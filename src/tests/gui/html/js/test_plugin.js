@@ -275,6 +275,61 @@ describe('Plugin', () => {
     });
   });
 
+  describe('#update()', () => {
+    let plugin;
+    const updatedPlugin = {
+      name: 'test',
+      foo: 'bar',
+      crc: 0xDEADBEEF,
+    };
+
+    beforeEach(() => {
+      plugin = new loot.Plugin({ name: 'test' });
+    });
+
+    it('should do nothing if its argument is undefined', () => {
+      plugin.update();
+
+      plugin.should.deepEqual(new loot.Plugin({ name: 'test' }));
+    });
+
+    it('should throw if the argument has no name property', () => {
+      should(() => { plugin.update({}); }).throw(Error);
+    });
+
+    it('should throw if the argument\'s name property doesn\'t match the plugin\'s name', () => {
+      should(() => { plugin.update({ name: 'other test' }); }).throw(Error);
+    });
+
+    it('should set property values for all the given argument\'s properties', () => {
+      plugin.update(updatedPlugin);
+
+      plugin.foo.should.equal(updatedPlugin.foo);
+      plugin.crc.should.equal(updatedPlugin.crc);
+    });
+
+    it('should not change property values for properties not present in the argument', () => {
+      plugin.isActive = true;
+
+      plugin.update(updatedPlugin);
+
+      plugin.foo.should.equal(updatedPlugin.foo);
+      plugin.crc.should.equal(updatedPlugin.crc);
+      plugin.isActive.should.be.true();
+    });
+
+    it('should set explicitly undefined values', () => {
+      plugin.isActive = true;
+
+      plugin.update({
+        name: plugin.name,
+        isActive: undefined,
+      });
+
+      should(plugin.isActive).be.undefined();
+    });
+  });
+
   describe('#fromJson()', () => {
     it('should return the value object if the JSON is not of the Plugin type', () => {
       const testInputObj = {

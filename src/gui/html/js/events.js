@@ -52,12 +52,7 @@ function updateMasterlist() {
       result.plugins.forEach((resultPlugin) => {
         const existingPlugin = loot.game.plugins.find(plugin => plugin.name === resultPlugin.name);
         if (existingPlugin) {
-          existingPlugin.isDirty = resultPlugin.isDirty;
-          existingPlugin.isPriorityGlobal = resultPlugin.isPriorityGlobal;
-          existingPlugin.masterlist = resultPlugin.masterlist;
-          existingPlugin.messages = resultPlugin.messages;
-          existingPlugin.priority = resultPlugin.priority;
-          existingPlugin.tags = resultPlugin.tags;
+          existingPlugin.update(resultPlugin);
         }
       });
 
@@ -107,8 +102,7 @@ function onSortPlugins() {
           item.name === plugin.name
         ));
         if (existingPlugin) {
-          existingPlugin.crc = plugin.crc;
-          existingPlugin.isEmpty = plugin.isEmpty;
+          existingPlugin.update(plugin);
         }
       });
       /* Send discardUnappliedChanges query. Not doing so prevents LOOT's window
@@ -123,8 +117,7 @@ function onSortPlugins() {
     result.plugins.forEach((plugin) => {
       let existingPlugin = loot.game.plugins.find(item => item.name === plugin.name);
       if (existingPlugin) {
-        existingPlugin.crc = plugin.crc;
-        existingPlugin.isEmpty = plugin.isEmpty;
+        existingPlugin.update(plugin);
       } else {
         existingPlugin = new loot.Plugin(plugin);
       }
@@ -190,11 +183,7 @@ function onClearAllMetadata() {
           existingPlugin.userlist = undefined;
           existingPlugin.editor = undefined;
 
-          existingPlugin.priority = plugin.priority;
-          existingPlugin.isPriorityGlobal = plugin.isPriorityGlobal;
-          existingPlugin.messages = plugin.messages;
-          existingPlugin.tags = plugin.tags;
-          existingPlugin.isDirty = plugin.isDirty;
+          existingPlugin.update(plugin);
         }
       });
 
@@ -384,11 +373,7 @@ function onEditorClose(evt) {
     const edits = evt.target.readFromEditor(plugin);
     promise = loot.query('editorClosed', edits).then(JSON.parse).then((result) => {
       if (result) {
-        plugin.priority = result.priority;
-        plugin.isPriorityGlobal = result.isPriorityGlobal;
-        plugin.messages = result.messages;
-        plugin.tags = result.tags;
-        plugin.isDirty = result.isDirty;
+        plugin.update(result);
 
         plugin.userlist = edits.userlist;
 
@@ -466,11 +451,7 @@ function onClearMetadata(evt) {
         existingPlugin.userlist = undefined;
         existingPlugin.editor = undefined;
 
-        existingPlugin.priority = plugin.priority;
-        existingPlugin.isPriorityGlobal = plugin.isPriorityGlobal;
-        existingPlugin.messages = plugin.messages;
-        existingPlugin.tags = plugin.tags;
-        existingPlugin.isDirty = plugin.isDirty;
+        existingPlugin.update(plugin);
       }
       loot.Dialog.showNotification(loot.l10n.translate('The user-added metadata for "%s" has been cleared.', evt.target.getName()));
       /* Now perform search again. If there is no current search, this won't

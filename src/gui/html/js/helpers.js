@@ -24,12 +24,7 @@ function getConflictingPlugins(pluginName) {
         }
         const plugin = loot.game.plugins.find(item => item.name === key);
         if (plugin) {
-          plugin.crc = result[key].crc;
-          plugin.isEmpty = result[key].isEmpty;
-
-          plugin.messages = result[key].messages;
-          plugin.tags = result[key].tags;
-          plugin.isDirty = result[key].isDirty;
+          plugin.update(result[key]);
         }
       }
     }

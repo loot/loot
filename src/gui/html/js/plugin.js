@@ -189,6 +189,19 @@
       this._isSearchResult = false;
     }
 
+    update(plugin) {
+      if (!plugin) {
+        return;
+      }
+      if (plugin.name !== this.name) {
+        throw new Error(`Cannot update ${this.name}'s data using data for ${plugin.name}`);
+      }
+
+      Object.getOwnPropertyNames(plugin).forEach((property) => {
+        this[property] = plugin[property];
+      });
+    }
+
     static fromJson(key, value) {
       if (value !== null && value.__type === 'Plugin') {
         return new Plugin(value);
