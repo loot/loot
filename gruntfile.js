@@ -18,7 +18,7 @@ module.exports = (grunt) => {
           browsers: [{
             browserName: 'chrome',
             platform: 'Windows 10',
-            version: '47',
+            version: '49',
           }],
           testname: 'LOOT UI JS Tests',
         },
