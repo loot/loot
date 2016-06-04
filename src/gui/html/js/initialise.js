@@ -219,9 +219,9 @@
     return query('getSettings').then(JSON.parse).then((result) => {
       appData.settings = result;
       dom.updateSettingsDialog(appData.settings);
-      loot.DOM.setGameMenuItems(appData.settings.games);
-      loot.DOM.updateEnabledGames(appData.installedGames);
-      loot.DOM.updateSelectedGame(appData.game.folder);
+      dom.setGameMenuItems(appData.settings.games);
+      dom.updateEnabledGames(appData.installedGames);
+      dom.updateSelectedGame(appData.game.folder);
     });
   }
 
