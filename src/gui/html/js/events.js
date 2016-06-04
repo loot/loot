@@ -8,14 +8,7 @@ function onSidebarFilterToggle(evt) {
   }
   filterPluginData(loot.game.plugins, loot.filters);
 }
-function secondScrollToTop() {
-  document.getElementById('pluginCardList').scroll(0, 0);
-  document.getElementById('main').removeEventListener('scroll', secondScrollToTop);
-}
 function onJumpToGeneralInfo() {
-  /* PolymerElements/iron-list#240 means a second call is necessary to complete
-     the scroll. This is a hack until the bug gets fixed. */
-  document.getElementById('main').addEventListener('scroll', secondScrollToTop);
   document.getElementById('pluginCardList').scroll(0, 0);
 }
 function onChangeGame(evt) {
