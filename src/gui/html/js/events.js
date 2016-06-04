@@ -21,7 +21,7 @@ function onChangeGame(evt) {
        filter. Don't need to deactivate the others beforehand. Strictly not
        deactivating the conflicts filter either, just resetting it's value.
        */
-    loot.filters.conflictTargetPluginName = undefined;
+    loot.filters.deactivateConflictsFilter();
 
     /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
@@ -403,9 +403,8 @@ function onEditorClose(evt) {
   }).catch(loot.handlePromiseError);
 }
 function undoConflictsFilter() {
-  const wasConflictsFilterEnabled = (loot.filters.conflictTargetPluginName);
+  const wasConflictsFilterEnabled = loot.filters.deactivateConflictsFilter();
 
-  loot.filters.conflictTargetPluginName = undefined;
   /* Deactivate any existing plugin conflict filter. */
   loot.game.plugins.forEach((plugin) => {
     plugin.isConflictFilterChecked = false;
@@ -424,10 +423,19 @@ function onConflictsFilter(evt) {
   /* evt.detail is true if the filter has been activated. */
   if (evt.detail) {
     evt.target.data.isConflictFilterChecked = true;
-    loot.filters.conflictTargetPluginName = evt.target.getName();
     evt.target.classList.toggle('highlight', true);
-  } else {
-    loot.filters.conflictTargetPluginName = undefined;
+
+    /* Now get conflicts for the plugin. */
+    loot.Dialog.showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
+    loot.filters.activateConflictsFilter(evt.target.getName()).then((plugins) => {
+      plugins.forEach((plugin) => {
+        const gamePlugin = loot.game.plugins.find(item => item.name === plugin.name);
+        if (gamePlugin) {
+          gamePlugin.update(plugin);
+        }
+      });
+      loot.Dialog.closeProgress();
+    }).catch(loot.handlePromiseError);
   }
   filterPluginData(loot.game.plugins, loot.filters);
 }

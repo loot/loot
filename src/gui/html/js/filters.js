@@ -6,9 +6,10 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Filters = factory();
+    root.loot.Filters = factory(root.loot.query,
+                                root.loot.handlePromiseError);
   }
-}(this, () => class {
+}(this, (query, handlePromiseError) => class {
   constructor(l10n) {
     /* Plugin filters */
     this.hideMessagelessPlugins = false;
@@ -65,5 +66,32 @@
     }
 
     return true;
+  }
+
+  deactivateConflictsFilter() {
+    const wasEnabled = (this.conflictingPluginNames);
+
+    this.conflictingPluginNames = [];
+
+    return wasEnabled;
+  }
+
+  activateConflictsFilter(targetPluginName) {
+    if (!targetPluginName) {
+      return Promise.resolve([]);
+    }
+
+    /* Filter everything but the plugin itself if there are no
+       conflicts. */
+    this.conflictingPluginNames = [targetPluginName];
+
+    return query('getConflictingPlugins', targetPluginName).then(JSON.parse).then((plugins) => {
+      plugins.forEach((plugin) => {
+        if (plugin.conflicts) {
+          this.conflictingPluginNames.push(plugin.name);
+        }
+      });
+      return plugins;
+    }).catch(handlePromiseError);
   }
 }));

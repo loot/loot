@@ -407,8 +407,12 @@ namespace loot {
         YAML::Node node;
         auto plugin = _lootState.CurrentGame().GetPlugin(pluginName);
         for (const auto& otherPlugin : _lootState.CurrentGame().GetPlugins()) {
-            YAML::Node pluginNode;
+            // Plugin loading may have produced an error message, so rederive
+            // displayed data.
 
+            YAML::Node pluginNode = GenerateDerivedMetadata(otherPlugin.Name());
+
+            pluginNode["name"] = otherPlugin.Name();
             pluginNode["crc"] = otherPlugin.Crc();
             pluginNode["isEmpty"] = otherPlugin.IsEmpty();
             if (plugin.DoFormIDsOverlap(otherPlugin)) {
@@ -419,20 +423,13 @@ namespace loot {
                 pluginNode["conflicts"] = false;
             }
 
-            // Plugin loading may have produced an error message, so rederive displayed data.
-            YAML::Node derivedNode = GenerateDerivedMetadata(otherPlugin.Name());
-            for (const auto &pair : derivedNode) {
-                const string key = pair.first.as<string>();
-                pluginNode[key] = pair.second;
-            }
-
-            node[otherPlugin.Name()] = pluginNode;
+            node.push_back(pluginNode);
         }
 
         if (node.size() > 0)
             callback->Success(JSON::stringify(node));
         else
-            callback->Success("null");
+            callback->Success("[]");
     }
 
     void Handler::CopyMetadata(const std::string& pluginName) {
