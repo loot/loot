@@ -1,10 +1,4 @@
 'use strict';
-function handlePromiseError(err) {
-  /* Error.stack seems to be Chromium-specific. */
-  console.log(err.stack);
-  loot.Dialog.closeProgress();
-  loot.Dialog.showMessage(loot.l10n.translate('Error'), err.message);
-}
 function getConflictingPlugins(pluginName) {
   if (!pluginName) {
     return Promise.resolve([]);
@@ -30,7 +24,7 @@ function getConflictingPlugins(pluginName) {
     }
     loot.Dialog.closeProgress();
     return conflicts;
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function filterPluginData(plugins, filters) {
   getConflictingPlugins(filters.conflictTargetPluginName).then((conflictingPluginNames) => {
@@ -60,5 +54,5 @@ function filterPluginData(plugins, filters) {
       hiddenMessageNo += plugin.messages.length - plugin.getCardContent(filters).messages.length;
     });
     document.getElementById('hiddenMessageNo').textContent = hiddenMessageNo;
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }

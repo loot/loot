@@ -2,7 +2,7 @@
 function onSidebarFilterToggle(evt) {
   if (evt.target.id !== 'contentFilter') {
     loot.filters[evt.target.id] = evt.target.checked;
-    loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(handlePromiseError);
+    loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(loot.handlePromiseError);
   } else {
     loot.filters.contentSearchString = evt.target.value;
   }
@@ -38,7 +38,7 @@ function onChangeGame(evt) {
     filterPluginData(loot.game.plugins, loot.filters);
 
     loot.Dialog.closeProgress();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
 function updateMasterlist() {
@@ -61,12 +61,12 @@ function updateMasterlist() {
     } else {
       loot.Dialog.showNotification(loot.l10n.translate('No masterlist update was necessary.'));
     }
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onUpdateMasterlist() {
   updateMasterlist().then(() => {
     loot.Dialog.closeProgress();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onSortPlugins() {
   if (undoConflictsFilter()) {
@@ -131,7 +131,7 @@ function onSortPlugins() {
     loot.state.enterSortingState();
 
     loot.Dialog.closeProgress();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onApplySort() {
   const loadOrder = loot.game.getPluginNames();
@@ -141,7 +141,7 @@ function onApplySort() {
     delete loot.game.oldLoadOrder;
 
     loot.state.exitSortingState();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onCancelSort() {
   return loot.query('cancelSort').then(JSON.parse).then((messages) => {
@@ -155,7 +155,7 @@ function onCancelSort() {
     loot.game.globalMessages = messages;
 
     loot.state.exitSortingState();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 
 function onRedatePlugins(evt) {
@@ -163,7 +163,7 @@ function onRedatePlugins(evt) {
     if (result) {
       loot.query('redatePlugins').then(() => {
         loot.Dialog.showNotification('Plugins were successfully redated.');
-      }).catch(handlePromiseError);
+      }).catch(loot.handlePromiseError);
     }
   });
 }
@@ -188,7 +188,7 @@ function onClearAllMetadata() {
       });
 
       loot.Dialog.showNotification(loot.l10n.translate('All user-added metadata has been cleared.'));
-    }).catch(handlePromiseError);
+    }).catch(loot.handlePromiseError);
   });
 }
 function onCopyContent() {
@@ -211,7 +211,7 @@ function onCopyContent() {
 
   loot.query('copyContent', content).then(() => {
     loot.Dialog.showNotification(loot.l10n.translate("LOOT's content has been copied to the clipboard."));
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onCopyLoadOrder() {
   let plugins = [];
@@ -222,7 +222,7 @@ function onCopyLoadOrder() {
 
   loot.query('copyLoadOrder', plugins).then(() => {
     loot.Dialog.showNotification(loot.l10n.translate('The load order has been copied to the clipboard.'));
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onContentRefresh() {
   /* Send a query for updated load order and plugin header info. */
@@ -235,14 +235,14 @@ function onContentRefresh() {
     filterPluginData(loot.game.plugins, loot.filters);
 
     loot.Dialog.closeProgress();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 
 function onOpenReadme() {
-  loot.query('openReadme').catch(handlePromiseError);
+  loot.query('openReadme').catch(loot.handlePromiseError);
 }
 function onOpenLogLocation() {
-  loot.query('openLogLocation').catch(handlePromiseError);
+  loot.query('openLogLocation').catch(loot.handlePromiseError);
 }
 function onShowAboutDialog() {
   document.getElementById('about').open();
@@ -255,7 +255,7 @@ function handleUnappliedChangesClose(change) {
     /* Discard any unapplied changes. */
     loot.query('discardUnappliedChanges').then(() => {
       window.close();
-    }).catch(handlePromiseError);
+    }).catch(loot.handlePromiseError);
   });
 }
 function onQuit() {
@@ -323,13 +323,13 @@ function onCloseSettingsDialog(evt) {
   loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
     loot.installedGames = installedGames;
     loot.DOM.updateEnabledGames(installedGames);
-  }).catch(handlePromiseError).then(() => {
+  }).catch(loot.handlePromiseError).then(() => {
     loot.settings = settings;
     loot.DOM.updateSettingsDialog(loot.settings);
     loot.DOM.setGameMenuItems(loot.settings.games);
     loot.DOM.updateEnabledGames(loot.installedGames);
     loot.DOM.updateSelectedGame(loot.game.folder);
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onShowSettingsDialog() {
   document.getElementById('settingsDialog').open();
@@ -355,7 +355,7 @@ function onEditorOpen(evt) {
 
   loot.state.enterEditingState();
 
-  return loot.query('editorOpened').catch(handlePromiseError);
+  return loot.query('editorOpened').catch(loot.handlePromiseError);
 }
 function onEditorClose(evt) {
   const plugin = loot.game.plugins.find((item) => (
@@ -387,7 +387,7 @@ function onEditorClose(evt) {
        the editor has been closed. */
     promise = loot.query('editorClosed');
   }
-  promise.catch(handlePromiseError).then(() => {
+  promise.catch(loot.handlePromiseError).then(() => {
     /* Remove body attribute so that sidebar items are styled correctly. */
     document.body.removeAttribute('data-editors');
     document.getElementById('cardsNav').notifyResize();
@@ -400,7 +400,7 @@ function onEditorClose(evt) {
     }
 
     loot.state.exitEditingState();
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function undoConflictsFilter() {
   const wasConflictsFilterEnabled = (loot.filters.conflictTargetPluginName);
@@ -434,7 +434,7 @@ function onConflictsFilter(evt) {
 function onCopyMetadata(evt) {
   loot.query('copyMetadata', evt.target.getName()).then(() => {
     loot.Dialog.showNotification(loot.l10n.translate('The metadata for "%s" has been copied to the clipboard.', evt.target.getName()));
-  }).catch(handlePromiseError);
+  }).catch(loot.handlePromiseError);
 }
 function onClearMetadata(evt) {
   loot.Dialog.askQuestion('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from "%s"?', evt.target.getName()), loot.l10n.translate('Clear'), (result) => {
@@ -457,7 +457,7 @@ function onClearMetadata(evt) {
       /* Now perform search again. If there is no current search, this won't
          do anything. */
       document.getElementById('searchBar').search();
-    }).catch(handlePromiseError);
+    }).catch(loot.handlePromiseError);
   });
 }
 

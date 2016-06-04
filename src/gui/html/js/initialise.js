@@ -282,6 +282,6 @@
       if (!loot.settings.lastVersion || loot.settings.lastVersion !== loot.version) {
         document.getElementById('firstRun').open();
       }
-    }).catch(handlePromiseError);
+    }).catch(loot.handlePromiseError);
   };
 }));
