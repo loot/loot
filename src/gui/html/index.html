@@ -205,7 +205,7 @@
         <paper-icon-button icon="menu" id="drawerToggle" paper-drawer-toggle></paper-icon-button>
         <paper-icon-button id="jumpToGeneralInfo" icon="home"></paper-icon-button>
         <paper-tooltip for="jumpToGeneralInfo">Jump To General Information</paper-tooltip>
-        <loot-dropdown-menu id="gameMenu" class="dark">
+        <loot-dropdown-menu id="gameMenu" class="dark" no-label-float>
           <!-- Generated game <li> elements go here. -->
         </loot-dropdown-menu>
         <!-- right-align the rest of the toolbar items. -->
@@ -383,7 +383,7 @@
       <div>
         <div>
           <div>Default Game</div>
-          <loot-dropdown-menu id="defaultGameSelect">
+          <loot-dropdown-menu id="defaultGameSelect" no-label-float>
             <paper-item value="auto">Autodetect</paper-item>
             <!-- Game <option> elements go here. -->
           </loot-dropdown-menu>
@@ -391,7 +391,7 @@
         <div>
           <span id="languageLabel">Language</span>
           <paper-tooltip for="languageLabel">Language changes will be applied after LOOT is restarted.</paper-tooltip>
-          <loot-dropdown-menu id="languageSelect">
+          <loot-dropdown-menu id="languageSelect" no-label-float>
             <!-- Language <option> elements go here. -->
           </loot-dropdown-menu>
         </div>

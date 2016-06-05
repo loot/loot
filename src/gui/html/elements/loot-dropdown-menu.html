@@ -39,7 +39,7 @@ it a <select>-like API. This means:
         };
       }
     </style>
-    <paper-dropdown-menu disabled$="[[disabled]]" no-label-float>
+    <paper-dropdown-menu disabled$="[[disabled]]" no-label-float="[[noLabelFloat]]" label="[[label]]" vertical-align="[[verticalAlign]]">
       <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{value}}">
         <content></content>
       </paper-listbox>
@@ -57,6 +57,16 @@ it a <select>-like API. This means:
         value: {
           type: String,
           notify: true,
+          reflectToAttribute: true,
+        },
+        noLabelFloat: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true,
+        },
+        verticalAlign: {
+          type: String,
+          value: 'top',
           reflectToAttribute: true,
         },
       },
