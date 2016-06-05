@@ -537,6 +537,7 @@ msg:
         <tr><td>Checksum<td><code>checksum("<var>filepath</var>", <var>checksum</var>)</code><td>Returns true if the calculated CRC-32 checksum of <var>filepath</var> matches <var>checksum</var>, false otherwise. If <var>filepath</var> does not exist, returns false.
         <tr><td>Version<td><code>version("<var>filepath</var>", "<var>version</var>", <var>comparator</var>)</code><td>Returns true if the boolean expression <code>(actual version of <var>filepath</var>) <var>comparator version</var></code> holds true, false otherwise. If <var>filepath</var> does not exist or does not have a version number, its version is assumed to be <code>0</code>. The comparison is not a straightforward per-character comparison, but instead uses the precedence rules defined by <a href="http://semver.org/">Semantic Versioning</a>, extended to allow leading zeroes, an arbitrary number of release version numbers, case-insensitivity and a wider range of separator characters.
         <tr><td>Plugin Active Status<td><code>active("<var>filepath</var>")</code><td>Returns true if <var>filepath</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
+        <tr><td>Many Plugins Active Status<td><code>many_active("<var>regex</var>")</code><td>Returns true if more than one file matching <var>regex</var> is a <code>.esp</code> or <code>.esm</code> file that is both installed and active, false otherwise.
 </table>
 
 <p>The different types of variable used in the above functions are described in more detail below.

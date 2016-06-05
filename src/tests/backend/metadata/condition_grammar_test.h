@@ -561,6 +561,51 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsNotActiveShouldEv
   EXPECT_FALSE(result_);
 }
 
+TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingMoreThanOnePluginThatIsActiveShouldEvaluateToTrue) {
+  ASSERT_NO_THROW(game_.Init(false, localPath));
+
+  Grammar grammar(&game_);
+  std::string condition("many_active(\"Blank( - Different Master Dependent)?\\.es(m|p)\")");
+
+  success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                             std::cend(condition),
+                                             grammar,
+                                             skipper_,
+                                             result_);
+  EXPECT_TRUE(success_);
+  EXPECT_TRUE(result_);
+}
+
+TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingOnlyOnePluginThatIsActiveShouldEvaluateToFalse) {
+  ASSERT_NO_THROW(game_.Init(false, localPath));
+
+  Grammar grammar(&game_);
+  std::string condition("many_active(\"Blank\\.esm\")");
+
+  success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                             std::cend(condition),
+                                             grammar,
+                                             skipper_,
+                                             result_);
+  EXPECT_TRUE(success_);
+  EXPECT_FALSE(result_);
+}
+
+TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingNoPluginsThatAreActiveShouldEvaluateToFalse) {
+  ASSERT_NO_THROW(game_.Init(false, localPath));
+
+  Grammar grammar(&game_);
+  std::string condition("many_active(\"Blank\\.esp\")");
+
+  success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                             std::cend(condition),
+                                             grammar,
+                                             skipper_,
+                                             result_);
+  EXPECT_TRUE(success_);
+  EXPECT_FALSE(result_);
+}
+
 TEST_P(ConditionGrammarTest, aFalseConditionPrecededByANegatorShouldEvaluateToTrue) {
   Grammar grammar(&game_);
   std::string condition("not file(\"" + missingEsp + "\")");

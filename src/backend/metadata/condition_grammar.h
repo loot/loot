@@ -87,6 +87,7 @@ public:
       | ("checksum(" > filePath_ > ',' > qi::hex > ')')[phoenix::bind(&ConditionGrammar::CheckSum, this, qi::labels::_val, qi::labels::_1, qi::labels::_2)]
       | ("version(" > filePath_ > ',' > quotedStr_ > ',' > comparator_ > ')')[phoenix::bind(&ConditionGrammar::CheckVersion, this, qi::labels::_val, qi::labels::_1, qi::labels::_2, qi::labels::_3)]
       | ("active(" > filePath_ > ')')[phoenix::bind(&ConditionGrammar::CheckActive, this, qi::labels::_val, qi::labels::_1)]
+      | ("many_active(" > quotedStr_ > ')')[phoenix::bind(&ConditionGrammar::CheckManyActive, this, qi::labels::_val, qi::labels::_1)]
       ;
 
     quotedStr_ %= '"' > +(char_ - '"') > '"';
@@ -374,6 +375,36 @@ private:
       result = game_->IsPluginActive(file);
 
     BOOST_LOG_TRIVIAL(trace) << "Active check result: " << result;
+  }
+
+  void CheckManyActive(bool& result, const std::string& regexStr) const {
+    result = false;
+
+    BOOST_LOG_TRIVIAL(trace) << "Checking to see if more than one file matching the regex \"" << regexStr << "\" exist.";
+
+    std::pair<boost::filesystem::path, std::regex> pathRegex = SplitRegex(regexStr);
+
+    if (game_ == nullptr)
+      return;
+
+    // Now we have a valid parent path and a regex filename. Check that
+    // the parent path exists and is a directory.
+    boost::filesystem::path parent_path = game_->DataPath() / pathRegex.first;
+    if (!boost::filesystem::exists(parent_path) || !boost::filesystem::is_directory(parent_path)) {
+      BOOST_LOG_TRIVIAL(trace) << "The path \"" << parent_path << "\" does not exist or is not a directory.";
+      return;
+    }
+
+    size_t count = 0;
+    for (boost::filesystem::directory_iterator itr(parent_path); itr != boost::filesystem::directory_iterator(); ++itr) {
+      const std::string filename = itr->path().filename().string();
+      if (std::regex_match(filename, pathRegex.second) && game_->IsPluginActive(filename)) {
+        ++count;
+        BOOST_LOG_TRIVIAL(trace) << "Matching file found: " << itr->path();
+      }
+    }
+
+    result = count > 1;
   }
 
   void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
