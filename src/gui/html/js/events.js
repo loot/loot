@@ -34,6 +34,9 @@ function onChangeGame(evt) {
     const gameInfo = JSON.parse(result, loot.Plugin.fromJson);
     loot.game = new loot.Game(gameInfo, loot.l10n);
 
+    /* Re-initialise conflicts filter plugin list. */
+    loot.Filters.fillConflictsFilterList(loot.game.plugins);
+
     /* Now update virtual lists. */
     filterPluginData(loot.game.plugins, loot.filters);
 
@@ -69,7 +72,7 @@ function onUpdateMasterlist() {
   }).catch(loot.handlePromiseError);
 }
 function onSortPlugins() {
-  if (undoConflictsFilter()) {
+  if (loot.filters.deactivateConflictsFilter()) {
     /* Conflicts filter was undone, update the displayed cards. */
     filterPluginData(loot.game.plugins, loot.filters);
   }
@@ -230,6 +233,9 @@ function onContentRefresh() {
     /* Parse the data sent from C++. */
     const game = JSON.parse(result, loot.Plugin.fromJson);
     loot.game = new loot.Game(game, loot.l10n);
+
+    /* Re-initialise conflicts filter plugin list. */
+    loot.Filters.fillConflictsFilterList(loot.game.plugins);
 
     /* Reapply filters. */
     filterPluginData(loot.game.plugins, loot.filters);
@@ -402,32 +408,15 @@ function onEditorClose(evt) {
     loot.state.exitEditingState();
   }).catch(loot.handlePromiseError);
 }
-function undoConflictsFilter() {
-  const wasConflictsFilterEnabled = loot.filters.deactivateConflictsFilter();
-
-  /* Deactivate any existing plugin conflict filter. */
-  loot.game.plugins.forEach((plugin) => {
-    plugin.isConflictFilterChecked = false;
-  });
-  /* Un-highlight any existing filter plugin. */
-  const cards = document.getElementById('main').getElementsByTagName('loot-plugin-card');
-  for (let i = 0; i < cards.length; ++i) {
-    cards[i].classList.toggle('highlight', false);
-  }
-
-  return wasConflictsFilterEnabled;
-}
 function onConflictsFilter(evt) {
   /* Deactivate any existing plugin conflict filter. */
-  undoConflictsFilter();
-  /* evt.detail is true if the filter has been activated. */
-  if (evt.detail) {
-    evt.target.data.isConflictFilterChecked = true;
-    evt.target.classList.toggle('highlight', true);
-
+  loot.filters.deactivateConflictsFilter();
+  /* evt.currentTarget.value is the name of the target plugin, or an empty string
+     if the filter has been deactivated. */
+  if (evt.currentTarget.value) {
     /* Now get conflicts for the plugin. */
     loot.Dialog.showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
-    loot.filters.activateConflictsFilter(evt.target.getName()).then((plugins) => {
+    loot.filters.activateConflictsFilter(evt.currentTarget.value).then((plugins) => {
       plugins.forEach((plugin) => {
         const gamePlugin = loot.game.plugins.find(item => item.name === plugin.name);
         if (gamePlugin) {

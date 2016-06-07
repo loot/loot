@@ -45,9 +45,6 @@
     function onEditorClose() {
       alert('Editor closed');
     }
-    function onFilterConflicts() {
-      alert('Conflicts filter toggle clicked');
-    }
     function onCopyMetadata() {
       alert('Copy metadata button clicked');
     }
@@ -77,7 +74,6 @@
 
     document.addEventListener('loot-editor-open', onEditorOpen);
     document.addEventListener('loot-editor-close', onEditorClose);
-    document.addEventListener('loot-filter-conflicts', onFilterConflicts);
     document.addEventListener('loot-copy-metadata', onCopyMetadata);
     document.addEventListener('loot-clear-metadata', onClearMetadata);
 

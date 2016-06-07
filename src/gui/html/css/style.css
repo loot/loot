@@ -78,6 +78,10 @@ div[drawer] > iron-pages {
     padding: 0 16px;
     height: 48px;
 }
+#conflictsFilter {
+    padding: 0 16px;
+    height: 48px;
+}
 
 /* Panel */
 #main {

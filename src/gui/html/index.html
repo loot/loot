@@ -27,6 +27,7 @@
   <link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
 
   <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+  <link rel="import" href="../../../bower_components/paper-item/paper-item-shared-styles.html">
   <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
   <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
   <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
@@ -45,6 +46,7 @@
   <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
   <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
   <link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
+
   <style is="custom-style">
     div[drawer],
     div[main] {
@@ -80,6 +82,11 @@
     #settingsDialog > paper-dialog-scrollable > div > div {
       @apply(--layout-horizontal);
       @apply(--layout-center);
+    }
+    #conflictsFilter {
+      --paper-dropdown-menu: {
+        display: block;
+      }
     }
 
     /* Paper element styling.
@@ -156,6 +163,14 @@
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
 <body oncontextmenu="return false" unresolved>
+  <!-- This style element needs to be here so that it loads after the Vulcanized
+       imports, which are placed in a div that is the first child of body. -->
+  <style is="custom-style" include="paper-item-shared-styles">
+    .paper-item {
+      display: flex;
+      align-items: center;
+    }
+  </style>
   <paper-drawer-panel id="container" drawer-width="33%">
     <div drawer>
       <paper-toolbar>
@@ -187,6 +202,10 @@
           <paper-checkbox id="hideMessagelessPlugins">Hide messageless plugins</paper-checkbox>
           <paper-input id="contentFilter" label="Filter content" no-label-float></paper-input>
           <paper-tooltip for="contentFilter" position="bottom">Press Enter or click outside the input to set the filter.</paper-tooltip>
+          <loot-dropdown-menu id="conflictsFilter" label="Show only conflicting plugins for" vertical-align="bottom">
+            <div class="paper-item" value="">No plugin</div>
+            <!-- Generated <div> plugin elements go here. -->
+          </loot-dropdown-menu>
           <div id="filtersSpacer"></div>
           <div class="divider"></div>
           <div id="hiddenPlugins">

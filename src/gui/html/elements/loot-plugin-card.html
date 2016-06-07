@@ -1,16 +1,3 @@
-<!-- Fires the following events:
-
-loot-editor-open
-
-loot-filter-conflicts
-  detail: boolean
-    True if the filter has been activated.
-
-loot-copy-metadata
-
-loot-clear-metadata
--->
-
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
@@ -104,13 +91,6 @@ loot-clear-metadata
       #clearMetadata {
         cursor: pointer;
       }
-      #showOnlyConflicts {
-        min-height: 48px;
-        padding: 0 16px;
-        font-weight: 500;
-        --paper-toggle-button-label-spacing: 16px;
-        white-space: nowrap;
-      }
       [hidden] {
         display: none;
       }
@@ -135,7 +115,6 @@ loot-clear-metadata
         <paper-menu-button id="menu" horizontal-align="right">
           <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
           <loot-menu class="dropdown-content">
-            <paper-toggle-button id="showOnlyConflicts" checked="{{data.isConflictFilterChecked}}">Show Only Conflicts</paper-toggle-button>
             <paper-icon-item id="editMetadata">
               <iron-icon icon="create" item-icon></iron-icon>
               Edit Metadata
@@ -177,14 +156,12 @@ loot-clear-metadata
       },
 
       attached() {
-        this.$.showOnlyConflicts.addEventListener('change', this._onShowOnlyConflicts);
         this.$.editMetadata.addEventListener('click', this.onShowEditor);
         this.$.copyMetadata.addEventListener('click', this._onCopyMetadata);
         this.$.clearMetadata.addEventListener('click', this._onClearMetadata);
       },
 
       detached() {
-        this.$.showOnlyConflicts.removeEventListener('change', this._onShowOnlyConflicts);
         this.$.editMetadata.removeEventListener('click', this.onShowEditor);
         this.$.copyMetadata.removeEventListener('click', this._onCopyMetadata);
         this.$.clearMetadata.removeEventListener('click', this._onClearMetadata);
@@ -201,9 +178,6 @@ loot-clear-metadata
           this.$.isMaster.hidden = !this.data.isMaster;
           this.$.isEmpty.hidden = !this.data.isEmpty;
           this.$.loadsArchive.hidden = !this.data.loadsArchive;
-
-          /* Also set highlight if the conflict filter is active. */
-          this.classList.toggle('highlight', this.data.isConflictFilterChecked);
         }
       },
 
@@ -256,9 +230,6 @@ loot-clear-metadata
               this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
             }
           }
-
-          /* Update the conflict filter toggle state. */
-          this.$.showOnlyConflicts.checked = this.data.isConflictFilterChecked;
         }
       },
 
@@ -278,13 +249,6 @@ loot-clear-metadata
       onShowEditor() {
         /* Fire an open event, so that the UI can enter edit mode. */
         this.dispatchEvent(new CustomEvent('loot-editor-open', {
-          bubbles: true,
-        }));
-      },
-
-      _onShowOnlyConflicts(evt) {
-        evt.target.dispatchEvent(new CustomEvent('loot-filter-conflicts', {
-          detail: evt.currentTarget.checked,
           bubbles: true,
         }));
       },

@@ -408,7 +408,6 @@ describe('Game', () => {
 
         id: '',
         _isEditorOpen: true,
-        isConflictFilterChecked: true,
         _isSearchResult: true,
       }];
 

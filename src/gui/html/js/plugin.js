@@ -185,7 +185,6 @@
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');
       this._isEditorOpen = false;
-      this.isConflictFilterChecked = false;
       this._isSearchResult = false;
     }
 

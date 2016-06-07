@@ -49,10 +49,8 @@
     document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideAllPluginMessages').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', onSidebarFilterToggle);
-    document.body.addEventListener('loot-filter-conflicts', onConflictsFilter);
-
-    /* Set up event handlers for content filter. */
     document.getElementById('contentFilter').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('conflictsFilter').addEventListener('iron-select', onConflictsFilter);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins);
@@ -231,6 +229,7 @@
       appData.game = new Game(game, appData.l10n);
       document.getElementById('cardsNav').items = appData.game.plugins;
       document.getElementById('pluginCardList').items = appData.game.plugins;
+      appData.Filters.fillConflictsFilterList(appData.game.plugins);
       applyEnabledFilters(appData.filters, appData.settings, appData.game.plugins);
       Dialog.closeProgress();
     });

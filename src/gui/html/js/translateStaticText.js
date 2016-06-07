@@ -20,7 +20,6 @@
     pluginCard.querySelector('paper-tooltip[for=loadsArchive]').textContent = l10n.translate('Loads Archive');
     pluginCard.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
 
-    pluginCard.getElementById('showOnlyConflicts').textContent = l10n.translate('Show Only Conflicts');
     pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate('Edit Metadata');
     pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate('Copy Metadata');
     pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate('Clear User Metadata');
@@ -202,6 +201,8 @@
     document.getElementById('hideAllPluginMessages').textContent = l10n.translate('Hide all plugin messages');
     document.getElementById('hideInactivePlugins').textContent = l10n.translate('Hide inactive plugins');
     document.getElementById('hideMessagelessPlugins').textContent = l10n.translate('Hide messageless plugins');
+    document.getElementById('conflictsFilter').label = l10n.translate('Show only conflicting plugins for');
+    document.getElementById('conflictsFilter').firstElementChild.textContent = l10n.translate('No plugin');
     document.getElementById('hiddenPluginsTxt').textContent = l10n.translate('Hidden plugins:');
     document.getElementById('hiddenMessagesTxt').textContent = l10n.translate('Hidden messages:');
   }

@@ -262,12 +262,6 @@ describe('Plugin', () => {
       plugin.isEditorOpen.should.be.false();
     });
 
-    it('should set isConflictFilterChecked to false', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.isConflictFilterChecked.should.be.false();
-    });
-
     it('should set isSearchResult to false', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 

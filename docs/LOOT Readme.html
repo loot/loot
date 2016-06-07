@@ -321,7 +321,7 @@ figure > div {
     <li>The <q>Empty Plugin</q> icon.
     <li>The <q>Loads Archive</q> icon.
     <li>The <q>Has User Metadata</q> icon.
-    <li>The plugin menu button, which provides access to a few plugin-specific features, including a conflict filter and access to it in the metadata editor. These are explained in later sections.
+    <li>The plugin menu button, which provides access to metadata-related features for the plugin. These are explained in later sections.
 </ol>
 
 <p>Bash Tag suggestions and messages are displayed below the plugin card's header.
@@ -342,13 +342,10 @@ figure > div {
     <li><i>Hide inactive plugins</i>: Hides all plugins that are inactive.
     <li><i>Hide messageless plugins</i>: Hides all plugins that have no visible messages.
 </ul>
-<p>The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also two other filters:
+<p>The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also two other filters in the sidebar tab:
 <ul>
-    <li>A content filter, located beneath the filter toggles in the <span class="button">Filters</span> sidebar tab. This hides any plugins that don't have the filter input value present in any of the text on their cards.
-    <li>A conflict filter that can be accessed through each plugin card's menu. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which <em>may</em> contain conflicting resources are also displayed.</p>
-
-    Only one plugin's conflict filter can be active at any one time, so activating a second conflict filter will deactivate the first. The plugin for which the filter is currently active has its card highlighted. Sorting with a conflict filter active will first deactivate it.
-
+    <li>A content filter. This hides any plugins that don't have the filter input value present in any of the text on their cards.
+    <li>A conflict filter. This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which <em>may</em> contain conflicting resources are also displayed. Sorting with the conflict filter active will first deactivate it.
 </ul>
 
 <h3 id="usage-editing">Editing Plugin Metadata</h3>

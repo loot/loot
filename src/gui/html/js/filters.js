@@ -94,4 +94,23 @@
       return plugins;
     }).catch(handlePromiseError);
   }
+
+  static fillConflictsFilterList(plugins) {
+    const list = document.getElementById('conflictsFilter');
+
+    /* Remove any existing plugin items. */
+    while (list.children.length > 1) {
+      list.removeChild(list.lastElementChild);
+    }
+
+    plugins.forEach(plugin => {
+      const item = document.createElement('div');
+
+      item.className = 'paper-item';
+      item.setAttribute('value', plugin.name);
+      item.textContent = plugin.name;
+
+      list.appendChild(item);
+    });
+  }
 }));
