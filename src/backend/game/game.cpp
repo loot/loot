@@ -28,6 +28,7 @@
 #include "../error.h"
 
 #include <thread>
+#include <cmath>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
