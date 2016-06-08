@@ -74,13 +74,10 @@ div[drawer] > iron-pages {
     height: 48px;
     line-height: 48px;
 }
-#contentFilter {
-    padding: 0 16px;
-    height: 48px;
-}
+#contentFilter,
 #conflictsFilter {
     padding: 0 16px;
-    height: 48px;
+    height: 64px;
 }
 
 /* Panel */
