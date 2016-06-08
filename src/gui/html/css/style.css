@@ -44,6 +44,9 @@ tt, code, kbd, samp {
 #mainToolbar.search {
     display: none;
 }
+#gameMenu {
+  margin: 0 8px;
+}
 #applySortButton {
     color: #2196F3;
     background-color: white;
