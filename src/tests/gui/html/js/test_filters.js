@@ -203,4 +203,56 @@ describe('Filters', () => {
       filters.messageFilter(doNotCleanMessage).should.be.false();
     });
   });
+
+  describe('#deactivateConflictsFilter', () => {
+    let filters;
+    let handleEvent;
+
+    beforeEach(() => {
+      filters = new loot.Filters(l10n);
+    });
+
+    afterEach(() => {
+      document.removeEventListener('loot-filter-conflicts-deactivate', handleEvent);
+    });
+
+    it('should return false if the conflicts filter was not active', () => {
+      filters.deactivateConflictsFilter().should.be.false();
+    });
+
+    it('should return true if the conflicts filter was active', () => {
+      filters.conflictingPluginNames = ['Skyrim.esm'];
+
+      filters.deactivateConflictsFilter().should.be.true();
+    });
+
+    it('should empty the conflicting plugin names array', () => {
+      filters.conflictingPluginNames = ['Skyrim.esm'];
+
+      filters.deactivateConflictsFilter().should.be.true();
+      filters.conflictingPluginNames.should.have.length(0);
+    });
+
+    it('should fire an event', (done) => {
+      handleEvent = () => {
+        done();
+      };
+
+      document.addEventListener('loot-filter-conflicts-deactivate', handleEvent);
+
+      filters.deactivateConflictsFilter();
+    });
+  });
+
+  describe('#activateConflictsFilter', () => {
+    let filters;
+
+    beforeEach(() => {
+      filters = new loot.Filters(l10n);
+    });
+
+    it('should return a promise that resolves to an empty array if the argument is falsy', () => {
+      filters.activateConflictsFilter().should.finally.deepEqual([]);
+    });
+  });
 });

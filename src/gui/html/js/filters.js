@@ -69,7 +69,7 @@
   }
 
   deactivateConflictsFilter() {
-    const wasEnabled = (this.conflictingPluginNames);
+    const wasEnabled = this.conflictingPluginNames.length > 0;
 
     this.conflictingPluginNames = [];
 
