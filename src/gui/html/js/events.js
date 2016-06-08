@@ -409,8 +409,6 @@ function onEditorClose(evt) {
   }).catch(loot.handlePromiseError);
 }
 function onConflictsFilter(evt) {
-  /* Deactivate any existing plugin conflict filter. */
-  loot.filters.deactivateConflictsFilter();
   /* evt.currentTarget.value is the name of the target plugin, or an empty string
      if the filter has been deactivated. */
   if (evt.currentTarget.value) {
@@ -423,10 +421,13 @@ function onConflictsFilter(evt) {
           gamePlugin.update(plugin);
         }
       });
+      filterPluginData(loot.game.plugins, loot.filters);
       loot.Dialog.closeProgress();
     }).catch(loot.handlePromiseError);
+  } else {
+    loot.filters.deactivateConflictsFilter();
+    filterPluginData(loot.game.plugins, loot.filters);
   }
-  filterPluginData(loot.game.plugins, loot.filters);
 }
 function onCopyMetadata(evt) {
   loot.query('copyMetadata', evt.target.getName()).then(() => {
