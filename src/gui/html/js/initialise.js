@@ -51,6 +51,7 @@
     document.getElementById('hideMessagelessPlugins').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('contentFilter').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('conflictsFilter').addEventListener('iron-select', onConflictsFilter);
+    document.addEventListener('loot-filter-conflicts-deactivate', Filters.onDeactivateConflictsFilter);
 
     /* Set up handlers for buttons. */
     document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins);

@@ -73,6 +73,8 @@
 
     this.conflictingPluginNames = [];
 
+    document.dispatchEvent(new CustomEvent('loot-filter-conflicts-deactivate'));
+
     return wasEnabled;
   }
 
@@ -112,5 +114,9 @@
 
       list.appendChild(item);
     });
+  }
+
+  static onDeactivateConflictsFilter() {
+    document.getElementById('conflictsFilter').value = '';
   }
 }));
