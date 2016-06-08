@@ -190,7 +190,8 @@
     document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate('Plugins');
     document.getElementById('sidebarTabs').firstElementChild.nextElementSibling.textContent = l10n.translate('Filters');
     document.getElementById('filters').querySelector('paper-tooltip[for=contentFilter]').textContent = l10n.translate('Press Enter or click outside the input to set the filter.');
-    document.getElementById('contentFilter').label = l10n.translate('Filter content');
+    document.getElementById('contentFilter').label = l10n.translate('Show only plugins with cards that contain');
+    document.getElementById('contentFilter').placeholder = l10n.translate('No text specified');
 
     /* Filters */
     document.getElementById('hideVersionNumbers').textContent = l10n.translate('Hide version numbers');
