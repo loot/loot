@@ -71,13 +71,13 @@ div[drawer] > iron-pages {
 #hiddenPlugins,
 #hiddenMessages {
     padding: 0 16px;
-    height: 48px;
+    min-height: 48px;
     line-height: 48px;
 }
 #contentFilter,
 #conflictsFilter {
     padding: 0 16px;
-    height: 64px;
+    min-height: 64px;
 }
 
 /* Panel */
