@@ -201,8 +201,13 @@
     document.getElementById('hideAllPluginMessages').textContent = l10n.translate('Hide all plugin messages');
     document.getElementById('hideInactivePlugins').textContent = l10n.translate('Hide inactive plugins');
     document.getElementById('hideMessagelessPlugins').textContent = l10n.translate('Hide messageless plugins');
-    document.getElementById('conflictsFilter').label = l10n.translate('Show only conflicting plugins for');
-    document.getElementById('conflictsFilter').firstElementChild.textContent = l10n.translate('No plugin');
+
+    const conflictsFilter = document.getElementById('conflictsFilter');
+    conflictsFilter.label = l10n.translate('Show only conflicting plugins for');
+    conflictsFilter.firstElementChild.textContent = l10n.translate('No plugin selected');
+    /* The selected text doesn't update, so force that translation. */
+    conflictsFilter.shadowRoot.querySelector('paper-dropdown-menu').shadowRoot.querySelector('paper-input').value = conflictsFilter.shadowRoot.querySelector('paper-dropdown-menu').selectedItem.textContent;
+
     document.getElementById('hiddenPluginsTxt').textContent = l10n.translate('Hidden plugins:');
     document.getElementById('hiddenMessagesTxt').textContent = l10n.translate('Hidden messages:');
   }
