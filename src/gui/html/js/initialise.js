@@ -185,7 +185,7 @@
     });
   }
 
-  return () => {
+  return (loot) => {
     Dialog.showProgress('Initialising user interface...');
 
     /* Make sure settings are what I want. */
