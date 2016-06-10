@@ -147,7 +147,7 @@
   function handleInitErrors(error) {
     dom.listInitErrors(JSON.parse(error.message));
     Dialog.closeProgress();
-    document.getElementById('settingsButton').click();
+    dom.openDialog('settingsDialog');
   }
 
   function setGameTypes() {
@@ -175,11 +175,12 @@
     return query('getGameData').then((result) => {
       const game = JSON.parse(result, Plugin.fromJson);
       appData.game = new Game(game, appData.l10n);
-      document.getElementById('cardsNav').items = appData.game.plugins;
-      document.getElementById('pluginCardList').items = appData.game.plugins;
+
+      dom.initialiseVirtualLists(appData.game.plugins);
       appData.Filters.fillConflictsFilterList(appData.game.plugins);
       appData.filters.load(appData.settings.filters);
       appData.filters.apply(appData.game.plugins);
+
       Dialog.closeProgress();
     });
   }
@@ -224,7 +225,7 @@
     .catch(handleInitErrors)
     .then(() => {
       if (loot.settings.lastVersion !== loot.version) {
-        document.getElementById('firstRun').open();
+        dom.openDialog('firstRun');
       }
     }).catch(handlePromiseError);
   };

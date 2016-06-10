@@ -73,6 +73,15 @@
       }
     }
 
+    static openDialog(dialogElementId) {
+      document.getElementById(dialogElementId).open();
+    }
+
+    static initialiseVirtualLists(plugins) {
+      document.getElementById('cardsNav').items = plugins;
+      document.getElementById('pluginCardList').items = plugins;
+    }
+
     static updateSelectedGame(gameFolder) {
       document.getElementById('gameMenu').value = gameFolder;
 
