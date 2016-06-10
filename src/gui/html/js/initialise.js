@@ -134,7 +134,7 @@
         || filters.hideNotes
         || filters.hideDoNotCleanMessages
         || filters.hideAllPluginMessages) {
-      filterPluginData(plugins, filters);
+      filters.apply(plugins);
     }
 
     if (filters.hideVersionNumbers) {

@@ -6,7 +6,7 @@ function onSidebarFilterToggle(evt) {
   } else {
     loot.filters.contentSearchString = evt.target.value;
   }
-  filterPluginData(loot.game.plugins, loot.filters);
+  loot.filters.apply(loot.game.plugins);
 }
 function onJumpToGeneralInfo() {
   document.getElementById('pluginCardList').scroll(0, 0);
@@ -38,7 +38,7 @@ function onChangeGame(evt) {
     loot.Filters.fillConflictsFilterList(loot.game.plugins);
 
     /* Now update virtual lists. */
-    filterPluginData(loot.game.plugins, loot.filters);
+    loot.filters.apply(loot.game.plugins);
 
     loot.Dialog.closeProgress();
   }).catch(loot.handlePromiseError);
@@ -74,7 +74,7 @@ function onUpdateMasterlist() {
 function onSortPlugins() {
   if (loot.filters.deactivateConflictsFilter()) {
     /* Conflicts filter was undone, update the displayed cards. */
-    filterPluginData(loot.game.plugins, loot.filters);
+    loot.filters.apply(loot.game.plugins);
   }
 
   let promise = Promise.resolve();
@@ -129,7 +129,7 @@ function onSortPlugins() {
 
     /* Now update the UI for the new order. */
     loot.game.plugins = loot.game.loadOrder;
-    filterPluginData(loot.game.plugins, loot.filters);
+    loot.filters.apply(loot.game.plugins);
 
     loot.state.enterSortingState();
 
@@ -150,7 +150,7 @@ function onCancelSort() {
   return loot.query('cancelSort').then(JSON.parse).then((messages) => {
     /* Sort UI elements again according to stored old load order. */
     loot.game.plugins = loot.game.oldLoadOrder;
-    filterPluginData(loot.game.plugins, loot.filters);
+    loot.filters.apply(loot.game.plugins);
     delete loot.game.loadOrder;
     delete loot.game.oldLoadOrder;
 
@@ -238,7 +238,7 @@ function onContentRefresh() {
     loot.Filters.fillConflictsFilterList(loot.game.plugins);
 
     /* Reapply filters. */
-    filterPluginData(loot.game.plugins, loot.filters);
+    loot.filters.apply(loot.game.plugins);
 
     loot.Dialog.closeProgress();
   }).catch(loot.handlePromiseError);
@@ -421,12 +421,12 @@ function onConflictsFilter(evt) {
           gamePlugin.update(plugin);
         }
       });
-      filterPluginData(loot.game.plugins, loot.filters);
+      loot.filters.apply(loot.game.plugins);
       loot.Dialog.closeProgress();
     }).catch(loot.handlePromiseError);
   } else {
     loot.filters.deactivateConflictsFilter();
-    filterPluginData(loot.game.plugins, loot.filters);
+    loot.filters.apply(loot.game.plugins);
   }
 }
 function onCopyMetadata(evt) {
