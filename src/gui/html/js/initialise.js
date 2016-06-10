@@ -33,12 +33,21 @@
                                     root.loot.DOM,
                                     root.loot.Filters,
                                     root.loot.Game,
+                                    root.loot.handlePromiseError,
                                     root.loot.translateStaticText,
                                     root.loot.Plugin,
                                     root.loot.query,
                                     root.loot.Translator);
   }
-}(this, (Dialog, dom, Filters, Game, translateStaticText, Plugin, query, Translator) => {
+}(this, (Dialog,
+         dom,
+         Filters,
+         Game,
+         handlePromiseError,
+         translateStaticText,
+         Plugin,
+         query,
+         Translator) => {
   function setupEventHandlers() {
     /* Set up handlers for filters. */
     document.getElementById('hideVersionNumbers').addEventListener('change', onSidebarFilterToggle);
@@ -141,70 +150,41 @@
     }
   }
 
+  function splitVersion(version) {
+    const lastPeriodIndex = version.lastIndexOf('.');
+    return {
+      release: version.substring(0, lastPeriodIndex),
+      build: version.substring(lastPeriodIndex + 1),
+    };
+  }
+
   function setVersion(appData) {
-    return query('getVersion').then(JSON.parse).then((result) => {
-      /* The fourth part of the version string is the build number. Trim it. */
-      const pos = result.lastIndexOf('.');
-      appData.version = result.substring(0, pos);
-      document.getElementById('LOOTVersion').textContent = appData.version;
-      document.getElementById('firstTimeLootVersion').textContent = appData.version;
-      document.getElementById('LOOTBuild').textContent = result.substring(pos + 1);
+    return query('getVersion').then(JSON.parse).then(splitVersion).then((version) => {
+      appData.version = version.release;
+      dom.setVersion(version);
     });
   }
 
   function setLanguages() {
-    return query('getLanguages').then(JSON.parse).then((result) => {
-      /* Now fill in language options. */
-      const settingsLangSelect = document.getElementById('languageSelect');
-      const messageLangSelect = dom.getElementInTableRowTemplate('messageRow', 'language');
+    return query('getLanguages').then(JSON.parse).then(dom.fillLanguagesList);
+  }
 
-      result.forEach((language) => {
-        const settingsItem = document.createElement('paper-item');
-        settingsItem.setAttribute('value', language.locale);
-        settingsItem.textContent = language.name;
-        settingsLangSelect.appendChild(settingsItem);
-        messageLangSelect.appendChild(settingsItem.cloneNode(true));
-      });
-
-      messageLangSelect.setAttribute('value', messageLangSelect.firstElementChild.getAttribute('value'));
+  function getInitErrors() {
+    return query('getInitErrors').then((result) => {
+      if (JSON.parse(result)) {
+        throw new Error(result);
+      }
     });
   }
 
-  function displayInitErrors() {
-    return query('getInitErrors').then(JSON.parse).then((result) => {
-      if (!result) {
-        return result;
-      }
-      const generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
-
-      result.forEach((message) => {
-        const li = document.createElement('li');
-        li.className = 'error';
-        /* Use the Marked library for Markdown formatting support. */
-        li.innerHTML = window.marked(message);
-        generalMessagesList.appendChild(li);
-      });
-
-      document.getElementById('filterTotalMessageNo').textContent = result.length;
-      document.getElementById('totalMessageNo').textContent = result.length;
-      document.getElementById('totalErrorNo').textContent = result.length;
-
-      return result;
-    });
+  function handleInitErrors(error) {
+    dom.listInitErrors(JSON.parse(error.message));
+    Dialog.closeProgress();
+    document.getElementById('settingsButton').click();
   }
 
   function setGameTypes() {
-    return query('getGameTypes').then(JSON.parse).then((result) => {
-      /* Fill in game row template's game type options. */
-      const select = dom.getElementInTableRowTemplate('gameRow', 'type');
-      result.forEach((gameType) => {
-        const item = document.createElement('paper-item');
-        item.setAttribute('value', gameType);
-        item.textContent = gameType;
-        select.appendChild(item);
-      });
-      select.setAttribute('value', select.firstElementChild.getAttribute('value'));
-    });
+    return query('getGameTypes').then(JSON.parse).then(dom.fillGameTypesList);
   }
 
   function setInstalledGames(appData) {
@@ -268,20 +248,16 @@
       translateStaticText(loot.l10n);
       /* Also need to update the settings UI. */
       dom.updateSettingsDialog(loot.settings);
-      loot.DOM.setGameMenuItems(loot.settings.games);
-      loot.DOM.updateEnabledGames(loot.installedGames);
-      loot.DOM.updateSelectedGame(loot.game.folder);
-    }).then(displayInitErrors).then((result) => {
-      if (result) {
-        Dialog.closeProgress();
-        document.getElementById('settingsButton').click();
-        return Promise.resolve();
-      }
-      return setGameData(loot);
-    }).then(() => {
-      if (!loot.settings.lastVersion || loot.settings.lastVersion !== loot.version) {
+      dom.setGameMenuItems(loot.settings.games);
+      dom.updateEnabledGames(loot.installedGames);
+      dom.updateSelectedGame(loot.game.folder);
+    }).then(getInitErrors)
+    .then(() => setGameData(loot))
+    .catch(handleInitErrors)
+    .then(() => {
+      if (loot.settings.lastVersion !== loot.version) {
         document.getElementById('firstRun').open();
       }
-    }).catch(loot.handlePromiseError);
+    }).catch(handlePromiseError);
   };
 }));
