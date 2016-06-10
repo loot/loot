@@ -111,7 +111,7 @@
     document.addEventListener('loot-plugin-item-content-change', Plugin.onItemContentChange);
 
     /* Set up event handlers for game member variable changes. */
-    document.addEventListener('loot-game-folder-change', Game.onFolderChange);
+    document.addEventListener('loot-game-folder-change', onFolderChange);
     document.addEventListener('loot-game-masterlist-change', Game.onMasterlistChange);
     document.addEventListener('loot-game-global-messages-change', Game.onGlobalMessagesChange);
     document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);

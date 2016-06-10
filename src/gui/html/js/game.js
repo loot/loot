@@ -310,6 +310,7 @@
     document.getElementById('activePluginNo').textContent = evt.detail.activePluginNo;
     document.getElementById('dirtyPluginNo').textContent = evt.detail.dirtyPluginNo;
   }
+
   static onGlobalMessagesChange(evt) {
     document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
     document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
@@ -333,22 +334,9 @@
       });
     }
   }
+
   static onMasterlistChange(evt) {
     document.getElementById('masterlistRevision').textContent = evt.detail.revision;
     document.getElementById('masterlistDate').textContent = evt.detail.date;
-  }
-  static onFolderChange(evt) {
-    loot.DOM.updateSelectedGame(evt.detail.folder);
-    /* Enable/disable the redate plugins option. */
-    let gameSettings = undefined;
-    if (loot.settings && loot.settings.games) {
-      gameSettings = loot.settings.games.find(game => game.folder === evt.detail.folder);
-    }
-    const redateButton = document.getElementById('redatePluginsButton');
-    if (gameSettings && gameSettings.type === 'Skyrim') {
-      redateButton.removeAttribute('disabled');
-    } else {
-      redateButton.setAttribute('disabled', true);
-    }
   }
 }));
