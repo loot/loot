@@ -97,7 +97,33 @@
     }).catch(handlePromiseError);
   }
 
+  areAnyFiltersActive() {
+    return this.hideMessagelessPlugins
+        || this.hideInactivePlugins
+        || this.conflictingPluginNames
+        || this.contentSearchString
+        || this.hideVersionNumbers
+        || this.hideCRCs
+        || this.hideBashTags
+        || this.hideAllPluginMessages
+        || this.hideNotes
+        || this.hideDoNotCleanMessages;
+  }
+
+  load(filterSettings) {
+    if (filterSettings) {
+      Object.getOwnPropertyNames(filterSettings).forEach((filter) => {
+        this[filter] = filterSettings[filter];
+        document.getElementById(filter).checked = this[filter];
+      });
+    }
+  }
+
   apply(plugins) {
+    if (!this.areAnyFiltersActive()) {
+      return;
+    }
+
     const filteredPlugins = plugins.filter(this.pluginFilter, this);
 
     document.getElementById('cardsNav').items = filteredPlugins;

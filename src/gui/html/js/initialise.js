@@ -117,39 +117,6 @@
     document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
   }
 
-  function applyEnabledFilters(filters, settings, plugins) {
-    if (!filters) {
-      return;
-    }
-
-    if (settings.filters) {
-      Object.getOwnPropertyNames(settings.filters).forEach((filter) => {
-        filters[filter] = settings.filters[filter];
-        document.getElementById(filter).checked = filters[filter];
-      });
-    }
-
-    if (filters.hideMessagelessPlugins
-        || filters.hideInactivePlugins
-        || filters.hideNotes
-        || filters.hideDoNotCleanMessages
-        || filters.hideAllPluginMessages) {
-      filters.apply(plugins);
-    }
-
-    if (filters.hideVersionNumbers) {
-      document.getElementById('hideVersionNumbers').dispatchEvent(new Event('change'));
-    }
-
-    if (filters.hideCRCs) {
-      document.getElementById('hideCRCs').dispatchEvent(new Event('change'));
-    }
-
-    if (filters.hideBashTags) {
-      document.getElementById('hideBashTags').dispatchEvent(new Event('change'));
-    }
-  }
-
   function splitVersion(version) {
     const lastPeriodIndex = version.lastIndexOf('.');
     return {
@@ -211,7 +178,8 @@
       document.getElementById('cardsNav').items = appData.game.plugins;
       document.getElementById('pluginCardList').items = appData.game.plugins;
       appData.Filters.fillConflictsFilterList(appData.game.plugins);
-      applyEnabledFilters(appData.filters, appData.settings, appData.game.plugins);
+      appData.filters.load(appData.settings.filters);
+      appData.filters.apply(appData.game.plugins);
       Dialog.closeProgress();
     });
   }
