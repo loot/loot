@@ -11,19 +11,6 @@ b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release 
 
 `link`, `runtime-link` and `address-model` can all be modified if shared linking or 64 bit builds are desired. LOOT uses statically-linked Boost libraries by default: to change this, edit [CMakeLists.txt](../CMakeLists.txt).
 
-#### Chromium Embedded Framework
-
-Most of the required binaries are pre-built, but the libcef_dll_wrapper dynamic library must be built.
-
-1. Configure CMake and generate a build system for Visual Studio by running:
-
-   ```
-   mkdir build && cd build
-   cmake.exe .. -G "Visual Studio 14"
-   ```
-
-2. Open the generated solution file, and build it with `Release` configuration.
-
 #### LOOT
 
 1. Set CMake up so that it builds the binaries in the `build` subdirectory of the LOOT folder.

@@ -17,9 +17,8 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 LOOT's build process uses [CMake](http://cmake.org). Most of LOOT's C++ dependencies are managed by CMake, but the following must be obtained manually:
 
 * [Boost](http://www.boost.org) v1.55+
-* [Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef) branch 2623 (only required if building the GUI)
 
-Building LOOT's GUI also uses [Node.js](http://nodejs.org/). With it installed, run `npm install` then `./node_modules/.bin/bower install` from the repository root to install the additional tools and dependencies required.
+Building LOOT's GUI also uses [Node.js](http://nodejs.org/). With it installed, run `npm install` then `node_modules/.bin/bower install` from the repository root to install the additional tools and dependencies required.
 
 The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
 
@@ -33,7 +32,6 @@ Parameter | Values | Default |Description
 ----------|--------|---------|-----------
 `BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared loot API binary.
 `PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the whether static or shared Boost libraries are used.
-`CEF_ROOT` | path | `../../cef` | Path to the root of the Chromium Embedded Framework folder.
 
 The default paths given in the table above are relative to LOOT's `CMakeLists.txt`. You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 

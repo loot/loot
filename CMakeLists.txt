@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8.12.1)
 cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 include(ExternalProject)
@@ -111,14 +111,44 @@ ExternalProject_Get_Property(yaml-cpp SOURCE_DIR BINARY_DIR)
 set(YAML_CPP_INCLUDE_DIRS "${SOURCE_DIR}/include")
 set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
+IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2704.1427.g95055fe_windows32.tar.bz2")
+    set(CEF_URL_HASH "4d18043de4eb55c4c8f7d29f097da39b0dfbf4e8")
+    set(CEF_PRECOMPILED_BINARIES "libcef.dll" "natives_blob.bin" "snapshot_blob.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll")
+    set(CEF_CONFIG_DIR_NAME ${CMAKE_CFG_INTDIR})
+    set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
+ELSE ()
+    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2704.1427.g95055fe_linux64.tar.bz2")
+    set(CEF_URL_HASH "6b2945cb917d81dc0862aaa5b643b8c7e51e0e6c")
+    set(CEF_PRECOMPILED_BINARIES "libcef.so" "natives_blob.bin" "snapshot_blob.bin" "chrome-sandbox")
+    set(CEF_CONFIG_DIR_NAME "Release")
+    set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
+ENDIF()
+
+ExternalProject_Add(cef
+                    PREFIX "external"
+                    URL ${CEF_URL}
+                    URL_HASH SHA1=${CEF_URL_HASH}
+                    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target libcef_dll_wrapper --config $(CONFIGURATION)
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(cef SOURCE_DIR BINARY_DIR)
+set(CEF_INCLUDE_DIRS "${SOURCE_DIR}")
+set(CEF_LIBRARIES "${SOURCE_DIR}/${CEF_CONFIG_DIR_NAME}/${CEF_LIB}"
+                  "${BINARY_DIR}/libcef_dll_wrapper/${CMAKE_CFG_INTDIR}/libcef_dll_wrapper${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(CEF_RESOURCES_DIR "${SOURCE_DIR}/Resources")
+set(CEF_RESOURCES "cef.pak"
+                  "cef_100_percent.pak"
+                  "cef_200_percent.pak"
+                  "devtools_resources.pak"
+                  "icudtl.dat")
+set(CEF_LOCALES_DIR "${CEF_RESOURCES_DIR}/locales")
+set(CEF_LOCALE_FILE "en-US.pak")
+set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/${CEF_CONFIG_DIR_NAME}")
+
 
 ##############################
 # General Settings
 ##############################
-
-IF (NOT DEFINED CEF_ROOT)
-    set (CEF_ROOT "../../cef")
-ENDIF ()
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
@@ -224,7 +254,7 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
-                        
+
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_state_test.h"
@@ -267,17 +297,12 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      "${CMAKE_SOURCE_DIR}/include"
                      ${LIBLOADORDER_INCLUDE_DIRS}
                      ${LIBGIT2_INCLUDE_DIRS}
-                     ${CEF_ROOT}
+                     ${CEF_INCLUDE_DIRS}
                      ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${YAML_CPP_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
                      ${PSEUDOSEM_INCLUDE_DIRS})
-
-# Look in build and build/<arch> folders to support single and multiarch builds.
-link_directories ("${CEF_ROOT}"
-                  "${CEF_ROOT}/build/libcef_dll")
-
 
 ##############################
 # System-Specific Settings
@@ -309,12 +334,9 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
                    z
                    crypto)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       cef
-                       cef_dll_wrapper
                        X11)
 
     IF (NOT MINGW)
-        link_directories("${CEF_ROOT}/Release")
         add_definitions(-DNDEBUG)
     ENDIF ()
 ENDIF ()
@@ -330,7 +352,6 @@ IF (MINGW)
                    ws2_32
                    shlwapi)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       cef_sandbox
                        rpcrt4
                        comctl32)
 ELSEIF (MSVC)
@@ -356,8 +377,6 @@ ELSEIF (MSVC)
                     crypt32
                     Rpcrt4)
     set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       libcef
-                       libcef_dll_wrapper
                        rpcrt4
                        comctl32
                        Psapi)
@@ -380,8 +399,8 @@ target_link_libraries(tests loot_api ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${LOO
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies      (LOOT libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (LOOT ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_GUI_LIBS} ${YAML_CPP_LIBRARIES})
+add_dependencies      (LOOT cef libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries (LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_GUI_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build validator.
 add_executable        (metadata-validator ${LOOT_VALIDATOR_SRC} ${LOOT_VALIDATOR_HEADERS})
@@ -424,44 +443,29 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}/src/gui/LOOT.exe.manifest\" -inputresource:"$(TargetDir)$(TargetFileName)"\;\#1 -outputresource:"$(TargetDir)$(TargetFileName)"\;\#1
         COMMENT "Adding manifest..."
     )
-
-    # Copy CEF binaries.
-    FOREACH(cef_dll libcef.dll natives_blob.bin snapshot_blob.bin d3dcompiler_47.dll libEGL.dll libGLESv2.dll)
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/${cef_dll}"
-                $<TARGET_FILE_DIR:LOOT>/${cef_dll})
-    ENDFOREACH()
-
-    IF (NOT CMAKE_CL_64)
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/$<CONFIGURATION>/wow_helper.exe"
-                $<TARGET_FILE_DIR:LOOT>/wow_helper.exe)
-    ENDIF ()
-ELSE ()
-    # Copy CEF binaries.
-    FOREACH(cef_dll libcef.so natives_blob.bin snapshot_blob.bin chrome-sandbox)
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Release/${cef_dll}"
-                $<TARGET_FILE_DIR:LOOT>/${cef_dll})
-    ENDFOREACH()
 ENDIF ()
 
-# Copy CEF resources.
-FOREACH(cef_resource icudtl.dat cef.pak cef_100_percent.pak cef_200_percent.pak devtools_resources.pak)
+# Copy CEF binaries.
+FOREACH(cef_dll ${CEF_PRECOMPILED_BINARIES})
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/${cef_resource}"
+            "${CEF_PRECOMPILED_BINARIES_DIR}/${cef_dll}"
+            $<TARGET_FILE_DIR:LOOT>/${cef_dll})
+ENDFOREACH()
+
+# Copy CEF resources.
+FOREACH(cef_resource ${CEF_RESOURCES})
+    add_custom_command(TARGET LOOT POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CEF_RESOURCES_DIR}/${cef_resource}"
             $<TARGET_FILE_DIR:LOOT>/${cef_resource})
 ENDFOREACH()
 
 # Copy CEF en-US locale resource.
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/${CEF_ROOT}/Resources/locales/en-US.pak"
-        $<TARGET_FILE_DIR:LOOT>/resources/l10n/en-US.pak)
+        "${CEF_LOCALES_DIR}/${CEF_LOCALE_FILE}"
+        $<TARGET_FILE_DIR:LOOT>/resources/l10n/${CEF_LOCALE_FILE})
 
 # Copy UI fonts. Not necessary for the build, but useful for testing.
 FOREACH(font Roboto-Bold.ttf Roboto-BoldItalic.ttf Roboto-Italic.ttf Roboto-Light.ttf Roboto-LightItalic.ttf Roboto-Medium.ttf Roboto-MediumItalic.ttf Roboto-Regular.ttf)

@@ -10,6 +10,7 @@ addons:
     sources:
       - boost-latest
       - ubuntu-toolchain-r-test
+      - kubuntu-backports
     packages:
       - libboost-log1.55-dev
       - libboost-date-time1.55-dev
@@ -20,6 +21,8 @@ addons:
       - libssl-dev
       - gcc-5
       - g++-5
+      - cmake
+      - cmake-data
   sauce_connect: true
 
 install:

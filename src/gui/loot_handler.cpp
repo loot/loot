@@ -33,7 +33,6 @@
 #include "../backend/helpers/json.h"
 
 #include <include/cef_app.h>
-#include <include/cef_runnable.h>
 #include <include/cef_task.h>
 #include <include/base/cef_bind.h>
 #include <include/wrapper/cef_closure_task.h>
@@ -268,7 +267,7 @@ namespace loot {
         if (!CefCurrentlyOn(TID_UI)) {
             // Execute on the UI thread.
             CefPostTask(TID_UI,
-                        NewCefRunnableMethod(this, &LootHandler::CloseAllBrowsers, force_close));
+                        base::Bind(&LootHandler::CloseAllBrowsers, this, force_close));
             return;
         }
 

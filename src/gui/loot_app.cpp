@@ -32,7 +32,6 @@
 
 #include <include/cef_browser.h>
 #include <include/cef_task.h>
-#include <include/cef_runnable.h>
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
