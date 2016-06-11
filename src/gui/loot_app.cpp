@@ -58,6 +58,7 @@ namespace loot {
 
             // Disable spell checking.
             command_line->AppendSwitch("--disable-spell-checking");
+            command_line->AppendSwitch("--disable-extensions");
         }
     }
 
