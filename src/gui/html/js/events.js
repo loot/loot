@@ -501,11 +501,11 @@ function onSearchEnd(evt) {
   document.getElementById('mainToolbar').classList.remove('search');
 }
 function onFolderChange(evt) {
-  loot.dom.updateSelectedGame(evt.detail.folder);
+  loot.DOM.updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let gameSettings = undefined;
   if (loot.settings && loot.settings.games) {
     gameSettings = loot.settings.games.find(game => game.folder === evt.detail.folder);
   }
-  loot.dom.enable('redatePluginsButton', gameSettings && gameSettings.type === 'Skyrim');
+  loot.DOM.enable('redatePluginsButton', gameSettings && gameSettings.type === 'Skyrim');
 }

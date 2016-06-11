@@ -62,8 +62,8 @@
 
     static enable(elementOrId, enableElement = true) {
       let element = elementOrId;
-      if (element instanceof String) {
-        element = document.getElementById('element');
+      if (typeof element === 'string' || element instanceof String) {
+        element = document.getElementById(element);
       }
 
       if (enableElement) {
