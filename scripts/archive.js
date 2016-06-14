@@ -66,10 +66,6 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       'devtools_resources.pak',
       'icudtl.dat',
     ];
-
-    if (helpers.fileExists(path.join(releasePath, 'wow_helper.exe'))) {
-      binaries.push('wow_helper.exe');
-    }
   } else {
     binaries = [
       'LOOT',
