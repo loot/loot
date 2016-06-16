@@ -59,6 +59,8 @@ namespace loot {
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
 
+        std::vector<std::string> getSupportedBashTags() const;
+
         GameSettings& SetName(const std::string& name);
         GameSettings& SetMaster(const std::string& masterFile);
         GameSettings& SetRegistryKey(const std::string& registry);
@@ -84,6 +86,8 @@ namespace loot {
         std::string _repositoryBranch;
 
         boost::filesystem::path _gamePath;  //Path to the game's folder.
+
+        std::vector<std::string> bashTags;
     };
 }
 

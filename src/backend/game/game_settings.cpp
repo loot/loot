@@ -54,6 +54,73 @@ namespace loot {
             _masterFile = "Oblivion.esm";
             _repositoryURL = "https://github.com/loot/oblivion.git";
             _repositoryBranch = "v0.8";
+
+            bashTags = {
+                "Actors.ACBS",
+                "Actors.AIData",
+                "Actors.AIPackages",
+                "Actors.AIPackagesForceAdd",
+                "Actors.Animations",
+                "Actors.CombatStyle",
+                "Actors.DeathItem",
+                "Actors.Skeleton",
+                "Actors.Spells",
+                "Actors.SpellsForceAdd",
+                "Actors.Stats",
+                "Body-F",
+                "Body-M",
+                "Body-Size-F",
+                "Body-Size-M",
+                "C.Climate",
+                "C.Light",
+                "C.Music",
+                "C.Name",
+                "C.Owner",
+                "C.RecordFlags",
+                "C.Water",
+                "Creatures.Blood",
+                "Deactivate",
+                "Delev",
+                "Eyes",
+                "Factions",
+                "Filter",
+                "Graphics",
+                "Hair",
+                "IIM",
+                "Invent",
+                "InventOnly",
+                "Merge",
+                "MustBeActiveIfImported",
+                "Names",
+                "NoMerge",
+                "NpcFaces",
+                "NpcFacesForceFullImport",
+                "NPC.Class",
+                "Npc.EyesOnly",
+                "Npc.HairOnly",
+                "NPC.Race",
+                "Relations",
+                "Relev",
+                "Roads",
+                "R.AddSpells",
+                "R.Attributes-F",
+                "R.Attributes-M",
+                "R.ChangeSpells",
+                "R.Description",
+                "R.Ears",
+                "R.Head",
+                "R.Mouth",
+                "R.Relations",
+                "R.Skills",
+                "R.Teeth",
+                "ScriptContents",
+                "Scripts",
+                "Sound",
+                "SpellStats",
+                "Stats",
+                "Voice-F",
+                "Voice-M",
+            };
         }
         else if (Id() == GameSettings::tes5) {
             _name = "TES V: Skyrim";
@@ -62,6 +129,78 @@ namespace loot {
             _masterFile = "Skyrim.esm";
             _repositoryURL = "https://github.com/loot/skyrim.git";
             _repositoryBranch = "v0.8";
+
+            bashTags = {
+                "Actors.ACBS",
+                "Actors.AIData",
+                "Actors.AIPackages",
+                "Actors.AIPackagesForceAdd",
+                "Actors.Animations",
+                "Actors.CombatStyle",
+                "Actors.DeathItem",
+                "Actors.Skeleton",
+                "Actors.Spells",
+                "Actors.SpellsForceAdd",
+                "Actors.Stats",
+                "Body-F",
+                "Body-M",
+                "Body-Size-F",
+                "Body-Size-M",
+                "C.Acoustic",
+                "C.Climate",
+                "C.ImageSpace",
+                "C.Light",
+                "C.Location",
+                "C.Music",
+                "C.Name",
+                "C.Owner",
+                "C.RecordFlags",
+                "C.Regions",
+                "C.SkyLighting",
+                "C.Water",
+                "Creatures.Blood",
+                "Deactivate",
+                "Delev",
+                "Eyes",
+                "Factions",
+                "Filter",
+                "Graphics",
+                "Hair",
+                "IIM",
+                "Invent",
+                "InventOnly",
+                "Merge",
+                "MustBeActiveIfImported",
+                "Names",
+                "NoMerge",
+                "NpcFaces",
+                "NpcFacesForceFullImport",
+                "NPC.Class",
+                "Npc.EyesOnly",
+                "Npc.HairOnly",
+                "NPC.Race",
+                "Relations",
+                "Relev",
+                "Roads",
+                "R.AddSpells",
+                "R.Attributes-F",
+                "R.Attributes-M",
+                "R.ChangeSpells",
+                "R.Description",
+                "R.Ears",
+                "R.Head",
+                "R.Mouth",
+                "R.Relations",
+                "R.Skills",
+                "R.Teeth",
+                "ScriptContents",
+                "Scripts",
+                "Sound",
+                "SpellStats",
+                "Stats",
+                "Voice-F",
+                "Voice-M",
+            };
         }
         else if (Id() == GameSettings::fo3) {
             _name = "Fallout 3";
@@ -70,6 +209,11 @@ namespace loot {
             _masterFile = "Fallout3.esm";
             _repositoryURL = "https://github.com/loot/fallout3.git";
             _repositoryBranch = "v0.8";
+
+            bashTags = {
+                "Deflst",
+                "Destructible",
+            };
         }
         else if (Id() == GameSettings::fonv) {
             _name = "Fallout: New Vegas";
@@ -78,6 +222,12 @@ namespace loot {
             _masterFile = "FalloutNV.esm";
             _repositoryURL = "https://github.com/loot/falloutnv.git";
             _repositoryBranch = "v0.8";
+
+            bashTags = {
+                "Deflst",
+                "Destructible",
+                "WeaponMods",
+            };
         }
         else if (Id() == GameSettings::fo4) {
             _name = "Fallout 4";
@@ -189,6 +339,10 @@ namespace loot {
             return "";
         else
             return LootPaths::getLootDataPath() / _lootFolderName / "userlist.yaml";
+    }
+
+    std::vector<std::string> GameSettings::getSupportedBashTags() const {
+        return bashTags;
     }
 
     GameSettings& GameSettings::SetName(const std::string& name) {

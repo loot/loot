@@ -33,6 +33,7 @@
     "Jed": "SlexAxton/Jed#a9d03e1bbca9211a8b29a93a298a7ee9ddb353f0",
     "jed-gettext-parser": "^1.0.0",
     "marked": "^0.3.2",
-    "lodash": "^4.3.0"
+    "lodash": "^4.3.0",
+    "paper-autocomplete": "loot/paper-autocomplete#master"
   }
 }

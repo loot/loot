@@ -59,8 +59,7 @@ function onChangeGame(evt) {
     const gameInfo = JSON.parse(result, loot.Plugin.fromJson);
     loot.game = new loot.Game(gameInfo, loot.l10n);
 
-    /* Re-initialise conflicts filter plugin list. */
-    loot.Filters.fillConflictsFilterList(loot.game.plugins);
+    loot.game.initialiseUI(loot.DOM, loot.Filters);
 
     /* Now update virtual lists. */
     if (loot.filters.areAnyFiltersActive()) {

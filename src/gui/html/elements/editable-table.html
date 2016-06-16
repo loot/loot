@@ -2,6 +2,7 @@
 
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 
+<link rel="import" href="../../../../bower_components/paper-autocomplete/paper-autocomplete.html">
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-textarea.html">
@@ -12,7 +13,7 @@
 
 <template id="fileRow">
   <tr>
-    <td><paper-input error-message="A filename is required." class="name" required auto-validate no-label-float></paper-input></td>
+    <td><paper-autocomplete error-message="A filename is required." class="name" required auto-validate no-label-float></paper-autocomplete></td>
     <td><paper-input class="display" no-label-float></paper-input></td>
     <td><paper-input class="condition" no-label-float></paper-input></td>
     <td>
@@ -55,7 +56,7 @@
         <paper-item value="remove">Remove</paper-item>
       </loot-dropdown-menu>
     </td>
-    <td><paper-input error-message="A name is required." class="name" required auto-validate no-label-float></paper-input></td>
+    <td><paper-autocomplete error-message="A name is required." class="name" required auto-validate no-label-float></paper-autocomplete></td>
     <td><paper-input class="condition" no-label-float></paper-input></td>
     <td>
       <span>
@@ -240,7 +241,7 @@
           if (trash.length > 0 && (!writableOnly || !trash[0].disabled)) {
             const rowData = {};
 
-            const inputs = rows[i].querySelectorAll('paper-input, paper-textarea, loot-dropdown-menu');
+            const inputs = rows[i].querySelectorAll('paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu');
             for (let j = 0; j < inputs.length; ++j) {
               rowData[inputs[j].className] = inputs[j].value;
             }
@@ -264,7 +265,7 @@
           trash.disabled = readOnly;
         }
 
-        const inputs = row.querySelectorAll('paper-input, paper-textarea, loot-dropdown-menu');
+        const inputs = row.querySelectorAll('paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu');
         for (let i = 0; i < inputs.length; ++i) {
           if (classMask) {
             for (let j = 0; j < classMask.length; ++j) {
@@ -337,7 +338,7 @@
       },
 
       validate() {
-        const inputs = this.querySelectorAll('paper-input, paper-textarea');
+        const inputs = this.querySelectorAll('paper-autocomplete, paper-input, paper-textarea');
         for (let i = 0; i < inputs.length; ++i) {
           if (!inputs[i].validate()) {
             return false;

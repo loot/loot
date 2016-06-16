@@ -235,5 +235,13 @@
     static onSearchChangeSelection(evt) {
       document.getElementById('pluginCardList').scrollToIndex(evt.detail.selection);
     }
+
+    static initialiseAutocompleteFilenames(filenames) {
+      getElementInTableRowTemplate('fileRow', 'name').setAttribute('source', JSON.stringify(filenames));
+    }
+
+    static initialiseAutocompleteBashTags(tags) {
+      getElementInTableRowTemplate('tagRow', 'name').setAttribute('source', JSON.stringify(tags));
+    }
   };
 }));

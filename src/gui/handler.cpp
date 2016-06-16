@@ -701,6 +701,8 @@ namespace loot {
             // Now store global messages.
             gameNode["globalMessages"] = GetGeneralMessages();
 
+            gameNode["bashTags"] = _lootState.CurrentGame().getSupportedBashTags();
+
             // Now store plugin data.
             for (const auto& plugin : installed) {
                 /* Each plugin has members while hold its raw masterlist and userlist data for
