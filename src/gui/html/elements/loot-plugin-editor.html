@@ -426,7 +426,7 @@ loot-editor-close
               newData.masterlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
             }
             if (tempData.userlist && tempData.userlist.dirty) {
-              tempData.userlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
+              tempData.userlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addRow, tables[j]);
             }
           } else {
             if (newData.masterlist && newData.masterlist[tables[j].parentElement.id]) {
