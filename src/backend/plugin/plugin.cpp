@@ -75,7 +75,7 @@ namespace loot {
                 pos1 += 7;
 
                 size_t pos2 = text.find("}}", pos1);
-                if (pos2 != string::npos) {
+                if (pos2 != string::npos && pos1 != pos2) {
                     text = text.substr(pos1, pos2 - pos1);
 
                     vector<string> bashTags;
