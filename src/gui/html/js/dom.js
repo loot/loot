@@ -101,7 +101,7 @@
       const gameMenuItems = document.getElementById('gameMenu').children;
       for (let i = 0; i < gameMenuItems.length; ++i) {
         DOM.enable(gameMenuItems[i],
-                   installedGames.indexOf(gameMenuItems[i].getAttribute('value')) === -1);
+                   installedGames.indexOf(gameMenuItems[i].getAttribute('value')) !== -1);
       }
     }
 
