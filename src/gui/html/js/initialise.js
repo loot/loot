@@ -58,7 +58,7 @@
     document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideAllPluginMessages').addEventListener('change', onSidebarFilterToggle);
     document.getElementById('hideMessagelessPlugins').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('contentFilter').addEventListener('change', onSidebarFilterToggle);
+    document.getElementById('contentFilter').addEventListener('change', onContentFilter);
     document.getElementById('conflictsFilter').addEventListener('iron-select', onConflictsFilter);
     document.addEventListener('loot-filter-conflicts-deactivate', Filters.onDeactivateConflictsFilter);
 

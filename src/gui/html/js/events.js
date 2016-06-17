@@ -1,12 +1,33 @@
 'use strict';
 function onSidebarFilterToggle(evt) {
-  if (evt.target.id !== 'contentFilter') {
-    loot.filters[evt.target.id] = evt.target.checked;
-    loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(loot.handlePromiseError);
-  } else {
-    loot.filters.contentSearchString = evt.target.value;
-  }
+  loot.filters[evt.target.id] = evt.target.checked;
+  loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(loot.handlePromiseError);
   loot.filters.apply(loot.game.plugins);
+}
+function onContentFilter(evt) {
+  loot.filters.contentSearchString = evt.target.value;
+  loot.filters.apply(loot.game.plugins);
+}
+function onConflictsFilter(evt) {
+  /* evt.currentTarget.value is the name of the target plugin, or an empty string
+     if the filter has been deactivated. */
+  if (evt.currentTarget.value) {
+    /* Now get conflicts for the plugin. */
+    loot.Dialog.showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
+    loot.filters.activateConflictsFilter(evt.currentTarget.value).then((plugins) => {
+      plugins.forEach((plugin) => {
+        const gamePlugin = loot.game.plugins.find(item => item.name === plugin.name);
+        if (gamePlugin) {
+          gamePlugin.update(plugin);
+        }
+      });
+      loot.filters.apply(loot.game.plugins);
+      loot.Dialog.closeProgress();
+    }).catch(loot.handlePromiseError);
+  } else {
+    loot.filters.deactivateConflictsFilter();
+    loot.filters.apply(loot.game.plugins);
+  }
 }
 function onJumpToGeneralInfo() {
   document.getElementById('pluginCardList').scroll(0, 0);
@@ -407,33 +428,6 @@ function onEditorClose(evt) {
 
     loot.state.exitEditingState();
   }).catch(loot.handlePromiseError);
-}
-function onConflictsFilter(evt) {
-  /* evt.currentTarget.value is the name of the target plugin, or an empty string
-     if the filter has been deactivated. */
-  if (evt.currentTarget.value) {
-    /* Now get conflicts for the plugin. */
-    loot.Dialog.showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
-    loot.filters.activateConflictsFilter(evt.currentTarget.value).then((plugins) => {
-      plugins.forEach((plugin) => {
-        const gamePlugin = loot.game.plugins.find(item => item.name === plugin.name);
-        if (gamePlugin) {
-          gamePlugin.update(plugin);
-        }
-      });
-      loot.filters.apply(loot.game.plugins);
-
-      /* Scroll to the target plugin */
-      const list = document.getElementById('pluginCardList');
-      const index = list.items.findIndex(item => item.name === evt.target.value);
-      list.scrollToIndex(index);
-
-      loot.Dialog.closeProgress();
-    }).catch(loot.handlePromiseError);
-  } else {
-    loot.filters.deactivateConflictsFilter();
-    loot.filters.apply(loot.game.plugins);
-  }
 }
 function onCopyMetadata(evt) {
   loot.query('copyMetadata', evt.target.getName()).then(() => {
