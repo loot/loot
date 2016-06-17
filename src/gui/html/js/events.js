@@ -29,9 +29,7 @@ function onConflictsFilter(evt) {
     loot.filters.apply(loot.game.plugins);
   }
 }
-function onJumpToGeneralInfo() {
-  document.getElementById('pluginCardList').scroll(0, 0);
-}
+
 function onChangeGame(evt) {
   if (evt.detail.item.getAttribute('value') === loot.game.folder) {
     return;
@@ -271,9 +269,6 @@ function onOpenReadme() {
 function onOpenLogLocation() {
   loot.query('openLogLocation').catch(loot.handlePromiseError);
 }
-function onShowAboutDialog() {
-  document.getElementById('about').open();
-}
 function handleUnappliedChangesClose(change) {
   loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
     if (!result) {
@@ -294,32 +289,8 @@ function onQuit() {
     window.close();
   }
 }
-
-function onSwitchSidebarTab(evt) {
-  document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
-}
-function onSidebarClick(evt) {
-  if (evt.target.hasAttribute('data-index')) {
-    const index = parseInt(evt.target.getAttribute('data-index'), 10);
-    document.getElementById('pluginCardList').scrollToIndex(index);
-
-    if (evt.type === 'dblclick') {
-      /* Double-clicking can select the item's text, clear the selection in
-         case that has happened. */
-      window.getSelection().removeAllRanges();
-
-      if (!document.body.hasAttribute('data-editors')) {
-        document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
-      }
-    }
-  }
-}
-
-function areSettingsValid() {
-  return document.getElementById('gameTable').validate();
-}
 function onApplySettings(evt) {
-  if (!areSettingsValid()) {
+  if (!document.getElementById('gameTable').validate()) {
     evt.stopPropagation();
   }
 }
@@ -358,10 +329,6 @@ function onCloseSettingsDialog(evt) {
     loot.DOM.updateSelectedGame(loot.game.folder);
   }).catch(loot.handlePromiseError);
 }
-function onShowSettingsDialog() {
-  document.getElementById('settingsDialog').open();
-}
-
 function onEditorOpen(evt) {
   /* Set the editor data. */
   document.getElementById('editor').setEditorData(evt.target.data);
@@ -459,16 +426,7 @@ function onClearMetadata(evt) {
   });
 }
 
-function onFocusSearch(evt) {
-  if (evt.ctrlKey && evt.keyCode === 70) { // 'f'
-    document.getElementById('mainToolbar').classList.add('search');
-    document.getElementById('searchBar').focusInput();
-  }
-}
-function onSearchOpen() {
-  document.getElementById('mainToolbar').classList.add('search');
-  document.getElementById('searchBar').focusInput();
-}
+
 function onSearchBegin(evt) {
   loot.game.plugins.forEach((plugin) => {
     plugin.isSearchResult = false;
@@ -490,9 +448,6 @@ function onSearchBegin(evt) {
   });
 
   evt.target.results = results;
-}
-function onSearchChangeSelection(evt) {
-  document.getElementById('pluginCardList').scrollToIndex(evt.detail.selection);
 }
 function onSearchEnd(evt) {
   loot.game.plugins.forEach((plugin) => {

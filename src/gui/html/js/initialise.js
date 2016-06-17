@@ -69,24 +69,24 @@
     document.getElementById('copyLoadOrderButton').addEventListener('click', onCopyLoadOrder);
     document.getElementById('copyContentButton').addEventListener('click', onCopyContent);
     document.getElementById('refreshContentButton').addEventListener('click', onContentRefresh);
-    document.getElementById('settingsButton').addEventListener('click', onShowSettingsDialog);
+    document.getElementById('settingsButton').addEventListener('click', dom.onShowSettingsDialog);
     document.getElementById('helpButton').addEventListener('click', onOpenReadme);
-    document.getElementById('aboutButton').addEventListener('click', onShowAboutDialog);
+    document.getElementById('aboutButton').addEventListener('click', dom.onShowAboutDialog);
     document.getElementById('quitButton').addEventListener('click', onQuit);
     document.getElementById('gameMenu').addEventListener('iron-select', onChangeGame);
     document.getElementById('updateMasterlistButton').addEventListener('click', onUpdateMasterlist);
     document.getElementById('sortButton').addEventListener('click', onSortPlugins);
     document.getElementById('applySortButton').addEventListener('click', onApplySort);
     document.getElementById('cancelSortButton').addEventListener('click', onCancelSort);
-    document.getElementById('sidebarTabs').addEventListener('iron-select', onSwitchSidebarTab);
-    document.getElementById('jumpToGeneralInfo').addEventListener('click', onJumpToGeneralInfo);
+    document.getElementById('sidebarTabs').addEventListener('iron-select', dom.onSwitchSidebarTab);
+    document.getElementById('jumpToGeneralInfo').addEventListener('click', dom.onJumpToGeneralInfo);
 
     /* Set up search event handlers. */
-    document.getElementById('showSearch').addEventListener('click', onSearchOpen);
+    document.getElementById('showSearch').addEventListener('click', dom.onSearchOpen);
     document.getElementById('searchBar').addEventListener('loot-search-begin', onSearchBegin);
-    document.getElementById('searchBar').addEventListener('loot-search-change-selection', onSearchChangeSelection, false);
+    document.getElementById('searchBar').addEventListener('loot-search-change-selection', dom.onSearchChangeSelection, false);
     document.getElementById('searchBar').addEventListener('loot-search-end', onSearchEnd);
-    window.addEventListener('keyup', onFocusSearch);
+    window.addEventListener('keyup', dom.onFocusSearch);
 
     /* Set up event handlers for settings dialog. */
     const settings = document.getElementById('settingsDialog');
@@ -99,8 +99,8 @@
     document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
     document.body.addEventListener('loot-clear-metadata', onClearMetadata);
 
-    document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
-    document.getElementById('cardsNav').addEventListener('dblclick', onSidebarClick);
+    document.getElementById('cardsNav').addEventListener('click', dom.onSidebarClick);
+    document.getElementById('cardsNav').addEventListener('dblclick', dom.onSidebarClick);
 
     /* Set up handler for plugin data changes. */
     document.addEventListener('loot-plugin-message-change', Plugin.onMessageChange);

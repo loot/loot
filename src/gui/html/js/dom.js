@@ -186,5 +186,54 @@
       document.getElementById('firstTimeLootVersion').textContent = version.release;
       document.getElementById('LOOTBuild').textContent = version.build;
     }
+
+    static onJumpToGeneralInfo() {
+      document.getElementById('pluginCardList').scroll(0, 0);
+    }
+
+    static onShowAboutDialog() {
+      document.getElementById('about').open();
+    }
+
+    static onSwitchSidebarTab(evt) {
+      document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
+    }
+
+    static onSidebarClick(evt) {
+      if (evt.target.hasAttribute('data-index')) {
+        const index = parseInt(evt.target.getAttribute('data-index'), 10);
+        document.getElementById('pluginCardList').scrollToIndex(index);
+
+        if (evt.type === 'dblclick') {
+          /* Double-clicking can select the item's text, clear the selection in
+             case that has happened. */
+          window.getSelection().removeAllRanges();
+
+          if (!document.body.hasAttribute('data-editors')) {
+            document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
+          }
+        }
+      }
+    }
+
+    static onShowSettingsDialog() {
+      document.getElementById('settingsDialog').open();
+    }
+
+    static onFocusSearch(evt) {
+      if (evt.ctrlKey && evt.keyCode === 70) { // 'f'
+        document.getElementById('mainToolbar').classList.add('search');
+        document.getElementById('searchBar').focusInput();
+      }
+    }
+
+    static onSearchOpen() {
+      document.getElementById('mainToolbar').classList.add('search');
+      document.getElementById('searchBar').focusInput();
+    }
+
+    static onSearchChangeSelection(evt) {
+      document.getElementById('pluginCardList').scrollToIndex(evt.detail.selection);
+    }
   };
 }));
