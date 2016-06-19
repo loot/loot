@@ -374,33 +374,14 @@ loot-editor-close
         /* newData is a Plugin object reference. */
         this.querySelector('h1').textContent = newData.name;
 
-        /* There may be existing recorded data from a previous instance of the
-           editor, so use that for userlist and priority data if so. */
-        let tempData = {};
-        if (newData.editor) {
-          if (newData.editor.isPriorityGlobal) {
-            tempData.isPriorityGlobal = newData.editor.isPriorityGlobal;
-          }
-          if (newData.editor.priority) {
-            tempData.priority = newData.editor.priority;
-          }
-          tempData.userlist = newData.editor.userlist;
-        } else {
-          tempData = {
-            isPriorityGlobal: newData.isPriorityGlobal,
-            priority: newData.priority,
-            userlist: newData.userlist,
-          };
-        }
-
         /* Fill in the editor input values. */
-        if (tempData.userlist && !tempData.userlist.enabled) {
+        if (newData.userlist && !newData.userlist.enabled) {
           this.$.enableEdits.checked = false;
         } else {
           this.$.enableEdits.checked = true;
         }
-        this.$.isPriorityGlobal.checked = tempData.isPriorityGlobal;
-        this.$.priorityValue.value = tempData.priority;
+        this.$.isPriorityGlobal.checked = newData.isPriorityGlobal;
+        this.$.priorityValue.value = newData.priority;
 
         /* Clear then fill in editor table data. Masterlist-originated
            rows should have their contents made read-only. */
@@ -411,29 +392,29 @@ loot-editor-close
             if (newData.masterlist && newData.masterlist.msg) {
               newData.masterlist.msg.map(this._messageToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
             }
-            if (tempData.userlist && tempData.userlist.msg) {
-              tempData.userlist.msg.map(this._messageToRowData).forEach(tables[j].addRow, tables[j]);
+            if (newData.userlist && newData.userlist.msg) {
+              newData.userlist.msg.map(this._messageToRowData).forEach(tables[j].addRow, tables[j]);
             }
           } else if (tables[j].parentElement.id === 'tags') {
             if (newData.masterlist && newData.masterlist.tag) {
               newData.masterlist.tag.map(loot.Plugin.tagToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
             }
-            if (tempData.userlist && tempData.userlist.tag) {
-              tempData.userlist.tag.map(loot.Plugin.tagToRowData).forEach(tables[j].addRow, tables[j]);
+            if (newData.userlist && newData.userlist.tag) {
+              newData.userlist.tag.map(loot.Plugin.tagToRowData).forEach(tables[j].addRow, tables[j]);
             }
           } else if (tables[j].parentElement.id === 'dirty') {
             if (newData.masterlist && newData.masterlist.dirty) {
               newData.masterlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
             }
-            if (tempData.userlist && tempData.userlist.dirty) {
-              tempData.userlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addRow, tables[j]);
+            if (newData.userlist && newData.userlist.dirty) {
+              newData.userlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addRow, tables[j]);
             }
           } else {
             if (newData.masterlist && newData.masterlist[tables[j].parentElement.id]) {
               newData.masterlist[tables[j].parentElement.id].forEach(tables[j].addReadOnlyRow, tables[j]);
             }
-            if (tempData.userlist && tempData.userlist[tables[j].parentElement.id]) {
-              tempData.userlist[tables[j].parentElement.id].forEach(tables[j].addRow, tables[j]);
+            if (newData.userlist && newData.userlist[tables[j].parentElement.id]) {
+              newData.userlist[tables[j].parentElement.id].forEach(tables[j].addRow, tables[j]);
             }
           }
         }

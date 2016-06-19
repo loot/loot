@@ -387,7 +387,6 @@ function onClearMetadata(evt) {
       const existingPlugin = loot.game.plugins.find(item => item.id === evt.target.id);
       if (existingPlugin) {
         existingPlugin.userlist = undefined;
-        existingPlugin.editor = undefined;
 
         existingPlugin.update(plugin);
       }
