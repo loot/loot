@@ -134,20 +134,9 @@ function onSortPlugins() {
       loot.Dialog.showNotification(loot.l10n.translate('Sorting made no changes to the load order.'));
       return;
     }
-    loot.game.oldLoadOrder = loot.game.plugins;
-    loot.game.loadOrder = [];
-    result.plugins.forEach((plugin) => {
-      let existingPlugin = loot.game.plugins.find(item => item.name === plugin.name);
-      if (existingPlugin) {
-        existingPlugin.update(plugin);
-      } else {
-        existingPlugin = new loot.Plugin(plugin);
-      }
-      loot.game.loadOrder.push(existingPlugin);
-    });
+    loot.game.updatePlugins(result.plugins);
 
     /* Now update the UI for the new order. */
-    loot.game.plugins = loot.game.loadOrder;
     loot.filters.apply(loot.game.plugins);
 
     loot.state.enterSortingState();
@@ -158,23 +147,15 @@ function onSortPlugins() {
 function onApplySort() {
   const loadOrder = loot.game.getPluginNames();
   return loot.query('applySort', loadOrder).then(() => {
-    /* Remove old load order storage. */
-    delete loot.game.loadOrder;
-    delete loot.game.oldLoadOrder;
+    loot.game.applySort();
 
     loot.state.exitSortingState();
   }).catch(loot.handlePromiseError);
 }
 function onCancelSort() {
-  return loot.query('cancelSort').then(JSON.parse).then((messages) => {
+  return loot.query('cancelSort').then(JSON.parse).then(loot.game.cancelSort).then(() => {
     /* Sort UI elements again according to stored old load order. */
-    loot.game.plugins = loot.game.oldLoadOrder;
     loot.filters.apply(loot.game.plugins);
-    delete loot.game.loadOrder;
-    delete loot.game.oldLoadOrder;
-
-    /* Update general messages */
-    loot.game.globalMessages = messages;
 
     loot.state.exitSortingState();
   }).catch(loot.handlePromiseError);
@@ -198,16 +179,8 @@ function onClearAllMetadata() {
       if (!plugins) {
         return;
       }
-      /* Need to empty the UI-side user metadata. */
-      plugins.forEach((plugin) => {
-        const existingPlugin = loot.game.plugins.find(item => item.name === plugin.name);
-        if (existingPlugin) {
-          existingPlugin.userlist = undefined;
-          existingPlugin.editor = undefined;
 
-          existingPlugin.update(plugin);
-        }
-      });
+      loot.game.clearMetadata(plugins);
 
       loot.Dialog.showNotification(loot.l10n.translate('All user-added metadata has been cleared.'));
     }).catch(loot.handlePromiseError);

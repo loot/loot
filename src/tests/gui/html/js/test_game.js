@@ -455,4 +455,155 @@ describe('Game', () => {
       game.getPluginNames().should.deepEqual(['foo']);
     });
   });
+
+  describe('#setSortedPlugins', () => {
+    let game;
+
+    beforeEach(() => {
+      game = new loot.Game({}, l10n);
+    });
+
+    it('should append new plugins to the plugins array', () => {
+      game.setSortedPlugins([{
+        name: 'foo',
+      }]);
+
+      game.plugins[0].name.should.equal('foo');
+    });
+
+    it('should update existing plugins with new data', () => {
+      game._plugins = [new loot.Plugin({
+        name: 'foo',
+        isActive: true,
+        messages: [{ type: 'warn' }],
+      })];
+
+      game.setSortedPlugins([{
+        name: 'foo',
+        crc: 0xDEADBEEF,
+      }]);
+
+      game.plugins[0].crc.should.equal(0xDEADBEEF);
+      game.plugins[0].isActive.should.be.true();
+    });
+
+    it('should reorder plugins to given order', () => {
+      game._plugins = [new loot.Plugin({
+        name: 'foo',
+      }), new loot.Plugin({
+        name: 'bar',
+      })];
+
+      game.setSortedPlugins([{
+        name: 'bar',
+      }, {
+        name: 'foo',
+      }]);
+
+      game.plugins[0].name.should.equal('bar');
+      game.plugins[1].name.should.equal('foo');
+    });
+
+    it('should store old load order', () => {
+      game._plugins = [new loot.Plugin({
+        name: 'foo',
+      }), new loot.Plugin({
+        name: 'bar',
+      })];
+
+      game.setSortedPlugins([{
+        name: 'bar',
+      }, {
+        name: 'foo',
+      }]);
+
+      game.oldLoadOrder[0].name.should.equal('foo');
+      game.oldLoadOrder[1].name.should.equal('bar');
+    });
+  });
+
+  describe('#applySort', () => {
+    let game;
+
+    beforeEach(() => {
+      game = new loot.Game({}, l10n);
+    });
+
+    it('should delete the stored old load order', () => {
+      game.oldLoadOrder = [0, 1, 2];
+
+      game.applySort();
+
+      should(game.oldLoadOrder).be.undefined();
+    });
+  });
+
+  describe('#cancelSort', () => {
+    let game;
+
+    beforeEach(() => {
+      game = new loot.Game({}, l10n);
+    });
+
+    it('should set the current load order to the old load order', () => {
+      game.oldLoadOrder = [0, 1, 2];
+      game.plugins = [3, 4, 5];
+
+      game.cancelSort();
+
+      game.plugins.should.deepEqual([0, 1, 2]);
+    });
+
+    it('should delete the stored old load order', () => {
+      game.oldLoadOrder = [0, 1, 2];
+
+      game.cancelSort();
+
+      should(game.oldLoadOrder).be.undefined();
+    });
+
+    it('should set the global messages to the passed object', () => {
+      game.oldLoadOrder = [0, 1, 2];
+
+      game.cancelSort(['foo']);
+
+      game.globalMessages.should.deepEqual(['foo']);
+    });
+  });
+
+  describe('#clearMetadata', () => {
+    let game;
+
+    beforeEach(() => {
+      game = new loot.Game({}, l10n);
+    });
+
+    it('should delete stored userlist data for existing plugins', () => {
+      game._plugins = [new loot.Plugin({
+        name: 'foo',
+        userlist: {},
+      })];
+
+      game.clearMetadata([{
+        name: 'foo',
+      }]);
+
+      should(game.plugins[0].userlist).be.undefined();
+    });
+
+    it('should update existing plugin data', () => {
+      game._plugins = [new loot.Plugin({
+        name: 'foo',
+        isActive: true,
+      })];
+
+      game.clearMetadata([{
+        name: 'foo',
+        crc: 0xDEADBEEF,
+      }]);
+
+      game.plugins[0].crc.should.equal(0xDEADBEEF);
+      game.plugins[0].isActive.should.be.true();
+    });
+  });
 });

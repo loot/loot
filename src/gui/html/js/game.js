@@ -7,16 +7,15 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Game = factory(root.marked);
+    root.loot.Game = factory(root.marked, root.loot.Plugin);
   }
-}(this, (marked) => class {
+}(this, (marked, Plugin) => class {
   constructor(obj, l10n) {
     this.folder = obj.folder || '';
     this.globalMessages = obj.globalMessages || [];
     this.masterlist = obj.masterlist || {};
     this.plugins = obj.plugins || [];
 
-    this.loadOrder = undefined;
     this.oldLoadOrder = undefined;
 
     this._notApplicableString = l10n.translate('N/A');
@@ -288,6 +287,46 @@
 
   getPluginNames() {
     return this.plugins.map(plugin => plugin.name);
+  }
+
+  setSortedPlugins(plugins) {
+    this.oldLoadOrder = this.plugins;
+    this.plugins = [];
+
+    plugins.forEach((plugin) => {
+      let existingPlugin = this.oldLoadOrder.find(item => item.name === plugin.name);
+      if (existingPlugin) {
+        existingPlugin.update(plugin);
+      } else {
+        existingPlugin = new Plugin(plugin);
+      }
+      this.plugins.push(existingPlugin);
+    });
+  }
+
+  applySort() {
+    delete this.oldLoadOrder;
+  }
+
+  cancelSort(globalMessages) {
+    this.plugins = this.oldLoadOrder;
+    delete this.oldLoadOrder;
+
+    /* Update general messages */
+    this.globalMessages = globalMessages;
+  }
+
+  clearMetadata(plugins) {
+    /* Need to empty the UI-side user metadata. */
+    plugins.forEach((plugin) => {
+      const existingPlugin = this.plugins.find(item => item.name === plugin.name);
+      if (existingPlugin) {
+        //delete existingPlugin.userlist;
+        existingPlugin.userlist = undefined;
+
+        existingPlugin.update(plugin);
+      }
+    });
   }
 
   static onPluginsChange(evt) {
