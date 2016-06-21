@@ -22,6 +22,12 @@ function onConflictsFilter(evt) {
         }
       });
       loot.filters.apply(loot.game.plugins);
+
+      /* Scroll to the target plugin */
+      const list = document.getElementById('pluginCardList');
+      const index = list.items.findIndex(item => item.name === evt.target.value);
+      list.scrollToIndex(index);
+
       loot.Dialog.closeProgress();
     }).catch(loot.handlePromiseError);
   } else {
