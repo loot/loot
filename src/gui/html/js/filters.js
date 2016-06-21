@@ -100,8 +100,8 @@
   areAnyFiltersActive() {
     return this.hideMessagelessPlugins
         || this.hideInactivePlugins
-        || this.conflictingPluginNames
-        || this.contentSearchString
+        || this.conflictingPluginNames.length !== 0
+        || this.contentSearchString.length !== 0
         || this.hideVersionNumbers
         || this.hideCRCs
         || this.hideBashTags
@@ -120,10 +120,6 @@
   }
 
   apply(plugins) {
-    if (!this.areAnyFiltersActive()) {
-      return;
-    }
-
     const filteredPlugins = plugins.filter(this.pluginFilter, this);
 
     document.getElementById('cardsNav').items = filteredPlugins;

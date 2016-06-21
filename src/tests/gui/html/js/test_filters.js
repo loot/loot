@@ -255,4 +255,76 @@ describe('Filters', () => {
       filters.activateConflictsFilter().should.finally.deepEqual([]);
     });
   });
+
+  describe('#areAnyFiltersActive', () => {
+    let filters;
+
+    beforeEach(() => {
+      filters = new loot.Filters(l10n);
+    });
+
+    it('should return false if all the boolean filters are false, and the content and conflict filter lengths are zero', () => {
+      filters.areAnyFiltersActive().should.be.false();
+    });
+
+    it('should return true if hideMessagelessPlugins is true', () => {
+      filters.hideMessagelessPlugins = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideInactivePlugins is true', () => {
+      filters.hideInactivePlugins = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideVersionNumbers is true', () => {
+      filters.hideVersionNumbers = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideCRCs is true', () => {
+      filters.hideCRCs = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideBashTags is true', () => {
+      filters.hideBashTags = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideAllPluginMessages is true', () => {
+      filters.hideAllPluginMessages = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideNotes is true', () => {
+      filters.hideNotes = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if hideDoNotCleanMessages is true', () => {
+      filters.hideDoNotCleanMessages = true;
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if conflictingPluginNames is a non-empty array', () => {
+      filters.conflictingPluginNames = ['foo'];
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+
+    it('should return true if contentSearchString is a non-empty string', () => {
+      filters.contentSearchString = 'foo';
+
+      filters.areAnyFiltersActive().should.be.true();
+    });
+  });
 });

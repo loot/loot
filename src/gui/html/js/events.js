@@ -63,7 +63,11 @@ function onChangeGame(evt) {
     loot.Filters.fillConflictsFilterList(loot.game.plugins);
 
     /* Now update virtual lists. */
-    loot.filters.apply(loot.game.plugins);
+    if (loot.filters.areAnyFiltersActive()) {
+      loot.filters.apply(loot.game.plugins);
+    } else {
+      loot.DOM.initialiseVirtualLists(loot.game.plugins);
+    }
 
     loot.Dialog.closeProgress();
   }).catch(loot.handlePromiseError);
@@ -237,7 +241,11 @@ function onContentRefresh() {
     loot.Filters.fillConflictsFilterList(loot.game.plugins);
 
     /* Reapply filters. */
-    loot.filters.apply(loot.game.plugins);
+    if (loot.filters.areAnyFiltersActive()) {
+      loot.filters.apply(loot.game.plugins);
+    } else {
+      loot.DOM.initialiseVirtualLists(loot.game.plugins);
+    }
 
     loot.Dialog.closeProgress();
   }).catch(loot.handlePromiseError);
