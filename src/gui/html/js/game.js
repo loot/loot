@@ -305,12 +305,12 @@
   }
 
   applySort() {
-    delete this.oldLoadOrder;
+    this.oldLoadOrder = undefined;
   }
 
   cancelSort(globalMessages) {
     this.plugins = this.oldLoadOrder;
-    delete this.oldLoadOrder;
+    this.oldLoadOrder = undefined;
 
     /* Update general messages */
     this.globalMessages = globalMessages;
@@ -321,7 +321,6 @@
     plugins.forEach((plugin) => {
       const existingPlugin = this.plugins.find(item => item.name === plugin.name);
       if (existingPlugin) {
-        //delete existingPlugin.userlist;
         existingPlugin.userlist = undefined;
 
         existingPlugin.update(plugin);

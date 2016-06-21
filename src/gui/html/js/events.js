@@ -140,7 +140,7 @@ function onSortPlugins() {
       loot.Dialog.showNotification(loot.l10n.translate('Sorting made no changes to the load order.'));
       return;
     }
-    loot.game.updatePlugins(result.plugins);
+    loot.game.setSortedPlugins(result.plugins);
 
     /* Now update the UI for the new order. */
     loot.filters.apply(loot.game.plugins);
@@ -159,7 +159,8 @@ function onApplySort() {
   }).catch(loot.handlePromiseError);
 }
 function onCancelSort() {
-  return loot.query('cancelSort').then(JSON.parse).then(loot.game.cancelSort).then(() => {
+  return loot.query('cancelSort').then(JSON.parse).then((globalMessages) => {
+    loot.game.cancelSort(globalMessages);
     /* Sort UI elements again according to stored old load order. */
     loot.filters.apply(loot.game.plugins);
 
