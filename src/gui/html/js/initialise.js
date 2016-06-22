@@ -179,10 +179,15 @@
       appData.Filters.fillConflictsFilterList(appData.game.plugins);
       appData.filters.load(appData.settings.filters);
 
+      /* Initialise the lists before checking if any filters need to be applied.
+         This causes the UI to be initialised faster thanks to scheduling
+         behaviour. */
+      dom.initialiseVirtualLists(appData.game.plugins);
       if (appData.filters.areAnyFiltersActive()) {
-        appData.filters.apply(appData.game.plugins);
-      } else {
-        dom.initialiseVirtualLists(appData.game.plugins);
+        /* Schedule applying the filters instead of applying them immediately.
+           This improves the UI initialisation speed, and is quick enough that
+           the lists aren't visible pre-filtration. */
+        setTimeout(appData.filters.apply, 0, appData.game.plugins);
       }
 
       Dialog.closeProgress();
