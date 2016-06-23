@@ -61,7 +61,7 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
- *      ## 0.9.1 - *21 June 2016*
+ *      ## 0.9.1 - *23 June 2016*
  *
  *        * No API changes.
  *
