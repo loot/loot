@@ -291,8 +291,8 @@
 
   setSortedPlugins(plugins) {
     this.oldLoadOrder = this.plugins;
-    this.plugins = [];
 
+    const newPlugins = [];
     plugins.forEach((plugin) => {
       let existingPlugin = this.oldLoadOrder.find(item => item.name === plugin.name);
       if (existingPlugin) {
@@ -300,8 +300,10 @@
       } else {
         existingPlugin = new Plugin(plugin);
       }
-      this.plugins.push(existingPlugin);
+      newPlugins.push(existingPlugin);
     });
+
+    this.plugins = newPlugins;
   }
 
   applySort() {

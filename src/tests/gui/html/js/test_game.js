@@ -458,9 +458,14 @@ describe('Game', () => {
 
   describe('#setSortedPlugins', () => {
     let game;
+    let handleEvent;
 
     beforeEach(() => {
       game = new loot.Game({}, l10n);
+    });
+
+    afterEach(() => {
+      document.removeEventListener('loot-game-plugins-change', handleEvent);
     });
 
     it('should append new plugins to the plugins array', () => {
@@ -519,6 +524,17 @@ describe('Game', () => {
 
       game.oldLoadOrder[0].name.should.equal('foo');
       game.oldLoadOrder[1].name.should.equal('bar');
+    });
+
+    it('should dispatch an event', (done) => {
+      handleEvent = () => {
+        done();
+      };
+      document.addEventListener('loot-game-plugins-change', handleEvent);
+
+      game.setSortedPlugins([{
+        name: 'foo',
+      }]);
     });
   });
 
