@@ -18,24 +18,21 @@ loot-search-end: Fired when the close button is clicked.
 <dom-module id="loot-search-toolbar">
   <template>
     <style>
-      paper-input {
-        @apply(--layout-horizontal);
+      #search {
         @apply(--layout-flex);
-        --paper-input-container: {
-          @apply(--layout-flex);
-        };
-        --paper-input-container-input-color: var(--loot-dark-theme-text-color);
-        --paper-input-container-label: {
-          color: var(--loot-dark-theme-disabled-color);
-        }
+
+        --paper-input-container-input-color: var(--dark-theme-text-color);
+        --paper-input-container-color: var(--dark-theme-secondary-color);
         --paper-input-container-underline: {
-          background-color: var(--loot-dark-theme-divider-color);
+          background-color: var(--dark-theme-divider-color);
         };
+
+        display: block;
       }
       #count {
         font-weight: 400;
         font-size: 0.857rem;
-        color: var(--loot-dark-theme-secondary-color);
+        color: var(--dark-theme-secondary-color);
       }
     </style>
     <paper-toolbar>

@@ -121,7 +121,7 @@ html {
        characters. If Noto isn't present, they're better than the sans-serif
        defaults. */
     font:13px/1.429 Roboto, Noto, 'Microsoft Yahei', 'Malgun Gothic', sans-serif;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--primary-text-color);
     font-weight: 400;
     text-rendering: optimizeLegibility;
 }

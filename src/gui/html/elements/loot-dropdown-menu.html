@@ -17,22 +17,25 @@ it a <select>-like API. This means:
     <style>
       paper-dropdown-menu {
         --paper-input-container: {
-          transition: opacity 0.6s;
+          transition: opacity var(--state-transition-time);
         };
         --paper-dropdown-menu-icon: {
-          color: var(--loot-secondary-text-color);
+          color: var(--secondary-text-color);
         };
       }
       :host(.dark) paper-dropdown-menu {
         --paper-input-container-underline: {
-          background-color: var(--loot-dark-theme-divider-color);
+          background-color: var(--dark-theme-divider-color);
+        };
+        --paper-input-container-underline-disabled: {
+          border-color: var(--dark-theme-divider-color);
         };
         --paper-input-container-input-color: white;
         --paper-dropdown-menu-input: {
-          color: var(--loot-dark-theme-primary-text-color);
+          color: var(--dark-theme-text-color);
         };
         --paper-dropdown-menu-icon: {
-          color: var(--loot-dark-theme-secondary-text-color);
+          color: var(--dark-theme-secondary-color);
         };
       }
     </style>

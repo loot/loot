@@ -32,7 +32,7 @@ loot-editor-close
         height: 264px;
         min-height: 56px;
         max-height: calc(100% - 56px);
-        transition: height 0.6s, min-height 0.6s;
+        transition: height var(--state-transition-time), min-height var(--state-transition-time);
       }
       :host(.hidden) {
         height: 0;
@@ -44,7 +44,7 @@ loot-editor-close
 
       /* Material Design for non-button icons. */
       iron-icon {
-        color: var(--loot-secondary-text-color);
+        color: var(--secondary-text-color);
         padding: 8px;
       }
 
@@ -53,7 +53,7 @@ loot-editor-close
         display: none;
       }
       #accept {
-        color: var(--loot-dark-accent-color);
+        color: var(--dark-accent-color);
       }
       #cancel {
         color: red;
@@ -86,7 +86,7 @@ loot-editor-close
       /* Misc Styling. */
       paper-toolbar.medium-tall {
         --paper-toolbar-background: var(--paper-blue-50);
-        --paper-toolbar-color: var(--loot-primary-text-color);
+        --paper-toolbar-color: var(--primary-text-color);
         height: 104px;
       }
       #main {
@@ -96,12 +96,6 @@ loot-editor-close
         @apply(--layout-flex);
         overflow: hidden;
         white-space: nowrap;
-      }
-      #tableTabs {
-        --paper-tabs-selection-bar-color: var(--loot-accent-color);
-      }
-      paper-tab {
-        --paper-tab-ink: var(--loot-accent-color);
       }
       #splitter {
         width: 100%;

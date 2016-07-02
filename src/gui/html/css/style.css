@@ -21,10 +21,34 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
 */
+/* CSS Custom Variables */
+:root {
+  --state-transition-time: 0.6s;
+
+  --primary-color: var(--paper-indigo-500);
+  --accent-color: var(--paper-blue-300);
+  --dark-accent-color: var(--paper-blue-500);
+
+  --primary-text-color: rgba(0, 0, 0, var(--dark-primary-opacity));
+  --secondary-text-color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+  --disabled-text-color: rgba(0, 0, 0, var(--dark-disabled-opacity));
+  --divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
+
+  --dark-theme-text-color: white;
+  --dark-theme-secondary-color: rgba(255, 255, 255, var(--light-secondary-opacity));
+  --dark-theme-disabled-color: rgba(255, 255, 255, var(--light-disabled-opacity));
+  --dark-theme-divider-color: rgba(255, 255, 255, var(--light-divider-opacity));
+
+  --paper-icon-button-disabled-text: rgba(255, 255, 255, 0.30);
+  --paper-tabs-selection-bar-color: var(--accent-color);
+  --paper-tab-ink: var(--accent-color);
+
+  --paper-toolbar-height: 56px;
+}
 
 /* Misc */
 a {
-    color: #2196F3;
+    color: var(--dark-accent-color);
     text-decoration: none;
 }
 a:hover {
@@ -48,7 +72,7 @@ tt, code, kbd, samp {
   margin: 0 8px;
 }
 #applySortButton {
-    color: #2196F3;
+    color: var(--dark-accent-color);
     background-color: white;
 }
 
@@ -57,7 +81,7 @@ div[drawer] {
     background: white;
 }
 div[drawer] > * {
-    border-right: 1px rgba(0, 0, 0, 0.12) solid;
+    border-right: 1px var(--divider-color) solid;
 }
 div[drawer] > iron-pages {
   overflow: auto;
@@ -173,7 +197,7 @@ li.warn {
 /* For Material Design generic dividers. */
 .divider {
     height: 1px;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--divider-color);
     margin-top: -1px;
 }
 
@@ -185,5 +209,5 @@ paper-icon-item iron-icon {
 
 /* Set icons to use Material Design colouring. */
 iron-icon {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--secondary-text-color);
 }

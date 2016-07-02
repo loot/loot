@@ -14,7 +14,7 @@
       /* Flip effect for user metadata / editor open icons. */
       #flipper {
         transform-style: preserve-3d;
-        transition: 0.6s;
+        transition: var(--state-transition-time);
         overflow: visible;
       }
       #flipper.flipped {
@@ -45,7 +45,7 @@
 
         --paper-item-focused-before: {
           opacity: 0;
-        }
+        };
       }
       paper-item-body[two-line] {
         min-height: 32px;
@@ -57,14 +57,14 @@
       #primary,
       #secondary,
       #secondary iron-icon {
-        transition: height 0.6s;
+        transition: height var(--state-transition-time);
       }
       :host-context(body[data-editors]) #primary {
           line-height: normal;
       }
       #priority {
           font-size: 0.857rem;
-          color: var(--loot-secondary-text-color);
+          color: var(--secondary-text-color);
           height: 13px;
           overflow: visible;
       }
@@ -72,7 +72,7 @@
           height: 13px;
       }
       iron-icon {
-          color: var(--loot-secondary-text-color);
+          color: var(--secondary-text-color);
       }
       /* When not in edit mode, hide secondary text. */
       :host-context(body:not([data-editors])) #secondary {
@@ -91,7 +91,7 @@
         cursor: pointer;
       }
       paper-ripple {
-        color: var(--loot-accent-color);
+        color: var(--accent-color);
       }
     </style>
     <paper-item>

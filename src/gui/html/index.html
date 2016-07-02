@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="css/typography.css" />
   <link rel="stylesheet" href="css/style.css" />
 
-  <link rel="import" href="native-shadow-dom.html">
+  <link rel="import" href="polymer-settings.html">
 
   <link rel="import" href="../../../bower_components/polymer/polymer.html">
 
@@ -46,8 +46,12 @@
   <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
   <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
   <link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
-
-  <style is="custom-style">
+</head>
+<!-- oncontextmenu attribute disables the right-click menu. -->
+<body oncontextmenu="return false" unresolved>
+  <!-- This style element needs to be here so that it loads after the Vulcanized
+       imports, which are placed in a div that is the first child of body. -->
+  <style is="custom-style" include="paper-item-shared-styles">
     div[drawer],
     div[main] {
       @apply(--layout-vertical);
@@ -86,53 +90,37 @@
     #conflictsFilter {
       --paper-dropdown-menu: {
         display: block;
-      }
+      };
+    }
+    .paper-item {
+      display: flex;
+      align-items: center;
     }
 
     /* Paper element styling.
        Colour variables are from Polymer's paper-styles element. */
     :root {
-      --loot-primary-color: var(--paper-indigo-500);
-      --loot-accent-color: var(--paper-blue-300);
-      --loot-dark-accent-color: var(--paper-blue-500);
-
-      --loot-primary-text-color: rgba(0, 0, 0, var(--dark-primary-opacity));
-      --loot-secondary-text-color: rgba(0, 0, 0, var(--dark-secondary-opacity));
-      --loot-disabled-text-color: rgba(0, 0, 0, var(--dark-disabled-opacity));
-      --loot-divider-color: rgba(0, 0, 0, var(--dark-divider-opacity));
-
-      --loot-dark-theme-text-color: white;
-      --loot-dark-theme-secondary-color: rgba(255, 255, 255, var(--light-secondary-opacity));
-      --loot-dark-theme-disabled-color: rgba(255, 255, 255, var(--light-disabled-opacity));
-      --loot-dark-theme-divider-color: rgba(255, 255, 255, var(--light-divider-opacity));
-
-      a,
-      #applySortButton {
-        color: var(--loot-dark-accent-color);
-      }
-
       --paper-button: {
         font-weight: 500;
         font-size: 1rem;
-      }
+      };
 
-      --paper-icon-button-disabled-text: rgba(255, 255, 255, 0.30);
       --paper-icon-button-disabled: {
-        transition: color 0.6s;
-      }
+        transition: color var(--state-transition-time);
+      };
 
       --paper-icon-item: {
         white-space: nowrap;
-      }
+      };
 
       --paper-input-container-input: {
         text-overflow: ellipsis;
-      }
+      };
       --paper-input-container-underline: {
-        background-color: var(--loot-divider-color);
+        background-color: var(--divider-color);
       };
       --paper-input-container-underline-focus: {
-        background-color: var(--loot-accent-color);
+        background-color: var(--accent-color);
       };
 
       paper-menu-button {
@@ -140,35 +128,18 @@
           font-weight: 500;
           font-size: 1rem;
           white-space: nowrap;
-        }
+        };
       }
 
-      --paper-tabs-selection-bar-color: var(--loot-accent-color);
-      --paper-tab-ink: var(--loot-accent-color);
       --paper-tab-content: {
         text-transform: uppercase;
-      }
+      };
 
       /* Prevents pop-in for the toggle button when a dropdown containing it is
          opened. */
       --paper-toggle-button-unchecked-button: {
         will-change: initial;
-      }
-
-      --paper-toolbar-background: var(--loot-primary-color);
-      /*--paper-toolbar-color: var(--loot-primary-text-color);*/
-      --paper-toolbar-height: 56px;
-    }
-  </style>
-</head>
-<!-- oncontextmenu attribute disables the right-click menu. -->
-<body oncontextmenu="return false" unresolved>
-  <!-- This style element needs to be here so that it loads after the Vulcanized
-       imports, which are placed in a div that is the first child of body. -->
-  <style is="custom-style" include="paper-item-shared-styles">
-    .paper-item {
-      display: flex;
-      align-items: center;
+      };
     }
   </style>
   <paper-drawer-panel id="container" drawer-width="33%">
