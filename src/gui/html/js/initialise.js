@@ -187,7 +187,7 @@
         /* Schedule applying the filters instead of applying them immediately.
            This improves the UI initialisation speed, and is quick enough that
            the lists aren't visible pre-filtration. */
-        setTimeout(appData.filters.apply, 0, appData.game.plugins);
+        setTimeout((plugins) => { appData.filters.apply(plugins); }, 0, appData.game.plugins);
       }
 
       Dialog.closeProgress();
