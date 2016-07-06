@@ -72,41 +72,21 @@ function getApiBinaryPaths(rootPath) {
     },
   ];
 
+  let file = 'loot_api';
+  if (os.platform() === 'win32') {
+    file += '.dll';
+  } else {
+    file += '.so';
+  }
+
   for (let i = 0; i < pathsToTry.length; ++i) {
-    let files = [];
     if (os.platform() === 'win32') {
       pathsToTry[i].path = path.join(pathsToTry[i].path, 'Release');
-
-      files = [
-        {
-          name: 'loot32.dll',
-          label: '32 bit',
-        },
-        {
-          name: 'loot64.dll',
-          label: '64 bit',
-        },
-      ];
-    } else {
-      files = [
-        {
-          name: 'libloot32.so',
-          label: '32 bit',
-        },
-        {
-          name: 'libloot64.so',
-          label: '64 bit',
-        },
-      ];
     }
 
-    for (let j = 0; j < files.length; ++j) {
-      if (fileExists(path.join(pathsToTry[i].path, files[j].name))) {
-        pathsToTry[i].path = path.join(pathsToTry[i].path, files[j].name);
-        pathsToTry[i].label = files[j].label;
-        paths.push(pathsToTry[i]);
-        break;
-      }
+    if (fileExists(path.join(pathsToTry[i].path, file))) {
+      pathsToTry[i].path = path.join(pathsToTry[i].path, file);
+      paths.push(pathsToTry[i]);
     }
   }
 
