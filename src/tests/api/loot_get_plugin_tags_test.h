@@ -134,6 +134,30 @@ namespace loot {
 
             EXPECT_TRUE(modified);
         }
+
+        TEST_P(loot_get_plugin_tags_test, shouldOutputTheCorrectBashTagsForPluginsWhenMakingConsecutiveCalls) {
+            ASSERT_NO_THROW(generateMasterlist());
+            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+            getTagMap();
+
+            EXPECT_EQ(loot_ok, loot_get_plugin_tags(db, blankEsm.c_str(), &added, &numAdded, &removed, &numRemoved, &modified));
+
+            ASSERT_EQ(2, numAdded);
+            EXPECT_EQ(0, added[0]);
+            EXPECT_EQ(1, added[1]);
+
+            ASSERT_EQ(1, numRemoved);
+            EXPECT_EQ(2, removed[0]);
+            EXPECT_FALSE(modified);
+
+            EXPECT_EQ(loot_ok, loot_get_plugin_tags(db, blankEsp.c_str(), &added, &numAdded, &removed, &numRemoved, &modified));
+
+            EXPECT_EQ(0, numAdded);
+            EXPECT_EQ(NULL, added);
+            EXPECT_EQ(0, numRemoved);
+            EXPECT_EQ(NULL, removed);
+            EXPECT_FALSE(modified);
+        }
     }
 }
 

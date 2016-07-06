@@ -180,6 +180,25 @@ namespace loot {
             }), db->getAddedTagIds());
         }
 
+        TEST_P(loot_db_test, settingAddedTagsShouldReplaceExistingTags) {
+            db->addBashTagsToMap({
+                "C.Climate",
+                "Relev",
+            });
+
+            db->setAddedTags({
+                "Relev",
+            });
+
+            db->setAddedTags({
+                "C.Climate",
+            });
+
+            EXPECT_EQ(std::vector<unsigned int>({
+                0,
+            }), db->getAddedTagIds());
+        }
+
         TEST_P(loot_db_test, settingRemovedTagsWithNoTagMapShouldThrow) {
             EXPECT_ANY_THROW(db->setRemovedTags({
                 "Relev",
@@ -198,6 +217,25 @@ namespace loot {
 
             EXPECT_EQ(std::vector<unsigned int>({
                 1,
+            }), db->getRemovedTagIds());
+        }
+
+        TEST_P(loot_db_test, settingRemovedTagsShouldReplaceExistingTags) {
+            db->addBashTagsToMap({
+                "C.Climate",
+                "Relev",
+            });
+
+            db->setRemovedTags({
+                "Relev",
+            });
+
+            db->setRemovedTags({
+                "C.Climate",
+            });
+
+            EXPECT_EQ(std::vector<unsigned int>({
+                0,
             }), db->getRemovedTagIds());
         }
 

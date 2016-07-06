@@ -77,11 +77,13 @@ void loot_db::setRevisionDateString(const std::string& str) {
 }
 
 void loot_db::setAddedTags(const std::set<std::string>& names) {
+    addedTagIds.clear();
     for (const auto& name : names)
         addedTagIds.push_back(getBashTagUid(name));
 }
 
 void loot_db::setRemovedTags(const std::set<std::string>& names) {
+    removedTagIds.clear();
     for (const auto& name : names)
         removedTagIds.push_back(getBashTagUid(name));
 }
