@@ -26,9 +26,11 @@
   --state-transition-time: 0.6s;
 
   --primary-color: var(--paper-indigo-500);
+  --light-primary-color: var(--paper-blue-50);
   --accent-color: var(--paper-blue-300);
   --dark-accent-color: var(--paper-blue-500);
 
+  --primary-background-color: white;
   --primary-text-color: rgba(0, 0, 0, var(--dark-primary-opacity));
   --secondary-text-color: rgba(0, 0, 0, var(--dark-secondary-opacity));
   --disabled-text-color: rgba(0, 0, 0, var(--dark-disabled-opacity));
@@ -39,7 +41,7 @@
   --dark-theme-disabled-color: rgba(255, 255, 255, var(--light-disabled-opacity));
   --dark-theme-divider-color: rgba(255, 255, 255, var(--light-divider-opacity));
 
-  --paper-icon-button-disabled-text: rgba(255, 255, 255, 0.30);
+  --paper-icon-button-disabled-text: var(--dark-theme-disabled-color);
   --paper-tabs-selection-bar-color: var(--accent-color);
   --paper-tab-ink: var(--accent-color);
 
@@ -78,7 +80,7 @@ tt, code, kbd, samp {
 
 /* Drawer / Sidebar */
 div[drawer] {
-    background: white;
+    background: var(--primary-background-color);
 }
 div[drawer] > * {
     border-right: 1px var(--divider-color) solid;
@@ -118,7 +120,7 @@ div[drawer] > iron-pages {
     margin-bottom: 120px;
 }
 #summary {
-    background-color: white;
+    background-color: var(--primary-background-color);
     margin: 8px;
     padding: 16px;
 }

@@ -33,6 +33,7 @@ loot-editor-close
         min-height: 56px;
         max-height: calc(100% - 56px);
         transition: height var(--state-transition-time), min-height var(--state-transition-time);
+        background-color: var(--primary-background-color);
       }
       :host(.hidden) {
         height: 0;
@@ -85,7 +86,7 @@ loot-editor-close
 
       /* Misc Styling. */
       paper-toolbar.medium-tall {
-        --paper-toolbar-background: var(--paper-blue-50);
+        --paper-toolbar-background: var(--loot-plugin-editor-toolbar-background, var(--light-primary-color));
         --paper-toolbar-color: var(--primary-text-color);
         height: 104px;
       }
@@ -106,7 +107,7 @@ loot-editor-close
         z-index: 1;
       }
       #splitter:active {
-        background: rgba(0, 0, 0, 0.12);
+        background: var(--divider-color);
       }
     </style>
     <div id="splitter"></div>
