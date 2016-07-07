@@ -112,6 +112,10 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
     path.join(tempPath, 'resources', 'ui', 'index.html')
   );
   fs.copySync(
+    path.join(rootPath, 'resources', 'ui', 'css', 'dark-theme.css'),
+    path.join(tempPath, 'resources', 'ui', 'css', 'dark-theme.css')
+  );
+  fs.copySync(
     path.join(rootPath, 'resources', 'ui', 'fonts'),
     path.join(tempPath, 'resources', 'ui', 'fonts')
   );

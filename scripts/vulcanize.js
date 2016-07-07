@@ -21,6 +21,9 @@ if (process.argv.length > 3) {
 const vulcanize = new Vulcanize({
   inlineScripts: true,
   inlineCss: true,
+  excludes: [
+    'css/theme.css',
+  ],
 });
 
 function mkdir(dir) {
