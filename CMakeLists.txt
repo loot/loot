@@ -80,7 +80,7 @@ set(LIBLOADORDER_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIB
 
 ExternalProject_Add(pseudosem
                     PREFIX "external"
-                    URL "https://github.com/WrinklyNinja/pseudosem/archive/1.0.1.tar.gz"
+                    URL "https://github.com/WrinklyNinja/pseudosem/archive/1.1.0.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
