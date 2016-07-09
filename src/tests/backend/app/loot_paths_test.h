@@ -27,6 +27,8 @@ along with LOOT.  If not, see
 
 #include "backend/app/loot_paths.h"
 
+#include <gtest/gtest.h>
+
 namespace loot {
     namespace test {
         TEST(LootPaths, getReadmePathShouldUseLootAppPath) {

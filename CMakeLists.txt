@@ -234,26 +234,15 @@ set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
 
 set (LOOT_TESTS_SRC ${LOOT_SRC}
                     "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
-                    "${CMAKE_SOURCE_DIR}/src/tests/main.cpp")
+                    "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/printers.h"
 
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_apply_load_order_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_create_db_test.h"
+                        # Testing this here rather than as part of the API tests
+                        # because it tests internal code and requires internal
+                        # linking.
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_db_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_eval_lists_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_dirty_info_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_masterlist_revision_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_messages_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_tags_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_tag_map_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_load_lists_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_sort_plugins_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
 
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
@@ -281,15 +270,36 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h")
 
+set(LOOT_API_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/api/main.cpp")
+
+set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
+
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_apply_load_order_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_create_db_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_eval_lists_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_dirty_info_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_masterlist_revision_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_messages_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_plugin_tags_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_get_tag_map_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_load_lists_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_sort_plugins_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h")
+
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
 source_group("Header Files\\api" FILES ${LOOT_API_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})
+source_group("Header Files\\tests" FILES ${LOOT_API_TESTS_HEADERS})
 
 source_group("Source Files\\backend" FILES ${LOOT_SRC})
 source_group("Source Files\\gui" FILES ${LOOT_GUI_SRC})
 source_group("Source Files\\api" FILES ${LOOT_API_SRC})
 source_group("Source Files\\tests" FILES ${LOOT_TESTS_SRC})
+source_group("Source Files\\tests" FILES ${LOOT_API_TESTS_SRC})
 source_group("Source Files\\validator" FILES ${LOOT_VALIDATOR_SRC})
 
 # Include source and library directories.
@@ -387,15 +397,20 @@ ENDIF ()
 # Define Targets
 ##############################
 
+# Build tests.
+add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+add_dependencies(tests GTest libespm libgit2 libloadorder pseudosem testing-metadata testing-plugins yaml-cpp)
+target_link_libraries(tests ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${GTEST_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+
 # Build API.
 add_library           (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
 add_dependencies      (loot_api libespm libgit2 libloadorder pseudosem yaml-cpp)
 target_link_libraries (loot_api ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
-# Build tests.
-add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-add_dependencies(tests loot_api GTest testing-metadata testing-plugins)
-target_link_libraries(tests loot_api ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+# Build API tests.
+add_executable(api-tests ${LOOT_API_TESTS_SRC} ${LOOT_API_TESTS_HEADERS})
+add_dependencies(api-tests loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(api-tests loot_api ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build application.
 add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
@@ -485,6 +500,10 @@ add_custom_command(TARGET tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SOURCE_DIR}
         "$<TARGET_FILE_DIR:tests>/testing-metadata")
+add_custom_command(TARGET api-tests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SOURCE_DIR}
+        "$<TARGET_FILE_DIR:api-tests>/testing-metadata")
 
 # Copy testing plugins
 ExternalProject_Get_Property(testing-plugins SOURCE_DIR)
@@ -492,6 +511,10 @@ add_custom_command(TARGET tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SOURCE_DIR}
         $<TARGET_FILE_DIR:tests>)
+add_custom_command(TARGET api-tests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${SOURCE_DIR}
+      $<TARGET_FILE_DIR:api-tests>)
 
 find_package(Doxygen)
 find_package(LATEX)

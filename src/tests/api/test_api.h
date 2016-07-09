@@ -27,6 +27,8 @@ along with LOOT.  If not, see
 
 #include "../include/loot/api.h"
 
+#include <gtest/gtest.h>
+
 namespace loot {
     namespace test {
         TEST(loot_get_version, shouldReturnAnInvalidArgsErrorIfPassedNullPointers) {

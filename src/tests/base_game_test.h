@@ -25,13 +25,12 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_BASE_GAME_TEST
 #define LOOT_TEST_BASE_GAME_TEST
 
-#include "backend/game/game_settings.h"
-
 #include <gtest/gtest.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <map>
 #include <unordered_set>
 
 namespace loot {
@@ -115,7 +114,7 @@ namespace loot {
                     for (const auto& plugin : loadOrder)
                         actual.push_back(plugin.second);
                 }
-                else if (GetParam() == GameSettings::tes5) {
+                else if (GetParam() == tes5) {
                     boost::filesystem::ifstream in(localPath / "loadorder.txt");
                     while (in) {
                         std::string line;
@@ -179,35 +178,41 @@ namespace loot {
             const uint32_t blankEsmCrc;
 
         private:
+            static const unsigned int tes4 = 1;
+            static const unsigned int tes5 = 2;
+            static const unsigned int fo3 = 3;
+            static const unsigned int fonv = 4;
+            static const unsigned int fo4 = 5;
+
             inline boost::filesystem::path getLocalPath() const {
-                if (GetParam() == GameSettings::tes4)
+                if (GetParam() == tes4)
                     return "./local/Oblivion";
                 else
                     return "./local/Skyrim";
             }
 
             inline boost::filesystem::path getPluginsPath() const {
-                if (GetParam() == GameSettings::tes4)
+                if (GetParam() == tes4)
                     return "./Oblivion/Data";
                 else
                     return "./Skyrim/Data";
             }
 
             inline std::string getMasterFile() const {
-                if (GetParam() == GameSettings::tes4)
+                if (GetParam() == tes4)
                     return "Oblivion.esm";
-                else if (GetParam() == GameSettings::tes5)
+                else if (GetParam() == tes5)
                     return "Skyrim.esm";
-                else if (GetParam() == GameSettings::fo3)
+                else if (GetParam() == fo3)
                     return "Fallout3.esm";
-                else if (GetParam() == GameSettings::fonv)
+                else if (GetParam() == fonv)
                     return "FalloutNV.esm";
                 else
                     return "Fallout4.esm";
             }
 
             inline uint32_t getBlankEsmCrc() const {
-                if (GetParam() == GameSettings::tes4)
+                if (GetParam() == tes4)
                     return 0x374E2A6F;
                 else
                     return 0x187BE342;
@@ -216,9 +221,9 @@ namespace loot {
             inline void setLoadOrder(const std::vector<std::pair<std::string, bool>>& loadOrder) const {
                 boost::filesystem::ofstream out(localPath / "plugins.txt");
                 for (const auto &plugin : loadOrder) {
-                    if (GetParam() == GameSettings::fo4 && plugin.second)
+                    if (GetParam() == fo4 && plugin.second)
                         out << '*';
-                    else if (GetParam() != GameSettings::fo4 && !plugin.second)
+                    else if (GetParam() != fo4 && !plugin.second)
                         continue;
 
                     out << plugin.first << std::endl;
@@ -236,7 +241,7 @@ namespace loot {
                         modificationTime += 60;
                     }
                 }
-                else if (GetParam() == GameSettings::tes5) {
+                else if (GetParam() == tes5) {
                     boost::filesystem::ofstream out(localPath / "loadorder.txt");
                     for (const auto &plugin : loadOrder)
                         out << plugin.first << std::endl;
@@ -244,7 +249,7 @@ namespace loot {
             }
 
             inline static bool isLoadOrderTimestampBased(unsigned int gameId) {
-                return gameId == GameSettings::tes4 || gameId == GameSettings::fo3 || gameId == GameSettings::fonv;
+                return gameId == tes4 || gameId == fo3 || gameId == fonv;
             }
         };
     }

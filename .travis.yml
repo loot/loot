@@ -48,6 +48,7 @@ before_script:
 script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
   - make tests && ./tests
+  - make api-tests && ./api-tests
 
 before_deploy:
   # Build the metadata validator

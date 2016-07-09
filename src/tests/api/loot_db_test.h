@@ -56,11 +56,11 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 loot_db_test,
                                 ::testing::Values(
-                                    loot_game_tes4,
-                                    loot_game_tes5,
-                                    loot_game_fo3,
-                                    loot_game_fonv,
-                                    loot_game_fo4));
+                                    GameSettings::tes4,
+                                    GameSettings::tes5,
+                                    GameSettings::fo3,
+                                    GameSettings::fonv,
+                                    GameSettings::fo4));
 
         TEST_P(loot_db_test, settingRevisionIdStringShouldCopyIt) {
             db->setRevisionIdString("id");

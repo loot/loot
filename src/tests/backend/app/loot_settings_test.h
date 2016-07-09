@@ -28,6 +28,8 @@ along with LOOT.  If not, see
 #include "backend/app/loot_settings.h"
 #include "backend/app/loot_version.h"
 
+#include <gtest/gtest.h>
+
 namespace loot {
     namespace test {
         class LootSettingsTest : public ::testing::Test {
