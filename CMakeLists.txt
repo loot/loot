@@ -50,7 +50,7 @@ set (GTEST_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_P
 
 ExternalProject_Add(libespm
                     PREFIX "external"
-                    URL "https://github.com/WrinklyNinja/libespm/archive/2.5.2.tar.gz"
+                    URL "https://github.com/WrinklyNinja/libespm/archive/2.5.3.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
