@@ -36,7 +36,7 @@ namespace loot {
         MessageContent();
         MessageContent(const std::string& str, const unsigned int language);
 
-        std::string Str() const;
+        std::string Text() const;
         unsigned int Language() const;
 
         bool operator < (const MessageContent& rhs) const;
@@ -52,7 +52,7 @@ namespace YAML {
     struct convert < loot::MessageContent > {
         static Node encode(const loot::MessageContent& rhs) {
             Node node;
-            node["str"] = rhs.Str();
+            node["str"] = rhs.Text();
             node["lang"] = loot::Language(rhs.Language()).Locale();
 
             return node;

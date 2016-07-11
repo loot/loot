@@ -102,7 +102,7 @@ void loot_db::setPluginMessages(const std::list<loot::Message>& pluginMessages) 
 
     size_t i = 0;
     for (const auto& message : pluginMessages) {
-        pluginMessageStrings[i] = message.ChooseContent(loot::Language::english).Str();
+        pluginMessageStrings[i] = message.ChooseContent(loot::Language::english).Text();
 
         cPluginMessages[i].type = message.Type();
         cPluginMessages[i].message = pluginMessageStrings[i].c_str();

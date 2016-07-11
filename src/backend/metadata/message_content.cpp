@@ -34,7 +34,7 @@ namespace loot {
 
     MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
 
-    std::string MessageContent::Str() const {
+    std::string MessageContent::Text() const {
         return _str;
     }
 
@@ -43,11 +43,11 @@ namespace loot {
     }
 
     bool MessageContent::operator < (const MessageContent& rhs) const {
-        return boost::ilexicographical_compare(_str, rhs.Str());
+        return boost::ilexicographical_compare(_str, rhs.Text());
     }
 
     bool MessageContent::operator == (const MessageContent& rhs) const {
-        return (boost::iequals(_str, rhs.Str()));
+        return (boost::iequals(_str, rhs.Text()));
     }
 }
 
@@ -57,7 +57,7 @@ namespace YAML {
 
         out << Key << "lang" << Value << loot::Language(rhs.Language()).Locale();
 
-        out << Key << "str" << Value << YAML::SingleQuoted << rhs.Str();
+        out << Key << "str" << Value << YAML::SingleQuoted << rhs.Text();
 
         out << EndMap;
 

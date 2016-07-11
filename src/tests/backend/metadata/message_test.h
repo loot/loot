@@ -52,7 +52,7 @@ namespace loot {
 
         TEST_P(MessageTest, scalarContentConstructorShouldCreateAMessageWithASingleContentString) {
             MessageContent content = MessageContent("content1", Language::english);
-            Message message(Message::warn, content.Str(), "condition1");
+            Message message(Message::warn, content.Text(), "condition1");
 
             EXPECT_EQ(Message::warn, message.Type());
             EXPECT_EQ(MessageContents({content}), message.Content());

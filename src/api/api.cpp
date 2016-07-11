@@ -606,7 +606,7 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db * const db, const char * const
     messages.insert(messages.end(), temp.begin(), temp.end());
 
     for (const auto& message : messages) {
-        if (boost::starts_with(message.ChooseContent(loot::Language::english).Str(), "Do not clean")) {
+        if (boost::starts_with(message.ChooseContent(loot::Language::english).Text(), "Do not clean")) {
             *needsCleaning = loot_needs_cleaning_no;
             break;
         }

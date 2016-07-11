@@ -124,7 +124,7 @@ namespace YAML {
             if (node["subs"]) {
                 std::vector<std::string> subs = node["subs"].as<std::vector<std::string>>();
                 for (auto& mc : content) {
-                    boost::format f(mc.Str());
+                    boost::format f(mc.Text());
 
                     for (const auto& sub : subs) {
                         f = f % sub;

@@ -57,7 +57,7 @@ namespace loot {
 
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.Content().empty())
-            return boost::ilexicographical_compare(ChooseContent(Language::english).Str(), rhs.ChooseContent(Language::english).Str());
+            return boost::ilexicographical_compare(ChooseContent(Language::english).Text(), rhs.ChooseContent(Language::english).Text());
         else if (_content.empty() && !rhs.Content().empty())
             return true;
         else
@@ -115,7 +115,7 @@ namespace YAML {
             out << Key << "type" << Value << "error";
 
         if (rhs.Content().size() == 1)
-            out << Key << "content" << Value << YAML::SingleQuoted << rhs.Content().front().Str();
+            out << Key << "content" << Value << YAML::SingleQuoted << rhs.Content().front().Text();
         else
             out << Key << "content" << Value << rhs.Content();
 

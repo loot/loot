@@ -34,14 +34,14 @@ namespace loot {
         TEST(MessageContent, defaultConstructorShouldSetEmptyEnglishLanguageString) {
             MessageContent content;
 
-            EXPECT_TRUE(content.Str().empty());
+            EXPECT_TRUE(content.Text().empty());
             EXPECT_EQ(Language::english, content.Language());
         }
 
         TEST(MessageContent, contentConstructorShouldStoreGivenStringAndLanguage) {
             MessageContent content("content", Language::french);
 
-            EXPECT_EQ("content", content.Str());
+            EXPECT_EQ("content", content.Text());
             EXPECT_EQ(Language::french, content.Language());
         }
 
@@ -79,7 +79,7 @@ namespace loot {
             emitter << content;
 
             EXPECT_EQ("lang: " + Language(content.Language()).Locale() +
-                      "\nstr: '" + content.Str() + "'", emitter.c_str());
+                      "\nstr: '" + content.Text() + "'", emitter.c_str());
         }
 
         TEST(MessageContent, encodingAsYamlShouldOutputDataCorrectly) {
@@ -87,7 +87,7 @@ namespace loot {
             YAML::Node node;
             node = content;
 
-            EXPECT_EQ(content.Str(), node["str"].as<std::string>());
+            EXPECT_EQ(content.Text(), node["str"].as<std::string>());
             EXPECT_EQ(Language(Language::french).Locale(), node["lang"].as<std::string>());
         }
 
@@ -95,7 +95,7 @@ namespace loot {
             YAML::Node node = YAML::Load("{str: content, lang: de}");
             MessageContent content = node.as<MessageContent>();
 
-            EXPECT_EQ("content", content.Str());
+            EXPECT_EQ("content", content.Text());
             EXPECT_EQ(Language::german, content.Language());
         }
 
