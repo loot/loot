@@ -29,4 +29,8 @@ namespace loot {
     const unsigned int LootVersion::minor = 9;
     const unsigned int LootVersion::patch = 1;
     const std::string LootVersion::revision = "@GIT_COMMIT_STRING@";
+
+    std::string LootVersion::string() {
+        return std::to_string(major) + '.' + std::to_string(minor) + '.' + std::to_string(patch);
+    }
 }

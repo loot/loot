@@ -45,7 +45,7 @@ namespace loot {
         };
 
         TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
-            const std::string currentVersion = std::to_string(LootVersion::major) + "." + std::to_string(LootVersion::minor) + "." + std::to_string(LootVersion::patch);
+            const std::string currentVersion = LootVersion::string();
             const std::vector<GameSettings> expectedGameSettings({
                 GameSettings(GameSettings::tes4),
                 GameSettings(GameSettings::tes5),
@@ -410,7 +410,7 @@ namespace loot {
         }
 
         TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
-            const std::string currentVersion = std::to_string(LootVersion::major) + "." + std::to_string(LootVersion::minor) + "." + std::to_string(LootVersion::patch);
+            const std::string currentVersion = LootVersion::string();
             YAML::Node inputYaml;
             inputYaml["lastVersion"] = "v0.7.1";
 

@@ -34,6 +34,8 @@ namespace loot {
         static const unsigned int minor;
         static const unsigned int patch;
         static const std::string revision;
+
+        static std::string string();
     };
 }
 

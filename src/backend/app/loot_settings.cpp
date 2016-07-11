@@ -195,7 +195,7 @@ namespace loot {
     void LootSettings::updateLastVersion() {
         std::lock_guard<std::recursive_mutex> guard(mutex);
 
-        lastVersion = std::to_string(LootVersion::major) + "." + std::to_string(LootVersion::minor) + "." + std::to_string(LootVersion::patch);
+        lastVersion = LootVersion::string();
     }
 
     YAML::Node LootSettings::toYaml() const {

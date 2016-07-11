@@ -566,7 +566,7 @@ namespace loot {
 
     std::string QueryHandler::GetVersion() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-        YAML::Node version(to_string(LootVersion::major) + "." + to_string(LootVersion::minor) + "." + to_string(LootVersion::patch) + "." + LootVersion::revision);
+        YAML::Node version(LootVersion::string() + "." + LootVersion::revision);
         return JSON::stringify(version);
     }
 
