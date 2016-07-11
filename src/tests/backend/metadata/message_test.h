@@ -46,16 +46,16 @@ namespace loot {
 
         TEST_P(MessageTest, defaultConstructorShouldCreateNoteWithNoContent) {
             Message message;
-            EXPECT_EQ(Message::say, message.Type());
-            EXPECT_EQ(MessageContents(), message.Content());
+            EXPECT_EQ(Message::Type::say, message.GetType());
+            EXPECT_EQ(MessageContents(), message.GetContent());
         }
 
         TEST_P(MessageTest, scalarContentConstructorShouldCreateAMessageWithASingleContentString) {
             MessageContent content = MessageContent("content1", Language::english);
-            Message message(Message::warn, content.Text(), "condition1");
+            Message message(Message::Type::warn, content.Text(), "condition1");
 
-            EXPECT_EQ(Message::warn, message.Type());
-            EXPECT_EQ(MessageContents({content}), message.Content());
+            EXPECT_EQ(Message::Type::warn, message.GetType());
+            EXPECT_EQ(MessageContents({content}), message.GetContent());
             EXPECT_EQ("condition1", message.Condition());
         }
 
@@ -64,10 +64,10 @@ namespace loot {
                 MessageContent("content1", Language::english),
                 MessageContent("content2", Language::french),
             });
-            Message message(Message::error, contents, "condition1");
+            Message message(Message::Type::error, contents, "condition1");
 
-            EXPECT_EQ(Message::error, message.Type());
-            EXPECT_EQ(contents, message.Content());
+            EXPECT_EQ(Message::Type::error, message.GetType());
+            EXPECT_EQ(contents, message.GetContent());
             EXPECT_EQ("condition1", message.Condition());
         }
 
@@ -76,31 +76,31 @@ namespace loot {
                 MessageContent("content1", Language::german),
                 MessageContent("content2", Language::french),
             });
-            EXPECT_ANY_THROW(Message(Message::error, contents, "condition1"));
+            EXPECT_ANY_THROW(Message(Message::Type::error, contents, "condition1"));
         }
 
         TEST_P(MessageTest, messagesWithDifferentContentStringsShouldBeUnequal) {
-            Message message1(Message::say, "content1", "condition1");
-            Message message2(Message::say, "content2", "condition1");
+            Message message1(Message::Type::say, "content1", "condition1");
+            Message message2(Message::Type::say, "content2", "condition1");
 
             EXPECT_FALSE(message1 == message2);
         }
 
         TEST_P(MessageTest, messagesWithEqualContentStringsShouldBeEqual) {
-            Message message1(Message::say, MessageContents({MessageContent("content1", Language::english)}), "condition1");
-            Message message2(Message::warn, MessageContents({MessageContent("content1", Language::french)}), "condition2");
+            Message message1(Message::Type::say, MessageContents({MessageContent("content1", Language::english)}), "condition1");
+            Message message2(Message::Type::warn, MessageContents({MessageContent("content1", Language::french)}), "condition2");
 
             EXPECT_TRUE(message1 == message2);
         }
 
         TEST_P(MessageTest, LessThanOperatorShouldUseCaseInsensitiveLexicographicalContentStringComparison) {
-            Message message1(Message::say, MessageContents({MessageContent("content1", Language::english)}), "condition1");
-            Message message2(Message::warn, MessageContents({MessageContent("content1", Language::french)}), "condition2");
+            Message message1(Message::Type::say, MessageContents({MessageContent("content1", Language::english)}), "condition1");
+            Message message2(Message::Type::warn, MessageContents({MessageContent("content1", Language::french)}), "condition2");
             EXPECT_FALSE(message1 < message2);
             EXPECT_FALSE(message2 < message1);
 
-            message1 = Message(Message::say, "content1", "condition1");
-            message2 = Message(Message::say, "content2", "condition1");
+            message1 = Message(Message::Type::say, "content1", "condition1");
+            message2 = Message(Message::Type::say, "content2", "condition1");
             EXPECT_TRUE(message1 < message2);
             EXPECT_FALSE(message2 < message1);
         }
@@ -112,7 +112,7 @@ namespace loot {
 
             Message message;
             EXPECT_TRUE(message.EvalCondition(game, Language::english));
-            EXPECT_EQ(MessageContents({MessageContent()}), message.Content());
+            EXPECT_EQ(MessageContents({MessageContent()}), message.GetContent());
         }
 
         TEST_P(MessageTest, evalConditionShouldPickOneContentStringIfMoreThanOneExists) {
@@ -120,15 +120,15 @@ namespace loot {
             game.SetGamePath(dataPath.parent_path());
             ASSERT_NO_THROW(game.Init(false, localPath));
 
-            Message message(Message::say, MessageContents({
+            Message message(Message::Type::say, MessageContents({
                 MessageContent("content1", Language::german),
                 MessageContent("content2", Language::english),
                 MessageContent("content3", Language::french),
             }));
 
             EXPECT_TRUE(message.EvalCondition(game, Language::french));
-            EXPECT_EQ(1, message.Content().size());
-            EXPECT_EQ(MessageContent("content3", Language::french), message.Content()[0]);
+            EXPECT_EQ(1, message.GetContent().size());
+            EXPECT_EQ(MessageContent("content3", Language::french), message.GetContent()[0]);
         }
 
         TEST_P(MessageTest, chooseContentShouldCreateADefaultContentObjectIfNoneExists) {
@@ -137,7 +137,7 @@ namespace loot {
 
         TEST_P(MessageTest, chooseContentShouldLeaveTheContentUnchangedIfOnlyOneStringExists) {
             MessageContent content("content1", Language::english);
-            Message message(Message::say, MessageContents({content}));
+            Message message(Message::Type::say, MessageContents({content}));
 
             EXPECT_EQ(content, message.ChooseContent(Language::french));
             EXPECT_EQ(content, message.ChooseContent(Language::english));
@@ -145,7 +145,7 @@ namespace loot {
 
         TEST_P(MessageTest, chooseContentShouldSelectTheEnglishStringIfNoStringExistsForTheGivenLanguage) {
             MessageContent content("content1", Language::english);
-            Message message(Message::say, MessageContents({
+            Message message(Message::Type::say, MessageContents({
                 content,
                 MessageContent("content1", Language::german),
             }));
@@ -154,7 +154,7 @@ namespace loot {
 
         TEST_P(MessageTest, chooseContentShouldSelectTheStringForTheGivenLanguageIfOneExists) {
             MessageContent french("content3", Language::french);
-            Message message(Message::say, MessageContents({
+            Message message(Message::Type::say, MessageContents({
                 MessageContent("content1", Language::german),
                 MessageContent("content2", Language::english),
                 french,
@@ -164,7 +164,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, emittingAsYamlShouldOutputNoteMessageTypeCorrectly) {
-            Message message(Message::say, "content1");
+            Message message(Message::Type::say, "content1");
             YAML::Emitter emitter;
             emitter << message;
 
@@ -173,7 +173,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, emittingAsYamlShouldOutputWarnMessageTypeCorrectly) {
-            Message message(Message::warn, "content1");
+            Message message(Message::Type::warn, "content1");
             YAML::Emitter emitter;
             emitter << message;
 
@@ -182,7 +182,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, emittingAsYamlShouldOutputErrorMessageTypeCorrectly) {
-            Message message(Message::error, "content1");
+            Message message(Message::Type::error, "content1");
             YAML::Emitter emitter;
             emitter << message;
 
@@ -191,7 +191,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, emittingAsYamlShouldOutputConditionIfItIsNotEmpty) {
-            Message message(Message::say, "content1", "condition1");
+            Message message(Message::Type::say, "content1", "condition1");
             YAML::Emitter emitter;
             emitter << message;
 
@@ -201,7 +201,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, emittingAsYamlShouldOutputMultipleContentStringsAsAList) {
-            Message message(Message::say, MessageContents({
+            Message message(Message::Type::say, MessageContents({
                 MessageContent("content1", Language::english),
                 MessageContent("content2", Language::german)
             }));
@@ -217,7 +217,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldStoreNoteMessageTypeCorrectly) {
-            Message message(Message::say, "content1");
+            Message message(Message::Type::say, "content1");
             YAML::Node node;
             node = message;
 
@@ -225,7 +225,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldStoreWarningMessageTypeCorrectly) {
-            Message message(Message::warn, "content1");
+            Message message(Message::Type::warn, "content1");
             YAML::Node node;
             node = message;
 
@@ -233,7 +233,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldStoreErrorMessageTypeCorrectly) {
-            Message message(Message::error, "content1");
+            Message message(Message::Type::error, "content1");
             YAML::Node node;
             node = message;
 
@@ -241,7 +241,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldOmitConditionFieldIfItIsEmpty) {
-            Message message(Message::say, "content1");
+            Message message(Message::Type::say, "content1");
             YAML::Node node;
             node = message;
 
@@ -249,7 +249,7 @@ namespace loot {
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldStoreConditionFieldIfItIsNotEmpty) {
-            Message message(Message::say, "content1", "condition1");
+            Message message(Message::Type::say, "content1", "condition1");
             YAML::Node node;
             node = message;
 
@@ -257,11 +257,11 @@ namespace loot {
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldStoreASingleContentStringInAVector) {
-            Message message(Message::say, "content1");
+            Message message(Message::Type::say, "content1");
             YAML::Node node;
             node = message;
 
-            EXPECT_EQ(message.Content(), node["content"].as<MessageContents>());
+            EXPECT_EQ(message.GetContent(), node["content"].as<MessageContents>());
         }
 
         TEST_P(MessageTest, encodingAsYamlShouldMultipleContentStringsInAVector) {
@@ -269,7 +269,7 @@ namespace loot {
                 MessageContent("content1", Language::english),
                 MessageContent("content2", Language::french),
             });
-            Message message(Message::say, contents);
+            Message message(Message::Type::say, contents);
             YAML::Node node;
             node = message;
 
@@ -281,7 +281,7 @@ namespace loot {
                                          "content: content1");
             Message message = node.as<Message>();
 
-            EXPECT_EQ(Message::say, message.Type());
+            EXPECT_EQ(Message::Type::say, message.GetType());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldSetWarningTypeCorrectly) {
@@ -289,7 +289,7 @@ namespace loot {
                                          "content: content1");
             Message message = node.as<Message>();
 
-            EXPECT_EQ(Message::warn, message.Type());
+            EXPECT_EQ(Message::Type::warn, message.GetType());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldSetErrorTypeCorrectly) {
@@ -297,7 +297,7 @@ namespace loot {
                                          "content: content1");
             Message message = node.as<Message>();
 
-            EXPECT_EQ(Message::error, message.Type());
+            EXPECT_EQ(Message::Type::error, message.GetType());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldHandleAnUnrecognisedTypeAsANote) {
@@ -305,7 +305,7 @@ namespace loot {
                                          "content: content1");
             Message message = node.as<Message>();
 
-            EXPECT_EQ(Message::say, message.Type());
+            EXPECT_EQ(Message::Type::say, message.GetType());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldLeaveTheConditionEmptyIfNoneIsPresent) {
@@ -331,7 +331,7 @@ namespace loot {
             Message message = node.as<Message>();
             MessageContents expectedContent({MessageContent("content1", Language::english)});
 
-            EXPECT_EQ(expectedContent, message.Content());
+            EXPECT_EQ(expectedContent, message.GetContent());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldStoreAListOfContentStringsCorrectly) {
@@ -346,7 +346,7 @@ namespace loot {
             EXPECT_EQ(MessageContents({
                 MessageContent("content1", Language::english),
                 MessageContent("content2", Language::german),
-            }), message.Content());
+            }), message.GetContent());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldNotThrowIfTheOnlyContentStringIsNotEnglish) {
@@ -376,7 +376,7 @@ namespace loot {
                                          "  - sub1");
             Message message = node.as<Message>();
 
-            EXPECT_EQ(MessageContents({MessageContent("consub1tent1", Language::english)}), message.Content());
+            EXPECT_EQ(MessageContents({MessageContent("consub1tent1", Language::english)}), message.GetContent());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldApplySubstitutionsToAllContentStrings) {
@@ -393,7 +393,7 @@ namespace loot {
             EXPECT_EQ(MessageContents({
                 MessageContent("content1 sub", Language::english),
                 MessageContent("content2 sub", Language::german),
-            }), message.Content());
+            }), message.GetContent());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldThrowIfTheContentStringExpectsMoreSubstitutionsThanExist) {
@@ -411,7 +411,7 @@ namespace loot {
                                          "content: con%1%tent1\n");
             Message message = node.as<Message>();
 
-            EXPECT_EQ(MessageContents({MessageContent("con%1%tent1", Language::english)}), message.Content());
+            EXPECT_EQ(MessageContents({MessageContent("con%1%tent1", Language::english)}), message.GetContent());
         }
 
         TEST_P(MessageTest, decodingFromYamlShouldThrowIfAnInvalidConditionIsGiven) {

@@ -115,7 +115,7 @@ namespace loot {
     std::vector<Message> GameCache::GetMessages() const {
         vector<Message> output(messages);
         if (!isLoadOrderSorted)
-            output.push_back(Message(Message::warn, "You have not sorted your load order this session."));
+            output.push_back(Message(Message::Type::warn, "You have not sorted your load order this session."));
 
         return output;
     }

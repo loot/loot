@@ -645,7 +645,7 @@ namespace loot {
                         _lootState.CurrentGame().GetMasterlist().Load(_lootState.CurrentGame().MasterlistPath());
                     }
                     catch (exception &e) {
-                        _lootState.CurrentGame().GetMasterlist().AppendMessage(Message(Message::error, (boost::format(loc::translate(
+                        _lootState.CurrentGame().GetMasterlist().AppendMessage(Message(Message::Type::error, (boost::format(loc::translate(
                             "An error occurred while parsing the masterlist: %1%. "
                             "This probably happened because an update to LOOT changed "
                             "its metadata syntax support. Try updating your masterlist "
@@ -661,7 +661,7 @@ namespace loot {
                         _lootState.CurrentGame().GetUserlist().Load(_lootState.CurrentGame().UserlistPath());
                     }
                     catch (exception &e) {
-                        _lootState.CurrentGame().GetUserlist().AppendMessage(Message(Message::error, (boost::format(loc::translate(
+                        _lootState.CurrentGame().GetUserlist().AppendMessage(Message(Message::Type::error, (boost::format(loc::translate(
                             "An error occurred while parsing the userlist: %1%. "
                             "This probably happened because an update to LOOT changed "
                             "its metadata syntax support. Your user metadata will have "
@@ -793,7 +793,7 @@ namespace loot {
                     // There was a parsing error, but roll-back was successful, so the process
 
                     // should still complete.
-                    _lootState.CurrentGame().GetMasterlist().AppendMessage(Message(Message::error, e.what()));
+                    _lootState.CurrentGame().GetMasterlist().AppendMessage(Message(Message::Type::error, e.what()));
                     wasChanged = true;
                 }
                 else {
@@ -962,7 +962,7 @@ namespace loot {
         catch (loot::Error& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
             if (e.code() == Error::Code::sorting_error) {
-                _lootState.CurrentGame().AppendMessage(Message(Message::error, e.what()));
+                _lootState.CurrentGame().AppendMessage(Message(Message::Type::error, e.what()));
 
                 YAML::Node node;
                 node["globalMessages"] = GetGeneralMessages();
@@ -1000,7 +1000,7 @@ namespace loot {
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-            messages.push_back(Message(Message::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+            messages.push_back(Message(Message::Type::error, (format(loc::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
         }
 
         return messages;
@@ -1023,7 +1023,7 @@ namespace loot {
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
             list<Message> messages(tempPlugin.Messages());
-            messages.push_back(Message(Message::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+            messages.push_back(Message(Message::Type::error, (format(loc::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
             tempPlugin.Messages(messages);
         }
 

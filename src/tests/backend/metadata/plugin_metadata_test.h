@@ -230,7 +230,7 @@ namespace loot {
         TEST_P(PluginMetadataTest, mergeMetadataShouldMergeMessages) {
             PluginMetadata plugin1;
             PluginMetadata plugin2;
-            Message message(Message::say, "content");
+            Message message(Message::Type::say, "content");
 
             plugin1.Messages({message});
             plugin2.Messages({message});
@@ -383,9 +383,9 @@ namespace loot {
         TEST_P(PluginMetadataTest, diffMetadataShouldOutputMessagesThatAreNotCommonToBothInputPlugins) {
             PluginMetadata plugin1;
             PluginMetadata plugin2;
-            Message message1(Message::say, "content1");
-            Message message2(Message::say, "content2");
-            Message message3(Message::say, "content3");
+            Message message1(Message::Type::say, "content1");
+            Message message2(Message::Type::say, "content2");
+            Message message3(Message::Type::say, "content3");
 
             plugin1.Messages({message1, message2});
             plugin2.Messages({message1, message3});
@@ -518,9 +518,9 @@ namespace loot {
         TEST_P(PluginMetadataTest, newMetadataShouldOutputMessagesThatAreNotCommonToBothInputPlugins) {
             PluginMetadata plugin1;
             PluginMetadata plugin2;
-            Message message1(Message::say, "content1");
-            Message message2(Message::say, "content2");
-            Message message3(Message::say, "content3");
+            Message message1(Message::Type::say, "content1");
+            Message message2(Message::Type::say, "content2");
+            Message message3(Message::Type::say, "content3");
 
             plugin1.Messages({message1, message2});
             plugin2.Messages({message1, message3});
@@ -625,8 +625,8 @@ namespace loot {
             plugin.Reqs({file1, file2});
             plugin.Incs({file1, file2});
 
-            Message message1(Message::say, "content");
-            Message message2(Message::say, "content", "file(\"" + missingEsp + "\")");
+            Message message1(Message::Type::say, "content");
+            Message message2(Message::Type::say, "content", "file(\"" + missingEsp + "\")");
             plugin.Messages({message1, message2});
 
             Tag tag1("Relev");
@@ -697,7 +697,7 @@ namespace loot {
 
         TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfMessagesExist) {
             PluginMetadata plugin(blankEsp);
-            plugin.Messages({Message(Message::say, "content")});
+            plugin.Messages({Message(Message::Type::say, "content")});
 
             EXPECT_FALSE(plugin.HasNameOnly());
         }
@@ -835,7 +835,7 @@ namespace loot {
 
         TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithMessagesCorrectly) {
             PluginMetadata plugin(blankEsp);
-            plugin.Messages({Message(Message::say, "content")});
+            plugin.Messages({Message(Message::Type::say, "content")});
 
             YAML::Emitter emitter;
             emitter << plugin;
@@ -949,7 +949,7 @@ namespace loot {
 
         TEST_P(PluginMetadataTest, encodingAsYamlShouldSetMsgFieldIfMessagesExist) {
             PluginMetadata plugin(blankEsp);
-            plugin.Messages({Message(Message::say, "content")});
+            plugin.Messages({Message(Message::Type::say, "content")});
             YAML::Node node;
             node = plugin;
 
@@ -1032,7 +1032,7 @@ namespace loot {
                 File("Blank.esm")
             }), plugin.Incs());
             EXPECT_EQ(std::list<Message>({
-                Message(Message::say, "content")
+                Message(Message::Type::say, "content")
             }), plugin.Messages());
             EXPECT_EQ(std::set<Tag>({
                 Tag("Relev")

@@ -86,7 +86,7 @@ namespace loot {
 
             EXPECT_NO_THROW(metadataList.Load(metadataPath));
             EXPECT_EQ(std::list<Message>({
-                Message(Message::say, "A global message."),
+                Message(Message::Type::say, "A global message."),
             }), metadataList.Messages());
         }
 
@@ -174,7 +174,7 @@ namespace loot {
             }), metadataList.BashTags());
 
             EXPECT_EQ(std::list<Message>({
-                Message(Message::say, "A global message."),
+                Message(Message::Type::say, "A global message."),
             }), metadataList.Messages());
 
             // Non-regex plugins can be outputted in any order, and regex entries can
@@ -294,8 +294,8 @@ namespace loot {
 
             PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
             ASSERT_EQ(std::list<Message>({
-                Message(Message::warn, "This is a warning."),
-                Message(Message::say, "This message should be removed when evaluating conditions."),
+                Message(Message::Type::warn, "This is a warning."),
+                Message(Message::Type::say, "This message should be removed when evaluating conditions."),
             }), plugin.Messages());
 
             plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));
@@ -306,7 +306,7 @@ namespace loot {
 
             plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
             EXPECT_EQ(std::list<Message>({
-                Message(Message::warn, "This is a warning."),
+                Message(Message::Type::warn, "This is a warning."),
             }), plugin.Messages());
 
             plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));

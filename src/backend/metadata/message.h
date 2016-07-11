@@ -41,10 +41,16 @@ namespace loot {
 
     class Message : public ConditionalMetadata {
     public:
+        enum struct Type : unsigned int {
+            say = 0,
+            warn = 1,
+            error = 2,
+        };
+
         Message();
-        Message(const unsigned int type, const std::string& content,
+        Message(const Type type, const std::string& content,
                 const std::string& condition = "");
-        Message(const unsigned int type, const std::vector<MessageContent>& content,
+        Message(const Type type, const std::vector<MessageContent>& content,
                 const std::string& condition = "");
 
         bool operator < (const Message& rhs) const;
@@ -52,15 +58,11 @@ namespace loot {
 
         bool EvalCondition(Game& game, const unsigned int language);
 
-        unsigned int Type() const;
-        std::vector<MessageContent> Content() const;
+        Type GetType() const;
+        std::vector<MessageContent> GetContent() const;
         MessageContent ChooseContent(const unsigned int language) const;
-
-        static const unsigned int say;
-        static const unsigned int warn;
-        static const unsigned int error;
     private:
-        unsigned int _type;
+        Type _type;
         std::vector<MessageContent> _content;
     };
 }
@@ -70,11 +72,11 @@ namespace YAML {
     struct convert < loot::Message > {
         static Node encode(const loot::Message& rhs) {
             Node node;
-            node["content"] = rhs.Content();
+            node["content"] = rhs.GetContent();
 
-            if (rhs.Type() == loot::Message::say)
+            if (rhs.GetType() == loot::Message::Type::say)
                 node["type"] = "say";
-            else if (rhs.Type() == loot::Message::warn)
+            else if (rhs.GetType() == loot::Message::Type::warn)
                 node["type"] = "warn";
             else
                 node["type"] = "error";
@@ -96,11 +98,11 @@ namespace YAML {
             std::string type;
             type = node["type"].as<std::string>();
 
-            unsigned int typeNo = loot::Message::say;
+            loot::Message::Type typeNo = loot::Message::Type::say;
             if (boost::iequals(type, "warn"))
-                typeNo = loot::Message::warn;
+                typeNo = loot::Message::Type::warn;
             else if (boost::iequals(type, "error"))
-                typeNo = loot::Message::error;
+                typeNo = loot::Message::Type::error;
 
             std::vector<loot::MessageContent> content;
             if (node["content"].IsSequence())

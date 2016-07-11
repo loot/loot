@@ -280,7 +280,7 @@ namespace loot {
 
             EXPECT_FALSE(plugin.CheckInstallValidity(game));
             EXPECT_EQ(std::list<Message>({
-                Message(Message::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
+                Message(Message::Type::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
             }), plugin.Messages());
         }
 
@@ -293,7 +293,7 @@ namespace loot {
 
             EXPECT_FALSE(plugin.CheckInstallValidity(game));
             EXPECT_EQ(std::list<Message>({
-                Message(Message::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
+                Message(Message::Type::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
             }), plugin.Messages());
         }
 
@@ -316,7 +316,7 @@ namespace loot {
 
             EXPECT_FALSE(plugin.CheckInstallValidity(game));
             EXPECT_EQ(std::list<Message>({
-                Message(Message::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
+                Message(Message::Type::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
             }), plugin.Messages());
         }
 

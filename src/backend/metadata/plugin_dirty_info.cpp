@@ -87,7 +87,7 @@ namespace loot {
         else if (this->_itm > 0 && this->_ref > 0 && this->_nav == 0)
             f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % this->_itm % this->_ref % this->_utility;
 
-        return Message(Message::warn, f.str());
+        return Message(Message::Type::warn, f.str());
     }
 
     bool PluginDirtyInfo::EvalCondition(Game& game, const std::string& pluginName) const {

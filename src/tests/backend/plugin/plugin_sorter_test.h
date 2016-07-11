@@ -73,7 +73,7 @@ namespace loot {
 
         TEST_P(PluginSorterTest, sortingShouldClearExistingGameMessages) {
             ASSERT_NO_THROW(game.LoadPlugins(false));
-            game.AppendMessage(Message(Message::say, "1"));
+            game.AppendMessage(Message(Message::Type::say, "1"));
             ASSERT_FALSE(game.GetMessages().empty());
 
             PluginSorter ps;
@@ -86,7 +86,7 @@ namespace loot {
             PluginMetadata plugin(blankEsm);
             plugin.LoadAfter({File(blankMasterDependentEsm)});
             game.GetUserlist().AddPlugin(plugin);
-            game.AppendMessage(Message(Message::say, "1"));
+            game.AppendMessage(Message(Message::Type::say, "1"));
             ASSERT_FALSE(game.GetMessages().empty());
 
             PluginSorter ps;

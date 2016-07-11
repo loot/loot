@@ -55,15 +55,15 @@ namespace loot {
 
         void PrintTo(const Message& value, ::std::ostream* os) {
             std::string type;
-            if (value.Type() == Message::warn)
+            if (value.GetType() == Message::Type::warn)
                 type = "warn";
-            else if (value.Type() == Message::error)
+            else if (value.GetType() == Message::Type::error)
                 type = "error";
             else
                 type = "say";
 
             *os << "Message(\"" << type << "\", "
-                << ::testing::PrintToString(value.Content()) << ", "
+                << ::testing::PrintToString(value.GetContent()) << ", "
                 << "\"" << value.Condition() << "\""
                 << ")";
         }

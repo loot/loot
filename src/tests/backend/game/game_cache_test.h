@@ -63,7 +63,7 @@ namespace loot {
 
             cache.CacheCondition(condition, true);
             cache.AddPlugin(Plugin(game, blankEsm, true));
-            Message expectedMessage(Message::say, "1");
+            Message expectedMessage(Message::Type::say, "1");
             cache.AppendMessage(expectedMessage);
             cache.SetLoadOrderSorted(true);
 
@@ -79,7 +79,7 @@ namespace loot {
 
             cache.CacheCondition(condition, true);
             cache.AddPlugin(Plugin(game, blankEsm, true));
-            Message expectedMessage(Message::say, "1");
+            Message expectedMessage(Message::Type::say, "1");
             cache.AppendMessage(expectedMessage);
             cache.SetLoadOrderSorted(true);
 
@@ -195,8 +195,8 @@ namespace loot {
 
         TEST_P(GameCacheTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
             std::vector<Message> messages({
-                Message(Message::say, "1"),
-                Message(Message::error, "2"),
+                Message(Message::Type::say, "1"),
+                Message(Message::Type::error, "2"),
             });
             for (const auto& message : messages)
                 cache.AppendMessage(message);
@@ -208,8 +208,8 @@ namespace loot {
 
         TEST_P(GameCacheTest, clearingMessagesShouldRemoveAllAppendedMessages) {
             std::vector<Message> messages({
-                Message(Message::say, "1"),
-                Message(Message::error, "2"),
+                Message(Message::Type::say, "1"),
+                Message(Message::Type::error, "2"),
             });
             for (const auto& message : messages)
                 cache.AppendMessage(message);

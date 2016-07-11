@@ -31,18 +31,14 @@
 using namespace std;
 
 namespace loot {
-    const unsigned int Message::say = 0;
-    const unsigned int Message::warn = 1;
-    const unsigned int Message::error = 2;
+    Message::Message() : _type(Message::Type::say) {}
 
-    Message::Message() : _type(Message::say) {}
-
-    Message::Message(const unsigned int type, const std::string& content,
+    Message::Message(const Type type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionalMetadata(condition) {
         _content.push_back(MessageContent(content, Language::english));
     }
 
-    Message::Message(const unsigned int type, const std::vector<MessageContent>& content,
+    Message::Message(const Type type, const std::vector<MessageContent>& content,
                      const std::string& condition) : _type(type), _content(content), ConditionalMetadata(condition) {
         if (content.size() > 1) {
             bool englishStringExists = false;
@@ -56,16 +52,16 @@ namespace loot {
     }
 
     bool Message::operator < (const Message& rhs) const {
-        if (!_content.empty() && !rhs.Content().empty())
+        if (!_content.empty() && !rhs.GetContent().empty())
             return boost::ilexicographical_compare(ChooseContent(Language::english).Text(), rhs.ChooseContent(Language::english).Text());
-        else if (_content.empty() && !rhs.Content().empty())
+        else if (_content.empty() && !rhs.GetContent().empty())
             return true;
         else
             return false;
     }
 
     bool Message::operator == (const Message& rhs) const {
-        return (_content == rhs.Content());
+        return (_content == rhs.GetContent());
     }
 
     bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
@@ -94,11 +90,11 @@ namespace loot {
         }
     }
 
-    unsigned int Message::Type() const {
+    Message::Type Message::GetType() const {
         return _type;
     }
 
-    std::vector<MessageContent> Message::Content() const {
+    std::vector<MessageContent> Message::GetContent() const {
         return _content;
     }
 }
@@ -107,17 +103,17 @@ namespace YAML {
     Emitter& operator << (Emitter& out, const loot::Message& rhs) {
         out << BeginMap;
 
-        if (rhs.Type() == loot::Message::say)
+        if (rhs.GetType() == loot::Message::Type::say)
             out << Key << "type" << Value << "say";
-        else if (rhs.Type() == loot::Message::warn)
+        else if (rhs.GetType() == loot::Message::Type::warn)
             out << Key << "type" << Value << "warn";
         else
             out << Key << "type" << Value << "error";
 
-        if (rhs.Content().size() == 1)
-            out << Key << "content" << Value << YAML::SingleQuoted << rhs.Content().front().Text();
+        if (rhs.GetContent().size() == 1)
+            out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().Text();
         else
-            out << Key << "content" << Value << rhs.Content();
+            out << Key << "content" << Value << rhs.GetContent();
 
         if (rhs.IsConditional())
             out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();

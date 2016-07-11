@@ -241,41 +241,41 @@ namespace loot {
 
         TEST_P(loot_db_test, settingPluginMessagesShouldCopyThem) {
             db->setPluginMessages(std::list<Message>({
-                Message(Message::warn, "Test 1"),
-                Message(Message::error, "Test 2"),
+                Message(Message::Type::warn, "Test 1"),
+                Message(Message::Type::error, "Test 2"),
             }));
 
             EXPECT_EQ(2, db->getPluginMessages().size());
-            EXPECT_EQ(Message::warn, db->getPluginMessages()[0].type);
+            EXPECT_EQ(static_cast<unsigned int>(Message::Type::warn), db->getPluginMessages()[0].type);
             EXPECT_STREQ("Test 1", db->getPluginMessages()[0].message);
-            EXPECT_EQ(Message::error, db->getPluginMessages()[1].type);
+            EXPECT_EQ(static_cast<unsigned int>(Message::Type::error), db->getPluginMessages()[1].type);
             EXPECT_STREQ("Test 2", db->getPluginMessages()[1].message);
         }
 
         TEST_P(loot_db_test, settingPluginMessagesTwiceShouldOverwriteTheFirstDataSet) {
             db->setPluginMessages(std::list<Message>({
-                Message(Message::warn, "Test 1"),
-                Message(Message::error, "Test 2"),
+                Message(Message::Type::warn, "Test 1"),
+                Message(Message::Type::error, "Test 2"),
             }));
             db->setPluginMessages(std::list<Message>({
-                Message(Message::error, "Test 3"),
-                Message(Message::warn, "Test 4"),
-                Message(Message::say, "Test 5"),
+                Message(Message::Type::error, "Test 3"),
+                Message(Message::Type::warn, "Test 4"),
+                Message(Message::Type::say, "Test 5"),
             }));
 
             EXPECT_EQ(3, db->getPluginMessages().size());
-            EXPECT_EQ(Message::error, db->getPluginMessages()[0].type);
+            EXPECT_EQ(static_cast<unsigned int>(Message::Type::error), db->getPluginMessages()[0].type);
             EXPECT_STREQ("Test 3", db->getPluginMessages()[0].message);
-            EXPECT_EQ(Message::warn, db->getPluginMessages()[1].type);
+            EXPECT_EQ(static_cast<unsigned int>(Message::Type::warn), db->getPluginMessages()[1].type);
             EXPECT_STREQ("Test 4", db->getPluginMessages()[1].message);
-            EXPECT_EQ(Message::say, db->getPluginMessages()[2].type);
+            EXPECT_EQ(static_cast<unsigned int>(Message::Type::say), db->getPluginMessages()[2].type);
             EXPECT_STREQ("Test 5", db->getPluginMessages()[2].message);
         }
 
         TEST_P(loot_db_test, clearingArraysShouldEmptyPluginNamesTagIdsAndMessages) {
             db->setPluginMessages(std::list<Message>({
-                Message(Message::warn, "Test 1"),
-                Message(Message::error, "Test 2"),
+                Message(Message::Type::warn, "Test 1"),
+                Message(Message::Type::error, "Test 2"),
             }));
             db->setPluginNames(std::vector<PluginMetadata>({
                 PluginMetadata("Blank.esm"),

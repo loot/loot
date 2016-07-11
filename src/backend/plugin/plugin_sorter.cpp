@@ -212,7 +212,7 @@ namespace loot {
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "\"" << graph[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
                 list<Message> messages(graph[v].Messages());
-                messages.push_back(Message(Message::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
+                messages.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph[v].Name() % e.what()).str()));
                 graph[v].Messages(messages);
             }
 

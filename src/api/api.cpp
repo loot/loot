@@ -67,9 +67,9 @@ const unsigned int loot_game_fonv = loot::Game::fonv;
 const unsigned int loot_game_fo4 = loot::Game::fo4;
 
 // LOOT message types.
-const unsigned int loot_message_say = loot::Message::say;
-const unsigned int loot_message_warn = loot::Message::warn;
-const unsigned int loot_message_error = loot::Message::error;
+const unsigned int loot_message_say = static_cast<unsigned int>(loot::Message::Type::say);
+const unsigned int loot_message_warn = static_cast<unsigned int>(loot::Message::Type::warn);
+const unsigned int loot_message_error = static_cast<unsigned int>(loot::Message::Type::error);
 
 // LOOT message languages.
 const unsigned int loot_lang_english = loot::Language::english;
