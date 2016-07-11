@@ -68,9 +68,7 @@ namespace loot {
         // CefRequestHandler methods
         //--------------------------
 
-        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE {
-            return this;
-        }
+        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE;
 
         virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
                                     CefRefPtr< CefFrame > frame,
@@ -81,21 +79,15 @@ namespace loot {
                                                                     CefRefPtr<CefFrame> frame,
                                                                     CefRefPtr<CefRequest> request,
                                                                     CefRefPtr<CefRequestCallback> callback) OVERRIDE;
-
-        // Request that all existing browser windows close.
-        void CloseAllBrowsers(bool force_close);
-
-        bool IsClosing() const { return is_closing_; }
-
-        LootState& _lootState;
+        
 
     private:
         // List of existing browser windows. Only accessed on the CEF UI thread.
         typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
+
         BrowserList browser_list_;
         CefRefPtr<CefMessageRouterBrowserSide> browser_side_router_;
-
-        bool is_closing_;
+        LootState& _lootState;
 
         // Include the default reference counting implementation.
         IMPLEMENT_REFCOUNTING(LootHandler);

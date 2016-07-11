@@ -54,7 +54,7 @@ namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
 namespace loot {
-    LootHandler::LootHandler(LootState& lootState) : is_closing_(false), _lootState(lootState) {}
+    LootHandler::LootHandler(LootState& lootState) : _lootState(lootState) {}
 
     // CefClient methods
     //------------------
@@ -156,14 +156,6 @@ namespace loot {
             return true;
         }
 
-        // Closing the main window requires special handling. See the DoClose()
-        // documentation in the CEF header for a detailed destription of this
-        // process.
-        if (browser_list_.size() == 1) {
-            // Set a flag to indicate that the window close should be allowed.
-            is_closing_ = true;
-        }
-
         // Allow the close. For windowed browsers this will result in the OS close
         // event being sent.
         return false;
@@ -235,6 +227,10 @@ namespace loot {
     // CefRequestHandler methods
     //--------------------------
 
+    CefRefPtr<CefRequestHandler> LootHandler::GetRequestHandler() {
+        return this;
+    }
+
     bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
                                      CefRefPtr< CefFrame > frame,
                                      CefRefPtr< CefRequest > request,
@@ -261,21 +257,5 @@ namespace loot {
             return RV_CANCEL;
 
         return RV_CONTINUE;
-    }
-
-    void LootHandler::CloseAllBrowsers(bool force_close) {
-        if (!CefCurrentlyOn(TID_UI)) {
-            // Execute on the UI thread.
-            CefPostTask(TID_UI,
-                        base::Bind(&LootHandler::CloseAllBrowsers, this, force_close));
-            return;
-        }
-
-        if (browser_list_.empty())
-            return;
-
-        for (BrowserList::const_iterator it = browser_list_.begin(); it != browser_list_.end(); ++it) {
-            (*it)->GetHost()->CloseBrowser(force_close);
-        }
     }
 }
