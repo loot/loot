@@ -41,20 +41,22 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/log/core.hpp>
 
-const unsigned int loot_ok = loot::Error::ok;
-const unsigned int loot_error_liblo_error = loot::Error::liblo_error;
-const unsigned int loot_error_file_write_fail = loot::Error::path_write_fail;
-const unsigned int loot_error_parse_fail = loot::Error::path_read_fail;
-const unsigned int loot_error_condition_eval_fail = loot::Error::condition_eval_fail;
-const unsigned int loot_error_regex_eval_fail = loot::Error::regex_eval_fail;
-const unsigned int loot_error_no_mem = loot::Error::no_mem;
-const unsigned int loot_error_invalid_args = loot::Error::invalid_args;
-const unsigned int loot_error_no_tag_map = loot::Error::no_tag_map;
-const unsigned int loot_error_path_not_found = loot::Error::path_not_found;
-const unsigned int loot_error_no_game_detected = loot::Error::no_game_detected;
-const unsigned int loot_error_git_error = loot::Error::git_error;
-const unsigned int loot_error_windows_error = loot::Error::windows_error;
-const unsigned int loot_error_sorting_error = loot::Error::sorting_error;
+using loot::Error;
+
+const unsigned int loot_ok = Error::asUnsignedInt(Error::Code::ok);
+const unsigned int loot_error_liblo_error = Error::asUnsignedInt(Error::Code::liblo_error);
+const unsigned int loot_error_file_write_fail = Error::asUnsignedInt(Error::Code::path_write_fail);
+const unsigned int loot_error_parse_fail = Error::asUnsignedInt(Error::Code::path_read_fail);
+const unsigned int loot_error_condition_eval_fail = Error::asUnsignedInt(Error::Code::condition_eval_fail);
+const unsigned int loot_error_regex_eval_fail = Error::asUnsignedInt(Error::Code::regex_eval_fail);
+const unsigned int loot_error_no_mem = Error::asUnsignedInt(Error::Code::no_mem);
+const unsigned int loot_error_invalid_args = Error::asUnsignedInt(Error::Code::invalid_args);
+const unsigned int loot_error_no_tag_map = Error::asUnsignedInt(Error::Code::no_tag_map);
+const unsigned int loot_error_path_not_found = Error::asUnsignedInt(Error::Code::path_not_found);
+const unsigned int loot_error_no_game_detected = Error::asUnsignedInt(Error::Code::no_game_detected);
+const unsigned int loot_error_git_error = Error::asUnsignedInt(Error::Code::git_error);
+const unsigned int loot_error_windows_error = Error::asUnsignedInt(Error::Code::windows_error);
+const unsigned int loot_error_sorting_error = Error::asUnsignedInt(Error::Code::sorting_error);
 const unsigned int loot_return_max = loot_error_sorting_error;
 
 // The following are the games identifiers used by the API.
@@ -89,13 +91,13 @@ const unsigned int loot_needs_cleaning_unknown = 2;
 
 std::string extMessageStr;
 
-unsigned int c_error(const loot::Error& e) {
+unsigned int c_error(const Error& e) {
     extMessageStr = e.what();
-    return e.code();
+    return e.codeAsUnsignedInt();
 }
 
 unsigned int c_error(const unsigned int code, const std::string& what) {
-    return c_error(loot::Error(code, what.c_str()));
+    return c_error(Error(Error::Code(code), what.c_str()));
 }
 
 //////////////////////////////
@@ -200,7 +202,7 @@ LOOT_API unsigned int loot_create_db(loot_db ** const db,
 
         *db = new loot_db(clientGame, game_path, game_local_path);
     }
-    catch (loot::Error& e) {
+    catch (Error& e) {
         return c_error(e);
     }
     catch (std::bad_alloc& e) {
@@ -303,7 +305,7 @@ LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int lan
         temp.EvalAllConditions(*db, language);
         userTemp.EvalAllConditions(*db, language);
     }
-    catch (loot::Error& e) {
+    catch (Error& e) {
         return c_error(e);
     }
     db->GetMasterlist() = temp;
@@ -335,7 +337,7 @@ LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
 
         db->setPluginNames(sorter.Sort(*db, loot::Language::english));
     }
-    catch (loot::Error &e) {
+    catch (Error &e) {
         return c_error(e);
     }
     catch (std::bad_alloc& e) {
@@ -360,7 +362,7 @@ LOOT_API unsigned int loot_apply_load_order(loot_db * const db,
     try {
         db->SetLoadOrder(loadOrder, numPlugins);
     }
-    catch (loot::Error &e) {
+    catch (Error &e) {
         return c_error(e);
     }
 
@@ -383,7 +385,7 @@ LOOT_API unsigned int loot_update_masterlist(loot_db * const db,
         loot::Masterlist masterlist;
         *updated = masterlist.Update(masterlistPath, remoteURL, remoteBranch);
     }
-    catch (loot::Error &e) {
+    catch (Error &e) {
         return c_error(e);
     }
 
@@ -418,8 +420,8 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db * const db,
         db->setRevisionIdString(id);
         db->setRevisionDateString(date);
     }
-    catch (loot::Error &e) {
-        if (e.code() == loot_ok)
+    catch (Error &e) {
+        if (e.code() == Error::Code::ok)
             return loot_ok;
         else
             return c_error(e);
@@ -532,7 +534,7 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db * const db, const char * cons
         db->setAddedTags(tagsAdded);
         db->setRemovedTags(tagsRemoved);
     }
-    catch (loot::Error& e) {
+    catch (Error& e) {
         return c_error(e);
     }
 

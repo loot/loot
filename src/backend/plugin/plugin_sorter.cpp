@@ -76,7 +76,7 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << graph[source].Name() << "\" and \"" << graph[target].Name() << "\". Back cycle: " << backCycle;
 
-            throw loot::Error(loot::Error::sorting_error, (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % graph[source].Name() % graph[target].Name() % backCycle).str());
+            throw loot::Error(loot::Error::Code::sorting_error, (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % graph[source].Name() % graph[target].Name() % backCycle).str());
         }
 
     private:
@@ -89,7 +89,7 @@ namespace loot {
 
         inline void discover_vertex(vertex_t vertex, const PluginGraph& graph) {
             if (vertex == target)
-                throw Error(Error::ok, "Found a path.");
+                throw Error(Error::Code::ok, "Found a path.");
         }
 
     private:
@@ -247,7 +247,7 @@ namespace loot {
             boost::breadth_first_search(graph, toVertex, visitor(PathDetector(fromVertex)).vertex_index_map(vertexIndexMap));
         }
         catch (Error& e) {
-            if (e.code() == Error::ok)
+            if (e.code() == Error::Code::ok)
                 return true;
         }
         return false;

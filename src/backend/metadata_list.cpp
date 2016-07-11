@@ -39,7 +39,7 @@ namespace loot {
 
         boost::filesystem::ifstream in(filepath);
         if (!in.good())
-            throw Error(Error::path_read_fail, "Cannot open " + filepath.string());
+            throw Error(Error::Code::path_read_fail, "Cannot open " + filepath.string());
 
         YAML::Node metadataList = YAML::Load(in);
         in.close();
@@ -51,7 +51,7 @@ namespace loot {
                     regexPlugins.push_back(plugin);
                 else {
                     if (!plugins.insert(plugin).second)
-                        throw Error(Error::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\"");
+                        throw Error(Error::Code::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\"");
                 }
             }
         }
@@ -127,7 +127,7 @@ namespace loot {
             regexPlugins.push_back(plugin);
         else {
             if (!plugins.insert(plugin).second)
-                throw Error(Error::invalid_args, "Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
+                throw Error(Error::Code::invalid_args, "Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
         }
     }
 

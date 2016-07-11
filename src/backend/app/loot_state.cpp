@@ -187,7 +187,7 @@ namespace loot {
             storeGameSettings(ToGameSettings(_games));
         }
         catch (loot::Error &e) {
-            if (e.code() == loot::Error::no_game_detected) {
+            if (e.code() == loot::Error::Code::no_game_detected) {
                 _initErrors.push_back(e.what());
             }
             else {
@@ -270,7 +270,7 @@ namespace loot {
         // If no game can be selected, throw an exception.
         if (_currentGame == end(_games)) {
             BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-            throw Error(Error::no_game_detected, translate("None of the supported games were detected."));
+            throw Error(Error::Code::no_game_detected, translate("None of the supported games were detected."));
         }
     }
 

@@ -73,7 +73,7 @@ namespace loot {
             }
             catch (Error &e) {
                 BOOST_LOG_TRIVIAL(error) << e.what();
-                callback->Failure(e.code(), e.what());
+                callback->Failure(e.codeAsUnsignedInt(), e.what());
             }
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << e.what();
@@ -88,7 +88,7 @@ namespace loot {
             }
             catch (Error &e) {
                 BOOST_LOG_TRIVIAL(error) << e.what();
-                callback->Failure(e.code(), e.what());
+                callback->Failure(e.codeAsUnsignedInt(), e.what());
             }
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << e.what();
@@ -137,7 +137,7 @@ namespace loot {
             }
             catch (Error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
-                callback->Failure(e.code(), e.what());
+                callback->Failure(e.codeAsUnsignedInt(), e.what());
             }
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to redate plugins. " << e.what();
@@ -224,7 +224,7 @@ namespace loot {
             }
             catch (loot::Error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
-                callback->Failure(e.code(), (boost::format(loc::translate("Failed to change game. Details: %1%")) % e.what()).str());
+                callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to change game. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
@@ -245,7 +245,7 @@ namespace loot {
             }
             catch (loot::Error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(e.code(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
+                callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
@@ -267,7 +267,7 @@ namespace loot {
             }
             catch (loot::Error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to apply plugin metadata. Details: " << e.what();
-                callback->Failure(e.code(), (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % e.what()).str());
+                callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to apply plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 // If this was a YAML conversion error, cut off the line and column numbers,
@@ -311,7 +311,7 @@ namespace loot {
             }
             catch (Error &e) {
                 BOOST_LOG_TRIVIAL(error) << e.what();
-                callback->Failure(e.code(), e.what());
+                callback->Failure(e.codeAsUnsignedInt(), e.what());
             }
             catch (exception &e) {
                 BOOST_LOG_TRIVIAL(error) << e.what();
@@ -335,7 +335,7 @@ namespace loot {
             }
             catch (loot::Error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(e.code(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
+                callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
@@ -371,7 +371,7 @@ namespace loot {
             }
             catch (loot::Error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
-                callback->Failure(e.code(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
+                callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to copy plugin metadata. Details: %1%")) % e.what()).str());
             }
             catch (std::exception& e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to copy plugin metadata. Details: " << e.what();
@@ -772,7 +772,7 @@ namespace loot {
         }
         catch (loot::Error &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to get game data. Details: " << e.what();
-            callback->Failure(e.code(), (boost::format(loc::translate("Failed to get game data. Details: %1%")) % e.what()).str());
+            callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to get game data. Details: %1%")) % e.what()).str());
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to get game data. Details: " << e.what();
@@ -789,7 +789,7 @@ namespace loot {
                 wasChanged = _lootState.CurrentGame().GetMasterlist().Update(_lootState.CurrentGame());
             }
             catch (loot::Error &e) {
-                if (e.code() == loot::Error::ok) {
+                if (e.code() == loot::Error::Code::ok) {
                     // There was a parsing error, but roll-back was successful, so the process
 
                     // should still complete.
@@ -863,7 +863,7 @@ namespace loot {
         }
         catch (Error &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. Details: " << e.what();
-            callback->Failure(e.code(), (boost::format(loc::translate("Failed to update the masterlist. Details: %1%")) % e.what()).str());
+            callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to update the masterlist. Details: %1%")) % e.what()).str());
         }
         catch (exception &e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to update the masterlist. Details: " << e.what();
@@ -961,7 +961,7 @@ namespace loot {
         }
         catch (loot::Error& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-            if (e.code() == Error::sorting_error) {
+            if (e.code() == Error::Code::sorting_error) {
                 _lootState.CurrentGame().AppendMessage(Message(Message::error, e.what()));
 
                 YAML::Node node;
@@ -969,7 +969,7 @@ namespace loot {
                 callback->Success(JSON::stringify(node));
             }
             else
-                callback->Failure(e.code(), (boost::format(loc::translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
+                callback->Failure(e.codeAsUnsignedInt(), (boost::format(loc::translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
         }
     }
 
@@ -1059,11 +1059,11 @@ namespace loot {
     void QueryHandler::CopyToClipboard(const std::string& text) {
 #ifdef _WIN32
         if (!OpenClipboard(NULL)) {
-            throw loot::Error(loot::Error::windows_error, "Failed to open the Windows clipboard.");
+            throw loot::Error(loot::Error::Code::windows_error, "Failed to open the Windows clipboard.");
         }
 
         if (!EmptyClipboard()) {
-            throw loot::Error(loot::Error::windows_error, "Failed to empty the Windows clipboard.");
+            throw loot::Error(loot::Error::Code::windows_error, "Failed to empty the Windows clipboard.");
         }
 
         // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
@@ -1074,11 +1074,11 @@ namespace loot {
         wcscpy(wcstr, wtext.c_str());
 
         if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
-            throw loot::Error(loot::Error::windows_error, "Failed to copy metadata to the Windows clipboard.");
+            throw loot::Error(loot::Error::Code::windows_error, "Failed to copy metadata to the Windows clipboard.");
         }
 
         if (!CloseClipboard()) {
-            throw loot::Error(loot::Error::windows_error, "Failed to close the Windows clipboard.");
+            throw loot::Error(loot::Error::Code::windows_error, "Failed to close the Windows clipboard.");
         }
 #endif
     }

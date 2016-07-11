@@ -69,12 +69,12 @@ namespace loot {
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw loot::Error(loot::Error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
+            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
 
         if (!r || begin != end) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw loot::Error(loot::Error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
 
         game.CacheCondition(_condition, eval);
@@ -101,12 +101,12 @@ namespace loot {
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw loot::Error(loot::Error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
+            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
         }
 
         if (!r || begin != end) {
             BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw loot::Error(loot::Error::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
+            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
         }
     }
 }

@@ -104,7 +104,7 @@ namespace loot {
             errorMessage = (boost::format(lc::translate("Git operation failed. Error: %1%")) % gitError).str();
 
         BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << gitError;
-        throw loot::Error(loot::Error::git_error, errorMessage);
+        throw loot::Error(loot::Error::Code::git_error, errorMessage);
     }
 
     void GitHelper::SetErrorMessage(const std::string& message) {
@@ -140,7 +140,7 @@ namespace loot {
     // Clones a repository and opens it.
     void GitHelper::Clone(const boost::filesystem::path& path, const std::string& url) {
         if (this->repo != nullptr)
-            throw Error(Error::git_error, "Cannot clone repository that has already been opened.");
+            throw Error(Error::Code::git_error, "Cannot clone repository that has already been opened.");
 
         this->SetErrorMessage(lc::translate("An error occurred while trying to clone the remote masterlist repository."));
         // Clone the remote repository.
@@ -191,7 +191,7 @@ namespace loot {
 
     void GitHelper::Fetch(const std::string& remote) {
         if (this->repo == nullptr)
-            throw Error(Error::git_error, "Cannot fetch updates for repository that has not been opened.");
+            throw Error(Error::Code::git_error, "Cannot fetch updates for repository that has not been opened.");
 
         BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
         this->SetErrorMessage(lc::translate("An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes."));
@@ -213,13 +213,13 @@ namespace loot {
 
     void GitHelper::CheckoutNewBranch(const std::string& remote, const std::string& branch) {
         if (this->repo == nullptr)
-            throw Error(Error::git_error, "Cannot fetch updates for repository that has not been opened.");
+            throw Error(Error::Code::git_error, "Cannot fetch updates for repository that has not been opened.");
         else if (this->commit != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, commit memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, commit memory already allocated.");
         else if (this->obj != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, object memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, object memory already allocated.");
         else if (this->ref != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, reference memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, reference memory already allocated.");
 
         BOOST_LOG_TRIVIAL(trace) << "Looking up commit referred to by the remote branch \"" << branch << "\".";
         this->Call(git_revparse_single(&this->obj, this->repo, (remote + "/" + branch).c_str()));
@@ -254,9 +254,9 @@ namespace loot {
 
     void GitHelper::CheckoutRevision(const std::string& revision) {
         if (this->repo == nullptr)
-            throw Error(Error::git_error, "Cannot checkout revision for repository that has not been opened.");
+            throw Error(Error::Code::git_error, "Cannot checkout revision for repository that has not been opened.");
         else if (this->obj != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, object memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, object memory already allocated.");
 
         // Get an object ID for 'HEAD^'.
         this->Call(git_revparse_single(&this->obj, this->repo, revision.c_str()));
@@ -275,13 +275,13 @@ namespace loot {
 
     std::string GitHelper::GetHeadShortId() {
         if (this->repo == nullptr)
-            throw Error(Error::git_error, "Cannot checkout revision for repository that has not been opened.");
+            throw Error(Error::Code::git_error, "Cannot checkout revision for repository that has not been opened.");
         else if (this->obj != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, object memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, object memory already allocated.");
         else if (this->ref != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, reference memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, reference memory already allocated.");
         else if (this->buf.ptr != nullptr)
-            throw Error(Error::git_error, "Cannot fetch repository updates, buffer memory already allocated.");
+            throw Error(Error::Code::git_error, "Cannot fetch repository updates, buffer memory already allocated.");
 
         BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
         this->Call(git_repository_head(&this->ref, this->repo));
@@ -304,7 +304,7 @@ namespace loot {
     bool GitHelper::IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename) {
         if (!IsRepository(repoRoot)) {
             BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
-            throw Error(Error::ok, lc::translate("Unknown: Git repository missing"));
+            throw Error(Error::Code::ok, lc::translate("Unknown: Git repository missing"));
         }
 
         BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
