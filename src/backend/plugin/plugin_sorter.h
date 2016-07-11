@@ -57,7 +57,6 @@ namespace loot {
         void PropagatePriorities();
 
         void addPluginVertices(Game& game, const unsigned int language);
-        void addMasterFlagEdges();
         void AddSpecificEdges();
         void AddPriorityEdges();
         void AddOverlapEdges();
