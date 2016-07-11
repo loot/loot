@@ -191,6 +191,13 @@ namespace loot {
             return LootPaths::getLootDataPath() / _lootFolderName / "userlist.yaml";
     }
 
+    std::string GameSettings::GetArchiveFileExtension() const {
+        if (_id == GameSettings::fo4)
+            return ".ba2";
+        else
+            return ".bsa";
+    }
+
     GameSettings& GameSettings::SetName(const std::string& name) {
         BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" name to: " << name;
         _name = name;

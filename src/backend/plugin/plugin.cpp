@@ -92,7 +92,7 @@ namespace loot {
             _isActive = game.LoadOrderHandler::IsPluginActive(Name());
 
             // Get whether the plugin loads an archive (BSA/BA2) or not.
-            const string archiveExtension = game.getArchiveFileExtension();
+            const string archiveExtension = game.GetArchiveFileExtension();
 
             if (game.Id() == Game::tes5) {
                 // Skyrim plugins only load BSAs that exactly match their basename.

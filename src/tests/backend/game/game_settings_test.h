@@ -131,6 +131,16 @@ namespace loot {
             EXPECT_FALSE(game1 == game2);
         }
 
+        TEST_P(GameSettingsTest, getArchiveFileExtensionShouldReturnDotBa2IfGameIdIsFallout4) {
+            GameSettings game(GameSettings::fo4);
+            EXPECT_EQ(".ba2", game.GetArchiveFileExtension());
+        }
+
+        TEST_P(GameSettingsTest, getArchiveFileExtensionShouldReturnDotBsaIfGameIdIsNotFallout4) {
+            GameSettings game;
+            EXPECT_EQ(".bsa", game.GetArchiveFileExtension());
+        }
+
         TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
             GameSettings game;
             game.SetName("name");

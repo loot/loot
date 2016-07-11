@@ -59,6 +59,8 @@ namespace loot {
         boost::filesystem::path MasterlistPath() const;
         boost::filesystem::path UserlistPath() const;
 
+        std::string GetArchiveFileExtension() const;
+
         GameSettings& SetName(const std::string& name);
         GameSettings& SetMaster(const std::string& masterFile);
         GameSettings& SetRegistryKey(const std::string& registry);

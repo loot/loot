@@ -35,8 +35,8 @@ namespace loot {
             PluginTest() :
                 emptyFile("EmptyFile.esm"),
                 nonPluginFile("NotAPlugin.esm"),
-                blankArchive("Blank" + Game(GetParam()).getArchiveFileExtension()),
-                blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).getArchiveFileExtension()) {}
+                blankArchive("Blank" + Game(GetParam()).GetArchiveFileExtension()),
+                blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).GetArchiveFileExtension()) {}
 
             inline void SetUp() {
                 BaseGameTest::SetUp();

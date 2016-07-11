@@ -195,11 +195,4 @@ namespace loot {
             return LoadOrderHandler::IsPluginActive(pluginName);
         }
     }
-
-    std::string Game::getArchiveFileExtension() const {
-        if (Id() == Game::fo4)
-            return ".ba2";
-        else
-            return ".bsa";
-    }
 }
