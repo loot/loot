@@ -22,7 +22,7 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#include "scheme.h"
+#include "loot_scheme_handler_factory.h"
 
 #include "backend/app/loot_paths.h"
 

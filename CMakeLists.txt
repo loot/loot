@@ -209,14 +209,14 @@ set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/scheme.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
                   "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/scheme.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
 set (LOOT_API_SRC ${LOOT_SRC}
@@ -318,7 +318,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 # System-Specific Settings
 ##############################
 
-# If building on Travis, define BOOST_NO_CXX11_SCOPED_ENUMS to avoid 
+# If building on Travis, define BOOST_NO_CXX11_SCOPED_ENUMS to avoid
 # boost::filesystem::copy_file() linking errors due to mismatched C++ runtimes
 # between Boost and LOOT.
 IF ($ENV{TRAVIS})

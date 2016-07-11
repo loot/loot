@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __LOOT_GUI_SCHEME_HANDLER__
-#define __LOOT_GUI_SCHEME_HANDLER__
+#ifndef LOOT_GUI_LOOT_SCHEME_HANDLER_FACTORY
+#define LOOT_GUI_LOOT_SCHEME_HANDLER_FACTORY
 
 #include <include/cef_base.h>
 #include <include/cef_scheme.h>

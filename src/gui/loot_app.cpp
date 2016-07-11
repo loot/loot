@@ -24,7 +24,7 @@
 
 #include "loot_app.h"
 #include "loot_handler.h"
-#include "scheme.h"
+#include "loot_scheme_handler_factory.h"
 
 #include "../backend/app/loot_paths.h"
 #include "../backend/helpers/helpers.h"
