@@ -22,121 +22,110 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "loot_app.h"
-#include "loot_handler.h"
-#include "loot_scheme_handler_factory.h"
+#include "gui/loot_app.h"
 
-#include "../backend/app/loot_paths.h"
-#include "../backend/helpers/helpers.h"
-#include "../backend/helpers/language.h"
-
+#include <boost/log/trivial.hpp>
 #include <include/cef_browser.h>
 #include <include/cef_task.h>
 
-#include <boost/format.hpp>
-#include <boost/locale.hpp>
-#include <boost/log/trivial.hpp>
-
-#include <yaml-cpp/yaml.h>
-
-using namespace std;
-using boost::locale::translate;
-using boost::format;
-
-namespace fs = boost::filesystem;
+#include "backend/app/loot_paths.h"
+#include "backend/helpers/helpers.h"
+#include "backend/helpers/language.h"
+#include "gui/loot_handler.h"
+#include "gui/loot_scheme_handler_factory.h"
 
 namespace loot {
-    LootApp::LootApp() {
-        LootPaths::initialise();
-    }
+LootApp::LootApp() {
+  LootPaths::initialise();
+}
 
-    void LootApp::Initialise(const std::string& commandLineGameArg) {
-        lootState_.Init(commandLineGameArg);
-    }
+void LootApp::Initialise(const std::string& commandLineGameArg) {
+  lootState_.init(commandLineGameArg);
+}
 
-    void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
-                                                CefRefPtr<CefCommandLine> command_line) {
-        if (process_type.empty()) {
-            // Browser process, OK to modify the command line.
+void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
+                                            CefRefPtr<CefCommandLine> command_line) {
+  if (process_type.empty()) {
+      // Browser process, OK to modify the command line.
 
-            // Disable spell checking.
-            command_line->AppendSwitch("--disable-spell-checking");
-            command_line->AppendSwitch("--disable-extensions");
-        }
-    }
+      // Disable spell checking.
+    command_line->AppendSwitch("--disable-spell-checking");
+    command_line->AppendSwitch("--disable-extensions");
+  }
+}
 
-    CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
-        return this;
-    }
+CefRefPtr<CefBrowserProcessHandler> LootApp::GetBrowserProcessHandler() {
+  return this;
+}
 
-    CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
-        return this;
-    }
+CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
+  return this;
+}
 
-    void LootApp::OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) {
-        // Register "loot" as a standard scheme.
-        registrar->AddCustomScheme("loot", true, false, false);
-    }
+void LootApp::OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) {
+    // Register "loot" as a standard scheme.
+  registrar->AddCustomScheme("loot", true, false, false);
+}
 
-    void LootApp::OnContextInitialized() {
-        //Make sure this is running in the UI thread.
-        assert(CefCurrentlyOn(TID_UI));
+void LootApp::OnContextInitialized() {
+    //Make sure this is running in the UI thread.
+  assert(CefCurrentlyOn(TID_UI));
 
-        // Information used when creating the native window.
-        CefWindowInfo window_info;
+  // Information used when creating the native window.
+  CefWindowInfo window_info;
 
 #ifdef _WIN32
         // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
-        window_info.SetAsPopup(NULL, "LOOT");
+  window_info.SetAsPopup(NULL, "LOOT");
 #endif
 
         // Set the handler for browser-level callbacks.
-        CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
+  CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
 
-        // Register the custom "loot" scheme handlers.
-        CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
+  // Register the custom "loot" scheme handlers.
+  CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
 
-        // Specify CEF browser settings here.
-        CefBrowserSettings browser_settings;
+  // Specify CEF browser settings here.
+  CefBrowserSettings browser_settings;
 
-        // Need to set the global locale for this process so that messages will
-        // be translated.
-        BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-        if (lootState_.getLanguage().GetCode() != Language::Code::english) {
-            boost::locale::generator gen;
-            gen.add_messages_path(LootPaths::getL10nPath().string());
-            gen.add_messages_domain("loot");
+  // Need to set the global locale for this process so that messages will
+  // be translated.
+  BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
+  if (lootState_.getLanguage().GetCode() != Language::Code::english) {
+    boost::locale::generator gen;
+    gen.add_messages_path(LootPaths::getL10nPath().string());
+    gen.add_messages_domain("loot");
 
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState_.getLanguage().GetName();
-            locale::global(gen(lootState_.getLanguage().GetLocale() + ".UTF-8"));
-            boost::filesystem::path::imbue(locale());
-        }
+    BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState_.getLanguage().GetName();
+    std::locale::global(gen(lootState_.getLanguage().GetLocale() + ".UTF-8"));
+    boost::filesystem::path::imbue(std::locale());
+  }
 
-        // Set URL to load. Ignore any command line values.
-        std::string url = ToFileURL(LootPaths::getUIIndexPath());
+  // Set URL to load. Ignore any command line values.
+  std::string url = ToFileURL(LootPaths::getUIIndexPath());
 
-        // Create the first browser window.
-        CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
-    }
+  // Create the first browser window.
+  CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
+}
 
-    void LootApp::OnWebKitInitialized() {
-        // Create the renderer-side router for query handling.
-        CefMessageRouterConfig config;
-        message_router_ = CefMessageRouterRendererSide::Create(config);
-    }
+void LootApp::OnWebKitInitialized() {
+    // Create the renderer-side router for query handling.
+  CefMessageRouterConfig config;
+  message_router_ = CefMessageRouterRendererSide::Create(config);
+}
 
-    bool LootApp::OnProcessMessageReceived(
-        CefRefPtr<CefBrowser> browser,
-        CefProcessId source_process,
-        CefRefPtr<CefProcessMessage> message) {
-        // Handle IPC messages from the browser process...
-        return message_router_->OnProcessMessageReceived(browser, source_process, message);
-    }
+bool LootApp::OnProcessMessageReceived(
+  CefRefPtr<CefBrowser> browser,
+  CefProcessId source_process,
+  CefRefPtr<CefProcessMessage> message) {
+  // Handle IPC messages from the browser process...
+  return message_router_->OnProcessMessageReceived(browser, source_process, message);
+}
 
-    void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
-                                   CefRefPtr<CefFrame> frame,
-                                   CefRefPtr<CefV8Context> context) {
-        // Register javascript functions.
-        message_router_->OnContextCreated(browser, frame, context);
-    }
+void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,
+                               CefRefPtr<CefFrame> frame,
+                               CefRefPtr<CefV8Context> context) {
+    // Register javascript functions.
+  message_router_->OnContextCreated(browser, frame, context);
+}
 }

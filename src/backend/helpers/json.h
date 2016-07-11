@@ -22,54 +22,51 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __LOOT_JSON__
-#define __LOOT_JSON__
-
-#include <yaml-cpp/yaml.h>
+#ifndef LOOT_BACKEND_HELPERS_JSON
+#define LOOT_BACKEND_HELPERS_JSON
 
 #include <regex>
+
 #include <boost/algorithm/string.hpp>
+#include <yaml-cpp/yaml.h>
 
 namespace loot {
-    // Handy class for turning YAML objects into JSON and vice-versa.
-    class JSON {
-    public:
+namespace JSON {
+YAML::Node parse(std::string& json) {
+  return YAML::Load(json);
+}
 
-        inline static YAML::Node parse(std::string& json) {
-            return YAML::Load(json);
-        }
+std::string stringify(const YAML::Node& yaml) {
+  YAML::Emitter out;
+  out.SetOutputCharset(YAML::EscapeNonAscii);
+  out.SetStringFormat(YAML::DoubleQuoted);
+  out.SetBoolFormat(YAML::TrueFalseBool);
+  out.SetSeqFormat(YAML::Flow);
+  out.SetMapFormat(YAML::Flow);
 
-        inline static std::string stringify(const YAML::Node& yaml) {
-            YAML::Emitter out;
-            out.SetOutputCharset(YAML::EscapeNonAscii);
-            out.SetStringFormat(YAML::DoubleQuoted);
-            out.SetBoolFormat(YAML::TrueFalseBool);
-            out.SetSeqFormat(YAML::Flow);
-            out.SetMapFormat(YAML::Flow);
+  out << yaml;
 
-            out << yaml;
+  // yaml-cpp produces `!<!>` artifacts in its output, so remove them.
+  std::string json = out.c_str();
+  boost::replace_all(json, "!<!> ", "");
+  // There's also a bit of weirdness where there are some \x escapes and some \u escapes.
+  // They should all be \u, so transform them.
+  boost::replace_all(json, "\\x", "\\u00");
+  // yaml-cpp also emits booleans as "true" and "false" strings, whereas JSON expects the same unquoted basic values. The same happens for null and numbers.
+  boost::replace_all(json, "\": \"true\"", "\": true");
+  boost::replace_all(json, "\": \"false\"", "\": false");
+  boost::replace_all(json, "\": \"null\"", "\": null");
+  boost::replace_all(json, "\": ~", "\": null");
 
-            // yaml-cpp produces `!<!>` artifacts in its output, so remove them.
-            std::string json = out.c_str();
-            boost::replace_all(json, "!<!> ", "");
-            // There's also a bit of weirdness where there are some \x escapes and some \u escapes.
-            // They should all be \u, so transform them.
-            boost::replace_all(json, "\\x", "\\u00");
-            // yaml-cpp also emits booleans as "true" and "false" strings, whereas JSON expects the same unquoted basic values. The same happens for null and numbers.
-            boost::replace_all(json, "\": \"true\"", "\": true");
-            boost::replace_all(json, "\": \"false\"", "\": false");
-            boost::replace_all(json, "\": \"null\"", "\": null");
-            boost::replace_all(json, "\": ~", "\": null");
+  // Using the definition at <http://www.json.org/>.
+  // Version numbers and revision IDs should be kept as strings though.
+  std::regex numbers("\"(?!version|revision)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
 
-            // Using the definition at <http://www.json.org/>.
-            // Version numbers and revision IDs should be kept as strings though.
-            std::regex numbers("\"(?!version|revision)([^\"]+)\": \"(-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)\"", std::regex::ECMAScript);
+  json = std::regex_replace(json, numbers, "\"$1\": $2");
 
-            json = std::regex_replace(json, numbers, "\"$1\": $2");
-
-            return json;
-        }
-    };
+  return json;
+}
+}
 }
 
 #endif

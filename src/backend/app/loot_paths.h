@@ -22,31 +22,31 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_BACKEND_LOOT_PATHS
-#define LOOT_BACKEND_LOOT_PATHS
+#ifndef LOOT_BACKEND_APP_LOOT_PATHS
+#define LOOT_BACKEND_APP_LOOT_PATHS
 
 #include <boost/filesystem.hpp>
 
 namespace loot {
-    class LootPaths {
-    public:
-        static boost::filesystem::path getReadmePath();
-        static boost::filesystem::path getUIIndexPath();
-        static boost::filesystem::path getL10nPath();
-        static boost::filesystem::path getLootDataPath();
-        static boost::filesystem::path getSettingsPath();
-        static boost::filesystem::path getLogPath();
+class LootPaths {
+public:
+  static boost::filesystem::path getReadmePath();
+  static boost::filesystem::path getUIIndexPath();
+  static boost::filesystem::path getL10nPath();
+  static boost::filesystem::path getLootDataPath();
+  static boost::filesystem::path getSettingsPath();
+  static boost::filesystem::path getLogPath();
 
-        // Sets the app path to the current path, and the data path to the user
-        // local app data path / "LOOT".
-        static void initialise();
-    private:
-        static boost::filesystem::path lootAppPath;
-        static boost::filesystem::path lootDataPath;
+  // Sets the app path to the current path, and the data path to the user
+  // local app data path / "LOOT".
+  static void initialise();
+private:
+    //Get the local application data path.
+  static boost::filesystem::path getLocalAppDataPath();
 
-        //Get the local application data path.
-        static boost::filesystem::path getLocalAppDataPath();
-    };
+  static boost::filesystem::path lootAppPath_;
+  static boost::filesystem::path lootDataPath_;
+};
 }
 
 #endif

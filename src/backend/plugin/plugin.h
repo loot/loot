@@ -21,68 +21,67 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
-#ifndef __LOOT_PLUGIN__
-#define __LOOT_PLUGIN__
-
-#include "../metadata/plugin_metadata.h"
+#ifndef LOOT_BACKEND_PLUGIN_PLUGIN
+#define LOOT_BACKEND_PLUGIN_PLUGIN
 
 #include <cstdint>
-#include <string>
-#include <vector>
 #include <list>
 #include <set>
+#include <string>
+#include <vector>
 
 #include <boost/locale.hpp>
-
 #include <libespm/Plugin.h>
 
+#include "backend/metadata/plugin_metadata.h"
+
 namespace loot {
-    class Game;
+class Game;
 
-    class Plugin : public PluginMetadata, private libespm::Plugin {
-    public:
-        Plugin(const Game& game, const std::string& name, const bool headerOnly);
+class Plugin : public PluginMetadata, private libespm::Plugin {
+public:
+  Plugin(const Game& game, const std::string& name, const bool headerOnly);
 
-        using libespm::Plugin::getDescription;
-        using libespm::Plugin::getFormIds;
-        using libespm::Plugin::getMasters;
-        using libespm::Plugin::isMasterFile;
+  using libespm::Plugin::getDescription;
+  using libespm::Plugin::getFormIds;
+  using libespm::Plugin::getMasters;
+  using libespm::Plugin::isMasterFile;
 
-        bool IsEmpty() const;
-        uint32_t Crc() const;
-        size_t NumOverrideFormIDs() const;
+  bool IsEmpty() const;
+  uint32_t Crc() const;
+  size_t NumOverrideFormIDs() const;
 
-        bool LoadsArchive() const;
-        bool IsActive() const;
+  bool LoadsArchive() const;
+  bool IsActive() const;
 
-        //Load ordering functions.
-        bool DoFormIDsOverlap(const Plugin& plugin) const;
-        std::set<libespm::FormId> OverlapFormIDs(const Plugin& plugin) const;
+  //Load ordering functions.
+  bool DoFormIDsOverlap(const Plugin& plugin) const;
+  std::set<libespm::FormId> OverlapFormIDs(const Plugin& plugin) const;
 
-        //Validity checks.
-        bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
-        static bool IsValid(const std::string& filename, const Game& game);
+  //Validity checks.
+  bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
+  static bool IsValid(const std::string& filename, const Game& game);
 
-        bool operator < (const Plugin& rhs) const;
-    private:
-        bool _isEmpty;  // Does the plugin contain any records other than the TES4 header?
-        bool _isActive;
-        bool _loadsArchive;
-        std::string version;  //Obtained from description field.
-        uint32_t crc;
+  bool operator < (const Plugin& rhs) const;
+private:
+  bool isEmpty_;  // Does the plugin contain any records other than the TES4 header?
+  bool isActive_;
+  bool loadsArchive_;
+  std::string version_;  //Obtained from description field.
+  uint32_t crc_;
 
-        //Useful caches.
-        size_t numOverrideRecords;
-    };
+  //Useful caches.
+  size_t numOverrideRecords_;
+};
 }
 
 namespace std {
-    template<>
-    struct hash < loot::Plugin > {
-        size_t operator() (const loot::Plugin& plugin) const {
-            return hash<string>()(boost::locale::to_lower(plugin.Name()));
-        }
-    };
+template<>
+struct hash<loot::Plugin> {
+  size_t operator() (const loot::Plugin& plugin) const {
+    return hash<string>()(boost::locale::to_lower(plugin.Name()));
+  }
+};
 }
 
 #endif

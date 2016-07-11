@@ -22,34 +22,35 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_HELPERS__
-#define __LOOT_HELPERS__
+#ifndef LOOT_BACKEND_HELPERS_HELPERS
+#define LOOT_BACKEND_HELPERS_HELPERS
 
-#include <string>
 #include <regex>
+#include <string>
+
 #include <boost/filesystem.hpp>
 
 namespace loot {
     //Calculate the CRC of the given file for comparison purposes.
-    uint32_t GetCrc32(const boost::filesystem::path& filename);
+uint32_t GetCrc32(const boost::filesystem::path& filename);
 
-    //Converts an unsigned 32-bit integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
-    std::string IntToHexString(const uint32_t n);
+//Converts an unsigned 32-bit integer to a hex string using BOOST's Spirit.Karma. Faster than a stringstream conversion.
+std::string IntToHexString(const uint32_t n);
 
-    //Turns an absolute filesystem path into a valid file:// URL.
-    std::string ToFileURL(const boost::filesystem::path& file);
+//Turns an absolute filesystem path into a valid file:// URL.
+std::string ToFileURL(const boost::filesystem::path& file);
 
-    //Opens the file in its registered default application.
-    void OpenInDefaultApplication(const boost::filesystem::path& file);
+//Opens the file in its registered default application.
+void OpenInDefaultApplication(const boost::filesystem::path& file);
 
 #ifdef _WIN32
     //Get registry subkey value string.
-    std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 
-    //Helper to turn UTF8 strings into strings that can be used by WinAPI.
-    std::wstring ToWinWide(const std::string& str);
+//Helper to turn UTF8 strings into strings that can be used by WinAPI.
+std::wstring ToWinWide(const std::string& str);
 
-    std::string FromWinWide(const std::wstring& wstr);
+std::string FromWinWide(const std::wstring& wstr);
 #endif
 }
 

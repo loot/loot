@@ -22,49 +22,49 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_LOOT_STATE
-#define LOOT_BACKEND_LOOT_STATE
+#ifndef LOOT_BACKEND_APP_LOOT_STATE
+#define LOOT_BACKEND_APP_LOOT_STATE
 
-#include "loot_settings.h"
+#include "backend/app/loot_settings.h"
 #include "backend/game/game.h"
 
 namespace loot {
-    class LootState : public LootSettings {
-    public:
-        LootState();
+class LootState : public LootSettings {
+public:
+  LootState();
 
-        void load(YAML::Node& settings);
-        void Init(const std::string& cmdLineGame);
-        const std::vector<std::string>& InitErrors() const;
+  void load(YAML::Node& settings);
+  void init(const std::string& cmdLineGame);
+  const std::vector<std::string>& getInitErrors() const;
 
-        void save(const boost::filesystem::path& file);
+  void save(const boost::filesystem::path& file);
 
-        Game& CurrentGame();
-        void ChangeGame(const std::string& newGameFolder);
+  Game& getCurrentGame();
+  void changeGame(const std::string& newGameFolder);
 
-        // Get the folder names of the installed games.
-        std::vector<std::string> InstalledGames();
+  // Get the folder names of the installed games.
+  std::vector<std::string> getInstalledGames();
 
-        bool hasUnappliedChanges() const;
-        void incrementUnappliedChangeCounter();
-        void decrementUnappliedChangeCounter();
-    private:
-        std::list<Game> _games;
-        std::list<Game>::iterator _currentGame;
-        std::vector<std::string> _initErrors;
+  bool hasUnappliedChanges() const;
+  void incrementUnappliedChangeCounter();
+  void decrementUnappliedChangeCounter();
+private:
+    // Select initial game.
+  void selectGame(std::string cmdLineGame);
 
-        // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
-        size_t unappliedChangeCounter;
+  static std::list<Game> toGames(const std::vector<GameSettings>& settings);
+  static std::vector<GameSettings> toGameSettings(const std::list<Game>& games);
 
-        // Select initial game.
-        void SelectGame(std::string cmdLineGame);
+  std::list<Game> games_;
+  std::list<Game>::iterator currentGame_;
+  std::vector<std::string> initErrors_;
 
-        static std::list<Game> ToGames(const std::vector<GameSettings>& settings);
-        static std::vector<GameSettings> ToGameSettings(const std::list<Game>& games);
+  // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
+  size_t unappliedChangeCounter_;
 
-        // Mutex used to protect access to member variables.
-        std::mutex mutex;
-    };
+  // Mutex used to protect access to member variables.
+  std::mutex mutex_;
+};
 }
 
 #endif

@@ -22,43 +22,43 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_HELPERS
-#define LOOT_TEST_BACKEND_HELPERS
+#ifndef LOOT_TESTS_BACKEND_HELPERS_HELPERS_TEST
+#define LOOT_TESTS_BACKEND_HELPERS_HELPERS_TEST
 
 #include "backend/helpers/helpers.h"
-#include "backend/error.h"
 
+#include "backend/error.h"
 #include "tests/backend/base_game_test.h"
 
 namespace loot {
-    namespace test {
-        class GetCrc32Test : public BaseGameTest {};
+namespace test {
+class GetCrc32Test : public BaseGameTest {};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        // Just test with one game because if it works for one it will work for them
-        // all.
-        INSTANTIATE_TEST_CASE_P(,
-                                GetCrc32Test,
-                                ::testing::Values(
-                                    GameType::tes5));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+// Just test with one game because if it works for one it will work for them
+// all.
+INSTANTIATE_TEST_CASE_P(,
+                        GetCrc32Test,
+                        ::testing::Values(
+                          GameType::tes5));
 
-        TEST_P(GetCrc32Test, gettingTheCrcOfAMissingFileShouldThrow) {
-            EXPECT_THROW(GetCrc32(dataPath / missingEsp), Error);
-        }
+TEST_P(GetCrc32Test, gettingTheCrcOfAMissingFileShouldThrow) {
+  EXPECT_THROW(GetCrc32(dataPath / missingEsp), Error);
+}
 
-        TEST_P(GetCrc32Test, gettingTheCrcOfAFileShouldReturnTheCorrectValue) {
-            EXPECT_EQ(blankEsmCrc, GetCrc32(dataPath / blankEsm));
-        }
+TEST_P(GetCrc32Test, gettingTheCrcOfAFileShouldReturnTheCorrectValue) {
+  EXPECT_EQ(blankEsmCrc, GetCrc32(dataPath / blankEsm));
+}
 
-        TEST(IntToHexString, intToHexStringShouldOutputANonZeroPositiveIntegerCorrectly) {
-            EXPECT_EQ("14", IntToHexString(20));
-        }
+TEST(IntToHexString, intToHexStringShouldOutputANonZeroPositiveIntegerCorrectly) {
+  EXPECT_EQ("14", IntToHexString(20));
+}
 
-        TEST(IntToHexString, intToHexStringShouldOutputZeroCorrectly) {
-            EXPECT_EQ("0", IntToHexString(0));
-        }
-    }
+TEST(IntToHexString, intToHexStringShouldOutputZeroCorrectly) {
+  EXPECT_EQ("0", IntToHexString(0));
+}
+}
 }
 
 #endif

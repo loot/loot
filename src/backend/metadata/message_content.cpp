@@ -22,45 +22,44 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "message_content.h"
-#include "../helpers/language.h"
+#include "backend/metadata/message_content.h"
 
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
+#include "backend/helpers/language.h"
 
 namespace loot {
-    MessageContent::MessageContent() : _language(Language::Code::english) {}
+MessageContent::MessageContent() : language_(Language::Code::english) {}
 
-    MessageContent::MessageContent(const std::string& str, const Language::Code language) : _str(str), _language(language) {}
+MessageContent::MessageContent(const std::string& text, const Language::Code language) : text_(text), language_(language) {}
 
-    std::string MessageContent::GetText() const {
-        return _str;
-    }
+std::string MessageContent::GetText() const {
+  return text_;
+}
 
-    Language::Code MessageContent::GetLanguage() const {
-        return _language;
-    }
+Language::Code MessageContent::GetLanguage() const {
+  return language_;
+}
 
-    bool MessageContent::operator < (const MessageContent& rhs) const {
-        return boost::ilexicographical_compare(_str, rhs.GetText());
-    }
+bool MessageContent::operator < (const MessageContent& rhs) const {
+  return boost::ilexicographical_compare(text_, rhs.GetText());
+}
 
-    bool MessageContent::operator == (const MessageContent& rhs) const {
-        return (boost::iequals(_str, rhs.GetText()));
-    }
+bool MessageContent::operator == (const MessageContent& rhs) const {
+  return (boost::iequals(text_, rhs.GetText()));
+}
 }
 
 namespace YAML {
-    Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
-        out << BeginMap;
+Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
+  out << BeginMap;
 
-        out << Key << "lang" << Value << loot::Language(rhs.GetLanguage()).GetLocale();
+  out << Key << "lang" << Value << loot::Language(rhs.GetLanguage()).GetLocale();
 
-        out << Key << "str" << Value << YAML::SingleQuoted << rhs.GetText();
+  out << Key << "str" << Value << YAML::SingleQuoted << rhs.GetText();
 
-        out << EndMap;
+  out << EndMap;
 
-        return out;
-    }
+  return out;
+}
 }

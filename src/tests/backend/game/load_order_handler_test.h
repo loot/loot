@@ -22,137 +22,137 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_LOAD_ORDER_HANDLER
-#define LOOT_TEST_BACKEND_LOAD_ORDER_HANDLER
+#ifndef LOOT_TESTS_BACKEND_LOAD_ORDER_HANDLER_TEST
+#define LOOT_TESTS_BACKEND_LOAD_ORDER_HANDLER_TEST
 
-#include "backend/error.h"
 #include "backend/game/load_order_handler.h"
 
+#include "backend/error.h"
 #include "tests/backend/base_game_test.h"
 
 namespace loot {
-    namespace test {
-        class LoadOrderHandlerTest : public BaseGameTest {
-        protected:
-            LoadOrderHandler loh;
-        };
+namespace test {
+class LoadOrderHandlerTest : public BaseGameTest {
+protected:
+  LoadOrderHandler loadOrderHandler_;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                LoadOrderHandlerTest,
-                                ::testing::Values(
-                                    GameType::tes4,
-                                    GameType::tes5,
-                                    GameType::fo3,
-                                    GameType::fonv,
-                                    GameType::fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        LoadOrderHandlerTest,
+                        ::testing::Values(
+                          GameType::tes4,
+                          GameType::tes5,
+                          GameType::fo3,
+                          GameType::fonv,
+                          GameType::fo4));
 
-        TEST_P(LoadOrderHandlerTest, initShouldThrowForAnInvalidGameId) {
-            GameSettings game(GameType::autodetect);
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(LoadOrderHandlerTest, initShouldThrowForAnInvalidGameId) {
+  GameSettings game(GameType::autodetect);
+  game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_THROW(loh.Init(game), Error);
-            EXPECT_THROW(loh.Init(game), Error);
-            EXPECT_THROW(loh.Init(game, localPath), Error);
-            EXPECT_THROW(loh.Init(game, localPath), Error);
-        }
+  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
+}
 
-        TEST_P(LoadOrderHandlerTest, initShouldThrowIfNoGamePathIsSet) {
-            GameSettings game(GetParam());
+TEST_P(LoadOrderHandlerTest, initShouldThrowIfNoGamePathIsSet) {
+  GameSettings game(GetParam());
 
-            EXPECT_THROW(loh.Init(game), Error);
-            EXPECT_THROW(loh.Init(game), Error);
-            EXPECT_THROW(loh.Init(game, localPath), Error);
-            EXPECT_THROW(loh.Init(game, localPath), Error);
-        }
+  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
+}
 
 #ifndef _WIN32
-        TEST_P(LoadOrderHandlerTest, initShouldThrowOnLinuxIfNoLocalPathIsSet) {
-            GameSettings game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(LoadOrderHandlerTest, initShouldThrowOnLinuxIfNoLocalPathIsSet) {
+  GameSettings game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_THROW(loh.Init(game), Error);
-        }
+  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
+}
 #endif
 
-        TEST_P(LoadOrderHandlerTest, initShouldNotThrowIfAValidGameIdAndGamePathAndLocalPathAreSet) {
-            GameSettings game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(LoadOrderHandlerTest, initShouldNotThrowIfAValidGameIdAndGamePathAndLocalPathAreSet) {
+  GameSettings game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_NO_THROW(loh.Init(game, localPath));
-        }
+  EXPECT_NO_THROW(loadOrderHandler_.Init(game, localPath));
+}
 
-        TEST_P(LoadOrderHandlerTest, isPluginActiveShouldThrowIfTheHandlerHasNotBeenInitialised) {
-            EXPECT_THROW(loh.IsPluginActive(masterFile), Error);
-        }
+TEST_P(LoadOrderHandlerTest, isPluginActiveShouldThrowIfTheHandlerHasNotBeenInitialised) {
+  EXPECT_THROW(loadOrderHandler_.IsPluginActive(masterFile), Error);
+}
 
-        TEST_P(LoadOrderHandlerTest, isPluginActiveShouldReturnCorrectPluginStatesAfterInitialisation) {
-            GameSettings game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(loh.Init(game, localPath));
+TEST_P(LoadOrderHandlerTest, isPluginActiveShouldReturnCorrectPluginStatesAfterInitialisation) {
+  GameSettings game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
 
-            EXPECT_TRUE(loh.IsPluginActive(masterFile));
-            EXPECT_TRUE(loh.IsPluginActive(blankEsm));
-            EXPECT_FALSE(loh.IsPluginActive(blankEsp));
-        }
+  EXPECT_TRUE(loadOrderHandler_.IsPluginActive(masterFile));
+  EXPECT_TRUE(loadOrderHandler_.IsPluginActive(blankEsm));
+  EXPECT_FALSE(loadOrderHandler_.IsPluginActive(blankEsp));
+}
 
-        TEST_P(LoadOrderHandlerTest, getLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
-            EXPECT_THROW(loh.GetLoadOrder(), Error);
-        }
+TEST_P(LoadOrderHandlerTest, getLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
+  EXPECT_THROW(loadOrderHandler_.GetLoadOrder(), Error);
+}
 
-        TEST_P(LoadOrderHandlerTest, getLoadOrderShouldReturnTheCurrentLoadOrder) {
-            GameSettings game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(loh.Init(game, localPath));
+TEST_P(LoadOrderHandlerTest, getLoadOrderShouldReturnTheCurrentLoadOrder) {
+  GameSettings game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
 
-            ASSERT_EQ(getLoadOrder(), loh.GetLoadOrder());
-        }
+  ASSERT_EQ(getLoadOrder(), loadOrderHandler_.GetLoadOrder());
+}
 
-        TEST_P(LoadOrderHandlerTest, setLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
-            std::list<std::string> loadOrder({
-                masterFile,
-                blankEsm,
-                blankMasterDependentEsm,
-                blankDifferentEsm,
-                blankDifferentMasterDependentEsm,
-                blankDifferentEsp,
-                blankDifferentPluginDependentEsp,
-                blankEsp,
-                blankMasterDependentEsp,
-                blankDifferentMasterDependentEsp,
-                blankPluginDependentEsp,
-            });
+TEST_P(LoadOrderHandlerTest, setLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
+  std::list<std::string> loadOrder({
+      masterFile,
+      blankEsm,
+      blankMasterDependentEsm,
+      blankDifferentEsm,
+      blankDifferentMasterDependentEsm,
+      blankDifferentEsp,
+      blankDifferentPluginDependentEsp,
+      blankEsp,
+      blankMasterDependentEsp,
+      blankDifferentMasterDependentEsp,
+      blankPluginDependentEsp,
+  });
 
-            EXPECT_THROW(loh.SetLoadOrder(std::list<std::string>()), Error);
-        }
+  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(std::list<std::string>()), Error);
+}
 
-        TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {
-            GameSettings game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(loh.Init(game, localPath));
+TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {
+  GameSettings game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
 
-            std::list<std::string> loadOrder({
-                masterFile,
-                blankEsm,
-                blankMasterDependentEsm,
-                blankDifferentEsm,
-                blankDifferentMasterDependentEsm,
-                blankDifferentEsp,
-                blankDifferentPluginDependentEsp,
-                blankEsp,
-                blankMasterDependentEsp,
-                blankDifferentMasterDependentEsp,
-                blankPluginDependentEsp,
-            });
-            EXPECT_NO_THROW(loh.SetLoadOrder(loadOrder));
+  std::list<std::string> loadOrder({
+      masterFile,
+      blankEsm,
+      blankMasterDependentEsm,
+      blankDifferentEsm,
+      blankDifferentMasterDependentEsm,
+      blankDifferentEsp,
+      blankDifferentPluginDependentEsp,
+      blankEsp,
+      blankMasterDependentEsp,
+      blankDifferentMasterDependentEsp,
+      blankPluginDependentEsp,
+  });
+  EXPECT_NO_THROW(loadOrderHandler_.SetLoadOrder(loadOrder));
 
-            if (GetParam() == GameType::fo4)
-                loadOrder.erase(begin(loadOrder));
+  if (GetParam() == GameType::fo4)
+    loadOrder.erase(begin(loadOrder));
 
-            EXPECT_EQ(loadOrder, getLoadOrder());
-        }
-    }
+  EXPECT_EQ(loadOrder, getLoadOrder());
+}
+}
 }
 
 #endif

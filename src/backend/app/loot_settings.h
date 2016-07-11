@@ -22,11 +22,8 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_LOOT_SETTINGS
-#define LOOT_BACKEND_LOOT_SETTINGS
-
-#include "backend/game/game_settings.h"
-#include "backend/helpers/language.h"
+#ifndef LOOT_BACKEND_APP_LOOT_SETTINGS
+#define LOOT_BACKEND_APP_LOOT_SETTINGS
 
 #include <map>
 #include <mutex>
@@ -36,55 +33,58 @@
 #include <boost/filesystem.hpp>
 #include <yaml-cpp/yaml.h>
 
+#include "backend/game/game_settings.h"
+#include "backend/helpers/language.h"
+
 namespace loot {
-    class LootSettings {
-    public:
-        struct WindowPosition {
-            WindowPosition();
+class LootSettings {
+public:
+  struct WindowPosition {
+    WindowPosition();
 
-            long top;
-            long bottom;
-            long left;
-            long right;
-        };
+    long top;
+    long bottom;
+    long left;
+    long right;
+  };
 
-        LootSettings();
+  LootSettings();
 
-        void load(YAML::Node& settings);
-        void load(const boost::filesystem::path& file);
-        void save(const boost::filesystem::path& file);
+  void load(YAML::Node& settings);
+  void load(const boost::filesystem::path& file);
+  void save(const boost::filesystem::path& file);
 
-        bool isDebugLoggingEnabled() const;
-        bool isWindowPositionStored() const;
-        std::string getGame() const;
-        std::string getLastGame() const;
-        std::string getLastVersion() const;
-        const Language& getLanguage() const;
-        const WindowPosition& getWindowPosition() const;
-        std::vector<GameSettings> getGameSettings() const;
+  bool isDebugLoggingEnabled() const;
+  bool isWindowPositionStored() const;
+  std::string getGame() const;
+  std::string getLastGame() const;
+  std::string getLastVersion() const;
+  const Language& getLanguage() const;
+  const WindowPosition& getWindowPosition() const;
+  std::vector<GameSettings> getGameSettings() const;
 
-        void storeLastGame(const std::string& lastGame);
-        void storeWindowPosition(const WindowPosition& position);
-        void storeGameSettings(const std::vector<GameSettings>& gameSettings);
-        void storeFilterState(const std::string& filterId, bool enabled);
-        void updateLastVersion();
+  void storeLastGame(const std::string& lastGame);
+  void storeWindowPosition(const WindowPosition& position);
+  void storeGameSettings(const std::vector<GameSettings>& gameSettings);
+  void storeFilterState(const std::string& filterId, bool enabled);
+  void updateLastVersion();
 
-        YAML::Node toYaml() const;
-    private:
-        bool enableDebugLogging;
-        bool updateMasterlist;
-        std::string game;
-        std::string lastGame;
-        std::string lastVersion;
-        Language language;
-        WindowPosition windowPosition;
-        std::vector<GameSettings> gameSettings;
-        std::map<std::string, bool> filters;
+  YAML::Node toYaml() const;
+private:
+  static void upgradeYaml(YAML::Node& yaml);
 
-        mutable std::recursive_mutex mutex;
+  bool enableDebugLogging_;
+  bool updateMasterlist_;
+  std::string game_;
+  std::string lastGame_;
+  std::string lastVersion_;
+  Language language_;
+  WindowPosition windowPosition_;
+  std::vector<GameSettings> gameSettings_;
+  std::map<std::string, bool> filters_;
 
-        static void upgradeYaml(YAML::Node& yaml);
-    };
+  mutable std::recursive_mutex mutex_;
+};
 }
 
 #endif

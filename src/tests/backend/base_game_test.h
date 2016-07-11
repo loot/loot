@@ -22,37 +22,30 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BASE_GAME_TEST
-#define LOOT_TEST_BASE_GAME_TEST
+#ifndef LOOT_TESTS_BACKEND_BASE_GAME_TEST
+#define LOOT_TESTS_BACKEND_BASE_GAME_TEST
 
-#include <gtest/gtest.h>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/algorithm/string.hpp>
-
-#include <map>
-#include <unordered_set>
-
+#include "backend/game/game_type.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
-    namespace test {
-        class BaseGameTest : 
-            public ::testing::TestWithParam<GameType>,
-            public CommonGameTestFixture {
-        protected:
-            BaseGameTest() :
-                CommonGameTestFixture(static_cast<unsigned int>(GetParam())) {}
+namespace test {
+class BaseGameTest :
+  public ::testing::TestWithParam<GameType>,
+  public CommonGameTestFixture {
+protected:
+  BaseGameTest() :
+    CommonGameTestFixture(static_cast<unsigned int>(GetParam())) {}
 
-            inline virtual void SetUp() {
-                setUp();
-            }
+  inline virtual void SetUp() {
+    setUp();
+  }
 
-            inline virtual void TearDown() {
-                tearDown();
-            }
-        };
-    }
+  inline virtual void TearDown() {
+    tearDown();
+  }
+};
+}
 }
 
 #endif

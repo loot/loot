@@ -21,61 +21,61 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
-#ifndef __LOOT_METADATA_MESSAGE_CONTENT__
-#define __LOOT_METADATA_MESSAGE_CONTENT__
-
-#include "../helpers/language.h"
+#ifndef LOOT_BACKEND_METADATA_MESSAGE_CONTENT
+#define LOOT_BACKEND_METADATA_MESSAGE_CONTENT
 
 #include <string>
 
 #include <yaml-cpp/yaml.h>
 
+#include "backend/helpers/language.h"
+
 namespace loot {
-    class MessageContent {
-    public:
-        MessageContent();
-        MessageContent(const std::string& str, const Language::Code language);
+class MessageContent {
+public:
+  MessageContent();
+  MessageContent(const std::string& text, const Language::Code language);
 
-        std::string GetText() const;
-        Language::Code GetLanguage() const;
+  std::string GetText() const;
+  Language::Code GetLanguage() const;
 
-        bool operator < (const MessageContent& rhs) const;
-        bool operator == (const MessageContent& rhs) const;
-    private:
-        std::string _str;
-        Language::Code _language;
-    };
+  bool operator < (const MessageContent& rhs) const;
+  bool operator == (const MessageContent& rhs) const;
+private:
+  std::string text_;
+  Language::Code language_;
+};
 }
 
 namespace YAML {
-    template<>
-    struct convert < loot::MessageContent > {
-        static Node encode(const loot::MessageContent& rhs) {
-            Node node;
-            node["str"] = rhs.GetText();
-            node["lang"] = loot::Language(rhs.GetLanguage()).GetLocale();
+template<>
+struct convert<loot::MessageContent> {
+  static Node encode(const loot::MessageContent& rhs) {
+    Node node;
+    node["str"] = rhs.GetText();
+    node["lang"] = loot::Language(rhs.GetLanguage()).GetLocale();
 
-            return node;
-        }
+    return node;
+  }
 
-        static bool decode(const Node& node, loot::MessageContent& rhs) {
-            if (!node.IsMap())
-                throw RepresentationException(node.Mark(), "bad conversion: 'message content' object must be a map");
-            if (!node["str"])
-                throw RepresentationException(node.Mark(), "bad conversion: 'str' key missing from 'message content' object");
-            if (!node["lang"])
-                throw RepresentationException(node.Mark(), "bad conversion: 'lang' key missing from 'message content' object");
+  static bool decode(const Node& node, loot::MessageContent& rhs) {
+    if (!node.IsMap())
+      throw RepresentationException(node.Mark(), "bad conversion: 'message content' object must be a map");
+    if (!node["str"])
+      throw RepresentationException(node.Mark(), "bad conversion: 'str' key missing from 'message content' object");
+    if (!node["lang"])
+      throw RepresentationException(node.Mark(), "bad conversion: 'lang' key missing from 'message content' object");
 
-            std::string str = node["str"].as<std::string>();
-            loot::Language::Code lang = loot::Language(node["lang"].as<std::string>()).GetCode();
+    std::string str = node["str"].as<std::string>();
+    loot::Language::Code lang = loot::Language(node["lang"].as<std::string>()).GetCode();
 
-            rhs = loot::MessageContent(str, lang);
+    rhs = loot::MessageContent(str, lang);
 
-            return true;
-        }
-    };
+    return true;
+  }
+};
 
-    Emitter& operator << (Emitter& out, const loot::MessageContent& rhs);
+Emitter& operator << (Emitter& out, const loot::MessageContent& rhs);
 }
 
 #endif

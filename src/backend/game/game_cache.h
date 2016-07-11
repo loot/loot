@@ -22,54 +22,54 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GAME_CRC_CACHE__
-#define __LOOT_GAME_CRC_CACHE__
+#ifndef LOOT_BACKEND_GAME_GAME_CACHE
+#define LOOT_BACKEND_GAME_GAME_CACHE
 
-#include "../metadata_list.h"
-#include "../masterlist.h"
-#include "../plugin/plugin.h"
-
-#include <string>
 #include <mutex>
+#include <string>
 #include <unordered_map>
 
+#include "backend/masterlist.h"
+#include "backend/metadata_list.h"
+#include "backend/plugin/plugin.h"
+
 namespace loot {
-    class GameCache {
-    public:
-        GameCache();
-        GameCache(const GameCache& cache);
+class GameCache {
+public:
+  GameCache();
+  GameCache(const GameCache& cache);
 
-        GameCache& operator=(const GameCache& cache);
+  GameCache& operator=(const GameCache& cache);
 
-        Masterlist& GetMasterlist();
-        MetadataList& GetUserlist();
+  Masterlist& GetMasterlist();
+  MetadataList& GetUserlist();
 
-        // Returns false for second bool if no cached condition.
-        std::pair<bool, bool> GetCachedCondition(const std::string& condition) const;
-        void CacheCondition(const std::string& condition, bool result);
+  // Returns false for second bool if no cached condition.
+  std::pair<bool, bool> GetCachedCondition(const std::string& condition) const;
+  void CacheCondition(const std::string& condition, bool result);
 
-        std::set<Plugin> GetPlugins() const;
-        const Plugin& GetPlugin(const std::string& pluginName) const;
-        void AddPlugin(const Plugin&& plugin);
+  std::set<Plugin> GetPlugins() const;
+  const Plugin& GetPlugin(const std::string& pluginName) const;
+  void AddPlugin(const Plugin&& plugin);
 
-        std::vector<Message> GetMessages() const;
-        void AppendMessage(const Message& message);
+  std::vector<Message> GetMessages() const;
+  void AppendMessage(const Message& message);
 
-        void SetLoadOrderSorted(bool isLoadOrderSorted);
+  void SetLoadOrderSorted(bool isLoadOrderSorted);
 
-        void ClearCachedConditions();
-        void ClearCachedPlugins();
-        void ClearMessages();
-    private:
-        Masterlist masterlist;
-        MetadataList userlist;
-        std::unordered_map<std::string, bool> conditionCache;
-        std::unordered_map<std::string, Plugin> plugins;
-        std::vector<Message> messages;
-        bool isLoadOrderSorted;
+  void ClearCachedConditions();
+  void ClearCachedPlugins();
+  void ClearMessages();
+private:
+  Masterlist masterlist_;
+  MetadataList userlist_;
+  std::unordered_map<std::string, bool> conditions_;
+  std::unordered_map<std::string, Plugin> plugins_;
+  std::vector<Message> messages_;
+  bool isLoadOrderSorted_;
 
-        mutable std::mutex mutex;
-    };
+  mutable std::mutex mutex_;
+};
 }
 
 #endif

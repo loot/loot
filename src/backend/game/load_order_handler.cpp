@@ -22,180 +22,174 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "load_order_handler.h"
-#include "../error.h"
+#include "backend/game/load_order_handler.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-using namespace std;
+#include "backend/error.h"
 
-namespace fs = boost::filesystem;
-namespace lc = boost::locale;
+using boost::locale::translate;
+using std::string;
 
 namespace loot {
-    LoadOrderHandler::LoadOrderHandler() : _gh(nullptr) {}
+LoadOrderHandler::LoadOrderHandler() : gh_(nullptr) {}
 
-    LoadOrderHandler::~LoadOrderHandler() {
-        lo_destroy_handle(_gh);
+LoadOrderHandler::~LoadOrderHandler() {
+  lo_destroy_handle(gh_);
+}
+
+void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData) {
+  if (game.Type() != GameType::tes4
+      && game.Type() != GameType::tes5
+      && game.Type() != GameType::fo3
+      && game.Type() != GameType::fonv
+      && game.Type() != GameType::fo4) {
+    throw Error(Error::Code::invalid_args, translate("Unsupported game ID supplied.").str());
+  }
+
+  if (game.GamePath().empty()) {
+    BOOST_LOG_TRIVIAL(error) << "Game path is not initialised.";
+    throw Error(Error::Code::invalid_args, translate("Game path is not initialised.").str());
+  }
+
+  const char * gameLocalDataPath = nullptr;
+  string tempPathString = gameLocalAppData.string();
+  if (!tempPathString.empty())
+    gameLocalDataPath = tempPathString.c_str();
+
+// If the handle has already been initialised, close it and open another.
+  if (gh_ != nullptr) {
+    lo_destroy_handle(gh_);
+    gh_ = nullptr;
+  }
+
+  int ret;
+  if (game.Type() == GameType::tes4)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_TES4, game.GamePath().string().c_str(), gameLocalDataPath);
+  else if (game.Type() == GameType::tes5)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_TES5, game.GamePath().string().c_str(), gameLocalDataPath);
+  else if (game.Type() == GameType::fo3)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
+  else if (game.Type() == GameType::fonv)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_FNV, game.GamePath().string().c_str(), gameLocalDataPath);
+  else if (game.Type() == GameType::fo4)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_FO4, game.GamePath().string().c_str(), gameLocalDataPath);
+  else
+    ret = LIBLO_ERROR_INVALID_ARGS;
+
+  if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
+    const char * e = nullptr;
+    string err;
+    lo_get_error_message(&e);
+    if (e == nullptr) {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
+      err = translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
+    } else {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
+      err = translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
     }
+    lo_cleanup();
+    throw Error(Error::Code::liblo_error, err);
+  }
+}
 
-    void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData) {
-        if (game.Type() != GameType::tes4
-            && game.Type() != GameType::tes5
-            && game.Type() != GameType::fo3
-            && game.Type() != GameType::fonv
-            && game.Type() != GameType::fo4) {
-            throw Error(Error::Code::invalid_args, lc::translate("Unsupported game ID supplied.").str());
-        }
+bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
+  BOOST_LOG_TRIVIAL(debug) << "Checking if plugin \"" << pluginName << "\" is active.";
 
-        if (game.GamePath().empty()) {
-            BOOST_LOG_TRIVIAL(error) << "Game path is not initialised.";
-            throw Error(Error::Code::invalid_args, lc::translate("Game path is not initialised.").str());
-        }
-
-        const char * gameLocalDataPath = nullptr;
-        string tempPathString = gameLocalAppData.string();
-        if (!tempPathString.empty())
-            gameLocalDataPath = tempPathString.c_str();
-
-        // If the handle has already been initialised, close it and open another.
-        if (_gh != nullptr) {
-            lo_destroy_handle(_gh);
-            _gh = nullptr;
-        }
-
-        int ret;
-        if (game.Type() == GameType::tes4)
-            ret = lo_create_handle(&_gh, LIBLO_GAME_TES4, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Type() == GameType::tes5)
-            ret = lo_create_handle(&_gh, LIBLO_GAME_TES5, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Type() == GameType::fo3)
-            ret = lo_create_handle(&_gh, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Type() == GameType::fonv)
-            ret = lo_create_handle(&_gh, LIBLO_GAME_FNV, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Type() == GameType::fo4)
-            ret = lo_create_handle(&_gh, LIBLO_GAME_FO4, game.GamePath().string().c_str(), gameLocalDataPath);
-        else
-            ret = LIBLO_ERROR_INVALID_ARGS;
-
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-                err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw Error(Error::Code::liblo_error, err);
-        }
+  bool result = false;
+  unsigned int ret = lo_get_plugin_active(gh_, pluginName.c_str(), &result);
+  if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME) {
+    const char * e = nullptr;
+    string err;
+    lo_get_error_message(&e);
+    if (e == nullptr) {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details could not be fetched.";
+      err = translate("libloadorder failed to check if a plugin is active. Details could not be fetched.").str();
+    } else {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details: " << e;
+      err = translate("libloadorder failed to check if a plugin is active. Details:").str() + " " + e;
     }
+    lo_cleanup();
+    throw Error(Error::Code::liblo_error, err);
+  }
 
-    bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
-        BOOST_LOG_TRIVIAL(debug) << "Checking if plugin \"" << pluginName << "\" is active.";
+  return result;
+}
 
-        bool result = false;
-        unsigned int ret = lo_get_plugin_active(_gh, pluginName.c_str(), &result);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to check if a plugin is active. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details: " << e;
-                err = lc::translate("libloadorder failed to check if a plugin is active. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw Error(Error::Code::liblo_error, err);
-        }
+std::list<std::string> LoadOrderHandler::GetLoadOrder() const {
+  BOOST_LOG_TRIVIAL(debug) << "Getting load order.";
 
-        return result;
+  char ** pluginArr;
+  size_t pluginArrSize;
+
+  unsigned int ret = lo_get_load_order(gh_, &pluginArr, &pluginArrSize);
+  if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
+    const char * e = nullptr;
+    string err;
+    lo_get_error_message(&e);
+    if (e == nullptr) {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details could not be fetched.";
+      err = translate("libloadorder failed to get the load order. Details could not be fetched.").str();
+    } else {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
+      err = translate("libloadorder failed to get the load order. Details:").str() + " " + e;
     }
+    lo_cleanup();
+    throw Error(Error::Code::liblo_error, err);
+  }
 
-    std::list<std::string> LoadOrderHandler::GetLoadOrder() const {
-        BOOST_LOG_TRIVIAL(debug) << "Getting load order.";
+  std::list<string> loadOrder;
+  for (size_t i = 0; i < pluginArrSize; ++i) {
+    loadOrder.push_back(string(pluginArr[i]));
+  }
+  return loadOrder;
+}
 
-        char ** pluginArr;
-        size_t pluginArrSize;
+void LoadOrderHandler::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
+  BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
 
-        unsigned int ret = lo_get_load_order(_gh, &pluginArr, &pluginArrSize);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to get the load order. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
-                err = lc::translate("libloadorder failed to get the load order. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw Error(Error::Code::liblo_error, err);
-        }
-
-        std::list<std::string> loadOrder;
-        for (size_t i = 0; i < pluginArrSize; ++i) {
-            loadOrder.push_back(string(pluginArr[i]));
-        }
-        return loadOrder;
+  unsigned int ret = lo_set_load_order(gh_, loadOrder, numPlugins);
+  if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
+    const char * e = nullptr;
+    string err;
+    lo_get_error_message(&e);
+    if (e == nullptr) {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
+      err = translate("libloadorder failed to set the load order. Details could not be fetched.").str();
+    } else {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
+      err = translate("libloadorder failed to set the load order. Details:").str() + " " + e;
     }
+    lo_cleanup();
+    throw Error(Error::Code::liblo_error, err);
+  }
+}
 
-    void LoadOrderHandler::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
-        BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
+void LoadOrderHandler::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+  BOOST_LOG_TRIVIAL(info) << "Setting load order.";
+  size_t pluginArrSize = loadOrder.size();
+  char ** pluginArr = new char*[pluginArrSize];
+  int i = 0;
+  for (const auto &plugin : loadOrder) {
+    BOOST_LOG_TRIVIAL(info) << '\t' << '\t' << plugin;
+    pluginArr[i] = new char[plugin.length() + 1];
+    strcpy(pluginArr[i], plugin.c_str());
+    ++i;
+  }
 
-        unsigned int ret = lo_set_load_order(_gh, loadOrder, numPlugins);
-        if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-            const char * e = nullptr;
-            string err;
-            lo_get_error_message(&e);
-            if (e == nullptr) {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
-                err = lc::translate("libloadorder failed to set the load order. Details could not be fetched.").str();
-            }
-            else {
-                BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-                err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
-            }
-            lo_cleanup();
-            throw Error(Error::Code::liblo_error, err);
-        }
-    }
+  try {
+    SetLoadOrder(pluginArr, pluginArrSize);
+  } catch (Error &/*e*/) {
+    for (size_t i = 0; i < pluginArrSize; i++)
+      delete[] pluginArr[i];
+    delete[] pluginArr;
+    throw;
+  }
 
-    void LoadOrderHandler::SetLoadOrder(const std::list<std::string>& loadOrder) const {
-        BOOST_LOG_TRIVIAL(info) << "Setting load order.";
-        size_t pluginArrSize = loadOrder.size();
-        char ** pluginArr = new char*[pluginArrSize];
-        int i = 0;
-        for (const auto &plugin : loadOrder) {
-            BOOST_LOG_TRIVIAL(info) << '\t' << '\t' << plugin;
-            pluginArr[i] = new char[plugin.length() + 1];
-            strcpy(pluginArr[i], plugin.c_str());
-            ++i;
-        }
-
-        try {
-            SetLoadOrder(pluginArr, pluginArrSize);
-        }
-        catch (Error &/*e*/) {
-            for (size_t i = 0; i < pluginArrSize; i++)
-                delete[] pluginArr[i];
-            delete[] pluginArr;
-            throw;
-        }
-
-        for (size_t i = 0; i < pluginArrSize; i++)
-            delete[] pluginArr[i];
-        delete[] pluginArr;
-    }
+  for (size_t i = 0; i < pluginArrSize; i++)
+    delete[] pluginArr[i];
+  delete[] pluginArr;
+}
 }

@@ -23,12 +23,13 @@ Fallout: New Vegas.
 */
 
 #include "loot_paths.h"
-#include "../helpers/helpers.h"
-#include "../error.h"
+
+#include <locale>
 
 #include <boost/locale.hpp>
 
-#include <locale>
+#include "backend/error.h"
+#include "backend/helpers/helpers.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE
@@ -42,69 +43,69 @@ Fallout: New Vegas.
 #endif
 
 namespace loot {
-    boost::filesystem::path LootPaths::getReadmePath() {
-        return lootAppPath / "docs" / "LOOT Readme.html";
-    }
+boost::filesystem::path LootPaths::getReadmePath() {
+  return lootAppPath_ / "docs" / "LOOT Readme.html";
+}
 
-    boost::filesystem::path LootPaths::getUIIndexPath() {
-        return lootAppPath / "resources" / "ui" / "index.html";
-    }
+boost::filesystem::path LootPaths::getUIIndexPath() {
+  return lootAppPath_ / "resources" / "ui" / "index.html";
+}
 
-    boost::filesystem::path LootPaths::getL10nPath() {
-        return lootAppPath / "resources" / "l10n";
-    }
+boost::filesystem::path LootPaths::getL10nPath() {
+  return lootAppPath_ / "resources" / "l10n";
+}
 
-    boost::filesystem::path LootPaths::getLootDataPath() {
-        return lootDataPath;
-    }
+boost::filesystem::path LootPaths::getLootDataPath() {
+  return lootDataPath_;
+}
 
-    boost::filesystem::path LootPaths::getSettingsPath() {
-        return lootDataPath / "settings.yaml";
-    }
+boost::filesystem::path LootPaths::getSettingsPath() {
+  return lootDataPath_ / "settings.yaml";
+}
 
-    boost::filesystem::path LootPaths::getLogPath() {
-        return lootDataPath / "LOOTDebugLog.txt";
-    }
+boost::filesystem::path LootPaths::getLogPath() {
+  return lootDataPath_ / "LOOTDebugLog.txt";
+}
 
-    void LootPaths::initialise() {
-        // Set the locale to get UTF-8 conversions working correctly.
-        std::locale::global(boost::locale::generator().generate(""));
-        boost::filesystem::path::imbue(std::locale());
+void LootPaths::initialise() {
+    // Set the locale to get UTF-8 conversions working correctly.
+  std::locale::global(boost::locale::generator().generate(""));
+  boost::filesystem::path::imbue(std::locale());
 
-        lootAppPath = boost::filesystem::current_path();
-        lootDataPath = getLocalAppDataPath() / "LOOT";
-    }
+  lootAppPath_ = boost::filesystem::current_path();
+  lootDataPath_ = getLocalAppDataPath() / "LOOT";
+}
 
-    boost::filesystem::path LootPaths::getLocalAppDataPath() {
+boost::filesystem::path LootPaths::getLocalAppDataPath() {
 #ifdef _WIN32
-        HWND owner = 0;
-        PWSTR path;
+  HWND owner = 0;
+  PWSTR path;
 
-        if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
-            throw Error(Error::Code::windows_error, boost::locale::translate("Failed to get %LOCALAPPDATA% path."));
+  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
+    throw Error(Error::Code::windows_error, boost::locale::translate("Failed to get %LOCALAPPDATA% path."));
 
-        boost::filesystem::path localAppDataPath(FromWinWide(path));
-        CoTaskMemFree(path);
+  boost::filesystem::path localAppDataPath(FromWinWide(path));
+  CoTaskMemFree(path);
 
-        return localAppDataPath;
+  return localAppDataPath;
 #else
         // Use XDG_CONFIG_HOME environmental variable if it's available.
-        const char * xdgConfigHome = getenv("XDG_CONFIG_HOME");
+  const char * xdgConfigHome = getenv("XDG_CONFIG_HOME");
 
-        if (xdgConfigHome != nullptr)
-            return boost::filesystem::path(xdgConfigHome);
+  if (xdgConfigHome != nullptr)
+    return boost::filesystem::path(xdgConfigHome);
 
-        // Otherwise, use the HOME env. var. if it's available.
-        xdgConfigHome = getenv("HOME");
+// Otherwise, use the HOME env. var. if it's available.
+  xdgConfigHome = getenv("HOME");
 
-        if (xdgConfigHome != nullptr)
-            return boost::filesystem::path(xdgConfigHome) / ".config";
+  if (xdgConfigHome != nullptr)
+    return boost::filesystem::path(xdgConfigHome) / ".config";
 
-        // If somehow both are missing, use the current path.
-        return boost::filesystem::current_path();
+// If somehow both are missing, use the current path.
+  return boost::filesystem::current_path();
 #endif
-    }
+}
 
-    boost::filesystem::path LootPaths::lootAppPath;
-    boost::filesystem::path LootPaths::lootDataPath;
+boost::filesystem::path LootPaths::lootAppPath_;
+boost::filesystem::path LootPaths::lootDataPath_;
 }

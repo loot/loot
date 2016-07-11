@@ -22,111 +22,112 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_LOOT_WRITE_MINIMAL_LIST
-#define LOOT_TEST_LOOT_WRITE_MINIMAL_LIST
+#ifndef LOOT_TESTS_API_LOOT_WRITE_MINIMAL_LIST_TEST
+#define LOOT_TESTS_API_LOOT_WRITE_MINIMAL_LIST_TEST
 
-#include "../include/loot/api.h"
-#include "api_game_operations_test.h"
+#include "loot/api.h"
+
+#include "tests/api/api_game_operations_test.h"
 
 namespace loot {
-    namespace test {
-        class loot_write_minimal_list_test : public ApiGameOperationsTest {
-        protected:
-            loot_write_minimal_list_test() :
-                outputPath(localPath / "minimal.yml") {}
+namespace test {
+class loot_write_minimal_list_test : public ApiGameOperationsTest {
+protected:
+  loot_write_minimal_list_test() :
+    outputPath(localPath / "minimal.yml") {}
 
-            void SetUp() {
-                ApiGameOperationsTest::SetUp();
+  void SetUp() {
+    ApiGameOperationsTest::SetUp();
 
-                ASSERT_FALSE(boost::filesystem::exists(outputPath));
-            }
+    ASSERT_FALSE(boost::filesystem::exists(outputPath));
+  }
 
-            void TearDown() {
-                ApiGameOperationsTest::TearDown();
+  void TearDown() {
+    ApiGameOperationsTest::TearDown();
 
-                ASSERT_NO_THROW(boost::filesystem::remove(outputPath));
-            }
+    ASSERT_NO_THROW(boost::filesystem::remove(outputPath));
+  }
 
-            std::string getExpectedContent() const {
-                using std::endl;
+  std::string GetExpectedContent() const {
+    using std::endl;
 
-                std::stringstream expectedContent;
-                expectedContent
-                    << "plugins:" << endl
-                    << "  - name: '" << blankEsm << "'" << endl
-                    << "    tag:" << endl
-                    << "      - Actors.ACBS" << endl
-                    << "      - Actors.AIData" << endl
-                    << "      - -C.Water" << endl
-                    << "  - name: '" << blankDifferentEsm << "'" << endl
-                    << "    dirty:" << endl
-                    << "      - crc: 0x7d22f9df" << endl
-                    << "        util: 'TES4Edit'" << endl
-                    << "        udr: 4";
+    std::stringstream expectedContent;
+    expectedContent
+      << "plugins:" << endl
+      << "  - name: '" << blankEsm << "'" << endl
+      << "    tag:" << endl
+      << "      - Actors.ACBS" << endl
+      << "      - Actors.AIData" << endl
+      << "      - -C.Water" << endl
+      << "  - name: '" << blankDifferentEsm << "'" << endl
+      << "    dirty:" << endl
+      << "      - crc: 0x7d22f9df" << endl
+      << "        util: 'TES4Edit'" << endl
+      << "        udr: 4";
 
-                return expectedContent.str();
-            }
+    return expectedContent.str();
+  }
 
-            const boost::filesystem::path outputPath;
-        };
+  const boost::filesystem::path outputPath;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                loot_write_minimal_list_test,
-                                ::testing::Values(
-                                    loot_game_tes4,
-                                    loot_game_tes5,
-                                    loot_game_fo3,
-                                    loot_game_fonv,
-                                    loot_game_fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        loot_write_minimal_list_test,
+                        ::testing::Values(
+                          loot_game_tes4,
+                          loot_game_tes5,
+                          loot_game_fo3,
+                          loot_game_fonv,
+                          loot_game_fo4));
 
-        TEST_P(loot_write_minimal_list_test, shouldReturnAnInvalidArgsErrorIfAPointerArgumentIsNull) {
-            EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(NULL, outputPath.string().c_str(), false));
-            EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(db, NULL, false));
-        }
+TEST_P(loot_write_minimal_list_test, shouldReturnAnInvalidArgsErrorIfAPointerArgumentIsNull) {
+  EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(NULL, outputPath.string().c_str(), false));
+  EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(db_, NULL, false));
+}
 
-        TEST_P(loot_write_minimal_list_test, shouldReturnAFileWriteErrorIfThePathGivenIsInvalid) {
-            EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db, "/:?*", false));
-        }
+TEST_P(loot_write_minimal_list_test, shouldReturnAFileWriteErrorIfThePathGivenIsInvalid) {
+  EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db_, "/:?*", false));
+}
 
-        TEST_P(loot_write_minimal_list_test, shouldReturnOkAndWriteToFileIfArgumentsGivenAreValid) {
-            EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputPath.string().c_str(), false));
-            EXPECT_TRUE(boost::filesystem::exists(outputPath));
-        }
+TEST_P(loot_write_minimal_list_test, shouldReturnOkAndWriteToFileIfArgumentsGivenAreValid) {
+  EXPECT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), false));
+  EXPECT_TRUE(boost::filesystem::exists(outputPath));
+}
 
-        TEST_P(loot_write_minimal_list_test, shouldReturnAFileWriteErrorIfTheFileAlreadyExistsAndTheOverwriteArgumentIsFalse) {
-            ASSERT_EQ(loot_ok, loot_write_minimal_list(db, outputPath.string().c_str(), false));
-            ASSERT_TRUE(boost::filesystem::exists(outputPath));
+TEST_P(loot_write_minimal_list_test, shouldReturnAFileWriteErrorIfTheFileAlreadyExistsAndTheOverwriteArgumentIsFalse) {
+  ASSERT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), false));
+  ASSERT_TRUE(boost::filesystem::exists(outputPath));
 
-            EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db, outputPath.string().c_str(), false));
-        }
+  EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db_, outputPath.string().c_str(), false));
+}
 
-        TEST_P(loot_write_minimal_list_test, shouldReturnOkAndWriteToFileIfTheArgumentsAreValidAndTheOverwriteArgumentIsTrue) {
-            EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputPath.string().c_str(), true));
-            EXPECT_TRUE(boost::filesystem::exists(outputPath));
-        }
+TEST_P(loot_write_minimal_list_test, shouldReturnOkAndWriteToFileIfTheArgumentsAreValidAndTheOverwriteArgumentIsTrue) {
+  EXPECT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), true));
+  EXPECT_TRUE(boost::filesystem::exists(outputPath));
+}
 
-        TEST_P(loot_write_minimal_list_test, shouldReturnOkIfTheFileAlreadyExistsAndTheOverwriteArgumentIsTrue) {
-            ASSERT_EQ(loot_ok, loot_write_minimal_list(db, outputPath.string().c_str(), false));
-            ASSERT_TRUE(boost::filesystem::exists(outputPath));
+TEST_P(loot_write_minimal_list_test, shouldReturnOkIfTheFileAlreadyExistsAndTheOverwriteArgumentIsTrue) {
+  ASSERT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), false));
+  ASSERT_TRUE(boost::filesystem::exists(outputPath));
 
-            EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputPath.string().c_str(), true));
-        }
+  EXPECT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), true));
+}
 
-        TEST_P(loot_write_minimal_list_test, shouldWriteOnlyBashTagsAndDirtyInfo) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_write_minimal_list_test, shouldWriteOnlyBashTagsAndDirtyInfo) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_write_minimal_list(db, outputPath.string().c_str(), true));
+  EXPECT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), true));
 
-            boost::filesystem::ifstream in(outputPath);
-            std::stringstream content;
-            content << in.rdbuf();
+  boost::filesystem::ifstream in(outputPath);
+  std::stringstream content;
+  content << in.rdbuf();
 
-            EXPECT_EQ(getExpectedContent(), content.str());
-        }
-    }
+  EXPECT_EQ(GetExpectedContent(), content.str());
+}
+}
 }
 
 #endif

@@ -22,48 +22,47 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_PLUGIN_SORTER
-#define LOOT_BACKEND_PLUGIN_SORTER
-
-#include "plugin.h"
+#ifndef LOOT_BACKEND_PLUGIN_PLUGIN_SORTER
+#define LOOT_BACKEND_PLUGIN_PLUGIN_SORTER
 
 #include <map>
 
-#include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/graph_traits.hpp>
+
+#include "backend/game/game.h"
+#include "backend/plugin/plugin.h"
 
 namespace loot {
-    typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, Plugin> PluginGraph;
-    typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
-    typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t;
+typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, Plugin> PluginGraph;
+typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
+typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t;
 
-    class Game;
+class PluginSorter {
+public:
+  std::list<Plugin> Sort(Game& game, const Language::Code language);
+private:
+  bool GetVertexByName(const std::string& name, vertex_t& vertex) const;
+  void CheckForCycles() const;
+  bool EdgeCreatesCycle(const vertex_t& u, const vertex_t& v) const;
 
-    class PluginSorter {
-    public:
-        std::list<Plugin> Sort(Game& game, const Language::Code language);
-    private:
-        PluginGraph graph;
-        std::map<vertex_t, size_t> indexMap;
-        vertex_map_t vertexIndexMap;
-        std::list<std::string> oldLoadOrder;
+  int ComparePlugins(const std::string& plugin1, const std::string& plugin2) const;
 
-        bool GetVertexByName(const std::string& name, vertex_t& vertex) const;
-        void CheckForCycles() const;
-        bool EdgeCreatesCycle(const vertex_t& u, const vertex_t& v) const;
+  void PropagatePriorities();
 
-        int plugincmp(const std::string& plugin1, const std::string& plugin2) const;
+  void AddPluginVertices(Game& game, const Language::Code language);
+  void AddSpecificEdges();
+  void AddPriorityEdges();
+  void AddOverlapEdges();
+  void AddTieBreakEdges();
 
-        void PropagatePriorities();
+  void AddEdge(const vertex_t& fromVertex, const vertex_t& toVertex);
 
-        void addPluginVertices(Game& game, const Language::Code language);
-        void AddSpecificEdges();
-        void AddPriorityEdges();
-        void AddOverlapEdges();
-        void AddTieBreakEdges();
-
-        void addEdge(const vertex_t& fromVertex, const vertex_t& toVertex);
-    };
+  PluginGraph graph_;
+  std::map<vertex_t, size_t> indexMap_;
+  vertex_map_t vertexIndexMap_;
+  std::list<std::string> oldLoadOrder_;
+};
 }
 
 #endif

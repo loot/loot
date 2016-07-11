@@ -22,91 +22,91 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "conditional_metadata.h"
-#include "condition_grammar.h"
+#include "backend/metadata/conditional_metadata.h"
 
-#include <boost/log/trivial.hpp>
 #include <boost/locale.hpp>
+#include <boost/log/trivial.hpp>
 
-using namespace std;
+#include "backend/game/game.h"
+#include "backend/metadata/condition_grammar.h"
+
+using boost::locale::translate;
+using std::exception;
+using std::string;
 
 namespace loot {
-    namespace lc = boost::locale;
+ConditionalMetadata::ConditionalMetadata() {}
 
-    ConditionalMetadata::ConditionalMetadata() {}
+ConditionalMetadata::ConditionalMetadata(const string& condition) : condition_(condition) {}
 
-    ConditionalMetadata::ConditionalMetadata(const string& condition) : _condition(condition) {}
+bool ConditionalMetadata::IsConditional() const {
+  return !condition_.empty();
+}
 
-    bool ConditionalMetadata::IsConditional() const {
-        return !_condition.empty();
-    }
+std::string ConditionalMetadata::Condition() const {
+  return condition_;
+}
 
-    std::string ConditionalMetadata::Condition() const {
-        return _condition;
-    }
+bool ConditionalMetadata::EvalCondition(Game& game) const {
+  if (condition_.empty())
+    return true;
 
-    bool ConditionalMetadata::EvalCondition(Game& game) const {
-        if (_condition.empty())
-            return true;
+  BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << condition_;
 
-        BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << _condition;
+  auto cachedValue = game.GetCachedCondition(condition_);
+  if (cachedValue.second)
+    return cachedValue.first;
 
-        auto cachedValue = game.GetCachedCondition(_condition);
-        if (cachedValue.second)
-            return cachedValue.first;
+  ConditionGrammar<string::const_iterator, boost::spirit::qi::space_type> grammar(&game);
+  boost::spirit::qi::space_type skipper;
+  string::const_iterator begin, end;
+  bool eval;
 
-        ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(&game);
-        boost::spirit::qi::space_type skipper;
-        std::string::const_iterator begin, end;
-        bool eval;
+  begin = condition_.begin();
+  end = condition_.end();
 
-        begin = _condition.begin();
-        end = _condition.end();
+  bool r;
+  try {
+    r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
+  } catch (exception& e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\": " << e.what();
+    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\": %2%")) % condition_ % e.what()).str());
+  }
 
-        bool r;
-        try {
-            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
-        }
+  if (!r || begin != end) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\".";
+    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\".")) % condition_).str());
+  }
 
-        if (!r || begin != end) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
-        }
+  game.CacheCondition(condition_, eval);
 
-        game.CacheCondition(_condition, eval);
+  return eval;
+}
 
-        return eval;
-    }
+void ConditionalMetadata::ParseCondition() const {
+  if (condition_.empty())
+    return;
 
-    void ConditionalMetadata::ParseCondition() const {
-        if (_condition.empty())
-            return;
+  BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << condition_;
 
-        BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << _condition;
+  ConditionGrammar<string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr);
+  boost::spirit::qi::space_type skipper;
+  string::const_iterator begin, end;
 
-        ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr);
-        boost::spirit::qi::space_type skipper;
-        std::string::const_iterator begin, end;
+  begin = condition_.begin();
+  end = condition_.end();
 
-        begin = _condition.begin();
-        end = _condition.end();
+  bool r;
+  try {
+    r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper);
+  } catch (exception& e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\": " << e.what();
+    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\": %2%")) % condition_ % e.what()).str());
+  }
 
-        bool r;
-        try {
-            r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper);
-        }
-        catch (std::exception& e) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\": " << e.what();
-            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\": %2%")) % _condition % e.what()).str());
-        }
-
-        if (!r || begin != end) {
-            BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << _condition << "\".";
-            throw loot::Error(loot::Error::Code::condition_eval_fail, (boost::format(lc::translate("Failed to parse condition \"%1%\".")) % _condition).str());
-        }
-    }
+  if (!r || begin != end) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\".";
+    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\".")) % condition_).str());
+  }
+}
 }

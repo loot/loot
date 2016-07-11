@@ -22,21 +22,21 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_BACKEND_LOOT_VERSION
-#define LOOT_BACKEND_LOOT_VERSION
+#ifndef LOOT_BACKEND_APP_LOOT_VERSION
+#define LOOT_BACKEND_APP_LOOT_VERSION
 
 #include <string>
 
 namespace loot {
-    class LootVersion {
-    public:
-        static const unsigned int major;
-        static const unsigned int minor;
-        static const unsigned int patch;
-        static const std::string revision;
+class LootVersion {
+public:
+  static const unsigned int major;
+  static const unsigned int minor;
+  static const unsigned int patch;
+  static const std::string revision;
 
-        static std::string string();
-    };
+  static std::string string();
+};
 }
 
 #endif

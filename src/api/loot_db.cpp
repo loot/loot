@@ -22,123 +22,123 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "loot_db.h"
+#include "api/loot_db.h"
 
-#include "../backend/error.h"
+#include "backend/error.h"
 
 loot_db::loot_db(const unsigned int clientGame, const std::string& gamePath, const boost::filesystem::path& gameLocalDataPath)
-    : Game(loot::GameType(clientGame)) {
-    this->SetGamePath(gamePath);
-    this->Init(false, gameLocalDataPath);
+  : Game(loot::GameType(clientGame)) {
+  this->SetGamePath(gamePath);
+  this->Init(false, gameLocalDataPath);
 }
 
 loot::Masterlist& loot_db::getUnevaluatedMasterlist() {
-    return unevaluatedMasterlist_;
+  return unevaluatedMasterlist_;
 }
 
 loot::MetadataList& loot_db::getUnevaluatedUserlist() {
-    return unevaluatedUserlist_;
+  return unevaluatedUserlist_;
 }
 
 const char * loot_db::getRevisionIdString() const {
-    return revisionId.c_str();
+  return revisionId.c_str();
 }
 
 const char * loot_db::getRevisionDateString() const {
-    return revisionDate.c_str();
+  return revisionDate.c_str();
 }
 
 const std::vector<const char *>& loot_db::getPluginNames() const {
-    return cPluginNames;
+  return cPluginNames;
 }
 
 const std::vector<const char *>& loot_db::getBashTagMap() const {
-    return cBashTagMap;
+  return cBashTagMap;
 }
 
 unsigned int loot_db::getBashTagUid(const std::string& name) const {
-    auto it = bashTagMap.find(name);
-    if (it != end(bashTagMap))
-        return it->second;
+  auto it = bashTagMap.find(name);
+  if (it != end(bashTagMap))
+    return it->second;
 
-    throw loot::Error(loot::Error::Code::no_tag_map, "The Bash Tag \"" + name + "\" does not exist in the Bash Tag map.");
+  throw loot::Error(loot::Error::Code::no_tag_map, "The Bash Tag \"" + name + "\" does not exist in the Bash Tag map.");
 }
 
 const std::vector<unsigned int>& loot_db::getAddedTagIds() const {
-    return addedTagIds;
+  return addedTagIds;
 }
 
 const std::vector<unsigned int>& loot_db::getRemovedTagIds() const {
-    return removedTagIds;
+  return removedTagIds;
 }
 
 const std::vector<loot_message>& loot_db::getPluginMessages() const {
-    return cPluginMessages;
+  return cPluginMessages;
 }
 
 void loot_db::setRevisionIdString(const std::string& str) {
-    revisionId = str;
+  revisionId = str;
 }
 
 void loot_db::setRevisionDateString(const std::string& str) {
-    revisionDate = str;
+  revisionDate = str;
 }
 
 void loot_db::setAddedTags(const std::set<std::string>& names) {
-    addedTagIds.clear();
-    for (const auto& name : names)
-        addedTagIds.push_back(getBashTagUid(name));
+  addedTagIds.clear();
+  for (const auto& name : names)
+    addedTagIds.push_back(getBashTagUid(name));
 }
 
 void loot_db::setRemovedTags(const std::set<std::string>& names) {
-    removedTagIds.clear();
-    for (const auto& name : names)
-        removedTagIds.push_back(getBashTagUid(name));
+  removedTagIds.clear();
+  for (const auto& name : names)
+    removedTagIds.push_back(getBashTagUid(name));
 }
 
 void loot_db::setPluginMessages(const std::list<loot::Message>& pluginMessages) {
-    cPluginMessages.resize(pluginMessages.size());
-    pluginMessageStrings.resize(pluginMessages.size());
+  cPluginMessages.resize(pluginMessages.size());
+  pluginMessageStrings.resize(pluginMessages.size());
 
-    size_t i = 0;
-    for (const auto& message : pluginMessages) {
-        pluginMessageStrings[i] = message.ChooseContent(loot::Language::Code::english).GetText();
+  size_t i = 0;
+  for (const auto& message : pluginMessages) {
+    pluginMessageStrings[i] = message.ChooseContent(loot::Language::Code::english).GetText();
 
-        cPluginMessages[i].type = static_cast<unsigned int>(message.GetType());
-        cPluginMessages[i].message = pluginMessageStrings[i].c_str();
+    cPluginMessages[i].type = static_cast<unsigned int>(message.GetType());
+    cPluginMessages[i].message = pluginMessageStrings[i].c_str();
 
-        ++i;
-    }
+    ++i;
+  }
 }
 
 void loot_db::addBashTagsToMap(std::set<std::string> names) {
-    for (const auto& name : names) {
-        // Try adding the Bash Tag to the map assuming it's not already in
-        // there, then use the UID in the returned value, as that will be
-        // equal to the value in the map, even if the Bash Tag was already
-        // present.
-        unsigned int uid = bashTagMap.size();
-        // If the tag already exists in the map, do
-        auto it = bashTagMap.emplace(name, uid).first;
-        if (it->second == cBashTagMap.size())
-            cBashTagMap.push_back(it->first.c_str());
-        else
-            cBashTagMap.at(it->second) = it->first.c_str();
-    }
+  for (const auto& name : names) {
+      // Try adding the Bash Tag to the map assuming it's not already in
+      // there, then use the UID in the returned value, as that will be
+      // equal to the value in the map, even if the Bash Tag was already
+      // present.
+    unsigned int uid = bashTagMap.size();
+    // If the tag already exists in the map, do
+    auto it = bashTagMap.emplace(name, uid).first;
+    if (it->second == cBashTagMap.size())
+      cBashTagMap.push_back(it->first.c_str());
+    else
+      cBashTagMap.at(it->second) = it->first.c_str();
+  }
 }
 
 void loot_db::clearBashTagMap() {
-    bashTagMap.clear();
-    cBashTagMap.clear();
+  bashTagMap.clear();
+  cBashTagMap.clear();
 }
 
 void loot_db::clearArrays() {
-    pluginNames.clear();
-    cPluginNames.clear();
+  pluginNames.clear();
+  cPluginNames.clear();
 
-    addedTagIds.clear();
-    removedTagIds.clear();
+  addedTagIds.clear();
+  removedTagIds.clear();
 
-    cPluginMessages.clear();
-    pluginMessageStrings.clear();
+  cPluginMessages.clear();
+  pluginMessageStrings.clear();
 }

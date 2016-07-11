@@ -22,56 +22,53 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "tag.h"
+#include "backend/metadata/tag.h"
 
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
-
 namespace loot {
-    Tag::Tag() : addTag(true) {}
+Tag::Tag() : addTag_(true) {}
 
-    Tag::Tag(const string& tag, const bool isAddition, const string& condition) : _name(tag), addTag(isAddition), ConditionalMetadata(condition) {}
+Tag::Tag(const std::string& tag, const bool isAddition, const std::string& condition) : name_(tag), addTag_(isAddition), ConditionalMetadata(condition) {}
 
-    bool Tag::operator < (const Tag& rhs) const {
-        if (addTag != rhs.IsAddition())
-            return (addTag && !rhs.IsAddition());
-        else
-            return boost::ilexicographical_compare(Name(), rhs.Name());
-    }
+bool Tag::operator < (const Tag& rhs) const {
+  if (addTag_ != rhs.IsAddition())
+    return (addTag_ && !rhs.IsAddition());
+  else
+    return boost::ilexicographical_compare(Name(), rhs.Name());
+}
 
-    bool Tag::operator == (const Tag& rhs) const {
-        return (addTag == rhs.IsAddition() && boost::iequals(Name(), rhs.Name()));
-    }
+bool Tag::operator == (const Tag& rhs) const {
+  return (addTag_ == rhs.IsAddition() && boost::iequals(Name(), rhs.Name()));
+}
 
-    bool Tag::IsAddition() const {
-        return addTag;
-    }
+bool Tag::IsAddition() const {
+  return addTag_;
+}
 
-    std::string Tag::Name() const {
-        return _name;
-    }
+std::string Tag::Name() const {
+  return name_;
+}
 }
 
 namespace YAML {
-    Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
-        if (!rhs.IsConditional()) {
-            if (rhs.IsAddition())
-                out << rhs.Name();
-            else
-                out << ('-' + rhs.Name());
-        }
-        else {
-            out << BeginMap;
-            if (rhs.IsAddition())
-                out << Key << "name" << Value << rhs.Name();
-            else
-                out << Key << "name" << Value << ('-' + rhs.Name());
+Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
+  if (!rhs.IsConditional()) {
+    if (rhs.IsAddition())
+      out << rhs.Name();
+    else
+      out << ('-' + rhs.Name());
+  } else {
+    out << BeginMap;
+    if (rhs.IsAddition())
+      out << Key << "name" << Value << rhs.Name();
+    else
+      out << Key << "name" << Value << ('-' + rhs.Name());
 
-            out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition()
-                << EndMap;
-        }
+    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition()
+      << EndMap;
+  }
 
-        return out;
-    }
+  return out;
+}
 }

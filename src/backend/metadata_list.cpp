@@ -22,143 +22,145 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "metadata_list.h"
-#include "error.h"
+#include "backend/metadata_list.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/log/trivial.hpp>
 
-using namespace std;
+#include "backend/error.h"
+#include "backend/game/game.h"
+
+using std::list;
 
 namespace loot {
-    void MetadataList::Load(const boost::filesystem::path& filepath) {
-        clear();
+void MetadataList::Load(const boost::filesystem::path& filepath) {
+  Clear();
 
-        BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
+  BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
 
-        boost::filesystem::ifstream in(filepath);
-        if (!in.good())
-            throw Error(Error::Code::path_read_fail, "Cannot open " + filepath.string());
+  boost::filesystem::ifstream in(filepath);
+  if (!in.good())
+    throw Error(Error::Code::path_read_fail, "Cannot open " + filepath.string());
 
-        YAML::Node metadataList = YAML::Load(in);
-        in.close();
+  YAML::Node metadataList = YAML::Load(in);
+  in.close();
 
-        if (metadataList["plugins"]) {
-            for (const auto& node : metadataList["plugins"]) {
-                PluginMetadata plugin(node.as<PluginMetadata>());
-                if (plugin.IsRegexPlugin())
-                    regexPlugins.push_back(plugin);
-                else {
-                    if (!plugins.insert(plugin).second)
-                        throw Error(Error::Code::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\"");
-                }
-            }
-        }
-        if (metadataList["globals"])
-            messages = metadataList["globals"].as<list<Message>>();
-
-        if (metadataList["bash_tags"])
-            bashTags_ = metadataList["bash_tags"].as<set<string>>();
-
-        BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
+  if (metadataList["plugins"]) {
+    for (const auto& node : metadataList["plugins"]) {
+      PluginMetadata plugin(node.as<PluginMetadata>());
+      if (plugin.IsRegexPlugin())
+        regexPlugins_.push_back(plugin);
+      else {
+        if (!plugins_.insert(plugin).second)
+          throw Error(Error::Code::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\"");
+      }
     }
+  }
+  if (metadataList["globals"])
+    messages_ = metadataList["globals"].as<list<Message>>();
 
-    void MetadataList::Save(const boost::filesystem::path& filepath) {
-        BOOST_LOG_TRIVIAL(trace) << "Saving metadata list to: " << filepath;
-        YAML::Emitter yout;
-        yout.SetIndent(2);
-        yout << YAML::BeginMap
-            << YAML::Key << "bash_tags" << YAML::Value << bashTags_
-            << YAML::Key << "plugins" << YAML::Value << Plugins()
-            << YAML::Key << "globals" << YAML::Value << messages
-            << YAML::EndMap;
+  if (metadataList["bash_tags"])
+    bashTags_ = metadataList["bash_tags"].as<std::set<std::string>>();
 
-        boost::filesystem::ofstream uout(filepath);
-        uout << yout.c_str();
-        uout.close();
-    }
+  BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
+}
 
-    void MetadataList::clear() {
-        bashTags_.clear();
-        plugins.clear();
-        regexPlugins.clear();
-        messages.clear();
-    }
+void MetadataList::Save(const boost::filesystem::path& filepath) {
+  BOOST_LOG_TRIVIAL(trace) << "Saving metadata list to: " << filepath;
+  YAML::Emitter yout;
+  yout.SetIndent(2);
+  yout << YAML::BeginMap
+    << YAML::Key << "bash_tags" << YAML::Value << bashTags_
+    << YAML::Key << "plugins" << YAML::Value << Plugins()
+    << YAML::Key << "globals" << YAML::Value << messages_
+    << YAML::EndMap;
 
-    std::list<PluginMetadata> MetadataList::Plugins() const {
-        list<PluginMetadata> pluginList(plugins.begin(), plugins.end());
+  boost::filesystem::ofstream uout(filepath);
+  uout << yout.c_str();
+  uout.close();
+}
 
-        pluginList.insert(pluginList.end(), regexPlugins.begin(), regexPlugins.end());
+void MetadataList::Clear() {
+  bashTags_.clear();
+  plugins_.clear();
+  regexPlugins_.clear();
+  messages_.clear();
+}
 
-        return pluginList;
-    }
+std::list<PluginMetadata> MetadataList::Plugins() const {
+  list<PluginMetadata> pluginList(plugins_.begin(), plugins_.end());
 
-    std::list<Message> MetadataList::Messages() const {
-        return messages;
-    }
+  pluginList.insert(pluginList.end(), regexPlugins_.begin(), regexPlugins_.end());
 
-    std::set<std::string> MetadataList::BashTags() const {
-        return bashTags_;
-    }
+  return pluginList;
+}
 
-    // Merges multiple matching regex entries if any are found.
-    PluginMetadata MetadataList::FindPlugin(const PluginMetadata& plugin) const {
-        PluginMetadata match(plugin.Name());
+std::list<Message> MetadataList::Messages() const {
+  return messages_;
+}
 
-        auto it = plugins.find(plugin);
+std::set<std::string> MetadataList::BashTags() const {
+  return bashTags_;
+}
 
-        if (it != plugins.end())
-            match = *it;
+// Merges multiple matching regex entries if any are found.
+PluginMetadata MetadataList::FindPlugin(const PluginMetadata& plugin) const {
+  PluginMetadata match(plugin.Name());
 
-        // Now we want to also match possibly multiple regex entries.
-        auto regIt = find(regexPlugins.begin(), regexPlugins.end(), plugin);
-        while (regIt != regexPlugins.end()) {
-            match.MergeMetadata(*regIt);
+  auto it = plugins_.find(plugin);
 
-            regIt = find(++regIt, regexPlugins.end(), plugin);
-        }
+  if (it != plugins_.end())
+    match = *it;
 
-        return match;
-    }
+// Now we want to also match possibly multiple regex entries.
+  auto regIt = find(regexPlugins_.begin(), regexPlugins_.end(), plugin);
+  while (regIt != regexPlugins_.end()) {
+    match.MergeMetadata(*regIt);
 
-    void MetadataList::AddPlugin(const PluginMetadata& plugin) {
-        if (plugin.IsRegexPlugin())
-            regexPlugins.push_back(plugin);
-        else {
-            if (!plugins.insert(plugin).second)
-                throw Error(Error::Code::invalid_args, "Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
-        }
-    }
+    regIt = find(++regIt, regexPlugins_.end(), plugin);
+  }
 
-    // Doesn't erase matching regex entries, because they might also
-    // be required for other plugins.
-    void MetadataList::ErasePlugin(const PluginMetadata& plugin) {
-        auto it = plugins.find(plugin);
+  return match;
+}
 
-        if (it != plugins.end()) {
-            plugins.erase(it);
-            return;
-        }
-    }
+void MetadataList::AddPlugin(const PluginMetadata& plugin) {
+  if (plugin.IsRegexPlugin())
+    regexPlugins_.push_back(plugin);
+  else {
+    if (!plugins_.insert(plugin).second)
+      throw Error(Error::Code::invalid_args, "Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
+  }
+}
 
-    void MetadataList::AppendMessage(const Message& message) {
-        messages.push_back(message);
-    }
+// Doesn't erase matching regex entries, because they might also
+// be required for other plugins.
+void MetadataList::ErasePlugin(const PluginMetadata& plugin) {
+  auto it = plugins_.find(plugin);
 
-    void MetadataList::EvalAllConditions(Game& game, const Language::Code language) {
-        unordered_set<PluginMetadata> replacementSet;
-        for (auto &plugin : plugins) {
-            PluginMetadata p(plugin);
-            p.EvalAllConditions(game, language);
-            replacementSet.insert(p);
-        }
-        plugins = replacementSet;
-        for (auto &plugin : regexPlugins) {
-            plugin.EvalAllConditions(game, language);
-        }
-        for (auto &message : messages) {
-            message.EvalCondition(game, language);
-        }
-    }
+  if (it != plugins_.end()) {
+    plugins_.erase(it);
+    return;
+  }
+}
+
+void MetadataList::AppendMessage(const Message& message) {
+  messages_.push_back(message);
+}
+
+void MetadataList::EvalAllConditions(Game& game, const Language::Code language) {
+  std::unordered_set<PluginMetadata> replacementSet;
+  for (auto &plugin : plugins_) {
+    PluginMetadata p(plugin);
+    p.EvalAllConditions(game, language);
+    replacementSet.insert(p);
+  }
+  plugins_ = replacementSet;
+  for (auto &plugin : regexPlugins_) {
+    plugin.EvalAllConditions(game, language);
+  }
+  for (auto &message : messages_) {
+    message.EvalCondition(game, language);
+  }
+}
 }

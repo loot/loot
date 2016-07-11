@@ -22,52 +22,52 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_ERROR__
-#define __LOOT_ERROR__
+#ifndef LOOT_BACKEND_ERROR
+#define LOOT_BACKEND_ERROR
 
 #include <exception>
 #include <string>
 
 namespace loot {
-    class Error : public std::exception {
-    public:
-        enum struct Code : unsigned int {
-            // These must not be changed for API stability.
-            ok = 0,
-            liblo_error = 1,
-            path_write_fail = 2,
-            path_read_fail = 3,
-            condition_eval_fail = 4,
-            regex_eval_fail = 5,
-            no_mem = 6,
-            invalid_args = 7,
-            no_tag_map = 8,
-            path_not_found = 9,
-            no_game_detected = 10,
-            //11 was subversion_error, and was removed along with svn support.
-            git_error = 12,
-            windows_error = 13,
-            sorting_error = 14,
-        };
+class Error : public std::exception {
+public:
+  enum struct Code : unsigned int {
+      // These must not be changed for API stability.
+    ok = 0,
+    liblo_error = 1,
+    path_write_fail = 2,
+    path_read_fail = 3,
+    condition_eval_fail = 4,
+    regex_eval_fail = 5,
+    no_mem = 6,
+    invalid_args = 7,
+    no_tag_map = 8,
+    path_not_found = 9,
+    no_game_detected = 10,
+    //11 was subversion_error, and was removed along with svn support.
+    git_error = 12,
+    windows_error = 13,
+    sorting_error = 14,
+  };
 
-        Error(const Code code_arg, const std::string& what_arg) : _code(code_arg), _what(what_arg) {}
-        ~Error() throw() {};
+  Error(const Code code_arg, const std::string& what_arg) : code_(code_arg), what_(what_arg) {}
+  ~Error() throw() {};
 
-        Code code() const { return _code; }
+  Code code() const { return code_; }
 
-        unsigned int codeAsUnsignedInt() const {
-            return asUnsignedInt(_code);
-        }
+  unsigned int codeAsUnsignedInt() const {
+    return asUnsignedInt(code_);
+  }
 
-        const char * what() const throw() { return _what.c_str(); }
+  const char * what() const throw() { return what_.c_str(); }
 
-        static unsigned int asUnsignedInt(Code code) {
-            return static_cast<unsigned int>(code);
-        }
-    private:
-        Code _code;
-        std::string _what;
-    };
+  static unsigned int asUnsignedInt(Code code) {
+    return static_cast<unsigned int>(code);
+  }
+private:
+  Code code_;
+  std::string what_;
+};
 }
 
 #endif

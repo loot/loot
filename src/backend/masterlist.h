@@ -22,32 +22,32 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_MASTERLIST__
-#define __LOOT_MASTERLIST__
-
-#include "metadata_list.h"
+#ifndef LOOT_BACKEND_MASTERLIST
+#define LOOT_BACKEND_MASTERLIST
 
 #include <string>
 
 #include <boost/filesystem.hpp>
 
+#include "backend/metadata_list.h"
+
 namespace loot {
-    class Game;
+class Game;
 
-    class Masterlist : public MetadataList {
-    public:
-        struct Info {
-            std::string revision;
-            std::string date;
-        };
+class Masterlist : public MetadataList {
+public:
+  struct Info {
+    std::string revision;
+    std::string date;
+  };
 
-        bool Update(const Game& game);
-        bool Update(const boost::filesystem::path& path,
-                    const std::string& repoURL,
-                    const std::string& repoBranch);
+  bool Update(const Game& game);
+  bool Update(const boost::filesystem::path& path,
+              const std::string& repoURL,
+              const std::string& repoBranch);
 
-        static Info GetInfo(const boost::filesystem::path& path, bool shortID);
-    };
+  static Info GetInfo(const boost::filesystem::path& path, bool shortID);
+};
 }
 
 #endif

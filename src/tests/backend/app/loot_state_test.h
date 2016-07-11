@@ -22,56 +22,56 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_GUI_LOOT_STATE
-#define LOOT_TEST_GUI_LOOT_STATE
+#ifndef LOOT_TESTS_BACKEND_LOOT_STATE_TEST
+#define LOOT_TESTS_BACKEND_LOOT_STATE_TEST
 
 #include "backend/app/loot_state.h"
 
 #include <gtest/gtest.h>
 
 namespace loot {
-    namespace test {
-        class LootStateTest : public ::testing::Test {
-        protected:
-            LootState lootState;
-        };
+namespace test {
+class LootStateTest : public ::testing::Test {
+protected:
+  LootState lootState_;
+};
 
-        TEST_F(LootStateTest, hasUnappliedChangesShouldBeFalseByDefault) {
-            EXPECT_FALSE(lootState.hasUnappliedChanges());
-        }
+TEST_F(LootStateTest, hasUnappliedChangesShouldBeFalseByDefault) {
+  EXPECT_FALSE(lootState_.hasUnappliedChanges());
+}
 
-        TEST_F(LootStateTest, shouldNotHaveUnappliedChangesIfCounterIsDeccremented) {
-            lootState.decrementUnappliedChangeCounter();
-            EXPECT_FALSE(lootState.hasUnappliedChanges());
-        }
+TEST_F(LootStateTest, shouldNotHaveUnappliedChangesIfCounterIsDeccremented) {
+  lootState_.decrementUnappliedChangeCounter();
+  EXPECT_FALSE(lootState_.hasUnappliedChanges());
+}
 
-        TEST_F(LootStateTest, shouldHaveUnappliedChangesIfCounterIsIncremented) {
-            lootState.incrementUnappliedChangeCounter();
-            EXPECT_TRUE(lootState.hasUnappliedChanges());
-        }
+TEST_F(LootStateTest, shouldHaveUnappliedChangesIfCounterIsIncremented) {
+  lootState_.incrementUnappliedChangeCounter();
+  EXPECT_TRUE(lootState_.hasUnappliedChanges());
+}
 
-        TEST_F(LootStateTest, incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
-            lootState.incrementUnappliedChangeCounter();
-            lootState.incrementUnappliedChangeCounter();
-            lootState.decrementUnappliedChangeCounter();
-            EXPECT_TRUE(lootState.hasUnappliedChanges());
-        }
+TEST_F(LootStateTest, incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
+  lootState_.incrementUnappliedChangeCounter();
+  lootState_.incrementUnappliedChangeCounter();
+  lootState_.decrementUnappliedChangeCounter();
+  EXPECT_TRUE(lootState_.hasUnappliedChanges());
+}
 
-        TEST_F(LootStateTest, incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
-            lootState.incrementUnappliedChangeCounter();
-            lootState.decrementUnappliedChangeCounter();
-            lootState.decrementUnappliedChangeCounter();
-            EXPECT_FALSE(lootState.hasUnappliedChanges());
-        }
+TEST_F(LootStateTest, incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
+  lootState_.incrementUnappliedChangeCounter();
+  lootState_.decrementUnappliedChangeCounter();
+  lootState_.decrementUnappliedChangeCounter();
+  EXPECT_FALSE(lootState_.hasUnappliedChanges());
+}
 
-        TEST_F(LootStateTest, incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
-            lootState.incrementUnappliedChangeCounter();
-            lootState.incrementUnappliedChangeCounter();
-            lootState.decrementUnappliedChangeCounter();
-            lootState.decrementUnappliedChangeCounter();
-            EXPECT_FALSE(lootState.hasUnappliedChanges());
-        }
-    }
+TEST_F(LootStateTest, incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
+  lootState_.incrementUnappliedChangeCounter();
+  lootState_.incrementUnappliedChangeCounter();
+  lootState_.decrementUnappliedChangeCounter();
+  lootState_.decrementUnappliedChangeCounter();
+  EXPECT_FALSE(lootState_.hasUnappliedChanges());
+}
+}
 }
 
 #endif

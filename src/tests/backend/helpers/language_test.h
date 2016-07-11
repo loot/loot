@@ -22,71 +22,71 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_HELPERS_LANGUAGE
-#define LOOT_TEST_BACKEND_HELPERS_LANGUAGE
+#ifndef LOOT_TESTS_BACKEND_HELPERS_LANGUAGE_TEST
+#define LOOT_TESTS_BACKEND_HELPERS_LANGUAGE_TEST
 
 #include "backend/helpers/language.h"
 
 #include <gtest/gtest.h>
 
 namespace loot {
-    namespace test {
-        TEST(Language, codeConstructorShouldSetTheCorrectData) {
-            Language lang(Language::Code::english);
-            EXPECT_EQ(Language::Code::english, lang.GetCode());
-            EXPECT_EQ("English", lang.GetName());
-            EXPECT_EQ("en", lang.GetLocale());
+namespace test {
+TEST(Language, codeConstructorShouldSetTheCorrectData) {
+  Language lang(Language::Code::english);
+  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  EXPECT_EQ("English", lang.GetName());
+  EXPECT_EQ("en", lang.GetLocale());
 
-            lang = Language(Language::Code::polish);
-            EXPECT_EQ(Language::Code::polish, lang.GetCode());
-            EXPECT_EQ("Polski", lang.GetName());
-            EXPECT_EQ("pl", lang.GetLocale());
-        }
+  lang = Language(Language::Code::polish);
+  EXPECT_EQ(Language::Code::polish, lang.GetCode());
+  EXPECT_EQ("Polski", lang.GetName());
+  EXPECT_EQ("pl", lang.GetLocale());
+}
 
-        TEST(Language, localeConstructorShouldSetTheCorrectData) {
-            Language lang("en");
-            EXPECT_EQ(Language::Code::english, lang.GetCode());
-            EXPECT_EQ("English", lang.GetName());
-            EXPECT_EQ("en", lang.GetLocale());
+TEST(Language, localeConstructorShouldSetTheCorrectData) {
+  Language lang("en");
+  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  EXPECT_EQ("English", lang.GetName());
+  EXPECT_EQ("en", lang.GetLocale());
 
-            lang = Language("de");
-            EXPECT_EQ(Language::Code::german, lang.GetCode());
-            EXPECT_EQ("Deutsch", lang.GetName());
-            EXPECT_EQ("de", lang.GetLocale());
-        }
+  lang = Language("de");
+  EXPECT_EQ(Language::Code::german, lang.GetCode());
+  EXPECT_EQ("Deutsch", lang.GetName());
+  EXPECT_EQ("de", lang.GetLocale());
+}
 
-        TEST(Language, codeConstructorShouldTreatAnInvalidCodeAsEnglish) {
-            Language lang(Language::Code(1000));
-            EXPECT_EQ(Language::Code::english, lang.GetCode());
-            EXPECT_EQ("English", lang.GetName());
-            EXPECT_EQ("en", lang.GetLocale());
-        }
+TEST(Language, codeConstructorShouldTreatAnInvalidCodeAsEnglish) {
+  Language lang(Language::Code(1000));
+  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  EXPECT_EQ("English", lang.GetName());
+  EXPECT_EQ("en", lang.GetLocale());
+}
 
-        TEST(Language, localeConstructorShouldTreatAnInvalidLocaleAsEnglish) {
-            Language lang("foo");
-            EXPECT_EQ(Language::Code::english, lang.GetCode());
-            EXPECT_EQ("English", lang.GetName());
-            EXPECT_EQ("en", lang.GetLocale());
-        }
+TEST(Language, localeConstructorShouldTreatAnInvalidLocaleAsEnglish) {
+  Language lang("foo");
+  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  EXPECT_EQ("English", lang.GetName());
+  EXPECT_EQ("en", lang.GetLocale());
+}
 
-        TEST(Language, codesShouldContainAllExpectedLanguageCodes) {
-            std::vector<Language::Code> codes = {
-                Language::Code::english,
-                Language::Code::spanish,
-                Language::Code::russian,
-                Language::Code::french,
-                Language::Code::chinese,
-                Language::Code::polish,
-                Language::Code::brazilian_portuguese,
-                Language::Code::finnish,
-                Language::Code::german,
-                Language::Code::danish,
-                Language::Code::korean
-            };
+TEST(Language, codesShouldContainAllExpectedLanguageCodes) {
+  std::vector<Language::Code> codes = {
+      Language::Code::english,
+      Language::Code::spanish,
+      Language::Code::russian,
+      Language::Code::french,
+      Language::Code::chinese,
+      Language::Code::polish,
+      Language::Code::brazilian_portuguese,
+      Language::Code::finnish,
+      Language::Code::german,
+      Language::Code::danish,
+      Language::Code::korean
+  };
 
-            EXPECT_EQ(codes, Language::Codes);
-        }
-    }
+  EXPECT_EQ(codes, Language::codes);
+}
+}
 }
 
 #endif

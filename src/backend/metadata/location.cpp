@@ -26,40 +26,38 @@
 
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
-
 namespace loot {
-    Location::Location() {}
+Location::Location() {}
 
-    Location::Location(const std::string& url, const std::string& name) : _url(url), _name(name) {}
+Location::Location(const std::string& url, const std::string& name) : url_(url), name_(name) {}
 
-    bool Location::operator < (const Location& rhs) const {
-        return boost::ilexicographical_compare(_url, rhs.URL());
-    }
+bool Location::operator < (const Location& rhs) const {
+  return boost::ilexicographical_compare(url_, rhs.URL());
+}
 
-    bool Location::operator == (const Location& rhs) const {
-        return boost::iequals(_url, rhs.URL());
-    }
+bool Location::operator == (const Location& rhs) const {
+  return boost::iequals(url_, rhs.URL());
+}
 
-    std::string Location::URL() const {
-        return _url;
-    }
+std::string Location::URL() const {
+  return url_;
+}
 
-    std::string Location::Name() const {
-        return _name;
-    }
+std::string Location::Name() const {
+  return name_;
+}
 }
 
 namespace YAML {
-    Emitter& operator << (Emitter& out, const loot::Location& rhs) {
-        if (rhs.Name().empty())
-            out << YAML::SingleQuoted << rhs.URL();
-        else {
-            out << BeginMap
-                << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
-                << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
-                << EndMap;
-        }
-        return out;
-    }
+Emitter& operator << (Emitter& out, const loot::Location& rhs) {
+  if (rhs.Name().empty())
+    out << YAML::SingleQuoted << rhs.URL();
+  else {
+    out << BeginMap
+      << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
+      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
+      << EndMap;
+  }
+  return out;
+}
 }

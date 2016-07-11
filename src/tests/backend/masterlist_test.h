@@ -22,195 +22,196 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_MASTERLIST
-#define LOOT_TEST_BACKEND_MASTERLIST
+#ifndef LOOT_TESTS_BACKEND_MASTERLIST_TEST
+#define LOOT_TESTS_BACKEND_MASTERLIST_TEST
 
 #include "backend/masterlist.h"
+
 #include "backend/app/loot_paths.h"
 #include "tests/backend/base_game_test.h"
 
 namespace loot {
-    namespace test {
-        class MasterlistTest : public BaseGameTest {
-        protected:
-            MasterlistTest() :
-                repoBranch("master"),
-                repoUrl("https://github.com/loot/testing-metadata.git"),
-                masterlistPath(localPath / "masterlist.yaml") {}
+namespace test {
+class MasterlistTest : public BaseGameTest {
+protected:
+  MasterlistTest() :
+    repoBranch("master"),
+    repoUrl("https://github.com/loot/testing-metadata.git"),
+    masterlistPath(localPath / "masterlist.yaml") {}
 
-            void SetUp() {
-                BaseGameTest::SetUp();
+  void SetUp() {
+    BaseGameTest::SetUp();
 
-                ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
-                ASSERT_FALSE(boost::filesystem::exists(localPath / ".git"));
+    ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
+    ASSERT_FALSE(boost::filesystem::exists(localPath / ".git"));
 
-                ASSERT_NO_THROW(boost::filesystem::create_directories(LootPaths::getLootDataPath() / Game(GetParam()).FolderName()));
-            }
+    ASSERT_NO_THROW(boost::filesystem::create_directories(LootPaths::getLootDataPath() / Game(GetParam()).FolderName()));
+  }
 
-            void TearDown() {
-                BaseGameTest::TearDown();
+  void TearDown() {
+    BaseGameTest::TearDown();
 
-                ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
-                ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));
+    ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
+    ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));
 
-                ASSERT_NO_THROW(boost::filesystem::remove(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / "masterlist.yaml"));
-                ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / ".git"));
-            }
+    ASSERT_NO_THROW(boost::filesystem::remove(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / "masterlist.yaml"));
+    ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / ".git"));
+  }
 
-            const std::string repoUrl;
-            const std::string repoBranch;
+  const std::string repoUrl;
+  const std::string repoBranch;
 
-            const boost::filesystem::path masterlistPath;
-        };
+  const boost::filesystem::path masterlistPath;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                MasterlistTest,
-                                ::testing::Values(
-                                    GameType::tes4,
-                                    GameType::tes5,
-                                    GameType::fo3,
-                                    GameType::fonv,
-                                    GameType::fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        MasterlistTest,
+                        ::testing::Values(
+                          GameType::tes4,
+                          GameType::tes5,
+                          GameType::fo3,
+                          GameType::fonv,
+                          GameType::fo4));
 
-        TEST_P(MasterlistTest, updateWithGameParameterShouldReturnTrueIfNoMasterlistExists) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            game.SetRepoURL(repoUrl);
-            game.SetRepoBranch(repoBranch);
-            ASSERT_NO_THROW(game.Init(false, localPath));
+TEST_P(MasterlistTest, updateWithGameParameterShouldReturnTrueIfNoMasterlistExists) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  game.SetRepoURL(repoUrl);
+  game.SetRepoBranch(repoBranch);
+  ASSERT_NO_THROW(game.Init(false, localPath));
 
-            // This may fail on Windows if a 'real' LOOT install is also present.
-            Masterlist masterlist;
-            EXPECT_TRUE(masterlist.Update(game));
-            EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
-        }
+  // This may fail on Windows if a 'real' LOOT install is also present.
+  Masterlist masterlist;
+  EXPECT_TRUE(masterlist.Update(game));
+  EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
+}
 
-        TEST_P(MasterlistTest, updateWithGameParameterShouldReturnFalseIfAnUpToDateMasterlistExists) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            game.SetRepoURL(repoUrl);
-            game.SetRepoBranch(repoBranch);
-            ASSERT_NO_THROW(game.Init(false, localPath));
+TEST_P(MasterlistTest, updateWithGameParameterShouldReturnFalseIfAnUpToDateMasterlistExists) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  game.SetRepoURL(repoUrl);
+  game.SetRepoBranch(repoBranch);
+  ASSERT_NO_THROW(game.Init(false, localPath));
 
-            // This may fail on Windows if a 'real' LOOT install is also present.
-            Masterlist masterlist;
-            EXPECT_TRUE(masterlist.Update(game));
-            EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
+  // This may fail on Windows if a 'real' LOOT install is also present.
+  Masterlist masterlist;
+  EXPECT_TRUE(masterlist.Update(game));
+  EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
 
-            EXPECT_FALSE(masterlist.Update(game));
-            EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
-        }
+  EXPECT_FALSE(masterlist.Update(game));
+  EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAnInvalidPathIsGiven) {
-            Masterlist masterlist;
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAnInvalidPathIsGiven) {
+  Masterlist masterlist;
 
-            EXPECT_ANY_THROW(masterlist.Update(";//\?", repoUrl, repoBranch));
-        }
+  EXPECT_ANY_THROW(masterlist.Update(";//\?", repoUrl, repoBranch));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankPathIsGiven) {
-            Masterlist masterlist;
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankPathIsGiven) {
+  Masterlist masterlist;
 
-            EXPECT_ANY_THROW(masterlist.Update("", repoUrl, repoBranch));
-        }
+  EXPECT_ANY_THROW(masterlist.Update("", repoUrl, repoBranch));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABranchThatDoesNotExistIsGiven) {
-            Masterlist masterlist;
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABranchThatDoesNotExistIsGiven) {
+  Masterlist masterlist;
 
-            EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
-                                               repoUrl,
-                                               "missing-branch"));
-        }
+  EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
+                                     repoUrl,
+                                     "missing-branch"));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankBranchIsGiven) {
-            Masterlist masterlist;
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankBranchIsGiven) {
+  Masterlist masterlist;
 
-            EXPECT_ANY_THROW(masterlist.Update(masterlistPath, repoUrl, ""));
-        }
+  EXPECT_ANY_THROW(masterlist.Update(masterlistPath, repoUrl, ""));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAUrlThatDoesNotExistIsGiven) {
-            Masterlist masterlist;
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAUrlThatDoesNotExistIsGiven) {
+  Masterlist masterlist;
 
-            EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
-                                               "https://github.com/loot/does-not-exist.git",
-                                               repoBranch));
-        }
+  EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
+                                     "https://github.com/loot/does-not-exist.git",
+                                     repoBranch));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankUrlIsGiven) {
-            Masterlist masterlist;
-            EXPECT_ANY_THROW(masterlist.Update(masterlistPath, "", repoBranch));
-        }
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankUrlIsGiven) {
+  Masterlist masterlist;
+  EXPECT_ANY_THROW(masterlist.Update(masterlistPath, "", repoBranch));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldReturnTrueIfNoMasterlistExists) {
-            Masterlist masterlist;
-            EXPECT_TRUE(masterlist.Update(masterlistPath,
-                                          repoUrl,
-                                          repoBranch));
-        }
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldReturnTrueIfNoMasterlistExists) {
+  Masterlist masterlist;
+  EXPECT_TRUE(masterlist.Update(masterlistPath,
+                                repoUrl,
+                                repoBranch));
+}
 
-        TEST_P(MasterlistTest, updateWithSeparateParametersShouldReturnFalseIfAnUpToDateMasterlistExists) {
-            Masterlist masterlist;
+TEST_P(MasterlistTest, updateWithSeparateParametersShouldReturnFalseIfAnUpToDateMasterlistExists) {
+  Masterlist masterlist;
 
-            EXPECT_TRUE(masterlist.Update(masterlistPath,
-                                          repoUrl,
-                                          repoBranch));
+  EXPECT_TRUE(masterlist.Update(masterlistPath,
+                                repoUrl,
+                                repoBranch));
 
-            EXPECT_FALSE(masterlist.Update(masterlistPath,
-                                           repoUrl,
-                                           repoBranch));
-        }
+  EXPECT_FALSE(masterlist.Update(masterlistPath,
+                                 repoUrl,
+                                 repoBranch));
+}
 
-        TEST_P(MasterlistTest, getInfoShouldThrowIfNoMasterlistExistsAtTheGivenPath) {
-            Masterlist masterlist;
-            EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
-        }
+TEST_P(MasterlistTest, getInfoShouldThrowIfNoMasterlistExistsAtTheGivenPath) {
+  Masterlist masterlist;
+  EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
+}
 
-        TEST_P(MasterlistTest, getInfoShouldThrowIfTheGivenPathDoesNotBelongToAGitRepository) {
-            ASSERT_NO_THROW(boost::filesystem::copy("./testing-metadata/masterlist.yaml", masterlistPath));
+TEST_P(MasterlistTest, getInfoShouldThrowIfTheGivenPathDoesNotBelongToAGitRepository) {
+  ASSERT_NO_THROW(boost::filesystem::copy("./testing-metadata/masterlist.yaml", masterlistPath));
 
-            Masterlist masterlist;
-            EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
-        }
+  Masterlist masterlist;
+  EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
+}
 
-        TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLengthsWhenRequestingALongId) {
-            Masterlist masterlist;
-            ASSERT_TRUE(masterlist.Update(masterlistPath,
-                                          repoUrl,
-                                          repoBranch));
+TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLengthsWhenRequestingALongId) {
+  Masterlist masterlist;
+  ASSERT_TRUE(masterlist.Update(masterlistPath,
+                                repoUrl,
+                                repoBranch));
 
-            Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
-            EXPECT_EQ(40, info.revision.length());
-            EXPECT_EQ(10, info.date.length());
-        }
+  Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
+  EXPECT_EQ(40, info.revision.length());
+  EXPECT_EQ(10, info.date.length());
+}
 
-        TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLengthsWhenRequestingAShortId) {
-            Masterlist masterlist;
-            ASSERT_TRUE(masterlist.Update(masterlistPath,
-                                          repoUrl,
-                                          repoBranch));
+TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLengthsWhenRequestingAShortId) {
+  Masterlist masterlist;
+  ASSERT_TRUE(masterlist.Update(masterlistPath,
+                                repoUrl,
+                                repoBranch));
 
-            Masterlist::Info info = masterlist.GetInfo(masterlistPath, true);
-            EXPECT_GE((unsigned)40, info.revision.length());
-            EXPECT_LE((unsigned)7, info.revision.length());
-            EXPECT_EQ(10, info.date.length());
-        }
+  Masterlist::Info info = masterlist.GetInfo(masterlistPath, true);
+  EXPECT_GE((unsigned)40, info.revision.length());
+  EXPECT_LE((unsigned)7, info.revision.length());
+  EXPECT_EQ(10, info.date.length());
+}
 
-        TEST_P(MasterlistTest, getInfoShouldAppendSuffixesToReturnedStringsIfTheMasterlistHasBeenEdited) {
-            Masterlist masterlist;
-            ASSERT_TRUE(masterlist.Update(masterlistPath,
-                                          repoUrl,
-                                          repoBranch));
-            boost::filesystem::ofstream out(masterlistPath);
-            out.close();
+TEST_P(MasterlistTest, getInfoShouldAppendSuffixesToReturnedStringsIfTheMasterlistHasBeenEdited) {
+  Masterlist masterlist;
+  ASSERT_TRUE(masterlist.Update(masterlistPath,
+                                repoUrl,
+                                repoBranch));
+  boost::filesystem::ofstream out(masterlistPath);
+  out.close();
 
-            Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
-            EXPECT_EQ(49, info.revision.length());
-            EXPECT_EQ(" (edited)", info.revision.substr(40));
-            EXPECT_EQ(19, info.date.length());
-            EXPECT_EQ(" (edited)", info.date.substr(10));
-        }
-    }
+  Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
+  EXPECT_EQ(49, info.revision.length());
+  EXPECT_EQ(" (edited)", info.revision.substr(40));
+  EXPECT_EQ(19, info.date.length());
+  EXPECT_EQ(" (edited)", info.date.substr(10));
+}
+}
 }
 
 #endif

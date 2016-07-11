@@ -21,8 +21,8 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
-#ifndef __LOOT_METADATA_LOCATION__
-#define __LOOT_METADATA_LOCATION__
+#ifndef LOOT_BACKEND_METADATA_LOCATION
+#define LOOT_BACKEND_METADATA_LOCATION
 
 #include <string>
 #include <vector>
@@ -30,60 +30,59 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    class Location {
-    public:
-        Location();
-        Location(const std::string& url, const std::string& name = "");
+class Location {
+public:
+  Location();
+  Location(const std::string& url, const std::string& name = "");
 
-        bool operator < (const Location& rhs) const;
-        bool operator == (const Location& rhs) const;
+  bool operator < (const Location& rhs) const;
+  bool operator == (const Location& rhs) const;
 
-        std::string URL() const;
-        std::string Name() const;
-    private:
-        std::string _url;
-        std::string _name;
-    };
+  std::string URL() const;
+  std::string Name() const;
+private:
+  std::string url_;
+  std::string name_;
+};
 }
 
 namespace YAML {
-    template<>
-    struct convert < loot::Location > {
-        static Node encode(const loot::Location& rhs) {
-            Node node;
+template<>
+struct convert<loot::Location> {
+  static Node encode(const loot::Location& rhs) {
+    Node node;
 
-            node["link"] = rhs.URL();
-            if (!rhs.Name().empty())
-                node["name"] = rhs.Name();
+    node["link"] = rhs.URL();
+    if (!rhs.Name().empty())
+      node["name"] = rhs.Name();
 
-            return node;
-        }
+    return node;
+  }
 
-        static bool decode(const Node& node, loot::Location& rhs) {
-            if (!node.IsMap() && !node.IsScalar())
-                throw RepresentationException(node.Mark(), "bad conversion: 'location' object must be a map or scalar");
+  static bool decode(const Node& node, loot::Location& rhs) {
+    if (!node.IsMap() && !node.IsScalar())
+      throw RepresentationException(node.Mark(), "bad conversion: 'location' object must be a map or scalar");
 
-            std::string url;
-            std::string name;
+    std::string url;
+    std::string name;
 
-            if (node.IsMap()) {
-                if (!node["link"])
-                    throw RepresentationException(node.Mark(), "bad conversion: 'link' key missing from 'location' map object");
+    if (node.IsMap()) {
+      if (!node["link"])
+        throw RepresentationException(node.Mark(), "bad conversion: 'link' key missing from 'location' map object");
 
-                url = node["link"].as<std::string>();
-                if (node["name"])
-                    name = node["name"].as<std::string>();
-            }
-            else
-                url = node.as<std::string>();
+      url = node["link"].as<std::string>();
+      if (node["name"])
+        name = node["name"].as<std::string>();
+    } else
+      url = node.as<std::string>();
 
-            rhs = loot::Location(url, name);
+    rhs = loot::Location(url, name);
 
-            return true;
-        }
-    };
+    return true;
+  }
+};
 
-    Emitter& operator << (Emitter& out, const loot::Location& rhs);
+Emitter& operator << (Emitter& out, const loot::Location& rhs);
 }
 
 #endif

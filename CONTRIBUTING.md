@@ -66,3 +66,30 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 * In [archive.js](scripts/archive.js), add the language folder to the list on line 83.
 * In [installer.iss](scripts/installer.iss), add an entry for your language's translation file to the `[Files]` section.
 * In [LOOT Metadata Syntax.html](docs/LOOT%20Metadata%20Syntax.html), add a row for your language to the Language Codes table.
+
+## Code Style
+
+LOOT's JavaScript uses a slightly tweaked version of the Airbnb style, and can be automatically linted by ESLint, so isn't covered here.
+
+### C++ Code Style
+
+The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) is used as the base, with deviations as listed below. Note that the LOOT API is a C API, so the style guide doesn't apply to its header.
+
+#### C++ Features
+
+* Static variables may contain non-POD types.
+* Reference arguments don't need to be `const` (ie. they can be used for output variables).
+* Exceptions can be used.
+* Unsigned integer types can be used.
+* There's no restriction on which Boost libraries can be used.
+* Specialising `std::hash` is allowed.
+
+#### Naming
+
+* Constant, enumerator and variable names should use `camelCase` or `underscore_separators`, but they should be consistent within the same scope.
+* Function names should use `PascalCase` or `camelCase`, but they should be consistent within the same scope.
+
+#### Formatting
+
+* Line length doesn't matter.
+* `public`, `protected` and `private` keywords should not be indented within a class declaration.

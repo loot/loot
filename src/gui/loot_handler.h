@@ -22,76 +22,76 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GUI_LOOT_HANDLER__
-#define __LOOT_GUI_LOOT_HANDLER__
+#ifndef LOOT_GUI_LOOT_HANDLER
+#define LOOT_GUI_LOOT_HANDLER
 
-#include "backend/app/loot_state.h"
+#include <list>
 
 #include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>
 
-#include <list>
+#include "backend/app/loot_state.h"
 
 namespace loot {
-    class LootHandler : public CefClient,
-        public CefDisplayHandler,
-        public CefLifeSpanHandler,
-        public CefLoadHandler,
-        public CefRequestHandler {
-    public:
-        LootHandler(LootState& lootState);
+class LootHandler : public CefClient,
+  public CefDisplayHandler,
+  public CefLifeSpanHandler,
+  public CefLoadHandler,
+  public CefRequestHandler {
+public:
+  LootHandler(LootState& lootState);
 
-        // CefClient methods
-        //------------------
-        virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE;
-        virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
-        virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE;
+  // CefClient methods
+  //------------------
+  virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE;
+  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
+  virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE;
 
-        virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                              CefProcessId source_process,
-                                              CefRefPtr<CefProcessMessage> message) OVERRIDE;
+  virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                        CefProcessId source_process,
+                                        CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
-        // CefLifeSpanHandler methods
-        //---------------------------
-        virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-        virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-        virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+  // CefLifeSpanHandler methods
+  //---------------------------
+  virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
+  virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+  virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
-        // CefLoadHandler methods
-        //-----------------------
-        virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
-                                 CefRefPtr<CefFrame> frame,
-                                 ErrorCode errorCode,
-                                 const CefString& errorText,
-                                 const CefString& failedUrl) OVERRIDE;
+  // CefLoadHandler methods
+  //-----------------------
+  virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
+                           CefRefPtr<CefFrame> frame,
+                           ErrorCode errorCode,
+                           const CefString& errorText,
+                           const CefString& failedUrl) OVERRIDE;
 
-        // CefRequestHandler methods
-        //--------------------------
+  // CefRequestHandler methods
+  //--------------------------
 
-        virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE;
+  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE;
 
-        virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-                                    CefRefPtr< CefFrame > frame,
-                                    CefRefPtr< CefRequest > request,
-                                    bool is_redirect) OVERRIDE;
+  virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
+                              CefRefPtr< CefFrame > frame,
+                              CefRefPtr< CefRequest > request,
+                              bool is_redirect) OVERRIDE;
 
-        virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
-                                                                    CefRefPtr<CefFrame> frame,
-                                                                    CefRefPtr<CefRequest> request,
-                                                                    CefRefPtr<CefRequestCallback> callback) OVERRIDE;
-        
+  virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
+                                                              CefRefPtr<CefFrame> frame,
+                                                              CefRefPtr<CefRequest> request,
+                                                              CefRefPtr<CefRequestCallback> callback) OVERRIDE;
 
-    private:
-        // List of existing browser windows. Only accessed on the CEF UI thread.
-        typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
+private:
+  typedef std::list<CefRefPtr<CefBrowser>> BrowserList;
 
-        BrowserList browser_list_;
-        CefRefPtr<CefMessageRouterBrowserSide> browser_side_router_;
-        LootState& _lootState;
+  // List of existing browser windows. Only accessed on the CEF UI thread.
+  BrowserList browser_list_;
+  CefRefPtr<CefMessageRouterBrowserSide> browser_side_router_;
 
-        // Include the default reference counting implementation.
-        IMPLEMENT_REFCOUNTING(LootHandler);
-    };
+  LootState& lootState_;
+
+  // Include the default reference counting implementation.
+  IMPLEMENT_REFCOUNTING(LootHandler);
+};
 }
 
 #endif

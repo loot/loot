@@ -22,100 +22,102 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_API_GAME_OPERATIONS_TEST
-#define LOOT_TEST_API_GAME_OPERATIONS_TEST
+#ifndef LOOT_TESTS_API_API_GAME_OPERATIONS_TEST
+#define LOOT_TESTS_API_API_GAME_OPERATIONS_TEST
+
+#include "loot/api.h"
 
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
-    namespace test {
-        class ApiGameOperationsTest :
-            public ::testing::TestWithParam<unsigned int>, 
-            public CommonGameTestFixture {
-        protected:
-            ApiGameOperationsTest() :
-                CommonGameTestFixture(GetParam()),
-                db(nullptr),
-                masterlistPath(localPath / "masterlist.yaml"),
-                noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
-                warningMessage("Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing."),
-                errorMessage("Obsolete. Remove this and install Enhanced Weather.") {}
+namespace test {
+class ApiGameOperationsTest :
+  public ::testing::TestWithParam<unsigned int>,
+  public CommonGameTestFixture {
+protected:
+  ApiGameOperationsTest() :
+    CommonGameTestFixture(GetParam()),
+    db_(nullptr),
+    masterlistPath(localPath / "masterlist.yaml"),
+    noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
+    warningMessage("Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing."),
+    errorMessage("Obsolete. Remove this and install Enhanced Weather.") {}
 
-            inline virtual void SetUp() {
-                setUp();
+  virtual void SetUp() {
+    setUp();
 
-                ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
+    ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
 
-                ASSERT_EQ(loot_ok, loot_create_db(&db, GetParam(), dataPath.parent_path().string().c_str(), localPath.string().c_str()));
-            }
+    ASSERT_EQ(loot_ok, loot_create_db(&db_, GetParam(), dataPath.parent_path().string().c_str(), localPath.string().c_str()));
+  }
 
-            inline virtual void TearDown() {
-                tearDown();
+  virtual void TearDown() {
+    tearDown();
 
-                ASSERT_NO_THROW(loot_destroy_db(db));
+    ASSERT_NO_THROW(loot_destroy_db(db_));
 
-                // The masterlist may have been created during the test, so delete it.
-                ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
-            }
+    // The masterlist may have been created during the test, so delete it.
+    ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
+  }
 
-            inline void generateMasterlist() {
-                using std::endl;
+  void GenerateMasterlist() {
+    using std::endl;
 
-                boost::filesystem::ofstream masterlist(masterlistPath);
-                masterlist
-                    << "plugins:" << endl
-                    << "  - name: " << blankEsm << endl
-                    << "    after:" << endl
-                    << "      - " << masterFile << endl
-                    << "    msg:" << endl
-                    << "      - type: say" << endl
-                    << "        content: '" << noteMessage << "'" << endl
-                    << "    tag:" << endl
-                    << "      - Actors.ACBS" << endl
-                    << "      - Actors.AIData" << endl
-                    << "      - '-C.Water'" << endl
-                    << "  - name: " << blankDifferentEsm << endl
-                    << "    after:" << endl
-                    << "      - " << blankMasterDependentEsm << endl
-                    << "    msg:" << endl
-                    << "      - type: warn" << endl
-                    << "        content: '" << warningMessage << "'" << endl
-                    << "    dirty:" << endl
-                    << "      - crc: 0x7d22f9df" << endl
-                    << "        util: TES4Edit" << endl
-                    << "        udr: 4" << endl
-                    << "  - name: " << blankDifferentEsp << endl
-                    << "    after:" << endl
-                    << "      - " << blankPluginDependentEsp << endl
-                    << "    msg:" << endl
-                    << "      - type: error" << endl
-                    << "        content: '" << errorMessage << "'" << endl
-                    << "  - name: " << blankEsp << endl
-                    << "    after:" << endl
-                    << "      - " << blankDifferentMasterDependentEsp << endl
-                    << "  - name: " << blankDifferentMasterDependentEsp << endl
-                    << "    after:" << endl
-                    << "      - " << blankMasterDependentEsp << endl
-                    << "    msg:" << endl
-                    << "      - type: say" << endl
-                    << "        content: '" << noteMessage << "'" << endl
-                    << "      - type: warn" << endl
-                    << "        content: '" << warningMessage << "'" << endl
-                    << "      - type: error" << endl
-                    << "        content: '" << errorMessage << "'" << endl;
+    boost::filesystem::ofstream masterlist(masterlistPath);
+    masterlist
+      << "plugins:" << endl
+      << "  - name: " << blankEsm << endl
+      << "    after:" << endl
+      << "      - " << masterFile << endl
+      << "    msg:" << endl
+      << "      - type: say" << endl
+      << "        content: '" << noteMessage << "'" << endl
+      << "    tag:" << endl
+      << "      - Actors.ACBS" << endl
+      << "      - Actors.AIData" << endl
+      << "      - '-C.Water'" << endl
+      << "  - name: " << blankDifferentEsm << endl
+      << "    after:" << endl
+      << "      - " << blankMasterDependentEsm << endl
+      << "    msg:" << endl
+      << "      - type: warn" << endl
+      << "        content: '" << warningMessage << "'" << endl
+      << "    dirty:" << endl
+      << "      - crc: 0x7d22f9df" << endl
+      << "        util: TES4Edit" << endl
+      << "        udr: 4" << endl
+      << "  - name: " << blankDifferentEsp << endl
+      << "    after:" << endl
+      << "      - " << blankPluginDependentEsp << endl
+      << "    msg:" << endl
+      << "      - type: error" << endl
+      << "        content: '" << errorMessage << "'" << endl
+      << "  - name: " << blankEsp << endl
+      << "    after:" << endl
+      << "      - " << blankDifferentMasterDependentEsp << endl
+      << "  - name: " << blankDifferentMasterDependentEsp << endl
+      << "    after:" << endl
+      << "      - " << blankMasterDependentEsp << endl
+      << "    msg:" << endl
+      << "      - type: say" << endl
+      << "        content: '" << noteMessage << "'" << endl
+      << "      - type: warn" << endl
+      << "        content: '" << warningMessage << "'" << endl
+      << "      - type: error" << endl
+      << "        content: '" << errorMessage << "'" << endl;
 
-                masterlist.close();
-            }
+    masterlist.close();
+  }
 
-            loot_db * db;
+  loot_db * db_;
 
-            const boost::filesystem::path masterlistPath;
+  const boost::filesystem::path masterlistPath;
 
-            const std::string noteMessage;
-            const std::string warningMessage;
-            const std::string errorMessage;
-        };
-    }
+  const std::string noteMessage;
+  const std::string warningMessage;
+  const std::string errorMessage;
+};
+}
 }
 
 #endif

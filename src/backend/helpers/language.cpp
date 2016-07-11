@@ -22,97 +22,86 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "language.h"
+#include "backend/helpers/language.h"
 
 namespace loot {
+const std::vector<Language::Code> Language::codes({
+    Code::english,
+    Code::spanish,
+    Code::russian,
+    Code::french,
+    Code::chinese,
+    Code::polish,
+    Code::brazilian_portuguese,
+    Code::finnish,
+    Code::german,
+    Code::danish,
+    Code::korean
+});
 
-    Language::Language(const Code code) {
-        Construct(code);
+Language::Language(Code code) {
+  Construct(code);
+}
+
+Language::Language(const std::string& locale) {
+  for (Code code : codes) {
+    if (locale == Language(code).GetLocale()) {
+      Construct(code);
+      return;
     }
+  }
 
-    Language::Language(const std::string& locale) {
-        for (Code code : Codes) {
-            if (locale == Language(code).GetLocale()) {
-                Construct(code);
-                return;
-            }
-        }
+  Construct(Code::english);
+}
 
-        Construct(Code::english);
-    }
+void Language::Construct(const Code code) {
+  code_ = code;
+  if (code_ == Code::spanish) {
+    name_ = "Español";
+    locale_ = "es";
+  } else if (code_ == Code::russian) {
+    name_ = "Русский";
+    locale_ = "ru";
+  } else if (code_ == Code::french) {
+    name_ = "Français";
+    locale_ = "fr";
+  } else if (code_ == Code::chinese) {
+    name_ = "简体中文";
+    locale_ = "zh_CN";
+  } else if (code_ == Code::polish) {
+    name_ = "Polski";
+    locale_ = "pl";
+  } else if (code_ == Code::brazilian_portuguese) {
+    name_ = "Português do Brasil";
+    locale_ = "pt_BR";
+  } else if (code_ == Code::finnish) {
+    name_ = "suomi";
+    locale_ = "fi";
+  } else if (code_ == Code::german) {
+    name_ = "Deutsch";
+    locale_ = "de";
+  } else if (code_ == Code::danish) {
+    name_ = "Dansk";
+    locale_ = "da";
+  } else if (code_ == Code::korean) {
+    name_ = "한국어";
+    locale_ = "ko";
+  } else {
+    code_ = Code::english;
+    name_ = "English";
+    locale_ = "en";
+  }
+}
 
-    void Language::Construct(const Code code) {
-        _code = code;
-        if (_code == Code::spanish) {
-            _name = "Español";
-            _locale = "es";
-        }
-        else if (_code == Code::russian) {
-            _name = "Русский";
-            _locale = "ru";
-        }
-        else if (_code == Code::french) {
-            _name = "Français";
-            _locale = "fr";
-        }
-        else if (_code == Code::chinese) {
-            _name = "简体中文";
-            _locale = "zh_CN";
-        }
-        else if (_code == Code::polish) {
-            _name = "Polski";
-            _locale = "pl";
-        }
-        else if (_code == Code::brazilian_portuguese) {
-            _name = "Português do Brasil";
-            _locale = "pt_BR";
-        }
-        else if (_code == Code::finnish) {
-            _name = "suomi";
-            _locale = "fi";
-        }
-        else if (_code == Code::german) {
-            _name = "Deutsch";
-            _locale = "de";
-        }
-        else if (_code == Code::danish) {
-            _name = "Dansk";
-            _locale = "da";
-        }
-        else if (_code == Code::korean) {
-            _name = "한국어";
-            _locale = "ko";
-        }
-        else {
-            _code = Code::english;
-            _name = "English";
-            _locale = "en";
-        }
-    }
+Language::Code Language::GetCode() const {
+  return code_;
+}
 
-    Language::Code Language::GetCode() const {
-        return _code;
-    }
+std::string Language::GetName() const {
+  return name_;
+}
 
-    std::string Language::GetName() const {
-        return _name;
-    }
-
-    std::string Language::GetLocale() const {
-        return _locale;
-    }
-
-    const std::vector<Language::Code> Language::Codes({
-        Code::english,
-        Code::spanish,
-        Code::russian,
-        Code::french,
-        Code::chinese,
-        Code::polish,
-        Code::brazilian_portuguese,
-        Code::finnish,
-        Code::german,
-        Code::danish,
-        Code::korean
-    });
+std::string Language::GetLocale() const {
+  return locale_;
+}
 }

@@ -26,14 +26,14 @@ along with LOOT.  If not, see
 #define LOOT_BACKEND_GAME_GAME_TYPE
 
 namespace loot {
-    enum struct GameType : unsigned int {
-        autodetect = 0,
-        tes4 = 1,
-        tes5 = 2,
-        fo3 = 3,
-        fonv = 4,
-        fo4 = 5,
-    };
+enum struct GameType : unsigned int {
+  autodetect = 0,
+  tes4 = 1,
+  tes5 = 2,
+  fo3 = 3,
+  fonv = 4,
+  fo4 = 5,
+};
 }
 
 #endif

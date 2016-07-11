@@ -22,92 +22,93 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_LOOT_GET_PLUGIN_MESSAGES
-#define LOOT_TEST_LOOT_GET_PLUGIN_MESSAGES
+#ifndef LOOT_TESTS_API_LOOT_GET_PLUGIN_MESSAGES_TEST
+#define LOOT_TESTS_API_LOOT_GET_PLUGIN_MESSAGES_TEST
 
-#include "../include/loot/api.h"
-#include "api_game_operations_test.h"
+#include "loot/api.h"
+
+#include "tests/api/api_game_operations_test.h"
 
 namespace loot {
-    namespace test {
-        class loot_get_plugin_messages_test : public ApiGameOperationsTest {
-        protected:
-            loot_get_plugin_messages_test() :
-                messages(nullptr),
-                numMessages(0) {}
+namespace test {
+class loot_get_plugin_messages_test : public ApiGameOperationsTest {
+protected:
+  loot_get_plugin_messages_test() :
+    messages_(nullptr),
+    numMessages_(0) {}
 
-            const loot_message * messages;
-            size_t numMessages;
-        };
+  const loot_message * messages_;
+  size_t numMessages_;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                loot_get_plugin_messages_test,
-                                ::testing::Values(
-                                    loot_game_tes4,
-                                    loot_game_tes5,
-                                    loot_game_fo3,
-                                    loot_game_fonv,
-                                    loot_game_fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        loot_get_plugin_messages_test,
+                        ::testing::Values(
+                          loot_game_tes4,
+                          loot_game_tes5,
+                          loot_game_fo3,
+                          loot_game_fonv,
+                          loot_game_fo4));
 
-        TEST_P(loot_get_plugin_messages_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
-            EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(NULL, blankEsp.c_str(), &messages, &numMessages));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, NULL, &messages, &numMessages));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, blankEsp.c_str(), NULL, &numMessages));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db, blankEsp.c_str(), &messages, NULL));
-        }
+TEST_P(loot_get_plugin_messages_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
+  EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(NULL, blankEsp.c_str(), &messages_, &numMessages_));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db_, NULL, &messages_, &numMessages_));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db_, blankEsp.c_str(), NULL, &numMessages_));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_plugin_messages(db_, blankEsp.c_str(), &messages_, NULL));
+}
 
-        TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputANullArrayIfAPluginWithNoMessagesIsQueried) {
-            EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, blankEsp.c_str(), &messages, &numMessages));
-            EXPECT_EQ(0, numMessages);
-            EXPECT_EQ(NULL, messages);
-        }
+TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputANullArrayIfAPluginWithNoMessagesIsQueried) {
+  EXPECT_EQ(loot_ok, loot_get_plugin_messages(db_, blankEsp.c_str(), &messages_, &numMessages_));
+  EXPECT_EQ(0, numMessages_);
+  EXPECT_EQ(NULL, messages_);
+}
 
-        TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputANoteIfAPluginWithANoteMessageIsQueried) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputANoteIfAPluginWithANoteMessageIsQueried) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, blankEsm.c_str(), &messages, &numMessages));
-            ASSERT_EQ(1, numMessages);
-            EXPECT_EQ(loot_message_say, messages[0].type);
-            EXPECT_STREQ(noteMessage.c_str(), messages[0].message);
-        }
+  EXPECT_EQ(loot_ok, loot_get_plugin_messages(db_, blankEsm.c_str(), &messages_, &numMessages_));
+  ASSERT_EQ(1, numMessages_);
+  EXPECT_EQ(loot_message_say, messages_[0].type);
+  EXPECT_STREQ(noteMessage.c_str(), messages_[0].message);
+}
 
-        TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputAWarningIfAPluginWithAWarningMessageIsQueried) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputAWarningIfAPluginWithAWarningMessageIsQueried) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, blankDifferentEsm.c_str(), &messages, &numMessages));
-            ASSERT_EQ(1, numMessages);
-            EXPECT_EQ(loot_message_warn, messages[0].type);
-            EXPECT_STREQ(warningMessage.c_str(), messages[0].message);
-        }
+  EXPECT_EQ(loot_ok, loot_get_plugin_messages(db_, blankDifferentEsm.c_str(), &messages_, &numMessages_));
+  ASSERT_EQ(1, numMessages_);
+  EXPECT_EQ(loot_message_warn, messages_[0].type);
+  EXPECT_STREQ(warningMessage.c_str(), messages_[0].message);
+}
 
-        TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputAnErrorIfAPluginWithAnErrorMessageIsQueried) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputAnErrorIfAPluginWithAnErrorMessageIsQueried) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, blankDifferentEsp.c_str(), &messages, &numMessages));
-            ASSERT_EQ(1, numMessages);
-            EXPECT_EQ(loot_message_error, messages[0].type);
-            EXPECT_STREQ(errorMessage.c_str(), messages[0].message);
-        }
+  EXPECT_EQ(loot_ok, loot_get_plugin_messages(db_, blankDifferentEsp.c_str(), &messages_, &numMessages_));
+  ASSERT_EQ(1, numMessages_);
+  EXPECT_EQ(loot_message_error, messages_[0].type);
+  EXPECT_STREQ(errorMessage.c_str(), messages_[0].message);
+}
 
-        TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputMultipleMessagesIfAPluginWithMultipleMessagesIsQueried) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_get_plugin_messages_test, shouldReturnOkAndOutputMultipleMessagesIfAPluginWithMultipleMessagesIsQueried) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_get_plugin_messages(db, blankDifferentMasterDependentEsp.c_str(), &messages, &numMessages));
-            ASSERT_EQ(3, numMessages);
-            EXPECT_EQ(loot_message_say, messages[0].type);
-            EXPECT_STREQ(noteMessage.c_str(), messages[0].message);
-            EXPECT_EQ(loot_message_warn, messages[1].type);
-            EXPECT_STREQ(warningMessage.c_str(), messages[1].message);
-            EXPECT_EQ(loot_message_error, messages[2].type);
-            EXPECT_STREQ(errorMessage.c_str(), messages[2].message);
-        }
-    }
+  EXPECT_EQ(loot_ok, loot_get_plugin_messages(db_, blankDifferentMasterDependentEsp.c_str(), &messages_, &numMessages_));
+  ASSERT_EQ(3, numMessages_);
+  EXPECT_EQ(loot_message_say, messages_[0].type);
+  EXPECT_STREQ(noteMessage.c_str(), messages_[0].message);
+  EXPECT_EQ(loot_message_warn, messages_[1].type);
+  EXPECT_STREQ(warningMessage.c_str(), messages_[1].message);
+  EXPECT_EQ(loot_message_error, messages_[2].type);
+  EXPECT_STREQ(errorMessage.c_str(), messages_[2].message);
+}
+}
 }
 
 #endif

@@ -22,50 +22,52 @@
     <http://www.gnu.org/licenses/>.
     */
 
+#include <boost/log/core.hpp>
+
 #include "backend/app/loot_version.h"
 #include "backend/metadata_list.h"
 
-#include <boost/log/core.hpp>
-
 int main(int argc, char **argv) {
-    //Set the locale to get encoding conversions working correctly.
-    std::locale::global(boost::locale::generator().generate(""));
-    boost::filesystem::path::imbue(std::locale());
+  using std::cout;
+  using std::endl;
 
-    //Disable logging or else stdout will get overrun.
-    boost::log::core::get()->set_logging_enabled(false);
+  //Set the locale to get encoding conversions working correctly.
+  std::locale::global(boost::locale::generator().generate(""));
+  boost::filesystem::path::imbue(std::locale());
 
-    // Print help text if -h, --help or invalid args are given (including no args).
-    if (argc != 2 || (strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
-        std::cout << std::endl
-            << "Usage: metadata-validator <arg>" << std::endl << std::endl
-            << "Arguments:" << std::endl << std::endl
-            << "  " << "<file>" << "         " << "The metadata file to validate." << std::endl
-            << "  " << "-v, --version" << "  " << "Prints version information for this utility." << std::endl
-            << "  " << "-h, --help" << "     " << "Prints this help text." << std::endl << std::endl;
-        return 1;
-    }
+  //Disable logging or else stdout will get overrun.
+  boost::log::core::get()->set_logging_enabled(false);
 
-    // Print version info if -v or --version are given.
-    if ((strcmp(argv[1], "-v") == 0) || (strcmp(argv[1], "--version") == 0)) {
-        std::cout << std::endl << "LOOT Metadata Validator" << std::endl
-            << "v" << loot::LootVersion::major << "." << loot::LootVersion::minor
-            << "." << loot::LootVersion::patch << std::endl
-            << "build revision " << loot::LootVersion::revision << std::endl << std::endl;
-        return 0;
-    }
+  // Print help text if -h, --help or invalid args are given (including no args).
+  if (argc != 2 || (strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
+    cout << endl
+      << "Usage: metadata-validator <arg>" << endl << endl
+      << "Arguments:" << endl << endl
+      << "  " << "<file>" << "         " << "The metadata file to validate." << endl
+      << "  " << "-v, --version" << "  " << "Prints version information for this utility." << endl
+      << "  " << "-h, --help" << "     " << "Prints this help text." << endl << endl;
+    return 1;
+  }
 
-    try {
-        std::cout << std::endl << "Validating metadata file: " << argv[1] << std::endl << std::endl;
-        // Test YAML parsing.
-        loot::MetadataList metadata;
-        metadata.Load(argv[1]);
-    }
-    catch (std::exception& e) {
-        std::cout << "ERROR: " << e.what() << std::endl << std::endl;
-        return 1;
-    }
-    std::cout << "SUCCESS!" << std::endl << std::endl;
-
+  // Print version info if -v or --version are given.
+  if ((strcmp(argv[1], "-v") == 0) || (strcmp(argv[1], "--version") == 0)) {
+    cout << endl << "LOOT Metadata Validator" << endl
+      << "v" << loot::LootVersion::major << "." << loot::LootVersion::minor
+      << "." << loot::LootVersion::patch << endl
+      << "build revision " << loot::LootVersion::revision << endl << endl;
     return 0;
+  }
+
+  try {
+    cout << endl << "Validating metadata file: " << argv[1] << endl << endl;
+    // Test YAML parsing.
+    loot::MetadataList metadata;
+    metadata.Load(argv[1]);
+  } catch (std::exception& e) {
+    cout << "ERROR: " << e.what() << endl << endl;
+    return 1;
+  }
+  cout << "SUCCESS!" << endl << endl;
+
+  return 0;
 }

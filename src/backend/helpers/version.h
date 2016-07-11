@@ -22,33 +22,34 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_VERSION__
-#define __LOOT_VERSION__
+#ifndef LOOT_BACKEND_HELPERS_VERSION
+#define LOOT_BACKEND_HELPERS_VERSION
 
 #include <regex>
 #include <string>
+
 #include <boost/filesystem.hpp>
 
 namespace loot {
     //Version class for more robust version comparisons.
-    class Version {
-    public:
-        Version();
-        Version(const std::string& ver);
-        Version(const boost::filesystem::path& file);
+class Version {
+public:
+  Version();
+  Version(const std::string& ver);
+  Version(const boost::filesystem::path& file);
 
-        std::string AsString() const;
+  std::string AsString() const;
 
-        bool operator > (const Version&) const;
-        bool operator < (const Version&) const;
-        bool operator >= (const Version&) const;
-        bool operator <= (const Version&) const;
-        bool operator == (const Version&) const;
-        bool operator != (const Version&) const;
-    private:
-        std::string verString;
-        static const std::vector<std::regex> versionRegexes;
-    };
+  bool operator > (const Version&) const;
+  bool operator < (const Version&) const;
+  bool operator >= (const Version&) const;
+  bool operator <= (const Version&) const;
+  bool operator == (const Version&) const;
+  bool operator != (const Version&) const;
+private:
+  std::string verString_;
+  static const std::vector<std::regex> versionRegexes;
+};
 }
 
 #endif

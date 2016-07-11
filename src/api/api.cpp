@@ -23,13 +23,6 @@
     */
 
 #include "loot/api.h"
-#include "loot_db.h"
-#include "../backend/error.h"
-#include "../backend/app/loot_paths.h"
-#include "../backend/app/loot_version.h"
-#include "../backend/plugin/plugin_sorter.h"
-
-#include <yaml-cpp/yaml.h>
 
 #include <algorithm>
 #include <clocale>
@@ -40,9 +33,18 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/log/core.hpp>
+#include <yaml-cpp/yaml.h>
+
+#include "api/loot_db.h"
+#include "backend/error.h"
+#include "backend/app/loot_paths.h"
+#include "backend/app/loot_version.h"
+#include "backend/plugin/plugin_sorter.h"
 
 using loot::Error;
 using loot::GameType;
+using loot::Message;
+using loot::Language;
 
 const unsigned int loot_ok = Error::asUnsignedInt(Error::Code::ok);
 const unsigned int loot_error_liblo_error = Error::asUnsignedInt(Error::Code::liblo_error);
@@ -67,23 +69,22 @@ const unsigned int loot_game_fo3 = static_cast<unsigned int>(GameType::fo3);
 const unsigned int loot_game_fonv = static_cast<unsigned int>(GameType::fonv);
 const unsigned int loot_game_fo4 = static_cast<unsigned int>(GameType::fo4);
 
-// LOOT message types.
-const unsigned int loot_message_say = static_cast<unsigned int>(loot::Message::Type::say);
-const unsigned int loot_message_warn = static_cast<unsigned int>(loot::Message::Type::warn);
-const unsigned int loot_message_error = static_cast<unsigned int>(loot::Message::Type::error);
+const unsigned int loot_message_say = static_cast<unsigned int>(Message::Type::say);
+const unsigned int loot_message_warn = static_cast<unsigned int>(Message::Type::warn);
+const unsigned int loot_message_error = static_cast<unsigned int>(Message::Type::error);
 
 // LOOT message languages.
-const unsigned int loot_lang_english = static_cast<unsigned int>(loot::Language::Code::english);
-const unsigned int loot_lang_spanish = static_cast<unsigned int>(loot::Language::Code::spanish);
-const unsigned int loot_lang_russian = static_cast<unsigned int>(loot::Language::Code::russian);
-const unsigned int loot_lang_french = static_cast<unsigned int>(loot::Language::Code::french);
-const unsigned int loot_lang_chinese = static_cast<unsigned int>(loot::Language::Code::chinese);
-const unsigned int loot_lang_polish = static_cast<unsigned int>(loot::Language::Code::polish);
-const unsigned int loot_lang_brazilian_portuguese = static_cast<unsigned int>(loot::Language::Code::brazilian_portuguese);
-const unsigned int loot_lang_finnish = static_cast<unsigned int>(loot::Language::Code::finnish);
-const unsigned int loot_lang_german = static_cast<unsigned int>(loot::Language::Code::german);
-const unsigned int loot_lang_danish = static_cast<unsigned int>(loot::Language::Code::danish);
-const unsigned int loot_lang_korean = static_cast<unsigned int>(loot::Language::Code::korean);
+const unsigned int loot_lang_english = static_cast<unsigned int>(Language::Code::english);
+const unsigned int loot_lang_spanish = static_cast<unsigned int>(Language::Code::spanish);
+const unsigned int loot_lang_russian = static_cast<unsigned int>(Language::Code::russian);
+const unsigned int loot_lang_french = static_cast<unsigned int>(Language::Code::french);
+const unsigned int loot_lang_chinese = static_cast<unsigned int>(Language::Code::chinese);
+const unsigned int loot_lang_polish = static_cast<unsigned int>(Language::Code::polish);
+const unsigned int loot_lang_brazilian_portuguese = static_cast<unsigned int>(Language::Code::brazilian_portuguese);
+const unsigned int loot_lang_finnish = static_cast<unsigned int>(Language::Code::finnish);
+const unsigned int loot_lang_german = static_cast<unsigned int>(Language::Code::german);
+const unsigned int loot_lang_danish = static_cast<unsigned int>(Language::Code::danish);
+const unsigned int loot_lang_korean = static_cast<unsigned int>(Language::Code::korean);
 
 // LOOT cleanliness codes.
 const unsigned int loot_needs_cleaning_no = 0;
@@ -93,12 +94,12 @@ const unsigned int loot_needs_cleaning_unknown = 2;
 std::string extMessageStr;
 
 unsigned int c_error(const Error& e) {
-    extMessageStr = e.what();
-    return e.codeAsUnsignedInt();
+  extMessageStr = e.what();
+  return e.codeAsUnsignedInt();
 }
 
 unsigned int c_error(const unsigned int code, const std::string& what) {
-    return c_error(Error(Error::Code(code), what.c_str()));
+  return c_error(Error(Error::Code(code), what.c_str()));
 }
 
 //////////////////////////////
@@ -109,12 +110,12 @@ unsigned int c_error(const unsigned int code, const std::string& what) {
 // warning return code was returned by a function. The string exists
 // until this function is called again or until CleanUpAPI is called.
 LOOT_API unsigned int loot_get_error_message(const char ** const message) {
-    if (message == nullptr)
-        return c_error(loot_error_invalid_args, "Null message pointer passed.");
+  if (message == nullptr)
+    return c_error(loot_error_invalid_args, "Null message pointer passed.");
 
-    *message = extMessageStr.c_str();
+  *message = extMessageStr.c_str();
 
-    return loot_ok;
+  return loot_ok;
 }
 
 //////////////////////////////
@@ -124,33 +125,33 @@ LOOT_API unsigned int loot_get_error_message(const char ** const message) {
 // Returns whether this version of LOOT supports the API from the given
 // LOOT version. Abstracts LOOT API stability policy away from clients.
 LOOT_API bool loot_is_compatible(const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
-    if (versionMajor > 0)
-        return versionMajor == loot::LootVersion::major;
-    else
-        return versionMinor == loot::LootVersion::minor;
+  if (versionMajor > 0)
+    return versionMajor == loot::LootVersion::major;
+  else
+    return versionMinor == loot::LootVersion::minor;
 }
 
 // Returns the version string for this version of LOOT.
 // The string exists until this function is called again or until
 // CleanUpAPI is called.
 LOOT_API unsigned int loot_get_version(unsigned int * const versionMajor, unsigned int * const versionMinor, unsigned int * const versionPatch) {
-    if (versionMajor == nullptr || versionMinor == nullptr || versionPatch == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (versionMajor == nullptr || versionMinor == nullptr || versionPatch == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    *versionMajor = loot::LootVersion::major;
-    *versionMinor = loot::LootVersion::minor;
-    *versionPatch = loot::LootVersion::patch;
+  *versionMajor = loot::LootVersion::major;
+  *versionMinor = loot::LootVersion::minor;
+  *versionPatch = loot::LootVersion::patch;
 
-    return loot_ok;
+  return loot_ok;
 }
 
 LOOT_API unsigned int loot_get_build_id(const char ** const revision) {
-    if (revision == nullptr)
-        return c_error(loot_error_invalid_args, "Null message pointer passed.");
+  if (revision == nullptr)
+    return c_error(loot_error_invalid_args, "Null message pointer passed.");
 
-    *revision = loot::LootVersion::revision.c_str();
+  *revision = loot::LootVersion::revision.c_str();
 
-    return loot_ok;
+  return loot_ok;
 }
 
 ////////////////////////////////////
@@ -168,57 +169,54 @@ LOOT_API unsigned int loot_create_db(loot_db ** const db,
                                      const unsigned int clientGame,
                                      const char * const gamePath,
                                      const char * const gameLocalPath) {
-    if (db == nullptr
-        || (clientGame != loot_game_tes4
-            && clientGame != loot_game_tes5
-            && clientGame != loot_game_fo3
-            && clientGame != loot_game_fonv
-            && clientGame != loot_game_fo4))
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr
+      || (clientGame != loot_game_tes4
+          && clientGame != loot_game_tes5
+          && clientGame != loot_game_fo3
+          && clientGame != loot_game_fonv
+          && clientGame != loot_game_fo4))
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    loot::LootPaths::initialise();
+  loot::LootPaths::initialise();
 
-    //Disable logging or else stdout will get overrun.
-    boost::log::core::get()->set_logging_enabled(false);
+  //Disable logging or else stdout will get overrun.
+  boost::log::core::get()->set_logging_enabled(false);
 
-    std::string game_path = "";
-    if (gamePath != nullptr)
-        game_path = gamePath;
+  std::string game_path = "";
+  if (gamePath != nullptr)
+    game_path = gamePath;
 
-    boost::filesystem::path game_local_path = "";
-    if (gameLocalPath != nullptr)
-        game_local_path = gameLocalPath;
+  boost::filesystem::path game_local_path = "";
+  if (gameLocalPath != nullptr)
+    game_local_path = gameLocalPath;
 #ifndef _WIN32
-    else
-        return c_error(loot_error_invalid_args, "A local data path must be supplied on non-Windows platforms.");
+  else
+    return c_error(loot_error_invalid_args, "A local data path must be supplied on non-Windows platforms.");
 #endif
 
-    try {
-        // Check for valid paths.
-        if (gamePath != nullptr && !boost::filesystem::is_directory(gamePath))
-            return c_error(loot_error_invalid_args, "Given game path \"" + std::string(gamePath) + "\" is not a valid directory.");
+  try {
+      // Check for valid paths.
+    if (gamePath != nullptr && !boost::filesystem::is_directory(gamePath))
+      return c_error(loot_error_invalid_args, "Given game path \"" + std::string(gamePath) + "\" is not a valid directory.");
 
-        if (gameLocalPath != nullptr && !boost::filesystem::is_directory(gameLocalPath))
-            return c_error(loot_error_invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
+    if (gameLocalPath != nullptr && !boost::filesystem::is_directory(gameLocalPath))
+      return c_error(loot_error_invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
 
-        *db = new loot_db(clientGame, game_path, game_local_path);
-    }
-    catch (Error& e) {
-        return c_error(e);
-    }
-    catch (std::bad_alloc& e) {
-        return c_error(loot_error_no_mem, e.what());
-    }
-    catch (std::exception& e) {
-        return c_error(loot_error_invalid_args, e.what());
-    }
+    *db = new loot_db(clientGame, game_path, game_local_path);
+  } catch (Error& e) {
+    return c_error(e);
+  } catch (std::bad_alloc& e) {
+    return c_error(loot_error_no_mem, e.what());
+  } catch (std::exception& e) {
+    return c_error(loot_error_invalid_args, e.what());
+  }
 
-    return loot_ok;
+  return loot_ok;
 }
 
 // Destroys the given DB, freeing any memory allocated as part of its use.
 LOOT_API void     loot_destroy_db(loot_db * const db) {
-    delete db;
+  delete db;
 }
 
 ///////////////////////////////////
@@ -231,48 +229,44 @@ LOOT_API void     loot_destroy_db(loot_db * const db) {
 // masterlistPath and userlistPath are files.
 LOOT_API unsigned int loot_load_lists(loot_db * const db, const char * const masterlistPath,
                                       const char * const userlistPath) {
-    if (db == nullptr || masterlistPath == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || masterlistPath == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    loot::Masterlist temp;
-    loot::MetadataList userTemp;
+  loot::Masterlist temp;
+  loot::MetadataList userTemp;
 
-    try {
-        if (boost::filesystem::exists(masterlistPath)) {
-            temp.Load(masterlistPath);
-        }
-        else {
-            return c_error(loot_error_path_not_found, std::string("The given masterlist path does not exist: ") + masterlistPath);
-        }
+  try {
+    if (boost::filesystem::exists(masterlistPath)) {
+      temp.Load(masterlistPath);
+    } else {
+      return c_error(loot_error_path_not_found, std::string("The given masterlist path does not exist: ") + masterlistPath);
     }
-    catch (std::exception& e) {
-        return c_error(loot_error_parse_fail, e.what());
+  } catch (std::exception& e) {
+    return c_error(loot_error_parse_fail, e.what());
+  }
+
+  try {
+    if (userlistPath != nullptr) {
+      if (boost::filesystem::exists(userlistPath)) {
+        userTemp.Load(userlistPath);
+      } else {
+        return c_error(loot_error_path_not_found, std::string("The given userlist path does not exist: ") + userlistPath);
+      }
     }
+  } catch (YAML::Exception& e) {
+    return c_error(loot_error_parse_fail, e.what());
+  }
 
-    try {
-        if (userlistPath != nullptr) {
-            if (boost::filesystem::exists(userlistPath)) {
-                userTemp.Load(userlistPath);
-            }
-            else {
-                return c_error(loot_error_path_not_found, std::string("The given userlist path does not exist: ") + userlistPath);
-            }
-        }
-    }
-    catch (YAML::Exception& e) {
-        return c_error(loot_error_parse_fail, e.what());
-    }
+  //Also free memory.
+  db->clearBashTagMap();
+  db->clearArrays();
 
-    //Also free memory.
-    db->clearBashTagMap();
-    db->clearArrays();
+  db->GetMasterlist() = temp;
+  db->getUnevaluatedMasterlist() = temp;
+  db->GetUserlist() = userTemp;
+  db->getUnevaluatedUserlist() = userTemp;
 
-    db->GetMasterlist() = temp;
-    db->getUnevaluatedMasterlist() = temp;
-    db->GetUserlist() = userTemp;
-    db->getUnevaluatedUserlist() = userTemp;
-
-    return loot_ok;
+  return loot_ok;
 }
 
 // Evaluates all conditional lines and regex mods the loaded masterlist.
@@ -282,37 +276,36 @@ LOOT_API unsigned int loot_load_lists(loot_db * const db, const char * const mas
 // ignoring the results of any previous evaluations. Paths are case-sensitive
 // if the underlying filesystem is case-sensitive.
 LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int language) {
-    if (db == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
-    if (language != loot_lang_english
-        && language != loot_lang_spanish
-        && language != loot_lang_russian
-        && language != loot_lang_french
-        && language != loot_lang_chinese
-        && language != loot_lang_polish
-        && language != loot_lang_brazilian_portuguese
-        && language != loot_lang_finnish
-        && language != loot_lang_german
-        && language != loot_lang_danish)
-        return c_error(loot_error_invalid_args, "Invalid language code given.");
+  if (db == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (language != loot_lang_english
+      && language != loot_lang_spanish
+      && language != loot_lang_russian
+      && language != loot_lang_french
+      && language != loot_lang_chinese
+      && language != loot_lang_polish
+      && language != loot_lang_brazilian_portuguese
+      && language != loot_lang_finnish
+      && language != loot_lang_german
+      && language != loot_lang_danish)
+    return c_error(loot_error_invalid_args, "Invalid language code given.");
 
-    // Clear caches before evaluating conditions.
-    db->ClearCachedConditions();
+// Clear caches before evaluating conditions.
+  db->ClearCachedConditions();
 
-    loot::Masterlist temp = db->getUnevaluatedMasterlist();
-    loot::MetadataList userTemp = db->getUnevaluatedUserlist();
-    try {
-        // Refresh active plugins before evaluating conditions.
-        temp.EvalAllConditions(*db, loot::Language::Code(language));
-        userTemp.EvalAllConditions(*db, loot::Language::Code(language));
-    }
-    catch (Error& e) {
-        return c_error(e);
-    }
-    db->GetMasterlist() = temp;
-    db->GetUserlist() = userTemp;
+  loot::Masterlist temp = db->getUnevaluatedMasterlist();
+  loot::MetadataList userTemp = db->getUnevaluatedUserlist();
+  try {
+      // Refresh active plugins before evaluating conditions.
+    temp.EvalAllConditions(*db, Language(Language::Code(language)).GetCode());
+    userTemp.EvalAllConditions(*db, Language(Language::Code(language)).GetCode());
+  } catch (loot::Error& e) {
+    return c_error(e);
+  }
+  db->GetMasterlist() = temp;
+  db->GetUserlist() = userTemp;
 
-    return loot_ok;
+  return loot_ok;
 }
 
 ////////////////////////////////////
@@ -322,52 +315,49 @@ LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int lan
 LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
                                         const char * const ** const sortedPlugins,
                                         size_t * const numPlugins) {
-    if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || sortedPlugins == nullptr || numPlugins == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    //Initialise output.
-    *numPlugins = 0;
-    *sortedPlugins = nullptr;
+//Initialise output.
+  *numPlugins = 0;
+  *sortedPlugins = nullptr;
 
-    try {
-        // Always reload all the plugins.
-        db->LoadPlugins(false);
+  try {
+      // Always reload all the plugins.
+    db->LoadPlugins(false);
 
-        //Sort plugins into their load order.
-        loot::PluginSorter sorter;
+    //Sort plugins into their load order.
+    loot::PluginSorter sorter;
 
-        db->setPluginNames(sorter.Sort(*db, loot::Language::Code::english));
-    }
-    catch (Error &e) {
-        return c_error(e);
-    }
-    catch (std::bad_alloc& e) {
-        return c_error(loot_error_no_mem, e.what());
-    }
+    db->setPluginNames(sorter.Sort(*db, loot::Language::Code::english));
+  } catch (Error &e) {
+    return c_error(e);
+  } catch (std::bad_alloc& e) {
+    return c_error(loot_error_no_mem, e.what());
+  }
 
-    if (db->getPluginNames().empty())
-        return loot_ok;
-
-    *numPlugins = db->getPluginNames().size();
-    *sortedPlugins = &db->getPluginNames()[0];
-
+  if (db->getPluginNames().empty())
     return loot_ok;
+
+  *numPlugins = db->getPluginNames().size();
+  *sortedPlugins = &db->getPluginNames()[0];
+
+  return loot_ok;
 }
 
 LOOT_API unsigned int loot_apply_load_order(loot_db * const db,
                                             const char * const * const loadOrder,
                                             const size_t numPlugins) {
-    if (db == nullptr || loadOrder == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || loadOrder == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    try {
-        db->SetLoadOrder(loadOrder, numPlugins);
-    }
-    catch (Error &e) {
-        return c_error(e);
-    }
+  try {
+    db->SetLoadOrder(loadOrder, numPlugins);
+  } catch (Error &e) {
+    return c_error(e);
+  }
 
-    return loot_ok;
+  return loot_ok;
 }
 
 LOOT_API unsigned int loot_update_masterlist(loot_db * const db,
@@ -375,22 +365,21 @@ LOOT_API unsigned int loot_update_masterlist(loot_db * const db,
                                              const char * const remoteURL,
                                              const char * const remoteBranch,
                                              bool * const updated) {
-    if (db == nullptr || masterlistPath == nullptr || remoteURL == nullptr || remoteBranch == nullptr || updated == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
-    if (!boost::filesystem::is_directory(boost::filesystem::path(masterlistPath).parent_path()))
-        return c_error(loot_error_invalid_args, "Given masterlist path \"" + std::string(masterlistPath) + "\" does not have a valid parent directory.");
+  if (db == nullptr || masterlistPath == nullptr || remoteURL == nullptr || remoteBranch == nullptr || updated == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (!boost::filesystem::is_directory(boost::filesystem::path(masterlistPath).parent_path()))
+    return c_error(loot_error_invalid_args, "Given masterlist path \"" + std::string(masterlistPath) + "\" does not have a valid parent directory.");
 
-    *updated = false;
+  *updated = false;
 
-    try {
-        loot::Masterlist masterlist;
-        *updated = masterlist.Update(masterlistPath, remoteURL, remoteBranch);
-    }
-    catch (Error &e) {
-        return c_error(e);
-    }
+  try {
+    loot::Masterlist masterlist;
+    *updated = masterlist.Update(masterlistPath, remoteURL, remoteBranch);
+  } catch (Error &e) {
+    return c_error(e);
+  }
 
-    return loot_ok;
+  return loot_ok;
 }
 
 LOOT_API unsigned int loot_get_masterlist_revision(loot_db * const db,
@@ -399,43 +388,41 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db * const db,
                                                    const char ** const revisionID,
                                                    const char ** const revisionDate,
                                                    bool * const isModified) {
-    if (db == nullptr || masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || masterlistPath == nullptr || revisionID == nullptr || revisionDate == nullptr || isModified == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    *revisionID = nullptr;
-    *revisionDate = nullptr;
-    *isModified = false;
+  *revisionID = nullptr;
+  *revisionDate = nullptr;
+  *isModified = false;
 
-    bool edited = false;
-    try {
-        loot::Masterlist::Info info = loot::Masterlist::GetInfo(masterlistPath, getShortID);
-        std::string id = info.revision;
-        std::string date = info.date;
+  bool edited = false;
+  try {
+    loot::Masterlist::Info info = loot::Masterlist::GetInfo(masterlistPath, getShortID);
+    std::string id = info.revision;
+    std::string date = info.date;
 
-        if (boost::ends_with(id, " (edited)")) {
-            id = id.substr(0, id.length() - 9);
-            date = date.substr(0, date.length() - 9);
-            edited = true;
-        }
-
-        db->setRevisionIdString(id);
-        db->setRevisionDateString(date);
-    }
-    catch (Error &e) {
-        if (e.code() == Error::Code::ok)
-            return loot_ok;
-        else
-            return c_error(e);
-    }
-    catch (std::bad_alloc& e) {
-        return c_error(loot_error_no_mem, e.what());
+    if (boost::ends_with(id, " (edited)")) {
+      id = id.substr(0, id.length() - 9);
+      date = date.substr(0, date.length() - 9);
+      edited = true;
     }
 
-    *revisionID = db->getRevisionIdString();
-    *revisionDate = db->getRevisionDateString();
-    *isModified = edited;
+    db->setRevisionIdString(id);
+    db->setRevisionDateString(date);
+  } catch (Error &e) {
+    if (e.code() == Error::Code::ok)
+      return loot_ok;
+    else
+      return c_error(e);
+  } catch (std::bad_alloc& e) {
+    return c_error(loot_error_no_mem, e.what());
+  }
 
-    return loot_ok;
+  *revisionID = db->getRevisionIdString();
+  *revisionDate = db->getRevisionDateString();
+  *isModified = edited;
+
+  return loot_ok;
 }
 
 //////////////////////////
@@ -446,43 +433,42 @@ LOOT_API unsigned int loot_get_masterlist_revision(loot_db * const db,
 // and userlist, and the number of tags in the returned array. The array and
 // its contents are static and should not be freed by the client.
 LOOT_API unsigned int loot_get_tag_map(loot_db * const db, const char * const ** const tagMap, size_t * const numTags) {
-    if (db == nullptr || tagMap == nullptr || numTags == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || tagMap == nullptr || numTags == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    //Clear existing array allocation.
-    db->clearBashTagMap();
+//Clear existing array allocation.
+  db->clearBashTagMap();
 
-    //Initialise output.
-    *tagMap = nullptr;
-    *numTags = 0;
+  //Initialise output.
+  *tagMap = nullptr;
+  *numTags = 0;
 
-    std::set<std::string> allTags;
+  std::set<std::string> allTags;
 
-    for (const auto &plugin : db->GetMasterlist().Plugins()) {
-        for (const auto &tag : plugin.Tags()) {
-            allTags.insert(tag.Name());
-        }
+  for (const auto &plugin : db->GetMasterlist().Plugins()) {
+    for (const auto &tag : plugin.Tags()) {
+      allTags.insert(tag.Name());
     }
-    for (const auto &plugin : db->GetUserlist().Plugins()) {
-        for (const auto &tag : plugin.Tags()) {
-            allTags.insert(tag.Name());
-        }
+  }
+  for (const auto &plugin : db->GetUserlist().Plugins()) {
+    for (const auto &tag : plugin.Tags()) {
+      allTags.insert(tag.Name());
     }
+  }
 
-    if (allTags.empty())
-        return loot_ok;
-
-    try {
-        db->addBashTagsToMap(allTags);
-    }
-    catch (std::bad_alloc& e) {
-        return c_error(loot_error_no_mem, e.what());
-    }
-
-    *tagMap = &db->getBashTagMap()[0];
-    *numTags = db->getBashTagMap().size();
-
+  if (allTags.empty())
     return loot_ok;
+
+  try {
+    db->addBashTagsToMap(allTags);
+  } catch (std::bad_alloc& e) {
+    return c_error(loot_error_no_mem, e.what());
+  }
+
+  *tagMap = &db->getBashTagMap()[0];
+  *numTags = db->getBashTagMap().size();
+
+  return loot_ok;
 }
 
 // Returns arrays of Bash Tag UIDs for Bash Tags suggested for addition and removal
@@ -498,62 +484,61 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db * const db, const char * cons
                                            const unsigned int ** const tagIds_removed,
                                            size_t * const numTags_removed,
                                            bool * const userlistModified) {
-    if (db == nullptr || plugin == nullptr || tagIds_added == nullptr || numTags_added == nullptr || tagIds_removed == nullptr || numTags_removed == nullptr || userlistModified == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || plugin == nullptr || tagIds_added == nullptr || numTags_added == nullptr || tagIds_removed == nullptr || numTags_removed == nullptr || userlistModified == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    if (db->getBashTagMap().empty()) {
-        return c_error(loot_error_no_tag_map, "No Bash Tag map has been previously generated.");
-    }
+  if (db->getBashTagMap().empty()) {
+    return c_error(loot_error_no_tag_map, "No Bash Tag map has been previously generated.");
+  }
 
-    //Initialise output.
+  //Initialise output.
+  *tagIds_added = nullptr;
+  *tagIds_removed = nullptr;
+  *userlistModified = false;
+  *numTags_added = 0;
+  *numTags_removed = 0;
+
+  std::set<std::string> tagsAdded, tagsRemoved;
+  loot::PluginMetadata p = db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin));
+  for (const auto &tag : p.Tags()) {
+    if (tag.IsAddition())
+      tagsAdded.insert(tag.Name());
+    else
+      tagsRemoved.insert(tag.Name());
+  }
+
+  p = db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin));
+  *userlistModified = !p.Tags().empty();
+  for (const auto &tag : p.Tags()) {
+    *userlistModified = true;
+    if (tag.IsAddition())
+      tagsAdded.insert(tag.Name());
+    else
+      tagsRemoved.insert(tag.Name());
+  }
+
+  try {
+    db->setAddedTags(tagsAdded);
+    db->setRemovedTags(tagsRemoved);
+  } catch (Error& e) {
+    return c_error(e);
+  }
+
+  //Set outputs.
+  *numTags_added = db->getAddedTagIds().size();
+  *numTags_removed = db->getRemovedTagIds().size();
+
+  if (db->getAddedTagIds().empty())
     *tagIds_added = nullptr;
+  else
+    *tagIds_added = reinterpret_cast<const unsigned int*>(&db->getAddedTagIds()[0]);
+
+  if (db->getRemovedTagIds().empty())
     *tagIds_removed = nullptr;
-    *userlistModified = false;
-    *numTags_added = 0;
-    *numTags_removed = 0;
+  else
+    *tagIds_removed = reinterpret_cast<const unsigned int*>(&db->getRemovedTagIds()[0]);
 
-    std::set<std::string> tagsAdded, tagsRemoved;
-    loot::PluginMetadata p = db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin));
-    for (const auto &tag : p.Tags()) {
-        if (tag.IsAddition())
-            tagsAdded.insert(tag.Name());
-        else
-            tagsRemoved.insert(tag.Name());
-    }
-
-    p = db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin));
-    *userlistModified = !p.Tags().empty();
-    for (const auto &tag : p.Tags()) {
-        *userlistModified = true;
-        if (tag.IsAddition())
-            tagsAdded.insert(tag.Name());
-        else
-            tagsRemoved.insert(tag.Name());
-    }
-
-    try {
-        db->setAddedTags(tagsAdded);
-        db->setRemovedTags(tagsRemoved);
-    }
-    catch (Error& e) {
-        return c_error(e);
-    }
-
-    //Set outputs.
-    *numTags_added = db->getAddedTagIds().size();
-    *numTags_removed = db->getRemovedTagIds().size();
-
-    if (db->getAddedTagIds().empty())
-        *tagIds_added = nullptr;
-    else
-        *tagIds_added = reinterpret_cast<const unsigned int*>(&db->getAddedTagIds()[0]);
-
-    if (db->getRemovedTagIds().empty())
-        *tagIds_removed = nullptr;
-    else
-        *tagIds_removed = reinterpret_cast<const unsigned int*>(&db->getRemovedTagIds()[0]);
-
-    return loot_ok;
+  return loot_ok;
 }
 
 // Returns the messages attached to the given plugin. Messages are valid until Load,
@@ -562,60 +547,60 @@ LOOT_API unsigned int loot_get_plugin_tags(loot_db * const db, const char * cons
 LOOT_API unsigned int loot_get_plugin_messages(loot_db * const db, const char * const plugin,
                                                const loot_message ** const messages,
                                                size_t * const numMessages) {
-    if (db == nullptr || plugin == nullptr || messages == nullptr || numMessages == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || plugin == nullptr || messages == nullptr || numMessages == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    //Initialise output.
-    *messages = nullptr;
-    *numMessages = 0;
+//Initialise output.
+  *messages = nullptr;
+  *numMessages = 0;
 
-    loot::PluginMetadata p = db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin));
-    std::list<loot::Message> pluginMessages(p.Messages());
+  loot::PluginMetadata p = db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin));
+  std::list<loot::Message> pluginMessages(p.Messages());
 
-    p = db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin));
-    std::list<loot::Message> temp(p.Messages());
-    pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
+  p = db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin));
+  std::list<loot::Message> temp(p.Messages());
+  pluginMessages.insert(pluginMessages.end(), temp.begin(), temp.end());
 
-    if (pluginMessages.empty())
-        return loot_ok;
-
-    db->setPluginMessages(pluginMessages);
-
-    *messages = &db->getPluginMessages()[0];
-    *numMessages = db->getPluginMessages().size();
-
+  if (pluginMessages.empty())
     return loot_ok;
+
+  db->setPluginMessages(pluginMessages);
+
+  *messages = &db->getPluginMessages()[0];
+  *numMessages = db->getPluginMessages().size();
+
+  return loot_ok;
 }
 
 LOOT_API unsigned int loot_get_dirty_info(loot_db * const db, const char * const plugin, unsigned int * const needsCleaning) {
-    if (db == nullptr || plugin == nullptr || needsCleaning == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || plugin == nullptr || needsCleaning == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    *needsCleaning = loot_needs_cleaning_unknown;
+  *needsCleaning = loot_needs_cleaning_unknown;
 
-    // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
-    if (!db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()
-        || !db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()) {
-        *needsCleaning = loot_needs_cleaning_yes;
+  // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
+  if (!db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()
+      || !db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin)).DirtyInfo().empty()) {
+    *needsCleaning = loot_needs_cleaning_yes;
+  }
+
+  // Is there a message beginning with the substring "Do not clean."?
+  // This isn't a very reliable system, because if the lists have been evaluated in some language
+  // other than English, the strings will be in different languages (and the API can't tell what they'd be)
+  // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
+  std::list<loot::Message> messages(db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin)).Messages());
+
+  std::list<loot::Message> temp(db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin)).Messages());
+  messages.insert(messages.end(), temp.begin(), temp.end());
+
+  for (const auto& message : messages) {
+    if (boost::starts_with(message.ChooseContent(loot::Language::Code::english).GetText(), "Do not clean")) {
+      *needsCleaning = loot_needs_cleaning_no;
+      break;
     }
+  }
 
-    // Is there a message beginning with the substring "Do not clean."?
-    // This isn't a very reliable system, because if the lists have been evaluated in some language
-    // other than English, the strings will be in different languages (and the API can't tell what they'd be)
-    // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
-    std::list<loot::Message> messages(db->GetMasterlist().FindPlugin(loot::PluginMetadata(plugin)).Messages());
-
-    std::list<loot::Message> temp(db->GetUserlist().FindPlugin(loot::PluginMetadata(plugin)).Messages());
-    messages.insert(messages.end(), temp.begin(), temp.end());
-
-    for (const auto& message : messages) {
-        if (boost::starts_with(message.ChooseContent(loot::Language::Code::english).GetText(), "Do not clean")) {
-            *needsCleaning = loot_needs_cleaning_no;
-            break;
-        }
-    }
-
-    return loot_ok;
+  return loot_ok;
 }
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,
@@ -623,41 +608,40 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db * const db, const char * const
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
 LOOT_API unsigned int loot_write_minimal_list(loot_db * const db, const char * const outputFile, const bool overwrite) {
-    if (db == nullptr || outputFile == nullptr)
-        return c_error(loot_error_invalid_args, "Null pointer passed.");
+  if (db == nullptr || outputFile == nullptr)
+    return c_error(loot_error_invalid_args, "Null pointer passed.");
 
-    if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
-        return c_error(loot_error_invalid_args, "Output directory does not exist.");
+  if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
+    return c_error(loot_error_invalid_args, "Output directory does not exist.");
 
-    if (boost::filesystem::exists(outputFile) && !overwrite)
-        return c_error(loot_error_file_write_fail, "Output file exists but overwrite is not set to true.");
+  if (boost::filesystem::exists(outputFile) && !overwrite)
+    return c_error(loot_error_file_write_fail, "Output file exists but overwrite is not set to true.");
 
-    loot::Masterlist temp = db->GetMasterlist();
-    std::unordered_set<loot::PluginMetadata> minimalPlugins;
-    for (const auto &plugin : temp.Plugins()) {
-        loot::PluginMetadata p(plugin.Name());
-        p.Tags(plugin.Tags());
-        p.DirtyInfo(plugin.DirtyInfo());
-        minimalPlugins.insert(p);
-    }
+  loot::Masterlist temp = db->GetMasterlist();
+  std::unordered_set<loot::PluginMetadata> minimalPlugins;
+  for (const auto &plugin : temp.Plugins()) {
+    loot::PluginMetadata p(plugin.Name());
+    p.Tags(plugin.Tags());
+    p.DirtyInfo(plugin.DirtyInfo());
+    minimalPlugins.insert(p);
+  }
 
-    YAML::Emitter yout;
-    yout.SetIndent(2);
-    yout << YAML::BeginMap
-        << YAML::Key << "plugins" << YAML::Value << minimalPlugins
-        << YAML::EndMap;
+  YAML::Emitter yout;
+  yout.SetIndent(2);
+  yout << YAML::BeginMap
+    << YAML::Key << "plugins" << YAML::Value << minimalPlugins
+    << YAML::EndMap;
 
-    boost::filesystem::path p(outputFile);
-    try {
-        boost::filesystem::ofstream out(p);
-        if (out.fail())
-            return c_error(loot_error_file_write_fail, "Couldn't open output file.");
-        out << yout.c_str();
-        out.close();
-    }
-    catch (std::exception& e) {
-        return c_error(loot_error_file_write_fail, e.what());
-    }
+  boost::filesystem::path p(outputFile);
+  try {
+    boost::filesystem::ofstream out(p);
+    if (out.fail())
+      return c_error(loot_error_file_write_fail, "Couldn't open output file.");
+    out << yout.c_str();
+    out.close();
+  } catch (std::exception& e) {
+    return c_error(loot_error_file_write_fail, e.what());
+  }
 
-    return loot_ok;
+  return loot_ok;
 }

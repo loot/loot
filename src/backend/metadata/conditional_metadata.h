@@ -21,26 +21,26 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
-#ifndef __LOOT_METADATA_CONDITIONAL_METADATA__
-#define __LOOT_METADATA_CONDITIONAL_METADATA__
+#ifndef LOOT_BACKEND_METADATA_CONDITIONAL_METADATA
+#define LOOT_BACKEND_METADATA_CONDITIONAL_METADATA
 
 #include <string>
 
 namespace loot {
-    class Game;
+class Game;
 
-    class ConditionalMetadata {
-    public:
-        ConditionalMetadata();
-        ConditionalMetadata(const std::string& condition);
+class ConditionalMetadata {
+public:
+  ConditionalMetadata();
+  ConditionalMetadata(const std::string& condition);
 
-        bool IsConditional() const;
-        bool EvalCondition(Game& game) const;
-        void ParseCondition() const;  // Throws error on parsing failure.
+  bool IsConditional() const;
+  bool EvalCondition(Game& game) const;
+  void ParseCondition() const;  // Throws error on parsing failure.
 
-        std::string Condition() const;
-    private:
-        std::string _condition;
-    };
+  std::string Condition() const;
+private:
+  std::string condition_;
+};
 }
 #endif

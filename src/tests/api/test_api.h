@@ -22,78 +22,78 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_API
-#define LOOT_TEST_API
+#ifndef LOOT_TESTS_API_TEST_API
+#define LOOT_TESTS_API_TEST_API
 
-#include "../include/loot/api.h"
+#include "loot/api.h"
 
 #include <gtest/gtest.h>
 
 namespace loot {
-    namespace test {
-        TEST(loot_get_version, shouldReturnAnInvalidArgsErrorIfPassedNullPointers) {
-            unsigned int vMajor, vMinor, vPatch;
-            EXPECT_EQ(loot_error_invalid_args, loot_get_version(&vMajor, NULL, NULL));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_version(NULL, &vMinor, NULL));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_version(NULL, NULL, &vPatch));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_version(NULL, NULL, NULL));
-        }
+namespace test {
+TEST(loot_get_version, shouldReturnAnInvalidArgsErrorIfPassedNullPointers) {
+  unsigned int vMajor, vMinor, vPatch;
+  EXPECT_EQ(loot_error_invalid_args, loot_get_version(&vMajor, NULL, NULL));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_version(NULL, &vMinor, NULL));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_version(NULL, NULL, &vPatch));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_version(NULL, NULL, NULL));
+}
 
-        TEST(loot_get_version, shouldReturnOkIfPassedNonNullPointers) {
-            unsigned int vMajor, vMinor, vPatch;
-            EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
-        }
+TEST(loot_get_version, shouldReturnOkIfPassedNonNullPointers) {
+  unsigned int vMajor, vMinor, vPatch;
+  EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
+}
 
-        TEST(loot_get_build_id, shouldReturnAnInvalidArgsErrorIfPassedANullPointer) {
-            EXPECT_EQ(loot_error_invalid_args, loot_get_build_id(NULL));
-        }
+TEST(loot_get_build_id, shouldReturnAnInvalidArgsErrorIfPassedANullPointer) {
+  EXPECT_EQ(loot_error_invalid_args, loot_get_build_id(NULL));
+}
 
-        TEST(loot_get_build_id, shouldReturnOkAndOutputANonNullNonPlaceholderRevisionString) {
-            const char * revision;
-            EXPECT_EQ(loot_ok, loot_get_build_id(&revision));
-            EXPECT_STRNE(NULL, revision);
-            EXPECT_STRNE("@GIT_COMMIT_STRING@", revision);  // The CMake placeholder.
-        }
+TEST(loot_get_build_id, shouldReturnOkAndOutputANonNullNonPlaceholderRevisionString) {
+  const char * revision;
+  EXPECT_EQ(loot_ok, loot_get_build_id(&revision));
+  EXPECT_STRNE(NULL, revision);
+  EXPECT_STRNE("@GIT_COMMIT_STRING@", revision);  // The CMake placeholder.
+}
 
-        TEST(loot_is_compatible, shouldReturnTrueWithEqualMajorAndMinorVersionsAndUnequalPatchVersion) {
-            unsigned int vMajor, vMinor, vPatch;
-            EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
+TEST(loot_is_compatible, shouldReturnTrueWithEqualMajorAndMinorVersionsAndUnequalPatchVersion) {
+  unsigned int vMajor, vMinor, vPatch;
+  EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
 
-            EXPECT_TRUE(loot_is_compatible(vMajor, vMinor, vPatch + 1));
-        }
+  EXPECT_TRUE(loot_is_compatible(vMajor, vMinor, vPatch + 1));
+}
 
-        TEST(loot_is_compatible, shouldReturnFalseWithEqualMajorVersionAndUnequalMinorAndPatchVersions) {
-            unsigned int vMajor, vMinor, vPatch;
-            EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
+TEST(loot_is_compatible, shouldReturnFalseWithEqualMajorVersionAndUnequalMinorAndPatchVersions) {
+  unsigned int vMajor, vMinor, vPatch;
+  EXPECT_EQ(loot_ok, loot_get_version(&vMajor, &vMinor, &vPatch));
 
-            EXPECT_FALSE(loot_is_compatible(vMajor, vMinor + 1, vPatch + 1));
-        }
+  EXPECT_FALSE(loot_is_compatible(vMajor, vMinor + 1, vPatch + 1));
+}
 
-        TEST(loot_get_error_message, shouldReturnAnInvalidArgsErrorIfPassedANullPointer) {
-            EXPECT_EQ(loot_error_invalid_args, loot_get_error_message(NULL));
+TEST(loot_get_error_message, shouldReturnAnInvalidArgsErrorIfPassedANullPointer) {
+  EXPECT_EQ(loot_error_invalid_args, loot_get_error_message(NULL));
 
-            const char * error;
-            EXPECT_EQ(loot_ok, loot_get_error_message(&error));
-            ASSERT_STREQ("Null message pointer passed.", error);
-        }
+  const char * error;
+  EXPECT_EQ(loot_ok, loot_get_error_message(&error));
+  ASSERT_STREQ("Null message pointer passed.", error);
+}
 
-        TEST(loot_get_error_message, shouldReturnOkIfPassedANonNullPointer) {
-            const char * error;
-            EXPECT_EQ(loot_ok, loot_get_error_message(&error));
-        }
+TEST(loot_get_error_message, shouldReturnOkIfPassedANonNullPointer) {
+  const char * error;
+  EXPECT_EQ(loot_ok, loot_get_error_message(&error));
+}
 
-        TEST(loot_get_error_message, shouldOutputAnErrorMessageDetailingTheLastErrorIfAnErrorHasOccurred) {
-            EXPECT_EQ(loot_error_invalid_args, loot_get_error_message(NULL));
+TEST(loot_get_error_message, shouldOutputAnErrorMessageDetailingTheLastErrorIfAnErrorHasOccurred) {
+  EXPECT_EQ(loot_error_invalid_args, loot_get_error_message(NULL));
 
-            const char * error;
-            EXPECT_EQ(loot_ok, loot_get_error_message(&error));
-            ASSERT_STREQ("Null message pointer passed.", error);
-        }
+  const char * error;
+  EXPECT_EQ(loot_ok, loot_get_error_message(&error));
+  ASSERT_STREQ("Null message pointer passed.", error);
+}
 
-        TEST(loot_destroy_db, shouldNotThrowIfPassedANullPointer) {
-            ASSERT_NO_THROW(loot_destroy_db(NULL));
-        }
-    }
+TEST(loot_destroy_db, shouldNotThrowIfPassedANullPointer) {
+  ASSERT_NO_THROW(loot_destroy_db(NULL));
+}
+}
 }
 
 #endif

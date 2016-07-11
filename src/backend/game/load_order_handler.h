@@ -22,37 +22,36 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_LOAD_ORDER_HANDLER__
-#define __LOOT_LOAD_ORDER_HANDLER__
+#ifndef LOOT_BACKEND_GAME_LOAD_ORDER_HANDLER
+#define LOOT_BACKEND_GAME_LOAD_ORDER_HANDLER
 
-#include "game_settings.h"
-
-#include <string>
 #include <list>
+#include <string>
 #include <unordered_set>
 
 #include <boost/filesystem.hpp>
-
 #include <libloadorder/libloadorder.h>
 
+#include "backend/game/game_settings.h"
+
 namespace loot {
-    class LoadOrderHandler {
-    public:
-        LoadOrderHandler();
-        ~LoadOrderHandler();
+class LoadOrderHandler {
+public:
+  LoadOrderHandler();
+  ~LoadOrderHandler();
 
-        void Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData = "");
+  void Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData = "");
 
-        std::list<std::string> GetLoadOrder() const;
+  std::list<std::string> GetLoadOrder() const;
 
-        bool IsPluginActive(const std::string& pluginName) const;
+  bool IsPluginActive(const std::string& pluginName) const;
 
-        //These modify game load order, even though const.
-        void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;  // For API.
-        void SetLoadOrder(const std::list<std::string>& loadOrder) const;
-    private:
-        lo_game_handle _gh;
-    };
+  //These modify game load order, even though const.
+  void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;  // For API.
+  void SetLoadOrder(const std::list<std::string>& loadOrder) const;
+private:
+  lo_game_handle gh_;
+};
 }
 
 #endif

@@ -22,104 +22,103 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "message.h"
-#include "../helpers/language.h"
-#include "../error.h"
+#include "backend/metadata/message.h"
 
 #include <boost/log/trivial.hpp>
 
-using namespace std;
+#include "backend/error.h"
+#include "backend/game/game.h"
+#include "backend/helpers/language.h"
 
 namespace loot {
-    Message::Message() : _type(Message::Type::say) {}
+Message::Message() : type_(Type::say) {}
 
-    Message::Message(const Type type, const std::string& content,
-                     const std::string& condition) : _type(type), ConditionalMetadata(condition) {
-        _content.push_back(MessageContent(content, Language::Code::english));
+Message::Message(const Type type, const std::string& content,
+                 const std::string& condition) : type_(type), ConditionalMetadata(condition) {
+  content_.push_back(MessageContent(content, Language::Code::english));
+}
+
+Message::Message(const Type type, const std::vector<MessageContent>& content,
+                 const std::string& condition) : type_(type), content_(content), ConditionalMetadata(condition) {
+  if (content.size() > 1) {
+    bool englishStringExists = false;
+    for (const auto &mc : content) {
+      if (mc.GetLanguage() == Language::Code::english)
+        englishStringExists = true;
     }
+    if (!englishStringExists)
+      throw Error(Error::Code::invalid_args, "bad conversion: multilingual messages must contain an English content string");
+  }
+}
 
-    Message::Message(const Type type, const std::vector<MessageContent>& content,
-                     const std::string& condition) : _type(type), _content(content), ConditionalMetadata(condition) {
-        if (content.size() > 1) {
-            bool englishStringExists = false;
-            for (const auto &mc : content) {
-                if (mc.GetLanguage() == loot::Language::Code::english)
-                    englishStringExists = true;
-            }
-            if (!englishStringExists)
-                throw loot::Error(Error::Code::invalid_args, "bad conversion: multilingual messages must contain an English content string");
-        }
+bool Message::operator < (const Message& rhs) const {
+  if (!content_.empty() && !rhs.GetContent().empty())
+    return boost::ilexicographical_compare(ChooseContent(Language::Code::english).GetText(), rhs.ChooseContent(Language::Code::english).GetText());
+  else if (content_.empty() && !rhs.GetContent().empty())
+    return true;
+  else
+    return false;
+}
+
+bool Message::operator == (const Message& rhs) const {
+  return (content_ == rhs.GetContent());
+}
+
+bool Message::EvalCondition(loot::Game& game, const Language::Code language) {
+  BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).GetName();
+  content_.assign({ChooseContent(language)});
+
+  return ConditionalMetadata::EvalCondition(game);
+}
+
+MessageContent Message::ChooseContent(const Language::Code language) const {
+  BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
+  if (content_.empty())
+    return MessageContent();
+  else if (content_.size() == 1)
+    return content_[0];
+  else {
+    MessageContent english;
+    for (const auto &mc : content_) {
+      if (mc.GetLanguage() == language) {
+        return mc;
+      } else if (mc.GetLanguage() == Language::Code::english)
+        english = mc;
     }
+    return english;
+  }
+}
 
-    bool Message::operator < (const Message& rhs) const {
-        if (!_content.empty() && !rhs.GetContent().empty())
-            return boost::ilexicographical_compare(ChooseContent(Language::Code::english).GetText(), rhs.ChooseContent(Language::Code::english).GetText());
-        else if (_content.empty() && !rhs.GetContent().empty())
-            return true;
-        else
-            return false;
-    }
+Message::Type Message::GetType() const {
+  return type_;
+}
 
-    bool Message::operator == (const Message& rhs) const {
-        return (_content == rhs.GetContent());
-    }
-
-    bool Message::EvalCondition(loot::Game& game, const Language::Code language) {
-        BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).GetName();
-        _content.assign({ChooseContent(language)});
-
-        return ConditionalMetadata::EvalCondition(game);
-    }
-
-    MessageContent Message::ChooseContent(const Language::Code language) const {
-        BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
-        if (_content.empty())
-            return MessageContent();
-        else if (_content.size() == 1)
-            return _content[0];
-        else {
-            MessageContent english;
-            for (const auto &mc : _content) {
-                if (mc.GetLanguage() == language) {
-                    return mc;
-                }
-                else if (mc.GetLanguage() == Language::Code::english)
-                    english = mc;
-            }
-            return english;
-        }
-    }
-
-    Message::Type Message::GetType() const {
-        return _type;
-    }
-
-    std::vector<MessageContent> Message::GetContent() const {
-        return _content;
-    }
+std::vector<MessageContent> Message::GetContent() const {
+  return content_;
+}
 }
 
 namespace YAML {
-    Emitter& operator << (Emitter& out, const loot::Message& rhs) {
-        out << BeginMap;
+Emitter& operator << (Emitter& out, const loot::Message& rhs) {
+  out << BeginMap;
 
-        if (rhs.GetType() == loot::Message::Type::say)
-            out << Key << "type" << Value << "say";
-        else if (rhs.GetType() == loot::Message::Type::warn)
-            out << Key << "type" << Value << "warn";
-        else
-            out << Key << "type" << Value << "error";
+  if (rhs.GetType() == loot::Message::Type::say)
+    out << Key << "type" << Value << "say";
+  else if (rhs.GetType() == loot::Message::Type::warn)
+    out << Key << "type" << Value << "warn";
+  else
+    out << Key << "type" << Value << "error";
 
-        if (rhs.GetContent().size() == 1)
-            out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().GetText();
-        else
-            out << Key << "content" << Value << rhs.GetContent();
+  if (rhs.GetContent().size() == 1)
+    out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().GetText();
+  else
+    out << Key << "content" << Value << rhs.GetContent();
 
-        if (rhs.IsConditional())
-            out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
+  if (rhs.IsConditional())
+    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
 
-        out << EndMap;
+  out << EndMap;
 
-        return out;
-    }
+  return out;
+}
 }

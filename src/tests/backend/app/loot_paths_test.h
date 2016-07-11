@@ -22,61 +22,61 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_LOOT_PATHS
-#define LOOT_TEST_BACKEND_LOOT_PATHS
+#ifndef LOOT_TESTS_BACKEND_LOOT_PATHS_TEST
+#define LOOT_TESTS_BACKEND_LOOT_PATHS_TEST
 
 #include "backend/app/loot_paths.h"
 
 #include <gtest/gtest.h>
 
 namespace loot {
-    namespace test {
-        TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
-            LootPaths::initialise();
+namespace test {
+TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
+  LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::current_path() / "docs" / "LOOT Readme.html", LootPaths::getReadmePath());
-        }
+  EXPECT_EQ(boost::filesystem::current_path() / "docs" / "LOOT Readme.html", LootPaths::getReadmePath());
+}
 
-        TEST(LootPaths, getUIIndexPathShouldUseLootAppPath) {
-            LootPaths::initialise();
+TEST(LootPaths, getUIIndexPathShouldUseLootAppPath) {
+  LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::current_path() / "resources" / "ui" / "index.html", LootPaths::getUIIndexPath());
-        }
+  EXPECT_EQ(boost::filesystem::current_path() / "resources" / "ui" / "index.html", LootPaths::getUIIndexPath());
+}
 
-        TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
-            LootPaths::initialise();
+TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
+  LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::current_path() / "resources" / "l10n", LootPaths::getL10nPath());
-        }
+  EXPECT_EQ(boost::filesystem::current_path() / "resources" / "l10n", LootPaths::getL10nPath());
+}
 
-        TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
-            LootPaths::initialise();
+TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
+  LootPaths::initialise();
 
-            EXPECT_EQ(LootPaths::getLootDataPath() / "settings.yaml", LootPaths::getSettingsPath());
-        }
+  EXPECT_EQ(LootPaths::getLootDataPath() / "settings.yaml", LootPaths::getSettingsPath());
+}
 
-        TEST(LootPaths, getLogPathShouldUseLootDataPath) {
-            LootPaths::initialise();
+TEST(LootPaths, getLogPathShouldUseLootDataPath) {
+  LootPaths::initialise();
 
-            EXPECT_EQ(LootPaths::getLootDataPath() / "LOOTDebugLog.txt", LootPaths::getLogPath());
-        }
+  EXPECT_EQ(LootPaths::getLootDataPath() / "LOOTDebugLog.txt", LootPaths::getLogPath());
+}
 
-        TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
-            LootPaths::initialise();
+TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
+  LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::current_path(), LootPaths::getReadmePath().parent_path().parent_path());
-        }
+  EXPECT_EQ(boost::filesystem::current_path(), LootPaths::getReadmePath().parent_path().parent_path());
+}
 
-        TEST(LootPaths, initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLoot) {
-            LootPaths::initialise();
+TEST(LootPaths, initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLoot) {
+  LootPaths::initialise();
 
-            // Can't actually know what the path should be, but we can check
-            // its properties.
-            EXPECT_EQ("LOOT", LootPaths::getLootDataPath().filename());
-            EXPECT_FALSE(LootPaths::getLootDataPath().parent_path().empty());
-            EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
-        }
-    }
+  // Can't actually know what the path should be, but we can check
+  // its properties.
+  EXPECT_EQ("LOOT", LootPaths::getLootDataPath().filename());
+  EXPECT_FALSE(LootPaths::getLootDataPath().parent_path().empty());
+  EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
+}
+}
 }
 
 #endif

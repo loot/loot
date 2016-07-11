@@ -22,170 +22,170 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_METADATA_TAG
-#define LOOT_TEST_BACKEND_METADATA_TAG
+#ifndef LOOT_TESTS_BACKEND_METADATA_TAG_TEST
+#define LOOT_TESTS_BACKEND_METADATA_TAG_TEST
 
 #include "backend/metadata/tag.h"
 
 #include <gtest/gtest.h>
 
 namespace loot {
-    namespace test {
-        TEST(Tag, defaultConstructorShouldSetEmptyNameAndConditionStringsForATagAddition) {
-            Tag tag;
+namespace test {
+TEST(Tag, defaultConstructorShouldSetEmptyNameAndConditionStringsForATagAddition) {
+  Tag tag;
 
-            EXPECT_TRUE(tag.Name().empty());
-            EXPECT_TRUE(tag.IsAddition());
-            EXPECT_TRUE(tag.Condition().empty());
-        }
+  EXPECT_TRUE(tag.Name().empty());
+  EXPECT_TRUE(tag.IsAddition());
+  EXPECT_TRUE(tag.Condition().empty());
+}
 
-        TEST(Tag, dataConstructorShouldSetFieldsToGivenValues) {
-            Tag tag("name", false, "condition");
+TEST(Tag, dataConstructorShouldSetFieldsToGivenValues) {
+  Tag tag("name", false, "condition");
 
-            EXPECT_EQ("name", tag.Name());
-            EXPECT_FALSE(tag.IsAddition());
-            EXPECT_EQ("condition", tag.Condition());
-        }
+  EXPECT_EQ("name", tag.Name());
+  EXPECT_FALSE(tag.IsAddition());
+  EXPECT_EQ("condition", tag.Condition());
+}
 
-        TEST(Tag, tagsWithCaseInsensitiveEqualNamesAndEqualAdditionStatesShouldBeEqual) {
-            Tag tag1("Name", true, "condition1");
-            Tag tag2("name", true, "condition2");
+TEST(Tag, tagsWithCaseInsensitiveEqualNamesAndEqualAdditionStatesShouldBeEqual) {
+  Tag tag1("Name", true, "condition1");
+  Tag tag2("name", true, "condition2");
 
-            EXPECT_TRUE(tag1 == tag2);
-        }
+  EXPECT_TRUE(tag1 == tag2);
+}
 
-        TEST(Tags, tagsWithUnequalNamesShouldNotBeEqual) {
-            Tag tag1("name1");
-            Tag tag2("name2");
+TEST(Tags, tagsWithUnequalNamesShouldNotBeEqual) {
+  Tag tag1("name1");
+  Tag tag2("name2");
 
-            EXPECT_FALSE(tag1 == tag2);
-        }
+  EXPECT_FALSE(tag1 == tag2);
+}
 
-        TEST(Tag, tagsWithUnequalAdditionStatesShouldNotBeEqual) {
-            Tag tag1("Name", true);
-            Tag tag2("name", false);
+TEST(Tag, tagsWithUnequalAdditionStatesShouldNotBeEqual) {
+  Tag tag1("Name", true);
+  Tag tag2("name", false);
 
-            EXPECT_FALSE(tag1 == tag2);
-        }
+  EXPECT_FALSE(tag1 == tag2);
+}
 
-        TEST(Tag, lessThanOperatorShouldCaseInsensitivelyLexicographicallyCompareNameStrings) {
-            Tag tag1("Name");
-            Tag tag2("name");
+TEST(Tag, lessThanOperatorShouldCaseInsensitivelyLexicographicallyCompareNameStrings) {
+  Tag tag1("Name");
+  Tag tag2("name");
 
-            EXPECT_FALSE(tag1 < tag2);
-            EXPECT_FALSE(tag2 < tag1);
+  EXPECT_FALSE(tag1 < tag2);
+  EXPECT_FALSE(tag2 < tag1);
 
-            tag1 = Tag("name1");
-            tag2 = Tag("name2");
+  tag1 = Tag("name1");
+  tag2 = Tag("name2");
 
-            EXPECT_TRUE(tag1 < tag2);
-            EXPECT_FALSE(tag2 < tag1);
-        }
+  EXPECT_TRUE(tag1 < tag2);
+  EXPECT_FALSE(tag2 < tag1);
+}
 
-        TEST(Tag, lessThanOperatorShouldTreatTagAdditionsAsBeingLessThanRemovals) {
-            Tag tag1("name", true);
-            Tag tag2("name", false);
+TEST(Tag, lessThanOperatorShouldTreatTagAdditionsAsBeingLessThanRemovals) {
+  Tag tag1("name", true);
+  Tag tag2("name", false);
 
-            EXPECT_TRUE(tag1 < tag2);
-            EXPECT_FALSE(tag2 < tag1);
-        }
+  EXPECT_TRUE(tag1 < tag2);
+  EXPECT_FALSE(tag2 < tag1);
+}
 
-        TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringIfTheTagIsAnAdditionWithNoCondition) {
-            Tag tag("name1");
-            YAML::Emitter emitter;
-            emitter << tag;
+TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringIfTheTagIsAnAdditionWithNoCondition) {
+  Tag tag("name1");
+  YAML::Emitter emitter;
+  emitter << tag;
 
-            EXPECT_EQ(tag.Name(), emitter.c_str());
-        }
+  EXPECT_EQ(tag.Name(), emitter.c_str());
+}
 
-        TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringPrefixedWithAHyphenIfTheTagIsARemovalWithNoCondition) {
-            Tag tag("name1", false);
-            YAML::Emitter emitter;
-            emitter << tag;
+TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringPrefixedWithAHyphenIfTheTagIsARemovalWithNoCondition) {
+  Tag tag("name1", false);
+  YAML::Emitter emitter;
+  emitter << tag;
 
-            EXPECT_EQ("-" + tag.Name(), emitter.c_str());
-        }
+  EXPECT_EQ("-" + tag.Name(), emitter.c_str());
+}
 
-        TEST(Tag, emittingAsYamlShouldOutputAMapIfTheTagHasACondition) {
-            Tag tag("name1", false, "condition1");
-            YAML::Emitter emitter;
-            emitter << tag;
+TEST(Tag, emittingAsYamlShouldOutputAMapIfTheTagHasACondition) {
+  Tag tag("name1", false, "condition1");
+  YAML::Emitter emitter;
+  emitter << tag;
 
-            EXPECT_STREQ("name: -name1\ncondition: 'condition1'", emitter.c_str());
-        }
+  EXPECT_STREQ("name: -name1\ncondition: 'condition1'", emitter.c_str());
+}
 
-        TEST(Tag, encodingAsYamlShouldOmitTheConditionFieldIfTheConditionStringIsEmpty) {
-            Tag tag;
-            YAML::Node node;
-            node = tag;
+TEST(Tag, encodingAsYamlShouldOmitTheConditionFieldIfTheConditionStringIsEmpty) {
+  Tag tag;
+  YAML::Node node;
+  node = tag;
 
-            EXPECT_FALSE(node["condition"]);
-        }
+  EXPECT_FALSE(node["condition"]);
+}
 
-        TEST(Tag, encodingAsYamlShouldOutputTheNameFieldCorrectly) {
-            Tag tag("name1");
-            YAML::Node node;
-            node = tag;
+TEST(Tag, encodingAsYamlShouldOutputTheNameFieldCorrectly) {
+  Tag tag("name1");
+  YAML::Node node;
+  node = tag;
 
-            EXPECT_EQ(tag.Name(), node["name"].as<std::string>());
-        }
+  EXPECT_EQ(tag.Name(), node["name"].as<std::string>());
+}
 
-        TEST(Tag, encodingAsYamlShouldOutputTheNameFieldWithAHyphenPrefixIfTheTagIsARemoval) {
-            Tag tag("name1", false);
-            YAML::Node node;
-            node = tag;
+TEST(Tag, encodingAsYamlShouldOutputTheNameFieldWithAHyphenPrefixIfTheTagIsARemoval) {
+  Tag tag("name1", false);
+  YAML::Node node;
+  node = tag;
 
-            EXPECT_EQ("-" + tag.Name(), node["name"].as<std::string>());
-        }
+  EXPECT_EQ("-" + tag.Name(), node["name"].as<std::string>());
+}
 
-        TEST(Tag, encodingAsYamlShouldOutputTheConditionFieldIfTheConditionStringIsNotEmpty) {
-            Tag tag("name1", true, "condition1");
-            YAML::Node node;
-            node = tag;
+TEST(Tag, encodingAsYamlShouldOutputTheConditionFieldIfTheConditionStringIsNotEmpty) {
+  Tag tag("name1", true, "condition1");
+  YAML::Node node;
+  node = tag;
 
-            EXPECT_EQ(tag.Name(), node["name"].as<std::string>());
-            EXPECT_EQ(tag.Condition(), node["condition"].as<std::string>());
-        }
+  EXPECT_EQ(tag.Name(), node["name"].as<std::string>());
+  EXPECT_EQ(tag.Condition(), node["condition"].as<std::string>());
+}
 
-        TEST(Tag, decodingFromYamlScalarShouldSetNameCorrectly) {
-            YAML::Node node = YAML::Load("name1");
-            Tag tag = node.as<Tag>();
+TEST(Tag, decodingFromYamlScalarShouldSetNameCorrectly) {
+  YAML::Node node = YAML::Load("name1");
+  Tag tag = node.as<Tag>();
 
-            EXPECT_EQ("name1", tag.Name());
-            EXPECT_TRUE(tag.IsAddition());
-            EXPECT_EQ("", tag.Condition());
-        }
+  EXPECT_EQ("name1", tag.Name());
+  EXPECT_TRUE(tag.IsAddition());
+  EXPECT_EQ("", tag.Condition());
+}
 
-        TEST(Tag, decodingFromYamlScalarShouldSetAdditionStateCorrectly) {
-            YAML::Node node = YAML::Load("-name1");
-            Tag tag = node.as<Tag>();
+TEST(Tag, decodingFromYamlScalarShouldSetAdditionStateCorrectly) {
+  YAML::Node node = YAML::Load("-name1");
+  Tag tag = node.as<Tag>();
 
-            EXPECT_EQ("name1", tag.Name());
-            EXPECT_FALSE(tag.IsAddition());
-            EXPECT_EQ("", tag.Condition());
-        }
+  EXPECT_EQ("name1", tag.Name());
+  EXPECT_FALSE(tag.IsAddition());
+  EXPECT_EQ("", tag.Condition());
+}
 
-        TEST(Tag, decodingFromYamlMapShouldSetDataCorrectly) {
-            YAML::Node node = YAML::Load("{name: name1, condition: 'file(\"Foo.esp\")'}");
-            Tag tag = node.as<Tag>();
+TEST(Tag, decodingFromYamlMapShouldSetDataCorrectly) {
+  YAML::Node node = YAML::Load("{name: name1, condition: 'file(\"Foo.esp\")'}");
+  Tag tag = node.as<Tag>();
 
-            EXPECT_EQ("name1", tag.Name());
-            EXPECT_TRUE(tag.IsAddition());
-            EXPECT_EQ("file(\"Foo.esp\")", tag.Condition());
-        }
+  EXPECT_EQ("name1", tag.Name());
+  EXPECT_TRUE(tag.IsAddition());
+  EXPECT_EQ("file(\"Foo.esp\")", tag.Condition());
+}
 
-        TEST(Tag, decodingFromYamlShouldThrowIfAnInvalidConditionIsGiven) {
-            YAML::Node node = YAML::Load("{name: name1, condition: invalid}");
+TEST(Tag, decodingFromYamlShouldThrowIfAnInvalidConditionIsGiven) {
+  YAML::Node node = YAML::Load("{name: name1, condition: invalid}");
 
-            EXPECT_THROW(node.as<Tag>(), YAML::RepresentationException);
-        }
+  EXPECT_THROW(node.as<Tag>(), YAML::RepresentationException);
+}
 
-        TEST(Tag, decodingFromYamlListShouldThrow) {
-            YAML::Node node = YAML::Load("[0, 1, 2]");
+TEST(Tag, decodingFromYamlListShouldThrow) {
+  YAML::Node node = YAML::Load("[0, 1, 2]");
 
-            EXPECT_THROW(node.as<Tag>(), YAML::RepresentationException);
-        }
-    }
+  EXPECT_THROW(node.as<Tag>(), YAML::RepresentationException);
+}
+}
 }
 
 #endif

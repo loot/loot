@@ -21,81 +21,79 @@
     along with LOOT.  If not, see
     <http://www.gnu.org/licenses/>.
     */
-#ifndef __LOOT_METADATA_FILE__
-#define __LOOT_METADATA_FILE__
-
-#include "conditional_metadata.h"
+#ifndef LOOT_BACKEND_METADATA_FILE
+#define LOOT_BACKEND_METADATA_FILE
 
 #include <string>
 
 #include <yaml-cpp/yaml.h>
 
+#include "backend/metadata/conditional_metadata.h"
+
 namespace loot {
-    class File : public ConditionalMetadata {
-    public:
-        File();
-        File(const std::string& name, const std::string& display = "",
-             const std::string& condition = "");
+class File : public ConditionalMetadata {
+public:
+  File();
+  File(const std::string& name, const std::string& display = "",
+       const std::string& condition = "");
 
-        bool operator < (const File& rhs) const;
-        bool operator == (const File& rhs) const;
+  bool operator < (const File& rhs) const;
+  bool operator == (const File& rhs) const;
 
-        std::string Name() const;
-        std::string DisplayName() const;
-    private:
-        std::string _name;
-        std::string _display;
-    };
+  std::string Name() const;
+  std::string DisplayName() const;
+private:
+  std::string name_;
+  std::string display_;
+};
 }
 
 namespace YAML {
-    template<>
-    struct convert < loot::File > {
-        static Node encode(const loot::File& rhs) {
-            Node node;
-            node["name"] = rhs.Name();
+template<>
+struct convert<loot::File> {
+  static Node encode(const loot::File& rhs) {
+    Node node;
+    node["name"] = rhs.Name();
 
-            if (rhs.IsConditional())
-                node["condition"] = rhs.Condition();
+    if (rhs.IsConditional())
+      node["condition"] = rhs.Condition();
 
-            if (rhs.DisplayName() != rhs.Name())
-                node["display"] = rhs.DisplayName();
+    if (rhs.DisplayName() != rhs.Name())
+      node["display"] = rhs.DisplayName();
 
-            return node;
-        }
+    return node;
+  }
 
-        static bool decode(const Node& node, loot::File& rhs) {
-            if (!node.IsMap() && !node.IsScalar())
-                throw RepresentationException(node.Mark(), "bad conversion: 'file' object must be a map or scalar");
+  static bool decode(const Node& node, loot::File& rhs) {
+    if (!node.IsMap() && !node.IsScalar())
+      throw RepresentationException(node.Mark(), "bad conversion: 'file' object must be a map or scalar");
 
-            if (node.IsMap()) {
-                if (!node["name"])
-                    throw RepresentationException(node.Mark(), "bad conversion: 'name' key missing from 'file' map object");
+    if (node.IsMap()) {
+      if (!node["name"])
+        throw RepresentationException(node.Mark(), "bad conversion: 'name' key missing from 'file' map object");
 
-                std::string name = node["name"].as<std::string>();
-                std::string condition, display;
-                if (node["condition"])
-                    condition = node["condition"].as<std::string>();
-                if (node["display"])
-                    display = node["display"].as<std::string>();
-                rhs = loot::File(name, display, condition);
-            }
-            else
-                rhs = loot::File(node.as<std::string>());
+      std::string name = node["name"].as<std::string>();
+      std::string condition, display;
+      if (node["condition"])
+        condition = node["condition"].as<std::string>();
+      if (node["display"])
+        display = node["display"].as<std::string>();
+      rhs = loot::File(name, display, condition);
+    } else
+      rhs = loot::File(node.as<std::string>());
 
-            // Test condition syntax.
-            try {
-                rhs.ParseCondition();
-            }
-            catch (std::exception& e) {
-                throw RepresentationException(node.Mark(), std::string("bad conversion: invalid condition syntax: ") + e.what());
-            }
+  // Test condition syntax.
+    try {
+      rhs.ParseCondition();
+    } catch (std::exception& e) {
+      throw RepresentationException(node.Mark(), std::string("bad conversion: invalid condition syntax: ") + e.what());
+    }
 
-            return true;
-        }
-    };
+    return true;
+  }
+};
 
-    Emitter& operator << (Emitter& out, const loot::File& rhs);
+Emitter& operator << (Emitter& out, const loot::File& rhs);
 }
 
 #endif

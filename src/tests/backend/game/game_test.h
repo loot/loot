@@ -22,302 +22,302 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_GAME
-#define LOOT_TEST_BACKEND_GAME
+#ifndef LOOT_TESTS_BACKEND_GAME_GAME_TEST
+#define LOOT_TESTS_BACKEND_GAME_GAME_TEST
 
-#include "backend/error.h"
-#include "backend/app/loot_paths.h"
 #include "backend/game/game.h"
 
-#include "load_order_handler_test.h"
+#include "backend/app/loot_paths.h"
+#include "backend/error.h"
+#include "tests/backend/game/load_order_handler_test.h"
 
 namespace loot {
-    namespace test {
-        class GameTest : public BaseGameTest {
-        protected:
+namespace test {
+class GameTest : public BaseGameTest {
+protected:
 #ifndef _WIN32
-            void TearDown() {
-                BaseGameTest::TearDown();
+  void TearDown() {
+    BaseGameTest::TearDown();
 
-                ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath()));
-            }
+    ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath()));
+  }
 #endif
-        };
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                GameTest,
-                                ::testing::Values(
-                                    GameType::tes4,
-                                    GameType::tes5,
-                                    GameType::fo3,
-                                    GameType::fonv,
-                                    GameType::fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        GameTest,
+                        ::testing::Values(
+                          GameType::tes4,
+                          GameType::tes5,
+                          GameType::fo3,
+                          GameType::fonv,
+                          GameType::fo4));
 
-        TEST_P(GameTest, defaultConstructorShouldConstructWithDefaultGameSettings) {
-            GameSettings settings;
-            Game game;
+TEST_P(GameTest, defaultConstructorShouldConstructWithDefaultGameSettings) {
+  GameSettings settings;
+  Game game;
 
-            EXPECT_EQ(settings.Type(), game.Type());
-            EXPECT_EQ(settings.FolderName(), game.FolderName());
-        }
+  EXPECT_EQ(settings.Type(), game.Type());
+  EXPECT_EQ(settings.FolderName(), game.FolderName());
+}
 
-        TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
-            GameSettings settings = GameSettings(GetParam(), "folder");
-            settings.SetName("foo");
-            settings.SetMaster(blankEsm);
-            settings.SetRegistryKey("foo");
-            settings.SetRepoURL("foo");
-            settings.SetRepoBranch("foo");
-            settings.SetGamePath(localPath);
-            Game game = Game(settings);
+TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
+  GameSettings settings = GameSettings(GetParam(), "folder");
+  settings.SetName("foo");
+  settings.SetMaster(blankEsm);
+  settings.SetRegistryKey("foo");
+  settings.SetRepoURL("foo");
+  settings.SetRepoBranch("foo");
+  settings.SetGamePath(localPath);
+  Game game = Game(settings);
 
-            EXPECT_EQ(GetParam(), game.Type());
-            EXPECT_EQ(settings.Name(), game.Name());
-            EXPECT_EQ(settings.FolderName(), game.FolderName());
-            EXPECT_EQ(settings.Master(), game.Master());
-            EXPECT_EQ(settings.RegistryKey(), game.RegistryKey());
-            EXPECT_EQ(settings.RepoURL(), game.RepoURL());
-            EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
+  EXPECT_EQ(GetParam(), game.Type());
+  EXPECT_EQ(settings.Name(), game.Name());
+  EXPECT_EQ(settings.FolderName(), game.FolderName());
+  EXPECT_EQ(settings.Master(), game.Master());
+  EXPECT_EQ(settings.RegistryKey(), game.RegistryKey());
+  EXPECT_EQ(settings.RepoURL(), game.RepoURL());
+  EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
 
-            EXPECT_EQ(settings.GamePath(), game.GamePath());
-        }
+  EXPECT_EQ(settings.GamePath(), game.GamePath());
+}
 
-        TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstructor) {
-            GameSettings settings = GameSettings(GetParam(), "folder");
-            Game game = Game(GetParam(), "folder");
+TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstructor) {
+  GameSettings settings = GameSettings(GetParam(), "folder");
+  Game game = Game(GetParam(), "folder");
 
-            EXPECT_EQ(settings.Type(), game.Type());
-            EXPECT_EQ(settings.FolderName(), game.FolderName());
-        }
+  EXPECT_EQ(settings.Type(), game.Type());
+  EXPECT_EQ(settings.FolderName(), game.FolderName());
+}
 
-        TEST_P(GameTest, initShouldThrowIfGameHasAnInvalidId) {
-            Game game;
-            EXPECT_THROW(game.Init(false), Error);
-            EXPECT_THROW(game.Init(true), Error);
-            EXPECT_THROW(game.Init(false, localPath), Error);
-            EXPECT_THROW(game.Init(true, localPath), Error);
-        }
+TEST_P(GameTest, initShouldThrowIfGameHasAnInvalidId) {
+  Game game;
+  EXPECT_THROW(game.Init(false), Error);
+  EXPECT_THROW(game.Init(true), Error);
+  EXPECT_THROW(game.Init(false, localPath), Error);
+  EXPECT_THROW(game.Init(true, localPath), Error);
+}
 
 #ifndef _WIN32
         // Testing on Windows will find real game installs in the Registry, so cannot
         // test autodetection fully unless on Linux.
-        TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
-            Game game = Game(GetParam());
-            EXPECT_THROW(game.Init(false), Error);
-            EXPECT_THROW(game.Init(true), Error);
-            EXPECT_THROW(game.Init(false, localPath), Error);
-            EXPECT_THROW(game.Init(true, localPath), Error);
-        }
+TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
+  Game game = Game(GetParam());
+  EXPECT_THROW(game.Init(false), Error);
+  EXPECT_THROW(game.Init(true), Error);
+  EXPECT_THROW(game.Init(false, localPath), Error);
+  EXPECT_THROW(game.Init(true, localPath), Error);
+}
 
-        TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
-            Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
-            ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-            EXPECT_THROW(game.Init(false), Error);
-        }
+TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
+  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+  ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
+  EXPECT_THROW(game.Init(false), Error);
+}
 
-        // Testing on Windows will find real LOOT installs, and they shouldn't be
-        // interfered with.
-        TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheCreateFolderArgumentIsFalse) {
-            Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+// Testing on Windows will find real LOOT installs, and they shouldn't be
+// interfered with.
+TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheCreateFolderArgumentIsFalse) {
+  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
 
-            ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-            EXPECT_NO_THROW(game.Init(false, localPath));
+  ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
+  EXPECT_NO_THROW(game.Init(false, localPath));
 
-            EXPECT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-        }
+  EXPECT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
+}
 
-        TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
-            Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
+  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
 
-            ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-            EXPECT_NO_THROW(game.Init(true, localPath));
+  ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
+  EXPECT_NO_THROW(game.Init(true, localPath));
 
-            EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-        }
+  EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
+}
 #else
-        TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
-            Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
+  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
 
-            EXPECT_NO_THROW(game.Init(false));
-        }
+  EXPECT_NO_THROW(game.Init(false));
+}
 #endif
 
-        TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreGiven) {
-            Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreGiven) {
+  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
 
-            EXPECT_NO_THROW(game.Init(false, localPath));
-        }
+  EXPECT_NO_THROW(game.Init(false, localPath));
+}
 
-        TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSkyrimAndNotForOtherGames) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSkyrimAndNotForOtherGames) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            if (GetParam() == GameType::tes5)
-                EXPECT_THROW(game.RedatePlugins(), Error);
-            else
-                EXPECT_NO_THROW(game.RedatePlugins());
-        }
+  if (GetParam() == GameType::tes5)
+    EXPECT_THROW(game.RedatePlugins(), Error);
+  else
+    EXPECT_NO_THROW(game.RedatePlugins());
+}
 
-        TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndDoNothingForOtherGames) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            game.Init(false, localPath);
+TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndDoNothingForOtherGames) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  game.Init(false, localPath);
 
-            std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
+  std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
-            // First set reverse timestamps to be sure.
-            time_t time = boost::filesystem::last_write_time(dataPath / masterFile);
-            for (size_t i = 1; i < loadOrder.size(); ++i) {
-                if (!boost::filesystem::exists(dataPath / loadOrder[i].first))
-                    loadOrder[i].first += ".ghost";
+  // First set reverse timestamps to be sure.
+  time_t time = boost::filesystem::last_write_time(dataPath / masterFile);
+  for (size_t i = 1; i < loadOrder.size(); ++i) {
+    if (!boost::filesystem::exists(dataPath / loadOrder[i].first))
+      loadOrder[i].first += ".ghost";
 
-                boost::filesystem::last_write_time(dataPath / loadOrder[i].first, time - i * 60);
-                ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
-            }
+    boost::filesystem::last_write_time(dataPath / loadOrder[i].first, time - i * 60);
+    ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
+  }
 
-            EXPECT_NO_THROW(game.RedatePlugins());
+  EXPECT_NO_THROW(game.RedatePlugins());
 
-            time_t interval = 60;
-            if (GetParam() != GameType::tes5)
-                interval *= -1;
-            for (size_t i = 0; i < loadOrder.size(); ++i) {
-                EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
-            }
-        }
+  time_t interval = 60;
+  if (GetParam() != GameType::tes5)
+    interval *= -1;
+  for (size_t i = 0; i < loadOrder.size(); ++i) {
+    EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
+  }
+}
 
-        TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_NO_THROW(game.LoadPlugins(true));
-            EXPECT_EQ(11, game.GetPlugins().size());
+  EXPECT_NO_THROW(game.LoadPlugins(true));
+  EXPECT_EQ(11, game.GetPlugins().size());
 
-            // Check that one plugin's header has been read.
-            ASSERT_NO_THROW(game.GetPlugin(masterFile));
-            Plugin plugin = game.GetPlugin(masterFile);
-            EXPECT_EQ("v5.0", plugin.getDescription());
+  // Check that one plugin's header has been read.
+  ASSERT_NO_THROW(game.GetPlugin(masterFile));
+  Plugin plugin = game.GetPlugin(masterFile);
+  EXPECT_EQ("v5.0", plugin.getDescription());
 
-            // Check that only the header has been read.
-            EXPECT_EQ(0, plugin.Crc());
-        }
+  // Check that only the header has been read.
+  EXPECT_EQ(0, plugin.Crc());
+}
 
-        TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_NO_THROW(game.LoadPlugins(false));
-            EXPECT_EQ(11, game.GetPlugins().size());
+  EXPECT_NO_THROW(game.LoadPlugins(false));
+  EXPECT_EQ(11, game.GetPlugins().size());
 
-            // Check that one plugin's header has been read.
-            ASSERT_NO_THROW(game.GetPlugin(blankEsm));
-            Plugin plugin = game.GetPlugin(blankEsm);
-            EXPECT_EQ("v5.0", plugin.getDescription());
+  // Check that one plugin's header has been read.
+  ASSERT_NO_THROW(game.GetPlugin(blankEsm));
+  Plugin plugin = game.GetPlugin(blankEsm);
+  EXPECT_EQ("v5.0", plugin.getDescription());
 
-            // Check that not only the header has been read.
-            EXPECT_EQ(blankEsmCrc, plugin.Crc());
-        }
+  // Check that not only the header has been read.
+  EXPECT_EQ(blankEsmCrc, plugin.Crc());
+}
 
-        TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-            EXPECT_FALSE(Game().ArePluginsFullyLoaded());
-            EXPECT_FALSE(Game(GameSettings()).ArePluginsFullyLoaded());
-            EXPECT_FALSE(Game(GetParam(), "folder").ArePluginsFullyLoaded());
-        }
+TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
+  EXPECT_FALSE(Game().ArePluginsFullyLoaded());
+  EXPECT_FALSE(Game(GameSettings()).ArePluginsFullyLoaded());
+  EXPECT_FALSE(Game(GetParam(), "folder").ArePluginsFullyLoaded());
+}
 
-        TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            ASSERT_NO_THROW(game.LoadPlugins(true));
+  ASSERT_NO_THROW(game.LoadPlugins(true));
 
-            EXPECT_FALSE(game.ArePluginsFullyLoaded());
-        }
+  EXPECT_FALSE(game.ArePluginsFullyLoaded());
+}
 
-        TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            ASSERT_NO_THROW(game.LoadPlugins(false));
+  ASSERT_NO_THROW(game.LoadPlugins(false));
 
-            EXPECT_TRUE(game.ArePluginsFullyLoaded());
-        }
+  EXPECT_TRUE(game.ArePluginsFullyLoaded());
+}
 
-        TEST_P(GameTest, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNotBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNotBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_ANY_THROW(game.IsPluginActive(blankEsm));
-        }
+  EXPECT_ANY_THROW(game.IsPluginActive(blankEsm));
+}
 
-        TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.Init(false, localPath));
+TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
 
-            EXPECT_TRUE(game.IsPluginActive(blankEsm));
-        }
+  EXPECT_TRUE(game.IsPluginActive(blankEsm));
+}
 
-        TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.Init(false, localPath));
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
 
-            EXPECT_FALSE(game.IsPluginActive(blankEsp));
-        }
+  EXPECT_FALSE(game.IsPluginActive(blankEsp));
+}
 
-        TEST_P(GameTest, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.LoadPlugins(true));
+TEST_P(GameTest, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.LoadPlugins(true));
 
-            EXPECT_FALSE(game.IsPluginActive(blankEsm));
-        }
+  EXPECT_FALSE(game.IsPluginActive(blankEsm));
+}
 
-        TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.LoadPlugins(true));
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.LoadPlugins(true));
 
-            EXPECT_FALSE(game.IsPluginActive(blankEsp));
-        }
+  EXPECT_FALSE(game.IsPluginActive(blankEsp));
+}
 
-        TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.Init(false, localPath));
-            ASSERT_NO_THROW(game.LoadPlugins(true));
+TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+  ASSERT_NO_THROW(game.LoadPlugins(true));
 
-            EXPECT_TRUE(game.IsPluginActive(blankEsm));
-        }
+  EXPECT_TRUE(game.IsPluginActive(blankEsm));
+}
 
-        TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.Init(false, localPath));
-            ASSERT_NO_THROW(game.LoadPlugins(true));
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+  ASSERT_NO_THROW(game.LoadPlugins(true));
 
-            EXPECT_FALSE(game.IsPluginActive(blankEsp));
-        }
+  EXPECT_FALSE(game.IsPluginActive(blankEsp));
+}
 
-        TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.Init(false, localPath));
-            ASSERT_NO_THROW(game.LoadPlugins(false));
+TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+  ASSERT_NO_THROW(game.LoadPlugins(false));
 
-            EXPECT_TRUE(game.IsPluginActive(blankEsm));
-        }
+  EXPECT_TRUE(game.IsPluginActive(blankEsm));
+}
 
-        TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
-            Game game(GetParam());
-            game.SetGamePath(dataPath.parent_path());
-            ASSERT_NO_THROW(game.Init(false, localPath));
-            ASSERT_NO_THROW(game.LoadPlugins(false));
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+  ASSERT_NO_THROW(game.LoadPlugins(false));
 
-            EXPECT_FALSE(game.IsPluginActive(blankEsp));
-        }
-    }
+  EXPECT_FALSE(game.IsPluginActive(blankEsp));
+}
+}
 }
 
 #endif

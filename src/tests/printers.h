@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_PRINTERS
-#define LOOT_TEST_PRINTERS
+#ifndef LOOT_TESTS_PRINTERS
+#define LOOT_TESTS_PRINTERS
 
 #include <iostream>
 
@@ -39,68 +39,68 @@ along with LOOT.  If not, see
 #include "backend/plugin/plugin.h"
 
 namespace loot {
-    namespace test {
-        void PrintTo(const File& value, ::std::ostream* os) {
-            *os << "File(\"" << value.Name() << "\", "
-                << "\"" << value.DisplayName() << "\", "
-                << "\"" << value.Condition() << "\""
-                << ")";
-        }
+namespace test {
+void PrintTo(const File& value, ::std::ostream* os) {
+  *os << "File(\"" << value.Name() << "\", "
+    << "\"" << value.DisplayName() << "\", "
+    << "\"" << value.Condition() << "\""
+    << ")";
+}
 
-        void PrintTo(const Location& value, ::std::ostream* os) {
-            *os << "Location(\"" << value.URL() << "\", "
-                << "\"" << value.Name() << "\", "
-                << ")";
-        }
+void PrintTo(const Location& value, ::std::ostream* os) {
+  *os << "Location(\"" << value.URL() << "\", "
+    << "\"" << value.Name() << "\", "
+    << ")";
+}
 
-        void PrintTo(const Message& value, ::std::ostream* os) {
-            std::string type;
-            if (value.GetType() == Message::Type::warn)
-                type = "warn";
-            else if (value.GetType() == Message::Type::error)
-                type = "error";
-            else
-                type = "say";
+void PrintTo(const Message& value, ::std::ostream* os) {
+  std::string type;
+  if (value.GetType() == Message::Type::warn)
+    type = "warn";
+  else if (value.GetType() == Message::Type::error)
+    type = "error";
+  else
+    type = "say";
 
-            *os << "Message(\"" << type << "\", "
-                << ::testing::PrintToString(value.GetContent()) << ", "
-                << "\"" << value.Condition() << "\""
-                << ")";
-        }
+  *os << "Message(\"" << type << "\", "
+    << ::testing::PrintToString(value.GetContent()) << ", "
+    << "\"" << value.Condition() << "\""
+    << ")";
+}
 
-        void PrintTo(const MessageContent& value, ::std::ostream* os) {
-            *os << "MessageContent(\"" << value.Str() << "\", "
-                << "\"" << Language(value.GetLanguage()).GetName() << "\""
-                << ")";
-        }
+void PrintTo(const MessageContent& value, ::std::ostream* os) {
+  *os << "MessageContent(\"" << value.GetText() << "\", "
+    << "\"" << Language(value.GetLanguage()).GetName() << "\""
+    << ")";
+}
 
-        void PrintTo(const PluginDirtyInfo& value, ::std::ostream* os) {
-            *os << "PluginDirtyInfo(0x"
-                << std::hex << std::uppercase
-                << value.CRC()
-                << std::nouppercase << std::dec << ", "
-                << value.ITMs() << ", "
-                << value.DeletedRefs() << ", "
-                << value.DeletedNavmeshes() << ", "
-                << "\"" << value.CleaningUtility() << "\""
-                << ")";
-        }
+void PrintTo(const PluginDirtyInfo& value, ::std::ostream* os) {
+  *os << "PluginDirtyInfo(0x"
+    << std::hex << std::uppercase
+    << value.CRC()
+    << std::nouppercase << std::dec << ", "
+    << value.ITMs() << ", "
+    << value.DeletedRefs() << ", "
+    << value.DeletedNavmeshes() << ", "
+    << "\"" << value.CleaningUtility() << "\""
+    << ")";
+}
 
-        void PrintTo(const PluginMetadata& value, ::std::ostream* os) {
-            *os << "PluginMetadata(\"" << value.Name() << "\")";
-        }
+void PrintTo(const PluginMetadata& value, ::std::ostream* os) {
+  *os << "PluginMetadata(\"" << value.Name() << "\")";
+}
 
-        void PrintTo(const Tag& value, ::std::ostream* os) {
-            *os << "Tag(\"" << value.Name() << "\", "
-                << value.IsAddition() << ", "
-                << "\"" << value.Condition() << "\""
-                << ")";
-        }
+void PrintTo(const Tag& value, ::std::ostream* os) {
+  *os << "Tag(\"" << value.Name() << "\", "
+    << value.IsAddition() << ", "
+    << "\"" << value.Condition() << "\""
+    << ")";
+}
 
-        void PrintTo(const Plugin& value, ::std::ostream* os) {
-            *os << "Plugin(\"" << value.Name() << "\")";
-        }
-    }
+void PrintTo(const Plugin& value, ::std::ostream* os) {
+  *os << "Plugin(\"" << value.Name() << "\")";
+}
+}
 }
 
 #endif

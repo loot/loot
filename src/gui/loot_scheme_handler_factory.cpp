@@ -39,32 +39,31 @@ namespace loot {
     // LootSchemeHandlerFactory
     ///////////////////////////////
 
-    CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(CefRefPtr<CefBrowser> browser,
-                                                                   CefRefPtr<CefFrame> frame,
-                                                                   const CefString& scheme_name,
-                                                                   CefRefPtr<CefRequest> request) {
-        BOOST_LOG_TRIVIAL(trace) << "Handling custom scheme: " << string(request->GetURL());
+CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(CefRefPtr<CefBrowser> browser,
+                                                               CefRefPtr<CefFrame> frame,
+                                                               const CefString& scheme_name,
+                                                               CefRefPtr<CefRequest> request) {
+  BOOST_LOG_TRIVIAL(trace) << "Handling custom scheme: " << string(request->GetURL());
 
-        // Get the path from the custom URL, which is of the form
-        // loot://l10n/<l10n path>
-        string file = (LootPaths::getL10nPath() / request->GetURL().ToString().substr(12)).string();
+  // Get the path from the custom URL, which is of the form
+  // loot://l10n/<l10n path>
+  string file = (LootPaths::getL10nPath() / request->GetURL().ToString().substr(12)).string();
 
-        CefResponse::HeaderMap headers;
-        headers.emplace("Access-Control-Allow-Origin", "*");
+  CefResponse::HeaderMap headers;
+  headers.emplace("Access-Control-Allow-Origin", "*");
 
-        if (boost::filesystem::exists(file)) {
-            // Load the file into a CEF stream.
-            CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForFile(file);
-            BOOST_LOG_TRIVIAL(trace) << "Loaded file: " << file;
+  if (boost::filesystem::exists(file)) {
+      // Load the file into a CEF stream.
+    CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForFile(file);
+    BOOST_LOG_TRIVIAL(trace) << "Loaded file: " << file;
 
-            return new CefStreamResourceHandler(200, "OK", "application/octet-stream", headers, stream);
-        }
-        else {
-            BOOST_LOG_TRIVIAL(trace) << "File " << file << " not found, sending 404.";
+    return new CefStreamResourceHandler(200, "OK", "application/octet-stream", headers, stream);
+  } else {
+    BOOST_LOG_TRIVIAL(trace) << "File " << file << " not found, sending 404.";
 
-            const string error404 = "File not found.";
-            CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData((void*)error404.c_str(), error404.size());
-            return new CefStreamResourceHandler(404, "Not Found", "application/octet-stream", headers, stream);
-        }
-    }
+    const string error404 = "File not found.";
+    CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData((void*)error404.c_str(), error404.size());
+    return new CefStreamResourceHandler(404, "Not Found", "application/octet-stream", headers, stream);
+  }
+}
 }

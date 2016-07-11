@@ -22,38 +22,38 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GAME__
-#define __LOOT_GAME__
-
-#include "game_cache.h"
-#include "game_settings.h"
-#include "load_order_handler.h"
+#ifndef LOOT_BACKEND_GAME_GAME
+#define LOOT_BACKEND_GAME_GAME
 
 #include <string>
 
 #include <boost/filesystem.hpp>
 
+#include "backend/game/game_cache.h"
+#include "backend/game/game_settings.h"
+#include "backend/game/load_order_handler.h"
+
 namespace loot {
-    class Game : public GameSettings, public LoadOrderHandler, public GameCache {
-    public:
-        //Game functions.
-        Game();  //Sets game to GameType::autodetect, with all other vars being empty.
-        Game(const GameSettings& gameSettings);
-        Game(const GameType gameType, const std::string& lootFolder = "");
+class Game : public GameSettings, public LoadOrderHandler, public GameCache {
+public:
+    //Game functions.
+  Game();  //Sets game to GameType::autodetect, with all other vars being empty.
+  Game(const GameSettings& gameSettings);
+  Game(const GameType gameType, const std::string& lootFolder = "");
 
-        void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
+  void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
-        void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
+  void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
-        void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
-        bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
+  void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
+  bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
 
-        // Check if the plugin is active by using the cached value if
-        // available, and otherwise asking the load order handler.
-        bool IsPluginActive(const std::string& pluginName) const;
-    private:
-        bool _pluginsFullyLoaded;
-    };
+  // Check if the plugin is active by using the cached value if
+  // available, and otherwise asking the load order handler.
+  bool IsPluginActive(const std::string& pluginName) const;
+private:
+  bool pluginsFullyLoaded_;
+};
 }
 
 #endif

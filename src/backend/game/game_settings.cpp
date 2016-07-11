@@ -22,225 +22,218 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "game_settings.h"
-#include "../app/loot_paths.h"
-#include "../helpers/helpers.h"
-#include "../error.h"
+#include "backend/game/game_settings.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-using namespace std;
+#include "backend/app/loot_paths.h"
+#include "backend/error.h"
+#include "backend/helpers/helpers.h"
 
 namespace fs = boost::filesystem;
-namespace lc = boost::locale;
 
 namespace loot {
-    GameSettings::GameSettings() : type_(GameType::autodetect) {}
+GameSettings::GameSettings() : type_(GameType::autodetect) {}
 
-    GameSettings::GameSettings(const GameType gameType, const std::string& folder) : type_(gameType) {
-        if (Type() == GameType::tes4) {
-            _name = "TES IV: Oblivion";
-            _registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
-            _lootFolderName = "Oblivion";
-            _masterFile = "Oblivion.esm";
-            _repositoryURL = "https://github.com/loot/oblivion.git";
-            _repositoryBranch = "v0.8";
-        }
-        else if (Type() == GameType::tes5) {
-            _name = "TES V: Skyrim";
-            _registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
-            _lootFolderName = "Skyrim";
-            _masterFile = "Skyrim.esm";
-            _repositoryURL = "https://github.com/loot/skyrim.git";
-            _repositoryBranch = "v0.8";
-        }
-        else if (Type() == GameType::fo3) {
-            _name = "Fallout 3";
-            _registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
-            _lootFolderName = "Fallout3";
-            _masterFile = "Fallout3.esm";
-            _repositoryURL = "https://github.com/loot/fallout3.git";
-            _repositoryBranch = "v0.8";
-        }
-        else if (Type() == GameType::fonv) {
-            _name = "Fallout: New Vegas";
-            _registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
-            _lootFolderName = "FalloutNV";
-            _masterFile = "FalloutNV.esm";
-            _repositoryURL = "https://github.com/loot/falloutnv.git";
-            _repositoryBranch = "v0.8";
-        }
-        else if (Type() == GameType::fo4) {
-            _name = "Fallout 4";
-            _registryKey = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
-            _lootFolderName = "Fallout4";
-            _masterFile = "Fallout4.esm";
-            _repositoryURL = "https://github.com/loot/fallout4.git";
-            _repositoryBranch = "v0.8";
-        }
+GameSettings::GameSettings(const GameType gameCode, const std::string& folder) : type_(gameCode) {
+  if (Type() == GameType::tes4) {
+    name_ = "TES IV: Oblivion";
+    registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
+    lootFolderName_ = "Oblivion";
+    masterFile_ = "Oblivion.esm";
+    repositoryURL_ = "https://github.com/loot/oblivion.git";
+    repositoryBranch_ = "v0.8";
+  } else if (Type() == GameType::tes5) {
+    name_ = "TES V: Skyrim";
+    registryKey_ = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
+    lootFolderName_ = "Skyrim";
+    masterFile_ = "Skyrim.esm";
+    repositoryURL_ = "https://github.com/loot/skyrim.git";
+    repositoryBranch_ = "v0.8";
+  } else if (Type() == GameType::fo3) {
+    name_ = "Fallout 3";
+    registryKey_ = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
+    lootFolderName_ = "Fallout3";
+    masterFile_ = "Fallout3.esm";
+    repositoryURL_ = "https://github.com/loot/fallout3.git";
+    repositoryBranch_ = "v0.8";
+  } else if (Type() == GameType::fonv) {
+    name_ = "Fallout: New Vegas";
+    registryKey_ = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
+    lootFolderName_ = "FalloutNV";
+    masterFile_ = "FalloutNV.esm";
+    repositoryURL_ = "https://github.com/loot/falloutnv.git";
+    repositoryBranch_ = "v0.8";
+  } else if (Type() == GameType::fo4) {
+    name_ = "Fallout 4";
+    registryKey_ = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
+    lootFolderName_ = "Fallout4";
+    masterFile_ = "Fallout4.esm";
+    repositoryURL_ = "https://github.com/loot/fallout4.git";
+    repositoryBranch_ = "v0.8";
+  }
 
-        if (!folder.empty())
-            _lootFolderName = folder;
+  if (!folder.empty())
+    lootFolderName_ = folder;
+}
+
+bool GameSettings::IsInstalled() {
+  try {
+    BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << name_ << "\" is installed.";
+    if (!gamePath_.empty() && fs::exists(gamePath_ / "Data" / masterFile_))
+      return true;
+
+    if (fs::exists(fs::path("..") / "Data" / masterFile_)) {
+      gamePath_ = "..";
+      return true;
     }
-
-    bool GameSettings::IsInstalled() {
-        try {
-            BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << _name << "\" is installed.";
-            if (!_gamePath.empty() && fs::exists(_gamePath / "Data" / _masterFile))
-                return true;
-
-            if (fs::exists(fs::path("..") / "Data" / _masterFile)) {
-                _gamePath = "..";
-                return true;
-            }
 
 #ifdef _WIN32
-            string path;
-            string key_parent = fs::path(_registryKey).parent_path().string();
-            string key_name = fs::path(_registryKey).filename().string();
-            path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-            if (!path.empty() && fs::exists(fs::path(path) / "Data" / _masterFile)) {
-                _gamePath = path;
-                return true;
-            }
+    std::string path;
+    std::string key_parent = fs::path(registryKey_).parent_path().string();
+    std::string key_name = fs::path(registryKey_).filename().string();
+    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+    if (!path.empty() && fs::exists(fs::path(path) / "Data" / masterFile_)) {
+      gamePath_ = path;
+      return true;
+    }
 #endif
-        }
-        catch (exception &e) {
-            BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << _name << "\" is installed: " << e.what();
-        }
+  } catch (std::exception &e) {
+    BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << name_ << "\" is installed: " << e.what();
+  }
 
-        return false;
-    }
+  return false;
+}
 
-    bool GameSettings::operator == (const GameSettings& rhs) const {
-        return (boost::iequals(_name, rhs.Name()) || boost::iequals(_lootFolderName, rhs.FolderName()));
-    }
+bool GameSettings::operator == (const GameSettings& rhs) const {
+  return (boost::iequals(name_, rhs.Name()) || boost::iequals(lootFolderName_, rhs.FolderName()));
+}
 
-    GameType GameSettings::Type() const {
-        return type_;
-    }
+GameType GameSettings::Type() const {
+  return type_;
+}
 
-    libespm::GameId GameSettings::LibespmId() const {
-        if (type_ == GameType::tes4)
-            return libespm::GameId::OBLIVION;
-        else if (type_ == GameType::tes5)
-            return libespm::GameId::SKYRIM;
-        else if (type_ == GameType::fo3)
-            return libespm::GameId::FALLOUT3;
-        else if (type_ == GameType::fonv)
-            return libespm::GameId::FALLOUTNV;
-        else
-            return libespm::GameId::FALLOUT4;
-    }
+libespm::GameId GameSettings::LibespmId() const {
+  if (type_ == GameType::tes4)
+    return libespm::GameId::OBLIVION;
+  else if (type_ == GameType::tes5)
+    return libespm::GameId::SKYRIM;
+  else if (type_ == GameType::fo3)
+    return libespm::GameId::FALLOUT3;
+  else if (type_ == GameType::fonv)
+    return libespm::GameId::FALLOUTNV;
+  else
+    return libespm::GameId::FALLOUT4;
+}
 
-    string GameSettings::Name() const {
-        return _name;
-    }
+std::string GameSettings::Name() const {
+  return name_;
+}
 
-    string GameSettings::FolderName() const {
-        return _lootFolderName;
-    }
+std::string GameSettings::FolderName() const {
+  return lootFolderName_;
+}
 
-    std::string GameSettings::Master() const {
-        return _masterFile;
-    }
+std::string GameSettings::Master() const {
+  return masterFile_;
+}
 
-    std::string GameSettings::RegistryKey() const {
-        return _registryKey;
-    }
+std::string GameSettings::RegistryKey() const {
+  return registryKey_;
+}
 
-    std::string GameSettings::RepoURL() const {
-        return _repositoryURL;
-    }
+std::string GameSettings::RepoURL() const {
+  return repositoryURL_;
+}
 
-    std::string GameSettings::RepoBranch() const {
-        return _repositoryBranch;
-    }
+std::string GameSettings::RepoBranch() const {
+  return repositoryBranch_;
+}
 
-    fs::path GameSettings::GamePath() const {
-        return _gamePath;
-    }
+fs::path GameSettings::GamePath() const {
+  return gamePath_;
+}
 
-    fs::path GameSettings::DataPath() const {
-        if (_gamePath.empty())
-            return "";
-        else
-            return _gamePath / "Data";
-    }
+fs::path GameSettings::DataPath() const {
+  if (gamePath_.empty())
+    return "";
+  else
+    return gamePath_ / "Data";
+}
 
-    fs::path GameSettings::MasterlistPath() const {
-        if (_lootFolderName.empty())
-            return "";
-        else
-            return LootPaths::getLootDataPath() / _lootFolderName / "masterlist.yaml";
-    }
+fs::path GameSettings::MasterlistPath() const {
+  if (lootFolderName_.empty())
+    return "";
+  else
+    return LootPaths::getLootDataPath() / lootFolderName_ / "masterlist.yaml";
+}
 
-    fs::path GameSettings::UserlistPath() const {
-        if (_lootFolderName.empty())
-            return "";
-        else
-            return LootPaths::getLootDataPath() / _lootFolderName / "userlist.yaml";
-    }
+fs::path GameSettings::UserlistPath() const {
+  if (lootFolderName_.empty())
+    return "";
+  else
+    return LootPaths::getLootDataPath() / lootFolderName_ / "userlist.yaml";
+}
 
-    std::string GameSettings::GetArchiveFileExtension() const {
-        if (type_ == GameType::fo4)
-            return ".ba2";
-        else
-            return ".bsa";
-    }
+std::string GameSettings::GetArchiveFileExtension() const {
+  if (type_ == GameType::fo4)
+    return ".ba2";
+  else
+    return ".bsa";
+}
 
-    GameSettings& GameSettings::SetName(const std::string& name) {
-        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" name to: " << name;
-        _name = name;
-        return *this;
-    }
+GameSettings& GameSettings::SetName(const std::string& name) {
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" name to: " << name;
+  name_ = name;
+  return *this;
+}
 
-    GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
-        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" master file to: " << masterFile;
-        _masterFile = masterFile;
-        return *this;
-    }
+GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" master file to: " << masterFile;
+  masterFile_ = masterFile;
+  return *this;
+}
 
-    GameSettings& GameSettings::SetRegistryKey(const std::string& registry) {
-        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" registry key to: " << registry;
-        _registryKey = registry;
-        return *this;
-    }
+GameSettings& GameSettings::SetRegistryKey(const std::string& registry) {
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" registry key to: " << registry;
+  registryKey_ = registry;
+  return *this;
+}
 
-    GameSettings& GameSettings::SetRepoURL(const std::string& repositoryURL) {
-        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" repo URL to: " << repositoryURL;
-        _repositoryURL = repositoryURL;
-        return *this;
-    }
+GameSettings& GameSettings::SetRepoURL(const std::string& repositoryURL) {
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" repo URL to: " << repositoryURL;
+  repositoryURL_ = repositoryURL;
+  return *this;
+}
 
-    GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
-        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" repo branch to: " << repositoryBranch;
-        _repositoryBranch = repositoryBranch;
-        return *this;
-    }
+GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" repo branch to: " << repositoryBranch;
+  repositoryBranch_ = repositoryBranch;
+  return *this;
+}
 
-    GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
-        BOOST_LOG_TRIVIAL(trace) << "Setting \"" << _name << "\" game path to: " << path;
-        _gamePath = path;
-        return *this;
-    }
+GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" game path to: " << path;
+  gamePath_ = path;
+  return *this;
+}
 }
 
 namespace YAML {
-    Emitter& operator << (Emitter& out, const loot::GameSettings& rhs) {
-        out << BeginMap
-            << Key << "type" << Value << YAML::SingleQuoted << loot::GameSettings(rhs.Type()).FolderName()
-            << Key << "folder" << Value << YAML::SingleQuoted << rhs.FolderName()
-            << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
-            << Key << "master" << Value << YAML::SingleQuoted << rhs.Master()
-            << Key << "repo" << Value << YAML::SingleQuoted << rhs.RepoURL()
-            << Key << "branch" << Value << YAML::SingleQuoted << rhs.RepoBranch()
-            << Key << "path" << Value << YAML::SingleQuoted << rhs.GamePath().string()
-            << Key << "registry" << Value << YAML::SingleQuoted << rhs.RegistryKey()
-            << EndMap;
+Emitter& operator << (Emitter& out, const loot::GameSettings& rhs) {
+  out << BeginMap
+    << Key << "type" << Value << YAML::SingleQuoted << loot::GameSettings(rhs.Type()).FolderName()
+    << Key << "folder" << Value << YAML::SingleQuoted << rhs.FolderName()
+    << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
+    << Key << "master" << Value << YAML::SingleQuoted << rhs.Master()
+    << Key << "repo" << Value << YAML::SingleQuoted << rhs.RepoURL()
+    << Key << "branch" << Value << YAML::SingleQuoted << rhs.RepoBranch()
+    << Key << "path" << Value << YAML::SingleQuoted << rhs.GamePath().string()
+    << Key << "registry" << Value << YAML::SingleQuoted << rhs.RegistryKey()
+    << EndMap;
 
-        return out;
-    }
+  return out;
+}
 }

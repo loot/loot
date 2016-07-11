@@ -22,59 +22,49 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_METADATA_LIST__
-#define __LOOT_METADATA_LIST__
-
-#include "metadata/plugin_metadata.h"
+#ifndef LOOT_BACKEND_METADATA_LIST
+#define LOOT_BACKEND_METADATA_LIST
 
 #include <string>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 #include <boost/filesystem.hpp>
 
+#include "backend/metadata/plugin_metadata.h"
+
 namespace loot {
-    class Game;
+class Game;
 
-    /* Each Game object should store the config details specific to that game.
-       It should also store the plugin and masterlist data for that game.
-       Plugin data should be stored as an unordered hashset, the elements of which are
-       referenced by ordered lists and other structures.
-       Masterlist / userlist data should be stored as structures which hold plugin and
-       global message lists.
-       Each game should have functions to load this plugin and masterlist / userlist
-       data. Plugin data should be loaded as header-only and as full data.
-       */
+class MetadataList {
+public:
+  void Load(const boost::filesystem::path& filepath);
+  void Save(const boost::filesystem::path& filepath);
+  void Clear();
 
-    class MetadataList {
-    public:
-        void Load(const boost::filesystem::path& filepath);
-        void Save(const boost::filesystem::path& filepath);
-        void clear();
+  std::list<PluginMetadata> Plugins() const;
+  std::list<Message> Messages() const;
+  std::set<std::string> BashTags() const;
 
-        std::list<PluginMetadata> Plugins() const;
-        std::list<Message> Messages() const;
-        std::set<std::string> BashTags() const;
+  // Merges multiple matching regex entries if any are found.
+  PluginMetadata FindPlugin(const PluginMetadata& plugin) const;
+  void AddPlugin(const PluginMetadata& plugin);
 
-        // Merges multiple matching regex entries if any are found.
-        PluginMetadata FindPlugin(const PluginMetadata& plugin) const;
-        void AddPlugin(const PluginMetadata& plugin);
+  // Doesn't erase matching regex entries, because they might also
+  // be required for other plugins.
+  void ErasePlugin(const PluginMetadata& plugin);
 
-        // Doesn't erase matching regex entries, because they might also
-        // be required for other plugins.
-        void ErasePlugin(const PluginMetadata& plugin);
+  void AppendMessage(const Message& message);
 
-        void AppendMessage(const Message& message);
+  // Eval plugin conditions.
+  void EvalAllConditions(Game& game, const Language::Code language);
 
-        // Eval plugin conditions.
-        void EvalAllConditions(Game& game, const Language::Code language);
-
-    protected:
-        std::set<std::string> bashTags_;
-        std::unordered_set<PluginMetadata> plugins;
-        std::list<PluginMetadata> regexPlugins;
-        std::list<Message> messages;
-    };
+protected:
+  std::set<std::string> bashTags_;
+  std::unordered_set<PluginMetadata> plugins_;
+  std::list<PluginMetadata> regexPlugins_;
+  std::list<Message> messages_;
+};
 }
 
 #endif

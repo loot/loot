@@ -22,69 +22,66 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GIT_HELPER__
-#define __LOOT_GIT_HELPER__
+#ifndef LOOT_BACKEND_HELPERS_GIT_HELPER
+#define LOOT_BACKEND_HELPERS_GIT_HELPER
 
 #include <string>
 
 #include <boost/filesystem.hpp>
-
 #include <git2.h>
 
 namespace loot {
-    class GitHelper {
-    public:
-        GitHelper();
-        ~GitHelper();
+class GitHelper {
+public:
+  struct DiffPayload {
+    bool fileFound;
+    const char * fileToFind;
+  };
 
-        void Call(int error_code);
-        void SetErrorMessage(const std::string& message);
+  struct GitData {
+    GitData();
+    ~GitData();
 
-        static bool IsRepository(const boost::filesystem::path& path);
+    git_repository * repo;
+    git_remote * remote;
+    git_config * config;
+    git_object * object;
+    git_commit * commit;
+    git_reference * reference;
+    git_reference * reference2;
+    git_blob * blob;
+    git_annotated_commit * annotated_commit;
+    git_tree * tree;
+    git_diff * diff;
+    git_buf buffer;
 
-        static bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename);
+    git_checkout_options checkout_options;
+    git_clone_options clone_options;
+  };
 
-        // Clones a repository and opens it. Sets 'repo'.
-        void Clone(const boost::filesystem::path& path, const std::string& url);
+  void Call(int error_code);
+  void SetErrorMessage(const std::string& message);
 
-        // Fetch from remote.
-        void Fetch(const std::string& remote);
+  static bool IsRepository(const boost::filesystem::path& path);
+  static bool IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename);
+  static int DiffFileCallback(const git_diff_delta *delta, float progress, void * payload);
 
-        // Create and checkout a new remote-tracking branch.
-        void CheckoutNewBranch(const std::string& remote, const std::string& branch);
+  void Clone(const boost::filesystem::path& path, const std::string& url);
+  void Fetch(const std::string& remote);
 
-        void CheckoutRevision(const std::string& revision);
+  void CheckoutNewBranch(const std::string& remote, const std::string& branch);
+  void CheckoutRevision(const std::string& revision);
 
-        std::string GetHeadShortId();
+  std::string GetHeadShortId();
+  GitData& GetData();
 
-        git_repository * repo;
-        git_remote * remote;
-        git_config * cfg;
-        git_object * obj;
-        git_commit * commit;
-        git_reference * ref;
-        git_reference * ref2;
-        git_blob * blob;
-        git_annotated_commit * annotated_commit;
-        git_tree * tree;
-        git_diff * diff;
-        git_buf buf;
+private:
+    // Removes the read-only flag from some files in git repositories
+    // created by libgit2.
+  static void FixRepoPermissions(const boost::filesystem::path& path);
 
-        git_checkout_options checkout_options;
-        git_clone_options clone_options;
-
-        struct git_diff_payload {
-            bool fileFound;
-            const char * fileToFind;
-        };
-
-        static int diff_file_cb(const git_diff_delta *delta, float progress, void * payload);
-    private:
-        std::string errorMessage;
-
-        // Removes the read-only flag from some files in git repositories
-        // created by libgit2.
-        static void FixRepoPermissions(const boost::filesystem::path& path);
-    };
+  GitData data_;
+  std::string errorMessage_;
+};
 }
 #endif

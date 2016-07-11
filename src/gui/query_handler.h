@@ -25,59 +25,58 @@
 #ifndef LOOT_GUI_QUERY_HANDLER
 #define LOOT_GUI_QUERY_HANDLER
 
+#include <include/wrapper/cef_message_router.h>
+#include <yaml-cpp/yaml.h>
+
 #include "backend/app/loot_state.h"
 #include "backend/plugin/plugin.h"
 #include "backend/metadata/plugin_metadata.h"
 
-#include <include/wrapper/cef_message_router.h>
-
-#include <yaml-cpp/yaml.h>
-
 namespace loot {
-    class QueryHandler : public CefMessageRouterBrowserSide::Handler {
-    public:
-        QueryHandler(LootState& lootState);
+class QueryHandler : public CefMessageRouterBrowserSide::Handler {
+public:
+  QueryHandler(LootState& lootState);
 
-        // Called due to cefQuery execution in binding.html.
-        virtual bool OnQuery(CefRefPtr<CefBrowser> browser,
-                             CefRefPtr<CefFrame> frame,
-                             int64 query_id,
-                             const CefString& request,
-                             bool persistent,
-                             CefRefPtr<Callback> callback) OVERRIDE;
-    private:
-        void OpenReadme();
-        void OpenLogLocation();
-        std::string GetVersion();
-        std::string GetSettings();
-        std::string GetLanguages();
-        std::string GetGameTypes();
-        std::string GetInstalledGames();
-        void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
-        void UpdateMasterlist(CefRefPtr<Callback> callback);
-        std::string ClearAllMetadata();
-        void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
+  // Called due to cefQuery execution in binding.html.
+  virtual bool OnQuery(CefRefPtr<CefBrowser> browser,
+                       CefRefPtr<CefFrame> frame,
+                       int64 query_id,
+                       const CefString& request,
+                       bool persistent,
+                       CefRefPtr<Callback> callback) OVERRIDE;
+private:
+  void OpenReadme();
+  void OpenLogLocation();
+  std::string GetVersion();
+  std::string GetSettings();
+  std::string GetLanguages();
+  std::string GetGameTypes();
+  std::string GetInstalledGames();
+  void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
+  void UpdateMasterlist(CefRefPtr<Callback> callback);
+  std::string ClearAllMetadata();
+  void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
 
-        // Handle queries with input arguments.
-        bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
-                                CefRefPtr<CefFrame> frame,
-                                YAML::Node& request,
-                                CefRefPtr<Callback> callback);
+  // Handle queries with input arguments.
+  bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
+                          CefRefPtr<CefFrame> frame,
+                          YAML::Node& request,
+                          CefRefPtr<Callback> callback);
 
-        void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback);
-        void CopyMetadata(const std::string& pluginName);
-        std::string ClearPluginMetadata(const std::string& pluginName);
-        std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
+  void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback);
+  void CopyMetadata(const std::string& pluginName);
+  std::string ClearPluginMetadata(const std::string& pluginName);
+  std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
 
-        std::vector<Message> GetGeneralMessages() const;
-        YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
-        YAML::Node GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist);
+  std::vector<Message> GetGeneralMessages() const;
+  YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
+  YAML::Node GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist);
 
-        void CopyToClipboard(const std::string& text);
-        void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
+  void CopyToClipboard(const std::string& text);
+  void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
 
-        LootState& _lootState;
-    };
+  LootState& lootState_;
+};
 }
 
 #endif

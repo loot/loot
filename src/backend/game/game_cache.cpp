@@ -22,9 +22,7 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "game_cache.h"
-#include "../helpers/helpers.h"
-#include "../error.h"
+#include "backend/game/game_cache.h"
 
 #include <thread>
 
@@ -32,118 +30,122 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-using namespace std;
+#include "backend/error.h"
+#include "backend/helpers/helpers.h"
 
-namespace fs = boost::filesystem;
-namespace lc = boost::locale;
+using boost::locale::to_lower;
+using std::lock_guard;
+using std::mutex;
+using std::pair;
+using std::string;
 
 namespace loot {
-    GameCache::GameCache() : isLoadOrderSorted(false) {}
+GameCache::GameCache() : isLoadOrderSorted_(false) {}
 
-    GameCache::GameCache(const GameCache& cache) :
-        masterlist(cache.masterlist),
-        userlist(cache.userlist),
-        conditionCache(cache.conditionCache),
-        plugins(cache.plugins),
-        messages(cache.messages),
-        isLoadOrderSorted(cache.isLoadOrderSorted) {}
+GameCache::GameCache(const GameCache& cache) :
+  masterlist_(cache.masterlist_),
+  userlist_(cache.userlist_),
+  conditions_(cache.conditions_),
+  plugins_(cache.plugins_),
+  messages_(cache.messages_),
+  isLoadOrderSorted_(cache.isLoadOrderSorted_) {}
 
-    GameCache& GameCache::operator=(const GameCache& cache) {
-        if (&cache != this) {
-            masterlist = cache.masterlist;
-            userlist = cache.userlist;
-            conditionCache = cache.conditionCache;
-            plugins = cache.plugins;
-            messages = cache.messages;
-            isLoadOrderSorted = cache.isLoadOrderSorted;
-        }
+GameCache& GameCache::operator=(const GameCache& cache) {
+  if (&cache != this) {
+    masterlist_ = cache.masterlist_;
+    userlist_ = cache.userlist_;
+    conditions_ = cache.conditions_;
+    plugins_ = cache.plugins_;
+    messages_ = cache.messages_;
+    isLoadOrderSorted_ = cache.isLoadOrderSorted_;
+  }
 
-        return *this;
-    }
+  return *this;
+}
 
-    Masterlist & GameCache::GetMasterlist() {
-        return masterlist;
-    }
+Masterlist & GameCache::GetMasterlist() {
+  return masterlist_;
+}
 
-    MetadataList & GameCache::GetUserlist() {
-        return userlist;
-    }
+MetadataList & GameCache::GetUserlist() {
+  return userlist_;
+}
 
-    void GameCache::CacheCondition(const std::string& condition, bool result) {
-        std::lock_guard<std::mutex> guard(mutex);
-        conditionCache.insert(pair<string, bool>(boost::locale::to_lower(condition), result));
-    }
+void GameCache::CacheCondition(const std::string& condition, bool result) {
+  lock_guard<mutex> guard(mutex_);
+  conditions_.insert(pair<string, bool>(to_lower(condition), result));
+}
 
-    std::pair<bool, bool> GameCache::GetCachedCondition(const std::string& condition) const {
-        std::lock_guard<std::mutex> guard(mutex);
+std::pair<bool, bool> GameCache::GetCachedCondition(const std::string& condition) const {
+  lock_guard<mutex> guard(mutex_);
 
-        auto it = conditionCache.find(boost::locale::to_lower(condition));
+  auto it = conditions_.find(to_lower(condition));
 
-        if (it != conditionCache.end())
-            return std::pair<bool, bool>(it->second, true);
-        else
-            return std::pair<bool, bool>(false, false);
-    }
+  if (it != conditions_.end())
+    return pair<bool, bool>(it->second, true);
+  else
+    return pair<bool, bool>(false, false);
+}
 
-    std::set<Plugin> GameCache::GetPlugins() const {
-        std::set<Plugin> output;
-        std::transform(begin(plugins),
-                       end(plugins),
-                       inserter<set<Plugin>>(output, begin(output)),
-                       [](const pair<std::string, Plugin>& pluginPair) {
-            return pluginPair.second;
-        });
-        return output;
-    }
+std::set<Plugin> GameCache::GetPlugins() const {
+  std::set<Plugin> output;
+  std::transform(begin(plugins_),
+                 end(plugins_),
+                 std::inserter<std::set<Plugin>>(output, begin(output)),
+                 [](const pair<string, Plugin>& pluginPair) {
+    return pluginPair.second;
+  });
+  return output;
+}
 
-    const Plugin& GameCache::GetPlugin(const std::string & pluginName) const {
-        auto it = plugins.find(boost::locale::to_lower(pluginName));
-        if (it != end(plugins))
-            return it->second;
+const Plugin& GameCache::GetPlugin(const std::string & pluginName) const {
+  auto it = plugins_.find(to_lower(pluginName));
+  if (it != end(plugins_))
+    return it->second;
 
-        throw Error(Error::Code::invalid_args, "No plugin \"" + pluginName + "\" exists.");
-    }
+  throw Error(Error::Code::invalid_args, "No plugin \"" + pluginName + "\" exists.");
+}
 
-    void GameCache::AddPlugin(const Plugin&& plugin) {
-        std::lock_guard<std::mutex> lock(mutex);
+void GameCache::AddPlugin(const Plugin&& plugin) {
+  lock_guard<mutex> lock(mutex_);
 
-        auto pair = plugins.emplace(boost::locale::to_lower(plugin.Name()), plugin);
-        if (!pair.second)
-            pair.first->second = plugin;
-    }
+  auto pair = plugins_.emplace(to_lower(plugin.Name()), plugin);
+  if (!pair.second)
+    pair.first->second = plugin;
+}
 
-    std::vector<Message> GameCache::GetMessages() const {
-        vector<Message> output(messages);
-        if (!isLoadOrderSorted)
-            output.push_back(Message(Message::Type::warn, "You have not sorted your load order this session."));
+std::vector<Message> GameCache::GetMessages() const {
+  std::vector<Message> output(messages_);
+  if (!isLoadOrderSorted_)
+    output.push_back(Message(Message::Type::warn, "You have not sorted your load order this session."));
 
-        return output;
-    }
+  return output;
+}
 
-    void GameCache::AppendMessage(const Message& message) {
-        std::lock_guard<std::mutex> guard(mutex);
+void GameCache::AppendMessage(const Message& message) {
+  lock_guard<mutex> guard(mutex_);
 
-        messages.push_back(message);
-    }
+  messages_.push_back(message);
+}
 
-    void GameCache::SetLoadOrderSorted(bool isLoadOrderSorted) {
-        this->isLoadOrderSorted = isLoadOrderSorted;
-    }
+void GameCache::SetLoadOrderSorted(bool isLoadOrderSorted) {
+  this->isLoadOrderSorted_ = isLoadOrderSorted;
+}
 
-    void GameCache::ClearCachedConditions() {
-        std::lock_guard<std::mutex> guard(mutex);
+void GameCache::ClearCachedConditions() {
+  lock_guard<mutex> guard(mutex_);
 
-        conditionCache.clear();
-    }
+  conditions_.clear();
+}
 
-    void GameCache::ClearCachedPlugins() {
-        std::lock_guard<std::mutex> guard(mutex);
+void GameCache::ClearCachedPlugins() {
+  lock_guard<mutex> guard(mutex_);
 
-        plugins.clear();
-    }
-    void GameCache::ClearMessages() {
-        std::lock_guard<std::mutex> guard(mutex);
+  plugins_.clear();
+}
+void GameCache::ClearMessages() {
+  lock_guard<mutex> guard(mutex_);
 
-        messages.clear();
-    }
+  messages_.clear();
+}
 }

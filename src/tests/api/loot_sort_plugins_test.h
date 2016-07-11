@@ -22,70 +22,71 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_LOOT_SORT_PLUGINS
-#define LOOT_TEST_LOOT_SORT_PLUGINS
+#ifndef LOOT_TESTS_API_LOOT_SORT_PLUGINS_TEST
+#define LOOT_TESTS_API_LOOT_SORT_PLUGINS_TEST
 
-#include "../include/loot/api.h"
-#include "api_game_operations_test.h"
+#include "loot/api.h"
+
+#include "tests/api/api_game_operations_test.h"
 
 namespace loot {
-    namespace test {
-        class loot_sort_plugins_test : public ApiGameOperationsTest {
-        protected:
-            loot_sort_plugins_test() :
-                sortedPlugins(nullptr),
-                numPlugins(0) {}
+namespace test {
+class loot_sort_plugins_test : public ApiGameOperationsTest {
+protected:
+  loot_sort_plugins_test() :
+    sortedPlugins_(nullptr),
+    numPlugins_(0) {}
 
-            const char * const * sortedPlugins;
-            size_t numPlugins;
-        };
+  const char * const * sortedPlugins_;
+  size_t numPlugins_;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                loot_sort_plugins_test,
-                                ::testing::Values(
-                                    loot_game_tes4,
-                                    loot_game_tes5,
-                                    loot_game_fo3,
-                                    loot_game_fonv,
-                                    loot_game_fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        loot_sort_plugins_test,
+                        ::testing::Values(
+                          loot_game_tes4,
+                          loot_game_tes5,
+                          loot_game_fo3,
+                          loot_game_fonv,
+                          loot_game_fo4));
 
-        TEST_P(loot_sort_plugins_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
-            EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(NULL, &sortedPlugins, &numPlugins));
-            EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, NULL, &numPlugins));
-            EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db, &sortedPlugins, NULL));
-        }
+TEST_P(loot_sort_plugins_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
+  EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(NULL, &sortedPlugins_, &numPlugins_));
+  EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db_, NULL, &numPlugins_));
+  EXPECT_EQ(loot_error_invalid_args, loot_sort_plugins(db_, &sortedPlugins_, NULL));
+}
 
-        TEST_P(loot_sort_plugins_test, shouldSucceedIfPassedValidArguments) {
-            std::list<std::string> expectedOrder = {
-                masterFile,
-                blankEsm,
-                blankMasterDependentEsm,
-                blankDifferentEsm,
-                blankDifferentMasterDependentEsm,
-                blankMasterDependentEsp,
-                blankDifferentMasterDependentEsp,
-                blankEsp,
-                blankPluginDependentEsp,
-                blankDifferentEsp,
-                blankDifferentPluginDependentEsp,
-            };
+TEST_P(loot_sort_plugins_test, shouldSucceedIfPassedValidArguments) {
+  std::list<std::string> expectedOrder = {
+      masterFile,
+      blankEsm,
+      blankMasterDependentEsm,
+      blankDifferentEsm,
+      blankDifferentMasterDependentEsm,
+      blankMasterDependentEsp,
+      blankDifferentMasterDependentEsp,
+      blankEsp,
+      blankPluginDependentEsp,
+      blankDifferentEsp,
+      blankDifferentPluginDependentEsp,
+  };
 
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_sort_plugins(db, &sortedPlugins, &numPlugins));
+  EXPECT_EQ(loot_ok, loot_sort_plugins(db_, &sortedPlugins_, &numPlugins_));
 
-            ASSERT_EQ(expectedOrder.size(), numPlugins);
+  ASSERT_EQ(expectedOrder.size(), numPlugins_);
 
-            size_t i = 0;
-            for (const auto& plugin : expectedOrder) {
-                EXPECT_EQ(plugin, sortedPlugins[i]);
-                ++i;
-            }
-        }
-    }
+  size_t i = 0;
+  for (const auto& plugin : expectedOrder) {
+    EXPECT_EQ(plugin, sortedPlugins_[i]);
+    ++i;
+  }
+}
+}
 }
 
 #endif

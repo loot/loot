@@ -29,16 +29,16 @@ along with LOOT.  If not, see
 #include <include/cef_scheme.h>
 
 namespace loot {
-    class LootSchemeHandlerFactory : public CefSchemeHandlerFactory {
-    public:
-        virtual CefRefPtr<CefResourceHandler> Create(CefRefPtr<CefBrowser> browser,
-                                                     CefRefPtr<CefFrame> frame,
-                                                     const CefString& scheme_name,
-                                                     CefRefPtr<CefRequest> request)
-                                                     OVERRIDE;
+class LootSchemeHandlerFactory : public CefSchemeHandlerFactory {
+public:
+  virtual CefRefPtr<CefResourceHandler> Create(CefRefPtr<CefBrowser> browser,
+                                               CefRefPtr<CefFrame> frame,
+                                               const CefString& scheme_name,
+                                               CefRefPtr<CefRequest> request)
+    OVERRIDE;
 
-        IMPLEMENT_REFCOUNTING(LootSchemeHandlerFactory);
-    };
+  IMPLEMENT_REFCOUNTING(LootSchemeHandlerFactory);
+};
 }
 
 #endif

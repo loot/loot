@@ -22,60 +22,61 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_LOOT_GET_DIRTY_INFO
-#define LOOT_TEST_LOOT_GET_DIRTY_INFO
+#ifndef LOOT_TEST_API_LOOT_GET_DIRTY_INFO_TEST
+#define LOOT_TEST_API_LOOT_GET_DIRTY_INFO_TEST
 
-#include "../include/loot/api.h"
-#include "api_game_operations_test.h"
+#include "loot/api.h"
+
+#include "tests/api/api_game_operations_test.h"
 
 namespace loot {
-    namespace test {
-        class loot_get_dirty_info_test : public ApiGameOperationsTest {
-        protected:
-            loot_get_dirty_info_test() :
-                needsCleaning(0) {}
+namespace test {
+class loot_get_dirty_info_test : public ApiGameOperationsTest {
+protected:
+  loot_get_dirty_info_test() :
+    needsCleaning_(0) {}
 
-            unsigned int needsCleaning;
-        };
+  unsigned int needsCleaning_;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                loot_get_dirty_info_test,
-                                ::testing::Values(
-                                    loot_game_tes4,
-                                    loot_game_tes5,
-                                    loot_game_fo3,
-                                    loot_game_fonv,
-                                    loot_game_fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        loot_get_dirty_info_test,
+                        ::testing::Values(
+                          loot_game_tes4,
+                          loot_game_tes5,
+                          loot_game_fo3,
+                          loot_game_fonv,
+                          loot_game_fo4));
 
-        TEST_P(loot_get_dirty_info_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
-            EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(NULL, blankEsp.c_str(), &needsCleaning));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db, NULL, &needsCleaning));
-            EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db, blankEsp.c_str(), NULL));
-        }
+TEST_P(loot_get_dirty_info_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
+  EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(NULL, blankEsp.c_str(), &needsCleaning_));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db_, NULL, &needsCleaning_));
+  EXPECT_EQ(loot_error_invalid_args, loot_get_dirty_info(db_, blankEsp.c_str(), NULL));
+}
 
-        TEST_P(loot_get_dirty_info_test, shouldReturnOkAndOutputUnknownForAPluginWithNoDirtyInfo) {
-            EXPECT_EQ(loot_ok, loot_get_dirty_info(db, blankEsp.c_str(), &needsCleaning));
-            EXPECT_EQ(loot_needs_cleaning_unknown, needsCleaning);
-        }
+TEST_P(loot_get_dirty_info_test, shouldReturnOkAndOutputUnknownForAPluginWithNoDirtyInfo) {
+  EXPECT_EQ(loot_ok, loot_get_dirty_info(db_, blankEsp.c_str(), &needsCleaning_));
+  EXPECT_EQ(loot_needs_cleaning_unknown, needsCleaning_);
+}
 
-        TEST_P(loot_get_dirty_info_test, shouldReturnOkAndOutputYesForAPluginWithDirtyInfo) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_get_dirty_info_test, shouldReturnOkAndOutputYesForAPluginWithDirtyInfo) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_get_dirty_info(db, blankDifferentEsm.c_str(), &needsCleaning));
-            EXPECT_EQ(loot_needs_cleaning_yes, needsCleaning);
-        }
+  EXPECT_EQ(loot_ok, loot_get_dirty_info(db_, blankDifferentEsm.c_str(), &needsCleaning_));
+  EXPECT_EQ(loot_needs_cleaning_yes, needsCleaning_);
+}
 
-        TEST_P(loot_get_dirty_info_test, shouldReturnOkAndOutputNoForAPluginWithADoNotCleanMessage) {
-            ASSERT_NO_THROW(generateMasterlist());
-            ASSERT_EQ(loot_ok, loot_load_lists(db, masterlistPath.string().c_str(), NULL));
+TEST_P(loot_get_dirty_info_test, shouldReturnOkAndOutputNoForAPluginWithADoNotCleanMessage) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_EQ(loot_ok, loot_load_lists(db_, masterlistPath.string().c_str(), NULL));
 
-            EXPECT_EQ(loot_ok, loot_get_dirty_info(db, blankEsm.c_str(), &needsCleaning));
-            EXPECT_EQ(loot_needs_cleaning_no, needsCleaning);
-        }
-    }
+  EXPECT_EQ(loot_ok, loot_get_dirty_info(db_, blankEsm.c_str(), &needsCleaning_));
+  EXPECT_EQ(loot_needs_cleaning_no, needsCleaning_);
+}
+}
 }
 
 #endif

@@ -22,87 +22,88 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_LOOT_UPDATE_MASTERLIST
-#define LOOT_TEST_LOOT_UPDATE_MASTERLIST
+#ifndef LOOT_TESTS_API_LOOT_UPDATE_MASTERLIST_TEST
+#define LOOT_TESTS_API_LOOT_UPDATE_MASTERLIST_TEST
 
-#include "../include/loot/api.h"
-#include "api_game_operations_test.h"
+#include "loot/api.h"
+
+#include "tests/api/api_game_operations_test.h"
 
 namespace loot {
-    namespace test {
-        class loot_update_masterlist_test : public ApiGameOperationsTest {
-        protected:
-            loot_update_masterlist_test() :
-                updated(false) {}
+namespace test {
+class loot_update_masterlist_test : public ApiGameOperationsTest {
+protected:
+  loot_update_masterlist_test() :
+    updated_(false) {}
 
-            inline virtual void TearDown() {
-                ApiGameOperationsTest::TearDown();
+  inline void TearDown() {
+    ApiGameOperationsTest::TearDown();
 
-                // Also remove the ".git" folder if it has been created.
-                ASSERT_NO_THROW(boost::filesystem::remove_all(masterlistPath.parent_path() / ".git"));
-            }
+    // Also remove the ".git" folder if it has been created.
+    ASSERT_NO_THROW(boost::filesystem::remove_all(masterlistPath.parent_path() / ".git"));
+  }
 
-            bool updated;
-        };
+  bool updated_;
+};
 
-        // Pass an empty first argument, as it's a prefix for the test instantation,
-        // but we only have the one so no prefix is necessary.
-        INSTANTIATE_TEST_CASE_P(,
-                                loot_update_masterlist_test,
-                                ::testing::Values(
-                                    loot_game_tes4,
-                                    loot_game_tes5,
-                                    loot_game_fo3,
-                                    loot_game_fonv,
-                                    loot_game_fo4));
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_CASE_P(,
+                        loot_update_masterlist_test,
+                        ::testing::Values(
+                          loot_game_tes4,
+                          loot_game_tes5,
+                          loot_game_fo3,
+                          loot_game_fonv,
+                          loot_game_fo4));
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(NULL, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, NULL, "https://github.com/loot/testing-metadata.git", "master", &updated));
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), NULL, "master", &updated));
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", NULL, &updated));
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", NULL));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfAnyOfTheArgumentsAreNull) {
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(NULL, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, NULL, "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, masterlistPath.string().c_str(), NULL, "master", &updated_));
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", NULL, &updated_));
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", NULL));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsInvalid) {
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, ";//\?", "https://github.com/loot/testing-metadata.git", "master", &updated));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsInvalid) {
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, ";//\?", "https://github.com/loot/testing-metadata.git", "master", &updated_));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsEmpty) {
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, "", "https://github.com/loot/testing-metadata.git", "master", &updated));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsEmpty) {
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, "", "https://github.com/loot/testing-metadata.git", "master", &updated_));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAGitErrorIfTheRepositoryUrlGivenCannotBeFound) {
-            EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/oblivion-does-not-exist.git", "master", &updated));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAGitErrorIfTheRepositoryUrlGivenCannotBeFound) {
+  EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/oblivion-does-not-exist.git", "master", &updated_));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheRepositoryUrlGivenIsEmpty) {
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "", "master", &updated));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheRepositoryUrlGivenIsEmpty) {
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, masterlistPath.string().c_str(), "", "master", &updated_));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAGitErrorIfTheRepositoryBranchGivenCannotBeFound) {
-            EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "missing-branch", &updated));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAGitErrorIfTheRepositoryBranchGivenCannotBeFound) {
+  EXPECT_EQ(loot_error_git_error, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "missing-branch", &updated_));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheRepositoryBranchGivenIsEmpty) {
-            EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "", &updated));
-        }
+TEST_P(loot_update_masterlist_test, shouldReturnAnInvalidArgsErrorIfTheRepositoryBranchGivenIsEmpty) {
+  EXPECT_EQ(loot_error_invalid_args, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "", &updated_));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldSucceedIfPassedValidParametersAndOutputTrueIfTheMasterlistWasUpdated) {
-            EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
-            EXPECT_TRUE(updated);
-            EXPECT_TRUE(boost::filesystem::exists(masterlistPath));
-        }
+TEST_P(loot_update_masterlist_test, shouldSucceedIfPassedValidParametersAndOutputTrueIfTheMasterlistWasUpdated) {
+  EXPECT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  EXPECT_TRUE(updated_);
+  EXPECT_TRUE(boost::filesystem::exists(masterlistPath));
+}
 
-        TEST_P(loot_update_masterlist_test, shouldSucceedIfCalledRepeatedlyButOnlyOutputTrueForTheFirstCall) {
-            EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
-            EXPECT_TRUE(updated);
+TEST_P(loot_update_masterlist_test, shouldSucceedIfCalledRepeatedlyButOnlyOutputTrueForTheFirstCall) {
+  EXPECT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  EXPECT_TRUE(updated_);
 
-            EXPECT_EQ(loot_ok, loot_update_masterlist(db, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated));
-            EXPECT_FALSE(updated);
-            EXPECT_TRUE(boost::filesystem::exists(masterlistPath));
-        }
-    }
+  EXPECT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  EXPECT_FALSE(updated_);
+  EXPECT_TRUE(boost::filesystem::exists(masterlistPath));
+}
+}
 }
 
 #endif

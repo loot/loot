@@ -22,120 +22,120 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BACKEND_HELPERS_GIT_HELPER
-#define LOOT_TEST_BACKEND_HELPERS_GIT_HELPER
+#ifndef LOOT_TESTS_BACKEND_HELPERS_GIT_HELPER_TEST
+#define LOOT_TESTS_BACKEND_HELPERS_GIT_HELPER_TEST
 
-#include "backend/error.h"
 #include "backend/helpers/git_helper.h"
 
 #include <gtest/gtest.h>
 
+#include "backend/error.h"
+
 namespace loot {
-    namespace test {
-        class GitHelperTest : public ::testing::Test {
-        protected:
-            GitHelperTest() :
-                parentRepoRoot(getRepoRoot()) {}
+namespace test {
+class GitHelperTest : public ::testing::Test {
+protected:
+  GitHelperTest() :
+    parentRepoRoot(GetRepoRoot()) {}
 
-            inline virtual void SetUp() {
-                ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "README.md"));
+  inline void SetUp() {
+    ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "README.md"));
 
-                // Create a backup of CONTRIBUTING.md.
-                ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md"));
-                ASSERT_FALSE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
-                ASSERT_NO_THROW(boost::filesystem::copy(parentRepoRoot / "CONTRIBUTING.md", parentRepoRoot / "CONTRIBUTING.md.copy"));
-                ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
+    // Create a backup of CONTRIBUTING.md.
+    ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md"));
+    ASSERT_FALSE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
+    ASSERT_NO_THROW(boost::filesystem::copy(parentRepoRoot / "CONTRIBUTING.md", parentRepoRoot / "CONTRIBUTING.md.copy"));
+    ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
 
-                // Edit CONTRIBUTING.md
-                boost::filesystem::ofstream out(parentRepoRoot / "CONTRIBUTING.md");
-                out.close();
-            }
+    // Edit CONTRIBUTING.md
+    boost::filesystem::ofstream out(parentRepoRoot / "CONTRIBUTING.md");
+    out.close();
+  }
 
-            inline virtual void TearDown() {
-                // Restore original CONTRIBUTING.md
-                ASSERT_NO_THROW(boost::filesystem::remove(parentRepoRoot / "CONTRIBUTING.md"));
-                ASSERT_NO_THROW(boost::filesystem::rename(parentRepoRoot / "CONTRIBUTING.md.copy", parentRepoRoot / "CONTRIBUTING.md"));
-                ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md"));
-                ASSERT_FALSE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
-            }
+  inline void TearDown() {
+      // Restore original CONTRIBUTING.md
+    ASSERT_NO_THROW(boost::filesystem::remove(parentRepoRoot / "CONTRIBUTING.md"));
+    ASSERT_NO_THROW(boost::filesystem::rename(parentRepoRoot / "CONTRIBUTING.md.copy", parentRepoRoot / "CONTRIBUTING.md"));
+    ASSERT_TRUE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md"));
+    ASSERT_FALSE(boost::filesystem::exists(parentRepoRoot / "CONTRIBUTING.md.copy"));
+  }
 
-            GitHelper git;
+  GitHelper git_;
 
-            const boost::filesystem::path parentRepoRoot;
+  const boost::filesystem::path parentRepoRoot;
 
-        private:
-            inline static boost::filesystem::path getRepoRoot() {
-                boost::filesystem::path dir = boost::filesystem::current_path();
-                while (!boost::filesystem::exists(dir / ".git")) {
-                    dir = dir.parent_path();
-                }
-
-                return dir;
-            }
-        };
-
-        TEST_F(GitHelperTest, repoShouldInitialiseAsANullPointer) {
-            EXPECT_EQ(nullptr, git.repo);
-        }
-
-        TEST_F(GitHelperTest, destructorShouldCallLibgit2CleanupFunction) {
-            ASSERT_EQ(2, git_libgit2_init());
-
-            GitHelper * gitPointer = new GitHelper();
-            ASSERT_EQ(4, git_libgit2_init());
-
-            delete gitPointer;
-            EXPECT_EQ(2, git_libgit2_shutdown());
-        }
-
-        TEST_F(GitHelperTest, callShouldNotThrowIfPassedAZeroValue) {
-            EXPECT_NO_THROW(git.Call(0));
-        }
-
-        TEST_F(GitHelperTest, callShouldThrowIfPassedANonZeroValue) {
-            EXPECT_THROW(git.Call(1), Error);
-            EXPECT_THROW(git.Call(-1), Error);
-        }
-
-        TEST_F(GitHelperTest, setErrorMessageShouldSetTheMessageForThrownExceptions) {
-            const char * errorMessage = "test message";
-            git.SetErrorMessage(errorMessage);
-
-            try {
-                git.Call(1);
-                ADD_FAILURE() << "An exception should have been thrown.";
-            }
-            catch (Error& e) {
-                EXPECT_NE(nullptr, strstr(e.what(), errorMessage));
-            }
-        }
-
-        TEST_F(GitHelperTest, isRepositoryShouldReturnTrueForARepositoryRoot) {
-            EXPECT_TRUE(GitHelper::IsRepository(parentRepoRoot));
-        }
-
-        TEST_F(GitHelperTest, isRepositoryShouldReturnFalseForRepositorySubdirectory) {
-            EXPECT_FALSE(GitHelper::IsRepository(boost::filesystem::current_path()));
-        }
-
-        TEST_F(GitHelperTest, isFileDifferentShouldThrowIfGivenANonRepositoryPath) {
-            EXPECT_THROW(GitHelper::IsFileDifferent(boost::filesystem::current_path(), "README.md"), Error);
-        }
-
-        TEST_F(GitHelperTest, isFileDifferentShouldReturnFalseForAnUntrackedFile) {
-            // New files not in the index are not tracked by Git, so aren't considered
-            // different.
-            EXPECT_FALSE(GitHelper::IsFileDifferent(parentRepoRoot, "CONTRIBUTING.md.copy"));
-        }
-
-        TEST_F(GitHelperTest, isFileDifferentShouldReturnFalseForAnUnchangedTrackedFile) {
-            EXPECT_FALSE(GitHelper::IsFileDifferent(parentRepoRoot, "README.md"));
-        }
-
-        TEST_F(GitHelperTest, isFileDifferentShouldReturnTrueForAChangedTrackedFile) {
-            EXPECT_TRUE(GitHelper::IsFileDifferent(parentRepoRoot, "CONTRIBUTING.md"));
-        }
+private:
+  inline static boost::filesystem::path GetRepoRoot() {
+    boost::filesystem::path dir = boost::filesystem::current_path();
+    while (!boost::filesystem::exists(dir / ".git")) {
+      dir = dir.parent_path();
     }
+
+    return dir;
+  }
+};
+
+TEST_F(GitHelperTest, repoShouldInitialiseAsANullPointer) {
+  EXPECT_EQ(nullptr, git_.GetData().repo);
+}
+
+TEST_F(GitHelperTest, destructorShouldCallLibgit2CleanupFunction) {
+  ASSERT_EQ(2, git_libgit2_init());
+
+  GitHelper * gitPointer = new GitHelper();
+  ASSERT_EQ(4, git_libgit2_init());
+
+  delete gitPointer;
+  EXPECT_EQ(2, git_libgit2_shutdown());
+}
+
+TEST_F(GitHelperTest, callShouldNotThrowIfPassedAZeroValue) {
+  EXPECT_NO_THROW(git_.Call(0));
+}
+
+TEST_F(GitHelperTest, callShouldThrowIfPassedANonZeroValue) {
+  EXPECT_THROW(git_.Call(1), Error);
+  EXPECT_THROW(git_.Call(-1), Error);
+}
+
+TEST_F(GitHelperTest, setErrorMessageShouldSetTheMessageForThrownExceptions) {
+  const char * errorMessage = "test message";
+  git_.SetErrorMessage(errorMessage);
+
+  try {
+    git_.Call(1);
+    ADD_FAILURE() << "An exception should have been thrown.";
+  } catch (Error& e) {
+    EXPECT_NE(nullptr, strstr(e.what(), errorMessage));
+  }
+}
+
+TEST_F(GitHelperTest, isRepositoryShouldReturnTrueForARepositoryRoot) {
+  EXPECT_TRUE(GitHelper::IsRepository(parentRepoRoot));
+}
+
+TEST_F(GitHelperTest, isRepositoryShouldReturnFalseForRepositorySubdirectory) {
+  EXPECT_FALSE(GitHelper::IsRepository(boost::filesystem::current_path()));
+}
+
+TEST_F(GitHelperTest, isFileDifferentShouldThrowIfGivenANonRepositoryPath) {
+  EXPECT_THROW(GitHelper::IsFileDifferent(boost::filesystem::current_path(), "README.md"), Error);
+}
+
+TEST_F(GitHelperTest, isFileDifferentShouldReturnFalseForAnUntrackedFile) {
+    // New files not in the index are not tracked by Git, so aren't considered
+    // different.
+  EXPECT_FALSE(GitHelper::IsFileDifferent(parentRepoRoot, "CONTRIBUTING.md.copy"));
+}
+
+TEST_F(GitHelperTest, isFileDifferentShouldReturnFalseForAnUnchangedTrackedFile) {
+  EXPECT_FALSE(GitHelper::IsFileDifferent(parentRepoRoot, "README.md"));
+}
+
+TEST_F(GitHelperTest, isFileDifferentShouldReturnTrueForAChangedTrackedFile) {
+  EXPECT_TRUE(GitHelper::IsFileDifferent(parentRepoRoot, "CONTRIBUTING.md"));
+}
+}
 }
 
 #endif

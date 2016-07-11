@@ -43,12 +43,12 @@
 
 int main(int argc, char **argv) {
     //Set the locale to get encoding conversions working correctly.
-    std::locale::global(boost::locale::generator().generate(""));
-    boost::filesystem::path::imbue(std::locale());
+  std::locale::global(boost::locale::generator().generate(""));
+  boost::filesystem::path::imbue(std::locale());
 
-    //Disable logging or else stdout will get overrun.
-    boost::log::core::get()->set_logging_enabled(false);
+  //Disable logging or else stdout will get overrun.
+  boost::log::core::get()->set_logging_enabled(false);
 
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
