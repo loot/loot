@@ -32,6 +32,14 @@ loot_db::loot_db(const unsigned int clientGame, const std::string& gamePath, con
     this->Init(false, gameLocalDataPath);
 }
 
+loot::Masterlist& loot_db::getUnevaluatedMasterlist() {
+    return unevaluatedMasterlist_;
+}
+
+loot::MetadataList& loot_db::getUnevaluatedUserlist() {
+    return unevaluatedUserlist_;
+}
+
 const char * loot_db::getRevisionIdString() const {
     return revisionId.c_str();
 }

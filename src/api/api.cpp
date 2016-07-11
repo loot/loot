@@ -265,9 +265,9 @@ LOOT_API unsigned int loot_load_lists(loot_db * const db, const char * const mas
     db->clearArrays();
 
     db->GetMasterlist() = temp;
-    db->rawMetadata = temp;
+    db->getUnevaluatedMasterlist() = temp;
     db->GetUserlist() = userTemp;
-    db->rawUserMetadata = userTemp;
+    db->getUnevaluatedUserlist() = userTemp;
 
     return loot_ok;
 }
@@ -296,8 +296,8 @@ LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int lan
     // Clear caches before evaluating conditions.
     db->ClearCachedConditions();
 
-    loot::Masterlist temp = db->rawMetadata;
-    loot::MetadataList userTemp = db->rawUserMetadata;
+    loot::Masterlist temp = db->getUnevaluatedMasterlist();
+    loot::MetadataList userTemp = db->getUnevaluatedUserlist();
     try {
         // Refresh active plugins before evaluating conditions.
         temp.EvalAllConditions(*db, language);

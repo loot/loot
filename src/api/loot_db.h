@@ -36,6 +36,9 @@ struct loot_db : public loot::Game {
             const std::string& gamePath,
             const boost::filesystem::path& gameLocalDataPath);
 
+    loot::Masterlist& getUnevaluatedMasterlist();
+    loot::MetadataList& getUnevaluatedUserlist();
+
     loot::MetadataList rawUserMetadata;
     loot::Masterlist rawMetadata;
 
@@ -86,6 +89,9 @@ struct loot_db : public loot::Game {
     void clearBashTagMap();
     void clearArrays();
 private:
+    loot::Masterlist unevaluatedMasterlist_;
+    loot::MetadataList unevaluatedUserlist_;
+
     std::string revisionId;
     std::string revisionDate;
 
