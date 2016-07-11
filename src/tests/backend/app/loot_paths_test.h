@@ -32,39 +32,33 @@ along with LOOT.  If not, see
 namespace loot {
     namespace test {
         TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
-            LootPaths::setLootAppPath("readme");
+            LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::path("readme") / "docs" / "LOOT Readme.html", LootPaths::getReadmePath());
+            EXPECT_EQ(boost::filesystem::current_path() / "docs" / "LOOT Readme.html", LootPaths::getReadmePath());
         }
 
         TEST(LootPaths, getUIIndexPathShouldUseLootAppPath) {
-            LootPaths::setLootAppPath("ui");
+            LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::path("ui") / "resources" / "ui" / "index.html", LootPaths::getUIIndexPath());
+            EXPECT_EQ(boost::filesystem::current_path() / "resources" / "ui" / "index.html", LootPaths::getUIIndexPath());
         }
 
         TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
-            LootPaths::setLootAppPath("l10n");
+            LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::path("l10n") / "resources" / "l10n", LootPaths::getL10nPath());
-        }
-
-        TEST(LootPaths, getLootDataPathShouldReturnTheSetPath) {
-            LootPaths::setLootDataPath("data");
-
-            EXPECT_EQ("data", LootPaths::getLootDataPath());
+            EXPECT_EQ(boost::filesystem::current_path() / "resources" / "l10n", LootPaths::getL10nPath());
         }
 
         TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
-            LootPaths::setLootDataPath("settings");
+            LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::path("settings") / "settings.yaml", LootPaths::getSettingsPath());
+            EXPECT_EQ(LootPaths::getLootDataPath() / "settings.yaml", LootPaths::getSettingsPath());
         }
 
         TEST(LootPaths, getLogPathShouldUseLootDataPath) {
-            LootPaths::setLootDataPath("log");
+            LootPaths::initialise();
 
-            EXPECT_EQ(boost::filesystem::path("log") / "LOOTDebugLog.txt", LootPaths::getLogPath());
+            EXPECT_EQ(LootPaths::getLootDataPath() / "LOOTDebugLog.txt", LootPaths::getLogPath());
         }
 
         TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
@@ -73,7 +67,7 @@ namespace loot {
             EXPECT_EQ(boost::filesystem::current_path(), LootPaths::getReadmePath().parent_path().parent_path());
         }
 
-        TEST(LootPaths, initialiseShouldSetTheAppPathToTheLocalAppDataPathSlashLoot) {
+        TEST(LootPaths, initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLoot) {
             LootPaths::initialise();
 
             // Can't actually know what the path should be, but we can check

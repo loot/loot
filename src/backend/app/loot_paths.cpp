@@ -75,14 +75,6 @@ namespace loot {
         lootDataPath = getLocalAppDataPath() / "LOOT";
     }
 
-    void LootPaths::setLootAppPath(const boost::filesystem::path& path) {
-        lootAppPath = path;
-    }
-
-    void LootPaths::setLootDataPath(const boost::filesystem::path& path) {
-        lootDataPath = path;
-    }
-
     boost::filesystem::path LootPaths::getLocalAppDataPath() {
 #ifdef _WIN32
         HWND owner = 0;
@@ -113,6 +105,6 @@ namespace loot {
 #endif
     }
 
-    boost::filesystem::path LootPaths::lootAppPath = boost::filesystem::path();
-    boost::filesystem::path LootPaths::lootDataPath = boost::filesystem::path();
+    boost::filesystem::path LootPaths::lootAppPath;
+    boost::filesystem::path LootPaths::lootDataPath;
 }

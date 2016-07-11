@@ -40,8 +40,6 @@ namespace loot {
         // Sets the app path to the current path, and the data path to the user
         // local app data path / "LOOT".
         static void initialise();
-        static void setLootAppPath(const boost::filesystem::path& path);
-        static void setLootDataPath(const boost::filesystem::path& path);
     private:
         static boost::filesystem::path lootAppPath;
         static boost::filesystem::path lootDataPath;
