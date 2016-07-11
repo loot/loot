@@ -67,7 +67,7 @@ namespace loot {
         void AppendMessage(const Message& message);
 
         // Eval plugin conditions.
-        void EvalAllConditions(Game& game, const unsigned int language);
+        void EvalAllConditions(Game& game, const Language::Code language);
 
     protected:
         std::set<std::string> bashTags_;

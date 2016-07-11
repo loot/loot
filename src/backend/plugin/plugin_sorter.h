@@ -41,7 +41,7 @@ namespace loot {
 
     class PluginSorter {
     public:
-        std::list<Plugin> Sort(Game& game, const unsigned int language);
+        std::list<Plugin> Sort(Game& game, const Language::Code language);
     private:
         PluginGraph graph;
         std::map<vertex_t, size_t> indexMap;
@@ -56,7 +56,7 @@ namespace loot {
 
         void PropagatePriorities();
 
-        void addPluginVertices(Game& game, const unsigned int language);
+        void addPluginVertices(Game& game, const Language::Code language);
         void AddSpecificEdges();
         void AddPriorityEdges();
         void AddOverlapEdges();

@@ -34,16 +34,16 @@ namespace loot {
     class MessageContent {
     public:
         MessageContent();
-        MessageContent(const std::string& str, const unsigned int language);
+        MessageContent(const std::string& str, const Language::Code language);
 
-        std::string Text() const;
-        unsigned int Language() const;
+        std::string GetText() const;
+        Language::Code GetLanguage() const;
 
         bool operator < (const MessageContent& rhs) const;
         bool operator == (const MessageContent& rhs) const;
     private:
         std::string _str;
-        unsigned int _language;
+        Language::Code _language;
     };
 }
 
@@ -52,8 +52,8 @@ namespace YAML {
     struct convert < loot::MessageContent > {
         static Node encode(const loot::MessageContent& rhs) {
             Node node;
-            node["str"] = rhs.Text();
-            node["lang"] = loot::Language(rhs.Language()).Locale();
+            node["str"] = rhs.GetText();
+            node["lang"] = loot::Language(rhs.GetLanguage()).GetLocale();
 
             return node;
         }
@@ -67,7 +67,7 @@ namespace YAML {
                 throw RepresentationException(node.Mark(), "bad conversion: 'lang' key missing from 'message content' object");
 
             std::string str = node["str"].as<std::string>();
-            unsigned int lang = loot::Language(node["lang"].as<std::string>()).Code();
+            loot::Language::Code lang = loot::Language(node["lang"].as<std::string>()).GetCode();
 
             rhs = loot::MessageContent(str, lang);
 

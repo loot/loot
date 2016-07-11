@@ -302,7 +302,7 @@ namespace loot {
             ASSERT_EQ(blankEsp, plugin.Name());
             ASSERT_FALSE(plugin.HasNameOnly());
 
-            EXPECT_NO_THROW(metadataList.EvalAllConditions(game, Language::english));
+            EXPECT_NO_THROW(metadataList.EvalAllConditions(game, Language::Code::english));
 
             plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
             EXPECT_EQ(std::list<Message>({

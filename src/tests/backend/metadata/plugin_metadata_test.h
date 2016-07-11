@@ -637,7 +637,7 @@ namespace loot {
             PluginDirtyInfo info2(0xDEADBEEF, 1, 2, 3, "utility");
             plugin.DirtyInfo({info1, info2});
 
-            EXPECT_NO_THROW(plugin.EvalAllConditions(game, Language::english));
+            EXPECT_NO_THROW(plugin.EvalAllConditions(game, Language::Code::english));
 
             std::set<File> expectedFiles({file1});
             EXPECT_EQ(expectedFiles, plugin.LoadAfter());

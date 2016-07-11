@@ -146,7 +146,7 @@ namespace loot {
         messages.push_back(message);
     }
 
-    void MetadataList::EvalAllConditions(Game& game, const unsigned int language) {
+    void MetadataList::EvalAllConditions(Game& game, const Language::Code language) {
         unordered_set<PluginMetadata> replacementSet;
         for (auto &plugin : plugins) {
             PluginMetadata p(plugin);

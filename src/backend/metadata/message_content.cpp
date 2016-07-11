@@ -30,24 +30,24 @@
 using namespace std;
 
 namespace loot {
-    MessageContent::MessageContent() : _language(Language::english) {}
+    MessageContent::MessageContent() : _language(Language::Code::english) {}
 
-    MessageContent::MessageContent(const std::string& str, const unsigned int language) : _str(str), _language(language) {}
+    MessageContent::MessageContent(const std::string& str, const Language::Code language) : _str(str), _language(language) {}
 
-    std::string MessageContent::Text() const {
+    std::string MessageContent::GetText() const {
         return _str;
     }
 
-    unsigned int MessageContent::Language() const {
+    Language::Code MessageContent::GetLanguage() const {
         return _language;
     }
 
     bool MessageContent::operator < (const MessageContent& rhs) const {
-        return boost::ilexicographical_compare(_str, rhs.Text());
+        return boost::ilexicographical_compare(_str, rhs.GetText());
     }
 
     bool MessageContent::operator == (const MessageContent& rhs) const {
-        return (boost::iequals(_str, rhs.Text()));
+        return (boost::iequals(_str, rhs.GetText()));
     }
 }
 
@@ -55,9 +55,9 @@ namespace YAML {
     Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
         out << BeginMap;
 
-        out << Key << "lang" << Value << loot::Language(rhs.Language()).Locale();
+        out << Key << "lang" << Value << loot::Language(rhs.GetLanguage()).GetLocale();
 
-        out << Key << "str" << Value << YAML::SingleQuoted << rhs.Text();
+        out << Key << "str" << Value << YAML::SingleQuoted << rhs.GetText();
 
         out << EndMap;
 

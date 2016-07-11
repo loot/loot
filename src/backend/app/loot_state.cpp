@@ -109,7 +109,7 @@ namespace loot {
         gen.add_messages_domain("loot");
 
         //Boost.Locale initialisation: Generate and imbue locales.
-        locale::global(gen(Language(Language::english).Locale() + ".UTF-8"));
+        locale::global(gen(Language(Language::Code::english).GetLocale() + ".UTF-8"));
         boost::filesystem::path::imbue(locale());
 
         // Check if the LOOT local app data folder exists, and create it if not.
@@ -161,13 +161,13 @@ namespace loot {
         fs::remove(LootPaths::getLootDataPath() / "CEFDebugLog.txt");
 
         // Now that settings have been loaded, set the locale again to handle translations.
-        if (getLanguage().Code() != Language::english) {
+        if (getLanguage().GetCode() != Language::Code::english) {
             BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
             loot::Language lang(getLanguage());
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.Name();
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.GetName();
 
             //Boost.Locale initialisation: Generate and imbue locales.
-            locale::global(gen(lang.Locale() + ".UTF-8"));
+            locale::global(gen(lang.GetLocale() + ".UTF-8"));
             boost::filesystem::path::imbue(locale());
         }
 

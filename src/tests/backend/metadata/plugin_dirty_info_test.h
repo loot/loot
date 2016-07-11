@@ -60,35 +60,35 @@ namespace loot {
         TEST_P(PluginDirtyInfoTest, asMessageShouldOutputAllNonZeroCounts) {
             Message message = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 2 ITM records, 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 2 ITM records, 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 0, 0, 0, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 0, 10, 30, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 0, 0, 30, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 0, 10, 0, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 2, 0, 30, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 2 ITM records and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 2 ITM records and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 2, 0, 0, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 2 ITM records. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 2 ITM records. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
             message = PluginDirtyInfo(0x12345678, 2, 10, 0, "cleaner").AsMessage();
             EXPECT_EQ(Message::Type::warn, message.GetType());
-            EXPECT_EQ("Contains 2 ITM records and 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::english).Text());
+            EXPECT_EQ("Contains 2 ITM records and 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
         }
 
         TEST_P(PluginDirtyInfoTest, dirtyInfoShouldBeEqualIfCrcValuesAreEqual) {

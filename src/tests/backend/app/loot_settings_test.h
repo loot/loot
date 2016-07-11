@@ -60,7 +60,7 @@ namespace loot {
 
             EXPECT_FALSE(settings.isDebugLoggingEnabled());
             EXPECT_EQ("auto", settings.getGame());
-            EXPECT_EQ("en", settings.getLanguage().Locale());
+            EXPECT_EQ("en", settings.getLanguage().GetLocale());
             EXPECT_EQ("auto", settings.getLastGame());
             EXPECT_FALSE(settings.isWindowPositionStored());
 
@@ -157,7 +157,7 @@ namespace loot {
 
             EXPECT_EQ(enableDebugLogging, settings.isDebugLoggingEnabled());
             EXPECT_EQ(game, settings.getGame());
-            EXPECT_EQ(language, settings.getLanguage().Locale());
+            EXPECT_EQ(language, settings.getLanguage().GetLocale());
             EXPECT_EQ(lastGame, settings.getLastGame());
 
             EXPECT_EQ(1, settings.getWindowPosition().top);
@@ -209,7 +209,7 @@ namespace loot {
             EXPECT_TRUE(settings.isDebugLoggingEnabled());
             EXPECT_EQ(UpdateMasterlist, outputYaml["updateMasterlist"].as<bool>());
             EXPECT_EQ(Game, settings.getGame());
-            EXPECT_EQ(Language, settings.getLanguage().Locale());
+            EXPECT_EQ(Language, settings.getLanguage().GetLocale());
             EXPECT_EQ(LastGame, settings.getLastGame());
 
             EXPECT_EQ(Games[0].Name(), settings.getGameSettings()[0].Name());
@@ -260,7 +260,7 @@ namespace loot {
             EXPECT_EQ(enableDebugLogging, settings.isDebugLoggingEnabled());
             EXPECT_EQ(updateMasterlist, outputYaml["updateMasterlist"].as<bool>());
             EXPECT_EQ(game, settings.getGame());
-            EXPECT_EQ(language, settings.getLanguage().Locale());
+            EXPECT_EQ(language, settings.getLanguage().GetLocale());
             EXPECT_EQ(lastGame, settings.getLastGame());
 
             EXPECT_EQ(games[0].Name(), settings.getGameSettings()[0].Name());
@@ -342,7 +342,7 @@ namespace loot {
 
             settings.load(inputYaml);
 
-            EXPECT_EQ("fr", settings.getLanguage().Locale());
+            EXPECT_EQ("fr", settings.getLanguage().GetLocale());
         }
 
         TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {

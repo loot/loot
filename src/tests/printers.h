@@ -70,7 +70,7 @@ namespace loot {
 
         void PrintTo(const MessageContent& value, ::std::ostream* os) {
             *os << "MessageContent(\"" << value.Str() << "\", "
-                << "\"" << Language(value.Language()).Name() << "\""
+                << "\"" << Language(value.GetLanguage()).GetName() << "\""
                 << ")";
         }
 

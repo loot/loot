@@ -56,11 +56,11 @@ namespace loot {
         bool operator < (const Message& rhs) const;
         bool operator == (const Message& rhs) const;
 
-        bool EvalCondition(Game& game, const unsigned int language);
+        bool EvalCondition(Game& game, const Language::Code language);
 
         Type GetType() const;
         std::vector<MessageContent> GetContent() const;
-        MessageContent ChooseContent(const unsigned int language) const;
+        MessageContent ChooseContent(const Language::Code language) const;
     private:
         Type _type;
         std::vector<MessageContent> _content;
@@ -108,14 +108,14 @@ namespace YAML {
             if (node["content"].IsSequence())
                 content = node["content"].as< std::vector<loot::MessageContent> >();
             else {
-                content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::english));
+                content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::Code::english));
             }
 
             //Check now that at least one item in content is English if there are multiple items.
             if (content.size() > 1) {
                 bool found = false;
                 for (const auto &mc : content) {
-                    if (mc.Language() == loot::Language::english)
+                    if (mc.GetLanguage() == loot::Language::Code::english)
                         found = true;
                 }
                 if (!found)
@@ -126,14 +126,14 @@ namespace YAML {
             if (node["subs"]) {
                 std::vector<std::string> subs = node["subs"].as<std::vector<std::string>>();
                 for (auto& mc : content) {
-                    boost::format f(mc.Text());
+                    boost::format f(mc.GetText());
 
                     for (const auto& sub : subs) {
                         f = f % sub;
                     }
 
                     try {
-                        mc = loot::MessageContent(f.str(), mc.Language());
+                        mc = loot::MessageContent(f.str(), mc.GetLanguage());
                     }
                     catch (boost::io::format_error& e) {
                         throw RepresentationException(node.Mark(), std::string("bad conversion: content substitution error: ") + e.what());

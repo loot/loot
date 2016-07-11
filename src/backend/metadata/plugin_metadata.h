@@ -91,7 +91,7 @@ namespace loot {
         void DirtyInfo(const std::set<PluginDirtyInfo>& info);
         void Locations(const std::set<Location>& locations);
 
-        PluginMetadata& EvalAllConditions(Game& game, const unsigned int language);
+        PluginMetadata& EvalAllConditions(Game& game, const Language::Code language);
         bool HasNameOnly() const;
         bool IsRegexPlugin() const;
 

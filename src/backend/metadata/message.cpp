@@ -35,7 +35,7 @@ namespace loot {
 
     Message::Message(const Type type, const std::string& content,
                      const std::string& condition) : _type(type), ConditionalMetadata(condition) {
-        _content.push_back(MessageContent(content, Language::english));
+        _content.push_back(MessageContent(content, Language::Code::english));
     }
 
     Message::Message(const Type type, const std::vector<MessageContent>& content,
@@ -43,7 +43,7 @@ namespace loot {
         if (content.size() > 1) {
             bool englishStringExists = false;
             for (const auto &mc : content) {
-                if (mc.Language() == loot::Language::english)
+                if (mc.GetLanguage() == loot::Language::Code::english)
                     englishStringExists = true;
             }
             if (!englishStringExists)
@@ -53,7 +53,7 @@ namespace loot {
 
     bool Message::operator < (const Message& rhs) const {
         if (!_content.empty() && !rhs.GetContent().empty())
-            return boost::ilexicographical_compare(ChooseContent(Language::english).Text(), rhs.ChooseContent(Language::english).Text());
+            return boost::ilexicographical_compare(ChooseContent(Language::Code::english).GetText(), rhs.ChooseContent(Language::Code::english).GetText());
         else if (_content.empty() && !rhs.GetContent().empty())
             return true;
         else
@@ -64,14 +64,14 @@ namespace loot {
         return (_content == rhs.GetContent());
     }
 
-    bool Message::EvalCondition(loot::Game& game, const unsigned int language) {
-        BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).Name();
+    bool Message::EvalCondition(loot::Game& game, const Language::Code language) {
+        BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).GetName();
         _content.assign({ChooseContent(language)});
 
         return ConditionalMetadata::EvalCondition(game);
     }
 
-    MessageContent Message::ChooseContent(const unsigned int language) const {
+    MessageContent Message::ChooseContent(const Language::Code language) const {
         BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
         if (_content.empty())
             return MessageContent();
@@ -80,10 +80,10 @@ namespace loot {
         else {
             MessageContent english;
             for (const auto &mc : _content) {
-                if (mc.Language() == language) {
+                if (mc.GetLanguage() == language) {
                     return mc;
                 }
-                else if (mc.Language() == Language::english)
+                else if (mc.GetLanguage() == Language::Code::english)
                     english = mc;
             }
             return english;
@@ -111,7 +111,7 @@ namespace YAML {
             out << Key << "type" << Value << "error";
 
         if (rhs.GetContent().size() == 1)
-            out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().Text();
+            out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().GetText();
         else
             out << Key << "content" << Value << rhs.GetContent();
 

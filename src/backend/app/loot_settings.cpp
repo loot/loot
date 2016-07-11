@@ -49,7 +49,7 @@ namespace loot {
         enableDebugLogging(false),
         updateMasterlist(true),
         game("auto"),
-        language(Language(Language::english)),
+        language(Language(Language::Code::english)),
         lastGame("auto") {}
 
     void LootSettings::load(YAML::Node& settings) {
@@ -206,7 +206,7 @@ namespace loot {
         node["enableDebugLogging"] = enableDebugLogging;
         node["updateMasterlist"] = updateMasterlist;
         node["game"] = game;
-        node["language"] = language.Locale();
+        node["language"] = language.GetLocale();
         node["lastGame"] = lastGame;
         node["lastVersion"] = lastVersion;
 

@@ -318,7 +318,7 @@ namespace loot {
         _locations = locations;
     }
 
-    PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const unsigned int language) {
+    PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const Language::Code language) {
         for (auto it = loadAfter.begin(); it != loadAfter.end();) {
             if (!it->EvalCondition(game))
                 loadAfter.erase(it++);

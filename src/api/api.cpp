@@ -72,17 +72,17 @@ const unsigned int loot_message_warn = static_cast<unsigned int>(loot::Message::
 const unsigned int loot_message_error = static_cast<unsigned int>(loot::Message::Type::error);
 
 // LOOT message languages.
-const unsigned int loot_lang_english = loot::Language::english;
-const unsigned int loot_lang_spanish = loot::Language::spanish;
-const unsigned int loot_lang_russian = loot::Language::russian;
-const unsigned int loot_lang_french = loot::Language::french;
-const unsigned int loot_lang_chinese = loot::Language::chinese;
-const unsigned int loot_lang_polish = loot::Language::polish;
-const unsigned int loot_lang_brazilian_portuguese = loot::Language::brazilian_portuguese;
-const unsigned int loot_lang_finnish = loot::Language::finnish;
-const unsigned int loot_lang_german = loot::Language::german;
-const unsigned int loot_lang_danish = loot::Language::danish;
-const unsigned int loot_lang_korean = loot::Language::korean;
+const unsigned int loot_lang_english = static_cast<unsigned int>(loot::Language::Code::english);
+const unsigned int loot_lang_spanish = static_cast<unsigned int>(loot::Language::Code::spanish);
+const unsigned int loot_lang_russian = static_cast<unsigned int>(loot::Language::Code::russian);
+const unsigned int loot_lang_french = static_cast<unsigned int>(loot::Language::Code::french);
+const unsigned int loot_lang_chinese = static_cast<unsigned int>(loot::Language::Code::chinese);
+const unsigned int loot_lang_polish = static_cast<unsigned int>(loot::Language::Code::polish);
+const unsigned int loot_lang_brazilian_portuguese = static_cast<unsigned int>(loot::Language::Code::brazilian_portuguese);
+const unsigned int loot_lang_finnish = static_cast<unsigned int>(loot::Language::Code::finnish);
+const unsigned int loot_lang_german = static_cast<unsigned int>(loot::Language::Code::german);
+const unsigned int loot_lang_danish = static_cast<unsigned int>(loot::Language::Code::danish);
+const unsigned int loot_lang_korean = static_cast<unsigned int>(loot::Language::Code::korean);
 
 // LOOT cleanliness codes.
 const unsigned int loot_needs_cleaning_no = 0;
@@ -302,8 +302,8 @@ LOOT_API unsigned int loot_eval_lists(loot_db * const db, const unsigned int lan
     loot::MetadataList userTemp = db->getUnevaluatedUserlist();
     try {
         // Refresh active plugins before evaluating conditions.
-        temp.EvalAllConditions(*db, language);
-        userTemp.EvalAllConditions(*db, language);
+        temp.EvalAllConditions(*db, loot::Language::Code(language));
+        userTemp.EvalAllConditions(*db, loot::Language::Code(language));
     }
     catch (Error& e) {
         return c_error(e);
@@ -335,7 +335,7 @@ LOOT_API unsigned int loot_sort_plugins(loot_db * const db,
         //Sort plugins into their load order.
         loot::PluginSorter sorter;
 
-        db->setPluginNames(sorter.Sort(*db, loot::Language::english));
+        db->setPluginNames(sorter.Sort(*db, loot::Language::Code::english));
     }
     catch (Error &e) {
         return c_error(e);
@@ -608,7 +608,7 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db * const db, const char * const
     messages.insert(messages.end(), temp.begin(), temp.end());
 
     for (const auto& message : messages) {
-        if (boost::starts_with(message.ChooseContent(loot::Language::english).Text(), "Do not clean")) {
+        if (boost::starts_with(message.ChooseContent(loot::Language::Code::english).GetText(), "Do not clean")) {
             *needsCleaning = loot_needs_cleaning_no;
             break;
         }

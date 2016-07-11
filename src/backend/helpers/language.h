@@ -32,32 +32,34 @@ namespace loot {
     //Language class for simpler language support.
     class Language {
     public:
-        Language(const unsigned int code);
+        enum struct Code : unsigned int {
+            english = 1,
+            spanish = 2,
+            russian = 3,
+            french = 4,
+            chinese = 5,
+            polish = 6,
+            brazilian_portuguese = 7,
+            finnish = 8,
+            german = 9,
+            danish = 10,
+            korean = 11,
+        };
+
+        Language(const Code code);
         Language(const std::string& locale);
 
-        unsigned int Code() const;
-        std::string Name() const;
-        std::string Locale() const;
+        Code GetCode() const;
+        std::string GetName() const;
+        std::string GetLocale() const;
 
-        static const unsigned int english;
-        static const unsigned int spanish;
-        static const unsigned int russian;
-        static const unsigned int french;
-        static const unsigned int chinese;
-        static const unsigned int polish;
-        static const unsigned int brazilian_portuguese;
-        static const unsigned int finnish;
-        static const unsigned int german;
-        static const unsigned int danish;
-        static const unsigned int korean;
-
-        static const std::vector<unsigned int> Codes;
+        static const std::vector<Code> Codes;
     private:
-        unsigned int _code;
+        Code _code;
         std::string _name;
         std::string _locale;
 
-        void Construct(const unsigned int code);
+        void Construct(const Code code);
     };
 }
 

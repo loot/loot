@@ -582,8 +582,8 @@ namespace loot {
         for (const auto& code : Language::Codes) {
             YAML::Node lang;
             Language language(code);
-            lang["name"] = language.Name();
-            lang["locale"] = language.Locale();
+            lang["name"] = language.GetName();
+            lang["locale"] = language.GetLocale();
             temp.push_back(lang);
         }
         return JSON::stringify(temp);
@@ -902,7 +902,7 @@ namespace loot {
 
     void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
-        BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().GetName();
 
         try {
             // Always reload all the plugins.
@@ -912,7 +912,7 @@ namespace loot {
             //Sort plugins into their load order.
             SendProgressUpdate(frame, loc::translate("Sorting load order..."));
             PluginSorter sorter;
-            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().Code());
+            list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().GetCode());
 
             // If TESV or FO4, check if load order has been changed.
             if ((_lootState.CurrentGame().Id() == Game::tes5 || _lootState.CurrentGame().Id() == Game::fo4)
@@ -989,10 +989,10 @@ namespace loot {
                         end(gameMessages));
 
         try {
-            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
+            BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().GetName();
             auto it = begin(messages);
             while (it != end(messages)) {
-                if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().Code()))
+                if (!it->EvalCondition(_lootState.CurrentGame(), _lootState.getLanguage().GetCode()))
                     it = messages.erase(it);
                 else
                     ++it;
@@ -1007,7 +1007,7 @@ namespace loot {
     }
 
     YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {
-        BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
+        BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().GetName();
 
         // Now rederive the displayed metadata from the masterlist and userlist.
         Plugin tempPlugin(file);
@@ -1018,7 +1018,7 @@ namespace loot {
         //Evaluate any conditions
         BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
         try {
-            tempPlugin.EvalAllConditions(_lootState.CurrentGame(), _lootState.getLanguage().Code());
+            tempPlugin.EvalAllConditions(_lootState.CurrentGame(), _lootState.getLanguage().GetCode());
         }
         catch (std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();

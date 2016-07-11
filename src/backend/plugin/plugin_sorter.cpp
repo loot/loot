@@ -96,7 +96,7 @@ namespace loot {
         vertex_t target;
     };
 
-    std::list<Plugin> PluginSorter::Sort(Game& game, const unsigned int language) {
+    std::list<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) {
         // Clear existing data.
         graph.clear();
         indexMap.clear();
@@ -164,7 +164,7 @@ namespace loot {
         return plugins;
     }
 
-    void PluginSorter::addPluginVertices(Game& game, const unsigned int language) {
+    void PluginSorter::addPluginVertices(Game& game, const Language::Code language) {
         BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
 
         // The resolution of tie-breaks in the plugin graph may be dependent

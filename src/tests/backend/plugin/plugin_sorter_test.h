@@ -52,7 +52,7 @@ namespace loot {
 
         TEST_P(PluginSorterTest, sortingWithNoLoadedPluginsShouldReturnAnEmptyList) {
             PluginSorter sorter;
-            std::list<Plugin> sorted = sorter.Sort(game, Language::english);
+            std::list<Plugin> sorted = sorter.Sort(game, Language::Code::english);
 
             EXPECT_TRUE(sorted.empty());
         }
@@ -63,11 +63,11 @@ namespace loot {
             PluginSorter ps;
             std::list<std::string> expectedSortedOrder = getLoadOrder();
 
-            std::list<Plugin> sorted = ps.Sort(game, Language::english);
+            std::list<Plugin> sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 
             // Check stability.
-            sorted = ps.Sort(game, Language::english);
+            sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
         }
 
@@ -77,7 +77,7 @@ namespace loot {
             ASSERT_FALSE(game.GetMessages().empty());
 
             PluginSorter ps;
-            std::list<Plugin> sorted = ps.Sort(game, Language::english);
+            std::list<Plugin> sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(game.GetMessages().empty());
         }
 
@@ -90,7 +90,7 @@ namespace loot {
             ASSERT_FALSE(game.GetMessages().empty());
 
             PluginSorter ps;
-            EXPECT_ANY_THROW(ps.Sort(game, Language::english));
+            EXPECT_ANY_THROW(ps.Sort(game, Language::Code::english));
             EXPECT_FALSE(game.GetMessages().empty());
         }
 
@@ -116,7 +116,7 @@ namespace loot {
                 blankDifferentPluginDependentEsp,
             });
 
-            std::list<Plugin> sorted = ps.Sort(game, Language::english);
+            std::list<Plugin> sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
         }
 
@@ -167,7 +167,7 @@ namespace loot {
                 blankDifferentPluginDependentEsp,
             });
 
-            std::list<Plugin> sorted = ps.Sort(game, Language::english);
+            std::list<Plugin> sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
         }
 
@@ -195,7 +195,7 @@ namespace loot {
                 blankPluginDependentEsp,
             });
 
-            std::list<Plugin> sorted = ps.Sort(game, Language::english);
+            std::list<Plugin> sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
         }
 
@@ -223,7 +223,7 @@ namespace loot {
                 blankPluginDependentEsp,
             });
 
-            std::list<Plugin> sorted = ps.Sort(game, Language::english);
+            std::list<Plugin> sorted = ps.Sort(game, Language::Code::english);
             EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
         }
 
@@ -234,7 +234,7 @@ namespace loot {
             game.GetUserlist().AddPlugin(plugin);
 
             PluginSorter ps;
-            EXPECT_ANY_THROW(ps.Sort(game, Language::english));
+            EXPECT_ANY_THROW(ps.Sort(game, Language::Code::english));
         }
     }
 }
