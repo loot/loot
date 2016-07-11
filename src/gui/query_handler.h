@@ -22,8 +22,8 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef __LOOT_GUI_HANDLER__
-#define __LOOT_GUI_HANDLER__
+#ifndef LOOT_GUI_QUERY_HANDLER
+#define LOOT_GUI_QUERY_HANDLER
 
 #include "backend/app/loot_state.h"
 #include "backend/plugin/plugin.h"
@@ -34,9 +34,9 @@
 #include <yaml-cpp/yaml.h>
 
 namespace loot {
-    class Handler : public CefMessageRouterBrowserSide::Handler {
+    class QueryHandler : public CefMessageRouterBrowserSide::Handler {
     public:
-        Handler(LootState& lootState);
+        QueryHandler(LootState& lootState);
 
         // Called due to cefQuery execution in binding.html.
         virtual bool OnQuery(CefRefPtr<CefBrowser> browser,

@@ -23,7 +23,7 @@
     */
 
 #include "loot_handler.h"
-#include "handler.h"
+#include "query_handler.h"
 #include "resource.h"
 #include "loot_app.h"
 
@@ -144,7 +144,7 @@ namespace loot {
         CefMessageRouterConfig config;
         browser_side_router_ = CefMessageRouterBrowserSide::Create(config);
 
-        browser_side_router_->AddHandler(new Handler(_lootState), false);
+        browser_side_router_->AddHandler(new QueryHandler(_lootState), false);
     }
 
     bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {

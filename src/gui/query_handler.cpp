@@ -22,7 +22,7 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "handler.h"
+#include "query_handler.h"
 #include "resource.h"
 #include "loot_app.h"
 #include "loot_handler.h"
@@ -57,10 +57,10 @@ namespace fs = boost::filesystem;
 namespace loc = boost::locale;
 
 namespace loot {
-    Handler::Handler(LootState& lootState) : _lootState(lootState) {}
+    QueryHandler::QueryHandler(LootState& lootState) : _lootState(lootState) {}
 
     // Called due to cefQuery execution in binding.html.
-    bool Handler::OnQuery(CefRefPtr<CefBrowser> browser,
+    bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
                           CefRefPtr<CefFrame> frame,
                           int64 query_id,
                           const CefString& request,
@@ -118,7 +118,7 @@ namespace loot {
         }
         else if (request == "getGameData") {
             SendProgressUpdate(frame, loc::translate("Parsing, merging and evaluating metadata..."));
-            return CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
+            return CefPostTask(TID_FILE, base::Bind(&QueryHandler::GetGameData, base::Unretained(this), frame, callback));
         }
         else if (request == "cancelFind") {
             browser->GetHost()->StopFinding(true);
@@ -147,10 +147,10 @@ namespace loot {
             return true;
         }
         else if (request == "updateMasterlist") {
-            return CefPostTask(TID_FILE, base::Bind(&Handler::UpdateMasterlist, base::Unretained(this), callback));
+            return CefPostTask(TID_FILE, base::Bind(&QueryHandler::UpdateMasterlist, base::Unretained(this), callback));
         }
         else if (request == "sortPlugins") {
-            return CefPostTask(TID_FILE, base::Bind(&Handler::SortPlugins, base::Unretained(this), frame, callback));
+            return CefPostTask(TID_FILE, base::Bind(&QueryHandler::SortPlugins, base::Unretained(this), frame, callback));
         }
         else if (request == "getInitErrors") {
             YAML::Node node(_lootState.InitErrors());
@@ -209,7 +209,7 @@ namespace loot {
     }
 
     // Handle queries with input arguments.
-    bool Handler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
+    bool QueryHandler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
                                      CefRefPtr<CefFrame> frame,
                                      YAML::Node& request,
                                      CefRefPtr<Callback> callback) {
@@ -220,7 +220,7 @@ namespace loot {
                 // Has one arg, which is the folder name of the new game.
                 _lootState.ChangeGame(request["args"][0].as<string>());
 
-                CefPostTask(TID_FILE, base::Bind(&Handler::GetGameData, base::Unretained(this), frame, callback));
+                CefPostTask(TID_FILE, base::Bind(&QueryHandler::GetGameData, base::Unretained(this), frame, callback));
             }
             catch (loot::error &e) {
                 BOOST_LOG_TRIVIAL(error) << "Failed to change game. Details: " << e.what();
@@ -234,7 +234,7 @@ namespace loot {
         }
         else if (requestName == "getConflictingPlugins") {
             // Has one arg, which is the name of the plugin to get conflicts for.
-            CefPostTask(TID_FILE, base::Bind(&Handler::GetConflictingPlugins, base::Unretained(this), request["args"][0].as<string>(), callback));
+            CefPostTask(TID_FILE, base::Bind(&QueryHandler::GetConflictingPlugins, base::Unretained(this), request["args"][0].as<string>(), callback));
             return true;
         }
         else if (requestName == "copyMetadata") {
@@ -395,7 +395,7 @@ namespace loot {
         return false;
     }
 
-    void Handler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback) {
+    void QueryHandler::GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName;
 
         // Checking for FormID overlap will only work if the plugins have been loaded, so check if
@@ -431,7 +431,7 @@ namespace loot {
             callback->Success("[]");
     }
 
-    void Handler::CopyMetadata(const std::string& pluginName) {
+    void QueryHandler::CopyMetadata(const std::string& pluginName) {
         BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName;
 
         // Get metadata from masterlist and userlist.
@@ -453,7 +453,7 @@ namespace loot {
         BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << pluginName << "\": " << text;
     }
 
-    std::string Handler::ClearPluginMetadata(const std::string& pluginName) {
+    std::string QueryHandler::ClearPluginMetadata(const std::string& pluginName) {
         BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName;
 
         _lootState.CurrentGame().GetUserlist().ErasePlugin(PluginMetadata(pluginName));
@@ -469,7 +469,7 @@ namespace loot {
             return "null";
     }
 
-    std::string Handler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
+    std::string QueryHandler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
         BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << pluginMetadata["name"].as<string>();
         // Create new object for userlist entry.
         PluginMetadata newUserlistEntry(pluginMetadata["name"].as<string>());
@@ -552,30 +552,30 @@ namespace loot {
             return "null";
     }
 
-    void Handler::OpenReadme() {
+    void QueryHandler::OpenReadme() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
         // Open readme in default application.
         OpenInDefaultApplication(LootPaths::getReadmePath());
     }
 
-    void Handler::OpenLogLocation() {
+    void QueryHandler::OpenLogLocation() {
         BOOST_LOG_TRIVIAL(info) << "Opening LOOT local appdata folder.";
         //Open debug log folder.
         OpenInDefaultApplication(LootPaths::getLogPath().parent_path());
     }
 
-    std::string Handler::GetVersion() {
+    std::string QueryHandler::GetVersion() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
         YAML::Node version(to_string(LootVersion::major) + "." + to_string(LootVersion::minor) + "." + to_string(LootVersion::patch) + "." + LootVersion::revision);
         return JSON::stringify(version);
     }
 
-    std::string Handler::GetSettings() {
+    std::string QueryHandler::GetSettings() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT settings.";
         return JSON::stringify(_lootState.toYaml());
     }
 
-    std::string Handler::GetLanguages() {
+    std::string QueryHandler::GetLanguages() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported languages.";
         // Need to get an array of language names and their corresponding codes.
         YAML::Node temp;
@@ -589,7 +589,7 @@ namespace loot {
         return JSON::stringify(temp);
     }
 
-    std::string Handler::GetGameTypes() {
+    std::string QueryHandler::GetGameTypes() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported game types.";
         YAML::Node temp;
         temp.push_back(Game(Game::tes4).FolderName());
@@ -600,7 +600,7 @@ namespace loot {
         return JSON::stringify(temp);
     }
 
-    std::string Handler::GetInstalledGames() {
+    std::string QueryHandler::GetInstalledGames() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT's detected games.";
         YAML::Node temp = YAML::Node(_lootState.InstalledGames());
         if (temp.size() > 0)
@@ -609,7 +609,7 @@ namespace loot {
             return "[]";
     }
 
-    void Handler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+    void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         try {
             /* GetGameData() can be called for initialising the UI for a game for the first time
                in a session, or it can be called when changing to a game that has previously been
@@ -780,7 +780,7 @@ namespace loot {
         }
     }
 
-    void Handler::UpdateMasterlist(CefRefPtr<Callback> callback) {
+    void QueryHandler::UpdateMasterlist(CefRefPtr<Callback> callback) {
         try {
             // Update / parse masterlist.
             BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
@@ -871,7 +871,7 @@ namespace loot {
         }
     }
 
-    std::string Handler::ClearAllMetadata() {
+    std::string QueryHandler::ClearAllMetadata() {
         BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
         // Record which plugins have userlist entries.
         vector<string> userlistPlugins;
@@ -900,7 +900,7 @@ namespace loot {
             return "[]";
     }
 
-    void Handler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
+    void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback) {
         BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
 
@@ -973,7 +973,7 @@ namespace loot {
         }
     }
 
-    std::vector<Message> Handler::GetGeneralMessages() const {
+    std::vector<Message> QueryHandler::GetGeneralMessages() const {
         vector<Message> messages;
         auto metadataListMessages = _lootState.CurrentGame().GetMasterlist().Messages();
         messages.insert(end(messages),
@@ -1006,7 +1006,7 @@ namespace loot {
         return messages;
     }
 
-    YAML::Node Handler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {
+    YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {
         BOOST_LOG_TRIVIAL(info) << "Using message language: " << _lootState.getLanguage().Name();
 
         // Now rederive the displayed metadata from the masterlist and userlist.
@@ -1042,7 +1042,7 @@ namespace loot {
         return pluginNode;
     }
 
-    YAML::Node Handler::GenerateDerivedMetadata(const std::string& pluginName) {
+    YAML::Node QueryHandler::GenerateDerivedMetadata(const std::string& pluginName) {
         // Now rederive the displayed metadata from the masterlist and userlist.
         try {
             auto plugin = _lootState.CurrentGame().GetPlugin(pluginName);
@@ -1056,7 +1056,7 @@ namespace loot {
         }
     }
 
-    void Handler::CopyToClipboard(const std::string& text) {
+    void QueryHandler::CopyToClipboard(const std::string& text) {
 #ifdef _WIN32
         if (!OpenClipboard(NULL)) {
             throw loot::error(loot::error::windows_error, "Failed to open the Windows clipboard.");
@@ -1083,7 +1083,7 @@ namespace loot {
 #endif
     }
 
-    void Handler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
+    void QueryHandler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
         BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
         frame->ExecuteJavaScript("loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
     }

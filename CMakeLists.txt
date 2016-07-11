@@ -206,17 +206,17 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
 
 set (LOOT_GUI_SRC ${LOOT_SRC}
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
-                  "${CMAKE_SOURCE_DIR}/src/gui/handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
 set (LOOT_API_SRC ${LOOT_SRC}
