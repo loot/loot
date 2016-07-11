@@ -51,7 +51,7 @@ namespace loot {
                     englishStringExists = true;
             }
             if (!englishStringExists)
-                throw loot::error(error::invalid_args, "bad conversion: multilingual messages must contain an English content string");
+                throw loot::Error(Error::invalid_args, "bad conversion: multilingual messages must contain an English content string");
         }
     }
 

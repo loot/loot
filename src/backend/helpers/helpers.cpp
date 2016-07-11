@@ -86,7 +86,7 @@ namespace loot {
         }
         catch (exception&) {
             BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
-            throw error(error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
+            throw Error(Error::path_read_fail, (boost::format(lc::translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
         }
         BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
         return chksum;
@@ -124,10 +124,10 @@ namespace loot {
 #ifdef _WIN32
         HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
         if ((int)ret <= 32)
-            throw error(error::windows_error, lc::translate("Failed to open file in its default application."));
+            throw Error(Error::windows_error, lc::translate("Failed to open file in its default application."));
 #else
         if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
-            throw error(error::windows_error, lc::translate("Failed to open file in its default application."));
+            throw Error(Error::windows_error, lc::translate("Failed to open file in its default application."));
 #endif
     }
 
@@ -149,7 +149,7 @@ namespace loot {
         else if (keyStr == "HKEY_USERS")
             hKey = HKEY_USERS;
         else
-            throw error(error::invalid_args, "Invalid registry key given.");
+            throw Error(Error::invalid_args, "Invalid registry key given.");
 
         BOOST_LOG_TRIVIAL(trace) << "Getting string for registry key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
         LONG ret = RegGetValue(hKey,

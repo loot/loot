@@ -44,7 +44,7 @@ namespace loot {
                                     GameSettings::tes5));
 
         TEST_P(GetCrc32Test, gettingTheCrcOfAMissingFileShouldThrow) {
-            EXPECT_THROW(GetCrc32(dataPath / missingEsp), error);
+            EXPECT_THROW(GetCrc32(dataPath / missingEsp), Error);
         }
 
         TEST_P(GetCrc32Test, gettingTheCrcOfAFileShouldReturnTheCorrectValue) {

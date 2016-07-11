@@ -55,14 +55,14 @@ namespace loot {
 
     void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
         if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv && Id() != Game::fo4) {
-            throw error(error::invalid_args, lc::translate("Invalid game ID supplied.").str());
+            throw Error(Error::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
 
         BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
 
         if (!this->IsInstalled()) {
             BOOST_LOG_TRIVIAL(error) << "Game path could not be detected.";
-            throw error(error::path_not_found, lc::translate("Game path could not be detected.").str());
+            throw Error(Error::path_not_found, lc::translate("Game path could not be detected.").str());
         }
 
         if (createFolder) {
@@ -73,7 +73,7 @@ namespace loot {
             }
             catch (fs::filesystem_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
-                throw error(error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
+                throw Error(Error::path_write_fail, lc::translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
             }
         }
 

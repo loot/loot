@@ -94,10 +94,10 @@ namespace loot {
 
         TEST_P(GameTest, initShouldThrowIfGameHasAnInvalidId) {
             Game game;
-            EXPECT_THROW(game.Init(false), error);
-            EXPECT_THROW(game.Init(true), error);
-            EXPECT_THROW(game.Init(false, localPath), error);
-            EXPECT_THROW(game.Init(true, localPath), error);
+            EXPECT_THROW(game.Init(false), Error);
+            EXPECT_THROW(game.Init(true), Error);
+            EXPECT_THROW(game.Init(false, localPath), Error);
+            EXPECT_THROW(game.Init(true, localPath), Error);
         }
 
         TEST_P(GameTest, getArchiveFileExtensionShouldReturnDotBa2ForFallout4AndDotBsaForOtherGames) {
@@ -113,16 +113,16 @@ namespace loot {
         // test autodetection fully unless on Linux.
         TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
             Game game = Game(GetParam());
-            EXPECT_THROW(game.Init(false), error);
-            EXPECT_THROW(game.Init(true), error);
-            EXPECT_THROW(game.Init(false, localPath), error);
-            EXPECT_THROW(game.Init(true, localPath), error);
+            EXPECT_THROW(game.Init(false), Error);
+            EXPECT_THROW(game.Init(true), Error);
+            EXPECT_THROW(game.Init(false, localPath), Error);
+            EXPECT_THROW(game.Init(true, localPath), Error);
         }
 
         TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
             Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
             ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-            EXPECT_THROW(game.Init(false), error);
+            EXPECT_THROW(game.Init(false), Error);
         }
 
         // Testing on Windows will find real LOOT installs, and they shouldn't be
@@ -163,7 +163,7 @@ namespace loot {
             game.SetGamePath(dataPath.parent_path());
 
             if (GetParam() == Game::tes5)
-                EXPECT_THROW(game.RedatePlugins(), error);
+                EXPECT_THROW(game.RedatePlugins(), Error);
             else
                 EXPECT_NO_THROW(game.RedatePlugins());
         }

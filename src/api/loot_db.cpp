@@ -53,7 +53,7 @@ unsigned int loot_db::getBashTagUid(const std::string& name) const {
     if (it != end(bashTagMap))
         return it->second;
 
-    throw loot::error(loot::error::no_tag_map, "The Bash Tag \"" + name + "\" does not exist in the Bash Tag map.");
+    throw loot::Error(loot::Error::no_tag_map, "The Bash Tag \"" + name + "\" does not exist in the Bash Tag map.");
 }
 
 const std::vector<unsigned int>& loot_db::getAddedTagIds() const {

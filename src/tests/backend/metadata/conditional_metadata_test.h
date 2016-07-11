@@ -79,7 +79,7 @@ namespace loot {
             game.SetGamePath(dataPath.parent_path());
 
             conditionalMetadata = ConditionalMetadata("condition");
-            EXPECT_THROW(conditionalMetadata.EvalCondition(game), error);
+            EXPECT_THROW(conditionalMetadata.EvalCondition(game), Error);
         }
 
         TEST_P(ConditionalMetadataTest, evalConditionShouldReturnTrueForAConditionThatIsTrue) {
@@ -104,7 +104,7 @@ namespace loot {
 
         TEST_P(ConditionalMetadataTest, parseConditionShouldThrowForAnInvalidCondition) {
             conditionalMetadata = ConditionalMetadata("condition");
-            EXPECT_THROW(conditionalMetadata.ParseCondition(), error);
+            EXPECT_THROW(conditionalMetadata.ParseCondition(), Error);
         }
 
         TEST_P(ConditionalMetadataTest, parseConditionShouldNotThrowForATrueCondition) {

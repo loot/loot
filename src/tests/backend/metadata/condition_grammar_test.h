@@ -84,7 +84,7 @@ namespace loot {
                                                          std::cend(condition),
                                                          grammar,
                                                          skipper,
-                                                         result), error);
+                                                         result), Error);
         }
 
         TEST_P(ConditionGrammarTest, evaluatingInvalidSyntaxShouldThrow) {
@@ -95,7 +95,7 @@ namespace loot {
                                                          std::cend(condition),
                                                          grammar,
                                                          skipper,
-                                                         result), error);
+                                                         result), Error);
         }
 
         TEST_P(ConditionGrammarTest, parsingAnEmptyConditionShouldThrow) {
@@ -106,7 +106,7 @@ namespace loot {
                                                          std::cend(condition),
                                                          grammar,
                                                          skipper,
-                                                         result), error);
+                                                         result), Error);
         }
 
         TEST_P(ConditionGrammarTest, evaluatingAnEmptyConditionShouldThrow) {
@@ -117,7 +117,7 @@ namespace loot {
                                                          std::cend(condition),
                                                          grammar,
                                                          skipper,
-                                                         result), error);
+                                                         result), Error);
         }
 
         TEST_P(ConditionGrammarTest, aFileConditionWithAPluginThatExistsShouldEvaluateToTrue) {
@@ -154,7 +154,7 @@ namespace loot {
                                                          std::cend(condition),
                                                          grammar,
                                                          skipper,
-                                                         result), error);
+                                                         result), Error);
         }
 
         TEST_P(ConditionGrammarTest, aRegexConditionWithAnInvalidRegexShouldThrow) {
@@ -165,7 +165,7 @@ namespace loot {
                                                          std::cend(condition),
                                                          grammar,
                                                          skipper,
-                                                         result), error);
+                                                         result), Error);
         }
 
         TEST_P(ConditionGrammarTest, aRegexConditionWithARegexMatchingAPluginThatExistsShouldEvaluateToTrue) {

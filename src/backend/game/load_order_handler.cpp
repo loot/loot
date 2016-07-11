@@ -47,12 +47,12 @@ namespace loot {
             && game.Id() != GameSettings::fo3
             && game.Id() != GameSettings::fonv
             && game.Id() != GameSettings::fo4) {
-            throw error(error::invalid_args, lc::translate("Unsupported game ID supplied.").str());
+            throw Error(Error::invalid_args, lc::translate("Unsupported game ID supplied.").str());
         }
 
         if (game.GamePath().empty()) {
             BOOST_LOG_TRIVIAL(error) << "Game path is not initialised.";
-            throw error(error::invalid_args, lc::translate("Game path is not initialised.").str());
+            throw Error(Error::invalid_args, lc::translate("Game path is not initialised.").str());
         }
 
         const char * gameLocalDataPath = nullptr;
@@ -93,7 +93,7 @@ namespace loot {
                 err = lc::translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
             }
             lo_cleanup();
-            throw error(error::liblo_error, err);
+            throw Error(Error::liblo_error, err);
         }
     }
 
@@ -115,7 +115,7 @@ namespace loot {
                 err = lc::translate("libloadorder failed to check if a plugin is active. Details:").str() + " " + e;
             }
             lo_cleanup();
-            throw error(error::liblo_error, err);
+            throw Error(Error::liblo_error, err);
         }
 
         return result;
@@ -141,7 +141,7 @@ namespace loot {
                 err = lc::translate("libloadorder failed to get the load order. Details:").str() + " " + e;
             }
             lo_cleanup();
-            throw error(error::liblo_error, err);
+            throw Error(Error::liblo_error, err);
         }
 
         std::list<std::string> loadOrder;
@@ -168,7 +168,7 @@ namespace loot {
                 err = lc::translate("libloadorder failed to set the load order. Details:").str() + " " + e;
             }
             lo_cleanup();
-            throw error(error::liblo_error, err);
+            throw Error(Error::liblo_error, err);
         }
     }
 
@@ -187,7 +187,7 @@ namespace loot {
         try {
             SetLoadOrder(pluginArr, pluginArrSize);
         }
-        catch (error &/*e*/) {
+        catch (Error &/*e*/) {
             for (size_t i = 0; i < pluginArrSize; i++)
                 delete[] pluginArr[i];
             delete[] pluginArr;

@@ -52,19 +52,19 @@ namespace loot {
             GameSettings game(GameSettings::autodetect);
             game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_THROW(loh.Init(game), error);
-            EXPECT_THROW(loh.Init(game), error);
-            EXPECT_THROW(loh.Init(game, localPath), error);
-            EXPECT_THROW(loh.Init(game, localPath), error);
+            EXPECT_THROW(loh.Init(game), Error);
+            EXPECT_THROW(loh.Init(game), Error);
+            EXPECT_THROW(loh.Init(game, localPath), Error);
+            EXPECT_THROW(loh.Init(game, localPath), Error);
         }
 
         TEST_P(LoadOrderHandlerTest, initShouldThrowIfNoGamePathIsSet) {
             GameSettings game(GetParam());
 
-            EXPECT_THROW(loh.Init(game), error);
-            EXPECT_THROW(loh.Init(game), error);
-            EXPECT_THROW(loh.Init(game, localPath), error);
-            EXPECT_THROW(loh.Init(game, localPath), error);
+            EXPECT_THROW(loh.Init(game), Error);
+            EXPECT_THROW(loh.Init(game), Error);
+            EXPECT_THROW(loh.Init(game, localPath), Error);
+            EXPECT_THROW(loh.Init(game, localPath), Error);
         }
 
 #ifndef _WIN32
@@ -72,7 +72,7 @@ namespace loot {
             GameSettings game(GetParam());
             game.SetGamePath(dataPath.parent_path());
 
-            EXPECT_THROW(loh.Init(game), error);
+            EXPECT_THROW(loh.Init(game), Error);
         }
 #endif
 
@@ -84,7 +84,7 @@ namespace loot {
         }
 
         TEST_P(LoadOrderHandlerTest, isPluginActiveShouldThrowIfTheHandlerHasNotBeenInitialised) {
-            EXPECT_THROW(loh.IsPluginActive(masterFile), error);
+            EXPECT_THROW(loh.IsPluginActive(masterFile), Error);
         }
 
         TEST_P(LoadOrderHandlerTest, isPluginActiveShouldReturnCorrectPluginStatesAfterInitialisation) {
@@ -98,7 +98,7 @@ namespace loot {
         }
 
         TEST_P(LoadOrderHandlerTest, getLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
-            EXPECT_THROW(loh.GetLoadOrder(), error);
+            EXPECT_THROW(loh.GetLoadOrder(), Error);
         }
 
         TEST_P(LoadOrderHandlerTest, getLoadOrderShouldReturnTheCurrentLoadOrder) {
@@ -124,7 +124,7 @@ namespace loot {
                 blankPluginDependentEsp,
             });
 
-            EXPECT_THROW(loh.SetLoadOrder(std::list<std::string>()), error);
+            EXPECT_THROW(loh.SetLoadOrder(std::list<std::string>()), Error);
         }
 
         TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {

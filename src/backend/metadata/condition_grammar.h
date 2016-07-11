@@ -152,7 +152,7 @@ namespace loot {
 
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
+                throw loot::Error(loot::Error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             if (_game == nullptr)
@@ -195,7 +195,7 @@ namespace loot {
                 std::regex(regex, std::regex::ECMAScript | std::regex::icase);
             }
             catch (std::regex_error& e) {
-                throw loot::error(loot::error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regex % e.what()).str());
+                throw loot::Error(loot::Error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regex % e.what()).str());
             }
 
             std::regex sepReg("/|(\\\\\\\\)", std::regex::ECMAScript);
@@ -213,7 +213,7 @@ namespace loot {
 
             if (!IsSafePath(parent)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid folder path: " << parent;
-                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent.string());
+                throw loot::Error(loot::Error::invalid_args, boost::locale::translate("Invalid folder path:").str() + " " + parent.string());
             }
 
             std::regex reg;
@@ -222,7 +222,7 @@ namespace loot {
             }
             catch (std::regex_error& e) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
-                throw loot::error(loot::error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
+                throw loot::Error(loot::Error::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
             }
 
             return std::pair<boost::filesystem::path, std::regex>(parent, reg);
@@ -290,7 +290,7 @@ namespace loot {
 
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
+                throw loot::Error(loot::Error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             if (_game == nullptr)
@@ -378,7 +378,7 @@ namespace loot {
         void CheckActive(bool& result, const std::string& file) const {
             if (!IsSafePath(file)) {
                 BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << file;
-                throw loot::error(loot::error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
+                throw loot::Error(loot::Error::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + file);
             }
 
             if (_game == nullptr)
@@ -398,7 +398,7 @@ namespace loot {
 
             BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";
 
-            throw loot::error(loot::error::condition_eval_fail, (boost::format(boost::locale::translate("Expected \"%1%\" at \"%2%\".")) % what.tag % context).str());
+            throw loot::Error(loot::Error::condition_eval_fail, (boost::format(boost::locale::translate("Expected \"%1%\" at \"%2%\".")) % what.tag % context).str());
         }
 
         //Checks that the path (not regex) doesn't go outside any game folders.

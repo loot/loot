@@ -277,7 +277,7 @@ namespace loot {
 
     void PluginMetadata::Priority(const int p) {
         if (abs(p) >= yamlGlobalPriorityDivisor)
-            throw error(error::invalid_args, "Cannot set priority that has an absolute value greater than or equal to " + to_string(yamlGlobalPriorityDivisor));
+            throw Error(Error::invalid_args, "Cannot set priority that has an absolute value greater than or equal to " + to_string(yamlGlobalPriorityDivisor));
 
         priority = p;
     }

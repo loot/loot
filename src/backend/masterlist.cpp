@@ -43,11 +43,11 @@ namespace loot {
 
         if (!fs::exists(path)) {
             BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: No masterlist present.";
-            throw error(error::ok, lc::translate("N/A: No masterlist present"));
+            throw Error(Error::ok, lc::translate("N/A: No masterlist present"));
         }
         else if (!git.IsRepository(path.parent_path())) {
             BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
-            throw error(error::ok, lc::translate("Unknown: Git repository missing"));
+            throw Error(Error::ok, lc::translate("Unknown: Git repository missing"));
         }
 
         BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
@@ -95,7 +95,7 @@ namespace loot {
         string filename = path.filename().string();
 
         if (repoUrl.empty() || repoBranch.empty())
-            throw error(error::invalid_args, "Repository URL and branch must not be empty.");
+            throw Error(Error::invalid_args, "Repository URL and branch must not be empty.");
 
         // Initialise checkout options.
         BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";
@@ -268,7 +268,7 @@ namespace loot {
         } while (parsingFailed);
 
         if (!parsingError.empty())
-            throw error(error::ok, parsingError);  //Throw an OK because the process still completed in a successful state.
+            throw Error(Error::ok, parsingError);  //Throw an OK because the process still completed in a successful state.
 
         return true;
     }

@@ -29,10 +29,10 @@
 #include <string>
 
 namespace loot {
-    class error : public std::exception {
+    class Error : public std::exception {
     public:
-        error(const unsigned int code_arg, const std::string& what_arg) : _code(code_arg), _what(what_arg) {}
-        ~error() throw() {};
+        Error(const unsigned int code_arg, const std::string& what_arg) : _code(code_arg), _what(what_arg) {}
+        ~Error() throw() {};
 
         unsigned int code() const { return _code; }
         const char * what() const throw() { return _what.c_str(); }

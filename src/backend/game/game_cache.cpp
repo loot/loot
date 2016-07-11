@@ -101,7 +101,7 @@ namespace loot {
         if (it != end(plugins))
             return it->second;
 
-        throw error(error::invalid_args, "No plugin \"" + pluginName + "\" exists.");
+        throw Error(Error::invalid_args, "No plugin \"" + pluginName + "\" exists.");
     }
 
     void GameCache::AddPlugin(const Plugin&& plugin) {

@@ -93,8 +93,8 @@ namespace loot {
         }
 
         TEST_F(GitHelperTest, callShouldThrowIfPassedANonZeroValue) {
-            EXPECT_THROW(git.Call(1), error);
-            EXPECT_THROW(git.Call(-1), error);
+            EXPECT_THROW(git.Call(1), Error);
+            EXPECT_THROW(git.Call(-1), Error);
         }
 
         TEST_F(GitHelperTest, setErrorMessageShouldSetTheMessageForThrownExceptions) {
@@ -105,7 +105,7 @@ namespace loot {
                 git.Call(1);
                 ADD_FAILURE() << "An exception should have been thrown.";
             }
-            catch (error& e) {
+            catch (Error& e) {
                 EXPECT_NE(nullptr, strstr(e.what(), errorMessage));
             }
         }
@@ -131,7 +131,7 @@ namespace loot {
         }
 
         TEST_F(GitHelperTest, isFileDifferentShouldThrowIfGivenANonRepositoryPath) {
-            EXPECT_THROW(GitHelper::IsFileDifferent(boost::filesystem::current_path(), "README.md"), error);
+            EXPECT_THROW(GitHelper::IsFileDifferent(boost::filesystem::current_path(), "README.md"), Error);
         }
 
         TEST_F(GitHelperTest, isFileDifferentShouldReturnFalseForAnUntrackedFile) {
