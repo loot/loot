@@ -37,6 +37,7 @@ namespace loot {
         public CefRenderProcessHandler {
     public:
         LootApp();
+        void Initialise(const std::string& commandLineGameArg);
 
         // Override CefApp methods.
         virtual void OnBeforeCommandLineProcessing(const CefString& process_type,
@@ -54,8 +55,8 @@ namespace loot {
                                               CefProcessId source_process,
                                               CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
-        LootState lootState;
     private:
+        LootState lootState_;
         CefRefPtr<CefMessageRouterRendererSide> message_router_;
 
         virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,

@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
         gameStr = command_line->GetSwitchValue("game");
     }
 
-    app.get()->lootState.Init(gameStr);
+    app.get()->Initialise(gameStr);
 
     // Back to CEF
     //------------

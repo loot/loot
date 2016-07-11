@@ -50,6 +50,10 @@ namespace loot {
         LootPaths::initialise();
     }
 
+    void LootApp::Initialise(const std::string& commandLineGameArg) {
+        lootState_.Init(commandLineGameArg);
+    }
+
     void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
                                                 CefRefPtr<CefCommandLine> command_line) {
         if (process_type.empty()) {
@@ -87,7 +91,7 @@ namespace loot {
 #endif
 
         // Set the handler for browser-level callbacks.
-        CefRefPtr<LootHandler> handler(new LootHandler(lootState));
+        CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
 
         // Register the custom "loot" scheme handlers.
         CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
@@ -98,13 +102,13 @@ namespace loot {
         // Need to set the global locale for this process so that messages will
         // be translated.
         BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-        if (lootState.getLanguage().Code() != Language::english) {
+        if (lootState_.getLanguage().Code() != Language::english) {
             boost::locale::generator gen;
             gen.add_messages_path(LootPaths::getL10nPath().string());
             gen.add_messages_domain("loot");
 
-            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState.getLanguage().Name();
-            locale::global(gen(lootState.getLanguage().Locale() + ".UTF-8"));
+            BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState_.getLanguage().Name();
+            locale::global(gen(lootState_.getLanguage().Locale() + ".UTF-8"));
             boost::filesystem::path::imbue(locale());
         }
 
