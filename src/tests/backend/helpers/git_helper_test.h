@@ -110,18 +110,6 @@ namespace loot {
             }
         }
 
-        TEST_F(GitHelperTest, freeShouldFreeMemoryAllocatedToMembers) {
-            // Initialise buffer member, it's simplest to test with.
-            GitHelper git;
-            git_buf_set(&git.buf, "foo", 4);
-            ASSERT_NE(nullptr, git.buf.ptr);
-            ASSERT_EQ(4, git.buf.size);
-
-            git.Free();
-            EXPECT_EQ(nullptr, git.buf.ptr);
-            EXPECT_EQ(0, git.buf.size);
-        }
-
         TEST_F(GitHelperTest, isRepositoryShouldReturnTrueForARepositoryRoot) {
             EXPECT_TRUE(GitHelper::IsRepository(parentRepoRoot));
         }

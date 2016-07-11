@@ -60,7 +60,23 @@ namespace loot {
         if (repo != nullptr)
             path = git_repository_path(repo);
 
-        Free();
+        git_commit_free(commit);
+        git_object_free(obj);
+        git_config_free(cfg);
+        git_remote_free(remote);
+        git_repository_free(repo);
+        git_reference_free(ref);
+        git_reference_free(ref2);
+        git_blob_free(blob);
+        git_annotated_commit_free(annotated_commit);
+        git_tree_free(tree);
+        git_diff_free(diff);
+        git_buf_free(&buf);
+
+        // Also free any path strings in the checkout options.
+        for (size_t i = 0; i < checkout_options.paths.count; ++i) {
+            delete[] checkout_options.paths.strings[i];
+        }
 
         if (!path.empty()) {
             try {
@@ -93,40 +109,6 @@ namespace loot {
 
     void GitHelper::SetErrorMessage(const std::string& message) {
         errorMessage = message;
-    }
-
-    void GitHelper::Free() {
-        git_commit_free(commit);
-        git_object_free(obj);
-        git_config_free(cfg);
-        git_remote_free(remote);
-        git_repository_free(repo);
-        git_reference_free(ref);
-        git_reference_free(ref2);
-        git_blob_free(blob);
-        git_annotated_commit_free(annotated_commit);
-        git_tree_free(tree);
-        git_diff_free(diff);
-        git_buf_free(&buf);
-
-        commit = nullptr;
-        obj = nullptr;
-        cfg = nullptr;
-        remote = nullptr;
-        repo = nullptr;
-        ref = nullptr;
-        ref2 = nullptr;
-        blob = nullptr;
-        annotated_commit = nullptr;
-        tree = nullptr;
-        diff = nullptr;
-        buf = {0};
-
-        // Also free any path strings in the checkout options.
-        for (size_t i = 0; i < checkout_options.paths.count; ++i) {
-            delete[] checkout_options.paths.strings[i];
-            checkout_options.paths.strings[i] = nullptr;
-        }
     }
 
     bool GitHelper::IsRepository(const boost::filesystem::path& path) {

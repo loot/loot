@@ -39,7 +39,6 @@ namespace loot {
 
         void Call(int error_code);
         void SetErrorMessage(const std::string& message);
-        void Free();
 
         static bool IsRepository(const boost::filesystem::path& path);
 
