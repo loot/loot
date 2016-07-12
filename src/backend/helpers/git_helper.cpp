@@ -166,6 +166,9 @@ namespace loot {
 
         fs::path tempPath = fs::temp_directory_path() / fs::unique_path();
 
+        // Create the temporary parent folder in case it doesn't already exist.
+        fs::create_directories(tempPath.parent_path());
+
         //Delete temporary folder in case it already exists.
         fs::remove_all(tempPath);
 
