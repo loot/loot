@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TEST_BASE_GAME_TEST
-#define LOOT_TEST_BASE_GAME_TEST
+#ifndef LOOT_TESTS_COMMON_GAME_TEST_FIXTURE
+#define LOOT_TESTS_COMMON_GAME_TEST_FIXTURE
 
 #include <gtest/gtest.h>
 #include <boost/filesystem.hpp>
@@ -35,9 +35,10 @@ along with LOOT.  If not, see
 
 namespace loot {
     namespace test {
-        class BaseGameTest : public ::testing::TestWithParam<unsigned int> {
+        class CommonGameTestFixture {
         protected:
-            BaseGameTest() :
+            CommonGameTestFixture(unsigned int gameType) :
+                gameType_(gameType),
                 missingPath("./missing"),
                 dataPath(getPluginsPath()),
                 localPath(getLocalPath()),
@@ -55,7 +56,7 @@ namespace loot {
                 blankDifferentPluginDependentEsp("Blank - Different Plugin Dependent.esp"),
                 blankEsmCrc(getBlankEsmCrc()) {}
 
-            inline virtual void SetUp() {
+            void setUp() {
                 ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
                 ASSERT_TRUE(boost::filesystem::exists(localPath));
 
@@ -87,7 +88,7 @@ namespace loot {
                 ASSERT_TRUE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
             }
 
-            inline virtual void TearDown() {
+            void tearDown() {
                 ASSERT_NO_THROW(boost::filesystem::remove_all(localPath));
 
                 ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
@@ -98,9 +99,9 @@ namespace loot {
                 ASSERT_FALSE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
             }
 
-            inline std::list<std::string> getLoadOrder() {
+            std::list<std::string> getLoadOrder() {
                 std::list<std::string> actual;
-                if (isLoadOrderTimestampBased(GetParam())) {
+                if (isLoadOrderTimestampBased(gameType_)) {
                     std::map<time_t, std::string> loadOrder;
                     for (boost::filesystem::directory_iterator it(dataPath); it != boost::filesystem::directory_iterator(); ++it) {
                         if (boost::filesystem::is_regular_file(it->status())) {
@@ -114,7 +115,7 @@ namespace loot {
                     for (const auto& plugin : loadOrder)
                         actual.push_back(plugin.second);
                 }
-                else if (GetParam() == tes5) {
+                else if (gameType_ == tes5) {
                     boost::filesystem::ifstream in(localPath / "loadorder.txt");
                     while (in) {
                         std::string line;
@@ -158,6 +159,11 @@ namespace loot {
                 });
             }
 
+        private:
+            // This needs to be here to ensure the correct initialisation order.
+            const unsigned int gameType_;
+
+        protected:
             const boost::filesystem::path missingPath;
             const boost::filesystem::path dataPath;
             const boost::filesystem::path localPath;
@@ -185,51 +191,51 @@ namespace loot {
             static const unsigned int fo4 = 5;
 
             inline boost::filesystem::path getLocalPath() const {
-                if (GetParam() == tes4)
+                if (gameType_ == tes4)
                     return "./local/Oblivion";
                 else
                     return "./local/Skyrim";
             }
 
             inline boost::filesystem::path getPluginsPath() const {
-                if (GetParam() == tes4)
+                if (gameType_ == tes4)
                     return "./Oblivion/Data";
                 else
                     return "./Skyrim/Data";
             }
 
             inline std::string getMasterFile() const {
-                if (GetParam() == tes4)
+                if (gameType_ == tes4)
                     return "Oblivion.esm";
-                else if (GetParam() == tes5)
+                else if (gameType_ == tes5)
                     return "Skyrim.esm";
-                else if (GetParam() == fo3)
+                else if (gameType_ == fo3)
                     return "Fallout3.esm";
-                else if (GetParam() == fonv)
+                else if (gameType_ == fonv)
                     return "FalloutNV.esm";
                 else
                     return "Fallout4.esm";
             }
 
             inline uint32_t getBlankEsmCrc() const {
-                if (GetParam() == tes4)
+                if (gameType_ == tes4)
                     return 0x374E2A6F;
                 else
                     return 0x187BE342;
             }
 
-            inline void setLoadOrder(const std::vector<std::pair<std::string, bool>>& loadOrder) const {
+            void setLoadOrder(const std::vector<std::pair<std::string, bool>>& loadOrder) const {
                 boost::filesystem::ofstream out(localPath / "plugins.txt");
                 for (const auto &plugin : loadOrder) {
-                    if (GetParam() == fo4 && plugin.second)
+                    if (gameType_ == fo4 && plugin.second)
                         out << '*';
-                    else if (GetParam() != fo4 && !plugin.second)
+                    else if (gameType_ != fo4 && !plugin.second)
                         continue;
 
                     out << plugin.first << std::endl;
                 }
 
-                if (isLoadOrderTimestampBased(GetParam())) {
+                if (isLoadOrderTimestampBased(gameType_)) {
                     time_t modificationTime = time(NULL);  // Current time.
                     for (const auto &plugin : loadOrder) {
                         if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin.first + ".ghost"))) {
@@ -241,7 +247,7 @@ namespace loot {
                         modificationTime += 60;
                     }
                 }
-                else if (GetParam() == tes5) {
+                else if (gameType_ == tes5) {
                     boost::filesystem::ofstream out(localPath / "loadorder.txt");
                     for (const auto &plugin : loadOrder)
                         out << plugin.first << std::endl;

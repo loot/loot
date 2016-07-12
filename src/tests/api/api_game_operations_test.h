@@ -25,13 +25,16 @@ along with LOOT.  If not, see
 #ifndef LOOT_TEST_API_GAME_OPERATIONS_TEST
 #define LOOT_TEST_API_GAME_OPERATIONS_TEST
 
-#include "../base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
     namespace test {
-        class ApiGameOperationsTest : public BaseGameTest {
+        class ApiGameOperationsTest :
+            public ::testing::TestWithParam<unsigned int>, 
+            public CommonGameTestFixture {
         protected:
             ApiGameOperationsTest() :
+                CommonGameTestFixture(GetParam()),
                 db(nullptr),
                 masterlistPath(localPath / "masterlist.yaml"),
                 noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
@@ -39,7 +42,7 @@ namespace loot {
                 errorMessage("Obsolete. Remove this and install Enhanced Weather.") {}
 
             inline virtual void SetUp() {
-                BaseGameTest::SetUp();
+                setUp();
 
                 ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
 
@@ -47,7 +50,7 @@ namespace loot {
             }
 
             inline virtual void TearDown() {
-                BaseGameTest::TearDown();
+                tearDown();
 
                 ASSERT_NO_THROW(loot_destroy_db(db));
 

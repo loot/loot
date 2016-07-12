@@ -28,7 +28,7 @@ along with LOOT.  If not, see
 #include "backend/error.h"
 #include "backend/game/load_order_handler.h"
 
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -42,14 +42,14 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 LoadOrderHandlerTest,
                                 ::testing::Values(
-                                    GameSettings::tes4,
-                                    GameSettings::tes5,
-                                    GameSettings::fo3,
-                                    GameSettings::fonv,
-                                    GameSettings::fo4));
+                                    GameType::tes4,
+                                    GameType::tes5,
+                                    GameType::fo3,
+                                    GameType::fonv,
+                                    GameType::fo4));
 
         TEST_P(LoadOrderHandlerTest, initShouldThrowForAnInvalidGameId) {
-            GameSettings game(GameSettings::autodetect);
+            GameSettings game(GameType::autodetect);
             game.SetGamePath(dataPath.parent_path());
 
             EXPECT_THROW(loh.Init(game), Error);
@@ -147,7 +147,7 @@ namespace loot {
             });
             EXPECT_NO_THROW(loh.SetLoadOrder(loadOrder));
 
-            if (GetParam() == GameSettings::fo4)
+            if (GetParam() == GameType::fo4)
                 loadOrder.erase(begin(loadOrder));
 
             EXPECT_EQ(loadOrder, getLoadOrder());

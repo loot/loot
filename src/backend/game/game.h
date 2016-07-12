@@ -37,9 +37,9 @@ namespace loot {
     class Game : public GameSettings, public LoadOrderHandler, public GameCache {
     public:
         //Game functions.
-        Game();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
+        Game();  //Sets game to GameType::autodetect, with all other vars being empty.
         Game(const GameSettings& gameSettings);
-        Game(const unsigned int baseGameCode, const std::string& lootFolder = "");
+        Game(const GameType gameType, const std::string& lootFolder = "");
 
         void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 

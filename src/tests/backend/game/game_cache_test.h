@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "backend/game/game_cache.h"
 
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -56,7 +56,7 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 GameCacheTest,
                                 ::testing::Values(
-                                    Game::tes5));
+                                    GameType::tes5));
 
         TEST_P(GameCacheTest, copyConstructorShouldCopyCachedData) {
             initialiseGame();

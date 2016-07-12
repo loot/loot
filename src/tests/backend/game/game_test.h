@@ -49,17 +49,17 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 GameTest,
                                 ::testing::Values(
-                                    GameSettings::tes4,
-                                    GameSettings::tes5,
-                                    GameSettings::fo3,
-                                    GameSettings::fonv,
-                                    GameSettings::fo4));
+                                    GameType::tes4,
+                                    GameType::tes5,
+                                    GameType::fo3,
+                                    GameType::fonv,
+                                    GameType::fo4));
 
         TEST_P(GameTest, defaultConstructorShouldConstructWithDefaultGameSettings) {
             GameSettings settings;
             Game game;
 
-            EXPECT_EQ(settings.Id(), game.Id());
+            EXPECT_EQ(settings.Type(), game.Type());
             EXPECT_EQ(settings.FolderName(), game.FolderName());
         }
 
@@ -73,7 +73,7 @@ namespace loot {
             settings.SetGamePath(localPath);
             Game game = Game(settings);
 
-            EXPECT_EQ(GetParam(), game.Id());
+            EXPECT_EQ(GetParam(), game.Type());
             EXPECT_EQ(settings.Name(), game.Name());
             EXPECT_EQ(settings.FolderName(), game.FolderName());
             EXPECT_EQ(settings.Master(), game.Master());
@@ -88,7 +88,7 @@ namespace loot {
             GameSettings settings = GameSettings(GetParam(), "folder");
             Game game = Game(GetParam(), "folder");
 
-            EXPECT_EQ(settings.Id(), game.Id());
+            EXPECT_EQ(settings.Type(), game.Type());
             EXPECT_EQ(settings.FolderName(), game.FolderName());
         }
 
@@ -154,7 +154,7 @@ namespace loot {
             Game game(GetParam());
             game.SetGamePath(dataPath.parent_path());
 
-            if (GetParam() == Game::tes5)
+            if (GetParam() == GameType::tes5)
                 EXPECT_THROW(game.RedatePlugins(), Error);
             else
                 EXPECT_NO_THROW(game.RedatePlugins());
@@ -180,7 +180,7 @@ namespace loot {
             EXPECT_NO_THROW(game.RedatePlugins());
 
             time_t interval = 60;
-            if (GetParam() != Game::tes5)
+            if (GetParam() != GameType::tes5)
                 interval *= -1;
             for (size_t i = 0; i < loadOrder.size(); ++i) {
                 EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));

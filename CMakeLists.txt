@@ -191,6 +191,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game/game.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game/game_cache.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game/game_settings.h"
+                "${CMAKE_SOURCE_DIR}/src/backend/game/game_type.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/game/load_order_handler.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
@@ -236,17 +237,14 @@ set (LOOT_TESTS_SRC ${LOOT_SRC}
                     "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
                     "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
-set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/printers.h"
-
-                        # Testing this here rather than as part of the API tests
+set (LOOT_TESTS_HEADERS # Testing this here rather than as part of the API tests
                         # because it tests internal code and requires internal
                         # linking.
                         "${CMAKE_SOURCE_DIR}/src/tests/api/loot_db_test.h"
-
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_state_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"
@@ -268,13 +266,13 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/plugin/plugin_sorter_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/masterlist_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h")
+                        "${CMAKE_SOURCE_DIR}/src/tests/backend/metadata_list_test.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/common_game_test_fixture.h"
+                        "${CMAKE_SOURCE_DIR}/src/tests/printers.h")
 
 set(LOOT_API_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/api/main.cpp")
 
-set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
-
-                            "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
+set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/loot_apply_load_order_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/loot_create_db_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/loot_eval_lists_test.h"
@@ -287,7 +285,8 @@ set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/base_game_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/loot_sort_plugins_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/loot_update_masterlist_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/loot_write_minimal_list_test.h"
-                            "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h")
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/test_api.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/common_game_test_fixture.h")
 
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})

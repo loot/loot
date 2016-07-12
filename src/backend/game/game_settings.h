@@ -34,18 +34,20 @@
 
 #include <libespm/GameId.h>
 
+#include "backend/game/game_type.h"
+
 namespace loot {
     class GameSettings {
     public:
         //Game functions.
-        GameSettings();  //Sets game to LOOT_Game::autodetect, with all other vars being empty.
-        GameSettings(const unsigned int baseGameCode, const std::string& lootFolder = "");
+        GameSettings();  //Sets game to LOOT_GameType::autodetect, with all other vars being empty.
+        GameSettings(const GameType gameType, const std::string& lootFolder = "");
 
         bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
 
         bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
 
-        unsigned int Id() const;
+        GameType Type() const;
         libespm::GameId LibespmId() const;
         std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
         std::string FolderName() const;
@@ -67,15 +69,8 @@ namespace loot {
         GameSettings& SetRepoURL(const std::string& repositoryURL);
         GameSettings& SetRepoBranch(const std::string& repositoryBranch);
         GameSettings& SetGamePath(const boost::filesystem::path& path);
-
-        static const unsigned int autodetect;
-        static const unsigned int tes4;
-        static const unsigned int tes5;
-        static const unsigned int fo3;
-        static const unsigned int fonv;
-        static const unsigned int fo4;
     private:
-        unsigned int _id;
+        GameType type_;
         std::string _name;
         std::string _masterFile;
 
@@ -95,7 +90,7 @@ namespace YAML {
         static Node encode(const loot::GameSettings& rhs) {
             Node node;
 
-            node["type"] = loot::GameSettings(rhs.Id()).FolderName();
+            node["type"] = loot::GameSettings(rhs.Type()).FolderName();
             node["name"] = rhs.Name();
             node["folder"] = rhs.FolderName();
             node["master"] = rhs.Master();
@@ -115,16 +110,16 @@ namespace YAML {
             if (!node["type"])
                 throw RepresentationException(node.Mark(), "bad conversion: 'type' key missing from 'game settings' object");
 
-            if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::tes4).FolderName())
-                rhs = loot::GameSettings(loot::GameSettings::tes4, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::tes5).FolderName())
-                rhs = loot::GameSettings(loot::GameSettings::tes5, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::fo3).FolderName())
-                rhs = loot::GameSettings(loot::GameSettings::fo3, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::fonv).FolderName())
-                rhs = loot::GameSettings(loot::GameSettings::fonv, node["folder"].as<std::string>());
-            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameSettings::fo4).FolderName())
-                rhs = loot::GameSettings(loot::GameSettings::fo4, node["folder"].as<std::string>());
+            if (node["type"].as<std::string>() == loot::GameSettings(loot::GameType::tes4).FolderName())
+                rhs = loot::GameSettings(loot::GameType::tes4, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameType::tes5).FolderName())
+                rhs = loot::GameSettings(loot::GameType::tes5, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameType::fo3).FolderName())
+                rhs = loot::GameSettings(loot::GameType::fo3, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameType::fonv).FolderName())
+                rhs = loot::GameSettings(loot::GameType::fonv, node["folder"].as<std::string>());
+            else if (node["type"].as<std::string>() == loot::GameSettings(loot::GameType::fo4).FolderName())
+                rhs = loot::GameSettings(loot::GameType::fo4, node["folder"].as<std::string>());
             else
                 throw RepresentationException(node.Mark(), "bad conversion: invalid value for 'type' key in 'game settings' object");
 

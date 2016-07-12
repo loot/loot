@@ -26,19 +26,26 @@ along with LOOT.  If not, see
 #define LOOT_TEST_LOOT_CREATE_DB
 
 #include "../include/loot/api.h"
-#include "tests/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 #include <climits>
 
 namespace loot {
     namespace test {
-        class loot_create_db_test : public BaseGameTest {
+        class loot_create_db_test :
+            public ::testing::TestWithParam<unsigned int>,
+            public CommonGameTestFixture {
         protected:
             loot_create_db_test() :
+                CommonGameTestFixture(GetParam()),
                 db(nullptr) {}
 
-            inline virtual void TearDown() {
-                BaseGameTest::TearDown();
+            void SetUp() {
+                setUp();
+            }
+
+            void TearDown() {
+                tearDown();
 
                 ASSERT_NO_THROW(loot_destroy_db(db));
             }

@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "api/loot_db.h"
 #include "backend/game/game_settings.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -39,7 +39,7 @@ namespace loot {
             virtual void SetUp() {
                 BaseGameTest::SetUp();
 
-                db = new loot_db(GetParam(), dataPath.parent_path().string().c_str(), localPath.string().c_str());
+                db = new loot_db(static_cast<unsigned int>(GetParam()), dataPath.parent_path().string().c_str(), localPath.string().c_str());
             }
 
             inline virtual void TearDown() {
@@ -56,11 +56,11 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 loot_db_test,
                                 ::testing::Values(
-                                    GameSettings::tes4,
-                                    GameSettings::tes5,
-                                    GameSettings::fo3,
-                                    GameSettings::fonv,
-                                    GameSettings::fo4));
+                                    GameType::tes4,
+                                    GameType::tes5,
+                                    GameType::fo3,
+                                    GameType::fonv,
+                                    GameType::fo4));
 
         TEST_P(loot_db_test, settingRevisionIdStringShouldCopyIt) {
             db->setRevisionIdString("id");

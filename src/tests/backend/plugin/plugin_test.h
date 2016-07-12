@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_PLUGIN
 
 #include "backend/plugin/plugin.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -85,11 +85,11 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 PluginTest,
                                 ::testing::Values(
-                                    GameSettings::tes4,
-                                    GameSettings::tes5,
-                                    GameSettings::fo3,
-                                    GameSettings::fonv,
-                                    GameSettings::fo4));
+                                    GameType::tes4,
+                                    GameType::tes5,
+                                    GameType::fo3,
+                                    GameType::fonv,
+                                    GameType::fo4));
 
         TEST_P(PluginTest, loadingHeaderOnlyShouldReadHeaderData) {
             Plugin plugin(game, blankEsm, true);
@@ -147,7 +147,7 @@ namespace loot {
         TEST_P(PluginTest, loadsArchiveForAnArchiveThatExactlyMatchesAnEsmFileBasenameShouldReturnTrueForAllGamesExceptOblivion) {
             bool loadsArchive = Plugin(game, blankEsm, true).LoadsArchive();
 
-            if (GetParam() == Game::tes4)
+            if (GetParam() == GameType::tes4)
                 EXPECT_FALSE(loadsArchive);
             else
                 EXPECT_TRUE(loadsArchive);
@@ -160,7 +160,7 @@ namespace loot {
         TEST_P(PluginTest, loadsArchiveForAnArchiveWithAFilenameWhichStartsWithTheEsmFileBasenameShouldReturnTrueForAllGamesExceptOblivionAndSkyrim) {
             bool loadsArchive = Plugin(game, blankDifferentEsm, true).LoadsArchive();
 
-            if (GetParam() == Game::tes4 || GetParam() == Game::tes5)
+            if (GetParam() == GameType::tes4 || GetParam() == GameType::tes5)
                 EXPECT_FALSE(loadsArchive);
             else
                 EXPECT_TRUE(loadsArchive);
@@ -169,7 +169,7 @@ namespace loot {
         TEST_P(PluginTest, loadsArchiveForAnArchiveWithAFilenameWhichStartsWithTheEspFileBasenameShouldReturnTrueForAllGamesExceptSkyrim) {
             bool loadsArchive = Plugin(game, blankDifferentEsp, true).LoadsArchive();
 
-            if (GetParam() == Game::tes5)
+            if (GetParam() == GameType::tes5)
                 EXPECT_FALSE(loadsArchive);
             else
                 EXPECT_TRUE(loadsArchive);

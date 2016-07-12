@@ -37,17 +37,10 @@ namespace fs = boost::filesystem;
 namespace lc = boost::locale;
 
 namespace loot {
-    const unsigned int GameSettings::autodetect = 0;
-    const unsigned int GameSettings::tes4 = 1;
-    const unsigned int GameSettings::tes5 = 2;
-    const unsigned int GameSettings::fo3 = 3;
-    const unsigned int GameSettings::fonv = 4;
-    const unsigned int GameSettings::fo4 = 5;
+    GameSettings::GameSettings() : type_(GameType::autodetect) {}
 
-    GameSettings::GameSettings() : _id(GameSettings::autodetect) {}
-
-    GameSettings::GameSettings(const unsigned int gameCode, const std::string& folder) : _id(gameCode) {
-        if (Id() == GameSettings::tes4) {
+    GameSettings::GameSettings(const GameType gameType, const std::string& folder) : type_(gameType) {
+        if (Type() == GameType::tes4) {
             _name = "TES IV: Oblivion";
             _registryKey = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
             _lootFolderName = "Oblivion";
@@ -55,7 +48,7 @@ namespace loot {
             _repositoryURL = "https://github.com/loot/oblivion.git";
             _repositoryBranch = "v0.8";
         }
-        else if (Id() == GameSettings::tes5) {
+        else if (Type() == GameType::tes5) {
             _name = "TES V: Skyrim";
             _registryKey = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
             _lootFolderName = "Skyrim";
@@ -63,7 +56,7 @@ namespace loot {
             _repositoryURL = "https://github.com/loot/skyrim.git";
             _repositoryBranch = "v0.8";
         }
-        else if (Id() == GameSettings::fo3) {
+        else if (Type() == GameType::fo3) {
             _name = "Fallout 3";
             _registryKey = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
             _lootFolderName = "Fallout3";
@@ -71,7 +64,7 @@ namespace loot {
             _repositoryURL = "https://github.com/loot/fallout3.git";
             _repositoryBranch = "v0.8";
         }
-        else if (Id() == GameSettings::fonv) {
+        else if (Type() == GameType::fonv) {
             _name = "Fallout: New Vegas";
             _registryKey = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
             _lootFolderName = "FalloutNV";
@@ -79,7 +72,7 @@ namespace loot {
             _repositoryURL = "https://github.com/loot/falloutnv.git";
             _repositoryBranch = "v0.8";
         }
-        else if (Id() == GameSettings::fo4) {
+        else if (Type() == GameType::fo4) {
             _name = "Fallout 4";
             _registryKey = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
             _lootFolderName = "Fallout4";
@@ -125,18 +118,18 @@ namespace loot {
         return (boost::iequals(_name, rhs.Name()) || boost::iequals(_lootFolderName, rhs.FolderName()));
     }
 
-    unsigned int GameSettings::Id() const {
-        return _id;
+    GameType GameSettings::Type() const {
+        return type_;
     }
 
     libespm::GameId GameSettings::LibespmId() const {
-        if (_id == GameSettings::tes4)
+        if (type_ == GameType::tes4)
             return libespm::GameId::OBLIVION;
-        else if (_id == GameSettings::tes5)
+        else if (type_ == GameType::tes5)
             return libespm::GameId::SKYRIM;
-        else if (_id == GameSettings::fo3)
+        else if (type_ == GameType::fo3)
             return libespm::GameId::FALLOUT3;
-        else if (_id == GameSettings::fonv)
+        else if (type_ == GameType::fonv)
             return libespm::GameId::FALLOUTNV;
         else
             return libespm::GameId::FALLOUT4;
@@ -192,7 +185,7 @@ namespace loot {
     }
 
     std::string GameSettings::GetArchiveFileExtension() const {
-        if (_id == GameSettings::fo4)
+        if (type_ == GameType::fo4)
             return ".ba2";
         else
             return ".bsa";
@@ -238,7 +231,7 @@ namespace loot {
 namespace YAML {
     Emitter& operator << (Emitter& out, const loot::GameSettings& rhs) {
         out << BeginMap
-            << Key << "type" << Value << YAML::SingleQuoted << loot::GameSettings(rhs.Id()).FolderName()
+            << Key << "type" << Value << YAML::SingleQuoted << loot::GameSettings(rhs.Type()).FolderName()
             << Key << "folder" << Value << YAML::SingleQuoted << rhs.FolderName()
             << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
             << Key << "master" << Value << YAML::SingleQuoted << rhs.Master()

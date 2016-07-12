@@ -592,11 +592,11 @@ namespace loot {
     std::string QueryHandler::GetGameTypes() {
         BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported game types.";
         YAML::Node temp;
-        temp.push_back(Game(Game::tes4).FolderName());
-        temp.push_back(Game(Game::tes5).FolderName());
-        temp.push_back(Game(Game::fo3).FolderName());
-        temp.push_back(Game(Game::fonv).FolderName());
-        temp.push_back(Game(Game::fo4).FolderName());
+        temp.push_back(Game(GameType::tes4).FolderName());
+        temp.push_back(Game(GameType::tes5).FolderName());
+        temp.push_back(Game(GameType::fo3).FolderName());
+        temp.push_back(Game(GameType::fonv).FolderName());
+        temp.push_back(Game(GameType::fo4).FolderName());
         return JSON::stringify(temp);
     }
 
@@ -915,7 +915,7 @@ namespace loot {
             list<Plugin> plugins = sorter.Sort(_lootState.CurrentGame(), _lootState.getLanguage().GetCode());
 
             // If TESV or FO4, check if load order has been changed.
-            if ((_lootState.CurrentGame().Id() == Game::tes5 || _lootState.CurrentGame().Id() == Game::fo4)
+            if ((_lootState.CurrentGame().Type() == GameType::tes5 || _lootState.CurrentGame().Type() == GameType::fo4)
                 && equal(begin(plugins), end(plugins), begin(_lootState.CurrentGame().GetLoadOrder()))) {
                 // Load order has not been changed, set it without asking for
                 // user input because there are no changes to accept and some

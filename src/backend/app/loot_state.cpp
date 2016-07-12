@@ -212,7 +212,7 @@ namespace loot {
         std::lock_guard<std::mutex> guard(mutex);
 
         BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-        _currentGame = find(_games.begin(), _games.end(), Game(Game::autodetect, newGameFolder));
+        _currentGame = find(_games.begin(), _games.end(), Game(GameType::autodetect, newGameFolder));
         _currentGame->Init(true);
 
         // Update game path in settings object.

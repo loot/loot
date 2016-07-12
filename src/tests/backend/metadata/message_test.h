@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "backend/game/game.h"
 #include "backend/metadata/message.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -42,7 +42,7 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 MessageTest,
                                 ::testing::Values(
-                                    GameSettings::tes4));
+                                    GameType::tes4));
 
         TEST_P(MessageTest, defaultConstructorShouldCreateNoteWithNoContent) {
             Message message;

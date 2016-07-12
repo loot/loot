@@ -42,6 +42,7 @@
 #include <boost/log/core.hpp>
 
 using loot::Error;
+using loot::GameType;
 
 const unsigned int loot_ok = Error::asUnsignedInt(Error::Code::ok);
 const unsigned int loot_error_liblo_error = Error::asUnsignedInt(Error::Code::liblo_error);
@@ -60,11 +61,11 @@ const unsigned int loot_error_sorting_error = Error::asUnsignedInt(Error::Code::
 const unsigned int loot_return_max = loot_error_sorting_error;
 
 // The following are the games identifiers used by the API.
-const unsigned int loot_game_tes4 = loot::Game::tes4;
-const unsigned int loot_game_tes5 = loot::Game::tes5;
-const unsigned int loot_game_fo3 = loot::Game::fo3;
-const unsigned int loot_game_fonv = loot::Game::fonv;
-const unsigned int loot_game_fo4 = loot::Game::fo4;
+const unsigned int loot_game_tes4 = static_cast<unsigned int>(GameType::tes4);
+const unsigned int loot_game_tes5 = static_cast<unsigned int>(GameType::tes5);
+const unsigned int loot_game_fo3 = static_cast<unsigned int>(GameType::fo3);
+const unsigned int loot_game_fonv = static_cast<unsigned int>(GameType::fonv);
+const unsigned int loot_game_fo4 = static_cast<unsigned int>(GameType::fo4);
 
 // LOOT message types.
 const unsigned int loot_message_say = static_cast<unsigned int>(loot::Message::Type::say);

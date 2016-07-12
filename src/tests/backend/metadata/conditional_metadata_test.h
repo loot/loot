@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "backend/error.h"
 #include "backend/metadata/conditional_metadata.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -41,11 +41,11 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 ConditionalMetadataTest,
                                 ::testing::Values(
-                                    GameSettings::tes4,
-                                    GameSettings::tes5,
-                                    GameSettings::fo3,
-                                    GameSettings::fonv,
-                                    GameSettings::fo4));
+                                    GameType::tes4,
+                                    GameType::tes5,
+                                    GameType::fo3,
+                                    GameType::fonv,
+                                    GameType::fo4));
 
         TEST_P(ConditionalMetadataTest, defaultConstructorShouldSetEmptyConditionString) {
             EXPECT_TRUE(conditionalMetadata.Condition().empty());

@@ -28,7 +28,7 @@ along with LOOT.  If not, see
 #include "backend/metadata_list.h"
 
 #include "backend/game/game.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -79,7 +79,7 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 MetadataListTest,
                                 ::testing::Values(
-                                    GameSettings::tes4));
+                                    GameType::tes4));
 
         TEST_P(MetadataListTest, loadShouldLoadGlobalMessages) {
             MetadataList metadataList;

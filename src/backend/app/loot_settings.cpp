@@ -36,12 +36,12 @@ namespace loot {
 
     LootSettings::LootSettings() :
         gameSettings({
-            GameSettings(GameSettings::tes4),
-            GameSettings(GameSettings::tes5),
-            GameSettings(GameSettings::fo3),
-            GameSettings(GameSettings::fonv),
-            GameSettings(GameSettings::fo4),
-            GameSettings(GameSettings::tes4, "Nehrim")
+            GameSettings(GameType::tes4),
+            GameSettings(GameType::tes5),
+            GameSettings(GameType::fo3),
+            GameSettings(GameType::fonv),
+            GameSettings(GameType::fo4),
+            GameSettings(GameType::tes4, "Nehrim")
                 .SetName("Nehrim - At Fate's Edge")
                 .SetMaster("Nehrim.esm")
                 .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
@@ -83,20 +83,20 @@ namespace loot {
             gameSettings = settings["games"].as<vector<GameSettings>>();
 
             // If a base game isn't in the settings, add it.
-            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameSettings::tes4)) == end(gameSettings))
-                gameSettings.push_back(GameSettings(GameSettings::tes4));
+            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameType::tes4)) == end(gameSettings))
+                gameSettings.push_back(GameSettings(GameType::tes4));
 
-            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameSettings::tes5)) == end(gameSettings))
-                gameSettings.push_back(GameSettings(GameSettings::tes5));
+            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameType::tes5)) == end(gameSettings))
+                gameSettings.push_back(GameSettings(GameType::tes5));
 
-            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameSettings::fo3)) == end(gameSettings))
-                gameSettings.push_back(GameSettings(GameSettings::fo3));
+            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameType::fo3)) == end(gameSettings))
+                gameSettings.push_back(GameSettings(GameType::fo3));
 
-            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameSettings::fonv)) == end(gameSettings))
-                gameSettings.push_back(GameSettings(GameSettings::fonv));
+            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameType::fonv)) == end(gameSettings))
+                gameSettings.push_back(GameSettings(GameType::fonv));
 
-            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameSettings::fo4)) == end(gameSettings))
-                gameSettings.push_back(GameSettings(GameSettings::fo4));
+            if (find(begin(gameSettings), end(gameSettings), GameSettings(GameType::fo4)) == end(gameSettings))
+                gameSettings.push_back(GameSettings(GameType::fo4));
         }
 
         if (settings["filters"])
@@ -275,7 +275,7 @@ namespace loot {
                     if (!yaml["Games"]) {
                         // Update existing default branch, if the default
                         // repositories are used.
-                        if (settings.RepoURL() == GameSettings(settings.Id()).RepoURL()
+                        if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL()
                             && oldDefaultBranches.count(settings.RepoBranch()) == 1) {
                             settings.SetRepoBranch("v0.8");
                         }

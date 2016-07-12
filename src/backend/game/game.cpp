@@ -51,10 +51,10 @@ namespace loot {
             .SetRegistryKey(gameSettings.RegistryKey());
     }
 
-    Game::Game(const unsigned int gameCode, const std::string& folder) : GameSettings(gameCode, folder), _pluginsFullyLoaded(false) {}
+    Game::Game(const GameType gameType, const std::string& folder) : GameSettings(gameType, folder), _pluginsFullyLoaded(false) {}
 
     void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
-        if (Id() != Game::tes4 && Id() != Game::tes5 && Id() != Game::fo3 && Id() != Game::fonv && Id() != Game::fo4) {
+        if (Type() != GameType::tes4 && Type() != GameType::tes5 && Type() != GameType::fo3 && Type() != GameType::fonv && Type() != GameType::fo4) {
             throw Error(Error::Code::invalid_args, lc::translate("Invalid game ID supplied.").str());
         }
 
@@ -81,7 +81,7 @@ namespace loot {
     }
 
     void Game::RedatePlugins() {
-        if (Id() != tes5)
+        if (Type() != GameType::tes5)
             return;
 
         list<string> loadorder = GetLoadOrder();

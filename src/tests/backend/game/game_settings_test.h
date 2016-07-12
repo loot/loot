@@ -28,7 +28,7 @@ along with LOOT.  If not, see
 #include "backend/app/loot_paths.h"
 #include "backend/game/game_settings.h"
 
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -44,10 +44,10 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 GameSettingsTest,
                                 ::testing::Values(
-                                    GameSettings::tes5));
+                                    GameType::tes5));
 
         TEST_P(GameSettingsTest, defaultConstructorShouldInitialiseIdToAutodetectAndAllOtherSettingsToEmptyStrings) {
-            EXPECT_EQ(GameSettings::autodetect, game.Id());
+            EXPECT_EQ(GameType::autodetect, game.Type());
             EXPECT_EQ("", game.Name());
             EXPECT_EQ("", game.FolderName());
             EXPECT_EQ("", game.Master());
@@ -62,9 +62,9 @@ namespace loot {
         }
 
         TEST_P(GameSettingsTest, idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
-            game = GameSettings(GameSettings::tes5);
+            game = GameSettings(GameType::tes5);
 
-            EXPECT_EQ(GameSettings::tes5, game.Id());
+            EXPECT_EQ(GameType::tes5, game.Type());
             EXPECT_EQ("TES V: Skyrim", game.Name());
             EXPECT_EQ("Skyrim", game.FolderName());
             EXPECT_EQ("Skyrim.esm", game.Master());
@@ -80,7 +80,7 @@ namespace loot {
         }
 
         TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
-            game = GameSettings(GameSettings::tes5, "folder");
+            game = GameSettings(GameType::tes5, "folder");
 
             EXPECT_EQ("folder", game.FolderName());
             EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", game.MasterlistPath());
@@ -93,19 +93,19 @@ namespace loot {
         }
 
         TEST_P(GameSettingsTest, isInstalledShouldBeTrueIfGamePathIsValid) {
-            game = GameSettings(GameSettings::tes5);
+            game = GameSettings(GameType::tes5);
             game.SetGamePath(dataPath.parent_path());
             EXPECT_TRUE(game.IsInstalled());
         }
 
         TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
-            GameSettings game1 = GameSettings(GameSettings::tes5, "game1")
+            GameSettings game1 = GameSettings(GameType::tes5, "game1")
                 .SetMaster("master1")
                 .SetRegistryKey("key1")
                 .SetRepoURL("url1")
                 .SetRepoBranch("branch1")
                 .SetGamePath("path1");
-            GameSettings game2 = GameSettings(GameSettings::tes5, "game2")
+            GameSettings game2 = GameSettings(GameType::tes5, "game2")
                 .SetMaster("master2")
                 .SetRegistryKey("key2")
                 .SetRepoURL("url2")
@@ -116,23 +116,23 @@ namespace loot {
         }
 
         TEST_P(GameSettingsTest, gameSettingsWithTheSameNameShouldBeEqual) {
-            GameSettings game1 = GameSettings(GameSettings::tes4)
+            GameSettings game1 = GameSettings(GameType::tes4)
                 .SetName("name");
-            GameSettings game2 = GameSettings(GameSettings::tes5)
+            GameSettings game2 = GameSettings(GameType::tes5)
                 .SetName("name");
 
             EXPECT_TRUE(game1 == game2);
         }
 
         TEST_P(GameSettingsTest, gameSettingsWithDifferentIdsAndNamesShouldNotBeEqual) {
-            GameSettings game1 = GameSettings(GameSettings::tes4);
-            GameSettings game2 = GameSettings(GameSettings::tes5);
+            GameSettings game1 = GameSettings(GameType::tes4);
+            GameSettings game2 = GameSettings(GameType::tes5);
 
             EXPECT_FALSE(game1 == game2);
         }
 
         TEST_P(GameSettingsTest, getArchiveFileExtensionShouldReturnDotBa2IfGameIdIsFallout4) {
-            GameSettings game(GameSettings::fo4);
+            GameSettings game(GameType::fo4);
             EXPECT_EQ(".ba2", game.GetArchiveFileExtension());
         }
 
@@ -181,7 +181,7 @@ namespace loot {
         }
 
         TEST_P(GameSettingsTest, emittingYamlShouldSerialiseDataCorrectly) {
-            GameSettings game(GameSettings::tes5, "folder1");
+            GameSettings game(GameType::tes5, "folder1");
             game.SetName("name1")
                 .SetMaster("master1")
                 .SetRegistryKey("key1")
@@ -202,7 +202,7 @@ namespace loot {
         }
 
         TEST_P(GameSettingsTest, encodingAsYamlShouldConvertDataCorrectly) {
-            GameSettings game(GameSettings::tes5, "folder1");
+            GameSettings game(GameType::tes5, "folder1");
             game.SetName("name1")
                 .SetMaster("master1")
                 .SetRegistryKey("key1")
@@ -233,7 +233,7 @@ namespace loot {
                                          "registry: 'key1'");
 
             GameSettings game = node.as<GameSettings>();
-            EXPECT_EQ(GameSettings::tes5, game.Id());
+            EXPECT_EQ(GameType::tes5, game.Type());
             EXPECT_EQ("name1", game.Name());
             EXPECT_EQ("folder1", game.FolderName());
             EXPECT_EQ("master1", game.Master());
@@ -267,7 +267,7 @@ namespace loot {
                                          "branch: 'branch1'\n");
 
             game = node.as<GameSettings>();
-            EXPECT_EQ(GameSettings::tes5, game.Id());
+            EXPECT_EQ(GameType::tes5, game.Type());
             EXPECT_EQ("TES V: Skyrim", game.Name());
             EXPECT_EQ("Software\\Bethesda Softworks\\Skyrim\\Installed Path", game.RegistryKey());
             EXPECT_EQ("", game.GamePath());

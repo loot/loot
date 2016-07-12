@@ -42,11 +42,11 @@ namespace loot {
     }
 
     void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData) {
-        if (game.Id() != GameSettings::tes4
-            && game.Id() != GameSettings::tes5
-            && game.Id() != GameSettings::fo3
-            && game.Id() != GameSettings::fonv
-            && game.Id() != GameSettings::fo4) {
+        if (game.Type() != GameType::tes4
+            && game.Type() != GameType::tes5
+            && game.Type() != GameType::fo3
+            && game.Type() != GameType::fonv
+            && game.Type() != GameType::fo4) {
             throw Error(Error::Code::invalid_args, lc::translate("Unsupported game ID supplied.").str());
         }
 
@@ -67,15 +67,15 @@ namespace loot {
         }
 
         int ret;
-        if (game.Id() == GameSettings::tes4)
+        if (game.Type() == GameType::tes4)
             ret = lo_create_handle(&_gh, LIBLO_GAME_TES4, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Id() == GameSettings::tes5)
+        else if (game.Type() == GameType::tes5)
             ret = lo_create_handle(&_gh, LIBLO_GAME_TES5, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Id() == GameSettings::fo3)
+        else if (game.Type() == GameType::fo3)
             ret = lo_create_handle(&_gh, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Id() == GameSettings::fonv)
+        else if (game.Type() == GameType::fonv)
             ret = lo_create_handle(&_gh, LIBLO_GAME_FNV, game.GamePath().string().c_str(), gameLocalDataPath);
-        else if (game.Id() == GameSettings::fo4)
+        else if (game.Type() == GameType::fo4)
             ret = lo_create_handle(&_gh, LIBLO_GAME_FO4, game.GamePath().string().c_str(), gameLocalDataPath);
         else
             ret = LIBLO_ERROR_INVALID_ARGS;

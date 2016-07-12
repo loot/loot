@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_F_BACKEND_METADATA_PLUGIN_METADATA
 
 #include "backend/metadata/plugin_metadata.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -37,7 +37,7 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 PluginMetadataTest,
                                 ::testing::Values(
-                                    GameSettings::tes5));
+                                    GameType::tes5));
 
         TEST_P(PluginMetadataTest, defaultConstructorShouldLeaveNameEmptyAndEnableMetadataAndLeaveAllOtherFieldsAtTheirDefaults) {
             PluginMetadata plugin;

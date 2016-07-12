@@ -27,7 +27,7 @@
 #include "../backend/error.h"
 
 loot_db::loot_db(const unsigned int clientGame, const std::string& gamePath, const boost::filesystem::path& gameLocalDataPath)
-    : Game(clientGame) {
+    : Game(loot::GameType(clientGame)) {
     this->SetGamePath(gamePath);
     this->Init(false, gameLocalDataPath);
 }

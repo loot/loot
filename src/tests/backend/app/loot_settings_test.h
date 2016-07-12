@@ -47,12 +47,12 @@ namespace loot {
         TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             const std::string currentVersion = LootVersion::string();
             const std::vector<GameSettings> expectedGameSettings({
-                GameSettings(GameSettings::tes4),
-                GameSettings(GameSettings::tes5),
-                GameSettings(GameSettings::fo3),
-                GameSettings(GameSettings::fonv),
-                GameSettings(GameSettings::fo4),
-                GameSettings(GameSettings::tes4, "Nehrim")
+                GameSettings(GameType::tes4),
+                GameSettings(GameType::tes5),
+                GameSettings(GameType::fo3),
+                GameSettings(GameType::fonv),
+                GameSettings(GameType::fo4),
+                GameSettings(GameType::tes4, "Nehrim")
                     .SetName("Nehrim - At Fate's Edge")
                     .SetMaster("Nehrim.esm")
                     .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
@@ -74,37 +74,37 @@ namespace loot {
             const std::vector<GameSettings> actualGameSettings = settings.getGameSettings();
             EXPECT_EQ(expectedGameSettings, actualGameSettings);
 
-            EXPECT_EQ(expectedGameSettings[0].Id(), actualGameSettings[0].Id());
+            EXPECT_EQ(expectedGameSettings[0].Type(), actualGameSettings[0].Type());
             EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
             EXPECT_EQ(expectedGameSettings[0].RegistryKey(), actualGameSettings[0].RegistryKey());
             EXPECT_EQ(expectedGameSettings[0].RepoURL(), actualGameSettings[0].RepoURL());
             EXPECT_EQ(expectedGameSettings[0].RepoBranch(), actualGameSettings[0].RepoBranch());
 
-            EXPECT_EQ(expectedGameSettings[1].Id(), actualGameSettings[1].Id());
+            EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
             EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
             EXPECT_EQ(expectedGameSettings[1].RegistryKey(), actualGameSettings[1].RegistryKey());
             EXPECT_EQ(expectedGameSettings[1].RepoURL(), actualGameSettings[1].RepoURL());
             EXPECT_EQ(expectedGameSettings[1].RepoBranch(), actualGameSettings[1].RepoBranch());
 
-            EXPECT_EQ(expectedGameSettings[2].Id(), actualGameSettings[2].Id());
+            EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
             EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
             EXPECT_EQ(expectedGameSettings[2].RegistryKey(), actualGameSettings[2].RegistryKey());
             EXPECT_EQ(expectedGameSettings[2].RepoURL(), actualGameSettings[2].RepoURL());
             EXPECT_EQ(expectedGameSettings[2].RepoBranch(), actualGameSettings[2].RepoBranch());
 
-            EXPECT_EQ(expectedGameSettings[3].Id(), actualGameSettings[3].Id());
+            EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
             EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
             EXPECT_EQ(expectedGameSettings[3].RegistryKey(), actualGameSettings[3].RegistryKey());
             EXPECT_EQ(expectedGameSettings[3].RepoURL(), actualGameSettings[3].RepoURL());
             EXPECT_EQ(expectedGameSettings[3].RepoBranch(), actualGameSettings[3].RepoBranch());
 
-            EXPECT_EQ(expectedGameSettings[4].Id(), actualGameSettings[4].Id());
+            EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
             EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
             EXPECT_EQ(expectedGameSettings[4].RegistryKey(), actualGameSettings[4].RegistryKey());
             EXPECT_EQ(expectedGameSettings[4].RepoURL(), actualGameSettings[4].RepoURL());
             EXPECT_EQ(expectedGameSettings[4].RepoBranch(), actualGameSettings[4].RepoBranch());
 
-            EXPECT_EQ(expectedGameSettings[5].Id(), actualGameSettings[5].Id());
+            EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
             EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
             EXPECT_EQ(expectedGameSettings[5].RegistryKey(), actualGameSettings[5].RegistryKey());
             EXPECT_EQ(expectedGameSettings[5].RepoURL(), actualGameSettings[5].RepoURL());
@@ -135,7 +135,7 @@ namespace loot {
                 {"right", 4},
             });
             const std::vector<GameSettings> games({
-                GameSettings(GameSettings::tes4).SetName("Game Name"),
+                GameSettings(GameType::tes4).SetName("Game Name"),
             });
             const std::map<std::string, bool> filters({
                 {"hideBashTags", false},
@@ -188,7 +188,7 @@ namespace loot {
             const std::string Language = "fr";
             const std::string LastGame = "Skyrim";
             const std::vector<GameSettings> Games({
-                GameSettings(GameSettings::tes4).SetName("Game Name"),
+                GameSettings(GameType::tes4).SetName("Game Name"),
             });
 
             YAML::Node inputYaml;
@@ -229,10 +229,10 @@ namespace loot {
             const std::string LastGame = "Skyrim";
             const std::string lastGame = "auto";
             const std::vector<GameSettings> Games({
-                GameSettings(GameSettings::tes4).SetName("Old Game Name"),
+                GameSettings(GameType::tes4).SetName("Old Game Name"),
             });
             const std::vector<GameSettings> games({
-                GameSettings(GameSettings::fo3).SetName("Game Name"),
+                GameSettings(GameType::fo3).SetName("Game Name"),
             });
 
             YAML::Node inputYaml;
@@ -267,7 +267,7 @@ namespace loot {
         }
 
         TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeOldDefaultGameRepositoryBranches) {
-            const std::vector<GameSettings> games({GameSettings(GameSettings::tes4)});
+            const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
 
             YAML::Node inputYaml;
             inputYaml["games"] = games;
@@ -279,7 +279,7 @@ namespace loot {
         }
 
         TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeNonDefaultGameRepositoryBranches) {
-            const std::vector<GameSettings> games({GameSettings(GameSettings::tes4)});
+            const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
 
             YAML::Node inputYaml;
             inputYaml["games"] = games;
@@ -291,28 +291,28 @@ namespace loot {
         }
 
         TEST_F(LootSettingsTest, loadingFromYamlShouldAddMissingBaseGames) {
-            const std::vector<GameSettings> games({GameSettings(GameSettings::tes4)});
+            const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
             YAML::Node inputYaml;
             inputYaml["games"] = games;
 
             settings.load(inputYaml);
 
             const std::vector<GameSettings> expectedGameSettings({
-                GameSettings(GameSettings::tes4),
-                GameSettings(GameSettings::tes5),
-                GameSettings(GameSettings::fo3),
-                GameSettings(GameSettings::fonv),
-                GameSettings(GameSettings::fo4),
+                GameSettings(GameType::tes4),
+                GameSettings(GameType::tes5),
+                GameSettings(GameType::fo3),
+                GameSettings(GameType::fonv),
+                GameSettings(GameType::fo4),
             });
             EXPECT_EQ(expectedGameSettings, settings.getGameSettings());
         }
 
         TEST_F(LootSettingsTest, loadingFromYamlShouldSkipUnrecognisedGames) {
             YAML::Node inputYaml;
-            inputYaml["games"][0] = GameSettings(GameSettings::tes4);
+            inputYaml["games"][0] = GameSettings(GameType::tes4);
             inputYaml["games"][0]["type"] = "Foobar";
             inputYaml["games"][0]["name"] = "Foobar";
-            inputYaml["games"][1] = GameSettings(GameSettings::tes5).SetName("Game Name");
+            inputYaml["games"][1] = GameSettings(GameType::tes5).SetName("Game Name");
 
             settings.load(inputYaml);
 
@@ -385,7 +385,7 @@ namespace loot {
         }
 
         TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
-            const std::vector<GameSettings> gameSettings({GameSettings(GameSettings::tes5)});
+            const std::vector<GameSettings> gameSettings({GameSettings(GameType::tes5)});
             settings.storeGameSettings(gameSettings);
 
             EXPECT_EQ(gameSettings, settings.getGameSettings());
@@ -434,7 +434,7 @@ namespace loot {
                 {"right", 4},
             });
             const std::vector<GameSettings> games({
-                GameSettings(GameSettings::tes4).SetName("Game Name"),
+                GameSettings(GameType::tes4).SetName("Game Name"),
             });
             const std::map<std::string, bool> filters({
                 {"hideBashTags", false},

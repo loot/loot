@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_PLUGIN_SORTER
 
 #include "backend/plugin/plugin_sorter.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -48,7 +48,7 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 PluginSorterTest,
                                 ::testing::Values(
-                                    GameSettings::tes4));
+                                    GameType::tes4));
 
         TEST_P(PluginSorterTest, sortingWithNoLoadedPluginsShouldReturnAnEmptyList) {
             PluginSorter sorter;

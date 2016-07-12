@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_METADATA_PLUGIN_DIRTY_INFO
 
 #include "backend/metadata/plugin_dirty_info.h"
-#include "tests/base_game_test.h"
+#include "tests/backend/base_game_test.h"
 
 namespace loot {
     namespace test {
@@ -37,7 +37,7 @@ namespace loot {
         INSTANTIATE_TEST_CASE_P(,
                                 PluginDirtyInfoTest,
                                 ::testing::Values(
-                                    GameSettings::tes4));
+                                    GameType::tes4));
 
         TEST_P(PluginDirtyInfoTest, defaultConstructorShouldLeaveAllCountsAtZeroAndTheUtilityStringEmpty) {
             PluginDirtyInfo info;
