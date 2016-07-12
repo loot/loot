@@ -42,6 +42,7 @@ OutputDir=build
 SetupIconFile=resources\icon.ico
 Compression=lzma
 SolidCompression=yes
+DisableDirPage=no
 DisableReadyPage=yes
 DisableProgramGroupPage=yes
 
