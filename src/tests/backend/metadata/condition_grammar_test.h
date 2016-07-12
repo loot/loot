@@ -289,6 +289,21 @@ namespace loot {
             EXPECT_FALSE(result);
         }
 
+        TEST_P(ConditionGrammarTest, aVersionEqualityConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
+            ASSERT_NO_THROW(game.LoadPlugins(true));
+
+            Grammar grammar(&game);
+            std::string condition("version(\"" + blankEsp + "\", \"6.0\", ==)");
+
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
+                                                      grammar,
+                                                      skipper,
+                                                      result);
+            EXPECT_TRUE(success);
+            EXPECT_FALSE(result);
+        }
+
         TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatDoesNotEqualTheActualPluginVersionShouldEvaluateToTrue) {
             ASSERT_NO_THROW(game.LoadPlugins(true));
 
@@ -317,6 +332,21 @@ namespace loot {
                                                       result);
             EXPECT_TRUE(success);
             EXPECT_FALSE(result);
+        }
+
+        TEST_P(ConditionGrammarTest, aVersionInequalityConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
+            ASSERT_NO_THROW(game.LoadPlugins(true));
+
+            Grammar grammar(&game);
+            std::string condition("version(\"" + blankEsp + "\", \"6.0\", !=)");
+
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
+                                                      grammar,
+                                                      skipper,
+                                                      result);
+            EXPECT_TRUE(success);
+            EXPECT_TRUE(result);
         }
 
         TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionLessThanTheGivenVersionShouldEvaluateToTrue) {
@@ -349,6 +379,21 @@ namespace loot {
             EXPECT_FALSE(result);
         }
 
+        TEST_P(ConditionGrammarTest, aVersionLessThanConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
+            ASSERT_NO_THROW(game.LoadPlugins(true));
+
+            Grammar grammar(&game);
+            std::string condition("version(\"" + blankEsp + "\", \"5.0\", <)");
+
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
+                                                      grammar,
+                                                      skipper,
+                                                      result);
+            EXPECT_TRUE(success);
+            EXPECT_TRUE(result);
+        }
+
         TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersionGreaterThanTheGivenVersionShouldEvaluateToTrue) {
             ASSERT_NO_THROW(game.LoadPlugins(true));
 
@@ -369,6 +414,21 @@ namespace loot {
 
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"5.0\", >)");
+
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
+                                                      grammar,
+                                                      skipper,
+                                                      result);
+            EXPECT_TRUE(success);
+            EXPECT_FALSE(result);
+        }
+
+        TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
+            ASSERT_NO_THROW(game.LoadPlugins(true));
+
+            Grammar grammar(&game);
+            std::string condition("version(\"" + blankEsp + "\", \"5.0\", >)");
 
             success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                                       std::cend(condition),
@@ -409,6 +469,21 @@ namespace loot {
             EXPECT_FALSE(result);
         }
 
+        TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
+            ASSERT_NO_THROW(game.LoadPlugins(true));
+
+            Grammar grammar(&game);
+            std::string condition("version(\"" + blankEsp + "\", \"5.0\", <=)");
+
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
+                                                      grammar,
+                                                      skipper,
+                                                      result);
+            EXPECT_TRUE(success);
+            EXPECT_TRUE(result);
+        }
+
         TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToTrue) {
             ASSERT_NO_THROW(game.Init(false, localPath));
             ASSERT_NO_THROW(game.LoadPlugins(true));
@@ -430,6 +505,21 @@ namespace loot {
 
             Grammar grammar(&game);
             std::string condition("version(\"" + blankEsm + "\", \"6.0\", >=)");
+
+            success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                                      std::cend(condition),
+                                                      grammar,
+                                                      skipper,
+                                                      result);
+            EXPECT_TRUE(success);
+            EXPECT_FALSE(result);
+        }
+
+        TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
+            ASSERT_NO_THROW(game.LoadPlugins(true));
+
+            Grammar grammar(&game);
+            std::string condition("version(\"" + blankEsp + "\", \"5.0\", >=)");
 
             success = boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                                       std::cend(condition),
