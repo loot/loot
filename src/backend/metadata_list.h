@@ -54,6 +54,7 @@ namespace loot {
 
         std::list<PluginMetadata> Plugins() const;
         std::list<Message> Messages() const;
+        std::set<std::string> BashTags() const;
 
         // Merges multiple matching regex entries if any are found.
         PluginMetadata FindPlugin(const PluginMetadata& plugin) const;
@@ -69,6 +70,7 @@ namespace loot {
         void EvalAllConditions(Game& game, const unsigned int language);
 
     protected:
+        std::set<std::string> bashTags_;
         std::unordered_set<PluginMetadata> plugins;
         std::list<PluginMetadata> regexPlugins;
         std::list<Message> messages;

@@ -80,6 +80,9 @@ function updateMasterlist() {
       loot.game.masterlist = result.masterlist;
       loot.game.globalMessages = result.globalMessages;
 
+      /* Update Bash Tag autocomplete suggestions. */
+      loot.DOM.initialiseAutocompleteBashTags(result.bashTags);
+
       result.plugins.forEach((resultPlugin) => {
         const existingPlugin = loot.game.plugins.find(plugin => plugin.name === resultPlugin.name);
         if (existingPlugin) {

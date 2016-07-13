@@ -33,9 +33,7 @@ using namespace std;
 
 namespace loot {
     void MetadataList::Load(const boost::filesystem::path& filepath) {
-        plugins.clear();
-        regexPlugins.clear();
-        messages.clear();
+        clear();
 
         BOOST_LOG_TRIVIAL(debug) << "Loading file: " << filepath;
 
@@ -58,7 +56,10 @@ namespace loot {
             }
         }
         if (metadataList["globals"])
-            messages = metadataList["globals"].as< list<Message> >();
+            messages = metadataList["globals"].as<list<Message>>();
+
+        if (metadataList["bash_tags"])
+            bashTags_ = metadataList["bash_tags"].as<set<string>>();
 
         BOOST_LOG_TRIVIAL(debug) << "File loaded successfully.";
     }
@@ -68,6 +69,7 @@ namespace loot {
         YAML::Emitter yout;
         yout.SetIndent(2);
         yout << YAML::BeginMap
+            << YAML::Key << "bash_tags" << YAML::Value << bashTags_
             << YAML::Key << "plugins" << YAML::Value << Plugins()
             << YAML::Key << "globals" << YAML::Value << messages
             << YAML::EndMap;
@@ -78,6 +80,7 @@ namespace loot {
     }
 
     void MetadataList::clear() {
+        bashTags_.clear();
         plugins.clear();
         regexPlugins.clear();
         messages.clear();
@@ -93,6 +96,10 @@ namespace loot {
 
     std::list<Message> MetadataList::Messages() const {
         return messages;
+    }
+
+    std::set<std::string> MetadataList::BashTags() const {
+        return bashTags_;
     }
 
     // Merges multiple matching regex entries if any are found.

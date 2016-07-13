@@ -26,6 +26,8 @@ along with LOOT.  If not, see
 #define LOOT_TEST_BACKEND_METADATA_LIST
 
 #include "backend/metadata_list.h"
+
+#include "backend/game/game.h"
 #include "tests/base_game_test.h"
 
 namespace loot {
@@ -110,6 +112,16 @@ namespace loot {
             }), names);
         }
 
+        TEST_P(MetadataListTest, loadShouldLoadBashTags) {
+            MetadataList metadataList;
+            ASSERT_NO_THROW(metadataList.Load(metadataPath));
+
+            EXPECT_EQ(std::set<std::string>({
+                "C.Climate",
+                "Relev"
+            }), metadataList.BashTags());
+        }
+
         TEST_P(MetadataListTest, loadShouldThrowIfAnInvalidMetadataFileIsGiven) {
             MetadataList ml;
             for (const auto& path : invalidMetadataPaths) {
@@ -123,10 +135,12 @@ namespace loot {
             ASSERT_NO_THROW(metadataList.Load(metadataPath));
             ASSERT_FALSE(metadataList.Messages().empty());
             ASSERT_FALSE(metadataList.Plugins().empty());
+            ASSERT_FALSE(metadataList.BashTags().empty());
 
             EXPECT_ANY_THROW(metadataList.Load(blankEsm));
             EXPECT_TRUE(metadataList.Messages().empty());
             EXPECT_TRUE(metadataList.Plugins().empty());
+            EXPECT_TRUE(metadataList.BashTags().empty());
         }
 
         TEST_P(MetadataListTest, loadShouldClearExistingDataIfAMissingMetadataFileIsGiven) {
@@ -135,10 +149,12 @@ namespace loot {
             ASSERT_NO_THROW(metadataList.Load(metadataPath));
             ASSERT_FALSE(metadataList.Messages().empty());
             ASSERT_FALSE(metadataList.Plugins().empty());
+            ASSERT_FALSE(metadataList.BashTags().empty());
 
             EXPECT_ANY_THROW(metadataList.Load(missingMetadataPath));
             EXPECT_TRUE(metadataList.Messages().empty());
             EXPECT_TRUE(metadataList.Plugins().empty());
+            EXPECT_TRUE(metadataList.BashTags().empty());
         }
 
         TEST_P(MetadataListTest, saveShouldWriteTheLoadedMetadataToTheGivenFilePath) {
@@ -151,6 +167,11 @@ namespace loot {
 
             // Check the new file contains the same metadata.
             EXPECT_NO_THROW(metadataList.Load(savedMetadataPath));
+
+            EXPECT_EQ(std::set<std::string>({
+                "C.Climate",
+                "Relev"
+            }), metadataList.BashTags());
 
             EXPECT_EQ(std::list<Message>({
                 Message(Message::say, "A global message."),
@@ -173,15 +194,17 @@ namespace loot {
             }), names);
         }
 
-        TEST_P(MetadataListTest, clearShouldClearLoadedMessagesAndPlugins) {
+        TEST_P(MetadataListTest, clearShouldClearLoadedData) {
             MetadataList metadataList;
             ASSERT_NO_THROW(metadataList.Load(metadataPath));
             ASSERT_FALSE(metadataList.Messages().empty());
             ASSERT_FALSE(metadataList.Plugins().empty());
+            ASSERT_FALSE(metadataList.BashTags().empty());
 
             metadataList.clear();
             EXPECT_TRUE(metadataList.Messages().empty());
             EXPECT_TRUE(metadataList.Plugins().empty());
+            EXPECT_TRUE(metadataList.BashTags().empty());
         }
 
         TEST_P(MetadataListTest, findPluginShouldReturnAnEmptyPluginObjectIfTheGivenPluginIsNotInTheMetadataList) {

@@ -240,13 +240,17 @@ var {
 <table>
     <thead><tr><th>Key Name<th>Value Type<th>Notes
     <tbody>
+        <tr><td><code>bash_tags</code><td>string list<td>A list of Bash Tags that are supported by the masterlist's game. These Bash Tags are used to provide autocomplete suggestions in LOOT's metadata editor.
         <tr><td><code>globals</code><td>message list<td>A list of message data structures for messages that are displayed independently of any plugin.
         <tr><td><code>plugins</code><td>plugin list <i>and</i> plugin set<td>The plugin data structures that hold all the plugin metadata within the file. It is a mixture of a list and a set because <strong>no non-regex plugin value may be equal to any other non-regex plugin value</strong>, but there may be any number of equal regex plugin values, and non-regex plugin values may be equal to regex plugin values.
             <p>If multiple plugin values match a single plugin, their metadata is merged in the order the values are listed, and as defined <a href="#structs-plugin-merge">later in this document</a>.
 </table>
 <p>Other keys may also be present, but are not processed by LOOT. The message and plugin data structures are detailed in the next section.
 <p>An example metadata file:
-<pre><code>globals:
+<pre><code>bash_tags:
+  - 'C.Climate'
+  - 'Relev'
+globals:
   - type: say
     content: 'You are using the latest version of LOOT.'
     condition: 'version("LOOT", "0.5.0.0", ==)'

@@ -701,7 +701,7 @@ namespace loot {
             // Now store global messages.
             gameNode["globalMessages"] = GetGeneralMessages();
 
-            gameNode["bashTags"] = _lootState.CurrentGame().getSupportedBashTags();
+            gameNode["bashTags"] = _lootState.CurrentGame().GetMasterlist().BashTags();
 
             // Now store plugin data.
             for (const auto& plugin : installed) {
@@ -821,6 +821,9 @@ namespace loot {
                     gameNode["masterlist"]["revision"] = e.what();
                     gameNode["masterlist"]["date"] = e.what();
                 }
+
+                // Store bash tags in case they have changed.
+                gameNode["bashTags"] = _lootState.CurrentGame().GetMasterlist().BashTags();
 
                 // Store global messages in case they have changed.
                 gameNode["globalMessages"] = GetGeneralMessages();
