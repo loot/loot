@@ -121,8 +121,8 @@ function onSortPlugins() {
 
     if (!result.plugins) {
       const message = result.globalMessages.find(item => (
-        item.content[0].str.startsWith('Cyclic interaction detected'
-      ))).content[0].str;
+        item.content[0].text.startsWith('Cyclic interaction detected'
+      ))).content[0].text;
       throw new Error(loot.l10n.translate(`Failed to sort plugins. Details: ${message}`));
     }
 

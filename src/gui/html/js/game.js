@@ -260,7 +260,7 @@
     if (this.globalMessages) {
       messages = this.globalMessages.map(message => ({
         type: message.type,
-        content: message.content[0].str,
+        content: message.content[0].text,
       }));
     }
     if (this.plugins) {
@@ -379,7 +379,7 @@
         const li = document.createElement('li');
         li.className = message.type;
         /* Use the Marked library for Markdown formatting support. */
-        li.innerHTML = marked(message.content[0].str);
+        li.innerHTML = marked(message.content[0].text);
         generalMessagesList.appendChild(li);
       });
     }

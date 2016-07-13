@@ -1087,14 +1087,14 @@ describe('PluginCardContent', () => {
         {
           type: 'say',
           content: [{
-            str: 'test message',
+            text: 'test message',
             lang: 'en',
           }],
         },
         {
           type: 'warn',
           content: [{
-            str: 'do not clean',
+            text: 'do not clean',
             lang: 'en',
           }],
         },
@@ -1270,11 +1270,11 @@ describe('PluginCardContent', () => {
       plugin.getCardContent(filters).messages.should.deepEqual([
         {
           type: plugin.messages[0].type,
-          content: plugin.messages[0].content[0].str,
+          content: plugin.messages[0].content[0].text,
         },
         {
           type: plugin.messages[1].type,
-          content: plugin.messages[1].content[0].str,
+          content: plugin.messages[1].content[0].text,
         },
       ]);
     });
@@ -1283,7 +1283,7 @@ describe('PluginCardContent', () => {
       filters.hideNotes = true;
       plugin.getCardContent(filters).messages.should.deepEqual([{
         type: plugin.messages[1].type,
-        content: plugin.messages[1].content[0].str,
+        content: plugin.messages[1].content[0].text,
       }]);
     });
 
@@ -1291,7 +1291,7 @@ describe('PluginCardContent', () => {
       filters.hideDoNotCleanMessages = true;
       plugin.getCardContent(filters).messages.should.deepEqual([{
         type: plugin.messages[0].type,
-        content: plugin.messages[0].content[0].str,
+        content: plugin.messages[0].content[0].text,
       }]);
     });
 

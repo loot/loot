@@ -56,7 +56,7 @@ Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
 
   out << Key << "lang" << Value << loot::Language(rhs.GetLanguage()).GetLocale();
 
-  out << Key << "str" << Value << YAML::SingleQuoted << rhs.GetText();
+  out << Key << "text" << Value << YAML::SingleQuoted << rhs.GetText();
 
   out << EndMap;
 

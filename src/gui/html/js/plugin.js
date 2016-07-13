@@ -63,7 +63,7 @@
 
       this._messages = plugin.messages.map(message => ({
         type: message.type,
-        content: message.content[0].str,
+        content: message.content[0].text,
       })).filter(filters.messageFilter, filters);
     }
 

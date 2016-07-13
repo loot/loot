@@ -79,7 +79,7 @@ TEST(MessageContent, emittingAsYamlShouldOutputDataCorrectly) {
   emitter << content;
 
   EXPECT_EQ("lang: " + Language(content.GetLanguage()).GetLocale() +
-            "\nstr: '" + content.GetText() + "'", emitter.c_str());
+            "\ntext: '" + content.GetText() + "'", emitter.c_str());
 }
 
 TEST(MessageContent, encodingAsYamlShouldOutputDataCorrectly) {
@@ -87,12 +87,12 @@ TEST(MessageContent, encodingAsYamlShouldOutputDataCorrectly) {
   YAML::Node node;
   node = content;
 
-  EXPECT_EQ(content.GetText(), node["str"].as<std::string>());
+  EXPECT_EQ(content.GetText(), node["text"].as<std::string>());
   EXPECT_EQ(Language(Language::Code::french).GetLocale(), node["lang"].as<std::string>());
 }
 
 TEST(MessageContent, decodingFromYamlShouldSetDataCorrectly) {
-  YAML::Node node = YAML::Load("{str: content, lang: de}");
+  YAML::Node node = YAML::Load("{text: content, lang: de}");
   MessageContent content = node.as<MessageContent>();
 
   EXPECT_EQ("content", content.GetText());

@@ -267,7 +267,7 @@ loot-editor-close
         return {
           type: rowData.type,
           content: [{
-            str: rowData.content,
+            text: rowData.content,
             lang: rowData.language,
           }],
           condition: rowData.condition,
@@ -362,7 +362,7 @@ loot-editor-close
       _messageToRowData(message) {
         return {
           type: message.type,
-          content: message.content[0].str,
+          content: message.content[0].text,
           condition: message.condition,
           language: message.content[0].lang,
         };

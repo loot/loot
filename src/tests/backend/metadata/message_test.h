@@ -212,9 +212,9 @@ TEST_P(MessageTest, emittingAsYamlShouldOutputMultipleContentStringsAsAList) {
   EXPECT_STREQ("type: say\n"
                "content:\n"
                "  - lang: en\n"
-               "    str: 'content1'\n"
+               "    text: 'content1'\n"
                "  - lang: de\n"
-               "    str: 'content2'", emitter.c_str());
+               "    text: 'content2'", emitter.c_str());
 }
 
 TEST_P(MessageTest, encodingAsYamlShouldStoreNoteMessageTypeCorrectly) {
@@ -339,9 +339,9 @@ TEST_P(MessageTest, decodingFromYamlShouldStoreAListOfContentStringsCorrectly) {
   YAML::Node node = YAML::Load("type: say\n"
                                "content:\n"
                                "  - lang: en\n"
-                               "    str: content1\n"
+                               "    text: content1\n"
                                "  - lang: de\n"
-                               "    str: content2");
+                               "    text: content2");
   Message message = node.as<Message>();
 
   EXPECT_EQ(MessageContents({
@@ -354,7 +354,7 @@ TEST_P(MessageTest, decodingFromYamlShouldNotThrowIfTheOnlyContentStringIsNotEng
   YAML::Node node = YAML::Load("type: say\n"
                                "content:\n"
                                "  - lang: fr\n"
-                               "    str: content1");
+                               "    text: content1");
 
   EXPECT_NO_THROW(Message message = node.as<Message>());
 }
@@ -363,9 +363,9 @@ TEST_P(MessageTest, decodingFromYamlShouldThrowIfMultipleContentStringsAreGivenA
   YAML::Node node = YAML::Load("type: say\n"
                                "content:\n"
                                "  - lang: de\n"
-                               "    str: content1\n"
+                               "    text: content1\n"
                                "  - lang: fr\n"
-                               "    str: content2");
+                               "    text: content2");
 
   EXPECT_THROW(node.as<Message>(), YAML::RepresentationException);
 }
@@ -384,9 +384,9 @@ TEST_P(MessageTest, decodingFromYamlShouldApplySubstitutionsToAllContentStrings)
   YAML::Node node = YAML::Load("type: say\n"
                                "content:\n"
                                "  - lang: en\n"
-                               "    str: content1 %1%\n"
+                               "    text: content1 %1%\n"
                                "  - lang: de\n"
-                               "    str: content2 %1%\n"
+                               "    text: content2 %1%\n"
                                "subs:\n"
                                "  - sub");
   Message message = node.as<Message>();

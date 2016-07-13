@@ -356,8 +356,8 @@ display: 'OBSE v18+'
 <table>
     <thead><tr><th>Key Name<th>Required<th>Notes
     <tbody>
-        <tr><td><code>str</code><td>&#x2713;<td>The actual message content string.
-        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>str</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
+        <tr><td><code>text</code><td>&#x2713;<td>The actual message content string.
+        <tr><td><code>lang</code><td>&#x2713;<td>The language that <code>text</code> is written in, given as a POSIX language code. The languages LOOT supports are given in <a href="#lang">Language Codes</a>.
 </table>
 
 <h4>Equality</h4>
@@ -373,9 +373,9 @@ display: 'OBSE v18+'
 condition: 'file("foo.esp")'
 content:
   - lang: en
-    str: 'An example link: &lt;http://www.example.com&gt;'
+    text: 'An example link: &lt;http://www.example.com&gt;'
   - lang: ru
-    str: 'Это пример ссылки: &lt;http://www.example.com&gt;'
+    text: 'Это пример ссылки: &lt;http://www.example.com&gt;'
 </code></pre>
 would be displayed as
 <blockquote>
