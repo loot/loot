@@ -229,13 +229,16 @@
       dom.setGameMenuItems(loot.settings.games);
       dom.updateEnabledGames(loot.installedGames);
       dom.updateSelectedGame(loot.game.folder);
-    }).then(getInitErrors)
+    })
+    .catch(handlePromiseError)
+    .then(getInitErrors)
     .then(() => setGameData(loot))
     .catch(handleInitErrors)
     .then(() => {
       if (loot.settings.lastVersion !== loot.version) {
         dom.openDialog('firstRun');
       }
-    }).catch(handlePromiseError);
+    })
+    .catch(handlePromiseError);
   };
 }));
