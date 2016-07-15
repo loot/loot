@@ -12,7 +12,7 @@
     "iron-list": "loot/iron-list#patched-for-loot",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "neon-animation": "PolymerElements/neon-animation#^1.0.0",
-    "paper-autocomplete": "ellipticaljs/paper-autocomplete#^v1.1.0",
+    "paper-autocomplete": "ellipticaljs/paper-autocomplete#v1.1.0",
     "paper-button": "PolymerElements/paper-button#^1.0.0",
     "paper-checkbox": "PolymerElements/paper-checkbox#^1.0.0",
     "paper-dialog": "PolymerElements/paper-dialog#^1.0.0",
