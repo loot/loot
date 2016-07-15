@@ -30,9 +30,8 @@
     const pluginEditor = document.getElementById('loot-plugin-editor').querySelector('template').content;
 
     pluginEditor.getElementById('enableEdits').previousElementSibling.textContent = l10n.translate('Enable Edits');
-    pluginEditor.getElementById('isPriorityGlobal').previousElementSibling.textContent = l10n.translate('Global Priority');
-    pluginEditor.querySelector('paper-tooltip[for=isPriorityGlobal]').textContent = l10n.translate('Global priorities are compared against all other plugins. Normal priorities are compared against only conflicting plugins.');
-    pluginEditor.getElementById('priorityValue').previousElementSibling.textContent = l10n.translate('Priority Value');
+    pluginEditor.getElementById('priorityValue').previousElementSibling.textContent = l10n.translate('Priority');
+    pluginEditor.getElementById('globalPriorityValue').previousElementSibling.textContent = l10n.translate('Global Priority');
 
     pluginEditor.getElementById('tableTabs').querySelector('[data-for=main]').textContent = l10n.translate('Main');
     pluginEditor.getElementById('tableTabs').querySelector('[data-for=after]').textContent = l10n.translate('Load After');
@@ -85,7 +84,8 @@
     /* Plugin List Item Template */
     const pluginItem = document.getElementById('loot-plugin-item').querySelector('template').content;
 
-    pluginItem.querySelector('paper-tooltip[for=globalPriorityIcon]').textContent = l10n.translate('Global Priority');
+    pluginItem.querySelector('#globalPriorityTooltip').textContent = l10n.translate('Global Priority');
+    pluginItem.querySelector('#localPriorityTooltip').textContent = l10n.translate('Priority');
     pluginItem.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
     pluginItem.querySelector('paper-tooltip[for=editorIsOpen]').textContent = l10n.translate('Editor Is Open');
   }

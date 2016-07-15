@@ -95,11 +95,10 @@ TEST_P(PluginSorterTest, failedSortShouldNotClearExistingGameMessages) {
   EXPECT_FALSE(game_.GetMessages().empty());
 }
 
-TEST_P(PluginSorterTest, sortingShouldEvaluateRelativePriorities) {
+TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
   ASSERT_NO_THROW(game_.LoadPlugins(false));
   PluginMetadata plugin(blankDifferentMasterDependentEsp);
-  plugin.Priority(-100000);
-  plugin.SetPriorityGlobal(true);
+  plugin.GlobalPriority(Priority(-100));
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
@@ -121,19 +120,19 @@ TEST_P(PluginSorterTest, sortingShouldEvaluateRelativePriorities) {
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
-TEST_P(PluginSorterTest, sortingWithPrioritiesShouldInheritRecursivelyRegardlessOfEvaluationOrder) {
+TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRegardlessOfEvaluationOrder) {
   ASSERT_NO_THROW(game_.LoadPlugins(false));
 
   // Set Blank.esp's priority.
   PluginMetadata plugin(blankEsp);
-  plugin.Priority(2);
+  plugin.GlobalPriority(Priority(2));
   game_.GetUserlist().AddPlugin(plugin);
 
   // Load Blank - Master Dependent.esp after Blank.esp so that it
   // inherits Blank.esp's priority.
   plugin = PluginMetadata(blankMasterDependentEsp);
   plugin.LoadAfter({
-      File(blankEsp),
+    File(blankEsp),
   });
   game_.GetUserlist().AddPlugin(plugin);
 
@@ -141,7 +140,7 @@ TEST_P(PluginSorterTest, sortingWithPrioritiesShouldInheritRecursivelyRegardless
   // that it inherits its inherited priority.
   plugin = PluginMetadata(blankDifferentEsp);
   plugin.LoadAfter({
-      File(blankMasterDependentEsp),
+    File(blankMasterDependentEsp),
   });
   game_.GetUserlist().AddPlugin(plugin);
 
@@ -149,23 +148,22 @@ TEST_P(PluginSorterTest, sortingWithPrioritiesShouldInheritRecursivelyRegardless
   // than 0 but lower than Blank.esp. Need to also make it a global priority
   // because it doesn't otherwise conflict with the other plugins.
   plugin = PluginMetadata(blankDifferentMasterDependentEsp);
-  plugin.Priority(1);
-  plugin.SetPriorityGlobal(true);
+  plugin.GlobalPriority(Priority(1));
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
   std::list<std::string> expectedSortedOrder({
-      masterFile,
-      blankEsm,
-      blankDifferentEsm,
-      blankMasterDependentEsm,
-      blankDifferentMasterDependentEsm,
-      blankDifferentMasterDependentEsp,
-      blankEsp,
-      blankMasterDependentEsp,
-      blankDifferentEsp,
-      blankPluginDependentEsp,
-      blankDifferentPluginDependentEsp,
+    masterFile,
+    blankEsm,
+    blankDifferentEsm,
+    blankMasterDependentEsm,
+    blankDifferentMasterDependentEsm,
+    blankDifferentMasterDependentEsp,
+    blankEsp,
+    blankMasterDependentEsp,
+    blankDifferentEsp,
+    blankPluginDependentEsp,
+    blankDifferentPluginDependentEsp,
   });
 
   std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);

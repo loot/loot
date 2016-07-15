@@ -138,13 +138,12 @@ loot-editor-close
           <paper-toggle-button id="enableEdits"></paper-toggle-button>
         </div>
         <div>
-          <div>Global Priority</div>
-          <paper-toggle-button id="isPriorityGlobal"></paper-toggle-button>
-          <paper-tooltip for="isPriorityGlobal">Compare against all other plugins, not just conflicting plugins.</paper-tooltip>
+          <div>Priority</div>
+          <paper-input id="priorityValue" type="number" max="127" min="-127" step="1" prevent-invalid-input no-label-float></paper-input>
         </div>
         <div>
-          <div>Priority Value</div>
-          <paper-input id="priorityValue" type="number" max="999999" min="-999999" step="1" prevent-invalid-input no-label-float></paper-input>
+          <div>Global Priority</div>
+          <paper-input id="globalPriorityValue" type="number" max="127" min="-127" step="1" prevent-invalid-input no-label-float></paper-input>
         </div>
       </div>
       <div id="after">
@@ -298,13 +297,11 @@ loot-editor-close
         /* If either of the priority values have been changed, the
            base priority value they're derived from will have
            changed, so record both. */
-        if (this.$.isPriorityGlobal.checked !== oldData.isPriorityGlobal
-            || this.$.priorityValue.value !== oldData.priority) {
-          plugin.isPriorityGlobal = this.$.isPriorityGlobal.checked;
+        if (this.$.priorityValue.value !== oldData.priority) {
           plugin.priority = this.$.priorityValue.value;
-
-          /* Also mark the priority as being explicitly set in the userlist. */
-          plugin.userlist.hasExplicitPriority = true;
+        }
+        if (this.$.globalPriorityValue.value !== oldData.globalPriority) {
+          plugin.globalPriority = this.$.globalPriorityValue.value;
         }
 
         plugin.userlist.enabled = this.$.enableEdits.checked;
@@ -388,8 +385,8 @@ loot-editor-close
         } else {
           this.$.enableEdits.checked = true;
         }
-        this.$.isPriorityGlobal.checked = newData.isPriorityGlobal;
         this.$.priorityValue.value = newData.priority;
+        this.$.globalPriorityValue.value = newData.globalPriority;
 
         /* Clear then fill in editor table data. Masterlist-originated
            rows should have their contents made read-only. */

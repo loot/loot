@@ -39,12 +39,11 @@
 #include "backend/metadata/location.h"
 #include "backend/metadata/message.h"
 #include "backend/metadata/plugin_cleaning_data.h"
+#include "backend/metadata/priority.h"
 #include "backend/metadata/tag.h"
 
 namespace loot {
 class Game;
-
-const int yamlGlobalPriorityDivisor = 1000000;
 
 class PluginMetadata {
 public:
@@ -67,9 +66,8 @@ public:
 
   std::string Name() const;
   bool Enabled() const;
-  int Priority() const;
-  bool IsPriorityExplicit() const;
-  bool IsPriorityGlobal() const;
+  Priority LocalPriority() const;
+  Priority GlobalPriority() const;
   std::set<File> LoadAfter() const;
   std::set<File> Reqs() const;
   std::set<File> Incs() const;
@@ -80,9 +78,8 @@ public:
   std::set<Location> Locations() const;
 
   void Enabled(const bool enabled);
-  void Priority(const int priority);
-  void SetPriorityExplicit(bool state);
-  void SetPriorityGlobal(bool state);
+  void LocalPriority(const Priority& priority);
+  void GlobalPriority(const Priority& priority);
   void LoadAfter(const std::set<File>& after);
   void Reqs(const std::set<File>& reqs);
   void Incs(const std::set<File>& incs);
@@ -103,17 +100,14 @@ public:
   //Compare name string.
   bool operator == (const std::string& rhs) const;
   bool operator != (const std::string& rhs) const;
-
-  int GetYamlPriorityValue() const;
 protected:
   std::list<Message> messages_;
   std::set<Tag> tags_;
 private:
   std::string name_;
   bool enabled_;  //Default to true.
-  int priority_;  //Default to 0 : >0 is lower down in load order, <0 is higher up.
-  bool isPriorityExplicit_;  //If false and priority is 0, then priority was not explicitly set as such.
-  bool isPriorityGlobal_;
+  Priority localPriority_;
+  Priority globalPriority_;
   std::set<File> loadAfter_;
   std::set<File> requirements_;
   std::set<File> incompatibilities_;
@@ -142,8 +136,11 @@ struct convert<loot::PluginMetadata> {
     if (!rhs.Enabled())
       node["enabled"] = rhs.Enabled();
 
-    if (rhs.IsPriorityExplicit())
-      node["priority"] = rhs.GetYamlPriorityValue();
+    if (rhs.LocalPriority().isExplicit())
+      node["priority"] = rhs.LocalPriority().getValue();
+
+    if (rhs.GlobalPriority().isExplicit())
+      node["global_priority"] = rhs.GlobalPriority().getValue();
 
     if (!rhs.LoadAfter().empty())
       node["after"] = rhs.LoadAfter();
@@ -185,11 +182,14 @@ struct convert<loot::PluginMetadata> {
     if (node["enabled"])
       rhs.Enabled(node["enabled"].as<bool>());
 
+    // Read priority values as int to prevent values that are too large from
+    // being converted to -128.
     if (node["priority"]) {
-      int priority = node["priority"].as<int>();
-      rhs.Priority(priority % loot::yamlGlobalPriorityDivisor);
-      rhs.SetPriorityExplicit(true);
-      rhs.SetPriorityGlobal(abs(priority) >= loot::yamlGlobalPriorityDivisor);
+      rhs.LocalPriority(loot::Priority(node["priority"].as<int>()));
+    }
+
+    if (node["global_priority"]) {
+      rhs.GlobalPriority(loot::Priority(node["global_priority"].as<int>()));
     }
 
     if (node["after"])

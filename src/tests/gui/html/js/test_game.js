@@ -393,8 +393,8 @@ describe('Game', () => {
         masterlist: {},
         userlist: {},
 
-        priority: 500,
-        isPriorityGlobal: true,
+        priority: -100,
+        globalPriority: 100,
         messages: [{
           type: 'warn',
           condition: 'file("bar.esp")',
@@ -425,7 +425,7 @@ describe('Game', () => {
           loadsArchive: game._plugins[0].loadsArchive,
 
           priority: game._plugins[0].priority,
-          isPriorityGlobal: game._plugins[0].isPriorityGlobal,
+          globalPriority: game._plugins[0].globalPriority,
           messages: game._plugins[0].messages,
           tags: game._plugins[0].tags,
           isDirty: game._plugins[0].isDirty,

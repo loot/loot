@@ -233,13 +233,13 @@ TEST_P(MetadataListTest, addPluginShouldStoreGivenSpecificPluginMetadata) {
   ASSERT_TRUE(metadataList.FindPlugin(PluginMetadata(blankDifferentEsm)).HasNameOnly());
 
   PluginMetadata plugin(blankDifferentEsm);
-  plugin.Priority(1000);
+  plugin.LocalPriority(Priority(100));
   metadataList.AddPlugin(plugin);
 
   plugin = metadataList.FindPlugin(plugin);
 
   EXPECT_EQ(blankDifferentEsm, plugin.Name());
-  EXPECT_EQ(1000, plugin.Priority());
+  EXPECT_EQ(100, plugin.LocalPriority().getValue());
 }
 
 TEST_P(MetadataListTest, addPluginShouldStoreGivenRegexPluginMetadata) {
@@ -247,12 +247,12 @@ TEST_P(MetadataListTest, addPluginShouldStoreGivenRegexPluginMetadata) {
   ASSERT_NO_THROW(metadataList.Load(metadataPath));
 
   PluginMetadata plugin(".+Dependent\\.esp");
-  plugin.Priority(-10);
+  plugin.LocalPriority(Priority(-10));
   metadataList.AddPlugin(plugin);
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankPluginDependentEsp));
 
-  EXPECT_EQ(-10, plugin.Priority());
+  EXPECT_EQ(-10, plugin.LocalPriority().getValue());
 }
 
 TEST_P(MetadataListTest, addPluginShouldThrowIfAMatchingPluginAlreadyExists) {
@@ -266,7 +266,7 @@ TEST_P(MetadataListTest, addPluginShouldThrowIfAMatchingPluginAlreadyExists) {
   ASSERT_ANY_THROW(metadataList.AddPlugin(PluginMetadata(blankEsm)));
 }
 
-TEST_P(MetadataListTest, erasePluginShouldRemoveStoredMetadatForTheGivenPlugin) {
+TEST_P(MetadataListTest, erasePluginShouldRemoveStoredMetadataForTheGivenPlugin) {
   MetadataList metadataList;
   ASSERT_NO_THROW(metadataList.Load(metadataPath));
 

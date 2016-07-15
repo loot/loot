@@ -457,13 +457,12 @@ udr: 160
     <tbody>
         <tr><td><code>name</code><td>string<td>&#x2713;<td>Can be an exact plugin filename or a regular expression plugin filename. If the filename contains any of the characters <code>:\*?|</code>, the string will be treated as a regular expression, otherwise it will be treated as an exact filename. For example, <code>Example\.esm</code> will be treated as a regular expression, as it contains a <code>\</code> character.
         <tr><td><code>enabled</code><td>boolean<td>&#x2717;<td>Enables or disables use of the plugin object. Used for user rules, but no reason to use it in the masterlist. If unspecified, defaults to <code>true</code>.
-        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). Plugins that don't change any of the same records are not compared, unless:
-            <ul>
-                <li>One of the plugins is an empty plugin, containing only a header record.
-                <li>One of the plugins has a priority greater than or equal to 1,000,000. In this case, only the modulo (ie. remainder when divided) with 1,000,000 is used when comparing plugin priority values &ndash; the rest is only used to signify that the plugin should be compared against all others.
+        <tr><td><code>priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to others that change one or more of the same records, but which are otherwise unrelated (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list). Plugins that don't change any of the same records are not compared, unless one of the plugins contains only a header record.
             </ul>
-            <p>For example, <code>priority: 153000352</code> and <code>priority: 352</code> have equal values when compared, but a plugin with the first priority will be compared against all others, while a (non-empty) plugin with the second priority will be compared against only those it conflicts with.
-            <p>A plugin with a higher priority value will load after a plugin with a lower priority value. The value can be anything in the range <code>-2000000000</code> to <code>2000000000</code>, and if unspecified defaults to <code>0</code>.
+            <p>A plugin with a higher <code>priority</code> value will load after a plugin with a lower <code>priority</code> value. The value can be anything in the range <code>-127</code> to <code>127</code> inclusive, and if unspecified defaults to <code>0</code>.
+        <tr><td><code>global_priority</code><td>integer<td>&#x2717;<td>Modifies plugin position relative to all unrelated plugins (ie. neither plugin lists the other as a master, requirement, or in its <code>after</code> list).
+            <p>A plugin with a higher <code>global_priority</code> value will load after a plugin with a lower priority value. The value can be anything in the range <code>-127</code> to <code>127</code> inclusive, and if unspecified defaults to <code>0</code>.
+            <p><code>global_priority</code> takes precedence over <code>priority</code> when comparing two plugins' priorities: the <code>priority</code> value is only compared if the two plugins have the same <code>global_priority</code> value.
         <tr><td><code>after</code><td>file set<td>&#x2717;<td>An unordered set of plugins that this plugin must load after, but which are not dependencies. Used for resolving specific compatibility issues and by user rules for specifying custom plugin positions.
         <tr><td><code>req</code><td>file set<td>&#x2717;<td>An unordered set of files that this plugin requires to be present. This plugin will load after any plugins listed. If any of these files are missing, an error message will be displayed. Intended for use specifying implicit dependencies, as LOOT will detect a plugin's explicit masters itself.
         <tr><td><code>inc</code><td>file set<td>&#x2717;<td>An unordered set of files that this plugin is incompatible with. If any of these files are present, an error message will be displayed.
@@ -489,6 +488,7 @@ udr: 160
         <tr><td><code>name</code><td>Not merged.
         <tr><td><code>enabled</code><td>Replaced by B's value.
         <tr><td><code>priority</code><td>Replaced by B's value, unless that value is <code>0</code> and it was not explicitly set.
+        <tr><td><code>global_priority</code><td>Replaced by B's value, unless that value is <code>0</code> and it was not explicitly set.
         <tr><td><code>after</code><td>Merged. If B's file set contains an item that is equal to one already present in A's file set, B's item is discarded.
         <tr><td><code>req</code><td>Merged. If B's file set contains an item that is equal to one already present in A's file set, B's item is discarded.
         <tr><td><code>inc</code><td>Merged. If B's file set contains an item that is equal to one already present in A's file set, B's item is discarded.

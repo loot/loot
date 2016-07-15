@@ -75,14 +75,15 @@
       :host-context(body[data-editors]) #primary {
           line-height: normal;
       }
-      #priority {
+      #secondary > span {
           font-size: 0.857rem;
           color: var(--secondary-text-color);
           height: 13px;
           overflow: visible;
       }
-      #globalPriorityIcon {
-          height: 13px;
+      #secondary iron-icon {
+        height: 13px;
+        vertical-align: text-bottom;
       }
       iron-icon {
           color: var(--secondary-text-color);
@@ -95,10 +96,6 @@
       [hidden],
       #hasUserEdits[hidden] {
         display: none;
-      }
-      #globalPriorityIcon[hidden] {
-        visibility: hidden;
-        display: inline-flex;
       }
       :host {
         cursor: pointer;
@@ -113,9 +110,16 @@
       <paper-item-body two-line>
         <div id="primary"><content></content></div>
         <div id="secondary" secondary>
-          <iron-icon id="globalPriorityIcon" icon="star" hidden$="[[!isPriorityGlobal]]"></iron-icon>
-          <paper-tooltip for="globalPriorityIcon" position="right">Global Priority</paper-tooltip>
-          <span id="priority" hidden$="[[!priority]]">[[priority]]</span>
+          <span hidden$="[[!globalPriority]]">
+            <iron-icon icon="star"></iron-icon>
+            <span>[[globalPriority]]</span>
+            <paper-tooltip id="globalPriorityTooltip" position="right">Global Priority</paper-tooltip>
+          </span>
+          <span hidden$="[[!priority]]">
+            <iron-icon icon="star-border"></iron-icon>
+            <span>[[priority]]</span>
+            <paper-tooltip id="localPriorityTooltip" position="right">Priority</paper-tooltip>
+          </span>
         </div>
       </paper-item-body>
       <paper-tooltip for="editorIsOpen" position="left">Editor Is Open</paper-tooltip>
@@ -139,9 +143,9 @@
           type: String,
           value: '',
         },
-        isPriorityGlobal: {
-          type: Boolean,
-          value: false,
+        globalPriority: {
+          type: String,
+          value: '',
         },
         isEditorOpen: {
           type: Boolean,
@@ -185,7 +189,7 @@
 
       updateStyling(pluginData) {
         this.priority = pluginData.priority;
-        this.isPriorityGlobal = pluginData.isPriorityGlobal;
+        this.globalPriority = pluginData.globalPriority;
         this.isEditorOpen = pluginData.isEditorOpen;
         this.hasUserEdits = pluginData.hasUserEdits;
       },

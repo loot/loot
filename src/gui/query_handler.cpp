@@ -429,21 +429,24 @@ std::string QueryHandler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
   PluginMetadata ulistPlugin = lootState_.getCurrentGame().GetUserlist().FindPlugin(newUserlistEntry);
 
   // First sort out the priority value. This is only given if it was changed.
-  BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata priority value from Javascript variables.";
-  if (pluginMetadata["priority"] && pluginMetadata["isPriorityGlobal"]) {
-    BOOST_LOG_TRIVIAL(trace) << "Priority value was changed, recalculating...";
+  BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata local priority value from Javascript variables.";
+  if (pluginMetadata["priority"]) {
+    BOOST_LOG_TRIVIAL(trace) << "Local priority value was changed, recalculating...";
     // Priority value was changed, so add it to the userlist data.
-    newUserlistEntry.Priority(pluginMetadata["priority"].as<int>());
-    newUserlistEntry.SetPriorityExplicit(true);
-    newUserlistEntry.SetPriorityGlobal(pluginMetadata["isPriorityGlobal"].as<bool>());
+    newUserlistEntry.LocalPriority(Priority(pluginMetadata["priority"].as<int>()));
   } else {
-      // Priority value wasn't changed, use the existing userlist value.
-    BOOST_LOG_TRIVIAL(trace) << "Priority value is unchanged, using existing userlist value (if it exists).";
-    if (!ulistPlugin.HasNameOnly()) {
-      newUserlistEntry.Priority(ulistPlugin.Priority());
-      newUserlistEntry.SetPriorityExplicit(ulistPlugin.IsPriorityExplicit());
-      newUserlistEntry.SetPriorityGlobal(ulistPlugin.IsPriorityGlobal());
-    }
+    // Priority value wasn't changed, use the existing userlist value.
+    BOOST_LOG_TRIVIAL(trace) << "Local priority value is unchanged, using existing userlist value (if it exists).";
+    newUserlistEntry.LocalPriority(ulistPlugin.LocalPriority());
+  }
+
+  if (pluginMetadata["globalPriority"]) {
+    BOOST_LOG_TRIVIAL(trace) << "Global priority value was changed, recalculating...";
+    // Priority value was changed, so add it to the userlist data.
+    newUserlistEntry.GlobalPriority(Priority(pluginMetadata["globalPriority"].as<int>()));
+  } else {
+    BOOST_LOG_TRIVIAL(trace) << "Global priority value is unchanged, using existing userlist value (if it exists).";
+    newUserlistEntry.GlobalPriority(ulistPlugin.GlobalPriority());
   }
 
   // Now the enabled flag.
@@ -698,11 +701,6 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
         pluginNode["userlist"]["clean"] = ulistPlugin.CleanInfo();
         pluginNode["userlist"]["url"] = ulistPlugin.Locations();
-        // The raw priority data isn't used, but should be set
-        // that LOOT knows it exists.
-        if (ulistPlugin.IsPriorityExplicit()) {
-          pluginNode["userlist"]["hasExplicitPriority"] = true;
-        }
       }
 
       // Now merge masterlist and userlist metadata and evaluate,
@@ -970,8 +968,8 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   // Now add to pluginNode.
   YAML::Node pluginNode;
   pluginNode["name"] = tempPlugin.Name();
-  pluginNode["priority"] = tempPlugin.Priority();
-  pluginNode["isPriorityGlobal"] = tempPlugin.IsPriorityGlobal();
+  pluginNode["priority"] = tempPlugin.LocalPriority().getValue();
+  pluginNode["globalPriority"] = tempPlugin.GlobalPriority().getValue();
   pluginNode["messages"] = tempPlugin.Messages();
   pluginNode["tags"] = tempPlugin.Tags();
   pluginNode["isDirty"] = isDirty;

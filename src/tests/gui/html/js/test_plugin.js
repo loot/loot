@@ -183,19 +183,19 @@ describe('Plugin', () => {
       plugin.priority.should.equal(5);
     });
 
-    it('should set isPriorityGlobal value to false if no key was passed', () => {
+    it('should set global priority to 0 if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isPriorityGlobal.should.be.false();
+      plugin.globalPriority.should.equal(0);
     });
 
-    it('should set isPriorityGlobal to passed key\'s value', () => {
+    it('should set global priority to passed key\'s value', () => {
       const plugin = new loot.Plugin({
         name: 'test',
-        isPriorityGlobal: true,
+        globalPriority: 5,
       });
 
-      plugin.isPriorityGlobal.should.be.true();
+      plugin.globalPriority.should.equal(5);
     });
 
     it('should set messages value to an empty array if no key was passed', () => {
@@ -812,7 +812,7 @@ describe('Plugin', () => {
       handleEvent = (evt) => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.globalPriority.should.equal(plugin.globalPriority);
         evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();
@@ -874,7 +874,7 @@ describe('Plugin', () => {
       handleEvent = (evt) => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.globalPriority.should.equal(plugin.globalPriority);
         evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();
@@ -886,34 +886,34 @@ describe('Plugin', () => {
     });
   });
 
-  describe('#isPriorityGlobal', () => {
+  describe('#globalPriority', () => {
     let handleEvent;
 
     afterEach(() => {
       document.removeEventListener('loot-plugin-item-content-change', handleEvent);
     });
 
-    it('getting value should return false if it has not been set in the constructor', () => {
+    it('getting value should return 0 if it has not been set in the constructor', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isPriorityGlobal.should.be.false();
+      plugin.globalPriority.should.equal(0);
     });
 
     it('getting value should return the value that was set', () => {
       const plugin = new loot.Plugin({
         name: 'test',
-        isPriorityGlobal: true,
+        globalPriority: 5,
       });
 
-      plugin.isPriorityGlobal.should.be.true();
+      plugin.globalPriority.should.equal(5);
     });
 
     it('setting value should store set value', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isPriorityGlobal = true;
+      plugin.globalPriority = 5;
 
-      plugin.isPriorityGlobal.should.be.true();
+      plugin.globalPriority.should.equal(5);
     });
 
     it('setting value to the current value should not fire an event', (done) => {
@@ -925,7 +925,7 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
-      plugin.isPriorityGlobal = plugin.isPriorityGlobal;
+      plugin.globalPriority = plugin.globalPriority;
 
       setTimeout(done, 100);
     });
@@ -936,7 +936,7 @@ describe('Plugin', () => {
       handleEvent = (evt) => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.globalPriority.should.equal(plugin.globalPriority);
         evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();
@@ -944,7 +944,7 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
-      plugin.isPriorityGlobal = true;
+      plugin.globalPriority = 5;
     });
   });
 
@@ -989,7 +989,7 @@ describe('Plugin', () => {
       handleEvent = (evt) => {
         evt.detail.pluginId.should.equal(plugin.id);
         evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.isPriorityGlobal.should.equal(plugin.isPriorityGlobal);
+        evt.detail.globalPriority.should.equal(plugin.globalPriority);
         evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
         evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
         done();

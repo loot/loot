@@ -177,7 +177,7 @@
       this._userlist = obj.userlist;
 
       this._priority = obj.priority || 0;
-      this._isPriorityGlobal = obj.isPriorityGlobal || false;
+      this._globalPriority = obj.globalPriority || 0;
       this._messages = obj.messages || [];
       this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
@@ -263,7 +263,7 @@
         detail: {
           pluginId: this.id,
           priority: this.priority,
-          isPriorityGlobal: this.isPriorityGlobal,
+          globalPriority: this.globalPriority,
           isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
         },
@@ -408,13 +408,13 @@
       }
     }
 
-    get isPriorityGlobal() {
-      return this._isPriorityGlobal;
+    get globalPriority() {
+      return this._globalPriority;
     }
 
-    set isPriorityGlobal(isPriorityGlobal) {
-      if (this._isPriorityGlobal !== isPriorityGlobal) {
-        this._isPriorityGlobal = isPriorityGlobal;
+    set globalPriority(globalPriority) {
+      if (this._globalPriority !== globalPriority) {
+        this._globalPriority = globalPriority;
 
         this._dispatchItemContentChangeEvent();
       }

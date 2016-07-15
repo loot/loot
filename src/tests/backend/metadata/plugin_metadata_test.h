@@ -45,9 +45,6 @@ TEST_P(PluginMetadataTest, defaultConstructorShouldLeaveNameEmptyAndEnableMetada
 
   EXPECT_TRUE(plugin.Name().empty());
   EXPECT_TRUE(plugin.Enabled());
-  EXPECT_FALSE(plugin.IsPriorityExplicit());
-  EXPECT_FALSE(plugin.IsPriorityGlobal());
-  EXPECT_EQ(0, plugin.Priority());
 }
 
 TEST_P(PluginMetadataTest, stringConstructorShouldSetNameToGivenStringAndEnableMetadataAndLeaveAllOtherFieldsAtTheirDefaults) {
@@ -55,9 +52,6 @@ TEST_P(PluginMetadataTest, stringConstructorShouldSetNameToGivenStringAndEnableM
 
   EXPECT_EQ(blankEsm, plugin.Name());
   EXPECT_TRUE(plugin.Enabled());
-  EXPECT_FALSE(plugin.IsPriorityExplicit());
-  EXPECT_FALSE(plugin.IsPriorityGlobal());
-  EXPECT_EQ(0, plugin.Priority());
 }
 
 TEST_P(PluginMetadataTest, equalityOperatorShouldUseCaseInsensitiveNameComparisonForNonRegexNames) {
@@ -119,74 +113,77 @@ TEST_P(PluginMetadataTest, mergeMetadataShouldUseMergedEnabledStateIfMergedMetad
   PluginMetadata plugin2;
 
   plugin2.Enabled(false);
-  plugin2.SetPriorityExplicit(true);
+  plugin2.LocalPriority(Priority(5));
   ASSERT_FALSE(plugin2.HasNameOnly());
   plugin1.MergeMetadata(plugin2);
 
   EXPECT_FALSE(plugin1.Enabled());
 }
 
-TEST_P(PluginMetadataTest, mergeMetadataShouldUseMergedNonZeroPriorityValue) {
+TEST_P(PluginMetadataTest, mergeMetadataShouldUseMergedNonZeroLocalPriorityValue) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin1.Priority(5);
-  plugin2.Priority(3);
+  plugin1.LocalPriority(Priority(5));
+  plugin2.LocalPriority(Priority(3));
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_EQ(3, plugin1.Priority());
+  EXPECT_EQ(3, plugin1.LocalPriority().getValue());
 }
 
-TEST_P(PluginMetadataTest, mergeMetadataShouldMergeAnExplicitPriorityValueOfZero) {
+TEST_P(PluginMetadataTest, mergeMetadataShouldUseMergedNonZeroGlobalPriorityValue) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin1.Priority(5);
-  plugin2.SetPriorityExplicit(true);
+  plugin1.GlobalPriority(Priority(5));
+  plugin2.GlobalPriority(Priority(3));
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_EQ(0, plugin1.Priority());
+  EXPECT_EQ(3, plugin1.GlobalPriority().getValue());
 }
 
-TEST_P(PluginMetadataTest, mergeMetadataShouldNotMergeNonExplicitGlobalPriorityState) {
+TEST_P(PluginMetadataTest, mergeMetadataShouldNotUseImplicitZeroLocalPriorityValue) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin2.SetPriorityGlobal(true);
+  plugin1.LocalPriority(Priority(5));
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_FALSE(plugin1.IsPriorityGlobal());
+  EXPECT_EQ(5, plugin1.LocalPriority().getValue());
 }
 
-TEST_P(PluginMetadataTest, mergeMetadataShouldMergeExplicitGlobalPriorityState) {
+TEST_P(PluginMetadataTest, mergeMetadataShouldNotUseImplicitZeroGlobalPriorityValue) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin2.SetPriorityExplicit(true);
-  plugin2.SetPriorityGlobal(true);
+  plugin1.GlobalPriority(Priority(5));
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_TRUE(plugin1.IsPriorityGlobal());
+  EXPECT_EQ(5, plugin1.GlobalPriority().getValue());
 }
 
-TEST_P(PluginMetadataTest, mergeMetadataShouldMergeTrueExplicitPriorityState) {
+TEST_P(PluginMetadataTest, mergeMetadataShouldMergeAnExplicitLocalPriorityValueOfZero) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin2.SetPriorityExplicit(true);
+  plugin1.LocalPriority(Priority(5));
+  plugin2.LocalPriority(Priority(0));
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_TRUE(plugin1.IsPriorityExplicit());
+  EXPECT_EQ(0, plugin1.LocalPriority().getValue());
+  EXPECT_TRUE(plugin1.LocalPriority().isExplicit());
 }
 
-TEST_P(PluginMetadataTest, mergeMetadataShouldNotMergeFalseExplicitPriorityState) {
+TEST_P(PluginMetadataTest, mergeMetadataShouldMergeAnExplicitGlobalPriorityValueOfZero) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin1.SetPriorityExplicit(true);
+  plugin1.GlobalPriority(Priority(5));
+  plugin2.GlobalPriority(Priority(0));
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_TRUE(plugin1.IsPriorityExplicit());
+  EXPECT_EQ(0, plugin1.GlobalPriority().getValue());
+  EXPECT_TRUE(plugin1.GlobalPriority().isExplicit());
 }
 
 TEST_P(PluginMetadataTest, mergeMetadataShouldMergeLoadAfterData) {
@@ -316,39 +313,50 @@ TEST_P(PluginMetadataTest, diffMetadataShouldUseSourcePluginEnabledState) {
   EXPECT_FALSE(diff.Enabled());
 }
 
-TEST_P(PluginMetadataTest, diffMetadataShouldUseSourcePluginPriorityDataIfItDiffersFromTheTargetPluginPriorityData) {
+TEST_P(PluginMetadataTest, diffMetadataShouldUseSourcePluginLocalPriorityIfItDiffersFromTheTargetPluginLocalPriority) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin1.SetPriorityGlobal(true);
+  plugin2.LocalPriority(Priority(5));
   PluginMetadata diff = plugin1.DiffMetadata(plugin2);
 
-  EXPECT_EQ(0, diff.Priority());
-  EXPECT_FALSE(diff.IsPriorityExplicit());
-  EXPECT_TRUE(diff.IsPriorityGlobal());
-
-  plugin1.Priority(5);
-  plugin1.SetPriorityGlobal(false);
-  diff = plugin1.DiffMetadata(plugin2);
-
-  EXPECT_EQ(5, diff.Priority());
-  EXPECT_TRUE(diff.IsPriorityExplicit());
-  EXPECT_FALSE(diff.IsPriorityGlobal());
+  EXPECT_EQ(0, diff.LocalPriority().getValue());
+  EXPECT_FALSE(diff.LocalPriority().isExplicit());
 }
 
-TEST_P(PluginMetadataTest, diffMetadataShouldOutputDefaultPriorityDataIfTheSourceAndTargetPluginPriorityDataMatch) {
+TEST_P(PluginMetadataTest, diffMetadataShouldUseSourcePluginGlobalPriorityIfItDiffersFromTheTargetPluginGlobalPriority) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin1.Priority(5);
-  plugin1.SetPriorityGlobal(true);
-  plugin2.Priority(5);
-  plugin2.SetPriorityGlobal(true);
+  plugin2.GlobalPriority(Priority(5));
   PluginMetadata diff = plugin1.DiffMetadata(plugin2);
 
-  EXPECT_EQ(0, diff.Priority());
-  EXPECT_FALSE(diff.IsPriorityExplicit());
-  EXPECT_FALSE(diff.IsPriorityGlobal());
+  EXPECT_EQ(0, diff.GlobalPriority().getValue());
+  EXPECT_FALSE(diff.GlobalPriority().isExplicit());
+}
+
+TEST_P(PluginMetadataTest, diffMetadataShouldOutputDefaultLocalPriorityIfTheSourceAndTargetPluginLocalPrioritiesMatch) {
+  PluginMetadata plugin1;
+  PluginMetadata plugin2;
+
+  plugin1.LocalPriority(Priority(5));
+  plugin2.LocalPriority(Priority(5));
+  PluginMetadata diff = plugin1.DiffMetadata(plugin2);
+
+  EXPECT_EQ(0, diff.LocalPriority().getValue());
+  EXPECT_FALSE(diff.LocalPriority().isExplicit());
+}
+
+TEST_P(PluginMetadataTest, diffMetadataShouldOutputDefaultGlobalPriorityIfTheSourceAndTargetPluginGlobalPrioritiesMatch) {
+  PluginMetadata plugin1;
+  PluginMetadata plugin2;
+
+  plugin1.GlobalPriority(Priority(5));
+  plugin2.GlobalPriority(Priority(5));
+  PluginMetadata diff = plugin1.DiffMetadata(plugin2);
+
+  EXPECT_EQ(0, diff.GlobalPriority().getValue());
+  EXPECT_FALSE(diff.GlobalPriority().isExplicit());
 }
 
 TEST_P(PluginMetadataTest, diffMetadataShouldOutputLoadAfterDataThatAreNotCommonToBothInputPlugins) {
@@ -487,17 +495,24 @@ TEST_P(PluginMetadataTest, newMetadataShouldUseSourcePluginEnabledState) {
   EXPECT_FALSE(newMetadata.Enabled());
 }
 
-TEST_P(PluginMetadataTest, newMetadataShouldUseSourcePluginPriorityData) {
+TEST_P(PluginMetadataTest, newMetadataShouldUseSourcePluginLocalPriority) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
 
-  plugin1.Priority(5);
-  plugin1.SetPriorityGlobal(true);
+  plugin1.LocalPriority(Priority(5));
   PluginMetadata newMetadata = plugin1.NewMetadata(plugin2);
 
-  EXPECT_EQ(5, newMetadata.Priority());
-  EXPECT_TRUE(newMetadata.IsPriorityExplicit());
-  EXPECT_TRUE(newMetadata.IsPriorityGlobal());
+  EXPECT_EQ(5, newMetadata.LocalPriority().getValue());
+}
+
+TEST_P(PluginMetadataTest, newMetadataShouldUseSourcePluginGlobalPriority) {
+  PluginMetadata plugin1;
+  PluginMetadata plugin2;
+
+  plugin1.GlobalPriority(Priority(5));
+  PluginMetadata newMetadata = plugin1.NewMetadata(plugin2);
+
+  EXPECT_EQ(5, newMetadata.GlobalPriority().getValue());
 }
 
 TEST_P(PluginMetadataTest, newMetadataShouldOutputLoadAfterDataThatAreNotCommonToBothInputPlugins) {
@@ -612,48 +627,6 @@ TEST_P(PluginMetadataTest, newMetadataShouldOutputLocationsThatAreNotCommonToBot
   EXPECT_EQ(std::set<Location>({location2}), newMetadata.Locations());
 }
 
-TEST_P(PluginMetadataTest, settingPriorityWithAbsoluteValueGreaterOrEqualToGlobalPriorityDivisorShouldThrow) {
-  PluginMetadata plugin;
-  EXPECT_ANY_THROW(plugin.Priority(yamlGlobalPriorityDivisor));
-  EXPECT_ANY_THROW(plugin.Priority(yamlGlobalPriorityDivisor + 1));
-  EXPECT_ANY_THROW(plugin.Priority(-yamlGlobalPriorityDivisor));
-  EXPECT_ANY_THROW(plugin.Priority(-yamlGlobalPriorityDivisor - 1));
-}
-
-TEST_P(PluginMetadataTest, settingPriorityAsGlobalShouldSucceed) {
-  PluginMetadata plugin;
-  ASSERT_FALSE(plugin.IsPriorityGlobal());
-  plugin.SetPriorityGlobal(true);
-  EXPECT_TRUE(plugin.IsPriorityGlobal());
-}
-
-TEST_P(PluginMetadataTest, settingPriorityAsNotGlobalShouldSucceed) {
-  PluginMetadata plugin;
-  plugin.SetPriorityGlobal(true);
-  ASSERT_TRUE(plugin.IsPriorityGlobal());
-  plugin.SetPriorityGlobal(false);
-  EXPECT_FALSE(plugin.IsPriorityGlobal());
-}
-
-TEST_P(PluginMetadataTest, gettingYamlPriorityValueForAGlobalPriorityShouldReturnValueWithGlobalFlagSet) {
-  PluginMetadata plugin;
-  plugin.Priority(10);
-  plugin.SetPriorityGlobal(true);
-  EXPECT_EQ(1000010, plugin.GetYamlPriorityValue());
-
-  plugin.Priority(-20);
-  EXPECT_EQ(-1000020, plugin.GetYamlPriorityValue());
-}
-
-TEST_P(PluginMetadataTest, gettingYamlPriorityValueForANonGlobalPriorityShouldReturnValueWithGlobalFlagNotSet) {
-  PluginMetadata plugin;
-  plugin.Priority(10);
-  EXPECT_EQ(10, plugin.GetYamlPriorityValue());
-
-  plugin.Priority(-20);
-  EXPECT_EQ(-20, plugin.GetYamlPriorityValue());
-}
-
 TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
@@ -710,9 +683,16 @@ TEST_P(PluginMetadataTest, hasNameOnlyShouldBeTrueIfThePluginMetadataIsDisabled)
   EXPECT_TRUE(plugin.HasNameOnly());
 }
 
-TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfThePriorityValueIsExplicit) {
+TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfTheLocalPriorityIsExplicit) {
   PluginMetadata plugin(blankEsp);
-  plugin.SetPriorityExplicit(true);
+  plugin.LocalPriority(Priority(0));
+
+  EXPECT_FALSE(plugin.HasNameOnly());
+}
+
+TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfTheGlobalPriorityIsExplicit) {
+  PluginMetadata plugin(blankEsp);
+  plugin.GlobalPriority(Priority(0));
 
   EXPECT_FALSE(plugin.HasNameOnly());
 }
@@ -823,9 +803,9 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithNoMetadataAsABla
   EXPECT_STREQ("", emitter.c_str());
 }
 
-TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithAnExplicitPriorityCorrectly) {
+TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithAnExplicitLocalPriorityCorrectly) {
   PluginMetadata plugin(blankEsm);
-  plugin.SetPriorityExplicit(true);
+  plugin.LocalPriority(Priority(0));
 
   YAML::Emitter emitter;
   emitter << plugin;
@@ -834,17 +814,38 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithAnExplicitPriori
                "priority: 0", emitter.c_str());
 }
 
-TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithAnExplicitPriorityThatIsDisabledCorrectly) {
+TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithAnExplicitGlobalPriorityCorrectly) {
   PluginMetadata plugin(blankEsm);
-  plugin.SetPriorityExplicit(true);
+  plugin.GlobalPriority(Priority(0));
+
+  YAML::Emitter emitter;
+  emitter << plugin;
+
+  EXPECT_STREQ("name: 'Blank.esm'\n"
+               "global_priority: 0", emitter.c_str());
+}
+
+TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginThatIsDisabledAndIsNotNameOnlyCorrectly) {
+  PluginMetadata plugin(blankEsm);
+  plugin.GlobalPriority(Priority(0));
   plugin.Enabled(false);
 
   YAML::Emitter emitter;
   emitter << plugin;
 
   EXPECT_STREQ("name: 'Blank.esm'\n"
-               "priority: 0\n"
-               "enabled: false", emitter.c_str());
+               "enabled: false\n"
+               "global_priority: 0", emitter.c_str());
+}
+
+TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginThatIsDisabledAndIsNameOnlyAsAnEmptyString) {
+  PluginMetadata plugin(blankEsm);
+  plugin.Enabled(false);
+
+  YAML::Emitter emitter;
+  emitter << plugin;
+
+  EXPECT_STREQ("", emitter.c_str());
 }
 
 TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithLoadAfterMetadataCorrectly) {
@@ -966,13 +967,38 @@ TEST_P(PluginMetadataTest, encodingAsYamlShouldOmitAllUnsetFields) {
   EXPECT_FALSE(node["url"]);
 }
 
-TEST_P(PluginMetadataTest, encodingAsYamlShouldSetPriorityFieldIfPriorityIsExplicit) {
+TEST_P(PluginMetadataTest, encodingAsYamlShouldSetPriorityFieldIfLocalPriorityIsExplicit) {
   PluginMetadata plugin(blankEsp);
-  plugin.SetPriorityExplicit(true);
+  plugin.LocalPriority(Priority(0));
   YAML::Node node;
   node = plugin;
 
-  EXPECT_EQ(0, node["priority"].as<int>());
+  EXPECT_EQ(0, node["priority"].as<short>());
+}
+
+TEST_P(PluginMetadataTest, encodingAsYamlShouldSetGlobalPriorityFieldIfGlobalPriorityIsExplicit) {
+  PluginMetadata plugin(blankEsp);
+  plugin.GlobalPriority(Priority(0));
+  YAML::Node node;
+  node = plugin;
+
+  EXPECT_EQ(0, node["global_priority"].as<short>());
+}
+
+TEST_P(PluginMetadataTest, encodingAsYamlShouldNotSetPriorityFieldIfLocalPriorityIsImplicit) {
+  PluginMetadata plugin(blankEsp);
+  YAML::Node node;
+  node = plugin;
+
+  EXPECT_FALSE(node["priority"]);
+}
+
+TEST_P(PluginMetadataTest, encodingAsYamlShouldNotSetPriorityFieldIfGlobalPriorityIsImplicit) {
+  PluginMetadata plugin(blankEsp);
+  YAML::Node node;
+  node = plugin;
+
+  EXPECT_FALSE(node["global_priority"]);
 }
 
 TEST_P(PluginMetadataTest, encodingAsYamlShouldSetEnabledFieldIfItIsFalse) {
@@ -1061,15 +1087,17 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldSetDefaultPriorityValuesIfNoneA
   PluginMetadata plugin = node.as<PluginMetadata>();
 
   EXPECT_EQ(blankEsp, plugin.Name());
-  EXPECT_EQ(0, plugin.Priority());
-  EXPECT_FALSE(plugin.IsPriorityExplicit());
-  EXPECT_FALSE(plugin.IsPriorityGlobal());
+  EXPECT_EQ(0, plugin.LocalPriority().getValue());
+  EXPECT_FALSE(plugin.LocalPriority().isExplicit());
+  EXPECT_EQ(0, plugin.GlobalPriority().getValue());
+  EXPECT_FALSE(plugin.GlobalPriority().isExplicit());
 }
 
 TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
   YAML::Node node = YAML::Load("name: 'Blank.esp'\n"
-                               "priority: 5\n"
                                "enabled: false\n"
+                               "priority: 5\n"
+                               "global_priority: 3\n"
                                "after:\n"
                                "  - 'Blank.esm'\n"
                                "req:\n"
@@ -1094,10 +1122,8 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
   PluginMetadata plugin = node.as<PluginMetadata>();
 
   EXPECT_EQ("Blank.esp", plugin.Name());
-  EXPECT_EQ(5, plugin.Priority());
-  EXPECT_TRUE(plugin.IsPriorityExplicit());
-  EXPECT_FALSE(plugin.IsPriorityGlobal());
-  EXPECT_FALSE(plugin.Enabled());
+  EXPECT_EQ(5, plugin.LocalPriority().getValue());
+  EXPECT_EQ(3, plugin.GlobalPriority().getValue());
   EXPECT_EQ(std::set<File>({
       File("Blank.esm")
   }), plugin.LoadAfter());

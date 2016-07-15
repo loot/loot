@@ -43,9 +43,9 @@ using std::regex_match;
 using std::set;
 
 namespace loot {
-PluginMetadata::PluginMetadata() : enabled_(true), isPriorityExplicit_(false), isPriorityGlobal_(false), priority_(0) {}
+PluginMetadata::PluginMetadata() : enabled_(true) {}
 
-PluginMetadata::PluginMetadata(const std::string& n) : name_(n), enabled_(true), isPriorityExplicit_(false), isPriorityGlobal_(false), priority_(0) {
+PluginMetadata::PluginMetadata(const std::string& n) : name_(n), enabled_(true) {
     //If the name passed ends in '.ghost', that should be trimmed.
   if (boost::iends_with(name_, ".ghost"))
     name_ = name_.substr(0, name_.length() - 6);
@@ -59,10 +59,13 @@ void PluginMetadata::MergeMetadata(const PluginMetadata& plugin) {
 // For 'enabled' and 'priority' metadata, use the given plugin's values,
 // but if the 'priority' user value is not explicit, ignore it.
   enabled_ = plugin.Enabled();
-  if (plugin.IsPriorityExplicit()) {
-    Priority(plugin.Priority());
-    SetPriorityGlobal(plugin.IsPriorityGlobal());
-    isPriorityExplicit_ = true;
+
+  if (plugin.localPriority_.isExplicit()) {
+    LocalPriority(plugin.localPriority_);
+  }
+
+  if (plugin.globalPriority_.isExplicit()) {
+    GlobalPriority(plugin.globalPriority_);
   }
 
   // Merge the following. If any files in the source already exist in the
@@ -94,11 +97,11 @@ PluginMetadata PluginMetadata::DiffMetadata(const PluginMetadata& plugin) const 
   BOOST_LOG_TRIVIAL(trace) << "Calculating metadata difference for: " << name_;
   PluginMetadata p(*this);
 
-  if (Priority() == plugin.Priority() && IsPriorityGlobal() == plugin.IsPriorityGlobal()) {
-    p.Priority(0);
-    p.SetPriorityGlobal(false);
-    p.SetPriorityExplicit(false);
-  }
+  if (localPriority_ == plugin.localPriority_)
+    p.localPriority_ = Priority();
+
+  if (globalPriority_ == plugin.globalPriority_)
+    p.globalPriority_ = Priority();
 
   //Compare this plugin against the given plugin.
   set<File> filesDiff;
@@ -258,16 +261,12 @@ bool PluginMetadata::Enabled() const {
   return enabled_;
 }
 
-int PluginMetadata::Priority() const {
-  return priority_;
+Priority PluginMetadata::LocalPriority() const {
+  return localPriority_;
 }
 
-bool PluginMetadata::IsPriorityExplicit() const {
-  return priority_ != 0 || isPriorityExplicit_;
-}
-
-bool PluginMetadata::IsPriorityGlobal() const {
-  return isPriorityGlobal_;
+Priority PluginMetadata::GlobalPriority() const {
+  return globalPriority_;
 }
 
 std::set<File> PluginMetadata::LoadAfter() const {
@@ -306,19 +305,12 @@ void PluginMetadata::Enabled(const bool e) {
   enabled_ = e;
 }
 
-void PluginMetadata::Priority(const int p) {
-  if (abs(p) >= yamlGlobalPriorityDivisor)
-    throw Error(Error::Code::invalid_args, "Cannot set priority that has an absolute value greater than or equal to " + std::to_string(yamlGlobalPriorityDivisor));
-
-  priority_ = p;
+void PluginMetadata::LocalPriority(const Priority& priority) {
+  localPriority_ = priority;
 }
 
-void PluginMetadata::SetPriorityExplicit(bool state) {
-  isPriorityExplicit_ = state;
-}
-
-void PluginMetadata::SetPriorityGlobal(bool state) {
-  isPriorityGlobal_ = state;
+void PluginMetadata::GlobalPriority(const Priority& priority) {
+  globalPriority_ = priority;
 }
 
 void PluginMetadata::LoadAfter(const std::set<File>& l) {
@@ -411,7 +403,8 @@ PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const Language::Co
 }
 
 bool PluginMetadata::HasNameOnly() const {
-  return !IsPriorityExplicit()
+  return !localPriority_.isExplicit()
+    && !globalPriority_.isExplicit()
     && loadAfter_.empty()
     && requirements_.empty()
     && incompatibilities_.empty()
@@ -453,17 +446,6 @@ bool PluginMetadata::operator == (const std::string& rhs) const {
 bool PluginMetadata::operator != (const std::string& rhs) const {
   return !(*this == rhs);
 }
-
-int PluginMetadata::GetYamlPriorityValue() const {
-  int priorityValue = Priority();
-  if (IsPriorityGlobal()) {
-    if (priorityValue < 0)
-      priorityValue -= yamlGlobalPriorityDivisor;
-    else
-      priorityValue += yamlGlobalPriorityDivisor;
-  }
-  return priorityValue;
-}
 }
 
 namespace YAML {
@@ -472,12 +454,16 @@ Emitter& operator << (Emitter& out, const loot::PluginMetadata& rhs) {
     out << BeginMap
       << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
 
-    if (rhs.IsPriorityExplicit()) {
-      out << Key << "priority" << Value << rhs.GetYamlPriorityValue();
-    }
-
     if (!rhs.Enabled())
       out << Key << "enabled" << Value << rhs.Enabled();
+
+    if (rhs.LocalPriority().isExplicit()) {
+      out << Key << "priority" << Value << rhs.LocalPriority().getValue();
+    }
+
+    if (rhs.GlobalPriority().isExplicit()) {
+      out << Key << "global_priority" << Value << rhs.GlobalPriority().getValue();
+    }
 
     if (!rhs.LoadAfter().empty())
       out << Key << "after" << Value << rhs.LoadAfter();

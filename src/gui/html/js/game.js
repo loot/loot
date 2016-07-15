@@ -273,7 +273,7 @@
         loadsArchive: plugin.loadsArchive,
 
         priority: plugin.priority,
-        isPriorityGlobal: plugin.isPriorityGlobal,
+        globalPriority: plugin.globalPriority,
         messages: plugin.messages,
         tags: plugin.tags,
         isDirty: plugin.isDirty,
