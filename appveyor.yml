@@ -1,0 +1,74 @@
+os: Visual Studio 2015
+
+version: "{build}-{branch}"
+
+configuration: Release
+
+cache:
+  - node_modules
+  - bower_components
+  - C:\projects\boost_1_61_0\boost
+  - C:\projects\boost_1_61_0\stage\lib
+
+install:
+  - npm install
+  - .\node_modules\.bin\bower install
+  - ps: .\scripts\appveyor\install_boost.ps1
+
+before_build:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - ps: mkdir build
+  - cd build
+  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0"
+
+build:
+  verbosity: minimal
+  project: 'c:\projects\loot\build\LOOT.sln'
+
+test_script:
+  - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
+  - tests.exe --gtest_output=xml:tests.xml
+  - api-tests.exe --gtest_output=xml:api-tests.xml
+
+after_test:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - node scripts\potomo.js
+  - node scripts\archive.js
+  # AppVeyor checks out a specific commit, but that means the archive script
+  # can't tell which branch it's on, so rename the 7z archives.
+  - ps: $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
+  - ps: mv "build\LOOT $($env:GIT_DESCRIBE)-HEAD.7z" "build\LOOT $($env:GIT_DESCRIBE)-$($env:APPVEYOR_REPO_BRANCH).7z"
+  - ps: mv "build\LOOT API $($env:GIT_DESCRIBE)-HEAD.7z" "build\LOOT API $($env:GIT_DESCRIBE)-$($env:APPVEYOR_REPO_BRANCH).7z"
+
+artifacts:
+  - path: build\LOOT $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH).7z
+    name: LOOT
+  - path: build\LOOT API $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH).7z
+    name: API
+
+deploy:
+  - provider: BinTray
+    username: wrinklyninja
+    api_key:
+      secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
+    subject: wrinklyninja
+    repo: loot
+    package: LOOT
+    version: $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH)
+    publish: true
+    artifact: LOOT
+
+  - provider: BinTray
+    username: wrinklyninja
+    api_key:
+      secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
+    subject: wrinklyninja
+    repo: loot
+    package: LOOT_API
+    version: $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH)
+    publish: true
+    artifact: API
+
+on_finish:
+  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
+  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\api-tests.xml")
