@@ -196,4 +196,37 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
     return LoadOrderHandler::IsPluginActive(pluginName);
   }
 }
+
+short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
+  // Get the full load order, then count the number of active plugins until the
+  // given plugin is encountered. If the plugin isn't active or in the load
+  // order, return -1.
+
+  if (!IsPluginActive(pluginName))
+    return -1;
+
+  short numberOfActivePlugins = 0;
+  for (const std::string& plugin : GetLoadOrder()) {
+    if (boost::iequals(plugin, pluginName))
+      return numberOfActivePlugins;
+
+    if (IsPluginActive(plugin))
+      ++numberOfActivePlugins;
+  }
+
+  return -1;
+}
+std::list<std::string> Game::GetLoadOrder() const {
+  if (loadOrder_.empty())
+    loadOrder_ = LoadOrderHandler::GetLoadOrder();
+
+  return loadOrder_;
+}
+void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+  LoadOrderHandler::SetLoadOrder(loadOrder);
+  loadOrder_ = loadOrder;
+}
+void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
+  LoadOrderHandler::SetLoadOrder(loadOrder, numPlugins);
+}
 }

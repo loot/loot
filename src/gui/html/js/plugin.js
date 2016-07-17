@@ -181,6 +181,7 @@
       this._messages = obj.messages || [];
       this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
+      this.loadOrderIndex = obj.loadOrderIndex;
 
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');

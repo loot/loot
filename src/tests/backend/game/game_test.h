@@ -317,6 +317,31 @@ TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoadedAndTheGameHas
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
+
+TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+
+  short index = game.GetActiveLoadOrderIndex(blankEsp);
+
+  EXPECT_EQ(-1, index);
+}
+
+TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+
+  short index = game.GetActiveLoadOrderIndex(masterFile);
+  EXPECT_EQ(0, index);
+
+  index = game.GetActiveLoadOrderIndex(blankEsm);
+  EXPECT_EQ(1, index);
+
+  index = game.GetActiveLoadOrderIndex(blankDifferentMasterDependentEsp);
+  EXPECT_EQ(2, index);
+}
 }
 }
 

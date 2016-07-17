@@ -37,7 +37,7 @@
       }
 
       /* paper-item (two-line) */
-      paper-item {
+      paper-icon-item {
         position: relative;
         min-height: 32px;
         line-height: 32px;
@@ -46,6 +46,8 @@
         --paper-item-focused-before: {
           opacity: 0;
         };
+
+        --paper-item-icon-width: 32px;
       }
       paper-item-body[two-line] {
         min-height: 32px;
@@ -53,6 +55,17 @@
       }
       :host-context(body[data-editors]) paper-item-body[two-line] {
         min-height: 40px;
+      }
+      div[item-icon] {
+        border: 1px solid var(--loot-plugin-item-index-border-color, var(--paper-grey-400));
+        border-radius: 50%;
+        color: var(--secondary-text-color);
+        height: 24px;
+        width: 24px;
+        line-height: 24px;
+        text-align: center;
+        font-family: monospace;
+        text-transform: uppercase;
       }
       #primary,
       #secondary,
@@ -94,8 +107,9 @@
         color: var(--accent-color);
       }
     </style>
-    <paper-item>
+    <paper-icon-item>
       <paper-ripple></paper-ripple>
+      <div item-icon hidden$="[[!computeLoadOrderIndexText(loadOrderIndex)]]">[[computeLoadOrderIndexText(loadOrderIndex)]]</div>
       <paper-item-body two-line>
         <div id="primary"><content></content></div>
         <div id="secondary" secondary>
@@ -110,13 +124,17 @@
         <iron-icon id="editorIsOpen" icon="create"></iron-icon>
         <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
       </div>
-    </paper-item>
+    </paper-icon-item>
   </template>
   <script>
     'use strict';
     Polymer({ // eslint-disable-line new-cap, no-undef
       is: 'loot-plugin-item',
       properties: {
+        loadOrderIndex: {
+          type: Number,
+          value: undefined,
+        },
         priority: {
           type: String,
           value: '',
@@ -139,6 +157,19 @@
         if (isEditorOpen) {
           return 'flipped';
         }
+        return '';
+      },
+
+      computeLoadOrderIndexText(loadOrderIndex) {
+        if (loadOrderIndex > -1) {
+          const number = loadOrderIndex.toString(16);
+          if (number.length === 1) {
+            return `0${number}`;
+          }
+
+          return number;
+        }
+
         return '';
       },
 

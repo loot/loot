@@ -970,6 +970,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   pluginNode["messages"] = tempPlugin.Messages();
   pluginNode["tags"] = tempPlugin.Tags();
   pluginNode["isDirty"] = isDirty;
+  pluginNode["loadOrderIndex"] = lootState_.getCurrentGame().GetActiveLoadOrderIndex(tempPlugin.Name());
 
   return pluginNode;
 }

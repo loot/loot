@@ -51,8 +51,14 @@ public:
   // Check if the plugin is active by using the cached value if
   // available, and otherwise asking the load order handler.
   bool IsPluginActive(const std::string& pluginName) const;
+  short GetActiveLoadOrderIndex(const std::string & pluginName) const;
+
+  std::list<std::string> GetLoadOrder() const;
+  void SetLoadOrder(const std::list<std::string>& loadOrder) const;
+  void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;
 private:
   bool pluginsFullyLoaded_;
+  mutable std::list<std::string> loadOrder_;
 };
 }
 

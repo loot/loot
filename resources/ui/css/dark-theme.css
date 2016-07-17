@@ -31,6 +31,10 @@
      the background behind cards. */
   --secondary-background-color: #303030;
   --paper-progress-container-color: var(--secondary-background-color);
+
+  /* --loot-plugin-item-index-border-color is used to control the colour of the
+     border around load order indices in the sidebar. */
+  --loot-plugin-item-index-border-color: var(--paper-color-300);
 }
 
 #main {
