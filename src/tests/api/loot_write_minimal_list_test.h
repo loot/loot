@@ -43,6 +43,12 @@ protected:
   }
 
   void TearDown() {
+    if (boost::filesystem::exists(outputPath)) {
+      boost::filesystem::permissions(outputPath,
+                                     boost::filesystem::perms::add_perms
+                                     | boost::filesystem::perms::owner_write);
+    }
+
     ApiGameOperationsTest::TearDown();
 
     ASSERT_NO_THROW(boost::filesystem::remove(outputPath));
@@ -87,10 +93,6 @@ TEST_P(loot_write_minimal_list_test, shouldReturnAnInvalidArgsErrorIfAPointerArg
   EXPECT_EQ(loot_error_invalid_args, loot_write_minimal_list(db_, NULL, false));
 }
 
-TEST_P(loot_write_minimal_list_test, shouldReturnAFileWriteErrorIfThePathGivenIsInvalid) {
-  EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db_, "/:?*", false));
-}
-
 TEST_P(loot_write_minimal_list_test, shouldReturnOkAndWriteToFileIfArgumentsGivenAreValid) {
   EXPECT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), false));
   EXPECT_TRUE(boost::filesystem::exists(outputPath));
@@ -113,6 +115,17 @@ TEST_P(loot_write_minimal_list_test, shouldReturnOkIfTheFileAlreadyExistsAndTheO
   ASSERT_TRUE(boost::filesystem::exists(outputPath));
 
   EXPECT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), true));
+}
+
+TEST_P(loot_write_minimal_list_test, shouldReturnAFileWriteErrorIfPathGivenExistsAndIsReadOnly) {
+  ASSERT_EQ(loot_ok, loot_write_minimal_list(db_, outputPath.string().c_str(), false));
+  ASSERT_TRUE(boost::filesystem::exists(outputPath));
+
+  boost::filesystem::permissions(outputPath,
+                                 boost::filesystem::perms::remove_perms
+                                 | boost::filesystem::perms::owner_write);
+
+  EXPECT_EQ(loot_error_file_write_fail, loot_write_minimal_list(db_, outputPath.string().c_str(), true));
 }
 
 TEST_P(loot_write_minimal_list_test, shouldWriteOnlyBashTagsAndDirtyInfo) {
