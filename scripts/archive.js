@@ -25,11 +25,9 @@ function getGitDescription() {
 }
 
 function compress(sourcePath, destPath) {
-  let sevenzipPath = '';
-  if (os.platform() === 'win32') {
-    sevenzipPath = path.join('C:\\', 'Program Files', '7-Zip', '7z.exe');
-  } else {
-    sevenzipPath = '/usr/bin/7z';
+  let sevenzipPath = path.join('C:\\', 'Program Files', '7-Zip', '7z.exe');
+  if (os.platform() !== 'win32' || !helpers.fileExists(sevenzipPath)) {
+    sevenzipPath = '7z';
   }
 
   // First remove any existing archive.
@@ -176,6 +174,14 @@ function createApiArchive(rootPath, binaryPath, tempPath, destPath) {
   fs.removeSync(tempPath);
 }
 
+function getFilenameSuffix(releasePath, gitDescription) {
+  if (releasePath.label) {
+    return `${gitDescription} (${releasePath.label}).7z`;
+  }
+
+  return `${gitDescription}.7z`;
+}
+
 let rootPath = '.';
 if (process.argv.length > 2) {
   rootPath = process.argv[2];
@@ -185,25 +191,18 @@ const tempPath = path.join(rootPath, 'build', 'archive.tmp');
 const gitDesc = getGitDescription();
 vulcanize(rootPath);
 
-const releasePaths = helpers.getAppReleasePaths(rootPath);
-for (let i = 0; i < releasePaths.length; ++i) {
-  if (releasePaths[i].label) {
-    const filename = `LOOT ${gitDesc} (${releasePaths[i].label}).7z`;
-    createAppArchive(rootPath,
-                     releasePaths[i].path,
-                     tempPath,
-                     path.join(rootPath, 'build', filename));
-  } else {
-    createAppArchive(releasePaths[i].path,
-                     path.join(rootPath, 'build', `LOOT ${gitDesc}.7z`));
-  }
-}
-
-const binaryPaths = helpers.getApiBinaryPaths(rootPath);
-for (let i = 0; i < binaryPaths.length; ++i) {
-  const filename = `LOOT API ${gitDesc} (${binaryPaths[i].label}).7z`;
-  createApiArchive(rootPath,
-                   binaryPaths[i].path,
+helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
+  const filename = `LOOT ${getFilenameSuffix(releasePath, gitDesc)}`;
+  createAppArchive(rootPath,
+                   releasePath.path,
                    tempPath,
                    path.join(rootPath, 'build', filename));
-}
+});
+
+helpers.getApiBinaryPaths(rootPath).forEach(releasePath => {
+  const filename = `LOOT API ${getFilenameSuffix(releasePath, gitDesc)}`
+  createApiArchive(rootPath,
+                   releasePath.path,
+                   tempPath,
+                   path.join(rootPath, 'build', filename));
+});
