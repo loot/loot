@@ -3,9 +3,25 @@
 const childProcess = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const helpers = require('./helpers');
 
-/* This isn't portable but it doesn't (yet?) need to be. */
-const msgfmtPath = path.join('C:\\', 'Program Files (x86)', 'Poedit', 'GettextTools', 'bin', 'msgfmt.exe');
+function getMsgfmtPath() {
+  const paths = [
+    path.join('C:\\', 'Program Files (x86)', 'Poedit', 'GettextTools', 'bin', 'msgfmt.exe'),
+    path.join('C:\\', 'cygwin', 'bin', 'msgfmt.exe'),
+  ];
+
+  for (let i = 0; i < paths.length; ++i) {
+    if (helpers.fileExists(paths[i])) {
+      return paths[i];
+    }
+  }
+
+  throw new Error('No msgfmt.exe found!');
+}
+
+/* This isn't portable to Linux but it doesn't (yet?) need to be. */
+const msgfmtPath = getMsgfmtPath();
 
 let rootPath = '.';
 if (process.argv.length > 2) {
