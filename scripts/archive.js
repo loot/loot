@@ -17,11 +17,18 @@ function vulcanize(rootPath) {
 }
 
 function getGitDescription() {
-  return String(childProcess.execFileSync('git', [
+  const describe = String(childProcess.execFileSync('git', [
     'describe',
     '--tags',
     '--long',
   ])).slice(0, -1);
+  const branch = String(childProcess.execFileSync('git', [
+    'rev-parse',
+    '--abbrev-ref',
+    'HEAD',
+  ])).slice(0, -1);
+
+  return `${describe}-${branch}`;
 }
 
 function compress(sourcePath, destPath) {

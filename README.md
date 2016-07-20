@@ -41,7 +41,7 @@ Packaging scripts are provided for creating an installer and compressed archives
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git for Windows](http://git-for-windows.github.io/) and [7-Zip](http://7-zip.org) to be installed. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long`.
+The archive packaging script requires [Git for Windows](http://git-for-windows.github.io/) and [7-Zip](http://7-zip.org) to be installed. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long` and `git rev-parse --abbrev-ref HEAD`.
 
 ## Snapshot Builds
 
@@ -50,7 +50,7 @@ Snapshot build archives are made available on [Dropbox](https://www.dropbox.com/
 The archives are named in the following manner:
 
 ```
-LOOT <last tag>-<revisions since tag>-g<short revision ID>.7z
+LOOT <last tag>-<revisions since tag>-g<short revision ID>-<branch>.7z
 ```
 
-For example `LOOT v0.7.0-alpha-2-10-gf6d7e80.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`.
+For example `LOOT v0.7.0-alpha-2-10-gf6d7e80-dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.
