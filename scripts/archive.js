@@ -159,10 +159,6 @@ function createApiArchive(rootPath, binaryPath, tempPath, destPath) {
   // Docs.
   fs.mkdirsSync(path.join(tempPath, 'docs'));
   fs.copySync(
-    path.join(rootPath, 'docs', 'latex', 'refman.pdf'),
-    path.join(tempPath, 'docs', 'readme.pdf')
-  );
-  fs.copySync(
     path.join(rootPath, 'docs', 'licenses'),
     path.join(tempPath, 'docs', 'licenses')
   );
