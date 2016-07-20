@@ -1,6 +1,7 @@
 # LOOT
 
-[![Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
+![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)
+[![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
 
 ## Introduction
 
@@ -11,6 +12,16 @@ LOOT also provides some load order error checking, including checks for requirem
 Although LOOT is able to calculate the correct load order positions for the vast majority of mods without any user input, some plugins are designed to load at certain positions in a load order, and LOOT may be unable to determine this from the plugins themselves. As such, LOOT provides a mechanism for supplying additional plugin metadata so that it may sort them correctly.
 
 LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See [Introduction To Load Orders](https://loot.github.io/docs/help/Introduction-To-Load-Orders) for an overview.
+
+## Snapshot Builds
+
+In addition to the releases hosted on GitHub, snapshot build archives of LOOT and its API are available on [Bintray](https://bintray.com/wrinklyninja/loot). The archives are named in the following manner:
+
+```
+LOOT <last tag>-<revisions since tag>-g<short revision ID>-<branch>.7z
+```
+
+For example `LOOT v0.7.0-alpha-2-10-gf6d7e80-dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.
 
 ## Building LOOT
 
@@ -41,16 +52,4 @@ Packaging scripts are provided for creating an installer and compressed archives
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git for Windows](http://git-for-windows.github.io/) and [7-Zip](http://7-zip.org) to be installed. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long` and `git rev-parse --abbrev-ref HEAD`.
-
-## Snapshot Builds
-
-Snapshot build archives are made available on [Dropbox](https://www.dropbox.com/sh/scuvwwc6ovzagmd/AAD1TodBAwGQTuV1-4Z2d0sCa?dl=0) fairly regularly. If you can't or don't want to build LOOT yourself, but still want to test a more recent build than the latest release or pre-release, you can check to see if there is such a build available.
-
-The archives are named in the following manner:
-
-```
-LOOT <last tag>-<revisions since tag>-g<short revision ID>-<branch>.7z
-```
-
-For example `LOOT v0.7.0-alpha-2-10-gf6d7e80-dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.
+The archive packaging script requires [Git](http://git-scm.com/) and [7-Zip](http://7-zip.org) to be installed. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long` and `git rev-parse --abbrev-ref HEAD`.
