@@ -30,7 +30,7 @@ configure_file("${CMAKE_SOURCE_DIR}/src/backend/app/loot_version.cpp.in" "${CMAK
 # External Projects
 ##############################
 
-set (Boost_USE_STATIC_LIBS ${PROJECT_STATIC_RUNTIME})
+set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
 set (Boost_USE_STATIC_RUNTIME ${PROJECT_STATIC_RUNTIME})
 
@@ -316,13 +316,6 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 ##############################
 # System-Specific Settings
 ##############################
-
-# If building on Travis, define BOOST_NO_CXX11_SCOPED_ENUMS to avoid
-# boost::filesystem::copy_file() linking errors due to mismatched C++ runtimes
-# between Boost and LOOT.
-IF ($ENV{TRAVIS})
-    add_definitions (-DBOOST_NO_CXX11_SCOPED_ENUMS)
-ENDIF ()
 
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")

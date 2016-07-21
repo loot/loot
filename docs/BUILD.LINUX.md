@@ -32,14 +32,6 @@ sudo apt-get update
 sudo apt-get install nodejs libx11-dev libgtk2.0-dev libnss3-dev libgconf2-dev libxss-dev libasound2-dev libxtst-dev
 ```
 
-## Pre-built Boost Packages Workaround
-
-The pre-built Boost packages for Boost 1.55 and below in Ubuntu were built without C++11 support, which causes an error when linking with a C++11-built LOOT binary. While it's better to use a build of Boost with C++11 support when building LOOT, the error can be worked around by running the following before running CMake:
-
-```
-export TRAVIS=1
-```
-
 ## Runtime Differences
 
 Not all LOOT's features have been implemented for Linux builds. Issues labelled

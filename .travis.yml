@@ -8,22 +8,23 @@ compiler: gcc
 addons:
   apt:
     sources:
-      - boost-latest
-      - ubuntu-toolchain-r-test
-      - kubuntu-backports
+      - ubuntu-toolchain-r-test # ppa:ubuntu-toolchain-r/test
+      - kubuntu-backports       # ppa:kubuntu-ppa/backports
     packages:
-      - libboost-log1.55-dev
-      - libboost-date-time1.55-dev
-      - libboost-thread1.55-dev
-      - libboost-filesystem1.55-dev
-      - libboost-locale1.55-dev
-      - libboost-iostreams1.55-dev
+      - libbz2-dev
       - libssl-dev
       - gcc-5
       - g++-5
       - cmake
       - cmake-data
   sauce_connect: true
+
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/node_modules
+    - $TRAVIS_BUILD_DIR/bower_components
+    - $HOME/boost_1_61_0/boost
+    - $HOME/boost_1_61_0/stage/lib
 
 install:
   # Use GCC 5.
@@ -38,15 +39,18 @@ install:
   - export PATH="./node_modules/.bin:$PATH"
   # Install runtime dependencies using Bower
   - bower install
+  - chmod +x scripts/travis/install_boost.sh
+  - scripts/travis/install_boost.sh
 
 before_script:
   # Move into the cloned LOOT repo build path.
   - mkdir build && cd build
-  # Travis machines are 64 bit, and the dependencies use dynamic linking.
-  - cmake .. -DPROJECT_STATIC_RUNTIME=OFF -DBUILD_SHARED_LIBS=OFF
+  # Link dynamically to the C++ standard library runtime.
+  - cmake .. -DPROJECT_STATIC_RUNTIME=OFF -DBOOST_ROOT=~/boost_1_61_0
 
 script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
+  - export CXXFLAGS="-fPIC" CFLAGS="-fPIC"
   - make tests && ./tests
   - make api-tests && ./api-tests
 
