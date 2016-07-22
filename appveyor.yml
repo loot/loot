@@ -37,16 +37,16 @@ after_test:
   # AppVeyor checks out a specific commit, but that means the archive script
   # can't tell which branch it's on, so rename the 7z archives.
   - ps: $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
-  - ps: mv "build\LOOT $($env:GIT_DESCRIBE)-HEAD.7z" "build\LOOT $($env:GIT_DESCRIBE)-$($env:APPVEYOR_REPO_BRANCH).7z"
-  - ps: mv "build\LOOT API $($env:GIT_DESCRIBE)-HEAD.7z" "build\LOOT API $($env:GIT_DESCRIBE)-$($env:APPVEYOR_REPO_BRANCH).7z"
-  - ps: mv "build\Metadata Validator $($env:GIT_DESCRIBE)-HEAD.7z" "build\Metadata Validator $($env:GIT_DESCRIBE)-$($env:APPVEYOR_REPO_BRANCH).7z"
+  - ps: mv "build\loot_$($env:GIT_DESCRIBE)_HEAD.7z" "build\loot_$($env:GIT_DESCRIBE)_$($env:APPVEYOR_REPO_BRANCH).7z"
+  - ps: mv "build\loot-api_$($env:GIT_DESCRIBE)_HEAD.7z" "build\loot-api_$($env:GIT_DESCRIBE)_$($env:APPVEYOR_REPO_BRANCH).7z"
+  - ps: mv "build\metadata-validator_$($env:GIT_DESCRIBE)_HEAD.7z" "build\metadata-validator_$($env:GIT_DESCRIBE)_$($env:APPVEYOR_REPO_BRANCH).7z"
 
 artifacts:
-  - path: build\LOOT $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
     name: LOOT
-  - path: build\LOOT API $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\loot-api_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
     name: API
-  - path: build\Metadata Validator $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\metadata-validator_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
     name: metadata-validator
 
 deploy:

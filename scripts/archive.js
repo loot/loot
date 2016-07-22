@@ -28,12 +28,16 @@ function getGitDescription() {
     'HEAD',
   ])).slice(0, -1);
 
-  return `${describe}-${branch}`;
+  return `${describe}_${branch}`;
 }
 
 function compress(sourcePath, destPath) {
   // First remove any existing archive.
   fs.removeSync(destPath);
+
+  const filename = path.basename(destPath);
+  const rootFolder = path.basename(sourcePath);
+  const workingDirectory = path.dirname(sourcePath);
 
   if (os.platform() === 'win32') {
     let sevenzipPath = path.join('C:\\', 'Program Files', '7-Zip', '7z.exe');
@@ -46,15 +50,15 @@ function compress(sourcePath, destPath) {
     return childProcess.execFileSync(sevenzipPath, [
       'a',
       '-r',
-      `${destPath}.7z`,
-      `.${path.sep}${path.join(sourcePath, '*')}`,
-    ]);
+      filename,
+      rootFolder,
+    ], {
+      cwd: workingDirectory,
+    });
   }
 
-  const filename = path.join('..', path.basename(destPath));
-
-  return childProcess.execSync(`tar -cJf "${filename}.tar.xz" *`, {
-    cwd: sourcePath,
+  return childProcess.execSync(`tar -cJf ${filename} ${rootFolder}`, {
+    cwd: workingDirectory,
   });
 }
 
@@ -204,41 +208,49 @@ function createMetadataValidatorArchive(rootPath, binaryPath, tempPath, destPath
 
 function getFilenameSuffix(label, gitDescription) {
   if (label) {
-    return `${gitDescription} (${label})`;
+    return `${gitDescription}_${label}`;
   }
 
   return `${gitDescription}`;
+}
+
+function getArchiveFileExtension() {
+  if (os.platform() === 'win32') {
+    return '.7z';
+  }
+
+  return '.tar.xz';
 }
 
 let rootPath = '.';
 if (process.argv.length > 2) {
   rootPath = process.argv[2];
 }
-const tempPath = path.join(rootPath, 'build', 'archive.tmp');
 
 const gitDesc = getGitDescription();
+const fileExtension = getArchiveFileExtension();
 vulcanize(rootPath);
 
 helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
-  const filename = `LOOT ${getFilenameSuffix(releasePath.label, gitDesc)}`;
+  const filename = `loot_${getFilenameSuffix(releasePath.label, gitDesc)}`;
   createAppArchive(rootPath,
                    releasePath.path,
-                   tempPath,
-                   path.join(rootPath, 'build', filename));
+                   path.join(rootPath, 'build', filename),
+                   path.join(rootPath, 'build', filename + fileExtension));
 });
 
 helpers.getApiBinaryPaths(rootPath).forEach(binaryPath => {
-  const filename = `LOOT API ${getFilenameSuffix(binaryPath.label, gitDesc)}`;
+  const filename = `loot-api_${getFilenameSuffix(binaryPath.label, gitDesc)}`;
   createApiArchive(rootPath,
                    binaryPath.path,
-                   tempPath,
-                   path.join(rootPath, 'build', filename));
+                   path.join(rootPath, 'build', filename),
+                   path.join(rootPath, 'build', filename + fileExtension));
 });
 
 helpers.getMetadataValidatorBinaryPaths(rootPath).forEach(binaryPath => {
-  const filename = `Metadata Validator ${getFilenameSuffix(binaryPath.label, gitDesc)}`;
+  const filename = `metadata-validator_${getFilenameSuffix(binaryPath.label, gitDesc)}`;
   createMetadataValidatorArchive(rootPath,
                                  binaryPath.path,
-                                 tempPath,
-                                 path.join(rootPath, 'build', filename));
+                                 path.join(rootPath, 'build', filename),
+                                 path.join(rootPath, 'build', filename + fileExtension));
 });

@@ -15,10 +15,10 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Snapshot Builds
 
-In addition to the releases hosted on GitHub, snapshot build archives of LOOT and its API are available on [Bintray](https://bintray.com/wrinklyninja/loot). The archives are named in the following manner:
+In addition to the releases hosted on GitHub, snapshot build archives of LOOT and its API are available on [Bintray](https://bintray.com/wrinklyninja/loot). The archives are named like so:
 
 ```
-LOOT <last tag>-<revisions since tag>-g<short revision ID>-<branch>.7z
+loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>.7z
 ```
 
 For example `LOOT v0.7.0-alpha-2-10-gf6d7e80-dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.

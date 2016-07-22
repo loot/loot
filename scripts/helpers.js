@@ -28,11 +28,11 @@ function getBinaryParentPaths(rootPath) {
     },
     {
       path: path.join(rootPath, 'build', '32'),
-      label: '32 bit',
+      label: '32-bit',
     },
     {
       path: path.join(rootPath, 'build', '64'),
-      label: '64 bit',
+      label: '64-bit',
     },
   ];
 
