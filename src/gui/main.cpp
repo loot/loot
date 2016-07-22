@@ -31,6 +31,9 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
 
+#include "backend/app/loot_paths.h"
+#include "gui/loot_app.h"
+
 #ifdef _WIN32
 #include <include/cef_sandbox_win.h>
 #include <windows.h>
@@ -38,9 +41,6 @@
 #include <include/base/cef_logging.h>
 #include <X11/Xlib.h>
 #endif
-
-#include "backend/app/loot_paths.h"
-#include "gui/loot_app.h"
 
 CefSettings GetCefSettings() {
   CefSettings cef_settings;
