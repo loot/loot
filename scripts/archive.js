@@ -32,22 +32,30 @@ function getGitDescription() {
 }
 
 function compress(sourcePath, destPath) {
-  let sevenzipPath = path.join('C:\\', 'Program Files', '7-Zip', '7z.exe');
-  if (os.platform() !== 'win32' || !helpers.fileExists(sevenzipPath)) {
-    sevenzipPath = '7z';
-  }
-
   // First remove any existing archive.
   fs.removeSync(destPath);
 
-  // The last argument must have a leading dot for the subdirectory not to
-  // be present in the archive, but path.join removes it, so it's prefixed.
-  return childProcess.execFileSync(sevenzipPath, [
-    'a',
-    '-r',
-    destPath,
-    `.${path.sep}${path.join(sourcePath, '*')}`,
-  ]);
+  if (os.platform() === 'win32') {
+    let sevenzipPath = path.join('C:\\', 'Program Files', '7-Zip', '7z.exe');
+    if (!helpers.fileExists(sevenzipPath)) {
+      sevenzipPath = '7z';
+    }
+
+    // The last argument must have a leading dot for the subdirectory not to
+    // be present in the archive, but path.join removes it, so it's prefixed.
+    return childProcess.execFileSync(sevenzipPath, [
+      'a',
+      '-r',
+      `${destPath}.7z`,
+      `.${path.sep}${path.join(sourcePath, '*')}`,
+    ]);
+  }
+
+  const filename = path.join('..', path.basename(destPath));
+
+  return childProcess.execSync(`tar -cJf "${filename}.tar.xz" *`, {
+    cwd: sourcePath,
+  });
 }
 
 function createAppArchive(rootPath, releasePath, tempPath, destPath) {
@@ -196,10 +204,10 @@ function createMetadataValidatorArchive(rootPath, binaryPath, tempPath, destPath
 
 function getFilenameSuffix(label, gitDescription) {
   if (label) {
-    return `${gitDescription} (${label}).7z`;
+    return `${gitDescription} (${label})`;
   }
 
-  return `${gitDescription}.7z`;
+  return `${gitDescription}`;
 }
 
 let rootPath = '.';
