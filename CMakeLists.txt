@@ -328,7 +328,8 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (LOOT_LIBS ssl
                    curl
                    z
-                   crypto)
+                   crypto
+                   rt)
     set (LOOT_GUI_LIBS X11)
 
     IF (NOT MINGW)

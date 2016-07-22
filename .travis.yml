@@ -17,6 +17,14 @@ addons:
       - g++-5
       - cmake
       - cmake-data
+      # GUI dependencies
+      - libx11-dev
+      - libgtk2.0-dev
+      - libnss3-dev
+      - libgconf2-dev
+      - libxss-dev
+      - libasound2-dev
+      - libxtst-dev
   sauce_connect: true
 
 cache:
@@ -51,8 +59,11 @@ before_script:
 
 script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
-  - make tests && ./tests
-  - make api-tests && ./api-tests
+  # Travis will run all steps before failing, so no point in building only the
+  # tests first.
+  - make all
+  - ./tests
+  - ./api-tests
 
 before_deploy:
   # Build the metadata validator
