@@ -20,9 +20,8 @@ function fileExists(filePath) {
   return false;
 }
 
-function getAppReleasePaths(rootPath) {
-  const paths = [];
-  const pathsToTry = [
+function getBinaryParentPaths(rootPath) {
+  const paths = [
     {
       path: path.join(rootPath, 'build'),
       label: null,
@@ -37,41 +36,36 @@ function getAppReleasePaths(rootPath) {
     },
   ];
 
-  let file = 'LOOT';
   if (os.platform() === 'win32') {
-    file += '.exe';
-  }
-
-  for (let i = 0; i < pathsToTry.length; ++i) {
-    if (os.platform() === 'win32') {
-      pathsToTry[i].path = path.join(pathsToTry[i].path, 'Release');
-    }
-
-    if (fileExists(path.join(pathsToTry[i].path, file))) {
-      paths.push(pathsToTry[i]);
-    }
+    paths.forEach(parentPath => {
+      parentPath.path = path.join(parentPath.path, 'Release');
+    });
   }
 
   return paths;
 }
 
-function getApiBinaryPaths(rootPath) {
-  const paths = [];
-  const pathsToTry = [
-    {
-      path: path.join(rootPath, 'build'),
-      label: null,
-    },
-    {
-      path: path.join(rootPath, 'build', '32'),
-      label: '32 bit',
-    },
-    {
-      path: path.join(rootPath, 'build', '64'),
-      label: '64 bit',
-    },
-  ];
+function getAppReleasePaths(rootPath) {
+  let file = 'LOOT';
+  if (os.platform() === 'win32') {
+    file += '.exe';
+  }
 
+  return getBinaryParentPaths(rootPath).filter(
+    parentPath => fileExists(path.join(parentPath.path, file))
+  );
+}
+
+function getBinaryPaths(rootPath, file) {
+  return getBinaryParentPaths(rootPath)
+    .map(parentPath => {
+      parentPath.path = path.join(parentPath.path, file);
+      return parentPath;
+    })
+    .filter(parentPath => fileExists(parentPath.path));
+}
+
+function getApiBinaryPaths(rootPath) {
   let file = 'loot_api';
   if (os.platform() === 'win32') {
     file += '.dll';
@@ -79,20 +73,19 @@ function getApiBinaryPaths(rootPath) {
     file = `lib${file}.so`;
   }
 
-  for (let i = 0; i < pathsToTry.length; ++i) {
-    if (os.platform() === 'win32') {
-      pathsToTry[i].path = path.join(pathsToTry[i].path, 'Release');
-    }
+  return getBinaryPaths(rootPath, file);
+}
 
-    if (fileExists(path.join(pathsToTry[i].path, file))) {
-      pathsToTry[i].path = path.join(pathsToTry[i].path, file);
-      paths.push(pathsToTry[i]);
-    }
+function getMetadataValidatorBinaryPaths(rootPath) {
+  let file = 'metadata-validator';
+  if (os.platform() === 'win32') {
+    file += '.exe';
   }
 
-  return paths;
+  return getBinaryPaths(rootPath, file);
 }
 
 module.exports.fileExists = fileExists;
 module.exports.getAppReleasePaths = getAppReleasePaths;
 module.exports.getApiBinaryPaths = getApiBinaryPaths;
+module.exports.getMetadataValidatorBinaryPaths = getMetadataValidatorBinaryPaths;

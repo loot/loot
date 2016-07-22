@@ -177,9 +177,26 @@ function createApiArchive(rootPath, binaryPath, tempPath, destPath) {
   fs.removeSync(tempPath);
 }
 
-function getFilenameSuffix(releasePath, gitDescription) {
-  if (releasePath.label) {
-    return `${gitDescription} (${releasePath.label}).7z`;
+function createMetadataValidatorArchive(rootPath, binaryPath, tempPath, destPath) {
+  // Ensure that the output directory is empty.
+  fs.emptyDirSync(tempPath);
+
+  // Metadata validator binary.
+  fs.copySync(
+    binaryPath,
+    path.join(tempPath, path.basename(binaryPath))
+  );
+
+  // Now compress the folder to a 7-zip archive.
+  compress(tempPath, destPath);
+
+  // Finally, delete the temporary folder.
+  fs.removeSync(tempPath);
+}
+
+function getFilenameSuffix(label, gitDescription) {
+  if (label) {
+    return `${gitDescription} (${label}).7z`;
   }
 
   return `${gitDescription}.7z`;
@@ -195,17 +212,25 @@ const gitDesc = getGitDescription();
 vulcanize(rootPath);
 
 helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
-  const filename = `LOOT ${getFilenameSuffix(releasePath, gitDesc)}`;
+  const filename = `LOOT ${getFilenameSuffix(releasePath.label, gitDesc)}`;
   createAppArchive(rootPath,
                    releasePath.path,
                    tempPath,
                    path.join(rootPath, 'build', filename));
 });
 
-helpers.getApiBinaryPaths(rootPath).forEach(releasePath => {
-  const filename = `LOOT API ${getFilenameSuffix(releasePath, gitDesc)}`
+helpers.getApiBinaryPaths(rootPath).forEach(binaryPath => {
+  const filename = `LOOT API ${getFilenameSuffix(binaryPath.label, gitDesc)}`;
   createApiArchive(rootPath,
-                   releasePath.path,
+                   binaryPath.path,
                    tempPath,
                    path.join(rootPath, 'build', filename));
+});
+
+helpers.getMetadataValidatorBinaryPaths(rootPath).forEach(binaryPath => {
+  const filename = `Metadata Validator ${getFilenameSuffix(binaryPath.label, gitDesc)}`;
+  createMetadataValidatorArchive(rootPath,
+                                 binaryPath.path,
+                                 tempPath,
+                                 path.join(rootPath, 'build', filename));
 });
