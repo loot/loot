@@ -9,6 +9,7 @@ function getMsgfmtPath() {
   const paths = [
     path.join('C:\\', 'Program Files (x86)', 'Poedit', 'GettextTools', 'bin', 'msgfmt.exe'),
     path.join('C:\\', 'cygwin', 'bin', 'msgfmt.exe'),
+    path.join('/', 'usr', 'bin', 'msgfmt'),
   ];
 
   for (let i = 0; i < paths.length; ++i) {
