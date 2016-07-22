@@ -76,7 +76,7 @@ function getApiBinaryPaths(rootPath) {
   if (os.platform() === 'win32') {
     file += '.dll';
   } else {
-    file += '.so';
+    file = `lib${file}.so`;
   }
 
   for (let i = 0; i < pathsToTry.length; ++i) {
