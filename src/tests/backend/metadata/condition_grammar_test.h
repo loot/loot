@@ -158,9 +158,9 @@ TEST_P(ConditionGrammarTest, evaluatingAFileConditionForAnUnsafePathShouldThrow)
                                                result_), Error);
 }
 
-TEST_P(ConditionGrammarTest, aRegexConditionWithAnInvalidRegexShouldThrow) {
+TEST_P(ConditionGrammarTest, aFileConditionWithAnInvalidRegexShouldThrow) {
   Grammar grammar(&game_);
-  std::string condition("regex(\"RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp\")");
+  std::string condition("file(\"RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp\")");
 
   EXPECT_THROW(boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                                std::cend(condition),
@@ -169,9 +169,9 @@ TEST_P(ConditionGrammarTest, aRegexConditionWithAnInvalidRegexShouldThrow) {
                                                result_), Error);
 }
 
-TEST_P(ConditionGrammarTest, aRegexConditionWithARegexMatchingAPluginThatExistsShouldEvaluateToTrue) {
+TEST_P(ConditionGrammarTest, aFileConditionWithARegexMatchingAPluginThatExistsShouldEvaluateToTrue) {
   Grammar grammar(&game_);
-  std::string condition("regex(\"Blank.+\\.esm\")");
+  std::string condition("file(\"Blank.+\\.esm\")");
 
   success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                              std::cend(condition),
@@ -182,9 +182,9 @@ TEST_P(ConditionGrammarTest, aRegexConditionWithARegexMatchingAPluginThatExistsS
   EXPECT_TRUE(result_);
 }
 
-TEST_P(ConditionGrammarTest, aRegexConditionWithARegexMatchingAPluginThatDoesNotExistShouldEvaluateToFalse) {
+TEST_P(ConditionGrammarTest, aFileConditionWithARegexMatchingAPluginThatDoesNotExistShouldEvaluateToFalse) {
   Grammar grammar(&game_);
-  std::string condition("regex(\"Blank\\.m.+\\.esm\")");
+  std::string condition("file(\"Blank\\.m.+\\.esm\")");
 
   success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                              std::cend(condition),
@@ -195,9 +195,9 @@ TEST_P(ConditionGrammarTest, aRegexConditionWithARegexMatchingAPluginThatDoesNot
   EXPECT_FALSE(result_);
 }
 
-TEST_P(ConditionGrammarTest, aRegexConditionWithARegexMatchingAFileInASubfolderThatExistsShouldEvaluateToTrue) {
+TEST_P(ConditionGrammarTest, aFileConditionWithARegexMatchingAFileInASubfolderThatExistsShouldEvaluateToTrue) {
   Grammar grammar(&game_);
-  std::string condition("regex(\"resource\\\\detail\\\\resource\\.txt\")");
+  std::string condition("file(\"resource/detail/resource\\.txt\")");
 
   success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                              std::cend(condition),
@@ -551,6 +551,36 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsNotActiveShouldEv
 
   Grammar grammar(&game_);
   std::string condition("active(\"" + blankEsp + "\")");
+
+  success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                             std::cend(condition),
+                                             grammar,
+                                             skipper_,
+                                             result_);
+  EXPECT_TRUE(success_);
+  EXPECT_FALSE(result_);
+}
+
+TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingAnActivePluginShouldEvaluateToTrue) {
+  ASSERT_NO_THROW(game_.Init(false, localPath));
+
+  Grammar grammar(&game_);
+  std::string condition("active(\"Blank\\.esm\")");
+
+  success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                             std::cend(condition),
+                                             grammar,
+                                             skipper_,
+                                             result_);
+  EXPECT_TRUE(success_);
+  EXPECT_TRUE(result_);
+}
+
+TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingNoActivePluginsShouldEvaluateToFalse) {
+  ASSERT_NO_THROW(game_.Init(false, localPath));
+
+  Grammar grammar(&game_);
+  std::string condition("active(\"Blank\\.esp\")");
 
   success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
                                              std::cend(condition),
