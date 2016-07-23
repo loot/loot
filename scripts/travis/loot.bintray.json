@@ -1,0 +1,15 @@
+{
+  "package": {
+    "name": "LOOT",
+    "repo": "loot",
+    "subject": "wrinklyninja"
+  },
+  "version": {
+    "name": "REPLACE_THIS_VERSION"
+  },
+  "files": [{
+    "includePattern": "build/(loot_.+\\.tar.xz)",
+    "uploadPattern": "$1"
+  }],
+  "publish": true
+}

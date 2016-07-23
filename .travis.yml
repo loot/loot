@@ -2,9 +2,6 @@ sudo: false
 language: cpp
 compiler: gcc
 
-# Need GCC 5 and Boost 1.54+, which aren't in the 12.04 repositories - install
-# from PPAs. Also install the libssl-dev package, which is needed to build
-# libgit2 with support for cloning from HTTPS URLs.
 addons:
   apt:
     sources:
@@ -65,20 +62,53 @@ script:
   - ./tests
   - ./api-tests
 
-before_deploy:
-  # Build the metadata validator
-  - make metadata-validator
-  - tar -pczf metadata-validator.tar.gz metadata-validator
+after_success:
+  - cd $TRAVIS_BUILD_DIR
+  # Get the full repo history before trying to run the archiver.
+  - git fetch --unshallow
+  - node scripts/potomo.js
+  - node scripts/archive.js
+  # Need to replace the HEAD branch descriptor in the archive filenames
+  - for ARCHIVE in build/*.tar.xz; do mv $ARCHIVE $(echo $ARCHIVE | sed "s/HEAD/$TRAVIS_BRANCH/"); done
+  # Need to replace the Bintray config files' version placeholders.
+  - VERSION=$(ls build/loot_*.tar.xz | sed 's/build\/loot_//;s/.tar.xz//;')
+  - sed -i "s/REPLACE_THIS_VERSION/$VERSION/" scripts/travis/loot.bintray.json
+  - sed -i "s/REPLACE_THIS_VERSION/$VERSION/" scripts/travis/loot-api.bintray.json
+  - sed -i "s/REPLACE_THIS_VERSION/$VERSION/" scripts/travis/metadata-validator.bintray.json
 
 deploy:
-  provider: releases
-  api_key:
-    secure: YOgb6thQKlp9aG19Vo8mFSzDRKntCcmMD+A4SAxmg919j6ONoSkaeuVxnUz5V2UKWbCaGzUN/fSnYbp51yDxWTFXalvRMckl0GaP5U0543ilpZPs3QdmDYQD7xlDevWBnYlZyU0jbFwX1U+yfW9k3lxea/JSFDwIkFZXY2Dxqmw=
-  file: metadata-validator.tar.gz
-  skip_cleanup: true
-  on:
-    repo: loot/loot
-    tags: true
+  - provider: bintray
+    file: scripts/travis/loot.bintray.json
+    user: wrinklyninja
+    key:
+      secure: "YjcfW+VRF3NC3pDxhpn7mAZ/Qs26KPLOwQS3VaC/0F8/tdPqznqEFGiuWGvC7i7NjUyJXDBHEso5GsRG3jxhGt1KOkCptiIsMiubUeUE3xY83oVvzJ/MbK7AXGM5heR3nUYLijzqxSSCbFdVewTdymfpGSWUbf1K+EV0qXUdinA="
+    skip_cleanup: true
+    on:
+      all_branches: true
+  - provider: bintray
+    file: scripts/travis/loot-api.bintray.json
+    user: wrinklyninja
+    key:
+      secure: "YjcfW+VRF3NC3pDxhpn7mAZ/Qs26KPLOwQS3VaC/0F8/tdPqznqEFGiuWGvC7i7NjUyJXDBHEso5GsRG3jxhGt1KOkCptiIsMiubUeUE3xY83oVvzJ/MbK7AXGM5heR3nUYLijzqxSSCbFdVewTdymfpGSWUbf1K+EV0qXUdinA="
+    skip_cleanup: true
+    on:
+      all_branches: true
+  - provider: bintray
+    file: scripts/travis/metadata-validator.bintray.json
+    user: wrinklyninja
+    key:
+      secure: "YjcfW+VRF3NC3pDxhpn7mAZ/Qs26KPLOwQS3VaC/0F8/tdPqznqEFGiuWGvC7i7NjUyJXDBHEso5GsRG3jxhGt1KOkCptiIsMiubUeUE3xY83oVvzJ/MbK7AXGM5heR3nUYLijzqxSSCbFdVewTdymfpGSWUbf1K+EV0qXUdinA="
+    skip_cleanup: true
+    on:
+      all_branches: true
+  - provider: releases
+    api_key:
+      secure: YOgb6thQKlp9aG19Vo8mFSzDRKntCcmMD+A4SAxmg919j6ONoSkaeuVxnUz5V2UKWbCaGzUN/fSnYbp51yDxWTFXalvRMckl0GaP5U0543ilpZPs3QdmDYQD7xlDevWBnYlZyU0jbFwX1U+yfW9k3lxea/JSFDwIkFZXY2Dxqmw=
+    file: metadata-validator.tar.xz
+    skip_cleanup: true
+    on:
+      repo: loot/loot
+      tags: true
 
 notifications:
   irc:
