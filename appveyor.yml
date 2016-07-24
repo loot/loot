@@ -57,7 +57,7 @@ deploy:
     subject: wrinklyninja
     repo: loot
     package: LOOT
-    version: $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH)
+    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
     artifact: LOOT
 
@@ -68,7 +68,7 @@ deploy:
     subject: wrinklyninja
     repo: loot
     package: LOOT_API
-    version: $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH)
+    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
     artifact: API
 
@@ -79,7 +79,7 @@ deploy:
     subject: wrinklyninja
     repo: loot
     package: metadata-validator
-    version: $(GIT_DESCRIBE)-$(APPVEYOR_REPO_BRANCH)
+    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
     artifact: metadata-validator
 
