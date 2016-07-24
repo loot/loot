@@ -22,11 +22,21 @@ function getGitDescription() {
     '--tags',
     '--long',
   ])).slice(0, -1);
-  const branch = String(childProcess.execFileSync('git', [
+  let branch = String(childProcess.execFileSync('git', [
     'rev-parse',
     '--abbrev-ref',
     'HEAD',
   ])).slice(0, -1);
+
+  /* On AppVeyor and Travis CI, a specific commit is checked out, so the branch
+     is HEAD. Use their stored branch value instead. */
+  if (branch === 'HEAD') {
+    if (process.env.APPVEYOR_REPO_BRANCH) {
+      branch = process.env.APPVEYOR_REPO_BRANCH;
+    } else if (process.env.TRAVIS_BRANCH) {
+      branch = process.env.TRAVIS_BRANCH;
+    }
+  }
 
   return `${describe}_${branch}`;
 }
