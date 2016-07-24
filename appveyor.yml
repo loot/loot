@@ -80,6 +80,21 @@ deploy:
     publish: true
     artifact: metadata-validator
 
+  - provider: GitHub
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
+    description: |
+      Requires Windows 7 or later, and [7-Zip](http://www.7-zip.org/) to extract the archives.
+
+      *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
+    auth_token:
+      secure: SecSfg5+S0OUzmC+kKixshqNDrRDj2uRYx58AAiZ1IDYTvQbPGRqEYCWZ9jbPd3h
+    artifact: LOOT,LOOT_API,metadata-validator
+    draft: true
+    on:
+      branch: master
+      appveyor_repo_tag: true
+
 on_finish:
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\api-tests.xml")
