@@ -205,36 +205,28 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h")
 
-set (LOOT_GUI_SRC ${LOOT_SRC}
-                  "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
+set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
-set (LOOT_GUI_HEADERS ${LOOT_HEADERS}
-                  "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
+set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
 
-set (LOOT_API_SRC ${LOOT_SRC}
-                  "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
+set (LOOT_API_SRC "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp")
 
-set (LOOT_API_HEADERS ${LOOT_HEADERS}
-                  "${CMAKE_SOURCE_DIR}/include/loot/api.h"
+set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                   "${CMAKE_SOURCE_DIR}/src/api/loot_db.h")
 
-set (LOOT_VALIDATOR_SRC ${LOOT_SRC}
-                        "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
+set (LOOT_VALIDATOR_SRC "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
 
-set (LOOT_VALIDATOR_HEADERS ${LOOT_HEADERS})
-
-set (LOOT_TESTS_SRC ${LOOT_SRC}
-                    "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
+set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp"
                     "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
 set (LOOT_TESTS_HEADERS # Testing this here rather than as part of the API tests
@@ -337,8 +329,7 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
                    curl
                    z
                    crypto)
-    set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       X11)
+    set (LOOT_GUI_LIBS X11)
 
     IF (NOT MINGW)
         add_definitions(-DNDEBUG)
@@ -355,8 +346,7 @@ IF (MINGW)
                    version
                    ws2_32
                    shlwapi)
-    set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       rpcrt4
+    set (LOOT_GUI_LIBS rpcrt4
                        comctl32)
 ELSEIF (MSVC)
     # Force static C++ runtime linkage.
@@ -380,9 +370,7 @@ ELSEIF (MSVC)
                     winhttp
                     crypt32
                     Rpcrt4)
-    set (LOOT_GUI_LIBS ${LOOT_LIBS}
-                       rpcrt4
-                       comctl32
+    set (LOOT_GUI_LIBS comctl32
                        Psapi)
 ENDIF ()
 
@@ -391,30 +379,35 @@ ENDIF ()
 # Define Targets
 ##############################
 
+# Common library.
+add_library          (loot_common STATIC ${LOOT_SRC} ${LOOT_HEADERS})
+add_dependencies     (loot_common libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries(loot_common ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+
 # Build tests.
-add_executable(tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-add_dependencies(tests GTest libespm libgit2 libloadorder pseudosem testing-metadata testing-plugins yaml-cpp)
-target_link_libraries(tests ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${GTEST_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+add_executable       (tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+add_dependencies     (tests loot_common GTest testing-metadata testing-plugins)
+target_link_libraries(tests loot_common ${GTEST_LIBRARIES})
 
 # Build API.
-add_library           (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
-add_dependencies      (loot_api libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (loot_api ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+add_library          (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
+add_dependencies     (loot_api loot_common)
+target_link_libraries(loot_api loot_common)
 
 # Build API tests.
-add_executable(api-tests ${LOOT_API_TESTS_SRC} ${LOOT_API_TESTS_HEADERS})
-add_dependencies(api-tests loot_api GTest testing-metadata testing-plugins)
-target_link_libraries(api-tests loot_api ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+add_executable       (api-tests ${LOOT_API_TESTS_SRC} ${LOOT_API_TESTS_HEADERS})
+add_dependencies     (api-tests loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(api-tests loot_api ${GTEST_LIBRARIES})
 
 # Build application.
-add_executable        (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies      (LOOT cef libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries (LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_GUI_LIBS} ${YAML_CPP_LIBRARIES})
+add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
+add_dependencies     (LOOT cef loot_common)
+target_link_libraries(LOOT ${CEF_LIBRARIES} loot_common ${LOOT_GUI_LIBS})
 
 # Build validator.
-add_executable        (metadata-validator ${LOOT_VALIDATOR_SRC} ${LOOT_VALIDATOR_HEADERS})
-add_dependencies      (metadata-validator libespm libgit2 libloadorder yaml-cpp)
-target_link_libraries (metadata-validator ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
+add_executable       (metadata-validator ${LOOT_VALIDATOR_SRC})
+add_dependencies     (metadata-validator loot_common)
+target_link_libraries(metadata-validator loot_common)
 
 
 
