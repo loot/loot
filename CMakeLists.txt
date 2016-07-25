@@ -315,7 +315,6 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set (LOOT_API_SRC ${LOOT_API_SRC} "${CMAKE_SOURCE_DIR}/src/resource.rc")
 ENDIF ()
 
-# GCC and MinGW settings.
 IF (CMAKE_COMPILER_IS_GNUCXX)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -std=c++14")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14")
@@ -331,25 +330,9 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
                    crypto
                    rt)
     set (LOOT_GUI_LIBS X11)
-
-    IF (NOT MINGW)
-        add_definitions(-DNDEBUG)
-    ENDIF ()
 ENDIF ()
 
-# MinGW settings.
-IF (MINGW)
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows")
-    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--subsystem,windows")
-    set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--subsystem,windows")
-
-    set (LOOT_LIBS ${LOOT_LIBS}
-                   version
-                   ws2_32
-                   shlwapi)
-    set (LOOT_GUI_LIBS rpcrt4
-                       comctl32)
-ELSEIF (MSVC)
+IF (MSVC)
     # Force static C++ runtime linkage.
     IF (PROJECT_STATIC_RUNTIME)
         FOREACH(flag
