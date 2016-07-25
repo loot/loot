@@ -29,6 +29,7 @@ cache:
 install:
   # Use GCC 5.
   - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+  - export CXXFLAGS="-fPIC" CFLAGS="-fPIC"
   # Install the latest stable Node.js. The default Node.js version is too old
   # for some of the JavaScript syntax used.
   - npm install -g nvm
@@ -50,7 +51,6 @@ before_script:
 
 script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
-  - export CXXFLAGS="-fPIC" CFLAGS="-fPIC"
   - make tests && ./tests
   - make api-tests && ./api-tests
 
