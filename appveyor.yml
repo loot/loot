@@ -93,7 +93,7 @@ deploy:
       *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
     auth_token:
       secure: SecSfg5+S0OUzmC+kKixshqNDrRDj2uRYx58AAiZ1IDYTvQbPGRqEYCWZ9jbPd3h
-    artifact: LOOT,LOOT_API,metadata-validator,installer
+    artifact: LOOT,API,metadata-validator,installer
     draft: true
     on:
       branch: master
