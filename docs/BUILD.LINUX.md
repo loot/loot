@@ -9,8 +9,8 @@ distributions.
 Most of the procedure for building the API, tests and metadata validator can be
 found in the `.travis.yml` file, which is the configuration file for LOOT's
 Travis CI instance. However, Travis instances have a few more libraries and
-utilities by default than Ubuntu 12.04 does, and the procedure does not
-cover building the GUI application, so these differences will be covered here.
+utilities by default than Ubuntu 12.04 does, so installation of them will be 
+covered here.
 
 Linux builds of the GUI application should be considered officially
 **unsupported and unmaintained**, though contributions are welcome.
@@ -29,7 +29,7 @@ sudo apt-get install python-software-properties git build-essential libcurl4-ope
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 68576280
 sudo apt-add-repository 'deb https://deb.nodesource.com/node_4.x precise main'
 sudo apt-get update
-sudo apt-get install nodejs libx11-dev libgtk2.0-dev libnss3-dev libgconf2-dev libxss-dev libasound2-dev libxtst-dev
+sudo apt-get install nodejs
 ```
 
 ## Runtime Differences
