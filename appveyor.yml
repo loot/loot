@@ -9,6 +9,7 @@ cache:
   - bower_components
   - C:\projects\boost_1_61_0\boost
   - C:\projects\boost_1_61_0\stage\lib
+  - C:\Program Files (x86)\Inno Setup 5
 
 install:
   - npm install
@@ -37,6 +38,7 @@ after_test:
   # AppVeyor checks out a specific commit, but that means the archive script
   # can't tell which branch it's on, so rename the 7z archives.
   - ps: $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
+  - ps: scripts\appveyor\build_installer.ps1
 
 artifacts:
   - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
@@ -45,6 +47,8 @@ artifacts:
     name: API
   - path: build\metadata-validator_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
     name: metadata-validator
+  - path: build\LOOT Installer.exe
+    name: installer
 
 deploy:
   - provider: BinTray
@@ -89,7 +93,7 @@ deploy:
       *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
     auth_token:
       secure: SecSfg5+S0OUzmC+kKixshqNDrRDj2uRYx58AAiZ1IDYTvQbPGRqEYCWZ9jbPd3h
-    artifact: LOOT,LOOT_API,metadata-validator
+    artifact: LOOT,LOOT_API,metadata-validator,installer
     draft: true
     on:
       branch: master
