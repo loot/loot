@@ -1,6 +1,6 @@
 # LOOT
 
-![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)](https://ci.appveyor.com/project/WrinklyNinja/loot)
 [![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
 
 ## Introduction
@@ -13,15 +13,15 @@ Although LOOT is able to calculate the correct load order positions for the vast
 
 LOOT is intended to make using mods easier, and mod users should still possess a working knowledge of mod load ordering. See [Introduction To Load Orders](https://loot.github.io/docs/help/Introduction-To-Load-Orders) for an overview.
 
-## Snapshot Builds
+## Downloads
 
-In addition to the releases hosted on GitHub, snapshot build archives of LOOT and its API are available on [Bintray](https://bintray.com/wrinklyninja/loot). The archives are named like so:
+Releases are hosted on [GitHub](https://github.com/loot/loot/releases), and snapshot builds are available on [Bintray](https://bintray.com/wrinklyninja/loot). The snapshot build archives are named like so:
 
 ```
 loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>.7z
 ```
 
-For example `LOOT v0.7.0-alpha-2-10-gf6d7e80-dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.
+For example `LOOT v0.7.0-alpha-2-10-gf6d7e80_dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.
 
 ## Building LOOT
 
@@ -41,15 +41,15 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared loot API binary.
-`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not. This also affects the whether static or shared Boost libraries are used.
+`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared LOOT API binary.
+`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not.
 
-The default paths given in the table above are relative to LOOT's `CMakeLists.txt`. You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
+You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 
 ## Packaging Releases
 
-Packaging scripts are provided for creating an installer and compressed archives on Windows.
+Packaging scripts are provided for creating an installer on Windows and compressed archives on Windows and Linux.
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git](http://git-scm.com/) and [7-Zip](http://7-zip.org) to be installed. The script can be run using `node scripts/archive.js`, and will create `.7z` archives for LOOT and its API in the `build` folder. The archives will be given filenames using the output of `git describe --tags --long` and `git rev-parse --abbrev-ref HEAD`.
+The archive packaging script requires [Git](http://git-scm.com/), and on Windows it also requires [7-Zip](http://7-zip.org), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates archives for LOOT, its API and the metadata validator in the `build` folder. The archives are named as described in the Downloads section above.
