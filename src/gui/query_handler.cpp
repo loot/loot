@@ -616,9 +616,9 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
             "menu to open its data folder, then open your 'userlist.yaml' "
             "file in the relevant game folder. You can then edit the "
             "metadata it contains with reference to the "
-            "[syntax documentation](http://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%%20Syntax.html).\n\n"
+            "[syntax documentation](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%%20Syntax.html).\n\n"
             "You can also seek support on LOOT's forum thread, which is "
-            "linked to on [LOOT's website](http://loot.github.io/)."
+            "linked to on [LOOT's website](https://loot.github.io/)."
           )) % e.what() % LootVersion::major % LootVersion::minor % LootVersion::patch).str()));
         }
       }
