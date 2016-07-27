@@ -11,6 +11,10 @@ cache:
   - C:\projects\boost_1_61_0\stage\lib
   - C:\Program Files (x86)\Inno Setup 5
 
+environment:
+  access_token:
+    secure: yoODjVeYw01Vg2idJgxMBOkyII/TO3yb6OZfxtzBh/F5z3ZTDW6CHBOiH4AyiX7Y
+
 install:
   - npm install
   - .\node_modules\.bin\bower install
@@ -98,6 +102,9 @@ deploy:
     on:
       branch: master
       appveyor_repo_tag: true
+
+on_success:
+  - ps: scripts\appveyor\deploy_docs.ps1
 
 on_finish:
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
