@@ -215,7 +215,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeFromVersion0Point6Format) {
 
   EXPECT_EQ(Games[0].Name(), settings_.getGameSettings()[0].Name());
   EXPECT_EQ(Games[0].RepoURL(), settings_.getGameSettings()[0].RepoURL());
-  EXPECT_EQ(Games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
+  EXPECT_EQ("master", settings_.getGameSettings()[0].RepoBranch());
 }
 
 TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {

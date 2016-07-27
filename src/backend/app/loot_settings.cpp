@@ -35,6 +35,11 @@ using std::recursive_mutex;
 using std::string;
 
 namespace loot {
+const std::set<std::string> LootSettings::oldDefaultBranches({
+  "master",
+  "v0.7",
+});
+
 LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0) {}
 
 LootSettings::LootSettings() :
@@ -253,17 +258,12 @@ void LootSettings::upgradeYaml(YAML::Node& yaml) {
     for (auto node : yaml["games"]) {
       if (node["url"]) {
         node["repo"] = node["url"];
-        node["branch"] = "v0.8";
+        node["branch"] = "master";  // It'll get updated to the correct default
       }
     }
   }
 
   if (yaml["games"]) {
-    const std::set<string> oldDefaultBranches({
-        "master",
-        "v0.7",
-    });
-
     // Handle exception if YAML is invalid, eg. if an unrecognised
     // game type is used (which can happen if downgrading from a
     // later version of LOOT that supports more game types).
@@ -280,7 +280,7 @@ void LootSettings::upgradeYaml(YAML::Node& yaml) {
             // repositories are used.
           if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL()
               && oldDefaultBranches.count(settings.RepoBranch()) == 1) {
-            settings.SetRepoBranch("v0.8");
+            settings.SetRepoBranch(GameSettings(settings.Type()).RepoBranch());
           }
         }
 
