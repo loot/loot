@@ -1,6 +1,6 @@
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-$boostUrl = 'http://downloads.sourceforge.net/project/boost/boost/1.61.0/boost_1_61_0.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.61.0%2F&ts=1468862599&use_mirror=ncu'
+$boostUrl = 'https://downloads.sourceforge.net/project/boost/boost/1.61.0/boost_1_61_0.7z?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.61.0%2F&ts=1468862599&use_mirror=ncu'
 $boostArchive = 'C:\projects\boost_1_61_0.7z'
 $boostFolder = 'C:\projects\boost_1_61_0'
 $boostLibraries = @(

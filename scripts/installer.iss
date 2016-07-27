@@ -5,7 +5,7 @@
 #define MyAppName "LOOT"
 #define MyAppVersion "0.9.1"
 #define MyAppPublisher "LOOT Team"
-#define MyAppURL "http://loot.github.io"
+#define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')

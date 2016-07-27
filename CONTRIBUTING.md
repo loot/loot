@@ -43,7 +43,7 @@ First check that an [Inno Setup translation](http://www.jrsoftware.org/files/ist
 
 ### Translating the LOOT application
 
-1. Download and install the latest version of [Poedit](http://www.poedit.net/).
+1. Download and install the latest version of [Poedit](https://poedit.net/).
 2. If you are starting a new translation, select `File->New catalogue from POT file...` and choose the template file at `resources/l10n/template.pot`. In the `Catalog properties` dialog, just click `OK` without changing anything.
 3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalogue->Update from POT file...` and choose the template file you downloaded. Click `OK` in the `Update summary` dialog.
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
