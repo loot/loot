@@ -25,11 +25,11 @@ For example `LOOT v0.7.0-alpha-2-10-gf6d7e80_dev.7z` was built using the revisio
 
 ## Building LOOT
 
-LOOT's build process uses [CMake](http://cmake.org). Most of LOOT's C++ dependencies are managed by CMake, but the following must be obtained manually:
+LOOT's build process uses [CMake](https://cmake.org). Most of LOOT's C++ dependencies are managed by CMake, but the following must be obtained manually:
 
 * [Boost](http://www.boost.org) v1.55+
 
-Building LOOT's GUI also uses [Node.js](http://nodejs.org/). With it installed, run `npm install` then `node_modules/.bin/bower install` from the repository root to install the additional tools and dependencies required.
+Building LOOT's GUI also uses [Node.js](https://nodejs.org/). With it installed, run `npm install` then `node_modules/.bin/bower install` from the repository root to install the additional tools and dependencies required.
 
 The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
 
@@ -52,4 +52,4 @@ Packaging scripts are provided for creating an installer on Windows and compress
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git](http://git-scm.com/), and on Windows it also requires [7-Zip](http://7-zip.org), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates archives for LOOT, its API and the metadata validator in the `build` folder. The archives are named as described in the Downloads section above.
+The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](http://7-zip.org), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates archives for LOOT, its API and the metadata validator in the `build` folder. The archives are named as described in the Downloads section above.
