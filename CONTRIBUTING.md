@@ -1,7 +1,7 @@
 Contributing To LOOT
 ====================
 
-A general guide to contributing to LOOT, may be found on [LOOT's wiki](https://loot.github.io/docs/contributing/How-To-Contribute). Information more specific to this repository is found here.
+A general guide to contributing to LOOT, may be found on [LOOT's website](https://loot.github.io/docs/contributing/How-To-Contribute). Information more specific to this repository is found here.
 
 ## Repository Branching Structure
 
