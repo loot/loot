@@ -16,7 +16,7 @@ function isLibraryMissing {
 if isLibraryMissing; then
   cd ~
 
-  wget http://downloads.sourceforge.net/project/boost/boost/1.61.0/${BOOST_BASENAME}.tar.bz2
+  wget https://downloads.sourceforge.net/project/boost/boost/1.61.0/${BOOST_BASENAME}.tar.bz2
   tar xf ${BOOST_BASENAME}.tar.bz2
 
   cd $BOOST_BASENAME
