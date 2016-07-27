@@ -19,7 +19,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with LOOT.  If not, see
-<http://www.gnu.org/licenses/>.
+<https://www.gnu.org/licenses/>.
 */
 
 #ifndef LOOT_TESTS_BACKEND_GAME_GAME_SETTINGS_TEST

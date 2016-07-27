@@ -19,7 +19,7 @@
 
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
-    <http://www.gnu.org/licenses/>.
+    <https://www.gnu.org/licenses/>.
     */
 
 #ifndef LOOT_BACKEND_METADATA_CONDITION_GRAMMAR
