@@ -1,7 +1,7 @@
 
 $innoInstallPath = 'C:\Program Files (x86)\Inno Setup 5'
 
-if ($env:APPVEYOR_REPO_TAG) {
+if ($env:APPVEYOR_REPO_TAG -eq 'true') {
   if (!(Test-Path $innoInstallPath)) {
     choco install -y InnoSetup
 

@@ -19,7 +19,7 @@ $docsFiles = @(
 
 $commitMessage = 'Add v' + $env:APPVEYOR_REPO_TAG_NAME + ' release docs'
 
-if ($env:APPVEYOR_REPO_TAG) {
+if ($env:APPVEYOR_REPO_TAG -eq 'true') {
   cd 'C:\projects'
   git clone $docsRepoUrl
 
