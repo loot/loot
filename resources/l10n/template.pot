@@ -1,275 +1,611 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR WrinklyNinja
+# This file is distributed under the same license as the LOOT package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.9\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-30 18:01+0000\n"
-"PO-Revision-Date: 2015-02-09 21:40-0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en\n"
+"Project-Id-Version: LOOT 0.9.2\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2016-07-28 16:31+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.6\n"
-"X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
-"X-Poedit-Basepath: ../../src\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-SearchPath-0: backend\n"
-"X-Poedit-SearchPath-1: gui\n"
-"X-Poedit-SearchPath-2: gui/html/js\n"
 
-#: backend/game/game.cpp:58
-msgid "Invalid game ID supplied."
+#: src/gui/html/js/events.js:16
+msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: backend/game/game.cpp:65
-msgid "Game path could not be detected."
+#: src/gui/html/js/events.js:96
+msgid "No masterlist update was necessary."
 msgstr ""
 
-#: backend/game/game.cpp:76
-msgid "Could not create LOOT folder for game. Details:"
+#: src/gui/html/js/events.js:146
+msgid "Sorting made no changes to the load order."
 msgstr ""
 
-#: backend/game/game.cpp:177
-msgid "An exception occurred while loading this plugin. Details:"
+#: src/gui/html/js/events.js:178
+msgid "Redate Plugins?"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:50
-msgid "Unsupported game ID supplied."
-msgstr ""
-
-#: backend/game/load_order_handler.cpp:55
-msgid "Game path is not initialised."
-msgstr ""
-
-#: backend/game/load_order_handler.cpp:89
+#: src/gui/html/js/events.js:178
 msgid ""
-"libloadorder failed to create a game handle. Details could not be fetched."
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam. Do you wish to continue?"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:93
-msgid "libloadorder failed to create a game handle. Details:"
+#: src/gui/html/js/events.js:178
+msgid "Redate"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:112
+#: src/gui/html/js/events.js:187
 msgid ""
-"libloadorder failed to get the active plugins list. Details could not be "
-"fetched."
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:116
-msgid "libloadorder failed to get the active plugins list. Details:"
+#: src/gui/html/js/events.js:187 src/gui/html/js/events.js:395
+msgid "Clear"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:142
+#: src/gui/html/js/events.js:198
+msgid "All user-added metadata has been cleared."
+msgstr ""
+
+#: src/gui/html/js/events.js:221
+msgid "LOOT's content has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/html/js/events.js:232
+msgid "The load order has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/html/js/events.js:263 src/gui/html/js/translateStaticText.js:182
+msgid "Quit"
+msgstr ""
+
+#: src/gui/html/js/events.js:275
+msgid "sorted load order"
+msgstr ""
+
+#: src/gui/html/js/events.js:277
+msgid "metadata edits"
+msgstr ""
+
+#: src/gui/html/js/filters.js:28
+msgid "Do not clean"
+msgstr ""
+
+#: src/gui/html/js/game.js:22
+msgid "N/A"
+msgstr ""
+
+#: src/gui/html/js/handlePromiseError.js:15
+#: src/gui/html/js/translateStaticText.js:111
+msgid "Error"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:17
+msgid "Active Plugin"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:18
+#: src/gui/html/js/translateStaticText.js:251
+msgid "Master File"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:19
+msgid "Empty Plugin"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:20
+msgid "Loads Archive"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:21
+#: src/gui/html/js/translateStaticText.js:85
+msgid "Has User Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:23
+msgid "Edit Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:24
+msgid "Copy Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:25
+msgid "Clear User Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:32
+msgid "Enable Edits"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:33
+#: src/gui/html/js/translateStaticText.js:84
+msgid "Global Priority"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:34
 msgid ""
-"libloadorder failed to get the load order. Details could not be fetched."
+"Global priorities are compared against all other plugins. Normal priorities "
+"are compared against only conflicting plugins."
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:146
-msgid "libloadorder failed to get the load order. Details:"
+#: src/gui/html/js/translateStaticText.js:35
+msgid "Priority Value"
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:169
+#: src/gui/html/js/translateStaticText.js:37
+msgid "Main"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:38
+msgid "Load After"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:39
+msgid "Requirements"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:40
+msgid "Incompatibilities"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:41
+msgid "Messages"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:42
+msgid "Bash Tags"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:43
+msgid "Dirty Info"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:44
+msgid "Locations"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:46
+#: src/gui/html/js/translateStaticText.js:50
+#: src/gui/html/js/translateStaticText.js:54
+msgid "Filename"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:47
+#: src/gui/html/js/translateStaticText.js:51
+#: src/gui/html/js/translateStaticText.js:55
+msgid "Display Name"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:48
+#: src/gui/html/js/translateStaticText.js:52
+#: src/gui/html/js/translateStaticText.js:56
+#: src/gui/html/js/translateStaticText.js:60
+#: src/gui/html/js/translateStaticText.js:65
+msgid "Condition"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:58
+msgid "Type"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:59
+msgid "Content"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:61
+#: src/gui/html/js/translateStaticText.js:239
+msgid "Language"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:63
+msgid "Add/Remove"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:64
+msgid "Bash Tag"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:67
+msgid "CRC"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:68
+msgid "ITM Count"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:69
+msgid "Deleted References"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:70
+msgid "Deleted Navmeshes"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:71
+msgid "Cleaning Utility"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:73
+msgid "URL"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:74
+#: src/gui/html/js/translateStaticText.js:248
+msgid "Name"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:76
+msgid "Save Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:77
+#: src/gui/html/js/translateStaticText.js:94
+#: src/gui/html/js/translateStaticText.js:169
+#: src/gui/html/js/translateStaticText.js:262
+msgid "Cancel"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:86
+msgid "Editor Is Open"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:93
+#: src/gui/html/js/translateStaticText.js:276
+msgid "OK"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:101
+msgid "A filename is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:102
+#: src/gui/html/js/translateStaticText.js:113
+#: src/gui/html/js/translateStaticText.js:123
+#: src/gui/html/js/translateStaticText.js:135
+#: src/gui/html/js/translateStaticText.js:143
+#: src/gui/html/js/translateStaticText.js:152
+msgid "Delete Row"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:109
+msgid "Note"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:110
+msgid "Warning"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:112
+msgid "A content string is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:120
+msgid "Add"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:121
+msgid "Remove"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:122
+#: src/gui/html/js/translateStaticText.js:150
+msgid "A name is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:130
+msgid "A CRC is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:131
+#: src/gui/html/js/translateStaticText.js:132
+#: src/gui/html/js/translateStaticText.js:133
+msgid "Values must be integers."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:134
+msgid "A utility name is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:142
+msgid "A link is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:151
+msgid "A folder is required."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:159
+#: src/gui/html/js/translateStaticText.js:259
+msgid "Add New Row"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:165
+msgid "Jump To General Information"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:166
+msgid "Sort Plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:167
+msgid "Update Masterlist"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:168
+#: src/gui/html/js/translateStaticText.js:261
+msgid "Apply"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:170
+msgid "Search Cards"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:173
+msgid "Redate Plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:174
+msgid "Open Debug Log Location"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:175
+msgid "Clear All User Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:176
+msgid "Copy Load Order"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:177
+msgid "Copy Content"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:178
+msgid "Refresh Content"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:179
+msgid "View Documentation"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:180
+msgid "About"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:181
+#: src/gui/html/js/translateStaticText.js:231
+msgid "Settings"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:185
+msgid "Search cards"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:190
+msgid "Plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:191
+msgid "Filters"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:192
+msgid "Press Enter or click outside the input to set the filter."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:193
+msgid "Show only plugins with cards that contain"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:194
+msgid "No text specified"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:197
+msgid "Hide version numbers"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:198
+msgid "Hide CRCs"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:199
+msgid "Hide Bash Tags"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:200
+msgid "Hide notes"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:201
+msgid "Hide 'Do not clean' messages"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:202
+msgid "Hide all plugin messages"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:203
+msgid "Hide inactive plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:204
+msgid "Hide messageless plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:207
+msgid "Show only conflicting plugins for"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:208
+msgid "No plugin selected"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:212
+msgid "Hidden plugins:"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:213
+msgid "Hidden messages:"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:218
+msgid "General Information"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:219
+msgid "Masterlist Revision"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:220
+msgid "Masterlist Date"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:221
+msgid "Warnings"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:222
+msgid "Errors"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:223
+msgid "Total Messages"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:224
+msgid "Active Plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:225
+msgid "Dirty Plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:226
+msgid "Total Plugins"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:234
+msgid "Default Game"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:235
+msgid "Autodetect"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:240
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:242
+msgid "Enable debug logging"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:243
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:245
+msgid "Update masterlist before sorting"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:249
+msgid "Base Game"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:250
+msgid "LOOT Folder"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:252
+msgid "Masterlist Repository URL"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:253
+msgid "Masterlist Repository Branch"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:254
+msgid "Install Path"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:255
+msgid "Install Path Registry Key"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:268
+msgid "First-Time Tips"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:270
 msgid ""
-"libloadorder failed to set the load order. Details could not be fetched."
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
 msgstr ""
 
-#: backend/game/load_order_handler.cpp:173
-msgid "libloadorder failed to set the load order. Details:"
-msgstr ""
-
-#: backend/helpers/git_helper.cpp:88
-msgid "Git operation failed. Error: %1%"
-msgstr ""
-
-#: backend/helpers/git_helper.cpp:163
+#: src/gui/html/js/translateStaticText.js:271
 msgid ""
-"An error occurred while trying to clone the remote masterlist repository."
+"Double-click a plugin in the sidebar to quickly open it in the metadata "
+"editor."
 msgstr ""
 
-#: backend/helpers/git_helper.cpp:212
+#: src/gui/html/js/translateStaticText.js:272
 msgid ""
-"An error occurred while trying to update the masterlist. This could be due "
-"to a server-side error. Try again in a few minutes."
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 
-#: backend/helpers/git_helper.cpp:324 backend/masterlist.cpp:50
-msgid "Unknown: Git repository missing"
-msgstr ""
-
-#: backend/helpers/helpers.cpp:88
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr ""
-
-#: backend/helpers/helpers.cpp:126 backend/helpers/helpers.cpp:129
-msgid "Failed to open file in its default application."
-msgstr ""
-
-#: backend/helpers/helpers.cpp:139
-msgid "Failed to get %LOCALAPPDATA% path."
-msgstr ""
-
-#: backend/masterlist.cpp:42
+#: src/gui/html/js/translateStaticText.js:273
 msgid ""
-"An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: backend/masterlist.cpp:46
-msgid "N/A: No masterlist present"
-msgstr ""
-
-#: backend/masterlist.cpp:81 backend/masterlist.cpp:82
-msgid "(edited)"
-msgstr ""
-
-#: backend/masterlist.cpp:119 backend/masterlist.cpp:133
+#: src/gui/html/js/translateStaticText.js:274
 msgid ""
-"An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
+"Many interface elements have tooltips. If you don't know what something is, "
+"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
+"can be accessed through the main menu."
 msgstr ""
 
-#: backend/masterlist.cpp:241
-msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
+#: src/gui/query_handler.cpp:111
+msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: backend/masterlist.cpp:256
-msgid "Masterlist revision"
-msgstr ""
-
-#: backend/masterlist.cpp:260
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-
-#: backend/metadata/conditional_metadata.cpp:72
-#: backend/metadata/conditional_metadata.cpp:104
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr ""
-
-#: backend/metadata/conditional_metadata.cpp:77
-#: backend/metadata/conditional_metadata.cpp:109
-msgid "Failed to parse condition \"%1%\"."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:68
-msgid ""
-"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
-"Clean with %4%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:70
-msgid "Clean with %1%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:73
-msgid ""
-"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:75
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:77
-msgid "Contains %1% deleted references. Clean with %2%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:80
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:82
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
-
-#: backend/metadata/plugin_dirty_info.cpp:85
-msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
-msgstr ""
-
-#: backend/plugin/plugin.cpp:163
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr ""
-
-#: backend/plugin/plugin.cpp:271 backend/plugin/plugin.cpp:283
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr ""
-
-#: backend/plugin/plugin.cpp:275
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr ""
-
-#: backend/plugin/plugin.cpp:289
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr ""
-
-#: backend/plugin_sorter.cpp:84
-msgid ""
-"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
-"%3%"
-msgstr ""
-
-#: backend/plugin_sorter.cpp:105
-msgid "Building plugin graph..."
-msgstr ""
-
-#: backend/plugin_sorter.cpp:115
-msgid "Adding edges to plugin graph and performing topological sort..."
-msgstr ""
-
-#: backend/plugin_sorter.cpp:210 gui/handler.cpp:1056
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
-
-#: gui/handler.cpp:216 gui/handler.cpp:220
+#: src/gui/query_handler.cpp:203 src/gui/query_handler.cpp:206
 msgid "Failed to change game. Details: %1%"
 msgstr ""
 
-#: gui/handler.cpp:237 gui/handler.cpp:241 gui/handler.cpp:335
-#: gui/handler.cpp:339 gui/handler.cpp:371 gui/handler.cpp:375
+#: src/gui/query_handler.cpp:220 src/gui/query_handler.cpp:223
+#: src/gui/query_handler.cpp:298 src/gui/query_handler.cpp:301
+#: src/gui/query_handler.cpp:329 src/gui/query_handler.cpp:332
 msgid "Failed to copy plugin metadata. Details: %1%"
 msgstr ""
 
-#: gui/handler.cpp:259 gui/handler.cpp:270
+#: src/gui/query_handler.cpp:238 src/gui/query_handler.cpp:248
 msgid "Failed to apply plugin metadata. Details: %1%"
 msgstr ""
 
-#: gui/handler.cpp:407 gui/handler.cpp:994
-msgid "Loading plugin contents..."
-msgstr ""
-
-#: gui/handler.cpp:411
-msgid "Checking for conflicting plugins..."
-msgstr ""
-
-#: gui/handler.cpp:639
-msgid "Loading plugin headers..."
-msgstr ""
-
-#: gui/handler.cpp:664
-msgid "Parsing masterlist..."
-msgstr ""
-
-#: gui/handler.cpp:671
+#: src/gui/query_handler.cpp:596
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: gui/handler.cpp:681
-msgid "Parsing userlist..."
-msgstr ""
-
-#: gui/handler.cpp:688
+#: src/gui/query_handler.cpp:611
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -285,643 +621,260 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: gui/handler.cpp:725
-msgid "Merging and evaluating plugin metadata..."
+#: src/gui/query_handler.cpp:719 src/gui/query_handler.cpp:722
+msgid "Failed to get game data. Details: %1%"
 msgstr ""
 
-#: gui/handler.cpp:790
-msgid "Loading general messages..."
+#: src/gui/query_handler.cpp:803 src/gui/query_handler.cpp:806
+msgid "Failed to update the masterlist. Details: %1%"
 msgstr ""
 
-#: gui/handler.cpp:819 gui/handler.cpp:932
+#: src/gui/query_handler.cpp:845
+msgid "Loading plugin contents..."
+msgstr ""
+
+#: src/gui/query_handler.cpp:849
+msgid "Sorting load order..."
+msgstr ""
+
+#: src/gui/query_handler.cpp:906
+msgid "Failed to sort plugins. Details: %1%"
+msgstr ""
+
+#: src/gui/query_handler.cpp:936
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: gui/handler.cpp:829 gui/handler.cpp:833
-msgid "Failed to get game data. Details: %1%"
+#: src/gui/query_handler.cpp:958 src/backend/plugin/plugin_sorter.cpp:216
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: gui/handler.cpp:852
-msgid "Updating and parsing masterlist..."
+#: src/backend/app/loot_paths.cpp:85
+msgid "Failed to get %LOCALAPPDATA% path."
 msgstr ""
 
-#: gui/handler.cpp:874
-msgid "Regenerating displayed content..."
-msgstr ""
-
-#: gui/handler.cpp:945 gui/handler.cpp:949
-msgid "Failed to update the masterlist. Details: %1%"
-msgstr ""
-
-#: gui/handler.cpp:1029
-msgid "Failed to sort plugins. Details: %1%"
-msgstr ""
-
-#: gui/loot_state.cpp:69
+#: src/backend/app/loot_state.cpp:124
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: gui/loot_state.cpp:79
+#: src/backend/app/loot_state.cpp:131
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: gui/loot_state.cpp:144
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr ""
-
-#: gui/loot_state.cpp:165
+#: src/backend/app/loot_state.cpp:194
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: gui/loot_state.cpp:311
+#: src/backend/app/loot_state.cpp:272
 msgid "None of the supported games were detected."
 msgstr ""
 
-#: backend/metadata/condition_grammar.h:155
-#: backend/metadata/condition_grammar.h:284
-#: backend/metadata/condition_grammar.h:352
+#: src/backend/game/game.cpp:62
+msgid "Invalid game ID supplied."
+msgstr ""
+
+#: src/backend/game/game.cpp:69
+msgid "Game path could not be detected."
+msgstr ""
+
+#: src/backend/game/game.cpp:79
+msgid "Could not create LOOT folder for game. Details:"
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:49
+msgid "Unsupported game ID supplied."
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:54
+msgid "Game path is not initialised."
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:88
+msgid ""
+"libloadorder failed to create a game handle. Details could not be fetched."
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:91
+msgid "libloadorder failed to create a game handle. Details:"
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:109
+msgid ""
+"libloadorder failed to check if a plugin is active. Details could not be "
+"fetched."
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:112
+msgid "libloadorder failed to check if a plugin is active. Details:"
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:134
+msgid ""
+"libloadorder failed to get the load order. Details could not be fetched."
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:137
+msgid "libloadorder failed to get the load order. Details:"
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:160
+msgid ""
+"libloadorder failed to set the load order. Details could not be fetched."
+msgstr ""
+
+#: src/backend/game/load_order_handler.cpp:163
+msgid "libloadorder failed to set the load order. Details:"
+msgstr ""
+
+#: src/backend/helpers/git_helper.cpp:104
+msgid "Git operation failed. Error: %1%"
+msgstr ""
+
+#: src/backend/helpers/git_helper.cpp:145
+msgid ""
+"An error occurred while trying to clone the remote masterlist repository."
+msgstr ""
+
+#: src/backend/helpers/git_helper.cpp:197
+msgid ""
+"An error occurred while trying to update the masterlist. This could be due "
+"to a server-side error. Try again in a few minutes."
+msgstr ""
+
+#: src/backend/helpers/git_helper.cpp:311 src/backend/masterlist.cpp:50
+msgid "Unknown: Git repository missing"
+msgstr ""
+
+#: src/backend/helpers/helpers.cpp:81
+msgid "Unable to open \"%1%\" for CRC calculation."
+msgstr ""
+
+#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
+msgid "Failed to open file in its default application."
+msgstr ""
+
+#: src/backend/masterlist.cpp:43
+msgid ""
+"An error occurred while trying to read the local masterlist's version. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+
+#: src/backend/masterlist.cpp:47
+msgid "N/A: No masterlist present"
+msgstr ""
+
+#: src/backend/masterlist.cpp:80 src/backend/masterlist.cpp:81
+msgid "(edited)"
+msgstr ""
+
+#: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
+msgid ""
+"An error occurred while trying to access the local masterlist repository. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+
+#: src/backend/masterlist.cpp:239
+msgid ""
+"An error occurred while trying to read information on the updated "
+"masterlist. If this error happens again, try deleting the \".git\" folder in "
+"%1%."
+msgstr ""
+
+#: src/backend/masterlist.cpp:253
+msgid "Masterlist revision"
+msgstr ""
+
+#: src/backend/masterlist.cpp:257
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+
+#: src/backend/metadata/condition_grammar.h:146
+#: src/backend/metadata/condition_grammar.h:281
+#: src/backend/metadata/condition_grammar.h:365
 msgid "Invalid file path:"
 msgstr ""
 
-#: backend/metadata/condition_grammar.h:188
-#: backend/metadata/condition_grammar.h:215
+#: src/backend/metadata/condition_grammar.h:187
+#: src/backend/metadata/condition_grammar.h:213
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr ""
 
-#: backend/metadata/condition_grammar.h:206
+#: src/backend/metadata/condition_grammar.h:205
 msgid "Invalid folder path:"
 msgstr ""
 
-#: backend/metadata/condition_grammar.h:372
+#: src/backend/metadata/condition_grammar.h:385
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr ""
 
-#: gui/html/js/events.js:42
-msgid "Loading game data..."
+#: src/backend/metadata/conditional_metadata.cpp:73
+#: src/backend/metadata/conditional_metadata.cpp:104
+msgid "Failed to parse condition \"%1%\": %2%"
 msgstr ""
 
-#: gui/html/js/events.js:112
-#, javascript-format
-msgid "Masterlist updated to revision %s."
+#: src/backend/metadata/conditional_metadata.cpp:78
+#: src/backend/metadata/conditional_metadata.cpp:109
+msgid "Failed to parse condition \"%1%\"."
 msgstr ""
 
-#: gui/html/js/events.js:114
-msgid "No masterlist update was necessary."
-msgstr ""
-
-#: gui/html/js/events.js:119
-msgid "Updating masterlist..."
-msgstr ""
-
-#: gui/html/js/events.js:143
-msgid "Sorting plugins..."
-msgstr ""
-
-#: gui/html/js/events.js:245
-msgid "Redate Plugins?"
-msgstr ""
-
-#: gui/html/js/events.js:245
+#: src/backend/metadata/plugin_dirty_info.cpp:69
 msgid ""
-"This feature is provided so that modders using the Creation Kit may set the "
-"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
+"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
+"Clean with %4%."
 msgstr ""
 
-#: gui/html/js/events.js:245
-msgid "Redate"
+#: src/backend/metadata/plugin_dirty_info.cpp:71
+msgid "Clean with %1%."
 msgstr ""
 
-#: gui/html/js/events.js:254
+#: src/backend/metadata/plugin_dirty_info.cpp:74
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from all "
-"plugins?"
+"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 
-#: gui/html/js/events.js:254 gui/html/js/events.js:570
-msgid "Clear"
+#: src/backend/metadata/plugin_dirty_info.cpp:76
+msgid "Contains %1% deleted navmeshes. Clean with %2%."
 msgstr ""
 
-#: gui/html/js/events.js:276
-msgid "All user-added metadata has been cleared."
+#: src/backend/metadata/plugin_dirty_info.cpp:78
+msgid "Contains %1% deleted references. Clean with %2%."
 msgstr ""
 
-#: gui/html/js/events.js:333
-msgid "LOOT's content has been copied to the clipboard."
+#: src/backend/metadata/plugin_dirty_info.cpp:81
+msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 
-#: gui/html/js/events.js:355
-msgid "The load order has been copied to the clipboard."
+#: src/backend/metadata/plugin_dirty_info.cpp:83
+msgid "Contains %1% ITM records. Clean with %2%."
 msgstr ""
 
-#: gui/html/js/events.js:566
-#, javascript-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
+#: src/backend/metadata/plugin_dirty_info.cpp:86
+msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
 msgstr ""
 
-#: gui/html/js/events.js:570
-#, javascript-format
+#: src/backend/plugin/plugin.cpp:115
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr ""
+
+#: src/backend/plugin/plugin.cpp:213 src/backend/plugin/plugin.cpp:224
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr ""
+
+#: src/backend/plugin/plugin.cpp:216
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr ""
+
+#: src/backend/plugin/plugin.cpp:230
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr ""
+
+#: src/backend/plugin/plugin_sorter.cpp:81
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr ""
-
-#: gui/html/js/events.js:596
-#, javascript-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr ""
-
-#: gui/html/js/events.js:619
-msgid "sorted load order"
-msgstr ""
-
-#: gui/html/js/events.js:621
-msgid "metadata edits"
-msgstr ""
-
-#: gui/html/js/events.js:632
-msgid "Refreshing data..."
-msgstr ""
-
-#: gui/html/js/filters.js:121
-msgid "Do not clean"
-msgstr ""
-
-#: gui/html/js/filters.js:160
-msgid "Checking if plugins have been loaded..."
-msgstr ""
-
-#: gui/html/js/helpers.js:7 gui/html/js/l10n.js:162
-msgid "Error"
-msgstr ""
-
-#: gui/html/js/helpers.js:27 gui/html/js/l10n.js:130 gui/html/js/l10n.js:227
-#: gui/html/js/l10n.js:306
-msgid "Cancel"
-msgstr ""
-
-#: gui/html/js/helpers.js:33 gui/html/js/l10n.js:318
-msgid "OK"
-msgstr ""
-
-#: gui/html/js/helpers.js:54
-#, javascript-format
-msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr ""
-
-#: gui/html/js/helpers.js:54 gui/html/js/l10n.js:240
-msgid "Quit"
-msgstr ""
-
-#: gui/html/js/init.js:38
-msgid "unknown"
-msgstr ""
-
-#: gui/html/js/l10n.js:61 gui/html/js/l10n.js:80
-msgid "Active Plugin"
-msgstr ""
-
-#: gui/html/js/l10n.js:62 gui/html/js/l10n.js:81 gui/html/js/l10n.js:295
-msgid "Master File"
-msgstr ""
-
-#: gui/html/js/l10n.js:63 gui/html/js/l10n.js:82
-msgid "Empty Plugin"
-msgstr ""
-
-#: gui/html/js/l10n.js:64 gui/html/js/l10n.js:83
-msgid "Loads Archive"
-msgstr ""
-
-#: gui/html/js/l10n.js:65 gui/html/js/l10n.js:140
-msgid "Has User Metadata"
-msgstr ""
-
-#: gui/html/js/l10n.js:67
-msgid "Show Only Conflicts"
-msgstr ""
-
-#: gui/html/js/l10n.js:68
-msgid "Edit Metadata"
-msgstr ""
-
-#: gui/html/js/l10n.js:69
-msgid "Copy Metadata"
-msgstr ""
-
-#: gui/html/js/l10n.js:70
-msgid "Clear User Metadata"
-msgstr ""
-
-#: gui/html/js/l10n.js:85
-msgid "Enable Edits"
-msgstr ""
-
-#: gui/html/js/l10n.js:86
-msgid ""
-"Global priorities are compared against all other plugins. Normal priorities "
-"are compared against only conflicting plugins."
-msgstr ""
-
-#: gui/html/js/l10n.js:87 gui/html/js/l10n.js:139
-msgid "Global Priority"
-msgstr ""
-
-#: gui/html/js/l10n.js:88
-msgid "Priority Value"
-msgstr ""
-
-#: gui/html/js/l10n.js:90
-msgid "Main"
-msgstr ""
-
-#: gui/html/js/l10n.js:91
-msgid "Load After"
-msgstr ""
-
-#: gui/html/js/l10n.js:92
-msgid "Requirements"
-msgstr ""
-
-#: gui/html/js/l10n.js:93
-msgid "Incompatibilities"
-msgstr ""
-
-#: gui/html/js/l10n.js:94
-msgid "Messages"
-msgstr ""
-
-#: gui/html/js/l10n.js:95
-msgid "Bash Tags"
-msgstr ""
-
-#: gui/html/js/l10n.js:96
-msgid "Dirty Info"
-msgstr ""
-
-#: gui/html/js/l10n.js:97
-msgid "Locations"
-msgstr ""
-
-#: gui/html/js/l10n.js:99 gui/html/js/l10n.js:103 gui/html/js/l10n.js:107
-msgid "Filename"
-msgstr ""
-
-#: gui/html/js/l10n.js:100 gui/html/js/l10n.js:104 gui/html/js/l10n.js:108
-msgid "Display Name"
-msgstr ""
-
-#: gui/html/js/l10n.js:101 gui/html/js/l10n.js:105 gui/html/js/l10n.js:109
-#: gui/html/js/l10n.js:113 gui/html/js/l10n.js:118
-msgid "Condition"
-msgstr ""
-
-#: gui/html/js/l10n.js:111
-msgid "Type"
-msgstr ""
-
-#: gui/html/js/l10n.js:112
-msgid "Content"
-msgstr ""
-
-#: gui/html/js/l10n.js:114 gui/html/js/l10n.js:283
-msgid "Language"
-msgstr ""
-
-#: gui/html/js/l10n.js:116
-msgid "Add/Remove"
-msgstr ""
-
-#: gui/html/js/l10n.js:117
-msgid "Bash Tag"
-msgstr ""
-
-#: gui/html/js/l10n.js:120
-msgid "CRC"
-msgstr ""
-
-#: gui/html/js/l10n.js:121
-msgid "ITM Count"
-msgstr ""
-
-#: gui/html/js/l10n.js:122
-msgid "Deleted References"
-msgstr ""
-
-#: gui/html/js/l10n.js:123
-msgid "Deleted Navmeshes"
-msgstr ""
-
-#: gui/html/js/l10n.js:124
-msgid "Cleaning Utility"
-msgstr ""
-
-#: gui/html/js/l10n.js:126
-msgid "URL"
-msgstr ""
-
-#: gui/html/js/l10n.js:127 gui/html/js/l10n.js:292
-msgid "Name"
-msgstr ""
-
-#: gui/html/js/l10n.js:129 gui/html/js/l10n.js:226 gui/html/js/l10n.js:305
-msgid "Apply"
-msgstr ""
-
-#: gui/html/js/l10n.js:141
-msgid "Editor Is Open"
-msgstr ""
-
-#: gui/html/js/l10n.js:150
-msgid "A filename is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:151 gui/html/js/l10n.js:164 gui/html/js/l10n.js:176
-#: gui/html/js/l10n.js:190 gui/html/js/l10n.js:200 gui/html/js/l10n.js:211
-msgid "Delete Row"
-msgstr ""
-
-#: gui/html/js/l10n.js:160
-msgid "Note"
-msgstr ""
-
-#: gui/html/js/l10n.js:161
-msgid "Warning"
-msgstr ""
-
-#: gui/html/js/l10n.js:163
-msgid "A content string is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:173
-msgid "Add"
-msgstr ""
-
-#: gui/html/js/l10n.js:174
-msgid "Remove"
-msgstr ""
-
-#: gui/html/js/l10n.js:175 gui/html/js/l10n.js:209
-msgid "A name is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:185
-msgid "A CRC is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:186 gui/html/js/l10n.js:187 gui/html/js/l10n.js:188
-msgid "Values must be integers."
-msgstr ""
-
-#: gui/html/js/l10n.js:189
-msgid "A utility name is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:199
-msgid "A link is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:210
-msgid "A folder is required."
-msgstr ""
-
-#: gui/html/js/l10n.js:220 gui/html/js/l10n.js:303
-msgid "Add New Row"
-msgstr ""
-
-#: gui/html/js/l10n.js:223
-msgid "Jump To General Information"
-msgstr ""
-
-#: gui/html/js/l10n.js:224
-msgid "Sort Plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:225
-msgid "Update Masterlist"
-msgstr ""
-
-#: gui/html/js/l10n.js:228
-msgid "Search Cards"
-msgstr ""
-
-#: gui/html/js/l10n.js:231
-msgid "Redate Plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:232
-msgid "Open Debug Log Location"
-msgstr ""
-
-#: gui/html/js/l10n.js:233
-msgid "Clear All User Metadata"
-msgstr ""
-
-#: gui/html/js/l10n.js:234
-msgid "Copy Load Order"
-msgstr ""
-
-#: gui/html/js/l10n.js:235
-msgid "Copy Content"
-msgstr ""
-
-#: gui/html/js/l10n.js:236
-msgid "Refresh Content"
-msgstr ""
-
-#: gui/html/js/l10n.js:237
-msgid "View Documentation"
-msgstr ""
-
-#: gui/html/js/l10n.js:238
-msgid "About"
-msgstr ""
-
-#: gui/html/js/l10n.js:239 gui/html/js/l10n.js:275
-msgid "Settings"
-msgstr ""
-
-#: gui/html/js/l10n.js:243
-msgid "Search cards"
-msgstr ""
-
-#: gui/html/js/l10n.js:246
-msgid "Plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:247
-msgid "Filters"
-msgstr ""
-
-#: gui/html/js/l10n.js:248
-msgid "Press Enter or click outside the input to set the filter."
-msgstr ""
-
-#: gui/html/js/l10n.js:249
-msgid "Filter content"
-msgstr ""
-
-#: gui/html/js/l10n.js:252
-msgid "Hide version numbers"
-msgstr ""
-
-#: gui/html/js/l10n.js:253
-msgid "Hide CRCs"
-msgstr ""
-
-#: gui/html/js/l10n.js:254
-msgid "Hide Bash Tags"
-msgstr ""
-
-#: gui/html/js/l10n.js:255
-msgid "Hide notes"
-msgstr ""
-
-#: gui/html/js/l10n.js:256
-msgid "Hide 'Do not clean' messages"
-msgstr ""
-
-#: gui/html/js/l10n.js:257
-msgid "Hide all plugin messages"
-msgstr ""
-
-#: gui/html/js/l10n.js:258
-msgid "Hide inactive plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:259
-msgid "Hide messageless plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:260
-msgid "Hidden plugins:"
-msgstr ""
-
-#: gui/html/js/l10n.js:261
-msgid "Hidden messages:"
-msgstr ""
-
-#: gui/html/js/l10n.js:264
-msgid "General Information"
-msgstr ""
-
-#: gui/html/js/l10n.js:265
-msgid "Masterlist Revision"
-msgstr ""
-
-#: gui/html/js/l10n.js:266
-msgid "Masterlist Date"
-msgstr ""
-
-#: gui/html/js/l10n.js:267
-msgid "Warnings"
-msgstr ""
-
-#: gui/html/js/l10n.js:268
-msgid "Errors"
-msgstr ""
-
-#: gui/html/js/l10n.js:269
-msgid "Total Messages"
-msgstr ""
-
-#: gui/html/js/l10n.js:270
-msgid "Active Plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:271
-msgid "Dirty Plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:272
-msgid "Total Plugins"
-msgstr ""
-
-#: gui/html/js/l10n.js:278
-msgid "Default Game"
-msgstr ""
-
-#: gui/html/js/l10n.js:279
-msgid "Autodetect"
-msgstr ""
-
-#: gui/html/js/l10n.js:284
-msgid "Language changes will be applied after LOOT is restarted."
-msgstr ""
-
-#: gui/html/js/l10n.js:286
-msgid "Enable debug logging"
-msgstr ""
-
-#: gui/html/js/l10n.js:287
-msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr ""
-
-#: gui/html/js/l10n.js:289
-msgid "Update masterlist before sorting"
-msgstr ""
-
-#: gui/html/js/l10n.js:293
-msgid "Base Game"
-msgstr ""
-
-#: gui/html/js/l10n.js:294
-msgid "LOOT Folder"
-msgstr ""
-
-#: gui/html/js/l10n.js:296
-msgid "Masterlist Repository URL"
-msgstr ""
-
-#: gui/html/js/l10n.js:297
-msgid "Masterlist Repository Branch"
-msgstr ""
-
-#: gui/html/js/l10n.js:298
-msgid "Install Path"
-msgstr ""
-
-#: gui/html/js/l10n.js:299
-msgid "Install Path Registry Key"
-msgstr ""
-
-#: gui/html/js/l10n.js:310
-msgid "First-Time Tips"
-msgstr ""
-
-#: gui/html/js/l10n.js:312
-msgid ""
-"CRCs are only displayed after plugins have been loaded, either by conflict "
-"filtering, or by sorting."
-msgstr ""
-
-#: gui/html/js/l10n.js:313
-msgid ""
-"Double-click a plugin in the sidebar to quickly open its metadata editor. "
-"Multiple metadata editors can be opened at once."
-msgstr ""
-
-#: gui/html/js/l10n.js:314
-msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
-"\"requirements\" and \"incompatibility\" tables."
-msgstr ""
-
-#: gui/html/js/l10n.js:315
-msgid ""
-"Some features are disabled while there is an editor open, or while there is "
-"a sorted load order that has not been applied or discarded."
-msgstr ""
-
-#: gui/html/js/l10n.js:316
-msgid ""
-"Many interface elements have tooltips. If you don't know what something is, "
-"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
-"can be accessed through the main menu."
-msgstr ""
-
-#: gui/html/js/loot.js:183 gui/html/js/loot.js:188
-msgid "N/A"
+"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
+"%3%"
 msgstr ""
