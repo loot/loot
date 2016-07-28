@@ -17,7 +17,7 @@ $docsFiles = @(
   'LOOT Readme.html'
 )
 
-$commitMessage = 'Add v' + $env:APPVEYOR_REPO_TAG_NAME + ' release docs'
+$commitMessage = 'Add v' + $env:APPVEYOR_REPO_TAG_NAME + " release docs`n`n From " + $env:APPVEYOR_REPO_NAME + '#' + $env:APPVEYOR_REPO_COMMIT
 
 if ($env:APPVEYOR_REPO_TAG -eq 'true') {
   cd 'C:\projects'
@@ -25,7 +25,7 @@ if ($env:APPVEYOR_REPO_TAG -eq 'true') {
 
   # Edit the docs index to list and select by default the new release docs.  | %{$_ -replace $searchSelect, $replaceSelect}
   cd $docsRepoPath
-  $newDocsIndex = cat -Raw $docsIndex | %{$_ -replace $searchOption, $replaceOption} | %{$_ -replace $searchSelect, $replaceSelect}
+  $newDocsIndex = (cat $docsIndex) | %{$_ -replace $searchOption, $replaceOption} | %{$_ -replace $searchSelect, $replaceSelect} | %{$_ -replace "`n$", ''}
   [IO.File]::WriteAllLines($docsRepoPath + '\' + $docsIndex, $newDocsIndex)
 
   # Add the docs to their subfolder.
