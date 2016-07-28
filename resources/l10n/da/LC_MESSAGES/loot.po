@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the LOOT package.
 # Frederik “Freso” S. Olesen, 2014-2016
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2016-07-28 16:33+0200\n"
-"PO-Revision-Date: 2016-07-28 16:40+0200\n"
+"PO-Revision-Date: 2016-07-28 17:10+0200\n"
 "Last-Translator: Frederik “Freso” S. Olesen <freso.dk@gmail.com>\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -249,7 +248,7 @@ msgstr "Slettede navmesh’er"
 
 #: src/gui/html/js/translateStaticText.js:71
 msgid "Cleaning Utility"
-msgstr ""
+msgstr "Renseværktøj"
 
 #: src/gui/html/js/translateStaticText.js:73
 msgid "URL"
@@ -282,7 +281,7 @@ msgstr "OK"
 
 #: src/gui/html/js/translateStaticText.js:101
 msgid "A filename is required."
-msgstr ""
+msgstr "Et filnavn er krævet."
 
 #: src/gui/html/js/translateStaticText.js:102
 #: src/gui/html/js/translateStaticText.js:113
@@ -303,7 +302,7 @@ msgstr "Advarsel"
 
 #: src/gui/html/js/translateStaticText.js:112
 msgid "A content string is required."
-msgstr ""
+msgstr "En indholdstekststreng er krævet."
 
 #: src/gui/html/js/translateStaticText.js:120
 msgid "Add"
@@ -316,11 +315,11 @@ msgstr "Fjern"
 #: src/gui/html/js/translateStaticText.js:122
 #: src/gui/html/js/translateStaticText.js:150
 msgid "A name is required."
-msgstr ""
+msgstr "Et navn er krævet."
 
 #: src/gui/html/js/translateStaticText.js:130
 msgid "A CRC is required."
-msgstr ""
+msgstr "En CRC er krævet."
 
 #: src/gui/html/js/translateStaticText.js:131
 #: src/gui/html/js/translateStaticText.js:132
@@ -330,15 +329,15 @@ msgstr "Værdier skal være tal."
 
 #: src/gui/html/js/translateStaticText.js:134
 msgid "A utility name is required."
-msgstr ""
+msgstr "Et værktøjsnavn er krævet."
 
 #: src/gui/html/js/translateStaticText.js:142
 msgid "A link is required."
-msgstr ""
+msgstr "Et link er krævet."
 
 #: src/gui/html/js/translateStaticText.js:151
 msgid "A folder is required."
-msgstr ""
+msgstr "En mappe er krævet."
 
 #: src/gui/html/js/translateStaticText.js:159
 #: src/gui/html/js/translateStaticText.js:259
@@ -347,7 +346,7 @@ msgstr "Tilføj ny række"
 
 #: src/gui/html/js/translateStaticText.js:165
 msgid "Jump To General Information"
-msgstr ""
+msgstr "Spring til generel information"
 
 #: src/gui/html/js/translateStaticText.js:166
 msgid "Sort Plugins"
@@ -364,7 +363,7 @@ msgstr "Anvend"
 
 #: src/gui/html/js/translateStaticText.js:170
 msgid "Search Cards"
-msgstr ""
+msgstr "Søg kort"
 
 #: src/gui/html/js/translateStaticText.js:173
 msgid "Redate Plugins"
@@ -380,7 +379,7 @@ msgstr "Ryd al brugermetadata"
 
 #: src/gui/html/js/translateStaticText.js:176
 msgid "Copy Load Order"
-msgstr ""
+msgstr "Kopiér indlæsningsrækkefølge"
 
 #: src/gui/html/js/translateStaticText.js:177
 msgid "Copy Content"
@@ -405,7 +404,7 @@ msgstr "Indstillinger"
 
 #: src/gui/html/js/translateStaticText.js:185
 msgid "Search cards"
-msgstr ""
+msgstr "Søg kort"
 
 #: src/gui/html/js/translateStaticText.js:190
 msgid "Plugins"
@@ -417,11 +416,11 @@ msgstr "Filtre"
 
 #: src/gui/html/js/translateStaticText.js:192
 msgid "Press Enter or click outside the input to set the filter."
-msgstr ""
+msgstr "Tryk Enter eller klik udenfor inputtet for at sætte filteret."
 
 #: src/gui/html/js/translateStaticText.js:193
 msgid "Show only plugins with cards that contain"
-msgstr ""
+msgstr "Vis kun plugins med kort der indeholder"
 
 #: src/gui/html/js/translateStaticText.js:194
 msgid "No text specified"
@@ -572,33 +571,28 @@ msgstr ""
 "konfliktfilrering eller ved sortering."
 
 #: src/gui/html/js/translateStaticText.js:271
-#, fuzzy
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr ""
-"Dobbeltklik på et plugin i sidebjælken for hurtigt at åbne et "
-"redigeringsvindue for dets metadata. Flere redigeringsvinduer kan være åbne "
-"samtidig."
+"Dobbeltklik på et plugin i sidebjælken for nemt at åbne det i "
+"metadatabehandleren."
 
 #: src/gui/html/js/translateStaticText.js:272
-#, fuzzy
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Plugins kan trækkes og slippes fra sidebjælken ind i redigeringsvinduets "
+"Plugins kan trækkes og slippes fra sidebjælken ind i metadatabehandlerens "
 "“indlæs efter”‐, “krav”‐ og “uforligeligheder”‐tabeller."
 
 #: src/gui/html/js/translateStaticText.js:273
-#, fuzzy
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
-"Nogle funktioner er slået fra mens der er et redigeringsvindue åbent, eller "
-"når en indlæsningsrækkefølge er blevet sorteret men ikke anvendt eller "
-"kasseret."
+"Nogle funktioner er slået fra mens metadatabehandleren er åbent, eller når "
+"en indlæsningsrækkefølge er blevet sorteret men ikke anvendt eller kasseret."
 
 #: src/gui/html/js/translateStaticText.js:274
 msgid ""
@@ -687,12 +681,11 @@ msgid "Failed to sort plugins. Details: %1%"
 msgstr "Kunne ikke sortere plugins. Detaljer: %1%"
 
 #: src/gui/query_handler.cpp:936
-#, fuzzy
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
-"En global besked inderholder en [[condition]] der ikke kunne evalueres. "
+"En global besked indeholder en betingelse der ikke kunne evalueres. "
 "Detaljer: %1%"
 
 #: src/gui/query_handler.cpp:958 src/backend/plugin/plugin_sorter.cpp:216
@@ -747,8 +740,9 @@ msgstr ""
 "libloadorder kunne ikke oprette “game handle”. Kunne ikke hente detaljer."
 
 #: src/backend/game/load_order_handler.cpp:91
+#, fuzzy
 msgid "libloadorder failed to create a game handle. Details:"
-msgstr ""
+msgstr "libloadorder kunne ikke oprette “game handle”. Detaljer:"
 
 #: src/backend/game/load_order_handler.cpp:109
 msgid ""
@@ -840,14 +834,13 @@ msgstr ""
 "at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
 
 #: src/backend/masterlist.cpp:239
-#, fuzzy
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
-"Der opstod en fejl i forsøg på at læse (information om den) opdaterede "
-"masterlist. Prøv at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
+"Der opstod en fejl i forsøg på at læse information om den opdaterede "
+"masterliste. Prøv at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
 
 #: src/backend/masterlist.cpp:253
 msgid "Masterlist revision"
