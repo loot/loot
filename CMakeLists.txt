@@ -129,6 +129,7 @@ ExternalProject_Add(cef
                     PREFIX "external"
                     URL ${CEF_URL}
                     URL_HASH SHA1=${CEF_URL_HASH}
+                    CMAKE_ARGS -DUSE_SANDBOX=OFF
                     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target libcef_dll_wrapper --config $(CONFIGURATION)
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(cef SOURCE_DIR BINARY_DIR)
