@@ -40,7 +40,7 @@ using std::pair;
 using std::string;
 
 namespace loot {
-GameCache::GameCache() : isLoadOrderSorted_(false) {}
+GameCache::GameCache() : loadOrderSortCount_(0) {}
 
 GameCache::GameCache(const GameCache& cache) :
   masterlist_(cache.masterlist_),
@@ -48,7 +48,7 @@ GameCache::GameCache(const GameCache& cache) :
   conditions_(cache.conditions_),
   plugins_(cache.plugins_),
   messages_(cache.messages_),
-  isLoadOrderSorted_(cache.isLoadOrderSorted_) {}
+  loadOrderSortCount_(cache.loadOrderSortCount_) {}
 
 GameCache& GameCache::operator=(const GameCache& cache) {
   if (&cache != this) {
@@ -57,7 +57,7 @@ GameCache& GameCache::operator=(const GameCache& cache) {
     conditions_ = cache.conditions_;
     plugins_ = cache.plugins_;
     messages_ = cache.messages_;
-    isLoadOrderSorted_ = cache.isLoadOrderSorted_;
+    loadOrderSortCount_ = cache.loadOrderSortCount_;
   }
 
   return *this;
@@ -116,7 +116,7 @@ void GameCache::AddPlugin(const Plugin&& plugin) {
 
 std::vector<Message> GameCache::GetMessages() const {
   std::vector<Message> output(messages_);
-  if (!isLoadOrderSorted_)
+  if (loadOrderSortCount_ == 0)
     output.push_back(Message(Message::Type::warn, "You have not sorted your load order this session."));
 
   return output;
@@ -128,8 +128,17 @@ void GameCache::AppendMessage(const Message& message) {
   messages_.push_back(message);
 }
 
-void GameCache::SetLoadOrderSorted(bool isLoadOrderSorted) {
-  this->isLoadOrderSorted_ = isLoadOrderSorted;
+void GameCache::IncrementLoadOrderSortCount() {
+  lock_guard<mutex> guard(mutex_);
+
+  ++loadOrderSortCount_;
+}
+
+void GameCache::DecrementLoadOrderSortCount() {
+  lock_guard<mutex> guard(mutex_);
+
+  if (loadOrderSortCount_ > 0)
+    --loadOrderSortCount_;
 }
 
 void GameCache::ClearCachedConditions() {

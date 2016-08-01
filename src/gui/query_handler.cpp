@@ -144,7 +144,7 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
     return true;
   } else if (request == "cancelSort") {
     lootState_.decrementUnappliedChangeCounter();
-    lootState_.getCurrentGame().SetLoadOrderSorted(false);
+    lootState_.getCurrentGame().DecrementLoadOrderSortCount();
 
     YAML::Node node(GetGeneralMessages());
     callback->Success(JSON::stringify(node));

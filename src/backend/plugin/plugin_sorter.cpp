@@ -161,7 +161,7 @@ std::list<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) 
     plugins.push_back(graph_[vertex]);
   }
 
-  game.SetLoadOrderSorted(true);
+  game.IncrementLoadOrderSortCount();
 
   return plugins;
 }

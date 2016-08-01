@@ -66,7 +66,7 @@ TEST_P(GameCacheTest, copyConstructorShouldCopyCachedData) {
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   Message expectedMessage(Message::Type::say, "1");
   cache_.AppendMessage(expectedMessage);
-  cache_.SetLoadOrderSorted(true);
+  cache_.IncrementLoadOrderSortCount();
 
   GameCache otherCache(cache_);
   EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition(conditionLowercase));
@@ -82,7 +82,7 @@ TEST_P(GameCacheTest, assignmentOperatorShouldCopyCachedData) {
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   Message expectedMessage(Message::Type::say, "1");
   cache_.AppendMessage(expectedMessage);
-  cache_.SetLoadOrderSorted(true);
+  cache_.IncrementLoadOrderSortCount();
 
   GameCache otherCache = cache_;
   EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition(conditionLowercase));
@@ -180,18 +180,34 @@ TEST_P(GameCacheTest, aMessageShouldBeCachedByDefault) {
   ASSERT_EQ(1, cache_.GetMessages().size());
 }
 
-TEST_P(GameCacheTest, settingLoadOrderSortedToTrueShouldSupressDefaultCachedMessage) {
-  cache_.SetLoadOrderSorted(true);
+TEST_P(GameCacheTest, incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
+  cache_.IncrementLoadOrderSortCount();
 
-  ASSERT_TRUE(cache_.GetMessages().empty());
+  EXPECT_TRUE(cache_.GetMessages().empty());
 }
 
-TEST_P(GameCacheTest, settingLoadOrderSortedToFalseShouldReverseTheDefaultCachedMessageSuppression) {
+TEST_P(GameCacheTest, decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
   auto expectedMessages = cache_.GetMessages();
-  cache_.SetLoadOrderSorted(true);
-  cache_.SetLoadOrderSorted(false);
+  cache_.IncrementLoadOrderSortCount();
+  cache_.DecrementLoadOrderSortCount();
 
-  ASSERT_EQ(expectedMessages, cache_.GetMessages());
+  EXPECT_EQ(expectedMessages, cache_.GetMessages());
+}
+
+TEST_P(GameCacheTest, decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
+  auto expectedMessages = cache_.GetMessages();
+  cache_.DecrementLoadOrderSortCount();
+
+  EXPECT_EQ(expectedMessages, cache_.GetMessages());
+}
+
+TEST_P(GameCacheTest, decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
+  auto expectedMessages = cache_.GetMessages();
+  cache_.IncrementLoadOrderSortCount();
+  cache_.IncrementLoadOrderSortCount();
+  cache_.DecrementLoadOrderSortCount();
+
+  EXPECT_TRUE(cache_.GetMessages().empty());
 }
 
 TEST_P(GameCacheTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
