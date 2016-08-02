@@ -310,7 +310,7 @@ figure > div {
 <figcaption>Examples of plugin cards.</figcaption>
 </figure>
 
-<p>Each plugin is displayed on its own <q>card</q>, which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's <span class="button">Plugins</span> tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
+<p>Each plugin is displayed on its own <q>card</q>, which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's <span class="button">Plugins</span> tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
 
 <p>The plugin card's header holds the following information, some of which is only displayed if applicable:
 <ol>
@@ -380,7 +380,7 @@ figure > div {
     <tbody>
         <tr><td>Load After<td>This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has three fields:
         <ul>
-            <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This field is required.
+            <li>The <var>filename</var> is the path, relative to the game's Data folder, of the file to be checked for. This field is required. It gives the filenames of installed plugins as autocomplete suggestions.
             <li>The <var>display name</var> is optional, and if specified will be used instead of the <var>filename</var> in any error messages that are displayed if a problem is encountered relating to the file.
             <li>The <var>condition</var> is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the <a href="LOOT%20Metadata%20Syntax.html">Metadata Syntax</a> documentation.
         </ul>
@@ -400,7 +400,7 @@ figure > div {
         <p>Each Bash Tag has three fields:
         <ul>
             <li>The <var>state</var> determines whether the Tag is to be suggested for addition or removal.
-            <li>The <var>name</var> is the actual Bash Tag name.
+            <li>The <var>name</var> is the actual Bash Tag name. The field gives autocomplete suggestions for Bash Tags supported by the current game.
             <li>The <var>condition</var> decides if the Tag is to be suggested or not. It functions as for files and messages.
         </ul>
         <p>If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the <code>Filter</code> tag applied and missing masters will not cause any errors to be displayed.
@@ -532,6 +532,27 @@ A copy of the license is included in the file named "GNU FDL v1.3.txt".</blockqu
 
 <h2 id="history">Version History</h2>
 <p>Only program history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
+
+<h3>0.9.2 - <i>X August 2016</i></h3>
+<ul>
+    <li>Fixed error when applying filters on startup.</li>
+    <li>Fixed hidden plugin and message counters not updating correctly after sorting.</li>
+    <li>Fixed an error occurring when the user's temporary files directory didn't exist and updating the masterlist tried to create a directory there.</li>
+    <li>Fixed the installer failing if LOOT was previously installed on a drive that no longer exists. The installer now always gives the option to change the default install path it selects.</li>
+    <li>Fixed startup errors being reported incorrectly and causing additional errors that prevented the user from being informed of the original issue.</li>
+    <li>Fixed the metadata editor's CRC input field being too short to fully display its validation error message.</li>
+    <li>Fixed errors when reading some Oblivion plugins during sorting, including the official DLC.</li>
+    <li>Fixed some cases where LOOT would fail to start.</li>
+    <li>Fixed the conflict filter not including the Unofficial Skyrim Legendary Edition Patch's plugin (and any other plugin that overrides a very large number of records) in results.</li>
+    <li>Fixed the "not sorted" message reappearing if the load order was sorted twice in one session and cancelled the second time.</li>
+    <li>Fixed version numbers where a digit was immediately followed by a letter not being detected.</li>
+    <li>Theming support and the dark theme have been reimplemented and reintroduced.</li>
+    <li>Plugin filename and Bash Tag name fields will now autocomplete in the metadata editor.</li>
+    <li>The in-game load order indices of active plugins are now displayed in the sidebar.</li>
+    <li>All URLs now use HTTPS.</li>
+    <li>The Danish and French translations have been updated.</li>
+    <li>The CEF (3.2743.1442.ge29124d), libespm (2.5.5), Polymer (1.6.0) and Pseudosem (1.1.0) dependencies have been updated to the versions given in brackets.</li>
+</ul>
 
 <h3>0.9.1 - <i>23 June 2016</i></h3>
 <ul>

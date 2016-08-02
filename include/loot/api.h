@@ -61,6 +61,14 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
+ *      ## 0.9.2 - *2 August 2016*
+ *
+ *        * Fixed the wrong API binary being packaged. This caused the v0.9.0 and v0.9.1 API releases to actually be re-releases of a snapshot build made at some point between v0.8.1 and v0.9.0: the affected API releases were taken offline once this was discovered.
+ *        * Fixed `loot_get_plugin_tags()`` remembering results and including them in the results of subsequent calls.
+ *        * Fixed an error occurring when the user's temporary files directory didn't exist and updating the masterlist tried to create a directory there.
+ *        * Fixed errors when reading some Oblivion plugins during sorting, including the official DLC.
+ *        * libespm (2.5.5) and Pseudosem (1.1.0) dependencies have been updated to the versions given in brackets.
+ *
  *      ## 0.9.1 - *23 June 2016*
  *
  *        * No API changes.
