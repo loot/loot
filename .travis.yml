@@ -104,7 +104,7 @@ deploy:
   - provider: releases
     api_key:
       secure: YOgb6thQKlp9aG19Vo8mFSzDRKntCcmMD+A4SAxmg919j6ONoSkaeuVxnUz5V2UKWbCaGzUN/fSnYbp51yDxWTFXalvRMckl0GaP5U0543ilpZPs3QdmDYQD7xlDevWBnYlZyU0jbFwX1U+yfW9k3lxea/JSFDwIkFZXY2Dxqmw=
-    file: metadata-validator.tar.xz
+    file: build/metadata-validator.tar.xz
     skip_cleanup: true
     on:
       repo: loot/loot
