@@ -61,7 +61,7 @@
  *      "docs/licenses/Licenses.txt" file.
  *
  * @section history_sec Version History
- *      ## 0.9.2 - *2 August 2016*
+ *      ## 0.9.2 - *3 August 2016*
  *
  *        * Fixed the wrong API binary being packaged. This caused the v0.9.0 and v0.9.1 API releases to actually be re-releases of a snapshot build made at some point between v0.8.1 and v0.9.0: the affected API releases were taken offline once this was discovered.
  *        * Fixed `loot_get_plugin_tags()`` remembering results and including them in the results of subsequent calls.
