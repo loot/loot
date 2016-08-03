@@ -100,7 +100,6 @@ deploy:
     artifact: LOOT,API,metadata-validator,installer
     draft: true
     on:
-      branch: master
       appveyor_repo_tag: true
 
 on_success:
