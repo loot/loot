@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-07-28 16:31+0200\n"
+"POT-Creation-Date: 2016-08-04 18:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -755,44 +755,6 @@ msgstr ""
 msgid "Failed to open file in its default application."
 msgstr ""
 
-#: src/backend/masterlist.cpp:43
-msgid ""
-"An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-
-#: src/backend/masterlist.cpp:47
-msgid "N/A: No masterlist present"
-msgstr ""
-
-#: src/backend/masterlist.cpp:80 src/backend/masterlist.cpp:81
-msgid "(edited)"
-msgstr ""
-
-#: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
-msgid ""
-"An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-
-#: src/backend/masterlist.cpp:239
-msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
-msgstr ""
-
-#: src/backend/masterlist.cpp:253
-msgid "Masterlist revision"
-msgstr ""
-
-#: src/backend/masterlist.cpp:257
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-
 #: src/backend/metadata/condition_grammar.h:146
 #: src/backend/metadata/condition_grammar.h:281
 #: src/backend/metadata/condition_grammar.h:365
@@ -877,4 +839,42 @@ msgstr ""
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
+msgstr ""
+
+#: src/backend/masterlist.cpp:43
+msgid ""
+"An error occurred while trying to read the local masterlist's version. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+
+#: src/backend/masterlist.cpp:47
+msgid "N/A: No masterlist present"
+msgstr ""
+
+#: src/backend/masterlist.cpp:80 src/backend/masterlist.cpp:81
+msgid "(edited)"
+msgstr ""
+
+#: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
+msgid ""
+"An error occurred while trying to access the local masterlist repository. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+
+#: src/backend/masterlist.cpp:239
+msgid ""
+"An error occurred while trying to read information on the updated "
+"masterlist. If this error happens again, try deleting the \".git\" folder in "
+"%1%."
+msgstr ""
+
+#: src/backend/masterlist.cpp:253
+msgid "Masterlist revision"
+msgstr ""
+
+#: src/backend/masterlist.cpp:257
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
 msgstr ""

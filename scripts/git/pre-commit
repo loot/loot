@@ -1,0 +1,19 @@
+#!/bin/sh
+# This is a Git pre-commit hook. Install it to `.git/hooks`.
+#
+# Run xgettext to write a new resources/l10n/template.pot, then add it to the
+# commit if more than one line in it has changed, otherwise discard any changes
+# to it.
+
+xgettext -k"translate:1,1t" -k"translate:1c,2,t" --add-location=full --from-code=utf-8 --package-name=LOOT --package-version=0.9.2 --copyright-holder="WrinklyNinja" --msgid-bugs-address="https://github.com/loot/loot/issues" -o resources/l10n/template.pot src/gui/html/js/*.* src/gui/*.cpp src/backend/*/*.* src/backend/*.*
+
+sed -i 's|charset=CHARSET|charset=UTF-8|' resources/l10n/template.pot
+
+LINES_ADDED=$(git diff --numstat resources/l10n/template.pot | cut -f 1)
+LINES_REMOVED=$(git diff --numstat resources/l10n/template.pot | cut -f 2)
+
+if [[ "$LINES_ADDED" -eq "$LINES_REMOVED" && "$LINES_ADDED" -eq 1 ]]; then
+  git checkout -- resources/l10n/template.pot
+else
+  git add resources/l10n/template.pot
+fi
