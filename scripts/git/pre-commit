@@ -12,7 +12,7 @@ sed -i 's|charset=CHARSET|charset=UTF-8|' resources/l10n/template.pot
 LINES_ADDED=$(git diff --numstat resources/l10n/template.pot | cut -f 1)
 LINES_REMOVED=$(git diff --numstat resources/l10n/template.pot | cut -f 2)
 
-if [[ "$LINES_ADDED" -eq "$LINES_REMOVED" && "$LINES_ADDED" -eq 1 ]]; then
+if [ "$LINES_ADDED" = "$LINES_REMOVED" -a "$LINES_ADDED" = "1" ]; then
   git checkout -- resources/l10n/template.pot
 else
   git add resources/l10n/template.pot
