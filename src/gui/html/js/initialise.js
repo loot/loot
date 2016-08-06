@@ -105,7 +105,7 @@
     /* Set up handler for plugin data changes. */
     document.addEventListener('loot-plugin-message-change', Plugin.onMessageChange);
     document.addEventListener('loot-plugin-message-change', Plugin.onContentChange);
-    document.addEventListener('loot-plugin-isdirty-change', Plugin.onIsDirtyChange);
+    document.addEventListener('loot-plugin-cleaning-data-change', Plugin.onCleaningDataChange);
     document.addEventListener('loot-plugin-card-content-change', Plugin.onContentChange);
     document.addEventListener('loot-plugin-card-styling-change', Plugin.onCardStylingChange);
     document.addEventListener('loot-plugin-item-content-change', Plugin.onItemContentChange);

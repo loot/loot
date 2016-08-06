@@ -40,7 +40,8 @@
     pluginEditor.getElementById('tableTabs').querySelector('[data-for=inc]').textContent = l10n.translate('Incompatibilities');
     pluginEditor.getElementById('tableTabs').querySelector('[data-for=message]').textContent = l10n.translate('Messages');
     pluginEditor.getElementById('tableTabs').querySelector('[data-for=tags]').textContent = l10n.translate('Bash Tags');
-    pluginEditor.getElementById('tableTabs').querySelector('[data-for=dirty]').textContent = l10n.translate('Dirty Info');
+    pluginEditor.getElementById('tableTabs').querySelector('[data-for=dirty]').textContent = l10n.translate('Dirty Plugin Info');
+    pluginEditor.getElementById('tableTabs').querySelector('[data-for=clean]').textContent = l10n.translate('Clean Plugin Info');
     pluginEditor.getElementById('tableTabs').querySelector('[data-for=url]').textContent = l10n.translate('Locations');
 
     pluginEditor.getElementById('after').querySelector('th:first-child').textContent = l10n.translate('Filename');
@@ -69,6 +70,9 @@
     pluginEditor.getElementById('dirty').querySelector('th:nth-child(3)').textContent = l10n.translate('Deleted References');
     pluginEditor.getElementById('dirty').querySelector('th:nth-child(4)').textContent = l10n.translate('Deleted Navmeshes');
     pluginEditor.getElementById('dirty').querySelector('th:nth-child(5)').textContent = l10n.translate('Cleaning Utility');
+
+    pluginEditor.getElementById('clean').querySelector('th:first-child').textContent = l10n.translate('CRC');
+    pluginEditor.getElementById('clean').querySelector('th:nth-child(2)').textContent = l10n.translate('Cleaning Utility');
 
     pluginEditor.getElementById('url').querySelector('th:first-child').textContent = l10n.translate('URL');
     pluginEditor.getElementById('url').querySelector('th:nth-child(2)').textContent = l10n.translate('Name');
@@ -133,6 +137,15 @@
     dirtyInfoRow.querySelector('.nav').setAttribute('error-message', l10n.translate('Values must be integers.'));
     dirtyInfoRow.querySelector('.util').setAttribute('error-message', l10n.translate('A utility name is required.'));
     dirtyInfoRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
+  }
+
+  function translateCleanInfoRowTemplate(l10n) {
+    /* Dirty Info row template */
+    const cleanInfoRow = document.getElementById('cleanInfoRow').content;
+
+    cleanInfoRow.querySelector('.crc').setAttribute('error-message', l10n.translate('A CRC is required.'));
+    cleanInfoRow.querySelector('.util').setAttribute('error-message', l10n.translate('A utility name is required.'));
+    cleanInfoRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
   }
 
   function translateLocationRowTemplate(l10n) {
@@ -286,6 +299,7 @@
     translateMessageRowTemplate(l10n);
     translateTagRowTemplate(l10n);
     translateDirtyInfoRowTemplate(l10n);
+    translateCleanInfoRowTemplate(l10n);
     translateLocationRowTemplate(l10n);
     translateGameRowTemplate(l10n);
     translateNewRowTemplate(l10n);

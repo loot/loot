@@ -465,6 +465,8 @@ std::string QueryHandler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
     newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
   if (pluginMetadata["userlist"]["dirty"])
     newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginCleaningData>>());
+  if (pluginMetadata["userlist"]["clean"])
+    newUserlistEntry.CleanInfo(pluginMetadata["userlist"]["clean"].as<set<PluginCleaningData>>());
   if (pluginMetadata["userlist"]["url"])
     newUserlistEntry.Locations(pluginMetadata["userlist"]["url"].as<set<Location>>());
 
@@ -681,6 +683,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
         pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
         pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+        pluginNode["masterlist"]["clean"] = mlistPlugin.CleanInfo();
         pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
       }
 
@@ -693,6 +696,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
         pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
         pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
+        pluginNode["userlist"]["clean"] = ulistPlugin.CleanInfo();
         pluginNode["userlist"]["url"] = ulistPlugin.Locations();
         // The raw priority data isn't used, but should be set
         // that LOOT knows it exists.
@@ -780,6 +784,7 @@ void QueryHandler::UpdateMasterlist(CefRefPtr<Callback> callback) {
           pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
           pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
           pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
+          pluginNode["masterlist"]["clean"] = mlistPlugin.CleanInfo();
           pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
         }
 
@@ -971,6 +976,12 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   pluginNode["tags"] = tempPlugin.Tags();
   pluginNode["isDirty"] = isDirty;
   pluginNode["loadOrderIndex"] = lootState_.getCurrentGame().GetActiveLoadOrderIndex(tempPlugin.Name());
+
+  if (!tempPlugin.CleanInfo().empty()) {
+    pluginNode["cleanedWith"] = tempPlugin.CleanInfo().begin()->CleaningUtility();
+  } else {
+    pluginNode["cleanedWith"] = "";
+  }
 
   return pluginNode;
 }

@@ -82,6 +82,7 @@ void PluginMetadata::MergeMetadata(const PluginMetadata& plugin) {
   messages_.insert(end(messages_), begin(plugin.messages_), end(plugin.messages_));
 
   dirtyInfo_.insert(begin(plugin.dirtyInfo_), end(plugin.dirtyInfo_));
+  cleanInfo_.insert(begin(plugin.cleanInfo_), end(plugin.cleanInfo_));
   locations_.insert(begin(plugin.locations_), end(plugin.locations_));
 
   return;
@@ -151,6 +152,14 @@ PluginMetadata PluginMetadata::DiffMetadata(const PluginMetadata& plugin) const 
                            end(plugin.dirtyInfo_),
                            inserter(dirtDiff, begin(dirtDiff)));
   p.DirtyInfo(dirtDiff);
+
+  set<PluginCleaningData> cleanDiff;
+  set_symmetric_difference(begin(cleanInfo_),
+                           end(cleanInfo_),
+                           begin(plugin.cleanInfo_),
+                           end(plugin.cleanInfo_),
+                           inserter(cleanDiff, begin(cleanDiff)));
+  p.CleanInfo(cleanDiff);
 
   set<Location> locationsDiff;
   set_symmetric_difference(begin(locations_),
@@ -222,6 +231,14 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  inserter(dirtDiff, begin(dirtDiff)));
   p.DirtyInfo(dirtDiff);
 
+  set<PluginCleaningData> cleanDiff;
+  set_difference(begin(cleanInfo_),
+                 end(cleanInfo_),
+                 begin(plugin.cleanInfo_),
+                 end(plugin.cleanInfo_),
+                 inserter(cleanDiff, begin(cleanDiff)));
+  p.CleanInfo(cleanDiff);
+
   set<Location> locationsDiff;
   set_difference(begin(locations_),
                  end(locations_),
@@ -277,6 +294,10 @@ std::set<PluginCleaningData> PluginMetadata::DirtyInfo() const {
   return dirtyInfo_;
 }
 
+std::set<PluginCleaningData> PluginMetadata::CleanInfo() const {
+  return cleanInfo_;
+}
+
 std::set<Location> PluginMetadata::Locations() const {
   return locations_;
 }
@@ -324,6 +345,10 @@ void PluginMetadata::DirtyInfo(const std::set<PluginCleaningData>& dirtyInfo) {
   dirtyInfo_ = dirtyInfo;
 }
 
+void PluginMetadata::CleanInfo(const std::set<PluginCleaningData>& info) {
+  cleanInfo_ = info;
+}
+
 void PluginMetadata::Locations(const std::set<Location>& locations) {
   locations_ = locations;
 }
@@ -364,12 +389,19 @@ PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const Language::Co
       ++it;
   }
 
-  if (IsRegexPlugin())  // Remove any dirty metadata from a regex plugin.
+  if (IsRegexPlugin()) {  // Remove any dirty metadata from a regex plugin.
     dirtyInfo_.clear();
-  else {
+    cleanInfo_.clear();
+  } else {
     for (auto it = dirtyInfo_.begin(); it != dirtyInfo_.end();) {
       if (!it->EvalCondition(game, name_))
         dirtyInfo_.erase(it++);
+      else
+        ++it;
+    }
+    for (auto it = cleanInfo_.begin(); it != cleanInfo_.end();) {
+      if (!it->EvalCondition(game, name_))
+        cleanInfo_.erase(it++);
       else
         ++it;
     }
@@ -379,7 +411,15 @@ PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const Language::Co
 }
 
 bool PluginMetadata::HasNameOnly() const {
-  return !IsPriorityExplicit() && loadAfter_.empty() && requirements_.empty() && incompatibilities_.empty() && messages_.empty() && tags_.empty() && dirtyInfo_.empty() && locations_.empty();
+  return !IsPriorityExplicit()
+    && loadAfter_.empty()
+    && requirements_.empty()
+    && incompatibilities_.empty()
+    && messages_.empty()
+    && tags_.empty()
+    && dirtyInfo_.empty()
+    && cleanInfo_.empty()
+    && locations_.empty();
 }
 
 bool PluginMetadata::IsRegexPlugin() const {
@@ -456,6 +496,9 @@ Emitter& operator << (Emitter& out, const loot::PluginMetadata& rhs) {
 
     if (!rhs.DirtyInfo().empty())
       out << Key << "dirty" << Value << rhs.DirtyInfo();
+
+    if (!rhs.CleanInfo().empty())
+      out << Key << "clean" << Value << rhs.CleanInfo();
 
     if (!rhs.Locations().empty())
       out << Key << "url" << Value << rhs.Locations();

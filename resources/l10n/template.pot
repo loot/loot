@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-08-06 16:31+0100\n"
+"POT-Creation-Date: 2016-08-06 16:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr ""
 msgid "The load order has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.js:263 src/gui/html/js/translateStaticText.js:182
+#: src/gui/html/js/events.js:263 src/gui/html/js/translateStaticText.js:195
 msgid "Quit"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgid "N/A"
 msgstr ""
 
 #: src/gui/html/js/handlePromiseError.js:15
-#: src/gui/html/js/translateStaticText.js:111
+#: src/gui/html/js/translateStaticText.js:115
 msgid "Error"
 msgstr ""
 
@@ -96,7 +96,7 @@ msgid "Active Plugin"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:18
-#: src/gui/html/js/translateStaticText.js:251
+#: src/gui/html/js/translateStaticText.js:264
 msgid "Master File"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgid "Loads Archive"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:21
-#: src/gui/html/js/translateStaticText.js:85
+#: src/gui/html/js/translateStaticText.js:89
 msgid "Has User Metadata"
 msgstr ""
 
@@ -130,7 +130,7 @@ msgid "Enable Edits"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:33
-#: src/gui/html/js/translateStaticText.js:84
+#: src/gui/html/js/translateStaticText.js:88
 msgid "Global Priority"
 msgstr ""
 
@@ -169,411 +169,420 @@ msgid "Bash Tags"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:43
-msgid "Dirty Info"
+msgid "Dirty Plugin Info"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:44
-msgid "Locations"
+msgid "Clean Plugin Info"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:46
-#: src/gui/html/js/translateStaticText.js:50
-#: src/gui/html/js/translateStaticText.js:54
-msgid "Filename"
+#: src/gui/html/js/translateStaticText.js:45
+msgid "Locations"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:47
 #: src/gui/html/js/translateStaticText.js:51
 #: src/gui/html/js/translateStaticText.js:55
-msgid "Display Name"
+msgid "Filename"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:48
 #: src/gui/html/js/translateStaticText.js:52
 #: src/gui/html/js/translateStaticText.js:56
-#: src/gui/html/js/translateStaticText.js:60
-#: src/gui/html/js/translateStaticText.js:65
+msgid "Display Name"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:49
+#: src/gui/html/js/translateStaticText.js:53
+#: src/gui/html/js/translateStaticText.js:57
+#: src/gui/html/js/translateStaticText.js:61
+#: src/gui/html/js/translateStaticText.js:66
 msgid "Condition"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:58
+#: src/gui/html/js/translateStaticText.js:59
 msgid "Type"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:59
+#: src/gui/html/js/translateStaticText.js:60
 msgid "Content"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:61
-#: src/gui/html/js/translateStaticText.js:239
+#: src/gui/html/js/translateStaticText.js:62
+#: src/gui/html/js/translateStaticText.js:252
 msgid "Language"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:63
+#: src/gui/html/js/translateStaticText.js:64
 msgid "Add/Remove"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:64
+#: src/gui/html/js/translateStaticText.js:65
 msgid "Bash Tag"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:67
+#: src/gui/html/js/translateStaticText.js:68
+#: src/gui/html/js/translateStaticText.js:74
 msgid "CRC"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:68
+#: src/gui/html/js/translateStaticText.js:69
 msgid "ITM Count"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:69
+#: src/gui/html/js/translateStaticText.js:70
 msgid "Deleted References"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:70
+#: src/gui/html/js/translateStaticText.js:71
 msgid "Deleted Navmeshes"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:72
+#: src/gui/html/js/translateStaticText.js:75
 msgid "Cleaning Utility"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:73
+#: src/gui/html/js/translateStaticText.js:77
 msgid "URL"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:74
-#: src/gui/html/js/translateStaticText.js:248
+#: src/gui/html/js/translateStaticText.js:78
+#: src/gui/html/js/translateStaticText.js:261
 msgid "Name"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:76
+#: src/gui/html/js/translateStaticText.js:80
 msgid "Save Metadata"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:77
-#: src/gui/html/js/translateStaticText.js:94
-#: src/gui/html/js/translateStaticText.js:169
-#: src/gui/html/js/translateStaticText.js:262
+#: src/gui/html/js/translateStaticText.js:81
+#: src/gui/html/js/translateStaticText.js:98
+#: src/gui/html/js/translateStaticText.js:182
+#: src/gui/html/js/translateStaticText.js:275
 msgid "Cancel"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:86
+#: src/gui/html/js/translateStaticText.js:90
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:93
-#: src/gui/html/js/translateStaticText.js:276
+#: src/gui/html/js/translateStaticText.js:97
+#: src/gui/html/js/translateStaticText.js:289
 msgid "OK"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:101
+#: src/gui/html/js/translateStaticText.js:105
 msgid "A filename is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:102
-#: src/gui/html/js/translateStaticText.js:113
-#: src/gui/html/js/translateStaticText.js:123
-#: src/gui/html/js/translateStaticText.js:135
-#: src/gui/html/js/translateStaticText.js:143
-#: src/gui/html/js/translateStaticText.js:152
+#: src/gui/html/js/translateStaticText.js:106
+#: src/gui/html/js/translateStaticText.js:117
+#: src/gui/html/js/translateStaticText.js:127
+#: src/gui/html/js/translateStaticText.js:139
+#: src/gui/html/js/translateStaticText.js:148
+#: src/gui/html/js/translateStaticText.js:156
+#: src/gui/html/js/translateStaticText.js:165
 msgid "Delete Row"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:109
+#: src/gui/html/js/translateStaticText.js:113
 msgid "Note"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:110
+#: src/gui/html/js/translateStaticText.js:114
 msgid "Warning"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:112
+#: src/gui/html/js/translateStaticText.js:116
 msgid "A content string is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:120
+#: src/gui/html/js/translateStaticText.js:124
 msgid "Add"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:121
+#: src/gui/html/js/translateStaticText.js:125
 msgid "Remove"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:122
-#: src/gui/html/js/translateStaticText.js:150
+#: src/gui/html/js/translateStaticText.js:126
+#: src/gui/html/js/translateStaticText.js:163
 msgid "A name is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:130
+#: src/gui/html/js/translateStaticText.js:134
+#: src/gui/html/js/translateStaticText.js:146
 msgid "A CRC is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:131
-#: src/gui/html/js/translateStaticText.js:132
-#: src/gui/html/js/translateStaticText.js:133
+#: src/gui/html/js/translateStaticText.js:135
+#: src/gui/html/js/translateStaticText.js:136
+#: src/gui/html/js/translateStaticText.js:137
 msgid "Values must be integers."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:134
+#: src/gui/html/js/translateStaticText.js:138
+#: src/gui/html/js/translateStaticText.js:147
 msgid "A utility name is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:142
+#: src/gui/html/js/translateStaticText.js:155
 msgid "A link is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:151
+#: src/gui/html/js/translateStaticText.js:164
 msgid "A folder is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:159
-#: src/gui/html/js/translateStaticText.js:259
+#: src/gui/html/js/translateStaticText.js:172
+#: src/gui/html/js/translateStaticText.js:272
 msgid "Add New Row"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:165
+#: src/gui/html/js/translateStaticText.js:178
 msgid "Jump To General Information"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:166
+#: src/gui/html/js/translateStaticText.js:179
 msgid "Sort Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:167
+#: src/gui/html/js/translateStaticText.js:180
 msgid "Update Masterlist"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:168
-#: src/gui/html/js/translateStaticText.js:261
+#: src/gui/html/js/translateStaticText.js:181
+#: src/gui/html/js/translateStaticText.js:274
 msgid "Apply"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:170
+#: src/gui/html/js/translateStaticText.js:183
 msgid "Search Cards"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:173
+#: src/gui/html/js/translateStaticText.js:186
 msgid "Redate Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:174
+#: src/gui/html/js/translateStaticText.js:187
 msgid "Open Debug Log Location"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:175
+#: src/gui/html/js/translateStaticText.js:188
 msgid "Clear All User Metadata"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:176
+#: src/gui/html/js/translateStaticText.js:189
 msgid "Copy Load Order"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:177
+#: src/gui/html/js/translateStaticText.js:190
 msgid "Copy Content"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:178
+#: src/gui/html/js/translateStaticText.js:191
 msgid "Refresh Content"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:179
+#: src/gui/html/js/translateStaticText.js:192
 msgid "View Documentation"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:180
+#: src/gui/html/js/translateStaticText.js:193
 msgid "About"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:181
-#: src/gui/html/js/translateStaticText.js:231
+#: src/gui/html/js/translateStaticText.js:194
+#: src/gui/html/js/translateStaticText.js:244
 msgid "Settings"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:185
+#: src/gui/html/js/translateStaticText.js:198
 msgid "Search cards"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:190
+#: src/gui/html/js/translateStaticText.js:203
 msgid "Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:191
+#: src/gui/html/js/translateStaticText.js:204
 msgid "Filters"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:192
+#: src/gui/html/js/translateStaticText.js:205
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:193
+#: src/gui/html/js/translateStaticText.js:206
 msgid "Show only plugins with cards that contain"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:194
+#: src/gui/html/js/translateStaticText.js:207
 msgid "No text specified"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:197
+#: src/gui/html/js/translateStaticText.js:210
 msgid "Hide version numbers"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:198
+#: src/gui/html/js/translateStaticText.js:211
 msgid "Hide CRCs"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:199
+#: src/gui/html/js/translateStaticText.js:212
 msgid "Hide Bash Tags"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:200
+#: src/gui/html/js/translateStaticText.js:213
 msgid "Hide notes"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:201
+#: src/gui/html/js/translateStaticText.js:214
 msgid "Hide 'Do not clean' messages"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:202
+#: src/gui/html/js/translateStaticText.js:215
 msgid "Hide all plugin messages"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:203
+#: src/gui/html/js/translateStaticText.js:216
 msgid "Hide inactive plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:204
+#: src/gui/html/js/translateStaticText.js:217
 msgid "Hide messageless plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:207
+#: src/gui/html/js/translateStaticText.js:220
 msgid "Show only conflicting plugins for"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:208
+#: src/gui/html/js/translateStaticText.js:221
 msgid "No plugin selected"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:212
+#: src/gui/html/js/translateStaticText.js:225
 msgid "Hidden plugins:"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:213
+#: src/gui/html/js/translateStaticText.js:226
 msgid "Hidden messages:"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:218
+#: src/gui/html/js/translateStaticText.js:231
 msgid "General Information"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:219
+#: src/gui/html/js/translateStaticText.js:232
 msgid "Masterlist Revision"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:220
+#: src/gui/html/js/translateStaticText.js:233
 msgid "Masterlist Date"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:221
+#: src/gui/html/js/translateStaticText.js:234
 msgid "Warnings"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:222
+#: src/gui/html/js/translateStaticText.js:235
 msgid "Errors"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:223
+#: src/gui/html/js/translateStaticText.js:236
 msgid "Total Messages"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:224
+#: src/gui/html/js/translateStaticText.js:237
 msgid "Active Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:225
+#: src/gui/html/js/translateStaticText.js:238
 msgid "Dirty Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:226
+#: src/gui/html/js/translateStaticText.js:239
 msgid "Total Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:234
+#: src/gui/html/js/translateStaticText.js:247
 msgid "Default Game"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:235
+#: src/gui/html/js/translateStaticText.js:248
 msgid "Autodetect"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:240
+#: src/gui/html/js/translateStaticText.js:253
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:242
+#: src/gui/html/js/translateStaticText.js:255
 msgid "Enable debug logging"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:243
+#: src/gui/html/js/translateStaticText.js:256
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:245
+#: src/gui/html/js/translateStaticText.js:258
 msgid "Update masterlist before sorting"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:249
+#: src/gui/html/js/translateStaticText.js:262
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:250
+#: src/gui/html/js/translateStaticText.js:263
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:252
+#: src/gui/html/js/translateStaticText.js:265
 msgid "Masterlist Repository URL"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:253
+#: src/gui/html/js/translateStaticText.js:266
 msgid "Masterlist Repository Branch"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:254
+#: src/gui/html/js/translateStaticText.js:267
 msgid "Install Path"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:255
+#: src/gui/html/js/translateStaticText.js:268
 msgid "Install Path Registry Key"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:268
+#: src/gui/html/js/translateStaticText.js:281
 msgid "First-Time Tips"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:270
+#: src/gui/html/js/translateStaticText.js:283
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:271
+#: src/gui/html/js/translateStaticText.js:284
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:272
+#: src/gui/html/js/translateStaticText.js:285
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:273
+#: src/gui/html/js/translateStaticText.js:286
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:274
+#: src/gui/html/js/translateStaticText.js:287
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -598,14 +607,14 @@ msgstr ""
 msgid "Failed to apply plugin metadata. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:596
+#: src/gui/query_handler.cpp:598
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/query_handler.cpp:611
+#: src/gui/query_handler.cpp:613
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -621,33 +630,33 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query_handler.cpp:719 src/gui/query_handler.cpp:722
+#: src/gui/query_handler.cpp:723 src/gui/query_handler.cpp:726
 msgid "Failed to get game data. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:803 src/gui/query_handler.cpp:806
+#: src/gui/query_handler.cpp:808 src/gui/query_handler.cpp:811
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:845
+#: src/gui/query_handler.cpp:850
 msgid "Loading plugin contents..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:849
+#: src/gui/query_handler.cpp:854
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:906
+#: src/gui/query_handler.cpp:911
 msgid "Failed to sort plugins. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:936
+#: src/gui/query_handler.cpp:941
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:958 src/backend/plugin/plugin_sorter.cpp:216
+#: src/gui/query_handler.cpp:963 src/backend/plugin/plugin_sorter.cpp:216
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 

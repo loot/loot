@@ -199,7 +199,7 @@ var {
         <li><a href="#structs-file">File Data Structure</a>
         <li><a href="#structs-message">Message Data Structure</a>
         <li><a href="#structs-location">Location Data Structure</a>
-        <li><a href="#structs-dirty">Dirty Info Data Structure</a>
+        <li><a href="#structs-dirty">Cleaning Data Structure</a>
         <li><a href="#structs-plugin">Plugin Data Structure</a>
     </ol>
     <li><a href="#cond">Condition Strings</a>
@@ -335,7 +335,7 @@ display: 'OBSE v18+'
         <tr><td><code>condition</code><td>string<td>&#x2717;<td>A condition string that is evaluated to determine whether the message should be displayed: if it evaluates to true, the message is displayed, otherwise it is not. See <a href="#cond">Condition Strings</a> for details.
         <tr><td><code>subs</code><td>string list<td>&#x2717;<td>A list of strings to be substituted into the message content string. The content string must use numbered specifiers (<code>%1%</code>, <code>%2%</code>, etc.), where the numbers correspond to the position of the substitution string in this list to use, to denote where these strings are to be substituted.
 </table>
-<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and dirty info utility strings, also support the same formatting options.
+<p>LOOT supports formatting of messages using <a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>. Support is provided by the <a href="https://github.com/chjj/marked">Marked</a> library (v0.3). Strings that get substituted into messages, such as file display names and cleaning data utility strings, also support the same formatting options.
 <p>LOOT handles messages and languages as follows:
 <ol>
     <li>If a message's <code>content</code> value is a string, the message will use the string as its content if displayed.
@@ -427,27 +427,26 @@ Note: A newer version of this plugin <a href="http://www.example.com">is availab
 name: 'Unofficial Skyrim Patch on Steam Workshop'
 </code></pre>
 
-<h3 id="structs-dirty">Dirty Info Data Structure</h3>
-<p>This structure holds information on which versions of a plugin are dirty, and how many identical-to-master records, deleted records and deleted navmeshes (if applicable) it contains. Dirty info is given as a key-value map.
+<h3 id="structs-dirty">Cleaning Data Structure</h3>
+<p>This structure holds information on which versions of a plugin are dirty or clean, and if dirty, how many identical-to-master records, deleted records and deleted navmeshes (if applicable) it contains. Cleaning data is given as a key-value map.
 <table>
     <thead><tr><th>Key Name<th>Value Type<th>Required<th>Notes
     <tbody>
-        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC-32 checksum of the dirty plugin, before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
-        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be used to clean the plugin.
-        <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
-        <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
-        <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown, this field should not be supplied. If the number is known and zero, this field should be supplied.
+        <tr><td><code>crc</code><td>hexadecimal integer<td>&#x2713;<td>The CRC-32 checksum of the plugin. If the plugin is dirty, this needs to be the CRC of the plugin before before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by <code>0x</code> so that it is correctly interpreted.
+        <tr><td><code>util</code><td>string<td>&#x2713;<td>The utility that should be or that was used to clean the plugin.
+        <tr><td><code>itm</code><td>integer<td>&#x2717;<td>The number of identical-to-master records reported for the dirty plugin. If the number is unknown or zero, this field should not be supplied.
+        <tr><td><code>udr</code><td>integer<td>&#x2717;<td>The number of undeleted records reported for the dirty plugin. If the number is unknown or zero, this field should not be supplied.
+        <tr><td><code>nav</code><td>integer<td>&#x2717;<td>The number of deleted navmeshes reported for the dirty plugin. If the number is unknown or zero, this field should not be supplied.
 </table>
 
 <h4>Equality</h4>
-<p>Two location data structures are equal if the values of their <code>crc</code> keys are identical.
+<p>Two cleaning data structures are equal if the values of their <code>crc</code> keys are identical.
 
 <h4>Examples</h4>
 <pre><code>crc: 0x3DF62ABC
 util: '[TES5Edit](http://www.creationkit.com/TES5Edit_Cleaning_Guide_-_TES5Edit)'
 itm: 4
 udr: 160
-nav: 0
 </code></pre>
 
 
@@ -471,7 +470,8 @@ nav: 0
         <tr><td><code>msg</code><td>message list<td>&#x2717;<td>The messages attached to this plugin. The messages will be displayed in the order that they are listed.
         <tr><td><code>tag</code><td>tag set<td>&#x2717;<td>An unordered set of Bash Tags suggested for this plugin. If a Bash Tag is suggested for both addition and removal, the latter will override the former when the list is evaluated.
         <tr><td><code>url</code><td>location set<td>&#x2717;<td>An unordered set of locations for this plugin. If the same version can be found at multiple locations, only one location should be recorded. This metadata is not currently used by LOOT.
-        <tr><td><code>dirty</code><td>dirty info set<td>&#x2717;<td>An unordered set of dirty info structures for this plugin. Plugin entries with regular expression filenames <strong>must not</strong> contain dirty info.
+        <tr><td><code>dirty</code><td>cleaning data set<td>&#x2717;<td>An unordered set of cleaning data structures for this plugin, identifying dirty plugins. Plugin entries with regular expression filenames <strong>must not</strong> contain cleaning data.
+        <tr><td><code>clean</code><td>cleaning data set<td>&#x2717;<td>An unordered set of cleaning data structures for this plugin, identifying clean plugins. Plugin entries with regular expression filenames <strong>must not</strong> contain cleaning data. The <code>itm</code>, <code>udr</code> and <code>nav</code> fields are unused in this context, as they're assumed to be zero.
 </table>
 
 <h4>Equality</h4>
@@ -495,7 +495,8 @@ nav: 0
         <tr><td><code>msg</code><td>Merged. If B's message list contains an item that is equal to one already present in A's message list, B's item is discarded.
         <tr><td><code>tag</code><td>Merged.If B's tag set contains an item that is equal to one already present in A's tag set, B's item is discarded.
         <tr><td><code>url</code><td>Merged. If B's location set contains an item that is equal to one already present in A's location set, B's item is discarded.
-        <tr><td><code>dirty</code><td>Merged.If B's dirty info set contains an item that is equal to one already present in A's dirty info set, B's item is discarded.
+        <tr><td><code>dirty</code><td>Merged.If B's dirty data set contain an item that is equal to one already present in A's dirty data set, B's item is discarded.
+        <tr><td><code>clean</code><td>Merged.If B's clean data set contain an item that is equal to one already present in A's clean data set, B's item is discarded.
 </table>
 
 <h4>Examples</h4>

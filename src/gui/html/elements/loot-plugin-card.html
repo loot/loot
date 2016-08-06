@@ -110,6 +110,8 @@
         <paper-tooltip for="isEmpty">Empty Plugin</paper-tooltip>
         <iron-icon id="loadsArchive" icon="attachment"></iron-icon>
         <paper-tooltip for="loadsArchive">Loads Archive</paper-tooltip>
+        <iron-icon id="isClean" icon="loot-custom-icons:droplet"></iron-icon>
+        <paper-tooltip id="isCleanTooltip" for="isClean"></paper-tooltip>
         <iron-icon id="hasUserEdits" icon="account-circle"></iron-icon>
         <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
         <paper-menu-button id="menu" horizontal-align="right">
@@ -221,6 +223,8 @@
 
           this.getElementsByClassName('crc')[0].textContent = cardContent.crc;
 
+          this.updateIsCleanIcon();
+
           if (updateBodyContent) {
             this._setTagsContent(cardContent.tags);
             this._setMessagesContent(cardContent.messages);
@@ -231,6 +235,11 @@
             }
           }
         }
+      },
+
+      updateIsCleanIcon() {
+        this.$.isClean.hidden = !this.data.cleanedWith;
+        this.$.isCleanTooltip.textContent = loot.l10n.translate('Verified clean by %s', this.data.cleanedWith);
       },
 
       updateStyling() {

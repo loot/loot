@@ -76,6 +76,7 @@ public:
   std::list<Message> Messages() const;
   std::set<Tag> Tags() const;
   std::set<PluginCleaningData> DirtyInfo() const;
+  std::set<PluginCleaningData> CleanInfo() const;
   std::set<Location> Locations() const;
 
   void Enabled(const bool enabled);
@@ -88,6 +89,7 @@ public:
   void Messages(const std::list<Message>& messages);
   void Tags(const std::set<Tag>& tags);
   void DirtyInfo(const std::set<PluginCleaningData>& info);
+  void CleanInfo(const std::set<PluginCleaningData>& info);
   void Locations(const std::set<Location>& locations);
 
   PluginMetadata& EvalAllConditions(Game& game, const Language::Code language);
@@ -116,6 +118,7 @@ private:
   std::set<File> requirements_;
   std::set<File> incompatibilities_;
   std::set<PluginCleaningData> dirtyInfo_;
+  std::set<PluginCleaningData> cleanInfo_;
   std::set<Location> locations_;
 };
 }
@@ -154,6 +157,8 @@ struct convert<loot::PluginMetadata> {
       node["tag"] = rhs.Tags();
     if (!rhs.DirtyInfo().empty())
       node["dirty"] = rhs.DirtyInfo();
+    if (!rhs.CleanInfo().empty())
+      node["clean"] = rhs.CleanInfo();
     if (!rhs.Locations().empty())
       node["url"] = rhs.Locations();
 
@@ -188,23 +193,29 @@ struct convert<loot::PluginMetadata> {
     }
 
     if (node["after"])
-      rhs.LoadAfter(node["after"].as< std::set<loot::File> >());
+      rhs.LoadAfter(node["after"].as<std::set<loot::File>>());
     if (node["req"])
-      rhs.Reqs(node["req"].as< std::set<loot::File> >());
+      rhs.Reqs(node["req"].as<std::set<loot::File>>());
     if (node["inc"])
-      rhs.Incs(node["inc"].as< std::set<loot::File> >());
+      rhs.Incs(node["inc"].as<std::set<loot::File>>());
     if (node["msg"])
-      rhs.Messages(node["msg"].as< std::list<loot::Message> >());
+      rhs.Messages(node["msg"].as<std::list<loot::Message>>());
     if (node["tag"])
-      rhs.Tags(node["tag"].as< std::set<loot::Tag> >());
+      rhs.Tags(node["tag"].as<std::set<loot::Tag>>());
     if (node["dirty"]) {
       if (rhs.IsRegexPlugin())
         throw RepresentationException(node.Mark(), "bad conversion: 'dirty' key must not be present in a regex 'plugin metadata' object");
       else
-        rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginCleaningData> >());
+        rhs.DirtyInfo(node["dirty"].as<std::set<loot::PluginCleaningData>>());
+    }
+    if (node["clean"]) {
+      if (rhs.IsRegexPlugin())
+        throw RepresentationException(node.Mark(), "bad conversion: 'clean' key must not be present in a regex 'plugin metadata' object");
+      else
+        rhs.CleanInfo(node["clean"].as<std::set<loot::PluginCleaningData>>());
     }
     if (node["url"])
-      rhs.Locations(node["url"].as< std::set<loot::Location> >());
+      rhs.Locations(node["url"].as<std::set<loot::Location>>());
 
     return true;
   }

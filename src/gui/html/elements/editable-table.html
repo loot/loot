@@ -81,6 +81,18 @@
     </td>
   </tr>
 </template>
+<template id="cleanInfoRow">
+  <tr>
+    <td style="width: 92px;"><paper-input error-message="A CRC is required." class="crc" maxlength="8" minlength="8" pattern="[0-9A-Fa-f]{8}" required auto-validate no-label-float></paper-input></td>
+    <td><paper-input error-message="A utility name is required." class="util" required auto-validate no-label-float></paper-input></td>
+    <td>
+      <span>
+        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
+        <paper-tooltip position="left">Delete Row</paper-tooltip>
+      </span>
+    </td>
+  </tr>
+</template>
 <template id="locationRow">
   <tr>
     <td><paper-input error-message="A link is required." class="link" required auto-validate no-label-float></paper-input></td>

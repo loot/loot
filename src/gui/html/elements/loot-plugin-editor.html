@@ -126,7 +126,8 @@ loot-editor-close
         <paper-tab data-for="inc">Incompatibilities</paper-tab>
         <paper-tab data-for="message">Messages</paper-tab>
         <paper-tab data-for="tags">Bash Tags</paper-tab>
-        <paper-tab data-for="dirty">Dirty Info</paper-tab>
+        <paper-tab data-for="dirty">Dirty Plugin Info</paper-tab>
+        <paper-tab data-for="clean">Clean Plugin Info</paper-tab>
         <paper-tab data-for="url">Locations</paper-tab>
       </paper-tabs>
     </paper-toolbar>
@@ -203,6 +204,16 @@ loot-editor-close
           </thead>
           <tbody>
             <!-- Dirty info rows go here. -->
+          </tbody>
+        </table>
+      </div>
+      <div id="clean">
+        <table is="editable-table" data-template="cleanInfoRow">
+          <thead>
+            <tr><th>CRC</th><th>Cleaning Utility</th><th></th></tr>
+          </thead>
+          <tbody>
+            <!-- Clean info rows go here. -->
           </tbody>
         </table>
       </div>
@@ -314,6 +325,8 @@ loot-editor-close
               plugin.userlist.tag = rowsData.map(loot.Plugin.tagFromRowData);
             } else if (tables[j].parentElement.id === 'dirty') {
               plugin.userlist.dirty = rowsData.map(this._rowDataToCrc);
+            } else if (tables[j].parentElement.id === 'clean') {
+              plugin.userlist.clean = rowsData.map(this._rowDataToCrc);
             } else if (tables[j].parentElement.id === 'url') {
               plugin.userlist.url = rowsData;
             }
@@ -403,6 +416,13 @@ loot-editor-close
             }
             if (newData.userlist && newData.userlist.dirty) {
               newData.userlist.dirty.map(this._dirtyInfoToRowData).forEach(tables[j].addRow, tables[j]);
+            }
+          } else if (tables[j].parentElement.id === 'clean') {
+            if (newData.masterlist && newData.masterlist.clean) {
+              newData.masterlist.clean.map(this._dirtyInfoToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
+            }
+            if (newData.userlist && newData.userlist.clean) {
+              newData.userlist.clean.map(this._dirtyInfoToRowData).forEach(tables[j].addRow, tables[j]);
             }
           } else {
             if (newData.masterlist && newData.masterlist[tables[j].parentElement.id]) {

@@ -250,6 +250,21 @@ describe('Plugin', () => {
       plugin.isDirty.should.be.true();
     });
 
+    it('should set cleanedWith value to an empty string if no key was passed', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.cleanedWith.should.equal('');
+    });
+
+    it('should set cleanedWith to passed key\'s value', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        cleanedWith: 'TES5Edit 3.11',
+      });
+
+      plugin.cleanedWith.should.equal('TES5Edit 3.11');
+    });
+
     it('should set id to the plugins name without spaces', () => {
       const plugin = new loot.Plugin({ name: 'test plugin name' });
 
@@ -510,7 +525,7 @@ describe('Plugin', () => {
     let handleEvent;
 
     afterEach(() => {
-      document.removeEventListener('loot-plugin-isdirty-change', handleEvent);
+      document.removeEventListener('loot-plugin-cleaning-data-change', handleEvent);
     });
 
     it('getting value should return false if isDirty has not been set in the constructor', () => {
@@ -543,7 +558,7 @@ describe('Plugin', () => {
         done(new Error('Should not have fired an event'));
       };
 
-      document.addEventListener('loot-plugin-isdirty-change', handleEvent);
+      document.addEventListener('loot-plugin-cleaning-data-change', handleEvent);
 
       plugin.isDirty = plugin.isDirty;
 
@@ -558,9 +573,67 @@ describe('Plugin', () => {
         done();
       };
 
-      document.addEventListener('loot-plugin-isdirty-change', handleEvent);
+      document.addEventListener('loot-plugin-cleaning-data-change', handleEvent);
 
       plugin.isDirty = !plugin.isDirty;
+    });
+  });
+
+  describe('#cleanedWith', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-plugin-cleaning-data-change', handleEvent);
+    });
+
+    it('getting value should return an empty string if cleanedWith has not been set in the constructor', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.cleanedWith.should.equal('');
+    });
+
+    it('getting value should return a string if cleanedWith is set in the constructor', () => {
+      const plugin = new loot.Plugin({
+        name: 'test',
+        cleanedWith: 'utility',
+      });
+
+      plugin.cleanedWith.should.equal('utility');
+    });
+
+    it('setting value should store set value', () => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      plugin.cleanedWith = 'utility';
+
+      plugin.cleanedWith.should.equal('utility');
+    });
+
+    it('setting value to the current value should not fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-cleaning-data-change', handleEvent);
+
+      plugin.cleanedWith = plugin.cleanedWith;
+
+      setTimeout(done, 100);
+    });
+
+    it('setting value not equal to the current value should fire an event', (done) => {
+      const plugin = new loot.Plugin({ name: 'test' });
+
+      handleEvent = (evt) => {
+        evt.detail.cleanedWith.should.equal('utility');
+        done();
+      };
+
+      document.addEventListener('loot-plugin-cleaning-data-change', handleEvent);
+
+      plugin.cleanedWith = 'utility';
     });
   });
 
@@ -574,7 +647,7 @@ describe('Plugin', () => {
     it('getting value should return 0 if crc has not been set in the constructor', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isDirty.should.be.false();
+      plugin.crc.should.equal(0);
     });
 
     it('getting value should return 0xDEADBEEF if it was set in the constructor', () => {

@@ -182,6 +182,7 @@
       this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
       this.loadOrderIndex = obj.loadOrderIndex;
+      this.cleanedWith = obj.cleanedWith || '';
 
       /* UI state variables */
       this.id = this.name.replace(/\s+/g, '');
@@ -329,9 +330,26 @@
       if (dirty !== this._isDirty) {
         this._isDirty = dirty;
 
-        document.dispatchEvent(new CustomEvent('loot-plugin-isdirty-change', {
+        document.dispatchEvent(new CustomEvent('loot-plugin-cleaning-data-change', {
           detail: {
-            isDirty: dirty,
+            isDirty: this.isDirty,
+          },
+        }));
+      }
+    }
+
+    get cleanedWith() {
+      return this._cleanedWith;
+    }
+
+    set cleanedWith(cleanedWith) {
+      if (cleanedWith !== this._cleanedWith) {
+        this._cleanedWith = cleanedWith;
+
+        document.dispatchEvent(new CustomEvent('loot-plugin-cleaning-data-change', {
+          detail: {
+            cleanedWith: this.cleanedWith,
+            pluginId: this.id,
           },
         }));
       }
@@ -437,11 +455,19 @@
       document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
     }
 
-    static onIsDirtyChange(evt) {
-      if (evt.detail.isDirty) {
-        document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
-      } else {
-        document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+    static onCleaningDataChange(evt) {
+      if (evt.detail.isDirty !== undefined) {
+        if (evt.detail.isDirty) {
+          document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
+        } else {
+          document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+        }
+      }
+      if (evt.detail.cleanedWith !== undefined) {
+        const card = document.getElementById(evt.detail.pluginId);
+        if (card) {
+          card.updateIsCleanIcon();
+        }
       }
     }
 
