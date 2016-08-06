@@ -112,14 +112,14 @@ set(YAML_CPP_INCLUDE_DIRS "${SOURCE_DIR}/include")
 set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_windows32.tar.bz2")
-    set(CEF_URL_HASH "1d8fd86c412b998d31e360600548b9932145e0df")
+    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_windows32_minimal.tar.bz2")
+    set(CEF_URL_HASH "8d0bb1ba2abccebef1e0d45fa2bb9c7ed7ec60de")
     set(CEF_PRECOMPILED_BINARIES "libcef.dll" "natives_blob.bin" "snapshot_blob.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll")
     set(CEF_CONFIG_DIR_NAME ${CMAKE_CFG_INTDIR})
     set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
 ELSE ()
-    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_linux64.tar.bz2")
-    set(CEF_URL_HASH "d5ea04f2bb89f5977a546c8f32ff83509f6731c6")
+    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_linux64_minimal.tar.bz2")
+    set(CEF_URL_HASH "9a8f227d08d9c4edb6636041375b900d6b864e12")
     set(CEF_PRECOMPILED_BINARIES "libcef.so" "natives_blob.bin" "snapshot_blob.bin" "chrome-sandbox")
     set(CEF_CONFIG_DIR_NAME "Release")
     set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -129,6 +129,7 @@ ExternalProject_Add(cef
                     PREFIX "external"
                     URL ${CEF_URL}
                     URL_HASH SHA1=${CEF_URL_HASH}
+                    PATCH_COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/cmake/CEF_CMakeLists.txt" "${CMAKE_BINARY_DIR}/external/src/cef/CMakeLists.txt"
                     CMAKE_ARGS -DUSE_SANDBOX=OFF
                     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target libcef_dll_wrapper --config $(CONFIGURATION)
                     INSTALL_COMMAND "")

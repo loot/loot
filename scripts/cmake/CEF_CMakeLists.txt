@@ -1,0 +1,20 @@
+# Copyright (c) 2014 The Chromium Embedded Framework Authors. All rights
+# reserved. Use of this source code is governed by a BSD-style license that
+# can be found in the LICENSE file.
+
+cmake_minimum_required(VERSION 2.8.12.1)
+
+set(CMAKE_CONFIGURATION_TYPES Debug Release)
+
+project(cef)
+
+set_property(GLOBAL PROPERTY OS_FOLDERS ON)
+
+set(CEF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
+
+find_package(CEF REQUIRED)
+
+add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
+
+PRINT_CEF_CONFIG()
