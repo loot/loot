@@ -631,6 +631,21 @@ msg:
 
 <p>Each version of LOOT has a corresponding version of the metadata format, and its version history is given below.
 
+<h3>0.10</h3>
+<ul>
+  <li>Added the <code>clean</code> key to the plugin data structure.</li>
+  <li>Added the <code>global_priority</code> field to the plugin data structure.</li>
+  <li>Renamed the <code>str</code> key in the message content data structure to <code>text</code>.</li>
+  <li>Changed the <code>priority</code> field of the plugin data structure to store values between -127 and 127 inclusive.</li>
+  <li>Changed regular expressions to no longer accept <code>\</code> as a directory expression: <code>/</code> must now be used.</li>
+  <li>Added the <code>many_active()</code> condition function.</li>
+  <li>Removed the <code>regex()</code> condition function and added regular expression support to the <code>file()</code> condition function.</li>
+  <li>Changed the <code>active()</code> condition function to also accept a regular expression.</li>
+  <li>Renamed the dirty info data structure to the cleaning data structure.</li>
+  <li>Renamed the <code>util</code> key in the cleaning data structure to <code>utility</code>.</li>
+  <li>Added the <code>info</code> key to the cleaning data structure.</li>
+</ul>
+
 <h3>0.8</h3>
 <ul>
     <li>Removed support for the <code>ver</code> key in location data structures.</li>
