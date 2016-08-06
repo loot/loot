@@ -38,6 +38,7 @@ namespace loot {
 const std::set<std::string> LootSettings::oldDefaultBranches({
   "master",
   "v0.7",
+  "v0.8",
 });
 
 LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0) {}
