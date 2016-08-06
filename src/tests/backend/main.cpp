@@ -43,7 +43,7 @@
 #include "tests/backend/metadata/location_test.h"
 #include "tests/backend/metadata/message_test.h"
 #include "tests/backend/metadata/message_content_test.h"
-#include "tests/backend/metadata/plugin_dirty_info_test.h"
+#include "tests/backend/metadata/plugin_cleaning_data_test.h"
 #include "tests/backend/metadata/plugin_metadata_test.h"
 #include "tests/backend/metadata/tag_test.h"
 #include "tests/backend/plugin/plugin_test.h"

@@ -144,7 +144,7 @@ PluginMetadata PluginMetadata::DiffMetadata(const PluginMetadata& plugin) const 
                            inserter(tagDiff, begin(tagDiff)));
   p.Tags(tagDiff);
 
-  set<PluginDirtyInfo> dirtDiff;
+  set<PluginCleaningData> dirtDiff;
   set_symmetric_difference(begin(dirtyInfo_),
                            end(dirtyInfo_),
                            begin(plugin.dirtyInfo_),
@@ -214,7 +214,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  inserter(tagDiff, begin(tagDiff)));
   p.Tags(tagDiff);
 
-  set<PluginDirtyInfo> dirtDiff;
+  set<PluginCleaningData> dirtDiff;
   set_difference(begin(dirtyInfo_),
                  end(dirtyInfo_),
                  begin(plugin.dirtyInfo_),
@@ -273,7 +273,7 @@ std::set<Tag> PluginMetadata::Tags() const {
   return tags_;
 }
 
-std::set<PluginDirtyInfo> PluginMetadata::DirtyInfo() const {
+std::set<PluginCleaningData> PluginMetadata::DirtyInfo() const {
   return dirtyInfo_;
 }
 
@@ -320,7 +320,7 @@ void PluginMetadata::Tags(const std::set<Tag>& t) {
   tags_ = t;
 }
 
-void PluginMetadata::DirtyInfo(const std::set<PluginDirtyInfo>& dirtyInfo) {
+void PluginMetadata::DirtyInfo(const std::set<PluginCleaningData>& dirtyInfo) {
   dirtyInfo_ = dirtyInfo;
 }
 

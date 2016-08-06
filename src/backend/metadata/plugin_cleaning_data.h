@@ -21,8 +21,9 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_PLUGIN_DIRTY_INFO
-#define LOOT_BACKEND_METADATA_PLUGIN_DIRTY_INFO
+
+#ifndef LOOT_BACKEND_METADATA_PLUGIN_CLEANING_DATA
+#define LOOT_BACKEND_METADATA_PLUGIN_CLEANING_DATA
 
 #include <cstdint>
 #include <string>
@@ -34,13 +35,14 @@
 namespace loot {
 class Game;
 
-class PluginDirtyInfo {
+class PluginCleaningData {
 public:
-  PluginDirtyInfo();
-  PluginDirtyInfo(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
+  PluginCleaningData();
+  PluginCleaningData(uint32_t crc, const std::string& utility);
+  PluginCleaningData(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
 
-  bool operator < (const PluginDirtyInfo& rhs) const;
-  bool operator == (const PluginDirtyInfo& rhs) const;
+  bool operator < (const PluginCleaningData& rhs) const;
+  bool operator == (const PluginCleaningData& rhs) const;
 
   uint32_t CRC() const;
   unsigned int ITMs() const;
@@ -52,18 +54,18 @@ public:
 
   bool EvalCondition(Game& game, const std::string& pluginName) const;
 private:
-  uint32_t _crc;
-  unsigned int _itm;
-  unsigned int _ref;
-  unsigned int _nav;
-  std::string _utility;
+  uint32_t crc_;
+  unsigned int itm_;
+  unsigned int ref_;
+  unsigned int nav_;
+  std::string utility_;
 };
 }
 
 namespace YAML {
 template<>
-struct convert<loot::PluginDirtyInfo> {
-  static Node encode(const loot::PluginDirtyInfo& rhs) {
+struct convert<loot::PluginCleaningData> {
+  static Node encode(const loot::PluginCleaningData& rhs) {
     Node node;
     node["crc"] = rhs.CRC();
     node["util"] = rhs.CleaningUtility();
@@ -78,13 +80,13 @@ struct convert<loot::PluginDirtyInfo> {
     return node;
   }
 
-  static bool decode(const Node& node, loot::PluginDirtyInfo& rhs) {
+  static bool decode(const Node& node, loot::PluginCleaningData& rhs) {
     if (!node.IsMap())
-      throw RepresentationException(node.Mark(), "bad conversion: 'dirty info' object must be a map");
+      throw RepresentationException(node.Mark(), "bad conversion: 'cleaning data' object must be a map");
     if (!node["crc"])
-      throw RepresentationException(node.Mark(), "bad conversion: 'crc' key missing from 'dirty info' object");
+      throw RepresentationException(node.Mark(), "bad conversion: 'crc' key missing from 'cleaning data' object");
     if (!node["util"])
-      throw RepresentationException(node.Mark(), "bad conversion: 'util' key missing from 'dirty info' object");
+      throw RepresentationException(node.Mark(), "bad conversion: 'util' key missing from 'cleaning data' object");
 
     uint32_t crc = node["crc"].as<uint32_t>();
     int itm = 0, ref = 0, nav = 0;
@@ -98,13 +100,13 @@ struct convert<loot::PluginDirtyInfo> {
 
     std::string utility = node["util"].as<std::string>();
 
-    rhs = loot::PluginDirtyInfo(crc, itm, ref, nav, utility);
+    rhs = loot::PluginCleaningData(crc, itm, ref, nav, utility);
 
     return true;
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::PluginDirtyInfo& rhs);
+Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs);
 }
 
 #endif

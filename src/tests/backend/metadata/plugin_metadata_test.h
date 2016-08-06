@@ -257,14 +257,14 @@ TEST_P(PluginMetadataTest, mergeMetadataShouldMergeTags) {
 TEST_P(PluginMetadataTest, mergeMetadataShouldMergeDirtyInfoData) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  PluginDirtyInfo info1(0x5, 1, 2, 3, "utility");
-  PluginDirtyInfo info2(0xA, 1, 2, 3, "utility");
+  PluginCleaningData info1(0x5, 1, 2, 3, "utility");
+  PluginCleaningData info2(0xA, 1, 2, 3, "utility");
 
   plugin1.DirtyInfo({info1});
   plugin2.DirtyInfo({info1, info2});
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_EQ(std::set<PluginDirtyInfo>({info1, info2}), plugin1.DirtyInfo());
+  EXPECT_EQ(std::set<PluginCleaningData>({info1, info2}), plugin1.DirtyInfo());
 }
 
 TEST_P(PluginMetadataTest, mergeMetadataShouldMergeLocationData) {
@@ -412,15 +412,15 @@ TEST_P(PluginMetadataTest, diffMetadataShouldOutputTagsThatAreNotCommonToBothInp
 TEST_P(PluginMetadataTest, diffMetadataShouldOutputDirtyInfoObjectsThatAreNotCommonToBothInputPlugins) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  PluginDirtyInfo info1(0x5, 1, 2, 3, "utility");
-  PluginDirtyInfo info2(0xA, 1, 2, 3, "utility");
-  PluginDirtyInfo info3(0x1, 1, 2, 3, "utility");
+  PluginCleaningData info1(0x5, 1, 2, 3, "utility");
+  PluginCleaningData info2(0xA, 1, 2, 3, "utility");
+  PluginCleaningData info3(0x1, 1, 2, 3, "utility");
 
   plugin1.DirtyInfo({info1, info2});
   plugin2.DirtyInfo({info1, info3});
   PluginMetadata diff = plugin1.DiffMetadata(plugin2);
 
-  EXPECT_EQ(std::set<PluginDirtyInfo>({info2, info3}), diff.DirtyInfo());
+  EXPECT_EQ(std::set<PluginCleaningData>({info2, info3}), diff.DirtyInfo());
 }
 
 TEST_P(PluginMetadataTest, diffMetadataShouldOutputLocationsThatAreNotCommonToBothInputPlugins) {
@@ -547,15 +547,15 @@ TEST_P(PluginMetadataTest, newMetadataShouldOutputTagsThatAreNotCommonToBothInpu
 TEST_P(PluginMetadataTest, newMetadataShouldOutputDirtyInfoObjectsThatAreNotCommonToBothInputPlugins) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  PluginDirtyInfo info1(0x5, 1, 2, 3, "utility");
-  PluginDirtyInfo info2(0xA, 1, 2, 3, "utility");
-  PluginDirtyInfo info3(0x1, 1, 2, 3, "utility");
+  PluginCleaningData info1(0x5, 1, 2, 3, "utility");
+  PluginCleaningData info2(0xA, 1, 2, 3, "utility");
+  PluginCleaningData info3(0x1, 1, 2, 3, "utility");
 
   plugin1.DirtyInfo({info1, info2});
   plugin2.DirtyInfo({info1, info3});
   PluginMetadata newMetadata = plugin1.NewMetadata(plugin2);
 
-  EXPECT_EQ(std::set<PluginDirtyInfo>({info2}), newMetadata.DirtyInfo());
+  EXPECT_EQ(std::set<PluginCleaningData>({info2}), newMetadata.DirtyInfo());
 }
 
 TEST_P(PluginMetadataTest, newMetadataShouldOutputLocationsThatAreNotCommonToBothInputPlugins) {
@@ -634,8 +634,8 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   Tag tag2("Relev", true, "file(\"" + missingEsp + "\")");
   plugin.Tags({tag1, tag2});
 
-  PluginDirtyInfo info1(blankEsmCrc, 1, 2, 3, "utility");
-  PluginDirtyInfo info2(0xDEADBEEF, 1, 2, 3, "utility");
+  PluginCleaningData info1(blankEsmCrc, 1, 2, 3, "utility");
+  PluginCleaningData info2(0xDEADBEEF, 1, 2, 3, "utility");
   plugin.DirtyInfo({info1, info2});
 
   EXPECT_NO_THROW(plugin.EvalAllConditions(game, Language::Code::english));
@@ -646,7 +646,7 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   EXPECT_EQ(expectedFiles, plugin.Incs());
   EXPECT_EQ(std::list<Message>({message1}), plugin.Messages());
   EXPECT_EQ(std::set<Tag>({tag1}), plugin.Tags());
-  EXPECT_EQ(std::set<PluginDirtyInfo>({info1}), plugin.DirtyInfo());
+  EXPECT_EQ(std::set<PluginCleaningData>({info1}), plugin.DirtyInfo());
 }
 
 TEST_P(PluginMetadataTest, hasNameOnlyShouldBeTrueForADefaultConstructedPluginMetadataObject) {
@@ -712,7 +712,7 @@ TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfTagsExist) {
 
 TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfDirtyInfoExists) {
   PluginMetadata plugin(blankEsp);
-  plugin.DirtyInfo({PluginDirtyInfo(5, 0, 1, 2, "utility")});
+  plugin.DirtyInfo({PluginCleaningData(5, 0, 1, 2, "utility")});
 
   EXPECT_FALSE(plugin.HasNameOnly());
 }
@@ -861,7 +861,7 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithTagsCorrectly) {
 
 TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithDirtyInfoCorrectly) {
   PluginMetadata plugin(blankEsp);
-  plugin.DirtyInfo({PluginDirtyInfo(5, 0, 1, 2, "utility")});
+  plugin.DirtyInfo({PluginCleaningData(5, 0, 1, 2, "utility")});
 
   YAML::Emitter emitter;
   emitter << plugin;
@@ -968,11 +968,11 @@ TEST_P(PluginMetadataTest, encodingAsYamlShouldSetTagFieldIfTagsExist) {
 
 TEST_P(PluginMetadataTest, encodingAsYamlShouldSetDirtyFieldIfDirtyInfoExists) {
   PluginMetadata plugin(blankEsp);
-  plugin.DirtyInfo({PluginDirtyInfo(5, 0, 1, 2, "utility")});
+  plugin.DirtyInfo({PluginCleaningData(5, 0, 1, 2, "utility")});
   YAML::Node node;
   node = plugin;
 
-  EXPECT_EQ(plugin.DirtyInfo(), node["dirty"].as<std::set<PluginDirtyInfo>>());
+  EXPECT_EQ(plugin.DirtyInfo(), node["dirty"].as<std::set<PluginCleaningData>>());
 }
 
 TEST_P(PluginMetadataTest, encodingAsYamlShouldSetUrlFieldIfLocationsExist) {
@@ -1038,8 +1038,8 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
   EXPECT_EQ(std::set<Tag>({
       Tag("Relev")
   }), plugin.Tags());
-  EXPECT_EQ(std::set<PluginDirtyInfo>({
-      PluginDirtyInfo(5, 0, 1, 2, "utility")
+  EXPECT_EQ(std::set<PluginCleaningData>({
+      PluginCleaningData(5, 0, 1, 2, "utility")
   }), plugin.DirtyInfo());
   EXPECT_EQ(std::set<Location>({
       Location("http://www.example.com")

@@ -464,7 +464,7 @@ std::string QueryHandler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
   if (pluginMetadata["userlist"]["tag"])
     newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
   if (pluginMetadata["userlist"]["dirty"])
-    newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginDirtyInfo>>());
+    newUserlistEntry.DirtyInfo(pluginMetadata["userlist"]["dirty"].as<set<PluginCleaningData>>());
   if (pluginMetadata["userlist"]["url"])
     newUserlistEntry.Locations(pluginMetadata["userlist"]["url"].as<set<Location>>());
 

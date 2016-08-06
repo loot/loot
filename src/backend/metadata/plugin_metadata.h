@@ -38,7 +38,7 @@
 #include "backend/metadata/file.h"
 #include "backend/metadata/location.h"
 #include "backend/metadata/message.h"
-#include "backend/metadata/plugin_dirty_info.h"
+#include "backend/metadata/plugin_cleaning_data.h"
 #include "backend/metadata/tag.h"
 
 namespace loot {
@@ -75,7 +75,7 @@ public:
   std::set<File> Incs() const;
   std::list<Message> Messages() const;
   std::set<Tag> Tags() const;
-  std::set<PluginDirtyInfo> DirtyInfo() const;
+  std::set<PluginCleaningData> DirtyInfo() const;
   std::set<Location> Locations() const;
 
   void Enabled(const bool enabled);
@@ -87,7 +87,7 @@ public:
   void Incs(const std::set<File>& incs);
   void Messages(const std::list<Message>& messages);
   void Tags(const std::set<Tag>& tags);
-  void DirtyInfo(const std::set<PluginDirtyInfo>& info);
+  void DirtyInfo(const std::set<PluginCleaningData>& info);
   void Locations(const std::set<Location>& locations);
 
   PluginMetadata& EvalAllConditions(Game& game, const Language::Code language);
@@ -115,7 +115,7 @@ private:
   std::set<File> loadAfter_;
   std::set<File> requirements_;
   std::set<File> incompatibilities_;
-  std::set<PluginDirtyInfo> dirtyInfo_;
+  std::set<PluginCleaningData> dirtyInfo_;
   std::set<Location> locations_;
 };
 }
@@ -201,7 +201,7 @@ struct convert<loot::PluginMetadata> {
       if (rhs.IsRegexPlugin())
         throw RepresentationException(node.Mark(), "bad conversion: 'dirty' key must not be present in a regex 'plugin metadata' object");
       else
-        rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginDirtyInfo> >());
+        rhs.DirtyInfo(node["dirty"].as< std::set<loot::PluginCleaningData> >());
     }
     if (node["url"])
       rhs.Locations(node["url"].as< std::set<loot::Location> >());

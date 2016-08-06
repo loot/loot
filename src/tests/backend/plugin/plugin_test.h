@@ -302,14 +302,14 @@ TEST_P(PluginTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent
 TEST_P(PluginTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   Plugin plugin(game_, blankEsm, false);
   plugin.DirtyInfo({
-      PluginDirtyInfo(blankEsmCrc, 0, 1, 2, "utility1"),
-      PluginDirtyInfo(0xDEADBEEF, 0, 5, 10, "utility2"),
+      PluginCleaningData(blankEsmCrc, 0, 1, 2, "utility1"),
+      PluginCleaningData(0xDEADBEEF, 0, 5, 10, "utility2"),
   });
 
   EXPECT_TRUE(plugin.CheckInstallValidity(game_));
   EXPECT_EQ(std::list<Message>({
-      PluginDirtyInfo(blankEsmCrc, 0, 1, 2, "utility1").AsMessage(),
-      PluginDirtyInfo(0xDEADBEEF, 0, 5, 10, "utility2").AsMessage(),
+      PluginCleaningData(blankEsmCrc, 0, 1, 2, "utility1").AsMessage(),
+      PluginCleaningData(0xDEADBEEF, 0, 5, 10, "utility2").AsMessage(),
   }), plugin.Messages());
 }
 

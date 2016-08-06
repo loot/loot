@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-08-04 21:46+0200\n"
+"POT-Creation-Date: 2016-08-06 16:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -784,38 +784,38 @@ msgstr ""
 msgid "Failed to parse condition \"%1%\"."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:69
+#: src/backend/metadata/plugin_cleaning_data.cpp:71
 msgid ""
 "Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
 "Clean with %4%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:71
+#: src/backend/metadata/plugin_cleaning_data.cpp:73
 msgid "Clean with %1%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:74
+#: src/backend/metadata/plugin_cleaning_data.cpp:76
 msgid ""
 "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:76
+#: src/backend/metadata/plugin_cleaning_data.cpp:78
 msgid "Contains %1% deleted navmeshes. Clean with %2%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:78
+#: src/backend/metadata/plugin_cleaning_data.cpp:80
 msgid "Contains %1% deleted references. Clean with %2%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:81
+#: src/backend/metadata/plugin_cleaning_data.cpp:83
 msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:83
+#: src/backend/metadata/plugin_cleaning_data.cpp:85
 msgid "Contains %1% ITM records. Clean with %2%."
 msgstr ""
 
-#: src/backend/metadata/plugin_dirty_info.cpp:86
+#: src/backend/metadata/plugin_cleaning_data.cpp:88
 msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
 msgstr ""
 

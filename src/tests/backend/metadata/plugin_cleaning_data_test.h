@@ -22,26 +22,27 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_METADATA_PLUGIN_DIRTY_INFO_TEST
-#define LOOT_TESTS_BACKEND_METADATA_PLUGIN_DIRTY_INFO_TEST
+#ifndef LOOT_TESTS_BACKEND_METADATA_PLUGIN_CLEANING_DATA
+#define LOOT_TESTS_BACKEND_METADATA_PLUGIN_CLEANING_DATA
 
-#include "backend/metadata/plugin_dirty_info.h"
+#include "backend/metadata/plugin_cleaning_data.h"
 
+#include "backend/game/game.h"
 #include "tests/backend/base_game_test.h"
 
 namespace loot {
 namespace test {
-class PluginDirtyInfoTest : public BaseGameTest {};
+class PluginCleaningDataTest : public BaseGameTest {};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_CASE_P(,
-                        PluginDirtyInfoTest,
+                        PluginCleaningDataTest,
                         ::testing::Values(
                           GameType::tes4));
 
-TEST_P(PluginDirtyInfoTest, defaultConstructorShouldLeaveAllCountsAtZeroAndTheUtilityStringEmpty) {
-  PluginDirtyInfo info;
+TEST_P(PluginCleaningDataTest, defaultConstructorShouldLeaveAllCountsAtZeroAndTheUtilityStringEmpty) {
+  PluginCleaningData info;
   EXPECT_EQ(0, info.CRC());
   EXPECT_EQ(0, info.ITMs());
   EXPECT_EQ(0, info.DeletedRefs());
@@ -49,8 +50,8 @@ TEST_P(PluginDirtyInfoTest, defaultConstructorShouldLeaveAllCountsAtZeroAndTheUt
   EXPECT_TRUE(info.CleaningUtility().empty());
 }
 
-TEST_P(PluginDirtyInfoTest, contentConstructorShouldStoreAllGivenData) {
-  PluginDirtyInfo info(0x12345678, 2, 10, 30, "cleaner");
+TEST_P(PluginCleaningDataTest, contentConstructorShouldStoreAllGivenData) {
+  PluginCleaningData info(0x12345678, 2, 10, 30, "cleaner");
   EXPECT_EQ(0x12345678, info.CRC());
   EXPECT_EQ(2, info.ITMs());
   EXPECT_EQ(10, info.DeletedRefs());
@@ -58,104 +59,104 @@ TEST_P(PluginDirtyInfoTest, contentConstructorShouldStoreAllGivenData) {
   EXPECT_EQ("cleaner", info.CleaningUtility());
 }
 
-TEST_P(PluginDirtyInfoTest, asMessageShouldOutputAllNonZeroCounts) {
-  Message message = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner").AsMessage();
+TEST_P(PluginCleaningDataTest, asMessageShouldOutputAllNonZeroCounts) {
+  Message message = PluginCleaningData(0x12345678, 2, 10, 30, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 2 ITM records, 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 0, 0, 0, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 0, 0, 0, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 0, 10, 30, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 0, 10, 30, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 10 deleted references and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 0, 0, 30, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 0, 0, 30, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 0, 10, 0, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 0, 10, 0, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 2, 0, 30, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 2, 0, 30, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 2 ITM records and 30 deleted navmeshes. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 2, 0, 0, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 2, 0, 0, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 2 ITM records. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 
-  message = PluginDirtyInfo(0x12345678, 2, 10, 0, "cleaner").AsMessage();
+  message = PluginCleaningData(0x12345678, 2, 10, 0, "cleaner").AsMessage();
   EXPECT_EQ(Message::Type::warn, message.GetType());
   EXPECT_EQ("Contains 2 ITM records and 10 deleted references. Clean with cleaner.", message.ChooseContent(Language::Code::english).GetText());
 }
 
-TEST_P(PluginDirtyInfoTest, dirtyInfoShouldBeEqualIfCrcValuesAreEqual) {
-  PluginDirtyInfo info1(0x12345678, 2, 10, 30, "cleaner1");
-  PluginDirtyInfo info2(0x12345678, 4, 20, 60, "cleaner2");
+TEST_P(PluginCleaningDataTest, dirtyInfoShouldBeEqualIfCrcValuesAreEqual) {
+  PluginCleaningData info1(0x12345678, 2, 10, 30, "cleaner1");
+  PluginCleaningData info2(0x12345678, 4, 20, 60, "cleaner2");
   EXPECT_TRUE(info1 == info2);
 
-  info1 = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner");
-  info2 = PluginDirtyInfo(0x87654321, 2, 10, 30, "cleaner");
+  info1 = PluginCleaningData(0x12345678, 2, 10, 30, "cleaner");
+  info2 = PluginCleaningData(0x87654321, 2, 10, 30, "cleaner");
   EXPECT_FALSE(info1 == info2);
 }
 
-TEST_P(PluginDirtyInfoTest, LessThanOperatorShouldCompareCrcValues) {
-  PluginDirtyInfo info1(0x12345678, 2, 10, 30, "cleaner1");
-  PluginDirtyInfo info2(0x12345678, 4, 20, 60, "cleaner2");
+TEST_P(PluginCleaningDataTest, LessThanOperatorShouldCompareCrcValues) {
+  PluginCleaningData info1(0x12345678, 2, 10, 30, "cleaner1");
+  PluginCleaningData info2(0x12345678, 4, 20, 60, "cleaner2");
   EXPECT_FALSE(info1 < info2);
   EXPECT_FALSE(info2 < info1);
 
-  info1 = PluginDirtyInfo(0x12345678, 2, 10, 30, "cleaner");
-  info2 = PluginDirtyInfo(0x87654321, 2, 10, 30, "cleaner");
+  info1 = PluginCleaningData(0x12345678, 2, 10, 30, "cleaner");
+  info2 = PluginCleaningData(0x87654321, 2, 10, 30, "cleaner");
   EXPECT_TRUE(info1 < info2);
   EXPECT_FALSE(info2 < info1);
 }
 
-TEST_P(PluginDirtyInfoTest, evalConditionShouldBeTrueIfTheCrcGivenMatchesTheRealPluginCrc) {
+TEST_P(PluginCleaningDataTest, evalConditionShouldBeTrueIfTheCrcGivenMatchesTheRealPluginCrc) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  PluginDirtyInfo dirtyInfo(blankEsmCrc, 2, 10, 30, "cleaner");
+  PluginCleaningData dirtyInfo(blankEsmCrc, 2, 10, 30, "cleaner");
   EXPECT_TRUE(dirtyInfo.EvalCondition(game, blankEsm));
 }
 
-TEST_P(PluginDirtyInfoTest, evalConditionShouldBeFalseIfTheCrcGivenDoesNotMatchTheRealPluginCrc) {
+TEST_P(PluginCleaningDataTest, evalConditionShouldBeFalseIfTheCrcGivenDoesNotMatchTheRealPluginCrc) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  PluginDirtyInfo dirtyInfo(0xDEADBEEF, 2, 10, 30, "cleaner");
+  PluginCleaningData dirtyInfo(0xDEADBEEF, 2, 10, 30, "cleaner");
   EXPECT_FALSE(dirtyInfo.EvalCondition(game, blankEsm));
 }
 
-TEST_P(PluginDirtyInfoTest, evalConditionShouldBeFalseIfAnEmptyPluginFilenameIsGiven) {
+TEST_P(PluginCleaningDataTest, evalConditionShouldBeFalseIfAnEmptyPluginFilenameIsGiven) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  PluginDirtyInfo dirtyInfo;
+  PluginCleaningData dirtyInfo;
   EXPECT_FALSE(dirtyInfo.EvalCondition(game, ""));
 }
 
-TEST_P(PluginDirtyInfoTest, emittingAsYamlShouldOutputAllNonZeroCounts) {
-  PluginDirtyInfo info(0x12345678, 2, 10, 30, "cleaner");
+TEST_P(PluginCleaningDataTest, emittingAsYamlShouldOutputAllNonZeroCounts) {
+  PluginCleaningData info(0x12345678, 2, 10, 30, "cleaner");
   YAML::Emitter emitter;
   emitter << info;
 
   EXPECT_STREQ("crc: 0x12345678\nutil: 'cleaner'\nitm: 2\nudr: 10\nnav: 30", emitter.c_str());
 }
 
-TEST_P(PluginDirtyInfoTest, emittingAsYamlShouldOmitAllZeroCounts) {
-  PluginDirtyInfo info(0x12345678, 0, 0, 0, "cleaner");
+TEST_P(PluginCleaningDataTest, emittingAsYamlShouldOmitAllZeroCounts) {
+  PluginCleaningData info(0x12345678, 0, 0, 0, "cleaner");
   YAML::Emitter emitter;
   emitter << info;
 
   EXPECT_STREQ("crc: 0x12345678\nutil: 'cleaner'", emitter.c_str());
 }
 
-TEST_P(PluginDirtyInfoTest, encodingAsYamlShouldOmitAllZeroCountFields) {
-  PluginDirtyInfo info(0x12345678, 0, 0, 0, "cleaner");
+TEST_P(PluginCleaningDataTest, encodingAsYamlShouldOmitAllZeroCountFields) {
+  PluginCleaningData info(0x12345678, 0, 0, 0, "cleaner");
   YAML::Node node;
   node = info;
 
@@ -166,8 +167,8 @@ TEST_P(PluginDirtyInfoTest, encodingAsYamlShouldOmitAllZeroCountFields) {
   EXPECT_FALSE(node["nav"]);
 }
 
-TEST_P(PluginDirtyInfoTest, encodingAsYamlShouldOutputAllNonZeroCountFields) {
-  PluginDirtyInfo info(0x12345678, 2, 10, 30, "cleaner");
+TEST_P(PluginCleaningDataTest, encodingAsYamlShouldOutputAllNonZeroCountFields) {
+  PluginCleaningData info(0x12345678, 2, 10, 30, "cleaner");
   YAML::Node node;
   node = info;
 
@@ -178,9 +179,9 @@ TEST_P(PluginDirtyInfoTest, encodingAsYamlShouldOutputAllNonZeroCountFields) {
   EXPECT_EQ(30, node["nav"].as<unsigned int>());
 }
 
-TEST_P(PluginDirtyInfoTest, decodingFromYamlShouldLeaveMissingFieldsWithZeroValues) {
+TEST_P(PluginCleaningDataTest, decodingFromYamlShouldLeaveMissingFieldsWithZeroValues) {
   YAML::Node node = YAML::Load("{crc: 0x12345678, util: cleaner}");
-  PluginDirtyInfo info = node.as<PluginDirtyInfo>();
+  PluginCleaningData info = node.as<PluginCleaningData>();
 
   EXPECT_EQ(0x12345678, info.CRC());
   EXPECT_EQ(0, info.ITMs());
@@ -189,9 +190,9 @@ TEST_P(PluginDirtyInfoTest, decodingFromYamlShouldLeaveMissingFieldsWithZeroValu
   EXPECT_EQ("cleaner", info.CleaningUtility());
 }
 
-TEST_P(PluginDirtyInfoTest, decodingFromYamlShouldStoreAllNonZeroCounts) {
+TEST_P(PluginCleaningDataTest, decodingFromYamlShouldStoreAllNonZeroCounts) {
   YAML::Node node = YAML::Load("{crc: 0x12345678, util: cleaner, itm: 2, udr: 10, nav: 30}");
-  PluginDirtyInfo info = node.as<PluginDirtyInfo>();
+  PluginCleaningData info = node.as<PluginCleaningData>();
 
   EXPECT_EQ(0x12345678, info.CRC());
   EXPECT_EQ(2, info.ITMs());
@@ -200,16 +201,16 @@ TEST_P(PluginDirtyInfoTest, decodingFromYamlShouldStoreAllNonZeroCounts) {
   EXPECT_EQ("cleaner", info.CleaningUtility());
 }
 
-TEST_P(PluginDirtyInfoTest, decodingFromYamlScalarShouldThrow) {
+TEST_P(PluginCleaningDataTest, decodingFromYamlScalarShouldThrow) {
   YAML::Node node = YAML::Load("scalar");
 
-  EXPECT_ANY_THROW(node.as<PluginDirtyInfo>());
+  EXPECT_ANY_THROW(node.as<PluginCleaningData>());
 }
 
-TEST_P(PluginDirtyInfoTest, decodingFromYamlListShouldThrow) {
+TEST_P(PluginCleaningDataTest, decodingFromYamlListShouldThrow) {
   YAML::Node node = YAML::Load("[0, 1, 2]");
 
-  EXPECT_ANY_THROW(node.as<PluginDirtyInfo>());
+  EXPECT_ANY_THROW(node.as<PluginCleaningData>());
 }
 }
 }

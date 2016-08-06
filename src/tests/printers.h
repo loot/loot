@@ -33,7 +33,7 @@ along with LOOT.  If not, see
 #include "backend/metadata/location.h"
 #include "backend/metadata/message.h"
 #include "backend/metadata/message_content.h"
-#include "backend/metadata/plugin_dirty_info.h"
+#include "backend/metadata/plugin_cleaning_data.h"
 #include "backend/metadata/plugin_metadata.h"
 #include "backend/metadata/tag.h"
 #include "backend/plugin/plugin.h"
@@ -74,8 +74,8 @@ void PrintTo(const MessageContent& value, ::std::ostream* os) {
     << ")";
 }
 
-void PrintTo(const PluginDirtyInfo& value, ::std::ostream* os) {
-  *os << "PluginDirtyInfo(0x"
+void PrintTo(const PluginCleaningData& value, ::std::ostream* os) {
+  *os << "PluginCleaningData(0x"
     << std::hex << std::uppercase
     << value.CRC()
     << std::nouppercase << std::dec << ", "
