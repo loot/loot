@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-08-06 16:32+0100\n"
+"POT-Creation-Date: 2016-08-06 16:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,132 +131,127 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:33
 #: src/gui/html/js/translateStaticText.js:88
-msgid "Global Priority"
+msgid "Priority"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:34
-msgid ""
-"Global priorities are compared against all other plugins. Normal priorities "
-"are compared against only conflicting plugins."
+#: src/gui/html/js/translateStaticText.js:87
+msgid "Global Priority"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:35
-msgid "Priority Value"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.js:37
+#: src/gui/html/js/translateStaticText.js:36
 msgid "Main"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:38
+#: src/gui/html/js/translateStaticText.js:37
 msgid "Load After"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:39
+#: src/gui/html/js/translateStaticText.js:38
 msgid "Requirements"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:40
+#: src/gui/html/js/translateStaticText.js:39
 msgid "Incompatibilities"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:41
+#: src/gui/html/js/translateStaticText.js:40
 msgid "Messages"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:42
+#: src/gui/html/js/translateStaticText.js:41
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:43
+#: src/gui/html/js/translateStaticText.js:42
 msgid "Dirty Plugin Info"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:44
+#: src/gui/html/js/translateStaticText.js:43
 msgid "Clean Plugin Info"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:45
+#: src/gui/html/js/translateStaticText.js:44
 msgid "Locations"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.js:46
+#: src/gui/html/js/translateStaticText.js:50
+#: src/gui/html/js/translateStaticText.js:54
+msgid "Filename"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:47
 #: src/gui/html/js/translateStaticText.js:51
 #: src/gui/html/js/translateStaticText.js:55
-msgid "Filename"
+msgid "Display Name"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:48
 #: src/gui/html/js/translateStaticText.js:52
 #: src/gui/html/js/translateStaticText.js:56
-msgid "Display Name"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.js:49
-#: src/gui/html/js/translateStaticText.js:53
-#: src/gui/html/js/translateStaticText.js:57
-#: src/gui/html/js/translateStaticText.js:61
-#: src/gui/html/js/translateStaticText.js:66
+#: src/gui/html/js/translateStaticText.js:60
+#: src/gui/html/js/translateStaticText.js:65
 msgid "Condition"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:59
+#: src/gui/html/js/translateStaticText.js:58
 msgid "Type"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:60
+#: src/gui/html/js/translateStaticText.js:59
 msgid "Content"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:62
+#: src/gui/html/js/translateStaticText.js:61
 #: src/gui/html/js/translateStaticText.js:252
 msgid "Language"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:64
+#: src/gui/html/js/translateStaticText.js:63
 msgid "Add/Remove"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:65
+#: src/gui/html/js/translateStaticText.js:64
 msgid "Bash Tag"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:68
-#: src/gui/html/js/translateStaticText.js:74
+#: src/gui/html/js/translateStaticText.js:67
+#: src/gui/html/js/translateStaticText.js:73
 msgid "CRC"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:69
+#: src/gui/html/js/translateStaticText.js:68
 msgid "ITM Count"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:70
+#: src/gui/html/js/translateStaticText.js:69
 msgid "Deleted References"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:70
 msgid "Deleted Navmeshes"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:72
-#: src/gui/html/js/translateStaticText.js:75
+#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:74
 msgid "Cleaning Utility"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:77
+#: src/gui/html/js/translateStaticText.js:76
 msgid "URL"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:78
+#: src/gui/html/js/translateStaticText.js:77
 #: src/gui/html/js/translateStaticText.js:261
 msgid "Name"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:80
+#: src/gui/html/js/translateStaticText.js:79
 msgid "Save Metadata"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:81
+#: src/gui/html/js/translateStaticText.js:80
 #: src/gui/html/js/translateStaticText.js:98
 #: src/gui/html/js/translateStaticText.js:182
 #: src/gui/html/js/translateStaticText.js:275
@@ -607,14 +602,14 @@ msgstr ""
 msgid "Failed to apply plugin metadata. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:598
+#: src/gui/query_handler.cpp:601
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/query_handler.cpp:613
+#: src/gui/query_handler.cpp:616
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -630,33 +625,33 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query_handler.cpp:723 src/gui/query_handler.cpp:726
+#: src/gui/query_handler.cpp:721 src/gui/query_handler.cpp:724
 msgid "Failed to get game data. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:808 src/gui/query_handler.cpp:811
+#: src/gui/query_handler.cpp:806 src/gui/query_handler.cpp:809
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:850
+#: src/gui/query_handler.cpp:848
 msgid "Loading plugin contents..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:854
+#: src/gui/query_handler.cpp:852
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:911
+#: src/gui/query_handler.cpp:909
 msgid "Failed to sort plugins. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:941
+#: src/gui/query_handler.cpp:939
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:963 src/backend/plugin/plugin_sorter.cpp:216
+#: src/gui/query_handler.cpp:961 src/backend/plugin/plugin_sorter.cpp:216
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
@@ -764,22 +759,16 @@ msgstr ""
 msgid "Failed to open file in its default application."
 msgstr ""
 
-#: src/backend/metadata/condition_grammar.h:146
-#: src/backend/metadata/condition_grammar.h:281
-#: src/backend/metadata/condition_grammar.h:365
+#: src/backend/metadata/condition_evaluator.cpp:173
 msgid "Invalid file path:"
 msgstr ""
 
-#: src/backend/metadata/condition_grammar.h:187
-#: src/backend/metadata/condition_grammar.h:213
+#: src/backend/metadata/condition_evaluator.cpp:183
+#: src/backend/metadata/condition_evaluator.cpp:223
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr ""
 
-#: src/backend/metadata/condition_grammar.h:205
-msgid "Invalid folder path:"
-msgstr ""
-
-#: src/backend/metadata/condition_grammar.h:385
+#: src/backend/metadata/condition_grammar.h:202
 msgid "Expected \"%1%\" at \"%2%\"."
 msgstr ""
 
@@ -793,39 +782,37 @@ msgstr ""
 msgid "Failed to parse condition \"%1%\"."
 msgstr ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:71
-msgid ""
-"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
-"Clean with %4%."
-msgstr ""
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:73
-msgid "Clean with %1%."
-msgstr ""
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:76
-msgid ""
-"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:78
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:80
-msgid "Contains %1% deleted references. Clean with %2%."
-msgstr ""
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:83
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:85
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
-
 #: src/backend/metadata/plugin_cleaning_data.cpp:88
-msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+msgid ""
+"%1% found %2% ITM records, %3% deleted references and %4% deleted navmeshes."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:90
+msgid "%1% found dirty edits."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:93
+msgid "%1% found %2% deleted references and %3% deleted navmeshes."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:95
+msgid "%1% found %2% deleted navmeshes."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:97
+msgid "%1% found %2% deleted references."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:100
+msgid "%1% found %2% ITM records and %3% deleted navmeshes."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:102
+msgid "%1% found %2% ITM records."
+msgstr ""
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:105
+msgid "%1% found %2% ITM records and %3% deleted references."
 msgstr ""
 
 #: src/backend/plugin/plugin.cpp:115

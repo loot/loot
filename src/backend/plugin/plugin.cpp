@@ -171,11 +171,11 @@ bool Plugin::IsValid(const std::string& filename, const Game& game) {
   else
     name = filename;
 
-// Check that the file has a valid extension.
+  // Check that the file has a valid extension.
   if (!boost::iends_with(name, ".esm") && !boost::iends_with(name, ".esp"))
     return false;
 
-// Add the ".ghost" file extension if the plugin is ghosted.
+  // Add the ".ghost" file extension if the plugin is ghosted.
   boost::filesystem::path filepath = game.DataPath() / name;
   if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
     filepath += ".ghost";
@@ -199,7 +199,7 @@ uint32_t Plugin::Crc() const {
   return crc_;
 }
 
-bool Plugin::CheckInstallValidity(const Game& game) {
+void Plugin::CheckInstallValidity(const Game& game) {
   BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << Name() << "'s data.";
   if (IsActive()) {
     auto pluginExists = [](const Game& game, const std::string& file) {
@@ -236,8 +236,6 @@ bool Plugin::CheckInstallValidity(const Game& game) {
   for (const auto &element : DirtyInfo()) {
     messages_.push_back(element.AsMessage());
   }
-
-  return !DirtyInfo().empty();
 }
 
 bool Plugin::LoadsArchive() const {

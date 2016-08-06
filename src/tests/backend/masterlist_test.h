@@ -35,7 +35,7 @@ namespace test {
 class MasterlistTest : public BaseGameTest {
 protected:
   MasterlistTest() :
-    repoBranch("master"),
+    repoBranch("2.x"),
     repoUrl("https://github.com/loot/testing-metadata.git"),
     masterlistPath(localPath / "masterlist.yaml") {}
 

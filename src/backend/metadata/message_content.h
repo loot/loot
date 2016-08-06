@@ -41,6 +41,9 @@ public:
 
   bool operator < (const MessageContent& rhs) const;
   bool operator == (const MessageContent& rhs) const;
+
+  static MessageContent Choose(const std::vector<MessageContent> content,
+                               const Language::Code language);
 private:
   std::string text_;
   Language::Code language_;

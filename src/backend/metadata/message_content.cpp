@@ -48,6 +48,23 @@ bool MessageContent::operator < (const MessageContent& rhs) const {
 bool MessageContent::operator == (const MessageContent& rhs) const {
   return (boost::iequals(text_, rhs.GetText()));
 }
+MessageContent MessageContent::Choose(const std::vector<MessageContent> content,
+                                      const Language::Code language) {
+  if (content.empty())
+    return MessageContent();
+  else if (content.size() == 1)
+    return content[0];
+  else {
+    MessageContent english;
+    for (const auto &mc : content) {
+      if (mc.GetLanguage() == language) {
+        return mc;
+      } else if (mc.GetLanguage() == Language::Code::english)
+        english = mc;
+    }
+    return english;
+  }
+}
 }
 
 namespace YAML {

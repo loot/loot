@@ -31,7 +31,14 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class PluginMetadataTest : public BaseGameTest {};
+class PluginMetadataTest : public BaseGameTest {
+protected:
+  PluginMetadataTest() : info_(std::vector<MessageContent>({
+    MessageContent("info", Language::Code::english),
+  })) {}
+
+  const std::vector<MessageContent> info_;
+};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
@@ -254,8 +261,8 @@ TEST_P(PluginMetadataTest, mergeMetadataShouldMergeTags) {
 TEST_P(PluginMetadataTest, mergeMetadataShouldMergeDirtyInfoData) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  PluginCleaningData info1(0x5, 1, 2, 3, "utility");
-  PluginCleaningData info2(0xA, 1, 2, 3, "utility");
+  PluginCleaningData info1(0x5, "utility", info_, 1, 2, 3);
+  PluginCleaningData info2(0xA, "utility", info_, 1, 2, 3);
 
   plugin1.DirtyInfo({info1});
   plugin2.DirtyInfo({info1, info2});
@@ -432,9 +439,9 @@ TEST_P(PluginMetadataTest, diffMetadataShouldOutputTagsThatAreNotCommonToBothInp
 TEST_P(PluginMetadataTest, diffMetadataShouldOutputDirtyInfoObjectsThatAreNotCommonToBothInputPlugins) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  PluginCleaningData info1(0x5, 1, 2, 3, "utility");
-  PluginCleaningData info2(0xA, 1, 2, 3, "utility");
-  PluginCleaningData info3(0x1, 1, 2, 3, "utility");
+  PluginCleaningData info1(0x5, "utility", info_, 1, 2, 3);
+  PluginCleaningData info2(0xA, "utility", info_, 1, 2, 3);
+  PluginCleaningData info3(0x1, "utility", info_, 1, 2, 3);
 
   plugin1.DirtyInfo({info1, info2});
   plugin2.DirtyInfo({info1, info3});
@@ -588,9 +595,9 @@ TEST_P(PluginMetadataTest, newMetadataShouldOutputTagsThatAreNotCommonToBothInpu
 TEST_P(PluginMetadataTest, newMetadataShouldOutputDirtyInfoObjectsThatAreNotCommonToBothInputPlugins) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  PluginCleaningData info1(0x5, 1, 2, 3, "utility");
-  PluginCleaningData info2(0xA, 1, 2, 3, "utility");
-  PluginCleaningData info3(0x1, 1, 2, 3, "utility");
+  PluginCleaningData info1(0x5, "utility", info_, 1, 2, 3);
+  PluginCleaningData info2(0xA, "utility", info_, 1, 2, 3);
+  PluginCleaningData info3(0x1, "utility", info_, 1, 2, 3);
 
   plugin1.DirtyInfo({info1, info2});
   plugin2.DirtyInfo({info1, info3});
@@ -647,8 +654,8 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   Tag tag2("Relev", true, "file(\"" + missingEsp + "\")");
   plugin.Tags({tag1, tag2});
 
-  PluginCleaningData info1(blankEsmCrc, 1, 2, 3, "utility");
-  PluginCleaningData info2(0xDEADBEEF, 1, 2, 3, "utility");
+  PluginCleaningData info1(blankEsmCrc, "utility", info_, 1, 2, 3);
+  PluginCleaningData info2(0xDEADBEEF, "utility", info_, 1, 2, 3);
   plugin.DirtyInfo({info1, info2});
   plugin.CleanInfo({info1, info2});
 
@@ -734,7 +741,7 @@ TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfTagsExist) {
 
 TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfDirtyInfoExists) {
   PluginMetadata plugin(blankEsp);
-  plugin.DirtyInfo({PluginCleaningData(5, 0, 1, 2, "utility")});
+  plugin.DirtyInfo({PluginCleaningData(5, "utility", info_, 0, 1, 2)});
 
   EXPECT_FALSE(plugin.HasNameOnly());
 }
@@ -911,7 +918,7 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithTagsCorrectly) {
 
 TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithDirtyInfoCorrectly) {
   PluginMetadata plugin(blankEsp);
-  plugin.DirtyInfo({PluginCleaningData(5, 0, 1, 2, "utility")});
+  plugin.DirtyInfo({PluginCleaningData(5, "utility", info_, 0, 1, 2)});
 
   YAML::Emitter emitter;
   emitter << plugin;
@@ -919,7 +926,8 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithDirtyInfoCorrect
   EXPECT_STREQ("name: 'Blank.esp'\n"
                "dirty:\n"
                "  - crc: 0x5\n"
-               "    util: 'utility'\n"
+               "    utility: 'utility'\n"
+               "    info: 'info'\n"
                "    udr: 1\n"
                "    nav: 2", emitter.c_str());
 }
@@ -934,7 +942,7 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithCleanInfoCorrect
   EXPECT_STREQ("name: 'Blank.esp'\n"
                "clean:\n"
                "  - crc: 0x5\n"
-               "    util: 'utility'", emitter.c_str());
+               "    utility: 'utility'", emitter.c_str());
 }
 
 TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithLocationsCorrectly) {
@@ -1057,7 +1065,7 @@ TEST_P(PluginMetadataTest, encodingAsYamlShouldSetTagFieldIfTagsExist) {
 
 TEST_P(PluginMetadataTest, encodingAsYamlShouldSetDirtyFieldIfDirtyInfoExists) {
   PluginMetadata plugin(blankEsp);
-  plugin.DirtyInfo({PluginCleaningData(5, 0, 1, 2, "utility")});
+  plugin.DirtyInfo({PluginCleaningData(5, "utility", info_, 0, 1, 2)});
   YAML::Node node;
   node = plugin;
 
@@ -1111,12 +1119,12 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
                                "  - Relev\n"
                                "dirty:\n"
                                "  - crc: 0x5\n"
-                               "    util: 'utility'\n"
+                               "    utility: 'utility'\n"
                                "    udr: 1\n"
                                "    nav: 2\n"
                                "clean:\n"
                                "  - crc: 0x6\n"
-                               "    util: 'utility'\n"
+                               "    utility: 'utility'\n"
                                "url:\n"
                                "  - 'http://www.example.com'");
   PluginMetadata plugin = node.as<PluginMetadata>();
@@ -1140,7 +1148,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
       Tag("Relev")
   }), plugin.Tags());
   EXPECT_EQ(std::set<PluginCleaningData>({
-      PluginCleaningData(5, 0, 1, 2, "utility")
+      PluginCleaningData(5, "utility", info_, 0, 1, 2)
   }), plugin.DirtyInfo());
   EXPECT_EQ(std::set<PluginCleaningData>({
     PluginCleaningData(6, "utility")
@@ -1154,7 +1162,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlWithDirtyInfoInARegexPluginMetadataOb
   YAML::Node node = YAML::Load("name: 'Blank\\.esp'\n"
                                "dirty:\n"
                                "  - crc: 0x5\n"
-                               "    util: 'utility'\n"
+                               "    utility: 'utility'\n"
                                "    udr: 1\n"
                                "    nav: 2");
 
@@ -1165,7 +1173,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlWithCleanInfoInARegexPluginMetadataOb
   YAML::Node node = YAML::Load("name: 'Blank\\.esp'\n"
                                "clean:\n"
                                "  - crc: 0x5\n"
-                               "    util: 'utility'");
+                               "    utility: 'utility'");
 
   EXPECT_THROW(node.as<PluginMetadata>(), YAML::RepresentationException);
 }
@@ -1174,7 +1182,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlWithAnInvalidRegexNameShouldThrow) {
   YAML::Node node = YAML::Load("name: 'RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp'\n"
                                "dirty:\n"
                                "  - crc: 0x5\n"
-                               "    util: 'utility'\n"
+                               "    utility: 'utility'\n"
                                "    udr: 1\n"
                                "    nav: 2");
 

@@ -73,20 +73,7 @@ bool Message::EvalCondition(loot::Game& game, const Language::Code language) {
 
 MessageContent Message::ChooseContent(const Language::Code language) const {
   BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
-  if (content_.empty())
-    return MessageContent();
-  else if (content_.size() == 1)
-    return content_[0];
-  else {
-    MessageContent english;
-    for (const auto &mc : content_) {
-      if (mc.GetLanguage() == language) {
-        return mc;
-      } else if (mc.GetLanguage() == Language::Code::english)
-        english = mc;
-    }
-    return english;
-  }
+  return MessageContent::Choose(content_, language);
 }
 
 Message::Type Message::GetType() const {

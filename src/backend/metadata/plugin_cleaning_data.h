@@ -39,7 +39,12 @@ class PluginCleaningData {
 public:
   PluginCleaningData();
   PluginCleaningData(uint32_t crc, const std::string& utility);
-  PluginCleaningData(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility);
+  PluginCleaningData(uint32_t crc,
+                     const std::string& utility,
+                     const std::vector<MessageContent>& info,
+                     unsigned int itm,
+                     unsigned int ref,
+                     unsigned int nav);
 
   bool operator < (const PluginCleaningData& rhs) const;
   bool operator == (const PluginCleaningData& rhs) const;
@@ -49,7 +54,9 @@ public:
   unsigned int DeletedRefs() const;
   unsigned int DeletedNavmeshes() const;
   std::string CleaningUtility() const;
+  std::vector<MessageContent> Info() const;
 
+  MessageContent ChooseInfo(const Language::Code language) const;
   Message AsMessage() const;
 
   bool EvalCondition(Game& game, const std::string& pluginName) const;
@@ -59,6 +66,7 @@ private:
   unsigned int ref_;
   unsigned int nav_;
   std::string utility_;
+  std::vector<MessageContent> info_;
 };
 }
 
@@ -68,7 +76,8 @@ struct convert<loot::PluginCleaningData> {
   static Node encode(const loot::PluginCleaningData& rhs) {
     Node node;
     node["crc"] = rhs.CRC();
-    node["util"] = rhs.CleaningUtility();
+    node["utility"] = rhs.CleaningUtility();
+    node["info"] = rhs.Info();
 
     if (rhs.ITMs() > 0)
       node["itm"] = rhs.ITMs();
@@ -85,7 +94,7 @@ struct convert<loot::PluginCleaningData> {
       throw RepresentationException(node.Mark(), "bad conversion: 'cleaning data' object must be a map");
     if (!node["crc"])
       throw RepresentationException(node.Mark(), "bad conversion: 'crc' key missing from 'cleaning data' object");
-    if (!node["util"])
+    if (!node["utility"])
       throw RepresentationException(node.Mark(), "bad conversion: 'util' key missing from 'cleaning data' object");
 
     uint32_t crc = node["crc"].as<uint32_t>();
@@ -98,9 +107,29 @@ struct convert<loot::PluginCleaningData> {
     if (node["nav"])
       nav = node["nav"].as<unsigned int>();
 
-    std::string utility = node["util"].as<std::string>();
+    std::string utility = node["utility"].as<std::string>();
 
-    rhs = loot::PluginCleaningData(crc, itm, ref, nav, utility);
+    std::vector<loot::MessageContent> info;
+    if (node["info"]) {
+      if (node["info"].IsSequence())
+        info = node["info"].as<std::vector<loot::MessageContent>>();
+      else {
+        info.push_back(loot::MessageContent(node["info"].as<std::string>(), loot::Language::Code::english));
+      }
+    }
+
+    //Check now that at least one item in info is English if there are multiple items.
+    if (info.size() > 1) {
+      bool found = false;
+      for (const auto &mc : info) {
+        if (mc.GetLanguage() == loot::Language::Code::english)
+          found = true;
+      }
+      if (!found)
+        throw RepresentationException(node.Mark(), "bad conversion: multilingual messages must contain an English info string");
+    }
+
+    rhs = loot::PluginCleaningData(crc, utility, info, itm, ref, nav);
 
     return true;
   }

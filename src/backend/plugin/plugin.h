@@ -58,8 +58,9 @@ public:
   bool DoFormIDsOverlap(const Plugin& plugin) const;
   std::set<libespm::FormId> OverlapFormIDs(const Plugin& plugin) const;
 
-  //Validity checks.
-  bool CheckInstallValidity(const Game& game);  //Checks that reqs and masters are all present, and that no incs are present. Returns true if the plugin is dirty.
+  // Validity checks.
+  // Checks that reqs and masters are all present, and that no incs are present.
+  void CheckInstallValidity(const Game& game);
   static bool IsValid(const std::string& filename, const Game& game);
 
   bool operator < (const Plugin& rhs) const;

@@ -963,7 +963,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   }
 
   //Also check install validity.
-  bool isDirty = tempPlugin.CheckInstallValidity(lootState_.getCurrentGame());
+  tempPlugin.CheckInstallValidity(lootState_.getCurrentGame());
 
   // Now add to pluginNode.
   YAML::Node pluginNode;
@@ -972,7 +972,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   pluginNode["globalPriority"] = tempPlugin.GlobalPriority().getValue();
   pluginNode["messages"] = tempPlugin.Messages();
   pluginNode["tags"] = tempPlugin.Tags();
-  pluginNode["isDirty"] = isDirty;
+  pluginNode["isDirty"] = !tempPlugin.DirtyInfo().empty();
   pluginNode["loadOrderIndex"] = lootState_.getCurrentGame().GetActiveLoadOrderIndex(tempPlugin.Name());
 
   if (!tempPlugin.CleanInfo().empty()) {

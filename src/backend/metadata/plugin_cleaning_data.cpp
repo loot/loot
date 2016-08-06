@@ -26,6 +26,7 @@
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "backend/game/game.h"
 #include "backend/helpers/helpers.h"
@@ -33,9 +34,16 @@
 namespace loot {
 PluginCleaningData::PluginCleaningData() : crc_(0), itm_(0), ref_(0), nav_(0) {}
 
-PluginCleaningData::PluginCleaningData(uint32_t crc, const std::string& utility) : crc_(crc), utility_(utility), itm_(0), ref_(0), nav_(0) {}
+PluginCleaningData::PluginCleaningData(uint32_t crc, const std::string& utility)
+  : crc_(crc), utility_(utility), itm_(0), ref_(0), nav_(0) {}
 
-PluginCleaningData::PluginCleaningData(uint32_t crc, unsigned int itm, unsigned int ref, unsigned int nav, const std::string& utility) : crc_(crc), itm_(itm), ref_(ref), nav_(nav), utility_(utility) {}
+PluginCleaningData::PluginCleaningData(uint32_t crc,
+                                       const std::string& utility,
+                                       const std::vector<MessageContent>& info,
+                                       unsigned int itm,
+                                       unsigned int ref,
+                                       unsigned int nav)
+  : crc_(crc), itm_(itm), ref_(ref), nav_(nav), utility_(utility), info_(info) {}
 
 bool PluginCleaningData::operator < (const PluginCleaningData& rhs) const {
   return crc_ < rhs.CRC();
@@ -65,29 +73,44 @@ std::string PluginCleaningData::CleaningUtility() const {
   return utility_;
 }
 
+std::vector<MessageContent> PluginCleaningData::Info() const {
+  return info_;
+}
+
+MessageContent PluginCleaningData::ChooseInfo(const Language::Code language) const {
+  BOOST_LOG_TRIVIAL(trace) << "Choosing dirty info content.";
+  return MessageContent::Choose(info_, language);
+}
+
 Message PluginCleaningData::AsMessage() const {
   boost::format f;
-  if (this->itm_ > 0 && this->ref_ > 0 && this->nav_ > 0)
-    f = boost::format(boost::locale::translate("Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. Clean with %4%.")) % this->itm_ % this->ref_ % this->nav_ % this->utility_;
-  else if (this->itm_ == 0 && this->ref_ == 0 && this->nav_ == 0)
-    f = boost::format(boost::locale::translate("Clean with %1%.")) % this->utility_;
+  if (itm_ > 0 && ref_ > 0 && nav_ > 0)
+    f = boost::format(boost::locale::translate("%1% found %2% ITM records, %3% deleted references and %4% deleted navmeshes.")) % utility_ % itm_ % ref_ % nav_;
+  else if (itm_ == 0 && ref_ == 0 && nav_ == 0)
+    f = boost::format(boost::locale::translate("%1% found dirty edits.")) % utility_;
 
-  else if (this->itm_ == 0 && this->ref_ > 0 && this->nav_ > 0)
-    f = boost::format(boost::locale::translate("Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%.")) % this->ref_ % this->nav_ % this->utility_;
-  else if (this->itm_ == 0 && this->ref_ == 0 && this->nav_ > 0)
-    f = boost::format(boost::locale::translate("Contains %1% deleted navmeshes. Clean with %2%.")) % this->nav_ % this->utility_;
-  else if (this->itm_ == 0 && this->ref_ > 0 && this->nav_ == 0)
-    f = boost::format(boost::locale::translate("Contains %1% deleted references. Clean with %2%.")) % this->ref_ % this->utility_;
+  else if (itm_ == 0 && ref_ > 0 && nav_ > 0)
+    f = boost::format(boost::locale::translate("%1% found %2% deleted references and %3% deleted navmeshes.")) % utility_ % ref_ % nav_;
+  else if (itm_ == 0 && ref_ == 0 && nav_ > 0)
+    f = boost::format(boost::locale::translate("%1% found %2% deleted navmeshes.")) % utility_ % nav_;
+  else if (itm_ == 0 && ref_ > 0 && nav_ == 0)
+    f = boost::format(boost::locale::translate("%1% found %2% deleted references.")) % utility_ % ref_;
 
-  else if (this->itm_ > 0 && this->ref_ == 0 && this->nav_ > 0)
-    f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%.")) % this->itm_ % this->nav_ % this->utility_;
-  else if (this->itm_ > 0 && this->ref_ == 0 && this->nav_ == 0)
-    f = boost::format(boost::locale::translate("Contains %1% ITM records. Clean with %2%.")) % this->itm_ % this->utility_;
+  else if (itm_ > 0 && ref_ == 0 && nav_ > 0)
+    f = boost::format(boost::locale::translate("%1% found %2% ITM records and %3% deleted navmeshes.")) % utility_ % itm_ % nav_;
+  else if (itm_ > 0 && ref_ == 0 && nav_ == 0)
+    f = boost::format(boost::locale::translate("%1% found %2% ITM records.")) % utility_ % itm_;
 
-  else if (this->itm_ > 0 && this->ref_ > 0 && this->nav_ == 0)
-    f = boost::format(boost::locale::translate("Contains %1% ITM records and %2% deleted references. Clean with %3%.")) % this->itm_ % this->ref_ % this->utility_;
+  else if (itm_ > 0 && ref_ > 0 && nav_ == 0)
+    f = boost::format(boost::locale::translate("%1% found %2% ITM records and %3% deleted references.")) % utility_ % itm_ % ref_;
 
-  return Message(Message::Type::warn, f.str());
+  std::string message = f.str();
+  auto info = info_;
+  for (auto& content : info) {
+    content = MessageContent(message + " " + content.GetText(), content.GetLanguage());
+  }
+
+  return Message(Message::Type::warn, info);
 }
 
 bool PluginCleaningData::EvalCondition(Game& game, const std::string& pluginName) const {
@@ -119,7 +142,14 @@ namespace YAML {
 Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs) {
   out << BeginMap
     << Key << "crc" << Value << Hex << rhs.CRC() << Dec
-    << Key << "util" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
+    << Key << "utility" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
+
+  if (!rhs.Info().empty()) {
+    if (rhs.Info().size() == 1)
+      out << Key << "info" << Value << YAML::SingleQuoted << rhs.Info().front().GetText();
+    else
+      out << Key << "info" << Value << rhs.Info();
+  }
 
   if (rhs.ITMs() > 0)
     out << Key << "itm" << Value << rhs.ITMs();

@@ -34,11 +34,13 @@ namespace test {
 class loot_get_masterlist_revision_test : public ApiGameOperationsTest {
 protected:
   loot_get_masterlist_revision_test() :
+    branch_("2.x"),
     revisionId_("foo"),
     revisionDate_("bar"),
     isModified_(true),
     updated_(false) {}
 
+  const std::string branch_;
   const char * revisionId_;
   const char * revisionDate_;
   bool isModified_;
@@ -80,7 +82,7 @@ TEST_P(loot_get_masterlist_revision_test, shouldSucceedIfANonVersionControlledMa
 }
 
 TEST_P(loot_get_masterlist_revision_test, shouldOutputLongStringsAndBooleanFalseIfAVersionControlledMasterlistIsPresentAndGetShortIdParameterIsFalse) {
-  ASSERT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  ASSERT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", branch_.c_str(), &updated_));
 
   EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db_, masterlistPath.string().c_str(), false, &revisionId_, &revisionDate_, &isModified_));
   EXPECT_STRNE(NULL, revisionId_);
@@ -91,7 +93,7 @@ TEST_P(loot_get_masterlist_revision_test, shouldOutputLongStringsAndBooleanFalse
 }
 
 TEST_P(loot_get_masterlist_revision_test, shouldOutputShortStringsAndBooleanFalseIfAVersionControlledMasterlistIsPresentAndGetShortIdParameterIsTrue) {
-  ASSERT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  ASSERT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", branch_.c_str(), &updated_));
 
   EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db_, masterlistPath.string().c_str(), false, &revisionId_, &revisionDate_, &isModified_));
   EXPECT_STRNE(NULL, revisionId_);
@@ -103,7 +105,7 @@ TEST_P(loot_get_masterlist_revision_test, shouldOutputShortStringsAndBooleanFals
 }
 
 TEST_P(loot_get_masterlist_revision_test, shouldSucceedIfAnEditedVersionControlledMasterlistIsPresent) {
-  ASSERT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", "master", &updated_));
+  ASSERT_EQ(loot_ok, loot_update_masterlist(db_, masterlistPath.string().c_str(), "https://github.com/loot/testing-metadata.git", branch_.c_str(), &updated_));
 
   ASSERT_NO_THROW(GenerateMasterlist());
   EXPECT_EQ(loot_ok, loot_get_masterlist_revision(db_, masterlistPath.string().c_str(), false, &revisionId_, &revisionDate_, &isModified_));

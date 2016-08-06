@@ -89,7 +89,7 @@ set(PSEUDOSEM_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(testing-metadata
                     PREFIX "external"
-                    URL "https://github.com/loot/testing-metadata/archive/1.1.0.tar.gz"
+                    URL "https://github.com/loot/testing-metadata/archive/2.0.0.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
