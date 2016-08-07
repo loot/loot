@@ -73,7 +73,9 @@ function getApiBinaryPaths(rootPath) {
     file = `lib${file}.so`;
   }
 
-  return getBinaryPaths(rootPath, file);
+  return getBinaryParentPaths(rootPath).filter(
+    parentPath => fileExists(path.join(parentPath.path, file))
+  );
 }
 
 function getMetadataValidatorBinaryPaths(rootPath) {

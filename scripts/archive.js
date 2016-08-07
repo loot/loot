@@ -168,15 +168,28 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   fs.removeSync(tempPath);
 }
 
-function createApiArchive(rootPath, binaryPath, tempPath, destPath) {
+function createApiArchive(rootPath, releasePath, tempPath, destPath) {
   // Ensure that the output directory is empty.
   fs.emptyDirSync(tempPath);
 
   // API binary/binaries.
-  fs.copySync(
-    binaryPath,
-    path.join(tempPath, path.basename(binaryPath))
-  );
+  let binaries = [];
+  if (os.platform() === 'win32') {
+    binaries = [
+      'loot_api.dll',
+      'loot_api.lib',
+    ];
+  } else {
+    binaries = [
+      'libloot_api.so',
+    ];
+  }
+  binaries.forEach((file) => {
+    fs.copySync(
+      path.join(releasePath, file),
+      path.join(tempPath, file)
+    );
+  });
 
   // API header file.
   fs.mkdirsSync(path.join(tempPath, 'include', 'loot'));
