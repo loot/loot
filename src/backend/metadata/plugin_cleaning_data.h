@@ -95,7 +95,7 @@ struct convert<loot::PluginCleaningData> {
     if (!node["crc"])
       throw RepresentationException(node.Mark(), "bad conversion: 'crc' key missing from 'cleaning data' object");
     if (!node["utility"])
-      throw RepresentationException(node.Mark(), "bad conversion: 'util' key missing from 'cleaning data' object");
+      throw RepresentationException(node.Mark(), "bad conversion: 'utility' key missing from 'cleaning data' object");
 
     uint32_t crc = node["crc"].as<uint32_t>();
     int itm = 0, ref = 0, nav = 0;
