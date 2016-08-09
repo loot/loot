@@ -32,11 +32,11 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 class ApiGameOperationsTest :
-  public ::testing::TestWithParam<unsigned int>,
+  public ::testing::TestWithParam<GameType>,
   public CommonGameTestFixture {
 protected:
   ApiGameOperationsTest() :
-    CommonGameTestFixture(GetParam()),
+    CommonGameTestFixture(static_cast<unsigned int>(GetParam())),
     db_(nullptr),
     masterlistPath(localPath / "masterlist.yaml"),
     noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
@@ -48,13 +48,11 @@ protected:
 
     ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
 
-    ASSERT_EQ(loot_ok, loot_create_db(&db_, GetParam(), dataPath.parent_path().string().c_str(), localPath.string().c_str()));
+    db_ = CreateDatabase(GetParam(), dataPath.parent_path().string(), localPath.string());
   }
 
   virtual void TearDown() {
     tearDown();
-
-    ASSERT_NO_THROW(loot_destroy_db(db_));
 
     // The masterlist may have been created during the test, so delete it.
     ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
@@ -109,7 +107,7 @@ protected:
     masterlist.close();
   }
 
-  loot_db * db_;
+  std::shared_ptr<DatabaseInterface> db_;
 
   const boost::filesystem::path masterlistPath;
 

@@ -1,0 +1,270 @@
+/*  LOOT
+
+    A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
+    Fallout: New Vegas.
+
+    Copyright (C) 2012-2016    WrinklyNinja
+
+    This file is part of LOOT.
+
+    LOOT is free software: you can redistribute
+    it and/or modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    LOOT is distributed in the hope that it will
+    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with LOOT.  If not, see
+    <https://www.gnu.org/licenses/>.
+    */
+#ifndef LOOT_DATABASE_INTERFACE
+#define LOOT_DATABASE_INTERFACE
+
+#include <string>
+#include <vector>
+
+#include "loot/language_code.h"
+#include "loot/masterlist_info.h"
+#include "loot/plugin_cleanliness.h"
+#include "loot/plugin_message.h"
+#include "loot/plugin_tags.h"
+
+namespace loot {
+class DatabaseInterface {
+public:
+  /**********************************************************************//**
+  *  @name Database Loading Functions
+  *************************************************************************/
+  /**@{*/
+
+  /**
+  *  @brief Loads the masterlist and userlist from the paths specified.
+  *  @details Can be called multiple times, each time replacing the
+  *           previously-loaded data.
+  *  @param masterlist_path
+  *      A string containing the relative or absolute path to the masterlist
+  *      file that should be loaded.
+  *  @param userlist_path
+  *      A string containing the relative or absolute path to the userlist
+  *      file that should be loaded, or `NULL`. If `NULL`, no userlist will
+  *      be loaded.
+  */
+  virtual void LoadLists(const std::string& masterlist_path,
+                         const std::string& userlist_path) = 0;
+
+  /**
+  *  @brief Evaluates all conditions and regular expression metadata
+  *         entries.
+  *  @details Repeated calls re-evaluate the metadata from scratch. This
+  *           function affects the output of all the database access
+  *           functions.
+  *  @param language
+  *      The language code that is used for message language comparisons.
+  */
+  virtual void EvalLists(const LanguageCode language) = 0;
+
+  /**********************************************************************//**
+  *  @name LOOT Functionality Functions
+  *************************************************************************/
+  /**@{*/
+
+  /**
+  *  @brief Calculates a new load order for the game's installed plugins
+  *         (including inactive plugins) and outputs the sorted order.
+  *  @details Pulls metadata from the masterlist and userlist if they are
+  *           loaded, and reads the contents of each plugin. No changes are
+  *           applied to the load order used by the game. This function does
+  *           not load or evaluate the masterlist or userlist.
+  *  @param db
+  *      The database the function acts on.
+  *  @param sortedPlugins
+  *      A pointer to an array of plugin filenames in their sorted load
+  *      order.
+  *  @param numPlugins
+  *      A pointer to the size of the outputted array.
+  *  @returns A return code.
+  */
+  virtual std::vector<std::string> SortPlugins() = 0;
+
+  /**
+  *  @brief Applies the given load order.
+  *  @param db
+  *      The database the function acts on.
+  *  @param loadOrder
+  *      An array of plugin filenames in the load order to be set.
+  *  @param numPlugins
+  *      The size of the inputted array.
+  *  @returns A return code.
+  */
+  virtual void ApplyLoadOrder(const std::vector<std::string>& loadOrder) = 0;
+
+  /**
+  *  @brief Update the given masterlist.
+  *  @details Uses Git to update the given masterlist to a given remote.
+  *           If the masterlist doesn't exist, this will create it. This
+  *           function also initialises a Git repository in the given
+  *           masterlist's parent folder. If the masterlist was not already
+  *           up-to-date, it will be re-loaded, but not re-evaluated.
+  *
+  *           If a Git repository is already present, it will be used to
+  *           perform a diff-only update, but if for any reason a
+  *           fast-forward merge update is not possible, the existing
+  *           repository will be deleted and a new repository cloned from
+  *           the given remote.
+  *  @param db
+  *      The database the function acts on.
+  *  @param masterlistPath
+  *      A string containing the relative or absolute path to the masterlist
+  *      file that should be updated. The filename must match the filename
+  *      of the masterlist file in the given remote repository, otherwise it
+  *      will not be updated correctly. Although LOOT itself expects this
+  *      filename to be "masterlist.yaml", the API does not check for any
+  *      specific filename.
+  *  @param remoteURL
+  *      The URL of the remote from which to fetch updates. This can also be
+  *      a relative or absolute path to a local repository.
+  *  @param remoteBranch
+  *      The branch of the remote from which to apply updates. LOOT's
+  *      official masterlists are versioned using separate branches for each
+  *      new version of the masterlist syntax, so if you're using them,
+  *      check their repositories to see which is the latest release branch.
+  *  @param updated
+  *      `true` if the masterlist was updated. `false` if no update was
+  *      necessary, ie. it was already up-to-date. If `true`, the masterlist
+  *      will have been re-loaded, but will need to be re-evaluated
+  *      separately.
+  *  @returns A return code.
+  */
+  virtual bool UpdateMasterlist(const std::string& masterlist_path,
+                                const std::string& remote_url,
+                                const std::string& remote_branch) = 0;
+
+  /**
+  *  @brief Get the given masterlist's revision.
+  *  @details Getting a masterlist's revision is only possible if it is
+  *           found inside a local Git repository.
+  *  @param db
+  *      The database the function acts on.
+  *  @param masterlistPath
+  *      A string containing the relative or absolute path to the masterlist
+  *      file that should be queried.
+  *  @param getShortID
+  *      If `true`, the shortest unique hexadecimal revision hash that is at
+  *      least 7 characters long will be outputted. Otherwise, the full 40
+  *      character hash will be outputted.
+  *  @param revisionID
+  *      A pointer to a string containing the outputted revision hash for
+  *      the masterlist. If the masterlist doesn't exist, or there is no Git
+  *      repository at its location, this will be `NULL`.
+  *  @param revisionDate
+  *      A pointer to a string containing the ISO 8601 formatted revision
+  *      date, ie. YYYY-MM-DD. If the masterlist doesn't exist, or there is
+  *      no Git repository at its location, this will be `NULL`.
+  *  @param isModified
+  *      A pointer to a boolean that is `true` if the masterlist has been
+  *      edited since the outputted revision, or `false` if it is at exactly
+  *      the revision given.
+  *  @returns A return code.
+  */
+  virtual MasterlistInfo GetMasterlistRevision(const std::string& masterlist_path,
+                                               const bool get_short_id) = 0;
+
+  /**@}*/
+  /**********************************************************************//**
+  *  @name Database Access Functions
+  *************************************************************************/
+  /**@{*/
+
+  /**
+  *  @brief Outputs the Bash Tags suggested for addition and removal by the
+  *         database for the given plugin.
+  *  @details loot_get_tag_map() must be called before this to ensure that
+  *           the Bash Tag UIDs outputted by this function can be matched up
+  *           to name strings.
+  *  @param db
+  *      The database the function acts on.
+  *  @param plugin
+  *      The filename of the plugin to look up Bash Tag suggestions for.
+  *  @param tags_added
+  *      A pointer to the outputted array of UIDs of the Bash Tags suggested
+  *      for addition to the specified plugin. `NULL` if no Bash Tag
+  *      additions are suggested.
+  *  @param numTags_added
+  *      A pointer to the size of the tags_added array. `0` if `tags_added`
+  *      is `NULL`.
+  *  @param tags_removed
+  *      A pointer to the outputted array of UIDs of the Bash Tags suggested
+  *      for removal from the specified plugin. `NULL` if no Bash Tag
+  *      removals are suggested.
+  *  @param numTags_removed
+  *      A pointer to the size of the `tags_removed` array. `0` if
+  *      `tags_removed` is `null`.
+  *  @param userlistModified
+  *      `true` if the Bash Tag suggestions were modified by the data in the
+  *      userlist, `false` otherwise.
+  *  @returns A return code.
+  */
+  virtual PluginTags GetPluginTags(const std::string& plugin) = 0;
+
+  /**
+  *  @brief Outputs the messages associated with the given plugin in the
+  *         database.
+  *  @param db
+  *      The database the function acts on.
+  *  @param plugin
+  *      The filename of the plugin to look up messages for.
+  *  @param messages
+  *      A pointer to the outputted array of messages associated with the
+  *      specified plugin, given as loot_message structures. `NULL` if the
+  *      plugin has no messages associated with it.
+  *  @param numMessages
+  *      A pointer to the size of the outputted array. If no messages are
+  *      outputted, this will be `0`.
+  *  @returns A return code.
+  */
+  virtual std::vector<PluginMessage> GetPluginMessages(const std::string& plugin) = 0;
+
+  /**
+  *  @brief Determines the database's knowledge of a plugin's dirtiness.
+  *  @details Outputs whether the plugin should be cleaned or not, or if
+  *           no data is available. The mechanism used to determine that
+  *           a plugin should not be cleaned is not very reliable, and is
+  *           likely to fail if `loot_eval_lists()` was called with a
+  *           language other than English. As such, some plugins that should
+  *           not be cleaned may have the `loot_needs_cleaning_unknown`
+  *           code outputted.
+  *  @param db
+  *      The database the function acts on.
+  *  @param plugin
+  *      The plugin to look up dirty status information for.
+  *  @param needsCleaning
+  *      A pointer to a plugin cleanliness code.
+  *  @returns A return code.
+  */
+  virtual PluginCleanliness GetPluginCleanliness(const std::string& plugin) = 0;
+
+  /**
+  *  @brief Writes a minimal metadata file that only contains plugins with
+  *         Bash Tag suggestions and/or dirty info, plus the suggestions and
+  *         info themselves.
+  *  @param db
+  *      The database the function acts on.
+  *  @param outputFile
+  *      The path to which the file shall be written.
+  *  @param overwrite
+  *      If `false` and `outputFile` already exists, no data will be
+  *      written. Otherwise, data will be written.
+  *  @returns A return code.
+  */
+  virtual void WriteMinimalList(const std::string& outputFile,
+                                const bool overwrite) = 0;
+
+  /**@}*/
+};
+}
+
+#endif

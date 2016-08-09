@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2014-2016    WrinklyNinja
+    Copyright (C) 2012-2016    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -21,24 +21,17 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
+#ifndef LOOT_MASTERLIST_INFO
+#define LOOT_MASTERLIST_INFO
 
-#include <gtest/gtest.h>
+#include <string>
 
-#include "tests/api/create_database_test.h"
-#include "tests/api/database_interface_test.h"
-#include "tests/api/is_compatible_test.h"
-
-#include <boost/log/core.hpp>
-#include <boost/locale.hpp>
-
-int main(int argc, char **argv) {
-    //Set the locale to get encoding conversions working correctly.
-  std::locale::global(boost::locale::generator().generate(""));
-  boost::filesystem::path::imbue(std::locale());
-
-  //Disable logging or else stdout will get overrun.
-  boost::log::core::get()->set_logging_enabled(false);
-
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+namespace loot {
+struct MasterlistInfo {
+  std::string revision_id;
+  std::string revision_date;
+  bool is_modified;
+};
 }
+
+#endif

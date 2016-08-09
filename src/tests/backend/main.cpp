@@ -24,7 +24,6 @@
 
 #include <boost/log/core.hpp>
 
-#include "tests/api/loot_db_test.h"
 #include "tests/backend/app/loot_paths_test.h"
 #include "tests/backend/app/loot_settings_test.h"
 #include "tests/backend/app/loot_state_test.h"
