@@ -87,7 +87,7 @@ void Game::RedatePlugins() {
   if (Type() != GameType::tes5)
     return;
 
-  list<string> loadorder = GetLoadOrder();
+  vector<string> loadorder = GetLoadOrder();
   if (!loadorder.empty()) {
     time_t lastTime = 0;
     for (const auto &pluginName : loadorder) {
@@ -216,13 +216,13 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
 
   return -1;
 }
-std::list<std::string> Game::GetLoadOrder() const {
+std::vector<std::string> Game::GetLoadOrder() const {
   if (loadOrder_.empty())
     loadOrder_ = LoadOrderHandler::GetLoadOrder();
 
   return loadOrder_;
 }
-void Game::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
   LoadOrderHandler::SetLoadOrder(loadOrder);
   loadOrder_ = loadOrder;
 }

@@ -99,8 +99,8 @@ protected:
     ASSERT_FALSE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
   }
 
-  std::list<std::string> getLoadOrder() {
-    std::list<std::string> actual;
+  std::vector<std::string> getLoadOrder() {
+    std::vector<std::string> actual;
     if (isLoadOrderTimestampBased(gameType)) {
       std::map<time_t, std::string> loadOrder;
       for (boost::filesystem::directory_iterator it(dataPath); it != boost::filesystem::directory_iterator(); ++it) {

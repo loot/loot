@@ -270,7 +270,7 @@ bool QueryHandler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
     lootState_.decrementUnappliedChangeCounter();
     BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
     try {
-      lootState_.getCurrentGame().SetLoadOrder(request["args"][0].as<list<string>>());
+      lootState_.getCurrentGame().SetLoadOrder(request["args"][0].as<vector<string>>());
       callback->Success("");
     } catch (Error &e) {
       BOOST_LOG_TRIVIAL(error) << e.what();
@@ -582,7 +582,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
 
     //Sort plugins into their load order.
     list<Plugin> installed;
-    list<string> loadOrder = lootState_.getCurrentGame().GetLoadOrder();
+    vector<string> loadOrder = lootState_.getCurrentGame().GetLoadOrder();
     for (const auto &pluginName : loadOrder) {
       try {
         const auto plugin = lootState_.getCurrentGame().GetPlugin(pluginName);
@@ -851,7 +851,7 @@ void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
     //Sort plugins into their load order.
     SendProgressUpdate(frame, translate("Sorting load order..."));
     PluginSorter sorter;
-    list<Plugin> plugins = sorter.Sort(lootState_.getCurrentGame(), lootState_.getLanguage().GetCode());
+    vector<Plugin> plugins = sorter.Sort(lootState_.getCurrentGame(), lootState_.getLanguage().GetCode());
 
     // If TESV or FO4, check if load order has been changed.
     if ((lootState_.getCurrentGame().Type() == GameType::tes5 || lootState_.getCurrentGame().Type() == GameType::fo4)
@@ -860,7 +860,7 @@ void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         // user input because there are no changes to accept and some
         // plugins' positions may only be inferred and not written to
         // loadorder.txt/plugins.txt.
-      std::list<std::string> newLoadOrder;
+      std::vector<std::string> newLoadOrder;
       std::transform(begin(plugins),
                      end(plugins),
                      back_inserter(newLoadOrder),

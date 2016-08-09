@@ -98,8 +98,9 @@ private:
   vertex_t target;
 };
 
-std::list<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) {
-    // Clear existing data.
+std::vector<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) {
+  using std::vector;
+  // Clear existing data.
   graph_.clear();
   indexMap_.clear();
   oldLoadOrder_.clear();
@@ -113,7 +114,7 @@ std::list<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) 
   // If there aren't any vertices, exit early, because sorting assumes
   // there is at least one plugin.
   if (boost::num_vertices(graph_) == 0)
-    return list<Plugin>();
+    return vector<Plugin>();
 
 // Get the existing load order.
   oldLoadOrder_ = game.GetLoadOrder();
@@ -155,7 +156,7 @@ std::list<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) 
 
   // Output a plugin list using the sorted vertices.
   BOOST_LOG_TRIVIAL(info) << "Calculated order: ";
-  list<Plugin> plugins;
+  vector<Plugin> plugins;
   for (const auto &vertex : sortedVertices) {
     BOOST_LOG_TRIVIAL(info) << '\t' << graph_[vertex].Name();
     plugins.push_back(graph_[vertex]);

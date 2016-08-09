@@ -118,7 +118,7 @@ bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
   return result;
 }
 
-std::list<std::string> LoadOrderHandler::GetLoadOrder() const {
+std::vector<std::string> LoadOrderHandler::GetLoadOrder() const {
   BOOST_LOG_TRIVIAL(debug) << "Getting load order.";
 
   char ** pluginArr;
@@ -140,7 +140,7 @@ std::list<std::string> LoadOrderHandler::GetLoadOrder() const {
     throw Error(Error::Code::liblo_error, err);
   }
 
-  std::list<string> loadOrder;
+  std::vector<string> loadOrder;
   for (size_t i = 0; i < pluginArrSize; ++i) {
     loadOrder.push_back(string(pluginArr[i]));
   }
@@ -167,7 +167,7 @@ void LoadOrderHandler::SetLoadOrder(const char * const * const loadOrder, const 
   }
 }
 
-void LoadOrderHandler::SetLoadOrder(const std::list<std::string>& loadOrder) const {
+void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
   BOOST_LOG_TRIVIAL(info) << "Setting load order.";
   size_t pluginArrSize = loadOrder.size();
   char ** pluginArr = new char*[pluginArrSize];

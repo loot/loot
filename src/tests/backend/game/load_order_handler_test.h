@@ -110,7 +110,7 @@ TEST_P(LoadOrderHandlerTest, getLoadOrderShouldReturnTheCurrentLoadOrder) {
 }
 
 TEST_P(LoadOrderHandlerTest, setLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
-  std::list<std::string> loadOrder({
+  std::vector<std::string> loadOrder({
       masterFile,
       blankEsm,
       blankMasterDependentEsm,
@@ -124,7 +124,7 @@ TEST_P(LoadOrderHandlerTest, setLoadOrderShouldThrowIfTheHandlerHasNotBeenInitia
       blankPluginDependentEsp,
   });
 
-  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(std::list<std::string>()), Error);
+  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(loadOrder), Error);
 }
 
 TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {
@@ -132,7 +132,7 @@ TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {
   game.SetGamePath(dataPath.parent_path());
   ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
 
-  std::list<std::string> loadOrder({
+  std::vector<std::string> loadOrder({
       masterFile,
       blankEsm,
       blankMasterDependentEsm,

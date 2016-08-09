@@ -53,12 +53,12 @@ public:
   bool IsPluginActive(const std::string& pluginName) const;
   short GetActiveLoadOrderIndex(const std::string & pluginName) const;
 
-  std::list<std::string> GetLoadOrder() const;
-  void SetLoadOrder(const std::list<std::string>& loadOrder) const;
+  std::vector<std::string> GetLoadOrder() const;
+  void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
   void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;
 private:
   bool pluginsFullyLoaded_;
-  mutable std::list<std::string> loadOrder_;
+  mutable std::vector<std::string> loadOrder_;
 };
 }
 

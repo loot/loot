@@ -40,7 +40,7 @@ typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t
 
 class PluginSorter {
 public:
-  std::list<Plugin> Sort(Game& game, const Language::Code language);
+  std::vector<Plugin> Sort(Game& game, const Language::Code language);
 private:
   bool GetVertexByName(const std::string& name, vertex_t& vertex) const;
   void CheckForCycles() const;
@@ -61,7 +61,7 @@ private:
   PluginGraph graph_;
   std::map<vertex_t, size_t> indexMap_;
   vertex_map_t vertexIndexMap_;
-  std::list<std::string> oldLoadOrder_;
+  std::vector<std::string> oldLoadOrder_;
 };
 }
 

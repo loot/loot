@@ -53,7 +53,7 @@ INSTANTIATE_TEST_CASE_P(,
 
 TEST_P(PluginSorterTest, sortingWithNoLoadedPluginsShouldReturnAnEmptyList) {
   PluginSorter sorter;
-  std::list<Plugin> sorted = sorter.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = sorter.Sort(game_, Language::Code::english);
 
   EXPECT_TRUE(sorted.empty());
 }
@@ -62,9 +62,9 @@ TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadO
   ASSERT_NO_THROW(game_.LoadPlugins(false));
 
   PluginSorter ps;
-  std::list<std::string> expectedSortedOrder = getLoadOrder();
+  std::vector<std::string> expectedSortedOrder = getLoadOrder();
 
-  std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = ps.Sort(game_, Language::Code::english);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 
   // Check stability.
@@ -78,7 +78,7 @@ TEST_P(PluginSorterTest, sortingShouldClearExistingGameMessages) {
   ASSERT_FALSE(game_.GetMessages().empty());
 
   PluginSorter ps;
-  std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = ps.Sort(game_, Language::Code::english);
   EXPECT_TRUE(game_.GetMessages().empty());
 }
 
@@ -102,7 +102,7 @@ TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
-  std::list<std::string> expectedSortedOrder({
+  std::vector<std::string> expectedSortedOrder({
       masterFile,
       blankEsm,
       blankDifferentEsm,
@@ -116,7 +116,7 @@ TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
       blankDifferentPluginDependentEsp,
   });
 
-  std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = ps.Sort(game_, Language::Code::english);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -152,7 +152,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
-  std::list<std::string> expectedSortedOrder({
+  std::vector<std::string> expectedSortedOrder({
     masterFile,
     blankEsm,
     blankDifferentEsm,
@@ -166,7 +166,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
     blankDifferentPluginDependentEsp,
   });
 
-  std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = ps.Sort(game_, Language::Code::english);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -180,7 +180,7 @@ TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePl
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
-  std::list<std::string> expectedSortedOrder({
+  std::vector<std::string> expectedSortedOrder({
       masterFile,
       blankEsm,
       blankDifferentEsm,
@@ -194,7 +194,7 @@ TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePl
       blankPluginDependentEsp,
   });
 
-  std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = ps.Sort(game_, Language::Code::english);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -208,7 +208,7 @@ TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelative
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
-  std::list<std::string> expectedSortedOrder({
+  std::vector<std::string> expectedSortedOrder({
       masterFile,
       blankEsm,
       blankDifferentEsm,
@@ -222,7 +222,7 @@ TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelative
       blankPluginDependentEsp,
   });
 
-  std::list<Plugin> sorted = ps.Sort(game_, Language::Code::english);
+  std::vector<Plugin> sorted = ps.Sort(game_, Language::Code::english);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
