@@ -115,13 +115,11 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_windows32_minimal.tar.bz2")
     set(CEF_URL_HASH "8d0bb1ba2abccebef1e0d45fa2bb9c7ed7ec60de")
     set(CEF_PRECOMPILED_BINARIES "libcef.dll" "natives_blob.bin" "snapshot_blob.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll")
-    set(CEF_CONFIG_DIR_NAME ${CMAKE_CFG_INTDIR})
     set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
 ELSE ()
     set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_linux64_minimal.tar.bz2")
     set(CEF_URL_HASH "9a8f227d08d9c4edb6636041375b900d6b864e12")
     set(CEF_PRECOMPILED_BINARIES "libcef.so" "natives_blob.bin" "snapshot_blob.bin" "chrome-sandbox")
-    set(CEF_CONFIG_DIR_NAME "Release")
     set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
 
@@ -135,7 +133,7 @@ ExternalProject_Add(cef
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(cef SOURCE_DIR BINARY_DIR)
 set(CEF_INCLUDE_DIRS "${SOURCE_DIR}")
-set(CEF_LIBRARIES "${SOURCE_DIR}/${CEF_CONFIG_DIR_NAME}/${CEF_LIB}"
+set(CEF_LIBRARIES "${SOURCE_DIR}/Release/${CEF_LIB}"
                   "${BINARY_DIR}/libcef_dll_wrapper/${CMAKE_CFG_INTDIR}/libcef_dll_wrapper${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set(CEF_RESOURCES_DIR "${SOURCE_DIR}/Resources")
 set(CEF_RESOURCES "cef.pak"
@@ -145,7 +143,7 @@ set(CEF_RESOURCES "cef.pak"
                   "icudtl.dat")
 set(CEF_LOCALES_DIR "${CEF_RESOURCES_DIR}/locales")
 set(CEF_LOCALE_FILE "en-US.pak")
-set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/${CEF_CONFIG_DIR_NAME}")
+set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 
 
 ##############################
