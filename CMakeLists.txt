@@ -207,7 +207,8 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/error.h")
+                "${CMAKE_SOURCE_DIR}/src/backend/error.h"
+                "${CMAKE_SOURCE_DIR}/include/loot/message_type.h")
 
 set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
@@ -226,7 +227,7 @@ set (LOOT_API_SRC "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/loot_db.cpp")
 
 set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
-                  "${CMAKE_SOURCE_DIR}/src/api/loot_db.h")
+                      "${CMAKE_SOURCE_DIR}/src/api/loot_db.h")
 
 set (LOOT_VALIDATOR_SRC "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
 

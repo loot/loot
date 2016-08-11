@@ -43,7 +43,7 @@
 
 using loot::Error;
 using loot::GameType;
-using loot::Message;
+using loot::MessageType;
 using loot::Language;
 
 const unsigned int loot_ok = Error::asUnsignedInt(Error::Code::ok);
@@ -69,9 +69,9 @@ const unsigned int loot_game_fo3 = static_cast<unsigned int>(GameType::fo3);
 const unsigned int loot_game_fonv = static_cast<unsigned int>(GameType::fonv);
 const unsigned int loot_game_fo4 = static_cast<unsigned int>(GameType::fo4);
 
-const unsigned int loot_message_say = static_cast<unsigned int>(Message::Type::say);
-const unsigned int loot_message_warn = static_cast<unsigned int>(Message::Type::warn);
-const unsigned int loot_message_error = static_cast<unsigned int>(Message::Type::error);
+const unsigned int loot_message_say = static_cast<unsigned int>(MessageType::say);
+const unsigned int loot_message_warn = static_cast<unsigned int>(MessageType::warn);
+const unsigned int loot_message_error = static_cast<unsigned int>(MessageType::error);
 
 // LOOT message languages.
 const unsigned int loot_lang_english = static_cast<unsigned int>(Language::Code::english);
@@ -594,7 +594,7 @@ LOOT_API unsigned int loot_get_dirty_info(loot_db * const db, const char * const
   messages.insert(messages.end(), temp.begin(), temp.end());
 
   for (const auto& message : messages) {
-    if (boost::starts_with(message.ChooseContent(loot::Language::Code::english).GetText(), "Do not clean")) {
+    if (boost::starts_with(message.GetText(), "Do not clean")) {
       *needsCleaning = loot_needs_cleaning_no;
       break;
     }

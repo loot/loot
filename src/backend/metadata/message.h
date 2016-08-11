@@ -31,6 +31,7 @@
 #include <boost/format.hpp>
 #include <yaml-cpp/yaml.h>
 
+#include "loot/message_type.h"
 #include "backend/helpers/language.h"
 #include "backend/metadata/conditional_metadata.h"
 #include "backend/metadata/message_content.h"
@@ -40,16 +41,10 @@ class Game;
 
 class Message : public ConditionalMetadata {
 public:
-  enum struct Type : unsigned int {
-    say = 0,
-    warn = 1,
-    error = 2,
-  };
-
   Message();
-  Message(const Type type, const std::string& content,
+  Message(const MessageType type, const std::string& content,
           const std::string& condition = "");
-  Message(const Type type, const std::vector<MessageContent>& content,
+  Message(const MessageType type, const std::vector<MessageContent>& content,
           const std::string& condition = "");
 
   bool operator < (const Message& rhs) const;
@@ -57,11 +52,13 @@ public:
 
   bool EvalCondition(Game& game, const Language::Code language);
 
-  Type GetType() const;
+  MessageType GetType() const;
+  std::string GetText() const;
   std::vector<MessageContent> GetContent() const;
-  MessageContent ChooseContent(const Language::Code language) const;
 private:
-  Type type_;
+  MessageContent ChooseContent(const Language::Code language) const;
+
+  MessageType type_;
   std::vector<MessageContent> content_;
 };
 }
@@ -73,9 +70,9 @@ struct convert<loot::Message> {
     Node node;
     node["content"] = rhs.GetContent();
 
-    if (rhs.GetType() == loot::Message::Type::say)
+    if (rhs.GetType() == loot::MessageType::say)
       node["type"] = "say";
-    else if (rhs.GetType() == loot::Message::Type::warn)
+    else if (rhs.GetType() == loot::MessageType::warn)
       node["type"] = "warn";
     else
       node["type"] = "error";
@@ -97,11 +94,11 @@ struct convert<loot::Message> {
     std::string type;
     type = node["type"].as<std::string>();
 
-    loot::Message::Type typeNo = loot::Message::Type::say;
+    loot::MessageType typeNo = loot::MessageType::say;
     if (boost::iequals(type, "warn"))
-      typeNo = loot::Message::Type::warn;
+      typeNo = loot::MessageType::warn;
     else if (boost::iequals(type, "error"))
-      typeNo = loot::Message::Type::error;
+      typeNo = loot::MessageType::error;
 
     std::vector<loot::MessageContent> content;
     if (node["content"].IsSequence())

@@ -70,36 +70,36 @@ TEST_P(PluginCleaningDataTest, contentConstructorShouldStoreAllGivenData) {
 
 TEST_P(PluginCleaningDataTest, asMessageShouldOutputAllNonZeroCounts) {
   Message message = PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 30).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records, 10 deleted references and 30 deleted navmeshes. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records, 10 deleted references and 30 deleted navmeshes. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 0).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found dirty edits. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found dirty edits. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 30).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references and 30 deleted navmeshes. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 10 deleted references and 30 deleted navmeshes. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 30).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 30 deleted navmeshes. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 30 deleted navmeshes. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 0).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 10 deleted references. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 30).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 0).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records. info", message.GetText());
 
   message = PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 0).AsMessage();
-  EXPECT_EQ(Message::Type::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info", message.ChooseContent(Language::Code::english).GetText());
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info", message.GetText());
 }
 
 TEST_P(PluginCleaningDataTest, dirtyInfoShouldBeEqualIfCrcValuesAreEqual) {

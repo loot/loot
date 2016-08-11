@@ -597,7 +597,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         try {
           lootState_.getCurrentGame().GetMasterlist().Load(lootState_.getCurrentGame().MasterlistPath());
         } catch (exception &e) {
-          lootState_.getCurrentGame().GetMasterlist().AppendMessage(Message(Message::Type::error, (boost::format(translate(
+          lootState_.getCurrentGame().GetMasterlist().AppendMessage(Message(MessageType::error, (boost::format(translate(
             "An error occurred while parsing the masterlist: %1%. "
             "This probably happened because an update to LOOT changed "
             "its metadata syntax support. Try updating your masterlist "
@@ -612,7 +612,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         try {
           lootState_.getCurrentGame().GetUserlist().Load(lootState_.getCurrentGame().UserlistPath());
         } catch (exception &e) {
-          lootState_.getCurrentGame().GetUserlist().AppendMessage(Message(Message::Type::error, (boost::format(translate(
+          lootState_.getCurrentGame().GetUserlist().AppendMessage(Message(MessageType::error, (boost::format(translate(
             "An error occurred while parsing the userlist: %1%. "
             "This probably happened because an update to LOOT changed "
             "its metadata syntax support. Your user metadata will have "
@@ -737,7 +737,7 @@ void QueryHandler::UpdateMasterlist(CefRefPtr<Callback> callback) {
           // There was a parsing error, but roll-back was successful, so the process
 
           // should still complete.
-        lootState_.getCurrentGame().GetMasterlist().AppendMessage(Message(Message::Type::error, e.what()));
+        lootState_.getCurrentGame().GetMasterlist().AppendMessage(Message(MessageType::error, e.what()));
         wasChanged = true;
       } else {
           // Error wasn't a parsing error. Need to try parsing masterlist if it exists.
@@ -900,7 +900,7 @@ void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
   } catch (Error& e) {
     BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
     if (e.code() == Error::Code::sorting_error) {
-      lootState_.getCurrentGame().AppendMessage(Message(Message::Type::error, e.what()));
+      lootState_.getCurrentGame().AppendMessage(Message(MessageType::error, e.what()));
 
       YAML::Node node;
       node["globalMessages"] = GetGeneralMessages();
@@ -936,7 +936,7 @@ std::vector<Message> QueryHandler::GetGeneralMessages() const {
     }
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-    messages.push_back(Message(Message::Type::error, (format(translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
+    messages.push_back(Message(MessageType::error, (format(translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
   }
 
   return messages;
@@ -958,7 +958,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
     list<Message> messages(tempPlugin.Messages());
-    messages.push_back(Message(Message::Type::error, (format(translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
+    messages.push_back(Message(MessageType::error, (format(translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
     tempPlugin.Messages(messages);
   }
 

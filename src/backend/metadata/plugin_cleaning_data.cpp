@@ -110,7 +110,7 @@ Message PluginCleaningData::AsMessage() const {
     content = MessageContent(message + " " + content.GetText(), content.GetLanguage());
   }
 
-  return Message(Message::Type::warn, info);
+  return Message(MessageType::warn, info);
 }
 
 bool PluginCleaningData::EvalCondition(Game& game, const std::string& pluginName) const {

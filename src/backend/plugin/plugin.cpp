@@ -112,7 +112,7 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
     }
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Cannot read plugin file \"" << name << "\". Details: " << e.what();
-    messages_.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
+    messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
   }
 
   BOOST_LOG_TRIVIAL(trace) << Name() << ": " << "Plugin loading complete.";
@@ -210,10 +210,10 @@ void Plugin::CheckInstallValidity(const Game& game) {
       for (const auto &master : getMasters()) {
         if (!pluginExists(game, master)) {
           BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << master << "\", but it is missing.";
-          messages_.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
+          messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
         } else if (!game.IsPluginActive(master)) {
           BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << master << "\", but it is inactive.";
-          messages_.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
+          messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
         }
       }
     }
@@ -221,13 +221,13 @@ void Plugin::CheckInstallValidity(const Game& game) {
     for (const auto &req : Reqs()) {
       if (!pluginExists(game, req.Name())) {
         BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << req.Name() << "\", but it is missing.";
-        messages_.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
+        messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
       }
     }
     for (const auto &inc : Incs()) {
       if (pluginExists(game, inc.Name()) && game.IsPluginActive(inc.Name())) {
         BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
-        messages_.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
+        messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
       }
     }
   }

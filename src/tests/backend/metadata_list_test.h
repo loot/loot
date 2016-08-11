@@ -83,7 +83,7 @@ TEST_P(MetadataListTest, loadShouldLoadGlobalMessages) {
 
   EXPECT_NO_THROW(metadataList.Load(metadataPath));
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::say, "A global message."),
+      Message(MessageType::say, "A global message."),
   }), metadataList.Messages());
 }
 
@@ -171,7 +171,7 @@ TEST_P(MetadataListTest, saveShouldWriteTheLoadedMetadataToTheGivenFilePath) {
   }), metadataList.BashTags());
 
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::say, "A global message."),
+      Message(MessageType::say, "A global message."),
   }), metadataList.Messages());
 
   // Non-regex plugins can be outputted in any order, and regex entries can
@@ -291,8 +291,8 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
 
   PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
   ASSERT_EQ(std::list<Message>({
-      Message(Message::Type::warn, "This is a warning."),
-      Message(Message::Type::say, "This message should be removed when evaluating conditions."),
+      Message(MessageType::warn, "This is a warning."),
+      Message(MessageType::say, "This message should be removed when evaluating conditions."),
   }), plugin.Messages());
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));
@@ -303,7 +303,7 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::warn, "This is a warning."),
+      Message(MessageType::warn, "This is a warning."),
   }), plugin.Messages());
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));

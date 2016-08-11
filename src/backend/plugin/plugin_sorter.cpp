@@ -214,7 +214,7 @@ void PluginSorter::AddPluginVertices(Game& game, const Language::Code language) 
     } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "\"" << graph_[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
       list<Message> messages(graph_[v].Messages());
-      messages.push_back(Message(Message::Type::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph_[v].Name() % e.what()).str()));
+      messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph_[v].Name() % e.what()).str()));
       graph_[v].Messages(messages);
     }
 

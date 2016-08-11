@@ -282,7 +282,7 @@ TEST_P(PluginTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
 
   plugin.CheckInstallValidity(game_);
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
+      Message(MessageType::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
   }), plugin.Messages());
 }
 
@@ -295,7 +295,7 @@ TEST_P(PluginTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent
 
   plugin.CheckInstallValidity(game_);
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
+      Message(MessageType::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
   }), plugin.Messages());
 }
 
@@ -322,7 +322,7 @@ TEST_P(PluginTest, checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresent
 
   plugin.CheckInstallValidity(game_);
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
+      Message(MessageType::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
   }), plugin.Messages());
 }
 

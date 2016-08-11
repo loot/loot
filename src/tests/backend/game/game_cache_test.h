@@ -64,7 +64,7 @@ TEST_P(GameCacheTest, copyConstructorShouldCopyCachedData) {
 
   cache_.CacheCondition(condition, true);
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
-  Message expectedMessage(Message::Type::say, "1");
+  Message expectedMessage(MessageType::say, "1");
   cache_.AppendMessage(expectedMessage);
   cache_.IncrementLoadOrderSortCount();
 
@@ -80,7 +80,7 @@ TEST_P(GameCacheTest, assignmentOperatorShouldCopyCachedData) {
 
   cache_.CacheCondition(condition, true);
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
-  Message expectedMessage(Message::Type::say, "1");
+  Message expectedMessage(MessageType::say, "1");
   cache_.AppendMessage(expectedMessage);
   cache_.IncrementLoadOrderSortCount();
 
@@ -212,8 +212,8 @@ TEST_P(GameCacheTest, decrementingLoadOrderSortCountToANonZeroValueShouldSupress
 
 TEST_P(GameCacheTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
   std::vector<Message> messages({
-      Message(Message::Type::say, "1"),
-      Message(Message::Type::error, "2"),
+      Message(MessageType::say, "1"),
+      Message(MessageType::error, "2"),
   });
   for (const auto& message : messages)
     cache_.AppendMessage(message);
@@ -225,8 +225,8 @@ TEST_P(GameCacheTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 
 TEST_P(GameCacheTest, clearingMessagesShouldRemoveAllAppendedMessages) {
   std::vector<Message> messages({
-      Message(Message::Type::say, "1"),
-      Message(Message::Type::error, "2"),
+      Message(MessageType::say, "1"),
+      Message(MessageType::error, "2"),
   });
   for (const auto& message : messages)
     cache_.AppendMessage(message);

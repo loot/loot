@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-08-06 16:58+0100\n"
+"POT-Creation-Date: 2016-08-13 07:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -651,7 +651,7 @@ msgid ""
 "%1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:961 src/backend/plugin/plugin_sorter.cpp:216
+#: src/gui/query_handler.cpp:961 src/backend/plugin/plugin_sorter.cpp:217
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 

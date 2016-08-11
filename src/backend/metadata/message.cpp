@@ -31,14 +31,14 @@
 #include "backend/helpers/language.h"
 
 namespace loot {
-Message::Message() : type_(Type::say) {}
+Message::Message() : type_(MessageType::say) {}
 
-Message::Message(const Type type, const std::string& content,
+Message::Message(const MessageType type, const std::string& content,
                  const std::string& condition) : type_(type), ConditionalMetadata(condition) {
   content_.push_back(MessageContent(content, Language::Code::english));
 }
 
-Message::Message(const Type type, const std::vector<MessageContent>& content,
+Message::Message(const MessageType type, const std::vector<MessageContent>& content,
                  const std::string& condition) : type_(type), content_(content), ConditionalMetadata(condition) {
   if (content.size() > 1) {
     bool englishStringExists = false;
@@ -76,8 +76,12 @@ MessageContent Message::ChooseContent(const Language::Code language) const {
   return MessageContent::Choose(content_, language);
 }
 
-Message::Type Message::GetType() const {
+MessageType Message::GetType() const {
   return type_;
+}
+
+std::string Message::GetText() const {
+  return ChooseContent(Language::Code::english).GetText();
 }
 
 std::vector<MessageContent> Message::GetContent() const {
@@ -89,9 +93,9 @@ namespace YAML {
 Emitter& operator << (Emitter& out, const loot::Message& rhs) {
   out << BeginMap;
 
-  if (rhs.GetType() == loot::Message::Type::say)
+  if (rhs.GetType() == loot::MessageType::say)
     out << Key << "type" << Value << "say";
-  else if (rhs.GetType() == loot::Message::Type::warn)
+  else if (rhs.GetType() == loot::MessageType::warn)
     out << Key << "type" << Value << "warn";
   else
     out << Key << "type" << Value << "error";

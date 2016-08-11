@@ -55,9 +55,9 @@ void PrintTo(const Location& value, ::std::ostream* os) {
 
 void PrintTo(const Message& value, ::std::ostream* os) {
   std::string type;
-  if (value.GetType() == Message::Type::warn)
+  if (value.GetType() == MessageType::warn)
     type = "warn";
-  else if (value.GetType() == Message::Type::error)
+  else if (value.GetType() == MessageType::error)
     type = "error";
   else
     type = "say";

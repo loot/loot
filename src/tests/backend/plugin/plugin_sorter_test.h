@@ -74,7 +74,7 @@ TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadO
 
 TEST_P(PluginSorterTest, sortingShouldClearExistingGameMessages) {
   ASSERT_NO_THROW(game_.LoadPlugins(false));
-  game_.AppendMessage(Message(Message::Type::say, "1"));
+  game_.AppendMessage(Message(MessageType::say, "1"));
   ASSERT_FALSE(game_.GetMessages().empty());
 
   PluginSorter ps;
@@ -87,7 +87,7 @@ TEST_P(PluginSorterTest, failedSortShouldNotClearExistingGameMessages) {
   PluginMetadata plugin(blankEsm);
   plugin.LoadAfter({File(blankMasterDependentEsm)});
   game_.GetUserlist().AddPlugin(plugin);
-  game_.AppendMessage(Message(Message::Type::say, "1"));
+  game_.AppendMessage(Message(MessageType::say, "1"));
   ASSERT_FALSE(game_.GetMessages().empty());
 
   PluginSorter ps;

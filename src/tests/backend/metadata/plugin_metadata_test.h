@@ -235,7 +235,7 @@ TEST_P(PluginMetadataTest, mergeMetadataShouldMergeIncompatibilityData) {
 TEST_P(PluginMetadataTest, mergeMetadataShouldMergeMessages) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  Message message(Message::Type::say, "content");
+  Message message(MessageType::say, "content");
 
   plugin1.Messages({message});
   plugin2.Messages({message});
@@ -411,9 +411,9 @@ TEST_P(PluginMetadataTest, diffMetadataShouldOutputIncompatibilityDataThatAreNot
 TEST_P(PluginMetadataTest, diffMetadataShouldOutputMessagesThatAreNotCommonToBothInputPlugins) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  Message message1(Message::Type::say, "content1");
-  Message message2(Message::Type::say, "content2");
-  Message message3(Message::Type::say, "content3");
+  Message message1(MessageType::say, "content1");
+  Message message2(MessageType::say, "content2");
+  Message message3(MessageType::say, "content3");
 
   plugin1.Messages({message1, message2});
   plugin2.Messages({message1, message3});
@@ -567,9 +567,9 @@ TEST_P(PluginMetadataTest, newMetadataShouldOutputIncompatibilityDataThatAreNotC
 TEST_P(PluginMetadataTest, newMetadataShouldOutputMessagesThatAreNotCommonToBothInputPlugins) {
   PluginMetadata plugin1;
   PluginMetadata plugin2;
-  Message message1(Message::Type::say, "content1");
-  Message message2(Message::Type::say, "content2");
-  Message message3(Message::Type::say, "content3");
+  Message message1(MessageType::say, "content1");
+  Message message2(MessageType::say, "content2");
+  Message message3(MessageType::say, "content3");
 
   plugin1.Messages({message1, message2});
   plugin2.Messages({message1, message3});
@@ -646,8 +646,8 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   plugin.Reqs({file1, file2});
   plugin.Incs({file1, file2});
 
-  Message message1(Message::Type::say, "content");
-  Message message2(Message::Type::say, "content", "file(\"" + missingEsp + "\")");
+  Message message1(MessageType::say, "content");
+  Message message2(MessageType::say, "content", "file(\"" + missingEsp + "\")");
   plugin.Messages({message1, message2});
 
   Tag tag1("Relev");
@@ -727,7 +727,7 @@ TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfIncompatibilityMetadataExis
 
 TEST_P(PluginMetadataTest, hasNameOnlyShouldBeFalseIfMessagesExist) {
   PluginMetadata plugin(blankEsp);
-  plugin.Messages({Message(Message::Type::say, "content")});
+  plugin.Messages({Message(MessageType::say, "content")});
 
   EXPECT_FALSE(plugin.HasNameOnly());
 }
@@ -893,7 +893,7 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithIncompatibilitie
 
 TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithMessagesCorrectly) {
   PluginMetadata plugin(blankEsp);
-  plugin.Messages({Message(Message::Type::say, "content")});
+  plugin.Messages({Message(MessageType::say, "content")});
 
   YAML::Emitter emitter;
   emitter << plugin;
@@ -1047,7 +1047,7 @@ TEST_P(PluginMetadataTest, encodingAsYamlShouldSetIncFieldIfIncompatibilitiesExi
 
 TEST_P(PluginMetadataTest, encodingAsYamlShouldSetMsgFieldIfMessagesExist) {
   PluginMetadata plugin(blankEsp);
-  plugin.Messages({Message(Message::Type::say, "content")});
+  plugin.Messages({Message(MessageType::say, "content")});
   YAML::Node node;
   node = plugin;
 
@@ -1142,7 +1142,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
       File("Blank.esm")
   }), plugin.Incs());
   EXPECT_EQ(std::list<Message>({
-      Message(Message::Type::say, "content")
+      Message(MessageType::say, "content")
   }), plugin.Messages());
   EXPECT_EQ(std::set<Tag>({
       Tag("Relev")
