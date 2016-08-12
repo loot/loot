@@ -25,8 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_HELPERS_VERSION_TEST
 #define LOOT_TESTS_BACKEND_HELPERS_VERSION_TEST
 
-#include "backend/app/loot_version.h"
 #include "backend/helpers/version.h"
+#include "loot/loot_version.h"
 
 #include <gtest/gtest.h>
 

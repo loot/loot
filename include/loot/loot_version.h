@@ -22,20 +22,36 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_BACKEND_APP_LOOT_VERSION
-#define LOOT_BACKEND_APP_LOOT_VERSION
+#ifndef LOOT_LOOT_VERSION
+#define LOOT_LOOT_VERSION
 
 #include <string>
+
+/* set up dll import/export decorators
+when compiling the dll on windows, ensure LOOT_EXPORT is defined. clients
+that use this header do not need to define anything to import the symbols
+properly. */
+#if defined(_WIN32)
+#   ifdef LOOT_STATIC
+#       define LOOT_API
+#   elif defined LOOT_EXPORT
+#       define LOOT_API __declspec(dllexport)
+#   else
+#       define LOOT_API __declspec(dllimport)
+#   endif
+#else
+#   define LOOT_API
+#endif
 
 namespace loot {
 class LootVersion {
 public:
-  static const unsigned int major;
-  static const unsigned int minor;
-  static const unsigned int patch;
-  static const std::string revision;
+  LOOT_API static const unsigned int major;
+  LOOT_API static const unsigned int minor;
+  LOOT_API static const unsigned int patch;
+  LOOT_API static const std::string revision;
 
-  static std::string string();
+  LOOT_API static std::string string();
 };
 }
 

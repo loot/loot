@@ -24,7 +24,7 @@
 
 #include <boost/log/core.hpp>
 
-#include "backend/app/loot_version.h"
+#include "loot/loot_version.h"
 #include "backend/metadata_list.h"
 
 int main(int argc, char **argv) {

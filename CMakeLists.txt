@@ -180,7 +180,6 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_version.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
@@ -209,6 +208,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/game_type.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/language_code.h"
+                "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/message_type.h")
 
 set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
@@ -419,6 +419,10 @@ ENDIF ()
 
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set_target_properties (loot_common PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+    set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+    set_target_properties (LOOT PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+    set_target_properties (metadata-validator PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()

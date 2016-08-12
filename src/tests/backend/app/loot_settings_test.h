@@ -29,7 +29,7 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
-#include "backend/app/loot_version.h"
+#include "loot/loot_version.h"
 
 namespace loot {
 namespace test {

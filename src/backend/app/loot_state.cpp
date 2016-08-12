@@ -36,9 +36,9 @@
 
 #include "backend/error.h"
 #include "backend/app/loot_paths.h"
-#include "backend/app/loot_version.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/language.h"
+#include "loot/loot_version.h"
 
 #ifdef _WIN32
 #include <windows.h>

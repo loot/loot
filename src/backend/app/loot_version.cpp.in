@@ -22,15 +22,15 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/app/loot_version.h"
+#include "loot/loot_version.h"
 
 namespace loot {
-    const unsigned int LootVersion::major = 0;
-    const unsigned int LootVersion::minor = 9;
-    const unsigned int LootVersion::patch = 2;
-    const std::string LootVersion::revision = "@GIT_COMMIT_STRING@";
+const unsigned int LootVersion::major = 0;
+const unsigned int LootVersion::minor = 9;
+const unsigned int LootVersion::patch = 2;
+const std::string LootVersion::revision = "@GIT_COMMIT_STRING@";
 
-    std::string LootVersion::string() {
-        return std::to_string(major) + '.' + std::to_string(minor) + '.' + std::to_string(patch);
-    }
+LOOT_API std::string LootVersion::string() {
+    return std::to_string(major) + '.' + std::to_string(minor) + '.' + std::to_string(patch);
+}
 }
