@@ -91,7 +91,7 @@ void LootApp::OnContextInitialized() {
   // Need to set the global locale for this process so that messages will
   // be translated.
   BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-  if (lootState_.getLanguage().GetCode() != Language::Code::english) {
+  if (lootState_.getLanguage().GetCode() != LanguageCode::english) {
     boost::locale::generator gen;
     gen.add_messages_path(LootPaths::getL10nPath().string());
     gen.add_messages_domain("loot");

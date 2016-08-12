@@ -208,6 +208,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/yaml_set_helpers.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/error.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/game_type.h"
+                "${CMAKE_SOURCE_DIR}/include/loot/language_code.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/message_type.h")
 
 set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"

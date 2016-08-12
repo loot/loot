@@ -35,46 +35,46 @@ TEST(MessageContent, defaultConstructorShouldSetEmptyEnglishLanguageString) {
   MessageContent content;
 
   EXPECT_TRUE(content.GetText().empty());
-  EXPECT_EQ(Language::Code::english, content.GetLanguage());
+  EXPECT_EQ(LanguageCode::english, content.GetLanguage());
 }
 
 TEST(MessageContent, contentConstructorShouldStoreGivenStringAndLanguage) {
-  MessageContent content("content", Language::Code::french);
+  MessageContent content("content", LanguageCode::french);
 
   EXPECT_EQ("content", content.GetText());
-  EXPECT_EQ(Language::Code::french, content.GetLanguage());
+  EXPECT_EQ(LanguageCode::french, content.GetLanguage());
 }
 
 TEST(MessageContent, contentShouldBeEqualIfStringsAreCaseInsensitivelyEqual) {
-  MessageContent content1("content", Language::Code::english);
-  MessageContent content2("Content", Language::Code::french);
+  MessageContent content1("content", LanguageCode::english);
+  MessageContent content2("Content", LanguageCode::french);
 
   EXPECT_TRUE(content1 == content2);
 }
 
 TEST(MessageContent, contentShouldBeUnequalIfStringsAreNotCaseInsensitivelyEqual) {
-  MessageContent content1("content1", Language::Code::french);
-  MessageContent content2("content2", Language::Code::french);
+  MessageContent content1("content1", LanguageCode::french);
+  MessageContent content2("content2", LanguageCode::french);
 
   EXPECT_FALSE(content1 == content2);
 }
 
 TEST(MessageContent, LessThanOperatorShouldUseCaseInsensitiveLexicographicalComparison) {
-  MessageContent content1("content", Language::Code::english);
-  MessageContent content2("Content", Language::Code::french);
+  MessageContent content1("content", LanguageCode::english);
+  MessageContent content2("Content", LanguageCode::french);
 
   EXPECT_FALSE(content1 < content2);
   EXPECT_FALSE(content2 < content1);
 
-  content1 = MessageContent("content1", Language::Code::french);
-  content2 = MessageContent("content2", Language::Code::english);
+  content1 = MessageContent("content1", LanguageCode::french);
+  content2 = MessageContent("content2", LanguageCode::english);
 
   EXPECT_TRUE(content1 < content2);
   EXPECT_FALSE(content2 < content1);
 }
 
 TEST(MessageContent, emittingAsYamlShouldOutputDataCorrectly) {
-  MessageContent content("content", Language::Code::french);
+  MessageContent content("content", LanguageCode::french);
   YAML::Emitter emitter;
   emitter << content;
 
@@ -83,12 +83,12 @@ TEST(MessageContent, emittingAsYamlShouldOutputDataCorrectly) {
 }
 
 TEST(MessageContent, encodingAsYamlShouldOutputDataCorrectly) {
-  MessageContent content("content", Language::Code::french);
+  MessageContent content("content", LanguageCode::french);
   YAML::Node node;
   node = content;
 
   EXPECT_EQ(content.GetText(), node["text"].as<std::string>());
-  EXPECT_EQ(Language(Language::Code::french).GetLocale(), node["lang"].as<std::string>());
+  EXPECT_EQ(Language(LanguageCode::french).GetLocale(), node["lang"].as<std::string>());
 }
 
 TEST(MessageContent, decodingFromYamlShouldSetDataCorrectly) {
@@ -96,7 +96,7 @@ TEST(MessageContent, decodingFromYamlShouldSetDataCorrectly) {
   MessageContent content = node.as<MessageContent>();
 
   EXPECT_EQ("content", content.GetText());
-  EXPECT_EQ(Language::Code::german, content.GetLanguage());
+  EXPECT_EQ(LanguageCode::german, content.GetLanguage());
 }
 
 TEST(MessageContent, decodingFromYamlScalarShouldThrow) {

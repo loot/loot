@@ -34,7 +34,7 @@ namespace test {
 class PluginMetadataTest : public BaseGameTest {
 protected:
   PluginMetadataTest() : info_(std::vector<MessageContent>({
-    MessageContent("info", Language::Code::english),
+    MessageContent("info", LanguageCode::english),
   })) {}
 
   const std::vector<MessageContent> info_;
@@ -659,7 +659,7 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   plugin.DirtyInfo({info1, info2});
   plugin.CleanInfo({info1, info2});
 
-  EXPECT_NO_THROW(plugin.EvalAllConditions(game, Language::Code::english));
+  EXPECT_NO_THROW(plugin.EvalAllConditions(game, LanguageCode::english));
 
   std::set<File> expectedFiles({file1});
   EXPECT_EQ(expectedFiles, plugin.LoadAfter());

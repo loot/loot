@@ -301,7 +301,7 @@ TEST_P(PluginTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent
 
 TEST_P(PluginTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   const std::vector<MessageContent> info = std::vector<MessageContent>({
-    MessageContent("info", Language::Code::english),
+    MessageContent("info", LanguageCode::english),
   });
 
   Plugin plugin(game_, blankEsm, false);

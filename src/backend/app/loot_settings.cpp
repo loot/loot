@@ -29,6 +29,7 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include "backend/app/loot_version.h"
+#include "loot/loot_version.h"
 
 using std::lock_guard;
 using std::recursive_mutex;
@@ -58,7 +59,7 @@ LootSettings::LootSettings() :
 enableDebugLogging_(false),
 updateMasterlist_(true),
 game_("auto"),
-language_(Language(Language::Code::english)),
+language_(Language(LanguageCode::english)),
 lastGame_("auto") {}
 
 void LootSettings::load(YAML::Node& settings) {

@@ -56,7 +56,7 @@ public:
   std::string CleaningUtility() const;
   std::vector<MessageContent> Info() const;
 
-  MessageContent ChooseInfo(const Language::Code language) const;
+  MessageContent ChooseInfo(const LanguageCode language) const;
   Message AsMessage() const;
 
   bool EvalCondition(Game& game, const std::string& pluginName) const;
@@ -114,7 +114,7 @@ struct convert<loot::PluginCleaningData> {
       if (node["info"].IsSequence())
         info = node["info"].as<std::vector<loot::MessageContent>>();
       else {
-        info.push_back(loot::MessageContent(node["info"].as<std::string>(), loot::Language::Code::english));
+        info.push_back(loot::MessageContent(node["info"].as<std::string>(), loot::LanguageCode::english));
       }
     }
 
@@ -122,7 +122,7 @@ struct convert<loot::PluginCleaningData> {
     if (info.size() > 1) {
       bool found = false;
       for (const auto &mc : info) {
-        if (mc.GetLanguage() == loot::Language::Code::english)
+        if (mc.GetLanguage() == loot::LanguageCode::english)
           found = true;
       }
       if (!found)

@@ -35,7 +35,7 @@ Message::Message() : type_(MessageType::say) {}
 
 Message::Message(const MessageType type, const std::string& content,
                  const std::string& condition) : type_(type), ConditionalMetadata(condition) {
-  content_.push_back(MessageContent(content, Language::Code::english));
+  content_.push_back(MessageContent(content, LanguageCode::english));
 }
 
 Message::Message(const MessageType type, const std::vector<MessageContent>& content,
@@ -43,7 +43,7 @@ Message::Message(const MessageType type, const std::vector<MessageContent>& cont
   if (content.size() > 1) {
     bool englishStringExists = false;
     for (const auto &mc : content) {
-      if (mc.GetLanguage() == Language::Code::english)
+      if (mc.GetLanguage() == LanguageCode::english)
         englishStringExists = true;
     }
     if (!englishStringExists)
@@ -53,7 +53,7 @@ Message::Message(const MessageType type, const std::vector<MessageContent>& cont
 
 bool Message::operator < (const Message& rhs) const {
   if (!content_.empty() && !rhs.GetContent().empty())
-    return boost::ilexicographical_compare(ChooseContent(Language::Code::english).GetText(), rhs.ChooseContent(Language::Code::english).GetText());
+    return boost::ilexicographical_compare(ChooseContent(LanguageCode::english).GetText(), rhs.ChooseContent(LanguageCode::english).GetText());
   else if (content_.empty() && !rhs.GetContent().empty())
     return true;
   else
@@ -64,14 +64,14 @@ bool Message::operator == (const Message& rhs) const {
   return (content_ == rhs.GetContent());
 }
 
-bool Message::EvalCondition(loot::Game& game, const Language::Code language) {
+bool Message::EvalCondition(loot::Game& game, const LanguageCode language) {
   BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).GetName();
   content_.assign({ChooseContent(language)});
 
   return ConditionalMetadata::EvalCondition(game);
 }
 
-MessageContent Message::ChooseContent(const Language::Code language) const {
+MessageContent Message::ChooseContent(const LanguageCode language) const {
   BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
   return MessageContent::Choose(content_, language);
 }
@@ -81,7 +81,7 @@ MessageType Message::GetType() const {
 }
 
 std::string Message::GetText() const {
-  return ChooseContent(Language::Code::english).GetText();
+  return ChooseContent(LanguageCode::english).GetText();
 }
 
 std::vector<MessageContent> Message::GetContent() const {

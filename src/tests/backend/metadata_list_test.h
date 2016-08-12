@@ -299,7 +299,7 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
   ASSERT_EQ(blankEsp, plugin.Name());
   ASSERT_FALSE(plugin.HasNameOnly());
 
-  EXPECT_NO_THROW(metadataList.EvalAllConditions(game, Language::Code::english));
+  EXPECT_NO_THROW(metadataList.EvalAllConditions(game, LanguageCode::english));
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
   EXPECT_EQ(std::list<Message>({

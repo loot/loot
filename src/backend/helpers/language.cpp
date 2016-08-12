@@ -25,75 +25,75 @@
 #include "backend/helpers/language.h"
 
 namespace loot {
-const std::vector<Language::Code> Language::codes({
-    Code::english,
-    Code::spanish,
-    Code::russian,
-    Code::french,
-    Code::chinese,
-    Code::polish,
-    Code::brazilian_portuguese,
-    Code::finnish,
-    Code::german,
-    Code::danish,
-    Code::korean
+const std::vector<LanguageCode> Language::codes({
+  LanguageCode::english,
+  LanguageCode::spanish,
+  LanguageCode::russian,
+  LanguageCode::french,
+  LanguageCode::chinese,
+  LanguageCode::polish,
+  LanguageCode::brazilian_portuguese,
+  LanguageCode::finnish,
+  LanguageCode::german,
+  LanguageCode::danish,
+  LanguageCode::korean
 });
 
-Language::Language(Code code) {
+Language::Language(LanguageCode code) {
   Construct(code);
 }
 
 Language::Language(const std::string& locale) {
-  for (Code code : codes) {
+  for (LanguageCode code : codes) {
     if (locale == Language(code).GetLocale()) {
       Construct(code);
       return;
     }
   }
 
-  Construct(Code::english);
+  Construct(LanguageCode::english);
 }
 
-void Language::Construct(const Code code) {
+void Language::Construct(const LanguageCode code) {
   code_ = code;
-  if (code_ == Code::spanish) {
+  if (code_ == LanguageCode::spanish) {
     name_ = "Español";
     locale_ = "es";
-  } else if (code_ == Code::russian) {
+  } else if (code_ == LanguageCode::russian) {
     name_ = "Русский";
     locale_ = "ru";
-  } else if (code_ == Code::french) {
+  } else if (code_ == LanguageCode::french) {
     name_ = "Français";
     locale_ = "fr";
-  } else if (code_ == Code::chinese) {
+  } else if (code_ == LanguageCode::chinese) {
     name_ = "简体中文";
     locale_ = "zh_CN";
-  } else if (code_ == Code::polish) {
+  } else if (code_ == LanguageCode::polish) {
     name_ = "Polski";
     locale_ = "pl";
-  } else if (code_ == Code::brazilian_portuguese) {
+  } else if (code_ == LanguageCode::brazilian_portuguese) {
     name_ = "Português do Brasil";
     locale_ = "pt_BR";
-  } else if (code_ == Code::finnish) {
+  } else if (code_ == LanguageCode::finnish) {
     name_ = "suomi";
     locale_ = "fi";
-  } else if (code_ == Code::german) {
+  } else if (code_ == LanguageCode::german) {
     name_ = "Deutsch";
     locale_ = "de";
-  } else if (code_ == Code::danish) {
+  } else if (code_ == LanguageCode::danish) {
     name_ = "Dansk";
     locale_ = "da";
-  } else if (code_ == Code::korean) {
+  } else if (code_ == LanguageCode::korean) {
     name_ = "한국어";
     locale_ = "ko";
   } else {
-    code_ = Code::english;
+    code_ = LanguageCode::english;
     name_ = "English";
     locale_ = "en";
   }
 }
 
-Language::Code Language::GetCode() const {
+LanguageCode Language::GetCode() const {
   return code_;
 }
 

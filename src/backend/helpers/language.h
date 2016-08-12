@@ -28,36 +28,25 @@
 #include <string>
 #include <vector>
 
+#include "loot/language_code.h"
+
 namespace loot {
     //Language class for simpler language support.
 class Language {
 public:
-  enum struct Code : unsigned int {
-    english = 1,
-    spanish = 2,
-    russian = 3,
-    french = 4,
-    chinese = 5,
-    polish = 6,
-    brazilian_portuguese = 7,
-    finnish = 8,
-    german = 9,
-    danish = 10,
-    korean = 11
-  };
 
-  static const std::vector<Code> codes;
+  static const std::vector<LanguageCode> codes;
 
-  Language(const Code code);
+  Language(const LanguageCode code);
   Language(const std::string& locale);
 
-  Code GetCode() const;
+  LanguageCode GetCode() const;
   std::string GetName() const;
   std::string GetLocale() const;
 private:
-  void Construct(const Code code);
+  void Construct(const LanguageCode code);
 
-  Code code_;
+  LanguageCode code_;
   std::string name_;
   std::string locale_;
 };

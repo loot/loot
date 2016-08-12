@@ -345,7 +345,7 @@ void PluginMetadata::Locations(const std::set<Location>& locations) {
   locations_ = locations;
 }
 
-PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const Language::Code language) {
+PluginMetadata& PluginMetadata::EvalAllConditions(Game& game, const LanguageCode language) {
   for (auto it = loadAfter_.begin(); it != loadAfter_.end();) {
     if (!it->EvalCondition(game))
       loadAfter_.erase(it++);

@@ -34,19 +34,19 @@ namespace loot {
 class MessageContent {
 public:
   MessageContent();
-  MessageContent(const std::string& text, const Language::Code language);
+  MessageContent(const std::string& text, const LanguageCode language);
 
   std::string GetText() const;
-  Language::Code GetLanguage() const;
+  LanguageCode GetLanguage() const;
 
   bool operator < (const MessageContent& rhs) const;
   bool operator == (const MessageContent& rhs) const;
 
   static MessageContent Choose(const std::vector<MessageContent> content,
-                               const Language::Code language);
+                               const LanguageCode language);
 private:
   std::string text_;
-  Language::Code language_;
+  LanguageCode language_;
 };
 }
 
@@ -70,7 +70,7 @@ struct convert<loot::MessageContent> {
       throw RepresentationException(node.Mark(), "bad conversion: 'lang' key missing from 'message content' object");
 
     std::string text = node["text"].as<std::string>();
-    loot::Language::Code lang = loot::Language(node["lang"].as<std::string>()).GetCode();
+    loot::LanguageCode lang = loot::Language(node["lang"].as<std::string>()).GetCode();
 
     rhs = loot::MessageContent(text, lang);
 

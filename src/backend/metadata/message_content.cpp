@@ -29,15 +29,15 @@
 #include "backend/helpers/language.h"
 
 namespace loot {
-MessageContent::MessageContent() : language_(Language::Code::english) {}
+MessageContent::MessageContent() : language_(LanguageCode::english) {}
 
-MessageContent::MessageContent(const std::string& text, const Language::Code language) : text_(text), language_(language) {}
+MessageContent::MessageContent(const std::string& text, const LanguageCode language) : text_(text), language_(language) {}
 
 std::string MessageContent::GetText() const {
   return text_;
 }
 
-Language::Code MessageContent::GetLanguage() const {
+LanguageCode MessageContent::GetLanguage() const {
   return language_;
 }
 
@@ -49,7 +49,7 @@ bool MessageContent::operator == (const MessageContent& rhs) const {
   return (boost::iequals(text_, rhs.GetText()));
 }
 MessageContent MessageContent::Choose(const std::vector<MessageContent> content,
-                                      const Language::Code language) {
+                                      const LanguageCode language) {
   if (content.empty())
     return MessageContent();
   else if (content.size() == 1)
@@ -59,7 +59,7 @@ MessageContent MessageContent::Choose(const std::vector<MessageContent> content,
     for (const auto &mc : content) {
       if (mc.GetLanguage() == language) {
         return mc;
-      } else if (mc.GetLanguage() == Language::Code::english)
+      } else if (mc.GetLanguage() == LanguageCode::english)
         english = mc;
     }
     return english;

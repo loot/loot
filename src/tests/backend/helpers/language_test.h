@@ -32,56 +32,56 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 TEST(Language, codeConstructorShouldSetTheCorrectData) {
-  Language lang(Language::Code::english);
-  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  Language lang(LanguageCode::english);
+  EXPECT_EQ(LanguageCode::english, lang.GetCode());
   EXPECT_EQ("English", lang.GetName());
   EXPECT_EQ("en", lang.GetLocale());
 
-  lang = Language(Language::Code::polish);
-  EXPECT_EQ(Language::Code::polish, lang.GetCode());
+  lang = Language(LanguageCode::polish);
+  EXPECT_EQ(LanguageCode::polish, lang.GetCode());
   EXPECT_EQ("Polski", lang.GetName());
   EXPECT_EQ("pl", lang.GetLocale());
 }
 
 TEST(Language, localeConstructorShouldSetTheCorrectData) {
   Language lang("en");
-  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  EXPECT_EQ(LanguageCode::english, lang.GetCode());
   EXPECT_EQ("English", lang.GetName());
   EXPECT_EQ("en", lang.GetLocale());
 
   lang = Language("de");
-  EXPECT_EQ(Language::Code::german, lang.GetCode());
+  EXPECT_EQ(LanguageCode::german, lang.GetCode());
   EXPECT_EQ("Deutsch", lang.GetName());
   EXPECT_EQ("de", lang.GetLocale());
 }
 
 TEST(Language, codeConstructorShouldTreatAnInvalidCodeAsEnglish) {
-  Language lang(Language::Code(1000));
-  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  Language lang(LanguageCode(1000));
+  EXPECT_EQ(LanguageCode::english, lang.GetCode());
   EXPECT_EQ("English", lang.GetName());
   EXPECT_EQ("en", lang.GetLocale());
 }
 
 TEST(Language, localeConstructorShouldTreatAnInvalidLocaleAsEnglish) {
   Language lang("foo");
-  EXPECT_EQ(Language::Code::english, lang.GetCode());
+  EXPECT_EQ(LanguageCode::english, lang.GetCode());
   EXPECT_EQ("English", lang.GetName());
   EXPECT_EQ("en", lang.GetLocale());
 }
 
 TEST(Language, codesShouldContainAllExpectedLanguageCodes) {
-  std::vector<Language::Code> codes = {
-      Language::Code::english,
-      Language::Code::spanish,
-      Language::Code::russian,
-      Language::Code::french,
-      Language::Code::chinese,
-      Language::Code::polish,
-      Language::Code::brazilian_portuguese,
-      Language::Code::finnish,
-      Language::Code::german,
-      Language::Code::danish,
-      Language::Code::korean
+  std::vector<LanguageCode> codes = {
+      LanguageCode::english,
+      LanguageCode::spanish,
+      LanguageCode::russian,
+      LanguageCode::french,
+      LanguageCode::chinese,
+      LanguageCode::polish,
+      LanguageCode::brazilian_portuguese,
+      LanguageCode::finnish,
+      LanguageCode::german,
+      LanguageCode::danish,
+      LanguageCode::korean
   };
 
   EXPECT_EQ(codes, Language::codes);

@@ -112,7 +112,7 @@ void LootState::init(const std::string& cmdLineGame) {
   gen.add_messages_domain("loot");
 
   //Boost.Locale initialisation: Generate and imbue locales.
-  locale::global(gen(Language(Language::Code::english).GetLocale() + ".UTF-8"));
+  locale::global(gen(Language(LanguageCode::english).GetLocale() + ".UTF-8"));
   boost::filesystem::path::imbue(locale());
 
   // Check if the LOOT local app data folder exists, and create it if not.
@@ -162,7 +162,7 @@ void LootState::init(const std::string& cmdLineGame) {
   fs::remove(LootPaths::getLootDataPath() / "CEFDebugLog.txt");
 
   // Now that settings have been loaded, set the locale again to handle translations.
-  if (getLanguage().GetCode() != Language::Code::english) {
+  if (getLanguage().GetCode() != LanguageCode::english) {
     BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
     Language lang(getLanguage());
     BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lang.GetName();

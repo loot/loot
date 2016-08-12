@@ -98,7 +98,7 @@ private:
   vertex_t target;
 };
 
-std::vector<Plugin> PluginSorter::Sort(Game& game, const Language::Code language) {
+std::vector<Plugin> PluginSorter::Sort(Game& game, const LanguageCode language) {
   using std::vector;
   // Clear existing data.
   graph_.clear();
@@ -167,7 +167,7 @@ std::vector<Plugin> PluginSorter::Sort(Game& game, const Language::Code language
   return plugins;
 }
 
-void PluginSorter::AddPluginVertices(Game& game, const Language::Code language) {
+void PluginSorter::AddPluginVertices(Game& game, const LanguageCode language) {
   BOOST_LOG_TRIVIAL(info) << "Merging masterlist, userlist into plugin list, evaluating conditions and checking for install validity.";
 
   // The resolution of tie-breaks in the plugin graph may be dependent

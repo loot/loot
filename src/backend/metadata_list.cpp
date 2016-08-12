@@ -148,7 +148,7 @@ void MetadataList::AppendMessage(const Message& message) {
   messages_.push_back(message);
 }
 
-void MetadataList::EvalAllConditions(Game& game, const Language::Code language) {
+void MetadataList::EvalAllConditions(Game& game, const LanguageCode language) {
   std::unordered_set<PluginMetadata> replacementSet;
   for (auto &plugin : plugins_) {
     PluginMetadata p(plugin);

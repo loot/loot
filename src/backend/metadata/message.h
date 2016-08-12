@@ -50,13 +50,13 @@ public:
   bool operator < (const Message& rhs) const;
   bool operator == (const Message& rhs) const;
 
-  bool EvalCondition(Game& game, const Language::Code language);
+  bool EvalCondition(Game& game, const LanguageCode language);
 
   MessageType GetType() const;
   std::string GetText() const;
   std::vector<MessageContent> GetContent() const;
 private:
-  MessageContent ChooseContent(const Language::Code language) const;
+  MessageContent ChooseContent(const LanguageCode language) const;
 
   MessageType type_;
   std::vector<MessageContent> content_;
@@ -104,14 +104,14 @@ struct convert<loot::Message> {
     if (node["content"].IsSequence())
       content = node["content"].as< std::vector<loot::MessageContent> >();
     else {
-      content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::Language::Code::english));
+      content.push_back(loot::MessageContent(node["content"].as<std::string>(), loot::LanguageCode::english));
     }
 
     //Check now that at least one item in content is English if there are multiple items.
     if (content.size() > 1) {
       bool found = false;
       for (const auto &mc : content) {
-        if (mc.GetLanguage() == loot::Language::Code::english)
+        if (mc.GetLanguage() == loot::LanguageCode::english)
           found = true;
       }
       if (!found)
