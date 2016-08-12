@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_BACKEND_GAME_GAME_TYPE
-#define LOOT_BACKEND_GAME_GAME_TYPE
+#ifndef LOOT_GAME_TYPE
+#define LOOT_GAME_TYPE
 
 namespace loot {
 enum struct GameType : unsigned int {

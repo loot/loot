@@ -32,7 +32,7 @@
 #include <libespm/GameId.h>
 #include <yaml-cpp/yaml.h>
 
-#include "backend/game/game_type.h"
+#include "loot/game_type.h"
 
 namespace loot {
 class GameSettings {

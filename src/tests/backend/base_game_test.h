@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_BASE_GAME_TEST
 #define LOOT_TESTS_BACKEND_BASE_GAME_TEST
 
-#include "backend/game/game_type.h"
+#include "loot/game_type.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
