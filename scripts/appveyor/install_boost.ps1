@@ -36,6 +36,8 @@ if (Is-LibraryMissing) {
 
   Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
+  Remove-Item -Recurse -Force $boostFolder
+
   Write-Output 'Extracting ' + $boostArchive + '...'
   cd
   7z x $boostArchive -o"C:\projects"
