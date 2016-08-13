@@ -4,7 +4,13 @@ project (LOOT)
 include(ExternalProject)
 
 option(BUILD_SHARED_LIBS "Build a shared library" ON)
-option(PROJECT_STATIC_RUNTIME "Build with static runtime libs (/MT)" ON)
+option(MSVC_STATIC_RUNTIME "Build with static runtime libs (/MT)" OFF)
+
+IF (${MSVC_STATIC_RUNTIME})
+    set (MSVC_SHARED_RUNTIME OFF)
+ELSE()
+    set (MSVC_SHARED_RUNTIME ON)
+ENDIF()
 
 ##############################
 # Get Build Revision
@@ -32,7 +38,12 @@ configure_file("${CMAKE_SOURCE_DIR}/src/backend/app/loot_version.cpp.in" "${CMAK
 
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
-set (Boost_USE_STATIC_RUNTIME ${PROJECT_STATIC_RUNTIME})
+
+IF (MSVC)
+    set (Boost_USE_STATIC_RUNTIME ${MSVC_STATIC_RUNTIME})
+ELSE()
+    set (Boost_USE_STATIC_RUNTIME OFF)
+ENDIF()
 
 IF (NOT Boost_USE_STATIC_LIBS)
     add_definitions(-DBOOST_LOG_DYN_LINK)
@@ -43,6 +54,7 @@ find_package(Boost REQUIRED COMPONENTS atomic log log_setup regex locale thread 
 ExternalProject_Add(GTest
                     PREFIX "external"
                     URL "https://github.com/google/googletest/archive/release-1.7.0.tar.gz"
+                    CMAKE_ARGS -Dgtest_force_shared_crt=${MSVC_SHARED_RUNTIME}
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
 set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/include")
@@ -60,7 +72,7 @@ set (LIBESPM_INCLUDE_DIRS "${SOURCE_DIR}/include")
 ExternalProject_Add(libgit2
                     PREFIX "external"
                     URL "https://github.com/libgit2/libgit2/archive/v0.24.1.tar.gz"
-                    CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF
+                    CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF -DSTATIC_CRT=${MSVC_STATIC_RUNTIME}
                     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target git2 --config $(CONFIGURATION)
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(libgit2 SOURCE_DIR BINARY_DIR)
@@ -70,9 +82,9 @@ set(LIBGIT2_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_
 ExternalProject_Add(libloadorder
                     PREFIX "external"
                     DEPENDS libespm
-                    URL "https://github.com/WrinklyNinja/libloadorder/archive/9.4.0.tar.gz"
-                    CMAKE_ARGS -DBOOST_INCLUDEDIR=${Boost_INCLUDE_DIR} -DPROJECT_STATIC_RUNTIME=${PROJECT_STATIC_RUNTIME}
-                    # BUILD_COMMAND ${CMAKE_COMMAND} --build . --target loadorder --config $(CONFIGURATION)
+                    URL "https://github.com/WrinklyNinja/libloadorder/archive/9.4.1.tar.gz"
+                    CMAKE_ARGS -DBOOST_INCLUDEDIR=${Boost_INCLUDE_DIR} -DMSVC_STATIC_RUNTIME=${MSVC_STATIC_RUNTIME}
+                    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target loadorder --config $(CONFIGURATION)
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(libloadorder SOURCE_DIR BINARY_DIR)
 set(LIBLOADORDER_INCLUDE_DIRS "${SOURCE_DIR}/include")
@@ -104,7 +116,7 @@ ExternalProject_Add(testing-plugins
 ExternalProject_Add(yaml-cpp
                     PREFIX "external"
                     URL "https://github.com/WrinklyNinja/yaml-cpp/archive/patched-for-loot.tar.gz"
-                    CMAKE_ARGS -DMSVC_SHARED_RT=OFF
+                    CMAKE_ARGS -DMSVC_SHARED_RT=${MSVC_SHARED_RUNTIME}
                     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target yaml-cpp --config $(CONFIGURATION)
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(yaml-cpp SOURCE_DIR BINARY_DIR)
@@ -127,7 +139,7 @@ ExternalProject_Add(cef
                     PREFIX "external"
                     URL ${CEF_URL}
                     URL_HASH SHA1=${CEF_URL_HASH}
-                    PATCH_COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/cmake/CEF_CMakeLists.txt" "${CMAKE_BINARY_DIR}/external/src/cef/CMakeLists.txt"
+                    PATCH_COMMAND ${CMAKE_COMMAND} -DMSVC_STATIC_RUNTIME=${MSVC_STATIC_RUNTIME} -P "${CMAKE_SOURCE_DIR}/scripts/cmake/configure_cef.cmake"
                     CMAKE_ARGS -DUSE_SANDBOX=OFF
                     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target libcef_dll_wrapper --config $(CONFIGURATION)
                     INSTALL_COMMAND "")
@@ -325,11 +337,6 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (CMAKE_BUILD_WITH_INSTALL_RPATH ON)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -std=c++14")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14")
-    IF (PROJECT_STATIC_RUNTIME)
-        set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
-        set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
-        set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
-    ENDIF ()
 
     set (LOOT_LIBS ssl
                    curl
@@ -340,8 +347,11 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
 ENDIF ()
 
 IF (MSVC)
-    # Force static C++ runtime linkage.
-    IF (PROJECT_STATIC_RUNTIME)
+    # Set /bigobj to allow building Debug tests
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
+
+    # Update compiler flags.
+    IF (MSVC_STATIC_RUNTIME)
         FOREACH(flag
             CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
             CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
@@ -351,9 +361,6 @@ IF (MSVC)
             SET("${flag}" "${${flag}} /EHsc")
         ENDFOREACH()
     ENDIF ()
-
-    # Set /bigobj to allow building Debug tests
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
 
     set (LOOT_LIBS  version
                     ws2_32
@@ -378,7 +385,7 @@ target_link_libraries(loot_common ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBL
 # Build tests.
 add_executable       (tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
 add_dependencies     (tests loot_common GTest testing-metadata testing-plugins)
-target_link_libraries(tests loot_common ${GTEST_LIBRARIES})
+target_link_libraries(tests loot_common ${GTEST_LIBRARIES} ${LIBLOADORDER_LIBRARIES})
 
 # Build API.
 add_library          (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})

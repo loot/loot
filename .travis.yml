@@ -52,7 +52,7 @@ before_script:
   # Move into the cloned LOOT repo build path.
   - mkdir build && cd build
   # Link dynamically to the C++ standard library runtime.
-  - cmake .. -DPROJECT_STATIC_RUNTIME=OFF -DBOOST_ROOT=~/boost_1_61_0
+  - cmake .. -DBOOST_ROOT=~/boost_1_61_0
 
 script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi

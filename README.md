@@ -41,8 +41,8 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`BUILD_SHARED_LIBS` | `ON`, `OFF` | `OFF` | Whether or not to build a shared LOOT API binary.
-`PROJECT_STATIC_RUNTIME` | `ON`, `OFF` | `ON` | Whether to link the C++ runtime statically or not.
+`BUILD_SHARED_LIBS` | `ON`, `OFF` | `ON` | Whether or not to build a shared LOOT API binary.
+`MSVC_STATIC_RUNTIME` | `ON`, `OFF` | `OFF` | Whether to link the C++ runtime statically or not when building with MSVC.
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 

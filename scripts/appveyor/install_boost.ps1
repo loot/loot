@@ -4,17 +4,17 @@ $boostUrl = 'https://downloads.sourceforge.net/project/boost/boost/1.61.0/boost_
 $boostArchive = 'C:\projects\boost_1_61_0.7z'
 $boostFolder = 'C:\projects\boost_1_61_0'
 $boostLibraries = @(
-  'libboost_atomic-vc140-mt-s-1_61.lib'
-  'libboost_chrono-vc140-mt-s-1_61.lib'
-  'libboost_date_time-vc140-mt-s-1_61.lib'
-  'libboost_filesystem-vc140-mt-s-1_61.lib'
-  'libboost_iostreams-vc140-mt-s-1_61.lib'
-  'libboost_locale-vc140-mt-s-1_61.lib'
-  'libboost_log_setup-vc140-mt-s-1_61.lib'
-  'libboost_log-vc140-mt-s-1_61.lib'
-  'libboost_regex-vc140-mt-s-1_61.lib'
-  'libboost_system-vc140-mt-s-1_61.lib'
-  'libboost_thread-vc140-mt-s-1_61.lib'
+  'libboost_atomic-vc140-mt-1_61.lib'
+  'libboost_chrono-vc140-mt-1_61.lib'
+  'libboost_date_time-vc140-mt-1_61.lib'
+  'libboost_filesystem-vc140-mt-1_61.lib'
+  'libboost_iostreams-vc140-mt-1_61.lib'
+  'libboost_locale-vc140-mt-1_61.lib'
+  'libboost_log_setup-vc140-mt-1_61.lib'
+  'libboost_log-vc140-mt-1_61.lib'
+  'libboost_regex-vc140-mt-1_61.lib'
+  'libboost_system-vc140-mt-1_61.lib'
+  'libboost_thread-vc140-mt-1_61.lib'
 )
 
 function Is-LibraryMissing {
@@ -37,10 +37,10 @@ if (Is-LibraryMissing) {
   Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
   Write-Output 'Extracting ' + $boostArchive + '...'
-  cd 
+  cd
   7z x $boostArchive -o"C:\projects"
 
   cd $boostFolder
   .\bootstrap.bat
-  .\b2 toolset=msvc threadapi=win32 link=static runtime-link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system  --with-iostreams
+  .\b2 toolset=msvc threadapi=win32 link=static variant=release address-model=32 --with-log --with-date_time --with-thread --with-filesystem --with-locale --with-regex --with-system  --with-iostreams
 }
