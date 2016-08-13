@@ -24,11 +24,33 @@
 #ifndef LOOT_PLUGIN_CLEANLINESS
 #define LOOT_PLUGIN_CLEANLINESS
 
+/**
+ * @file
+ * @brief Contains the plugin cleanliness codes used when getting the
+ * cleanliness state of a plugin.
+ */
+
+/**
+ * The namespace used by the LOOT API.
+ */
 namespace loot {
+/**
+ * @brief Codes used to indicate the cleanliness of a plugin according to the
+ *        information contained within the loaded masterlist/userlist.
+ */
 enum struct PluginCleanliness : unsigned int {
+  /** Indicates that the plugin is clean. */
   clean,
+  /** Indicates that the plugin is dirty. */
   dirty,
+  /**
+   * Indicates that the plugin contains dirty edits, but that they are
+   * part of the plugin's intended functionality and should not be removed.
+   */
   do_not_clean,
+  /**
+   * Indicates that no data is available on whether the plugin is dirty or not.
+   */
   unknown,
 };
 }

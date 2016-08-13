@@ -26,23 +26,21 @@
 
 #include "loot/message_type.h"
 
-namespace loot {
 /**
- *  @brief A structure that holds the type of a message and the message
- *      string itself.
+ * @file
+ * @brief Contains the PluginMessage structure.
  */
-class PluginMessage {
-public:
-  /**
-    *  @var type
-    *      The type of the message, specified using one of the message
-    *      type codes.
-    *  @var text
-    *      The message string, which may be formatted using
-    *      [GitHub Flavored Markdown]
-    *      (https://help.github.com/articles/github-flavored-markdown).
-    */
+
+namespace loot {
+/** @brief A structure that holds the type of a message and the message string itself. */
+struct PluginMessage {
+  /** @brief The type of the message. */
   MessageType type;
+
+  /**
+   * @brief The message string, which may be formatted using
+   * [GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown).
+   */
   std::string text;
 };
 }

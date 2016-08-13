@@ -43,14 +43,34 @@ properly. */
 #   define LOOT_API
 #endif
 
+/**
+ * @file
+ * @brief Contains the class used to get API version information.
+ */
+
 namespace loot {
+/**
+ * @brief A purely static class that provides information about the version of
+ *        the LOOT API that is being run.
+ */
 class LootVersion {
 public:
+  /** @brief The major version number. */
   LOOT_API static const unsigned int major;
+
+  /** @brief The minor version number. */
   LOOT_API static const unsigned int minor;
+
+  /** @brief The patch version number. */
   LOOT_API static const unsigned int patch;
+
+  /** @brief The source control revision that the API was built from. */
   LOOT_API static const std::string revision;
 
+  /**
+   * @brief Get the API version as a string.
+   * @return A string of the form "major.minor.patch".
+   */
   LOOT_API static std::string string();
 };
 }

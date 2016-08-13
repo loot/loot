@@ -25,14 +25,29 @@ along with LOOT.  If not, see
 #ifndef LOOT_GAME_TYPE
 #define LOOT_GAME_TYPE
 
+/**
+ * @file
+ * @brief Contains the GameType codes used when creating a database handle.
+ */
+
+/**
+ * The namespace used by the LOOT API.
+ */
 namespace loot {
+/** @brief Codes used to create database handles for specific games. */
 enum struct GameType : unsigned int {
-  autodetect = 0,
-  tes4 = 1,
-  tes5 = 2,
-  fo3 = 3,
-  fonv = 4,
-  fo4 = 5,
+  /** Autodetect the game type. **Specifying this will cause an error for API users**. */
+  autodetect,
+  /** The Elder Scrolls IV: Oblivion */
+  tes4,
+  /** The Elder Scrolls IV: Skyrim */
+  tes5,
+  /** Fallout 3 */
+  fo3,
+  /** Fallout: New Vegas */
+  fonv,
+  /** Fallout 4 */
+  fo4,
 };
 }
 

@@ -25,19 +25,37 @@ along with LOOT.  If not, see
 #ifndef LOOT_LANGUAGE_CODE
 #define LOOT_LANGUAGE_CODE
 
+/**
+ * @file
+ * @brief Contains the language codes used when evaluating masterlists and
+ *        userlists.
+ */
+
+/**
+ * The namespace used by the LOOT API.
+ */
 namespace loot {
+/**
+ * @brief Codes used to specify the preferred language for messages when
+ *        evaluating masterlists and userlists.
+ * @details If a message is not available in the preferred language, its English
+ *          string will be used. Note that messages with only one language
+ *          string are assumed to be written in English, but this cannot be
+ *          guaranteed (any violations should be reported as bugs so that they
+ *          can be fixed).
+ */
 enum struct LanguageCode : unsigned int {
-  english = 1,
-  spanish = 2,
-  russian = 3,
-  french = 4,
-  chinese = 5,
-  polish = 6,
-  brazilian_portuguese = 7,
-  finnish = 8,
-  german = 9,
-  danish = 10,
-  korean = 11
+  english,
+  spanish,
+  russian,
+  french,
+  chinese,
+  polish,
+  brazilian_portuguese,
+  finnish,
+  german,
+  danish,
+  korean
 };
 }
 

@@ -48,9 +48,7 @@ Thumbs.db
 *.suo
 *.sdf
 *.opensdf
-build/
-docs/html
-docs/latex
+build
 *.mo
 bower_components
 node_modules

@@ -25,11 +25,29 @@ along with LOOT.  If not, see
 #ifndef LOOT_MESSAGE_TYPE
 #define LOOT_MESSAGE_TYPE
 
+/**
+ * @file
+ * @brief Contains the message type codes used by the PluginMessage structure.
+ */
+
+/**
+ * The namespace used by the LOOT API.
+ */
 namespace loot {
+/** @brief Codes used to indicate the type of a message. */
 enum struct MessageType : unsigned int {
-  say = 0,
-  warn = 1,
-  error = 2,
+  /** A notification message that is of no significant severity. */
+  say,
+  /**
+   * A warning message, used to indicate that an issue may be present that the
+   * user may wish to act on.
+   */
+  warn,
+  /**
+   * An error message, used to indicate that an issue that requires user action
+   * is present.
+   */
+  error,
 };
 }
 

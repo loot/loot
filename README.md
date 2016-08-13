@@ -46,6 +46,18 @@ Parameter | Values | Default |Description
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 
+## Building The API Documentation
+
+The API documentation is built using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), [Breathe](https://breathe.readthedocs.io/en/latest/) and [Sphinx](http://www.sphinx-doc.org/en/stable/). On Windows, install Doxygen and [Python](https://www.python.org) 2.7, add Doxygen's binary path, `C:\Python27` and `C:\Python27\Scripts` (or wherever you installed Python to) to your `%PATH%`, then:
+
+```
+python -m pip install breathe sphinx
+cd docs/api
+doxygen
+cd ../..
+sphinx-build -b html docs/api build/documentation/sphinx
+```
+
 ## Packaging Releases
 
 Packaging scripts are provided for creating an installer on Windows and compressed archives on Windows and Linux.

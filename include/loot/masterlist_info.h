@@ -26,10 +26,35 @@
 
 #include <string>
 
+/**
+ * @file
+ * @brief Contains the MasterlistInfo structure.
+ */
+
 namespace loot {
+/**
+ * @brief A structure that holds data about a masterlist's source control
+ *        revision.
+ */
 struct MasterlistInfo {
+  /**
+   * @brief The revision hash for the masterlist. If the masterlist doesn't
+   *        exist, or there is no Git repository at its location, this will be
+   *        empty.
+   */
   std::string revision_id;
+
+  /**
+   * @brief A pointer to a string containing the ISO 8601 formatted revision
+   *        date, ie. YYYY-MM-DD. If the masterlist doesn't exist, or there is
+   *        no Git repository at its location, this will be empty.
+   */
   std::string revision_date;
+
+  /**
+   * @brief `true` if the masterlist has been edited since the outputted
+   *        revision, or `false` if it is at exactly the revision given.
+   */
   bool is_modified;
 };
 }

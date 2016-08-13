@@ -27,10 +27,33 @@
 #include <set>
 #include <string>
 
+/**
+ * @file
+ * @brief Contains the PluginTags structure.
+ */
+
 namespace loot {
+/**
+ * @brief A structure that holds data about the Bash Tag suggestions made by
+ *        LOOT for a plugin.
+ */
 struct PluginTags {
+  /**
+   * @brief A set of Bash Tag names suggested for addition to the specified
+   *        plugin. Empty if no Bash Tag additions are suggested.
+   */
   std::set<std::string> added;
+
+  /**
+   * @brief A set of Bash Tag names suggested for removal from the specified
+   *        plugin. Empty if no Bash Tag removals are suggested.
+   */
   std::set<std::string> removed;
+
+  /**
+  * @brief `true` if the Bash Tag suggestions were modified by data in the
+  *        userlist, `false` otherwise.
+  */
   bool userlist_modified;
 };
 }
