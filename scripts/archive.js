@@ -191,18 +191,17 @@ function createApiArchive(rootPath, releasePath, tempPath, destPath) {
     );
   });
 
-  // API header file.
+  // API header files.
   fs.mkdirsSync(path.join(tempPath, 'include'));
   fs.copySync(
     path.join(rootPath, 'include', 'loot'),
     path.join(tempPath, 'include', 'loot')
   );
 
-  // Docs.
-  fs.mkdirsSync(path.join(tempPath, 'docs'));
+  // Readme.
   fs.copySync(
-    path.join(rootPath, 'docs', 'licenses'),
-    path.join(tempPath, 'docs', 'licenses')
+    path.join(rootPath, 'docs', 'api', 'README.md'),
+    path.join(tempPath, 'README.md')
   );
 
   // Now compress the folder to a 7-zip archive.
