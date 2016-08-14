@@ -41,7 +41,7 @@
 #include "gui/loot_handler.h"
 #include "gui/resource.h"
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/app/loot_paths.h"
 #include "backend/plugin/plugin_sorter.h"
 #include "backend/helpers/helpers.h"

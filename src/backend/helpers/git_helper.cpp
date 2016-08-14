@@ -28,7 +28,7 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 
 using boost::locale::translate;
 using std::string;

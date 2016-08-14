@@ -46,7 +46,7 @@
 #include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/spirit/include/qi.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/version.h"

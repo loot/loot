@@ -34,7 +34,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/app/loot_paths.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/language.h"

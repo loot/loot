@@ -27,7 +27,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/game/game.h"
 #include "backend/plugin/plugin_sorter.h"
 

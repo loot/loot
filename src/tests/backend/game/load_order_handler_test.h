@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "backend/game/load_order_handler.h"
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "tests/backend/base_game_test.h"
 
 namespace loot {

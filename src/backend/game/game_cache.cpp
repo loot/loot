@@ -30,7 +30,7 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/helpers/helpers.h"
 
 using boost::locale::to_lower;

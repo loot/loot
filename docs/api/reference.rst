@@ -43,5 +43,8 @@ Interfaces
 Classes
 =======
 
+.. doxygenclass:: loot::Error
+   :members:
+
 .. doxygenclass:: loot::LootVersion
    :members:

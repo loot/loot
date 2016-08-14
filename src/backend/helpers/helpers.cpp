@@ -40,7 +40,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/spirit/include/karma.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE

@@ -28,7 +28,7 @@
 #include <boost/log/core.hpp>
 
 #include "api/api_database.h"
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/app/loot_paths.h"
 
 namespace loot {

@@ -26,7 +26,7 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/git_helper.h"
 

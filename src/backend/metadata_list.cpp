@@ -28,7 +28,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/error.h"
+#include "loot/error.h"
 #include "backend/game/game.h"
 
 using std::list;
