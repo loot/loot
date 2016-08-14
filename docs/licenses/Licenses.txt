@@ -4,7 +4,7 @@ LOOT uses a number of libraries, and their licenses are listed in this file.
 
 * Boost - Boost Software License v1.0; see "Boost Software License v1.0.txt" for the text.
 * Chromium Embedded Framework - BSD license; see "BSD License (Chromium Embedded Framework).txt" for the text.
-* Jed - WTFPL; the text is not included as allowed by the license.
+* Jed - MIT License; see "MIT License (Jed).txt" for the text.
 * Jed Gettext Parser - MIT License; see "MIT License (Jed Gettext Parser).txt" for the text.
 * Libespm - GNU GPL v3; see "GNU GPL v3.txt" for the text.
 * Libgit2 - GNU GPL v2; see "GNU GPL v2 (libgit2).txt" for the text.
