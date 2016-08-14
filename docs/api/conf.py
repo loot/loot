@@ -20,6 +20,17 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import subprocess, os
+
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+if read_the_docs_build:
+    output_directory = '../../build/documentation'
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+
+    subprocess.call('doxygen', shell=True)
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
