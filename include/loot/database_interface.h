@@ -60,7 +60,7 @@ public:
    *         no userlist will be loaded.
    */
   virtual void LoadLists(const std::string& masterlist_path,
-                         const std::string& userlist_path) = 0;
+                         const std::string& userlist_path = "") = 0;
 
   /**
    *  @brief Evaluates all conditions and regular expression metadata entries.

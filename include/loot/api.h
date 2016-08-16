@@ -103,8 +103,8 @@ LOOT_API bool IsCompatible(const unsigned int major,
  *  @returns The new database handle.
  */
 LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
-                                                           const std::string& game_path,
-                                                           const std::string& game_local_path);
+                                                           const std::string& game_path = "",
+                                                           const std::string& game_local_path = "");
 }
 
 #endif

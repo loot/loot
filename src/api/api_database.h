@@ -35,11 +35,11 @@
 namespace loot {
 struct ApiDatabase : public DatabaseInterface {
   ApiDatabase(const GameType clientGame,
-              const std::string& gamePath,
-              const std::string& gameLocalDataPath);
+              const std::string& gamePath = "",
+              const std::string& gameLocalDataPath = "");
 
   void LoadLists(const std::string& masterlist_path,
-                 const std::string& userlist_path);
+                 const std::string& userlist_path = "");
 
   void EvalLists(const LanguageCode language);
 
