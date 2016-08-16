@@ -102,10 +102,6 @@ std::vector<std::string> ApiDatabase::SortPlugins() {
   return loadOrder;
 }
 
-void ApiDatabase::ApplyLoadOrder(const std::vector<std::string>& loadOrder) {
-  game_.SetLoadOrder(loadOrder);
-}
-
 bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
                                    const std::string& remoteURL,
                                    const std::string& remoteBranch) {

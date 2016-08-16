@@ -45,8 +45,6 @@ struct ApiDatabase : public DatabaseInterface {
 
   std::vector<std::string> SortPlugins();
 
-  void ApplyLoadOrder(const std::vector<std::string>& loadOrder);
-
   bool UpdateMasterlist(const std::string& masterlist_path,
                         const std::string& remote_url,
                         const std::string& remote_branch);

@@ -89,13 +89,6 @@ public:
   virtual std::vector<std::string> SortPlugins() = 0;
 
   /**
-   *  @brief Applies the given load order.
-   *  @param loadOrder
-   *         A vector of plugin filenames in the load order to be set.
-   */
-  virtual void ApplyLoadOrder(const std::vector<std::string>& loadOrder) = 0;
-
-  /**
    *  @}
    *  @name Masterlist Update
    *  @{

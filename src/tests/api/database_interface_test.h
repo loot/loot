@@ -176,24 +176,6 @@ TEST_P(DatabaseInterfaceTest, sortPluginsShouldSucceedIfPassedValidArguments) {
   ASSERT_EQ(expectedOrder, actualOrder);
 }
 
-TEST_P(DatabaseInterfaceTest, applyLoadOrderShouldReturnOkIfLoadOrderGivenIsNotEmpty) {
-  std::vector<std::string> loadOrder = {
-    masterFile,
-    blankEsm,
-    blankMasterDependentEsm,
-    blankDifferentEsm,
-    blankDifferentMasterDependentEsm,
-    blankMasterDependentEsp,
-    blankDifferentMasterDependentEsp,
-    blankEsp,
-    blankPluginDependentEsp,
-    blankDifferentEsp,
-    blankDifferentPluginDependentEsp,
-  };
-
-  EXPECT_NO_THROW(db_->ApplyLoadOrder(loadOrder));
-}
-
 TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsInvalid) {
   EXPECT_ANY_THROW(db_->UpdateMasterlist(";//\?", url_, branch_));
 }
