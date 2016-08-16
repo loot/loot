@@ -211,7 +211,9 @@ void LootState::changeGame(const std::string& newGameFolder) {
   lock_guard<mutex> guard(mutex_);
 
   BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-  currentGame_ = find(games_.begin(), games_.end(), Game(GameType::autodetect, newGameFolder));
+  currentGame_ = find_if(games_.begin(), games_.end(), [&](const Game& game) {
+    return boost::iequals(newGameFolder, game.FolderName());
+  });
   currentGame_->Init(true);
 
   // Update game path in settings object.

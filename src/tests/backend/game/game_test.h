@@ -55,14 +55,6 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::fonv,
                           GameType::fo4));
 
-TEST_P(GameTest, defaultConstructorShouldConstructWithDefaultGameSettings) {
-  GameSettings settings;
-  Game game;
-
-  EXPECT_EQ(settings.Type(), game.Type());
-  EXPECT_EQ(settings.FolderName(), game.FolderName());
-}
-
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   GameSettings settings = GameSettings(GetParam(), "folder");
   settings.SetName("foo");
@@ -90,14 +82,6 @@ TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstruc
 
   EXPECT_EQ(settings.Type(), game.Type());
   EXPECT_EQ(settings.FolderName(), game.FolderName());
-}
-
-TEST_P(GameTest, initShouldThrowIfGameHasAnInvalidId) {
-  Game game;
-  EXPECT_THROW(game.Init(false), Error);
-  EXPECT_THROW(game.Init(true), Error);
-  EXPECT_THROW(game.Init(false, localPath), Error);
-  EXPECT_THROW(game.Init(true, localPath), Error);
 }
 
 #ifndef _WIN32
@@ -220,7 +204,6 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllIn
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  EXPECT_FALSE(Game().ArePluginsFullyLoaded());
   EXPECT_FALSE(Game(GameSettings()).ArePluginsFullyLoaded());
   EXPECT_FALSE(Game(GetParam(), "folder").ArePluginsFullyLoaded());
 }

@@ -36,10 +36,10 @@ class GameCacheTest : public CommonGameTestFixture {
 protected:
   GameCacheTest() :
     condition("Condition"),
-    conditionLowercase("condition") {}
+    conditionLowercase("condition"),
+    game_(GetParam()) {}
 
   void initialiseGame() {
-    game_ = Game(GetParam());
     game_.SetGamePath(dataPath.parent_path());
   }
 

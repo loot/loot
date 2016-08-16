@@ -48,16 +48,6 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::fonv,
                           GameType::fo4));
 
-TEST_P(LoadOrderHandlerTest, initShouldThrowForAnInvalidGameId) {
-  GameSettings game(GameType::autodetect);
-  game.SetGamePath(dataPath.parent_path());
-
-  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
-  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
-  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
-  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
-}
-
 TEST_P(LoadOrderHandlerTest, initShouldThrowIfNoGamePathIsSet) {
   GameSettings game(GetParam());
 

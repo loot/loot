@@ -35,7 +35,7 @@
 namespace fs = boost::filesystem;
 
 namespace loot {
-GameSettings::GameSettings() : type_(GameType::autodetect) {}
+GameSettings::GameSettings() : type_(GameType::tes4) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) : type_(gameCode) {
   if (Type() == GameType::tes4) {

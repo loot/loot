@@ -36,8 +36,6 @@
 namespace loot {
 class Game : public GameSettings, public LoadOrderHandler, public GameCache {
 public:
-    //Game functions.
-  Game();  //Sets game to GameType::autodetect, with all other vars being empty.
   Game(const GameSettings& gameSettings);
   Game(const GameType gameType, const std::string& lootFolder = "");
 

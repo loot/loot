@@ -38,12 +38,12 @@ protected:
     emptyFile("EmptyFile.esm"),
     nonPluginFile("NotAPlugin.esm"),
     blankArchive("Blank" + Game(GetParam()).GetArchiveFileExtension()),
-    blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).GetArchiveFileExtension()) {}
+    blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).GetArchiveFileExtension()),
+    game_(GetParam()) {}
 
   void SetUp() {
     CommonGameTestFixture::SetUp();
 
-    game_ = Game(GetParam());
     game_.SetGamePath(dataPath.parent_path());
     game_.Init(false, localPath);
 

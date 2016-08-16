@@ -46,8 +46,8 @@ INSTANTIATE_TEST_CASE_P(,
                         ::testing::Values(
                           GameType::tes5));
 
-TEST_P(GameSettingsTest, defaultConstructorShouldInitialiseIdToAutodetectAndAllOtherSettingsToEmptyStrings) {
-  EXPECT_EQ(GameType::autodetect, settings_.Type());
+TEST_P(GameSettingsTest, defaultConstructorShouldInitialiseIdToTes4AndAllOtherSettingsToEmptyStrings) {
+  EXPECT_EQ(GameType::tes4, settings_.Type());
   EXPECT_EQ("", settings_.Name());
   EXPECT_EQ("", settings_.FolderName());
   EXPECT_EQ("", settings_.Master());

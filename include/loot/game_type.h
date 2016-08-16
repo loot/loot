@@ -36,8 +36,6 @@ along with LOOT.  If not, see
 namespace loot {
 /** @brief Codes used to create database handles for specific games. */
 enum struct GameType : unsigned int {
-  /** Autodetect the game type. **Specifying this will cause an error for API users**. */
-  autodetect,
   /** The Elder Scrolls IV: Oblivion */
   tes4,
   /** The Elder Scrolls IV: Skyrim */

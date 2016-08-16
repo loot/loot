@@ -44,8 +44,6 @@ using std::vector;
 namespace fs = boost::filesystem;
 
 namespace loot {
-Game::Game() : pluginsFullyLoaded_(false) {}
-
 Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings), pluginsFullyLoaded_(false) {
   this->SetName(gameSettings.Name())
     .SetMaster(gameSettings.Master())

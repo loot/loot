@@ -37,7 +37,7 @@
 namespace loot {
 class GameSettings {
 public:
-  GameSettings();  //Sets game type to autodetect, with all other vars being empty.
+  GameSettings();
   GameSettings(const GameType gameType, const std::string& lootFolder = "");
 
   bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
