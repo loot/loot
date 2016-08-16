@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/game/game_cache.h"
 
 #include "backend/game/game.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class GameCacheTest : public BaseGameTest {
+class GameCacheTest : public CommonGameTestFixture {
 protected:
   GameCacheTest() :
     condition("Condition"),

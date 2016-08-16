@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/game/load_order_handler.h"
 
 #include "loot/error.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class LoadOrderHandlerTest : public BaseGameTest {
+class LoadOrderHandlerTest : public CommonGameTestFixture {
 protected:
   LoadOrderHandler loadOrderHandler_;
 };

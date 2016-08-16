@@ -27,11 +27,11 @@ along with LOOT.  If not, see
 
 #include "backend/metadata_list.h"
 
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class MetadataListTest : public BaseGameTest {
+class MetadataListTest : public CommonGameTestFixture {
 protected:
   MetadataListTest() :
     metadataPath("./testing-metadata/masterlist.yaml"),
@@ -40,7 +40,7 @@ protected:
     invalidMetadataPaths({"./testing-metadata/invalid/non_unique.yaml"}) {}
 
   inline virtual void SetUp() {
-    BaseGameTest::SetUp();
+    CommonGameTestFixture::SetUp();
 
     ASSERT_TRUE(boost::filesystem::exists(metadataPath));
     ASSERT_FALSE(boost::filesystem::exists(savedMetadataPath));
@@ -51,7 +51,7 @@ protected:
   }
 
   inline virtual void TearDown() {
-    BaseGameTest::TearDown();
+    CommonGameTestFixture::TearDown();
 
     ASSERT_TRUE(boost::filesystem::exists(metadataPath));
     ASSERT_NO_THROW(boost::filesystem::remove(savedMetadataPath));

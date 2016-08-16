@@ -33,11 +33,11 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class GameTest : public BaseGameTest {
+class GameTest : public CommonGameTestFixture {
 protected:
 #ifndef _WIN32
   void TearDown() {
-    BaseGameTest::TearDown();
+    CommonGameTestFixture::TearDown();
 
     ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath()));
   }

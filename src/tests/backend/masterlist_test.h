@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/masterlist.h"
 
 #include "backend/app/loot_paths.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class MasterlistTest : public BaseGameTest {
+class MasterlistTest : public CommonGameTestFixture {
 protected:
   MasterlistTest() :
     repoBranch("2.x"),
@@ -40,7 +40,7 @@ protected:
     masterlistPath(localPath / "masterlist.yaml") {}
 
   void SetUp() {
-    BaseGameTest::SetUp();
+    CommonGameTestFixture::SetUp();
 
     ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
     ASSERT_FALSE(boost::filesystem::exists(localPath / ".git"));
@@ -49,7 +49,7 @@ protected:
   }
 
   void TearDown() {
-    BaseGameTest::TearDown();
+    CommonGameTestFixture::TearDown();
 
     ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
     ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));

@@ -31,12 +31,9 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class ApiGameOperationsTest :
-  public ::testing::TestWithParam<GameType>,
-  public CommonGameTestFixture {
+class ApiGameOperationsTest : public CommonGameTestFixture {
 protected:
   ApiGameOperationsTest() :
-    CommonGameTestFixture(static_cast<unsigned int>(GetParam())),
     db_(nullptr),
     masterlistPath(localPath / "masterlist.yaml"),
     noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
@@ -44,7 +41,7 @@ protected:
     errorMessage("Obsolete. Remove this and install Enhanced Weather.") {}
 
   virtual void SetUp() {
-    setUp();
+    CommonGameTestFixture::SetUp();
 
     ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
 
@@ -52,7 +49,7 @@ protected:
   }
 
   virtual void TearDown() {
-    tearDown();
+    CommonGameTestFixture::TearDown();
 
     // The masterlist may have been created during the test, so delete it.
     ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));

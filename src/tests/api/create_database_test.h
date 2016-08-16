@@ -33,20 +33,16 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class CreateDatabaseTest :
-  public ::testing::TestWithParam<GameType>,
-  public CommonGameTestFixture {
+class CreateDatabaseTest : public CommonGameTestFixture {
 protected:
-  CreateDatabaseTest() :
-    CommonGameTestFixture(static_cast<unsigned int>(GetParam())),
-    db_(nullptr) {}
+  CreateDatabaseTest() : db_(nullptr) {}
 
   void SetUp() {
-    setUp();
+    CommonGameTestFixture::SetUp();
   }
 
   void TearDown() {
-    tearDown();
+    CommonGameTestFixture::TearDown();
   }
 
   std::shared_ptr<DatabaseInterface> db_;

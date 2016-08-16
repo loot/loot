@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/plugin/plugin.h"
 
 #include "backend/game/game.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class PluginTest : public BaseGameTest {
+class PluginTest : public CommonGameTestFixture {
 protected:
   PluginTest() :
     emptyFile("EmptyFile.esm"),
@@ -41,7 +41,7 @@ protected:
     blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).GetArchiveFileExtension()) {}
 
   void SetUp() {
-    BaseGameTest::SetUp();
+    CommonGameTestFixture::SetUp();
 
     game_ = Game(GetParam());
     game_.SetGamePath(dataPath.parent_path());
@@ -66,7 +66,7 @@ protected:
   }
 
   void TearDown() {
-    BaseGameTest::TearDown();
+    CommonGameTestFixture::TearDown();
 
     boost::filesystem::remove(dataPath / emptyFile);
     boost::filesystem::remove(dataPath / nonPluginFile);

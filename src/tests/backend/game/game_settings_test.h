@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/game/game_settings.h"
 
 #include "backend/app/loot_paths.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class GameSettingsTest : public BaseGameTest {
+class GameSettingsTest : public CommonGameTestFixture {
 protected:
   GameSettings settings_;
 };

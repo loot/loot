@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/helpers/helpers.h"
 
 #include "loot/error.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class GetCrc32Test : public BaseGameTest {};
+class GetCrc32Test : public CommonGameTestFixture {};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.

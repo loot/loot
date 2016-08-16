@@ -263,7 +263,6 @@ set (LOOT_TESTS_HEADERS # Testing this here rather than as part of the API tests
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_state_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/base_game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"

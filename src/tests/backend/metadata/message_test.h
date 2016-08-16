@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/metadata/message.h"
 
 #include "backend/game/game.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class MessageTest : public BaseGameTest {
+class MessageTest : public CommonGameTestFixture {
 protected:
 
   typedef std::vector<MessageContent> MessageContents;

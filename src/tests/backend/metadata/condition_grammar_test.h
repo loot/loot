@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/metadata/condition_grammar.h"
 
 #include "loot/error.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class ConditionGrammarTest : public BaseGameTest {
+class ConditionGrammarTest : public CommonGameTestFixture {
 protected:
   typedef ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> Grammar;
 
@@ -43,7 +43,7 @@ protected:
     success_(false) {}
 
   inline void SetUp() {
-    BaseGameTest::SetUp();
+    CommonGameTestFixture::SetUp();
 
     // Write out an empty resource file.
     ASSERT_NO_THROW(boost::filesystem::create_directories(resourcePath.parent_path()));
@@ -53,7 +53,7 @@ protected:
   }
 
   inline void TearDown() {
-    BaseGameTest::TearDown();
+    CommonGameTestFixture::TearDown();
 
     ASSERT_NO_THROW(boost::filesystem::remove(resourcePath));
   }

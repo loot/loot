@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/metadata/conditional_metadata.h"
 
 #include "loot/error.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class ConditionalMetadataTest : public BaseGameTest {
+class ConditionalMetadataTest : public CommonGameTestFixture {
 protected:
   ConditionalMetadata conditionalMetadata_;
 };

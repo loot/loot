@@ -28,11 +28,11 @@ along with LOOT.  If not, see
 #include "backend/metadata/plugin_cleaning_data.h"
 
 #include "backend/game/game.h"
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class PluginCleaningDataTest : public BaseGameTest {
+class PluginCleaningDataTest : public CommonGameTestFixture {
 protected:
   PluginCleaningDataTest() : info_(std::vector<MessageContent>({
     MessageContent("info", LanguageCode::english),

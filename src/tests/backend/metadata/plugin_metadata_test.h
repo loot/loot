@@ -27,11 +27,11 @@ along with LOOT.  If not, see
 
 #include "backend/metadata/plugin_metadata.h"
 
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class PluginMetadataTest : public BaseGameTest {
+class PluginMetadataTest : public CommonGameTestFixture {
 protected:
   PluginMetadataTest() : info_(std::vector<MessageContent>({
     MessageContent("info", LanguageCode::english),

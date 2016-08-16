@@ -27,14 +27,14 @@ along with LOOT.  If not, see
 
 #include "backend/plugin/plugin_sorter.h"
 
-#include "tests/backend/base_game_test.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
-class PluginSorterTest : public BaseGameTest {
+class PluginSorterTest : public CommonGameTestFixture {
 protected:
   inline virtual void SetUp() {
-    BaseGameTest::SetUp();
+    CommonGameTestFixture::SetUp();
 
     game_ = Game(GetParam());
     game_.SetGamePath(dataPath.parent_path());

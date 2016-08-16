@@ -33,12 +33,13 @@ along with LOOT.  If not, see
 #include <boost/filesystem/fstream.hpp>
 #include <gtest/gtest.h>
 
+#include "loot/game_type.h"
+
 namespace loot {
 namespace test {
-class CommonGameTestFixture {
+class CommonGameTestFixture : public ::testing::TestWithParam<GameType> {
 protected:
-  CommonGameTestFixture(unsigned int gameType) :
-    gameType(gameType),
+  CommonGameTestFixture() :
     missingPath("./missing"),
     dataPath(getPluginsPath()),
     localPath(getLocalPath()),
@@ -56,7 +57,7 @@ protected:
     blankDifferentPluginDependentEsp("Blank - Different Plugin Dependent.esp"),
     blankEsmCrc(getBlankEsmCrc()) {}
 
-  void setUp() {
+  void SetUp() {
     ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
     ASSERT_TRUE(boost::filesystem::exists(localPath));
 
@@ -88,7 +89,7 @@ protected:
     ASSERT_TRUE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
   }
 
-  void tearDown() {
+  void TearDown() {
     ASSERT_NO_THROW(boost::filesystem::remove_all(localPath));
 
     ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
@@ -101,7 +102,7 @@ protected:
 
   std::vector<std::string> getLoadOrder() {
     std::vector<std::string> actual;
-    if (isLoadOrderTimestampBased(gameType)) {
+    if (isLoadOrderTimestampBased(GetParam())) {
       std::map<time_t, std::string> loadOrder;
       for (boost::filesystem::directory_iterator it(dataPath); it != boost::filesystem::directory_iterator(); ++it) {
         if (boost::filesystem::is_regular_file(it->status())) {
@@ -114,7 +115,7 @@ protected:
       }
       for (const auto& plugin : loadOrder)
         actual.push_back(plugin.second);
-    } else if (gameType == tes5) {
+    } else if (GetParam() == GameType::tes5) {
       boost::filesystem::ifstream in(localPath / "loadorder.txt");
       while (in) {
         std::string line;
@@ -157,10 +158,6 @@ protected:
     });
   }
 
-private:
-    // This needs to be here to ensure the correct initialisation order.
-  const unsigned int gameType;
-
 protected:
   const boost::filesystem::path missingPath;
   const boost::filesystem::path dataPath;
@@ -182,41 +179,35 @@ protected:
   const uint32_t blankEsmCrc;
 
 private:
-  static const unsigned int tes4 = 1;
-  static const unsigned int tes5 = 2;
-  static const unsigned int fo3 = 3;
-  static const unsigned int fonv = 4;
-  static const unsigned int fo4 = 5;
-
   inline boost::filesystem::path getLocalPath() const {
-    if (gameType == tes4)
+    if (GetParam() == GameType::tes4)
       return "./local/Oblivion";
     else
       return "./local/Skyrim";
   }
 
   inline boost::filesystem::path getPluginsPath() const {
-    if (gameType == tes4)
+    if (GetParam() == GameType::tes4)
       return "./Oblivion/Data";
     else
       return "./Skyrim/Data";
   }
 
   inline std::string getMasterFile() const {
-    if (gameType == tes4)
+    if (GetParam() == GameType::tes4)
       return "Oblivion.esm";
-    else if (gameType == tes5)
+    else if (GetParam() == GameType::tes5)
       return "Skyrim.esm";
-    else if (gameType == fo3)
+    else if (GetParam() == GameType::fo3)
       return "Fallout3.esm";
-    else if (gameType == fonv)
+    else if (GetParam() == GameType::fonv)
       return "FalloutNV.esm";
     else
       return "Fallout4.esm";
   }
 
   inline uint32_t getBlankEsmCrc() const {
-    if (gameType == tes4)
+    if (GetParam() == GameType::tes4)
       return 0x374E2A6F;
     else
       return 0x187BE342;
@@ -225,15 +216,15 @@ private:
   void setLoadOrder(const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     boost::filesystem::ofstream out(localPath / "plugins.txt");
     for (const auto &plugin : loadOrder) {
-      if (gameType == fo4 && plugin.second)
+      if (GetParam() == GameType::fo4 && plugin.second)
         out << '*';
-      else if (gameType != fo4 && !plugin.second)
+      else if (GetParam() != GameType::fo4 && !plugin.second)
         continue;
 
       out << plugin.first << std::endl;
     }
 
-    if (isLoadOrderTimestampBased(gameType)) {
+    if (isLoadOrderTimestampBased(GetParam())) {
       time_t modificationTime = time(NULL);  // Current time.
       for (const auto &plugin : loadOrder) {
         if (boost::filesystem::exists(dataPath / boost::filesystem::path(plugin.first + ".ghost"))) {
@@ -243,15 +234,15 @@ private:
         }
         modificationTime += 60;
       }
-    } else if (gameType == tes5) {
+    } else if (GetParam() == GameType::tes5) {
       boost::filesystem::ofstream out(localPath / "loadorder.txt");
       for (const auto &plugin : loadOrder)
         out << plugin.first << std::endl;
     }
   }
 
-  inline static bool isLoadOrderTimestampBased(unsigned int gameId) {
-    return gameId == tes4 || gameId == fo3 || gameId == fonv;
+  inline static bool isLoadOrderTimestampBased(GameType gameType) {
+    return gameType == GameType::tes4 || gameType == GameType::fo3 || gameType == GameType::fonv;
   }
 };
 }
