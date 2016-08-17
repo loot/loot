@@ -82,7 +82,7 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
         text = text.substr(pos1, pos2 - pos1);
 
         std::vector<string> bashTags;
-        boost::split(bashTags, text, boost::is_any_of(","));
+        boost::split(bashTags, text, [](char c) { return c == ','; });
 
         for (auto &tag : bashTags) {
           boost::trim(tag);
