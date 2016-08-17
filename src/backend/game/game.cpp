@@ -113,31 +113,28 @@ void Game::RedatePlugins() {
   }
 }
 
-void Game::LoadPlugins(bool headersOnly) {
+void Game::LoadPlugins(const std::vector<std::string>& plugins, bool headersOnly) {
   uintmax_t meanFileSize = 0;
   std::multimap<uintmax_t, string> sizeMap;
 
-  // First find out how many plugins there are, and their sizes.
-  BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
-  for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
-    if (fs::is_regular_file(it->status()) && Plugin::IsValid(it->path().filename().string(), *this)) {
-      string name = it->path().filename().string();
-      BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
+  // First get the plugin sizes.
+  for (const auto& plugin : plugins) {
+    if (!Plugin::IsValid(plugin, *this))
+      throw Error(Error::Code::invalid_args, "\"" + plugin + "\" is not a valid plugin");
 
-      // Trim .ghost extension if present.
-      if (boost::iends_with(name, ".ghost"))
-        name = name.substr(0, name.length() - 6);
+    uintmax_t fileSize = Plugin::GetFileSize(plugin, *this);
+    meanFileSize += fileSize;
 
-      uintmax_t fileSize = fs::file_size(it->path());
-      meanFileSize += fileSize;
-
-      sizeMap.emplace(fileSize, name);
-    }
+    // Trim .ghost extension if present.
+    if (boost::iends_with(plugin, ".ghost"))
+      sizeMap.emplace(fileSize, plugin.substr(0, plugin.length() - 6));
+    else
+      sizeMap.emplace(fileSize, plugin);
   }
   meanFileSize /= sizeMap.size();  //Rounding error, but not important.
 
-  // Get the number of threads to use.
-  // hardware_concurrency() may be zero, if so then use only one thread.
+                                   // Get the number of threads to use.
+                                   // hardware_concurrency() may be zero, if so then use only one thread.
   size_t threadsToUse = std::min((size_t)thread::hardware_concurrency(), sizeMap.size());
   threadsToUse = std::max(threadsToUse, (size_t)1);
 
@@ -183,6 +180,22 @@ void Game::LoadPlugins(bool headersOnly) {
   }
 
   pluginsFullyLoaded_ = !headersOnly;
+}
+
+void Game::LoadAllInstalledPlugins(bool headersOnly) {
+  std::vector<std::string> plugins;
+
+  BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
+  for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
+    if (fs::is_regular_file(it->status()) && Plugin::IsValid(it->path().filename().string(), *this)) {
+      string name = it->path().filename().string();
+      BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
+
+      plugins.push_back(name);
+    }
+  }
+
+  LoadPlugins(plugins, headersOnly);
 }
 
 bool Game::ArePluginsFullyLoaded() const {

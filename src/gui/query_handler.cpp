@@ -353,7 +353,7 @@ void QueryHandler::GetConflictingPlugins(const std::string& pluginName, CefRefPt
   // Checking for FormID overlap will only work if the plugins have been loaded, so check if
   // the plugins have been fully loaded, and if not load all plugins.
   if (!lootState_.getCurrentGame().ArePluginsFullyLoaded())
-    lootState_.getCurrentGame().LoadPlugins(false);
+    lootState_.getCurrentGame().LoadAllInstalledPlugins(false);
 
   YAML::Node node;
   auto plugin = lootState_.getCurrentGame().GetPlugin(pluginName);
@@ -578,7 +578,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
     lootState_.getCurrentGame().ClearCachedConditions();
 
     bool isFirstLoad = lootState_.getCurrentGame().GetPlugins().empty();
-    lootState_.getCurrentGame().LoadPlugins(true);
+    lootState_.getCurrentGame().LoadAllInstalledPlugins(true);
 
     //Sort plugins into their load order.
     list<Plugin> installed;
@@ -846,7 +846,7 @@ void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
   try {
       // Always reload all the plugins.
     SendProgressUpdate(frame, translate("Loading plugin contents..."));
-    lootState_.getCurrentGame().LoadPlugins(false);
+    lootState_.getCurrentGame().LoadAllInstalledPlugins(false);
 
     //Sort plugins into their load order.
     SendProgressUpdate(frame, translate("Sorting load order..."));

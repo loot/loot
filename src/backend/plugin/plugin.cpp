@@ -187,6 +187,14 @@ bool Plugin::IsValid(const std::string& filename, const Game& game) {
   return false;
 }
 
+uintmax_t Plugin::GetFileSize(const std::string & filename, const Game & game) {
+  boost::filesystem::path realPath = game.DataPath() / filename;
+  if (!boost::filesystem::exists(realPath))
+    realPath += ".ghost";
+
+  return boost::filesystem::file_size(realPath);
+}
+
 bool Plugin::operator < (const Plugin & rhs) const {
   return boost::ilexicographical_compare(Name(), rhs.Name());;
 }

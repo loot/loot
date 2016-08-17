@@ -43,7 +43,7 @@ struct ApiDatabase : public DatabaseInterface {
 
   void EvalLists(const LanguageCode language);
 
-  std::vector<std::string> SortPlugins();
+  std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);
 
   bool UpdateMasterlist(const std::string& masterlist_path,
                         const std::string& remote_url,

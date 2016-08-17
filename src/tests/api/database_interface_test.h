@@ -171,7 +171,19 @@ TEST_P(DatabaseInterfaceTest, sortPluginsShouldSucceedIfPassedValidArguments) {
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
 
-  std::vector<std::string> actualOrder = db_->SortPlugins();
+  std::vector<std::string> actualOrder = db_->SortPlugins({
+    blankEsp,
+    blankPluginDependentEsp,
+    blankDifferentMasterDependentEsm,
+    blankMasterDependentEsp,
+    blankDifferentMasterDependentEsp,
+    blankDifferentEsp,
+    blankDifferentPluginDependentEsp,
+    masterFile,
+    blankEsm,
+    blankMasterDependentEsm,
+    blankDifferentEsm,
+  });
 
   ASSERT_EQ(expectedOrder, actualOrder);
 }

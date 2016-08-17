@@ -187,11 +187,11 @@ TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndDoNothingForOtherGa
   }
 }
 
-TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
+TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  EXPECT_NO_THROW(game.LoadPlugins(true));
+  EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
   EXPECT_EQ(11, game.GetPlugins().size());
 
   // Check that one plugin's header has been read.
@@ -203,11 +203,11 @@ TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalle
   EXPECT_EQ(0, plugin.Crc());
 }
 
-TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
+TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  EXPECT_NO_THROW(game.LoadPlugins(false));
+  EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
   EXPECT_EQ(11, game.GetPlugins().size());
 
   // Check that one plugin's header has been read.
@@ -229,7 +229,7 @@ TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  ASSERT_NO_THROW(game.LoadPlugins(true));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.ArePluginsFullyLoaded());
 }
@@ -238,7 +238,7 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  ASSERT_NO_THROW(game.LoadPlugins(false));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_TRUE(game.ArePluginsFullyLoaded());
 }
@@ -269,7 +269,7 @@ TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasNotBeenLoadedAndTheGameHasBe
 TEST_P(GameTest, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.LoadPlugins(true));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsm));
 }
@@ -277,7 +277,7 @@ TEST_P(GameTest, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasN
 TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.LoadPlugins(true));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
@@ -286,7 +286,7 @@ TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoadedAndTheGameHas
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
   ASSERT_NO_THROW(game.Init(false, localPath));
-  ASSERT_NO_THROW(game.LoadPlugins(true));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
@@ -295,7 +295,7 @@ TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndTheGameH
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
   ASSERT_NO_THROW(game.Init(false, localPath));
-  ASSERT_NO_THROW(game.LoadPlugins(true));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
@@ -304,7 +304,7 @@ TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoadedAndTheGameHasBe
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
   ASSERT_NO_THROW(game.Init(false, localPath));
-  ASSERT_NO_THROW(game.LoadPlugins(false));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
@@ -313,7 +313,7 @@ TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoadedAndTheGameHas
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
   ASSERT_NO_THROW(game.Init(false, localPath));
-  ASSERT_NO_THROW(game.LoadPlugins(false));
+  ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }

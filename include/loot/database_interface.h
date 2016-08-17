@@ -84,9 +84,12 @@ public:
    *           loaded, and reads the contents of each plugin. No changes are
    *           applied to the load order used by the game. This function does
    *           not load or evaluate the masterlist or userlist.
-   *  @returns A vector of plugin filenames in their sorted load order.
+   *  @param plugins
+   *         A vector of filenames of the plugins to sort.
+   *  @returns A vector of the given plugin filenames in their sorted load
+   *           order.
    */
-  virtual std::vector<std::string> SortPlugins() = 0;
+  virtual std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins) = 0;
 
   /**
    *  @}

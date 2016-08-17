@@ -86,9 +86,9 @@ void ApiDatabase::EvalLists(const LanguageCode language) {
 // LOOT Functionality Functions
 ////////////////////////////////////
 
-std::vector<std::string> ApiDatabase::SortPlugins() {
+std::vector<std::string> ApiDatabase::SortPlugins(const std::vector<std::string>& plugins) {
   // Always reload all the plugins.
-  game_.LoadPlugins(false);
+  game_.LoadPlugins(plugins, false);
 
   //Sort plugins into their load order.
   PluginSorter sorter;

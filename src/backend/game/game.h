@@ -45,7 +45,8 @@ public:
 
   void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
-  void LoadPlugins(bool headersOnly);  //Loads all installed plugins.
+  void LoadPlugins(const std::vector<std::string>& plugins, bool headersOnly);
+  void LoadAllInstalledPlugins(bool headersOnly);  //Loads all installed plugins.
   bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
 
   // Check if the plugin is active by using the cached value if

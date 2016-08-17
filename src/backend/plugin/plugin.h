@@ -62,6 +62,7 @@ public:
   // Checks that reqs and masters are all present, and that no incs are present.
   void CheckInstallValidity(const Game& game);
   static bool IsValid(const std::string& filename, const Game& game);
+  static uintmax_t GetFileSize(const std::string& filename, const Game& game);
 
   bool operator < (const Plugin& rhs) const;
 private:
