@@ -53,11 +53,9 @@ public:
   bool EvalCondition(Game& game, const LanguageCode language);
 
   MessageType GetType() const;
-  std::string GetText() const;
   std::vector<MessageContent> GetContent() const;
+  MessageContent GetContent(const LanguageCode language) const;
 private:
-  MessageContent ChooseContent(const LanguageCode language) const;
-
   MessageType type_;
   std::vector<MessageContent> content_;
 };

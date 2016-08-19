@@ -54,7 +54,8 @@ struct ApiDatabase : public DatabaseInterface {
 
   PluginTags GetPluginTags(const std::string& plugin);
 
-  std::vector<PluginMessage> GetPluginMessages(const std::string& plugin);
+  std::vector<PluginMessage> GetPluginMessages(const std::string& plugin,
+                                               const LanguageCode language);
 
   PluginCleanliness GetPluginCleanliness(const std::string& plugin);
 

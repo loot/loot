@@ -170,10 +170,16 @@ public:
    *         database.
    *  @param plugin
    *         The filename of the plugin to look up messages for.
+   *  @param language
+   *         The language to use when choosing which message content strings
+   *         to return. This has no effect if `EvalLists` has been called,
+   *         as it selects content strings, discarding non-selected strings,
+   *         during its operation.
    *  @returns A vector of messages associated with the specified plugin. Empty
    *           if the plugin has no messages associated with it.
    */
-  virtual std::vector<PluginMessage> GetPluginMessages(const std::string& plugin) = 0;
+  virtual std::vector<PluginMessage> GetPluginMessages(const std::string& plugin,
+                                                       const LanguageCode language) = 0;
 
   /**
    *  @brief Determines the database's knowledge of a plugin's cleanliness.

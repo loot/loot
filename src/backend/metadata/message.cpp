@@ -53,7 +53,7 @@ Message::Message(const MessageType type, const std::vector<MessageContent>& cont
 
 bool Message::operator < (const Message& rhs) const {
   if (!content_.empty() && !rhs.GetContent().empty())
-    return boost::ilexicographical_compare(ChooseContent(LanguageCode::english).GetText(), rhs.ChooseContent(LanguageCode::english).GetText());
+    return boost::ilexicographical_compare(GetContent(LanguageCode::english).GetText(), rhs.GetContent(LanguageCode::english).GetText());
   else if (content_.empty() && !rhs.GetContent().empty())
     return true;
   else
@@ -66,26 +66,20 @@ bool Message::operator == (const Message& rhs) const {
 
 bool Message::EvalCondition(loot::Game& game, const LanguageCode language) {
   BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).GetName();
-  content_.assign({ChooseContent(language)});
+  content_.assign({GetContent(language)});
 
   return ConditionalMetadata::EvalCondition(game);
-}
-
-MessageContent Message::ChooseContent(const LanguageCode language) const {
-  BOOST_LOG_TRIVIAL(trace) << "Choosing message content.";
-  return MessageContent::Choose(content_, language);
 }
 
 MessageType Message::GetType() const {
   return type_;
 }
 
-std::string Message::GetText() const {
-  return ChooseContent(LanguageCode::english).GetText();
-}
-
 std::vector<MessageContent> Message::GetContent() const {
   return content_;
+}
+MessageContent Message::GetContent(const LanguageCode language) const {
+  return MessageContent::Choose(content_, language);
 }
 }
 

@@ -158,7 +158,7 @@ TEST_P(MessageTest, evalConditionShouldSelectTheEnglishStringIfNoStringExistsFor
   EXPECT_EQ(MessageContents({content}), message.GetContent());
 }
 
-TEST_P(MessageTest, getTextShouldSelectTheEnglishStringIfThereAreMultipleContentStrings) {
+TEST_P(MessageTest, getContentShouldSelectTheEnglishStringIfThereIsNoStringForTheGivenLanguage) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
   ASSERT_NO_THROW(game.Init(false, localPath));
@@ -169,7 +169,21 @@ TEST_P(MessageTest, getTextShouldSelectTheEnglishStringIfThereAreMultipleContent
     MessageContent("content3", LanguageCode::french),
   }));
 
-  EXPECT_EQ("content2", message.GetText());
+  EXPECT_EQ("content2", message.GetContent(LanguageCode::korean).GetText());
+}
+
+TEST_P(MessageTest, getContentShouldSelectTheGivenLanguageStringIfItExists) {
+  Game game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  ASSERT_NO_THROW(game.Init(false, localPath));
+
+  Message message(MessageType::say, MessageContents({
+    MessageContent("content1", LanguageCode::german),
+    MessageContent("content2", LanguageCode::english),
+    MessageContent("content3", LanguageCode::french),
+  }));
+
+  EXPECT_EQ("content3", message.GetContent(LanguageCode::french).GetText());
 }
 
 TEST_P(MessageTest, getTextShouldSelectTheContentStringIfOnlyOneExists) {
@@ -181,7 +195,7 @@ TEST_P(MessageTest, getTextShouldSelectTheContentStringIfOnlyOneExists) {
     MessageContent("content1", LanguageCode::german),
   }));
 
-  EXPECT_EQ("content1", message.GetText());
+  EXPECT_EQ("content1", message.GetContent(LanguageCode::english).GetText());
 }
 
 TEST_P(MessageTest, emittingAsYamlShouldOutputNoteMessageTypeCorrectly) {

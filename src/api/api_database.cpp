@@ -163,14 +163,15 @@ PluginTags ApiDatabase::GetPluginTags(const std::string& plugin) {
   return tags;
 }
 
-std::vector<PluginMessage> ApiDatabase::GetPluginMessages(const std::string& plugin) {
+std::vector<PluginMessage> ApiDatabase::GetPluginMessages(const std::string& plugin,
+                                                          const LanguageCode language) {
   std::vector<PluginMessage> messages;
 
   PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
   for (const auto& message : pluginMetadata.Messages()) {
     PluginMessage pluginMessage;
     pluginMessage.type = message.GetType();
-    pluginMessage.text = message.GetText();
+    pluginMessage.text = message.GetContent(language).GetText();
     messages.push_back(pluginMessage);
   }
 
@@ -178,7 +179,7 @@ std::vector<PluginMessage> ApiDatabase::GetPluginMessages(const std::string& plu
   for (const auto& message : pluginMetadata.Messages()) {
     PluginMessage pluginMessage;
     pluginMessage.type = message.GetType();
-    pluginMessage.text = message.GetText();
+    pluginMessage.text = message.GetContent(language).GetText();
     messages.push_back(pluginMessage);
   }
 
@@ -199,7 +200,7 @@ PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) {
   std::list<Message> messages(game_.GetMasterlist().FindPlugin(PluginMetadata(plugin)).Messages());
 
   for (const auto& message : messages) {
-    if (boost::starts_with(message.GetText(), "Do not clean")) {
+    if (boost::starts_with(message.GetContent(LanguageCode::english).GetText(), "Do not clean")) {
       return PluginCleanliness::do_not_clean;
     }
   }
@@ -207,7 +208,7 @@ PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) {
   messages = game_.GetUserlist().FindPlugin(PluginMetadata(plugin)).Messages();
 
   for (const auto& message : messages) {
-    if (boost::starts_with(message.GetText(), "Do not clean")) {
+    if (boost::starts_with(message.GetContent(LanguageCode::english).GetText(), "Do not clean")) {
       return PluginCleanliness::do_not_clean;
     }
   }
