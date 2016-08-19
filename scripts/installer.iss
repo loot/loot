@@ -2,6 +2,14 @@
 ; This file must be encoded in UTF-8 WITH a BOM for Unicode text to
 ; be displayed correctly.
 
+#include <idp.iss>
+#include <idplang\finnish.iss>
+#include <idplang\french.iss>
+#include <idplang\german.iss>
+#include <idplang\polish.iss>
+#include <idplang\russian.iss>
+#include <idplang\spanish.iss>
+
 #define MyAppName "LOOT"
 #define MyAppVersion "0.9.2"
 #define MyAppPublisher "LOOT Team"
@@ -139,6 +147,7 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet"; Flags: skipifdoesntexist
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -186,26 +195,6 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
 
 [Code]
-// Query user whether their data files should be deleted on uninstall.
-procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
-begin
-  // Don't remove user data if the uninstall is silent.
-  if UninstallSilent then
-    exit;
-  if CurUninstallStep = usUninstall then begin
-    if MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES
-    then begin
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\LOOTDebugLog.txt'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\CEFDebugLog.txt'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Oblivion\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Skyrim\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout3\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\FalloutNV\userlist.yaml'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout4\userlist.yaml'));
-    end;
-  end;
-end;
 // Set LOOT's language in settings.yaml
 procedure SetLootLanguage();
 var
@@ -236,6 +225,7 @@ begin
       SaveStringToFile(File, LanguageLine, False);
   end;
 end;
+
 // Run a previous install's uninstaller before starting this installation.
 procedure RunPreviousVersionUninstaller();
 var
@@ -259,11 +249,75 @@ begin
     end;
   end;
 end;
+
+function VCRedistNeedsInstall: Boolean;
+var
+  VersionMajor : Integer;
+  VersionMinor: Integer;
+  VersionBld: Integer;
+  RegKey: String;
+  IsRuntimeInstalled: Cardinal;
+  InstalledVersionMajor: Cardinal;
+  InstalledVersionMinor: Cardinal;
+  InstalledVersionBld: Cardinal;
+begin
+  VersionMajor := 14;
+  VersionMinor := 0;
+  VersionBld := 24212;
+  RegKey := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86';
+  IsRuntimeInstalled := 0;
+  InstalledVersionMajor := 0;
+  InstalledVersionMinor := 0;
+  InstalledVersionBld := 0;
+
+  RegQueryDWordValue(HKLM, RegKey, 'Installed', IsRuntimeInstalled);
+  RegQueryDWordValue(HKLM, RegKey, 'Major', InstalledVersionMajor);
+  RegQueryDWordValue(HKLM, RegKey, 'Minor', InstalledVersionMinor);
+  RegQueryDWordValue(HKLM, RegKey, 'Bld', InstalledVersionBld);
+
+  Result := (IsRuntimeInstalled = 0)
+    or (InstalledVersionMajor < VersionMajor)
+    or (InstalledVersionMinor < VersionMinor)
+    or (InstalledVersionBld < VersionBld);
+end;
+
+// Query user whether their data files should be deleted on uninstall.
+procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
+begin
+  // Don't remove user data if the uninstall is silent.
+  if UninstallSilent then
+    exit;
+  if CurUninstallStep = usUninstall then begin
+    if MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES
+    then begin
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\LOOTDebugLog.txt'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\CEFDebugLog.txt'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Oblivion\userlist.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Skyrim\userlist.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout3\userlist.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\FalloutNV\userlist.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout4\userlist.yaml'));
+    end;
+  end;
+end;
+
+procedure InitializeWizard();
+begin
+  if VCRedistNeedsInstall then begin
+    idpAddFile('http://download.microsoft.com/download/9/a/2/9a2a7e36-a8af-46c0-8a78-a5eb111eefe2/vc_redist.x86.exe', ExpandConstant('{tmp}\vc_redist.x86.exe'));
+
+    idpDownloadAfter(wpReady);
+  end
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then
     RunPreviousVersionUninstaller();
 
-  if CurStep = ssPostInstall then
+  if CurStep = ssPostInstall then begin
     SetLootLanguage();
+    DeleteFile(ExpandConstant('{tmp}\vc_redist.x86.exe'));
+  end
 end;
