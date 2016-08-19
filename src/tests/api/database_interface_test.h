@@ -362,6 +362,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputANoteIfAPl
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankEsm, LanguageCode::english));
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(MessageType::say, messages[0].type);
+  EXPECT_EQ(LanguageCode::english, messages[0].language);
   EXPECT_EQ(noteMessage, messages[0].text);
 }
 
@@ -373,6 +374,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputAWarningIf
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankDifferentEsm, LanguageCode::english));
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(MessageType::warn, messages[0].type);
+  EXPECT_EQ(LanguageCode::english, messages[0].language);
   EXPECT_EQ(warningMessage, messages[0].text);
 }
 
@@ -384,6 +386,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputAnErrorIfA
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankDifferentEsp, LanguageCode::english));
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(MessageType::error, messages[0].type);
+  EXPECT_EQ(LanguageCode::english, messages[0].language);
   EXPECT_EQ(errorMessage, messages[0].text);
 }
 
@@ -395,10 +398,13 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputMultipleMe
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankDifferentMasterDependentEsp, LanguageCode::english));
   ASSERT_EQ(3, messages.size());
   EXPECT_EQ(MessageType::say, messages[0].type);
+  EXPECT_EQ(LanguageCode::english, messages[0].language);
   EXPECT_EQ(noteMessage, messages[0].text);
   EXPECT_EQ(MessageType::warn, messages[1].type);
+  EXPECT_EQ(LanguageCode::english, messages[1].language);
   EXPECT_EQ(warningMessage, messages[1].text);
   EXPECT_EQ(MessageType::error, messages[2].type);
+  EXPECT_EQ(LanguageCode::english, messages[2].language);
   EXPECT_EQ(errorMessage, messages[2].text);
 }
 

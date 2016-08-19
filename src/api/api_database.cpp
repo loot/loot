@@ -169,18 +169,12 @@ std::vector<PluginMessage> ApiDatabase::GetPluginMessages(const std::string& plu
 
   PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
   for (const auto& message : pluginMetadata.Messages()) {
-    PluginMessage pluginMessage;
-    pluginMessage.type = message.GetType();
-    pluginMessage.text = message.GetContent(language).GetText();
-    messages.push_back(pluginMessage);
+    messages.push_back(convertMessage(message, language));
   }
 
   pluginMetadata = game_.GetUserlist().FindPlugin(PluginMetadata(plugin));
   for (const auto& message : pluginMetadata.Messages()) {
-    PluginMessage pluginMessage;
-    pluginMessage.type = message.GetType();
-    pluginMessage.text = message.GetContent(language).GetText();
-    messages.push_back(pluginMessage);
+    messages.push_back(convertMessage(message, language));
   }
 
   return messages;
@@ -248,5 +242,15 @@ void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool ove
     throw Error(Error::Code::path_write_fail, "Couldn't open output file.");
   out << yout.c_str();
   out.close();
+}
+PluginMessage ApiDatabase::convertMessage(const Message& message, const LanguageCode language) {
+  PluginMessage pluginMessage;
+  MessageContent content = message.GetContent(language);
+
+  pluginMessage.type = message.GetType();
+  pluginMessage.language = content.GetLanguage();
+  pluginMessage.text = content.GetText();
+
+  return pluginMessage;
 }
 }

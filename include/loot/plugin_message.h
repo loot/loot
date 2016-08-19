@@ -37,6 +37,9 @@ struct PluginMessage {
   /** @brief The type of the message. */
   MessageType type;
 
+  /** @brief The language the message string is written in. */
+  LanguageCode language;
+
   /**
    * @brief The message string, which may be formatted using
    * [GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown).
