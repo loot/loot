@@ -135,8 +135,6 @@ bool ConditionEvaluator::checksumMatches(const std::string& filePath, const uint
         realChecksum = GetCrc32(game_->DataPath() / filePath);
       else if ((boost::iends_with(filePath, ".esp") || boost::iends_with(filePath, ".esm")) && boost::filesystem::exists(game_->DataPath() / (filePath + ".ghost")))
         realChecksum = GetCrc32(game_->DataPath() / (filePath + ".ghost"));
-    } else {
-      return false;
     }
   }
 

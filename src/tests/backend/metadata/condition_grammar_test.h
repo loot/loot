@@ -247,6 +247,21 @@ TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatMatchesTheActualPlugi
   EXPECT_TRUE(result_);
 }
 
+TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatMatchesTheActualCachedPluginCrcShouldEvaluateToTrue) {
+  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+
+  Grammar grammar(&game_);
+  std::string condition("checksum(\"" + blankEsm + "\", " + IntToHexString(blankEsmCrc) + ")");
+
+  success_ = boost::spirit::qi::phrase_parse(std::cbegin(condition),
+                                             std::cend(condition),
+                                             grammar,
+                                             skipper_,
+                                             result_);
+  EXPECT_TRUE(success_);
+  EXPECT_TRUE(result_);
+}
+
 TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatDoesNotMatchTheActualPluginCrcShouldEvaluateToFalse) {
   Grammar grammar(&game_);
   std::string condition("checksum(\"" + blankEsm + "\", DEADBEEF)");
