@@ -74,6 +74,16 @@ std::vector<MessageContent> Message::GetContent() const {
 MessageContent Message::GetContent(const LanguageCode language) const {
   return MessageContent::Choose(content_, language);
 }
+SimpleMessage Message::ToSimpleMessage(const LanguageCode language) const {
+  MessageContent content = GetContent(language);
+  SimpleMessage simpleMessage;
+
+  simpleMessage.type = GetType();
+  simpleMessage.language = content.GetLanguage();
+  simpleMessage.text = content.GetText();
+
+  return simpleMessage;
+}
 }
 
 namespace YAML {

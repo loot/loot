@@ -301,6 +301,15 @@ std::set<Location> PluginMetadata::Locations() const {
   return locations_;
 }
 
+std::list<SimpleMessage> PluginMetadata::SimpleMessages(const LanguageCode language) const {
+  std::list<SimpleMessage> simpleMessages(messages_.size());
+  std::transform(begin(messages_), end(messages_), begin(simpleMessages), [&](const Message& message) {
+    return message.ToSimpleMessage(language);
+  });
+
+  return simpleMessages;
+}
+
 void PluginMetadata::Enabled(const bool e) {
   enabled_ = e;
 }

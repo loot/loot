@@ -62,8 +62,6 @@ struct ApiDatabase : public DatabaseInterface {
   void WriteMinimalList(const std::string& outputFile,
                         const bool overwrite);
 private:
-  SimpleMessage convertMessage(const Message& message, const LanguageCode language);
-
   Game game_;
 
   Masterlist unevaluatedMasterlist_;

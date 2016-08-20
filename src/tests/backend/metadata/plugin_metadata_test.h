@@ -634,6 +634,28 @@ TEST_P(PluginMetadataTest, newMetadataShouldOutputLocationsThatAreNotCommonToBot
   EXPECT_EQ(std::set<Location>({location2}), newMetadata.Locations());
 }
 
+TEST_P(PluginMetadataTest, simpleMessagesShouldReturnMessagesAsSimpleMessages) {
+  PluginMetadata plugin;
+  plugin.Messages({
+    Message(MessageType::say, "content1"),
+    Message(MessageType::warn, {{"content2",LanguageCode::french}, {"other content2", LanguageCode::english}}),
+    Message(MessageType::error, "content3"),
+  });
+
+  auto simpleMessages = plugin.SimpleMessages(LanguageCode::french);
+
+  EXPECT_EQ(3, simpleMessages.size());
+  EXPECT_EQ(MessageType::say, simpleMessages.front().type);
+  EXPECT_EQ(LanguageCode::english, simpleMessages.front().language);
+  EXPECT_EQ("content1", simpleMessages.front().text);
+  EXPECT_EQ(MessageType::warn, (++simpleMessages.begin())->type);
+  EXPECT_EQ(LanguageCode::french, (++simpleMessages.begin())->language);
+  EXPECT_EQ("content2", (++simpleMessages.begin())->text);
+  EXPECT_EQ(MessageType::error, simpleMessages.back().type);
+  EXPECT_EQ(LanguageCode::english, simpleMessages.back().language);
+  EXPECT_EQ("content3", simpleMessages.back().text);
+}
+
 TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());

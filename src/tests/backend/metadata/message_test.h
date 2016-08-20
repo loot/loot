@@ -139,6 +139,20 @@ TEST_P(MessageTest, getContentShouldSelectTheContentStringIfOnlyOneExists) {
   EXPECT_EQ("content1", message.GetContent(LanguageCode::english).GetText());
 }
 
+TEST_P(MessageTest, toSimpleMessageShouldSelectTextAndLanguageUsingGetContent) {
+  Message message(MessageType::warn, MessageContents({
+    MessageContent("content1", LanguageCode::german),
+    MessageContent("content2", LanguageCode::english),
+    MessageContent("content3", LanguageCode::french),
+  }));
+
+  SimpleMessage simpleMessage = message.ToSimpleMessage(LanguageCode::french);
+
+  EXPECT_EQ(MessageType::warn, simpleMessage.type);
+  EXPECT_EQ("content3", simpleMessage.text);
+  EXPECT_EQ(LanguageCode::french, simpleMessage.language);
+}
+
 TEST_P(MessageTest, emittingAsYamlShouldOutputNoteMessageTypeCorrectly) {
   Message message(MessageType::say, "content1");
   YAML::Emitter emitter;

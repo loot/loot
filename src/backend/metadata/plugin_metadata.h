@@ -77,6 +77,8 @@ public:
   std::set<PluginCleaningData> CleanInfo() const;
   std::set<Location> Locations() const;
 
+  std::list<SimpleMessage> SimpleMessages(const LanguageCode language) const;
+
   void Enabled(const bool enabled);
   void LocalPriority(const Priority& priority);
   void GlobalPriority(const Priority& priority);

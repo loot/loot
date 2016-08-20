@@ -31,10 +31,11 @@
 #include <boost/format.hpp>
 #include <yaml-cpp/yaml.h>
 
-#include "loot/message_type.h"
-#include "backend/helpers/language.h"
 #include "backend/metadata/conditional_metadata.h"
 #include "backend/metadata/message_content.h"
+#include "loot/language_code.h"
+#include "loot/message_type.h"
+#include "loot/simple_message.h"
 
 namespace loot {
 class Message : public ConditionalMetadata {
@@ -51,6 +52,8 @@ public:
   MessageType GetType() const;
   std::vector<MessageContent> GetContent() const;
   MessageContent GetContent(const LanguageCode language) const;
+
+  SimpleMessage ToSimpleMessage(const LanguageCode language) const;
 private:
   MessageType type_;
   std::vector<MessageContent> content_;
