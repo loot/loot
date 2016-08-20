@@ -37,9 +37,11 @@
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
 
+#include "gui/editor_message.h"
 #include "gui/loot_app.h"
 #include "gui/loot_handler.h"
 #include "gui/resource.h"
+#include "gui/yaml_simple_message_helpers.h"
 
 #include "loot/error.h"
 #include "backend/app/loot_paths.h"
@@ -146,7 +148,7 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
     lootState_.decrementUnappliedChangeCounter();
     lootState_.getCurrentGame().DecrementLoadOrderSortCount();
 
-    YAML::Node node(GetGeneralMessages());
+    YAML::Node node(GetGeneralMessages(lootState_.getLanguage().GetCode()));
     callback->Success(JSON::stringify(node));
     return true;
   } else if (request == "editorOpened") {
@@ -463,7 +465,7 @@ std::string QueryHandler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
     newUserlistEntry.Incs(pluginMetadata["userlist"]["inc"].as<set<File>>());
 
   if (pluginMetadata["userlist"]["msg"])
-    newUserlistEntry.Messages(pluginMetadata["userlist"]["msg"].as<list<Message>>());
+    newUserlistEntry.Messages(ToMessages(pluginMetadata["userlist"]["msg"].as<list<EditorMessage>>()));
   if (pluginMetadata["userlist"]["tag"])
     newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
   if (pluginMetadata["userlist"]["dirty"])
@@ -649,7 +651,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
     }
 
     // Now store global messages.
-    gameNode["globalMessages"] = GetGeneralMessages();
+    gameNode["globalMessages"] = GetGeneralMessages(lootState_.getLanguage().GetCode());
 
     gameNode["bashTags"] = lootState_.getCurrentGame().GetMasterlist().BashTags();
 
@@ -683,7 +685,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
         pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
         pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
-        pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
+        pluginNode["masterlist"]["msg"] = ToEditorMessages(mlistPlugin.Messages(), lootState_.getLanguage().GetCode());
         pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
         pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
         pluginNode["masterlist"]["clean"] = mlistPlugin.CleanInfo();
@@ -696,7 +698,7 @@ void QueryHandler::GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
         pluginNode["userlist"]["after"] = ulistPlugin.LoadAfter();
         pluginNode["userlist"]["req"] = ulistPlugin.Reqs();
         pluginNode["userlist"]["inc"] = ulistPlugin.Incs();
-        pluginNode["userlist"]["msg"] = ulistPlugin.Messages();
+        pluginNode["userlist"]["msg"] = ToEditorMessages(ulistPlugin.Messages(), lootState_.getLanguage().GetCode());
         pluginNode["userlist"]["tag"] = ulistPlugin.Tags();
         pluginNode["userlist"]["dirty"] = ulistPlugin.DirtyInfo();
         pluginNode["userlist"]["clean"] = ulistPlugin.CleanInfo();
@@ -767,7 +769,7 @@ void QueryHandler::UpdateMasterlist(CefRefPtr<Callback> callback) {
       gameNode["bashTags"] = lootState_.getCurrentGame().GetMasterlist().BashTags();
 
       // Store global messages in case they have changed.
-      gameNode["globalMessages"] = GetGeneralMessages();
+      gameNode["globalMessages"] = GetGeneralMessages(lootState_.getLanguage().GetCode());
 
       for (const auto& plugin : lootState_.getCurrentGame().GetPlugins()) {
         Plugin mlistPlugin(plugin);
@@ -873,7 +875,7 @@ void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
     YAML::Node node;
 
     // Store global messages in case they have changed.
-    node["globalMessages"] = GetGeneralMessages();
+    node["globalMessages"] = GetGeneralMessages(lootState_.getLanguage().GetCode());
 
     for (const auto &plugin : plugins) {
       YAML::Node pluginNode;
@@ -903,30 +905,31 @@ void QueryHandler::SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> ca
       lootState_.getCurrentGame().AppendMessage(Message(MessageType::error, e.what()));
 
       YAML::Node node;
-      node["globalMessages"] = GetGeneralMessages();
+      node["globalMessages"] = GetGeneralMessages(lootState_.getLanguage().GetCode());
       callback->Success(JSON::stringify(node));
     } else
       callback->Failure(e.codeAsUnsignedInt(), (boost::format(translate("Failed to sort plugins. Details: %1%")) % e.what()).str());
   }
 }
 
-std::vector<Message> QueryHandler::GetGeneralMessages() const {
+std::vector<SimpleMessage> QueryHandler::GetGeneralMessages(const LanguageCode language) const {
   vector<Message> messages;
   auto metadataListMessages = lootState_.getCurrentGame().GetMasterlist().Messages();
   messages.insert(end(messages),
                   begin(metadataListMessages),
                   end(metadataListMessages));
+
   metadataListMessages = lootState_.getCurrentGame().GetUserlist().Messages();
   messages.insert(end(messages),
                   begin(metadataListMessages),
                   end(metadataListMessages));
+
   auto gameMessages = lootState_.getCurrentGame().GetMessages();
   messages.insert(end(messages),
                   begin(gameMessages),
                   end(gameMessages));
 
   try {
-    BOOST_LOG_TRIVIAL(info) << "Using message language: " << lootState_.getLanguage().GetName();
     auto it = begin(messages);
     while (it != end(messages)) {
       if (!it->EvalCondition(lootState_.getCurrentGame()))
@@ -939,7 +942,17 @@ std::vector<Message> QueryHandler::GetGeneralMessages() const {
     messages.push_back(Message(MessageType::error, (format(translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
   }
 
-  return messages;
+  vector<SimpleMessage> simpleMessages;
+
+  BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).GetName();
+  std::transform(begin(messages),
+                 end(messages),
+                 std::back_inserter<vector<SimpleMessage>>(simpleMessages),
+                 [&](const Message& message) {
+    return message.ToSimpleMessage(language);
+  });
+
+  return simpleMessages;
 }
 
 YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist) {
@@ -970,7 +983,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   pluginNode["name"] = tempPlugin.Name();
   pluginNode["priority"] = tempPlugin.LocalPriority().getValue();
   pluginNode["globalPriority"] = tempPlugin.GlobalPriority().getValue();
-  pluginNode["messages"] = tempPlugin.Messages();
+  pluginNode["messages"] = tempPlugin.SimpleMessages(lootState_.getLanguage().GetCode());
   pluginNode["tags"] = tempPlugin.Tags();
   pluginNode["isDirty"] = !tempPlugin.DirtyInfo().empty();
   pluginNode["loadOrderIndex"] = lootState_.getCurrentGame().GetActiveLoadOrderIndex(tempPlugin.Name());
@@ -1027,5 +1040,28 @@ void QueryHandler::CopyToClipboard(const std::string& text) {
 void QueryHandler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
   BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
   frame->ExecuteJavaScript("loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
+}
+
+std::list<EditorMessage> QueryHandler::ToEditorMessages(std::list<Message> messages, const LanguageCode language) {
+  std::list<EditorMessage> list;
+
+  for (const auto& message : messages) {
+    list.push_back(EditorMessage(message, language));
+  }
+
+  return list;
+}
+
+std::list<Message> QueryHandler::ToMessages(std::list<EditorMessage> messages) {
+  std::list<Message> list;
+
+  for (const auto& message : messages) {
+    list.push_back(Message(
+      message.type,
+      {{message.text, message.language}},
+      message.condition));
+  }
+
+  return list;
 }
 }

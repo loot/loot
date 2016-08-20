@@ -377,10 +377,8 @@ describe('Game', () => {
       game._globalMessages = [{
         type: 'say',
         condition: 'file("foo.esp")',
-        content: [{
-          lang: 'fr',
-          text: 'Bonjour le monde',
-        }],
+        language: 'fr',
+        text: 'Bonjour le monde',
       }];
       game._plugins = [{
         name: 'foo',
@@ -398,10 +396,8 @@ describe('Game', () => {
         messages: [{
           type: 'warn',
           condition: 'file("bar.esp")',
-          content: [{
-            lang: 'en',
-            text: 'Hello world',
-          }],
+          language: 'en',
+          text: 'Hello world',
         }],
         tags: ['invalidStructure'],
         isDirty: true,
@@ -412,10 +408,7 @@ describe('Game', () => {
       }];
 
       game.getContent().should.deepEqual({
-        messages: [{
-          type: game._globalMessages[0].type,
-          content: game._globalMessages[0].content[0].text,
-        }],
+        messages: game._globalMessages,
         plugins: [{
           name: game._plugins[0].name,
           crc: game._plugins[0].crc,

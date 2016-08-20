@@ -262,17 +262,6 @@ loot-editor-close
         this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height, 10) - evt.detail.ddy) + 'px';
       },
 
-      _rowDataToMessage(rowData) {
-        return {
-          type: rowData.type,
-          content: [{
-            text: rowData.content,
-            lang: rowData.language,
-          }],
-          condition: rowData.condition,
-        };
-      },
-
       _rowDataToCrc(rowData) {
         return {
           crc: parseInt(rowData.crc, 16),
@@ -317,7 +306,7 @@ loot-editor-close
             } else if (tables[j].parentElement.id === 'inc') {
               plugin.userlist.inc = rowsData;
             } else if (tables[j].parentElement.id === 'message') {
-              plugin.userlist.msg = rowsData.map(this._rowDataToMessage);
+              plugin.userlist.msg = rowsData;
             } else if (tables[j].parentElement.id === 'tags') {
               plugin.userlist.tag = rowsData.map(loot.Plugin.tagFromRowData);
             } else if (tables[j].parentElement.id === 'dirty') {
@@ -356,15 +345,6 @@ loot-editor-close
         }
       },
 
-      _messageToRowData(message) {
-        return {
-          type: message.type,
-          content: message.content[0].text,
-          condition: message.condition,
-          language: message.content[0].lang,
-        };
-      },
-
       _dirtyInfoToRowData(dirtyInfo) {
         return {
           crc: dirtyInfo.crc.toString(16).toUpperCase(),
@@ -395,10 +375,10 @@ loot-editor-close
           tables[j].clear();
           if (tables[j].parentElement.id === 'message') {
             if (newData.masterlist && newData.masterlist.msg) {
-              newData.masterlist.msg.map(this._messageToRowData).forEach(tables[j].addReadOnlyRow, tables[j]);
+              newData.masterlist.msg.forEach(tables[j].addReadOnlyRow, tables[j]);
             }
             if (newData.userlist && newData.userlist.msg) {
-              newData.userlist.msg.map(this._messageToRowData).forEach(tables[j].addRow, tables[j]);
+              newData.userlist.msg.forEach(tables[j].addRow, tables[j]);
             }
           } else if (tables[j].parentElement.id === 'tags') {
             if (newData.masterlist && newData.masterlist.tag) {

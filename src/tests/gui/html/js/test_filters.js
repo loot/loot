@@ -157,11 +157,11 @@ describe('Filters', () => {
       filters = new loot.Filters(l10n);
       note = {
         type: 'say',
-        content: 'test message',
+        text: 'test message',
       };
       doNotCleanMessage = {
         type: 'warn',
-        content: 'do not clean',
+        text: 'do not clean',
       };
     });
 

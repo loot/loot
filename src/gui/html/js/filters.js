@@ -61,7 +61,7 @@
     }
 
     if (this.hideDoNotCleanMessages
-        && message.content.toLowerCase().indexOf(this._doNotCleanString) !== -1) {
+        && message.text.toLowerCase().indexOf(this._doNotCleanString) !== -1) {
       return false;
     }
 

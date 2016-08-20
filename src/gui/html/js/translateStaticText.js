@@ -113,7 +113,7 @@
     messageRow.querySelector('.type').children[0].textContent = l10n.translate('Note');
     messageRow.querySelector('.type').children[1].textContent = l10n.translate('Warning');
     messageRow.querySelector('.type').children[2].textContent = l10n.translate('Error');
-    messageRow.querySelector('.content').setAttribute('error-message', l10n.translate('A content string is required.'));
+    messageRow.querySelector('.text').setAttribute('error-message', l10n.translate('A content string is required.'));
     messageRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
   }
 

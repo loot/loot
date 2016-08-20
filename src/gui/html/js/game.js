@@ -258,10 +258,7 @@
     let plugins = [];
 
     if (this.globalMessages) {
-      messages = this.globalMessages.map(message => ({
-        type: message.type,
-        content: message.content[0].text,
-      }));
+      messages = this.globalMessages;
     }
     if (this.plugins) {
       plugins = this.plugins.map(plugin => ({
@@ -379,7 +376,7 @@
         const li = document.createElement('li');
         li.className = message.type;
         /* Use the Marked library for Markdown formatting support. */
-        li.innerHTML = marked(message.content[0].text);
+        li.innerHTML = marked(message.text);
         generalMessagesList.appendChild(li);
       });
     }

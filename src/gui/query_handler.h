@@ -31,6 +31,7 @@
 #include "backend/app/loot_state.h"
 #include "backend/plugin/plugin.h"
 #include "backend/metadata/plugin_metadata.h"
+#include "gui/editor_message.h"
 
 namespace loot {
 class QueryHandler : public CefMessageRouterBrowserSide::Handler {
@@ -68,12 +69,15 @@ private:
   std::string ClearPluginMetadata(const std::string& pluginName);
   std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
 
-  std::vector<Message> GetGeneralMessages() const;
+  std::vector<SimpleMessage> GetGeneralMessages(const LanguageCode language) const;
   YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
   YAML::Node GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist);
 
   void CopyToClipboard(const std::string& text);
   void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
+
+  std::list<EditorMessage> ToEditorMessages(std::list<Message> messages, const LanguageCode language);
+  std::list<Message> ToMessages(std::list<EditorMessage> messages);
 
   LootState& lootState_;
 };

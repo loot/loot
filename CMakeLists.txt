@@ -230,11 +230,13 @@ set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
-set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
+set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/resource.h")
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")
 
 set (LOOT_API_SRC "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp"

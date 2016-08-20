@@ -61,10 +61,7 @@
         this._tags = [];
       }
 
-      this._messages = plugin.messages.map(message => ({
-        type: message.type,
-        content: message.content[0].text,
-      })).filter(filters.messageFilter, filters);
+      this._messages = plugin.messages.filter(filters.messageFilter, filters);
     }
 
     get name() {
@@ -153,7 +150,7 @@
       }
 
       for (let i = 0; i < this.messages.length; ++i) {
-        if (this.messages[i].content.toLowerCase().indexOf(needle) !== -1) {
+        if (this.messages[i].text.toLowerCase().indexOf(needle) !== -1) {
           return true;
         }
       }

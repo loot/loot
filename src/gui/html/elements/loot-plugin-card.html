@@ -208,7 +208,7 @@
             const messageListItem = document.createElement('li');
             messageListItem.className = message.type;
             // Use the Marked library for Markdown formatting support.
-            messageListItem.innerHTML = window.marked(message.content);
+            messageListItem.innerHTML = window.marked(message.text);
             messageList.appendChild(messageListItem);
           });
           messageList.hidden = messages.length === 0;

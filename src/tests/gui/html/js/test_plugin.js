@@ -207,7 +207,7 @@ describe('Plugin', () => {
     it('should set messages to passed key\'s value', () => {
       const messages = [{
         type: 'say',
-        content: 'test message',
+        text: 'test message',
       }];
       const plugin = new loot.Plugin({
         name: 'test',
@@ -452,7 +452,7 @@ describe('Plugin', () => {
     it('getting messages should return any that are set', () => {
       const messages = [{
         type: 'say',
-        content: 'test message',
+        text: 'test message',
       }];
       const plugin = new loot.Plugin({
         name: 'test',
@@ -469,7 +469,7 @@ describe('Plugin', () => {
       });
       const messages = [{
         type: 'say',
-        content: 'test message',
+        text: 'test message',
       }];
 
       plugin.messages = messages;
@@ -482,7 +482,7 @@ describe('Plugin', () => {
         name: 'test',
         messages: [{
           type: 'say',
-          content: 'test message',
+          text: 'test message',
         }],
       });
 
@@ -504,7 +504,7 @@ describe('Plugin', () => {
       });
       const messages = [{
         type: 'error',
-        content: 'test message',
+        text: 'test message',
       }];
 
       handleEvent = (evt) => {
@@ -1063,7 +1063,7 @@ describe('Plugin', () => {
     it('should throw with an empty object', () => {
       plugin.messages = [{
         type: 'say',
-        content: 'test message',
+        text: 'test message',
       }];
 
       (() => { plugin.getCardContent({}); }).should.throw();
@@ -1086,17 +1086,13 @@ describe('PluginCardContent', () => {
       messages: [
         {
           type: 'say',
-          content: [{
-            text: 'test message',
-            lang: 'en',
-          }],
+          text: 'test message',
+          language: 'en',
         },
         {
           type: 'warn',
-          content: [{
-            text: 'do not clean',
-            lang: 'en',
-          }],
+          text: 'do not clean',
+          language: 'en',
         },
       ],
     });
@@ -1267,32 +1263,21 @@ describe('PluginCardContent', () => {
 
   describe('#messages', () => {
     it('should return message objects mapped from the plugin\'s message objects', () => {
-      plugin.getCardContent(filters).messages.should.deepEqual([
-        {
-          type: plugin.messages[0].type,
-          content: plugin.messages[0].content[0].text,
-        },
-        {
-          type: plugin.messages[1].type,
-          content: plugin.messages[1].content[0].text,
-        },
-      ]);
+      plugin.getCardContent(filters).messages.should.deepEqual(plugin.messages);
     });
 
     it('should return an array missing the note message when the notes filter is enabled', () => {
       filters.hideNotes = true;
-      plugin.getCardContent(filters).messages.should.deepEqual([{
-        type: plugin.messages[1].type,
-        content: plugin.messages[1].content[0].text,
-      }]);
+      plugin.getCardContent(filters).messages.should.deepEqual([
+        plugin.messages[1],
+      ]);
     });
 
     it('should return an array missing the "do not clean" message when the "do not clean" messages filter is enabled', () => {
       filters.hideDoNotCleanMessages = true;
-      plugin.getCardContent(filters).messages.should.deepEqual([{
-        type: plugin.messages[0].type,
-        content: plugin.messages[0].content[0].text,
-      }]);
+      plugin.getCardContent(filters).messages.should.deepEqual([
+        type: plugin.messages[0],
+      ]);
     });
 
     it('should return an empty array when the all messages filter is enabled', () => {
