@@ -37,8 +37,6 @@
 #include "backend/metadata/message_content.h"
 
 namespace loot {
-class Game;
-
 class Message : public ConditionalMetadata {
 public:
   Message();
@@ -49,8 +47,6 @@ public:
 
   bool operator < (const Message& rhs) const;
   bool operator == (const Message& rhs) const;
-
-  bool EvalCondition(Game& game, const LanguageCode language);
 
   MessageType GetType() const;
   std::vector<MessageContent> GetContent() const;

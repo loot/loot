@@ -66,10 +66,8 @@ public:
    *  @brief Evaluates all conditions and regular expression metadata entries.
    *  @details Repeated calls re-evaluate the metadata from scratch. This
    *           function affects the output of all the database access functions.
-   *  @param language
-   *         The language code that is used for message language comparisons.
    */
-  virtual void EvalLists(const LanguageCode language) = 0;
+  virtual void EvalLists() = 0;
 
   /**
    *  @}
@@ -172,9 +170,7 @@ public:
    *         The filename of the plugin to look up messages for.
    *  @param language
    *         The language to use when choosing which message content strings
-   *         to return. This has no effect if `EvalLists` has been called,
-   *         as it selects content strings, discarding non-selected strings,
-   *         during its operation.
+   *         to return.
    *  @returns A vector of messages associated with the specified plugin. Empty
    *           if the plugin has no messages associated with it.
    */

@@ -41,7 +41,7 @@ struct ApiDatabase : public DatabaseInterface {
   void LoadLists(const std::string& masterlist_path,
                  const std::string& userlist_path = "");
 
-  void EvalLists(const LanguageCode language);
+  void EvalLists();
 
   std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);
 

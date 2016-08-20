@@ -929,7 +929,7 @@ std::vector<Message> QueryHandler::GetGeneralMessages() const {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << lootState_.getLanguage().GetName();
     auto it = begin(messages);
     while (it != end(messages)) {
-      if (!it->EvalCondition(lootState_.getCurrentGame(), lootState_.getLanguage().GetCode()))
+      if (!it->EvalCondition(lootState_.getCurrentGame()))
         it = messages.erase(it);
       else
         ++it;
@@ -954,7 +954,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
   //Evaluate any conditions
   BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
   try {
-    tempPlugin.EvalAllConditions(lootState_.getCurrentGame(), lootState_.getLanguage().GetCode());
+    tempPlugin.EvalAllConditions(lootState_.getCurrentGame());
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
     list<Message> messages(tempPlugin.Messages());

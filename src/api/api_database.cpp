@@ -67,7 +67,7 @@ void ApiDatabase::LoadLists(const std::string& masterlistPath,
   unevaluatedUserlist_ = userTemp;
 }
 
-void ApiDatabase::EvalLists(const LanguageCode language) {
+void ApiDatabase::EvalLists() {
   // Clear caches before evaluating conditions.
   game_.ClearCachedConditions();
 
@@ -75,8 +75,8 @@ void ApiDatabase::EvalLists(const LanguageCode language) {
   MetadataList userTemp = unevaluatedUserlist_;
 
   // Refresh active plugins before evaluating conditions.
-  temp.EvalAllConditions(game_, Language(LanguageCode(language)).GetCode());
-  userTemp.EvalAllConditions(game_, Language(LanguageCode(language)).GetCode());
+  temp.EvalAllConditions(game_);
+  userTemp.EvalAllConditions(game_);
 
   game_.GetMasterlist() = temp;
   game_.GetUserlist() = userTemp;

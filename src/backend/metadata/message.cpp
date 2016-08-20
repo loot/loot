@@ -64,13 +64,6 @@ bool Message::operator == (const Message& rhs) const {
   return (content_ == rhs.GetContent());
 }
 
-bool Message::EvalCondition(loot::Game& game, const LanguageCode language) {
-  BOOST_LOG_TRIVIAL(trace) << "Choosing message content for language: " << Language(language).GetName();
-  content_.assign({GetContent(language)});
-
-  return ConditionalMetadata::EvalCondition(game);
-}
-
 MessageType Message::GetType() const {
   return type_;
 }

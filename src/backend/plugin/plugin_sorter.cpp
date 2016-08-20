@@ -210,7 +210,7 @@ void PluginSorter::AddPluginVertices(Game& game, const LanguageCode language) {
     //Now that items are merged, evaluate any conditions they have.
     BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
     try {
-      graph_[v].EvalAllConditions(game, language);
+      graph_[v].EvalAllConditions(game);
     } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "\"" << graph_[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
       list<Message> messages(graph_[v].Messages());

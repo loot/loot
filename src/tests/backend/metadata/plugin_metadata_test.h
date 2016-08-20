@@ -659,7 +659,7 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   plugin.DirtyInfo({info1, info2});
   plugin.CleanInfo({info1, info2});
 
-  EXPECT_NO_THROW(plugin.EvalAllConditions(game, LanguageCode::english));
+  EXPECT_NO_THROW(plugin.EvalAllConditions(game));
 
   std::set<File> expectedFiles({file1});
   EXPECT_EQ(expectedFiles, plugin.LoadAfter());

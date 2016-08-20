@@ -148,19 +148,19 @@ void MetadataList::AppendMessage(const Message& message) {
   messages_.push_back(message);
 }
 
-void MetadataList::EvalAllConditions(Game& game, const LanguageCode language) {
+void MetadataList::EvalAllConditions(Game& game) {
   std::unordered_set<PluginMetadata> replacementSet;
   for (auto &plugin : plugins_) {
     PluginMetadata p(plugin);
-    p.EvalAllConditions(game, language);
+    p.EvalAllConditions(game);
     replacementSet.insert(p);
   }
   plugins_ = replacementSet;
   for (auto &plugin : regexPlugins_) {
-    plugin.EvalAllConditions(game, language);
+    plugin.EvalAllConditions(game);
   }
   for (auto &message : messages_) {
-    message.EvalCondition(game, language);
+    message.EvalCondition(game);
   }
 }
 }

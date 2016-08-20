@@ -57,7 +57,7 @@ public:
   void AppendMessage(const Message& message);
 
   // Eval plugin conditions.
-  void EvalAllConditions(Game& game, const LanguageCode language);
+  void EvalAllConditions(Game& game);
 
 protected:
   std::set<std::string> bashTags_;

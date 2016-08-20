@@ -94,7 +94,7 @@ TEST_P(MessageTest, messagesWithEqualContentStringsShouldBeEqual) {
   EXPECT_TRUE(message1 == message2);
 }
 
-TEST_P(MessageTest, LessThanOperatorShouldUseCaseInsensitiveLexicographicalContentStringComparison) {
+TEST_P(MessageTest, lessThanOperatorShouldUseCaseInsensitiveLexicographicalContentStringComparison) {
   Message message1(MessageType::say, MessageContents({MessageContent("content1", LanguageCode::english)}), "condition1");
   Message message2(MessageType::warn, MessageContents({MessageContent("content1", LanguageCode::french)}), "condition2");
   EXPECT_FALSE(message1 < message2);
@@ -106,63 +106,12 @@ TEST_P(MessageTest, LessThanOperatorShouldUseCaseInsensitiveLexicographicalConte
   EXPECT_FALSE(message2 < message1);
 }
 
-TEST_P(MessageTest, evalConditionShouldCreateADefaultContentObjectIfNoneExists) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-
+TEST_P(MessageTest, getContentShouldReturnADefaultContentObjectIfNoneExists) {
   Message message;
-  EXPECT_TRUE(message.EvalCondition(game, LanguageCode::english));
-  EXPECT_EQ(MessageContents({MessageContent()}), message.GetContent());
-}
-
-TEST_P(MessageTest, evalConditionShouldSelectTheStringForTheGivenLanguageIfOneExists) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-
-  Message message(MessageType::say, MessageContents({
-      MessageContent("content1", LanguageCode::german),
-      MessageContent("content2", LanguageCode::english),
-      MessageContent("content3", LanguageCode::french),
-  }));
-
-  EXPECT_TRUE(message.EvalCondition(game, LanguageCode::french));
-  EXPECT_EQ(1, message.GetContent().size());
-  EXPECT_EQ(MessageContent("content3", LanguageCode::french), message.GetContent()[0]);
-}
-
-TEST_P(MessageTest, evalConditionShouldLeaveTheContentUnchangedIfOnlyOneStringExists) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-  MessageContent content("content1", LanguageCode::english);
-  Message message(MessageType::say, MessageContents({content}));
-
-  EXPECT_TRUE(message.EvalCondition(game, LanguageCode::french));
-  EXPECT_EQ(MessageContents({content}), message.GetContent());
-}
-
-TEST_P(MessageTest, evalConditionShouldSelectTheEnglishStringIfNoStringExistsForTheGivenLanguage) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-
-  MessageContent content("content1", LanguageCode::english);
-  Message message(MessageType::say, MessageContents({
-      content,
-      MessageContent("content1", LanguageCode::german),
-  }));
-
-  EXPECT_TRUE(message.EvalCondition(game, LanguageCode::french));
-  EXPECT_EQ(MessageContents({content}), message.GetContent());
+  EXPECT_EQ(MessageContent(), message.GetContent(LanguageCode::english));
 }
 
 TEST_P(MessageTest, getContentShouldSelectTheEnglishStringIfThereIsNoStringForTheGivenLanguage) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-
   Message message(MessageType::say, MessageContents({
     MessageContent("content1", LanguageCode::german),
     MessageContent("content2", LanguageCode::english),
@@ -173,10 +122,6 @@ TEST_P(MessageTest, getContentShouldSelectTheEnglishStringIfThereIsNoStringForTh
 }
 
 TEST_P(MessageTest, getContentShouldSelectTheGivenLanguageStringIfItExists) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-
   Message message(MessageType::say, MessageContents({
     MessageContent("content1", LanguageCode::german),
     MessageContent("content2", LanguageCode::english),
@@ -186,11 +131,7 @@ TEST_P(MessageTest, getContentShouldSelectTheGivenLanguageStringIfItExists) {
   EXPECT_EQ("content3", message.GetContent(LanguageCode::french).GetText());
 }
 
-TEST_P(MessageTest, getTextShouldSelectTheContentStringIfOnlyOneExists) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
-
+TEST_P(MessageTest, getContentShouldSelectTheContentStringIfOnlyOneExists) {
   Message message(MessageType::say, MessageContents({
     MessageContent("content1", LanguageCode::german),
   }));

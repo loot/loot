@@ -122,35 +122,15 @@ TEST_P(DatabaseInterfaceTest, loadListsShouldSucceedIfTheMasterlistAndUserlistAr
   EXPECT_NO_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
 }
 
-TEST_P(DatabaseInterfaceTest, evalListsShouldReturnOkForAllLanguagesWithNoListsLoaded) {
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::english));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::english));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::spanish));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::russian));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::french));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::chinese));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::polish));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::brazilian_portuguese));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::finnish));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::german));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::danish));
+TEST_P(DatabaseInterfaceTest, evalListsShouldReturnOkWithNoListsLoaded) {
+  EXPECT_NO_THROW(db_->EvalLists());
 }
 
 TEST_P(DatabaseInterfaceTest, evalListsShouldReturnOKForAllLanguagesWithAMasterlistLoaded) {
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
 
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::english));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::english));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::spanish));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::russian));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::french));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::chinese));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::polish));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::brazilian_portuguese));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::finnish));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::german));
-  EXPECT_NO_THROW(db_->EvalLists(LanguageCode::danish));
+  EXPECT_NO_THROW(db_->EvalLists());
 }
 
 TEST_P(DatabaseInterfaceTest, sortPluginsShouldSucceedIfPassedValidArguments) {

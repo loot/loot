@@ -89,7 +89,7 @@ public:
   void CleanInfo(const std::set<PluginCleaningData>& info);
   void Locations(const std::set<Location>& locations);
 
-  PluginMetadata& EvalAllConditions(Game& game, const LanguageCode language);
+  PluginMetadata& EvalAllConditions(Game& game);
   bool HasNameOnly() const;
   bool IsRegexPlugin() const;
 
