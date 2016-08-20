@@ -21,19 +21,19 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_PLUGIN_MESSAGE
-#define LOOT_PLUGIN_MESSAGE
+#ifndef LOOT_SIMPLE_MESSAGE
+#define LOOT_SIMPLE_MESSAGE
 
 #include "loot/message_type.h"
 
 /**
  * @file
- * @brief Contains the PluginMessage structure.
+ * @brief Contains the SimpleMessage structure.
  */
 
 namespace loot {
 /** @brief A structure that holds the type of a message and the message string itself. */
-struct PluginMessage {
+struct SimpleMessage {
   /** @brief The type of the message. */
   MessageType type;
 

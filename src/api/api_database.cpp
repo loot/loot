@@ -163,9 +163,9 @@ PluginTags ApiDatabase::GetPluginTags(const std::string& plugin) {
   return tags;
 }
 
-std::vector<PluginMessage> ApiDatabase::GetPluginMessages(const std::string& plugin,
+std::vector<SimpleMessage> ApiDatabase::GetPluginMessages(const std::string& plugin,
                                                           const LanguageCode language) {
-  std::vector<PluginMessage> messages;
+  std::vector<SimpleMessage> messages;
 
   PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
   for (const auto& message : pluginMetadata.Messages()) {
@@ -243,8 +243,8 @@ void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool ove
   out << yout.c_str();
   out.close();
 }
-PluginMessage ApiDatabase::convertMessage(const Message& message, const LanguageCode language) {
-  PluginMessage pluginMessage;
+SimpleMessage ApiDatabase::convertMessage(const Message& message, const LanguageCode language) {
+  SimpleMessage pluginMessage;
   MessageContent content = message.GetContent(language);
 
   pluginMessage.type = message.GetType();

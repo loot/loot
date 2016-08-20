@@ -329,7 +329,7 @@ TEST_P(DatabaseInterfaceTest, getPluginTagsShouldOutputTheCorrectBashTagsForPlug
 }
 
 TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputANullArrayIfAPluginWithNoMessagesIsQueried) {
-  std::vector<PluginMessage> messages;
+  std::vector<SimpleMessage> messages;
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankEsp, LanguageCode::english));
   EXPECT_TRUE(messages.empty());
 }
@@ -338,7 +338,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputANoteIfAPl
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
 
-  std::vector<PluginMessage> messages;
+  std::vector<SimpleMessage> messages;
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankEsm, LanguageCode::english));
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(MessageType::say, messages[0].type);
@@ -350,7 +350,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputAWarningIf
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
 
-  std::vector<PluginMessage> messages;
+  std::vector<SimpleMessage> messages;
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankDifferentEsm, LanguageCode::english));
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(MessageType::warn, messages[0].type);
@@ -362,7 +362,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputAnErrorIfA
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
 
-  std::vector<PluginMessage> messages;
+  std::vector<SimpleMessage> messages;
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankDifferentEsp, LanguageCode::english));
   ASSERT_EQ(1, messages.size());
   EXPECT_EQ(MessageType::error, messages[0].type);
@@ -374,7 +374,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMessagesShouldReturnOkAndOutputMultipleMe
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
 
-  std::vector<PluginMessage> messages;
+  std::vector<SimpleMessage> messages;
   EXPECT_NO_THROW(messages = db_->GetPluginMessages(blankDifferentMasterDependentEsp, LanguageCode::english));
   ASSERT_EQ(3, messages.size());
   EXPECT_EQ(MessageType::say, messages[0].type);

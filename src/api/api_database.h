@@ -54,7 +54,7 @@ struct ApiDatabase : public DatabaseInterface {
 
   PluginTags GetPluginTags(const std::string& plugin);
 
-  std::vector<PluginMessage> GetPluginMessages(const std::string& plugin,
+  std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
                                                const LanguageCode language);
 
   PluginCleanliness GetPluginCleanliness(const std::string& plugin);
@@ -62,7 +62,7 @@ struct ApiDatabase : public DatabaseInterface {
   void WriteMinimalList(const std::string& outputFile,
                         const bool overwrite);
 private:
-  PluginMessage convertMessage(const Message& message, const LanguageCode language);
+  SimpleMessage convertMessage(const Message& message, const LanguageCode language);
 
   Game game_;
 

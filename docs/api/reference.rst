@@ -21,7 +21,7 @@ Public-Field Data Structures
 .. doxygenstruct:: loot::MasterlistInfo
    :members:
 
-.. doxygenstruct:: loot::PluginMessage
+.. doxygenstruct:: loot::SimpleMessage
    :members:
 
 .. doxygenstruct:: loot::PluginTags

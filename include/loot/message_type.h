@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 /**
  * @file
- * @brief Contains the message type codes used by the PluginMessage structure.
+ * @brief Contains the message type codes used by the SimpleMessage structure.
  */
 
 /**

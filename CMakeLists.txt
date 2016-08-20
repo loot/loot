@@ -249,8 +249,8 @@ set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/masterlist_info.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/message_type.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/plugin_cleanliness.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/plugin_message.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/plugin_tags.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/simple_message.h"
                       "${CMAKE_SOURCE_DIR}/src/api/api_database.h")
 
 set (LOOT_VALIDATOR_SRC "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")

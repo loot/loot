@@ -30,8 +30,8 @@
 #include "loot/language_code.h"
 #include "loot/masterlist_info.h"
 #include "loot/plugin_cleanliness.h"
-#include "loot/plugin_message.h"
 #include "loot/plugin_tags.h"
+#include "loot/simple_message.h"
 
 /**
  * @file
@@ -174,7 +174,7 @@ public:
    *  @returns A vector of messages associated with the specified plugin. Empty
    *           if the plugin has no messages associated with it.
    */
-  virtual std::vector<PluginMessage> GetPluginMessages(const std::string& plugin,
+  virtual std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
                                                        const LanguageCode language) = 0;
 
   /**
