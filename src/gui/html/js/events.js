@@ -369,7 +369,7 @@ function onEditorClose(evt) {
   } else {
     /* Don't need to record changes, but still need to notify C++ side that
        the editor has been closed. */
-    promise = loot.query('editorClosed');
+    promise = loot.query('editorClosed', 'null');
   }
   promise.catch(loot.handlePromiseError).then(() => {
     /* Remove body attribute so that sidebar items are styled correctly. */

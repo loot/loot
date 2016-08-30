@@ -70,7 +70,27 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
                            const CefString& request,
                            bool persistent,
                            CefRefPtr<Callback> callback) {
-  if (request == "openReadme") {
+  try {
+    YAML::Node parsedRequest = JSON::parse(request.ToString());
+
+    return HandleQuery(browser, frame, parsedRequest, callback);
+  } catch (exception &e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request.ToString() << "\": " << e.what();
+    callback->Failure(-1, e.what());
+    return true;
+  }
+
+  return false;
+}
+
+// Handle queries with input arguments.
+bool QueryHandler::HandleQuery(CefRefPtr<CefBrowser> browser,
+                               CefRefPtr<CefFrame> frame,
+                               YAML::Node& request,
+                               CefRefPtr<Callback> callback) {
+  const string requestName = request["name"].as<string>();
+
+  if (requestName == "openReadme") {
     try {
       OpenReadme();
       callback->Success("");
@@ -82,7 +102,7 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
       callback->Failure(-1, e.what());
     }
     return true;
-  } else if (request == "openLogLocation") {
+  } else if (requestName == "openLogLocation") {
     try {
       OpenLogLocation();
       callback->Success("");
@@ -94,32 +114,32 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
       callback->Failure(-1, e.what());
     }
     return true;
-  } else if (request == "getVersion") {
+  } else if (requestName == "getVersion") {
     callback->Success(GetVersion());
     return true;
-  } else if (request == "getSettings") {
+  } else if (requestName == "getSettings") {
     callback->Success(GetSettings());
     return true;
-  } else if (request == "getLanguages") {
+  } else if (requestName == "getLanguages") {
     callback->Success(GetLanguages());
     return true;
-  } else if (request == "getGameTypes") {
+  } else if (requestName == "getGameTypes") {
     callback->Success(GetGameTypes());
     return true;
-  } else if (request == "getInstalledGames") {
+  } else if (requestName == "getInstalledGames") {
     callback->Success(GetInstalledGames());
     return true;
-  } else if (request == "getGameData") {
+  } else if (requestName == "getGameData") {
     SendProgressUpdate(frame, translate("Parsing, merging and evaluating metadata..."));
     return CefPostTask(TID_FILE, base::Bind(&QueryHandler::GetGameData, base::Unretained(this), frame, callback));
-  } else if (request == "cancelFind") {
+  } else if (requestName == "cancelFind") {
     browser->GetHost()->StopFinding(true);
     callback->Success("");
     return true;
-  } else if (request == "clearAllMetadata") {
+  } else if (requestName == "clearAllMetadata") {
     callback->Success(ClearAllMetadata());
     return true;
-  } else if (request == "redatePlugins") {
+  } else if (requestName == "redatePlugins") {
     BOOST_LOG_TRIVIAL(debug) << "Redating plugins.";
     try {
       lootState_.getCurrentGame().RedatePlugins();
@@ -133,68 +153,34 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
     }
 
     return true;
-  } else if (request == "updateMasterlist") {
+  } else if (requestName == "updateMasterlist") {
     return CefPostTask(TID_FILE, base::Bind(&QueryHandler::UpdateMasterlist, base::Unretained(this), callback));
-  } else if (request == "sortPlugins") {
+  } else if (requestName == "sortPlugins") {
     return CefPostTask(TID_FILE, base::Bind(&QueryHandler::SortPlugins, base::Unretained(this), frame, callback));
-  } else if (request == "getInitErrors") {
+  } else if (requestName == "getInitErrors") {
     YAML::Node node(lootState_.getInitErrors());
     if (node.size() > 0)
       callback->Success(JSON::stringify(node));
     else
       callback->Success("null");
     return true;
-  } else if (request == "cancelSort") {
+  } else if (requestName == "cancelSort") {
     lootState_.decrementUnappliedChangeCounter();
     lootState_.getCurrentGame().DecrementLoadOrderSortCount();
 
     YAML::Node node(GetGeneralMessages(lootState_.getLanguage().GetCode()));
     callback->Success(JSON::stringify(node));
     return true;
-  } else if (request == "editorOpened") {
+  } else if (requestName == "editorOpened") {
     lootState_.incrementUnappliedChangeCounter();
     callback->Success("");
     return true;
-  } else if (request == "editorClosed") {
-      // This version of the editorClosed query has no arguments as it is
-      // sent when editing is cancelled. Just update the unapplied changes
-      // counter.
-    lootState_.decrementUnappliedChangeCounter();
-    callback->Success("");
-    return true;
-  } else if (request == "discardUnappliedChanges") {
+  } else if (requestName == "discardUnappliedChanges") {
     while (lootState_.hasUnappliedChanges())
       lootState_.decrementUnappliedChangeCounter();
     callback->Success("");
     return true;
-  } else {
-      // May be a request with arguments.
-    YAML::Node req;
-    try {
-        // Can't pass this as a reference directly as GCC
-        // complains about it.
-      std::string requestString = request.ToString();
-      req = JSON::parse(requestString);
-    } catch (exception &e) {
-      BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request.ToString() << "\": " << e.what();
-      callback->Failure(-1, e.what());
-      return true;
-    }
-
-    return HandleComplexQuery(browser, frame, req, callback);
-  }
-
-  return false;
-}
-
-// Handle queries with input arguments.
-bool QueryHandler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
-                                      CefRefPtr<CefFrame> frame,
-                                      YAML::Node& request,
-                                      CefRefPtr<Callback> callback) {
-  const string requestName = request["name"].as<string>();
-
-  if (requestName == "changeGame") {
+  } else if (requestName == "changeGame") {
     try {
         // Has one arg, which is the folder name of the new game.
       lootState_.changeGame(request["args"][0].as<string>());
@@ -233,7 +219,10 @@ bool QueryHandler::HandleComplexQuery(CefRefPtr<CefBrowser> browser,
     BOOST_LOG_TRIVIAL(debug) << "Editor for plugin closed.";
     // One argument, which is the plugin metadata that has changed (+ its name).
     try {
-      callback->Success(ApplyUserEdits(request["args"][0]));
+      if (!request["args"][0].IsMap())
+        callback->Success("");
+      else
+        callback->Success(ApplyUserEdits(request["args"][0]));
       lootState_.decrementUnappliedChangeCounter();
     } catch (Error &e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to apply plugin metadata. Details: " << e.what();

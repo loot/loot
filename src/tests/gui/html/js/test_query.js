@@ -2,7 +2,7 @@
 
 /* Mock the window.cefQuery method */
 window.cefQuery = (obj) => {
-  if (obj.request === 'fail') {
+  if (obj.request === '{"name":"fail","args":[]}') {
     obj.onFailure(-1, obj.request);
   } else {
     obj.onSuccess(obj.request);
@@ -19,7 +19,7 @@ describe('query()', () => {
   });
 
   it('should succeed if a request name is passed', () => {
-    return loot.query('test').should.be.fulfilledWith('test');
+    return loot.query('test').should.be.fulfilledWith('{"name":"test","args":[]}');
   });
 
   it('should succeed if a request name and arguments are passed', () => {
@@ -34,6 +34,6 @@ describe('query()', () => {
   });
 
   it('should fail with an Error object when an error occurs', () => {
-    return loot.query('fail').should.be.rejectedWith(Error, { message: 'Error code: -1; fail' });
+    return loot.query('fail').should.be.rejectedWith(Error, { message: 'Error code: -1; {"name":"fail","args":[]}' });
   });
 });

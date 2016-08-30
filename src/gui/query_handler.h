@@ -46,6 +46,12 @@ public:
                        bool persistent,
                        CefRefPtr<Callback> callback) OVERRIDE;
 private:
+  // Handle queries with input arguments.
+  bool HandleQuery(CefRefPtr<CefBrowser> browser,
+                   CefRefPtr<CefFrame> frame,
+                   YAML::Node& request,
+                   CefRefPtr<Callback> callback);
+
   void OpenReadme();
   void OpenLogLocation();
   std::string GetVersion();
@@ -57,12 +63,6 @@ private:
   void UpdateMasterlist(CefRefPtr<Callback> callback);
   std::string ClearAllMetadata();
   void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
-
-  // Handle queries with input arguments.
-  bool HandleComplexQuery(CefRefPtr<CefBrowser> browser,
-                          CefRefPtr<CefFrame> frame,
-                          YAML::Node& request,
-                          CefRefPtr<Callback> callback);
 
   void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback);
   void CopyMetadata(const std::string& pluginName);

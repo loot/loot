@@ -32,7 +32,7 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace JSON {
-YAML::Node parse(std::string& json) {
+YAML::Node parse(const std::string& json) {
   return YAML::Load(json);
 }
 
