@@ -1276,7 +1276,7 @@ describe('PluginCardContent', () => {
     it('should return an array missing the "do not clean" message when the "do not clean" messages filter is enabled', () => {
       filters.hideDoNotCleanMessages = true;
       plugin.getCardContent(filters).messages.should.deepEqual([
-        type: plugin.messages[0],
+        plugin.messages[0],
       ]);
     });
 
