@@ -32,6 +32,7 @@
 #include "backend/plugin/plugin.h"
 #include "backend/metadata/plugin_metadata.h"
 #include "gui/editor_message.h"
+#include "gui/query/query.h"
 
 namespace loot {
 class QueryHandler : public CefMessageRouterBrowserSide::Handler {
@@ -46,38 +47,9 @@ public:
                        bool persistent,
                        CefRefPtr<Callback> callback) OVERRIDE;
 private:
-  // Handle queries with input arguments.
-  bool HandleQuery(CefRefPtr<CefBrowser> browser,
-                   CefRefPtr<CefFrame> frame,
-                   YAML::Node& request,
-                   CefRefPtr<Callback> callback);
-
-  void OpenReadme();
-  void OpenLogLocation();
-  std::string GetVersion();
-  std::string GetSettings();
-  std::string GetLanguages();
-  std::string GetGameTypes();
-  std::string GetInstalledGames();
-  void GetGameData(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
-  void UpdateMasterlist(CefRefPtr<Callback> callback);
-  std::string ClearAllMetadata();
-  void SortPlugins(CefRefPtr<CefFrame> frame, CefRefPtr<Callback> callback);
-
-  void GetConflictingPlugins(const std::string& pluginName, CefRefPtr<Callback> callback);
-  void CopyMetadata(const std::string& pluginName);
-  std::string ClearPluginMetadata(const std::string& pluginName);
-  std::string ApplyUserEdits(const YAML::Node& pluginMetadata);
-
-  std::vector<SimpleMessage> GetGeneralMessages(const LanguageCode language) const;
-  YAML::Node GenerateDerivedMetadata(const std::string& pluginName);
-  YAML::Node GenerateDerivedMetadata(const Plugin& file, const PluginMetadata& masterlist, const PluginMetadata& userlist);
-
-  void CopyToClipboard(const std::string& text);
-  void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
-
-  std::vector<EditorMessage> ToEditorMessages(std::vector<Message> messages, const LanguageCode language);
-  std::vector<Message> ToMessages(std::vector<EditorMessage> messages);
+  CefRefPtr<Query> createQuery(CefRefPtr<CefBrowser> browser,
+                               CefRefPtr<CefFrame> frame,
+                               const YAML::Node& request);
 
   LootState& lootState_;
 };
