@@ -31,8 +31,6 @@
 #include "loot/error.h"
 #include "backend/game/game.h"
 
-using std::list;
-
 namespace loot {
 void MetadataList::Load(const boost::filesystem::path& filepath) {
   Clear();
@@ -58,7 +56,7 @@ void MetadataList::Load(const boost::filesystem::path& filepath) {
     }
   }
   if (metadataList["globals"])
-    messages_ = metadataList["globals"].as<list<Message>>();
+    messages_ = metadataList["globals"].as<std::vector<Message>>();
 
   if (metadataList["bash_tags"])
     bashTags_ = metadataList["bash_tags"].as<std::set<std::string>>();
@@ -89,14 +87,14 @@ void MetadataList::Clear() {
 }
 
 std::list<PluginMetadata> MetadataList::Plugins() const {
-  list<PluginMetadata> pluginList(plugins_.begin(), plugins_.end());
+  std::list<PluginMetadata> pluginList(plugins_.begin(), plugins_.end());
 
   pluginList.insert(pluginList.end(), regexPlugins_.begin(), regexPlugins_.end());
 
   return pluginList;
 }
 
-std::list<Message> MetadataList::Messages() const {
+std::vector<Message> MetadataList::Messages() const {
   return messages_;
 }
 

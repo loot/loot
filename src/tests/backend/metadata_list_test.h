@@ -82,7 +82,7 @@ TEST_P(MetadataListTest, loadShouldLoadGlobalMessages) {
   MetadataList metadataList;
 
   EXPECT_NO_THROW(metadataList.Load(metadataPath));
-  EXPECT_EQ(std::list<Message>({
+  EXPECT_EQ(std::vector<Message>({
       Message(MessageType::say, "A global message."),
   }), metadataList.Messages());
 }
@@ -170,7 +170,7 @@ TEST_P(MetadataListTest, saveShouldWriteTheLoadedMetadataToTheGivenFilePath) {
       "Relev"
   }), metadataList.BashTags());
 
-  EXPECT_EQ(std::list<Message>({
+  EXPECT_EQ(std::vector<Message>({
       Message(MessageType::say, "A global message."),
   }), metadataList.Messages());
 
@@ -290,7 +290,7 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
   ASSERT_NO_THROW(metadataList.Load(metadataPath));
 
   PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
-  ASSERT_EQ(std::list<Message>({
+  ASSERT_EQ(std::vector<Message>({
       Message(MessageType::warn, "This is a warning."),
       Message(MessageType::say, "This message should be removed when evaluating conditions."),
   }), plugin.Messages());
@@ -302,7 +302,7 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
   EXPECT_NO_THROW(metadataList.EvalAllConditions(game));
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
-  EXPECT_EQ(std::list<Message>({
+  EXPECT_EQ(std::vector<Message>({
       Message(MessageType::warn, "This is a warning."),
   }), plugin.Messages());
 

@@ -454,7 +454,7 @@ std::string QueryHandler::ApplyUserEdits(const YAML::Node& pluginMetadata) {
     newUserlistEntry.Incs(pluginMetadata["userlist"]["inc"].as<set<File>>());
 
   if (pluginMetadata["userlist"]["msg"])
-    newUserlistEntry.Messages(ToMessages(pluginMetadata["userlist"]["msg"].as<list<EditorMessage>>()));
+    newUserlistEntry.Messages(ToMessages(pluginMetadata["userlist"]["msg"].as<vector<EditorMessage>>()));
   if (pluginMetadata["userlist"]["tag"])
     newUserlistEntry.Tags(pluginMetadata["userlist"]["tag"].as<set<Tag>>());
   if (pluginMetadata["userlist"]["dirty"])
@@ -959,7 +959,7 @@ YAML::Node QueryHandler::GenerateDerivedMetadata(const Plugin& file, const Plugi
     tempPlugin.EvalAllConditions(lootState_.getCurrentGame());
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "\"" << tempPlugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-    list<Message> messages(tempPlugin.Messages());
+    vector<Message> messages(tempPlugin.Messages());
     messages.push_back(Message(MessageType::error, (format(translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % tempPlugin.Name() % e.what()).str()));
     tempPlugin.Messages(messages);
   }
@@ -1031,8 +1031,8 @@ void QueryHandler::SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::stri
   frame->ExecuteJavaScript("loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
 }
 
-std::list<EditorMessage> QueryHandler::ToEditorMessages(std::list<Message> messages, const LanguageCode language) {
-  std::list<EditorMessage> list;
+std::vector<EditorMessage> QueryHandler::ToEditorMessages(std::vector<Message> messages, const LanguageCode language) {
+  std::vector<EditorMessage> list;
 
   for (const auto& message : messages) {
     list.push_back(EditorMessage(message, language));
@@ -1041,8 +1041,8 @@ std::list<EditorMessage> QueryHandler::ToEditorMessages(std::list<Message> messa
   return list;
 }
 
-std::list<Message> QueryHandler::ToMessages(std::list<EditorMessage> messages) {
-  std::list<Message> list;
+std::vector<Message> QueryHandler::ToMessages(std::vector<EditorMessage> messages) {
+  std::vector<Message> list;
 
   for (const auto& message : messages) {
     list.push_back(Message(

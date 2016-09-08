@@ -43,7 +43,7 @@ public:
   void Clear();
 
   std::list<PluginMetadata> Plugins() const;
-  std::list<Message> Messages() const;
+  std::vector<Message> Messages() const;
   std::set<std::string> BashTags() const;
 
   // Merges multiple matching regex entries if any are found.
@@ -63,7 +63,7 @@ protected:
   std::set<std::string> bashTags_;
   std::unordered_set<PluginMetadata> plugins_;
   std::list<PluginMetadata> regexPlugins_;
-  std::list<Message> messages_;
+  std::vector<Message> messages_;
 };
 }
 

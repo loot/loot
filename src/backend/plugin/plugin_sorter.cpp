@@ -40,6 +40,7 @@
 
 using std::list;
 using std::string;
+using std::vector;
 
 namespace loot {
 typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
@@ -99,7 +100,6 @@ private:
 };
 
 std::vector<Plugin> PluginSorter::Sort(Game& game, const LanguageCode language) {
-  using std::vector;
   // Clear existing data.
   graph_.clear();
   indexMap_.clear();
@@ -213,7 +213,7 @@ void PluginSorter::AddPluginVertices(Game& game, const LanguageCode language) {
       graph_[v].EvalAllConditions(game);
     } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "\"" << graph_[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-      list<Message> messages(graph_[v].Messages());
+      vector<Message> messages(graph_[v].Messages());
       messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % graph_[v].Name() % e.what()).str()));
       graph_[v].Messages(messages);
     }

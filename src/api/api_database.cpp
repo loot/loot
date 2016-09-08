@@ -191,7 +191,7 @@ PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) {
   // This isn't a very reliable system, because if the lists have been evaluated in some language
   // other than English, the strings will be in different languages (and the API can't tell what they'd be)
   // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
-  std::list<Message> messages(game_.GetMasterlist().FindPlugin(PluginMetadata(plugin)).Messages());
+  std::vector<Message> messages(game_.GetMasterlist().FindPlugin(PluginMetadata(plugin)).Messages());
 
   for (const auto& message : messages) {
     if (boost::starts_with(message.GetContent(LanguageCode::english).GetText(), "Do not clean")) {

@@ -71,13 +71,13 @@ public:
   std::set<File> LoadAfter() const;
   std::set<File> Reqs() const;
   std::set<File> Incs() const;
-  std::list<Message> Messages() const;
+  std::vector<Message> Messages() const;
   std::set<Tag> Tags() const;
   std::set<PluginCleaningData> DirtyInfo() const;
   std::set<PluginCleaningData> CleanInfo() const;
   std::set<Location> Locations() const;
 
-  std::list<SimpleMessage> SimpleMessages(const LanguageCode language) const;
+  std::vector<SimpleMessage> SimpleMessages(const LanguageCode language) const;
 
   void Enabled(const bool enabled);
   void LocalPriority(const Priority& priority);
@@ -85,7 +85,7 @@ public:
   void LoadAfter(const std::set<File>& after);
   void Reqs(const std::set<File>& reqs);
   void Incs(const std::set<File>& incs);
-  void Messages(const std::list<Message>& messages);
+  void Messages(const std::vector<Message>& messages);
   void Tags(const std::set<Tag>& tags);
   void DirtyInfo(const std::set<PluginCleaningData>& info);
   void CleanInfo(const std::set<PluginCleaningData>& info);
@@ -103,7 +103,7 @@ public:
   bool operator == (const std::string& rhs) const;
   bool operator != (const std::string& rhs) const;
 protected:
-  std::list<Message> messages_;
+  std::vector<Message> messages_;
   std::set<Tag> tags_;
 private:
   std::string name_;
@@ -201,7 +201,7 @@ struct convert<loot::PluginMetadata> {
     if (node["inc"])
       rhs.Incs(node["inc"].as<std::set<loot::File>>());
     if (node["msg"])
-      rhs.Messages(node["msg"].as<std::list<loot::Message>>());
+      rhs.Messages(node["msg"].as<std::vector<loot::Message>>());
     if (node["tag"])
       rhs.Tags(node["tag"].as<std::set<loot::Tag>>());
     if (node["dirty"]) {

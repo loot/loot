@@ -76,8 +76,8 @@ private:
   void CopyToClipboard(const std::string& text);
   void SendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message);
 
-  std::list<EditorMessage> ToEditorMessages(std::list<Message> messages, const LanguageCode language);
-  std::list<Message> ToMessages(std::list<EditorMessage> messages);
+  std::vector<EditorMessage> ToEditorMessages(std::vector<Message> messages, const LanguageCode language);
+  std::vector<Message> ToMessages(std::vector<EditorMessage> messages);
 
   LootState& lootState_;
 };
