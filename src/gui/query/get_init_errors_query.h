@@ -34,12 +34,12 @@ class GetInitErrorsQuery : public Query {
 public:
   GetInitErrorsQuery(LootState& state) : state_(state) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     YAML::Node node(state_.getInitErrors());
     if (node.size() > 0)
-      callback->Success(JSON::stringify(node));
-    else
-      callback->Success("null");
+      return JSON::stringify(node);
+
+    return "null";
   }
 
 private:

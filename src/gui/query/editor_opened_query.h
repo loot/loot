@@ -33,9 +33,9 @@ class EditorOpenedQuery : public Query {
 public:
   EditorOpenedQuery(LootState& state) : state_(state) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     state_.incrementUnappliedChangeCounter();
-    callback->Success("");
+    return "";
   }
 
 private:

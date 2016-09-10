@@ -34,13 +34,13 @@ class GetSettingsQuery : public Query {
 public:
   GetSettingsQuery(LootSettings& settings) : settings_(settings) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT settings.";
-    callback->Success(JSON::stringify(settings_.toYaml()));
+    return JSON::stringify(settings_.toYaml());
   }
 
 private:
-  LootSettings& settings_;
+  const LootSettings& settings_;
 };
 }
 

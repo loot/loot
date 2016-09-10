@@ -38,10 +38,10 @@ public:
                        bool enabled) :
     state_(state), filterId_(filterId), enabled_(enabled) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(trace) << "Saving filter states.";
     state_.storeFilterState(filterId_, enabled_);
-    callback->Success("");
+    return "";
   }
 
 private:

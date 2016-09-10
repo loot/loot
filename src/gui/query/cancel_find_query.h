@@ -34,13 +34,13 @@ class CancelFindQuery : public Query {
 public:
   CancelFindQuery(CefRefPtr<CefBrowser> browser) : browser_(browser) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     browser_->GetHost()->StopFinding(true);
-    callback->Success("");
+    return "";
   }
 
 private:
-  CefRefPtr<CefBrowser> browser_;
+  const CefRefPtr<CefBrowser> browser_;
 };
 }
 

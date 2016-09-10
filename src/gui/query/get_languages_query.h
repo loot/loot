@@ -32,9 +32,9 @@ along with LOOT.  If not, see
 namespace loot {
 class GetLanguagesQuery : public Query {
 public:
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported languages.";
-    callback->Success(getLanguagesAsJson());
+    return getLanguagesAsJson();
   }
 
 private:

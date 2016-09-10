@@ -32,11 +32,11 @@ along with LOOT.  If not, see
 namespace loot {
 class OpenLogLocationQuery : public Query {
 public:
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Opening LOOT local appdata folder.";
     OpenInDefaultApplication(LootPaths::getLogPath().parent_path());
 
-    callback->Success("");
+    return "";
   }
 };
 }

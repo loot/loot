@@ -32,11 +32,11 @@ along with LOOT.  If not, see
 namespace loot {
 class OpenReadmeQuery : public Query {
 public:
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
     OpenInDefaultApplication(LootPaths::getReadmePath());
 
-    callback->Success("");
+    return "";
   }
 };
 }

@@ -34,11 +34,11 @@ public:
   CloseSettingsQuery(LootState& state, YAML::Node settings) :
     GetInstalledGamesQuery(state), state_(state), settings_(settings) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
     state_.load(settings_);
 
-    GetInstalledGamesQuery::execute(callback);
+    return GetInstalledGamesQuery::executeLogic();
   }
 
 private:

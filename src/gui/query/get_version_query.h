@@ -31,9 +31,9 @@ along with LOOT.  If not, see
 namespace loot {
 class GetVersionQuery : public Query {
 public:
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-    callback->Success("\"" + LootVersion::string() + "." + LootVersion::revision + "\"");
+    return "\"" + LootVersion::string() + "." + LootVersion::revision + "\"";
   }
 };
 }

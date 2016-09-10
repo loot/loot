@@ -36,16 +36,14 @@ public:
     MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
     game_(state.getCurrentGame()) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
 
-    if (!updateMasterlist()) {
-      callback->Success("null");
-      return;
-    }
+    if (!updateMasterlist())
+      return "null";
 
     // Now regenerate the JS-side masterlist data if the masterlist was changed.
-    callback->Success(generateJsonResponse());
+    return generateJsonResponse();
   }
 
 private:

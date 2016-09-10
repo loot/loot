@@ -35,7 +35,7 @@ public:
   CopyMetadataQuery(LootState& state, const std::string& pluginName) :
     state_(state), pluginName_(pluginName) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName_;
 
     // Get metadata from masterlist and userlist.
@@ -48,6 +48,8 @@ public:
     copyToClipboard(text);
 
     BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << pluginName_ << "\": " << text;
+
+    return "";
   }
 
 private:

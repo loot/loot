@@ -33,16 +33,17 @@ public:
   ApplySortQuery(LootState& state, const std::vector<std::string>& plugins) :
     state_(state), plugins_(plugins) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
     state_.decrementUnappliedChangeCounter();
     state_.getCurrentGame().SetLoadOrder(plugins_);
-    callback->Success("");
+
+    return "";
   }
 
 private:
   LootState& state_;
-  std::vector<std::string> plugins_;
+  const std::vector<std::string> plugins_;
 };
 }
 

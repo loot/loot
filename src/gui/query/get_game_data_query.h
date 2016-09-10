@@ -41,7 +41,7 @@ public:
     state_(state),
     frame_(frame) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     sendProgressUpdate(frame_, boost::locale::translate("Parsing, merging and evaluating metadata..."));
 
     // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
@@ -64,7 +64,7 @@ public:
       } catch (...) {}
     }
 
-    callback->Success(generateJsonResponse(installed));
+    return generateJsonResponse(installed);
   }
 
 private:

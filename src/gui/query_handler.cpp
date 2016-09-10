@@ -111,15 +111,7 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
   if (!query)
     return false;
 
-  try {
-    CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
-  } catch (Error &e) {
-    BOOST_LOG_TRIVIAL(error) << e.what();
-    callback->Failure(e.codeAsUnsignedInt(), e.what());
-  } catch (exception &e) {
-    BOOST_LOG_TRIVIAL(error) << e.what();
-    callback->Failure(-1, e.what());
-  }
+  CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
 
   return true;
 }

@@ -37,7 +37,7 @@ public:
     game_(state.getCurrentGame()),
     pluginName_(pluginName) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName_;
 
     // Checking for FormID overlap will only work if the plugins have been loaded, so check if
@@ -52,9 +52,9 @@ public:
     }
 
     if (node.size() > 0)
-      callback->Success(JSON::stringify(node));
-    else
-      callback->Success("[]");
+      return JSON::stringify(node);
+
+    return "[]";
   }
 
 private:
@@ -76,7 +76,7 @@ private:
   }
 
   Game& game_;
-  std::string pluginName_;
+  const std::string pluginName_;
 };
 }
 

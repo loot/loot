@@ -34,11 +34,11 @@ class CopyContentQuery : public ClipboardQuery {
 public:
   CopyContentQuery(const YAML::Node& content) : content_(content) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
-    std::string text = "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
+  std::string executeLogic() {
+    const std::string text = "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
 
     copyToClipboard(text);
-    callback->Success("");
+    return "";
   }
 
 private:
@@ -53,7 +53,7 @@ private:
     return text;
   }
 
-  YAML::Node content_;
+  const YAML::Node content_;
 };
 }
 

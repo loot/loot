@@ -39,7 +39,7 @@ public:
     state_(state),
     frame_(frame) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
 
     // Always reload all the plugins.
@@ -52,11 +52,13 @@ public:
     if ((state_.getCurrentGame().Type() == GameType::tes5 || state_.getCurrentGame().Type() == GameType::fo4))
       applyUnchangedLoadOrder(plugins);
 
-    callback->Success(generateJsonResponse(plugins));
+    std::string json = generateJsonResponse(plugins);
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty())
       state_.incrementUnappliedChangeCounter();
+
+    return json;
   }
 
 private:
@@ -78,7 +80,7 @@ private:
   }
 
   void applyUnchangedLoadOrder(const std::vector<Plugin>& plugins) {
-    if (!equal(begin(plugins), end(plugins), begin(state_.getCurrentGame().GetLoadOrder())))
+    if (plugins.empty() || !equal(begin(plugins), end(plugins), begin(state_.getCurrentGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input

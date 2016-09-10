@@ -33,10 +33,11 @@ class DiscardUnappliedChangesQuery : public Query {
 public:
   DiscardUnappliedChangesQuery(LootState& state) : state_(state) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     while (state_.hasUnappliedChanges())
       state_.decrementUnappliedChangeCounter();
-    callback->Success("");
+
+    return "";
   }
 
 private:

@@ -36,12 +36,11 @@ public:
     MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
     state_(state) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     state_.decrementUnappliedChangeCounter();
     state_.getCurrentGame().DecrementLoadOrderSortCount();
 
-    YAML::Node node(getGeneralMessages());
-    callback->Success(JSON::stringify(node));
+    return JSON::stringify(YAML::Node(getGeneralMessages()));
   }
 
 private:

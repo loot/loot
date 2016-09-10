@@ -38,10 +38,10 @@ public:
     state_(state),
     gameFolder_(gameFolder) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     state_.changeGame(gameFolder_);
 
-    GetGameDataQuery::execute(callback);
+    return GetGameDataQuery::executeLogic();
   }
 
 private:

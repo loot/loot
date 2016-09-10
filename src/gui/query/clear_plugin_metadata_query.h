@@ -37,7 +37,7 @@ public:
     game_(state.getCurrentGame()),
     pluginName_(pluginName) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName_;
 
     game_.GetUserlist().ErasePlugin(PluginMetadata(pluginName_));
@@ -46,14 +46,14 @@ public:
     // Now rederive the displayed metadata from the masterlist.
     YAML::Node derivedMetadata = generateDerivedMetadata(pluginName_);
     if (derivedMetadata.size() > 0)
-      callback->Success(JSON::stringify(derivedMetadata));
-    else
-      callback->Success("null");
+      return JSON::stringify(derivedMetadata);
+
+    return "null";
   }
 
 private:
   Game& game_;
-  std::string pluginName_;
+  const std::string pluginName_;
 };
 }
 

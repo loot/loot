@@ -28,12 +28,26 @@ along with LOOT.  If not, see
 #include <boost/log/trivial.hpp>
 #include <include/wrapper/cef_message_router.h>
 
+#include "loot/error.h"
+
 namespace loot {
 class Query : public CefBase {
 public:
-  virtual void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) = 0;
+  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+    try {
+      callback->Success(executeLogic());
+    } catch (Error &e) {
+      BOOST_LOG_TRIVIAL(error) << e.what();
+      callback->Failure(e.codeAsUnsignedInt(), e.what());
+    } catch (std::exception &e) {
+      BOOST_LOG_TRIVIAL(error) << e.what();
+      callback->Failure(-1, e.what());
+    }
+  }
 
 protected:
+  virtual std::string executeLogic() = 0;
+
   void sendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
     BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
     frame->ExecuteJavaScript("loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);

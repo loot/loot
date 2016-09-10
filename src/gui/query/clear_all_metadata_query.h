@@ -36,7 +36,7 @@ public:
     MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
     game_(state.getCurrentGame()) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
 
     // Record which plugins have userlist entries.
@@ -47,7 +47,8 @@ public:
     game_.GetUserlist().Save(game_.UserlistPath());
 
     BOOST_LOG_TRIVIAL(trace) << "Rederiving display metadata for " << userlistPluginNames.size() << " plugins that had user metadata.";
-    callback->Success(getDerivedMetadataJson(userlistPluginNames));
+
+    return getDerivedMetadataJson(userlistPluginNames);
   }
 
 private:

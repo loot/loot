@@ -148,7 +148,7 @@ private:
   }
 
   Game& game_;
-  LanguageCode language_;
+  const LanguageCode language_;
 };
 }
 

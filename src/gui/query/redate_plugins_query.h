@@ -33,9 +33,9 @@ class RedatePluginsQuery : public Query {
 public:
   RedatePluginsQuery(LootState& state) : state_(state) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     state_.getCurrentGame().RedatePlugins();
-    callback->Success("");
+    return "";
   }
 
 private:

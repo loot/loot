@@ -35,9 +35,12 @@ public:
     MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
     state_(state), metadata_(metadata) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     try {
-      callback->Success(applyUserEdits());
+      const std::string json = applyUserEdits();
+      state_.decrementUnappliedChangeCounter();
+
+      return json;
     } catch (Error&) {
       throw;
     } catch (std::exception& e) {
@@ -51,7 +54,6 @@ public:
 
       throw std::runtime_error(error);
     }
-    state_.decrementUnappliedChangeCounter();
   }
 
 private:

@@ -34,9 +34,9 @@ class GetInstalledGamesQuery : public Query {
 public:
   GetInstalledGamesQuery(LootState& state) : state_(state) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT's detected games.";
-    callback->Success(getInstalledGamesAsJson());
+    return getInstalledGamesAsJson();
   }
 
 private:

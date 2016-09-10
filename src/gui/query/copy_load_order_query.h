@@ -33,7 +33,7 @@ public:
   CopyLoadOrderQuery(LootState& state, const std::vector<std::string>& plugins) :
     state_(state), plugins_(plugins) {}
 
-  void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
+  std::string executeLogic() {
     int numberOfIndexDigits = getNumberOfIndexDigits();
 
     size_t activeIndex = 0;
@@ -43,7 +43,7 @@ public:
     }
 
     copyToClipboard(stream.str());
-    callback->Success("");
+    return "";
   }
 
 private:
@@ -67,7 +67,7 @@ private:
   }
 
   LootState& state_;
-  std::vector<std::string> plugins_;
+  const std::vector<std::string> plugins_;
 };
 }
 
