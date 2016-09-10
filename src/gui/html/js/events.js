@@ -37,7 +37,9 @@ function onConflictsFilter(evt) {
 }
 
 function onChangeGame(evt) {
-  if (evt.detail.item.getAttribute('value') === loot.game.folder) {
+  if (evt.detail.item.getAttribute('value') === loot.game.folder
+    || loot.game.folder.length === 0) {
+    // Game folder length is zero if LOOT is being initalised.
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
