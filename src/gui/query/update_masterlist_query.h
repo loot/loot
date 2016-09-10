@@ -33,7 +33,7 @@ namespace loot {
 class UpdateMasterlistQuery : public MetadataQuery {
 public:
   UpdateMasterlistQuery(LootState& state) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {

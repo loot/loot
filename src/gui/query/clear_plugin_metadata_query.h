@@ -33,7 +33,7 @@ namespace loot {
 class ClearPluginMetadataQuery : public MetadataQuery {
 public:
   ClearPluginMetadataQuery(LootState& state, const std::string& pluginName) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     game_(state.getCurrentGame()),
     pluginName_(pluginName) {}
 

@@ -35,18 +35,17 @@ along with LOOT.  If not, see
 namespace loot {
 class MetadataQuery : public Query {
 protected:
-  MetadataQuery(Game& game, const LanguageCode language) :
-    game_(game), language_(language) {}
+  MetadataQuery(LootState& state) : state_(state) {}
 
   std::vector<SimpleMessage> getGeneralMessages() {
     std::vector<Message> messages;
-    appendMessages(messages, game_.GetMasterlist().Messages());
-    appendMessages(messages, game_.GetUserlist().Messages());
-    appendMessages(messages, game_.GetMessages());
+    appendMessages(messages, state_.getCurrentGame().GetMasterlist().Messages());
+    appendMessages(messages, state_.getCurrentGame().GetUserlist().Messages());
+    appendMessages(messages, state_.getCurrentGame().GetMessages());
 
     evaluateMessageConditions(messages);
 
-    return toSimpleMessages(messages, language_);
+    return toSimpleMessages(messages, state_.getLanguage().GetCode());
   }
 
   YAML::Node generateDerivedMetadata(const Plugin& file,
@@ -65,9 +64,9 @@ protected:
   YAML::Node generateDerivedMetadata(const std::string& pluginName) {
       // Now rederive the displayed metadata from the masterlist and userlist.
     try {
-      auto plugin = game_.GetPlugin(pluginName);
-      PluginMetadata master(game_.GetMasterlist().FindPlugin(plugin));
-      PluginMetadata user(game_.GetUserlist().FindPlugin(plugin));
+      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      PluginMetadata master(state_.getCurrentGame().GetMasterlist().FindPlugin(plugin));
+      PluginMetadata user(state_.getCurrentGame().GetUserlist().FindPlugin(plugin));
 
       return generateDerivedMetadata(plugin, master, user);
     } catch (...) {
@@ -85,7 +84,7 @@ private:
     try {
       auto it = begin(messages);
       while (it != end(messages)) {
-        if (!it->EvalCondition(game_))
+        if (!it->EvalCondition(state_.getCurrentGame()))
           it = messages.erase(it);
         else
           ++it;
@@ -114,7 +113,7 @@ private:
     //Evaluate any conditions
     BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
     try {
-      plugin.EvalAllConditions(game_);
+      plugin.EvalAllConditions(state_.getCurrentGame());
     } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "\"" << plugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
       std::vector<Message> messages(plugin.Messages());
@@ -123,20 +122,20 @@ private:
     }
 
     //Also check install validity.
-    plugin.CheckInstallValidity(game_);
+    plugin.CheckInstallValidity(state_.getCurrentGame());
   }
 
   YAML::Node toYaml(const Plugin& plugin) {
-    BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language_).GetName();
+    BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage().GetName();
 
     YAML::Node pluginNode;
     pluginNode["name"] = plugin.Name();
     pluginNode["priority"] = plugin.LocalPriority().getValue();
     pluginNode["globalPriority"] = plugin.GlobalPriority().getValue();
-    pluginNode["messages"] = plugin.SimpleMessages(language_);
+    pluginNode["messages"] = plugin.SimpleMessages(state_.getLanguage().GetCode());
     pluginNode["tags"] = plugin.Tags();
     pluginNode["isDirty"] = !plugin.DirtyInfo().empty();
-    pluginNode["loadOrderIndex"] = game_.GetActiveLoadOrderIndex(plugin.Name());
+    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin.Name());
 
     if (!plugin.CleanInfo().empty()) {
       pluginNode["cleanedWith"] = plugin.CleanInfo().begin()->CleaningUtility();
@@ -147,8 +146,7 @@ private:
     return pluginNode;
   }
 
-  Game& game_;
-  const LanguageCode language_;
+  LootState& state_;
 };
 }
 

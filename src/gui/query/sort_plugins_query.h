@@ -35,7 +35,7 @@ namespace loot {
 class SortPluginsQuery : public MetadataQuery {
 public:
   SortPluginsQuery(LootState& state, CefRefPtr<CefFrame> frame) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     state_(state),
     frame_(frame) {}
 

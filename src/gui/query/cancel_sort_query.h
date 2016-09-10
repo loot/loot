@@ -33,7 +33,7 @@ namespace loot {
 class CancelSortQuery : public MetadataQuery {
 public:
   CancelSortQuery(LootState& state) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     state_(state) {}
 
   std::string executeLogic() {

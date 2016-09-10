@@ -33,7 +33,7 @@ namespace loot {
 class ClearAllMetadataQuery : public MetadataQuery {
 public:
   ClearAllMetadataQuery(LootState& state) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {

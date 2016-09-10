@@ -32,7 +32,7 @@ namespace loot {
 class EditorClosedQuery : public MetadataQuery {
 public:
   EditorClosedQuery(LootState& state, YAML::Node metadata) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     state_(state), metadata_(metadata) {}
 
   std::string executeLogic() {

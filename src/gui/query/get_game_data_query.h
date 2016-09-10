@@ -37,7 +37,7 @@ namespace loot {
 class GetGameDataQuery : public MetadataQuery {
 public:
   GetGameDataQuery(LootState& state, CefRefPtr<CefFrame> frame) :
-    MetadataQuery(state.getCurrentGame(), state.getLanguage().GetCode()),
+    MetadataQuery(state),
     state_(state),
     frame_(frame) {}
 
@@ -49,10 +49,12 @@ public:
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
-    if (state_.getCurrentGame().GetPlugins().empty())
-      loadMetadataLists();
+    bool isFirstLoad = state_.getCurrentGame().GetPlugins().empty();
 
     state_.getCurrentGame().LoadAllInstalledPlugins(true);
+
+    if (isFirstLoad)
+      loadMetadataLists();
 
     //Sort plugins into their load order.
     std::vector<Plugin> installed;
