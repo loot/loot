@@ -37,10 +37,10 @@
 #include "backend/helpers/helpers.h"
 
 using std::inserter;
-using std::list;
 using std::regex;
 using std::regex_match;
 using std::set;
+using std::vector;
 
 namespace loot {
 PluginMetadata::PluginMetadata() : enabled_(true) {}
@@ -128,11 +128,11 @@ PluginMetadata PluginMetadata::DiffMetadata(const PluginMetadata& plugin) const 
                            inserter(filesDiff, begin(filesDiff)));
   p.Incs(filesDiff);
 
-  list<Message> msgs1 = plugin.Messages();
-  list<Message> msgs2 = messages_;
-  msgs1.sort();
-  msgs2.sort();
-  list<Message> mDiff;
+  vector<Message> msgs1 = plugin.Messages();
+  vector<Message> msgs2 = messages_;
+  std::sort(begin(msgs1), end(msgs1));
+  std::sort(begin(msgs2), end(msgs2));
+  vector<Message> mDiff;
   set_symmetric_difference(begin(msgs2),
                            end(msgs2),
                            begin(msgs1),
@@ -206,11 +206,11 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  inserter(filesDiff, begin(filesDiff)));
   p.Incs(filesDiff);
 
-  list<Message> msgs1 = plugin.Messages();
-  list<Message> msgs2 = messages_;
-  msgs1.sort();
-  msgs2.sort();
-  list<Message> mDiff;
+  vector<Message> msgs1 = plugin.Messages();
+  vector<Message> msgs2 = messages_;
+  std::sort(begin(msgs1), end(msgs1));
+  std::sort(begin(msgs2), end(msgs2));
+  vector<Message> mDiff;
   set_difference(begin(msgs2),
                  end(msgs2),
                  begin(msgs1),
@@ -281,7 +281,7 @@ std::set<File> PluginMetadata::Incs() const {
   return incompatibilities_;
 }
 
-std::list<Message> PluginMetadata::Messages() const {
+std::vector<Message> PluginMetadata::Messages() const {
   return messages_;
 }
 
@@ -301,8 +301,8 @@ std::set<Location> PluginMetadata::Locations() const {
   return locations_;
 }
 
-std::list<SimpleMessage> PluginMetadata::SimpleMessages(const LanguageCode language) const {
-  std::list<SimpleMessage> simpleMessages(messages_.size());
+std::vector<SimpleMessage> PluginMetadata::SimpleMessages(const LanguageCode language) const {
+  std::vector<SimpleMessage> simpleMessages(messages_.size());
   std::transform(begin(messages_), end(messages_), begin(simpleMessages), [&](const Message& message) {
     return message.ToSimpleMessage(language);
   });
@@ -334,7 +334,7 @@ void PluginMetadata::Incs(const std::set<File>& i) {
   incompatibilities_ = i;
 }
 
-void PluginMetadata::Messages(const std::list<Message>& m) {
+void PluginMetadata::Messages(const std::vector<Message>& m) {
   messages_ = m;
 }
 

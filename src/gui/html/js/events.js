@@ -37,7 +37,9 @@ function onConflictsFilter(evt) {
 }
 
 function onChangeGame(evt) {
-  if (evt.detail.item.getAttribute('value') === loot.game.folder) {
+  if (evt.detail.item.getAttribute('value') === loot.game.folder
+    || loot.game.folder.length === 0) {
+    // Game folder length is zero if LOOT is being initalised.
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
@@ -369,7 +371,7 @@ function onEditorClose(evt) {
   } else {
     /* Don't need to record changes, but still need to notify C++ side that
        the editor has been closed. */
-    promise = loot.query('editorClosed');
+    promise = loot.query('editorClosed', 'null');
   }
   promise.catch(loot.handlePromiseError).then(() => {
     /* Remove body attribute so that sidebar items are styled correctly. */

@@ -241,7 +241,7 @@ TEST_P(PluginMetadataTest, mergeMetadataShouldMergeMessages) {
   plugin2.Messages({message});
   plugin1.MergeMetadata(plugin2);
 
-  EXPECT_EQ(std::list<Message>({message, message}), plugin1.Messages());
+  EXPECT_EQ(std::vector<Message>({message, message}), plugin1.Messages());
 }
 
 TEST_P(PluginMetadataTest, mergeMetadataShouldMergeTags) {
@@ -419,7 +419,7 @@ TEST_P(PluginMetadataTest, diffMetadataShouldOutputMessagesThatAreNotCommonToBot
   plugin2.Messages({message1, message3});
   PluginMetadata diff = plugin1.DiffMetadata(plugin2);
 
-  EXPECT_EQ(std::list<Message>({message2, message3}), diff.Messages());
+  EXPECT_EQ(std::vector<Message>({message2, message3}), diff.Messages());
 }
 
 TEST_P(PluginMetadataTest, diffMetadataShouldOutputTagsThatAreNotCommonToBothInputPlugins) {
@@ -575,7 +575,7 @@ TEST_P(PluginMetadataTest, newMetadataShouldOutputMessagesThatAreNotCommonToBoth
   plugin2.Messages({message1, message3});
   PluginMetadata newMetadata = plugin1.NewMetadata(plugin2);
 
-  EXPECT_EQ(std::list<Message>({message2}), newMetadata.Messages());
+  EXPECT_EQ(std::vector<Message>({message2}), newMetadata.Messages());
 }
 
 TEST_P(PluginMetadataTest, newMetadataShouldOutputTagsThatAreNotCommonToBothInputPlugins) {
@@ -687,7 +687,7 @@ TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions)
   EXPECT_EQ(expectedFiles, plugin.LoadAfter());
   EXPECT_EQ(expectedFiles, plugin.Reqs());
   EXPECT_EQ(expectedFiles, plugin.Incs());
-  EXPECT_EQ(std::list<Message>({message1}), plugin.Messages());
+  EXPECT_EQ(std::vector<Message>({message1}), plugin.Messages());
   EXPECT_EQ(std::set<Tag>({tag1}), plugin.Tags());
   EXPECT_EQ(std::set<PluginCleaningData>({info1}), plugin.DirtyInfo());
   EXPECT_EQ(std::set<PluginCleaningData>({info1}), plugin.CleanInfo());
@@ -1073,7 +1073,7 @@ TEST_P(PluginMetadataTest, encodingAsYamlShouldSetMsgFieldIfMessagesExist) {
   YAML::Node node;
   node = plugin;
 
-  EXPECT_EQ(plugin.Messages(), node["msg"].as<std::list<Message>>());
+  EXPECT_EQ(plugin.Messages(), node["msg"].as<std::vector<Message>>());
 }
 
 TEST_P(PluginMetadataTest, encodingAsYamlShouldSetTagFieldIfTagsExist) {
@@ -1163,7 +1163,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
   EXPECT_EQ(std::set<File>({
       File("Blank.esm")
   }), plugin.Incs());
-  EXPECT_EQ(std::list<Message>({
+  EXPECT_EQ(std::vector<Message>({
       Message(MessageType::say, "content")
   }), plugin.Messages());
   EXPECT_EQ(std::set<Tag>({

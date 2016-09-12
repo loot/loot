@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.9.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-08-17 18:15+0100\n"
+"POT-Creation-Date: 2016-09-10 10:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -584,32 +584,32 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 
-#: src/gui/query_handler.cpp:111
+#: src/gui/query_handler.cpp:133
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:203 src/gui/query_handler.cpp:206
+#: src/gui/query_handler.cpp:191 src/gui/query_handler.cpp:194
 msgid "Failed to change game. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:220 src/gui/query_handler.cpp:223
-#: src/gui/query_handler.cpp:298 src/gui/query_handler.cpp:301
-#: src/gui/query_handler.cpp:329 src/gui/query_handler.cpp:332
+#: src/gui/query_handler.cpp:208 src/gui/query_handler.cpp:211
+#: src/gui/query_handler.cpp:289 src/gui/query_handler.cpp:292
+#: src/gui/query_handler.cpp:320 src/gui/query_handler.cpp:323
 msgid "Failed to copy plugin metadata. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:238 src/gui/query_handler.cpp:248
+#: src/gui/query_handler.cpp:229 src/gui/query_handler.cpp:239
 msgid "Failed to apply plugin metadata. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:601
+#: src/gui/query_handler.cpp:592
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/query_handler.cpp:616
+#: src/gui/query_handler.cpp:607
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -625,33 +625,33 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query_handler.cpp:721 src/gui/query_handler.cpp:724
+#: src/gui/query_handler.cpp:712 src/gui/query_handler.cpp:715
 msgid "Failed to get game data. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:806 src/gui/query_handler.cpp:809
+#: src/gui/query_handler.cpp:797 src/gui/query_handler.cpp:800
 msgid "Failed to update the masterlist. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:848
+#: src/gui/query_handler.cpp:839
 msgid "Loading plugin contents..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:852
+#: src/gui/query_handler.cpp:843
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/query_handler.cpp:909
+#: src/gui/query_handler.cpp:900
 msgid "Failed to sort plugins. Details: %1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:939
+#: src/gui/query_handler.cpp:931
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query_handler.cpp:961 src/backend/plugin/plugin_sorter.cpp:217
+#: src/gui/query_handler.cpp:963 src/backend/plugin/plugin_sorter.cpp:217
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
@@ -759,12 +759,12 @@ msgstr ""
 msgid "Failed to open file in its default application."
 msgstr ""
 
-#: src/backend/metadata/condition_evaluator.cpp:173
+#: src/backend/metadata/condition_evaluator.cpp:171
 msgid "Invalid file path:"
 msgstr ""
 
-#: src/backend/metadata/condition_evaluator.cpp:183
-#: src/backend/metadata/condition_evaluator.cpp:223
+#: src/backend/metadata/condition_evaluator.cpp:181
+#: src/backend/metadata/condition_evaluator.cpp:221
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr ""
 

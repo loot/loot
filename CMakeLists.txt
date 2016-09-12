@@ -124,13 +124,13 @@ set(YAML_CPP_INCLUDE_DIRS "${SOURCE_DIR}/include")
 set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_windows32_minimal.tar.bz2")
-    set(CEF_URL_HASH "8d0bb1ba2abccebef1e0d45fa2bb9c7ed7ec60de")
+    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2785.1466.g80e473e_windows32_minimal.tar.bz2")
+    set(CEF_URL_HASH "31086a64fb226cdb4b4ce5a93d5eb32ea0308c17")
     set(CEF_PRECOMPILED_BINARIES "libcef.dll" "natives_blob.bin" "snapshot_blob.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll")
     set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
 ELSE ()
-    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2743.1442.ge29124d_linux64_minimal.tar.bz2")
-    set(CEF_URL_HASH "9a8f227d08d9c4edb6636041375b900d6b864e12")
+    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.2785.1465.g87ce149_linux64_minimal.tar.bz2")
+    set(CEF_URL_HASH "78352474cc6db47aa517596fd44a99940a408c2e")
     set(CEF_PRECOMPILED_BINARIES "libcef.so" "natives_blob.bin" "snapshot_blob.bin" "chrome-sandbox")
     set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
@@ -234,6 +234,36 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/apply_sort_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/cancel_find_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/cancel_sort_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/change_game_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/clear_all_metadata_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/clear_plugin_metadata_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/clipboard_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/close_settings_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/copy_content_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/copy_load_order_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/copy_metadata_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/discard_unapplied_changes_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/editor_opened_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/editor_closed_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_conflicting_plugins_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_game_data_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_game_types_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_init_errors_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_installed_games_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_languages_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_settings_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/get_version_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/metadata_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/open_log_location_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/open_readme_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/redate_plugins_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/save_filter_state_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/sort_plugins_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/query/update_masterlist_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")

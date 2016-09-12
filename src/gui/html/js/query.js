@@ -12,15 +12,10 @@
   if (!requestName) {
     throw new Error('No request name passed');
   }
-  let request;
-  if (args.length === 0) {
-    request = requestName;
-  } else {
-    request = JSON.stringify({
-      name: requestName,
-      args,
-    });
-  }
+  const request = JSON.stringify({
+    name: requestName,
+    args,
+  });
   return new Promise((resolve, reject) => {
     window.cefQuery({
       request,
