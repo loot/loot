@@ -126,7 +126,7 @@
     document.getElementById('pluginCardList').items = filteredPlugins;
 
     const pluginCards = document.getElementById('pluginCardList').children;
-    for (let i = 0; i < pluginCards.length; ++i) {
+    for (let i = 0; i < pluginCards.length; i += 1) {
       if (pluginCards[i].data) {
         pluginCards[i].updateContent(true);
       }

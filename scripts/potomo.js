@@ -1,4 +1,6 @@
 /* Convert .po files to .mo files. */
+/* eslint-disable no-unused-vars */
+
 'use strict';
 const childProcess = require('child_process');
 const fs = require('fs');
@@ -12,7 +14,7 @@ function getMsgfmtPath() {
     path.join('/', 'usr', 'bin', 'msgfmt'),
   ];
 
-  for (let i = 0; i < paths.length; ++i) {
+  for (let i = 0; i < paths.length; i += 1) {
     if (helpers.fileExists(paths[i])) {
       return paths[i];
     }

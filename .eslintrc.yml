@@ -5,9 +5,6 @@ env:
   node: true
   browser: true
 
-ecmaFeatures:
-  modules: false
-
 globals:
   loot: false
   should: false
@@ -17,13 +14,18 @@ extends:
   - "airbnb-base"
 
 rules:
-  strict:
-    - 2
-    - global
+  strict: off
   no-param-reassign:
-    - 2
+    - error
     - props: false
-  max-len: 1
+  max-len: warn
+  linebreak-style: off
+  no-underscore-dangle: off
+  arrow-parens: off
+  no-undef: warn
+  no-mixed-operators:
+    - error
+    - allowSamePrecedence: true
 
 plugins:
   - eslint-plugin-html

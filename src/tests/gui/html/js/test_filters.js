@@ -3,7 +3,7 @@
 describe('Filters', () => {
   /* Mock the Translator class. */
   class Translator {
-    translate(text) {
+    translate(text) {  // eslint-disable-line class-methods-use-this
       return text;
     }
   }
@@ -68,7 +68,7 @@ describe('Filters', () => {
         return this._messages;
       }
 
-      containsText(text) {
+      containsText(text) {  // eslint-disable-line class-methods-use-this
         return text === 'found text';
       }
     }

@@ -3,7 +3,7 @@
 describe('Game', () => {
   /* Mock the Translator class. */
   class Translator {
-    translate(text) {
+    translate(text) {  // eslint-disable-line class-methods-use-this
       return text;
     }
   }

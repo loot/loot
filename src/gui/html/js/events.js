@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 'use strict';
 function onSidebarFilterToggle(evt) {
   loot.filters[evt.target.id] = evt.target.checked;
@@ -313,13 +315,15 @@ function onCloseSettingsDialog(evt) {
   loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
     loot.installedGames = installedGames;
     loot.DOM.updateEnabledGames(installedGames);
-  }).catch(loot.handlePromiseError).then(() => {
+  }).catch(loot.handlePromiseError)
+  .then(() => {
     loot.settings = settings;
     loot.DOM.updateSettingsDialog(loot.settings);
     loot.DOM.setGameMenuItems(loot.settings.games);
     loot.DOM.updateEnabledGames(loot.installedGames);
     loot.DOM.updateSelectedGame(loot.game.folder);
-  }).catch(loot.handlePromiseError);
+  })
+  .catch(loot.handlePromiseError);
 }
 function onEditorOpen(evt) {
   /* Set the editor data. */
@@ -334,7 +338,7 @@ function onEditorOpen(evt) {
 
   /* Set up drag 'n' drop event handlers. */
   const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-  for (let i = 0; i < elements.length; ++i) {
+  for (let i = 0; i < elements.length; i += 1) {
     elements[i].draggable = true;
     elements[i].addEventListener('dragstart', elements[i].onDragStart);
   }
@@ -380,7 +384,7 @@ function onEditorClose(evt) {
 
     /* Remove drag 'n' drop event handlers. */
     const elements = document.getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
-    for (let i = 0; i < elements.length; ++i) {
+    for (let i = 0; i < elements.length; i += 1) {
       elements[i].removeAttribute('draggable');
       elements[i].removeEventListener('dragstart', elements[i].onDragStart);
     }
@@ -449,7 +453,7 @@ function onSearchEnd(evt) {
 function onFolderChange(evt) {
   loot.DOM.updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
-  let gameSettings = undefined;
+  let gameSettings;
   if (loot.settings && loot.settings.games) {
     gameSettings = loot.settings.games.find(game => game.folder === evt.detail.folder);
   }

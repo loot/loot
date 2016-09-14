@@ -102,7 +102,7 @@
       const tagsRemoved = [];
 
       if (this._tags) {
-        for (let i = 0; i < this._tags.length; ++i) {
+        for (let i = 0; i < this._tags.length; i += 1) {
           if (this._tags[i].name[0] === '-') {
             tagsRemoved.push(this._tags[i].name.substr(1));
           } else {
@@ -112,12 +112,12 @@
       }
       /* Now make sure that the same tag doesn't appear in both arrays.
          Prefer the removed list. */
-      for (let i = 0; i < tagsAdded.length; ++i) {
-        for (let j = 0; j < tagsRemoved.length; ++j) {
+      for (let i = 0; i < tagsAdded.length; i += 1) {
+        for (let j = 0; j < tagsRemoved.length; j += 1) {
           if (tagsRemoved[j].toLowerCase() === tagsAdded[i].toLowerCase()) {
             /* Remove tag from the tagsAdded array. */
             tagsAdded.splice(i, 1);
-            --i;
+            i -= 1;
           }
         }
       }
@@ -149,7 +149,7 @@
         return true;
       }
 
-      for (let i = 0; i < this.messages.length; ++i) {
+      for (let i = 0; i < this.messages.length; i += 1) {
         if (this.messages[i].text.toLowerCase().indexOf(needle) !== -1) {
           return true;
         }
@@ -208,7 +208,9 @@
     }
 
     static tagFromRowData(rowData) {
-      if (rowData.condition === undefined || rowData.name === undefined || rowData.type === undefined) {
+      if (rowData.condition === undefined
+        || rowData.name === undefined
+        || rowData.type === undefined) {
         throw new TypeError('Row data members are undefined');
       }
       const tag = {
@@ -284,9 +286,9 @@
 
       this._messages.forEach((message) => {
         if (message.type === 'warn') {
-          ++oldWarns;
+          oldWarns += 1;
         } else if (message.type === 'error') {
-          ++oldErrs;
+          oldErrs += 1;
         }
       });
 
@@ -294,9 +296,9 @@
 
       messages.forEach((message) => {
         if (message.type === 'warn') {
-          ++newWarns;
+          newWarns += 1;
         } else if (message.type === 'error') {
-          ++newErrs;
+          newErrs += 1;
         }
       });
 
