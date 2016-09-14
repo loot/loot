@@ -14,7 +14,7 @@ globals:
 
 extends:
   - "eslint:recommended"
-  - "airbnb/base"
+  - "airbnb-base"
 
 rules:
   strict:
