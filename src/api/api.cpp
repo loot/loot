@@ -31,7 +31,16 @@
 #include "loot/error.h"
 #include "backend/app/loot_paths.h"
 
+namespace fs = boost::filesystem;
+
 namespace loot {
+std::string ResolvePath(const std::string& path) {
+  if (path.empty() || !fs::is_symlink(path))
+    return path;
+
+  return fs::read_symlink(path).string();
+}
+
 LOOT_API bool IsCompatible(const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
   if (versionMajor > 0)
     return versionMajor == loot::LootVersion::major;
@@ -48,12 +57,14 @@ LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
   boost::log::core::get()->set_logging_enabled(false);
 
   // Check for valid paths.
-  if (!gamePath.empty() && !boost::filesystem::is_directory(gamePath))
-    throw loot::Error(Error::Code::invalid_args, "Given game path \"" + std::string(gamePath) + "\" is not a valid directory.");
+  const std::string resolvedGamePath = ResolvePath(gamePath);
+  if (!gamePath.empty() && !fs::is_directory(resolvedGamePath))
+    throw Error(Error::Code::invalid_args, "Given game path \"" + gamePath + "\" does not resolve to a valid directory.");
 
-  if (!gameLocalPath.empty() && !boost::filesystem::is_directory(gameLocalPath))
-    throw loot::Error(Error::Code::invalid_args, "Given local data path \"" + std::string(gameLocalPath) + "\" is not a valid directory.");
+  const std::string resolvedGameLocalPath = ResolvePath(gameLocalPath);
+  if (!gameLocalPath.empty() && !fs::is_directory(resolvedGameLocalPath))
+    throw Error(Error::Code::invalid_args, "Given local data path \"" + gameLocalPath + "\" does not resolve to a valid directory.");
 
-  return std::make_shared<ApiDatabase>(game, gamePath, gameLocalPath);
+  return std::make_shared<ApiDatabase>(game, resolvedGamePath, resolvedGameLocalPath);
 }
 }
