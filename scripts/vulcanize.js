@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Build the UI's index.html file. Takes one argument, which is the path to the
 // repository's root.
+
+/* eslint-disable no-unused-vars */
 'use strict';
 const path = require('path');
 const fs = require('fs');

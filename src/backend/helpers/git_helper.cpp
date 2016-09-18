@@ -146,10 +146,7 @@ void GitHelper::Clone(const boost::filesystem::path& path, const std::string& ur
   // Clone the remote repository.
   BOOST_LOG_TRIVIAL(info) << "Repository doesn't exist, cloning the remote repository.";
 
-  fs::path tempPath = fs::temp_directory_path() / fs::unique_path();
-
-  // Create the temporary parent folder in case it doesn't already exist.
-  fs::create_directories(tempPath.parent_path());
+  fs::path tempPath = path.parent_path() / fs::unique_path();
 
   //Delete temporary folder in case it already exists.
   fs::remove_all(tempPath);

@@ -53,9 +53,9 @@
       oldTotal = this._globalMessages.length;
       this._globalMessages.forEach((message) => {
         if (message.type === 'warn') {
-          ++oldWarns;
+          oldWarns += 1;
         } else if (message.type === 'error') {
-          ++oldErrs;
+          oldErrs += 1;
         }
       });
     }
@@ -65,9 +65,9 @@
 
       globalMessages.forEach((message) => {
         if (message.type === 'warn') {
-          ++newWarns;
+          newWarns += 1;
         } else if (message.type === 'error') {
-          ++newErrs;
+          newErrs += 1;
         }
       });
     }
@@ -134,27 +134,27 @@
       totalMessageNo = this.globalMessages.length;
       this.globalMessages.forEach((message) => {
         if (message.type === 'warn') {
-          ++warnMessageNo;
+          warnMessageNo += 1;
         } else if (message.type === 'error') {
-          ++errorMessageNo;
+          errorMessageNo += 1;
         }
       });
     }
 
     plugins.forEach((plugin) => {
       if (plugin.isActive) {
-        ++activePluginNo;
+        activePluginNo += 1;
       }
       if (plugin.isDirty) {
-        ++dirtyPluginNo;
+        dirtyPluginNo += 1;
       }
       if (plugin.messages) {
         totalMessageNo += plugin.messages.length;
         plugin.messages.forEach((message) => {
           if (message.type === 'warn') {
-            ++warnMessageNo;
+            warnMessageNo += 1;
           } else if (message.type === 'error') {
-            ++errorMessageNo;
+            errorMessageNo += 1;
           }
         });
       }
@@ -183,18 +183,18 @@
     let dirtyChange = 0;
 
     if (plugin.isActive) {
-      ++activeChange;
+      activeChange += 1;
     }
     if (plugin.isDirty) {
-      ++dirtyChange;
+      dirtyChange += 1;
     }
     if (plugin.messages) {
       totalChange += plugin.messages.length;
       plugin.messages.forEach((message) => {
         if (message.type === 'warn') {
-          ++warnChange;
+          warnChange += 1;
         } else if (message.type === 'error') {
-          ++errorChange;
+          errorChange += 1;
         }
       });
     }
@@ -222,18 +222,18 @@
     let dirtyChange = 0;
 
     if (this._plugins[index].isActive) {
-      --activeChange;
+      activeChange -= 1;
     }
     if (this._plugins[index].isDirty) {
-      --dirtyChange;
+      dirtyChange -= 1;
     }
     if (this._plugins[index].messages) {
       totalChange -= this._plugins[index].messages.length;
       this._plugins[index].messages.forEach((message) => {
         if (message.type === 'warn') {
-          --warnChange;
+          warnChange -= 1;
         } else if (message.type === 'error') {
-          --errorChange;
+          errorChange -= 1;
         }
       });
     }

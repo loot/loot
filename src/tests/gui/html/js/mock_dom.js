@@ -13,11 +13,3 @@ loot.DOM = {
     this.elementEnabledStates.set(elementId, enableElement);
   },
 };
-
-function getShown(elementId) {
-  return loot.DOM.elementShownStates.get(elementId);
-}
-
-function getEnabled(elementId) {
-  return loot.DOM.elementEnabledStates.get(elementId);
-}

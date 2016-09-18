@@ -12,21 +12,24 @@
   },
   "homepage": "https://github.com/loot/loot",
   "private": true,
+  "dependencies": {
+    "fs-extra": "^0.30.0",
+    "vulcanize": "^1.14.5"
+  },
   "devDependencies": {
     "bower": "^1.7.1",
-    "eslint": "^2.4.0",
-    "eslint-config-airbnb": "^6.1.0",
-    "eslint-plugin-html": "^1.3.0",
-    "fs-extra": "^0.26.2",
-    "grunt": "^0.4.5",
+    "eslint": "^3.5.0",
+    "eslint-config-airbnb-base": "^7.1.0",
+    "eslint-plugin-import": "^1.15.0",
+    "eslint-plugin-html": "^1.5.0",
+    "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-connect": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-saucelabs": "^8.6.2",
+    "grunt-saucelabs": "^9.0.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.3.4",
-    "should": "^8.0.1",
-    "vulcanize": "^1.14.5"
+    "mocha": "^3.0.1",
+    "should": "^11.1.0"
   },
   "scripts": {
     "test": "grunt test"

@@ -1,5 +1,13 @@
 'use strict';
 
+function getShown(elementId) {
+  return loot.DOM.elementShownStates.get(elementId);
+}
+
+function getEnabled(elementId) {
+  return loot.DOM.elementEnabledStates.get(elementId);
+}
+
 beforeEach(() => {
   loot.DOM.elementShownStates.clear();
   loot.DOM.elementEnabledStates.clear();

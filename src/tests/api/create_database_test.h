@@ -35,17 +35,29 @@ namespace loot {
 namespace test {
 class CreateDatabaseTest : public CommonGameTestFixture {
 protected:
-  CreateDatabaseTest() : db_(nullptr) {}
+  CreateDatabaseTest() :
+    db_(nullptr),
+    gamePathSymlink(dataPath.parent_path().string() + "symlink"),
+    localPathSymlink(localPath.string() + "symlink") {}
 
   void SetUp() {
     CommonGameTestFixture::SetUp();
+
+    boost::filesystem::create_directory_symlink(dataPath.parent_path(), gamePathSymlink);
+    boost::filesystem::create_directory_symlink(localPath, localPathSymlink);
   }
 
   void TearDown() {
     CommonGameTestFixture::TearDown();
+
+    boost::filesystem::remove(gamePathSymlink);
+    boost::filesystem::remove(localPathSymlink);
   }
 
   std::shared_ptr<DatabaseInterface> db_;
+
+  const boost::filesystem::path gamePathSymlink;
+  const boost::filesystem::path localPathSymlink;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -86,6 +98,11 @@ TEST_P(CreateDatabaseTest, shouldReturnOkIfPassedAnEmptyLocalPathString) {
   EXPECT_NE(nullptr, db_);
 }
 #endif
+
+TEST_P(CreateDatabaseTest, shouldReturnOkIfPassedGameAndLocalPathSymlinks) {
+  EXPECT_NO_THROW(db_ = CreateDatabase(GetParam(), gamePathSymlink.string(), localPathSymlink.string()));
+  EXPECT_NE(nullptr, db_);
+}
 }
 }
 

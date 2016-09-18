@@ -25,17 +25,19 @@ For example `LOOT v0.7.0-alpha-2-10-gf6d7e80_dev.7z` was built using the revisio
 
 ## Building LOOT
 
-LOOT's build process uses [CMake](https://cmake.org). Most of LOOT's C++ dependencies are managed by CMake, but the following must be obtained manually:
+### Windows
 
-* [Boost](http://www.boost.org) v1.55+
+Refer to `appveyor.yml` for the build process. The Appveyor configuration assumes that [CMake](https://cmake.org) and [Node.js](https://nodejs.org/) are already installed.
 
-Building LOOT's GUI also uses [Node.js](https://nodejs.org/). With it installed, run `npm install` then `node_modules/.bin/bower install` from the repository root to install the additional tools and dependencies required.
+### Linux
 
-The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
+Refer to `.travis.yml` for the build process. If starting from a freshly-installed instance of Ubuntu Server 12.04, first run the steps in the `scripts/linux/prepare_ubuntu_precise.sh` to install some additional packages Travis instances have pre-installed.
 
-Platform-specific instructions for building Windows binaries using Microsoft Visual Studio are given in [docs/BUILD.MSVC.md](docs/BUILD.MSVC.md), and instructions for building Linux binaries using GCC are given in [docs/BUILD.LINUX.md](docs/BUILD.LINUX.md).
+Not all LOOT's features have been implemented for Linux builds. Issues labelled
+`linux` on LOOT's issue tracker cover such missing features where they can be
+implemented.
 
-#### CMake Variables
+### CMake Variables
 
 LOOT uses the following CMake variables to set build parameters:
 
@@ -45,6 +47,10 @@ Parameter | Values | Default |Description
 `MSVC_STATIC_RUNTIME` | `ON`, `OFF` | `OFF` | Whether to link the C++ runtime statically or not when building with MSVC.
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
+
+### Rebuilding the HTML UI
+
+The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
 
 ## Building The API Documentation
 
