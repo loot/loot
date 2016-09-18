@@ -61,7 +61,7 @@ python -m pip install breathe sphinx
 cd docs/api
 doxygen
 cd ../..
-sphinx-build -b html docs/api build/documentation/sphinx
+sphinx-build -b html docs build/documentation/sphinx
 ```
 
 ## Packaging Releases

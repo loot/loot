@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# LOOT API documentation build configuration file, created by
+# LOOT documentation build configuration file, created by
 # sphinx-quickstart on Sat Aug 13 21:09:25 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -25,11 +25,11 @@ import subprocess, os
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 if read_the_docs_build:
-    output_directory = '../../build/documentation'
+    output_directory = '../build/documentation'
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    subprocess.call('doxygen', shell=True)
+    subprocess.call('doxygen', shell=True, cwd='./api')
 
 # -- General configuration ------------------------------------------------
 
@@ -62,7 +62,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'LOOT API'
+project = u'LOOT'
 copyright = u'2016, WrinklyNinja'
 author = u'WrinklyNinja'
 
@@ -147,7 +147,7 @@ html_theme = 'sphinx_rtd_theme'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'LOOT API v0.9.2'
+# html_title = u''
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -247,7 +247,7 @@ html_static_path = []
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'LOOTAPIdoc'
+htmlhelp_basename = 'LOOTdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -273,7 +273,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'LOOTAPI.tex', u'LOOT API Documentation',
+    (master_doc, 'LOOT.tex', u'LOOT Documentation',
      u'WrinklyNinja', 'manual'),
 ]
 
@@ -315,7 +315,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lootapi', u'LOOT API Documentation',
+    (master_doc, 'loot', u'LOOT Documentation',
      [author], 1)
 ]
 
@@ -330,8 +330,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'LOOTAPI', u'LOOT API Documentation',
-     author, 'LOOTAPI', 'One line description of project.',
+    (master_doc, 'LOOT', u'LOOT Documentation',
+     author, 'LOOT', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -353,7 +353,7 @@ texinfo_documents = [
 
 
 breathe_projects = {
-"loot_api":"../../build/documentation/xml/",
+"loot":"../build/documentation/xml/",
 }
 
-breathe_default_project = 'loot_api'
+breathe_default_project = 'loot'

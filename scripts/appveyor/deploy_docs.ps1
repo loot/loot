@@ -13,7 +13,6 @@ $replaceSelect = '$1' + "`n" + '    <option value="' + $env:APPVEYOR_REPO_TAG_NA
 $docsFiles = @(
   'images'
   'licenses'
-  'LOOT Metadata Syntax.html'
   'LOOT Readme.html'
 )
 

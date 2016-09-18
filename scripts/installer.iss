@@ -102,8 +102,6 @@ DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
-Source: "docs\LOOT Metadata Syntax.html"; \
-DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "docs\LOOT Readme.html"; \
 DestDir: "{app}\docs"; Flags: ignoreversion isreadme
 Source: "docs\licenses\*"; \
