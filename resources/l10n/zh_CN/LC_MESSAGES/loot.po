@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-09-12 15:25+0800\n"
-"PO-Revision-Date: 2016-09-12 15:36+0800\n"
+"POT-Creation-Date: 2016-09-18 11:57+0800\n"
+"PO-Revision-Date: 2016-09-18 11:58+0800\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
 "Language: zh_CN\n"
@@ -19,23 +19,23 @@ msgstr ""
 "X-Poedit-SearchPath-1: src/gui\n"
 "X-Poedit-SearchPath-2: resources/report/js\n"
 
-#: src/gui/html/js/events.js:16
+#: src/gui/html/js/events.js:18
 msgid "Identifying conflicting plugins..."
 msgstr "识别冲突插件..."
 
-#: src/gui/html/js/events.js:96
+#: src/gui/html/js/events.js:100
 msgid "No masterlist update was necessary."
 msgstr "主列表无需更新。"
 
-#: src/gui/html/js/events.js:146
+#: src/gui/html/js/events.js:150
 msgid "Sorting made no changes to the load order."
 msgstr "加载顺序排序没有变化。"
 
-#: src/gui/html/js/events.js:178
+#: src/gui/html/js/events.js:182
 msgid "Redate Plugins?"
 msgstr "修改插件时间？"
 
-#: src/gui/html/js/events.js:178
+#: src/gui/html/js/events.js:182
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -44,41 +44,41 @@ msgstr ""
 "此功能方便使用Creation Kit的modder可以设定个人顺序。副作用是所有在Steam "
 "Workshop订阅的mod都会被Steam重新下载，您确定要继续吗？"
 
-#: src/gui/html/js/events.js:178
+#: src/gui/html/js/events.js:182
 msgid "Redate"
 msgstr "修改时间"
 
-#: src/gui/html/js/events.js:187
+#: src/gui/html/js/events.js:191
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr "你确定要清除所有插件里用户添加的元数据？"
 
-#: src/gui/html/js/events.js:187 src/gui/html/js/events.js:395
+#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:401
 msgid "Clear"
 msgstr "清除"
 
-#: src/gui/html/js/events.js:198
+#: src/gui/html/js/events.js:202
 msgid "All user-added metadata has been cleared."
 msgstr "所有用户添加的元数据已被清除。"
 
-#: src/gui/html/js/events.js:221
+#: src/gui/html/js/events.js:225
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT 的内容已被复制到剪贴板。"
 
-#: src/gui/html/js/events.js:232
+#: src/gui/html/js/events.js:236
 msgid "The load order has been copied to the clipboard."
 msgstr "加载顺序已被复制到剪贴板。"
 
-#: src/gui/html/js/events.js:263 src/gui/html/js/translateStaticText.js:195
+#: src/gui/html/js/events.js:267 src/gui/html/js/translateStaticText.js:195
 msgid "Quit"
 msgstr "退出"
 
-#: src/gui/html/js/events.js:275
+#: src/gui/html/js/events.js:279
 msgid "sorted load order"
 msgstr "已调整的加载顺序"
 
-#: src/gui/html/js/events.js:277
+#: src/gui/html/js/events.js:281
 msgid "metadata edits"
 msgstr "元数据编辑"
 
@@ -591,25 +591,11 @@ msgstr ""
 "许多界面元素都有使用提示。如果你不知道某些功能什么，试着将鼠标停在它上。另"
 "外，LOOT的帮助文档可以从主菜单进入。"
 
-#: src/gui/query_handler.cpp:133
+#: src/gui/query/get_game_data_query.h:45
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "解析、融合并评估插件元数据..."
 
-#: src/gui/query_handler.cpp:191 src/gui/query_handler.cpp:194
-msgid "Failed to change game. Details: %1%"
-msgstr "无法更换游戏，详细信息：%1%"
-
-#: src/gui/query_handler.cpp:208 src/gui/query_handler.cpp:211
-#: src/gui/query_handler.cpp:289 src/gui/query_handler.cpp:292
-#: src/gui/query_handler.cpp:320 src/gui/query_handler.cpp:323
-msgid "Failed to copy plugin metadata. Details: %1%"
-msgstr "无法复制插件元数据，详细信息：%1%"
-
-#: src/gui/query_handler.cpp:229 src/gui/query_handler.cpp:239
-msgid "Failed to apply plugin metadata. Details: %1%"
-msgstr "无法应用插件元数据，详细信息：%1%"
-
-#: src/gui/query_handler.cpp:592
+#: src/gui/query/get_game_data_query.h:80
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
@@ -618,7 +604,7 @@ msgstr ""
 "解析主列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。尝试"
 "更新你的主列表来解决这个错误。"
 
-#: src/gui/query_handler.cpp:607
+#: src/gui/query/get_game_data_query.h:94
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -643,35 +629,23 @@ msgstr ""
 "你也可以在 LOOT 论坛寻求支持，链接为 [LOOT官方网站](https://loot.github."
 "io/)。"
 
-#: src/gui/query_handler.cpp:712 src/gui/query_handler.cpp:715
-msgid "Failed to get game data. Details: %1%"
-msgstr "无法获取游戏数据，详细信息：%1%"
-
-#: src/gui/query_handler.cpp:797 src/gui/query_handler.cpp:800
-msgid "Failed to update the masterlist. Details: %1%"
-msgstr "无法更新主列表，详细信息：%1%"
-
-#: src/gui/query_handler.cpp:839
-msgid "Loading plugin contents..."
-msgstr "加载插件内容..."
-
-#: src/gui/query_handler.cpp:843
-msgid "Sorting load order..."
-msgstr "排序加载顺序..."
-
-#: src/gui/query_handler.cpp:900
-msgid "Failed to sort plugins. Details: %1%"
-msgstr "无法调整排序，详细信息：%1%"
-
-#: src/gui/query_handler.cpp:931
+#: src/gui/query/metadata_query.h:94
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
 
-#: src/gui/query_handler.cpp:963 src/backend/plugin/plugin_sorter.cpp:217
+#: src/gui/query/metadata_query.h:120 src/backend/plugin/plugin_sorter.cpp:217
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
+
+#: src/gui/query/sort_plugins_query.h:46
+msgid "Loading plugin contents..."
+msgstr "加载插件内容..."
+
+#: src/gui/query/sort_plugins_query.h:66
+msgid "Sorting load order..."
+msgstr "排序加载顺序..."
 
 #: src/backend/app/loot_paths.cpp:85
 msgid "Failed to get %LOCALAPPDATA% path."
@@ -849,7 +823,7 @@ msgstr "这个插件激活\"%1%\"。"
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "这个插件与\"%1%\"不兼容，但是两者都存在。"
 
-#: src/backend/plugin/plugin_sorter.cpp:81
+#: src/backend/plugin/plugin_sorter.cpp:82
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
@@ -900,6 +874,24 @@ msgid ""
 msgstr ""
 "最新的主列表版次包含一个语法错误，LOOT 将使用最近的正常版次替代。语法错误通常"
 "是小问题，一般在数小时内修正。"
+
+#~ msgid "Failed to change game. Details: %1%"
+#~ msgstr "无法更换游戏，详细信息：%1%"
+
+#~ msgid "Failed to copy plugin metadata. Details: %1%"
+#~ msgstr "无法复制插件元数据，详细信息：%1%"
+
+#~ msgid "Failed to apply plugin metadata. Details: %1%"
+#~ msgstr "无法应用插件元数据，详细信息：%1%"
+
+#~ msgid "Failed to get game data. Details: %1%"
+#~ msgstr "无法获取游戏数据，详细信息：%1%"
+
+#~ msgid "Failed to update the masterlist. Details: %1%"
+#~ msgstr "无法更新主列表，详细信息：%1%"
+
+#~ msgid "Failed to sort plugins. Details: %1%"
+#~ msgstr "无法调整排序，详细信息：%1%"
 
 #~ msgid "An exception occurred while loading this plugin. Details:"
 #~ msgstr "载入这个插件时发生意外，详细信息："
