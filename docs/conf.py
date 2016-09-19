@@ -22,14 +22,11 @@
 
 import subprocess, os
 
-read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+output_directory = os.path.join('..', 'build', 'docs')
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
 
-if read_the_docs_build:
-    output_directory = '../build/docs'
-    if not os.path.exists(output_directory):
-        os.makedirs(output_directory)
-
-    subprocess.call('doxygen', shell=True, cwd='..')
+subprocess.call(['doxygen', 'docs/api/Doxyfile'], cwd='..')
 
 # -- General configuration ------------------------------------------------
 
