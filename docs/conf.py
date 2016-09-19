@@ -29,7 +29,7 @@ if read_the_docs_build:
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    subprocess.call('doxygen', shell=True, cwd='./api')
+    subprocess.call('doxygen', shell=True, cwd='..')
 
 # -- General configuration ------------------------------------------------
 
