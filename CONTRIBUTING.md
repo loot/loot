@@ -65,7 +65,7 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 * Add constants for the language in [api.h](include/loot/api.h) and [api.cpp](src/api/api.cpp).
 * In [archive.js](scripts/archive.js), add the language folder to the list on line 83.
 * In [installer.iss](scripts/installer.iss), add an entry for your language's translation file to the `[Files]` section.
-* In [LOOT Metadata Syntax.html](docs/LOOT%20Metadata%20Syntax.html), add a row for your language to the Language Codes table.
+* In [localised_content.rst](docs/metadata/data_structures/localised_content.rst), add a row for your language to the Language Codes table.
 
 ## Code Style
 

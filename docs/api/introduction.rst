@@ -1,5 +1,6 @@
+************
 Introduction
-============
+************
 
 LOOT is a utility that helps users avoid serious conflicts between their mods by
 setting their plugins in an optimal load order. It also provides tens of

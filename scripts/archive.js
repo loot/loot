@@ -152,7 +152,6 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   [
     'images',
     'licenses',
-    'LOOT Metadata Syntax.html',
     'LOOT Readme.html',
   ].forEach((item) => {
     fs.copySync(

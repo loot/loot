@@ -2,6 +2,24 @@
 Version History
 ***************
 
+0.10.0 - *Unreleased*
+=====================
+
+* Completely rewrote the API as a C++ API. The C API has been reimplemented as
+  a wrapper around the C++ API, and can be found in a `separate repository`_.
+  The ``loot_apply_load_order()`` and ``loot_get_tag_map()`` functions are not
+  included in the reimplementation.
+* Windows builds now have a runtime dependency on the MSVC 2015 runtime
+  redistributable.
+* Fixed database creation failing when passing paths to symlinks that point to
+  the game and/or game local paths.
+* API documentation is now available on `Read The Docs`_.
+* Changed the Windows binary release to include the ``.lib`` file for
+  compile-time linking.
+
+.. _separate repository: https://github.com/loot/loot-api-c
+.. _Read The Docs: https://loot.readthedocs.io
+
 0.9.2 - *3 August 2016*
 =======================
 

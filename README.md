@@ -2,6 +2,7 @@
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)](https://ci.appveyor.com/project/WrinklyNinja/loot)
 [![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
+[![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](http://loot.readthedocs.io/en/latest/?badge=latest)
 
 ## Introduction
 
@@ -52,16 +53,13 @@ You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 
 The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
 
-## Building The API Documentation
+## Building The Documentation
 
-The API documentation is built using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), [Breathe](https://breathe.readthedocs.io/en/latest/) and [Sphinx](http://www.sphinx-doc.org/en/stable/). On Windows, install Doxygen and [Python](https://www.python.org) 2.7, add Doxygen's binary path, `C:\Python27` and `C:\Python27\Scripts` (or wherever you installed Python to) to your `%PATH%`, then:
+The documentation is built using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), [Breathe](https://breathe.readthedocs.io/en/latest/) and [Sphinx](http://www.sphinx-doc.org/en/stable/). Install them (Breathe and Sphinx support Python 2 and 3) and make sure they're accessible from your `PATH`, then:
 
 ```
-python -m pip install breathe sphinx
-cd docs/api
-doxygen
-cd ../..
-sphinx-build -b html docs/api build/documentation/sphinx
+doxygen docs/api/Doxyfile
+sphinx-build -b html docs build/docs/sphinx
 ```
 
 ## Packaging Releases

@@ -23,7 +23,7 @@ Metadata Files
 LOOT stores plugin metadata in YAML files. It distinguishes between *masterlist*
 and *userlist* files: each game has a single masterlist, which is a public,
 curated metadata store, and each LOOT user has a private userlist, which can
-contain metadata added by the user. The two files use the same `syntax`_, but
+contain metadata added by the user. The two files use the same syntax, but
 metadata in the userlist extends or replaces metadata sourced from the
 masterlist.
 
@@ -37,8 +37,6 @@ The :cpp:func:`EvalLists` must be called to evaluate any conditions in the
 loaded metadata. In doing so it discards any metadata with a condition that
 evaluates to false, but the pre-evaluation metadata is cached internally so that
 re-evaluation does not require the lists to be reloaded.
-
-.. _syntax: https://loot.github.io/docs/0.9.2/LOOT%20Metadata%20Syntax.html
 
 Caching
 =======

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.9.2\n"
+"Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-09-14 18:51+0100\n"
+"POT-Creation-Date: 2016-09-18 06:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -715,13 +715,13 @@ msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:197
+#: src/backend/helpers/git_helper.cpp:194
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:311 src/backend/masterlist.cpp:50
+#: src/backend/helpers/git_helper.cpp:308 src/backend/masterlist.cpp:50
 msgid "Unknown: Git repository missing"
 msgstr ""
 

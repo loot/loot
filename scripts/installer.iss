@@ -11,7 +11,7 @@
 #include <idplang\spanish.iss>
 
 #define MyAppName "LOOT"
-#define MyAppVersion "0.9.2"
+#define MyAppVersion "0.10.0"
 #define MyAppPublisher "LOOT Team"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
@@ -102,8 +102,6 @@ DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
-Source: "docs\LOOT Metadata Syntax.html"; \
-DestDir: "{app}\docs"; Flags: ignoreversion
 Source: "docs\LOOT Readme.html"; \
 DestDir: "{app}\docs"; Flags: ignoreversion isreadme
 Source: "docs\licenses\*"; \
