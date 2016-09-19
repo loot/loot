@@ -25,7 +25,7 @@ import subprocess, os
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 if read_the_docs_build:
-    output_directory = '../build/documentation'
+    output_directory = '../build/docs'
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
@@ -353,7 +353,7 @@ texinfo_documents = [
 
 
 breathe_projects = {
-"loot":"../build/documentation/xml/",
+"loot":"../build/docs/xml/",
 }
 
 breathe_default_project = 'loot'
