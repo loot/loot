@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-09-18 11:57+0800\n"
-"PO-Revision-Date: 2016-09-18 11:58+0800\n"
+"POT-Creation-Date: 2016-09-20 02:57+0800\n"
+"PO-Revision-Date: 2016-09-20 02:57+0800\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
 "Language: zh_CN\n"
@@ -733,13 +733,13 @@ msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr "试图复制远程主列表库时发生错误。"
 
-#: src/backend/helpers/git_helper.cpp:197
+#: src/backend/helpers/git_helper.cpp:194
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr "更新主列表时发生错误。这可能是由于服务器端故障。过几分钟后再进行尝试。"
 
-#: src/backend/helpers/git_helper.cpp:311 src/backend/masterlist.cpp:50
+#: src/backend/helpers/git_helper.cpp:308 src/backend/masterlist.cpp:50
 msgid "Unknown: Git repository missing"
 msgstr "未知：Git 库缺失"
 
