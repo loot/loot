@@ -24,8 +24,8 @@ LOOT
   api/miscellaneous
   api/sorting
   api/reference
-  api/history
   api/credits
+  api/changelog
 
 .. toctree::
   :maxdepth: 2
