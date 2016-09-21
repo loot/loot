@@ -34,7 +34,7 @@ namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   LootPaths::initialise();
 
-  EXPECT_EQ(boost::filesystem::current_path() / "docs" / "LOOT Readme.html", LootPaths::getReadmePath());
+  EXPECT_EQ(boost::filesystem::current_path() / "docs" / "index.html", LootPaths::getReadmePath());
 }
 
 TEST(LootPaths, getUIIndexPathShouldUseLootAppPath) {
