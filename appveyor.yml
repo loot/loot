@@ -102,9 +102,6 @@ deploy:
     on:
       appveyor_repo_tag: true
 
-on_success:
-  - ps: scripts\appveyor\deploy_docs.ps1
-
 on_finish:
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\api-tests.xml")
