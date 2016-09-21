@@ -135,7 +135,7 @@
     dirtyInfoRow.querySelector('.itm').setAttribute('error-message', l10n.translate('Values must be integers.'));
     dirtyInfoRow.querySelector('.udr').setAttribute('error-message', l10n.translate('Values must be integers.'));
     dirtyInfoRow.querySelector('.nav').setAttribute('error-message', l10n.translate('Values must be integers.'));
-    dirtyInfoRow.querySelector('.util').setAttribute('error-message', l10n.translate('A utility name is required.'));
+    dirtyInfoRow.querySelector('.utility').setAttribute('error-message', l10n.translate('A utility name is required.'));
     dirtyInfoRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
   }
 
@@ -144,7 +144,7 @@
     const cleanInfoRow = document.getElementById('cleanInfoRow').content;
 
     cleanInfoRow.querySelector('.crc').setAttribute('error-message', l10n.translate('A CRC is required.'));
-    cleanInfoRow.querySelector('.util').setAttribute('error-message', l10n.translate('A utility name is required.'));
+    cleanInfoRow.querySelector('.utility').setAttribute('error-message', l10n.translate('A utility name is required.'));
     cleanInfoRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
   }
 
