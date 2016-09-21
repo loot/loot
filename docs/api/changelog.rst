@@ -2,94 +2,141 @@
 Version History
 ***************
 
-0.10.0 - *Unreleased*
-=====================
+0.10.0 - Unreleased
+===================
+
+Changed
+-------
 
 * Completely rewrote the API as a C++ API. The C API has been reimplemented as
   a wrapper around the C++ API, and can be found in a `separate repository`_.
-  The ``loot_apply_load_order()`` and ``loot_get_tag_map()`` functions are not
-  included in the reimplementation.
 * Windows builds now have a runtime dependency on the MSVC 2015 runtime
   redistributable.
-* Fixed database creation failing when passing paths to symlinks that point to
+* API documentation is now hosted on `Read The Docs`_ instead of being included
+  in the release archive.
+* The Windows release archive includes the ``.lib`` file for compile-time linking.
+
+Removed
+-------
+
+* The ``loot_get_tag_map()`` function has no equivalent in the new C++ API as it
+  is obsolete.
+* The ``loot_apply_load_order()`` function has no equivalent in the new C++ API
+  as it just passed through to libloadorder, which clients can use directly
+  instead.
+
+Fixed
+-----
+
+* Database creation was failing when passing paths to symlinks that point to
   the game and/or game local paths.
-* API documentation is now available on `Read The Docs`_.
-* Changed the Windows binary release to include the ``.lib`` file for
-  compile-time linking.
 
 .. _separate repository: https://github.com/loot/loot-api-c
 .. _Read The Docs: https://loot.readthedocs.io
 
-0.9.2 - *3 August 2016*
-=======================
+0.9.2 - 2016-08-03
+==================
 
-* Fixed the wrong API binary being packaged. This caused the v0.9.0 and v0.9.1
-  API releases to actually be re-releases of a snapshot build made at some
-  point between v0.8.1 and v0.9.0: the affected API releases were taken
-  offline once this was discovered.
-* Fixed ``loot_get_plugin_tags()`` remembering results and including them in the
-  results of subsequent calls.
-* Fixed an error occurring when the user's temporary files directory didn't
-  exist and updating the masterlist tried to create a directory there.
-* Fixed errors when reading some Oblivion plugins during sorting, including
-  the official DLC.
+Changed
+-------
+
 * libespm (2.5.5) and Pseudosem (1.1.0) dependencies have been updated to the
   versions given in brackets.
 
-0.9.1 - *23 June 2016*
-======================
+Fixed
+-----
 
-* No API changes.
+* The packaging script used to create API archives was packaging the wrong
+  binary, which caused the v0.9.0 and v0.9.1 API releases to actually be
+  re-releases of a snapshot build made at some point between v0.8.1 and v0.9.0:
+  the affected API releases were taken offline once this was discovered.
+* ``loot_get_plugin_tags()`` remembering results and including them in the
+  results of subsequent calls.
+* An error occurred when the user's temporary files directory didn't
+  exist and updating the masterlist tried to create a directory there.
+* Errors when reading some Oblivion plugins during sorting, including
+  the official DLC.
 
-0.9.0 - *21 May 2016*
-=====================
+0.9.1 - 2016-06-23
+==================
+
+No API changes.
+
+0.9.0 - 2016-05-21
+==================
+
+Changed
+-------
 
 * Moved API header location to the more standard ``include/loot/api.h``.
 * Documented LOOT's masterlist versioning system.
 * Made all API outputs fully const to make it clear they should not be
   modified and to avoid internal const casting.
-* Removed the ``loot_cleanup()`` function, as the one string it used to destroy
-  is now stored on the stack and so destroyed when the API is unloaded.
 * The ``loot_db`` type is now an opaque struct, and functions that used to take
   it as a value now take a pointer to it.
-* Removed the ``loot_lang_any`` constant. The ``loot_lang_english`` constant
+
+Removed
+-------
+
+* The ``loot_cleanup()`` function, as the one string it used to destroy
+  is now stored on the stack and so destroyed when the API is unloaded.
+* The ``loot_lang_any`` constant. The ``loot_lang_english`` constant
   should be used instead.
 
-0.8.1 - *27 September 2015*
-===========================
+0.8.1 - 2015-09-27
+==================
 
-* Fixed crash when loading plugins due to lack of thread safety.
-* Fixed masterlist updater and validator not checking for valid condition
-  and regex syntax.
-* Check for safe file paths when parsing conditions.
+Changed
+-------
+
+* Safety checks are now performed on file paths when parsing conditions (paths
+  must not reference a location outside the game folder).
 * Updated Boost (1.59.0), libgit2 (0.23.2) and CEF (branch 2454) dependencies.
-  This fixes the masterlist updater not working correctly for Windows Vista
-  users.
 
-0.8.0 - *22 July 2015*
-======================
+Fixed
+-----
 
-* Fixed many miscellaneous bugs, including initialisation crashes and
-  incorrect metadata input/output handling.
-* Fixed LOOT silently discarding some non-unique metadata: an error will now
-  occur when loading or attempting to apply such metadata.
-* Fixed and improved LOOT's version comparison behaviour for a wide variety of
-  version string formats. This involved removing LOOT's usage of the Alphanum
-  code library.
+* A crash when loading plugins due to lack of thread safety.
+* The masterlist updater and validator not checking for valid condition
+  and regex syntax.
+* The masterlist updater not working correctly on Windows Vista.
+
+0.8.0 - 2015-07-22
+==================
+
+Added
+-----
+
+* Support for metadata syntax v0.8.
+
+Changed
+-------
+
 * Improved plugin loading performance for computers with weaker multithreading
   capabilities (eg. non-hyperthreaded dual-core or single-core CPUs).
 * LOOT no longer outputs validity warnings for inactive plugins.
-* Metadata syntax support changes, see the metadata syntax document for
-  details.
 * Updated libgit2 to v0.23.0.
 
-0.7.1 - *22 June 2015*
-======================
+Fixed
+-----
 
-* Fixed "No existing load order position" errors when sorting.
-* Fixed output of Bash Tag removal suggestions in ``loot_write_minimal_list()``.
+* Many miscellaneous bugs, including initialisation crashes and
+  incorrect metadata input/output handling.
+* LOOT silently discarding some non-unique metadata: an error will now
+  occur when loading or attempting to apply such metadata.
+* LOOT's version comparison behaviour for a wide variety of version string
+  formats.
 
-0.7.0 - *20 May 2015*
-=====================
+0.7.1 - 2015-06-22
+==================
 
-* Initial API release.
+Fixed
+-----
+
+* "No existing load order position" errors when sorting.
+* Output of Bash Tag removal suggestions in ``loot_write_minimal_list()``.
+
+0.7.0 - 2015-05-20
+==================
+
+Initial API release.
