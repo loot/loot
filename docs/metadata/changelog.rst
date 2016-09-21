@@ -2,7 +2,7 @@
 Version History
 ***************
 
-Each version of LOOT has a corresponding version of the metadata format, and its version history is given below.
+The version history of the metadata syntax is given below.
 
 0.10 - Unreleased
 =================
@@ -18,7 +18,7 @@ Added
 Changed
 -------
 
-* Renamed the ``str`` key in the message content data structure to ``text`` .
+* Renamed the ``str`` key in the localised content data structure to ``text`` .
 * The ``priority`` field of the plugin data structure now stores values between -127 and 127 inclusive.
 * Regular expressions no longer accept ``\`` as a directory separator: ``/`` must now be used.
 * The ``file()`` condition function now also accepts a regular expression.
