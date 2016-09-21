@@ -102,14 +102,8 @@ DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
-Source: "docs\LOOT Readme.html"; \
-DestDir: "{app}\docs"; Flags: ignoreversion isreadme
-Source: "docs\licenses\*"; \
-DestDir: "{app}\docs\licenses"; Flags: ignoreversion
-Source: "docs\images\main.png"; \
-DestDir: "{app}\docs\images"; Flags: ignoreversion
-Source: "docs\images\settings.png"; \
-DestDir: "{app}\docs\images"; Flags: ignoreversion
+Source: "{#buildir}\docs\html\*"; \
+DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 
 Source: "{#buildir}\Release\resources\ui\index.html"; \
 DestDir: "{app}\resources\ui"; Flags: ignoreversion

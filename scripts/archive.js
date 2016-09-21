@@ -147,18 +147,11 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
     path.join(tempPath, 'resources', 'ui', 'fonts')
   );
 
-  // Docs.
-  fs.mkdirsSync(path.join(tempPath, 'docs'));
-  [
-    'images',
-    'licenses',
-    'LOOT Readme.html',
-  ].forEach((item) => {
-    fs.copySync(
-      path.join(rootPath, 'docs', item),
-      path.join(tempPath, 'docs', item)
-    );
-  });
+  // Documentation.
+  fs.copySync(
+    path.join(rootPath, 'build', 'docs', 'html'),
+    path.join(tempPath, 'docs')
+  );
 
   // Now compress the folder to a 7-zip archive.
   compress(tempPath, destPath);
