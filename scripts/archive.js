@@ -183,10 +183,10 @@ function createApiArchive(rootPath, releasePath, tempPath, destPath) {
     path.join(tempPath, 'include', 'loot')
   );
 
-  // Readme.
+  // Documentation.
   fs.copySync(
-    path.join(rootPath, 'docs', 'api', 'README.md'),
-    path.join(tempPath, 'README.md')
+    path.join(rootPath, 'build', 'docs', 'html'),
+    path.join(tempPath, 'docs')
   );
 
   // Now compress the folder to a 7-zip archive.
