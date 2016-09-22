@@ -58,7 +58,7 @@ The GUI's HTML file is automatically built when building the LOOT GUI binary, bu
 The documentation is built using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), [Breathe](https://breathe.readthedocs.io/en/latest/) and [Sphinx](http://www.sphinx-doc.org/en/stable/). Install them (Breathe and Sphinx support Python 2 and 3) and make sure they're accessible from your `PATH`, then run:
 
 ```
-sphinx-build -b html docs build/docs/sphinx
+sphinx-build -b html docs build/docs/html
 ```
 
 ## Packaging Releases
