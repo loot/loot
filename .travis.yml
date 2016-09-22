@@ -47,6 +47,16 @@ install:
   - bower install
   - chmod +x scripts/travis/install_boost.sh
   - scripts/travis/install_boost.sh
+  # Install packages for generating documentation
+  - pip install --user sphinx breathe sphinx_rtd_theme
+  # Add sphinx-build to PATH
+  - export PATH="$HOME/.local/bin:$PATH"
+  # Don't install Doxygen from the repositories, it also gets the LaTeX packages
+  # so is a ~ 700 MB download.
+  - wget ftp://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.12.linux.bin.tar.gz
+  - tar -xf doxygen-1.8.12.linux.bin.tar.gz
+  # Add Doxygen binary path to PATH
+  - export PATH="$PWD/doxygen-1.8.12/bin:$PATH"
 
 before_script:
   # Move into the cloned LOOT repo build path.
@@ -67,6 +77,7 @@ after_success:
   # Get the full repo history before trying to run the archiver.
   - git fetch --unshallow
   - node scripts/potomo.js
+  - sphinx-build -b html docs build/docs/html
   - node scripts/archive.js
   # Need to replace the HEAD branch descriptor in the archive filenames
   - for ARCHIVE in build/*.tar.xz; do mv $ARCHIVE $(echo $ARCHIVE | sed "s/HEAD/$TRAVIS_BRANCH/"); done

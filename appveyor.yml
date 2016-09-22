@@ -16,6 +16,8 @@ environment:
     secure: yoODjVeYw01Vg2idJgxMBOkyII/TO3yb6OZfxtzBh/F5z3ZTDW6CHBOiH4AyiX7Y
 
 install:
+  - choco install doxygen.portable
+  - python -m pip install sphinx breathe sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
   - ps: .\scripts\appveyor\install_boost.ps1
@@ -37,6 +39,7 @@ test_script:
 
 after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
+  - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
   - node scripts\potomo.js
   - node scripts\archive.js
   # AppVeyor checks out a specific commit, but that means the archive script
