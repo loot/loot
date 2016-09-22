@@ -9,13 +9,6 @@ const fs = require('fs-extra');
 const os = require('os');
 const helpers = require('./helpers');
 
-function vulcanize(rootPath) {
-  return childProcess.execFileSync('node', [
-    'scripts/vulcanize.js',
-    rootPath,
-  ]);
-}
-
 function getGitDescription() {
   const describe = String(childProcess.execFileSync('git', [
     'describe',
@@ -243,7 +236,6 @@ if (process.argv.length > 2) {
 
 const gitDesc = getGitDescription();
 const fileExtension = getArchiveFileExtension();
-vulcanize(rootPath);
 
 helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
   const filename = `loot_${getFilenameSuffix(releasePath.label, gitDesc)}`;
