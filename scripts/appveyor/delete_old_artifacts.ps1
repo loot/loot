@@ -3,7 +3,7 @@ function Get-HashFromBintrayVersion($version) {
 }
 
 function Get-BranchFromBintrayVersion($version) {
-  return $version.split('-')[2].split('_-', 2)[1]
+  return $version.substring($version.IndexOf('_') + 1)
 }
 
 function Get-AuthorizationHeaderValue($username, $password) {
