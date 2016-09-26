@@ -14,6 +14,8 @@ cache:
 environment:
   access_token:
     secure: yoODjVeYw01Vg2idJgxMBOkyII/TO3yb6OZfxtzBh/F5z3ZTDW6CHBOiH4AyiX7Y
+  bintray_token:
+    secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
 
 install:
   - choco install doxygen.portable
@@ -104,6 +106,9 @@ deploy:
     draft: true
     on:
       appveyor_repo_tag: true
+
+on_success:
+  - ps: scripts\appveyor\delete_old_artifacts.ps1
 
 on_finish:
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
