@@ -20,8 +20,14 @@ $packages = @(
   'LOOT_API'
   'metadata-validator'
 )
+# The GitHub API's protected branches API is currently in preview, so hardcode
+# the branches for now.
+$protectedBranches = @(
+  'dev'
+  'master'
+)
 
-if ($currentBranch -ne "dev") {
+if (!($protectedBranches.Contains($currentBranch))) {
   exit
 }
 
@@ -36,7 +42,7 @@ foreach($package in $packages) {
   foreach ($version in $versions) {
     if ($currentCommitId -eq (Get-HashFromBintrayVersion $version)) {
       $versionBranch = Get-BranchFromBintrayVersion $version
-      if ($versionBranch -ne "dev") {
+      if (!($protectedBranches.Contains($versionBranch))) {
         $matchingBranches += $versionBranch
       }
     }
