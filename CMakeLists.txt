@@ -71,7 +71,7 @@ set (LIBESPM_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(libgit2
                     PREFIX "external"
-                    URL "https://github.com/libgit2/libgit2/archive/v0.24.1.tar.gz"
+                    URL "https://github.com/libgit2/libgit2/archive/v0.24.2.tar.gz"
                     CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF -DBUILD_CLAR=OFF -DSTATIC_CRT=${MSVC_STATIC_RUNTIME}
                     BUILD_COMMAND ${CMAKE_COMMAND} --build . --target git2 --config $(CONFIGURATION)
                     INSTALL_COMMAND "")
