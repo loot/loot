@@ -53,12 +53,12 @@ find_package(Boost REQUIRED COMPONENTS atomic log log_setup regex locale thread 
 
 ExternalProject_Add(GTest
                     PREFIX "external"
-                    URL "https://github.com/google/googletest/archive/release-1.7.0.tar.gz"
+                    URL "https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
                     CMAKE_ARGS -Dgtest_force_shared_crt=${MSVC_SHARED_RUNTIME}
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
-set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/include")
-set (GTEST_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
+set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 ExternalProject_Add(libespm
                     PREFIX "external"
