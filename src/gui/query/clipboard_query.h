@@ -35,11 +35,11 @@ protected:
   void copyToClipboard(const std::string& text) {
 #ifdef _WIN32
     if (!OpenClipboard(NULL)) {
-      throw Error(Error::Code::windows_error, "Failed to open the Windows clipboard.");
+      throw std::system_error(GetLastError(), std::system_category(), "Failed to open the Windows clipboard.");
     }
 
     if (!EmptyClipboard()) {
-      throw Error(Error::Code::windows_error, "Failed to empty the Windows clipboard.");
+      throw std::system_error(GetLastError(), std::system_category(), "Failed to empty the Windows clipboard.");
     }
 
     // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
@@ -50,11 +50,11 @@ protected:
     wcscpy(wcstr, wtext.c_str());
 
     if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
-      throw Error(Error::Code::windows_error, "Failed to copy metadata to the Windows clipboard.");
+      throw std::system_error(GetLastError(), std::system_category(), "Failed to copy metadata to the Windows clipboard.");
     }
 
     if (!CloseClipboard()) {
-      throw Error(Error::Code::windows_error, "Failed to close the Windows clipboard.");
+      throw std::system_error(GetLastError(), std::system_category(), "Failed to close the Windows clipboard.");
     }
 #endif
   }

@@ -66,8 +66,6 @@ public:
      * repository.
      */
     git_error = 12,
-    /** A miscellaneous error occurred when using an operating system API. */
-    windows_error = 13,
     /** An error occurred while trying to sort the load order. */
     sorting_error = 14,
   };

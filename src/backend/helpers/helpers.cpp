@@ -119,10 +119,10 @@ void OpenInDefaultApplication(const boost::filesystem::path& file) {
 #ifdef _WIN32
   HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
   if ((int)ret <= 32)
-    throw Error(Error::Code::windows_error, translate("Failed to open file in its default application."));
+    throw std::system_error(GetLastError(), std::system_category(), translate("Failed to open file in its default application."));
 #else
   if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
-    throw Error(Error::Code::windows_error, translate("Failed to open file in its default application."));
+    throw std::system_error(errno, std::system_category(), translate("Failed to open file in its default application."));
 #endif
 }
 

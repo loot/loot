@@ -82,7 +82,7 @@ boost::filesystem::path LootPaths::getLocalAppDataPath() {
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
-    throw Error(Error::Code::windows_error, boost::locale::translate("Failed to get %LOCALAPPDATA% path."));
+    throw std::system_error(GetLastError(), std::system_category(), boost::locale::translate("Failed to get %LOCALAPPDATA% path."));
 
   boost::filesystem::path localAppDataPath(FromWinWide(path));
   CoTaskMemFree(path);
