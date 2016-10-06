@@ -57,28 +57,12 @@ public:
      * condition.
      */
     condition_eval_fail = 4,
-    /** An error was encountered when parsing a regular expression. */
-    regex_eval_fail = 5,
-    /** An error was encountered when trying to allocate memory. */
-    no_mem = 6,
     /** An error was encountered due to invalid function arguments. */
     invalid_args = 7,
-    /**
-     * @deprecated
-     * @brief An error was encountered when getting plugin tags as no tag map
-     * was built. **This code is obsolete and no longer used.**
-     */
-    no_tag_map = 8,
     /** A path could not be found. */
     path_not_found = 9,
     /** None of LOOT's supported games could be detected. */
     no_game_detected = 10,
-    /**
-     * @deprecated
-     * @brief An error was encountered while trying to run a Subversion command.
-     * **This code is obsolete and no longer used.**
-     */
-    subversion_error = 11,
     /**
      * An error was encountered while trying to create or interact with a Git
      * repository.
