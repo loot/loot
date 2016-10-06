@@ -46,8 +46,6 @@ public:
      * failed, but its failure was not fatal to the task being performed.
      */
     ok = 0,
-    /** An error was encountered when reading or writing the load order. */
-    liblo_error = 1,
     /** An error was encountered when writing a file. */
     path_write_fail = 2,
     /** An error was encountered when reading a file. */

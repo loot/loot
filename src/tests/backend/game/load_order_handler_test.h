@@ -27,7 +27,6 @@ along with LOOT.  If not, see
 
 #include "backend/game/load_order_handler.h"
 
-#include "loot/error.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -62,7 +61,7 @@ TEST_P(LoadOrderHandlerTest, initShouldThrowOnLinuxIfNoLocalPathIsSet) {
   GameSettings game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game), std::system_error);
 }
 #endif
 
@@ -74,7 +73,7 @@ TEST_P(LoadOrderHandlerTest, initShouldNotThrowIfAValidGameIdAndGamePathAndLocal
 }
 
 TEST_P(LoadOrderHandlerTest, isPluginActiveShouldThrowIfTheHandlerHasNotBeenInitialised) {
-  EXPECT_THROW(loadOrderHandler_.IsPluginActive(masterFile), Error);
+  EXPECT_THROW(loadOrderHandler_.IsPluginActive(masterFile), std::system_error);
 }
 
 TEST_P(LoadOrderHandlerTest, isPluginActiveShouldReturnCorrectPluginStatesAfterInitialisation) {
@@ -88,7 +87,7 @@ TEST_P(LoadOrderHandlerTest, isPluginActiveShouldReturnCorrectPluginStatesAfterI
 }
 
 TEST_P(LoadOrderHandlerTest, getLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
-  EXPECT_THROW(loadOrderHandler_.GetLoadOrder(), Error);
+  EXPECT_THROW(loadOrderHandler_.GetLoadOrder(), std::system_error);
 }
 
 TEST_P(LoadOrderHandlerTest, getLoadOrderShouldReturnTheCurrentLoadOrder) {
@@ -114,7 +113,7 @@ TEST_P(LoadOrderHandlerTest, setLoadOrderShouldThrowIfTheHandlerHasNotBeenInitia
       blankPluginDependentEsp,
   });
 
-  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(loadOrder), Error);
+  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(loadOrder), std::system_error);
 }
 
 TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {

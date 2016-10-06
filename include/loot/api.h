@@ -31,6 +31,7 @@
 #include "loot/api_decorator.h"
 #include "loot/database_interface.h"
 #include "loot/error.h"
+#include "loot/error_categories.h"
 #include "loot/game_type.h"
 #include "loot/loot_version.h"
 

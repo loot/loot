@@ -29,6 +29,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "loot/error.h"
+#include "loot/error_categories.h"
 
 using boost::locale::translate;
 using std::string;
@@ -91,7 +92,7 @@ void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::p
       err = translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
     }
     lo_cleanup();
-    throw Error(Error::Code::liblo_error, err);
+    throw std::system_error(ret, libloadorder_category(), err);
   }
 }
 
@@ -112,7 +113,7 @@ bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
       err = translate("libloadorder failed to check if a plugin is active. Details:").str() + " " + e;
     }
     lo_cleanup();
-    throw Error(Error::Code::liblo_error, err);
+    throw std::system_error(ret, libloadorder_category(), err);
   }
 
   return result;
@@ -137,7 +138,7 @@ std::vector<std::string> LoadOrderHandler::GetLoadOrder() const {
       err = translate("libloadorder failed to get the load order. Details:").str() + " " + e;
     }
     lo_cleanup();
-    throw Error(Error::Code::liblo_error, err);
+    throw std::system_error(ret, libloadorder_category(), err);
   }
 
   std::vector<string> loadOrder;
@@ -163,7 +164,7 @@ void LoadOrderHandler::SetLoadOrder(const char * const * const loadOrder, const 
       err = translate("libloadorder failed to set the load order. Details:").str() + " " + e;
     }
     lo_cleanup();
-    throw Error(Error::Code::liblo_error, err);
+    throw std::system_error(ret, libloadorder_category(), err);
   }
 }
 

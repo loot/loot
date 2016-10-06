@@ -48,3 +48,11 @@ Classes
 
 .. doxygenclass:: loot::LootVersion
    :members:
+
+Error Categories
+================
+
+LOOT uses error category objects to identify errors with codes that originate in
+lower-level libraries.
+
+.. doxygenfunction:: loot::libloadorder_category

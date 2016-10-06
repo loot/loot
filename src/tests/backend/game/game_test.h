@@ -98,7 +98,7 @@ TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
 TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
   Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
   ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-  EXPECT_THROW(game.Init(false), Error);
+  EXPECT_THROW(game.Init(false), std::system_error);
 }
 
 // Testing on Windows will find real LOOT installs, and they shouldn't be
@@ -139,7 +139,7 @@ TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSky
   game.SetGamePath(dataPath.parent_path());
 
   if (GetParam() == GameType::tes5)
-    EXPECT_THROW(game.RedatePlugins(), Error);
+    EXPECT_THROW(game.RedatePlugins(), std::system_error);
   else
     EXPECT_NO_THROW(game.RedatePlugins());
 }
