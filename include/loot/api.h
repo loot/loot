@@ -32,26 +32,11 @@
 #include <string>
 #include <memory>
 
+#include "loot/api_decorator.h"
 #include "loot/database_interface.h"
 #include "loot/error.h"
 #include "loot/game_type.h"
 #include "loot/loot_version.h"
-
-/* set up dll import/export decorators
-   when compiling the dll on windows, ensure LOOT_EXPORT is defined. clients
-   that use this header do not need to define anything to import the symbols
-   properly. */
-#if defined(_WIN32)
-#   ifdef LOOT_STATIC
-#       define LOOT_API
-#   elif defined LOOT_EXPORT
-#       define LOOT_API __declspec(dllexport)
-#   else
-#       define LOOT_API __declspec(dllimport)
-#   endif
-#else
-#   define LOOT_API
-#endif
 
 namespace loot {
 /**@}*/
