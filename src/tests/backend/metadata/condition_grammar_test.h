@@ -155,7 +155,7 @@ TEST_P(ConditionGrammarTest, evaluatingAFileConditionForAnUnsafePathShouldThrow)
                                                std::cend(condition),
                                                grammar,
                                                skipper_,
-                                               result_), Error);
+                                               result_), std::invalid_argument);
 }
 
 TEST_P(ConditionGrammarTest, aFileConditionWithAnInvalidRegexShouldThrow) {
@@ -166,7 +166,7 @@ TEST_P(ConditionGrammarTest, aFileConditionWithAnInvalidRegexShouldThrow) {
                                                std::cend(condition),
                                                grammar,
                                                skipper_,
-                                               result_), Error);
+                                               result_), std::invalid_argument);
 }
 
 TEST_P(ConditionGrammarTest, aFileConditionWithARegexMatchingAPluginThatExistsShouldEvaluateToTrue) {

@@ -106,7 +106,7 @@ bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
                                    const std::string& remoteURL,
                                    const std::string& remoteBranch) {
   if (!boost::filesystem::is_directory(boost::filesystem::path(masterlistPath).parent_path()))
-    throw Error(Error::Code::invalid_args, "Given masterlist path \"" + std::string(masterlistPath) + "\" does not have a valid parent directory.");
+    throw std::invalid_argument("Given masterlist path \"" + masterlistPath + "\" does not have a valid parent directory.");
 
   Masterlist masterlist;
   return masterlist.Update(masterlistPath, remoteURL, remoteBranch);
@@ -216,7 +216,7 @@ PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) {
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
 void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool overwrite) {
   if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
-    throw Error(Error::Code::invalid_args, "Output directory does not exist.");
+    throw std::invalid_argument("Output directory does not exist.");
 
   if (boost::filesystem::exists(outputFile) && !overwrite)
     throw Error(Error::Code::path_write_fail, "Output file exists but overwrite is not set to true.");

@@ -47,7 +47,7 @@ Message::Message(const MessageType type, const std::vector<MessageContent>& cont
         englishStringExists = true;
     }
     if (!englishStringExists)
-      throw Error(Error::Code::invalid_args, "bad conversion: multilingual messages must contain an English content string");
+      throw std::invalid_argument("bad conversion: multilingual messages must contain an English content string");
   }
 }
 

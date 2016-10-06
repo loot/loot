@@ -85,11 +85,11 @@ TEST_P(CreateDatabaseTest, shouldSucceedIfPassedValidParametersWithAbsolutePaths
 }
 
 TEST_P(CreateDatabaseTest, shouldThrowIfPassedAGamePathThatDoesNotExist) {
-  EXPECT_ANY_THROW(CreateDatabase(GetParam(), missingPath.string(), localPath.string()));
+  EXPECT_THROW(CreateDatabase(GetParam(), missingPath.string(), localPath.string()), std::invalid_argument);
 }
 
 TEST_P(CreateDatabaseTest, shouldThrowIfPassedALocalPathThatDoesNotExist) {
-  EXPECT_ANY_THROW(CreateDatabase(GetParam(), dataPath.parent_path().string(), missingPath.string()));
+  EXPECT_THROW(CreateDatabase(GetParam(), dataPath.parent_path().string(), missingPath.string()), std::invalid_argument);
 }
 
 #ifdef _WIN32

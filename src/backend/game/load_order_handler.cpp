@@ -46,12 +46,12 @@ void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::p
       && game.Type() != GameType::fo3
       && game.Type() != GameType::fonv
       && game.Type() != GameType::fo4) {
-    throw Error(Error::Code::invalid_args, translate("Unsupported game ID supplied.").str());
+    throw std::invalid_argument(translate("Unsupported game ID supplied.").str());
   }
 
   if (game.GamePath().empty()) {
     BOOST_LOG_TRIVIAL(error) << "Game path is not initialised.";
-    throw Error(Error::Code::invalid_args, translate("Game path is not initialised.").str());
+    throw std::invalid_argument(translate("Game path is not initialised.").str());
   }
 
   const char * gameLocalDataPath = nullptr;

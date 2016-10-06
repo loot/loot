@@ -57,8 +57,6 @@ public:
      * condition.
      */
     condition_eval_fail = 4,
-    /** An error was encountered due to invalid function arguments. */
-    invalid_args = 7,
     /** A path could not be found. */
     path_not_found = 9,
     /** None of LOOT's supported games could be detected. */

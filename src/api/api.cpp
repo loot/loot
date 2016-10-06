@@ -59,11 +59,11 @@ LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
   // Check for valid paths.
   const std::string resolvedGamePath = ResolvePath(gamePath);
   if (!gamePath.empty() && !fs::is_directory(resolvedGamePath))
-    throw Error(Error::Code::invalid_args, "Given game path \"" + gamePath + "\" does not resolve to a valid directory.");
+    throw std::invalid_argument("Given game path \"" + gamePath + "\" does not resolve to a valid directory.");
 
   const std::string resolvedGameLocalPath = ResolvePath(gameLocalPath);
   if (!gameLocalPath.empty() && !fs::is_directory(resolvedGameLocalPath))
-    throw Error(Error::Code::invalid_args, "Given local data path \"" + gameLocalPath + "\" does not resolve to a valid directory.");
+    throw std::invalid_argument("Given game path \"" + gameLocalPath + "\" does not resolve to a valid directory.");
 
   return std::make_shared<ApiDatabase>(game, resolvedGamePath, resolvedGameLocalPath);
 }

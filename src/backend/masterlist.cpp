@@ -94,7 +94,7 @@ bool Masterlist::Update(const boost::filesystem::path& path, const std::string& 
   string filename = path.filename().string();
 
   if (repoUrl.empty() || repoBranch.empty())
-    throw Error(Error::Code::invalid_args, "Repository URL and branch must not be empty.");
+    throw std::invalid_argument("Repository URL and branch must not be empty.");
 
 // Initialise checkout options.
   BOOST_LOG_TRIVIAL(debug) << "Setting up checkout options.";

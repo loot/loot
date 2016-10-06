@@ -103,7 +103,7 @@ const Plugin& GameCache::GetPlugin(const std::string & pluginName) const {
   if (it != end(plugins_))
     return it->second;
 
-  throw Error(Error::Code::invalid_args, "No plugin \"" + pluginName + "\" exists.");
+  throw std::invalid_argument("No plugin \"" + pluginName + "\" exists.");
 }
 
 void GameCache::AddPlugin(const Plugin&& plugin) {

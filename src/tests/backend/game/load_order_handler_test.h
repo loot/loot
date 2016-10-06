@@ -51,10 +51,10 @@ INSTANTIATE_TEST_CASE_P(,
 TEST_P(LoadOrderHandlerTest, initShouldThrowIfNoGamePathIsSet) {
   GameSettings game(GetParam());
 
-  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
-  EXPECT_THROW(loadOrderHandler_.Init(game), Error);
-  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
-  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), Error);
+  EXPECT_THROW(loadOrderHandler_.Init(game), std::invalid_argument);
+  EXPECT_THROW(loadOrderHandler_.Init(game), std::invalid_argument);
+  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), std::invalid_argument);
+  EXPECT_THROW(loadOrderHandler_.Init(game, localPath), std::invalid_argument);
 }
 
 #ifndef _WIN32

@@ -168,7 +168,7 @@ void ConditionEvaluator::validatePath(const boost::filesystem::path& path) {
 
     if (component == ".." && temp.filename() == "..") {
       BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << path;
-      throw Error(Error::Code::invalid_args, boost::locale::translate("Invalid file path:").str() + " " + path.string());
+      throw std::invalid_argument(boost::locale::translate("Invalid file path:").str() + " " + path.string());
     }
 
     temp /= component;
@@ -178,7 +178,7 @@ void ConditionEvaluator::validateRegex(const std::string& regexString) {
   try {
     std::regex(regexString, std::regex::ECMAScript | std::regex::icase);
   } catch (std::regex_error& e) {
-    throw Error(Error::Code::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regexString % e.what()).str());
+    throw std::invalid_argument((boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regexString % e.what()).str());
   }
 }
 
@@ -218,7 +218,7 @@ std::pair<boost::filesystem::path, std::regex> ConditionEvaluator::splitRegex(co
     reg = std::regex(filename, std::regex::ECMAScript | std::regex::icase);
   } catch (std::regex_error& e) {
     BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
-    throw Error(Error::Code::invalid_args, (boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
+    throw std::invalid_argument((boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
   }
 
   return std::pair<boost::filesystem::path, std::regex>(parent, reg);

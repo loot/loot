@@ -144,7 +144,7 @@ std::string RegKeyStringValue(const std::string& keyStr, const std::string& subk
   else if (keyStr == "HKEY_USERS")
     hKey = HKEY_USERS;
   else
-    throw Error(Error::Code::invalid_args, "Invalid registry key given.");
+    throw std::invalid_argument("Invalid registry key given.");
 
   BOOST_LOG_TRIVIAL(trace) << "Getting string for registry key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
   LONG ret = RegGetValue(hKey,

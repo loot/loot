@@ -127,7 +127,7 @@ void MetadataList::AddPlugin(const PluginMetadata& plugin) {
     regexPlugins_.push_back(plugin);
   else {
     if (!plugins_.insert(plugin).second)
-      throw Error(Error::Code::invalid_args, "Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
+      throw std::invalid_argument("Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
   }
 }
 

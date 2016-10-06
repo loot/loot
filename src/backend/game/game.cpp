@@ -57,7 +57,7 @@ Game::Game(const GameType gameType, const std::string& folder) : GameSettings(ga
 
 void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
   if (Type() != GameType::tes4 && Type() != GameType::tes5 && Type() != GameType::fo3 && Type() != GameType::fonv && Type() != GameType::fo4) {
-    throw Error(Error::Code::invalid_args, translate("Invalid game ID supplied.").str());
+    throw std::invalid_argument(translate("Invalid game ID supplied.").str());
   }
 
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
@@ -118,7 +118,7 @@ void Game::LoadPlugins(const std::vector<std::string>& plugins, bool headersOnly
   // First get the plugin sizes.
   for (const auto& plugin : plugins) {
     if (!Plugin::IsValid(plugin, *this))
-      throw Error(Error::Code::invalid_args, "\"" + plugin + "\" is not a valid plugin");
+      throw std::invalid_argument("\"" + plugin + "\" is not a valid plugin");
 
     uintmax_t fileSize = Plugin::GetFileSize(plugin, *this);
     meanFileSize += fileSize;
