@@ -94,8 +94,8 @@ TEST_F(GitHelperTest, callShouldNotThrowIfPassedAZeroValue) {
 }
 
 TEST_F(GitHelperTest, callShouldThrowIfPassedANonZeroValue) {
-  EXPECT_THROW(git_.Call(1), Error);
-  EXPECT_THROW(git_.Call(-1), Error);
+  EXPECT_THROW(git_.Call(1), std::system_error);
+  EXPECT_THROW(git_.Call(-1), std::system_error);
 }
 
 TEST_F(GitHelperTest, setErrorMessageShouldSetTheMessageForThrownExceptions) {
@@ -105,7 +105,7 @@ TEST_F(GitHelperTest, setErrorMessageShouldSetTheMessageForThrownExceptions) {
   try {
     git_.Call(1);
     ADD_FAILURE() << "An exception should have been thrown.";
-  } catch (Error& e) {
+  } catch (std::system_error& e) {
     EXPECT_NE(nullptr, strstr(e.what(), errorMessage));
   }
 }

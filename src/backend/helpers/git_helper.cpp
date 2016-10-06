@@ -29,6 +29,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "loot/error.h"
+#include "loot/error_categories.h"
 
 using boost::locale::translate;
 using std::string;
@@ -104,7 +105,7 @@ void GitHelper::Call(int error_code) {
     errorMessage_ = (boost::format(translate("Git operation failed. Error: %1%")) % gitError).str();
 
   BOOST_LOG_TRIVIAL(error) << "Git operation failed. Error: " << gitError;
-  throw Error(Error::Code::git_error, errorMessage_);
+  throw std::system_error(error_code, libgit2_category(), errorMessage_);
 }
 
 void GitHelper::SetErrorMessage(const std::string& message) {

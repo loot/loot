@@ -56,3 +56,5 @@ LOOT uses error category objects to identify errors with codes that originate in
 lower-level libraries.
 
 .. doxygenfunction:: loot::libloadorder_category
+
+.. doxygenfunction:: loot::libgit2_category

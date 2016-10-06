@@ -39,10 +39,29 @@ class libloadorder_category : public std::error_category {
     return code.category().name() == name();
   }
 };
+
+class libgit2_category : public std::error_category {
+  virtual const char* name() const noexcept {
+    return "libgit2";
+  }
+
+  virtual std::string message(int ev) const {
+    return "libgit2 error";
+  }
+
+  virtual bool equivalent(const std::error_code& code, int condition) const noexcept {
+    return code.category().name() == name();
+  }
+};
 }
 
 LOOT_API const std::error_category& libloadorder_category() {
   static detail::libloadorder_category instance;
+  return instance;
+}
+
+LOOT_API const std::error_category& libgit2_category() {
+  static detail::libgit2_category instance;
   return instance;
 }
 }
