@@ -28,11 +28,6 @@
 #include <exception>
 #include <string>
 
-/**
- * @file
- * @brief Contains the Error class used for some exceptions thrown.
- */
-
 namespace loot {
 /**
  * @brief A class that defines the type of objects thrown as errors by the LOOT

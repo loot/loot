@@ -29,11 +29,6 @@ along with LOOT.  If not, see
 
 #include "loot/api_decorator.h"
 
-/**
- * @file
- * @brief Contains the class used to get API version information.
- */
-
 namespace loot {
 /**
  * @brief A purely static class that provides information about the version of

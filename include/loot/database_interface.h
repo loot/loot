@@ -33,11 +33,6 @@
 #include "loot/plugin_tags.h"
 #include "loot/simple_message.h"
 
-/**
- * @file
- * @brief Contains the DatabaseInterface class.
- */
-
 namespace loot {
 /** @brief The interface provided by API's database handle. */
 class DatabaseInterface {

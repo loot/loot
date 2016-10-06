@@ -26,11 +26,6 @@
 
 #include "loot/message_type.h"
 
-/**
- * @file
- * @brief Contains the SimpleMessage structure.
- */
-
 namespace loot {
 /** @brief A structure that holds the type of a message and the message string itself. */
 struct SimpleMessage {

@@ -27,11 +27,6 @@
 #include <set>
 #include <string>
 
-/**
- * @file
- * @brief Contains the PluginTags structure.
- */
-
 namespace loot {
 /**
  * @brief A structure that holds data about the Bash Tag suggestions made by

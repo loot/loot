@@ -25,12 +25,6 @@
 #define LOOT_PLUGIN_CLEANLINESS
 
 /**
- * @file
- * @brief Contains the plugin cleanliness codes used when getting the
- * cleanliness state of a plugin.
- */
-
-/**
  * The namespace used by the LOOT API.
  */
 namespace loot {

@@ -25,10 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GAME_TYPE
 #define LOOT_GAME_TYPE
 
-/**
- * @file
- * @brief Contains the GameType codes used when creating a database handle.
- */
 
 /**
  * The namespace used by the LOOT API.

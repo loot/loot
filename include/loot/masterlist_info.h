@@ -26,11 +26,6 @@
 
 #include <string>
 
-/**
- * @file
- * @brief Contains the MasterlistInfo structure.
- */
-
 namespace loot {
 /**
  * @brief A structure that holds data about a masterlist's source control

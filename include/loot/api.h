@@ -21,10 +21,6 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-/**
- *  @file
- *  @brief The main include file for the API.
- */
 
 #ifndef LOOT_API_H
 #define LOOT_API_H

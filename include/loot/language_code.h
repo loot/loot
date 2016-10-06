@@ -26,12 +26,6 @@ along with LOOT.  If not, see
 #define LOOT_LANGUAGE_CODE
 
 /**
- * @file
- * @brief Contains the language codes used when evaluating masterlists and
- *        userlists.
- */
-
-/**
  * The namespace used by the LOOT API.
  */
 namespace loot {

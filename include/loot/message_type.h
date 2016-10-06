@@ -26,11 +26,6 @@ along with LOOT.  If not, see
 #define LOOT_MESSAGE_TYPE
 
 /**
- * @file
- * @brief Contains the message type codes used by the SimpleMessage structure.
- */
-
-/**
  * The namespace used by the LOOT API.
  */
 namespace loot {
