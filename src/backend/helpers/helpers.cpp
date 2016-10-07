@@ -41,6 +41,7 @@
 #include <boost/spirit/include/karma.hpp>
 
 #include "loot/error.h"
+#include "loot/exception/file_access_error.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE
@@ -78,7 +79,7 @@ uint32_t GetCrc32(const boost::filesystem::path& filename) {
       throw std::exception();
   } catch (std::exception&) {
     BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
-    throw Error(Error::Code::path_read_fail, (boost::format(translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
+    throw FileAccessError((boost::format(translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
   }
   BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
   return chksum;

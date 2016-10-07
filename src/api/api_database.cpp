@@ -28,6 +28,7 @@
 #include <unordered_map>
 
 #include "loot/error.h"
+#include "loot/exception/file_access_error.h"
 #include "backend/game/game.h"
 #include "backend/plugin/plugin_sorter.h"
 
@@ -50,14 +51,14 @@ void ApiDatabase::LoadLists(const std::string& masterlistPath,
   if (boost::filesystem::exists(masterlistPath)) {
     temp.Load(masterlistPath);
   } else {
-    throw Error(Error::Code::path_not_found, std::string("The given masterlist path does not exist: ") + masterlistPath);
+    throw FileAccessError("The given masterlist path does not exist: " + masterlistPath);
   }
 
   if (!userlistPath.empty()) {
     if (boost::filesystem::exists(userlistPath)) {
       userTemp.Load(userlistPath);
     } else {
-      throw Error(Error::Code::path_not_found, std::string("The given userlist path does not exist: ") + userlistPath);
+      throw FileAccessError("The given userlist path does not exist: " + userlistPath);
     }
   }
 
@@ -219,7 +220,7 @@ void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool ove
     throw std::invalid_argument("Output directory does not exist.");
 
   if (boost::filesystem::exists(outputFile) && !overwrite)
-    throw Error(Error::Code::path_write_fail, "Output file exists but overwrite is not set to true.");
+    throw FileAccessError("Output file exists but overwrite is not set to true.");
 
   Masterlist temp = game_.GetMasterlist();
   std::unordered_set<PluginMetadata> minimalPlugins;
@@ -239,7 +240,7 @@ void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool ove
   boost::filesystem::path p(outputFile);
   boost::filesystem::ofstream out(p);
   if (out.fail())
-    throw Error(Error::Code::path_write_fail, "Couldn't open output file.");
+    throw FileAccessError("Couldn't open output file.");
   out << yout.c_str();
   out.close();
 }

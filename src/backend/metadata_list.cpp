@@ -29,6 +29,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "loot/error.h"
+#include "loot/exception/file_access_error.h"
 #include "backend/game/game.h"
 
 namespace loot {
@@ -39,7 +40,7 @@ void MetadataList::Load(const boost::filesystem::path& filepath) {
 
   boost::filesystem::ifstream in(filepath);
   if (!in.good())
-    throw Error(Error::Code::path_read_fail, "Cannot open " + filepath.string());
+    throw FileAccessError("Cannot open " + filepath.string());
 
   YAML::Node metadataList = YAML::Load(in);
   in.close();
@@ -49,10 +50,8 @@ void MetadataList::Load(const boost::filesystem::path& filepath) {
       PluginMetadata plugin(node.as<PluginMetadata>());
       if (plugin.IsRegexPlugin())
         regexPlugins_.push_back(plugin);
-      else {
-        if (!plugins_.insert(plugin).second)
-          throw Error(Error::Code::path_read_fail, "More than one entry exists for \"" + plugin.Name() + "\"");
-      }
+      else if (!plugins_.insert(plugin).second)
+          throw FileAccessError("More than one entry exists for \"" + plugin.Name() + "\"");
     }
   }
   if (metadataList["globals"])

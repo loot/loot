@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-10-07 21:03+0100\n"
+"POT-Creation-Date: 2016-10-07 21:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -648,15 +648,15 @@ msgstr ""
 msgid "None of the supported games were detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:61
+#: src/backend/game/game.cpp:62
 msgid "Invalid game ID supplied."
 msgstr ""
 
-#: src/backend/game/game.cpp:68
+#: src/backend/game/game.cpp:69
 msgid "Game path could not be detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:78
+#: src/backend/game/game.cpp:79
 msgid "Could not create LOOT folder for game. Details:"
 msgstr ""
 
@@ -724,11 +724,11 @@ msgstr ""
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/backend/helpers/helpers.cpp:81
+#: src/backend/helpers/helpers.cpp:82
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr ""
 
-#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
+#: src/backend/helpers/helpers.cpp:123 src/backend/helpers/helpers.cpp:126
 msgid "Failed to open file in its default application."
 msgstr ""
 

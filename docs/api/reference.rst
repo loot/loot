@@ -55,6 +55,9 @@ Classes
 .. doxygenclass:: loot::ConditionSyntaxError
    :members:
 
+.. doxygenclass:: loot::FileAccessError
+   :members:
+
 .. doxygenclass:: loot::Error
    :members:
 

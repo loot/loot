@@ -33,6 +33,7 @@
 
 #include "backend/app/loot_paths.h"
 #include "loot/error.h"
+#include "loot/exception/file_access_error.h"
 #include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"
 
@@ -75,7 +76,7 @@ void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppDa
         fs::create_directories(LootPaths::getLootDataPath() / FolderName());
     } catch (fs::filesystem_error& e) {
       BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
-      throw Error(Error::Code::path_write_fail, translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
+      throw FileAccessError(translate("Could not create LOOT folder for game. Details:").str() + " " + e.what());
     }
   }
 

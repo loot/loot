@@ -46,17 +46,11 @@ public:
      * failed, but its failure was not fatal to the task being performed.
      */
     ok = 0,
-    /** An error was encountered when writing a file. */
-    path_write_fail = 2,
-    /** An error was encountered when reading a file. */
-    path_read_fail = 3,
     /**
      * An error was encountered when attempting to evaluate a metadata
      * condition.
      */
     condition_eval_fail = 4,
-    /** A path could not be found. */
-    path_not_found = 9,
   };
 
   /**

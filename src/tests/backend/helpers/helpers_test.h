@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include "backend/helpers/helpers.h"
 
 #include "loot/error.h"
+#include "loot/exception/file_access_error.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -44,7 +45,7 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5));
 
 TEST_P(GetCrc32Test, gettingTheCrcOfAMissingFileShouldThrow) {
-  EXPECT_THROW(GetCrc32(dataPath / missingEsp), Error);
+  EXPECT_THROW(GetCrc32(dataPath / missingEsp), FileAccessError);
 }
 
 TEST_P(GetCrc32Test, gettingTheCrcOfAFileShouldReturnTheCorrectValue) {
