@@ -59,11 +59,6 @@ public:
     path_not_found = 9,
     /** None of LOOT's supported games could be detected. */
     no_game_detected = 10,
-    /**
-     * An error was encountered while trying to create or interact with a Git
-     * repository.
-     */
-    git_error = 12,
   };
 
   /**

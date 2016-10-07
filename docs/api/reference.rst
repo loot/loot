@@ -46,6 +46,9 @@ Classes
 .. doxygenclass:: loot::CyclicInteractionError
    :members:
 
+.. doxygenclass:: loot::GitStateError
+   :members:
+
 .. doxygenclass:: loot::Error
    :members:
 

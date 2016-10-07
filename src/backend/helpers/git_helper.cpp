@@ -30,6 +30,7 @@
 
 #include "loot/error.h"
 #include "loot/error_categories.h"
+#include "loot/exception/git_state_error.h"
 
 using boost::locale::translate;
 using std::string;
@@ -141,7 +142,7 @@ int GitHelper::DiffFileCallback(const git_diff_delta *delta, float progress, voi
 // Clones a repository and opens it.
 void GitHelper::Clone(const boost::filesystem::path& path, const std::string& url) {
   if (data_.repo != nullptr)
-    throw Error(Error::Code::git_error, "Cannot clone repository that has already been opened.");
+    throw GitStateError("Cannot clone repository that has already been opened.");
 
   SetErrorMessage(translate("An error occurred while trying to clone the remote masterlist repository."));
   // Clone the remote repository.
@@ -189,7 +190,7 @@ void GitHelper::Clone(const boost::filesystem::path& path, const std::string& ur
 
 void GitHelper::Fetch(const std::string& remote) {
   if (data_.repo == nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch updates for repository that has not been opened.");
+    throw GitStateError("Cannot fetch updates for repository that has not been opened.");
 
   BOOST_LOG_TRIVIAL(trace) << "Fetching updates from remote.";
   SetErrorMessage(translate("An error occurred while trying to update the masterlist. This could be due to a server-side error. Try again in a few minutes."));
@@ -211,13 +212,13 @@ void GitHelper::Fetch(const std::string& remote) {
 
 void GitHelper::CheckoutNewBranch(const std::string& remote, const std::string& branch) {
   if (data_.repo == nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch updates for repository that has not been opened.");
+    throw GitStateError("Cannot fetch updates for repository that has not been opened.");
   else if (data_.commit != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, commit memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, commit memory already allocated.");
   else if (data_.object != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, object memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, object memory already allocated.");
   else if (data_.reference != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, reference memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, reference memory already allocated.");
 
   BOOST_LOG_TRIVIAL(trace) << "Looking up commit referred to by the remote branch \"" << branch << "\".";
   Call(git_revparse_single(&data_.object, data_.repo, (remote + "/" + branch).c_str()));
@@ -252,9 +253,9 @@ void GitHelper::CheckoutNewBranch(const std::string& remote, const std::string& 
 
 void GitHelper::CheckoutRevision(const std::string& revision) {
   if (data_.repo == nullptr)
-    throw Error(Error::Code::git_error, "Cannot checkout revision for repository that has not been opened.");
+    throw GitStateError("Cannot checkout revision for repository that has not been opened.");
   else if (data_.object != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, object memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, object memory already allocated.");
 
 // Get an object ID for 'HEAD^'.
   Call(git_revparse_single(&data_.object, data_.repo, revision.c_str()));
@@ -273,13 +274,13 @@ void GitHelper::CheckoutRevision(const std::string& revision) {
 
 std::string GitHelper::GetHeadShortId() {
   if (data_.repo == nullptr)
-    throw Error(Error::Code::git_error, "Cannot checkout revision for repository that has not been opened.");
+    throw GitStateError("Cannot checkout revision for repository that has not been opened.");
   else if (data_.object != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, object memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, object memory already allocated.");
   else if (data_.reference != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, reference memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, reference memory already allocated.");
   else if (data_.buffer.ptr != nullptr)
-    throw Error(Error::Code::git_error, "Cannot fetch repository updates, buffer memory already allocated.");
+    throw GitStateError("Cannot fetch repository updates, buffer memory already allocated.");
 
   BOOST_LOG_TRIVIAL(trace) << "Getting the Git object for HEAD.";
   Call(git_repository_head(&data_.reference, data_.repo));
