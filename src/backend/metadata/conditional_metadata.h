@@ -40,6 +40,8 @@ public:
 
   std::string Condition() const;
 private:
+  bool ParseCondition(Game * game) const;  // Throws error on parsing failure.
+
   std::string condition_;
 };
 }

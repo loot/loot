@@ -57,15 +57,33 @@ bool ConditionalMetadata::EvalCondition(Game& game) const {
   if (cachedValue.second)
     return cachedValue.first;
 
-  ConditionGrammar<string::const_iterator, boost::spirit::qi::space_type> grammar(&game);
+  bool result = ParseCondition(&game);
+
+  game.CacheCondition(condition_, result);
+
+  return result;
+}
+
+void ConditionalMetadata::ParseCondition() const {
+  BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << condition_;
+  ParseCondition(nullptr);
+}
+
+bool ConditionalMetadata::ParseCondition(Game * game) const {
+  if (condition_.empty())
+    return true;
+
+  BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << condition_;
+
+  ConditionGrammar<string::const_iterator, boost::spirit::qi::space_type> grammar(game);
   boost::spirit::qi::space_type skipper;
   string::const_iterator begin, end;
-  bool eval;
 
   begin = condition_.begin();
   end = condition_.end();
 
   bool r;
+  bool eval;
   try {
     r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
   } catch (exception& e) {
@@ -78,35 +96,6 @@ bool ConditionalMetadata::EvalCondition(Game& game) const {
     throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\".")) % condition_).str());
   }
 
-  game.CacheCondition(condition_, eval);
-
   return eval;
-}
-
-void ConditionalMetadata::ParseCondition() const {
-  if (condition_.empty())
-    return;
-
-  BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << condition_;
-
-  ConditionGrammar<string::const_iterator, boost::spirit::qi::space_type> grammar(nullptr);
-  boost::spirit::qi::space_type skipper;
-  string::const_iterator begin, end;
-
-  begin = condition_.begin();
-  end = condition_.end();
-
-  bool r;
-  try {
-    r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper);
-  } catch (exception& e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\": " << e.what();
-    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\": %2%")) % condition_ % e.what()).str());
-  }
-
-  if (!r || begin != end) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\".";
-    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\".")) % condition_).str());
-  }
 }
 }
