@@ -57,8 +57,6 @@ public:
     condition_eval_fail = 4,
     /** A path could not be found. */
     path_not_found = 9,
-    /** None of LOOT's supported games could be detected. */
-    no_game_detected = 10,
   };
 
   /**

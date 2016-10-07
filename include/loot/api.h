@@ -33,6 +33,7 @@
 #include "loot/error.h"
 #include "loot/error_categories.h"
 #include "loot/exception/cyclic_interaction_error.h"
+#include "loot/exception/game_detection_error.h"
 #include "loot/exception/git_state_error.h"
 #include "loot/game_type.h"
 #include "loot/loot_version.h"

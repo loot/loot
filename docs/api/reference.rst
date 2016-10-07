@@ -49,6 +49,9 @@ Classes
 .. doxygenclass:: loot::GitStateError
    :members:
 
+.. doxygenclass:: loot::GameDetectionError
+   :members:
+
 .. doxygenclass:: loot::Error
    :members:
 

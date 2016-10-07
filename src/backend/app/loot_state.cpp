@@ -35,6 +35,7 @@
 #include <boost/log/utility/setup/file.hpp>
 
 #include "loot/error.h"
+#include "loot/exception/game_detection_error.h"
 #include "backend/app/loot_paths.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/language.h"
@@ -186,13 +187,11 @@ void LootState::init(const std::string& cmdLineGame) {
     currentGame_->Init(true);
     // Update game path in settings object.
     storeGameSettings(toGameSettings(games_));
+  } catch (GameDetectionError& e) {
+    initErrors_.push_back(e.what());
   } catch (Error &e) {
-    if (e.code() == Error::Code::no_game_detected) {
-      initErrors_.push_back(e.what());
-    } else {
-      BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
-      initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
-    }
+    BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
+    initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
   }
   BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
 }
@@ -271,7 +270,7 @@ void LootState::selectGame(std::string preferredGame) {
   // If no game can be selected, throw an exception.
   if (currentGame_ == end(games_)) {
     BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-    throw Error(Error::Code::no_game_detected, translate("None of the supported games were detected."));
+    throw GameDetectionError(translate("None of the supported games were detected."));
   }
 }
 

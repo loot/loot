@@ -33,6 +33,7 @@
 
 #include "backend/app/loot_paths.h"
 #include "loot/error.h"
+#include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"
 
 using boost::locale::translate;
@@ -64,7 +65,7 @@ void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppDa
 
   if (!this->IsInstalled()) {
     BOOST_LOG_TRIVIAL(error) << "Game path could not be detected.";
-    throw Error(Error::Code::path_not_found, translate("Game path could not be detected.").str());
+    throw GameDetectionError(translate("Game path could not be detected."));
   }
 
   if (createFolder) {

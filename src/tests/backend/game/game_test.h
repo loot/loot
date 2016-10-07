@@ -28,7 +28,7 @@ along with LOOT.  If not, see
 #include "backend/game/game.h"
 
 #include "backend/app/loot_paths.h"
-#include "loot/error.h"
+#include "loot/exception/game_detection_error.h"
 #include "tests/backend/game/load_order_handler_test.h"
 
 namespace loot {
@@ -89,10 +89,10 @@ TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstruc
         // test autodetection fully unless on Linux.
 TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
   Game game = Game(GetParam());
-  EXPECT_THROW(game.Init(false), Error);
-  EXPECT_THROW(game.Init(true), Error);
-  EXPECT_THROW(game.Init(false, localPath), Error);
-  EXPECT_THROW(game.Init(true, localPath), Error);
+  EXPECT_THROW(game.Init(false), GameDetectionError);
+  EXPECT_THROW(game.Init(true), GameDetectionError);
+  EXPECT_THROW(game.Init(false, localPath), GameDetectionError);
+  EXPECT_THROW(game.Init(true, localPath), GameDetectionError);
 }
 
 TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
