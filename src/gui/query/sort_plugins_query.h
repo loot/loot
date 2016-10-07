@@ -27,8 +27,10 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
+#include "backend/app/loot_state.h"
 #include "backend/helpers/json.h"
 #include "backend/plugin/plugin_sorter.h"
+#include "loot/exception/cyclic_interaction_error.h"
 #include "gui/query/metadata_query.h"
 
 namespace loot {
@@ -68,12 +70,11 @@ private:
     try {
       PluginSorter sorter;
       plugins = sorter.Sort(state_.getCurrentGame(), state_.getLanguage().GetCode());
+    } catch (CyclicInteractionError& e) {
+      BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
+      state_.getCurrentGame().AppendMessage(Message(MessageType::error, e.what()));
     } catch (Error& e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-      if (e.code() != Error::Code::sorting_error)
-        throw;
-
-      state_.getCurrentGame().AppendMessage(Message(MessageType::error, e.what()));
     }
 
     return plugins;

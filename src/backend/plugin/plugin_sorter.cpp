@@ -35,6 +35,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "loot/error.h"
+#include "loot/exception/cyclic_interaction_error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/helpers.h"
 
@@ -79,7 +80,7 @@ public:
 
     BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << graph[source].Name() << "\" and \"" << graph[target].Name() << "\". Back cycle: " << backCycle;
 
-    throw loot::Error(loot::Error::Code::sorting_error, (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % graph[source].Name() % graph[target].Name() % backCycle).str());
+    throw CyclicInteractionError((boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % graph[source].Name() % graph[target].Name() % backCycle).str());
   }
 
 private:

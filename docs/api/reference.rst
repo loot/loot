@@ -43,6 +43,9 @@ Interfaces
 Classes
 =======
 
+.. doxygenclass:: loot::CyclicInteractionError
+   :members:
+
 .. doxygenclass:: loot::Error
    :members:
 

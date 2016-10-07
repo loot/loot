@@ -64,8 +64,6 @@ public:
      * repository.
      */
     git_error = 12,
-    /** An error occurred while trying to sort the load order. */
-    sorting_error = 14,
   };
 
   /**
