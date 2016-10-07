@@ -47,6 +47,7 @@
 #include <boost/spirit/include/qi.hpp>
 
 #include "loot/error.h"
+#include "loot/exception/condition_syntax_error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/version.h"
@@ -193,13 +194,14 @@ private:
     result = evaluator.arePluginsActive(regexStr);
   }
 
-  void SyntaxError(Iterator const& /*first*/, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
+  void SyntaxError(Iterator const& first, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
+    std::string condition(first, last);
     std::string context(errorpos, last);
     boost::trim(context);
 
     BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";
 
-    throw Error(Error::Code::condition_eval_fail, (boost::format(boost::locale::translate("Expected \"%1%\" at \"%2%\".")) % what.tag % context).str());
+    throw ConditionSyntaxError((boost::format(boost::locale::translate("Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\".")) % condition % what.tag % context).str());
   }
 
   boost::spirit::qi::rule<Iterator, bool(), Skipper> expression_, compound_, condition_, function_;

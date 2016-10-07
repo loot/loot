@@ -52,6 +52,9 @@ Classes
 .. doxygenclass:: loot::GameDetectionError
    :members:
 
+.. doxygenclass:: loot::ConditionSyntaxError
+   :members:
+
 .. doxygenclass:: loot::Error
    :members:
 

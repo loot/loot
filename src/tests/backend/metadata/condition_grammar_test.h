@@ -85,7 +85,7 @@ TEST_P(ConditionGrammarTest, parsingInvalidSyntaxShouldThrow) {
                                                std::cend(condition),
                                                grammar,
                                                skipper_,
-                                               result_), Error);
+                                               result_), ConditionSyntaxError);
 }
 
 TEST_P(ConditionGrammarTest, evaluatingInvalidSyntaxShouldThrow) {
@@ -96,7 +96,7 @@ TEST_P(ConditionGrammarTest, evaluatingInvalidSyntaxShouldThrow) {
                                                std::cend(condition),
                                                grammar,
                                                skipper_,
-                                               result_), Error);
+                                               result_), ConditionSyntaxError);
 }
 
 TEST_P(ConditionGrammarTest, parsingAnEmptyConditionShouldThrow) {
@@ -107,7 +107,7 @@ TEST_P(ConditionGrammarTest, parsingAnEmptyConditionShouldThrow) {
                                                std::cend(condition),
                                                grammar,
                                                skipper_,
-                                               result_), Error);
+                                               result_), ConditionSyntaxError);
 }
 
 TEST_P(ConditionGrammarTest, evaluatingAnEmptyConditionShouldThrow) {
@@ -118,7 +118,7 @@ TEST_P(ConditionGrammarTest, evaluatingAnEmptyConditionShouldThrow) {
                                                std::cend(condition),
                                                grammar,
                                                skipper_,
-                                               result_), Error);
+                                               result_), ConditionSyntaxError);
 }
 
 TEST_P(ConditionGrammarTest, aFileConditionWithAPluginThatExistsShouldEvaluateToTrue) {

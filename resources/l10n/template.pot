@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-09-21 19:40+0100\n"
+"POT-Creation-Date: 2016-10-07 21:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -616,15 +616,15 @@ msgid ""
 "%1%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:120 src/backend/plugin/plugin_sorter.cpp:217
+#: src/gui/query/metadata_query.h:120 src/backend/plugin/plugin_sorter.cpp:218
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/query/sort_plugins_query.h:46
+#: src/gui/query/sort_plugins_query.h:48
 msgid "Loading plugin contents..."
 msgstr ""
 
-#: src/gui/query/sort_plugins_query.h:66
+#: src/gui/query/sort_plugins_query.h:68
 msgid "Sorting load order..."
 msgstr ""
 
@@ -632,11 +632,11 @@ msgstr ""
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:124
+#: src/backend/app/loot_state.cpp:125
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:131
+#: src/backend/app/loot_state.cpp:132
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
@@ -644,83 +644,83 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:274
+#: src/backend/app/loot_state.cpp:273
 msgid "None of the supported games were detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:60
+#: src/backend/game/game.cpp:61
 msgid "Invalid game ID supplied."
 msgstr ""
 
-#: src/backend/game/game.cpp:67
+#: src/backend/game/game.cpp:68
 msgid "Game path could not be detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:77
+#: src/backend/game/game.cpp:78
 msgid "Could not create LOOT folder for game. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:49
+#: src/backend/game/load_order_handler.cpp:50
 msgid "Unsupported game ID supplied."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:54
+#: src/backend/game/load_order_handler.cpp:55
 msgid "Game path is not initialised."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:88
+#: src/backend/game/load_order_handler.cpp:89
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:91
+#: src/backend/game/load_order_handler.cpp:92
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:109
+#: src/backend/game/load_order_handler.cpp:110
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:112
+#: src/backend/game/load_order_handler.cpp:113
 msgid "libloadorder failed to check if a plugin is active. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:134
+#: src/backend/game/load_order_handler.cpp:135
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:137
+#: src/backend/game/load_order_handler.cpp:138
 msgid "libloadorder failed to get the load order. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:160
+#: src/backend/game/load_order_handler.cpp:161
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:163
+#: src/backend/game/load_order_handler.cpp:164
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:104
+#: src/backend/helpers/git_helper.cpp:106
 msgid "Git operation failed. Error: %1%"
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:145
+#: src/backend/helpers/git_helper.cpp:147
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:194
+#: src/backend/helpers/git_helper.cpp:196
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:308 src/backend/masterlist.cpp:50
+#: src/backend/helpers/git_helper.cpp:310 src/backend/masterlist.cpp:50
 msgid "Unknown: Git repository missing"
 msgstr ""
 
@@ -741,8 +741,8 @@ msgstr ""
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr ""
 
-#: src/backend/metadata/condition_grammar.h:202
-msgid "Expected \"%1%\" at \"%2%\"."
+#: src/backend/metadata/condition_grammar.h:204
+msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
 msgstr ""
 
 #: src/backend/metadata/conditional_metadata.cpp:73
@@ -804,7 +804,7 @@ msgstr ""
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/backend/plugin/plugin_sorter.cpp:82
+#: src/backend/plugin/plugin_sorter.cpp:83
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
