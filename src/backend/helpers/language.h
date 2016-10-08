@@ -28,7 +28,7 @@
 #include <string>
 #include <vector>
 
-#include "loot/language_code.h"
+#include "loot/enum/language_code.h"
 
 namespace loot {
     //Language class for simpler language support.

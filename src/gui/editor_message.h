@@ -25,7 +25,7 @@
 #define LOOT_GUI_EDITOR_MESSAGE
 
 #include "backend/metadata/message.h"
-#include "loot/simple_message.h"
+#include "loot/struct/simple_message.h"
 
 namespace loot {
 struct EditorMessage : public SimpleMessage {

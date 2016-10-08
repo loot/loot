@@ -27,11 +27,11 @@
 #include <string>
 #include <vector>
 
-#include "loot/language_code.h"
-#include "loot/masterlist_info.h"
-#include "loot/plugin_cleanliness.h"
-#include "loot/plugin_tags.h"
-#include "loot/simple_message.h"
+#include "loot/enum/language_code.h"
+#include "loot/struct/masterlist_info.h"
+#include "loot/enum/plugin_cleanliness.h"
+#include "loot/struct/plugin_tags.h"
+#include "loot/struct/simple_message.h"
 
 namespace loot {
 /** @brief The interface provided by API's database handle. */

@@ -33,9 +33,9 @@
 
 #include "backend/metadata/conditional_metadata.h"
 #include "backend/metadata/message_content.h"
-#include "loot/language_code.h"
-#include "loot/message_type.h"
-#include "loot/simple_message.h"
+#include "loot/enum/language_code.h"
+#include "loot/enum/message_type.h"
+#include "loot/struct/simple_message.h"
 
 namespace loot {
 class Message : public ConditionalMetadata {

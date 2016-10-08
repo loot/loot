@@ -27,7 +27,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include "loot/simple_message.h"
+#include "loot/struct/simple_message.h"
 
 namespace YAML {
 template<>

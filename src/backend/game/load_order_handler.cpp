@@ -28,7 +28,7 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "loot/error_categories.h"
+#include "loot/exception/error_categories.h"
 
 using boost::locale::translate;
 using std::string;

@@ -24,7 +24,7 @@
 #ifndef LOOT_SIMPLE_MESSAGE
 #define LOOT_SIMPLE_MESSAGE
 
-#include "loot/message_type.h"
+#include "loot/enum/message_type.h"
 
 namespace loot {
 /** @brief A structure that holds the type of a message and the message string itself. */

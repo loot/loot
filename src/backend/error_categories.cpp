@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "loot/error_categories.h"
+#include "loot/exception/error_categories.h"
 
 namespace loot {
 namespace detail {

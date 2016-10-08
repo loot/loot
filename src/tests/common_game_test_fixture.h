@@ -33,7 +33,7 @@ along with LOOT.  If not, see
 #include <boost/filesystem/fstream.hpp>
 #include <gtest/gtest.h>
 
-#include "loot/game_type.h"
+#include "loot/enum/game_type.h"
 
 namespace loot {
 namespace test {
