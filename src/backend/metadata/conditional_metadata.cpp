@@ -82,20 +82,21 @@ bool ConditionalMetadata::ParseCondition(Game * game) const {
   begin = condition_.begin();
   end = condition_.end();
 
-  bool r;
-  bool eval;
   try {
-    r = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, eval);
+    bool evaluation;
+    bool parseResult = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, evaluation);
+
+    if (!parseResult || begin != end) {
+      BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\": only partially matched expected syntax.";
+      throw ConditionSyntaxError((boost::format(translate("Failed to parse condition \"%1%\": only partially matched expected syntax.")) % condition_).str());
+    }
+
+    return evaluation;
+  } catch (ConditionSyntaxError& e) {
+    throw;
   } catch (exception& e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\": " << e.what();
-    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\": %2%")) % condition_ % e.what()).str());
+    BOOST_LOG_TRIVIAL(error) << "Failed to evaluate condition \"" << condition_ << "\": " << e.what();
+    throw;
   }
-
-  if (!r || begin != end) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\".";
-    throw Error(Error::Code::condition_eval_fail, (boost::format(translate("Failed to parse condition \"%1%\".")) % condition_).str());
-  }
-
-  return eval;
 }
 }

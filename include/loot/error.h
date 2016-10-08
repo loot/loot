@@ -46,11 +46,6 @@ public:
      * failed, but its failure was not fatal to the task being performed.
      */
     ok = 0,
-    /**
-     * An error was encountered when attempting to evaluate a metadata
-     * condition.
-     */
-    condition_eval_fail = 4,
   };
 
   /**

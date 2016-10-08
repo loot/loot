@@ -80,7 +80,7 @@ TEST_P(ConditionalMetadataTest, evalConditionShouldThrowForAnInvalidCondition) {
   game.SetGamePath(dataPath.parent_path());
 
   conditionalMetadata_ = ConditionalMetadata("condition");
-  EXPECT_THROW(conditionalMetadata_.EvalCondition(game), Error);
+  EXPECT_THROW(conditionalMetadata_.EvalCondition(game), ConditionSyntaxError);
 }
 
 TEST_P(ConditionalMetadataTest, evalConditionShouldReturnTrueForAConditionThatIsTrue) {
@@ -105,7 +105,7 @@ TEST_P(ConditionalMetadataTest, parseConditionShouldNotThrowForAnEmptyCondition)
 
 TEST_P(ConditionalMetadataTest, parseConditionShouldThrowForAnInvalidCondition) {
   conditionalMetadata_ = ConditionalMetadata("condition");
-  EXPECT_THROW(conditionalMetadata_.ParseCondition(), Error);
+  EXPECT_THROW(conditionalMetadata_.ParseCondition(), ConditionSyntaxError);
 }
 
 TEST_P(ConditionalMetadataTest, parseConditionShouldNotThrowForATrueCondition) {
