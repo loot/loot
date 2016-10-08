@@ -41,8 +41,6 @@ public:
       state_.decrementUnappliedChangeCounter();
 
       return json;
-    } catch (Error&) {
-      throw;
     } catch (std::exception& e) {
       // If this was a YAML conversion error, cut off the line and column numbers,
       // since the YAML wasn't written to a file.

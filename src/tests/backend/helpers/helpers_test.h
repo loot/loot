@@ -27,7 +27,6 @@ along with LOOT.  If not, see
 
 #include "backend/helpers/helpers.h"
 
-#include "loot/error.h"
 #include "loot/exception/file_access_error.h"
 #include "tests/common_game_test_fixture.h"
 

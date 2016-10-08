@@ -26,7 +26,6 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "loot/error.h"
 #include "backend/helpers/helpers.h"
 
 namespace loot {

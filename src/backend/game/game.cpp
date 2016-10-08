@@ -32,7 +32,6 @@
 #include <boost/log/trivial.hpp>
 
 #include "backend/app/loot_paths.h"
-#include "loot/error.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"

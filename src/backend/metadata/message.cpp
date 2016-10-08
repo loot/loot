@@ -26,7 +26,6 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "loot/error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/language.h"
 

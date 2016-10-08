@@ -28,17 +28,12 @@ along with LOOT.  If not, see
 #include <boost/log/trivial.hpp>
 #include <include/wrapper/cef_message_router.h>
 
-#include "loot/error.h"
-
 namespace loot {
 class Query : public CefBase {
 public:
   void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
     try {
       callback->Success(executeLogic());
-    } catch (Error &e) {
-      BOOST_LOG_TRIVIAL(error) << e.what();
-      callback->Failure(e.codeAsUnsignedInt(), e.what());
     } catch (std::exception &e) {
       BOOST_LOG_TRIVIAL(error) << e.what();
       callback->Failure(-1, e.what());

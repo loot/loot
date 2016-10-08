@@ -29,7 +29,6 @@
 #include <boost/log/trivial.hpp>
 
 #include "backend/app/loot_paths.h"
-#include "loot/error.h"
 #include "backend/helpers/helpers.h"
 
 namespace fs = boost::filesystem;

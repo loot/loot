@@ -27,7 +27,6 @@ along with LOOT.  If not, see
 
 #include "backend/metadata/condition_grammar.h"
 
-#include "loot/error.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {

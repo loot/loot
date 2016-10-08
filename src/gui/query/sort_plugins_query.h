@@ -73,7 +73,7 @@ private:
     } catch (CyclicInteractionError& e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
       state_.getCurrentGame().AppendMessage(Message(MessageType::error, e.what()));
-    } catch (Error& e) {
+    } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
     }
 

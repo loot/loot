@@ -28,7 +28,6 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "loot/error.h"
 #include "loot/error_categories.h"
 #include "loot/exception/git_state_error.h"
 

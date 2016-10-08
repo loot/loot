@@ -28,7 +28,6 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "loot/error.h"
 #include "loot/error_categories.h"
 
 using boost::locale::translate;
@@ -182,7 +181,7 @@ void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) c
 
   try {
     SetLoadOrder(pluginArr, pluginArrSize);
-  } catch (Error &/*e*/) {
+  } catch (std::exception& /*e*/) {
     for (size_t i = 0; i < pluginArrSize; i++)
       delete[] pluginArr[i];
     delete[] pluginArr;

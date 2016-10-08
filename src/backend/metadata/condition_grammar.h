@@ -46,7 +46,6 @@
 #include <boost/spirit/include/phoenix_bind.hpp>
 #include <boost/spirit/include/qi.hpp>
 
-#include "loot/error.h"
 #include "loot/exception/condition_syntax_error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/helpers.h"

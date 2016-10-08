@@ -50,7 +50,7 @@ private:
   bool updateMasterlist() {
     try {
       return game_.GetMasterlist().Update(game_);
-    } catch (Error &e) {
+    } catch (std::exception& e) {
       try {
         game_.GetMasterlist().Load(game_.MasterlistPath());
       } catch (...) {}
@@ -80,7 +80,7 @@ private:
       Masterlist::Info info = game_.GetMasterlist().GetInfo(game_.MasterlistPath(), true);
       gameMetadata["masterlist"]["revision"] = info.revision;
       gameMetadata["masterlist"]["date"] = info.date;
-    } catch (Error &e) {
+    } catch (std::exception& e) {
       gameMetadata["masterlist"]["revision"] = e.what();
       gameMetadata["masterlist"]["date"] = e.what();
     }

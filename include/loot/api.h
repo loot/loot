@@ -30,7 +30,6 @@
 
 #include "loot/api_decorator.h"
 #include "loot/database_interface.h"
-#include "loot/error.h"
 #include "loot/error_categories.h"
 #include "loot/exception/condition_syntax_error.h"
 #include "loot/exception/cyclic_interaction_error.h"

@@ -28,7 +28,6 @@
 #include <boost/log/core.hpp>
 
 #include "api/api_database.h"
-#include "loot/error.h"
 #include "backend/app/loot_paths.h"
 
 namespace fs = boost::filesystem;

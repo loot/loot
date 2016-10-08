@@ -27,7 +27,6 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "loot/error.h"
 #include "loot/loot_version.h"
 #include "backend/helpers/json.h"
 #include "backend/helpers/version.h"
@@ -113,7 +112,7 @@ private:
       Masterlist::Info info = state_.getCurrentGame().GetMasterlist().GetInfo(state_.getCurrentGame().MasterlistPath(), true);
       masterlistNode["revision"] = info.revision;
       masterlistNode["date"] = info.date;
-    } catch (Error &e) {
+    } catch (std::exception &e) {
       masterlistNode["revision"] = e.what();
       masterlistNode["date"] = e.what();
     }

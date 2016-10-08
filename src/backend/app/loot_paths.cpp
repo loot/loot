@@ -28,7 +28,6 @@ Fallout: New Vegas.
 
 #include <boost/locale.hpp>
 
-#include "loot/error.h"
 #include "backend/helpers/helpers.h"
 
 #ifdef _WIN32

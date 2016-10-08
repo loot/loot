@@ -43,6 +43,12 @@ Interfaces
 Classes
 =======
 
+.. doxygenclass:: loot::LootVersion
+   :members:
+
+Exceptions
+==========
+
 .. doxygenclass:: loot::CyclicInteractionError
    :members:
 
@@ -56,12 +62,6 @@ Classes
    :members:
 
 .. doxygenclass:: loot::FileAccessError
-   :members:
-
-.. doxygenclass:: loot::Error
-   :members:
-
-.. doxygenclass:: loot::LootVersion
    :members:
 
 Error Categories

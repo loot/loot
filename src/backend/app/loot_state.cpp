@@ -34,7 +34,6 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
 
-#include "loot/error.h"
 #include "loot/exception/game_detection_error.h"
 #include "backend/app/loot_paths.h"
 #include "backend/helpers/helpers.h"
@@ -189,7 +188,7 @@ void LootState::init(const std::string& cmdLineGame) {
     storeGameSettings(toGameSettings(games_));
   } catch (GameDetectionError& e) {
     initErrors_.push_back(e.what());
-  } catch (Error &e) {
+  } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
     initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
   }

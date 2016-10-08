@@ -28,7 +28,6 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "loot/error.h"
 #include "loot/exception/file_access_error.h"
 #include "backend/game/game.h"
 

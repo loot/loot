@@ -40,7 +40,6 @@
 #include <boost/log/trivial.hpp>
 #include <boost/spirit/include/karma.hpp>
 
-#include "loot/error.h"
 #include "loot/exception/file_access_error.h"
 
 #ifdef _WIN32
