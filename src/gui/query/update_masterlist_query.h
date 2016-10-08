@@ -51,18 +51,9 @@ private:
     try {
       return game_.GetMasterlist().Update(game_);
     } catch (Error &e) {
-      if (e.code() == Error::Code::ok) {
-        // There was a parsing error, but roll-back was successful, so the
-        // process should still complete.
-        game_.GetMasterlist().AppendMessage(Message(MessageType::error, e.what()));
-        return true;
-      } else {
-        // Error wasn't a parsing error. Need to try parsing masterlist if it
-        // exists.
-        try {
-          game_.GetMasterlist().Load(game_.MasterlistPath());
-        } catch (...) {}
-      }
+      try {
+        game_.GetMasterlist().Load(game_.MasterlistPath());
+      } catch (...) {}
       throw;
     }
   }

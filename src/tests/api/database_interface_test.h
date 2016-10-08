@@ -209,19 +209,19 @@ TEST_P(DatabaseInterfaceTest, updateMasterlistShouldSucceedIfCalledRepeatedlyBut
   EXPECT_TRUE(boost::filesystem::exists(masterlistPath));
 }
 
-TEST_P(DatabaseInterfaceTest, getMasterlistRevisionShouldSucceedIfNoMasterlistIsPresent) {
+TEST_P(DatabaseInterfaceTest, getMasterlistRevisionShouldThrowIfNoMasterlistIsPresent) {
   MasterlistInfo info;
-  EXPECT_NO_THROW(info = db_->GetMasterlistRevision(masterlistPath.string(), false));
+  EXPECT_THROW(info = db_->GetMasterlistRevision(masterlistPath.string(), false), FileAccessError);
   EXPECT_TRUE(info.revision_id.empty());
   EXPECT_TRUE(info.revision_date.empty());
   EXPECT_FALSE(info.is_modified);
 }
 
-TEST_P(DatabaseInterfaceTest, getMasterlistRevisionShouldSucceedIfANonVersionControlledMasterlistIsPresent) {
+TEST_P(DatabaseInterfaceTest, getMasterlistRevisionShouldThrowIfANonVersionControlledMasterlistIsPresent) {
   ASSERT_NO_THROW(GenerateMasterlist());
 
   MasterlistInfo info;
-  EXPECT_NO_THROW(info = db_->GetMasterlistRevision(masterlistPath.string(), false));
+  EXPECT_THROW(info = db_->GetMasterlistRevision(masterlistPath.string(), false), GitStateError);
   EXPECT_TRUE(info.revision_id.empty());
   EXPECT_TRUE(info.revision_date.empty());
   EXPECT_FALSE(info.is_modified);

@@ -26,7 +26,8 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "loot/error.h"
+#include "loot/exception/file_access_error.h"
+#include "loot/exception/git_state_error.h"
 #include "backend/game/game.h"
 #include "backend/helpers/git_helper.h"
 
@@ -44,10 +45,10 @@ Masterlist::Info Masterlist::GetInfo(const boost::filesystem::path& path, bool s
 
   if (!fs::exists(path)) {
     BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: No masterlist present.";
-    throw Error(Error::Code::ok, translate("N/A: No masterlist present"));
+    throw FileAccessError(translate("N/A: No masterlist present"));
   } else if (!git.IsRepository(path.parent_path())) {
     BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
-    throw Error(Error::Code::ok, translate("Unknown: Git repository missing"));
+    throw GitStateError(translate("Unknown: Git repository missing"));
   }
 
   BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";
@@ -263,7 +264,7 @@ bool Masterlist::Update(const boost::filesystem::path& path, const std::string& 
   } while (parsingFailed);
 
   if (!parsingError.empty())
-    throw Error(Error::Code::ok, parsingError);  //Throw an OK because the process still completed in a successful state.
+    AppendMessage(Message(MessageType::error, parsingError));
 
   return true;
 }

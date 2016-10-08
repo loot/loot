@@ -48,6 +48,8 @@ typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
 typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
 typedef boost::graph_traits<PluginGraph>::edge_iterator edge_it;
 
+class PathFoundException : public std::exception {};
+
 class CycleDetector : public boost::dfs_visitor<> {
 public:
   void tree_edge(edge_t edge, const PluginGraph& graph) {
@@ -93,7 +95,7 @@ public:
 
   inline void discover_vertex(vertex_t vertex, const PluginGraph& graph) {
     if (vertex == target)
-      throw Error(Error::Code::ok, "Found a path.");
+      throw PathFoundException();
   }
 
 private:
@@ -248,8 +250,7 @@ void PluginSorter::CheckForCycles() const {
 bool PluginSorter::EdgeCreatesCycle(const vertex_t& fromVertex, const vertex_t& toVertex) const {
   try {
     boost::breadth_first_search(graph_, toVertex, visitor(PathDetector(fromVertex)).vertex_index_map(vertexIndexMap_));
-  } catch (Error& e) {
-    if (e.code() == Error::Code::ok)
+  } catch (PathFoundException& e) {
       return true;
   }
   return false;

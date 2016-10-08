@@ -29,7 +29,7 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
-#include "loot/error.h"
+#include "loot/exception/git_state_error.h"
 
 namespace loot {
 namespace test {
@@ -119,7 +119,7 @@ TEST_F(GitHelperTest, isRepositoryShouldReturnFalseForRepositorySubdirectory) {
 }
 
 TEST_F(GitHelperTest, isFileDifferentShouldThrowIfGivenANonRepositoryPath) {
-  EXPECT_THROW(GitHelper::IsFileDifferent(boost::filesystem::current_path(), "README.md"), Error);
+  EXPECT_THROW(GitHelper::IsFileDifferent(boost::filesystem::current_path(), "README.md"), GitStateError);
 }
 
 TEST_F(GitHelperTest, isFileDifferentShouldReturnFalseForAnUntrackedFile) {

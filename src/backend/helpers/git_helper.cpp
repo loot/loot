@@ -307,7 +307,7 @@ GitHelper::GitData& GitHelper::GetData() {
 bool GitHelper::IsFileDifferent(const boost::filesystem::path& repoRoot, const std::string& filename) {
   if (!IsRepository(repoRoot)) {
     BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
-    throw Error(Error::Code::ok, translate("Unknown: Git repository missing"));
+    throw GitStateError("Cannot check if the \"" + filename + "\" working copy is edited, Git repository missing.");
   }
 
   BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";

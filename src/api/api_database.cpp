@@ -117,21 +117,16 @@ MasterlistInfo ApiDatabase::GetMasterlistRevision(const std::string& masterlistP
                                                   const bool getShortID) {
   MasterlistInfo apiMasterlistInfo;
   apiMasterlistInfo.is_modified = false;
-  try {
-    Masterlist::Info info = Masterlist::GetInfo(masterlistPath, getShortID);
+  Masterlist::Info info = Masterlist::GetInfo(masterlistPath, getShortID);
 
-    if (boost::ends_with(info.revision, " (edited)")) {
-      apiMasterlistInfo.revision_id = info.revision.substr(0, info.revision.length() - 9);
-      apiMasterlistInfo.revision_date = info.date.substr(0, info.date.length() - 9);
-      apiMasterlistInfo.is_modified = true;
-    } else {
-      apiMasterlistInfo.revision_id = info.revision;
-      apiMasterlistInfo.revision_date = info.date;
-      apiMasterlistInfo.is_modified = false;
-    }
-  } catch (Error &e) {
-    if (e.code() != Error::Code::ok)
-      throw;
+  if (boost::ends_with(info.revision, " (edited)")) {
+    apiMasterlistInfo.revision_id = info.revision.substr(0, info.revision.length() - 9);
+    apiMasterlistInfo.revision_date = info.date.substr(0, info.date.length() - 9);
+    apiMasterlistInfo.is_modified = true;
+  } else {
+    apiMasterlistInfo.revision_id = info.revision;
+    apiMasterlistInfo.revision_date = info.date;
+    apiMasterlistInfo.is_modified = false;
   }
 
   return apiMasterlistInfo;
