@@ -138,7 +138,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
     return new CopyContentQuery(request["args"][0]);
   else if (name == "copyLoadOrder")
     return new CopyLoadOrderQuery(lootState_, request["args"][0].as<std::vector<string>>());
-  else if (name == "copyLoadOrder")
+  else if (name == "copyMetadata")
     return new CopyMetadataQuery(lootState_, request["args"][0].as<string>());
   else if (name == "discardUnappliedChanges")
     return new DiscardUnappliedChangesQuery(lootState_);
