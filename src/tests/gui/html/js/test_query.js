@@ -34,6 +34,6 @@ describe('query()', () => {
   );
 
   it('should fail with an Error object when an error occurs', () =>
-    loot.query('fail').should.be.rejectedWith(Error, { message: 'Error code: -1; {"name":"fail","args":[]}' })
+    loot.query('fail').should.be.rejectedWith(Error, { message: '{"name":"fail","args":[]}' })
   );
 });

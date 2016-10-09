@@ -22,7 +22,7 @@
       persistent: false,
       onSuccess: resolve,
       onFailure: (errorCode, errorMessage) => {
-        reject(new Error(`Error code: ${errorCode}; ${errorMessage}`));
+        reject(new Error(errorMessage));
       },
     });
   });
