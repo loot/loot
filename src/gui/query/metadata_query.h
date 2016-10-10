@@ -74,6 +74,13 @@ protected:
     }
   }
 
+  void addSuffixIfModified(MasterlistInfo& info) {
+    if (info.is_modified) {
+      info.revision_date += " " + boost::locale::translate("(edited)").str();
+      info.revision_id += " " + boost::locale::translate("(edited)").str();
+    }
+  }
+
 private:
   static void appendMessages(std::vector<Message>& destination,
                              const std::vector<Message>& source) {

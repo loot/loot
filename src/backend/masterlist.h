@@ -30,23 +30,19 @@
 #include <boost/filesystem.hpp>
 
 #include "backend/metadata_list.h"
+#include "loot/struct/masterlist_info.h"
 
 namespace loot {
 class Game;
 
 class Masterlist : public MetadataList {
 public:
-  struct Info {
-    std::string revision;
-    std::string date;
-  };
-
   bool Update(const Game& game);
   bool Update(const boost::filesystem::path& path,
               const std::string& repoURL,
               const std::string& repoBranch);
 
-  static Info GetInfo(const boost::filesystem::path& path, bool shortID);
+  static MasterlistInfo GetInfo(const boost::filesystem::path& path, bool shortID);
 };
 }
 

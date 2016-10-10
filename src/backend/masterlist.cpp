@@ -37,10 +37,10 @@ using std::string;
 namespace fs = boost::filesystem;
 
 namespace loot {
-Masterlist::Info Masterlist::GetInfo(const boost::filesystem::path& path, bool shortID) {
+MasterlistInfo Masterlist::GetInfo(const boost::filesystem::path& path, bool shortID) {
     // Compare HEAD and working copy, and get revision info.
   GitHelper git;
-  Info info;
+  MasterlistInfo info;
   git.SetErrorMessage((boost::format(translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str());
 
   if (!fs::exists(path)) {
@@ -61,10 +61,10 @@ Masterlist::Info Masterlist::GetInfo(const boost::filesystem::path& path, bool s
   BOOST_LOG_TRIVIAL(trace) << "Generating hex string for Git object ID.";
   if (shortID) {
     git.Call(git_object_short_id(&git.GetData().buffer, git.GetData().object));
-    info.revision = git.GetData().buffer.ptr;
+    info.revision_id = git.GetData().buffer.ptr;
   } else {
     char c_rev[GIT_OID_HEXSZ + 1];
-    info.revision = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.GetData().object));
+    info.revision_id = git_oid_tostr(c_rev, GIT_OID_HEXSZ + 1, git_object_id(git.GetData().object));
   }
 
   BOOST_LOG_TRIVIAL(trace) << "Getting date for Git object.";
@@ -74,13 +74,10 @@ Masterlist::Info Masterlist::GetInfo(const boost::filesystem::path& path, bool s
   boost::locale::date_time dateTime(time);
   std::stringstream out;
   out << boost::locale::as::ftime("%Y-%m-%d") << dateTime;
-  info.date = out.str();
+  info.revision_date = out.str();
 
   BOOST_LOG_TRIVIAL(trace) << "Diffing masterlist HEAD and working copy.";
-  if (GitHelper::IsFileDifferent(path.parent_path(), path.filename().string())) {
-    info.revision += string(" ") + translate("(edited)").str();
-    info.date += string(" ") + translate("(edited)").str();
-  }
+  info.is_modified = GitHelper::IsFileDifferent(path.parent_path(), path.filename().string());
 
   return info;
 }

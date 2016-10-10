@@ -180,9 +180,10 @@ TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLeng
                                 repoUrl,
                                 repoBranch));
 
-  Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
-  EXPECT_EQ(40, info.revision.length());
-  EXPECT_EQ(10, info.date.length());
+  MasterlistInfo info = masterlist.GetInfo(masterlistPath, false);
+  EXPECT_EQ(40, info.revision_id.length());
+  EXPECT_EQ(10, info.revision_date.length());
+  EXPECT_FALSE(info.is_modified);
 }
 
 TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLengthsWhenRequestingAShortId) {
@@ -191,10 +192,11 @@ TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLeng
                                 repoUrl,
                                 repoBranch));
 
-  Masterlist::Info info = masterlist.GetInfo(masterlistPath, true);
-  EXPECT_GE((unsigned)40, info.revision.length());
-  EXPECT_LE((unsigned)7, info.revision.length());
-  EXPECT_EQ(10, info.date.length());
+  MasterlistInfo info = masterlist.GetInfo(masterlistPath, true);
+  EXPECT_GE((unsigned)40, info.revision_id.length());
+  EXPECT_LE((unsigned)7, info.revision_id.length());
+  EXPECT_EQ(10, info.revision_date.length());
+  EXPECT_FALSE(info.is_modified);
 }
 
 TEST_P(MasterlistTest, getInfoShouldAppendSuffixesToReturnedStringsIfTheMasterlistHasBeenEdited) {
@@ -205,11 +207,10 @@ TEST_P(MasterlistTest, getInfoShouldAppendSuffixesToReturnedStringsIfTheMasterli
   boost::filesystem::ofstream out(masterlistPath);
   out.close();
 
-  Masterlist::Info info = masterlist.GetInfo(masterlistPath, false);
-  EXPECT_EQ(49, info.revision.length());
-  EXPECT_EQ(" (edited)", info.revision.substr(40));
-  EXPECT_EQ(19, info.date.length());
-  EXPECT_EQ(" (edited)", info.date.substr(10));
+  MasterlistInfo info = masterlist.GetInfo(masterlistPath, false);
+  EXPECT_EQ(40, info.revision_id.length());
+  EXPECT_EQ(10, info.revision_date.length());
+  EXPECT_TRUE(info.is_modified);
 }
 }
 }

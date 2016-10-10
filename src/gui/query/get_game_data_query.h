@@ -109,9 +109,11 @@ private:
   YAML::Node convertMasterlistMetadata() {
     YAML::Node masterlistNode;
     try {
-      Masterlist::Info info = state_.getCurrentGame().GetMasterlist().GetInfo(state_.getCurrentGame().MasterlistPath(), true);
-      masterlistNode["revision"] = info.revision;
-      masterlistNode["date"] = info.date;
+      MasterlistInfo info = state_.getCurrentGame().GetMasterlist().GetInfo(state_.getCurrentGame().MasterlistPath(), true);
+      addSuffixIfModified(info);
+
+      masterlistNode["revision"] = info.revision_id;
+      masterlistNode["date"] = info.revision_date;
     } catch (std::exception &e) {
       masterlistNode["revision"] = e.what();
       masterlistNode["date"] = e.what();

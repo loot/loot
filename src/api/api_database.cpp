@@ -114,21 +114,7 @@ bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
 
 MasterlistInfo ApiDatabase::GetMasterlistRevision(const std::string& masterlistPath,
                                                   const bool getShortID) {
-  MasterlistInfo apiMasterlistInfo;
-  apiMasterlistInfo.is_modified = false;
-  Masterlist::Info info = Masterlist::GetInfo(masterlistPath, getShortID);
-
-  if (boost::ends_with(info.revision, " (edited)")) {
-    apiMasterlistInfo.revision_id = info.revision.substr(0, info.revision.length() - 9);
-    apiMasterlistInfo.revision_date = info.date.substr(0, info.date.length() - 9);
-    apiMasterlistInfo.is_modified = true;
-  } else {
-    apiMasterlistInfo.revision_id = info.revision;
-    apiMasterlistInfo.revision_date = info.date;
-    apiMasterlistInfo.is_modified = false;
-  }
-
-  return apiMasterlistInfo;
+  return Masterlist::GetInfo(masterlistPath, getShortID);
 }
 
 //////////////////////////

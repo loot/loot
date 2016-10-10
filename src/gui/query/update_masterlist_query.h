@@ -77,9 +77,11 @@ private:
 
   void storeMasterlistMetadata(YAML::Node& gameMetadata) {
     try {
-      Masterlist::Info info = game_.GetMasterlist().GetInfo(game_.MasterlistPath(), true);
-      gameMetadata["masterlist"]["revision"] = info.revision;
-      gameMetadata["masterlist"]["date"] = info.date;
+      MasterlistInfo info = game_.GetMasterlist().GetInfo(game_.MasterlistPath(), true);
+      addSuffixIfModified(info);
+
+      gameMetadata["masterlist"]["revision"] = info.revision_id;
+      gameMetadata["masterlist"]["date"] = info.revision_date;
     } catch (std::exception& e) {
       gameMetadata["masterlist"]["revision"] = e.what();
       gameMetadata["masterlist"]["date"] = e.what();
