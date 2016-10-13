@@ -39,23 +39,7 @@ const std::vector<LanguageCode> Language::codes({
   LanguageCode::korean
 });
 
-Language::Language(LanguageCode code) {
-  Construct(code);
-}
-
-Language::Language(const std::string& locale) {
-  for (LanguageCode code : codes) {
-    if (locale == Language(code).GetLocale()) {
-      Construct(code);
-      return;
-    }
-  }
-
-  Construct(LanguageCode::english);
-}
-
-void Language::Construct(const LanguageCode code) {
-  code_ = code;
+Language::Language(LanguageCode code) : code_(code) {
   if (code_ == LanguageCode::spanish) {
     name_ = "Español";
     locale_ = "es";
@@ -91,6 +75,18 @@ void Language::Construct(const LanguageCode code) {
     name_ = "English";
     locale_ = "en";
   }
+}
+
+Language::Language(const std::string& locale) : Language(GetCode(locale)) {}
+
+LanguageCode Language::GetCode(const std::string& locale) {
+  for (LanguageCode code : codes) {
+    if (locale == Language(code).GetLocale()) {
+      return code;
+    }
+  }
+
+  return LanguageCode::english;
 }
 
 LanguageCode Language::GetCode() const {

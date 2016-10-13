@@ -44,7 +44,7 @@ public:
   std::string GetName() const;
   std::string GetLocale() const;
 private:
-  void Construct(const LanguageCode code);
+  static LanguageCode GetCode(const std::string& locale);
 
   LanguageCode code_;
   std::string name_;
