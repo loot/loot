@@ -34,6 +34,21 @@ function getGitDescription() {
   return `${describe}_${branch}`;
 }
 
+function getLanguageFolders() {
+  return [
+    'es',
+    'ru',
+    'fr',
+    'zh_CN',
+    'pl',
+    'pt_BR',
+    'fi',
+    'de',
+    'da',
+    'ko',
+  ];
+}
+
 function compress(sourcePath, destPath) {
   // First remove any existing archive.
   fs.removeSync(destPath);
@@ -115,9 +130,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   );
 
   // Translation files.
-  [
-    'es', 'ru', 'fr', 'zh_CN', 'pl', 'pt_BR', 'fi', 'de', 'da', 'ko',
-  ].forEach((lang) => {
+  getLanguageFolders().forEach((lang) => {
     fs.mkdirsSync(path.join(tempPath, 'resources', 'l10n', lang, 'LC_MESSAGES'));
     fs.copySync(
       path.join(rootPath, 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'),
