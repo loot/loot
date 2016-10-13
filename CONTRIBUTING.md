@@ -7,8 +7,8 @@ A general guide to contributing to LOOT, may be found on [LOOT's website](https:
 
 The repository branching structure is pretty simple:
 
-* The `master` branch is a ready-to-release branch. It will generally hold code newer than the latest release, but which could be prepared (ie. update version number, changelog) and packaged for release fairly quickly and easily. Code on this branch *should* be reasonably bug free and features will be complete.
-* The `dev` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code is generally buggy and features incomplete (though this will vary considerably through the development cycle).
+* The `master` branch holds released code.
+* The `dev` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code on `dev` is generally pretty stable as CI must pass before anything can be merged into it, but may not be release-ready.
 * Other branches are generally themed on specific features or groups of changes, and come and go as they are merged into one of the two above, or discarded.
 
 ## Getting Involved
@@ -60,10 +60,9 @@ Some strings to be translated may contain special characters. Different types of
 
 If you're adding a new translation, LOOT's source code must be updated to recognise it. You can do this yourself and include the changes in your translation's pull request if you wish. The files and functions which must be updated are given below.
 
-* In [language.h](src/backend/helpers/language.h), add a static constant for the language to the `Language` class.
-* In [language.cpp](src/backend/helpers/language.cpp), define the value for the constant you added, and update `Language::Language(const std::string& locale)`, `Language::Construct(const unsigned int code)` and `Language::Codes({...})` to include lines for your language.
-* Add constants for the language in [api.h](include/loot/api.h) and [api.cpp](src/api/api.cpp).
-* In [archive.js](scripts/archive.js), add the language folder to the list on line 83.
+* In [language_code.h](include/loot/enum/language_code.h), append a value for the language to the `LanguageCode` enum.
+* In [language.cpp](src/backend/helpers/language.cpp), define the value for the constant you added, and update `Language::Language(LanguageCode code)` and `Language::codes({...})` to include lines for your language.
+* In [archive.js](scripts/archive.js), add the language folder to the list returned by `getLanguageFolders()`.
 * In [installer.iss](scripts/installer.iss), add an entry for your language's translation file to the `[Files]` section.
 * In [localised_content.rst](docs/metadata/data_structures/localised_content.rst), add a row for your language to the Language Codes table.
 
@@ -73,7 +72,7 @@ LOOT's JavaScript uses a slightly tweaked version of the Airbnb style, and can b
 
 ### C++ Code Style
 
-The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) is used as the base, with deviations as listed below. Note that the LOOT API is a C API, so the style guide doesn't apply to its header.
+The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) is used as the base, with deviations as listed below.
 
 #### C++ Features
 
