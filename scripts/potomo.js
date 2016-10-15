@@ -7,25 +7,6 @@ const fs = require('fs');
 const path = require('path');
 const helpers = require('./helpers');
 
-function getMsgfmtPath() {
-  const paths = [
-    path.join('C:\\', 'Program Files (x86)', 'Poedit', 'GettextTools', 'bin', 'msgfmt.exe'),
-    path.join('C:\\', 'cygwin', 'bin', 'msgfmt.exe'),
-    path.join('/', 'usr', 'bin', 'msgfmt'),
-  ];
-
-  for (let i = 0; i < paths.length; i += 1) {
-    if (helpers.fileExists(paths[i])) {
-      return paths[i];
-    }
-  }
-
-  throw new Error('No msgfmt.exe found!');
-}
-
-/* This isn't portable to Linux but it doesn't (yet?) need to be. */
-const msgfmtPath = getMsgfmtPath();
-
 let rootPath = '.';
 if (process.argv.length > 2) {
   rootPath = process.argv[2];
@@ -40,7 +21,7 @@ fs.readdirSync(l10nPath).forEach((file) => {
 
       fs.accessSync(poPath, fs.R_OK);
 
-      childProcess.execFileSync(msgfmtPath, [
+      childProcess.execFileSync('msgfmt', [
         poPath,
         '-o',
         moPath,

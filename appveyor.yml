@@ -42,6 +42,7 @@ test_script:
 after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
+  - set PATH=%PATH%;C:\cygwin\bin\
   - node scripts\potomo.js
   - node scripts\archive.js
   # AppVeyor checks out a specific commit, but that means the archive script
