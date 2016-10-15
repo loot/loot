@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-10-07 21:09+0100\n"
+"POT-Creation-Date: 2016-10-15 12:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -584,18 +584,18 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:45
+#: src/gui/query/get_game_data_query.h:44
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:80
+#: src/gui/query/get_game_data_query.h:79
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:94
+#: src/gui/query/get_game_data_query.h:93
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -610,13 +610,17 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:94
+#: src/gui/query/metadata_query.h:79 src/gui/query/metadata_query.h:80
+msgid "(edited)"
+msgstr ""
+
+#: src/gui/query/metadata_query.h:101
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:120 src/backend/plugin/plugin_sorter.cpp:218
+#: src/gui/query/metadata_query.h:127 src/backend/plugin/plugin_sorter.cpp:219
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
@@ -628,131 +632,122 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/backend/app/loot_paths.cpp:85
+#: src/backend/app/loot_paths.cpp:84
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:125
+#: src/backend/app/loot_state.cpp:124
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:132
+#: src/backend/app/loot_state.cpp:131
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:194
+#: src/backend/app/loot_state.cpp:193
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:273
+#: src/backend/app/loot_state.cpp:272
 msgid "None of the supported games were detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:62
+#: src/backend/game/game.cpp:61
 msgid "Invalid game ID supplied."
 msgstr ""
 
-#: src/backend/game/game.cpp:69
+#: src/backend/game/game.cpp:68
 msgid "Game path could not be detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:79
+#: src/backend/game/game.cpp:78
 msgid "Could not create LOOT folder for game. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:50
+#: src/backend/game/load_order_handler.cpp:49
 msgid "Unsupported game ID supplied."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:55
+#: src/backend/game/load_order_handler.cpp:54
 msgid "Game path is not initialised."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:89
+#: src/backend/game/load_order_handler.cpp:88
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:92
+#: src/backend/game/load_order_handler.cpp:91
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:110
+#: src/backend/game/load_order_handler.cpp:109
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:113
+#: src/backend/game/load_order_handler.cpp:112
 msgid "libloadorder failed to check if a plugin is active. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:135
+#: src/backend/game/load_order_handler.cpp:134
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:138
+#: src/backend/game/load_order_handler.cpp:137
 msgid "libloadorder failed to get the load order. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:161
+#: src/backend/game/load_order_handler.cpp:160
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:164
+#: src/backend/game/load_order_handler.cpp:163
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:106
+#: src/backend/helpers/git_helper.cpp:105
 msgid "Git operation failed. Error: %1%"
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:147
+#: src/backend/helpers/git_helper.cpp:146
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:196
+#: src/backend/helpers/git_helper.cpp:195
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:310 src/backend/masterlist.cpp:50
-msgid "Unknown: Git repository missing"
-msgstr ""
-
-#: src/backend/helpers/helpers.cpp:82
+#: src/backend/helpers/helpers.cpp:81
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr ""
 
-#: src/backend/helpers/helpers.cpp:123 src/backend/helpers/helpers.cpp:126
+#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
 msgid "Failed to open file in its default application."
 msgstr ""
 
-#: src/backend/metadata/condition_evaluator.cpp:171
+#: src/backend/metadata/condition_evaluator.cpp:170
 msgid "Invalid file path:"
 msgstr ""
 
-#: src/backend/metadata/condition_evaluator.cpp:181
-#: src/backend/metadata/condition_evaluator.cpp:221
+#: src/backend/metadata/condition_evaluator.cpp:180
+#: src/backend/metadata/condition_evaluator.cpp:220
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr ""
 
-#: src/backend/metadata/condition_grammar.h:204
+#: src/backend/metadata/condition_grammar.h:203
 msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
 msgstr ""
 
-#: src/backend/metadata/conditional_metadata.cpp:73
-#: src/backend/metadata/conditional_metadata.cpp:104
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr ""
-
-#: src/backend/metadata/conditional_metadata.cpp:78
-#: src/backend/metadata/conditional_metadata.cpp:109
-msgid "Failed to parse condition \"%1%\"."
+#: src/backend/metadata/conditional_metadata.cpp:91
+msgid ""
+"Failed to parse condition \"%1%\": only partially matched expected syntax."
 msgstr ""
 
 #: src/backend/metadata/plugin_cleaning_data.cpp:88
@@ -804,44 +799,44 @@ msgstr ""
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/backend/plugin/plugin_sorter.cpp:83
+#: src/backend/plugin/plugin_sorter.cpp:84
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
 
-#: src/backend/masterlist.cpp:43
+#: src/backend/masterlist.cpp:44
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:47
+#: src/backend/masterlist.cpp:48
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/backend/masterlist.cpp:80 src/backend/masterlist.cpp:81
-msgid "(edited)"
+#: src/backend/masterlist.cpp:51
+msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
+#: src/backend/masterlist.cpp:116 src/backend/masterlist.cpp:130
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:239
+#: src/backend/masterlist.cpp:237
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:253
+#: src/backend/masterlist.cpp:251
 msgid "Masterlist revision"
 msgstr ""
 
-#: src/backend/masterlist.cpp:257
+#: src/backend/masterlist.cpp:255
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
