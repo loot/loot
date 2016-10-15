@@ -46,6 +46,7 @@ function getLanguageFolders() {
     'de',
     'da',
     'ko',
+    'sv',
   ];
 }
 

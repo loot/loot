@@ -25,4 +25,5 @@ The localised content data structure is a key-value string map.
   Polish                pl
   Russian               ru
   Spanish               es
+  Swedish               sv
   ====================  ==========

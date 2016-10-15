@@ -49,7 +49,8 @@ enum struct LanguageCode : unsigned int {
   finnish,
   german,
   danish,
-  korean
+  korean,
+  swedish
 };
 }
 

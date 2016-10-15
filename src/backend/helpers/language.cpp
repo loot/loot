@@ -36,7 +36,8 @@ const std::vector<LanguageCode> Language::codes({
   LanguageCode::finnish,
   LanguageCode::german,
   LanguageCode::danish,
-  LanguageCode::korean
+  LanguageCode::korean,
+  LanguageCode::swedish
 });
 
 Language::Language(LanguageCode code) : code_(code) {
@@ -70,6 +71,9 @@ Language::Language(LanguageCode code) : code_(code) {
   } else if (code_ == LanguageCode::korean) {
     name_ = "한국어";
     locale_ = "ko";
+  } else if (code_ == LanguageCode::swedish) {
+    name_ = "Svenska";
+    locale_ = "sv";
   } else {
     code_ = LanguageCode::english;
     name_ = "English";

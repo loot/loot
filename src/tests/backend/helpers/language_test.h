@@ -81,7 +81,8 @@ TEST(Language, codesShouldContainAllExpectedLanguageCodes) {
       LanguageCode::finnish,
       LanguageCode::german,
       LanguageCode::danish,
-      LanguageCode::korean
+      LanguageCode::korean,
+      LanguageCode::swedish,
   };
 
   EXPECT_EQ(codes, Language::codes);
