@@ -116,7 +116,7 @@ void GameCache::AddPlugin(const Plugin&& plugin) {
 std::vector<Message> GameCache::GetMessages() const {
   std::vector<Message> output(messages_);
   if (loadOrderSortCount_ == 0)
-    output.push_back(Message(MessageType::warn, "You have not sorted your load order this session."));
+    output.push_back(Message(MessageType::warn, boost::locale::translate("You have not sorted your load order this session.")));
 
   return output;
 }
