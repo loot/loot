@@ -21,6 +21,7 @@ In addition, the following are credited with application-related support:
   * Polish: Łukasz Niemczyk
   * Russian: Tokc.D.K.
   * Spanish: Sharlikran
+  * Swedish: Mikael Hiort af Ornäs
 
 * Beta testing: Too many to list, thank you all!
 

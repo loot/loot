@@ -7,6 +7,11 @@ Only application history is recorded here. A full history of masterlist changes 
 0.10.0 - Unreleased
 ===================
 
+Added
+-----
+
+- Swedish translation by Mikael Hiort af Ornäs (Lakrits).
+
 Changed
 -------
 
@@ -15,13 +20,11 @@ Changed
 - Added a "Clean Plugin Info" tab to the metadata editor, for editing metadata that identifies a plugin as being clean.
 - Added a "Verified clean" icon to plugin cards that is displayed for plugins that are identified as clean.
 - All operations triggered from the UI are now processed asynchronously, which may have a minor positive effect on perceived performance.
+- Error messages displayed in dialog boxes no longer include an error code.
+- Rewrote the documentation, which is now hosted online at `Read The Docs`_.
 - Updated Simplified Chinese translation.
-- Updated CEF to 3.2785.1466.g80e473e.
-
-Removed
--------
-
-- The metadata syntax documentation from build installers and archives: it is now hosted online at `Read The Docs`_.
+- Updated Russian translation.
+- Updated CEF to 3.2785.1466.g80e473e and libgit2 to 0.24.2.
 
 .. _Read The Docs: https://loot.readthedocs.io/
 

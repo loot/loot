@@ -12,8 +12,7 @@ Changed
   a wrapper around the C++ API, and can be found in a `separate repository`_.
 * Windows builds now have a runtime dependency on the MSVC 2015 runtime
   redistributable.
-* API documentation is now hosted on `Read The Docs`_ instead of being included
-  in the release archive.
+* Rewrote the API documentation, which is now hosted online at `Read The Docs`_.
 * The Windows release archive includes the ``.lib`` file for compile-time linking.
 
 Removed
