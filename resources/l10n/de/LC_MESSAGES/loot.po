@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-24 18:59+0100\n"
-"PO-Revision-Date: 2015-06-24 19:05+0100\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2016-10-20 17:26+0200\n"
+"PO-Revision-Date: 2016-10-20 17:26+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -18,403 +18,23 @@ msgstr ""
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
 
-#: src/backend/game.cpp:347
-msgid "Invalid game ID supplied."
-msgstr "Ungültige Spiel-ID übergeben."
-
-#: src/backend/game.cpp:371
-msgid "Game path could not be detected."
-msgstr "Spielpfad konnte nicht ermittelt werden."
-
-#: src/backend/game.cpp:494
-msgid ""
-"libloadorder failed to create a game handle. Details could not be fetched."
-msgstr ""
-"libloadorder konnte keine Spiel-Referenz anlegen. Es konnten keine Details "
-"ermittelt werden."
-
-#: src/backend/game.cpp:498
-msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder konnte keine Spiel-Referenz anlegen. Details:"
-
-#: src/backend/game.cpp:515
-msgid ""
-"libloadorder failed to initialise game master file support. Details could "
-"not be fetched."
-msgstr ""
-"libloadorder konnte die Unterstützung für die Spiel-Stammdatei nicht "
-"initialisieren. Es konnten keine Details ermittelt werden."
-
-#: src/backend/game.cpp:519
-msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr ""
-"libloadorder konnte die Unterstützung für die Spiel-Stammdatei nicht "
-"initialisieren. Details:"
-
-#: src/backend/game.cpp:539
-msgid ""
-"libloadorder failed to get the active plugins list. Details could not be "
-"fetched."
-msgstr ""
-"libloadorder konnte die Liste der aktiven Plugins nicht laden. Es konnten "
-"keine Details ermittelt werden."
-
-#: src/backend/game.cpp:543
-msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr ""
-"libloadorder konnte die Liste der aktiven Plugins nicht laden. Details: "
-
-#: src/backend/game.cpp:572
-msgid ""
-"libloadorder failed to get the load order. Details could not be fetched."
-msgstr ""
-"libloadorder konnte die Ladereihenfolge nicht ermitteln. Es konnten keine "
-"Details ermittelt werden."
-
-#: src/backend/game.cpp:576
-msgid "libloadorder failed to get the load order. Details:"
-msgstr "libloadorder konnte die Ladereihenfolge nicht verändern. Details:"
-
-#: src/backend/game.cpp:598
-msgid ""
-"libloadorder failed to set the load order. Details could not be fetched."
-msgstr ""
-"libloadorder konnte die Ladereihenfolge nicht verändern. Es konnten keine "
-"Details ermittelt werden."
-
-#: src/backend/game.cpp:602
-msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder konnte die Ladereihenfolge nicht verändern. Details:"
-
-#: src/backend/game.cpp:706
-msgid "An exception occurred while loading this plugin. Details: "
-msgstr "Beim Laden des Plugins ist ein Fehler aufgetreten. Details: "
-
-#: src/backend/game.cpp:724
-msgid "An exception occurred while loading this plugin. Details:"
-msgstr "Beim Laden des Plugins ist ein Fehler aufgetreten. Details: "
-
-#: src/backend/game.cpp:783
-msgid "Could not create LOOT folder for game. Details:"
-msgstr "Konnte den LOOT-Ordner für das Spiel nicht erzeugen. Details:"
-
-#: src/backend/game.cpp:791
-msgid "Building plugin graph..."
-msgstr "Konstruiere Plugin-Graphen..."
-
-#: src/backend/game.cpp:817 src/gui/handler.cpp:1017
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
-"\"%1%\" enthält eine Bedingung, die nicht ausgewertet werden konnte. "
-"Details: %2%"
-
-#: src/backend/game.cpp:833
-msgid "Adding edges to plugin graph and performing topological sort..."
-msgstr ""
-"Füge Kanten zum Plugin-Graphen hinzu und führe topologische Sortierung aus..."
-
-#: src/backend/git.cpp:132
-msgid "Git operation failed. Error: %1%"
-msgstr "Git-Operation ist fehlgeschalgen. Fehler: %1%"
-
-#: src/backend/git.cpp:179
-msgid "Object memory already allocated!"
-msgstr "Objekt-Speicher bereits alloziert!"
-
-#: src/backend/git.cpp:183
-msgid "Tree memory already allocated!"
-msgstr "Baum-Speicher bereits alloziert!"
-
-#: src/backend/git.cpp:187
-msgid "Diff memory already allocated!"
-msgstr "Diff-Speicher bereits alloziert!"
-
-#: src/backend/git.cpp:191
-msgid "Repository handle not open!"
-msgstr "Repository-Handle nicht geöffnet!"
-
-#: src/backend/git.cpp:222
-msgid ""
-"An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-"Beim Lesen der lokalen Masterlist-Version ist ein Fehler aufgetreten. Falls "
-"dieser Fehler erneut auftritt, kann es helfen, den \".git\" Ordner zu "
-"löschen in %1%."
-
-#: src/backend/git.cpp:226
-msgid "N/A: No masterlist present"
-msgstr "N/A: Keine Masterlist vorhanden"
-
-#: src/backend/git.cpp:230
-msgid "Unknown: Git repository missing"
-msgstr "Unbekannt: Git Repository fehlt"
-
-#: src/backend/git.cpp:265 src/backend/git.cpp:266
-msgid "(edited)"
-msgstr "(bearbeitet)"
-
-#: src/backend/git.cpp:295
-msgid ""
-"An error occurred while trying to clone the remote masterlist repository."
-msgstr ""
-"Beim Klonen des Remote Masterlist Repository ist ein Fehler aufgetreten."
-
-#: src/backend/git.cpp:347 src/backend/git.cpp:380
-msgid ""
-"An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-"Beim Zugriff auf das lokale Masterlist Repository ist ein Fehler "
-"aufgetreten. Falls dieser Fehler erneut auftritt, kann es helfen, den \".git"
-"\" Ordner zu löschen in %1%."
-
-#: src/backend/git.cpp:371
-msgid ""
-"An error occurred while trying to update the masterlist. This could be due "
-"to a server-side error. Try again in a few minutes."
-msgstr ""
-"Beim Aktualisieren der Masterlist ist ein Fehler aufgetreten. Die Ursache "
-"könnte ein Fehler auf Server-Seite sein. Versuchen Sie es in wenigen Minuten "
-"erneut."
-
-#: src/backend/git.cpp:514
-msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
-msgstr ""
-"Beim Lesen der Informationen über die aktualisierte Masterlist ist ein "
-"Fehler aufgetreten. Falls dieser Fehler erneut auftritt, kann es helfen, den "
-"\".git\" Ordner zu löschen in %1%."
-
-#: src/backend/git.cpp:584
-msgid "Masterlist revision"
-msgstr "Revision der Masterlist"
-
-#: src/backend/git.cpp:584
-msgid "Rolled back to the previous revision."
-msgstr "Auf die vorherige Revision zurückgerollt."
-
-#: src/backend/graph.cpp:82
-msgid ""
-"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
-"%3%"
-msgstr ""
-"Zyklische Interaktion festgestellt zwischen Plugins \"%1%\" und \"%2%\". "
-"Rückwärts-Zyklus: %3%"
-
-#: src/backend/helpers.cpp:153
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "Konnte \"%1%\" zur Berechnung der CRC-Prüfsumme nicht öffnen."
-
-#: src/backend/metadata.cpp:118 src/backend/metadata.cpp:150
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "Fehler beim Parsen der Bedingung \"%1%\": %2%"
-
-#: src/backend/metadata.cpp:123 src/backend/metadata.cpp:155
-msgid "Failed to parse condition \"%1%\"."
-msgstr "Fehler beim Parsen der Bedingung \"%1%\"."
-
-#: src/backend/metadata.cpp:288
-msgid ""
-"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
-"Clean with %4%."
-msgstr ""
-"Enthält %1% ITM Einträge, %2% gelöschte Referenzen und %3% gelöschte "
-"Navmeshes. Säubern mit %4%."
-
-#: src/backend/metadata.cpp:290
-msgid "Clean with %1%."
-msgstr "Säubern mit %1%."
-
-#: src/backend/metadata.cpp:293
-msgid ""
-"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-"Enthält %1% gelöschte Referenzen und %2% gelöschte Navmeshes. Säubern mit "
-"%3%."
-
-#: src/backend/metadata.cpp:295
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Enthält %1% gelöschte Navmeshes. Säubern mit %2%."
-
-#: src/backend/metadata.cpp:297
-msgid "Contains %1% deleted references. Clean with %2%."
-msgstr "Enthält %1% gelöschte Referenzen. Säubern mit %2%."
-
-#: src/backend/metadata.cpp:300
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr "Enthält %1% ITM Einträge und %2% gelöschte Navmeshes. Säubern mit %3%."
-
-#: src/backend/metadata.cpp:302
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Enthält %1% ITM Einträge. Säubern mit %2%."
-
-#: src/backend/metadata.cpp:305
-msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
-msgstr ""
-"Enthält %1% ITM Einträge und %2% gelöschte Referenzen. Säubern mit %3%."
-
-#: src/backend/metadata.cpp:482
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr "Kann \"%1%\" nicht lesen. Details: %2%"
-
-#: src/backend/metadata.cpp:908 src/backend/metadata.cpp:919
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Für dieses Plugin muss \"%1%\" installiert sein, dieses fehlt aber."
-
-#: src/backend/metadata.cpp:912
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Für dieses Plugin muss \"%1%\" aktiv sein, dieses ist aber inaktiv."
-
-#: src/backend/metadata.cpp:927
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr ""
-"Dieses Plugin ist inkompatibel mit \"%1%\", es sind jedoch beide vorhanden."
-
-#: src/gui/app.cpp:170
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr ""
-"Fehler: Die LOOT Konfigurations-Datei konnte nicht erstellt werden. %1%"
-
-#: src/gui/app.cpp:180
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Fehler: Die Einstellungen konnten nicht gelesen werden. %1%"
-
-#: src/gui/app.cpp:245
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr "Fehler: Die Einstellungen des Spiels konnten nicht gelesen werden. %1%"
-
-#: src/gui/app.cpp:265
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-"Fehler: Spielspezifische Einstellungen konnten nicht initialisiert werden. "
-"%1%"
-
-#: src/gui/app.cpp:406
-msgid "None of the supported games were detected."
-msgstr "Keines der unterstützten Spiele wurde erkannt."
-
-#: src/gui/handler.cpp:217 src/gui/handler.cpp:221
-msgid "Failed to change game. Details: %1%"
-msgstr "Das Spiel konnte nicht gewechselt werden. Details: %1%"
-
-#: src/gui/handler.cpp:238 src/gui/handler.cpp:242 src/gui/handler.cpp:319
-#: src/gui/handler.cpp:323 src/gui/handler.cpp:355 src/gui/handler.cpp:359
-msgid "Failed to copy plugin metadata. Details: %1%"
-msgstr "Die Plugin Metadaten konnten nicht kopiert werden. Details: %1%"
-
-#: src/gui/handler.cpp:391 src/gui/handler.cpp:956
-msgid "Loading plugin contents..."
-msgstr "Lade Plugin Inhalte..."
-
-#: src/gui/handler.cpp:395
-msgid "Checking for conflicting plugins..."
-msgstr "Prüfe auf inkompatible Plugins..."
-
-#: src/gui/handler.cpp:565 src/gui/handler.cpp:573
-msgid "Shell execute failed."
-msgstr "Shell-Ausführung fehlgeschlagen."
-
-#: src/gui/handler.cpp:630
-msgid "Loading plugin headers..."
-msgstr "Lade Plugin Header..."
-
-#: src/gui/handler.cpp:656
-msgid "Parsing masterlist..."
-msgstr "Parse Masterlist..."
-
-#: src/gui/handler.cpp:662
-msgid "An error occurred while parsing the masterlist: %1%"
-msgstr "Beim Parsen der Masterlist ist ein Fehler aufgetreten: %1%"
-
-#: src/gui/handler.cpp:668
-msgid "Parsing userlist..."
-msgstr "Parse Benutzerliste..."
-
-#: src/gui/handler.cpp:674
-msgid "An error occurred while parsing the userlist: %1%"
-msgstr "Beim Parsen der Benutzerliste ist ein Fehler aufgetreten: %1%"
-
-#: src/gui/handler.cpp:699
-msgid "Merging and evaluating plugin metadata..."
-msgstr "Die Plugin Metadaten werden zusammengeführt und evaluiert..."
-
-#: src/gui/handler.cpp:764
-msgid "Loading general messages..."
-msgstr "Lade allgemeine Nachrichten..."
-
-#: src/gui/handler.cpp:788 src/gui/handler.cpp:894
-msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr ""
-"Eine globale Nachricht enthält eine Bedingung, die nicht ausgewertet werden "
-"konnte. Details: %1%"
-
-#: src/gui/handler.cpp:798 src/gui/handler.cpp:802
-msgid "Failed to get game data. Details: %1%"
-msgstr "Die Spieldaten konnten nicht geladen werden. Details: %1%"
-
-#: src/gui/handler.cpp:821
-msgid "Updating and parsing masterlist..."
-msgstr "Update und Parsen der Masterlist..."
-
-#: src/gui/handler.cpp:837
-msgid "Regenerating displayed content..."
-msgstr "Aktualisiere angezeigte Inhalte..."
-
-#: src/gui/handler.cpp:907 src/gui/handler.cpp:911
-msgid "Failed to update the masterlist. Details: %1%"
-msgstr "Die Masterlist konnte nicht aktualisiert werden. Details: %1%"
-
-#: src/gui/handler.cpp:990
-msgid "Failed to sort plugins. Details: %1%"
-msgstr "Die Plugins konnten nicht sortiert werden. Details: %1%"
-
-#: src/backend/parsers.h:553 src/backend/parsers.h:645
-msgid "Invalid file path:"
-msgstr "Ungültiger Dateipfad:"
-
-#: src/backend/parsers.h:607
-msgid "Invalid folder path:"
-msgstr "Ungültiger Ordnerpfad:"
-
-#: src/backend/parsers.h:625
-msgid "Invalid regex string:"
-msgstr "Ungültiger regulärer Ausdruck:"
-
-#: src/backend/parsers.h:727
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "Erwartete \"%1%\" an \"%2%\"."
-
-#: resources/report/js/events.js:42
-msgid "Loading game data..."
-msgstr "Lade Spieldaten..."
-
-#: resources/report/js/events.js:112
-#, javascript-format
-msgid "Masterlist updated to revision %s."
-msgstr "Masterlist aktualisiert auf Revision %s."
-
-#: resources/report/js/events.js:114
+#: src/gui/html/js/events.js:18
+msgid "Identifying conflicting plugins..."
+msgstr "Ermittle inkompatible Plugins..."
+
+#: src/gui/html/js/events.js:100
 msgid "No masterlist update was necessary."
 msgstr "Keine Aktualisierung der Masterlist war nötig."
 
-#: resources/report/js/events.js:119
-msgid "Updating masterlist..."
-msgstr "Aktualisiere Masterlist..."
+#: src/gui/html/js/events.js:150
+msgid "Sorting made no changes to the load order."
+msgstr "Das Sortieren hat keine Änderungen der Ladereihenfolge bewirkt."
 
-#: resources/report/js/events.js:143
-msgid "Sorting plugins..."
-msgstr "Sortiere Plugins..."
-
-#: resources/report/js/events.js:245
+#: src/gui/html/js/events.js:182
 msgid "Redate Plugins?"
 msgstr "Plugins neu datieren?"
 
-#: resources/report/js/events.js:245
+#: src/gui/html/js/events.js:182
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -425,11 +45,11 @@ msgstr ""
 "Seiteneffekt davon ist, dass jegliche abonnierten Mods aus dem Steam "
 "Workshop von Steam erneut heruntergeladen werden. Wollen Sie fortfahren?"
 
-#: resources/report/js/events.js:245
+#: src/gui/html/js/events.js:182
 msgid "Redate"
 msgstr "Neu datieren"
 
-#: resources/report/js/events.js:254
+#: src/gui/html/js/events.js:191
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -437,517 +57,512 @@ msgstr ""
 "Sind Sie sicher, dass Sie alle bestehenden vom Benutzer hinzugefügten "
 "Metadaten von allen Plugins entfernen wollen?"
 
-#: resources/report/js/events.js:254 resources/report/js/events.js:566
+#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:401
 msgid "Clear"
 msgstr "Entfernen"
 
-#: resources/report/js/events.js:276
+#: src/gui/html/js/events.js:202
 msgid "All user-added metadata has been cleared."
 msgstr "Alle vom Benutzer hinzugefügten Metadaten wurden entfernt."
 
-#: resources/report/js/events.js:333
+#: src/gui/html/js/events.js:225
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Der Inhalt von LOOT wurde in die Zwischenablage kopiert."
 
-#: resources/report/js/events.js:355
+#: src/gui/html/js/events.js:236
 msgid "The load order has been copied to the clipboard."
 msgstr "Die Ladereihenfolge wurde in die Zwischenablage kopiert."
 
-#: resources/report/js/events.js:562
-#, javascript-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Die Metadaten für \"%s\" wurden in die Zwischenablage kopiert."
-
-#: resources/report/js/events.js:566
-#, javascript-format
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr ""
-"Sind Sie sicher, dass Sie alle bestehenden vom Benutzer hinzugefügten "
-"Metadaten von \"%s\" entfernen wollen?"
-
-#: resources/report/js/events.js:592
-#, javascript-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Die vom Benutzer hinzugefügten Metadaten von \"%s\" wurden entfernt."
-
-#: resources/report/js/events.js:615
-msgid "sorted load order"
-msgstr "sortierte Ladereihenfolge"
-
-#: resources/report/js/events.js:617
-msgid "metadata edits"
-msgstr "Metadaten Änderungen"
-
-#: resources/report/js/events.js:628
-msgid "Refreshing data..."
-msgstr "Aktualisiere Daten..."
-
-#: resources/report/js/filters.js:121
-msgid "Do not clean"
-msgstr "Nicht säubern"
-
-#: resources/report/js/filters.js:160
-msgid "Checking if plugins have been loaded..."
-msgstr "Prüfe, ob Plugins geladen wurden..."
-
-#: resources/report/js/helpers.js:7 resources/report/js/l10n.js:162
-msgid "Error"
-msgstr "Fehler"
-
-#: resources/report/js/helpers.js:27 resources/report/js/l10n.js:130
-#: resources/report/js/l10n.js:227 resources/report/js/l10n.js:306
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: resources/report/js/helpers.js:33 resources/report/js/l10n.js:318
-msgid "OK"
-msgstr "OK"
-
-#: resources/report/js/helpers.js:54
-#, javascript-format
-msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr ""
-"Sie haben noch nicht ihre %s angewandt oder abgebrochen. Sind Sie sicher, "
-"dass Sie beenden wollen?"
-
-#: resources/report/js/helpers.js:54 resources/report/js/l10n.js:240
+#: src/gui/html/js/events.js:267 src/gui/html/js/translateStaticText.js:195
 msgid "Quit"
 msgstr "Beenden"
 
-#: resources/report/js/init.js:38
-msgid "unknown"
-msgstr "unbekannt"
+#: src/gui/html/js/events.js:279
+msgid "sorted load order"
+msgstr "sortierte Ladereihenfolge"
 
-#: resources/report/js/l10n.js:61 resources/report/js/l10n.js:80
+#: src/gui/html/js/events.js:281
+msgid "metadata edits"
+msgstr "Metadaten Änderungen"
+
+#: src/gui/html/js/filters.js:28
+msgid "Do not clean"
+msgstr "Nicht säubern"
+
+#: src/gui/html/js/game.js:22
+msgid "N/A"
+msgstr "N/A"
+
+#: src/gui/html/js/handlePromiseError.js:15
+#: src/gui/html/js/translateStaticText.js:115
+msgid "Error"
+msgstr "Fehler"
+
+#: src/gui/html/js/translateStaticText.js:17
 msgid "Active Plugin"
 msgstr "Aktives Plugin"
 
-#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:81
-#: resources/report/js/l10n.js:295
+#: src/gui/html/js/translateStaticText.js:18
+#: src/gui/html/js/translateStaticText.js:264
 msgid "Master File"
 msgstr "Master-Datei"
 
-#: resources/report/js/l10n.js:63 resources/report/js/l10n.js:82
+#: src/gui/html/js/translateStaticText.js:19
 msgid "Empty Plugin"
 msgstr "Leeres Plugin"
 
-#: resources/report/js/l10n.js:64 resources/report/js/l10n.js:83
-msgid "Loads BSA"
-msgstr "Lädt BSA"
+#: src/gui/html/js/translateStaticText.js:20
+msgid "Loads Archive"
+msgstr "Lädt Archiv"
 
-#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
+#: src/gui/html/js/translateStaticText.js:21
+#: src/gui/html/js/translateStaticText.js:89
 msgid "Has User Metadata"
 msgstr "Hat Benutzer-Metadaten"
 
-#: resources/report/js/l10n.js:67
-msgid "Show Only Conflicts"
-msgstr "Zeige nur Konflikte"
-
-#: resources/report/js/l10n.js:68
+#: src/gui/html/js/translateStaticText.js:23
 msgid "Edit Metadata"
 msgstr "Metadaten bearbeiten"
 
-#: resources/report/js/l10n.js:69
+#: src/gui/html/js/translateStaticText.js:24
 msgid "Copy Metadata"
 msgstr "Kopiere Metadaten"
 
-#: resources/report/js/l10n.js:70
+#: src/gui/html/js/translateStaticText.js:25
 msgid "Clear User Metadata"
 msgstr "Entferne Benutzer-Metadaten"
 
-#: resources/report/js/l10n.js:85
+#: src/gui/html/js/translateStaticText.js:32
 msgid "Enable Edits"
 msgstr "Aktiviere Änderungen"
 
-#: resources/report/js/l10n.js:86
-msgid ""
-"Global priorities are compared against all other plugins. Normal priorities "
-"are compared against only conflicting plugins."
-msgstr ""
-"Globale Prioritäten werden mit allen anderen Plugins verglichen. Normale "
-"Prioritäten werden nur mit inkompatiblen Plugins verglichen."
+#: src/gui/html/js/translateStaticText.js:33
+#: src/gui/html/js/translateStaticText.js:88
+msgid "Priority"
+msgstr "Priorität"
 
-#: resources/report/js/l10n.js:87 resources/report/js/l10n.js:139
+#: src/gui/html/js/translateStaticText.js:34
+#: src/gui/html/js/translateStaticText.js:87
 msgid "Global Priority"
 msgstr "Globale Priorität"
 
-#: resources/report/js/l10n.js:88
-msgid "Priority Value"
-msgstr "Prioritäts-Wert"
-
-#: resources/report/js/l10n.js:90
+#: src/gui/html/js/translateStaticText.js:36
 msgid "Main"
 msgstr "Allgemein"
 
-#: resources/report/js/l10n.js:91
+#: src/gui/html/js/translateStaticText.js:37
 msgid "Load After"
 msgstr "Lade Nach"
 
-#: resources/report/js/l10n.js:92
+#: src/gui/html/js/translateStaticText.js:38
 msgid "Requirements"
 msgstr "Voraussetzungen"
 
-#: resources/report/js/l10n.js:93
+#: src/gui/html/js/translateStaticText.js:39
 msgid "Incompatibilities"
 msgstr "Inkompatibilitäten"
 
-#: resources/report/js/l10n.js:94
+#: src/gui/html/js/translateStaticText.js:40
 msgid "Messages"
 msgstr "Nachrichten"
 
-#: resources/report/js/l10n.js:95
+#: src/gui/html/js/translateStaticText.js:41
 msgid "Bash Tags"
 msgstr "Bash Tags"
 
-#: resources/report/js/l10n.js:96
-msgid "Dirty Info"
-msgstr "Informationen über schmutzige Einträge"
+#: src/gui/html/js/translateStaticText.js:42
+msgid "Dirty Plugin Info"
+msgstr "Schmutzige Plugin Informationen"
 
-#: resources/report/js/l10n.js:97
+#: src/gui/html/js/translateStaticText.js:43
+msgid "Clean Plugin Info"
+msgstr "Saubere Plugin Informationen"
+
+#: src/gui/html/js/translateStaticText.js:44
 msgid "Locations"
 msgstr "Orte"
 
-#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
-#: resources/report/js/l10n.js:107
+#: src/gui/html/js/translateStaticText.js:46
+#: src/gui/html/js/translateStaticText.js:50
+#: src/gui/html/js/translateStaticText.js:54
 msgid "Filename"
 msgstr "Dateiname"
 
-#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
-#: resources/report/js/l10n.js:108
+#: src/gui/html/js/translateStaticText.js:47
+#: src/gui/html/js/translateStaticText.js:51
+#: src/gui/html/js/translateStaticText.js:55
 msgid "Display Name"
 msgstr "Anzeigename"
 
-#: resources/report/js/l10n.js:101 resources/report/js/l10n.js:105
-#: resources/report/js/l10n.js:109 resources/report/js/l10n.js:113
-#: resources/report/js/l10n.js:118
+#: src/gui/html/js/translateStaticText.js:48
+#: src/gui/html/js/translateStaticText.js:52
+#: src/gui/html/js/translateStaticText.js:56
+#: src/gui/html/js/translateStaticText.js:60
+#: src/gui/html/js/translateStaticText.js:65
 msgid "Condition"
 msgstr "Bedingung"
 
-#: resources/report/js/l10n.js:111
+#: src/gui/html/js/translateStaticText.js:58
 msgid "Type"
 msgstr "Typ"
 
-#: resources/report/js/l10n.js:112
+#: src/gui/html/js/translateStaticText.js:59
 msgid "Content"
 msgstr "Inhalt"
 
-#: resources/report/js/l10n.js:114 resources/report/js/l10n.js:283
+#: src/gui/html/js/translateStaticText.js:61
+#: src/gui/html/js/translateStaticText.js:252
 msgid "Language"
 msgstr "Sprache"
 
-#: resources/report/js/l10n.js:116
+#: src/gui/html/js/translateStaticText.js:63
 msgid "Add/Remove"
 msgstr "Hinzufügen/Entfernen"
 
-#: resources/report/js/l10n.js:117
+#: src/gui/html/js/translateStaticText.js:64
 msgid "Bash Tag"
 msgstr "Bash Tag"
 
-#: resources/report/js/l10n.js:120
+#: src/gui/html/js/translateStaticText.js:67
+#: src/gui/html/js/translateStaticText.js:73
 msgid "CRC"
 msgstr "CRC"
 
-#: resources/report/js/l10n.js:121
+#: src/gui/html/js/translateStaticText.js:68
 msgid "ITM Count"
 msgstr "ITM Anzahl"
 
-#: resources/report/js/l10n.js:122
+#: src/gui/html/js/translateStaticText.js:69
 msgid "Deleted References"
 msgstr "Gelöschte Referenzen"
 
-#: resources/report/js/l10n.js:123
+#: src/gui/html/js/translateStaticText.js:70
 msgid "Deleted Navmeshes"
 msgstr "Gelöschte Navmeshes"
 
-#: resources/report/js/l10n.js:124
+#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:74
 msgid "Cleaning Utility"
 msgstr "Bereinigungs-Tool"
 
-#: resources/report/js/l10n.js:126
+#: src/gui/html/js/translateStaticText.js:76
 msgid "URL"
 msgstr "URL"
 
-#: resources/report/js/l10n.js:127
-msgid "Version"
-msgstr "Version"
+#: src/gui/html/js/translateStaticText.js:77
+#: src/gui/html/js/translateStaticText.js:261
+msgid "Name"
+msgstr "Name"
 
-#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
-#: resources/report/js/l10n.js:305
-msgid "Apply"
-msgstr "Anwenden"
+#: src/gui/html/js/translateStaticText.js:79
+msgid "Save Metadata"
+msgstr "Metadaten speichern"
 
-#: resources/report/js/l10n.js:141
+#: src/gui/html/js/translateStaticText.js:80
+#: src/gui/html/js/translateStaticText.js:98
+#: src/gui/html/js/translateStaticText.js:182
+#: src/gui/html/js/translateStaticText.js:275
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/gui/html/js/translateStaticText.js:90
 msgid "Editor Is Open"
 msgstr "Editor ist geöffnet"
 
-#: resources/report/js/l10n.js:150
+#: src/gui/html/js/translateStaticText.js:97
+#: src/gui/html/js/translateStaticText.js:289
+msgid "OK"
+msgstr "OK"
+
+#: src/gui/html/js/translateStaticText.js:105
 msgid "A filename is required."
 msgstr "Ein Dateiname ist erforderlich."
 
-#: resources/report/js/l10n.js:151 resources/report/js/l10n.js:164
-#: resources/report/js/l10n.js:176 resources/report/js/l10n.js:190
-#: resources/report/js/l10n.js:200 resources/report/js/l10n.js:211
+#: src/gui/html/js/translateStaticText.js:106
+#: src/gui/html/js/translateStaticText.js:117
+#: src/gui/html/js/translateStaticText.js:127
+#: src/gui/html/js/translateStaticText.js:139
+#: src/gui/html/js/translateStaticText.js:148
+#: src/gui/html/js/translateStaticText.js:156
+#: src/gui/html/js/translateStaticText.js:165
 msgid "Delete Row"
 msgstr "Reihe löschen"
 
-#: resources/report/js/l10n.js:160
+#: src/gui/html/js/translateStaticText.js:113
 msgid "Note"
 msgstr "Notiz"
 
-#: resources/report/js/l10n.js:161
+#: src/gui/html/js/translateStaticText.js:114
 msgid "Warning"
 msgstr "Warnung"
 
-#: resources/report/js/l10n.js:163
+#: src/gui/html/js/translateStaticText.js:116
 msgid "A content string is required."
 msgstr "Ein Inhalts-String ist erforderlich."
 
-#: resources/report/js/l10n.js:173
+#: src/gui/html/js/translateStaticText.js:124
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: resources/report/js/l10n.js:174
+#: src/gui/html/js/translateStaticText.js:125
 msgid "Remove"
 msgstr "Entfernen"
 
-#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:209
+#: src/gui/html/js/translateStaticText.js:126
+#: src/gui/html/js/translateStaticText.js:163
 msgid "A name is required."
 msgstr "Ein Name ist erforderlich."
 
-#: resources/report/js/l10n.js:185
+#: src/gui/html/js/translateStaticText.js:134
+#: src/gui/html/js/translateStaticText.js:146
 msgid "A CRC is required."
 msgstr "Eine CRC-Summe ist erforderlich."
 
-#: resources/report/js/l10n.js:186 resources/report/js/l10n.js:187
-#: resources/report/js/l10n.js:188
+#: src/gui/html/js/translateStaticText.js:135
+#: src/gui/html/js/translateStaticText.js:136
+#: src/gui/html/js/translateStaticText.js:137
 msgid "Values must be integers."
 msgstr "Werte müssen ganze Zahlen sein."
 
-#: resources/report/js/l10n.js:189
+#: src/gui/html/js/translateStaticText.js:138
+#: src/gui/html/js/translateStaticText.js:147
 msgid "A utility name is required."
 msgstr "Ein Tool-Name ist erforderlich."
 
-#: resources/report/js/l10n.js:199
+#: src/gui/html/js/translateStaticText.js:155
 msgid "A link is required."
 msgstr "Ein Link ist erforderlich."
 
-#: resources/report/js/l10n.js:210
+#: src/gui/html/js/translateStaticText.js:164
 msgid "A folder is required."
 msgstr "Es wird ein Ordner benötigt."
 
-#: resources/report/js/l10n.js:220 resources/report/js/l10n.js:303
+#: src/gui/html/js/translateStaticText.js:172
+#: src/gui/html/js/translateStaticText.js:272
 msgid "Add New Row"
 msgstr "Neue Reihe hinzügen"
 
-#: resources/report/js/l10n.js:223
+#: src/gui/html/js/translateStaticText.js:178
 msgid "Jump To General Information"
 msgstr "Springe zu allgemeinen Informationen"
 
-#: resources/report/js/l10n.js:224
+#: src/gui/html/js/translateStaticText.js:179
 msgid "Sort Plugins"
 msgstr "Plugins sortieren"
 
-#: resources/report/js/l10n.js:225
+#: src/gui/html/js/translateStaticText.js:180
 msgid "Update Masterlist"
 msgstr "Aktualisiere Masterlist"
 
-#: resources/report/js/l10n.js:228
+#: src/gui/html/js/translateStaticText.js:181
+#: src/gui/html/js/translateStaticText.js:274
+msgid "Apply"
+msgstr "Anwenden"
+
+#: src/gui/html/js/translateStaticText.js:183
 msgid "Search Cards"
 msgstr "Suche Karten"
 
-#: resources/report/js/l10n.js:231
+#: src/gui/html/js/translateStaticText.js:186
 msgid "Redate Plugins"
 msgstr "Datiere Plugins neu"
 
-#: resources/report/js/l10n.js:232
+#: src/gui/html/js/translateStaticText.js:187
 msgid "Open Debug Log Location"
 msgstr "Öffne Debug-Log Pfad"
 
-#: resources/report/js/l10n.js:233
+#: src/gui/html/js/translateStaticText.js:188
 msgid "Clear All User Metadata"
 msgstr "Entferne alle Benutzer-Metadaten"
 
-#: resources/report/js/l10n.js:234
+#: src/gui/html/js/translateStaticText.js:189
 msgid "Copy Load Order"
 msgstr "Kopiere Ladereihenfolge"
 
-#: resources/report/js/l10n.js:235
+#: src/gui/html/js/translateStaticText.js:190
 msgid "Copy Content"
 msgstr "Kopiere Inhalt"
 
-#: resources/report/js/l10n.js:236
+#: src/gui/html/js/translateStaticText.js:191
 msgid "Refresh Content"
 msgstr "Aktualisiere Inhalt"
 
-#: resources/report/js/l10n.js:237
+#: src/gui/html/js/translateStaticText.js:192
 msgid "View Documentation"
 msgstr "Öffne Dokumentation"
 
-#: resources/report/js/l10n.js:238
+#: src/gui/html/js/translateStaticText.js:193
 msgid "About"
 msgstr "Über"
 
-#: resources/report/js/l10n.js:239 resources/report/js/l10n.js:275
+#: src/gui/html/js/translateStaticText.js:194
+#: src/gui/html/js/translateStaticText.js:244
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: resources/report/js/l10n.js:243
+#: src/gui/html/js/translateStaticText.js:198
 msgid "Search cards"
 msgstr "Suche Karten"
 
-#: resources/report/js/l10n.js:246
+#: src/gui/html/js/translateStaticText.js:203
 msgid "Plugins"
 msgstr "Plugins"
 
-#: resources/report/js/l10n.js:247
+#: src/gui/html/js/translateStaticText.js:204
 msgid "Filters"
 msgstr "Filter"
 
-#: resources/report/js/l10n.js:248
+#: src/gui/html/js/translateStaticText.js:205
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 "Drücken Sie Enter oder klicken Sie außerhalb der Eingabe, um den Filter zu "
 "setzen."
 
-#: resources/report/js/l10n.js:249
-msgid "Filter content..."
-msgstr "Filter Inhalt..."
+#: src/gui/html/js/translateStaticText.js:206
+msgid "Show only plugins with cards that contain"
+msgstr "Zeige nur Plugins mit Karten mit"
 
-#: resources/report/js/l10n.js:252
+#: src/gui/html/js/translateStaticText.js:207
+msgid "No text specified"
+msgstr "Kein Text angegeben"
+
+#: src/gui/html/js/translateStaticText.js:210
 msgid "Hide version numbers"
 msgstr "Versionsnummern ausblenden"
 
-#: resources/report/js/l10n.js:253
+#: src/gui/html/js/translateStaticText.js:211
 msgid "Hide CRCs"
 msgstr "CRCs ausblenden"
 
-#: resources/report/js/l10n.js:254
+#: src/gui/html/js/translateStaticText.js:212
 msgid "Hide Bash Tags"
 msgstr "Bash Tags ausblenden"
 
-#: resources/report/js/l10n.js:255
+#: src/gui/html/js/translateStaticText.js:213
 msgid "Hide notes"
 msgstr "Notizen ausblenden"
 
-#: resources/report/js/l10n.js:256
+#: src/gui/html/js/translateStaticText.js:214
 msgid "Hide 'Do not clean' messages"
 msgstr "'Nicht säubern'-Nachrichten ausblenden"
 
-#: resources/report/js/l10n.js:257
+#: src/gui/html/js/translateStaticText.js:215
 msgid "Hide all plugin messages"
 msgstr "Alle aktiven Plugins ausblenden"
 
-#: resources/report/js/l10n.js:258
+#: src/gui/html/js/translateStaticText.js:216
 msgid "Hide inactive plugins"
 msgstr "Inaktive Plugins ausblenden"
 
-#: resources/report/js/l10n.js:259
+#: src/gui/html/js/translateStaticText.js:217
 msgid "Hide messageless plugins"
 msgstr "Nachrichtenlose Plugins ausblenden"
 
-#: resources/report/js/l10n.js:260
+#: src/gui/html/js/translateStaticText.js:220
+msgid "Show only conflicting plugins for"
+msgstr "Zeige nur inkompatible Plugins für"
+
+#: src/gui/html/js/translateStaticText.js:221
+msgid "No plugin selected"
+msgstr "Kein Plugin ausgewählt"
+
+#: src/gui/html/js/translateStaticText.js:225
 msgid "Hidden plugins:"
 msgstr "Ausgeblendete Plugins:"
 
-#: resources/report/js/l10n.js:261
+#: src/gui/html/js/translateStaticText.js:226
 msgid "Hidden messages:"
 msgstr "Ausgeblendete Nachrichten:"
 
-#: resources/report/js/l10n.js:264
+#: src/gui/html/js/translateStaticText.js:231
 msgid "General Information"
 msgstr "Allgemeine Informationen"
 
-#: resources/report/js/l10n.js:265
+#: src/gui/html/js/translateStaticText.js:232
 msgid "Masterlist Revision"
 msgstr "Masterlist Revision"
 
-#: resources/report/js/l10n.js:266
+#: src/gui/html/js/translateStaticText.js:233
 msgid "Masterlist Date"
 msgstr "Masterlist Datum"
 
-#: resources/report/js/l10n.js:267
+#: src/gui/html/js/translateStaticText.js:234
 msgid "Warnings"
 msgstr "Warnungen"
 
-#: resources/report/js/l10n.js:268
+#: src/gui/html/js/translateStaticText.js:235
 msgid "Errors"
 msgstr "Fehler"
 
-#: resources/report/js/l10n.js:269
+#: src/gui/html/js/translateStaticText.js:236
 msgid "Total Messages"
 msgstr "Nachrichten insgesamt"
 
-#: resources/report/js/l10n.js:270
+#: src/gui/html/js/translateStaticText.js:237
 msgid "Active Plugins"
 msgstr "Aktive Plugins"
 
-#: resources/report/js/l10n.js:271
+#: src/gui/html/js/translateStaticText.js:238
 msgid "Dirty Plugins"
 msgstr "Schmutzige Plugins"
 
-#: resources/report/js/l10n.js:272
+#: src/gui/html/js/translateStaticText.js:239
 msgid "Total Plugins"
 msgstr "Plugins insgesamt"
 
-#: resources/report/js/l10n.js:278
+#: src/gui/html/js/translateStaticText.js:247
 msgid "Default Game"
 msgstr "Standard-Spiel"
 
-#: resources/report/js/l10n.js:279
+#: src/gui/html/js/translateStaticText.js:248
 msgid "Autodetect"
 msgstr "Automatisch erkennen"
 
-#: resources/report/js/l10n.js:284
+#: src/gui/html/js/translateStaticText.js:253
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "Spracheinstellungen werden wirksam nachdem LOOT neugestartet wird."
 
-#: resources/report/js/l10n.js:286
+#: src/gui/html/js/translateStaticText.js:255
 msgid "Enable debug logging"
 msgstr "Aktivere Debug-Logging"
 
-#: resources/report/js/l10n.js:287
+#: src/gui/html/js/translateStaticText.js:256
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "Die Ausgabe wird in die LOOTDebugLog.txt-Datei geloggt."
 
-#: resources/report/js/l10n.js:289
+#: src/gui/html/js/translateStaticText.js:258
 msgid "Update masterlist before sorting"
 msgstr "Aktualisiere Masterlist vor dem Sortieren"
 
-#: resources/report/js/l10n.js:292
-msgid "Name"
-msgstr "Name"
-
-#: resources/report/js/l10n.js:293
+#: src/gui/html/js/translateStaticText.js:262
 msgid "Base Game"
 msgstr "Grund-Spiel"
 
-#: resources/report/js/l10n.js:294
+#: src/gui/html/js/translateStaticText.js:263
 msgid "LOOT Folder"
 msgstr "LOOT Ordner"
 
-#: resources/report/js/l10n.js:296
+#: src/gui/html/js/translateStaticText.js:265
 msgid "Masterlist Repository URL"
 msgstr "Masterlist Repository URL"
 
-#: resources/report/js/l10n.js:297
+#: src/gui/html/js/translateStaticText.js:266
 msgid "Masterlist Repository Branch"
 msgstr "Masterlist Repository Branch"
 
-#: resources/report/js/l10n.js:298
+#: src/gui/html/js/translateStaticText.js:267
 msgid "Install Path"
 msgstr "Installationspfad"
 
-#: resources/report/js/l10n.js:299
+#: src/gui/html/js/translateStaticText.js:268
 msgid "Install Path Registry Key"
 msgstr "Installationspfad Registrierungsschlüssel"
 
-#: resources/report/js/l10n.js:310
+#: src/gui/html/js/translateStaticText.js:281
 msgid "First-Time Tips"
 msgstr "Anfänger-Tips"
 
-#: resources/report/js/l10n.js:312
+#: src/gui/html/js/translateStaticText.js:283
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -955,34 +570,33 @@ msgstr ""
 "CRCs werden erst angezeigt nachdem Plugins geladen wurden, entweder durch "
 "Konflikt Filter oder durch Sortierung."
 
-#: resources/report/js/l10n.js:313
+#: src/gui/html/js/translateStaticText.js:284
 msgid ""
-"Double-click a plugin in the sidebar to quickly open its metadata editor. "
-"Multiple metadata editors can be opened at once."
+"Double-click a plugin in the sidebar to quickly open it in the metadata "
+"editor."
 msgstr ""
-"Durch Doppelklick auf ein Plugin in der Sidebar wird direkt der Metadaten-"
-"Editor geöffnet. Es können mehrere Metadaten-Editoren gleichzeitig geöffnet "
-"werden."
+"Doppelklick auf ein Plugin in der Seitenleiste öffnet dieses direkt im "
+"Metadaten-Editor."
 
-#: resources/report/js/l10n.js:314
+#: src/gui/html/js/translateStaticText.js:285
 msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
-"\"requirements\" and \"incompatibility\" tables."
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Plugins können per Drag-and-Drop von der Sidebar in die Tabellen \"Lade nach"
-"\", \"Voraussetzungen\" und \"Inkompatibilitäten\" von Editoren geschoben "
-"werden."
+"Plugins können per Drag-and-Drop von der Seitenleiste in die Tabellen \"Lade "
+"Nach\", \"Voraussetzungen\" und \"Inkompatibilitäten\" des Metadaten-Editors "
+"platziert werden."
 
-#: resources/report/js/l10n.js:315
+#: src/gui/html/js/translateStaticText.js:286
 msgid ""
-"Some features are disabled while there is an editor open, or while there is "
-"a sorted load order that has not been applied or discarded."
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
 msgstr ""
-"Einige Features sind deaktiviert während der Editor geöffnet ist oder "
-"während es eine sortierte Ladereihenfolge gibt, die nicht angewandt oder "
-"verworfen wurde."
+"Einige Funktionen sind deaktiviert während der Metadaten-Editor geöffnet ist "
+"oder während es eine sortierte Ladereihenfolge gibt, die nicht gespeichert "
+"oder verworfen wurde."
 
-#: resources/report/js/l10n.js:316
+#: src/gui/html/js/translateStaticText.js:287
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -992,9 +606,564 @@ msgstr ""
 "ist, versuchen Sie, mit der Maus darüber zu fahren, um mehr zu erfahren. "
 "Außerdem kann die LOOT-Dokumentation über das Hauptmenü geöffnet werden."
 
-#: resources/report/js/loot.js:183 resources/report/js/loot.js:188
-msgid "N/A"
-msgstr "N/A"
+#: src/gui/query/get_game_data_query.h:44
+msgid "Parsing, merging and evaluating metadata..."
+msgstr "Parsen, Zusammenführen und Auswerten der Metadaten..."
+
+#: src/gui/query/get_game_data_query.h:79
+msgid ""
+"An error occurred while parsing the masterlist: %1%. This probably happened "
+"because an update to LOOT changed its metadata syntax support. Try updating "
+"your masterlist to resolve the error."
+msgstr ""
+"Beim Parsen der Masterlist ist ein Fehler aufgetreten: %1%. Die Ursache "
+"dafür ist wahrscheinlich, dass ein LOOT-Update die Unterstützung der "
+"Metadaten-Syntax verändert hat. Versuchen Sie, die Masterlist zu "
+"aktualisieren, um den Fehler zu beheben."
+
+#: src/gui/query/get_game_data_query.h:93
+msgid ""
+"An error occurred while parsing the userlist: %1%. This probably happened "
+"because an update to LOOT changed its metadata syntax support. Your user "
+"metadata will have to be updated manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"Beim Parsen der Benutzerliste ist ein Fehler aufgetreten: %1%. Der Fehler "
+"ist wahrscheinlich aufgetreten, weil ein LOOT-Update die Unterstützung von "
+"Medaten-Syntax verändert hat. Ihre Benutzer-Metadaten müssen manuell "
+"aktualisiert werden.\n"
+"\n"
+"Klicken Sie dazu auf 'Öffne Debug-Log Pfad' im Hauptmenü von LOOT, um den "
+"Daten-Ordner zu öffnen, dann öffnen Sie die Datei 'userlist.yaml' im "
+"betroffenen Spiele-Ordner. Nun können Sie die enthaltenen Metadaten "
+"bearbeiten mit Hilfe der Dokumentation, die über das Hauptmenü von LOOT "
+"geöffnet werden kann.\n"
+"\n"
+"Sie können auch Hilfe über den LOOT Forumsbeitrag bekommen, welcher auf der "
+"[LOOT Webseite](https://loot.github.io/) verlinkt ist."
+
+#: src/gui/query/metadata_query.h:79 src/gui/query/metadata_query.h:80
+msgid "(edited)"
+msgstr "(bearbeitet)"
+
+#: src/gui/query/metadata_query.h:101
+msgid ""
+"A global message contains a condition that could not be evaluated. Details: "
+"%1%"
+msgstr ""
+"Eine globale Nachricht enthält eine Bedingung, die nicht ausgewertet werden "
+"konnte. Details: %1%"
+
+#: src/gui/query/metadata_query.h:127 src/backend/plugin/plugin_sorter.cpp:219
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+"\"%1%\" enthält eine Bedingung, die nicht ausgewertet werden konnte. "
+"Details: %2%"
+
+#: src/gui/query/sort_plugins_query.h:48
+msgid "Loading plugin contents..."
+msgstr "Lade Plugin Inhalte..."
+
+#: src/gui/query/sort_plugins_query.h:68
+msgid "Sorting load order..."
+msgstr "Sortiere Ladereihenfolge..."
+
+#: src/backend/app/loot_paths.cpp:84
+msgid "Failed to get %LOCALAPPDATA% path."
+msgstr "Fehler beim Öffnen des Pfades %LOCALAPPDATA%."
+
+#: src/backend/app/loot_state.cpp:124
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr ""
+"Fehler: Die LOOT Konfigurations-Datei konnte nicht erstellt werden. %1%"
+
+#: src/backend/app/loot_state.cpp:131
+msgid "Error: Settings parsing failed. %1%"
+msgstr "Fehler: Die Einstellungen konnten nicht gelesen werden. %1%"
+
+#: src/backend/app/loot_state.cpp:193
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr ""
+"Fehler: Spielspezifische Einstellungen konnten nicht initialisiert werden. "
+"%1%"
+
+#: src/backend/app/loot_state.cpp:272
+msgid "None of the supported games were detected."
+msgstr "Keines der unterstützten Spiele wurde erkannt."
+
+#: src/backend/game/game.cpp:61
+msgid "Invalid game ID supplied."
+msgstr "Ungültige Spiel-ID übergeben."
+
+#: src/backend/game/game.cpp:68
+msgid "Game path could not be detected."
+msgstr "Spielpfad konnte nicht ermittelt werden."
+
+#: src/backend/game/game.cpp:78
+msgid "Could not create LOOT folder for game. Details:"
+msgstr "Konnte den LOOT-Ordner für das Spiel nicht erzeugen. Details:"
+
+#: src/backend/game/load_order_handler.cpp:49
+msgid "Unsupported game ID supplied."
+msgstr "Nicht unterstützte Spiel-ID übergeben."
+
+#: src/backend/game/load_order_handler.cpp:54
+msgid "Game path is not initialised."
+msgstr "Spielpfad ist nicht initialisiert."
+
+#: src/backend/game/load_order_handler.cpp:88
+msgid ""
+"libloadorder failed to create a game handle. Details could not be fetched."
+msgstr ""
+"libloadorder konnte keine Spiel-Referenz anlegen. Es konnten keine Details "
+"ermittelt werden."
+
+#: src/backend/game/load_order_handler.cpp:91
+msgid "libloadorder failed to create a game handle. Details:"
+msgstr "libloadorder konnte keine Spiel-Referenz anlegen. Details:"
+
+#: src/backend/game/load_order_handler.cpp:109
+msgid ""
+"libloadorder failed to check if a plugin is active. Details could not be "
+"fetched."
+msgstr ""
+"libloadorder konnte nicht prüfen, ob ein Plugin aktiv ist. Es konnten keine "
+"Details ermittelt werden."
+
+#: src/backend/game/load_order_handler.cpp:112
+msgid "libloadorder failed to check if a plugin is active. Details:"
+msgstr "libloadorder konnte nicht prüfen, ob ein Plugin aktiv ist. Details:"
+
+#: src/backend/game/load_order_handler.cpp:134
+msgid ""
+"libloadorder failed to get the load order. Details could not be fetched."
+msgstr ""
+"libloadorder konnte die Ladereihenfolge nicht ermitteln. Es konnten keine "
+"Details ermittelt werden."
+
+#: src/backend/game/load_order_handler.cpp:137
+msgid "libloadorder failed to get the load order. Details:"
+msgstr "libloadorder konnte die Ladereihenfolge nicht verändern. Details:"
+
+#: src/backend/game/load_order_handler.cpp:160
+msgid ""
+"libloadorder failed to set the load order. Details could not be fetched."
+msgstr ""
+"libloadorder konnte die Ladereihenfolge nicht verändern. Es konnten keine "
+"Details ermittelt werden."
+
+#: src/backend/game/load_order_handler.cpp:163
+msgid "libloadorder failed to set the load order. Details:"
+msgstr "libloadorder konnte die Ladereihenfolge nicht verändern. Details:"
+
+#: src/backend/helpers/git_helper.cpp:105
+msgid "Git operation failed. Error: %1%"
+msgstr "Git-Operation ist fehlgeschalgen. Fehler: %1%"
+
+#: src/backend/helpers/git_helper.cpp:146
+msgid ""
+"An error occurred while trying to clone the remote masterlist repository."
+msgstr ""
+"Beim Klonen des Remote Masterlist Repository ist ein Fehler aufgetreten."
+
+#: src/backend/helpers/git_helper.cpp:195
+msgid ""
+"An error occurred while trying to update the masterlist. This could be due "
+"to a server-side error. Try again in a few minutes."
+msgstr ""
+"Beim Aktualisieren der Masterlist ist ein Fehler aufgetreten. Die Ursache "
+"könnte ein Fehler auf Server-Seite sein. Versuchen Sie es in wenigen Minuten "
+"erneut."
+
+#: src/backend/helpers/helpers.cpp:81
+msgid "Unable to open \"%1%\" for CRC calculation."
+msgstr "Konnte \"%1%\" zur Berechnung der CRC-Prüfsumme nicht öffnen."
+
+#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
+msgid "Failed to open file in its default application."
+msgstr "Die Datei konnte nicht mit der Standard-Anwendung geöffnet werden."
+
+#: src/backend/metadata/condition_evaluator.cpp:170
+msgid "Invalid file path:"
+msgstr "Ungültiger Dateipfad:"
+
+#: src/backend/metadata/condition_evaluator.cpp:180
+#: src/backend/metadata/condition_evaluator.cpp:220
+msgid "Invalid regex string \"%1%\": %2%"
+msgstr "Ungültiger regulärer Ausdruck \"%1%\": %2%"
+
+#: src/backend/metadata/condition_grammar.h:203
+msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
+msgstr ""
+"Fehler beim Parsen von Bedingung \"%1%\": erwartete \"%2%\" an \"%3%\"."
+
+#: src/backend/metadata/conditional_metadata.cpp:91
+msgid ""
+"Failed to parse condition \"%1%\": only partially matched expected syntax."
+msgstr ""
+"Fehler beim Parsen von Bedingung \"%1%\": entspricht nur teilweise der "
+"erwarteten Syntax."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:88
+msgid ""
+"%1% found %2% ITM records, %3% deleted references and %4% deleted navmeshes."
+msgstr ""
+"%1% hat %2% ITM Einträge, %3% gelöschte Referenzen und %4% gelöschte "
+"Navmeshes gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:90
+msgid "%1% found dirty edits."
+msgstr "%1% hat schmutzige Änderungen gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:93
+msgid "%1% found %2% deleted references and %3% deleted navmeshes."
+msgstr "%1% hat %2% gelöschte Referenzen und %3% gelöschte Navmeshes gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:95
+msgid "%1% found %2% deleted navmeshes."
+msgstr "%1% hat %2% gelöschte Navmeshes gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:97
+msgid "%1% found %2% deleted references."
+msgstr "%1% hat %2% gelöschte Referenzen gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:100
+msgid "%1% found %2% ITM records and %3% deleted navmeshes."
+msgstr "%1% hat %2% ITM Einträge und %3% gelöscht Navmeshes gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:102
+msgid "%1% found %2% ITM records."
+msgstr "%1% hat %2% ITM Einträge gefunden."
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:105
+msgid "%1% found %2% ITM records and %3% deleted references."
+msgstr "%1% hat %2% ITM Einträge und %3% gelöscht Referenzen gefunden."
+
+#: src/backend/plugin/plugin.cpp:115
+msgid "Cannot read \"%1%\". Details: %2%"
+msgstr "Kann \"%1%\" nicht lesen. Details: %2%"
+
+#: src/backend/plugin/plugin.cpp:221 src/backend/plugin/plugin.cpp:232
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "Für dieses Plugin muss \"%1%\" installiert sein, dieses fehlt aber."
+
+#: src/backend/plugin/plugin.cpp:224
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "Für dieses Plugin muss \"%1%\" aktiv sein, dieses ist aber inaktiv."
+
+#: src/backend/plugin/plugin.cpp:238
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr ""
+"Dieses Plugin ist inkompatibel mit \"%1%\", es sind jedoch beide vorhanden."
+
+#: src/backend/plugin/plugin_sorter.cpp:84
+msgid ""
+"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
+"%3%"
+msgstr ""
+"Zyklische Interaktion festgestellt zwischen Plugins \"%1%\" und \"%2%\". "
+"Rückwärts-Zyklus: %3%"
+
+#: src/backend/masterlist.cpp:44
+msgid ""
+"An error occurred while trying to read the local masterlist's version. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+"Beim Lesen der lokalen Masterlist-Version ist ein Fehler aufgetreten. Falls "
+"dieser Fehler erneut auftritt, kann es helfen, den \".git\" Ordner zu "
+"löschen in %1%."
+
+#: src/backend/masterlist.cpp:48
+msgid "N/A: No masterlist present"
+msgstr "N/A: Keine Masterlist vorhanden"
+
+#: src/backend/masterlist.cpp:51
+msgid "Unknown: Git repository missing"
+msgstr "Unbekannt: Git Repository fehlt"
+
+#: src/backend/masterlist.cpp:116 src/backend/masterlist.cpp:130
+msgid ""
+"An error occurred while trying to access the local masterlist repository. If "
+"this error happens again, try deleting the \".git\" folder in %1%."
+msgstr ""
+"Beim Zugriff auf das lokale Masterlist Repository ist ein Fehler "
+"aufgetreten. Falls dieser Fehler erneut auftritt, kann es helfen, den \".git"
+"\" Ordner zu löschen in %1%."
+
+#: src/backend/masterlist.cpp:237
+msgid ""
+"An error occurred while trying to read information on the updated "
+"masterlist. If this error happens again, try deleting the \".git\" folder in "
+"%1%."
+msgstr ""
+"Beim Lesen der Informationen über die aktualisierte Masterlist ist ein "
+"Fehler aufgetreten. Falls dieser Fehler erneut auftritt, kann es helfen, den "
+"\".git\" Ordner zu löschen in %1%."
+
+#: src/backend/masterlist.cpp:251
+msgid "Masterlist revision"
+msgstr "Revision der Masterlist"
+
+#: src/backend/masterlist.cpp:255
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+"Die neueste Masterlist Revision enthält Syntax-Fehler, LOOT benutzt "
+"stattdessen die letzte fehlerfreie Revision. Syntax-Fehler sind "
+"normalerweise minderschwer und werden zumeist innerhalb weniger Stunden "
+"behoben."
+
+#~ msgid ""
+#~ "libloadorder failed to initialise game master file support. Details could "
+#~ "not be fetched."
+#~ msgstr ""
+#~ "libloadorder konnte die Unterstützung für die Spiel-Stammdatei nicht "
+#~ "initialisieren. Es konnten keine Details ermittelt werden."
+
+#~ msgid "libloadorder failed to initialise game master file support. Details:"
+#~ msgstr ""
+#~ "libloadorder konnte die Unterstützung für die Spiel-Stammdatei nicht "
+#~ "initialisieren. Details:"
+
+#~ msgid ""
+#~ "libloadorder failed to get the active plugins list. Details could not be "
+#~ "fetched."
+#~ msgstr ""
+#~ "libloadorder konnte die Liste der aktiven Plugins nicht laden. Es konnten "
+#~ "keine Details ermittelt werden."
+
+#~ msgid "libloadorder failed to get the active plugins list. Details:"
+#~ msgstr ""
+#~ "libloadorder konnte die Liste der aktiven Plugins nicht laden. Details: "
+
+#~ msgid "An exception occurred while loading this plugin. Details: "
+#~ msgstr "Beim Laden des Plugins ist ein Fehler aufgetreten. Details: "
+
+#~ msgid "An exception occurred while loading this plugin. Details:"
+#~ msgstr "Beim Laden des Plugins ist ein Fehler aufgetreten. Details: "
+
+#~ msgid "Building plugin graph..."
+#~ msgstr "Konstruiere Plugin-Graphen..."
+
+#~ msgid "Adding edges to plugin graph and performing topological sort..."
+#~ msgstr ""
+#~ "Füge Kanten zum Plugin-Graphen hinzu und führe topologische Sortierung "
+#~ "aus..."
+
+#~ msgid "Object memory already allocated!"
+#~ msgstr "Objekt-Speicher bereits alloziert!"
+
+#~ msgid "Tree memory already allocated!"
+#~ msgstr "Baum-Speicher bereits alloziert!"
+
+#~ msgid "Diff memory already allocated!"
+#~ msgstr "Diff-Speicher bereits alloziert!"
+
+#~ msgid "Repository handle not open!"
+#~ msgstr "Repository-Handle nicht geöffnet!"
+
+#~ msgid "Rolled back to the previous revision."
+#~ msgstr "Auf die vorherige Revision zurückgerollt."
+
+#~ msgid "Failed to parse condition \"%1%\": %2%"
+#~ msgstr "Fehler beim Parsen der Bedingung \"%1%\": %2%"
+
+#~ msgid "Failed to parse condition \"%1%\"."
+#~ msgstr "Fehler beim Parsen der Bedingung \"%1%\"."
+
+#~ msgid ""
+#~ "Contains %1% ITM records, %2% deleted references and %3% deleted "
+#~ "navmeshes. Clean with %4%."
+#~ msgstr ""
+#~ "Enthält %1% ITM Einträge, %2% gelöschte Referenzen und %3% gelöschte "
+#~ "Navmeshes. Säubern mit %4%."
+
+#~ msgid "Clean with %1%."
+#~ msgstr "Säubern mit %1%."
+
+#~ msgid ""
+#~ "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "Enthält %1% gelöschte Referenzen und %2% gelöschte Navmeshes. Säubern mit "
+#~ "%3%."
+
+#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
+#~ msgstr "Enthält %1% gelöschte Navmeshes. Säubern mit %2%."
+
+#~ msgid "Contains %1% deleted references. Clean with %2%."
+#~ msgstr "Enthält %1% gelöschte Referenzen. Säubern mit %2%."
+
+#~ msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "Enthält %1% ITM Einträge und %2% gelöschte Navmeshes. Säubern mit %3%."
+
+#~ msgid "Contains %1% ITM records. Clean with %2%."
+#~ msgstr "Enthält %1% ITM Einträge. Säubern mit %2%."
+
+#~ msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+#~ msgstr ""
+#~ "Enthält %1% ITM Einträge und %2% gelöschte Referenzen. Säubern mit %3%."
+
+#~ msgid "Error: Games' settings parsing failed. %1%"
+#~ msgstr ""
+#~ "Fehler: Die Einstellungen des Spiels konnten nicht gelesen werden. %1%"
+
+#~ msgid "Failed to change game. Details: %1%"
+#~ msgstr "Das Spiel konnte nicht gewechselt werden. Details: %1%"
+
+#~ msgid "Failed to copy plugin metadata. Details: %1%"
+#~ msgstr "Die Plugin Metadaten konnten nicht kopiert werden. Details: %1%"
+
+#~ msgid "Checking for conflicting plugins..."
+#~ msgstr "Prüfe auf inkompatible Plugins..."
+
+#~ msgid "Shell execute failed."
+#~ msgstr "Shell-Ausführung fehlgeschlagen."
+
+#~ msgid "Loading plugin headers..."
+#~ msgstr "Lade Plugin Header..."
+
+#~ msgid "Parsing masterlist..."
+#~ msgstr "Parse Masterlist..."
+
+#~ msgid "An error occurred while parsing the masterlist: %1%"
+#~ msgstr "Beim Parsen der Masterlist ist ein Fehler aufgetreten: %1%"
+
+#~ msgid "Parsing userlist..."
+#~ msgstr "Parse Benutzerliste..."
+
+#~ msgid "An error occurred while parsing the userlist: %1%"
+#~ msgstr "Beim Parsen der Benutzerliste ist ein Fehler aufgetreten: %1%"
+
+#~ msgid "Merging and evaluating plugin metadata..."
+#~ msgstr "Die Plugin Metadaten werden zusammengeführt und evaluiert..."
+
+#~ msgid "Loading general messages..."
+#~ msgstr "Lade allgemeine Nachrichten..."
+
+#~ msgid "Failed to get game data. Details: %1%"
+#~ msgstr "Die Spieldaten konnten nicht geladen werden. Details: %1%"
+
+#~ msgid "Updating and parsing masterlist..."
+#~ msgstr "Update und Parsen der Masterlist..."
+
+#~ msgid "Regenerating displayed content..."
+#~ msgstr "Aktualisiere angezeigte Inhalte..."
+
+#~ msgid "Failed to update the masterlist. Details: %1%"
+#~ msgstr "Die Masterlist konnte nicht aktualisiert werden. Details: %1%"
+
+#~ msgid "Failed to sort plugins. Details: %1%"
+#~ msgstr "Die Plugins konnten nicht sortiert werden. Details: %1%"
+
+#~ msgid "Invalid folder path:"
+#~ msgstr "Ungültiger Ordnerpfad:"
+
+#~ msgid "Invalid regex string:"
+#~ msgstr "Ungültiger regulärer Ausdruck:"
+
+#~ msgid "Expected \"%1%\" at \"%2%\"."
+#~ msgstr "Erwartete \"%1%\" an \"%2%\"."
+
+#~ msgid "Loading game data..."
+#~ msgstr "Lade Spieldaten..."
+
+#~ msgid "Masterlist updated to revision %s."
+#~ msgstr "Masterlist aktualisiert auf Revision %s."
+
+#~ msgid "Updating masterlist..."
+#~ msgstr "Aktualisiere Masterlist..."
+
+#~ msgid "Sorting plugins..."
+#~ msgstr "Sortiere Plugins..."
+
+#~ msgid "The metadata for \"%s\" has been copied to the clipboard."
+#~ msgstr "Die Metadaten für \"%s\" wurden in die Zwischenablage kopiert."
+
+#~ msgid ""
+#~ "Are you sure you want to clear all existing user-added metadata from \"%s"
+#~ "\"?"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie alle bestehenden vom Benutzer hinzugefügten "
+#~ "Metadaten von \"%s\" entfernen wollen?"
+
+#~ msgid "The user-added metadata for \"%s\" has been cleared."
+#~ msgstr ""
+#~ "Die vom Benutzer hinzugefügten Metadaten von \"%s\" wurden entfernt."
+
+#~ msgid "Refreshing data..."
+#~ msgstr "Aktualisiere Daten..."
+
+#~ msgid "Checking if plugins have been loaded..."
+#~ msgstr "Prüfe, ob Plugins geladen wurden..."
+
+#~ msgid ""
+#~ "You have not yet applied or cancelled your %s. Are you sure you want to "
+#~ "quit?"
+#~ msgstr ""
+#~ "Sie haben noch nicht ihre %s angewandt oder abgebrochen. Sind Sie sicher, "
+#~ "dass Sie beenden wollen?"
+
+#~ msgid "unknown"
+#~ msgstr "unbekannt"
+
+#~ msgid "Loads BSA"
+#~ msgstr "Lädt BSA"
+
+#~ msgid "Show Only Conflicts"
+#~ msgstr "Zeige nur Konflikte"
+
+#~ msgid ""
+#~ "Global priorities are compared against all other plugins. Normal "
+#~ "priorities are compared against only conflicting plugins."
+#~ msgstr ""
+#~ "Globale Prioritäten werden mit allen anderen Plugins verglichen. Normale "
+#~ "Prioritäten werden nur mit inkompatiblen Plugins verglichen."
+
+#~ msgid "Priority Value"
+#~ msgstr "Prioritäts-Wert"
+
+#~ msgid "Dirty Info"
+#~ msgstr "Informationen über schmutzige Einträge"
+
+#~ msgid "Version"
+#~ msgstr "Version"
+
+#~ msgid "Filter content..."
+#~ msgstr "Filter Inhalt..."
+
+#~ msgid ""
+#~ "Double-click a plugin in the sidebar to quickly open its metadata editor. "
+#~ "Multiple metadata editors can be opened at once."
+#~ msgstr ""
+#~ "Durch Doppelklick auf ein Plugin in der Sidebar wird direkt der Metadaten-"
+#~ "Editor geöffnet. Es können mehrere Metadaten-Editoren gleichzeitig "
+#~ "geöffnet werden."
+
+#~ msgid ""
+#~ "Plugins can be drag and dropped from the sidebar into editors' \"load "
+#~ "after\", \"requirements\" and \"incompatibility\" tables."
+#~ msgstr ""
+#~ "Plugins können per Drag-and-Drop von der Sidebar in die Tabellen \"Lade "
+#~ "nach\", \"Voraussetzungen\" und \"Inkompatibilitäten\" von Editoren "
+#~ "geschoben werden."
+
+#~ msgid ""
+#~ "Some features are disabled while there is an editor open, or while there "
+#~ "is a sorted load order that has not been applied or discarded."
+#~ msgstr ""
+#~ "Einige Features sind deaktiviert während der Editor geöffnet ist oder "
+#~ "während es eine sortierte Ladereihenfolge gibt, die nicht angewandt oder "
+#~ "verworfen wurde."
 
 #~ msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
 #~ msgstr ""
@@ -1028,9 +1197,6 @@ msgstr "N/A"
 
 #~ msgid "Plugin"
 #~ msgstr "Plugin"
-
-#~ msgid "Priority"
-#~ msgstr "Priorität"
 
 #~ msgid "Otherwise, priorities are only compared between conflicting plugins."
 #~ msgstr ""
