@@ -35,12 +35,6 @@ using std::recursive_mutex;
 using std::string;
 
 namespace loot {
-const std::set<std::string> LootSettings::oldDefaultBranches({
-  "master",
-  "v0.7",
-  "v0.8",
-});
-
 LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0) {}
 
 LootSettings::LootSettings() :
@@ -280,7 +274,7 @@ void LootSettings::upgradeYaml(YAML::Node& yaml) {
             // Update existing default branch, if the default
             // repositories are used.
           if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL()
-              && oldDefaultBranches.count(settings.RepoBranch()) == 1) {
+              && settings.IsRepoBranchOldDefault()) {
             settings.SetRepoBranch(GameSettings(settings.Type()).RepoBranch());
           }
         }

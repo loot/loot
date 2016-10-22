@@ -71,8 +71,6 @@ public:
 
   YAML::Node toYaml() const;
 private:
-  static const std::set<std::string> oldDefaultBranches;
-
   static void upgradeYaml(YAML::Node& yaml);
 
   bool enableDebugLogging_;

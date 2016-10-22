@@ -98,6 +98,19 @@ TEST_P(GameSettingsTest, isInstalledShouldBeTrueIfGamePathIsValid) {
   EXPECT_TRUE(settings_.IsInstalled());
 }
 
+TEST_P(GameSettingsTest, isRepoBranchOldDefaultShouldBeTrueIfValueIsMaster) {
+  settings_ = GameSettings(GameType::tes5);
+  settings_.SetRepoBranch("master");
+
+  EXPECT_TRUE(settings_.IsRepoBranchOldDefault());
+}
+
+TEST_P(GameSettingsTest, isRepoBranchOldDefaultShouldBeFalseIfValueIsTheDefault) {
+  settings_ = GameSettings(GameType::tes5);
+
+  EXPECT_FALSE(settings_.IsRepoBranchOldDefault());
+}
+
 TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
   GameSettings game1 = GameSettings(GameType::tes5, "game1")
     .SetMaster("master1")

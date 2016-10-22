@@ -34,6 +34,12 @@
 namespace fs = boost::filesystem;
 
 namespace loot {
+const std::set<std::string> GameSettings::oldDefaultBranches({
+  "master",
+  "v0.7",
+  "v0.8",
+});
+
 GameSettings::GameSettings() : type_(GameType::tes4) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) : type_(gameCode), repositoryBranch_("v0.10") {
@@ -99,6 +105,10 @@ bool GameSettings::IsInstalled() {
   }
 
   return false;
+}
+
+bool GameSettings::IsRepoBranchOldDefault() const {
+  return oldDefaultBranches.count(repositoryBranch_) == 1;
 }
 
 bool GameSettings::operator == (const GameSettings& rhs) const {
