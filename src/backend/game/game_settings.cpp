@@ -36,42 +36,37 @@ namespace fs = boost::filesystem;
 namespace loot {
 GameSettings::GameSettings() : type_(GameType::tes4) {}
 
-GameSettings::GameSettings(const GameType gameCode, const std::string& folder) : type_(gameCode) {
+GameSettings::GameSettings(const GameType gameCode, const std::string& folder) : type_(gameCode), repositoryBranch_("v0.10") {
   if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
     repositoryURL_ = "https://github.com/loot/oblivion.git";
-    repositoryBranch_ = "v0.10";
   } else if (Type() == GameType::tes5) {
     name_ = "TES V: Skyrim";
     registryKey_ = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
     repositoryURL_ = "https://github.com/loot/skyrim.git";
-    repositoryBranch_ = "v0.10";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
     registryKey_ = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
     repositoryURL_ = "https://github.com/loot/fallout3.git";
-    repositoryBranch_ = "v0.10";
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
     registryKey_ = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
     repositoryURL_ = "https://github.com/loot/falloutnv.git";
-    repositoryBranch_ = "v0.10";
   } else if (Type() == GameType::fo4) {
     name_ = "Fallout 4";
     registryKey_ = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
     repositoryURL_ = "https://github.com/loot/fallout4.git";
-    repositoryBranch_ = "v0.10";
   }
 
   if (!folder.empty())
