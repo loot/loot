@@ -145,7 +145,11 @@
   }
 
   function handleInitErrors(error) {
-    dom.listInitErrors(JSON.parse(error.message));
+    if (error.constructor === Array) {
+      dom.listInitErrors(JSON.parse(error.message));
+    } else {
+      dom.listInitErrors([error.message]);
+    }
     Dialog.closeProgress();
     dom.openDialog('settingsDialog');
   }
