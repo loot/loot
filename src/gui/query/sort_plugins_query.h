@@ -51,7 +51,9 @@ public:
     //Sort plugins into their load order.
     std::vector<Plugin> plugins = sortPlugins();
 
-    if ((state_.getCurrentGame().Type() == GameType::tes5 || state_.getCurrentGame().Type() == GameType::fo4))
+    if ((state_.getCurrentGame().Type() == GameType::tes5 
+         || state_.getCurrentGame().Type() == GameType::fo4
+         || state_.getCurrentGame().Type() == GameType::tes5se))
       applyUnchangedLoadOrder(plugins);
 
     std::string json = generateJsonResponse(plugins);

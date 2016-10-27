@@ -196,7 +196,7 @@ private:
   inline std::string getMasterFile() const {
     if (GetParam() == GameType::tes4)
       return "Oblivion.esm";
-    else if (GetParam() == GameType::tes5)
+    else if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5se)
       return "Skyrim.esm";
     else if (GetParam() == GameType::fo3)
       return "Fallout3.esm";
@@ -216,9 +216,10 @@ private:
   void setLoadOrder(const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     boost::filesystem::ofstream out(localPath / "plugins.txt");
     for (const auto &plugin : loadOrder) {
-      if (GetParam() == GameType::fo4 && plugin.second)
-        out << '*';
-      else if (GetParam() != GameType::fo4 && !plugin.second)
+      if (GetParam() == GameType::fo4 || GetParam() == GameType::tes5se) {
+        if (plugin.second)
+          out << '*';
+      } else if (!plugin.second)
         continue;
 
       out << plugin.first << std::endl;

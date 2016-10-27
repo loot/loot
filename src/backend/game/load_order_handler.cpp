@@ -41,14 +41,6 @@ LoadOrderHandler::~LoadOrderHandler() {
 }
 
 void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData) {
-  if (game.Type() != GameType::tes4
-      && game.Type() != GameType::tes5
-      && game.Type() != GameType::fo3
-      && game.Type() != GameType::fonv
-      && game.Type() != GameType::fo4) {
-    throw std::invalid_argument(translate("Unsupported game ID supplied.").str());
-  }
-
   if (game.GamePath().empty()) {
     BOOST_LOG_TRIVIAL(error) << "Game path is not initialised.";
     throw std::invalid_argument(translate("Game path is not initialised.").str());
@@ -70,6 +62,8 @@ void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::p
     ret = lo_create_handle(&gh_, LIBLO_GAME_TES4, game.GamePath().string().c_str(), gameLocalDataPath);
   else if (game.Type() == GameType::tes5)
     ret = lo_create_handle(&gh_, LIBLO_GAME_TES5, game.GamePath().string().c_str(), gameLocalDataPath);
+  else if (game.Type() == GameType::tes5se)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_TES5SE, game.GamePath().string().c_str(), gameLocalDataPath);
   else if (game.Type() == GameType::fo3)
     ret = lo_create_handle(&gh_, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
   else if (game.Type() == GameType::fonv)

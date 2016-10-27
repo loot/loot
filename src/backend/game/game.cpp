@@ -57,10 +57,6 @@ Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings), plugi
 Game::Game(const GameType gameType, const std::string& folder) : GameSettings(gameType, folder), pluginsFullyLoaded_(false) {}
 
 void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
-  if (Type() != GameType::tes4 && Type() != GameType::tes5 && Type() != GameType::fo3 && Type() != GameType::fonv && Type() != GameType::fo4) {
-    throw std::invalid_argument(translate("Invalid game ID supplied.").str());
-  }
-
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
 
   if (!this->IsInstalled()) {

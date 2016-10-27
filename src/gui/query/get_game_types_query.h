@@ -43,6 +43,7 @@ private:
 
     temp.push_back(GameSettings(GameType::tes4).FolderName());
     temp.push_back(GameSettings(GameType::tes5).FolderName());
+    temp.push_back(GameSettings(GameType::tes5se).FolderName());
     temp.push_back(GameSettings(GameType::fo3).FolderName());
     temp.push_back(GameSettings(GameType::fonv).FolderName());
     temp.push_back(GameSettings(GameType::fo4).FolderName());

@@ -41,6 +41,7 @@ LootSettings::LootSettings() :
   gameSettings_({
       GameSettings(GameType::tes4),
       GameSettings(GameType::tes5),
+      GameSettings(GameType::tes5se),
       GameSettings(GameType::fo3),
       GameSettings(GameType::fonv),
       GameSettings(GameType::fo4),
@@ -91,6 +92,9 @@ void LootSettings::load(YAML::Node& settings) {
 
     if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::tes5)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::tes5));
+
+    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::tes5se)) == end(gameSettings_))
+        gameSettings_.push_back(GameSettings(GameType::tes5se));
 
     if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::fo3)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::fo3));

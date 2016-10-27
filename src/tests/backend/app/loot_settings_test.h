@@ -50,6 +50,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   const std::vector<GameSettings> expectedGameSettings({
       GameSettings(GameType::tes4),
       GameSettings(GameType::tes5),
+      GameSettings(GameType::tes5se),
       GameSettings(GameType::fo3),
       GameSettings(GameType::fonv),
       GameSettings(GameType::fo4),
@@ -301,6 +302,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldAddMissingBaseGames) {
   const std::vector<GameSettings> expectedGameSettings({
       GameSettings(GameType::tes4),
       GameSettings(GameType::tes5),
+      GameSettings(GameType::tes5se),
       GameSettings(GameType::fo3),
       GameSettings(GameType::fonv),
       GameSettings(GameType::fo4),

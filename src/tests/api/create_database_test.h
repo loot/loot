@@ -69,7 +69,8 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5,
                           GameType::fo3,
                           GameType::fonv,
-                          GameType::fo4));
+                          GameType::fo4,
+                          GameType::tes5se));
 
 TEST_P(CreateDatabaseTest, shouldSucceedIfPassedValidParametersWithRelativePaths) {
   EXPECT_NO_THROW(db_ = CreateDatabase(GetParam(), dataPath.parent_path().string(), localPath.string()));

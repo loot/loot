@@ -118,6 +118,8 @@ struct convert<loot::GameSettings> {
       rhs = GameSettings(GameType::tes4, node["folder"].as<std::string>());
     else if (node["type"].as<std::string>() == GameSettings(GameType::tes5).FolderName())
       rhs = GameSettings(GameType::tes5, node["folder"].as<std::string>());
+    else if (node["type"].as<std::string>() == GameSettings(GameType::tes5se).FolderName())
+      rhs = GameSettings(GameType::tes5se, node["folder"].as<std::string>());
     else if (node["type"].as<std::string>() == GameSettings(GameType::fo3).FolderName())
       rhs = GameSettings(GameType::fo3, node["folder"].as<std::string>());
     else if (node["type"].as<std::string>() == GameSettings(GameType::fonv).FolderName())

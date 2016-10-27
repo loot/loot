@@ -91,7 +91,8 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5,
                           GameType::fo3,
                           GameType::fonv,
-                          GameType::fo4));
+                          GameType::fo4,
+                          GameType::tes5se));
 
 TEST_P(PluginTest, loadingHeaderOnlyShouldReadHeaderData) {
   Plugin plugin(game_, blankEsm, true);

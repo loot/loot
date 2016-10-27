@@ -53,7 +53,8 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5,
                           GameType::fo3,
                           GameType::fonv,
-                          GameType::fo4));
+                          GameType::fo4,
+                          GameType::tes5se));
 
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   GameSettings settings = GameSettings(GetParam(), "folder");

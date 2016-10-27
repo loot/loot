@@ -34,7 +34,7 @@ namespace loot {
 enum struct GameType : unsigned int {
   /** The Elder Scrolls IV: Oblivion */
   tes4,
-  /** The Elder Scrolls IV: Skyrim */
+  /** The Elder Scrolls V: Skyrim */
   tes5,
   /** Fallout 3 */
   fo3,
@@ -42,6 +42,8 @@ enum struct GameType : unsigned int {
   fonv,
   /** Fallout 4 */
   fo4,
+  /** The Elder Scrolls V: Skyrim Special Edition */
+  tes5se,
 };
 }
 

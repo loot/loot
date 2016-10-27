@@ -45,7 +45,8 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5,
                           GameType::fo3,
                           GameType::fonv,
-                          GameType::fo4));
+                          GameType::fo4,
+                          GameType::tes5se));
 
 TEST_P(LoadOrderHandlerTest, initShouldThrowIfNoGamePathIsSet) {
   GameSettings game(GetParam());
@@ -136,7 +137,7 @@ TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {
   });
   EXPECT_NO_THROW(loadOrderHandler_.SetLoadOrder(loadOrder));
 
-  if (GetParam() == GameType::fo4)
+  if (GetParam() == GameType::fo4 || GetParam() == GameType::tes5se)
     loadOrder.erase(begin(loadOrder));
 
   EXPECT_EQ(loadOrder, getLoadOrder());
