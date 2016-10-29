@@ -5,6 +5,11 @@ Version History
 0.10.0 - Unreleased
 ===================
 
+Added
+-----
+
+* Support for TES V: Skyrim Special Edition.
+
 Changed
 -------
 

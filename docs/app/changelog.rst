@@ -10,6 +10,7 @@ Only application history is recorded here. A full history of masterlist changes 
 Added
 -----
 
+- Support for TES V: Skyrim Special Edition.
 - Swedish translation by Mikael Hiort af Ornäs (Lakrits).
 
 Changed
@@ -24,6 +25,7 @@ Changed
 - Rewrote the documentation, which is now hosted online at `Read The Docs`_.
 - Updated Simplified Chinese translation.
 - Updated Russian translation.
+- Updated German translation.
 - Updated CEF to 3.2785.1466.g80e473e and libgit2 to 0.24.2.
 
 .. _Read The Docs: https://loot.readthedocs.io/
@@ -34,6 +36,7 @@ Fixed
 - Cached plugin CRCs causing checksum conditions to always evaluate to false.
 - Data being loaded twice when launching LOOT.
 - Updating the masterlist when the user's ``TEMP`` and ``TMP`` environmental variables point to a different drive than the one LOOT is installed on.
+- Incorrect error message display when there was an issue during initialisation.
 
 0.9.2 - 2016-08-03
 ==================
