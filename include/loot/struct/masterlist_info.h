@@ -32,6 +32,8 @@ namespace loot {
  *        revision.
  */
 struct MasterlistInfo {
+  inline MasterlistInfo() : is_modified(false) {}
+
   /**
    * @brief The revision hash for the masterlist. If the masterlist doesn't
    *        exist, or there is no Git repository at its location, this will be

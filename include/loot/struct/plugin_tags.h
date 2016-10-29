@@ -33,6 +33,8 @@ namespace loot {
  *        LOOT for a plugin.
  */
 struct PluginTags {
+  inline PluginTags() : userlist_modified(false) {}
+
   /**
    * @brief A set of Bash Tag names suggested for addition to the specified
    *        plugin. Empty if no Bash Tag additions are suggested.
