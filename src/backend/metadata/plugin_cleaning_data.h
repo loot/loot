@@ -76,7 +76,7 @@ struct convert<loot::PluginCleaningData> {
   static Node encode(const loot::PluginCleaningData& rhs) {
     Node node;
     node["crc"] = rhs.CRC();
-    node["utility"] = rhs.CleaningUtility();
+    node["util"] = rhs.CleaningUtility();
     node["info"] = rhs.Info();
 
     if (rhs.ITMs() > 0)
@@ -94,8 +94,8 @@ struct convert<loot::PluginCleaningData> {
       throw RepresentationException(node.Mark(), "bad conversion: 'cleaning data' object must be a map");
     if (!node["crc"])
       throw RepresentationException(node.Mark(), "bad conversion: 'crc' key missing from 'cleaning data' object");
-    if (!node["utility"])
-      throw RepresentationException(node.Mark(), "bad conversion: 'utility' key missing from 'cleaning data' object");
+    if (!node["util"])
+      throw RepresentationException(node.Mark(), "bad conversion: 'util' key missing from 'cleaning data' object");
 
     uint32_t crc = node["crc"].as<uint32_t>();
     int itm = 0, ref = 0, nav = 0;
@@ -107,7 +107,7 @@ struct convert<loot::PluginCleaningData> {
     if (node["nav"])
       nav = node["nav"].as<unsigned int>();
 
-    std::string utility = node["utility"].as<std::string>();
+    std::string utility = node["util"].as<std::string>();
 
     std::vector<loot::MessageContent> info;
     if (node["info"]) {

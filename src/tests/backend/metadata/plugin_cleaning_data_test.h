@@ -188,7 +188,7 @@ TEST_P(PluginCleaningDataTest, emittingAsYamlShouldOutputAllNonZeroCounts) {
   YAML::Emitter emitter;
   emitter << info;
 
-  EXPECT_STREQ("crc: 0x12345678\nutility: 'cleaner'\ninfo: 'info'\nitm: 2\nudr: 10\nnav: 30", emitter.c_str());
+  EXPECT_STREQ("crc: 0x12345678\nutil: 'cleaner'\ninfo: 'info'\nitm: 2\nudr: 10\nnav: 30", emitter.c_str());
 }
 
 TEST_P(PluginCleaningDataTest, emittingAsYamlShouldOmitAllZeroCounts) {
@@ -196,7 +196,7 @@ TEST_P(PluginCleaningDataTest, emittingAsYamlShouldOmitAllZeroCounts) {
   YAML::Emitter emitter;
   emitter << info;
 
-  EXPECT_STREQ("crc: 0x12345678\nutility: 'cleaner'\ninfo: 'info'", emitter.c_str());
+  EXPECT_STREQ("crc: 0x12345678\nutil: 'cleaner'\ninfo: 'info'", emitter.c_str());
 }
 
 TEST_P(PluginCleaningDataTest, encodingAsYamlShouldOmitAllZeroCountFields) {
@@ -205,7 +205,7 @@ TEST_P(PluginCleaningDataTest, encodingAsYamlShouldOmitAllZeroCountFields) {
   node = info;
 
   EXPECT_EQ(0x12345678, node["crc"].as<uint32_t>());
-  EXPECT_EQ("cleaner", node["utility"].as<std::string>());
+  EXPECT_EQ("cleaner", node["util"].as<std::string>());
   EXPECT_EQ(info_, node["info"].as<std::vector<MessageContent>>());
   EXPECT_FALSE(node["itm"]);
   EXPECT_FALSE(node["udr"]);
@@ -218,7 +218,7 @@ TEST_P(PluginCleaningDataTest, encodingAsYamlShouldOutputAllNonZeroCountFields) 
   node = info;
 
   EXPECT_EQ(0x12345678, node["crc"].as<uint32_t>());
-  EXPECT_EQ("cleaner", node["utility"].as<std::string>());
+  EXPECT_EQ("cleaner", node["util"].as<std::string>());
   EXPECT_EQ(info_, node["info"].as<std::vector<MessageContent>>());
   EXPECT_EQ(2, node["itm"].as<unsigned int>());
   EXPECT_EQ(10, node["udr"].as<unsigned int>());
@@ -226,7 +226,7 @@ TEST_P(PluginCleaningDataTest, encodingAsYamlShouldOutputAllNonZeroCountFields) 
 }
 
 TEST_P(PluginCleaningDataTest, decodingFromYamlShouldLeaveMissingFieldsWithZeroValues) {
-  YAML::Node node = YAML::Load("{crc: 0x12345678, utility: cleaner}");
+  YAML::Node node = YAML::Load("{crc: 0x12345678, util: cleaner}");
   PluginCleaningData info = node.as<PluginCleaningData>();
 
   EXPECT_EQ(0x12345678, info.CRC());
@@ -238,7 +238,7 @@ TEST_P(PluginCleaningDataTest, decodingFromYamlShouldLeaveMissingFieldsWithZeroV
 }
 
 TEST_P(PluginCleaningDataTest, decodingFromYamlShouldStoreAllNonZeroCounts) {
-  YAML::Node node = YAML::Load("{crc: 0x12345678, utility: cleaner, info: info, itm: 2, udr: 10, nav: 30}");
+  YAML::Node node = YAML::Load("{crc: 0x12345678, util: cleaner, info: info, itm: 2, udr: 10, nav: 30}");
   PluginCleaningData info = node.as<PluginCleaningData>();
 
   EXPECT_EQ(0x12345678, info.CRC());

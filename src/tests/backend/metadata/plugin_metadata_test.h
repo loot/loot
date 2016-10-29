@@ -948,7 +948,7 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithDirtyInfoCorrect
   EXPECT_STREQ("name: 'Blank.esp'\n"
                "dirty:\n"
                "  - crc: 0x5\n"
-               "    utility: 'utility'\n"
+               "    util: 'utility'\n"
                "    info: 'info'\n"
                "    udr: 1\n"
                "    nav: 2", emitter.c_str());
@@ -964,7 +964,7 @@ TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithCleanInfoCorrect
   EXPECT_STREQ("name: 'Blank.esp'\n"
                "clean:\n"
                "  - crc: 0x5\n"
-               "    utility: 'utility'", emitter.c_str());
+               "    util: 'utility'", emitter.c_str());
 }
 
 TEST_P(PluginMetadataTest, emittingAsYamlShouldOutputAPluginWithLocationsCorrectly) {
@@ -1141,12 +1141,12 @@ TEST_P(PluginMetadataTest, decodingFromYamlShouldStoreAllGivenData) {
                                "  - Relev\n"
                                "dirty:\n"
                                "  - crc: 0x5\n"
-                               "    utility: 'utility'\n"
+                               "    util: 'utility'\n"
                                "    udr: 1\n"
                                "    nav: 2\n"
                                "clean:\n"
                                "  - crc: 0x6\n"
-                               "    utility: 'utility'\n"
+                               "    util: 'utility'\n"
                                "url:\n"
                                "  - 'http://www.example.com'");
   PluginMetadata plugin = node.as<PluginMetadata>();
@@ -1184,7 +1184,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlWithDirtyInfoInARegexPluginMetadataOb
   YAML::Node node = YAML::Load("name: 'Blank\\.esp'\n"
                                "dirty:\n"
                                "  - crc: 0x5\n"
-                               "    utility: 'utility'\n"
+                               "    util: 'utility'\n"
                                "    udr: 1\n"
                                "    nav: 2");
 
@@ -1195,7 +1195,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlWithCleanInfoInARegexPluginMetadataOb
   YAML::Node node = YAML::Load("name: 'Blank\\.esp'\n"
                                "clean:\n"
                                "  - crc: 0x5\n"
-                               "    utility: 'utility'");
+                               "    util: 'utility'");
 
   EXPECT_THROW(node.as<PluginMetadata>(), YAML::RepresentationException);
 }
@@ -1204,7 +1204,7 @@ TEST_P(PluginMetadataTest, decodingFromYamlWithAnInvalidRegexNameShouldThrow) {
   YAML::Node node = YAML::Load("name: 'RagnvaldBook(Farengar(+Ragnvald)?)?\\.esp'\n"
                                "dirty:\n"
                                "  - crc: 0x5\n"
-                               "    utility: 'utility'\n"
+                               "    util: 'utility'\n"
                                "    udr: 1\n"
                                "    nav: 2");
 

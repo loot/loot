@@ -36,7 +36,7 @@ protected:
   DatabaseInterfaceTest() :
     userlistPath_(localPath / "userlist.yaml"),
     url_("https://github.com/loot/testing-metadata.git"),
-    branch_("2.x"),
+    branch_("master"),
     minimalOutputPath_(localPath / "minimal.yml") {}
 
   void SetUp() {
@@ -77,7 +77,7 @@ protected:
       << "  - name: '" << blankDifferentEsm << "'" << endl
       << "    dirty:" << endl
       << "      - crc: 0x7d22f9df" << endl
-      << "        utility: 'TES4Edit'" << endl
+      << "        util: 'TES4Edit'" << endl
       << "        udr: 4";
 
     return expectedContent.str();

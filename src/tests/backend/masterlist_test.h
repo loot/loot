@@ -35,7 +35,7 @@ namespace test {
 class MasterlistTest : public CommonGameTestFixture {
 protected:
   MasterlistTest() :
-    repoBranch("2.x"),
+    repoBranch("master"),
     repoUrl("https://github.com/loot/testing-metadata.git"),
     masterlistPath(localPath / "masterlist.yaml") {}
 

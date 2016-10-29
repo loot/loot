@@ -24,7 +24,6 @@ Changed
 * The ``file()`` condition function now also accepts a regular expression.
 * The ``active()`` condition function to also accept a regular expression.
 * Renamed the dirty info data structure to the cleaning data structure.
-* Renamed the ``util`` key in the cleaning data structure to ``utility`` .
 
 Removed
 -------

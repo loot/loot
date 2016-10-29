@@ -9,7 +9,7 @@ This structure holds information on which versions of a plugin are dirty or clea
 
   **Required.** The CRC-32 checksum of the plugin. If the plugin is dirty, this needs to be the CRC of the plugin before before cleaning. LOOT displays the CRCs of installed plugins in its report. The 8-character CRC should be preceded by ``0x`` so that it is interpreted correctly.
 
-.. describe:: utility
+.. describe:: util
 
   ``string``
 
@@ -50,7 +50,7 @@ Examples
 A dirty plugin::
 
   crc: 0x3DF62ABC
-  utility: '[TES5Edit](http://www.nexusmods.com/skyrim/mods/25859) v3.1.1'
+  util: '[TES5Edit](http://www.nexusmods.com/skyrim/mods/25859) v3.1.1'
   info: 'A cleaning guide is available [here](http://www.creationkit.com/index.php?title=TES5Edit_Cleaning_Guide_-_TES5Edit).'
   itm: 4
   udr: 160
@@ -58,4 +58,4 @@ A dirty plugin::
 A clean plugin::
 
   crc: 0x2ABC3DF6
-  utility: '[TES5Edit](http://www.nexusmods.com/skyrim/mods/25859) v3.1.1'
+  util: '[TES5Edit](http://www.nexusmods.com/skyrim/mods/25859) v3.1.1'

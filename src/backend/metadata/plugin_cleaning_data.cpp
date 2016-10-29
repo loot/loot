@@ -142,7 +142,7 @@ namespace YAML {
 Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs) {
   out << BeginMap
     << Key << "crc" << Value << Hex << rhs.CRC() << Dec
-    << Key << "utility" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
+    << Key << "util" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
 
   if (!rhs.Info().empty()) {
     if (rhs.Info().size() == 1)
