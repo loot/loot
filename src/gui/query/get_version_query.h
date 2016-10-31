@@ -27,13 +27,17 @@ along with LOOT.  If not, see
 
 #include "gui/query/query.h"
 #include "loot/loot_version.h"
+#include "backend/helpers/json.h"
 
 namespace loot {
 class GetVersionQuery : public Query {
 public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-    return "\"" + LootVersion::string() + "." + LootVersion::revision + "\"";
+    YAML::Node node;
+    node["release"] = LootVersion::string();
+    node["build"] = LootVersion::revision;
+    return JSON::stringify(node);
   }
 };
 }

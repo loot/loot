@@ -117,16 +117,8 @@
     document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
   }
 
-  function splitVersion(version) {
-    const lastPeriodIndex = version.lastIndexOf('.');
-    return {
-      release: version.substring(0, lastPeriodIndex),
-      build: version.substring(lastPeriodIndex + 1),
-    };
-  }
-
   function setVersion(appData) {
-    return query('getVersion').then(JSON.parse).then(splitVersion).then((version) => {
+    return query('getVersion').then(JSON.parse).then((version) => {
       appData.version = version.release;
       dom.setVersion(version);
     });
