@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-10-15 12:29+0100\n"
+"POT-Creation-Date: 2016-11-02 23:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -628,7 +628,7 @@ msgstr ""
 msgid "Loading plugin contents..."
 msgstr ""
 
-#: src/gui/query/sort_plugins_query.h:68
+#: src/gui/query/sort_plugins_query.h:70
 msgid "Sorting load order..."
 msgstr ""
 
@@ -652,60 +652,56 @@ msgstr ""
 msgid "None of the supported games were detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:61
-msgid "Invalid game ID supplied."
-msgstr ""
-
-#: src/backend/game/game.cpp:68
+#: src/backend/game/game.cpp:64
 msgid "Game path could not be detected."
 msgstr ""
 
-#: src/backend/game/game.cpp:78
+#: src/backend/game/game.cpp:74
 msgid "Could not create LOOT folder for game. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:49
-msgid "Unsupported game ID supplied."
+#: src/backend/game/game_cache.cpp:119
+msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:54
+#: src/backend/game/load_order_handler.cpp:46
 msgid "Game path is not initialised."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:88
+#: src/backend/game/load_order_handler.cpp:82
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:91
+#: src/backend/game/load_order_handler.cpp:85
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:109
+#: src/backend/game/load_order_handler.cpp:103
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:112
+#: src/backend/game/load_order_handler.cpp:106
 msgid "libloadorder failed to check if a plugin is active. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:134
+#: src/backend/game/load_order_handler.cpp:128
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:137
+#: src/backend/game/load_order_handler.cpp:131
 msgid "libloadorder failed to get the load order. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:160
+#: src/backend/game/load_order_handler.cpp:154
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:163
+#: src/backend/game/load_order_handler.cpp:157
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
@@ -728,7 +724,7 @@ msgstr ""
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr ""
 
-#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
+#: src/backend/helpers/helpers.cpp:103 src/backend/helpers/helpers.cpp:106
 msgid "Failed to open file in its default application."
 msgstr ""
 

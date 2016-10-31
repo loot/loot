@@ -239,8 +239,10 @@ CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(CefRefPtr<CefBr
                                                                  CefRefPtr<CefFrame> frame,
                                                                  CefRefPtr<CefRequest> request,
                                                                  CefRefPtr<CefRequestCallback> callback) {
-  if (boost::starts_with(request->GetURL().ToString(), "http"))
+  if (boost::starts_with(request->GetURL().ToString(), "https://fonts.googleapis.com")) {
+    BOOST_LOG_TRIVIAL(warning) << "Blocking load of resource at " << request->GetURL().ToString();
     return RV_CANCEL;
+  }
 
   return RV_CONTINUE;
 }

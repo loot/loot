@@ -34,11 +34,11 @@
     return item;
   }
 
-  function createMessageItem(message) {
+  function createMessageItem(type, content) {
     const li = document.createElement('li');
-    li.className = 'error';
+    li.className = type;
     /* Use the Marked library for Markdown formatting support. */
-    li.innerHTML = marked(message);
+    li.innerHTML = marked(content);
 
     return li;
   }
@@ -166,15 +166,26 @@
       forceSelectDefaultValue(messageLangSelect);
     }
 
+    static appendGeneralMessages(messages) {
+      if (!messages) {
+        return;
+      }
+
+      const generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
+      messages.forEach((message) => {
+        generalMessagesList.appendChild(createMessageItem(message.type, message.content));
+      });
+    }
+
     static listInitErrors(errorMessages) {
       if (!errorMessages) {
         return;
       }
-      const generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
 
-      errorMessages.forEach((message) => {
-        generalMessagesList.appendChild(createMessageItem(message));
-      });
+      DOM.appendGeneralMessages(errorMessages.map((element) => ({
+        type: 'error',
+        content: element,
+      })));
 
       document.getElementById('filterTotalMessageNo').textContent = errorMessages.length;
       document.getElementById('totalMessageNo').textContent = errorMessages.length;

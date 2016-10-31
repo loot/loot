@@ -37,7 +37,8 @@
                                     root.loot.translateStaticText,
                                     root.loot.Plugin,
                                     root.loot.query,
-                                    root.loot.Translator);
+                                    root.loot.Translator,
+                                    root.loot.updateExists);
   }
 }(this, (Dialog,
          dom,
@@ -47,7 +48,8 @@
          translateStaticText,
          Plugin,
          query,
-         Translator) => {
+         Translator,
+         updateExists) => {
   function setupEventHandlers() {
     /* Set up handlers for filters. */
     document.getElementById('hideVersionNumbers').addEventListener('change', onSidebarFilterToggle);
@@ -234,6 +236,19 @@
       if (loot.settings.lastVersion !== loot.version) {
         dom.openDialog('firstRun');
       }
+    })
+    .then(() => loot.query('getVersion'))
+    .then(JSON.parse)
+    .then((version) => updateExists(version.release, version.build))
+    .then((isUpdateAvailable) => {
+      if (!isUpdateAvailable) {
+        return;
+      }
+
+      dom.appendGeneralMessages([{
+        type: 'warn',
+        content: loot.l10n.translate('A [new release](%s) of LOOT is available.', 'https://github.com/loot/loot/releases/latest'),
+      }]);
     })
     .catch(handlePromiseError);
   };
