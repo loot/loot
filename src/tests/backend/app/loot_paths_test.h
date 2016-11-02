@@ -37,10 +37,10 @@ TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   EXPECT_EQ(boost::filesystem::current_path() / "docs" / "index.html", LootPaths::getReadmePath());
 }
 
-TEST(LootPaths, getUIIndexPathShouldUseLootAppPath) {
+TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
   LootPaths::initialise();
 
-  EXPECT_EQ(boost::filesystem::current_path() / "resources" / "ui" / "index.html", LootPaths::getUIIndexPath());
+  EXPECT_EQ(boost::filesystem::current_path() / "resources", LootPaths::getResourcesPath());
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {

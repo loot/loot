@@ -31,7 +31,7 @@ namespace loot {
 class LootPaths {
 public:
   static boost::filesystem::path getReadmePath();
-  static boost::filesystem::path getUIIndexPath();
+  static boost::filesystem::path getResourcesPath();
   static boost::filesystem::path getL10nPath();
   static boost::filesystem::path getLootDataPath();
   static boost::filesystem::path getSettingsPath();

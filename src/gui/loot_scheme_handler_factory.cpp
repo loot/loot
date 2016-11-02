@@ -26,6 +26,7 @@ along with LOOT.  If not, see
 
 #include "backend/app/loot_paths.h"
 
+#include <include/cef_parser.h>
 #include <include/wrapper/cef_stream_resource_handler.h>
 
 #include <string>
@@ -43,27 +44,49 @@ CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(CefRefPtr<CefBrow
                                                                CefRefPtr<CefFrame> frame,
                                                                const CefString& scheme_name,
                                                                CefRefPtr<CefRequest> request) {
-  BOOST_LOG_TRIVIAL(trace) << "Handling custom scheme: " << string(request->GetURL());
+  BOOST_LOG_TRIVIAL(info) << "Handling request to URL: " << request->GetURL().ToString();
+  const string filePath = GetPath(request->GetURL());
 
-  // Get the path from the custom URL, which is of the form
-  // loot://l10n/<l10n path>
-  string file = (LootPaths::getL10nPath() / request->GetURL().ToString().substr(12)).string();
+  if (boost::filesystem::exists(filePath)) {
+    return new CefStreamResourceHandler(200,
+                                        "OK",
+                                        GetMimeType(filePath),
+                                        GetHeaders(),
+                                        CefStreamReader::CreateForFile(filePath));
+  }
 
+  BOOST_LOG_TRIVIAL(trace) << "File " << filePath << " not found, sending 404.";
+  const string error404 = "File not found.";
+  CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData((void*)error404.c_str(), error404.size());
+  return new CefStreamResourceHandler(404,
+                                      "Not Found",
+                                      "text/plain",
+                                      GetHeaders(),
+                                      stream);
+}
+
+std::string LootSchemeHandlerFactory::GetPath(const CefString& url) const {
+  CefURLParts urlParts;
+  CefParseURL(url, urlParts);
+
+  return (LootPaths::getResourcesPath() / CefString(&urlParts.path).ToString()).string();
+}
+
+std::string LootSchemeHandlerFactory::GetMimeType(const std::string& file) const {
+  if (file.substr(file.length() - 5) == ".html")
+    return "text/html";
+  else if (file.substr(file.length() - 3) == ".js")
+    return "application/javascript";
+  else if (file.substr(file.length() - 4) == ".css")
+    return "text/css";
+  else
+    return "application/octet-stream";
+}
+
+CefResponse::HeaderMap LootSchemeHandlerFactory::GetHeaders() const {
   CefResponse::HeaderMap headers;
   headers.emplace("Access-Control-Allow-Origin", "*");
 
-  if (boost::filesystem::exists(file)) {
-      // Load the file into a CEF stream.
-    CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForFile(file);
-    BOOST_LOG_TRIVIAL(trace) << "Loaded file: " << file;
-
-    return new CefStreamResourceHandler(200, "OK", "application/octet-stream", headers, stream);
-  } else {
-    BOOST_LOG_TRIVIAL(trace) << "File " << file << " not found, sending 404.";
-
-    const string error404 = "File not found.";
-    CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData((void*)error404.c_str(), error404.size());
-    return new CefStreamResourceHandler(404, "Not Found", "application/octet-stream", headers, stream);
-  }
+  return headers;
 }
 }

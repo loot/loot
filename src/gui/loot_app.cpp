@@ -62,11 +62,6 @@ CefRefPtr<CefRenderProcessHandler> LootApp::GetRenderProcessHandler() {
   return this;
 }
 
-void LootApp::OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) {
-    // Register "loot" as a standard scheme.
-  registrar->AddCustomScheme("loot", true, false, false);
-}
-
 void LootApp::OnContextInitialized() {
     //Make sure this is running in the UI thread.
   assert(CefCurrentlyOn(TID_UI));
@@ -75,15 +70,15 @@ void LootApp::OnContextInitialized() {
   CefWindowInfo window_info;
 
 #ifdef _WIN32
-        // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
+  // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
   window_info.SetAsPopup(NULL, "LOOT");
 #endif
 
-        // Set the handler for browser-level callbacks.
+  // Set the handler for browser-level callbacks.
   CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
 
-  // Register the custom "loot" scheme handlers.
-  CefRegisterSchemeHandlerFactory("loot", "l10n", new LootSchemeHandlerFactory());
+  // Register the custom "loot" domain handler.
+  CefRegisterSchemeHandlerFactory("http", "loot", new LootSchemeHandlerFactory());
 
   // Specify CEF browser settings here.
   CefBrowserSettings browser_settings;
@@ -102,7 +97,7 @@ void LootApp::OnContextInitialized() {
   }
 
   // Set URL to load. Ignore any command line values.
-  std::string url = ToFileURL(LootPaths::getUIIndexPath());
+  const std::string url = "http://loot/ui/index.html";
 
   // Create the first browser window.
   CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);

@@ -35,7 +35,7 @@
       translationDataPromise = Promise.resolve(defaultTranslationData);
     } else {
       translationDataPromise = new Promise((resolve, reject) => {
-        const url = `loot://l10n/${this.locale}/LC_MESSAGES/loot.mo`;
+        const url = `http://loot/l10n/${this.locale}/LC_MESSAGES/loot.mo`;
         const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.responseType = 'arraybuffer';

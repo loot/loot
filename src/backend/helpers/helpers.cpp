@@ -95,25 +95,6 @@ std::string IntToHexString(const uint32_t n) {
   return out;
 }
 
-//Turns an absolute filesystem path into a valid file:// URL.
-std::string ToFileURL(const boost::filesystem::path& file) {
-  BOOST_LOG_TRIVIAL(trace) << "Converting file path " << file << " to a URL.";
-  string url;
-
-#ifdef _WIN32
-  wstring wstr(MAX_PATH, 0);
-  DWORD len = MAX_PATH;
-  UrlCreateFromPath(ToWinWide(file.string()).c_str(), &wstr[0], &len, NULL);
-  url = FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
-  BOOST_LOG_TRIVIAL(trace) << "Converted to: " << url;
-#else
-        // Let's be naive about this.
-  url = "file://" + file.string();
-#endif
-
-  return url;
-}
-
 //Opens the file in its registered default application.
 void OpenInDefaultApplication(const boost::filesystem::path& file) {
 #ifdef _WIN32

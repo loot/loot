@@ -44,7 +44,6 @@ public:
                                              CefRefPtr<CefCommandLine> command_line);
   virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
   virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE;
-  virtual void OnRegisterCustomSchemes(CefRefPtr<CefSchemeRegistrar> registrar) OVERRIDE;
 
   // Override CefBrowserProcessHandler methods.
   virtual void OnContextInitialized() OVERRIDE;

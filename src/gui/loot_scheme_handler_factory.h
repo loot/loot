@@ -36,6 +36,10 @@ public:
                                                const CefString& scheme_name,
                                                CefRefPtr<CefRequest> request)
     OVERRIDE;
+private:
+  std::string GetPath(const CefString& url) const;
+  std::string GetMimeType(const std::string& file) const;
+  CefResponse::HeaderMap GetHeaders() const;
 
   IMPLEMENT_REFCOUNTING(LootSchemeHandlerFactory);
 };

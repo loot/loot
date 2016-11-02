@@ -46,12 +46,12 @@ boost::filesystem::path LootPaths::getReadmePath() {
   return lootAppPath_ / "docs" / "index.html";
 }
 
-boost::filesystem::path LootPaths::getUIIndexPath() {
-  return lootAppPath_ / "resources" / "ui" / "index.html";
+boost::filesystem::path LootPaths::getResourcesPath() {
+  return lootAppPath_ / "resources";
 }
 
 boost::filesystem::path LootPaths::getL10nPath() {
-  return lootAppPath_ / "resources" / "l10n";
+  return getResourcesPath() / "l10n";
 }
 
 boost::filesystem::path LootPaths::getLootDataPath() {

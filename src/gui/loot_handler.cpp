@@ -32,11 +32,13 @@
 #include <boost/log/trivial.hpp>
 #include <include/base/cef_bind.h>
 #include <include/cef_app.h>
+#include <include/cef_parser.h>
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
 
 #include "backend/app/loot_paths.h"
 #include "backend/helpers/helpers.h"
+#include "gui/loot_scheme_handler_factory.h"
 #include "gui/query_handler.h"
 #include "gui/resource.h"
 
@@ -221,9 +223,8 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
                                  CefRefPtr< CefRequest > request,
                                  bool is_redirect) {
   BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: " << request->GetURL().ToString();
-  BOOST_LOG_TRIVIAL(trace) << "Comparing with URL: " << ToFileURL(LootPaths::getUIIndexPath());
 
-  if (boost::iequals(request->GetURL().ToString(), ToFileURL(LootPaths::getUIIndexPath()))) {
+  if (boost::starts_with(request->GetURL().ToString(), "http://loot/")) {
     BOOST_LOG_TRIVIAL(trace) << "Link is to LOOT page, allowing CEF's default handling.";
     return false;
   }
