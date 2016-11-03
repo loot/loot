@@ -44,13 +44,16 @@ void MetadataList::Load(const boost::filesystem::path& filepath) {
   YAML::Node metadataList = YAML::Load(in);
   in.close();
 
+  if (!metadataList.IsMap())
+    throw FileAccessError("The root of the metadata file " + filepath.string() + " is not a YAML map.");
+
   if (metadataList["plugins"]) {
     for (const auto& node : metadataList["plugins"]) {
       PluginMetadata plugin(node.as<PluginMetadata>());
       if (plugin.IsRegexPlugin())
         regexPlugins_.push_back(plugin);
       else if (!plugins_.insert(plugin).second)
-          throw FileAccessError("More than one entry exists for \"" + plugin.Name() + "\"");
+        throw FileAccessError("More than one entry exists for \"" + plugin.Name() + "\"");
     }
   }
   if (metadataList["globals"])

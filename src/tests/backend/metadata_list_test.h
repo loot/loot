@@ -37,7 +37,9 @@ protected:
     metadataPath("./testing-metadata/masterlist.yaml"),
     savedMetadataPath("./testing-metadata/saved.masterlist.yaml"),
     missingMetadataPath("./missing-metadata.yaml"),
-    invalidMetadataPaths({"./testing-metadata/invalid/non_unique.yaml"}) {}
+    invalidMetadataPaths({
+      "./testing-metadata/invalid/non_map_root.yaml",
+      "./testing-metadata/invalid/non_unique.yaml"}) {}
 
   inline virtual void SetUp() {
     CommonGameTestFixture::SetUp();
