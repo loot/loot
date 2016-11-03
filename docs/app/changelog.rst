@@ -12,6 +12,7 @@ Added
 
 - Support for TES V: Skyrim Special Edition.
 - Swedish translation by Mikael Hiort af Ornäs (Lakrits).
+- More robust update checker, so now LOOT will notify users of an update without needing a masterlist to be present or for it to be updated for the new release, and will also detect when the user is using a non-release build with the same version number.
 
 Changed
 -------
@@ -26,7 +27,7 @@ Changed
 - Updated Simplified Chinese translation.
 - Updated Russian translation.
 - Updated German translation.
-- Updated CEF to 3.2785.1466.g80e473e and libgit2 to 0.24.2.
+- Updated CEF to 3.2840.1511.gb345083 and libgit2 to 0.24.2.
 
 .. _Read The Docs: https://loot.readthedocs.io/
 
