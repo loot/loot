@@ -100,6 +100,11 @@ deploy:
     description: |
       Requires Windows 7 or later, and [7-Zip](http://www.7-zip.org/) to extract the archives.
 
+      ## Change Logs
+      - [Application](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html)
+      - [API](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/api/changelog.html)
+      - [Metadata Syntax](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/metadata/changelog.html)
+
       *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
     auth_token:
       secure: SecSfg5+S0OUzmC+kKixshqNDrRDj2uRYx58AAiZ1IDYTvQbPGRqEYCWZ9jbPd3h
