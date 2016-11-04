@@ -179,7 +179,7 @@ function onCancelSort() {
 }
 
 function onRedatePlugins(evt) {
-  loot.Dialog.askQuestion(loot.l10n.translate('Redate Plugins?'), loot.l10n.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam. Do you wish to continue?'), loot.l10n.translate('Redate'), (result) => {
+  loot.Dialog.askQuestion(loot.l10n.translate('Redate Plugins?'), loot.l10n.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam (this does not affect Skyrim Special Edition). Do you wish to continue?'), loot.l10n.translate('Redate'), (result) => {
     if (result) {
       loot.query('redatePlugins').then(() => {
         loot.Dialog.showNotification('Plugins were successfully redated.');
@@ -455,7 +455,10 @@ function onFolderChange(evt) {
   /* Enable/disable the redate plugins option. */
   let gameSettings;
   if (loot.settings && loot.settings.games) {
-    gameSettings = loot.settings.games.find(game => game.folder === evt.detail.folder);
+    gameSettings = loot.settings.games.find(game => (
+      (game.type === 'Skyrim' || game.type === 'SkyrimSE')
+      && game.folder === evt.detail.folder
+    ));
   }
-  loot.DOM.enable('redatePluginsButton', gameSettings && gameSettings.type === 'Skyrim');
+  loot.DOM.enable('redatePluginsButton', gameSettings !== undefined);
 }
