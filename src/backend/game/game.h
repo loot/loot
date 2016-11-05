@@ -51,6 +51,7 @@ public:
   // available, and otherwise asking the load order handler.
   bool IsPluginActive(const std::string& pluginName) const;
   short GetActiveLoadOrderIndex(const std::string & pluginName) const;
+  short GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder) const;

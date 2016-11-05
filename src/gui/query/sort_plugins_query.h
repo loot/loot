@@ -51,7 +51,12 @@ public:
     //Sort plugins into their load order.
     std::vector<Plugin> plugins = sortPlugins();
 
-    if ((state_.getCurrentGame().Type() == GameType::tes5 
+    sortedPluginNames.resize(plugins.size());
+    std::transform(begin(plugins), end(plugins), begin(sortedPluginNames), [](const Plugin& plugin) {
+      return plugin.Name();
+    });
+
+    if ((state_.getCurrentGame().Type() == GameType::tes5
          || state_.getCurrentGame().Type() == GameType::fo4
          || state_.getCurrentGame().Type() == GameType::tes5se))
       applyUnchangedLoadOrder(plugins);
@@ -100,19 +105,12 @@ private:
   }
 
   YAML::Node generateDerivedMetadata(const Plugin& plugin) {
-    YAML::Node pluginNode;
+    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin.Name());
 
     pluginNode["name"] = plugin.Name();
     pluginNode["crc"] = plugin.Crc();
     pluginNode["isEmpty"] = plugin.IsEmpty();
-
-    // Sorting may have produced a plugin loading error message, so rederive displayed data.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin.Name());
-
-    for (const auto &pair : derivedNode) {
-      const std::string key = pair.first.as<std::string>();
-      pluginNode[key] = pair.second;
-    }
+    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin.Name(), sortedPluginNames);
 
     return pluginNode;
   }
@@ -135,6 +133,7 @@ private:
 
   LootState& state_;
   CefRefPtr<CefFrame> frame_;
+  std::vector<std::string> sortedPluginNames;
 };
 }
 

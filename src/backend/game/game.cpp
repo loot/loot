@@ -206,6 +206,10 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
 }
 
 short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
+  return GetActiveLoadOrderIndex(pluginName, GetLoadOrder());
+}
+
+short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const {
   // Get the full load order, then count the number of active plugins until the
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return -1.
@@ -214,7 +218,7 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
     return -1;
 
   short numberOfActivePlugins = 0;
-  for (const std::string& plugin : GetLoadOrder()) {
+  for (const std::string& plugin : loadOrder) {
     if (boost::iequals(plugin, pluginName))
       return numberOfActivePlugins;
 
