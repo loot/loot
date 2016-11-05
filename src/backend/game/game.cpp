@@ -224,17 +224,16 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
 
   return -1;
 }
+
 std::vector<std::string> Game::GetLoadOrder() const {
   if (loadOrder_.empty())
     loadOrder_ = LoadOrderHandler::GetLoadOrder();
 
   return loadOrder_;
 }
+
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
   LoadOrderHandler::SetLoadOrder(loadOrder);
   loadOrder_ = loadOrder;
-}
-void Game::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
-  LoadOrderHandler::SetLoadOrder(loadOrder, numPlugins);
 }
 }

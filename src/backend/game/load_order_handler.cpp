@@ -141,26 +141,6 @@ std::vector<std::string> LoadOrderHandler::GetLoadOrder() const {
   return loadOrder;
 }
 
-void LoadOrderHandler::SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const {
-  BOOST_LOG_TRIVIAL(debug) << "Setting load order.";
-
-  unsigned int ret = lo_set_load_order(gh_, loadOrder, numPlugins);
-  if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
-    const char * e = nullptr;
-    string err;
-    lo_get_error_message(&e);
-    if (e == nullptr) {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
-      err = translate("libloadorder failed to set the load order. Details could not be fetched.").str();
-    } else {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-      err = translate("libloadorder failed to set the load order. Details:").str() + " " + e;
-    }
-    lo_cleanup();
-    throw std::system_error(ret, libloadorder_category(), err);
-  }
-}
-
 void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
   BOOST_LOG_TRIVIAL(info) << "Setting load order.";
   size_t pluginArrSize = loadOrder.size();
@@ -173,17 +153,26 @@ void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) c
     ++i;
   }
 
-  try {
-    SetLoadOrder(pluginArr, pluginArrSize);
-  } catch (std::exception& /*e*/) {
-    for (size_t i = 0; i < pluginArrSize; i++)
-      delete[] pluginArr[i];
-    delete[] pluginArr;
-    throw;
-  }
+  unsigned int ret = lo_set_load_order(gh_, pluginArr, pluginArrSize);
 
   for (size_t i = 0; i < pluginArrSize; i++)
     delete[] pluginArr[i];
   delete[] pluginArr;
+
+  if (ret != LIBLO_OK && ret != LIBLO_WARN_BAD_FILENAME && ret != LIBLO_WARN_INVALID_LIST && ret != LIBLO_WARN_LO_MISMATCH) {
+    const char * e = nullptr;
+    string err;
+    lo_get_error_message(&e);
+    if (e == nullptr) {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
+      err = translate("libloadorder failed to set the load order. Details could not be fetched.").str();
+    } else {
+      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
+      err = translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+    }
+    lo_cleanup();
+
+    throw std::system_error(ret, libloadorder_category(), err);
+  }
 }
 }

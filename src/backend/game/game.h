@@ -54,7 +54,6 @@ public:
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
-  void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;
 private:
   bool pluginsFullyLoaded_;
   mutable std::vector<std::string> loadOrder_;

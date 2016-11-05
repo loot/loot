@@ -46,8 +46,6 @@ public:
 
   bool IsPluginActive(const std::string& pluginName) const;
 
-  //These modify game load order, even though const.
-  void SetLoadOrder(const char * const * const loadOrder, const size_t numPlugins) const;  // For API.
   void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
 private:
   lo_game_handle gh_;
