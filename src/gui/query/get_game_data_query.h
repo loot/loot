@@ -136,6 +136,8 @@ private:
     YAML::Node node;
 
     node["enabled"] = metadata.Enabled();
+    node["priority"] = metadata.LocalPriority().getValue();
+    node["globalPriority"] = metadata.GlobalPriority().getValue();
     node["after"] = metadata.LoadAfter();
     node["req"] = metadata.Reqs();
     node["inc"] = metadata.Incs();

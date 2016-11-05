@@ -288,9 +288,11 @@ loot-editor-close
            changed, so record both. */
         if (this.$.priorityValue.value !== oldData.priority) {
           plugin.priority = this.$.priorityValue.value;
+          plugin.userlist.priority = this.$.priorityValue.value;
         }
         if (this.$.globalPriorityValue.value !== oldData.globalPriority) {
           plugin.globalPriority = this.$.globalPriorityValue.value;
+          plugin.userlist.globalPriority = this.$.globalPriority.value;
         }
 
         plugin.userlist.enabled = this.$.enableEdits.checked;
