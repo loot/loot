@@ -50,7 +50,7 @@ private:
   bool updateMasterlist() {
     try {
       return game_.GetMasterlist().Update(game_);
-    } catch (std::exception& e) {
+    } catch (std::exception&) {
       try {
         game_.GetMasterlist().Load(game_.MasterlistPath());
       } catch (...) {}
