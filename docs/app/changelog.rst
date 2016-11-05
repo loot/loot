@@ -27,6 +27,7 @@ Changed
 - Updated Simplified Chinese translation.
 - Updated Russian translation.
 - Updated German translation.
+- Updated Danish translation.
 - Updated CEF to 3.2840.1511.gb345083 and libgit2 to 0.24.2.
 
 .. _Read The Docs: https://loot.readthedocs.io/
@@ -38,6 +39,8 @@ Fixed
 - Data being loaded twice when launching LOOT.
 - Updating the masterlist when the user's ``TEMP`` and ``TMP`` environmental variables point to a different drive than the one LOOT is installed on.
 - Incorrect error message display when there was an issue during initialisation.
+- Sidebar plugin load order indices not updating when sorting changed plugin positions.
+- The "Has User Metadata" icon not displaying when priority metadata was changed.
 
 0.9.2 - 2016-08-03
 ==================
