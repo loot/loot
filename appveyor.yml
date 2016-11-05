@@ -9,7 +9,6 @@ cache:
   - bower_components
   - C:\projects\boost_1_61_0\boost
   - C:\projects\boost_1_61_0\stage\lib
-  - C:\Program Files (x86)\Inno Setup 5
 
 environment:
   access_token:
@@ -18,7 +17,7 @@ environment:
     secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
 
 install:
-  - choco install doxygen.portable
+  - choco install -y doxygen.portable InnoSetup
   - python -m pip install sphinx breathe sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
@@ -45,8 +44,6 @@ after_test:
   - set PATH=%PATH%;C:\cygwin\bin\
   - node scripts\potomo.js
   - node scripts\archive.js
-  # AppVeyor checks out a specific commit, but that means the archive script
-  # can't tell which branch it's on, so rename the 7z archives.
   - ps: $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
   - ps: scripts\appveyor\build_installer.ps1
 
