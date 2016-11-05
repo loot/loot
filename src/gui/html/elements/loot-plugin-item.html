@@ -187,11 +187,12 @@
         evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
       },
 
-      updateStyling(pluginData) {
+      updateContent(pluginData) {
         this.priority = pluginData.priority;
         this.globalPriority = pluginData.globalPriority;
         this.isEditorOpen = pluginData.isEditorOpen;
         this.hasUserEdits = pluginData.hasUserEdits;
+        this.loadOrderIndex = pluginData.loadOrderIndex;
       },
     });
   </script>

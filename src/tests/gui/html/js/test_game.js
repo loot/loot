@@ -554,27 +554,67 @@ describe('Game', () => {
       game = new loot.Game({}, l10n);
     });
 
+    it('should throw if no parameters are supplied', () => {
+      (() => { game.cancelSort(); }).should.throw();
+    });
+
     it('should set the current load order to the old load order', () => {
-      game.oldLoadOrder = [0, 1, 2];
-      game.plugins = [3, 4, 5];
+      const oldLoadOrder = [new loot.Plugin({
+        name: 'foo',
+      }), new loot.Plugin({
+        name: 'bar',
+      })];
+      game.oldLoadOrder = oldLoadOrder;
+      game.plugins = [new loot.Plugin({
+        name: 'bar',
+      }), new loot.Plugin({
+        name: 'foo',
+      })];
 
-      game.cancelSort();
+      game.cancelSort([]);
 
-      game.plugins.should.deepEqual([0, 1, 2]);
+      game.plugins.should.deepEqual(oldLoadOrder);
     });
 
     it('should delete the stored old load order', () => {
-      game.oldLoadOrder = [0, 1, 2];
+      game.oldLoadOrder = [new loot.Plugin({
+        name: 'foo',
+      }), new loot.Plugin({
+        name: 'bar',
+      })];
 
-      game.cancelSort();
+      game.cancelSort([]);
 
       should(game.oldLoadOrder).be.undefined();
     });
 
-    it('should set the global messages to the passed object', () => {
+    it('should set plugin load order indices using the array passed as the first parameter', () => {
+      game.oldLoadOrder = [new loot.Plugin({
+        name: 'foo',
+        loadOrderIndex: 1,
+      }), new loot.Plugin({
+        name: 'bar',
+        loadOrderIndex: 0,
+      })];
+
+      game.cancelSort([new loot.Plugin({
+        name: 'bar',
+        loadOrderIndex: 1,
+      }), new loot.Plugin({
+        name: 'foo',
+        loadOrderIndex: 0,
+      })]);
+
+      game.plugins[0].name.should.equal('foo');
+      game.plugins[0].loadOrderIndex.should.equal(0);
+      game.plugins[1].name.should.equal('bar');
+      game.plugins[1].loadOrderIndex.should.equal(1);
+    });
+
+    it('should set the global messages to the second passed parameter', () => {
       game.oldLoadOrder = [0, 1, 2];
 
-      game.cancelSort(['foo']);
+      game.cancelSort([], ['foo']);
 
       game.globalMessages.should.deepEqual(['foo']);
     });

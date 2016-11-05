@@ -40,7 +40,20 @@ public:
     state_.decrementUnappliedChangeCounter();
     state_.getCurrentGame().DecrementLoadOrderSortCount();
 
-    return JSON::stringify(YAML::Node(getGeneralMessages()));
+    YAML::Node response;
+    std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
+    for (const auto& plugin : loadOrder) {
+      YAML::Node pluginNode;
+
+      pluginNode["name"] = plugin;
+      pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, loadOrder);
+
+      response["plugins"].push_back(pluginNode);
+    }
+
+    response["generalMessages"] = getGeneralMessages();
+
+    return JSON::stringify(response);
   }
 
 private:

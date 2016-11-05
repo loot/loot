@@ -178,7 +178,7 @@
       this._messages = obj.messages || [];
       this._tags = obj.tags || [];
       this._isDirty = obj.isDirty || false;
-      this.loadOrderIndex = obj.loadOrderIndex;
+      this._loadOrderIndex = obj.loadOrderIndex;
       this.cleanedWith = obj.cleanedWith || '';
 
       /* UI state variables */
@@ -265,6 +265,7 @@
           globalPriority: this.globalPriority,
           isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
+          loadOrderIndex: this.loadOrderIndex,
         },
       }));
     }
@@ -443,6 +444,18 @@
       }
     }
 
+    get loadOrderIndex() {
+      return this._loadOrderIndex;
+    }
+
+    set loadOrderIndex(loadOrderIndex) {
+      if (this._loadOrderIndex !== loadOrderIndex) {
+        this._loadOrderIndex = loadOrderIndex;
+
+        this._dispatchItemContentChangeEvent();
+      }
+    }
+
     getCardContent(filters) {
       return new PluginCardContent(this, filters);
     }
@@ -487,7 +500,7 @@
     static onItemContentChange(evt) {
       const item = document.getElementById('cardsNav').querySelector(`[data-id="${evt.detail.pluginId}"]`);
       if (item) {
-        item.updateStyling(evt.detail);
+        item.updateContent(evt.detail);
       }
     }
   };

@@ -308,9 +308,16 @@
     this.oldLoadOrder = undefined;
   }
 
-  cancelSort(globalMessages) {
+  cancelSort(plugins, globalMessages) {
     this.plugins = this.oldLoadOrder;
     this.oldLoadOrder = undefined;
+
+    plugins.forEach((plugin) => {
+      const existingPlugin = this.plugins.find(item => item.name === plugin.name);
+      if (existingPlugin) {
+        existingPlugin.update(plugin);
+      }
+    });
 
     /* Update general messages */
     this.globalMessages = globalMessages;
