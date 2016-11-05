@@ -81,6 +81,8 @@ after_success:
   - node scripts/archive.js
   # Need to replace the HEAD branch descriptor in the archive filenames
   - for ARCHIVE in build/*.tar.xz; do mv $ARCHIVE $(echo $ARCHIVE | sed "s/HEAD/$TRAVIS_BRANCH/"); done
+  # Make a copy of the metadata validator archive for GitHub deployment to find.
+  - cp $(ls build/metadata-validator_*.tar.xz) build/metadata-validator.tar.xz
   # Need to replace the Bintray config files' version placeholders.
   - VERSION=$(ls build/loot_*.tar.xz | sed 's/build\/loot_//;s/.tar.xz//;')
   - sed -i "s/REPLACE_THIS_VERSION/$VERSION/" scripts/travis/loot.bintray.json
