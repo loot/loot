@@ -106,7 +106,7 @@ deploy:
     auth_token:
       secure: SecSfg5+S0OUzmC+kKixshqNDrRDj2uRYx58AAiZ1IDYTvQbPGRqEYCWZ9jbPd3h
     artifact: LOOT,API,metadata-validator,installer
-    draft: true
+    draft: false
     on:
       appveyor_repo_tag: true
 
