@@ -141,7 +141,7 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet"; Flags: skipifdoesntexist
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
