@@ -19,6 +19,8 @@ Changed
   redistributable.
 * Rewrote the API documentation, which is now hosted online at `Read The Docs`_.
 * The Windows release archive includes the ``.lib`` file for compile-time linking.
+* LOOT now supports v0.10 of the metadata syntax. This breaks compatibility with existing syntax. See :doc:`the syntax version history <../metadata/changelog>` for the details.
+* Updated libgit2 to 0.24.2.
 
 Removed
 -------
@@ -34,6 +36,8 @@ Fixed
 
 * Database creation was failing when passing paths to symlinks that point to
   the game and/or game local paths.
+* Cached plugin CRCs causing checksum conditions to always evaluate to false.
+* Updating the masterlist when the user's ``TEMP`` and ``TMP`` environmental variables point to a different drive than the one LOOT is installed on.
 
 .. _separate repository: https://github.com/loot/loot-api-c
 .. _Read The Docs: https://loot.readthedocs.io
