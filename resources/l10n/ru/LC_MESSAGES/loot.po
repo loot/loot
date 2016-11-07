@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-10-06 11:54+0500\n"
-"PO-Revision-Date: 2016-10-06 12:04+0500\n"
+"POT-Creation-Date: 2016-11-07 11:22+0500\n"
+"PO-Revision-Date: 2016-11-07 11:24+0500\n"
 "Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: src/gui/html/js/events.js:18
 msgid "Identifying conflicting plugins..."
@@ -32,12 +32,14 @@ msgstr "Редатировать плагины?"
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
 msgstr ""
-"Эта возможность предоставлена для того, чтобы авторы модов, использующие "
-"Creation Kit, могли установить там используемый ими порядок загрузки. "
-"Обратная сторона этого то, что любые, подписанные в Steam Workshop моды, "
-"могут быть заново загружены с помощью Steam. Вы желаете продолжить?"
+"Эта возможность предоставлена для того, чтобы мододелы, использующие "
+"Creation Kit, могли задать тот порядок загрузки, который они используют. "
+"Побочным эффектом является то, что любые моды с подпиской в мастерской Steam "
+"будут загружены через Steam снова (это не относится к Skyrim Special "
+"Edition). Продолжить?"
 
 #: src/gui/html/js/events.js:182
 msgid "Redate"
@@ -597,68 +599,7 @@ msgstr ""
 "элемент, попробуйте навести на него курсор мышки. В противном случае "
 "документация LOOT доступна через главное меню."
 
-#: src/gui/query/get_game_data_query.h:45
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "Обработка, объединение и сверка с метаданными.."
-
-#: src/gui/query/get_game_data_query.h:80
-msgid ""
-"An error occurred while parsing the masterlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Try updating "
-"your masterlist to resolve the error."
-msgstr ""
-"Во время обработки мастерлиста произошла ошибка: %1%. Возможно это произошло "
-"потому, что в обновлении LOOT изменена поддержка синтаксиса метаданных. "
-"Попробуйте обновить ваш мастерлист, чтобы исправить ошибку."
-
-#: src/gui/query/get_game_data_query.h:94
-msgid ""
-"An error occurred while parsing the userlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Your user "
-"metadata will have to be updated manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"documentation, which is accessible through LOOT's main menu.\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-"Ошибка при обработке пользовательских правил: %1%. Возможно в обновлении "
-"LOOT изменилась поддержка синтаксиса метеданных. Пользовательские правила "
-"нужно обновить вручную.\n"
-"\n"
-"Чтобы это сделать, испольуйте опцию главного меню LOOT 'Открыть расположение "
-"лога отладки', чтобы открыть папку с данными, потом откройте файл 'userlist."
-"yaml' в папке соответствующей игры. Тогда вы сможете отредактировать "
-"содержащиеся метаданные в соответствии с документацией, посмотреть которую "
-"можно в главном меню LOOT.\n"
-"\n"
-"Также вы можете задать вопросы на форумах, в теме LOOT, ссылки на которые "
-"есть на [сайте LOOT](https://loot.github.io/)."
-
-#: src/gui/query/metadata_query.h:94
-msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr ""
-"Глобальное сообщение включает выражение, которое не может быть оценено. "
-"Детали: %1%"
-
-#: src/gui/query/metadata_query.h:120 src/backend/plugin/plugin_sorter.cpp:217
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
-
-#: src/gui/query/sort_plugins_query.h:46
-msgid "Loading plugin contents..."
-msgstr "Загрузка содержимого плагина."
-
-#: src/gui/query/sort_plugins_query.h:66
-msgid "Sorting load order..."
-msgstr "Сортировка порядка загрузки..."
-
-#: src/backend/app/loot_paths.cpp:85
+#: src/backend/app/loot_paths.cpp:84
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr "Не удалось получить путь %LOCALAPPDATA%."
 
@@ -670,47 +611,43 @@ msgstr "Ошибка: Невозможно создать файл настро�
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Ошибка: Обработка настроек не удалась. %1%"
 
-#: src/backend/app/loot_state.cpp:194
+#: src/backend/app/loot_state.cpp:193
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 "Ошибка: Специфические для игры настройки не могут быть инициализированы. %1%"
 
-#: src/backend/app/loot_state.cpp:274
+#: src/backend/app/loot_state.cpp:272
 msgid "None of the supported games were detected."
 msgstr "Не удалось найти поддерживаемые игры."
 
-#: src/backend/game/game.cpp:60
-msgid "Invalid game ID supplied."
-msgstr "Предоставлен неверный идентификатор игры."
-
-#: src/backend/game/game.cpp:67
+#: src/backend/game/game.cpp:64
 msgid "Game path could not be detected."
 msgstr "Путь к игре найти не удалось."
 
-#: src/backend/game/game.cpp:77
+#: src/backend/game/game.cpp:74
 msgid "Could not create LOOT folder for game. Details:"
 msgstr "Не удалось создать папку LOOT для игры. Детали:"
 
-#: src/backend/game/load_order_handler.cpp:49
-msgid "Unsupported game ID supplied."
-msgstr "Предоставлен неверный идентификатор игры."
+#: src/backend/game/game_cache.cpp:119
+msgid "You have not sorted your load order this session."
+msgstr "В этой сессии порядок загрузки ещё не отсортирован"
 
-#: src/backend/game/load_order_handler.cpp:54
+#: src/backend/game/load_order_handler.cpp:46
 msgid "Game path is not initialised."
 msgstr "Путь к игре не инициализирован"
 
-#: src/backend/game/load_order_handler.cpp:88
+#: src/backend/game/load_order_handler.cpp:82
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось создать дескриптор игры. Детали не могут быть "
 "получены."
 
-#: src/backend/game/load_order_handler.cpp:91
+#: src/backend/game/load_order_handler.cpp:85
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr "libloadorder не удалось создать дескриптор игры. Детали:"
 
-#: src/backend/game/load_order_handler.cpp:109
+#: src/backend/game/load_order_handler.cpp:103
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
@@ -718,42 +655,42 @@ msgstr ""
 "libloadorder не удалось проверить активен ли плагин. Детали не могут быть "
 "извлечены."
 
-#: src/backend/game/load_order_handler.cpp:112
+#: src/backend/game/load_order_handler.cpp:106
 msgid "libloadorder failed to check if a plugin is active. Details:"
 msgstr "libloadorder не удалось проверить активен ли плагин. Детали:"
 
-#: src/backend/game/load_order_handler.cpp:134
+#: src/backend/game/load_order_handler.cpp:128
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось получить порядок загрузки. Детали не могут быть "
 "извлечены."
 
-#: src/backend/game/load_order_handler.cpp:137
+#: src/backend/game/load_order_handler.cpp:131
 msgid "libloadorder failed to get the load order. Details:"
 msgstr "libloadorder не удалось получить порядок загрузки. Детали:"
 
-#: src/backend/game/load_order_handler.cpp:160
+#: src/backend/game/load_order_handler.cpp:154
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 "libloadorder не удалось установить порядок загрузки. Детали не могут быть "
 "получены."
 
-#: src/backend/game/load_order_handler.cpp:163
+#: src/backend/game/load_order_handler.cpp:157
 msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder не удалось установить порядок загрузки. Детали:"
 
-#: src/backend/helpers/git_helper.cpp:104
+#: src/backend/helpers/git_helper.cpp:105
 msgid "Git operation failed. Error: %1%"
 msgstr "Не удалась операция с Git. Ошибка: %1%"
 
-#: src/backend/helpers/git_helper.cpp:145
+#: src/backend/helpers/git_helper.cpp:146
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr "Ошибка при попытке клонировать удаленное хранилище мастерлиста."
 
-#: src/backend/helpers/git_helper.cpp:194
+#: src/backend/helpers/git_helper.cpp:195
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
@@ -761,40 +698,33 @@ msgstr ""
 "Ошибка при попытке обновления мастерлиста. Это может быть из-за ошибка на "
 "стороне сервера. Попробуйте через несколько минут."
 
-#: src/backend/helpers/git_helper.cpp:308 src/backend/masterlist.cpp:50
-msgid "Unknown: Git repository missing"
-msgstr "Неизвестно: Отсутствует хранилище Git"
-
 #: src/backend/helpers/helpers.cpp:81
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr "Не удается открыть \"%1%\" для подсчета CRC."
 
-#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
+#: src/backend/helpers/helpers.cpp:103 src/backend/helpers/helpers.cpp:106
 msgid "Failed to open file in its default application."
 msgstr "Не удалось открыть файл в приложении по умолчанию."
 
-#: src/backend/metadata/condition_evaluator.cpp:171
+#: src/backend/metadata/condition_evaluator.cpp:170
 msgid "Invalid file path:"
 msgstr "Неверный путь к файлу:"
 
-#: src/backend/metadata/condition_evaluator.cpp:181
-#: src/backend/metadata/condition_evaluator.cpp:221
+#: src/backend/metadata/condition_evaluator.cpp:180
+#: src/backend/metadata/condition_evaluator.cpp:220
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr "Неверная строка regex \"%1%\": %2%"
 
-#: src/backend/metadata/condition_grammar.h:202
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "Ожидалось \"%1%\" на \"%2%\"."
+#: src/backend/metadata/condition_grammar.h:203
+msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
+msgstr "Не удалось обработать выражеие \"%1%\": ожидалось \"%2%\" на \"%3%\"."
 
-#: src/backend/metadata/conditional_metadata.cpp:73
-#: src/backend/metadata/conditional_metadata.cpp:104
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "Не удалось обработать выражение \"%1%\": %2%"
-
-#: src/backend/metadata/conditional_metadata.cpp:78
-#: src/backend/metadata/conditional_metadata.cpp:109
-msgid "Failed to parse condition \"%1%\"."
-msgstr "Не удалось обработать выражение \"%1%\"."
+#: src/backend/metadata/conditional_metadata.cpp:91
+msgid ""
+"Failed to parse condition \"%1%\": only partially matched expected syntax."
+msgstr ""
+"Не удалось обработать выражение \"%1%\": лишь частичное соответствиет "
+"ожидаемому синтаксису."
 
 #: src/backend/metadata/plugin_cleaning_data.cpp:88
 msgid ""
@@ -846,7 +776,7 @@ msgstr "Этот плагин требует подключенного плаг
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "Этот плагин несовместим с \"%1%\", но они оба присутствуют."
 
-#: src/backend/plugin/plugin_sorter.cpp:82
+#: src/backend/plugin/plugin_sorter.cpp:84
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
@@ -854,7 +784,11 @@ msgstr ""
 "Циклическое взаимодействие обнаружено между плагинами \"%1%\" и \"%2%\". "
 "Обратный цикл: %3%"
 
-#: src/backend/masterlist.cpp:43
+#: src/backend/plugin/plugin_sorter.cpp:219
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
+
+#: src/backend/masterlist.cpp:44
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -862,15 +796,15 @@ msgstr ""
 "Ошибка при попытке прочитать версию локального мастерлиста. Если эта ошибка "
 "происходит повторно, попробуйте удалить папку \".git\" в %1%."
 
-#: src/backend/masterlist.cpp:47
+#: src/backend/masterlist.cpp:48
 msgid "N/A: No masterlist present"
 msgstr "N/A: Мастерлист отсутствует"
 
-#: src/backend/masterlist.cpp:80 src/backend/masterlist.cpp:81
-msgid "(edited)"
-msgstr "(изменено)"
+#: src/backend/masterlist.cpp:51
+msgid "Unknown: Git repository missing"
+msgstr "Неизвестно: Отсутствует хранилище Git"
 
-#: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
+#: src/backend/masterlist.cpp:116 src/backend/masterlist.cpp:130
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -878,7 +812,7 @@ msgstr ""
 "Ошибка при попытке доступа к локальному хранилищу мастерлиста. Если эта "
 "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
 
-#: src/backend/masterlist.cpp:239
+#: src/backend/masterlist.cpp:237
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
@@ -887,11 +821,11 @@ msgstr ""
 "Ошибка при попытке прочитать информацию об обновлении мастерлиста. Если эта "
 "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
 
-#: src/backend/masterlist.cpp:253
+#: src/backend/masterlist.cpp:251
 msgid "Masterlist revision"
 msgstr "Версия мастерлиста"
 
-#: src/backend/masterlist.cpp:257
+#: src/backend/masterlist.cpp:255
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
@@ -900,6 +834,85 @@ msgstr ""
 "Последняя версия мастерлиста содержит синтаксическую ошибку, вместо неё LOOT "
 "использует самую последнюю без ошибок. Синтаксические ошибки обычно "
 "небольшие и исправляются в считанные часы."
+
+#~ msgid ""
+#~ "This feature is provided so that modders using the Creation Kit may set "
+#~ "the load order it uses. A side-effect is that any subscribed Steam "
+#~ "Workshop mods will be re-downloaded by Steam. Do you wish to continue?"
+#~ msgstr ""
+#~ "Эта возможность предоставлена для того, чтобы авторы модов, использующие "
+#~ "Creation Kit, могли установить там используемый ими порядок загрузки. "
+#~ "Обратная сторона этого то, что любые, подписанные в Steam Workshop моды, "
+#~ "могут быть заново загружены с помощью Steam. Вы желаете продолжить?"
+
+#~ msgid "Parsing, merging and evaluating metadata..."
+#~ msgstr "Обработка, объединение и сверка с метаданными.."
+
+#~ msgid ""
+#~ "An error occurred while parsing the masterlist: %1%. This probably "
+#~ "happened because an update to LOOT changed its metadata syntax support. "
+#~ "Try updating your masterlist to resolve the error."
+#~ msgstr ""
+#~ "Во время обработки мастерлиста произошла ошибка: %1%. Возможно это "
+#~ "произошло потому, что в обновлении LOOT изменена поддержка синтаксиса "
+#~ "метаданных. Попробуйте обновить ваш мастерлист, чтобы исправить ошибку."
+
+#~ msgid ""
+#~ "An error occurred while parsing the userlist: %1%. This probably happened "
+#~ "because an update to LOOT changed its metadata syntax support. Your user "
+#~ "metadata will have to be updated manually.\n"
+#~ "\n"
+#~ "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open "
+#~ "its data folder, then open your 'userlist.yaml' file in the relevant game "
+#~ "folder. You can then edit the metadata it contains with reference to the "
+#~ "documentation, which is accessible through LOOT's main menu.\n"
+#~ "\n"
+#~ "You can also seek support on LOOT's forum thread, which is linked to on "
+#~ "[LOOT's website](https://loot.github.io/)."
+#~ msgstr ""
+#~ "Ошибка при обработке пользовательских правил: %1%. Возможно в обновлении "
+#~ "LOOT изменилась поддержка синтаксиса метеданных. Пользовательские правила "
+#~ "нужно обновить вручную.\n"
+#~ "\n"
+#~ "Чтобы это сделать, испольуйте опцию главного меню LOOT 'Открыть "
+#~ "расположение лога отладки', чтобы открыть папку с данными, потом откройте "
+#~ "файл 'userlist.yaml' в папке соответствующей игры. Тогда вы сможете "
+#~ "отредактировать содержащиеся метаданные в соответствии с документацией, "
+#~ "посмотреть которую можно в главном меню LOOT.\n"
+#~ "\n"
+#~ "Также вы можете задать вопросы на форумах, в теме LOOT, ссылки на которые "
+#~ "есть на [сайте LOOT](https://loot.github.io/)."
+
+#~ msgid ""
+#~ "A global message contains a condition that could not be evaluated. "
+#~ "Details: %1%"
+#~ msgstr ""
+#~ "Глобальное сообщение включает выражение, которое не может быть оценено. "
+#~ "Детали: %1%"
+
+#~ msgid "Loading plugin contents..."
+#~ msgstr "Загрузка содержимого плагина."
+
+#~ msgid "Sorting load order..."
+#~ msgstr "Сортировка порядка загрузки..."
+
+#~ msgid "Invalid game ID supplied."
+#~ msgstr "Предоставлен неверный идентификатор игры."
+
+#~ msgid "Unsupported game ID supplied."
+#~ msgstr "Предоставлен неверный идентификатор игры."
+
+#~ msgid "Expected \"%1%\" at \"%2%\"."
+#~ msgstr "Ожидалось \"%1%\" на \"%2%\"."
+
+#~ msgid "Failed to parse condition \"%1%\": %2%"
+#~ msgstr "Не удалось обработать выражение \"%1%\": %2%"
+
+#~ msgid "Failed to parse condition \"%1%\"."
+#~ msgstr "Не удалось обработать выражение \"%1%\"."
+
+#~ msgid "(edited)"
+#~ msgstr "(изменено)"
 
 #~ msgid "Failed to change game. Details: %1%"
 #~ msgstr "Не удалось изменить игру. Детали: %1%"
