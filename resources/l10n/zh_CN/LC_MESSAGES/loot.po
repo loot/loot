@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-09-18 11:57+0800\n"
-"PO-Revision-Date: 2016-09-18 11:58+0800\n"
+"POT-Creation-Date: 2016-11-09 01:56+0800\n"
+"PO-Revision-Date: 2016-11-09 02:00+0800\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -29,7 +29,7 @@ msgstr "主列表无需更新。"
 
 #: src/gui/html/js/events.js:150
 msgid "Sorting made no changes to the load order."
-msgstr "加载顺序排序没有变化。"
+msgstr "加载顺序没有变化。"
 
 #: src/gui/html/js/events.js:182
 msgid "Redate Plugins?"
@@ -39,10 +39,11 @@ msgstr "修改插件时间？"
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
 msgstr ""
 "此功能方便使用Creation Kit的modder可以设定个人顺序。副作用是所有在Steam "
-"Workshop订阅的mod都会被Steam重新下载，您确定要继续吗？"
+"Workshop订阅的mod都会被Steam重新下载(这不影响天际特别版)。您确定要继续吗？"
 
 #: src/gui/html/js/events.js:182
 msgid "Redate"
@@ -591,63 +592,7 @@ msgstr ""
 "许多界面元素都有使用提示。如果你不知道某些功能什么，试着将鼠标停在它上。另"
 "外，LOOT的帮助文档可以从主菜单进入。"
 
-#: src/gui/query/get_game_data_query.h:45
-msgid "Parsing, merging and evaluating metadata..."
-msgstr "解析、融合并评估插件元数据..."
-
-#: src/gui/query/get_game_data_query.h:80
-msgid ""
-"An error occurred while parsing the masterlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Try updating "
-"your masterlist to resolve the error."
-msgstr ""
-"解析主列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。尝试"
-"更新你的主列表来解决这个错误。"
-
-#: src/gui/query/get_game_data_query.h:94
-msgid ""
-"An error occurred while parsing the userlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Your user "
-"metadata will have to be updated manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"[syntax documentation](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%"
-"%20Metadata%%20Syntax.html).\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-"解析用户列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。你"
-"的用户数据必须手动更新。\n"
-"\n"
-"要完成更新，请使用 LOOT 主菜单中的 '打开本地调试日志' 功能打开数据目录，然后"
-"在相关目录打开你的 'userlist.yaml' 文件。你可以编辑这个元数据，请参考 [语法文"
-"档](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%%20Syntax."
-"html)。\n"
-"你也可以在 LOOT 论坛寻求支持，链接为 [LOOT官方网站](https://loot.github."
-"io/)。"
-
-#: src/gui/query/metadata_query.h:94
-msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
-
-#: src/gui/query/metadata_query.h:120 src/backend/plugin/plugin_sorter.cpp:217
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
-
-#: src/gui/query/sort_plugins_query.h:46
-msgid "Loading plugin contents..."
-msgstr "加载插件内容..."
-
-#: src/gui/query/sort_plugins_query.h:66
-msgid "Sorting load order..."
-msgstr "排序加载顺序..."
-
-#: src/backend/app/loot_paths.cpp:85
+#: src/backend/app/loot_paths.cpp:84
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr "无法获取%LOCALAPPDATA%路径。"
 
@@ -659,120 +604,107 @@ msgstr "错误：无法创建LOOT配置文件。%1%"
 msgid "Error: Settings parsing failed. %1%"
 msgstr "错误：设置解析失败。%1%"
 
-#: src/backend/app/loot_state.cpp:194
+#: src/backend/app/loot_state.cpp:193
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr "错误：游戏专属设置无法初始化。%1%"
 
-#: src/backend/app/loot_state.cpp:274
+#: src/backend/app/loot_state.cpp:272
 msgid "None of the supported games were detected."
 msgstr "没有支持的游戏被选中。"
 
-#: src/backend/game/game.cpp:60
-msgid "Invalid game ID supplied."
-msgstr "无效的游戏ID"
-
-#: src/backend/game/game.cpp:67
+#: src/backend/game/game.cpp:64
 msgid "Game path could not be detected."
 msgstr "无法检测到游戏路径。"
 
-#: src/backend/game/game.cpp:77
+#: src/backend/game/game.cpp:74
 msgid "Could not create LOOT folder for game. Details:"
 msgstr "无法创建 LOOT 文件夹。详细信息："
 
-#: src/backend/game/load_order_handler.cpp:49
-msgid "Unsupported game ID supplied."
-msgstr "不支持的游戏ID"
+#: src/backend/game/game_cache.cpp:119
+msgid "You have not sorted your load order this session."
+msgstr "你还没有在这个会话中整理你的加载顺序。"
 
-#: src/backend/game/load_order_handler.cpp:54
+#: src/backend/game/load_order_handler.cpp:46
 msgid "Game path is not initialised."
 msgstr "游戏路径未初始化。"
 
-#: src/backend/game/load_order_handler.cpp:88
+#: src/backend/game/load_order_handler.cpp:82
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr "libloadorder 无法创建游戏处理器，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:91
+#: src/backend/game/load_order_handler.cpp:85
 msgid "libloadorder failed to create a game handle. Details:"
 msgstr "libloadorder 无法创建游戏处理器，详细信息："
 
-#: src/backend/game/load_order_handler.cpp:109
+#: src/backend/game/load_order_handler.cpp:103
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
 msgstr "libloadorder 无法检查插件是否处于活动状态，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:112
+#: src/backend/game/load_order_handler.cpp:106
 msgid "libloadorder failed to check if a plugin is active. Details:"
 msgstr "libloadorder 无法检查插件是否处于活动状态。详细信息︰"
 
-#: src/backend/game/load_order_handler.cpp:134
+#: src/backend/game/load_order_handler.cpp:128
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr "libloadorder 无法获取加载顺序，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:137
+#: src/backend/game/load_order_handler.cpp:131
 msgid "libloadorder failed to get the load order. Details:"
 msgstr "libloadorder 无法获取加载顺序，详细信息："
 
-#: src/backend/game/load_order_handler.cpp:160
+#: src/backend/game/load_order_handler.cpp:154
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr "libloadorder 无法设置加载顺序，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:163
+#: src/backend/game/load_order_handler.cpp:157
 msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder 无法设置加载顺序，详细信息："
 
-#: src/backend/helpers/git_helper.cpp:104
+#: src/backend/helpers/git_helper.cpp:105
 msgid "Git operation failed. Error: %1%"
 msgstr "Git 操作失败。错误：%1%"
 
-#: src/backend/helpers/git_helper.cpp:145
+#: src/backend/helpers/git_helper.cpp:146
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr "试图复制远程主列表库时发生错误。"
 
-#: src/backend/helpers/git_helper.cpp:197
+#: src/backend/helpers/git_helper.cpp:195
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr "更新主列表时发生错误。这可能是由于服务器端故障。过几分钟后再进行尝试。"
 
-#: src/backend/helpers/git_helper.cpp:311 src/backend/masterlist.cpp:50
-msgid "Unknown: Git repository missing"
-msgstr "未知：Git 库缺失"
-
 #: src/backend/helpers/helpers.cpp:81
 msgid "Unable to open \"%1%\" for CRC calculation."
 msgstr "无法打开\"%1%\"进行CRC计算。"
 
-#: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
+#: src/backend/helpers/helpers.cpp:103 src/backend/helpers/helpers.cpp:106
 msgid "Failed to open file in its default application."
 msgstr "无法使用它的默认程序来打开这个文件。"
 
-#: src/backend/metadata/condition_evaluator.cpp:171
+#: src/backend/metadata/condition_evaluator.cpp:170
 msgid "Invalid file path:"
 msgstr "无效文件路径："
 
-#: src/backend/metadata/condition_evaluator.cpp:181
-#: src/backend/metadata/condition_evaluator.cpp:221
+#: src/backend/metadata/condition_evaluator.cpp:180
+#: src/backend/metadata/condition_evaluator.cpp:220
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr "无效表达式\"%1%\"：%2%"
 
-#: src/backend/metadata/condition_grammar.h:202
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "预期\"%1%\"在\"%2%\"。"
+#: src/backend/metadata/condition_grammar.h:203
+msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
+msgstr "无法解析条件 \"%1%\"：预期 %2% 在 \"%3%\"。"
 
-#: src/backend/metadata/conditional_metadata.cpp:73
-#: src/backend/metadata/conditional_metadata.cpp:104
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "无法解析条件 \"%1%\"：%2%"
-
-#: src/backend/metadata/conditional_metadata.cpp:78
-#: src/backend/metadata/conditional_metadata.cpp:109
-msgid "Failed to parse condition \"%1%\"."
-msgstr "无法解析条件 \"%1%\"。"
+#: src/backend/metadata/conditional_metadata.cpp:91
+msgid ""
+"Failed to parse condition \"%1%\": only partially matched expected syntax."
+msgstr "无法解析条件 \"%1%\": 只是部分匹配预期的语法。"
 
 #: src/backend/metadata/plugin_cleaning_data.cpp:88
 msgid ""
@@ -823,13 +755,17 @@ msgstr "这个插件激活\"%1%\"。"
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "这个插件与\"%1%\"不兼容，但是两者都存在。"
 
-#: src/backend/plugin/plugin_sorter.cpp:82
+#: src/backend/plugin/plugin_sorter.cpp:84
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr "插件\"%1%\"和 \"%2%\"之间产生循环。回环：%3%"
 
-#: src/backend/masterlist.cpp:43
+#: src/backend/plugin/plugin_sorter.cpp:219
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
+
+#: src/backend/masterlist.cpp:44
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -837,15 +773,15 @@ msgstr ""
 "读取本地主列表版本时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/masterlist.cpp:47
+#: src/backend/masterlist.cpp:48
 msgid "N/A: No masterlist present"
 msgstr "不可用：没有主列表"
 
-#: src/backend/masterlist.cpp:80 src/backend/masterlist.cpp:81
-msgid "(edited)"
-msgstr "(已修改)"
+#: src/backend/masterlist.cpp:51
+msgid "Unknown: Git repository missing"
+msgstr "未知：Git 库缺失"
 
-#: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
+#: src/backend/masterlist.cpp:116 src/backend/masterlist.cpp:130
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -853,7 +789,7 @@ msgstr ""
 "存取本地主列表库时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/masterlist.cpp:239
+#: src/backend/masterlist.cpp:237
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
@@ -862,11 +798,11 @@ msgstr ""
 "更新主列表时读取信息发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/masterlist.cpp:253
+#: src/backend/masterlist.cpp:251
 msgid "Masterlist revision"
 msgstr "主列表版次"
 
-#: src/backend/masterlist.cpp:257
+#: src/backend/masterlist.cpp:255
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
@@ -874,6 +810,64 @@ msgid ""
 msgstr ""
 "最新的主列表版次包含一个语法错误，LOOT 将使用最近的正常版次替代。语法错误通常"
 "是小问题，一般在数小时内修正。"
+
+#~ msgid "Parsing, merging and evaluating metadata..."
+#~ msgstr "解析、融合并评估插件元数据..."
+
+#~ msgid ""
+#~ "An error occurred while parsing the masterlist: %1%. This probably "
+#~ "happened because an update to LOOT changed its metadata syntax support. "
+#~ "Try updating your masterlist to resolve the error."
+#~ msgstr ""
+#~ "解析主列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。"
+#~ "尝试更新你的主列表来解决这个错误。"
+
+#~ msgid ""
+#~ "An error occurred while parsing the userlist: %1%. This probably happened "
+#~ "because an update to LOOT changed its metadata syntax support. Your user "
+#~ "metadata will have to be updated manually.\n"
+#~ "\n"
+#~ "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open "
+#~ "its data folder, then open your 'userlist.yaml' file in the relevant game "
+#~ "folder. You can then edit the metadata it contains with reference to the "
+#~ "[syntax documentation](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%"
+#~ "%20Metadata%%20Syntax.html).\n"
+#~ "\n"
+#~ "You can also seek support on LOOT's forum thread, which is linked to on "
+#~ "[LOOT's website](https://loot.github.io/)."
+#~ msgstr ""
+#~ "解析用户列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支"
+#~ "持。你的用户数据必须手动更新。\n"
+#~ "\n"
+#~ "要完成更新，请使用 LOOT 主菜单中的 '打开本地调试日志' 功能打开数据目录，然"
+#~ "后在相关目录打开你的 'userlist.yaml' 文件。你可以编辑这个元数据，请参考 "
+#~ "[语法文档](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%"
+#~ "%20Syntax.html)。\n"
+#~ "你也可以在 LOOT 论坛寻求支持，链接为 [LOOT官方网站](https://loot.github."
+#~ "io/)。"
+
+#~ msgid ""
+#~ "A global message contains a condition that could not be evaluated. "
+#~ "Details: %1%"
+#~ msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
+
+#~ msgid "Loading plugin contents..."
+#~ msgstr "加载插件内容..."
+
+#~ msgid "Sorting load order..."
+#~ msgstr "排序加载顺序..."
+
+#~ msgid "Invalid game ID supplied."
+#~ msgstr "无效的游戏ID"
+
+#~ msgid "Unsupported game ID supplied."
+#~ msgstr "不支持的游戏ID"
+
+#~ msgid "Expected \"%1%\" at \"%2%\"."
+#~ msgstr "预期\"%1%\"在\"%2%\"。"
+
+#~ msgid "(edited)"
+#~ msgstr "(已修改)"
 
 #~ msgid "Failed to change game. Details: %1%"
 #~ msgstr "无法更换游戏，详细信息：%1%"
