@@ -58,7 +58,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
     registryKey_ = "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path";
-    lootFolderName_ = "SkyrimSE";
+    lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::fo3) {

@@ -28,6 +28,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 
+#include "backend/app/loot_paths.h"
 #include "loot/loot_version.h"
 
 using std::lock_guard;
@@ -94,7 +95,7 @@ void LootSettings::load(YAML::Node& settings) {
       gameSettings_.push_back(GameSettings(GameType::tes5));
 
     if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::tes5se)) == end(gameSettings_))
-        gameSettings_.push_back(GameSettings(GameType::tes5se));
+      gameSettings_.push_back(GameSettings(GameType::tes5se));
 
     if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::fo3)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::fo3));
@@ -272,6 +273,13 @@ void LootSettings::upgradeYaml(YAML::Node& yaml) {
     YAML::Node validGames;
     for (auto node : yaml["games"]) {
       try {
+        if (node["type"].as<string>() == "SkyrimSE" && node["folder"].as<string>() == "SkyrimSE") {
+          node["type"] = GameSettings(GameType::tes5se).FolderName();
+          node["folder"] = GameSettings(GameType::tes5se).FolderName();
+
+          boost::filesystem::rename(LootPaths::getLootDataPath() / "SkyrimSE", LootPaths::getLootDataPath() / node["folder"].as<string>());
+        }
+
         GameSettings settings(node.as<GameSettings>());
 
         if (!yaml["Games"]) {
