@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-11-05 12:51+0100\n"
+"POT-Creation-Date: 2016-11-12 08:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgid ""
 "plugins?"
 msgstr ""
 
-#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:401
+#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:399
 msgid "Clear"
 msgstr ""
 
@@ -585,6 +585,54 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 
+#: src/gui/query/get_game_data_query.h:44
+msgid "Parsing, merging and evaluating metadata..."
+msgstr ""
+
+#: src/gui/query/get_game_data_query.h:79
+msgid ""
+"An error occurred while parsing the masterlist: %1%. This probably happened "
+"because an update to LOOT changed its metadata syntax support. Try updating "
+"your masterlist to resolve the error."
+msgstr ""
+
+#: src/gui/query/get_game_data_query.h:93
+msgid ""
+"An error occurred while parsing the userlist: %1%. This probably happened "
+"because an update to LOOT changed its metadata syntax support. Your user "
+"metadata will have to be updated manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+
+#: src/gui/query/metadata_query.h:79 src/gui/query/metadata_query.h:80
+msgid "(edited)"
+msgstr ""
+
+#: src/gui/query/metadata_query.h:101
+msgid ""
+"A global message contains a condition that could not be evaluated. Details: "
+"%1%"
+msgstr ""
+
+#: src/gui/query/metadata_query.h:127 src/backend/plugin/plugin_sorter.cpp:219
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+
+#: src/gui/query/sort_plugins_query.h:48
+msgid "Loading plugin contents..."
+msgstr ""
+
+#: src/gui/query/sort_plugins_query.h:75
+msgid "Sorting load order..."
+msgstr ""
+
 #: src/backend/app/loot_paths.cpp:84
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr ""
@@ -649,12 +697,12 @@ msgstr ""
 msgid "libloadorder failed to get the load order. Details:"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:154
+#: src/backend/game/load_order_handler.cpp:168
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:157
+#: src/backend/game/load_order_handler.cpp:171
 msgid "libloadorder failed to set the load order. Details:"
 msgstr ""
 
@@ -752,10 +800,6 @@ msgstr ""
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
-msgstr ""
-
-#: src/backend/plugin/plugin_sorter.cpp:219
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
 #: src/backend/masterlist.cpp:44
