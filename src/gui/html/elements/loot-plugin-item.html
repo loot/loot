@@ -53,7 +53,7 @@
         min-height: 32px;
         height: 32px;
       }
-      :host-context(body[data-editors]) paper-item-body[two-line] {
+      :host-context(body[data-state=editing]) paper-item-body[two-line] {
         min-height: 40px;
       }
       div[item-icon] {
@@ -72,7 +72,7 @@
       #secondary iron-icon {
         transition: height var(--state-transition-time);
       }
-      :host-context(body[data-editors]) #primary {
+      :host-context(body[data-state=editing]) #primary {
           line-height: normal;
       }
       #secondary > span {
@@ -89,7 +89,7 @@
           color: var(--secondary-text-color);
       }
       /* When not in edit mode, hide secondary text. */
-      :host-context(body:not([data-editors])) #secondary {
+      :host-context(body:not([data-state=editing])) #secondary {
           height: 0;
           overflow: hidden;
       }

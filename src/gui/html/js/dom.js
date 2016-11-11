@@ -220,7 +220,7 @@
              case that has happened. */
           window.getSelection().removeAllRanges();
 
-          if (!document.body.hasAttribute('data-editors')) {
+          if (document.body.getAttribute('data-state') !== 'editing') {
             document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
           }
         }
@@ -253,6 +253,10 @@
 
     static initialiseAutocompleteBashTags(tags) {
       getElementInTableRowTemplate('tagRow', 'name').setAttribute('source', JSON.stringify(tags));
+    }
+
+    static setUIState(state) {
+      document.body.setAttribute('data-state', state);
     }
   };
 }));

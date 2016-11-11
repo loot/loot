@@ -82,7 +82,8 @@
         overflow: hidden;
         white-space: nowrap;
       }
-      :host-context(body[data-editors]) #editMetadata {
+      :host-context(body[data-state=editing]) #editMetadata,
+      :host-context(body[data-state=sorting]) #editMetadata {
         color: #9b9b9b;
         pointer-events: none;
       }

@@ -57,6 +57,8 @@
     dom.enable('gameMenu', false);
     dom.enable('refreshContentButton', false);
 
+    dom.setUIState('sorting');
+
     this.currentState = State.SORTING_STATE;
   }
 
@@ -79,6 +81,8 @@
     dom.enable('gameMenu');
     dom.enable('refreshContentButton');
 
+    dom.setUIState('default');
+
     this.currentState = State.DEFAULT_STATE;
   }
 
@@ -99,6 +103,8 @@
     dom.enable('updateMasterlistButton', false);
     dom.enable('sortButton', false);
 
+    dom.setUIState('editing');
+
     this.currentState = State.EDITING_STATE;
   }
 
@@ -118,6 +124,8 @@
     dom.enable('gameMenu');
     dom.enable('updateMasterlistButton');
     dom.enable('sortButton');
+
+    dom.setUIState('default');
 
     this.currentState = State.DEFAULT_STATE;
   }

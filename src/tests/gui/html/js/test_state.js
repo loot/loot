@@ -8,6 +8,10 @@ function getEnabled(elementId) {
   return loot.DOM.elementEnabledStates.get(elementId);
 }
 
+function getDomState() {
+  return loot.DOM.state;
+}
+
 beforeEach(() => {
   loot.DOM.elementShownStates.clear();
   loot.DOM.elementEnabledStates.clear();
@@ -116,6 +120,8 @@ describe('State', () => {
       getShown('cancelSortButton').should.be.true();
       getEnabled('gameMenu').should.be.false();
       getEnabled('refreshContentButton').should.be.false();
+
+      getDomState().should.equal('sorting');
     });
 
     it('should throw an error if called in the editing state', () => {
@@ -155,6 +161,8 @@ describe('State', () => {
       getShown('cancelSortButton').should.be.false();
       getEnabled('gameMenu').should.be.true();
       getEnabled('refreshContentButton').should.be.true();
+
+      getDomState().should.equal('default');
     });
 
     it('should throw an error if called in the editing state', () => {
@@ -193,6 +201,8 @@ describe('State', () => {
       getEnabled('gameMenu').should.be.false();
       getEnabled('updateMasterlistButton').should.be.false();
       getEnabled('sortButton').should.be.false();
+
+      getDomState().should.equal('editing');
     });
 
     it('should throw an error if called in the sorting state', () => {
@@ -234,6 +244,8 @@ describe('State', () => {
       getEnabled('gameMenu').should.be.true();
       getEnabled('updateMasterlistButton').should.be.true();
       getEnabled('sortButton').should.be.true();
+
+      getDomState().should.equal('default');
     });
 
     it('should throw an error if called in the sorting state', () => {

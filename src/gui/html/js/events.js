@@ -275,9 +275,9 @@ function handleUnappliedChangesClose(change) {
   });
 }
 function onQuit() {
-  if (!document.getElementById('applySortButton').hidden) {
+  if (loot.state.isInSortingState()) {
     handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
-  } else if (document.body.hasAttribute('data-editors')) {
+  } else if (loot.state.isInEditingState()) {
     handleUnappliedChangesClose(loot.l10n.translate('metadata edits'));
   } else {
     window.close();
@@ -329,8 +329,9 @@ function onEditorOpen(evt) {
   /* Set the editor data. */
   document.getElementById('editor').setEditorData(evt.target.data);
 
-  /* Set body attribute so that sidebar items are styled correctly. */
-  document.body.setAttribute('data-editors', true);
+  loot.state.enterEditingState();
+
+  /* Sidebar items have been resized. */
   document.getElementById('cardsNav').notifyResize();
 
   /* Update the plugin's editor state tracker */
@@ -342,8 +343,6 @@ function onEditorOpen(evt) {
     elements[i].draggable = true;
     elements[i].addEventListener('dragstart', elements[i].onDragStart);
   }
-
-  loot.state.enterEditingState();
 
   return loot.query('editorOpened').catch(loot.handlePromiseError);
 }
@@ -378,8 +377,8 @@ function onEditorClose(evt) {
     promise = loot.query('editorClosed', 'null');
   }
   promise.catch(loot.handlePromiseError).then(() => {
-    /* Remove body attribute so that sidebar items are styled correctly. */
-    document.body.removeAttribute('data-editors');
+    loot.state.exitEditingState();
+    /* Sidebar items have been resized. */
     document.getElementById('cardsNav').notifyResize();
 
     /* Remove drag 'n' drop event handlers. */
@@ -389,7 +388,6 @@ function onEditorClose(evt) {
       elements[i].removeEventListener('dragstart', elements[i].onDragStart);
     }
 
-    loot.state.exitEditingState();
   }).catch(loot.handlePromiseError);
 }
 function onCopyMetadata(evt) {
