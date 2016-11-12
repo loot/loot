@@ -2,7 +2,7 @@
 Version History
 ***************
 
-0.10.1 - Unreleased
+0.10.1 - 2016-11-12
 ===================
 
 No API changes.
