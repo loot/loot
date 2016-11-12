@@ -4,6 +4,25 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.10.1 - Unreleased
+===================
+
+Changed
+-------
+
+- When saving a load order for Fallout 4 or Skyrim SE, the official plugins (including DLC plugins) are no longer written to ``plugins.txt`` to match game behaviour and improve interoperability with other modding utilities.
+- LOOT now uses ``Skyrim Special Edition`` as the folder name for storing its Skyrim SE data, to mirror the game's own folder naming and improve interoperability with other modding utilities, and automatically renames any ``SkyrimSE`` folder created by LOOT v0.10.0.
+- Updated Russian translation.
+- Updated Chinese translation.
+
+Fixed
+-----
+
+- When saving a load order for Fallout 4 or Skyrim SE, the positions of official plugins (including DLC plugins) in ``plugins.txt`` are now ignored if they are present and a hardcoded order used instead. Note that there is a bug in Skyrim SE v1.2.39 that causes the DLC plugins to be loaded in timestamp order: this behaviour is ignored.
+- If the LOOT installer installed the MSVC redistributable, the latter would silently force a restart, leading to possible data loss.
+- It was possible to open the metadata editor between sorting and applying/cancelling a sorted load order, which would then cause an error when trying to close the editor. The editor is now correctly disabled during the sort process.
+
+
 0.10.0 - 2016-11-06
 ===================
 
