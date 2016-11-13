@@ -220,7 +220,8 @@
              case that has happened. */
           window.getSelection().removeAllRanges();
 
-          if (document.body.getAttribute('data-state') !== 'editing') {
+          if (document.body.getAttribute('data-state') !== 'editing'
+              && document.body.getAttribute('data-state') !== 'sorting') {
             document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
           }
         }
