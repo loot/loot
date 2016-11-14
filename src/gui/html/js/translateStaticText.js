@@ -27,7 +27,7 @@
 
   function translatePluginEditorTemplate(l10n) {
     /* Plugin editor template. */
-    const pluginEditor = document.getElementById('loot-plugin-editor').querySelector('template').content;
+    const pluginEditor = document.getElementById('editor').shadowRoot;
 
     pluginEditor.getElementById('enableEdits').previousElementSibling.textContent = l10n.translate('Enable Edits');
     pluginEditor.getElementById('priorityValue').previousElementSibling.textContent = l10n.translate('Priority');
