@@ -77,7 +77,7 @@ function onChangeGame(evt) {
 }
 /* Masterlist update process, minus progress dialog. */
 function updateMasterlist() {
-  loot.Dialog.showProgress('Updating and parsing masterlist...');
+  loot.Dialog.showProgress(loot.l10n.translate('Updating and parsing masterlist...'));
   return loot.query('updateMasterlist').then(JSON.parse).then((result) => {
     if (result) {
       /* Update JS variables. */
@@ -182,7 +182,7 @@ function onRedatePlugins(evt) {
   loot.Dialog.askQuestion(loot.l10n.translate('Redate Plugins?'), loot.l10n.translate('This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam (this does not affect Skyrim Special Edition). Do you wish to continue?'), loot.l10n.translate('Redate'), (result) => {
     if (result) {
       loot.query('redatePlugins').then(() => {
-        loot.Dialog.showNotification('Plugins were successfully redated.');
+        loot.Dialog.showNotification(loot.l10n.translate('Plugins were successfully redated.'));
       }).catch(loot.handlePromiseError);
     }
   });
