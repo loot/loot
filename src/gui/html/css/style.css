@@ -92,6 +92,7 @@ div[drawer] > iron-pages {
 #cardsNav {
   padding-top: 8px;
   padding-bottom: 8px;
+  will-change: transform;
 }
 #filters {
     padding: 8px 0;
