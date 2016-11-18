@@ -454,7 +454,7 @@ function onFolderChange(evt) {
   let gameSettings;
   if (loot.settings && loot.settings.games) {
     gameSettings = loot.settings.games.find(game => (
-      (game.type === 'Skyrim' || game.type === 'SkyrimSE')
+      (game.type === 'Skyrim' || game.type === 'Skyrim Special Edition')
       && game.folder === evt.detail.folder
     ));
   }
