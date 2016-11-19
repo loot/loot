@@ -55,6 +55,12 @@
 
         return !tag.commit.sha.startsWith(currentBuild);
       });
+    }).catch((error) => {
+      if (!error.message) {
+        console.error(error);
+      } else {
+        throw error;
+      }
     });
   };
 }));
