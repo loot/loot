@@ -66,13 +66,17 @@ boost::filesystem::path LootPaths::getLogPath() {
   return lootDataPath_ / "LOOTDebugLog.txt";
 }
 
-void LootPaths::initialise() {
+void LootPaths::initialise(const std::string& lootDataPath) {
     // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   boost::filesystem::path::imbue(std::locale());
 
   lootAppPath_ = boost::filesystem::current_path();
-  lootDataPath_ = getLocalAppDataPath() / "LOOT";
+
+  if (!lootDataPath.empty())
+    lootDataPath_ = lootDataPath;
+  else
+    lootDataPath_ = getLocalAppDataPath() / "LOOT";
 }
 
 boost::filesystem::path LootPaths::getLocalAppDataPath() {

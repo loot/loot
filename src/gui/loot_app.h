@@ -36,8 +36,7 @@ class LootApp : public CefApp,
   public CefBrowserProcessHandler,
   public CefRenderProcessHandler {
 public:
-  LootApp();
-  void Initialise(const std::string& commandLineGameArg);
+  void Initialise(const std::string& defaultGame, const std::string& lootDataPath);
 
   // Override CefApp methods.
   virtual void OnBeforeCommandLineProcessing(const CefString& process_type,

@@ -50,7 +50,7 @@ LOOT_API bool IsCompatible(const unsigned int versionMajor, const unsigned int v
 LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
                                                            const std::string& gamePath,
                                                            const std::string& gameLocalPath) {
-  loot::LootPaths::initialise();
+  loot::LootPaths::initialise("");
 
   //Disable logging or else stdout will get overrun.
   boost::log::core::get()->set_logging_enabled(false);

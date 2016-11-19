@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-11-12 08:53+0000\n"
+"POT-Creation-Date: 2016-11-19 11:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,10 @@ msgstr ""
 
 #: src/gui/html/js/events.js:18
 msgid "Identifying conflicting plugins..."
+msgstr ""
+
+#: src/gui/html/js/events.js:80
+msgid "Updating and parsing masterlist..."
 msgstr ""
 
 #: src/gui/html/js/events.js:100
@@ -43,6 +47,10 @@ msgstr ""
 
 #: src/gui/html/js/events.js:182
 msgid "Redate"
+msgstr ""
+
+#: src/gui/html/js/events.js:185
+msgid "Plugins were successfully redated."
 msgstr ""
 
 #: src/gui/html/js/events.js:191
@@ -633,7 +641,7 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/backend/app/loot_paths.cpp:84
+#: src/backend/app/loot_paths.cpp:88
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr ""
 

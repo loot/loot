@@ -37,9 +37,9 @@ public:
   static boost::filesystem::path getSettingsPath();
   static boost::filesystem::path getLogPath();
 
-  // Sets the app path to the current path, and the data path to the user
-  // local app data path / "LOOT".
-  static void initialise();
+  // Sets the app path to the current path, and the data path to the given
+  // path or (if it is an empty string), local app data path / "LOOT".
+  static void initialise(const std::string& lootDataPath);
 private:
     //Get the local application data path.
   static boost::filesystem::path getLocalAppDataPath();

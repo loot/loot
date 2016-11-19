@@ -35,12 +35,9 @@
 #include "gui/loot_scheme_handler_factory.h"
 
 namespace loot {
-LootApp::LootApp() {
-  LootPaths::initialise();
-}
-
-void LootApp::Initialise(const std::string& commandLineGameArg) {
-  lootState_.init(commandLineGameArg);
+void LootApp::Initialise(const std::string& defaultGame, const std::string& lootDataPath) {
+  LootPaths::initialise(lootDataPath);
+  lootState_.init(defaultGame);
 }
 
 void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,

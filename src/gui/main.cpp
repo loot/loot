@@ -76,6 +76,27 @@ int XIOErrorHandlerImpl(Display *display) {
 }
 #endif
 
+void processCommandLineArguments(CefRefPtr<loot::LootApp> app) {
+  std::string defaultGame;
+  std::string lootDataPath;
+
+  // Record command line arguments.
+  CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
+#ifdef _WIN32
+  command_line->InitFromString(::GetCommandLineW());
+#endif
+
+  if (command_line->HasSwitch("game")) {  // Format is: --game=<game>
+    defaultGame = command_line->GetSwitchValue("game");
+  }
+
+  if (command_line->HasSwitch("loot-data-path")) {
+    lootDataPath = command_line->GetSwitchValue("loot-data-path");
+  }
+
+  app.get()->Initialise(defaultGame, lootDataPath);
+}
+
 #ifdef _WIN32
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 #else
@@ -124,21 +145,10 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
-    // Handle command line args (not CEF args)
-    //----------------------------------------
+  // Handle command line args (not CEF args)
+  //----------------------------------------
 
-  std::string gameStr;
-
-  // Record command line arguments.
-  CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
-#ifdef _WIN32
-  command_line->InitFromString(::GetCommandLineW());
-#endif
-  if (command_line->HasSwitch("game")) {  // Format is: --game=<game>
-    gameStr = command_line->GetSwitchValue("game");
-  }
-
-  app.get()->Initialise(gameStr);
+  processCommandLineArguments(app);
 
   // Back to CEF
   //------------
