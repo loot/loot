@@ -140,18 +140,9 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   });
 
   // UI files.
-  fs.mkdirsSync(path.join(tempPath, 'resources', 'ui', 'css'));
   fs.copySync(
-    path.join(releasePath, 'resources', 'ui', 'index.html'),
-    path.join(tempPath, 'resources', 'ui', 'index.html')
-  );
-  fs.copySync(
-    path.join(rootPath, 'resources', 'ui', 'css', 'dark-theme.css'),
-    path.join(tempPath, 'resources', 'ui', 'css', 'dark-theme.css')
-  );
-  fs.copySync(
-    path.join(rootPath, 'resources', 'ui', 'fonts'),
-    path.join(tempPath, 'resources', 'ui', 'fonts')
+    path.join(releasePath, 'resources', 'ui'),
+    path.join(tempPath, 'resources', 'ui')
   );
 
   // Documentation.

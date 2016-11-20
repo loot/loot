@@ -105,12 +105,8 @@ DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 Source: "{#buildir}\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 
-Source: "{#buildir}\Release\resources\ui\index.html"; \
-DestDir: "{app}\resources\ui"; Flags: ignoreversion
-Source: "resources\ui\css\dark-theme.css"; \
-DestDir: "{app}\resources\ui\css"; Flags: ignoreversion
-Source: "resources\ui\fonts\*"; \
-DestDir: "{app}\resources\ui\fonts"; Flags: ignoreversion
+Source: "{#buildir}\Release\resources\ui\*"; \
+DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
 Source: "resources\l10n\da\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\da\LC_MESSAGES"; Flags: ignoreversion

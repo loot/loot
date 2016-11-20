@@ -188,13 +188,19 @@
   </template>
   <script>
     'use strict';
+    const editableTableHtml = document.currentScript.ownerDocument;
+    function getRowTemplate(templateId) {
+      return editableTableHtml.getElementById(templateId);
+    }
+
+
     Polymer({ // eslint-disable-line new-cap, no-undef
       is: 'editable-table',
       extends: 'table',
 
       attached() {
         /* Add "add new row" row. */
-        const content = document.getElementById('newRow').content;
+        const content = getRowTemplate('newRow').content;
         let row = document.importNode(content, true);
         this.tBodies[0].appendChild(row);
         row = this.tBodies[0].lastElementChild;
@@ -323,7 +329,7 @@
 
       addRow(tableData) {
         const rowTemplateId = this.getAttribute('data-template');
-        const content = document.getElementById(rowTemplateId).content;
+        const content = getRowTemplate(rowTemplateId).content;
         let row = document.importNode(content, true);
         this.tBodies[0].insertBefore(row, this.tBodies[0].lastElementChild);
         row = this.tBodies[0].lastElementChild.previousElementSibling;

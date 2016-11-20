@@ -524,9 +524,10 @@ add_custom_command(TARGET LOOT POST_BUILD
         $<TARGET_FILE_DIR:LOOT>/resources/ui/fonts/${font})
 ENDFOREACH()
 
-# Run Vulcanize to build the UI HTML.
+# Build the UI HTML.
 add_custom_command(TARGET LOOT POST_BUILD
-    COMMAND "node" "${CMAKE_SOURCE_DIR}/scripts/vulcanize.js" ${CMAKE_SOURCE_DIR})
+    COMMAND "node" "${CMAKE_SOURCE_DIR}/scripts/build_ui.js"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Copy testing metadata
 ExternalProject_Get_Property(testing-metadata SOURCE_DIR)

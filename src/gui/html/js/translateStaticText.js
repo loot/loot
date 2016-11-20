@@ -10,9 +10,28 @@
     root.loot.translateStaticText = factory();
   }
 }(this, () => {
+  function getTemplate(templateId, importHtml) {
+    if (importHtml === undefined) {
+      importHtml = templateId;
+    }
+
+    let template = document.getElementById(templateId);
+    if (!template) {
+      template = document
+      .querySelector(`link[rel="import"][href$="${importHtml}.html"]`).import;
+    }
+    template = template.querySelector(`#${templateId}`);
+
+    if (template.tagName !== 'TEMPLATE') {
+      template = template.querySelector('template');
+    }
+
+    return template.content;
+  }
+
   function translatePluginCardTemplate(l10n) {
     /* Plugin card template. */
-    const pluginCard = document.getElementById('loot-plugin-card').querySelector('template').content;
+    const pluginCard = getTemplate('loot-plugin-card');
 
     pluginCard.querySelector('paper-tooltip[for=activeTick]').textContent = l10n.translate('Active Plugin');
     pluginCard.querySelector('paper-tooltip[for=isMaster]').textContent = l10n.translate('Master File');
@@ -82,7 +101,7 @@
 
   function translatePluginListItemTemplate(l10n) {
     /* Plugin List Item Template */
-    const pluginItem = document.getElementById('loot-plugin-item').querySelector('template').content;
+    const pluginItem = getTemplate('loot-plugin-item');
 
     pluginItem.querySelector('#globalPriorityTooltip').textContent = l10n.translate('Global Priority');
     pluginItem.querySelector('#localPriorityTooltip').textContent = l10n.translate('Priority');
@@ -92,7 +111,7 @@
 
   function translateMessageDialogTemplate(l10n) {
     /* Plugin List Item Template */
-    const messageDialog = document.getElementById('loot-message-dialog').querySelector('template').content;
+    const messageDialog = getTemplate('loot-message-dialog');
 
     messageDialog.getElementById('confirm').textContent = l10n.translate('OK');
     messageDialog.getElementById('dismiss').textContent = l10n.translate('Cancel');
@@ -100,7 +119,7 @@
 
   function translateFileRowTemplate(l10n) {
     /* File row template */
-    const fileRow = document.getElementById('fileRow').content;
+    const fileRow = getTemplate('fileRow', 'editable-table');
 
     fileRow.querySelector('.name').setAttribute('error-message', l10n.translate('A filename is required.'));
     fileRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
@@ -108,7 +127,7 @@
 
   function translateMessageRowTemplate(l10n) {
     /* Message row template */
-    const messageRow = document.getElementById('messageRow').content;
+    const messageRow = getTemplate('messageRow', 'editable-table');
 
     messageRow.querySelector('.type').children[0].textContent = l10n.translate('Note');
     messageRow.querySelector('.type').children[1].textContent = l10n.translate('Warning');
@@ -119,7 +138,7 @@
 
   function translateTagRowTemplate(l10n) {
     /* Tag row template */
-    const tagRow = document.getElementById('tagRow').content;
+    const tagRow = getTemplate('tagRow', 'editable-table');
 
     tagRow.querySelector('.type').children[0].textContent = l10n.translate('Add');
     tagRow.querySelector('.type').children[1].textContent = l10n.translate('Remove');
@@ -129,7 +148,7 @@
 
   function translateDirtyInfoRowTemplate(l10n) {
     /* Dirty Info row template */
-    const dirtyInfoRow = document.getElementById('dirtyInfoRow').content;
+    const dirtyInfoRow = getTemplate('dirtyInfoRow', 'editable-table');
 
     dirtyInfoRow.querySelector('.crc').setAttribute('error-message', l10n.translate('A CRC is required.'));
     dirtyInfoRow.querySelector('.itm').setAttribute('error-message', l10n.translate('Values must be integers.'));
@@ -141,7 +160,7 @@
 
   function translateCleanInfoRowTemplate(l10n) {
     /* Dirty Info row template */
-    const cleanInfoRow = document.getElementById('cleanInfoRow').content;
+    const cleanInfoRow = getTemplate('cleanInfoRow', 'editable-table');
 
     cleanInfoRow.querySelector('.crc').setAttribute('error-message', l10n.translate('A CRC is required.'));
     cleanInfoRow.querySelector('.utility').setAttribute('error-message', l10n.translate('A utility name is required.'));
@@ -150,7 +169,7 @@
 
   function translateLocationRowTemplate(l10n) {
     /* Location row template */
-    const locationRow = document.getElementById('locationRow').content;
+    const locationRow = getTemplate('locationRow', 'editable-table');
 
     locationRow.querySelector('.link').setAttribute('error-message', l10n.translate('A link is required.'));
     locationRow.querySelector('paper-tooltip').textContent = l10n.translate('Delete Row');
@@ -158,7 +177,7 @@
 
   function translateGameRowTemplate(l10n) {
     /* Game row template */
-    const gameRow = document.getElementById('gameRow').content;
+    const gameRow = getTemplate('gameRow', 'editable-table');
 
     gameRow.querySelector('.name').setAttribute('error-message', l10n.translate('A name is required.'));
     gameRow.querySelector('.folder').setAttribute('error-message', l10n.translate('A folder is required.'));
@@ -167,7 +186,7 @@
 
   function translateNewRowTemplate(l10n) {
     /* New row template */
-    const newRow = document.getElementById('newRow').content;
+    const newRow = getTemplate('newRow', 'editable-table');
 
     newRow.querySelector('paper-tooltip').textContent = l10n.translate('Add New Row');
   }

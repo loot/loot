@@ -51,7 +51,7 @@ You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 
 ### Rebuilding the HTML UI
 
-The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/vulcanize.js` from the repository root.
+The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `node scripts/build_ui.js` from the repository root.
 
 ## Building The Documentation
 

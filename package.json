@@ -14,8 +14,8 @@
   "private": true,
   "dependencies": {
     "fs-extra": "^0.30.0",
-    "replace": "^0.3.0",
-    "vulcanize": "^1.14.5"
+    "hydrolysis": "^1.24.1",
+    "replace": "^0.3.0"
   },
   "devDependencies": {
     "bower": "^1.7.1",

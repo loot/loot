@@ -47,11 +47,6 @@
   <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
   <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
   <link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
-</head>
-<!-- oncontextmenu attribute disables the right-click menu. -->
-<body oncontextmenu="return false" unresolved>
-  <!-- This style element needs to be here so that it loads after the Vulcanized
-       imports, which are placed in a div that is the first child of body. -->
   <style is="custom-style" include="paper-item-shared-styles">
     div[drawer],
     div[main] {
@@ -147,6 +142,9 @@
       };
     }
   </style>
+</head>
+<!-- oncontextmenu attribute disables the right-click menu. -->
+<body oncontextmenu="return false" unresolved>
   <paper-drawer-panel id="container" drawer-width="33%">
     <div drawer>
       <paper-toolbar>
