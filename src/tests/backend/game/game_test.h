@@ -139,13 +139,13 @@ TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSky
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  if (GetParam() == GameType::tes5)
+  if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5se)
     EXPECT_THROW(game.RedatePlugins(), std::system_error);
   else
     EXPECT_NO_THROW(game.RedatePlugins());
 }
 
-TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndDoNothingForOtherGames) {
+TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
   game.Init(false, localPath);
@@ -165,8 +165,9 @@ TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndDoNothingForOtherGa
   EXPECT_NO_THROW(game.RedatePlugins());
 
   time_t interval = 60;
-  if (GetParam() != GameType::tes5)
+  if (GetParam() != GameType::tes5 && GetParam() != GameType::tes5se)
     interval *= -1;
+
   for (size_t i = 0; i < loadOrder.size(); ++i) {
     EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
   }

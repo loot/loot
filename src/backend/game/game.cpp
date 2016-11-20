@@ -79,8 +79,10 @@ void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppDa
 }
 
 void Game::RedatePlugins() {
-  if (Type() != GameType::tes5)
+  if (Type() != GameType::tes5 && Type() != GameType::tes5se) {
+    BOOST_LOG_TRIVIAL(warning) << "Cannot redate plugins for game " << Name();
     return;
+  }
 
   vector<string> loadorder = GetLoadOrder();
   if (!loadorder.empty()) {
