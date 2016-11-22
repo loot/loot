@@ -83,26 +83,32 @@ MessageContent PluginCleaningData::ChooseInfo(const LanguageCode language) const
 }
 
 Message PluginCleaningData::AsMessage() const {
-  boost::format f;
+  using boost::format;
+  using boost::locale::translate;
+
+  const std::string itmRecords = (format(translate("%1% ITM record", "%1% ITM records", itm_)) % itm_).str();
+  const std::string deletedReferences = (format(translate("%1% deleted reference", "%1% deleted references", ref_)) % ref_).str();
+  const std::string deletedNavmeshes = (format(translate("%1% deleted navmesh", "%1% deleted navmeshes", nav_)) % nav_).str();
+
+  format f;
   if (itm_ > 0 && ref_ > 0 && nav_ > 0)
-    f = boost::format(boost::locale::translate("%1% found %2% ITM records, %3% deleted references and %4% deleted navmeshes.")) % utility_ % itm_ % ref_ % nav_;
+    f = format(translate("%1% found %2%, %3% and %4%.")) % utility_ % itmRecords % deletedReferences % deletedNavmeshes;
   else if (itm_ == 0 && ref_ == 0 && nav_ == 0)
-    f = boost::format(boost::locale::translate("%1% found dirty edits.")) % utility_;
+    f = format(translate("%1% found dirty edits.")) % utility_;
 
   else if (itm_ == 0 && ref_ > 0 && nav_ > 0)
-    f = boost::format(boost::locale::translate("%1% found %2% deleted references and %3% deleted navmeshes.")) % utility_ % ref_ % nav_;
-  else if (itm_ == 0 && ref_ == 0 && nav_ > 0)
-    f = boost::format(boost::locale::translate("%1% found %2% deleted navmeshes.")) % utility_ % nav_;
-  else if (itm_ == 0 && ref_ > 0 && nav_ == 0)
-    f = boost::format(boost::locale::translate("%1% found %2% deleted references.")) % utility_ % ref_;
-
+    f = format(translate("%1% found %2% and %3%.")) % utility_ % deletedReferences % deletedNavmeshes;
   else if (itm_ > 0 && ref_ == 0 && nav_ > 0)
-    f = boost::format(boost::locale::translate("%1% found %2% ITM records and %3% deleted navmeshes.")) % utility_ % itm_ % nav_;
-  else if (itm_ > 0 && ref_ == 0 && nav_ == 0)
-    f = boost::format(boost::locale::translate("%1% found %2% ITM records.")) % utility_ % itm_;
-
+    f = format(translate("%1% found %2% and %3%.")) % utility_ % itmRecords % deletedNavmeshes;
   else if (itm_ > 0 && ref_ > 0 && nav_ == 0)
-    f = boost::format(boost::locale::translate("%1% found %2% ITM records and %3% deleted references.")) % utility_ % itm_ % ref_;
+    f = format(translate("%1% found %2% and %3%.")) % utility_ % itmRecords % deletedReferences;
+
+  else if (itm_ > 0)
+    f = format(translate("%1% found %2%.")) % utility_ % itmRecords;
+  else if (ref_ > 0)
+    f = format(translate("%1% found %2%.")) % utility_ % deletedReferences;
+  else if (nav_ > 0)
+    f = format(translate("%1% found %2%.")) % utility_ % deletedNavmeshes;
 
   std::string message = f.str();
   auto info = info_;
