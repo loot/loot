@@ -240,7 +240,7 @@
 
       updateIsCleanIcon() {
         this.$.isClean.hidden = !this.data.cleanedWith;
-        this.$.isCleanTooltip.textContent = loot.l10n.translate('Verified clean by %s', this.data.cleanedWith);
+        this.$.isCleanTooltip.textContent = loot.l10n.translateFormatted('Verified clean by %s', this.data.cleanedWith);
       },
 
       updateStyling() {

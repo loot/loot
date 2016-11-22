@@ -247,7 +247,7 @@
 
       dom.appendGeneralMessages([{
         type: 'warn',
-        content: loot.l10n.translate('A [new release](%s) of LOOT is available.', 'https://github.com/loot/loot/releases/latest'),
+        content: loot.l10n.translateFormatted('A [new release](%s) of LOOT is available.', 'https://github.com/loot/loot/releases/latest'),
       }]);
     })
     .catch(handlePromiseError);

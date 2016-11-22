@@ -64,7 +64,11 @@
     });
   }
 
-  translate(text, ...substitutions) {
+  translate(text) {
+    return this.translateFormatted(text);
+  }
+
+  translateFormatted(text, ...substitutions) {
     if (text === undefined) {
       return '';
     }

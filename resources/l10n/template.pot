@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.10.0\n"
+"Project-Id-Version: LOOT 0.10.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-11-22 18:27+0000\n"
+"POT-Creation-Date: 2016-11-22 19:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,8 +25,18 @@ msgstr ""
 msgid "Updating and parsing masterlist..."
 msgstr ""
 
+#: src/gui/html/js/events.js:97
+#, javascript-format
+msgid "Masterlist updated to revision %s."
+msgstr ""
+
 #: src/gui/html/js/events.js:100
 msgid "No masterlist update was necessary."
+msgstr ""
+
+#: src/gui/html/js/events.js:130
+#, javascript-format
+msgid "Failed to sort plugins. Details: %s"
 msgstr ""
 
 #: src/gui/html/js/events.js:150
@@ -75,6 +85,12 @@ msgstr ""
 msgid "The load order has been copied to the clipboard."
 msgstr ""
 
+#: src/gui/html/js/events.js:267
+#, javascript-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr ""
+
 #: src/gui/html/js/events.js:267 src/gui/html/js/translateStaticText.js:214
 msgid "Quit"
 msgstr ""
@@ -85,6 +101,22 @@ msgstr ""
 
 #: src/gui/html/js/events.js:281
 msgid "metadata edits"
+msgstr ""
+
+#: src/gui/html/js/events.js:395
+#, javascript-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/html/js/events.js:399
+#, javascript-format
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr ""
+
+#: src/gui/html/js/events.js:414
+#, javascript-format
+msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
 
 #: src/gui/html/js/filters.js:28
@@ -98,6 +130,11 @@ msgstr ""
 #: src/gui/html/js/handlePromiseError.js:15
 #: src/gui/html/js/translateStaticText.js:134
 msgid "Error"
+msgstr ""
+
+#: src/gui/html/js/initialise.js:250
+#, javascript-format
+msgid "A [new release](%s) of LOOT is available."
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:36

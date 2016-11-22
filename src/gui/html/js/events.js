@@ -94,7 +94,7 @@ function updateMasterlist() {
         }
       });
 
-      loot.Dialog.showNotification(loot.l10n.translate('Masterlist updated to revision %s.',
+      loot.Dialog.showNotification(loot.l10n.translateFormatted('Masterlist updated to revision %s.',
                                    loot.game.masterlist.revision));
     } else {
       loot.Dialog.showNotification(loot.l10n.translate('No masterlist update was necessary.'));
@@ -127,7 +127,7 @@ function onSortPlugins() {
       const message = result.globalMessages.find(item => (
         item.text.startsWith('Cyclic interaction detected'
       ))).text;
-      throw new Error(loot.l10n.translate('Failed to sort plugins. Details: %s', message));
+      throw new Error(loot.l10n.translateFormatted('Failed to sort plugins. Details: %s', message));
     }
 
     /* Check if sorted load order differs from current load order. */
@@ -264,7 +264,7 @@ function onOpenLogLocation() {
   loot.query('openLogLocation').catch(loot.handlePromiseError);
 }
 function handleUnappliedChangesClose(change) {
-  loot.Dialog.askQuestion('', loot.l10n.translate('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
+  loot.Dialog.askQuestion('', loot.l10n.translateFormatted('You have not yet applied or cancelled your %s. Are you sure you want to quit?', change), loot.l10n.translate('Quit'), (result) => {
     if (!result) {
       return;
     }
@@ -392,11 +392,11 @@ function onEditorClose(evt) {
 }
 function onCopyMetadata(evt) {
   loot.query('copyMetadata', evt.target.getName()).then(() => {
-    loot.Dialog.showNotification(loot.l10n.translate('The metadata for "%s" has been copied to the clipboard.', evt.target.getName()));
+    loot.Dialog.showNotification(loot.l10n.translateFormatted('The metadata for "%s" has been copied to the clipboard.', evt.target.getName()));
   }).catch(loot.handlePromiseError);
 }
 function onClearMetadata(evt) {
-  loot.Dialog.askQuestion('', loot.l10n.translate('Are you sure you want to clear all existing user-added metadata from "%s"?', evt.target.getName()), loot.l10n.translate('Clear'), (result) => {
+  loot.Dialog.askQuestion('', loot.l10n.translateFormatted('Are you sure you want to clear all existing user-added metadata from "%s"?', evt.target.getName()), loot.l10n.translate('Clear'), (result) => {
     if (!result) {
       return;
     }
@@ -411,7 +411,7 @@ function onClearMetadata(evt) {
 
         existingPlugin.update(plugin);
       }
-      loot.Dialog.showNotification(loot.l10n.translate('The user-added metadata for "%s" has been cleared.', evt.target.getName()));
+      loot.Dialog.showNotification(loot.l10n.translateFormatted('The user-added metadata for "%s" has been cleared.', evt.target.getName()));
       /* Now perform search again. If there is no current search, this won't
          do anything. */
       document.getElementById('searchBar').search();
