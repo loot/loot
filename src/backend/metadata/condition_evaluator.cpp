@@ -28,6 +28,9 @@
 
 #include "backend/helpers/helpers.h"
 
+using boost::format;
+using boost::locale::translate;
+
 namespace loot {
 ConditionEvaluator::ConditionEvaluator(Game * game) : game_(game) {}
 
@@ -167,7 +170,7 @@ void ConditionEvaluator::validatePath(const boost::filesystem::path& path) {
 
     if (component == ".." && temp.filename() == "..") {
       BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << path;
-      throw std::invalid_argument(boost::locale::translate("Invalid file path:").str() + " " + path.string());
+      throw std::invalid_argument((format(translate("Invalid file path: %1%")) % path.string()).str());
     }
 
     temp /= component;
@@ -177,7 +180,7 @@ void ConditionEvaluator::validateRegex(const std::string& regexString) {
   try {
     std::regex(regexString, std::regex::ECMAScript | std::regex::icase);
   } catch (std::regex_error& e) {
-    throw std::invalid_argument((boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % regexString % e.what()).str());
+    throw std::invalid_argument((format(translate("Invalid regex string \"%1%\": %2%")) % regexString % e.what()).str());
   }
 }
 

@@ -25,11 +25,13 @@
 #include "backend/game/load_order_handler.h"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
 #include "loot/exception/error_categories.h"
 
+using boost::format;
 using boost::locale::translate;
 using std::string;
 
@@ -82,7 +84,7 @@ void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::p
       err = translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
     } else {
       BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-      err = translate("libloadorder failed to create a game handle. Details:").str() + " " + e;
+      err = (format(translate("libloadorder failed to create a game handle. Details: %1%")) % e).str();
     }
     lo_cleanup();
     throw std::system_error(ret, libloadorder_category(), err);
@@ -103,7 +105,7 @@ bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
       err = translate("libloadorder failed to check if a plugin is active. Details could not be fetched.").str();
     } else {
       BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details: " << e;
-      err = translate("libloadorder failed to check if a plugin is active. Details:").str() + " " + e;
+      err = (format(translate("libloadorder failed to check if a plugin is active. Details: %1%")) % e).str();
     }
     lo_cleanup();
     throw std::system_error(ret, libloadorder_category(), err);
@@ -128,7 +130,7 @@ std::vector<std::string> LoadOrderHandler::GetLoadOrder() const {
       err = translate("libloadorder failed to get the load order. Details could not be fetched.").str();
     } else {
       BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
-      err = translate("libloadorder failed to get the load order. Details:").str() + " " + e;
+      err = (format(translate("libloadorder failed to get the load order. Details: %1%")) % e).str();
     }
     lo_cleanup();
     throw std::system_error(ret, libloadorder_category(), err);
@@ -168,7 +170,7 @@ void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) c
       err = translate("libloadorder failed to set the load order. Details could not be fetched.").str();
     } else {
       BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-      err = translate("libloadorder failed to set the load order. Details:").str() + " " + e;
+      err = (format(translate("libloadorder failed to set the load order. Details: %1%")) % e).str();
     }
     lo_cleanup();
 

@@ -31,6 +31,7 @@
 #include "backend/game/game.h"
 #include "backend/helpers/git_helper.h"
 
+using boost::format;
 using boost::locale::translate;
 using std::string;
 
@@ -41,7 +42,7 @@ MasterlistInfo Masterlist::GetInfo(const boost::filesystem::path& path, bool sho
     // Compare HEAD and working copy, and get revision info.
   GitHelper git;
   MasterlistInfo info;
-  git.SetErrorMessage((boost::format(translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str());
+  git.SetErrorMessage((format(translate("An error occurred while trying to read the local masterlist's version. If this error happens again, try deleting the \".git\" folder in %1%.")) % path.parent_path().string()).str());
 
   if (!fs::exists(path)) {
     BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: No masterlist present.";
@@ -113,7 +114,7 @@ bool Masterlist::Update(const boost::filesystem::path& path, const std::string& 
     git.Clone(repoPath, repoUrl);
   else {
       // Repository exists: check settings are correct, then pull updates.
-    git.SetErrorMessage((boost::format(translate("An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in %1%.")) % repoPath.string()).str());
+    git.SetErrorMessage((format(translate("An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in %1%.")) % repoPath.string()).str());
 
     // Open the repository.
     BOOST_LOG_TRIVIAL(info) << "Existing repository found, attempting to open it.";
@@ -127,7 +128,7 @@ bool Masterlist::Update(const boost::filesystem::path& path, const std::string& 
     git.Fetch("origin");
 
     // Check that a local branch with the correct name exists.
-    git.SetErrorMessage((boost::format(translate("An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in %1%.")) % repoPath.string()).str());
+    git.SetErrorMessage((format(translate("An error occurred while trying to access the local masterlist repository. If this error happens again, try deleting the \".git\" folder in %1%.")) % repoPath.string()).str());
     int ret = git_branch_lookup(&git.GetData().reference, git.GetData().repo, repoBranch.c_str(), GIT_BRANCH_LOCAL);
     if (ret == GIT_ENOTFOUND)
         // Branch doesn't exist. Create a new branch using the remote branch's latest commit.
@@ -234,7 +235,7 @@ bool Masterlist::Update(const boost::filesystem::path& path, const std::string& 
 
   bool parsingFailed = false;
   std::string parsingError;
-  git.SetErrorMessage((boost::format(translate("An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in %1%.")) % repoPath.string()).str());
+  git.SetErrorMessage((format(translate("An error occurred while trying to read information on the updated masterlist. If this error happens again, try deleting the \".git\" folder in %1%.")) % repoPath.string()).str());
   do {
       // Get the HEAD revision's short ID.
     string revision = git.GetHeadShortId();
@@ -248,11 +249,7 @@ bool Masterlist::Update(const boost::filesystem::path& path, const std::string& 
     } catch (std::exception& e) {
       parsingFailed = true;
       if (parsingError.empty())
-        parsingError = boost::locale::translate("Masterlist revision").str() +
-        " " + string(revision) +
-        ": " + e.what() +
-        ". " +
-        boost::locale::translate("The latest masterlist revision contains a syntax error, LOOT is using the most recent valid revision instead. Syntax errors are usually minor and fixed within hours.").str();
+        parsingError = (format(translate("Masterlist revision %1%: %2%. The latest masterlist revision contains a syntax error, LOOT is using the most recent valid revision instead. Syntax errors are usually minor and fixed within hours.")) % revision % e.what()).str();
 
     //There was an error, roll back one revision.
       BOOST_LOG_TRIVIAL(error) << "Masterlist parsing failed. Masterlist revision " + string(revision) + ": " + e.what();

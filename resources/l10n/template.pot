@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-11-20 10:46+0000\n"
+"POT-Creation-Date: 2016-11-22 18:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -666,52 +666,52 @@ msgid "Game path could not be detected."
 msgstr ""
 
 #: src/backend/game/game.cpp:74
-msgid "Could not create LOOT folder for game. Details:"
+msgid "Could not create LOOT folder for game. Details: %1%"
 msgstr ""
 
 #: src/backend/game/game_cache.cpp:119
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:46
+#: src/backend/game/load_order_handler.cpp:48
 msgid "Game path is not initialised."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:82
+#: src/backend/game/load_order_handler.cpp:84
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:85
-msgid "libloadorder failed to create a game handle. Details:"
+#: src/backend/game/load_order_handler.cpp:87
+msgid "libloadorder failed to create a game handle. Details: %1%"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:103
+#: src/backend/game/load_order_handler.cpp:105
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:106
-msgid "libloadorder failed to check if a plugin is active. Details:"
+#: src/backend/game/load_order_handler.cpp:108
+msgid "libloadorder failed to check if a plugin is active. Details: %1%"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:128
+#: src/backend/game/load_order_handler.cpp:130
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:131
-msgid "libloadorder failed to get the load order. Details:"
+#: src/backend/game/load_order_handler.cpp:133
+msgid "libloadorder failed to get the load order. Details: %1%"
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:168
+#: src/backend/game/load_order_handler.cpp:170
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:171
-msgid "libloadorder failed to set the load order. Details:"
+#: src/backend/game/load_order_handler.cpp:173
+msgid "libloadorder failed to set the load order. Details: %1%"
 msgstr ""
 
 #: src/backend/helpers/git_helper.cpp:105
@@ -737,12 +737,12 @@ msgstr ""
 msgid "Failed to open file in its default application."
 msgstr ""
 
-#: src/backend/metadata/condition_evaluator.cpp:170
-msgid "Invalid file path:"
+#: src/backend/metadata/condition_evaluator.cpp:173
+msgid "Invalid file path: %1%"
 msgstr ""
 
-#: src/backend/metadata/condition_evaluator.cpp:180
-#: src/backend/metadata/condition_evaluator.cpp:220
+#: src/backend/metadata/condition_evaluator.cpp:183
+#: src/backend/metadata/condition_evaluator.cpp:223
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr ""
 
@@ -810,40 +810,36 @@ msgid ""
 "%3%"
 msgstr ""
 
-#: src/backend/masterlist.cpp:44
+#: src/backend/masterlist.cpp:45
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:48
+#: src/backend/masterlist.cpp:49
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/backend/masterlist.cpp:51
+#: src/backend/masterlist.cpp:52
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/backend/masterlist.cpp:116 src/backend/masterlist.cpp:130
+#: src/backend/masterlist.cpp:117 src/backend/masterlist.cpp:131
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:237
+#: src/backend/masterlist.cpp:238
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:251
-msgid "Masterlist revision"
-msgstr ""
-
-#: src/backend/masterlist.cpp:255
+#: src/backend/masterlist.cpp:252
 msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
+"Masterlist revision %1%: %2%. The latest masterlist revision contains a "
+"syntax error, LOOT is using the most recent valid revision instead. Syntax "
+"errors are usually minor and fixed within hours."
 msgstr ""
