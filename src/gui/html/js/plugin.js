@@ -192,7 +192,7 @@
         return;
       }
       if (plugin.name !== this.name) {
-        throw new Error(`Cannot update ${this.name}'s data using data for ${plugin.name}`);
+        throw new Error(`Cannot update data for ${this.name} using data for ${plugin.name}`);
       }
 
       Object.getOwnPropertyNames(plugin).forEach((property) => {
