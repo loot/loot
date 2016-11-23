@@ -52,17 +52,6 @@ BASH TAGS
 
   If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the Filter tag applied and missing masters will not cause any errors to be displayed.
 
-DIRTY INFO
-  A list of dirty plugin CRCs and related information. Each row has five fields:
-
-  - The CRC of the dirty plugin.
-  - The ITM Count for the dirty plugin.
-  - The number of Deleted References that the dirty plugin contains.
-  - The number of Deleted Navmeshes that the dirty plugin contains.
-  - The name of the Cleaning Utility to use to clean the dirty plugin.
-
-  LOOT uses the information supplied to construct a warning message for the plugin if it matches any of the given CRCs.
-
 DIRTY PLUGIN INFO
   A list of dirty plugin CRCs and related information. Each row has five fields:
 
