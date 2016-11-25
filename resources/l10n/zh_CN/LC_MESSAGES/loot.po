@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.7\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-11-09 01:56+0800\n"
-"PO-Revision-Date: 2016-11-09 02:00+0800\n"
+"POT-Creation-Date: 2016-11-25 21:52+0800\n"
+"PO-Revision-Date: 2016-11-25 22:00+0800\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
 "Language: zh_CN\n"
@@ -23,9 +23,23 @@ msgstr ""
 msgid "Identifying conflicting plugins..."
 msgstr "识别冲突插件..."
 
+#: src/gui/html/js/events.js:80
+msgid "Updating and parsing masterlist..."
+msgstr "更新并解析主列表..."
+
+#: src/gui/html/js/events.js:97
+#, javascript-format
+msgid "Masterlist updated to revision %s."
+msgstr "主列表已更新到版次%s。"
+
 #: src/gui/html/js/events.js:100
 msgid "No masterlist update was necessary."
 msgstr "主列表无需更新。"
+
+#: src/gui/html/js/events.js:130
+#, javascript-format
+msgid "Failed to sort plugins. Details: %s"
+msgstr "无法调整排序，详细信息：%s"
 
 #: src/gui/html/js/events.js:150
 msgid "Sorting made no changes to the load order."
@@ -49,13 +63,17 @@ msgstr ""
 msgid "Redate"
 msgstr "修改时间"
 
+#: src/gui/html/js/events.js:185
+msgid "Plugins were successfully redated."
+msgstr "修改插件日期已完成。"
+
 #: src/gui/html/js/events.js:191
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr "你确定要清除所有插件里用户添加的元数据？"
 
-#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:401
+#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:399
 msgid "Clear"
 msgstr "清除"
 
@@ -71,7 +89,13 @@ msgstr "LOOT 的内容已被复制到剪贴板。"
 msgid "The load order has been copied to the clipboard."
 msgstr "加载顺序已被复制到剪贴板。"
 
-#: src/gui/html/js/events.js:267 src/gui/html/js/translateStaticText.js:195
+#: src/gui/html/js/events.js:267
+#, javascript-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "你还没用应用或取消你的%s。确定要退出吗？"
+
+#: src/gui/html/js/events.js:267 src/gui/html/js/translateStaticText.js:214
 msgid "Quit"
 msgstr "退出"
 
@@ -83,6 +107,22 @@ msgstr "已调整的加载顺序"
 msgid "metadata edits"
 msgstr "元数据编辑"
 
+#: src/gui/html/js/events.js:395
+#, javascript-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "\"%s\"的元数据已被复制到剪贴板。"
+
+#: src/gui/html/js/events.js:399
+#, javascript-format
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr "你确定要清除从\"%s\"清除所有用户添加的元数据？"
+
+#: src/gui/html/js/events.js:414
+#, javascript-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "\"%s\"中用户添加的元数据已被清除。"
+
 #: src/gui/html/js/filters.js:28
 msgid "Do not clean"
 msgstr "不要清理"
@@ -92,498 +132,503 @@ msgid "N/A"
 msgstr "不可用"
 
 #: src/gui/html/js/handlePromiseError.js:15
-#: src/gui/html/js/translateStaticText.js:115
+#: src/gui/html/js/translateStaticText.js:134
 msgid "Error"
 msgstr "错误"
 
-#: src/gui/html/js/translateStaticText.js:17
+#: src/gui/html/js/initialise.js:250
+#, javascript-format
+msgid "A [new release](%s) of LOOT is available."
+msgstr "一个[新版本](%s)的LOOT发行了。"
+
+#: src/gui/html/js/translateStaticText.js:36
 msgid "Active Plugin"
 msgstr "激活插件"
 
-#: src/gui/html/js/translateStaticText.js:18
-#: src/gui/html/js/translateStaticText.js:264
+#: src/gui/html/js/translateStaticText.js:37
+#: src/gui/html/js/translateStaticText.js:283
 msgid "Master File"
 msgstr "Master文件"
 
-#: src/gui/html/js/translateStaticText.js:19
+#: src/gui/html/js/translateStaticText.js:38
 msgid "Empty Plugin"
 msgstr "空插件"
 
-#: src/gui/html/js/translateStaticText.js:20
+#: src/gui/html/js/translateStaticText.js:39
 msgid "Loads Archive"
 msgstr "加载档案"
 
-#: src/gui/html/js/translateStaticText.js:21
-#: src/gui/html/js/translateStaticText.js:89
+#: src/gui/html/js/translateStaticText.js:40
+#: src/gui/html/js/translateStaticText.js:108
 msgid "Has User Metadata"
 msgstr "有用户元数据"
 
-#: src/gui/html/js/translateStaticText.js:23
+#: src/gui/html/js/translateStaticText.js:42
 msgid "Edit Metadata"
 msgstr "编辑元数据"
 
-#: src/gui/html/js/translateStaticText.js:24
+#: src/gui/html/js/translateStaticText.js:43
 msgid "Copy Metadata"
 msgstr "复制元数据"
 
-#: src/gui/html/js/translateStaticText.js:25
+#: src/gui/html/js/translateStaticText.js:44
 msgid "Clear User Metadata"
 msgstr "清除用户元数据"
 
-#: src/gui/html/js/translateStaticText.js:32
+#: src/gui/html/js/translateStaticText.js:51
 msgid "Enable Edits"
 msgstr "启用编辑"
 
-#: src/gui/html/js/translateStaticText.js:33
-#: src/gui/html/js/translateStaticText.js:88
+#: src/gui/html/js/translateStaticText.js:52
+#: src/gui/html/js/translateStaticText.js:107
 msgid "Priority"
 msgstr "优先值"
 
-#: src/gui/html/js/translateStaticText.js:34
-#: src/gui/html/js/translateStaticText.js:87
+#: src/gui/html/js/translateStaticText.js:53
+#: src/gui/html/js/translateStaticText.js:106
 msgid "Global Priority"
 msgstr "全局优先级"
 
-#: src/gui/html/js/translateStaticText.js:36
+#: src/gui/html/js/translateStaticText.js:55
 msgid "Main"
 msgstr "主要"
 
-#: src/gui/html/js/translateStaticText.js:37
+#: src/gui/html/js/translateStaticText.js:56
 msgid "Load After"
 msgstr "加载在后面"
 
-#: src/gui/html/js/translateStaticText.js:38
+#: src/gui/html/js/translateStaticText.js:57
 msgid "Requirements"
 msgstr "需求信息"
 
-#: src/gui/html/js/translateStaticText.js:39
+#: src/gui/html/js/translateStaticText.js:58
 msgid "Incompatibilities"
 msgstr "不兼容信息"
 
-#: src/gui/html/js/translateStaticText.js:40
+#: src/gui/html/js/translateStaticText.js:59
 msgid "Messages"
 msgstr "信息"
 
-#: src/gui/html/js/translateStaticText.js:41
+#: src/gui/html/js/translateStaticText.js:60
 msgid "Bash Tags"
 msgstr "Bash 标签"
 
-#: src/gui/html/js/translateStaticText.js:42
+#: src/gui/html/js/translateStaticText.js:61
 msgid "Dirty Plugin Info"
 msgstr "Dirty 插件信息"
 
-#: src/gui/html/js/translateStaticText.js:43
+#: src/gui/html/js/translateStaticText.js:62
 msgid "Clean Plugin Info"
 msgstr "清除插件信息"
 
-#: src/gui/html/js/translateStaticText.js:44
+#: src/gui/html/js/translateStaticText.js:63
 msgid "Locations"
 msgstr "地址"
 
-#: src/gui/html/js/translateStaticText.js:46
-#: src/gui/html/js/translateStaticText.js:50
-#: src/gui/html/js/translateStaticText.js:54
+#: src/gui/html/js/translateStaticText.js:65
+#: src/gui/html/js/translateStaticText.js:69
+#: src/gui/html/js/translateStaticText.js:73
 msgid "Filename"
 msgstr "文件"
 
-#: src/gui/html/js/translateStaticText.js:47
-#: src/gui/html/js/translateStaticText.js:51
-#: src/gui/html/js/translateStaticText.js:55
+#: src/gui/html/js/translateStaticText.js:66
+#: src/gui/html/js/translateStaticText.js:70
+#: src/gui/html/js/translateStaticText.js:74
 msgid "Display Name"
 msgstr "显示名字"
 
-#: src/gui/html/js/translateStaticText.js:48
-#: src/gui/html/js/translateStaticText.js:52
-#: src/gui/html/js/translateStaticText.js:56
-#: src/gui/html/js/translateStaticText.js:60
-#: src/gui/html/js/translateStaticText.js:65
+#: src/gui/html/js/translateStaticText.js:67
+#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:75
+#: src/gui/html/js/translateStaticText.js:79
+#: src/gui/html/js/translateStaticText.js:84
 msgid "Condition"
 msgstr "条件"
 
-#: src/gui/html/js/translateStaticText.js:58
+#: src/gui/html/js/translateStaticText.js:77
 msgid "Type"
 msgstr "类型"
 
-#: src/gui/html/js/translateStaticText.js:59
+#: src/gui/html/js/translateStaticText.js:78
 msgid "Content"
 msgstr "内容"
 
-#: src/gui/html/js/translateStaticText.js:61
-#: src/gui/html/js/translateStaticText.js:252
+#: src/gui/html/js/translateStaticText.js:80
+#: src/gui/html/js/translateStaticText.js:271
 msgid "Language"
 msgstr "界面语言"
 
-#: src/gui/html/js/translateStaticText.js:63
+#: src/gui/html/js/translateStaticText.js:82
 msgid "Add/Remove"
 msgstr "添加/移除"
 
-#: src/gui/html/js/translateStaticText.js:64
+#: src/gui/html/js/translateStaticText.js:83
 msgid "Bash Tag"
 msgstr "Bash 标签"
 
-#: src/gui/html/js/translateStaticText.js:67
-#: src/gui/html/js/translateStaticText.js:73
+#: src/gui/html/js/translateStaticText.js:86
+#: src/gui/html/js/translateStaticText.js:92
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/html/js/translateStaticText.js:68
+#: src/gui/html/js/translateStaticText.js:87
 msgid "ITM Count"
 msgstr "ITM 数量"
 
-#: src/gui/html/js/translateStaticText.js:69
+#: src/gui/html/js/translateStaticText.js:88
 msgid "Deleted References"
 msgstr "已删除的引用"
 
-#: src/gui/html/js/translateStaticText.js:70
+#: src/gui/html/js/translateStaticText.js:89
 msgid "Deleted Navmeshes"
 msgstr "已删除的导航"
 
-#: src/gui/html/js/translateStaticText.js:71
-#: src/gui/html/js/translateStaticText.js:74
+#: src/gui/html/js/translateStaticText.js:90
+#: src/gui/html/js/translateStaticText.js:93
 msgid "Cleaning Utility"
 msgstr "清除工具"
 
-#: src/gui/html/js/translateStaticText.js:76
+#: src/gui/html/js/translateStaticText.js:95
 msgid "URL"
 msgstr "链接"
 
-#: src/gui/html/js/translateStaticText.js:77
-#: src/gui/html/js/translateStaticText.js:261
+#: src/gui/html/js/translateStaticText.js:96
+#: src/gui/html/js/translateStaticText.js:280
 msgid "Name"
 msgstr "名字"
 
-#: src/gui/html/js/translateStaticText.js:79
+#: src/gui/html/js/translateStaticText.js:98
 msgid "Save Metadata"
 msgstr "保存元数据"
 
-#: src/gui/html/js/translateStaticText.js:80
-#: src/gui/html/js/translateStaticText.js:98
-#: src/gui/html/js/translateStaticText.js:182
-#: src/gui/html/js/translateStaticText.js:275
+#: src/gui/html/js/translateStaticText.js:99
+#: src/gui/html/js/translateStaticText.js:117
+#: src/gui/html/js/translateStaticText.js:201
+#: src/gui/html/js/translateStaticText.js:294
 msgid "Cancel"
 msgstr "取消"
 
-#: src/gui/html/js/translateStaticText.js:90
+#: src/gui/html/js/translateStaticText.js:109
 msgid "Editor Is Open"
 msgstr "编辑器已打开"
 
-#: src/gui/html/js/translateStaticText.js:97
-#: src/gui/html/js/translateStaticText.js:289
+#: src/gui/html/js/translateStaticText.js:116
+#: src/gui/html/js/translateStaticText.js:308
 msgid "OK"
 msgstr "确定"
 
-#: src/gui/html/js/translateStaticText.js:105
+#: src/gui/html/js/translateStaticText.js:124
 msgid "A filename is required."
 msgstr "需要一个文件名。"
 
-#: src/gui/html/js/translateStaticText.js:106
-#: src/gui/html/js/translateStaticText.js:117
-#: src/gui/html/js/translateStaticText.js:127
-#: src/gui/html/js/translateStaticText.js:139
-#: src/gui/html/js/translateStaticText.js:148
-#: src/gui/html/js/translateStaticText.js:156
-#: src/gui/html/js/translateStaticText.js:165
+#: src/gui/html/js/translateStaticText.js:125
+#: src/gui/html/js/translateStaticText.js:136
+#: src/gui/html/js/translateStaticText.js:146
+#: src/gui/html/js/translateStaticText.js:158
+#: src/gui/html/js/translateStaticText.js:167
+#: src/gui/html/js/translateStaticText.js:175
+#: src/gui/html/js/translateStaticText.js:184
 msgid "Delete Row"
 msgstr "删除行"
 
-#: src/gui/html/js/translateStaticText.js:113
+#: src/gui/html/js/translateStaticText.js:132
 msgid "Note"
 msgstr "注意"
 
-#: src/gui/html/js/translateStaticText.js:114
+#: src/gui/html/js/translateStaticText.js:133
 msgid "Warning"
 msgstr "警告"
 
-#: src/gui/html/js/translateStaticText.js:116
+#: src/gui/html/js/translateStaticText.js:135
 msgid "A content string is required."
 msgstr "需要一个有内容的字符串。"
 
-#: src/gui/html/js/translateStaticText.js:124
+#: src/gui/html/js/translateStaticText.js:143
 msgid "Add"
 msgstr "添加"
 
-#: src/gui/html/js/translateStaticText.js:125
+#: src/gui/html/js/translateStaticText.js:144
 msgid "Remove"
 msgstr "移除"
 
-#: src/gui/html/js/translateStaticText.js:126
-#: src/gui/html/js/translateStaticText.js:163
+#: src/gui/html/js/translateStaticText.js:145
+#: src/gui/html/js/translateStaticText.js:182
 msgid "A name is required."
 msgstr "需要一个名字。"
 
-#: src/gui/html/js/translateStaticText.js:134
-#: src/gui/html/js/translateStaticText.js:146
+#: src/gui/html/js/translateStaticText.js:153
+#: src/gui/html/js/translateStaticText.js:165
 msgid "A CRC is required."
 msgstr "需要一个CRC。"
 
-#: src/gui/html/js/translateStaticText.js:135
-#: src/gui/html/js/translateStaticText.js:136
-#: src/gui/html/js/translateStaticText.js:137
+#: src/gui/html/js/translateStaticText.js:154
+#: src/gui/html/js/translateStaticText.js:155
+#: src/gui/html/js/translateStaticText.js:156
 msgid "Values must be integers."
 msgstr "值必须是整数。"
 
-#: src/gui/html/js/translateStaticText.js:138
-#: src/gui/html/js/translateStaticText.js:147
+#: src/gui/html/js/translateStaticText.js:157
+#: src/gui/html/js/translateStaticText.js:166
 msgid "A utility name is required."
 msgstr "需要一个实用名。"
 
-#: src/gui/html/js/translateStaticText.js:155
+#: src/gui/html/js/translateStaticText.js:174
 msgid "A link is required."
 msgstr "需要一个链接。"
 
-#: src/gui/html/js/translateStaticText.js:164
+#: src/gui/html/js/translateStaticText.js:183
 msgid "A folder is required."
 msgstr "需要一个文件夹。"
 
-#: src/gui/html/js/translateStaticText.js:172
-#: src/gui/html/js/translateStaticText.js:272
+#: src/gui/html/js/translateStaticText.js:191
+#: src/gui/html/js/translateStaticText.js:291
 msgid "Add New Row"
 msgstr "添加行"
 
-#: src/gui/html/js/translateStaticText.js:178
+#: src/gui/html/js/translateStaticText.js:197
 msgid "Jump To General Information"
 msgstr "跳转到综合信息"
 
-#: src/gui/html/js/translateStaticText.js:179
+#: src/gui/html/js/translateStaticText.js:198
 msgid "Sort Plugins"
 msgstr "调整排序"
 
-#: src/gui/html/js/translateStaticText.js:180
+#: src/gui/html/js/translateStaticText.js:199
 msgid "Update Masterlist"
 msgstr "更新主列表"
 
-#: src/gui/html/js/translateStaticText.js:181
-#: src/gui/html/js/translateStaticText.js:274
+#: src/gui/html/js/translateStaticText.js:200
+#: src/gui/html/js/translateStaticText.js:293
 msgid "Apply"
 msgstr "应用"
 
-#: src/gui/html/js/translateStaticText.js:183
+#: src/gui/html/js/translateStaticText.js:202
 msgid "Search Cards"
 msgstr "搜索卡片"
 
-#: src/gui/html/js/translateStaticText.js:186
+#: src/gui/html/js/translateStaticText.js:205
 msgid "Redate Plugins"
 msgstr "修改插件时间"
 
-#: src/gui/html/js/translateStaticText.js:187
+#: src/gui/html/js/translateStaticText.js:206
 msgid "Open Debug Log Location"
 msgstr "打开本地调试日志"
 
-#: src/gui/html/js/translateStaticText.js:188
+#: src/gui/html/js/translateStaticText.js:207
 msgid "Clear All User Metadata"
 msgstr "清除所有用户元数据"
 
-#: src/gui/html/js/translateStaticText.js:189
+#: src/gui/html/js/translateStaticText.js:208
 msgid "Copy Load Order"
 msgstr "复制加载顺序"
 
-#: src/gui/html/js/translateStaticText.js:190
+#: src/gui/html/js/translateStaticText.js:209
 msgid "Copy Content"
 msgstr "复制内容"
 
-#: src/gui/html/js/translateStaticText.js:191
+#: src/gui/html/js/translateStaticText.js:210
 msgid "Refresh Content"
 msgstr "刷新内容"
 
-#: src/gui/html/js/translateStaticText.js:192
+#: src/gui/html/js/translateStaticText.js:211
 msgid "View Documentation"
 msgstr "查看文档"
 
-#: src/gui/html/js/translateStaticText.js:193
+#: src/gui/html/js/translateStaticText.js:212
 msgid "About"
 msgstr "关于"
 
-#: src/gui/html/js/translateStaticText.js:194
-#: src/gui/html/js/translateStaticText.js:244
+#: src/gui/html/js/translateStaticText.js:213
+#: src/gui/html/js/translateStaticText.js:263
 msgid "Settings"
 msgstr "设置"
 
-#: src/gui/html/js/translateStaticText.js:198
+#: src/gui/html/js/translateStaticText.js:217
 msgid "Search cards"
 msgstr "搜索卡片"
 
-#: src/gui/html/js/translateStaticText.js:203
+#: src/gui/html/js/translateStaticText.js:222
 msgid "Plugins"
 msgstr "插件"
 
-#: src/gui/html/js/translateStaticText.js:204
+#: src/gui/html/js/translateStaticText.js:223
 msgid "Filters"
 msgstr "筛选"
 
-#: src/gui/html/js/translateStaticText.js:205
+#: src/gui/html/js/translateStaticText.js:224
 msgid "Press Enter or click outside the input to set the filter."
 msgstr "按下回车键或点击输入框以外设置筛选。"
 
-#: src/gui/html/js/translateStaticText.js:206
+#: src/gui/html/js/translateStaticText.js:225
 msgid "Show only plugins with cards that contain"
 msgstr "只显示包含该卡片的插件"
 
-#: src/gui/html/js/translateStaticText.js:207
+#: src/gui/html/js/translateStaticText.js:226
 msgid "No text specified"
 msgstr "没有文本被指定"
 
-#: src/gui/html/js/translateStaticText.js:210
+#: src/gui/html/js/translateStaticText.js:229
 msgid "Hide version numbers"
 msgstr "隐藏版次号"
 
-#: src/gui/html/js/translateStaticText.js:211
+#: src/gui/html/js/translateStaticText.js:230
 msgid "Hide CRCs"
 msgstr "隐藏CRC"
 
-#: src/gui/html/js/translateStaticText.js:212
+#: src/gui/html/js/translateStaticText.js:231
 msgid "Hide Bash Tags"
 msgstr "隐藏Bash标签"
 
-#: src/gui/html/js/translateStaticText.js:213
+#: src/gui/html/js/translateStaticText.js:232
 msgid "Hide notes"
 msgstr "隐藏注释"
 
-#: src/gui/html/js/translateStaticText.js:214
+#: src/gui/html/js/translateStaticText.js:233
 msgid "Hide 'Do not clean' messages"
 msgstr "隐藏 '不要清理' 信息"
 
-#: src/gui/html/js/translateStaticText.js:215
+#: src/gui/html/js/translateStaticText.js:234
 msgid "Hide all plugin messages"
 msgstr "隐藏所有插件信息"
 
-#: src/gui/html/js/translateStaticText.js:216
+#: src/gui/html/js/translateStaticText.js:235
 msgid "Hide inactive plugins"
 msgstr "隐藏未激活插件"
 
-#: src/gui/html/js/translateStaticText.js:217
+#: src/gui/html/js/translateStaticText.js:236
 msgid "Hide messageless plugins"
 msgstr "隐藏无信息的插件"
 
-#: src/gui/html/js/translateStaticText.js:220
+#: src/gui/html/js/translateStaticText.js:239
 msgid "Show only conflicting plugins for"
 msgstr "只显示与之冲突的插件"
 
-#: src/gui/html/js/translateStaticText.js:221
+#: src/gui/html/js/translateStaticText.js:240
 msgid "No plugin selected"
 msgstr "没有插件被选中"
 
-#: src/gui/html/js/translateStaticText.js:225
+#: src/gui/html/js/translateStaticText.js:244
 msgid "Hidden plugins:"
 msgstr "已隐藏插件："
 
-#: src/gui/html/js/translateStaticText.js:226
+#: src/gui/html/js/translateStaticText.js:245
 msgid "Hidden messages:"
 msgstr "已隐藏信息："
 
-#: src/gui/html/js/translateStaticText.js:231
+#: src/gui/html/js/translateStaticText.js:250
 msgid "General Information"
 msgstr "综合信息"
 
-#: src/gui/html/js/translateStaticText.js:232
+#: src/gui/html/js/translateStaticText.js:251
 msgid "Masterlist Revision"
 msgstr "主列表版次"
 
-#: src/gui/html/js/translateStaticText.js:233
+#: src/gui/html/js/translateStaticText.js:252
 msgid "Masterlist Date"
 msgstr "主列表日期"
 
-#: src/gui/html/js/translateStaticText.js:234
+#: src/gui/html/js/translateStaticText.js:253
 msgid "Warnings"
 msgstr "警告"
 
-#: src/gui/html/js/translateStaticText.js:235
+#: src/gui/html/js/translateStaticText.js:254
 msgid "Errors"
 msgstr "错误"
 
-#: src/gui/html/js/translateStaticText.js:236
+#: src/gui/html/js/translateStaticText.js:255
 msgid "Total Messages"
 msgstr "信息总计"
 
-#: src/gui/html/js/translateStaticText.js:237
+#: src/gui/html/js/translateStaticText.js:256
 msgid "Active Plugins"
 msgstr "激活插件"
 
-#: src/gui/html/js/translateStaticText.js:238
+#: src/gui/html/js/translateStaticText.js:257
 msgid "Dirty Plugins"
 msgstr "Dirty 插件"
 
-#: src/gui/html/js/translateStaticText.js:239
+#: src/gui/html/js/translateStaticText.js:258
 msgid "Total Plugins"
 msgstr "插件总计"
 
-#: src/gui/html/js/translateStaticText.js:247
+#: src/gui/html/js/translateStaticText.js:266
 msgid "Default Game"
 msgstr "默认游戏"
 
-#: src/gui/html/js/translateStaticText.js:248
+#: src/gui/html/js/translateStaticText.js:267
 msgid "Autodetect"
 msgstr "自动检测"
 
-#: src/gui/html/js/translateStaticText.js:253
+#: src/gui/html/js/translateStaticText.js:272
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "语言会在 LOOT 重启后应用。"
 
-#: src/gui/html/js/translateStaticText.js:255
+#: src/gui/html/js/translateStaticText.js:274
 msgid "Enable debug logging"
 msgstr "启用调试日志"
 
-#: src/gui/html/js/translateStaticText.js:256
+#: src/gui/html/js/translateStaticText.js:275
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "输出被记录在 LOOTDebugLog.txt 文件中。"
 
-#: src/gui/html/js/translateStaticText.js:258
+#: src/gui/html/js/translateStaticText.js:277
 msgid "Update masterlist before sorting"
 msgstr "在排序前更新主列表"
 
-#: src/gui/html/js/translateStaticText.js:262
+#: src/gui/html/js/translateStaticText.js:281
 msgid "Base Game"
 msgstr "基于游戏"
 
-#: src/gui/html/js/translateStaticText.js:263
+#: src/gui/html/js/translateStaticText.js:282
 msgid "LOOT Folder"
 msgstr "LOOT 文件夹"
 
-#: src/gui/html/js/translateStaticText.js:265
+#: src/gui/html/js/translateStaticText.js:284
 msgid "Masterlist Repository URL"
 msgstr "主列表库链接"
 
-#: src/gui/html/js/translateStaticText.js:266
+#: src/gui/html/js/translateStaticText.js:285
 msgid "Masterlist Repository Branch"
 msgstr "主列表库分支"
 
-#: src/gui/html/js/translateStaticText.js:267
+#: src/gui/html/js/translateStaticText.js:286
 msgid "Install Path"
 msgstr "安装路径"
 
-#: src/gui/html/js/translateStaticText.js:268
+#: src/gui/html/js/translateStaticText.js:287
 msgid "Install Path Registry Key"
 msgstr "注册表键安装路径键值"
 
-#: src/gui/html/js/translateStaticText.js:281
+#: src/gui/html/js/translateStaticText.js:300
 msgid "First-Time Tips"
 msgstr "首次运行小贴士"
 
-#: src/gui/html/js/translateStaticText.js:283
+#: src/gui/html/js/translateStaticText.js:302
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr "CRC只在插件被载入后，通过冲突筛选或者排序来显示。"
 
-#: src/gui/html/js/translateStaticText.js:284
+#: src/gui/html/js/translateStaticText.js:303
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr "在侧边栏双击一个插件可以快速打开它的元数据编辑器。"
 
-#: src/gui/html/js/translateStaticText.js:285
+#: src/gui/html/js/translateStaticText.js:304
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "插件可以从侧边栏拖动进入编辑器的\"加载在后面，\"需求\"和\"不兼容\"表格。"
 
-#: src/gui/html/js/translateStaticText.js:286
+#: src/gui/html/js/translateStaticText.js:305
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr "在编辑器打开，或者排序未应用和取消时，有些功能会被禁用。"
 
-#: src/gui/html/js/translateStaticText.js:287
+#: src/gui/html/js/translateStaticText.js:306
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -592,7 +637,66 @@ msgstr ""
 "许多界面元素都有使用提示。如果你不知道某些功能什么，试着将鼠标停在它上。另"
 "外，LOOT的帮助文档可以从主菜单进入。"
 
-#: src/backend/app/loot_paths.cpp:84
+#: src/gui/query/get_game_data_query.h:44
+msgid "Parsing, merging and evaluating metadata..."
+msgstr "解析、融合并评估插件元数据..."
+
+#: src/gui/query/get_game_data_query.h:79
+msgid ""
+"An error occurred while parsing the masterlist: %1%. This probably happened "
+"because an update to LOOT changed its metadata syntax support. Try updating "
+"your masterlist to resolve the error."
+msgstr ""
+"解析主列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。尝试"
+"更新你的主列表来解决这个错误。"
+
+#: src/gui/query/get_game_data_query.h:93
+msgid ""
+"An error occurred while parsing the userlist: %1%. This probably happened "
+"because an update to LOOT changed its metadata syntax support. Your user "
+"metadata will have to be updated manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"解析用户列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。你"
+"的用户数据必须手动更新。\n"
+"\n"
+"要完成更新，请使用 LOOT 主菜单中的 '打开本地调试日志' 功能打开数据目录，然后"
+"在相关目录打开你的 'userlist.yaml' 文件。你可以编辑这个元数据，请参考 LOOT 主"
+"菜单中的文档。\n"
+"\n"
+"你也可以在 LOOT 论坛寻求支持，链接为 [LOOT官方网站](https://loot.github."
+"io/)。"
+
+#: src/gui/query/metadata_query.h:79 src/gui/query/metadata_query.h:80
+msgid "(edited)"
+msgstr "(已修改)"
+
+#: src/gui/query/metadata_query.h:101
+msgid ""
+"A global message contains a condition that could not be evaluated. Details: "
+"%1%"
+msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
+
+#: src/gui/query/metadata_query.h:127 src/backend/plugin/plugin_sorter.cpp:219
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
+
+#: src/gui/query/sort_plugins_query.h:48
+msgid "Loading plugin contents..."
+msgstr "加载插件内容..."
+
+#: src/gui/query/sort_plugins_query.h:75
+msgid "Sorting load order..."
+msgstr "排序加载顺序..."
+
+#: src/backend/app/loot_paths.cpp:88
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr "无法获取%LOCALAPPDATA%路径。"
 
@@ -617,53 +721,53 @@ msgid "Game path could not be detected."
 msgstr "无法检测到游戏路径。"
 
 #: src/backend/game/game.cpp:74
-msgid "Could not create LOOT folder for game. Details:"
-msgstr "无法创建 LOOT 文件夹。详细信息："
+msgid "Could not create LOOT folder for game. Details: %1%"
+msgstr "无法创建 LOOT 文件夹。详细信息：%1%"
 
 #: src/backend/game/game_cache.cpp:119
 msgid "You have not sorted your load order this session."
 msgstr "你还没有在这个会话中整理你的加载顺序。"
 
-#: src/backend/game/load_order_handler.cpp:46
+#: src/backend/game/load_order_handler.cpp:48
 msgid "Game path is not initialised."
 msgstr "游戏路径未初始化。"
 
-#: src/backend/game/load_order_handler.cpp:82
+#: src/backend/game/load_order_handler.cpp:84
 msgid ""
 "libloadorder failed to create a game handle. Details could not be fetched."
 msgstr "libloadorder 无法创建游戏处理器，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:85
-msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder 无法创建游戏处理器，详细信息："
+#: src/backend/game/load_order_handler.cpp:87
+msgid "libloadorder failed to create a game handle. Details: %1%"
+msgstr "libloadorder 无法创建游戏处理器，详细信息：%1%"
 
-#: src/backend/game/load_order_handler.cpp:103
+#: src/backend/game/load_order_handler.cpp:105
 msgid ""
 "libloadorder failed to check if a plugin is active. Details could not be "
 "fetched."
 msgstr "libloadorder 无法检查插件是否处于活动状态，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:106
-msgid "libloadorder failed to check if a plugin is active. Details:"
-msgstr "libloadorder 无法检查插件是否处于活动状态。详细信息︰"
+#: src/backend/game/load_order_handler.cpp:108
+msgid "libloadorder failed to check if a plugin is active. Details: %1%"
+msgstr "libloadorder 无法检查插件是否处于活动状态。详细信息︰%1%"
 
-#: src/backend/game/load_order_handler.cpp:128
+#: src/backend/game/load_order_handler.cpp:130
 msgid ""
 "libloadorder failed to get the load order. Details could not be fetched."
 msgstr "libloadorder 无法获取加载顺序，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:131
-msgid "libloadorder failed to get the load order. Details:"
-msgstr "libloadorder 无法获取加载顺序，详细信息："
+#: src/backend/game/load_order_handler.cpp:133
+msgid "libloadorder failed to get the load order. Details: %1%"
+msgstr "libloadorder 无法获取加载顺序，详细信息：%1%"
 
-#: src/backend/game/load_order_handler.cpp:154
+#: src/backend/game/load_order_handler.cpp:170
 msgid ""
 "libloadorder failed to set the load order. Details could not be fetched."
 msgstr "libloadorder 无法设置加载顺序，详细信息无法获取。"
 
-#: src/backend/game/load_order_handler.cpp:157
-msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder 无法设置加载顺序，详细信息："
+#: src/backend/game/load_order_handler.cpp:173
+msgid "libloadorder failed to set the load order. Details: %1%"
+msgstr "libloadorder 无法设置加载顺序，详细信息：%1%"
 
 #: src/backend/helpers/git_helper.cpp:105
 msgid "Git operation failed. Error: %1%"
@@ -688,12 +792,12 @@ msgstr "无法打开\"%1%\"进行CRC计算。"
 msgid "Failed to open file in its default application."
 msgstr "无法使用它的默认程序来打开这个文件。"
 
-#: src/backend/metadata/condition_evaluator.cpp:170
-msgid "Invalid file path:"
-msgstr "无效文件路径："
+#: src/backend/metadata/condition_evaluator.cpp:173
+msgid "Invalid file path: %1%"
+msgstr "无效文件路径：%1%"
 
-#: src/backend/metadata/condition_evaluator.cpp:180
-#: src/backend/metadata/condition_evaluator.cpp:220
+#: src/backend/metadata/condition_evaluator.cpp:183
+#: src/backend/metadata/condition_evaluator.cpp:223
 msgid "Invalid regex string \"%1%\": %2%"
 msgstr "无效表达式\"%1%\"：%2%"
 
@@ -706,38 +810,40 @@ msgid ""
 "Failed to parse condition \"%1%\": only partially matched expected syntax."
 msgstr "无法解析条件 \"%1%\": 只是部分匹配预期的语法。"
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:88
-msgid ""
-"%1% found %2% ITM records, %3% deleted references and %4% deleted navmeshes."
-msgstr "%1%发现%2%个ITM记录，%3%个已删除引用和%4%已删除导航。"
+#: src/backend/metadata/plugin_cleaning_data.cpp:89
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] "%1%个ITM记录。"
 
 #: src/backend/metadata/plugin_cleaning_data.cpp:90
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] "%1%个已删除的引用"
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:91
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] "%1%个已删除的导航"
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:95
+msgid "%1% found %2%, %3% and %4%."
+msgstr "%1%发现%2%，%3%和%4%。"
+
+#: src/backend/metadata/plugin_cleaning_data.cpp:97
 msgid "%1% found dirty edits."
 msgstr "%1%发现dirty编辑器。"
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:93
-msgid "%1% found %2% deleted references and %3% deleted navmeshes."
-msgstr "%1%发现%2%个已删除引用和%3%个已删除导航。"
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:95
-msgid "%1% found %2% deleted navmeshes."
-msgstr "%1%发现%2%个已删除的导航"
-
-#: src/backend/metadata/plugin_cleaning_data.cpp:97
-msgid "%1% found %2% deleted references."
-msgstr "%1%发现%2%个已删除的引用"
-
 #: src/backend/metadata/plugin_cleaning_data.cpp:100
-msgid "%1% found %2% ITM records and %3% deleted navmeshes."
-msgstr "%1%发现%2%个ITM记录和%3%个已删除导航。"
-
 #: src/backend/metadata/plugin_cleaning_data.cpp:102
-msgid "%1% found %2% ITM records."
-msgstr "%1%发现%2%个ITM记录。"
+#: src/backend/metadata/plugin_cleaning_data.cpp:104
+msgid "%1% found %2% and %3%."
+msgstr "%1%发现%2%和%3%。"
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:105
-msgid "%1% found %2% ITM records and %3% deleted references."
-msgstr "%1%发现%2%个ITM记录和%3%个已删除引用。"
+#: src/backend/metadata/plugin_cleaning_data.cpp:107
+#: src/backend/metadata/plugin_cleaning_data.cpp:109
+#: src/backend/metadata/plugin_cleaning_data.cpp:111
+msgid "%1% found %2%."
+msgstr "%1%发现%2%。"
 
 #: src/backend/plugin/plugin.cpp:115
 msgid "Cannot read \"%1%\". Details: %2%"
@@ -761,11 +867,7 @@ msgid ""
 "%3%"
 msgstr "插件\"%1%\"和 \"%2%\"之间产生循环。回环：%3%"
 
-#: src/backend/plugin/plugin_sorter.cpp:219
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
-
-#: src/backend/masterlist.cpp:44
+#: src/backend/masterlist.cpp:45
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -773,15 +875,15 @@ msgstr ""
 "读取本地主列表版本时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/masterlist.cpp:48
+#: src/backend/masterlist.cpp:49
 msgid "N/A: No masterlist present"
 msgstr "不可用：没有主列表"
 
-#: src/backend/masterlist.cpp:51
+#: src/backend/masterlist.cpp:52
 msgid "Unknown: Git repository missing"
 msgstr "未知：Git 库缺失"
 
-#: src/backend/masterlist.cpp:116 src/backend/masterlist.cpp:130
+#: src/backend/masterlist.cpp:117 src/backend/masterlist.cpp:131
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
@@ -789,7 +891,7 @@ msgstr ""
 "存取本地主列表库时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/masterlist.cpp:237
+#: src/backend/masterlist.cpp:238
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
@@ -798,64 +900,31 @@ msgstr ""
 "更新主列表时读取信息发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文件"
 "夹。"
 
-#: src/backend/masterlist.cpp:251
-msgid "Masterlist revision"
-msgstr "主列表版次"
-
-#: src/backend/masterlist.cpp:255
+#: src/backend/masterlist.cpp:252
 msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
+"Masterlist revision %1%: %2%. The latest masterlist revision contains a "
+"syntax error, LOOT is using the most recent valid revision instead. Syntax "
+"errors are usually minor and fixed within hours."
 msgstr ""
-"最新的主列表版次包含一个语法错误，LOOT 将使用最近的正常版次替代。语法错误通常"
-"是小问题，一般在数小时内修正。"
-
-#~ msgid "Parsing, merging and evaluating metadata..."
-#~ msgstr "解析、融合并评估插件元数据..."
+"主列表版次%1%：%2%。最新的主列表版次包含一个语法错误，LOOT 将使用最近的正常版"
+"次替代。语法错误通常是小问题，一般在数小时内修正。"
 
 #~ msgid ""
-#~ "An error occurred while parsing the masterlist: %1%. This probably "
-#~ "happened because an update to LOOT changed its metadata syntax support. "
-#~ "Try updating your masterlist to resolve the error."
-#~ msgstr ""
-#~ "解析主列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。"
-#~ "尝试更新你的主列表来解决这个错误。"
+#~ "%1% found %2% ITM records, %3% deleted references and %4% deleted "
+#~ "navmeshes."
+#~ msgstr "%1%发现%2%个ITM记录，%3%个已删除引用和%4%已删除导航。"
 
-#~ msgid ""
-#~ "An error occurred while parsing the userlist: %1%. This probably happened "
-#~ "because an update to LOOT changed its metadata syntax support. Your user "
-#~ "metadata will have to be updated manually.\n"
-#~ "\n"
-#~ "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open "
-#~ "its data folder, then open your 'userlist.yaml' file in the relevant game "
-#~ "folder. You can then edit the metadata it contains with reference to the "
-#~ "[syntax documentation](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%"
-#~ "%20Metadata%%20Syntax.html).\n"
-#~ "\n"
-#~ "You can also seek support on LOOT's forum thread, which is linked to on "
-#~ "[LOOT's website](https://loot.github.io/)."
-#~ msgstr ""
-#~ "解析用户列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支"
-#~ "持。你的用户数据必须手动更新。\n"
-#~ "\n"
-#~ "要完成更新，请使用 LOOT 主菜单中的 '打开本地调试日志' 功能打开数据目录，然"
-#~ "后在相关目录打开你的 'userlist.yaml' 文件。你可以编辑这个元数据，请参考 "
-#~ "[语法文档](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%%20Metadata%"
-#~ "%20Syntax.html)。\n"
-#~ "你也可以在 LOOT 论坛寻求支持，链接为 [LOOT官方网站](https://loot.github."
-#~ "io/)。"
+#~ msgid "%1% found %2% deleted references and %3% deleted navmeshes."
+#~ msgstr "%1%发现%2%个已删除引用和%3%个已删除导航。"
 
-#~ msgid ""
-#~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: %1%"
-#~ msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
+#~ msgid "%1% found %2% ITM records and %3% deleted navmeshes."
+#~ msgstr "%1%发现%2%个ITM记录和%3%个已删除导航。"
 
-#~ msgid "Loading plugin contents..."
-#~ msgstr "加载插件内容..."
+#~ msgid "%1% found %2% ITM records and %3% deleted references."
+#~ msgstr "%1%发现%2%个ITM记录和%3%个已删除引用。"
 
-#~ msgid "Sorting load order..."
-#~ msgstr "排序加载顺序..."
+#~ msgid "Masterlist revision"
+#~ msgstr "主列表版次"
 
 #~ msgid "Invalid game ID supplied."
 #~ msgstr "无效的游戏ID"
@@ -865,9 +934,6 @@ msgstr ""
 
 #~ msgid "Expected \"%1%\" at \"%2%\"."
 #~ msgstr "预期\"%1%\"在\"%2%\"。"
-
-#~ msgid "(edited)"
-#~ msgstr "(已修改)"
 
 #~ msgid "Failed to change game. Details: %1%"
 #~ msgstr "无法更换游戏，详细信息：%1%"
@@ -883,9 +949,6 @@ msgstr ""
 
 #~ msgid "Failed to update the masterlist. Details: %1%"
 #~ msgstr "无法更新主列表，详细信息：%1%"
-
-#~ msgid "Failed to sort plugins. Details: %1%"
-#~ msgstr "无法调整排序，详细信息：%1%"
 
 #~ msgid "An exception occurred while loading this plugin. Details:"
 #~ msgstr "载入这个插件时发生意外，详细信息："
@@ -931,9 +994,6 @@ msgstr ""
 #~ msgid "Loading general messages..."
 #~ msgstr "载入综合信息..."
 
-#~ msgid "Updating and parsing masterlist..."
-#~ msgstr "更新并解析主列表..."
-
 #~ msgid "Regenerating displayed content..."
 #~ msgstr "重建显示内容..."
 
@@ -946,36 +1006,17 @@ msgstr ""
 #~ msgid "Loading game data..."
 #~ msgstr "载入游戏数据..."
 
-#~ msgid "Masterlist updated to revision %s."
-#~ msgstr "主列表已更新到版次%s。"
-
 #~ msgid "Updating masterlist..."
 #~ msgstr "更新主列表..."
 
 #~ msgid "Sorting plugins..."
 #~ msgstr "排序插件..."
 
-#~ msgid "The metadata for \"%s\" has been copied to the clipboard."
-#~ msgstr "\"%s\"的元数据已被复制到剪贴板。"
-
-#~ msgid ""
-#~ "Are you sure you want to clear all existing user-added metadata from \"%s"
-#~ "\"?"
-#~ msgstr "你确定要清除从\"%s\"清除所有用户添加的元数据？"
-
-#~ msgid "The user-added metadata for \"%s\" has been cleared."
-#~ msgstr "\"%s\"中用户添加的元数据已被清除。"
-
 #~ msgid "Refreshing data..."
 #~ msgstr "刷新数据..."
 
 #~ msgid "Checking if plugins have been loaded..."
 #~ msgstr "检查插件是否被加载..."
-
-#~ msgid ""
-#~ "You have not yet applied or cancelled your %s. Are you sure you want to "
-#~ "quit?"
-#~ msgstr "你还没用应用或取消你的%s。确定要退出吗？"
 
 #~ msgid "unknown"
 #~ msgstr "未知"
