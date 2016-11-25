@@ -83,6 +83,10 @@ loot-editor-close
       iron-pages > *:not(.iron-selected) {
         display: none;
       }
+      #priorityValue,
+      #globalPriorityValue {
+        width: 250px;
+      }
 
       /* Misc Styling. */
       paper-toolbar.medium-tall {
@@ -139,11 +143,11 @@ loot-editor-close
         </div>
         <div>
           <div>Priority</div>
-          <paper-input id="priorityValue" type="number" max="127" min="-127" step="1" prevent-invalid-input no-label-float></paper-input>
+          <paper-input id="priorityValue" error-message="Must be an integer between +/- 127 inclusive" type="number" max="127" min="-127" step="1" auto-validate no-label-float></paper-input>
         </div>
         <div>
           <div>Global Priority</div>
-          <paper-input id="globalPriorityValue" type="number" max="127" min="-127" step="1" prevent-invalid-input no-label-float></paper-input>
+          <paper-input id="globalPriorityValue" error-message="Must be an integer between +/- 127 inclusive" type="number" max="127" min="-127" step="1" auto-validate no-label-float></paper-input>
         </div>
       </div>
       <div id="after">
