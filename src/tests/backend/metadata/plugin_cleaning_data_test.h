@@ -102,6 +102,26 @@ TEST_P(PluginCleaningDataTest, asMessageShouldOutputAllNonZeroCounts) {
   EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info", message.GetContent(LanguageCode::english).GetText());
 }
 
+TEST_P(PluginCleaningDataTest, asMessageShouldDistinguishBetweenSingularAndPluralCounts) {
+  Message message = PluginCleaningData(0x12345678, "cleaner", info_, 1, 2, 3).AsMessage();
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 1 ITM record, 2 deleted references and 3 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+  
+  message = PluginCleaningData(0x12345678, "cleaner", info_, 2, 1, 3).AsMessage();
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records, 1 deleted reference and 3 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+  
+  message = PluginCleaningData(0x12345678, "cleaner", info_, 3, 2, 1).AsMessage();
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 3 ITM records, 2 deleted references and 1 deleted navmesh. info", message.GetContent(LanguageCode::english).GetText());
+}
+
+TEST_P(PluginCleaningDataTest, asMessageShouldReturnAMessageWithCountsButNoInfoStringIfInfoIsAnEmptyString) {
+  Message message = PluginCleaningData(0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3).AsMessage();
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 1 ITM record, 2 deleted references and 3 deleted navmeshes.", message.GetContent(LanguageCode::english).GetText());
+}
+
 TEST_P(PluginCleaningDataTest, dirtyInfoShouldBeEqualIfCrcValuesAreEqual) {
   PluginCleaningData info1(0x12345678, "cleaner1", info_, 2, 10, 30);
   PluginCleaningData info2(0x12345678, "cleaner2", info_, 4, 20, 60);

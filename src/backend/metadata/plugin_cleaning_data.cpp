@@ -111,6 +111,10 @@ Message PluginCleaningData::AsMessage() const {
     f = format(translate("%1% found %2%.")) % utility_ % deletedNavmeshes;
 
   std::string message = f.str();
+  if (info_.empty()) {
+    return Message(MessageType::warn, message);
+  }
+
   auto info = info_;
   for (auto& content : info) {
     content = MessageContent(message + " " + content.GetText(), content.GetLanguage());
