@@ -4,6 +4,40 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.10.2 - 2016-12-03
+===================
+
+Added
+-----
+
+- Support for specifying the path to use for LOOT's local data storage, via the ``--loot-data-path`` parameter.
+
+Changed
+-------
+
+- The metadata editor now displays an error message when the user inputs invalid priority values, in addition to the input's existing red underline styling for invalid values, and instead of validating the values when trying to save the metadata.
+- LOOT's icon now scales better for high-DPI displays.
+- LOOT's UI is now built as many loose files instead of one large HTML file, to aid debugging and development.
+- Updated Chinese translation.
+- Updated Chromium Embedded Framework to 3.2840.1517.gd7afec5.
+- Updated libgit2 to 0.24.3.
+- Updated Polymer to 1.7.0, and also updated various Polymer elements.
+
+Fixed
+-----
+
+- A crash could occur if some plugins that are hardcoded to always load were missing. Fixed by updating to libloadorder v9.5.4.
+- Plugin cleaning metadata with no ``info`` value generated a warning message with no text.
+- The LOOT update checker will no longer display an empty error dialog if the update check is unable to connect to the GitHub API (eg. if offline).
+- Redate Plugins was accidentally disabled for Skyrim SE in v0.10.1, and had no effect for Skyrim SE in v0.10.0.
+- Having more than ~ 100 plugins installed could make the sidebar's plugin list appear on top of dialogs.
+- More UI text has been made available for translation.
+- Tweak some text formatting to include more context for translators.
+- Dirty plugin warning messages now distinguish between singular and plural forms for their ITM, deleted reference and deleted navmesh counts, to allow the construction of more grammatically-correct messages in English and other languages.
+- The UI text for the metadata editor was always displayed in English even when LOOT was set to use another language, despite translations being available.
+- It was possible to open the metadata editor during sorting by double-clicking a plugin in the sidebar.
+- Removed a duplicate section in the documentation for editing metadata.
+
 0.10.1 - 2016-11-12
 ===================
 

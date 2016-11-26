@@ -2,6 +2,21 @@
 Version History
 ***************
 
+0.10.2 - 2016-12-03
+===================
+
+Changed
+-------
+
+- Updated libgit2 to 0.24.3.
+
+Fixed
+-----
+
+- A crash could occur if some plugins that are hardcoded to always load were missing. Fixed by updating to libloadorder v9.5.4.
+- Plugin cleaning metadata with no ``info`` value generated a warning message with no text.
+
+
 0.10.1 - 2016-11-12
 ===================
 
