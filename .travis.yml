@@ -22,6 +22,9 @@ addons:
       - libxss-dev
       - libasound2-dev
       - libxtst-dev
+      # Scripting dependencies
+      - inkscape
+      - imagemagick
   sauce_connect: true
 
 cache:
@@ -59,8 +62,10 @@ install:
   - export PATH="$PWD/doxygen-1.8.12/bin:$PATH"
 
 before_script:
+  - mkdir build
+  - node scripts/create_ico.js
   # Move into the cloned LOOT repo build path.
-  - mkdir build && cd build
+  - cd build
   # Link dynamically to the C++ standard library runtime.
   - cmake .. -DBOOST_ROOT=~/boost_1_61_0
 

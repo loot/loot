@@ -19,4 +19,4 @@ BEGIN
 VALUE "Translation", 0x409, 1200
 END
 END
-MAINICON ICON "../resources/icon.ico"
+MAINICON ICON "../build/icon/icon.ico"

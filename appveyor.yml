@@ -17,7 +17,7 @@ environment:
     secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
 
 install:
-  - choco install -y doxygen.portable InnoSetup
+  - choco install -y doxygen.portable InnoSetup inkscape imagemagick.tool
   - python -m pip install sphinx breathe sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
@@ -26,6 +26,8 @@ install:
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - ps: mkdir build
+  - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
+  - node scripts\create_ico.js
   - cd build
   - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0"
 
