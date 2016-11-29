@@ -3,6 +3,7 @@ const helpers = require('./helpers');
 const hyd = require('hydrolysis');
 const fs = require('fs-extra');
 const path = require('path');
+const getRobotoFiles = require('./get_roboto_files').getRobotoFiles;
 
 function getHtmlImports(filePath) {
   return hyd.Analyzer.analyze(filePath).then((analyzer) =>
@@ -85,20 +86,31 @@ function copyFiles(pathsPromise, destinationRootPath) {
   });
 }
 
-helpers.getAppReleasePaths('.').forEach(releasePath => {
-  const index = 'src/gui/html/index.html';
-  const destinationRootPath = `${releasePath.path}/resources/ui`;
-  const imports = new Set();
+const url = 'https://github.com/google/roboto/releases/download/v2.135/roboto-hinted.zip';
+const fontsPath = 'build/fonts';
 
-  copyFiles(getRecursiveHtmlImports(index, imports), destinationRootPath);
-  copyFiles(getJavaScriptSources(index), destinationRootPath);
-  fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
-  fs.copySync('resources/ui/css/dark-theme.css', `${destinationRootPath}/css/dark-theme.css`);
-  fs.copySync('resources/ui/fonts', `${destinationRootPath}/fonts`);
-  copyNormalisedFile(index, `${destinationRootPath}/index.html`);
+Promise.resolve().then(() => {
+  if (!fs.existsSync(fontsPath)) {
+    return getRobotoFiles(url, fontsPath);
+  }
 
-  // This is the only JS file referenced by a HTML import (neon-animation),
-  // so just hardcode it instead of recursively searching for it.
-  const webAnimationsJs = 'bower_components/web-animations-js/web-animations-next-lite.min.js';
-  fs.copySync(webAnimationsJs, `${destinationRootPath}/${webAnimationsJs}`);
+  return '';
+}).then(() => {
+  helpers.getAppReleasePaths('.').forEach(releasePath => {
+    const index = 'src/gui/html/index.html';
+    const destinationRootPath = `${releasePath.path}/resources/ui`;
+    const imports = new Set();
+
+    copyFiles(getRecursiveHtmlImports(index, imports), destinationRootPath);
+    copyFiles(getJavaScriptSources(index), destinationRootPath);
+    fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
+    fs.copySync('resources/ui/css/dark-theme.css', `${destinationRootPath}/css/dark-theme.css`);
+    fs.copySync(fontsPath, `${destinationRootPath}/fonts`);
+    copyNormalisedFile(index, `${destinationRootPath}/index.html`);
+
+    // This is the only JS file referenced by a HTML import (neon-animation),
+    // so just hardcode it instead of recursively searching for it.
+    const webAnimationsJs = 'bower_components/web-animations-js/web-animations-next-lite.min.js';
+    fs.copySync(webAnimationsJs, `${destinationRootPath}/${webAnimationsJs}`);
+  });
 });

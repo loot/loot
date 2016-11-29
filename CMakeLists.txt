@@ -516,14 +516,6 @@ add_custom_command(TARGET LOOT POST_BUILD
         "${CEF_LOCALES_DIR}/${CEF_LOCALE_FILE}"
         $<TARGET_FILE_DIR:LOOT>/resources/l10n/${CEF_LOCALE_FILE})
 
-# Copy UI fonts. Not necessary for the build, but useful for testing.
-FOREACH(font Roboto-Bold.ttf Roboto-BoldItalic.ttf Roboto-Italic.ttf Roboto-Light.ttf Roboto-LightItalic.ttf Roboto-Medium.ttf Roboto-MediumItalic.ttf Roboto-Regular.ttf)
-add_custom_command(TARGET LOOT POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/resources/ui/fonts/${font}"
-        $<TARGET_FILE_DIR:LOOT>/resources/ui/fonts/${font})
-ENDFOREACH()
-
 # Build the UI HTML.
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND "node" "${CMAKE_SOURCE_DIR}/scripts/build_ui.js"
