@@ -5,6 +5,11 @@ const fs = require('fs-extra');
 const path = require('path');
 const getRobotoFiles = require('./get_roboto_files').getRobotoFiles;
 
+function handleError(error) {
+  console.error(error);
+  process.exit(1);
+}
+
 function getHtmlImports(filePath) {
   return hyd.Analyzer.analyze(filePath).then((analyzer) =>
     analyzer._getDependencies(filePath)
@@ -69,7 +74,7 @@ function normalisePaths(html) {
 
 function copyNormalisedFile(sourceFile, destinationFile) {
   const html = fs.readFileSync(sourceFile, { encoding: 'utf8' });
-  fs.mkdirs(path.dirname(destinationFile));
+  fs.mkdirsSync(path.dirname(destinationFile));
   fs.writeFileSync(destinationFile, normalisePaths(html));
 }
 
@@ -83,7 +88,7 @@ function copyFiles(pathsPromise, destinationRootPath) {
         copyNormalisedFile(filePath, destinationPath);
       }
     });
-  });
+  }).catch(handleError);
 }
 
 const url = 'https://github.com/google/roboto/releases/download/v2.135/roboto-hinted.zip';
@@ -113,4 +118,4 @@ Promise.resolve().then(() => {
     const webAnimationsJs = 'bower_components/web-animations-js/web-animations-next-lite.min.js';
     fs.copySync(webAnimationsJs, `${destinationRootPath}/${webAnimationsJs}`);
   });
-});
+}).catch(handleError);
