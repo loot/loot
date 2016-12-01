@@ -6,6 +6,32 @@ function Get-BranchFromBintrayVersion($version) {
   return $version.substring($version.IndexOf('_') + 1)
 }
 
+function Get-Branches($versions) {
+  $branches = @()
+  foreach ($version in $versions) {
+    $branches += Get-BranchFromBintrayVersion $version
+  }
+
+  return $branches | select -uniq
+}
+
+function Is-Merged($commitId) {
+  $branches = [array](git branch --contains $commitId)
+
+  return ($branches -contains '  dev') -Or ($branches -contains '* dev')
+}
+
+function Get-VersionsForBranch($versions, $branch) {
+  $branchVersions = @()
+  foreach ($version in $versions) {
+    $versionBranch = Get-BranchFromBintrayVersion $version
+    if ($versionBranch -eq $branch) {
+      $branchVersions += $version
+    }
+  }
+  return $branchVersions
+}
+
 function Get-AuthorizationHeaderValue($username, $password) {
   $credentials = "$($username):$($password)"
   return 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($credentials))
@@ -27,34 +53,41 @@ $protectedBranches = @(
   'master'
 )
 
-if (!($protectedBranches.Contains($currentBranch))) {
-  exit
-}
-
-$currentCommitId = [string](git rev-parse --short HEAD)
-
 foreach($package in $packages) {
   $bintrayPackageUrl = "$bintrayRepoUrl/$package"
   $versions = (Invoke-RestMethod -Uri $bintrayPackageUrl).versions
 
+  $versionsToDelete = @()
+  $versionsToKeep = @()
 
-  $matchingBranches = @()
-  foreach ($version in $versions) {
-    if ($currentCommitId -eq (Get-HashFromBintrayVersion $version)) {
-      $versionBranch = Get-BranchFromBintrayVersion $version
-      if (!($protectedBranches.Contains($versionBranch))) {
-        $matchingBranches += $versionBranch
-      }
+  foreach ($branch in (Get-Branches $versions)) {
+    if ($protectedBranches -contains $branch) {
+      continue
+    }
+
+    $branchVersions = @(Get-VersionsForBranch $versions $branch)
+    if (Is-Merged (Get-HashFromBintrayVersion $branchVersions[0])) {
+      $versionsToDelete += $branchVersions
+    } else {
+      $versionsToKeep += $branchVersions[0]
     }
   }
 
+  # Get the versions not marked for deletion or keeping.
+  $unevaluatedVersions = @()
   foreach ($version in $versions) {
-    $versionBranch = Get-BranchFromBintrayVersion $version
-
-    foreach ($matchingBranch in $matchingBranches) {
-      if ($versionBranch -eq $matchingBranch) {
-        Invoke-RestMethod -Method Delete -Uri "$bintrayPackageUrl/versions/$version" -Headers $bintrayHeaders
-      }
+    if (!($versionsToDelete -contains $version) -And !($versionsToKeep -contains $version)) {
+      $unevaluatedVersions += $version
     }
+  }
+
+  $firstOldVersionIndex = 40 - $versionsToKeep.length
+  if ($unevaluatedVersions.length -gt $firstOldVersionIndex) {
+    $versionsToDelete += $unevaluatedVersions[$firstOldVersionIndex..($unevaluatedVersions.length - 1)]
+  }
+
+  foreach ($version in $versionsToDelete) {
+    Write-Output "Deleting from Bintray: $version"
+    Invoke-RestMethod -Method Delete -Uri "$bintrayPackageUrl/versions/$version" -Headers $bintrayHeaders
   }
 }
