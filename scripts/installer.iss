@@ -295,7 +295,7 @@ end;
 procedure InitializeWizard();
 begin
   if VCRedistNeedsInstall then begin
-    idpAddFile('http://download.microsoft.com/download/9/a/2/9a2a7e36-a8af-46c0-8a78-a5eb111eefe2/vc_redist.x86.exe', ExpandConstant('{tmp}\vc_redist.x86.exe'));
+    idpAddFile('https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe', ExpandConstant('{tmp}\vc_redist.x86.exe'));
 
     idpDownloadAfter(wpReady);
   end

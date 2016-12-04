@@ -11,4 +11,4 @@ If LOOT was installed using the installer, then use the uninstaller linked to in
 1. Delete the files you extracted from the location you chose.
 2. Delete the ``LOOT`` folder in your local application data folder, which can be accessed by entering ``%LOCALAPPDATA%`` into Windows' File Explorer.
 
-.. _MSVC 2015 x86 redistributable: http://download.microsoft.com/download/9/a/2/9a2a7e36-a8af-46c0-8a78-a5eb111eefe2/vc_redist.x86.exe
+.. _MSVC 2015 x86 redistributable: https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe
