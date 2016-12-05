@@ -38,7 +38,7 @@ function Get-AuthorizationHeaderValue($username, $password) {
 }
 
 $currentBranch = $env:APPVEYOR_REPO_BRANCH
-$bintrayToken = $env:bintray_token
+$bintrayToken = $env:bintray_auth_token
 $bintrayRepoUrl = 'https://api.bintray.com/packages/wrinklyninja/loot'
 $bintrayHeaders = @{ Authorization = (Get-AuthorizationHeaderValue 'wrinklyninja' $bintrayToken) }
 $packages = @(

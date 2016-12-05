@@ -15,7 +15,7 @@ if ($env:APPVEYOR_REPO_TAG -eq 'true') {
   $branchName = Get-BranchName
 
   Write-Output "`nUpdating masterlists' default branch to $branchName..."
-  lomad -t $env:access_token -a -d $branchName
+  lomad -t $env:github_auth_token -a -d $branchName
 
   if ($lastexitcode -eq 0) {
     Write-Output "Masterlists' default branches have been updated."

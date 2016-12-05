@@ -11,10 +11,10 @@ cache:
   - C:\projects\boost_1_61_0\stage\lib
 
 environment:
-  access_token:
-    secure: yoODjVeYw01Vg2idJgxMBOkyII/TO3yb6OZfxtzBh/F5z3ZTDW6CHBOiH4AyiX7Y
-  bintray_token:
-    secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
+  github_auth_token:
+    secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
+  bintray_auth_token:
+    secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
 
 install:
   - choco install -y doxygen.portable InnoSetup inkscape imagemagick.tool
@@ -63,7 +63,7 @@ deploy:
   - provider: BinTray
     username: wrinklyninja
     api_key:
-      secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
+      secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
     subject: wrinklyninja
     repo: loot
     package: LOOT
@@ -74,7 +74,7 @@ deploy:
   - provider: BinTray
     username: wrinklyninja
     api_key:
-      secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
+      secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
     subject: wrinklyninja
     repo: loot
     package: LOOT_API
@@ -85,7 +85,7 @@ deploy:
   - provider: BinTray
     username: wrinklyninja
     api_key:
-      secure: u234T2688DZmz4JH5+0iAHcUcL2fEIGculb8655bn4B1q7GckhplsitzgEbv3NFc
+      secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
     subject: wrinklyninja
     repo: loot
     package: metadata-validator
@@ -106,7 +106,7 @@ deploy:
 
       *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
     auth_token:
-      secure: SecSfg5+S0OUzmC+kKixshqNDrRDj2uRYx58AAiZ1IDYTvQbPGRqEYCWZ9jbPd3h
+      secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
     artifact: LOOT,API,metadata-validator,installer
     draft: false
     on:

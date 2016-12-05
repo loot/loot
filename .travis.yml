@@ -25,7 +25,10 @@ addons:
       # Scripting dependencies
       - inkscape
       - imagemagick
-  sauce_connect: true
+  sauce_connect:
+    username: oliverhamlet
+  jwt:
+    secure: "YbmqKNfotisPlMiw1Vk8Ts9xYAegLf+fNb9FfAvNVyHIR7mJw7LivFPdjW5x3P7ktfwPqGxjGjNn0hOCKbLoqueKcq4LHuvdWgOaeqXc2BmVQx+HLzECj0G3uMshiyGZRCf6noJBXPe96YJb/nGj4bhZn/AMiGH+vNkOrPtoJNk="
 
 cache:
   directories:
@@ -99,7 +102,7 @@ deploy:
     file: scripts/travis/loot.bintray.json
     user: wrinklyninja
     key:
-      secure: "YjcfW+VRF3NC3pDxhpn7mAZ/Qs26KPLOwQS3VaC/0F8/tdPqznqEFGiuWGvC7i7NjUyJXDBHEso5GsRG3jxhGt1KOkCptiIsMiubUeUE3xY83oVvzJ/MbK7AXGM5heR3nUYLijzqxSSCbFdVewTdymfpGSWUbf1K+EV0qXUdinA="
+      secure: "CyJpCbkO4pK+h4ZFDqwS3FZNwTaY7638IT7uzVKhGQV2CD9nMR7mb9bL6DG/Uxs91MuBeCu8RwzXtK5IVmPkH5AbMO95JMsjor+t8lT6AHhjvgmAhOBXJa5qMbFBFbLQErTdudHIcOxgjyjA5vqt5Zf0DlWty7WnE10WoU/O7qg="
     skip_cleanup: true
     on:
       all_branches: true
@@ -107,7 +110,7 @@ deploy:
     file: scripts/travis/loot-api.bintray.json
     user: wrinklyninja
     key:
-      secure: "YjcfW+VRF3NC3pDxhpn7mAZ/Qs26KPLOwQS3VaC/0F8/tdPqznqEFGiuWGvC7i7NjUyJXDBHEso5GsRG3jxhGt1KOkCptiIsMiubUeUE3xY83oVvzJ/MbK7AXGM5heR3nUYLijzqxSSCbFdVewTdymfpGSWUbf1K+EV0qXUdinA="
+      secure: "CyJpCbkO4pK+h4ZFDqwS3FZNwTaY7638IT7uzVKhGQV2CD9nMR7mb9bL6DG/Uxs91MuBeCu8RwzXtK5IVmPkH5AbMO95JMsjor+t8lT6AHhjvgmAhOBXJa5qMbFBFbLQErTdudHIcOxgjyjA5vqt5Zf0DlWty7WnE10WoU/O7qg="
     skip_cleanup: true
     on:
       all_branches: true
@@ -115,13 +118,13 @@ deploy:
     file: scripts/travis/metadata-validator.bintray.json
     user: wrinklyninja
     key:
-      secure: "YjcfW+VRF3NC3pDxhpn7mAZ/Qs26KPLOwQS3VaC/0F8/tdPqznqEFGiuWGvC7i7NjUyJXDBHEso5GsRG3jxhGt1KOkCptiIsMiubUeUE3xY83oVvzJ/MbK7AXGM5heR3nUYLijzqxSSCbFdVewTdymfpGSWUbf1K+EV0qXUdinA="
+      secure: "CyJpCbkO4pK+h4ZFDqwS3FZNwTaY7638IT7uzVKhGQV2CD9nMR7mb9bL6DG/Uxs91MuBeCu8RwzXtK5IVmPkH5AbMO95JMsjor+t8lT6AHhjvgmAhOBXJa5qMbFBFbLQErTdudHIcOxgjyjA5vqt5Zf0DlWty7WnE10WoU/O7qg="
     skip_cleanup: true
     on:
       all_branches: true
   - provider: releases
     api_key:
-      secure: YOgb6thQKlp9aG19Vo8mFSzDRKntCcmMD+A4SAxmg919j6ONoSkaeuVxnUz5V2UKWbCaGzUN/fSnYbp51yDxWTFXalvRMckl0GaP5U0543ilpZPs3QdmDYQD7xlDevWBnYlZyU0jbFwX1U+yfW9k3lxea/JSFDwIkFZXY2Dxqmw=
+      secure: "TuiXR/J5cdvgAXqU5x79E7thXwzN4Jqo1vKolPPb5ahrBllBHFh23awyOIdlTnXY1aS6NjS85uIiD3TNZ/hwrtDsjMgNs1ofL6A9B+7uQJjpK8JqFUECrJCMsEhnwRSzIUeqDeZp440x3c0bTFqfSMErrG/ga5S+VyNYHYREqo4="
     file: build/metadata-validator.tar.xz
     skip_cleanup: true
     on:
@@ -134,8 +137,3 @@ notifications:
       - "chat.freenode.net#loot"
     use_notice: true
     skip_join: true
-
-env:
-  global:
-  - secure: OWgDkff/b+0eKk/P75rBnecaPDv1E/gMkCzsTUUtofmzj+sttpMUsh8VOVUvckGs5m3fRwRhc/t99gR4FuDtMOVE5JZ8CqZn7tcv2wNAspQ613pS0nWyIX/IUbyF+gjtPW2dWy81hKVtTP4yFvUn1Gk+JRjJLSyxM53Xt6oTOlY=
-  - secure: XpGbqizjWfaGiWDkrcW4UhSW8ijm00jgSo2qkthza3QmHQ3C0Vye3gQjjITCq+y6izQTPa46fxaI+Ozligyh4aQ1G8SpCa77tXMBfvo31led+s81FlAOSVGDJ/2eDOoawFuj5dTKTPR1zLniDYH8AqG8EDZuLoK6fhx7CchU2Yw=
