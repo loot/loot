@@ -10,12 +10,12 @@ const os = require('os');
 const helpers = require('./helpers');
 
 function getGitDescription() {
-  const describe = String(childProcess.execFileSync('git', [
+  const describe = String(helpers.safeExecFileSync('git', [
     'describe',
     '--tags',
     '--long',
   ])).slice(0, -1);
-  let branch = String(childProcess.execFileSync('git', [
+  let branch = String(helpers.safeExecFileSync('git', [
     'rev-parse',
     '--abbrev-ref',
     'HEAD',
@@ -66,7 +66,7 @@ function compress(sourcePath, destPath) {
 
     // The last argument must have a leading dot for the subdirectory not to
     // be present in the archive, but path.join removes it, so it's prefixed.
-    return childProcess.execFileSync(sevenzipPath, [
+    return helpers.safeExecFileSync(sevenzipPath, [
       'a',
       '-r',
       filename,

@@ -1,5 +1,6 @@
 // Helper functions shared across scripts.
 'use strict';
+const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -87,7 +88,16 @@ function getMetadataValidatorBinaryPaths(rootPath) {
   return getBinaryPaths(rootPath, file);
 }
 
+function safeExecFileSync(file, args, options) {
+  try {
+    childProcess.execFileSync(file, args, options);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 module.exports.fileExists = fileExists;
 module.exports.getAppReleasePaths = getAppReleasePaths;
 module.exports.getApiBinaryPaths = getApiBinaryPaths;
 module.exports.getMetadataValidatorBinaryPaths = getMetadataValidatorBinaryPaths;
+module.exports.safeExecFileSync = safeExecFileSync;

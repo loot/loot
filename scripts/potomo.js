@@ -21,7 +21,7 @@ fs.readdirSync(l10nPath).forEach((file) => {
 
       fs.accessSync(poPath, fs.R_OK);
 
-      childProcess.execFileSync('msgfmt', [
+      helpers.safeExecFileSync('msgfmt', [
         poPath,
         '-o',
         moPath,

@@ -1,4 +1,4 @@
-const childProcess = require('child_process');
+const helpers = require('./helpers');
 const fs = require('fs-extra');
 const path = require('path');
 
@@ -15,7 +15,7 @@ sizes.forEach((size) => {
   const pngFile = path.join(buildDirectory, `icon-${size}.png`);
   convertArgs.push(pngFile);
 
-  childProcess.execFileSync('inkscape', [
+  helpers.safeExecFileSync('inkscape', [
     '-z',
     '-e',
     pngFile,
@@ -28,4 +28,4 @@ sizes.forEach((size) => {
 });
 
 convertArgs.push(outputPath);
-childProcess.execFileSync('convert', convertArgs);
+helpers.safeExecFileSync('convert', convertArgs);
