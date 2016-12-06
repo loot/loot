@@ -90,7 +90,7 @@ function getMetadataValidatorBinaryPaths(rootPath) {
 
 function safeExecFileSync(file, args, options) {
   try {
-    childProcess.execFileSync(file, args, options);
+    return childProcess.execFileSync(file, args, options);
   } catch (error) {
     throw new Error(error.message);
   }
