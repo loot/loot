@@ -7,8 +7,8 @@ configuration: Release
 cache:
   - node_modules
   - bower_components
-  - C:\projects\boost_1_61_0\boost
-  - C:\projects\boost_1_61_0\stage\lib
+  - C:\projects\boost_1_62_0\boost
+  - C:\projects\boost_1_62_0\stage\lib
 
 environment:
   github_auth_token:
@@ -21,7 +21,9 @@ install:
   - python -m pip install sphinx breathe sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
-  - ps: .\scripts\appveyor\install_boost.ps1
+  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py', "$env:APPVEYOR_BUILD_FOLDER\install_boost.py")
+  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
+  - python %APPVEYOR_BUILD_FOLDER%\install_boost.py --directory C:\projects --boost-version 1.62.0 atomic chrono date_time filesystem iostreams locale log regex system thread
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -29,7 +31,7 @@ before_build:
   - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
   - node scripts\create_ico.js
   - cd build
-  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0"
+  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_62_0"
 
 build:
   verbosity: minimal
@@ -113,7 +115,9 @@ deploy:
       appveyor_repo_tag: true
 
 on_success:
-  - ps: scripts\appveyor\delete_old_artifacts.ps1
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p LOOT -t $env:bintray_auth_token -n 40
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p LOOT_API -t $env:bintray_auth_token -n 40
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p metadata-validator -t $env:bintray_auth_token -n 40
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
