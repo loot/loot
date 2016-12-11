@@ -68,7 +68,7 @@ deploy:
       secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
     subject: wrinklyninja
     repo: loot
-    package: LOOT
+    package: loot
     version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
     artifact: LOOT
@@ -79,7 +79,7 @@ deploy:
       secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
     subject: wrinklyninja
     repo: loot
-    package: LOOT_API
+    package: loot-api
     version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
     artifact: API
@@ -115,8 +115,8 @@ deploy:
       appveyor_repo_tag: true
 
 on_success:
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p LOOT -t $env:bintray_auth_token -n 40
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p LOOT_API -t $env:bintray_auth_token -n 40
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot -t $env:bintray_auth_token -n 40
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot-api -t $env:bintray_auth_token -n 40
   - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p metadata-validator -t $env:bintray_auth_token -n 40
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
