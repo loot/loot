@@ -115,9 +115,9 @@ deploy:
       appveyor_repo_tag: true
 
 on_success:
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot -t $env:bintray_auth_token -n 40
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot-api -t $env:bintray_auth_token -n 40
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p metadata-validator -t $env:bintray_auth_token -n 40
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot -t $env:bintray_auth_token -n 30
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot-api -t $env:bintray_auth_token -n 30
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p metadata-validator -t $env:bintray_auth_token -n 30
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
