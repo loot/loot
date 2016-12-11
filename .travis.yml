@@ -34,8 +34,8 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/node_modules
     - $TRAVIS_BUILD_DIR/bower_components
-    - $HOME/boost_1_61_0/boost
-    - $HOME/boost_1_61_0/stage/lib
+    - $HOME/boost_1_62_0/boost
+    - $HOME/boost_1_62_0/stage/lib
 
 install:
   # Use GCC 5.
@@ -51,8 +51,8 @@ install:
   - export PATH="./node_modules/.bin:$PATH"
   # Install runtime dependencies using Bower
   - bower install
-  - chmod +x scripts/travis/install_boost.sh
-  - scripts/travis/install_boost.sh
+  - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py
+  - python install_boost.py --directory ~ --boost-version 1.62.0 atomic chrono date_time filesystem iostreams locale log regex system thread
   # Install packages for generating documentation
   - pip install --user sphinx breathe sphinx_rtd_theme
   # Add sphinx-build to PATH
@@ -70,7 +70,7 @@ before_script:
   # Move into the cloned LOOT repo build path.
   - cd build
   # Link dynamically to the C++ standard library runtime.
-  - cmake .. -DBOOST_ROOT=~/boost_1_61_0
+  - cmake .. -DBOOST_ROOT=~/boost_1_62_0
 
 script:
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
