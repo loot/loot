@@ -4,11 +4,19 @@ version: "{build}-{branch}"
 
 configuration: Release
 
+platform:
+  - x64
+  - Win32
+
+matrix:
+  fast_finish: true
+
 cache:
   - node_modules
   - bower_components
   - C:\projects\boost_1_61_0\boost
-  - C:\projects\boost_1_61_0\stage\lib
+  - C:\projects\boost_1_61_0\stage\32\lib
+  - C:\projects\boost_1_61_0\stage\64\lib
 
 environment:
   github_auth_token:
@@ -21,9 +29,10 @@ install:
   - python -m pip install sphinx breathe sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
-  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py', "$env:APPVEYOR_BUILD_FOLDER\install_boost.py")
+  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.1.0/install_boost.py', "$env:APPVEYOR_BUILD_FOLDER\install_boost.py")
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
-  - python %APPVEYOR_BUILD_FOLDER%\install_boost.py --directory C:\projects --boost-version 1.61.0 atomic chrono date_time filesystem iostreams locale log regex system thread
+  - ps: if ($env:PLATFORM -eq "Win32") { $env:ADDRESS_MODEL = '32' } else { $env:ADDRESS_MODEL = '64' }
+  - ps: python $env:APPVEYOR_BUILD_FOLDER\install_boost.py -d C:\projects -b 1.61.0 -a $env:ADDRESS_MODEL atomic chrono date_time filesystem iostreams locale log regex system thread
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -31,11 +40,22 @@ before_build:
   - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
   - node scripts\create_ico.js
   - cd build
-  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0"
+  - ps: |
 
-build:
-  verbosity: minimal
-  project: 'c:\projects\loot\build\LOOT.sln'
+      if ($env:PLATFORM -eq 'Win32') {
+        cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0" -DBOOST_LIBRARYDIR="C:\projects\boost_1_61_0\stage\32\lib"
+      } else {
+        cmake .. -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT="C:\projects\boost_1_61_0" -DBOOST_LIBRARYDIR="C:\projects\boost_1_61_0\stage\64\lib"
+      }
+
+build_script:
+  - ps: |
+      if ($env:PLATFORM -eq 'Win32') {
+        msbuild "c:\projects\loot\build\LOOT.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+      } else {
+        msbuild "c:\projects\loot\build\tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+        msbuild "c:\projects\loot\build\api-tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+      }
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
@@ -45,18 +65,21 @@ test_script:
 after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
-  - set PATH=%PATH%;C:\cygwin\bin\
-  - node scripts\potomo.js
+  - ps: |
+      $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
+      if ($env:PLATFORM -eq 'Win32') {
+        $env:PATH = "$env:PATH;C:\cygwin\bin\"
+        node scripts\potomo.js
+        scripts\appveyor\build_installer.ps1
+      }
   - node scripts\archive.js
-  - ps: $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
-  - ps: scripts\appveyor\build_installer.ps1
 
 artifacts:
-  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
     name: LOOT
-  - path: build\loot-api_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\loot-api_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
     name: API
-  - path: build\metadata-validator_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\metadata-validator_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
     name: metadata-validator
   - path: build\LOOT Installer.exe
     name: installer
@@ -109,10 +132,32 @@ deploy:
       *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
-    artifact: LOOT,API,metadata-validator,installer
+    artifact: API
     draft: false
     on:
       appveyor_repo_tag: true
+      platform: x64
+
+  - provider: GitHub
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
+    description: |
+      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives.
+
+      ## Change Logs
+      - [Application](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html)
+      - [API](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/api/changelog.html)
+      - [Metadata Syntax](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/metadata/changelog.html)
+
+      *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
+    auth_token:
+      secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
+    artifact: LOOT,API,metadata-validator,installer
+    draft: false
+    force_update: true
+    on:
+      appveyor_repo_tag: true
+      platform: Win32
 
 on_success:
   - ps: |

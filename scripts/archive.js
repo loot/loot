@@ -221,6 +221,8 @@ function createMetadataValidatorArchive(rootPath, binaryPath, tempPath, destPath
 function getFilenameSuffix(label, gitDescription) {
   if (label) {
     return `${gitDescription}_${label}`;
+  } else if (process.env.APPVEYOR) {
+    return `${gitDescription}_${process.env.PLATFORM}`;
   }
 
   return `${gitDescription}`;
