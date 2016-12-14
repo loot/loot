@@ -59,29 +59,46 @@ using std::string;
 using std::wstring;
 
 namespace loot {
-    //Calculate the CRC of the given file for comparison purposes.
+size_t GetStreamSize(std::istream& stream) {
+  std::streampos startingPosition = stream.tellg();
+
+  stream.seekg(0, std::ios_base::end);
+  size_t streamSize = stream.tellg();
+  stream.seekg(startingPosition, std::ios_base::beg);
+  
+  return streamSize;
+}
+
+//Calculate the CRC of the given file for comparison purposes.
 uint32_t GetCrc32(const boost::filesystem::path& filename) {
-  uint32_t chksum = 0;
   try {
-    boost::filesystem::ifstream ifile(filename, std::ios::binary);
     BOOST_LOG_TRIVIAL(trace) << "Calculating CRC for: " << filename.string();
+
+    boost::filesystem::ifstream ifile(filename, std::ios::binary);
+    ifile.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+
+    static const size_t bufferSize = 8192;
+    char buffer[bufferSize];
     boost::crc_32_type result;
-    if (ifile) {
-      static const size_t buffer_size = 8192;
-      char buffer[buffer_size];
-      do {
-        ifile.read(buffer, buffer_size);
-        result.process_bytes(buffer, ifile.gcount());
-      } while (ifile);
-      chksum = result.checksum();
-    } else
-      throw std::exception();
-  } catch (std::exception&) {
+    size_t bytesLeft = GetStreamSize(ifile);
+    while (bytesLeft > 0) {
+      if (bytesLeft > bufferSize)
+        ifile.read(buffer, bufferSize);
+      else
+        ifile.read(buffer, bytesLeft);
+
+      result.process_bytes(buffer, ifile.gcount());
+      bytesLeft -= ifile.gcount();
+    }
+
+    uint32_t checksum = result.checksum();
+    BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << checksum << std::dec;
+    return checksum;
+      
+  } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
-    throw FileAccessError((boost::format(translate("Unable to open \"%1%\" for CRC calculation.")) % filename.string()).str());
+    throw FileAccessError((boost::format(translate("Unable to open \"%1%\" for CRC calculation: %2%")) % filename.string() % e.what()).str());
   }
-  BOOST_LOG_TRIVIAL(debug) << "CRC32(\"" << filename.string() << "\"): " << std::hex << chksum << std::dec;
-  return chksum;
 }
 
 //Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
