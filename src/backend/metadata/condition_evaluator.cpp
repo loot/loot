@@ -27,6 +27,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "backend/helpers/helpers.h"
+#include "loot/exception/condition_syntax_error.h"
 
 using boost::format;
 using boost::locale::translate;
@@ -170,7 +171,7 @@ void ConditionEvaluator::validatePath(const boost::filesystem::path& path) {
 
     if (component == ".." && temp.filename() == "..") {
       BOOST_LOG_TRIVIAL(error) << "Invalid file path: " << path;
-      throw std::invalid_argument((format(translate("Invalid file path: %1%")) % path.string()).str());
+      throw ConditionSyntaxError((format(translate("Invalid file path: %1%")) % path.string()).str());
     }
 
     temp /= component;
@@ -180,7 +181,7 @@ void ConditionEvaluator::validateRegex(const std::string& regexString) {
   try {
     std::regex(regexString, std::regex::ECMAScript | std::regex::icase);
   } catch (std::regex_error& e) {
-    throw std::invalid_argument((format(translate("Invalid regex string \"%1%\": %2%")) % regexString % e.what()).str());
+    throw ConditionSyntaxError((format(translate("Invalid regex string \"%1%\": %2%")) % regexString % e.what()).str());
   }
 }
 
@@ -220,7 +221,7 @@ std::pair<boost::filesystem::path, std::regex> ConditionEvaluator::splitRegex(co
     reg = std::regex(filename, std::regex::ECMAScript | std::regex::icase);
   } catch (std::regex_error& e) {
     BOOST_LOG_TRIVIAL(error) << "Invalid regex string:" << filename;
-    throw std::invalid_argument((boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
+    throw ConditionSyntaxError((boost::format(boost::locale::translate("Invalid regex string \"%1%\": %2%")) % filename % e.what()).str());
   }
 
   return std::pair<boost::filesystem::path, std::regex>(parent, reg);
