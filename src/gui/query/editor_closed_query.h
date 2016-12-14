@@ -41,16 +41,9 @@ public:
       state_.decrementUnappliedChangeCounter();
 
       return json;
-    } catch (std::exception& e) {
-      // If this was a YAML conversion error, cut off the line and column numbers,
-      // since the YAML wasn't written to a file.
-      std::string error = e.what();
-      size_t pos = std::string::npos;
-      if ((pos = error.find("bad conversion")) != std::string::npos) {
-        error = error.substr(pos);
-      }
-
-      throw std::runtime_error(error);
+    } catch (YAML::RepresentationException& e) {
+      BOOST_LOG_TRIVIAL(error) << "Error while closing editor: " << e.what();
+      throw YAML::RepresentationException(YAML::Mark::null_mark(), e.msg);
     }
   }
 
