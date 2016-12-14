@@ -101,7 +101,7 @@ private:
           "documentation, which is accessible through LOOT's main menu.\n\n"
           "You can also seek support on LOOT's forum thread, which is "
           "linked to on [LOOT's website](https://loot.github.io/)."
-        )) % e.what() % LootVersion::major % LootVersion::minor % LootVersion::patch).str()));
+        )) % e.what()).str()));
       }
     }
   }
