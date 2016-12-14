@@ -140,7 +140,7 @@ std::string RegKeyStringValue(const std::string& keyStr, const std::string& subk
     BOOST_LOG_TRIVIAL(info) << "Found string: " << wstr.c_str();
     return FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
   } else {
-    BOOST_LOG_TRIVIAL(error) << "Failed to get string value.";
+    BOOST_LOG_TRIVIAL(info) << "Failed to get string value.";
     return "";
   }
 }
