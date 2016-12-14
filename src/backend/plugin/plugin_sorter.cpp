@@ -79,9 +79,7 @@ public:
     }
     backCycle.erase(backCycle.length() - 2);
 
-    BOOST_LOG_TRIVIAL(error) << "Cyclic interaction detected between plugins \"" << graph[source].Name() << "\" and \"" << graph[target].Name() << "\". Back cycle: " << backCycle;
-
-    throw CyclicInteractionError((boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%")) % graph[source].Name() % graph[target].Name() % backCycle).str());
+    throw CyclicInteractionError(graph[source].Name(), graph[target].Name(), backCycle);
   }
 
 private:

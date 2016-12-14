@@ -106,22 +106,6 @@ private:
     }
   }
 
-  YAML::Node convertMasterlistMetadata() {
-    YAML::Node masterlistNode;
-    try {
-      MasterlistInfo info = state_.getCurrentGame().GetMasterlist().GetInfo(state_.getCurrentGame().MasterlistPath(), true);
-      addSuffixIfModified(info);
-
-      masterlistNode["revision"] = info.revision_id;
-      masterlistNode["date"] = info.revision_date;
-    } catch (std::exception &e) {
-      masterlistNode["revision"] = e.what();
-      masterlistNode["date"] = e.what();
-    }
-
-    return masterlistNode;
-  }
-
   static std::vector<EditorMessage> toEditorMessages(std::vector<Message> messages, const LanguageCode language) {
     std::vector<EditorMessage> list;
 
@@ -190,7 +174,7 @@ private:
 
     // ID the game using its folder value.
     gameNode["folder"] = state_.getCurrentGame().FolderName();
-    gameNode["masterlist"] = convertMasterlistMetadata();
+    gameNode["masterlist"] = getMasterlistInfo();
     gameNode["globalMessages"] = getGeneralMessages();
     gameNode["bashTags"] = state_.getCurrentGame().GetMasterlist().BashTags();
 

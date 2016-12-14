@@ -79,7 +79,9 @@ private:
       plugins = sorter.Sort(state_.getCurrentGame(), state_.getLanguage().GetCode());
     } catch (CyclicInteractionError& e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-      state_.getCurrentGame().AppendMessage(Message(MessageType::error, e.what()));
+      state_.getCurrentGame().AppendMessage(Message(MessageType::error,
+        (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%"))
+         % e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle()).str()));
     } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
     }

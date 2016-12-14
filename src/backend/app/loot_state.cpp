@@ -186,8 +186,6 @@ void LootState::init(const std::string& cmdLineGame) {
     currentGame_->Init(true);
     // Update game path in settings object.
     storeGameSettings(toGameSettings(games_));
-  } catch (GameDetectionError& e) {
-    initErrors_.push_back(e.what());
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
     initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
@@ -266,10 +264,10 @@ void LootState::selectGame(std::string preferredGame) {
       return game.IsInstalled();
     });
   }
+
   // If no game can be selected, throw an exception.
   if (currentGame_ == end(games_)) {
-    BOOST_LOG_TRIVIAL(error) << "None of the supported games were detected.";
-    throw GameDetectionError(translate("None of the supported games were detected."));
+    throw GameDetectionError("None of the supported games were detected.");
   }
 }
 

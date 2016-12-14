@@ -30,8 +30,6 @@
 #include "backend/game/game.h"
 #include "backend/metadata/condition_grammar.h"
 
-using boost::locale::translate;
-using std::exception;
 using std::string;
 
 namespace loot {
@@ -79,19 +77,12 @@ bool ConditionalMetadata::ParseCondition(Game * game) const {
   boost::spirit::qi::space_type skipper;
   string::const_iterator begin = condition_.begin();
   string::const_iterator end = condition_.end();
-  bool parseResult;
   bool evaluation;
 
-  try {
-    bool parseResult = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, evaluation);
-  } catch (exception& e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to evaluate condition \"" << condition_ << "\": " << e.what();
-    throw;
-  }
+  bool parseResult = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, evaluation);
 
   if (!parseResult || begin != end) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse condition \"" << condition_ << "\": only partially matched expected syntax.";
-    throw ConditionSyntaxError((boost::format(translate("Failed to parse condition \"%1%\": only partially matched expected syntax.")) % condition_).str());
+    throw ConditionSyntaxError((boost::format("Failed to parse condition \"%1%\": only partially matched expected syntax.") % condition_).str());
   }
 
   return evaluation;

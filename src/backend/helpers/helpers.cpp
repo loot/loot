@@ -36,7 +36,6 @@
 #include <boost/crc.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
-#include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/spirit/include/karma.hpp>
 
@@ -54,7 +53,6 @@
 #   include "shlwapi.h"
 #endif
 
-using boost::locale::translate;
 using std::string;
 using std::wstring;
 
@@ -96,8 +94,7 @@ uint32_t GetCrc32(const boost::filesystem::path& filename) {
     return checksum;
       
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error) << "Unable to open \"" << filename.string() << "\" for CRC calculation.";
-    throw FileAccessError((boost::format(translate("Unable to open \"%1%\" for CRC calculation: %2%")) % filename.string() % e.what()).str());
+    throw FileAccessError((boost::format("Unable to open \"%1%\" for CRC calculation: %2%") % filename.string() % e.what()).str());
   }
 }
 
@@ -117,10 +114,10 @@ void OpenInDefaultApplication(const boost::filesystem::path& file) {
 #ifdef _WIN32
   HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
   if ((int)ret <= 32)
-    throw std::system_error(GetLastError(), std::system_category(), translate("Failed to open file in its default application."));
+    throw std::system_error(GetLastError(), std::system_category(), "Failed to open file in its default application.");
 #else
   if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
-    throw std::system_error(errno, std::system_category(), translate("Failed to open file in its default application."));
+    throw std::system_error(errno, std::system_category(), "Failed to open file in its default application.");
 #endif
 }
 

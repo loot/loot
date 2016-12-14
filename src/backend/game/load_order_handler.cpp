@@ -26,13 +26,11 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
-#include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
 #include "loot/exception/error_categories.h"
 
 using boost::format;
-using boost::locale::translate;
 using std::string;
 
 namespace loot {
@@ -44,8 +42,7 @@ LoadOrderHandler::~LoadOrderHandler() {
 
 void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData) {
   if (game.GamePath().empty()) {
-    BOOST_LOG_TRIVIAL(error) << "Game path is not initialised.";
-    throw std::invalid_argument(translate("Game path is not initialised.").str());
+    throw std::invalid_argument("Game path is not initialised.");
   }
 
   const char * gameLocalDataPath = nullptr;
@@ -80,11 +77,9 @@ void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::p
     string err;
     lo_get_error_message(&e);
     if (e == nullptr) {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details could not be fetched.";
-      err = translate("libloadorder failed to create a game handle. Details could not be fetched.").str();
+      err = "libloadorder failed to create a game handle. Details could not be fetched.";
     } else {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to create a game handle. Details: " << e;
-      err = (format(translate("libloadorder failed to create a game handle. Details: %1%")) % e).str();
+      err = (format("libloadorder failed to create a game handle. Details: %1%") % e).str();
     }
     lo_cleanup();
     throw std::system_error(ret, libloadorder_category(), err);
@@ -101,11 +96,9 @@ bool LoadOrderHandler::IsPluginActive(const std::string& pluginName) const {
     string err;
     lo_get_error_message(&e);
     if (e == nullptr) {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details could not be fetched.";
-      err = translate("libloadorder failed to check if a plugin is active. Details could not be fetched.").str();
+      err = "libloadorder failed to check if a plugin is active. Details could not be fetched.";
     } else {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to check if a plugin is active. Details: " << e;
-      err = (format(translate("libloadorder failed to check if a plugin is active. Details: %1%")) % e).str();
+      err = (format("libloadorder failed to check if a plugin is active. Details: %1%") % e).str();
     }
     lo_cleanup();
     throw std::system_error(ret, libloadorder_category(), err);
@@ -126,11 +119,9 @@ std::vector<std::string> LoadOrderHandler::GetLoadOrder() const {
     string err;
     lo_get_error_message(&e);
     if (e == nullptr) {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details could not be fetched.";
-      err = translate("libloadorder failed to get the load order. Details could not be fetched.").str();
+      err = "libloadorder failed to get the load order. Details could not be fetched.";
     } else {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to get the load order. Details: " << e;
-      err = (format(translate("libloadorder failed to get the load order. Details: %1%")) % e).str();
+      err = (format("libloadorder failed to get the load order. Details: %1%") % e).str();
     }
     lo_cleanup();
     throw std::system_error(ret, libloadorder_category(), err);
@@ -166,11 +157,9 @@ void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) c
     string err;
     lo_get_error_message(&e);
     if (e == nullptr) {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details could not be fetched.";
-      err = translate("libloadorder failed to set the load order. Details could not be fetched.").str();
+      err = "libloadorder failed to set the load order. Details could not be fetched.";
     } else {
-      BOOST_LOG_TRIVIAL(error) << "libloadorder failed to set the load order. Details: " << e;
-      err = (format(translate("libloadorder failed to set the load order. Details: %1%")) % e).str();
+      err = (format("libloadorder failed to set the load order. Details: %1%") % e).str();
     }
     lo_cleanup();
 

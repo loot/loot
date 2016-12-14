@@ -46,10 +46,10 @@ MasterlistInfo Masterlist::GetInfo(const boost::filesystem::path& path, bool sho
 
   if (!fs::exists(path)) {
     BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: No masterlist present.";
-    throw FileAccessError(translate("N/A: No masterlist present"));
+    throw FileAccessError(string("N/A: No masterlist present at ") + path.string());
   } else if (!git.IsRepository(path.parent_path())) {
     BOOST_LOG_TRIVIAL(info) << "Unknown masterlist revision: Git repository missing.";
-    throw GitStateError(translate("Unknown: Git repository missing"));
+    throw GitStateError(string("Unknown: \"") + path.parent_path().string() + "\" is not a Git repository.");
   }
 
   BOOST_LOG_TRIVIAL(debug) << "Existing repository found, attempting to open it.";

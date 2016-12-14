@@ -25,6 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
+#include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 #include <include/wrapper/cef_message_router.h>
 
@@ -36,7 +37,7 @@ public:
       callback->Success(executeLogic());
     } catch (std::exception &e) {
       BOOST_LOG_TRIVIAL(error) << e.what();
-      callback->Failure(-1, e.what());
+      callback->Failure(-1, boost::locale::translate("Oh no, something went wrong! If you've enabled debug logging in your settings, you can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.").str());
     }
   }
 

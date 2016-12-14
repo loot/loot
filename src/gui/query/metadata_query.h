@@ -31,6 +31,8 @@ along with LOOT.  If not, see
 #include "backend/game/game.h"
 #include "backend/plugin/plugin.h"
 #include "gui/query/query.h"
+#include "loot/exception/file_access_error.h"
+#include "loot/exception/git_state_error.h"
 
 namespace loot {
 class MetadataQuery : public Query {
@@ -74,11 +76,25 @@ protected:
     }
   }
 
-  void addSuffixIfModified(MasterlistInfo& info) {
-    if (info.is_modified) {
-      info.revision_date += " " + boost::locale::translate("(edited)").str();
-      info.revision_id += " " + boost::locale::translate("(edited)").str();
+  YAML::Node getMasterlistInfo() {
+    using boost::locale::translate;
+
+    YAML::Node masterlistNode;
+    try {
+      MasterlistInfo info = state_.getCurrentGame().GetMasterlist().GetInfo(state_.getCurrentGame().MasterlistPath(), true);
+      addSuffixIfModified(info);
+
+      masterlistNode["revision"] = info.revision_id;
+      masterlistNode["date"] = info.revision_date;
+    } catch (FileAccessError &) {
+      masterlistNode["revision"] = translate("N/A: No masterlist present").str();
+      masterlistNode["date"] = translate("N/A: No masterlist present").str();
+    } catch (GitStateError &) {
+      masterlistNode["revision"] = translate("Unknown: Git repository missing").str();
+      masterlistNode["date"] = translate("Unknown: Git repository missing").str();
     }
+
+    return masterlistNode;
   }
 
 private:
@@ -151,6 +167,13 @@ private:
     }
 
     return pluginNode;
+  }
+
+  void addSuffixIfModified(MasterlistInfo& info) {
+    if (info.is_modified) {
+      info.revision_date += " " + boost::locale::translate("(edited)").str();
+      info.revision_id += " " + boost::locale::translate("(edited)").str();
+    }
   }
 
   LootState& state_;

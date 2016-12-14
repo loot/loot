@@ -36,7 +36,6 @@
 #include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"
 
-using boost::locale::translate;
 using std::list;
 using std::string;
 using std::thread;
@@ -60,8 +59,7 @@ void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppDa
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
 
   if (!this->IsInstalled()) {
-    BOOST_LOG_TRIVIAL(error) << "Game path could not be detected.";
-    throw GameDetectionError(translate("Game path could not be detected."));
+    throw GameDetectionError("Game path could not be detected.");
   }
 
   if (createFolder) {
@@ -70,8 +68,7 @@ void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppDa
       if (!fs::exists(LootPaths::getLootDataPath() / FolderName()))
         fs::create_directories(LootPaths::getLootDataPath() / FolderName());
     } catch (fs::filesystem_error& e) {
-      BOOST_LOG_TRIVIAL(error) << "Could not create LOOT folder for game. Details: " << e.what();
-      throw FileAccessError((boost::format(translate("Could not create LOOT folder for game. Details: %1%")) % e.what()).str());
+      throw FileAccessError((boost::format("Could not create LOOT folder for game. Details: %1%") % e.what()).str());
     }
   }
 

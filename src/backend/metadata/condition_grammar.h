@@ -39,7 +39,6 @@
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
-#include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
@@ -198,9 +197,7 @@ private:
     std::string context(errorpos, last);
     boost::trim(context);
 
-    BOOST_LOG_TRIVIAL(error) << "Expected \"" << what.tag << "\" at \"" << context << "\".";
-
-    throw ConditionSyntaxError((boost::format(boost::locale::translate("Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\".")) % condition % what.tag % context).str());
+    throw ConditionSyntaxError((boost::format("Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\".") % condition % what.tag % context).str());
   }
 
   boost::spirit::qi::rule<Iterator, bool(), Skipper> expression_, compound_, condition_, function_;

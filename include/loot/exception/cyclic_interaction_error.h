@@ -34,7 +34,28 @@ namespace loot {
  */
 class CyclicInteractionError : public std::runtime_error {
 public:
-  using std::runtime_error::runtime_error;
+  CyclicInteractionError(const std::string& firstPlugin, const std::string& lastPlugin, const std::string& backCycle) : 
+    std::runtime_error("Cyclic interaction detected between plugins \"" + firstPlugin + "\" and \"" + lastPlugin + "\". Back cycle: " + backCycle),
+    firstPlugin_(firstPlugin), 
+    lastPlugin_(lastPlugin), 
+    backCycle_(backCycle) {}
+
+  std::string getFirstPlugin() {
+    return firstPlugin_;
+  }
+
+  std::string getLastPlugin() {
+    return lastPlugin_;
+  }
+
+  std::string getBackCycle() {
+    return backCycle_;
+  }
+
+private:
+  const std::string firstPlugin_;
+  const std::string lastPlugin_;
+  const std::string backCycle_;
 };
 }
 

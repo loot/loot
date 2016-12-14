@@ -60,7 +60,7 @@ private:
 
   std::string generateJsonResponse() {
     YAML::Node gameMetadata;
-    storeMasterlistMetadata(gameMetadata);
+    gameMetadata["masterlist"] = getMasterlistInfo();
 
     // Store bash tags in case they have changed.
     gameMetadata["bashTags"] = game_.GetMasterlist().BashTags();
@@ -73,19 +73,6 @@ private:
     }
 
     return JSON::stringify(gameMetadata);
-  }
-
-  void storeMasterlistMetadata(YAML::Node& gameMetadata) {
-    try {
-      MasterlistInfo info = game_.GetMasterlist().GetInfo(game_.MasterlistPath(), true);
-      addSuffixIfModified(info);
-
-      gameMetadata["masterlist"]["revision"] = info.revision_id;
-      gameMetadata["masterlist"]["date"] = info.revision_date;
-    } catch (std::exception& e) {
-      gameMetadata["masterlist"]["revision"] = e.what();
-      gameMetadata["masterlist"]["date"] = e.what();
-    }
   }
 
   YAML::Node generateDerivedMetadata(const Plugin& plugin) {

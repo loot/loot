@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-11-22 19:39+0000\n"
+"POT-Creation-Date: 2016-12-14 21:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -657,18 +657,33 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:79 src/gui/query/metadata_query.h:80
-msgid "(edited)"
+#: src/gui/query/metadata_query.h:90 src/gui/query/metadata_query.h:91
+msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:101
+#: src/gui/query/metadata_query.h:93 src/gui/query/metadata_query.h:94
+msgid "Unknown: Git repository missing"
+msgstr ""
+
+#: src/gui/query/metadata_query.h:117
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:127 src/backend/plugin/plugin_sorter.cpp:219
+#: src/gui/query/metadata_query.h:143 src/backend/plugin/plugin_sorter.cpp:217
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+
+#: src/gui/query/metadata_query.h:174 src/gui/query/metadata_query.h:175
+msgid "(edited)"
+msgstr ""
+
+#: src/gui/query/query.h:40
+msgid ""
+"Oh no, something went wrong! If you've enabled debug logging in your "
+"settings, you can check your LOOTDebugLog.txt (you can get to it through the "
+"main menu) for more information."
 msgstr ""
 
 #: src/gui/query/sort_plugins_query.h:48
@@ -679,8 +694,10 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/backend/app/loot_paths.cpp:88
-msgid "Failed to get %LOCALAPPDATA% path."
+#: src/gui/query/sort_plugins_query.h:83
+msgid ""
+"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
+"%3%"
 msgstr ""
 
 #: src/backend/app/loot_state.cpp:124
@@ -691,106 +708,23 @@ msgstr ""
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/backend/app/loot_state.cpp:193
+#: src/backend/app/loot_state.cpp:191
 msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-
-#: src/backend/app/loot_state.cpp:272
-msgid "None of the supported games were detected."
-msgstr ""
-
-#: src/backend/game/game.cpp:64
-msgid "Game path could not be detected."
-msgstr ""
-
-#: src/backend/game/game.cpp:74
-msgid "Could not create LOOT folder for game. Details: %1%"
 msgstr ""
 
 #: src/backend/game/game_cache.cpp:119
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/backend/game/load_order_handler.cpp:48
-msgid "Game path is not initialised."
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:84
-msgid ""
-"libloadorder failed to create a game handle. Details could not be fetched."
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:87
-msgid "libloadorder failed to create a game handle. Details: %1%"
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:105
-msgid ""
-"libloadorder failed to check if a plugin is active. Details could not be "
-"fetched."
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:108
-msgid "libloadorder failed to check if a plugin is active. Details: %1%"
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:130
-msgid ""
-"libloadorder failed to get the load order. Details could not be fetched."
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:133
-msgid "libloadorder failed to get the load order. Details: %1%"
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:170
-msgid ""
-"libloadorder failed to set the load order. Details could not be fetched."
-msgstr ""
-
-#: src/backend/game/load_order_handler.cpp:173
-msgid "libloadorder failed to set the load order. Details: %1%"
-msgstr ""
-
-#: src/backend/helpers/git_helper.cpp:105
-msgid "Git operation failed. Error: %1%"
-msgstr ""
-
-#: src/backend/helpers/git_helper.cpp:146
+#: src/backend/helpers/git_helper.cpp:145
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:195
+#: src/backend/helpers/git_helper.cpp:194
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
-msgstr ""
-
-#: src/backend/helpers/helpers.cpp:81
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr ""
-
-#: src/backend/helpers/helpers.cpp:103 src/backend/helpers/helpers.cpp:106
-msgid "Failed to open file in its default application."
-msgstr ""
-
-#: src/backend/metadata/condition_evaluator.cpp:173
-msgid "Invalid file path: %1%"
-msgstr ""
-
-#: src/backend/metadata/condition_evaluator.cpp:183
-#: src/backend/metadata/condition_evaluator.cpp:223
-msgid "Invalid regex string \"%1%\": %2%"
-msgstr ""
-
-#: src/backend/metadata/condition_grammar.h:203
-msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
-msgstr ""
-
-#: src/backend/metadata/conditional_metadata.cpp:91
-msgid ""
-"Failed to parse condition \"%1%\": only partially matched expected syntax."
 msgstr ""
 
 #: src/backend/metadata/plugin_cleaning_data.cpp:89
@@ -847,24 +781,10 @@ msgstr ""
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/backend/plugin/plugin_sorter.cpp:84
-msgid ""
-"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
-"%3%"
-msgstr ""
-
 #: src/backend/masterlist.cpp:45
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-
-#: src/backend/masterlist.cpp:49
-msgid "N/A: No masterlist present"
-msgstr ""
-
-#: src/backend/masterlist.cpp:52
-msgid "Unknown: Git repository missing"
 msgstr ""
 
 #: src/backend/masterlist.cpp:117 src/backend/masterlist.cpp:131
