@@ -42,7 +42,6 @@ public:
 
       return json;
     } catch (YAML::RepresentationException& e) {
-      BOOST_LOG_TRIVIAL(error) << "Error while closing editor: " << e.what();
       throw YAML::RepresentationException(YAML::Mark::null_mark(), e.msg);
     }
   }
