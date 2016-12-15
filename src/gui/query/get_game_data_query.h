@@ -75,6 +75,7 @@ private:
       try {
         state_.getCurrentGame().GetMasterlist().Load(state_.getCurrentGame().MasterlistPath());
       } catch (std::exception &e) {
+        BOOST_LOG_TRIVIAL(error) << "An error occurred while parsing \"" << state_.getCurrentGame().MasterlistPath() << "\": " << e.what();
         state_.getCurrentGame().GetMasterlist().AppendMessage(Message(MessageType::error, (boost::format(boost::locale::translate(
           "An error occurred while parsing the masterlist: %1%. "
           "This probably happened because an update to LOOT changed "
@@ -89,6 +90,7 @@ private:
       try {
         state_.getCurrentGame().GetUserlist().Load(state_.getCurrentGame().UserlistPath());
       } catch (std::exception &e) {
+        BOOST_LOG_TRIVIAL(error) << "An error occurred while parsing \"" << state_.getCurrentGame().UserlistPath() << "\": " << e.what();
         state_.getCurrentGame().GetUserlist().AppendMessage(Message(MessageType::error, (boost::format(boost::locale::translate(
           "An error occurred while parsing the userlist: %1%. "
           "This probably happened because an update to LOOT changed "

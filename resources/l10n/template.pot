@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-12-14 21:55+0000\n"
+"POT-Creation-Date: 2016-12-15 18:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -635,14 +635,14 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:79
+#: src/gui/query/get_game_data_query.h:80
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:93
+#: src/gui/query/get_game_data_query.h:95
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -657,25 +657,25 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:90 src/gui/query/metadata_query.h:91
+#: src/gui/query/metadata_query.h:91 src/gui/query/metadata_query.h:92
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:93 src/gui/query/metadata_query.h:94
+#: src/gui/query/metadata_query.h:95 src/gui/query/metadata_query.h:96
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:117
+#: src/gui/query/metadata_query.h:119
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:143 src/backend/plugin/plugin_sorter.cpp:217
+#: src/gui/query/metadata_query.h:145 src/backend/plugin/plugin_sorter.cpp:217
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:174 src/gui/query/metadata_query.h:175
+#: src/gui/query/metadata_query.h:176 src/gui/query/metadata_query.h:177
 msgid "(edited)"
 msgstr ""
 

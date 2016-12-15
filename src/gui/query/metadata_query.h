@@ -87,9 +87,11 @@ protected:
       masterlistNode["revision"] = info.revision_id;
       masterlistNode["date"] = info.revision_date;
     } catch (FileAccessError &) {
+      BOOST_LOG_TRIVIAL(warning) << "No masterlist present at " << state_.getCurrentGame().MasterlistPath();
       masterlistNode["revision"] = translate("N/A: No masterlist present").str();
       masterlistNode["date"] = translate("N/A: No masterlist present").str();
     } catch (GitStateError &) {
+      BOOST_LOG_TRIVIAL(warning) << "Not a Git repository: " << state_.getCurrentGame().MasterlistPath().parent_path();
       masterlistNode["revision"] = translate("Unknown: Git repository missing").str();
       masterlistNode["date"] = translate("Unknown: Git repository missing").str();
     }
