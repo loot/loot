@@ -37,7 +37,7 @@ public:
       callback->Success(executeLogic());
     } catch (std::exception &e) {
       BOOST_LOG_TRIVIAL(error) << e.what();
-      callback->Failure(-1, boost::locale::translate("Oh no, something went wrong! If you've enabled debug logging in your settings, you can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.").str());
+      callback->Failure(-1, boost::locale::translate("Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.").str());
     }
   }
 

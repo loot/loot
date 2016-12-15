@@ -49,8 +49,9 @@ public:
   void incrementUnappliedChangeCounter();
   void decrementUnappliedChangeCounter();
 private:
-    // Select initial game.
+  // Select initial game.
   void selectGame(std::string cmdLineGame);
+  void enableDebugLogging(bool enable);
 
   static std::list<Game> toGames(const std::vector<GameSettings>& settings);
   static std::vector<GameSettings> toGameSettings(const std::list<Game>& games);

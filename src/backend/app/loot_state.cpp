@@ -64,7 +64,7 @@ void LootState::load(YAML::Node& settings) {
   LootSettings::load(settings);
 
   // Enable/disable debug logging in case it has changed.
-  boost::log::core::get()->set_logging_enabled(isDebugLoggingEnabled());
+  enableDebugLogging(isDebugLoggingEnabled());
 
   // Update existing games, add new games.
   std::unordered_set<string> newGameFolders;
@@ -144,7 +144,7 @@ void LootState::init(const std::string& cmdLineGame) {
       )
   );
   boost::log::add_common_attributes();
-  boost::log::core::get()->set_logging_enabled(isDebugLoggingEnabled());
+  enableDebugLogging(isDebugLoggingEnabled());
 
   // Log some useful info.
   BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << LootVersion::major << "." << LootVersion::minor << "." << LootVersion::patch;
@@ -268,6 +268,14 @@ void LootState::selectGame(std::string preferredGame) {
   // If no game can be selected, throw an exception.
   if (currentGame_ == end(games_)) {
     throw GameDetectionError("None of the supported games were detected.");
+  }
+}
+
+void LootState::enableDebugLogging(bool enable) {
+  if (enable) {
+    boost::log::core::get()->reset_filter();
+  } else {
+    boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);
   }
 }
 
