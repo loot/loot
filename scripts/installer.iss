@@ -253,7 +253,7 @@ var
 begin
   VersionMajor := 14;
   VersionMinor := 0;
-  VersionBld := 24212;
+  VersionBld := 24215;
   RegKey := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86';
   IsRuntimeInstalled := 0;
   InstalledVersionMajor := 0;
