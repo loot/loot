@@ -32,7 +32,7 @@ Refer to `appveyor.yml` for the build process. The Appveyor configuration assume
 
 ### Linux
 
-Refer to `.travis.yml` for the build process. If starting from a freshly-installed instance of Ubuntu Server 12.04, first run the steps in the `scripts/linux/prepare_ubuntu_precise.sh` to install some additional packages Travis instances have pre-installed.
+Refer to `.travis.yml` for the build process. A [local Docker image](https://docs.travis-ci.com/user/common-build-problems/#Troubleshooting-Locally-in-a-Docker-Image) can be used to ensure the assumed build environment.
 
 Not all LOOT's features have been implemented for Linux builds. Issues labelled
 `linux` on LOOT's issue tracker cover such missing features where they can be
