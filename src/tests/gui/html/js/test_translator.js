@@ -17,13 +17,13 @@ describe('Translator', () => {
     it('should return a Promise', () => {
       const l10n = new loot.Translator();
 
-      l10n.load().should.be.a.Promise(); // eslint-disable-line new-cap
+      l10n.load().should.be.a('promise'); // eslint-disable-line new-cap
     });
 
     it('should be fulfilled for a locale of "en"', () => {
       const l10n = new loot.Translator('en');
 
-      return l10n.load().should.be.fulfilled();
+      return l10n.load();
     });
 
     /* Cannot test rejection or other locales as the URL uses is invalid in the

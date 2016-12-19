@@ -81,7 +81,7 @@ describe('Plugin', () => {
     it('should set isActive value to false if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isActive.should.be.false();
+      plugin.isActive.should.be.false;
     });
 
     it('should set isActive to passed key\'s value', () => {
@@ -90,13 +90,13 @@ describe('Plugin', () => {
         isActive: true,
       });
 
-      plugin.isActive.should.be.true();
+      plugin.isActive.should.be.true;
     });
 
     it('should set isEmpty value to false if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isEmpty.should.be.false();
+      plugin.isEmpty.should.be.false;
     });
 
     it('should set isEmpty to passed key\'s value', () => {
@@ -105,13 +105,13 @@ describe('Plugin', () => {
         isEmpty: true,
       });
 
-      plugin.isEmpty.should.be.true();
+      plugin.isEmpty.should.be.true;
     });
 
     it('should set isMaster value to false if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isMaster.should.be.false();
+      plugin.isMaster.should.be.false;
     });
 
     it('should set isMaster to passed key\'s value', () => {
@@ -120,13 +120,13 @@ describe('Plugin', () => {
         isMaster: true,
       });
 
-      plugin.isMaster.should.be.true();
+      plugin.isMaster.should.be.true;
     });
 
     it('should set loadsArchive value to false if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.loadsArchive.should.be.false();
+      plugin.loadsArchive.should.be.false;
     });
 
     it('should set loadsArchive to passed key\'s value', () => {
@@ -135,13 +135,13 @@ describe('Plugin', () => {
         loadsArchive: true,
       });
 
-      plugin.loadsArchive.should.be.true();
+      plugin.loadsArchive.should.be.true;
     });
 
     it('should set masterlist value to undefined if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      should(plugin.masterlist).be.undefined();
+      should.equal(undefined, plugin.masterlist);
     });
 
     it('should set masterlist to passed key\'s value', () => {
@@ -150,13 +150,13 @@ describe('Plugin', () => {
         masterlist: {},
       });
 
-      plugin.masterlist.should.be.deepEqual({});
+      plugin.masterlist.should.be.deep.equal({});
     });
 
     it('should set userlist value to undefined if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      should(plugin.userlist).be.undefined();
+      should.equal(undefined, plugin.userlist);
     });
 
     it('should set userlist to passed key\'s value', () => {
@@ -165,7 +165,7 @@ describe('Plugin', () => {
         userlist: {},
       });
 
-      plugin.userlist.should.be.deepEqual({});
+      plugin.userlist.should.be.deep.equal({});
     });
 
     it('should set priority to 0 if no key was passed', () => {
@@ -214,7 +214,7 @@ describe('Plugin', () => {
         messages,
       });
 
-      plugin.messages.should.deepEqual(messages);
+      plugin.messages.should.deep.equal(messages);
     });
 
     it('should set tags value to an empty array if no key was passed', () => {
@@ -232,13 +232,13 @@ describe('Plugin', () => {
         tags,
       });
 
-      plugin.tags.should.deepEqual(tags);
+      plugin.tags.should.deep.equal(tags);
     });
 
     it('should set isDirty value to false if no key was passed', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isDirty.should.be.false();
+      plugin.isDirty.should.be.false;
     });
 
     it('should set isDirty to passed key\'s value', () => {
@@ -247,7 +247,7 @@ describe('Plugin', () => {
         isDirty: true,
       });
 
-      plugin.isDirty.should.be.true();
+      plugin.isDirty.should.be.true;
     });
 
     it('should set cleanedWith value to an empty string if no key was passed', () => {
@@ -274,13 +274,13 @@ describe('Plugin', () => {
     it('should set isEditorOpen to false', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isEditorOpen.should.be.false();
+      plugin.isEditorOpen.should.be.false;
     });
 
     it('should set isSearchResult to false', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isSearchResult.should.be.false();
+      plugin.isSearchResult.should.be.false;
     });
   });
 
@@ -299,15 +299,15 @@ describe('Plugin', () => {
     it('should do nothing if its argument is undefined', () => {
       plugin.update();
 
-      plugin.should.deepEqual(new loot.Plugin({ name: 'test' }));
+      plugin.should.deep.equal(new loot.Plugin({ name: 'test' }));
     });
 
     it('should throw if the argument has no name property', () => {
-      should(() => { plugin.update({}); }).throw(Error);
+      (() => { plugin.update({}); }).should.throw(Error);
     });
 
     it('should throw if the argument\'s name property doesn\'t match the plugin\'s name', () => {
-      should(() => { plugin.update({ name: 'other test' }); }).throw(Error);
+      (() => { plugin.update({ name: 'other test' }); }).should.throw(Error);
     });
 
     it('should set property values for all the given argument\'s properties', () => {
@@ -324,7 +324,7 @@ describe('Plugin', () => {
 
       plugin.foo.should.equal(updatedPlugin.foo);
       plugin.crc.should.equal(updatedPlugin.crc);
-      plugin.isActive.should.be.true();
+      plugin.isActive.should.be.true;
     });
 
     it('should set explicitly undefined values', () => {
@@ -335,7 +335,7 @@ describe('Plugin', () => {
         isActive: undefined,
       });
 
-      should(plugin.isActive).be.undefined();
+      should.equal(undefined, plugin.isActive);
     });
   });
 
@@ -347,7 +347,7 @@ describe('Plugin', () => {
       };
       const testInputJson = JSON.stringify(testInputObj);
 
-      JSON.parse(testInputJson, loot.Plugin.fromJson).should.deepEqual(testInputObj);
+      JSON.parse(testInputJson, loot.Plugin.fromJson).should.deep.equal(testInputObj);
     });
 
     it('should return a Plugin object if the JSON is of the Plugin type', () => {
@@ -376,7 +376,7 @@ describe('Plugin', () => {
         condition: 'foo',
         type: 'remove',
         name: 'bar',
-      }).should.deepEqual({
+      }).should.deep.equal({
         condition: 'foo',
         name: '-bar',
       });
@@ -387,7 +387,7 @@ describe('Plugin', () => {
         condition: 'foo',
         type: 'add',
         name: 'bar',
-      }).should.deepEqual({
+      }).should.deep.equal({
         condition: 'foo',
         name: 'bar',
       });
@@ -407,7 +407,7 @@ describe('Plugin', () => {
       loot.Plugin.tagToRowData({
         condition: 'foo',
         name: '-bar',
-      }).should.deepEqual({
+      }).should.deep.equal({
         condition: 'foo',
         type: 'remove',
         name: 'bar',
@@ -418,7 +418,7 @@ describe('Plugin', () => {
       loot.Plugin.tagToRowData({
         condition: 'foo',
         name: 'bar',
-      }).should.deepEqual({
+      }).should.deep.equal({
         condition: 'foo',
         type: 'add',
         name: 'bar',
@@ -445,8 +445,8 @@ describe('Plugin', () => {
         messages: [],
       });
 
-      plugin.messages.should.be.Array();
-      plugin.messages.should.be.empty();
+      plugin.messages.should.be.an('array');
+      plugin.messages.should.be.empty;
     });
 
     it('getting messages should return any that are set', () => {
@@ -459,7 +459,7 @@ describe('Plugin', () => {
         messages,
       });
 
-      plugin.messages.should.be.deepEqual(messages);
+      plugin.messages.should.be.deep.equal(messages);
     });
 
     it('setting messages should store any set', () => {
@@ -474,7 +474,7 @@ describe('Plugin', () => {
 
       plugin.messages = messages;
 
-      plugin.messages.should.be.deepEqual(messages);
+      plugin.messages.should.be.deep.equal(messages);
     });
 
     it('setting messages should not fire an event if no messages were changed', (done) => {
@@ -531,7 +531,7 @@ describe('Plugin', () => {
     it('getting value should return false if isDirty has not been set in the constructor', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isDirty.should.be.false();
+      plugin.isDirty.should.be.false;
     });
 
     it('getting value should return true if isDirty is set to true in the constructor', () => {
@@ -540,7 +540,7 @@ describe('Plugin', () => {
         isDirty: true,
       });
 
-      plugin.isDirty.should.be.true();
+      plugin.isDirty.should.be.true;
     });
 
     it('setting value should store set value', () => {
@@ -548,7 +548,7 @@ describe('Plugin', () => {
 
       plugin.isDirty = true;
 
-      plugin.isDirty.should.be.true();
+      plugin.isDirty.should.be.true;
     });
 
     it('setting value to the current value should not fire an event', (done) => {
@@ -569,7 +569,7 @@ describe('Plugin', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
       handleEvent = (evt) => {
-        evt.detail.isDirty.should.be.true();
+        evt.detail.isDirty.should.be.true;
         done();
       };
 
@@ -717,7 +717,7 @@ describe('Plugin', () => {
         tags,
       });
 
-      plugin.tags.should.deepEqual(tags);
+      plugin.tags.should.deep.equal(tags);
     });
 
     it('setting value should store set value', () => {
@@ -728,7 +728,7 @@ describe('Plugin', () => {
 
       plugin.tags = tags;
 
-      plugin.tags.should.deepEqual(tags);
+      plugin.tags.should.deep.equal(tags);
     });
 
     it('setting value to the current value should not fire an event', (done) => {
@@ -772,7 +772,7 @@ describe('Plugin', () => {
     it('getting value should return undefined if it has not been set in the constructor', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      should(plugin.userlist).be.undefined();
+      should.equal(undefined, plugin.userlist);
     });
 
     it('getting value should return the value that was set', () => {
@@ -781,7 +781,7 @@ describe('Plugin', () => {
         userlist: {},
       });
 
-      plugin.userlist.should.deepEqual({});
+      plugin.userlist.should.deep.equal({});
     });
 
     it('setting value should store set value', () => {
@@ -789,7 +789,7 @@ describe('Plugin', () => {
 
       plugin.userlist = {};
 
-      plugin.userlist.should.deepEqual({});
+      plugin.userlist.should.deep.equal({});
     });
 
     it('setting value to the current value should not fire an event', (done) => {
@@ -958,7 +958,7 @@ describe('Plugin', () => {
     it('getting value should return false if it has not been set in the constructor', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isEditorOpen.should.be.false();
+      plugin.isEditorOpen.should.be.false;
     });
 
     it('setting value should store set value', () => {
@@ -966,7 +966,7 @@ describe('Plugin', () => {
 
       plugin.isEditorOpen = true;
 
-      plugin.isEditorOpen.should.be.true();
+      plugin.isEditorOpen.should.be.true;
     });
 
     it('setting value to the current value should not fire an event', (done) => {
@@ -1011,7 +1011,7 @@ describe('Plugin', () => {
     it('getting value should return false if it has not been set in the constructor', () => {
       const plugin = new loot.Plugin({ name: 'test' });
 
-      plugin.isSearchResult.should.be.false();
+      plugin.isSearchResult.should.be.false;
     });
 
     it('setting value should store set value', () => {
@@ -1019,7 +1019,7 @@ describe('Plugin', () => {
 
       plugin.isSearchResult = true;
 
-      plugin.isSearchResult.should.be.true();
+      plugin.isSearchResult.should.be.true;
     });
 
     it('setting value to the current value should not fire an event', (done) => {
@@ -1167,7 +1167,7 @@ describe('PluginCardContent', () => {
 
   describe('#tags', () => {
     it('should return an object containing empty strings if no tags are set', () => {
-      plugin.getCardContent(filters).tags.should.deepEqual({
+      plugin.getCardContent(filters).tags.should.deep.equal({
         added: '',
         removed: '',
       });
@@ -1182,7 +1182,7 @@ describe('PluginCardContent', () => {
         { name: '-Actor.ABCS' },
       ];
 
-      plugin.getCardContent(filters).tags.should.deepEqual({
+      plugin.getCardContent(filters).tags.should.deep.equal({
         added: 'Relev, Delev, Names',
         removed: 'C.Climate, Actor.ABCS',
       });
@@ -1198,7 +1198,7 @@ describe('PluginCardContent', () => {
       ];
       filters.hideBashTags = true;
 
-      plugin.getCardContent(filters).tags.should.deepEqual({
+      plugin.getCardContent(filters).tags.should.deep.equal({
         added: '',
         removed: '',
       });
@@ -1210,7 +1210,7 @@ describe('PluginCardContent', () => {
         { name: '-Relev' },
       ];
 
-      plugin.getCardContent(filters).tags.should.deepEqual({
+      plugin.getCardContent(filters).tags.should.deep.equal({
         added: '',
         removed: 'Relev',
       });
@@ -1263,26 +1263,26 @@ describe('PluginCardContent', () => {
 
   describe('#messages', () => {
     it('should return message objects mapped from the plugin\'s message objects', () => {
-      plugin.getCardContent(filters).messages.should.deepEqual(plugin.messages);
+      plugin.getCardContent(filters).messages.should.deep.equal(plugin.messages);
     });
 
     it('should return an array missing the note message when the notes filter is enabled', () => {
       filters.hideNotes = true;
-      plugin.getCardContent(filters).messages.should.deepEqual([
+      plugin.getCardContent(filters).messages.should.deep.equal([
         plugin.messages[1],
       ]);
     });
 
     it('should return an array missing the "do not clean" message when the "do not clean" messages filter is enabled', () => {
       filters.hideDoNotCleanMessages = true;
-      plugin.getCardContent(filters).messages.should.deepEqual([
+      plugin.getCardContent(filters).messages.should.deep.equal([
         plugin.messages[0],
       ]);
     });
 
     it('should return an empty array when the all messages filter is enabled', () => {
       filters.hideAllPluginMessages = true;
-      plugin.getCardContent(filters).messages.should.deepEqual([]);
+      plugin.getCardContent(filters).messages.should.deep.equal([]);
     });
 
     it('setting value should throw', () => {
@@ -1292,20 +1292,20 @@ describe('PluginCardContent', () => {
 
   describe('#containsText()', () => {
     it('should return true if argument is undefined', () => {
-      plugin.getCardContent(filters).containsText().should.be.true();
+      plugin.getCardContent(filters).containsText().should.be.true;
     });
 
     it('should return true if argument is an empty string', () => {
-      plugin.getCardContent(filters).containsText('').should.be.true();
+      plugin.getCardContent(filters).containsText('').should.be.true;
     });
 
     it('should search name case-insensitively', () => {
-      plugin.getCardContent(filters).containsText('Tes').should.be.true();
+      plugin.getCardContent(filters).containsText('Tes').should.be.true;
     });
 
     it('should search CRC case-insensitively', () => {
       plugin.crc = 0xDEADBEEF;
-      plugin.getCardContent(filters).containsText('dead').should.be.true();
+      plugin.getCardContent(filters).containsText('dead').should.be.true;
     });
 
     it('should search added tags case-insensitively', () => {
@@ -1316,7 +1316,7 @@ describe('PluginCardContent', () => {
         { name: '-C.Climate' },
         { name: '-Actor.ABCS' },
       ];
-      plugin.getCardContent(filters).containsText('climate').should.be.true();
+      plugin.getCardContent(filters).containsText('climate').should.be.true;
     });
 
     it('should search removed tags case-insensitively', () => {
@@ -1327,15 +1327,15 @@ describe('PluginCardContent', () => {
         { name: '-C.Climate' },
         { name: '-Actor.ABCS' },
       ];
-      plugin.getCardContent(filters).containsText('.abc').should.be.true();
+      plugin.getCardContent(filters).containsText('.abc').should.be.true;
     });
 
     it('should search message content case-insensitively', () => {
-      plugin.getCardContent(filters).containsText('Clean').should.be.true();
+      plugin.getCardContent(filters).containsText('Clean').should.be.true;
     });
 
     it('should not find text that is not present', () => {
-      plugin.getCardContent(filters).containsText('say').should.be.false();
+      plugin.getCardContent(filters).containsText('say').should.be.false;
     });
   });
 });

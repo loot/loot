@@ -38,52 +38,52 @@ describe('Game', () => {
 
     it('should set globalMessages to an empty array by default', () => {
       const game = new loot.Game({}, l10n);
-      game.globalMessages.should.deepEqual([]);
+      game.globalMessages.should.deep.equal([]);
     });
 
     it('should set globalMessages to the object\'s value if defined', () => {
       const game = new loot.Game({ globalMessages: ['test'] }, l10n);
-      game.globalMessages.should.deepEqual(['test']);
+      game.globalMessages.should.deep.equal(['test']);
     });
 
     it('should set masterlist to an empty object by default', () => {
       const game = new loot.Game({}, l10n);
-      game.masterlist.should.deepEqual({});
+      game.masterlist.should.deep.equal({});
     });
 
     it('should set masterlist to the object\'s value if defined', () => {
       const game = new loot.Game({ masterlist: { revision: 0 } }, l10n);
-      game.masterlist.should.deepEqual({ revision: 0 });
+      game.masterlist.should.deep.equal({ revision: 0 });
     });
 
     it('should set plugins to an empty array by default', () => {
       const game = new loot.Game({}, l10n);
-      game.plugins.should.deepEqual([]);
+      game.plugins.should.deep.equal([]);
     });
 
     it('should set plugins to the object\'s value if defined', () => {
       const game = new loot.Game({ plugins: ['test'] }, l10n);
-      game.plugins.should.deepEqual(['test']);
+      game.plugins.should.deep.equal(['test']);
     });
 
     it('should set loadOrder to undefined by default', () => {
       const game = new loot.Game({}, l10n);
-      should(game.loadOrder).be.undefined();
+      should.equal(undefined, game.loadOrder);
     });
 
     it('should set loadOrder to undefined even if the object\'s value if defined', () => {
       const game = new loot.Game({ loadOrder: ['test'] }, l10n);
-      should(game.loadOrder).be.undefined();
+      should.equal(undefined, game.loadOrder);
     });
 
     it('should set oldLoadOrder to undefined by default', () => {
       const game = new loot.Game({}, l10n);
-      should(game.oldLoadOrder).be.undefined();
+      should.equal(undefined, game.oldLoadOrder);
     });
 
     it('should set oldLoadOrder to undefined even if the object\'s value if defined', () => {
       const game = new loot.Game({ oldLoadOrder: ['test'] }, l10n);
-      should(game.oldLoadOrder).be.undefined();
+      should.equal(undefined, game.oldLoadOrder);
     });
 
     it('should initialise _notApplicableString', () => {
@@ -153,7 +153,7 @@ describe('Game', () => {
         { type: 'error' },
       ];
       handleEvent = (evt) => {
-        evt.detail.messages.should.deepEqual(newMessages);
+        evt.detail.messages.should.deep.equal(newMessages);
         evt.detail.totalDiff.should.equal(2);
         evt.detail.errorDiff.should.equal(1);
         evt.detail.warningDiff.should.equal(1);
@@ -193,7 +193,7 @@ describe('Game', () => {
         date: 'bar',
       };
       handleEvent = (evt) => {
-        evt.detail.should.deepEqual(newMasterlist);
+        evt.detail.should.deep.equal(newMasterlist);
         done();
       };
       document.addEventListener('loot-game-masterlist-change', handleEvent);
@@ -246,7 +246,7 @@ describe('Game', () => {
         },
       ];
       handleEvent = (evt) => {
-        evt.detail.valuesAreTotals.should.be.true();
+        evt.detail.valuesAreTotals.should.be.true;
         evt.detail.totalMessageNo.should.equal(4);
         evt.detail.warnMessageNo.should.equal(2);
         evt.detail.errorMessageNo.should.equal(1);
@@ -286,12 +286,12 @@ describe('Game', () => {
       };
       game.appendPlugin(newPlugin);
 
-      game.plugins[0].should.deepEqual(newPlugin);
+      game.plugins[0].should.deep.equal(newPlugin);
     });
 
     it('should dispatch an event with the correct counter differences', (done) => {
       handleEvent = (evt) => {
-        evt.detail.valuesAreTotals.should.be.false();
+        evt.detail.valuesAreTotals.should.be.false;
         evt.detail.totalMessageNo.should.equal(1);
         evt.detail.warnMessageNo.should.equal(1);
         evt.detail.errorMessageNo.should.equal(0);
@@ -338,7 +338,7 @@ describe('Game', () => {
 
     it('should dispatch an event with the correct counter differences', (done) => {
       handleEvent = (evt) => {
-        evt.detail.valuesAreTotals.should.be.false();
+        evt.detail.valuesAreTotals.should.be.false;
         evt.detail.totalMessageNo.should.equal(-1);
         evt.detail.warnMessageNo.should.equal(-1);
         evt.detail.errorMessageNo.should.equal(0);
@@ -367,7 +367,7 @@ describe('Game', () => {
     });
 
     it('should return an object of two empty arrays if there is no game data', () => {
-      game.getContent().should.deepEqual({
+      game.getContent().should.deep.equal({
         messages: [],
         plugins: [],
       });
@@ -407,7 +407,7 @@ describe('Game', () => {
         _isSearchResult: true,
       }];
 
-      game.getContent().should.deepEqual({
+      game.getContent().should.deep.equal({
         messages: game._globalMessages,
         plugins: [{
           name: game._plugins[0].name,
@@ -435,7 +435,7 @@ describe('Game', () => {
     });
 
     it('should return an empty array if there are no plugins', () => {
-      game.getPluginNames().should.be.empty();
+      game.getPluginNames().should.be.empty;
     });
 
     it('should return an array of plugin filenames if there are plugins', () => {
@@ -445,7 +445,7 @@ describe('Game', () => {
         messages: [{ type: 'warn' }],
       }];
 
-      game.getPluginNames().should.deepEqual(['foo']);
+      game.getPluginNames().should.deep.equal(['foo']);
     });
   });
 
@@ -482,7 +482,7 @@ describe('Game', () => {
       }]);
 
       game.plugins[0].crc.should.equal(0xDEADBEEF);
-      game.plugins[0].isActive.should.be.true();
+      game.plugins[0].isActive.should.be.true;
     });
 
     it('should reorder plugins to given order', () => {
@@ -543,7 +543,7 @@ describe('Game', () => {
 
       game.applySort();
 
-      should(game.oldLoadOrder).be.undefined();
+      should.equal(undefined, game.oldLoadOrder);
     });
   });
 
@@ -573,7 +573,7 @@ describe('Game', () => {
 
       game.cancelSort([]);
 
-      game.plugins.should.deepEqual(oldLoadOrder);
+      game.plugins.should.deep.equal(oldLoadOrder);
     });
 
     it('should delete the stored old load order', () => {
@@ -585,7 +585,7 @@ describe('Game', () => {
 
       game.cancelSort([]);
 
-      should(game.oldLoadOrder).be.undefined();
+      should.equal(undefined, game.oldLoadOrder);
     });
 
     it('should set plugin load order indices using the array passed as the first parameter', () => {
@@ -616,7 +616,7 @@ describe('Game', () => {
 
       game.cancelSort([], ['foo']);
 
-      game.globalMessages.should.deepEqual(['foo']);
+      game.globalMessages.should.deep.equal(['foo']);
     });
   });
 
@@ -637,7 +637,7 @@ describe('Game', () => {
         name: 'foo',
       }]);
 
-      should(game.plugins[0].userlist).be.undefined();
+      should.equal(undefined, game.plugins[0].userlist);
     });
 
     it('should update existing plugin data', () => {
@@ -652,7 +652,7 @@ describe('Game', () => {
       }]);
 
       game.plugins[0].crc.should.equal(0xDEADBEEF);
-      game.plugins[0].isActive.should.be.true();
+      game.plugins[0].isActive.should.be.true;
     });
   });
 });

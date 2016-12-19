@@ -45,21 +45,21 @@ describe('State', () => {
     it('should return true if the default state is the current state', () => {
       const state = new loot.State();
 
-      state.isInDefaultState().should.be.true();
+      state.isInDefaultState().should.be.true;
     });
 
     it('should return false if the editing state is the current state', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      state.isInDefaultState().should.be.false();
+      state.isInDefaultState().should.be.false;
     });
 
     it('should return false if the sorting state is the current state', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      state.isInDefaultState().should.be.false();
+      state.isInDefaultState().should.be.false;
     });
   });
 
@@ -68,20 +68,20 @@ describe('State', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      state.isInEditingState().should.be.true();
+      state.isInEditingState().should.be.true;
     });
 
     it('should return false if the default state is the current state', () => {
       const state = new loot.State();
 
-      state.isInEditingState().should.be.false();
+      state.isInEditingState().should.be.false;
     });
 
     it('should return false if the sorting state is the current state', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      state.isInEditingState().should.be.false();
+      state.isInEditingState().should.be.false;
     });
   });
 
@@ -90,20 +90,20 @@ describe('State', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      state.isInSortingState().should.be.true();
+      state.isInSortingState().should.be.true;
     });
 
     it('should return false if the editing state is the current state', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      state.isInSortingState().should.be.false();
+      state.isInSortingState().should.be.false;
     });
 
     it('should return false if the default state is the current state', () => {
       const state = new loot.State();
 
-      state.isInSortingState().should.be.false();
+      state.isInSortingState().should.be.false;
     });
   });
 
@@ -114,12 +114,12 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.SORTING_STATE);
 
-      getShown('updateMasterlistButton').should.be.false();
-      getShown('sortButton').should.be.false();
-      getShown('applySortButton').should.be.true();
-      getShown('cancelSortButton').should.be.true();
-      getEnabled('gameMenu').should.be.false();
-      getEnabled('refreshContentButton').should.be.false();
+      getShown('updateMasterlistButton').should.be.false;
+      getShown('sortButton').should.be.false;
+      getShown('applySortButton').should.be.true;
+      getShown('cancelSortButton').should.be.true;
+      getEnabled('gameMenu').should.be.false;
+      getEnabled('refreshContentButton').should.be.false;
 
       getDomState().should.equal('sorting');
     });
@@ -128,7 +128,7 @@ describe('State', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      should.throws(() => { state.enterSortingState(); }, Error);
+      should.throw(() => { state.enterSortingState(); }, Error);
     });
 
     it('should have no effect if already in the sorting state', () => {
@@ -138,12 +138,12 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.SORTING_STATE);
 
-      getShown('updateMasterlistButton').should.be.false();
-      getShown('sortButton').should.be.false();
-      getShown('applySortButton').should.be.true();
-      getShown('cancelSortButton').should.be.true();
-      getEnabled('gameMenu').should.be.false();
-      getEnabled('refreshContentButton').should.be.false();
+      getShown('updateMasterlistButton').should.be.false;
+      getShown('sortButton').should.be.false;
+      getShown('applySortButton').should.be.true;
+      getShown('cancelSortButton').should.be.true;
+      getEnabled('gameMenu').should.be.false;
+      getEnabled('refreshContentButton').should.be.false;
     });
   });
 
@@ -155,12 +155,12 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.DEFAULT_STATE);
 
-      getShown('updateMasterlistButton').should.be.true();
-      getShown('sortButton').should.be.true();
-      getShown('applySortButton').should.be.false();
-      getShown('cancelSortButton').should.be.false();
-      getEnabled('gameMenu').should.be.true();
-      getEnabled('refreshContentButton').should.be.true();
+      getShown('updateMasterlistButton').should.be.true;
+      getShown('sortButton').should.be.true;
+      getShown('applySortButton').should.be.false;
+      getShown('cancelSortButton').should.be.false;
+      getEnabled('gameMenu').should.be.true;
+      getEnabled('refreshContentButton').should.be.true;
 
       getDomState().should.equal('default');
     });
@@ -169,7 +169,7 @@ describe('State', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      should.throws(() => { state.exitSortingState(); }, Error);
+      should.throw(() => { state.exitSortingState(); }, Error);
     });
 
     it('should have no effect if already in the default state', () => {
@@ -178,12 +178,12 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.DEFAULT_STATE);
 
-      should(getShown('updateMasterlistButton')).be.undefined();
-      should(getShown('sortButton')).be.undefined();
-      should(getShown('applySortButton')).be.undefined();
-      should(getShown('cancelSortButton')).be.undefined();
-      should(getEnabled('gameMenu')).be.undefined();
-      should(getEnabled('refreshContentButton')).be.undefined();
+      should.equal(undefined, getShown('updateMasterlistButton'));
+      should.equal(undefined, getShown('sortButton'));
+      should.equal(undefined, getShown('applySortButton'));
+      should.equal(undefined, getShown('cancelSortButton'));
+      should.equal(undefined, getEnabled('gameMenu'));
+      should.equal(undefined, getEnabled('refreshContentButton'));
     });
   });
 
@@ -194,13 +194,13 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.EDITING_STATE);
 
-      getEnabled('wipeUserlistButton').should.be.false();
-      getEnabled('copyContentButton').should.be.false();
-      getEnabled('refreshContentButton').should.be.false();
-      getEnabled('settingsButton').should.be.false();
-      getEnabled('gameMenu').should.be.false();
-      getEnabled('updateMasterlistButton').should.be.false();
-      getEnabled('sortButton').should.be.false();
+      getEnabled('wipeUserlistButton').should.be.false;
+      getEnabled('copyContentButton').should.be.false;
+      getEnabled('refreshContentButton').should.be.false;
+      getEnabled('settingsButton').should.be.false;
+      getEnabled('gameMenu').should.be.false;
+      getEnabled('updateMasterlistButton').should.be.false;
+      getEnabled('sortButton').should.be.false;
 
       getDomState().should.equal('editing');
     });
@@ -209,7 +209,7 @@ describe('State', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      should.throws(() => { state.enterEditingState(); }, Error);
+      should.throw(() => { state.enterEditingState(); }, Error);
     });
 
     it('should have no effect if already in the editing state', () => {
@@ -219,13 +219,13 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.EDITING_STATE);
 
-      getEnabled('wipeUserlistButton').should.be.false();
-      getEnabled('copyContentButton').should.be.false();
-      getEnabled('refreshContentButton').should.be.false();
-      getEnabled('settingsButton').should.be.false();
-      getEnabled('gameMenu').should.be.false();
-      getEnabled('updateMasterlistButton').should.be.false();
-      getEnabled('sortButton').should.be.false();
+      getEnabled('wipeUserlistButton').should.be.false;
+      getEnabled('copyContentButton').should.be.false;
+      getEnabled('refreshContentButton').should.be.false;
+      getEnabled('settingsButton').should.be.false;
+      getEnabled('gameMenu').should.be.false;
+      getEnabled('updateMasterlistButton').should.be.false;
+      getEnabled('sortButton').should.be.false;
     });
   });
 
@@ -237,13 +237,13 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.DEFAULT_STATE);
 
-      getEnabled('wipeUserlistButton').should.be.true();
-      getEnabled('copyContentButton').should.be.true();
-      getEnabled('refreshContentButton').should.be.true();
-      getEnabled('settingsButton').should.be.true();
-      getEnabled('gameMenu').should.be.true();
-      getEnabled('updateMasterlistButton').should.be.true();
-      getEnabled('sortButton').should.be.true();
+      getEnabled('wipeUserlistButton').should.be.true;
+      getEnabled('copyContentButton').should.be.true;
+      getEnabled('refreshContentButton').should.be.true;
+      getEnabled('settingsButton').should.be.true;
+      getEnabled('gameMenu').should.be.true;
+      getEnabled('updateMasterlistButton').should.be.true;
+      getEnabled('sortButton').should.be.true;
 
       getDomState().should.equal('default');
     });
@@ -252,7 +252,7 @@ describe('State', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      should.throws(() => { state.exitEditingState(); }, Error);
+      should.throw(() => { state.exitEditingState(); }, Error);
     });
 
     it('should have no effect if already in the default state', () => {
@@ -261,13 +261,13 @@ describe('State', () => {
 
       state.currentState.should.equal(loot.State.DEFAULT_STATE);
 
-      should(getEnabled('wipeUserlistButton')).be.undefined();
-      should(getEnabled('copyContentButton')).be.undefined();
-      should(getEnabled('refreshContentButton')).be.undefined();
-      should(getEnabled('settingsButton')).be.undefined();
-      should(getEnabled('gameMenu')).be.undefined();
-      should(getEnabled('updateMasterlistButton')).be.undefined();
-      should(getEnabled('sortButton')).be.undefined();
+      should.equal(undefined, getEnabled('wipeUserlistButton'));
+      should.equal(undefined, getEnabled('copyContentButton'));
+      should.equal(undefined, getEnabled('refreshContentButton'));
+      should.equal(undefined, getEnabled('settingsButton'));
+      should.equal(undefined, getEnabled('gameMenu'));
+      should.equal(undefined, getEnabled('updateMasterlistButton'));
+      should.equal(undefined, getEnabled('sortButton'));
     });
   });
 });

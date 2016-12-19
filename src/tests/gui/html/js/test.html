@@ -4,14 +4,17 @@
 
 <div id="mocha"></div>
 
-<script src="../../../../../node_modules/should/should.js"></script>
+<script src="../../../../../node_modules/chai/chai.js"></script>
 <script src="../../../../../node_modules/mocha/mocha.js"></script>
 
 <script src="../../../../../bower_components/Jed/jed.js"></script>
 <script src="../../../../../bower_components/jed-gettext-parser/jedGettextParser.js"></script>
 <script src="../../../../../bower_components/lodash/dist/lodash.core.min.js"></script>
 
-<script>mocha.setup('bdd')</script>
+<script>
+const should = chai.should();
+mocha.setup('bdd');
+</script>
 <script src="mock_dom.js"></script>
 <script src="mock_octokat.js"></script>
 <script src="../../../../gui/html/js/filters.js"></script>
