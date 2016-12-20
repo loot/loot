@@ -224,8 +224,12 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
                                  bool is_redirect) {
   BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: " << request->GetURL().ToString();
 
-  if (boost::starts_with(request->GetURL().ToString(), "http://loot/")) {
+  const std::string url = request->GetURL().ToString();
+  if (boost::starts_with(url, "http://loot/")) {
     BOOST_LOG_TRIVIAL(trace) << "Link is to LOOT page, allowing CEF's default handling.";
+    return false;
+  } else if (boost::starts_with(url, "http://localhost:")) {
+    BOOST_LOG_TRIVIAL(warning) << "Link is to a page on localhost, if this isn't happening while running tests, something has gone wrong";
     return false;
   }
 

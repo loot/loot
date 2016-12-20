@@ -35,9 +35,12 @@
 #include "gui/loot_scheme_handler_factory.h"
 
 namespace loot {
-void LootApp::Initialise(const std::string& defaultGame, const std::string& lootDataPath) {
+void LootApp::Initialise(const std::string& defaultGame,
+                         const std::string& lootDataPath,
+                         const std::string& url) {
   LootPaths::initialise(lootDataPath);
   lootState_.init(defaultGame);
+  url_ = url;
 }
 
 void LootApp::OnBeforeCommandLineProcessing(const CefString& process_type,
@@ -93,11 +96,8 @@ void LootApp::OnContextInitialized() {
     boost::filesystem::path::imbue(std::locale());
   }
 
-  // Set URL to load. Ignore any command line values.
-  const std::string url = "http://loot/ui/index.html";
-
   // Create the first browser window.
-  CefBrowserHost::CreateBrowser(window_info, handler.get(), url, browser_settings, NULL);
+  CefBrowserHost::CreateBrowser(window_info, handler.get(), url_, browser_settings, NULL);
 }
 
 void LootApp::OnWebKitInitialized() {

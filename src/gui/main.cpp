@@ -94,7 +94,15 @@ void processCommandLineArguments(CefRefPtr<loot::LootApp> app) {
     lootDataPath = command_line->GetSwitchValue("loot-data-path");
   }
 
-  app.get()->Initialise(defaultGame, lootDataPath);
+  std::string url = "http://loot/ui/index.html";
+  if (command_line->HasArguments()) {
+    std::vector<CefString> arguments;
+    command_line->GetArguments(arguments);
+    url = arguments[0];
+    BOOST_LOG_TRIVIAL(info) << "Loading homepage using URL " << url;
+  }
+
+  app.get()->Initialise(defaultGame, lootDataPath, url);
 }
 
 #ifdef _WIN32

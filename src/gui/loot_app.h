@@ -36,7 +36,9 @@ class LootApp : public CefApp,
   public CefBrowserProcessHandler,
   public CefRenderProcessHandler {
 public:
-  void Initialise(const std::string& defaultGame, const std::string& lootDataPath);
+  void Initialise(const std::string& defaultGame,
+                  const std::string& lootDataPath,
+                  const std::string& url);
 
   // Override CefApp methods.
   virtual void OnBeforeCommandLineProcessing(const CefString& process_type,
@@ -60,6 +62,7 @@ private:
 
   LootState lootState_;
   CefRefPtr<CefMessageRouterRendererSide> message_router_;
+  std::string url_;
 
   IMPLEMENT_REFCOUNTING(LootApp);
 };
