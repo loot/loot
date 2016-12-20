@@ -25,10 +25,6 @@ addons:
       # Scripting dependencies
       - inkscape
       - imagemagick
-  sauce_connect:
-    username: oliverhamlet
-  jwt:
-    secure: "YbmqKNfotisPlMiw1Vk8Ts9xYAegLf+fNb9FfAvNVyHIR7mJw7LivFPdjW5x3P7ktfwPqGxjGjNn0hOCKbLoqueKcq4LHuvdWgOaeqXc2BmVQx+HLzECj0G3uMshiyGZRCf6noJBXPe96YJb/nGj4bhZn/AMiGH+vNkOrPtoJNk="
 
 cache:
   directories:
@@ -73,9 +69,6 @@ before_script:
   - cmake .. -DBOOST_ROOT=~/boost_1_61_0
 
 script:
-  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then npm test; fi
-  # Travis will run all steps before failing, so no point in building only the
-  # tests first.
   - make all
   - ./tests
   - ./api-tests

@@ -27,20 +27,14 @@
     "eslint-config-airbnb-base": "^7.1.0",
     "eslint-plugin-html": "^1.5.0",
     "eslint-plugin-import": "^1.15.0",
-    "grunt": "^1.0.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-connect": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-saucelabs": "^9.0.0",
     "karma": "^1.3.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
-    "karma-cli": "^1.0.1",
     "karma-mocha": "^1.3.0",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.1"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "karma start"
   }
 }
