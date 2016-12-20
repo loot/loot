@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2016-12-15 18:04+0000\n"
+"POT-Creation-Date: 2016-12-20 15:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -681,9 +681,8 @@ msgstr ""
 
 #: src/gui/query/query.h:40
 msgid ""
-"Oh no, something went wrong! If you've enabled debug logging in your "
-"settings, you can check your LOOTDebugLog.txt (you can get to it through the "
-"main menu) for more information."
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
 msgstr ""
 
 #: src/gui/query/sort_plugins_query.h:48

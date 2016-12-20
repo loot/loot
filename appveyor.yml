@@ -58,6 +58,11 @@ build_script:
       }
 
 test_script:
+  - ps: |
+      if ($env:PLATFORM -eq 'Win32') {
+        cd $env:APPVEYOR_BUILD_FOLDER
+        npm test
+      }
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
   - tests.exe --gtest_output=xml:tests.xml
   - api-tests.exe --gtest_output=xml:api-tests.xml
