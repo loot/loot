@@ -34,20 +34,40 @@ namespace loot {
  */
 class CyclicInteractionError : public std::runtime_error {
 public:
-  CyclicInteractionError(const std::string& firstPlugin, const std::string& lastPlugin, const std::string& backCycle) : 
+  /**
+   * @brief Construct an exception detailing a plugin graph cycle.
+   * @param firstPlugin A plugin in the cycle.
+   * @param lastPlugin Another plugin in the cycle.
+   * @param backCycle A string describing the path from lastPlugin to
+   *                  firstPlugin.
+   */
+  CyclicInteractionError(const std::string& firstPlugin, const std::string& lastPlugin, const std::string& backCycle) :
     std::runtime_error("Cyclic interaction detected between plugins \"" + firstPlugin + "\" and \"" + lastPlugin + "\". Back cycle: " + backCycle),
-    firstPlugin_(firstPlugin), 
-    lastPlugin_(lastPlugin), 
+    firstPlugin_(firstPlugin),
+    lastPlugin_(lastPlugin),
     backCycle_(backCycle) {}
 
+  /**
+   * Get the first plugin in the chosen forward path of the cycle.
+   * @return A plugin filename.
+   */
   std::string getFirstPlugin() {
     return firstPlugin_;
   }
 
+  /**
+   * Get the first plugin in the chosen forward path of the cycle.
+   * @return A plugin filename.
+   */
   std::string getLastPlugin() {
     return lastPlugin_;
   }
 
+  /**
+   * Get a description of the reverse path from the chosen last plugin to the
+   * chosen first plugin of the cycle.
+   * @return A string describing a path between two plugins in the plugin graph.
+   */
   std::string getBackCycle() {
     return backCycle_;
   }
