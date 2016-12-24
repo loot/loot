@@ -47,6 +47,9 @@ public:
   bool IsPluginActive(const std::string& pluginName) const;
 
   void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
+
+  static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                              const boost::filesystem::path& backupDirectory);
 private:
   lo_game_handle gh_;
 };

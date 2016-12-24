@@ -33,7 +33,44 @@ namespace loot {
 namespace test {
 class LoadOrderHandlerTest : public CommonGameTestFixture {
 protected:
+  LoadOrderHandlerTest() : loadOrderToSet_({
+    masterFile,
+    blankEsm,
+    blankMasterDependentEsm,
+    blankDifferentEsm,
+    blankDifferentMasterDependentEsm,
+    blankDifferentEsp,
+    blankDifferentPluginDependentEsp,
+    blankEsp,
+    blankMasterDependentEsp,
+    blankDifferentMasterDependentEsp,
+    blankPluginDependentEsp,
+  }),
+  loadOrderBackupFile0(localPath / "loadorder.bak.0"),
+  loadOrderBackupFile1(localPath / "loadorder.bak.1"),
+  loadOrderBackupFile2(localPath / "loadorder.bak.2"),
+  loadOrderBackupFile3(localPath / "loadorder.bak.3") {}
+
+  void TearDown() {
+    CommonGameTestFixture::TearDown();
+
+    boost::filesystem::remove(loadOrderBackupFile0);
+    boost::filesystem::remove(loadOrderBackupFile1);
+    boost::filesystem::remove(loadOrderBackupFile2);
+  }
+
+  void initialiseHandler() {
+    GameSettings game(GetParam());
+    game.SetGamePath(dataPath.parent_path());
+    ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
+  }
+
   LoadOrderHandler loadOrderHandler_;
+  std::vector<std::string> loadOrderToSet_;
+  const boost::filesystem::path loadOrderBackupFile0;
+  const boost::filesystem::path loadOrderBackupFile1;
+  const boost::filesystem::path loadOrderBackupFile2;
+  const boost::filesystem::path loadOrderBackupFile3;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -78,9 +115,7 @@ TEST_P(LoadOrderHandlerTest, isPluginActiveShouldThrowIfTheHandlerHasNotBeenInit
 }
 
 TEST_P(LoadOrderHandlerTest, isPluginActiveShouldReturnCorrectPluginStatesAfterInitialisation) {
-  GameSettings game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
+  initialiseHandler();
 
   EXPECT_TRUE(loadOrderHandler_.IsPluginActive(masterFile));
   EXPECT_TRUE(loadOrderHandler_.IsPluginActive(blankEsm));
@@ -92,55 +127,121 @@ TEST_P(LoadOrderHandlerTest, getLoadOrderShouldThrowIfTheHandlerHasNotBeenInitia
 }
 
 TEST_P(LoadOrderHandlerTest, getLoadOrderShouldReturnTheCurrentLoadOrder) {
-  GameSettings game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
+  initialiseHandler();
 
   ASSERT_EQ(getLoadOrder(), loadOrderHandler_.GetLoadOrder());
 }
 
 TEST_P(LoadOrderHandlerTest, setLoadOrderShouldThrowIfTheHandlerHasNotBeenInitialised) {
-  std::vector<std::string> loadOrder({
-      masterFile,
-      blankEsm,
-      blankMasterDependentEsm,
-      blankDifferentEsm,
-      blankDifferentMasterDependentEsm,
-      blankDifferentEsp,
-      blankDifferentPluginDependentEsp,
-      blankEsp,
-      blankMasterDependentEsp,
-      blankDifferentMasterDependentEsp,
-      blankPluginDependentEsp,
-  });
-
-  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(loadOrder), std::system_error);
+  EXPECT_THROW(loadOrderHandler_.SetLoadOrder(loadOrderToSet_), std::system_error);
 }
 
 TEST_P(LoadOrderHandlerTest, setLoadOrderShouldSetTheLoadOrder) {
-  GameSettings game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(loadOrderHandler_.Init(game, localPath));
+  initialiseHandler();
 
-  std::vector<std::string> loadOrder({
-      masterFile,
-      blankEsm,
-      blankMasterDependentEsm,
-      blankDifferentEsm,
-      blankDifferentMasterDependentEsm,
-      blankDifferentEsp,
-      blankDifferentPluginDependentEsp,
-      blankEsp,
-      blankMasterDependentEsp,
-      blankDifferentMasterDependentEsp,
-      blankPluginDependentEsp,
-  });
-  EXPECT_NO_THROW(loadOrderHandler_.SetLoadOrder(loadOrder));
+  EXPECT_NO_THROW(loadOrderHandler_.SetLoadOrder(loadOrderToSet_));
 
   if (GetParam() == GameType::fo4 || GetParam() == GameType::tes5se)
-    loadOrder.erase(begin(loadOrder));
+    loadOrderToSet_.erase(begin(loadOrderToSet_));
 
-  EXPECT_EQ(loadOrder, getLoadOrder());
+  EXPECT_EQ(loadOrderToSet_, getLoadOrder());
+}
+
+TEST_P(LoadOrderHandlerTest, backupLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile0));
+  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+
+  auto loadOrder = readFileLines(loadOrderBackupFile0);
+
+  EXPECT_EQ(loadOrderToSet_, loadOrder);
+}
+
+TEST_P(LoadOrderHandlerTest, backupLoadOrderShouldRollOverExistingBackups) {
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  auto firstSetLoadOrder = loadOrderToSet_;
+
+  ASSERT_NE(blankPluginDependentEsp, loadOrderToSet_[9]);
+  ASSERT_NE(blankDifferentMasterDependentEsp, loadOrderToSet_[10]);
+  loadOrderToSet_[9] = blankPluginDependentEsp;
+  loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile0));
+  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+
+  auto loadOrder = readFileLines(loadOrderBackupFile0);
+  EXPECT_EQ(loadOrderToSet_, loadOrder);
+
+  loadOrder = readFileLines(loadOrderBackupFile1);
+  EXPECT_EQ(firstSetLoadOrder, loadOrder);
+}
+
+TEST_P(LoadOrderHandlerTest, backupLoadOrderShouldKeepUpToThreeBackups) {
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  auto firstSetLoadOrder = loadOrderToSet_;
+
+  ASSERT_NE(blankPluginDependentEsp, loadOrderToSet_[9]);
+  ASSERT_NE(blankDifferentMasterDependentEsp, loadOrderToSet_[10]);
+  loadOrderToSet_[9] = blankPluginDependentEsp;
+  loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  auto secondSetLoadOrder = loadOrderToSet_;
+
+  ASSERT_NE(blankMasterDependentEsp, loadOrderToSet_[7]);
+  ASSERT_NE(blankEsp, loadOrderToSet_[8]);
+  loadOrderToSet_[7] = blankMasterDependentEsp;
+  loadOrderToSet_[8] = blankEsp;
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  auto thirdSetLoadOrder = loadOrderToSet_;
+
+  ASSERT_NE(blankMasterDependentEsm, loadOrderToSet_[7]);
+  ASSERT_NE(blankDifferentEsm, loadOrderToSet_[8]);
+  loadOrderToSet_[7] = blankMasterDependentEsm;
+  loadOrderToSet_[8] = blankDifferentEsm;
+
+  ASSERT_NO_THROW(LoadOrderHandler::BackupLoadOrder(loadOrderToSet_, localPath));
+
+  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile0));
+  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile1));
+  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+
+  auto loadOrder = readFileLines(loadOrderBackupFile0);
+  EXPECT_EQ(loadOrderToSet_, loadOrder);
+
+  loadOrder = readFileLines(loadOrderBackupFile1);
+  EXPECT_EQ(thirdSetLoadOrder, loadOrder);
+
+  loadOrder = readFileLines(loadOrderBackupFile2);
+  EXPECT_EQ(secondSetLoadOrder, loadOrder);
 }
 }
 }

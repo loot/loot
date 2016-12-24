@@ -27,6 +27,11 @@ LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and
 
 Any errors encountered during sorting or masterlist update will be displayed on the "General Information" card.
 
+Load Order Backups
+^^^^^^^^^^^^^^^^^^
+
+Before a sorted load order is applied, LOOT saves a backup of the current load order as a ``loadorder.bak.0`` text file in LOOT's data folder for the current game. Up to three load order backups are retained: ``loadorder.bak.0`` is the backup from the most recent load order change, ``loadorder.bak.1`` is the second-most recent backup, and ``loadorder.bak.2`` is the third-most recent backup.
+
 Search
 ------
 

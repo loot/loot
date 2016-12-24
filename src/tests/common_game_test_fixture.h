@@ -100,6 +100,22 @@ protected:
     ASSERT_FALSE(boost::filesystem::exists(dataPath / (blankMasterDependentEsm + ".ghost")));
   }
 
+  std::vector<std::string> readFileLines(const boost::filesystem::path& file) {
+    boost::filesystem::ifstream in(file);
+
+    std::vector<std::string> lines;
+    while (in) {
+      std::string line;
+      std::getline(in, line);
+
+      if (!line.empty()) {
+        lines.push_back(line);
+      }
+    }
+
+    return lines;
+  }
+
   std::vector<std::string> getLoadOrder() {
     std::vector<std::string> actual;
     if (isLoadOrderTimestampBased(GetParam())) {
@@ -125,17 +141,10 @@ protected:
           actual.push_back(line);
       }
     } else {
-      boost::filesystem::ifstream in(localPath / "plugins.txt");
-      while (in) {
-        std::string line;
-        std::getline(in, line);
-
-        if (!line.empty()) {
-          if (line[0] == '*')
-            line = line.substr(1);
-
-          actual.push_back(line);
-        }
+      actual = readFileLines(localPath / "plugins.txt");
+      for (auto& line : actual) {
+        if (line[0] == '*')
+          line = line.substr(1);
       }
     }
 

@@ -236,6 +236,7 @@ std::vector<std::string> Game::GetLoadOrder() const {
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
+  BackupLoadOrder(loadOrder_, LootPaths::getLootDataPath() / FolderName());
   LoadOrderHandler::SetLoadOrder(loadOrder);
   loadOrder_ = loadOrder;
 }

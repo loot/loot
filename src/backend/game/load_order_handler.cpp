@@ -166,4 +166,23 @@ void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) c
     throw std::system_error(ret, libloadorder_category(), err);
   }
 }
+void LoadOrderHandler::BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                                       const boost::filesystem::path & backupDirectory) {
+  const int maxBackupIndex = 2;
+  boost::format filenameFormat = boost::format("loadorder.bak.%1%");
+
+  boost::filesystem::path backupFilePath = backupDirectory / (filenameFormat % 2).str();
+  if (boost::filesystem::exists(backupFilePath))
+    boost::filesystem::remove(backupFilePath);
+
+  for (int i = maxBackupIndex - 1; i > -1; --i) {
+    const boost::filesystem::path backupFilePath = backupDirectory / (filenameFormat % i).str();
+    if (boost::filesystem::exists(backupFilePath))
+      boost::filesystem::rename(backupFilePath, backupDirectory / (filenameFormat % (i + 1)).str());
+  }
+
+  boost::filesystem::ofstream out(backupDirectory / (filenameFormat % 0).str());
+  for (const auto &plugin : loadOrder)
+    out << plugin << std::endl;
+}
 }
