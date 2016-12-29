@@ -294,21 +294,39 @@
     document.getElementById('settingsDialog').getElementsByClassName('cancel')[0].textContent = l10n.translate('Cancel');
   }
 
-  function translateFirstRunDialog(l10n) {
+  function translateFirstRunDialog(l10n, version) {
     /* First-run dialog */
     const firstRun = document.getElementById('firstRun');
     firstRun.querySelector('h2').textContent = l10n.translate('First-Time Tips');
 
+    firstRun.querySelector('p:first-of-type').innerHTML = l10n.translateFormatted('This appears to be the first time you have run LOOT v%s. Here are some tips to help you get started with the interface.', version.release);
+
+    firstRun.querySelector('li:nth-child(1)').innerHTML = l10n.translateFormatted('Click %(menu_icon)s buttons to open menus.', {
+      menu_icon: '<iron-icon icon="more-vert"></iron-icon>',
+    });
+    firstRun.querySelector('li:nth-child(2)').innerHTML = l10n.translate('As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.');
     firstRun.querySelector('li:nth-child(3)').textContent = l10n.translate('CRCs are only displayed after plugins have been loaded, either by conflict filtering, or by sorting.');
     firstRun.querySelector('li:nth-child(4)').textContent = l10n.translate('Double-click a plugin in the sidebar to quickly open it in the metadata editor.');
     firstRun.querySelector('li:nth-child(5)').textContent = l10n.translate('Plugins can be drag and dropped from the sidebar into the metadata editor\'s "load after", "requirements" and "incompatibility" tables.');
     firstRun.querySelector('li:nth-child(6)').textContent = l10n.translate('Some features are disabled while the metadata editor is open, or while there is a sorted load order that has not been applied or discarded.');
     firstRun.querySelector('li:last-child').textContent = l10n.translate('Many interface elements have tooltips. If you don\'t know what something is, try hovering your mouse over it to find out. Otherwise, LOOT\'s documentation can be accessed through the main menu.');
 
+    firstRun.querySelector('p:last-of-type').innerHTML = l10n.translateFormatted("LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s or %s.", '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>', '<a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>');
+
     firstRun.getElementsByTagName('paper-button')[0].textContent = l10n.translate('OK');
   }
 
-  return (l10n) => {
+  function translateAboutDialog(l10n, version) {
+    const about = document.getElementById('about');
+    about.querySelector('h2').textContent = l10n.translate('About LOOT');
+
+    about.querySelector('p:nth-child(1)').innerHTML = l10n.translateFormatted('Version %s (build %s)', version.release, version.build);
+    about.querySelector('p:nth-child(2)').textContent = l10n.translate('Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Fallout 3, Fallout: New Vegas and Fallout 4.');
+
+    about.querySelector('p:nth-child(4)').innerHTML = l10n.translateFormatted("LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s or %s.", '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>', '<a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>');
+  }
+
+  return (l10n, version) => {
     translatePluginCardTemplate(l10n);
     translatePluginEditorTemplate(l10n);
     translatePluginListItemTemplate(l10n);
@@ -328,6 +346,7 @@
 
     translateSummaryCard(l10n);
     translateSettingsDialog(l10n);
-    translateFirstRunDialog(l10n);
+    translateFirstRunDialog(l10n, version);
+    translateAboutDialog(l10n, version);
   };
 }));

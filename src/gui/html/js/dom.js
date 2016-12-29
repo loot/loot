@@ -192,12 +192,6 @@
       document.getElementById('totalErrorNo').textContent = errorMessages.length;
     }
 
-    static setVersion(version) {
-      document.getElementById('LOOTVersion').textContent = version.release;
-      document.getElementById('firstTimeLootVersion').textContent = version.release;
-      document.getElementById('LOOTBuild').textContent = version.build;
-    }
-
     static onJumpToGeneralInfo() {
       document.getElementById('pluginCardList').scroll(0, 0);
     }

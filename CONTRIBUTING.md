@@ -54,7 +54,13 @@ Some languages may use different words or phrases for different contexts where o
 Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
 
 * Backslashes (`\`). These are used to escape backslashes and double-quotation marks (`"`) in the C++ translation strings. Don't add new backslashes into translations, and make sure all backslashes in the original string are retained in the translation.
-* Formatting placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear as a number surrounded by percentage signs, eg. `%1%`, or as `%s`. If formatting placeholders are used in the untranslated string, they **must all** be present in the translated string, or LOOT will crash when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
+* Formatting placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear in a few different formats:
+  1. A number surrounded by percentage signs, eg. `%1%`.
+  2. A named placeholder, eg. `%(icon)s` (the name in parentheses must not be changed).
+  3. A simple placeholder `%s`.
+
+  If formatting placeholders are used in the untranslated string, they **must all** be present in the translated string, or LOOT will encounter an error when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
+* A small number of strings also include HTML `<span>` elements that wrap translatable text. While the text inside the elements should be translated, the element tags and their attributes should not be.
 
 ### Adding A New Translation
 

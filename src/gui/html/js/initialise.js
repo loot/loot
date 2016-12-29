@@ -121,8 +121,7 @@
 
   function setVersion(appData) {
     return query('getVersion').then(JSON.parse).then((version) => {
-      appData.version = version.release;
-      dom.setVersion(version);
+      appData.version = version;
     });
   }
 
@@ -203,7 +202,7 @@
     });
     setupEventHandlers();
 
-    loot.version = '';
+    loot.version = {};
     loot.settings = {};
     loot.l10n = new Translator();
     loot.game = new Game({}, loot.l10n);
@@ -221,7 +220,7 @@
       return loot.l10n.load();
     }).then(() => {
       loot.filters = new Filters(loot.l10n);
-      translateStaticText(loot.l10n);
+      translateStaticText(loot.l10n, loot.version);
       /* Also need to update the settings UI. */
       dom.updateSettingsDialog(loot.settings);
       dom.setGameMenuItems(loot.settings.games);
@@ -233,7 +232,7 @@
     .then(() => setGameData(loot))
     .catch(handleInitErrors)
     .then(() => {
-      if (loot.settings.lastVersion !== loot.version) {
+      if (loot.settings.lastVersion !== loot.version.release) {
         dom.openDialog('firstRun');
       }
     })
