@@ -14,7 +14,7 @@
    height="192"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.92.0 r15299"
    sodipodi:docname="icon.svg"
    inkscape:export-filename="C:\Users\olive_000\Documents\GitHub\LOOT\loot\resources\icon.png"
    inkscape:export-xdpi="90"
@@ -206,12 +206,7 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="-8"
-     inkscape:window-y="1042"
-     inkscape:window-maximized="1">
+     fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
        id="grid2985"
@@ -219,10 +214,10 @@
        visible="true"
        enabled="true"
        snapvisiblegridlinesonly="true"
-       spacingx="4px"
-       spacingy="4px"
-       originx="4px"
-       originy="4px" />
+       spacingx="4"
+       spacingy="4"
+       originx="4"
+       originy="4" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -232,7 +227,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
