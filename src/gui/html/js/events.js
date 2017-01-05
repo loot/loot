@@ -327,7 +327,7 @@ function onCloseSettingsDialog(evt) {
     loot.DOM.updateSelectedGame(loot.game.folder);
   })
   .then(() => {
-    if (loot.game.folder.length === 0) {
+    if (loot.installedGames.length > 0 && loot.game.folder.length === 0) {
       /* Initialisation failed and game was configured in settings. */
       onContentRefresh();
     }

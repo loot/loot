@@ -102,10 +102,12 @@ void LootState::load(YAML::Node& settings) {
     selectGame("");
   }
 
-  // Re-initialise the current game in case the game path setting was changed.
-  currentGame_->Init(true);
-  // Update game path in settings object.
-  storeGameSettings(toGameSettings(games_));
+  if (currentGame_ != end(games_)) {
+    // Re-initialise the current game in case the game path setting was changed.
+    currentGame_->Init(true);
+    // Update game path in settings object.
+    storeGameSettings(toGameSettings(games_));
+  }
 }
 
 void LootState::init(const std::string& cmdLineGame) {
