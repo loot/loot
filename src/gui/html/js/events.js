@@ -315,6 +315,9 @@ function onCloseSettingsDialog(evt) {
   loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
     loot.installedGames = installedGames;
     loot.DOM.updateEnabledGames(installedGames);
+    if (installedGames.length > 0) {
+      loot.DOM.enableGameOperations(true);
+    }
   }).catch(loot.handlePromiseError)
   .then(() => {
     loot.settings = settings;

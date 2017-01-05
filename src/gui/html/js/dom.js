@@ -253,5 +253,13 @@
     static setUIState(state) {
       document.body.setAttribute('data-state', state);
     }
+
+    static enableGameOperations(enable) {
+      document.getElementById('sortButton').disabled = !enable;
+      document.getElementById('updateMasterlistButton').disabled = !enable;
+      document.getElementById('wipeUserlistButton').disabled = !enable;
+      document.getElementById('copyLoadOrderButton').disabled = !enable;
+      document.getElementById('refreshContentButton').disabled = !enable;
+    }
   };
 }));

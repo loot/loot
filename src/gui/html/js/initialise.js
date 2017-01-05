@@ -151,6 +151,7 @@
   function handleInitErrors(error) {
     dom.listInitErrors(getErrorMessages(error.message));
     Dialog.closeProgress();
+    dom.enableGameOperations(false);
     dom.openDialog('settingsDialog');
   }
 
