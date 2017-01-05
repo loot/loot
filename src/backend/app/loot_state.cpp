@@ -98,6 +98,10 @@ void LootState::load(YAML::Node& settings) {
       ++it;
   }
 
+  if (currentGame_ == end(games_)) {
+    selectGame("");
+  }
+
   // Re-initialise the current game in case the game path setting was changed.
   currentGame_->Init(true);
   // Update game path in settings object.

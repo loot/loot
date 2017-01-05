@@ -323,6 +323,12 @@ function onCloseSettingsDialog(evt) {
     loot.DOM.updateEnabledGames(loot.installedGames);
     loot.DOM.updateSelectedGame(loot.game.folder);
   })
+  .then(() => {
+    if (loot.game.folder.length === 0) {
+      /* Initialisation failed and game was configured in settings. */
+      onContentRefresh();
+    }
+  })
   .catch(loot.handlePromiseError);
 }
 function onEditorOpen(evt) {
