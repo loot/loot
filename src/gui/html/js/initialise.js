@@ -131,18 +131,25 @@
 
   function getInitErrors() {
     return query('getInitErrors').then((result) => {
-      if (JSON.parse(result)) {
+      const errors = JSON.parse(result);
+      if (errors.length > 0) {
         throw new Error(result);
       }
     });
   }
 
-  function handleInitErrors(error) {
-    if (error.constructor === Array) {
-      dom.listInitErrors(JSON.parse(error.message));
-    } else {
-      dom.listInitErrors([error.message]);
+  function getErrorMessages(string) {
+    /* error.message could be a message string or JSON encoding a list of
+       message strings. */
+    try {
+      return JSON.parse(string);
+    } catch (error) {
+      return [string];
     }
+  }
+
+  function handleInitErrors(error) {
+    dom.listInitErrors(getErrorMessages(error.message));
     Dialog.closeProgress();
     dom.openDialog('settingsDialog');
   }

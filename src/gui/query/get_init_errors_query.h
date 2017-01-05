@@ -35,11 +35,7 @@ public:
   GetInitErrorsQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    YAML::Node node(state_.getInitErrors());
-    if (node.size() > 0)
-      return JSON::stringify(node);
-
-    return "null";
+    return JSON::stringify(YAML::Node(state_.getInitErrors()));
   }
 
 private:
