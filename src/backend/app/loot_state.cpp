@@ -182,6 +182,7 @@ void LootState::init(const std::string& cmdLineGame) {
   try {
     BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
     selectGame(cmdLineGame);
+    BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
     BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
     currentGame_->Init(true);
     // Update game path in settings object.
@@ -190,7 +191,6 @@ void LootState::init(const std::string& cmdLineGame) {
     BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
     initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
   }
-  BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
 }
 
 const std::vector<std::string>& LootState::getInitErrors() const {
