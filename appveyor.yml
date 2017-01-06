@@ -25,7 +25,7 @@ environment:
     secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
 
 install:
-  - choco install -y doxygen.portable InnoSetup inkscape imagemagick.tool
+  - choco install -y doxygen.portable InnoSetup imagemagick.tool
   - python -m pip install sphinx breathe sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install

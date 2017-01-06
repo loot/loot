@@ -23,7 +23,6 @@ addons:
       - libasound2-dev
       - libxtst-dev
       # Scripting dependencies
-      - inkscape
       - imagemagick
 
 cache:
