@@ -217,6 +217,13 @@
     document.getElementById('searchBar').shadowRoot.getElementById('search').label = l10n.translate('Search cards');
   }
 
+  function updateDropdownSelectedItemText(dropdownElement) {
+    const paperDropdownMenu = dropdownElement.shadowRoot.querySelector('paper-dropdown-menu');
+    if (paperDropdownMenu.selectedItem) {
+      paperDropdownMenu.shadowRoot.querySelector('paper-input').value = paperDropdownMenu.selectedItem.textContent;
+    }
+  }
+
   function translateSidebar(l10n) {
     /* Nav items */
     document.getElementById('sidebarTabs').firstElementChild.textContent = l10n.translate('Plugins');
@@ -239,7 +246,7 @@
     conflictsFilter.label = l10n.translate('Show only conflicting plugins for');
     conflictsFilter.firstElementChild.textContent = l10n.translate('No plugin selected');
     /* The selected text doesn't update, so force that translation. */
-    conflictsFilter.shadowRoot.querySelector('paper-dropdown-menu').shadowRoot.querySelector('paper-input').value = conflictsFilter.shadowRoot.querySelector('paper-dropdown-menu').selectedItem.textContent;
+    updateDropdownSelectedItemText(conflictsFilter);
 
     document.getElementById('hiddenPluginsTxt').textContent = l10n.translate('Hidden plugins:');
     document.getElementById('hiddenMessagesTxt').textContent = l10n.translate('Hidden messages:');
@@ -266,7 +273,7 @@
     defaultGameSelect.previousElementSibling.textContent = l10n.translate('Default Game');
     defaultGameSelect.firstElementChild.textContent = l10n.translate('Autodetect');
     /* The selected text doesn't update, so force that translation. */
-    defaultGameSelect.shadowRoot.querySelector('paper-dropdown-menu').shadowRoot.querySelector('paper-input').value = defaultGameSelect.shadowRoot.querySelector('paper-dropdown-menu').selectedItem.textContent;
+    updateDropdownSelectedItemText(defaultGameSelect);
 
     document.getElementById('languageLabel').textContent = l10n.translate('Language');
     document.getElementById('languageLabel').nextElementSibling.textContent = l10n.translate('Language changes will be applied after LOOT is restarted.');
