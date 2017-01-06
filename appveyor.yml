@@ -71,7 +71,7 @@ after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
   - ps: |
-      $env:GIT_DESCRIBE = ((git describe --tags --long) | Out-String) -replace "`n|`r", ""
+      $env:GIT_DESCRIBE = ((git describe --tags --long --abbrev=7) | Out-String) -replace "`n|`r", ""
       if ($env:PLATFORM -eq 'Win32') {
         $env:PATH = "$env:PATH;C:\cygwin\bin\"
         node scripts\potomo.js

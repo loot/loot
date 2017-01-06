@@ -14,6 +14,7 @@ function getGitDescription() {
     'describe',
     '--tags',
     '--long',
+    '--abbrev=7',
   ])).slice(0, -1);
   let branch = String(helpers.safeExecFileSync('git', [
     'rev-parse',
