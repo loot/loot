@@ -4,6 +4,39 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.10.3 - 2017-01-08
+===================
+
+Added
+-----
+
+- LOOT now creates a backup of the existing load order when applying a sorted load order. The backup is stored in LOOT's folder for the current game, and up to the three most recent backups are retained.
+
+Changed
+-------
+
+- If no game is detected when LOOT is launched and a valid game path or Registry key pointing to a game path is added in the Settings dialog, LOOT will select that game and refresh its content when the new settings are applied.
+- Most exception-derived errors now display a generic error message, as exception messages are no longer translatable. Only metadata syntax exceptions still have their message displayed in the UI.
+- Improved robustness of error handling when calculating file CRCs.
+- Improved consistency of error logging.
+- Errors and warnings are now always logged, even when debug logging is disabled.
+- The First Time Tips and About dialogs are now fully translatable, with the exception of the legal text in the About dialog.
+- Updated Russian translation.
+
+Fixed
+-----
+
+- A crash on startup if none of the supported games were detected.
+- A crash when applying settings when none of the supported games are detected.
+- Buttons and menu items for performing game-specific operations are now disabled while none of the supported games are detected.
+- Initialisation error messages were formatted incorrectly.
+- An error message reading ``Cannot read property 'textContent' of undefined`` could be displayed on startup due to UI elements initialising later than expected.
+- The texts of the first plugin card and sidebar item were not being translated.
+- LOOT now logs being unable to find a game's registry entry as ``[info]``, not ``[error]``.
+- If an error was encountered while loading a userlist, constructing the error message produced a ``boost::too_many_args`` error that obscured the original error.
+- The installer now checks for v14.0.24215 of the MSVC Redistributable, it was previously checking for v14.0.24212, which some users found insufficient.
+
+
 0.10.2 - 2016-12-03
 ===================
 

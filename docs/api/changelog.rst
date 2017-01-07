@@ -2,6 +2,26 @@
 Version History
 ***************
 
+0.10.3 - 2017-01-08
+===================
+
+Added
+-----
+
+- Automated 64-bit API builds.
+
+Changed
+-------
+
+- Replaced ``std::invalid_argument`` exceptions thrown during condition evaluation with ``ConditionSyntaxError`` exceptions.
+- Improved robustness of error handling when calculating file CRCs.
+
+Fixed
+-----
+
+- Documentation was not generated correctly for enums, exceptions and structs exposed by the API.
+- Added missing documentation for ``CyclicInteractionError`` methods.
+
 0.10.2 - 2016-12-03
 ===================
 
