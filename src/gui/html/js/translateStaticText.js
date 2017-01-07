@@ -29,22 +29,31 @@
     return template.content;
   }
 
-  function translatePluginCardTemplate(l10n) {
-    /* Plugin card template. */
-    const pluginCard = getTemplate('loot-plugin-card');
+  function translatePluginCard(l10n, element) {
+    element.querySelector('paper-tooltip[for=activeTick]').textContent = l10n.translate('Active Plugin');
+    element.querySelector('paper-tooltip[for=isMaster]').textContent = l10n.translate('Master File');
+    element.querySelector('paper-tooltip[for=isEmpty]').textContent = l10n.translate('Empty Plugin');
+    element.querySelector('paper-tooltip[for=loadsArchive]').textContent = l10n.translate('Loads Archive');
+    element.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
 
-    pluginCard.querySelector('paper-tooltip[for=activeTick]').textContent = l10n.translate('Active Plugin');
-    pluginCard.querySelector('paper-tooltip[for=isMaster]').textContent = l10n.translate('Master File');
-    pluginCard.querySelector('paper-tooltip[for=isEmpty]').textContent = l10n.translate('Empty Plugin');
-    pluginCard.querySelector('paper-tooltip[for=loadsArchive]').textContent = l10n.translate('Loads Archive');
-    pluginCard.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
-
-    pluginCard.getElementById('editMetadata').lastChild.textContent = l10n.translate('Edit Metadata');
-    pluginCard.getElementById('copyMetadata').lastChild.textContent = l10n.translate('Copy Metadata');
-    pluginCard.getElementById('clearMetadata').lastChild.textContent = l10n.translate('Clear User Metadata');
+    element.querySelector('#editMetadata').lastChild.textContent = l10n.translate('Edit Metadata');
+    element.querySelector('#copyMetadata').lastChild.textContent = l10n.translate('Copy Metadata');
+    element.querySelector('#clearMetadata').lastChild.textContent = l10n.translate('Clear User Metadata');
   }
 
-  function translatePluginEditorTemplate(l10n) {
+  function translatePluginCardInstance(l10n) {
+    const elements = document.getElementById('pluginCardList').children;
+
+    if (elements.length > 1 && elements[1].tagName === 'LOOT-PLUGIN-CARD') {
+      translatePluginCard(l10n, elements[1].shadowRoot);
+    }
+  }
+
+  function translatePluginCardTemplate(l10n) {
+    translatePluginCard(l10n, getTemplate('loot-plugin-card'));
+  }
+
+  function translatePluginEditor(l10n) {
     /* Plugin editor template. */
     const pluginEditor = document.getElementById('editor').shadowRoot;
 
@@ -99,14 +108,23 @@
     pluginEditor.querySelector('paper-tooltip[for=cancel]').textContent = l10n.translate('Cancel');
   }
 
-  function translatePluginListItemTemplate(l10n) {
-    /* Plugin List Item Template */
-    const pluginItem = getTemplate('loot-plugin-item');
+  function translatePluginListItem(l10n, element) {
+    element.querySelector('#globalPriorityTooltip').textContent = l10n.translate('Global Priority');
+    element.querySelector('#localPriorityTooltip').textContent = l10n.translate('Priority');
+    element.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
+    element.querySelector('paper-tooltip[for=editorIsOpen]').textContent = l10n.translate('Editor Is Open');
+  }
 
-    pluginItem.querySelector('#globalPriorityTooltip').textContent = l10n.translate('Global Priority');
-    pluginItem.querySelector('#localPriorityTooltip').textContent = l10n.translate('Priority');
-    pluginItem.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');
-    pluginItem.querySelector('paper-tooltip[for=editorIsOpen]').textContent = l10n.translate('Editor Is Open');
+  function translatePluginListItemInstance(l10n) {
+    const elements = document.getElementById('cardsNav').children;
+
+    if (elements.length > 1 && elements[1].tagName === 'LOOT-PLUGIN-ITEM') {
+      translatePluginListItem(l10n, elements[1].shadowRoot);
+    }
+  }
+
+  function translatePluginListItemTemplate(l10n) {
+    translatePluginListItem(l10n, getTemplate('loot-plugin-item'));
   }
 
   function translateMessageDialogTemplate(l10n) {
@@ -334,8 +352,10 @@
   }
 
   return (l10n, version) => {
+    translatePluginCardInstance(l10n);
     translatePluginCardTemplate(l10n);
-    translatePluginEditorTemplate(l10n);
+    translatePluginEditor(l10n);
+    translatePluginListItemInstance(l10n);
     translatePluginListItemTemplate(l10n);
     translateMessageDialogTemplate(l10n);
 
