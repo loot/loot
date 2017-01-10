@@ -89,6 +89,8 @@ Source: "{#buildir}\Release\devtools_resources.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\icudtl.dat"; \
 DestDir: "{app}"; Flags: ignoreversion
+Source: "{#buildir}\Release\chrome_elf.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\libcef.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\libEGL.dll"; \

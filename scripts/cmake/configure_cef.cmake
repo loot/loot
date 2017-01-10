@@ -8,6 +8,7 @@ file(READ ${CEF_CMAKELISTS_PATH} CEF_CMAKELISTS)
 
 string(REPLACE "add_subdirectory(cefclient)" "" CEF_CMAKELISTS ${CEF_CMAKELISTS})
 string(REPLACE "add_subdirectory(cefsimple)" "" CEF_CMAKELISTS ${CEF_CMAKELISTS})
+string(REGEX REPLACE "add_subdirectory\\(tests/.+\\)" "" CEF_CMAKELISTS ${CEF_CMAKELISTS})
 
 file(WRITE ${CEF_CMAKELISTS_PATH} ${CEF_CMAKELISTS})
 

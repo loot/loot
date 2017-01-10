@@ -91,6 +91,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   if (os.platform() === 'win32') {
     binaries = [
       'LOOT.exe',
+      'chrome_elf.dll',
       'd3dcompiler_47.dll',
       'libEGL.dll',
       'libGLESv2.dll',
