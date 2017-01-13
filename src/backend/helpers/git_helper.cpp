@@ -102,7 +102,9 @@ void GitHelper::Call(int error_code) {
   giterr_clear();
 
   if (errorMessage_.empty())
-    errorMessage_ = (boost::format("Git operation failed. Error: %1%") % gitError).str();
+    errorMessage_ = "Git operation failed.";
+
+  errorMessage_ = (boost::format("%1% Details: %2%") % errorMessage_ % gitError).str();
 
   throw std::system_error(error_code, libgit2_category(), errorMessage_);
 }
