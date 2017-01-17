@@ -1,5 +1,7 @@
 # LOOT
 
+[![Join the chat at https://gitter.im/loot/general](https://badges.gitter.im/loot/general.svg)](https://gitter.im/loot/general?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)](https://ci.appveyor.com/project/WrinklyNinja/loot)
 [![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
 [![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](http://loot.readthedocs.io/en/latest/?badge=latest)
