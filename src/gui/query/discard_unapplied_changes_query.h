@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_DISCARD_UNAPPLIED_CHANGES_QUERY
 #define LOOT_GUI_QUERY_DISCARD_UNAPPLIED_CHANGES_QUERY
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "gui/query/query.h"
 
 namespace loot {

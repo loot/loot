@@ -163,8 +163,6 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 ##############################
 
 set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.cpp"
                 "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/error_categories.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.cpp"
@@ -191,8 +189,6 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp")
 
 set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_settings.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/app/loot_state.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
@@ -236,6 +232,8 @@ set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
@@ -274,6 +272,8 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/sort_plugins_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/update_masterlist_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")
 
@@ -302,12 +302,7 @@ set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
 
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
-set (LOOT_TESTS_HEADERS # Testing this here rather than as part of the API tests
-                        # because it tests internal code and requires internal
-                        # linking.
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_settings_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_state_test.h"
+set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"
@@ -342,17 +337,28 @@ set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operatio
                             "${CMAKE_SOURCE_DIR}/src/tests/api/is_compatible_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/common_game_test_fixture.h")
 
+set(LOOT_GUI_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
+                       "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
+                       "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp")
+
+set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
+                            "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_state_test.h")
+
 source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
 source_group("Header Files\\api" FILES ${LOOT_API_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_API_TESTS_HEADERS})
+source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_HEADERS})
 
 source_group("Source Files\\backend" FILES ${LOOT_SRC})
 source_group("Source Files\\gui" FILES ${LOOT_GUI_SRC})
 source_group("Source Files\\api" FILES ${LOOT_API_SRC})
 source_group("Source Files\\tests" FILES ${LOOT_TESTS_SRC})
 source_group("Source Files\\tests" FILES ${LOOT_API_TESTS_SRC})
+source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_SRC})
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
@@ -446,6 +452,10 @@ add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 add_dependencies     (LOOT cef loot_common)
 target_link_libraries(LOOT ${CEF_LIBRARIES} loot_common ${LOOT_GUI_LIBS})
 
+# Build application tests.
+add_executable       (gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
+add_dependencies     (gui_tests loot_common GTest testing-metadata testing-plugins)
+target_link_libraries(gui_tests loot_common ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -465,6 +475,7 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties (loot_common PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (LOOT PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+    set_target_properties (gui_tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()

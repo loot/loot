@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_INSTALLED_GAMES_QUERY
 #define LOOT_GUI_QUERY_GET_INSTALLED_GAMES_QUERY
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "gui/query/json.h"
 #include "gui/query/query.h"
 

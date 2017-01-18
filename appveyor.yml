@@ -66,6 +66,10 @@ test_script:
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
   - tests.exe --gtest_output=xml:tests.xml
   - api-tests.exe --gtest_output=xml:api-tests.xml
+  - ps: |
+      if ($env:PLATFORM -eq 'Win32') {
+        ./gui_tests.exe --gtest_output=xml:gui_tests.xml
+      }
 
 after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -162,3 +166,7 @@ on_success:
 on_finish:
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
   - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\api-tests.xml")
+  - ps: |
+      if ($env:PLATFORM -eq 'Win32') {
+        (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\gui_tests.xml")
+      }

@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>

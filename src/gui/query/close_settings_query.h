@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLOSE_SETTINGS_QUERY
 #define LOOT_GUI_QUERY_CLOSE_SETTINGS_QUERY
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "gui/query/get_installed_games_query.h"
 
 namespace loot {

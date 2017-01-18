@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_LOOT_SETTINGS_TEST
 #define LOOT_TESTS_BACKEND_LOOT_SETTINGS_TEST
 
-#include "backend/app/loot_settings.h"
+#include "gui/state/loot_settings.h"
 
 #include <gtest/gtest.h>
 

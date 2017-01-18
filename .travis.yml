@@ -71,6 +71,7 @@ script:
   - make all
   - ./tests
   - ./api-tests
+  - ./gui_tests
 
 after_success:
   - cd $TRAVIS_BUILD_DIR

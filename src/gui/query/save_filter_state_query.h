@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include <boost/log/trivial.hpp>
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "gui/query/query.h"
 
 namespace loot {

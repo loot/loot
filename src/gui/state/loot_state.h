@@ -25,7 +25,7 @@
 #ifndef LOOT_BACKEND_APP_LOOT_STATE
 #define LOOT_BACKEND_APP_LOOT_STATE
 
-#include "backend/app/loot_settings.h"
+#include "gui/state/loot_settings.h"
 #include "backend/game/game.h"
 
 namespace loot {

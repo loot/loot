@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_EDITOR_CLOSED_QUERY
 #define LOOT_GUI_QUERY_EDITOR_CLOSED_QUERY
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "gui/query/metadata_query.h"
 
 namespace loot {

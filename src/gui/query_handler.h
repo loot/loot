@@ -28,7 +28,7 @@
 #include <include/wrapper/cef_message_router.h>
 #include <yaml-cpp/yaml.h>
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "backend/plugin/plugin.h"
 #include "backend/metadata/plugin_metadata.h"
 #include "gui/editor_message.h"

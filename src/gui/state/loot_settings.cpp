@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/app/loot_settings.h"
+#include "gui/state/loot_settings.h"
 
 #include <thread>
 

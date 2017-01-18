@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 #include "gui/query/json.h"
 #include "backend/plugin/plugin_sorter.h"
 #include "loot/exception/cyclic_interaction_error.h"

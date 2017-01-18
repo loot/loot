@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_SETTINGS_QUERY
 #define LOOT_GUI_QUERY_GET_SETTINGS_QUERY
 
-#include "backend/app/loot_settings.h"
+#include "gui/state/loot_settings.h"
 #include "gui/query/json.h"
 #include "gui/query/query.h"
 

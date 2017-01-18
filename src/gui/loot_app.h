@@ -29,7 +29,7 @@
 #include <include/base/cef_lock.h>
 #include <include/wrapper/cef_message_router.h>
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class LootApp : public CefApp,

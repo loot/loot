@@ -30,7 +30,7 @@
 #include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>
 
-#include "backend/app/loot_state.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class LootHandler : public CefClient,
