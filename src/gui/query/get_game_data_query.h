@@ -28,7 +28,7 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "loot/loot_version.h"
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 #include "backend/helpers/version.h"
 #include "gui/query/metadata_query.h"
 

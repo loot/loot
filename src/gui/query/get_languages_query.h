@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_LANGUAGES_QUERY
 #define LOOT_GUI_QUERY_GET_LANGUAGES_QUERY
 
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 #include "backend/helpers/language.h"
 #include "gui/query/query.h"
 

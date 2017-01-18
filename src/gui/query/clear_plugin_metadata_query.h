@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 
 #include "backend/game/game.h"
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 #include "gui/query/metadata_query.h"
 
 namespace loot {

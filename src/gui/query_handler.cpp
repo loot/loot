@@ -73,7 +73,7 @@
 #include "backend/app/loot_paths.h"
 #include "backend/plugin/plugin_sorter.h"
 #include "backend/helpers/helpers.h"
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 #include "backend/helpers/version.h"
 #include "loot/loot_version.h"
 

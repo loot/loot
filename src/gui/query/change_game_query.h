@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 #include "gui/query/get_game_data_query.h"
 
 namespace loot {

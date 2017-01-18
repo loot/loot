@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/query/query.h"
 #include "loot/loot_version.h"
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 
 namespace loot {
 class GetVersionQuery : public Query {

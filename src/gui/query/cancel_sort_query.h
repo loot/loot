@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 
 #include "backend/app/loot_state.h"
-#include "backend/helpers/json.h"
+#include "gui/query/json.h"
 #include "gui/query/metadata_query.h"
 
 namespace loot {
