@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2016    WrinklyNinja
+    Copyright (C) 2014-2017    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -21,24 +21,12 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-
-#ifndef LOOT_BACKEND_HELPERS_HELPERS
-#define LOOT_BACKEND_HELPERS_HELPERS
-
-#include <regex>
-#include <string>
+#ifndef LOOT_GUI_HELPERS
+#define LOOT_GUI_HELPERS
 
 #include <boost/filesystem.hpp>
 
 namespace loot {
-    //Calculate the CRC of the given file for comparison purposes.
-uint32_t GetCrc32(const boost::filesystem::path& filename);
-
-#ifdef _WIN32
-std::wstring ToWinWide(const std::string& str);
-
-std::string FromWinWide(const std::wstring& wstr);
-#endif
+void OpenInDefaultApplication(const boost::filesystem::path& file);
 }
-
 #endif

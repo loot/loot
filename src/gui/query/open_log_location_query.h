@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_OPEN_LOG_LOCATION_QUERY
 
 #include "backend/app/loot_paths.h"
-#include "backend/helpers/helpers.h"
+#include "gui/helpers.h"
 #include "gui/query/query.h"
 
 namespace loot {

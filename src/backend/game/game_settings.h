@@ -69,6 +69,10 @@ public:
   GameSettings& SetGamePath(const boost::filesystem::path& path);
 
 private:
+#ifdef _WIN32
+  std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+#endif
+
   static const std::set<std::string> oldDefaultBranches;
 
   GameType type_;

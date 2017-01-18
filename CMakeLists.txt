@@ -231,6 +231,7 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/enum/message_type.h")
 
 set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.cpp"
@@ -238,6 +239,7 @@ set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
 
 set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.h"

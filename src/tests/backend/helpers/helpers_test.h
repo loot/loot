@@ -50,14 +50,6 @@ TEST_P(GetCrc32Test, gettingTheCrcOfAMissingFileShouldThrow) {
 TEST_P(GetCrc32Test, gettingTheCrcOfAFileShouldReturnTheCorrectValue) {
   EXPECT_EQ(blankEsmCrc, GetCrc32(dataPath / blankEsm));
 }
-
-TEST(IntToHexString, intToHexStringShouldOutputANonZeroPositiveIntegerCorrectly) {
-  EXPECT_EQ("14", IntToHexString(20));
-}
-
-TEST(IntToHexString, intToHexStringShouldOutputZeroCorrectly) {
-  EXPECT_EQ("0", IntToHexString(0));
-}
 }
 }
 

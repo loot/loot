@@ -37,7 +37,6 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/log/trivial.hpp>
-#include <boost/spirit/include/karma.hpp>
 
 #include "loot/exception/file_access_error.h"
 
@@ -98,67 +97,7 @@ uint32_t GetCrc32(const boost::filesystem::path& filename) {
   }
 }
 
-//Converts an integer to a hex string using BOOST's Spirit.Karma, which is apparently a lot faster than a stringstream conversion...
-std::string IntToHexString(const uint32_t n) {
-  namespace karma = boost::spirit::karma;
-
-  string out;
-  std::back_insert_iterator<string> sink(out);
-  karma::generate(sink, karma::upper[karma::hex], n);
-
-  return out;
-}
-
-//Opens the file in its registered default application.
-void OpenInDefaultApplication(const boost::filesystem::path& file) {
 #ifdef _WIN32
-  HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
-  if ((int)ret <= 32)
-    throw std::system_error(GetLastError(), std::system_category(), "Failed to open file in its default application.");
-#else
-  if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
-    throw std::system_error(errno, std::system_category(), "Failed to open file in its default application.");
-#endif
-}
-
-#ifdef _WIN32
-    //Get registry subkey value string.
-std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-  HKEY hKey = NULL;
-  DWORD len = MAX_PATH;
-  wstring wstr(MAX_PATH, 0);
-
-  if (keyStr == "HKEY_CLASSES_ROOT")
-    hKey = HKEY_CLASSES_ROOT;
-  else if (keyStr == "HKEY_CURRENT_CONFIG")
-    hKey = HKEY_CURRENT_CONFIG;
-  else if (keyStr == "HKEY_CURRENT_USER")
-    hKey = HKEY_CURRENT_USER;
-  else if (keyStr == "HKEY_LOCAL_MACHINE")
-    hKey = HKEY_LOCAL_MACHINE;
-  else if (keyStr == "HKEY_USERS")
-    hKey = HKEY_USERS;
-  else
-    throw std::invalid_argument("Invalid registry key given.");
-
-  BOOST_LOG_TRIVIAL(trace) << "Getting string for registry key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
-  LONG ret = RegGetValue(hKey,
-                         ToWinWide(subkey).c_str(),
-                         ToWinWide(value).c_str(),
-                         RRF_RT_REG_SZ | KEY_WOW64_32KEY,
-                         NULL,
-                         &wstr[0],
-                         &len);
-
-  if (ret == ERROR_SUCCESS) {
-    BOOST_LOG_TRIVIAL(info) << "Found string: " << wstr.c_str();
-    return FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
-  } else {
-    BOOST_LOG_TRIVIAL(info) << "Failed to get string value.";
-    return "";
-  }
-}
-
 //Helper to turn UTF8 strings into strings that can be used by WinAPI.
 std::wstring ToWinWide(const std::string& str) {
   size_t len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);

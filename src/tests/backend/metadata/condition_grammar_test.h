@@ -57,6 +57,12 @@ protected:
     ASSERT_NO_THROW(boost::filesystem::remove(resourcePath));
   }
 
+  std::string IntToHexString(const uint32_t value) {
+    std::stringstream stream;
+    stream << std::hex << value;
+    return stream.str();
+  }
+
   const boost::filesystem::path resourcePath;
 
   Game game_;

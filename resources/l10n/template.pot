@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-01-08 14:08+0000\n"
+"POT-Creation-Date: 2017-01-18 21:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -758,12 +758,12 @@ msgstr ""
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:145
+#: src/backend/helpers/git_helper.cpp:147
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:194
+#: src/backend/helpers/git_helper.cpp:196
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."

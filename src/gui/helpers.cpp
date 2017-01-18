@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2016    WrinklyNinja
+    Copyright (C) 2014-2017    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -22,23 +22,31 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_HELPERS_HELPERS
-#define LOOT_BACKEND_HELPERS_HELPERS
+#include "gui/helpers.h"
 
-#include <regex>
-#include <string>
-
-#include <boost/filesystem.hpp>
-
-namespace loot {
-    //Calculate the CRC of the given file for comparison purposes.
-uint32_t GetCrc32(const boost::filesystem::path& filename);
+#include "backend/helpers/helpers.h"
 
 #ifdef _WIN32
-std::wstring ToWinWide(const std::string& str);
+#   ifndef UNICODE
+#       define UNICODE
+#   endif
+#   ifndef _UNICODE
+#      define _UNICODE
+#   endif
+#   include "windows.h"
+#   include "shlobj.h"
+#   include "shlwapi.h"
+#endif
 
-std::string FromWinWide(const std::wstring& wstr);
+namespace loot {
+void OpenInDefaultApplication(const boost::filesystem::path& file) {
+#ifdef _WIN32
+  HINSTANCE ret = ShellExecute(0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
+  if ((int)ret <= 32)
+    throw std::system_error(GetLastError(), std::system_category(), "Failed to open file in its default application.");
+#else
+  if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
+    throw std::system_error(errno, std::system_category(), "Failed to open file in its default application.");
 #endif
 }
-
-#endif
+}
