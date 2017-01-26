@@ -258,17 +258,17 @@ TEST_P(GameSettingsTest, decodingFromYamlShouldInterpretTheYamlCorrectly) {
 
 TEST_P(GameSettingsTest, decodingFromAnInvalidYamlMapShouldThrowAnException) {
   YAML::Node node = YAML::Load("type: 'Invalid'\n");
-  EXPECT_ANY_THROW(node.as<GameSettings>());
+  EXPECT_THROW(node.as<GameSettings>(), YAML::RepresentationException);
 }
 
 TEST_P(GameSettingsTest, decodingFromAYamlScalarShouldThrowAnException) {
   YAML::Node node = YAML::Load("scalar");
-  EXPECT_ANY_THROW(node.as<GameSettings>());
+  EXPECT_THROW(node.as<GameSettings>(), YAML::RepresentationException);
 }
 
 TEST_P(GameSettingsTest, decodingFromAYamlListShouldThrowAnException) {
   YAML::Node node = YAML::Load("[0, 1, 2]");
-  EXPECT_ANY_THROW(node.as<GameSettings>());
+  EXPECT_THROW(node.as<GameSettings>(), YAML::RepresentationException);
 }
 
 TEST_P(GameSettingsTest, decodingFromAnIncompleteYamlMapShouldUseDefaultValuesForMissingSettings) {

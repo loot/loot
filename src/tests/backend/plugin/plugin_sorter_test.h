@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include "backend/plugin/plugin_sorter.h"
 
+#include "loot/exception/cyclic_interaction_error.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -92,7 +93,7 @@ TEST_P(PluginSorterTest, failedSortShouldNotClearExistingGameMessages) {
   ASSERT_FALSE(game_.GetMessages().empty());
 
   PluginSorter ps;
-  EXPECT_ANY_THROW(ps.Sort(game_, LanguageCode::english));
+  EXPECT_THROW(ps.Sort(game_, LanguageCode::english), CyclicInteractionError);
   EXPECT_FALSE(game_.GetMessages().empty());
 }
 
@@ -234,7 +235,7 @@ TEST_P(PluginSorterTest, sortingShouldThrowIfACyclicInteractionIsEncountered) {
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
-  EXPECT_ANY_THROW(ps.Sort(game_, LanguageCode::english));
+  EXPECT_THROW(ps.Sort(game_, LanguageCode::english), CyclicInteractionError);
 }
 }
 }

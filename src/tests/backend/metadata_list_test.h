@@ -124,7 +124,7 @@ TEST_P(MetadataListTest, loadShouldLoadBashTags) {
 TEST_P(MetadataListTest, loadShouldThrowIfAnInvalidMetadataFileIsGiven) {
   MetadataList ml;
   for (const auto& path : invalidMetadataPaths) {
-    EXPECT_ANY_THROW(ml.Load(path));
+    EXPECT_THROW(ml.Load(path), FileAccessError);
   }
 }
 
@@ -136,7 +136,7 @@ TEST_P(MetadataListTest, loadShouldClearExistingDataIfAnInvalidMetadataFileIsGiv
   ASSERT_FALSE(metadataList.Plugins().empty());
   ASSERT_FALSE(metadataList.BashTags().empty());
 
-  EXPECT_ANY_THROW(metadataList.Load(blankEsm));
+  EXPECT_THROW(metadataList.Load(blankEsm), FileAccessError);
   EXPECT_TRUE(metadataList.Messages().empty());
   EXPECT_TRUE(metadataList.Plugins().empty());
   EXPECT_TRUE(metadataList.BashTags().empty());
@@ -150,7 +150,7 @@ TEST_P(MetadataListTest, loadShouldClearExistingDataIfAMissingMetadataFileIsGive
   ASSERT_FALSE(metadataList.Plugins().empty());
   ASSERT_FALSE(metadataList.BashTags().empty());
 
-  EXPECT_ANY_THROW(metadataList.Load(missingMetadataPath));
+  EXPECT_THROW(metadataList.Load(missingMetadataPath), FileAccessError);
   EXPECT_TRUE(metadataList.Messages().empty());
   EXPECT_TRUE(metadataList.Plugins().empty());
   EXPECT_TRUE(metadataList.BashTags().empty());
@@ -265,7 +265,7 @@ TEST_P(MetadataListTest, addPluginShouldThrowIfAMatchingPluginAlreadyExists) {
   ASSERT_EQ(blankEsm, plugin.Name());
   ASSERT_FALSE(plugin.HasNameOnly());
 
-  ASSERT_ANY_THROW(metadataList.AddPlugin(PluginMetadata(blankEsm)));
+  EXPECT_THROW(metadataList.AddPlugin(PluginMetadata(blankEsm)), std::invalid_argument);
 }
 
 TEST_P(MetadataListTest, erasePluginShouldRemoveStoredMetadataForTheGivenPlugin) {

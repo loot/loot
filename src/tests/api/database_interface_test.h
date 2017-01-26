@@ -102,12 +102,12 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5se));
 
 TEST_P(DatabaseInterfaceTest, loadListsShouldThrowIfNoMasterlistIsPresent) {
-  EXPECT_ANY_THROW(db_->LoadLists(masterlistPath.string(), ""));
+  EXPECT_THROW(db_->LoadLists(masterlistPath.string(), ""), FileAccessError);
 }
 
 TEST_P(DatabaseInterfaceTest, loadListsShouldThrowIfAMasterlistIsPresentButAUserlistDoesNotExistAtTheGivenPath) {
   ASSERT_NO_THROW(GenerateMasterlist());
-  EXPECT_ANY_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
+  EXPECT_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()), FileAccessError);
 }
 
 TEST_P(DatabaseInterfaceTest, loadListsShouldSucceedIfTheMasterlistIsPresentAndTheUserlistPathIsAnEmptyString) {
@@ -169,28 +169,28 @@ TEST_P(DatabaseInterfaceTest, sortPluginsShouldSucceedIfPassedValidArguments) {
   ASSERT_EQ(expectedOrder, actualOrder);
 }
 
-TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsInvalid) {
-  EXPECT_ANY_THROW(db_->UpdateMasterlist(";//\?", url_, branch_));
+TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheMasterlistPathGivenIsInvalid) {
+  EXPECT_THROW(db_->UpdateMasterlist(";//\?", url_, branch_), std::invalid_argument);
 }
 
-TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAnInvalidArgsErrorIfTheMasterlistPathGivenIsEmpty) {
-  EXPECT_ANY_THROW(db_->UpdateMasterlist("", url_, branch_));
+TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheMasterlistPathGivenIsEmpty) {
+  EXPECT_THROW(db_->UpdateMasterlist("", url_, branch_), std::invalid_argument);
 }
 
-TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAGitErrorIfTheRepositoryUrlGivenCannotBeFound) {
-  EXPECT_ANY_THROW(db_->UpdateMasterlist(masterlistPath.string(), "https://github.com/loot/oblivion-does-not-exist.git", branch_));
+TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheRepositoryUrlGivenCannotBeFound) {
+  EXPECT_THROW(db_->UpdateMasterlist(masterlistPath.string(), "https://github.com/loot/oblivion-does-not-exist.git", branch_), std::system_error);
 }
 
-TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAnInvalidArgsErrorIfTheRepositoryUrlGivenIsEmpty) {
-  EXPECT_ANY_THROW(db_->UpdateMasterlist(masterlistPath.string(), "", branch_));
+TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheRepositoryUrlGivenIsEmpty) {
+  EXPECT_THROW(db_->UpdateMasterlist(masterlistPath.string(), "", branch_), std::invalid_argument);
 }
 
-TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAGitErrorIfTheRepositoryBranchGivenCannotBeFound) {
-  EXPECT_ANY_THROW(db_->UpdateMasterlist(masterlistPath.string(), url_, "missing-branch"));
+TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheRepositoryBranchGivenCannotBeFound) {
+  EXPECT_THROW(db_->UpdateMasterlist(masterlistPath.string(), url_, "missing-branch"), std::system_error);
 }
 
-TEST_P(DatabaseInterfaceTest, updateMasterlistShouldReturnAnInvalidArgsErrorIfTheRepositoryBranchGivenIsEmpty) {
-  EXPECT_ANY_THROW(db_->UpdateMasterlist(masterlistPath.string(), url_, ""));
+TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheRepositoryBranchGivenIsEmpty) {
+  EXPECT_THROW(db_->UpdateMasterlist(masterlistPath.string(), url_, ""), std::invalid_argument);
 }
 
 TEST_P(DatabaseInterfaceTest, updateMasterlistShouldSucceedIfPassedValidParametersAndOutputTrueIfTheMasterlistWasUpdated) {
@@ -418,11 +418,11 @@ TEST_P(DatabaseInterfaceTest, writeMinimalListShouldReturnOkAndWriteToFileIfArgu
   EXPECT_TRUE(boost::filesystem::exists(minimalOutputPath_));
 }
 
-TEST_P(DatabaseInterfaceTest, writeMinimalListShouldReturnAFileWriteErrorIfTheFileAlreadyExistsAndTheOverwriteArgumentIsFalse) {
+TEST_P(DatabaseInterfaceTest, writeMinimalListShouldThrowIfTheFileAlreadyExistsAndTheOverwriteArgumentIsFalse) {
   ASSERT_NO_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), false));
   ASSERT_TRUE(boost::filesystem::exists(minimalOutputPath_));
 
-  EXPECT_ANY_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), false));
+  EXPECT_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), false), FileAccessError);
 }
 
 TEST_P(DatabaseInterfaceTest, writeMinimalListShouldReturnOkAndWriteToFileIfTheArgumentsAreValidAndTheOverwriteArgumentIsTrue) {
@@ -437,7 +437,7 @@ TEST_P(DatabaseInterfaceTest, writeMinimalListShouldReturnOkIfTheFileAlreadyExis
   EXPECT_NO_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), true));
 }
 
-TEST_P(DatabaseInterfaceTest, writeMinimalListShouldReturnAFileWriteErrorIfPathGivenExistsAndIsReadOnly) {
+TEST_P(DatabaseInterfaceTest, writeMinimalListShouldThrowIfPathGivenExistsAndIsReadOnly) {
   ASSERT_NO_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), false));
   ASSERT_TRUE(boost::filesystem::exists(minimalOutputPath_));
 
@@ -445,7 +445,7 @@ TEST_P(DatabaseInterfaceTest, writeMinimalListShouldReturnAFileWriteErrorIfPathG
                                  boost::filesystem::perms::remove_perms
                                  | boost::filesystem::perms::owner_write);
 
-  EXPECT_ANY_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), true));
+  EXPECT_THROW(db_->WriteMinimalList(minimalOutputPath_.string(), true), FileAccessError);
 }
 
 TEST_P(DatabaseInterfaceTest, writeMinimalListShouldWriteOnlyBashTagsAndDirtyInfo) {

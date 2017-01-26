@@ -53,7 +53,7 @@ TEST(set, decodingFromAYamlListShouldStoreValuesCorrectly) {
 
 TEST(set, decodingFromAYamlListThatContainsDuplicateElementsShouldThrow) {
   YAML::Node node = YAML::Load("[a, b, c, c]");
-  EXPECT_ANY_THROW(node.as<std::set<std::string>>());
+  EXPECT_THROW(node.as<std::set<std::string>>(), YAML::RepresentationException);
 }
 
 TEST(set, emittingAsYamlShouldOutputAYamlListContainingAllValues) {
@@ -117,7 +117,7 @@ TEST_F(unordered_set, decodingFromAYamlListShouldStoreValuesCorrectly) {
 TEST_F(unordered_set, decodingFromAYamlListThatContainsDuplicateElementsShouldThrow) {
   YAML::Node node = YAML::Load("[a, b, c, c]");
 
-  EXPECT_ANY_THROW(node.as<std::unordered_set<std::string>>());
+  EXPECT_THROW(node.as<std::unordered_set<std::string>>(), YAML::RepresentationException);
 }
 
 TEST_F(unordered_set, emittingAsYamlShouldOutputAYamlListContainingAllValues) {

@@ -232,7 +232,7 @@ TEST_P(GameTest, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNo
   Game game(GetParam());
   game.SetGamePath(dataPath.parent_path());
 
-  EXPECT_ANY_THROW(game.IsPluginActive(blankEsm));
+  EXPECT_THROW(game.IsPluginActive(blankEsm), std::system_error);
 }
 
 TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {

@@ -125,7 +125,7 @@ TEST_P(GameCacheTest, addingAPluginThatIsAlreadyCachedShouldOverwriteExistingEnt
 }
 
 TEST_P(GameCacheTest, gettingAPluginThatIsNotCachedShouldThrow) {
-  EXPECT_ANY_THROW(cache_.GetPlugin(blankEsm));
+  EXPECT_THROW(cache_.GetPlugin(blankEsm), std::invalid_argument);
 }
 
 TEST_P(GameCacheTest, gettingAPluginShouldBeCaseInsensitive) {

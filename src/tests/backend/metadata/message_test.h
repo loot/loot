@@ -77,7 +77,7 @@ TEST_P(MessageTest, vectorContentConstructorShouldThrowIfMultipleContentStringsA
       MessageContent("content1", LanguageCode::german),
       MessageContent("content2", LanguageCode::french),
   });
-  EXPECT_ANY_THROW(Message(MessageType::error, contents, "condition1"));
+  EXPECT_THROW(Message(MessageType::error, contents, "condition1"), std::invalid_argument);
 }
 
 TEST_P(MessageTest, messagesWithDifferentContentStringsShouldBeUnequal) {

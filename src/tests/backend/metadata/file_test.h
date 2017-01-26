@@ -178,7 +178,7 @@ TEST(File, decodingFromYamlShouldThrowIfAnInvalidMapIsGiven) {
 TEST(File, decodingFromYamlShouldThrowIfAListIsGiven) {
   YAML::Node node = YAML::Load("[0, 1, 2]");
 
-  EXPECT_ANY_THROW(node.as<File>());
+  EXPECT_THROW(node.as<File>(), YAML::RepresentationException);
 }
 }
 }

@@ -108,40 +108,40 @@ TEST_P(MasterlistTest, updateWithGameParameterShouldReturnFalseIfAnUpToDateMaste
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAnInvalidPathIsGiven) {
   Masterlist masterlist;
 
-  EXPECT_ANY_THROW(masterlist.Update(";//\?", repoUrl, repoBranch));
+  EXPECT_THROW(masterlist.Update(";//\?", repoUrl, repoBranch), boost::filesystem::filesystem_error);
 }
 
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankPathIsGiven) {
   Masterlist masterlist;
 
-  EXPECT_ANY_THROW(masterlist.Update("", repoUrl, repoBranch));
+  EXPECT_THROW(masterlist.Update("", repoUrl, repoBranch), boost::filesystem::filesystem_error);
 }
 
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABranchThatDoesNotExistIsGiven) {
   Masterlist masterlist;
 
-  EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
-                                     repoUrl,
-                                     "missing-branch"));
+  EXPECT_THROW(masterlist.Update(masterlistPath,
+                                 repoUrl,
+                                 "missing-branch"), std::system_error);
 }
 
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankBranchIsGiven) {
   Masterlist masterlist;
 
-  EXPECT_ANY_THROW(masterlist.Update(masterlistPath, repoUrl, ""));
+  EXPECT_THROW(masterlist.Update(masterlistPath, repoUrl, ""), std::invalid_argument);
 }
 
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAUrlThatDoesNotExistIsGiven) {
   Masterlist masterlist;
 
-  EXPECT_ANY_THROW(masterlist.Update(masterlistPath,
-                                     "https://github.com/loot/does-not-exist.git",
-                                     repoBranch));
+  EXPECT_THROW(masterlist.Update(masterlistPath,
+                                 "https://github.com/loot/does-not-exist.git",
+                                 repoBranch), std::system_error);
 }
 
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfABlankUrlIsGiven) {
   Masterlist masterlist;
-  EXPECT_ANY_THROW(masterlist.Update(masterlistPath, "", repoBranch));
+  EXPECT_THROW(masterlist.Update(masterlistPath, "", repoBranch), std::invalid_argument);
 }
 
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldReturnTrueIfNoMasterlistExists) {
@@ -165,14 +165,14 @@ TEST_P(MasterlistTest, updateWithSeparateParametersShouldReturnFalseIfAnUpToDate
 
 TEST_P(MasterlistTest, getInfoShouldThrowIfNoMasterlistExistsAtTheGivenPath) {
   Masterlist masterlist;
-  EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
+  EXPECT_THROW(masterlist.GetInfo(masterlistPath, false), FileAccessError);
 }
 
 TEST_P(MasterlistTest, getInfoShouldThrowIfTheGivenPathDoesNotBelongToAGitRepository) {
   ASSERT_NO_THROW(boost::filesystem::copy("./testing-metadata/masterlist.yaml", masterlistPath));
 
   Masterlist masterlist;
-  EXPECT_ANY_THROW(masterlist.GetInfo(masterlistPath, false));
+  EXPECT_THROW(masterlist.GetInfo(masterlistPath, false), GitStateError);
 }
 
 TEST_P(MasterlistTest, getInfoShouldReturnRevisionAndDateStringsOfTheCorrectLengthsWhenRequestingALongId) {

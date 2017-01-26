@@ -126,7 +126,7 @@ TEST(Location, decodingFromYamlScalarShouldSetUrlToScalarValueAndLeaveNameEmpty)
 TEST(Location, decodingFromYamlShouldThrowIfAListIsGiven) {
   YAML::Node node = YAML::Load("[0, 1, 2]");
 
-  EXPECT_ANY_THROW(node.as<Location>());
+  EXPECT_THROW(node.as<Location>(), YAML::RepresentationException);
 }
 }
 }

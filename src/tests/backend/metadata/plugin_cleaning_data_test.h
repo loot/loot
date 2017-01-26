@@ -272,13 +272,13 @@ TEST_P(PluginCleaningDataTest, decodingFromYamlShouldStoreAllNonZeroCounts) {
 TEST_P(PluginCleaningDataTest, decodingFromYamlScalarShouldThrow) {
   YAML::Node node = YAML::Load("scalar");
 
-  EXPECT_ANY_THROW(node.as<PluginCleaningData>());
+  EXPECT_THROW(node.as<PluginCleaningData>(), YAML::RepresentationException);
 }
 
 TEST_P(PluginCleaningDataTest, decodingFromYamlListShouldThrow) {
   YAML::Node node = YAML::Load("[0, 1, 2]");
 
-  EXPECT_ANY_THROW(node.as<PluginCleaningData>());
+  EXPECT_THROW(node.as<PluginCleaningData>(), YAML::RepresentationException);
 }
 }
 }

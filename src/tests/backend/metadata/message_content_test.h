@@ -102,13 +102,13 @@ TEST(MessageContent, decodingFromYamlShouldSetDataCorrectly) {
 TEST(MessageContent, decodingFromYamlScalarShouldThrow) {
   YAML::Node node = YAML::Load("scalar");
 
-  EXPECT_ANY_THROW(node.as<MessageContent>());
+  EXPECT_THROW(node.as<MessageContent>(), YAML::RepresentationException);
 }
 
 TEST(MessageContent, decodingFromYamlListShouldThrow) {
   YAML::Node node = YAML::Load("[0, 1, 2]");
 
-  EXPECT_ANY_THROW(node.as<MessageContent>());
+  EXPECT_THROW(node.as<MessageContent>(), YAML::RepresentationException);
 }
 }
 }
