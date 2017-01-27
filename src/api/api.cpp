@@ -28,7 +28,6 @@
 #include <boost/log/core.hpp>
 
 #include "api/api_database.h"
-#include "backend/app/loot_paths.h"
 
 namespace fs = boost::filesystem;
 
@@ -50,7 +49,9 @@ LOOT_API bool IsCompatible(const unsigned int versionMajor, const unsigned int v
 LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
                                                            const std::string& gamePath,
                                                            const std::string& gameLocalPath) {
-  loot::LootPaths::initialise("");
+  // Set the locale to get UTF-8 conversions working correctly.
+  std::locale::global(boost::locale::generator().generate(""));
+  boost::filesystem::path::imbue(std::locale());
 
   //Disable logging or else stdout will get overrun.
   boost::log::core::get()->set_logging_enabled(false);

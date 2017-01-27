@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_LOOT_PATHS_TEST
 #define LOOT_TESTS_BACKEND_LOOT_PATHS_TEST
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 
 #include <gtest/gtest.h>
 

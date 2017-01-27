@@ -95,15 +95,6 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
 TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
   Game game = Game(GameSettings(GetParam()), "");
   EXPECT_THROW(game.Init(), GameDetectionError);
-
-  game = Game(GameSettings(GetParam()), lootDataPath);
-  EXPECT_THROW(game.Init(), GameDetectionError);
-
-  game = Game(GameSettings(GetParam()), "", localPath);
-  EXPECT_THROW(game.Init(), GameDetectionError);
-
-  game = Game(GameSettings(GetParam()), lootDataPath, localPath);
-  EXPECT_THROW(game.Init(), GameDetectionError);
 }
 
 TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
@@ -113,14 +104,14 @@ TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "");
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   EXPECT_NO_THROW(game.Init());
 }
 #endif
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "");
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());

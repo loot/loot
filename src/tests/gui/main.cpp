@@ -24,6 +24,7 @@
 
 #include <boost/log/core.hpp>
 
+#include "tests/gui/state/loot_paths_test.h"
 #include "tests/gui/state/loot_settings_test.h"
 #include "tests/gui/state/loot_state_test.h"
 

@@ -28,7 +28,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 #include "loot/loot_version.h"
 
 using std::lock_guard;

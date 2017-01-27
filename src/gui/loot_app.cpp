@@ -28,7 +28,7 @@
 #include <include/cef_browser.h>
 #include <include/cef_task.h>
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/language.h"
 #include "gui/loot_handler.h"

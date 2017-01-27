@@ -162,8 +162,7 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 # General Settings
 ##############################
 
-set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
-                "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
+set (LOOT_SRC   "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/error_categories.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
@@ -188,8 +187,7 @@ set (LOOT_SRC   "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
                 "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp")
 
-set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/app/loot_paths.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.h"
+set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.h"
                 "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.h"
@@ -232,6 +230,7 @@ set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_scheme_handler_factory.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/resource.rc")
@@ -272,6 +271,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/sort_plugins_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/update_masterlist_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query_handler.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
@@ -302,8 +302,7 @@ set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
 
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
-set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/backend/app/loot_paths_test.h"
-                        "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
+set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_cache_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_settings_test.h"
                         "${CMAKE_SOURCE_DIR}/src/tests/backend/game/load_order_handler_test.h"
@@ -337,12 +336,15 @@ set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operatio
                             "${CMAKE_SOURCE_DIR}/src/tests/api/is_compatible_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/common_game_test_fixture.h")
 
-set(LOOT_GUI_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
+set(LOOT_GUI_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
+                       "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
                        "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp")
 
-set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
+set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
+                            "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                             "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_state_test.h")
 

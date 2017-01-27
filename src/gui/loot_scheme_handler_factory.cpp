@@ -24,7 +24,7 @@ along with LOOT.  If not, see
 
 #include "loot_scheme_handler_factory.h"
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 
 #include <include/cef_parser.h>
 #include <include/wrapper/cef_stream_resource_handler.h>

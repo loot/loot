@@ -70,7 +70,7 @@
 #include "gui/resource.h"
 #include "gui/yaml_simple_message_helpers.h"
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 #include "backend/plugin/plugin_sorter.h"
 #include "backend/helpers/helpers.h"
 #include "gui/query/json.h"

@@ -35,9 +35,9 @@
 #include <boost/log/utility/setup/file.hpp>
 
 #include "loot/exception/game_detection_error.h"
-#include "backend/app/loot_paths.h"
 #include "backend/helpers/helpers.h"
 #include "backend/helpers/language.h"
+#include "gui/state/loot_paths.h"
 #include "loot/loot_version.h"
 
 #ifdef _WIN32
@@ -290,7 +290,7 @@ std::list<Game> LootState::toGames(const std::vector<GameSettings>& settings) {
   for (const auto& element : settings) {
     games.push_back(Game(element, LootPaths::getLootDataPath()));
   }
-  
+
   return games;
 }
 

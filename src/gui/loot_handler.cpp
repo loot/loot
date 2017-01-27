@@ -36,7 +36,7 @@
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 #include "gui/helpers.h"
 #include "gui/loot_scheme_handler_factory.h"
 #include "gui/query_handler.h"

@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_OPEN_README_QUERY
 #define LOOT_GUI_QUERY_OPEN_README_QUERY
 
-#include "backend/app/loot_paths.h"
+#include "gui/state/loot_paths.h"
 #include "gui/helpers.h"
 #include "gui/query/query.h"
 
