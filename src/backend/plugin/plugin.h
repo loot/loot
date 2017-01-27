@@ -34,6 +34,7 @@
 #include <libespm/Plugin.h>
 
 #include "backend/metadata/plugin_metadata.h"
+#include "loot/enum/game_type.h"
 
 namespace loot {
 class Game;
@@ -66,6 +67,7 @@ public:
 
   bool operator < (const Plugin& rhs) const;
 private:
+  static libespm::GameId GetLibespmGameId(GameType gameType);
   bool isEmpty_;  // Does the plugin contain any records other than the TES4 header?
   bool isActive_;
   bool loadsArchive_;

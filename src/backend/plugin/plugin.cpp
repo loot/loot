@@ -42,7 +42,7 @@ using std::string;
 namespace loot {
 Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly) :
   PluginMetadata(name),
-  libespm::Plugin(game.LibespmId()),
+  libespm::Plugin(Plugin::GetLibespmGameId(game.Type())),
   isEmpty_(true),
   isActive_(false),
   loadsArchive_(false),
@@ -180,7 +180,7 @@ bool Plugin::IsValid(const std::string& filename, const Game& game) {
   if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
     filepath += ".ghost";
 
-  if (libespm::Plugin::isValid(filepath, game.LibespmId(), true))
+  if (libespm::Plugin::isValid(filepath, GetLibespmGameId(game.Type()), true))
     return true;
 
   BOOST_LOG_TRIVIAL(warning) << "The .es(p|m) file \"" << filename << "\" is not a valid plugin.";
@@ -248,5 +248,18 @@ void Plugin::CheckInstallValidity(const Game& game) {
 
 bool Plugin::LoadsArchive() const {
   return loadsArchive_;
+}
+
+libespm::GameId Plugin::GetLibespmGameId(GameType gameType) {
+  if (gameType == GameType::tes4)
+    return libespm::GameId::OBLIVION;
+  else if (gameType == GameType::tes5 || gameType == GameType::tes5se)
+    return libespm::GameId::SKYRIM;
+  else if (gameType == GameType::fo3)
+    return libespm::GameId::FALLOUT3;
+  else if (gameType == GameType::fonv)
+    return libespm::GameId::FALLOUTNV;
+  else
+    return libespm::GameId::FALLOUT4;
 }
 }

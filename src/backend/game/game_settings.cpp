@@ -96,19 +96,6 @@ GameType GameSettings::Type() const {
   return type_;
 }
 
-libespm::GameId GameSettings::LibespmId() const {
-  if (type_ == GameType::tes4)
-    return libespm::GameId::OBLIVION;
-  else if (type_ == GameType::tes5 || type_ == GameType::tes5se)
-    return libespm::GameId::SKYRIM;
-  else if (type_ == GameType::fo3)
-    return libespm::GameId::FALLOUT3;
-  else if (type_ == GameType::fonv)
-    return libespm::GameId::FALLOUTNV;
-  else
-    return libespm::GameId::FALLOUT4;
-}
-
 std::string GameSettings::Name() const {
   return name_;
 }

@@ -29,7 +29,6 @@
 #include <list>
 
 #include <boost/filesystem.hpp>
-#include <libespm/GameId.h>
 #include <yaml-cpp/yaml.h>
 
 #include "loot/enum/game_type.h"
@@ -45,7 +44,6 @@ public:
   bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
 
   GameType Type() const;
-  libespm::GameId LibespmId() const;
   std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;
   std::string Master() const;
