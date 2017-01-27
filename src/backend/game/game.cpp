@@ -117,7 +117,7 @@ void Game::Init() {
     }
   }
 
-  LoadOrderHandler::Init(*this, localDataPath_);
+  loadOrderHandler_.Init(*this, localDataPath_);
 }
 
 void Game::RedatePlugins() {
@@ -245,7 +245,7 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
   try {
     return GetPlugin(pluginName).IsActive();
   } catch (...) {
-    return LoadOrderHandler::IsPluginActive(pluginName);
+    return loadOrderHandler_.IsPluginActive(pluginName);
   }
 }
 
@@ -275,14 +275,14 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::v
 
 std::vector<std::string> Game::GetLoadOrder() const {
   if (loadOrder_.empty())
-    loadOrder_ = LoadOrderHandler::GetLoadOrder();
+    loadOrder_ = loadOrderHandler_.GetLoadOrder();
 
   return loadOrder_;
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
-  BackupLoadOrder(loadOrder_, lootDataPath_ / FolderName());
-  LoadOrderHandler::SetLoadOrder(loadOrder);
+  loadOrderHandler_.BackupLoadOrder(loadOrder_, lootDataPath_ / FolderName());
+  loadOrderHandler_.SetLoadOrder(loadOrder);
   loadOrder_ = loadOrder;
 }
 

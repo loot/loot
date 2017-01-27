@@ -34,7 +34,7 @@
 #include "backend/game/load_order_handler.h"
 
 namespace loot {
-class Game : public GameSettings, public LoadOrderHandler, public GameCache {
+class Game : public GameSettings, public GameCache {
 public:
   Game(const GameSettings& gameSettings, 
        const boost::filesystem::path& lootDataPath,
@@ -69,6 +69,7 @@ private:
   const boost::filesystem::path localDataPath_;
 
   bool pluginsFullyLoaded_;
+  LoadOrderHandler loadOrderHandler_;
   mutable std::vector<std::string> loadOrder_;
 };
 }

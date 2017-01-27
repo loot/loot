@@ -92,7 +92,7 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
       }
     }
     // Get whether the plugin is active or not.
-    isActive_ = game.LoadOrderHandler::IsPluginActive(Name());
+    isActive_ = game.IsPluginActive(Name());
 
     // Get whether the plugin loads an archive (BSA/BA2) or not.
     const string archiveExtension = game.GetArchiveFileExtension();
