@@ -40,7 +40,6 @@ public:
   GameSettings();
   GameSettings(const GameType gameType, const std::string& lootFolder = "");
 
-  bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
   bool IsRepoBranchOldDefault() const;
 
   bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
@@ -56,8 +55,6 @@ public:
 
   boost::filesystem::path GamePath() const;
   boost::filesystem::path DataPath() const;
-  boost::filesystem::path MasterlistPath() const;
-  boost::filesystem::path UserlistPath() const;
 
   std::string GetArchiveFileExtension() const;
 
@@ -69,10 +66,6 @@ public:
   GameSettings& SetGamePath(const boost::filesystem::path& path);
 
 private:
-#ifdef _WIN32
-  std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
-#endif
-
   static const std::set<std::string> oldDefaultBranches;
 
   GameType type_;

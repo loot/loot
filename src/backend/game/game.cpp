@@ -24,6 +24,7 @@
 
 #include "backend/game/game.h"
 
+#include <algorithm>
 #include <thread>
 #include <cmath>
 
@@ -35,6 +36,19 @@
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"
+
+#ifdef _WIN32
+#   ifndef UNICODE
+#       define UNICODE
+#   endif
+#   ifndef _UNICODE
+#      define _UNICODE
+#   endif
+#   define NOMINMAX
+#   include "windows.h"
+#   include "shlobj.h"
+#   include "shlwapi.h"
+#endif
 
 using std::list;
 using std::string;
@@ -54,6 +68,34 @@ Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings), plugi
 }
 
 Game::Game(const GameType gameType, const std::string& folder) : GameSettings(gameType, folder), pluginsFullyLoaded_(false) {}
+
+bool Game::IsInstalled() {
+  try {
+    BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << Name() << "\" is installed.";
+    if (!GamePath().empty() && fs::exists(GamePath() / "Data" / Master()))
+      return true;
+
+    if (fs::exists(fs::path("..") / "Data" / Master())) {
+      SetGamePath("..");
+      return true;
+    }
+
+#ifdef _WIN32
+    std::string path;
+    std::string key_parent = fs::path(RegistryKey()).parent_path().string();
+    std::string key_name = fs::path(RegistryKey()).filename().string();
+    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+    if (!path.empty() && fs::exists(fs::path(path) / "Data" / Master())) {
+      SetGamePath(path);
+      return true;
+    }
+#endif
+  } catch (std::exception &e) {
+    BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << Name() << "\" is installed: " << e.what();
+  }
+
+  return false;
+}
 
 void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
@@ -129,8 +171,8 @@ void Game::LoadPlugins(const std::vector<std::string>& plugins, bool headersOnly
 
                                    // Get the number of threads to use.
                                    // hardware_concurrency() may be zero, if so then use only one thread.
-  size_t threadsToUse = std::min((size_t)thread::hardware_concurrency(), sizeMap.size());
-  threadsToUse = std::max(threadsToUse, (size_t)1);
+  size_t threadsToUse = ::std::min((size_t)thread::hardware_concurrency(), sizeMap.size());
+  threadsToUse = ::std::max(threadsToUse, (size_t)1);
 
   // Divide the plugins up by thread.
   unsigned int pluginsPerThread = ceil((double)sizeMap.size() / threadsToUse);
@@ -240,4 +282,56 @@ void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
   LoadOrderHandler::SetLoadOrder(loadOrder);
   loadOrder_ = loadOrder;
 }
+
+fs::path Game::MasterlistPath() const {
+  if (FolderName().empty())
+    return "";
+  else
+    return LootPaths::getLootDataPath() / FolderName() / "masterlist.yaml";
+}
+
+fs::path Game::UserlistPath() const {
+  if (FolderName().empty())
+    return "";
+  else
+    return LootPaths::getLootDataPath() / FolderName() / "userlist.yaml";
+}
+
+#ifdef _WIN32
+std::string Game::RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
+  HKEY hKey = NULL;
+  DWORD len = MAX_PATH;
+  std::wstring wstr(MAX_PATH, 0);
+
+  if (keyStr == "HKEY_CLASSES_ROOT")
+    hKey = HKEY_CLASSES_ROOT;
+  else if (keyStr == "HKEY_CURRENT_CONFIG")
+    hKey = HKEY_CURRENT_CONFIG;
+  else if (keyStr == "HKEY_CURRENT_USER")
+    hKey = HKEY_CURRENT_USER;
+  else if (keyStr == "HKEY_LOCAL_MACHINE")
+    hKey = HKEY_LOCAL_MACHINE;
+  else if (keyStr == "HKEY_USERS")
+    hKey = HKEY_USERS;
+  else
+    throw std::invalid_argument("Invalid registry key given.");
+
+  BOOST_LOG_TRIVIAL(trace) << "Getting string for registry key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
+  LONG ret = RegGetValue(hKey,
+                         ToWinWide(subkey).c_str(),
+                         ToWinWide(value).c_str(),
+                         RRF_RT_REG_SZ | KEY_WOW64_32KEY,
+                         NULL,
+                         &wstr[0],
+                         &len);
+
+  if (ret == ERROR_SUCCESS) {
+    BOOST_LOG_TRIVIAL(info) << "Found string: " << wstr.c_str();
+    return FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
+  } else {
+    BOOST_LOG_TRIVIAL(info) << "Failed to get string value.";
+    return "";
+  }
+}
+#endif
 }

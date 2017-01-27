@@ -31,18 +31,6 @@
 #include "backend/app/loot_paths.h"
 #include "backend/helpers/helpers.h"
 
-#ifdef _WIN32
-#   ifndef UNICODE
-#       define UNICODE
-#   endif
-#   ifndef _UNICODE
-#      define _UNICODE
-#   endif
-#   include "windows.h"
-#   include "shlobj.h"
-#   include "shlwapi.h"
-#endif
-
 namespace fs = boost::filesystem;
 
 namespace loot {
@@ -95,34 +83,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
 
   if (!folder.empty())
     lootFolderName_ = folder;
-}
-
-bool GameSettings::IsInstalled() {
-  try {
-    BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << name_ << "\" is installed.";
-    if (!gamePath_.empty() && fs::exists(gamePath_ / "Data" / masterFile_))
-      return true;
-
-    if (fs::exists(fs::path("..") / "Data" / masterFile_)) {
-      gamePath_ = "..";
-      return true;
-    }
-
-#ifdef _WIN32
-    std::string path;
-    std::string key_parent = fs::path(registryKey_).parent_path().string();
-    std::string key_name = fs::path(registryKey_).filename().string();
-    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-    if (!path.empty() && fs::exists(fs::path(path) / "Data" / masterFile_)) {
-      gamePath_ = path;
-      return true;
-    }
-#endif
-  } catch (std::exception &e) {
-    BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << name_ << "\" is installed: " << e.what();
-  }
-
-  return false;
 }
 
 bool GameSettings::IsRepoBranchOldDefault() const {
@@ -185,20 +145,6 @@ fs::path GameSettings::DataPath() const {
     return gamePath_ / "Data";
 }
 
-fs::path GameSettings::MasterlistPath() const {
-  if (lootFolderName_.empty())
-    return "";
-  else
-    return LootPaths::getLootDataPath() / lootFolderName_ / "masterlist.yaml";
-}
-
-fs::path GameSettings::UserlistPath() const {
-  if (lootFolderName_.empty())
-    return "";
-  else
-    return LootPaths::getLootDataPath() / lootFolderName_ / "userlist.yaml";
-}
-
 std::string GameSettings::GetArchiveFileExtension() const {
   if (type_ == GameType::fo4)
     return ".ba2";
@@ -241,44 +187,6 @@ GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
   gamePath_ = path;
   return *this;
 }
-
-#ifdef _WIN32
-std::string GameSettings::RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value) {
-  HKEY hKey = NULL;
-  DWORD len = MAX_PATH;
-  std::wstring wstr(MAX_PATH, 0);
-
-  if (keyStr == "HKEY_CLASSES_ROOT")
-    hKey = HKEY_CLASSES_ROOT;
-  else if (keyStr == "HKEY_CURRENT_CONFIG")
-    hKey = HKEY_CURRENT_CONFIG;
-  else if (keyStr == "HKEY_CURRENT_USER")
-    hKey = HKEY_CURRENT_USER;
-  else if (keyStr == "HKEY_LOCAL_MACHINE")
-    hKey = HKEY_LOCAL_MACHINE;
-  else if (keyStr == "HKEY_USERS")
-    hKey = HKEY_USERS;
-  else
-    throw std::invalid_argument("Invalid registry key given.");
-
-  BOOST_LOG_TRIVIAL(trace) << "Getting string for registry key, subkey and value: " << keyStr << " + " << subkey << " + " << value;
-  LONG ret = RegGetValue(hKey,
-                         ToWinWide(subkey).c_str(),
-                         ToWinWide(value).c_str(),
-                         RRF_RT_REG_SZ | KEY_WOW64_32KEY,
-                         NULL,
-                         &wstr[0],
-                         &len);
-
-  if (ret == ERROR_SUCCESS) {
-    BOOST_LOG_TRIVIAL(info) << "Found string: " << wstr.c_str();
-    return FromWinWide(wstr.c_str());  // Passing c_str() cuts off any unused buffer.
-  } else {
-    BOOST_LOG_TRIVIAL(info) << "Failed to get string value.";
-    return "";
-  }
-}
-#endif
 }
 
 namespace YAML {

@@ -75,6 +75,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
 
   EXPECT_EQ(settings.GamePath(), game.GamePath());
+  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", game.MasterlistPath());
+  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "userlist.yaml", game.UserlistPath());
 }
 
 TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstructor) {
@@ -83,6 +85,19 @@ TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstruc
 
   EXPECT_EQ(settings.Type(), game.Type());
   EXPECT_EQ(settings.FolderName(), game.FolderName());
+  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", game.MasterlistPath());
+  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "userlist.yaml", game.UserlistPath());
+}
+
+TEST_P(GameTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
+  Game game = Game(GetParam());
+  EXPECT_FALSE(game.IsInstalled());
+}
+
+TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
+  Game game = Game(GetParam());
+  game.SetGamePath(dataPath.parent_path());
+  EXPECT_TRUE(game.IsInstalled());
 }
 
 #ifndef _WIN32

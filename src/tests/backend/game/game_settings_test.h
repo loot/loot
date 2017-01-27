@@ -57,8 +57,6 @@ TEST_P(GameSettingsTest, defaultConstructorShouldInitialiseIdToTes4AndAllOtherSe
 
   EXPECT_EQ("", settings_.GamePath());
   EXPECT_EQ("", settings_.DataPath());
-  EXPECT_EQ("", settings_.MasterlistPath());
-  EXPECT_EQ("", settings_.UserlistPath());
 }
 
 TEST_P(GameSettingsTest, idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
@@ -75,27 +73,12 @@ TEST_P(GameSettingsTest, idConstructorShouldInitialiseSettingsToDefaultsForThatG
 
   EXPECT_EQ("", settings_.GamePath());
   EXPECT_EQ("", settings_.DataPath());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "Skyrim" / "masterlist.yaml", settings_.MasterlistPath());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "Skyrim" / "userlist.yaml", settings_.UserlistPath());
 }
 
 TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
   settings_ = GameSettings(GameType::tes5, "folder");
 
   EXPECT_EQ("folder", settings_.FolderName());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", settings_.MasterlistPath());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "userlist.yaml", settings_.UserlistPath());
-}
-
-TEST_P(GameSettingsTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
-  GameSettings settings_;
-  EXPECT_FALSE(settings_.IsInstalled());
-}
-
-TEST_P(GameSettingsTest, isInstalledShouldBeTrueIfGamePathIsValid) {
-  settings_ = GameSettings(GameType::tes5);
-  settings_.SetGamePath(dataPath.parent_path());
-  EXPECT_TRUE(settings_.IsInstalled());
 }
 
 TEST_P(GameSettingsTest, isRepoBranchOldDefaultShouldBeTrueIfValueIsMaster) {

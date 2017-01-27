@@ -39,6 +39,7 @@ public:
   Game(const GameSettings& gameSettings);
   Game(const GameType gameType, const std::string& lootFolder = "");
 
+  bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
   void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
 
   void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
@@ -55,7 +56,14 @@ public:
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
+
+  boost::filesystem::path MasterlistPath() const;
+  boost::filesystem::path UserlistPath() const;
 private:
+#ifdef _WIN32
+  std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+#endif
+
   bool pluginsFullyLoaded_;
   mutable std::vector<std::string> loadOrder_;
 };
