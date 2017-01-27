@@ -36,11 +36,12 @@
 namespace loot {
 class Game : public GameSettings, public LoadOrderHandler, public GameCache {
 public:
-  Game(const GameSettings& gameSettings);
-  Game(const GameType gameType, const std::string& lootFolder = "");
+  Game(const GameSettings& gameSettings, 
+       const boost::filesystem::path& lootDataPath,
+       const boost::filesystem::path& localDataPath = "");
 
   bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
-  void Init(bool createFolder, const boost::filesystem::path& gameLocalAppData = "");
+  void Init();
 
   void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
@@ -63,6 +64,9 @@ private:
 #ifdef _WIN32
   std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 #endif
+
+  const boost::filesystem::path lootDataPath_;
+  const boost::filesystem::path localDataPath_;
 
   bool pluginsFullyLoaded_;
   mutable std::vector<std::string> loadOrder_;

@@ -33,9 +33,9 @@
 
 namespace loot {
 ApiDatabase::ApiDatabase(const GameType game, const std::string& gamePath, const std::string& gameLocalDataPath)
-  : game_(Game(GameType(game))) {
+  : game_(Game(GameSettings(GameType(game)), "", gameLocalDataPath)) {
   game_.SetGamePath(gamePath);
-  game_.Init(false, gameLocalDataPath);
+  game_.Init();
 }
 
 ///////////////////////////////////

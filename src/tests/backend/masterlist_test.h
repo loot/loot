@@ -27,7 +27,6 @@ along with LOOT.  If not, see
 
 #include "backend/masterlist.h"
 
-#include "backend/app/loot_paths.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -44,18 +43,12 @@ protected:
 
     ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
     ASSERT_FALSE(boost::filesystem::exists(localPath / ".git"));
-
-    ASSERT_NO_THROW(boost::filesystem::create_directories(LootPaths::getLootDataPath() / Game(GetParam()).FolderName()));
   }
 
   void TearDown() {
     CommonGameTestFixture::TearDown();
 
     ASSERT_NO_THROW(boost::filesystem::remove(masterlistPath));
-    ASSERT_NO_THROW(boost::filesystem::remove_all(localPath / ".git"));
-
-    ASSERT_NO_THROW(boost::filesystem::remove(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / "masterlist.yaml"));
-    ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath() / Game(GetParam()).FolderName() / ".git"));
   }
 
   const std::string repoUrl;
@@ -77,11 +70,11 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5se));
 
 TEST_P(MasterlistTest, updateWithGameParameterShouldReturnTrueIfNoMasterlistExists) {
-  Game game(GetParam());
+  Game game(GameSettings(GetParam()), lootDataPath, localPath);
   game.SetGamePath(dataPath.parent_path());
   game.SetRepoURL(repoUrl);
   game.SetRepoBranch(repoBranch);
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  ASSERT_NO_THROW(game.Init());
 
   // This may fail on Windows if a 'real' LOOT install is also present.
   Masterlist masterlist;
@@ -90,11 +83,11 @@ TEST_P(MasterlistTest, updateWithGameParameterShouldReturnTrueIfNoMasterlistExis
 }
 
 TEST_P(MasterlistTest, updateWithGameParameterShouldReturnFalseIfAnUpToDateMasterlistExists) {
-  Game game(GetParam());
+  Game game(GameSettings(GetParam()), lootDataPath, localPath);
   game.SetGamePath(dataPath.parent_path());
   game.SetRepoURL(repoUrl);
   game.SetRepoBranch(repoBranch);
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  ASSERT_NO_THROW(game.Init());
 
   // This may fail on Windows if a 'real' LOOT install is also present.
   Masterlist masterlist;

@@ -37,11 +37,7 @@ protected:
   GameCacheTest() :
     condition("Condition"),
     conditionLowercase("condition"),
-    game_(GetParam()) {}
-
-  void initialiseGame() {
-    game_.SetGamePath(dataPath.parent_path());
-  }
+    game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath) {}
 
   Game game_;
   GameCache cache_;
@@ -60,8 +56,6 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5));
 
 TEST_P(GameCacheTest, copyConstructorShouldCopyCachedData) {
-  initialiseGame();
-
   cache_.CacheCondition(condition, true);
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   Message expectedMessage(MessageType::say, "1");
@@ -76,8 +70,6 @@ TEST_P(GameCacheTest, copyConstructorShouldCopyCachedData) {
 }
 
 TEST_P(GameCacheTest, assignmentOperatorShouldCopyCachedData) {
-  initialiseGame();
-
   cache_.CacheCondition(condition, true);
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   Message expectedMessage(MessageType::say, "1");
@@ -108,15 +100,11 @@ TEST_P(GameCacheTest, gettingANonCachedConditionShouldReturnAFalseFalsePair) {
 }
 
 TEST_P(GameCacheTest, addingAPluginThatDoesNotExistShouldSucceed) {
-  initialiseGame();
-
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   EXPECT_EQ(blankEsm, cache_.GetPlugin(blankEsm).Name());
 }
 
 TEST_P(GameCacheTest, addingAPluginThatIsAlreadyCachedShouldOverwriteExistingEntry) {
-  initialiseGame();
-
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   EXPECT_EQ(0, cache_.GetPlugin(blankEsm).Crc());
 
@@ -129,8 +117,6 @@ TEST_P(GameCacheTest, gettingAPluginThatIsNotCachedShouldThrow) {
 }
 
 TEST_P(GameCacheTest, gettingAPluginShouldBeCaseInsensitive) {
-  initialiseGame();
-
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   EXPECT_EQ(blankEsm, cache_.GetPlugin(blankEsm).Name());
 }
@@ -140,8 +126,6 @@ TEST_P(GameCacheTest, gettingPluginsShouldReturnAnEmptySetIfNoPluginsHaveBeenCac
 }
 
 TEST_P(GameCacheTest, gettingPluginsShouldReturnASetOfCachedPluginsIfPluginsHaveBeenCached) {
-  initialiseGame();
-
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   cache_.AddPlugin(Plugin(game_, blankMasterDependentEsm, true));
 
@@ -168,8 +152,6 @@ TEST_P(GameCacheTest, clearingCachedPluginsShouldNotThrowIfNoPluginsAreCached) {
 }
 
 TEST_P(GameCacheTest, clearingCachedPluginsShouldClearAnyCachedPlugins) {
-  initialiseGame();
-
   cache_.AddPlugin(Plugin(game_, blankEsm, true));
   cache_.ClearCachedPlugins();
 

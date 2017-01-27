@@ -69,22 +69,22 @@ void LootState::load(YAML::Node& settings) {
   // Update existing games, add new games.
   std::unordered_set<string> newGameFolders;
   BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
-  for (const auto &game : getGameSettings()) {
-    auto pos = find(games_.begin(), games_.end(), game);
+  for (const auto &gameSettings : getGameSettings()) {
+    auto pos = find(games_.begin(), games_.end(), gameSettings);
 
     if (pos != games_.end()) {
-      pos->SetName(game.Name())
-        .SetMaster(game.Master())
-        .SetRepoURL(game.RepoURL())
-        .SetRepoBranch(game.RepoBranch())
-        .SetGamePath(game.GamePath())
-        .SetRegistryKey(game.RegistryKey());
+      pos->SetName(gameSettings.Name())
+        .SetMaster(gameSettings.Master())
+        .SetRepoURL(gameSettings.RepoURL())
+        .SetRepoBranch(gameSettings.RepoBranch())
+        .SetGamePath(gameSettings.GamePath())
+        .SetRegistryKey(gameSettings.RegistryKey());
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << game.FolderName();
-      games_.push_back(game);
+      BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << gameSettings.FolderName();
+      games_.push_back(Game(gameSettings, LootPaths::getLootDataPath()));
     }
 
-    newGameFolders.insert(game.FolderName());
+    newGameFolders.insert(gameSettings.FolderName());
   }
 
   // Remove deleted games. As the current game is stored using its index,
@@ -104,7 +104,7 @@ void LootState::load(YAML::Node& settings) {
 
   if (currentGame_ != end(games_)) {
     // Re-initialise the current game in case the game path setting was changed.
-    currentGame_->Init(true);
+    currentGame_->Init();
     // Update game path in settings object.
     storeGameSettings(toGameSettings(games_));
   }
@@ -190,7 +190,7 @@ void LootState::init(const std::string& cmdLineGame) {
     selectGame(cmdLineGame);
     BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
     BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
-    currentGame_->Init(true);
+    currentGame_->Init();
     // Update game path in settings object.
     storeGameSettings(toGameSettings(games_));
   } catch (std::exception& e) {
@@ -216,7 +216,7 @@ void LootState::changeGame(const std::string& newGameFolder) {
   currentGame_ = find_if(games_.begin(), games_.end(), [&](const Game& game) {
     return boost::iequals(newGameFolder, game.FolderName());
   });
-  currentGame_->Init(true);
+  currentGame_->Init();
 
   // Update game path in settings object.
   storeGameSettings(toGameSettings(games_));
@@ -286,7 +286,12 @@ void LootState::enableDebugLogging(bool enable) {
 }
 
 std::list<Game> LootState::toGames(const std::vector<GameSettings>& settings) {
-  return std::list<Game>(settings.begin(), settings.end());
+  std::list<Game> games;
+  for (const auto& element : settings) {
+    games.push_back(Game(element, LootPaths::getLootDataPath()));
+  }
+  
+  return games;
 }
 
 std::vector<GameSettings> LootState::toGameSettings(const std::list<Game>& games) {

@@ -27,22 +27,12 @@ along with LOOT.  If not, see
 
 #include "backend/game/game.h"
 
-#include "backend/app/loot_paths.h"
 #include "loot/exception/game_detection_error.h"
 #include "tests/backend/game/load_order_handler_test.h"
 
 namespace loot {
 namespace test {
-class GameTest : public CommonGameTestFixture {
-protected:
-#ifndef _WIN32
-  void TearDown() {
-    CommonGameTestFixture::TearDown();
-
-    ASSERT_NO_THROW(boost::filesystem::remove_all(LootPaths::getLootDataPath()));
-  }
-#endif
-};
+class GameTest : public CommonGameTestFixture {};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
@@ -64,7 +54,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
   settings.SetGamePath(localPath);
-  Game game = Game(settings);
+  Game game = Game(settings, lootDataPath, localPath);
 
   EXPECT_EQ(GetParam(), game.Type());
   EXPECT_EQ(settings.Name(), game.Name());
@@ -75,28 +65,27 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
 
   EXPECT_EQ(settings.GamePath(), game.GamePath());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", game.MasterlistPath());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "userlist.yaml", game.UserlistPath());
+  EXPECT_EQ(lootDataPath / "folder" / "masterlist.yaml", game.MasterlistPath());
+  EXPECT_EQ(lootDataPath / "folder" / "userlist.yaml", game.UserlistPath());
 }
 
 TEST_P(GameTest, constructingFromIdAndFolderShouldPassThemToGameSettingsConstructor) {
   GameSettings settings = GameSettings(GetParam(), "folder");
-  Game game = Game(GetParam(), "folder");
+  Game game = Game(settings, lootDataPath, localPath);
 
   EXPECT_EQ(settings.Type(), game.Type());
   EXPECT_EQ(settings.FolderName(), game.FolderName());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "masterlist.yaml", game.MasterlistPath());
-  EXPECT_EQ(LootPaths::getLootDataPath() / "folder" / "userlist.yaml", game.UserlistPath());
+  EXPECT_EQ(lootDataPath / "folder" / "masterlist.yaml", game.MasterlistPath());
+  EXPECT_EQ(lootDataPath / "folder" / "userlist.yaml", game.UserlistPath());
 }
 
 TEST_P(GameTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
-  Game game = Game(GetParam());
+  Game game = Game(GameSettings(GetParam()), "", localPath);
   EXPECT_FALSE(game.IsInstalled());
 }
 
 TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
-  Game game = Game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
   EXPECT_TRUE(game.IsInstalled());
 }
 
@@ -104,55 +93,58 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
         // Testing on Windows will find real game installs in the Registry, so cannot
         // test autodetection fully unless on Linux.
 TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  Game game = Game(GetParam());
-  EXPECT_THROW(game.Init(false), GameDetectionError);
-  EXPECT_THROW(game.Init(true), GameDetectionError);
-  EXPECT_THROW(game.Init(false, localPath), GameDetectionError);
-  EXPECT_THROW(game.Init(true, localPath), GameDetectionError);
+  Game game = Game(GameSettings(GetParam()), "");
+  EXPECT_THROW(game.Init(), GameDetectionError);
+
+  game = Game(GameSettings(GetParam()), lootDataPath);
+  EXPECT_THROW(game.Init(), GameDetectionError);
+
+  game = Game(GameSettings(GetParam()), "", localPath);
+  EXPECT_THROW(game.Init(), GameDetectionError);
+
+  game = Game(GameSettings(GetParam()), lootDataPath, localPath);
+  EXPECT_THROW(game.Init(), GameDetectionError);
 }
 
 TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
-  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
-  ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-  EXPECT_THROW(game.Init(false), std::system_error);
-}
-
-// Testing on Windows will find real LOOT installs, and they shouldn't be
-// interfered with.
-TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheCreateFolderArgumentIsFalse) {
-  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
-
-  ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-  EXPECT_NO_THROW(game.Init(false, localPath));
-
-  EXPECT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-}
-
-TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
-  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
-
-  ASSERT_FALSE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
-  EXPECT_NO_THROW(game.Init(true, localPath));
-
-  EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath() / game.FolderName()));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath);
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_THROW(game.Init(), std::system_error);
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
-  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "");
 
-  EXPECT_NO_THROW(game.Init(false));
+  EXPECT_NO_THROW(game.Init());
 }
 #endif
 
-TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreGiven) {
-  Game game = Game(GetParam()).SetGamePath(dataPath.parent_path());
+TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "");
 
-  EXPECT_NO_THROW(game.Init(false, localPath));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_NO_THROW(game.Init());
+
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+}
+
+TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_NO_THROW(game.Init());
+
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+}
+
+TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+
+  EXPECT_NO_THROW(game.Init());
 }
 
 TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSkyrimAndNotForOtherGames) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5se)
     EXPECT_THROW(game.RedatePlugins(), std::system_error);
@@ -161,9 +153,8 @@ TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSky
 }
 
 TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  game.Init(false, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
 
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
@@ -189,8 +180,7 @@ TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothin
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
   EXPECT_EQ(11, game.GetPlugins().size());
@@ -205,8 +195,7 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersO
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
   EXPECT_EQ(11, game.GetPlugins().size());
@@ -221,13 +210,13 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllIn
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  EXPECT_FALSE(Game(GameSettings()).ArePluginsFullyLoaded());
-  EXPECT_FALSE(Game(GetParam(), "folder").ArePluginsFullyLoaded());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+
+  EXPECT_FALSE(game.ArePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
@@ -235,8 +224,7 @@ TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
 }
 
 TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
@@ -244,84 +232,80 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 }
 
 TEST_P(GameTest, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNotBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   EXPECT_THROW(game.IsPluginActive(blankEsm), std::system_error);
 }
 
 TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
 
 TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
 
 TEST_P(GameTest, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsm));
 }
 
 TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
 
 TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
+
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
 
 TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
+
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
 
 TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
+
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
 
 TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
+
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
 
 TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
 
   short index = game.GetActiveLoadOrderIndex(blankEsp);
 
@@ -329,9 +313,8 @@ TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsN
 }
 
 TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
-  ASSERT_NO_THROW(game.Init(false, localPath));
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
 
   short index = game.GetActiveLoadOrderIndex(masterFile);
   EXPECT_EQ(0, index);

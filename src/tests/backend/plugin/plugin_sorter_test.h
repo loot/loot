@@ -34,13 +34,12 @@ namespace loot {
 namespace test {
 class PluginSorterTest : public CommonGameTestFixture {
 protected:
-  PluginSorterTest() : game_(GetParam()) {}
+  PluginSorterTest() : game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath) {}
 
   inline virtual void SetUp() {
     CommonGameTestFixture::SetUp();
 
-    game_.SetGamePath(dataPath.parent_path());
-    ASSERT_NO_THROW(game_.Init(false, localPath));
+    ASSERT_NO_THROW(game_.Init());
   }
 
   Game game_;

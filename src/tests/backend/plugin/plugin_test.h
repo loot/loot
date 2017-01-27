@@ -37,15 +37,14 @@ protected:
   PluginTest() :
     emptyFile("EmptyFile.esm"),
     nonPluginFile("NotAPlugin.esm"),
-    blankArchive("Blank" + Game(GetParam()).GetArchiveFileExtension()),
-    blankSuffixArchive("Blank - Different - suffix" + Game(GetParam()).GetArchiveFileExtension()),
-    game_(GetParam()) {}
+    game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath),
+    blankArchive("Blank" + game_.GetArchiveFileExtension()),
+    blankSuffixArchive("Blank - Different - suffix" + game_.GetArchiveFileExtension()) {}
 
   void SetUp() {
     CommonGameTestFixture::SetUp();
 
-    game_.SetGamePath(dataPath.parent_path());
-    game_.Init(false, localPath);
+    game_.Init();
 
     // Write out an empty file.
     boost::filesystem::ofstream out(dataPath / emptyFile);

@@ -37,7 +37,7 @@ protected:
 
   ConditionGrammarTest() :
     resourcePath(dataPath / "resource" / "detail" / "resource.txt"),
-    game_(Game(GetParam()).SetGamePath(dataPath.parent_path())),
+    game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath),
     result_(false),
     success_(false) {}
 
@@ -507,7 +507,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionForAPluginWithNoV
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
 
   Grammar grammar(&game_);
@@ -553,7 +553,7 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionForAPluginWith
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsActiveShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("active(\"" + blankEsm + "\")");
@@ -568,7 +568,7 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsActiveShouldEvalu
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsNotActiveShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("active(\"" + blankEsp + "\")");
@@ -583,7 +583,7 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsNotActiveShouldEv
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingAnActivePluginShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("active(\"Blank\\.esm\")");
@@ -598,7 +598,7 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingAnActivePluginSh
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingNoActivePluginsShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("active(\"Blank\\.esp\")");
@@ -613,7 +613,7 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingNoActivePluginsS
 }
 
 TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingMoreThanOnePluginThatIsActiveShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("many_active(\"Blank( - Different Master Dependent)?\\.es(m|p)\")");
@@ -628,7 +628,7 @@ TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingMoreThanOnePl
 }
 
 TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingOnlyOnePluginThatIsActiveShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("many_active(\"Blank\\.esm\")");
@@ -643,7 +643,7 @@ TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingOnlyOnePlugin
 }
 
 TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingNoPluginsThatAreActiveShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init(false, localPath));
+  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(&game_);
   std::string condition("many_active(\"Blank\\.esp\")");

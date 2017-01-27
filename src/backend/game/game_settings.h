@@ -38,7 +38,7 @@ namespace loot {
 class GameSettings {
 public:
   GameSettings();
-  GameSettings(const GameType gameType, const std::string& lootFolder = "");
+  explicit GameSettings(const GameType gameType, const std::string& lootFolder = "");
 
   bool IsRepoBranchOldDefault() const;
 

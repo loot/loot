@@ -69,31 +69,27 @@ TEST_P(ConditionalMetadataTest, isConditionalShouldBeTrueForANonEmptyConditionSt
 }
 
 TEST_P(ConditionalMetadataTest, evalConditionShouldReturnTrueForAnEmptyCondition) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   EXPECT_TRUE(conditionalMetadata_.EvalCondition(game));
 }
 
 TEST_P(ConditionalMetadataTest, evalConditionShouldThrowForAnInvalidCondition) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   conditionalMetadata_ = ConditionalMetadata("condition");
   EXPECT_THROW(conditionalMetadata_.EvalCondition(game), ConditionSyntaxError);
 }
 
 TEST_P(ConditionalMetadataTest, evalConditionShouldReturnTrueForAConditionThatIsTrue) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   conditionalMetadata_ = ConditionalMetadata("file(\"" + blankEsm + "\")");
   EXPECT_TRUE(conditionalMetadata_.EvalCondition(game));
 }
 
 TEST_P(ConditionalMetadataTest, evalConditionShouldReturnFalseForAConditionThatIsFalse) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   conditionalMetadata_ = ConditionalMetadata("file(\"" + missingEsp + "\")");
   EXPECT_FALSE(conditionalMetadata_.EvalCondition(game));

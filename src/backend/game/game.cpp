@@ -32,7 +32,6 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/app/loot_paths.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"
@@ -58,7 +57,13 @@ using std::vector;
 namespace fs = boost::filesystem;
 
 namespace loot {
-Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings), pluginsFullyLoaded_(false) {
+Game::Game(const GameSettings& gameSettings, 
+           const boost::filesystem::path& lootDataPath, 
+           const boost::filesystem::path& localDataPath) :
+  GameSettings(gameSettings), 
+  lootDataPath_(lootDataPath),
+  localDataPath_(localDataPath),
+  pluginsFullyLoaded_(false) {
   this->SetName(gameSettings.Name())
     .SetMaster(gameSettings.Master())
     .SetRepoURL(gameSettings.RepoURL())
@@ -66,8 +71,6 @@ Game::Game(const GameSettings& gameSettings) : GameSettings(gameSettings), plugi
     .SetGamePath(gameSettings.GamePath())
     .SetRegistryKey(gameSettings.RegistryKey());
 }
-
-Game::Game(const GameType gameType, const std::string& folder) : GameSettings(gameType, folder), pluginsFullyLoaded_(false) {}
 
 bool Game::IsInstalled() {
   try {
@@ -97,24 +100,24 @@ bool Game::IsInstalled() {
   return false;
 }
 
-void Game::Init(bool createFolder, const boost::filesystem::path& gameLocalAppData) {
+void Game::Init() {
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
 
   if (!this->IsInstalled()) {
     throw GameDetectionError("Game path could not be detected.");
   }
 
-  if (createFolder) {
+  if (!lootDataPath_.empty()) {
       //Make sure that the LOOT game path exists.
     try {
-      if (!fs::exists(LootPaths::getLootDataPath() / FolderName()))
-        fs::create_directories(LootPaths::getLootDataPath() / FolderName());
+      if (!fs::exists(lootDataPath_ / FolderName()))
+        fs::create_directories(lootDataPath_ / FolderName());
     } catch (fs::filesystem_error& e) {
       throw FileAccessError((boost::format("Could not create LOOT folder for game. Details: %1%") % e.what()).str());
     }
   }
 
-  LoadOrderHandler::Init(*this, gameLocalAppData);
+  LoadOrderHandler::Init(*this, localDataPath_);
 }
 
 void Game::RedatePlugins() {
@@ -278,23 +281,23 @@ std::vector<std::string> Game::GetLoadOrder() const {
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
-  BackupLoadOrder(loadOrder_, LootPaths::getLootDataPath() / FolderName());
+  BackupLoadOrder(loadOrder_, lootDataPath_ / FolderName());
   LoadOrderHandler::SetLoadOrder(loadOrder);
   loadOrder_ = loadOrder;
 }
 
 fs::path Game::MasterlistPath() const {
-  if (FolderName().empty())
+  if (lootDataPath_.empty() || FolderName().empty())
     return "";
   else
-    return LootPaths::getLootDataPath() / FolderName() / "masterlist.yaml";
+    return lootDataPath_ / FolderName() / "masterlist.yaml";
 }
 
 fs::path Game::UserlistPath() const {
-  if (FolderName().empty())
+  if (lootDataPath_.empty() || FolderName().empty())
     return "";
   else
-    return LootPaths::getLootDataPath() / FolderName() / "userlist.yaml";
+    return lootDataPath_ / FolderName() / "userlist.yaml";
 }
 
 #ifdef _WIN32

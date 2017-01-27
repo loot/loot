@@ -145,24 +145,21 @@ TEST_P(PluginCleaningDataTest, LessThanOperatorShouldCompareCrcValues) {
 }
 
 TEST_P(PluginCleaningDataTest, evalConditionShouldBeTrueIfTheCrcGivenMatchesTheRealPluginCrc) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   PluginCleaningData dirtyInfo(blankEsmCrc, "cleaner", info_, 2, 10, 30);
   EXPECT_TRUE(dirtyInfo.EvalCondition(game, blankEsm));
 }
 
 TEST_P(PluginCleaningDataTest, evalConditionShouldBeFalseIfTheCrcGivenDoesNotMatchTheRealPluginCrc) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   PluginCleaningData dirtyInfo(0xDEADBEEF, "cleaner", info_, 2, 10, 30);
   EXPECT_FALSE(dirtyInfo.EvalCondition(game, blankEsm));
 }
 
 TEST_P(PluginCleaningDataTest, evalConditionShouldBeFalseIfAnEmptyPluginFilenameIsGiven) {
-  Game game(GetParam());
-  game.SetGamePath(dataPath.parent_path());
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   PluginCleaningData dirtyInfo;
   EXPECT_FALSE(dirtyInfo.EvalCondition(game, ""));

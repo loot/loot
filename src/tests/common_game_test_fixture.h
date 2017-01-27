@@ -43,6 +43,7 @@ protected:
     missingPath("./missing"),
     dataPath(getPluginsPath()),
     localPath(getLocalPath()),
+    lootDataPath("./local/LOOT"),
     masterFile(getMasterFile()),
     missingEsp("Blank.missing.esp"),
     blankEsm("Blank.esm"),
@@ -91,6 +92,7 @@ protected:
 
   void TearDown() {
     ASSERT_NO_THROW(boost::filesystem::remove_all(localPath));
+    ASSERT_NO_THROW(boost::filesystem::remove_all(lootDataPath));
 
     ASSERT_NO_THROW(boost::filesystem::remove(dataPath / masterFile));
 
@@ -171,6 +173,7 @@ protected:
   const boost::filesystem::path missingPath;
   const boost::filesystem::path dataPath;
   const boost::filesystem::path localPath;
+  const boost::filesystem::path lootDataPath;
 
   const std::string masterFile;
   const std::string missingEsp;
