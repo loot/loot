@@ -74,7 +74,6 @@
 #include "backend/plugin/plugin_sorter.h"
 #include "backend/helpers/helpers.h"
 #include "gui/query/json.h"
-#include "backend/helpers/version.h"
 #include "loot/loot_version.h"
 
 using boost::filesystem::exists;

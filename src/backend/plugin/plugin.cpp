@@ -34,6 +34,7 @@
 
 #include "backend/game/game.h"
 #include "backend/helpers/helpers.h"
+#include "backend/helpers/version.h"
 
 using libespm::FormId;
 using std::set;
@@ -141,6 +142,10 @@ bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
 
 size_t Plugin::NumOverrideFormIDs() const {
   return numOverrideRecords_;
+}
+
+std::string Plugin::GetVersion() const {
+  return Version(getDescription()).AsString();
 }
 
 std::set<FormId> Plugin::OverlapFormIDs(const Plugin& plugin) const {

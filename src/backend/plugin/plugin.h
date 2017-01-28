@@ -51,6 +51,7 @@ public:
   bool IsEmpty() const;
   uint32_t Crc() const;
   size_t NumOverrideFormIDs() const;
+  std::string GetVersion() const;
 
   bool LoadsArchive() const;
   bool IsActive() const;

@@ -146,7 +146,7 @@ private:
     pluginNode["isMaster"] = plugin.isMasterFile();
     pluginNode["loadsArchive"] = plugin.LoadsArchive();
     pluginNode["crc"] = plugin.Crc();
-    pluginNode["version"] = Version(plugin.getDescription()).AsString();
+    pluginNode["version"] = plugin.GetVersion();
 
     BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin.Name();
     Plugin mlistPlugin(plugin);
