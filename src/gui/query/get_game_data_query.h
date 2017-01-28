@@ -29,7 +29,6 @@ along with LOOT.  If not, see
 
 #include "loot/loot_version.h"
 #include "gui/query/json.h"
-#include "backend/helpers/version.h"
 #include "gui/query/metadata_query.h"
 
 namespace loot {
