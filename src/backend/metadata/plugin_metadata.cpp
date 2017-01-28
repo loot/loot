@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "plugin_metadata.h"
+#include "loot/metadata/plugin_metadata.h"
 
 #include <regex>
 
@@ -256,6 +256,10 @@ std::string PluginMetadata::Name() const {
   return name_;
 }
 
+std::string PluginMetadata::LowercasedName() const {
+  return boost::locale::to_lower(name_);
+}
+
 bool PluginMetadata::Enabled() const {
   return enabled_;
 }
@@ -453,53 +457,5 @@ bool PluginMetadata::operator == (const std::string& rhs) const {
 
 bool PluginMetadata::operator != (const std::string& rhs) const {
   return !(*this == rhs);
-}
-}
-
-namespace YAML {
-Emitter& operator << (Emitter& out, const loot::PluginMetadata& rhs) {
-  if (!rhs.HasNameOnly()) {
-    out << BeginMap
-      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
-
-    if (!rhs.Enabled())
-      out << Key << "enabled" << Value << rhs.Enabled();
-
-    if (rhs.LocalPriority().isExplicit()) {
-      out << Key << "priority" << Value << rhs.LocalPriority().getValue();
-    }
-
-    if (rhs.GlobalPriority().isExplicit()) {
-      out << Key << "global_priority" << Value << rhs.GlobalPriority().getValue();
-    }
-
-    if (!rhs.LoadAfter().empty())
-      out << Key << "after" << Value << rhs.LoadAfter();
-
-    if (!rhs.Reqs().empty())
-      out << Key << "req" << Value << rhs.Reqs();
-
-    if (!rhs.Incs().empty())
-      out << Key << "inc" << Value << rhs.Incs();
-
-    if (!rhs.Messages().empty())
-      out << Key << "msg" << Value << rhs.Messages();
-
-    if (!rhs.Tags().empty())
-      out << Key << "tag" << Value << rhs.Tags();
-
-    if (!rhs.DirtyInfo().empty())
-      out << Key << "dirty" << Value << rhs.DirtyInfo();
-
-    if (!rhs.CleanInfo().empty())
-      out << Key << "clean" << Value << rhs.CleanInfo();
-
-    if (!rhs.Locations().empty())
-      out << Key << "url" << Value << rhs.Locations();
-
-    out << EndMap;
-  }
-
-  return out;
 }
 }

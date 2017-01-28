@@ -29,6 +29,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "loot/exception/file_access_error.h"
+#include "loot/yaml/plugin_metadata.h"
 #include "backend/game/game.h"
 
 namespace loot {

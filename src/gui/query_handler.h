@@ -30,7 +30,7 @@
 
 #include "gui/state/loot_state.h"
 #include "backend/plugin/plugin.h"
-#include "backend/metadata/plugin_metadata.h"
+#include "loot/metadata/plugin_metadata.h"
 #include "gui/editor_message.h"
 #include "gui/query/query.h"
 

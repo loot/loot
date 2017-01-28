@@ -28,24 +28,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include "backend/metadata/conditional_metadata.h"
-
-namespace loot {
-class Tag : public ConditionalMetadata {
-public:
-  Tag();
-  Tag(const std::string& tag, const bool isAddition = true, const std::string& condition = "");
-
-  bool operator < (const Tag& rhs) const;
-  bool operator == (const Tag& rhs) const;
-
-  bool IsAddition() const;
-  std::string Name() const;
-private:
-  std::string name_;
-  bool addTag_;
-};
-}
+#include "loot/metadata/tag.h"
 
 namespace YAML {
 template<>
@@ -92,7 +75,25 @@ struct convert<loot::Tag> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::Tag& rhs);
+inline Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
+  if (!rhs.IsConditional()) {
+    if (rhs.IsAddition())
+      out << rhs.Name();
+    else
+      out << ('-' + rhs.Name());
+  } else {
+    out << BeginMap;
+    if (rhs.IsAddition())
+      out << Key << "name" << Value << rhs.Name();
+    else
+      out << Key << "name" << Value << ('-' + rhs.Name());
+
+    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition()
+      << EndMap;
+  }
+
+  return out;
+}
 }
 
 #endif

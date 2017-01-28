@@ -31,102 +31,17 @@
 #include <string>
 #include <vector>
 
-#include <boost/locale.hpp>
 #include <yaml-cpp/yaml.h>
 
-#include "backend/helpers/yaml_set_helpers.h"
-#include "backend/metadata/file.h"
-#include "backend/metadata/location.h"
-#include "backend/metadata/message.h"
-#include "backend/metadata/plugin_cleaning_data.h"
-#include "backend/metadata/priority.h"
-#include "backend/metadata/tag.h"
+#include "loot/metadata/plugin_metadata.h"
 
-namespace loot {
-class Game;
-
-class PluginMetadata {
-public:
-  PluginMetadata();
-  PluginMetadata(const std::string& name);
-
-  //Merges from the given plugin into this one, unless there is already equal metadata present.
-  //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
-  void MergeMetadata(const PluginMetadata& plugin);
-
-  //Returns the difference in metadata between the two plugins.
-  //For 'enabled', use this plugin's value.
-  //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
-  PluginMetadata DiffMetadata(const PluginMetadata& plugin) const;
-
-  // Returns metadata in this plugin not in the given plugin.
-  //For 'enabled', use this plugin's value.
-  //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
-  PluginMetadata NewMetadata(const PluginMetadata& plugin) const;
-
-  std::string Name() const;
-  bool Enabled() const;
-  Priority LocalPriority() const;
-  Priority GlobalPriority() const;
-  std::set<File> LoadAfter() const;
-  std::set<File> Reqs() const;
-  std::set<File> Incs() const;
-  std::vector<Message> Messages() const;
-  std::set<Tag> Tags() const;
-  std::set<PluginCleaningData> DirtyInfo() const;
-  std::set<PluginCleaningData> CleanInfo() const;
-  std::set<Location> Locations() const;
-
-  std::vector<SimpleMessage> SimpleMessages(const LanguageCode language) const;
-
-  void Enabled(const bool enabled);
-  void LocalPriority(const Priority& priority);
-  void GlobalPriority(const Priority& priority);
-  void LoadAfter(const std::set<File>& after);
-  void Reqs(const std::set<File>& reqs);
-  void Incs(const std::set<File>& incs);
-  void Messages(const std::vector<Message>& messages);
-  void Tags(const std::set<Tag>& tags);
-  void DirtyInfo(const std::set<PluginCleaningData>& info);
-  void CleanInfo(const std::set<PluginCleaningData>& info);
-  void Locations(const std::set<Location>& locations);
-
-  PluginMetadata& EvalAllConditions(Game& game);
-  bool HasNameOnly() const;
-  bool IsRegexPlugin() const;
-
-  //Compare name strings.
-  bool operator == (const PluginMetadata& rhs) const;
-  bool operator != (const PluginMetadata& rhs) const;
-
-  //Compare name string.
-  bool operator == (const std::string& rhs) const;
-  bool operator != (const std::string& rhs) const;
-protected:
-  std::vector<Message> messages_;
-  std::set<Tag> tags_;
-private:
-  std::string name_;
-  bool enabled_;  //Default to true.
-  Priority localPriority_;
-  Priority globalPriority_;
-  std::set<File> loadAfter_;
-  std::set<File> requirements_;
-  std::set<File> incompatibilities_;
-  std::set<PluginCleaningData> dirtyInfo_;
-  std::set<PluginCleaningData> cleanInfo_;
-  std::set<Location> locations_;
-};
-}
-
-namespace std {
-template<>
-struct hash<loot::PluginMetadata> {
-  size_t operator() (const loot::PluginMetadata& plugin) const {
-    return hash<string>()(boost::locale::to_lower(plugin.Name()));
-  }
-};
-}
+#include "loot/yaml/file.h"
+#include "loot/yaml/location.h"
+#include "loot/yaml/message_content.h"
+#include "loot/yaml/message.h"
+#include "loot/yaml/plugin_cleaning_data.h"
+#include "loot/yaml/set.h"
+#include "loot/yaml/tag.h"
 
 namespace YAML {
 template<>
@@ -223,7 +138,51 @@ struct convert<loot::PluginMetadata> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::PluginMetadata& rhs);
+inline Emitter& operator << (Emitter& out, const loot::PluginMetadata& rhs) {
+  if (!rhs.HasNameOnly()) {
+    out << BeginMap
+      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
+
+    if (!rhs.Enabled())
+      out << Key << "enabled" << Value << rhs.Enabled();
+
+    if (rhs.LocalPriority().isExplicit()) {
+      out << Key << "priority" << Value << rhs.LocalPriority().getValue();
+    }
+
+    if (rhs.GlobalPriority().isExplicit()) {
+      out << Key << "global_priority" << Value << rhs.GlobalPriority().getValue();
+    }
+
+    if (!rhs.LoadAfter().empty())
+      out << Key << "after" << Value << rhs.LoadAfter();
+
+    if (!rhs.Reqs().empty())
+      out << Key << "req" << Value << rhs.Reqs();
+
+    if (!rhs.Incs().empty())
+      out << Key << "inc" << Value << rhs.Incs();
+
+    if (!rhs.Messages().empty())
+      out << Key << "msg" << Value << rhs.Messages();
+
+    if (!rhs.Tags().empty())
+      out << Key << "tag" << Value << rhs.Tags();
+
+    if (!rhs.DirtyInfo().empty())
+      out << Key << "dirty" << Value << rhs.DirtyInfo();
+
+    if (!rhs.CleanInfo().empty())
+      out << Key << "clean" << Value << rhs.CleanInfo();
+
+    if (!rhs.Locations().empty())
+      out << Key << "url" << Value << rhs.Locations();
+
+    out << EndMap;
+  }
+
+  return out;
+}
 }
 
 #endif

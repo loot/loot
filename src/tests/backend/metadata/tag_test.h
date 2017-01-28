@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_TAG_TEST
 #define LOOT_TESTS_BACKEND_METADATA_TAG_TEST
 
-#include "backend/metadata/tag.h"
+#include "loot/metadata/tag.h"
 
 #include <gtest/gtest.h>
+
+#include "loot/yaml/tag.h"
 
 namespace loot {
 namespace test {

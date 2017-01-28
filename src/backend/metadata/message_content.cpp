@@ -22,11 +22,11 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/metadata/message_content.h"
+#include "loot/metadata/message_content.h"
 
 #include <boost/algorithm/string.hpp>
 
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 
 namespace loot {
 MessageContent::MessageContent() : language_(LanguageCode::english) {}
@@ -64,19 +64,5 @@ MessageContent MessageContent::Choose(const std::vector<MessageContent> content,
     }
     return english;
   }
-}
-}
-
-namespace YAML {
-Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
-  out << BeginMap;
-
-  out << Key << "lang" << Value << loot::Language(rhs.GetLanguage()).GetLocale();
-
-  out << Key << "text" << Value << YAML::SingleQuoted << rhs.GetText();
-
-  out << EndMap;
-
-  return out;
 }
 }

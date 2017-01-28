@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_CONDITIONAL_METADATA_TEST
 #define LOOT_TESTS_BACKEND_METADATA_CONDITIONAL_METADATA_TEST
 
-#include "backend/metadata/conditional_metadata.h"
+#include "loot/metadata/conditional_metadata.h"
 
 #include "tests/common_game_test_fixture.h"
 

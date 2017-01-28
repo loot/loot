@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_HELPERS_LANGUAGE_TEST
 #define LOOT_TESTS_BACKEND_HELPERS_LANGUAGE_TEST
 
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 
 #include <gtest/gtest.h>
 

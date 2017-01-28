@@ -21,30 +21,15 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_LOCATION
-#define LOOT_BACKEND_METADATA_LOCATION
+#ifndef LOOT_YAML_LOCATION
+#define LOOT_YAML_LOCATION
 
 #include <string>
 #include <vector>
 
 #include <yaml-cpp/yaml.h>
 
-namespace loot {
-class Location {
-public:
-  Location();
-  Location(const std::string& url, const std::string& name = "");
-
-  bool operator < (const Location& rhs) const;
-  bool operator == (const Location& rhs) const;
-
-  std::string URL() const;
-  std::string Name() const;
-private:
-  std::string url_;
-  std::string name_;
-};
-}
+#include "loot/metadata/location.h"
 
 namespace YAML {
 template<>
@@ -82,7 +67,17 @@ struct convert<loot::Location> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::Location& rhs);
+inline Emitter& operator << (Emitter& out, const loot::Location& rhs) {
+  if (rhs.Name().empty())
+    out << YAML::SingleQuoted << rhs.URL();
+  else {
+    out << BeginMap
+      << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
+      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
+      << EndMap;
+  }
+  return out;
+}
 }
 
 #endif

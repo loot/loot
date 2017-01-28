@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 
 namespace loot {
 const std::vector<LanguageCode> Language::codes({

@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_HELPERS_YAML_SET_HELPERS_TEST
 #define LOOT_TESTS_BACKEND_HELPERS_YAML_SET_HELPERS_TEST
 
-#include "backend/helpers/yaml_set_helpers.h"
+#include "loot/yaml/set.h"
 
 #include <gtest/gtest.h>
 

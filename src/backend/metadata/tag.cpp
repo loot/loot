@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/metadata/tag.h"
+#include "loot/metadata/tag.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -48,27 +48,5 @@ bool Tag::IsAddition() const {
 
 std::string Tag::Name() const {
   return name_;
-}
-}
-
-namespace YAML {
-Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
-  if (!rhs.IsConditional()) {
-    if (rhs.IsAddition())
-      out << rhs.Name();
-    else
-      out << ('-' + rhs.Name());
-  } else {
-    out << BeginMap;
-    if (rhs.IsAddition())
-      out << Key << "name" << Value << rhs.Name();
-    else
-      out << Key << "name" << Value << ('-' + rhs.Name());
-
-    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition()
-      << EndMap;
-  }
-
-  return out;
 }
 }

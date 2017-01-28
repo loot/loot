@@ -21,35 +21,29 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
+#ifndef LOOT_METADATA_FILE
+#define LOOT_METADATA_FILE
 
-#include "loot/metadata/file.h"
+#include <string>
 
-#include <boost/algorithm/string.hpp>
-
-#include "loot/yaml/file.h"
+#include "loot/metadata/conditional_metadata.h"
 
 namespace loot {
-File::File() {}
+class File : public ConditionalMetadata {
+public:
+  File();
+  File(const std::string& name, const std::string& display = "",
+       const std::string& condition = "");
 
-File::File(const std::string& name, const std::string& display, const std::string& condition)
-  : name_(name), display_(display), ConditionalMetadata(condition) {}
+  bool operator < (const File& rhs) const;
+  bool operator == (const File& rhs) const;
 
-bool File::operator < (const File& rhs) const {
-  return boost::ilexicographical_compare(Name(), rhs.Name());
+  std::string Name() const;
+  std::string DisplayName() const;
+private:
+  std::string name_;
+  std::string display_;
+};
 }
 
-bool File::operator == (const File& rhs) const {
-  return boost::iequals(Name(), rhs.Name());
-}
-
-std::string File::Name() const {
-  return name_;
-}
-
-std::string File::DisplayName() const {
-  if (display_.empty())
-    return name_;
-  else
-    return display_;
-}
-}
+#endif

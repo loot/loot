@@ -19,36 +19,32 @@
 
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
-    <http://www.gnu.org/licenses/>.
+    <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_PRIORITY
-#define LOOT_BACKEND_METADATA_PRIORITY
+#ifndef LOOT_METADATA_MESSAGE_CONTENT
+#define LOOT_METADATA_MESSAGE_CONTENT
 
-#include <cstdint>
+#include <string>
+
+#include "loot/language.h"
 
 namespace loot {
-class Priority {
+class MessageContent {
 public:
-  Priority();
-  // Take an int to prevent literals that are too large for one byte from
-  // wrapping around to negative values.
-  explicit Priority(const int value);
+  MessageContent();
+  MessageContent(const std::string& text, const LanguageCode language);
 
-  // Doesn't return an int8_t because it is commonly signed char, which
-  // yaml-cpp interprets as a character rather than an integer.
-  short getValue() const;
-  bool isExplicit() const;
+  std::string GetText() const;
+  LanguageCode GetLanguage() const;
 
-  bool operator < (const Priority& rhs) const;
-  bool operator > (const Priority& rhs) const;
-  bool operator >= (const Priority& rhs) const;
-  bool operator == (const Priority& rhs) const;
+  bool operator < (const MessageContent& rhs) const;
+  bool operator == (const MessageContent& rhs) const;
 
-  bool operator > (const uint8_t rhs) const;
-
+  static MessageContent Choose(const std::vector<MessageContent> content,
+                               const LanguageCode language);
 private:
-  bool isExplicitZeroValue_;
-  int8_t value_;
+  std::string text_;
+  LanguageCode language_;
 };
 }
 

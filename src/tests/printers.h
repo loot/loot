@@ -29,13 +29,13 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
-#include "backend/metadata/file.h"
-#include "backend/metadata/location.h"
-#include "backend/metadata/message.h"
+#include "loot/metadata/file.h"
+#include "loot/metadata/location.h"
+#include "loot/metadata/message.h"
 #include "backend/metadata/message_content.h"
-#include "backend/metadata/plugin_cleaning_data.h"
-#include "backend/metadata/plugin_metadata.h"
-#include "backend/metadata/tag.h"
+#include "loot/metadata/plugin_cleaning_data.h"
+#include "loot/metadata/plugin_metadata.h"
+#include "loot/metadata/tag.h"
 #include "backend/plugin/plugin.h"
 
 namespace loot {

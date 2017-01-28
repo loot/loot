@@ -31,7 +31,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "backend/metadata/plugin_metadata.h"
+#include "loot/metadata/plugin_metadata.h"
 
 namespace loot {
 class Game;

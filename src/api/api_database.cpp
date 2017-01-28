@@ -27,7 +27,10 @@
 #include <vector>
 #include <unordered_map>
 
+#include <boost/algorithm/string.hpp>
+
 #include "loot/exception/file_access_error.h"
+#include "loot/yaml/plugin_metadata.h"
 #include "backend/game/game.h"
 #include "backend/plugin/plugin_sorter.h"
 

@@ -21,34 +21,26 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-
-#ifndef LOOT_BACKEND_HELPERS_LANGUAGE
-#define LOOT_BACKEND_HELPERS_LANGUAGE
+#ifndef LOOT_METADATA_LOCATION
+#define LOOT_METADATA_LOCATION
 
 #include <string>
 #include <vector>
 
-#include "loot/enum/language_code.h"
-
 namespace loot {
-    //Language class for simpler language support.
-class Language {
+class Location {
 public:
+  Location();
+  Location(const std::string& url, const std::string& name = "");
 
-  static const std::vector<LanguageCode> codes;
+  bool operator < (const Location& rhs) const;
+  bool operator == (const Location& rhs) const;
 
-  Language(const LanguageCode code);
-  Language(const std::string& locale);
-
-  LanguageCode GetCode() const;
-  std::string GetName() const;
-  std::string GetLocale() const;
+  std::string URL() const;
+  std::string Name() const;
 private:
-  static LanguageCode GetCode(const std::string& locale);
-
-  LanguageCode code_;
+  std::string url_;
   std::string name_;
-  std::string locale_;
 };
 }
 

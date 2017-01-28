@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_LOCATION_TEST
 #define LOOT_TESTS_BACKEND_METADATA_LOCATION_TEST
 
-#include "backend/metadata/location.h"
+#include "loot/metadata/location.h"
 
 #include <gtest/gtest.h>
+
+#include "loot/yaml/location.h"
 
 namespace loot {
 namespace test {

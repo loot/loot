@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_MESSAGE_CONTENT_TEST
 #define LOOT_TESTS_BACKEND_METADATA_MESSAGE_CONTENT_TEST
 
-#include "backend/metadata/message_content.h"
+#include "loot/metadata/message_content.h"
 
 #include <gtest/gtest.h>
+
+#include "loot/yaml/message_content.h"
 
 namespace loot {
 namespace test {

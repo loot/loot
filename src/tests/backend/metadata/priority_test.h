@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_PRIORITY_TEST
 #define LOOT_TESTS_BACKEND_METADATA_PRIORITY_TEST
 
-#include "backend/metadata/priority.h"
+#include "loot/metadata/priority.h"
 
 #include <gtest/gtest.h>
 

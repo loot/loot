@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_PLUGIN_METADATA_TEST
 #define LOOT_TESTS_BACKEND_METADATA_PLUGIN_METADATA_TEST
 
-#include "backend/metadata/plugin_metadata.h"
+#include "loot/metadata/plugin_metadata.h"
 
 #include "tests/common_game_test_fixture.h"
+
+#include "loot/yaml/plugin_metadata.h"
 
 namespace loot {
 namespace test {

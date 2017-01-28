@@ -25,9 +25,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_BACKEND_METADATA_PLUGIN_CLEANING_DATA
 #define LOOT_TESTS_BACKEND_METADATA_PLUGIN_CLEANING_DATA
 
-#include "backend/metadata/plugin_cleaning_data.h"
+#include "loot/metadata/plugin_cleaning_data.h"
 
 #include "backend/game/game.h"
+#include "loot/yaml/plugin_cleaning_data.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {

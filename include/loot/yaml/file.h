@@ -21,32 +21,14 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_FILE
-#define LOOT_BACKEND_METADATA_FILE
+#ifndef LOOT_YAML_FILE
+#define LOOT_YAML_FILE
 
 #include <string>
 
 #include <yaml-cpp/yaml.h>
 
-#include "backend/metadata/conditional_metadata.h"
-
-namespace loot {
-class File : public ConditionalMetadata {
-public:
-  File();
-  File(const std::string& name, const std::string& display = "",
-       const std::string& condition = "");
-
-  bool operator < (const File& rhs) const;
-  bool operator == (const File& rhs) const;
-
-  std::string Name() const;
-  std::string DisplayName() const;
-private:
-  std::string name_;
-  std::string display_;
-};
-}
+#include "loot/metadata/file.h"
 
 namespace YAML {
 template<>
@@ -93,7 +75,24 @@ struct convert<loot::File> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::File& rhs);
+inline Emitter& operator << (Emitter& out, const loot::File& rhs) {
+  if (!rhs.IsConditional() && (rhs.DisplayName().empty() || rhs.DisplayName() == rhs.Name()))
+    out << YAML::SingleQuoted << rhs.Name();
+  else {
+    out << BeginMap
+      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
+
+    if (rhs.IsConditional())
+      out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
+
+    if (rhs.DisplayName() != rhs.Name())
+      out << Key << "display" << Value << YAML::SingleQuoted << rhs.DisplayName();
+
+    out << EndMap;
+  }
+
+  return out;
+}
 }
 
 #endif

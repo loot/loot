@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_GET_LANGUAGES_QUERY
 
 #include "gui/query/json.h"
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 #include "gui/query/query.h"
 
 namespace loot {

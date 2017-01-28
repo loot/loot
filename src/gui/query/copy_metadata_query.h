@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include <yaml-cpp/yaml.h>
 
 #include "gui/query/clipboard_query.h"
+#include "loot/yaml/plugin_metadata.h"
 
 namespace loot {
 class CopyMetadataQuery : public ClipboardQuery {

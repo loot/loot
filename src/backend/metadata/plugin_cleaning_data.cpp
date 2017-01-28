@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/metadata/plugin_cleaning_data.h"
+#include "loot/metadata/plugin_cleaning_data.h"
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -145,31 +145,5 @@ bool PluginCleaningData::EvalCondition(Game& game, const std::string& pluginName
   }
 
   return crc_ == crc;
-}
-}
-
-namespace YAML {
-Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs) {
-  out << BeginMap
-    << Key << "crc" << Value << Hex << rhs.CRC() << Dec
-    << Key << "util" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
-
-  if (!rhs.Info().empty()) {
-    if (rhs.Info().size() == 1)
-      out << Key << "info" << Value << YAML::SingleQuoted << rhs.Info().front().GetText();
-    else
-      out << Key << "info" << Value << rhs.Info();
-  }
-
-  if (rhs.ITMs() > 0)
-    out << Key << "itm" << Value << rhs.ITMs();
-  if (rhs.DeletedRefs() > 0)
-    out << Key << "udr" << Value << rhs.DeletedRefs();
-  if (rhs.DeletedNavmeshes() > 0)
-    out << Key << "nav" << Value << rhs.DeletedNavmeshes();
-
-  out << EndMap;
-
-  return out;
 }
 }

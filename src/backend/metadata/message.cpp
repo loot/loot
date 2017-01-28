@@ -22,12 +22,13 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/metadata/message.h"
+#include "loot/metadata/message.h"
 
+#include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>
 
 #include "backend/game/game.h"
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 
 namespace loot {
 Message::Message() : type_(MessageType::say) {}
@@ -82,30 +83,5 @@ SimpleMessage Message::ToSimpleMessage(const LanguageCode language) const {
   simpleMessage.text = content.GetText();
 
   return simpleMessage;
-}
-}
-
-namespace YAML {
-Emitter& operator << (Emitter& out, const loot::Message& rhs) {
-  out << BeginMap;
-
-  if (rhs.GetType() == loot::MessageType::say)
-    out << Key << "type" << Value << "say";
-  else if (rhs.GetType() == loot::MessageType::warn)
-    out << Key << "type" << Value << "warn";
-  else
-    out << Key << "type" << Value << "error";
-
-  if (rhs.GetContent().size() == 1)
-    out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().GetText();
-  else
-    out << Key << "content" << Value << rhs.GetContent();
-
-  if (rhs.IsConditional())
-    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
-
-  out << EndMap;
-
-  return out;
 }
 }

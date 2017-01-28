@@ -24,6 +24,7 @@
 
 #include "backend/masterlist.h"
 
+#include <boost/format.hpp>
 #include <boost/log/trivial.hpp>
 
 #include "loot/exception/file_access_error.h"

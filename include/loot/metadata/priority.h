@@ -19,37 +19,37 @@
 
     You should have received a copy of the GNU General Public License
     along with LOOT.  If not, see
-    <https://www.gnu.org/licenses/>.
+    <http://www.gnu.org/licenses/>.
     */
+#ifndef LOOT_METADATA_PRIORITY
+#define LOOT_METADATA_PRIORITY
 
-#include "loot/metadata/file.h"
-
-#include <boost/algorithm/string.hpp>
-
-#include "loot/yaml/file.h"
+#include <cstdint>
 
 namespace loot {
-File::File() {}
+class Priority {
+public:
+  Priority();
+  // Take an int to prevent literals that are too large for one byte from
+  // wrapping around to negative values.
+  explicit Priority(const int value);
 
-File::File(const std::string& name, const std::string& display, const std::string& condition)
-  : name_(name), display_(display), ConditionalMetadata(condition) {}
+  // Doesn't return an int8_t because it is commonly signed char, which
+  // yaml-cpp interprets as a character rather than an integer.
+  short getValue() const;
+  bool isExplicit() const;
 
-bool File::operator < (const File& rhs) const {
-  return boost::ilexicographical_compare(Name(), rhs.Name());
+  bool operator < (const Priority& rhs) const;
+  bool operator > (const Priority& rhs) const;
+  bool operator >= (const Priority& rhs) const;
+  bool operator == (const Priority& rhs) const;
+
+  bool operator > (const uint8_t rhs) const;
+
+private:
+  bool isExplicitZeroValue_;
+  int8_t value_;
+};
 }
 
-bool File::operator == (const File& rhs) const {
-  return boost::iequals(Name(), rhs.Name());
-}
-
-std::string File::Name() const {
-  return name_;
-}
-
-std::string File::DisplayName() const {
-  if (display_.empty())
-    return name_;
-  else
-    return display_;
-}
-}
+#endif

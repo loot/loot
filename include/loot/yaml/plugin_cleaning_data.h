@@ -22,53 +22,15 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_METADATA_PLUGIN_CLEANING_DATA
-#define LOOT_BACKEND_METADATA_PLUGIN_CLEANING_DATA
+#ifndef LOOT_YAML_PLUGIN_CLEANING_DATA
+#define LOOT_YAML_PLUGIN_CLEANING_DATA
 
 #include <cstdint>
 #include <string>
 
 #include <yaml-cpp/yaml.h>
 
-#include "backend/metadata/message.h"
-
-namespace loot {
-class Game;
-
-class PluginCleaningData {
-public:
-  PluginCleaningData();
-  PluginCleaningData(uint32_t crc, const std::string& utility);
-  PluginCleaningData(uint32_t crc,
-                     const std::string& utility,
-                     const std::vector<MessageContent>& info,
-                     unsigned int itm,
-                     unsigned int ref,
-                     unsigned int nav);
-
-  bool operator < (const PluginCleaningData& rhs) const;
-  bool operator == (const PluginCleaningData& rhs) const;
-
-  uint32_t CRC() const;
-  unsigned int ITMs() const;
-  unsigned int DeletedRefs() const;
-  unsigned int DeletedNavmeshes() const;
-  std::string CleaningUtility() const;
-  std::vector<MessageContent> Info() const;
-
-  MessageContent ChooseInfo(const LanguageCode language) const;
-  Message AsMessage() const;
-
-  bool EvalCondition(Game& game, const std::string& pluginName) const;
-private:
-  uint32_t crc_;
-  unsigned int itm_;
-  unsigned int ref_;
-  unsigned int nav_;
-  std::string utility_;
-  std::vector<MessageContent> info_;
-};
-}
+#include "loot/metadata/plugin_cleaning_data.h"
 
 namespace YAML {
 template<>
@@ -135,7 +97,29 @@ struct convert<loot::PluginCleaningData> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs);
+inline Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs) {
+  out << BeginMap
+    << Key << "crc" << Value << Hex << rhs.CRC() << Dec
+    << Key << "util" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
+
+  if (!rhs.Info().empty()) {
+    if (rhs.Info().size() == 1)
+      out << Key << "info" << Value << YAML::SingleQuoted << rhs.Info().front().GetText();
+    else
+      out << Key << "info" << Value << rhs.Info();
+  }
+
+  if (rhs.ITMs() > 0)
+    out << Key << "itm" << Value << rhs.ITMs();
+  if (rhs.DeletedRefs() > 0)
+    out << Key << "udr" << Value << rhs.DeletedRefs();
+  if (rhs.DeletedNavmeshes() > 0)
+    out << Key << "nav" << Value << rhs.DeletedNavmeshes();
+
+  out << EndMap;
+
+  return out;
+}
 }
 
 #endif

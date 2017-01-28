@@ -34,7 +34,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "backend/game/game_settings.h"
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 
 namespace loot {
 class LootSettings {

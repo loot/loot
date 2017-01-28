@@ -24,7 +24,9 @@
 #ifndef LOOT_GUI_EDITOR_MESSAGE
 #define LOOT_GUI_EDITOR_MESSAGE
 
-#include "backend/metadata/message.h"
+#include <boost/algorithm/string.hpp>
+
+#include "loot/metadata/message.h"
 #include "loot/struct/simple_message.h"
 
 namespace loot {

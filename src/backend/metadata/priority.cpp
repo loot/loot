@@ -22,7 +22,7 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#include "backend/metadata/priority.h"
+#include "loot/metadata/priority.h"
 
 namespace loot {
 Priority::Priority() : value_(0), isExplicitZeroValue_(false) {}

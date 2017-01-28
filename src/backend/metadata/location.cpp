@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "location.h"
+#include "loot/metadata/location.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -45,19 +45,5 @@ std::string Location::URL() const {
 
 std::string Location::Name() const {
   return name_;
-}
-}
-
-namespace YAML {
-Emitter& operator << (Emitter& out, const loot::Location& rhs) {
-  if (rhs.Name().empty())
-    out << YAML::SingleQuoted << rhs.URL();
-  else {
-    out << BeginMap
-      << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
-      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
-      << EndMap;
-  }
-  return out;
 }
 }

@@ -21,28 +21,34 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_CONDITIONAL_METADATA
-#define LOOT_BACKEND_METADATA_CONDITIONAL_METADATA
+
+#ifndef LOOT_LANGUAGE
+#define LOOT_LANGUAGE
 
 #include <string>
+#include <vector>
+
+#include "loot/enum/language_code.h"
 
 namespace loot {
-class Game;
-
-class ConditionalMetadata {
+class Language {
 public:
-  ConditionalMetadata();
-  ConditionalMetadata(const std::string& condition);
 
-  bool IsConditional() const;
-  bool EvalCondition(Game& game) const;
-  void ParseCondition() const;  // Throws error on parsing failure.
+  static const std::vector<LanguageCode> codes;
 
-  std::string Condition() const;
+  Language(const LanguageCode code);
+  Language(const std::string& locale);
+
+  LanguageCode GetCode() const;
+  std::string GetName() const;
+  std::string GetLocale() const;
 private:
-  bool ParseCondition(Game * game) const;  // Throws error on parsing failure.
+  static LanguageCode GetCode(const std::string& locale);
 
-  std::string condition_;
+  LanguageCode code_;
+  std::string name_;
+  std::string locale_;
 };
 }
+
 #endif

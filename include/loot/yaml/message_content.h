@@ -28,27 +28,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include "backend/helpers/language.h"
-
-namespace loot {
-class MessageContent {
-public:
-  MessageContent();
-  MessageContent(const std::string& text, const LanguageCode language);
-
-  std::string GetText() const;
-  LanguageCode GetLanguage() const;
-
-  bool operator < (const MessageContent& rhs) const;
-  bool operator == (const MessageContent& rhs) const;
-
-  static MessageContent Choose(const std::vector<MessageContent> content,
-                               const LanguageCode language);
-private:
-  std::string text_;
-  LanguageCode language_;
-};
-}
+#include "loot/metadata/message_content.h"
 
 namespace YAML {
 template<>
@@ -78,7 +58,17 @@ struct convert<loot::MessageContent> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::MessageContent& rhs);
+inline Emitter& operator << (Emitter& out, const loot::MessageContent& rhs) {
+  out << BeginMap;
+
+  out << Key << "lang" << Value << loot::Language(rhs.GetLanguage()).GetLocale();
+
+  out << Key << "text" << Value << YAML::SingleQuoted << rhs.GetText();
+
+  out << EndMap;
+
+  return out;
+}
 }
 
 #endif

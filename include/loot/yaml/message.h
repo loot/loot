@@ -21,8 +21,8 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_MESSAGE
-#define LOOT_BACKEND_METADATA_MESSAGE
+#ifndef LOOT_YAML_MESSAGE
+#define LOOT_YAML_MESSAGE
 
 #include <string>
 #include <vector>
@@ -31,34 +31,7 @@
 #include <boost/format.hpp>
 #include <yaml-cpp/yaml.h>
 
-#include "backend/metadata/conditional_metadata.h"
-#include "backend/metadata/message_content.h"
-#include "loot/enum/language_code.h"
-#include "loot/enum/message_type.h"
-#include "loot/struct/simple_message.h"
-
-namespace loot {
-class Message : public ConditionalMetadata {
-public:
-  Message();
-  Message(const MessageType type, const std::string& content,
-          const std::string& condition = "");
-  Message(const MessageType type, const std::vector<MessageContent>& content,
-          const std::string& condition = "");
-
-  bool operator < (const Message& rhs) const;
-  bool operator == (const Message& rhs) const;
-
-  MessageType GetType() const;
-  std::vector<MessageContent> GetContent() const;
-  MessageContent GetContent(const LanguageCode language) const;
-
-  SimpleMessage ToSimpleMessage(const LanguageCode language) const;
-private:
-  MessageType type_;
-  std::vector<MessageContent> content_;
-};
-}
+#include "loot/metadata/message.h"
 
 namespace YAML {
 template<>
@@ -150,7 +123,28 @@ struct convert<loot::Message> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::Message& rhs);
+inline Emitter& operator << (Emitter& out, const loot::Message& rhs) {
+  out << BeginMap;
+
+  if (rhs.GetType() == loot::MessageType::say)
+    out << Key << "type" << Value << "say";
+  else if (rhs.GetType() == loot::MessageType::warn)
+    out << Key << "type" << Value << "warn";
+  else
+    out << Key << "type" << Value << "error";
+
+  if (rhs.GetContent().size() == 1)
+    out << Key << "content" << Value << YAML::SingleQuoted << rhs.GetContent().front().GetText();
+  else
+    out << Key << "content" << Value << rhs.GetContent();
+
+  if (rhs.IsConditional())
+    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
+
+  out << EndMap;
+
+  return out;
+}
 }
 
 #endif

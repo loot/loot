@@ -24,6 +24,7 @@
 
 #include "gui/state/loot_state.h"
 
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -36,7 +37,7 @@
 
 #include "loot/exception/game_detection_error.h"
 #include "backend/helpers/helpers.h"
-#include "backend/helpers/language.h"
+#include "loot/language.h"
 #include "gui/state/loot_paths.h"
 #include "loot/loot_version.h"
 

@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/metadata/conditional_metadata.h"
+#include "loot/metadata/conditional_metadata.h"
 
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
