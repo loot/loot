@@ -246,7 +246,7 @@ void PluginSorter::CheckForCycles() const {
 bool PluginSorter::EdgeCreatesCycle(const vertex_t& fromVertex, const vertex_t& toVertex) const {
   try {
     boost::breadth_first_search(graph_, toVertex, visitor(PathDetector(fromVertex)).vertex_index_map(vertexIndexMap_));
-  } catch (PathFoundException& e) {
+  } catch (PathFoundException&) {
       return true;
   }
   return false;
