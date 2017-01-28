@@ -127,6 +127,14 @@ void GameCache::AppendMessage(const Message& message) {
   messages_.push_back(message);
 }
 
+std::vector<std::string> GameCache::GetLoadOrder() const {
+  return loadOrder_;
+}
+
+void GameCache::StoreLoadOrder(const std::vector<std::string>& loadOrder) {
+  loadOrder_ = loadOrder;
+}
+
 void GameCache::IncrementLoadOrderSortCount() {
   lock_guard<mutex> guard(mutex_);
 

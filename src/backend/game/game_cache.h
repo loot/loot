@@ -55,6 +55,9 @@ public:
   std::vector<Message> GetMessages() const;
   void AppendMessage(const Message& message);
 
+  std::vector<std::string> GetLoadOrder() const;
+  void StoreLoadOrder(const std::vector<std::string>& loadOrder);
+
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();
 
@@ -67,6 +70,7 @@ private:
   std::unordered_map<std::string, bool> conditions_;
   std::unordered_map<std::string, Plugin> plugins_;
   std::vector<Message> messages_;
+  std::vector<std::string> loadOrder_;
   unsigned short loadOrderSortCount_;
 
   mutable std::mutex mutex_;

@@ -119,6 +119,7 @@ void Game::Init() {
   }
 
   loadOrderHandler_.Init(*this, localDataPath_);
+  StoreLoadOrder(loadOrderHandler_.GetLoadOrder());
 }
 
 void Game::RedatePlugins() {
@@ -275,16 +276,15 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::v
 }
 
 std::vector<std::string> Game::GetLoadOrder() const {
-  if (loadOrder_.empty())
-    loadOrder_ = loadOrderHandler_.GetLoadOrder();
+  auto loadOrder = GameCache::GetLoadOrder();
 
-  return loadOrder_;
+  return loadOrder;
 }
 
-void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) const {
-  loadOrderHandler_.BackupLoadOrder(loadOrder_, lootDataPath_ / FolderName());
+void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
+  loadOrderHandler_.BackupLoadOrder(GetLoadOrder(), lootDataPath_ / FolderName());
   loadOrderHandler_.SetLoadOrder(loadOrder);
-  loadOrder_ = loadOrder;
+  StoreLoadOrder(loadOrder);
 }
 
 fs::path Game::MasterlistPath() const {

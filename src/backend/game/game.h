@@ -36,7 +36,7 @@
 namespace loot {
 class Game : public GameSettings, public GameCache {
 public:
-  Game(const GameSettings& gameSettings, 
+  Game(const GameSettings& gameSettings,
        const boost::filesystem::path& lootDataPath,
        const boost::filesystem::path& localDataPath = "");
 
@@ -56,7 +56,7 @@ public:
   short GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const;
 
   std::vector<std::string> GetLoadOrder() const;
-  void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
+  void SetLoadOrder(const std::vector<std::string>& loadOrder);
 
   boost::filesystem::path MasterlistPath() const;
   boost::filesystem::path UserlistPath() const;
@@ -70,7 +70,6 @@ private:
 
   bool pluginsFullyLoaded_;
   LoadOrderHandler loadOrderHandler_;
-  mutable std::vector<std::string> loadOrder_;
 };
 }
 
