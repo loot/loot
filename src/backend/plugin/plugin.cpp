@@ -33,7 +33,7 @@
 #include <boost/locale.hpp>
 
 #include "backend/game/game.h"
-#include "backend/helpers/helpers.h"
+#include "backend/helpers/crc.h"
 #include "backend/helpers/version.h"
 
 using libespm::FormId;

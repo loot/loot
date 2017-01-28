@@ -29,7 +29,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "backend/game/game.h"
-#include "backend/helpers/helpers.h"
+#include "backend/helpers/crc.h"
 
 namespace loot {
 PluginCleaningData::PluginCleaningData() : crc_(0), itm_(0), ref_(0), nav_(0) {}

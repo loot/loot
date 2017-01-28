@@ -47,7 +47,6 @@
 
 #include "loot/exception/condition_syntax_error.h"
 #include "backend/game/game.h"
-#include "backend/helpers/helpers.h"
 #include "backend/helpers/version.h"
 #include "backend/metadata/condition_evaluator.h"
 #include "backend/plugin/plugin.h"

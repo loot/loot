@@ -28,7 +28,7 @@
 #include <boost/format.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/helpers/helpers.h"
+#include "backend/helpers/crc.h"
 #include "loot/exception/condition_syntax_error.h"
 
 using boost::format;

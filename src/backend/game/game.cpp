@@ -35,7 +35,6 @@
 
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/game_detection_error.h"
-#include "backend/helpers/helpers.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE

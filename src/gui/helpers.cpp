@@ -24,7 +24,7 @@
 
 #include "gui/helpers.h"
 
-#include "backend/helpers/helpers.h"
+#include "loot/windows_encoding_converters.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE

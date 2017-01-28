@@ -35,11 +35,11 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
 
-#include "loot/exception/game_detection_error.h"
-#include "backend/helpers/helpers.h"
-#include "loot/language.h"
 #include "gui/state/loot_paths.h"
+#include "loot/exception/game_detection_error.h"
+#include "loot/language.h"
 #include "loot/loot_version.h"
+#include "loot/windows_encoding_converters.h"
 
 #ifdef _WIN32
 #include <windows.h>

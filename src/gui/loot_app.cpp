@@ -29,7 +29,6 @@
 #include <include/cef_task.h>
 
 #include "gui/state/loot_paths.h"
-#include "backend/helpers/helpers.h"
 #include "loot/language.h"
 #include "gui/loot_handler.h"
 #include "gui/loot_scheme_handler_factory.h"

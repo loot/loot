@@ -25,8 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLIPBOARD_QUERY
 #define LOOT_GUI_QUERY_CLIPBOARD_QUERY
 
-#include "backend/helpers/helpers.h"
 #include "gui/query/query.h"
+#include "loot/windows_encoding_converters.h"
 
 namespace loot {
 class ClipboardQuery : public Query {

@@ -22,10 +22,10 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_HELPERS_HELPERS_TEST
-#define LOOT_TESTS_BACKEND_HELPERS_HELPERS_TEST
+#ifndef LOOT_TESTS_BACKEND_HELPERS_CRC_TEST
+#define LOOT_TESTS_BACKEND_HELPERS_CRC_TEST
 
-#include "backend/helpers/helpers.h"
+#include "backend/helpers/crc.h"
 
 #include "loot/exception/file_access_error.h"
 #include "tests/common_game_test_fixture.h"

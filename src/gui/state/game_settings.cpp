@@ -28,8 +28,6 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/helpers/helpers.h"
-
 namespace fs = boost::filesystem;
 
 namespace loot {

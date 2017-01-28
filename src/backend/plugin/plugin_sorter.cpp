@@ -36,7 +36,6 @@
 
 #include "loot/exception/cyclic_interaction_error.h"
 #include "backend/game/game.h"
-#include "backend/helpers/helpers.h"
 
 using std::list;
 using std::string;

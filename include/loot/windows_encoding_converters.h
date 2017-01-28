@@ -25,20 +25,36 @@
 #ifndef LOOT_BACKEND_HELPERS_HELPERS
 #define LOOT_BACKEND_HELPERS_HELPERS
 
-#include <regex>
+#ifdef _WIN32
+
 #include <string>
 
-#include <boost/filesystem.hpp>
+#   ifndef UNICODE
+#       define UNICODE
+#   endif
+#   ifndef _UNICODE
+#      define _UNICODE
+#   endif
+#   include "windows.h"
+#   include "shlobj.h"
+#   include "shlwapi.h"
 
 namespace loot {
-    //Calculate the CRC of the given file for comparison purposes.
-uint32_t GetCrc32(const boost::filesystem::path& filename);
-
-#ifdef _WIN32
-std::wstring ToWinWide(const std::string& str);
-
-std::string FromWinWide(const std::wstring& wstr);
-#endif
+inline std::wstring ToWinWide(const std::string& str) {
+  size_t len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+  std::wstring wstr(len, 0);
+  MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], len);
+  return wstr;
 }
+
+inline std::string FromWinWide(const std::wstring& wstr) {
+  size_t len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
+  std::string str(len, 0);
+  WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
+  return str;
+}
+}
+
+#endif
 
 #endif
