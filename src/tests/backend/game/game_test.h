@@ -106,8 +106,9 @@ TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
   EXPECT_NO_THROW(game.Init());
 }
 
-TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
+TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
+  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(loadInstalledPlugins(game, true));
   EXPECT_EQ(11, game.GetPlugins().size());
@@ -121,8 +122,9 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersO
   EXPECT_EQ(0, plugin.Crc());
 }
 
-TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
+TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
+  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(loadInstalledPlugins(game, false));
   EXPECT_EQ(11, game.GetPlugins().size());

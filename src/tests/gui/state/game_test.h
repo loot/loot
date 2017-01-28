@@ -196,6 +196,7 @@ TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothin
 
 TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
   EXPECT_EQ(11, game.GetPlugins().size());
@@ -211,6 +212,7 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersO
 
 TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
   EXPECT_EQ(11, game.GetPlugins().size());
