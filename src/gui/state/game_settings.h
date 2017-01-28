@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_GAME_GAME_SETTINGS
-#define LOOT_BACKEND_GAME_GAME_SETTINGS
+#ifndef LOOT_GUI_STATE_GAME_SETTINGS
+#define LOOT_GUI_STATE_GAME_SETTINGS
 
 #include <string>
 #include <list>
@@ -50,11 +50,7 @@ public:
   std::string RegistryKey() const;
   std::string RepoURL() const;
   std::string RepoBranch() const;
-
   boost::filesystem::path GamePath() const;
-  boost::filesystem::path DataPath() const;
-
-  std::string GetArchiveFileExtension() const;
 
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);

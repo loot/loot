@@ -659,7 +659,7 @@ TEST_P(PluginMetadataTest, simpleMessagesShouldReturnMessagesAsSimpleMessages) {
 }
 
 TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions) {
-  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game(GetParam(), dataPath.parent_path(), localPath);
 
   PluginMetadata plugin(blankEsm);
 

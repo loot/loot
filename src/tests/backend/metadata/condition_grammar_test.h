@@ -37,7 +37,7 @@ protected:
 
   ConditionGrammarTest() :
     resourcePath(dataPath / "resource" / "detail" / "resource.txt"),
-    game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath),
+    game_(GetParam(), dataPath.parent_path(), localPath),
     result_(false),
     success_(false) {}
 
@@ -61,6 +61,23 @@ protected:
     std::stringstream stream;
     stream << std::hex << value;
     return stream.str();
+  }
+
+  void loadInstalledPlugins(Game& game_, bool headersOnly) {
+    const std::vector<std::string> plugins({
+      masterFile,
+      blankEsm,
+      blankDifferentEsm,
+      blankMasterDependentEsm,
+      blankDifferentMasterDependentEsm,
+      blankEsp,
+      blankDifferentEsp,
+      blankMasterDependentEsp,
+      blankDifferentMasterDependentEsp,
+      blankPluginDependentEsp,
+      blankDifferentPluginDependentEsp,
+    });
+    game_.LoadPlugins(plugins, masterFile, headersOnly);
   }
 
   const boost::filesystem::path resourcePath;
@@ -254,7 +271,7 @@ TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatMatchesTheActualPlugi
 }
 
 TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatMatchesTheActualCachedPluginCrcShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
 
   Grammar grammar(&game_);
   std::string condition("checksum(\"" + blankEsm + "\", " + IntToHexString(blankEsmCrc) + ")");
@@ -282,7 +299,7 @@ TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatDoesNotMatchTheActual
 }
 
 TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatEqualsTheActualPluginVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"5.0\", ==)");
@@ -297,7 +314,7 @@ TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatEqualsTheA
 }
 
 TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatDoesNotEqualTheActualPluginVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"6.0\", ==)");
@@ -312,7 +329,7 @@ TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatDoesNotEqu
 }
 
 TEST_P(ConditionGrammarTest, aVersionEqualityConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsp + "\", \"6.0\", ==)");
@@ -327,7 +344,7 @@ TEST_P(ConditionGrammarTest, aVersionEqualityConditionForAPluginWithNoVersionSho
 }
 
 TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatDoesNotEqualTheActualPluginVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"6.0\", !=)");
@@ -342,7 +359,7 @@ TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatDoesNotE
 }
 
 TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatEqualsTheActualPluginVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"5.0\", !=)");
@@ -357,7 +374,7 @@ TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatEqualsTh
 }
 
 TEST_P(ConditionGrammarTest, aVersionInequalityConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsp + "\", \"6.0\", !=)");
@@ -372,7 +389,7 @@ TEST_P(ConditionGrammarTest, aVersionInequalityConditionForAPluginWithNoVersionS
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionLessThanTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"6.0\", <)");
@@ -387,7 +404,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionL
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"5.0\", <)");
@@ -402,7 +419,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionE
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsp + "\", \"5.0\", <)");
@@ -417,7 +434,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanConditionForAPluginWithNoVersionSho
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersionGreaterThanTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"4.0\", >)");
@@ -432,7 +449,7 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersi
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"5.0\", >)");
@@ -447,7 +464,7 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersi
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsp + "\", \"5.0\", >)");
@@ -462,7 +479,7 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionForAPluginWithNoVersion
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"5.0\", <=)");
@@ -477,7 +494,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPlugi
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPluginVersionGreaterThanTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"4.0\", <=)");
@@ -492,7 +509,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPlugi
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsp + "\", \"5.0\", <=)");
@@ -508,7 +525,7 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionForAPluginWithNoV
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToTrue) {
   ASSERT_NO_THROW(game_.Init());
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"5.0\", >=)");
@@ -523,7 +540,7 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPl
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPluginVersionLessThanTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsm + "\", \"6.0\", >=)");
@@ -538,7 +555,7 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPl
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(true));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(&game_);
   std::string condition("version(\"" + blankEsp + "\", \"5.0\", >=)");

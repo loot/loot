@@ -43,6 +43,8 @@ struct ApiDatabase : public DatabaseInterface {
 
   void EvalLists();
 
+  void IdentifyMainMasterFile(const std::string& masterFile);
+
   std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);
 
   bool UpdateMasterlist(const std::string& masterlist_path,
@@ -63,6 +65,8 @@ struct ApiDatabase : public DatabaseInterface {
                         const bool overwrite);
 private:
   Game game_;
+
+  std::string masterFile_;
 
   Masterlist unevaluatedMasterlist_;
   MetadataList unevaluatedUserlist_;

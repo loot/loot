@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 
-#include "backend/game/game.h"
+#include "gui/state/game.h"
 #include "gui/query/json.h"
 #include "gui/query/metadata_query.h"
 
@@ -75,7 +75,7 @@ private:
     return pluginNode;
   }
 
-  Game& game_;
+  gui::Game& game_;
   const std::string pluginName_;
 };
 }

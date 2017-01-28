@@ -33,7 +33,7 @@
 #include <boost/filesystem.hpp>
 #include <yaml-cpp/yaml.h>
 
-#include "backend/game/game_settings.h"
+#include "gui/state/game_settings.h"
 #include "loot/language.h"
 
 namespace loot {

@@ -30,45 +30,32 @@
 #include <boost/filesystem.hpp>
 
 #include "backend/game/game_cache.h"
-#include "backend/game/game_settings.h"
 #include "backend/game/load_order_handler.h"
 
 namespace loot {
-class Game : public GameSettings, public GameCache {
+class Game : public GameCache {
 public:
-  Game(const GameSettings& gameSettings,
-       const boost::filesystem::path& lootDataPath,
+  Game(const GameType gameType,
+       const boost::filesystem::path& gamePath,
        const boost::filesystem::path& localDataPath = "");
 
-  bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
+  GameType Type() const;
+  boost::filesystem::path DataPath() const;
+  std::string GetArchiveFileExtension() const;
+
   void Init();
 
-  void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
+  void LoadPlugins(const std::vector<std::string>& plugins, const std::string& masterFile, bool headersOnly);
 
-  void LoadPlugins(const std::vector<std::string>& plugins, bool headersOnly);
-  void LoadAllInstalledPlugins(bool headersOnly);  //Loads all installed plugins.
-  bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
-
-  // Check if the plugin is active by using the cached value if
-  // available, and otherwise asking the load order handler.
   bool IsPluginActive(const std::string& pluginName) const;
-  short GetActiveLoadOrderIndex(const std::string & pluginName) const;
-  short GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
-
-  boost::filesystem::path MasterlistPath() const;
-  boost::filesystem::path UserlistPath() const;
 private:
-#ifdef _WIN32
-  std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
-#endif
-
-  const boost::filesystem::path lootDataPath_;
+  const GameType type_;
+  const boost::filesystem::path gamePath_;
   const boost::filesystem::path localDataPath_;
 
-  bool pluginsFullyLoaded_;
   LoadOrderHandler loadOrderHandler_;
 };
 }

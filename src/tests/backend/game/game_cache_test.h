@@ -37,7 +37,7 @@ protected:
   GameCacheTest() :
     condition("Condition"),
     conditionLowercase("condition"),
-    game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath) {}
+    game_(GetParam(), dataPath.parent_path(), localPath) {}
 
   Game game_;
   GameCache cache_;

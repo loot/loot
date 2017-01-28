@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_UPDATE_MASTERLIST_QUERY
 #define LOOT_GUI_QUERY_UPDATE_MASTERLIST_QUERY
 
-#include "backend/game/game.h"
+#include "gui/state/game.h"
 #include "gui/query/json.h"
 #include "gui/query/metadata_query.h"
 
@@ -49,7 +49,7 @@ public:
 private:
   bool updateMasterlist() {
     try {
-      return game_.GetMasterlist().Update(game_);
+      return game_.GetMasterlist().Update(game_.MasterlistPath(), game_.RepoURL(), game_.RepoBranch());
     } catch (std::exception&) {
       try {
         game_.GetMasterlist().Load(game_.MasterlistPath());
@@ -104,7 +104,7 @@ private:
     return pluginNode;
   }
 
-  Game& game_;
+  gui::Game& game_;
 };
 }
 

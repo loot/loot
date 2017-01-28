@@ -36,8 +36,7 @@
 
 namespace loot {
 ApiDatabase::ApiDatabase(const GameType game, const std::string& gamePath, const std::string& gameLocalDataPath)
-  : game_(Game(GameSettings(GameType(game)), "", gameLocalDataPath)) {
-  game_.SetGamePath(gamePath);
+  : game_(game, gamePath, gameLocalDataPath) {
   game_.Init();
 }
 
@@ -85,13 +84,17 @@ void ApiDatabase::EvalLists() {
   game_.GetUserlist() = userTemp;
 }
 
+void ApiDatabase::IdentifyMainMasterFile(const std::string& masterFile) {
+  masterFile_ = masterFile;
+}
+
 ////////////////////////////////////
 // LOOT Functionality Functions
 ////////////////////////////////////
 
 std::vector<std::string> ApiDatabase::SortPlugins(const std::vector<std::string>& plugins) {
   // Always reload all the plugins.
-  game_.LoadPlugins(plugins, false);
+  game_.LoadPlugins(plugins, masterFile_, false);
 
   //Sort plugins into their load order.
   PluginSorter sorter;

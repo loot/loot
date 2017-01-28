@@ -34,12 +34,29 @@ namespace loot {
 namespace test {
 class PluginSorterTest : public CommonGameTestFixture {
 protected:
-  PluginSorterTest() : game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath) {}
+  PluginSorterTest() : game_(GetParam(), dataPath.parent_path(), localPath) {}
 
   inline virtual void SetUp() {
     CommonGameTestFixture::SetUp();
 
     ASSERT_NO_THROW(game_.Init());
+  }
+
+  void loadInstalledPlugins(Game& game_, bool headersOnly) {
+    const std::vector<std::string> plugins({
+      masterFile,
+      blankEsm,
+      blankDifferentEsm,
+      blankMasterDependentEsm,
+      blankDifferentMasterDependentEsm,
+      blankEsp,
+      blankDifferentEsp,
+      blankMasterDependentEsp,
+      blankDifferentMasterDependentEsp,
+      blankPluginDependentEsp,
+      blankDifferentPluginDependentEsp,
+    });
+    game_.LoadPlugins(plugins, masterFile, headersOnly);
   }
 
   Game game_;
@@ -60,7 +77,7 @@ TEST_P(PluginSorterTest, sortingWithNoLoadedPluginsShouldReturnAnEmptyList) {
 }
 
 TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadOrder) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
 
   PluginSorter ps;
   std::vector<std::string> expectedSortedOrder = getLoadOrder();
@@ -74,7 +91,7 @@ TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadO
 }
 
 TEST_P(PluginSorterTest, sortingShouldClearExistingGameMessages) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   game_.AppendMessage(Message(MessageType::say, "1"));
   ASSERT_FALSE(game_.GetMessages().empty());
 
@@ -84,7 +101,7 @@ TEST_P(PluginSorterTest, sortingShouldClearExistingGameMessages) {
 }
 
 TEST_P(PluginSorterTest, failedSortShouldNotClearExistingGameMessages) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsm);
   plugin.LoadAfter({File(blankMasterDependentEsm)});
   game_.GetUserlist().AddPlugin(plugin);
@@ -97,7 +114,7 @@ TEST_P(PluginSorterTest, failedSortShouldNotClearExistingGameMessages) {
 }
 
 TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankDifferentMasterDependentEsp);
   plugin.GlobalPriority(Priority(-100));
   game_.GetUserlist().AddPlugin(plugin);
@@ -122,7 +139,7 @@ TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
 }
 
 TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRegardlessOfEvaluationOrder) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
 
   // Set Blank.esp's priority.
   PluginMetadata plugin(blankEsp);
@@ -172,7 +189,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
 }
 
 TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePluginPositions) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsp);
   plugin.LoadAfter({
       File(blankDifferentEsp),
@@ -200,7 +217,7 @@ TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePl
 }
 
 TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelativePluginPositions) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsp);
   plugin.Reqs({
       File(blankDifferentEsp),
@@ -228,7 +245,7 @@ TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelative
 }
 
 TEST_P(PluginSorterTest, sortingShouldThrowIfACyclicInteractionIsEncountered) {
-  ASSERT_NO_THROW(game_.LoadAllInstalledPlugins(false));
+  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsm);
   plugin.LoadAfter({File(blankMasterDependentEsm)});
   game_.GetUserlist().AddPlugin(plugin);

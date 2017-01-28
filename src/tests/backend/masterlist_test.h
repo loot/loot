@@ -69,35 +69,6 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::fo4,
                           GameType::tes5se));
 
-TEST_P(MasterlistTest, updateWithGameParameterShouldReturnTrueIfNoMasterlistExists) {
-  Game game(GameSettings(GetParam()), lootDataPath, localPath);
-  game.SetGamePath(dataPath.parent_path());
-  game.SetRepoURL(repoUrl);
-  game.SetRepoBranch(repoBranch);
-  ASSERT_NO_THROW(game.Init());
-
-  // This may fail on Windows if a 'real' LOOT install is also present.
-  Masterlist masterlist;
-  EXPECT_TRUE(masterlist.Update(game));
-  EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
-}
-
-TEST_P(MasterlistTest, updateWithGameParameterShouldReturnFalseIfAnUpToDateMasterlistExists) {
-  Game game(GameSettings(GetParam()), lootDataPath, localPath);
-  game.SetGamePath(dataPath.parent_path());
-  game.SetRepoURL(repoUrl);
-  game.SetRepoBranch(repoBranch);
-  ASSERT_NO_THROW(game.Init());
-
-  // This may fail on Windows if a 'real' LOOT install is also present.
-  Masterlist masterlist;
-  EXPECT_TRUE(masterlist.Update(game));
-  EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
-
-  EXPECT_FALSE(masterlist.Update(game));
-  EXPECT_TRUE(boost::filesystem::exists(game.MasterlistPath()));
-}
-
 TEST_P(MasterlistTest, updateWithSeparateParametersShouldThrowIfAnInvalidPathIsGiven) {
   Masterlist masterlist;
 

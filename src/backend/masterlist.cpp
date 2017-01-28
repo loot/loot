@@ -84,10 +84,6 @@ MasterlistInfo Masterlist::GetInfo(const boost::filesystem::path& path, bool sho
   return info;
 }
 
-bool Masterlist::Update(const Game& game) {
-  return Update(game.MasterlistPath(), game.RepoURL(), game.RepoBranch());
-}
-
 bool Masterlist::Update(const boost::filesystem::path& path, const std::string& repoUrl, const std::string& repoBranch) {
   GitHelper git;
   fs::path repoPath = path.parent_path();

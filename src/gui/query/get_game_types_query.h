@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_GAME_TYPES_QUERY
 #define LOOT_GUI_QUERY_GET_GAME_TYPES_QUERY
 
-#include "backend/game/game_settings.h"
+#include "gui/state/game_settings.h"
 #include "gui/query/json.h"
 #include "gui/query/query.h"
 

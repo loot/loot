@@ -22,10 +22,10 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_GAME_GAME_SETTINGS_TEST
-#define LOOT_TESTS_BACKEND_GAME_GAME_SETTINGS_TEST
+#ifndef LOOT_TESTS_GUI_STATE_GAME_SETTINGS_TEST
+#define LOOT_TESTS_GUI_STATE_GAME_SETTINGS_TEST
 
-#include "backend/game/game_settings.h"
+#include "gui/state/game_settings.h"
 
 #include "tests/common_game_test_fixture.h"
 
@@ -55,7 +55,6 @@ TEST_P(GameSettingsTest, defaultConstructorShouldInitialiseIdToTes4AndAllOtherSe
   EXPECT_EQ("", settings_.RepoBranch());
 
   EXPECT_EQ("", settings_.GamePath());
-  EXPECT_EQ("", settings_.DataPath());
 }
 
 TEST_P(GameSettingsTest, idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
@@ -71,7 +70,6 @@ TEST_P(GameSettingsTest, idConstructorShouldInitialiseSettingsToDefaultsForThatG
   EXPECT_NE("", settings_.RepoBranch());
 
   EXPECT_EQ("", settings_.GamePath());
-  EXPECT_EQ("", settings_.DataPath());
 }
 
 TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
@@ -126,16 +124,6 @@ TEST_P(GameSettingsTest, gameSettingsWithDifferentIdsAndNamesShouldNotBeEqual) {
   EXPECT_FALSE(game1 == game2);
 }
 
-TEST_P(GameSettingsTest, getArchiveFileExtensionShouldReturnDotBa2IfGameIdIsFallout4) {
-  GameSettings settings_(GameType::fo4);
-  EXPECT_EQ(".ba2", settings_.GetArchiveFileExtension());
-}
-
-TEST_P(GameSettingsTest, getArchiveFileExtensionShouldReturnDotBsaIfGameIdIsNotFallout4) {
-  GameSettings settings_;
-  EXPECT_EQ(".bsa", settings_.GetArchiveFileExtension());
-}
-
 TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
   GameSettings settings_;
   settings_.SetName("name");
@@ -172,7 +160,6 @@ TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
 
   settings_.SetGamePath(pathValue);
   EXPECT_EQ(pathValue, settings_.GamePath().string());
-  EXPECT_EQ(boost::filesystem::path(pathValue) / "Data", settings_.DataPath());
 }
 
 TEST_P(GameSettingsTest, emittingYamlShouldSerialiseDataCorrectly) {

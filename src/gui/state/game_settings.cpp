@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "backend/game/game_settings.h"
+#include "gui/state/game_settings.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
@@ -122,20 +122,6 @@ std::string GameSettings::RepoBranch() const {
 
 fs::path GameSettings::GamePath() const {
   return gamePath_;
-}
-
-fs::path GameSettings::DataPath() const {
-  if (gamePath_.empty())
-    return "";
-  else
-    return gamePath_ / "Data";
-}
-
-std::string GameSettings::GetArchiveFileExtension() const {
-  if (type_ == GameType::fo4)
-    return ".ba2";
-  else
-    return ".bsa";
 }
 
 GameSettings& GameSettings::SetName(const std::string& name) {

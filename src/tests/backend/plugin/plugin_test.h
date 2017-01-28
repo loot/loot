@@ -37,7 +37,7 @@ protected:
   PluginTest() :
     emptyFile("EmptyFile.esm"),
     nonPluginFile("NotAPlugin.esm"),
-    game_(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath),
+    game_(GetParam(), dataPath.parent_path(), localPath),
     blankArchive("Blank" + game_.GetArchiveFileExtension()),
     blankSuffixArchive("Blank - Different - suffix" + game_.GetArchiveFileExtension()) {}
 

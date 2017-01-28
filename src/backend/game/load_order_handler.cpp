@@ -40,8 +40,10 @@ LoadOrderHandler::~LoadOrderHandler() {
   lo_destroy_handle(gh_);
 }
 
-void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData) {
-  if (game.GamePath().empty()) {
+void LoadOrderHandler::Init(const GameType& gameType, 
+                            const boost::filesystem::path& gamePath, 
+                            const boost::filesystem::path& gameLocalAppData) {
+  if (gamePath.empty()) {
     throw std::invalid_argument("Game path is not initialised.");
   }
 
@@ -57,18 +59,18 @@ void LoadOrderHandler::Init(const GameSettings& game, const boost::filesystem::p
   }
 
   int ret;
-  if (game.Type() == GameType::tes4)
-    ret = lo_create_handle(&gh_, LIBLO_GAME_TES4, game.GamePath().string().c_str(), gameLocalDataPath);
-  else if (game.Type() == GameType::tes5)
-    ret = lo_create_handle(&gh_, LIBLO_GAME_TES5, game.GamePath().string().c_str(), gameLocalDataPath);
-  else if (game.Type() == GameType::tes5se)
-    ret = lo_create_handle(&gh_, LIBLO_GAME_TES5SE, game.GamePath().string().c_str(), gameLocalDataPath);
-  else if (game.Type() == GameType::fo3)
-    ret = lo_create_handle(&gh_, LIBLO_GAME_FO3, game.GamePath().string().c_str(), gameLocalDataPath);
-  else if (game.Type() == GameType::fonv)
-    ret = lo_create_handle(&gh_, LIBLO_GAME_FNV, game.GamePath().string().c_str(), gameLocalDataPath);
-  else if (game.Type() == GameType::fo4)
-    ret = lo_create_handle(&gh_, LIBLO_GAME_FO4, game.GamePath().string().c_str(), gameLocalDataPath);
+  if (gameType == GameType::tes4)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_TES4, gamePath.string().c_str(), gameLocalDataPath);
+  else if (gameType == GameType::tes5)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_TES5, gamePath.string().c_str(), gameLocalDataPath);
+  else if (gameType == GameType::tes5se)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_TES5SE, gamePath.string().c_str(), gameLocalDataPath);
+  else if (gameType == GameType::fo3)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_FO3, gamePath.string().c_str(), gameLocalDataPath);
+  else if (gameType == GameType::fonv)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_FNV, gamePath.string().c_str(), gameLocalDataPath);
+  else if (gameType == GameType::fo4)
+    ret = lo_create_handle(&gh_, LIBLO_GAME_FO4, gamePath.string().c_str(), gameLocalDataPath);
   else
     ret = LIBLO_ERROR_INVALID_ARGS;
 
@@ -165,24 +167,5 @@ void LoadOrderHandler::SetLoadOrder(const std::vector<std::string>& loadOrder) c
 
     throw std::system_error(ret, libloadorder_category(), err);
   }
-}
-void LoadOrderHandler::BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                                       const boost::filesystem::path & backupDirectory) {
-  const int maxBackupIndex = 2;
-  boost::format filenameFormat = boost::format("loadorder.bak.%1%");
-
-  boost::filesystem::path backupFilePath = backupDirectory / (filenameFormat % 2).str();
-  if (boost::filesystem::exists(backupFilePath))
-    boost::filesystem::remove(backupFilePath);
-
-  for (int i = maxBackupIndex - 1; i > -1; --i) {
-    const boost::filesystem::path backupFilePath = backupDirectory / (filenameFormat % i).str();
-    if (boost::filesystem::exists(backupFilePath))
-      boost::filesystem::rename(backupFilePath, backupDirectory / (filenameFormat % (i + 1)).str());
-  }
-
-  boost::filesystem::ofstream out(backupDirectory / (filenameFormat % 0).str());
-  for (const auto &plugin : loadOrder)
-    out << plugin << std::endl;
 }
 }

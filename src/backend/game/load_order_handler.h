@@ -32,7 +32,7 @@
 #include <boost/filesystem.hpp>
 #include <libloadorder/libloadorder.h>
 
-#include "backend/game/game_settings.h"
+#include "loot/enum/game_type.h"
 
 namespace loot {
 class LoadOrderHandler {
@@ -40,16 +40,15 @@ public:
   LoadOrderHandler();
   ~LoadOrderHandler();
 
-  void Init(const GameSettings& game, const boost::filesystem::path& gameLocalAppData = "");
+  void Init(const GameType& game,
+            const boost::filesystem::path& gamePath,
+            const boost::filesystem::path& gameLocalAppData = "");
 
   std::vector<std::string> GetLoadOrder() const;
 
   bool IsPluginActive(const std::string& pluginName) const;
 
   void SetLoadOrder(const std::vector<std::string>& loadOrder) const;
-
-  static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                              const boost::filesystem::path& backupDirectory);
 private:
   lo_game_handle gh_;
 };

@@ -26,7 +26,6 @@
 
 #include "tests/backend/game/game_test.h"
 #include "tests/backend/game/game_cache_test.h"
-#include "tests/backend/game/game_settings_test.h"
 #include "tests/backend/game/load_order_handler_test.h"
 #include "tests/backend/helpers/git_helper_test.h"
 #include "tests/backend/helpers/helpers_test.h"

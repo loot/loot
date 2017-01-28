@@ -71,6 +71,13 @@ public:
    */
 
   /**
+   *  @brief Identify the game's main master file.
+   *  @details When sorting, LOOT always only loads the headers of the game's
+   *           main master file as a performance optimisation.
+   */
+  virtual void IdentifyMainMasterFile(const std::string& masterFile) = 0;
+
+  /**
    *  @brief Calculates a new load order for the game's installed plugins
    *         (including inactive plugins) and outputs the sorted order.
    *  @details Pulls metadata from the masterlist and userlist if they are

@@ -82,7 +82,7 @@ void LootState::load(YAML::Node& settings) {
         .SetRegistryKey(gameSettings.RegistryKey());
     } else {
       BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << gameSettings.FolderName();
-      games_.push_back(Game(gameSettings, LootPaths::getLootDataPath()));
+      games_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
     }
 
     newGameFolders.insert(gameSettings.FolderName());
@@ -214,7 +214,7 @@ void LootState::changeGame(const std::string& newGameFolder) {
   lock_guard<mutex> guard(mutex_);
 
   BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-  currentGame_ = find_if(games_.begin(), games_.end(), [&](const Game& game) {
+  currentGame_ = find_if(games_.begin(), games_.end(), [&](const gui::Game& game) {
     return boost::iequals(newGameFolder, game.FolderName());
   });
   currentGame_->Init();
@@ -224,7 +224,7 @@ void LootState::changeGame(const std::string& newGameFolder) {
   BOOST_LOG_TRIVIAL(debug) << "New game is " << currentGame_->Name();
 }
 
-Game& LootState::getCurrentGame() {
+gui::Game& LootState::getCurrentGame() {
   lock_guard<mutex> guard(mutex_);
 
   return *currentGame_;
@@ -262,12 +262,12 @@ void LootState::selectGame(std::string preferredGame) {
   }
 
   // Get iterator to preferred game.
-  currentGame_ = find_if(begin(games_), end(games_), [&](Game& game) {
+  currentGame_ = find_if(begin(games_), end(games_), [&](gui::Game& game) {
     return (preferredGame.empty() || preferredGame == game.FolderName()) && game.IsInstalled();
   });
   // If the preferred game cannot be found, get the first installed game.
   if (currentGame_ == end(games_)) {
-    currentGame_ = find_if(begin(games_), end(games_), [](Game& game) {
+    currentGame_ = find_if(begin(games_), end(games_), [](gui::Game& game) {
       return game.IsInstalled();
     });
   }
@@ -286,16 +286,16 @@ void LootState::enableDebugLogging(bool enable) {
   }
 }
 
-std::list<Game> LootState::toGames(const std::vector<GameSettings>& settings) {
-  std::list<Game> games;
+std::list<gui::Game> LootState::toGames(const std::vector<GameSettings>& settings) {
+  std::list<gui::Game> games;
   for (const auto& element : settings) {
-    games.push_back(Game(element, LootPaths::getLootDataPath()));
+    games.push_back(gui::Game(element, LootPaths::getLootDataPath()));
   }
 
   return games;
 }
 
-std::vector<GameSettings> LootState::toGameSettings(const std::list<Game>& games) {
+std::vector<GameSettings> LootState::toGameSettings(const std::list<gui::Game>& games) {
   return vector<GameSettings>(games.begin(), games.end());
 }
 }

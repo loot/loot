@@ -25,7 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 
-#include "backend/game/game.h"
+#include "gui/state/game.h"
 #include "gui/query/json.h"
 #include "gui/query/metadata_query.h"
 
@@ -77,7 +77,7 @@ private:
       return "[]";
   }
 
-  Game& game_;
+  gui::Game& game_;
 };
 }
 

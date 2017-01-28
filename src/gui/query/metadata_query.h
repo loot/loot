@@ -28,7 +28,6 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/game/game.h"
 #include "backend/plugin/plugin.h"
 #include "gui/query/query.h"
 #include "loot/exception/file_access_error.h"

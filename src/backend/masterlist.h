@@ -37,7 +37,6 @@ class Game;
 
 class Masterlist : public MetadataList {
 public:
-  bool Update(const Game& game);
   bool Update(const boost::filesystem::path& path,
               const std::string& repoURL,
               const std::string& repoBranch);

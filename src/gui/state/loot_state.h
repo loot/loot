@@ -26,7 +26,7 @@
 #define LOOT_BACKEND_APP_LOOT_STATE
 
 #include "gui/state/loot_settings.h"
-#include "backend/game/game.h"
+#include "gui/state/game.h"
 
 namespace loot {
 class LootState : public LootSettings {
@@ -39,7 +39,7 @@ public:
 
   void save(const boost::filesystem::path& file);
 
-  Game& getCurrentGame();
+  gui::Game& getCurrentGame();
   void changeGame(const std::string& newGameFolder);
 
   // Get the folder names of the installed games.
@@ -53,11 +53,11 @@ private:
   void selectGame(std::string cmdLineGame);
   void enableDebugLogging(bool enable);
 
-  static std::list<Game> toGames(const std::vector<GameSettings>& settings);
-  static std::vector<GameSettings> toGameSettings(const std::list<Game>& games);
+  static std::list<gui::Game> toGames(const std::vector<GameSettings>& settings);
+  static std::vector<GameSettings> toGameSettings(const std::list<gui::Game>& games);
 
-  std::list<Game> games_;
-  std::list<Game>::iterator currentGame_;
+  std::list<gui::Game> games_;
+  std::list<gui::Game>::iterator currentGame_;
   std::vector<std::string> initErrors_;
 
   // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
