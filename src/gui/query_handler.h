@@ -29,9 +29,6 @@
 #include <yaml-cpp/yaml.h>
 
 #include "gui/state/loot_state.h"
-#include "backend/plugin/plugin.h"
-#include "loot/metadata/plugin_metadata.h"
-#include "gui/editor_message.h"
 #include "gui/query/query.h"
 
 namespace loot {

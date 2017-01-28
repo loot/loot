@@ -40,6 +40,7 @@
 #include "gui/editor_message.h"
 #include "gui/loot_app.h"
 #include "gui/loot_handler.h"
+#include "gui/query/json.h"
 #include "gui/query/apply_sort_query.h"
 #include "gui/query/cancel_find_query.h"
 #include "gui/query/cancel_sort_query.h"
@@ -70,11 +71,6 @@
 #include "gui/resource.h"
 #include "gui/yaml_simple_message_helpers.h"
 
-#include "gui/state/loot_paths.h"
-#include "backend/plugin/plugin_sorter.h"
-#include "backend/helpers/helpers.h"
-#include "gui/query/json.h"
-#include "loot/loot_version.h"
 
 using boost::filesystem::exists;
 using boost::format;
