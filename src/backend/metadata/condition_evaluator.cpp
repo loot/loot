@@ -29,12 +29,124 @@
 #include <boost/log/trivial.hpp>
 
 #include "backend/helpers/crc.h"
+#include "backend/metadata/condition_grammar.h"
 #include "loot/exception/condition_syntax_error.h"
 
 using boost::format;
 
 namespace loot {
 ConditionEvaluator::ConditionEvaluator(Game * game) : game_(game) {}
+
+bool ConditionEvaluator::evaluate(const std::string& condition) {
+  if (game_ == nullptr) {
+    // Still check that the syntax is valid.
+    parseCondition(condition);
+    return false;
+  }
+
+  if (condition.empty())
+    return true;
+
+  BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << condition;
+
+  auto cachedValue = game_->GetCachedCondition(condition);
+  if (cachedValue.second)
+    return cachedValue.first;
+
+  bool result = parseCondition(condition);
+
+  game_->CacheCondition(condition, result);
+
+  return result;
+}
+
+bool ConditionEvaluator::evaluate(const PluginCleaningData& cleaningData, const std::string& pluginName) {
+  if (game_ == nullptr || pluginName.empty())
+    return false;
+
+  // First need to get plugin's CRC.
+  uint32_t crc = 0;
+
+  // Get the CRC from the game plugin cache if possible.
+  try {
+    crc = game_->GetPlugin(pluginName).Crc();
+  } catch (...) {}
+
+  // Otherwise calculate it from the file.
+  if (crc == 0) {
+    if (boost::filesystem::exists(game_->DataPath() / pluginName)) {
+      crc = GetCrc32(game_->DataPath() / pluginName);
+    } else if (boost::filesystem::exists(game_->DataPath() / (pluginName + ".ghost"))) {
+      crc = GetCrc32(game_->DataPath() / (pluginName + ".ghost"));
+    }
+  }
+
+  return cleaningData.CRC() == crc;
+}
+
+PluginMetadata ConditionEvaluator::evaluateAll(const PluginMetadata& pluginMetadata) {
+  if (game_ == nullptr)
+    return pluginMetadata;
+
+  PluginMetadata evaluatedMetadata(pluginMetadata.Name());
+  evaluatedMetadata.Enabled(pluginMetadata.Enabled());
+  evaluatedMetadata.LocalPriority(pluginMetadata.LocalPriority());
+  evaluatedMetadata.GlobalPriority(pluginMetadata.GlobalPriority());
+  evaluatedMetadata.Locations(pluginMetadata.Locations());
+
+  std::set<File> fileSet;
+  for (const auto& file : pluginMetadata.LoadAfter()) {
+    if (evaluate(file.Condition()))
+      fileSet.insert(file);
+  }
+  evaluatedMetadata.LoadAfter(fileSet);
+
+  fileSet.clear();
+  for (const auto& file : pluginMetadata.Reqs()) {
+    if (evaluate(file.Condition()))
+      fileSet.insert(file);
+  }
+  evaluatedMetadata.Reqs(fileSet);
+
+  fileSet.clear();
+  for (const auto& file : pluginMetadata.Incs()) {
+    if (evaluate(file.Condition()))
+      fileSet.insert(file);
+  }
+  evaluatedMetadata.Incs(fileSet);
+
+  std::vector<Message> messages;
+  for (const auto& message : pluginMetadata.Messages()) {
+    if (evaluate(message.Condition()))
+      messages.push_back(message);
+  }
+  evaluatedMetadata.Messages(messages);
+
+  std::set<Tag> tagSet;
+  for (const auto& tag : pluginMetadata.Tags()) {
+    if (evaluate(tag.Condition()))
+      tagSet.insert(tag);
+  }
+  evaluatedMetadata.Tags(tagSet);
+
+  if (!evaluatedMetadata.IsRegexPlugin()) {
+    std::set<PluginCleaningData> infoSet;
+    for (const auto& info : pluginMetadata.DirtyInfo()) {
+      if (evaluate(info, pluginMetadata.Name()))
+        infoSet.insert(info);
+    }
+    evaluatedMetadata.DirtyInfo(infoSet);
+
+    infoSet.clear();
+    for (const auto& info : pluginMetadata.CleanInfo()) {
+      if (evaluate(info, pluginMetadata.Name()))
+        infoSet.insert(info);
+    }
+    evaluatedMetadata.CleanInfo(infoSet);
+  }
+
+  return evaluatedMetadata;
+}
 
 bool ConditionEvaluator::fileExists(const std::string& filePath) const {
   validatePath(filePath);
@@ -263,6 +375,24 @@ bool ConditionEvaluator::areRegexMatchesInDataDirectory(const std::pair<boost::f
 
     return false;
   });
+}
+bool ConditionEvaluator::parseCondition(const std::string & condition) {
+  if (condition.empty())
+    return true;
+
+  ConditionGrammar<std::string::const_iterator, boost::spirit::qi::space_type> grammar(*this);
+  boost::spirit::qi::space_type skipper;
+  std::string::const_iterator begin = condition.begin();
+  std::string::const_iterator end = condition.end();
+  bool evaluation;
+
+  bool parseResult = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, evaluation);
+
+  if (!parseResult || begin != end) {
+    throw ConditionSyntaxError((boost::format("Failed to parse condition \"%1%\": only partially matched expected syntax.") % condition).str());
+  }
+
+  return evaluation;
 }
 Version ConditionEvaluator::getVersion(const std::string& filePath) const {
   if (filePath == "LOOT")

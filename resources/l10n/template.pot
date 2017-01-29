@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-01-29 11:37+0000\n"
+"POT-Creation-Date: 2017-01-29 13:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -700,25 +700,25 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:90 src/gui/query/metadata_query.h:91
+#: src/gui/query/metadata_query.h:91 src/gui/query/metadata_query.h:92
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:94 src/gui/query/metadata_query.h:95
+#: src/gui/query/metadata_query.h:95 src/gui/query/metadata_query.h:96
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:118
+#: src/gui/query/metadata_query.h:120
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:144 src/backend/plugin/plugin_sorter.cpp:219
+#: src/gui/query/metadata_query.h:146 src/backend/plugin/plugin_sorter.cpp:219
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:175 src/gui/query/metadata_query.h:176
+#: src/gui/query/metadata_query.h:178 src/gui/query/metadata_query.h:179
 msgid "(edited)"
 msgstr ""
 

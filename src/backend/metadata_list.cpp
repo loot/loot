@@ -31,6 +31,7 @@
 #include "loot/exception/file_access_error.h"
 #include "loot/yaml/plugin_metadata.h"
 #include "backend/game/game.h"
+#include "backend/metadata/condition_evaluator.h"
 
 namespace loot {
 void MetadataList::Load(const boost::filesystem::path& filepath) {
@@ -149,18 +150,21 @@ void MetadataList::AppendMessage(const Message& message) {
 }
 
 void MetadataList::EvalAllConditions(Game& game) {
+  ConditionEvaluator evaluator(&game);
   std::unordered_set<PluginMetadata> replacementSet;
   for (auto &plugin : plugins_) {
-    PluginMetadata p(plugin);
-    p.EvalAllConditions(game);
-    replacementSet.insert(p);
+    replacementSet.insert(evaluator.evaluateAll(plugin));
   }
   plugins_ = replacementSet;
   for (auto &plugin : regexPlugins_) {
-    plugin.EvalAllConditions(game);
+    plugin = evaluator.evaluateAll(plugin);
   }
-  for (auto &message : messages_) {
-    message.EvalCondition(game);
+
+  for (auto it = std::begin(messages_); it != std::end(messages_);) {
+    if (!evaluator.evaluate(it->Condition()))
+      it = messages_.erase(it);
+    else
+      ++it;
   }
 }
 }

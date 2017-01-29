@@ -272,63 +272,6 @@ void PluginMetadata::Locations(const std::set<Location>& locations) {
   locations_ = locations;
 }
 
-PluginMetadata& PluginMetadata::EvalAllConditions(Game& game) {
-  for (auto it = loadAfter_.begin(); it != loadAfter_.end();) {
-    if (!it->EvalCondition(game))
-      loadAfter_.erase(it++);
-    else
-      ++it;
-  }
-
-  for (auto it = requirements_.begin(); it != requirements_.end();) {
-    if (!it->EvalCondition(game))
-      requirements_.erase(it++);
-    else
-      ++it;
-  }
-
-  for (auto it = incompatibilities_.begin(); it != incompatibilities_.end();) {
-    if (!it->EvalCondition(game))
-      incompatibilities_.erase(it++);
-    else
-      ++it;
-  }
-
-  for (auto it = messages_.begin(); it != messages_.end();) {
-    if (!it->EvalCondition(game))
-      it = messages_.erase(it);
-    else
-      ++it;
-  }
-
-  for (auto it = tags_.begin(); it != tags_.end();) {
-    if (!it->EvalCondition(game))
-      tags_.erase(it++);
-    else
-      ++it;
-  }
-
-  if (IsRegexPlugin()) {  // Remove any dirty metadata from a regex plugin.
-    dirtyInfo_.clear();
-    cleanInfo_.clear();
-  } else {
-    for (auto it = dirtyInfo_.begin(); it != dirtyInfo_.end();) {
-      if (!it->EvalCondition(game, name_))
-        dirtyInfo_.erase(it++);
-      else
-        ++it;
-    }
-    for (auto it = cleanInfo_.begin(); it != cleanInfo_.end();) {
-      if (!it->EvalCondition(game, name_))
-        cleanInfo_.erase(it++);
-      else
-        ++it;
-    }
-  }
-
-  return *this;
-}
-
 bool PluginMetadata::HasNameOnly() const {
   return !localPriority_.isExplicit()
     && !globalPriority_.isExplicit()

@@ -36,6 +36,7 @@
 
 #include "loot/exception/cyclic_interaction_error.h"
 #include "backend/game/game.h"
+#include "backend/metadata/condition_evaluator.h"
 
 using std::list;
 using std::string;
@@ -190,26 +191,28 @@ void PluginSorter::AddPluginVertices(Game& game, const LanguageCode language) {
   // Using a set of plugin names followed by finding the matching key
   // in the unordered map, as it's probably faster than copying the
   // full plugin objects then sorting them.
+  ConditionEvaluator evaluator(&game);
   for (const auto &plugin : game.GetPlugins()) {
     vertex_t v = boost::add_vertex(plugin, graph_);
     BOOST_LOG_TRIVIAL(trace) << "Merging for plugin \"" << graph_[v].Name() << "\"";
 
-    //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-    BOOST_LOG_TRIVIAL(trace) << "Merging masterlist data down to plugin list data.";
-    graph_[v].MergeMetadata(game.GetMasterlist().FindPlugin(graph_[v]));
-
-    //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-    PluginMetadata ulistPlugin = game.GetUserlist().FindPlugin(graph_[v]);
-
-    if (!ulistPlugin.HasNameOnly() && ulistPlugin.Enabled()) {
-      BOOST_LOG_TRIVIAL(trace) << "Merging userlist data down to plugin list data.";
-      graph_[v].MergeMetadata(ulistPlugin);
-    }
-
-    //Now that items are merged, evaluate any conditions they have.
-    BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
     try {
-      graph_[v].EvalAllConditions(game);
+      //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
+      BOOST_LOG_TRIVIAL(trace) << "Evaluating conditions for any masterlist metadata.";
+      auto metadata = game.GetMasterlist().FindPlugin(graph_[v]);
+      metadata = evaluator.evaluateAll(metadata);
+      BOOST_LOG_TRIVIAL(trace) << "Merging masterlist metadata down to plugin list data.";
+      graph_[v].MergeMetadata(metadata);
+
+      //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
+      metadata = game.GetUserlist().FindPlugin(graph_[v]);
+
+      if (!metadata.HasNameOnly() && metadata.Enabled()) {
+        BOOST_LOG_TRIVIAL(trace) << "Evaluating conditions for userlist metadata.";
+        metadata = evaluator.evaluateAll(metadata);
+        BOOST_LOG_TRIVIAL(trace) << "Merging userlist metadata down to plugin list data.";
+        graph_[v].MergeMetadata(metadata);
+      }
     } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << "\"" << graph_[v].Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
       vector<Message> messages(graph_[v].Messages());

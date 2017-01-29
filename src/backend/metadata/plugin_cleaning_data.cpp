@@ -122,28 +122,4 @@ Message PluginCleaningData::AsMessage() const {
 
   return Message(MessageType::warn, info);
 }
-
-bool PluginCleaningData::EvalCondition(Game& game, const std::string& pluginName) const {
-  if (pluginName.empty())
-    return false;
-
-  // First need to get plugin's CRC.
-  uint32_t crc = 0;
-
-  // Get the CRC from the game plugin cache if possible.
-  try {
-    crc = game.GetPlugin(pluginName).Crc();
-  } catch (...) {}
-
-  // Otherwise calculate it from the file.
-  if (crc == 0) {
-    if (boost::filesystem::exists(game.DataPath() / pluginName)) {
-      crc = GetCrc32(game.DataPath() / pluginName);
-    } else if (boost::filesystem::exists(game.DataPath() / (pluginName + ".ghost"))) {
-      crc = GetCrc32(game.DataPath() / (pluginName + ".ghost"));
-    }
-  }
-
-  return crc_ == crc;
-}
 }

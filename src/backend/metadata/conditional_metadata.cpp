@@ -28,7 +28,7 @@
 #include <boost/log/trivial.hpp>
 
 #include "backend/game/game.h"
-#include "backend/metadata/condition_grammar.h"
+#include "backend/metadata/condition_evaluator.h"
 
 using std::string;
 
@@ -45,46 +45,10 @@ std::string ConditionalMetadata::Condition() const {
   return condition_;
 }
 
-bool ConditionalMetadata::EvalCondition(Game& game) const {
-  if (condition_.empty())
-    return true;
-
-  BOOST_LOG_TRIVIAL(trace) << "Evaluating condition: " << condition_;
-
-  auto cachedValue = game.GetCachedCondition(condition_);
-  if (cachedValue.second)
-    return cachedValue.first;
-
-  bool result = ParseCondition(&game);
-
-  game.CacheCondition(condition_, result);
-
-  return result;
-}
-
 void ConditionalMetadata::ParseCondition() const {
   BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << condition_;
-  ParseCondition(nullptr);
-}
+  ConditionEvaluator evaluator(nullptr);
 
-bool ConditionalMetadata::ParseCondition(Game * game) const {
-  if (condition_.empty())
-    return true;
-
-  BOOST_LOG_TRIVIAL(trace) << "Testing condition syntax: " << condition_;
-
-  ConditionGrammar<string::const_iterator, boost::spirit::qi::space_type> grammar(game);
-  boost::spirit::qi::space_type skipper;
-  string::const_iterator begin = condition_.begin();
-  string::const_iterator end = condition_.end();
-  bool evaluation;
-
-  bool parseResult = boost::spirit::qi::phrase_parse(begin, end, grammar, skipper, evaluation);
-
-  if (!parseResult || begin != end) {
-    throw ConditionSyntaxError((boost::format("Failed to parse condition \"%1%\": only partially matched expected syntax.") % condition_).str());
-  }
-
-  return evaluation;
+  evaluator.evaluate(condition_);
 }
 }

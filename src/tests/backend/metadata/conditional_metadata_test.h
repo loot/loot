@@ -68,33 +68,6 @@ TEST_P(ConditionalMetadataTest, isConditionalShouldBeTrueForANonEmptyConditionSt
   EXPECT_TRUE(conditionalMetadata_.IsConditional());
 }
 
-TEST_P(ConditionalMetadataTest, evalConditionShouldReturnTrueForAnEmptyCondition) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  EXPECT_TRUE(conditionalMetadata_.EvalCondition(game));
-}
-
-TEST_P(ConditionalMetadataTest, evalConditionShouldThrowForAnInvalidCondition) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  conditionalMetadata_ = ConditionalMetadata("condition");
-  EXPECT_THROW(conditionalMetadata_.EvalCondition(game), ConditionSyntaxError);
-}
-
-TEST_P(ConditionalMetadataTest, evalConditionShouldReturnTrueForAConditionThatIsTrue) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  conditionalMetadata_ = ConditionalMetadata("file(\"" + blankEsm + "\")");
-  EXPECT_TRUE(conditionalMetadata_.EvalCondition(game));
-}
-
-TEST_P(ConditionalMetadataTest, evalConditionShouldReturnFalseForAConditionThatIsFalse) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  conditionalMetadata_ = ConditionalMetadata("file(\"" + missingEsp + "\")");
-  EXPECT_FALSE(conditionalMetadata_.EvalCondition(game));
-}
-
 TEST_P(ConditionalMetadataTest, parseConditionShouldNotThrowForAnEmptyCondition) {
   EXPECT_NO_THROW(conditionalMetadata_.ParseCondition());
 }

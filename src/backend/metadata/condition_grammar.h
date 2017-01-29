@@ -56,7 +56,7 @@ template<typename Iterator, typename Skipper>
 class ConditionGrammar : public boost::spirit::qi::grammar < Iterator, bool(), Skipper > {
 public:
   ConditionGrammar() : ConditionGrammar(nullptr) {}
-  ConditionGrammar(Game * game) : ConditionGrammar::base_type(expression_, "condition grammar"), evaluator(game) {
+  ConditionGrammar(ConditionEvaluator& evaluator) : ConditionGrammar::base_type(expression_, "condition grammar"), evaluator_(evaluator) {
     using boost::spirit::unicode::char_;
     using boost::spirit::unicode::string;
     namespace phoenix = boost::phoenix;
@@ -144,9 +144,9 @@ private:
 
     result = false;
     if (IsRegex(file))
-      result = evaluator.regexMatchExists(file);
+      result = evaluator_.regexMatchExists(file);
     else
-      result = evaluator.fileExists(file);
+      result = evaluator_.fileExists(file);
 
     BOOST_LOG_TRIVIAL(trace) << "File check result: " << result;
   }
@@ -155,21 +155,21 @@ private:
     BOOST_LOG_TRIVIAL(trace) << "Checking to see if more than one file matching the regex \"" << regexStr << "\" exist.";
 
     result = false;
-    result = evaluator.regexMatchesExist(regexStr);
+    result = evaluator_.regexMatchesExist(regexStr);
   }
 
   void CheckSum(bool& result, const std::string& file, const uint32_t checksum) {
     BOOST_LOG_TRIVIAL(trace) << "Checking the CRC of the file \"" << file << "\".";
 
     result = false;
-    result = evaluator.checksumMatches(file, checksum);
+    result = evaluator_.checksumMatches(file, checksum);
   }
 
   void CheckVersion(bool& result, const std::string&  file, const std::string& version, const std::string& comparator) const {
     BOOST_LOG_TRIVIAL(trace) << "Checking version of file \"" << file << "\".";
 
     result = false;
-    result = evaluator.compareVersions(file, version, comparator);
+    result = evaluator_.compareVersions(file, version, comparator);
 
     BOOST_LOG_TRIVIAL(trace) << "Version check result: " << result;
   }
@@ -177,9 +177,9 @@ private:
   void CheckActive(bool& result, const std::string& file) const {
     result = false;
     if (IsRegex(file))
-      result = evaluator.isPluginMatchingRegexActive(file);
+      result = evaluator_.isPluginMatchingRegexActive(file);
     else
-      result = evaluator.isPluginActive(file);
+      result = evaluator_.isPluginActive(file);
 
     BOOST_LOG_TRIVIAL(trace) << "Active check result: " << result;
   }
@@ -188,7 +188,7 @@ private:
     BOOST_LOG_TRIVIAL(trace) << "Checking to see if more than one file matching the regex \"" << regexStr << "\" exist.";
 
     result = false;
-    result = evaluator.arePluginsActive(regexStr);
+    result = evaluator_.arePluginsActive(regexStr);
   }
 
   void SyntaxError(Iterator const& first, Iterator const& last, Iterator const& errorpos, boost::spirit::info const& what) {
@@ -203,7 +203,7 @@ private:
   boost::spirit::qi::rule<Iterator, std::string()> quotedStr_, filePath_, comparator_;
   boost::spirit::qi::rule<Iterator, char()> invalidPathChars_;
 
-  ConditionEvaluator evaluator;
+  ConditionEvaluator& evaluator_;
 };
 }
 #endif

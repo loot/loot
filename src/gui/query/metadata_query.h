@@ -29,6 +29,7 @@ along with LOOT.  If not, see
 #include <boost/log/trivial.hpp>
 
 #include "backend/plugin/plugin.h"
+#include "backend/metadata/condition_evaluator.h"
 #include "gui/query/query.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/git_state_error.h"
@@ -54,10 +55,10 @@ protected:
                                      const PluginMetadata& userlistEntry) {
     Plugin plugin(file);
 
-    plugin.MergeMetadata(masterlistEntry);
-    plugin.MergeMetadata(userlistEntry);
+    plugin.MergeMetadata(evaluateMetadata(masterlistEntry));
+    plugin.MergeMetadata(evaluateMetadata(userlistEntry));
 
-    evaluatePlugin(plugin);
+    plugin.CheckInstallValidity(state_.getCurrentGame());
 
     return toYaml(plugin);
   }
@@ -106,9 +107,10 @@ private:
 
   void evaluateMessageConditions(std::vector<Message>& messages) {
     try {
+      ConditionEvaluator evaluator(&state_.getCurrentGame());
       auto it = begin(messages);
       while (it != end(messages)) {
-        if (!it->EvalCondition(state_.getCurrentGame()))
+        if (!evaluator.evaluate(it->Condition()))
           it = messages.erase(it);
         else
           ++it;
@@ -133,20 +135,21 @@ private:
     return simpleMessages;
   }
 
-  void evaluatePlugin(Plugin& plugin) {
-    //Evaluate any conditions
+  PluginMetadata evaluateMetadata(const PluginMetadata& pluginMetadata) {
     BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
     try {
-      plugin.EvalAllConditions(state_.getCurrentGame());
+      ConditionEvaluator evaluator(&state_.getCurrentGame());
+      return evaluator.evaluateAll(pluginMetadata);
     } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << plugin.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-      std::vector<Message> messages(plugin.Messages());
-      messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % plugin.Name() % e.what()).str()));
-      plugin.Messages(messages);
+      BOOST_LOG_TRIVIAL(error) << "\"" << pluginMetadata.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+      std::vector<Message> messages(pluginMetadata.Messages());
+      messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginMetadata.Name() % e.what()).str()));
+      
+      PluginMetadata newMetadata(pluginMetadata);
+      newMetadata.Messages(messages);
+      
+      return newMetadata;
     }
-
-    //Also check install validity.
-    plugin.CheckInstallValidity(state_.getCurrentGame());
   }
 
   YAML::Node toYaml(const Plugin& plugin) {

@@ -145,27 +145,6 @@ TEST_P(PluginCleaningDataTest, LessThanOperatorShouldCompareCrcValues) {
   EXPECT_FALSE(info2 < info1);
 }
 
-TEST_P(PluginCleaningDataTest, evalConditionShouldBeTrueIfTheCrcGivenMatchesTheRealPluginCrc) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  PluginCleaningData dirtyInfo(blankEsmCrc, "cleaner", info_, 2, 10, 30);
-  EXPECT_TRUE(dirtyInfo.EvalCondition(game, blankEsm));
-}
-
-TEST_P(PluginCleaningDataTest, evalConditionShouldBeFalseIfTheCrcGivenDoesNotMatchTheRealPluginCrc) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  PluginCleaningData dirtyInfo(0xDEADBEEF, "cleaner", info_, 2, 10, 30);
-  EXPECT_FALSE(dirtyInfo.EvalCondition(game, blankEsm));
-}
-
-TEST_P(PluginCleaningDataTest, evalConditionShouldBeFalseIfAnEmptyPluginFilenameIsGiven) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  PluginCleaningData dirtyInfo;
-  EXPECT_FALSE(dirtyInfo.EvalCondition(game, ""));
-}
-
 TEST_P(PluginCleaningDataTest, chooseInfoShouldCreateADefaultContentObjectIfNoneExists) {
   PluginCleaningData dirtyInfo(0xDEADBEEF, "cleaner", std::vector<MessageContent>(), 2, 10, 30);
   EXPECT_EQ(MessageContent(), dirtyInfo.ChooseInfo(LanguageCode::english));

@@ -27,21 +27,16 @@
 #include <string>
 
 namespace loot {
-class Game;
-
 class ConditionalMetadata {
 public:
   ConditionalMetadata();
   ConditionalMetadata(const std::string& condition);
 
   bool IsConditional() const;
-  bool EvalCondition(Game& game) const;
-  void ParseCondition() const;  // Throws error on parsing failure.
+  void ParseCondition() const;
 
   std::string Condition() const;
 private:
-  bool ParseCondition(Game * game) const;  // Throws error on parsing failure.
-
   std::string condition_;
 };
 }

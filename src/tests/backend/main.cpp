@@ -32,6 +32,7 @@
 #include "tests/backend/helpers/language_test.h"
 #include "tests/backend/helpers/version_test.h"
 #include "tests/backend/helpers/yaml_set_helpers_test.h"
+#include "tests/backend/metadata/condition_evaluator_test.h"
 #include "tests/backend/metadata/condition_grammar_test.h"
 #include "tests/backend/metadata/conditional_metadata_test.h"
 #include "tests/backend/metadata/file_test.h"

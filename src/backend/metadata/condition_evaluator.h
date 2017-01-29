@@ -32,11 +32,17 @@
 
 #include "backend/game/game.h"
 #include "backend/helpers/version.h"
+#include "loot/metadata/plugin_cleaning_data.h"
+#include "loot/metadata/plugin_metadata.h"
 
 namespace loot {
 class ConditionEvaluator {
 public:
   ConditionEvaluator(Game * game);
+
+  bool evaluate(const std::string& condition);
+  bool evaluate(const PluginCleaningData& cleaningData, const std::string& pluginName);
+  PluginMetadata evaluateAll(const PluginMetadata& pluginMetadata);
 
   bool fileExists(const std::string& filePath) const;
   bool regexMatchExists(const std::string& regexString) const;
@@ -67,6 +73,8 @@ private:
                                    const std::function<bool(const std::string&)> condition) const;
   bool areRegexMatchesInDataDirectory(const std::pair<boost::filesystem::path, std::regex>& pathRegex,
                                       const std::function<bool(const std::string&)> condition) const;
+
+  bool parseCondition(const std::string& condition);
 
   Version getVersion(const std::string& filePath) const;
 

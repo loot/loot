@@ -476,42 +476,6 @@ TEST_P(PluginMetadataTest, simpleMessagesShouldReturnMessagesAsSimpleMessages) {
   EXPECT_EQ("content3", simpleMessages.back().text);
 }
 
-TEST_P(PluginMetadataTest, evalAllConditionsShouldEvaluateAllMetadataConditions) {
-  Game game(GetParam(), dataPath.parent_path(), localPath);
-
-  PluginMetadata plugin(blankEsm);
-
-  File file1(blankEsp);
-  File file2(blankDifferentEsm, "", "file(\"" + missingEsp + "\")");
-  plugin.LoadAfter({file1, file2});
-  plugin.Reqs({file1, file2});
-  plugin.Incs({file1, file2});
-
-  Message message1(MessageType::say, "content");
-  Message message2(MessageType::say, "content", "file(\"" + missingEsp + "\")");
-  plugin.Messages({message1, message2});
-
-  Tag tag1("Relev");
-  Tag tag2("Relev", true, "file(\"" + missingEsp + "\")");
-  plugin.Tags({tag1, tag2});
-
-  PluginCleaningData info1(blankEsmCrc, "utility", info_, 1, 2, 3);
-  PluginCleaningData info2(0xDEADBEEF, "utility", info_, 1, 2, 3);
-  plugin.DirtyInfo({info1, info2});
-  plugin.CleanInfo({info1, info2});
-
-  EXPECT_NO_THROW(plugin.EvalAllConditions(game));
-
-  std::set<File> expectedFiles({file1});
-  EXPECT_EQ(expectedFiles, plugin.LoadAfter());
-  EXPECT_EQ(expectedFiles, plugin.Reqs());
-  EXPECT_EQ(expectedFiles, plugin.Incs());
-  EXPECT_EQ(std::vector<Message>({message1}), plugin.Messages());
-  EXPECT_EQ(std::set<Tag>({tag1}), plugin.Tags());
-  EXPECT_EQ(std::set<PluginCleaningData>({info1}), plugin.DirtyInfo());
-  EXPECT_EQ(std::set<PluginCleaningData>({info1}), plugin.CleanInfo());
-}
-
 TEST_P(PluginMetadataTest, hasNameOnlyShouldBeTrueForADefaultConstructedPluginMetadataObject) {
   PluginMetadata plugin;
 

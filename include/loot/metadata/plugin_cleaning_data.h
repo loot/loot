@@ -31,8 +31,6 @@
 #include "loot/metadata/message.h"
 
 namespace loot {
-class Game;
-
 class PluginCleaningData {
 public:
   PluginCleaningData();
@@ -56,8 +54,6 @@ public:
 
   MessageContent ChooseInfo(const LanguageCode language) const;
   Message AsMessage() const;
-
-  bool EvalCondition(Game& game, const std::string& pluginName) const;
 private:
   uint32_t crc_;
   unsigned int itm_;
