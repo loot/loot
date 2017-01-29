@@ -73,8 +73,8 @@ void MetadataList::Save(const boost::filesystem::path& filepath) {
   yout.SetIndent(2);
   yout << YAML::BeginMap
     << YAML::Key << "bash_tags" << YAML::Value << bashTags_
-    << YAML::Key << "plugins" << YAML::Value << Plugins()
     << YAML::Key << "globals" << YAML::Value << messages_
+    << YAML::Key << "plugins" << YAML::Value << Plugins()
     << YAML::EndMap;
 
   boost::filesystem::ofstream uout(filepath);
