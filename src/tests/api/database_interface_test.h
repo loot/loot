@@ -34,6 +34,7 @@ namespace test {
 class DatabaseInterfaceTest : public ApiGameOperationsTest {
 protected:
   DatabaseInterfaceTest() :
+    db_(nullptr),
     userlistPath_(localPath / "userlist.yaml"),
     url_("https://github.com/loot/testing-metadata.git"),
     branch_("master"),
@@ -42,6 +43,8 @@ protected:
 
   void SetUp() {
     ApiGameOperationsTest::SetUp();
+
+    db_ = handle_->GetDatabase();
 
     ASSERT_FALSE(boost::filesystem::exists(minimalOutputPath_));
   }
@@ -119,6 +122,8 @@ protected:
   const std::string url_;
   const std::string branch_;
   const std::string generalUserlistMessage;
+
+  std::shared_ptr<DatabaseInterface> db_;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -220,41 +225,6 @@ TEST_P(DatabaseInterfaceTest, writeUserMetadataShouldShouldWriteUserMetadata) {
   EXPECT_NO_THROW(db_->WriteUserMetadata(minimalOutputPath_.string(), true));
 
   EXPECT_FALSE(GetFileContent(minimalOutputPath_).empty());
-}
-
-TEST_P(DatabaseInterfaceTest, sortPluginsShouldSucceedIfPassedValidArguments) {
-  std::vector<std::string> expectedOrder = {
-    masterFile,
-    blankEsm,
-    blankMasterDependentEsm,
-    blankDifferentEsm,
-    blankDifferentMasterDependentEsm,
-    blankMasterDependentEsp,
-    blankDifferentMasterDependentEsp,
-    blankEsp,
-    blankPluginDependentEsp,
-    blankDifferentEsp,
-    blankDifferentPluginDependentEsp,
-  };
-
-  ASSERT_NO_THROW(GenerateMasterlist());
-  ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
-
-  std::vector<std::string> actualOrder = db_->SortPlugins({
-    blankEsp,
-    blankPluginDependentEsp,
-    blankDifferentMasterDependentEsm,
-    blankMasterDependentEsp,
-    blankDifferentMasterDependentEsp,
-    blankDifferentEsp,
-    blankDifferentPluginDependentEsp,
-    masterFile,
-    blankEsm,
-    blankMasterDependentEsm,
-    blankDifferentEsm,
-  });
-
-  ASSERT_EQ(expectedOrder, actualOrder);
 }
 
 TEST_P(DatabaseInterfaceTest, updateMasterlistShouldThrowIfTheMasterlistPathGivenIsInvalid) {

@@ -289,7 +289,8 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
 
 set (LOOT_API_SRC "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/api/api_database.cpp")
+                  "${CMAKE_SOURCE_DIR}/src/api/api_database.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/api/game.cpp")
 
 set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/api_decorator.h"
@@ -302,13 +303,15 @@ set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/exception/git_state_error.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/game_type.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/language_code.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/game_interface.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/struct/masterlist_info.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/message_type.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/plugin_cleanliness.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/struct/plugin_tags.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/struct/simple_message.h"
-                      "${CMAKE_SOURCE_DIR}/src/api/api_database.h")
+                      "${CMAKE_SOURCE_DIR}/src/api/api_database.h"
+                      "${CMAKE_SOURCE_DIR}/src/api/game.h")
 
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
@@ -341,8 +344,9 @@ set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
 set(LOOT_API_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/api/main.cpp")
 
 set(LOOT_API_TESTS_HEADERS  "${CMAKE_SOURCE_DIR}/src/tests/api/api_game_operations_test.h"
-                            "${CMAKE_SOURCE_DIR}/src/tests/api/create_database_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/create_game_handle_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/database_interface_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/api/game_interface_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/api/is_compatible_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/common_game_test_fixture.h")
 

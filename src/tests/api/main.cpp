@@ -24,8 +24,9 @@
 
 #include <gtest/gtest.h>
 
-#include "tests/api/create_database_test.h"
+#include "tests/api/create_game_handle_test.h"
 #include "tests/api/database_interface_test.h"
+#include "tests/api/game_interface_test.h"
 #include "tests/api/is_compatible_test.h"
 
 #include <boost/log/core.hpp>

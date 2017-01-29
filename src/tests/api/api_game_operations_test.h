@@ -34,7 +34,7 @@ namespace test {
 class ApiGameOperationsTest : public CommonGameTestFixture {
 protected:
   ApiGameOperationsTest() :
-    db_(nullptr),
+    handle_(nullptr),
     masterlistPath(localPath / "masterlist.yaml"),
     noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
     warningMessage("Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing."),
@@ -46,7 +46,7 @@ protected:
 
     ASSERT_FALSE(boost::filesystem::exists(masterlistPath));
 
-    db_ = CreateDatabase(GetParam(), dataPath.parent_path().string(), localPath.string());
+    handle_ = CreateGameHandle(GetParam(), dataPath.parent_path().string(), localPath.string());
   }
 
   virtual void TearDown() {
@@ -111,7 +111,7 @@ protected:
     masterlist.close();
   }
 
-  std::shared_ptr<DatabaseInterface> db_;
+  std::shared_ptr<GameInterface> handle_;
 
   const boost::filesystem::path masterlistPath;
 

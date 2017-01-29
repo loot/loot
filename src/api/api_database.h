@@ -34,9 +34,7 @@
 
 namespace loot {
 struct ApiDatabase : public DatabaseInterface {
-  ApiDatabase(const GameType clientGame,
-              const std::string& gamePath = "",
-              const std::string& gameLocalDataPath = "");
+  ApiDatabase(Game& game);
 
   void LoadLists(const std::string& masterlist_path,
                  const std::string& userlist_path = "");
@@ -81,9 +79,7 @@ struct ApiDatabase : public DatabaseInterface {
 
   PluginCleanliness GetPluginCleanliness(const std::string& plugin);
 private:
-  Game game_;
-
-  std::string masterFile_;
+  Game& game_;
 
   Masterlist unevaluatedMasterlist_;
   MetadataList unevaluatedUserlist_;

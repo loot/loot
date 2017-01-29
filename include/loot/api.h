@@ -29,7 +29,7 @@
 #include <memory>
 
 #include "loot/api_decorator.h"
-#include "loot/database_interface.h"
+#include "loot/game_interface.h"
 #include "loot/exception/error_categories.h"
 #include "loot/exception/condition_syntax_error.h"
 #include "loot/exception/cyclic_interaction_error.h"
@@ -70,9 +70,9 @@ LOOT_API bool IsCompatible(const unsigned int major,
 /**@{*/
 
 /**
- *  @brief Initialise a new database handle.
- *  @details Creates a handle for a database, which is then used by all
- *           database functions.
+ *  @brief Initialise a new game handle.
+ *  @details Creates a handle for a game, which is then used by all
+ *           game-specific functions.
  *  @param game
  *         A game code for which to create the handle.
  *  @param game_path
@@ -86,11 +86,11 @@ LOOT_API bool IsCompatible(const unsigned int major,
  *         attempt to look up the path that `%%LOCALAPPDATA%` corresponds to.
  *         This parameter is provided so that systems lacking that environmental
  *         variable (eg. Linux) can still use the API.
- *  @returns The new database handle.
+ *  @returns The new game handle.
  */
-LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
-                                                           const std::string& game_path = "",
-                                                           const std::string& game_local_path = "");
+LOOT_API std::shared_ptr<GameInterface> CreateGameHandle(const GameType game,
+                                                         const std::string& game_path = "",
+                                                         const std::string& game_local_path = "");
 }
 
 #endif

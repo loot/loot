@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_API_CREATE_DATABASE_TEST
-#define LOOT_TESTS_API_CREATE_DATABASE_TEST
+#ifndef LOOT_TESTS_API_CREATE_GAME_HANDLE_TEST
+#define LOOT_TESTS_API_CREATE_GAME_HANDLE_TEST
 
 #include "loot/api.h"
 
@@ -33,10 +33,10 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class CreateDatabaseTest : public CommonGameTestFixture {
+class CreateGameHandleTest : public CommonGameTestFixture {
 protected:
-  CreateDatabaseTest() :
-    db_(nullptr),
+  CreateGameHandleTest() :
+    handle_(nullptr),
     gamePathSymlink(dataPath.parent_path().string() + "symlink"),
     localPathSymlink(localPath.string() + "symlink") {}
 
@@ -54,7 +54,7 @@ protected:
     boost::filesystem::remove(localPathSymlink);
   }
 
-  std::shared_ptr<DatabaseInterface> db_;
+  std::shared_ptr<GameInterface> handle_;
 
   const boost::filesystem::path gamePathSymlink;
   const boost::filesystem::path localPathSymlink;
@@ -63,7 +63,7 @@ protected:
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_CASE_P(,
-                        CreateDatabaseTest,
+                        CreateGameHandleTest,
                         ::testing::Values(
                           GameType::tes4,
                           GameType::tes5,
@@ -72,37 +72,37 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::fo4,
                           GameType::tes5se));
 
-TEST_P(CreateDatabaseTest, shouldSucceedIfPassedValidParametersWithRelativePaths) {
-  EXPECT_NO_THROW(db_ = CreateDatabase(GetParam(), dataPath.parent_path().string(), localPath.string()));
-  EXPECT_NE(nullptr, db_);
+TEST_P(CreateGameHandleTest, shouldSucceedIfPassedValidParametersWithRelativePaths) {
+  EXPECT_NO_THROW(handle_ = CreateGameHandle(GetParam(), dataPath.parent_path().string(), localPath.string()));
+  EXPECT_NE(nullptr, handle_);
 }
 
-TEST_P(CreateDatabaseTest, shouldSucceedIfPassedValidParametersWithAbsolutePaths) {
+TEST_P(CreateGameHandleTest, shouldSucceedIfPassedValidParametersWithAbsolutePaths) {
   boost::filesystem::path game = boost::filesystem::current_path() / dataPath.parent_path();
   boost::filesystem::path local = boost::filesystem::current_path() / localPath;
 
-  EXPECT_NO_THROW(db_ = CreateDatabase(GetParam(), dataPath.parent_path().string(), localPath.string()));
-  EXPECT_NE(nullptr, db_);
+  EXPECT_NO_THROW(handle_ = CreateGameHandle(GetParam(), dataPath.parent_path().string(), localPath.string()));
+  EXPECT_NE(nullptr, handle_);
 }
 
-TEST_P(CreateDatabaseTest, shouldThrowIfPassedAGamePathThatDoesNotExist) {
-  EXPECT_THROW(CreateDatabase(GetParam(), missingPath.string(), localPath.string()), std::invalid_argument);
+TEST_P(CreateGameHandleTest, shouldThrowIfPassedAGamePathThatDoesNotExist) {
+  EXPECT_THROW(CreateGameHandle(GetParam(), missingPath.string(), localPath.string()), std::invalid_argument);
 }
 
-TEST_P(CreateDatabaseTest, shouldThrowIfPassedALocalPathThatDoesNotExist) {
-  EXPECT_THROW(CreateDatabase(GetParam(), dataPath.parent_path().string(), missingPath.string()), std::invalid_argument);
+TEST_P(CreateGameHandleTest, shouldThrowIfPassedALocalPathThatDoesNotExist) {
+  EXPECT_THROW(CreateGameHandle(GetParam(), dataPath.parent_path().string(), missingPath.string()), std::invalid_argument);
 }
 
 #ifdef _WIN32
-TEST_P(CreateDatabaseTest, shouldReturnOkIfPassedAnEmptyLocalPathString) {
-  EXPECT_NO_THROW(db_ = CreateDatabase(GetParam(), dataPath.parent_path().string(), ""));
-  EXPECT_NE(nullptr, db_);
+TEST_P(CreateGameHandleTest, shouldReturnOkIfPassedAnEmptyLocalPathString) {
+  EXPECT_NO_THROW(handle_ = CreateGameHandle(GetParam(), dataPath.parent_path().string(), ""));
+  EXPECT_NE(nullptr, handle_);
 }
 #endif
 
-TEST_P(CreateDatabaseTest, shouldReturnOkIfPassedGameAndLocalPathSymlinks) {
-  EXPECT_NO_THROW(db_ = CreateDatabase(GetParam(), gamePathSymlink.string(), localPathSymlink.string()));
-  EXPECT_NE(nullptr, db_);
+TEST_P(CreateGameHandleTest, shouldReturnOkIfPassedGameAndLocalPathSymlinks) {
+  EXPECT_NO_THROW(handle_ = CreateGameHandle(GetParam(), gamePathSymlink.string(), localPathSymlink.string()));
+  EXPECT_NE(nullptr, handle_);
 }
 }
 }

@@ -92,33 +92,6 @@ public:
 
   /**
    *  @}
-   *  @name Sorting
-   *  @{
-   */
-
-  /**
-   *  @brief Identify the game's main master file.
-   *  @details When sorting, LOOT always only loads the headers of the game's
-   *           main master file as a performance optimisation.
-   */
-  virtual void IdentifyMainMasterFile(const std::string& masterFile) = 0;
-
-  /**
-   *  @brief Calculates a new load order for the game's installed plugins
-   *         (including inactive plugins) and outputs the sorted order.
-   *  @details Pulls metadata from the masterlist and userlist if they are
-   *           loaded, and reads the contents of each plugin. No changes are
-   *           applied to the load order used by the game. This function does
-   *           not load or evaluate the masterlist or userlist.
-   *  @param plugins
-   *         A vector of filenames of the plugins to sort.
-   *  @returns A vector of the given plugin filenames in their sorted load
-   *           order.
-   */
-  virtual std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins) = 0;
-
-  /**
-   *  @}
    *  @name Masterlist Update
    *  @{
    */
@@ -223,7 +196,7 @@ public:
   virtual PluginMetadata GetPluginUserMetadata(const std::string& plugin) = 0;
 
   /**
-  *  @brief Sets a plugin's user metadata, overwriting any existing user 
+  *  @brief Sets a plugin's user metadata, overwriting any existing user
   *         metadata.
   *  @param plugin
   *         The user metadata you want to set, with plugin.Name() being the

@@ -27,7 +27,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/log/core.hpp>
 
-#include "api/api_database.h"
+#include "api/game.h"
 
 namespace fs = boost::filesystem;
 
@@ -46,9 +46,9 @@ LOOT_API bool IsCompatible(const unsigned int versionMajor, const unsigned int v
     return versionMinor == loot::LootVersion::minor;
 }
 
-LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
-                                                           const std::string& gamePath,
-                                                           const std::string& gameLocalPath) {
+LOOT_API std::shared_ptr<GameInterface> CreateGameHandle(const GameType game,
+                                                         const std::string& gamePath,
+                                                         const std::string& gameLocalPath) {
   // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   boost::filesystem::path::imbue(std::locale());
@@ -65,6 +65,6 @@ LOOT_API std::shared_ptr<DatabaseInterface> CreateDatabase(const GameType game,
   if (!gameLocalPath.empty() && !fs::is_directory(resolvedGameLocalPath))
     throw std::invalid_argument("Given game path \"" + gameLocalPath + "\" does not resolve to a valid directory.");
 
-  return std::make_shared<ApiDatabase>(game, resolvedGamePath, resolvedGameLocalPath);
+  return std::make_shared<api::Game>(game, resolvedGamePath, resolvedGameLocalPath);
 }
 }

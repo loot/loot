@@ -35,10 +35,7 @@
 #include "backend/plugin/plugin_sorter.h"
 
 namespace loot {
-ApiDatabase::ApiDatabase(const GameType game, const std::string& gamePath, const std::string& gameLocalDataPath)
-  : game_(game, gamePath, gameLocalDataPath) {
-  game_.Init();
-}
+ApiDatabase::ApiDatabase(Game& game) : game_(game) {}
 
 ///////////////////////////////////
 // Database Loading Functions
@@ -94,29 +91,10 @@ void ApiDatabase::WriteUserMetadata(const std::string& outputFile, const bool ov
   game_.GetUserlist().Save(outputFile);
 }
 
-void ApiDatabase::IdentifyMainMasterFile(const std::string& masterFile) {
-  masterFile_ = masterFile;
-}
-
 ////////////////////////////////////
 // LOOT Functionality Functions
 ////////////////////////////////////
 
-std::vector<std::string> ApiDatabase::SortPlugins(const std::vector<std::string>& plugins) {
-  // Always reload all the plugins.
-  game_.LoadPlugins(plugins, masterFile_, false);
-
-  //Sort plugins into their load order.
-  PluginSorter sorter;
-  auto list = sorter.Sort(game_, LanguageCode::english);
-
-  std::vector<std::string> loadOrder(list.size());
-  std::transform(begin(list), end(list), begin(loadOrder), [](const Plugin& plugin) {
-    return plugin.Name();
-  });
-
-  return loadOrder;
-}
 
 bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
                                    const std::string& remoteURL,
