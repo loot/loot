@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-01-26 21:09+0000\n"
+"POT-Creation-Date: 2017-01-29 11:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -674,18 +674,18 @@ msgid ""
 "Fallout 3, Fallout: New Vegas and Fallout 4."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:44
+#: src/gui/query/get_game_data_query.h:43
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:80
+#: src/gui/query/get_game_data_query.h:79
 msgid ""
 "An error occurred while parsing the masterlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:95
+#: src/gui/query/get_game_data_query.h:94
 msgid ""
 "An error occurred while parsing the userlist: %1%. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
@@ -700,25 +700,25 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:91 src/gui/query/metadata_query.h:92
+#: src/gui/query/metadata_query.h:90 src/gui/query/metadata_query.h:91
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:95 src/gui/query/metadata_query.h:96
+#: src/gui/query/metadata_query.h:94 src/gui/query/metadata_query.h:95
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:119
+#: src/gui/query/metadata_query.h:118
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
 "%1%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:145 src/backend/plugin/plugin_sorter.cpp:217
+#: src/gui/query/metadata_query.h:144 src/backend/plugin/plugin_sorter.cpp:219
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:176 src/gui/query/metadata_query.h:177
+#: src/gui/query/metadata_query.h:175 src/gui/query/metadata_query.h:176
 msgid "(edited)"
 msgstr ""
 
@@ -742,19 +742,19 @@ msgid ""
 "%3%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:130
+#: src/gui/state/loot_state.cpp:131
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:137
+#: src/gui/state/loot_state.cpp:138
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:198
+#: src/gui/state/loot_state.cpp:199
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/backend/game/game_cache.cpp:119
+#: src/backend/game/game_cache.cpp:117
 msgid "You have not sorted your load order this session."
 msgstr ""
 
@@ -807,42 +807,42 @@ msgstr ""
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/backend/plugin/plugin.cpp:115
+#: src/backend/plugin/plugin.cpp:116
 msgid "Cannot read \"%1%\". Details: %2%"
 msgstr ""
 
-#: src/backend/plugin/plugin.cpp:221 src/backend/plugin/plugin.cpp:232
+#: src/backend/plugin/plugin.cpp:226 src/backend/plugin/plugin.cpp:237
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/backend/plugin/plugin.cpp:224
+#: src/backend/plugin/plugin.cpp:229
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/backend/plugin/plugin.cpp:238
+#: src/backend/plugin/plugin.cpp:243
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/backend/masterlist.cpp:45
+#: src/backend/masterlist.cpp:46
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:117 src/backend/masterlist.cpp:131
+#: src/backend/masterlist.cpp:114 src/backend/masterlist.cpp:128
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:238
+#: src/backend/masterlist.cpp:235
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:252
+#: src/backend/masterlist.cpp:249
 msgid ""
 "Masterlist revision %1%: %2%. The latest masterlist revision contains a "
 "syntax error, LOOT is using the most recent valid revision instead. Syntax "

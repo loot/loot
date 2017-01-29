@@ -51,11 +51,6 @@ public:
   //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
   void MergeMetadata(const PluginMetadata& plugin);
 
-  //Returns the difference in metadata between the two plugins.
-  //For 'enabled', use this plugin's value.
-  //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
-  PluginMetadata DiffMetadata(const PluginMetadata& plugin) const;
-
   // Returns metadata in this plugin not in the given plugin.
   //For 'enabled', use this plugin's value.
   //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
