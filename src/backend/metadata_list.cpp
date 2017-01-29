@@ -78,6 +78,9 @@ void MetadataList::Save(const boost::filesystem::path& filepath) {
     << YAML::EndMap;
 
   boost::filesystem::ofstream uout(filepath);
+  if (uout.fail())
+    throw FileAccessError("Couldn't open output file.");
+
   uout << yout.c_str();
   uout.close();
 }

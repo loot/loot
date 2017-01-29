@@ -43,6 +43,12 @@ struct ApiDatabase : public DatabaseInterface {
 
   void EvalLists();
 
+  void WriteUserMetadata(const std::string& outputFile,
+                         const bool overwrite);
+
+  void WriteMinimalList(const std::string& outputFile,
+                        const bool overwrite);
+
   void IdentifyMainMasterFile(const std::string& masterFile);
 
   std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);
@@ -54,15 +60,26 @@ struct ApiDatabase : public DatabaseInterface {
   MasterlistInfo GetMasterlistRevision(const std::string& masterlist_path,
                                        const bool get_short_id);
 
+  std::set<std::string> GetKnownBashTags();
+
+  std::vector<Message> GetGeneralMessages();
+
+  PluginMetadata GetPluginMetadata(const std::string& plugin);
+
+  PluginMetadata GetPluginUserMetadata(const std::string& plugin);
+
+  void SetPluginUserMetadata(const PluginMetadata& pluginMetadata);
+
+  void DiscardPluginUserMetadata(const std::string& plugin);
+
+  void DiscardAllUserMetadata();
+
   PluginTags GetPluginTags(const std::string& plugin);
 
   std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
                                                const LanguageCode language);
 
   PluginCleanliness GetPluginCleanliness(const std::string& plugin);
-
-  void WriteMinimalList(const std::string& outputFile,
-                        const bool overwrite);
 private:
   Game game_;
 

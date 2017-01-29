@@ -84,6 +84,16 @@ void ApiDatabase::EvalLists() {
   game_.GetUserlist() = userTemp;
 }
 
+void ApiDatabase::WriteUserMetadata(const std::string& outputFile, const bool overwrite) {
+  if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
+    throw std::invalid_argument("Output directory does not exist.");
+
+  if (boost::filesystem::exists(outputFile) && !overwrite)
+    throw FileAccessError("Output file exists but overwrite is not set to true.");
+
+  game_.GetUserlist().Save(outputFile);
+}
+
 void ApiDatabase::IdentifyMainMasterFile(const std::string& masterFile) {
   masterFile_ = masterFile;
 }
@@ -121,6 +131,52 @@ bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
 MasterlistInfo ApiDatabase::GetMasterlistRevision(const std::string& masterlistPath,
                                                   const bool getShortID) {
   return Masterlist::GetInfo(masterlistPath, getShortID);
+}
+
+std::set<std::string> ApiDatabase::GetKnownBashTags() {
+  auto masterlistTags = game_.GetMasterlist().BashTags();
+  auto userlistTags = game_.GetUserlist().BashTags();
+
+  if (!userlistTags.empty()) {
+    masterlistTags.insert(std::begin(userlistTags), std::end(userlistTags));
+  }
+
+  return masterlistTags;
+}
+
+std::vector<Message> ApiDatabase::GetGeneralMessages() {
+  auto masterlistMessages = game_.GetMasterlist().Messages();
+  auto userlistMessages = game_.GetUserlist().Messages();
+
+  if (!userlistMessages.empty()) {
+    masterlistMessages.insert(std::end(masterlistMessages), std::begin(userlistMessages), std::end(userlistMessages));
+  }
+
+  return masterlistMessages;
+}
+
+PluginMetadata ApiDatabase::GetPluginMetadata(const std::string& plugin) {
+  PluginMetadata metadata = game_.GetMasterlist().FindPlugin(plugin);
+  metadata.MergeMetadata(game_.GetUserlist().FindPlugin(plugin));
+
+  return metadata;
+}
+
+PluginMetadata ApiDatabase::GetPluginUserMetadata(const std::string& plugin) {
+  return game_.GetUserlist().FindPlugin(plugin);
+}
+
+void ApiDatabase::SetPluginUserMetadata(const PluginMetadata& pluginMetadata) {
+  game_.GetUserlist().ErasePlugin(pluginMetadata);
+  game_.GetUserlist().AddPlugin(pluginMetadata);
+}
+
+void ApiDatabase::DiscardPluginUserMetadata(const std::string& plugin) {
+  game_.GetUserlist().ErasePlugin(plugin);
+}
+
+void ApiDatabase::DiscardAllUserMetadata() {
+  game_.GetUserlist().Clear();
 }
 
 //////////////////////////

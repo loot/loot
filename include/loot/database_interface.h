@@ -28,8 +28,10 @@
 #include <vector>
 
 #include "loot/enum/language_code.h"
-#include "loot/struct/masterlist_info.h"
 #include "loot/enum/plugin_cleanliness.h"
+#include "loot/metadata/message.h"
+#include "loot/metadata/plugin_metadata.h"
+#include "loot/struct/masterlist_info.h"
 #include "loot/struct/plugin_tags.h"
 #include "loot/struct/simple_message.h"
 
@@ -38,7 +40,7 @@ namespace loot {
 class DatabaseInterface {
 public:
   /**
-   *  @name Data Loading
+   *  @name Data Reading & Writing
    *  @{
    */
 
@@ -63,6 +65,30 @@ public:
    *           function affects the output of all the database access functions.
    */
   virtual void EvalLists() = 0;
+
+  /**
+   * Writes a metadata file containing all loaded user-added metadata.
+   * @param outputFile
+   *         The path to which the file shall be written.
+   * @param overwrite
+   *         If `false` and `outputFile` already exists, no data will be
+   *         written. Otherwise, data will be written.
+   */
+  virtual void WriteUserMetadata(const std::string& outputFile,
+                                const bool overwrite) = 0;
+
+   /**
+   *  @brief Writes a minimal metadata file that only contains plugins with
+   *         Bash Tag suggestions and/or dirty info, plus the suggestions and
+   *         info themselves.
+   *  @param outputFile
+   *         The path to which the file shall be written.
+   *  @param overwrite
+   *         If `false` and `outputFile` already exists, no data will be
+   *         written. Otherwise, data will be written.
+   */
+   virtual void WriteMinimalList(const std::string& outputFile,
+                                 const bool overwrite) = 0;
 
   /**
    *  @}
@@ -152,11 +178,76 @@ public:
 
   /**
    *  @}
+   *  @name Non-plugin Data Access
+   *  @{
+  */
+
+  /**
+   *  @brief Gets the Bash Tags that are listed in the loaded metadata lists.
+   *  @details Bash Tag suggestions can include plugins not in this list.
+   *  @returns A set of Bash Tag names.
+  */
+  virtual std::set<std::string> GetKnownBashTags() = 0;
+
+  /**
+   *  @brief Get all general messages listen in the loaded metadata lists.
+   *  @returns A vector of messages supplied in the metadata lists but not
+   *           attached to any particular plugin.
+   */
+  virtual std::vector<Message> GetGeneralMessages() = 0;
+
+  /**
+   *  @}
    *  @name Plugin Data Access
    *  @{
    */
 
   /**
+   *  @brief Get all a plugin's loaded metadata.
+   *  @param plugin
+   *         The filename of the plugin to look up metadata for.
+   *  @returns A PluginMetadata object containing all the plugin's metadata.
+   *           If the plugin has no metadata, PluginMetadata.IsNameOnly()
+   *           will return true.
+   */
+  virtual PluginMetadata GetPluginMetadata(const std::string& plugin) = 0;
+
+  /**
+  *  @brief Get a plugin's metadata loaded from the given userlist.
+  *  @param plugin
+  *         The filename of the plugin to look up user-added metadata for.
+  *  @returns A PluginMetadata object containing the plugin's user-added
+  *           metadata. If the plugin has no metadata,
+  *           PluginMetadata.IsNameOnly() will return true.
+  */
+  virtual PluginMetadata GetPluginUserMetadata(const std::string& plugin) = 0;
+
+  /**
+  *  @brief Sets a plugin's user metadata, overwriting any existing user 
+  *         metadata.
+  *  @param plugin
+  *         The user metadata you want to set, with plugin.Name() being the
+  *         filename of the plugin the metadata is for.
+  */
+  virtual void SetPluginUserMetadata(const PluginMetadata& pluginMetadata) = 0;
+
+  /**
+   * @brief Discards all loaded user metadata for the plugin with the given
+   *        filename.
+   * @param plugin
+   *        The filename of the plugin for which all user-added metadata
+   *        should be deleted.
+   */
+  virtual void DiscardPluginUserMetadata(const std::string& plugin) = 0;
+
+  /**
+   * @brief Discards all loaded user metadata for all plugins, and any user-added
+   *        general messages and known bash tags.
+   */
+  virtual void DiscardAllUserMetadata() = 0;
+
+  /**
+   *  @deprecated
    *  @brief Outputs the Bash Tags suggested for addition and removal by the
    *         database for the given plugin.
    *  @param plugin
@@ -166,6 +257,7 @@ public:
   virtual PluginTags GetPluginTags(const std::string& plugin) = 0;
 
   /**
+   *  @deprecated
    *  @brief Outputs the messages associated with the given plugin in the
    *         database.
    *  @param plugin
@@ -180,6 +272,7 @@ public:
                                                        const LanguageCode language) = 0;
 
   /**
+   *  @deprecated
    *  @brief Determines the database's knowledge of a plugin's cleanliness.
    *  @details Outputs whether the plugin should be cleaned or not, or if
    *           no data is available. The mechanism used to determine that
@@ -193,25 +286,6 @@ public:
    *  @returns A plugin cleanliness code.
    */
   virtual PluginCleanliness GetPluginCleanliness(const std::string& plugin) = 0;
-
-  /**
-   *  @}
-   *  @name Miscellaneous
-   *  @{
-   */
-
-  /**
-  *  @brief Writes a minimal metadata file that only contains plugins with
-  *         Bash Tag suggestions and/or dirty info, plus the suggestions and
-  *         info themselves.
-  *  @param outputFile
-  *         The path to which the file shall be written.
-  *  @param overwrite
-  *         If `false` and `outputFile` already exists, no data will be
-  *         written. Otherwise, data will be written.
-  */
-  virtual void WriteMinimalList(const std::string& outputFile,
-                                const bool overwrite) = 0;
 
   /** @} */
 };

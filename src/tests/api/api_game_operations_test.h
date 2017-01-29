@@ -38,7 +38,8 @@ protected:
     masterlistPath(localPath / "masterlist.yaml"),
     noteMessage("Do not clean ITM records, they are intentional and required for the mod to function."),
     warningMessage("Check you are using v2+. If not, Update. v1 has a severe bug with the Mystic Emporium disappearing."),
-    errorMessage("Obsolete. Remove this and install Enhanced Weather.") {}
+    errorMessage("Obsolete. Remove this and install Enhanced Weather."),
+    generalMasterlistMessage("A general masterlist message.") {}
 
   virtual void SetUp() {
     CommonGameTestFixture::SetUp();
@@ -60,6 +61,12 @@ protected:
 
     boost::filesystem::ofstream masterlist(masterlistPath);
     masterlist
+      << "bash_tags:" << endl
+      << "  - Actors.ACBS" << endl
+      << "  - C.Climate" << endl
+      << "globals:" << endl
+      << "  - type: say" << endl
+      << "    content: '" << generalMasterlistMessage << "'" << endl
       << "plugins:" << endl
       << "  - name: " << blankEsm << endl
       << "    after:" << endl
@@ -111,6 +118,7 @@ protected:
   const std::string noteMessage;
   const std::string warningMessage;
   const std::string errorMessage;
+  const std::string generalMasterlistMessage;
 };
 }
 }
