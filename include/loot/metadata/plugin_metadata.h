@@ -92,17 +92,16 @@ public:
   //Compare name string.
   bool operator == (const std::string& rhs) const;
   bool operator != (const std::string& rhs) const;
-protected:
-  std::vector<Message> messages_;
-  std::set<Tag> tags_;
 private:
   std::string name_;
-  bool enabled_;  //Default to true.
+  bool enabled_;
   Priority localPriority_;
   Priority globalPriority_;
   std::set<File> loadAfter_;
   std::set<File> requirements_;
   std::set<File> incompatibilities_;
+  std::vector<Message> messages_;
+  std::set<Tag> tags_;
   std::set<PluginCleaningData> dirtyInfo_;
   std::set<PluginCleaningData> cleanInfo_;
   std::set<Location> locations_;

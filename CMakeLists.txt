@@ -227,7 +227,8 @@ set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.
                 "${CMAKE_SOURCE_DIR}/include/loot/yaml/tag.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/windows_encoding_converters.h"
                 "${CMAKE_SOURCE_DIR}/include/loot/language.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h")
+                "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
+                "${CMAKE_SOURCE_DIR}/include/loot/plugin_interface.h")
 
 set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -305,6 +306,7 @@ set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/language_code.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/game_interface.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/plugin_interface.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/struct/masterlist_info.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/message_type.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/enum/plugin_cleanliness.h"

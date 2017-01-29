@@ -38,6 +38,14 @@ public:
 
   std::shared_ptr<DatabaseInterface> GetDatabase();
 
+  bool IsValidPlugin(const std::string& plugin);
+
+  void LoadPlugins(const std::vector<std::string>& plugins, bool loadHeadersOnly);
+
+  std::shared_ptr<const PluginInterface> GetPlugin(const std::string& pluginName);
+
+  std::set<std::shared_ptr<const PluginInterface>> GetLoadedPlugins();
+
   void IdentifyMainMasterFile(const std::string& masterFile);
 
   std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);

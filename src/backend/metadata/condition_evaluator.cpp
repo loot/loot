@@ -69,7 +69,7 @@ bool ConditionEvaluator::evaluate(const PluginCleaningData& cleaningData, const 
 
   // Get the CRC from the game plugin cache if possible.
   try {
-    crc = game_->GetPlugin(pluginName).Crc();
+    crc = game_->GetPlugin(pluginName)->GetCRC();
   } catch (...) {}
 
   // Otherwise calculate it from the file.
@@ -243,7 +243,7 @@ bool ConditionEvaluator::checksumMatches(const std::string& filePath, const uint
     // CRC could be for a plugin or a file.
     // Get the CRC from the game plugin cache if possible.
     try {
-      realChecksum = game_->GetPlugin(filePath).Crc();
+      realChecksum = game_->GetPlugin(filePath)->GetCRC();
     } catch (...) {}
 
     if (realChecksum == 0) {
@@ -402,13 +402,13 @@ Version ConditionEvaluator::getVersion(const std::string& filePath) const {
     // from its description field. Try getting an entry from the
     // plugin cache.
     try {
-      return Version(game_->GetPlugin(filePath).getDescription());
+      return Version(game_->GetPlugin(filePath)->GetVersion());
     } catch (...) {
       // The file wasn't in the plugin cache, load it as a plugin
       // if it appears to be valid, otherwise treat it as a non
       // plugin file.
       if (Plugin::IsValid(filePath, *game_))
-        return Version(Plugin(*game_, filePath, true).getDescription());
+        return Version(Plugin(*game_, filePath, true).GetVersion());
 
       return Version(game_->DataPath() / filePath);
     }

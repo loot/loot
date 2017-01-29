@@ -34,13 +34,31 @@
 #include "backend/plugin/plugin.h"
 
 namespace loot {
-typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, Plugin> PluginGraph;
+
+class PluginSortingData : public Plugin, private PluginMetadata {
+public:
+  PluginSortingData(const Plugin& plugin, const PluginMetadata& metadata);
+
+  using Plugin::GetName;
+  using Plugin::IsMaster;
+  using Plugin::LoadsArchive;
+  using Plugin::GetMasters;
+  using Plugin::NumOverrideFormIDs;
+  using Plugin::DoFormIDsOverlap;
+
+  using PluginMetadata::LocalPriority;
+  using PluginMetadata::GlobalPriority;
+  using PluginMetadata::Reqs;
+  using PluginMetadata::LoadAfter;
+};
+
+typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, PluginSortingData> PluginGraph;
 typedef boost::graph_traits<PluginGraph>::vertex_descriptor vertex_t;
 typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t;
 
 class PluginSorter {
 public:
-  std::vector<Plugin> Sort(Game& game, const LanguageCode language);
+  std::vector<std::string> Sort(Game& game, const LanguageCode language);
 private:
   bool GetVertexByName(const std::string& name, vertex_t& vertex) const;
   void CheckForCycles() const;

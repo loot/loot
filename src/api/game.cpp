@@ -42,6 +42,28 @@ std::shared_ptr<DatabaseInterface> Game::GetDatabase() {
   return database_;
 }
 
+bool Game::IsValidPlugin(const std::string& plugin) {
+  return Plugin::IsValid(plugin, game_);
+}
+
+void Game::LoadPlugins(const std::vector<std::string>& plugins, bool loadHeadersOnly) {
+  game_.LoadPlugins(plugins, masterFile_, loadHeadersOnly);
+}
+
+std::shared_ptr<const PluginInterface> Game::GetPlugin(const std::string& pluginName) {
+  return std::static_pointer_cast<const PluginInterface>(game_.GetPlugin(pluginName));
+}
+
+std::set<std::shared_ptr<const PluginInterface>> Game::GetLoadedPlugins() {
+  auto pointers = game_.GetPlugins();
+  std::set<std::shared_ptr<const PluginInterface>> interfacePointers;
+  for (auto& plugin : game_.GetPlugins()) {
+    interfacePointers.insert(std::static_pointer_cast<const PluginInterface>(plugin));
+  }
+
+  return interfacePointers;
+}
+
 void Game::IdentifyMainMasterFile(const std::string& masterFile) {
   masterFile_ = masterFile;
 }
@@ -51,14 +73,7 @@ std::vector<std::string> Game::SortPlugins(const std::vector<std::string>& plugi
 
   //Sort plugins into their load order.
   PluginSorter sorter;
-  auto list = sorter.Sort(game_, LanguageCode::english);
-
-  std::vector<std::string> loadOrder(list.size());
-  std::transform(begin(list), end(list), begin(loadOrder), [](const Plugin& plugin) {
-    return plugin.Name();
-  });
-
-  return loadOrder;
+  return sorter.Sort(game_, LanguageCode::english);
 }
 
 bool Game::IsPluginActive(const std::string& plugin) {

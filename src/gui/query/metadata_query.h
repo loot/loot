@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_METADATA_QUERY
 #define LOOT_GUI_QUERY_METADATA_QUERY
 
+#include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
@@ -50,25 +52,40 @@ protected:
     return toSimpleMessages(messages, state_.getLanguage().GetCode());
   }
 
-  YAML::Node generateDerivedMetadata(const Plugin& file,
+  PluginMetadata getNonUserMetadata(std::shared_ptr<const Plugin> file,
+                                    const PluginMetadata& masterlistEntry) {
+    auto metadata = masterlistEntry;
+
+    auto fileTags = file->GetBashTags();
+    auto tags = metadata.Tags();
+    tags.insert(begin(fileTags), end(fileTags));
+    metadata.Tags(tags);
+
+    auto messages = metadata.Messages();
+    auto statusMessages = file->GetStatusMessages();
+    auto validityMessages = CheckInstallValidity(file, metadata);
+    messages.insert(end(messages), begin(statusMessages), end(statusMessages));
+    messages.insert(end(messages), begin(validityMessages), end(validityMessages));
+    metadata.Messages(messages);
+
+    return metadata;
+  }
+
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> file,
                                      const PluginMetadata& masterlistEntry,
                                      const PluginMetadata& userlistEntry) {
-    Plugin plugin(file);
+    auto metadata = evaluateMetadata(getNonUserMetadata(file, masterlistEntry));
+    metadata.MergeMetadata(evaluateMetadata(userlistEntry));
 
-    plugin.MergeMetadata(evaluateMetadata(masterlistEntry));
-    plugin.MergeMetadata(evaluateMetadata(userlistEntry));
-
-    plugin.CheckInstallValidity(state_.getCurrentGame());
-
-    return toYaml(plugin);
+    return toYaml(file, metadata);
   }
 
   YAML::Node generateDerivedMetadata(const std::string& pluginName) {
       // Now rederive the displayed metadata from the masterlist and userlist.
     try {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      PluginMetadata master(state_.getCurrentGame().GetMasterlist().FindPlugin(plugin));
-      PluginMetadata user(state_.getCurrentGame().GetUserlist().FindPlugin(plugin));
+      PluginMetadata master(state_.getCurrentGame().GetMasterlist().FindPlugin(pluginName));
+      PluginMetadata user(state_.getCurrentGame().GetUserlist().FindPlugin(pluginName));
 
       return generateDerivedMetadata(plugin, master, user);
     } catch (...) {
@@ -152,20 +169,20 @@ private:
     }
   }
 
-  YAML::Node toYaml(const Plugin& plugin) {
+  YAML::Node toYaml(std::shared_ptr<const Plugin> plugin, const PluginMetadata& metadata) {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage().GetName();
 
     YAML::Node pluginNode;
-    pluginNode["name"] = plugin.Name();
-    pluginNode["priority"] = plugin.LocalPriority().getValue();
-    pluginNode["globalPriority"] = plugin.GlobalPriority().getValue();
-    pluginNode["messages"] = plugin.SimpleMessages(state_.getLanguage().GetCode());
-    pluginNode["tags"] = plugin.Tags();
-    pluginNode["isDirty"] = !plugin.DirtyInfo().empty();
-    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin.Name());
+    pluginNode["name"] = plugin->GetName();
+    pluginNode["priority"] = metadata.LocalPriority().getValue();
+    pluginNode["globalPriority"] = metadata.GlobalPriority().getValue();
+    pluginNode["messages"] = metadata.SimpleMessages(state_.getLanguage().GetCode());
+    pluginNode["tags"] = metadata.Tags();
+    pluginNode["isDirty"] = !metadata.DirtyInfo().empty();
+    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName());
 
-    if (!plugin.CleanInfo().empty()) {
-      pluginNode["cleanedWith"] = plugin.CleanInfo().begin()->CleaningUtility();
+    if (!metadata.CleanInfo().empty()) {
+      pluginNode["cleanedWith"] = metadata.CleanInfo().begin()->CleaningUtility();
     } else {
       pluginNode["cleanedWith"] = "";
     }
@@ -178,6 +195,49 @@ private:
       info.revision_date += " " + boost::locale::translate("(edited)").str();
       info.revision_id += " " + boost::locale::translate("(edited)").str();
     }
+  }
+
+  std::vector<Message> CheckInstallValidity(std::shared_ptr<const Plugin> plugin, const PluginMetadata& metadata) {
+    BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << plugin->GetName() << "'s data.";
+    std::vector<Message> messages;
+    if (state_.getCurrentGame().IsPluginActive(plugin->GetName())) {
+      auto pluginExists = [&](const std::string& file) {
+        return boost::filesystem::exists(state_.getCurrentGame().DataPath() / file)
+          || ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(state_.getCurrentGame().DataPath() / (file + ".ghost")));
+      };
+      auto tags = metadata.Tags();
+      if (tags.find(Tag("Filter")) == std::end(tags)) {
+        for (const auto &master : plugin->GetMasters()) {
+          if (!pluginExists(master)) {
+            BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << master << "\", but it is missing.";
+            messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
+          } else if (!state_.getCurrentGame().IsPluginActive(master)) {
+            BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << master << "\", but it is inactive.";
+            messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
+          }
+        }
+      }
+
+      for (const auto &req : metadata.Reqs()) {
+        if (!pluginExists(req.Name())) {
+          BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << req.Name() << "\", but it is missing.";
+          messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
+        }
+      }
+      for (const auto &inc : metadata.Incs()) {
+        if (pluginExists(inc.Name()) && state_.getCurrentGame().IsPluginActive(inc.Name())) {
+          BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
+          messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
+        }
+      }
+    }
+
+    // Also generate dirty messages.
+    for (const auto &element : metadata.DirtyInfo()) {
+      messages.push_back(element.AsMessage());
+    }
+
+    return messages;
   }
 
   LootState& state_;

@@ -48,8 +48,8 @@ public:
   std::pair<bool, bool> GetCachedCondition(const std::string& condition) const;
   void CacheCondition(const std::string& condition, bool result);
 
-  std::set<Plugin> GetPlugins() const;
-  const Plugin& GetPlugin(const std::string& pluginName) const;
+  std::set<std::shared_ptr<const Plugin>> GetPlugins() const;
+  std::shared_ptr<const Plugin> GetPlugin(const std::string& pluginName) const;
   void AddPlugin(const Plugin&& plugin);
 
   std::vector<Message> GetMessages() const;
@@ -68,7 +68,7 @@ private:
   Masterlist masterlist_;
   MetadataList userlist_;
   std::unordered_map<std::string, bool> conditions_;
-  std::unordered_map<std::string, Plugin> plugins_;
+  std::unordered_map<std::string, std::shared_ptr<const Plugin>> plugins_;
   std::vector<Message> messages_;
   std::vector<std::string> loadOrder_;
   unsigned short loadOrderSortCount_;

@@ -31,7 +31,36 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class GameInterfaceTest : public ApiGameOperationsTest {};
+class GameInterfaceTest : public ApiGameOperationsTest {
+protected:
+  GameInterfaceTest() :
+    emptyFile("EmptyFile.esm"),
+    nonPluginFile("NotAPlugin.esm"),
+    pluginsToLoad({
+      masterFile,
+      blankEsm,
+      blankDifferentEsm,
+      blankMasterDependentEsm,
+      blankDifferentMasterDependentEsm,
+      blankEsp,
+      blankDifferentEsp,
+      blankMasterDependentEsp,
+      blankDifferentMasterDependentEsp,
+      blankPluginDependentEsp,
+      blankDifferentPluginDependentEsp,
+    }) {}
+
+  void TearDown() {
+    ApiGameOperationsTest::TearDown();
+
+    boost::filesystem::remove(dataPath / emptyFile);
+    boost::filesystem::remove(dataPath / nonPluginFile);
+  }
+
+  const std::string emptyFile;
+  const std::string nonPluginFile;
+  const std::vector<std::string> pluginsToLoad;
+};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
@@ -45,7 +74,62 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::fo4,
                           GameType::tes5se));
 
+TEST_P(GameInterfaceTest, isValidPluginShouldReturnTrueForAValidPlugin) {
+  EXPECT_TRUE(handle_->IsValidPlugin(blankEsm));
+}
 
+TEST_P(GameInterfaceTest, isValidPluginShouldReturnFalseForANonPluginFile) {
+  // Write out an non-empty, non-plugin file.
+  boost::filesystem::ofstream out(dataPath / nonPluginFile);
+  out << "This isn't a valid plugin file.";
+  out.close();
+  ASSERT_TRUE(boost::filesystem::exists(dataPath / nonPluginFile));
+
+  EXPECT_FALSE(handle_->IsValidPlugin(nonPluginFile));
+}
+
+TEST_P(GameInterfaceTest, isValidPluginShouldReturnFalseForAnEmptyFile) {
+  // Write out an empty file.
+  boost::filesystem::ofstream out(dataPath / emptyFile);
+  out.close();
+  ASSERT_TRUE(boost::filesystem::exists(dataPath / emptyFile));
+
+  EXPECT_FALSE(handle_->IsValidPlugin(emptyFile));
+}
+
+TEST_P(GameInterfaceTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
+  handle_->LoadPlugins(pluginsToLoad, true);
+  EXPECT_EQ(11, handle_->GetLoadedPlugins().size());
+
+  // Check that one plugin's header has been read.
+  ASSERT_NO_THROW(handle_->GetPlugin(masterFile));
+  auto plugin = handle_->GetPlugin(masterFile);
+  EXPECT_EQ("5.0", plugin->GetVersion());
+
+  // Check that only the header has been read.
+  EXPECT_EQ(0, plugin->GetCRC());
+}
+
+TEST_P(GameInterfaceTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
+  handle_->LoadPlugins(pluginsToLoad, false);
+  EXPECT_EQ(11, handle_->GetLoadedPlugins().size());
+
+  // Check that one plugin's header has been read.
+  ASSERT_NO_THROW(handle_->GetPlugin(masterFile));
+  auto plugin = handle_->GetPlugin(masterFile);
+  EXPECT_EQ("5.0", plugin->GetVersion());
+
+  // Check that not only the header has been read.
+  EXPECT_EQ(blankEsmCrc, plugin->GetCRC());
+}
+
+TEST_P(GameInterfaceTest, getPluginThatIsNotCachedShouldThrow) {
+  EXPECT_THROW(handle_->GetPlugin(blankEsm), std::invalid_argument);
+}
+
+TEST_P(GameInterfaceTest, gettingPluginsShouldReturnAnEmptySetIfNoneHaveBeenLoaded) {
+  EXPECT_TRUE(handle_->GetLoadedPlugins().empty());
+}
 
 TEST_P(GameInterfaceTest, sortPluginsShouldSucceedIfPassedValidArguments) {
   std::vector<std::string> expectedOrder = {

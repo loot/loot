@@ -155,7 +155,7 @@ void Game::LoadPlugins(const std::vector<std::string>& plugins, const std::strin
 
 bool Game::IsPluginActive(const std::string& pluginName) const {
   try {
-    return GetPlugin(pluginName).IsActive();
+    return GetPlugin(pluginName)->IsActive();
   } catch (...) {
     return loadOrderHandler_.IsPluginActive(pluginName);
   }

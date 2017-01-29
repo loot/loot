@@ -115,11 +115,11 @@ TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalle
 
   // Check that one plugin's header has been read.
   ASSERT_NO_THROW(game.GetPlugin(masterFile));
-  Plugin plugin = game.GetPlugin(masterFile);
-  EXPECT_EQ("v5.0", plugin.getDescription());
+  auto plugin = game.GetPlugin(masterFile);
+  EXPECT_EQ("5.0", plugin->GetVersion());
 
   // Check that only the header has been read.
-  EXPECT_EQ(0, plugin.Crc());
+  EXPECT_EQ(0, plugin->GetCRC());
 }
 
 TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
@@ -131,11 +131,11 @@ TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugi
 
   // Check that one plugin's header has been read.
   ASSERT_NO_THROW(game.GetPlugin(blankEsm));
-  Plugin plugin = game.GetPlugin(blankEsm);
-  EXPECT_EQ("v5.0", plugin.getDescription());
+  auto plugin = game.GetPlugin(blankEsm);
+  EXPECT_EQ("5.0", plugin->GetVersion());
 
   // Check that not only the header has been read.
-  EXPECT_EQ(blankEsmCrc, plugin.Crc());
+  EXPECT_EQ(blankEsmCrc, plugin->GetCRC());
 }
 
 TEST_P(GameTest, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNotBeenInitialised) {

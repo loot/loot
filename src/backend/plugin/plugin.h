@@ -35,57 +35,53 @@
 
 #include "loot/metadata/plugin_metadata.h"
 #include "loot/enum/game_type.h"
+#include "loot/plugin_interface.h"
 
 namespace loot {
 class Game;
 
-class Plugin : public PluginMetadata, private libespm::Plugin {
+class Plugin : public PluginInterface, private libespm::Plugin {
 public:
   Plugin(const Game& game, const std::string& name, const bool headerOnly);
 
-  using libespm::Plugin::getDescription;
-  using libespm::Plugin::getFormIds;
-  using libespm::Plugin::getMasters;
-  using libespm::Plugin::isMasterFile;
-
-  bool IsEmpty() const;
-  uint32_t Crc() const;
-  size_t NumOverrideFormIDs() const;
+  std::string GetName() const;
+  std::string GetLowercasedName() const;
   std::string GetVersion() const;
+  std::vector<std::string> GetMasters() const;
+  std::vector<Message> GetStatusMessages() const;
+  std::set<Tag> GetBashTags() const;
+  uint32_t GetCRC() const;
 
+  bool IsMaster() const;
+  bool IsEmpty() const;
   bool LoadsArchive() const;
+  bool DoFormIDsOverlap(const PluginInterface& plugin) const;
+
   bool IsActive() const;
 
   //Load ordering functions.
-  bool DoFormIDsOverlap(const Plugin& plugin) const;
+  size_t NumOverrideFormIDs() const;
   std::set<libespm::FormId> OverlapFormIDs(const Plugin& plugin) const;
 
   // Validity checks.
-  // Checks that reqs and masters are all present, and that no incs are present.
-  void CheckInstallValidity(const Game& game);
   static bool IsValid(const std::string& filename, const Game& game);
   static uintmax_t GetFileSize(const std::string& filename, const Game& game);
 
   bool operator < (const Plugin& rhs) const;
 private:
   static libespm::GameId GetLibespmGameId(GameType gameType);
+
   bool isEmpty_;  // Does the plugin contain any records other than the TES4 header?
   bool isActive_;
   bool loadsArchive_;
+  const std::string name_;
   std::string version_;  //Obtained from description field.
   uint32_t crc_;
+  std::set<Tag> tags_;
+  std::vector<Message> messages_;
 
   //Useful caches.
   size_t numOverrideRecords_;
-};
-}
-
-namespace std {
-template<>
-struct hash<loot::Plugin> {
-  size_t operator() (const loot::Plugin& plugin) const {
-    return hash<string>()(boost::locale::to_lower(plugin.Name()));
-  }
 };
 }
 

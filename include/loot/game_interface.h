@@ -25,6 +25,7 @@
 #define LOOT_GAME_INTERFACE
 
 #include "loot/database_interface.h"
+#include "loot/plugin_interface.h"
 
 namespace loot {
 /** @brief The interface provided for accessing game-specific functionality. */
@@ -41,6 +42,57 @@ public:
    * @returns A shared pointer to the game's DatabaseInterface
    */
   virtual std::shared_ptr<DatabaseInterface> GetDatabase() = 0;
+
+  /**
+   * @}
+   * @name Plugin Data Access
+   * @{
+   */
+
+  /**
+   * @brief Check if a file is a valid plugin.
+   * @details The validity check is not exhaustive: it checks that the file
+   *          extension is ``.esm`` or ``.esp`` (after trimming any ``.ghost``
+   *          extension), and that the ``TES4`` header can be parsed.
+   * @param  plugin
+   *         The filename of the file to check.
+   * @returns True if the file is a valid plugin, false otherwise.
+   */
+  virtual bool IsValidPlugin(const std::string& plugin) = 0;
+
+  /**
+   * @brief Parses plugins and loads their data.
+   * @details Any previously-loaded plugin data is discarded when this function
+   *          is called.
+   * @param plugins
+   *        The filenames of the plugins to load.
+   * @param loadHeadersOnly
+   *        If true, only the plugins' ``TES4`` headers are loaded. If false,
+   *        all records in the plugins are parsed, apart from the main master
+   *        file if it has been identified by a previous call to
+   *        ``IdentifyMainMasterFile()``.
+   */
+  virtual void LoadPlugins(const std::vector<std::string>& plugins, bool loadHeadersOnly) = 0;
+
+  /**
+   * @brief Get data for a loaded plugin.
+   * @details Throws an exception if the given plugin has not been loaded.
+   * @param  pluginName
+   *         The filename of the plugin to get data for.
+   * @returns A const PluginInterface reference. The reference remains valid
+   *          until the ``LoadPlugins()`` or ``SortPlugins()`` functions are
+   *          next called or this GameInterface is destroyed.
+   */
+  virtual std::shared_ptr<const PluginInterface> GetPlugin(const std::string& pluginName) = 0;
+
+  /**
+   * @brief Get a set of const references to all loaded plugins' PluginInterface
+   *        objects.
+   * @returns A set of const PluginInterface references. The references remain
+   *          valid until the ``LoadPlugins()`` or ``SortPlugins()`` functions
+   *          are next called or this GameInterface is destroyed.
+   */
+  virtual std::set<std::shared_ptr<const PluginInterface>> GetLoadedPlugins() = 0;
 
   /**
   *  @}

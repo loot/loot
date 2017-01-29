@@ -101,9 +101,10 @@ private:
   PluginMetadata getUniqueMetadata(const PluginMetadata& metadata) {
     BOOST_LOG_TRIVIAL(trace) << "Removing any user metadata that duplicates masterlist metadata.";
     try {
-      Plugin tempPlugin(state_.getCurrentGame().GetPlugin(metadata.Name()));
-      tempPlugin.MergeMetadata(state_.getCurrentGame().GetMasterlist().FindPlugin(metadata));
-      return metadata.NewMetadata(tempPlugin);
+      auto plugin = state_.getCurrentGame().GetPlugin(metadata.Name());
+      auto masterlistMetadata = state_.getCurrentGame().GetMasterlist().FindPlugin(metadata);
+      auto nonUserMetadata = getNonUserMetadata(plugin, masterlistMetadata);
+      return metadata.NewMetadata(nonUserMetadata);
     } catch (...) {
       return metadata.NewMetadata(state_.getCurrentGame().GetMasterlist().FindPlugin(metadata));
     }

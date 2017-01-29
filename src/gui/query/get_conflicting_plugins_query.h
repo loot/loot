@@ -58,15 +58,16 @@ public:
   }
 
 private:
-  YAML::Node getConflictMetadata(const Plugin& plugin, const Plugin& otherPlugin) {
-    YAML::Node pluginNode = generateDerivedMetadata(otherPlugin.Name());
+  YAML::Node getConflictMetadata(std::shared_ptr<const Plugin> plugin, 
+                                 std::shared_ptr<const Plugin> otherPlugin) {
+    YAML::Node pluginNode = generateDerivedMetadata(otherPlugin->GetName());
 
-    pluginNode["name"] = otherPlugin.Name();
-    pluginNode["crc"] = otherPlugin.Crc();
-    pluginNode["isEmpty"] = otherPlugin.IsEmpty();
+    pluginNode["name"] = otherPlugin->GetName();
+    pluginNode["crc"] = otherPlugin->GetCRC();
+    pluginNode["isEmpty"] = otherPlugin->IsEmpty();
 
-    if (plugin.DoFormIDsOverlap(otherPlugin)) {
-      BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << otherPlugin.Name();
+    if (plugin->DoFormIDsOverlap(*otherPlugin)) {
+      BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << otherPlugin->GetName();
       pluginNode["conflicts"] = true;
     } else {
       pluginNode["conflicts"] = false;

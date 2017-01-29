@@ -96,28 +96,27 @@ INSTANTIATE_TEST_CASE_P(,
 TEST_P(PluginTest, loadingHeaderOnlyShouldReadHeaderData) {
   Plugin plugin(game_, blankEsm, true);
 
-  EXPECT_EQ(blankEsm, plugin.Name());
-  EXPECT_TRUE(plugin.getMasters().empty());
-  EXPECT_TRUE(plugin.isMasterFile());
+  EXPECT_EQ(blankEsm, plugin.GetName());
+  EXPECT_TRUE(plugin.GetMasters().empty());
+  EXPECT_TRUE(plugin.IsMaster());
   EXPECT_FALSE(plugin.IsEmpty());
-  EXPECT_EQ("v5.0", plugin.getDescription());
+  EXPECT_EQ("5.0", plugin.GetVersion());
 }
 
 TEST_P(PluginTest, loadingHeaderOnlyShouldNotReadFieldsOrCalculateCrc) {
   Plugin plugin(game_, blankEsm, true);
 
-  EXPECT_TRUE(plugin.getFormIds().empty());
-  EXPECT_EQ(0, plugin.Crc());
+  EXPECT_EQ(0, plugin.GetCRC());
 }
 
 TEST_P(PluginTest, loadingWholePluginShouldReadHeaderData) {
   Plugin plugin(game_, blankEsm, true);
 
-  EXPECT_EQ(blankEsm, plugin.Name());
-  EXPECT_TRUE(plugin.getMasters().empty());
-  EXPECT_TRUE(plugin.isMasterFile());
+  EXPECT_EQ(blankEsm, plugin.GetName());
+  EXPECT_TRUE(plugin.GetMasters().empty());
+  EXPECT_TRUE(plugin.IsMaster());
   EXPECT_FALSE(plugin.IsEmpty());
-  EXPECT_EQ("v5.0", plugin.getDescription());
+  EXPECT_EQ("5.0", plugin.GetVersion());
 }
 
 TEST_P(PluginTest, loadingWholePluginShouldReadFields) {
@@ -129,13 +128,13 @@ TEST_P(PluginTest, loadingWholePluginShouldReadFields) {
 TEST_P(PluginTest, loadingWholePluginShouldCalculateCrc) {
   Plugin plugin(game_, blankEsm, false);
 
-  EXPECT_EQ(blankEsmCrc, plugin.Crc());
+  EXPECT_EQ(blankEsmCrc, plugin.GetCRC());
 }
 
 TEST_P(PluginTest, loadingANonMasterPluginShouldReadTheMasterFlagAsFalse) {
   Plugin plugin(game_, blankMasterDependentEsp, true);
 
-  EXPECT_FALSE(plugin.isMasterFile());
+  EXPECT_FALSE(plugin.IsMaster());
 }
 
 TEST_P(PluginTest, loadingAPluginWithMastersShouldReadThemCorrectly) {
@@ -143,7 +142,7 @@ TEST_P(PluginTest, loadingAPluginWithMastersShouldReadThemCorrectly) {
 
   EXPECT_EQ(std::vector<std::string>({
       blankEsm
-  }), plugin.getMasters());
+  }), plugin.GetMasters());
 }
 
 TEST_P(PluginTest, loadsArchiveForAnArchiveThatExactlyMatchesAnEsmFileBasenameShouldReturnTrueForAllGamesExceptOblivion) {
@@ -212,11 +211,11 @@ TEST_P(PluginTest, lessThanOperatorShouldUseCaseInsensitiveLexicographicalNameCo
   EXPECT_FALSE(plugin1 < plugin2);
   EXPECT_FALSE(plugin2 < plugin1);
 
-  plugin1 = Plugin(game_, "blank.esm", true);
-  plugin2 = Plugin(game_, "blank.esp", true);
+  Plugin plugin3 = Plugin(game_, "blank.esm", true);
+  Plugin plugin4 = Plugin(game_, "blank.esp", true);
 
-  EXPECT_TRUE(plugin1 < plugin2);
-  EXPECT_FALSE(plugin2 < plugin1);
+  EXPECT_TRUE(plugin3 < plugin4);
+  EXPECT_FALSE(plugin4 < plugin3);
 }
 
 TEST_P(PluginTest, doFormIDsOverlapShouldReturnFalseForTwoPluginsWithOnlyHeadersLoaded) {
@@ -271,67 +270,6 @@ TEST_P(PluginTest, overlapFormIDsShouldReturnTheFormIDsOfRecordsAddedByOnePlugin
   });
   EXPECT_EQ(expectedFormIds, plugin1.OverlapFormIDs(plugin2));
   EXPECT_EQ(expectedFormIds, plugin2.OverlapFormIDs(plugin1));
-}
-
-TEST_P(PluginTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
-  Plugin plugin(game_, blankEsm, false);
-  plugin.Reqs({
-      File(missingEsp),
-      File(blankEsp),
-  });
-
-  plugin.CheckInstallValidity(game_);
-  EXPECT_EQ(std::vector<Message>({
-      Message(MessageType::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
-  }), plugin.Messages());
-}
-
-TEST_P(PluginTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
-  Plugin plugin(game_, blankEsm, false);
-  plugin.Incs({
-      File(missingEsp),
-      File(masterFile),
-  });
-
-  plugin.CheckInstallValidity(game_);
-  EXPECT_EQ(std::vector<Message>({
-      Message(MessageType::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
-  }), plugin.Messages());
-}
-
-TEST_P(PluginTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
-  const std::vector<MessageContent> info = std::vector<MessageContent>({
-    MessageContent("info", LanguageCode::english),
-  });
-
-  Plugin plugin(game_, blankEsm, false);
-  plugin.DirtyInfo({
-      PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2),
-      PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10),
-  });
-
-  plugin.CheckInstallValidity(game_);
-  EXPECT_EQ(std::vector<Message>({
-      PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2).AsMessage(),
-      PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10).AsMessage(),
-  }), plugin.Messages());
-}
-
-TEST_P(PluginTest, checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
-  Plugin plugin(game_, blankDifferentMasterDependentEsp, false);
-
-  plugin.CheckInstallValidity(game_);
-  EXPECT_EQ(std::vector<Message>({
-      Message(MessageType::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
-  }), plugin.Messages());
-}
-
-TEST_P(PluginTest, checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
-  Plugin plugin(game_, blankDifferentMasterDependentEsp, false);
-  plugin.Tags({Tag("Filter")});
-
-  plugin.CheckInstallValidity(game_);
-  EXPECT_TRUE(plugin.Messages().empty());
 }
 }
 }

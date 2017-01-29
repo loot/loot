@@ -84,18 +84,18 @@ std::pair<bool, bool> GameCache::GetCachedCondition(const std::string& condition
     return pair<bool, bool>(false, false);
 }
 
-std::set<Plugin> GameCache::GetPlugins() const {
-  std::set<Plugin> output;
+std::set<std::shared_ptr<const Plugin>> GameCache::GetPlugins() const {
+  std::set<std::shared_ptr<const Plugin>> output;
   std::transform(begin(plugins_),
                  end(plugins_),
-                 std::inserter<std::set<Plugin>>(output, begin(output)),
-                 [](const pair<string, Plugin>& pluginPair) {
+                 std::inserter<std::set<std::shared_ptr<const Plugin>>>(output, begin(output)),
+                 [](const pair<string, std::shared_ptr<const Plugin>>& pluginPair) {
     return pluginPair.second;
   });
   return output;
 }
 
-const Plugin& GameCache::GetPlugin(const std::string & pluginName) const {
+std::shared_ptr<const Plugin> GameCache::GetPlugin(const std::string& pluginName) const {
   auto it = plugins_.find(to_lower(pluginName));
   if (it != end(plugins_))
     return it->second;
@@ -106,9 +106,12 @@ const Plugin& GameCache::GetPlugin(const std::string & pluginName) const {
 void GameCache::AddPlugin(const Plugin&& plugin) {
   lock_guard<mutex> lock(mutex_);
 
-  auto pair = plugins_.emplace(to_lower(plugin.Name()), plugin);
-  if (!pair.second)
-    pair.first->second = plugin;
+  auto it = plugins_.find(plugin.GetLowercasedName());
+  if (it != end(plugins_))
+    plugins_.erase(it);
+
+  
+  plugins_.emplace(plugin.GetLowercasedName(), std::make_shared<Plugin>(std::move(plugin)));
 }
 
 std::vector<Message> GameCache::GetMessages() const {

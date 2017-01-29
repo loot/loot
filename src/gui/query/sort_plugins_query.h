@@ -49,12 +49,7 @@ public:
     state_.getCurrentGame().LoadAllInstalledPlugins(false);
 
     //Sort plugins into their load order.
-    std::vector<Plugin> plugins = sortPlugins();
-
-    sortedPluginNames.resize(plugins.size());
-    std::transform(begin(plugins), end(plugins), begin(sortedPluginNames), [](const Plugin& plugin) {
-      return plugin.Name();
-    });
+    std::vector<std::string> plugins = sortPlugins();
 
     if ((state_.getCurrentGame().Type() == GameType::tes5
          || state_.getCurrentGame().Type() == GameType::fo4
@@ -71,9 +66,9 @@ public:
   }
 
 private:
-  std::vector<Plugin> sortPlugins() {
+  std::vector<std::string> sortPlugins() {
     sendProgressUpdate(frame_, boost::locale::translate("Sorting load order..."));
-    std::vector<Plugin> plugins;
+    std::vector<std::string> plugins;
     try {
       PluginSorter sorter;
       plugins = sorter.Sort(state_.getCurrentGame(), state_.getLanguage().GetCode());
@@ -89,41 +84,35 @@ private:
     return plugins;
   }
 
-  void applyUnchangedLoadOrder(const std::vector<Plugin>& plugins) {
+  void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
     if (plugins.empty() || !equal(begin(plugins), end(plugins), begin(state_.getCurrentGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
     // because there are no changes to accept and some plugins' positions
     // may only be inferred and not written to loadorder.txt/plugins.txt.
-    std::vector<std::string> newLoadOrder(plugins.size());
-    std::transform(begin(plugins),
-                   end(plugins),
-                   begin(newLoadOrder),
-                   [](const Plugin& plugin) {
-      return plugin.Name();
-    });
-    state_.getCurrentGame().SetLoadOrder(newLoadOrder);
+    state_.getCurrentGame().SetLoadOrder(plugins);
   }
 
-  YAML::Node generateDerivedMetadata(const Plugin& plugin) {
-    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin.Name());
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> plugin) {
+    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
 
-    pluginNode["name"] = plugin.Name();
-    pluginNode["crc"] = plugin.Crc();
-    pluginNode["isEmpty"] = plugin.IsEmpty();
-    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin.Name(), sortedPluginNames);
+    pluginNode["name"] = plugin->GetName();
+    pluginNode["crc"] = plugin->GetCRC();
+    pluginNode["isEmpty"] = plugin->IsEmpty();
+    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName(), sortedPluginNames);
 
     return pluginNode;
   }
 
-  std::string generateJsonResponse(const std::vector<Plugin>& plugins) {
+  std::string generateJsonResponse(const std::vector<std::string>& plugins) {
     YAML::Node node;
 
     // Store global messages in case they have changed.
     node["globalMessages"] = getGeneralMessages();
 
-    for (const auto &plugin : plugins) {
+    for (const auto &pluginName : plugins) {
+      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
       node["plugins"].push_back(generateDerivedMetadata(plugin));
     }
 

@@ -55,7 +55,7 @@ public:
       loadMetadataLists();
 
     //Sort plugins into their load order.
-    std::vector<Plugin> installed;
+    std::vector<std::shared_ptr<const Plugin>> installed;
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
     for (const auto &pluginName : loadOrder) {
       try {
@@ -69,7 +69,7 @@ public:
 
 private:
   void loadMetadataLists() {
-    if (exists(state_.getCurrentGame().MasterlistPath())) {
+    if (boost::filesystem::exists(state_.getCurrentGame().MasterlistPath())) {
       BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
       try {
         state_.getCurrentGame().GetMasterlist().Load(state_.getCurrentGame().MasterlistPath());
@@ -84,7 +84,7 @@ private:
       }
     }
 
-    if (exists(state_.getCurrentGame().UserlistPath())) {
+    if (boost::filesystem::exists(state_.getCurrentGame().UserlistPath())) {
       BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
       try {
         state_.getCurrentGame().GetUserlist().Load(state_.getCurrentGame().UserlistPath());
@@ -135,32 +135,31 @@ private:
     return node;
   }
 
-  YAML::Node generateDerivedMetadata(const Plugin& plugin) {
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> plugin) {
     YAML::Node pluginNode;
 
     pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
-    pluginNode["name"] = plugin.Name();
-    pluginNode["isActive"] = plugin.IsActive();
-    pluginNode["isEmpty"] = plugin.IsEmpty();
-    pluginNode["isMaster"] = plugin.isMasterFile();
-    pluginNode["loadsArchive"] = plugin.LoadsArchive();
-    pluginNode["crc"] = plugin.Crc();
-    pluginNode["version"] = plugin.GetVersion();
+    pluginNode["name"] = plugin->GetName();
+    pluginNode["isActive"] = plugin->IsActive();
+    pluginNode["isEmpty"] = plugin->IsEmpty();
+    pluginNode["isMaster"] = plugin->IsMaster();
+    pluginNode["loadsArchive"] = plugin->LoadsArchive();
+    pluginNode["crc"] = plugin->GetCRC();
+    pluginNode["version"] = plugin->GetVersion();
 
-    BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin.Name();
-    Plugin mlistPlugin(plugin);
-    mlistPlugin.MergeMetadata(state_.getCurrentGame().GetMasterlist().FindPlugin(plugin));
-    if (!mlistPlugin.HasNameOnly())
-      pluginNode["masterlist"] = convertPluginMetadata(mlistPlugin, state_.getLanguage().GetCode());
+    BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
+    auto masterlistMetadata = state_.getCurrentGame().GetMasterlist().FindPlugin(plugin->GetName());
+    if (!masterlistMetadata.HasNameOnly())
+      pluginNode["masterlist"] = convertPluginMetadata(masterlistMetadata, state_.getLanguage().GetCode());
 
-    BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin.Name();
-    PluginMetadata ulistPlugin(state_.getCurrentGame().GetUserlist().FindPlugin(plugin));
-    if (!ulistPlugin.HasNameOnly())
-      pluginNode["userlist"] = convertPluginMetadata(ulistPlugin, state_.getLanguage().GetCode());
+    BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
+    auto userlistMetadata = state_.getCurrentGame().GetUserlist().FindPlugin(plugin->GetName());
+    if (!userlistMetadata.HasNameOnly())
+      pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage().GetCode());
 
     // Now merge masterlist and userlist metadata and evaluate,
     // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin, mlistPlugin, ulistPlugin);
+    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin, masterlistMetadata, userlistMetadata);
 
     for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
       const std::string key = it->first.as<std::string>();
@@ -170,7 +169,7 @@ private:
     return pluginNode;
   }
 
-  std::string generateJsonResponse(std::vector<Plugin> plugins) {
+  std::string generateJsonResponse(std::vector<std::shared_ptr<const Plugin>> plugins) {
     YAML::Node gameNode;
 
     // ID the game using its folder value.

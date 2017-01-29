@@ -42,7 +42,7 @@ using std::string;
 
 namespace loot {
 Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly) :
-  PluginMetadata(name),
+  name_(name),
   libespm::Plugin(Plugin::GetLibespmGameId(game.Type())),
   isEmpty_(true),
   isActive_(false),
@@ -50,7 +50,7 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
   crc_(0),
   numOverrideRecords_(0) {
   try {
-    boost::filesystem::path filepath = game.DataPath() / Name();
+    boost::filesystem::path filepath = game.DataPath() / name_;
 
     // In case the plugin is ghosted.
     if (!boost::filesystem::exists(filepath) && boost::filesystem::exists(filepath.string() + ".ghost"))
@@ -61,19 +61,19 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
     isEmpty_ = getRecordAndGroupCount() == 0;
 
     if (!headerOnly) {
-      BOOST_LOG_TRIVIAL(trace) << Name() << ": Caching CRC value.";
+      BOOST_LOG_TRIVIAL(trace) << name_ << ": Caching CRC value.";
       crc_ = GetCrc32(filepath);
     }
 
-    BOOST_LOG_TRIVIAL(trace) << Name() << ": Counting override FormIDs.";
+    BOOST_LOG_TRIVIAL(trace) << name_ << ": Counting override FormIDs.";
     for (const auto& formID : getFormIds()) {
-      if (!boost::iequals(formID.getPluginName(), Name()))
+      if (!boost::iequals(formID.getPluginName(), name_))
         ++numOverrideRecords_;
     }
 
     //Also read Bash Tags applied and version string in description.
     string text = getDescription();
-    BOOST_LOG_TRIVIAL(trace) << Name() << ": " << "Attempting to extract Bash Tags from the description.";
+    BOOST_LOG_TRIVIAL(trace) << name_ << ": " << "Attempting to extract Bash Tags from the description.";
     size_t pos1 = text.find("{{BASH:");
     if (pos1 != string::npos && pos1 + 7 != text.length()) {
       pos1 += 7;
@@ -87,23 +87,23 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
 
         for (auto &tag : bashTags) {
           boost::trim(tag);
-          BOOST_LOG_TRIVIAL(trace) << Name() << ": " << "Extracted Bash Tag: " << tag;
+          BOOST_LOG_TRIVIAL(trace) << name_ << ": " << "Extracted Bash Tag: " << tag;
           tags_.insert(Tag(tag));
         }
       }
     }
     // Get whether the plugin is active or not.
-    isActive_ = game.IsPluginActive(Name());
+    isActive_ = game.IsPluginActive(name_);
 
     // Get whether the plugin loads an archive (BSA/BA2) or not.
     const string archiveExtension = game.GetArchiveFileExtension();
 
     if (game.Type() == GameType::tes5) {
         // Skyrim plugins only load BSAs that exactly match their basename.
-      loadsArchive_ = boost::filesystem::exists(game.DataPath() / (Name().substr(0, Name().length() - 4) + archiveExtension));
-    } else if (game.Type() != GameType::tes4 || boost::iends_with(Name(), ".esp")) {
+      loadsArchive_ = boost::filesystem::exists(game.DataPath() / (name_.substr(0, name_.length() - 4) + archiveExtension));
+    } else if (game.Type() != GameType::tes4 || boost::iends_with(name_, ".esp")) {
         //Oblivion .esp files and FO3, FNV, FO4 plugins can load archives which begin with the plugin basename.
-      string basename = Name().substr(0, Name().length() - 4);
+      string basename = name_.substr(0, name_.length() - 4);
       for (boost::filesystem::directory_iterator it(game.DataPath()); it != boost::filesystem::directory_iterator(); ++it) {
         if (boost::iequals(it->path().extension().string(), archiveExtension) && boost::istarts_with(it->path().filename().string(), basename)) {
           loadsArchive_ = true;
@@ -116,13 +116,58 @@ Plugin::Plugin(const Game& game, const std::string& name, const bool headerOnly)
     messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("Cannot read \"%1%\". Details: %2%")) % name % e.what()).str()));
   }
 
-  BOOST_LOG_TRIVIAL(trace) << Name() << ": " << "Plugin loading complete.";
+  BOOST_LOG_TRIVIAL(trace) << name_ << ": " << "Plugin loading complete.";
 }
 
-bool Plugin::DoFormIDsOverlap(const Plugin& plugin) const {
-    //Basically std::set_intersection except with an early exit instead of an append to results.
+std::string Plugin::GetName() const {
+  return name_;
+}
+
+std::string Plugin::GetLowercasedName() const {
+  return boost::locale::to_lower(name_);
+}
+
+std::string Plugin::GetVersion() const {
+  return Version(getDescription()).AsString();
+}
+
+std::vector<std::string> Plugin::GetMasters() const {
+  return getMasters();
+}
+
+std::vector<Message> Plugin::GetStatusMessages() const {
+  return messages_;
+}
+
+std::set<Tag> Plugin::GetBashTags() const {
+  return tags_;
+}
+
+uint32_t Plugin::GetCRC() const {
+  return crc_;
+}
+
+bool Plugin::IsMaster() const {
+  return isMasterFile();
+}
+
+bool Plugin::IsEmpty() const {
+  return isEmpty_;
+}
+
+bool Plugin::LoadsArchive() const {
+  return loadsArchive_;
+}
+
+bool Plugin::DoFormIDsOverlap(const PluginInterface& plugin) const {
+  // Assume the PluginInterface is another plugin: it'll throw if it's not.
+  // Not great design, but the function needs getFormIds() and that can't
+  // be exposed in the interface.
+  const Plugin& otherPlugin = dynamic_cast<const Plugin&>(plugin);
+
+  //Basically std::set_intersection except with an early exit instead of an append to results.
   set<FormId> formIds(getFormIds());
-  set<FormId> otherFormIds(plugin.getFormIds());
+  set<FormId> otherFormIds(otherPlugin.getFormIds());
   auto i = begin(formIds);
   auto j = begin(otherFormIds);
   auto iend = end(formIds);
@@ -144,10 +189,6 @@ size_t Plugin::NumOverrideFormIDs() const {
   return numOverrideRecords_;
 }
 
-std::string Plugin::GetVersion() const {
-  return Version(getDescription()).AsString();
-}
-
 std::set<FormId> Plugin::OverlapFormIDs(const Plugin& plugin) const {
   set<FormId> formIds(getFormIds());
   set<FormId> otherFormIds(plugin.getFormIds());
@@ -160,10 +201,6 @@ std::set<FormId> Plugin::OverlapFormIDs(const Plugin& plugin) const {
                    inserter(overlap, end(overlap)));
 
   return overlap;
-}
-
-bool Plugin::IsEmpty() const {
-  return isEmpty_;
 }
 
 bool Plugin::IsValid(const std::string& filename, const Game& game) {
@@ -201,58 +238,11 @@ uintmax_t Plugin::GetFileSize(const std::string & filename, const Game & game) {
 }
 
 bool Plugin::operator < (const Plugin & rhs) const {
-  return boost::ilexicographical_compare(Name(), rhs.Name());;
+  return boost::ilexicographical_compare(name_, rhs.name_);;
 }
 
 bool Plugin::IsActive() const {
   return isActive_;
-}
-
-uint32_t Plugin::Crc() const {
-  return crc_;
-}
-
-void Plugin::CheckInstallValidity(const Game& game) {
-  BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << Name() << "'s data.";
-  if (IsActive()) {
-    auto pluginExists = [](const Game& game, const std::string& file) {
-      return boost::filesystem::exists(game.DataPath() / file)
-        || ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(game.DataPath() / (file + ".ghost")));
-    };
-    if (tags_.find(Tag("Filter")) == tags_.end()) {
-      for (const auto &master : getMasters()) {
-        if (!pluginExists(game, master)) {
-          BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << master << "\", but it is missing.";
-          messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
-        } else if (!game.IsPluginActive(master)) {
-          BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << master << "\", but it is inactive.";
-          messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
-        }
-      }
-    }
-
-    for (const auto &req : Reqs()) {
-      if (!pluginExists(game, req.Name())) {
-        BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" requires \"" << req.Name() << "\", but it is missing.";
-        messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
-      }
-    }
-    for (const auto &inc : Incs()) {
-      if (pluginExists(game, inc.Name()) && game.IsPluginActive(inc.Name())) {
-        BOOST_LOG_TRIVIAL(error) << "\"" << Name() << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
-        messages_.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
-      }
-    }
-  }
-
-  // Also generate dirty messages.
-  for (const auto &element : DirtyInfo()) {
-    messages_.push_back(element.AsMessage());
-  }
-}
-
-bool Plugin::LoadsArchive() const {
-  return loadsArchive_;
 }
 
 libespm::GameId Plugin::GetLibespmGameId(GameType gameType) {

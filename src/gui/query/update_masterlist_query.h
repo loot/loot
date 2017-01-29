@@ -75,26 +75,27 @@ private:
     return JSON::stringify(gameMetadata);
   }
 
-  YAML::Node generateDerivedMetadata(const Plugin& plugin) {
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> plugin) {
     YAML::Node pluginNode;
 
-    Plugin mlistPlugin(plugin);
-    mlistPlugin.MergeMetadata(game_.GetMasterlist().FindPlugin(plugin));
-    if (!mlistPlugin.HasNameOnly()) {
+    auto masterlistMetadata = game_.GetMasterlist().FindPlugin(plugin->GetName());
+    auto metadata = getNonUserMetadata(plugin, masterlistMetadata);
+
+    if (!metadata.HasNameOnly()) {
         // Now add the masterlist metadata to the pluginNode.
-      pluginNode["masterlist"]["after"] = mlistPlugin.LoadAfter();
-      pluginNode["masterlist"]["req"] = mlistPlugin.Reqs();
-      pluginNode["masterlist"]["inc"] = mlistPlugin.Incs();
-      pluginNode["masterlist"]["msg"] = mlistPlugin.Messages();
-      pluginNode["masterlist"]["tag"] = mlistPlugin.Tags();
-      pluginNode["masterlist"]["dirty"] = mlistPlugin.DirtyInfo();
-      pluginNode["masterlist"]["clean"] = mlistPlugin.CleanInfo();
-      pluginNode["masterlist"]["url"] = mlistPlugin.Locations();
+      pluginNode["masterlist"]["after"] = metadata.LoadAfter();
+      pluginNode["masterlist"]["req"] = metadata.Reqs();
+      pluginNode["masterlist"]["inc"] = metadata.Incs();
+      pluginNode["masterlist"]["msg"] = metadata.Messages();
+      pluginNode["masterlist"]["tag"] = metadata.Tags();
+      pluginNode["masterlist"]["dirty"] = metadata.DirtyInfo();
+      pluginNode["masterlist"]["clean"] = metadata.CleanInfo();
+      pluginNode["masterlist"]["url"] = metadata.Locations();
     }
 
     // Now merge masterlist and userlist metadata and evaluate,
     // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin.Name());
+    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
 
     for (const auto &pair : derivedNode) {
       const std::string key = pair.first.as<std::string>();
