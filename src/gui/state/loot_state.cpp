@@ -57,7 +57,7 @@ using std::vector;
 namespace fs = boost::filesystem;
 
 namespace loot {
-LootState::LootState() : unappliedChangeCounter_(0), currentGame_(games_.end()) {}
+LootState::LootState() : unappliedChangeCounter_(0), currentGame_(installedGames_.end()) {}
 
 void LootState::load(YAML::Node& settings) {
   lock_guard<mutex> guard(mutex_);
@@ -71,9 +71,9 @@ void LootState::load(YAML::Node& settings) {
   std::unordered_set<string> newGameFolders;
   BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
   for (const auto &gameSettings : getGameSettings()) {
-    auto pos = find(games_.begin(), games_.end(), gameSettings);
+    auto pos = find(installedGames_.begin(), installedGames_.end(), gameSettings);
 
-    if (pos != games_.end()) {
+    if (pos != installedGames_.end()) {
       pos->SetName(gameSettings.Name())
         .SetMaster(gameSettings.Master())
         .SetRepoURL(gameSettings.RepoURL())
@@ -81,8 +81,10 @@ void LootState::load(YAML::Node& settings) {
         .SetGamePath(gameSettings.GamePath())
         .SetRegistryKey(gameSettings.RegistryKey());
     } else {
-      BOOST_LOG_TRIVIAL(trace) << "Adding new game entry for: " << gameSettings.FolderName();
-      games_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+      if (gui::Game::IsInstalled(gameSettings)) {
+        BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
+        installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+      }
     }
 
     newGameFolders.insert(gameSettings.FolderName());
@@ -91,23 +93,22 @@ void LootState::load(YAML::Node& settings) {
   // Remove deleted games. As the current game is stored using its index,
   // removing an earlier game may invalidate it.
   BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
-  for (auto it = games_.begin(); it != games_.end();) {
+  for (auto it = installedGames_.begin(); it != installedGames_.end();) {
     if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
       BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
-      it = games_.erase(it);
+      it = installedGames_.erase(it);
     } else
       ++it;
   }
 
-  if (currentGame_ == end(games_)) {
+  if (currentGame_ == end(installedGames_)) {
     selectGame("");
   }
 
-  if (currentGame_ != end(games_)) {
+  if (currentGame_ != end(installedGames_)) {
     // Re-initialise the current game in case the game path setting was changed.
     currentGame_->Init();
-    // Update game path in settings object.
-    storeGameSettings(toGameSettings(games_));
+    updateCurrentGamePathSetting();
   }
 }
 
@@ -184,7 +185,13 @@ void LootState::init(const std::string& cmdLineGame) {
 
   //Detect installed games.
   BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
-  games_ = toGames(getGameSettings());
+  installedGames_.clear();
+  for (const auto& gameSettings : getGameSettings()) {
+    if (gui::Game::IsInstalled(gameSettings)) {
+      BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
+      installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+    }
+  }
 
   try {
     BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
@@ -192,8 +199,7 @@ void LootState::init(const std::string& cmdLineGame) {
     BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
     BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
     currentGame_->Init();
-    // Update game path in settings object.
-    storeGameSettings(toGameSettings(games_));
+    updateCurrentGamePathSetting();
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
     initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
@@ -214,13 +220,11 @@ void LootState::changeGame(const std::string& newGameFolder) {
   lock_guard<mutex> guard(mutex_);
 
   BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: " << newGameFolder;
-  currentGame_ = find_if(games_.begin(), games_.end(), [&](const gui::Game& game) {
+  currentGame_ = find_if(installedGames_.begin(), installedGames_.end(), [&](const gui::Game& game) {
     return boost::iequals(newGameFolder, game.FolderName());
   });
   currentGame_->Init();
-
-  // Update game path in settings object.
-  storeGameSettings(toGameSettings(games_));
+  updateCurrentGamePathSetting();
   BOOST_LOG_TRIVIAL(debug) << "New game is " << currentGame_->Name();
 }
 
@@ -230,11 +234,10 @@ gui::Game& LootState::getCurrentGame() {
   return *currentGame_;
 }
 
-std::vector<std::string> LootState::getInstalledGames() {
+std::vector<std::string> LootState::getInstalledGames() const {
   vector<string> installedGames;
-  for (auto &game : games_) {
-    if (game.IsInstalled())
-      installedGames.push_back(game.FolderName());
+  for (const auto &game : installedGames_) {
+    installedGames.push_back(game.FolderName());
   }
   return installedGames;
 }
@@ -262,18 +265,16 @@ void LootState::selectGame(std::string preferredGame) {
   }
 
   // Get iterator to preferred game.
-  currentGame_ = find_if(begin(games_), end(games_), [&](gui::Game& game) {
-    return (preferredGame.empty() || preferredGame == game.FolderName()) && game.IsInstalled();
+  currentGame_ = find_if(begin(installedGames_), end(installedGames_), [&](gui::Game& game) {
+    return preferredGame.empty() || preferredGame == game.FolderName();
   });
   // If the preferred game cannot be found, get the first installed game.
-  if (currentGame_ == end(games_)) {
-    currentGame_ = find_if(begin(games_), end(games_), [](gui::Game& game) {
-      return game.IsInstalled();
-    });
+  if (currentGame_ == end(installedGames_)) {
+    currentGame_ = begin(installedGames_);
   }
 
   // If no game can be selected, throw an exception.
-  if (currentGame_ == end(games_)) {
+  if (currentGame_ == end(installedGames_)) {
     throw GameDetectionError("None of the supported games were detected.");
   }
 }
@@ -283,6 +284,19 @@ void LootState::enableDebugLogging(bool enable) {
     boost::log::core::get()->reset_filter();
   } else {
     boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);
+  }
+}
+
+void LootState::updateCurrentGamePathSetting() {
+  auto gameSettings = getGameSettings();
+  auto pos = find_if(begin(gameSettings), end(gameSettings), [&](const GameSettings& game) {
+    return boost::iequals(currentGame_->Name(), game.FolderName());
+  });
+  if (pos == end(gameSettings)) {
+    BOOST_LOG_TRIVIAL(error) << "Could not find the settings for the current game (" << currentGame_->Name() << ")";
+  } else {
+    pos->SetGamePath(currentGame_->GamePath());
+    storeGameSettings(gameSettings);
   }
 }
 

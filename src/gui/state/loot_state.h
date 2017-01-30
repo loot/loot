@@ -43,7 +43,7 @@ public:
   void changeGame(const std::string& newGameFolder);
 
   // Get the folder names of the installed games.
-  std::vector<std::string> getInstalledGames();
+  std::vector<std::string> getInstalledGames() const;
 
   bool hasUnappliedChanges() const;
   void incrementUnappliedChangeCounter();
@@ -53,10 +53,12 @@ private:
   void selectGame(std::string cmdLineGame);
   void enableDebugLogging(bool enable);
 
+  void updateCurrentGamePathSetting();
+
   static std::list<gui::Game> toGames(const std::vector<GameSettings>& settings);
   static std::vector<GameSettings> toGameSettings(const std::list<gui::Game>& games);
 
-  std::list<gui::Game> games_;
+  std::list<gui::Game> installedGames_;
   std::list<gui::Game>::iterator currentGame_;
   std::vector<std::string> initErrors_;
 

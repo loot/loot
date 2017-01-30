@@ -48,24 +48,20 @@ protected:
     blankDifferentMasterDependentEsp,
     blankPluginDependentEsp,
   }),
-  loadOrderBackupFile0(localPath / "loadorder.bak.0"),
-  loadOrderBackupFile1(localPath / "loadorder.bak.1"),
-  loadOrderBackupFile2(localPath / "loadorder.bak.2"),
-  loadOrderBackupFile3(localPath / "loadorder.bak.3") {}
+  loadOrderBackupFile0("loadorder.bak.0"),
+  loadOrderBackupFile1("loadorder.bak.1"),
+  loadOrderBackupFile2("loadorder.bak.2"),
+  loadOrderBackupFile3("loadorder.bak.3") {}
 
   void TearDown() {
     CommonGameTestFixture::TearDown();
-
-    boost::filesystem::remove(loadOrderBackupFile0);
-    boost::filesystem::remove(loadOrderBackupFile1);
-    boost::filesystem::remove(loadOrderBackupFile2);
   }
 
   std::vector<std::string> loadOrderToSet_;
-  const boost::filesystem::path loadOrderBackupFile0;
-  const boost::filesystem::path loadOrderBackupFile1;
-  const boost::filesystem::path loadOrderBackupFile2;
-  const boost::filesystem::path loadOrderBackupFile3;
+  const std::string loadOrderBackupFile0;
+  const std::string loadOrderBackupFile1;
+  const std::string loadOrderBackupFile2;
+  const std::string loadOrderBackupFile3;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -103,36 +99,31 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(lootDataPath / "folder" / "userlist.yaml", game.UserlistPath());
 }
 
+#ifndef _WIN32
+// Testing on Windows will find real game installs in the Registry, so cannot
+// test autodetection fully unless on Linux.
+TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
+  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath), std::system_error);
+}
+
+TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {
+  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  EXPECT_THROW(Game(settings, lootDataPath), std::system_error);
+}
+#else
+TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
+  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  EXPECT_NO_THROW(Game(settings, lootDataPath, ""));
+}
+#endif
+
 TEST_P(GameTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
-  Game game = Game(GameSettings(GetParam()), "", localPath);
-  EXPECT_FALSE(game.IsInstalled());
+  EXPECT_FALSE(Game::IsInstalled(GameSettings(GetParam())));
 }
 
 TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
-  EXPECT_TRUE(game.IsInstalled());
+  EXPECT_TRUE(Game::IsInstalled(GameSettings(GetParam()).SetGamePath(dataPath.parent_path())));
 }
-
-#ifndef _WIN32
-        // Testing on Windows will find real game installs in the Registry, so cannot
-        // test autodetection fully unless on Linux.
-TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  Game game = Game(GameSettings(GetParam()), "");
-  EXPECT_THROW(game.Init(), GameDetectionError);
-}
-
-TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath);
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
-  EXPECT_THROW(game.Init(), std::system_error);
-}
-#else
-TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
-
-  EXPECT_NO_THROW(game.Init());
-}
-#endif
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
@@ -156,15 +147,6 @@ TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   EXPECT_NO_THROW(game.Init());
-}
-
-TEST_P(GameTest, redatePluginsShouldThrowIfTheGameHasNotYetBeenInitialisedForSkyrimAndNotForOtherGames) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
-
-  if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5se)
-    EXPECT_THROW(game.RedatePlugins(), std::system_error);
-  else
-    EXPECT_NO_THROW(game.RedatePlugins());
 }
 
 TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
@@ -271,31 +253,39 @@ TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingIna
   EXPECT_EQ(2, index);
 }
 
-TEST_P(GameTest, backupLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game.Init();
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
 
-  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile0));
-  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+  auto initialLoadOrder = getLoadOrder();
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  auto loadOrder = readFileLines(loadOrderBackupFile0);
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
 
-  EXPECT_EQ(loadOrderToSet_, loadOrder);
+  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+
+  EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
-TEST_P(GameTest, backupLoadOrderShouldRollOverExistingBackups) {
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game.Init();
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+
+  auto initialLoadOrder = getLoadOrder();
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
   auto firstSetLoadOrder = loadOrderToSet_;
 
@@ -304,27 +294,31 @@ TEST_P(GameTest, backupLoadOrderShouldRollOverExistingBackups) {
   loadOrderToSet_[9] = blankPluginDependentEsp;
   loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile0));
-  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(loadOrderBackupFile0);
-  EXPECT_EQ(loadOrderToSet_, loadOrder);
-
-  loadOrder = readFileLines(loadOrderBackupFile1);
+  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
+
+  loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
+  EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
-TEST_P(GameTest, backupLoadOrderShouldKeepUpToThreeBackups) {
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game.Init();
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+
+  auto initialLoadOrder = getLoadOrder();
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
   auto firstSetLoadOrder = loadOrderToSet_;
 
@@ -333,7 +327,7 @@ TEST_P(GameTest, backupLoadOrderShouldKeepUpToThreeBackups) {
   loadOrderToSet_[9] = blankPluginDependentEsp;
   loadOrderToSet_[10] = blankDifferentMasterDependentEsp;
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
   auto secondSetLoadOrder = loadOrderToSet_;
 
@@ -342,30 +336,30 @@ TEST_P(GameTest, backupLoadOrderShouldKeepUpToThreeBackups) {
   loadOrderToSet_[7] = blankMasterDependentEsp;
   loadOrderToSet_[8] = blankEsp;
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
   auto thirdSetLoadOrder = loadOrderToSet_;
 
-  ASSERT_NE(blankMasterDependentEsm, loadOrderToSet_[7]);
-  ASSERT_NE(blankDifferentEsm, loadOrderToSet_[8]);
-  loadOrderToSet_[7] = blankMasterDependentEsm;
-  loadOrderToSet_[8] = blankDifferentEsm;
+  ASSERT_NE(blankDifferentMasterDependentEsm, loadOrderToSet_[3]);
+  ASSERT_NE(blankDifferentEsm, loadOrderToSet_[4]);
+  loadOrderToSet_[3] = blankDifferentMasterDependentEsm;
+  loadOrderToSet_[4] = blankDifferentEsm;
 
-  ASSERT_NO_THROW(Game::BackupLoadOrder(loadOrderToSet_, localPath));
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile0));
-  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile1));
-  EXPECT_TRUE(boost::filesystem::exists(loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(loadOrderBackupFile3));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(loadOrderBackupFile0);
-  EXPECT_EQ(loadOrderToSet_, loadOrder);
-
-  loadOrder = readFileLines(loadOrderBackupFile1);
+  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
   EXPECT_EQ(thirdSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(loadOrderBackupFile2);
+  loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
   EXPECT_EQ(secondSetLoadOrder, loadOrder);
+
+  loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile2);
+  EXPECT_EQ(firstSetLoadOrder, loadOrder);
 }
 }
 }

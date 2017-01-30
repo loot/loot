@@ -24,6 +24,7 @@
 
 #include "gui/loot_app.h"
 
+#include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 #include <include/cef_browser.h>
 #include <include/cef_task.h>

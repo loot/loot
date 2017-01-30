@@ -478,8 +478,8 @@ target_link_libraries(LOOT ${CEF_LIBRARIES} loot_common ${LOOT_GUI_LIBS})
 
 # Build application tests.
 add_executable       (gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (gui_tests loot_common GTest testing-metadata testing-plugins)
-target_link_libraries(gui_tests loot_common ${GTEST_LIBRARIES})
+add_dependencies     (gui_tests loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(gui_tests loot_api ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -499,7 +499,6 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties (loot_common PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (LOOT PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
-    set_target_properties (gui_tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()

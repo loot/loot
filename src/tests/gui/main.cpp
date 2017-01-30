@@ -22,6 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
+#include <boost/locale.hpp>
 #include <boost/log/core.hpp>
 
 #include "tests/gui/state/game_test.h"

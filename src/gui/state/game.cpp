@@ -62,43 +62,25 @@ namespace gui {
 Game::Game(const GameSettings& gameSettings,
            const boost::filesystem::path& lootDataPath,
            const boost::filesystem::path& localDataPath) :
-  loot::Game(gameSettings.Type(), gameSettings.GamePath(), localDataPath),
   GameSettings(gameSettings),
   lootDataPath_(lootDataPath),
-  pluginsFullyLoaded_(false) {}
+  gameHandle_(CreateGameHandle(gameSettings.Type(), gameSettings.GamePath().string(), localDataPath.string())),
+  pluginsFullyLoaded_(false) {
+  gameHandle_->IdentifyMainMasterFile(gameSettings.Master());
+}
 
-bool Game::IsInstalled() {
-  try {
-    BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << Name() << "\" is installed.";
-    if (!GamePath().empty() && fs::exists(GamePath() / "Data" / Master()))
-      return true;
+bool Game::IsInstalled(const GameSettings& gameSettings) {
+  auto gamePath = DetectGamePath(gameSettings);
 
-    if (fs::exists(fs::path("..") / "Data" / Master())) {
-      SetGamePath("..");
-      return true;
-    }
-
-#ifdef _WIN32
-    std::string path;
-    std::string key_parent = fs::path(RegistryKey()).parent_path().string();
-    std::string key_name = fs::path(RegistryKey()).filename().string();
-    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-    if (!path.empty() && fs::exists(fs::path(path) / "Data" / Master())) {
-      SetGamePath(path);
-      return true;
-    }
-#endif
-  } catch (std::exception &e) {
-    BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << Name() << "\" is installed: " << e.what();
-  }
-
-  return false;
+  return !gamePath.empty();
 }
 
 void Game::Init() {
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
 
-  if (!this->IsInstalled()) {
+  SetGamePath(DetectGamePath(*this));
+
+  if (GamePath().empty()) {
     throw GameDetectionError("Game path could not be detected.");
   }
 
@@ -111,8 +93,14 @@ void Game::Init() {
       throw FileAccessError((boost::format("Could not create LOOT folder for game. Details: %1%") % e.what()).str());
     }
   }
+}
 
-  loot::Game::Init();
+std::shared_ptr<const PluginInterface> Game::GetPlugin(const std::string & name) const {
+  return gameHandle_->GetPlugin(name);
+}
+
+std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
+  return gameHandle_->GetLoadedPlugins();
 }
 
 void Game::RedatePlugins() {
@@ -121,7 +109,7 @@ void Game::RedatePlugins() {
     return;
   }
 
-  vector<string> loadorder = GetLoadOrder();
+  vector<string> loadorder = gameHandle_->GetLoadOrder();
   if (!loadorder.empty()) {
     time_t lastTime = 0;
     for (const auto &pluginName : loadorder) {
@@ -152,7 +140,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 
   BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
   for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
-    if (fs::is_regular_file(it->status()) && Plugin::IsValid(it->path().filename().string(), *this)) {
+    if (fs::is_regular_file(it->status()) && gameHandle_->IsValidPlugin(it->path().filename().string())) {
       string name = it->path().filename().string();
       BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
 
@@ -160,7 +148,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
     }
   }
 
-  LoadPlugins(plugins, Master(), headersOnly);
+  gameHandle_->LoadPlugins(plugins, headersOnly);
 
   pluginsFullyLoaded_ = !headersOnly;
 }
@@ -169,22 +157,31 @@ bool Game::ArePluginsFullyLoaded() const {
   return pluginsFullyLoaded_;
 }
 
+boost::filesystem::path Game::DataPath() const {
+  if (GamePath().empty())
+    throw std::logic_error("Cannot get data path from empty game path");
+  return GamePath() / "Data";
+}
+
 fs::path Game::MasterlistPath() const {
-  if (lootDataPath_.empty() || FolderName().empty())
-    return "";
-  else
-    return lootDataPath_ / FolderName() / "masterlist.yaml";
+  return lootDataPath_ / FolderName() / "masterlist.yaml";
 }
 
 fs::path Game::UserlistPath() const {
-  if (lootDataPath_.empty() || FolderName().empty())
-    return "";
-  else
-    return lootDataPath_ / FolderName() / "userlist.yaml";
+  return lootDataPath_ / FolderName() / "userlist.yaml";
+}
+
+std::vector<std::string> Game::GetLoadOrder() const {
+  return gameHandle_->GetLoadOrder();
+}
+
+void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
+  BackupLoadOrder(GetLoadOrder(), lootDataPath_ / FolderName());
+  gameHandle_->SetLoadOrder(loadOrder);
 }
 
 short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
-  return GetActiveLoadOrderIndex(pluginName, GetLoadOrder());
+  return GetActiveLoadOrderIndex(pluginName, gameHandle_->GetLoadOrder());
 }
 
 short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const {
@@ -192,7 +189,7 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::v
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return -1.
 
-  if (!IsPluginActive(pluginName))
+  if (!gameHandle_->IsPluginActive(pluginName))
     return -1;
 
   short numberOfActivePlugins = 0;
@@ -200,15 +197,41 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::v
     if (boost::iequals(plugin, pluginName))
       return numberOfActivePlugins;
 
-    if (IsPluginActive(plugin))
+    if (gameHandle_->IsPluginActive(plugin))
       ++numberOfActivePlugins;
   }
 
   return -1;
 }
 
+boost::filesystem::path Game::DetectGamePath(const GameSettings & gameSettings) {
+  try {
+    BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << gameSettings.Name() << "\" is installed.";
+    if (!gameSettings.GamePath().empty() && fs::exists(gameSettings.GamePath() / "Data" / gameSettings.Master()))
+      return gameSettings.GamePath();
+
+    if (fs::exists(fs::path("..") / "Data" / gameSettings.Master())) {
+      return "..";
+    }
+
+#ifdef _WIN32
+    std::string path;
+    std::string key_parent = fs::path(gameSettings.RegistryKey()).parent_path().string();
+    std::string key_name = fs::path(gameSettings.RegistryKey()).filename().string();
+    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+    if (!path.empty() && fs::exists(fs::path(path) / "Data" / gameSettings.Master())) {
+      return path;
+    }
+#endif
+  } catch (std::exception &e) {
+    BOOST_LOG_TRIVIAL(error) << "Error while checking if game \"" << gameSettings.Name() << "\" is installed: " << e.what();
+  }
+
+  return boost::filesystem::path();
+}
+
 void Game::BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                                       const boost::filesystem::path & backupDirectory) {
+                           const boost::filesystem::path& backupDirectory) {
   const int maxBackupIndex = 2;
   boost::format filenameFormat = boost::format("loadorder.bak.%1%");
 

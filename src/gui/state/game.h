@@ -29,12 +29,12 @@
 
 #include <boost/filesystem.hpp>
 
-#include "backend/game/game.h"
 #include "gui/state/game_settings.h"
+#include "loot/api.h"
 
 namespace loot {
 namespace gui {
-class Game : public loot::Game, public GameSettings {
+class Game : public GameSettings {
 public:
   Game(const GameSettings& gameSettings,
        const boost::filesystem::path& lootDataPath,
@@ -42,29 +42,37 @@ public:
 
   using GameSettings::Type;
 
-  bool IsInstalled();  //Sets gamePath if the current value is not valid and a valid path is found.
+  static bool IsInstalled(const GameSettings& gameSettings);
   void Init();
+
+  std::shared_ptr<const PluginInterface> GetPlugin(const std::string& name) const;
+  std::set<std::shared_ptr<const PluginInterface>> GetPlugins() const;
 
   void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
 
   void LoadAllInstalledPlugins(bool headersOnly);  //Loads all installed plugins.
   bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
 
+  boost::filesystem::path DataPath() const;
   boost::filesystem::path MasterlistPath() const;
   boost::filesystem::path UserlistPath() const;
 
+  std::vector<std::string> GetLoadOrder() const;
+  void SetLoadOrder(const std::vector<std::string>& loadOrder);
+
   short GetActiveLoadOrderIndex(const std::string & pluginName) const;
   short GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const;
-
-  static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                              const boost::filesystem::path& backupDirectory);
 private:
 #ifdef _WIN32
-  std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+  static std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 #endif
+  static boost::filesystem::path DetectGamePath(const GameSettings& gameSettings);
+  static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                              const boost::filesystem::path& backupDirectory);
 
   const boost::filesystem::path lootDataPath_;
 
+  std::shared_ptr<GameInterface> gameHandle_;
   bool pluginsFullyLoaded_;
 };
 }
