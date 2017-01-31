@@ -25,7 +25,7 @@
 #ifndef LOOT_API_GAME
 #define LOOT_API_GAME
 
-#include "backend/game/game.h"
+#include "api/game/game.h"
 #include "loot/game_interface.h"
 
 namespace loot {

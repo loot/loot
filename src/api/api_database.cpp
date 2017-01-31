@@ -31,8 +31,8 @@
 
 #include "loot/exception/file_access_error.h"
 #include "loot/yaml/plugin_metadata.h"
-#include "backend/game/game.h"
-#include "backend/plugin/plugin_sorter.h"
+#include "api/game/game.h"
+#include "api/plugin/plugin_sorter.h"
 
 namespace loot {
 ApiDatabase::ApiDatabase(Game& game) : game_(game) {}

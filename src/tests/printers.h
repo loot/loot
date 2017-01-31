@@ -32,11 +32,11 @@ along with LOOT.  If not, see
 #include "loot/metadata/file.h"
 #include "loot/metadata/location.h"
 #include "loot/metadata/message.h"
-#include "backend/metadata/message_content.h"
+#include "api/metadata/message_content.h"
 #include "loot/metadata/plugin_cleaning_data.h"
 #include "loot/metadata/plugin_metadata.h"
 #include "loot/metadata/tag.h"
-#include "backend/plugin/plugin.h"
+#include "api/plugin/plugin.h"
 
 namespace loot {
 namespace test {

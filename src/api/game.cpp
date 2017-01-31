@@ -25,7 +25,7 @@
 #include "api/game.h"
 
 #include "api/api_database.h"
-#include "backend/plugin/plugin_sorter.h"
+#include "api/plugin/plugin_sorter.h"
 
 namespace loot {
 namespace api {

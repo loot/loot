@@ -29,7 +29,7 @@
 #include <string>
 #include <vector>
 
-#include "backend/game/game.h"
+#include "api/game/game.h"
 #include "loot/database_interface.h"
 
 namespace loot {
