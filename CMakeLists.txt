@@ -436,9 +436,9 @@ ENDIF ()
 ##############################
 
 # Build tests.
-add_executable       (tests ${LOOT_API_SRC} ${LOOT_API_HEADERS} ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-add_dependencies     (tests libespm libgit2 libloadorder pseudosem yaml-cpp GTest testing-metadata testing-plugins)
-target_link_libraries(tests ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES} ${LIBLOADORDER_LIBRARIES})
+add_executable       (loot_api_internals_tests ${LOOT_API_SRC} ${LOOT_API_HEADERS} ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+add_dependencies     (loot_api_internals_tests libespm libgit2 libloadorder pseudosem yaml-cpp GTest testing-metadata testing-plugins)
+target_link_libraries(loot_api_internals_tests ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES} ${LIBLOADORDER_LIBRARIES})
 
 # Build API.
 add_library          (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
@@ -446,9 +446,9 @@ add_dependencies     (loot_api libespm libgit2 libloadorder pseudosem yaml-cpp)
 target_link_libraries(loot_api ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build API tests.
-add_executable       (api-tests ${LOOT_API_TESTS_SRC} ${LOOT_API_TESTS_HEADERS})
-add_dependencies     (api-tests loot_api GTest testing-metadata testing-plugins)
-target_link_libraries(api-tests loot_api ${GTEST_LIBRARIES})
+add_executable       (loot_api_tests ${LOOT_API_TESTS_SRC} ${LOOT_API_TESTS_HEADERS})
+add_dependencies     (loot_api_tests loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(loot_api_tests loot_api ${GTEST_LIBRARIES})
 
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
@@ -456,9 +456,9 @@ add_dependencies     (LOOT cef loot_api)
 target_link_libraries(LOOT ${CEF_LIBRARIES} loot_api ${LOOT_GUI_LIBS})
 
 # Build application tests.
-add_executable       (gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (gui_tests loot_api GTest testing-metadata testing-plugins)
-target_link_libraries(gui_tests loot_api ${GTEST_LIBRARIES})
+add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
+add_dependencies     (loot_gui_tests loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(loot_gui_tests loot_api ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -475,7 +475,7 @@ ENDIF ()
 
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
+    set_target_properties (loot_api_internals_tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()
@@ -526,22 +526,22 @@ add_custom_command(TARGET LOOT POST_BUILD
 
 # Copy testing metadata
 ExternalProject_Get_Property(testing-metadata SOURCE_DIR)
-add_custom_command(TARGET tests POST_BUILD
+add_custom_command(TARGET loot_api_internals_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SOURCE_DIR}
-        "$<TARGET_FILE_DIR:tests>/testing-metadata")
-add_custom_command(TARGET api-tests POST_BUILD
+        "$<TARGET_FILE_DIR:loot_api_internals_tests>/testing-metadata")
+add_custom_command(TARGET loot_api_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SOURCE_DIR}
-        "$<TARGET_FILE_DIR:api-tests>/testing-metadata")
+        "$<TARGET_FILE_DIR:loot_api_tests>/testing-metadata")
 
 # Copy testing plugins
 ExternalProject_Get_Property(testing-plugins SOURCE_DIR)
-add_custom_command(TARGET tests POST_BUILD
+add_custom_command(TARGET loot_api_internals_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SOURCE_DIR}
-        $<TARGET_FILE_DIR:tests>)
-add_custom_command(TARGET api-tests POST_BUILD
+        $<TARGET_FILE_DIR:loot_api_internals_tests>)
+add_custom_command(TARGET loot_api_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${SOURCE_DIR}
-      $<TARGET_FILE_DIR:api-tests>)
+      $<TARGET_FILE_DIR:loot_api_tests>)

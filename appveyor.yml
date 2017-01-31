@@ -53,8 +53,8 @@ build_script:
       if ($env:PLATFORM -eq 'Win32') {
         msbuild "c:\projects\loot\build\LOOT.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
       } else {
-        msbuild "c:\projects\loot\build\tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-        msbuild "c:\projects\loot\build\api-tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+        msbuild "c:\projects\loot\build\loot_api_internals_tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+        msbuild "c:\projects\loot\build\loot_api_tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
       }
 
 test_script:
@@ -64,11 +64,11 @@ test_script:
         npm test
       }
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
-  - tests.exe --gtest_output=xml:tests.xml
-  - api-tests.exe --gtest_output=xml:api-tests.xml
+  - loot_api_internals_tests.exe --gtest_output=xml:loot_api_internals_tests.xml
+  - loot_api_tests.exe --gtest_output=xml:loot_api_tests.xml
   - ps: |
       if ($env:PLATFORM -eq 'Win32') {
-        ./gui_tests.exe --gtest_output=xml:gui_tests.xml
+        ./loot_gui_tests.exe --gtest_output=xml:loot_gui_tests.xml
       }
 
 after_test:
@@ -164,9 +164,9 @@ on_success:
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
-  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\tests.xml")
-  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\api-tests.xml")
+  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_api_internals_tests.xml")
+  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_api_tests.xml")
   - ps: |
       if ($env:PLATFORM -eq 'Win32') {
-        (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\gui_tests.xml")
+        (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_gui_tests.xml")
       }
