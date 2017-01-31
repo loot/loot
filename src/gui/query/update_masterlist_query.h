@@ -49,10 +49,11 @@ public:
 private:
   bool updateMasterlist() {
     try {
-      return game_.GetMasterlist().Update(game_.MasterlistPath(), game_.RepoURL(), game_.RepoBranch());
+      return game_.UpdateMasterlist();
     } catch (std::exception&) {
       try {
-        game_.GetMasterlist().Load(game_.MasterlistPath());
+        game_.LoadMetadata();
+        game_.EvaluateLoadedMetadata();
       } catch (...) {}
       throw;
     }
@@ -63,7 +64,7 @@ private:
     gameMetadata["masterlist"] = getMasterlistInfo();
 
     // Store bash tags in case they have changed.
-    gameMetadata["bashTags"] = game_.GetMasterlist().BashTags();
+    gameMetadata["bashTags"] = game_.GetKnownBashTags();
 
     // Store global messages in case they have changed.
     gameMetadata["globalMessages"] = getGeneralMessages();
@@ -75,10 +76,10 @@ private:
     return JSON::stringify(gameMetadata);
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> plugin) {
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin) {
     YAML::Node pluginNode;
 
-    auto masterlistMetadata = game_.GetMasterlist().FindPlugin(plugin->GetName());
+    auto masterlistMetadata = game_.GetMasterlistMetadata(plugin->GetName());
     auto metadata = getNonUserMetadata(plugin, masterlistMetadata);
 
     if (!metadata.HasNameOnly()) {

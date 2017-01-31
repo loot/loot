@@ -26,10 +26,10 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 
 #include <boost/locale.hpp>
+#include <yaml-cpp/yaml.h>
 
 #include "gui/state/loot_state.h"
 #include "gui/query/json.h"
-#include "backend/plugin/plugin_sorter.h"
 #include "loot/exception/cyclic_interaction_error.h"
 #include "gui/query/metadata_query.h"
 
@@ -49,7 +49,8 @@ public:
     state_.getCurrentGame().LoadAllInstalledPlugins(false);
 
     //Sort plugins into their load order.
-    std::vector<std::string> plugins = sortPlugins();
+    sendProgressUpdate(frame_, boost::locale::translate("Sorting load order..."));
+    std::vector<std::string> plugins = state_.getCurrentGame().SortPlugins();
 
     if ((state_.getCurrentGame().Type() == GameType::tes5
          || state_.getCurrentGame().Type() == GameType::fo4
@@ -66,30 +67,6 @@ public:
   }
 
 private:
-  std::vector<std::string> sortPlugins() {
-    sendProgressUpdate(frame_, boost::locale::translate("Sorting load order..."));
-    std::vector<std::string> plugins;
-    try {
-      // Clear any existing game-specific messages, as these only relate to
-      // state that has been changed by sorting.
-      state_.getCurrentGame().ClearMessages();
-
-      PluginSorter sorter;
-      plugins = sorter.Sort(state_.getCurrentGame(), state_.getLanguage().GetCode());
-
-      state_.getCurrentGame().IncrementLoadOrderSortCount();
-    } catch (CyclicInteractionError& e) {
-      BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-      state_.getCurrentGame().AppendMessage(Message(MessageType::error,
-        (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%"))
-         % e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle()).str()));
-    } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
-    }
-
-    return plugins;
-  }
-
   void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
     if (plugins.empty() || !equal(begin(plugins), end(plugins), begin(state_.getCurrentGame().GetLoadOrder())))
       return;
@@ -100,7 +77,7 @@ private:
     state_.getCurrentGame().SetLoadOrder(plugins);
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> plugin) {
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin) {
     YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
 
     pluginNode["name"] = plugin->GetName();

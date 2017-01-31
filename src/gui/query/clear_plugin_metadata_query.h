@@ -40,8 +40,8 @@ public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName_;
 
-    game_.GetUserlist().ErasePlugin(PluginMetadata(pluginName_));
-    game_.GetUserlist().Save(game_.UserlistPath());
+    game_.ClearUserMetadata(pluginName_);
+    game_.SaveUserMetadata();
 
     // Now rederive the displayed metadata from the masterlist.
     YAML::Node derivedMetadata = generateDerivedMetadata(pluginName_);

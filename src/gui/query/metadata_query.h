@@ -30,8 +30,6 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
-#include "backend/plugin/plugin.h"
-#include "backend/metadata/condition_evaluator.h"
 #include "gui/query/query.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/git_state_error.h"
@@ -42,17 +40,12 @@ protected:
   MetadataQuery(LootState& state) : state_(state) {}
 
   std::vector<SimpleMessage> getGeneralMessages() {
-    std::vector<Message> messages;
-    appendMessages(messages, state_.getCurrentGame().GetMasterlist().Messages());
-    appendMessages(messages, state_.getCurrentGame().GetUserlist().Messages());
-    appendMessages(messages, state_.getCurrentGame().GetMessages());
-
-    evaluateMessageConditions(messages);
+    std::vector<Message> messages = state_.getCurrentGame().GetMessages();
 
     return toSimpleMessages(messages, state_.getLanguage().GetCode());
   }
 
-  PluginMetadata getNonUserMetadata(std::shared_ptr<const Plugin> file,
+  PluginMetadata getNonUserMetadata(std::shared_ptr<const PluginInterface> file,
                                     const PluginMetadata& masterlistEntry) {
     auto metadata = masterlistEntry;
 
@@ -71,11 +64,11 @@ protected:
     return metadata;
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> file,
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> file,
                                      const PluginMetadata& masterlistEntry,
                                      const PluginMetadata& userlistEntry) {
-    auto metadata = evaluateMetadata(getNonUserMetadata(file, masterlistEntry));
-    metadata.MergeMetadata(evaluateMetadata(userlistEntry));
+    auto metadata = getNonUserMetadata(file, masterlistEntry);
+    metadata.MergeMetadata(userlistEntry);
 
     return toYaml(file, metadata);
   }
@@ -84,8 +77,10 @@ protected:
       // Now rederive the displayed metadata from the masterlist and userlist.
     try {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      PluginMetadata master(state_.getCurrentGame().GetMasterlist().FindPlugin(pluginName));
-      PluginMetadata user(state_.getCurrentGame().GetUserlist().FindPlugin(pluginName));
+
+
+      PluginMetadata master(state_.getCurrentGame().GetMasterlistMetadata(pluginName));
+      PluginMetadata user(state_.getCurrentGame().GetUserMetadata(pluginName));
 
       return generateDerivedMetadata(plugin, master, user);
     } catch (...) {
@@ -98,7 +93,8 @@ protected:
 
     YAML::Node masterlistNode;
     try {
-      MasterlistInfo info = state_.getCurrentGame().GetMasterlist().GetInfo(state_.getCurrentGame().MasterlistPath(), true);
+
+      MasterlistInfo info = state_.getCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
 
       masterlistNode["revision"] = info.revision_id;
@@ -117,27 +113,6 @@ protected:
   }
 
 private:
-  static void appendMessages(std::vector<Message>& destination,
-                             const std::vector<Message>& source) {
-    destination.insert(end(destination), begin(source), end(source));
-  }
-
-  void evaluateMessageConditions(std::vector<Message>& messages) {
-    try {
-      ConditionEvaluator evaluator(&state_.getCurrentGame());
-      auto it = begin(messages);
-      while (it != end(messages)) {
-        if (!evaluator.evaluate(it->Condition()))
-          it = messages.erase(it);
-        else
-          ++it;
-      }
-    } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "A global message contains a condition that could not be evaluated. Details: " << e.what();
-      messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("A global message contains a condition that could not be evaluated. Details: %1%")) % e.what()).str()));
-    }
-  }
-
   static std::vector<SimpleMessage> toSimpleMessages(const std::vector<Message>& messages,
                                                      LanguageCode language) {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).GetName();
@@ -152,24 +127,7 @@ private:
     return simpleMessages;
   }
 
-  PluginMetadata evaluateMetadata(const PluginMetadata& pluginMetadata) {
-    BOOST_LOG_TRIVIAL(trace) << "Evaluate conditions for merged plugin data.";
-    try {
-      ConditionEvaluator evaluator(&state_.getCurrentGame());
-      return evaluator.evaluateAll(pluginMetadata);
-    } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << pluginMetadata.Name() << "\" contains a condition that could not be evaluated. Details: " << e.what();
-      std::vector<Message> messages(pluginMetadata.Messages());
-      messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginMetadata.Name() % e.what()).str()));
-      
-      PluginMetadata newMetadata(pluginMetadata);
-      newMetadata.Messages(messages);
-      
-      return newMetadata;
-    }
-  }
-
-  YAML::Node toYaml(std::shared_ptr<const Plugin> plugin, const PluginMetadata& metadata) {
+  YAML::Node toYaml(std::shared_ptr<const PluginInterface> plugin, const PluginMetadata& metadata) {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage().GetName();
 
     YAML::Node pluginNode;
@@ -197,7 +155,7 @@ private:
     }
   }
 
-  std::vector<Message> CheckInstallValidity(std::shared_ptr<const Plugin> plugin, const PluginMetadata& metadata) {
+  std::vector<Message> CheckInstallValidity(std::shared_ptr<const PluginInterface> plugin, const PluginMetadata& metadata) {
     BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << plugin->GetName() << "'s data.";
     std::vector<Message> messages;
     if (state_.getCurrentGame().IsPluginActive(plugin->GetName())) {

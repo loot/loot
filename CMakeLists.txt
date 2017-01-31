@@ -473,8 +473,8 @@ target_link_libraries(api-tests loot_api ${GTEST_LIBRARIES})
 
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies     (LOOT cef loot_common)
-target_link_libraries(LOOT ${CEF_LIBRARIES} loot_common ${LOOT_GUI_LIBS})
+add_dependencies     (LOOT cef loot_api)
+target_link_libraries(LOOT ${CEF_LIBRARIES} loot_api ${LOOT_GUI_LIBS})
 
 # Build application tests.
 add_executable       (gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
@@ -498,7 +498,6 @@ ENDIF ()
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties (loot_common PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
-    set_target_properties (LOOT PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()

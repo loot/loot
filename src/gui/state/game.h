@@ -64,15 +64,31 @@ public:
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
 
-  short GetActiveLoadOrderIndex(const std::string & pluginName) const;
-  short GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const;
+  bool IsPluginActive(const std::string& pluginName) const;
+  short GetActiveLoadOrderIndex(const std::string& pluginName) const;
+  short GetActiveLoadOrderIndex(const std::string& pluginName, const std::vector<std::string>& loadOrder) const;
 
+  std::vector<std::string> SortPlugins();
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();
 
   std::vector<Message> GetMessages() const;
   void AppendMessage(const Message& message);
   void ClearMessages();
+
+  bool UpdateMasterlist() const;
+  MasterlistInfo GetMasterlistInfo() const;
+
+  void LoadMetadata();
+  void EvaluateLoadedMetadata();
+  std::set<std::string> GetKnownBashTags() const;
+  PluginMetadata GetMasterlistMetadata(const std::string& pluginName) const;
+  PluginMetadata GetUserMetadata(const std::string& pluginName) const;
+
+  void AddUserMetadata(const PluginMetadata& metadata);
+  void ClearUserMetadata(const std::string& pluginName);
+  void ClearAllUserMetadata();
+  void SaveUserMetadata();
 private:
 #ifdef _WIN32
   static std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);

@@ -103,7 +103,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 // Testing on Windows will find real game installs in the Registry, so cannot
 // test autodetection fully unless on Linux.
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath), std::system_error);
+  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath), std::invalid_argument);
 }
 
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {

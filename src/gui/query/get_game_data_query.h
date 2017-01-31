@@ -42,9 +42,6 @@ public:
   std::string executeLogic() {
     sendProgressUpdate(frame_, boost::locale::translate("Parsing, merging and evaluating metadata..."));
 
-    // First clear CRC and condition caches, otherwise they could lead to incorrect evaluations.
-    state_.getCurrentGame().ClearCachedConditions();
-
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
     bool isFirstLoad = state_.getCurrentGame().GetPlugins().empty();
@@ -52,10 +49,12 @@ public:
     state_.getCurrentGame().LoadAllInstalledPlugins(true);
 
     if (isFirstLoad)
-      loadMetadataLists();
+      state_.getCurrentGame().LoadMetadata();
+
+    state_.getCurrentGame().EvaluateLoadedMetadata();
 
     //Sort plugins into their load order.
-    std::vector<std::shared_ptr<const Plugin>> installed;
+    std::vector<std::shared_ptr<const PluginInterface>> installed;
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
     for (const auto &pluginName : loadOrder) {
       try {
@@ -68,45 +67,6 @@ public:
   }
 
 private:
-  void loadMetadataLists() {
-    if (boost::filesystem::exists(state_.getCurrentGame().MasterlistPath())) {
-      BOOST_LOG_TRIVIAL(debug) << "Parsing masterlist.";
-      try {
-        state_.getCurrentGame().GetMasterlist().Load(state_.getCurrentGame().MasterlistPath());
-      } catch (std::exception &e) {
-        BOOST_LOG_TRIVIAL(error) << "An error occurred while parsing \"" << state_.getCurrentGame().MasterlistPath() << "\": " << e.what();
-        state_.getCurrentGame().GetMasterlist().AppendMessage(Message(MessageType::error, (boost::format(boost::locale::translate(
-          "An error occurred while parsing the masterlist: %1%. "
-          "This probably happened because an update to LOOT changed "
-          "its metadata syntax support. Try updating your masterlist "
-          "to resolve the error."
-        )) % e.what()).str()));
-      }
-    }
-
-    if (boost::filesystem::exists(state_.getCurrentGame().UserlistPath())) {
-      BOOST_LOG_TRIVIAL(debug) << "Parsing userlist.";
-      try {
-        state_.getCurrentGame().GetUserlist().Load(state_.getCurrentGame().UserlistPath());
-      } catch (std::exception &e) {
-        BOOST_LOG_TRIVIAL(error) << "An error occurred while parsing \"" << state_.getCurrentGame().UserlistPath() << "\": " << e.what();
-        state_.getCurrentGame().GetUserlist().AppendMessage(Message(MessageType::error, (boost::format(boost::locale::translate(
-          "An error occurred while parsing the userlist: %1%. "
-          "This probably happened because an update to LOOT changed "
-          "its metadata syntax support. Your user metadata will have "
-          "to be updated manually.\n\n"
-          "To do so, use the 'Open Debug Log Location' in LOOT's main "
-          "menu to open its data folder, then open your 'userlist.yaml' "
-          "file in the relevant game folder. You can then edit the "
-          "metadata it contains with reference to the "
-          "documentation, which is accessible through LOOT's main menu.\n\n"
-          "You can also seek support on LOOT's forum thread, which is "
-          "linked to on [LOOT's website](https://loot.github.io/)."
-        )) % e.what()).str()));
-      }
-    }
-  }
-
   static std::vector<EditorMessage> toEditorMessages(std::vector<Message> messages, const LanguageCode language) {
     std::vector<EditorMessage> list;
 
@@ -135,12 +95,12 @@ private:
     return node;
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const Plugin> plugin) {
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin) {
     YAML::Node pluginNode;
 
     pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
     pluginNode["name"] = plugin->GetName();
-    pluginNode["isActive"] = plugin->IsActive();
+    pluginNode["isActive"] = state_.getCurrentGame().IsPluginActive(plugin->GetName());
     pluginNode["isEmpty"] = plugin->IsEmpty();
     pluginNode["isMaster"] = plugin->IsMaster();
     pluginNode["loadsArchive"] = plugin->LoadsArchive();
@@ -148,12 +108,12 @@ private:
     pluginNode["version"] = plugin->GetVersion();
 
     BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
-    auto masterlistMetadata = state_.getCurrentGame().GetMasterlist().FindPlugin(plugin->GetName());
+    auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
     if (!masterlistMetadata.HasNameOnly())
       pluginNode["masterlist"] = convertPluginMetadata(masterlistMetadata, state_.getLanguage().GetCode());
 
     BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
-    auto userlistMetadata = state_.getCurrentGame().GetUserlist().FindPlugin(plugin->GetName());
+    auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
     if (!userlistMetadata.HasNameOnly())
       pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage().GetCode());
 
@@ -169,14 +129,14 @@ private:
     return pluginNode;
   }
 
-  std::string generateJsonResponse(std::vector<std::shared_ptr<const Plugin>> plugins) {
+  std::string generateJsonResponse(std::vector<std::shared_ptr<const PluginInterface>> plugins) {
     YAML::Node gameNode;
 
     // ID the game using its folder value.
     gameNode["folder"] = state_.getCurrentGame().FolderName();
     gameNode["masterlist"] = getMasterlistInfo();
     gameNode["globalMessages"] = getGeneralMessages();
-    gameNode["bashTags"] = state_.getCurrentGame().GetMasterlist().BashTags();
+    gameNode["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
 
     // Now store plugin data.
     for (const auto& plugin : plugins) {

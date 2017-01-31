@@ -205,11 +205,15 @@ void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
   gameHandle_->SetLoadOrder(loadOrder);
 }
 
-short Game::GetActiveLoadOrderIndex(const std::string & pluginName) const {
+bool Game::IsPluginActive(const std::string& pluginName) const {
+  return gameHandle_->IsPluginActive(pluginName);
+}
+
+short Game::GetActiveLoadOrderIndex(const std::string& pluginName) const {
   return GetActiveLoadOrderIndex(pluginName, gameHandle_->GetLoadOrder());
 }
 
-short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const {
+short Game::GetActiveLoadOrderIndex(const std::string& pluginName, const std::vector<std::string>& loadOrder) const {
   // Get the full load order, then count the number of active plugins until the
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return -1.
@@ -229,6 +233,34 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::v
   return -1;
 }
 
+std::vector<std::string> Game::SortPlugins() {
+  std::vector<std::string> plugins;
+  try {
+    for (const auto& plugin : gameHandle_->GetLoadedPlugins()) {
+      plugins.push_back(plugin->GetName());
+    }
+
+    // Clear any existing game-specific messages, as these only relate to
+    // state that has been changed by sorting.
+    ClearMessages();
+
+    plugins = gameHandle_->SortPlugins(plugins);
+
+    IncrementLoadOrderSortCount();
+  } catch (CyclicInteractionError& e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
+    AppendMessage(Message(MessageType::error,
+      (boost::format(boost::locale::translate("Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: %3%"))
+       % e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle()).str()));
+    plugins.clear();
+  } catch (std::exception& e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
+    plugins.clear();
+  }
+
+  return plugins;
+}
+
 void Game::IncrementLoadOrderSortCount() {
   lock_guard<mutex> guard(mutex_);
 
@@ -243,7 +275,9 @@ void Game::DecrementLoadOrderSortCount() {
 }
 
 std::vector<Message> Game::GetMessages() const {
-  std::vector<Message> output(messages_);
+  std::vector<Message> output(gameHandle_->GetDatabase()->GetGeneralMessages());
+  output.insert(end(output), begin(messages_), end(messages_));
+
   if (loadOrderSortCount_ == 0)
     output.push_back(Message(MessageType::warn, boost::locale::translate("You have not sorted your load order this session.")));
 
@@ -260,6 +294,81 @@ void Game::ClearMessages() {
   lock_guard<mutex> guard(mutex_);
 
   messages_.clear();
+}
+
+bool Game::UpdateMasterlist() const {
+  return gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch());
+}
+
+MasterlistInfo Game::GetMasterlistInfo() const {
+  return gameHandle_->GetDatabase()->GetMasterlistRevision(MasterlistPath().string(), true);
+}
+
+void Game::LoadMetadata() {
+  std::string masterlistPath;
+  std::string userlistPath;
+  if (boost::filesystem::exists(MasterlistPath())) {
+    BOOST_LOG_TRIVIAL(debug) << "Preparing to parse masterlist.";
+    masterlistPath = MasterlistPath().string();
+  }
+
+  if (boost::filesystem::exists(UserlistPath())) {
+    BOOST_LOG_TRIVIAL(debug) << "Preparing to parse userlist.";
+    userlistPath = UserlistPath().string();
+  }
+
+  BOOST_LOG_TRIVIAL(debug) << "Parsing metadata list(s).";
+  try {
+    gameHandle_->GetDatabase()->LoadLists(masterlistPath, userlistPath);
+  } catch (std::exception& e) {
+    BOOST_LOG_TRIVIAL(error) << "An error occurred while parsing the metadata list(s): " << e.what();
+    AppendMessage(Message(MessageType::error, (boost::format(boost::locale::translate(
+      "An error occurred while parsing the metadata list(s): %1%. "
+      "Try updating your masterlist to resolve the error. If the "
+      "error is with your user metadata, this probably happened because "
+      "an update to LOOT changed its metadata syntax support. Your "
+      "user metadata will have to be updated manually.\n\n"
+      "To do so, use the 'Open Debug Log Location' in LOOT's main "
+      "menu to open its data folder, then open your 'userlist.yaml' "
+      "file in the relevant game folder. You can then edit the "
+      "metadata it contains with reference to the "
+      "documentation, which is accessible through LOOT's main menu.\n\n"
+      "You can also seek support on LOOT's forum thread, which is "
+      "linked to on [LOOT's website](https://loot.github.io/)."
+    )) % e.what()).str()));
+  }
+}
+
+void Game::EvaluateLoadedMetadata() {
+  return gameHandle_->GetDatabase()->EvalLists();
+}
+
+std::set<std::string> Game::GetKnownBashTags() const {
+  return gameHandle_->GetDatabase()->GetKnownBashTags();
+}
+
+PluginMetadata Game::GetMasterlistMetadata(const std::string & pluginName) const {
+  return gameHandle_->GetDatabase()->GetPluginMetadata(pluginName, false);
+}
+
+PluginMetadata Game::GetUserMetadata(const std::string & pluginName) const {
+  return gameHandle_->GetDatabase()->GetPluginUserMetadata(pluginName);
+}
+
+void Game::AddUserMetadata(const PluginMetadata & metadata) {
+  gameHandle_->GetDatabase()->SetPluginUserMetadata(metadata);
+}
+
+void Game::ClearUserMetadata(const std::string & pluginName) {
+  gameHandle_->GetDatabase()->DiscardPluginUserMetadata(pluginName);
+}
+
+void Game::ClearAllUserMetadata() {
+  gameHandle_->GetDatabase()->DiscardAllUserMetadata();
+}
+
+void Game::SaveUserMetadata() {
+  gameHandle_->GetDatabase()->WriteUserMetadata(UserlistPath().string(), true);
 }
 
 boost::filesystem::path Game::DetectGamePath(const GameSettings & gameSettings) {

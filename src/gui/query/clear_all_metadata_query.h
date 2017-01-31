@@ -43,8 +43,8 @@ public:
     auto userlistPluginNames = getUserlistPluginNames();
 
     // Clear the user metadata.
-    game_.GetUserlist().Clear();
-    game_.GetUserlist().Save(game_.UserlistPath());
+    game_.ClearAllUserMetadata();
+    game_.SaveUserMetadata();
 
     BOOST_LOG_TRIVIAL(trace) << "Rederiving display metadata for " << userlistPluginNames.size() << " plugins that had user metadata.";
 
@@ -53,14 +53,12 @@ public:
 
 private:
   std::vector<std::string> getUserlistPluginNames() const {
-    auto userlistPlugins = game_.GetUserlist().Plugins();
-    std::vector<std::string> userlistPluginNames(userlistPlugins.size());
-    std::transform(begin(userlistPlugins),
-                   end(userlistPlugins),
-                   begin(userlistPluginNames),
-                   [](const PluginMetadata& plugin) {
-      return plugin.Name();
-    });
+    std::vector<std::string> userlistPluginNames;
+    for (const auto& plugin : game_.GetPlugins()) {
+      if (!game_.GetUserMetadata(plugin->GetName()).HasNameOnly()) {
+        userlistPluginNames.push_back(plugin->GetName());
+      }
+    }
 
     return userlistPluginNames;
   }

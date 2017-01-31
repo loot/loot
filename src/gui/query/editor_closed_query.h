@@ -102,11 +102,11 @@ private:
     BOOST_LOG_TRIVIAL(trace) << "Removing any user metadata that duplicates masterlist metadata.";
     try {
       auto plugin = state_.getCurrentGame().GetPlugin(metadata.Name());
-      auto masterlistMetadata = state_.getCurrentGame().GetMasterlist().FindPlugin(metadata);
+      auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata.Name());
       auto nonUserMetadata = getNonUserMetadata(plugin, masterlistMetadata);
       return metadata.NewMetadata(nonUserMetadata);
     } catch (...) {
-      return metadata.NewMetadata(state_.getCurrentGame().GetMasterlist().FindPlugin(metadata));
+      return metadata.NewMetadata(state_.getCurrentGame().GetMasterlistMetadata(metadata.Name()));
     }
   }
 
@@ -119,7 +119,7 @@ private:
     BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << pluginName;
 
     // Find existing userlist entry.
-    PluginMetadata ulistPlugin = state_.getCurrentGame().GetUserlist().FindPlugin(pluginName);
+    PluginMetadata ulistPlugin = state_.getCurrentGame().GetUserMetadata(pluginName);
 
     // Create new object for userlist entry.
     PluginMetadata newMetadata = getUniqueMetadata(convertMetadata(metadata_, ulistPlugin));
@@ -127,17 +127,17 @@ private:
     // Now erase any existing userlist entry.
     if (!ulistPlugin.HasNameOnly()) {
       BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
-      state_.getCurrentGame().GetUserlist().ErasePlugin(ulistPlugin);
+      state_.getCurrentGame().ClearUserMetadata(ulistPlugin.Name());
     }
 
     // Add a new userlist entry if necessary.
     if (!newMetadata.HasNameOnly()) {
       BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
-      state_.getCurrentGame().GetUserlist().AddPlugin(newMetadata);
+      state_.getCurrentGame().AddUserMetadata(newMetadata);
     }
 
     // Save edited userlist.
-    state_.getCurrentGame().GetUserlist().Save(state_.getCurrentGame().UserlistPath());
+    state_.getCurrentGame().SaveUserMetadata();
 
     // Now rederive the derived metadata.
     BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";

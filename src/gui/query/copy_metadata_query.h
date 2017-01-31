@@ -40,8 +40,8 @@ public:
     BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName_;
 
     // Get metadata from masterlist and userlist.
-    PluginMetadata metadata = state_.getCurrentGame().GetMasterlist().FindPlugin(pluginName_);
-    metadata.MergeMetadata(state_.getCurrentGame().GetUserlist().FindPlugin(pluginName_));
+    PluginMetadata metadata = state_.getCurrentGame().GetMasterlistMetadata(pluginName_);
+    metadata.MergeMetadata(state_.getCurrentGame().GetUserMetadata(pluginName_));
 
     // Generate text representation.
     std::string text = "[spoiler][code]" + asText(metadata) + "[/code][/spoiler]";
