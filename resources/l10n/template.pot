@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-01-30 08:05+0000\n"
+"POT-Creation-Date: 2017-01-31 20:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -678,59 +678,27 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/get_game_data_query.h:79
-msgid ""
-"An error occurred while parsing the masterlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Try updating "
-"your masterlist to resolve the error."
-msgstr ""
-
-#: src/gui/query/get_game_data_query.h:94
-msgid ""
-"An error occurred while parsing the userlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Your user "
-"metadata will have to be updated manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"documentation, which is accessible through LOOT's main menu.\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-
-#: src/gui/query/metadata_query.h:108 src/gui/query/metadata_query.h:109
+#: src/gui/query/metadata_query.h:104 src/gui/query/metadata_query.h:105
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:112 src/gui/query/metadata_query.h:113
+#: src/gui/query/metadata_query.h:108 src/gui/query/metadata_query.h:109
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:137
-msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr ""
-
-#: src/gui/query/metadata_query.h:163
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
-
-#: src/gui/query/metadata_query.h:195 src/gui/query/metadata_query.h:196
+#: src/gui/query/metadata_query.h:153 src/gui/query/metadata_query.h:154
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:213 src/gui/query/metadata_query.h:224
+#: src/gui/query/metadata_query.h:171 src/gui/query/metadata_query.h:182
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:216
+#: src/gui/query/metadata_query.h:174
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:230
+#: src/gui/query/metadata_query.h:188
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
@@ -744,30 +712,46 @@ msgstr ""
 msgid "Loading plugin contents..."
 msgstr ""
 
-#: src/gui/query/sort_plugins_query.h:70
+#: src/gui/query/sort_plugins_query.h:52
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/query/sort_plugins_query.h:78
+#: src/gui/state/game.cpp:253
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:131
+#: src/gui/state/game.cpp:282
+msgid "You have not sorted your load order this session."
+msgstr ""
+
+#: src/gui/state/game.cpp:326
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%. Try updating your "
+"masterlist to resolve the error. If the error is with your user metadata, "
+"this probably happened because an update to LOOT changed its metadata syntax "
+"support. Your user metadata will have to be updated manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:132
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:138
+#: src/gui/state/loot_state.cpp:139
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:199
+#: src/gui/state/loot_state.cpp:205
 msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-
-#: src/backend/game/game_cache.cpp:120
-msgid "You have not sorted your load order this session."
 msgstr ""
 
 #: src/backend/helpers/git_helper.cpp:147

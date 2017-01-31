@@ -73,7 +73,7 @@ std::vector<std::string> Game::SortPlugins(const std::vector<std::string>& plugi
 
   //Sort plugins into their load order.
   PluginSorter sorter;
-  return sorter.Sort(game_, LanguageCode::english);
+  return sorter.Sort(game_);
 }
 
 bool Game::IsPluginActive(const std::string& plugin) {

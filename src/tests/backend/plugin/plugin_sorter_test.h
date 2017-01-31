@@ -71,7 +71,7 @@ INSTANTIATE_TEST_CASE_P(,
 
 TEST_P(PluginSorterTest, sortingWithNoLoadedPluginsShouldReturnAnEmptyList) {
   PluginSorter sorter;
-  std::vector<std::string> sorted = sorter.Sort(game_, LanguageCode::english);
+  std::vector<std::string> sorted = sorter.Sort(game_);
 
   EXPECT_TRUE(sorted.empty());
 }
@@ -82,11 +82,11 @@ TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadO
   PluginSorter ps;
   std::vector<std::string> expectedSortedOrder = getLoadOrder();
 
-  std::vector<std::string> sorted = ps.Sort(game_, LanguageCode::english);
+  std::vector<std::string> sorted = ps.Sort(game_);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 
   // Check stability.
-  sorted = ps.Sort(game_, LanguageCode::english);
+  sorted = ps.Sort(game_);
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
@@ -111,7 +111,7 @@ TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
       blankDifferentPluginDependentEsp,
   });
 
-  std::vector<std::string> sorted = ps.Sort(game_, LanguageCode::english);
+  std::vector<std::string> sorted = ps.Sort(game_);
   EXPECT_EQ(expectedSortedOrder, sorted);
 }
 
@@ -161,7 +161,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
     blankDifferentPluginDependentEsp,
   });
 
-  std::vector<std::string> sorted = ps.Sort(game_, LanguageCode::english);
+  std::vector<std::string> sorted = ps.Sort(game_);
   EXPECT_EQ(expectedSortedOrder, sorted);
 }
 
@@ -189,7 +189,7 @@ TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePl
       blankPluginDependentEsp,
   });
 
-  std::vector<std::string> sorted = ps.Sort(game_, LanguageCode::english);
+  std::vector<std::string> sorted = ps.Sort(game_);
   EXPECT_EQ(expectedSortedOrder, sorted);
 }
 
@@ -217,7 +217,7 @@ TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelative
       blankPluginDependentEsp,
   });
 
-  std::vector<std::string> sorted = ps.Sort(game_, LanguageCode::english);
+  std::vector<std::string> sorted = ps.Sort(game_);
   EXPECT_EQ(expectedSortedOrder, sorted);
 }
 
@@ -228,7 +228,7 @@ TEST_P(PluginSorterTest, sortingShouldThrowIfACyclicInteractionIsEncountered) {
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
-  EXPECT_THROW(ps.Sort(game_, LanguageCode::english), CyclicInteractionError);
+  EXPECT_THROW(ps.Sort(game_), CyclicInteractionError);
 }
 }
 }

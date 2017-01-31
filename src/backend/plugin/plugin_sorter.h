@@ -58,7 +58,7 @@ typedef boost::associative_property_map<std::map<vertex_t, size_t>> vertex_map_t
 
 class PluginSorter {
 public:
-  std::vector<std::string> Sort(Game& game, const LanguageCode language);
+  std::vector<std::string> Sort(Game& game);
 private:
   bool GetVertexByName(const std::string& name, vertex_t& vertex) const;
   void CheckForCycles() const;
@@ -68,7 +68,7 @@ private:
 
   void PropagatePriorities();
 
-  void AddPluginVertices(Game& game, const LanguageCode language);
+  void AddPluginVertices(Game& game);
   void AddSpecificEdges();
   void AddPriorityEdges();
   void AddOverlapEdges();
