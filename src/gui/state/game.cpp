@@ -128,6 +128,49 @@ std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
+std::vector<Message> Game::CheckInstallValidity(std::shared_ptr<const PluginInterface> plugin, const PluginMetadata & metadata) {
+  BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << plugin->GetName() << "'s data.";
+  std::vector<Message> messages;
+  if (IsPluginActive(plugin->GetName())) {
+    auto pluginExists = [&](const std::string& file) {
+      return boost::filesystem::exists(DataPath() / file)
+        || ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(DataPath() / (file + ".ghost")));
+    };
+    auto tags = metadata.Tags();
+    if (tags.find(Tag("Filter")) == std::end(tags)) {
+      for (const auto &master : plugin->GetMasters()) {
+        if (!pluginExists(master)) {
+          BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << master << "\", but it is missing.";
+          messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % master).str()));
+        } else if (!IsPluginActive(master)) {
+          BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << master << "\", but it is inactive.";
+          messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be active, but it is inactive.")) % master).str()));
+        }
+      }
+    }
+
+    for (const auto &req : metadata.Reqs()) {
+      if (!pluginExists(req.Name())) {
+        BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << req.Name() << "\", but it is missing.";
+        messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
+      }
+    }
+    for (const auto &inc : metadata.Incs()) {
+      if (pluginExists(inc.Name()) && IsPluginActive(inc.Name())) {
+        BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
+        messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
+      }
+    }
+  }
+
+  // Also generate dirty messages.
+  for (const auto &element : metadata.DirtyInfo()) {
+    messages.push_back(element.AsMessage());
+  }
+
+  return messages;
+}
+
 void Game::RedatePlugins() {
   if (Type() != GameType::tes5 && Type() != GameType::tes5se) {
     BOOST_LOG_TRIVIAL(warning) << "Cannot redate plugins for game " << Name();

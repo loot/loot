@@ -171,6 +171,82 @@ TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
   EXPECT_NO_THROW(game.Init());
 }
 
+TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.Reqs({
+    File(missingEsp),
+    File(blankEsp),
+  });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+    Message(MessageType::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
+  }), messages);
+}
+
+TEST_P(GameTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.Incs({
+    File(missingEsp),
+    File(masterFile),
+  });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+    Message(MessageType::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
+  }), messages);
+}
+
+TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  const std::vector<MessageContent> info = std::vector<MessageContent>({
+    MessageContent("info", LanguageCode::english),
+  });
+
+  metadata.DirtyInfo({
+    PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2),
+    PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10),
+  });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+    PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2).AsMessage(),
+    PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10).AsMessage(),
+  }), messages);
+}
+
+TEST_P(GameTest, checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankDifferentMasterDependentEsp);
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
+  EXPECT_EQ(std::vector<Message>({
+    Message(MessageType::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
+  }), messages);
+}
+
+TEST_P(GameTest, checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankDifferentMasterDependentEsp);
+  metadata.Tags({Tag("Filter")});
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
+  EXPECT_TRUE(messages.empty());
+}
+
 TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
   game.Init();
