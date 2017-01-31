@@ -75,7 +75,7 @@ public:
    *         written. Otherwise, data will be written.
    */
   virtual void WriteUserMetadata(const std::string& outputFile,
-                                const bool overwrite) = 0;
+                                const bool overwrite) const = 0;
 
    /**
    *  @brief Writes a minimal metadata file that only contains plugins with
@@ -88,7 +88,7 @@ public:
    *         written. Otherwise, data will be written.
    */
    virtual void WriteMinimalList(const std::string& outputFile,
-                                 const bool overwrite) = 0;
+                                 const bool overwrite) const = 0;
 
   /**
    *  @}
@@ -147,7 +147,7 @@ public:
    *  @returns The revision data.
    */
   virtual MasterlistInfo GetMasterlistRevision(const std::string& masterlist_path,
-                                               const bool get_short_id) = 0;
+                                               const bool get_short_id) const = 0;
 
   /**
    *  @}
@@ -160,14 +160,14 @@ public:
    *  @details Bash Tag suggestions can include plugins not in this list.
    *  @returns A set of Bash Tag names.
   */
-  virtual std::set<std::string> GetKnownBashTags() = 0;
+  virtual std::set<std::string> GetKnownBashTags() const = 0;
 
   /**
    *  @brief Get all general messages listen in the loaded metadata lists.
    *  @returns A vector of messages supplied in the metadata lists but not
    *           attached to any particular plugin.
    */
-  virtual std::vector<Message> GetGeneralMessages() = 0;
+  virtual std::vector<Message> GetGeneralMessages() const = 0;
 
   /**
    *  @}
@@ -188,7 +188,7 @@ public:
    *           will return true.
    */
   virtual PluginMetadata GetPluginMetadata(const std::string& plugin,
-                                           bool includeUserMetadata = true) = 0;
+                                           bool includeUserMetadata = true) const = 0;
 
   /**
   *  @brief Get a plugin's metadata loaded from the given userlist.
@@ -198,7 +198,7 @@ public:
   *           metadata. If the plugin has no metadata,
   *           PluginMetadata.IsNameOnly() will return true.
   */
-  virtual PluginMetadata GetPluginUserMetadata(const std::string& plugin) = 0;
+  virtual PluginMetadata GetPluginUserMetadata(const std::string& plugin) const = 0;
 
   /**
   *  @brief Sets a plugin's user metadata, overwriting any existing user
@@ -232,7 +232,7 @@ public:
    *         The filename of the plugin to look up Bash Tag suggestions for.
    *  @returns Bash Tag data for the plugin.
   */
-  virtual PluginTags GetPluginTags(const std::string& plugin) = 0;
+  virtual PluginTags GetPluginTags(const std::string& plugin) const = 0;
 
   /**
    *  @deprecated
@@ -247,7 +247,7 @@ public:
    *           if the plugin has no messages associated with it.
    */
   virtual std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
-                                                       const LanguageCode language) = 0;
+                                                       const LanguageCode language) const = 0;
 
   /**
    *  @deprecated
@@ -263,7 +263,7 @@ public:
    *      The plugin to look up the cleanliness state for.
    *  @returns A plugin cleanliness code.
    */
-  virtual PluginCleanliness GetPluginCleanliness(const std::string& plugin) = 0;
+  virtual PluginCleanliness GetPluginCleanliness(const std::string& plugin) const = 0;
 
   /** @} */
 };

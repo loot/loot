@@ -81,7 +81,7 @@ void ApiDatabase::EvalLists() {
   game_.GetUserlist() = userTemp;
 }
 
-void ApiDatabase::WriteUserMetadata(const std::string& outputFile, const bool overwrite) {
+void ApiDatabase::WriteUserMetadata(const std::string& outputFile, const bool overwrite) const {
   if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
     throw std::invalid_argument("Output directory does not exist.");
 
@@ -107,11 +107,11 @@ bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
 }
 
 MasterlistInfo ApiDatabase::GetMasterlistRevision(const std::string& masterlistPath,
-                                                  const bool getShortID) {
+                                                  const bool getShortID) const {
   return Masterlist::GetInfo(masterlistPath, getShortID);
 }
 
-std::set<std::string> ApiDatabase::GetKnownBashTags() {
+std::set<std::string> ApiDatabase::GetKnownBashTags() const {
   auto masterlistTags = game_.GetMasterlist().BashTags();
   auto userlistTags = game_.GetUserlist().BashTags();
 
@@ -122,7 +122,7 @@ std::set<std::string> ApiDatabase::GetKnownBashTags() {
   return masterlistTags;
 }
 
-std::vector<Message> ApiDatabase::GetGeneralMessages() {
+std::vector<Message> ApiDatabase::GetGeneralMessages() const {
   auto masterlistMessages = game_.GetMasterlist().Messages();
   auto userlistMessages = game_.GetUserlist().Messages();
 
@@ -134,7 +134,7 @@ std::vector<Message> ApiDatabase::GetGeneralMessages() {
 }
 
 PluginMetadata ApiDatabase::GetPluginMetadata(const std::string& plugin,
-                                              bool includeUserMetadata) {
+                                              bool includeUserMetadata) const {
   PluginMetadata metadata = game_.GetMasterlist().FindPlugin(plugin);
 
   if (includeUserMetadata) {
@@ -144,7 +144,7 @@ PluginMetadata ApiDatabase::GetPluginMetadata(const std::string& plugin,
   return metadata;
 }
 
-PluginMetadata ApiDatabase::GetPluginUserMetadata(const std::string& plugin) {
+PluginMetadata ApiDatabase::GetPluginUserMetadata(const std::string& plugin) const {
   return game_.GetUserlist().FindPlugin(plugin);
 }
 
@@ -165,7 +165,7 @@ void ApiDatabase::DiscardAllUserMetadata() {
 // DB Access Functions
 //////////////////////////
 
-PluginTags ApiDatabase::GetPluginTags(const std::string& plugin) {
+PluginTags ApiDatabase::GetPluginTags(const std::string& plugin) const {
   PluginTags tags;
 
   PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
@@ -189,7 +189,7 @@ PluginTags ApiDatabase::GetPluginTags(const std::string& plugin) {
 }
 
 std::vector<SimpleMessage> ApiDatabase::GetPluginMessages(const std::string& plugin,
-                                                          const LanguageCode language) {
+                                                          const LanguageCode language) const {
   std::vector<SimpleMessage> messages;
 
   PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
@@ -205,7 +205,7 @@ std::vector<SimpleMessage> ApiDatabase::GetPluginMessages(const std::string& plu
   return messages;
 }
 
-PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) {
+PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) const {
   // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
   if (!game_.GetMasterlist().FindPlugin(PluginMetadata(plugin)).DirtyInfo().empty()
       || !game_.GetUserlist().FindPlugin(PluginMetadata(plugin)).DirtyInfo().empty()) {
@@ -239,7 +239,7 @@ PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) {
 // and/or dirty messages, plus the Tag suggestions and/or messages themselves and their
 // conditions, in order to create the Wrye Bash taglist. outputFile is the path to use
 // for output. If outputFile already exists, it will only be overwritten if overwrite is true.
-void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool overwrite) {
+void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool overwrite) const {
   if (!boost::filesystem::exists(boost::filesystem::path(outputFile).parent_path()))
     throw std::invalid_argument("Output directory does not exist.");
 

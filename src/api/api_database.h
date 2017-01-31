@@ -42,10 +42,10 @@ struct ApiDatabase : public DatabaseInterface {
   void EvalLists();
 
   void WriteUserMetadata(const std::string& outputFile,
-                         const bool overwrite);
+                         const bool overwrite) const;
 
   void WriteMinimalList(const std::string& outputFile,
-                        const bool overwrite);
+                        const bool overwrite) const;
 
   void IdentifyMainMasterFile(const std::string& masterFile);
 
@@ -56,16 +56,16 @@ struct ApiDatabase : public DatabaseInterface {
                         const std::string& remote_branch);
 
   MasterlistInfo GetMasterlistRevision(const std::string& masterlist_path,
-                                       const bool get_short_id);
+                                       const bool get_short_id) const;
 
-  std::set<std::string> GetKnownBashTags();
+  std::set<std::string> GetKnownBashTags() const;
 
-  std::vector<Message> GetGeneralMessages();
+  std::vector<Message> GetGeneralMessages() const;
 
   PluginMetadata GetPluginMetadata(const std::string& plugin,
-                                   bool includeUserMetadata = true);
+                                   bool includeUserMetadata = true) const;
 
-  PluginMetadata GetPluginUserMetadata(const std::string& plugin);
+  PluginMetadata GetPluginUserMetadata(const std::string& plugin) const;
 
   void SetPluginUserMetadata(const PluginMetadata& pluginMetadata);
 
@@ -73,12 +73,12 @@ struct ApiDatabase : public DatabaseInterface {
 
   void DiscardAllUserMetadata();
 
-  PluginTags GetPluginTags(const std::string& plugin);
+  PluginTags GetPluginTags(const std::string& plugin) const;
 
   std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
-                                               const LanguageCode language);
+                                               const LanguageCode language) const;
 
-  PluginCleanliness GetPluginCleanliness(const std::string& plugin);
+  PluginCleanliness GetPluginCleanliness(const std::string& plugin) const;
 private:
   Game& game_;
 
