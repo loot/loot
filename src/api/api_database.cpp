@@ -111,6 +111,10 @@ MasterlistInfo ApiDatabase::GetMasterlistRevision(const std::string& masterlistP
   return Masterlist::GetInfo(masterlistPath, getShortID);
 }
 
+//////////////////////////
+// DB Access Functions
+//////////////////////////
+
 std::set<std::string> ApiDatabase::GetKnownBashTags() const {
   auto masterlistTags = game_.GetMasterlist().BashTags();
   auto userlistTags = game_.GetUserlist().BashTags();
@@ -159,80 +163,6 @@ void ApiDatabase::DiscardPluginUserMetadata(const std::string& plugin) {
 
 void ApiDatabase::DiscardAllUserMetadata() {
   game_.GetUserlist().Clear();
-}
-
-//////////////////////////
-// DB Access Functions
-//////////////////////////
-
-PluginTags ApiDatabase::GetPluginTags(const std::string& plugin) const {
-  PluginTags tags;
-
-  PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
-  for (const auto &tag : pluginMetadata.Tags()) {
-    if (tag.IsAddition())
-      tags.added.insert(tag.Name());
-    else
-      tags.removed.insert(tag.Name());
-  }
-
-  pluginMetadata = game_.GetUserlist().FindPlugin(PluginMetadata(plugin));
-  tags.userlist_modified = !pluginMetadata.Tags().empty();
-  for (const auto &tag : pluginMetadata.Tags()) {
-    if (tag.IsAddition())
-      tags.added.insert(tag.Name());
-    else
-      tags.removed.insert(tag.Name());
-  }
-
-  return tags;
-}
-
-std::vector<SimpleMessage> ApiDatabase::GetPluginMessages(const std::string& plugin,
-                                                          const LanguageCode language) const {
-  std::vector<SimpleMessage> messages;
-
-  PluginMetadata pluginMetadata = game_.GetMasterlist().FindPlugin(PluginMetadata(plugin));
-  for (const auto& message : pluginMetadata.SimpleMessages(language)) {
-    messages.push_back(message);
-  }
-
-  pluginMetadata = game_.GetUserlist().FindPlugin(PluginMetadata(plugin));
-  for (const auto& message : pluginMetadata.SimpleMessages(language)) {
-    messages.push_back(message);
-  }
-
-  return messages;
-}
-
-PluginCleanliness ApiDatabase::GetPluginCleanliness(const std::string& plugin) const {
-  // Is there any dirty info? Testing for applicability happens in loot_eval_lists().
-  if (!game_.GetMasterlist().FindPlugin(PluginMetadata(plugin)).DirtyInfo().empty()
-      || !game_.GetUserlist().FindPlugin(PluginMetadata(plugin)).DirtyInfo().empty()) {
-    return PluginCleanliness::dirty;
-  }
-
-  // Is there a message beginning with the substring "Do not clean."?
-  // This isn't a very reliable system, because if the lists have been evaluated in some language
-  // other than English, the strings will be in different languages (and the API can't tell what they'd be)
-  // and the strings may be non-standard and begin with something other than "Do not clean." anyway.
-  std::vector<Message> messages(game_.GetMasterlist().FindPlugin(PluginMetadata(plugin)).Messages());
-
-  for (const auto& message : messages) {
-    if (boost::starts_with(message.GetContent(LanguageCode::english).GetText(), "Do not clean")) {
-      return PluginCleanliness::do_not_clean;
-    }
-  }
-
-  messages = game_.GetUserlist().FindPlugin(PluginMetadata(plugin)).Messages();
-
-  for (const auto& message : messages) {
-    if (boost::starts_with(message.GetContent(LanguageCode::english).GetText(), "Do not clean")) {
-      return PluginCleanliness::do_not_clean;
-    }
-  }
-
-  return PluginCleanliness::unknown;
 }
 
 // Writes a minimal masterlist that only contains mods that have Bash Tag suggestions,

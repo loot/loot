@@ -224,47 +224,6 @@ public:
    */
   virtual void DiscardAllUserMetadata() = 0;
 
-  /**
-   *  @deprecated
-   *  @brief Outputs the Bash Tags suggested for addition and removal by the
-   *         database for the given plugin.
-   *  @param plugin
-   *         The filename of the plugin to look up Bash Tag suggestions for.
-   *  @returns Bash Tag data for the plugin.
-  */
-  virtual PluginTags GetPluginTags(const std::string& plugin) const = 0;
-
-  /**
-   *  @deprecated
-   *  @brief Outputs the messages associated with the given plugin in the
-   *         database.
-   *  @param plugin
-   *         The filename of the plugin to look up messages for.
-   *  @param language
-   *         The language to use when choosing which message content strings
-   *         to return.
-   *  @returns A vector of messages associated with the specified plugin. Empty
-   *           if the plugin has no messages associated with it.
-   */
-  virtual std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
-                                                       const LanguageCode language) const = 0;
-
-  /**
-   *  @deprecated
-   *  @brief Determines the database's knowledge of a plugin's cleanliness.
-   *  @details Outputs whether the plugin should be cleaned or not, or if
-   *           no data is available. The mechanism used to determine that
-   *           a plugin should not be cleaned is not very reliable, and is
-   *           likely to fail if `EvalLists()` was called with a
-   *           language other than English. As such, some plugins that should
-   *           not be cleaned may have the `PluginCleanliness::unknown`
-   *           code outputted.
-   *  @param plugin
-   *      The plugin to look up the cleanliness state for.
-   *  @returns A plugin cleanliness code.
-   */
-  virtual PluginCleanliness GetPluginCleanliness(const std::string& plugin) const = 0;
-
   /** @} */
 };
 }

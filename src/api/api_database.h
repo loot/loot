@@ -72,13 +72,6 @@ struct ApiDatabase : public DatabaseInterface {
   void DiscardPluginUserMetadata(const std::string& plugin);
 
   void DiscardAllUserMetadata();
-
-  PluginTags GetPluginTags(const std::string& plugin) const;
-
-  std::vector<SimpleMessage> GetPluginMessages(const std::string& plugin,
-                                               const LanguageCode language) const;
-
-  PluginCleanliness GetPluginCleanliness(const std::string& plugin) const;
 private:
   Game& game_;
 
