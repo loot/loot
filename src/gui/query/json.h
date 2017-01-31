@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_BACKEND_HELPERS_JSON
-#define LOOT_BACKEND_HELPERS_JSON
+#ifndef LOOT_GUI_QUERY_JSON
+#define LOOT_GUI_QUERY_JSON
 
 #include <regex>
 

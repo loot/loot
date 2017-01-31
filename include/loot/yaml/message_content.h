@@ -21,8 +21,8 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_MESSAGE_CONTENT
-#define LOOT_BACKEND_METADATA_MESSAGE_CONTENT
+#ifndef LOOT_YAML_MESSAGE_CONTENT
+#define LOOT_YAML_MESSAGE_CONTENT
 
 #include <string>
 

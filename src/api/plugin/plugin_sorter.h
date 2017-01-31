@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_PLUGIN_PLUGIN_SORTER
-#define LOOT_BACKEND_PLUGIN_PLUGIN_SORTER
+#ifndef LOOT_API_PLUGIN_PLUGIN_SORTER
+#define LOOT_API_PLUGIN_PLUGIN_SORTER
 
 #include <map>
 

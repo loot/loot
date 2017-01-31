@@ -22,8 +22,8 @@
     <http://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_METADATA_CONDITION_EVALUATOR
-#define LOOT_BACKEND_METADATA_CONDITION_EVALUATOR
+#ifndef LOOT_API_METADATA_CONDITION_EVALUATOR
+#define LOOT_API_METADATA_CONDITION_EVALUATOR
 
 #include <regex>
 #include <string>

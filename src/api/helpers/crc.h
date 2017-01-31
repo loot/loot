@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_HELPERS_CRC
-#define LOOT_BACKEND_HELPERS_CRC
+#ifndef LOOT_API_HELPERS_CRC
+#define LOOT_API_HELPERS_CRC
 
 #include <cstdint>
 

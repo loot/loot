@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_MASTERLIST
-#define LOOT_BACKEND_MASTERLIST
+#ifndef LOOT_API_MASTERLIST
+#define LOOT_API_MASTERLIST
 
 #include <string>
 

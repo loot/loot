@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_GAME_LOAD_ORDER_HANDLER
-#define LOOT_BACKEND_GAME_LOAD_ORDER_HANDLER
+#ifndef LOOT_API_GAME_LOAD_ORDER_HANDLER
+#define LOOT_API_GAME_LOAD_ORDER_HANDLER
 
 #include <list>
 #include <string>

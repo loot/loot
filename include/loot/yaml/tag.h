@@ -21,8 +21,8 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_TAG
-#define LOOT_BACKEND_METADATA_TAG
+#ifndef LOOT_YAML_TAG
+#define LOOT_YAML_TAG
 
 #include <string>
 

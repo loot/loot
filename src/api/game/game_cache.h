@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_GAME_GAME_CACHE
-#define LOOT_BACKEND_GAME_GAME_CACHE
+#ifndef LOOT_API_GAME_GAME_CACHE
+#define LOOT_API_GAME_GAME_CACHE
 
 #include <mutex>
 #include <string>

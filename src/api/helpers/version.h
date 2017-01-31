@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_HELPERS_VERSION
-#define LOOT_BACKEND_HELPERS_VERSION
+#ifndef LOOT_API_HELPERS_VERSION
+#define LOOT_API_HELPERS_VERSION
 
 #include <regex>
 #include <string>

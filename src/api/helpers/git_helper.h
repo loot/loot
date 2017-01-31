@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_HELPERS_GIT_HELPER
-#define LOOT_BACKEND_HELPERS_GIT_HELPER
+#ifndef LOOT_API_HELPERS_GIT_HELPER
+#define LOOT_API_HELPERS_GIT_HELPER
 
 #include <string>
 

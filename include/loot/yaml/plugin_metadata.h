@@ -21,8 +21,8 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_METADATA_PLUGIN_METADATA
-#define LOOT_BACKEND_METADATA_PLUGIN_METADATA
+#ifndef LOOT_YAML_PLUGIN_METADATA
+#define LOOT_YAML_PLUGIN_METADATA
 
 #include <cstdint>
 #include <list>

@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_APP_LOOT_STATE
-#define LOOT_BACKEND_APP_LOOT_STATE
+#ifndef LOOT_GUI_STATE_LOOT_STATE
+#define LOOT_GUI_STATE_LOOT_STATE
 
 #include "gui/state/loot_settings.h"
 #include "gui/state/game.h"

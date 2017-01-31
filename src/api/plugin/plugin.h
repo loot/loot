@@ -21,8 +21,8 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_BACKEND_PLUGIN_PLUGIN
-#define LOOT_BACKEND_PLUGIN_PLUGIN
+#ifndef LOOT_API_PLUGIN_PLUGIN
+#define LOOT_API_PLUGIN_PLUGIN
 
 #include <cstdint>
 #include <list>

@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_HELPERS_HELPERS
-#define LOOT_BACKEND_HELPERS_HELPERS
+#ifndef LOOT_WINDOWS_ENCODING_CONVERTERS
+#define LOOT_WINDOWS_ENCODING_CONVERTERS
 
 #ifdef _WIN32
 

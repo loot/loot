@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_BACKEND_APP_LOOT_PATHS
-#define LOOT_BACKEND_APP_LOOT_PATHS
+#ifndef LOOT_GUI_STATE_LOOT_PATHS
+#define LOOT_GUI_STATE_LOOT_PATHS
 
 #include <boost/filesystem.hpp>
 

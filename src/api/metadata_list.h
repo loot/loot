@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_METADATA_LIST
-#define LOOT_BACKEND_METADATA_LIST
+#ifndef LOOT_API_METADATA_LIST
+#define LOOT_API_METADATA_LIST
 
 #include <string>
 #include <unordered_set>

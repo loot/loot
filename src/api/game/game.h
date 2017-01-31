@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_GAME_GAME
-#define LOOT_BACKEND_GAME_GAME
+#ifndef LOOT_API_GAME_GAME
+#define LOOT_API_GAME_GAME
 
 #include <string>
 

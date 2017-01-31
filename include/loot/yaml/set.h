@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_HELPERS_YAML_SET_HELPERS
-#define LOOT_BACKEND_HELPERS_YAML_SET_HELPERS
+#ifndef LOOT_YAML_SET
+#define LOOT_YAML_SET
 
 #include <set>
 #include <unordered_set>

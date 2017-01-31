@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_BACKEND_APP_LOOT_SETTINGS
-#define LOOT_BACKEND_APP_LOOT_SETTINGS
+#ifndef LOOT_GUI_STATE_LOOT_SETTINGS
+#define LOOT_GUI_STATE_LOOT_SETTINGS
 
 #include <map>
 #include <mutex>
