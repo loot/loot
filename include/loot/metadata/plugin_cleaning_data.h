@@ -28,32 +28,33 @@
 #include <cstdint>
 #include <string>
 
+#include "loot/api_decorator.h"
 #include "loot/metadata/message.h"
 
 namespace loot {
 class PluginCleaningData {
 public:
-  PluginCleaningData();
-  PluginCleaningData(uint32_t crc, const std::string& utility);
-  PluginCleaningData(uint32_t crc,
-                     const std::string& utility,
-                     const std::vector<MessageContent>& info,
-                     unsigned int itm,
-                     unsigned int ref,
-                     unsigned int nav);
+  LOOT_API PluginCleaningData();
+  LOOT_API PluginCleaningData(uint32_t crc, const std::string& utility);
+  LOOT_API PluginCleaningData(uint32_t crc,
+                              const std::string& utility,
+                              const std::vector<MessageContent>& info,
+                              unsigned int itm,
+                              unsigned int ref,
+                              unsigned int nav);
 
-  bool operator < (const PluginCleaningData& rhs) const;
-  bool operator == (const PluginCleaningData& rhs) const;
+  LOOT_API bool operator < (const PluginCleaningData& rhs) const;
+  LOOT_API bool operator == (const PluginCleaningData& rhs) const;
 
-  uint32_t CRC() const;
-  unsigned int ITMs() const;
-  unsigned int DeletedRefs() const;
-  unsigned int DeletedNavmeshes() const;
-  std::string CleaningUtility() const;
-  std::vector<MessageContent> Info() const;
+  LOOT_API uint32_t CRC() const;
+  LOOT_API unsigned int ITMs() const;
+  LOOT_API unsigned int DeletedRefs() const;
+  LOOT_API unsigned int DeletedNavmeshes() const;
+  LOOT_API std::string CleaningUtility() const;
+  LOOT_API std::vector<MessageContent> Info() const;
 
-  MessageContent ChooseInfo(const LanguageCode language) const;
-  Message AsMessage() const;
+  LOOT_API MessageContent ChooseInfo(const LanguageCode language) const;
+  LOOT_API Message AsMessage() const;
 private:
   uint32_t crc_;
   unsigned int itm_;

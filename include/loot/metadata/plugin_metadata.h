@@ -31,6 +31,7 @@
 #include <string>
 #include <vector>
 
+#include "loot/api_decorator.h"
 #include "loot/yaml/set.h"
 #include "loot/metadata/file.h"
 #include "loot/metadata/location.h"
@@ -42,56 +43,56 @@
 namespace loot {
 class PluginMetadata {
 public:
-  PluginMetadata();
-  PluginMetadata(const std::string& name);
+  LOOT_API PluginMetadata();
+  LOOT_API PluginMetadata(const std::string& name);
 
   //Merges from the given plugin into this one, unless there is already equal metadata present.
   //For 'enabled' and 'priority' metadata, use the given plugin's values, but if the 'priority' user value is zero, ignore it.
-  void MergeMetadata(const PluginMetadata& plugin);
+  LOOT_API void MergeMetadata(const PluginMetadata& plugin);
 
   // Returns metadata in this plugin not in the given plugin.
   //For 'enabled', use this plugin's value.
   //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
-  PluginMetadata NewMetadata(const PluginMetadata& plugin) const;
+  LOOT_API PluginMetadata NewMetadata(const PluginMetadata& plugin) const;
 
-  std::string Name() const;
-  std::string LowercasedName() const;
-  bool Enabled() const;
-  Priority LocalPriority() const;
-  Priority GlobalPriority() const;
-  std::set<File> LoadAfter() const;
-  std::set<File> Reqs() const;
-  std::set<File> Incs() const;
-  std::vector<Message> Messages() const;
-  std::set<Tag> Tags() const;
-  std::set<PluginCleaningData> DirtyInfo() const;
-  std::set<PluginCleaningData> CleanInfo() const;
-  std::set<Location> Locations() const;
+  LOOT_API std::string Name() const;
+  LOOT_API std::string LowercasedName() const;
+  LOOT_API bool Enabled() const;
+  LOOT_API Priority LocalPriority() const;
+  LOOT_API Priority GlobalPriority() const;
+  LOOT_API std::set<File> LoadAfter() const;
+  LOOT_API std::set<File> Reqs() const;
+  LOOT_API std::set<File> Incs() const;
+  LOOT_API std::vector<Message> Messages() const;
+  LOOT_API std::set<Tag> Tags() const;
+  LOOT_API std::set<PluginCleaningData> DirtyInfo() const;
+  LOOT_API std::set<PluginCleaningData> CleanInfo() const;
+  LOOT_API std::set<Location> Locations() const;
 
-  std::vector<SimpleMessage> SimpleMessages(const LanguageCode language) const;
+  LOOT_API std::vector<SimpleMessage> SimpleMessages(const LanguageCode language) const;
 
-  void Enabled(const bool enabled);
-  void LocalPriority(const Priority& priority);
-  void GlobalPriority(const Priority& priority);
-  void LoadAfter(const std::set<File>& after);
-  void Reqs(const std::set<File>& reqs);
-  void Incs(const std::set<File>& incs);
-  void Messages(const std::vector<Message>& messages);
-  void Tags(const std::set<Tag>& tags);
-  void DirtyInfo(const std::set<PluginCleaningData>& info);
-  void CleanInfo(const std::set<PluginCleaningData>& info);
-  void Locations(const std::set<Location>& locations);
+  LOOT_API void Enabled(const bool enabled);
+  LOOT_API void LocalPriority(const Priority& priority);
+  LOOT_API void GlobalPriority(const Priority& priority);
+  LOOT_API void LoadAfter(const std::set<File>& after);
+  LOOT_API void Reqs(const std::set<File>& reqs);
+  LOOT_API void Incs(const std::set<File>& incs);
+  LOOT_API void Messages(const std::vector<Message>& messages);
+  LOOT_API void Tags(const std::set<Tag>& tags);
+  LOOT_API void DirtyInfo(const std::set<PluginCleaningData>& info);
+  LOOT_API void CleanInfo(const std::set<PluginCleaningData>& info);
+  LOOT_API void Locations(const std::set<Location>& locations);
 
-  bool HasNameOnly() const;
-  bool IsRegexPlugin() const;
+  LOOT_API bool HasNameOnly() const;
+  LOOT_API bool IsRegexPlugin() const;
 
   //Compare name strings.
-  bool operator == (const PluginMetadata& rhs) const;
-  bool operator != (const PluginMetadata& rhs) const;
+  LOOT_API bool operator == (const PluginMetadata& rhs) const;
+  LOOT_API bool operator != (const PluginMetadata& rhs) const;
 
   //Compare name string.
-  bool operator == (const std::string& rhs) const;
-  bool operator != (const std::string& rhs) const;
+  LOOT_API bool operator == (const std::string& rhs) const;
+  LOOT_API bool operator != (const std::string& rhs) const;
 private:
   std::string name_;
   bool enabled_;

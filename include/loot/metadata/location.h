@@ -27,17 +27,19 @@
 #include <string>
 #include <vector>
 
+#include "loot/api_decorator.h"
+
 namespace loot {
 class Location {
 public:
-  Location();
-  Location(const std::string& url, const std::string& name = "");
+  LOOT_API Location();
+  LOOT_API Location(const std::string& url, const std::string& name = "");
 
-  bool operator < (const Location& rhs) const;
-  bool operator == (const Location& rhs) const;
+  LOOT_API bool operator < (const Location& rhs) const;
+  LOOT_API bool operator == (const Location& rhs) const;
 
-  std::string URL() const;
-  std::string Name() const;
+  LOOT_API std::string URL() const;
+  LOOT_API std::string Name() const;
 private:
   std::string url_;
   std::string name_;

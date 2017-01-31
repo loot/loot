@@ -26,22 +26,23 @@
 
 #include <string>
 
+#include "loot/api_decorator.h"
 #include "loot/language.h"
 
 namespace loot {
 class MessageContent {
 public:
-  MessageContent();
-  MessageContent(const std::string& text, const LanguageCode language);
+  LOOT_API MessageContent();
+  LOOT_API MessageContent(const std::string& text, const LanguageCode language);
 
-  std::string GetText() const;
-  LanguageCode GetLanguage() const;
+  LOOT_API std::string GetText() const;
+  LOOT_API LanguageCode GetLanguage() const;
 
-  bool operator < (const MessageContent& rhs) const;
-  bool operator == (const MessageContent& rhs) const;
+  LOOT_API bool operator < (const MessageContent& rhs) const;
+  LOOT_API bool operator == (const MessageContent& rhs) const;
 
-  static MessageContent Choose(const std::vector<MessageContent> content,
-                               const LanguageCode language);
+  LOOT_API static MessageContent Choose(const std::vector<MessageContent> content,
+                                        const LanguageCode language);
 private:
   std::string text_;
   LanguageCode language_;

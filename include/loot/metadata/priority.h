@@ -26,25 +26,27 @@
 
 #include <cstdint>
 
+#include "loot/api_decorator.h"
+
 namespace loot {
 class Priority {
 public:
-  Priority();
+  LOOT_API Priority();
   // Take an int to prevent literals that are too large for one byte from
   // wrapping around to negative values.
-  explicit Priority(const int value);
+  LOOT_API explicit Priority(const int value);
 
   // Doesn't return an int8_t because it is commonly signed char, which
   // yaml-cpp interprets as a character rather than an integer.
-  short getValue() const;
-  bool isExplicit() const;
+  LOOT_API short getValue() const;
+  LOOT_API bool isExplicit() const;
 
-  bool operator < (const Priority& rhs) const;
-  bool operator > (const Priority& rhs) const;
-  bool operator >= (const Priority& rhs) const;
-  bool operator == (const Priority& rhs) const;
+  LOOT_API bool operator < (const Priority& rhs) const;
+  LOOT_API bool operator > (const Priority& rhs) const;
+  LOOT_API bool operator >= (const Priority& rhs) const;
+  LOOT_API bool operator == (const Priority& rhs) const;
 
-  bool operator > (const uint8_t rhs) const;
+  LOOT_API bool operator > (const uint8_t rhs) const;
 
 private:
   bool isExplicitZeroValue_;

@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "loot/api_decorator.h"
 #include "loot/metadata/conditional_metadata.h"
 #include "loot/metadata/message_content.h"
 #include "loot/enum/language_code.h"
@@ -36,20 +37,20 @@
 namespace loot {
 class Message : public ConditionalMetadata {
 public:
-  Message();
-  Message(const MessageType type, const std::string& content,
-          const std::string& condition = "");
-  Message(const MessageType type, const std::vector<MessageContent>& content,
-          const std::string& condition = "");
+  LOOT_API Message();
+  LOOT_API Message(const MessageType type, const std::string& content,
+                   const std::string& condition = "");
+  LOOT_API Message(const MessageType type, const std::vector<MessageContent>& content,
+                   const std::string& condition = "");
 
-  bool operator < (const Message& rhs) const;
-  bool operator == (const Message& rhs) const;
+  LOOT_API bool operator < (const Message& rhs) const;
+  LOOT_API bool operator == (const Message& rhs) const;
 
-  MessageType GetType() const;
-  std::vector<MessageContent> GetContent() const;
-  MessageContent GetContent(const LanguageCode language) const;
+  LOOT_API MessageType GetType() const;
+  LOOT_API std::vector<MessageContent> GetContent() const;
+  LOOT_API MessageContent GetContent(const LanguageCode language) const;
 
-  SimpleMessage ToSimpleMessage(const LanguageCode language) const;
+  LOOT_API SimpleMessage ToSimpleMessage(const LanguageCode language) const;
 private:
   MessageType type_;
   std::vector<MessageContent> content_;

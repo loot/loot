@@ -26,16 +26,18 @@
 
 #include <string>
 
+#include "loot/api_decorator.h"
+
 namespace loot {
 class ConditionalMetadata {
 public:
-  ConditionalMetadata();
-  ConditionalMetadata(const std::string& condition);
+  LOOT_API ConditionalMetadata();
+  LOOT_API ConditionalMetadata(const std::string& condition);
 
-  bool IsConditional() const;
-  void ParseCondition() const;
+  LOOT_API bool IsConditional() const;
+  LOOT_API void ParseCondition() const;
 
-  std::string Condition() const;
+  LOOT_API std::string Condition() const;
 private:
   std::string condition_;
 };

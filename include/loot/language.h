@@ -28,20 +28,20 @@
 #include <string>
 #include <vector>
 
+#include "loot/api_decorator.h"
 #include "loot/enum/language_code.h"
 
 namespace loot {
 class Language {
 public:
+  LOOT_API static const std::vector<LanguageCode> codes;
 
-  static const std::vector<LanguageCode> codes;
+  LOOT_API Language(const LanguageCode code);
+  LOOT_API Language(const std::string& locale);
 
-  Language(const LanguageCode code);
-  Language(const std::string& locale);
-
-  LanguageCode GetCode() const;
-  std::string GetName() const;
-  std::string GetLocale() const;
+  LOOT_API LanguageCode GetCode() const;
+  LOOT_API std::string GetName() const;
+  LOOT_API std::string GetLocale() const;
 private:
   static LanguageCode GetCode(const std::string& locale);
 

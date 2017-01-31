@@ -162,73 +162,86 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 # General Settings
 ##############################
 
-set (LOOT_SRC   "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/error_categories.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/message_content.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/plugin_cleaning_data.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/plugin_metadata.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/priority.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/tag.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/game/game.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/game/game_cache.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/game/load_order_handler.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/masterlist.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_sorter.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/crc.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp")
 
-set (LOOT_HEADERS "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/game/game.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/game/game_cache.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/game/load_order_handler.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_sorter.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/crc.h"
-                "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/api_decorator.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/exception/error_categories.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/exception/condition_syntax_error.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/exception/cyclic_interaction_error.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/exception/file_access_error.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/exception/game_detection_error.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/exception/git_state_error.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/enum/game_type.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/enum/language_code.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/enum/message_type.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/conditional_metadata.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/file.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/location.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/message.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/message_content.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/plugin_cleaning_data.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/plugin_metadata.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/priority.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/metadata/tag.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/file.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/location.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/message.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/message_content.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/plugin_cleaning_data.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/plugin_metadata.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/set.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/yaml/tag.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/windows_encoding_converters.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/language.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
-                "${CMAKE_SOURCE_DIR}/include/loot/plugin_interface.h")
+set (LOOT_API_SRC "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/api/api_database.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/api/game.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/error_categories.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/conditional_metadata.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/file.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/location.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/message.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/message_content.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/plugin_cleaning_data.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/plugin_metadata.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/priority.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata/tag.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/game/game.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/game/game_cache.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/game/load_order_handler.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/masterlist.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_sorter.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/helpers/crc.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/helpers/language.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.cpp")
+
+set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/api_decorator.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/database_interface.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/exception/error_categories.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/exception/condition_syntax_error.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/exception/cyclic_interaction_error.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/exception/file_access_error.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/exception/game_detection_error.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/exception/git_state_error.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/enum/game_type.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/enum/language_code.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/enum/message_type.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/enum/plugin_cleanliness.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/game_interface.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/language.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/conditional_metadata.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/file.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/location.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/message.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/message_content.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/plugin_cleaning_data.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/plugin_metadata.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/priority.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/metadata/tag.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/file.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/location.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/message.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/message_content.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/plugin_cleaning_data.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/plugin_metadata.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/set.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/yaml/tag.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/plugin_interface.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/struct/masterlist_info.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/struct/plugin_tags.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/struct/simple_message.h"
+                      "${CMAKE_SOURCE_DIR}/include/loot/windows_encoding_converters.h"
+                      "${CMAKE_SOURCE_DIR}/src/api/api_database.h"
+                      "${CMAKE_SOURCE_DIR}/src/api/game.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_evaluator.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/metadata/condition_grammar.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/game/game.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/game/game_cache.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/game/load_order_handler.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/metadata_list.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/masterlist.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/plugin/plugin_sorter.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/helpers/git_helper.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/helpers/crc.h"
+                      "${CMAKE_SOURCE_DIR}/src/backend/helpers/version.h")
 
 set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -288,33 +301,6 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")
 
-set (LOOT_API_SRC "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/api/api.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/api/api_database.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/api/game.cpp")
-
-set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/api_decorator.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/database_interface.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/exception/error_categories.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/exception/condition_syntax_error.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/exception/cyclic_interaction_error.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/exception/file_access_error.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/exception/game_detection_error.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/exception/git_state_error.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/enum/game_type.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/enum/language_code.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/game_interface.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/loot_version.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/plugin_interface.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/struct/masterlist_info.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/enum/message_type.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/enum/plugin_cleanliness.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/struct/plugin_tags.h"
-                      "${CMAKE_SOURCE_DIR}/include/loot/struct/simple_message.h"
-                      "${CMAKE_SOURCE_DIR}/src/api/api_database.h"
-                      "${CMAKE_SOURCE_DIR}/src/api/game.h")
-
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
 set (LOOT_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/tests/backend/game/game_test.h"
@@ -370,14 +356,12 @@ set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/state/game.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_state_test.h")
 
-source_group("Header Files\\backend" FILES ${LOOT_HEADERS})
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
 source_group("Header Files\\api" FILES ${LOOT_API_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_API_TESTS_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_HEADERS})
 
-source_group("Source Files\\backend" FILES ${LOOT_SRC})
 source_group("Source Files\\gui" FILES ${LOOT_GUI_SRC})
 source_group("Source Files\\api" FILES ${LOOT_API_SRC})
 source_group("Source Files\\tests" FILES ${LOOT_TESTS_SRC})
@@ -451,20 +435,15 @@ ENDIF ()
 # Define Targets
 ##############################
 
-# Common library.
-add_library          (loot_common STATIC ${LOOT_SRC} ${LOOT_HEADERS})
-add_dependencies     (loot_common libespm libgit2 libloadorder pseudosem yaml-cpp)
-target_link_libraries(loot_common ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
-
 # Build tests.
-add_executable       (tests ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
-add_dependencies     (tests loot_common GTest testing-metadata testing-plugins)
-target_link_libraries(tests loot_common ${GTEST_LIBRARIES} ${LIBLOADORDER_LIBRARIES})
+add_executable       (tests ${LOOT_API_SRC} ${LOOT_API_HEADERS} ${LOOT_TESTS_SRC} ${LOOT_TESTS_HEADERS})
+add_dependencies     (tests libespm libgit2 libloadorder pseudosem yaml-cpp GTest testing-metadata testing-plugins)
+target_link_libraries(tests ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES} ${LIBLOADORDER_LIBRARIES})
 
 # Build API.
 add_library          (loot_api ${LOOT_API_SRC} ${LOOT_API_HEADERS})
-add_dependencies     (loot_api loot_common)
-target_link_libraries(loot_api loot_common)
+add_dependencies     (loot_api libespm libgit2 libloadorder pseudosem yaml-cpp)
+target_link_libraries(loot_api ${Boost_LIBRARIES} ${LIBGIT2_LIBRARIES} ${LIBLOADORDER_LIBRARIES} ${LOOT_LIBS} ${YAML_CPP_LIBRARIES})
 
 # Build API tests.
 add_executable       (api-tests ${LOOT_API_TESTS_SRC} ${LOOT_API_TESTS_HEADERS})
@@ -496,7 +475,6 @@ ENDIF ()
 
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set_target_properties (loot_common PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")

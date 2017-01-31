@@ -26,20 +26,21 @@
 
 #include <string>
 
+#include "loot/api_decorator.h"
 #include "loot/metadata/conditional_metadata.h"
 
 namespace loot {
 class File : public ConditionalMetadata {
 public:
-  File();
-  File(const std::string& name, const std::string& display = "",
-       const std::string& condition = "");
+  LOOT_API File();
+  LOOT_API File(const std::string& name, const std::string& display = "",
+                const std::string& condition = "");
 
-  bool operator < (const File& rhs) const;
-  bool operator == (const File& rhs) const;
+  LOOT_API bool operator < (const File& rhs) const;
+  LOOT_API bool operator == (const File& rhs) const;
 
-  std::string Name() const;
-  std::string DisplayName() const;
+  LOOT_API std::string Name() const;
+  LOOT_API std::string DisplayName() const;
 private:
   std::string name_;
   std::string display_;

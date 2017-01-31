@@ -26,21 +26,22 @@
 
 #include <string>
 
+#include "loot/api_decorator.h"
 #include "loot/metadata/conditional_metadata.h"
 
 namespace loot {
 class Tag : public ConditionalMetadata {
 public:
-  Tag();
-  Tag(const std::string& tag,
-      const bool isAddition = true,
-      const std::string& condition = "");
+  LOOT_API Tag();
+  LOOT_API Tag(const std::string& tag,
+               const bool isAddition = true,
+               const std::string& condition = "");
 
-  bool operator < (const Tag& rhs) const;
-  bool operator == (const Tag& rhs) const;
+  LOOT_API bool operator < (const Tag& rhs) const;
+  LOOT_API bool operator == (const Tag& rhs) const;
 
-  bool IsAddition() const;
-  std::string Name() const;
+  LOOT_API bool IsAddition() const;
+  LOOT_API std::string Name() const;
 private:
   std::string name_;
   bool addTag_;
