@@ -51,6 +51,8 @@
 #endif
 
 using std::list;
+using std::lock_guard;
+using std::mutex;
 using std::string;
 using std::thread;
 using std::vector;
@@ -65,8 +67,31 @@ Game::Game(const GameSettings& gameSettings,
   GameSettings(gameSettings),
   lootDataPath_(lootDataPath),
   gameHandle_(CreateGameHandle(gameSettings.Type(), gameSettings.GamePath().string(), localDataPath.string())),
-  pluginsFullyLoaded_(false) {
+  pluginsFullyLoaded_(false),
+  loadOrderSortCount_(0) {
   gameHandle_->IdentifyMainMasterFile(gameSettings.Master());
+}
+
+Game::Game(const Game& game) :
+  GameSettings(game),
+  lootDataPath_(game.lootDataPath_),
+  gameHandle_(game.gameHandle_),
+  pluginsFullyLoaded_(game.pluginsFullyLoaded_),
+  messages_(game.messages_),
+  loadOrderSortCount_(0) {}
+
+Game& Game::operator=(const Game& game) {
+  if (&game != this) {
+    GameSettings::operator=(game);
+
+    lootDataPath_ = game.lootDataPath_;
+    gameHandle_ = game.gameHandle_;
+    pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
+    messages_ = game.messages_;
+    loadOrderSortCount_ = game.loadOrderSortCount_;
+  }
+
+  return *this;
 }
 
 bool Game::IsInstalled(const GameSettings& gameSettings) {
@@ -202,6 +227,39 @@ short Game::GetActiveLoadOrderIndex(const std::string & pluginName, const std::v
   }
 
   return -1;
+}
+
+void Game::IncrementLoadOrderSortCount() {
+  lock_guard<mutex> guard(mutex_);
+
+  ++loadOrderSortCount_;
+}
+
+void Game::DecrementLoadOrderSortCount() {
+  lock_guard<mutex> guard(mutex_);
+
+  if (loadOrderSortCount_ > 0)
+    --loadOrderSortCount_;
+}
+
+std::vector<Message> Game::GetMessages() const {
+  std::vector<Message> output(messages_);
+  if (loadOrderSortCount_ == 0)
+    output.push_back(Message(MessageType::warn, boost::locale::translate("You have not sorted your load order this session.")));
+
+  return output;
+}
+
+void Game::AppendMessage(const Message& message) {
+  lock_guard<mutex> guard(mutex_);
+
+  messages_.push_back(message);
+}
+
+void Game::ClearMessages() {
+  lock_guard<mutex> guard(mutex_);
+
+  messages_.clear();
 }
 
 boost::filesystem::path Game::DetectGamePath(const GameSettings & gameSettings) {

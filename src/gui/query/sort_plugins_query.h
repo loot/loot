@@ -70,8 +70,14 @@ private:
     sendProgressUpdate(frame_, boost::locale::translate("Sorting load order..."));
     std::vector<std::string> plugins;
     try {
+      // Clear any existing game-specific messages, as these only relate to
+      // state that has been changed by sorting.
+      state_.getCurrentGame().ClearMessages();
+
       PluginSorter sorter;
       plugins = sorter.Sort(state_.getCurrentGame(), state_.getLanguage().GetCode());
+
+      state_.getCurrentGame().IncrementLoadOrderSortCount();
     } catch (CyclicInteractionError& e) {
       BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
       state_.getCurrentGame().AppendMessage(Message(MessageType::error,

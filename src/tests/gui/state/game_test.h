@@ -84,7 +84,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
   settings.SetGamePath(localPath);
-  Game game = Game(settings, lootDataPath, localPath);
+  Game game(settings, lootDataPath, localPath);
 
   EXPECT_EQ(GetParam(), game.Type());
   EXPECT_EQ(settings.Name(), game.Name());
@@ -117,6 +117,28 @@ TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
 }
 #endif
 
+TEST_P(GameTest, copyConstructorShouldCopyGameData) {
+  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game1.AppendMessage(Message(MessageType::say, "1"));
+
+  Game game2(game1);
+
+  EXPECT_EQ(game1.MasterlistPath(), game2.MasterlistPath());
+  EXPECT_EQ(game1.ArePluginsFullyLoaded(), game2.ArePluginsFullyLoaded());
+  EXPECT_EQ(game1.GetMessages(), game2.GetMessages());
+}
+
+TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
+  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game1.AppendMessage(Message(MessageType::say, "1"));
+
+  Game game2 = game1;
+
+  EXPECT_EQ(game1.MasterlistPath(), game2.MasterlistPath());
+  EXPECT_EQ(game1.ArePluginsFullyLoaded(), game2.ArePluginsFullyLoaded());
+  EXPECT_EQ(game1.GetMessages(), game2.GetMessages());
+}
+
 TEST_P(GameTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
   EXPECT_FALSE(Game::IsInstalled(GameSettings(GetParam())));
 }
@@ -126,7 +148,7 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
 }
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());
@@ -360,6 +382,76 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 
   loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile2);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
+}
+
+TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+
+  ASSERT_EQ(1, game.GetMessages().size());
+}
+
+TEST_P(GameTest, incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game.IncrementLoadOrderSortCount();
+
+  EXPECT_TRUE(game.GetMessages().empty());
+}
+
+TEST_P(GameTest, decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  auto expectedMessages = game.GetMessages();
+  game.IncrementLoadOrderSortCount();
+  game.DecrementLoadOrderSortCount();
+
+  EXPECT_EQ(expectedMessages, game.GetMessages());
+}
+
+TEST_P(GameTest, decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  auto expectedMessages = game.GetMessages();
+  game.DecrementLoadOrderSortCount();
+
+  EXPECT_EQ(expectedMessages, game.GetMessages());
+}
+
+TEST_P(GameTest, decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  auto expectedMessages = game.GetMessages();
+  game.IncrementLoadOrderSortCount();
+  game.IncrementLoadOrderSortCount();
+  game.DecrementLoadOrderSortCount();
+
+  EXPECT_TRUE(game.GetMessages().empty());
+}
+
+TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  std::vector<Message> messages({
+    Message(MessageType::say, "1"),
+    Message(MessageType::error, "2"),
+  });
+  for (const auto& message : messages)
+    game.AppendMessage(message);
+
+  ASSERT_EQ(3, game.GetMessages().size());
+  EXPECT_EQ(messages[0], game.GetMessages()[0]);
+  EXPECT_EQ(messages[1], game.GetMessages()[1]);
+}
+
+TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  std::vector<Message> messages({
+    Message(MessageType::say, "1"),
+    Message(MessageType::error, "2"),
+  });
+  for (const auto& message : messages)
+    game.AppendMessage(message);
+
+  auto previousSize = game.GetMessages().size();
+
+  game.ClearMessages();
+
+  EXPECT_EQ(previousSize - messages.size(), game.GetMessages().size());
 }
 }
 }

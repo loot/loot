@@ -108,10 +108,6 @@ std::vector<std::string> PluginSorter::Sort(Game& game, const LanguageCode langu
   indexMap_.clear();
   oldLoadOrder_.clear();
 
-  // Clear any existing game-specific messages, as these only relate to
-  // state that has been changed by sorting.
-  game.ClearMessages();
-
   AddPluginVertices(game, language);
 
   // If there aren't any vertices, exit early, because sorting assumes
@@ -164,8 +160,6 @@ std::vector<std::string> PluginSorter::Sort(Game& game, const LanguageCode langu
     plugins.push_back(graph_[vertex].GetName());
     BOOST_LOG_TRIVIAL(info) << '\t' << plugins.back();
   }
-
-  game.IncrementLoadOrderSortCount();
 
   return plugins;
 }

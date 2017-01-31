@@ -52,26 +52,17 @@ public:
   std::shared_ptr<const Plugin> GetPlugin(const std::string& pluginName) const;
   void AddPlugin(const Plugin&& plugin);
 
-  std::vector<Message> GetMessages() const;
-  void AppendMessage(const Message& message);
-
   std::vector<std::string> GetLoadOrder() const;
   void StoreLoadOrder(const std::vector<std::string>& loadOrder);
 
-  void IncrementLoadOrderSortCount();
-  void DecrementLoadOrderSortCount();
-
   void ClearCachedConditions();
   void ClearCachedPlugins();
-  void ClearMessages();
 private:
   Masterlist masterlist_;
   MetadataList userlist_;
   std::unordered_map<std::string, bool> conditions_;
   std::unordered_map<std::string, std::shared_ptr<const Plugin>> plugins_;
-  std::vector<Message> messages_;
   std::vector<std::string> loadOrder_;
-  unsigned short loadOrderSortCount_;
 
   mutable std::mutex mutex_;
 };

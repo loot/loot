@@ -90,29 +90,6 @@ TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadO
   EXPECT_TRUE(std::equal(begin(sorted), end(sorted), begin(expectedSortedOrder)));
 }
 
-TEST_P(PluginSorterTest, sortingShouldClearExistingGameMessages) {
-  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
-  game_.AppendMessage(Message(MessageType::say, "1"));
-  ASSERT_FALSE(game_.GetMessages().empty());
-
-  PluginSorter ps;
-  std::vector<std::string> sorted = ps.Sort(game_, LanguageCode::english);
-  EXPECT_TRUE(game_.GetMessages().empty());
-}
-
-TEST_P(PluginSorterTest, failedSortShouldNotClearExistingGameMessages) {
-  ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
-  PluginMetadata plugin(blankEsm);
-  plugin.LoadAfter({File(blankMasterDependentEsm)});
-  game_.GetUserlist().AddPlugin(plugin);
-  game_.AppendMessage(Message(MessageType::say, "1"));
-  ASSERT_FALSE(game_.GetMessages().empty());
-
-  PluginSorter ps;
-  EXPECT_THROW(ps.Sort(game_, LanguageCode::english), CyclicInteractionError);
-  EXPECT_FALSE(game_.GetMessages().empty());
-}
-
 TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
   ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankDifferentMasterDependentEsp);

@@ -25,6 +25,7 @@
 #ifndef LOOT_GUI_STATE_GAME
 #define LOOT_GUI_STATE_GAME
 
+#include <mutex>
 #include <string>
 
 #include <boost/filesystem.hpp>
@@ -39,6 +40,9 @@ public:
   Game(const GameSettings& gameSettings,
        const boost::filesystem::path& lootDataPath,
        const boost::filesystem::path& localDataPath = "");
+  Game(const Game& game);
+
+  Game& operator=(const Game& game);
 
   using GameSettings::Type;
 
@@ -62,6 +66,13 @@ public:
 
   short GetActiveLoadOrderIndex(const std::string & pluginName) const;
   short GetActiveLoadOrderIndex(const std::string & pluginName, const std::vector<std::string>& loadOrder) const;
+
+  void IncrementLoadOrderSortCount();
+  void DecrementLoadOrderSortCount();
+
+  std::vector<Message> GetMessages() const;
+  void AppendMessage(const Message& message);
+  void ClearMessages();
 private:
 #ifdef _WIN32
   static std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
@@ -70,10 +81,15 @@ private:
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                               const boost::filesystem::path& backupDirectory);
 
-  const boost::filesystem::path lootDataPath_;
+  boost::filesystem::path lootDataPath_;
 
   std::shared_ptr<GameInterface> gameHandle_;
   bool pluginsFullyLoaded_;
+
+  std::vector<Message> messages_;
+  unsigned short loadOrderSortCount_;
+
+  mutable std::mutex mutex_;
 };
 }
 }

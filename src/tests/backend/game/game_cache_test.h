@@ -55,34 +55,6 @@ INSTANTIATE_TEST_CASE_P(,
                         ::testing::Values(
                           GameType::tes5));
 
-TEST_P(GameCacheTest, copyConstructorShouldCopyCachedData) {
-  cache_.CacheCondition(condition, true);
-  cache_.AddPlugin(Plugin(game_, blankEsm, true));
-  Message expectedMessage(MessageType::say, "1");
-  cache_.AppendMessage(expectedMessage);
-  cache_.IncrementLoadOrderSortCount();
-
-  GameCache otherCache(cache_);
-  EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition(conditionLowercase));
-  EXPECT_EQ(blankEsm, otherCache.GetPlugin(blankEsm)->GetName());
-  ASSERT_EQ(1, otherCache.GetMessages().size());
-  EXPECT_EQ(expectedMessage, otherCache.GetMessages()[0]);
-}
-
-TEST_P(GameCacheTest, assignmentOperatorShouldCopyCachedData) {
-  cache_.CacheCondition(condition, true);
-  cache_.AddPlugin(Plugin(game_, blankEsm, true));
-  Message expectedMessage(MessageType::say, "1");
-  cache_.AppendMessage(expectedMessage);
-  cache_.IncrementLoadOrderSortCount();
-
-  GameCache otherCache = cache_;
-  EXPECT_EQ(std::make_pair(true, true), otherCache.GetCachedCondition(conditionLowercase));
-  EXPECT_EQ(blankEsm, otherCache.GetPlugin(blankEsm)->GetName());
-  ASSERT_EQ(1, otherCache.GetMessages().size());
-  EXPECT_EQ(expectedMessage, otherCache.GetMessages()[0]);
-}
-
 TEST_P(GameCacheTest, gettingATrueConditionShouldReturnATrueTruePair) {
   EXPECT_NO_THROW(cache_.CacheCondition(condition, true));
 
@@ -153,68 +125,6 @@ TEST_P(GameCacheTest, clearingCachedPluginsShouldClearAnyCachedPlugins) {
   cache_.ClearCachedPlugins();
 
   EXPECT_TRUE(cache_.GetPlugins().empty());
-}
-
-TEST_P(GameCacheTest, aMessageShouldBeCachedByDefault) {
-  ASSERT_EQ(1, cache_.GetMessages().size());
-}
-
-TEST_P(GameCacheTest, incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
-  cache_.IncrementLoadOrderSortCount();
-
-  EXPECT_TRUE(cache_.GetMessages().empty());
-}
-
-TEST_P(GameCacheTest, decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
-  auto expectedMessages = cache_.GetMessages();
-  cache_.IncrementLoadOrderSortCount();
-  cache_.DecrementLoadOrderSortCount();
-
-  EXPECT_EQ(expectedMessages, cache_.GetMessages());
-}
-
-TEST_P(GameCacheTest, decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
-  auto expectedMessages = cache_.GetMessages();
-  cache_.DecrementLoadOrderSortCount();
-
-  EXPECT_EQ(expectedMessages, cache_.GetMessages());
-}
-
-TEST_P(GameCacheTest, decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
-  auto expectedMessages = cache_.GetMessages();
-  cache_.IncrementLoadOrderSortCount();
-  cache_.IncrementLoadOrderSortCount();
-  cache_.DecrementLoadOrderSortCount();
-
-  EXPECT_TRUE(cache_.GetMessages().empty());
-}
-
-TEST_P(GameCacheTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
-  std::vector<Message> messages({
-      Message(MessageType::say, "1"),
-      Message(MessageType::error, "2"),
-  });
-  for (const auto& message : messages)
-    cache_.AppendMessage(message);
-
-  ASSERT_EQ(3, cache_.GetMessages().size());
-  EXPECT_EQ(messages[0], cache_.GetMessages()[0]);
-  EXPECT_EQ(messages[1], cache_.GetMessages()[1]);
-}
-
-TEST_P(GameCacheTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  std::vector<Message> messages({
-      Message(MessageType::say, "1"),
-      Message(MessageType::error, "2"),
-  });
-  for (const auto& message : messages)
-    cache_.AppendMessage(message);
-
-  auto previousSize = cache_.GetMessages().size();
-
-  cache_.ClearMessages();
-
-  EXPECT_EQ(previousSize - messages.size(), cache_.GetMessages().size());
 }
 }
 }

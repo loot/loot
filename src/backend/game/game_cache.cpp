@@ -37,15 +37,13 @@ using std::pair;
 using std::string;
 
 namespace loot {
-GameCache::GameCache() : loadOrderSortCount_(0) {}
+GameCache::GameCache() {}
 
 GameCache::GameCache(const GameCache& cache) :
   masterlist_(cache.masterlist_),
   userlist_(cache.userlist_),
   conditions_(cache.conditions_),
-  plugins_(cache.plugins_),
-  messages_(cache.messages_),
-  loadOrderSortCount_(cache.loadOrderSortCount_) {}
+  plugins_(cache.plugins_) {}
 
 GameCache& GameCache::operator=(const GameCache& cache) {
   if (&cache != this) {
@@ -53,8 +51,6 @@ GameCache& GameCache::operator=(const GameCache& cache) {
     userlist_ = cache.userlist_;
     conditions_ = cache.conditions_;
     plugins_ = cache.plugins_;
-    messages_ = cache.messages_;
-    loadOrderSortCount_ = cache.loadOrderSortCount_;
   }
 
   return *this;
@@ -114,39 +110,12 @@ void GameCache::AddPlugin(const Plugin&& plugin) {
   plugins_.emplace(plugin.GetLowercasedName(), std::make_shared<Plugin>(std::move(plugin)));
 }
 
-std::vector<Message> GameCache::GetMessages() const {
-  std::vector<Message> output(messages_);
-  if (loadOrderSortCount_ == 0)
-    output.push_back(Message(MessageType::warn, boost::locale::translate("You have not sorted your load order this session.")));
-
-  return output;
-}
-
-void GameCache::AppendMessage(const Message& message) {
-  lock_guard<mutex> guard(mutex_);
-
-  messages_.push_back(message);
-}
-
 std::vector<std::string> GameCache::GetLoadOrder() const {
   return loadOrder_;
 }
 
 void GameCache::StoreLoadOrder(const std::vector<std::string>& loadOrder) {
   loadOrder_ = loadOrder;
-}
-
-void GameCache::IncrementLoadOrderSortCount() {
-  lock_guard<mutex> guard(mutex_);
-
-  ++loadOrderSortCount_;
-}
-
-void GameCache::DecrementLoadOrderSortCount() {
-  lock_guard<mutex> guard(mutex_);
-
-  if (loadOrderSortCount_ > 0)
-    --loadOrderSortCount_;
 }
 
 void GameCache::ClearCachedConditions() {
@@ -159,10 +128,5 @@ void GameCache::ClearCachedPlugins() {
   lock_guard<mutex> guard(mutex_);
 
   plugins_.clear();
-}
-void GameCache::ClearMessages() {
-  lock_guard<mutex> guard(mutex_);
-
-  messages_.clear();
 }
 }
