@@ -133,9 +133,13 @@ std::vector<Message> ApiDatabase::GetGeneralMessages() {
   return masterlistMessages;
 }
 
-PluginMetadata ApiDatabase::GetPluginMetadata(const std::string& plugin) {
+PluginMetadata ApiDatabase::GetPluginMetadata(const std::string& plugin,
+                                              bool includeUserMetadata) {
   PluginMetadata metadata = game_.GetMasterlist().FindPlugin(plugin);
-  metadata.MergeMetadata(game_.GetUserlist().FindPlugin(plugin));
+
+  if (includeUserMetadata) {
+    metadata.MergeMetadata(game_.GetUserlist().FindPlugin(plugin));
+  }
 
   return metadata;
 }

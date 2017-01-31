@@ -179,11 +179,16 @@ public:
    *  @brief Get all a plugin's loaded metadata.
    *  @param plugin
    *         The filename of the plugin to look up metadata for.
+   *  @param includeUserMetadata
+   *         If true, any user metadata the plugin has is included in the
+   *         returned metadata, otherwise the metadata returned only includes
+   *         metadata from the masterlist.
    *  @returns A PluginMetadata object containing all the plugin's metadata.
    *           If the plugin has no metadata, PluginMetadata.IsNameOnly()
    *           will return true.
    */
-  virtual PluginMetadata GetPluginMetadata(const std::string& plugin) = 0;
+  virtual PluginMetadata GetPluginMetadata(const std::string& plugin,
+                                           bool includeUserMetadata = true) = 0;
 
   /**
   *  @brief Get a plugin's metadata loaded from the given userlist.

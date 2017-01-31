@@ -62,7 +62,8 @@ struct ApiDatabase : public DatabaseInterface {
 
   std::vector<Message> GetGeneralMessages();
 
-  PluginMetadata GetPluginMetadata(const std::string& plugin);
+  PluginMetadata GetPluginMetadata(const std::string& plugin,
+                                   bool includeUserMetadata = true);
 
   PluginMetadata GetPluginUserMetadata(const std::string& plugin);
 

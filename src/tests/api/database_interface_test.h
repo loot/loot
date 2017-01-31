@@ -355,16 +355,29 @@ TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnAnEmptyPluginMetadata
   EXPECT_TRUE(metadata.HasNameOnly());
 }
 
-TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnMergedMasterAndUserMetadataForTheGivenPlugin) {
+TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnMergedMasterAndUserMetadataForTheGivenPluginIfIncludeUserMetadataIsTrue) {
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(GenerateUserlist());
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
 
-  auto metadata = db_->GetPluginMetadata(blankEsm);
+  auto metadata = db_->GetPluginMetadata(blankEsm, true);
 
   std::set<File> expectedLoadAfter({
     File(masterFile),
     File(blankDifferentEsm),
+  });
+  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+}
+
+TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnOnlyMasterlistMetadataForTheGivenPluginIfIncludeUserMetadataIsFalse) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_NO_THROW(GenerateUserlist());
+  ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
+
+  auto metadata = db_->GetPluginMetadata(blankEsm, false);
+
+  std::set<File> expectedLoadAfter({
+    File(masterFile),
   });
   EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
 }
