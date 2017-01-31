@@ -67,7 +67,7 @@ public:
   }
 
 private:
-  static std::vector<EditorMessage> toEditorMessages(std::vector<Message> messages, const LanguageCode language) {
+  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const LanguageCode language) {
     std::vector<EditorMessage> list;
 
     for (const auto& message : messages) {
@@ -129,7 +129,7 @@ private:
     return pluginNode;
   }
 
-  std::string generateJsonResponse(std::vector<std::shared_ptr<const PluginInterface>> plugins) {
+  std::string generateJsonResponse(const std::vector<std::shared_ptr<const PluginInterface>>& plugins) {
     YAML::Node gameNode;
 
     // ID the game using its folder value.

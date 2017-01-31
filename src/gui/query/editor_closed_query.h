@@ -148,7 +148,7 @@ private:
       return "null";
   }
 
-  static std::vector<Message> toMessages(std::vector<EditorMessage> messages) {
+  static std::vector<Message> toMessages(const std::vector<EditorMessage>& messages) {
     std::vector<Message> list;
 
     for (const auto& message : messages) {
