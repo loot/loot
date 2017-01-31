@@ -285,7 +285,6 @@ TEST_P(MetadataListTest, erasePluginShouldRemoveStoredMetadataForTheGivenPlugin)
 
 TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePluginsStoredInTeMetadataList) {
   Game game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   MetadataList metadataList;
   ASSERT_NO_THROW(metadataList.Load(metadataPath));

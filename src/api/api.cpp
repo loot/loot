@@ -27,7 +27,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/log/core.hpp>
 
-#include "api/game.h"
+#include "api/game/game.h"
 
 namespace fs = boost::filesystem;
 
@@ -65,6 +65,6 @@ LOOT_API std::shared_ptr<GameInterface> CreateGameHandle(const GameType game,
   if (!gameLocalPath.empty() && !fs::is_directory(resolvedGameLocalPath))
     throw std::invalid_argument("Given game path \"" + gameLocalPath + "\" does not resolve to a valid directory.");
 
-  return std::make_shared<api::Game>(game, resolvedGamePath, resolvedGameLocalPath);
+  return std::make_shared<Game>(game, resolvedGamePath, resolvedGameLocalPath);
 }
 }

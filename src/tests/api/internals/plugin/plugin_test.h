@@ -44,8 +44,6 @@ protected:
   void SetUp() {
     CommonGameTestFixture::SetUp();
 
-    game_.Init();
-
     // Write out an empty file.
     boost::filesystem::ofstream out(dataPath / emptyFile);
     out.close();

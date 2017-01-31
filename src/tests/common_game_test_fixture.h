@@ -56,9 +56,11 @@ protected:
     blankDifferentMasterDependentEsp("Blank - Different Master Dependent.esp"),
     blankPluginDependentEsp("Blank - Plugin Dependent.esp"),
     blankDifferentPluginDependentEsp("Blank - Different Plugin Dependent.esp"),
-    blankEsmCrc(getBlankEsmCrc()) {}
+    blankEsmCrc(getBlankEsmCrc()) {
+    assertInitialState();
+  }
 
-  void SetUp() {
+  void assertInitialState() {
     ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
     ASSERT_TRUE(boost::filesystem::exists(localPath));
 

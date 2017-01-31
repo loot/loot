@@ -78,7 +78,7 @@ protected:
       blankPluginDependentEsp,
       blankDifferentPluginDependentEsp,
     });
-    game_.LoadPlugins(plugins, masterFile, headersOnly);
+    game_.LoadPlugins(plugins, headersOnly);
   }
 
   const boost::filesystem::path resourcePath;
@@ -275,7 +275,6 @@ TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatMatchesTheActualPlugi
 }
 
 TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatMatchesTheActualCachedPluginCrcShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
 
   Grammar grammar(evaluator_);
@@ -304,7 +303,6 @@ TEST_P(ConditionGrammarTest, aChecksumConditionWithACrcThatDoesNotMatchTheActual
 }
 
 TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatEqualsTheActualPluginVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -320,7 +318,6 @@ TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatEqualsTheA
 }
 
 TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatDoesNotEqualTheActualPluginVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -336,7 +333,6 @@ TEST_P(ConditionGrammarTest, aVersionEqualityConditionWithAVersionThatDoesNotEqu
 }
 
 TEST_P(ConditionGrammarTest, aVersionEqualityConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -352,7 +348,6 @@ TEST_P(ConditionGrammarTest, aVersionEqualityConditionForAPluginWithNoVersionSho
 }
 
 TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatDoesNotEqualTheActualPluginVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -368,7 +363,6 @@ TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatDoesNotE
 }
 
 TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatEqualsTheActualPluginVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -384,7 +378,6 @@ TEST_P(ConditionGrammarTest, aVersionInequalityConditionWithAVersionThatEqualsTh
 }
 
 TEST_P(ConditionGrammarTest, aVersionInequalityConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -400,7 +393,6 @@ TEST_P(ConditionGrammarTest, aVersionInequalityConditionForAPluginWithNoVersionS
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionLessThanTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -416,7 +408,6 @@ TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionL
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -432,7 +423,6 @@ TEST_P(ConditionGrammarTest, aVersionLessThanConditionWithAnActualPluginVersionE
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -448,7 +438,6 @@ TEST_P(ConditionGrammarTest, aVersionLessThanConditionForAPluginWithNoVersionSho
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersionGreaterThanTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -464,7 +453,6 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersi
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -480,7 +468,6 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionWithAnActualPluginVersi
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -496,7 +483,6 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanConditionForAPluginWithNoVersion
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -512,7 +498,6 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPlugi
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPluginVersionGreaterThanTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -528,7 +513,6 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionWithAnActualPlugi
 }
 
 TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionForAPluginWithNoVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -544,7 +528,6 @@ TEST_P(ConditionGrammarTest, aVersionLessThanOrEqualToConditionForAPluginWithNoV
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPluginVersionEqualToTheGivenVersionShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -560,7 +543,6 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPl
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPluginVersionLessThanTheGivenVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -576,7 +558,6 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionWithAnActualPl
 }
 
 TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionForAPluginWithNoVersionShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
   ASSERT_NO_THROW(loadInstalledPlugins(game_, true));
 
   Grammar grammar(evaluator_);
@@ -592,7 +573,6 @@ TEST_P(ConditionGrammarTest, aVersionGreaterThanOrEqualToConditionForAPluginWith
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsActiveShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("active(\"" + blankEsm + "\")");
@@ -607,7 +587,6 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsActiveShouldEvalu
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsNotActiveShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("active(\"" + blankEsp + "\")");
@@ -622,7 +601,6 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithAPluginThatIsNotActiveShouldEv
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingAnActivePluginShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("active(\"Blank\\.esm\")");
@@ -637,7 +615,6 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingAnActivePluginSh
 }
 
 TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingNoActivePluginsShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("active(\"Blank\\.esp\")");
@@ -652,7 +629,6 @@ TEST_P(ConditionGrammarTest, anActiveConditionWithARegexMatchingNoActivePluginsS
 }
 
 TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingMoreThanOnePluginThatIsActiveShouldEvaluateToTrue) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("many_active(\"Blank( - Different Master Dependent)?\\.es(m|p)\")");
@@ -667,7 +643,6 @@ TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingMoreThanOnePl
 }
 
 TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingOnlyOnePluginThatIsActiveShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("many_active(\"Blank\\.esm\")");
@@ -682,7 +657,6 @@ TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingOnlyOnePlugin
 }
 
 TEST_P(ConditionGrammarTest, aManyActiveConditionWithARegexMatchingNoPluginsThatAreActiveShouldEvaluateToFalse) {
-  ASSERT_NO_THROW(game_.Init());
 
   Grammar grammar(evaluator_);
   std::string condition("many_active(\"Blank\\.esp\")");

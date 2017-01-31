@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2016    WrinklyNinja
+    Copyright (C) 2013-2016    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -31,33 +31,53 @@
 
 #include "api/game/game_cache.h"
 #include "api/game/load_order_handler.h"
+#include "loot/game_interface.h"
 
 namespace loot {
-class Game : public GameCache {
+class Game : public GameInterface, public GameCache {
 public:
   Game(const GameType gameType,
-       const boost::filesystem::path& gamePath,
-       const boost::filesystem::path& localDataPath = "");
+       const boost::filesystem::path& gamePath = "",
+       const boost::filesystem::path& gameLocalDataPath = "");
+
+  // Internal Methods //
+  //////////////////////
 
   GameType Type() const;
   boost::filesystem::path DataPath() const;
   std::string GetArchiveFileExtension() const;
 
-  void Init();
+  // Game Interface Methods //
+  ////////////////////////////
 
-  void LoadPlugins(const std::vector<std::string>& plugins, const std::string& masterFile, bool headersOnly);
+  std::shared_ptr<DatabaseInterface> GetDatabase();
+
+  bool IsValidPlugin(const std::string& plugin) const;
+
+  void LoadPlugins(const std::vector<std::string>& plugins, bool loadHeadersOnly);
+
+  std::shared_ptr<const PluginInterface> GetPlugin(const std::string& pluginName) const;
+
+  std::set<std::shared_ptr<const PluginInterface>> GetLoadedPlugins() const;
+
+  void IdentifyMainMasterFile(const std::string& masterFile);
+
+  std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);
 
   bool IsPluginActive(const std::string& pluginName) const;
 
   std::vector<std::string> GetLoadOrder() const;
+
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
 private:
+  std::shared_ptr<DatabaseInterface> database_;
+
   const GameType type_;
   const boost::filesystem::path gamePath_;
   const boost::filesystem::path localDataPath_;
 
   LoadOrderHandler loadOrderHandler_;
+  std::string masterFile_;
 };
 }
-
 #endif

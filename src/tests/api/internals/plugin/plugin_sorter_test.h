@@ -36,12 +36,6 @@ class PluginSorterTest : public CommonGameTestFixture {
 protected:
   PluginSorterTest() : game_(GetParam(), dataPath.parent_path(), localPath) {}
 
-  inline virtual void SetUp() {
-    CommonGameTestFixture::SetUp();
-
-    ASSERT_NO_THROW(game_.Init());
-  }
-
   void loadInstalledPlugins(Game& game_, bool headersOnly) {
     const std::vector<std::string> plugins({
       masterFile,
@@ -56,7 +50,8 @@ protected:
       blankPluginDependentEsp,
       blankDifferentPluginDependentEsp,
     });
-    game_.LoadPlugins(plugins, masterFile, headersOnly);
+    game_.IdentifyMainMasterFile(masterFile);
+    game_.LoadPlugins(plugins, headersOnly);
   }
 
   Game game_;

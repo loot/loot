@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2012-2016    WrinklyNinja
+    Copyright (C) 2013-2016    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -33,6 +33,8 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
+#include "api/api_database.h"
+#include "api/plugin/plugin_sorter.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/game_detection_error.h"
 
@@ -62,7 +64,14 @@ Game::Game(const GameType gameType,
            const boost::filesystem::path& localDataPath) :
   type_(gameType),
   gamePath_(gamePath),
-  localDataPath_(localDataPath) {}
+  localDataPath_(localDataPath) {
+  BOOST_LOG_TRIVIAL(info) << "Initialising load order data for game of type " << (int)type_ << " at: " << gamePath_;
+
+  loadOrderHandler_.Init(type_, gamePath_, localDataPath_);
+  StoreLoadOrder(loadOrderHandler_.GetLoadOrder());
+
+  database_ = std::make_shared<ApiDatabase>(*this);
+}
 
 GameType Game::Type() const {
   return type_;
@@ -79,14 +88,15 @@ std::string Game::GetArchiveFileExtension() const {
     return ".bsa";
 }
 
-void Game::Init() {
-  BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game of type " << (int) type_ << " at: " << gamePath_;
-
-  loadOrderHandler_.Init(type_, gamePath_, localDataPath_);
-  StoreLoadOrder(loadOrderHandler_.GetLoadOrder());
+std::shared_ptr<DatabaseInterface> Game::GetDatabase() {
+  return database_;
 }
 
-void Game::LoadPlugins(const std::vector<std::string>& plugins, const std::string& masterFile, bool headersOnly) {
+bool Game::IsValidPlugin(const std::string& plugin) const {
+  return Plugin::IsValid(plugin, *this);
+}
+
+void Game::LoadPlugins(const std::vector<std::string>& plugins, bool loadHeadersOnly) {
   uintmax_t meanFileSize = 0;
   std::multimap<uintmax_t, string> sizeMap;
 
@@ -138,10 +148,10 @@ void Game::LoadPlugins(const std::vector<std::string>& plugins, const std::strin
     threads.push_back(thread([&]() {
       for (auto pluginName : pluginGroup) {
         BOOST_LOG_TRIVIAL(trace) << "Loading " << pluginName;
-        if (boost::iequals(pluginName, masterFile))
+        if (boost::iequals(pluginName, masterFile_))
           AddPlugin(Plugin(*this, pluginName, true));
         else
-          AddPlugin(Plugin(*this, pluginName, headersOnly));
+          AddPlugin(Plugin(*this, pluginName, loadHeadersOnly));
       }
     }));
   }
@@ -153,11 +163,36 @@ void Game::LoadPlugins(const std::vector<std::string>& plugins, const std::strin
   }
 }
 
-bool Game::IsPluginActive(const std::string& pluginName) const {
+std::shared_ptr<const PluginInterface> Game::GetPlugin(const std::string& pluginName) const {
+  return std::static_pointer_cast<const PluginInterface>(GameCache::GetPlugin(pluginName));
+}
+
+std::set<std::shared_ptr<const PluginInterface>> Game::GetLoadedPlugins() const {
+  std::set<std::shared_ptr<const PluginInterface>> interfacePointers;
+  for (auto& plugin : GameCache::GetPlugins()) {
+    interfacePointers.insert(std::static_pointer_cast<const PluginInterface>(plugin));
+  }
+
+  return interfacePointers;
+}
+
+void Game::IdentifyMainMasterFile(const std::string& masterFile) {
+  masterFile_ = masterFile;
+}
+
+std::vector<std::string> Game::SortPlugins(const std::vector<std::string>& plugins) {
+  LoadPlugins(plugins, false);
+
+  //Sort plugins into their load order.
+  PluginSorter sorter;
+  return sorter.Sort(*this);
+}
+
+bool Game::IsPluginActive(const std::string& plugin) const {
   try {
-    return GetPlugin(pluginName)->IsActive();
+    return std::static_pointer_cast<const Plugin>(GetPlugin(plugin))->IsActive();
   } catch (...) {
-    return loadOrderHandler_.IsPluginActive(pluginName);
+    return loadOrderHandler_.IsPluginActive(plugin);
   }
 }
 

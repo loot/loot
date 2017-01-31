@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-01-31 20:43+0000\n"
+"POT-Creation-Date: 2017-02-02 07:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -690,18 +690,6 @@ msgstr ""
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:171 src/gui/query/metadata_query.h:182
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr ""
-
-#: src/gui/query/metadata_query.h:174
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr ""
-
-#: src/gui/query/metadata_query.h:188
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr ""
-
 #: src/gui/query/query.h:40
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
@@ -716,17 +704,29 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/game.cpp:253
+#: src/gui/state/game.cpp:144 src/gui/state/game.cpp:155
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr ""
+
+#: src/gui/state/game.cpp:147
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr ""
+
+#: src/gui/state/game.cpp:161
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr ""
+
+#: src/gui/state/game.cpp:296
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
 
-#: src/gui/state/game.cpp:282
+#: src/gui/state/game.cpp:325
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:326
+#: src/gui/state/game.cpp:369
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%. Try updating your "
 "masterlist to resolve the error. If the error is with your user metadata, "
@@ -754,79 +754,79 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:147
+#: src/api/helpers/git_helper.cpp:147
 msgid ""
 "An error occurred while trying to clone the remote masterlist repository."
 msgstr ""
 
-#: src/backend/helpers/git_helper.cpp:196
+#: src/api/helpers/git_helper.cpp:196
 msgid ""
 "An error occurred while trying to update the masterlist. This could be due "
 "to a server-side error. Try again in a few minutes."
 msgstr ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:89
+#: src/api/metadata/plugin_cleaning_data.cpp:89
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:90
+#: src/api/metadata/plugin_cleaning_data.cpp:90
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:91
+#: src/api/metadata/plugin_cleaning_data.cpp:91
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:95
+#: src/api/metadata/plugin_cleaning_data.cpp:95
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:97
+#: src/api/metadata/plugin_cleaning_data.cpp:97
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:100
-#: src/backend/metadata/plugin_cleaning_data.cpp:102
-#: src/backend/metadata/plugin_cleaning_data.cpp:104
+#: src/api/metadata/plugin_cleaning_data.cpp:100
+#: src/api/metadata/plugin_cleaning_data.cpp:102
+#: src/api/metadata/plugin_cleaning_data.cpp:104
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:107
-#: src/backend/metadata/plugin_cleaning_data.cpp:109
-#: src/backend/metadata/plugin_cleaning_data.cpp:111
+#: src/api/metadata/plugin_cleaning_data.cpp:107
+#: src/api/metadata/plugin_cleaning_data.cpp:109
+#: src/api/metadata/plugin_cleaning_data.cpp:111
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/backend/plugin/plugin.cpp:116
+#: src/api/plugin/plugin.cpp:116
 msgid "Cannot read \"%1%\". Details: %2%"
 msgstr ""
 
-#: src/backend/masterlist.cpp:46
+#: src/api/masterlist.cpp:46
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:114 src/backend/masterlist.cpp:128
+#: src/api/masterlist.cpp:114 src/api/masterlist.cpp:128
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
 "this error happens again, try deleting the \".git\" folder in %1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:235
+#: src/api/masterlist.cpp:235
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
 "%1%."
 msgstr ""
 
-#: src/backend/masterlist.cpp:249
+#: src/api/masterlist.cpp:249
 msgid ""
 "Masterlist revision %1%: %2%. The latest masterlist revision contains a "
 "syntax error, LOOT is using the most recent valid revision instead. Syntax "

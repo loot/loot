@@ -58,7 +58,7 @@ public:
    *         The filename of the file to check.
    * @returns True if the file is a valid plugin, false otherwise.
    */
-  virtual bool IsValidPlugin(const std::string& plugin) = 0;
+  virtual bool IsValidPlugin(const std::string& plugin) const = 0;
 
   /**
    * @brief Parses plugins and loads their data.
@@ -83,7 +83,7 @@ public:
    *          until the ``LoadPlugins()`` or ``SortPlugins()`` functions are
    *          next called or this GameInterface is destroyed.
    */
-  virtual std::shared_ptr<const PluginInterface> GetPlugin(const std::string& pluginName) = 0;
+  virtual std::shared_ptr<const PluginInterface> GetPlugin(const std::string& pluginName) const = 0;
 
   /**
    * @brief Get a set of const references to all loaded plugins' PluginInterface
@@ -92,7 +92,7 @@ public:
    *          valid until the ``LoadPlugins()`` or ``SortPlugins()`` functions
    *          are next called or this GameInterface is destroyed.
    */
-  virtual std::set<std::shared_ptr<const PluginInterface>> GetLoadedPlugins() = 0;
+  virtual std::set<std::shared_ptr<const PluginInterface>> GetLoadedPlugins() const = 0;
 
   /**
   *  @}
@@ -133,13 +133,13 @@ public:
    *         The filename of the plugin for which to check the active state.
    * @returns True if the plugin is active, false otherwise.
    */
-  virtual bool IsPluginActive(const std::string& plugin) = 0;
+  virtual bool IsPluginActive(const std::string& plugin) const = 0;
 
   /**
    * @brief Get the current load order.
    * @returns A vector of plugin filenames in their load order.
    */
-  virtual std::vector<std::string> GetLoadOrder() = 0;
+  virtual std::vector<std::string> GetLoadOrder() const = 0;
 
   /**
    * @brief Set the game's load order.

@@ -48,7 +48,7 @@ protected:
       blankPluginDependentEsp,
       blankDifferentPluginDependentEsp,
     });
-    game.LoadPlugins(plugins, masterFile, headersOnly);
+    game.LoadPlugins(plugins, headersOnly);
   }
 };
 
@@ -71,6 +71,26 @@ TEST_P(GameTest, constructingShouldStoreTheGivenValues) {
   EXPECT_EQ(dataPath, game.DataPath());
 }
 
+#ifndef _WIN32
+        // Testing on Windows will find real game installs in the Registry, so cannot
+        // test autodetection fully unless on Linux.
+TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
+  EXPECT_THROW(Game(GetParam(), "", localPath), std::invalid_argument);
+}
+
+TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {
+  EXPECT_THROW(Game(GetParam(), dataPath.parent_path()), std::system_error);
+}
+#else
+TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
+  EXPECT_NO_THROW(Game(GetParam(), dataPath.parent_path(), localPath));
+}
+#endif
+
+TEST_P(GameTest, constructingShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
+  EXPECT_NO_THROW(Game(GetParam(), dataPath.parent_path(), localPath));
+}
+
 TEST_P(GameTest, getArchiveFileExtensionShouldReturnDotBa2IfGameIdIsFallout4AndDotBsaOtherwise) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
 
@@ -80,35 +100,8 @@ TEST_P(GameTest, getArchiveFileExtensionShouldReturnDotBa2IfGameIdIsFallout4AndD
     EXPECT_EQ(".bsa", game.GetArchiveFileExtension());
 }
 
-#ifndef _WIN32
-        // Testing on Windows will find real game installs in the Registry, so cannot
-        // test autodetection fully unless on Linux.
-TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  Game game = Game(GetParam(), "", localPath);
-  EXPECT_THROW(game.Init(), std::invalid_argument);
-}
-
-TEST_P(GameTest, initShouldThrowOnLinuxIfLocalPathIsNotGiven) {
-  Game game = Game(GetParam(), dataPath.parent_path());
-  EXPECT_THROW(game.Init(), std::system_error);
-}
-#else
-TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
-  Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-
-  EXPECT_NO_THROW(game.Init());
-}
-#endif
-
-TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
-  Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-
-  EXPECT_NO_THROW(game.Init());
-}
-
 TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(loadInstalledPlugins(game, true));
   EXPECT_EQ(11, game.GetPlugins().size());
@@ -124,7 +117,6 @@ TEST_P(GameTest, loadPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalle
 
 TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(loadInstalledPlugins(game, false));
   EXPECT_EQ(11, game.GetPlugins().size());
@@ -138,72 +130,44 @@ TEST_P(GameTest, loadPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugi
   EXPECT_EQ(blankEsmCrc, plugin->GetCRC());
 }
 
-TEST_P(GameTest, shouldThrowIfCheckingIfPluginThatIsntLoadedIsActiveAndGameHasNotBeenInitialised) {
+TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasNotBeenLoaded) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-
-  EXPECT_THROW(game.IsPluginActive(blankEsm), std::system_error);
-}
-
-TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
-  Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
 
-TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasNotBeenLoadedAndTheGameHasBeenInitialised) {
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasNotBeenLoaded) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
 
-TEST_P(GameTest, shouldShowBlankEsmAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
+TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoaded) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-
-  ASSERT_NO_THROW(loadInstalledPlugins(game, true));
-
-  EXPECT_FALSE(game.IsPluginActive(blankEsm));
-}
-
-TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndGameHasNotBeenInitialised) {
-  Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-
-  ASSERT_NO_THROW(loadInstalledPlugins(game, true));
-
-  EXPECT_FALSE(game.IsPluginActive(blankEsp));
-}
-
-TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
-  Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   ASSERT_NO_THROW(loadInstalledPlugins(game, true));
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
 
-TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoadedAndTheGameHasBeenInitialised) {
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItsHeaderHasBeenLoaded) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   ASSERT_NO_THROW(loadInstalledPlugins(game, true));
 
   EXPECT_FALSE(game.IsPluginActive(blankEsp));
 }
 
-TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
+TEST_P(GameTest, shouldShowBlankEsmAsActiveIfItHasBeenFullyLoaded) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   ASSERT_NO_THROW(loadInstalledPlugins(game, false));
 
   EXPECT_TRUE(game.IsPluginActive(blankEsm));
 }
 
-TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoadedAndTheGameHasBeenInitialised) {
+TEST_P(GameTest, shouldShowBlankEspAsInactiveIfItHasBeenFullyLoaded) {
   Game game = Game(GetParam(), dataPath.parent_path(), localPath);
-  game.Init();
 
   ASSERT_NO_THROW(loadInstalledPlugins(game, false));
 
