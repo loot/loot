@@ -66,6 +66,10 @@ boost::filesystem::path LootPaths::getLogPath() {
   return lootDataPath_ / "LOOTDebugLog.txt";
 }
 
+boost::filesystem::path LootPaths::getApiLogPath() {
+  return lootDataPath_ / "LOOTAPIDebugLog.txt";
+}
+
 void LootPaths::initialise(const std::string& lootDataPath) {
     // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));

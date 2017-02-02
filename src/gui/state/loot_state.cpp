@@ -36,9 +36,7 @@
 #include <boost/log/utility/setup/file.hpp>
 
 #include "gui/state/loot_paths.h"
-#include "loot/exception/game_detection_error.h"
-#include "loot/language.h"
-#include "loot/loot_version.h"
+#include "loot/api.h"
 #include "loot/windows_encoding_converters.h"
 
 #ifdef _WIN32
@@ -152,6 +150,7 @@ void LootState::init(const std::string& cmdLineGame) {
       )
   );
   boost::log::add_common_attributes();
+  SetLogFile(LootPaths::getApiLogPath().string());
   enableDebugLogging(isDebugLoggingEnabled());
 
   // Log some useful info.
@@ -282,8 +281,10 @@ void LootState::selectGame(std::string preferredGame) {
 void LootState::enableDebugLogging(bool enable) {
   if (enable) {
     boost::log::core::get()->reset_filter();
+    SetLoggingVerbosity(LogVerbosity::trace);
   } else {
     boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);
+    SetLoggingVerbosity(LogVerbosity::warning);
   }
 }
 
