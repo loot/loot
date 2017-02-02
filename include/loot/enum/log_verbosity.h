@@ -30,13 +30,7 @@ along with LOOT.  If not, see
  */
 namespace loot {
 /**
- * @brief Codes used to specify the preferred language for messages when
- *        evaluating masterlists and userlists.
- * @details If a message is not available in the preferred language, its English
- *          string will be used. Note that messages with only one language
- *          string are assumed to be written in English, but this cannot be
- *          guaranteed (any violations should be reported as bugs so that they
- *          can be fixed).
+ * @brief Codes used to specify different levels of API logging verbosity.
  */
 enum struct LogVerbosity : unsigned int {
   off,
