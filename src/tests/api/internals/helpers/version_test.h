@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_HELPERS_VERSION_TEST
-#define LOOT_TESTS_BACKEND_HELPERS_VERSION_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_HELPERS_VERSION_TEST
+#define LOOT_TESTS_API_INTERNALS_HELPERS_VERSION_TEST
 
 #include "api/helpers/version.h"
 #include "loot/loot_version.h"

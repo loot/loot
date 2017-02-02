@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_METADATA_FILE_TEST
-#define LOOT_TESTS_BACKEND_METADATA_FILE_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_METADATA_FILE_TEST
+#define LOOT_TESTS_API_INTERNALS_METADATA_FILE_TEST
 
 #include "loot/metadata/file.h"
 

@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_METADATA_MESSAGE_TEST
-#define LOOT_TESTS_BACKEND_METADATA_MESSAGE_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_METADATA_MESSAGE_TEST
+#define LOOT_TESTS_API_INTERNALS_METADATA_MESSAGE_TEST
 
 #include "loot/metadata/message.h"
 

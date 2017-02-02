@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_MASTERLIST_TEST
-#define LOOT_TESTS_BACKEND_MASTERLIST_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_MASTERLIST_TEST
+#define LOOT_TESTS_API_INTERNALS_MASTERLIST_TEST
 
 #include "api/masterlist.h"
 

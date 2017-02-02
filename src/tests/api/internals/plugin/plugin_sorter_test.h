@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_PLUGIN_PLUGIN_SORTER_TEST
-#define LOOT_TESTS_BACKEND_PLUGIN_PLUGIN_SORTER_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_PLUGIN_PLUGIN_SORTER_TEST
+#define LOOT_TESTS_API_INTERNALS_PLUGIN_PLUGIN_SORTER_TEST
 
 #include "api/plugin/plugin_sorter.h"
 

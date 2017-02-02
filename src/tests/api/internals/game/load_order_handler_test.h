@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_LOAD_ORDER_HANDLER_TEST
-#define LOOT_TESTS_BACKEND_LOAD_ORDER_HANDLER_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_LOAD_ORDER_HANDLER_TEST
+#define LOOT_TESTS_API_INTERNALS_LOAD_ORDER_HANDLER_TEST
 
 #include "api/game/load_order_handler.h"
 

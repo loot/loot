@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_HELPERS_GIT_HELPER_TEST
-#define LOOT_TESTS_BACKEND_HELPERS_GIT_HELPER_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_HELPERS_GIT_HELPER_TEST
+#define LOOT_TESTS_API_INTERNALS_HELPERS_GIT_HELPER_TEST
 
 #include "api/helpers/git_helper.h"
 

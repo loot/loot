@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_METADATA_PRIORITY_TEST
-#define LOOT_TESTS_BACKEND_METADATA_PRIORITY_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_METADATA_PRIORITY_TEST
+#define LOOT_TESTS_API_INTERNALS_METADATA_PRIORITY_TEST
 
 #include "loot/metadata/priority.h"
 

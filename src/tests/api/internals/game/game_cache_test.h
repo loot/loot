@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_GAME_GAME_CACHE_TEST
-#define LOOT_TESTS_BACKEND_GAME_GAME_CACHE_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_GAME_GAME_CACHE_TEST
+#define LOOT_TESTS_API_INTERNALS_GAME_GAME_CACHE_TEST
 
 #include "api/game/game_cache.h"
 

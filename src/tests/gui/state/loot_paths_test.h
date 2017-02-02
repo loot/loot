@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_LOOT_PATHS_TEST
-#define LOOT_TESTS_BACKEND_LOOT_PATHS_TEST
+#ifndef LOOT_TESTS_GUI_STATE_LOOT_PATHS_TEST
+#define LOOT_TESTS_GUI_STATE_LOOT_PATHS_TEST
 
 #include "gui/state/loot_paths.h"
 

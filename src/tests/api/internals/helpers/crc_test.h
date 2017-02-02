@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_HELPERS_CRC_TEST
-#define LOOT_TESTS_BACKEND_HELPERS_CRC_TEST
+#ifndef LOOT_TESTS_API_INTERNALS_HELPERS_CRC_TEST
+#define LOOT_TESTS_API_INTERNALS_HELPERS_CRC_TEST
 
 #include "api/helpers/crc.h"
 

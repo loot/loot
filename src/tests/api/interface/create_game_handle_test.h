@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_API_CREATE_GAME_HANDLE_TEST
-#define LOOT_TESTS_API_CREATE_GAME_HANDLE_TEST
+#ifndef LOOT_TESTS_API_INTERFACE_CREATE_GAME_HANDLE_TEST
+#define LOOT_TESTS_API_INTERFACE_CREATE_GAME_HANDLE_TEST
 
 #include "loot/api.h"
 

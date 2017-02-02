@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_API_IS_COMPATIBLE_TEST
-#define LOOT_TESTS_API_IS_COMPATIBLE_TEST
+#ifndef LOOT_TESTS_API_INTERFACE_IS_COMPATIBLE_TEST
+#define LOOT_TESTS_API_INTERFACE_IS_COMPATIBLE_TEST
 
 #include "loot/api.h"
 

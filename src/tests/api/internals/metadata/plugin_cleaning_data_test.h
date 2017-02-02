@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_BACKEND_METADATA_PLUGIN_CLEANING_DATA
-#define LOOT_TESTS_BACKEND_METADATA_PLUGIN_CLEANING_DATA
+#ifndef LOOT_TESTS_API_INTERNALS_METADATA_PLUGIN_CLEANING_DATA
+#define LOOT_TESTS_API_INTERNALS_METADATA_PLUGIN_CLEANING_DATA
 
 #include "loot/metadata/plugin_cleaning_data.h"
 
