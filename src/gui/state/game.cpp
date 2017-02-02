@@ -33,8 +33,8 @@
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
+#include "gui/state/game_detection_error.h"
 #include "loot/exception/file_access_error.h"
-#include "loot/exception/game_detection_error.h"
 #include "loot/windows_encoding_converters.h"
 
 #ifdef _WIN32

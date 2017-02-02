@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/game.h"
 
-#include "loot/exception/game_detection_error.h"
+#include "gui/state/game_detection_error.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {

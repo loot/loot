@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_EXCEPTION_GAME_DETECTION_ERROR
-#define LOOT_EXCEPTION_GAME_DETECTION_ERROR
+#ifndef LOOT_GUI_GAME_DETECTION_ERROR
+#define LOOT_GUI_GAME_DETECTION_ERROR
 
 #include <stdexcept>
 

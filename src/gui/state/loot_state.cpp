@@ -35,6 +35,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
 
+#include "gui/state/game_detection_error.h"
 #include "gui/state/loot_paths.h"
 #include "loot/api.h"
 #include "loot/windows_encoding_converters.h"

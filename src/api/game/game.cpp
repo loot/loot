@@ -36,7 +36,6 @@
 #include "api/api_database.h"
 #include "api/plugin/plugin_sorter.h"
 #include "loot/exception/file_access_error.h"
-#include "loot/exception/game_detection_error.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE

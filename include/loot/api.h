@@ -34,7 +34,6 @@
 #include "loot/exception/condition_syntax_error.h"
 #include "loot/exception/cyclic_interaction_error.h"
 #include "loot/exception/file_access_error.h"
-#include "loot/exception/game_detection_error.h"
 #include "loot/exception/git_state_error.h"
 #include "loot/enum/game_type.h"
 #include "loot/enum/log_verbosity.h"
