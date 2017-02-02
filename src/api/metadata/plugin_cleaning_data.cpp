@@ -46,34 +46,34 @@ PluginCleaningData::PluginCleaningData(uint32_t crc,
   : crc_(crc), itm_(itm), ref_(ref), nav_(nav), utility_(utility), info_(info) {}
 
 bool PluginCleaningData::operator < (const PluginCleaningData& rhs) const {
-  return crc_ < rhs.CRC();
+  return crc_ < rhs.GetCRC();
 }
 
 bool PluginCleaningData::operator == (const PluginCleaningData& rhs) const {
-  return crc_ == rhs.CRC();
+  return crc_ == rhs.GetCRC();
 }
 
-uint32_t PluginCleaningData::CRC() const {
+uint32_t PluginCleaningData::GetCRC() const {
   return crc_;
 }
 
-unsigned int PluginCleaningData::ITMs() const {
+unsigned int PluginCleaningData::GetITMCount() const {
   return itm_;
 }
 
-unsigned int PluginCleaningData::DeletedRefs() const {
+unsigned int PluginCleaningData::GetDeletedReferenceCount() const {
   return ref_;
 }
 
-unsigned int PluginCleaningData::DeletedNavmeshes() const {
+unsigned int PluginCleaningData::GetDeletedNavmeshCount() const {
   return nav_;
 }
 
-std::string PluginCleaningData::CleaningUtility() const {
+std::string PluginCleaningData::GetCleaningUtility() const {
   return utility_;
 }
 
-std::vector<MessageContent> PluginCleaningData::Info() const {
+std::vector<MessageContent> PluginCleaningData::GetInfo() const {
   return info_;
 }
 

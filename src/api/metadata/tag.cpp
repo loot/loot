@@ -35,18 +35,18 @@ bool Tag::operator < (const Tag& rhs) const {
   if (addTag_ != rhs.IsAddition())
     return (addTag_ && !rhs.IsAddition());
   else
-    return boost::ilexicographical_compare(Name(), rhs.Name());
+    return boost::ilexicographical_compare(GetName(), rhs.GetName());
 }
 
 bool Tag::operator == (const Tag& rhs) const {
-  return (addTag_ == rhs.IsAddition() && boost::iequals(Name(), rhs.Name()));
+  return (addTag_ == rhs.IsAddition() && boost::iequals(GetName(), rhs.GetName()));
 }
 
 bool Tag::IsAddition() const {
   return addTag_;
 }
 
-std::string Tag::Name() const {
+std::string Tag::GetName() const {
   return name_;
 }
 }

@@ -41,7 +41,7 @@ public:
   LOOT_API bool operator == (const Tag& rhs) const;
 
   LOOT_API bool IsAddition() const;
-  LOOT_API std::string Name() const;
+  LOOT_API std::string GetName() const;
 private:
   std::string name_;
   bool addTag_;

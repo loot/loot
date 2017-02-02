@@ -80,17 +80,17 @@ private:
   static YAML::Node convertPluginMetadata(const PluginMetadata& metadata, const LanguageCode language) {
     YAML::Node node;
 
-    node["enabled"] = metadata.Enabled();
-    node["priority"] = metadata.LocalPriority().getValue();
-    node["globalPriority"] = metadata.GlobalPriority().getValue();
-    node["after"] = metadata.LoadAfter();
-    node["req"] = metadata.Reqs();
-    node["inc"] = metadata.Incs();
-    node["msg"] = toEditorMessages(metadata.Messages(), language);
-    node["tag"] = metadata.Tags();
-    node["dirty"] = metadata.DirtyInfo();
-    node["clean"] = metadata.CleanInfo();
-    node["url"] = metadata.Locations();
+    node["enabled"] = metadata.IsEnabled();
+    node["priority"] = metadata.GetLocalPriority().GetValue();
+    node["globalPriority"] = metadata.GetGlobalPriority().GetValue();
+    node["after"] = metadata.GetLoadAfterFiles();
+    node["req"] = metadata.GetRequirements();
+    node["inc"] = metadata.GetIncompatibilities();
+    node["msg"] = toEditorMessages(metadata.GetMessages(), language);
+    node["tag"] = metadata.GetTags();
+    node["dirty"] = metadata.GetDirtyInfo();
+    node["clean"] = metadata.GetCleanInfo();
+    node["url"] = metadata.GetLocations();
 
     return node;
   }

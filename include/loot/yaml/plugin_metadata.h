@@ -48,33 +48,33 @@ template<>
 struct convert<loot::PluginMetadata> {
   static Node encode(const loot::PluginMetadata& rhs) {
     Node node;
-    node["name"] = rhs.Name();
+    node["name"] = rhs.GetName();
 
-    if (!rhs.Enabled())
-      node["enabled"] = rhs.Enabled();
+    if (!rhs.IsEnabled())
+      node["enabled"] = rhs.IsEnabled();
 
-    if (rhs.LocalPriority().isExplicit())
-      node["priority"] = rhs.LocalPriority().getValue();
+    if (rhs.GetLocalPriority().IsExplicit())
+      node["priority"] = rhs.GetLocalPriority().GetValue();
 
-    if (rhs.GlobalPriority().isExplicit())
-      node["global_priority"] = rhs.GlobalPriority().getValue();
+    if (rhs.GetGlobalPriority().IsExplicit())
+      node["global_priority"] = rhs.GetGlobalPriority().GetValue();
 
-    if (!rhs.LoadAfter().empty())
-      node["after"] = rhs.LoadAfter();
-    if (!rhs.Reqs().empty())
-      node["req"] = rhs.Reqs();
-    if (!rhs.Incs().empty())
-      node["inc"] = rhs.Incs();
-    if (!rhs.Messages().empty())
-      node["msg"] = rhs.Messages();
-    if (!rhs.Tags().empty())
-      node["tag"] = rhs.Tags();
-    if (!rhs.DirtyInfo().empty())
-      node["dirty"] = rhs.DirtyInfo();
-    if (!rhs.CleanInfo().empty())
-      node["clean"] = rhs.CleanInfo();
-    if (!rhs.Locations().empty())
-      node["url"] = rhs.Locations();
+    if (!rhs.GetLoadAfterFiles().empty())
+      node["after"] = rhs.GetLoadAfterFiles();
+    if (!rhs.GetRequirements().empty())
+      node["req"] = rhs.GetRequirements();
+    if (!rhs.GetIncompatibilities().empty())
+      node["inc"] = rhs.GetIncompatibilities();
+    if (!rhs.GetMessages().empty())
+      node["msg"] = rhs.GetMessages();
+    if (!rhs.GetTags().empty())
+      node["tag"] = rhs.GetTags();
+    if (!rhs.GetDirtyInfo().empty())
+      node["dirty"] = rhs.GetDirtyInfo();
+    if (!rhs.GetCleanInfo().empty())
+      node["clean"] = rhs.GetCleanInfo();
+    if (!rhs.GetLocations().empty())
+      node["url"] = rhs.GetLocations();
 
     return node;
   }
@@ -90,49 +90,49 @@ struct convert<loot::PluginMetadata> {
     // Test for valid regex.
     if (rhs.IsRegexPlugin()) {
       try {
-        std::regex(rhs.Name(), std::regex::ECMAScript | std::regex::icase);
+        std::regex(rhs.GetName(), std::regex::ECMAScript | std::regex::icase);
       } catch (std::regex_error& e) {
         throw RepresentationException(node.Mark(), std::string("bad conversion: invalid regex in 'name' key: ") + e.what());
       }
     }
 
     if (node["enabled"])
-      rhs.Enabled(node["enabled"].as<bool>());
+      rhs.SetEnabled(node["enabled"].as<bool>());
 
     // Read priority values as int to prevent values that are too large from
     // being converted to -128.
     if (node["priority"]) {
-      rhs.LocalPriority(loot::Priority(node["priority"].as<int>()));
+      rhs.SetLocalPriority(loot::Priority(node["priority"].as<int>()));
     }
 
     if (node["global_priority"]) {
-      rhs.GlobalPriority(loot::Priority(node["global_priority"].as<int>()));
+      rhs.SetGlobalPriority(loot::Priority(node["global_priority"].as<int>()));
     }
 
     if (node["after"])
-      rhs.LoadAfter(node["after"].as<std::set<loot::File>>());
+      rhs.SetLoadAfterFiles(node["after"].as<std::set<loot::File>>());
     if (node["req"])
-      rhs.Reqs(node["req"].as<std::set<loot::File>>());
+      rhs.SetRequirements(node["req"].as<std::set<loot::File>>());
     if (node["inc"])
-      rhs.Incs(node["inc"].as<std::set<loot::File>>());
+      rhs.SetIncompatibilities(node["inc"].as<std::set<loot::File>>());
     if (node["msg"])
-      rhs.Messages(node["msg"].as<std::vector<loot::Message>>());
+      rhs.SetMessages(node["msg"].as<std::vector<loot::Message>>());
     if (node["tag"])
-      rhs.Tags(node["tag"].as<std::set<loot::Tag>>());
+      rhs.SetTags(node["tag"].as<std::set<loot::Tag>>());
     if (node["dirty"]) {
       if (rhs.IsRegexPlugin())
         throw RepresentationException(node.Mark(), "bad conversion: 'dirty' key must not be present in a regex 'plugin metadata' object");
       else
-        rhs.DirtyInfo(node["dirty"].as<std::set<loot::PluginCleaningData>>());
+        rhs.SetDirtyInfo(node["dirty"].as<std::set<loot::PluginCleaningData>>());
     }
     if (node["clean"]) {
       if (rhs.IsRegexPlugin())
         throw RepresentationException(node.Mark(), "bad conversion: 'clean' key must not be present in a regex 'plugin metadata' object");
       else
-        rhs.CleanInfo(node["clean"].as<std::set<loot::PluginCleaningData>>());
+        rhs.SetCleanInfo(node["clean"].as<std::set<loot::PluginCleaningData>>());
     }
     if (node["url"])
-      rhs.Locations(node["url"].as<std::set<loot::Location>>());
+      rhs.SetLocations(node["url"].as<std::set<loot::Location>>());
 
     return true;
   }
@@ -141,42 +141,42 @@ struct convert<loot::PluginMetadata> {
 inline Emitter& operator << (Emitter& out, const loot::PluginMetadata& rhs) {
   if (!rhs.HasNameOnly()) {
     out << BeginMap
-      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name();
+      << Key << "name" << Value << YAML::SingleQuoted << rhs.GetName();
 
-    if (!rhs.Enabled())
-      out << Key << "enabled" << Value << rhs.Enabled();
+    if (!rhs.IsEnabled())
+      out << Key << "enabled" << Value << rhs.IsEnabled();
 
-    if (rhs.LocalPriority().isExplicit()) {
-      out << Key << "priority" << Value << rhs.LocalPriority().getValue();
+    if (rhs.GetLocalPriority().IsExplicit()) {
+      out << Key << "priority" << Value << rhs.GetLocalPriority().GetValue();
     }
 
-    if (rhs.GlobalPriority().isExplicit()) {
-      out << Key << "global_priority" << Value << rhs.GlobalPriority().getValue();
+    if (rhs.GetGlobalPriority().IsExplicit()) {
+      out << Key << "global_priority" << Value << rhs.GetGlobalPriority().GetValue();
     }
 
-    if (!rhs.LoadAfter().empty())
-      out << Key << "after" << Value << rhs.LoadAfter();
+    if (!rhs.GetLoadAfterFiles().empty())
+      out << Key << "after" << Value << rhs.GetLoadAfterFiles();
 
-    if (!rhs.Reqs().empty())
-      out << Key << "req" << Value << rhs.Reqs();
+    if (!rhs.GetRequirements().empty())
+      out << Key << "req" << Value << rhs.GetRequirements();
 
-    if (!rhs.Incs().empty())
-      out << Key << "inc" << Value << rhs.Incs();
+    if (!rhs.GetIncompatibilities().empty())
+      out << Key << "inc" << Value << rhs.GetIncompatibilities();
 
-    if (!rhs.Messages().empty())
-      out << Key << "msg" << Value << rhs.Messages();
+    if (!rhs.GetMessages().empty())
+      out << Key << "msg" << Value << rhs.GetMessages();
 
-    if (!rhs.Tags().empty())
-      out << Key << "tag" << Value << rhs.Tags();
+    if (!rhs.GetTags().empty())
+      out << Key << "tag" << Value << rhs.GetTags();
 
-    if (!rhs.DirtyInfo().empty())
-      out << Key << "dirty" << Value << rhs.DirtyInfo();
+    if (!rhs.GetDirtyInfo().empty())
+      out << Key << "dirty" << Value << rhs.GetDirtyInfo();
 
-    if (!rhs.CleanInfo().empty())
-      out << Key << "clean" << Value << rhs.CleanInfo();
+    if (!rhs.GetCleanInfo().empty())
+      out << Key << "clean" << Value << rhs.GetCleanInfo();
 
-    if (!rhs.Locations().empty())
-      out << Key << "url" << Value << rhs.Locations();
+    if (!rhs.GetLocations().empty())
+      out << Key << "url" << Value << rhs.GetLocations();
 
     out << EndMap;
   }

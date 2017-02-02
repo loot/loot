@@ -366,7 +366,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnMergedMasterAndUserMe
     File(masterFile),
     File(blankDifferentEsm),
   });
-  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+  EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 }
 
 TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnOnlyMasterlistMetadataForTheGivenPluginIfIncludeUserMetadataIsFalse) {
@@ -379,7 +379,7 @@ TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnOnlyMasterlistMetadat
   std::set<File> expectedLoadAfter({
     File(masterFile),
   });
-  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+  EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 }
 
 TEST_P(DatabaseInterfaceTest, getPluginUserMetadataShouldReturnAnEmptyPluginMetadataObjectIfThePluginHasNoUserMetadata) {
@@ -402,7 +402,7 @@ TEST_P(DatabaseInterfaceTest, getPluginUserMetadataShouldReturnOnlyUserMetadataF
   std::set<File> expectedLoadAfter({
     File(blankDifferentEsm),
   });
-  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+  EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 }
 
 TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldReplaceExistingUserMetadataWithTheGivenMetadata) {
@@ -411,7 +411,7 @@ TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldReplaceExistingUserMeta
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
 
   PluginMetadata newMetadata(blankDifferentEsp);
-  newMetadata.Reqs(std::set<File>({File(masterFile)}));
+  newMetadata.SetRequirements(std::set<File>({File(masterFile)}));
 
   db_->SetPluginUserMetadata(newMetadata);
 
@@ -420,8 +420,8 @@ TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldReplaceExistingUserMeta
   std::set<File> expectedLoadAfter({
     File(blankDifferentEsm),
   });
-  EXPECT_TRUE(metadata.Incs().empty());
-  EXPECT_EQ(newMetadata.Reqs(), metadata.Reqs());
+  EXPECT_TRUE(metadata.GetIncompatibilities().empty());
+  EXPECT_EQ(newMetadata.GetRequirements(), metadata.GetRequirements());
 }
 
 TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldNotAffectExistingMasterlistMetadata) {
@@ -430,7 +430,7 @@ TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldNotAffectExistingMaster
   ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
 
   PluginMetadata newMetadata(blankEsm);
-  newMetadata.Reqs(std::set<File>({File(masterFile)}));
+  newMetadata.SetRequirements(std::set<File>({File(masterFile)}));
 
   db_->SetPluginUserMetadata(newMetadata);
 
@@ -439,7 +439,7 @@ TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldNotAffectExistingMaster
   std::set<File> expectedLoadAfter({
     File(masterFile),
   });
-  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+  EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 }
 
 TEST_P(DatabaseInterfaceTest, discardPluginUserMetadataShouldDiscardAllUserMetadataForTheGivenPlugin) {
@@ -466,7 +466,7 @@ TEST_P(DatabaseInterfaceTest, discardPluginUserMetadataShouldNotDiscardMasterlis
   std::set<File> expectedLoadAfter({
     File(masterFile),
   });
-  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+  EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 }
 
 TEST_P(DatabaseInterfaceTest, discardPluginUserMetadataShouldNotDiscardUserMetadataForOtherPlugins) {
@@ -533,7 +533,7 @@ TEST_P(DatabaseInterfaceTest, discardAllUserMetadataShouldDiscardAllUserMetadata
   std::set<File> expectedLoadAfter({
     File(masterFile),
   });
-  EXPECT_EQ(expectedLoadAfter, metadata.LoadAfter());
+  EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 
   auto messages = db_->GetGeneralMessages();
 

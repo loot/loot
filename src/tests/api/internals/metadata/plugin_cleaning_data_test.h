@@ -51,22 +51,22 @@ INSTANTIATE_TEST_CASE_P(,
 
 TEST_P(PluginCleaningDataTest, defaultConstructorShouldLeaveAllCountsAtZeroAndTheUtilityStringEmpty) {
   PluginCleaningData info;
-  EXPECT_EQ(0, info.CRC());
-  EXPECT_EQ(0, info.ITMs());
-  EXPECT_EQ(0, info.DeletedRefs());
-  EXPECT_EQ(0, info.DeletedNavmeshes());
-  EXPECT_TRUE(info.CleaningUtility().empty());
-  EXPECT_TRUE(info.Info().empty());
+  EXPECT_EQ(0, info.GetCRC());
+  EXPECT_EQ(0, info.GetITMCount());
+  EXPECT_EQ(0, info.GetDeletedReferenceCount());
+  EXPECT_EQ(0, info.GetDeletedNavmeshCount());
+  EXPECT_TRUE(info.GetCleaningUtility().empty());
+  EXPECT_TRUE(info.GetInfo().empty());
 }
 
 TEST_P(PluginCleaningDataTest, contentConstructorShouldStoreAllGivenData) {
   PluginCleaningData info(0x12345678, "cleaner", info_, 2, 10, 30);
-  EXPECT_EQ(0x12345678, info.CRC());
-  EXPECT_EQ(2, info.ITMs());
-  EXPECT_EQ(10, info.DeletedRefs());
-  EXPECT_EQ(30, info.DeletedNavmeshes());
-  EXPECT_EQ("cleaner", info.CleaningUtility());
-  EXPECT_EQ(info_, info.Info());
+  EXPECT_EQ(0x12345678, info.GetCRC());
+  EXPECT_EQ(2, info.GetITMCount());
+  EXPECT_EQ(10, info.GetDeletedReferenceCount());
+  EXPECT_EQ(30, info.GetDeletedNavmeshCount());
+  EXPECT_EQ("cleaner", info.GetCleaningUtility());
+  EXPECT_EQ(info_, info.GetInfo());
 }
 
 TEST_P(PluginCleaningDataTest, asMessageShouldOutputAllNonZeroCounts) {
@@ -226,24 +226,24 @@ TEST_P(PluginCleaningDataTest, decodingFromYamlShouldLeaveMissingFieldsWithZeroV
   YAML::Node node = YAML::Load("{crc: 0x12345678, util: cleaner}");
   PluginCleaningData info = node.as<PluginCleaningData>();
 
-  EXPECT_EQ(0x12345678, info.CRC());
-  EXPECT_TRUE(info.Info().empty());
-  EXPECT_EQ(0, info.ITMs());
-  EXPECT_EQ(0, info.DeletedRefs());
-  EXPECT_EQ(0, info.DeletedNavmeshes());
-  EXPECT_EQ("cleaner", info.CleaningUtility());
+  EXPECT_EQ(0x12345678, info.GetCRC());
+  EXPECT_TRUE(info.GetInfo().empty());
+  EXPECT_EQ(0, info.GetITMCount());
+  EXPECT_EQ(0, info.GetDeletedReferenceCount());
+  EXPECT_EQ(0, info.GetDeletedNavmeshCount());
+  EXPECT_EQ("cleaner", info.GetCleaningUtility());
 }
 
 TEST_P(PluginCleaningDataTest, decodingFromYamlShouldStoreAllNonZeroCounts) {
   YAML::Node node = YAML::Load("{crc: 0x12345678, util: cleaner, info: info, itm: 2, udr: 10, nav: 30}");
   PluginCleaningData info = node.as<PluginCleaningData>();
 
-  EXPECT_EQ(0x12345678, info.CRC());
-  EXPECT_EQ(info_, info.Info());
-  EXPECT_EQ(2, info.ITMs());
-  EXPECT_EQ(10, info.DeletedRefs());
-  EXPECT_EQ(30, info.DeletedNavmeshes());
-  EXPECT_EQ("cleaner", info.CleaningUtility());
+  EXPECT_EQ(0x12345678, info.GetCRC());
+  EXPECT_EQ(info_, info.GetInfo());
+  EXPECT_EQ(2, info.GetITMCount());
+  EXPECT_EQ(10, info.GetDeletedReferenceCount());
+  EXPECT_EQ(30, info.GetDeletedNavmeshCount());
+  EXPECT_EQ("cleaner", info.GetCleaningUtility());
 }
 
 TEST_P(PluginCleaningDataTest, decodingFromYamlScalarShouldThrow) {

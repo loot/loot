@@ -41,15 +41,15 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 void PrintTo(const File& value, ::std::ostream* os) {
-  *os << "File(\"" << value.Name() << "\", "
-    << "\"" << value.DisplayName() << "\", "
-    << "\"" << value.Condition() << "\""
+  *os << "File(\"" << value.GetName() << "\", "
+    << "\"" << value.GetDisplayName() << "\", "
+    << "\"" << value.GetCondition() << "\""
     << ")";
 }
 
 void PrintTo(const Location& value, ::std::ostream* os) {
-  *os << "Location(\"" << value.URL() << "\", "
-    << "\"" << value.Name() << "\", "
+  *os << "Location(\"" << value.GetURL() << "\", "
+    << "\"" << value.GetName() << "\", "
     << ")";
 }
 
@@ -64,7 +64,7 @@ void PrintTo(const Message& value, ::std::ostream* os) {
 
   *os << "Message(\"" << type << "\", "
     << ::testing::PrintToString(value.GetContent()) << ", "
-    << "\"" << value.Condition() << "\""
+    << "\"" << value.GetCondition() << "\""
     << ")";
 }
 
@@ -77,28 +77,28 @@ void PrintTo(const MessageContent& value, ::std::ostream* os) {
 void PrintTo(const PluginCleaningData& value, ::std::ostream* os) {
   *os << "PluginCleaningData(0x"
     << std::hex << std::uppercase
-    << value.CRC()
+    << value.GetCRC()
     << std::nouppercase << std::dec << ", "
-    << value.ITMs() << ", "
-    << value.DeletedRefs() << ", "
-    << value.DeletedNavmeshes() << ", "
-    << "\"" << value.CleaningUtility() << "\""
+    << value.GetITMCount() << ", "
+    << value.GetDeletedReferenceCount() << ", "
+    << value.GetDeletedNavmeshCount() << ", "
+    << "\"" << value.GetCleaningUtility() << "\""
     << ")";
 }
 
 void PrintTo(const PluginMetadata& value, ::std::ostream* os) {
-  *os << "PluginMetadata(\"" << value.Name() << "\")";
+  *os << "PluginMetadata(\"" << value.GetName() << "\")";
 }
 
 void PrintTo(const Tag& value, ::std::ostream* os) {
-  *os << "Tag(\"" << value.Name() << "\", "
+  *os << "Tag(\"" << value.GetName() << "\", "
     << value.IsAddition() << ", "
-    << "\"" << value.Condition() << "\""
+    << "\"" << value.GetCondition() << "\""
     << ")";
 }
 
 void PrintTo(const Plugin& value, ::std::ostream* os) {
-  *os << "Plugin(\"" << value.Name() << "\")";
+  *os << "Plugin(\"" << value.GetName() << "\")";
 }
 }
 }

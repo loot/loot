@@ -50,16 +50,16 @@ protected:
     auto metadata = masterlistEntry;
 
     auto fileTags = file->GetBashTags();
-    auto tags = metadata.Tags();
+    auto tags = metadata.GetTags();
     tags.insert(begin(fileTags), end(fileTags));
-    metadata.Tags(tags);
+    metadata.SetTags(tags);
 
-    auto messages = metadata.Messages();
+    auto messages = metadata.GetMessages();
     auto statusMessages = file->GetStatusMessages();
     auto validityMessages = state_.getCurrentGame().CheckInstallValidity(file, metadata);
     messages.insert(end(messages), begin(statusMessages), end(statusMessages));
     messages.insert(end(messages), begin(validityMessages), end(validityMessages));
-    metadata.Messages(messages);
+    metadata.SetMessages(messages);
 
     return metadata;
   }
@@ -132,15 +132,15 @@ private:
 
     YAML::Node pluginNode;
     pluginNode["name"] = plugin->GetName();
-    pluginNode["priority"] = metadata.LocalPriority().getValue();
-    pluginNode["globalPriority"] = metadata.GlobalPriority().getValue();
-    pluginNode["messages"] = metadata.SimpleMessages(state_.getLanguage().GetCode());
-    pluginNode["tags"] = metadata.Tags();
-    pluginNode["isDirty"] = !metadata.DirtyInfo().empty();
+    pluginNode["priority"] = metadata.GetLocalPriority().GetValue();
+    pluginNode["globalPriority"] = metadata.GetGlobalPriority().GetValue();
+    pluginNode["messages"] = metadata.GetSimpleMessages(state_.getLanguage().GetCode());
+    pluginNode["tags"] = metadata.GetTags();
+    pluginNode["isDirty"] = !metadata.GetDirtyInfo().empty();
     pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName());
 
-    if (!metadata.CleanInfo().empty()) {
-      pluginNode["cleanedWith"] = metadata.CleanInfo().begin()->CleaningUtility();
+    if (!metadata.GetCleanInfo().empty()) {
+      pluginNode["cleanedWith"] = metadata.GetCleanInfo().begin()->GetCleaningUtility();
     } else {
       pluginNode["cleanedWith"] = "";
     }

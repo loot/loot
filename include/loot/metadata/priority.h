@@ -38,8 +38,8 @@ public:
 
   // Doesn't return an int8_t because it is commonly signed char, which
   // yaml-cpp interprets as a character rather than an integer.
-  LOOT_API short getValue() const;
-  LOOT_API bool isExplicit() const;
+  LOOT_API short GetValue() const;
+  LOOT_API bool IsExplicit() const;
 
   LOOT_API bool operator < (const Priority& rhs) const;
   LOOT_API bool operator > (const Priority& rhs) const;

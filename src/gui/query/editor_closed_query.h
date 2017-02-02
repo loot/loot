@@ -48,52 +48,52 @@ public:
 
 private:
   static PluginMetadata convertMetadata(YAML::Node& newMetadata, PluginMetadata& existingUserMetadata) {
-    PluginMetadata newUserlistEntry(existingUserMetadata.Name());
+    PluginMetadata newUserlistEntry(existingUserMetadata.GetName());
 
     // First sort out the priority value. This is only given if it was changed.
     BOOST_LOG_TRIVIAL(trace) << "Calculating userlist metadata local priority value from Javascript variables.";
     if (newMetadata["priority"]) {
       BOOST_LOG_TRIVIAL(trace) << "Local priority value was changed, recalculating...";
       // Priority value was changed, so add it to the userlist data.
-      newUserlistEntry.LocalPriority(Priority(newMetadata["priority"].as<int>()));
+      newUserlistEntry.SetLocalPriority(Priority(newMetadata["priority"].as<int>()));
     } else {
       // Priority value wasn't changed, use the existing userlist value.
       BOOST_LOG_TRIVIAL(trace) << "Local priority value is unchanged, using existing userlist value (if it exists).";
-      newUserlistEntry.LocalPriority(existingUserMetadata.LocalPriority());
+      newUserlistEntry.SetLocalPriority(existingUserMetadata.GetLocalPriority());
     }
 
     if (newMetadata["globalPriority"]) {
       BOOST_LOG_TRIVIAL(trace) << "Global priority value was changed, recalculating...";
       // Priority value was changed, so add it to the userlist data.
-      newUserlistEntry.GlobalPriority(Priority(newMetadata["globalPriority"].as<int>()));
+      newUserlistEntry.SetGlobalPriority(Priority(newMetadata["globalPriority"].as<int>()));
     } else {
       BOOST_LOG_TRIVIAL(trace) << "Global priority value is unchanged, using existing userlist value (if it exists).";
-      newUserlistEntry.GlobalPriority(existingUserMetadata.GlobalPriority());
+      newUserlistEntry.SetGlobalPriority(existingUserMetadata.GetGlobalPriority());
     }
 
     // Now the enabled flag.
-    newUserlistEntry.Enabled(newMetadata["userlist"]["enabled"].as<bool>());
+    newUserlistEntry.SetEnabled(newMetadata["userlist"]["enabled"].as<bool>());
 
     // Now metadata lists. These are given in their entirety, so replace anything that
     // currently exists.
     BOOST_LOG_TRIVIAL(trace) << "Recording metadata lists from Javascript variables.";
     if (newMetadata["userlist"]["after"])
-      newUserlistEntry.LoadAfter(newMetadata["userlist"]["after"].as<std::set<File>>());
+      newUserlistEntry.SetLoadAfterFiles(newMetadata["userlist"]["after"].as<std::set<File>>());
     if (newMetadata["userlist"]["req"])
-      newUserlistEntry.Reqs(newMetadata["userlist"]["req"].as<std::set<File>>());
+      newUserlistEntry.SetRequirements(newMetadata["userlist"]["req"].as<std::set<File>>());
     if (newMetadata["userlist"]["inc"])
-      newUserlistEntry.Incs(newMetadata["userlist"]["inc"].as<std::set<File>>());
+      newUserlistEntry.SetIncompatibilities(newMetadata["userlist"]["inc"].as<std::set<File>>());
 
     if (newMetadata["userlist"]["msg"])
-      newUserlistEntry.Messages(toMessages(newMetadata["userlist"]["msg"].as<std::vector<EditorMessage>>()));
+      newUserlistEntry.SetMessages(toMessages(newMetadata["userlist"]["msg"].as<std::vector<EditorMessage>>()));
     if (newMetadata["userlist"]["tag"])
-      newUserlistEntry.Tags(newMetadata["userlist"]["tag"].as<std::set<Tag>>());
+      newUserlistEntry.SetTags(newMetadata["userlist"]["tag"].as<std::set<Tag>>());
     if (newMetadata["userlist"]["dirty"])
-      newUserlistEntry.DirtyInfo(newMetadata["userlist"]["dirty"].as<std::set<PluginCleaningData>>());
+      newUserlistEntry.SetDirtyInfo(newMetadata["userlist"]["dirty"].as<std::set<PluginCleaningData>>());
     if (newMetadata["userlist"]["clean"])
-      newUserlistEntry.CleanInfo(newMetadata["userlist"]["clean"].as<std::set<PluginCleaningData>>());
+      newUserlistEntry.SetCleanInfo(newMetadata["userlist"]["clean"].as<std::set<PluginCleaningData>>());
     if (newMetadata["userlist"]["url"])
-      newUserlistEntry.Locations(newMetadata["userlist"]["url"].as<std::set<Location>>());
+      newUserlistEntry.SetLocations(newMetadata["userlist"]["url"].as<std::set<Location>>());
 
     return newUserlistEntry;
   }
@@ -101,12 +101,12 @@ private:
   PluginMetadata getUniqueMetadata(const PluginMetadata& metadata) {
     BOOST_LOG_TRIVIAL(trace) << "Removing any user metadata that duplicates masterlist metadata.";
     try {
-      auto plugin = state_.getCurrentGame().GetPlugin(metadata.Name());
-      auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata.Name());
+      auto plugin = state_.getCurrentGame().GetPlugin(metadata.GetName());
+      auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata.GetName());
       auto nonUserMetadata = getNonUserMetadata(plugin, masterlistMetadata);
       return metadata.NewMetadata(nonUserMetadata);
     } catch (...) {
-      return metadata.NewMetadata(state_.getCurrentGame().GetMasterlistMetadata(metadata.Name()));
+      return metadata.NewMetadata(state_.getCurrentGame().GetMasterlistMetadata(metadata.GetName()));
     }
   }
 
@@ -127,7 +127,7 @@ private:
     // Now erase any existing userlist entry.
     if (!ulistPlugin.HasNameOnly()) {
       BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
-      state_.getCurrentGame().ClearUserMetadata(ulistPlugin.Name());
+      state_.getCurrentGame().ClearUserMetadata(ulistPlugin.GetName());
     }
 
     // Add a new userlist entry if necessary.
@@ -141,7 +141,7 @@ private:
 
     // Now rederive the derived metadata.
     BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";
-    YAML::Node derivedMetadata = generateDerivedMetadata(newMetadata.Name());
+    YAML::Node derivedMetadata = generateDerivedMetadata(newMetadata.GetName());
     if (derivedMetadata.size() > 0)
       return JSON::stringify(derivedMetadata);
     else

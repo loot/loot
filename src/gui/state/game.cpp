@@ -136,7 +136,7 @@ std::vector<Message> Game::CheckInstallValidity(std::shared_ptr<const PluginInte
       return boost::filesystem::exists(DataPath() / file)
         || ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(DataPath() / (file + ".ghost")));
     };
-    auto tags = metadata.Tags();
+    auto tags = metadata.GetTags();
     if (tags.find(Tag("Filter")) == std::end(tags)) {
       for (const auto &master : plugin->GetMasters()) {
         if (!pluginExists(master)) {
@@ -149,22 +149,22 @@ std::vector<Message> Game::CheckInstallValidity(std::shared_ptr<const PluginInte
       }
     }
 
-    for (const auto &req : metadata.Reqs()) {
-      if (!pluginExists(req.Name())) {
-        BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << req.Name() << "\", but it is missing.";
-        messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.Name()).str()));
+    for (const auto &req : metadata.GetRequirements()) {
+      if (!pluginExists(req.GetName())) {
+        BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" requires \"" << req.GetName() << "\", but it is missing.";
+        messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin requires \"%1%\" to be installed, but it is missing.")) % req.GetName()).str()));
       }
     }
-    for (const auto &inc : metadata.Incs()) {
-      if (pluginExists(inc.Name()) && IsPluginActive(inc.Name())) {
-        BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" is incompatible with \"" << inc.Name() << "\", but both are present.";
-        messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.Name()).str()));
+    for (const auto &inc : metadata.GetIncompatibilities()) {
+      if (pluginExists(inc.GetName()) && IsPluginActive(inc.GetName())) {
+        BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" is incompatible with \"" << inc.GetName() << "\", but both are present.";
+        messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is incompatible with \"%1%\", but both are present.")) % inc.GetName()).str()));
       }
     }
   }
 
   // Also generate dirty messages.
-  for (const auto &element : metadata.DirtyInfo()) {
+  for (const auto &element : metadata.GetDirtyInfo()) {
     messages.push_back(element.AsMessage());
   }
 

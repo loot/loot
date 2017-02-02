@@ -84,14 +84,14 @@ private:
 
     if (!metadata.HasNameOnly()) {
         // Now add the masterlist metadata to the pluginNode.
-      pluginNode["masterlist"]["after"] = metadata.LoadAfter();
-      pluginNode["masterlist"]["req"] = metadata.Reqs();
-      pluginNode["masterlist"]["inc"] = metadata.Incs();
-      pluginNode["masterlist"]["msg"] = metadata.Messages();
-      pluginNode["masterlist"]["tag"] = metadata.Tags();
-      pluginNode["masterlist"]["dirty"] = metadata.DirtyInfo();
-      pluginNode["masterlist"]["clean"] = metadata.CleanInfo();
-      pluginNode["masterlist"]["url"] = metadata.Locations();
+      pluginNode["masterlist"]["after"] = metadata.GetLoadAfterFiles();
+      pluginNode["masterlist"]["req"] = metadata.GetRequirements();
+      pluginNode["masterlist"]["inc"] = metadata.GetIncompatibilities();
+      pluginNode["masterlist"]["msg"] = metadata.GetMessages();
+      pluginNode["masterlist"]["tag"] = metadata.GetTags();
+      pluginNode["masterlist"]["dirty"] = metadata.GetDirtyInfo();
+      pluginNode["masterlist"]["clean"] = metadata.GetCleanInfo();
+      pluginNode["masterlist"]["url"] = metadata.GetLocations();
     }
 
     // Now merge masterlist and userlist metadata and evaluate,

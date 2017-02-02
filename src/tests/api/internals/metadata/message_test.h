@@ -58,7 +58,7 @@ TEST_P(MessageTest, scalarContentConstructorShouldCreateAMessageWithASingleConte
 
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(MessageContents({content}), message.GetContent());
-  EXPECT_EQ("condition1", message.Condition());
+  EXPECT_EQ("condition1", message.GetCondition());
 }
 
 TEST_P(MessageTest, vectorContentConstructorShouldCreateAMessageWithGivenContentStrings) {
@@ -70,7 +70,7 @@ TEST_P(MessageTest, vectorContentConstructorShouldCreateAMessageWithGivenContent
 
   EXPECT_EQ(MessageType::error, message.GetType());
   EXPECT_EQ(contents, message.GetContent());
-  EXPECT_EQ("condition1", message.Condition());
+  EXPECT_EQ("condition1", message.GetCondition());
 }
 
 TEST_P(MessageTest, vectorContentConstructorShouldThrowIfMultipleContentStringsAreGivenAndNoneAreEnglish) {
@@ -304,7 +304,7 @@ TEST_P(MessageTest, decodingFromYamlShouldLeaveTheConditionEmptyIfNoneIsPresent)
                                "content: content1");
   Message message = node.as<Message>();
 
-  EXPECT_TRUE(message.Condition().empty());
+  EXPECT_TRUE(message.GetCondition().empty());
 }
 
 TEST_P(MessageTest, decodingFromYamlShouldStoreANonEmptyConditionField) {
@@ -313,7 +313,7 @@ TEST_P(MessageTest, decodingFromYamlShouldStoreANonEmptyConditionField) {
                                "condition: 'file(\"Foo.esp\")'");
   Message message = node.as<Message>();
 
-  EXPECT_EQ("file(\"Foo.esp\")", message.Condition());
+  EXPECT_EQ("file(\"Foo.esp\")", message.GetCondition());
 }
 
 TEST_P(MessageTest, decodingFromYamlShouldStoreAScalarContentValueCorrectly) {

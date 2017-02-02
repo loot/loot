@@ -196,7 +196,7 @@ void PluginSorter::AddPluginVertices(Game& game) {
     //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
     auto userMetadata = game.GetUserlist().FindPlugin(plugin->GetName());
 
-    if (!userMetadata.HasNameOnly() && userMetadata.Enabled()) {
+    if (!userMetadata.HasNameOnly() && userMetadata.IsEnabled()) {
       BOOST_LOG_TRIVIAL(trace) << "Merging userlist metadata down to masterlist metadata.";
       metadata.MergeMetadata(userMetadata);
     }
@@ -251,8 +251,8 @@ void PluginSorter::PropagatePriorities() {
                vitend,
                std::back_inserter(positivePriorityVertices),
                [&](const vertex_t& vertex) {
-    return graph_[vertex].LocalPriority() > 0
-      || graph_[vertex].GlobalPriority() > 0;
+    return graph_[vertex].GetLocalPriority() > 0
+      || graph_[vertex].GetGlobalPriority() > 0;
   });
 
   // To reduce the number of priorities that will need setting,
@@ -260,8 +260,8 @@ void PluginSorter::PropagatePriorities() {
   std::sort(begin(positivePriorityVertices),
             end(positivePriorityVertices),
             [&](const vertex_t& lhs, const vertex_t& rhs) {
-    return graph_[lhs].LocalPriority() > graph_[rhs].LocalPriority()
-      || graph_[lhs].GlobalPriority() > graph_[rhs].GlobalPriority();
+    return graph_[lhs].GetLocalPriority() > graph_[rhs].GetLocalPriority()
+      || graph_[lhs].GetGlobalPriority() > graph_[rhs].GetGlobalPriority();
   });
 
   // Create a color map.
@@ -273,8 +273,8 @@ void PluginSorter::PropagatePriorities() {
   // encountered.
   for (const vertex_t& vertex : positivePriorityVertices) {
     BOOST_LOG_TRIVIAL(trace) << "Doing DFS for " << graph_[vertex].GetName()
-      << " which has local priority " << graph_[vertex].LocalPriority().getValue()
-      << " and global priority " << graph_[vertex].GlobalPriority().getValue();
+      << " which has local priority " << graph_[vertex].GetLocalPriority().GetValue()
+      << " and global priority " << graph_[vertex].GetGlobalPriority().GetValue();
     boost::dfs_visitor<> visitor;
     boost::depth_first_visit(graph_,
                              vertex,
@@ -282,29 +282,29 @@ void PluginSorter::PropagatePriorities() {
                              colorMap,
                              [&vertex](const vertex_t& currentVertex, const PluginGraph& graph) {
       // depth_first_search takes a const graph, so cast it if modifying a vertex.
-      if (graph[currentVertex].LocalPriority() < graph[vertex].LocalPriority()) {
+      if (graph[currentVertex].GetLocalPriority() < graph[vertex].GetLocalPriority()) {
         BOOST_LOG_TRIVIAL(trace) << "Overriding local priority for "
           << graph[currentVertex].GetName()
-          << " from " << graph[currentVertex].LocalPriority().getValue()
-          << " to " << graph[vertex].LocalPriority().getValue();
-        const_cast<PluginGraph&>(graph)[currentVertex].LocalPriority(graph[vertex].LocalPriority());
+          << " from " << graph[currentVertex].GetLocalPriority().GetValue()
+          << " to " << graph[vertex].GetLocalPriority().GetValue();
+        const_cast<PluginGraph&>(graph)[currentVertex].SetLocalPriority(graph[vertex].GetLocalPriority());
 
         return false;
       }
 
-      if (graph[currentVertex].GlobalPriority() < graph[vertex].GlobalPriority()) {
+      if (graph[currentVertex].GetGlobalPriority() < graph[vertex].GetGlobalPriority()) {
         BOOST_LOG_TRIVIAL(trace) << "Overriding global priority for "
           << graph[currentVertex].GetName()
-          << " from " << graph[currentVertex].GlobalPriority().getValue()
-          << " to " << graph[vertex].GlobalPriority().getValue();
-        const_cast<PluginGraph&>(graph)[currentVertex].GlobalPriority(graph[vertex].GlobalPriority());
+          << " from " << graph[currentVertex].GetGlobalPriority().GetValue()
+          << " to " << graph[vertex].GetGlobalPriority().GetValue();
+        const_cast<PluginGraph&>(graph)[currentVertex].SetGlobalPriority(graph[vertex].GetGlobalPriority());
 
         return false;
       }
 
       return currentVertex != vertex
-        && graph[currentVertex].LocalPriority() >= graph[vertex].LocalPriority()
-        && graph[currentVertex].GlobalPriority() >= graph[vertex].GlobalPriority();
+        && graph[currentVertex].GetLocalPriority() >= graph[vertex].GetLocalPriority()
+        && graph[currentVertex].GetGlobalPriority() >= graph[vertex].GetGlobalPriority();
     });
   }
 }
@@ -348,14 +348,14 @@ void PluginSorter::AddSpecificEdges() {
     }
 
     BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for requirements.";
-    for (const auto &file : graph_[*vit].Reqs()) {
-      if (GetVertexByName(file.Name(), parentVertex))
+    for (const auto &file : graph_[*vit].GetRequirements()) {
+      if (GetVertexByName(file.GetName(), parentVertex))
         AddEdge(parentVertex, *vit);
     }
 
     BOOST_LOG_TRIVIAL(trace) << "Adding in-edges for 'load after's.";
-    for (const auto &file : graph_[*vit].LoadAfter()) {
-      if (GetVertexByName(file.Name(), parentVertex))
+    for (const auto &file : graph_[*vit].GetLoadAfterFiles()) {
+      if (GetVertexByName(file.GetName(), parentVertex))
         AddEdge(parentVertex, *vit);
     }
   }
@@ -369,7 +369,7 @@ void PluginSorter::AddPriorityEdges() {
     // override records can only conflict with plugins that override
     // the records they add, so any edge necessary will be added when
     // evaluating that plugin.
-    if (graph_[vertex].GlobalPriority().getValue() == 0
+    if (graph_[vertex].GetGlobalPriority().GetValue() == 0
         && graph_[vertex].NumOverrideFormIDs() == 0
         && !graph_[vertex].LoadsArchive()) {
       continue;
@@ -378,17 +378,17 @@ void PluginSorter::AddPriorityEdges() {
     for (const auto& otherVertex : boost::make_iterator_range(boost::vertices(graph_))) {
         // If the plugins have equal priority, or have non-global
         // priorities but don't conflict, don't add a priority edge.
-      if ((graph_[vertex].LocalPriority() == graph_[otherVertex].LocalPriority() && graph_[vertex].GlobalPriority() == graph_[otherVertex].GlobalPriority())
-          || (graph_[vertex].GlobalPriority().getValue() == 0
-              && graph_[otherVertex].GlobalPriority().getValue() == 0
+      if ((graph_[vertex].GetLocalPriority() == graph_[otherVertex].GetLocalPriority() && graph_[vertex].GetGlobalPriority() == graph_[otherVertex].GetGlobalPriority())
+          || (graph_[vertex].GetGlobalPriority().GetValue() == 0
+              && graph_[otherVertex].GetGlobalPriority().GetValue() == 0
               && !graph_[vertex].DoFormIDsOverlap(graph_[otherVertex]))) {
         continue;
       }
 
       vertex_t toVertex, fromVertex;
-      if (graph_[vertex].GlobalPriority() < graph_[otherVertex].GlobalPriority()
-          || (graph_[vertex].GlobalPriority() == graph_[otherVertex].GlobalPriority()
-              && graph_[vertex].LocalPriority() < graph_[otherVertex].LocalPriority())) {
+      if (graph_[vertex].GetGlobalPriority() < graph_[otherVertex].GetGlobalPriority()
+          || (graph_[vertex].GetGlobalPriority() == graph_[otherVertex].GetGlobalPriority()
+              && graph_[vertex].GetLocalPriority() < graph_[otherVertex].GetLocalPriority())) {
         fromVertex = vertex;
         toVertex = otherVertex;
       } else {

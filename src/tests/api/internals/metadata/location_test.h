@@ -36,15 +36,15 @@ namespace test {
 TEST(Location, defaultConstructorShouldInitialiseEmptyStrings) {
   Location location;
 
-  EXPECT_EQ("", location.URL());
-  EXPECT_EQ("", location.Name());
+  EXPECT_EQ("", location.GetURL());
+  EXPECT_EQ("", location.GetName());
 }
 
 TEST(Location, stringsConstructorShouldStoreGivenStrings) {
   Location location("http://www.example.com", "example");
 
-  EXPECT_EQ("http://www.example.com", location.URL());
-  EXPECT_EQ("example", location.Name());
+  EXPECT_EQ("http://www.example.com", location.GetURL());
+  EXPECT_EQ("example", location.GetName());
 }
 
 TEST(Location, locationsWithCaseInsensitiveEqualUrlsShouldBeEqual) {
@@ -80,7 +80,7 @@ TEST(Location, emittingAsYamlShouldOutputAScalarIfTheNameStringIsEmpty) {
   YAML::Emitter emitter;
   emitter << location;
 
-  EXPECT_EQ("'" + location.URL() + "'", emitter.c_str());
+  EXPECT_EQ("'" + location.GetURL() + "'", emitter.c_str());
 }
 
 TEST(Location, emittingAsYamlShouldOutputAMapIfTheNameStringIsNotEmpty) {
@@ -88,7 +88,7 @@ TEST(Location, emittingAsYamlShouldOutputAMapIfTheNameStringIsNotEmpty) {
   YAML::Emitter emitter;
   emitter << location;
 
-  EXPECT_EQ("link: '" + location.URL() + "'\nname: '" + location.Name() + "'", emitter.c_str());
+  EXPECT_EQ("link: '" + location.GetURL() + "'\nname: '" + location.GetName() + "'", emitter.c_str());
 }
 
 TEST(Location, encodingAsYamlShouldStoreDataCorrectly) {
@@ -96,8 +96,8 @@ TEST(Location, encodingAsYamlShouldStoreDataCorrectly) {
   YAML::Node node;
   node = location;
 
-  EXPECT_EQ(location.URL(), node["link"].as<std::string>());
-  EXPECT_EQ(location.Name(), node["name"].as<std::string>());
+  EXPECT_EQ(location.GetURL(), node["link"].as<std::string>());
+  EXPECT_EQ(location.GetName(), node["name"].as<std::string>());
 }
 
 TEST(Location, encodingAsYamlShouldOmitEmptyFields) {
@@ -105,7 +105,7 @@ TEST(Location, encodingAsYamlShouldOmitEmptyFields) {
   YAML::Node node;
   node = location;
 
-  EXPECT_EQ(location.URL(), node["link"].as<std::string>());
+  EXPECT_EQ(location.GetURL(), node["link"].as<std::string>());
   EXPECT_FALSE(node["name"]);
 }
 
@@ -113,16 +113,16 @@ TEST(Location, decodingFromYamlShouldSetDataCorrectly) {
   YAML::Node node = YAML::Load("{link: http://www.example.com, name: example}");
   Location location = node.as<Location>();
 
-  EXPECT_EQ(node["link"].as<std::string>(), location.URL());
-  EXPECT_EQ(node["name"].as<std::string>(), location.Name());
+  EXPECT_EQ(node["link"].as<std::string>(), location.GetURL());
+  EXPECT_EQ(node["name"].as<std::string>(), location.GetName());
 }
 
 TEST(Location, decodingFromYamlScalarShouldSetUrlToScalarValueAndLeaveNameEmpty) {
   YAML::Node node = YAML::Load("http://www.example.com");
   Location location = node.as<Location>();
 
-  EXPECT_EQ(node.as<std::string>(), location.URL());
-  EXPECT_TRUE(location.Name().empty());
+  EXPECT_EQ(node.as<std::string>(), location.GetURL());
+  EXPECT_TRUE(location.GetName().empty());
 }
 
 TEST(Location, decodingFromYamlShouldThrowIfAListIsGiven) {

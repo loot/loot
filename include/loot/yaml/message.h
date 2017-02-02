@@ -48,7 +48,7 @@ struct convert<loot::Message> {
       node["type"] = "error";
 
     if (rhs.IsConditional())
-      node["condition"] = rhs.Condition();
+      node["condition"] = rhs.GetCondition();
 
     return node;
   }
@@ -139,7 +139,7 @@ inline Emitter& operator << (Emitter& out, const loot::Message& rhs) {
     out << Key << "content" << Value << rhs.GetContent();
 
   if (rhs.IsConditional())
-    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition();
+    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.GetCondition();
 
   out << EndMap;
 

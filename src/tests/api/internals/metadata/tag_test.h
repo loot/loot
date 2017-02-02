@@ -36,17 +36,17 @@ namespace test {
 TEST(Tag, defaultConstructorShouldSetEmptyNameAndConditionStringsForATagAddition) {
   Tag tag;
 
-  EXPECT_TRUE(tag.Name().empty());
+  EXPECT_TRUE(tag.GetName().empty());
   EXPECT_TRUE(tag.IsAddition());
-  EXPECT_TRUE(tag.Condition().empty());
+  EXPECT_TRUE(tag.GetCondition().empty());
 }
 
 TEST(Tag, dataConstructorShouldSetFieldsToGivenValues) {
   Tag tag("name", false, "condition");
 
-  EXPECT_EQ("name", tag.Name());
+  EXPECT_EQ("name", tag.GetName());
   EXPECT_FALSE(tag.IsAddition());
-  EXPECT_EQ("condition", tag.Condition());
+  EXPECT_EQ("condition", tag.GetCondition());
 }
 
 TEST(Tag, tagsWithCaseInsensitiveEqualNamesAndEqualAdditionStatesShouldBeEqual) {
@@ -97,7 +97,7 @@ TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringIfTheTagIsAnAdditionWithNoC
   YAML::Emitter emitter;
   emitter << tag;
 
-  EXPECT_EQ(tag.Name(), emitter.c_str());
+  EXPECT_EQ(tag.GetName(), emitter.c_str());
 }
 
 TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringPrefixedWithAHyphenIfTheTagIsARemovalWithNoCondition) {
@@ -105,7 +105,7 @@ TEST(Tag, emittingAsYamlShouldOutputOnlyTheNameStringPrefixedWithAHyphenIfTheTag
   YAML::Emitter emitter;
   emitter << tag;
 
-  EXPECT_EQ("-" + tag.Name(), emitter.c_str());
+  EXPECT_EQ("-" + tag.GetName(), emitter.c_str());
 }
 
 TEST(Tag, emittingAsYamlShouldOutputAMapIfTheTagHasACondition) {
@@ -129,7 +129,7 @@ TEST(Tag, encodingAsYamlShouldOutputTheNameFieldCorrectly) {
   YAML::Node node;
   node = tag;
 
-  EXPECT_EQ(tag.Name(), node["name"].as<std::string>());
+  EXPECT_EQ(tag.GetName(), node["name"].as<std::string>());
 }
 
 TEST(Tag, encodingAsYamlShouldOutputTheNameFieldWithAHyphenPrefixIfTheTagIsARemoval) {
@@ -137,7 +137,7 @@ TEST(Tag, encodingAsYamlShouldOutputTheNameFieldWithAHyphenPrefixIfTheTagIsARemo
   YAML::Node node;
   node = tag;
 
-  EXPECT_EQ("-" + tag.Name(), node["name"].as<std::string>());
+  EXPECT_EQ("-" + tag.GetName(), node["name"].as<std::string>());
 }
 
 TEST(Tag, encodingAsYamlShouldOutputTheConditionFieldIfTheConditionStringIsNotEmpty) {
@@ -145,35 +145,35 @@ TEST(Tag, encodingAsYamlShouldOutputTheConditionFieldIfTheConditionStringIsNotEm
   YAML::Node node;
   node = tag;
 
-  EXPECT_EQ(tag.Name(), node["name"].as<std::string>());
-  EXPECT_EQ(tag.Condition(), node["condition"].as<std::string>());
+  EXPECT_EQ(tag.GetName(), node["name"].as<std::string>());
+  EXPECT_EQ(tag.GetCondition(), node["condition"].as<std::string>());
 }
 
 TEST(Tag, decodingFromYamlScalarShouldSetNameCorrectly) {
   YAML::Node node = YAML::Load("name1");
   Tag tag = node.as<Tag>();
 
-  EXPECT_EQ("name1", tag.Name());
+  EXPECT_EQ("name1", tag.GetName());
   EXPECT_TRUE(tag.IsAddition());
-  EXPECT_EQ("", tag.Condition());
+  EXPECT_EQ("", tag.GetCondition());
 }
 
 TEST(Tag, decodingFromYamlScalarShouldSetAdditionStateCorrectly) {
   YAML::Node node = YAML::Load("-name1");
   Tag tag = node.as<Tag>();
 
-  EXPECT_EQ("name1", tag.Name());
+  EXPECT_EQ("name1", tag.GetName());
   EXPECT_FALSE(tag.IsAddition());
-  EXPECT_EQ("", tag.Condition());
+  EXPECT_EQ("", tag.GetCondition());
 }
 
 TEST(Tag, decodingFromYamlMapShouldSetDataCorrectly) {
   YAML::Node node = YAML::Load("{name: name1, condition: 'file(\"Foo.esp\")'}");
   Tag tag = node.as<Tag>();
 
-  EXPECT_EQ("name1", tag.Name());
+  EXPECT_EQ("name1", tag.GetName());
   EXPECT_TRUE(tag.IsAddition());
-  EXPECT_EQ("file(\"Foo.esp\")", tag.Condition());
+  EXPECT_EQ("file(\"Foo.esp\")", tag.GetCondition());
 }
 
 TEST(Tag, decodingFromYamlShouldThrowIfAnInvalidConditionIsGiven) {

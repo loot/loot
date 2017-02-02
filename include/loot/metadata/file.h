@@ -39,8 +39,8 @@ public:
   LOOT_API bool operator < (const File& rhs) const;
   LOOT_API bool operator == (const File& rhs) const;
 
-  LOOT_API std::string Name() const;
-  LOOT_API std::string DisplayName() const;
+  LOOT_API std::string GetName() const;
+  LOOT_API std::string GetDisplayName() const;
 private:
   std::string name_;
   std::string display_;

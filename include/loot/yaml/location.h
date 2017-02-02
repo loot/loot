@@ -37,9 +37,9 @@ struct convert<loot::Location> {
   static Node encode(const loot::Location& rhs) {
     Node node;
 
-    node["link"] = rhs.URL();
-    if (!rhs.Name().empty())
-      node["name"] = rhs.Name();
+    node["link"] = rhs.GetURL();
+    if (!rhs.GetName().empty())
+      node["name"] = rhs.GetName();
 
     return node;
   }
@@ -68,12 +68,12 @@ struct convert<loot::Location> {
 };
 
 inline Emitter& operator << (Emitter& out, const loot::Location& rhs) {
-  if (rhs.Name().empty())
-    out << YAML::SingleQuoted << rhs.URL();
+  if (rhs.GetName().empty())
+    out << YAML::SingleQuoted << rhs.GetURL();
   else {
     out << BeginMap
-      << Key << "link" << Value << YAML::SingleQuoted << rhs.URL()
-      << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
+      << Key << "link" << Value << YAML::SingleQuoted << rhs.GetURL()
+      << Key << "name" << Value << YAML::SingleQuoted << rhs.GetName()
       << EndMap;
   }
   return out;

@@ -38,8 +38,8 @@ public:
   LOOT_API bool operator < (const Location& rhs) const;
   LOOT_API bool operator == (const Location& rhs) const;
 
-  LOOT_API std::string URL() const;
-  LOOT_API std::string Name() const;
+  LOOT_API std::string GetURL() const;
+  LOOT_API std::string GetName() const;
 private:
   std::string url_;
   std::string name_;

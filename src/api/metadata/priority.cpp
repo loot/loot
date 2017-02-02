@@ -38,11 +38,11 @@ Priority::Priority(const int value)
   }
 }
 
-short Priority::getValue() const {
+short Priority::GetValue() const {
   return value_;
 }
 
-bool Priority::isExplicit() const {
+bool Priority::IsExplicit() const {
   return value_ != 0 || isExplicitZeroValue_;
 }
 

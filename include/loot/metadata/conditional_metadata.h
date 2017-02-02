@@ -37,7 +37,7 @@ public:
   LOOT_API bool IsConditional() const;
   LOOT_API void ParseCondition() const;
 
-  LOOT_API std::string Condition() const;
+  LOOT_API std::string GetCondition() const;
 private:
   std::string condition_;
 };

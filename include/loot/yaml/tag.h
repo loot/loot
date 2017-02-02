@@ -36,11 +36,11 @@ struct convert<loot::Tag> {
   static Node encode(const loot::Tag& rhs) {
     Node node;
     if (rhs.IsConditional())
-      node["condition"] = rhs.Condition();
+      node["condition"] = rhs.GetCondition();
     if (rhs.IsAddition())
-      node["name"] = rhs.Name();
+      node["name"] = rhs.GetName();
     else
-      node["name"] = "-" + rhs.Name();
+      node["name"] = "-" + rhs.GetName();
     return node;
   }
 
@@ -78,17 +78,17 @@ struct convert<loot::Tag> {
 inline Emitter& operator << (Emitter& out, const loot::Tag& rhs) {
   if (!rhs.IsConditional()) {
     if (rhs.IsAddition())
-      out << rhs.Name();
+      out << rhs.GetName();
     else
-      out << ('-' + rhs.Name());
+      out << ('-' + rhs.GetName());
   } else {
     out << BeginMap;
     if (rhs.IsAddition())
-      out << Key << "name" << Value << rhs.Name();
+      out << Key << "name" << Value << rhs.GetName();
     else
-      out << Key << "name" << Value << ('-' + rhs.Name());
+      out << Key << "name" << Value << ('-' + rhs.GetName());
 
-    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.Condition()
+    out << Key << "condition" << Value << YAML::SingleQuoted << rhs.GetCondition()
       << EndMap;
   }
 

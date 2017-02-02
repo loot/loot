@@ -179,9 +179,9 @@ void ApiDatabase::WriteMinimalList(const std::string& outputFile, const bool ove
   Masterlist temp = game_.GetMasterlist();
   std::unordered_set<PluginMetadata> minimalPlugins;
   for (const auto &plugin : temp.Plugins()) {
-    PluginMetadata p(plugin.Name());
-    p.Tags(plugin.Tags());
-    p.DirtyInfo(plugin.DirtyInfo());
+    PluginMetadata p(plugin.GetName());
+    p.SetTags(plugin.GetTags());
+    p.SetDirtyInfo(plugin.GetDirtyInfo());
     minimalPlugins.insert(p);
   }
 

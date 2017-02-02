@@ -81,68 +81,68 @@ bool ConditionEvaluator::evaluate(const PluginCleaningData& cleaningData, const 
     }
   }
 
-  return cleaningData.CRC() == crc;
+  return cleaningData.GetCRC() == crc;
 }
 
 PluginMetadata ConditionEvaluator::evaluateAll(const PluginMetadata& pluginMetadata) {
   if (game_ == nullptr)
     return pluginMetadata;
 
-  PluginMetadata evaluatedMetadata(pluginMetadata.Name());
-  evaluatedMetadata.Enabled(pluginMetadata.Enabled());
-  evaluatedMetadata.LocalPriority(pluginMetadata.LocalPriority());
-  evaluatedMetadata.GlobalPriority(pluginMetadata.GlobalPriority());
-  evaluatedMetadata.Locations(pluginMetadata.Locations());
+  PluginMetadata evaluatedMetadata(pluginMetadata.GetName());
+  evaluatedMetadata.SetEnabled(pluginMetadata.IsEnabled());
+  evaluatedMetadata.SetLocalPriority(pluginMetadata.GetLocalPriority());
+  evaluatedMetadata.SetGlobalPriority(pluginMetadata.GetGlobalPriority());
+  evaluatedMetadata.SetLocations(pluginMetadata.GetLocations());
 
   std::set<File> fileSet;
-  for (const auto& file : pluginMetadata.LoadAfter()) {
-    if (evaluate(file.Condition()))
+  for (const auto& file : pluginMetadata.GetLoadAfterFiles()) {
+    if (evaluate(file.GetCondition()))
       fileSet.insert(file);
   }
-  evaluatedMetadata.LoadAfter(fileSet);
+  evaluatedMetadata.SetLoadAfterFiles(fileSet);
 
   fileSet.clear();
-  for (const auto& file : pluginMetadata.Reqs()) {
-    if (evaluate(file.Condition()))
+  for (const auto& file : pluginMetadata.GetRequirements()) {
+    if (evaluate(file.GetCondition()))
       fileSet.insert(file);
   }
-  evaluatedMetadata.Reqs(fileSet);
+  evaluatedMetadata.SetRequirements(fileSet);
 
   fileSet.clear();
-  for (const auto& file : pluginMetadata.Incs()) {
-    if (evaluate(file.Condition()))
+  for (const auto& file : pluginMetadata.GetIncompatibilities()) {
+    if (evaluate(file.GetCondition()))
       fileSet.insert(file);
   }
-  evaluatedMetadata.Incs(fileSet);
+  evaluatedMetadata.SetIncompatibilities(fileSet);
 
   std::vector<Message> messages;
-  for (const auto& message : pluginMetadata.Messages()) {
-    if (evaluate(message.Condition()))
+  for (const auto& message : pluginMetadata.GetMessages()) {
+    if (evaluate(message.GetCondition()))
       messages.push_back(message);
   }
-  evaluatedMetadata.Messages(messages);
+  evaluatedMetadata.SetMessages(messages);
 
   std::set<Tag> tagSet;
-  for (const auto& tag : pluginMetadata.Tags()) {
-    if (evaluate(tag.Condition()))
+  for (const auto& tag : pluginMetadata.GetTags()) {
+    if (evaluate(tag.GetCondition()))
       tagSet.insert(tag);
   }
-  evaluatedMetadata.Tags(tagSet);
+  evaluatedMetadata.SetTags(tagSet);
 
   if (!evaluatedMetadata.IsRegexPlugin()) {
     std::set<PluginCleaningData> infoSet;
-    for (const auto& info : pluginMetadata.DirtyInfo()) {
-      if (evaluate(info, pluginMetadata.Name()))
+    for (const auto& info : pluginMetadata.GetDirtyInfo()) {
+      if (evaluate(info, pluginMetadata.GetName()))
         infoSet.insert(info);
     }
-    evaluatedMetadata.DirtyInfo(infoSet);
+    evaluatedMetadata.SetDirtyInfo(infoSet);
 
     infoSet.clear();
-    for (const auto& info : pluginMetadata.CleanInfo()) {
-      if (evaluate(info, pluginMetadata.Name()))
+    for (const auto& info : pluginMetadata.GetCleanInfo()) {
+      if (evaluate(info, pluginMetadata.GetName()))
         infoSet.insert(info);
     }
-    evaluatedMetadata.CleanInfo(infoSet);
+    evaluatedMetadata.SetCleanInfo(infoSet);
   }
 
   return evaluatedMetadata;

@@ -46,12 +46,12 @@ public:
   LOOT_API bool operator < (const PluginCleaningData& rhs) const;
   LOOT_API bool operator == (const PluginCleaningData& rhs) const;
 
-  LOOT_API uint32_t CRC() const;
-  LOOT_API unsigned int ITMs() const;
-  LOOT_API unsigned int DeletedRefs() const;
-  LOOT_API unsigned int DeletedNavmeshes() const;
-  LOOT_API std::string CleaningUtility() const;
-  LOOT_API std::vector<MessageContent> Info() const;
+  LOOT_API uint32_t GetCRC() const;
+  LOOT_API unsigned int GetITMCount() const;
+  LOOT_API unsigned int GetDeletedReferenceCount() const;
+  LOOT_API unsigned int GetDeletedNavmeshCount() const;
+  LOOT_API std::string GetCleaningUtility() const;
+  LOOT_API std::vector<MessageContent> GetInfo() const;
 
   LOOT_API MessageContent ChooseInfo(const LanguageCode language) const;
   LOOT_API Message AsMessage() const;

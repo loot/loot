@@ -176,7 +176,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
-  metadata.Reqs({
+  metadata.SetRequirements({
     File(missingEsp),
     File(blankEsp),
   });
@@ -192,7 +192,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) 
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
-  metadata.Incs({
+  metadata.SetIncompatibilities({
     File(missingEsp),
     File(masterFile),
   });
@@ -212,7 +212,7 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
     MessageContent("info", LanguageCode::english),
   });
 
-  metadata.DirtyInfo({
+  metadata.SetDirtyInfo({
     PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2),
     PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10),
   });
@@ -241,7 +241,7 @@ TEST_P(GameTest, checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActive
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
-  metadata.Tags({Tag("Filter")});
+  metadata.SetTags({Tag("Filter")});
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
   EXPECT_TRUE(messages.empty());

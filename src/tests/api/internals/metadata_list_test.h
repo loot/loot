@@ -64,7 +64,7 @@ protected:
   }
 
   static std::string PluginMetadataToString(const PluginMetadata& metadata) {
-    return metadata.Name();
+    return metadata.GetName();
   }
 
   const boost::filesystem::path metadataPath;
@@ -210,7 +210,7 @@ TEST_P(MetadataListTest, findPluginShouldReturnAnEmptyPluginObjectIfTheGivenPlug
   MetadataList metadataList;
   PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankDifferentEsm));
 
-  EXPECT_EQ(blankDifferentEsm, plugin.Name());
+  EXPECT_EQ(blankDifferentEsm, plugin.GetName());
   EXPECT_TRUE(plugin.HasNameOnly());
 }
 
@@ -220,13 +220,13 @@ TEST_P(MetadataListTest, findPluginShouldReturnTheMetadataObjectInTheMetadataLis
 
   PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankDifferentEsp));
 
-  EXPECT_EQ(blankDifferentEsp, plugin.Name());
+  EXPECT_EQ(blankDifferentEsp, plugin.GetName());
   EXPECT_EQ(std::set<File>({
       File(blankEsm),
-  }), plugin.LoadAfter());
+  }), plugin.GetLoadAfterFiles());
   EXPECT_EQ(std::set<File>({
       File(blankEsp),
-  }), plugin.Incs());
+  }), plugin.GetIncompatibilities());
 }
 
 TEST_P(MetadataListTest, addPluginShouldStoreGivenSpecificPluginMetadata) {
@@ -235,13 +235,13 @@ TEST_P(MetadataListTest, addPluginShouldStoreGivenSpecificPluginMetadata) {
   ASSERT_TRUE(metadataList.FindPlugin(PluginMetadata(blankDifferentEsm)).HasNameOnly());
 
   PluginMetadata plugin(blankDifferentEsm);
-  plugin.LocalPriority(Priority(100));
+  plugin.SetLocalPriority(Priority(100));
   metadataList.AddPlugin(plugin);
 
   plugin = metadataList.FindPlugin(plugin);
 
-  EXPECT_EQ(blankDifferentEsm, plugin.Name());
-  EXPECT_EQ(100, plugin.LocalPriority().getValue());
+  EXPECT_EQ(blankDifferentEsm, plugin.GetName());
+  EXPECT_EQ(100, plugin.GetLocalPriority().GetValue());
 }
 
 TEST_P(MetadataListTest, addPluginShouldStoreGivenRegexPluginMetadata) {
@@ -249,12 +249,12 @@ TEST_P(MetadataListTest, addPluginShouldStoreGivenRegexPluginMetadata) {
   ASSERT_NO_THROW(metadataList.Load(metadataPath));
 
   PluginMetadata plugin(".+Dependent\\.esp");
-  plugin.LocalPriority(Priority(-10));
+  plugin.SetLocalPriority(Priority(-10));
   metadataList.AddPlugin(plugin);
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankPluginDependentEsp));
 
-  EXPECT_EQ(-10, plugin.LocalPriority().getValue());
+  EXPECT_EQ(-10, plugin.GetLocalPriority().GetValue());
 }
 
 TEST_P(MetadataListTest, addPluginShouldThrowIfAMatchingPluginAlreadyExists) {
@@ -262,7 +262,7 @@ TEST_P(MetadataListTest, addPluginShouldThrowIfAMatchingPluginAlreadyExists) {
   ASSERT_NO_THROW(metadataList.Load(metadataPath));
 
   PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
-  ASSERT_EQ(blankEsm, plugin.Name());
+  ASSERT_EQ(blankEsm, plugin.GetName());
   ASSERT_FALSE(plugin.HasNameOnly());
 
   EXPECT_THROW(metadataList.AddPlugin(PluginMetadata(blankEsm)), std::invalid_argument);
@@ -273,13 +273,13 @@ TEST_P(MetadataListTest, erasePluginShouldRemoveStoredMetadataForTheGivenPlugin)
   ASSERT_NO_THROW(metadataList.Load(metadataPath));
 
   PluginMetadata plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));
-  ASSERT_EQ(blankEsp, plugin.Name());
+  ASSERT_EQ(blankEsp, plugin.GetName());
   ASSERT_FALSE(plugin.HasNameOnly());
 
   metadataList.ErasePlugin(plugin);
 
   plugin = metadataList.FindPlugin(plugin);
-  EXPECT_EQ(blankEsp, plugin.Name());
+  EXPECT_EQ(blankEsp, plugin.GetName());
   EXPECT_TRUE(plugin.HasNameOnly());
 }
 
@@ -293,10 +293,10 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
   ASSERT_EQ(std::vector<Message>({
       Message(MessageType::warn, "This is a warning."),
       Message(MessageType::say, "This message should be removed when evaluating conditions."),
-  }), plugin.Messages());
+  }), plugin.GetMessages());
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));
-  ASSERT_EQ(blankEsp, plugin.Name());
+  ASSERT_EQ(blankEsp, plugin.GetName());
   ASSERT_FALSE(plugin.HasNameOnly());
 
   EXPECT_NO_THROW(metadataList.EvalAllConditions(game));
@@ -304,10 +304,10 @@ TEST_P(MetadataListTest, evalAllConditionsShouldEvaluateTheConditionsForThePlugi
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsm));
   EXPECT_EQ(std::vector<Message>({
       Message(MessageType::warn, "This is a warning."),
-  }), plugin.Messages());
+  }), plugin.GetMessages());
 
   plugin = metadataList.FindPlugin(PluginMetadata(blankEsp));
-  EXPECT_EQ(blankEsp, plugin.Name());
+  EXPECT_EQ(blankEsp, plugin.GetName());
   EXPECT_TRUE(plugin.HasNameOnly());
 }
 }

@@ -49,14 +49,14 @@ INSTANTIATE_TEST_CASE_P(,
                           GameType::tes5se));
 
 TEST_P(ConditionalMetadataTest, defaultConstructorShouldSetEmptyConditionString) {
-  EXPECT_TRUE(conditionalMetadata_.Condition().empty());
+  EXPECT_TRUE(conditionalMetadata_.GetCondition().empty());
 }
 
 TEST_P(ConditionalMetadataTest, stringConstructorShouldSetConditionToGivenString) {
   std::string condition("condition");
   conditionalMetadata_ = ConditionalMetadata(condition);
 
-  EXPECT_EQ(condition, conditionalMetadata_.Condition());
+  EXPECT_EQ(condition, conditionalMetadata_.GetCondition());
 }
 
 TEST_P(ConditionalMetadataTest, isConditionalShouldBeFalseForAnEmptyConditionString) {

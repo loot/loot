@@ -55,33 +55,33 @@ public:
   //For 'priority', use 0 if the two plugin priorities are equal, and make it not explicit. Otherwise use this plugin's value.
   LOOT_API PluginMetadata NewMetadata(const PluginMetadata& plugin) const;
 
-  LOOT_API std::string Name() const;
-  LOOT_API std::string LowercasedName() const;
-  LOOT_API bool Enabled() const;
-  LOOT_API Priority LocalPriority() const;
-  LOOT_API Priority GlobalPriority() const;
-  LOOT_API std::set<File> LoadAfter() const;
-  LOOT_API std::set<File> Reqs() const;
-  LOOT_API std::set<File> Incs() const;
-  LOOT_API std::vector<Message> Messages() const;
-  LOOT_API std::set<Tag> Tags() const;
-  LOOT_API std::set<PluginCleaningData> DirtyInfo() const;
-  LOOT_API std::set<PluginCleaningData> CleanInfo() const;
-  LOOT_API std::set<Location> Locations() const;
+  LOOT_API std::string GetName() const;
+  LOOT_API std::string GetLowercasedName() const;
+  LOOT_API bool IsEnabled() const;
+  LOOT_API Priority GetLocalPriority() const;
+  LOOT_API Priority GetGlobalPriority() const;
+  LOOT_API std::set<File> GetLoadAfterFiles() const;
+  LOOT_API std::set<File> GetRequirements() const;
+  LOOT_API std::set<File> GetIncompatibilities() const;
+  LOOT_API std::vector<Message> GetMessages() const;
+  LOOT_API std::set<Tag> GetTags() const;
+  LOOT_API std::set<PluginCleaningData> GetDirtyInfo() const;
+  LOOT_API std::set<PluginCleaningData> GetCleanInfo() const;
+  LOOT_API std::set<Location> GetLocations() const;
 
-  LOOT_API std::vector<SimpleMessage> SimpleMessages(const LanguageCode language) const;
+  LOOT_API std::vector<SimpleMessage> GetSimpleMessages(const LanguageCode language) const;
 
-  LOOT_API void Enabled(const bool enabled);
-  LOOT_API void LocalPriority(const Priority& priority);
-  LOOT_API void GlobalPriority(const Priority& priority);
-  LOOT_API void LoadAfter(const std::set<File>& after);
-  LOOT_API void Reqs(const std::set<File>& reqs);
-  LOOT_API void Incs(const std::set<File>& incs);
-  LOOT_API void Messages(const std::vector<Message>& messages);
-  LOOT_API void Tags(const std::set<Tag>& tags);
-  LOOT_API void DirtyInfo(const std::set<PluginCleaningData>& info);
-  LOOT_API void CleanInfo(const std::set<PluginCleaningData>& info);
-  LOOT_API void Locations(const std::set<Location>& locations);
+  LOOT_API void SetEnabled(const bool enabled);
+  LOOT_API void SetLocalPriority(const Priority& priority);
+  LOOT_API void SetGlobalPriority(const Priority& priority);
+  LOOT_API void SetLoadAfterFiles(const std::set<File>& after);
+  LOOT_API void SetRequirements(const std::set<File>& reqs);
+  LOOT_API void SetIncompatibilities(const std::set<File>& incs);
+  LOOT_API void SetMessages(const std::vector<Message>& messages);
+  LOOT_API void SetTags(const std::set<Tag>& tags);
+  LOOT_API void SetDirtyInfo(const std::set<PluginCleaningData>& info);
+  LOOT_API void SetCleanInfo(const std::set<PluginCleaningData>& info);
+  LOOT_API void SetLocations(const std::set<Location>& locations);
 
   LOOT_API bool HasNameOnly() const;
   LOOT_API bool IsRegexPlugin() const;
@@ -113,7 +113,7 @@ namespace std {
 template<>
 struct hash<loot::PluginMetadata> {
   size_t operator() (const loot::PluginMetadata& plugin) const {
-    return hash<string>()(plugin.LowercasedName());
+    return hash<string>()(plugin.GetLowercasedName());
   }
 };
 }

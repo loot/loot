@@ -34,7 +34,6 @@
 #include "api/plugin/plugin.h"
 
 namespace loot {
-
 class PluginSortingData : public Plugin, private PluginMetadata {
 public:
   PluginSortingData(const Plugin& plugin, const PluginMetadata& metadata);
@@ -46,10 +45,14 @@ public:
   using Plugin::NumOverrideFormIDs;
   using Plugin::DoFormIDsOverlap;
 
-  using PluginMetadata::LocalPriority;
-  using PluginMetadata::GlobalPriority;
-  using PluginMetadata::Reqs;
-  using PluginMetadata::LoadAfter;
+  using PluginMetadata::GetLocalPriority;
+  using PluginMetadata::SetLocalPriority;
+  using PluginMetadata::GetGlobalPriority;
+  using PluginMetadata::SetGlobalPriority;
+  using PluginMetadata::GetRequirements;
+  using PluginMetadata::SetRequirements;
+  using PluginMetadata::GetLoadAfterFiles;
+  using PluginMetadata::SetLoadAfterFiles;
 };
 
 typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, PluginSortingData> PluginGraph;

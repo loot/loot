@@ -56,14 +56,14 @@ void PluginMetadata::MergeMetadata(const PluginMetadata& plugin) {
 
 // For 'enabled' and 'priority' metadata, use the given plugin's values,
 // but if the 'priority' user value is not explicit, ignore it.
-  enabled_ = plugin.Enabled();
+  enabled_ = plugin.IsEnabled();
 
-  if (plugin.localPriority_.isExplicit()) {
-    LocalPriority(plugin.localPriority_);
+  if (plugin.localPriority_.IsExplicit()) {
+    SetLocalPriority(plugin.localPriority_);
   }
 
-  if (plugin.globalPriority_.isExplicit()) {
-    GlobalPriority(plugin.globalPriority_);
+  if (plugin.globalPriority_.IsExplicit()) {
+    SetGlobalPriority(plugin.globalPriority_);
   }
 
   // Merge the following. If any files in the source already exist in the
@@ -102,7 +102,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.loadAfter_),
                  end(plugin.loadAfter_),
                  inserter(filesDiff, begin(filesDiff)));
-  p.LoadAfter(filesDiff);
+  p.SetLoadAfterFiles(filesDiff);
 
   filesDiff.clear();
   set_difference(begin(requirements_),
@@ -110,7 +110,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.requirements_),
                  end(plugin.requirements_),
                  inserter(filesDiff, begin(filesDiff)));
-  p.Reqs(filesDiff);
+  p.SetRequirements(filesDiff);
 
   filesDiff.clear();
   set_difference(begin(incompatibilities_),
@@ -118,9 +118,9 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.incompatibilities_),
                  end(plugin.incompatibilities_),
                  inserter(filesDiff, begin(filesDiff)));
-  p.Incs(filesDiff);
+  p.SetIncompatibilities(filesDiff);
 
-  vector<Message> msgs1 = plugin.Messages();
+  vector<Message> msgs1 = plugin.GetMessages();
   vector<Message> msgs2 = messages_;
   std::sort(begin(msgs1), end(msgs1));
   std::sort(begin(msgs2), end(msgs2));
@@ -130,7 +130,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(msgs1),
                  end(msgs1),
                  inserter(mDiff, begin(mDiff)));
-  p.Messages(mDiff);
+  p.SetMessages(mDiff);
 
   set<Tag> tagDiff;
   set_difference(begin(tags_),
@@ -138,7 +138,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.tags_),
                  end(plugin.tags_),
                  inserter(tagDiff, begin(tagDiff)));
-  p.Tags(tagDiff);
+  p.SetTags(tagDiff);
 
   set<PluginCleaningData> dirtDiff;
   set_difference(begin(dirtyInfo_),
@@ -146,7 +146,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.dirtyInfo_),
                  end(plugin.dirtyInfo_),
                  inserter(dirtDiff, begin(dirtDiff)));
-  p.DirtyInfo(dirtDiff);
+  p.SetDirtyInfo(dirtDiff);
 
   set<PluginCleaningData> cleanDiff;
   set_difference(begin(cleanInfo_),
@@ -154,7 +154,7 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.cleanInfo_),
                  end(plugin.cleanInfo_),
                  inserter(cleanDiff, begin(cleanDiff)));
-  p.CleanInfo(cleanDiff);
+  p.SetCleanInfo(cleanDiff);
 
   set<Location> locationsDiff;
   set_difference(begin(locations_),
@@ -162,64 +162,64 @@ PluginMetadata PluginMetadata::NewMetadata(const PluginMetadata& plugin) const {
                  begin(plugin.locations_),
                  end(plugin.locations_),
                  inserter(locationsDiff, begin(locationsDiff)));
-  p.Locations(locationsDiff);
+  p.SetLocations(locationsDiff);
 
   return p;
 }
 
-std::string PluginMetadata::Name() const {
+std::string PluginMetadata::GetName() const {
   return name_;
 }
 
-std::string PluginMetadata::LowercasedName() const {
+std::string PluginMetadata::GetLowercasedName() const {
   return boost::locale::to_lower(name_);
 }
 
-bool PluginMetadata::Enabled() const {
+bool PluginMetadata::IsEnabled() const {
   return enabled_;
 }
 
-Priority PluginMetadata::LocalPriority() const {
+Priority PluginMetadata::GetLocalPriority() const {
   return localPriority_;
 }
 
-Priority PluginMetadata::GlobalPriority() const {
+Priority PluginMetadata::GetGlobalPriority() const {
   return globalPriority_;
 }
 
-std::set<File> PluginMetadata::LoadAfter() const {
+std::set<File> PluginMetadata::GetLoadAfterFiles() const {
   return loadAfter_;
 }
 
-std::set<File> PluginMetadata::Reqs() const {
+std::set<File> PluginMetadata::GetRequirements() const {
   return requirements_;
 }
 
-std::set<File> PluginMetadata::Incs() const {
+std::set<File> PluginMetadata::GetIncompatibilities() const {
   return incompatibilities_;
 }
 
-std::vector<Message> PluginMetadata::Messages() const {
+std::vector<Message> PluginMetadata::GetMessages() const {
   return messages_;
 }
 
-std::set<Tag> PluginMetadata::Tags() const {
+std::set<Tag> PluginMetadata::GetTags() const {
   return tags_;
 }
 
-std::set<PluginCleaningData> PluginMetadata::DirtyInfo() const {
+std::set<PluginCleaningData> PluginMetadata::GetDirtyInfo() const {
   return dirtyInfo_;
 }
 
-std::set<PluginCleaningData> PluginMetadata::CleanInfo() const {
+std::set<PluginCleaningData> PluginMetadata::GetCleanInfo() const {
   return cleanInfo_;
 }
 
-std::set<Location> PluginMetadata::Locations() const {
+std::set<Location> PluginMetadata::GetLocations() const {
   return locations_;
 }
 
-std::vector<SimpleMessage> PluginMetadata::SimpleMessages(const LanguageCode language) const {
+std::vector<SimpleMessage> PluginMetadata::GetSimpleMessages(const LanguageCode language) const {
   std::vector<SimpleMessage> simpleMessages(messages_.size());
   std::transform(begin(messages_), end(messages_), begin(simpleMessages), [&](const Message& message) {
     return message.ToSimpleMessage(language);
@@ -228,53 +228,53 @@ std::vector<SimpleMessage> PluginMetadata::SimpleMessages(const LanguageCode lan
   return simpleMessages;
 }
 
-void PluginMetadata::Enabled(const bool e) {
+void PluginMetadata::SetEnabled(const bool e) {
   enabled_ = e;
 }
 
-void PluginMetadata::LocalPriority(const Priority& priority) {
+void PluginMetadata::SetLocalPriority(const Priority& priority) {
   localPriority_ = priority;
 }
 
-void PluginMetadata::GlobalPriority(const Priority& priority) {
+void PluginMetadata::SetGlobalPriority(const Priority& priority) {
   globalPriority_ = priority;
 }
 
-void PluginMetadata::LoadAfter(const std::set<File>& l) {
+void PluginMetadata::SetLoadAfterFiles(const std::set<File>& l) {
   loadAfter_ = l;
 }
 
-void PluginMetadata::Reqs(const std::set<File>& r) {
+void PluginMetadata::SetRequirements(const std::set<File>& r) {
   requirements_ = r;
 }
 
-void PluginMetadata::Incs(const std::set<File>& i) {
+void PluginMetadata::SetIncompatibilities(const std::set<File>& i) {
   incompatibilities_ = i;
 }
 
-void PluginMetadata::Messages(const std::vector<Message>& m) {
+void PluginMetadata::SetMessages(const std::vector<Message>& m) {
   messages_ = m;
 }
 
-void PluginMetadata::Tags(const std::set<Tag>& t) {
+void PluginMetadata::SetTags(const std::set<Tag>& t) {
   tags_ = t;
 }
 
-void PluginMetadata::DirtyInfo(const std::set<PluginCleaningData>& dirtyInfo) {
+void PluginMetadata::SetDirtyInfo(const std::set<PluginCleaningData>& dirtyInfo) {
   dirtyInfo_ = dirtyInfo;
 }
 
-void PluginMetadata::CleanInfo(const std::set<PluginCleaningData>& info) {
+void PluginMetadata::SetCleanInfo(const std::set<PluginCleaningData>& info) {
   cleanInfo_ = info;
 }
 
-void PluginMetadata::Locations(const std::set<Location>& locations) {
+void PluginMetadata::SetLocations(const std::set<Location>& locations) {
   locations_ = locations;
 }
 
 bool PluginMetadata::HasNameOnly() const {
-  return !localPriority_.isExplicit()
-    && !globalPriority_.isExplicit()
+  return !localPriority_.IsExplicit()
+    && !globalPriority_.IsExplicit()
     && loadAfter_.empty()
     && requirements_.empty()
     && incompatibilities_.empty()
@@ -294,12 +294,12 @@ bool PluginMetadata::IsRegexPlugin() const {
 
 bool PluginMetadata::operator == (const PluginMetadata& rhs) const {
   if (IsRegexPlugin() == rhs.IsRegexPlugin())
-    return boost::iequals(name_, rhs.Name());
+    return boost::iequals(name_, rhs.GetName());
 
   if (IsRegexPlugin())
-    return regex_match(rhs.Name(), regex(name_, regex::ECMAScript | regex::icase));
+    return regex_match(rhs.GetName(), regex(name_, regex::ECMAScript | regex::icase));
   else
-    return regex_match(name_, regex(rhs.Name(), regex::ECMAScript | regex::icase));
+    return regex_match(name_, regex(rhs.GetName(), regex::ECMAScript | regex::icase));
 }
 
 bool PluginMetadata::operator != (const PluginMetadata& rhs) const {
@@ -308,9 +308,9 @@ bool PluginMetadata::operator != (const PluginMetadata& rhs) const {
 
 bool PluginMetadata::operator == (const std::string& rhs) const {
   if (IsRegexPlugin())
-    return regex_match(PluginMetadata(rhs).Name(), regex(name_, regex::ECMAScript | regex::icase));
+    return regex_match(PluginMetadata(rhs).GetName(), regex(name_, regex::ECMAScript | regex::icase));
   else
-    return boost::iequals(name_, PluginMetadata(rhs).Name());
+    return boost::iequals(name_, PluginMetadata(rhs).GetName());
 }
 
 bool PluginMetadata::operator != (const std::string& rhs) const {

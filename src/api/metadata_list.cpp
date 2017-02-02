@@ -55,7 +55,7 @@ void MetadataList::Load(const boost::filesystem::path& filepath) {
       if (plugin.IsRegexPlugin())
         regexPlugins_.push_back(plugin);
       else if (!plugins_.insert(plugin).second)
-        throw FileAccessError("More than one entry exists for \"" + plugin.Name() + "\"");
+        throw FileAccessError("More than one entry exists for \"" + plugin.GetName() + "\"");
     }
   }
   if (metadataList["globals"])
@@ -110,7 +110,7 @@ std::set<std::string> MetadataList::BashTags() const {
 
 // Merges multiple matching regex entries if any are found.
 PluginMetadata MetadataList::FindPlugin(const PluginMetadata& plugin) const {
-  PluginMetadata match(plugin.Name());
+  PluginMetadata match(plugin.GetName());
 
   auto it = plugins_.find(plugin);
 
@@ -133,7 +133,7 @@ void MetadataList::AddPlugin(const PluginMetadata& plugin) {
     regexPlugins_.push_back(plugin);
   else {
     if (!plugins_.insert(plugin).second)
-      throw std::invalid_argument("Cannot add \"" + plugin.Name() + "\" to the metadata list as another entry already exists.");
+      throw std::invalid_argument("Cannot add \"" + plugin.GetName() + "\" to the metadata list as another entry already exists.");
   }
 }
 
@@ -164,7 +164,7 @@ void MetadataList::EvalAllConditions(Game& game) {
   }
 
   for (auto it = std::begin(messages_); it != std::end(messages_);) {
-    if (!evaluator.evaluate(it->Condition()))
+    if (!evaluator.evaluate(it->GetCondition()))
       it = messages_.erase(it);
     else
       ++it;

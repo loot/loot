@@ -88,7 +88,7 @@ TEST_P(PluginSorterTest, sortingShouldNotMakeUnnecessaryChangesToAnExistingLoadO
 TEST_P(PluginSorterTest, sortingShouldEvaluateRelativeGlobalPriorities) {
   ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankDifferentMasterDependentEsp);
-  plugin.GlobalPriority(Priority(-100));
+  plugin.SetGlobalPriority(Priority(-100));
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
@@ -115,13 +115,13 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
 
   // Set Blank.esp's priority.
   PluginMetadata plugin(blankEsp);
-  plugin.GlobalPriority(Priority(2));
+  plugin.SetGlobalPriority(Priority(2));
   game_.GetUserlist().AddPlugin(plugin);
 
   // Load Blank - Master Dependent.esp after Blank.esp so that it
   // inherits Blank.esp's priority.
   plugin = PluginMetadata(blankMasterDependentEsp);
-  plugin.LoadAfter({
+  plugin.SetLoadAfterFiles({
     File(blankEsp),
   });
   game_.GetUserlist().AddPlugin(plugin);
@@ -129,7 +129,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
   // Load Blank - Different.esp after Blank - Master Dependent.esp, so
   // that it inherits its inherited priority.
   plugin = PluginMetadata(blankDifferentEsp);
-  plugin.LoadAfter({
+  plugin.SetLoadAfterFiles({
     File(blankMasterDependentEsp),
   });
   game_.GetUserlist().AddPlugin(plugin);
@@ -138,7 +138,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
   // than 0 but lower than Blank.esp. Need to also make it a global priority
   // because it doesn't otherwise conflict with the other plugins.
   plugin = PluginMetadata(blankDifferentMasterDependentEsp);
-  plugin.GlobalPriority(Priority(1));
+  plugin.SetGlobalPriority(Priority(1));
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;
@@ -163,7 +163,7 @@ TEST_P(PluginSorterTest, sortingWithGlobalPrioritiesShouldInheritRecursivelyRega
 TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePluginPositions) {
   ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsp);
-  plugin.LoadAfter({
+  plugin.SetLoadAfterFiles({
       File(blankDifferentEsp),
       File(blankDifferentPluginDependentEsp),
   });
@@ -191,7 +191,7 @@ TEST_P(PluginSorterTest, sortingShouldUseLoadAfterMetadataWhenDecidingRelativePl
 TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelativePluginPositions) {
   ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsp);
-  plugin.Reqs({
+  plugin.SetRequirements({
       File(blankDifferentEsp),
       File(blankDifferentPluginDependentEsp),
   });
@@ -219,7 +219,7 @@ TEST_P(PluginSorterTest, sortingShouldUseRequirementMetadataWhenDecidingRelative
 TEST_P(PluginSorterTest, sortingShouldThrowIfACyclicInteractionIsEncountered) {
   ASSERT_NO_THROW(loadInstalledPlugins(game_, false));
   PluginMetadata plugin(blankEsm);
-  plugin.LoadAfter({File(blankMasterDependentEsm)});
+  plugin.SetLoadAfterFiles({File(blankMasterDependentEsm)});
   game_.GetUserlist().AddPlugin(plugin);
 
   PluginSorter ps;

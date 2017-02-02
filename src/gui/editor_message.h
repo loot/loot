@@ -34,7 +34,7 @@ struct EditorMessage : public SimpleMessage {
   EditorMessage() {}
   EditorMessage(const Message& message, const LanguageCode language)
     : SimpleMessage(message.ToSimpleMessage(language)) {
-    condition = message.Condition();
+    condition = message.GetCondition();
   }
 
   std::string condition;

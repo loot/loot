@@ -34,28 +34,28 @@ namespace test {
 TEST(Priority, defaultConstructorShouldInitialiseAnImplicitZeroPriority) {
   Priority priority;
 
-  EXPECT_EQ(0, priority.getValue());
-  EXPECT_FALSE(priority.isExplicit());
+  EXPECT_EQ(0, priority.GetValue());
+  EXPECT_FALSE(priority.IsExplicit());
 }
 
 TEST(Priority, valueConstructorShouldInitialseAnExplicitValue) {
   Priority priority(0);
 
-  EXPECT_EQ(0, priority.getValue());
-  EXPECT_TRUE(priority.isExplicit());
+  EXPECT_EQ(0, priority.GetValue());
+  EXPECT_TRUE(priority.IsExplicit());
 
   priority = Priority(5);
 
-  EXPECT_EQ(5, priority.getValue());
-  EXPECT_TRUE(priority.isExplicit());
+  EXPECT_EQ(5, priority.GetValue());
+  EXPECT_TRUE(priority.IsExplicit());
 }
 
 TEST(Priority, valueConstructorTruncatesOutOfRangeValues) {
-  EXPECT_EQ(127, Priority(127).getValue());
-  EXPECT_EQ(127, Priority(128).getValue());
+  EXPECT_EQ(127, Priority(127).GetValue());
+  EXPECT_EQ(127, Priority(128).GetValue());
 
-  EXPECT_EQ(-127, Priority(-127).getValue());
-  EXPECT_EQ(-127, Priority(-128).getValue());
+  EXPECT_EQ(-127, Priority(-127).GetValue());
+  EXPECT_EQ(-127, Priority(-128).GetValue());
 }
 
 TEST(Priority, lessThanOperatorShouldCompareValues) {

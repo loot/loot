@@ -41,7 +41,7 @@ bool ConditionalMetadata::IsConditional() const {
   return !condition_.empty();
 }
 
-std::string ConditionalMetadata::Condition() const {
+std::string ConditionalMetadata::GetCondition() const {
   return condition_;
 }
 

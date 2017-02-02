@@ -35,18 +35,18 @@ File::File(const std::string& name, const std::string& display, const std::strin
   : name_(name), display_(display), ConditionalMetadata(condition) {}
 
 bool File::operator < (const File& rhs) const {
-  return boost::ilexicographical_compare(Name(), rhs.Name());
+  return boost::ilexicographical_compare(GetName(), rhs.GetName());
 }
 
 bool File::operator == (const File& rhs) const {
-  return boost::iequals(Name(), rhs.Name());
+  return boost::iequals(GetName(), rhs.GetName());
 }
 
-std::string File::Name() const {
+std::string File::GetName() const {
   return name_;
 }
 
-std::string File::DisplayName() const {
+std::string File::GetDisplayName() const {
   if (display_.empty())
     return name_;
   else

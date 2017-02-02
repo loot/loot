@@ -37,16 +37,16 @@ template<>
 struct convert<loot::PluginCleaningData> {
   static Node encode(const loot::PluginCleaningData& rhs) {
     Node node;
-    node["crc"] = rhs.CRC();
-    node["util"] = rhs.CleaningUtility();
-    node["info"] = rhs.Info();
+    node["crc"] = rhs.GetCRC();
+    node["util"] = rhs.GetCleaningUtility();
+    node["info"] = rhs.GetInfo();
 
-    if (rhs.ITMs() > 0)
-      node["itm"] = rhs.ITMs();
-    if (rhs.DeletedRefs() > 0)
-      node["udr"] = rhs.DeletedRefs();
-    if (rhs.DeletedNavmeshes() > 0)
-      node["nav"] = rhs.DeletedNavmeshes();
+    if (rhs.GetITMCount() > 0)
+      node["itm"] = rhs.GetITMCount();
+    if (rhs.GetDeletedReferenceCount() > 0)
+      node["udr"] = rhs.GetDeletedReferenceCount();
+    if (rhs.GetDeletedNavmeshCount() > 0)
+      node["nav"] = rhs.GetDeletedNavmeshCount();
 
     return node;
   }
@@ -99,22 +99,22 @@ struct convert<loot::PluginCleaningData> {
 
 inline Emitter& operator << (Emitter& out, const loot::PluginCleaningData& rhs) {
   out << BeginMap
-    << Key << "crc" << Value << Hex << rhs.CRC() << Dec
-    << Key << "util" << Value << YAML::SingleQuoted << rhs.CleaningUtility();
+    << Key << "crc" << Value << Hex << rhs.GetCRC() << Dec
+    << Key << "util" << Value << YAML::SingleQuoted << rhs.GetCleaningUtility();
 
-  if (!rhs.Info().empty()) {
-    if (rhs.Info().size() == 1)
-      out << Key << "info" << Value << YAML::SingleQuoted << rhs.Info().front().GetText();
+  if (!rhs.GetInfo().empty()) {
+    if (rhs.GetInfo().size() == 1)
+      out << Key << "info" << Value << YAML::SingleQuoted << rhs.GetInfo().front().GetText();
     else
-      out << Key << "info" << Value << rhs.Info();
+      out << Key << "info" << Value << rhs.GetInfo();
   }
 
-  if (rhs.ITMs() > 0)
-    out << Key << "itm" << Value << rhs.ITMs();
-  if (rhs.DeletedRefs() > 0)
-    out << Key << "udr" << Value << rhs.DeletedRefs();
-  if (rhs.DeletedNavmeshes() > 0)
-    out << Key << "nav" << Value << rhs.DeletedNavmeshes();
+  if (rhs.GetITMCount() > 0)
+    out << Key << "itm" << Value << rhs.GetITMCount();
+  if (rhs.GetDeletedReferenceCount() > 0)
+    out << Key << "udr" << Value << rhs.GetDeletedReferenceCount();
+  if (rhs.GetDeletedNavmeshCount() > 0)
+    out << Key << "nav" << Value << rhs.GetDeletedNavmeshCount();
 
   out << EndMap;
 
