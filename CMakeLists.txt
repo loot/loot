@@ -30,7 +30,7 @@ ENDIF ()
 message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
 
 # Write to file.
-configure_file("${CMAKE_SOURCE_DIR}/src/api/app/loot_version.cpp.in" "${CMAKE_BINARY_DIR}/generated/loot_version.cpp" @ONLY)
+configure_file("${CMAKE_SOURCE_DIR}/src/api/loot_version.cpp.in" "${CMAKE_BINARY_DIR}/generated/loot_version.cpp" @ONLY)
 
 ##############################
 # External Projects

@@ -23,7 +23,7 @@ function updateInstallerScript(version) {
 }
 
 function updateCppFile(version) {
-  const file = path.join('src', 'backend', 'app', 'loot_version.cpp.in');
+  const file = path.join('src', 'api', 'loot_version.cpp.in');
   const versionParts = version.split('.');
 
   replace({
