@@ -26,6 +26,11 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/log/core.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/support/date_time.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/file.hpp>
 
 #include "api/game/game.h"
 
@@ -37,6 +42,40 @@ std::string ResolvePath(const std::string& path) {
     return path;
 
   return fs::read_symlink(path).string();
+}
+
+LOOT_API void SetLoggingVerbosity(LogVerbosity verbosity) {
+  switch (verbosity) {
+  case LogVerbosity::off:
+    boost::log::core::get()->set_logging_enabled(false);
+    break;
+  case LogVerbosity::warning:
+    boost::log::core::get()->set_filter(boost::log::trivial::severity > boost::log::trivial::warning);
+    boost::log::core::get()->set_logging_enabled(true);
+    break;
+  case LogVerbosity::trace:
+    boost::log::core::get()->reset_filter();
+    boost::log::core::get()->set_logging_enabled(true);
+    break;
+  }
+}
+
+LOOT_API void SetLogFile(const std::string& path) {
+  // Set the locale to get UTF-8 conversions working correctly.
+  std::locale::global(boost::locale::generator().generate(""));
+  boost::filesystem::path::imbue(std::locale());
+
+  boost::log::add_file_log(
+    boost::log::keywords::file_name = path,
+    boost::log::keywords::auto_flush = true,
+    boost::log::keywords::format = (
+      boost::log::expressions::stream
+      << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+      << " [" << boost::log::trivial::severity << "]: "
+      << boost::log::expressions::smessage
+      )
+  );
+  boost::log::add_common_attributes();
 }
 
 LOOT_API bool IsCompatible(const unsigned int versionMajor, const unsigned int versionMinor, const unsigned int versionPatch) {
@@ -52,9 +91,6 @@ LOOT_API std::shared_ptr<GameInterface> CreateGameHandle(const GameType game,
   // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   boost::filesystem::path::imbue(std::locale());
-
-  //Disable logging or else stdout will get overrun.
-  boost::log::core::get()->set_logging_enabled(false);
 
   // Check for valid paths.
   const std::string resolvedGamePath = ResolvePath(gamePath);

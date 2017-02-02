@@ -37,9 +37,33 @@
 #include "loot/exception/game_detection_error.h"
 #include "loot/exception/git_state_error.h"
 #include "loot/enum/game_type.h"
+#include "loot/enum/log_verbosity.h"
 #include "loot/loot_version.h"
 
 namespace loot {
+/**@}*/
+/**********************************************************************//**
+ *  @name Logging Functions
+ *************************************************************************/
+/**@{*/
+
+/**
+ * @brief Set the API's logging verbosity.
+ * @details The default is ``LogVerbosity::off``.
+ * @param verbosity
+ *        The logging verbosity to set.
+ */
+LOOT_API void SetLoggingVerbosity(LogVerbosity verbosity);
+
+/**
+ * @brief Set the file path that logging statements are written to.
+ * @details If no file is set the default behaviour is to print logging
+ *          statements to the console.
+ * @param path
+ *        The log file path.
+ */
+LOOT_API void SetLogFile(const std::string& path);
+
 /**@}*/
 /**********************************************************************//**
  *  @name Version Functions
