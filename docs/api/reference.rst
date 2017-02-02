@@ -24,9 +24,6 @@ Public-Field Data Structures
 .. doxygenstruct:: loot::SimpleMessage
    :members:
 
-.. doxygenstruct:: loot::PluginTags
-   :members:
-
 Functions
 =========
 

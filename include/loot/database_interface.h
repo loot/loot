@@ -32,7 +32,6 @@
 #include "loot/metadata/message.h"
 #include "loot/metadata/plugin_metadata.h"
 #include "loot/struct/masterlist_info.h"
-#include "loot/struct/plugin_tags.h"
 #include "loot/struct/simple_message.h"
 
 namespace loot {
