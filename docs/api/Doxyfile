@@ -784,6 +784,7 @@ WARN_LOGFILE           =
 INPUT                  = include/loot \
                          include/loot/enum \
                          include/loot/exception \
+                         include/loot/metadata \
                          include/loot/struct
 
 # This tag can be used to specify the character encoding of the source files

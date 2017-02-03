@@ -30,16 +30,55 @@
 #include "loot/metadata/conditional_metadata.h"
 
 namespace loot {
+/**
+ * Represents a file in a game's Data folder, including files in subdirectories.
+ */
 class File : public ConditionalMetadata {
 public:
+  /**
+   * Construct a File with blank name, display and condition strings.
+   * @return A File object.
+   */
   LOOT_API File();
+
+  /**
+   * Construct a File with the given name, display name and condition strings.
+   * @param  name
+   *         The filename of the file.
+   * @param  display
+   *         The name to be displayed for the file in messages.
+   * @param  condition
+   *         The File's condition string.
+   * @return A File object.
+   */
   LOOT_API File(const std::string& name, const std::string& display = "",
                 const std::string& condition = "");
 
+  /**
+   * A less-than operator implemented with no semantics so that File objects can
+   * be stored in sets.
+   * @returns True if this File's name is case-insensitively lexicographically
+   *          less than the given File's name, false otherwise.
+   */
   LOOT_API bool operator < (const File& rhs) const;
+
+  /**
+   * Check if two File objects are equal by comparing their filenames.
+   * @returns True if the filenames are case-insensitively equal, false
+   *          otherwise.
+   */
   LOOT_API bool operator == (const File& rhs) const;
 
+  /**
+   * Get the filename of the file.
+   * @return The file's filename.
+   */
   LOOT_API std::string GetName() const;
+
+  /**
+   * Get the display name of the file.
+   * @return The file's display name.
+   */
   LOOT_API std::string GetDisplayName() const;
 private:
   std::string name_;

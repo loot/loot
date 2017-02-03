@@ -30,17 +30,62 @@
 #include "loot/metadata/conditional_metadata.h"
 
 namespace loot {
+/**
+ * Represents a Bash Tag suggestion for a plugin.
+ */
 class Tag : public ConditionalMetadata {
 public:
+  /**
+   * Construct a Tag object with an empty tag name suggested for addition, with
+   * an empty condition string.
+   * @return A Tag object.
+   */
   LOOT_API Tag();
+
+  /**
+   * Construct a Tag object with the given name, for addition or removal, with
+   * the given condition string.
+   * @param  tag
+   *         The name of the Bash Tag.
+   * @param  isAddition
+   *         True if the tag should be added, false if it should be removed.
+   * @param  condition
+   *         A condition string.
+   * @return A Tag object.
+   */
   LOOT_API Tag(const std::string& tag,
                const bool isAddition = true,
                const std::string& condition = "");
 
+  /**
+   * A less-than operator implemented with no semantics so that Tag objects
+   * can be stored in sets.
+   * @returns True if this Tag is suggested for addition and the other is not.
+   *          If both Tags are suggested for addition or both are suggested for
+   *          removal, returns true if this Tag's name is case-insensitively
+   *          lexicographically less than the given Tag's name, false
+   *          otherwise.
+   */
   LOOT_API bool operator < (const Tag& rhs) const;
+
+  /**
+   * Check if two Tag objects are equal.
+   * @returns True if both Tags are suggested for addition or both are suggested
+   *          for removal, and the Tag names are case-insensitively equal, false
+   *          otherwise.
+   */
   LOOT_API bool operator == (const Tag& rhs) const;
 
+  /**
+   * Check if the tag should be added.
+   * @return True if the tag should be added, false if it should be removed.
+   */
   LOOT_API bool IsAddition() const;
+
+  /**
+   * Get the tag's name.
+   * @return The tag's name.
+   */
   LOOT_API std::string GetName() const;
 private:
   std::string name_;

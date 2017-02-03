@@ -30,17 +30,65 @@
 #include "loot/language.h"
 
 namespace loot {
+/**
+ * Represents a message's localised text content.
+ */
 class MessageContent {
 public:
+  /**
+   * Construct a MessageContent object with an empty English message string.
+   * @return A MessageContent object.
+   */
   LOOT_API MessageContent();
+
+  /**
+   * Construct a Message object with the given text in the given language.
+   * @param  text
+   *         The message text.
+   * @param  language
+   *         The language that the message is written in.
+   * @return A MessageContent object.
+   */
   LOOT_API MessageContent(const std::string& text, const LanguageCode language);
 
+  /**
+   * Get the message text.
+   * @return A string containing the message text.
+   */
   LOOT_API std::string GetText() const;
+
+  /**
+   * Get the message language.
+   * @return A code representing the language that the message is written in.
+   */
   LOOT_API LanguageCode GetLanguage() const;
 
+  /**
+   * A less-than operator implemented with no semantics so that MessageContent
+   * objects can be stored in sets.
+   * @returns True if this MessageContent's text is case-insensitively
+   *          lexicographically less than the given MessageContent's text, false
+   *          otherwise.
+   */
   LOOT_API bool operator < (const MessageContent& rhs) const;
+
+  /**
+   * Check if two MessageContent objects are equal by comparing their texts.
+   * @returns True if the texts are case-insensitively equal, false otherwise.
+   */
   LOOT_API bool operator == (const MessageContent& rhs) const;
 
+  /**
+   * Choose a MessageContent object from a vector given a language.
+   * @param  content
+   *         The MessageContent objects to choose between.
+   * @param  language
+   *         The LanguageCode for the preferred language to select. If no
+   *         message in the preferred language is present, the English
+   *         MessageContent will be returned.
+   * @return A MessageContent object. If the given vector is empty, a
+   *         default-constructed MessageContent is returned.
+   */
   LOOT_API static MessageContent Choose(const std::vector<MessageContent> content,
                                         const LanguageCode language);
 private:

@@ -40,6 +40,15 @@
 #   include "shlwapi.h"
 
 namespace loot {
+/**
+ * Convert a UTF-8 std::string to a UTF-16 std::wstring.
+ *
+ * This isn't strictly part of the LOOT API, but is used within the API and the
+ * LOOT application, so is shared through the API.
+ * @param  str
+ *         A string encoded in UTF-8.
+ * @return A wstring encoded in UTF-16.
+ */
 inline std::wstring ToWinWide(const std::string& str) {
   size_t len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
   std::wstring wstr(len, 0);
@@ -47,6 +56,15 @@ inline std::wstring ToWinWide(const std::string& str) {
   return wstr;
 }
 
+/**
+ * Convert a UTF-16 std::wstring to a UTF-8 std::string.
+ *
+ * This isn't strictly part of the LOOT API, but is used within the API and the
+ * LOOT application, so is shared through the API.
+ * @param  wstr
+ *         A wstring encoded in UTF-16.
+ * @return A string encoded in UTF-8.
+ */
 inline std::string FromWinWide(const std::wstring& wstr) {
   size_t len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
   std::string str(len, 0);

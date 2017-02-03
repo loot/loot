@@ -35,21 +35,91 @@
 #include "loot/struct/simple_message.h"
 
 namespace loot {
+/**
+ * Represents a message with localisable text content.
+ */
 class Message : public ConditionalMetadata {
 public:
+  /**
+   * Construct a Message object of type 'say' with blank content and condition
+   * strings.
+   * @return A Message object.
+   */
   LOOT_API Message();
+
+  /**
+   * Construct a Message object with the given type, English content and
+   * condition string.
+   * @param  type
+   *         The message type.
+   * @param  content
+   *         The English message content text.
+   * @param  condition
+   *         A condition string.
+   * @return A Message object.
+   */
   LOOT_API Message(const MessageType type, const std::string& content,
                    const std::string& condition = "");
+
+  /**
+   * Construct a Message object with the given type, content and condition
+   * string.
+   * @param  type
+   *         The message type.
+   * @param  content
+   *         The message content. If multilingual, one language must be English.
+   * @param  condition
+   *         A condition string.
+   * @return A Message object.
+   */
   LOOT_API Message(const MessageType type, const std::vector<MessageContent>& content,
                    const std::string& condition = "");
 
+  /**
+   * A less-than operator implemented with no semantics so that Message objects
+   * can be stored in sets.
+   * @returns If both messages have content, returns true if this Message's
+   *          English text is case-insensitively lexicographically less than the
+   *          given Message's English text, and false otherwise.
+   *          Otherwise returns true if this Message has no content, and false
+   *          otherwise.
+   */
   LOOT_API bool operator < (const Message& rhs) const;
+
+  /**
+   * Check if two Message objects are equal by comparing their content.
+   * @returns True if the contents are equal, false otherwise.
+   */
   LOOT_API bool operator == (const Message& rhs) const;
 
+  /**
+   * Get the message type.
+   * @return The message type.
+   */
   LOOT_API MessageType GetType() const;
+
+  /**
+   * Get the message content.
+   * @return The message's MessageContent objects.
+   */
   LOOT_API std::vector<MessageContent> GetContent() const;
+
+  /**
+   * Get the message content given a language.
+   * @param  language
+   *         The preferred language for the message content.
+   * @return A MessageContent object for the preferred language, or for English
+   *         if a MessageContent object is not available for the given language.
+   */
   LOOT_API MessageContent GetContent(const LanguageCode language) const;
 
+  /**
+   * Get the message as a SimpleMessage given a language.
+   * @param  language
+   *         The preferred language for the message content.
+   * @return A SimpleMessage object for the preferred language, or for English
+   *         if message text is not available for the given language.
+   */
   LOOT_API SimpleMessage ToSimpleMessage(const LanguageCode language) const;
 private:
   MessageType type_;

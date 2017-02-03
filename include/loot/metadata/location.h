@@ -30,15 +30,52 @@
 #include "loot/api_decorator.h"
 
 namespace loot {
+/**
+ * Represents a URL at which the parent plugin can be found.
+ */
 class Location {
 public:
+  /**
+   * Construct a Location with empty URL and name strings.
+   * @return A Location object.
+   */
   LOOT_API Location();
+
+  /**
+   * Construct a Location with the given URL and name.
+   * @param  url
+   *         The URL at which the plugin can be found.
+   * @param  name
+   *         A name for the URL, eg. the page or site name.
+   * @return A Location object.
+   */
   LOOT_API Location(const std::string& url, const std::string& name = "");
 
+  /**
+   * A less-than operator implemented with no semantics so that Location objects
+   * can be stored in sets.
+   * @returns True if this Location's URL is case-insensitively
+   *          lexicographically less than the given Location's URL, false
+   *          otherwise.
+   */
   LOOT_API bool operator < (const Location& rhs) const;
+
+  /**
+   * Check if two Location objects are equal by comparing their URLs.
+   * @returns True if the URLs are case-insensitively equal, false otherwise.
+   */
   LOOT_API bool operator == (const Location& rhs) const;
 
+  /**
+   * Get the object's URL.
+   * @return A URL string.
+   */
   LOOT_API std::string GetURL() const;
+
+  /**
+   * Get the object's name.
+   * @return The name of the location.
+   */
   LOOT_API std::string GetName() const;
 private:
   std::string url_;

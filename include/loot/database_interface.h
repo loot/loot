@@ -202,7 +202,7 @@ public:
   /**
   *  @brief Sets a plugin's user metadata, overwriting any existing user
   *         metadata.
-  *  @param plugin
+  *  @param pluginMetadata
   *         The user metadata you want to set, with plugin.Name() being the
   *         filename of the plugin the metadata is for.
   */

@@ -32,15 +32,53 @@
 #include "loot/enum/language_code.h"
 
 namespace loot {
+/**
+ * @brief Represents a language, and used to map between API language codes,
+ *        locale codes and language names.
+ */
 class Language {
 public:
+  /**
+   * @brief A convenience constant that contains all available language codes.
+   */
   LOOT_API static const std::vector<LanguageCode> codes;
 
+  /**
+   * @brief Construct a Language object.
+   * @param  code
+   *         A LOOT API language code.
+   * @return A Language object for the given code.
+   */
   LOOT_API Language(const LanguageCode code);
+
+  /**
+   * @brief Construct a Language object.
+   * @param  locale
+   *         A POSIX locale code.
+   * @return A Language object. If the locale code corresponds to a language
+   *         with a LanguageCode value, the object is for that language,
+   *         otherwise it is for English.
+   */
   LOOT_API Language(const std::string& locale);
 
+  /**
+   * Get the language's LanguageCode.
+   * @return The language's LanguageCode.
+   */
   LOOT_API LanguageCode GetCode() const;
+
+  /**
+   * Get the language's name for itself.
+   *
+   * For example, ``Русский``, not ``Russian``.
+   * @return The language's name.
+   */
   LOOT_API std::string GetName() const;
+
+  /**
+   * Get the language's POSIX locale code.
+   * @return The language's POSIX locale code.
+   */
   LOOT_API std::string GetLocale() const;
 private:
   static LanguageCode GetCode(const std::string& locale);

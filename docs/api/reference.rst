@@ -11,6 +11,8 @@ Enumerations
 
 .. doxygenenum:: loot::LanguageCode
 
+.. doxygenenum:: loot::LogVerbosity
+
 .. doxygenenum:: loot::MessageType
 
 .. doxygenenum:: loot::PluginCleanliness
@@ -27,9 +29,13 @@ Public-Field Data Structures
 Functions
 =========
 
+.. doxygenfunction:: loot::SetLoggingVerbosity
+
+.. doxygenfunction:: loot::SetLogFile
+
 .. doxygenfunction:: loot::IsCompatible
 
-.. doxygenfunction:: loot::CreateDatabase
+.. doxygenfunction:: loot::CreateGameHandle
 
 Interfaces
 ==========
@@ -37,10 +43,46 @@ Interfaces
 .. doxygenclass:: loot::DatabaseInterface
    :members:
 
+.. doxygenclass:: loot::GameInterface
+   :members:
+
+.. doxygenclass:: loot::PluginInterface
+   :members:
+
 Classes
 =======
 
+.. doxygenclass:: loot::ConditionalMetadata
+   :members:
+
+.. doxygenclass:: loot::File
+   :members:
+
+.. doxygenclass:: loot::Language
+   :members:
+
+.. doxygenclass:: loot::Location
+   :members:
+
 .. doxygenclass:: loot::LootVersion
+   :members:
+
+.. doxygenclass:: loot::MessageContent
+   :members:
+
+.. doxygenclass:: loot::Message
+   :members:
+
+.. doxygenclass:: loot::PluginCleaningData
+   :members:
+
+.. doxygenclass:: loot::PluginMetadata
+   :members:
+
+.. doxygenclass:: loot::Priority
+   :members:
+
+.. doxygenclass:: loot::Tag
    :members:
 
 Exceptions
