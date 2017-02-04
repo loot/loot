@@ -91,6 +91,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   if (os.platform() === 'win32') {
     binaries = [
       'LOOT.exe',
+      'loot_api.dll',
       'chrome_elf.dll',
       'd3dcompiler_47.dll',
       'libEGL.dll',
@@ -107,6 +108,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   } else {
     binaries = [
       'LOOT',
+      'libloot_api.so',
       'chrome-sandbox',
       'libcef.so',
       'natives_blob.bin',
