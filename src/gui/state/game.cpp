@@ -366,7 +366,7 @@ void Game::LoadMetadata() {
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "An error occurred while parsing the metadata list(s): " << e.what();
     AppendMessage(Message(MessageType::error, (boost::format(boost::locale::translate(
-      "An error occurred while parsing the metadata list(s): %1%. "
+      "An error occurred while parsing the metadata list(s): %1%.\n\n"
       "Try updating your masterlist to resolve the error. If the "
       "error is with your user metadata, this probably happened because "
       "an update to LOOT changed its metadata syntax support. Your "
