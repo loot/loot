@@ -66,10 +66,16 @@ Game::Game(const GameSettings& gameSettings,
            const boost::filesystem::path& localDataPath) :
   GameSettings(gameSettings),
   lootDataPath_(lootDataPath),
-  gameHandle_(CreateGameHandle(gameSettings.Type(), gameSettings.GamePath().string(), localDataPath.string())),
   pluginsFullyLoaded_(false),
   loadOrderSortCount_(0) {
-  gameHandle_->IdentifyMainMasterFile(gameSettings.Master());
+  SetGamePath(DetectGamePath(*this));
+
+  if (GamePath().empty()) {
+    throw GameDetectionError("Game path could not be detected.");
+  }
+
+  gameHandle_ = CreateGameHandle(Type(), GamePath().string(), localDataPath.string());
+  gameHandle_->IdentifyMainMasterFile(Master());
 }
 
 Game::Game(const Game& game) :
@@ -102,12 +108,6 @@ bool Game::IsInstalled(const GameSettings& gameSettings) {
 
 void Game::Init() {
   BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: " << Name();
-
-  SetGamePath(DetectGamePath(*this));
-
-  if (GamePath().empty()) {
-    throw GameDetectionError("Game path could not be detected.");
-  }
 
   if (!lootDataPath_.empty()) {
       //Make sure that the LOOT game path exists.

@@ -83,7 +83,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetRegistryKey("foo");
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
-  settings.SetGamePath(localPath);
+  settings.SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, localPath);
 
   EXPECT_EQ(GetParam(), game.Type());
@@ -103,7 +103,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 // Testing on Windows will find real game installs in the Registry, so cannot
 // test autodetection fully unless on Linux.
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath), std::invalid_argument);
+  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath), GameDetectionError);
 }
 
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {

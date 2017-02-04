@@ -62,6 +62,7 @@ protected:
 
   void assertInitialState() {
     ASSERT_NO_THROW(boost::filesystem::create_directories(localPath));
+    ASSERT_NO_THROW(boost::filesystem::create_directories(lootDataPath));
     ASSERT_TRUE(boost::filesystem::exists(localPath));
 
     ASSERT_FALSE(boost::filesystem::exists(missingPath));
