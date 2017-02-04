@@ -46,10 +46,12 @@ void ApiDatabase::LoadLists(const std::string& masterlistPath,
   Masterlist temp;
   MetadataList userTemp;
 
-  if (boost::filesystem::exists(masterlistPath)) {
-    temp.Load(masterlistPath);
-  } else {
-    throw FileAccessError("The given masterlist path does not exist: " + masterlistPath);
+  if (!masterlistPath.empty()) {
+    if (boost::filesystem::exists(masterlistPath)) {
+      temp.Load(masterlistPath);
+    } else {
+      throw FileAccessError("The given masterlist path does not exist: " + masterlistPath);
+    }
   }
 
   if (!userlistPath.empty()) {
@@ -94,7 +96,6 @@ void ApiDatabase::WriteUserMetadata(const std::string& outputFile, const bool ov
 ////////////////////////////////////
 // LOOT Functionality Functions
 ////////////////////////////////////
-
 
 bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
                                    const std::string& remoteURL,
