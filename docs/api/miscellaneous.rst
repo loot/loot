@@ -6,10 +6,11 @@ String Encoding
 ===============
 
 * All output strings are encoded in UTF-8.
+* Metadata files are written encoded in UTF-8.
 * Input strings are expected to be encoded in UTF-8.
+* Metadata files read are expected to be encoded in UTF-8.
 * File paths are case-sensitive if and only if the underlying file system is
   case-sensitive.
-* :cpp:func:`WriteMinimalList` writes a metadata list encoded in UTF-8.
 
 Errors
 ======
@@ -48,8 +49,12 @@ so that every call to :cpp:func:`EvalLists` re-evaluates all conditions, but
 conditions that are used more than once in the loaded metadata are only
 evaluated once.
 
-Plugin content is cached between calls to :cpp:func:`SortPlugins`, though no
-other API function makes use of it.
+Plugin content is cached between calls to :cpp:func:`LoadPlugins` and
+:cpp:func:`SortPlugins`.
+
+Load order is cached on creation of a game using :cpp:func:`CreateGameHandle`
+and when :cpp:func:`SetLoadOrder` is called, and plugins' active states are
+cached between calls to :cpp:func:`LoadPlugins` and :cpp:func:`SortPlugins`.
 
 Performance
 ===========

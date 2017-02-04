@@ -8,7 +8,7 @@ The editor panel is accessed by clicking the "Edit Metadata" item in a plugin's 
 
 The editor's header displays the name of the plugin being edited, "Save Metadata" and "Cancel" buttons, and a row of tabs. The MAIN tab's page contains the following inputs:
 
-- The "Enable Edits" toggle must be on for LOOT to use any user-added metadata, otherwise it will be ignored.
+- The "Enable Edits" toggle must be on for LOOT to use any user-added metadata during sorting, otherwise it will be ignored.
 - The "Global Priority" input sets the plugin's global priority value, which is used to modify plugin position relative to all other plugins. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default global priority of 0.
 - The "Priority Value" input sets the plugin's local priority value, which is used to modify plugin position relative to other plugins that conflict, load archives or are empty. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default local priority of 0.
 
