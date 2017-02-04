@@ -292,7 +292,7 @@ void LootState::enableDebugLogging(bool enable) {
 void LootState::updateCurrentGamePathSetting() {
   auto gameSettings = getGameSettings();
   auto pos = find_if(begin(gameSettings), end(gameSettings), [&](const GameSettings& game) {
-    return boost::iequals(currentGame_->Name(), game.FolderName());
+    return boost::iequals(currentGame_->FolderName(), game.FolderName());
   });
   if (pos == end(gameSettings)) {
     BOOST_LOG_TRIVIAL(error) << "Could not find the settings for the current game (" << currentGame_->Name() << ")";
