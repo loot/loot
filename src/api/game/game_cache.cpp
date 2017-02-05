@@ -106,16 +106,7 @@ void GameCache::AddPlugin(const Plugin&& plugin) {
   if (it != end(plugins_))
     plugins_.erase(it);
 
-  
   plugins_.emplace(plugin.GetLowercasedName(), std::make_shared<Plugin>(std::move(plugin)));
-}
-
-std::vector<std::string> GameCache::GetLoadOrder() const {
-  return loadOrder_;
-}
-
-void GameCache::StoreLoadOrder(const std::vector<std::string>& loadOrder) {
-  loadOrder_ = loadOrder;
 }
 
 void GameCache::ClearCachedConditions() {

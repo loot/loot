@@ -67,7 +67,6 @@ Game::Game(const GameType gameType,
   BOOST_LOG_TRIVIAL(info) << "Initialising load order data for game of type " << (int)type_ << " at: " << gamePath_;
 
   loadOrderHandler_.Init(type_, gamePath_, localDataPath_);
-  StoreLoadOrder(loadOrderHandler_.GetLoadOrder());
 
   database_ = std::make_shared<ApiDatabase>(*this);
 }
@@ -196,15 +195,10 @@ bool Game::IsPluginActive(const std::string& plugin) const {
 }
 
 std::vector<std::string> Game::GetLoadOrder() const {
-  auto loadOrder = GameCache::GetLoadOrder();
-  if (loadOrder.empty())
-    return loadOrderHandler_.GetLoadOrder();
-
-  return loadOrder;
+  return loadOrderHandler_.GetLoadOrder();
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
   loadOrderHandler_.SetLoadOrder(loadOrder);
-  StoreLoadOrder(loadOrder);
 }
 }

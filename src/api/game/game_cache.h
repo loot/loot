@@ -52,9 +52,6 @@ public:
   std::shared_ptr<const Plugin> GetPlugin(const std::string& pluginName) const;
   void AddPlugin(const Plugin&& plugin);
 
-  std::vector<std::string> GetLoadOrder() const;
-  void StoreLoadOrder(const std::vector<std::string>& loadOrder);
-
   void ClearCachedConditions();
   void ClearCachedPlugins();
 private:
@@ -62,7 +59,6 @@ private:
   MetadataList userlist_;
   std::unordered_map<std::string, bool> conditions_;
   std::unordered_map<std::string, std::shared_ptr<const Plugin>> plugins_;
-  std::vector<std::string> loadOrder_;
 
   mutable std::mutex mutex_;
 };
@@ -71,7 +67,7 @@ private:
 namespace std {
 template<>
 struct less<std::shared_ptr<const loot::Plugin>> {
-  size_t operator() (const std::shared_ptr<const loot::Plugin>& lhs, 
+  size_t operator() (const std::shared_ptr<const loot::Plugin>& lhs,
                      const std::shared_ptr<const loot::Plugin>& rhs) const {
     return lhs->GetLowercasedName() < rhs->GetLowercasedName();
   }
