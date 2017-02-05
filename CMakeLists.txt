@@ -187,7 +187,8 @@ set (LOOT_API_SRC "${CMAKE_BINARY_DIR}/generated/loot_version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/helpers/crc.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/helpers/git_helper.cpp"
                   "${CMAKE_SOURCE_DIR}/src/api/helpers/language.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/api/helpers/version.cpp")
+                  "${CMAKE_SOURCE_DIR}/src/api/helpers/version.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/api/resource.rc")
 
 set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/api_decorator.h"
@@ -251,7 +252,7 @@ set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/resource.rc")
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
 
 set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
@@ -385,7 +386,6 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
-    set (LOOT_API_SRC ${LOOT_API_SRC} "${CMAKE_SOURCE_DIR}/src/resource.rc")
 ENDIF ()
 
 IF (CMAKE_COMPILER_IS_GNUCXX)

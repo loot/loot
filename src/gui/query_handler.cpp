@@ -68,7 +68,6 @@
 #include "gui/query/save_filter_state_query.h"
 #include "gui/query/sort_plugins_query.h"
 #include "gui/query/update_masterlist_query.h"
-#include "gui/resource.h"
 #include "gui/yaml_simple_message_helpers.h"
 
 

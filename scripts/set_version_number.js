@@ -48,21 +48,24 @@ function updateCppFile(version) {
   });
 }
 
-function updateResourceFile(version) {
-  const file = path.join('src', 'resource.rc');
+function updateResourceFiles(version) {
+  const files = [
+    path.join('src', 'api', 'resource.rc'),
+    path.join('src', 'gui', 'resource.rc'),
+  ];
   const commaSeparatedVersion = version.replace(/\./g, ', ');
 
   replace({
     regex: /VERSION \d+, \d+, \d+/g,
     replacement: `VERSION ${commaSeparatedVersion}`,
-    paths: [file],
+    paths: files,
     silent: true,
   });
 
   replace({
     regex: /Version", "\d+\.\d+\.\d+"/g,
     replacement: `Version", "${version}"`,
-    paths: [file],
+    paths: files,
     silent: true,
   });
 }
@@ -83,7 +86,7 @@ function main() {
   updatePreCommitHookScript(newVersion);
   updateInstallerScript(newVersion);
   updateCppFile(newVersion);
-  updateResourceFile(newVersion);
+  updateResourceFiles(newVersion);
 }
 
 main();
