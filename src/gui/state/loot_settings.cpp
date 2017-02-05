@@ -36,7 +36,7 @@ using std::recursive_mutex;
 using std::string;
 
 namespace loot {
-LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0) {}
+LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0), maximised(false) {}
 
 LootSettings::LootSettings() :
   gameSettings_({
@@ -77,11 +77,13 @@ void LootSettings::load(YAML::Node& settings) {
 
   if (settings["window"]
       && settings["window"]["top"] && settings["window"]["bottom"]
-      && settings["window"]["left"] && settings["window"]["right"]) {
+      && settings["window"]["left"] && settings["window"]["right"]
+      && settings["window"]["maximised"]) {
     windowPosition_.top = settings["window"]["top"].as<long>();
     windowPosition_.bottom = settings["window"]["bottom"].as<long>();
     windowPosition_.left = settings["window"]["left"].as<long>();
     windowPosition_.right = settings["window"]["right"].as<long>();
+    windowPosition_.maximised = settings["window"]["maximised"].as<bool>();
   }
 
   if (settings["games"]) {
@@ -223,6 +225,7 @@ YAML::Node LootSettings::toYaml() const {
     node["window"]["bottom"] = windowPosition_.bottom;
     node["window"]["left"] = windowPosition_.left;
     node["window"]["right"] = windowPosition_.right;
+    node["window"]["maximised"] = windowPosition_.maximised;
   }
 
   node["games"] = gameSettings_;

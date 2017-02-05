@@ -88,17 +88,22 @@ void LootHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
         // Set window size & position.
   if (lootState_.isWindowPositionStored()) {
 #ifdef _WIN32
-    RECT rc;
-    rc.left = lootState_.getWindowPosition().left;
-    rc.top = lootState_.getWindowPosition().top;
-    rc.right = lootState_.getWindowPosition().right;
-    rc.bottom = lootState_.getWindowPosition().bottom;
+    WINDOWPLACEMENT windowPlacement;
+    windowPlacement.length = sizeof(WINDOWPLACEMENT);
+    windowPlacement.rcNormalPosition.left = lootState_.getWindowPosition().left;
+    windowPlacement.rcNormalPosition.top = lootState_.getWindowPosition().top;
+    windowPlacement.rcNormalPosition.right = lootState_.getWindowPosition().right;
+    windowPlacement.rcNormalPosition.bottom = lootState_.getWindowPosition().bottom;
+
+    if (lootState_.getWindowPosition().maximised) {
+      windowPlacement.showCmd = SW_SHOWMAXIMIZED;
+    }
 
     // Fit the saved window size/position to the current monitor setup.
 
     // Get the nearest monitor to the saved size/pos.
     HMONITOR hMonitor;
-    hMonitor = MonitorFromRect(&rc, MONITOR_DEFAULTTONEAREST);
+    hMonitor = MonitorFromRect(&windowPlacement.rcNormalPosition, MONITOR_DEFAULTTONEAREST);
 
     // Get the rect for the monitor's working area.
     MONITORINFO mi;
@@ -106,14 +111,14 @@ void LootHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
     GetMonitorInfo(hMonitor, &mi);
 
     // Clip the saved rect to fit inside the monitor rect.
-    int width = rc.right - rc.left;
-    int height = rc.bottom - rc.top;
-    rc.left = max(mi.rcWork.left, min(mi.rcWork.right - width, rc.left));
-    rc.top = max(mi.rcWork.top, min(mi.rcWork.bottom - height, rc.top));
-    rc.right = rc.left + width;
-    rc.bottom = rc.top + height;
+    int width = windowPlacement.rcNormalPosition.right - windowPlacement.rcNormalPosition.left;
+    int height = windowPlacement.rcNormalPosition.bottom - windowPlacement.rcNormalPosition.top;
+    windowPlacement.rcNormalPosition.left = max(mi.rcWork.left, min(mi.rcWork.right - width, windowPlacement.rcNormalPosition.left));
+    windowPlacement.rcNormalPosition.top = max(mi.rcWork.top, min(mi.rcWork.bottom - height, windowPlacement.rcNormalPosition.top));
+    windowPlacement.rcNormalPosition.right = windowPlacement.rcNormalPosition.left + width;
+    windowPlacement.rcNormalPosition.bottom = windowPlacement.rcNormalPosition.top + height;
 
-    SetWindowPos(hWnd, HWND_TOP, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_SHOWWINDOW);
+    SetWindowPlacement(hWnd, &windowPlacement);
 #endif
   } else {
 #ifdef _WIN32
@@ -154,14 +159,17 @@ void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
   assert(CefCurrentlyOn(TID_UI));
 
 #ifdef _WIN32
-  RECT rc;
-  GetWindowRect(browser->GetHost()->GetWindowHandle(), &rc);
+  WINDOWPLACEMENT windowPlacement;
+  windowPlacement.length = sizeof(WINDOWPLACEMENT);
+
+  GetWindowPlacement(browser->GetHost()->GetWindowHandle(), &windowPlacement);
 
   LootSettings::WindowPosition position;
-  position.top = rc.top;
-  position.bottom = rc.bottom;
-  position.left = rc.left;
-  position.right = rc.right;
+  position.top = windowPlacement.rcNormalPosition.top;
+  position.bottom = windowPlacement.rcNormalPosition.bottom;
+  position.left = windowPlacement.rcNormalPosition.left;
+  position.right = windowPlacement.rcNormalPosition.right;
+  position.maximised = windowPlacement.showCmd == SW_SHOWMAXIMIZED;
   lootState_.storeWindowPosition(position);
 #endif
 

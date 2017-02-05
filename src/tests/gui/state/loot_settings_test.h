@@ -152,6 +152,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
   inputYaml["lastGame"] = lastGame;
   inputYaml["lastVersion"] = lastVersion;
   inputYaml["window"] = window;
+  inputYaml["window"]["maximised"] = true;
   inputYaml["games"] = games;
   inputYaml["filters"] = filters;
 
@@ -166,6 +167,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
   EXPECT_EQ(2, settings_.getWindowPosition().bottom);
   EXPECT_EQ(3, settings_.getWindowPosition().left);
   EXPECT_EQ(4, settings_.getWindowPosition().right);
+  EXPECT_TRUE(settings_.getWindowPosition().maximised);
 
   const YAML::Node outputYaml = settings_.toYaml();
   EXPECT_EQ(updateMasterlist, outputYaml["updateMasterlist"].as<bool>());
@@ -452,6 +454,7 @@ TEST_F(LootSettingsTest, toYamlShouldOutputStoredSettings) {
   inputYaml["lastGame"] = lastGame;
   inputYaml["lastVersion"] = lastVersion;
   inputYaml["window"] = window;
+  inputYaml["window"]["maximised"] = true;
   inputYaml["games"] = games;
   inputYaml["filters"] = filters;
 
@@ -469,6 +472,7 @@ TEST_F(LootSettingsTest, toYamlShouldOutputStoredSettings) {
   for (const auto& position : window) {
     EXPECT_EQ(position.second, outputYaml["window"][position.first].as<long>());
   }
+  EXPECT_TRUE(outputYaml["window"]["maximised"].as<bool>());
 
   for (const auto& filter : filters) {
     EXPECT_EQ(filter.second, outputYaml["filters"][filter.first].as<bool>());

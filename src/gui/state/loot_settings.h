@@ -46,6 +46,7 @@ public:
     long bottom;
     long left;
     long right;
+    bool maximised;
   };
 
   LootSettings();
