@@ -28,8 +28,10 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "loot/loot_version.h"
+#include "gui/editor_message.h"
 #include "gui/query/json.h"
 #include "gui/query/metadata_query.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class GetGameDataQuery : public MetadataQuery {
