@@ -51,7 +51,9 @@ protected:
   loadOrderBackupFile0("loadorder.bak.0"),
   loadOrderBackupFile1("loadorder.bak.1"),
   loadOrderBackupFile2("loadorder.bak.2"),
-  loadOrderBackupFile3("loadorder.bak.3") {}
+  loadOrderBackupFile3("loadorder.bak.3") {
+    SetLoggingVerbosity(LogVerbosity::off);
+  }
 
   void TearDown() {
     CommonGameTestFixture::TearDown();
