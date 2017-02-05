@@ -77,13 +77,13 @@ private:
     state_.getCurrentGame().SetLoadOrder(plugins);
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin) {
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin, std::vector<std::string> loadOrder) {
     YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
 
     pluginNode["name"] = plugin->GetName();
     pluginNode["crc"] = plugin->GetCRC();
     pluginNode["isEmpty"] = plugin->IsEmpty();
-    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName(), sortedPluginNames);
+    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName(), loadOrder);
 
     return pluginNode;
   }
@@ -96,7 +96,7 @@ private:
 
     for (const auto &pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      node["plugins"].push_back(generateDerivedMetadata(plugin));
+      node["plugins"].push_back(generateDerivedMetadata(plugin, plugins));
     }
 
     if (node.size() > 0)
@@ -107,7 +107,6 @@ private:
 
   LootState& state_;
   CefRefPtr<CefFrame> frame_;
-  std::vector<std::string> sortedPluginNames;
 };
 }
 
