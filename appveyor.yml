@@ -84,8 +84,6 @@ artifacts:
     name: LOOT
   - path: build\loot-api_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
     name: API
-  - path: build\metadata-validator_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
-    name: metadata-validator
   - path: build\LOOT Installer.exe
     name: installer
 
@@ -111,17 +109,6 @@ deploy:
     version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
     artifact: API
-
-  - provider: BinTray
-    username: wrinklyninja
-    api_key:
-      secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
-    subject: wrinklyninja
-    repo: loot
-    package: metadata-validator
-    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
-    publish: true
-    artifact: metadata-validator
 
   - provider: GitHub
     tag: $(APPVEYOR_REPO_TAG_NAME)
@@ -157,7 +144,7 @@ deploy:
       *Note: The files below with `tar.xz` extensions contain Linux binaries. They won't work on Windows computers.*
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
-    artifact: LOOT,API,metadata-validator,installer
+    artifact: LOOT,API,installer
     draft: false
     force_update: true
     on:
@@ -169,7 +156,6 @@ on_success:
       if ($env:bintray_auth_token) {
         python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot -t $env:bintray_auth_token -a $env:github_auth_token -n 30
         python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot-api -t $env:bintray_auth_token -a $env:github_auth_token -n 30
-        python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p metadata-validator -t $env:bintray_auth_token -a $env:github_auth_token -n 30
       }
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 

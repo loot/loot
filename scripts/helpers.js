@@ -79,15 +79,6 @@ function getApiBinaryPaths(rootPath) {
   );
 }
 
-function getMetadataValidatorBinaryPaths(rootPath) {
-  let file = 'metadata-validator';
-  if (os.platform() === 'win32') {
-    file += '.exe';
-  }
-
-  return getBinaryPaths(rootPath, file);
-}
-
 function safeExecFileSync(file, args, options) {
   try {
     return childProcess.execFileSync(file, args, options);
@@ -99,5 +90,4 @@ function safeExecFileSync(file, args, options) {
 module.exports.fileExists = fileExists;
 module.exports.getAppReleasePaths = getAppReleasePaths;
 module.exports.getApiBinaryPaths = getApiBinaryPaths;
-module.exports.getMetadataValidatorBinaryPaths = getMetadataValidatorBinaryPaths;
 module.exports.safeExecFileSync = safeExecFileSync;

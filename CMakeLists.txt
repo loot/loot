@@ -298,8 +298,6 @@ set (LOOT_API_HEADERS "${CMAKE_SOURCE_DIR}/include/loot/api.h"
                       "${CMAKE_SOURCE_DIR}/include/loot/struct/simple_message.h"
                       "${CMAKE_SOURCE_DIR}/src/api/api_database.h")
 
-set (LOOT_VALIDATOR_SRC "${CMAKE_SOURCE_DIR}/src/validator/main.cpp")
-
 set (LOOT_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/tests/backend/main.cpp")
 
 set (LOOT_TESTS_HEADERS # Testing this here rather than as part of the API tests
@@ -353,7 +351,6 @@ source_group("Source Files\\gui" FILES ${LOOT_GUI_SRC})
 source_group("Source Files\\api" FILES ${LOOT_API_SRC})
 source_group("Source Files\\tests" FILES ${LOOT_TESTS_SRC})
 source_group("Source Files\\tests" FILES ${LOOT_API_TESTS_SRC})
-source_group("Source Files\\validator" FILES ${LOOT_VALIDATOR_SRC})
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
@@ -447,12 +444,6 @@ add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 add_dependencies     (LOOT cef loot_common)
 target_link_libraries(LOOT ${CEF_LIBRARIES} loot_common ${LOOT_GUI_LIBS})
 
-# Build validator.
-add_executable       (metadata-validator ${LOOT_VALIDATOR_SRC})
-add_dependencies     (metadata-validator loot_common)
-target_link_libraries(metadata-validator loot_common)
-
-
 
 ##############################
 # Set Target-Specific Flags
@@ -472,7 +463,6 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set_target_properties (loot_common PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (tests PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     set_target_properties (LOOT PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
-    set_target_properties (metadata-validator PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_STATIC")
     IF (BUILD_SHARED_LIBS)
         set_target_properties (loot_api PROPERTIES COMPILE_DEFINITIONS "${COMPILE_DEFINITIONS} LOOT_EXPORT")
     ELSE ()
