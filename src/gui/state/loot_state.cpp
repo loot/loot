@@ -24,6 +24,8 @@
 
 #include "gui/state/loot_state.h"
 
+#include <unordered_set>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>

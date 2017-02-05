@@ -32,7 +32,6 @@
 #include <vector>
 
 #include "loot/api_decorator.h"
-#include "loot/yaml/set.h"
 #include "loot/metadata/file.h"
 #include "loot/metadata/location.h"
 #include "loot/metadata/message.h"
