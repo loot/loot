@@ -81,8 +81,9 @@ after_success:
   - node scripts/archive.js
   # Need to replace the HEAD branch descriptor in the archive filenames
   - for ARCHIVE in build/*.tar.xz; do mv $ARCHIVE $(echo $ARCHIVE | sed "s/HEAD/$TRAVIS_BRANCH/"); done
-  # Make a copy of the metadata validator archive for GitHub deployment to find.
+  # Make copies of the archives for GitHub deployment to find.
   - cp $(ls build/metadata-validator_*.tar.xz) build/metadata-validator.tar.xz
+  - cp $(ls build/loot-api_*.tar.xz) build/loot-api.tar.xz
   # Need to replace the Bintray config files' version placeholders.
   - VERSION=$(ls build/loot_*.tar.xz | sed 's/build\/loot_//;s/.tar.xz//;')
   - sed -i "s/REPLACE_THIS_VERSION/$VERSION/" scripts/travis/loot.bintray.json
@@ -117,7 +118,9 @@ deploy:
   - provider: releases
     api_key:
       secure: "TuiXR/J5cdvgAXqU5x79E7thXwzN4Jqo1vKolPPb5ahrBllBHFh23awyOIdlTnXY1aS6NjS85uIiD3TNZ/hwrtDsjMgNs1ofL6A9B+7uQJjpK8JqFUECrJCMsEhnwRSzIUeqDeZp440x3c0bTFqfSMErrG/ga5S+VyNYHYREqo4="
-    file: build/metadata-validator.tar.xz
+    file:
+      - build/metadata-validator.tar.xz
+      - build/loot-api.tar.xz
     skip_cleanup: true
     on:
       repo: loot/loot

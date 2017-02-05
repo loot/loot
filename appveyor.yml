@@ -134,7 +134,7 @@ deploy:
       - [API](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/api/changelog.html)
       - [Metadata Syntax](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/metadata/changelog.html)
 
-      *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
+      *Note: The files below with `tar.xz` extensions contain Linux binaries. They won't work on Windows computers.*
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
     artifact: API
@@ -154,7 +154,7 @@ deploy:
       - [API](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/api/changelog.html)
       - [Metadata Syntax](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/metadata/changelog.html)
 
-      *Note: The `metadata-validator.tar.xz` file below contains a Linux binary. It won't work on Windows computers.*
+      *Note: The files below with `tar.xz` extensions contain Linux binaries. They won't work on Windows computers.*
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
     artifact: LOOT,API,metadata-validator,installer
