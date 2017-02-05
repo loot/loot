@@ -85,6 +85,7 @@ void LootState::load(YAML::Node& settings) {
       if (gui::Game::IsInstalled(gameSettings)) {
         BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
         installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+        updateStoredGamePathSetting(installedGames_.back());
       }
     }
 
@@ -109,7 +110,6 @@ void LootState::load(YAML::Node& settings) {
   if (currentGame_ != end(installedGames_)) {
     // Re-initialise the current game in case the game path setting was changed.
     currentGame_->Init();
-    updateCurrentGamePathSetting();
   }
 }
 
@@ -192,6 +192,7 @@ void LootState::init(const std::string& cmdLineGame) {
     if (gui::Game::IsInstalled(gameSettings)) {
       BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
       installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+      updateStoredGamePathSetting(installedGames_.back());
     }
   }
 
@@ -201,7 +202,6 @@ void LootState::init(const std::string& cmdLineGame) {
     BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
     BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
     currentGame_->Init();
-    updateCurrentGamePathSetting();
   } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Game-specific settings could not be initialised. " << e.what();
     initErrors_.push_back((format(translate("Error: Game-specific settings could not be initialised. %1%")) % e.what()).str());
@@ -226,7 +226,6 @@ void LootState::changeGame(const std::string& newGameFolder) {
     return boost::iequals(newGameFolder, game.FolderName());
   });
   currentGame_->Init();
-  updateCurrentGamePathSetting();
   BOOST_LOG_TRIVIAL(debug) << "New game is " << currentGame_->Name();
 }
 
@@ -291,29 +290,16 @@ void LootState::enableDebugLogging(bool enable) {
   }
 }
 
-void LootState::updateCurrentGamePathSetting() {
+void LootState::updateStoredGamePathSetting(const gui::Game& game) {
   auto gameSettings = getGameSettings();
-  auto pos = find_if(begin(gameSettings), end(gameSettings), [&](const GameSettings& game) {
-    return boost::iequals(currentGame_->FolderName(), game.FolderName());
+  auto pos = find_if(begin(gameSettings), end(gameSettings), [&](const GameSettings& gameSettings) {
+    return boost::iequals(game.FolderName(), gameSettings.FolderName());
   });
   if (pos == end(gameSettings)) {
-    BOOST_LOG_TRIVIAL(error) << "Could not find the settings for the current game (" << currentGame_->Name() << ")";
+    BOOST_LOG_TRIVIAL(error) << "Could not find the settings for the current game (" << game.Name() << ")";
   } else {
-    pos->SetGamePath(currentGame_->GamePath());
+    pos->SetGamePath(game.GamePath());
     storeGameSettings(gameSettings);
   }
-}
-
-std::list<gui::Game> LootState::toGames(const std::vector<GameSettings>& settings) {
-  std::list<gui::Game> games;
-  for (const auto& element : settings) {
-    games.push_back(gui::Game(element, LootPaths::getLootDataPath()));
-  }
-
-  return games;
-}
-
-std::vector<GameSettings> LootState::toGameSettings(const std::list<gui::Game>& games) {
-  return vector<GameSettings>(games.begin(), games.end());
 }
 }

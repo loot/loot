@@ -52,11 +52,7 @@ private:
   // Select initial game.
   void selectGame(std::string cmdLineGame);
   void enableDebugLogging(bool enable);
-
-  void updateCurrentGamePathSetting();
-
-  static std::list<gui::Game> toGames(const std::vector<GameSettings>& settings);
-  static std::vector<GameSettings> toGameSettings(const std::list<gui::Game>& games);
+  void updateStoredGamePathSetting(const gui::Game& game);
 
   std::list<gui::Game> installedGames_;
   std::list<gui::Game>::iterator currentGame_;
