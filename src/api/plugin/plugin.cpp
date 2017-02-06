@@ -160,26 +160,27 @@ bool Plugin::LoadsArchive() const {
 }
 
 bool Plugin::DoFormIDsOverlap(const PluginInterface& plugin) const {
-  // Assume the PluginInterface is another plugin: it'll throw if it's not.
-  // Not great design, but the function needs getFormIds() and that can't
-  // be exposed in the interface.
-  const Plugin& otherPlugin = dynamic_cast<const Plugin&>(plugin);
+  try {
+    auto otherPlugin = dynamic_cast<const Plugin&>(plugin);
 
-  //Basically std::set_intersection except with an early exit instead of an append to results.
-  set<FormId> formIds(getFormIds());
-  set<FormId> otherFormIds(otherPlugin.getFormIds());
-  auto i = begin(formIds);
-  auto j = begin(otherFormIds);
-  auto iend = end(formIds);
-  auto jend = end(otherFormIds);
+    //Basically std::set_intersection except with an early exit instead of an append to results.
+    set<FormId> formIds(getFormIds());
+    set<FormId> otherFormIds(otherPlugin.getFormIds());
+    auto i = begin(formIds);
+    auto j = begin(otherFormIds);
+    auto iend = end(formIds);
+    auto jend = end(otherFormIds);
 
-  while (i != iend && j != jend) {
-    if (*i < *j)
-      ++i;
-    else if (*j < *i)
-      ++j;
-    else
-      return true;
+    while (i != iend && j != jend) {
+      if (*i < *j)
+        ++i;
+      else if (*j < *i)
+        ++j;
+      else
+        return true;
+    }
+  } catch (std::bad_cast& e) {
+    BOOST_LOG_TRIVIAL(error) << "Tried to check if FormIDs overlapped with a non-Plugin implementation of PluginInterface.";
   }
 
   return false;

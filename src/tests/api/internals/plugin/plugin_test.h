@@ -79,6 +79,22 @@ protected:
   const std::string blankSuffixArchive;
 };
 
+class OtherPluginType : public PluginInterface {
+public:
+  std::string GetName() const { return ""; }
+  std::string GetLowercasedName() const { return ""; }
+  std::string GetVersion() const { return ""; }
+  std::vector<std::string> GetMasters() const { return std::vector<std::string>(); }
+  std::vector<Message> GetStatusMessages() const { return std::vector<Message>(); }
+  std::set<Tag> GetBashTags() const { return std::set<Tag>(); }
+  uint32_t GetCRC() const { return 0; }
+
+  bool IsMaster() const { return false; }
+  bool IsEmpty() const { return false; }
+  bool LoadsArchive() const { return false; }
+  bool DoFormIDsOverlap(const PluginInterface& plugin) const { return true; }
+};
+
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_CASE_P(,
@@ -214,6 +230,14 @@ TEST_P(PluginTest, lessThanOperatorShouldUseCaseInsensitiveLexicographicalNameCo
 
   EXPECT_TRUE(plugin3 < plugin4);
   EXPECT_FALSE(plugin4 < plugin3);
+}
+
+TEST_P(PluginTest, doFormIDsOverlapShouldReturnFalseIfTheArgumentIsNotAPluginObject) {
+  Plugin plugin1(game_, blankEsm, false);
+  OtherPluginType plugin2;
+
+  EXPECT_FALSE(plugin1.DoFormIDsOverlap(plugin2));
+  EXPECT_TRUE(plugin2.DoFormIDsOverlap(plugin1));
 }
 
 TEST_P(PluginTest, doFormIDsOverlapShouldReturnFalseForTwoPluginsWithOnlyHeadersLoaded) {
