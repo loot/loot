@@ -77,7 +77,7 @@ public:
   void AppendMessage(const Message& message);
   void ClearMessages();
 
-  bool UpdateMasterlist() const;
+  bool UpdateMasterlist();
   MasterlistInfo GetMasterlistInfo() const;
 
   void LoadMetadata();

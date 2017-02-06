@@ -104,7 +104,13 @@ bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
     throw std::invalid_argument("Given masterlist path \"" + masterlistPath + "\" does not have a valid parent directory.");
 
   Masterlist masterlist;
-  return masterlist.Update(masterlistPath, remoteURL, remoteBranch);
+  if (masterlist.Update(masterlistPath, remoteURL, remoteBranch)) {
+    game_.GetMasterlist() = masterlist;
+    unevaluatedMasterlist_ = masterlist;
+    return true;
+  }
+
+  return false;
 }
 
 MasterlistInfo ApiDatabase::GetMasterlistRevision(const std::string& masterlistPath,

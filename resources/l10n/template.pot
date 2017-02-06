@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-02-05 13:37+0000\n"
+"POT-Creation-Date: 2017-02-06 18:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -726,7 +726,7 @@ msgstr ""
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:369
+#: src/gui/state/game.cpp:374
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -744,15 +744,15 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:131
+#: src/gui/state/loot_state.cpp:133
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:138
+#: src/gui/state/loot_state.cpp:140
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:205
+#: src/gui/state/loot_state.cpp:207
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 

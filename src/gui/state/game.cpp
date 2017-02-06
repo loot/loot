@@ -339,8 +339,13 @@ void Game::ClearMessages() {
   messages_.clear();
 }
 
-bool Game::UpdateMasterlist() const {
-  return gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch());
+bool Game::UpdateMasterlist() {
+  if (gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch())) {
+    EvaluateLoadedMetadata();
+    return true;
+  }
+
+  return false;
 }
 
 MasterlistInfo Game::GetMasterlistInfo() const {
