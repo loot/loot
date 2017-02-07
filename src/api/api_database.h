@@ -47,10 +47,6 @@ struct ApiDatabase : public DatabaseInterface {
   void WriteMinimalList(const std::string& outputFile,
                         const bool overwrite) const;
 
-  void IdentifyMainMasterFile(const std::string& masterFile);
-
-  std::vector<std::string> SortPlugins(const std::vector<std::string>& plugins);
-
   bool UpdateMasterlist(const std::string& masterlist_path,
                         const std::string& remote_url,
                         const std::string& remote_branch);
