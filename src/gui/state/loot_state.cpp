@@ -147,7 +147,7 @@ void LootState::init(const std::string& cmdLineGame) {
     boost::log::keywords::auto_flush = true,
     boost::log::keywords::format = (
       boost::log::expressions::stream
-      << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
+      << "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S.%f") << "]"
       << " [" << boost::log::trivial::severity << "]: "
       << boost::log::expressions::smessage
       )
