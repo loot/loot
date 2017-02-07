@@ -43,8 +43,32 @@ using std::string;
 using std::vector;
 
 namespace loot {
-PluginSortingData::PluginSortingData(const Plugin& plugin, const PluginMetadata& metadata)
-  : Plugin(plugin), PluginMetadata(metadata) {}
+PluginSortingData::PluginSortingData(const Plugin& plugin, const PluginMetadata&& metadata)
+  : plugin_(plugin), PluginMetadata(metadata) {}
+
+std::string PluginSortingData::GetName() const {
+  return plugin_.GetName();
+}
+
+bool PluginSortingData::IsMaster() const {
+  return plugin_.IsMaster();
+}
+
+bool PluginSortingData::LoadsArchive() const {
+  return plugin_.LoadsArchive();
+}
+
+std::vector<std::string> PluginSortingData::GetMasters() const {
+  return plugin_.GetMasters();
+}
+
+size_t PluginSortingData::NumOverrideFormIDs() const {
+  return plugin_.NumOverrideFormIDs();
+}
+
+bool PluginSortingData::DoFormIDsOverlap(const PluginSortingData& plugin) const {
+  return plugin_.DoFormIDsOverlap(plugin.plugin_);
+}
 
 typedef boost::graph_traits<PluginGraph>::vertex_iterator vertex_it;
 typedef boost::graph_traits<PluginGraph>::edge_descriptor edge_t;
@@ -203,7 +227,7 @@ void PluginSorter::AddPluginVertices(Game& game) {
 
     BOOST_LOG_TRIVIAL(trace) << "Adding vertex for plugin \"" << plugin->GetName() << "\"";
 
-    vertex_t v = boost::add_vertex(PluginSortingData(*plugin, metadata), graph_);
+    vertex_t v = boost::add_vertex(PluginSortingData(*plugin, std::move(metadata)), graph_);
   }
 
   // Prebuild an index map, which std::list-based VertexList graphs don't have.
@@ -232,7 +256,7 @@ bool PluginSorter::EdgeCreatesCycle(const vertex_t& fromVertex, const vertex_t& 
   try {
     boost::breadth_first_search(graph_, toVertex, visitor(PathDetector(fromVertex)).vertex_index_map(vertexIndexMap_));
   } catch (PathFoundException&) {
-      return true;
+    return true;
   }
   return false;
 }

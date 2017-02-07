@@ -34,25 +34,25 @@
 #include "api/plugin/plugin.h"
 
 namespace loot {
-class PluginSortingData : public Plugin, private PluginMetadata {
+class PluginSortingData : private PluginMetadata {
 public:
-  PluginSortingData(const Plugin& plugin, const PluginMetadata& metadata);
+  PluginSortingData(const Plugin& plugin, const PluginMetadata&& metadata);
 
-  using Plugin::GetName;
-  using Plugin::IsMaster;
-  using Plugin::LoadsArchive;
-  using Plugin::GetMasters;
-  using Plugin::NumOverrideFormIDs;
-  using Plugin::DoFormIDsOverlap;
+  std::string GetName() const;
+  bool IsMaster() const;
+  bool LoadsArchive() const;
+  std::vector<std::string> GetMasters() const;
+  size_t NumOverrideFormIDs() const;
+  bool DoFormIDsOverlap(const PluginSortingData& plugin) const;
 
   using PluginMetadata::GetLocalPriority;
   using PluginMetadata::SetLocalPriority;
   using PluginMetadata::GetGlobalPriority;
   using PluginMetadata::SetGlobalPriority;
   using PluginMetadata::GetRequirements;
-  using PluginMetadata::SetRequirements;
   using PluginMetadata::GetLoadAfterFiles;
-  using PluginMetadata::SetLoadAfterFiles;
+private:
+  const Plugin& plugin_;
 };
 
 typedef boost::adjacency_list<boost::listS, boost::listS, boost::directedS, PluginSortingData> PluginGraph;
