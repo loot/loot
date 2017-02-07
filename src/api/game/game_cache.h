@@ -67,8 +67,8 @@ private:
 namespace std {
 template<>
 struct less<std::shared_ptr<const loot::Plugin>> {
-  size_t operator() (const std::shared_ptr<const loot::Plugin>& lhs,
-                     const std::shared_ptr<const loot::Plugin>& rhs) const {
+  bool operator() (const std::shared_ptr<const loot::Plugin>& lhs,
+                   const std::shared_ptr<const loot::Plugin>& rhs) const {
     return lhs->GetLowercasedName() < rhs->GetLowercasedName();
   }
 };
