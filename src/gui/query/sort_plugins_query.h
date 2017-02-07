@@ -44,10 +44,6 @@ public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
 
-    // Always reload all the plugins.
-    sendProgressUpdate(frame_, boost::locale::translate("Loading plugin contents..."));
-    state_.getCurrentGame().LoadAllInstalledPlugins(false);
-
     //Sort plugins into their load order.
     sendProgressUpdate(frame_, boost::locale::translate("Sorting load order..."));
     std::vector<std::string> plugins = state_.getCurrentGame().SortPlugins();

@@ -204,19 +204,7 @@ void Game::RedatePlugins() {
 }
 
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
-  std::vector<std::string> plugins;
-
-  BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
-  for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
-    if (fs::is_regular_file(it->status()) && gameHandle_->IsValidPlugin(it->path().filename().string())) {
-      string name = it->path().filename().string();
-      BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
-
-      plugins.push_back(name);
-    }
-  }
-
-  gameHandle_->LoadPlugins(plugins, headersOnly);
+  gameHandle_->LoadPlugins(GetInstalledPluginNames(), headersOnly);
 
   pluginsFullyLoaded_ = !headersOnly;
 }
@@ -277,12 +265,8 @@ short Game::GetActiveLoadOrderIndex(const std::string& pluginName, const std::ve
 }
 
 std::vector<std::string> Game::SortPlugins() {
-  std::vector<std::string> plugins;
+  std::vector<std::string> plugins = GetInstalledPluginNames();
   try {
-    for (const auto& plugin : gameHandle_->GetLoadedPlugins()) {
-      plugins.push_back(plugin->GetName());
-    }
-
     // Clear any existing game-specific messages, as these only relate to
     // state that has been changed by sorting.
     ClearMessages();
@@ -463,6 +447,22 @@ void Game::BackupLoadOrder(const std::vector<std::string>& loadOrder,
   boost::filesystem::ofstream out(backupDirectory / (filenameFormat % 0).str());
   for (const auto &plugin : loadOrder)
     out << plugin << std::endl;
+}
+
+std::vector<std::string> Game::GetInstalledPluginNames() {
+  std::vector<std::string> plugins;
+
+  BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
+  for (fs::directory_iterator it(this->DataPath()); it != fs::directory_iterator(); ++it) {
+    if (fs::is_regular_file(it->status()) && gameHandle_->IsValidPlugin(it->path().filename().string())) {
+      string name = it->path().filename().string();
+      BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
+
+      plugins.push_back(name);
+    }
+  }
+
+  return plugins;
 }
 
 #ifdef _WIN32

@@ -97,6 +97,7 @@ private:
   static boost::filesystem::path DetectGamePath(const GameSettings& gameSettings);
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                               const boost::filesystem::path& backupDirectory);
+  std::vector<std::string> GetInstalledPluginNames();
 
   boost::filesystem::path lootDataPath_;
 
