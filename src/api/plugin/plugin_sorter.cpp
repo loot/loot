@@ -213,16 +213,16 @@ void PluginSorter::AddPluginVertices(Game& game) {
   // in the unordered map, as it's probably faster than copying the
   // full plugin objects then sorting them.
   for (const auto &plugin : game.GetPlugins()) {
-    //Check if there is a plugin entry in the masterlist. This will also find matching regex entries.
-    BOOST_LOG_TRIVIAL(trace) << "Evaluating conditions for any masterlist metadata.";
-    auto metadata = game.GetMasterlist().FindPlugin(plugin->GetName());
+    BOOST_LOG_TRIVIAL(trace) << "Getting and evaluating metadata for plugin " << plugin->GetName();
 
-    //Check if there is a plugin entry in the userlist. This will also find matching regex entries.
-    auto userMetadata = game.GetUserlist().FindPlugin(plugin->GetName());
-
-    if (!userMetadata.HasNameOnly() && userMetadata.IsEnabled()) {
-      BOOST_LOG_TRIVIAL(trace) << "Merging userlist metadata down to masterlist metadata.";
-      metadata.MergeMetadata(userMetadata);
+    PluginMetadata metadata(plugin->GetName());
+    try {
+      metadata = game.GetDatabase()->GetPluginMetadata(plugin->GetName(), true, true);
+    } catch (std::exception& e) {
+      BOOST_LOG_TRIVIAL(error) << "\"" << plugin->GetName() << "\" contains a condition that could not be evaluated. Details: " << e.what();
+      metadata.SetMessages({
+        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % plugin->GetName() % e.what()).str()),
+      });
     }
 
     BOOST_LOG_TRIVIAL(trace) << "Adding vertex for plugin \"" << plugin->GetName() << "\"";
