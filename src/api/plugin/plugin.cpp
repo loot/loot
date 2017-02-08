@@ -179,7 +179,7 @@ bool Plugin::DoFormIDsOverlap(const PluginInterface& plugin) const {
       else
         return true;
     }
-  } catch (std::bad_cast& e) {
+  } catch (std::bad_cast&) {
     BOOST_LOG_TRIVIAL(error) << "Tried to check if FormIDs overlapped with a non-Plugin implementation of PluginInterface.";
   }
 
