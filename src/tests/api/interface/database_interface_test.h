@@ -112,7 +112,10 @@ protected:
       << "      - " << blankDifferentEsm << endl
       << "  - name: " << blankDifferentEsp << endl
       << "    inc:" << endl
-      << "      - " << blankEsp << endl;
+      << "      - " << blankEsp << endl
+      << "    tag:" << endl
+      << "      - name: C.Climate" << endl
+      << "        condition: 'file(\"" << missingEsp << "\")'" << endl;
 
     userlist.close();
   }
@@ -349,6 +352,15 @@ TEST_P(DatabaseInterfaceTest, getGeneralMessagesShouldGetGeneralMessagesFromTheM
   EXPECT_EQ(expectedMessages, messages);
 }
 
+TEST_P(DatabaseInterfaceTest, getGeneralMessagesShouldReturnOnlyValidMessagesIfConditionsAreEvaluated) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
+
+  auto messages = db_->GetGeneralMessages(true);
+
+  EXPECT_TRUE(messages.empty());
+}
+
 TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnAnEmptyPluginMetadataObjectIfThePluginHasNoMetadata) {
   auto metadata = db_->GetPluginMetadata(blankEsm);
 
@@ -382,6 +394,15 @@ TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnOnlyMasterlistMetadat
   EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
 }
 
+TEST_P(DatabaseInterfaceTest, getPluginMetadataShouldReturnOnlyValidMetadataForTheGivenPluginIfConditionsAreEvaluated) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), ""));
+
+  auto metadata = db_->GetPluginMetadata(blankEsm, false, true);
+
+  EXPECT_TRUE(metadata.GetMessages().empty());
+}
+
 TEST_P(DatabaseInterfaceTest, getPluginUserMetadataShouldReturnAnEmptyPluginMetadataObjectIfThePluginHasNoUserMetadata) {
   ASSERT_NO_THROW(GenerateMasterlist());
   ASSERT_NO_THROW(GenerateUserlist());
@@ -403,6 +424,16 @@ TEST_P(DatabaseInterfaceTest, getPluginUserMetadataShouldReturnOnlyUserMetadataF
     File(blankDifferentEsm),
   });
   EXPECT_EQ(expectedLoadAfter, metadata.GetLoadAfterFiles());
+}
+
+TEST_P(DatabaseInterfaceTest, getPluginUserMetadataShouldReturnOnlyValidMetadataForTheGivenPluginIfConditionsAreEvaluated) {
+  ASSERT_NO_THROW(GenerateMasterlist());
+  ASSERT_NO_THROW(GenerateUserlist());
+  ASSERT_NO_THROW(db_->LoadLists(masterlistPath.string(), userlistPath_.string()));
+
+  auto metadata = db_->GetPluginMetadata(blankEsm, false, true);
+
+  EXPECT_TRUE(metadata.GetMessages().empty());
 }
 
 TEST_P(DatabaseInterfaceTest, setPluginUserMetadataShouldReplaceExistingUserMetadataWithTheGivenMetadata) {
@@ -451,7 +482,6 @@ TEST_P(DatabaseInterfaceTest, discardPluginUserMetadataShouldDiscardAllUserMetad
 
   auto metadata = db_->GetPluginUserMetadata(blankEsm);
   EXPECT_TRUE(metadata.HasNameOnly());
-
 }
 
 TEST_P(DatabaseInterfaceTest, discardPluginUserMetadataShouldNotDiscardMasterlistMetadataForTheGivenPlugin) {

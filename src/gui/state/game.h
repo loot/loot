@@ -81,10 +81,11 @@ public:
   MasterlistInfo GetMasterlistInfo() const;
 
   void LoadMetadata();
-  void EvaluateLoadedMetadata();
   std::set<std::string> GetKnownBashTags() const;
-  PluginMetadata GetMasterlistMetadata(const std::string& pluginName) const;
-  PluginMetadata GetUserMetadata(const std::string& pluginName) const;
+  PluginMetadata GetMasterlistMetadata(const std::string& pluginName,
+                                       bool evaluateConditions = false) const;
+  PluginMetadata GetUserMetadata(const std::string& pluginName,
+                                 bool evaluateConditions = false) const;
 
   void AddUserMetadata(const PluginMetadata& metadata);
   void ClearUserMetadata(const std::string& pluginName);

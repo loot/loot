@@ -53,8 +53,6 @@ public:
     if (isFirstLoad)
       state_.getCurrentGame().LoadMetadata();
 
-    state_.getCurrentGame().EvaluateLoadedMetadata();
-
     //Sort plugins into their load order.
     std::vector<std::shared_ptr<const PluginInterface>> installed;
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
@@ -121,7 +119,7 @@ private:
 
     // Now merge masterlist and userlist metadata and evaluate,
     // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin, masterlistMetadata, userlistMetadata);
+    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
 
     for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
       const std::string key = it->first.as<std::string>();

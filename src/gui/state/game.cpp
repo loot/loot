@@ -302,7 +302,7 @@ void Game::DecrementLoadOrderSortCount() {
 }
 
 std::vector<Message> Game::GetMessages() const {
-  std::vector<Message> output(gameHandle_->GetDatabase()->GetGeneralMessages());
+  std::vector<Message> output(gameHandle_->GetDatabase()->GetGeneralMessages(true));
   output.insert(end(output), begin(messages_), end(messages_));
 
   if (loadOrderSortCount_ == 0)
@@ -324,12 +324,7 @@ void Game::ClearMessages() {
 }
 
 bool Game::UpdateMasterlist() {
-  if (gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch())) {
-    EvaluateLoadedMetadata();
-    return true;
-  }
-
-  return false;
+  return gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch());
 }
 
 MasterlistInfo Game::GetMasterlistInfo() const {
@@ -371,20 +366,18 @@ void Game::LoadMetadata() {
   }
 }
 
-void Game::EvaluateLoadedMetadata() {
-  return gameHandle_->GetDatabase()->EvalLists();
-}
-
 std::set<std::string> Game::GetKnownBashTags() const {
   return gameHandle_->GetDatabase()->GetKnownBashTags();
 }
 
-PluginMetadata Game::GetMasterlistMetadata(const std::string & pluginName) const {
-  return gameHandle_->GetDatabase()->GetPluginMetadata(pluginName, false);
+PluginMetadata Game::GetMasterlistMetadata(const std::string & pluginName,
+                                           bool evaluateConditions) const {
+  return gameHandle_->GetDatabase()->GetPluginMetadata(pluginName, false, evaluateConditions);
 }
 
-PluginMetadata Game::GetUserMetadata(const std::string & pluginName) const {
-  return gameHandle_->GetDatabase()->GetPluginUserMetadata(pluginName);
+PluginMetadata Game::GetUserMetadata(const std::string & pluginName,
+                                     bool evaluateConditions) const {
+  return gameHandle_->GetDatabase()->GetPluginUserMetadata(pluginName, evaluateConditions);
 }
 
 void Game::AddUserMetadata(const PluginMetadata & metadata) {

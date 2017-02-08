@@ -56,12 +56,14 @@ struct ApiDatabase : public DatabaseInterface {
 
   std::set<std::string> GetKnownBashTags() const;
 
-  std::vector<Message> GetGeneralMessages() const;
+  std::vector<Message> GetGeneralMessages(bool evaluateConditions = false) const;
 
   PluginMetadata GetPluginMetadata(const std::string& plugin,
-                                   bool includeUserMetadata = true) const;
+                                   bool includeUserMetadata = true,
+                                   bool evaluateConditions = false) const;
 
-  PluginMetadata GetPluginUserMetadata(const std::string& plugin) const;
+  PluginMetadata GetPluginUserMetadata(const std::string& plugin,
+                                       bool evaluateConditions = false) const;
 
   void SetPluginUserMetadata(const PluginMetadata& pluginMetadata);
 

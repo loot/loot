@@ -74,9 +74,9 @@ public:
    *         written. Otherwise, data will be written.
    */
   virtual void WriteUserMetadata(const std::string& outputFile,
-                                const bool overwrite) const = 0;
+                                 const bool overwrite) const = 0;
 
-   /**
+  /**
    *  @brief Writes a minimal metadata file that only contains plugins with
    *         Bash Tag suggestions and/or dirty info, plus the suggestions and
    *         info themselves.
@@ -86,8 +86,8 @@ public:
    *         If `false` and `outputFile` already exists, no data will be
    *         written. Otherwise, data will be written.
    */
-   virtual void WriteMinimalList(const std::string& outputFile,
-                                 const bool overwrite) const = 0;
+  virtual void WriteMinimalList(const std::string& outputFile,
+                                const bool overwrite) const = 0;
 
   /**
    *  @}
@@ -152,21 +152,26 @@ public:
    *  @}
    *  @name Non-plugin Data Access
    *  @{
-  */
+   */
 
   /**
    *  @brief Gets the Bash Tags that are listed in the loaded metadata lists.
    *  @details Bash Tag suggestions can include plugins not in this list.
    *  @returns A set of Bash Tag names.
-  */
+   */
   virtual std::set<std::string> GetKnownBashTags() const = 0;
 
   /**
    *  @brief Get all general messages listen in the loaded metadata lists.
+   *  @param evaluateConditions
+   *         If true, any metadata conditions are evaluated before the metadata
+   *         is returned, otherwise unevaluated metadata is returned. Evaluating
+   *         general message conditions also clears the condition cache before
+   *         evaluating conditions.
    *  @returns A vector of messages supplied in the metadata lists but not
    *           attached to any particular plugin.
    */
-  virtual std::vector<Message> GetGeneralMessages() const = 0;
+  virtual std::vector<Message> GetGeneralMessages(bool evaluateConditions = false) const = 0;
 
   /**
    *  @}
@@ -182,22 +187,32 @@ public:
    *         If true, any user metadata the plugin has is included in the
    *         returned metadata, otherwise the metadata returned only includes
    *         metadata from the masterlist.
+   *  @param evaluateConditions
+   *         If true, any metadata conditions are evaluated before the metadata
+   *         is returned, otherwise unevaluated metadata is returned. Evaluating
+   *         plugin metadata conditions does not clear the condition cache.
    *  @returns A PluginMetadata object containing all the plugin's metadata.
    *           If the plugin has no metadata, PluginMetadata.IsNameOnly()
    *           will return true.
    */
   virtual PluginMetadata GetPluginMetadata(const std::string& plugin,
-                                           bool includeUserMetadata = true) const = 0;
+                                           bool includeUserMetadata = true,
+                                           bool evaluateConditions = false) const = 0;
 
   /**
   *  @brief Get a plugin's metadata loaded from the given userlist.
   *  @param plugin
   *         The filename of the plugin to look up user-added metadata for.
+  *  @param evaluateConditions
+  *         If true, any metadata conditions are evaluated before the metadata
+  *         is returned, otherwise unevaluated metadata is returned. Evaluating
+  *         plugin metadata conditions does not clear the condition cache.
   *  @returns A PluginMetadata object containing the plugin's user-added
   *           metadata. If the plugin has no metadata,
   *           PluginMetadata.IsNameOnly() will return true.
   */
-  virtual PluginMetadata GetPluginUserMetadata(const std::string& plugin) const = 0;
+  virtual PluginMetadata GetPluginUserMetadata(const std::string& plugin,
+                                               bool evaluateConditions = false) const = 0;
 
   /**
   *  @brief Sets a plugin's user metadata, overwriting any existing user

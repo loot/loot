@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-02-06 18:49+0000\n"
+"POT-Creation-Date: 2017-02-08 20:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -678,15 +678,19 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:104 src/gui/query/metadata_query.h:105
+#: src/gui/query/metadata_query.h:82 src/gui/query/metadata_query.h:92
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+
+#: src/gui/query/metadata_query.h:111 src/gui/query/metadata_query.h:112
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:108 src/gui/query/metadata_query.h:109
+#: src/gui/query/metadata_query.h:115 src/gui/query/metadata_query.h:116
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:153 src/gui/query/metadata_query.h:154
+#: src/gui/query/metadata_query.h:169 src/gui/query/metadata_query.h:170
 msgid "(edited)"
 msgstr ""
 
@@ -697,10 +701,6 @@ msgid ""
 msgstr ""
 
 #: src/gui/query/sort_plugins_query.h:48
-msgid "Loading plugin contents..."
-msgstr ""
-
-#: src/gui/query/sort_plugins_query.h:52
 msgid "Sorting load order..."
 msgstr ""
 
@@ -716,17 +716,17 @@ msgstr ""
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game.cpp:296
+#: src/gui/state/game.cpp:280
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
 
-#: src/gui/state/game.cpp:325
+#: src/gui/state/game.cpp:309
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:374
+#: src/gui/state/game.cpp:353
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

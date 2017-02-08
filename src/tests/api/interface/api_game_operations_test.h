@@ -67,6 +67,7 @@ protected:
       << "globals:" << endl
       << "  - type: say" << endl
       << "    content: '" << generalMasterlistMessage << "'" << endl
+      << "    condition: 'file(\"" << missingEsp << "\")'" << endl
       << "plugins:" << endl
       << "  - name: " << blankEsm << endl
       << "    after:" << endl
@@ -74,6 +75,7 @@ protected:
       << "    msg:" << endl
       << "      - type: say" << endl
       << "        content: '" << noteMessage << "'" << endl
+      << "        condition: 'file(\"" << missingEsp << "\")'" << endl
       << "    tag:" << endl
       << "      - Actors.ACBS" << endl
       << "      - Actors.AIData" << endl

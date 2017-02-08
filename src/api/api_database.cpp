@@ -32,6 +32,7 @@
 #include "loot/exception/file_access_error.h"
 #include "loot/yaml/plugin_metadata.h"
 #include "api/game/game.h"
+#include "api/metadata/condition_evaluator.h"
 #include "api/plugin/plugin_sorter.h"
 
 namespace loot {
@@ -133,7 +134,7 @@ std::set<std::string> ApiDatabase::GetKnownBashTags() const {
   return masterlistTags;
 }
 
-std::vector<Message> ApiDatabase::GetGeneralMessages() const {
+std::vector<Message> ApiDatabase::GetGeneralMessages(bool evaluateConditions) const {
   auto masterlistMessages = game_.GetMasterlist().Messages();
   auto userlistMessages = game_.GetUserlist().Messages();
 
@@ -141,22 +142,48 @@ std::vector<Message> ApiDatabase::GetGeneralMessages() const {
     masterlistMessages.insert(std::end(masterlistMessages), std::begin(userlistMessages), std::end(userlistMessages));
   }
 
+  if (evaluateConditions) {
+    // Evaluate conditions from scratch.
+    game_.ClearCachedConditions();
+    ConditionEvaluator evaluator(&game_);
+    for (auto it = std::begin(masterlistMessages); it != std::end(masterlistMessages);) {
+      if (!evaluator.evaluate(it->GetCondition()))
+        it = masterlistMessages.erase(it);
+      else
+        ++it;
+    }
+  }
+
   return masterlistMessages;
 }
 
 PluginMetadata ApiDatabase::GetPluginMetadata(const std::string& plugin,
-                                              bool includeUserMetadata) const {
+                                              bool includeUserMetadata,
+                                              bool evaluateConditions) const {
   PluginMetadata metadata = game_.GetMasterlist().FindPlugin(plugin);
 
   if (includeUserMetadata) {
     metadata.MergeMetadata(game_.GetUserlist().FindPlugin(plugin));
   }
 
+  if (evaluateConditions) {
+    ConditionEvaluator evaluator(&game_);
+    return evaluator.evaluateAll(metadata);
+  }
+
   return metadata;
 }
 
-PluginMetadata ApiDatabase::GetPluginUserMetadata(const std::string& plugin) const {
-  return game_.GetUserlist().FindPlugin(plugin);
+PluginMetadata ApiDatabase::GetPluginUserMetadata(const std::string& plugin,
+                                                  bool evaluateConditions) const {
+  PluginMetadata metadata = game_.GetUserlist().FindPlugin(plugin);
+
+  if (evaluateConditions) {
+    ConditionEvaluator evaluator(&game_);
+    return evaluator.evaluateAll(metadata);
+  }
+
+  return metadata;
 }
 
 void ApiDatabase::SetPluginUserMetadata(const PluginMetadata& pluginMetadata) {

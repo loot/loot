@@ -64,28 +64,36 @@ protected:
     return metadata;
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> file,
-                                     const PluginMetadata& masterlistEntry,
-                                     const PluginMetadata& userlistEntry) {
-    auto metadata = getNonUserMetadata(file, masterlistEntry);
-    metadata.MergeMetadata(userlistEntry);
-
-    return toYaml(file, metadata);
-  }
-
   YAML::Node generateDerivedMetadata(const std::string& pluginName) {
       // Now rederive the displayed metadata from the masterlist and userlist.
+    std::shared_ptr<const PluginInterface> plugin = nullptr;
     try {
-      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-
-
-      PluginMetadata master(state_.getCurrentGame().GetMasterlistMetadata(pluginName));
-      PluginMetadata user(state_.getCurrentGame().GetUserMetadata(pluginName));
-
-      return generateDerivedMetadata(plugin, master, user);
+      plugin = state_.getCurrentGame().GetPlugin(pluginName);
     } catch (...) {
       return YAML::Node();
     }
+
+    PluginMetadata master(pluginName);
+    try {
+      master = state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
+    } catch (std::exception& e) {
+      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s masterlist metadata contains a condition that could not be evaluated. Details: " << e.what();
+      master.SetMessages({
+        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
+      });
+    }
+
+    PluginMetadata user(pluginName);
+    try {
+      user = state_.getCurrentGame().GetUserMetadata(pluginName, true);
+    } catch (std::exception& e) {
+      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s user metadata contains a condition that could not be evaluated. Details: " << e.what();
+      user.SetMessages({
+        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
+      });
+    }
+
+    return generateDerivedMetadata(plugin, master, user);
   }
 
   YAML::Node getMasterlistInfo() {
@@ -93,7 +101,6 @@ protected:
 
     YAML::Node masterlistNode;
     try {
-
       MasterlistInfo info = state_.getCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
 
@@ -125,6 +132,15 @@ private:
     });
 
     return simpleMessages;
+  }
+
+  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> file,
+                                     const PluginMetadata& masterlistEntry,
+                                     const PluginMetadata& userlistEntry) {
+    auto metadata = getNonUserMetadata(file, masterlistEntry);
+    metadata.MergeMetadata(userlistEntry);
+
+    return toYaml(file, metadata);
   }
 
   YAML::Node toYaml(std::shared_ptr<const PluginInterface> plugin, const PluginMetadata& metadata) {

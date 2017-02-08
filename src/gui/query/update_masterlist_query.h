@@ -53,7 +53,6 @@ private:
     } catch (std::exception&) {
       try {
         game_.LoadMetadata();
-        game_.EvaluateLoadedMetadata();
       } catch (...) {}
       throw;
     }
