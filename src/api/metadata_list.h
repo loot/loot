@@ -64,6 +64,10 @@ protected:
   std::unordered_set<PluginMetadata> plugins_;
   std::list<PluginMetadata> regexPlugins_;
   std::vector<Message> messages_;
+
+  std::unordered_set<PluginMetadata> unevaluatedPlugins_;
+  std::list<PluginMetadata> unevaluatedRegexPlugins_;
+  std::vector<Message> unevaluatedMessages_;
 };
 }
 

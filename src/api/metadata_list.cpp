@@ -154,20 +154,33 @@ void MetadataList::AppendMessage(const Message& message) {
 
 void MetadataList::EvalAllConditions(Game& game) {
   ConditionEvaluator evaluator(&game);
-  std::unordered_set<PluginMetadata> replacementSet;
-  for (auto &plugin : plugins_) {
-    replacementSet.insert(evaluator.evaluateAll(plugin));
+
+  if (unevaluatedPlugins_.empty())
+    unevaluatedPlugins_.swap(plugins_);
+  else
+    plugins_.clear();
+
+  for (const auto& plugin : unevaluatedPlugins_) {
+    plugins_.insert(evaluator.evaluateAll(plugin));
   }
-  plugins_ = replacementSet;
-  for (auto &plugin : regexPlugins_) {
+
+  if (unevaluatedRegexPlugins_.empty())
+    unevaluatedRegexPlugins_ = regexPlugins_;
+  else
+    regexPlugins_ = unevaluatedRegexPlugins_;
+
+  for (auto& plugin : regexPlugins_) {
     plugin = evaluator.evaluateAll(plugin);
   }
 
-  for (auto it = std::begin(messages_); it != std::end(messages_);) {
-    if (!evaluator.evaluate(it->GetCondition()))
-      it = messages_.erase(it);
-    else
-      ++it;
+  if (unevaluatedMessages_.empty())
+    unevaluatedMessages_.swap(messages_);
+  else
+    messages_.clear();
+
+  for (const auto& message : unevaluatedMessages_) {
+    if (evaluator.evaluate(message.GetCondition()))
+      messages_.push_back(message);
   }
 }
 }

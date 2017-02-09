@@ -64,17 +64,15 @@ void ApiDatabase::LoadLists(const std::string& masterlistPath,
   }
 
   game_.GetMasterlist() = temp;
-  unevaluatedMasterlist_ = temp;
   game_.GetUserlist() = userTemp;
-  unevaluatedUserlist_ = userTemp;
 }
 
 void ApiDatabase::EvalLists() {
   // Clear caches before evaluating conditions.
   game_.ClearCachedConditions();
 
-  Masterlist temp = unevaluatedMasterlist_;
-  MetadataList userTemp = unevaluatedUserlist_;
+  Masterlist temp = game_.GetMasterlist();
+  MetadataList userTemp = game_.GetUserlist();
 
   // Refresh active plugins before evaluating conditions.
   temp.EvalAllConditions(game_);
@@ -107,7 +105,6 @@ bool ApiDatabase::UpdateMasterlist(const std::string& masterlistPath,
   Masterlist masterlist;
   if (masterlist.Update(masterlistPath, remoteURL, remoteBranch)) {
     game_.GetMasterlist() = masterlist;
-    unevaluatedMasterlist_ = masterlist;
     return true;
   }
 
