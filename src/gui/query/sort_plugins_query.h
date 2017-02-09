@@ -73,7 +73,8 @@ private:
     state_.getCurrentGame().SetLoadOrder(plugins);
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin, std::vector<std::string> loadOrder) {
+  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin,
+                                     const std::vector<std::string>& loadOrder) {
     YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
 
     pluginNode["name"] = plugin->GetName();

@@ -128,7 +128,7 @@ std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
-std::vector<Message> Game::CheckInstallValidity(std::shared_ptr<const PluginInterface> plugin, const PluginMetadata & metadata) {
+std::vector<Message> Game::CheckInstallValidity(const std::shared_ptr<const PluginInterface>& plugin, const PluginMetadata & metadata) {
   BOOST_LOG_TRIVIAL(trace) << "Checking that the current install is valid according to " << plugin->GetName() << "'s data.";
   std::vector<Message> messages;
   if (IsPluginActive(plugin->GetName())) {

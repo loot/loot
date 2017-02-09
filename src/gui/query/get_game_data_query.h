@@ -95,7 +95,7 @@ private:
     return node;
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin) {
+  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
     YAML::Node pluginNode;
 
     pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.

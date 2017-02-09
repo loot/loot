@@ -45,7 +45,7 @@ protected:
     return toSimpleMessages(messages, state_.getLanguage().GetCode());
   }
 
-  PluginMetadata getNonUserMetadata(std::shared_ptr<const PluginInterface> file,
+  PluginMetadata getNonUserMetadata(const std::shared_ptr<const PluginInterface>& file,
                                     const PluginMetadata& masterlistEntry) {
     auto metadata = masterlistEntry;
 
@@ -134,7 +134,7 @@ private:
     return simpleMessages;
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> file,
+  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& file,
                                      const PluginMetadata& masterlistEntry,
                                      const PluginMetadata& userlistEntry) {
     auto metadata = getNonUserMetadata(file, masterlistEntry);
@@ -143,7 +143,8 @@ private:
     return toYaml(file, metadata);
   }
 
-  YAML::Node toYaml(std::shared_ptr<const PluginInterface> plugin, const PluginMetadata& metadata) {
+  YAML::Node toYaml(const std::shared_ptr<const PluginInterface>& plugin,
+                    const PluginMetadata& metadata) {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage().GetName();
 
     YAML::Node pluginNode;

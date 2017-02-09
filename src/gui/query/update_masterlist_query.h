@@ -75,7 +75,7 @@ private:
     return JSON::stringify(gameMetadata);
   }
 
-  YAML::Node generateDerivedMetadata(std::shared_ptr<const PluginInterface> plugin) {
+  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
     YAML::Node pluginNode;
 
     auto masterlistMetadata = game_.GetMasterlistMetadata(plugin->GetName());
