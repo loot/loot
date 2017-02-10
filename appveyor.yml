@@ -4,19 +4,11 @@ version: "{build}-{branch}"
 
 configuration: Release
 
-platform:
-  - x64
-  - Win32
-
-matrix:
-  fast_finish: true
-
 cache:
   - node_modules
   - bower_components
   - C:\projects\boost_1_61_0\boost
   - C:\projects\boost_1_61_0\stage\32\lib
-  - C:\projects\boost_1_61_0\stage\64\lib
 
 environment:
   github_auth_token:
@@ -25,14 +17,13 @@ environment:
     secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
 
 install:
-  - choco install -y doxygen.portable InnoSetup imagemagick.tool
-  - python -m pip install sphinx breathe sphinx_rtd_theme
+  - choco install -y InnoSetup imagemagick.tool
+  - python -m pip install sphinx sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.1.0/install_boost.py', "$env:APPVEYOR_BUILD_FOLDER\install_boost.py")
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.2.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
-  - ps: if ($env:PLATFORM -eq "Win32") { $env:ADDRESS_MODEL = '32' } else { $env:ADDRESS_MODEL = '64' }
-  - ps: python $env:APPVEYOR_BUILD_FOLDER\install_boost.py -d C:\projects -b 1.61.0 -a $env:ADDRESS_MODEL atomic chrono date_time filesystem iostreams locale log regex system thread
+  - ps: python $env:APPVEYOR_BUILD_FOLDER\install_boost.py -d C:\projects -b 1.61.0 -a 32 atomic chrono date_time filesystem iostreams locale log regex system thread
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -40,54 +31,30 @@ before_build:
   - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
   - node scripts\create_ico.js
   - cd build
-  - ps: |
+  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0" -DBOOST_LIBRARYDIR="C:\projects\boost_1_61_0\stage\32\lib"
 
-      if ($env:PLATFORM -eq 'Win32') {
-        cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0" -DBOOST_LIBRARYDIR="C:\projects\boost_1_61_0\stage\32\lib"
-      } else {
-        cmake .. -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT="C:\projects\boost_1_61_0" -DBOOST_LIBRARYDIR="C:\projects\boost_1_61_0\stage\64\lib"
-      }
-
-build_script:
-  - ps: |
-      if ($env:PLATFORM -eq 'Win32') {
-        msbuild "c:\projects\loot\build\LOOT.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-      } else {
-        msbuild "c:\projects\loot\build\loot_api_internals_tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-        msbuild "c:\projects\loot\build\loot_api_tests.vcxproj" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-      }
+build:
+  verbosity: minimal
+  project: '$(APPVEYOR_BUILD_FOLDER)\build\LOOT.sln'
 
 test_script:
-  - ps: |
-      if ($env:PLATFORM -eq 'Win32') {
-        cd $env:APPVEYOR_BUILD_FOLDER
-        npm test
-      }
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - npm test
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
-  - loot_api_internals_tests.exe --gtest_output=xml:loot_api_internals_tests.xml
-  - loot_api_tests.exe --gtest_output=xml:loot_api_tests.xml
-  - ps: |
-      if ($env:PLATFORM -eq 'Win32') {
-        ./loot_gui_tests.exe --gtest_output=xml:loot_gui_tests.xml
-      }
+  - .\loot_gui_tests.exe --gtest_output=xml:loot_gui_tests.xml
 
 after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
-  - ps: |
-      $env:GIT_DESCRIBE = ((git describe --tags --long --abbrev=7) | Out-String) -replace "`n|`r", ""
-      if ($env:PLATFORM -eq 'Win32') {
-        $env:PATH = "$env:PATH;C:\cygwin\bin\"
-        node scripts\potomo.js
-        scripts\appveyor\build_installer.ps1
-      }
+  - ps: $env:GIT_DESCRIBE = ((git describe --tags --long --abbrev=7) | Out-String) -replace "`n|`r", ""
+  - ps: $env:PATH = "$env:PATH;C:\cygwin\bin\"
+  - node scripts\potomo.js
+  - ps: scripts\appveyor\build_installer.ps1
   - node scripts\archive.js
 
 artifacts:
-  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
+  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
     name: LOOT
-  - path: build\loot-api_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)_$(PLATFORM).7z
-    name: API
   - path: build\LOOT Installer.exe
     name: installer
 
@@ -103,17 +70,6 @@ deploy:
     publish: true
     artifact: LOOT
 
-  - provider: BinTray
-    username: wrinklyninja
-    api_key:
-      secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
-    subject: wrinklyninja
-    repo: loot
-    package: loot-api
-    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
-    publish: true
-    artifact: API
-
   - provider: GitHub
     tag: $(APPVEYOR_REPO_TAG_NAME)
     release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
@@ -122,51 +78,19 @@ deploy:
 
       ## Change Logs
       - [Application](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html)
-      - [API](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/api/changelog.html)
-      - [Metadata Syntax](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/metadata/changelog.html)
 
       *Note: The files below with `tar.xz` extensions contain Linux binaries. They won't work on Windows computers.*
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
-    artifact: API
-    draft: false
-    on:
-      appveyor_repo_tag: true
-      platform: x64
-
-  - provider: GitHub
-    tag: $(APPVEYOR_REPO_TAG_NAME)
-    release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
-    description: |
-      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives.
-
-      ## Change Logs
-      - [Application](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html)
-      - [API](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/api/changelog.html)
-      - [Metadata Syntax](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/metadata/changelog.html)
-
-      *Note: The files below with `tar.xz` extensions contain Linux binaries. They won't work on Windows computers.*
-    auth_token:
-      secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
-    artifact: LOOT,API,installer
+    artifact: LOOT,installer
     draft: false
     force_update: true
     on:
       appveyor_repo_tag: true
-      platform: Win32
 
 on_success:
-  - ps: |
-      if ($env:bintray_auth_token) {
-        python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot -t $env:bintray_auth_token -a $env:github_auth_token -n 30
-        python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot-api -t $env:bintray_auth_token -a $env:github_auth_token -n 30
-      }
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u wrinklyninja -b loot -p loot -t $env:bintray_auth_token -a $env:github_auth_token -n 30
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
-  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_api_internals_tests.xml")
-  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_api_tests.xml")
-  - ps: |
-      if ($env:PLATFORM -eq 'Win32') {
-        (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_gui_tests.xml")
-      }
+  - ps: (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", "$($env:APPVEYOR_BUILD_FOLDER)\build\$($env:CONFIGURATION)\loot_gui_tests.xml")

@@ -44,7 +44,6 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`BUILD_SHARED_LIBS` | `ON`, `OFF` | `ON` | Whether or not to build a shared LOOT API binary.
 `MSVC_STATIC_RUNTIME` | `ON`, `OFF` | `OFF` | Whether to link the C++ runtime statically or not when building with MSVC.
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
@@ -55,10 +54,10 @@ The GUI's HTML file is automatically built when building the LOOT GUI binary, bu
 
 ## Building The Documentation
 
-The documentation is built using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), [Breathe](https://breathe.readthedocs.io/en/latest/) and [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Doxygen and Python (2 or 3) and make sure they're accessible from your `PATH`, then run:
+The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python (2 or 3) and make sure it's accessible from your `PATH`, then run:
 
 ```
-pip install -r docs/api/requirements.txt
+pip install -r docs/requirements.txt
 sphinx-build -b html docs build/docs/html
 ```
 
@@ -68,4 +67,4 @@ Packaging scripts are provided for creating an installer on Windows and compress
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. The script requires the [Inno Download Plugin](https://bitbucket.org/mitrich_k/inno-download-plugin) to be installed. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](http://7-zip.org), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates archives for LOOT and its API in the `build` folder. The archives are named as described in the Downloads section above.
+The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](http://7-zip.org), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.

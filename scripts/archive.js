@@ -162,54 +162,9 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   fs.removeSync(tempPath);
 }
 
-function createApiArchive(rootPath, releasePath, tempPath, destPath) {
-  // Ensure that the output directory is empty.
-  fs.emptyDirSync(tempPath);
-
-  // API binary/binaries.
-  let binaries = [];
-  if (os.platform() === 'win32') {
-    binaries = [
-      'loot_api.dll',
-      'loot_api.lib',
-    ];
-  } else {
-    binaries = [
-      'libloot_api.so',
-    ];
-  }
-  binaries.forEach((file) => {
-    fs.copySync(
-      path.join(releasePath, file),
-      path.join(tempPath, file)
-    );
-  });
-
-  // API header files.
-  fs.mkdirsSync(path.join(tempPath, 'include'));
-  fs.copySync(
-    path.join(rootPath, 'include', 'loot'),
-    path.join(tempPath, 'include', 'loot')
-  );
-
-  // Documentation.
-  fs.copySync(
-    path.join(rootPath, 'build', 'docs', 'html'),
-    path.join(tempPath, 'docs')
-  );
-
-  // Now compress the folder to a 7-zip archive.
-  compress(tempPath, destPath);
-
-  // Finally, delete the temporary folder.
-  fs.removeSync(tempPath);
-}
-
 function getFilenameSuffix(label, gitDescription) {
   if (label) {
     return `${gitDescription}_${label}`;
-  } else if (process.env.APPVEYOR) {
-    return `${gitDescription}_${process.env.PLATFORM}`;
   }
 
   return `${gitDescription}`;
@@ -235,14 +190,6 @@ helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
   const filename = `loot_${getFilenameSuffix(releasePath.label, gitDesc)}`;
   createAppArchive(rootPath,
                    releasePath.path,
-                   path.join(rootPath, 'build', filename),
-                   path.join(rootPath, 'build', filename + fileExtension));
-});
-
-helpers.getApiBinaryPaths(rootPath).forEach(binaryPath => {
-  const filename = `loot-api_${getFilenameSuffix(binaryPath.label, gitDesc)}`;
-  createApiArchive(rootPath,
-                   binaryPath.path,
                    path.join(rootPath, 'build', filename),
                    path.join(rootPath, 'build', filename + fileExtension));
 });

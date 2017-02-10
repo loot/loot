@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-02-08 20:47+0000\n"
+"POT-Creation-Date: 2017-02-11 08:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: src/gui/html/js/events.js:18
 msgid "Identifying conflicting plugins..."
@@ -690,7 +689,7 @@ msgstr ""
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:169 src/gui/query/metadata_query.h:170
+#: src/gui/query/metadata_query.h:170 src/gui/query/metadata_query.h:171
 msgid "(edited)"
 msgstr ""
 
@@ -754,83 +753,4 @@ msgstr ""
 
 #: src/gui/state/loot_state.cpp:207
 msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-
-#: src/api/helpers/git_helper.cpp:147
-msgid ""
-"An error occurred while trying to clone the remote masterlist repository."
-msgstr ""
-
-#: src/api/helpers/git_helper.cpp:196
-msgid ""
-"An error occurred while trying to update the masterlist. This could be due "
-"to a server-side error. Try again in a few minutes."
-msgstr ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:89
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:90
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:91
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:95
-msgid "%1% found %2%, %3% and %4%."
-msgstr ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:97
-msgid "%1% found dirty edits."
-msgstr ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:100
-#: src/api/metadata/plugin_cleaning_data.cpp:102
-#: src/api/metadata/plugin_cleaning_data.cpp:104
-msgid "%1% found %2% and %3%."
-msgstr ""
-
-#: src/api/metadata/plugin_cleaning_data.cpp:107
-#: src/api/metadata/plugin_cleaning_data.cpp:109
-#: src/api/metadata/plugin_cleaning_data.cpp:111
-msgid "%1% found %2%."
-msgstr ""
-
-#: src/api/plugin/plugin.cpp:116
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr ""
-
-#: src/api/masterlist.cpp:46
-msgid ""
-"An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-
-#: src/api/masterlist.cpp:114 src/api/masterlist.cpp:128
-msgid ""
-"An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-
-#: src/api/masterlist.cpp:235
-msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
-msgstr ""
-
-#: src/api/masterlist.cpp:249
-msgid ""
-"Masterlist revision %1%: %2%. The latest masterlist revision contains a "
-"syntax error, LOOT is using the most recent valid revision instead. Syntax "
-"errors are usually minor and fixed within hours."
 msgstr ""

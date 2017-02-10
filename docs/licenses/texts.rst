@@ -36,17 +36,10 @@ Copyright License Texts
 .. include:: MIT License (Jed Gettext Parser).txt
   :literal:
 
-`libgit2`_
-==========
+LOOT, `LOOT API`_, `Libespm`_ & `Libloadorder`_
+===============================================
 
-.. _libgit2: https://github.com/libgit2/libgit2
-
-.. include:: GNU GPL v2 (libgit2).txt
-  :literal:
-
-LOOT, `Libespm`_ & `Libloadorder`_
-==================================
-
+.. _LOOT API: https://github.com/loot/loot-api
 .. _libespm: https://github.com/WrinklyNinja/libespm
 .. _libloadorder: https://github.com/WrinklyNinja/libloadorder
 
@@ -73,20 +66,4 @@ LOOT Documentation
 .. _Polymer: https://www.polymer-project.org/
 
 .. include:: BSD License (Polymer).txt
-  :literal:
-
-`Pseudosem`_
-============
-
-.. _Pseudosem: https://github.com/WrinklyNinja/pseudosem
-
-.. include:: MIT License (Pseudosem).txt
-  :literal:
-
-`yaml-cpp`_
-===========
-
-.. _yaml-cpp: https://github.com/loot/yaml-cpp
-
-.. include:: MIT License (yaml-cpp).txt
   :literal:

@@ -103,7 +103,7 @@ Added
 Changed
 -------
 
-- LOOT now supports v0.10 of the metadata syntax. This breaks compatibility with existing syntax, which may cause existing user metadata to fail to load. See :doc:`the syntax version history <../metadata/changelog>` for the details.
+- LOOT now supports v0.10 of the metadata syntax. This breaks compatibility with existing syntax, which may cause existing user metadata to fail to load. See :doc:`the syntax version history <loot_api:metadata/changelog>` for the details.
 - The Global Priority toggle button in the metadata editor has been replaced with an input field to reflect the change in syntax for global priorities.
 - Added a "Clean Plugin Info" tab to the metadata editor, for editing metadata that identifies a plugin as being clean.
 - Added a "Verified clean" icon to plugin cards that is displayed for plugins that are identified as clean.

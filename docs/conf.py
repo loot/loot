@@ -26,8 +26,6 @@ output_directory = os.path.join('..', 'build', 'docs')
 if not os.path.exists(output_directory):
     os.makedirs(output_directory)
 
-subprocess.call(['doxygen', 'docs/api/Doxyfile'], cwd='..')
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -38,8 +36,7 @@ subprocess.call(['doxygen', 'docs/api/Doxyfile'], cwd='..')
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'breathe',
+    'sphinx.ext.intersphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -348,9 +345,6 @@ texinfo_documents = [
 #
 # texinfo_no_detailmenu = False
 
-
-breathe_projects = {
-"loot":"../build/docs/xml/",
+intersphinx_mapping = {
+    'loot_api': ('http://loot-api.readthedocs.io/en/latest/', None),
 }
-
-breathe_default_project = 'loot'
