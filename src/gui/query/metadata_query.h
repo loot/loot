@@ -55,9 +55,7 @@ protected:
     metadata.SetTags(tags);
 
     auto messages = metadata.GetMessages();
-    auto statusMessages = file->GetStatusMessages();
     auto validityMessages = state_.getCurrentGame().CheckInstallValidity(file, metadata);
-    messages.insert(end(messages), begin(statusMessages), end(statusMessages));
     messages.insert(end(messages), begin(validityMessages), end(validityMessages));
     metadata.SetMessages(messages);
 

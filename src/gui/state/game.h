@@ -47,6 +47,7 @@ public:
   using GameSettings::Type;
 
   static bool IsInstalled(const GameSettings& gameSettings);
+  static Message ToMessage(const PluginCleaningData& cleaningData);
   void Init();
 
   std::shared_ptr<const PluginInterface> GetPlugin(const std::string& name) const;

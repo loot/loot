@@ -48,6 +48,9 @@ protected:
     blankDifferentMasterDependentEsp,
     blankPluginDependentEsp,
   }),
+  info_(std::vector<MessageContent>({
+    MessageContent("info", LanguageCode::english),
+  })),
   loadOrderBackupFile0("loadorder.bak.0"),
   loadOrderBackupFile1("loadorder.bak.1"),
   loadOrderBackupFile2("loadorder.bak.2"),
@@ -64,6 +67,8 @@ protected:
   const std::string loadOrderBackupFile1;
   const std::string loadOrderBackupFile2;
   const std::string loadOrderBackupFile3;
+
+  const std::vector<MessageContent> info_;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -149,6 +154,60 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
   EXPECT_TRUE(Game::IsInstalled(GameSettings(GetParam()).SetGamePath(dataPath.parent_path())));
 }
 
+TEST_P(GameTest, toMessageShouldOutputAllNonZeroCounts) {
+  Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 30));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records, 10 deleted references and 30 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 0));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found dirty edits. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 30));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 10 deleted references and 30 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 30));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 30 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 0));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 10 deleted references. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 30));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 0));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 0));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info", message.GetContent(LanguageCode::english).GetText());
+}
+
+TEST_P(GameTest, toMessageShouldDistinguishBetweenSingularAndPluralCounts) {
+  Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 1, 2, 3));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 1 ITM record, 2 deleted references and 3 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 1, 3));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 2 ITM records, 1 deleted reference and 3 deleted navmeshes. info", message.GetContent(LanguageCode::english).GetText());
+
+  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 3, 2, 1));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 3 ITM records, 2 deleted references and 1 deleted navmesh. info", message.GetContent(LanguageCode::english).GetText());
+}
+
+TEST_P(GameTest, toMessageShouldReturnAMessageWithCountsButNoInfoStringIfInfoIsAnEmptyString) {
+  Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3));
+  EXPECT_EQ(MessageType::warn, message.GetType());
+  EXPECT_EQ("cleaner found 1 ITM record, 2 deleted references and 3 deleted navmeshes.", message.GetContent(LanguageCode::english).GetText());
+}
+
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
 
@@ -221,8 +280,8 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
-    PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2).AsMessage(),
-    PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10).AsMessage(),
+    Game::ToMessage(PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2)),
+    Game::ToMessage(PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10)),
   }), messages);
 }
 

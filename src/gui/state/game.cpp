@@ -165,7 +165,7 @@ std::vector<Message> Game::CheckInstallValidity(const std::shared_ptr<const Plug
 
   // Also generate dirty messages.
   for (const auto &element : metadata.GetDirtyInfo()) {
-    messages.push_back(element.AsMessage());
+    messages.push_back(Game::ToMessage(element));
   }
 
   return messages;
@@ -324,7 +324,12 @@ void Game::ClearMessages() {
 }
 
 bool Game::UpdateMasterlist() {
-  return gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch());
+  bool wasUpdated = gameHandle_->GetDatabase()->UpdateMasterlist(MasterlistPath().string(), RepoURL(), RepoBranch());
+  if (wasUpdated && !gameHandle_->GetDatabase()->IsLatestMasterlist(MasterlistPath().string(), RepoBranch())) {
+    AppendMessage(Message(MessageType::error, boost::locale::translate("The latest masterlist revision contains a syntax error, LOOT is using the most recent valid revision instead. Syntax errors are usually minor and fixed within hours.")));
+  }
+
+  return wasUpdated;
 }
 
 MasterlistInfo Game::GetMasterlistInfo() const {
@@ -440,6 +445,47 @@ void Game::BackupLoadOrder(const std::vector<std::string>& loadOrder,
   boost::filesystem::ofstream out(backupDirectory / (filenameFormat % 0).str());
   for (const auto &plugin : loadOrder)
     out << plugin << std::endl;
+}
+
+Message Game::ToMessage(const PluginCleaningData& cleaningData) {
+  using boost::format;
+  using boost::locale::translate;
+
+  const std::string itmRecords = (format(translate("%1% ITM record", "%1% ITM records", cleaningData.GetITMCount())) % cleaningData.GetITMCount()).str();
+  const std::string deletedReferences = (format(translate("%1% deleted reference", "%1% deleted references", cleaningData.GetDeletedReferenceCount())) % cleaningData.GetDeletedReferenceCount()).str();
+  const std::string deletedNavmeshes = (format(translate("%1% deleted navmesh", "%1% deleted navmeshes", cleaningData.GetDeletedNavmeshCount())) % cleaningData.GetDeletedNavmeshCount()).str();
+
+  format f;
+  if (cleaningData.GetITMCount() > 0 && cleaningData.GetDeletedReferenceCount() > 0 && cleaningData.GetDeletedNavmeshCount() > 0)
+    f = format(translate("%1% found %2%, %3% and %4%.")) % cleaningData.GetCleaningUtility() % itmRecords % deletedReferences % deletedNavmeshes;
+  else if (cleaningData.GetITMCount() == 0 && cleaningData.GetDeletedReferenceCount() == 0 && cleaningData.GetDeletedNavmeshCount() == 0)
+    f = format(translate("%1% found dirty edits.")) % cleaningData.GetCleaningUtility();
+
+  else if (cleaningData.GetITMCount() == 0 && cleaningData.GetDeletedReferenceCount() > 0 && cleaningData.GetDeletedNavmeshCount() > 0)
+    f = format(translate("%1% found %2% and %3%.")) % cleaningData.GetCleaningUtility() % deletedReferences % deletedNavmeshes;
+  else if (cleaningData.GetITMCount() > 0 && cleaningData.GetDeletedReferenceCount() == 0 && cleaningData.GetDeletedNavmeshCount() > 0)
+    f = format(translate("%1% found %2% and %3%.")) % cleaningData.GetCleaningUtility() % itmRecords % deletedNavmeshes;
+  else if (cleaningData.GetITMCount() > 0 && cleaningData.GetDeletedReferenceCount() > 0 && cleaningData.GetDeletedNavmeshCount() == 0)
+    f = format(translate("%1% found %2% and %3%.")) % cleaningData.GetCleaningUtility() % itmRecords % deletedReferences;
+
+  else if (cleaningData.GetITMCount() > 0)
+    f = format(translate("%1% found %2%.")) % cleaningData.GetCleaningUtility() % itmRecords;
+  else if (cleaningData.GetDeletedReferenceCount() > 0)
+    f = format(translate("%1% found %2%.")) % cleaningData.GetCleaningUtility() % deletedReferences;
+  else if (cleaningData.GetDeletedNavmeshCount() > 0)
+    f = format(translate("%1% found %2%.")) % cleaningData.GetCleaningUtility() % deletedNavmeshes;
+
+  std::string message = f.str();
+  if (cleaningData.GetInfo().empty()) {
+    return Message(MessageType::warn, message);
+  }
+
+  auto info = cleaningData.GetInfo();
+  for (auto& content : info) {
+    content = MessageContent(message + " " + content.GetText(), content.GetLanguage());
+  }
+
+  return Message(MessageType::warn, info);
 }
 
 std::vector<std::string> Game::GetInstalledPluginNames() {
