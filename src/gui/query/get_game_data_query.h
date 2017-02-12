@@ -67,7 +67,7 @@ public:
   }
 
 private:
-  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const LanguageCode language) {
+  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
     std::vector<EditorMessage> list;
 
     for (const auto& message : messages) {
@@ -77,7 +77,7 @@ private:
     return list;
   }
 
-  static YAML::Node convertPluginMetadata(const PluginMetadata& metadata, const LanguageCode language) {
+  static YAML::Node convertPluginMetadata(const PluginMetadata& metadata, const std::string& language) {
     YAML::Node node;
 
     node["enabled"] = metadata.IsEnabled();
@@ -110,12 +110,12 @@ private:
     BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
     auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
     if (!masterlistMetadata.HasNameOnly())
-      pluginNode["masterlist"] = convertPluginMetadata(masterlistMetadata, state_.getLanguage().GetCode());
+      pluginNode["masterlist"] = convertPluginMetadata(masterlistMetadata, state_.getLanguage());
 
     BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
     auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
     if (!userlistMetadata.HasNameOnly())
-      pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage().GetCode());
+      pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage());
 
     // Now merge masterlist and userlist metadata and evaluate,
     // putting any resulting metadata into the base of the pluginNode.

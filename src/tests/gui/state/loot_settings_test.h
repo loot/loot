@@ -62,7 +62,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_EQ("auto", settings_.getGame());
-  EXPECT_EQ("en", settings_.getLanguage().GetLocale());
+  EXPECT_EQ("en", settings_.getLanguage());
   EXPECT_EQ("auto", settings_.getLastGame());
   EXPECT_FALSE(settings_.isWindowPositionStored());
 
@@ -160,7 +160,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
 
   EXPECT_EQ(enableDebugLogging, settings_.isDebugLoggingEnabled());
   EXPECT_EQ(game, settings_.getGame());
-  EXPECT_EQ(language, settings_.getLanguage().GetLocale());
+  EXPECT_EQ(language, settings_.getLanguage());
   EXPECT_EQ(lastGame, settings_.getLastGame());
 
   EXPECT_EQ(1, settings_.getWindowPosition().top);
@@ -213,7 +213,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeFromVersion0Point6Format) {
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_EQ(UpdateMasterlist, outputYaml["updateMasterlist"].as<bool>());
   EXPECT_EQ(Game, settings_.getGame());
-  EXPECT_EQ(Language, settings_.getLanguage().GetLocale());
+  EXPECT_EQ(Language, settings_.getLanguage());
   EXPECT_EQ(LastGame, settings_.getLastGame());
 
   EXPECT_EQ(Games[0].Name(), settings_.getGameSettings()[0].Name());
@@ -264,7 +264,7 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeVersion0Point6SettingsIf
   EXPECT_EQ(enableDebugLogging, settings_.isDebugLoggingEnabled());
   EXPECT_EQ(updateMasterlist, outputYaml["updateMasterlist"].as<bool>());
   EXPECT_EQ(game, settings_.getGame());
-  EXPECT_EQ(language, settings_.getLanguage().GetLocale());
+  EXPECT_EQ(language, settings_.getLanguage());
   EXPECT_EQ(lastGame, settings_.getLastGame());
 
   EXPECT_EQ(games[0].Name(), settings_.getGameSettings()[0].Name());
@@ -347,7 +347,7 @@ TEST_F(LootSettingsTest, getLanguageShouldReturnTheCurrentValue) {
 
   settings_.load(inputYaml);
 
-  EXPECT_EQ("fr", settings_.getLanguage().GetLocale());
+  EXPECT_EQ("fr", settings_.getLanguage());
 }
 
 TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {

@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_GET_LANGUAGES_QUERY
 
 #include "gui/query/json.h"
-#include "loot/language.h"
 #include "gui/query/query.h"
 
 namespace loot {
@@ -40,15 +39,31 @@ public:
 private:
   static std::string getLanguagesAsJson() {
     YAML::Node temp;
-    for (const auto& code : Language::codes) {
+    for (const auto& language : getLanguages()) {
       YAML::Node lang;
-      Language language(code);
-      lang["name"] = language.GetName();
-      lang["locale"] = language.GetLocale();
+      lang["locale"] = language.first;
+      lang["name"] = language.second;
       temp.push_back(lang);
     }
 
     return JSON::stringify(temp);
+  }
+
+  static std::map<std::string, std::string> getLanguages() {
+    return std::map<std::string, std::string>({
+      {"da", "Dansk"},
+      {"de", "Deutsch"},
+      {"en", "English"},
+      {"es", "Español"},
+      {"fi", "suomi"},
+      {"fr", "Français"},
+      {"ko", "한국어"},
+      {"pl", "Polski"},
+      {"pt_BR", "Português do Brasil"},
+      {"ru", "Русский"},
+      {"sv", "Svenska"},
+      {"zh_CN", "简体中文"},
+    });
   }
 };
 }

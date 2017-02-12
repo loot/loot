@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-02-11 08:27+0000\n"
+"POT-Creation-Date: 2017-02-12 22:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: src/gui/html/js/events.js:18
 msgid "Identifying conflicting plugins..."
@@ -677,19 +678,19 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:82 src/gui/query/metadata_query.h:92
+#: src/gui/query/metadata_query.h:80 src/gui/query/metadata_query.h:90
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:111 src/gui/query/metadata_query.h:112
+#: src/gui/query/metadata_query.h:109 src/gui/query/metadata_query.h:110
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:115 src/gui/query/metadata_query.h:116
+#: src/gui/query/metadata_query.h:113 src/gui/query/metadata_query.h:114
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:170 src/gui/query/metadata_query.h:171
+#: src/gui/query/metadata_query.h:168 src/gui/query/metadata_query.h:169
 msgid "(edited)"
 msgstr ""
 
@@ -725,7 +726,14 @@ msgstr ""
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:353
+#: src/gui/state/game.cpp:329
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+
+#: src/gui/state/game.cpp:358
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -743,14 +751,50 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:133
+#: src/gui/state/game.cpp:454
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game.cpp:455
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game.cpp:456
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game.cpp:460
+msgid "%1% found %2%, %3% and %4%."
+msgstr ""
+
+#: src/gui/state/game.cpp:462
+msgid "%1% found dirty edits."
+msgstr ""
+
+#: src/gui/state/game.cpp:465 src/gui/state/game.cpp:467
+#: src/gui/state/game.cpp:469
+msgid "%1% found %2% and %3%."
+msgstr ""
+
+#: src/gui/state/game.cpp:472 src/gui/state/game.cpp:474
+#: src/gui/state/game.cpp:476
+msgid "%1% found %2%."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:134
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:140
+#: src/gui/state/loot_state.cpp:141
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:207
+#: src/gui/state/loot_state.cpp:208
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""

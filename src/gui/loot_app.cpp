@@ -30,7 +30,6 @@
 #include <include/cef_task.h>
 
 #include "gui/state/loot_paths.h"
-#include "loot/language.h"
 #include "gui/loot_handler.h"
 #include "gui/loot_scheme_handler_factory.h"
 
@@ -86,13 +85,14 @@ void LootApp::OnContextInitialized() {
   // Need to set the global locale for this process so that messages will
   // be translated.
   BOOST_LOG_TRIVIAL(debug) << "Initialising language settings in UI thread.";
-  if (lootState_.getLanguage().GetCode() != LanguageCode::english) {
+  if (lootState_.getLanguage() != MessageContent::defaultLanguage) {
     boost::locale::generator gen;
     gen.add_messages_path(LootPaths::getL10nPath().string());
     gen.add_messages_domain("loot");
 
-    BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState_.getLanguage().GetName();
-    std::locale::global(gen(lootState_.getLanguage().GetLocale() + ".UTF-8"));
+    BOOST_LOG_TRIVIAL(debug) << "Selected language: " << lootState_.getLanguage();
+    std::locale::global(gen(lootState_.getLanguage() + ".UTF-8"));
+    loot::InitialiseLocale(lootState_.getLanguage() + ".UTF-8");
     boost::filesystem::path::imbue(std::locale());
   }
 

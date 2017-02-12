@@ -34,7 +34,6 @@
 #include <yaml-cpp/yaml.h>
 
 #include "gui/state/game_settings.h"
-#include "loot/language.h"
 
 namespace loot {
 class LootSettings {
@@ -60,7 +59,7 @@ public:
   std::string getGame() const;
   std::string getLastGame() const;
   std::string getLastVersion() const;
-  const Language& getLanguage() const;
+  std::string getLanguage() const;
   const WindowPosition& getWindowPosition() const;
   std::vector<GameSettings> getGameSettings() const;
 
@@ -79,7 +78,7 @@ private:
   std::string game_;
   std::string lastGame_;
   std::string lastVersion_;
-  Language language_;
+  std::string language_;
   WindowPosition windowPosition_;
   std::vector<GameSettings> gameSettings_;
   std::map<std::string, bool> filters_;

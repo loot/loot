@@ -28,6 +28,7 @@ Fallout: New Vegas.
 
 #include <boost/locale.hpp>
 
+#include "loot/api.h"
 #include "loot/windows_encoding_converters.h"
 
 #ifdef _WIN32
@@ -74,6 +75,7 @@ void LootPaths::initialise(const std::string& lootDataPath) {
     // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   boost::filesystem::path::imbue(std::locale());
+  loot::InitialiseLocale("");
 
   lootAppPath_ = boost::filesystem::current_path();
 

@@ -42,7 +42,7 @@ protected:
   std::vector<SimpleMessage> getGeneralMessages() {
     std::vector<Message> messages = state_.getCurrentGame().GetMessages();
 
-    return toSimpleMessages(messages, state_.getLanguage().GetCode());
+    return toSimpleMessages(messages, state_.getLanguage());
   }
 
   PluginMetadata getNonUserMetadata(const std::shared_ptr<const PluginInterface>& file,
@@ -119,8 +119,8 @@ protected:
 
 private:
   static std::vector<SimpleMessage> toSimpleMessages(const std::vector<Message>& messages,
-                                                     LanguageCode language) {
-    BOOST_LOG_TRIVIAL(info) << "Using message language: " << Language(language).GetName();
+                                                     const std::string& language) {
+    BOOST_LOG_TRIVIAL(info) << "Using message language: " << language;
     std::vector<SimpleMessage> simpleMessages(messages.size());
     std::transform(begin(messages),
                    end(messages),
@@ -143,13 +143,13 @@ private:
 
   YAML::Node toYaml(const std::shared_ptr<const PluginInterface>& plugin,
                     const PluginMetadata& metadata) {
-    BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage().GetName();
+    BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage();
 
     YAML::Node pluginNode;
     pluginNode["name"] = plugin->GetName();
     pluginNode["priority"] = metadata.GetLocalPriority().GetValue();
     pluginNode["globalPriority"] = metadata.GetGlobalPriority().GetValue();
-    pluginNode["messages"] = metadata.GetSimpleMessages(state_.getLanguage().GetCode());
+    pluginNode["messages"] = metadata.GetSimpleMessages(state_.getLanguage());
     pluginNode["tags"] = metadata.GetTags();
     pluginNode["isDirty"] = !metadata.GetDirtyInfo().empty();
     pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName());

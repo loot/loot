@@ -54,7 +54,7 @@ LootSettings::LootSettings() :
 enableDebugLogging_(false),
 updateMasterlist_(true),
 game_("auto"),
-language_(Language(LanguageCode::english)),
+language_("en"),
 lastGame_("auto") {}
 
 void LootSettings::load(YAML::Node& settings) {
@@ -69,7 +69,7 @@ void LootSettings::load(YAML::Node& settings) {
   if (settings["game"])
     game_ = settings["game"].as<string>();
   if (settings["language"])
-    language_ = Language(settings["language"].as<string>());
+    language_ = settings["language"].as<string>();
   if (settings["lastGame"])
     lastGame_ = settings["lastGame"].as<string>();
   if (settings["lastVersion"])
@@ -160,7 +160,7 @@ std::string LootSettings::getLastVersion() const {
   return lastVersion_;
 }
 
-const Language& LootSettings::getLanguage() const {
+std::string LootSettings::getLanguage() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return language_;
@@ -216,7 +216,7 @@ YAML::Node LootSettings::toYaml() const {
   node["enableDebugLogging"] = enableDebugLogging_;
   node["updateMasterlist"] = updateMasterlist_;
   node["game"] = game_;
-  node["language"] = language_.GetLocale();
+  node["language"] = language_;
   node["lastGame"] = lastGame_;
   node["lastVersion"] = lastVersion_;
 

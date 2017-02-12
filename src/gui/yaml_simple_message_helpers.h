@@ -43,7 +43,7 @@ struct convert<loot::SimpleMessage> {
       node["type"] = "error";
 
     node["text"] = rhs.text;
-    node["language"] = loot::Language(rhs.language).GetLocale();
+    node["language"] = rhs.language;
 
     return node;
   }
@@ -60,7 +60,7 @@ struct convert<loot::SimpleMessage> {
       throw RepresentationException(node.Mark(), "bad conversion: 'language' key missing from 'simple message' object");
 
     rhs.text = node["text"].as<std::string>();
-    rhs.language = loot::Language(node["language"].as<std::string>()).GetCode();
+    rhs.language = node["language"].as<std::string>();
 
     std::string type;
     type = node["type"].as<std::string>();
@@ -85,7 +85,7 @@ Emitter& operator << (Emitter& out, const loot::SimpleMessage& rhs) {
   else
     out << Key << "type" << Value << "error";
 
-  out << Key << "language" << Value << loot::Language(rhs.language).GetLocale();
+  out << Key << "language" << Value << rhs.language;
 
   out << Key << "text" << Value << YAML::SingleQuoted << rhs.text;
 
