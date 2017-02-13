@@ -74,6 +74,9 @@ tt, code, kbd, samp {
   margin: 0 8px;
   width: 250px;
 }
+#gameMenu > paper-item {
+  white-space: nowrap;
+}
 #applySortButton {
     color: var(--dark-accent-color);
     background-color: white;
