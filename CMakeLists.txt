@@ -29,6 +29,10 @@ ENDIF ()
 
 message(STATUS "Git revision: ${GIT_COMMIT_STRING}")
 
+# Write to file.
+configure_file("${CMAKE_SOURCE_DIR}/src/gui/version.cpp.in" "${CMAKE_BINARY_DIR}/generated/version.cpp" @ONLY)
+include_directories("${CMAKE_BINARY_DIR}/generated")
+
 ##############################
 # External Projects
 ##############################
@@ -141,7 +145,8 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 # General Settings
 ##############################
 
-set (LOOT_GUI_SRC "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
+set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_handler.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/loot_app.cpp"
@@ -198,9 +203,11 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/version.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")
 
-set(LOOT_GUI_TESTS_SRC "${CMAKE_SOURCE_DIR}/src/gui/state/game.cpp"
+set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
+                       "${CMAKE_SOURCE_DIR}/src/gui/state/game.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/state/game_settings.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"

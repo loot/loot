@@ -29,7 +29,7 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
-#include "loot/loot_version.h"
+#include "gui/version.h"
 
 namespace loot {
 namespace test {
@@ -46,7 +46,7 @@ protected:
 };
 
 TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
-  const std::string currentVersion = LootVersion::string();
+  const std::string currentVersion = gui::Version::string();
   const std::vector<GameSettings> expectedGameSettings({
       GameSettings(GameType::tes4),
       GameSettings(GameType::tes5),
@@ -415,7 +415,7 @@ TEST_F(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
 }
 
 TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
-  const std::string currentVersion = LootVersion::string();
+  const std::string currentVersion = gui::Version::string();
   YAML::Node inputYaml;
   inputYaml["lastVersion"] = "v0.7.1";
 

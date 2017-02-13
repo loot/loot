@@ -29,7 +29,7 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include "gui/state/loot_paths.h"
-#include "loot/loot_version.h"
+#include "gui/version.h"
 
 using std::lock_guard;
 using std::recursive_mutex;
@@ -205,7 +205,7 @@ void LootSettings::storeFilterState(const std::string& filterId, bool enabled) {
 void LootSettings::updateLastVersion() {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  lastVersion_ = LootVersion::string();
+  lastVersion_ = gui::Version::string();
 }
 
 YAML::Node LootSettings::toYaml() const {

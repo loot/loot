@@ -39,6 +39,7 @@
 
 #include "gui/state/game_detection_error.h"
 #include "gui/state/loot_paths.h"
+#include "gui/version.h"
 #include "loot/api.h"
 #include "loot/windows_encoding_converters.h"
 
@@ -158,8 +159,9 @@ void LootState::init(const std::string& cmdLineGame) {
   enableDebugLogging(isDebugLoggingEnabled());
 
   // Log some useful info.
-  BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << LootVersion::major << "." << LootVersion::minor << "." << LootVersion::patch;
-  BOOST_LOG_TRIVIAL(info) << "LOOT Build Revision: " << LootVersion::revision;
+  BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << gui::Version::string() << "+" << gui::Version::revision;
+  BOOST_LOG_TRIVIAL(info) << "LOOT API Version: " << LootVersion::string() << "+" << LootVersion::revision;
+
 #ifdef _WIN32
         // Check if LOOT is being run through Mod Organiser.
   bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;

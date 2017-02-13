@@ -22,6 +22,32 @@ function updateInstallerScript(version) {
   });
 }
 
+function updateCppFile(version) {
+  const file = path.join('src', 'gui', 'version.cpp.in');
+  const versionParts = version.split('.');
+
+  replace({
+    regex: /Version::major = \d+;/,
+    replacement: `Version::major = ${versionParts[0]};`,
+    paths: [file],
+    silent: true,
+  });
+
+  replace({
+    regex: /Version::minor = \d+;/,
+    replacement: `Version::minor = ${versionParts[1]};`,
+    paths: [file],
+    silent: true,
+  });
+
+  replace({
+    regex: /Version::patch = \d+;/,
+    replacement: `Version::patch = ${versionParts[2]};`,
+    paths: [file],
+    silent: true,
+  });
+}
+
 function updateResourceFiles(version) {
   const files = [
     path.join('src', 'gui', 'resource.rc'),
@@ -58,6 +84,7 @@ function main() {
 
   updatePreCommitHookScript(newVersion);
   updateInstallerScript(newVersion);
+  updateCppFile(newVersion);
   updateResourceFiles(newVersion);
 }
 

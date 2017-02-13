@@ -26,8 +26,8 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_GET_VERSION_QUERY
 
 #include "gui/query/query.h"
-#include "loot/loot_version.h"
 #include "gui/query/json.h"
+#include "gui/version.h"
 
 namespace loot {
 class GetVersionQuery : public Query {
@@ -35,8 +35,8 @@ public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
     YAML::Node node;
-    node["release"] = LootVersion::string();
-    node["build"] = LootVersion::revision;
+    node["release"] = gui::Version::string();
+    node["build"] = gui::Version::revision;
     return JSON::stringify(node);
   }
 };
