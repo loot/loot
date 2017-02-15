@@ -40,6 +40,10 @@ it a <select>-like API. This means:
           color: var(--dark-theme-secondary-color);
         };
       }
+
+      ::content > paper-item {
+        white-space: nowrap;
+      }
     </style>
     <paper-dropdown-menu disabled$="[[disabled]]" no-label-float="[[noLabelFloat]]" label="[[label]]" vertical-align="[[verticalAlign]]">
       <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{value}}">
