@@ -9,7 +9,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#1.7.0",
     "iron-icons": "PolymerElements/iron-icons#1.2.0",
-    "iron-list": "loot/iron-list#patched-for-loot",
+    "iron-list": "PolymerElements/iron-list#1.4.3",
     "iron-pages": "PolymerElements/iron-pages#1.0.8",
     "neon-animation": "PolymerElements/neon-animation#1.2.4",
     "paper-autocomplete": "ellipticaljs/paper-autocomplete#v1.1.0",

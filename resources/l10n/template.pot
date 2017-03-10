@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-02-12 22:32+0000\n"
+"POT-Creation-Date: 2017-03-12 00:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -787,14 +787,14 @@ msgstr ""
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:134
+#: src/gui/state/loot_state.cpp:135
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:141
+#: src/gui/state/loot_state.cpp:142
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:208
+#: src/gui/state/loot_state.cpp:210
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""

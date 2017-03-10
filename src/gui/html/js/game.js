@@ -141,7 +141,10 @@
       });
     }
 
-    plugins.forEach((plugin) => {
+    plugins.forEach((plugin, index) => {
+      /* Recalculate each plugin card's z-index value. */
+      plugin.cardZIndex = plugins.length - index;
+
       if (plugin.isActive) {
         activePluginNo += 1;
       }
@@ -309,6 +312,14 @@
         generalMessagesList.appendChild(li);
       });
     }
+
+    /* Update the plugin card list's configured offset. */
+    const summary = document.getElementById('summary');
+    const summaryStyle = getComputedStyle(summary);
+    document.getElementById('pluginCardList').scrollOffset =
+      summary.offsetHeight
+      + parseInt(summaryStyle.marginTop, 10)
+      + parseInt(summaryStyle.marginBottom, 10);
   }
 
   static onMasterlistChange(evt) {

@@ -316,7 +316,7 @@
         <iron-list id="pluginCardList" as="plugin" scroll-target="main">
           <template>
             <loot-plugin-card id="[[plugin.id]]"
-                              data="[[plugin]]">
+                              data="[[plugin]]" style="z-index: [[plugin.cardZIndex]]">
               <h1>[[plugin.name]]</h1>
               <span class="version"></span>
               <span class="crc"></span>

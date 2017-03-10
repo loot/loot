@@ -185,6 +185,7 @@
       this.id = this.name.replace(/\s+/g, '');
       this._isEditorOpen = false;
       this._isSearchResult = false;
+      this.cardZIndex = 0;
     }
 
     update(plugin) {

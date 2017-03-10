@@ -62,8 +62,8 @@ describe('Game', () => {
     });
 
     it('should set plugins to the object\'s value if defined', () => {
-      const game = new loot.Game({ plugins: ['test'] }, l10n);
-      game.plugins.should.deep.equal(['test']);
+      const game = new loot.Game({ plugins: [{ name: 'test' }] }, l10n);
+      game.plugins.should.deep.equal([{ name: 'test', cardZIndex: 1 }]);
     });
 
     it('should set loadOrder to undefined by default', () => {
@@ -520,7 +520,13 @@ describe('Game', () => {
     });
 
     it('should set the global messages to the second passed parameter', () => {
-      game.oldLoadOrder = [0, 1, 2];
+      game.oldLoadOrder = [new loot.Plugin({
+        name: 'foo',
+        loadOrderIndex: 1,
+      }), new loot.Plugin({
+        name: 'bar',
+        loadOrderIndex: 0,
+      })];
 
       game.cancelSort([], ['foo']);
 
