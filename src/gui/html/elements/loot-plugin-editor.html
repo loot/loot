@@ -290,13 +290,25 @@ loot-editor-close
         /* If either of the priority values have been changed, the
            base priority value they're derived from will have
            changed, so record both. */
-        if (this.$.priorityValue.value !== oldData.priority) {
-          plugin.priority = this.$.priorityValue.value;
-          plugin.userlist.priority = this.$.priorityValue.value;
+        const localPriority = parseInt(this.$.priorityValue.value, 10);
+        const globalPriority = parseInt(this.$.globalPriorityValue.value, 10);
+        if (localPriority !== oldData.priority) {
+          plugin.priority = localPriority;
         }
-        if (this.$.globalPriorityValue.value !== oldData.globalPriority) {
-          plugin.globalPriority = this.$.globalPriorityValue.value;
-          plugin.userlist.globalPriority = this.$.globalPriorityValue.value;
+        if (globalPriority !== oldData.globalPriority) {
+          plugin.globalPriority = globalPriority;
+        }
+
+        if (localPriority !== 0 && (localPriority !== oldData.priority
+          || (oldData.userlist
+          && localPriority === oldData.userlist.priority))) {
+          plugin.userlist.priority = localPriority;
+        }
+
+        if (globalPriority !== 0 && (globalPriority !== oldData.globalPriority
+          || (oldData.userlist
+          && globalPriority === oldData.userlist.globalPriority))) {
+          plugin.userlist.globalPriority = globalPriority;
         }
 
         plugin.userlist.enabled = this.$.enableEdits.checked;
