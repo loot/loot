@@ -4,6 +4,35 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.11.0 - Unreleased
+===================
+
+Changed
+-------
+
+- The LOOT application now uses the LOOT API, rather than sharing internal code
+  with it.
+- LOOT now writes to an additional log file, ``LOOTAPIDebugLog.txt``.
+- If LOOT is closed while maximised, it will now start maximised.
+- Log timestamps now have microsecond precision.
+- Updated to CEF v3.2924.1561.g06fde99.
+- The LOOT API has had its code split into its
+  own `repository`_. Its documentation, along
+  with the metadata syntax documentation, is now
+  hosted `separately`_.
+
+.. _repository: https://github.com/loot/loot-api
+.. _separately: https://loot-api.readthedocs.io
+
+Fixed
+-----
+
+- A few inaccurate logging statements.
+- Menu text wrapping during opening animation.
+- Inconsistent editor priority values handling, causing priority values user
+  metadata to not trigger the "Has User Metadata" icon appearing in certain
+  circumstances.
+
 0.10.3 - 2017-01-08
 ===================
 
