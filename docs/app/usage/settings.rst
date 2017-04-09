@@ -38,6 +38,7 @@ Base Game Type
 
   - TES IV: Oblivion
   - TES V: Skyrim
+  - TES V: Skyrim Special Edition
   - Fallout 3
   - Fallout: New Vegas
   - Fallout 4
