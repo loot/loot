@@ -157,7 +157,8 @@ set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc"
+                  "${CMAKE_SOURCE_DIR}/src/gui/window_delegate.cpp")
 
 set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
@@ -204,6 +205,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/version.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/window_delegate.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")
 
 set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"

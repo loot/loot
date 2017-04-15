@@ -26,12 +26,13 @@
 
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
-#include <include/cef_browser.h>
-#include <include/cef_task.h>
+#include <include/views/cef_browser_view.h>
+#include <include/views/cef_window.h>
 
 #include "gui/state/loot_paths.h"
 #include "gui/loot_handler.h"
 #include "gui/loot_scheme_handler_factory.h"
+#include "gui/window_delegate.h"
 
 namespace loot {
 void LootApp::Initialise(const std::string& defaultGame,
@@ -65,14 +66,6 @@ void LootApp::OnContextInitialized() {
     //Make sure this is running in the UI thread.
   assert(CefCurrentlyOn(TID_UI));
 
-  // Information used when creating the native window.
-  CefWindowInfo window_info;
-
-#ifdef _WIN32
-  // On Windows we need to specify certain flags that will be passed to CreateWindowEx().
-  window_info.SetAsPopup(NULL, "LOOT");
-#endif
-
   // Set the handler for browser-level callbacks.
   CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
 
@@ -96,8 +89,9 @@ void LootApp::OnContextInitialized() {
     boost::filesystem::path::imbue(std::locale());
   }
 
-  // Create the first browser window.
-  CefBrowserHost::CreateBrowser(window_info, handler.get(), url_, browser_settings, NULL);
+  CefRefPtr<CefBrowserView> browser_view = CefBrowserView::CreateBrowserView(handler, url_, browser_settings, NULL, NULL);
+
+  CefWindow::CreateTopLevelWindow(new WindowDelegate(browser_view, lootState_));
 }
 
 void LootApp::OnWebKitInitialized() {
