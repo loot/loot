@@ -25,6 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLIPBOARD_QUERY
 #define LOOT_GUI_QUERY_CLIPBOARD_QUERY
 
+#include <cstdlib>
+#include <regex>
+
 #include "gui/query/query.h"
 #include "loot/windows_encoding_converters.h"
 
@@ -54,6 +57,14 @@ protected:
 
     if (!CloseClipboard()) {
       throw std::system_error(GetLastError(), std::system_category(), "Failed to close the Windows clipboard.");
+    }
+#else
+    std::regex specialCharacters("(\\|\")");
+    std::string copyCommand = "echo \"" + std::regex_replace(text, specialCharacters, "\\$1") + "\" | xclip -selection clipboard";
+    int returnCode = system(copyCommand.c_str());
+
+    if (returnCode != 0) {
+      throw std::system_error(returnCode, std::system_category(), "Failed to run clipboard copy command: " + copyCommand);
     }
 #endif
   }
