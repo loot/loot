@@ -32,6 +32,10 @@ Fixed
 - Inconsistent editor priority values handling, causing priority values user
   metadata to not trigger the "Has User Metadata" icon appearing in certain
   circumstances.
+- The LOOT window's title is now set on Linux.
+- The LOOT window's size and position is now saved and restored on Linux.
+- Clipboard operations are now supported on Linux (requires ``xclip`` to be
+  installed).
 
 0.10.3 - 2017-01-08
 ===================
