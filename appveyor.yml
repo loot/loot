@@ -31,7 +31,7 @@ before_build:
   - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
   - node scripts\create_ico.js
   - cd build
-  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\projects\boost_1_61_0" -DBOOST_LIBRARYDIR="C:\projects\boost_1_61_0\stage\32\lib"
+  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:/projects/boost_1_61_0" -DBOOST_LIBRARYDIR="C:/projects/boost_1_61_0/stage/32/lib"
 
 build:
   verbosity: minimal
