@@ -62,9 +62,9 @@ set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
 set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(LOOT_API_URL "https://bintray.com/wrinklyninja/loot/download_file?file_path=loot_api-0.10.3-93-gdbfeea4_dev-win32.7z")
+    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.11.0/loot_api-0.11.0-0-g8864f78_dev-win32.7z")
 else()
-    set(LOOT_API_URL "https://bintray.com/wrinklyninja/loot/download_file?file_path=loot_api-dbfeea4_dev-Linux.tar.xz")
+    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.11.0/loot-api.tar.xz")
 endif()
 
 ExternalProject_Add(loot_api
