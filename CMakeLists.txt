@@ -3,7 +3,6 @@ cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 include(ExternalProject)
 
-option(BUILD_SHARED_LIBS "Build a shared library" ON)
 option(MSVC_STATIC_RUNTIME "Build with static runtime libs (/MT)" OFF)
 
 IF (${MSVC_STATIC_RUNTIME})
