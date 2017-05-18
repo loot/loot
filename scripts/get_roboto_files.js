@@ -2,7 +2,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const request = require('request');
 const decompress = require('decompress');
-const decompressUnzip = require('decompress-unzip');
 
 function getRobotoFiles(url, destinationPath) {
   const extractPath = path.dirname(destinationPath);

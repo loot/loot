@@ -396,7 +396,6 @@ function onEditorClose(evt) {
       elements[i].removeAttribute('draggable');
       elements[i].removeEventListener('dragstart', elements[i].onDragStart);
     }
-
   }).catch(loot.handlePromiseError);
 }
 function onCopyMetadata(evt) {

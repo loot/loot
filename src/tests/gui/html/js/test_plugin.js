@@ -28,6 +28,7 @@ class Filters {
   }
 }
 
+/* eslint-disable no-unused-expressions */
 describe('Plugin', () => {
   describe('#Plugin()', () => {
     it('should throw if nothing is passed', () => {

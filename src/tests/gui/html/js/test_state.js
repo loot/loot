@@ -17,6 +17,7 @@ beforeEach(() => {
   loot.DOM.elementEnabledStates.clear();
 });
 
+/* eslint-disable no-unused-expressions */
 describe('State', () => {
   describe('State()', () => {
     it('should set the current state to DEFAULT_STATE', () => {

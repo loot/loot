@@ -11,14 +11,11 @@
   }
 }(this, () => {
   function getTemplate(templateId, importHtml) {
-    if (importHtml === undefined) {
-      importHtml = templateId;
-    }
-
     let template = document.getElementById(templateId);
     if (!template) {
+      const htmlBasename = importHtml === undefined ? templateId : importHtml;
       template = document
-      .querySelector(`link[rel="import"][href$="${importHtml}.html"]`).import;
+      .querySelector(`link[rel="import"][href$="${htmlBasename}.html"]`).import;
     }
     template = template.querySelector(`#${templateId}`);
 

@@ -42,8 +42,8 @@ function getRecursiveHtmlImports(filePath, imports) {
       }
       imports.add(dependency);
       return getRecursiveHtmlImports(dependency, imports);
-    }))
-  ).then((results) => {
+    })))
+  .then((results) => {
     flattenUnique(results).forEach((dependency) => {
       imports.add(dependency);
     });
