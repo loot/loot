@@ -1,6 +1,7 @@
 'use strict';
+
 const helpers = require('./helpers');
-const hyd = require('hydrolysis');
+const { Analyzer, FSUrlLoader } = require('polymer-analyzer');
 const fs = require('fs-extra');
 const path = require('path');
 const getRobotoFiles = require('./get_roboto_files').getRobotoFiles;
@@ -10,54 +11,25 @@ function handleError(error) {
   process.exit(1);
 }
 
-function getHtmlImports(filePath) {
-  return hyd.Analyzer.analyze(filePath).then((analyzer) =>
-    analyzer._getDependencies(filePath)
-  );
-}
-
-function isString(variable) {
-  return typeof variable === 'string' || variable instanceof String;
-}
-
-function flattenUnique(array) {
-  const results = new Set();
-  array.forEach((element) => {
-    if (isString(element)) {
-      results.add(element);
-    } else if (element) {
-      flattenUnique(element).forEach((subelement) => {
-        results.add(subelement);
-      });
-    }
+function getFeatureURLs(filePath, featureTypes) {
+  const analyzer = new Analyzer({
+    urlLoader: new FSUrlLoader(process.cwd()),
   });
-  return results;
-}
-
-function getRecursiveHtmlImports(filePath, imports) {
-  return getHtmlImports(filePath).then((paths) =>
-    Promise.all(paths.map((dependency) => {
-      if (imports.has(dependency)) {
-        return null;
-      }
-      imports.add(dependency);
-      return getRecursiveHtmlImports(dependency, imports);
-    })))
-  .then((results) => {
-    flattenUnique(results).forEach((dependency) => {
-      imports.add(dependency);
+  return analyzer.analyze([filePath]).then((analysis) => {
+    const featureUrls = {};
+    featureTypes.forEach((featureType) => {
+      featureUrls[featureType] = new Set();
+      analysis.getFeatures({
+        kind: featureType,
+        imported: true,
+        externalPackages: true,
+      }).forEach(feature => {
+        featureUrls[featureType].add(feature.url);
+      });
     });
 
-    return imports;
+    return featureUrls;
   });
-}
-
-function getJavaScriptSources(filePath) {
-  return hyd.Analyzer.analyze(filePath).then((analyzer) =>
-    Object.keys(analyzer.parsedScripts).filter((script) =>
-      script.endsWith('.js')
-    )
-  );
 }
 
 function getRelativePath(filePath) {
@@ -104,10 +76,13 @@ Promise.resolve().then(() => {
   helpers.getAppReleasePaths('.').forEach(releasePath => {
     const index = 'src/gui/html/index.html';
     const destinationRootPath = `${releasePath.path}/resources/ui`;
-    const imports = new Set();
 
-    copyFiles(getRecursiveHtmlImports(index, imports), destinationRootPath);
-    copyFiles(getJavaScriptSources(index), destinationRootPath);
+    const urls = getFeatureURLs(index, ['html-import', 'html-script']);
+    const htmlImportUrls = urls.then(features => features['html-import']);
+    const scriptUrls = urls.then(features => features['html-script']);
+
+    copyFiles(htmlImportUrls, destinationRootPath);
+    copyFiles(scriptUrls, destinationRootPath);
     fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
     fs.copySync('resources/ui/css/dark-theme.css', `${destinationRootPath}/css/dark-theme.css`);
     fs.copySync(fontsPath, `${destinationRootPath}/fonts`);
