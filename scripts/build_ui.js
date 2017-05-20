@@ -87,10 +87,5 @@ Promise.resolve().then(() => {
     fs.copySync('resources/ui/css/dark-theme.css', `${destinationRootPath}/css/dark-theme.css`);
     fs.copySync(fontsPath, `${destinationRootPath}/fonts`);
     copyNormalisedFile(index, `${destinationRootPath}/index.html`);
-
-    // This is the only JS file referenced by a HTML import (neon-animation),
-    // so just hardcode it instead of recursively searching for it.
-    const webAnimationsJs = 'bower_components/web-animations-js/web-animations-next-lite.min.js';
-    fs.copySync(webAnimationsJs, `${destinationRootPath}/${webAnimationsJs}`);
   });
 }).catch(handleError);

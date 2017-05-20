@@ -1,11 +1,13 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/shadycss/apply-shim.html">
+
+<link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <!-- events
@@ -18,8 +20,14 @@ loot-search-end: Fired when the close button is clicked.
 <dom-module id="loot-search-toolbar">
   <template>
     <style>
+      app-toolbar {
+        height: 56px;
+        background: var(--primary-color);
+        color: var(--dark-theme-text-color);
+      }
+
       #search {
-        @apply(--layout-flex);
+        @apply --layout-flex;
 
         --paper-input-container-input-color: var(--dark-theme-text-color);
         --paper-input-container-color: var(--dark-theme-secondary-color);
@@ -35,7 +43,7 @@ loot-search-end: Fired when the close button is clicked.
         color: var(--dark-theme-secondary-color);
       }
     </style>
-    <paper-toolbar>
+    <app-toolbar>
       <paper-input id="search" label="Search cards" no-label-float></paper-input>
       <div id="count">
         <span>[[_computeResultNum(_currentResult)]]</span>
@@ -45,7 +53,7 @@ loot-search-end: Fired when the close button is clicked.
       <paper-icon-button id="prev" icon="expand-less" disabled></paper-icon-button>
       <paper-icon-button id="next" icon="expand-more" disabled></paper-icon-button>
       <paper-icon-button id="close" icon="close"></paper-icon-button>
-    </paper-toolbar>
+    </app-toolbar>
   </template>
   <script>
     'use strict';
@@ -84,6 +92,7 @@ loot-search-end: Fired when the close button is clicked.
           this.dispatchEvent(new CustomEvent('loot-search-change-selection', {
             detail: { selection: this.results[newValue] },
             bubbles: true,
+            composed: true,
           }));
         }
       },
@@ -141,10 +150,12 @@ loot-search-end: Fired when the close button is clicked.
       _onSearch(evt) {
         evt.target.parentElement.parentNode.host._resetResults();
 
-        const needle = evt.target.value.toLowerCase();
+
+        const needle = evt.target.value ? evt.target.value.toLowerCase() : '';
         evt.target.dispatchEvent(new CustomEvent('loot-search-begin', {
           detail: { needle },
           bubbles: true,
+          composed: true,
         }));
       },
 
@@ -163,6 +174,7 @@ loot-search-end: Fired when the close button is clicked.
         host.$.count.classList.toggle('hidden', true);
         evt.target.dispatchEvent(new CustomEvent('loot-search-end', {
           bubbles: true,
+          composed: true,
         }));
       },
 

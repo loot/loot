@@ -1,4 +1,7 @@
 <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/shadycss/apply-shim.html">
+
+<link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 
 <link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
@@ -9,7 +12,6 @@
 <link rel="import" href="../../../../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../../../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="loot-custom-icons.html">
@@ -46,23 +48,23 @@
       }
 
       /* Content styling. */
-      content::content > .tag {
+      ::slotted(.tag) {
         display: block;
         padding: 0 16px 16px;
       }
-      content::content > ul {
+      ::slotted(ul) {
         display: block;
         padding: 0 16px 16px 40px;
         margin: 0;
       }
-      content::content > h1 {
+      ::slotted(h1) {
         font-size: 1.143rem;
         display: inline-block;
         margin: 0;
         color: inherit;
       }
-      content::content > .version,
-      content::content > .crc {
+      ::slotted(.version),
+      ::slotted(.crc) {
         display: inline-block;
         margin-left: 16px;
         font-weight: 400;
@@ -70,15 +72,16 @@
       }
 
       /* Misc Styling. */
-      paper-toolbar {
-        --paper-toolbar-color: var(--primary-text-color);
-        --paper-toolbar-background: var(--primary-background-color);
+      app-toolbar {
+        height: 56px;
+        color: var(--primary-text-color);
+        background: var(--primary-background-color);
       }
       #content {
         overflow: hidden;
       }
       #title {
-        @apply(--layout-flex);
+        @apply --layout-flex;
         overflow: hidden;
         white-space: nowrap;
       }
@@ -92,18 +95,19 @@
       #clearMetadata {
         cursor: pointer;
       }
-      [hidden] {
+      [hidden],
+      ::slotted([hidden]) {
         display: none;
       }
     </style>
     <paper-material id="wrapper" elevation="1">
-      <paper-toolbar>
+      <app-toolbar>
         <iron-icon id="activeTick" icon="check"></iron-icon>
         <paper-tooltip for="activeTick">Active Plugin</paper-tooltip>
         <div id="title">
-          <content select="h1"></content>
-          <content select=".version"></content>
-          <content select=".crc"></content>
+          <slot name="name"></slot>
+          <slot name="version"></slot>
+          <slot name="crc"></slot>
         </div>
         <iron-icon id="isMaster" icon="loot-custom-icons:crown"></iron-icon>
         <paper-tooltip for="isMaster">Master File</paper-tooltip>
@@ -116,27 +120,27 @@
         <iron-icon id="hasUserEdits" icon="account-circle"></iron-icon>
         <paper-tooltip for="hasUserEdits">Has User Metadata</paper-tooltip>
         <paper-menu-button id="menu" horizontal-align="right">
-          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-          <loot-menu class="dropdown-content">
+          <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+          <loot-menu slot="dropdown-content">
             <paper-icon-item id="editMetadata">
-              <iron-icon icon="create" item-icon></iron-icon>
+              <iron-icon icon="create"slot="item-icon"></iron-icon>
               Edit Metadata
             </paper-icon-item>
             <paper-icon-item id="copyMetadata">
-              <iron-icon icon="content-copy" item-icon></iron-icon>
+              <iron-icon icon="content-copy"slot="item-icon"></iron-icon>
               Copy Metadata
             </paper-icon-item>
             <paper-icon-item id="clearMetadata">
-              <iron-icon icon="delete" item-icon></iron-icon>
+              <iron-icon icon="delete"slot="item-icon"></iron-icon>
               Clear User Metadata
             </paper-icon-item>
           </loot-menu>
         </paper-menu-button>
-      </paper-toolbar>
+      </app-toolbar>
       <div id="content">
-        <content select=".tag.add"></content>
-        <content select=".tag.remove"></content>
-        <content></content>
+        <slot name="tag add"></slot>
+        <slot name="tag remove"></slot>
+        <slot></slot>
       </div>
     </paper-material>
   </template>
@@ -232,7 +236,10 @@
 
             if (!suppressResizeEvent) {
               /* Notify that this card (may have) changed size. */
-              this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+              this.dispatchEvent(new CustomEvent('iron-resize', {
+                bubbles: true,
+                composed: true,
+              }));
             }
           }
         }
@@ -260,18 +267,21 @@
         /* Fire an open event, so that the UI can enter edit mode. */
         this.dispatchEvent(new CustomEvent('loot-editor-open', {
           bubbles: true,
+          composed: true,
         }));
       },
 
       _onCopyMetadata(evt) {
         evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
           bubbles: true,
+          composed: true,
         }));
       },
 
       _onClearMetadata(evt) {
         evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
           bubbles: true,
+          composed: true,
         }));
       },
     });

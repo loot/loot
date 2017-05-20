@@ -154,9 +154,7 @@
     }
 
     plugins.forEach(plugin => {
-      const item = document.createElement('div');
-
-      item.className = 'paper-item';
+      const item = document.createElement('paper-item');
       item.setAttribute('value', plugin.name);
       item.textContent = plugin.name;
 

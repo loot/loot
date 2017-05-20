@@ -87,10 +87,10 @@
 
       /* Also disable deletion of the game's row in the settings dialog. */
       const table = document.getElementById('gameTable');
-      for (let i = 0; i < table.tBodies[0].rows.length; i += 1) {
-        const folderElements = table.tBodies[0].rows[i].getElementsByClassName('folder');
+      for (let i = 0; i < table.querySelector('tbody').rows.length; i += 1) {
+        const folderElements = table.querySelector('tbody').rows[i].getElementsByClassName('folder');
         if (folderElements.length === 1) {
-          table.setReadOnly(table.tBodies[0].rows[i],
+          table.setReadOnly(table.querySelector('tbody').rows[i],
                             ['delete'],
                             folderElements[0].value === gameFolder);
         }

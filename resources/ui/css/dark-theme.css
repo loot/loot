@@ -23,9 +23,9 @@
   --disabled-text-color: var(--dark-theme-disabled-color);
   --divider-color: var(--dark-theme-divider-color);
 
-  /* --paper-toolbar-background can be used to override the --primary-color defined
+  /* --app-toolbar-background can be used to override the --primary-color defined
      above for the main toolbar. */
-  --paper-toolbar-background: var(--paper-grey-900);
+  --app-toolbar-background: var(--paper-grey-900);
 
   /* --secondary-background-color is used for the progress bar background and
      the background behind cards. */

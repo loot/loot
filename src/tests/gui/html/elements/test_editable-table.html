@@ -9,44 +9,54 @@
 </head>
 
 <body>
-  <table is="editable-table" data-template="fileRow">
-    <thead>
-      <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-    </thead>
-    <tbody>
-      <!-- File rows go here. -->
-    </tbody>
-  </table>
-  <table is="editable-table" data-template="messageRow">
-    <thead>
-      <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
-    </thead>
-    <tbody>
-      <!-- Message rows go here. -->
-    </tbody>
-  </table>
-  <table is="editable-table" data-template="tagRow">
-    <thead>
-      <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
-    </thead>
-    <tbody>
-      <!-- Bash Tag rows go here. -->
-    </tbody>
-  </table>
-  <table is="editable-table" data-template="dirtyInfoRow">
-    <thead>
-      <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
-    </thead>
-    <tbody>
-      <!-- Dirty info rows go here. -->
-    </tbody>
-  </table>
-  <table is="editable-table" data-template="locationRow">
-    <thead>
-      <tr><th>URL</th><th>Name</th><th></th></tr>
-    </thead>
-    <tbody>
-      <!-- Location rows go here. -->
-    </tbody>
-  </table>
+  <editable-table data-template="fileRow">
+    <table>
+      <thead>
+        <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
+      </thead>
+      <tbody>
+        <!-- File rows go here. -->
+      </tbody>
+    </table>
+  </editable-table>
+  <editable-table data-template="messageRow">
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
+      </thead>
+      <tbody>
+        <!-- Message rows go here. -->
+      </tbody>
+    </table>
+  </editable-table>
+  <editable-table data-template="tagRow">
+    <table>
+      <thead>
+        <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
+      </thead>
+      <tbody>
+        <!-- Bash Tag rows go here. -->
+      </tbody>
+    </table>
+  </editable-table>
+  <editable-table data-template="dirtyInfoRow">
+    <table>
+      <thead>
+        <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
+      </thead>
+      <tbody>
+        <!-- Dirty info rows go here. -->
+      </tbody>
+    </table>
+  </editable-table>
+  <editable-table data-template="locationRow">
+    <table>
+      <thead>
+        <tr><th>URL</th><th>Name</th><th></th></tr>
+      </thead>
+      <tbody>
+        <!-- Location rows go here. -->
+      </tbody>
+    </table>
+  </editable-table>
 </body>

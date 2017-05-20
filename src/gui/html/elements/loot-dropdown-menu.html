@@ -41,13 +41,13 @@ it a <select>-like API. This means:
         };
       }
 
-      ::content > paper-item {
+      ::slotted(paper-item) {
         white-space: nowrap;
       }
     </style>
     <paper-dropdown-menu disabled$="[[disabled]]" no-label-float="[[noLabelFloat]]" label="[[label]]" vertical-align="[[verticalAlign]]">
-      <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{value}}">
-        <content></content>
+      <paper-listbox slot="dropdown-content" attr-for-selected="value" selected="{{value}}">
+        <slot></slot>
       </paper-listbox>
     </paper-dropdown-menu>
   </template>

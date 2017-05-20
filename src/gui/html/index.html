@@ -5,10 +5,15 @@
   <link rel="stylesheet" href="css/typography.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/theme.css" />
+  <script src="../../../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
   <link rel="import" href="polymer-settings.html">
 
+    <!-- import CSS mixin shim -->
+  <link rel="import" href="../../../bower_components/shadycss/apply-shim.html">
+
   <link rel="import" href="../../../bower_components/polymer/polymer.html">
+  <link rel="import" href="../../../bower_components/polymer/lib/elements/custom-style.html">
 
   <link rel="import" href="elements/editable-table.html">
   <link rel="import" href="elements/loot-dropdown-menu.html">
@@ -18,12 +23,17 @@
   <link rel="import" href="elements/loot-plugin-editor.html">
   <link rel="import" href="elements/loot-search-toolbar.html">
 
+  <link rel="import" href="../../../bower_components/app-layout/app-drawer/app-drawer.html">
+  <link rel="import" href="../../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+  <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
   <link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
   <link rel="import" href="../../../bower_components/iron-icon/iron-icon.html">
   <link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
   <link rel="import" href="../../../bower_components/iron-list/iron-list.html">
   <link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
 
+  <link rel="import" href="../../../bower_components/neon-animation/web-animations.html">
   <link rel="import" href="../../../bower_components/neon-animation/animations/fade-in-animation.html">
   <link rel="import" href="../../../bower_components/neon-animation/animations/fade-out-animation.html">
 
@@ -36,7 +46,6 @@
   <link rel="import" href="../../../bower_components/paper-checkbox/paper-checkbox.html">
   <link rel="import" href="../../../bower_components/paper-dialog/paper-dialog.html">
   <link rel="import" href="../../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-  <link rel="import" href="../../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
   <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
   <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
   <link rel="import" href="../../../bower_components/paper-item/paper-item.html">
@@ -45,15 +54,15 @@
   <link rel="import" href="../../../bower_components/paper-progress/paper-progress.html">
   <link rel="import" href="../../../bower_components/paper-toast/paper-toast.html">
   <link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-  <link rel="import" href="../../../bower_components/paper-toolbar/paper-toolbar.html">
   <link rel="import" href="../../../bower_components/paper-tooltip/paper-tooltip.html">
-  <style is="custom-style" include="paper-item-shared-styles">
-    div[drawer],
-    div[main] {
-      @apply(--layout-vertical);
+  <custom-style>
+    <style>
+    app-drawer,
+    app-drawer-layout > div {
+      @apply --layout-vertical;
     }
     #sidebarTabs {
-      @apply(--layout-self-stretch);
+      @apply --layout-self-stretch;
     }
     #cardsNav,
     #filtersSpacer,
@@ -61,27 +70,27 @@
     #hiddenMessagesTxt,
     #toolbarSpacer,
     #pluginCardList {
-      @apply(--layout-flex);
+      @apply --layout-flex;
     }
     #filters,
-    div[drawer] > iron-pages,
+    app-drawer > iron-pages,
     #main {
-      @apply(--layout-vertical);
-      @apply(--layout-flex);
+      @apply --layout-vertical;
+      @apply --layout-flex;
     }
     #hiddenPlugins,
     #hiddenMessages {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
+      @apply --layout-horizontal;
+      @apply --layout-center;
     }
     #settingsDialog > paper-dialog-scrollable > div {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-      @apply(--layout-wrap);
+      @apply --layout-horizontal;
+      @apply --layout-center;
+      @apply --layout-wrap;
     }
     #settingsDialog > paper-dialog-scrollable > div > div {
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
+      @apply --layout-horizontal;
+      @apply --layout-center;
     }
     #conflictsFilter {
       --paper-dropdown-menu: {
@@ -96,7 +105,9 @@
 
     /* Paper element styling.
        Colour variables are from Polymer's paper-styles element. */
-    :root {
+    html {
+      --app-drawer-width: 33%;
+
       --paper-button: {
         font-weight: 500;
         font-size: 1rem;
@@ -141,18 +152,19 @@
         will-change: initial;
       };
     }
-  </style>
+    </style>
+  </custom-style>
 </head>
 <!-- oncontextmenu attribute disables the right-click menu. -->
-<body oncontextmenu="return false" unresolved>
-  <paper-drawer-panel id="container" drawer-width="33%">
-    <div drawer>
-      <paper-toolbar>
-        <paper-tabs id="sidebarTabs" selected="cardsNav" attr-for-selected="data-id" class="bottom fit">
+<body oncontextmenu="return false">
+  <app-drawer-layout id="container" fullbleed unresolved>
+    <app-drawer slot="drawer">
+      <app-toolbar>
+        <paper-tabs id="sidebarTabs" selected="cardsNav" attr-for-selected="data-id" bottom-item>
           <paper-tab data-id="cardsNav">Plugins</paper-tab>
           <paper-tab data-id="filters">Filters</paper-tab>
         </paper-tabs>
-      </paper-toolbar>
+      </app-toolbar>
       <iron-pages selected="cardsNav" attr-for-selected="id">
         <iron-list id="cardsNav">
           <template>
@@ -168,7 +180,7 @@
         </iron-list>
         <div id="filters">
           <loot-dropdown-menu id="conflictsFilter" label="Show only conflicting plugins for" value="">
-            <div class="paper-item" value="">No plugin selected</div>
+            <paper-item value="">No plugin selected</paper-item>
             <!-- Generated <div> plugin elements go here. -->
           </loot-dropdown-menu>
           <paper-input id="contentFilter" label="Show only plugins with cards that contain" always-float-label placeholder="No text specified"></paper-input>
@@ -193,10 +205,10 @@
           </div>
         </div>
       </iron-pages>
-    </div>
-    <div main>
-      <paper-toolbar id="mainToolbar">
-        <paper-icon-button icon="menu" id="drawerToggle" paper-drawer-toggle></paper-icon-button>
+    </app-drawer>
+    <div>
+      <app-toolbar id="mainToolbar">
+        <paper-icon-button icon="menu" id="drawerToggle" drawer-toggle></paper-icon-button>
         <paper-icon-button id="jumpToGeneralInfo" icon="home"></paper-icon-button>
         <paper-tooltip for="jumpToGeneralInfo">Jump To General Information</paper-tooltip>
         <loot-dropdown-menu id="gameMenu" class="dark" no-label-float>
@@ -213,54 +225,54 @@
         <paper-icon-button id="showSearch" icon="search"></paper-icon-button>
         <paper-tooltip for="showSearch">Search Cards</paper-tooltip>
         <paper-menu-button horizontal-align="right">
-          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-          <loot-menu class="dropdown-content">
+          <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+          <loot-menu slot="dropdown-content">
             <paper-icon-item id="redatePluginsButton">
-              <iron-icon icon="today" item-icon></iron-icon>
+              <iron-icon icon="today"slot="item-icon"></iron-icon>
               Redate Plugins
             </paper-icon-item>
             <paper-icon-item id="wipeUserlistButton">
-              <iron-icon icon="delete" item-icon></iron-icon>
+              <iron-icon icon="delete"slot="item-icon"></iron-icon>
               Clear All User Metadata
             </paper-icon-item>
             <paper-icon-item id="copyLoadOrderButton">
-              <iron-icon icon="receipt" item-icon></iron-icon>
+              <iron-icon icon="receipt"slot="item-icon"></iron-icon>
               Copy Load Order
             </paper-icon-item>
             <paper-icon-item id="copyContentButton">
-              <iron-icon icon="content-copy" item-icon></iron-icon>
+              <iron-icon icon="content-copy"slot="item-icon"></iron-icon>
               Copy Content
             </paper-icon-item>
             <paper-icon-item id="refreshContentButton">
-              <iron-icon icon="refresh" item-icon></iron-icon>
+              <iron-icon icon="refresh"slot="item-icon"></iron-icon>
               Refresh Content
             </paper-icon-item>
             <div class="divider"></div>
             <paper-icon-item id="settingsButton">
-              <iron-icon icon="settings" item-icon></iron-icon>
+              <iron-icon icon="settings"slot="item-icon"></iron-icon>
               Settings
             </paper-icon-item>
             <div class="divider"></div>
             <paper-icon-item id="helpButton">
-              <iron-icon icon="book" item-icon></iron-icon>
+              <iron-icon icon="book"slot="item-icon"></iron-icon>
               View Documentation
             </paper-icon-item>
             <paper-icon-item id="openLogButton">
-              <iron-icon icon="folder" item-icon></iron-icon>
+              <iron-icon icon="folder"slot="item-icon"></iron-icon>
               Open Debug Log Location
             </paper-icon-item>
             <paper-icon-item id="aboutButton">
-              <iron-icon icon="help" item-icon></iron-icon>
+              <iron-icon icon="help"slot="item-icon"></iron-icon>
               About
             </paper-icon-item>
             <div class="divider"></div>
             <paper-icon-item id="quitButton">
-              <iron-icon icon="close" item-icon></iron-icon>
+              <iron-icon icon="close"slot="item-icon"></iron-icon>
               Quit
             </paper-icon-item>
           </loot-menu>
         </paper-menu-button>
-      </paper-toolbar>
+      </app-toolbar>
       <loot-search-toolbar id="searchBar"></loot-search-toolbar>
       <div id="main">
         <paper-material id="summary">
@@ -317,11 +329,11 @@
           <template>
             <loot-plugin-card id="[[plugin.id]]"
                               data="[[plugin]]" style="z-index: [[plugin.cardZIndex]]">
-              <h1>[[plugin.name]]</h1>
-              <span class="version"></span>
-              <span class="crc"></span>
-              <span class="tag add"></span>
-              <span class="tag remove"></span>
+              <h1 slot="name">[[plugin.name]]</h1>
+              <span class="version" slot="version"></span>
+              <span class="crc" slot="crc"></span>
+              <span class="tag add" slot="tag add"></span>
+              <span class="tag remove" slot="tag remove"></span>
               <ul>
                 <!-- Messages go here. -->
               </ul>
@@ -331,10 +343,10 @@
         </iron-list>
       </div>
       <loot-plugin-editor id="editor" class="hidden">
-        <h1></h1>
+        <h1 slot="title"><!-- Plugin name goes here--></h1>
       </loot-plugin-editor>
     </div>
-  </paper-drawer-panel>
+  </app-drawer-layout>
   <paper-toast id="toast" duration="4500"></paper-toast>
   <paper-dialog id="progressDialog"
                 modal
@@ -399,28 +411,30 @@
           <paper-toggle-button id="updateMasterlist"></paper-toggle-button>
         </div>
       </div>
-      <table is="editable-table" id="gameTable" data-template="gameRow">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Base Game</th>
-            <th>LOOT Folder</th>
-            <th>Master File</th>
-            <th>Masterlist Repository URL</th>
-            <th>Masterlist Repository Branch</th>
-            <th>Install Path</th>
-            <th>Install Path Registry Key</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Game rows go here. -->
-        </tbody>
-      </table>
+      <editable-table id="gameTable" data-template="gameRow">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Base Game</th>
+              <th>LOOT Folder</th>
+              <th>Master File</th>
+              <th>Masterlist Repository URL</th>
+              <th>Masterlist Repository Branch</th>
+              <th>Install Path</th>
+              <th>Install Path Registry Key</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Game rows go here. -->
+          </tbody>
+        </table>
+      </editable-table>
     </paper-dialog-scrollable>
     <div class="buttons">
       <paper-button class="cancel" dialog-dismiss>Cancel</paper-button>
-      <paper-button class="accept" dialog-confirm autofocus>Apply</paper-button>
+      <paper-button class="accept" dialog-confirm>Apply</paper-button>
     </div>
   </paper-dialog>
 
@@ -464,6 +478,8 @@
   <script src="js/initialise.js"></script>
   <script>
     'use strict';
-    loot.initialise(loot);
+    window.addEventListener('WebComponentsReady', () => {
+      loot.initialise(loot);
+    });
   </script>
 </body>

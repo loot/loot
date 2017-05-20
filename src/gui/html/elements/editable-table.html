@@ -139,6 +139,45 @@
   </tr>
 </template>
 
+<style>
+
+editable-table td,
+editable-table th {
+  vertical-align: middle;
+  text-align: left;
+  padding: 0 7px;
+}
+editable-table th:first-child,
+editable-table td:first-child {
+  padding-left: 16px;
+}
+editable-table th:last-child,
+editable-table td:last-child {
+  padding-left: 0;
+}
+editable-table thead > tr {
+  height: 56px;
+}
+editable-table tbody > tr {
+  height: 48px;
+}
+editable-table th {
+    color: var(--secondary-text-color);
+    border-bottom: 1px solid var(--divider-color);
+}
+editable-table paper-icon-button {
+    color: var(--secondary-text-color);
+}
+editable-table paper-icon-button[disabled] {
+    color: var(--disabled-text-color);
+}
+editable-table paper-icon-button[icon=delete]:hover {
+    color: red;
+}
+editable-table paper-icon-button[icon=add]:hover {
+    color: green;
+}
+</style>
 <dom-module id="editable-table">
   <template>
     <style>
@@ -147,44 +186,9 @@
           border-collapse: collapse;
           width: 100%;
       }
-      ::content td,
-      ::content th {
-        vertical-align: middle;
-        text-align: left;
-        padding: 0 7px;
-      }
-      ::content th:first-child,
-      ::content td:first-child {
-        padding-left: 16px;
-      }
-      ::content th:last-child,
-      ::content td:last-child {
-        padding-left: 0;
-      }
-      ::content thead > tr {
-        height: 56px;
-      }
-      ::content tbody > tr {
-        height: 48px;
-      }
-      ::content th {
-          color: var(--secondary-text-color);
-          border-bottom: 1px solid var(--divider-color);
-      }
-      ::content paper-icon-button {
-          color: var(--secondary-text-color);
-      }
-      ::content paper-icon-button[disabled] {
-          color: var(--disabled-text-color);
-      }
-      ::content paper-icon-button[icon=delete]:hover {
-          color: red;
-      }
-      ::content paper-icon-button[icon=add]:hover {
-          color: green;
-      }
     </style>
-    <content></content>
+    <slot>
+    </slot>
   </template>
   <script>
     'use strict';
@@ -196,30 +200,31 @@
 
     Polymer({ // eslint-disable-line new-cap, no-undef
       is: 'editable-table',
-      extends: 'table',
 
       attached() {
-        /* Add "add new row" row. */
-        const content = getRowTemplate('newRow').content;
-        let row = document.importNode(content, true);
-        this.tBodies[0].appendChild(row);
-        row = this.tBodies[0].lastElementChild;
+        Polymer.RenderStatus.beforeNextRender(this, () => {
+          /* Add "add new row" row. */
+          const content = getRowTemplate('newRow').content;
+          let row = document.importNode(content, true);
+          this.querySelector('tbody').appendChild(row);
+          row = this.querySelector('tbody').lastElementChild;
 
-        /* Add new row listener. */
-        row.querySelector('paper-icon-button').addEventListener('click', this.onAddEmptyRow);
+          /* Add new row listener. */
+          row.querySelector('paper-icon-button').addEventListener('click', this.onAddEmptyRow);
 
-        /* Add drag 'n' drop listeners.
-           Drag 'n' drop should only be enabled for file-row tables.
-        */
-        if (this.getAttribute('data-template') === 'fileRow') {
-          this.addEventListener('drop', this.onDrop);
-          this.addEventListener('dragover', this.onDragOver);
-        }
+          /* Add drag 'n' drop listeners.
+             Drag 'n' drop should only be enabled for file-row tables.
+          */
+          if (this.getAttribute('data-template') === 'fileRow') {
+            this.addEventListener('drop', this.onDrop);
+            this.addEventListener('dragover', this.onDragOver);
+          }
+        });
       },
 
       detached() {
         /* Remove deletion listener. */
-        const icons = this.tBodies[0].getElementsByClassName('delete');
+        const icons = this.querySelector('tbody').getElementsByClassName('delete');
         for (let i = 0; i < icons.length; ++i) {
           icons[i].removeEventListener('click', this.onRemoveRow);
         }
@@ -252,7 +257,7 @@
 
       getRowsData(writableOnly) {
         const writableRows = [];
-        const rows = this.tBodies[0].rows;
+        const rows = this.querySelector('tbody').rows;
 
         for (let i = 0; i < rows.length; ++i) {
           const trash = rows[i].getElementsByClassName('delete');
@@ -299,7 +304,7 @@
       },
 
       clear() {
-        const rowDeletes = this.tBodies[0].getElementsByClassName('delete');
+        const rowDeletes = this.querySelector('tbody').getElementsByClassName('delete');
         while (rowDeletes.length > 0) {
           rowDeletes[0].click();
         }
@@ -311,28 +316,34 @@
         const table = tbody.parentElement;
 
         /* Remove deletion listener. */
-        evt.target.removeEventListener('click', table.onRemoveRow);
+        evt.target.removeEventListener('click', table.parentElement.onRemoveRow);
 
         /* Now remove row. */
         tbody.removeChild(tr);
 
         /* Notify that the table size has changed. */
-        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+        this.dispatchEvent(new CustomEvent('iron-resize', {
+          bubbles: true,
+          composed: true,
+        }));
       },
 
       onAddEmptyRow(evt) {
-        evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.addRow({});
+        evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.addRow({});
 
         /* Notify that the table size has changed. */
-        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+        this.dispatchEvent(new CustomEvent('iron-resize', {
+          bubbles: true,
+          composed: true,
+        }));
       },
 
       addRow(tableData) {
         const rowTemplateId = this.getAttribute('data-template');
         const content = getRowTemplate(rowTemplateId).content;
         let row = document.importNode(content, true);
-        this.tBodies[0].insertBefore(row, this.tBodies[0].lastElementChild);
-        row = this.tBodies[0].lastElementChild.previousElementSibling;
+        this.querySelector('tbody').insertBefore(row, this.querySelector('tbody').lastElementChild);
+        row = this.querySelector('tbody').lastElementChild.previousElementSibling;
 
         /* Data is an object with keys that match element class names. */
         for (const key in tableData) {
@@ -346,7 +357,10 @@
         row.getElementsByClassName('delete')[0].addEventListener('click', this.onRemoveRow);
 
         /* Notify that the table size has changed. */
-        this.dispatchEvent(new CustomEvent('iron-resize', { bubbles: true }));
+        this.dispatchEvent(new CustomEvent('iron-resize', {
+          bubbles: true,
+          composed: true,
+        }));
 
         return row;
       },

@@ -5,12 +5,12 @@
 <dom-module id="loot-menu">
   <template>
     <style>
-      ::content > * {
+      ::slotted(*) {
         cursor: pointer;
       }
     </style>
     <paper-listbox id="menu" multi>
-      <content></content>
+      <slot></slot>
     </paper-listbox>
   </template>
   <script>
@@ -18,8 +18,12 @@
     Polymer({
       is: 'loot-menu',
 
-      listeners: {
-        'menu.iron-select': 'onSelect',
+      attached() {
+        this.$.menu.addEventListener('iron-select', this.onSelect);
+      },
+
+      detached() {
+        this.$.menu.removeEventListener('iron-select', this.onSelect);
       },
 
       onSelect(evt) {

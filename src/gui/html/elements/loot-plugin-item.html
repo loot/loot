@@ -56,7 +56,7 @@
       :host-context(body[data-state=editing]) paper-item-body[two-line] {
         min-height: 40px;
       }
-      div[item-icon] {
+      div[slot=item-icon] {
         border: 1px solid var(--loot-plugin-item-index-border-color, var(--paper-grey-400));
         border-radius: 50%;
         color: var(--secondary-text-color);
@@ -106,9 +106,9 @@
     </style>
     <paper-icon-item>
       <paper-ripple></paper-ripple>
-      <div item-icon hidden$="[[!computeLoadOrderIndexText(loadOrderIndex)]]">[[computeLoadOrderIndexText(loadOrderIndex)]]</div>
+      <div slot="item-icon" hidden$="[[!computeLoadOrderIndexText(loadOrderIndex)]]">[[computeLoadOrderIndexText(loadOrderIndex)]]</div>
       <paper-item-body two-line>
-        <div id="primary"><content></content></div>
+        <div id="primary"><slot></slot></div>
         <div id="secondary" secondary>
           <span hidden$="[[!globalPriority]]">
             <iron-icon icon="star"></iron-icon>
