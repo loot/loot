@@ -39,35 +39,30 @@ void WindowDelegate::OnWindowCreated(CefRefPtr<CefWindow> window) {
 
   window->AddChildView(browser_view_);
 
+  bool isMaximised = false;
   if (lootState_.isWindowPositionStored()) {
-    SetWindowPosition(lootState_.getWindowPosition());
+    auto windowPosition = lootState_.getWindowPosition();
+    isMaximised = windowPosition.maximised;
+    SetWindowPosition(windowPosition);
   } else {
     window->CenterWindow(CefSize(1024, 768));
   }
 
   window->Show();
 
+#ifdef _WIN32
+  // This is necessary because CefWindow::Maximise() doesn't seem to do
+  // anything on Windows if it's called before window->Show();
+  if (isMaximised) {
+    window->Maximize();
+  }
+#endif
+
   // Give keyboard focus to the browser view.
   browser_view_->RequestFocus();
 }
 
 void WindowDelegate::OnWindowDestroyed(CefRefPtr<CefWindow> window) {
-  CefRect windowBounds = window->GetBoundsInScreen();
-
-  LootSettings::WindowPosition position;
-  position.top = windowBounds.y;
-  position.bottom = windowBounds.y + windowBounds.height;
-  position.left = windowBounds.x;
-  position.right = windowBounds.x + windowBounds.width;
-  position.maximised = window->IsMaximized();
-  lootState_.storeWindowPosition(position);
-
-  try {
-    lootState_.save(LootPaths::getSettingsPath());
-  } catch (std::exception &e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
-  }
-
   browser_view_ = nullptr;
 }
 

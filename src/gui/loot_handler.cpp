@@ -32,6 +32,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
 #include <include/cef_app.h>
+#include <include/views/cef_browser_view.h>
+#include <include/views/cef_window.h>
 
 #include "gui/state/loot_paths.h"
 #include "gui/helpers.h"
@@ -85,6 +87,38 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   if (lootState_.hasUnappliedChanges()) {
     browser->GetMainFrame()->ExecuteJavaScript("onQuit();", browser->GetMainFrame()->GetURL(), 0);
     return true;
+  }
+
+  auto browserView = CefBrowserView::GetForBrowser(browser);
+  if (browserView == nullptr) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings, browser view is null";
+    return false;
+  }
+
+  auto window = browserView->GetWindow();
+  if (window == nullptr) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings, window is null";
+    return false;
+  }
+
+  LootSettings::WindowPosition position;
+  position.maximised = window->IsMaximized();
+
+  // Un-maximise the window so that the non-maximised size and position are recorded.
+  window->Restore();
+
+  CefRect windowBounds = window->GetBoundsInScreen();
+  position.top = windowBounds.y;
+  position.bottom = windowBounds.y + windowBounds.height;
+  position.left = windowBounds.x;
+  position.right = windowBounds.x + windowBounds.width;
+  lootState_.storeWindowPosition(position);
+
+  try {
+    lootState_.save(LootPaths::getSettingsPath());
+  }
+  catch (std::exception &e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
   }
 
   // Allow the close. For windowed browsers this will result in the OS close
