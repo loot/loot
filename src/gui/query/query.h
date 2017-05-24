@@ -30,7 +30,7 @@ along with LOOT.  If not, see
 #include <include/wrapper/cef_message_router.h>
 
 namespace loot {
-class Query : public CefBase {
+class Query : public CefBaseRefCounted {
 public:
   void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
     try {
