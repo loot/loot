@@ -51,7 +51,7 @@
       }
 
       return repo.tags.fetch().then((tags) => {
-        const tag = tags.find((element) => element.name === latestRelease.tagName);
+        const tag = tags.items.find((element) => element.name === latestRelease.tagName);
 
         return !tag.commit.sha.startsWith(currentBuild);
       });
