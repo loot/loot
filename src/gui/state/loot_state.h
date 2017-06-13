@@ -34,7 +34,8 @@ public:
   LootState();
 
   void load(YAML::Node& settings);
-  void init(const std::string& cmdLineGame);
+  void init(const std::string& cmdLineGame,
+            const std::string& gameAppDataPath);
   const std::vector<std::string>& getInitErrors() const;
 
   void save(const boost::filesystem::path& file);
@@ -54,6 +55,7 @@ private:
   void enableDebugLogging(bool enable);
   void updateStoredGamePathSetting(const gui::Game& game);
 
+  std::string gameAppDataPath;
   std::list<gui::Game> installedGames_;
   std::list<gui::Game>::iterator currentGame_;
   std::vector<std::string> initErrors_;

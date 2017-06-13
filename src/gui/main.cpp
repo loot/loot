@@ -76,33 +76,43 @@ int XIOErrorHandlerImpl(Display *display) {
 }
 #endif
 
-void processCommandLineArguments(CefRefPtr<loot::LootApp> app) {
+namespace loot {
+struct CommandLineOptions {
   std::string defaultGame;
   std::string lootDataPath;
+  std::string gameAppDataPath;
+  std::string url;
 
-  // Record command line arguments.
-  CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
+  CommandLineOptions(int argc, const char* const* argv) {
+    // Record command line arguments.
+    CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
 #ifdef _WIN32
-  command_line->InitFromString(::GetCommandLineW());
+    command_line->InitFromString(::GetCommandLineW());
+#else
+    command_line->InitFromArgv(argc, argv);
 #endif
 
-  if (command_line->HasSwitch("game")) {  // Format is: --game=<game>
-    defaultGame = command_line->GetSwitchValue("game");
-  }
+    if (command_line->HasSwitch("game")) {
+      defaultGame = command_line->GetSwitchValue("game");
+    }
 
-  if (command_line->HasSwitch("loot-data-path")) {
-    lootDataPath = command_line->GetSwitchValue("loot-data-path");
-  }
+    if (command_line->HasSwitch("loot-data-path")) {
+      lootDataPath = command_line->GetSwitchValue("loot-data-path");
+    }
 
-  std::string url = "http://loot/ui/index.html";
-  if (command_line->HasArguments()) {
-    std::vector<CefString> arguments;
-    command_line->GetArguments(arguments);
-    url = arguments[0];
-    BOOST_LOG_TRIVIAL(info) << "Loading homepage using URL " << url;
-  }
+    if (command_line->HasSwitch("game-appdata-path")) {
+      gameAppDataPath = command_line->GetSwitchValue("game-appdata-path");
+    }
 
-  app.get()->Initialise(defaultGame, lootDataPath, url);
+    url = "http://loot/ui/index.html";
+    if (command_line->HasArguments()) {
+      std::vector<CefString> arguments;
+      command_line->GetArguments(arguments);
+      url = arguments[0];
+      BOOST_LOG_TRIVIAL(info) << "Loading homepage using URL " << url;
+    }
+  }
+};
 }
 
 #ifdef _WIN32
@@ -156,7 +166,15 @@ int main(int argc, char* argv[]) {
   // Handle command line args (not CEF args)
   //----------------------------------------
 
-  processCommandLineArguments(app);
+#ifdef _WIN32
+  int argc = 0;
+  const char * const * argv = nullptr;
+#endif
+  const auto cliOptions = loot::CommandLineOptions(argc, argv);
+  app.get()->Initialise(cliOptions.defaultGame,
+                        cliOptions.gameAppDataPath,
+                        cliOptions.lootDataPath,
+                        cliOptions.url);
 
   // Back to CEF
   //------------

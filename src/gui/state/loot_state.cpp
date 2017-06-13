@@ -85,7 +85,7 @@ void LootState::load(YAML::Node& settings) {
     } else {
       if (gui::Game::IsInstalled(gameSettings)) {
         BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
-        installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+        installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
         updateStoredGamePathSetting(installedGames_.back());
       }
     }
@@ -114,7 +114,9 @@ void LootState::load(YAML::Node& settings) {
   }
 }
 
-void LootState::init(const std::string& cmdLineGame) {
+void LootState::init(const std::string& cmdLineGame,
+                     const std::string& gameAppDataPath) {
+  this->gameAppDataPath = gameAppDataPath;
     // Do some preliminary locale / UTF-8 support setup here, in case the settings file reading requires it.
     //Boost.Locale initialisation: Specify location of language dictionaries.
   boost::locale::generator gen;
@@ -194,7 +196,7 @@ void LootState::init(const std::string& cmdLineGame) {
   for (const auto& gameSettings : getGameSettings()) {
     if (gui::Game::IsInstalled(gameSettings)) {
       BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
-      installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath()));
+      installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
       updateStoredGamePathSetting(installedGames_.back());
     }
   }
