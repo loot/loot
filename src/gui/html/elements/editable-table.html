@@ -1,4 +1,5 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/polymer/lib/utils/render-status.html">
 
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
 
@@ -197,11 +198,12 @@ editable-table paper-icon-button[icon=add]:hover {
       return editableTableHtml.getElementById(templateId);
     }
 
+    class EditableTable extends Polymer.Element {
+      static get is() { return 'editable-table' }
 
-    Polymer({ // eslint-disable-line new-cap, no-undef
-      is: 'editable-table',
+      connectedCallback() {
+        super.connectedCallback();
 
-      attached() {
         Polymer.RenderStatus.beforeNextRender(this, () => {
           /* Add "add new row" row. */
           const content = getRowTemplate('newRow').content;
@@ -220,9 +222,11 @@ editable-table paper-icon-button[icon=add]:hover {
             this.addEventListener('dragover', this.onDragOver);
           }
         });
-      },
+      }
 
-      detached() {
+      disconnectedCallback() {
+        super.disconnectedCallback();
+
         /* Remove deletion listener. */
         const icons = this.querySelector('tbody').getElementsByClassName('delete');
         for (let i = 0; i < icons.length; ++i) {
@@ -235,7 +239,7 @@ editable-table paper-icon-button[icon=add]:hover {
         /* Remove drag 'n' drop listeners. */
         this.removeEventListener('drop', this.onDrop);
         this.removeEventListener('dragover', this.onDragOver);
-      },
+      }
 
       onDrop(evt) {
         evt.stopPropagation();
@@ -248,12 +252,12 @@ editable-table paper-icon-button[icon=add]:hover {
         }
 
         return false;
-      },
+      }
 
       onDragOver(evt) {
         evt.preventDefault();
         evt.dataTransfer.dropEffect = 'copy';
-      },
+      }
 
       getRowsData(writableOnly) {
         const writableRows = [];
@@ -274,7 +278,7 @@ editable-table paper-icon-button[icon=add]:hover {
         }
 
         return writableRows;
-      },
+      }
 
       setReadOnly(row, classMask, readOnly) {
         readOnly = readOnly || true;
@@ -301,14 +305,14 @@ editable-table paper-icon-button[icon=add]:hover {
             inputs[i].disabled = readOnly;
           }
         }
-      },
+      }
 
       clear() {
         const rowDeletes = this.querySelector('tbody').getElementsByClassName('delete');
         while (rowDeletes.length > 0) {
           rowDeletes[0].click();
         }
-      },
+      }
 
       onRemoveRow(evt) {
         const tr = evt.target.parentElement.parentElement.parentElement;
@@ -326,7 +330,7 @@ editable-table paper-icon-button[icon=add]:hover {
           bubbles: true,
           composed: true,
         }));
-      },
+      }
 
       onAddEmptyRow(evt) {
         evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.addRow({});
@@ -336,7 +340,7 @@ editable-table paper-icon-button[icon=add]:hover {
           bubbles: true,
           composed: true,
         }));
-      },
+      }
 
       addRow(tableData) {
         const rowTemplateId = this.getAttribute('data-template');
@@ -363,11 +367,11 @@ editable-table paper-icon-button[icon=add]:hover {
         }));
 
         return row;
-      },
+      }
 
       addReadOnlyRow(tableData) {
         this.setReadOnly(this.addRow(tableData));
-      },
+      }
 
       validate() {
         const inputs = this.querySelectorAll('paper-autocomplete, paper-input, paper-textarea');
@@ -377,7 +381,9 @@ editable-table paper-icon-button[icon=add]:hover {
           }
         }
         return true;
-      },
-    });
+      }
+    }
+
+    customElements.define(EditableTable.is, EditableTable);
   </script>
 </dom-module>

@@ -1,4 +1,4 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
 
@@ -15,20 +15,26 @@
   </template>
   <script>
     'use strict';
-    Polymer({
-      is: 'loot-menu',
+    class LootMenu extends Polymer.Element {
+      static get is() { return 'loot-menu' }
 
-      attached() {
-        this.$.menu.addEventListener('iron-select', this.onSelect);
-      },
+      connectedCallback() {
+        super.connectedCallback();
 
-      detached() {
-        this.$.menu.removeEventListener('iron-select', this.onSelect);
-      },
+        this.$.menu.addEventListener('iron-select', LootMenu.onSelect);
+      }
 
-      onSelect(evt) {
+      disconnectedCallback() {
+        super.disconnectedCallback();
+
+        this.$.menu.removeEventListener('iron-select', LootMenu.onSelect);
+      }
+
+      static onSelect(evt) {
         evt.currentTarget.select(evt.currentTarget.indexOf(evt.detail.item));
-      },
-    });
+      }
+    }
+
+    customElements.define(LootMenu.is, LootMenu);
   </script>
 </dom-module>

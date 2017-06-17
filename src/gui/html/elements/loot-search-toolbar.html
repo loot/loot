@@ -1,4 +1,4 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/shadycss/apply-shim.html">
 
 <link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -57,20 +57,24 @@ loot-search-end: Fired when the close button is clicked.
   </template>
   <script>
     'use strict';
-    Polymer({ // eslint-disable-line new-cap, no-undef
-      is: 'loot-search-toolbar',
-      properties: {
-        _currentResult: {
-          type: Number,
-          value: -1,
-          observer: '_currentResultChanged',
-        },
-        results: {
-          type: Array,
-          value: () => { return []; },
-          observer: '_resultsChanged',
-        },
-      },
+
+    class LootSearchToolbar extends Polymer.Element {
+      static get is() { return 'loot-search-toolbar' }
+
+      static get properties() {
+        return {
+          _currentResult: {
+            type: Number,
+            value: -1,
+            observer: '_currentResultChanged',
+          },
+          results: {
+            type: Array,
+            value: () => { return []; },
+            observer: '_resultsChanged',
+          },
+        };
+      }
 
       _currentResultChanged(newValue) {
         if (this.results && this.results.length > 0) {
@@ -95,30 +99,32 @@ loot-search-end: Fired when the close button is clicked.
             composed: true,
           }));
         }
-      },
+      }
 
       _resultsChanged(newValue) {
         this.$.count.lastElementChild.textContent = newValue.length;
         if (newValue.length > 0) {
           this._currentResult = 0;
         }
-      },
+      }
 
-      attached() {
+      connectedCallback() {
+        super.connectedCallback();
         this.$.search.addEventListener('input', this._onSearch);
         this.$.search.addEventListener('keyup', this._onEnter);
         this.$.prev.addEventListener('click', this._onPrev);
         this.$.next.addEventListener('click', this._onNext);
         this.$.close.addEventListener('click', this._onClose);
-      },
+      }
 
-      detached() {
+      disconnectedCallback() {
+        super.disconnectedCallback();
         this.$.search.removeEventListener('input', this._onSearch);
         this.$.search.removeEventListener('keyup', this._onEnter);
         this.$.prev.removeEventListener('click', this._onPrev);
         this.$.next.removeEventListener('click', this._onNext);
         this.$.close.removeEventListener('change', this._onClose);
-      },
+      }
 
       _onEnter(evt) {
         const host = evt.target.parentElement.parentNode.host;
@@ -130,22 +136,22 @@ loot-search-end: Fired when the close button is clicked.
         } else {
           ++host._currentResult;
         }
-      },
+      }
 
       focusInput() {
         this.$.search.focus();
-      },
+      }
 
       _resetResults() {
         this.results = [];
         this._currentResult = -1;
         this.$.prev.setAttribute('disabled', '');
         this.$.next.setAttribute('disabled', '');
-      },
+      }
 
       search() {
         this.$.search.dispatchEvent(new Event('input'));
-      },
+      }
 
       _onSearch(evt) {
         evt.target.parentElement.parentNode.host._resetResults();
@@ -157,15 +163,15 @@ loot-search-end: Fired when the close button is clicked.
           bubbles: true,
           composed: true,
         }));
-      },
+      }
 
       _onPrev(evt) {
         --evt.target.parentElement.parentNode.host._currentResult;
-      },
+      }
 
       _onNext(evt) {
         ++evt.target.parentElement.parentNode.host._currentResult;
-      },
+      }
 
       _onClose(evt) {
         const host = evt.target.parentElement.parentNode.host;
@@ -176,11 +182,13 @@ loot-search-end: Fired when the close button is clicked.
           bubbles: true,
           composed: true,
         }));
-      },
+      }
 
       _computeResultNum(currentResult) {
         return currentResult + 1;
-      },
-    });
+      }
+    }
+
+    customElements.define(LootSearchToolbar.is, LootSearchToolbar);
   </script>
 </dom-module>

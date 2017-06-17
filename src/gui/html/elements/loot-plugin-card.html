@@ -1,4 +1,4 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/shadycss/apply-shim.html">
 
 <link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -153,26 +153,31 @@
       return element.parentNode.host;
     }
 
-    Polymer({
-      is: 'loot-plugin-card',
-      properties: {
-        data: {
-          notify: true,
-          observer: '_dataChanged',
-        },
-      },
+    class LootPluginCard extends Polymer.Element {
+      static get is() { return 'loot-plugin-card' }
 
-      attached() {
+      static get properties() {
+        return {
+          data: {
+            notify: true,
+            observer: '_dataChanged',
+          },
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
         this.$.editMetadata.addEventListener('click', this.onShowEditor);
         this.$.copyMetadata.addEventListener('click', this._onCopyMetadata);
         this.$.clearMetadata.addEventListener('click', this._onClearMetadata);
-      },
+      }
 
-      detached() {
+      disconnectedCallback() {
+        super.disconnectedCallback();
         this.$.editMetadata.removeEventListener('click', this.onShowEditor);
         this.$.copyMetadata.removeEventListener('click', this._onCopyMetadata);
         this.$.clearMetadata.removeEventListener('click', this._onClearMetadata);
-      },
+      }
 
       _dataChanged(newValue, oldValue) {
         if (newValue) {
@@ -186,7 +191,7 @@
           this.$.isEmpty.hidden = !this.data.isEmpty;
           this.$.loadsArchive.hidden = !this.data.loadsArchive;
         }
-      },
+      }
 
       _setTagsContent(tags) {
         if (tags) {
@@ -198,7 +203,7 @@
           tagsRemoved.textContent = tags.removed;
           tagsRemoved.hidden = tags.removed.length === 0;
         }
-      },
+      }
 
       _setMessagesContent(messages) {
         /* First clear any existing messages. */
@@ -218,7 +223,7 @@
           });
           messageList.hidden = messages.length === 0;
         }
-      },
+      }
 
       updateContent(updateBodyContent, suppressResizeEvent) {
         if (this.data) {
@@ -243,12 +248,12 @@
             }
           }
         }
-      },
+      }
 
       updateIsCleanIcon() {
         this.$.isClean.hidden = !this.data.cleanedWith;
         this.$.isCleanTooltip.textContent = loot.l10n.translateFormatted('Verified clean by %s', this.data.cleanedWith);
-      },
+      }
 
       updateStyling() {
         if (this.data) {
@@ -257,11 +262,11 @@
           /* Set highlight if the plugin is a search result. */
           this.classList.toggle('search-result', this.data.isSearchResult);
         }
-      },
+      }
 
       getName() {
         return this.getElementsByTagName('h1')[0].textContent;
-      },
+      }
 
       onShowEditor() {
         /* Fire an open event, so that the UI can enter edit mode. */
@@ -269,21 +274,23 @@
           bubbles: true,
           composed: true,
         }));
-      },
+      }
 
       _onCopyMetadata(evt) {
         evt.target.dispatchEvent(new CustomEvent('loot-copy-metadata', {
           bubbles: true,
           composed: true,
         }));
-      },
+      }
 
       _onClearMetadata(evt) {
         evt.target.dispatchEvent(new CustomEvent('loot-clear-metadata', {
           bubbles: true,
           composed: true,
         }));
-      },
-    });
+      }
+    }
+
+    customElements.define(LootPluginCard.is, LootPluginCard);
   </script>
 </dom-module>

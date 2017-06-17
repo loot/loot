@@ -6,7 +6,7 @@ loot-editor-close
 
 -->
 
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../../../bower_components/shadycss/apply-shim.html">
 
 <link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
@@ -261,26 +261,32 @@ loot-editor-close
   </template>
   <script>
     'use strict';
-    Polymer({ // eslint-disable-line new-cap, no-undef
-      is: 'loot-plugin-editor',
-      properties: {
-        selected: {
-          type: String,
-          value: 'main',
-        },
-      },
 
-      attached() {
+    class LootPluginEditor extends Polymer.Element {
+      static get is() { return 'loot-plugin-editor' }
+
+      static get properties() {
+        return {
+          selected: {
+            type: String,
+            value: 'main',
+          },
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
         this.$.accept.addEventListener('click', this._onHideEditor);
         this.$.cancel.addEventListener('click', this._onHideEditor);
         Polymer.Gestures.addListener(this.$.splitter, 'track', this._onSplitterDrag);
-      },
+      }
 
-      detached() {
+      disconnectedCallback() {
+        super.disconnectedCallback();
         this.$.accept.removeEventListener('click', this._onHideEditor);
         this.$.cancel.removeEventListener('click', this._onHideEditor);
         Polymer.Gestures.removeListener(this.$.splitter, 'track', this._onSplitterDrag);
-      },
+      }
 
       _onSplitterDrag(evt) {
         if (evt.detail.state === 'start') {
@@ -291,7 +297,7 @@ loot-editor-close
         }
         window.getSelection().removeAllRanges();
         this.parentNode.host.style.height = (parseInt(this.parentNode.host.style.height, 10) - evt.detail.ddy) + 'px';
-      },
+      }
 
       _rowDataToCrc(rowData) {
         return {
@@ -301,7 +307,7 @@ loot-editor-close
           nav: rowData.nav,
           util: rowData.utility,
         };
-      },
+      }
 
       readFromEditor(oldData) {
         /* Need to turn all the editor controls' values into data to
@@ -365,7 +371,7 @@ loot-editor-close
         }
 
         return plugin;
-      },
+      }
 
       _onHideEditor(evt) {
         /* First validate table inputs. */
@@ -389,7 +395,7 @@ loot-editor-close
             composed: true,
           }));
         }
-      },
+      }
 
       _dirtyInfoToRowData(dirtyInfo) {
         return {
@@ -399,7 +405,7 @@ loot-editor-close
           nav: dirtyInfo.nav,
           utility: dirtyInfo.util,
         };
-      },
+      }
 
       setEditorData(newData) {
         /* newData is a Plugin object reference. */
@@ -459,7 +465,9 @@ loot-editor-close
 
         /* Now show editor. */
         this.classList.toggle('hidden', false);
-      },
-    });
+      }
+    }
+
+    customElements.define(LootPluginEditor.is, LootPluginEditor);
   </script>
 </dom-module>

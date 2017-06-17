@@ -7,7 +7,7 @@ it a <select>-like API. This means:
 
 -->
 
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../../../bower_components/paper-listbox/paper-listbox.html">
@@ -52,30 +52,35 @@ it a <select>-like API. This means:
     </paper-dropdown-menu>
   </template>
   <script>
-    Polymer({
-      is: 'loot-dropdown-menu',
-      properties: {
-        disabled: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        value: {
-          type: String,
-          notify: true,
-          reflectToAttribute: true,
-        },
-        noLabelFloat: {
-          type: Boolean,
-          value: false,
-          reflectToAttribute: true,
-        },
-        verticalAlign: {
-          type: String,
-          value: 'top',
-          reflectToAttribute: true,
-        },
-      },
-    });
+    class LootDropdownMenu extends Polymer.Element {
+      static get is() { return 'loot-dropdown-menu' }
+
+      static get properties() {
+        return {
+          disabled: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+          },
+          value: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true,
+          },
+          noLabelFloat: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+          },
+          verticalAlign: {
+            type: String,
+            value: 'top',
+            reflectToAttribute: true,
+          },
+        }
+      }
+    }
+
+    customElements.define(LootDropdownMenu.is, LootDropdownMenu);
   </script>
 </dom-module>

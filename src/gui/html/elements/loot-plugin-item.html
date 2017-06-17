@@ -1,4 +1,4 @@
-<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
@@ -132,37 +132,40 @@
   </template>
   <script>
     'use strict';
-    Polymer({ // eslint-disable-line new-cap, no-undef
-      is: 'loot-plugin-item',
-      properties: {
-        loadOrderIndex: {
-          type: Number,
-          value: undefined,
-        },
-        priority: {
-          type: String,
-          value: '',
-        },
-        globalPriority: {
-          type: String,
-          value: '',
-        },
-        isEditorOpen: {
-          type: Boolean,
-          value: false,
-        },
-        hasUserEdits: {
-          type: Boolean,
-          value: false,
-        },
-      },
+    class LootPluginItem extends Polymer.Element {
+      static get is() { return 'loot-plugin-item' }
+
+      static get properties() {
+        return {
+          loadOrderIndex: {
+            type: Number,
+            value: undefined,
+          },
+          priority: {
+            type: String,
+            value: '',
+          },
+          globalPriority: {
+            type: String,
+            value: '',
+          },
+          isEditorOpen: {
+            type: Boolean,
+            value: false,
+          },
+          hasUserEdits: {
+            type: Boolean,
+            value: false,
+          },
+        };
+      }
 
       computeFlipperClass(isEditorOpen) {
         if (isEditorOpen) {
           return 'flipped';
         }
         return '';
-      },
+      }
 
       computeLoadOrderIndexText(loadOrderIndex) {
         if (loadOrderIndex > -1) {
@@ -175,17 +178,17 @@
         }
 
         return '';
-      },
+      }
 
       getName() {
         return this.textContent.trim();
-      },
+      }
 
       onDragStart(evt) {
         evt.dataTransfer.effectAllowed = 'copy';
         evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
         evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
-      },
+      }
 
       updateContent(pluginData) {
         this.priority = pluginData.priority;
@@ -193,7 +196,9 @@
         this.isEditorOpen = pluginData.isEditorOpen;
         this.hasUserEdits = pluginData.hasUserEdits;
         this.loadOrderIndex = pluginData.loadOrderIndex;
-      },
-    });
+      }
+    }
+
+    customElements.define(LootPluginItem.is, LootPluginItem);
   </script>
 </dom-module>
