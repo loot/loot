@@ -34,7 +34,8 @@ class UpdateMasterlistQuery : public MetadataQuery {
 public:
   UpdateMasterlistQuery(LootState& state) :
     MetadataQuery(state),
-    game_(state.getCurrentGame()) {}
+    game_(state.getCurrentGame()),
+    language_(state.getLanguage()) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
@@ -86,7 +87,7 @@ private:
       pluginNode["masterlist"]["after"] = metadata.GetLoadAfterFiles();
       pluginNode["masterlist"]["req"] = metadata.GetRequirements();
       pluginNode["masterlist"]["inc"] = metadata.GetIncompatibilities();
-      pluginNode["masterlist"]["msg"] = metadata.GetMessages();
+      pluginNode["masterlist"]["msg"] = toEditorMessages(metadata.GetMessages(), language_);
       pluginNode["masterlist"]["tag"] = metadata.GetTags();
       pluginNode["masterlist"]["dirty"] = metadata.GetDirtyInfo();
       pluginNode["masterlist"]["clean"] = metadata.GetCleanInfo();
@@ -106,6 +107,7 @@ private:
   }
 
   gui::Game& game_;
+  const std::string language_;
 };
 }
 

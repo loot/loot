@@ -117,6 +117,16 @@ protected:
     return masterlistNode;
   }
 
+  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
+    std::vector<EditorMessage> list;
+
+    for (const auto& message : messages) {
+      list.push_back(EditorMessage(message, language));
+    }
+
+    return list;
+  }
+
 private:
   static std::vector<SimpleMessage> toSimpleMessages(const std::vector<Message>& messages,
                                                      const std::string& language) {
