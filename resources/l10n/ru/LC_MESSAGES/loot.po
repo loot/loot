@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT\n"
+"Project-Id-Version: LOOT 0.11.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-01-09 12:40+0500\n"
-"PO-Revision-Date: 2017-01-09 12:52+0500\n"
+"POT-Creation-Date: 2017-06-24 19:21+0500\n"
+"PO-Revision-Date: 2017-06-24 19:31+0500\n"
 "Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
@@ -31,20 +31,20 @@ msgstr "Мастерлист обновлен до версии %s."
 msgid "No masterlist update was necessary."
 msgstr "Обновление мастерлиста не требуется."
 
-#: src/gui/html/js/events.js:130
+#: src/gui/html/js/events.js:131
 #, javascript-format
 msgid "Failed to sort plugins. Details: %s"
 msgstr "Не удалось отсортировать плагины. Детали: %s"
 
-#: src/gui/html/js/events.js:150
+#: src/gui/html/js/events.js:151
 msgid "Sorting made no changes to the load order."
 msgstr "В результате сортировки порядок загрузки изменен не был."
 
-#: src/gui/html/js/events.js:182
+#: src/gui/html/js/events.js:183
 msgid "Redate Plugins?"
 msgstr "Редатировать плагины?"
 
-#: src/gui/html/js/events.js:182
+#: src/gui/html/js/events.js:183
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -57,15 +57,15 @@ msgstr ""
 "мастерской Steam будут загружены через Steam снова (это не относится к "
 "Skyrim Special Edition). Продолжить?"
 
-#: src/gui/html/js/events.js:182
+#: src/gui/html/js/events.js:183
 msgid "Redate"
 msgstr "Редатировать"
 
-#: src/gui/html/js/events.js:185
+#: src/gui/html/js/events.js:186
 msgid "Plugins were successfully redated."
 msgstr "Плагины были успешно редатированы."
 
-#: src/gui/html/js/events.js:191
+#: src/gui/html/js/events.js:192
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -73,38 +73,38 @@ msgstr ""
 "Вы уверены, что хотите очистить все существующие добавленные пользователем "
 "метаданные для всех плагинов?"
 
-#: src/gui/html/js/events.js:191 src/gui/html/js/events.js:408
+#: src/gui/html/js/events.js:192 src/gui/html/js/events.js:408
 msgid "Clear"
 msgstr "Очистить"
 
-#: src/gui/html/js/events.js:202
+#: src/gui/html/js/events.js:203
 msgid "All user-added metadata has been cleared."
 msgstr "Пользовательские метаданные были очищены."
 
-#: src/gui/html/js/events.js:225
+#: src/gui/html/js/events.js:226
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Содержимое LOOT было скопировано в буфер обмена."
 
-#: src/gui/html/js/events.js:236
+#: src/gui/html/js/events.js:237
 msgid "The load order has been copied to the clipboard."
 msgstr "Порядок загрузки был скопирован в буфер обмена."
 
-#: src/gui/html/js/events.js:267
+#: src/gui/html/js/events.js:268
 #, javascript-format
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 "Вы все еще не применили или не отменили %s. Действительно хотите выйти?"
 
-#: src/gui/html/js/events.js:267 src/gui/html/js/translateStaticText.js:232
+#: src/gui/html/js/events.js:268 src/gui/html/js/translateStaticText.js:229
 msgid "Quit"
 msgstr "Выход"
 
-#: src/gui/html/js/events.js:279
+#: src/gui/html/js/events.js:280
 msgid "sorted load order"
 msgstr "отсортированный порядок загрузки"
 
-#: src/gui/html/js/events.js:281
+#: src/gui/html/js/events.js:282
 msgid "metadata edits"
 msgstr "правки метаданных"
 
@@ -135,7 +135,7 @@ msgid "N/A"
 msgstr "Нет"
 
 #: src/gui/html/js/handlePromiseError.js:15
-#: src/gui/html/js/translateStaticText.js:152
+#: src/gui/html/js/translateStaticText.js:149
 msgid "Error"
 msgstr "Ошибка"
 
@@ -144,496 +144,496 @@ msgstr "Ошибка"
 msgid "A [new release](%s) of LOOT is available."
 msgstr "Доступна [Новая версия](%s) LOOT."
 
-#: src/gui/html/js/translateStaticText.js:33
+#: src/gui/html/js/translateStaticText.js:30
 msgid "Active Plugin"
 msgstr "Активный плагин"
 
-#: src/gui/html/js/translateStaticText.js:34
-#: src/gui/html/js/translateStaticText.js:308
+#: src/gui/html/js/translateStaticText.js:31
+#: src/gui/html/js/translateStaticText.js:305
 msgid "Master File"
 msgstr "Мастерфайл"
 
-#: src/gui/html/js/translateStaticText.js:35
+#: src/gui/html/js/translateStaticText.js:32
 msgid "Empty Plugin"
 msgstr "Очистить плагин"
 
-#: src/gui/html/js/translateStaticText.js:36
+#: src/gui/html/js/translateStaticText.js:33
 msgid "Loads Archive"
 msgstr "Загружает архив"
 
-#: src/gui/html/js/translateStaticText.js:37
-#: src/gui/html/js/translateStaticText.js:114
+#: src/gui/html/js/translateStaticText.js:34
+#: src/gui/html/js/translateStaticText.js:111
 msgid "Has User Metadata"
 msgstr "Имеет метаданные пользователя"
 
-#: src/gui/html/js/translateStaticText.js:39
+#: src/gui/html/js/translateStaticText.js:36
 msgid "Edit Metadata"
 msgstr "Править метаданные"
 
-#: src/gui/html/js/translateStaticText.js:40
+#: src/gui/html/js/translateStaticText.js:37
 msgid "Copy Metadata"
 msgstr "Скопировать метаданные"
 
-#: src/gui/html/js/translateStaticText.js:41
+#: src/gui/html/js/translateStaticText.js:38
 msgid "Clear User Metadata"
 msgstr "Очистить метаданные пользователя"
 
-#: src/gui/html/js/translateStaticText.js:60
+#: src/gui/html/js/translateStaticText.js:57
 msgid "Enable Edits"
 msgstr "Включить правки"
 
-#: src/gui/html/js/translateStaticText.js:61
-#: src/gui/html/js/translateStaticText.js:113
+#: src/gui/html/js/translateStaticText.js:58
+#: src/gui/html/js/translateStaticText.js:110
 msgid "Priority"
 msgstr "Приоритет"
 
-#: src/gui/html/js/translateStaticText.js:62
-#: src/gui/html/js/translateStaticText.js:112
+#: src/gui/html/js/translateStaticText.js:59
+#: src/gui/html/js/translateStaticText.js:109
 msgid "Global Priority"
 msgstr "Глобальный приоритет"
 
-#: src/gui/html/js/translateStaticText.js:64
+#: src/gui/html/js/translateStaticText.js:61
 msgid "Main"
 msgstr "Основные"
 
-#: src/gui/html/js/translateStaticText.js:65
+#: src/gui/html/js/translateStaticText.js:62
 msgid "Load After"
 msgstr "Грузить после"
 
-#: src/gui/html/js/translateStaticText.js:66
+#: src/gui/html/js/translateStaticText.js:63
 msgid "Requirements"
 msgstr "Требования"
 
-#: src/gui/html/js/translateStaticText.js:67
+#: src/gui/html/js/translateStaticText.js:64
 msgid "Incompatibilities"
 msgstr "Несовместимости"
 
-#: src/gui/html/js/translateStaticText.js:68
+#: src/gui/html/js/translateStaticText.js:65
 msgid "Messages"
 msgstr "Сообщения"
 
-#: src/gui/html/js/translateStaticText.js:69
+#: src/gui/html/js/translateStaticText.js:66
 msgid "Bash Tags"
 msgstr "Bash-теги"
 
-#: src/gui/html/js/translateStaticText.js:70
+#: src/gui/html/js/translateStaticText.js:67
 msgid "Dirty Plugin Info"
 msgstr "Информация о грязных правках"
 
-#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:68
 msgid "Clean Plugin Info"
 msgstr "Информация об очистке плагина"
 
-#: src/gui/html/js/translateStaticText.js:72
+#: src/gui/html/js/translateStaticText.js:69
 msgid "Locations"
 msgstr "Местоположения"
 
-#: src/gui/html/js/translateStaticText.js:74
-#: src/gui/html/js/translateStaticText.js:78
-#: src/gui/html/js/translateStaticText.js:82
+#: src/gui/html/js/translateStaticText.js:71
+#: src/gui/html/js/translateStaticText.js:75
+#: src/gui/html/js/translateStaticText.js:79
 msgid "Filename"
 msgstr "Имя файла"
 
-#: src/gui/html/js/translateStaticText.js:75
-#: src/gui/html/js/translateStaticText.js:79
-#: src/gui/html/js/translateStaticText.js:83
+#: src/gui/html/js/translateStaticText.js:72
+#: src/gui/html/js/translateStaticText.js:76
+#: src/gui/html/js/translateStaticText.js:80
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
-#: src/gui/html/js/translateStaticText.js:76
-#: src/gui/html/js/translateStaticText.js:80
-#: src/gui/html/js/translateStaticText.js:84
-#: src/gui/html/js/translateStaticText.js:88
-#: src/gui/html/js/translateStaticText.js:93
+#: src/gui/html/js/translateStaticText.js:73
+#: src/gui/html/js/translateStaticText.js:77
+#: src/gui/html/js/translateStaticText.js:81
+#: src/gui/html/js/translateStaticText.js:85
+#: src/gui/html/js/translateStaticText.js:90
 msgid "Condition"
 msgstr "Выражение"
 
-#: src/gui/html/js/translateStaticText.js:86
+#: src/gui/html/js/translateStaticText.js:83
 msgid "Type"
 msgstr "Тип"
 
-#: src/gui/html/js/translateStaticText.js:87
+#: src/gui/html/js/translateStaticText.js:84
 msgid "Content"
 msgstr "Содержимое"
 
-#: src/gui/html/js/translateStaticText.js:89
-#: src/gui/html/js/translateStaticText.js:296
+#: src/gui/html/js/translateStaticText.js:86
+#: src/gui/html/js/translateStaticText.js:293
 msgid "Language"
 msgstr "Язык"
 
-#: src/gui/html/js/translateStaticText.js:91
+#: src/gui/html/js/translateStaticText.js:88
 msgid "Add/Remove"
 msgstr "Добавить/удалить"
 
-#: src/gui/html/js/translateStaticText.js:92
+#: src/gui/html/js/translateStaticText.js:89
 msgid "Bash Tag"
 msgstr "Bash-тег"
 
-#: src/gui/html/js/translateStaticText.js:95
-#: src/gui/html/js/translateStaticText.js:101
+#: src/gui/html/js/translateStaticText.js:92
+#: src/gui/html/js/translateStaticText.js:98
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/html/js/translateStaticText.js:96
+#: src/gui/html/js/translateStaticText.js:93
 msgid "ITM Count"
 msgstr "Число ITM"
 
-#: src/gui/html/js/translateStaticText.js:97
+#: src/gui/html/js/translateStaticText.js:94
 msgid "Deleted References"
 msgstr "Удаленные ссылки"
 
-#: src/gui/html/js/translateStaticText.js:98
+#: src/gui/html/js/translateStaticText.js:95
 msgid "Deleted Navmeshes"
 msgstr "Удаленные Navmesh-записи"
 
+#: src/gui/html/js/translateStaticText.js:96
 #: src/gui/html/js/translateStaticText.js:99
-#: src/gui/html/js/translateStaticText.js:102
 msgid "Cleaning Utility"
 msgstr "Утилита для очистки"
 
-#: src/gui/html/js/translateStaticText.js:104
+#: src/gui/html/js/translateStaticText.js:101
 msgid "URL"
 msgstr "URL"
 
-#: src/gui/html/js/translateStaticText.js:105
-#: src/gui/html/js/translateStaticText.js:305
+#: src/gui/html/js/translateStaticText.js:102
+#: src/gui/html/js/translateStaticText.js:302
 msgid "Name"
 msgstr "Имя"
 
-#: src/gui/html/js/translateStaticText.js:107
+#: src/gui/html/js/translateStaticText.js:104
 msgid "Save Metadata"
 msgstr "Сохранить метаданные"
 
-#: src/gui/html/js/translateStaticText.js:108
-#: src/gui/html/js/translateStaticText.js:135
-#: src/gui/html/js/translateStaticText.js:219
-#: src/gui/html/js/translateStaticText.js:319
+#: src/gui/html/js/translateStaticText.js:105
+#: src/gui/html/js/translateStaticText.js:132
+#: src/gui/html/js/translateStaticText.js:216
+#: src/gui/html/js/translateStaticText.js:316
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/gui/html/js/translateStaticText.js:115
+#: src/gui/html/js/translateStaticText.js:112
 msgid "Editor Is Open"
 msgstr "Редактор открыт"
 
-#: src/gui/html/js/translateStaticText.js:134
-#: src/gui/html/js/translateStaticText.js:341
+#: src/gui/html/js/translateStaticText.js:131
+#: src/gui/html/js/translateStaticText.js:338
 msgid "OK"
 msgstr "Принять"
 
-#: src/gui/html/js/translateStaticText.js:142
+#: src/gui/html/js/translateStaticText.js:139
 msgid "A filename is required."
 msgstr "Необходимо имя файла."
 
-#: src/gui/html/js/translateStaticText.js:143
-#: src/gui/html/js/translateStaticText.js:154
-#: src/gui/html/js/translateStaticText.js:164
-#: src/gui/html/js/translateStaticText.js:176
-#: src/gui/html/js/translateStaticText.js:185
-#: src/gui/html/js/translateStaticText.js:193
-#: src/gui/html/js/translateStaticText.js:202
+#: src/gui/html/js/translateStaticText.js:140
+#: src/gui/html/js/translateStaticText.js:151
+#: src/gui/html/js/translateStaticText.js:161
+#: src/gui/html/js/translateStaticText.js:173
+#: src/gui/html/js/translateStaticText.js:182
+#: src/gui/html/js/translateStaticText.js:190
+#: src/gui/html/js/translateStaticText.js:199
 msgid "Delete Row"
 msgstr "Удалить строку"
 
-#: src/gui/html/js/translateStaticText.js:150
+#: src/gui/html/js/translateStaticText.js:147
 msgid "Note"
 msgstr "Примечание"
 
-#: src/gui/html/js/translateStaticText.js:151
+#: src/gui/html/js/translateStaticText.js:148
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: src/gui/html/js/translateStaticText.js:153
+#: src/gui/html/js/translateStaticText.js:150
 msgid "A content string is required."
 msgstr "Необходимо содержимое строки."
 
-#: src/gui/html/js/translateStaticText.js:161
+#: src/gui/html/js/translateStaticText.js:158
 msgid "Add"
 msgstr "Добавить"
 
-#: src/gui/html/js/translateStaticText.js:162
+#: src/gui/html/js/translateStaticText.js:159
 msgid "Remove"
 msgstr "Удалить"
 
-#: src/gui/html/js/translateStaticText.js:163
-#: src/gui/html/js/translateStaticText.js:200
+#: src/gui/html/js/translateStaticText.js:160
+#: src/gui/html/js/translateStaticText.js:197
 msgid "A name is required."
 msgstr "Необходимо имя."
 
-#: src/gui/html/js/translateStaticText.js:171
-#: src/gui/html/js/translateStaticText.js:183
+#: src/gui/html/js/translateStaticText.js:168
+#: src/gui/html/js/translateStaticText.js:180
 msgid "A CRC is required."
 msgstr "Необходима контрольная сумма (CRC)."
 
-#: src/gui/html/js/translateStaticText.js:172
-#: src/gui/html/js/translateStaticText.js:173
-#: src/gui/html/js/translateStaticText.js:174
+#: src/gui/html/js/translateStaticText.js:169
+#: src/gui/html/js/translateStaticText.js:170
+#: src/gui/html/js/translateStaticText.js:171
 msgid "Values must be integers."
 msgstr "Значениями должны быть целые числа."
 
-#: src/gui/html/js/translateStaticText.js:175
-#: src/gui/html/js/translateStaticText.js:184
+#: src/gui/html/js/translateStaticText.js:172
+#: src/gui/html/js/translateStaticText.js:181
 msgid "A utility name is required."
 msgstr "Необходимо имя утилиты."
 
-#: src/gui/html/js/translateStaticText.js:192
+#: src/gui/html/js/translateStaticText.js:189
 msgid "A link is required."
 msgstr "Необходима ссылка."
 
-#: src/gui/html/js/translateStaticText.js:201
+#: src/gui/html/js/translateStaticText.js:198
 msgid "A folder is required."
 msgstr "Необходима папка."
 
-#: src/gui/html/js/translateStaticText.js:209
-#: src/gui/html/js/translateStaticText.js:316
+#: src/gui/html/js/translateStaticText.js:206
+#: src/gui/html/js/translateStaticText.js:313
 msgid "Add New Row"
 msgstr "Добавить новую строку"
 
-#: src/gui/html/js/translateStaticText.js:215
+#: src/gui/html/js/translateStaticText.js:212
 msgid "Jump To General Information"
 msgstr "Перейти к основной информации"
 
-#: src/gui/html/js/translateStaticText.js:216
+#: src/gui/html/js/translateStaticText.js:213
 msgid "Sort Plugins"
 msgstr "Сортировать плагины"
 
-#: src/gui/html/js/translateStaticText.js:217
+#: src/gui/html/js/translateStaticText.js:214
 msgid "Update Masterlist"
 msgstr "Обновить мастерлист"
 
-#: src/gui/html/js/translateStaticText.js:218
-#: src/gui/html/js/translateStaticText.js:318
+#: src/gui/html/js/translateStaticText.js:215
+#: src/gui/html/js/translateStaticText.js:315
 msgid "Apply"
 msgstr "Принять"
 
-#: src/gui/html/js/translateStaticText.js:220
+#: src/gui/html/js/translateStaticText.js:217
 msgid "Search Cards"
 msgstr "Найти карточки"
 
-#: src/gui/html/js/translateStaticText.js:223
+#: src/gui/html/js/translateStaticText.js:220
 msgid "Redate Plugins"
 msgstr "Редатировать плагины"
 
-#: src/gui/html/js/translateStaticText.js:224
+#: src/gui/html/js/translateStaticText.js:221
 msgid "Open Debug Log Location"
 msgstr "Открыть папку с логом отладки"
 
-#: src/gui/html/js/translateStaticText.js:225
+#: src/gui/html/js/translateStaticText.js:222
 msgid "Clear All User Metadata"
 msgstr "Очистить все пользовательские метаданные"
 
-#: src/gui/html/js/translateStaticText.js:226
+#: src/gui/html/js/translateStaticText.js:223
 msgid "Copy Load Order"
 msgstr "Скопировать порядок загрузки"
 
-#: src/gui/html/js/translateStaticText.js:227
+#: src/gui/html/js/translateStaticText.js:224
 msgid "Copy Content"
 msgstr "Скопировать содержимое"
 
-#: src/gui/html/js/translateStaticText.js:228
+#: src/gui/html/js/translateStaticText.js:225
 msgid "Refresh Content"
 msgstr "Обновить содержимое"
 
-#: src/gui/html/js/translateStaticText.js:229
+#: src/gui/html/js/translateStaticText.js:226
 msgid "View Documentation"
 msgstr "Смотреть документацию"
 
-#: src/gui/html/js/translateStaticText.js:230
+#: src/gui/html/js/translateStaticText.js:227
 msgid "About"
 msgstr "О программе"
 
-#: src/gui/html/js/translateStaticText.js:231
-#: src/gui/html/js/translateStaticText.js:288
+#: src/gui/html/js/translateStaticText.js:228
+#: src/gui/html/js/translateStaticText.js:285
 msgid "Settings"
 msgstr "Настройки"
 
-#: src/gui/html/js/translateStaticText.js:235
+#: src/gui/html/js/translateStaticText.js:232
 msgid "Search cards"
 msgstr "Найти карточки"
 
-#: src/gui/html/js/translateStaticText.js:247
+#: src/gui/html/js/translateStaticText.js:244
 msgid "Plugins"
 msgstr "Плагины"
 
-#: src/gui/html/js/translateStaticText.js:248
+#: src/gui/html/js/translateStaticText.js:245
 msgid "Filters"
 msgstr "Фильтры"
 
-#: src/gui/html/js/translateStaticText.js:249
+#: src/gui/html/js/translateStaticText.js:246
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 "Нажмите клавишу Ввод или кликните по по свободному месту, чтобы применить "
 "фильтр."
 
-#: src/gui/html/js/translateStaticText.js:250
+#: src/gui/html/js/translateStaticText.js:247
 msgid "Show only plugins with cards that contain"
 msgstr "Показать только плагины, имя которых содержит содержит"
 
-#: src/gui/html/js/translateStaticText.js:251
+#: src/gui/html/js/translateStaticText.js:248
 msgid "No text specified"
 msgstr "Текст не определен"
 
-#: src/gui/html/js/translateStaticText.js:254
+#: src/gui/html/js/translateStaticText.js:251
 msgid "Hide version numbers"
 msgstr "Скрыть номера версии"
 
-#: src/gui/html/js/translateStaticText.js:255
+#: src/gui/html/js/translateStaticText.js:252
 msgid "Hide CRCs"
 msgstr "Скрыть CRC"
 
-#: src/gui/html/js/translateStaticText.js:256
+#: src/gui/html/js/translateStaticText.js:253
 msgid "Hide Bash Tags"
 msgstr "Скрыть bash-теги"
 
-#: src/gui/html/js/translateStaticText.js:257
+#: src/gui/html/js/translateStaticText.js:254
 msgid "Hide notes"
 msgstr "Скрыть примечания"
 
-#: src/gui/html/js/translateStaticText.js:258
+#: src/gui/html/js/translateStaticText.js:255
 msgid "Hide 'Do not clean' messages"
 msgstr "Скрыть сообщения 'Не чистить'"
 
-#: src/gui/html/js/translateStaticText.js:259
+#: src/gui/html/js/translateStaticText.js:256
 msgid "Hide all plugin messages"
 msgstr "Скрыть все сообщения плагинов"
 
-#: src/gui/html/js/translateStaticText.js:260
+#: src/gui/html/js/translateStaticText.js:257
 msgid "Hide inactive plugins"
 msgstr "Скрыть неактивные плагины"
 
-#: src/gui/html/js/translateStaticText.js:261
+#: src/gui/html/js/translateStaticText.js:258
 msgid "Hide messageless plugins"
 msgstr "Скрыть плагины без сообщений"
 
-#: src/gui/html/js/translateStaticText.js:264
+#: src/gui/html/js/translateStaticText.js:261
 msgid "Show only conflicting plugins for"
 msgstr "Показать конфликтующие плагины только для"
 
-#: src/gui/html/js/translateStaticText.js:265
+#: src/gui/html/js/translateStaticText.js:262
 msgid "No plugin selected"
 msgstr "Плагин не выбран"
 
-#: src/gui/html/js/translateStaticText.js:269
+#: src/gui/html/js/translateStaticText.js:266
 msgid "Hidden plugins:"
 msgstr "Скрытые плагины:"
 
-#: src/gui/html/js/translateStaticText.js:270
+#: src/gui/html/js/translateStaticText.js:267
 msgid "Hidden messages:"
 msgstr "Скрытые сообщения:"
 
-#: src/gui/html/js/translateStaticText.js:275
+#: src/gui/html/js/translateStaticText.js:272
 msgid "General Information"
 msgstr "Основная информация"
 
-#: src/gui/html/js/translateStaticText.js:276
+#: src/gui/html/js/translateStaticText.js:273
 msgid "Masterlist Revision"
 msgstr "Версия мастерлиста"
 
-#: src/gui/html/js/translateStaticText.js:277
+#: src/gui/html/js/translateStaticText.js:274
 msgid "Masterlist Date"
 msgstr "Дата мастерлиста"
 
-#: src/gui/html/js/translateStaticText.js:278
+#: src/gui/html/js/translateStaticText.js:275
 msgid "Warnings"
 msgstr "Предупреждений"
 
-#: src/gui/html/js/translateStaticText.js:279
+#: src/gui/html/js/translateStaticText.js:276
 msgid "Errors"
 msgstr "Ошибок"
 
-#: src/gui/html/js/translateStaticText.js:280
+#: src/gui/html/js/translateStaticText.js:277
 msgid "Total Messages"
 msgstr "Всего сообщений"
 
-#: src/gui/html/js/translateStaticText.js:281
+#: src/gui/html/js/translateStaticText.js:278
 msgid "Active Plugins"
 msgstr "Активных плагинов"
 
-#: src/gui/html/js/translateStaticText.js:282
+#: src/gui/html/js/translateStaticText.js:279
 msgid "Dirty Plugins"
 msgstr "Грязных плагинов"
 
-#: src/gui/html/js/translateStaticText.js:283
+#: src/gui/html/js/translateStaticText.js:280
 msgid "Total Plugins"
 msgstr "Плагинов всего"
 
-#: src/gui/html/js/translateStaticText.js:291
+#: src/gui/html/js/translateStaticText.js:288
 msgid "Default Game"
 msgstr "Игра по умолчанию"
 
-#: src/gui/html/js/translateStaticText.js:292
+#: src/gui/html/js/translateStaticText.js:289
 msgid "Autodetect"
 msgstr "Автообнаружение"
 
-#: src/gui/html/js/translateStaticText.js:297
+#: src/gui/html/js/translateStaticText.js:294
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "Установки языка будут применены после перезапуска LOOT."
 
-#: src/gui/html/js/translateStaticText.js:299
+#: src/gui/html/js/translateStaticText.js:296
 msgid "Enable debug logging"
 msgstr "Включить лог отладки"
 
-#: src/gui/html/js/translateStaticText.js:300
+#: src/gui/html/js/translateStaticText.js:297
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "Выходной поток записан в файл LOOTDebugLog.txt."
 
-#: src/gui/html/js/translateStaticText.js:302
+#: src/gui/html/js/translateStaticText.js:299
 msgid "Update masterlist before sorting"
 msgstr "Обновить мастерлист перед сортировкой"
 
-#: src/gui/html/js/translateStaticText.js:306
+#: src/gui/html/js/translateStaticText.js:303
 msgid "Base Game"
 msgstr "Игра"
 
-#: src/gui/html/js/translateStaticText.js:307
+#: src/gui/html/js/translateStaticText.js:304
 msgid "LOOT Folder"
 msgstr "Папка LOOT"
 
-#: src/gui/html/js/translateStaticText.js:309
+#: src/gui/html/js/translateStaticText.js:306
 msgid "Masterlist Repository URL"
 msgstr "URL хранилища мастерлиста"
 
-#: src/gui/html/js/translateStaticText.js:310
+#: src/gui/html/js/translateStaticText.js:307
 msgid "Masterlist Repository Branch"
 msgstr "Ветка хранилища мастерлиста"
 
-#: src/gui/html/js/translateStaticText.js:311
+#: src/gui/html/js/translateStaticText.js:308
 msgid "Install Path"
 msgstr "Путь установки"
 
-#: src/gui/html/js/translateStaticText.js:312
+#: src/gui/html/js/translateStaticText.js:309
 msgid "Install Path Registry Key"
 msgstr "Ключ реестра для пути установки"
 
-#: src/gui/html/js/translateStaticText.js:325
+#: src/gui/html/js/translateStaticText.js:322
 msgid "First-Time Tips"
 msgstr "Советы для новичков"
 
-#: src/gui/html/js/translateStaticText.js:327
+#: src/gui/html/js/translateStaticText.js:324
 #, javascript-format
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"Похоже, это первый раз, когда вы запустили LOOT %s. Вот некоторые "
-"подсказки, которые помогут вам начать работу с интерфейсом."
+"Похоже, это первый раз, когда вы запустили LOOT %s. Вот некоторые подсказки, "
+"которые помогут вам начать работу с интерфейсом."
 
-#: src/gui/html/js/translateStaticText.js:329
+#: src/gui/html/js/translateStaticText.js:326
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "Нажмите на значок %(menu_icon)s для открытия меню."
 
-#: src/gui/html/js/translateStaticText.js:332
+#: src/gui/html/js/translateStaticText.js:329
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
 "<span class=\"tag add\">addition</span> and <span class=\"tag remove"
 "\">removal</span>."
 msgstr ""
-"Также, как и сообщения, LOOT отображает <span class=\"version\">номера версий</"
-"span> плагинов, <span class=\"crc\">CRC</span> и рекомендуемые Bash-теги для "
-"<span class=\"tag add\">добавления</span> и <span class=\"tag remove"
+"Также, как и сообщения, LOOT отображает <span class=\"version\">номера "
+"версий</span> плагинов, <span class=\"crc\">CRC</span> и рекомендуемые Bash-"
+"теги для <span class=\"tag add\">добавления</span> и <span class=\"tag remove"
 "\">удаления</span>."
 
-#: src/gui/html/js/translateStaticText.js:333
+#: src/gui/html/js/translateStaticText.js:330
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -641,7 +641,7 @@ msgstr ""
 "CRC отображаются только после загрузки плагинов, фильтрации конфликтов или "
 "сортировки."
 
-#: src/gui/html/js/translateStaticText.js:334
+#: src/gui/html/js/translateStaticText.js:331
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
@@ -649,7 +649,7 @@ msgstr ""
 "Дважды кликните по плагину на боковой панели для быстрого открытия в "
 "редакторе метаданных."
 
-#: src/gui/html/js/translateStaticText.js:335
+#: src/gui/html/js/translateStaticText.js:332
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -658,7 +658,7 @@ msgstr ""
 "редактор метаданных, в поля таблицы \"Грузить после\", \"Требования\" и "
 "\"Несовместимости\"."
 
-#: src/gui/html/js/translateStaticText.js:336
+#: src/gui/html/js/translateStaticText.js:333
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -666,7 +666,7 @@ msgstr ""
 "Некоторые функции отключены, пока открыт редактор метаданных или пока "
 "отсортированный порядок загрузки не был применен или отменен."
 
-#: src/gui/html/js/translateStaticText.js:337
+#: src/gui/html/js/translateStaticText.js:334
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -676,8 +676,8 @@ msgstr ""
 "назначение какого-то элемента, попробуйте навести на него курсор мышки. В "
 "противном случае документация LOOT всегда доступна через главное меню."
 
-#: src/gui/html/js/translateStaticText.js:339
-#: src/gui/html/js/translateStaticText.js:351
+#: src/gui/html/js/translateStaticText.js:336
+#: src/gui/html/js/translateStaticText.js:348
 #, javascript-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
@@ -688,16 +688,16 @@ msgstr ""
 "пожертвования могут быть направлены WrinklyNinja (создатель и основной "
 "разработчик LOOT), через %s или %s."
 
-#: src/gui/html/js/translateStaticText.js:346
+#: src/gui/html/js/translateStaticText.js:343
 msgid "About LOOT"
 msgstr "О LOOT"
 
-#: src/gui/html/js/translateStaticText.js:348
+#: src/gui/html/js/translateStaticText.js:345
 #, javascript-format
 msgid "Version %s (build %s)"
 msgstr "Версия %s (сборка %s)"
 
-#: src/gui/html/js/translateStaticText.js:349
+#: src/gui/html/js/translateStaticText.js:346
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, "
 "Fallout 3, Fallout: New Vegas and Fallout 4."
@@ -705,68 +705,23 @@ msgstr ""
 "Оптимизация порядка загрузки для Oblivion, Skyrim, Skyrim Special Edition, "
 "Fallout 3, Fallout: New Vegas и Fallout 4."
 
-#: src/gui/query/get_game_data_query.h:44
+#: src/gui/query/get_game_data_query.h:45
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "Обработка, объединение и сверка с метаданными.."
 
-#: src/gui/query/get_game_data_query.h:80
-msgid ""
-"An error occurred while parsing the masterlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Try updating "
-"your masterlist to resolve the error."
-msgstr ""
-"Во время обработки мастерлиста произошла ошибка: %1%. Возможно это произошло "
-"потому, что в обновлении LOOT изменена поддержка синтаксиса метаданных. "
-"Попробуйте обновить мастерлист, чтобы исправить ошибку."
-
-#: src/gui/query/get_game_data_query.h:95
-msgid ""
-"An error occurred while parsing the userlist: %1%. This probably happened "
-"because an update to LOOT changed its metadata syntax support. Your user "
-"metadata will have to be updated manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"documentation, which is accessible through LOOT's main menu.\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-"Ошибка при обработке пользовательских правил: %1%. Возможно в обновлении "
-"LOOT изменилась поддержка синтаксиса метеданных. Пользовательские правила "
-"нужно обновить вручную.\n"
-"\n"
-"Чтобы это сделать, испольуйте опцию главного меню LOOT 'Открыть расположение "
-"лога отладки', чтобы открыть папку с данными, потом откройте файл 'userlist."
-"yaml' в папке соответствующей игры. Тогда вы сможете отредактировать "
-"содержащиеся метаданные в соответствии с документацией, посмотреть которую "
-"можно в главном меню LOOT.\n"
-"\n"
-"Также вы можете задать вопросы на форумах, в теме LOOT, ссылки на которые "
-"есть на [сайте LOOT](https://loot.github.io/)."
-
-#: src/gui/query/metadata_query.h:91 src/gui/query/metadata_query.h:92
-msgid "N/A: No masterlist present"
-msgstr "N/A: Мастерлист отсутствует"
-
-#: src/gui/query/metadata_query.h:95 src/gui/query/metadata_query.h:96
-msgid "Unknown: Git repository missing"
-msgstr "Неизвестно: Отсутствует хранилище Git"
-
-#: src/gui/query/metadata_query.h:119
-msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr ""
-"Глобальное сообщение включает выражение, которое не может быть оценено. "
-"Детали: %1%"
-
-#: src/gui/query/metadata_query.h:145 src/backend/plugin/plugin_sorter.cpp:217
+#: src/gui/query/metadata_query.h:80 src/gui/query/metadata_query.h:90
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
 
-#: src/gui/query/metadata_query.h:176 src/gui/query/metadata_query.h:177
+#: src/gui/query/metadata_query.h:109 src/gui/query/metadata_query.h:110
+msgid "N/A: No masterlist present"
+msgstr "N/A: Мастерлист отсутствует"
+
+#: src/gui/query/metadata_query.h:113 src/gui/query/metadata_query.h:114
+msgid "Unknown: Git repository missing"
+msgstr "Неизвестно: Отсутствует хранилище Git"
+
+#: src/gui/query/metadata_query.h:178 src/gui/query/metadata_query.h:179
 msgid "(edited)"
 msgstr "(изменено)"
 
@@ -779,14 +734,22 @@ msgstr ""
 "LOOTDebugLog.txt (можно получить доступ к нему через главное меню)."
 
 #: src/gui/query/sort_plugins_query.h:48
-msgid "Loading plugin contents..."
-msgstr "Загрузка содержимого плагинов..."
-
-#: src/gui/query/sort_plugins_query.h:75
 msgid "Sorting load order..."
 msgstr "Сортировка порядка загрузки..."
 
-#: src/gui/query/sort_plugins_query.h:83
+#: src/gui/state/game.cpp:144 src/gui/state/game.cpp:155
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "Этот плагин требует установленного плагина \"%1%\", но он отсутствует."
+
+#: src/gui/state/game.cpp:147
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "Этот плагин требует подключенного плагина \"%1%\", но он не подключен."
+
+#: src/gui/state/game.cpp:161
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr "Этот плагин несовместим с \"%1%\", но они оба присутствуют."
+
+#: src/gui/state/game.cpp:280
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
@@ -794,128 +757,194 @@ msgstr ""
 "Циклическое взаимодействие обнаружено между плагинами \"%1%\" и \"%2%\". "
 "Обратный цикл: %3%"
 
-#: src/backend/app/loot_state.cpp:130
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "Ошибка: Невозможно создать файл настроек LOOT. %1%"
-
-#: src/backend/app/loot_state.cpp:137
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Ошибка: Обработка настроек не удалась. %1%"
-
-#: src/backend/app/loot_state.cpp:198
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-"Ошибка: Специфические для игры настройки не могут быть инициализированы. %1%"
-
-#: src/backend/game/game_cache.cpp:119
+#: src/gui/state/game.cpp:309
 msgid "You have not sorted your load order this session."
 msgstr "В этой сессии порядок загрузки ещё не отсортирован!"
 
-#: src/backend/helpers/git_helper.cpp:145
+#: src/gui/state/game.cpp:329
 msgid ""
-"An error occurred while trying to clone the remote masterlist repository."
-msgstr "Ошибка при попытке клонировать удаленное хранилище мастерлиста."
-
-#: src/backend/helpers/git_helper.cpp:194
-msgid ""
-"An error occurred while trying to update the masterlist. This could be due "
-"to a server-side error. Try again in a few minutes."
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
 msgstr ""
-"Ошибка при попытке обновления мастерлиста. Это может быть из-за ошибка на "
-"стороне сервера. Попробуйте через несколько минут."
+"Последняя версия мастерлиста содержит синтаксическую ошибку, вместо неё LOOT "
+"использует самую последнюю без ошибок. Синтаксические ошибки обычно "
+"небольшие и исправляются в считанные часы."
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:89
+#: src/gui/state/game.cpp:358
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"Произошла ошибка при обработке списка метеданных: %1%.\n"
+"\n"
+"Для исправления ошибки попробуйте обновить мастерлист. Если ошибка в в ваших "
+"пользовательских метаданных, то причина может заключаться в изменении "
+"поддержки метаданны в обновленном LOOT. Пользовательские метаданные должны "
+"быть обновлены вручную.\n"
+"\n"
+"Для этого используйте пункт 'Открыть папку с логом отладки' в главном меню "
+"LOOT, затем откройте файл 'userlist.yaml' в папке соответствующей игры. "
+"Тогда вы сможете отредактировать свои метаданные в соответствии с "
+"документацией, также доступной из главного меню LOOT.\n"
+"\n"
+"Также вы можете спросить на ветке форма LOOT, который указан на [вебсайте "
+"LOOT](https://loot.github.io/)."
+
+#: src/gui/state/game.cpp:454
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] "%1% ITM-запись"
 msgstr[1] "%1% ITM-записей"
 msgstr[2] "%1% ITM-записей"
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:90
+#: src/gui/state/game.cpp:455
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] "%1% удаленную ссылку"
 msgstr[1] "%1% удаленных ссылок"
 msgstr[2] "%1% удаленных ссылок"
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:91
+#: src/gui/state/game.cpp:456
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] "%1% удаленный navmesh"
 msgstr[1] "%1% удаленных navmesh-ей"
 msgstr[2] "%1% удаленных navmesh-ей"
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:95
+#: src/gui/state/game.cpp:460
 msgid "%1% found %2%, %3% and %4%."
 msgstr "%1% содержит %2%, %3% и %4%."
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:97
+#: src/gui/state/game.cpp:462
 msgid "%1% found dirty edits."
 msgstr "%1% содержит грязные правки."
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:100
-#: src/backend/metadata/plugin_cleaning_data.cpp:102
-#: src/backend/metadata/plugin_cleaning_data.cpp:104
+#: src/gui/state/game.cpp:465 src/gui/state/game.cpp:467
+#: src/gui/state/game.cpp:469
 msgid "%1% found %2% and %3%."
 msgstr "%1% содержит %2% and %3%."
 
-#: src/backend/metadata/plugin_cleaning_data.cpp:107
-#: src/backend/metadata/plugin_cleaning_data.cpp:109
-#: src/backend/metadata/plugin_cleaning_data.cpp:111
+#: src/gui/state/game.cpp:472 src/gui/state/game.cpp:474
+#: src/gui/state/game.cpp:476
 msgid "%1% found %2%."
 msgstr "%1% содержит %2%."
 
-#: src/backend/plugin/plugin.cpp:115
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr "Невозможно прочесть \"%1%\". Детали: %2%"
+#: src/gui/state/loot_state.cpp:137
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr "Ошибка: Невозможно создать файл настроек LOOT. %1%"
 
-#: src/backend/plugin/plugin.cpp:221 src/backend/plugin/plugin.cpp:232
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Этот плагин требует установленного плагина \"%1%\", но он отсутствует."
+#: src/gui/state/loot_state.cpp:144
+msgid "Error: Settings parsing failed. %1%"
+msgstr "Ошибка: Обработка настроек не удалась. %1%"
 
-#: src/backend/plugin/plugin.cpp:224
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Этот плагин требует подключенного плагина \"%1%\", но он не подключен."
-
-#: src/backend/plugin/plugin.cpp:238
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Этот плагин несовместим с \"%1%\", но они оба присутствуют."
-
-#: src/backend/masterlist.cpp:45
-msgid ""
-"An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
+#: src/gui/state/loot_state.cpp:212
+msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
-"Ошибка при попытке прочитать версию локального мастерлиста. Если эта ошибка "
-"происходит повторно, попробуйте удалить папку \".git\" в %1%."
+"Ошибка: Специфические для игры настройки не могут быть инициализированы. %1%"
 
-#: src/backend/masterlist.cpp:117 src/backend/masterlist.cpp:131
-msgid ""
-"An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-"Ошибка при попытке доступа к локальному хранилищу мастерлиста. Если эта "
-"ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+#~ msgid ""
+#~ "An error occurred while parsing the masterlist: %1%. This probably "
+#~ "happened because an update to LOOT changed its metadata syntax support. "
+#~ "Try updating your masterlist to resolve the error."
+#~ msgstr ""
+#~ "Во время обработки мастерлиста произошла ошибка: %1%. Возможно это "
+#~ "произошло потому, что в обновлении LOOT изменена поддержка синтаксиса "
+#~ "метаданных. Попробуйте обновить мастерлист, чтобы исправить ошибку."
 
-#: src/backend/masterlist.cpp:238
-msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
-msgstr ""
-"Ошибка при попытке прочитать информацию об обновлении мастерлиста. Если эта "
-"ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+#~ msgid ""
+#~ "An error occurred while parsing the userlist: %1%. This probably happened "
+#~ "because an update to LOOT changed its metadata syntax support. Your user "
+#~ "metadata will have to be updated manually.\n"
+#~ "\n"
+#~ "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open "
+#~ "its data folder, then open your 'userlist.yaml' file in the relevant game "
+#~ "folder. You can then edit the metadata it contains with reference to the "
+#~ "documentation, which is accessible through LOOT's main menu.\n"
+#~ "\n"
+#~ "You can also seek support on LOOT's forum thread, which is linked to on "
+#~ "[LOOT's website](https://loot.github.io/)."
+#~ msgstr ""
+#~ "Ошибка при обработке пользовательских правил: %1%. Возможно в обновлении "
+#~ "LOOT изменилась поддержка синтаксиса метеданных. Пользовательские правила "
+#~ "нужно обновить вручную.\n"
+#~ "\n"
+#~ "Чтобы это сделать, испольуйте опцию главного меню LOOT 'Открыть "
+#~ "расположение лога отладки', чтобы открыть папку с данными, потом откройте "
+#~ "файл 'userlist.yaml' в папке соответствующей игры. Тогда вы сможете "
+#~ "отредактировать содержащиеся метаданные в соответствии с документацией, "
+#~ "посмотреть которую можно в главном меню LOOT.\n"
+#~ "\n"
+#~ "Также вы можете задать вопросы на форумах, в теме LOOT, ссылки на которые "
+#~ "есть на [сайте LOOT](https://loot.github.io/)."
 
-#: src/backend/masterlist.cpp:252
-msgid ""
-"Masterlist revision %1%: %2%. The latest masterlist revision contains a "
-"syntax error, LOOT is using the most recent valid revision instead. Syntax "
-"errors are usually minor and fixed within hours."
-msgstr ""
-"Версия мастерлиста %1%: %2%. Последняя версия мастерлиста содержит "
-"синтаксическую ошибку, LOOT использует наиболее новую версию вместо этой. "
-"Синтаксические ошибки обычно небольшие и исправляются в течение нескольких "
-"часов."
+#~ msgid ""
+#~ "A global message contains a condition that could not be evaluated. "
+#~ "Details: %1%"
+#~ msgstr ""
+#~ "Глобальное сообщение включает выражение, которое не может быть оценено. "
+#~ "Детали: %1%"
+
+#~ msgid "Loading plugin contents..."
+#~ msgstr "Загрузка содержимого плагинов..."
+
+#~ msgid ""
+#~ "An error occurred while trying to clone the remote masterlist repository."
+#~ msgstr "Ошибка при попытке клонировать удаленное хранилище мастерлиста."
+
+#~ msgid ""
+#~ "An error occurred while trying to update the masterlist. This could be "
+#~ "due to a server-side error. Try again in a few minutes."
+#~ msgstr ""
+#~ "Ошибка при попытке обновления мастерлиста. Это может быть из-за ошибка на "
+#~ "стороне сервера. Попробуйте через несколько минут."
+
+#~ msgid "Cannot read \"%1%\". Details: %2%"
+#~ msgstr "Невозможно прочесть \"%1%\". Детали: %2%"
+
+#~ msgid ""
+#~ "An error occurred while trying to read the local masterlist's version. If "
+#~ "this error happens again, try deleting the \".git\" folder in %1%."
+#~ msgstr ""
+#~ "Ошибка при попытке прочитать версию локального мастерлиста. Если эта "
+#~ "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+
+#~ msgid ""
+#~ "An error occurred while trying to access the local masterlist repository. "
+#~ "If this error happens again, try deleting the \".git\" folder in %1%."
+#~ msgstr ""
+#~ "Ошибка при попытке доступа к локальному хранилищу мастерлиста. Если эта "
+#~ "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+
+#~ msgid ""
+#~ "An error occurred while trying to read information on the updated "
+#~ "masterlist. If this error happens again, try deleting the \".git\" folder "
+#~ "in %1%."
+#~ msgstr ""
+#~ "Ошибка при попытке прочитать информацию об обновлении мастерлиста. Если "
+#~ "эта ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+
+#~ msgid ""
+#~ "Masterlist revision %1%: %2%. The latest masterlist revision contains a "
+#~ "syntax error, LOOT is using the most recent valid revision instead. "
+#~ "Syntax errors are usually minor and fixed within hours."
+#~ msgstr ""
+#~ "Версия мастерлиста %1%: %2%. Последняя версия мастерлиста содержит "
+#~ "синтаксическую ошибку, LOOT использует наиболее новую версию вместо этой. "
+#~ "Синтаксические ошибки обычно небольшие и исправляются в течение "
+#~ "нескольких часов."
 
 #~ msgid "Failed to get %LOCALAPPDATA% path."
 #~ msgstr "Не удалось получить путь %LOCALAPPDATA%."
@@ -1039,15 +1068,6 @@ msgstr ""
 
 #~ msgid "Masterlist revision"
 #~ msgstr "Версия мастерлиста"
-
-#~ msgid ""
-#~ "The latest masterlist revision contains a syntax error, LOOT is using the "
-#~ "most recent valid revision instead. Syntax errors are usually minor and "
-#~ "fixed within hours."
-#~ msgstr ""
-#~ "Последняя версия мастерлиста содержит синтаксическую ошибку, вместо неё "
-#~ "LOOT использует самую последнюю без ошибок. Синтаксические ошибки обычно "
-#~ "небольшие и исправляются в считанные часы."
 
 #~ msgid ""
 #~ "This feature is provided so that modders using the Creation Kit may set "
