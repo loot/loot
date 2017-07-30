@@ -401,23 +401,35 @@ void Game::SaveUserMetadata() {
   gameHandle_->GetDatabase()->WriteUserMetadata(UserlistPath().string(), true);
 }
 
+bool Game::ExecutableExists(const GameType& gameType, const boost::filesystem::path& gamePath) {
+  if (gameType == GameType::tes5) {
+    return fs::exists(gamePath / "TESV.exe");
+  } else if (gameType == GameType::tes5se) {
+    return fs::exists(gamePath / "SkyrimSE.exe");
+  } else {
+    return true;  // Don't bother checking for the other games.
+  }
+}
+
 boost::filesystem::path Game::DetectGamePath(const GameSettings & gameSettings) {
   try {
     BOOST_LOG_TRIVIAL(trace) << "Checking if game \"" << gameSettings.Name() << "\" is installed.";
     if (!gameSettings.GamePath().empty() && fs::exists(gameSettings.GamePath() / "Data" / gameSettings.Master()))
       return gameSettings.GamePath();
 
-    if (fs::exists(fs::path("..") / "Data" / gameSettings.Master())) {
-      return "..";
+    boost::filesystem::path gamePath = "..";
+    if (fs::exists(gamePath / "Data" / gameSettings.Master())
+        && ExecutableExists(gameSettings.Type(), gamePath)) {
+      return gamePath;
     }
 
 #ifdef _WIN32
-    std::string path;
     std::string key_parent = fs::path(gameSettings.RegistryKey()).parent_path().string();
     std::string key_name = fs::path(gameSettings.RegistryKey()).filename().string();
-    path = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
-    if (!path.empty() && fs::exists(fs::path(path) / "Data" / gameSettings.Master())) {
-      return path;
+    gamePath = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+    if (!gamePath.empty() && fs::exists(gamePath / "Data" / gameSettings.Master())
+        && ExecutableExists(gameSettings.Type(), gamePath)) {
+      return gamePath;
     }
 #endif
   } catch (std::exception &e) {

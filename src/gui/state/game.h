@@ -97,6 +97,8 @@ private:
 #ifdef _WIN32
   static std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
 #endif
+  static bool ExecutableExists(const GameType& gameType,
+                               const boost::filesystem::path& gamePath);
   static boost::filesystem::path DetectGamePath(const GameSettings& gameSettings);
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                               const boost::filesystem::path& backupDirectory);

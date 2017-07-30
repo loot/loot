@@ -154,6 +154,46 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
   EXPECT_TRUE(Game::IsInstalled(GameSettings(GetParam()).SetGamePath(dataPath.parent_path())));
 }
 
+TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
+  auto currentPath = boost::filesystem::current_path();
+
+  boost::filesystem::create_directory(dataPath / ".." / "LOOT");
+  boost::filesystem::current_path(dataPath / ".." / "LOOT");
+  if (GetParam() == GameType::tes5) {
+    boost::filesystem::ofstream out(boost::filesystem::path("..") / "TESV.exe");
+    //out << "";
+    out.close();
+  } else if (GetParam() == GameType::tes5se) {
+    boost::filesystem::ofstream out(boost::filesystem::path("..") / "SkyrimSE.exe");
+    //out << "";
+    out.close();
+  }
+
+  GameType gameTypes[6] = {
+    GameType::tes4,
+    GameType::tes5,
+    GameType::fo3,
+    GameType::fonv,
+    GameType::fo4,
+    GameType::tes5se,
+  };
+  for (int i = 0; i < 6; ++i) {
+    if (gameTypes[i] == GetParam()) {
+      EXPECT_TRUE(Game::IsInstalled(GameSettings(gameTypes[i])));
+    } else {
+      EXPECT_FALSE(Game::IsInstalled(GameSettings(gameTypes[i])));
+    }
+  }
+
+  boost::filesystem::current_path(currentPath);
+  boost::filesystem::remove_all(dataPath / ".." / "LOOT");
+  if (GetParam() == GameType::tes5) {
+    boost::filesystem::remove(dataPath / ".." / "TESV.exe");
+  } else if (GetParam() == GameType::tes5se) {
+    boost::filesystem::remove(dataPath / ".." / "SkyrimSE.exe");
+  }
+}
+
 TEST_P(GameTest, toMessageShouldOutputAllNonZeroCounts) {
   Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
