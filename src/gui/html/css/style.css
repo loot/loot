@@ -235,3 +235,8 @@ paper-icon-item iron-icon {
 iron-icon {
     color: var(--secondary-text-color);
 }
+
+/* For some reason paper-icon-button doesn't have hidden styling by default. */
+paper-icon-button[hidden] {
+    display: none;
+}
