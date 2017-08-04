@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.11.0\n"
+"Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-07-06 12:57+0200\n"
+"POT-Creation-Date: 2017-08-04 17:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -751,39 +751,39 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game.cpp:454
+#: src/gui/state/game.cpp:466
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:455
+#: src/gui/state/game.cpp:467
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:456
+#: src/gui/state/game.cpp:468
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:460
+#: src/gui/state/game.cpp:472
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game.cpp:462
+#: src/gui/state/game.cpp:474
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game.cpp:465 src/gui/state/game.cpp:467
-#: src/gui/state/game.cpp:469
+#: src/gui/state/game.cpp:477 src/gui/state/game.cpp:479
+#: src/gui/state/game.cpp:481
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game.cpp:472 src/gui/state/game.cpp:474
-#: src/gui/state/game.cpp:476
+#: src/gui/state/game.cpp:484 src/gui/state/game.cpp:486
+#: src/gui/state/game.cpp:488
 msgid "%1% found %2%."
 msgstr ""
 

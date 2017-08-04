@@ -244,7 +244,7 @@ editable-table paper-icon-button[icon=add]:hover {
       onDrop(evt) {
         evt.stopPropagation();
 
-        if (evt.currentTarget.tagName === 'TABLE'
+        if (evt.currentTarget.tagName === 'EDITABLE-TABLE'
             && evt.currentTarget.getAttribute('data-template') === 'fileRow') {
           evt.currentTarget.addRow({
             name: evt.dataTransfer.getData('text/plain'),
@@ -271,6 +271,10 @@ editable-table paper-icon-button[icon=add]:hover {
             const inputs = rows[i].querySelectorAll('paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu');
             for (let j = 0; j < inputs.length; ++j) {
               rowData[inputs[j].className] = inputs[j].value;
+            }
+            const autocompletes = rows[i].getElementsByTagName('paper-autocomplete');
+            for (let j = 0; j < autocompletes.length; j += 1) {
+              rowData[autocompletes[j].className] = autocompletes[j].text;
             }
 
             writableRows.push(rowData);
@@ -353,7 +357,11 @@ editable-table paper-icon-button[icon=add]:hover {
         for (const key in tableData) {
           const elems = row.getElementsByClassName(key);
           if (tableData[key] !== undefined && elems.length === 1) {
-            elems[0].value = tableData[key];
+            if (elems[0].tagName === 'PAPER-AUTOCOMPLETE') {
+              elems[0].text = tableData[key];
+            } else {
+              elems[0].value = tableData[key];
+            }
           }
         }
 
