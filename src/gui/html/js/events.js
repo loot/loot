@@ -171,7 +171,7 @@ function onApplySort() {
 }
 function onCancelSort() {
   return loot.query('cancelSort').then(JSON.parse).then((response) => {
-    loot.game.cancelSort(response.plugins, response.globalMessages);
+    loot.game.cancelSort(response.plugins, response.generalMessages);
     /* Sort UI elements again according to stored old load order. */
     loot.filters.apply(loot.game.plugins);
 
