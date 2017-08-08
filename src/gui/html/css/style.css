@@ -89,9 +89,6 @@ app-toolbar {
 app-drawer-layout:not([narrow]) [drawer-toggle] {
   display: none;
 }
-app-drawer {
-    background: var(--primary-background-color);
-}
 app-drawer > * {
     border-right: 1px var(--divider-color) solid;
 }
