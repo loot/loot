@@ -114,13 +114,42 @@
     src: local('Noto Sans CJK SC Bold'),
          url('../fonts/NotoSansCJKsc-Bold.otf');
 }
+/* Noto - Japanese */
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Noto Sans CJK JP Light'),
+         url('../fonts/NotoSansCJKjp-Light.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Sans CJK JP Regular'),
+         url('../fonts/NotoSansCJKjp-Regular.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Noto Sans CJK JP Medium'),
+         url('../fonts/NotoSansCJKjp-Medium.otf');
+}
+@font-face {
+    font-family: 'Noto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Sans CJK JP Bold'),
+         url('../fonts/NotoSansCJKjp-Bold.otf');
+}
 
 /* Typography */
 html {
-    /* Microsoft Yahei is for Chinese characters, and Malgun Gothic for Korean
+    /* Microsoft Yahei is for Chinese characters, Malgun Gothic for Korean, and Meiryo for Japanese
        characters. If Noto isn't present, they're better than the sans-serif
        defaults. */
-    font:13px/1.429 Roboto, Noto, 'Microsoft Yahei', 'Malgun Gothic', sans-serif;
+    font:13px/1.429 Roboto, Noto, 'Microsoft Yahei', 'Malgun Gothic', 'Meiryo', sans-serif;
     color: var(--primary-text-color);
     font-weight: 400;
     text-rendering: optimizeLegibility;
