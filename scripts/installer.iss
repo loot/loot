@@ -70,6 +70,7 @@ Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 #endif
 Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -134,6 +135,8 @@ Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\sv\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 
 [Icons]
 Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -187,6 +190,7 @@ ru.DeleteUserFiles=Вы хотите удалить ваши настройки 
 zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
 es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
+ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 
 [Code]
 // Set LOOT's language in settings.yaml
