@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2017-08-04 17:06+0100\n"
-"PO-Revision-Date: 2017-09-11 16:50+0900\n"
+"PO-Revision-Date: 2017-09-13 07:54+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -33,7 +33,7 @@ msgstr "マスターリストがリビジョン %s に更新されました。"
 
 #: src/gui/html/js/events.js:100
 msgid "No masterlist update was necessary."
-msgstr "マスターリストの更新は必要はありません。"
+msgstr "マスターリストの更新は必要ありません。"
 
 #: src/gui/html/js/events.js:131
 #, javascript-format
@@ -142,7 +142,7 @@ msgstr "エラー"
 #: src/gui/html/js/initialise.js:257
 #, javascript-format
 msgid "A [new release](%s) of LOOT is available."
-msgstr "新しいバージョンのLOOT (%s) が利用できます。"
+msgstr "[新しいバージョンのLOOT](%s)が利用できます。"
 
 #: src/gui/html/js/translateStaticText.js:30
 msgid "Active Plugin"
@@ -198,7 +198,7 @@ msgstr "メイン"
 
 #: src/gui/html/js/translateStaticText.js:62
 msgid "Load After"
-msgstr "後ろにロード"
+msgstr "後にロード"
 
 #: src/gui/html/js/translateStaticText.js:63
 msgid "Requirements"
@@ -246,7 +246,7 @@ msgstr "表示名"
 #: src/gui/html/js/translateStaticText.js:85
 #: src/gui/html/js/translateStaticText.js:90
 msgid "Condition"
-msgstr "条件"
+msgstr "条件(Condition)"
 
 #: src/gui/html/js/translateStaticText.js:83
 msgid "Type"
@@ -313,7 +313,7 @@ msgstr "キャンセル"
 
 #: src/gui/html/js/translateStaticText.js:112
 msgid "Editor Is Open"
-msgstr "編集中"
+msgstr "エディット中"
 
 #: src/gui/html/js/translateStaticText.js:131
 #: src/gui/html/js/translateStaticText.js:338
@@ -322,7 +322,7 @@ msgstr "OK"
 
 #: src/gui/html/js/translateStaticText.js:139
 msgid "A filename is required."
-msgstr "ファイル名を書いてください。"
+msgstr "ファイル名を入れてください。"
 
 #: src/gui/html/js/translateStaticText.js:140
 #: src/gui/html/js/translateStaticText.js:151
@@ -390,7 +390,7 @@ msgstr "新しい行を追加"
 
 #: src/gui/html/js/translateStaticText.js:212
 msgid "Jump To General Information"
-msgstr "全体情報にジャンプ"
+msgstr "トップに戻る"
 
 #: src/gui/html/js/translateStaticText.js:213
 msgid "Sort Plugins"
@@ -581,7 +581,7 @@ msgstr "ソートの前にマスターリストを更新"
 
 #: src/gui/html/js/translateStaticText.js:303
 msgid "Base Game"
-msgstr "元ゲーム"
+msgstr "ゲーム種別"
 
 #: src/gui/html/js/translateStaticText.js:304
 msgid "LOOT Folder"
@@ -618,7 +618,7 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:326
 msgid "Click %(menu_icon)s buttons to open menus."
-msgstr "%(menu_icon)s ボタンをクリックするとメインメニューが開きます。"
+msgstr "%(menu_icon)s ボタンをクリックするとメニューが開きます。"
 
 #: src/gui/html/js/translateStaticText.js:329
 msgid ""
@@ -653,7 +653,7 @@ msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"サイドバー内のプラグインはメタデータ編集画面の \"後ろにロード\" , \"必須\" , "
+"サイドバー内のプラグインはメタデータ編集画面の \"後にロード\" , \"必須\" , "
 "\"非互換\" テーブルにドロップすることができます。"
 
 #: src/gui/html/js/translateStaticText.js:333
@@ -671,8 +671,8 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 "画面上の項目の多くにはヒントが用意されています。どういう機能か知りたくなった"
-"らカーソルを載せて調べてみてください。また、メインメニューからLOOTのマニュア"
-"ルを開くこともできます。"
+"らカーソルを載せて調べてみてください。また、メニューからLOOTのマニュアルを開"
+"くこともできます。"
 
 #: src/gui/html/js/translateStaticText.js:336
 #: src/gui/html/js/translateStaticText.js:348
@@ -720,15 +720,15 @@ msgstr "不明: Gitリポジトリが消失"
 
 #: src/gui/query/metadata_query.h:178 src/gui/query/metadata_query.h:179
 msgid "(edited)"
-msgstr "(編集済み)"
+msgstr "(編集有り)"
 
 #: src/gui/query/query.h:40
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
 msgstr ""
-"エラーが発生しました！詳しい情報はLOOTDebugLog.txt（メインメニューから開けま"
-"す）で確認してください。"
+"エラーが発生しました！詳しい情報はLOOTDebugLog.txt（メニューから開けます）で"
+"確認してください。"
 
 #: src/gui/query/sort_plugins_query.h:48
 msgid "Sorting load order..."
@@ -792,46 +792,46 @@ msgstr ""
 "ポートが変更されたことが原因です。ユーザーメタデータを手動で更新してくださ"
 "い。\n"
 "\n"
-"手動で更新するには、メインメニューから 'デバッグログの保存先を開く'をクリック"
-"してLOOTのデータフォルダを開き、対応するゲームのフォルダにあるuserlist.yaml"
-"ファイルを開きましょう。ファイル内のメタデータをマニュアル（メインメニューか"
-"ら開けます）を参照しながら編集してください。\n"
+"手動で更新するには、メニューから 'デバッグログの保存先を開く'をクリックして"
+"LOOTのデータフォルダを開き、対応するゲームのフォルダにあるuserlist.yamlファイ"
+"ルを開きましょう。ファイル内のメタデータをマニュアル（メインメニューから開け"
+"ます）を参照しながら編集してください。\n"
 "\n"
-"LOOTのForum Threadでサポートを求めることもできます。LOOTのウェブページよりア"
-"クセス可能です。(https://loot.github.io/)"
+"LOOTのForum Threadでサポートを求めることもできます。[LOOTのウェブページ]"
+"(https://loot.github.io/)よりアクセス可能です。"
 
 #: src/gui/state/game.cpp:466
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
-msgstr[0] "%1% - ITM レコード"
+msgstr[0] "%1%のITM レコード"
 
 #: src/gui/state/game.cpp:467
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
-msgstr[0] "%1% - 削除されたリファレンス"
+msgstr[0] "%1%の削除されたリファレンス"
 
 #: src/gui/state/game.cpp:468
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% - 削除されたNavmesh"
+msgstr[0] "%1%の削除されたNavmesh"
 
 #: src/gui/state/game.cpp:472
 msgid "%1% found %2%, %3% and %4%."
-msgstr "%1%から%2%、%3%、%4%が見つかりました。"
+msgstr "%1%によって%2%、%3%、%4%が見つかりました。"
 
 #: src/gui/state/game.cpp:474
 msgid "%1% found dirty edits."
-msgstr "%1%からdirty editが見つかりました。"
+msgstr "%1%によってdirty editが見つかりました。"
 
 #: src/gui/state/game.cpp:477 src/gui/state/game.cpp:479
 #: src/gui/state/game.cpp:481
 msgid "%1% found %2% and %3%."
-msgstr "%1%から%2%、%3%が見つかりました。"
+msgstr "%1%によって%2%、%3%が見つかりました。"
 
 #: src/gui/state/game.cpp:484 src/gui/state/game.cpp:486
 #: src/gui/state/game.cpp:488
 msgid "%1% found %2%."
-msgstr "%1%から%2%が見つかりました。"
+msgstr "%1%によって%2%が見つかりました。"
 
 #: src/gui/state/loot_state.cpp:137
 msgid "Error: Could not create LOOT settings file. %1%"
