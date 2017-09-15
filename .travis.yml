@@ -49,10 +49,6 @@ install:
   - pip install --user sphinx sphinx_rtd_theme
   # Add sphinx-build to PATH
   - export PATH="$HOME/.local/bin:$PATH"
-  # Get CMake (version available in repositories is too old, needs to be 3.1+)
-  - wget --no-check-certificate https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz
-  - tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz
-  - export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH
 
 before_script:
   - mkdir build
