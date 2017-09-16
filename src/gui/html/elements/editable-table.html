@@ -270,7 +270,7 @@ editable-table paper-icon-button[icon=add]:hover {
 
             const inputs = rows[i].querySelectorAll('paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu');
             for (let j = 0; j < inputs.length; ++j) {
-              rowData[inputs[j].className] = inputs[j].value;
+              rowData[inputs[j].className] = inputs[j].value || '';
             }
             const autocompletes = rows[i].getElementsByTagName('paper-autocomplete');
             for (let j = 0; j < autocompletes.length; j += 1) {
