@@ -32,3 +32,18 @@ message Location {
     string link = 1;
     string name = 2;
 }
+
+message SimpleMessage {
+    string type = 1;
+    //Type type = 1;
+    string text = 2;
+    string language = 3;
+    string condition = 4;
+
+    // Not currently used as types are strings.
+    enum Type {
+        SAY = 0;
+        WARN = 1;
+        ERROR = 2;
+    }
+}

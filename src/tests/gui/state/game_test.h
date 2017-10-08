@@ -54,9 +54,7 @@ protected:
   loadOrderBackupFile0("loadorder.bak.0"),
   loadOrderBackupFile1("loadorder.bak.1"),
   loadOrderBackupFile2("loadorder.bak.2"),
-  loadOrderBackupFile3("loadorder.bak.3") {
-    SetLoggingVerbosity(LogVerbosity::off);
-  }
+  loadOrderBackupFile3("loadorder.bak.3") {}
 
   void TearDown() {
     CommonGameTestFixture::TearDown();
@@ -351,6 +349,7 @@ TEST_P(GameTest, checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActive
 TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
   game.Init();
+  game.LoadAllInstalledPlugins(true);
 
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
@@ -430,6 +429,8 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 }
 
 TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
+
+
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
   game.Init();
 
@@ -438,9 +439,18 @@ TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsN
   EXPECT_EQ(-1, index);
 }
 
+TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAllPluginsIfTheyAreNotLoaded) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  game.Init();
+
+  short index = game.GetActiveLoadOrderIndex(masterFile);
+  EXPECT_EQ(-1, index);
+}
+
 TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
   game.Init();
+  game.LoadAllInstalledPlugins(true);
 
   short index = game.GetActiveLoadOrderIndex(masterFile);
   EXPECT_EQ(0, index);
@@ -452,9 +462,32 @@ TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingIna
   EXPECT_EQ(2, index);
 }
 
+TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  game.Init();
+
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+
+  auto initialLoadOrder = getLoadOrder();
+  ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
+
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+
+  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+
+  EXPECT_TRUE(loadOrder.empty());
+}
+
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
   game.Init();
+  game.LoadAllInstalledPlugins(true);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
@@ -477,6 +510,7 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
   game.Init();
+  game.LoadAllInstalledPlugins(true);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));

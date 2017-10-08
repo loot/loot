@@ -59,6 +59,34 @@ using std::vector;
 namespace fs = boost::filesystem;
 
 namespace loot {
+void apiLogCallback(LogLevel level, const char * message) {
+#ifdef _WIN32
+  switch (level) {
+  case LogLevel::trace:
+    BOOST_LOG_TRIVIAL(trace) << message;
+    break;
+  case LogLevel::debug:
+    BOOST_LOG_TRIVIAL(debug) << message;
+    break;
+  case LogLevel::info:
+    BOOST_LOG_TRIVIAL(info) << message;
+    break;
+  case LogLevel::warning:
+    BOOST_LOG_TRIVIAL(warning) << message;
+    break;
+  case LogLevel::error:
+    BOOST_LOG_TRIVIAL(error) << message;
+    break;
+  case LogLevel::fatal:
+    BOOST_LOG_TRIVIAL(fatal) << message;
+    break;
+  default:
+    BOOST_LOG_TRIVIAL(trace) << message;
+    break;
+  }
+#endif
+}
+
 LootState::LootState() : unappliedChangeCounter_(0), currentGame_(installedGames_.end()) {}
 
 void LootState::init(const std::string& cmdLineGame,
@@ -104,7 +132,7 @@ void LootState::init(const std::string& cmdLineGame,
       )
   );
   boost::log::add_common_attributes();
-  SetLogFile(LootPaths::getApiLogPath().string());
+  SetLoggingCallback(apiLogCallback);
   enableDebugLogging(isDebugLoggingEnabled());
 
   // Log some useful info.
@@ -238,10 +266,8 @@ void LootState::enableDebugLogging(bool enable) {
   LootSettings::enableDebugLogging(enable);
   if (enable) {
     boost::log::core::get()->reset_filter();
-    SetLoggingVerbosity(LogVerbosity::trace);
   } else {
     boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);
-    SetLoggingVerbosity(LogVerbosity::warning);
   }
 }
 

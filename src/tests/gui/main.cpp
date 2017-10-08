@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 
   //Disable logging or else stdout will get overrun.
   boost::log::core::get()->set_logging_enabled(false);
-  loot::SetLoggingVerbosity(loot::LogVerbosity::off);
+  loot::SetLoggingCallback([&](loot::LogLevel level, const char * message) {});
 
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

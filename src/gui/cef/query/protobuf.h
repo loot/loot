@@ -44,6 +44,7 @@ void convert(const SimpleMessage& fromMessage, protobuf::SimpleMessage& toMessag
   toMessage.set_type(mapMessageType(fromMessage.type));
   toMessage.set_text(fromMessage.text);
   toMessage.set_language(fromMessage.language);
+  toMessage.set_condition(fromMessage.condition);
 }
 
 void convert(const Tag& fromTag, protobuf::Tag& toTag) {
@@ -98,8 +99,7 @@ protobuf::PluginMetadata convert(const PluginMetadata& metadata, const std::stri
   for (const auto& message : metadata.GetMessages()) {
     auto simpleMessage = message.ToSimpleMessage(language);
     auto pbMessage = pbMetadata.add_msg();
-    loot::convert(simpleMessage, *pbMessage);
-    pbMessage->set_condition(message.GetCondition());
+    convert(simpleMessage, *pbMessage);
   }
 
   for (const auto& tag : metadata.GetTags()) {

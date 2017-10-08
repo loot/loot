@@ -36,7 +36,6 @@ public:
   static boost::filesystem::path getLootDataPath();
   static boost::filesystem::path getSettingsPath();
   static boost::filesystem::path getLogPath();
-  static boost::filesystem::path getApiLogPath();
 
   // Sets the app path to the current path, and the data path to the given
   // path or (if it is an empty string), local app data path / "LOOT".
