@@ -28,18 +28,22 @@ along with LOOT.  If not, see
 #include "gui/cef/query/types/clipboard_query.h"
 
 namespace loot {
+struct Counters {
+  size_t activeNormal = 0;
+  size_t activeLightMasters = 0;
+};
+
+
 class CopyLoadOrderQuery : public ClipboardQuery {
 public:
   CopyLoadOrderQuery(LootState& state, const std::vector<std::string>& plugins) :
     state_(state), plugins_(plugins) {}
 
   std::string executeLogic() {
-    int numberOfIndexDigits = getNumberOfIndexDigits();
-
-    size_t activeIndex = 0;
+    Counters counters;
     std::stringstream stream;
     for (const auto& pluginName : plugins_) {
-      activeIndex += writePluginLine(stream, pluginName, activeIndex);
+      writePluginLine(stream, pluginName, counters);
     }
 
     copyToClipboard(stream.str());
@@ -47,23 +51,24 @@ public:
   }
 
 private:
-  unsigned short getNumberOfIndexDigits() const {
-    if (plugins_.size() > 99)
-      return 3;
-    else if (plugins_.size() > 9)
-      return 2;
-    else
-      return 1;
-  }
+  void writePluginLine(std::ostream& stream, const std::string& plugin, Counters& counters) {
+    auto isActive = state_.getCurrentGame().IsPluginActive(plugin);
+    auto isLightMaster = state_.getCurrentGame().GetPlugin(plugin)->IsLightMaster();
 
-  size_t writePluginLine(std::ostream& stream, const std::string& plugin, size_t activeIndex) {
-    if (state_.getCurrentGame().IsPluginActive(plugin)) {
-      stream << std::setw(getNumberOfIndexDigits()) << activeIndex << " " << std::hex << std::setw(2) << activeIndex << std::dec << " " << plugin << "\r\n";
-      return 1;
+    if (isActive && isLightMaster) {
+      stream << "254 FE " << std::setw(4) << counters.activeLightMasters << " ";
+      counters.activeLightMasters += 1;
+    }
+    else if (isActive) {
+      stream << std::setw(3) << counters.activeNormal << " "
+        << std::hex << std::setw(2) << counters.activeNormal << std::dec << "      ";
+      counters.activeNormal += 1;
+    }
+    else {
+      stream << "            ";
     }
 
-    stream << std::setw(getNumberOfIndexDigits() + 4) << "     " << plugin << "\r\n";
-    return 0;
+    stream  << plugin << "\r\n";
   }
 
   LootState& state_;
