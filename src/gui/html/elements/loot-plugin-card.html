@@ -111,6 +111,8 @@
         </div>
         <iron-icon id="isMaster" icon="loot-custom-icons:crown"></iron-icon>
         <paper-tooltip for="isMaster">Master File</paper-tooltip>
+        <iron-icon id="isLightMaster" icon="image:flare"></iron-icon>
+        <paper-tooltip for="isLightMaster">Light Master File</paper-tooltip>
         <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
         <paper-tooltip for="isEmpty">Empty Plugin</paper-tooltip>
         <iron-icon id="loadsArchive" icon="attachment"></iron-icon>
@@ -187,7 +189,8 @@
 
           /* Set icons' visibility */
           this.$.activeTick.hidden = !this.data.isActive;
-          this.$.isMaster.hidden = !this.data.isMaster;
+          this.$.isMaster.hidden = !this.data.isMaster || this.data.isLightMaster;
+          this.$.isLightMaster.hidden = !this.data.isLightMaster;
           this.$.isEmpty.hidden = !this.data.isEmpty;
           this.$.loadsArchive.hidden = !this.data.loadsArchive;
         }

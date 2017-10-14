@@ -29,6 +29,7 @@
   function translatePluginCard(l10n, element) {
     element.querySelector('paper-tooltip[for=activeTick]').textContent = l10n.translate('Active Plugin');
     element.querySelector('paper-tooltip[for=isMaster]').textContent = l10n.translate('Master File');
+    element.querySelector('paper-tooltip[for=isLightMaster]').textContent = l10n.translate('Light Master File');
     element.querySelector('paper-tooltip[for=isEmpty]').textContent = l10n.translate('Empty Plugin');
     element.querySelector('paper-tooltip[for=loadsArchive]').textContent = l10n.translate('Loads Archive');
     element.querySelector('paper-tooltip[for=hasUserEdits]').textContent = l10n.translate('Has User Metadata');

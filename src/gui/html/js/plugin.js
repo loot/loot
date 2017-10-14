@@ -41,6 +41,7 @@
       this._isActive = plugin.isActive || false;
       this._isEmpty = plugin.isEmpty;
       this._isMaster = plugin.isMaster;
+      this._isLightMaster = plugin.isLightMaster;
       this._loadsArchive = plugin.loadsArchive;
 
       if (!filters.hideVersionNumbers) {
@@ -78,6 +79,10 @@
 
     get isMaster() {
       return this._isMaster;
+    }
+
+    get isLightMaster() {
+      return this._isLightMaster;
     }
 
     get loadsArchive() {
@@ -168,6 +173,7 @@
       this.isActive = obj.isActive || false;
       this.isEmpty = obj.isEmpty || false;
       this.isMaster = obj.isMaster || false;
+      this.isLightMaster = obj.isLightMaster || false;
       this.loadsArchive = obj.loadsArchive || false;
 
       this.masterlist = obj.masterlist;

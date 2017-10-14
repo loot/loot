@@ -42,6 +42,7 @@ public:
     plugin.set_is_dirty(!evaluatedMetadata.GetDirtyInfo().empty());
     plugin.set_is_empty(file->IsEmpty());
     plugin.set_is_master(file->IsMaster());
+    plugin.set_is_light_master(file->IsLightMaster());
     plugin.set_loads_archive(file->LoadsArchive());
 
     plugin.set_crc(file->GetCRC());

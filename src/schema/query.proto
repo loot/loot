@@ -56,6 +56,7 @@ message Plugin {
     bool is_active = 3;
     bool is_empty = 4;
     bool is_master = 5;
+    bool is_light_master = 17;
     bool loads_archive = 6;
 
     uint32 crc = 7;
