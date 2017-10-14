@@ -704,36 +704,36 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/game.cpp:144 src/gui/state/game.cpp:155
+#: src/gui/state/game.cpp:148 src/gui/state/game.cpp:159
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game.cpp:147
+#: src/gui/state/game.cpp:151
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game.cpp:161
+#: src/gui/state/game.cpp:165
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game.cpp:280
+#: src/gui/state/game.cpp:284
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
 
-#: src/gui/state/game.cpp:309
+#: src/gui/state/game.cpp:313
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:329
+#: src/gui/state/game.cpp:333
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game.cpp:358
+#: src/gui/state/game.cpp:362
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -751,39 +751,39 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game.cpp:466
+#: src/gui/state/game.cpp:470
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:467
+#: src/gui/state/game.cpp:471
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:468
+#: src/gui/state/game.cpp:472
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:472
+#: src/gui/state/game.cpp:476
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game.cpp:474
+#: src/gui/state/game.cpp:478
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game.cpp:477 src/gui/state/game.cpp:479
-#: src/gui/state/game.cpp:481
+#: src/gui/state/game.cpp:481 src/gui/state/game.cpp:483
+#: src/gui/state/game.cpp:485
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game.cpp:484 src/gui/state/game.cpp:486
-#: src/gui/state/game.cpp:488
+#: src/gui/state/game.cpp:488 src/gui/state/game.cpp:490
+#: src/gui/state/game.cpp:492
 msgid "%1% found %2%."
 msgstr ""
 

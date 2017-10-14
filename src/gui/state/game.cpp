@@ -61,6 +61,10 @@ namespace fs = boost::filesystem;
 
 namespace loot {
 namespace gui {
+bool hasPluginFileExtension(const std::string& filename) {
+  return boost::iends_with(filename, ".esp") || boost::iends_with(filename, ".esm") || boost::iends_with(filename, ".esl");
+}
+
 Game::Game(const GameSettings& gameSettings,
            const boost::filesystem::path& lootDataPath,
            const boost::filesystem::path& localDataPath) :
@@ -134,7 +138,7 @@ std::vector<Message> Game::CheckInstallValidity(const std::shared_ptr<const Plug
   if (IsPluginActive(plugin->GetName())) {
     auto pluginExists = [&](const std::string& file) {
       return boost::filesystem::exists(DataPath() / file)
-        || ((boost::iends_with(file, ".esp") || boost::iends_with(file, ".esm")) && boost::filesystem::exists(DataPath() / (file + ".ghost")));
+        || (hasPluginFileExtension(file) && boost::filesystem::exists(DataPath() / (file + ".ghost")));
     };
     auto tags = metadata.GetTags();
     if (tags.find(Tag("Filter")) == std::end(tags)) {
