@@ -694,7 +694,11 @@ msgstr ""
 msgid "Unknown: Git repository missing"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/gui/query/metadata_query.h:160 src/gui/query/metadata_query.h:161
+=======
+#: src/gui/query/metadata_query.h:179 src/gui/query/metadata_query.h:180
+>>>>>>> 9495361f... Add warning messages for risky light master usage
 msgid "(edited)"
 msgstr ""
 
@@ -708,7 +712,7 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/game.cpp:148 src/gui/state/game.cpp:159
+#: src/gui/state/game.cpp:148 src/gui/state/game.cpp:174
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
@@ -716,28 +720,40 @@ msgstr ""
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game.cpp:165
+#: src/gui/state/game.cpp:162
+msgid ""
+"This plugin is a light master and requires the non-master plugin \"%1%\"."
+msgstr ""
+
+#: src/gui/state/game.cpp:180
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game.cpp:284
+#: src/gui/state/game.cpp:298
 msgid ""
 "Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
 "%3%"
 msgstr ""
 
-#: src/gui/state/game.cpp:313
+#: src/gui/state/game.cpp:327
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:333
+#: src/gui/state/game.cpp:344
+msgid ""
+"You have a normal plugin and at least one light master sharing the FE load "
+"order index. Deactivate a normal plugin or all your light masters to avoid "
+"potential issues."
+msgstr ""
+
+#: src/gui/state/game.cpp:365
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game.cpp:362
+#: src/gui/state/game.cpp:394
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -755,42 +771,43 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game.cpp:470
+#: src/gui/state/game.cpp:502
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:471
+#: src/gui/state/game.cpp:503
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:472
+#: src/gui/state/game.cpp:504
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:476
+#: src/gui/state/game.cpp:508
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game.cpp:478
+#: src/gui/state/game.cpp:510
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game.cpp:481 src/gui/state/game.cpp:483
-#: src/gui/state/game.cpp:485
+#: src/gui/state/game.cpp:513 src/gui/state/game.cpp:515
+#: src/gui/state/game.cpp:517
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game.cpp:488 src/gui/state/game.cpp:490
-#: src/gui/state/game.cpp:492
+#: src/gui/state/game.cpp:520 src/gui/state/game.cpp:522
+#: src/gui/state/game.cpp:524
 msgid "%1% found %2%."
 msgstr ""
 
+<<<<<<< HEAD
 #: src/gui/state/loot_state.cpp:84
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
@@ -800,5 +817,16 @@ msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
 #: src/gui/state/loot_state.cpp:159
+=======
+#: src/gui/state/loot_state.cpp:163
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:170
+msgid "Error: Settings parsing failed. %1%"
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:238
+>>>>>>> 9495361f... Add warning messages for risky light master usage
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""

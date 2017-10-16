@@ -167,6 +167,21 @@ std::vector<Message> Game::CheckInstallValidity(const std::shared_ptr<const Plug
     }
   }
 
+  if (plugin->IsLightMaster()) {
+    for (const auto &masterName : plugin->GetMasters()) {
+      try {
+        auto master = GetPlugin(masterName);
+        if (!master->IsLightMaster() && !master->IsMaster()) {
+          BOOST_LOG_TRIVIAL(error) << "This plugin is a light master and requires the non-master plugin \"" << masterName << "\". This can cause issues in-game, and sorting will fail while this plugin is installed.";
+          messages.push_back(Message(MessageType::error, (boost::format(boost::locale::translate("This plugin is a light master and requires the non-master plugin \"%1%\". This can cause issues in-game, and sorting will fail while this plugin is installed.")) % masterName).str()));
+        }
+      }
+      catch (...) {
+        BOOST_LOG_TRIVIAL(info) << "Tried to get plugin object for master \"" << masterName << "\" of \"" << plugin->GetName() << "\" but it was not loaded.";
+      }
+    }
+  }
+
   // Also generate dirty messages.
   for (const auto &element : metadata.GetDirtyInfo()) {
     messages.push_back(Game::ToMessage(element));
@@ -310,6 +325,24 @@ std::vector<Message> Game::GetMessages() const {
 
   if (loadOrderSortCount_ == 0)
     output.push_back(Message(MessageType::warn, boost::locale::translate("You have not sorted your load order this session.")));
+
+  size_t activeNormalPluginsCount = 0;
+  bool hasActiveEsl = false;
+  for (const auto& plugin : GetPlugins()) {
+    if (IsPluginActive(plugin->GetName())) {
+      if (plugin->IsLightMaster()) {
+        hasActiveEsl = true;
+      }
+      else {
+        ++activeNormalPluginsCount;
+      }
+    }
+  }
+  
+  if (activeNormalPluginsCount > 254 && hasActiveEsl) {
+    BOOST_LOG_TRIVIAL(warning) << "255 normal plugins and at least one light master are active at the same time.";
+    output.push_back(Message(MessageType::warn, boost::locale::translate("You have a normal plugin and at least one light master sharing the FE load order index. Deactivate a normal plugin or all your light masters to avoid potential issues.")));
+  }
 
   return output;
 }
