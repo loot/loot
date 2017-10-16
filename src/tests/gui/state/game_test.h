@@ -429,21 +429,11 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 }
 
 TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
-
-
   Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
   game.Init();
+  game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(blankEsp);
-
-  EXPECT_EQ(-1, index);
-}
-
-TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAllPluginsIfTheyAreNotLoaded) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
-  game.Init();
-
-  short index = game.GetActiveLoadOrderIndex(masterFile);
+  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp), game.GetLoadOrder());
   EXPECT_EQ(-1, index);
 }
 
@@ -452,13 +442,13 @@ TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingIna
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(masterFile);
+  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile), game.GetLoadOrder());
   EXPECT_EQ(0, index);
 
-  index = game.GetActiveLoadOrderIndex(blankEsm);
+  index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm), game.GetLoadOrder());
   EXPECT_EQ(1, index);
 
-  index = game.GetActiveLoadOrderIndex(blankDifferentMasterDependentEsp);
+  index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
   EXPECT_EQ(2, index);
 }
 

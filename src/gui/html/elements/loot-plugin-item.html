@@ -56,7 +56,7 @@
       :host-context(body[data-state=editing]) paper-item-body[two-line] {
         min-height: 40px;
       }
-      div[slot=item-icon] {
+      #icon {
         border: 1px solid var(--loot-plugin-item-index-border-color, var(--paper-grey-400));
         border-radius: 50%;
         color: var(--secondary-text-color);
@@ -103,10 +103,18 @@
       paper-ripple {
         color: var(--accent-color);
       }
+      #icon.lightMaster {
+        white-space: pre;
+        line-height: 12px;
+        width: 32px;
+        position: relative;
+        left: -3px;
+        border: none;
+      }
     </style>
     <paper-icon-item>
       <paper-ripple></paper-ripple>
-      <div slot="item-icon" hidden$="[[!computeLoadOrderIndexText(loadOrderIndex)]]">[[computeLoadOrderIndexText(loadOrderIndex)]]</div>
+      <div id="icon" slot="item-icon" class$="[[computeLoadOrderIndexClass(isLightMaster)]]" hidden$="[[!computeLoadOrderIndexText(loadOrderIndex)]]">[[computeLoadOrderIndexText(loadOrderIndex)]]</div>
       <paper-item-body two-line>
         <div id="primary"><slot></slot></div>
         <div id="secondary" secondary>
@@ -157,6 +165,10 @@
             type: Boolean,
             value: false,
           },
+          isLightMaster: {
+            type: Boolean,
+            value: false,
+          }
         };
       }
 
@@ -167,8 +179,19 @@
         return '';
       }
 
+      computeLoadOrderIndexClass(isLightMaster) {
+        if (isLightMaster) {
+          return 'lightMaster';
+        }
+        return '';
+      }
+
       computeLoadOrderIndexText(loadOrderIndex) {
         if (loadOrderIndex > -1) {
+          if (this.isLightMaster) {
+            return `FE\n#${loadOrderIndex}`;
+          }
+
           const number = loadOrderIndex.toString(16);
           if (number.length === 1) {
             return `0${number}`;
@@ -191,11 +214,17 @@
       }
 
       updateContent(pluginData) {
+        this.loadOrderIndex = pluginData.loadOrderIndex;
         this.priority = pluginData.priority;
         this.globalPriority = pluginData.globalPriority;
         this.isEditorOpen = pluginData.isEditorOpen;
         this.hasUserEdits = pluginData.hasUserEdits;
-        this.loadOrderIndex = pluginData.loadOrderIndex;
+        this.isLightMaster = pluginData.isLightMaster;
+
+        const indexText = this.computeLoadOrderIndexText(this.loadOrderIndex);
+        this.$.icon.className = this.computeLoadOrderIndexClass(this.isLightMaster);
+        this.$.icon.hidden = !indexText;
+        this.$.icon.textContent = indexText;
       }
     }
 

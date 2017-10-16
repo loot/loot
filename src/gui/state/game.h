@@ -68,8 +68,8 @@ public:
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
 
   bool IsPluginActive(const std::string& pluginName) const;
-  short GetActiveLoadOrderIndex(const std::string& pluginName) const;
-  short GetActiveLoadOrderIndex(const std::string& pluginName, const std::vector<std::string>& loadOrder) const;
+  short GetActiveLoadOrderIndex(const std::shared_ptr<const PluginInterface>& plugin, 
+                                const std::vector<std::string>& loadOrder) const;
 
   std::vector<std::string> SortPlugins();
   void IncrementLoadOrderSortCount();

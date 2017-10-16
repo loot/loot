@@ -273,6 +273,7 @@
           isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
           loadOrderIndex: this.loadOrderIndex,
+          isLightMaster: this.isLightMaster,
         },
       }));
     }

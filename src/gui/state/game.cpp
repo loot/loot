@@ -244,25 +244,24 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
   return gameHandle_->IsPluginActive(pluginName);
 }
 
-short Game::GetActiveLoadOrderIndex(const std::string& pluginName) const {
-  return GetActiveLoadOrderIndex(pluginName, gameHandle_->GetLoadOrder());
-}
-
-short Game::GetActiveLoadOrderIndex(const std::string& pluginName, const std::vector<std::string>& loadOrder) const {
+short Game::GetActiveLoadOrderIndex(const std::shared_ptr<const PluginInterface>& plugin, 
+                                    const std::vector<std::string>& loadOrder) const {
   // Get the full load order, then count the number of active plugins until the
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return -1.
 
-  if (!gameHandle_->IsPluginActive(pluginName))
+  if (!IsPluginActive(plugin->GetName()))
     return -1;
 
   short numberOfActivePlugins = 0;
-  for (const std::string& plugin : loadOrder) {
-    if (boost::iequals(plugin, pluginName))
+  for (const std::string& otherPluginName : loadOrder) {
+    if (boost::iequals(otherPluginName, plugin->GetName()))
       return numberOfActivePlugins;
 
-    if (gameHandle_->IsPluginActive(plugin))
+    auto otherPlugin = GetPlugin(otherPluginName);
+    if (plugin->IsLightMaster() == otherPlugin->IsLightMaster() && IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
+    }
   }
 
   return -1;
