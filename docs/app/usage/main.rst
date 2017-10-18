@@ -47,7 +47,13 @@ Main Menu
 A few items in the main menu are not self-explanatory:
 
 - "Redate Plugins" is provided so that Skyrim and Skyrim Special Edition modders may set the load order for the Creation Kit. It is only available for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
-- "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard.
+- "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard. The columns are:
+
+  1. Hexadecimal load order index
+  2. Decimal load order index
+  3. Decimal light master index
+  4. Plugin name
+
 - "Copy Content" copies the data displayed in LOOT's cards to the clipboard as YAML-formatted text.
 - "Refresh Content" re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open. Refreshing content will also discard any CRCs that were previously calculated, as they may have changed.
 
@@ -56,7 +62,7 @@ Users running LOOT natively on Linux must have ``xclip`` installed in order to u
 Plugin Cards & Sidebar Items
 ============================
 
-Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's PLUGINS tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
+Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's PLUGINS tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Light masters also have their decimal light master index displayed. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
 
 The plugin card's header holds the following information, some of which is only displayed if applicable:
 
@@ -65,6 +71,7 @@ The plugin card's header holds the following information, some of which is only 
 - The plugin's version number, extracted from its description field.
 - The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting, except the the CRC of the game's main master file, which is never displayed.
 - The "Master File" icon.
+- The "Light Master File" icon.
 - The "Empty Plugin" icon.
 - The "Loads Archive" icon.
 - The "Verified clean" icon.

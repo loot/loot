@@ -4,6 +4,67 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.12.0 - Unreleased
+===================
+
+Added
+-----
+
+- Support for light master (``.esl``) plugins.
+
+  - Light masters are indicated by a new icon on their plugin cards, and the
+    "Master File" icon is suppressed for light masters.
+  - In the sidebar, light masters all have the in-game load order index ``FE``,
+    followed by the decimal index of the light master relative to only other
+    light masters.
+  - A new general warning message will be displayed when 255 normal plugins and
+    at least one light master are active.
+  - A new error message will be displayed for light masters that depend on a
+    non-master plugin.
+
+- Support for specifying the game local app data path using the
+  ``--game-appdata-path=<path>`` command line parameter.
+- Japanese translation by kuroko137.
+
+Changed
+-------
+
+- "Copy Load Order" now includes a third column for the index of light masters
+  relative to other light masters.
+- Updated the UI to use Polymer v2 and updated LOOT's custom elements to use the
+  Custom Elements v1 syntax.
+- LOOT API log messages are now included in the ``LOOTDebugLog.txt`` file, and
+  are no longer written to ``LOOTAPIDebugLog.txt``.
+- Updated the Chinese translation.
+- Updated the Danish translation.
+- Updated the Russian translation.
+- Updated the LOOT API to v0.12.0.
+- Updated Lodash to b4.17.4.
+- Updated Octokat to v0.8.0.
+- Updated CEF to v3.3163.1671.g700dc25.
+
+Fixed
+-----
+
+- Error when adding a Bash Tag with no condition using the metadata editor.
+- Detection of Skyrim and Skyrim SE when LOOT is installed in the same directory
+  as both.
+- General messages disappearing when cancelling a sort.
+- Blank messages' content in the metadata editor after updating the masterlist.
+- LOOT window size/position not restoring maximised state correctly.
+- "Cannot read property of 'text' of undefined" error messages when something
+  went wrong.
+- Significant fixes in the LOOT API:
+
+  - A crash would occur when loading an plugin that had invalid data past its
+    header. Such plugins are now just silently ignored.
+  - LOOT would not resolve game or local data paths that are junction links
+    correctly, which caused problems later when trying to perform actions such
+    as loading plugins.
+  - Performing a masterlist update on a branch where the remote and local
+    histories had diverged would fail. The existing local branch is now
+    discarded and the remote branch checked out anew, as intended.
+
 0.11.0 - 2017-05-13
 ===================
 
