@@ -24,8 +24,6 @@
 
 #include "gui/helpers.h"
 
-#include "loot/windows_encoding_converters.h"
-
 #ifdef _WIN32
 #   ifndef UNICODE
 #       define UNICODE
@@ -49,4 +47,20 @@ void OpenInDefaultApplication(const boost::filesystem::path& file) {
     throw std::system_error(errno, std::system_category(), "Failed to open file in its default application.");
 #endif
 }
+
+#ifdef _WIN32
+std::wstring ToWinWide(const std::string& str) {
+  size_t len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+  std::wstring wstr(len, 0);
+  MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], len);
+  return wstr;
+}
+
+std::string FromWinWide(const std::wstring& wstr) {
+  size_t len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
+  std::string str(len, 0);
+  WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
+  return str;
+}
+#endif
 }

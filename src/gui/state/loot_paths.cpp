@@ -29,7 +29,7 @@ Fallout: New Vegas.
 #include <boost/locale.hpp>
 
 #include "loot/api.h"
-#include "loot/windows_encoding_converters.h"
+#include "gui/helpers.h"
 
 #ifdef _WIN32
 #   ifndef UNICODE

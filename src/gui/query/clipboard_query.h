@@ -28,8 +28,8 @@ along with LOOT.  If not, see
 #include <cstdlib>
 #include <regex>
 
+#include "gui/helpers.h"
 #include "gui/query/query.h"
-#include "loot/windows_encoding_converters.h"
 
 namespace loot {
 class ClipboardQuery : public Query {

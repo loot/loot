@@ -28,5 +28,11 @@
 
 namespace loot {
 void OpenInDefaultApplication(const boost::filesystem::path& file);
+
+#ifdef _WIN32
+std::wstring ToWinWide(const std::string& str);
+
+std::string FromWinWide(const std::wstring& wstr);
+#endif
 }
 #endif
