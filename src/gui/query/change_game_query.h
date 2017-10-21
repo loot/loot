@@ -25,9 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CHANGE_GAME_QUERY
 #define LOOT_GUI_QUERY_CHANGE_GAME_QUERY
 
-#include <boost/locale.hpp>
-
-#include "gui/query/json.h"
 #include "gui/query/get_game_data_query.h"
 
 namespace loot {
