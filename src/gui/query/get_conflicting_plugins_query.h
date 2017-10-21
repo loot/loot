@@ -60,7 +60,7 @@ public:
 private:
   YAML::Node getConflictMetadata(const std::shared_ptr<const PluginInterface>& plugin,
                                  const std::shared_ptr<const PluginInterface>& otherPlugin) {
-    YAML::Node pluginNode = generateDerivedMetadata(otherPlugin->GetName());
+    YAML::Node pluginNode = generateDerivedMetadata(otherPlugin->GetName()).toYaml();
 
     pluginNode["name"] = otherPlugin->GetName();
     pluginNode["crc"] = otherPlugin->GetCRC();

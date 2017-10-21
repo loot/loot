@@ -109,7 +109,7 @@ private:
 
     // Now merge masterlist and userlist metadata and evaluate,
     // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
+    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
 
     for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
       const std::string key = it->first.as<std::string>();
@@ -122,9 +122,12 @@ private:
   std::string generateJsonResponse(const std::vector<std::shared_ptr<const PluginInterface>>& plugins) {
     YAML::Node gameNode;
 
+    auto masterlistInfo = getMasterlistInfo();
+
     // ID the game using its folder value.
     gameNode["folder"] = state_.getCurrentGame().FolderName();
-    gameNode["masterlist"] = getMasterlistInfo();
+    gameNode["masterlist"]["revision"] = masterlistInfo.revision_id;
+    gameNode["masterlist"]["date"] = masterlistInfo.revision_date;
     gameNode["globalMessages"] = getGeneralMessages();
     gameNode["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
 

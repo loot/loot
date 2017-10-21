@@ -141,7 +141,7 @@ private:
 
     // Now rederive the derived metadata.
     BOOST_LOG_TRIVIAL(trace) << "Returning newly derived display metadata.";
-    YAML::Node derivedMetadata = generateDerivedMetadata(newMetadata.GetName());
+    YAML::Node derivedMetadata = generateDerivedMetadata(newMetadata.GetName()).toYaml();
     if (derivedMetadata.size() > 0)
       return JSON::stringify(derivedMetadata);
     else

@@ -75,7 +75,7 @@ private:
 
   YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin,
                                      const std::vector<std::string>& loadOrder) {
-    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
+    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
 
     pluginNode["name"] = plugin->GetName();
     pluginNode["crc"] = plugin->GetCRC();

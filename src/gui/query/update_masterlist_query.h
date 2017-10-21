@@ -61,7 +61,10 @@ private:
 
   std::string generateJsonResponse() {
     YAML::Node gameMetadata;
-    gameMetadata["masterlist"] = getMasterlistInfo();
+    
+    auto masterlistInfo = getMasterlistInfo();
+    gameMetadata["masterlist"]["revision"] = masterlistInfo.revision_id;
+    gameMetadata["masterlist"]["date"] = masterlistInfo.revision_date;
 
     // Store bash tags in case they have changed.
     gameMetadata["bashTags"] = game_.GetKnownBashTags();
@@ -96,7 +99,7 @@ private:
 
     // Now merge masterlist and userlist metadata and evaluate,
     // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName());
+    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
 
     for (const auto &pair : derivedNode) {
       const std::string key = pair.first.as<std::string>();

@@ -30,6 +30,7 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
+#include "gui/query/derived_plugin_metadata.h"
 #include "gui/query/query.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/git_state_error.h"
@@ -62,13 +63,13 @@ protected:
     return metadata;
   }
 
-  YAML::Node generateDerivedMetadata(const std::string& pluginName) {
+  DerivedPluginMetadata generateDerivedMetadata(const std::string& pluginName) {
       // Now rederive the displayed metadata from the masterlist and userlist.
     std::shared_ptr<const PluginInterface> plugin = nullptr;
     try {
       plugin = state_.getCurrentGame().GetPlugin(pluginName);
     } catch (...) {
-      return YAML::Node();
+      return DerivedPluginMetadata::none();
     }
 
     PluginMetadata master(pluginName);
@@ -94,27 +95,24 @@ protected:
     return generateDerivedMetadata(plugin, master, user);
   }
 
-  YAML::Node getMasterlistInfo() {
+  MasterlistInfo getMasterlistInfo() {
     using boost::locale::translate;
 
-    YAML::Node masterlistNode;
+    MasterlistInfo info;
     try {
-      MasterlistInfo info = state_.getCurrentGame().GetMasterlistInfo();
+      info = state_.getCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
-
-      masterlistNode["revision"] = info.revision_id;
-      masterlistNode["date"] = info.revision_date;
     } catch (FileAccessError &) {
       BOOST_LOG_TRIVIAL(warning) << "No masterlist present at " << state_.getCurrentGame().MasterlistPath();
-      masterlistNode["revision"] = translate("N/A: No masterlist present").str();
-      masterlistNode["date"] = translate("N/A: No masterlist present").str();
+      info.revision_id = translate("N/A: No masterlist present").str();
+      info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError &) {
       BOOST_LOG_TRIVIAL(warning) << "Not a Git repository: " << state_.getCurrentGame().MasterlistPath().parent_path();
-      masterlistNode["revision"] = translate("Unknown: Git repository missing").str();
-      masterlistNode["date"] = translate("Unknown: Git repository missing").str();
+      info.revision_id = translate("Unknown: Git repository missing").str();
+      info.revision_date = translate("Unknown: Git repository missing").str();
     }
 
-    return masterlistNode;
+    return info;
   }
 
   static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
@@ -142,35 +140,13 @@ private:
     return simpleMessages;
   }
 
-  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& file,
+  DerivedPluginMetadata generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& file,
                                      const PluginMetadata& masterlistEntry,
                                      const PluginMetadata& userlistEntry) {
     auto metadata = getNonUserMetadata(file, masterlistEntry);
     metadata.MergeMetadata(userlistEntry);
 
-    return toYaml(file, metadata);
-  }
-
-  YAML::Node toYaml(const std::shared_ptr<const PluginInterface>& plugin,
-                    const PluginMetadata& metadata) {
-    BOOST_LOG_TRIVIAL(info) << "Using message language: " << state_.getLanguage();
-
-    YAML::Node pluginNode;
-    pluginNode["name"] = plugin->GetName();
-    pluginNode["priority"] = metadata.GetLocalPriority().GetValue();
-    pluginNode["globalPriority"] = metadata.GetGlobalPriority().GetValue();
-    pluginNode["messages"] = metadata.GetSimpleMessages(state_.getLanguage());
-    pluginNode["tags"] = metadata.GetTags();
-    pluginNode["isDirty"] = !metadata.GetDirtyInfo().empty();
-    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName());
-
-    if (!metadata.GetCleanInfo().empty()) {
-      pluginNode["cleanedWith"] = metadata.GetCleanInfo().begin()->GetCleaningUtility();
-    } else {
-      pluginNode["cleanedWith"] = "";
-    }
-
-    return pluginNode;
+    return DerivedPluginMetadata(state_, file, metadata);
   }
 
   void addSuffixIfModified(MasterlistInfo& info) {

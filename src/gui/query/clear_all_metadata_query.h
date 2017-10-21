@@ -66,7 +66,7 @@ private:
   std::string getDerivedMetadataJson(const std::vector<std::string>& userlistPluginNames) {
     YAML::Node pluginsNode;
     for (const auto &pluginName : userlistPluginNames) {
-      pluginsNode.push_back(generateDerivedMetadata(pluginName));
+      pluginsNode.push_back(generateDerivedMetadata(pluginName).toYaml());
     }
 
     if (pluginsNode.size() > 0)
