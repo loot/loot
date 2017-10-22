@@ -69,8 +69,8 @@ private:
     // Store bash tags in case they have changed.
     gameMetadata["bashTags"] = game_.GetKnownBashTags();
 
-    // Store global messages in case they have changed.
-    gameMetadata["globalMessages"] = getGeneralMessages();
+    // Store general messages in case they have changed.
+    gameMetadata["generalMessages"] = getGeneralMessages();
 
     for (const auto& plugin : game_.GetPlugins()) {
       gameMetadata["plugins"].push_back(generateDerivedMetadata(plugin));

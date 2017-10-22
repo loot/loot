@@ -37,14 +37,14 @@ describe('Game', () => {
       game.folder.should.equal('test');
     });
 
-    it('should set globalMessages to an empty array by default', () => {
+    it('should set generalMessages to an empty array by default', () => {
       const game = new loot.Game({}, l10n);
-      game.globalMessages.should.deep.equal([]);
+      game.generalMessages.should.deep.equal([]);
     });
 
-    it('should set globalMessages to the object\'s value if defined', () => {
-      const game = new loot.Game({ globalMessages: ['test'] }, l10n);
-      game.globalMessages.should.deep.equal(['test']);
+    it('should set generalMessages to the object\'s value if defined', () => {
+      const game = new loot.Game({ generalMessages: ['test'] }, l10n);
+      game.generalMessages.should.deep.equal(['test']);
     });
 
     it('should set masterlist to an empty object by default', () => {
@@ -126,7 +126,7 @@ describe('Game', () => {
     });
   });
 
-  describe('#globalMessages', () => {
+  describe('#generalMessages', () => {
     let game;
     let handleEvent;
 
@@ -144,7 +144,7 @@ describe('Game', () => {
       };
       document.addEventListener('loot-game-global-messages-change', handleEvent);
 
-      game.globalMessages = game.globalMessages;
+      game.generalMessages = game.generalMessages;
       setTimeout(done, 100);
     });
 
@@ -162,7 +162,7 @@ describe('Game', () => {
       };
       document.addEventListener('loot-game-global-messages-change', handleEvent);
 
-      game.globalMessages = newMessages;
+      game.generalMessages = newMessages;
     });
   });
 
@@ -258,8 +258,8 @@ describe('Game', () => {
       };
       document.addEventListener('loot-game-plugins-change', handleEvent);
 
-      /* Set global messages to check they are also counted in the totals. */
-      game.globalMessages = [
+      /* Set general messages to check they are also counted in the totals. */
+      game.generalMessages = [
         { type: 'warn' },
         { type: 'error' },
       ];
@@ -283,7 +283,7 @@ describe('Game', () => {
     });
 
     it('should return a structure containing converted plugin and message structures', () => {
-      game._globalMessages = [{
+      game._generalMessages = [{
         type: 'say',
         condition: 'file("foo.esp")',
         language: 'fr',
@@ -317,7 +317,7 @@ describe('Game', () => {
       }];
 
       game.getContent().should.deep.equal({
-        messages: game._globalMessages,
+        messages: game._generalMessages,
         plugins: [{
           name: game._plugins[0].name,
           crc: game._plugins[0].crc,
@@ -520,7 +520,7 @@ describe('Game', () => {
       game.plugins[1].loadOrderIndex.should.equal(1);
     });
 
-    it('should set the global messages to the second passed parameter', () => {
+    it('should set the general messages to the second passed parameter', () => {
       game.oldLoadOrder = [new loot.Plugin({
         name: 'foo',
         loadOrderIndex: 1,
@@ -531,7 +531,7 @@ describe('Game', () => {
 
       game.cancelSort([], ['foo']);
 
-      game.globalMessages.should.deep.equal(['foo']);
+      game.generalMessages.should.deep.equal(['foo']);
     });
   });
 

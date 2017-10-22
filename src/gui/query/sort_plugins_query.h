@@ -88,8 +88,8 @@ private:
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
     YAML::Node node;
 
-    // Store global messages in case they have changed.
-    node["globalMessages"] = getGeneralMessages();
+    // Store general messages in case they have changed.
+    node["generalMessages"] = getGeneralMessages();
 
     for (const auto &pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);

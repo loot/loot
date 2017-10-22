@@ -12,7 +12,7 @@
 }(this, (marked, Plugin) => class {
   constructor(obj, l10n) {
     this.folder = obj.folder || '';
-    this.globalMessages = obj.globalMessages || [];
+    this.generalMessages = obj.generalMessages || [];
     this.masterlist = obj.masterlist || {};
     this.plugins = obj.plugins || [];
     this.bashTags = obj.bashTags || [];
@@ -36,11 +36,11 @@
     this._folder = folder;
   }
 
-  get globalMessages() {
-    return this._globalMessages;
+  get generalMessages() {
+    return this._generalMessages;
   }
 
-  set globalMessages(globalMessages) {
+  set generalMessages(generalMessages) {
     /* Update the message counts. */
     let oldTotal = 0;
     let newTotal = 0;
@@ -49,9 +49,9 @@
     let oldErrs = 0;
     let newErrs = 0;
 
-    if (this._globalMessages) {
-      oldTotal = this._globalMessages.length;
-      this._globalMessages.forEach((message) => {
+    if (this._generalMessages) {
+      oldTotal = this._generalMessages.length;
+      this._generalMessages.forEach((message) => {
         if (message.type === 'warn') {
           oldWarns += 1;
         } else if (message.type === 'error') {
@@ -60,10 +60,10 @@
       });
     }
 
-    if (globalMessages) {
-      newTotal = globalMessages.length;
+    if (generalMessages) {
+      newTotal = generalMessages.length;
 
-      globalMessages.forEach((message) => {
+      generalMessages.forEach((message) => {
         if (message.type === 'warn') {
           newWarns += 1;
         } else if (message.type === 'error') {
@@ -78,12 +78,12 @@
           totalDiff: newTotal - oldTotal,
           warningDiff: newWarns - oldWarns,
           errorDiff: newErrs - oldErrs,
-          messages: globalMessages,
+          messages: generalMessages,
         },
       }));
     }
 
-    this._globalMessages = globalMessages;
+    this._generalMessages = generalMessages;
   }
 
   get masterlist() {
@@ -120,7 +120,7 @@
   }
 
   set plugins(plugins) {
-    /* Update plugin and message counts. Unlike for global messages
+    /* Update plugin and message counts. Unlike for general messages
        it's not worth calculating the count differences, just count
        from zero. */
     let totalMessageNo = 0;
@@ -129,10 +129,10 @@
     let activePluginNo = 0;
     let dirtyPluginNo = 0;
 
-    /* Include global messages in the count. */
-    if (this.globalMessages) {
-      totalMessageNo = this.globalMessages.length;
-      this.globalMessages.forEach((message) => {
+    /* Include general messages in the count. */
+    if (this.generalMessages) {
+      totalMessageNo = this.generalMessages.length;
+      this.generalMessages.forEach((message) => {
         if (message.type === 'warn') {
           warnMessageNo += 1;
         } else if (message.type === 'error') {
@@ -182,8 +182,8 @@
     let messages = [];
     let plugins = [];
 
-    if (this.globalMessages) {
-      messages = this.globalMessages;
+    if (this.generalMessages) {
+      messages = this.generalMessages;
     }
     if (this.plugins) {
       plugins = this.plugins.map(plugin => ({
@@ -233,7 +233,7 @@
     this.oldLoadOrder = undefined;
   }
 
-  cancelSort(plugins, globalMessages) {
+  cancelSort(plugins, generalMessages) {
     this.plugins = this.oldLoadOrder;
     this.oldLoadOrder = undefined;
 
@@ -245,7 +245,7 @@
     });
 
     /* Update general messages */
-    this.globalMessages = globalMessages;
+    this.generalMessages = generalMessages;
   }
 
   clearMetadata(plugins) {
@@ -290,7 +290,7 @@
     document.getElementById('dirtyPluginNo').textContent = evt.detail.dirtyPluginNo;
   }
 
-  static onGlobalMessagesChange(evt) {
+  static ongeneralMessagesChange(evt) {
     document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
     document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
     document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;

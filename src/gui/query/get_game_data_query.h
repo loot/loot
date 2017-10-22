@@ -128,7 +128,7 @@ private:
     gameNode["folder"] = state_.getCurrentGame().FolderName();
     gameNode["masterlist"]["revision"] = masterlistInfo.revision_id;
     gameNode["masterlist"]["date"] = masterlistInfo.revision_date;
-    gameNode["globalMessages"] = getGeneralMessages();
+    gameNode["generalMessages"] = getGeneralMessages();
     gameNode["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
 
     // Now store plugin data.

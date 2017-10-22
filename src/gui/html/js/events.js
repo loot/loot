@@ -54,9 +54,9 @@ function onChangeGame(evt) {
 
     /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
-    const globalMessages = document.getElementById('summary').getElementsByTagName('ul')[0];
-    while (globalMessages.firstElementChild) {
-      globalMessages.removeChild(globalMessages.firstElementChild);
+    const generalMessages = document.getElementById('summary').getElementsByTagName('ul')[0];
+    while (generalMessages.firstElementChild) {
+      generalMessages.removeChild(generalMessages.firstElementChild);
     }
 
     /* Parse the data sent from C++. */
@@ -82,7 +82,7 @@ function updateMasterlist() {
     if (result) {
       /* Update JS variables. */
       loot.game.masterlist = result.masterlist;
-      loot.game.globalMessages = result.globalMessages;
+      loot.game.generalMessages = result.generalMessages;
 
       /* Update Bash Tag autocomplete suggestions. */
       loot.DOM.initialiseAutocompleteBashTags(result.bashTags);
@@ -121,10 +121,10 @@ function onSortPlugins() {
       return;
     }
 
-    loot.game.globalMessages = result.globalMessages;
+    loot.game.generalMessages = result.generalMessages;
 
     if (!result.plugins) {
-      const message = result.globalMessages.find(item => (
+      const message = result.generalMessages.find(item => (
         item.text.startsWith('Cyclic interaction detected')
       ));
       const text = message ? message.text : 'see general messages for details.';
