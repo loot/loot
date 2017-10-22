@@ -40,7 +40,7 @@ class MetadataQuery : public Query {
 protected:
   MetadataQuery(LootState& state) : state_(state) {}
 
-  std::vector<SimpleMessage> getGeneralMessages() {
+  std::vector<SimpleMessage> getGeneralMessages() const {
     std::vector<Message> messages = state_.getCurrentGame().GetMessages();
 
     return toSimpleMessages(messages, state_.getLanguage());
@@ -64,55 +64,34 @@ protected:
   }
 
   DerivedPluginMetadata generateDerivedMetadata(const std::string& pluginName) {
-      // Now rederive the displayed metadata from the masterlist and userlist.
-    std::shared_ptr<const PluginInterface> plugin = nullptr;
     try {
-      plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+
+      return generateDerivedMetadata(plugin);
     } catch (...) {
       return DerivedPluginMetadata::none();
     }
-
-    PluginMetadata master(pluginName);
-    try {
-      master = state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
-    } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s masterlist metadata contains a condition that could not be evaluated. Details: " << e.what();
-      master.SetMessages({
-        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
-      });
-    }
-
-    PluginMetadata user(pluginName);
-    try {
-      user = state_.getCurrentGame().GetUserMetadata(pluginName, true);
-    } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s user metadata contains a condition that could not be evaluated. Details: " << e.what();
-      user.SetMessages({
-        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
-      });
-    }
-
-    return generateDerivedMetadata(plugin, master, user);
   }
 
-  MasterlistInfo getMasterlistInfo() {
-    using boost::locale::translate;
+  DerivedPluginMetadata generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
+    BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
+    auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
+    masterlistMetadata = getNonUserMetadata(plugin, masterlistMetadata);
 
-    MasterlistInfo info;
-    try {
-      info = state_.getCurrentGame().GetMasterlistInfo();
-      addSuffixIfModified(info);
-    } catch (FileAccessError &) {
-      BOOST_LOG_TRIVIAL(warning) << "No masterlist present at " << state_.getCurrentGame().MasterlistPath();
-      info.revision_id = translate("N/A: No masterlist present").str();
-      info.revision_date = translate("N/A: No masterlist present").str();
-    } catch (GitStateError &) {
-      BOOST_LOG_TRIVIAL(warning) << "Not a Git repository: " << state_.getCurrentGame().MasterlistPath().parent_path();
-      info.revision_id = translate("Unknown: Git repository missing").str();
-      info.revision_date = translate("Unknown: Git repository missing").str();
-    }
+    BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
+    auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
 
-    return info;
+    auto master = evaluateMasterlistMetadata(plugin->GetName());
+    auto user = evaluateUserlistMetadata(plugin->GetName());
+
+    auto evaluatedMetadata = getNonUserMetadata(plugin, master);
+    evaluatedMetadata.MergeMetadata(user);
+
+    auto derived = DerivedPluginMetadata(state_, plugin, evaluatedMetadata);
+
+    derived.storeUnevaluatedMetadata(masterlistMetadata, userlistMetadata);
+
+    return derived;
   }
 
   std::string generateJsonResponse(const std::string& pluginName) {
@@ -136,20 +115,10 @@ protected:
 
     // Now store plugin data.
     for (auto it = firstPlugin; it != lastPlugin; ++it) {
-      response["plugins"].push_back(generateDerivedMetadata(*it));
+      response["plugins"].push_back(generateDerivedMetadata(*it).toYaml());
     }
 
     return JSON::stringify(response);
-  }
-
-  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
-    std::vector<EditorMessage> list;
-
-    for (const auto& message : messages) {
-      list.push_back(EditorMessage(message, language));
-    }
-
-    return list;
   }
 
 private:
@@ -167,48 +136,52 @@ private:
     return simpleMessages;
   }
 
-  DerivedPluginMetadata generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& file,
-                                     const PluginMetadata& masterlistEntry,
-                                     const PluginMetadata& userlistEntry) {
-    auto metadata = getNonUserMetadata(file, masterlistEntry);
-    metadata.MergeMetadata(userlistEntry);
+  PluginMetadata evaluateMasterlistMetadata(const std::string& pluginName) {
+    PluginMetadata master(pluginName);
+    try {
+      master = state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
+    } catch (std::exception& e) {
+      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s masterlist metadata contains a condition that could not be evaluated. Details: " << e.what();
+      master.SetMessages({
+        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
+      });
+    }
 
-    return DerivedPluginMetadata(state_, file, metadata);
+    return master;
   }
 
-  static YAML::Node convertPluginMetadata(const PluginMetadata& metadata, const std::string& language) {
-    YAML::Node node;
+  PluginMetadata evaluateUserlistMetadata(const std::string& pluginName) {
+    PluginMetadata user(pluginName);
+    try {
+      user = state_.getCurrentGame().GetUserMetadata(pluginName, true);
+    } catch (std::exception& e) {
+      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s user metadata contains a condition that could not be evaluated. Details: " << e.what();
+      user.SetMessages({
+        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
+      });
+    }
 
-    node["enabled"] = metadata.IsEnabled();
-    node["priority"] = metadata.GetLocalPriority().GetValue();
-    node["globalPriority"] = metadata.GetGlobalPriority().GetValue();
-    node["after"] = metadata.GetLoadAfterFiles();
-    node["req"] = metadata.GetRequirements();
-    node["inc"] = metadata.GetIncompatibilities();
-    node["msg"] = toEditorMessages(metadata.GetMessages(), language);
-    node["tag"] = metadata.GetTags();
-    node["dirty"] = metadata.GetDirtyInfo();
-    node["clean"] = metadata.GetCleanInfo();
-    node["url"] = metadata.GetLocations();
-
-    return node;
+    return user;
   }
 
-  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
-    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
+  MasterlistInfo getMasterlistInfo() {
+    using boost::locale::translate;
 
-    BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
-    auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
-    masterlistMetadata = getNonUserMetadata(plugin, masterlistMetadata);
-    if (!masterlistMetadata.HasNameOnly())
-      pluginNode["masterlist"] = convertPluginMetadata(masterlistMetadata, state_.getLanguage());
+    MasterlistInfo info;
+    try {
+      info = state_.getCurrentGame().GetMasterlistInfo();
+      addSuffixIfModified(info);
+    } catch (FileAccessError &) {
+      BOOST_LOG_TRIVIAL(warning) << "No masterlist present at " << state_.getCurrentGame().MasterlistPath();
+      info.revision_id = translate("N/A: No masterlist present").str();
+      info.revision_date = translate("N/A: No masterlist present").str();
+    } catch (GitStateError &) {
+      BOOST_LOG_TRIVIAL(warning) << "Not a Git repository: " << state_.getCurrentGame().MasterlistPath().parent_path();
+      info.revision_id = translate("Unknown: Git repository missing").str();
+      info.revision_date = translate("Unknown: Git repository missing").str();
+    }
 
-    BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
-    auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
-    if (!userlistMetadata.HasNameOnly())
-      pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage());
-
-    return pluginNode;
+    return info;
   }
 
   void addSuffixIfModified(MasterlistInfo& info) {

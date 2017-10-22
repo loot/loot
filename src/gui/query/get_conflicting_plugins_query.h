@@ -60,7 +60,7 @@ private:
                                  const std::shared_ptr<const PluginInterface>& otherPlugin) {
     YAML::Node pluginNode;
 
-    pluginNode["metadata"] = generateDerivedMetadata(otherPlugin->GetName()).toYaml();
+    pluginNode["metadata"] = generateDerivedMetadata(otherPlugin).toYaml();
     pluginNode["conflicts"] = doPluginsConflict(plugin, otherPlugin);
 
     return pluginNode;

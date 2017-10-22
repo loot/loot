@@ -81,7 +81,7 @@ private:
 
     for (const auto &pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      response["plugins"].push_back(generateDerivedMetadata(plugin->GetName()).toYaml());
+      response["plugins"].push_back(generateDerivedMetadata(plugin).toYaml());
     }
 
     return JSON::stringify(response);

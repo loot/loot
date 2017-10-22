@@ -50,6 +50,13 @@ public:
     }
     messages = evaluatedMetadata.GetSimpleMessages(state.getLanguage());
     tags = evaluatedMetadata.GetTags();
+
+    language = state.getLanguage();
+  }
+
+  void storeUnevaluatedMetadata(PluginMetadata masterlistEntry, PluginMetadata userlistEntry) {
+    masterlistMetadata = masterlistEntry;
+    userMetadata = userlistEntry;
   }
 
   static DerivedPluginMetadata none() {
@@ -81,6 +88,14 @@ public:
     pluginNode["messages"] = messages;
     pluginNode["tags"] = tags;
 
+    if (!masterlistMetadata.HasNameOnly()) {
+      pluginNode["masterlist"] = toYaml(masterlistMetadata, language);
+    }
+
+    if (!userMetadata.HasNameOnly()) {
+      pluginNode["userlist"] = toYaml(userMetadata, language);
+    }
+
     return pluginNode;
   }
 
@@ -102,7 +117,40 @@ private:
   std::vector<SimpleMessage> messages;
   std::set<Tag> tags;
 
+  PluginMetadata masterlistMetadata;
+  PluginMetadata userMetadata;
+
+  std::string language;
+
   DerivedPluginMetadata() {}
+
+  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
+    std::vector<EditorMessage> list;
+
+    for (const auto& message : messages) {
+      list.push_back(EditorMessage(message, language));
+    }
+
+    return list;
+  }
+
+  static YAML::Node toYaml(const PluginMetadata& metadata, const std::string& language) {
+    YAML::Node node;
+
+    node["enabled"] = metadata.IsEnabled();
+    node["priority"] = metadata.GetLocalPriority().GetValue();
+    node["globalPriority"] = metadata.GetGlobalPriority().GetValue();
+    node["after"] = metadata.GetLoadAfterFiles();
+    node["req"] = metadata.GetRequirements();
+    node["inc"] = metadata.GetIncompatibilities();
+    node["msg"] = toEditorMessages(metadata.GetMessages(), language);
+    node["tag"] = metadata.GetTags();
+    node["dirty"] = metadata.GetDirtyInfo();
+    node["clean"] = metadata.GetCleanInfo();
+    node["url"] = metadata.GetLocations();
+
+    return node;
+  }
 };
 }
 
