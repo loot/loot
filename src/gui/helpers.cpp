@@ -43,7 +43,7 @@ void OpenInDefaultApplication(const boost::filesystem::path& file) {
   if ((int)ret <= 32)
     throw std::system_error(GetLastError(), std::system_category(), "Failed to open file in its default application.");
 #else
-  if (system(("/usr/bin/xdg-open" + file.string()).c_str()) != 0)
+  if (system(("/usr/bin/xdg-open " + file.string()).c_str()) != 0)
     throw std::system_error(errno, std::system_category(), "Failed to open file in its default application.");
 #endif
 }
