@@ -136,8 +136,16 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
     return new CopyMetadataQuery(lootState_, request["args"][0].as<string>());
   else if (name == "discardUnappliedChanges")
     return new DiscardUnappliedChangesQuery(lootState_);
-  else if (name == "editorClosed")
-    return new EditorClosedQuery(lootState_, request["args"][0]);
+  else if (name == "editorClosed") {
+    try {
+      auto applyEdits = request["args"][0]["applyEdits"].as<bool>();
+      auto metadata = request["args"][0]["metadata"].as<PluginMetadata>();
+
+      return new EditorClosedQuery(lootState_, applyEdits, metadata);
+    } catch (YAML::RepresentationException& e) {
+      throw YAML::RepresentationException(YAML::Mark::null_mark(), e.msg);
+    }
+  }
   else if (name == "editorOpened")
     return new EditorOpenedQuery(lootState_);
   else if (name == "getConflictingPlugins")

@@ -363,30 +363,24 @@ function onEditorClose(evt) {
   /* Update the plugin's editor state tracker */
   plugin.isEditorOpen = false;
 
-  let promise;
   /* evt.detail is true if the apply button was pressed. */
-  if (evt.detail) {
-    /* Need to record the editor control values and work out what's
-       changed, and update any UI elements necessary. Offload the
-       majority of the work to the C++ side of things. */
-    const edits = evt.target.readFromEditor(plugin);
-    promise = loot.query('editorClosed', edits).then(JSON.parse).then((result) => {
-      if (result) {
-        plugin.update(result);
+  const metadata = evt.target.readFromEditor(plugin);
+  const payload = {
+    applyEdits: evt.detail,
+    metadata,
+  };
 
-        plugin.userlist = edits.userlist;
+  loot.query('editorClosed', payload).then(JSON.parse).then((result) => {
+    plugin.update(result);
 
-        /* Now perform search again. If there is no current search, this won't
-           do anything. */
-        document.getElementById('searchBar').search();
-      }
-    });
-  } else {
-    /* Don't need to record changes, but still need to notify C++ side that
-       the editor has been closed. */
-    promise = loot.query('editorClosed', 'null');
-  }
-  promise.catch(loot.handlePromiseError).then(() => {
+    /* Explicitly set userlist to detect when user edits have been removed
+       (so result.userlist is not present). */
+    plugin.userlist = result.userlist;
+
+    /* Now perform search again. If there is no current search, this won't
+       do anything. */
+    document.getElementById('searchBar').search();
+  }).catch(loot.handlePromiseError).then(() => {
     loot.state.exitEditingState();
     /* Sidebar items have been resized. */
     document.getElementById('cardsNav').notifyResize();

@@ -320,66 +320,42 @@ loot-editor-close
 
       readFromEditor(oldData) {
         /* Need to turn all the editor controls' values into data to
-           process. The control values can be compared with the existing
-           values to determine what's been changed, and masterlist rows in
+           process. Determining whether or not priority values have changed
+           is left to the C++ side of things, and masterlist rows in
            the tables can be ignored because they're immutable. */
 
-        const plugin = {
+        const metadata = {
           name: this.querySelector('h1').textContent,
-          userlist: {},
+          enabled: this.$.enableEdits.checked,
+          priority: parseInt(this.$.priorityValue.value, 10),
+          global_priority: parseInt(this.$.globalPriorityValue.value, 10),
         };
-
-        /* If either of the priority values have been changed, the
-           base priority value they're derived from will have
-           changed, so record both. */
-        const localPriority = parseInt(this.$.priorityValue.value, 10);
-        const globalPriority = parseInt(this.$.globalPriorityValue.value, 10);
-        if (localPriority !== oldData.priority) {
-          plugin.priority = localPriority;
-        }
-        if (globalPriority !== oldData.globalPriority) {
-          plugin.globalPriority = globalPriority;
-        }
-
-        if (localPriority !== 0 && (localPriority !== oldData.priority
-          || (oldData.userlist
-          && localPriority === oldData.userlist.priority))) {
-          plugin.userlist.priority = localPriority;
-        }
-
-        if (globalPriority !== 0 && (globalPriority !== oldData.globalPriority
-          || (oldData.userlist
-          && globalPriority === oldData.userlist.globalPriority))) {
-          plugin.userlist.globalPriority = globalPriority;
-        }
-
-        plugin.userlist.enabled = this.$.enableEdits.checked;
 
         const tables = this.shadowRoot.querySelectorAll('editable-table');
         for (let j = 0; j < tables.length; ++j) {
           const rowsData = tables[j].getRowsData(true);
           if (rowsData.length > 0) {
             if (tables[j].parentElement.id === 'after') {
-              plugin.userlist.after = rowsData;
+              metadata.after = rowsData;
             } else if (tables[j].parentElement.id === 'req') {
-              plugin.userlist.req = rowsData;
+              metadata.req = rowsData;
             } else if (tables[j].parentElement.id === 'inc') {
-              plugin.userlist.inc = rowsData;
+              metadata.inc = rowsData;
             } else if (tables[j].parentElement.id === 'message') {
-              plugin.userlist.msg = rowsData;
+              metadata.msg = rowsData;
             } else if (tables[j].parentElement.id === 'tags') {
-              plugin.userlist.tag = rowsData.map(loot.Plugin.tagFromRowData);
+              metadata.tag = rowsData.map(loot.Plugin.tagFromRowData);
             } else if (tables[j].parentElement.id === 'dirty') {
-              plugin.userlist.dirty = rowsData.map(this._rowDataToCrc);
+              metadata.dirty = rowsData.map(this._rowDataToCrc);
             } else if (tables[j].parentElement.id === 'clean') {
-              plugin.userlist.clean = rowsData.map(this._rowDataToCrc);
+              metadata.clean = rowsData.map(this._rowDataToCrc);
             } else if (tables[j].parentElement.id === 'url') {
-              plugin.userlist.url = rowsData;
+              metadata.url = rowsData;
             }
           }
         }
 
-        return plugin;
+        return metadata;
       }
 
       _onHideEditor(evt) {
