@@ -30,21 +30,28 @@ class DerivedPluginMetadata {
 public:
   DerivedPluginMetadata(LootState& state,
                         const std::shared_ptr<const PluginInterface>& file,
-                        const PluginMetadata& metadata) {
+                        const PluginMetadata& evaluatedMetadata) {
     name = file->GetName();
-    priority = metadata.GetLocalPriority().GetValue();
-    globalPriority = metadata.GetGlobalPriority().GetValue();
-    messages = metadata.GetSimpleMessages(state.getLanguage());
-    tags = metadata.GetTags();
-    isDirty = !metadata.GetDirtyInfo().empty();
-    loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file, 
+    version = file->GetVersion();
+    isActive = state.getCurrentGame().IsPluginActive(name);
+    isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
+    isEmpty = file->IsEmpty();
+    isMaster = file->IsMaster();
+    loadsArchive = file->LoadsArchive();
+
+    crc = file->GetCRC();
+    loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
       state.getCurrentGame().GetLoadOrder());
 
-    if (!metadata.GetCleanInfo().empty()) {
-      cleanedWith = metadata.GetCleanInfo().begin()->GetCleaningUtility();
+    priority = evaluatedMetadata.GetLocalPriority().GetValue();
+    globalPriority = evaluatedMetadata.GetGlobalPriority().GetValue();
+    if (!evaluatedMetadata.GetCleanInfo().empty()) {
+      cleanedWith = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
     }
+    messages = evaluatedMetadata.GetSimpleMessages(state.getLanguage());
+    tags = evaluatedMetadata.GetTags();
   }
-    
+
   static DerivedPluginMetadata none() {
     return DerivedPluginMetadata();
   }
@@ -56,27 +63,44 @@ public:
   YAML::Node toYaml() const {
     YAML::Node pluginNode;
 
+    pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
     pluginNode["name"] = name;
+    pluginNode["version"] = version;
+    pluginNode["isActive"] = isActive;
+    pluginNode["isDirty"] = isDirty;
+    pluginNode["isEmpty"] = isEmpty;
+    pluginNode["isMaster"] = isMaster;
+    pluginNode["loadsArchive"] = loadsArchive;
+
+    pluginNode["crc"] = crc;
+    pluginNode["loadOrderIndex"] = loadOrderIndex;
+
     pluginNode["priority"] = priority;
     pluginNode["globalPriority"] = globalPriority;
+    pluginNode["cleanedWith"] = cleanedWith;
     pluginNode["messages"] = messages;
     pluginNode["tags"] = tags;
-    pluginNode["isDirty"] = isDirty;
-    pluginNode["loadOrderIndex"] = loadOrderIndex;
-    pluginNode["cleanedWith"] = cleanedWith;
-    
+
     return pluginNode;
   }
 
 private:
   std::string name;
+  std::string version;
+  bool isActive;
+  bool isDirty;
+  bool isEmpty;
+  bool isMaster;
+  bool loadsArchive;
+
+  uint32_t crc;
+  short loadOrderIndex;
+
   short priority;
   short globalPriority;
+  std::string cleanedWith;
   std::vector<SimpleMessage> messages;
   std::set<Tag> tags;
-  bool isDirty;
-  short loadOrderIndex;
-  std::string cleanedWith;
 
   DerivedPluginMetadata() {}
 };

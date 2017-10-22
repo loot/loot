@@ -61,8 +61,6 @@ private:
     YAML::Node pluginNode;
 
     pluginNode["metadata"] = generateDerivedMetadata(otherPlugin->GetName()).toYaml();
-    pluginNode["metadata"]["crc"] = otherPlugin->GetCRC();
-    pluginNode["metadata"]["isEmpty"] = otherPlugin->IsEmpty();
     pluginNode["conflicts"] = doPluginsConflict(plugin, otherPlugin);
 
     return pluginNode;

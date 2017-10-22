@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2017-08-04 17:06+0100\n"
+"POT-Creation-Date: 2017-11-03 18:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgid ""
 "plugins?"
 msgstr ""
 
-#: src/gui/html/js/events.js:192 src/gui/html/js/events.js:408
+#: src/gui/html/js/events.js:192 src/gui/html/js/events.js:402
 msgid "Clear"
 msgstr ""
 
@@ -104,18 +104,18 @@ msgstr ""
 msgid "metadata edits"
 msgstr ""
 
-#: src/gui/html/js/events.js:404
+#: src/gui/html/js/events.js:398
 #, javascript-format
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.js:408
+#: src/gui/html/js/events.js:402
 #, javascript-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 
-#: src/gui/html/js/events.js:423
+#: src/gui/html/js/events.js:417
 #, javascript-format
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/gui/html/js/initialise.js:257
+#: src/gui/html/js/initialise.js:262
 #, javascript-format
 msgid "A [new release](%s) of LOOT is available."
 msgstr ""
@@ -678,19 +678,19 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/metadata_query.h:80 src/gui/query/metadata_query.h:90
+#: src/gui/query/metadata_query.h:81 src/gui/query/metadata_query.h:91
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:109 src/gui/query/metadata_query.h:110
+#: src/gui/query/metadata_query.h:107 src/gui/query/metadata_query.h:108
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:113 src/gui/query/metadata_query.h:114
+#: src/gui/query/metadata_query.h:111 src/gui/query/metadata_query.h:112
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/query/metadata_query.h:178 src/gui/query/metadata_query.h:179
+#: src/gui/query/metadata_query.h:160 src/gui/query/metadata_query.h:161
 msgid "(edited)"
 msgstr ""
 
@@ -787,14 +787,14 @@ msgstr ""
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:137
+#: src/gui/state/loot_state.cpp:84
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:144
+#: src/gui/state/loot_state.cpp:91
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:212
+#: src/gui/state/loot_state.cpp:159
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""

@@ -73,18 +73,6 @@ private:
     state_.getCurrentGame().SetLoadOrder(plugins);
   }
 
-  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin,
-                                     const std::vector<std::string>& loadOrder) {
-    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
-
-    pluginNode["name"] = plugin->GetName();
-    pluginNode["crc"] = plugin->GetCRC();
-    pluginNode["isEmpty"] = plugin->IsEmpty();
-    pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin->GetName(), loadOrder);
-
-    return pluginNode;
-  }
-
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
     YAML::Node response;
 
@@ -93,7 +81,7 @@ private:
 
     for (const auto &pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      response["plugins"].push_back(generateDerivedMetadata(plugin, plugins));
+      response["plugins"].push_back(generateDerivedMetadata(plugin->GetName()).toYaml());
     }
 
     return JSON::stringify(response);

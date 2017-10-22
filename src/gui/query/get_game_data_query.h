@@ -86,16 +86,7 @@ private:
   }
 
   YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
-    YAML::Node pluginNode;
-
-    pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
-    pluginNode["name"] = plugin->GetName();
-    pluginNode["isActive"] = state_.getCurrentGame().IsPluginActive(plugin->GetName());
-    pluginNode["isEmpty"] = plugin->IsEmpty();
-    pluginNode["isMaster"] = plugin->IsMaster();
-    pluginNode["loadsArchive"] = plugin->LoadsArchive();
-    pluginNode["crc"] = plugin->GetCRC();
-    pluginNode["version"] = plugin->GetVersion();
+    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
 
     BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
     auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
@@ -106,15 +97,6 @@ private:
     auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
     if (!userlistMetadata.HasNameOnly())
       pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage());
-
-    // Now merge masterlist and userlist metadata and evaluate,
-    // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
-
-    for (auto it = derivedNode.begin(); it != derivedNode.end(); ++it) {
-      const std::string key = it->first.as<std::string>();
-      pluginNode[key] = it->second;
-    }
 
     return pluginNode;
   }
