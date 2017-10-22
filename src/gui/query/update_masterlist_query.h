@@ -34,8 +34,7 @@ class UpdateMasterlistQuery : public MetadataQuery {
 public:
   UpdateMasterlistQuery(LootState& state) :
     MetadataQuery(state),
-    game_(state.getCurrentGame()),
-    language_(state.getLanguage()) {}
+    game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
@@ -43,8 +42,8 @@ public:
     if (!updateMasterlist())
       return "null";
 
-    // Now regenerate the JS-side masterlist data if the masterlist was changed.
-    return generateJsonResponse();
+    auto plugins = game_.GetPlugins();
+    return generateJsonResponse(plugins.cbegin(), plugins.cend());
   }
 
 private:
@@ -59,58 +58,7 @@ private:
     }
   }
 
-  std::string generateJsonResponse() {
-    YAML::Node response;
-
-    auto masterlistInfo = getMasterlistInfo();
-    response["masterlist"]["revision"] = masterlistInfo.revision_id;
-    response["masterlist"]["date"] = masterlistInfo.revision_date;
-
-    // Store bash tags in case they have changed.
-    response["bashTags"] = game_.GetKnownBashTags();
-
-    // Store general messages in case they have changed.
-    response["generalMessages"] = getGeneralMessages();
-
-    for (const auto& plugin : game_.GetPlugins()) {
-      response["plugins"].push_back(generateDerivedMetadata(plugin));
-    }
-
-    return JSON::stringify(response);
-  }
-
-  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
-    YAML::Node pluginNode;
-
-    auto masterlistMetadata = game_.GetMasterlistMetadata(plugin->GetName());
-    auto metadata = getNonUserMetadata(plugin, masterlistMetadata);
-
-    if (!metadata.HasNameOnly()) {
-        // Now add the masterlist metadata to the pluginNode.
-      pluginNode["masterlist"]["after"] = metadata.GetLoadAfterFiles();
-      pluginNode["masterlist"]["req"] = metadata.GetRequirements();
-      pluginNode["masterlist"]["inc"] = metadata.GetIncompatibilities();
-      pluginNode["masterlist"]["msg"] = toEditorMessages(metadata.GetMessages(), language_);
-      pluginNode["masterlist"]["tag"] = metadata.GetTags();
-      pluginNode["masterlist"]["dirty"] = metadata.GetDirtyInfo();
-      pluginNode["masterlist"]["clean"] = metadata.GetCleanInfo();
-      pluginNode["masterlist"]["url"] = metadata.GetLocations();
-    }
-
-    // Now merge masterlist and userlist metadata and evaluate,
-    // putting any resulting metadata into the base of the pluginNode.
-    YAML::Node derivedNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
-
-    for (const auto &pair : derivedNode) {
-      const std::string key = pair.first.as<std::string>();
-      pluginNode[key] = pair.second;
-    }
-
-    return pluginNode;
-  }
-
   gui::Game& game_;
-  const std::string language_;
 };
 }
 

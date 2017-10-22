@@ -121,6 +121,27 @@ protected:
     return JSON::stringify(response);
   }
 
+  template<typename InputIterator>
+  std::string generateJsonResponse(InputIterator firstPlugin, InputIterator lastPlugin) {
+    YAML::Node response;
+
+    auto masterlistInfo = getMasterlistInfo();
+
+    // ID the game using its folder value.
+    response["folder"] = state_.getCurrentGame().FolderName();
+    response["masterlist"]["revision"] = masterlistInfo.revision_id;
+    response["masterlist"]["date"] = masterlistInfo.revision_date;
+    response["generalMessages"] = getGeneralMessages();
+    response["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
+
+    // Now store plugin data.
+    for (auto it = firstPlugin; it != lastPlugin; ++it) {
+      response["plugins"].push_back(generateDerivedMetadata(*it));
+    }
+
+    return JSON::stringify(response);
+  }
+
   static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
     std::vector<EditorMessage> list;
 
@@ -153,6 +174,41 @@ private:
     metadata.MergeMetadata(userlistEntry);
 
     return DerivedPluginMetadata(state_, file, metadata);
+  }
+
+  static YAML::Node convertPluginMetadata(const PluginMetadata& metadata, const std::string& language) {
+    YAML::Node node;
+
+    node["enabled"] = metadata.IsEnabled();
+    node["priority"] = metadata.GetLocalPriority().GetValue();
+    node["globalPriority"] = metadata.GetGlobalPriority().GetValue();
+    node["after"] = metadata.GetLoadAfterFiles();
+    node["req"] = metadata.GetRequirements();
+    node["inc"] = metadata.GetIncompatibilities();
+    node["msg"] = toEditorMessages(metadata.GetMessages(), language);
+    node["tag"] = metadata.GetTags();
+    node["dirty"] = metadata.GetDirtyInfo();
+    node["clean"] = metadata.GetCleanInfo();
+    node["url"] = metadata.GetLocations();
+
+    return node;
+  }
+
+  YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
+    YAML::Node pluginNode = MetadataQuery::generateDerivedMetadata(plugin->GetName()).toYaml();
+
+    BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
+    auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
+    masterlistMetadata = getNonUserMetadata(plugin, masterlistMetadata);
+    if (!masterlistMetadata.HasNameOnly())
+      pluginNode["masterlist"] = convertPluginMetadata(masterlistMetadata, state_.getLanguage());
+
+    BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
+    auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
+    if (!userlistMetadata.HasNameOnly())
+      pluginNode["userlist"] = convertPluginMetadata(userlistMetadata, state_.getLanguage());
+
+    return pluginNode;
   }
 
   void addSuffixIfModified(MasterlistInfo& info) {
