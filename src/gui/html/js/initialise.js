@@ -126,26 +126,28 @@
   }
 
   function setLanguages() {
-    return query('getLanguages').then(JSON.parse).then(dom.fillLanguagesList);
+    return query('getLanguages')
+      .then(JSON.parse)
+      .then((response) => response.languages)
+      .then(dom.fillLanguagesList);
   }
 
   function getInitErrors() {
-    return query('getInitErrors').then((result) => {
-      const errors = JSON.parse(result);
-      if (errors.length > 0) {
-        throw new Error(result);
-      }
-    });
+    return query('getInitErrors')
+      .then(JSON.parse)
+      .then((response) => {
+        if (response.errors.length > 0) {
+          throw new Error(response.errors);
+        }
+      });
   }
 
-  function getErrorMessages(string) {
-    /* error.message could be a message string or JSON encoding a list of
-       message strings. */
-    try {
-      return JSON.parse(string);
-    } catch (error) {
-      return [string];
+  function getErrorMessages(object) {
+    if (Array.isArray(object)) {
+      return object;
     }
+
+    return [object];
   }
 
   function handleInitErrors(error) {
@@ -156,13 +158,16 @@
   }
 
   function setGameTypes() {
-    return query('getGameTypes').then(JSON.parse).then(dom.fillGameTypesList);
+    return query('getGameTypes')
+      .then(JSON.parse)
+      .then((response) => response.gameTypes)
+      .then(dom.fillGameTypesList);
   }
 
   function setInstalledGames(appData) {
-    return query('getInstalledGames').then(JSON.parse).then((installedGames) => {
-      appData.installedGames = installedGames;
-      dom.updateEnabledGames(installedGames);
+    return query('getInstalledGames').then(JSON.parse).then((response) => {
+      appData.installedGames = response.installedGames;
+      dom.updateEnabledGames(response.installedGames);
     });
   }
 

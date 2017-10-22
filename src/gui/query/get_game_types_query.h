@@ -39,16 +39,16 @@ public:
 
 private:
   static std::string getGameTypesAsJson() {
-    YAML::Node temp;
+    YAML::Node response;
 
-    temp.push_back(GameSettings(GameType::tes4).FolderName());
-    temp.push_back(GameSettings(GameType::tes5).FolderName());
-    temp.push_back(GameSettings(GameType::tes5se).FolderName());
-    temp.push_back(GameSettings(GameType::fo3).FolderName());
-    temp.push_back(GameSettings(GameType::fonv).FolderName());
-    temp.push_back(GameSettings(GameType::fo4).FolderName());
+    response["gameTypes"].push_back(GameSettings(GameType::tes4).FolderName());
+    response["gameTypes"].push_back(GameSettings(GameType::tes5).FolderName());
+    response["gameTypes"].push_back(GameSettings(GameType::tes5se).FolderName());
+    response["gameTypes"].push_back(GameSettings(GameType::fo3).FolderName());
+    response["gameTypes"].push_back(GameSettings(GameType::fonv).FolderName());
+    response["gameTypes"].push_back(GameSettings(GameType::fo4).FolderName());
 
-    return JSON::stringify(temp);
+    return JSON::stringify(response);
   }
 };
 }

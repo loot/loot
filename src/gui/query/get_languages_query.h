@@ -38,15 +38,15 @@ public:
 
 private:
   static std::string getLanguagesAsJson() {
-    YAML::Node temp;
+    YAML::Node response;
     for (const auto& language : getLanguages()) {
       YAML::Node lang;
       lang["locale"] = language.first;
       lang["name"] = language.second;
-      temp.push_back(lang);
+      response["languages"].push_back(lang);
     }
 
-    return JSON::stringify(temp);
+    return JSON::stringify(response);
   }
 
   static std::map<std::string, std::string> getLanguages() {

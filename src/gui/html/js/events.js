@@ -193,12 +193,12 @@ function onClearAllMetadata() {
     if (!result) {
       return;
     }
-    loot.query('clearAllMetadata').then(JSON.parse).then((plugins) => {
-      if (!plugins) {
+    loot.query('clearAllMetadata').then(JSON.parse).then((response) => {
+      if (!response || !response.plugins) {
         return;
       }
 
-      loot.game.clearMetadata(plugins);
+      loot.game.clearMetadata(response.plugins);
 
       loot.Dialog.showNotification(loot.l10n.translate('All user-added metadata has been cleared.'));
     }).catch(loot.handlePromiseError);
@@ -313,10 +313,10 @@ function onCloseSettingsDialog(evt) {
   };
 
   /* Send the settings back to the C++ side. */
-  loot.query('closeSettings', settings).then(JSON.parse).then((installedGames) => {
-    loot.installedGames = installedGames;
-    loot.DOM.updateEnabledGames(installedGames);
-    if (installedGames.length > 0) {
+  loot.query('closeSettings', settings).then(JSON.parse).then((response) => {
+    loot.installedGames = response.installedGames;
+    loot.DOM.updateEnabledGames(loot.installedGames);
+    if (loot.installedGames.length > 0) {
       loot.DOM.enableGameOperations(true);
     }
   }).catch(loot.handlePromiseError)

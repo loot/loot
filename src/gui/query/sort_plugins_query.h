@@ -86,20 +86,17 @@ private:
   }
 
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
-    YAML::Node node;
+    YAML::Node response;
 
     // Store general messages in case they have changed.
-    node["generalMessages"] = getGeneralMessages();
+    response["generalMessages"] = getGeneralMessages();
 
     for (const auto &pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      node["plugins"].push_back(generateDerivedMetadata(plugin, plugins));
+      response["plugins"].push_back(generateDerivedMetadata(plugin, plugins));
     }
 
-    if (node.size() > 0)
-      return JSON::stringify(node);
-    else
-      return "null";
+    return JSON::stringify(response);
   }
 
   LootState& state_;

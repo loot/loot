@@ -64,15 +64,12 @@ private:
   }
 
   std::string getDerivedMetadataJson(const std::vector<std::string>& userlistPluginNames) {
-    YAML::Node pluginsNode;
+    YAML::Node response;
     for (const auto &pluginName : userlistPluginNames) {
-      pluginsNode.push_back(generateDerivedMetadata(pluginName).toYaml());
+      response["plugins"].push_back(generateDerivedMetadata(pluginName).toYaml());
     }
 
-    if (pluginsNode.size() > 0)
-      return JSON::stringify(pluginsNode);
-    else
-      return "[]";
+    return JSON::stringify(response);
   }
 
   gui::Game& game_;

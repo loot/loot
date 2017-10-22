@@ -41,11 +41,10 @@ public:
 
 private:
   std::string getInstalledGamesAsJson() const {
-    YAML::Node temp = YAML::Node(state_.getInstalledGames());
-    if (temp.size() > 0)
-      return JSON::stringify(temp);
-    else
-      return "[]";
+    YAML::Node response;
+    response["installedGames"] = state_.getInstalledGames();
+
+    return JSON::stringify(response);
   }
 
   LootState& state_;

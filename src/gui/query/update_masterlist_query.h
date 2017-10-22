@@ -60,23 +60,23 @@ private:
   }
 
   std::string generateJsonResponse() {
-    YAML::Node gameMetadata;
-    
+    YAML::Node response;
+
     auto masterlistInfo = getMasterlistInfo();
-    gameMetadata["masterlist"]["revision"] = masterlistInfo.revision_id;
-    gameMetadata["masterlist"]["date"] = masterlistInfo.revision_date;
+    response["masterlist"]["revision"] = masterlistInfo.revision_id;
+    response["masterlist"]["date"] = masterlistInfo.revision_date;
 
     // Store bash tags in case they have changed.
-    gameMetadata["bashTags"] = game_.GetKnownBashTags();
+    response["bashTags"] = game_.GetKnownBashTags();
 
     // Store general messages in case they have changed.
-    gameMetadata["generalMessages"] = getGeneralMessages();
+    response["generalMessages"] = getGeneralMessages();
 
     for (const auto& plugin : game_.GetPlugins()) {
-      gameMetadata["plugins"].push_back(generateDerivedMetadata(plugin));
+      response["plugins"].push_back(generateDerivedMetadata(plugin));
     }
 
-    return JSON::stringify(gameMetadata);
+    return JSON::stringify(response);
   }
 
   YAML::Node generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {

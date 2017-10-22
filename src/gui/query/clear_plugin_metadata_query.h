@@ -44,11 +44,9 @@ public:
     game_.SaveUserMetadata();
 
     // Now rederive the displayed metadata from the masterlist.
-    YAML::Node derivedMetadata = generateDerivedMetadata(pluginName_).toYaml();
-    if (derivedMetadata.size() > 0)
-      return JSON::stringify(derivedMetadata);
+    YAML::Node response = generateDerivedMetadata(pluginName_).toYaml();
 
-    return "null";
+    return JSON::stringify(response);
   }
 
 private:

@@ -120,23 +120,23 @@ private:
   }
 
   std::string generateJsonResponse(const std::vector<std::shared_ptr<const PluginInterface>>& plugins) {
-    YAML::Node gameNode;
+    YAML::Node response;
 
     auto masterlistInfo = getMasterlistInfo();
 
     // ID the game using its folder value.
-    gameNode["folder"] = state_.getCurrentGame().FolderName();
-    gameNode["masterlist"]["revision"] = masterlistInfo.revision_id;
-    gameNode["masterlist"]["date"] = masterlistInfo.revision_date;
-    gameNode["generalMessages"] = getGeneralMessages();
-    gameNode["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
+    response["folder"] = state_.getCurrentGame().FolderName();
+    response["masterlist"]["revision"] = masterlistInfo.revision_id;
+    response["masterlist"]["date"] = masterlistInfo.revision_date;
+    response["generalMessages"] = getGeneralMessages();
+    response["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
 
     // Now store plugin data.
     for (const auto& plugin : plugins) {
-      gameNode["plugins"].push_back(generateDerivedMetadata(plugin));
+      response["plugins"].push_back(generateDerivedMetadata(plugin));
     }
 
-    return JSON::stringify(gameNode);
+    return JSON::stringify(response);
   }
 
   LootState& state_;

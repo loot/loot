@@ -41,8 +41,8 @@ public:
     }
     state_.decrementUnappliedChangeCounter();
 
-    auto derived = generateDerivedMetadata(metadata_.GetName()).toYaml();
-    return JSON::stringify(derived);
+    auto response = generateDerivedMetadata(metadata_.GetName()).toYaml();
+    return JSON::stringify(response);
   }
 
 private:

@@ -87,14 +87,16 @@
        conflicts. */
     this.conflictingPluginNames = [targetPluginName];
 
-    return query('getConflictingPlugins', targetPluginName).then(JSON.parse).then((plugins) => {
-      plugins.forEach((plugin) => {
-        if (plugin.conflicts) {
-          this.conflictingPluginNames.push(plugin.name);
-        }
-      });
-      return plugins;
-    }).catch(handlePromiseError);
+    return query('getConflictingPlugins', targetPluginName)
+      .then(JSON.parse)
+      .then((response) => {
+        return response.plugins.map((plugin) => {
+          if (plugin.conflicts) {
+            this.conflictingPluginNames.push(plugin.metadata.name);
+          }
+          return plugin.metadata;
+        });
+      }).catch(handlePromiseError);
   }
 
   areAnyFiltersActive() {

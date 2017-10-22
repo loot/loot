@@ -34,10 +34,10 @@ class GetVersionQuery : public Query {
 public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-    YAML::Node node;
-    node["release"] = gui::Version::string();
-    node["build"] = gui::Version::revision;
-    return JSON::stringify(node);
+    YAML::Node response;
+    response["release"] = gui::Version::string();
+    response["build"] = gui::Version::revision;
+    return JSON::stringify(response);
   }
 };
 }

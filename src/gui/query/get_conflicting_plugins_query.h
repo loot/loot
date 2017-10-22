@@ -40,40 +40,42 @@ public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName_;
 
-    // Checking for FormID overlap will only work if the plugins have been loaded, so check if
-    // the plugins have been fully loaded, and if not load all plugins.
+    // Checking for FormID overlap will only work if the plugins have been
+    // loaded, so check if the plugins have been fully loaded, and if not load
+    // all plugins.
     if (!game_.ArePluginsFullyLoaded())
       game_.LoadAllInstalledPlugins(false);
 
-    YAML::Node node;
+    YAML::Node response;
     auto plugin = game_.GetPlugin(pluginName_);
     for (const auto& otherPlugin : game_.GetPlugins()) {
-      node.push_back(getConflictMetadata(plugin, otherPlugin));
+      response["plugins"].push_back(getConflictMetadata(plugin, otherPlugin));
     }
 
-    if (node.size() > 0)
-      return JSON::stringify(node);
-
-    return "[]";
+    return JSON::stringify(response);
   }
 
 private:
   YAML::Node getConflictMetadata(const std::shared_ptr<const PluginInterface>& plugin,
                                  const std::shared_ptr<const PluginInterface>& otherPlugin) {
-    YAML::Node pluginNode = generateDerivedMetadata(otherPlugin->GetName()).toYaml();
+    YAML::Node pluginNode;
 
-    pluginNode["name"] = otherPlugin->GetName();
-    pluginNode["crc"] = otherPlugin->GetCRC();
-    pluginNode["isEmpty"] = otherPlugin->IsEmpty();
-
-    if (plugin->DoFormIDsOverlap(*otherPlugin)) {
-      BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << otherPlugin->GetName();
-      pluginNode["conflicts"] = true;
-    } else {
-      pluginNode["conflicts"] = false;
-    }
+    pluginNode["metadata"] = generateDerivedMetadata(otherPlugin->GetName()).toYaml();
+    pluginNode["metadata"]["crc"] = otherPlugin->GetCRC();
+    pluginNode["metadata"]["isEmpty"] = otherPlugin->IsEmpty();
+    pluginNode["conflicts"] = doPluginsConflict(plugin, otherPlugin);
 
     return pluginNode;
+  }
+
+  bool doPluginsConflict(const std::shared_ptr<const PluginInterface>& plugin,
+                          const std::shared_ptr<const PluginInterface>& otherPlugin) {
+    if (plugin->DoFormIDsOverlap(*otherPlugin)) {
+      BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << otherPlugin->GetName();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   gui::Game& game_;
