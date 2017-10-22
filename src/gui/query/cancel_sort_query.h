@@ -43,10 +43,12 @@ public:
     YAML::Node response;
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
     for (const auto& plugin : loadOrder) {
-      YAML::Node pluginNode;
+      auto pluginObject = state_.getCurrentGame().GetPlugin(plugin);
+      auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(pluginObject, loadOrder);
 
+      YAML::Node pluginNode;
       pluginNode["name"] = plugin;
-      pluginNode["loadOrderIndex"] = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, loadOrder);
+      pluginNode["loadOrderIndex"] = loadOrderIndex;
 
       response["plugins"].push_back(pluginNode);
     }
