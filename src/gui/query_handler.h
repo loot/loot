@@ -26,7 +26,6 @@
 #define LOOT_GUI_QUERY_HANDLER
 
 #include <include/wrapper/cef_message_router.h>
-#include <yaml-cpp/yaml.h>
 
 #include "gui/state/loot_state.h"
 #include "gui/query/query.h"
@@ -46,7 +45,7 @@ public:
 private:
   CefRefPtr<Query> createQuery(CefRefPtr<CefBrowser> browser,
                                CefRefPtr<CefFrame> frame,
-                               const YAML::Node& request);
+                               const std::string& request);
 
   LootState& lootState_;
 };

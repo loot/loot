@@ -36,6 +36,7 @@
 #include <include/cef_app.h>
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
+#include <yaml-cpp/yaml.h>
 
 #include "gui/editor_message.h"
 #include "gui/loot_app.h"
@@ -90,28 +91,25 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
                            const CefString& request,
                            bool persistent,
                            CefRefPtr<Callback> callback) {
-  YAML::Node parsedRequest;
   try {
-    parsedRequest = JSON::parse(request.ToString());
+    auto query = createQuery(browser, frame, request.ToString());
+
+    if (!query)
+      return false;
+
+    CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
   } catch (exception &e) {
     BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request.ToString() << "\": " << e.what();
     callback->Failure(-1, e.what());
-    return true;
   }
-
-  auto query = createQuery(browser, frame, parsedRequest);
-
-  if (!query)
-    return false;
-
-  CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
 
   return true;
 }
 
 CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
                                            CefRefPtr<CefFrame> frame,
-                                           const YAML::Node& request) {
+                                           const std::string& requestString) {
+  YAML::Node request = JSON::parse(requestString);
   const string name = request["name"].as<string>();
 
   if (name == "applySort")
