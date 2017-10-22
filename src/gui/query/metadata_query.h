@@ -115,6 +115,12 @@ protected:
     return info;
   }
 
+  std::string generateJsonResponse(const std::string& pluginName) {
+    YAML::Node response = generateDerivedMetadata(pluginName).toYaml();
+
+    return JSON::stringify(response);
+  }
+
   static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
     std::vector<EditorMessage> list;
 

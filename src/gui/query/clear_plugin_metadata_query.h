@@ -43,10 +43,7 @@ public:
     game_.ClearUserMetadata(pluginName_);
     game_.SaveUserMetadata();
 
-    // Now rederive the displayed metadata from the masterlist.
-    YAML::Node response = generateDerivedMetadata(pluginName_).toYaml();
-
-    return JSON::stringify(response);
+    return generateJsonResponse(pluginName_);
   }
 
 private:
