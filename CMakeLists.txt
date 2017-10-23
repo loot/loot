@@ -51,6 +51,13 @@ ENDIF ()
 
 find_package(Boost REQUIRED COMPONENTS atomic log log_setup regex locale thread date_time chrono filesystem system iostreams)
 
+if (NOT PROTOBUF_ROOT STREQUAL "")
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROTOBUF_ROOT})
+    get_filename_component(Protobuf_PROTOC_EXECUTABLE "${PROTOBUF_ROOT}/bin/protoc" ABSOLUTE)
+endif ()
+
+find_package(Protobuf REQUIRED)
+
 ExternalProject_Add(GTest
                     PREFIX "external"
                     URL "https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
@@ -144,6 +151,8 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 # General Settings
 ##############################
 
+set(LOOT_SCHEMA_DIR "${CMAKE_SOURCE_DIR}/src/schema")
+
 set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -157,7 +166,9 @@ set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc"
+                  "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
+                  "${LOOT_SCHEMA_DIR}/request.pb.cc")
 
 set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
@@ -206,7 +217,9 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/version.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h")
+                  "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h"
+                  "${LOOT_SCHEMA_DIR}/metadata.pb.h"
+                  "${LOOT_SCHEMA_DIR}/request.pb.h")
 
 set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -239,6 +252,7 @@ source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_SRC})
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
+                     ${LOOT_SCHEMA_DIR}
                      ${LIBLOADORDER_INCLUDE_DIRS}
                      ${LIBGIT2_INCLUDE_DIRS}
                      ${CEF_INCLUDE_DIRS}
@@ -246,6 +260,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${Boost_INCLUDE_DIRS}
                      ${YAML_CPP_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
+                     ${Protobuf_INCLUDE_DIRS}
                      ${PSEUDOSEM_INCLUDE_DIRS})
 
 ##############################
@@ -267,6 +282,7 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14")
 
     set (LOOT_GUI_LIBS X11 pthread)
+    set (LOOT_TEST_LIBS pthread)
 ENDIF ()
 
 IF (MSVC)
@@ -293,15 +309,24 @@ ENDIF ()
 # Define Targets
 ##############################
 
+add_custom_command(
+    OUTPUT "${LOOT_SCHEMA_DIR}/request.pb.cc"
+           "${LOOT_SCHEMA_DIR}/request.pb.h"
+           "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
+           "${LOOT_SCHEMA_DIR}/metadata.pb.h"
+    COMMAND ${Protobuf_PROTOC_EXECUTABLE} -I=${LOOT_SCHEMA_DIR} --cpp_out=${LOOT_SCHEMA_DIR} ${LOOT_SCHEMA_DIR}/request.proto ${LOOT_SCHEMA_DIR}/metadata.proto
+    DEPENDS "${LOOT_SCHEMA_DIR}/request.proto" "${LOOT_SCHEMA_DIR}/metadata.proto"
+)
+
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 add_dependencies     (LOOT cef loot_api yaml-cpp)
-target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${YAML_CPP_LIBRARIES})
+target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${Protobuf_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
 add_dependencies     (loot_gui_tests loot_api yaml-cpp GTest testing-metadata testing-plugins)
-target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${YAML_CPP_LIBRARIES})
+target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_TEST_LIBS})
 
 ##############################
 # Set Target-Specific Flags

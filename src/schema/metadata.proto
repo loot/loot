@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package loot.protobuf;
+
+message File {
+    string name = 1;
+    string display = 2;
+    string condition = 3;
+}
+
+message MessageContent {
+    string text = 1;
+    string language = 2;
+}
+
+message Tag {
+    string name = 1;
+    string condition = 2;
+    bool is_addition = 3;
+}
+
+message CleaningData {
+    uint32 crc = 1;
+    uint32 itm = 2;
+    uint32 udr = 3;
+    uint32 nav = 4;
+    string util = 5;
+    repeated MessageContent info = 6;
+}
+
+message Location {
+    string link = 1;
+    string name = 2;
+}

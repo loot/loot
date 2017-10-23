@@ -36,7 +36,6 @@
 #include <include/cef_app.h>
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
-#include <yaml-cpp/yaml.h>
 
 #include "gui/editor_message.h"
 #include "gui/cef/loot_app.h"
@@ -69,12 +68,16 @@
 #include "gui/cef/query/types/save_filter_state_query.h"
 #include "gui/cef/query/types/sort_plugins_query.h"
 #include "gui/cef/query/types/update_masterlist_query.h"
-#include "gui/yaml_simple_message_helpers.h"
 
+#undef ERROR
+
+#include "schema/request.pb.h"
+#include <google/protobuf/util/json_util.h>
 
 using boost::filesystem::exists;
 using boost::format;
 using boost::locale::translate;
+using google::protobuf::util::JsonStringToMessage;
 using std::exception;
 using std::list;
 using std::set;
@@ -109,50 +112,45 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
 CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
                                            CefRefPtr<CefFrame> frame,
                                            const std::string& requestString) {
-  YAML::Node request = JSON::parse(requestString);
-  const string name = request["name"].as<string>();
+  protobuf::Request request;
+  JsonStringToMessage(requestString, &request);
+
+  const string name = request.name();
+
+  std::vector<std::string> pluginNames;
+  if (request.has_plugin_names()) {
+    auto plugins = request.plugin_names().plugins();
+    pluginNames = std::vector<std::string>(plugins.cbegin(), plugins.cend());
+  }
 
   if (name == "applySort")
-    return new ApplySortQuery(lootState_, request["args"][0].as<std::vector<string>>());
+    return new ApplySortQuery(lootState_, pluginNames);
   else if (name == "cancelFind")
     return new CancelFindQuery(browser);
   else if (name == "cancelSort")
     return new CancelSortQuery(lootState_);
   else if (name == "changeGame")
-    return new ChangeGameQuery(lootState_, frame, request["args"][0].as<string>());
+    return new ChangeGameQuery(lootState_, frame, request.target_name());
   else if (name == "clearAllMetadata")
     return new ClearAllMetadataQuery(lootState_);
   else if (name == "clearPluginMetadata")
-    return new ClearPluginMetadataQuery(lootState_, request["args"][0].as<string>());
-  else if (name == "closeSettings") {
-    YAML::Node node = request["args"][0];
-    auto settings = std::make_unique<LootSettings>();
-    settings->load(node);
-
-    return new CloseSettingsQuery(lootState_, std::move(settings));
-  }
+    return new ClearPluginMetadataQuery(lootState_, request.target_name());
+  else if (name == "closeSettings")
+    return new CloseSettingsQuery(lootState_, request.settings());
   else if (name == "copyContent")
-    return new CopyContentQuery(request["args"][0]);
+    return new CopyContentQuery(request.content());
   else if (name == "copyLoadOrder")
-    return new CopyLoadOrderQuery(lootState_, request["args"][0].as<std::vector<string>>());
+    return new CopyLoadOrderQuery(lootState_, pluginNames);
   else if (name == "copyMetadata")
-    return new CopyMetadataQuery(lootState_, request["args"][0].as<string>());
+    return new CopyMetadataQuery(lootState_, request.target_name());
   else if (name == "discardUnappliedChanges")
     return new DiscardUnappliedChangesQuery(lootState_);
-  else if (name == "editorClosed") {
-    try {
-      auto applyEdits = request["args"][0]["applyEdits"].as<bool>();
-      auto metadata = request["args"][0]["metadata"].as<PluginMetadata>();
-
-      return new EditorClosedQuery(lootState_, applyEdits, metadata);
-    } catch (YAML::RepresentationException& e) {
-      throw YAML::RepresentationException(YAML::Mark::null_mark(), e.msg);
-    }
-  }
+  else if (name == "editorClosed")
+    return new EditorClosedQuery(lootState_, request.editor_state());
   else if (name == "editorOpened")
     return new EditorOpenedQuery(lootState_);
   else if (name == "getConflictingPlugins")
-    return new GetConflictingPluginsQuery(lootState_, request["args"][0].as<string>());
+    return new GetConflictingPluginsQuery(lootState_, request.target_name());
   else if (name == "getGameTypes")
     return new GetGameTypesQuery();
   else if (name == "getGameData")
@@ -174,7 +172,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "redatePlugins")
     return new RedatePluginsQuery(lootState_);
   else if (name == "saveFilterState")
-    return new SaveFilterStateQuery(lootState_, request["args"][0].as<string>(), request["args"][1].as<bool>());
+    return new SaveFilterStateQuery(lootState_, request.filter().name(), request.filter().state());
   else if (name == "sortPlugins")
     return new SortPluginsQuery(lootState_, frame);
   else if (name == "updateMasterlist")

@@ -25,15 +25,20 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_EDITOR_CLOSED_QUERY
 #define LOOT_GUI_QUERY_EDITOR_CLOSED_QUERY
 
+#undef ERROR
+
 #include "gui/state/loot_state.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "schema/request.pb.h"
 
 namespace loot {
 class EditorClosedQuery : public MetadataQuery {
 public:
-  EditorClosedQuery(LootState& state, bool applyEdits, PluginMetadata metadata) :
+  EditorClosedQuery(LootState& state, protobuf::EditorState editorState) :
     MetadataQuery(state),
-    state_(state), applyEdits_(applyEdits), metadata_(metadata) {}
+    state_(state),
+    applyEdits_(editorState.apply_edits()),
+    metadata_(convert(editorState.metadata())) {}
 
   std::string executeLogic() {
     if (applyEdits_) {
@@ -45,6 +50,9 @@ public:
   }
 
 private:
+  template<typename T>
+  using PBFields = ::google::protobuf::RepeatedPtrField<T>;
+
   PluginMetadata getNonUserMetadata() {
     BOOST_LOG_TRIVIAL(trace) << "Getting non-user metadata for: " << metadata_.GetName();
     auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
@@ -94,6 +102,106 @@ private:
 
     // Save edited userlist.
     state_.getCurrentGame().SaveUserMetadata();
+  }
+
+  static PluginMetadata convert(protobuf::PluginMetadata pbMetadata) {
+    PluginMetadata metadata(pbMetadata.name());
+
+    metadata.SetEnabled(pbMetadata.enabled());
+
+    // These two will register all priorities as explicit, but that's OK because
+    // explicitness is ignored above.
+    metadata.SetLocalPriority(Priority(pbMetadata.priority()));
+    metadata.SetGlobalPriority(Priority(pbMetadata.global_priority()));
+
+    metadata.SetLoadAfterFiles(convert(pbMetadata.after()));
+    metadata.SetRequirements(convert(pbMetadata.req()));
+    metadata.SetIncompatibilities(convert(pbMetadata.inc()));
+    metadata.SetMessages(convert(pbMetadata.msg()));
+    metadata.SetTags(convert(pbMetadata.tag()));
+    metadata.SetDirtyInfo(convert(pbMetadata.dirty()));
+    metadata.SetCleanInfo(convert(pbMetadata.clean()));
+    metadata.SetLocations(convert(pbMetadata.url()));
+
+    return metadata;
+  }
+
+  static std::set<File> convert(const PBFields<protobuf::File>& pbFiles) {
+    std::set<File> files;
+
+    for (const auto& pbFile : pbFiles) {
+      files.insert(File(pbFile.name(), pbFile.display(), pbFile.condition()));
+    }
+
+    return files;
+  }
+
+  static MessageType mapMessageType(const std::string& type) {
+    if (type == "say") {
+      return MessageType::say;
+    } else if (type == "warn") {
+      return MessageType::warn;
+    } else {
+      return MessageType::error;
+    }
+  }
+
+  static std::vector<Message> convert(const PBFields<protobuf::SimpleMessage>& pbMessages) {
+    std::vector<Message> messages;
+
+    for (const auto& pbMessage : pbMessages) {
+      MessageContent content(pbMessage.text(), pbMessage.language());
+      messages.push_back(Message(mapMessageType(pbMessage.type()),
+        std::vector<MessageContent>({content}),
+        pbMessage.condition()));
+    }
+
+    return messages;
+  }
+
+  static std::set<Tag> convert(const PBFields<protobuf::Tag>& pbTags) {
+    std::set<Tag> tags;
+
+    for (const auto& pbTag : pbTags) {
+      tags.insert(Tag(pbTag.name(), pbTag.is_addition(), pbTag.condition()));
+    }
+
+    return tags;
+  }
+
+  static std::vector<MessageContent> convert(const PBFields<protobuf::MessageContent>& pbContents) {
+    std::vector<MessageContent> contents;
+
+    for (const auto& pbContent : pbContents) {
+      contents.push_back(MessageContent(pbContent.text(), pbContent.language()));
+    }
+
+    return contents;
+  }
+
+  static std::set<PluginCleaningData> convert(const PBFields<protobuf::CleaningData>& pbData) {
+    std::set<PluginCleaningData> data;
+
+    for (const auto& pb : pbData) {
+      data.insert(PluginCleaningData(pb.crc(),
+        pb.util(),
+        convert(pb.info()),
+        pb.itm(),
+        pb.udr(),
+        pb.nav()));
+    }
+
+    return data;
+  }
+
+  static std::set<Location> convert(const PBFields<protobuf::Location>& pbLocations) {
+    std::set<Location> locations;
+
+    for (const auto& pbLocation : pbLocations) {
+      locations.insert(Location(pbLocation.link(), pbLocation.name()));
+    }
+
+    return locations;
   }
 
   LootState& state_;

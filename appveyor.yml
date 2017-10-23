@@ -25,6 +25,8 @@ install:
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.1.0/install_boost.py', "$env:APPVEYOR_BUILD_FOLDER\install_boost.py")
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.2.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
   - ps: python $env:APPVEYOR_BUILD_FOLDER\install_boost.py -d C:\projects -b 1.61.0 -a 32 atomic chrono date_time filesystem iostreams locale log regex system thread
+  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/master/install_protobuf.py', "$env:APPVEYOR_BUILD_FOLDER\install_protobuf.py")
+  - ps: python $env:APPVEYOR_BUILD_FOLDER\install_protobuf.py --target-version 3.4.1 --output-directory C:\projects\protobuf
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -32,7 +34,7 @@ before_build:
   - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
   - node scripts\create_ico.js
   - cd build
-  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:/projects/boost_1_61_0" -DBOOST_LIBRARYDIR="C:/projects/boost_1_61_0/stage/32/lib"
+  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:/projects/boost_1_61_0" -DBOOST_LIBRARYDIR="C:/projects/boost_1_61_0/stage/32/lib" -DPROTOBUF_ROOT="C:/projects/protobuf" -DMSVC_STATIC_RUNTIME=ON
 
 build:
   verbosity: minimal

@@ -59,7 +59,6 @@ protected:
       throw std::system_error(GetLastError(), std::system_category(), "Failed to close the Windows clipboard.");
     }
 #else
-    std::regex specialCharacters("(\\|\")");
     std::string copyCommand = "echo '" + text + "' | xclip -selection clipboard";
     int returnCode = system(copyCommand.c_str());
 

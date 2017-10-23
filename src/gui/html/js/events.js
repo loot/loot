@@ -3,7 +3,12 @@
 'use strict';
 function onSidebarFilterToggle(evt) {
   loot.filters[evt.target.id] = evt.target.checked;
-  loot.query('saveFilterState', evt.target.id, evt.target.checked).catch(loot.handlePromiseError);
+
+  const payload = {
+    name: evt.target.id,
+    state: evt.target.checked,
+  };
+  loot.query('saveFilterState', payload).catch(loot.handlePromiseError);
   loot.filters.apply(loot.game.plugins);
 }
 function onContentFilter(evt) {

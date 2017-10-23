@@ -2,23 +2,40 @@
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], factory);
+    define(['bower_components/lodash/dist/lodash.core.min'], factory);
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.query = factory();
+    root.loot.query = factory(root._);
   }
-}(this, () => (requestName, ...args) => {
+}(this, (_) => (requestName, payload) => {
   if (!requestName) {
     throw new Error('No request name passed');
   }
-  const request = JSON.stringify({
+  const request = {
     name: requestName,
-    args,
-  });
+  };
+  if (payload) {
+    if (Array.isArray(payload)) {
+      request.plugin_names = {
+        plugins: payload,
+      };
+    } else if (_.isString(payload)) {
+      request.target_name = payload;
+    } else if (payload.name) {
+      request.filter = payload;
+    } else if (payload.messages) {
+      request.content = payload;
+    } else if (payload.enableDebugLogging) {
+      request.settings = payload;
+    } else if (payload.metadata) {
+      request.editorState = payload;
+    }
+  }
+
   return new Promise((resolve, reject) => {
     window.cefQuery({
-      request,
+      request: JSON.stringify(request),
       persistent: false,
       onSuccess: resolve,
       onFailure: (errorCode, errorMessage) => {

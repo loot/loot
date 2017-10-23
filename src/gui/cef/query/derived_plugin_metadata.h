@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 #define LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 
+#include "gui/yaml_simple_message_helpers.h"
+
 namespace loot {
 class DerivedPluginMetadata {
 public:

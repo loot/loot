@@ -25,14 +25,17 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_COPY_CONTENT_QUERY
 #define LOOT_GUI_QUERY_COPY_CONTENT_QUERY
 
-#include <yaml-cpp/yaml.h>
+#include <google/protobuf/util/json_util.h>
+
+#undef ERROR
 
 #include "gui/cef/query/types/clipboard_query.h"
+#include "schema/request.pb.h"
 
 namespace loot {
 class CopyContentQuery : public ClipboardQuery {
 public:
-  CopyContentQuery(const YAML::Node& content) : content_(content) {}
+  CopyContentQuery(protobuf::Content content) : content_(content) {}
 
   std::string executeLogic() {
     const std::string text = "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
@@ -43,17 +46,16 @@ public:
 
 private:
   std::string getContentAsText() const {
-    YAML::Emitter out;
-    out.SetIndent(2);
-    out << content_;
-
-    std::string text = out.c_str();
-    boost::replace_all(text, "!<!> ", "");
+    google::protobuf::util::JsonPrintOptions options;
+    options.add_whitespace = true;
+    options.always_print_primitive_fields = true;
+    std::string text;
+    google::protobuf::util::MessageToJsonString(content_, &text, options);
 
     return text;
   }
 
-  const YAML::Node content_;
+  const protobuf::Content content_;
 };
 }
 
