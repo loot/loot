@@ -32,7 +32,7 @@
 #include <boost/log/utility/setup/file.hpp>
 
 #include "gui/state/loot_paths.h"
-#include "gui/loot_app.h"
+#include "gui/cef/loot_app.h"
 
 #ifdef _WIN32
 #include <include/cef_sandbox_win.h>
