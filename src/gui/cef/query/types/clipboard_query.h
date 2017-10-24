@@ -60,7 +60,7 @@ protected:
     }
 #else
     std::regex specialCharacters("(\\|\")");
-    std::string copyCommand = "echo \"" + std::regex_replace(text, specialCharacters, "\\$1") + "\" | xclip -selection clipboard";
+    std::string copyCommand = "echo '" + text + "' | xclip -selection clipboard";
     int returnCode = system(copyCommand.c_str());
 
     if (returnCode != 0) {
