@@ -214,10 +214,17 @@ function onCopyContent() {
     content = loot.game.getContent();
   } else {
     const message = document.getElementById('summary').getElementsByTagName('ul')[0].firstElementChild;
+
+    let language = 'en';
+    if (loot.settings && loot.settings.language) {
+      language = loot.settings.language;
+    }
+
     if (message) {
       content.messages.push({
         type: message.className,
-        content: message.textContent,
+        text: message.textContent,
+        language,
       });
     }
   }
