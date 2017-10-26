@@ -53,6 +53,7 @@ public:
   void save(const boost::filesystem::path& file);
 
   bool isDebugLoggingEnabled() const;
+  bool updateMasterlist() const;
   bool isWindowPositionStored() const;
   std::string getGame() const;
   std::string getLastGame() const;
@@ -60,6 +61,11 @@ public:
   std::string getLanguage() const;
   const WindowPosition& getWindowPosition() const;
   std::vector<GameSettings> getGameSettings() const;
+
+  void setDefaultGame(const std::string& game);
+  void setLanguage(const std::string& language);
+  void enableDebugLogging(bool enable);
+  void updateMasterlist(bool update);
 
   void storeLastGame(const std::string& lastGame);
   void storeWindowPosition(const WindowPosition& position);

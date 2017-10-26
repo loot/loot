@@ -61,59 +61,6 @@ namespace fs = boost::filesystem;
 namespace loot {
 LootState::LootState() : unappliedChangeCounter_(0), currentGame_(installedGames_.end()) {}
 
-void LootState::load(YAML::Node& settings) {
-  lock_guard<mutex> guard(mutex_);
-
-  LootSettings::load(settings);
-
-  // Enable/disable debug logging in case it has changed.
-  enableDebugLogging(isDebugLoggingEnabled());
-
-  // Update existing games, add new games.
-  std::unordered_set<string> newGameFolders;
-  BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
-  for (const auto &gameSettings : getGameSettings()) {
-    auto pos = find(installedGames_.begin(), installedGames_.end(), gameSettings);
-
-    if (pos != installedGames_.end()) {
-      pos->SetName(gameSettings.Name())
-        .SetMaster(gameSettings.Master())
-        .SetRepoURL(gameSettings.RepoURL())
-        .SetRepoBranch(gameSettings.RepoBranch())
-        .SetGamePath(gameSettings.GamePath())
-        .SetRegistryKey(gameSettings.RegistryKey());
-    } else {
-      if (gui::Game::IsInstalled(gameSettings)) {
-        BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
-        installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
-        updateStoredGamePathSetting(installedGames_.back());
-      }
-    }
-
-    newGameFolders.insert(gameSettings.FolderName());
-  }
-
-  // Remove deleted games. As the current game is stored using its index,
-  // removing an earlier game may invalidate it.
-  BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
-  for (auto it = installedGames_.begin(); it != installedGames_.end();) {
-    if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
-      BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
-      it = installedGames_.erase(it);
-    } else
-      ++it;
-  }
-
-  if (currentGame_ == end(installedGames_)) {
-    selectGame("");
-  }
-
-  if (currentGame_ != end(installedGames_)) {
-    // Re-initialise the current game in case the game path setting was changed.
-    currentGame_->Init();
-  }
-}
-
 void LootState::init(const std::string& cmdLineGame,
                      const std::string& gameAppDataPath) {
   this->gameAppDataPath = gameAppDataPath;
@@ -286,12 +233,65 @@ void LootState::selectGame(std::string preferredGame) {
 }
 
 void LootState::enableDebugLogging(bool enable) {
+  lock_guard<mutex> guard(mutex_);
+
+  LootSettings::enableDebugLogging(enable);
   if (enable) {
     boost::log::core::get()->reset_filter();
     SetLoggingVerbosity(LogVerbosity::trace);
   } else {
     boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);
     SetLoggingVerbosity(LogVerbosity::warning);
+  }
+}
+
+void LootState::storeGameSettings(const std::vector<GameSettings>& gameSettings) {
+  lock_guard<mutex> guard(mutex_);
+
+  LootSettings::storeGameSettings(gameSettings);
+
+  // Update existing games, add new games.
+  std::unordered_set<string> newGameFolders;
+  BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
+  for (const auto &gameSettings : getGameSettings()) {
+    auto pos = find(installedGames_.begin(), installedGames_.end(), gameSettings);
+
+    if (pos != installedGames_.end()) {
+      pos->SetName(gameSettings.Name())
+        .SetMaster(gameSettings.Master())
+        .SetRepoURL(gameSettings.RepoURL())
+        .SetRepoBranch(gameSettings.RepoBranch())
+        .SetGamePath(gameSettings.GamePath())
+        .SetRegistryKey(gameSettings.RegistryKey());
+    } else {
+      if (gui::Game::IsInstalled(gameSettings)) {
+        BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: " << gameSettings.FolderName();
+        installedGames_.push_back(gui::Game(gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
+        updateStoredGamePathSetting(installedGames_.back());
+      }
+    }
+
+    newGameFolders.insert(gameSettings.FolderName());
+  }
+
+  // Remove deleted games. As the current game is stored using its index,
+  // removing an earlier game may invalidate it.
+  BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
+  for (auto it = installedGames_.begin(); it != installedGames_.end();) {
+    if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
+      BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
+      it = installedGames_.erase(it);
+    } else
+      ++it;
+  }
+
+  if (currentGame_ == end(installedGames_)) {
+    selectGame("");
+  }
+
+  if (currentGame_ != end(installedGames_)) {
+    // Re-initialise the current game in case the game path setting was changed.
+    currentGame_->Init();
   }
 }
 
@@ -304,7 +304,7 @@ void LootState::updateStoredGamePathSetting(const gui::Game& game) {
     BOOST_LOG_TRIVIAL(error) << "Could not find the settings for the current game (" << game.Name() << ")";
   } else {
     pos->SetGamePath(game.GamePath());
-    storeGameSettings(gameSettings);
+    LootSettings::storeGameSettings(gameSettings);
   }
 }
 }

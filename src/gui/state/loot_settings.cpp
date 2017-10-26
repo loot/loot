@@ -224,6 +224,12 @@ bool LootSettings::isDebugLoggingEnabled() const {
   return enableDebugLogging_;
 }
 
+bool LootSettings::updateMasterlist() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return updateMasterlist_;
+}
+
 bool LootSettings::isWindowPositionStored() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
@@ -264,6 +270,30 @@ std::vector<GameSettings> LootSettings::getGameSettings() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return gameSettings_;
+}
+
+void LootSettings::setDefaultGame(const std::string& game) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  game_ = game;
+}
+
+void LootSettings::setLanguage(const std::string& language) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  language_ = language;
+}
+
+void LootSettings::enableDebugLogging(bool enable) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  enableDebugLogging_ = enable;
+}
+
+void LootSettings::updateMasterlist(bool update) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  updateMasterlist_ = update;
 }
 
 void LootSettings::storeLastGame(const std::string& lastGame) {

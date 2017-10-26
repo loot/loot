@@ -31,19 +31,24 @@ along with LOOT.  If not, see
 namespace loot {
 class CloseSettingsQuery : public GetInstalledGamesQuery {
 public:
-  CloseSettingsQuery(LootState& state, YAML::Node settings) :
-    GetInstalledGamesQuery(state), state_(state), settings_(settings) {}
+  CloseSettingsQuery(LootState& state, std::unique_ptr<LootSettings> settings) :
+    GetInstalledGamesQuery(state), state_(state), settings_(std::move(settings)) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
-    state_.load(settings_);
+
+    state_.setDefaultGame(settings_->getGame());
+    state_.setLanguage(settings_->getLanguage());
+    state_.enableDebugLogging(settings_->isDebugLoggingEnabled());
+    state_.updateMasterlist(settings_->updateMasterlist());
+    state_.storeGameSettings(settings_->getGameSettings());
 
     return GetInstalledGamesQuery::executeLogic();
   }
 
 private:
   LootState& state_;
-  YAML::Node settings_;
+  std::unique_ptr<LootSettings> settings_;
 };
 }
 

@@ -126,8 +126,13 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
     return new ClearAllMetadataQuery(lootState_);
   else if (name == "clearPluginMetadata")
     return new ClearPluginMetadataQuery(lootState_, request["args"][0].as<string>());
-  else if (name == "closeSettings")
-    return new CloseSettingsQuery(lootState_, request["args"][0]);
+  else if (name == "closeSettings") {
+    YAML::Node node = request["args"][0];
+    auto settings = std::make_unique<LootSettings>();
+    settings->load(node);
+
+    return new CloseSettingsQuery(lootState_, std::move(settings));
+  }
   else if (name == "copyContent")
     return new CopyContentQuery(request["args"][0]);
   else if (name == "copyLoadOrder")

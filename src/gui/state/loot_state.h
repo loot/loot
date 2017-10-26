@@ -33,7 +33,6 @@ class LootState : public LootSettings {
 public:
   LootState();
 
-  void load(YAML::Node& settings);
   void init(const std::string& cmdLineGame,
             const std::string& gameAppDataPath);
   const std::vector<std::string>& getInitErrors() const;
@@ -49,10 +48,12 @@ public:
   bool hasUnappliedChanges() const;
   void incrementUnappliedChangeCounter();
   void decrementUnappliedChangeCounter();
+
+  void enableDebugLogging(bool enable);
+  void storeGameSettings(const std::vector<GameSettings>& gameSettings);
 private:
   // Select initial game.
   void selectGame(std::string cmdLineGame);
-  void enableDebugLogging(bool enable);
   void updateStoredGamePathSetting(const gui::Game& game);
 
   std::string gameAppDataPath;
