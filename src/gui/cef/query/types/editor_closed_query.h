@@ -32,104 +32,142 @@ along with LOOT.  If not, see
 #include "schema/request.pb.h"
 
 namespace loot {
-class EditorClosedQuery : public MetadataQuery {
-public:
-  EditorClosedQuery(LootState& state, protobuf::EditorState editorState) :
-    MetadataQuery(state),
-    state_(state),
-    applyEdits_(editorState.apply_edits()),
-    metadata_(convert(editorState.metadata())) {}
-
-  std::string executeLogic() {
-    if (applyEdits_) {
-      applyUserEdits();
-    }
-    state_.decrementUnappliedChangeCounter();
-
-    return generateJsonResponse(metadata_.GetName());
-  }
-
-private:
-  template<typename T>
-  using PBFields = ::google::protobuf::RepeatedPtrField<T>;
-
-  PluginMetadata getNonUserMetadata() {
-    BOOST_LOG_TRIVIAL(trace) << "Getting non-user metadata for: " << metadata_.GetName();
-    auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
-
-    try {
-      auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
-      return MetadataQuery::getNonUserMetadata(plugin, masterlistMetadata);
-    } catch (...) {}
-
-    return masterlistMetadata;
-  }
-
-  PluginMetadata getUserMetadata() {
-    auto nonUserMetadata = getNonUserMetadata();
-    auto userMetadata = metadata_.NewMetadata(nonUserMetadata);
-
-    if (metadata_.GetLocalPriority().GetValue() != nonUserMetadata.GetLocalPriority().GetValue()) {
-      userMetadata.SetLocalPriority(metadata_.GetLocalPriority());
-    } else {
-      userMetadata.SetLocalPriority(Priority());
+  class EditorClosedQuery : public MetadataQuery {
+  public:
+    EditorClosedQuery(LootState& state, protobuf::EditorState editorState) :
+      MetadataQuery(state),
+      state_(state),
+      applyEdits_(editorState.apply_edits()) {
+      try {
+        metadata_ = convert(editorState.metadata());
+      } catch (...) {
+        state_.decrementUnappliedChangeCounter();
+        throw;
+      }
     }
 
-    if (metadata_.GetGlobalPriority().GetValue() != nonUserMetadata.GetGlobalPriority().GetValue()) {
-      userMetadata.SetGlobalPriority(metadata_.GetGlobalPriority());
-    } else {
-      userMetadata.SetGlobalPriority(Priority());
+    std::string executeLogic() {
+      if (applyEdits_) {
+        applyUserEdits();
+      }
+      state_.decrementUnappliedChangeCounter();
+
+      return generateJsonResponse(metadata_.GetName());
     }
 
-    return userMetadata;
-  }
+  private:
+    template<typename T>
+    using PBFields = ::google::protobuf::RepeatedPtrField<T>;
 
-  void applyUserEdits() {
-    BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << metadata_.GetName();
+    PluginMetadata getNonUserMetadata() {
+      BOOST_LOG_TRIVIAL(trace) << "Getting non-user metadata for: " << metadata_.GetName();
+      auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
 
-    // Determine what metadata in the response is user-added.
-    auto userMetadata = getUserMetadata();
+      try {
+        auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
+        return MetadataQuery::getNonUserMetadata(plugin, masterlistMetadata);
+      } catch (...) {}
 
-    // Now erase any existing userlist entry.
-    BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
-    state_.getCurrentGame().ClearUserMetadata(userMetadata.GetName());
-
-    // Add a new userlist entry if necessary.
-    if (!userMetadata.HasNameOnly()) {
-      BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
-      state_.getCurrentGame().AddUserMetadata(userMetadata);
+      return masterlistMetadata;
     }
 
-    // Save edited userlist.
-    state_.getCurrentGame().SaveUserMetadata();
-  }
+    PluginMetadata getUserMetadata() {
+      auto nonUserMetadata = getNonUserMetadata();
+      auto userMetadata = metadata_.NewMetadata(nonUserMetadata);
 
-  static PluginMetadata convert(protobuf::PluginMetadata pbMetadata) {
-    PluginMetadata metadata(pbMetadata.name());
+      if (metadata_.GetLocalPriority().GetValue() != nonUserMetadata.GetLocalPriority().GetValue()) {
+        userMetadata.SetLocalPriority(metadata_.GetLocalPriority());
+      } else {
+        userMetadata.SetLocalPriority(Priority());
+      }
 
-    metadata.SetEnabled(pbMetadata.enabled());
+      if (metadata_.GetGlobalPriority().GetValue() != nonUserMetadata.GetGlobalPriority().GetValue()) {
+        userMetadata.SetGlobalPriority(metadata_.GetGlobalPriority());
+      } else {
+        userMetadata.SetGlobalPriority(Priority());
+      }
 
-    // These two will register all priorities as explicit, but that's OK because
-    // explicitness is ignored above.
-    metadata.SetLocalPriority(Priority(pbMetadata.priority()));
-    metadata.SetGlobalPriority(Priority(pbMetadata.global_priority()));
+      return userMetadata;
+    }
 
-    metadata.SetLoadAfterFiles(convert(pbMetadata.after()));
-    metadata.SetRequirements(convert(pbMetadata.req()));
-    metadata.SetIncompatibilities(convert(pbMetadata.inc()));
-    metadata.SetMessages(convert(pbMetadata.msg()));
-    metadata.SetTags(convert(pbMetadata.tag()));
-    metadata.SetDirtyInfo(convert(pbMetadata.dirty()));
-    metadata.SetCleanInfo(convert(pbMetadata.clean()));
-    metadata.SetLocations(convert(pbMetadata.url()));
+    void applyUserEdits() {
+      BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << metadata_.GetName();
 
-    return metadata;
-  }
+      // Determine what metadata in the response is user-added.
+      auto userMetadata = getUserMetadata();
 
-  static std::set<File> convert(const PBFields<protobuf::File>& pbFiles) {
-    std::set<File> files;
+      // Now erase any existing userlist entry.
+      BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
+      state_.getCurrentGame().ClearUserMetadata(userMetadata.GetName());
 
-    for (const auto& pbFile : pbFiles) {
+      // Add a new userlist entry if necessary.
+      if (!userMetadata.HasNameOnly()) {
+        BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
+        state_.getCurrentGame().AddUserMetadata(userMetadata);
+      }
+
+      // Save edited userlist.
+      state_.getCurrentGame().SaveUserMetadata();
+    }
+
+    static PluginMetadata convert(protobuf::PluginMetadata pbMetadata) {
+      if (pbMetadata.name().empty()) {
+        throw std::runtime_error("PluginMetadata object has an empty 'name' value");
+      }
+
+      PluginMetadata metadata(pbMetadata.name());
+
+      if (metadata.IsRegexPlugin()) {
+        try {
+          std::regex(metadata.GetName(), std::regex::ECMAScript | std::regex::icase);
+        } catch (std::regex_error& e) {
+          throw std::runtime_error(std::string("PluginMetadata object has an invalid regex 'name' value: ") + e.what());
+        }
+
+        if (pbMetadata.dirty().empty()) {
+          throw std::runtime_error("PluginMetadata object cannot have a 'dirty' key with a regex 'name' value");
+        }
+        if (pbMetadata.clean().empty()) {
+          throw std::runtime_error("PluginMetadata object cannot have a 'clean' key with a regex 'name' value");
+        }
+      }
+
+      metadata.SetEnabled(pbMetadata.enabled());
+
+      // These two will register all priorities as explicit, but that's OK because
+      // explicitness is ignored above.
+      metadata.SetLocalPriority(Priority(pbMetadata.priority()));
+      metadata.SetGlobalPriority(Priority(pbMetadata.global_priority()));
+
+      metadata.SetLoadAfterFiles(convert(pbMetadata.after()));
+      metadata.SetRequirements(convert(pbMetadata.req()));
+      metadata.SetIncompatibilities(convert(pbMetadata.inc()));
+      metadata.SetMessages(convert(pbMetadata.msg()));
+      metadata.SetTags(convert(pbMetadata.tag()));
+      metadata.SetDirtyInfo(convert(pbMetadata.dirty()));
+      metadata.SetCleanInfo(convert(pbMetadata.clean()));
+      metadata.SetLocations(convert(pbMetadata.url()));
+
+      return metadata;
+    }
+
+    static void testConditionSyntax(const std::string& objectType, const std::string& condition) {
+      try {
+        ConditionalMetadata(condition).ParseCondition();
+      } catch (std::exception& e) {
+        throw std::runtime_error(objectType + " object has an invalid condition: " + e.what());
+      }
+    }
+
+    static std::set<File> convert(const PBFields<protobuf::File>& pbFiles) {
+      std::set<File> files;
+
+      for (const auto& pbFile : pbFiles) {
+        if (pbFile.name().empty()) {
+          throw std::runtime_error("File object has an empty 'name' value");
+        }
+        testConditionSyntax("File", pbFile.condition());
+
       files.insert(File(pbFile.name(), pbFile.display(), pbFile.condition()));
     }
 
@@ -150,7 +188,19 @@ private:
     std::vector<Message> messages;
 
     for (const auto& pbMessage : pbMessages) {
+      if (pbMessage.text().empty()) {
+        throw std::runtime_error("SimpleMessage object has an empty 'text' value");
+      }
+      if (pbMessage.language().empty()) {
+        throw std::runtime_error("SimpleMessage object has an empty 'language' value");
+      }
+      if (pbMessage.type().empty()) {
+        throw std::runtime_error("SimpleMessage object has an empty 'type' value");
+      }
+      testConditionSyntax("SimpleMessage", pbMessage.condition());
+
       MessageContent content(pbMessage.text(), pbMessage.language());
+
       messages.push_back(Message(mapMessageType(pbMessage.type()),
         std::vector<MessageContent>({content}),
         pbMessage.condition()));
@@ -163,6 +213,11 @@ private:
     std::set<Tag> tags;
 
     for (const auto& pbTag : pbTags) {
+      if (pbTag.name().empty()) {
+        throw std::runtime_error("Tag object has an empty 'name' value");
+      }
+      testConditionSyntax("Tag", pbTag.condition());
+
       tags.insert(Tag(pbTag.name(), pbTag.is_addition(), pbTag.condition()));
     }
 
@@ -173,7 +228,24 @@ private:
     std::vector<MessageContent> contents;
 
     for (const auto& pbContent : pbContents) {
+      if (pbContent.text().empty()) {
+        throw std::runtime_error("MessageContent object has an empty 'text' value");
+      }
+      if (pbContent.language().empty()) {
+        throw std::runtime_error("MessageContent object has an empty 'language' value");
+      }
+
       contents.push_back(MessageContent(pbContent.text(), pbContent.language()));
+    }
+
+    if (contents.size() > 1) {
+      bool found = false;
+      for (const auto &mc : contents) {
+        if (mc.GetLanguage() == loot::MessageContent::defaultLanguage)
+          found = true;
+      }
+      if (!found)
+        throw std::runtime_error("MessageContent array does not contain an English MessageContent object");
     }
 
     return contents;
@@ -183,6 +255,13 @@ private:
     std::set<PluginCleaningData> data;
 
     for (const auto& pb : pbData) {
+      if (pb.crc() == 0) {
+        throw std::runtime_error("CleaningData object has a 'crc' value of zero");
+      }
+      if (pb.util().empty()) {
+        throw std::runtime_error("CleaningData object has an empty 'util' value");
+      }
+
       data.insert(PluginCleaningData(pb.crc(),
         pb.util(),
         convert(pb.info()),
@@ -198,6 +277,9 @@ private:
     std::set<Location> locations;
 
     for (const auto& pbLocation : pbLocations) {
+      if (pbLocation.link().empty()) {
+        throw std::runtime_error("Location object has an empty 'link' value");
+      }
       locations.insert(Location(pbLocation.link(), pbLocation.name()));
     }
 
@@ -206,7 +288,7 @@ private:
 
   LootState& state_;
   const bool applyEdits_;
-  const PluginMetadata metadata_;
+  PluginMetadata metadata_;
 };
 }
 

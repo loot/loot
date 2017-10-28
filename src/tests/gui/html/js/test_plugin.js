@@ -341,7 +341,7 @@ describe('Plugin', () => {
   });
 
   describe('#fromJson()', () => {
-    it('should return the value object if the JSON is not of the Plugin type', () => {
+    it('should return the value object if the JSON object does not have name and isEmpty fields', () => {
       const testInputObj = {
         name: 'test',
         crc: 0xDEADBEEF,
@@ -351,11 +351,11 @@ describe('Plugin', () => {
       JSON.parse(testInputJson, loot.Plugin.fromJson).should.deep.equal(testInputObj);
     });
 
-    it('should return a Plugin object if the JSON is of the Plugin type', () => {
+    it('should return a Plugin object if the JSON object has name and isEmpty fields', () => {
       const testInputObj = {
         name: 'test',
         crc: 0xDEADBEEF,
-        __type: 'Plugin',
+        isEmpty: false,
       };
       const testInputJson = JSON.stringify(testInputObj);
 

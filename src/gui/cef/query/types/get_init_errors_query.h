@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_INIT_ERRORS_QUERY
 #define LOOT_GUI_QUERY_GET_INIT_ERRORS_QUERY
 
+#undef ERROR
+
 #include "gui/state/loot_state.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/query.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class GetInitErrorsQuery : public Query {
@@ -35,10 +37,13 @@ public:
   GetInitErrorsQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    YAML::Node response;
-    response["errors"] = state_.getInitErrors();
+    protobuf::GetInitErrorsResponse response;
 
-    return JSON::stringify(response);
+    for (const auto& error : state_.getInitErrors()) {
+      response.add_errors(error);
+    }
+
+    return toJson(response);
   }
 
 private:

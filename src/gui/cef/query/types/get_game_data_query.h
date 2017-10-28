@@ -28,8 +28,6 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "loot/loot_version.h"
-#include "gui/editor_message.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
 #include "gui/state/loot_state.h"
 

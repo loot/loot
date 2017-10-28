@@ -25,10 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_COPY_METADATA_QUERY
 #define LOOT_GUI_QUERY_COPY_METADATA_QUERY
 
-#include <yaml-cpp/yaml.h>
-
 #include "gui/cef/query/types/clipboard_query.h"
-#include "loot/yaml/plugin_metadata.h"
 
 namespace loot {
 class CopyMetadataQuery : public ClipboardQuery {
@@ -54,13 +51,14 @@ public:
   }
 
 private:
-  static std::string asText(const PluginMetadata& metadata) {
-    YAML::Emitter out;
-    out.SetIndent(2);
-    out << metadata;
+  std::string asText(const PluginMetadata& metadata) {
+    protobuf::PluginMetadata pbMetadata = convert(metadata, state_.getLanguage());
 
-    std::string text = out.c_str();
-    boost::replace_all(text, "!<!> ", "");
+    google::protobuf::util::JsonPrintOptions options;
+    options.add_whitespace = true;
+    options.always_print_primitive_fields = true;
+    std::string text;
+    google::protobuf::util::MessageToJsonString(pbMetadata, &text, options);
 
     return text;
   }

@@ -153,6 +153,11 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 
 set(LOOT_SCHEMA_DIR "${CMAKE_SOURCE_DIR}/src/schema")
 
+set(LOOT_SCHEMA ${LOOT_SCHEMA_DIR}/metadata.proto
+                ${LOOT_SCHEMA_DIR}/query.proto
+                ${LOOT_SCHEMA_DIR}/request.proto
+                ${LOOT_SCHEMA_DIR}/response.proto)
+
 set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -168,16 +173,17 @@ set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.rc"
                   "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
-                  "${LOOT_SCHEMA_DIR}/request.pb.cc")
+                  "${LOOT_SCHEMA_DIR}/query.pb.cc"
+                  "${LOOT_SCHEMA_DIR}/request.pb.cc"
+                  "${LOOT_SCHEMA_DIR}/response.pb.cc")
 
-set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
+set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_scheme_handler_factory.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/window_delegate.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/cef/query/json.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/derived_plugin_metadata.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/cef/query/protobuf.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/apply_sort_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/cancel_find_query.h"
@@ -217,9 +223,10 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/editor_message.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/version.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/yaml_simple_message_helpers.h"
                   "${LOOT_SCHEMA_DIR}/metadata.pb.h"
-                  "${LOOT_SCHEMA_DIR}/request.pb.h")
+                  "${LOOT_SCHEMA_DIR}/query.pb.h"
+                  "${LOOT_SCHEMA_DIR}/request.pb.h"
+                  "${LOOT_SCHEMA_DIR}/response.pb.h")
 
 set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -310,12 +317,16 @@ ENDIF ()
 ##############################
 
 add_custom_command(
-    OUTPUT "${LOOT_SCHEMA_DIR}/request.pb.cc"
-           "${LOOT_SCHEMA_DIR}/request.pb.h"
-           "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
+    OUTPUT "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
            "${LOOT_SCHEMA_DIR}/metadata.pb.h"
-    COMMAND ${Protobuf_PROTOC_EXECUTABLE} -I=${LOOT_SCHEMA_DIR} --cpp_out=${LOOT_SCHEMA_DIR} ${LOOT_SCHEMA_DIR}/request.proto ${LOOT_SCHEMA_DIR}/metadata.proto
-    DEPENDS "${LOOT_SCHEMA_DIR}/request.proto" "${LOOT_SCHEMA_DIR}/metadata.proto"
+           "${LOOT_SCHEMA_DIR}/query.pb.cc"
+           "${LOOT_SCHEMA_DIR}/query.pb.h"
+           "${LOOT_SCHEMA_DIR}/request.pb.cc"
+           "${LOOT_SCHEMA_DIR}/request.pb.h"
+           "${LOOT_SCHEMA_DIR}/response.pb.cc"
+           "${LOOT_SCHEMA_DIR}/response.pb.h"
+    COMMAND ${Protobuf_PROTOC_EXECUTABLE} -I=${LOOT_SCHEMA_DIR} --cpp_out=${LOOT_SCHEMA_DIR} ${LOOT_SCHEMA}
+    DEPENDS ${LOOT_SCHEMA}
 )
 
 # Build application.

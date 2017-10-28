@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "query.proto";
+
+package loot.protobuf;
+
+message Version {
+    string release = 1;
+    string build = 2;
+}
+
+message Language {
+    string locale = 1;
+    string name = 2;
+}
+
+message GetGameTypesResponse {
+    repeated string game_types = 1;
+}
+
+message GetInitErrorsResponse {
+    repeated string errors = 1;
+}
+
+message GetInstalledGamesResponse {
+    repeated string installed_games = 1;
+}
+
+message GetLanguagesResponse {
+    repeated Language languages = 1;
+}
+
+message ClearAllMetadataResponse {
+    repeated Plugin plugins = 1;
+}
+
+message ConflictingPlugin {
+    Plugin metadata = 1;
+    bool conflicts = 2;
+}
+
+message GetConflictingPluginsResponse {
+    repeated ConflictingPlugin plugins = 1;
+}
+
+message MasterlistInfo {
+    string revision = 1;
+    string date = 2;
+}
+
+message GameDataResponse {
+    // Used for updateMasterlist, getGameData and partially for sortPlugins and
+    // cancelSort.
+    string folder = 1;
+    MasterlistInfo masterlist = 2;
+    repeated string bash_tags = 3;
+    repeated SimpleMessage general_messages = 4;
+    repeated Plugin plugins = 5;
+}

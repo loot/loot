@@ -25,13 +25,13 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 
+#undef ERROR
+
 #include <boost/locale.hpp>
-#include <yaml-cpp/yaml.h>
 
 #include "gui/state/loot_state.h"
-#include "gui/cef/query/json.h"
-#include "loot/exception/cyclic_interaction_error.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class SortPluginsQuery : public MetadataQuery {
@@ -74,17 +74,22 @@ private:
   }
 
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
-    YAML::Node response;
+    protobuf::GameDataResponse response;
 
     // Store general messages in case they have changed.
-    response["generalMessages"] = getGeneralMessages();
+    for (const auto& message : getGeneralMessages()) {
+      auto pbMessage = response.add_general_messages();
+      convert(message, *pbMessage);
+    }
 
     for (const auto &pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-      response["plugins"].push_back(generateDerivedMetadata(plugin).toYaml());
+
+      auto pbPlugin = response.add_plugins();
+      *pbPlugin = generateDerivedMetadata(plugin).toProtobuf();
     }
 
-    return JSON::stringify(response);
+    return toJson(response);
   }
 
   LootState& state_;

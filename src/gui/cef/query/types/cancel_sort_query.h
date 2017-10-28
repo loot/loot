@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 #define LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 
+#undef ERROR
+
 #include "gui/state/loot_state.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class CancelSortQuery : public MetadataQuery {
@@ -40,22 +42,25 @@ public:
     state_.decrementUnappliedChangeCounter();
     state_.getCurrentGame().DecrementLoadOrderSortCount();
 
-    YAML::Node response;
+    protobuf::GameDataResponse response;
+
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
     for (const auto& plugin : loadOrder) {
       auto pluginObject = state_.getCurrentGame().GetPlugin(plugin);
       auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(pluginObject, loadOrder);
 
-      YAML::Node pluginNode;
-      pluginNode["name"] = plugin;
-      pluginNode["loadOrderIndex"] = loadOrderIndex;
+      auto pbPlugin = response.add_plugins();
 
-      response["plugins"].push_back(pluginNode);
+      pbPlugin->set_name(plugin);
+      pbPlugin->set_load_order_index(loadOrderIndex);
     }
 
-    response["generalMessages"] = getGeneralMessages();
+    for (const auto& message : getGeneralMessages()) {
+      auto pbMessage = response.add_general_messages();
+      convert(message, *pbMessage);
+    }
 
-    return JSON::stringify(response);
+    return toJson(response);
   }
 
 private:

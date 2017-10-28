@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 
+#undef ERROR
+
 #include "gui/state/game.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class GetConflictingPluginsQuery : public MetadataQuery {
@@ -46,24 +48,23 @@ public:
     if (!game_.ArePluginsFullyLoaded())
       game_.LoadAllInstalledPlugins(false);
 
-    YAML::Node response;
-    auto plugin = game_.GetPlugin(pluginName_);
-    for (const auto& otherPlugin : game_.GetPlugins()) {
-      response["plugins"].push_back(getConflictMetadata(plugin, otherPlugin));
-    }
-
-    return JSON::stringify(response);
+    return getJsonResponse();
   }
 
 private:
-  YAML::Node getConflictMetadata(const std::shared_ptr<const PluginInterface>& plugin,
-                                 const std::shared_ptr<const PluginInterface>& otherPlugin) {
-    YAML::Node pluginNode;
+  std::string getJsonResponse() {
+    protobuf::GetConflictingPluginsResponse response;
 
-    pluginNode["metadata"] = generateDerivedMetadata(otherPlugin).toYaml();
-    pluginNode["conflicts"] = doPluginsConflict(plugin, otherPlugin);
+    auto plugin = game_.GetPlugin(pluginName_);
+    for (const auto& otherPlugin : game_.GetPlugins()) {
+      auto conflictingPlugin = response.add_plugins();
 
-    return pluginNode;
+      auto metadata = generateDerivedMetadata(otherPlugin).toProtobuf();
+      *conflictingPlugin->mutable_metadata() = metadata;
+      conflictingPlugin->set_conflicts(doPluginsConflict(plugin, otherPlugin));
+    }
+
+    return toJson(response);
   }
 
   bool doPluginsConflict(const std::shared_ptr<const PluginInterface>& plugin,

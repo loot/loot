@@ -25,19 +25,23 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_VERSION_QUERY
 #define LOOT_GUI_QUERY_GET_VERSION_QUERY
 
+#undef ERROR
+
 #include "gui/cef/query/query.h"
-#include "gui/cef/query/json.h"
 #include "gui/version.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class GetVersionQuery : public Query {
 public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
-    YAML::Node response;
-    response["release"] = gui::Version::string();
-    response["build"] = gui::Version::revision;
-    return JSON::stringify(response);
+
+    protobuf::Version response;
+    response.set_release(gui::Version::string());
+    response.set_build(gui::Version::revision);
+
+    return toJson(response);
   }
 };
 }

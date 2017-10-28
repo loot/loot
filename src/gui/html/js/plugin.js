@@ -202,7 +202,7 @@
     }
 
     static fromJson(key, value) {
-      if (value !== null && value.__type === 'Plugin') {
+      if (value !== null && Object.prototype.hasOwnProperty.call(value, 'name') && Object.prototype.hasOwnProperty.call(value, 'isEmpty')) {
         return new Plugin(value);
       }
       return value;

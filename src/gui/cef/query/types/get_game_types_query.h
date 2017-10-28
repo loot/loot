@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_GAME_TYPES_QUERY
 #define LOOT_GUI_QUERY_GET_GAME_TYPES_QUERY
 
+#undef ERROR
+
 #include "gui/state/game_settings.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/query.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class GetGameTypesQuery : public Query {
@@ -39,16 +41,16 @@ public:
 
 private:
   static std::string getGameTypesAsJson() {
-    YAML::Node response;
+    protobuf::GetGameTypesResponse response;
 
-    response["gameTypes"].push_back(GameSettings(GameType::tes4).FolderName());
-    response["gameTypes"].push_back(GameSettings(GameType::tes5).FolderName());
-    response["gameTypes"].push_back(GameSettings(GameType::tes5se).FolderName());
-    response["gameTypes"].push_back(GameSettings(GameType::fo3).FolderName());
-    response["gameTypes"].push_back(GameSettings(GameType::fonv).FolderName());
-    response["gameTypes"].push_back(GameSettings(GameType::fo4).FolderName());
+    response.add_game_types(GameSettings(GameType::tes4).FolderName());
+    response.add_game_types(GameSettings(GameType::tes5).FolderName());
+    response.add_game_types(GameSettings(GameType::tes5se).FolderName());
+    response.add_game_types(GameSettings(GameType::fo3).FolderName());
+    response.add_game_types(GameSettings(GameType::fonv).FolderName());
+    response.add_game_types(GameSettings(GameType::fo4).FolderName());
 
-    return JSON::stringify(response);
+    return toJson(response);
   }
 };
 }

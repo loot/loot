@@ -266,10 +266,16 @@ const LootSettings::WindowPosition& LootSettings::getWindowPosition() const {
   return windowPosition_;
 }
 
-std::vector<GameSettings> LootSettings::getGameSettings() const {
+const std::vector<GameSettings>& LootSettings::getGameSettings() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return gameSettings_;
+}
+
+const std::map<std::string, bool>& LootSettings::getFilters() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return filters_;
 }
 
 void LootSettings::setDefaultGame(const std::string& game) {

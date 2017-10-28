@@ -25,9 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_INSTALLED_GAMES_QUERY
 #define LOOT_GUI_QUERY_GET_INSTALLED_GAMES_QUERY
 
+#undef ERROR
+
 #include "gui/state/loot_state.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/query.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class GetInstalledGamesQuery : public Query {
@@ -41,10 +43,13 @@ public:
 
 private:
   std::string getInstalledGamesAsJson() const {
-    YAML::Node response;
-    response["installedGames"] = state_.getInstalledGames();
+    protobuf::GetInstalledGamesResponse response;
 
-    return JSON::stringify(response);
+    for (const auto& game : state_.getInstalledGames()) {
+      response.add_installed_games(game);
+    }
+
+    return toJson(response);
   }
 
   LootState& state_;

@@ -136,7 +136,7 @@
     return query('getInitErrors')
       .then(JSON.parse)
       .then((response) => {
-        if (response.errors.length > 0) {
+        if (response.errors && response.errors.length > 0) {
           throw new Error(response.errors);
         }
       });

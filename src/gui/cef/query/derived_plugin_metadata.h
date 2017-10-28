@@ -25,7 +25,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 #define LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 
-#include "gui/yaml_simple_message_helpers.h"
+#undef ERROR
+
+#include "gui/cef/query/protobuf.h"
+#include "schema/query.pb.h"
 
 namespace loot {
 class DerivedPluginMetadata {
@@ -33,125 +36,68 @@ public:
   DerivedPluginMetadata(LootState& state,
                         const std::shared_ptr<const PluginInterface>& file,
                         const PluginMetadata& evaluatedMetadata) {
-    name = file->GetName();
-    version = file->GetVersion();
-    isActive = state.getCurrentGame().IsPluginActive(name);
-    isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
-    isEmpty = file->IsEmpty();
-    isMaster = file->IsMaster();
-    loadsArchive = file->LoadsArchive();
+    plugin.set_name(file->GetName());
+    plugin.set_version(file->GetVersion());
+    plugin.set_is_active(state.getCurrentGame().IsPluginActive(file->GetName()));
+    plugin.set_is_dirty(!evaluatedMetadata.GetDirtyInfo().empty());
+    plugin.set_is_empty(file->IsEmpty());
+    plugin.set_is_master(file->IsMaster());
+    plugin.set_loads_archive(file->LoadsArchive());
 
-    crc = file->GetCRC();
-    loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
+    plugin.set_crc(file->GetCRC());
+    auto loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
       state.getCurrentGame().GetLoadOrder());
+    plugin.set_load_order_index(loadOrderIndex);
 
-    priority = evaluatedMetadata.GetLocalPriority().GetValue();
-    globalPriority = evaluatedMetadata.GetGlobalPriority().GetValue();
+    plugin.set_priority(evaluatedMetadata.GetLocalPriority().GetValue());
+    plugin.set_global_priority(evaluatedMetadata.GetGlobalPriority().GetValue());
+
     if (!evaluatedMetadata.GetCleanInfo().empty()) {
-      cleanedWith = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
+      auto utility = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
+      plugin.set_cleaned_with(utility);
     }
-    messages = evaluatedMetadata.GetSimpleMessages(state.getLanguage());
-    tags = evaluatedMetadata.GetTags();
 
-    language = state.getLanguage();
+    set(plugin, evaluatedMetadata.GetSimpleMessages(state.getLanguage()));
+    set(plugin, evaluatedMetadata.GetTags());
   }
 
-  void storeUnevaluatedMetadata(PluginMetadata masterlistEntry, PluginMetadata userlistEntry) {
-    masterlistMetadata = masterlistEntry;
-    userMetadata = userlistEntry;
+  void storeUnevaluatedMetadata(PluginMetadata masterlistEntry,
+                                PluginMetadata userlistEntry,
+                                const std::string& language) {
+    if (!masterlistEntry.HasNameOnly()) {
+      *plugin.mutable_masterlist() = convert(masterlistEntry, language);
+    }
+
+    if (!userlistEntry.HasNameOnly()) {
+      *plugin.mutable_userlist() = convert(userlistEntry, language);
+    }
   }
 
   static DerivedPluginMetadata none() {
     return DerivedPluginMetadata();
   }
 
-  bool isNone() {
-    return name.empty();
-  }
-
-  YAML::Node toYaml() const {
-    YAML::Node pluginNode;
-
-    pluginNode["__type"] = "Plugin";  // For conversion back into a JS typed object.
-    pluginNode["name"] = name;
-    pluginNode["version"] = version;
-    pluginNode["isActive"] = isActive;
-    pluginNode["isDirty"] = isDirty;
-    pluginNode["isEmpty"] = isEmpty;
-    pluginNode["isMaster"] = isMaster;
-    pluginNode["loadsArchive"] = loadsArchive;
-
-    pluginNode["crc"] = crc;
-    pluginNode["loadOrderIndex"] = loadOrderIndex;
-
-    pluginNode["priority"] = priority;
-    pluginNode["globalPriority"] = globalPriority;
-    pluginNode["cleanedWith"] = cleanedWith;
-    pluginNode["messages"] = messages;
-    pluginNode["tags"] = tags;
-
-    if (!masterlistMetadata.HasNameOnly()) {
-      pluginNode["masterlist"] = toYaml(masterlistMetadata, language);
-    }
-
-    if (!userMetadata.HasNameOnly()) {
-      pluginNode["userlist"] = toYaml(userMetadata, language);
-    }
-
-    return pluginNode;
+  protobuf::Plugin toProtobuf() const {
+    return plugin;
   }
 
 private:
-  std::string name;
-  std::string version;
-  bool isActive;
-  bool isDirty;
-  bool isEmpty;
-  bool isMaster;
-  bool loadsArchive;
-
-  uint32_t crc;
-  short loadOrderIndex;
-
-  short priority;
-  short globalPriority;
-  std::string cleanedWith;
-  std::vector<SimpleMessage> messages;
-  std::set<Tag> tags;
-
-  PluginMetadata masterlistMetadata;
-  PluginMetadata userMetadata;
-
-  std::string language;
+  protobuf::Plugin plugin;
 
   DerivedPluginMetadata() {}
 
-  static std::vector<EditorMessage> toEditorMessages(const std::vector<Message>& messages, const std::string& language) {
-    std::vector<EditorMessage> list;
-
+  static void set(protobuf::Plugin& plugin, const std::vector<SimpleMessage>& messages) {
     for (const auto& message : messages) {
-      list.push_back(EditorMessage(message, language));
+      auto pbMessage = plugin.add_messages();
+      convert(message, *pbMessage);
     }
-
-    return list;
   }
 
-  static YAML::Node toYaml(const PluginMetadata& metadata, const std::string& language) {
-    YAML::Node node;
-
-    node["enabled"] = metadata.IsEnabled();
-    node["priority"] = metadata.GetLocalPriority().GetValue();
-    node["globalPriority"] = metadata.GetGlobalPriority().GetValue();
-    node["after"] = metadata.GetLoadAfterFiles();
-    node["req"] = metadata.GetRequirements();
-    node["inc"] = metadata.GetIncompatibilities();
-    node["msg"] = toEditorMessages(metadata.GetMessages(), language);
-    node["tag"] = metadata.GetTags();
-    node["dirty"] = metadata.GetDirtyInfo();
-    node["clean"] = metadata.GetCleanInfo();
-    node["url"] = metadata.GetLocations();
-
-    return node;
+  static void set(protobuf::Plugin& plugin, const std::set<Tag>& tags) {
+    for (const auto& tag : tags) {
+      auto pbTag = plugin.add_tags();
+      convert(tag, *pbTag);
+    }
   }
 };
 }

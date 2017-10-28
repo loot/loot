@@ -128,7 +128,7 @@ function onSortPlugins() {
 
     loot.game.generalMessages = result.generalMessages;
 
-    if (!result.plugins) {
+    if (!result.plugins || result.plugins.length == 0) {
       const message = result.generalMessages.find(item => (
         item.text.startsWith('Cyclic interaction detected')
       ));

@@ -37,10 +37,8 @@
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
 
-#include "gui/editor_message.h"
 #include "gui/cef/loot_app.h"
 #include "gui/cef/loot_handler.h"
-#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/apply_sort_query.h"
 #include "gui/cef/query/types/cancel_find_query.h"
 #include "gui/cef/query/types/cancel_sort_query.h"

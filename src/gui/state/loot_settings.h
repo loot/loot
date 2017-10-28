@@ -60,7 +60,8 @@ public:
   std::string getLastVersion() const;
   std::string getLanguage() const;
   const WindowPosition& getWindowPosition() const;
-  std::vector<GameSettings> getGameSettings() const;
+  const std::vector<GameSettings>& getGameSettings() const;
+  const std::map<std::string, bool>& getFilters() const;
 
   void setDefaultGame(const std::string& game);
   void setLanguage(const std::string& language);

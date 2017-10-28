@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_METADATA_QUERY
 #define LOOT_GUI_QUERY_METADATA_QUERY
 
+#undef ERROR
+
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -34,6 +36,7 @@ along with LOOT.  If not, see
 #include "gui/cef/query/query.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/git_state_error.h"
+#include "schema/response.pb.h"
 
 namespace loot {
 class MetadataQuery : public Query {
@@ -89,36 +92,43 @@ protected:
 
     auto derived = DerivedPluginMetadata(state_, plugin, evaluatedMetadata);
 
-    derived.storeUnevaluatedMetadata(masterlistMetadata, userlistMetadata);
+    derived.storeUnevaluatedMetadata(masterlistMetadata, userlistMetadata, state_.getLanguage());
 
     return derived;
   }
 
   std::string generateJsonResponse(const std::string& pluginName) {
-    YAML::Node response = generateDerivedMetadata(pluginName).toYaml();
+    auto response = generateDerivedMetadata(pluginName).toProtobuf();
 
-    return JSON::stringify(response);
+    return toJson(response);
   }
 
   template<typename InputIterator>
   std::string generateJsonResponse(InputIterator firstPlugin, InputIterator lastPlugin) {
-    YAML::Node response;
+    protobuf::GameDataResponse response;
 
     auto masterlistInfo = getMasterlistInfo();
 
-    // ID the game using its folder value.
-    response["folder"] = state_.getCurrentGame().FolderName();
-    response["masterlist"]["revision"] = masterlistInfo.revision_id;
-    response["masterlist"]["date"] = masterlistInfo.revision_date;
-    response["generalMessages"] = getGeneralMessages();
-    response["bashTags"] = state_.getCurrentGame().GetKnownBashTags();
+    response.set_folder(state_.getCurrentGame().FolderName());
+    response.mutable_masterlist()->set_revision(masterlistInfo.revision_id);
+    response.mutable_masterlist()->set_date(masterlistInfo.revision_date);
 
-    // Now store plugin data.
-    for (auto it = firstPlugin; it != lastPlugin; ++it) {
-      response["plugins"].push_back(generateDerivedMetadata(*it).toYaml());
+    // Store general messages in case they have changed.
+    for (const auto& message : getGeneralMessages()) {
+      auto pbMessage = response.add_general_messages();
+      convert(message, *pbMessage);
     }
 
-    return JSON::stringify(response);
+    for (const auto& tag : state_.getCurrentGame().GetKnownBashTags()) {
+      response.add_bash_tags(tag);
+    }
+
+    for (auto it = firstPlugin; it != lastPlugin; ++it) {
+      auto pbPlugin = response.add_plugins();
+      *pbPlugin = generateDerivedMetadata(*it).toProtobuf();
+    }
+
+    return toJson(response);
   }
 
 private:

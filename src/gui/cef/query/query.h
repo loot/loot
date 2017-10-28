@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 #include <include/wrapper/cef_message_router.h>
+#include <google/protobuf/util/json_util.h>
 
 namespace loot {
 class Query : public CefBaseRefCounted {
@@ -47,6 +48,15 @@ protected:
   void sendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
     BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
     frame->ExecuteJavaScript("loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
+  }
+
+  static std::string toJson(const google::protobuf::Message& message) {
+    google::protobuf::util::JsonPrintOptions options;
+    options.always_print_primitive_fields = true;
+    std::string json;
+    google::protobuf::util::MessageToJsonString(message, &json, options);
+
+    return json;
   }
 
 private:
