@@ -61,18 +61,16 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
-  EXPECT_EQ("auto", settings_.getGame());
-  EXPECT_EQ("en", settings_.getLanguage());
-  EXPECT_EQ("auto", settings_.getLastGame());
+  EXPECT_TRUE(settings_.updateMasterlist());
   EXPECT_FALSE(settings_.isWindowPositionStored());
-
-  const YAML::Node node = settings_.toYaml();
-  EXPECT_TRUE(node["updateMasterlist"].as<bool>());
-  EXPECT_TRUE(node["lastVersion"].as<std::string>().empty());
-  EXPECT_FALSE(node["filters"]);
+  EXPECT_EQ("auto", settings_.getGame());
+  EXPECT_EQ("auto", settings_.getLastGame());
+  EXPECT_TRUE(settings_.getLastVersion().empty());
+  EXPECT_EQ("en", settings_.getLanguage());
+  EXPECT_TRUE(settings_.getFilters().empty());
 
   // GameSettings equality only checks name and folder, so check
-  // other settings_ individually.
+  // other settings individually.
   const std::vector<GameSettings> actualGameSettings = settings_.getGameSettings();
   EXPECT_EQ(expectedGameSettings, actualGameSettings);
 
@@ -113,29 +111,226 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(expectedGameSettings[5].RepoBranch(), actualGameSettings[5].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingFromFileShouldLoadContentAsYaml) {
+TEST_F(LootSettingsTest, loadingShouldReadFileContentAsYaml) {
+  using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
-  out << "enableDebugLogging: true" << std::endl;
+  out << "enableDebugLogging: true" << endl
+    << "updateMasterlist: true" << endl
+    << "game: Oblivion" << endl
+    << "lastGame: Skyrim" << endl
+    << "language: fr" << endl
+    << "lastVersion: 0.7.1" << endl
+    << "window:" << endl
+    << "  top: 1" << endl
+    << "  bottom: 2" << endl
+    << "  left: 3" << endl
+    << "  right: 4" << endl
+    << "  maximised: true" << endl
+    << "games:" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Oblivion" << endl
+    << "filters:" << endl
+    << "  hideBashTags: false" << endl
+    << "  hideCRCs: true" << endl;
   out.close();
 
   settings_.load(settingsFile_);
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
+  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_EQ("Oblivion", settings_.getGame());
+  EXPECT_EQ("Skyrim", settings_.getLastGame());
+  EXPECT_EQ("0.7.1", settings_.getLastVersion());
+  EXPECT_EQ("fr", settings_.getLanguage());
+
+  EXPECT_EQ(1, settings_.getWindowPosition().top);
+  EXPECT_EQ(2, settings_.getWindowPosition().bottom);
+  EXPECT_EQ(3, settings_.getWindowPosition().left);
+  EXPECT_EQ(4, settings_.getWindowPosition().right);
+  EXPECT_TRUE(settings_.getWindowPosition().maximised);
+
+  EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
+
+  EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
+  EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
 }
 
-TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
-  const bool enableDebugLogging = true;
-  const bool updateMasterlist = true;
+TEST_F(LootSettingsTest, loadingShouldUpgradeFromVersion0Point6Format) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "Debug Verbosity: 3" << endl
+    << "Update Masterlist: true" << endl
+    << "Game: Oblivion" << endl
+    << "Last Game: Skyrim" << endl
+    << "Language: fr" << endl
+    << "Games:" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Oblivion" << endl
+    << "    url: https://github.com/loot/oblivion.git" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
+  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_EQ("Oblivion", settings_.getGame());
+  EXPECT_EQ("Skyrim", settings_.getLastGame());
+  EXPECT_EQ("fr", settings_.getLanguage());
+
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ("https://github.com/loot/oblivion.git", settings_.getGameSettings()[0].RepoURL());
+  EXPECT_EQ("master", settings_.getGameSettings()[0].RepoBranch());
+}
+
+TEST_F(LootSettingsTest, loadingShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "enableDebugLogging: false" << endl
+    << "updateMasterlist: false" << endl
+    << "game: auto" << endl
+    << "lastGame: auto" << endl
+    << "language: en" << endl
+    << "lastVersion: 0.7.1" << endl
+    << "window:" << endl
+    << "  top: 1" << endl
+    << "  bottom: 2" << endl
+    << "  left: 3" << endl
+    << "  right: 4" << endl
+    << "  maximised: true" << endl
+    << "games:" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Fallout3" << endl
+    << "    folder: Fallout3" << endl
+    << "filters:" << endl
+    << "  hideBashTags: false" << endl
+    << "  hideCRCs: true" << endl;
+
+  out << "Debug Verbosity: 3" << endl
+    << "Update Masterlist: true" << endl
+    << "Game: Oblivion" << endl
+    << "Last Game: Skyrim" << endl
+    << "Language: fr" << endl
+    << "Games:" << endl
+    << "  - name: Old Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Oblivion" << endl
+    << "    url: https://github.com/loot/oblivion.git" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_FALSE(settings_.isDebugLoggingEnabled());
+  EXPECT_FALSE(settings_.updateMasterlist());
+  EXPECT_EQ("auto", settings_.getGame());
+  EXPECT_EQ("auto", settings_.getLastGame());
+  EXPECT_EQ("en", settings_.getLanguage());
+
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+}
+
+TEST_F(LootSettingsTest, loadingShouldUpgradeOldDefaultGameRepositoryBranches) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "games:" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Oblivion" << endl
+    << "    branch: v0.7" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
+  EXPECT_EQ(games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
+}
+
+TEST_F(LootSettingsTest, loadingShouldNotUpgradeNonDefaultGameRepositoryBranches) {
+  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
+
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "games:" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Oblivion" << endl
+    << "    branch: foo" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
+}
+
+TEST_F(LootSettingsTest, loadingShouldAddMissingBaseGames) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "games:" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Test" << endl
+    << "    branch: foo" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  GameSettings testGame = GameSettings(GameType::tes4, "Test")
+    .SetName("Game Name")
+    .SetRepoBranch("foo");
+
+  const std::vector<GameSettings> expectedGameSettings({
+      testGame,
+      GameSettings(GameType::tes4),
+      GameSettings(GameType::tes5),
+      GameSettings(GameType::tes5se),
+      GameSettings(GameType::fo3),
+      GameSettings(GameType::fonv),
+      GameSettings(GameType::fo4),
+  });
+  EXPECT_EQ(7, settings_.getGameSettings().size());
+  EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
+}
+
+TEST_F(LootSettingsTest, loadingShouldSkipUnrecognisedGames) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "games:" << endl
+    << "  - name: Foobar" << endl
+    << "    type: Foobar" << endl
+    << "    folder: Oblivion" << endl
+    << "  - name: Game Name" << endl
+    << "    type: Oblivion" << endl
+    << "    folder: Oblivion" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+}
+
+TEST_F(LootSettingsTest, loadingShouldRemoveTheContentFilterSetting) {
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "filters:" << std::endl
+    << "  contentFilter: foo" << std::endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_TRUE(settings_.getFilters().empty());
+}
+
+TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
-  const std::string lastVersion = "0.7.1";
-  const std::map<std::string, long> window({
-      {"top", 1},
-      {"bottom", 2},
-      {"left", 3},
-      {"right", 4},
-  });
+
+  LootSettings::WindowPosition windowPosition;
+  windowPosition.top = 1;
+  windowPosition.bottom = 2;
+  windowPosition.left = 3;
+  windowPosition.right = 4;
+  windowPosition.maximised = 5;
   const std::vector<GameSettings> games({
       GameSettings(GameType::tes4).SetName("Game Name"),
   });
@@ -144,24 +339,26 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
       {"hideCRCs", true},
   });
 
-  YAML::Node inputYaml;
-  inputYaml["enableDebugLogging"] = enableDebugLogging;
-  inputYaml["updateMasterlist"] = updateMasterlist;
-  inputYaml["game"] = game;
-  inputYaml["language"] = language;
-  inputYaml["lastGame"] = lastGame;
-  inputYaml["lastVersion"] = lastVersion;
-  inputYaml["window"] = window;
-  inputYaml["window"]["maximised"] = true;
-  inputYaml["games"] = games;
-  inputYaml["filters"] = filters;
+  settings_.enableDebugLogging(true);
+  settings_.updateMasterlist(true);
+  settings_.setDefaultGame(game);
+  settings_.storeLastGame(lastGame);
+  settings_.setLanguage(language);
 
-  settings_.load(inputYaml);
+  settings_.storeWindowPosition(windowPosition);
+  settings_.storeGameSettings(games);
+  for (const auto& filter : filters) {
+    settings_.storeFilterState(filter.first, filter.second);
+  }
 
-  EXPECT_EQ(enableDebugLogging, settings_.isDebugLoggingEnabled());
+  settings_.save(settingsFile_);
+  settings_.load(settingsFile_);
+
+  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
+  EXPECT_TRUE(settings_.updateMasterlist());
   EXPECT_EQ(game, settings_.getGame());
-  EXPECT_EQ(language, settings_.getLanguage());
   EXPECT_EQ(lastGame, settings_.getLastGame());
+  EXPECT_EQ(language, settings_.getLanguage());
 
   EXPECT_EQ(1, settings_.getWindowPosition().top);
   EXPECT_EQ(2, settings_.getWindowPosition().bottom);
@@ -169,185 +366,9 @@ TEST_F(LootSettingsTest, loadingFromYamlShouldStoreLoadedValues) {
   EXPECT_EQ(4, settings_.getWindowPosition().right);
   EXPECT_TRUE(settings_.getWindowPosition().maximised);
 
-  const YAML::Node outputYaml = settings_.toYaml();
-  EXPECT_EQ(updateMasterlist, outputYaml["updateMasterlist"].as<bool>());
-  EXPECT_EQ(lastVersion, outputYaml["lastVersion"].as<std::string>());
+  EXPECT_EQ(games[0].Name(), settings_.getGameSettings().at(0).Name());
 
-  for (const auto& filter : filters) {
-    EXPECT_EQ(filter.second, outputYaml["filters"][filter.first].as<bool>());
-  }
-
-  EXPECT_EQ(games[0].Name(), settings_.getGameSettings()[0].Name());
-}
-
-TEST_F(LootSettingsTest, loadingFromEmptyYamlShouldNotThrow) {
-  YAML::Node yaml;
-  EXPECT_NO_THROW(settings_.load(yaml));
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeFromVersion0Point6Format) {
-  const unsigned int DebugVerbosity = 3;
-  const bool UpdateMasterlist = true;
-  const std::string Game = "Oblivion";
-  const std::string Language = "fr";
-  const std::string LastGame = "Skyrim";
-  const std::vector<GameSettings> Games({
-      GameSettings(GameType::tes4).SetName("Game Name"),
-  });
-
-  YAML::Node inputYaml;
-  inputYaml["Debug Verbosity"] = DebugVerbosity;
-  inputYaml["Update Masterlist"] = UpdateMasterlist;
-  inputYaml["Game"] = Game;
-  inputYaml["Language"] = Language;
-  inputYaml["Last Game"] = LastGame;
-
-  inputYaml["Games"] = Games;
-  inputYaml["Games"][0]["url"] = inputYaml["Games"][0]["repo"];
-  inputYaml["Games"][0].remove("repo");
-  inputYaml["Games"][0].remove("branch");
-
-  settings_.load(inputYaml);
-
-  const YAML::Node outputYaml = settings_.toYaml();
-  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_EQ(UpdateMasterlist, outputYaml["updateMasterlist"].as<bool>());
-  EXPECT_EQ(Game, settings_.getGame());
-  EXPECT_EQ(Language, settings_.getLanguage());
-  EXPECT_EQ(LastGame, settings_.getLastGame());
-
-  EXPECT_EQ(Games[0].Name(), settings_.getGameSettings()[0].Name());
-  EXPECT_EQ(Games[0].RepoURL(), settings_.getGameSettings()[0].RepoURL());
-  EXPECT_EQ("master", settings_.getGameSettings()[0].RepoBranch());
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
-  const unsigned int DebugVerbosity = 3;
-  const bool enableDebugLogging = false;
-  const bool UpdateMasterlist = true;
-  const bool updateMasterlist = false;
-  const std::string Game = "Oblivion";
-  const std::string game = "auto";
-  const std::string Language = "fr";
-  const std::string language = "en";
-  const std::string LastGame = "Skyrim";
-  const std::string lastGame = "auto";
-  const std::vector<GameSettings> Games({
-      GameSettings(GameType::tes4).SetName("Old Game Name"),
-  });
-  const std::vector<GameSettings> games({
-      GameSettings(GameType::fo3).SetName("Game Name"),
-  });
-
-  YAML::Node inputYaml;
-  inputYaml["Debug Verbosity"] = DebugVerbosity;
-  inputYaml["enableDebugLogging"] = enableDebugLogging;
-  inputYaml["Update Masterlist"] = UpdateMasterlist;
-  inputYaml["updateMasterlist"] = updateMasterlist;
-  inputYaml["Game"] = Game;
-  inputYaml["game"] = game;
-  inputYaml["Language"] = Language;
-  inputYaml["language"] = language;
-  inputYaml["Last Game"] = LastGame;
-  inputYaml["lastGame"] = lastGame;
-
-  inputYaml["Games"] = Games;
-  inputYaml["Games"][0]["url"] = inputYaml["Games"][0]["repo"];
-  inputYaml["Games"][0].remove("repo");
-  inputYaml["Games"][0].remove("branch");
-  inputYaml["games"] = games;
-
-  settings_.load(inputYaml);
-
-  const YAML::Node outputYaml = settings_.toYaml();
-
-  EXPECT_EQ(enableDebugLogging, settings_.isDebugLoggingEnabled());
-  EXPECT_EQ(updateMasterlist, outputYaml["updateMasterlist"].as<bool>());
-  EXPECT_EQ(game, settings_.getGame());
-  EXPECT_EQ(language, settings_.getLanguage());
-  EXPECT_EQ(lastGame, settings_.getLastGame());
-
-  EXPECT_EQ(games[0].Name(), settings_.getGameSettings()[0].Name());
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldUpgradeOldDefaultGameRepositoryBranches) {
-  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
-
-  YAML::Node inputYaml;
-  inputYaml["games"] = games;
-  inputYaml["games"][0]["branch"] = "v0.7";
-
-  settings_.load(inputYaml);
-
-  EXPECT_EQ(games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldNotUpgradeNonDefaultGameRepositoryBranches) {
-  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
-
-  YAML::Node inputYaml;
-  inputYaml["games"] = games;
-  inputYaml["games"][0]["branch"] = "foo";
-
-  settings_.load(inputYaml);
-
-  EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldAddMissingBaseGames) {
-  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
-  YAML::Node inputYaml;
-  inputYaml["games"] = games;
-
-  settings_.load(inputYaml);
-
-  const std::vector<GameSettings> expectedGameSettings({
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-  });
-  EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldSkipUnrecognisedGames) {
-  YAML::Node inputYaml;
-  inputYaml["games"][0] = GameSettings(GameType::tes4);
-  inputYaml["games"][0]["type"] = "Foobar";
-  inputYaml["games"][0]["name"] = "Foobar";
-  inputYaml["games"][1] = GameSettings(GameType::tes5).SetName("Game Name");
-
-  settings_.load(inputYaml);
-
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-}
-
-TEST_F(LootSettingsTest, loadingFromYamlShouldRemoveTheContentFilterSetting) {
-  YAML::Node inputYaml;
-  inputYaml["filters"]["contentFilter"] = "foo";
-
-  settings_.load(inputYaml);
-}
-
-TEST_F(LootSettingsTest, saveShouldWriteSettingsAsYamlToPassedFile) {
-  settings_.storeLastGame("Skyrim");
-  settings_.save(settingsFile_);
-
-  settings_.storeLastGame("auto");
-  settings_.load(settingsFile_);
-
-  EXPECT_EQ("Skyrim", settings_.getLastGame());
-}
-
-TEST_F(LootSettingsTest, getLanguageShouldReturnTheCurrentValue) {
-  YAML::Node inputYaml;
-  inputYaml["language"] = "fr";
-
-  settings_.load(inputYaml);
-
-  EXPECT_EQ("fr", settings_.getLanguage());
+  EXPECT_EQ(filters, settings_.getFilters());
 }
 
 TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
@@ -416,69 +437,15 @@ TEST_F(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
 
 TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   const std::string currentVersion = gui::Version::string();
-  YAML::Node inputYaml;
-  inputYaml["lastVersion"] = "v0.7.1";
 
-  settings_.load(inputYaml);
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "lastVersion: 0.7.1" << std::endl;
+  out.close();
+
+  settings_.load(settingsFile_);
   settings_.updateLastVersion();
 
   EXPECT_EQ(currentVersion, settings_.getLastVersion());
-}
-
-TEST_F(LootSettingsTest, toYamlShouldOutputStoredSettings) {
-  const bool enableDebugLogging = true;
-  const bool updateMasterlist = true;
-  const std::string game = "Oblivion";
-  const std::string language = "fr";
-  const std::string lastGame = "Skyrim";
-  const std::string lastVersion = "0.7.1";
-  const std::map<std::string, long> window({
-      {"top", 1},
-      {"bottom", 2},
-      {"left", 3},
-      {"right", 4},
-  });
-  const std::vector<GameSettings> games({
-      GameSettings(GameType::tes4).SetName("Game Name"),
-  });
-  const std::map<std::string, bool> filters({
-      {"hideBashTags", false},
-      {"hideCRCs", true},
-  });
-
-  YAML::Node inputYaml;
-  inputYaml["enableDebugLogging"] = enableDebugLogging;
-  inputYaml["updateMasterlist"] = updateMasterlist;
-  inputYaml["game"] = game;
-  inputYaml["language"] = language;
-  inputYaml["lastGame"] = lastGame;
-  inputYaml["lastVersion"] = lastVersion;
-  inputYaml["window"] = window;
-  inputYaml["window"]["maximised"] = true;
-  inputYaml["games"] = games;
-  inputYaml["filters"] = filters;
-
-  settings_.load(inputYaml);
-
-  const YAML::Node outputYaml = settings_.toYaml();
-
-  EXPECT_EQ(enableDebugLogging, outputYaml["enableDebugLogging"].as<bool>());
-  EXPECT_EQ(updateMasterlist, outputYaml["updateMasterlist"].as<bool>());
-  EXPECT_EQ(game, outputYaml["game"].as<std::string>());
-  EXPECT_EQ(language, outputYaml["language"].as<std::string>());
-  EXPECT_EQ(lastGame, outputYaml["lastGame"].as<std::string>());
-  EXPECT_EQ(lastVersion, outputYaml["lastVersion"].as<std::string>());
-
-  for (const auto& position : window) {
-    EXPECT_EQ(position.second, outputYaml["window"][position.first].as<long>());
-  }
-  EXPECT_TRUE(outputYaml["window"]["maximised"].as<bool>());
-
-  for (const auto& filter : filters) {
-    EXPECT_EQ(filter.second, outputYaml["filters"][filter.first].as<bool>());
-  }
-
-  EXPECT_EQ(games[0].Name(), outputYaml["games"][0]["name"].as<std::string>());
 }
 }
 }

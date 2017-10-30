@@ -31,7 +31,6 @@
 #include <vector>
 
 #include <boost/filesystem.hpp>
-#include <yaml-cpp/yaml.h>
 
 #include "gui/state/game_settings.h"
 
@@ -50,7 +49,6 @@ public:
 
   LootSettings();
 
-  void load(YAML::Node& settings);
   void load(const boost::filesystem::path& file);
   void save(const boost::filesystem::path& file);
 
@@ -68,11 +66,7 @@ public:
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
   void storeFilterState(const std::string& filterId, bool enabled);
   void updateLastVersion();
-
-  YAML::Node toYaml() const;
 private:
-  static void upgradeYaml(YAML::Node& yaml);
-
   bool enableDebugLogging_;
   bool updateMasterlist_;
   std::string game_;

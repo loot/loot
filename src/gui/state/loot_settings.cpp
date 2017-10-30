@@ -27,6 +27,7 @@
 #include <thread>
 
 #include <boost/filesystem/fstream.hpp>
+#include <yaml-cpp/yaml.h>
 
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
@@ -36,6 +37,74 @@ using std::recursive_mutex;
 using std::string;
 
 namespace loot {
+void upgradeYaml(YAML::Node& yaml) {
+  // Upgrade YAML settings' keys and values from those used in earlier
+  // versions of LOOT.
+
+  if (yaml["Debug Verbosity"] && !yaml["enableDebugLogging"])
+    yaml["enableDebugLogging"] = yaml["Debug Verbosity"].as<unsigned int>() > 0;
+
+  if (yaml["Update Masterlist"] && !yaml["updateMasterlist"])
+    yaml["updateMasterlist"] = yaml["Update Masterlist"];
+
+  if (yaml["Game"] && !yaml["game"])
+    yaml["game"] = yaml["Game"];
+
+  if (yaml["Language"] && !yaml["language"])
+    yaml["language"] = yaml["Language"];
+
+  if (yaml["Last Game"] && !yaml["lastGame"])
+    yaml["lastGame"] = yaml["Last Game"];
+
+  if (yaml["Games"] && !yaml["games"]) {
+    yaml["games"] = yaml["Games"];
+
+    for (auto node : yaml["games"]) {
+      if (node["url"]) {
+        node["repo"] = node["url"];
+        node["branch"] = "master";  // It'll get updated to the correct default
+      }
+    }
+  }
+
+  if (yaml["games"]) {
+    // Handle exception if YAML is invalid, eg. if an unrecognised
+    // game type is used (which can happen if downgrading from a
+    // later version of LOOT that supports more game types).
+    // However, can't remove elements from a sequence Node, so have to
+    // copy the valid elements into a new node then overwrite the
+    // original.
+    YAML::Node validGames;
+    for (auto node : yaml["games"]) {
+      try {
+        if (node["type"].as<string>() == "SkyrimSE" && node["folder"].as<string>() == "SkyrimSE") {
+          node["type"] = GameSettings(GameType::tes5se).FolderName();
+          node["folder"] = GameSettings(GameType::tes5se).FolderName();
+
+          boost::filesystem::rename(LootPaths::getLootDataPath() / "SkyrimSE", LootPaths::getLootDataPath() / node["folder"].as<string>());
+        }
+
+        GameSettings settings(node.as<GameSettings>());
+
+        if (!yaml["Games"]) {
+            // Update existing default branch, if the default
+            // repositories are used.
+          if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL()
+              && settings.IsRepoBranchOldDefault()) {
+            settings.SetRepoBranch(GameSettings(settings.Type()).RepoBranch());
+          }
+        }
+
+        validGames.push_back(settings);
+      } catch (...) {}
+    }
+    yaml["games"] = validGames;
+  }
+
+  if (yaml["filters"])
+    yaml["filters"].remove("contentFilter");
+}
+
 LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0), maximised(false) {}
 
 LootSettings::LootSettings() :
@@ -57,8 +126,11 @@ game_("auto"),
 language_("en"),
 lastGame_("auto") {}
 
-void LootSettings::load(YAML::Node& settings) {
+void LootSettings::load(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
+
+  boost::filesystem::ifstream in(file);
+  YAML::Node settings = YAML::Load(in);
 
   upgradeYaml(settings);
 
@@ -113,18 +185,34 @@ void LootSettings::load(YAML::Node& settings) {
     filters_ = settings["filters"].as<std::map<string, bool>>();
 }
 
-void LootSettings::load(const boost::filesystem::path& file) {
-  boost::filesystem::ifstream in(file);
-  YAML::Node content = YAML::Load(in);
-  load(content);
-}
-
 void LootSettings::save(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
+  YAML::Node node;
+
+  node["enableDebugLogging"] = enableDebugLogging_;
+  node["updateMasterlist"] = updateMasterlist_;
+  node["game"] = game_;
+  node["language"] = language_;
+  node["lastGame"] = lastGame_;
+  node["lastVersion"] = lastVersion_;
+
+  if (isWindowPositionStored()) {
+    node["window"]["top"] = windowPosition_.top;
+    node["window"]["bottom"] = windowPosition_.bottom;
+    node["window"]["left"] = windowPosition_.left;
+    node["window"]["right"] = windowPosition_.right;
+    node["window"]["maximised"] = windowPosition_.maximised;
+  }
+
+  node["games"] = gameSettings_;
+
+  if (!filters_.empty())
+    node["filters"] = filters_;
+
   YAML::Emitter yout;
   yout.SetIndent(2);
-  yout << toYaml();
+  yout << node;
 
   boost::filesystem::ofstream out(file);
   out << yout.c_str();
@@ -206,101 +294,5 @@ void LootSettings::updateLastVersion() {
   lock_guard<recursive_mutex> guard(mutex_);
 
   lastVersion_ = gui::Version::string();
-}
-
-YAML::Node LootSettings::toYaml() const {
-  lock_guard<recursive_mutex> guard(mutex_);
-
-  YAML::Node node;
-
-  node["enableDebugLogging"] = enableDebugLogging_;
-  node["updateMasterlist"] = updateMasterlist_;
-  node["game"] = game_;
-  node["language"] = language_;
-  node["lastGame"] = lastGame_;
-  node["lastVersion"] = lastVersion_;
-
-  if (isWindowPositionStored()) {
-    node["window"]["top"] = windowPosition_.top;
-    node["window"]["bottom"] = windowPosition_.bottom;
-    node["window"]["left"] = windowPosition_.left;
-    node["window"]["right"] = windowPosition_.right;
-    node["window"]["maximised"] = windowPosition_.maximised;
-  }
-
-  node["games"] = gameSettings_;
-
-  if (!filters_.empty())
-    node["filters"] = filters_;
-
-  return node;
-}
-
-void LootSettings::upgradeYaml(YAML::Node& yaml) {
-    // Upgrade YAML settings' keys and values from those used in earlier
-    // versions of LOOT.
-
-  if (yaml["Debug Verbosity"] && !yaml["enableDebugLogging"])
-    yaml["enableDebugLogging"] = yaml["Debug Verbosity"].as<unsigned int>() > 0;
-
-  if (yaml["Update Masterlist"] && !yaml["updateMasterlist"])
-    yaml["updateMasterlist"] = yaml["Update Masterlist"];
-
-  if (yaml["Game"] && !yaml["game"])
-    yaml["game"] = yaml["Game"];
-
-  if (yaml["Language"] && !yaml["language"])
-    yaml["language"] = yaml["Language"];
-
-  if (yaml["Last Game"] && !yaml["lastGame"])
-    yaml["lastGame"] = yaml["Last Game"];
-
-  if (yaml["Games"] && !yaml["games"]) {
-    yaml["games"] = yaml["Games"];
-
-    for (auto node : yaml["games"]) {
-      if (node["url"]) {
-        node["repo"] = node["url"];
-        node["branch"] = "master";  // It'll get updated to the correct default
-      }
-    }
-  }
-
-  if (yaml["games"]) {
-    // Handle exception if YAML is invalid, eg. if an unrecognised
-    // game type is used (which can happen if downgrading from a
-    // later version of LOOT that supports more game types).
-    // However, can't remove elements from a sequence Node, so have to
-    // copy the valid elements into a new node then overwrite the
-    // original.
-    YAML::Node validGames;
-    for (auto node : yaml["games"]) {
-      try {
-        if (node["type"].as<string>() == "SkyrimSE" && node["folder"].as<string>() == "SkyrimSE") {
-          node["type"] = GameSettings(GameType::tes5se).FolderName();
-          node["folder"] = GameSettings(GameType::tes5se).FolderName();
-
-          boost::filesystem::rename(LootPaths::getLootDataPath() / "SkyrimSE", LootPaths::getLootDataPath() / node["folder"].as<string>());
-        }
-
-        GameSettings settings(node.as<GameSettings>());
-
-        if (!yaml["Games"]) {
-            // Update existing default branch, if the default
-            // repositories are used.
-          if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL()
-              && settings.IsRepoBranchOldDefault()) {
-            settings.SetRepoBranch(GameSettings(settings.Type()).RepoBranch());
-          }
-        }
-
-        validGames.push_back(settings);
-      } catch (...) {}
-    }
-    yaml["games"] = validGames;
-  }
-
-  if (yaml["filters"])
-    yaml["filters"].remove("contentFilter");
 }
 }
