@@ -146,6 +146,15 @@ set(CEF_LOCALES_DIR "${CEF_RESOURCES_DIR}/locales")
 set(CEF_LOCALE_FILE "en-US.pak")
 set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 
+ExternalProject_Add(cpptoml
+                    PREFIX "external"
+                    URL "https://github.com/skystrife/cpptoml/archive/2051836a96a25e5a2d5283be7f633a157848f15e.tar.gz"
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(cpptoml SOURCE_DIR)
+set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
+
 
 ##############################
 # General Settings
@@ -260,6 +269,7 @@ source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_SRC})
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${LOOT_SCHEMA_DIR}
+                     ${CPPTOML_INCLUDE_DIRS}
                      ${LIBLOADORDER_INCLUDE_DIRS}
                      ${LIBGIT2_INCLUDE_DIRS}
                      ${CEF_INCLUDE_DIRS}
@@ -331,12 +341,12 @@ add_custom_command(
 
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies     (LOOT cef loot_api yaml-cpp)
+add_dependencies     (LOOT cef cpptoml loot_api yaml-cpp)
 target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${Protobuf_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests loot_api yaml-cpp GTest testing-metadata testing-plugins)
+add_dependencies     (loot_gui_tests cpptoml loot_api yaml-cpp GTest testing-metadata testing-plugins)
 target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_TEST_LIBS})
 
 ##############################

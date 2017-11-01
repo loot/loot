@@ -86,6 +86,10 @@ private:
   std::map<std::string, bool> filters_;
 
   mutable std::recursive_mutex mutex_;
+
+  void appendBaseGames();
+  void loadAsYaml(const boost::filesystem::path& file);
+  void loadAsToml(const boost::filesystem::path& file);
 };
 }
 

@@ -26,7 +26,9 @@
 
 #include <thread>
 
+#include <cpptoml.h>
 #include <yaml-cpp/yaml.h>
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include "gui/state/loot_paths.h"
@@ -109,6 +111,79 @@ void upgradeYaml(YAML::Node& yaml) {
     yaml["filters"].remove("contentFilter");
 }
 
+GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
+  GameSettings game;
+
+  auto type = table->get_as<std::string>("type");
+  if (!type) {
+    throw std::runtime_error("'type' key missing from game settings table");
+  }
+
+  auto folder = table->get_as<std::string>("folder");
+  if (!folder) {
+    throw std::runtime_error("'folder' key missing from game settings table");
+  }
+
+  if (*type == "SkyrimSE" && *folder == *type) {
+    type = cpptoml::option<std::string>(
+        GameSettings(GameType::tes5se).FolderName());
+    folder = type;
+
+    auto path = LootPaths::getLootDataPath() / "SkyrimSE";
+    if (boost::filesystem::exists(path)) {
+      boost::filesystem::rename(path, LootPaths::getLootDataPath() / *folder);
+    }
+  }
+
+  if (*type == GameSettings(GameType::tes4).FolderName()) {
+    game = GameSettings(GameType::tes4, *folder);
+  } else if (*type == GameSettings(GameType::tes5).FolderName()) {
+    game = GameSettings(GameType::tes5, *folder);
+  } else if (*type == GameSettings(GameType::tes5se).FolderName()) {
+    game = GameSettings(GameType::tes5se, *folder);
+  } else if (*type == GameSettings(GameType::fo3).FolderName()) {
+    game = GameSettings(GameType::fo3, *folder);
+  } else if (*type == GameSettings(GameType::fonv).FolderName()) {
+    game = GameSettings(GameType::fonv, *folder);
+  } else if (*type == GameSettings(GameType::fo4).FolderName()) {
+    game = GameSettings(GameType::fo4, *folder);
+  } else
+    throw std::runtime_error(
+        "invalid value for 'type' key in game settings table");
+
+  auto name = table->get_as<std::string>("name");
+  if (name) {
+    game.SetName(*name);
+  }
+
+  auto master = table->get_as<std::string>("master");
+  if (master) {
+    game.SetMaster(*master);
+  }
+
+  auto repo = table->get_as<std::string>("repo");
+  if (repo) {
+    game.SetRepoURL(*repo);
+  }
+
+  auto branch = table->get_as<std::string>("branch");
+  if (branch) {
+    game.SetRepoBranch(*branch);
+  }
+
+  auto path = table->get_as<std::string>("path");
+  if (path) {
+    game.SetGamePath(*path);
+  }
+
+  auto registry = table->get_as<std::string>("registry");
+  if (registry) {
+    game.SetRegistryKey(*registry);
+  }
+
+  return game;
+}
+
 LootSettings::WindowPosition::WindowPosition() :
     top(0),
     bottom(0),
@@ -140,6 +215,64 @@ LootSettings::LootSettings() :
 void LootSettings::load(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
+  if (boost::iequals(file.extension().string(), ".toml")) {
+    loadAsToml(file);
+  } else {
+    loadAsYaml(file);
+  }
+}
+
+void LootSettings::loadAsToml(const boost::filesystem::path& file) {
+  auto settings = cpptoml::parse_file(file.string());
+
+  enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
+                            .value_or(enableDebugLogging_);
+  updateMasterlist_ =
+      settings->get_as<bool>("updateMasterlist").value_or(updateMasterlist_);
+  game_ = settings->get_as<std::string>("game").value_or(game_);
+  language_ = settings->get_as<std::string>("language").value_or(language_);
+  lastGame_ = settings->get_as<std::string>("lastGame").value_or(lastGame_);
+  lastVersion_ =
+      settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
+
+  auto windowTop = settings->get_qualified_as<long>("window.top");
+  auto windowBottom = settings->get_qualified_as<long>("window.bottom");
+  auto windowLeft = settings->get_qualified_as<long>("window.left");
+  auto windowRight = settings->get_qualified_as<long>("window.right");
+  auto windowMaximised = settings->get_qualified_as<bool>("window.maximised");
+  if (windowTop && windowBottom && windowLeft && windowRight &&
+      windowMaximised) {
+    windowPosition_.top = *windowTop;
+    windowPosition_.bottom = *windowBottom;
+    windowPosition_.left = *windowLeft;
+    windowPosition_.right = *windowRight;
+    windowPosition_.maximised = *windowMaximised;
+  }
+
+  auto games = settings->get_table_array("games");
+  if (games) {
+    gameSettings_.clear();
+
+    for (const auto& game : *games) {
+      gameSettings_.push_back(convert(game));
+    }
+
+    appendBaseGames();
+  }
+
+  auto filters = settings->get_table("filters");
+  if (filters) {
+    filters_.clear();
+    for (const auto& filter : *filters) {
+      auto value = filter.second->as<bool>();
+      if (value) {
+        filters_.emplace(filter.first, value->get());
+      }
+    }
+  }
+}
+
+void LootSettings::loadAsYaml(const boost::filesystem::path& file) {
   boost::filesystem::ifstream in(file);
   YAML::Node settings = YAML::Load(in);
 
@@ -172,35 +305,7 @@ void LootSettings::load(const boost::filesystem::path& file) {
     gameSettings_ = settings["games"].as<std::vector<GameSettings>>();
 
     // If a base game isn't in the settings, add it.
-    if (find(begin(gameSettings_),
-             end(gameSettings_),
-             GameSettings(GameType::tes4)) == end(gameSettings_))
-      gameSettings_.push_back(GameSettings(GameType::tes4));
-
-    if (find(begin(gameSettings_),
-             end(gameSettings_),
-             GameSettings(GameType::tes5)) == end(gameSettings_))
-      gameSettings_.push_back(GameSettings(GameType::tes5));
-
-    if (find(begin(gameSettings_),
-             end(gameSettings_),
-             GameSettings(GameType::tes5se)) == end(gameSettings_))
-      gameSettings_.push_back(GameSettings(GameType::tes5se));
-
-    if (find(begin(gameSettings_),
-             end(gameSettings_),
-             GameSettings(GameType::fo3)) == end(gameSettings_))
-      gameSettings_.push_back(GameSettings(GameType::fo3));
-
-    if (find(begin(gameSettings_),
-             end(gameSettings_),
-             GameSettings(GameType::fonv)) == end(gameSettings_))
-      gameSettings_.push_back(GameSettings(GameType::fonv));
-
-    if (find(begin(gameSettings_),
-             end(gameSettings_),
-             GameSettings(GameType::fo4)) == end(gameSettings_))
-      gameSettings_.push_back(GameSettings(GameType::fo4));
+    appendBaseGames();
   }
 
   if (settings["filters"])
@@ -354,5 +459,37 @@ void LootSettings::updateLastVersion() {
   lock_guard<recursive_mutex> guard(mutex_);
 
   lastVersion_ = gui::Version::string();
+}
+
+void LootSettings::appendBaseGames() {
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::tes4)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::tes4));
+
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::tes5)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::tes5));
+
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::tes5se)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::tes5se));
+
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::fo3)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::fo3));
+
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::fonv)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::fonv));
+
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::fo4)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::fo4));
 }
 }

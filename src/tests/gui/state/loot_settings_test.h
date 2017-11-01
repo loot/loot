@@ -35,11 +35,14 @@ namespace loot {
 namespace test {
 class LootSettingsTest : public ::testing::Test {
 protected:
-  LootSettingsTest() : settingsFile_("./settings_.yaml") {}
+  LootSettingsTest() :
+      settingsFile_("./settings_.yaml"),
+      tomlSettingsFile_("./settings.toml") {}
 
   ~LootSettingsTest() { boost::filesystem::remove(settingsFile_); }
 
-  boost::filesystem::path settingsFile_;
+  const boost::filesystem::path settingsFile_;
+  const boost::filesystem::path tomlSettingsFile_;
   LootSettings settings_;
 };
 
@@ -123,7 +126,55 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[5].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingShouldReadFileContentAsYaml) {
+TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
+  using std::endl;
+  boost::filesystem::ofstream out(tomlSettingsFile_);
+  out << "enableDebugLogging = true" << endl
+      << "updateMasterlist = true" << endl
+      << "game = \"Oblivion\"" << endl
+      << "lastGame = \"Skyrim\"" << endl
+      << "language = \"fr\"" << endl
+      << "lastVersion = \"0.7.1\"" << endl
+      << endl
+      << "[window]" << endl
+      << "top = 1" << endl
+      << "bottom = 2" << endl
+      << "left = 3" << endl
+      << "right = 4" << endl
+      << "maximised = true" << endl
+      << endl
+      << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << endl
+      << "[filters]" << endl
+      << "hideBashTags = false" << endl
+      << "hideCRCs = true" << endl;
+  out.close();
+
+  settings_.load(tomlSettingsFile_);
+
+  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
+  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_EQ("Oblivion", settings_.getGame());
+  EXPECT_EQ("Skyrim", settings_.getLastGame());
+  EXPECT_EQ("0.7.1", settings_.getLastVersion());
+  EXPECT_EQ("fr", settings_.getLanguage());
+
+  EXPECT_EQ(1, settings_.getWindowPosition().top);
+  EXPECT_EQ(2, settings_.getWindowPosition().bottom);
+  EXPECT_EQ(3, settings_.getWindowPosition().left);
+  EXPECT_EQ(4, settings_.getWindowPosition().right);
+  EXPECT_TRUE(settings_.getWindowPosition().maximised);
+
+  EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
+
+  EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
+  EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
+}
+
+TEST_F(LootSettingsTest, loadingShouldReadFromAYamlFile) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "enableDebugLogging: true" << endl
@@ -168,7 +219,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFileContentAsYaml) {
   EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
 }
 
-TEST_F(LootSettingsTest, loadingShouldUpgradeFromVersion0Point6Format) {
+TEST_F(LootSettingsTest, loadingYamlShouldUpgradeFromVersion0Point6Format) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "Debug Verbosity: 3" << endl
@@ -244,7 +295,8 @@ TEST_F(LootSettingsTest,
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_F(LootSettingsTest, loadingShouldUpgradeOldDefaultGameRepositoryBranches) {
+TEST_F(LootSettingsTest,
+       loadingYamlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
@@ -262,8 +314,6 @@ TEST_F(LootSettingsTest, loadingShouldUpgradeOldDefaultGameRepositoryBranches) {
 
 TEST_F(LootSettingsTest,
        loadingShouldNotUpgradeNonDefaultGameRepositoryBranches) {
-  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
-
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
@@ -278,7 +328,52 @@ TEST_F(LootSettingsTest,
   EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingShouldAddMissingBaseGames) {
+TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"SkyrimSE\"" << endl
+      << "folder = \"SkyrimSE\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_EQ(GameType::tes5se, settings_.getGameSettings()[0].Type());
+  EXPECT_EQ("Skyrim Special Edition",
+            settings_.getGameSettings()[0].FolderName());
+}
+
+TEST_F(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
+  using std::endl;
+  boost::filesystem::ofstream out(tomlSettingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Test\"" << endl
+      << "branch = \"foo\"" << endl;
+  out.close();
+
+  settings_.load(tomlSettingsFile_);
+
+  GameSettings testGame = GameSettings(GameType::tes4, "Test")
+                              .SetName("Game Name")
+                              .SetRepoBranch("foo");
+
+  const std::vector<GameSettings> expectedGameSettings({
+      testGame,
+      GameSettings(GameType::tes4),
+      GameSettings(GameType::tes5),
+      GameSettings(GameType::tes5se),
+      GameSettings(GameType::fo3),
+      GameSettings(GameType::fonv),
+      GameSettings(GameType::fo4),
+  });
+  EXPECT_EQ(7, settings_.getGameSettings().size());
+  EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
+}
+
+TEST_F(LootSettingsTest, loadingYamlShouldAddMissingBaseGames) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
@@ -307,7 +402,25 @@ TEST_F(LootSettingsTest, loadingShouldAddMissingBaseGames) {
   EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
 }
 
-TEST_F(LootSettingsTest, loadingShouldSkipUnrecognisedGames) {
+TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
+  using std::endl;
+  boost::filesystem::ofstream out(tomlSettingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Foobar\"" << endl
+      << "type = \"Foobar\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl;
+  out.close();
+
+  settings_.load(tomlSettingsFile_);
+
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+}
+
+TEST_F(LootSettingsTest, loadingYamlShouldSkipUnrecognisedGames) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
@@ -324,7 +437,7 @@ TEST_F(LootSettingsTest, loadingShouldSkipUnrecognisedGames) {
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_F(LootSettingsTest, loadingShouldRemoveTheContentFilterSetting) {
+TEST_F(LootSettingsTest, loadingYamlShouldRemoveTheContentFilterSetting) {
   boost::filesystem::ofstream out(settingsFile_);
   out << "filters:" << std::endl << "  contentFilter: foo" << std::endl;
   out.close();
@@ -334,7 +447,7 @@ TEST_F(LootSettingsTest, loadingShouldRemoveTheContentFilterSetting) {
   EXPECT_TRUE(settings_.getFilters().empty());
 }
 
-TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedFile) {
+TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedYamlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
@@ -344,7 +457,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedFile) {
   windowPosition.bottom = 2;
   windowPosition.left = 3;
   windowPosition.right = 4;
-  windowPosition.maximised = 5;
+  windowPosition.maximised = true;
   const std::vector<GameSettings> games({
       GameSettings(GameType::tes4).SetName("Game Name"),
   });
