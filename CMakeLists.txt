@@ -253,7 +253,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -DLIBLO_STATIC)
+    add_definitions (-DUNICODE -D_UNICODE)
     set(LOOT_API_LINK_LIBRARY ${LOOT_API_STATIC_LIBRARY})
 else()
     set(LOOT_API_LINK_LIBRARY ${LOOT_API_SHARED_LIBRARY})
