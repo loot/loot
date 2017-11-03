@@ -447,6 +447,59 @@ TEST_F(LootSettingsTest, loadingYamlShouldRemoveTheContentFilterSetting) {
   EXPECT_TRUE(settings_.getFilters().empty());
 }
 
+TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
+  const std::string game = "Oblivion";
+  const std::string language = "fr";
+  const std::string lastGame = "Skyrim";
+
+  LootSettings::WindowPosition windowPosition;
+  windowPosition.top = 1;
+  windowPosition.bottom = 2;
+  windowPosition.left = 3;
+  windowPosition.right = 4;
+  windowPosition.maximised = true;
+  const std::vector<GameSettings> games({
+      GameSettings(GameType::tes4).SetName("Game Name"),
+  });
+  const std::map<std::string, bool> filters({
+      {"hideBashTags", false},
+      {"hideCRCs", true},
+  });
+
+  settings_.enableDebugLogging(true);
+  settings_.updateMasterlist(true);
+  settings_.setDefaultGame(game);
+  settings_.storeLastGame(lastGame);
+  settings_.setLanguage(language);
+
+  settings_.storeWindowPosition(windowPosition);
+  settings_.storeGameSettings(games);
+  for (const auto& filter : filters) {
+    settings_.storeFilterState(filter.first, filter.second);
+  }
+
+  settings_.save(tomlSettingsFile_);
+
+  LootSettings settings;
+  settings.load(tomlSettingsFile_);
+
+  EXPECT_TRUE(settings.isDebugLoggingEnabled());
+  EXPECT_TRUE(settings.updateMasterlist());
+  EXPECT_EQ(game, settings.getGame());
+  EXPECT_EQ(lastGame, settings.getLastGame());
+  EXPECT_EQ(language, settings.getLanguage());
+
+  EXPECT_EQ(1, settings.getWindowPosition().top);
+  EXPECT_EQ(2, settings.getWindowPosition().bottom);
+  EXPECT_EQ(3, settings.getWindowPosition().left);
+  EXPECT_EQ(4, settings.getWindowPosition().right);
+  EXPECT_TRUE(settings.getWindowPosition().maximised);
+
+  EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
+
+  EXPECT_EQ(filters, settings.getFilters());
+}
+
 TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedYamlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
@@ -479,23 +532,25 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedYamlFile) {
   }
 
   settings_.save(settingsFile_);
-  settings_.load(settingsFile_);
 
-  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
-  EXPECT_EQ(game, settings_.getGame());
-  EXPECT_EQ(lastGame, settings_.getLastGame());
-  EXPECT_EQ(language, settings_.getLanguage());
+  LootSettings settings;
+  settings.load(settingsFile_);
 
-  EXPECT_EQ(1, settings_.getWindowPosition().top);
-  EXPECT_EQ(2, settings_.getWindowPosition().bottom);
-  EXPECT_EQ(3, settings_.getWindowPosition().left);
-  EXPECT_EQ(4, settings_.getWindowPosition().right);
-  EXPECT_TRUE(settings_.getWindowPosition().maximised);
+  EXPECT_TRUE(settings.isDebugLoggingEnabled());
+  EXPECT_TRUE(settings.updateMasterlist());
+  EXPECT_EQ(game, settings.getGame());
+  EXPECT_EQ(lastGame, settings.getLastGame());
+  EXPECT_EQ(language, settings.getLanguage());
 
-  EXPECT_EQ(games[0].Name(), settings_.getGameSettings().at(0).Name());
+  EXPECT_EQ(1, settings.getWindowPosition().top);
+  EXPECT_EQ(2, settings.getWindowPosition().bottom);
+  EXPECT_EQ(3, settings.getWindowPosition().left);
+  EXPECT_EQ(4, settings.getWindowPosition().right);
+  EXPECT_TRUE(settings.getWindowPosition().maximised);
 
-  EXPECT_EQ(filters, settings_.getFilters());
+  EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
+
+  EXPECT_EQ(filters, settings.getFilters());
 }
 
 TEST_F(LootSettingsTest,

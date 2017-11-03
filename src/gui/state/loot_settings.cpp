@@ -254,7 +254,11 @@ void LootSettings::loadAsToml(const boost::filesystem::path& file) {
     gameSettings_.clear();
 
     for (const auto& game : *games) {
-      gameSettings_.push_back(convert(game));
+      try {
+        gameSettings_.push_back(convert(game));
+      } catch (...) {
+        // Skip invalid games.
+      }
     }
 
     appendBaseGames();
@@ -315,6 +319,65 @@ void LootSettings::loadAsYaml(const boost::filesystem::path& file) {
 void LootSettings::save(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
+  if (boost::iequals(file.extension().string(), ".toml")) {
+    saveAsToml(file);
+  } else {
+    saveAsYaml(file);
+  }
+}
+
+void LootSettings::saveAsToml(const boost::filesystem::path& file) {
+  auto root = cpptoml::make_table();
+
+  root->insert("enableDebugLogging", enableDebugLogging_);
+  root->insert("updateMasterlist", updateMasterlist_);
+  root->insert("game", game_);
+  root->insert("language", language_);
+  root->insert("lastGame", lastGame_);
+  root->insert("lastVersion", lastVersion_);
+
+  if (isWindowPositionStored()) {
+    auto window = cpptoml::make_table();
+    window->insert("top", windowPosition_.top);
+    window->insert("bottom", windowPosition_.bottom);
+    window->insert("left", windowPosition_.left);
+    window->insert("right", windowPosition_.right);
+    window->insert("maximised", windowPosition_.maximised);
+    root->insert("window", window);
+  }
+
+  if (!gameSettings_.empty()) {
+    auto games = cpptoml::make_table_array();
+
+    for (const auto& gameSettings : gameSettings_) {
+      auto game = cpptoml::make_table();
+      game->insert("type", GameSettings(gameSettings.Type()).FolderName());
+      game->insert("name", gameSettings.Name());
+      game->insert("folder", gameSettings.FolderName());
+      game->insert("master", gameSettings.Master());
+      game->insert("repo", gameSettings.RepoURL());
+      game->insert("branch", gameSettings.RepoBranch());
+      game->insert("path", gameSettings.GamePath().string());
+      game->insert("registry", gameSettings.RegistryKey());
+      games->push_back(game);
+    }
+
+    root->insert("games", games);
+  }
+
+  if (!filters_.empty()) {
+    auto filters = cpptoml::make_table();
+    for (const auto& filter : filters_) {
+      filters->insert(filter.first, filter.second);
+    }
+    root->insert("filters", filters);
+  }
+
+  boost::filesystem::ofstream out(file);
+  out << *root;
+}
+
+void LootSettings::saveAsYaml(const boost::filesystem::path& file) {
   YAML::Node node;
 
   node["enableDebugLogging"] = enableDebugLogging_;
