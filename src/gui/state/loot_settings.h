@@ -88,10 +88,6 @@ private:
   mutable std::recursive_mutex mutex_;
 
   void appendBaseGames();
-  void loadAsYaml(const boost::filesystem::path& file);
-  void loadAsToml(const boost::filesystem::path& file);
-  void saveAsYaml(const boost::filesystem::path& file);
-  void saveAsToml(const boost::filesystem::path& file);
 };
 }
 

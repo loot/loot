@@ -25,10 +25,9 @@
 #ifndef LOOT_GUI_STATE_GAME_SETTINGS
 #define LOOT_GUI_STATE_GAME_SETTINGS
 
-#include <list>
+#include <set>
 #include <string>
 
-#include <yaml-cpp/yaml.h>
 #include <boost/filesystem.hpp>
 
 #include "loot/enum/game_type.h"
@@ -76,83 +75,6 @@ private:
 
   boost::filesystem::path gamePath_;  // Path to the game's folder.
 };
-}
-
-namespace YAML {
-template<>
-struct convert<loot::GameSettings> {
-  static Node encode(const loot::GameSettings& rhs) {
-    Node node;
-
-    node["type"] = loot::GameSettings(rhs.Type()).FolderName();
-    node["name"] = rhs.Name();
-    node["folder"] = rhs.FolderName();
-    node["master"] = rhs.Master();
-    node["repo"] = rhs.RepoURL();
-    node["branch"] = rhs.RepoBranch();
-    node["path"] = rhs.GamePath().string();
-    node["registry"] = rhs.RegistryKey();
-
-    return node;
-  }
-
-  static bool decode(const Node& node, loot::GameSettings& rhs) {
-    using loot::GameSettings;
-    using loot::GameType;
-
-    if (!node.IsMap())
-      throw RepresentationException(
-          node.Mark(), "bad conversion: 'game settings' object must be a map");
-    if (!node["folder"])
-      throw RepresentationException(
-          node.Mark(),
-          "bad conversion: 'folder' key missing from 'game settings' object");
-    if (!node["type"])
-      throw RepresentationException(
-          node.Mark(),
-          "bad conversion: 'type' key missing from 'game settings' object");
-
-    if (node["type"].as<std::string>() ==
-        GameSettings(GameType::tes4).FolderName())
-      rhs = GameSettings(GameType::tes4, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() ==
-             GameSettings(GameType::tes5).FolderName())
-      rhs = GameSettings(GameType::tes5, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() ==
-             GameSettings(GameType::tes5se).FolderName())
-      rhs = GameSettings(GameType::tes5se, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() ==
-             GameSettings(GameType::fo3).FolderName())
-      rhs = GameSettings(GameType::fo3, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() ==
-             GameSettings(GameType::fonv).FolderName())
-      rhs = GameSettings(GameType::fonv, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() ==
-             GameSettings(GameType::fo4).FolderName())
-      rhs = GameSettings(GameType::fo4, node["folder"].as<std::string>());
-    else
-      throw RepresentationException(node.Mark(),
-                                    "bad conversion: invalid value for 'type' "
-                                    "key in 'game settings' object");
-
-    if (node["name"])
-      rhs.SetName(node["name"].as<std::string>());
-    if (node["master"])
-      rhs.SetMaster(node["master"].as<std::string>());
-    if (node["repo"])
-      rhs.SetRepoURL(node["repo"].as<std::string>());
-    if (node["branch"])
-      rhs.SetRepoBranch(node["branch"].as<std::string>());
-    if (node["path"])
-      rhs.SetGamePath(node["path"].as<std::string>());
-    if (node["registry"])
-      rhs.SetRegistryKey(node["registry"].as<std::string>());
-
-    return true;
-  }
-};
-
-Emitter& operator<<(Emitter& out, const loot::GameSettings& rhs);
 }
 
 #endif

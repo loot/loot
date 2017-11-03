@@ -27,9 +27,6 @@
 #include <thread>
 
 #include <cpptoml.h>
-#include <yaml-cpp/yaml.h>
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem/fstream.hpp>
 
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
@@ -39,78 +36,6 @@ using std::recursive_mutex;
 using std::string;
 
 namespace loot {
-void upgradeYaml(YAML::Node& yaml) {
-  // Upgrade YAML settings' keys and values from those used in earlier
-  // versions of LOOT.
-
-  if (yaml["Debug Verbosity"] && !yaml["enableDebugLogging"])
-    yaml["enableDebugLogging"] = yaml["Debug Verbosity"].as<unsigned int>() > 0;
-
-  if (yaml["Update Masterlist"] && !yaml["updateMasterlist"])
-    yaml["updateMasterlist"] = yaml["Update Masterlist"];
-
-  if (yaml["Game"] && !yaml["game"])
-    yaml["game"] = yaml["Game"];
-
-  if (yaml["Language"] && !yaml["language"])
-    yaml["language"] = yaml["Language"];
-
-  if (yaml["Last Game"] && !yaml["lastGame"])
-    yaml["lastGame"] = yaml["Last Game"];
-
-  if (yaml["Games"] && !yaml["games"]) {
-    yaml["games"] = yaml["Games"];
-
-    for (auto node : yaml["games"]) {
-      if (node["url"]) {
-        node["repo"] = node["url"];
-        node["branch"] = "master";  // It'll get updated to the correct default
-      }
-    }
-  }
-
-  if (yaml["games"]) {
-    // Handle exception if YAML is invalid, eg. if an unrecognised
-    // game type is used (which can happen if downgrading from a
-    // later version of LOOT that supports more game types).
-    // However, can't remove elements from a sequence Node, so have to
-    // copy the valid elements into a new node then overwrite the
-    // original.
-    YAML::Node validGames;
-    for (auto node : yaml["games"]) {
-      try {
-        if (node["type"].as<string>() == "SkyrimSE" &&
-            node["folder"].as<string>() == "SkyrimSE") {
-          node["type"] = GameSettings(GameType::tes5se).FolderName();
-          node["folder"] = GameSettings(GameType::tes5se).FolderName();
-
-          boost::filesystem::rename(
-              LootPaths::getLootDataPath() / "SkyrimSE",
-              LootPaths::getLootDataPath() / node["folder"].as<string>());
-        }
-
-        GameSettings settings(node.as<GameSettings>());
-
-        if (!yaml["Games"]) {
-          // Update existing default branch, if the default
-          // repositories are used.
-          if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL() &&
-              settings.IsRepoBranchOldDefault()) {
-            settings.SetRepoBranch(GameSettings(settings.Type()).RepoBranch());
-          }
-        }
-
-        validGames.push_back(settings);
-      } catch (...) {
-      }
-    }
-    yaml["games"] = validGames;
-  }
-
-  if (yaml["filters"])
-    yaml["filters"].remove("contentFilter");
-}
-
 GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
   GameSettings game;
 
@@ -169,6 +94,12 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
   auto branch = table->get_as<std::string>("branch");
   if (branch) {
     game.SetRepoBranch(*branch);
+
+    auto defaultGame = GameSettings(game.Type());
+    if (game.RepoURL() == defaultGame.RepoURL() &&
+        game.IsRepoBranchOldDefault()) {
+      game.SetRepoBranch(defaultGame.RepoBranch());
+    }
   }
 
   auto path = table->get_as<std::string>("path");
@@ -215,14 +146,6 @@ LootSettings::LootSettings() :
 void LootSettings::load(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  if (boost::iequals(file.extension().string(), ".toml")) {
-    loadAsToml(file);
-  } else {
-    loadAsYaml(file);
-  }
-}
-
-void LootSettings::loadAsToml(const boost::filesystem::path& file) {
   auto settings = cpptoml::parse_file(file.string());
 
   enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
@@ -276,57 +199,9 @@ void LootSettings::loadAsToml(const boost::filesystem::path& file) {
   }
 }
 
-void LootSettings::loadAsYaml(const boost::filesystem::path& file) {
-  boost::filesystem::ifstream in(file);
-  YAML::Node settings = YAML::Load(in);
-
-  upgradeYaml(settings);
-
-  if (settings["enableDebugLogging"])
-    enableDebugLogging_ = settings["enableDebugLogging"].as<bool>();
-  if (settings["updateMasterlist"])
-    updateMasterlist_ = settings["updateMasterlist"].as<bool>();
-  if (settings["game"])
-    game_ = settings["game"].as<string>();
-  if (settings["language"])
-    language_ = settings["language"].as<string>();
-  if (settings["lastGame"])
-    lastGame_ = settings["lastGame"].as<string>();
-  if (settings["lastVersion"])
-    lastVersion_ = settings["lastVersion"].as<string>();
-
-  if (settings["window"] && settings["window"]["top"] &&
-      settings["window"]["bottom"] && settings["window"]["left"] &&
-      settings["window"]["right"] && settings["window"]["maximised"]) {
-    windowPosition_.top = settings["window"]["top"].as<long>();
-    windowPosition_.bottom = settings["window"]["bottom"].as<long>();
-    windowPosition_.left = settings["window"]["left"].as<long>();
-    windowPosition_.right = settings["window"]["right"].as<long>();
-    windowPosition_.maximised = settings["window"]["maximised"].as<bool>();
-  }
-
-  if (settings["games"]) {
-    gameSettings_ = settings["games"].as<std::vector<GameSettings>>();
-
-    // If a base game isn't in the settings, add it.
-    appendBaseGames();
-  }
-
-  if (settings["filters"])
-    filters_ = settings["filters"].as<std::map<string, bool>>();
-}
-
 void LootSettings::save(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  if (boost::iequals(file.extension().string(), ".toml")) {
-    saveAsToml(file);
-  } else {
-    saveAsYaml(file);
-  }
-}
-
-void LootSettings::saveAsToml(const boost::filesystem::path& file) {
   auto root = cpptoml::make_table();
 
   root->insert("enableDebugLogging", enableDebugLogging_);
@@ -375,37 +250,6 @@ void LootSettings::saveAsToml(const boost::filesystem::path& file) {
 
   boost::filesystem::ofstream out(file);
   out << *root;
-}
-
-void LootSettings::saveAsYaml(const boost::filesystem::path& file) {
-  YAML::Node node;
-
-  node["enableDebugLogging"] = enableDebugLogging_;
-  node["updateMasterlist"] = updateMasterlist_;
-  node["game"] = game_;
-  node["language"] = language_;
-  node["lastGame"] = lastGame_;
-  node["lastVersion"] = lastVersion_;
-
-  if (isWindowPositionStored()) {
-    node["window"]["top"] = windowPosition_.top;
-    node["window"]["bottom"] = windowPosition_.bottom;
-    node["window"]["left"] = windowPosition_.left;
-    node["window"]["right"] = windowPosition_.right;
-    node["window"]["maximised"] = windowPosition_.maximised;
-  }
-
-  node["games"] = gameSettings_;
-
-  if (!filters_.empty())
-    node["filters"] = filters_;
-
-  YAML::Emitter yout;
-  yout.SetIndent(2);
-  yout << node;
-
-  boost::filesystem::ofstream out(file);
-  out << yout.c_str();
 }
 
 bool LootSettings::isDebugLoggingEnabled() const {

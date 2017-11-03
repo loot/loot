@@ -58,7 +58,7 @@ boost::filesystem::path LootPaths::getL10nPath() {
 boost::filesystem::path LootPaths::getLootDataPath() { return lootDataPath_; }
 
 boost::filesystem::path LootPaths::getSettingsPath() {
-  return lootDataPath_ / "settings.yaml";
+  return lootDataPath_ / "settings.toml";
 }
 
 boost::filesystem::path LootPaths::getLogPath() {

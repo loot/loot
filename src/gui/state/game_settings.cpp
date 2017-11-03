@@ -151,19 +151,3 @@ GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
   return *this;
 }
 }
-
-namespace YAML {
-Emitter& operator<<(Emitter& out, const loot::GameSettings& rhs) {
-  out << BeginMap << Key << "type" << Value << YAML::SingleQuoted
-      << loot::GameSettings(rhs.Type()).FolderName() << Key << "folder" << Value
-      << YAML::SingleQuoted << rhs.FolderName() << Key << "name" << Value
-      << YAML::SingleQuoted << rhs.Name() << Key << "master" << Value
-      << YAML::SingleQuoted << rhs.Master() << Key << "repo" << Value
-      << YAML::SingleQuoted << rhs.RepoURL() << Key << "branch" << Value
-      << YAML::SingleQuoted << rhs.RepoBranch() << Key << "path" << Value
-      << YAML::SingleQuoted << rhs.GamePath().string() << Key << "registry"
-      << Value << YAML::SingleQuoted << rhs.RegistryKey() << EndMap;
-
-  return out;
-}
-}

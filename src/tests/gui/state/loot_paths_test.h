@@ -55,7 +55,7 @@ TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(LootPaths::getLootDataPath() / "settings.yaml",
+  EXPECT_EQ(LootPaths::getLootDataPath() / "settings.toml",
             LootPaths::getSettingsPath());
 }
 

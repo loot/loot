@@ -102,16 +102,6 @@ ExternalProject_Add(testing-plugins
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
 
-ExternalProject_Add(yaml-cpp
-                    PREFIX "external"
-                    URL "https://github.com/WrinklyNinja/yaml-cpp/archive/patched-for-loot.tar.gz"
-                    CMAKE_ARGS -DMSVC_SHARED_RT=${MSVC_SHARED_RUNTIME}
-                    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target yaml-cpp --config $(CONFIGURATION)
-                    INSTALL_COMMAND "")
-ExternalProject_Get_Property(yaml-cpp SOURCE_DIR BINARY_DIR)
-set(YAML_CPP_INCLUDE_DIRS "${SOURCE_DIR}/include")
-set(YAML_CPP_LIBRARIES "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libyaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}")
-
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_3.3163.1671.g700dc25_windows32_minimal.tar.bz2")
     set(CEF_URL_HASH "72063873f9f32b12d53d59d9a22ec662959a17a6")
@@ -275,7 +265,6 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${CEF_INCLUDE_DIRS}
                      ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
-                     ${YAML_CPP_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
                      ${Protobuf_INCLUDE_DIRS}
                      ${PSEUDOSEM_INCLUDE_DIRS})
@@ -341,13 +330,13 @@ add_custom_command(
 
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies     (LOOT cef cpptoml loot_api yaml-cpp)
-target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${Protobuf_LIBRARIES} ${YAML_CPP_LIBRARIES})
+add_dependencies     (LOOT cef cpptoml loot_api)
+target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${Protobuf_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests cpptoml loot_api yaml-cpp GTest testing-metadata testing-plugins)
-target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${YAML_CPP_LIBRARIES} ${LOOT_TEST_LIBS})
+add_dependencies     (loot_gui_tests cpptoml loot_api GTest testing-metadata testing-plugins)
+target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS})
 
 ##############################
 # Set Target-Specific Flags

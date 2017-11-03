@@ -35,14 +35,11 @@ namespace loot {
 namespace test {
 class LootSettingsTest : public ::testing::Test {
 protected:
-  LootSettingsTest() :
-      settingsFile_("./settings_.yaml"),
-      tomlSettingsFile_("./settings.toml") {}
+  LootSettingsTest() : settingsFile_("./settings_.toml") {}
 
   ~LootSettingsTest() { boost::filesystem::remove(settingsFile_); }
 
   const boost::filesystem::path settingsFile_;
-  const boost::filesystem::path tomlSettingsFile_;
   LootSettings settings_;
 };
 
@@ -128,7 +125,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
 TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   using std::endl;
-  boost::filesystem::ofstream out(tomlSettingsFile_);
+  boost::filesystem::ofstream out(settingsFile_);
   out << "enableDebugLogging = true" << endl
       << "updateMasterlist = true" << endl
       << "game = \"Oblivion\"" << endl
@@ -153,51 +150,6 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "hideCRCs = true" << endl;
   out.close();
 
-  settings_.load(tomlSettingsFile_);
-
-  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
-  EXPECT_EQ("Oblivion", settings_.getGame());
-  EXPECT_EQ("Skyrim", settings_.getLastGame());
-  EXPECT_EQ("0.7.1", settings_.getLastVersion());
-  EXPECT_EQ("fr", settings_.getLanguage());
-
-  EXPECT_EQ(1, settings_.getWindowPosition().top);
-  EXPECT_EQ(2, settings_.getWindowPosition().bottom);
-  EXPECT_EQ(3, settings_.getWindowPosition().left);
-  EXPECT_EQ(4, settings_.getWindowPosition().right);
-  EXPECT_TRUE(settings_.getWindowPosition().maximised);
-
-  EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
-
-  EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
-  EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
-}
-
-TEST_F(LootSettingsTest, loadingShouldReadFromAYamlFile) {
-  using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
-  out << "enableDebugLogging: true" << endl
-      << "updateMasterlist: true" << endl
-      << "game: Oblivion" << endl
-      << "lastGame: Skyrim" << endl
-      << "language: fr" << endl
-      << "lastVersion: 0.7.1" << endl
-      << "window:" << endl
-      << "  top: 1" << endl
-      << "  bottom: 2" << endl
-      << "  left: 3" << endl
-      << "  right: 4" << endl
-      << "  maximised: true" << endl
-      << "games:" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Oblivion" << endl
-      << "filters:" << endl
-      << "  hideBashTags: false" << endl
-      << "  hideCRCs: true" << endl;
-  out.close();
-
   settings_.load(settingsFile_);
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
@@ -219,113 +171,58 @@ TEST_F(LootSettingsTest, loadingShouldReadFromAYamlFile) {
   EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
 }
 
-TEST_F(LootSettingsTest, loadingYamlShouldUpgradeFromVersion0Point6Format) {
-  using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
-  out << "Debug Verbosity: 3" << endl
-      << "Update Masterlist: true" << endl
-      << "Game: Oblivion" << endl
-      << "Last Game: Skyrim" << endl
-      << "Language: fr" << endl
-      << "Games:" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Oblivion" << endl
-      << "    url: https://github.com/loot/oblivion.git" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
-  EXPECT_EQ("Oblivion", settings_.getGame());
-  EXPECT_EQ("Skyrim", settings_.getLastGame());
-  EXPECT_EQ("fr", settings_.getLanguage());
-
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ("https://github.com/loot/oblivion.git",
-            settings_.getGameSettings()[0].RepoURL());
-  EXPECT_EQ("master", settings_.getGameSettings()[0].RepoBranch());
-}
-
 TEST_F(LootSettingsTest,
-       loadingShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
+       loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
-  out << "enableDebugLogging: false" << endl
-      << "updateMasterlist: false" << endl
-      << "game: auto" << endl
-      << "lastGame: auto" << endl
-      << "language: en" << endl
-      << "lastVersion: 0.7.1" << endl
-      << "window:" << endl
-      << "  top: 1" << endl
-      << "  bottom: 2" << endl
-      << "  left: 3" << endl
-      << "  right: 4" << endl
-      << "  maximised: true" << endl
-      << "games:" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Fallout3" << endl
-      << "    folder: Fallout3" << endl
-      << "filters:" << endl
-      << "  hideBashTags: false" << endl
-      << "  hideCRCs: true" << endl;
-
-  out << "Debug Verbosity: 3" << endl
-      << "Update Masterlist: true" << endl
-      << "Game: Oblivion" << endl
-      << "Last Game: Skyrim" << endl
-      << "Language: fr" << endl
-      << "Games:" << endl
-      << "  - name: Old Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Oblivion" << endl
-      << "    url: https://github.com/loot/oblivion.git" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  EXPECT_FALSE(settings_.isDebugLoggingEnabled());
-  EXPECT_FALSE(settings_.updateMasterlist());
-  EXPECT_EQ("auto", settings_.getGame());
-  EXPECT_EQ("auto", settings_.getLastGame());
-  EXPECT_EQ("en", settings_.getLanguage());
-
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-}
-
-TEST_F(LootSettingsTest,
-       loadingYamlShouldUpgradeOldDefaultGameRepositoryBranches) {
-  using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
-  out << "games:" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Oblivion" << endl
-      << "    branch: v0.7" << endl;
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "branch = \"v0.7\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
 
   const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
+  EXPECT_NE("v0.7", settings_.getGameSettings()[0].RepoBranch());
   EXPECT_EQ(games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(LootSettingsTest,
-       loadingShouldNotUpgradeNonDefaultGameRepositoryBranches) {
+TEST_F(
+    LootSettingsTest,
+    loadingTomlShouldNotUpgradeNonDefaultBranchesForDefaultGameRepositories) {
+  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
+
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
-  out << "games:" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Oblivion" << endl
-      << "    branch: foo" << endl;
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "branch = \"foo\"" << endl;
   out.close();
 
   settings_.load(settingsFile_);
 
   EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
+}
+
+TEST_F(LootSettingsTest,
+       loadingTomlShouldNotUpgradeBranchesForNonDefaultGameRepositories) {
+  using std::endl;
+  boost::filesystem::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "repo = \"http://example.com/repo.git\"" << endl
+      << "branch = \"v0.7\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  EXPECT_EQ("v0.7", settings_.getGameSettings()[0].RepoBranch());
 }
 
 TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
@@ -346,41 +243,12 @@ TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
 
 TEST_F(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
   using std::endl;
-  boost::filesystem::ofstream out(tomlSettingsFile_);
+  boost::filesystem::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
       << "folder = \"Test\"" << endl
       << "branch = \"foo\"" << endl;
-  out.close();
-
-  settings_.load(tomlSettingsFile_);
-
-  GameSettings testGame = GameSettings(GameType::tes4, "Test")
-                              .SetName("Game Name")
-                              .SetRepoBranch("foo");
-
-  const std::vector<GameSettings> expectedGameSettings({
-      testGame,
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-  });
-  EXPECT_EQ(7, settings_.getGameSettings().size());
-  EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
-}
-
-TEST_F(LootSettingsTest, loadingYamlShouldAddMissingBaseGames) {
-  using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
-  out << "games:" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Test" << endl
-      << "    branch: foo" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -404,7 +272,7 @@ TEST_F(LootSettingsTest, loadingYamlShouldAddMissingBaseGames) {
 
 TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   using std::endl;
-  boost::filesystem::ofstream out(tomlSettingsFile_);
+  boost::filesystem::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Foobar\"" << endl
       << "type = \"Foobar\"" << endl
@@ -415,31 +283,14 @@ TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
       << "folder = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(tomlSettingsFile_);
-
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-}
-
-TEST_F(LootSettingsTest, loadingYamlShouldSkipUnrecognisedGames) {
-  using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
-  out << "games:" << endl
-      << "  - name: Foobar" << endl
-      << "    type: Foobar" << endl
-      << "    folder: Oblivion" << endl
-      << "  - name: Game Name" << endl
-      << "    type: Oblivion" << endl
-      << "    folder: Oblivion" << endl;
-  out.close();
-
   settings_.load(settingsFile_);
 
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_F(LootSettingsTest, loadingYamlShouldRemoveTheContentFilterSetting) {
+TEST_F(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
   boost::filesystem::ofstream out(settingsFile_);
-  out << "filters:" << std::endl << "  contentFilter: foo" << std::endl;
+  out << "[filters]" << std::endl << "contentFilter = \"foo\"" << std::endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -448,59 +299,6 @@ TEST_F(LootSettingsTest, loadingYamlShouldRemoveTheContentFilterSetting) {
 }
 
 TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
-  const std::string game = "Oblivion";
-  const std::string language = "fr";
-  const std::string lastGame = "Skyrim";
-
-  LootSettings::WindowPosition windowPosition;
-  windowPosition.top = 1;
-  windowPosition.bottom = 2;
-  windowPosition.left = 3;
-  windowPosition.right = 4;
-  windowPosition.maximised = true;
-  const std::vector<GameSettings> games({
-      GameSettings(GameType::tes4).SetName("Game Name"),
-  });
-  const std::map<std::string, bool> filters({
-      {"hideBashTags", false},
-      {"hideCRCs", true},
-  });
-
-  settings_.enableDebugLogging(true);
-  settings_.updateMasterlist(true);
-  settings_.setDefaultGame(game);
-  settings_.storeLastGame(lastGame);
-  settings_.setLanguage(language);
-
-  settings_.storeWindowPosition(windowPosition);
-  settings_.storeGameSettings(games);
-  for (const auto& filter : filters) {
-    settings_.storeFilterState(filter.first, filter.second);
-  }
-
-  settings_.save(tomlSettingsFile_);
-
-  LootSettings settings;
-  settings.load(tomlSettingsFile_);
-
-  EXPECT_TRUE(settings.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings.updateMasterlist());
-  EXPECT_EQ(game, settings.getGame());
-  EXPECT_EQ(lastGame, settings.getLastGame());
-  EXPECT_EQ(language, settings.getLanguage());
-
-  EXPECT_EQ(1, settings.getWindowPosition().top);
-  EXPECT_EQ(2, settings.getWindowPosition().bottom);
-  EXPECT_EQ(3, settings.getWindowPosition().left);
-  EXPECT_EQ(4, settings.getWindowPosition().right);
-  EXPECT_TRUE(settings.getWindowPosition().maximised);
-
-  EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
-
-  EXPECT_EQ(filters, settings.getFilters());
-}
-
-TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedYamlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
@@ -626,7 +424,7 @@ TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   const std::string currentVersion = gui::Version::string();
 
   boost::filesystem::ofstream out(settingsFile_);
-  out << "lastVersion: 0.7.1" << std::endl;
+  out << "lastVersion = \"0.7.1\"" << std::endl;
   out.close();
 
   settings_.load(settingsFile_);
