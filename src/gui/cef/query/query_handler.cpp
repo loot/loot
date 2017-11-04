@@ -28,6 +28,9 @@
 #include <sstream>
 #include <string>
 
+#include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
+#include <google/protobuf/util/json_util.h>
 #include <include/base/cef_bind.h>
 #include <include/cef_app.h>
 #include <include/cef_task.h>
@@ -69,18 +72,7 @@
 
 #undef ERROR
 
-#include <google/protobuf/util/json_util.h>
 #include "schema/request.pb.h"
-
-using boost::filesystem::exists;
-using boost::format;
-using boost::locale::translate;
-using google::protobuf::util::JsonStringToMessage;
-using std::exception;
-using std::list;
-using std::set;
-using std::string;
-using std::vector;
 
 namespace loot {
 QueryHandler::QueryHandler(LootState& lootState) : lootState_(lootState) {}
@@ -99,7 +91,7 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
       return false;
 
     CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
-  } catch (exception& e) {
+  } catch (std::exception& e) {
     BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \""
                              << request.ToString() << "\": " << e.what();
     callback->Failure(-1, e.what());
@@ -112,9 +104,9 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
                                            CefRefPtr<CefFrame> frame,
                                            const std::string& requestString) {
   protobuf::Request request;
-  JsonStringToMessage(requestString, &request);
+  google::protobuf::util::JsonStringToMessage(requestString, &request);
 
-  const string name = request.name();
+  const std::string name = request.name();
 
   std::vector<std::string> pluginNames;
   if (request.has_plugin_names()) {

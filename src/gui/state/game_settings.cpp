@@ -25,7 +25,6 @@
 #include "gui/state/game_settings.h"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
 
 namespace fs = boost::filesystem;
