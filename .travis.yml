@@ -45,7 +45,7 @@ install:
   # Install runtime dependencies using Bower
   - bower install
   - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py
-  - python install_boost.py --directory ~ --boost-version 1.61.0 atomic chrono date_time filesystem iostreams locale log regex system thread
+  - python install_boost.py --directory ~ --boost-version 1.61.0 atomic chrono date_time filesystem locale log system thread
   # Install packages for generating documentation
   - pip install --user sphinx sphinx_rtd_theme
   # Add sphinx-build to PATH

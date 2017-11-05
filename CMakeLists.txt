@@ -49,7 +49,7 @@ IF (NOT Boost_USE_STATIC_LIBS)
     add_definitions(-DBOOST_LOG_DYN_LINK)
 ENDIF ()
 
-find_package(Boost REQUIRED COMPONENTS atomic log log_setup regex locale thread date_time chrono filesystem system iostreams)
+find_package(Boost REQUIRED COMPONENTS atomic log log_setup locale thread date_time chrono filesystem system)
 
 if (NOT PROTOBUF_ROOT STREQUAL "")
     set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROTOBUF_ROOT})
@@ -237,7 +237,7 @@ set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                        "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp")
 
 set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
-							"${CMAKE_SOURCE_DIR}/src/gui/state/game.h"
+                            "${CMAKE_SOURCE_DIR}/src/gui/state/game.h"
                             "${CMAKE_SOURCE_DIR}/src/gui/state/game_settings.h"
                             "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
                             "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
@@ -263,7 +263,8 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
-                     ${Protobuf_INCLUDE_DIRS})
+                     ${Protobuf_INCLUDE_DIRS}
+                     ${SPDLOG_INCLUDE_DIRS})
 
 ##############################
 # System-Specific Settings
