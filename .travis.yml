@@ -26,8 +26,8 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/node_modules
     - $TRAVIS_BUILD_DIR/bower_components
-    - $HOME/boost_1_61_0/boost
-    - $HOME/boost_1_61_0/stage/lib
+    - $HOME/boost_1_65_1/boost
+    - $HOME/boost_1_65_1/stage/lib
     - $HOME/protobuf
 
 install:
@@ -45,7 +45,7 @@ install:
   # Install runtime dependencies using Bower
   - bower install
   - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py
-  - python install_boost.py --directory ~ --boost-version 1.61.0 atomic chrono date_time filesystem locale log system thread
+  - python install_boost.py --directory ~ --boost-version 1.65.1 atomic chrono date_time filesystem locale log system thread
   # Install packages for generating documentation
   - pip install --user sphinx sphinx_rtd_theme
   # Add sphinx-build to PATH
@@ -64,7 +64,7 @@ before_script:
   # Move into the cloned LOOT repo build path.
   - cd build
   # Link dynamically to the C++ standard library runtime.
-  - cmake .. -DBOOST_ROOT=~/boost_1_61_0 -DPROTOBUF_ROOT=~/protobuf
+  - cmake .. -DBOOST_ROOT=~/boost_1_65_1 -DPROTOBUF_ROOT=~/protobuf
 
 script:
   - make all
