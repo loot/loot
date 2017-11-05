@@ -258,16 +258,12 @@ source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_SRC})
 
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
-                     ${LOOT_SCHEMA_DIR}
                      ${CPPTOML_INCLUDE_DIRS}
-                     ${LIBLOADORDER_INCLUDE_DIRS}
-                     ${LIBGIT2_INCLUDE_DIRS}
                      ${CEF_INCLUDE_DIRS}
                      ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
-                     ${Protobuf_INCLUDE_DIRS}
-                     ${PSEUDOSEM_INCLUDE_DIRS})
+                     ${Protobuf_INCLUDE_DIRS})
 
 ##############################
 # System-Specific Settings
