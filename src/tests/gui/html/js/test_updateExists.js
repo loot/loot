@@ -43,9 +43,15 @@ describe('updateExists()', () => {
     )
   );
 
-  it('should resolve to true if the given version equals the latest version but the short build SHAs are unequal', () =>
+  it('should resolve to true if the given version equals the latest version but the short build SHAs are unequal and the latest version commit is newer', () =>
     loot.updateExists('0.9.2', 'deadbeef').then((result) =>
       result.should.be.true
+    )
+  );
+
+  it('should resolve to false if the given version equals the latest version but the short build SHAs are unequal and the build commits dates are equal', () =>
+    loot.updateExists('0.9.2', 'feedbac').then((result) =>
+      result.should.be.false
     )
   );
 

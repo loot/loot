@@ -33,7 +33,6 @@
     "Jed": "SlexAxton/Jed#1.1.1",
     "jed-gettext-parser": "1.0.0",
     "marked": "0.3.6",
-    "lodash": "4.17.4",
-    "octokat": "0.8.0"
+    "lodash": "4.17.4"
   }
 }

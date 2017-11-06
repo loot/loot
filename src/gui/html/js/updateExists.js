@@ -2,13 +2,13 @@
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['bower_components/octokat/dist/octokat.js'], factory);
+    define(['node_modules/github-api/dist/GitHub.bundle.min.js'], factory);
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.updateExists = factory(root.Octokat);
+    root.loot.updateExists = factory(root.GitHub);
   }
-}(this, (Octokat) => {
+}(this, (GitHub) => {
   const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
 
   function compare(lhs, rhs) {
@@ -40,20 +40,31 @@
       return Promise.reject(new Error('Invalid arguments, both version and build must be given'));
     }
 
-    const repo = (new Octokat()).repos('loot', 'loot');
+    const repo = (new GitHub()).getRepo('loot', 'loot');
 
-    return repo.releases.latest.fetch().then((latestRelease) => {
-      const comparison = compare(currentVersion, latestRelease.tagName);
+    return repo.getRelease('latest').then((response) => {
+      const latestReleaseTagName = response.data.tag_name;
+      const comparison = compare(currentVersion, latestReleaseTagName);
       if (comparison === -1) {
         return true;
       } else if (comparison === 1) {
         return false;
       }
 
-      return repo.tags.fetch().then((tags) => {
-        const tag = tags.items.find((element) => element.name === latestRelease.tagName);
+      return repo.listTags().then((tagsResponse) => (
+        tagsResponse.data.find((element) => element.name === latestReleaseTagName)
+      )).then((tag) => {
+        if (tag.commit.sha.startsWith(currentBuild)) {
+          return false;
+        }
 
-        return !tag.commit.sha.startsWith(currentBuild);
+        return repo.getCommit(tag.commit.sha)
+          .then((commitResponse) => Date.parse(commitResponse.data.committer.date))
+          .then((tagDate) => (
+            repo.getSingleCommit(currentBuild)
+              .then((commitResponse) => Date.parse(commitResponse.data.commit.committer.date))
+              .then((buildCommitDate) => tagDate > buildCommitDate)
+          ));
       });
     }).catch((error) => {
       if (!error.message) {
