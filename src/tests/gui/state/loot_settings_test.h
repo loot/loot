@@ -37,9 +37,7 @@ class LootSettingsTest : public ::testing::Test {
 protected:
   LootSettingsTest() : settingsFile_("./settings_.yaml") {}
 
-  ~LootSettingsTest() {
-    boost::filesystem::remove(settingsFile_);
-  }
+  ~LootSettingsTest() { boost::filesystem::remove(settingsFile_); }
 
   boost::filesystem::path settingsFile_;
   LootSettings settings_;
@@ -57,7 +55,8 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
           .SetMaster("Nehrim.esm")
-          .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
+          .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
+                          "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
@@ -71,68 +70,81 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   // GameSettings equality only checks name and folder, so check
   // other settings individually.
-  const std::vector<GameSettings> actualGameSettings = settings_.getGameSettings();
+  const std::vector<GameSettings> actualGameSettings =
+      settings_.getGameSettings();
   EXPECT_EQ(expectedGameSettings, actualGameSettings);
 
   EXPECT_EQ(expectedGameSettings[0].Type(), actualGameSettings[0].Type());
   EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
-  EXPECT_EQ(expectedGameSettings[0].RegistryKey(), actualGameSettings[0].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[0].RegistryKey(),
+            actualGameSettings[0].RegistryKey());
   EXPECT_EQ(expectedGameSettings[0].RepoURL(), actualGameSettings[0].RepoURL());
-  EXPECT_EQ(expectedGameSettings[0].RepoBranch(), actualGameSettings[0].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[0].RepoBranch(),
+            actualGameSettings[0].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
   EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
-  EXPECT_EQ(expectedGameSettings[1].RegistryKey(), actualGameSettings[1].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[1].RegistryKey(),
+            actualGameSettings[1].RegistryKey());
   EXPECT_EQ(expectedGameSettings[1].RepoURL(), actualGameSettings[1].RepoURL());
-  EXPECT_EQ(expectedGameSettings[1].RepoBranch(), actualGameSettings[1].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[1].RepoBranch(),
+            actualGameSettings[1].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
   EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
-  EXPECT_EQ(expectedGameSettings[2].RegistryKey(), actualGameSettings[2].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[2].RegistryKey(),
+            actualGameSettings[2].RegistryKey());
   EXPECT_EQ(expectedGameSettings[2].RepoURL(), actualGameSettings[2].RepoURL());
-  EXPECT_EQ(expectedGameSettings[2].RepoBranch(), actualGameSettings[2].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[2].RepoBranch(),
+            actualGameSettings[2].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
   EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
-  EXPECT_EQ(expectedGameSettings[3].RegistryKey(), actualGameSettings[3].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[3].RegistryKey(),
+            actualGameSettings[3].RegistryKey());
   EXPECT_EQ(expectedGameSettings[3].RepoURL(), actualGameSettings[3].RepoURL());
-  EXPECT_EQ(expectedGameSettings[3].RepoBranch(), actualGameSettings[3].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[3].RepoBranch(),
+            actualGameSettings[3].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
   EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
-  EXPECT_EQ(expectedGameSettings[4].RegistryKey(), actualGameSettings[4].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[4].RegistryKey(),
+            actualGameSettings[4].RegistryKey());
   EXPECT_EQ(expectedGameSettings[4].RepoURL(), actualGameSettings[4].RepoURL());
-  EXPECT_EQ(expectedGameSettings[4].RepoBranch(), actualGameSettings[4].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[4].RepoBranch(),
+            actualGameSettings[4].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
   EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
-  EXPECT_EQ(expectedGameSettings[5].RegistryKey(), actualGameSettings[5].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[5].RegistryKey(),
+            actualGameSettings[5].RegistryKey());
   EXPECT_EQ(expectedGameSettings[5].RepoURL(), actualGameSettings[5].RepoURL());
-  EXPECT_EQ(expectedGameSettings[5].RepoBranch(), actualGameSettings[5].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[5].RepoBranch(),
+            actualGameSettings[5].RepoBranch());
 }
 
 TEST_F(LootSettingsTest, loadingShouldReadFileContentAsYaml) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "enableDebugLogging: true" << endl
-    << "updateMasterlist: true" << endl
-    << "game: Oblivion" << endl
-    << "lastGame: Skyrim" << endl
-    << "language: fr" << endl
-    << "lastVersion: 0.7.1" << endl
-    << "window:" << endl
-    << "  top: 1" << endl
-    << "  bottom: 2" << endl
-    << "  left: 3" << endl
-    << "  right: 4" << endl
-    << "  maximised: true" << endl
-    << "games:" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Oblivion" << endl
-    << "filters:" << endl
-    << "  hideBashTags: false" << endl
-    << "  hideCRCs: true" << endl;
+      << "updateMasterlist: true" << endl
+      << "game: Oblivion" << endl
+      << "lastGame: Skyrim" << endl
+      << "language: fr" << endl
+      << "lastVersion: 0.7.1" << endl
+      << "window:" << endl
+      << "  top: 1" << endl
+      << "  bottom: 2" << endl
+      << "  left: 3" << endl
+      << "  right: 4" << endl
+      << "  maximised: true" << endl
+      << "games:" << endl
+      << "  - name: Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Oblivion" << endl
+      << "filters:" << endl
+      << "  hideBashTags: false" << endl
+      << "  hideCRCs: true" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -160,15 +172,15 @@ TEST_F(LootSettingsTest, loadingShouldUpgradeFromVersion0Point6Format) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "Debug Verbosity: 3" << endl
-    << "Update Masterlist: true" << endl
-    << "Game: Oblivion" << endl
-    << "Last Game: Skyrim" << endl
-    << "Language: fr" << endl
-    << "Games:" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Oblivion" << endl
-    << "    url: https://github.com/loot/oblivion.git" << endl;
+      << "Update Masterlist: true" << endl
+      << "Game: Oblivion" << endl
+      << "Last Game: Skyrim" << endl
+      << "Language: fr" << endl
+      << "Games:" << endl
+      << "  - name: Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Oblivion" << endl
+      << "    url: https://github.com/loot/oblivion.git" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -180,43 +192,45 @@ TEST_F(LootSettingsTest, loadingShouldUpgradeFromVersion0Point6Format) {
   EXPECT_EQ("fr", settings_.getLanguage());
 
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ("https://github.com/loot/oblivion.git", settings_.getGameSettings()[0].RepoURL());
+  EXPECT_EQ("https://github.com/loot/oblivion.git",
+            settings_.getGameSettings()[0].RepoURL());
   EXPECT_EQ("master", settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
+TEST_F(LootSettingsTest,
+       loadingShouldNotUpgradeVersion0Point6SettingsIfEquivalentsAlreadyExist) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "enableDebugLogging: false" << endl
-    << "updateMasterlist: false" << endl
-    << "game: auto" << endl
-    << "lastGame: auto" << endl
-    << "language: en" << endl
-    << "lastVersion: 0.7.1" << endl
-    << "window:" << endl
-    << "  top: 1" << endl
-    << "  bottom: 2" << endl
-    << "  left: 3" << endl
-    << "  right: 4" << endl
-    << "  maximised: true" << endl
-    << "games:" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Fallout3" << endl
-    << "    folder: Fallout3" << endl
-    << "filters:" << endl
-    << "  hideBashTags: false" << endl
-    << "  hideCRCs: true" << endl;
+      << "updateMasterlist: false" << endl
+      << "game: auto" << endl
+      << "lastGame: auto" << endl
+      << "language: en" << endl
+      << "lastVersion: 0.7.1" << endl
+      << "window:" << endl
+      << "  top: 1" << endl
+      << "  bottom: 2" << endl
+      << "  left: 3" << endl
+      << "  right: 4" << endl
+      << "  maximised: true" << endl
+      << "games:" << endl
+      << "  - name: Game Name" << endl
+      << "    type: Fallout3" << endl
+      << "    folder: Fallout3" << endl
+      << "filters:" << endl
+      << "  hideBashTags: false" << endl
+      << "  hideCRCs: true" << endl;
 
   out << "Debug Verbosity: 3" << endl
-    << "Update Masterlist: true" << endl
-    << "Game: Oblivion" << endl
-    << "Last Game: Skyrim" << endl
-    << "Language: fr" << endl
-    << "Games:" << endl
-    << "  - name: Old Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Oblivion" << endl
-    << "    url: https://github.com/loot/oblivion.git" << endl;
+      << "Update Masterlist: true" << endl
+      << "Game: Oblivion" << endl
+      << "Last Game: Skyrim" << endl
+      << "Language: fr" << endl
+      << "Games:" << endl
+      << "  - name: Old Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Oblivion" << endl
+      << "    url: https://github.com/loot/oblivion.git" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -234,10 +248,10 @@ TEST_F(LootSettingsTest, loadingShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Oblivion" << endl
-    << "    branch: v0.7" << endl;
+      << "  - name: Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Oblivion" << endl
+      << "    branch: v0.7" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -246,16 +260,17 @@ TEST_F(LootSettingsTest, loadingShouldUpgradeOldDefaultGameRepositoryBranches) {
   EXPECT_EQ(games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingShouldNotUpgradeNonDefaultGameRepositoryBranches) {
+TEST_F(LootSettingsTest,
+       loadingShouldNotUpgradeNonDefaultGameRepositoryBranches) {
   const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
 
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Oblivion" << endl
-    << "    branch: foo" << endl;
+      << "  - name: Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Oblivion" << endl
+      << "    branch: foo" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -267,17 +282,17 @@ TEST_F(LootSettingsTest, loadingShouldAddMissingBaseGames) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Test" << endl
-    << "    branch: foo" << endl;
+      << "  - name: Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Test" << endl
+      << "    branch: foo" << endl;
   out.close();
 
   settings_.load(settingsFile_);
 
   GameSettings testGame = GameSettings(GameType::tes4, "Test")
-    .SetName("Game Name")
-    .SetRepoBranch("foo");
+                              .SetName("Game Name")
+                              .SetRepoBranch("foo");
 
   const std::vector<GameSettings> expectedGameSettings({
       testGame,
@@ -296,12 +311,12 @@ TEST_F(LootSettingsTest, loadingShouldSkipUnrecognisedGames) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "games:" << endl
-    << "  - name: Foobar" << endl
-    << "    type: Foobar" << endl
-    << "    folder: Oblivion" << endl
-    << "  - name: Game Name" << endl
-    << "    type: Oblivion" << endl
-    << "    folder: Oblivion" << endl;
+      << "  - name: Foobar" << endl
+      << "    type: Foobar" << endl
+      << "    folder: Oblivion" << endl
+      << "  - name: Game Name" << endl
+      << "    type: Oblivion" << endl
+      << "    folder: Oblivion" << endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -311,8 +326,7 @@ TEST_F(LootSettingsTest, loadingShouldSkipUnrecognisedGames) {
 
 TEST_F(LootSettingsTest, loadingShouldRemoveTheContentFilterSetting) {
   boost::filesystem::ofstream out(settingsFile_);
-  out << "filters:" << std::endl
-    << "  contentFilter: foo" << std::endl;
+  out << "filters:" << std::endl << "  contentFilter: foo" << std::endl;
   out.close();
 
   settings_.load(settingsFile_);
@@ -371,14 +385,16 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedFile) {
   EXPECT_EQ(filters, settings_.getFilters());
 }
 
-TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
+TEST_F(LootSettingsTest,
+       isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
   LootSettings::WindowPosition position;
   settings_.storeWindowPosition(position);
 
   EXPECT_FALSE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfTopPositionValueIsNonZero) {
+TEST_F(LootSettingsTest,
+       isWindowPositionStoredShouldReturnTrueIfTopPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.top = 1;
   settings_.storeWindowPosition(position);
@@ -386,7 +402,8 @@ TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfTopPositionValu
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfBottomPositionValueIsNonZero) {
+TEST_F(LootSettingsTest,
+       isWindowPositionStoredShouldReturnTrueIfBottomPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.bottom = 1;
   settings_.storeWindowPosition(position);
@@ -394,7 +411,8 @@ TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfBottomPositionV
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfLeftPositionValueIsNonZero) {
+TEST_F(LootSettingsTest,
+       isWindowPositionStoredShouldReturnTrueIfLeftPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.left = 1;
   settings_.storeWindowPosition(position);
@@ -402,7 +420,8 @@ TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfLeftPositionVal
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest, isWindowPositionStoredShouldReturnTrueIfRightPositionValueIsNonZero) {
+TEST_F(LootSettingsTest,
+       isWindowPositionStoredShouldReturnTrueIfRightPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.right = 1;
   settings_.storeWindowPosition(position);

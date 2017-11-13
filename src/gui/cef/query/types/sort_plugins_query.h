@@ -29,28 +29,29 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/loot_state.h"
 #include "schema/response.pb.h"
 
 namespace loot {
 class SortPluginsQuery : public MetadataQuery {
 public:
   SortPluginsQuery(LootState& state, CefRefPtr<CefFrame> frame) :
-    MetadataQuery(state),
-    state_(state),
-    frame_(frame) {}
+      MetadataQuery(state),
+      state_(state),
+      frame_(frame) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
 
-    //Sort plugins into their load order.
-    sendProgressUpdate(frame_, boost::locale::translate("Sorting load order..."));
+    // Sort plugins into their load order.
+    sendProgressUpdate(frame_,
+                       boost::locale::translate("Sorting load order..."));
     std::vector<std::string> plugins = state_.getCurrentGame().SortPlugins();
 
-    if ((state_.getCurrentGame().Type() == GameType::tes5
-         || state_.getCurrentGame().Type() == GameType::fo4
-         || state_.getCurrentGame().Type() == GameType::tes5se))
+    if ((state_.getCurrentGame().Type() == GameType::tes5 ||
+         state_.getCurrentGame().Type() == GameType::fo4 ||
+         state_.getCurrentGame().Type() == GameType::tes5se))
       applyUnchangedLoadOrder(plugins);
 
     std::string json = generateJsonResponse(plugins);
@@ -64,7 +65,10 @@ public:
 
 private:
   void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
-    if (plugins.empty() || !equal(begin(plugins), end(plugins), begin(state_.getCurrentGame().GetLoadOrder())))
+    if (plugins.empty() ||
+        !equal(begin(plugins),
+               end(plugins),
+               begin(state_.getCurrentGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
@@ -82,7 +86,7 @@ private:
       convert(message, *pbMessage);
     }
 
-    for (const auto &pluginName : plugins) {
+    for (const auto& pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
 
       auto pbPlugin = response.add_plugins();

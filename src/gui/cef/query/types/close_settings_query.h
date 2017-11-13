@@ -27,18 +27,21 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/types/get_installed_games_query.h"
+#include "gui/state/loot_state.h"
 #include "schema/request.pb.h"
 
 namespace loot {
 class CloseSettingsQuery : public GetInstalledGamesQuery {
 public:
   CloseSettingsQuery(LootState& state, protobuf::LootSettings settings) :
-    GetInstalledGamesQuery(state), state_(state), settings_(settings) {}
+      GetInstalledGamesQuery(state),
+      state_(state),
+      settings_(settings) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, updating settings object.";
+    BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, "
+                                "updating settings object.";
 
     state_.setDefaultGame(settings_.game());
     state_.setLanguage(settings_.language());
@@ -53,7 +56,9 @@ private:
   LootState& state_;
   protobuf::LootSettings settings_;
 
-  typedef ::google::protobuf::RepeatedPtrField< ::loot::protobuf::LootSettings_GameSettings > PBGameSettings;
+  typedef ::google::protobuf::RepeatedPtrField<
+      ::loot::protobuf::LootSettings_GameSettings>
+      PBGameSettings;
 
   static std::vector<GameSettings> convert(const PBGameSettings& pbGames) {
     std::vector<GameSettings> games;

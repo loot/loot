@@ -27,146 +27,163 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/loot_state.h"
 #include "schema/request.pb.h"
 
 namespace loot {
-  class EditorClosedQuery : public MetadataQuery {
-  public:
-    EditorClosedQuery(LootState& state, protobuf::EditorState editorState) :
+class EditorClosedQuery : public MetadataQuery {
+public:
+  EditorClosedQuery(LootState& state, protobuf::EditorState editorState) :
       MetadataQuery(state),
       state_(state),
       applyEdits_(editorState.apply_edits()) {
-      try {
-        metadata_ = convert(editorState.metadata());
-      } catch (...) {
-        state_.decrementUnappliedChangeCounter();
-        throw;
-      }
-    }
-
-    std::string executeLogic() {
-      if (applyEdits_) {
-        applyUserEdits();
-      }
+    try {
+      metadata_ = convert(editorState.metadata());
+    } catch (...) {
       state_.decrementUnappliedChangeCounter();
+      throw;
+    }
+  }
 
-      return generateJsonResponse(metadata_.GetName());
+  std::string executeLogic() {
+    if (applyEdits_) {
+      applyUserEdits();
+    }
+    state_.decrementUnappliedChangeCounter();
+
+    return generateJsonResponse(metadata_.GetName());
+  }
+
+private:
+  template<typename T>
+  using PBFields = ::google::protobuf::RepeatedPtrField<T>;
+
+  PluginMetadata getNonUserMetadata() {
+    BOOST_LOG_TRIVIAL(trace)
+        << "Getting non-user metadata for: " << metadata_.GetName();
+    auto masterlistMetadata =
+        state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
+
+    try {
+      auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
+      return MetadataQuery::getNonUserMetadata(plugin, masterlistMetadata);
+    } catch (...) {
     }
 
-  private:
-    template<typename T>
-    using PBFields = ::google::protobuf::RepeatedPtrField<T>;
+    return masterlistMetadata;
+  }
 
-    PluginMetadata getNonUserMetadata() {
-      BOOST_LOG_TRIVIAL(trace) << "Getting non-user metadata for: " << metadata_.GetName();
-      auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
+  PluginMetadata getUserMetadata() {
+    auto nonUserMetadata = getNonUserMetadata();
+    auto userMetadata = metadata_.NewMetadata(nonUserMetadata);
 
+    if (metadata_.GetLocalPriority().GetValue() !=
+        nonUserMetadata.GetLocalPriority().GetValue()) {
+      userMetadata.SetLocalPriority(metadata_.GetLocalPriority());
+    } else {
+      userMetadata.SetLocalPriority(Priority());
+    }
+
+    if (metadata_.GetGlobalPriority().GetValue() !=
+        nonUserMetadata.GetGlobalPriority().GetValue()) {
+      userMetadata.SetGlobalPriority(metadata_.GetGlobalPriority());
+    } else {
+      userMetadata.SetGlobalPriority(Priority());
+    }
+
+    return userMetadata;
+  }
+
+  void applyUserEdits() {
+    BOOST_LOG_TRIVIAL(trace)
+        << "Applying user edits for: " << metadata_.GetName();
+
+    // Determine what metadata in the response is user-added.
+    auto userMetadata = getUserMetadata();
+
+    // Now erase any existing userlist entry.
+    BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
+    state_.getCurrentGame().ClearUserMetadata(userMetadata.GetName());
+
+    // Add a new userlist entry if necessary.
+    if (!userMetadata.HasNameOnly()) {
+      BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
+      state_.getCurrentGame().AddUserMetadata(userMetadata);
+    }
+
+    // Save edited userlist.
+    state_.getCurrentGame().SaveUserMetadata();
+  }
+
+  static PluginMetadata convert(protobuf::PluginMetadata pbMetadata) {
+    if (pbMetadata.name().empty()) {
+      throw std::runtime_error(
+          "PluginMetadata object has an empty 'name' value");
+    }
+
+    PluginMetadata metadata(pbMetadata.name());
+
+    if (metadata.IsRegexPlugin()) {
       try {
-        auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
-        return MetadataQuery::getNonUserMetadata(plugin, masterlistMetadata);
-      } catch (...) {}
-
-      return masterlistMetadata;
-    }
-
-    PluginMetadata getUserMetadata() {
-      auto nonUserMetadata = getNonUserMetadata();
-      auto userMetadata = metadata_.NewMetadata(nonUserMetadata);
-
-      if (metadata_.GetLocalPriority().GetValue() != nonUserMetadata.GetLocalPriority().GetValue()) {
-        userMetadata.SetLocalPriority(metadata_.GetLocalPriority());
-      } else {
-        userMetadata.SetLocalPriority(Priority());
+        std::regex(metadata.GetName(),
+                   std::regex::ECMAScript | std::regex::icase);
+      } catch (std::regex_error& e) {
+        throw std::runtime_error(
+            std::string(
+                "PluginMetadata object has an invalid regex 'name' value: ") +
+            e.what());
       }
 
-      if (metadata_.GetGlobalPriority().GetValue() != nonUserMetadata.GetGlobalPriority().GetValue()) {
-        userMetadata.SetGlobalPriority(metadata_.GetGlobalPriority());
-      } else {
-        userMetadata.SetGlobalPriority(Priority());
+      if (pbMetadata.dirty().empty()) {
+        throw std::runtime_error(
+            "PluginMetadata object cannot have a 'dirty' key with a regex "
+            "'name' value");
       }
-
-      return userMetadata;
-    }
-
-    void applyUserEdits() {
-      BOOST_LOG_TRIVIAL(trace) << "Applying user edits for: " << metadata_.GetName();
-
-      // Determine what metadata in the response is user-added.
-      auto userMetadata = getUserMetadata();
-
-      // Now erase any existing userlist entry.
-      BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
-      state_.getCurrentGame().ClearUserMetadata(userMetadata.GetName());
-
-      // Add a new userlist entry if necessary.
-      if (!userMetadata.HasNameOnly()) {
-        BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
-        state_.getCurrentGame().AddUserMetadata(userMetadata);
-      }
-
-      // Save edited userlist.
-      state_.getCurrentGame().SaveUserMetadata();
-    }
-
-    static PluginMetadata convert(protobuf::PluginMetadata pbMetadata) {
-      if (pbMetadata.name().empty()) {
-        throw std::runtime_error("PluginMetadata object has an empty 'name' value");
-      }
-
-      PluginMetadata metadata(pbMetadata.name());
-
-      if (metadata.IsRegexPlugin()) {
-        try {
-          std::regex(metadata.GetName(), std::regex::ECMAScript | std::regex::icase);
-        } catch (std::regex_error& e) {
-          throw std::runtime_error(std::string("PluginMetadata object has an invalid regex 'name' value: ") + e.what());
-        }
-
-        if (pbMetadata.dirty().empty()) {
-          throw std::runtime_error("PluginMetadata object cannot have a 'dirty' key with a regex 'name' value");
-        }
-        if (pbMetadata.clean().empty()) {
-          throw std::runtime_error("PluginMetadata object cannot have a 'clean' key with a regex 'name' value");
-        }
-      }
-
-      metadata.SetEnabled(pbMetadata.enabled());
-
-      // These two will register all priorities as explicit, but that's OK because
-      // explicitness is ignored above.
-      metadata.SetLocalPriority(Priority(pbMetadata.priority()));
-      metadata.SetGlobalPriority(Priority(pbMetadata.global_priority()));
-
-      metadata.SetLoadAfterFiles(convert(pbMetadata.after()));
-      metadata.SetRequirements(convert(pbMetadata.req()));
-      metadata.SetIncompatibilities(convert(pbMetadata.inc()));
-      metadata.SetMessages(convert(pbMetadata.msg()));
-      metadata.SetTags(convert(pbMetadata.tag()));
-      metadata.SetDirtyInfo(convert(pbMetadata.dirty()));
-      metadata.SetCleanInfo(convert(pbMetadata.clean()));
-      metadata.SetLocations(convert(pbMetadata.url()));
-
-      return metadata;
-    }
-
-    static void testConditionSyntax(const std::string& objectType, const std::string& condition) {
-      try {
-        ConditionalMetadata(condition).ParseCondition();
-      } catch (std::exception& e) {
-        throw std::runtime_error(objectType + " object has an invalid condition: " + e.what());
+      if (pbMetadata.clean().empty()) {
+        throw std::runtime_error(
+            "PluginMetadata object cannot have a 'clean' key with a regex "
+            "'name' value");
       }
     }
 
-    static std::set<File> convert(const PBFields<protobuf::File>& pbFiles) {
-      std::set<File> files;
+    metadata.SetEnabled(pbMetadata.enabled());
 
-      for (const auto& pbFile : pbFiles) {
-        if (pbFile.name().empty()) {
-          throw std::runtime_error("File object has an empty 'name' value");
-        }
-        testConditionSyntax("File", pbFile.condition());
+    // These two will register all priorities as explicit, but that's OK because
+    // explicitness is ignored above.
+    metadata.SetLocalPriority(Priority(pbMetadata.priority()));
+    metadata.SetGlobalPriority(Priority(pbMetadata.global_priority()));
+
+    metadata.SetLoadAfterFiles(convert(pbMetadata.after()));
+    metadata.SetRequirements(convert(pbMetadata.req()));
+    metadata.SetIncompatibilities(convert(pbMetadata.inc()));
+    metadata.SetMessages(convert(pbMetadata.msg()));
+    metadata.SetTags(convert(pbMetadata.tag()));
+    metadata.SetDirtyInfo(convert(pbMetadata.dirty()));
+    metadata.SetCleanInfo(convert(pbMetadata.clean()));
+    metadata.SetLocations(convert(pbMetadata.url()));
+
+    return metadata;
+  }
+
+  static void testConditionSyntax(const std::string& objectType,
+                                  const std::string& condition) {
+    try {
+      ConditionalMetadata(condition).ParseCondition();
+    } catch (std::exception& e) {
+      throw std::runtime_error(objectType +
+                               " object has an invalid condition: " + e.what());
+    }
+  }
+
+  static std::set<File> convert(const PBFields<protobuf::File>& pbFiles) {
+    std::set<File> files;
+
+    for (const auto& pbFile : pbFiles) {
+      if (pbFile.name().empty()) {
+        throw std::runtime_error("File object has an empty 'name' value");
+      }
+      testConditionSyntax("File", pbFile.condition());
 
       files.insert(File(pbFile.name(), pbFile.display(), pbFile.condition()));
     }
@@ -184,26 +201,30 @@ namespace loot {
     }
   }
 
-  static std::vector<Message> convert(const PBFields<protobuf::SimpleMessage>& pbMessages) {
+  static std::vector<Message> convert(
+      const PBFields<protobuf::SimpleMessage>& pbMessages) {
     std::vector<Message> messages;
 
     for (const auto& pbMessage : pbMessages) {
       if (pbMessage.text().empty()) {
-        throw std::runtime_error("SimpleMessage object has an empty 'text' value");
+        throw std::runtime_error(
+            "SimpleMessage object has an empty 'text' value");
       }
       if (pbMessage.language().empty()) {
-        throw std::runtime_error("SimpleMessage object has an empty 'language' value");
+        throw std::runtime_error(
+            "SimpleMessage object has an empty 'language' value");
       }
       if (pbMessage.type().empty()) {
-        throw std::runtime_error("SimpleMessage object has an empty 'type' value");
+        throw std::runtime_error(
+            "SimpleMessage object has an empty 'type' value");
       }
       testConditionSyntax("SimpleMessage", pbMessage.condition());
 
       MessageContent content(pbMessage.text(), pbMessage.language());
 
       messages.push_back(Message(mapMessageType(pbMessage.type()),
-        std::vector<MessageContent>({content}),
-        pbMessage.condition()));
+                                 std::vector<MessageContent>({content}),
+                                 pbMessage.condition()));
     }
 
     return messages;
@@ -224,56 +245,66 @@ namespace loot {
     return tags;
   }
 
-  static std::vector<MessageContent> convert(const PBFields<protobuf::MessageContent>& pbContents) {
+  static std::vector<MessageContent> convert(
+      const PBFields<protobuf::MessageContent>& pbContents) {
     std::vector<MessageContent> contents;
 
     for (const auto& pbContent : pbContents) {
       if (pbContent.text().empty()) {
-        throw std::runtime_error("MessageContent object has an empty 'text' value");
+        throw std::runtime_error(
+            "MessageContent object has an empty 'text' value");
       }
       if (pbContent.language().empty()) {
-        throw std::runtime_error("MessageContent object has an empty 'language' value");
+        throw std::runtime_error(
+            "MessageContent object has an empty 'language' value");
       }
 
-      contents.push_back(MessageContent(pbContent.text(), pbContent.language()));
+      contents.push_back(
+          MessageContent(pbContent.text(), pbContent.language()));
     }
 
     if (contents.size() > 1) {
       bool found = false;
-      for (const auto &mc : contents) {
+      for (const auto& mc : contents) {
         if (mc.GetLanguage() == loot::MessageContent::defaultLanguage)
           found = true;
       }
       if (!found)
-        throw std::runtime_error("MessageContent array does not contain an English MessageContent object");
+        throw std::runtime_error(
+            "MessageContent array does not contain an English MessageContent "
+            "object");
     }
 
     return contents;
   }
 
-  static std::set<PluginCleaningData> convert(const PBFields<protobuf::CleaningData>& pbData) {
+  static std::set<PluginCleaningData> convert(
+      const PBFields<protobuf::CleaningData>& pbData) {
     std::set<PluginCleaningData> data;
 
     for (const auto& pb : pbData) {
       if (pb.crc() == 0) {
-        throw std::runtime_error("CleaningData object has a 'crc' value of zero");
+        throw std::runtime_error(
+            "CleaningData object has a 'crc' value of zero");
       }
       if (pb.util().empty()) {
-        throw std::runtime_error("CleaningData object has an empty 'util' value");
+        throw std::runtime_error(
+            "CleaningData object has an empty 'util' value");
       }
 
       data.insert(PluginCleaningData(pb.crc(),
-        pb.util(),
-        convert(pb.info()),
-        pb.itm(),
-        pb.udr(),
-        pb.nav()));
+                                     pb.util(),
+                                     convert(pb.info()),
+                                     pb.itm(),
+                                     pb.udr(),
+                                     pb.nav()));
     }
 
     return data;
   }
 
-  static std::set<Location> convert(const PBFields<protobuf::Location>& pbLocations) {
+  static std::set<Location> convert(
+      const PBFields<protobuf::Location>& pbLocations) {
     std::set<Location> locations;
 
     for (const auto& pbLocation : pbLocations) {

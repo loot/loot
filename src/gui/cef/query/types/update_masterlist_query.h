@@ -25,15 +25,15 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_UPDATE_MASTERLIST_QUERY
 #define LOOT_GUI_QUERY_UPDATE_MASTERLIST_QUERY
 
-#include "gui/state/game.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/game.h"
 
 namespace loot {
 class UpdateMasterlistQuery : public MetadataQuery {
 public:
   UpdateMasterlistQuery(LootState& state) :
-    MetadataQuery(state),
-    game_(state.getCurrentGame()) {}
+      MetadataQuery(state),
+      game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
@@ -52,7 +52,8 @@ private:
     } catch (std::exception&) {
       try {
         game_.LoadMetadata();
-      } catch (...) {}
+      } catch (...) {
+      }
       throw;
     }
   }

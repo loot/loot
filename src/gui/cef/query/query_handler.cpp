@@ -24,18 +24,18 @@
 
 #include "gui/cef/query/query_handler.h"
 
+#include <iomanip>
 #include <sstream>
 #include <string>
-#include <iomanip>
 
-#include <boost/filesystem.hpp>
-#include <boost/format.hpp>
-#include <boost/locale.hpp>
-#include <boost/log/trivial.hpp>
 #include <include/base/cef_bind.h>
 #include <include/cef_app.h>
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "gui/cef/loot_app.h"
 #include "gui/cef/loot_handler.h"
@@ -50,8 +50,8 @@
 #include "gui/cef/query/types/copy_load_order_query.h"
 #include "gui/cef/query/types/copy_metadata_query.h"
 #include "gui/cef/query/types/discard_unapplied_changes_query.h"
-#include "gui/cef/query/types/editor_opened_query.h"
 #include "gui/cef/query/types/editor_closed_query.h"
+#include "gui/cef/query/types/editor_opened_query.h"
 #include "gui/cef/query/types/get_conflicting_plugins_query.h"
 #include "gui/cef/query/types/get_game_data_query.h"
 #include "gui/cef/query/types/get_game_types_query.h"
@@ -69,8 +69,8 @@
 
 #undef ERROR
 
-#include "schema/request.pb.h"
 #include <google/protobuf/util/json_util.h>
+#include "schema/request.pb.h"
 
 using boost::filesystem::exists;
 using boost::format;
@@ -99,8 +99,9 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
       return false;
 
     CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
-  } catch (exception &e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \"" << request.ToString() << "\": " << e.what();
+  } catch (exception& e) {
+    BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \""
+                             << request.ToString() << "\": " << e.what();
     callback->Failure(-1, e.what());
   }
 
@@ -170,7 +171,8 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "redatePlugins")
     return new RedatePluginsQuery(lootState_);
   else if (name == "saveFilterState")
-    return new SaveFilterStateQuery(lootState_, request.filter().name(), request.filter().state());
+    return new SaveFilterStateQuery(
+        lootState_, request.filter().name(), request.filter().state());
   else if (name == "sortPlugins")
     return new SortPluginsQuery(lootState_, frame);
   else if (name == "updateMasterlist")

@@ -38,7 +38,8 @@ public:
   CopyContentQuery(protobuf::Content content) : content_(content) {}
 
   std::string executeLogic() {
-    const std::string text = "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
+    const std::string text =
+        "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
 
     copyToClipboard(text);
     return "";

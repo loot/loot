@@ -34,47 +34,56 @@ namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "docs" / "index.html", LootPaths::getReadmePath());
+  EXPECT_EQ(boost::filesystem::current_path() / "docs" / "index.html",
+            LootPaths::getReadmePath());
 }
 
 TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "resources", LootPaths::getResourcesPath());
+  EXPECT_EQ(boost::filesystem::current_path() / "resources",
+            LootPaths::getResourcesPath());
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "resources" / "l10n", LootPaths::getL10nPath());
+  EXPECT_EQ(boost::filesystem::current_path() / "resources" / "l10n",
+            LootPaths::getL10nPath());
 }
 
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(LootPaths::getLootDataPath() / "settings.yaml", LootPaths::getSettingsPath());
+  EXPECT_EQ(LootPaths::getLootDataPath() / "settings.yaml",
+            LootPaths::getSettingsPath());
 }
 
 TEST(LootPaths, getLogPathShouldUseLootDataPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(LootPaths::getLootDataPath() / "LOOTDebugLog.txt", LootPaths::getLogPath());
+  EXPECT_EQ(LootPaths::getLootDataPath() / "LOOTDebugLog.txt",
+            LootPaths::getLogPath());
 }
 
 TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path(), LootPaths::getReadmePath().parent_path().parent_path());
+  EXPECT_EQ(boost::filesystem::current_path(),
+            LootPaths::getReadmePath().parent_path().parent_path());
 }
 
-TEST(LootPaths, initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
+TEST(
+    LootPaths,
+    initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
   LootPaths::initialise("");
 
   // Can't actually know what the path should be, but we can check
   // its properties.
   EXPECT_EQ("LOOT", LootPaths::getLootDataPath().filename());
   EXPECT_FALSE(LootPaths::getLootDataPath().parent_path().empty());
-  EXPECT_TRUE(boost::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
+  EXPECT_TRUE(
+      boost::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
 }
 
 TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {

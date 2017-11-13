@@ -30,10 +30,12 @@ along with LOOT.  If not, see
 namespace loot {
 class ChangeGameQuery : public GetGameDataQuery {
 public:
-  ChangeGameQuery(LootState& state, CefRefPtr<CefFrame> frame, const std::string& gameFolder) :
-    GetGameDataQuery(state, frame),
-    state_(state),
-    gameFolder_(gameFolder) {}
+  ChangeGameQuery(LootState& state,
+                  CefRefPtr<CefFrame> frame,
+                  const std::string& gameFolder) :
+      GetGameDataQuery(state, frame),
+      state_(state),
+      gameFolder_(gameFolder) {}
 
   std::string executeLogic() {
     state_.changeGame(gameFolder_);

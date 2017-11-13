@@ -27,16 +27,14 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/loot_state.h"
 #include "schema/response.pb.h"
 
 namespace loot {
 class CancelSortQuery : public MetadataQuery {
 public:
-  CancelSortQuery(LootState& state) :
-    MetadataQuery(state),
-    state_(state) {}
+  CancelSortQuery(LootState& state) : MetadataQuery(state), state_(state) {}
 
   std::string executeLogic() {
     state_.decrementUnappliedChangeCounter();
@@ -47,7 +45,8 @@ public:
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
     for (const auto& plugin : loadOrder) {
       auto pluginObject = state_.getCurrentGame().GetPlugin(plugin);
-      auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(pluginObject, loadOrder);
+      auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(
+          pluginObject, loadOrder);
 
       auto pbPlugin = response.add_plugins();
 

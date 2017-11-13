@@ -25,11 +25,11 @@
 #ifndef LOOT_GUI_STATE_GAME_SETTINGS
 #define LOOT_GUI_STATE_GAME_SETTINGS
 
-#include <string>
 #include <list>
+#include <string>
 
-#include <boost/filesystem.hpp>
 #include <yaml-cpp/yaml.h>
+#include <boost/filesystem.hpp>
 
 #include "loot/enum/game_type.h"
 
@@ -37,14 +37,16 @@ namespace loot {
 class GameSettings {
 public:
   GameSettings();
-  explicit GameSettings(const GameType gameType, const std::string& lootFolder = "");
+  explicit GameSettings(const GameType gameType,
+                        const std::string& lootFolder = "");
 
   bool IsRepoBranchOldDefault() const;
 
-  bool operator == (const GameSettings& rhs) const;  //Compares names and folder names.
+  bool operator==(
+      const GameSettings& rhs) const;  // Compares names and folder names.
 
   GameType Type() const;
-  std::string Name() const;  //Returns the game's name, eg. "TES IV: Oblivion".
+  std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;
   std::string Master() const;
   std::string RegistryKey() const;
@@ -72,7 +74,7 @@ private:
   std::string repositoryURL_;
   std::string repositoryBranch_;
 
-  boost::filesystem::path gamePath_;  //Path to the game's folder.
+  boost::filesystem::path gamePath_;  // Path to the game's folder.
 };
 }
 
@@ -99,26 +101,39 @@ struct convert<loot::GameSettings> {
     using loot::GameType;
 
     if (!node.IsMap())
-      throw RepresentationException(node.Mark(), "bad conversion: 'game settings' object must be a map");
+      throw RepresentationException(
+          node.Mark(), "bad conversion: 'game settings' object must be a map");
     if (!node["folder"])
-      throw RepresentationException(node.Mark(), "bad conversion: 'folder' key missing from 'game settings' object");
+      throw RepresentationException(
+          node.Mark(),
+          "bad conversion: 'folder' key missing from 'game settings' object");
     if (!node["type"])
-      throw RepresentationException(node.Mark(), "bad conversion: 'type' key missing from 'game settings' object");
+      throw RepresentationException(
+          node.Mark(),
+          "bad conversion: 'type' key missing from 'game settings' object");
 
-    if (node["type"].as<std::string>() == GameSettings(GameType::tes4).FolderName())
+    if (node["type"].as<std::string>() ==
+        GameSettings(GameType::tes4).FolderName())
       rhs = GameSettings(GameType::tes4, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() == GameSettings(GameType::tes5).FolderName())
+    else if (node["type"].as<std::string>() ==
+             GameSettings(GameType::tes5).FolderName())
       rhs = GameSettings(GameType::tes5, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() == GameSettings(GameType::tes5se).FolderName())
+    else if (node["type"].as<std::string>() ==
+             GameSettings(GameType::tes5se).FolderName())
       rhs = GameSettings(GameType::tes5se, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() == GameSettings(GameType::fo3).FolderName())
+    else if (node["type"].as<std::string>() ==
+             GameSettings(GameType::fo3).FolderName())
       rhs = GameSettings(GameType::fo3, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() == GameSettings(GameType::fonv).FolderName())
+    else if (node["type"].as<std::string>() ==
+             GameSettings(GameType::fonv).FolderName())
       rhs = GameSettings(GameType::fonv, node["folder"].as<std::string>());
-    else if (node["type"].as<std::string>() == GameSettings(GameType::fo4).FolderName())
+    else if (node["type"].as<std::string>() ==
+             GameSettings(GameType::fo4).FolderName())
       rhs = GameSettings(GameType::fo4, node["folder"].as<std::string>());
     else
-      throw RepresentationException(node.Mark(), "bad conversion: invalid value for 'type' key in 'game settings' object");
+      throw RepresentationException(node.Mark(),
+                                    "bad conversion: invalid value for 'type' "
+                                    "key in 'game settings' object");
 
     if (node["name"])
       rhs.SetName(node["name"].as<std::string>());
@@ -137,7 +152,7 @@ struct convert<loot::GameSettings> {
   }
 };
 
-Emitter& operator << (Emitter& out, const loot::GameSettings& rhs);
+Emitter& operator<<(Emitter& out, const loot::GameSettings& rhs);
 }
 
 #endif

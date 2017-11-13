@@ -73,6 +73,7 @@ public:
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
   void storeFilterState(const std::string& filterId, bool enabled);
   void updateLastVersion();
+
 private:
   bool enableDebugLogging_;
   bool updateMasterlist_;

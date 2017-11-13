@@ -34,10 +34,10 @@
 
 namespace loot {
 class LootHandler : public CefClient,
-  public CefDisplayHandler,
-  public CefLifeSpanHandler,
-  public CefLoadHandler,
-  public CefRequestHandler {
+                    public CefDisplayHandler,
+                    public CefLifeSpanHandler,
+                    public CefLoadHandler,
+                    public CefRequestHandler {
 public:
   LootHandler(LootState& lootState);
 
@@ -47,9 +47,10 @@ public:
   virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE;
 
-  virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                        CefProcessId source_process,
-                                        CefRefPtr<CefProcessMessage> message) OVERRIDE;
+  virtual bool OnProcessMessageReceived(
+      CefRefPtr<CefBrowser> browser,
+      CefProcessId source_process,
+      CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
   // CefLifeSpanHandler methods
   //---------------------------
@@ -70,15 +71,16 @@ public:
 
   virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE;
 
-  virtual bool OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-                              CefRefPtr< CefFrame > frame,
-                              CefRefPtr< CefRequest > request,
+  virtual bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+                              CefRefPtr<CefFrame> frame,
+                              CefRefPtr<CefRequest> request,
                               bool is_redirect) OVERRIDE;
 
-  virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
-                                                              CefRefPtr<CefFrame> frame,
-                                                              CefRefPtr<CefRequest> request,
-                                                              CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+  virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(
+      CefRefPtr<CefBrowser> browser,
+      CefRefPtr<CefFrame> frame,
+      CefRefPtr<CefRequest> request,
+      CefRefPtr<CefRequestCallback> callback) OVERRIDE;
 
 private:
   typedef std::list<CefRefPtr<CefBrowser>> BrowserList;

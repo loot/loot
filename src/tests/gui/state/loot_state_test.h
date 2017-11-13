@@ -50,21 +50,27 @@ TEST_F(LootStateTest, shouldHaveUnappliedChangesIfCounterIsIncremented) {
   EXPECT_TRUE(lootState_.hasUnappliedChanges());
 }
 
-TEST_F(LootStateTest, incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
+TEST_F(
+    LootStateTest,
+    incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
   lootState_.incrementUnappliedChangeCounter();
   lootState_.incrementUnappliedChangeCounter();
   lootState_.decrementUnappliedChangeCounter();
   EXPECT_TRUE(lootState_.hasUnappliedChanges());
 }
 
-TEST_F(LootStateTest, incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
+TEST_F(
+    LootStateTest,
+    incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
   lootState_.incrementUnappliedChangeCounter();
   lootState_.decrementUnappliedChangeCounter();
   lootState_.decrementUnappliedChangeCounter();
   EXPECT_FALSE(lootState_.hasUnappliedChanges());
 }
 
-TEST_F(LootStateTest, incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
+TEST_F(
+    LootStateTest,
+    incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
   lootState_.incrementUnappliedChangeCounter();
   lootState_.incrementUnappliedChangeCounter();
   lootState_.decrementUnappliedChangeCounter();

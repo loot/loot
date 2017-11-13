@@ -27,8 +27,8 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/loot_settings.h"
 #include "gui/cef/query/query.h"
+#include "gui/state/loot_settings.h"
 #include "schema/response.pb.h"
 
 namespace loot {
@@ -60,7 +60,6 @@ public:
 
     auto filters = settings_.getFilters();
     response.mutable_filters()->insert(filters.cbegin(), filters.cend());
-
 
     return toJson(response);
   }

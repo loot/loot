@@ -35,30 +35,29 @@ namespace gui {
 namespace test {
 class GameTest : public loot::test::CommonGameTestFixture {
 protected:
-  GameTest() : loadOrderToSet_({
-    masterFile,
-    blankEsm,
-    blankMasterDependentEsm,
-    blankDifferentEsm,
-    blankDifferentMasterDependentEsm,
-    blankDifferentEsp,
-    blankDifferentPluginDependentEsp,
-    blankEsp,
-    blankMasterDependentEsp,
-    blankDifferentMasterDependentEsp,
-    blankPluginDependentEsp,
-  }),
-  info_(std::vector<MessageContent>({
-    MessageContent("info"),
-  })),
-  loadOrderBackupFile0("loadorder.bak.0"),
-  loadOrderBackupFile1("loadorder.bak.1"),
-  loadOrderBackupFile2("loadorder.bak.2"),
-  loadOrderBackupFile3("loadorder.bak.3") {}
+  GameTest() :
+      loadOrderToSet_({
+          masterFile,
+          blankEsm,
+          blankMasterDependentEsm,
+          blankDifferentEsm,
+          blankDifferentMasterDependentEsm,
+          blankDifferentEsp,
+          blankDifferentPluginDependentEsp,
+          blankEsp,
+          blankMasterDependentEsp,
+          blankDifferentMasterDependentEsp,
+          blankPluginDependentEsp,
+      }),
+      info_(std::vector<MessageContent>({
+          MessageContent("info"),
+      })),
+      loadOrderBackupFile0("loadorder.bak.0"),
+      loadOrderBackupFile1("loadorder.bak.1"),
+      loadOrderBackupFile2("loadorder.bak.2"),
+      loadOrderBackupFile3("loadorder.bak.3") {}
 
-  void TearDown() {
-    CommonGameTestFixture::TearDown();
-  }
+  void TearDown() { CommonGameTestFixture::TearDown(); }
 
   std::vector<std::string> loadOrderToSet_;
   const std::string loadOrderBackupFile0;
@@ -73,13 +72,12 @@ protected:
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_CASE_P(,
                         GameTest,
-                        ::testing::Values(
-                          GameType::tes4,
-                          GameType::tes5,
-                          GameType::fo3,
-                          GameType::fonv,
-                          GameType::fo4,
-                          GameType::tes5se));
+                        ::testing::Values(GameType::tes4,
+                                          GameType::tes5,
+                                          GameType::fo3,
+                                          GameType::fonv,
+                                          GameType::fo4,
+                                          GameType::tes5se));
 
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   GameSettings settings = GameSettings(GetParam(), "folder");
@@ -108,7 +106,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 // Testing on Windows will find real game installs in the Registry, so cannot
 // test autodetection fully unless on Linux.
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath), GameDetectionError);
+  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath),
+               GameDetectionError);
 }
 
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {
@@ -123,7 +122,9 @@ TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
 #endif
 
 TEST_P(GameTest, copyConstructorShouldCopyGameData) {
-  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+             lootDataPath,
+             localPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2(game1);
@@ -134,7 +135,9 @@ TEST_P(GameTest, copyConstructorShouldCopyGameData) {
 }
 
 TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
-  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+             lootDataPath,
+             localPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2 = game1;
@@ -149,7 +152,8 @@ TEST_P(GameTest, isInstalledShouldBeFalseIfGamePathIsNotSet) {
 }
 
 TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
-  EXPECT_TRUE(Game::IsInstalled(GameSettings(GetParam()).SetGamePath(dataPath.parent_path())));
+  EXPECT_TRUE(Game::IsInstalled(
+      GameSettings(GetParam()).SetGamePath(dataPath.parent_path())));
 }
 
 TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
@@ -159,21 +163,22 @@ TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
   boost::filesystem::current_path(dataPath / ".." / "LOOT");
   if (GetParam() == GameType::tes5) {
     boost::filesystem::ofstream out(boost::filesystem::path("..") / "TESV.exe");
-    //out << "";
+    // out << "";
     out.close();
   } else if (GetParam() == GameType::tes5se) {
-    boost::filesystem::ofstream out(boost::filesystem::path("..") / "SkyrimSE.exe");
-    //out << "";
+    boost::filesystem::ofstream out(boost::filesystem::path("..") /
+                                    "SkyrimSE.exe");
+    // out << "";
     out.close();
   }
 
   GameType gameTypes[6] = {
-    GameType::tes4,
-    GameType::tes5,
-    GameType::fo3,
-    GameType::fonv,
-    GameType::fo4,
-    GameType::tes5se,
+      GameType::tes4,
+      GameType::tes5,
+      GameType::fo3,
+      GameType::fonv,
+      GameType::fo4,
+      GameType::tes5se,
   };
   for (int i = 0; i < 6; ++i) {
     if (gameTypes[i] == GetParam()) {
@@ -193,61 +198,100 @@ TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
 }
 
 TEST_P(GameTest, toMessageShouldOutputAllNonZeroCounts) {
-  Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 30));
+  Message message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records, 10 deleted references and 30 deleted navmeshes. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ(
+      "cleaner found 2 ITM records, 10 deleted references and 30 deleted "
+      "navmeshes. info",
+      message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 0));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found dirty edits. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found dirty edits. info",
+            message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 30));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references and 30 deleted navmeshes. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ(
+      "cleaner found 10 deleted references and 30 deleted navmeshes. info",
+      message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 30));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 0, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 30 deleted navmeshes. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 30 deleted navmeshes. info",
+            message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 0));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 0, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 10 deleted references. info",
+            message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 30));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. info",
+            message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 0));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 2, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 2 ITM records. info",
+            message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 0));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 2, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info",
+            message.GetContent(MessageContent::defaultLanguage).GetText());
 }
 
 TEST_P(GameTest, toMessageShouldDistinguishBetweenSingularAndPluralCounts) {
-  Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 1, 2, 3));
+  Message message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 1, 2, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 1 ITM record, 2 deleted references and 3 deleted navmeshes. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ(
+      "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
+      "navmeshes. info",
+      message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 2, 1, 3));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 2, 1, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records, 1 deleted reference and 3 deleted navmeshes. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ(
+      "cleaner found 2 ITM records, 1 deleted reference and 3 deleted "
+      "navmeshes. info",
+      message.GetContent(MessageContent::defaultLanguage).GetText());
 
-  message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", info_, 3, 2, 1));
+  message = Game::ToMessage(
+      PluginCleaningData(0x12345678, "cleaner", info_, 3, 2, 1));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 3 ITM records, 2 deleted references and 1 deleted navmesh. info", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ(
+      "cleaner found 3 ITM records, 2 deleted references and 1 deleted "
+      "navmesh. info",
+      message.GetContent(MessageContent::defaultLanguage).GetText());
 }
 
-TEST_P(GameTest, toMessageShouldReturnAMessageWithCountsButNoInfoStringIfInfoIsAnEmptyString) {
-  Message message = Game::ToMessage(PluginCleaningData(0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3));
+TEST_P(
+    GameTest,
+    toMessageShouldReturnAMessageWithCountsButNoInfoStringIfInfoIsAnEmptyString) {
+  Message message = Game::ToMessage(PluginCleaningData(
+      0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 1 ITM record, 2 deleted references and 3 deleted navmeshes.", message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ(
+      "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
+      "navmeshes.",
+      message.GetContent(MessageContent::defaultLanguage).GetText());
 }
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
-  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+            "",
+            localPath);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());
@@ -256,7 +300,9 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
 }
 
 TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());
@@ -265,89 +311,124 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
 }
 
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
 
   EXPECT_NO_THROW(game.Init());
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
-    File(missingEsp),
-    File(blankEsp),
+      File(missingEsp),
+      File(blankEsp),
   });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
-    Message(MessageType::error, "This plugin requires \"" + missingEsp + "\" to be installed, but it is missing."),
-  }), messages);
+                Message(MessageType::error,
+                        "This plugin requires \"" + missingEsp +
+                            "\" to be installed, but it is missing."),
+            }),
+            messages);
 }
 
-TEST_P(GameTest, checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(GameTest,
+       checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetIncompatibilities({
-    File(missingEsp),
-    File(masterFile),
+      File(missingEsp),
+      File(masterFile),
   });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
-    Message(MessageType::error, "This plugin is incompatible with \"" + masterFile + "\", but both are present."),
-  }), messages);
+                Message(MessageType::error,
+                        "This plugin is incompatible with \"" + masterFile +
+                            "\", but both are present."),
+            }),
+            messages);
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   const std::vector<MessageContent> info = std::vector<MessageContent>({
-    MessageContent("info", MessageContent::defaultLanguage),
+      MessageContent("info", MessageContent::defaultLanguage),
   });
 
   metadata.SetDirtyInfo({
-    PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2),
-    PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10),
+      PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2),
+      PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10),
   });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
-    Game::ToMessage(PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2)),
-    Game::ToMessage(PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10)),
-  }), messages);
+                Game::ToMessage(
+                    PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2)),
+                Game::ToMessage(
+                    PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10)),
+            }),
+            messages);
 }
 
-TEST_P(GameTest, checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
 
-  auto messages = game.CheckInstallValidity(game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
+  auto messages = game.CheckInstallValidity(
+      game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
   EXPECT_EQ(std::vector<Message>({
-    Message(MessageType::error, "This plugin requires \"" + blankDifferentEsm + "\" to be active, but it is inactive."),
-  }), messages);
+                Message(MessageType::error,
+                        "This plugin requires \"" + blankDifferentEsm +
+                            "\" to be active, but it is inactive."),
+            }),
+            messages);
 }
 
-TEST_P(GameTest, checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
   metadata.SetTags({Tag("Filter")});
 
-  auto messages = game.CheckInstallValidity(game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
+  auto messages = game.CheckInstallValidity(
+      game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
   EXPECT_TRUE(messages.empty());
 }
 
-TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -359,8 +440,11 @@ TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothin
     if (!boost::filesystem::exists(dataPath / loadOrder[i].first))
       loadOrder[i].first += ".ghost";
 
-    boost::filesystem::last_write_time(dataPath / loadOrder[i].first, time - i * 60);
-    ASSERT_EQ(time - i * 60, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
+    boost::filesystem::last_write_time(dataPath / loadOrder[i].first,
+                                       time - i * 60);
+    ASSERT_EQ(
+        time - i * 60,
+        boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
   }
 
   EXPECT_NO_THROW(game.RedatePlugins());
@@ -370,12 +454,18 @@ TEST_P(GameTest, redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothin
     interval *= -1;
 
   for (size_t i = 0; i < loadOrder.size(); ++i) {
-    EXPECT_EQ(time + i * interval, boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
+    EXPECT_EQ(
+        time + i * interval,
+        boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
   }
 }
 
-TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
@@ -390,8 +480,12 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersO
   EXPECT_EQ(0, plugin->GetCRC());
 }
 
-TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
@@ -407,13 +501,17 @@ TEST_P(GameTest, loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllIn
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
 
   EXPECT_FALSE(game.ArePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
@@ -421,91 +519,133 @@ TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
 }
 
 TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_TRUE(game.ArePluginsFullyLoaded());
 }
 
-TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp), game.GetLoadOrder());
+  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp),
+                                             game.GetLoadOrder());
   EXPECT_EQ(-1, index);
 }
 
-TEST_P(GameTest, GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), "", localPath);
+TEST_P(
+    GameTest,
+    GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   "",
+                   localPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile), game.GetLoadOrder());
+  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile),
+                                             game.GetLoadOrder());
   EXPECT_EQ(0, index);
 
-  index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm), game.GetLoadOrder());
+  index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm),
+                                       game.GetLoadOrder());
   EXPECT_EQ(1, index);
 
-  index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
+  index = game.GetActiveLoadOrderIndex(
+      game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
   EXPECT_EQ(2, index);
 }
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   game.Init();
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile0));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+  auto loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
 
   EXPECT_TRUE(loadOrder.empty());
 }
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile0));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+  auto loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
 
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
@@ -519,26 +659,38 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile0));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile1));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+  auto loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
+  loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
 TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   game.Init();
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile0));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile1));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile2));
+  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
@@ -570,36 +722,51 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile0));
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile1));
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() / loadOrderBackupFile3));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile0));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile1));
+  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                        loadOrderBackupFile2));
+  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+                                         loadOrderBackupFile3));
 
-  auto loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+  auto loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
   EXPECT_EQ(thirdSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
+  loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
   EXPECT_EQ(secondSetLoadOrder, loadOrder);
 
-  loadOrder = readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile2);
+  loadOrder =
+      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile2);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 }
 
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
 
   ASSERT_EQ(1, game.GetMessages().size());
 }
 
-TEST_P(GameTest, incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+TEST_P(GameTest,
+       incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   game.IncrementLoadOrderSortCount();
 
   EXPECT_TRUE(game.GetMessages().empty());
 }
 
-TEST_P(GameTest, decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+TEST_P(GameTest,
+       decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
@@ -607,16 +774,24 @@ TEST_P(GameTest, decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedM
   EXPECT_EQ(expectedMessages, game.GetMessages());
 }
 
-TEST_P(GameTest, decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+TEST_P(
+    GameTest,
+    decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   auto expectedMessages = game.GetMessages();
   game.DecrementLoadOrderSortCount();
 
   EXPECT_EQ(expectedMessages, game.GetMessages());
 }
 
-TEST_P(GameTest, decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+TEST_P(
+    GameTest,
+    decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
@@ -626,13 +801,14 @@ TEST_P(GameTest, decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDe
 }
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   std::vector<Message> messages({
-    Message(MessageType::say, "1"),
-    Message(MessageType::error, "2"),
+      Message(MessageType::say, "1"),
+      Message(MessageType::error, "2"),
   });
-  for (const auto& message : messages)
-    game.AppendMessage(message);
+  for (const auto& message : messages) game.AppendMessage(message);
 
   ASSERT_EQ(3, game.GetMessages().size());
   EXPECT_EQ(messages[0], game.GetMessages()[0]);
@@ -640,13 +816,14 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()), lootDataPath, localPath);
+  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
+                   lootDataPath,
+                   localPath);
   std::vector<Message> messages({
-    Message(MessageType::say, "1"),
-    Message(MessageType::error, "2"),
+      Message(MessageType::say, "1"),
+      Message(MessageType::error, "2"),
   });
-  for (const auto& message : messages)
-    game.AppendMessage(message);
+  for (const auto& message : messages) game.AppendMessage(message);
 
   auto previousSize = game.GetMessages().size();
 

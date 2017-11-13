@@ -38,7 +38,8 @@ public:
                         const PluginMetadata& evaluatedMetadata) {
     plugin.set_name(file->GetName());
     plugin.set_version(file->GetVersion());
-    plugin.set_is_active(state.getCurrentGame().IsPluginActive(file->GetName()));
+    plugin.set_is_active(
+        state.getCurrentGame().IsPluginActive(file->GetName()));
     plugin.set_is_dirty(!evaluatedMetadata.GetDirtyInfo().empty());
     plugin.set_is_empty(file->IsEmpty());
     plugin.set_is_master(file->IsMaster());
@@ -46,15 +47,17 @@ public:
     plugin.set_loads_archive(file->LoadsArchive());
 
     plugin.set_crc(file->GetCRC());
-    auto loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
-      state.getCurrentGame().GetLoadOrder());
+    auto loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(
+        file, state.getCurrentGame().GetLoadOrder());
     plugin.set_load_order_index(loadOrderIndex);
 
     plugin.set_priority(evaluatedMetadata.GetLocalPriority().GetValue());
-    plugin.set_global_priority(evaluatedMetadata.GetGlobalPriority().GetValue());
+    plugin.set_global_priority(
+        evaluatedMetadata.GetGlobalPriority().GetValue());
 
     if (!evaluatedMetadata.GetCleanInfo().empty()) {
-      auto utility = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
+      auto utility =
+          evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
       plugin.set_cleaned_with(utility);
     }
 
@@ -74,20 +77,17 @@ public:
     }
   }
 
-  static DerivedPluginMetadata none() {
-    return DerivedPluginMetadata();
-  }
+  static DerivedPluginMetadata none() { return DerivedPluginMetadata(); }
 
-  protobuf::Plugin toProtobuf() const {
-    return plugin;
-  }
+  protobuf::Plugin toProtobuf() const { return plugin; }
 
 private:
   protobuf::Plugin plugin;
 
   DerivedPluginMetadata() {}
 
-  static void set(protobuf::Plugin& plugin, const std::vector<SimpleMessage>& messages) {
+  static void set(protobuf::Plugin& plugin,
+                  const std::vector<SimpleMessage>& messages) {
     for (const auto& message : messages) {
       auto pbMessage = plugin.add_messages();
       convert(message, *pbMessage);

@@ -31,28 +31,31 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
 
-#include "gui/state/loot_paths.h"
 #include "gui/cef/loot_app.h"
+#include "gui/state/loot_paths.h"
 
 #ifdef _WIN32
 #include <include/cef_sandbox_win.h>
 #include <windows.h>
 #else
-#include <include/base/cef_logging.h>
 #include <X11/Xlib.h>
+#include <include/base/cef_logging.h>
 #endif
 
 CefSettings GetCefSettings() {
   CefSettings cef_settings;
 
-  //Enable CEF command line args.
+  // Enable CEF command line args.
   cef_settings.command_line_args_disabled = false;
 
   // Set CEF logging.
-  CefString(&cef_settings.log_file).FromString((loot::LootPaths::getLootDataPath() / "CEFDebugLog.txt").string());
+  CefString(&cef_settings.log_file)
+      .FromString(
+          (loot::LootPaths::getLootDataPath() / "CEFDebugLog.txt").string());
 
   // Load locale pack files from LOOT's l10n path.
-  CefString(&cef_settings.locales_dir_path).FromString(loot::LootPaths::getL10nPath().string());
+  CefString(&cef_settings.locales_dir_path)
+      .FromString(loot::LootPaths::getL10nPath().string());
 
   return cef_settings;
 }
@@ -60,19 +63,17 @@ CefSettings GetCefSettings() {
 #ifndef _WIN32
 namespace {
 int XErrorHandlerImpl(Display *display, XErrorEvent *event) {
-  LOG(WARNING)
-    << "X error received: "
-    << "type " << event->type << ", "
-    << "serial " << event->serial << ", "
-    << "error_code " << static_cast<int>(event->error_code) << ", "
-    << "request_code " << static_cast<int>(event->request_code) << ", "
-    << "minor_code " << static_cast<int>(event->minor_code);
+  LOG(WARNING) << "X error received: "
+               << "type " << event->type << ", "
+               << "serial " << event->serial << ", "
+               << "error_code " << static_cast<int>(event->error_code) << ", "
+               << "request_code " << static_cast<int>(event->request_code)
+               << ", "
+               << "minor_code " << static_cast<int>(event->minor_code);
   return 0;
 }
 
-int XIOErrorHandlerImpl(Display *display) {
-  return 0;
-}
+int XIOErrorHandlerImpl(Display *display) { return 0; }
 }
 #endif
 
@@ -83,9 +84,10 @@ struct CommandLineOptions {
   std::string gameAppDataPath;
   std::string url;
 
-  CommandLineOptions(int argc, const char* const* argv) {
+  CommandLineOptions(int argc, const char *const *argv) {
     // Record command line arguments.
-    CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
+    CefRefPtr<CefCommandLine> command_line =
+        CefCommandLine::CreateCommandLine();
 #ifdef _WIN32
     command_line->InitFromString(::GetCommandLineW());
 #else
@@ -116,59 +118,62 @@ struct CommandLineOptions {
 }
 
 #ifdef _WIN32
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+int APIENTRY wWinMain(HINSTANCE hInstance,
+                      HINSTANCE hPrevInstance,
+                      LPTSTR lpCmdLine,
+                      int nCmdShow) {
 #else
 int main(int argc, char* argv[]) {
 #endif
 
-    // Do all the standard CEF setup stuff.
-    //-------------------------------------
+  // Do all the standard CEF setup stuff.
+  //-------------------------------------
 
-  void * sandbox_info = nullptr;
+  void *sandbox_info = nullptr;
 
 #ifdef _WIN32
-    // Enable High-DPI support on Windows 7 or newer.
+  // Enable High-DPI support on Windows 7 or newer.
   CefEnableHighDPISupport();
 
   // Read command line arguments.
   CefMainArgs main_args(hInstance);
 #else
-    // Read command line arguments.
+  // Read command line arguments.
   CefMainArgs main_args(argc, argv);
 #endif
 
-    // Create the process reference.
+  // Create the process reference.
   CefRefPtr<loot::LootApp> app(new loot::LootApp);
 
   // Run the process.
   int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
   if (exit_code >= 0) {
-      // The sub-process has completed so return here.
+    // The sub-process has completed so return here.
     return exit_code;
   }
 
 #ifdef _WIN32
-    // Check if LOOT is already running
-    //---------------------------------
+  // Check if LOOT is already running
+  //---------------------------------
 
   HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, L"LOOT.Shell.Instance");
   if (hMutex != NULL) {
-      // An instance of LOOT is already running, so focus its window then quit.
+    // An instance of LOOT is already running, so focus its window then quit.
     HWND hWnd = ::FindWindow(NULL, L"LOOT");
     ::SetForegroundWindow(hWnd);
     return 0;
   } else {
-      //Create the mutex so that future instances will not run.
+    // Create the mutex so that future instances will not run.
     hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
   }
 #endif
 
-  // Handle command line args (not CEF args)
-  //----------------------------------------
+    // Handle command line args (not CEF args)
+    //----------------------------------------
 
 #ifdef _WIN32
   int argc = 0;
-  const char * const * argv = nullptr;
+  const char *const *argv = nullptr;
 #endif
   const auto cliOptions = loot::CommandLineOptions(argc, argv);
   app.get()->Initialise(cliOptions.defaultGame,
@@ -183,23 +188,24 @@ int main(int argc, char* argv[]) {
   CefSettings cef_settings = GetCefSettings();
 
 #ifndef _WIN32
-    // Install xlib error handlers so that the application won't be terminated
-    // on non-fatal errors.
+  // Install xlib error handlers so that the application won't be terminated
+  // on non-fatal errors.
   XSetErrorHandler(XErrorHandlerImpl);
   XSetIOErrorHandler(XIOErrorHandlerImpl);
 #endif
 
-    // Initialize CEF.
+  // Initialize CEF.
   CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
 
-  // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
+  // Run the CEF message loop. This will block until CefQuitMessageLoop() is
+  // called.
   CefRunMessageLoop();
 
   // Shut down CEF.
   CefShutdown();
 
 #ifdef _WIN32
-    // Release the program instance mutex.
+  // Release the program instance mutex.
   if (hMutex != NULL)
     ReleaseMutex(hMutex);
 #endif

@@ -27,20 +27,21 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/game.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/game.h"
 #include "schema/response.pb.h"
 
 namespace loot {
 class GetConflictingPluginsQuery : public MetadataQuery {
 public:
   GetConflictingPluginsQuery(LootState& state, const std::string& pluginName) :
-    MetadataQuery(state),
-    game_(state.getCurrentGame()),
-    pluginName_(pluginName) {}
+      MetadataQuery(state),
+      game_(state.getCurrentGame()),
+      pluginName_(pluginName) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug) << "Searching for plugins that conflict with " << pluginName_;
+    BOOST_LOG_TRIVIAL(debug)
+        << "Searching for plugins that conflict with " << pluginName_;
 
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
@@ -67,10 +68,12 @@ private:
     return toJson(response);
   }
 
-  bool doPluginsConflict(const std::shared_ptr<const PluginInterface>& plugin,
-                          const std::shared_ptr<const PluginInterface>& otherPlugin) {
+  bool doPluginsConflict(
+      const std::shared_ptr<const PluginInterface>& plugin,
+      const std::shared_ptr<const PluginInterface>& otherPlugin) {
     if (plugin->DoFormIDsOverlap(*otherPlugin)) {
-      BOOST_LOG_TRIVIAL(debug) << "Found conflicting plugin: " << otherPlugin->GetName();
+      BOOST_LOG_TRIVIAL(debug)
+          << "Found conflicting plugin: " << otherPlugin->GetName();
       return true;
     } else {
       return false;

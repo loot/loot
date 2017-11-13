@@ -25,10 +25,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
+#include <google/protobuf/util/json_util.h>
+#include <include/wrapper/cef_message_router.h>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
-#include <include/wrapper/cef_message_router.h>
-#include <google/protobuf/util/json_util.h>
 
 namespace loot {
 class Query : public CefBaseRefCounted {
@@ -36,18 +36,25 @@ public:
   void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
     try {
       callback->Success(executeLogic());
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       BOOST_LOG_TRIVIAL(error) << e.what();
-      callback->Failure(-1, boost::locale::translate("Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.").str());
+      callback->Failure(-1,
+                        boost::locale::translate(
+                            "Oh no, something went wrong! You can check your "
+                            "LOOTDebugLog.txt (you can get to it through the "
+                            "main menu) for more information.")
+                            .str());
     }
   }
 
 protected:
   virtual std::string executeLogic() = 0;
 
-  void sendProgressUpdate(CefRefPtr<CefFrame> frame, const std::string& message) {
+  void sendProgressUpdate(CefRefPtr<CefFrame> frame,
+                          const std::string& message) {
     BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
-    frame->ExecuteJavaScript("loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
+    frame->ExecuteJavaScript(
+        "loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
   }
 
   static std::string toJson(const google::protobuf::Message& message) {

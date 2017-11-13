@@ -26,8 +26,8 @@
 
 #include <thread>
 
-#include <boost/filesystem/fstream.hpp>
 #include <yaml-cpp/yaml.h>
+#include <boost/filesystem/fstream.hpp>
 
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
@@ -77,26 +77,30 @@ void upgradeYaml(YAML::Node& yaml) {
     YAML::Node validGames;
     for (auto node : yaml["games"]) {
       try {
-        if (node["type"].as<string>() == "SkyrimSE" && node["folder"].as<string>() == "SkyrimSE") {
+        if (node["type"].as<string>() == "SkyrimSE" &&
+            node["folder"].as<string>() == "SkyrimSE") {
           node["type"] = GameSettings(GameType::tes5se).FolderName();
           node["folder"] = GameSettings(GameType::tes5se).FolderName();
 
-          boost::filesystem::rename(LootPaths::getLootDataPath() / "SkyrimSE", LootPaths::getLootDataPath() / node["folder"].as<string>());
+          boost::filesystem::rename(
+              LootPaths::getLootDataPath() / "SkyrimSE",
+              LootPaths::getLootDataPath() / node["folder"].as<string>());
         }
 
         GameSettings settings(node.as<GameSettings>());
 
         if (!yaml["Games"]) {
-            // Update existing default branch, if the default
-            // repositories are used.
-          if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL()
-              && settings.IsRepoBranchOldDefault()) {
+          // Update existing default branch, if the default
+          // repositories are used.
+          if (settings.RepoURL() == GameSettings(settings.Type()).RepoURL() &&
+              settings.IsRepoBranchOldDefault()) {
             settings.SetRepoBranch(GameSettings(settings.Type()).RepoBranch());
           }
         }
 
         validGames.push_back(settings);
-      } catch (...) {}
+      } catch (...) {
+      }
     }
     yaml["games"] = validGames;
   }
@@ -105,26 +109,33 @@ void upgradeYaml(YAML::Node& yaml) {
     yaml["filters"].remove("contentFilter");
 }
 
-LootSettings::WindowPosition::WindowPosition() : top(0), bottom(0), left(0), right(0), maximised(false) {}
+LootSettings::WindowPosition::WindowPosition() :
+    top(0),
+    bottom(0),
+    left(0),
+    right(0),
+    maximised(false) {}
 
 LootSettings::LootSettings() :
-  gameSettings_({
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::tes4, "Nehrim")
-          .SetName("Nehrim - At Fate's Edge")
-          .SetMaster("Nehrim.esm")
-          .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
-}),
-enableDebugLogging_(false),
-updateMasterlist_(true),
-game_("auto"),
-language_("en"),
-lastGame_("auto") {}
+    gameSettings_({
+        GameSettings(GameType::tes4),
+        GameSettings(GameType::tes5),
+        GameSettings(GameType::tes5se),
+        GameSettings(GameType::fo3),
+        GameSettings(GameType::fonv),
+        GameSettings(GameType::fo4),
+        GameSettings(GameType::tes4, "Nehrim")
+            .SetName("Nehrim - At Fate's Edge")
+            .SetMaster("Nehrim.esm")
+            .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Unin"
+                            "stall\\Nehrim - At Fate's "
+                            "Edge_is1\\InstallLocation"),
+    }),
+    enableDebugLogging_(false),
+    updateMasterlist_(true),
+    game_("auto"),
+    language_("en"),
+    lastGame_("auto") {}
 
 void LootSettings::load(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
@@ -147,10 +158,9 @@ void LootSettings::load(const boost::filesystem::path& file) {
   if (settings["lastVersion"])
     lastVersion_ = settings["lastVersion"].as<string>();
 
-  if (settings["window"]
-      && settings["window"]["top"] && settings["window"]["bottom"]
-      && settings["window"]["left"] && settings["window"]["right"]
-      && settings["window"]["maximised"]) {
+  if (settings["window"] && settings["window"]["top"] &&
+      settings["window"]["bottom"] && settings["window"]["left"] &&
+      settings["window"]["right"] && settings["window"]["maximised"]) {
     windowPosition_.top = settings["window"]["top"].as<long>();
     windowPosition_.bottom = settings["window"]["bottom"].as<long>();
     windowPosition_.left = settings["window"]["left"].as<long>();
@@ -162,22 +172,34 @@ void LootSettings::load(const boost::filesystem::path& file) {
     gameSettings_ = settings["games"].as<std::vector<GameSettings>>();
 
     // If a base game isn't in the settings, add it.
-    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::tes4)) == end(gameSettings_))
+    if (find(begin(gameSettings_),
+             end(gameSettings_),
+             GameSettings(GameType::tes4)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::tes4));
 
-    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::tes5)) == end(gameSettings_))
+    if (find(begin(gameSettings_),
+             end(gameSettings_),
+             GameSettings(GameType::tes5)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::tes5));
 
-    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::tes5se)) == end(gameSettings_))
+    if (find(begin(gameSettings_),
+             end(gameSettings_),
+             GameSettings(GameType::tes5se)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::tes5se));
 
-    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::fo3)) == end(gameSettings_))
+    if (find(begin(gameSettings_),
+             end(gameSettings_),
+             GameSettings(GameType::fo3)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::fo3));
 
-    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::fonv)) == end(gameSettings_))
+    if (find(begin(gameSettings_),
+             end(gameSettings_),
+             GameSettings(GameType::fonv)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::fonv));
 
-    if (find(begin(gameSettings_), end(gameSettings_), GameSettings(GameType::fo4)) == end(gameSettings_))
+    if (find(begin(gameSettings_),
+             end(gameSettings_),
+             GameSettings(GameType::fo4)) == end(gameSettings_))
       gameSettings_.push_back(GameSettings(GameType::fo4));
   }
 
@@ -233,7 +255,8 @@ bool LootSettings::updateMasterlist() const {
 bool LootSettings::isWindowPositionStored() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return windowPosition_.top != 0 || windowPosition_.bottom != 0 || windowPosition_.left != 0 || windowPosition_.right != 0;
+  return windowPosition_.top != 0 || windowPosition_.bottom != 0 ||
+         windowPosition_.left != 0 || windowPosition_.right != 0;
 }
 
 std::string LootSettings::getGame() const {
@@ -314,7 +337,8 @@ void LootSettings::storeWindowPosition(const WindowPosition& position) {
   windowPosition_ = position;
 }
 
-void LootSettings::storeGameSettings(const std::vector<GameSettings>& gameSettings) {
+void LootSettings::storeGameSettings(
+    const std::vector<GameSettings>& gameSettings) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   this->gameSettings_ = gameSettings;

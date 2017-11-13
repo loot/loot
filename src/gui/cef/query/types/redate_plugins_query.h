@@ -25,8 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_REDATE_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_REDATE_PLUGINS_QUERY
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/query.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class RedatePluginsQuery : public Query {

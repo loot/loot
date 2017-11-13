@@ -25,9 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_OPEN_README_QUERY
 #define LOOT_GUI_QUERY_OPEN_README_QUERY
 
-#include "gui/state/loot_paths.h"
-#include "gui/helpers.h"
 #include "gui/cef/query/query.h"
+#include "gui/helpers.h"
+#include "gui/state/loot_paths.h"
 
 namespace loot {
 class OpenReadmeQuery : public Query {

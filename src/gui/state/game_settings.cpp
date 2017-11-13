@@ -32,14 +32,16 @@ namespace fs = boost::filesystem;
 
 namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches({
-  "master",
-  "v0.7",
-  "v0.8",
+    "master",
+    "v0.7",
+    "v0.8",
 });
 
 GameSettings::GameSettings() : type_(GameType::tes4) {}
 
-GameSettings::GameSettings(const GameType gameCode, const std::string& folder) : type_(gameCode), repositoryBranch_("v0.10") {
+GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
+    type_(gameCode),
+    repositoryBranch_("v0.10") {
   if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
@@ -54,7 +56,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrim.git";
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
-    registryKey_ = "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path";
+    registryKey_ =
+        "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path";
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
@@ -86,41 +89,26 @@ bool GameSettings::IsRepoBranchOldDefault() const {
   return oldDefaultBranches.count(repositoryBranch_) == 1;
 }
 
-bool GameSettings::operator == (const GameSettings& rhs) const {
-  return (boost::iequals(name_, rhs.Name()) || boost::iequals(lootFolderName_, rhs.FolderName()));
+bool GameSettings::operator==(const GameSettings& rhs) const {
+  return (boost::iequals(name_, rhs.Name()) ||
+          boost::iequals(lootFolderName_, rhs.FolderName()));
 }
 
-GameType GameSettings::Type() const {
-  return type_;
-}
+GameType GameSettings::Type() const { return type_; }
 
-std::string GameSettings::Name() const {
-  return name_;
-}
+std::string GameSettings::Name() const { return name_; }
 
-std::string GameSettings::FolderName() const {
-  return lootFolderName_;
-}
+std::string GameSettings::FolderName() const { return lootFolderName_; }
 
-std::string GameSettings::Master() const {
-  return masterFile_;
-}
+std::string GameSettings::Master() const { return masterFile_; }
 
-std::string GameSettings::RegistryKey() const {
-  return registryKey_;
-}
+std::string GameSettings::RegistryKey() const { return registryKey_; }
 
-std::string GameSettings::RepoURL() const {
-  return repositoryURL_;
-}
+std::string GameSettings::RepoURL() const { return repositoryURL_; }
 
-std::string GameSettings::RepoBranch() const {
-  return repositoryBranch_;
-}
+std::string GameSettings::RepoBranch() const { return repositoryBranch_; }
 
-fs::path GameSettings::GamePath() const {
-  return gamePath_;
-}
+fs::path GameSettings::GamePath() const { return gamePath_; }
 
 GameSettings& GameSettings::SetName(const std::string& name) {
   BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" name to: " << name;
@@ -129,48 +117,52 @@ GameSettings& GameSettings::SetName(const std::string& name) {
 }
 
 GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" master file to: " << masterFile;
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
+                           << "\" master file to: " << masterFile;
   masterFile_ = masterFile;
   return *this;
 }
 
 GameSettings& GameSettings::SetRegistryKey(const std::string& registry) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" registry key to: " << registry;
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
+                           << "\" registry key to: " << registry;
   registryKey_ = registry;
   return *this;
 }
 
 GameSettings& GameSettings::SetRepoURL(const std::string& repositoryURL) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" repo URL to: " << repositoryURL;
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
+                           << "\" repo URL to: " << repositoryURL;
   repositoryURL_ = repositoryURL;
   return *this;
 }
 
 GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" repo branch to: " << repositoryBranch;
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
+                           << "\" repo branch to: " << repositoryBranch;
   repositoryBranch_ = repositoryBranch;
   return *this;
 }
 
 GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" game path to: " << path;
+  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
+                           << "\" game path to: " << path;
   gamePath_ = path;
   return *this;
 }
 }
 
 namespace YAML {
-Emitter& operator << (Emitter& out, const loot::GameSettings& rhs) {
-  out << BeginMap
-    << Key << "type" << Value << YAML::SingleQuoted << loot::GameSettings(rhs.Type()).FolderName()
-    << Key << "folder" << Value << YAML::SingleQuoted << rhs.FolderName()
-    << Key << "name" << Value << YAML::SingleQuoted << rhs.Name()
-    << Key << "master" << Value << YAML::SingleQuoted << rhs.Master()
-    << Key << "repo" << Value << YAML::SingleQuoted << rhs.RepoURL()
-    << Key << "branch" << Value << YAML::SingleQuoted << rhs.RepoBranch()
-    << Key << "path" << Value << YAML::SingleQuoted << rhs.GamePath().string()
-    << Key << "registry" << Value << YAML::SingleQuoted << rhs.RegistryKey()
-    << EndMap;
+Emitter& operator<<(Emitter& out, const loot::GameSettings& rhs) {
+  out << BeginMap << Key << "type" << Value << YAML::SingleQuoted
+      << loot::GameSettings(rhs.Type()).FolderName() << Key << "folder" << Value
+      << YAML::SingleQuoted << rhs.FolderName() << Key << "name" << Value
+      << YAML::SingleQuoted << rhs.Name() << Key << "master" << Value
+      << YAML::SingleQuoted << rhs.Master() << Key << "repo" << Value
+      << YAML::SingleQuoted << rhs.RepoURL() << Key << "branch" << Value
+      << YAML::SingleQuoted << rhs.RepoBranch() << Key << "path" << Value
+      << YAML::SingleQuoted << rhs.GamePath().string() << Key << "registry"
+      << Value << YAML::SingleQuoted << rhs.RegistryKey() << EndMap;
 
   return out;
 }

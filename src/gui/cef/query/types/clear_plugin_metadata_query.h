@@ -25,19 +25,20 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 
-#include "gui/state/game.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/game.h"
 
 namespace loot {
 class ClearPluginMetadataQuery : public MetadataQuery {
 public:
   ClearPluginMetadataQuery(LootState& state, const std::string& pluginName) :
-    MetadataQuery(state),
-    game_(state.getCurrentGame()),
-    pluginName_(pluginName) {}
+      MetadataQuery(state),
+      game_(state.getCurrentGame()),
+      pluginName_(pluginName) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug) << "Clearing user metadata for plugin " << pluginName_;
+    BOOST_LOG_TRIVIAL(debug)
+        << "Clearing user metadata for plugin " << pluginName_;
 
     game_.ClearUserMetadata(pluginName_);
     game_.SaveUserMetadata();

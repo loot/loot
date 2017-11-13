@@ -27,8 +27,8 @@
 
 #include <include/wrapper/cef_message_router.h>
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/query.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class QueryHandler : public CefMessageRouterBrowserSide::Handler {
@@ -42,6 +42,7 @@ public:
                        const CefString& request,
                        bool persistent,
                        CefRefPtr<Callback> callback) OVERRIDE;
+
 private:
   CefRefPtr<Query> createQuery(CefRefPtr<CefBrowser> browser,
                                CefRefPtr<CefFrame> frame,

@@ -27,8 +27,8 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/game_settings.h"
 #include "gui/cef/query/query.h"
+#include "gui/state/game_settings.h"
 #include "schema/response.pb.h"
 
 namespace loot {

@@ -28,8 +28,8 @@ along with LOOT.  If not, see
 #include <cstdlib>
 #include <regex>
 
-#include "gui/helpers.h"
 #include "gui/cef/query/query.h"
+#include "gui/helpers.h"
 
 namespace loot {
 class ClipboardQuery : public Query {
@@ -37,33 +37,46 @@ protected:
   void copyToClipboard(const std::string& text) {
 #ifdef _WIN32
     if (!OpenClipboard(NULL)) {
-      throw std::system_error(GetLastError(), std::system_category(), "Failed to open the Windows clipboard.");
+      throw std::system_error(GetLastError(),
+                              std::system_category(),
+                              "Failed to open the Windows clipboard.");
     }
 
     if (!EmptyClipboard()) {
-      throw std::system_error(GetLastError(), std::system_category(), "Failed to empty the Windows clipboard.");
+      throw std::system_error(GetLastError(),
+                              std::system_category(),
+                              "Failed to empty the Windows clipboard.");
     }
 
-    // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and must not
-    // be destroyed by LOOT. Convert the string, then copy it into a new block of
-    // memory for the clipboard.
+    // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and
+    // must not be destroyed by LOOT. Convert the string, then copy it into a
+    // new block of memory for the clipboard.
     std::wstring wtext = ToWinWide(text);
-    wchar_t * wcstr = new wchar_t[wtext.length() + 1];
+    wchar_t* wcstr = new wchar_t[wtext.length() + 1];
     wcscpy(wcstr, wtext.c_str());
 
     if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
-      throw std::system_error(GetLastError(), std::system_category(), "Failed to copy metadata to the Windows clipboard.");
+      throw std::system_error(
+          GetLastError(),
+          std::system_category(),
+          "Failed to copy metadata to the Windows clipboard.");
     }
 
     if (!CloseClipboard()) {
-      throw std::system_error(GetLastError(), std::system_category(), "Failed to close the Windows clipboard.");
+      throw std::system_error(GetLastError(),
+                              std::system_category(),
+                              "Failed to close the Windows clipboard.");
     }
 #else
-    std::string copyCommand = "echo '" + text + "' | xclip -selection clipboard";
+    std::string copyCommand =
+        "echo '" + text + "' | xclip -selection clipboard";
     int returnCode = system(copyCommand.c_str());
 
     if (returnCode != 0) {
-      throw std::system_error(returnCode, std::system_category(), "Failed to run clipboard copy command: " + copyCommand);
+      throw std::system_error(
+          returnCode,
+          std::system_category(),
+          "Failed to run clipboard copy command: " + copyCommand);
     }
 #endif
   }

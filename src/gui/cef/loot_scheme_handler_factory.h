@@ -31,11 +31,12 @@ along with LOOT.  If not, see
 namespace loot {
 class LootSchemeHandlerFactory : public CefSchemeHandlerFactory {
 public:
-  virtual CefRefPtr<CefResourceHandler> Create(CefRefPtr<CefBrowser> browser,
-                                               CefRefPtr<CefFrame> frame,
-                                               const CefString& scheme_name,
-                                               CefRefPtr<CefRequest> request)
-    OVERRIDE;
+  virtual CefRefPtr<CefResourceHandler> Create(
+      CefRefPtr<CefBrowser> browser,
+      CefRefPtr<CefFrame> frame,
+      const CefString& scheme_name,
+      CefRefPtr<CefRequest> request) OVERRIDE;
+
 private:
   std::string GetPath(const CefString& url) const;
   std::string GetMimeType(const std::string& file) const;

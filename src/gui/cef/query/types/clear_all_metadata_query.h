@@ -27,16 +27,16 @@ along with LOOT.  If not, see
 
 #undef ERROR
 
-#include "gui/state/game.h"
 #include "gui/cef/query/types/metadata_query.h"
+#include "gui/state/game.h"
 #include "schema/response.pb.h"
 
 namespace loot {
 class ClearAllMetadataQuery : public MetadataQuery {
 public:
   ClearAllMetadataQuery(LootState& state) :
-    MetadataQuery(state),
-    game_(state.getCurrentGame()) {}
+      MetadataQuery(state),
+      game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
@@ -48,7 +48,9 @@ public:
     game_.ClearAllUserMetadata();
     game_.SaveUserMetadata();
 
-    BOOST_LOG_TRIVIAL(trace) << "Rederiving display metadata for " << userlistPluginNames.size() << " plugins that had user metadata.";
+    BOOST_LOG_TRIVIAL(trace)
+        << "Rederiving display metadata for " << userlistPluginNames.size()
+        << " plugins that had user metadata.";
 
     return getDerivedMetadataJson(userlistPluginNames);
   }
@@ -65,7 +67,8 @@ private:
     return userlistPluginNames;
   }
 
-  std::string getDerivedMetadataJson(const std::vector<std::string>& userlistPluginNames) {
+  std::string getDerivedMetadataJson(
+      const std::vector<std::string>& userlistPluginNames) {
     protobuf::GameDataResponse response;
 
     for (const auto& pluginName : userlistPluginNames) {

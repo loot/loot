@@ -49,8 +49,9 @@ protected:
     return toSimpleMessages(messages, state_.getLanguage());
   }
 
-  PluginMetadata getNonUserMetadata(const std::shared_ptr<const PluginInterface>& file,
-                                    const PluginMetadata& masterlistEntry) {
+  PluginMetadata getNonUserMetadata(
+      const std::shared_ptr<const PluginInterface>& file,
+      const PluginMetadata& masterlistEntry) {
     auto metadata = masterlistEntry;
 
     auto fileTags = file->GetBashTags();
@@ -59,8 +60,10 @@ protected:
     metadata.SetTags(tags);
 
     auto messages = metadata.GetMessages();
-    auto validityMessages = state_.getCurrentGame().CheckInstallValidity(file, metadata);
-    messages.insert(end(messages), begin(validityMessages), end(validityMessages));
+    auto validityMessages =
+        state_.getCurrentGame().CheckInstallValidity(file, metadata);
+    messages.insert(
+        end(messages), begin(validityMessages), end(validityMessages));
     metadata.SetMessages(messages);
 
     return metadata;
@@ -76,13 +79,18 @@ protected:
     }
   }
 
-  DerivedPluginMetadata generateDerivedMetadata(const std::shared_ptr<const PluginInterface>& plugin) {
-    BOOST_LOG_TRIVIAL(trace) << "Getting masterlist metadata for: " << plugin->GetName();
-    auto masterlistMetadata = state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
+  DerivedPluginMetadata generateDerivedMetadata(
+      const std::shared_ptr<const PluginInterface>& plugin) {
+    BOOST_LOG_TRIVIAL(trace)
+        << "Getting masterlist metadata for: " << plugin->GetName();
+    auto masterlistMetadata =
+        state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
     masterlistMetadata = getNonUserMetadata(plugin, masterlistMetadata);
 
-    BOOST_LOG_TRIVIAL(trace) << "Getting userlist metadata for: " << plugin->GetName();
-    auto userlistMetadata = state_.getCurrentGame().GetUserMetadata(plugin->GetName());
+    BOOST_LOG_TRIVIAL(trace)
+        << "Getting userlist metadata for: " << plugin->GetName();
+    auto userlistMetadata =
+        state_.getCurrentGame().GetUserMetadata(plugin->GetName());
 
     auto master = evaluateMasterlistMetadata(plugin->GetName());
     auto user = evaluateUserlistMetadata(plugin->GetName());
@@ -92,7 +100,8 @@ protected:
 
     auto derived = DerivedPluginMetadata(state_, plugin, evaluatedMetadata);
 
-    derived.storeUnevaluatedMetadata(masterlistMetadata, userlistMetadata, state_.getLanguage());
+    derived.storeUnevaluatedMetadata(
+        masterlistMetadata, userlistMetadata, state_.getLanguage());
 
     return derived;
   }
@@ -104,7 +113,8 @@ protected:
   }
 
   template<typename InputIterator>
-  std::string generateJsonResponse(InputIterator firstPlugin, InputIterator lastPlugin) {
+  std::string generateJsonResponse(InputIterator firstPlugin,
+                                   InputIterator lastPlugin) {
     protobuf::GameDataResponse response;
 
     auto masterlistInfo = getMasterlistInfo();
@@ -132,16 +142,17 @@ protected:
   }
 
 private:
-  static std::vector<SimpleMessage> toSimpleMessages(const std::vector<Message>& messages,
-                                                     const std::string& language) {
+  static std::vector<SimpleMessage> toSimpleMessages(
+      const std::vector<Message>& messages,
+      const std::string& language) {
     BOOST_LOG_TRIVIAL(info) << "Using message language: " << language;
     std::vector<SimpleMessage> simpleMessages(messages.size());
     std::transform(begin(messages),
                    end(messages),
                    begin(simpleMessages),
                    [&](const Message& message) {
-      return message.ToSimpleMessage(language);
-    });
+                     return message.ToSimpleMessage(language);
+                   });
 
     return simpleMessages;
   }
@@ -151,9 +162,18 @@ private:
     try {
       master = state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
     } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s masterlist metadata contains a condition that could not be evaluated. Details: " << e.what();
+      BOOST_LOG_TRIVIAL(error)
+          << "\"" << pluginName
+          << "\"'s masterlist metadata contains a condition that could not be "
+             "evaluated. Details: "
+          << e.what();
       master.SetMessages({
-        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
+          Message(MessageType::error,
+                  (boost::format(boost::locale::translate(
+                       "\"%1%\" contains a condition that could not be "
+                       "evaluated. Details: %2%")) %
+                   pluginName % e.what())
+                      .str()),
       });
     }
 
@@ -165,9 +185,17 @@ private:
     try {
       user = state_.getCurrentGame().GetUserMetadata(pluginName, true);
     } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName << "\"'s user metadata contains a condition that could not be evaluated. Details: " << e.what();
+      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName
+                               << "\"'s user metadata contains a condition "
+                                  "that could not be evaluated. Details: "
+                               << e.what();
       user.SetMessages({
-        Message(MessageType::error, (boost::format(boost::locale::translate("\"%1%\" contains a condition that could not be evaluated. Details: %2%")) % pluginName % e.what()).str()),
+          Message(MessageType::error,
+                  (boost::format(boost::locale::translate(
+                       "\"%1%\" contains a condition that could not be "
+                       "evaluated. Details: %2%")) %
+                   pluginName % e.what())
+                      .str()),
       });
     }
 
@@ -181,12 +209,15 @@ private:
     try {
       info = state_.getCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
-    } catch (FileAccessError &) {
-      BOOST_LOG_TRIVIAL(warning) << "No masterlist present at " << state_.getCurrentGame().MasterlistPath();
+    } catch (FileAccessError&) {
+      BOOST_LOG_TRIVIAL(warning) << "No masterlist present at "
+                                 << state_.getCurrentGame().MasterlistPath();
       info.revision_id = translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
-    } catch (GitStateError &) {
-      BOOST_LOG_TRIVIAL(warning) << "Not a Git repository: " << state_.getCurrentGame().MasterlistPath().parent_path();
+    } catch (GitStateError&) {
+      BOOST_LOG_TRIVIAL(warning)
+          << "Not a Git repository: "
+          << state_.getCurrentGame().MasterlistPath().parent_path();
       info.revision_id = translate("Unknown: Git repository missing").str();
       info.revision_date = translate("Unknown: Git repository missing").str();
     }

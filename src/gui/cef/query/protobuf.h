@@ -40,7 +40,8 @@ std::string mapMessageType(MessageType type) {
   }
 }
 
-void convert(const SimpleMessage& fromMessage, protobuf::SimpleMessage& toMessage) {
+void convert(const SimpleMessage& fromMessage,
+             protobuf::SimpleMessage& toMessage) {
   toMessage.set_type(mapMessageType(fromMessage.type));
   toMessage.set_text(fromMessage.text);
   toMessage.set_language(fromMessage.language);
@@ -53,7 +54,8 @@ void convert(const Tag& fromTag, protobuf::Tag& toTag) {
   toTag.set_is_addition(fromTag.IsAddition());
 }
 
-void convert(const PluginCleaningData& fromData, protobuf::CleaningData& toData) {
+void convert(const PluginCleaningData& fromData,
+             protobuf::CleaningData& toData) {
   toData.set_crc(fromData.GetCRC());
   toData.set_util(fromData.GetCleaningUtility());
   toData.set_itm(fromData.GetITMCount());
@@ -69,12 +71,13 @@ void convert(const PluginCleaningData& fromData, protobuf::CleaningData& toData)
 }
 
 void convert(const File& fromFile, protobuf::File& toFile) {
-    toFile.set_name(fromFile.GetName());
-    toFile.set_display(fromFile.GetDisplayName());
-    toFile.set_condition(fromFile.GetCondition());
+  toFile.set_name(fromFile.GetName());
+  toFile.set_display(fromFile.GetDisplayName());
+  toFile.set_condition(fromFile.GetCondition());
 }
 
-protobuf::PluginMetadata convert(const PluginMetadata& metadata, const std::string& language) {
+protobuf::PluginMetadata convert(const PluginMetadata& metadata,
+                                 const std::string& language) {
   protobuf::PluginMetadata pbMetadata;
   pbMetadata.set_name(metadata.GetName());
   pbMetadata.set_enabled(metadata.IsEnabled());

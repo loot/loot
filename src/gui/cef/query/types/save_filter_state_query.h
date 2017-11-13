@@ -27,8 +27,8 @@ along with LOOT.  If not, see
 
 #include <boost/log/trivial.hpp>
 
-#include "gui/state/loot_state.h"
 #include "gui/cef/query/query.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class SaveFilterStateQuery : public Query {
@@ -36,7 +36,9 @@ public:
   SaveFilterStateQuery(LootState& state,
                        const std::string& filterId,
                        bool enabled) :
-    state_(state), filterId_(filterId), enabled_(enabled) {}
+      state_(state),
+      filterId_(filterId),
+      enabled_(enabled) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(trace) << "Saving filter states.";

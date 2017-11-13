@@ -50,15 +50,19 @@ public:
   static Message ToMessage(const PluginCleaningData& cleaningData);
   void Init();
 
-  std::shared_ptr<const PluginInterface> GetPlugin(const std::string& name) const;
+  std::shared_ptr<const PluginInterface> GetPlugin(
+      const std::string& name) const;
   std::set<std::shared_ptr<const PluginInterface>> GetPlugins() const;
-  std::vector<Message> CheckInstallValidity(const std::shared_ptr<const PluginInterface>& plugin,
-                                            const PluginMetadata& metadata);
+  std::vector<Message> CheckInstallValidity(
+      const std::shared_ptr<const PluginInterface>& plugin,
+      const PluginMetadata& metadata);
 
-  void RedatePlugins();  //Change timestamps to match load order (Skyrim only).
+  void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
-  void LoadAllInstalledPlugins(bool headersOnly);  //Loads all installed plugins.
-  bool ArePluginsFullyLoaded() const;  // Checks if the game's plugins have already been loaded.
+  void LoadAllInstalledPlugins(
+      bool headersOnly);  // Loads all installed plugins.
+  bool ArePluginsFullyLoaded()
+      const;  // Checks if the game's plugins have already been loaded.
 
   boost::filesystem::path DataPath() const;
   boost::filesystem::path MasterlistPath() const;
@@ -68,8 +72,9 @@ public:
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
 
   bool IsPluginActive(const std::string& pluginName) const;
-  short GetActiveLoadOrderIndex(const std::shared_ptr<const PluginInterface>& plugin, 
-                                const std::vector<std::string>& loadOrder) const;
+  short GetActiveLoadOrderIndex(
+      const std::shared_ptr<const PluginInterface>& plugin,
+      const std::vector<std::string>& loadOrder) const;
 
   std::vector<std::string> SortPlugins();
   void IncrementLoadOrderSortCount();
@@ -93,13 +98,17 @@ public:
   void ClearUserMetadata(const std::string& pluginName);
   void ClearAllUserMetadata();
   void SaveUserMetadata();
+
 private:
 #ifdef _WIN32
-  static std::string RegKeyStringValue(const std::string& keyStr, const std::string& subkey, const std::string& value);
+  static std::string RegKeyStringValue(const std::string& keyStr,
+                                       const std::string& subkey,
+                                       const std::string& value);
 #endif
   static bool ExecutableExists(const GameType& gameType,
                                const boost::filesystem::path& gamePath);
-  static boost::filesystem::path DetectGamePath(const GameSettings& gameSettings);
+  static boost::filesystem::path DetectGamePath(
+      const GameSettings& gameSettings);
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                               const boost::filesystem::path& backupDirectory);
   std::vector<std::string> GetInstalledPluginNames();

@@ -31,28 +31,34 @@ namespace loot {
 class CopyMetadataQuery : public ClipboardQuery {
 public:
   CopyMetadataQuery(LootState& state, const std::string& pluginName) :
-    state_(state), pluginName_(pluginName) {}
+      state_(state),
+      pluginName_(pluginName) {}
 
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName_;
 
     // Get metadata from masterlist and userlist.
-    PluginMetadata metadata = state_.getCurrentGame().GetMasterlistMetadata(pluginName_);
-    metadata.MergeMetadata(state_.getCurrentGame().GetUserMetadata(pluginName_));
+    PluginMetadata metadata =
+        state_.getCurrentGame().GetMasterlistMetadata(pluginName_);
+    metadata.MergeMetadata(
+        state_.getCurrentGame().GetUserMetadata(pluginName_));
 
     // Generate text representation.
-    std::string text = "[spoiler][code]" + asText(metadata) + "[/code][/spoiler]";
+    std::string text =
+        "[spoiler][code]" + asText(metadata) + "[/code][/spoiler]";
 
     copyToClipboard(text);
 
-    BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \"" << pluginName_ << "\": " << text;
+    BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \""
+                            << pluginName_ << "\": " << text;
 
     return "";
   }
 
 private:
   std::string asText(const PluginMetadata& metadata) {
-    protobuf::PluginMetadata pbMetadata = convert(metadata, state_.getLanguage());
+    protobuf::PluginMetadata pbMetadata =
+        convert(metadata, state_.getLanguage());
 
     google::protobuf::util::JsonPrintOptions options;
     options.add_whitespace = true;

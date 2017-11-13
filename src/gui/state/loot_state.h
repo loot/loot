@@ -25,16 +25,15 @@
 #ifndef LOOT_GUI_STATE_LOOT_STATE
 #define LOOT_GUI_STATE_LOOT_STATE
 
-#include "gui/state/loot_settings.h"
 #include "gui/state/game.h"
+#include "gui/state/loot_settings.h"
 
 namespace loot {
 class LootState : public LootSettings {
 public:
   LootState();
 
-  void init(const std::string& cmdLineGame,
-            const std::string& gameAppDataPath);
+  void init(const std::string& cmdLineGame, const std::string& gameAppDataPath);
   const std::vector<std::string>& getInitErrors() const;
 
   void save(const boost::filesystem::path& file);
@@ -51,6 +50,7 @@ public:
 
   void enableDebugLogging(bool enable);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
+
 private:
   // Select initial game.
   void selectGame(std::string cmdLineGame);

@@ -1,0 +1,15 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+
+AccessModifierOffset: -2
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortIfStatementsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+FixNamespaceComments: false
+SpaceAfterTemplateKeyword: false
+Standard: Cpp11
+...

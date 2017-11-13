@@ -76,7 +76,7 @@ LOOT's JavaScript uses a slightly tweaked version of the Airbnb style, and can b
 
 ### C++ Code Style
 
-The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) is used as the base, with deviations as listed below.
+The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) is used as the base, with deviations as listed below. Formatting style is codified in the repository's `.clang-format` file, but is not enforced.
 
 #### C++ Features
 
@@ -91,8 +91,3 @@ The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) 
 
 * Constant, enumerator and variable names should use `camelCase` or `underscore_separators`, but they should be consistent within the same scope.
 * Function names should use `PascalCase` or `camelCase`, but they should be consistent within the same scope.
-
-#### Formatting
-
-* Line length doesn't matter.
-* `public`, `protected` and `private` keywords should not be indented within a class declaration.

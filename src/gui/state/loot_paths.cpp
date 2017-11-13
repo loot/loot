@@ -28,18 +28,18 @@ Fallout: New Vegas.
 
 #include <boost/locale.hpp>
 
-#include "loot/api.h"
 #include "gui/helpers.h"
+#include "loot/api.h"
 
 #ifdef _WIN32
-#   ifndef UNICODE
-#       define UNICODE
-#   endif
-#   ifndef _UNICODE
-#      define _UNICODE
-#   endif
-#   include "windows.h"
-#   include "shlobj.h"
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#include "shlobj.h"
+#include "windows.h"
 #endif
 
 namespace loot {
@@ -55,9 +55,7 @@ boost::filesystem::path LootPaths::getL10nPath() {
   return getResourcesPath() / "l10n";
 }
 
-boost::filesystem::path LootPaths::getLootDataPath() {
-  return lootDataPath_;
-}
+boost::filesystem::path LootPaths::getLootDataPath() { return lootDataPath_; }
 
 boost::filesystem::path LootPaths::getSettingsPath() {
   return lootDataPath_ / "settings.yaml";
@@ -68,7 +66,7 @@ boost::filesystem::path LootPaths::getLogPath() {
 }
 
 void LootPaths::initialise(const std::string& lootDataPath) {
-    // Set the locale to get UTF-8 conversions working correctly.
+  // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   boost::filesystem::path::imbue(std::locale());
   loot::InitialiseLocale("");
@@ -87,26 +85,28 @@ boost::filesystem::path LootPaths::getLocalAppDataPath() {
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
-    throw std::system_error(GetLastError(), std::system_category(), "Failed to get %LOCALAPPDATA% path.");
+    throw std::system_error(GetLastError(),
+                            std::system_category(),
+                            "Failed to get %LOCALAPPDATA% path.");
 
   boost::filesystem::path localAppDataPath(FromWinWide(path));
   CoTaskMemFree(path);
 
   return localAppDataPath;
 #else
-        // Use XDG_CONFIG_HOME environmental variable if it's available.
-  const char * xdgConfigHome = getenv("XDG_CONFIG_HOME");
+  // Use XDG_CONFIG_HOME environmental variable if it's available.
+  const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
 
   if (xdgConfigHome != nullptr)
     return boost::filesystem::path(xdgConfigHome);
 
-// Otherwise, use the HOME env. var. if it's available.
+  // Otherwise, use the HOME env. var. if it's available.
   xdgConfigHome = getenv("HOME");
 
   if (xdgConfigHome != nullptr)
     return boost::filesystem::path(xdgConfigHome) / ".config";
 
-// If somehow both are missing, use the current path.
+  // If somehow both are missing, use the current path.
   return boost::filesystem::current_path();
 #endif
 }

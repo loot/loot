@@ -25,16 +25,16 @@
 #ifndef LOOT_GUI_LOOT_APP
 #define LOOT_GUI_LOOT_APP
 
-#include <include/cef_app.h>
 #include <include/base/cef_lock.h>
+#include <include/cef_app.h>
 #include <include/wrapper/cef_message_router.h>
 
 #include "gui/state/loot_state.h"
 
 namespace loot {
 class LootApp : public CefApp,
-  public CefBrowserProcessHandler,
-  public CefRenderProcessHandler {
+                public CefBrowserProcessHandler,
+                public CefRenderProcessHandler {
 public:
   void Initialise(const std::string& defaultGame,
                   const std::string& gameAppDataPath,
@@ -42,9 +42,11 @@ public:
                   const std::string& url);
 
   // Override CefApp methods.
-  virtual void OnBeforeCommandLineProcessing(const CefString& process_type,
-                                             CefRefPtr<CefCommandLine> command_line);
-  virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE;
+  virtual void OnBeforeCommandLineProcessing(
+      const CefString& process_type,
+      CefRefPtr<CefCommandLine> command_line);
+  virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler()
+      OVERRIDE;
   virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE;
 
   // Override CefBrowserProcessHandler methods.
@@ -52,9 +54,10 @@ public:
   virtual void OnWebKitInitialized() OVERRIDE;
 
   // Override CefRenderProcessHandler methods.
-  virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                        CefProcessId source_process,
-                                        CefRefPtr<CefProcessMessage> message) OVERRIDE;
+  virtual bool OnProcessMessageReceived(
+      CefRefPtr<CefBrowser> browser,
+      CefProcessId source_process,
+      CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
 private:
   virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,

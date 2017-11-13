@@ -27,20 +27,22 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "loot/loot_version.h"
 #include "gui/cef/query/types/metadata_query.h"
 #include "gui/state/loot_state.h"
+#include "loot/loot_version.h"
 
 namespace loot {
 class GetGameDataQuery : public MetadataQuery {
 public:
   GetGameDataQuery(LootState& state, CefRefPtr<CefFrame> frame) :
-    MetadataQuery(state),
-    state_(state),
-    frame_(frame) {}
+      MetadataQuery(state),
+      state_(state),
+      frame_(frame) {}
 
   std::string executeLogic() {
-    sendProgressUpdate(frame_, boost::locale::translate("Parsing, merging and evaluating metadata..."));
+    sendProgressUpdate(frame_,
+                       boost::locale::translate(
+                           "Parsing, merging and evaluating metadata..."));
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
@@ -51,14 +53,15 @@ public:
     if (isFirstLoad)
       state_.getCurrentGame().LoadMetadata();
 
-    //Sort plugins into their load order.
+    // Sort plugins into their load order.
     std::vector<std::shared_ptr<const PluginInterface>> installed;
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
-    for (const auto &pluginName : loadOrder) {
+    for (const auto& pluginName : loadOrder) {
       try {
         const auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
         installed.push_back(plugin);
-      } catch (...) {}
+      } catch (...) {
+      }
     }
 
     return generateJsonResponse(installed.cbegin(), installed.cend());

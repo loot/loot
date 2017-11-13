@@ -33,11 +33,12 @@ struct Counters {
   size_t activeLightMasters = 0;
 };
 
-
 class CopyLoadOrderQuery : public ClipboardQuery {
 public:
-  CopyLoadOrderQuery(LootState& state, const std::vector<std::string>& plugins) :
-    state_(state), plugins_(plugins) {}
+  CopyLoadOrderQuery(LootState& state,
+                     const std::vector<std::string>& plugins) :
+      state_(state),
+      plugins_(plugins) {}
 
   std::string executeLogic() {
     Counters counters;
@@ -51,24 +52,25 @@ public:
   }
 
 private:
-  void writePluginLine(std::ostream& stream, const std::string& plugin, Counters& counters) {
+  void writePluginLine(std::ostream& stream,
+                       const std::string& plugin,
+                       Counters& counters) {
     auto isActive = state_.getCurrentGame().IsPluginActive(plugin);
-    auto isLightMaster = state_.getCurrentGame().GetPlugin(plugin)->IsLightMaster();
+    auto isLightMaster =
+        state_.getCurrentGame().GetPlugin(plugin)->IsLightMaster();
 
     if (isActive && isLightMaster) {
       stream << "254 FE " << std::setw(4) << counters.activeLightMasters << " ";
       counters.activeLightMasters += 1;
-    }
-    else if (isActive) {
-      stream << std::setw(3) << counters.activeNormal << " "
-        << std::hex << std::setw(2) << counters.activeNormal << std::dec << "      ";
+    } else if (isActive) {
+      stream << std::setw(3) << counters.activeNormal << " " << std::hex
+             << std::setw(2) << counters.activeNormal << std::dec << "      ";
       counters.activeNormal += 1;
-    }
-    else {
+    } else {
       stream << "            ";
     }
 
-    stream  << plugin << "\r\n";
+    stream << plugin << "\r\n";
   }
 
   LootState& state_;

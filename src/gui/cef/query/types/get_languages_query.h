@@ -52,19 +52,19 @@ private:
 
   static std::map<std::string, std::string> getLanguages() {
     return std::map<std::string, std::string>({
-      {"da", "Dansk"},
-      {"de", "Deutsch"},
-      {"en", "English"},
-      {"es", "Español"},
-      {"fi", "suomi"},
-      {"fr", "Français"},
-      {"ko", "한국어"},
-      {"pl", "Polski"},
-      {"pt_BR", "Português do Brasil"},
-      {"ru", "Русский"},
-      {"sv", "Svenska"},
-      {"zh_CN", "简体中文"},
-      {"ja", "日本語"},
+        {"da", "Dansk"},
+        {"de", "Deutsch"},
+        {"en", "English"},
+        {"es", "Español"},
+        {"fi", "suomi"},
+        {"fr", "Français"},
+        {"ko", "한국어"},
+        {"pl", "Polski"},
+        {"pt_BR", "Português do Brasil"},
+        {"ru", "Русский"},
+        {"sv", "Svenska"},
+        {"zh_CN", "简体中文"},
+        {"ja", "日本語"},
     });
   }
 };

@@ -28,17 +28,17 @@
 #include <sstream>
 #include <string>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/log/trivial.hpp>
 #include <include/cef_app.h>
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
 
-#include "gui/state/loot_paths.h"
-#include "gui/helpers.h"
 #include "gui/cef/loot_scheme_handler_factory.h"
 #include "gui/cef/query/query_handler.h"
+#include "gui/helpers.h"
+#include "gui/state/loot_paths.h"
 
 namespace loot {
 LootHandler::LootHandler(LootState& lootState) : lootState_(lootState) {}
@@ -46,22 +46,18 @@ LootHandler::LootHandler(LootState& lootState) : lootState_(lootState) {}
 // CefClient methods
 //------------------
 
-CefRefPtr<CefDisplayHandler> LootHandler::GetDisplayHandler() {
-  return this;
-}
+CefRefPtr<CefDisplayHandler> LootHandler::GetDisplayHandler() { return this; }
 
-CefRefPtr<CefLifeSpanHandler> LootHandler::GetLifeSpanHandler() {
-  return this;
-}
+CefRefPtr<CefLifeSpanHandler> LootHandler::GetLifeSpanHandler() { return this; }
 
-CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() {
-  return this;
-}
+CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() { return this; }
 
-bool LootHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                           CefProcessId source_process,
-                                           CefRefPtr<CefProcessMessage> message) {
-  return browser_side_router_->OnProcessMessageReceived(browser, source_process, message);
+bool LootHandler::OnProcessMessageReceived(
+    CefRefPtr<CefBrowser> browser,
+    CefProcessId source_process,
+    CefRefPtr<CefProcessMessage> message) {
+  return browser_side_router_->OnProcessMessageReceived(
+      browser, source_process, message);
 }
 
 // CefLifeSpanHandler methods
@@ -85,26 +81,30 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 
   // Check if unapplied changes exist.
   if (lootState_.hasUnappliedChanges()) {
-    browser->GetMainFrame()->ExecuteJavaScript("onQuit();", browser->GetMainFrame()->GetURL(), 0);
+    browser->GetMainFrame()->ExecuteJavaScript(
+        "onQuit();", browser->GetMainFrame()->GetURL(), 0);
     return true;
   }
 
   auto browserView = CefBrowserView::GetForBrowser(browser);
   if (browserView == nullptr) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings, browser view is null";
+    BOOST_LOG_TRIVIAL(error)
+        << "Failed to save LOOT's settings, browser view is null";
     return false;
   }
 
   auto window = browserView->GetWindow();
   if (window == nullptr) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings, window is null";
+    BOOST_LOG_TRIVIAL(error)
+        << "Failed to save LOOT's settings, window is null";
     return false;
   }
 
   LootSettings::WindowPosition position;
   position.maximised = window->IsMaximized();
 
-  // Un-maximise the window so that the non-maximised size and position are recorded.
+  // Un-maximise the window so that the non-maximised size and position are
+  // recorded.
   window->Restore();
 
   CefRect windowBounds = window->GetBoundsInScreen();
@@ -116,9 +116,9 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 
   try {
     lootState_.save(LootPaths::getSettingsPath());
-  }
-  catch (std::exception &e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to save LOOT's settings. Error: " << e.what();
+  } catch (std::exception& e) {
+    BOOST_LOG_TRIVIAL(error)
+        << "Failed to save LOOT's settings. Error: " << e.what();
   }
 
   // Allow the close. For windowed browsers this will result in the OS close
@@ -133,7 +133,9 @@ void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
   browser_side_router_->OnBeforeClose(browser);
 
   // Remove from the list of existing browsers.
-  for (BrowserList::iterator bit = browser_list_.begin(); bit != browser_list_.end(); ++bit) {
+  for (BrowserList::iterator bit = browser_list_.begin();
+       bit != browser_list_.end();
+       ++bit) {
     if ((*bit)->IsSame(browser)) {
       browser_list_.erase(bit);
       break;
@@ -141,7 +143,7 @@ void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
   }
 
   if (browser_list_.empty()) {
-      // All browser windows have closed. Quit the application message loop.
+    // All browser windows have closed. Quit the application message loop.
     CefQuitMessageLoop();
   }
 }
@@ -160,12 +162,11 @@ void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
   if (errorCode == ERR_ABORTED)
     return;
 
-// Display a load error message.
+  // Display a load error message.
   std::stringstream ss;
   ss << "<html><body bgcolor=\"white\">"
-    << "<h2>Failed to load URL " << std::string(failedUrl)
-    << " with error " << std::string(errorText) << " (" << errorCode
-    << ").</h2></body></html>";
+     << "<h2>Failed to load URL " << std::string(failedUrl) << " with error "
+     << std::string(errorText) << " (" << errorCode << ").</h2></body></html>";
 
   frame->LoadString(ss.str(), failedUrl);
 }
@@ -173,37 +174,43 @@ void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 // CefRequestHandler methods
 //--------------------------
 
-CefRefPtr<CefRequestHandler> LootHandler::GetRequestHandler() {
-  return this;
-}
+CefRefPtr<CefRequestHandler> LootHandler::GetRequestHandler() { return this; }
 
-bool LootHandler::OnBeforeBrowse(CefRefPtr< CefBrowser > browser,
-                                 CefRefPtr< CefFrame > frame,
-                                 CefRefPtr< CefRequest > request,
+bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+                                 CefRefPtr<CefFrame> frame,
+                                 CefRefPtr<CefRequest> request,
                                  bool is_redirect) {
-  BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: " << request->GetURL().ToString();
+  BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: "
+                           << request->GetURL().ToString();
 
   const std::string url = request->GetURL().ToString();
   if (boost::starts_with(url, "http://loot/")) {
-    BOOST_LOG_TRIVIAL(trace) << "Link is to LOOT page, allowing CEF's default handling.";
+    BOOST_LOG_TRIVIAL(trace)
+        << "Link is to LOOT page, allowing CEF's default handling.";
     return false;
   } else if (boost::starts_with(url, "http://localhost:")) {
-    BOOST_LOG_TRIVIAL(warning) << "Link is to a page on localhost, if this isn't happening while running tests, something has gone wrong";
+    BOOST_LOG_TRIVIAL(warning) << "Link is to a page on localhost, if this "
+                                  "isn't happening while running tests, "
+                                  "something has gone wrong";
     return false;
   }
 
   BOOST_LOG_TRIVIAL(info) << "Opening link in Windows' default handler.";
-  OpenInDefaultApplication(boost::filesystem::path(request->GetURL().ToString()));
+  OpenInDefaultApplication(
+      boost::filesystem::path(request->GetURL().ToString()));
 
   return true;
 }
 
-CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser,
-                                                                 CefRefPtr<CefFrame> frame,
-                                                                 CefRefPtr<CefRequest> request,
-                                                                 CefRefPtr<CefRequestCallback> callback) {
-  if (boost::starts_with(request->GetURL().ToString(), "https://fonts.googleapis.com")) {
-    BOOST_LOG_TRIVIAL(warning) << "Blocking load of resource at " << request->GetURL().ToString();
+CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefRequest> request,
+    CefRefPtr<CefRequestCallback> callback) {
+  if (boost::starts_with(request->GetURL().ToString(),
+                         "https://fonts.googleapis.com")) {
+    BOOST_LOG_TRIVIAL(warning)
+        << "Blocking load of resource at " << request->GetURL().ToString();
     return RV_CANCEL;
   }
 

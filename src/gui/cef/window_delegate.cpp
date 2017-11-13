@@ -29,9 +29,10 @@
 #include "gui/state/loot_paths.h"
 
 namespace loot {
-WindowDelegate::WindowDelegate(CefRefPtr<CefBrowserView> browser_view, LootState& lootState)
-    : browser_view_(browser_view), lootState_(lootState) {
-}
+WindowDelegate::WindowDelegate(CefRefPtr<CefBrowserView> browser_view,
+                               LootState& lootState) :
+    browser_view_(browser_view),
+    lootState_(lootState) {}
 
 void WindowDelegate::OnWindowCreated(CefRefPtr<CefWindow> window) {
   window->SetTitle("LOOT");
@@ -75,7 +76,10 @@ bool WindowDelegate::CanClose(CefRefPtr<CefWindow> window) {
 }
 
 void WindowDelegate::SetWindowPosition(LootSettings::WindowPosition position) {
-  CefRect rect(position.left, position.top, abs(position.right - position.left), abs(position.bottom - position.top));
+  CefRect rect(position.left,
+               position.top,
+               abs(position.right - position.left),
+               abs(position.bottom - position.top));
   browser_view_->GetWindow()->SetBounds(ConstrainWindowPosition(rect));
 
   if (position.maximised)
@@ -83,22 +87,34 @@ void WindowDelegate::SetWindowPosition(LootSettings::WindowPosition position) {
 }
 
 CefRect WindowDelegate::ConstrainWindowPosition(CefRect rect) {
-  CefRect workArea = CefDisplay::GetDisplayMatchingBounds(rect, true)->GetWorkArea();
+  CefRect workArea =
+      CefDisplay::GetDisplayMatchingBounds(rect, true)->GetWorkArea();
 
   rect.x = std::max(workArea.x, std::min(workArea.width - rect.width, rect.x));
-  rect.y = std::max(workArea.y, std::min(workArea.height - rect.height, rect.y));
+  rect.y =
+      std::max(workArea.y, std::min(workArea.height - rect.height, rect.y));
 
   return rect;
 }
 
 void WindowDelegate::SetWindowIcon(CefRefPtr<CefWindow> window) {
-  #ifdef _WIN32
-    // Set the title bar icon.
-    HWND hWnd = window->GetWindowHandle();
-    HANDLE hIcon = LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(MAINICON), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
-    HANDLE hIconSm = LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(MAINICON), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
-    SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
-    SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm);
-  #endif
+#ifdef _WIN32
+  // Set the title bar icon.
+  HWND hWnd = window->GetWindowHandle();
+  HANDLE hIcon = LoadImage(GetModuleHandle(NULL),
+                           MAKEINTRESOURCE(MAINICON),
+                           IMAGE_ICON,
+                           0,
+                           0,
+                           LR_DEFAULTSIZE);
+  HANDLE hIconSm = LoadImage(GetModuleHandle(NULL),
+                             MAKEINTRESOURCE(MAINICON),
+                             IMAGE_ICON,
+                             0,
+                             0,
+                             LR_DEFAULTSIZE);
+  SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+  SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm);
+#endif
 }
 }

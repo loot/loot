@@ -34,7 +34,8 @@
 namespace loot {
 class WindowDelegate : public CefWindowDelegate {
 public:
-  explicit WindowDelegate(CefRefPtr<CefBrowserView> browser_view, LootState& lootState);
+  explicit WindowDelegate(CefRefPtr<CefBrowserView> browser_view,
+                          LootState& lootState);
 
   void OnWindowCreated(CefRefPtr<CefWindow> window) OVERRIDE;
 

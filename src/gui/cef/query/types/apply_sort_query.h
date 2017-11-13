@@ -31,10 +31,12 @@ namespace loot {
 class ApplySortQuery : public Query {
 public:
   ApplySortQuery(LootState& state, const std::vector<std::string>& plugins) :
-    state_(state), plugins_(plugins) {}
+      state_(state),
+      plugins_(plugins) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(trace) << "User has accepted sorted load order, applying it.";
+    BOOST_LOG_TRIVIAL(trace)
+        << "User has accepted sorted load order, applying it.";
     state_.decrementUnappliedChangeCounter();
     state_.getCurrentGame().SetLoadOrder(plugins_);
 
