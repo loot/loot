@@ -123,7 +123,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
                       LPTSTR lpCmdLine,
                       int nCmdShow) {
 #else
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 #endif
 
   // Do all the standard CEF setup stuff.
