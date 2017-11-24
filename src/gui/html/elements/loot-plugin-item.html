@@ -186,18 +186,18 @@
         return '';
       }
 
+      _asHexString(number, numberOfDigits) {
+        const text = number.toString(16);
+        return '0'.repeat(numberOfDigits - text.length) + text;
+      }
+
       computeLoadOrderIndexText(loadOrderIndex) {
         if (loadOrderIndex > -1) {
           if (this.isLightMaster) {
-            return `FE\n#${loadOrderIndex}`;
+            return `FE\n${this._asHexString(loadOrderIndex, 3)}`;
           }
 
-          const number = loadOrderIndex.toString(16);
-          if (number.length === 1) {
-            return `0${number}`;
-          }
-
-          return number;
+          return this._asHexString(loadOrderIndex, 2);
         }
 
         return '';
