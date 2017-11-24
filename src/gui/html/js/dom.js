@@ -1,4 +1,5 @@
 'use strict';
+
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -8,14 +9,19 @@
     root.loot = root.loot || {};
     root.loot.DOM = factory(root.marked);
   }
-}(this, (marked) => {
+})(this, marked => {
   function getElementInTableRowTemplate(rowTemplateId, elementClass) {
-    const select = document.querySelector('link[rel="import"][href$="editable-table.html"]');
+    const select = document.querySelector(
+      'link[rel="import"][href$="editable-table.html"]'
+    );
     if (select) {
-      return select.import.querySelector(`#${rowTemplateId}`).content
-        .querySelector(`.${elementClass}`);
+      return select.import
+        .querySelector(`#${rowTemplateId}`)
+        .content.querySelector(`.${elementClass}`);
     }
-    return document.querySelector(`#${rowTemplateId}`).content.querySelector(`.${elementClass}`);
+    return document
+      .querySelector(`#${rowTemplateId}`)
+      .content.querySelector(`.${elementClass}`);
   }
 
   function createGameItem(game) {
@@ -52,7 +58,10 @@
   }
 
   function forceSelectDefaultValue(element) {
-    element.setAttribute('value', element.firstElementChild.getAttribute('value'));
+    element.setAttribute(
+      'value',
+      element.firstElementChild.getAttribute('value')
+    );
   }
 
   return class DOM {
@@ -88,11 +97,15 @@
       /* Also disable deletion of the game's row in the settings dialog. */
       const table = document.getElementById('gameTable');
       for (let i = 0; i < table.querySelector('tbody').rows.length; i += 1) {
-        const folderElements = table.querySelector('tbody').rows[i].getElementsByClassName('folder');
+        const folderElements = table
+          .querySelector('tbody')
+          .rows[i].getElementsByClassName('folder');
         if (folderElements.length === 1) {
-          table.setReadOnly(table.querySelector('tbody').rows[i],
-                            ['delete'],
-                            folderElements[0].value === gameFolder);
+          table.setReadOnly(
+            table.querySelector('tbody').rows[i],
+            ['delete'],
+            folderElements[0].value === gameFolder
+          );
         }
       }
     }
@@ -100,8 +113,10 @@
     static updateEnabledGames(installedGames) {
       const gameMenuItems = document.getElementById('gameMenu').children;
       for (let i = 0; i < gameMenuItems.length; i += 1) {
-        DOM.enable(gameMenuItems[i],
-                   installedGames.indexOf(gameMenuItems[i].getAttribute('value')) !== -1);
+        DOM.enable(
+          gameMenuItems[i],
+          installedGames.indexOf(gameMenuItems[i].getAttribute('value')) !== -1
+        );
       }
     }
 
@@ -113,7 +128,7 @@
         gameMenu.removeChild(gameMenu.firstElementChild);
       }
 
-      games.forEach((game) => {
+      games.forEach(game => {
         gameMenu.appendChild(createGameItem(game));
       });
     }
@@ -129,7 +144,7 @@
       gameTable.clear();
 
       /* Now fill with new values. */
-      settings.games.forEach((game) => {
+      settings.games.forEach(game => {
         gameSelect.appendChild(createGameItem(game));
 
         const row = gameTable.addRow(game);
@@ -138,26 +153,34 @@
 
       gameSelect.value = settings.game;
       document.getElementById('languageSelect').value = settings.language;
-      document.getElementById('enableDebugLogging').checked = settings.enableDebugLogging;
-      document.getElementById('updateMasterlist').checked = settings.updateMasterlist;
+      document.getElementById('enableDebugLogging').checked =
+        settings.enableDebugLogging;
+      document.getElementById('updateMasterlist').checked =
+        settings.updateMasterlist;
     }
 
     static fillGameTypesList(gameTypes) {
       const select = getElementInTableRowTemplate('gameRow', 'type');
 
-      gameTypes.forEach((gameType) => {
+      gameTypes.forEach(gameType => {
         select.appendChild(createGameTypeItem(gameType));
       });
 
       forceSelectDefaultValue(select);
-      select.setAttribute('value', select.firstElementChild.getAttribute('value'));
+      select.setAttribute(
+        'value',
+        select.firstElementChild.getAttribute('value')
+      );
     }
 
     static fillLanguagesList(languages) {
       const settingsLangSelect = document.getElementById('languageSelect');
-      const messageLangSelect = getElementInTableRowTemplate('messageRow', 'language');
+      const messageLangSelect = getElementInTableRowTemplate(
+        'messageRow',
+        'language'
+      );
 
-      languages.forEach((language) => {
+      languages.forEach(language => {
         const settingsItem = createLanguageItem(language);
         settingsLangSelect.appendChild(settingsItem);
         messageLangSelect.appendChild(settingsItem.cloneNode(true));
@@ -171,9 +194,13 @@
         return;
       }
 
-      const generalMessagesList = document.getElementById('summary').getElementsByTagName('ul')[0];
-      messages.forEach((message) => {
-        generalMessagesList.appendChild(createMessageItem(message.type, message.content));
+      const generalMessagesList = document
+        .getElementById('summary')
+        .getElementsByTagName('ul')[0];
+      messages.forEach(message => {
+        generalMessagesList.appendChild(
+          createMessageItem(message.type, message.content)
+        );
       });
     }
 
@@ -182,14 +209,19 @@
         return;
       }
 
-      DOM.appendGeneralMessages(errorMessages.map((element) => ({
-        type: 'error',
-        content: element,
-      })));
+      DOM.appendGeneralMessages(
+        errorMessages.map(element => ({
+          type: 'error',
+          content: element
+        }))
+      );
 
-      document.getElementById('filterTotalMessageNo').textContent = errorMessages.length;
-      document.getElementById('totalMessageNo').textContent = errorMessages.length;
-      document.getElementById('totalErrorNo').textContent = errorMessages.length;
+      document.getElementById('filterTotalMessageNo').textContent =
+        errorMessages.length;
+      document.getElementById('totalMessageNo').textContent =
+        errorMessages.length;
+      document.getElementById('totalErrorNo').textContent =
+        errorMessages.length;
     }
 
     static onJumpToGeneralInfo() {
@@ -201,7 +233,8 @@
     }
 
     static onSwitchSidebarTab(evt) {
-      document.getElementById(evt.target.selected).parentElement.selected = evt.target.selected;
+      document.getElementById(evt.target.selected).parentElement.selected =
+        evt.target.selected;
     }
 
     static onSidebarClick(evt) {
@@ -214,9 +247,13 @@
              case that has happened. */
           window.getSelection().removeAllRanges();
 
-          if (document.body.getAttribute('data-state') !== 'editing'
-              && document.body.getAttribute('data-state') !== 'sorting') {
-            document.getElementById(evt.target.getAttribute('data-id')).onShowEditor();
+          if (
+            document.body.getAttribute('data-state') !== 'editing' &&
+            document.body.getAttribute('data-state') !== 'sorting'
+          ) {
+            document
+              .getElementById(evt.target.getAttribute('data-id'))
+              .onShowEditor();
           }
         }
       }
@@ -227,7 +264,8 @@
     }
 
     static onFocusSearch(evt) {
-      if (evt.ctrlKey && evt.keyCode === 70) { // 'f'
+      // Focus search if ctrl-f is pressed.
+      if (evt.ctrlKey && evt.keyCode === 70) {
         document.getElementById('mainToolbar').classList.add('search');
         document.getElementById('searchBar').focusInput();
       }
@@ -239,15 +277,23 @@
     }
 
     static onSearchChangeSelection(evt) {
-      document.getElementById('pluginCardList').scrollToIndex(evt.detail.selection);
+      document
+        .getElementById('pluginCardList')
+        .scrollToIndex(evt.detail.selection);
     }
 
     static initialiseAutocompleteFilenames(filenames) {
-      getElementInTableRowTemplate('fileRow', 'name').setAttribute('source', JSON.stringify(filenames));
+      getElementInTableRowTemplate('fileRow', 'name').setAttribute(
+        'source',
+        JSON.stringify(filenames)
+      );
     }
 
     static initialiseAutocompleteBashTags(tags) {
-      getElementInTableRowTemplate('tagRow', 'name').setAttribute('source', JSON.stringify(tags));
+      getElementInTableRowTemplate('tagRow', 'name').setAttribute(
+        'source',
+        JSON.stringify(tags)
+      );
     }
 
     static setUIState(state) {
@@ -262,4 +308,4 @@
       document.getElementById('refreshContentButton').disabled = !enable;
     }
   };
-}));
+});

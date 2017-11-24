@@ -1,10 +1,12 @@
+/* eslint-disable no-console */
+
 'use strict';
 
 const helpers = require('./helpers');
 const { Analyzer, FSUrlLoader } = require('polymer-analyzer');
 const fs = require('fs-extra');
 const path = require('path');
-const getRobotoFiles = require('./get_roboto_files').getRobotoFiles;
+const { getRobotoFiles } = require('./get_roboto_files');
 
 function handleError(error) {
   console.error(error);
@@ -13,19 +15,21 @@ function handleError(error) {
 
 function getFeatureURLs(filePath, featureTypes) {
   const analyzer = new Analyzer({
-    urlLoader: new FSUrlLoader(process.cwd()),
+    urlLoader: new FSUrlLoader(process.cwd())
   });
-  return analyzer.analyze([filePath]).then((analysis) => {
+  return analyzer.analyze([filePath]).then(analysis => {
     const featureUrls = {};
-    featureTypes.forEach((featureType) => {
+    featureTypes.forEach(featureType => {
       featureUrls[featureType] = new Set();
-      analysis.getFeatures({
-        kind: featureType,
-        imported: true,
-        externalPackages: true,
-      }).forEach(feature => {
-        featureUrls[featureType].add(feature.url);
-      });
+      analysis
+        .getFeatures({
+          kind: featureType,
+          imported: true,
+          externalPackages: true
+        })
+        .forEach(feature => {
+          featureUrls[featureType].add(feature.url);
+        });
     });
 
     return featureUrls;
@@ -40,7 +44,8 @@ function getRelativePath(filePath) {
 }
 
 function normalisePaths(html) {
-  return html.replace(/href="(\.\.\/){3}/g, 'href="')
+  return html
+    .replace(/href="(\.\.\/){3}/g, 'href="')
     .replace(/src="(\.\.\/){3}/g, 'src="');
 }
 
@@ -51,41 +56,52 @@ function copyNormalisedFile(sourceFile, destinationFile) {
 }
 
 function copyFiles(pathsPromise, destinationRootPath) {
-  pathsPromise.then((paths) => {
-    paths.forEach((filePath) => {
-      const destinationPath = `${destinationRootPath}/${getRelativePath(filePath)}`;
-      if (filePath.includes('bower_components')) {
-        fs.copySync(filePath, destinationPath);
-      } else {
-        copyNormalisedFile(filePath, destinationPath);
-      }
-    });
-  }).catch(handleError);
+  pathsPromise
+    .then(paths => {
+      paths.forEach(filePath => {
+        const destinationPath = `${destinationRootPath}/${getRelativePath(
+          filePath
+        )}`;
+        if (filePath.includes('bower_components')) {
+          fs.copySync(filePath, destinationPath);
+        } else {
+          copyNormalisedFile(filePath, destinationPath);
+        }
+      });
+    })
+    .catch(handleError);
 }
 
-const url = 'https://github.com/google/roboto/releases/download/v2.135/roboto-hinted.zip';
+const url =
+  'https://github.com/google/roboto/releases/download/v2.135/roboto-hinted.zip';
 const fontsPath = 'build/fonts';
 
-Promise.resolve().then(() => {
-  if (!fs.existsSync(fontsPath)) {
-    return getRobotoFiles(url, fontsPath);
-  }
+Promise.resolve()
+  .then(() => {
+    if (!fs.existsSync(fontsPath)) {
+      return getRobotoFiles(url, fontsPath);
+    }
 
-  return '';
-}).then(() => {
-  helpers.getAppReleasePaths('.').forEach(releasePath => {
-    const index = 'src/gui/html/index.html';
-    const destinationRootPath = `${releasePath.path}/resources/ui`;
+    return '';
+  })
+  .then(() => {
+    helpers.getAppReleasePaths('.').forEach(releasePath => {
+      const index = 'src/gui/html/index.html';
+      const destinationRootPath = `${releasePath.path}/resources/ui`;
 
-    const urls = getFeatureURLs(index, ['html-import', 'html-script']);
-    const htmlImportUrls = urls.then(features => features['html-import']);
-    const scriptUrls = urls.then(features => features['html-script']);
+      const urls = getFeatureURLs(index, ['html-import', 'html-script']);
+      const htmlImportUrls = urls.then(features => features['html-import']);
+      const scriptUrls = urls.then(features => features['html-script']);
 
-    copyFiles(htmlImportUrls, destinationRootPath);
-    copyFiles(scriptUrls, destinationRootPath);
-    fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
-    fs.copySync('resources/ui/css/dark-theme.css', `${destinationRootPath}/css/dark-theme.css`);
-    fs.copySync(fontsPath, `${destinationRootPath}/fonts`);
-    copyNormalisedFile(index, `${destinationRootPath}/index.html`);
-  });
-}).catch(handleError);
+      copyFiles(htmlImportUrls, destinationRootPath);
+      copyFiles(scriptUrls, destinationRootPath);
+      fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
+      fs.copySync(
+        'resources/ui/css/dark-theme.css',
+        `${destinationRootPath}/css/dark-theme.css`
+      );
+      fs.copySync(fontsPath, `${destinationRootPath}/fonts`);
+      copyNormalisedFile(index, `${destinationRootPath}/index.html`);
+    });
+  })
+  .catch(handleError);

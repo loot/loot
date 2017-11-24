@@ -1,4 +1,5 @@
 'use strict';
+
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -8,17 +9,17 @@
     root.loot = root.loot || {};
     root.loot.query = factory(root._);
   }
-}(this, (_) => (requestName, payload) => {
+})(this, _ => (requestName, payload) => {
   if (!requestName) {
     throw new Error('No request name passed');
   }
   const request = {
-    name: requestName,
+    name: requestName
   };
   if (payload) {
     if (Array.isArray(payload)) {
       request.plugin_names = {
-        plugins: payload,
+        plugins: payload
       };
     } else if (_.isString(payload)) {
       request.target_name = payload;
@@ -40,7 +41,7 @@
       onSuccess: resolve,
       onFailure: (errorCode, errorMessage) => {
         reject(new Error(errorMessage));
-      },
+      }
     });
   });
-}));
+});

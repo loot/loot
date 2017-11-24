@@ -44,14 +44,12 @@ describe('Translator', () => {
     it('should return an empty string if nothing is passed', () =>
       l10n.load().then(() => {
         l10n.translate().should.equal('');
-      })
-    );
+      }));
 
     it('should return the input string if the current locale is "en"', () =>
       l10n.load().then(() => {
         l10n.translate('foo').should.equal('foo');
-      })
-    );
+      }));
 
     it('should return the translated string if locale data has been loaded', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
@@ -62,12 +60,12 @@ describe('Translator', () => {
             '': {
               domain: 'messages',
               lang: 'en',
-              plural_forms: 'nplurals=2; plural=(n != 1);',
+              plural_forms: 'nplurals=2; plural=(n != 1);'
             },
-            foo: ['bar'],
-          },
+            foo: ['bar']
+          }
         },
-        domain: 'messages',
+        domain: 'messages'
       });
 
       l10n.translate('foo').should.equal('bar');
@@ -88,14 +86,12 @@ describe('Translator', () => {
     it('should return an empty string if nothing is passed', () =>
       l10n.load().then(() => {
         l10n.translateFormatted().should.equal('');
-      })
-    );
+      }));
 
     it('should return the input string if the current locale is "en"', () =>
       l10n.load().then(() => {
         l10n.translateFormatted('foo').should.equal('foo');
-      })
-    );
+      }));
 
     it('should return the translated string if locale data has been loaded', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
@@ -106,12 +102,12 @@ describe('Translator', () => {
             '': {
               domain: 'messages',
               lang: 'en',
-              plural_forms: 'nplurals=2; plural=(n != 1);',
+              plural_forms: 'nplurals=2; plural=(n != 1);'
             },
-            foo: ['bar'],
-          },
+            foo: ['bar']
+          }
         },
-        domain: 'messages',
+        domain: 'messages'
       });
 
       l10n.translateFormatted('foo').should.equal('bar');
@@ -126,15 +122,17 @@ describe('Translator', () => {
             '': {
               domain: 'messages',
               lang: 'en',
-              plural_forms: 'nplurals=2; plural=(n != 1);',
+              plural_forms: 'nplurals=2; plural=(n != 1);'
             },
-            'foo %1$s %2$s': ['%2$s is bar'],
-          },
+            'foo %1$s %2$s': ['%2$s is bar']
+          }
         },
-        domain: 'messages',
+        domain: 'messages'
       });
 
-      l10n.translateFormatted('foo %1$s %2$s', 'is not', 'bar').should.equal('bar is bar');
+      l10n
+        .translateFormatted('foo %1$s %2$s', 'is not', 'bar')
+        .should.equal('bar is bar');
     });
   });
 });

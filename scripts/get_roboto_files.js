@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs-extra');
 const path = require('path');
 const request = require('request');
@@ -9,17 +11,19 @@ function getRobotoFiles(url, destinationPath) {
 
   return new Promise((resolve, reject) => {
     request(url)
-    .pipe(fs.createWriteStream(downloadPath))
-    .on('close', (err) => {
-      if (err) {
-        reject(err);
-      }
-      resolve();
+      .pipe(fs.createWriteStream(downloadPath))
+      .on('close', err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+  })
+    .then(() => decompress(downloadPath, extractPath))
+    .then(() => {
+      fs.renameSync(path.join(extractPath, 'roboto-hinted'), destinationPath);
+      fs.removeSync(downloadPath);
     });
-  }).then(() => decompress(downloadPath, extractPath)).then(() => {
-    fs.renameSync(path.join(extractPath, 'roboto-hinted'), destinationPath);
-    fs.removeSync(downloadPath);
-  });
 }
 
 module.exports.getRobotoFiles = getRobotoFiles;

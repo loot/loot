@@ -1,19 +1,16 @@
 /* Convert .po files to .mo files. */
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 
 'use strict';
-const childProcess = require('child_process');
+
 const fs = require('fs');
 const path = require('path');
 const helpers = require('./helpers');
 
-let rootPath = '.';
-if (process.argv.length > 2) {
-  rootPath = process.argv[2];
-}
+const [, , rootPath = '.'] = process.argv;
 
 const l10nPath = path.join(rootPath, 'resources', 'l10n');
-fs.readdirSync(l10nPath).forEach((file) => {
+fs.readdirSync(l10nPath).forEach(file => {
   if (fs.statSync(path.join(l10nPath, file)).isDirectory()) {
     try {
       const poPath = path.join(l10nPath, file, 'LC_MESSAGES', 'loot.po');
@@ -21,11 +18,7 @@ fs.readdirSync(l10nPath).forEach((file) => {
 
       fs.accessSync(poPath, fs.R_OK);
 
-      helpers.safeExecFileSync('msgfmt', [
-        poPath,
-        '-o',
-        moPath,
-      ]);
+      helpers.safeExecFileSync('msgfmt', [poPath, '-o', moPath]);
     } catch (error) {
       console.log(error);
     }

@@ -21,7 +21,9 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
+
 'use strict';
+
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -31,7 +33,7 @@
     root.loot = root.loot || {};
     root.loot.Plugin = factory(root._);
   }
-}(this, (_) => {
+})(this, _ => {
   /* Messages, tags, CRCs and version strings can all be hidden by filters.
      Use getters with no setters for member variables as data should not be
      written to objects of this class. */
@@ -99,7 +101,7 @@
       }
 
       /* Pad CRC string to 8 characters. */
-      return (`00000000${this._crc.toString(16).toUpperCase()}`).slice(-8);
+      return `00000000${this._crc.toString(16).toUpperCase()}`.slice(-8);
     }
 
     get tags() {
@@ -129,7 +131,7 @@
 
       return {
         added: tagsAdded.join(', '),
-        removed: tagsRemoved.join(', '),
+        removed: tagsRemoved.join(', ')
       };
     }
 
@@ -143,14 +145,18 @@
       }
       const needle = text.toLowerCase();
 
-      if (this.name.toLowerCase().indexOf(needle) !== -1
-          || this.crc.toLowerCase().indexOf(needle) !== -1
-          || this.version.toLowerCase().indexOf(needle) !== -1) {
+      if (
+        this.name.toLowerCase().indexOf(needle) !== -1 ||
+        this.crc.toLowerCase().indexOf(needle) !== -1 ||
+        this.version.toLowerCase().indexOf(needle) !== -1
+      ) {
         return true;
       }
 
-      if (this.tags.added.toLowerCase().indexOf(needle) !== -1
-          || this.tags.removed.toLowerCase().indexOf(needle) !== -1) {
+      if (
+        this.tags.added.toLowerCase().indexOf(needle) !== -1 ||
+        this.tags.removed.toLowerCase().indexOf(needle) !== -1
+      ) {
         return true;
       }
 
@@ -199,30 +205,38 @@
         return;
       }
       if (plugin.name !== this.name) {
-        throw new Error(`Cannot update data for ${this.name} using data for ${plugin.name}`);
+        throw new Error(
+          `Cannot update data for ${this.name} using data for ${plugin.name}`
+        );
       }
 
-      Object.getOwnPropertyNames(plugin).forEach((property) => {
+      Object.getOwnPropertyNames(plugin).forEach(property => {
         this[property] = plugin[property];
       });
     }
 
     static fromJson(key, value) {
-      if (value !== null && Object.prototype.hasOwnProperty.call(value, 'name') && Object.prototype.hasOwnProperty.call(value, 'isEmpty')) {
+      if (
+        value !== null &&
+        Object.prototype.hasOwnProperty.call(value, 'name') &&
+        Object.prototype.hasOwnProperty.call(value, 'isEmpty')
+      ) {
         return new Plugin(value);
       }
       return value;
     }
 
     static tagFromRowData(rowData) {
-      if (rowData.condition === undefined
-        || rowData.name === undefined
-        || rowData.type === undefined) {
+      if (
+        rowData.condition === undefined ||
+        rowData.name === undefined ||
+        rowData.type === undefined
+      ) {
         throw new TypeError('Row data members are undefined');
       }
       const tag = {
         condition: rowData.condition,
-        name: '',
+        name: ''
       };
 
       if (rowData.type === 'remove') {
@@ -235,7 +249,7 @@
 
     static tagToRowData(tag) {
       const rowData = {
-        condition: tag.condition,
+        condition: tag.condition
       };
 
       if (tag.name[0] === '-') {
@@ -250,32 +264,38 @@
     }
 
     _dispatchCardContentChangeEvent(mayChangeCardHeight) {
-      document.dispatchEvent(new CustomEvent('loot-plugin-card-content-change', {
-        detail: {
-          pluginId: this.id,
-          mayChangeCardHeight,
-        },
-      }));
+      document.dispatchEvent(
+        new CustomEvent('loot-plugin-card-content-change', {
+          detail: {
+            pluginId: this.id,
+            mayChangeCardHeight
+          }
+        })
+      );
     }
 
     _dispatchCardStylingChangeEvent() {
-      document.dispatchEvent(new CustomEvent('loot-plugin-card-styling-change', {
-        detail: { pluginId: this.id },
-      }));
+      document.dispatchEvent(
+        new CustomEvent('loot-plugin-card-styling-change', {
+          detail: { pluginId: this.id }
+        })
+      );
     }
 
     _dispatchItemContentChangeEvent() {
-      document.dispatchEvent(new CustomEvent('loot-plugin-item-content-change', {
-        detail: {
-          pluginId: this.id,
-          priority: this.priority,
-          globalPriority: this.globalPriority,
-          isEditorOpen: this.isEditorOpen,
-          hasUserEdits: this.hasUserEdits,
-          loadOrderIndex: this.loadOrderIndex,
-          isLightMaster: this.isLightMaster,
-        },
-      }));
+      document.dispatchEvent(
+        new CustomEvent('loot-plugin-item-content-change', {
+          detail: {
+            pluginId: this.id,
+            priority: this.priority,
+            globalPriority: this.globalPriority,
+            isEditorOpen: this.isEditorOpen,
+            hasUserEdits: this.hasUserEdits,
+            loadOrderIndex: this.loadOrderIndex,
+            isLightMaster: this.isLightMaster
+          }
+        })
+      );
     }
 
     get messages() {
@@ -293,7 +313,7 @@
 
       oldTotal = this._messages.length;
 
-      this._messages.forEach((message) => {
+      this._messages.forEach(message => {
         if (message.type === 'warn') {
           oldWarns += 1;
         } else if (message.type === 'error') {
@@ -303,7 +323,7 @@
 
       newTotal = messages.length;
 
-      messages.forEach((message) => {
+      messages.forEach(message => {
         if (message.type === 'warn') {
           newWarns += 1;
         } else if (message.type === 'error') {
@@ -311,21 +331,25 @@
         }
       });
 
-      if (newTotal !== oldTotal
-        || newWarns !== oldWarns
-        || newErrs !== oldErrs
-        || !_.isEqual(this._messages, messages)) {
+      if (
+        newTotal !== oldTotal ||
+        newWarns !== oldWarns ||
+        newErrs !== oldErrs ||
+        !_.isEqual(this._messages, messages)
+      ) {
         this._messages = messages;
 
-        document.dispatchEvent(new CustomEvent('loot-plugin-message-change', {
-          detail: {
-            pluginId: this.id,
-            mayChangeCardHeight: true,
-            totalDiff: newTotal - oldTotal,
-            warningDiff: newWarns - oldWarns,
-            errorDiff: newErrs - oldErrs,
-          },
-        }));
+        document.dispatchEvent(
+          new CustomEvent('loot-plugin-message-change', {
+            detail: {
+              pluginId: this.id,
+              mayChangeCardHeight: true,
+              totalDiff: newTotal - oldTotal,
+              warningDiff: newWarns - oldWarns,
+              errorDiff: newErrs - oldErrs
+            }
+          })
+        );
       }
     }
 
@@ -338,11 +362,13 @@
       if (dirty !== this._isDirty) {
         this._isDirty = dirty;
 
-        document.dispatchEvent(new CustomEvent('loot-plugin-cleaning-data-change', {
-          detail: {
-            isDirty: this.isDirty,
-          },
-        }));
+        document.dispatchEvent(
+          new CustomEvent('loot-plugin-cleaning-data-change', {
+            detail: {
+              isDirty: this.isDirty
+            }
+          })
+        );
       }
     }
 
@@ -354,12 +380,14 @@
       if (cleanedWith !== this._cleanedWith) {
         this._cleanedWith = cleanedWith;
 
-        document.dispatchEvent(new CustomEvent('loot-plugin-cleaning-data-change', {
-          detail: {
-            cleanedWith: this.cleanedWith,
-            pluginId: this.id,
-          },
-        }));
+        document.dispatchEvent(
+          new CustomEvent('loot-plugin-cleaning-data-change', {
+            detail: {
+              cleanedWith: this.cleanedWith,
+              pluginId: this.id
+            }
+          })
+        );
       }
     }
 
@@ -388,7 +416,9 @@
     }
 
     get hasUserEdits() {
-      return this.userlist !== undefined && Object.keys(this.userlist).length > 1;
+      return (
+        this.userlist !== undefined && Object.keys(this.userlist).length > 1
+      );
     }
 
     get userlist() {
@@ -469,18 +499,32 @@
     }
 
     static onMessageChange(evt) {
-      document.getElementById('filterTotalMessageNo').textContent = parseInt(document.getElementById('filterTotalMessageNo').textContent, 10) + evt.detail.totalDiff;
-      document.getElementById('totalMessageNo').textContent = parseInt(document.getElementById('totalMessageNo').textContent, 10) + evt.detail.totalDiff;
-      document.getElementById('totalWarningNo').textContent = parseInt(document.getElementById('totalWarningNo').textContent, 10) + evt.detail.warningDiff;
-      document.getElementById('totalErrorNo').textContent = parseInt(document.getElementById('totalErrorNo').textContent, 10) + evt.detail.errorDiff;
+      document.getElementById('filterTotalMessageNo').textContent =
+        parseInt(
+          document.getElementById('filterTotalMessageNo').textContent,
+          10
+        ) + evt.detail.totalDiff;
+      document.getElementById('totalMessageNo').textContent =
+        parseInt(document.getElementById('totalMessageNo').textContent, 10) +
+        evt.detail.totalDiff;
+      document.getElementById('totalWarningNo').textContent =
+        parseInt(document.getElementById('totalWarningNo').textContent, 10) +
+        evt.detail.warningDiff;
+      document.getElementById('totalErrorNo').textContent =
+        parseInt(document.getElementById('totalErrorNo').textContent, 10) +
+        evt.detail.errorDiff;
     }
 
     static onCleaningDataChange(evt) {
       if (evt.detail.isDirty !== undefined) {
         if (evt.detail.isDirty) {
-          document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1;
+          document.getElementById('dirtyPluginNo').textContent =
+            parseInt(document.getElementById('dirtyPluginNo').textContent, 10) +
+            1;
         } else {
-          document.getElementById('dirtyPluginNo').textContent = parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1;
+          document.getElementById('dirtyPluginNo').textContent =
+            parseInt(document.getElementById('dirtyPluginNo').textContent, 10) -
+            1;
         }
       }
       if (evt.detail.cleanedWith !== undefined) {
@@ -506,10 +550,12 @@
     }
 
     static onItemContentChange(evt) {
-      const item = document.getElementById('cardsNav').querySelector(`[data-id="${evt.detail.pluginId}"]`);
+      const item = document
+        .getElementById('cardsNav')
+        .querySelector(`[data-id="${evt.detail.pluginId}"]`);
       if (item) {
         item.updateContent(evt.detail);
       }
     }
   };
-}));
+});

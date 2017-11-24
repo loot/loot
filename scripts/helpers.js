@@ -1,5 +1,7 @@
 // Helper functions shared across scripts.
+
 'use strict';
+
 const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');
@@ -25,16 +27,16 @@ function getBinaryParentPaths(rootPath) {
   const paths = [
     {
       path: path.join(rootPath, 'build'),
-      label: null,
+      label: null
     },
     {
       path: path.join(rootPath, 'build', '32'),
-      label: '32-bit',
+      label: '32-bit'
     },
     {
       path: path.join(rootPath, 'build', '64'),
-      label: '64-bit',
-    },
+      label: '64-bit'
+    }
   ];
 
   if (os.platform() === 'win32') {
@@ -52,8 +54,8 @@ function getAppReleasePaths(rootPath) {
     file += '.exe';
   }
 
-  return getBinaryParentPaths(rootPath).filter(
-    parentPath => fileExists(path.join(parentPath.path, file))
+  return getBinaryParentPaths(rootPath).filter(parentPath =>
+    fileExists(path.join(parentPath.path, file))
   );
 }
 

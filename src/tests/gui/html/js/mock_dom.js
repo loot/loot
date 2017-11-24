@@ -1,3 +1,5 @@
+'use strict';
+
 /* Mock the DOM interactions */
 window.loot = window.loot || {};
 
@@ -16,5 +18,5 @@ loot.DOM = {
 
   setUIState(state) {
     this.state = state;
-  },
+  }
 };

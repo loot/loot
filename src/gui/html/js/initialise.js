@@ -21,7 +21,9 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
+
 'use strict';
+
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -29,239 +31,369 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.initialise = factory(root.loot.Dialog,
-                                    root.loot.DOM,
-                                    root.loot.Filters,
-                                    root.loot.Game,
-                                    root.loot.handlePromiseError,
-                                    root.loot.translateStaticText,
-                                    root.loot.Plugin,
-                                    root.loot.query,
-                                    root.loot.Translator,
-                                    root.loot.updateExists);
+    root.loot.initialise = factory(
+      root.loot.Dialog,
+      root.loot.DOM,
+      root.loot.Filters,
+      root.loot.Game,
+      root.loot.handlePromiseError,
+      root.loot.translateStaticText,
+      root.loot.Plugin,
+      root.loot.query,
+      root.loot.Translator,
+      root.loot.updateExists
+    );
   }
-}(this, (Dialog,
-         dom,
-         Filters,
-         Game,
-         handlePromiseError,
-         translateStaticText,
-         Plugin,
-         query,
-         Translator,
-         updateExists) => {
-  function setupEventHandlers() {
-    /* Set up handlers for filters. */
-    document.getElementById('hideVersionNumbers').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideCRCs').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideBashTags').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideDoNotCleanMessages').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideInactivePlugins').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideAllPluginMessages').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('hideMessagelessPlugins').addEventListener('change', onSidebarFilterToggle);
-    document.getElementById('contentFilter').addEventListener('change', onContentFilter);
-    document.getElementById('conflictsFilter').addEventListener('value-changed', onConflictsFilter);
-    document.addEventListener('loot-filter-conflicts-deactivate', Filters.onDeactivateConflictsFilter);
+})(
+  this,
+  (
+    Dialog,
+    dom,
+    Filters,
+    Game,
+    handlePromiseError,
+    translateStaticText,
+    Plugin,
+    query,
+    Translator,
+    updateExists
+  ) => {
+    function setupEventHandlers() {
+      /* eslint-disable no-undef */
 
-    /* Set up handlers for buttons. */
-    document.getElementById('redatePluginsButton').addEventListener('click', onRedatePlugins);
-    document.getElementById('openLogButton').addEventListener('click', onOpenLogLocation);
-    document.getElementById('wipeUserlistButton').addEventListener('click', onClearAllMetadata);
-    document.getElementById('copyLoadOrderButton').addEventListener('click', onCopyLoadOrder);
-    document.getElementById('copyContentButton').addEventListener('click', onCopyContent);
-    document.getElementById('refreshContentButton').addEventListener('click', onContentRefresh);
-    document.getElementById('settingsButton').addEventListener('click', dom.onShowSettingsDialog);
-    document.getElementById('helpButton').addEventListener('click', onOpenReadme);
-    document.getElementById('aboutButton').addEventListener('click', dom.onShowAboutDialog);
-    document.getElementById('quitButton').addEventListener('click', onQuit);
-    document.getElementById('gameMenu').addEventListener('iron-select', onChangeGame);
-    document.getElementById('updateMasterlistButton').addEventListener('click', onUpdateMasterlist);
-    document.getElementById('sortButton').addEventListener('click', onSortPlugins);
-    document.getElementById('applySortButton').addEventListener('click', onApplySort);
-    document.getElementById('cancelSortButton').addEventListener('click', onCancelSort);
-    document.getElementById('sidebarTabs').addEventListener('iron-select', dom.onSwitchSidebarTab);
-    document.getElementById('jumpToGeneralInfo').addEventListener('click', dom.onJumpToGeneralInfo);
+      /* Set up handlers for filters. */
+      document
+        .getElementById('hideVersionNumbers')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideCRCs')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideBashTags')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideNotes')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideDoNotCleanMessages')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideInactivePlugins')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideAllPluginMessages')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('hideMessagelessPlugins')
+        .addEventListener('change', onSidebarFilterToggle);
+      document
+        .getElementById('contentFilter')
+        .addEventListener('change', onContentFilter);
+      document
+        .getElementById('conflictsFilter')
+        .addEventListener('value-changed', onConflictsFilter);
+      document.addEventListener(
+        'loot-filter-conflicts-deactivate',
+        Filters.onDeactivateConflictsFilter
+      );
 
-    /* Set up search event handlers. */
-    document.getElementById('showSearch').addEventListener('click', dom.onSearchOpen);
-    document.getElementById('searchBar').addEventListener('loot-search-begin', onSearchBegin);
-    document.getElementById('searchBar').addEventListener('loot-search-change-selection', dom.onSearchChangeSelection, false);
-    document.getElementById('searchBar').addEventListener('loot-search-end', onSearchEnd);
-    window.addEventListener('keyup', dom.onFocusSearch);
+      /* Set up handlers for buttons. */
+      document
+        .getElementById('redatePluginsButton')
+        .addEventListener('click', onRedatePlugins);
+      document
+        .getElementById('openLogButton')
+        .addEventListener('click', onOpenLogLocation);
+      document
+        .getElementById('wipeUserlistButton')
+        .addEventListener('click', onClearAllMetadata);
+      document
+        .getElementById('copyLoadOrderButton')
+        .addEventListener('click', onCopyLoadOrder);
+      document
+        .getElementById('copyContentButton')
+        .addEventListener('click', onCopyContent);
+      document
+        .getElementById('refreshContentButton')
+        .addEventListener('click', onContentRefresh);
+      document
+        .getElementById('settingsButton')
+        .addEventListener('click', dom.onShowSettingsDialog);
+      document
+        .getElementById('helpButton')
+        .addEventListener('click', onOpenReadme);
+      document
+        .getElementById('aboutButton')
+        .addEventListener('click', dom.onShowAboutDialog);
+      document.getElementById('quitButton').addEventListener('click', onQuit);
+      document
+        .getElementById('gameMenu')
+        .addEventListener('iron-select', onChangeGame);
+      document
+        .getElementById('updateMasterlistButton')
+        .addEventListener('click', onUpdateMasterlist);
+      document
+        .getElementById('sortButton')
+        .addEventListener('click', onSortPlugins);
+      document
+        .getElementById('applySortButton')
+        .addEventListener('click', onApplySort);
+      document
+        .getElementById('cancelSortButton')
+        .addEventListener('click', onCancelSort);
+      document
+        .getElementById('sidebarTabs')
+        .addEventListener('iron-select', dom.onSwitchSidebarTab);
+      document
+        .getElementById('jumpToGeneralInfo')
+        .addEventListener('click', dom.onJumpToGeneralInfo);
 
-    /* Set up event handlers for settings dialog. */
-    const settings = document.getElementById('settingsDialog');
-    settings.addEventListener('iron-overlay-closed', onCloseSettingsDialog);
-    settings.querySelector('[dialog-confirm]').addEventListener('tap', onApplySettings);
+      /* Set up search event handlers. */
+      document
+        .getElementById('showSearch')
+        .addEventListener('click', dom.onSearchOpen);
+      document
+        .getElementById('searchBar')
+        .addEventListener('loot-search-begin', onSearchBegin);
+      document
+        .getElementById('searchBar')
+        .addEventListener(
+          'loot-search-change-selection',
+          dom.onSearchChangeSelection,
+          false
+        );
+      document
+        .getElementById('searchBar')
+        .addEventListener('loot-search-end', onSearchEnd);
+      window.addEventListener('keyup', dom.onFocusSearch);
 
-    /* Set up handler for opening and closing editors. */
-    document.body.addEventListener('loot-editor-open', onEditorOpen);
-    document.body.addEventListener('loot-editor-close', onEditorClose);
-    document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
-    document.body.addEventListener('loot-clear-metadata', onClearMetadata);
+      /* Set up event handlers for settings dialog. */
+      const settings = document.getElementById('settingsDialog');
+      settings.addEventListener('iron-overlay-closed', onCloseSettingsDialog);
+      settings
+        .querySelector('[dialog-confirm]')
+        .addEventListener('tap', onApplySettings);
 
-    document.getElementById('cardsNav').addEventListener('click', dom.onSidebarClick);
-    document.getElementById('cardsNav').addEventListener('dblclick', dom.onSidebarClick);
+      /* Set up handler for opening and closing editors. */
+      document.body.addEventListener('loot-editor-open', onEditorOpen);
+      document.body.addEventListener('loot-editor-close', onEditorClose);
+      document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
+      document.body.addEventListener('loot-clear-metadata', onClearMetadata);
 
-    /* Set up handler for plugin data changes. */
-    document.addEventListener('loot-plugin-message-change', Plugin.onMessageChange);
-    document.addEventListener('loot-plugin-message-change', Plugin.onContentChange);
-    document.addEventListener('loot-plugin-cleaning-data-change', Plugin.onCleaningDataChange);
-    document.addEventListener('loot-plugin-card-content-change', Plugin.onContentChange);
-    document.addEventListener('loot-plugin-card-styling-change', Plugin.onCardStylingChange);
-    document.addEventListener('loot-plugin-item-content-change', Plugin.onItemContentChange);
+      /* eslint-enable no-undef */
 
-    /* Set up event handlers for game member variable changes. */
-    document.addEventListener('loot-game-folder-change', onFolderChange);
-    document.addEventListener('loot-game-masterlist-change', Game.onMasterlistChange);
-    document.addEventListener('loot-game-global-messages-change', Game.ongeneralMessagesChange);
-    document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
-  }
+      document
+        .getElementById('cardsNav')
+        .addEventListener('click', dom.onSidebarClick);
+      document
+        .getElementById('cardsNav')
+        .addEventListener('dblclick', dom.onSidebarClick);
 
-  function setVersion(appData) {
-    return query('getVersion').then(JSON.parse).then((version) => {
-      appData.version = version;
-    });
-  }
+      /* Set up handler for plugin data changes. */
+      document.addEventListener(
+        'loot-plugin-message-change',
+        Plugin.onMessageChange
+      );
+      document.addEventListener(
+        'loot-plugin-message-change',
+        Plugin.onContentChange
+      );
+      document.addEventListener(
+        'loot-plugin-cleaning-data-change',
+        Plugin.onCleaningDataChange
+      );
+      document.addEventListener(
+        'loot-plugin-card-content-change',
+        Plugin.onContentChange
+      );
+      document.addEventListener(
+        'loot-plugin-card-styling-change',
+        Plugin.onCardStylingChange
+      );
+      document.addEventListener(
+        'loot-plugin-item-content-change',
+        Plugin.onItemContentChange
+      );
 
-  function setLanguages() {
-    return query('getLanguages')
-      .then(JSON.parse)
-      .then((response) => response.languages)
-      .then(dom.fillLanguagesList);
-  }
-
-  function getInitErrors() {
-    return query('getInitErrors')
-      .then(JSON.parse)
-      .then((response) => {
-        if (response.errors && response.errors.length > 0) {
-          throw new Error(response.errors);
-        }
-      });
-  }
-
-  function getErrorMessages(object) {
-    if (Array.isArray(object)) {
-      return object;
+      /* Set up event handlers for game member variable changes. */
+      document.addEventListener('loot-game-folder-change', onFolderChange); // eslint-disable-line no-undef
+      document.addEventListener(
+        'loot-game-masterlist-change',
+        Game.onMasterlistChange
+      );
+      document.addEventListener(
+        'loot-game-global-messages-change',
+        Game.ongeneralMessagesChange
+      );
+      document.addEventListener(
+        'loot-game-plugins-change',
+        Game.onPluginsChange
+      );
     }
 
-    return [object];
-  }
+    function setVersion(appData) {
+      return query('getVersion')
+        .then(JSON.parse)
+        .then(version => {
+          appData.version = version;
+        });
+    }
 
-  function handleInitErrors(error) {
-    dom.listInitErrors(getErrorMessages(error.message));
-    Dialog.closeProgress();
-    dom.enableGameOperations(false);
-    dom.openDialog('settingsDialog');
-  }
+    function setLanguages() {
+      return query('getLanguages')
+        .then(JSON.parse)
+        .then(response => response.languages)
+        .then(dom.fillLanguagesList);
+    }
 
-  function setGameTypes() {
-    return query('getGameTypes')
-      .then(JSON.parse)
-      .then((response) => response.gameTypes)
-      .then(dom.fillGameTypesList);
-  }
+    function getInitErrors() {
+      return query('getInitErrors')
+        .then(JSON.parse)
+        .then(response => {
+          if (response.errors && response.errors.length > 0) {
+            throw new Error(response.errors);
+          }
+        });
+    }
 
-  function setInstalledGames(appData) {
-    return query('getInstalledGames').then(JSON.parse).then((response) => {
-      appData.installedGames = response.installedGames;
-      dom.updateEnabledGames(response.installedGames);
-    });
-  }
+    function getErrorMessages(object) {
+      if (Array.isArray(object)) {
+        return object;
+      }
 
-  function setSettings(appData) {
-    return query('getSettings').then(JSON.parse).then((result) => {
-      appData.settings = result;
-      dom.updateSettingsDialog(appData.settings);
-      dom.setGameMenuItems(appData.settings.games);
-      dom.updateEnabledGames(appData.installedGames);
-      dom.updateSelectedGame(appData.game.folder);
-    });
-  }
+      return [object];
+    }
 
-  function setGameData(appData) {
-    return query('getGameData').then((result) => {
-      const game = JSON.parse(result, Plugin.fromJson);
-      appData.game = new Game(game, appData.l10n);
+    function handleInitErrors(error) {
+      dom.listInitErrors(getErrorMessages(error.message));
+      Dialog.closeProgress();
+      dom.enableGameOperations(false);
+      dom.openDialog('settingsDialog');
+    }
 
-      appData.game.initialiseUI(dom, appData.Filters);
-      appData.filters.load(appData.settings.filters);
+    function setGameTypes() {
+      return query('getGameTypes')
+        .then(JSON.parse)
+        .then(response => response.gameTypes)
+        .then(dom.fillGameTypesList);
+    }
 
-      /* Initialise the lists before checking if any filters need to be applied.
+    function setInstalledGames(appData) {
+      return query('getInstalledGames')
+        .then(JSON.parse)
+        .then(response => {
+          appData.installedGames = response.installedGames;
+          dom.updateEnabledGames(response.installedGames);
+        });
+    }
+
+    function setSettings(appData) {
+      return query('getSettings')
+        .then(JSON.parse)
+        .then(result => {
+          appData.settings = result;
+          dom.updateSettingsDialog(appData.settings);
+          dom.setGameMenuItems(appData.settings.games);
+          dom.updateEnabledGames(appData.installedGames);
+          dom.updateSelectedGame(appData.game.folder);
+        });
+    }
+
+    function setGameData(appData) {
+      return query('getGameData').then(result => {
+        const game = JSON.parse(result, Plugin.fromJson);
+        appData.game = new Game(game, appData.l10n);
+
+        appData.game.initialiseUI(dom, appData.Filters);
+        appData.filters.load(appData.settings.filters);
+
+        /* Initialise the lists before checking if any filters need to be applied.
          This causes the UI to be initialised faster thanks to scheduling
          behaviour. */
-      dom.initialiseVirtualLists(appData.game.plugins);
-      if (appData.filters.areAnyFiltersActive()) {
-        /* Schedule applying the filters instead of applying them immediately.
+        dom.initialiseVirtualLists(appData.game.plugins);
+        if (appData.filters.areAnyFiltersActive()) {
+          /* Schedule applying the filters instead of applying them immediately.
            This improves the UI initialisation speed, and is quick enough that
            the lists aren't visible pre-filtration. */
-        setTimeout((plugins) => { appData.filters.apply(plugins); }, 0, appData.game.plugins);
-      }
+          setTimeout(
+            plugins => {
+              appData.filters.apply(plugins);
+            },
+            0,
+            appData.game.plugins
+          );
+        }
 
-      Dialog.closeProgress();
-    });
-  }
+        Dialog.closeProgress();
+      });
+    }
 
-  return (loot) => {
-    Dialog.showProgress('Initialising user interface...');
+    return loot => {
+      Dialog.showProgress('Initialising user interface...');
 
-    /* Make sure settings are what I want. */
-    window.marked.setOptions({
-      gfm: true,
-      tables: true,
-      sanitize: true,
-    });
-    setupEventHandlers();
+      /* Make sure settings are what I want. */
+      window.marked.setOptions({
+        gfm: true,
+        tables: true,
+        sanitize: true
+      });
+      setupEventHandlers();
 
-    loot.version = {};
-    loot.settings = {};
-    loot.l10n = new Translator();
-    loot.game = new Game({}, loot.l10n);
-    loot.filters = new Filters(loot.l10n);
-
-    Promise.all([
-      setLanguages(),
-      setGameTypes(),
-      setInstalledGames(loot),
-      setVersion(loot),
-      setSettings(loot),
-    ]).then(() => {
-      /* Translate static text. */
-      loot.l10n = new Translator(loot.settings.language);
-      return loot.l10n.load();
-    }).then(() => {
+      loot.version = {};
+      loot.settings = {};
+      loot.l10n = new Translator();
+      loot.game = new Game({}, loot.l10n);
       loot.filters = new Filters(loot.l10n);
-      translateStaticText(loot.l10n, loot.version);
-      /* Also need to update the settings UI. */
-      dom.updateSettingsDialog(loot.settings);
-      dom.setGameMenuItems(loot.settings.games);
-      dom.updateEnabledGames(loot.installedGames);
-      dom.updateSelectedGame(loot.game.folder);
-    })
-    .catch(handlePromiseError)
-    .then(getInitErrors)
-    .then(() => setGameData(loot))
-    .catch(handleInitErrors)
-    .then(() => {
-      if (loot.settings.lastVersion !== loot.version.release) {
-        dom.openDialog('firstRun');
-      }
-    })
-    .then(() => loot.query('getVersion'))
-    .then(JSON.parse)
-    .then((version) => updateExists(version.release, version.build))
-    .then((isUpdateAvailable) => {
-      if (!isUpdateAvailable) {
-        return;
-      }
 
-      dom.appendGeneralMessages([{
-        type: 'warn',
-        content: loot.l10n.translateFormatted('A [new release](%s) of LOOT is available.', 'https://github.com/loot/loot/releases/latest'),
-      }]);
-    })
-    .catch(handlePromiseError);
-  };
-}));
+      Promise.all([
+        setLanguages(),
+        setGameTypes(),
+        setInstalledGames(loot),
+        setVersion(loot),
+        setSettings(loot)
+      ])
+        .then(() => {
+          /* Translate static text. */
+          loot.l10n = new Translator(loot.settings.language);
+          return loot.l10n.load();
+        })
+        .then(() => {
+          loot.filters = new Filters(loot.l10n);
+          translateStaticText(loot.l10n, loot.version);
+          /* Also need to update the settings UI. */
+          dom.updateSettingsDialog(loot.settings);
+          dom.setGameMenuItems(loot.settings.games);
+          dom.updateEnabledGames(loot.installedGames);
+          dom.updateSelectedGame(loot.game.folder);
+        })
+        .catch(handlePromiseError)
+        .then(getInitErrors)
+        .then(() => setGameData(loot))
+        .catch(handleInitErrors)
+        .then(() => {
+          if (loot.settings.lastVersion !== loot.version.release) {
+            dom.openDialog('firstRun');
+          }
+        })
+        .then(() => loot.query('getVersion'))
+        .then(JSON.parse)
+        .then(version => updateExists(version.release, version.build))
+        .then(isUpdateAvailable => {
+          if (!isUpdateAvailable) {
+            return;
+          }
+
+          dom.appendGeneralMessages([
+            {
+              type: 'warn',
+              content: loot.l10n.translateFormatted(
+                'A [new release](%s) of LOOT is available.',
+                'https://github.com/loot/loot/releases/latest'
+              )
+            }
+          ]);
+        })
+        .catch(handlePromiseError);
+    };
+  }
+);

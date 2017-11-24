@@ -2,7 +2,9 @@
 // Archive packaging script. Takes one argument, which is the path to the
 // repository's root. Requires 7-zip and Git to be installed, and Git to be
 // available on the system path.
+
 'use strict';
+
 const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs-extra');
@@ -10,17 +12,17 @@ const os = require('os');
 const helpers = require('./helpers');
 
 function getGitDescription() {
-  const describe = String(helpers.safeExecFileSync('git', [
-    'describe',
-    '--tags',
-    '--long',
-    '--abbrev=7',
-  ])).slice(0, -1);
-  let branch = String(helpers.safeExecFileSync('git', [
-    'rev-parse',
-    '--abbrev-ref',
-    'HEAD',
-  ])).slice(0, -1);
+  const describe = String(
+    helpers.safeExecFileSync('git', [
+      'describe',
+      '--tags',
+      '--long',
+      '--abbrev=7'
+    ])
+  ).slice(0, -1);
+  let branch = String(
+    helpers.safeExecFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
+  ).slice(0, -1);
 
   /* On AppVeyor and Travis CI, a specific commit is checked out, so the branch
      is HEAD. Use their stored branch value instead. */
@@ -48,7 +50,7 @@ function getLanguageFolders() {
     'da',
     'ko',
     'sv',
-    'ja',
+    'ja'
   ];
 }
 
@@ -68,18 +70,17 @@ function compress(sourcePath, destPath) {
 
     // The last argument must have a leading dot for the subdirectory not to
     // be present in the archive, but path.join removes it, so it's prefixed.
-    return helpers.safeExecFileSync(sevenzipPath, [
-      'a',
-      '-r',
-      filename,
-      rootFolder,
-    ], {
-      cwd: workingDirectory,
-    });
+    return helpers.safeExecFileSync(
+      sevenzipPath,
+      ['a', '-r', filename, rootFolder],
+      {
+        cwd: workingDirectory
+      }
+    );
   }
 
   return childProcess.execSync(`tar -cJf ${filename} ${rootFolder}`, {
-    cwd: workingDirectory,
+    cwd: workingDirectory
   });
 }
 
@@ -104,7 +105,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       'cef_100_percent.pak',
       'cef_200_percent.pak',
       'devtools_resources.pak',
-      'icudtl.dat',
+      'icudtl.dat'
     ];
   } else {
     binaries = [
@@ -118,14 +119,11 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       'cef_100_percent.pak',
       'cef_200_percent.pak',
       'devtools_resources.pak',
-      'icudtl.dat',
+      'icudtl.dat'
     ];
   }
-  binaries.forEach((file) => {
-    fs.copySync(
-      path.join(releasePath, file),
-      path.join(tempPath, file)
-    );
+  binaries.forEach(file => {
+    fs.copySync(path.join(releasePath, file), path.join(tempPath, file));
   });
 
   // CEF locale file.
@@ -136,8 +134,10 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   );
 
   // Translation files.
-  getLanguageFolders().forEach((lang) => {
-    fs.mkdirsSync(path.join(tempPath, 'resources', 'l10n', lang, 'LC_MESSAGES'));
+  getLanguageFolders().forEach(lang => {
+    fs.mkdirsSync(
+      path.join(tempPath, 'resources', 'l10n', lang, 'LC_MESSAGES')
+    );
     fs.copySync(
       path.join(rootPath, 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo'),
       path.join(tempPath, 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo')
@@ -179,18 +179,16 @@ function getArchiveFileExtension() {
   return '.tar.xz';
 }
 
-let rootPath = '.';
-if (process.argv.length > 2) {
-  rootPath = process.argv[2];
-}
-
+const [, , rootPath = '.'] = process.argv;
 const gitDesc = getGitDescription();
 const fileExtension = getArchiveFileExtension();
 
 helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
   const filename = `loot_${getFilenameSuffix(releasePath.label, gitDesc)}`;
-  createAppArchive(rootPath,
-                   releasePath.path,
-                   path.join(rootPath, 'build', filename),
-                   path.join(rootPath, 'build', filename + fileExtension));
+  createAppArchive(
+    rootPath,
+    releasePath.path,
+    path.join(rootPath, 'build', filename),
+    path.join(rootPath, 'build', filename + fileExtension)
+  );
 });

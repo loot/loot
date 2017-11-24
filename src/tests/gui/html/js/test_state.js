@@ -129,7 +129,9 @@ describe('State', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      should.throw(() => { state.enterSortingState(); }, Error);
+      should.throw(() => {
+        state.enterSortingState();
+      }, Error);
     });
 
     it('should have no effect if already in the sorting state', () => {
@@ -170,7 +172,9 @@ describe('State', () => {
       const state = new loot.State();
       state.enterEditingState();
 
-      should.throw(() => { state.exitSortingState(); }, Error);
+      should.throw(() => {
+        state.exitSortingState();
+      }, Error);
     });
 
     it('should have no effect if already in the default state', () => {
@@ -210,7 +214,9 @@ describe('State', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      should.throw(() => { state.enterEditingState(); }, Error);
+      should.throw(() => {
+        state.enterEditingState();
+      }, Error);
     });
 
     it('should have no effect if already in the editing state', () => {
@@ -253,7 +259,9 @@ describe('State', () => {
       const state = new loot.State();
       state.enterSortingState();
 
-      should.throw(() => { state.exitEditingState(); }, Error);
+      should.throw(() => {
+        state.exitEditingState();
+      }, Error);
     });
 
     it('should have no effect if already in the default state', () => {

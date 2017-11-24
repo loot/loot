@@ -72,7 +72,7 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 
 ## Code Style
 
-LOOT's JavaScript uses a slightly tweaked version of the Airbnb style, and can be automatically linted by ESLint, so isn't covered here.
+LOOT's JavaScript code style is codified by the included ESLint configuration, which is based off the Airbnb and Prettier rules.
 
 ### C++ Code Style
 

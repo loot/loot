@@ -2,7 +2,9 @@
 
 describe('query()', () => {
   it('should throw if no arguments are passed', () => {
-    (() => { loot.query(); }).should.throw();
+    (() => {
+      loot.query();
+    }).should.throw();
   });
 
   it('should return a promise', () => {
@@ -10,20 +12,13 @@ describe('query()', () => {
   });
 
   it('should succeed if a request name is passed', () =>
-    loot.query('discardUnappliedChanges').then((result) =>
-      result.should.be.empty
-    )
-  );
+    loot
+      .query('discardUnappliedChanges')
+      .then(result => result.should.be.empty));
 
   it('should succeed if a request name and arguments are passed', () =>
-    loot.query('copyContent', 'foo').then((result) =>
-      result.should.be.empty
-    )
-  );
+    loot.query('copyContent', 'foo').then(result => result.should.be.empty));
 
   it('should fail with an Error object when an error occurs', () =>
-    loot.query('copyContent').catch((error) =>
-      error.should.be.an('error')
-    )
-  );
+    loot.query('copyContent').catch(error => error.should.be.an('error')));
 });

@@ -1,3 +1,5 @@
+'use strict';
+
 const helpers = require('./helpers');
 const fs = require('fs-extra');
 const path = require('path');
@@ -14,17 +16,17 @@ const sizes = [16, 20, 24, 30, 32, 36, 40, 48, 60, 64, 72, 80, 96, 128, 256];
 fs.mkdirsSync(buildDirectory);
 
 const convertArgs = [];
-sizes.forEach((size) => {
+sizes.forEach(size => {
   const pngFile = path.join(buildDirectory, `icon-${size}.png`);
   convertArgs.push(pngFile);
 
   helpers.safeExecFileSync('convert', [
     '-density',
-    (size / svgSize) * svgDPI,
+    size / svgSize * svgDPI,
     '-background',
     'none',
     svgPath,
-    pngFile,
+    pngFile
   ]);
 });
 

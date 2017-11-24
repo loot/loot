@@ -1,10 +1,19 @@
+/* eslint-disable no-console */
+
+'use strict';
+
 const helpers = require('./scripts/helpers');
 const path = require('path');
 
-process.env.CHROME_BIN = path.join(helpers.getAppReleasePaths('.')[0].path, 'LOOT');
-console.log(`Running tests using browser executable at ${process.env.CHROME_BIN}`);
+process.env.CHROME_BIN = path.join(
+  helpers.getAppReleasePaths('.')[0].path,
+  'LOOT'
+);
+console.log(
+  `Running tests using browser executable at ${process.env.CHROME_BIN}`
+);
 
-module.exports = (config) => {
+module.exports = config => {
   config.set({
     basePath: '',
     frameworks: ['mocha', 'chai'],
@@ -20,7 +29,7 @@ module.exports = (config) => {
       'src/gui/html/js/state.js',
       'src/gui/html/js/translator.js',
       'src/gui/html/js/updateExists.js',
-      'src/tests/gui/html/js/*.js',
+      'src/tests/gui/html/js/*.js'
     ],
     exclude: [],
     preprocessors: {},
@@ -30,6 +39,6 @@ module.exports = (config) => {
     logLevel: config.LOG_INFO,
     autoWatch: false,
     browsers: ['Chrome'],
-    singleRun: true,
+    singleRun: true
   });
 };

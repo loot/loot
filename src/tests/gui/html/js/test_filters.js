@@ -1,12 +1,16 @@
+/* eslint-disable no-unused-expressions */
+
 'use strict';
 
-/* eslint-disable no-unused-expressions */
 describe('Filters', () => {
   /* Mock the Translator class. */
+
   class Translator {
-    translate(text) {  // eslint-disable-line class-methods-use-this
+    /* eslint-disable class-methods-use-this */
+    translate(text) {
       return text;
     }
+    /* eslint-enable class-methods-use-this */
   }
 
   let l10n;
@@ -17,15 +21,21 @@ describe('Filters', () => {
 
   describe('#constructor()', () => {
     it('should throw if no parameter is passed', () => {
-      (() => { new loot.Filters(); }).should.throw(); // eslint-disable-line no-new
+      (() => {
+        new loot.Filters(); // eslint-disable-line no-new
+      }).should.throw();
     });
 
     it('should throw if an empty object is passed', () => {
-      (() => { new loot.Filters({}); }).should.throw(); // eslint-disable-line no-new
+      (() => {
+        new loot.Filters({}); // eslint-disable-line no-new
+      }).should.throw();
     });
 
     it('should not throw if a valid Translator object is passed', () => {
-      (() => { new loot.Filters(l10n); }).should.not.throw(); // eslint-disable-line no-new
+      (() => {
+        new loot.Filters(l10n); // eslint-disable-line no-new
+      }).should.not.throw();
     });
 
     it('should initialise filters as not enabled', () => {
@@ -69,9 +79,11 @@ describe('Filters', () => {
         return this._messages;
       }
 
-      containsText(text) {  // eslint-disable-line class-methods-use-this
+      /* eslint-disable class-methods-use-this */
+      containsText(text) {
         return text === 'found text';
       }
+      /* eslint-enable class-methods-use-this */
     }
 
     /* Mock the Plugin class */
@@ -131,10 +143,7 @@ describe('Filters', () => {
     });
 
     it('should return true if conflicting plugins filter is enabled and plugin name is in the conflicting plugins array', () => {
-      filters.conflictingPluginNames = [
-        'conflicting plugin',
-        plugin.name,
-      ];
+      filters.conflictingPluginNames = ['conflicting plugin', plugin.name];
       filters.pluginFilter(plugin).should.be.true;
     });
 
@@ -158,11 +167,11 @@ describe('Filters', () => {
       filters = new loot.Filters(l10n);
       note = {
         type: 'say',
-        text: 'test message',
+        text: 'test message'
       };
       doNotCleanMessage = {
         type: 'warn',
-        text: 'do not clean',
+        text: 'do not clean'
       };
     });
 
@@ -214,7 +223,10 @@ describe('Filters', () => {
     });
 
     afterEach(() => {
-      document.removeEventListener('loot-filter-conflicts-deactivate', handleEvent);
+      document.removeEventListener(
+        'loot-filter-conflicts-deactivate',
+        handleEvent
+      );
     });
 
     it('should return false if the conflicts filter was not active', () => {
@@ -234,12 +246,15 @@ describe('Filters', () => {
       filters.conflictingPluginNames.should.have.length(0);
     });
 
-    it('should fire an event', (done) => {
+    it('should fire an event', done => {
       handleEvent = () => {
         done();
       };
 
-      document.addEventListener('loot-filter-conflicts-deactivate', handleEvent);
+      document.addEventListener(
+        'loot-filter-conflicts-deactivate',
+        handleEvent
+      );
 
       filters.deactivateConflictsFilter();
     });
@@ -253,7 +268,7 @@ describe('Filters', () => {
     });
 
     it('should return a promise that resolves to an empty array if the argument is falsy', () => {
-      filters.activateConflictsFilter().then((result) => {
+      filters.activateConflictsFilter().then(result => {
         result.should.be.an('array');
         return result.should.be.empty;
       });

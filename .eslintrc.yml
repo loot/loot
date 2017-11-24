@@ -1,3 +1,7 @@
+parserOptions:
+  ecmaVersion: 7
+  sourceType: script
+
 env:
   es6: true
   mocha: true
@@ -12,20 +16,17 @@ globals:
 extends:
   - "eslint:recommended"
   - "airbnb-base"
+  - "prettier"
 
 rules:
-  strict: off
+  prettier/prettier: error
   no-param-reassign:
     - error
     - props: false
-  max-len: warn
-  linebreak-style: off
   no-underscore-dangle: off
-  arrow-parens: off
-  no-undef: warn
-  no-mixed-operators:
-    - error
-    - allowSamePrecedence: true
+  curly: [error, all]
+  no-confusing-arrow: error
 
 plugins:
-  - eslint-plugin-html
+  - html
+  - prettier
