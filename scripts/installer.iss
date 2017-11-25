@@ -193,7 +193,7 @@ es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
 ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 
 [Code]
-// Set LOOT's language in settings.yaml
+// Set LOOT's language in settings.toml
 procedure SetLootLanguage();
 var
   LanguageLine: String;
@@ -202,11 +202,11 @@ var
   Lines: TArrayOfString;
   I: Integer;
 begin
-  LanguageLine := 'language: ' + ActiveLanguage;
-  File := ExpandConstant('{localappdata}\{#MyAppName}\settings.yaml');
+  LanguageLine := 'language = "' + ActiveLanguage + '"';
+  File := ExpandConstant('{localappdata}\{#MyAppName}\settings.toml');
 
   if FileExists(File) then begin
-    SearchLineStart := 'language:';
+    SearchLineStart := 'language = ';
 
     if LoadStringsFromFile(File, Lines) = True then begin
       for I := 0 to GetArrayLength(Lines) - 1 do begin
