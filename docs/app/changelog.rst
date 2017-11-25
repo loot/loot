@@ -29,6 +29,9 @@ Added
 Changed
 -------
 
+- LOOT now stores its settings in a ``settings.toml`` file instead of a
+  ``settings.yaml`` file. It cannot upgrade from the latter to the former
+  itself, but a converter is available `online`_.
 - "Copy Load Order" now includes a third column for the index of light masters
   relative to other light masters.
 - Updated the UI to use Polymer v2 and updated LOOT's custom elements to use the
@@ -38,10 +41,12 @@ Changed
 - Updated the Chinese translation.
 - Updated the Danish translation.
 - Updated the Russian translation.
-- Updated the LOOT API to v0.12.0.
+- Updated the LOOT API to v0.12.1.
 - Updated Lodash to b4.17.4.
 - Updated Octokat to v0.8.0.
 - Updated CEF to v3.3163.1671.g700dc25.
+
+.. _online: https://loot.github.io/convert-settings/
 
 Fixed
 -----
@@ -54,6 +59,8 @@ Fixed
 - LOOT window size/position not restoring maximised state correctly.
 - "Cannot read property of 'text' of undefined" error messages when something
   went wrong.
+- The "new version available" message is no longer displayed for snapshot builds
+  built from code newer than the latest release.
 - Significant fixes in the LOOT API:
 
   - A crash would occur when loading an plugin that had invalid data past its
