@@ -49,9 +49,9 @@ A few items in the main menu are not self-explanatory:
 - "Redate Plugins" is provided so that Skyrim and Skyrim Special Edition modders may set the load order for the Creation Kit. It is only available for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
 - "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard. The columns are:
 
-  1. Hexadecimal load order index
-  2. Decimal load order index
-  3. Decimal light master index
+  1. Decimal load order index
+  2. Hexadecimal load order index
+  3. Hexadecimal light master index
   4. Plugin name
 
 - "Copy Content" copies the data displayed in LOOT's cards to the clipboard as YAML-formatted text.

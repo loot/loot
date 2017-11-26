@@ -60,14 +60,15 @@ private:
         state_.getCurrentGame().GetPlugin(plugin)->IsLightMaster();
 
     if (isActive && isLightMaster) {
-      stream << "254 FE " << std::setw(4) << counters.activeLightMasters << " ";
+      stream << "254 FE " << std::setw(3) << std::hex
+        << counters.activeLightMasters << std::dec << " ";
       counters.activeLightMasters += 1;
     } else if (isActive) {
       stream << std::setw(3) << counters.activeNormal << " " << std::hex
-             << std::setw(2) << counters.activeNormal << std::dec << "      ";
+             << std::setw(2) << counters.activeNormal << std::dec << "     ";
       counters.activeNormal += 1;
     } else {
-      stream << "            ";
+      stream << "           ";
     }
 
     stream << plugin << "\r\n";
