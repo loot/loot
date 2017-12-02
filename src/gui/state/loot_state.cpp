@@ -60,7 +60,6 @@ namespace fs = boost::filesystem;
 
 namespace loot {
 void apiLogCallback(LogLevel level, const char* message) {
-#ifdef _WIN32
   switch (level) {
     case LogLevel::trace:
       BOOST_LOG_TRIVIAL(trace) << message;
@@ -84,7 +83,6 @@ void apiLogCallback(LogLevel level, const char* message) {
       BOOST_LOG_TRIVIAL(trace) << message;
       break;
   }
-#endif
 }
 
 LootState::LootState() :
