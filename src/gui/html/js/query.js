@@ -27,7 +27,9 @@
       request.filter = payload;
     } else if (payload.messages) {
       request.content = payload;
-    } else if (payload.enableDebugLogging) {
+    } else if (
+      Object.prototype.hasOwnProperty.call(payload, 'enableDebugLogging')
+    ) {
       request.settings = payload;
     } else if (payload.metadata) {
       request.editorState = payload;
