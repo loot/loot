@@ -4,7 +4,17 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.12.0 - Unreleased
+0.12.1 - 2017-12-03
+===================
+
+Fixed
+-----
+
+- Settings would not save correctly with debug logging disabled.
+- LOOT API logging was disabled on Linux.
+- Typos in the v0.12.0 changelog.
+
+0.12.0 - 2017-12-02
 ===================
 
 Added
@@ -15,7 +25,7 @@ Added
   - Light masters are indicated by a new icon on their plugin cards, and the
     "Master File" icon is suppressed for light masters.
   - In the sidebar, light masters all have the in-game load order index ``FE``,
-    followed by the decimal index of the light master relative to only other
+    followed by the hexadecimal index of the light master relative to only other
     light masters.
   - A new general warning message will be displayed when 255 normal plugins and
     at least one light master are active.
