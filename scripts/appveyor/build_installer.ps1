@@ -13,7 +13,7 @@ $innoInstallPath = 'C:\Program Files (x86)\Inno Setup 5'
 $url = 'https://bitbucket.org/mitrich_k/inno-download-plugin/downloads/idpsetup-1.5.1.exe'
 (New-Object System.Net.WebClient).DownloadFile($url, (pwd).path + '/idpsetup-1.5.1.exe')
 
-./idpsetup-1.5.1.exe /verysilent
+Start-Process ./idpsetup-1.5.1.exe /verysilent -Wait
 if (!$?) {
   throw 'Failed to install the Inno Download Plugin'
 }
