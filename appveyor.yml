@@ -77,12 +77,7 @@ deploy:
     tag: $(APPVEYOR_REPO_TAG_NAME)
     release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
     description: |
-      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives.
-
-      ## Change Logs
-      - [Application](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html)
-
-      *Note: The files below with `tar.xz` extensions contain Linux binaries. They won't work on Windows computers.*
+      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html).
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
     artifact: LOOT,installer
