@@ -18,7 +18,7 @@ environment:
 
 install:
   - ps: Install-Product node LTS
-  - choco install -y InnoSetup imagemagick.tool
+  - choco install -y imagemagick.tool
   - python -m pip install sphinx sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
