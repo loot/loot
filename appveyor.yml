@@ -7,8 +7,6 @@ configuration: Release
 cache:
   - node_modules
   - bower_components
-  - C:\projects\boost_1_65_1\boost
-  - C:\projects\boost_1_65_1\stage\32\lib
 
 environment:
   github_auth_token:
@@ -22,9 +20,7 @@ install:
   - python -m pip install sphinx sphinx_rtd_theme
   - npm install
   - .\node_modules\.bin\bower install
-  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.1.0/install_boost.py', "$env:APPVEYOR_BUILD_FOLDER\install_boost.py")
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.2.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
-  - ps: python $env:APPVEYOR_BUILD_FOLDER\install_boost.py -d C:\projects -b 1.65.1 -a 32 atomic chrono date_time filesystem locale log system thread
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/master/install_protobuf.py', "$env:APPVEYOR_BUILD_FOLDER\install_protobuf.py")
   - ps: python $env:APPVEYOR_BUILD_FOLDER\install_protobuf.py --target-version 3.4.1 --output-directory C:\projects\protobuf
 
@@ -34,7 +30,7 @@ before_build:
   - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
   - node scripts\create_ico.js
   - cd build
-  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:/projects/boost_1_65_1" -DBOOST_LIBRARYDIR="C:/projects/boost_1_65_1/stage/32/lib" -DPROTOBUF_ROOT="C:/projects/protobuf" -DMSVC_STATIC_RUNTIME=ON
+  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\Libraries\boost_1_63_0" -DBOOST_LIBRARYDIR="C:\Libraries\boost_1_63_0\lib32-msvc-14.0" -DPROTOBUF_ROOT="C:/projects/protobuf" -DMSVC_STATIC_RUNTIME=ON
 
 build:
   verbosity: minimal
