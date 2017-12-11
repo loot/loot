@@ -25,7 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
-#include <google/protobuf/util/json_util.h>
 #include <include/wrapper/cef_message_router.h>
 #include <boost/locale.hpp>
 #include <boost/log/trivial.hpp>
@@ -55,15 +54,6 @@ protected:
     BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
     frame->ExecuteJavaScript(
         "loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
-  }
-
-  static std::string toJson(const google::protobuf::Message& message) {
-    google::protobuf::util::JsonPrintOptions options;
-    options.always_print_primitive_fields = true;
-    std::string json;
-    google::protobuf::util::MessageToJsonString(message, &json, options);
-
-    return json;
   }
 
 private:

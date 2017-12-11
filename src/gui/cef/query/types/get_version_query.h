@@ -25,11 +25,12 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_VERSION_QUERY
 #define LOOT_GUI_QUERY_GET_VERSION_QUERY
 
-#undef ERROR
+#undef min
+
+#include <json.hpp>
 
 #include "gui/cef/query/query.h"
 #include "gui/version.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class GetVersionQuery : public Query {
@@ -37,11 +38,12 @@ public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
 
-    protobuf::Version response;
-    response.set_release(gui::Version::string());
-    response.set_build(gui::Version::revision);
+    nlohmann::json json = {
+      { "release", gui::Version::string() },
+      { "build", gui::Version::revision },
+    };
 
-    return toJson(response);
+    return json.dump();
   }
 };
 }

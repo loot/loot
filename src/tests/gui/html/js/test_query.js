@@ -17,7 +17,9 @@ describe('query()', () => {
       .then(result => result.should.be.empty));
 
   it('should succeed if a request name and arguments are passed', () =>
-    loot.query('copyContent', 'foo').then(result => result.should.be.empty));
+    loot
+      .query('copyContent', { messages: {} })
+      .then(result => result.should.be.empty));
 
   it('should fail with an Error object when an error occurs', () =>
     loot.query('copyContent').catch(error => error.should.be.an('error')));

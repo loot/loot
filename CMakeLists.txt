@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8.12.1)
+cmake_minimum_required (VERSION 3.6)
 cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 include(ExternalProject)
@@ -51,13 +51,6 @@ ENDIF ()
 
 find_package(Boost REQUIRED COMPONENTS atomic log log_setup locale thread date_time chrono filesystem system)
 
-if (NOT PROTOBUF_ROOT STREQUAL "")
-    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PROTOBUF_ROOT})
-    get_filename_component(Protobuf_PROTOC_EXECUTABLE "${PROTOBUF_ROOT}/bin/protoc" ABSOLUTE)
-endif ()
-
-find_package(Protobuf REQUIRED)
-
 ExternalProject_Add(GTest
                     PREFIX "external"
                     URL "https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
@@ -72,6 +65,15 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
 else()
     set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.12.1/loot-api.tar.xz")
 endif()
+
+ExternalProject_Add(json
+                    PREFIX "external"
+                    URL "https://github.com/nlohmann/json/releases/download/v2.1.1/json.hpp"
+                    DOWNLOAD_NO_EXTRACT 1
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+set(JSON_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/external/src")
 
 ExternalProject_Add(loot_api
                     PREFIX "external"
@@ -150,13 +152,6 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 # General Settings
 ##############################
 
-set(LOOT_SCHEMA_DIR "${CMAKE_SOURCE_DIR}/src/schema")
-
-set(LOOT_SCHEMA ${LOOT_SCHEMA_DIR}/metadata.proto
-                ${LOOT_SCHEMA_DIR}/query.proto
-                ${LOOT_SCHEMA_DIR}/request.proto
-                ${LOOT_SCHEMA_DIR}/response.proto)
-
 set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -170,11 +165,7 @@ set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
-                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc"
-                  "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
-                  "${LOOT_SCHEMA_DIR}/query.pb.cc"
-                  "${LOOT_SCHEMA_DIR}/request.pb.cc"
-                  "${LOOT_SCHEMA_DIR}/response.pb.cc")
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
 
 set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_handler.h"
@@ -182,7 +173,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_scheme_handler_factory.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/window_delegate.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/derived_plugin_metadata.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/cef/query/protobuf.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/cef/query/json.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/apply_sort_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/cancel_find_query.h"
@@ -221,11 +212,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/version.h"
-                  "${LOOT_SCHEMA_DIR}/metadata.pb.h"
-                  "${LOOT_SCHEMA_DIR}/query.pb.h"
-                  "${LOOT_SCHEMA_DIR}/request.pb.h"
-                  "${LOOT_SCHEMA_DIR}/response.pb.h")
+                  "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
 set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
@@ -260,10 +247,10 @@ source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_SRC})
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${CPPTOML_INCLUDE_DIRS}
                      ${CEF_INCLUDE_DIRS}
+                     ${JSON_INCLUDE_DIRS}
                      ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
-                     ${Protobuf_INCLUDE_DIRS}
                      ${SPDLOG_INCLUDE_DIRS})
 
 ##############################
@@ -312,23 +299,10 @@ ENDIF ()
 # Define Targets
 ##############################
 
-add_custom_command(
-    OUTPUT "${LOOT_SCHEMA_DIR}/metadata.pb.cc"
-           "${LOOT_SCHEMA_DIR}/metadata.pb.h"
-           "${LOOT_SCHEMA_DIR}/query.pb.cc"
-           "${LOOT_SCHEMA_DIR}/query.pb.h"
-           "${LOOT_SCHEMA_DIR}/request.pb.cc"
-           "${LOOT_SCHEMA_DIR}/request.pb.h"
-           "${LOOT_SCHEMA_DIR}/response.pb.cc"
-           "${LOOT_SCHEMA_DIR}/response.pb.h"
-    COMMAND ${Protobuf_PROTOC_EXECUTABLE} -I=${LOOT_SCHEMA_DIR} --cpp_out=${LOOT_SCHEMA_DIR} ${LOOT_SCHEMA}
-    DEPENDS ${LOOT_SCHEMA}
-)
-
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies     (LOOT cef cpptoml loot_api)
-target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${Protobuf_LIBRARIES})
+add_dependencies     (LOOT cef cpptoml json loot_api)
+target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})

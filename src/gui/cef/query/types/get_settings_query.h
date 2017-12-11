@@ -25,11 +25,12 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_SETTINGS_QUERY
 #define LOOT_GUI_QUERY_GET_SETTINGS_QUERY
 
-#undef ERROR
+#undef min
+
+#include <json.hpp>
 
 #include "gui/cef/query/query.h"
 #include "gui/state/loot_settings.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class GetSettingsQuery : public Query {
@@ -39,29 +40,17 @@ public:
   std::string executeLogic() {
     BOOST_LOG_TRIVIAL(info) << "Getting LOOT settings.";
 
-    protobuf::LootSettings response;
-    response.set_game(settings_.getGame());
-    response.set_last_version(settings_.getLastVersion());
-    response.set_language(settings_.getLanguage());
-    response.set_enable_debug_logging(settings_.isDebugLoggingEnabled());
-    response.set_update_masterlist(settings_.updateMasterlist());
+    nlohmann::json json = {
+      { "game", settings_.getGame() },
+      { "lastVersion", settings_.getLastVersion() },
+      { "language", settings_.getLanguage() },
+      { "enableDebugLogging", settings_.isDebugLoggingEnabled() },
+      { "updateMasterlist", settings_.updateMasterlist() },
+      { "games", settings_.getGameSettings() },
+      { "filters", settings_.getFilters() },
+    };
 
-    for (const auto& game : settings_.getGameSettings()) {
-      auto pbGame = response.add_games();
-      pbGame->set_type(GameSettings(game.Type()).FolderName());
-      pbGame->set_name(game.Name());
-      pbGame->set_master(game.Master());
-      pbGame->set_registry(game.RegistryKey());
-      pbGame->set_folder(game.FolderName());
-      pbGame->set_repo(game.RepoURL());
-      pbGame->set_branch(game.RepoBranch());
-      pbGame->set_path(game.GamePath().string());
-    }
-
-    auto filters = settings_.getFilters();
-    response.mutable_filters()->insert(filters.cbegin(), filters.cend());
-
-    return toJson(response);
+    return json.dump();
   }
 
 private:

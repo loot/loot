@@ -28,7 +28,6 @@ cache:
     - $TRAVIS_BUILD_DIR/bower_components
     - $HOME/boost_1_65_1/boost
     - $HOME/boost_1_65_1/stage/lib
-    - $HOME/protobuf
 
 install:
   # Use GCC 5.
@@ -50,9 +49,6 @@ install:
   - pip install --user sphinx sphinx_rtd_theme
   # Add sphinx-build to PATH
   - export PATH="$HOME/.local/bin:$PATH"
-  # Install Protocol Buffers
-  - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/master/install_protobuf.py
-  - python install_protobuf.py --target-version 3.4.1 --output-directory $HOME/protobuf
   # Get CMake (version available in repositories is too old, needs to be 3.1+)
   - wget --no-check-certificate https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz
@@ -64,7 +60,7 @@ before_script:
   # Move into the cloned LOOT repo build path.
   - cd build
   # Link dynamically to the C++ standard library runtime.
-  - cmake .. -DBOOST_ROOT=~/boost_1_65_1 -DPROTOBUF_ROOT=~/protobuf
+  - cmake .. -DBOOST_ROOT=~/boost_1_65_1
 
 script:
   - make all

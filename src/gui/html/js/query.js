@@ -22,7 +22,7 @@
         plugins: payload
       };
     } else if (_.isString(payload)) {
-      request.target_name = payload;
+      request.targetName = payload;
     } else if (payload.name) {
       request.filter = payload;
     } else if (payload.messages) {

@@ -25,17 +25,16 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_COPY_CONTENT_QUERY
 #define LOOT_GUI_QUERY_COPY_CONTENT_QUERY
 
-#include <google/protobuf/util/json_util.h>
+#undef min
 
-#undef ERROR
+#include <json.hpp>
 
 #include "gui/cef/query/types/clipboard_query.h"
-#include "schema/request.pb.h"
 
 namespace loot {
 class CopyContentQuery : public ClipboardQuery {
 public:
-  CopyContentQuery(protobuf::Content content) : content_(content) {}
+  CopyContentQuery(const nlohmann::json& content) : content_(content) {}
 
   std::string executeLogic() {
     const std::string text =
@@ -47,16 +46,10 @@ public:
 
 private:
   std::string getContentAsText() const {
-    google::protobuf::util::JsonPrintOptions options;
-    options.add_whitespace = true;
-    options.always_print_primitive_fields = true;
-    std::string text;
-    google::protobuf::util::MessageToJsonString(content_, &text, options);
-
-    return text;
+    return content_.dump(4);
   }
 
-  const protobuf::Content content_;
+  const nlohmann::json content_;
 };
 }
 

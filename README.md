@@ -45,7 +45,6 @@ LOOT uses the following CMake variables to set build parameters:
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
 `MSVC_STATIC_RUNTIME` | `ON`, `OFF` | `OFF` | Whether to link the C++ runtime statically or not when building with MSVC.
-`PROTOBUF_ROOT` | Directory path | `` | The path to where the Protocol Buffers `bin`, `include` and `lib` directories can be found. If left blank, CMake just searches its default prefix paths when looking for Protobuf.
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 

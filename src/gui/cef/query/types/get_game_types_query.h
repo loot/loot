@@ -25,11 +25,12 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_GAME_TYPES_QUERY
 #define LOOT_GUI_QUERY_GET_GAME_TYPES_QUERY
 
-#undef ERROR
+#undef min
+
+#include <json.hpp>
 
 #include "gui/cef/query/query.h"
 #include "gui/state/game_settings.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class GetGameTypesQuery : public Query {
@@ -41,16 +42,18 @@ public:
 
 private:
   static std::string getGameTypesAsJson() {
-    protobuf::GetGameTypesResponse response;
+    nlohmann::json json;
 
-    response.add_game_types(GameSettings(GameType::tes4).FolderName());
-    response.add_game_types(GameSettings(GameType::tes5).FolderName());
-    response.add_game_types(GameSettings(GameType::tes5se).FolderName());
-    response.add_game_types(GameSettings(GameType::fo3).FolderName());
-    response.add_game_types(GameSettings(GameType::fonv).FolderName());
-    response.add_game_types(GameSettings(GameType::fo4).FolderName());
+    json["gameTypes"] = {
+      GameSettings(GameType::tes4).FolderName(),
+      GameSettings(GameType::tes5).FolderName(),
+      GameSettings(GameType::tes5se).FolderName(),
+      GameSettings(GameType::fo3).FolderName(),
+      GameSettings(GameType::fonv).FolderName(),
+      GameSettings(GameType::fo4).FolderName(),
+    };
 
-    return toJson(response);
+    return json.dump();
   }
 };
 }

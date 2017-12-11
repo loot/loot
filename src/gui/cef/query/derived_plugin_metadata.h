@@ -25,10 +25,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 #define LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 
-#undef ERROR
+#include <json.hpp>
+#include <loot/api.h>
 
-#include "gui/cef/query/protobuf.h"
-#include "schema/query.pb.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class DerivedPluginMetadata {
@@ -36,70 +36,65 @@ public:
   DerivedPluginMetadata(LootState& state,
                         const std::shared_ptr<const PluginInterface>& file,
                         const PluginMetadata& evaluatedMetadata) {
-    plugin.set_name(file->GetName());
-    plugin.set_version(file->GetVersion());
-    plugin.set_is_active(
-        state.getCurrentGame().IsPluginActive(file->GetName()));
-    plugin.set_is_dirty(!evaluatedMetadata.GetDirtyInfo().empty());
-    plugin.set_is_empty(file->IsEmpty());
-    plugin.set_is_master(file->IsMaster());
-    plugin.set_is_light_master(file->IsLightMaster());
-    plugin.set_loads_archive(file->LoadsArchive());
+    name = file->GetName();
+    version = file->GetVersion();
+    isActive = state.getCurrentGame().IsPluginActive(name);
+    isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
+    isEmpty = file->IsEmpty();
+    isMaster = file->IsMaster();
+    isLightMaster = file->IsLightMaster();
+    loadsArchive = file->LoadsArchive();
 
-    plugin.set_crc(file->GetCRC());
-    auto loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(
-        file, state.getCurrentGame().GetLoadOrder());
-    plugin.set_load_order_index(loadOrderIndex);
+    crc = file->GetCRC();
+    loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
+      state.getCurrentGame().GetLoadOrder());
 
-    plugin.set_priority(evaluatedMetadata.GetLocalPriority().GetValue());
-    plugin.set_global_priority(
-        evaluatedMetadata.GetGlobalPriority().GetValue());
-
+    priority = evaluatedMetadata.GetLocalPriority().GetValue();
+    globalPriority = evaluatedMetadata.GetGlobalPriority().GetValue();
     if (!evaluatedMetadata.GetCleanInfo().empty()) {
-      auto utility =
-          evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
-      plugin.set_cleaned_with(utility);
+      cleanedWith = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
     }
+    messages = evaluatedMetadata.GetSimpleMessages(state.getLanguage());
+    tags = evaluatedMetadata.GetTags();
 
-    set(plugin, evaluatedMetadata.GetSimpleMessages(state.getLanguage()));
-    set(plugin, evaluatedMetadata.GetTags());
+    language = state.getLanguage();
   }
 
-  void storeUnevaluatedMetadata(PluginMetadata masterlistEntry,
-                                PluginMetadata userlistEntry,
-                                const std::string& language) {
-    if (!masterlistEntry.HasNameOnly()) {
-      *plugin.mutable_masterlist() = convert(masterlistEntry, language);
-    }
-
-    if (!userlistEntry.HasNameOnly()) {
-      *plugin.mutable_userlist() = convert(userlistEntry, language);
-    }
+  void storeUnevaluatedMetadata(PluginMetadata masterlistEntry, PluginMetadata userlistEntry) {
+    masterlistMetadata = masterlistEntry;
+    userMetadata = userlistEntry;
   }
 
-  static DerivedPluginMetadata none() { return DerivedPluginMetadata(); }
-
-  protobuf::Plugin toProtobuf() const { return plugin; }
-
+  static DerivedPluginMetadata none() {
+    return DerivedPluginMetadata();
+  }
 private:
-  protobuf::Plugin plugin;
+  std::string name;
+  std::string version;
+  bool isActive;
+  bool isDirty;
+  bool isEmpty;
+  bool isMaster;
+  bool isLightMaster;
+  bool loadsArchive;
+
+  uint32_t crc;
+  short loadOrderIndex;
+
+  short priority;
+  short globalPriority;
+  std::string cleanedWith;
+  std::vector<SimpleMessage> messages;
+  std::set<Tag> tags;
+
+  PluginMetadata masterlistMetadata;
+  PluginMetadata userMetadata;
+
+  std::string language;
 
   DerivedPluginMetadata() {}
 
-  static void set(protobuf::Plugin& plugin,
-                  const std::vector<SimpleMessage>& messages) {
-    for (const auto& message : messages) {
-      auto pbMessage = plugin.add_messages();
-      convert(message, *pbMessage);
-    }
-  }
-
-  static void set(protobuf::Plugin& plugin, const std::set<Tag>& tags) {
-    for (const auto& tag : tags) {
-      auto pbTag = plugin.add_tags();
-      convert(tag, *pbTag);
-    }
-  }
+  friend void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin);
 };
 }
 

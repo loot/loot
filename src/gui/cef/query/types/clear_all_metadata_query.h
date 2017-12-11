@@ -25,11 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 
-#undef ERROR
-
+#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
 #include "gui/state/game.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class ClearAllMetadataQuery : public MetadataQuery {
@@ -69,14 +67,14 @@ private:
 
   std::string getDerivedMetadataJson(
       const std::vector<std::string>& userlistPluginNames) {
-    protobuf::GameDataResponse response;
+    nlohmann::json json;
 
+    json["plugins"] = nlohmann::json::array();
     for (const auto& pluginName : userlistPluginNames) {
-      auto plugin = response.add_plugins();
-      *plugin = generateDerivedMetadata(pluginName).toProtobuf();
+      json["plugins"].push_back(generateDerivedMetadata(pluginName));
     }
 
-    return toJson(response);
+    return json.dump();
   }
 
   gui::Game& game_;

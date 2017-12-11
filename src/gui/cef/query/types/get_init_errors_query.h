@@ -25,11 +25,12 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_INIT_ERRORS_QUERY
 #define LOOT_GUI_QUERY_GET_INIT_ERRORS_QUERY
 
-#undef ERROR
+#undef min
+
+#include <json.hpp>
 
 #include "gui/cef/query/query.h"
 #include "gui/state/loot_state.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class GetInitErrorsQuery : public Query {
@@ -37,13 +38,10 @@ public:
   GetInitErrorsQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    protobuf::GetInitErrorsResponse response;
+    nlohmann::json json;
+    json["errors"] = state_.getInitErrors();
 
-    for (const auto& error : state_.getInitErrors()) {
-      response.add_errors(error);
-    }
-
-    return toJson(response);
+    return json.dump();
   }
 
 private:

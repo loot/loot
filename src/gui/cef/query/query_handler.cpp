@@ -30,7 +30,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
-#include <google/protobuf/util/json_util.h>
 #include <include/base/cef_bind.h>
 #include <include/cef_app.h>
 #include <include/cef_task.h>
@@ -70,9 +69,8 @@
 #include "gui/cef/query/types/sort_plugins_query.h"
 #include "gui/cef/query/types/update_masterlist_query.h"
 
-#undef ERROR
-
-#include "schema/request.pb.h"
+#undef min
+#include <json.hpp>
 
 namespace loot {
 QueryHandler::QueryHandler(LootState& lootState) : lootState_(lootState) {}
@@ -103,45 +101,38 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
 CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
                                            CefRefPtr<CefFrame> frame,
                                            const std::string& requestString) {
-  protobuf::Request request;
-  google::protobuf::util::JsonStringToMessage(requestString, &request);
+  nlohmann::json json = nlohmann::json::parse(requestString);
 
-  const std::string name = request.name();
-
-  std::vector<std::string> pluginNames;
-  if (request.has_plugin_names()) {
-    auto plugins = request.plugin_names().plugins();
-    pluginNames = std::vector<std::string>(plugins.cbegin(), plugins.cend());
-  }
+  const std::string name = json.at("name");
 
   if (name == "applySort")
-    return new ApplySortQuery(lootState_, pluginNames);
+    return new ApplySortQuery(lootState_, json.at("pluginNames").at("plugins"));
   else if (name == "cancelFind")
     return new CancelFindQuery(browser);
   else if (name == "cancelSort")
     return new CancelSortQuery(lootState_);
   else if (name == "changeGame")
-    return new ChangeGameQuery(lootState_, frame, request.target_name());
+    return new ChangeGameQuery(lootState_, frame, json.at("targetName"));
   else if (name == "clearAllMetadata")
     return new ClearAllMetadataQuery(lootState_);
   else if (name == "clearPluginMetadata")
-    return new ClearPluginMetadataQuery(lootState_, request.target_name());
+    return new ClearPluginMetadataQuery(lootState_, json.at("targetName"));
   else if (name == "closeSettings")
-    return new CloseSettingsQuery(lootState_, request.settings());
+    return new CloseSettingsQuery(lootState_, json.at("settings"));
   else if (name == "copyContent")
-    return new CopyContentQuery(request.content());
+    return new CopyContentQuery(json.at("content"));
   else if (name == "copyLoadOrder")
-    return new CopyLoadOrderQuery(lootState_, pluginNames);
+    return new CopyLoadOrderQuery(lootState_, json.at("pluginNames").at("plugins"));
   else if (name == "copyMetadata")
-    return new CopyMetadataQuery(lootState_, request.target_name());
+    return new CopyMetadataQuery(lootState_, json.at("targetName"));
   else if (name == "discardUnappliedChanges")
     return new DiscardUnappliedChangesQuery(lootState_);
   else if (name == "editorClosed")
-    return new EditorClosedQuery(lootState_, request.editor_state());
+    return new EditorClosedQuery(lootState_, json.at("editorState"));
   else if (name == "editorOpened")
     return new EditorOpenedQuery(lootState_);
   else if (name == "getConflictingPlugins")
-    return new GetConflictingPluginsQuery(lootState_, request.target_name());
+    return new GetConflictingPluginsQuery(lootState_, json.at("targetName"));
   else if (name == "getGameTypes")
     return new GetGameTypesQuery();
   else if (name == "getGameData")
@@ -164,7 +155,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
     return new RedatePluginsQuery(lootState_);
   else if (name == "saveFilterState")
     return new SaveFilterStateQuery(
-        lootState_, request.filter().name(), request.filter().state());
+        lootState_, json.at("filter").at("name"), json.at("filter").at("state"));
   else if (name == "sortPlugins")
     return new SortPluginsQuery(lootState_, frame);
   else if (name == "updateMasterlist")

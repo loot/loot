@@ -25,6 +25,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_COPY_METADATA_QUERY
 #define LOOT_GUI_QUERY_COPY_METADATA_QUERY
 
+#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/clipboard_query.h"
 
 namespace loot {
@@ -57,16 +58,7 @@ public:
 
 private:
   std::string asText(const PluginMetadata& metadata) {
-    protobuf::PluginMetadata pbMetadata =
-        convert(metadata, state_.getLanguage());
-
-    google::protobuf::util::JsonPrintOptions options;
-    options.add_whitespace = true;
-    options.always_print_primitive_fields = true;
-    std::string text;
-    google::protobuf::util::MessageToJsonString(pbMetadata, &text, options);
-
-    return text;
+    return to_json_with_language(metadata, state_.getLanguage()).dump(4);
   }
 
   LootState& state_;

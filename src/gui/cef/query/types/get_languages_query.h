@@ -25,10 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_LANGUAGES_QUERY
 #define LOOT_GUI_QUERY_GET_LANGUAGES_QUERY
 
-#undef ERROR
+#undef min
+
+#include <json.hpp>
 
 #include "gui/cef/query/query.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class GetLanguagesQuery : public Query {
@@ -40,14 +41,17 @@ public:
 
 private:
   static std::string getLanguagesAsJson() {
-    protobuf::GetLanguagesResponse response;
+    nlohmann::json json;
+
+    json["languages"] = nlohmann::json::array();
     for (const auto& language : getLanguages()) {
-      auto pbLanguage = response.add_languages();
-      pbLanguage->set_locale(language.first);
-      pbLanguage->set_name(language.second);
+      json["languages"].push_back({
+        { "locale", language.first },
+        { "name", language.second }
+      });
     }
 
-    return toJson(response);
+    return json.dump();
   }
 
   static std::map<std::string, std::string> getLanguages() {

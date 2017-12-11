@@ -25,11 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 
-#undef ERROR
-
+#include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
 #include "gui/state/game.h"
-#include "schema/response.pb.h"
 
 namespace loot {
 class GetConflictingPluginsQuery : public MetadataQuery {
@@ -54,18 +52,18 @@ public:
 
 private:
   std::string getJsonResponse() {
-    protobuf::GetConflictingPluginsResponse response;
+    nlohmann::json json;
 
+    json["plugins"] = nlohmann::json::array();
     auto plugin = game_.GetPlugin(pluginName_);
     for (const auto& otherPlugin : game_.GetPlugins()) {
-      auto conflictingPlugin = response.add_plugins();
-
-      auto metadata = generateDerivedMetadata(otherPlugin).toProtobuf();
-      *conflictingPlugin->mutable_metadata() = metadata;
-      conflictingPlugin->set_conflicts(doPluginsConflict(plugin, otherPlugin));
+      json["plugins"].push_back({
+        { "metadata", generateDerivedMetadata(otherPlugin) },
+        { "conflicts", doPluginsConflict(plugin, otherPlugin) },
+      });
     }
 
-    return toJson(response);
+    return json.dump();
   }
 
   bool doPluginsConflict(
