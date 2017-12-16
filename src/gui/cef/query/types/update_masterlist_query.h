@@ -36,7 +36,10 @@ public:
       game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug) << "Updating and parsing masterlist.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Updating and parsing masterlist.");
+    }
 
     if (!updateMasterlist())
       return "null";

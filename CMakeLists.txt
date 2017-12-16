@@ -49,7 +49,7 @@ IF (NOT Boost_USE_STATIC_LIBS)
     add_definitions(-DBOOST_LOG_DYN_LINK)
 ENDIF ()
 
-find_package(Boost REQUIRED COMPONENTS atomic log log_setup locale thread date_time chrono filesystem system)
+find_package(Boost REQUIRED COMPONENTS locale filesystem system)
 
 ExternalProject_Add(GTest
                     PREFIX "external"
@@ -147,6 +147,14 @@ ExternalProject_Add(cpptoml
 ExternalProject_Get_Property(cpptoml SOURCE_DIR)
 set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
+ExternalProject_Add(spdlog
+                    PREFIX "external"
+                    URL "https://github.com/gabime/spdlog/archive/v0.14.0.tar.gz"
+                    CONFIGURE_COMMAND ""
+                    BUILD_COMMAND ""
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(spdlog SOURCE_DIR)
+set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ##############################
 # General Settings
@@ -208,6 +216,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/game.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/game_detection_error.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/game_settings.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/logging.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
@@ -301,12 +310,12 @@ ENDIF ()
 
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies     (LOOT cef cpptoml json loot_api)
+add_dependencies     (LOOT cef cpptoml json loot_api spdlog)
 target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests cpptoml loot_api GTest testing-metadata testing-plugins)
+add_dependencies     (loot_gui_tests cpptoml loot_api spdlog GTest testing-metadata testing-plugins)
 target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS})
 
 ##############################

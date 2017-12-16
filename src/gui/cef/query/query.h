@@ -27,7 +27,8 @@ along with LOOT.  If not, see
 
 #include <include/wrapper/cef_message_router.h>
 #include <boost/locale.hpp>
-#include <boost/log/trivial.hpp>
+
+#include "gui/state/logging.h"
 
 namespace loot {
 class Query : public CefBaseRefCounted {
@@ -36,7 +37,10 @@ public:
     try {
       callback->Success(executeLogic());
     } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << e.what();
+      auto logger = getLogger();
+      if (logger) {
+        logger->error("Exception while executing query: {}", e.what());
+      }
       callback->Failure(-1,
                         boost::locale::translate(
                             "Oh no, something went wrong! You can check your "
@@ -51,7 +55,10 @@ protected:
 
   void sendProgressUpdate(CefRefPtr<CefFrame> frame,
                           const std::string& message) {
-    BOOST_LOG_TRIVIAL(trace) << "Sending progress update: " << message;
+    auto logger = getLogger();
+    if (logger) {
+      logger->trace("Sending progress update: {}", message);
+    }
     frame->ExecuteJavaScript(
         "loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
   }

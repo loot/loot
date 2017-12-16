@@ -55,8 +55,10 @@ public:
 
 private:
   PluginMetadata getNonUserMetadata() {
-    BOOST_LOG_TRIVIAL(trace)
-        << "Getting non-user metadata for: " << metadata_.GetName();
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->trace("Getting non-user metadata for: {}", metadata_.GetName());
+    }
     auto masterlistMetadata =
         state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
 
@@ -91,19 +93,25 @@ private:
   }
 
   void applyUserEdits() {
-    BOOST_LOG_TRIVIAL(trace)
-        << "Applying user edits for: " << metadata_.GetName();
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->trace("Applying user edits for: {}", metadata_.GetName());
+    }
 
     // Determine what metadata in the response is user-added.
     auto userMetadata = getUserMetadata();
 
     // Now erase any existing userlist entry.
-    BOOST_LOG_TRIVIAL(trace) << "Erasing the existing userlist entry.";
+    if (logger) {
+      logger->trace("Erasing the existing userlist entry.");
+    }
     state_.getCurrentGame().ClearUserMetadata(userMetadata.GetName());
 
     // Add a new userlist entry if necessary.
     if (!userMetadata.HasNameOnly()) {
-      BOOST_LOG_TRIVIAL(trace) << "Adding new metadata to new userlist entry.";
+      if (logger) {
+        logger->trace("Adding new metadata to new userlist entry.");
+      }
       state_.getCurrentGame().AddUserMetadata(userMetadata);
     }
 

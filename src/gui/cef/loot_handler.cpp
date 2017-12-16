@@ -33,7 +33,6 @@
 #include <include/views/cef_window.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/log/trivial.hpp>
 
 #include "gui/cef/loot_scheme_handler_factory.h"
 #include "gui/cef/query/query_handler.h"
@@ -86,17 +85,21 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
     return true;
   }
 
+  auto logger = lootState_.getLogger();
+
   auto browserView = CefBrowserView::GetForBrowser(browser);
   if (browserView == nullptr) {
-    BOOST_LOG_TRIVIAL(error)
-        << "Failed to save LOOT's settings, browser view is null";
+    if (logger) {
+      logger->error("Failed to save LOOT's settings, browser view is null");
+    }
     return false;
   }
 
   auto window = browserView->GetWindow();
   if (window == nullptr) {
-    BOOST_LOG_TRIVIAL(error)
-        << "Failed to save LOOT's settings, window is null";
+    if (logger) {
+      logger->error("Failed to save LOOT's settings, window is null");
+    }
     return false;
   }
 
@@ -117,8 +120,9 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   try {
     lootState_.save(LootPaths::getSettingsPath());
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error)
-        << "Failed to save LOOT's settings. Error: " << e.what();
+    if (logger) {
+      logger->error("Failed to save LOOT's settings. Error: {}", e.what());
+    }
   }
 
   // Allow the close. For windowed browsers this will result in the OS close
@@ -180,22 +184,28 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
                                  CefRefPtr<CefFrame> frame,
                                  CefRefPtr<CefRequest> request,
                                  bool is_redirect) {
-  BOOST_LOG_TRIVIAL(trace) << "Attempting to open link: "
-                           << request->GetURL().ToString();
+  auto logger = lootState_.getLogger();
+  if (logger) {
+    logger->info("Attempting to open link: {}", request->GetURL().ToString());
+  }
 
   const std::string url = request->GetURL().ToString();
   if (boost::starts_with(url, "http://loot/")) {
-    BOOST_LOG_TRIVIAL(trace)
-        << "Link is to LOOT page, allowing CEF's default handling.";
+    if (logger) {
+      logger->trace("Link is to LOOT page, allowing CEF's default handling.");
+    }
     return false;
   } else if (boost::starts_with(url, "http://localhost:")) {
-    BOOST_LOG_TRIVIAL(warning) << "Link is to a page on localhost, if this "
-                                  "isn't happening while running tests, "
-                                  "something has gone wrong";
+    if (logger) {
+      logger->warn("Link is to a page on localhost, if this isn't happening "
+                   "while running tests, something has gone wrong");
+    }
     return false;
   }
 
-  BOOST_LOG_TRIVIAL(info) << "Opening link in Windows' default handler.";
+  if (logger) {
+    logger->info("Opening link in Windows' default handler.");
+  }
   OpenInDefaultApplication(
       boost::filesystem::path(request->GetURL().ToString()));
 
@@ -209,8 +219,11 @@ CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(
     CefRefPtr<CefRequestCallback> callback) {
   if (boost::starts_with(request->GetURL().ToString(),
                          "https://fonts.googleapis.com")) {
-    BOOST_LOG_TRIVIAL(warning)
-        << "Blocking load of resource at " << request->GetURL().ToString();
+    auto logger = lootState_.getLogger();
+    if (logger) {
+      logger->warn("Blocking load of resource at {}",
+        request->GetURL().ToString());
+    }
     return RV_CANCEL;
   }
 

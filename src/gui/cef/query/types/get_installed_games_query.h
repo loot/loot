@@ -38,7 +38,10 @@ public:
   GetInstalledGamesQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Getting LOOT's detected games.";
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->info("Getting LOOT's detected games.");
+    }
     return getInstalledGamesAsJson();
   }
 

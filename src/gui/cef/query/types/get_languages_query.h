@@ -35,7 +35,10 @@ namespace loot {
 class GetLanguagesQuery : public Query {
 public:
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported languages.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Getting LOOT's supported languages.");
+    }
     return getLanguagesAsJson();
   }
 

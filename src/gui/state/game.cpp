@@ -31,10 +31,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <boost/log/trivial.hpp>
 
 #include "gui/helpers.h"
 #include "gui/state/game_detection_error.h"
+#include "gui/state/logging.h"
 #include "loot/exception/file_access_error.h"
 
 #ifdef _WIN32
@@ -73,7 +73,8 @@ Game::Game(const GameSettings& gameSettings,
     GameSettings(gameSettings),
     lootDataPath_(lootDataPath),
     pluginsFullyLoaded_(false),
-    loadOrderSortCount_(0) {
+    loadOrderSortCount_(0),
+    logger_(getLogger()) {
   SetGamePath(DetectGamePath(*this));
 
   if (GamePath().empty()) {
@@ -91,7 +92,8 @@ Game::Game(const Game& game) :
     gameHandle_(game.gameHandle_),
     pluginsFullyLoaded_(game.pluginsFullyLoaded_),
     messages_(game.messages_),
-    loadOrderSortCount_(0) {}
+    loadOrderSortCount_(0),
+    logger_(getLogger()) {}
 
 Game& Game::operator=(const Game& game) {
   if (&game != this) {
@@ -102,6 +104,7 @@ Game& Game::operator=(const Game& game) {
     pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
     messages_ = game.messages_;
     loadOrderSortCount_ = game.loadOrderSortCount_;
+    logger_ = game.logger_;
   }
 
   return *this;
@@ -114,8 +117,9 @@ bool Game::IsInstalled(const GameSettings& gameSettings) {
 }
 
 void Game::Init() {
-  BOOST_LOG_TRIVIAL(info) << "Initialising filesystem-related data for game: "
-                          << Name();
+  if (logger_) {
+    logger_->info("Initialising filesystem-related data for game: {}", Name());
+  }
 
   if (!lootDataPath_.empty()) {
     // Make sure that the LOOT game path exists.
@@ -144,9 +148,10 @@ std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
 std::vector<Message> Game::CheckInstallValidity(
     const std::shared_ptr<const PluginInterface>& plugin,
     const PluginMetadata& metadata) {
-  BOOST_LOG_TRIVIAL(trace)
-      << "Checking that the current install is valid according to "
-      << plugin->GetName() << "'s data.";
+  if (logger_) {
+    logger_->trace("Checking that the current install is valid according to {}"
+                   "'s data.", plugin->GetName());
+  }
   std::vector<Message> messages;
   if (IsPluginActive(plugin->GetName())) {
     auto pluginExists = [&](const std::string& file) {
@@ -158,9 +163,11 @@ std::vector<Message> Game::CheckInstallValidity(
     if (tags.find(Tag("Filter")) == std::end(tags)) {
       for (const auto& master : plugin->GetMasters()) {
         if (!pluginExists(master)) {
-          BOOST_LOG_TRIVIAL(error)
-              << "\"" << plugin->GetName() << "\" requires \"" << master
-              << "\", but it is missing.";
+          if (logger_) {
+            logger_->error("\"{}\" requires \"{}\", but it is missing.",
+              plugin->GetName(),
+              master);
+          }
           messages.push_back(Message(MessageType::error,
                                      (boost::format(boost::locale::translate(
                                           "This plugin requires \"%1%\" to be "
@@ -168,9 +175,11 @@ std::vector<Message> Game::CheckInstallValidity(
                                       master)
                                          .str()));
         } else if (!IsPluginActive(master)) {
-          BOOST_LOG_TRIVIAL(error)
-              << "\"" << plugin->GetName() << "\" requires \"" << master
-              << "\", but it is inactive.";
+          if (logger_) {
+            logger_->error("\"{}\" requires \"{}\", but it is inactive.",
+              plugin->GetName(),
+              master);
+          }
           messages.push_back(Message(MessageType::error,
                                      (boost::format(boost::locale::translate(
                                           "This plugin requires \"%1%\" to be "
@@ -183,9 +192,11 @@ std::vector<Message> Game::CheckInstallValidity(
 
     for (const auto& req : metadata.GetRequirements()) {
       if (!pluginExists(req.GetName())) {
-        BOOST_LOG_TRIVIAL(error)
-            << "\"" << plugin->GetName() << "\" requires \"" << req.GetName()
-            << "\", but it is missing.";
+        if (logger_) {
+          logger_->error("\"{}\" requires \"{}\", but it is missing.",
+            plugin->GetName(),
+            req.GetName());
+        }
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
                                         "This plugin requires \"%1%\" to be "
@@ -196,9 +207,10 @@ std::vector<Message> Game::CheckInstallValidity(
     }
     for (const auto& inc : metadata.GetIncompatibilities()) {
       if (pluginExists(inc.GetName()) && IsPluginActive(inc.GetName())) {
-        BOOST_LOG_TRIVIAL(error)
-            << "\"" << plugin->GetName() << "\" is incompatible with \""
-            << inc.GetName() << "\", but both are present.";
+        if (logger_) {
+          logger_->error("\"{}\" is incompatible with \"{}\", but both are "
+                         "present.", plugin->GetName(), inc.GetName());
+        }
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
                                         "This plugin is incompatible with "
@@ -214,12 +226,12 @@ std::vector<Message> Game::CheckInstallValidity(
       try {
         auto master = GetPlugin(masterName);
         if (!master->IsLightMaster() && !master->IsMaster()) {
-          BOOST_LOG_TRIVIAL(error)
-              << "This plugin is a light master and requires the non-master "
-                 "plugin \""
-              << masterName
-              << "\". This can cause issues in-game, and sorting will fail "
-                 "while this plugin is installed.";
+          if (logger_) {
+            logger_->error("This plugin is a light master and requires the "
+                           "non-master plugin \"{}\". This can cause issues "
+                           "in-game, and sorting will fail while this plugin "
+                           "is installed.", masterName);
+          }
           messages.push_back(Message(
               MessageType::error,
               (boost::format(boost::locale::translate(
@@ -230,9 +242,12 @@ std::vector<Message> Game::CheckInstallValidity(
                   .str()));
         }
       } catch (...) {
-        BOOST_LOG_TRIVIAL(info)
-            << "Tried to get plugin object for master \"" << masterName
-            << "\" of \"" << plugin->GetName() << "\" but it was not loaded.";
+          if (logger_) {
+            logger_->info("Tried to get plugin object for master \"{}\" of "
+                          "\"{}\" but it was not loaded.",
+                          masterName,
+                          plugin->GetName());
+          }
       }
     }
   }
@@ -247,7 +262,9 @@ std::vector<Message> Game::CheckInstallValidity(
 
 void Game::RedatePlugins() {
   if (Type() != GameType::tes5 && Type() != GameType::tes5se) {
-    BOOST_LOG_TRIVIAL(warning) << "Cannot redate plugins for game " << Name();
+    if (logger_) {
+      logger_->warn("Cannot redate plugins for game {}.", Name());
+    }
     return;
   }
 
@@ -264,19 +281,28 @@ void Game::RedatePlugins() {
       }
 
       time_t thisTime = fs::last_write_time(filepath);
-      BOOST_LOG_TRIVIAL(info)
-          << "Current timestamp for \"" << filepath.filename().string()
-          << "\": " << thisTime;
+      if (logger_) {
+        logger_->info("Current timestamp for \"{}\": {}",
+          filepath.filename().string(),
+          thisTime);
+      }
       if (thisTime >= lastTime) {
         lastTime = thisTime;
-        BOOST_LOG_TRIVIAL(trace)
-            << "No need to redate \"" << filepath.filename().string() << "\".";
+
+        if (logger_) {
+          logger_->trace("No need to redate \"{}\".",
+            filepath.filename().string());
+        }
       } else {
         lastTime += 60;
         fs::last_write_time(filepath,
                             lastTime);  // Space timestamps by a minute.
-        BOOST_LOG_TRIVIAL(info) << "Redated \"" << filepath.filename().string()
-                                << "\" to: " << lastTime;
+
+        if (logger_) {
+          logger_->info("Redated \"{}\" to: {}",
+            filepath.filename().string(),
+            lastTime);
+        }
       }
     }
   }
@@ -353,7 +379,9 @@ std::vector<std::string> Game::SortPlugins() {
 
     IncrementLoadOrderSortCount();
   } catch (CyclicInteractionError& e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
+    if (logger_) {
+      logger_->error("Failed to sort plugins. Details: {}", e.what());
+    }
     AppendMessage(Message(
         MessageType::error,
         (boost::format(boost::locale::translate("Cyclic interaction detected "
@@ -363,7 +391,9 @@ std::vector<std::string> Game::SortPlugins() {
             .str()));
     plugins.clear();
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to sort plugins. Details: " << e.what();
+    if (logger_) {
+      logger_->error("Failed to sort plugins. Details: {}", e.what());
+    }
     plugins.clear();
   }
 
@@ -407,8 +437,10 @@ std::vector<Message> Game::GetMessages() const {
   }
 
   if (activeNormalPluginsCount > 254 && hasActiveEsl) {
-    BOOST_LOG_TRIVIAL(warning) << "255 normal plugins and at least one light "
-                                  "master are active at the same time.";
+    if (logger_) {
+      logger_->warn("255 normal plugins and at least one light master are "
+                    "active at the same time.");
+    }
     output.push_back(Message(
         MessageType::warn,
         boost::locale::translate(
@@ -457,21 +489,29 @@ void Game::LoadMetadata() {
   std::string masterlistPath;
   std::string userlistPath;
   if (boost::filesystem::exists(MasterlistPath())) {
-    BOOST_LOG_TRIVIAL(debug) << "Preparing to parse masterlist.";
+    if (logger_) {
+      logger_->debug("Preparing to parse masterlist.");
+    }
     masterlistPath = MasterlistPath().string();
   }
 
   if (boost::filesystem::exists(UserlistPath())) {
-    BOOST_LOG_TRIVIAL(debug) << "Preparing to parse userlist.";
+    if (logger_) {
+      logger_->debug("Preparing to parse userlist.");
+    }
     userlistPath = UserlistPath().string();
   }
 
-  BOOST_LOG_TRIVIAL(debug) << "Parsing metadata list(s).";
+  if (logger_) {
+    logger_->debug("Parsing metadata list(s).");
+  }
   try {
     gameHandle_->GetDatabase()->LoadLists(masterlistPath, userlistPath);
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error)
-        << "An error occurred while parsing the metadata list(s): " << e.what();
+    if (logger_) {
+      logger_->error("An error occurred while parsing the metadata list(s): {}",
+        e.what());
+    }
     AppendMessage(Message(
         MessageType::error,
         (boost::format(boost::locale::translate(
@@ -536,9 +576,12 @@ bool Game::ExecutableExists(const GameType& gameType,
 }
 
 boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
+  auto logger = getLogger();
   try {
-    BOOST_LOG_TRIVIAL(trace)
-        << "Checking if game \"" << gameSettings.Name() << "\" is installed.";
+    if (logger) {
+      logger->trace("Checking if game \"{}\" is installed.",
+        gameSettings.Name());
+    }
     if (!gameSettings.GamePath().empty() &&
         fs::exists(gameSettings.GamePath() / "Data" / gameSettings.Master()))
       return gameSettings.GamePath();
@@ -562,9 +605,11 @@ boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
     }
 #endif
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error)
-        << "Error while checking if game \"" << gameSettings.Name()
-        << "\" is installed: " << e.what();
+    if (logger) {
+      logger->error("Error while checking if game \"{}\" is installed: {}",
+        gameSettings.Name(),
+        e.what());
+    }
   }
 
   return boost::filesystem::path();
@@ -671,14 +716,21 @@ Message Game::ToMessage(const PluginCleaningData& cleaningData) {
 std::vector<std::string> Game::GetInstalledPluginNames() {
   std::vector<std::string> plugins;
 
-  BOOST_LOG_TRIVIAL(trace) << "Scanning for plugins in " << this->DataPath();
+  if (logger_) {
+    logger_->trace("Scanning for plugins in {}",
+      this->DataPath().string());
+  }
+
   for (fs::directory_iterator it(this->DataPath());
        it != fs::directory_iterator();
        ++it) {
     if (fs::is_regular_file(it->status()) &&
         gameHandle_->IsValidPlugin(it->path().filename().string())) {
       string name = it->path().filename().string();
-      BOOST_LOG_TRIVIAL(info) << "Found plugin: " << name;
+
+      if (logger_) {
+        logger_->info("Found plugin: ", name);
+      }
 
       plugins.push_back(name);
     }
@@ -708,9 +760,12 @@ std::string Game::RegKeyStringValue(const std::string& keyStr,
   else
     throw std::invalid_argument("Invalid registry key given.");
 
-  BOOST_LOG_TRIVIAL(trace)
-      << "Getting string for registry key, subkey and value: " << keyStr
-      << " + " << subkey << " + " << value;
+  auto logger = getLogger();
+  if (logger) {
+    logger->trace("Getting string for registry key, subkey and value: {}, {}, "
+                   "{}", keyStr, subkey, value);
+  }
+
   LONG ret = RegGetValue(hKey,
                          ToWinWide(subkey).c_str(),
                          ToWinWide(value).c_str(),
@@ -720,11 +775,16 @@ std::string Game::RegKeyStringValue(const std::string& keyStr,
                          &len);
 
   if (ret == ERROR_SUCCESS) {
-    BOOST_LOG_TRIVIAL(info) << "Found string: " << wstr.c_str();
-    return FromWinWide(
-        wstr.c_str());  // Passing c_str() cuts off any unused buffer.
+    // Passing c_str() cuts off any unused buffer.
+    std::string value = FromWinWide(wstr.c_str());
+    if (logger) {
+      logger->info("Found string: {}", value);
+    }
+    return value;
   } else {
-    BOOST_LOG_TRIVIAL(info) << "Failed to get string value.";
+    if (logger) {
+      logger->info("Failed to get string value.");
+    }
     return "";
   }
 }

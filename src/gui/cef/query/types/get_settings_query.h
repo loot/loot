@@ -38,7 +38,10 @@ public:
   GetSettingsQuery(LootSettings& settings) : settings_(settings) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Getting LOOT settings.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Getting LOOT's settings.");
+    }
 
     nlohmann::json json = {
       { "game", settings_.getGame() },

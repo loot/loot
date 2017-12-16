@@ -41,7 +41,10 @@ public:
       frame_(frame) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Beginning sorting operation.";
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->info("Beginning sorting operation.");
+    }
 
     // Sort plugins into their load order.
     sendProgressUpdate(frame_,

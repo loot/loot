@@ -33,7 +33,10 @@ namespace loot {
 class OpenLogLocationQuery : public Query {
 public:
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Opening LOOT local appdata folder.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Opening LOOT's local appdata folder.");
+    }
     OpenInDefaultApplication(LootPaths::getLogPath().parent_path());
 
     return "";

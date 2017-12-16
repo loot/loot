@@ -23,8 +23,6 @@
     */
 #include "gui/cef/window_delegate.h"
 
-#include <boost/log/trivial.hpp>
-
 #include "gui/resource.h"
 #include "gui/state/loot_paths.h"
 

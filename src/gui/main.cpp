@@ -22,10 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-
 #include "gui/cef/loot_app.h"
+#include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
 #ifdef _WIN32
@@ -105,7 +103,10 @@ struct CommandLineOptions {
       std::vector<CefString> arguments;
       command_line->GetArguments(arguments);
       url = arguments[0];
-      BOOST_LOG_TRIVIAL(info) << "Loading homepage using URL " << url;
+      auto logger = getLogger();
+      if (logger) {
+        logger->info("Loading homepage using URL: {}", url);
+      }
     }
   }
 };

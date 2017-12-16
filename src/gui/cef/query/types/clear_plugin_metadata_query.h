@@ -37,8 +37,10 @@ public:
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug)
-        << "Clearing user metadata for plugin " << pluginName_;
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Clearing user metadata for plugin {}", pluginName_);
+    }
 
     game_.ClearUserMetadata(pluginName_);
     game_.SaveUserMetadata();

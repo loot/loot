@@ -36,7 +36,10 @@ namespace loot {
 class GetVersionQuery : public Query {
 public:
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Getting LOOT version.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Getting LOOT's version.");
+    }
 
     nlohmann::json json = {
       { "release", gui::Version::string() },

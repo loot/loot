@@ -24,13 +24,13 @@ along with LOOT.  If not, see
 
 #include "gui/cef/loot_scheme_handler_factory.h"
 
+#include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
 #include <include/cef_parser.h>
 #include <include/wrapper/cef_stream_resource_handler.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/log/trivial.hpp>
 #include <string>
 
 using namespace std;
@@ -45,8 +45,10 @@ CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(
     CefRefPtr<CefFrame> frame,
     const CefString& scheme_name,
     CefRefPtr<CefRequest> request) {
-  BOOST_LOG_TRIVIAL(info) << "Handling request to URL: "
-                          << request->GetURL().ToString();
+  auto logger = getLogger();
+  if (logger) {
+    logger->info("Handling request to URL: {}", request->GetURL().ToString());
+  }
   const string filePath = GetPath(request->GetURL());
 
   if (boost::filesystem::exists(filePath)) {
@@ -58,7 +60,9 @@ CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(
         CefStreamReader::CreateForFile(filePath));
   }
 
-  BOOST_LOG_TRIVIAL(trace) << "File " << filePath << " not found, sending 404.";
+  if (logger) {
+    logger->trace("File {} not found, sending 404.", filePath);
+  }
   const string error404 = "File not found.";
   CefRefPtr<CefStreamReader> stream =
       CefStreamReader::CreateForData((void*)error404.c_str(), error404.size());

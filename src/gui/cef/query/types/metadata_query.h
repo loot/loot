@@ -28,7 +28,6 @@ along with LOOT.  If not, see
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <boost/log/trivial.hpp>
 
 #include "gui/cef/query/derived_plugin_metadata.h"
 #include "gui/cef/query/query.h"
@@ -78,14 +77,17 @@ protected:
 
   DerivedPluginMetadata generateDerivedMetadata(
       const std::shared_ptr<const PluginInterface>& plugin) {
-    BOOST_LOG_TRIVIAL(trace)
-        << "Getting masterlist metadata for: " << plugin->GetName();
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->trace("Getting masterlist metadata for: {}", plugin->GetName());
+    }
     auto masterlistMetadata =
         state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
     masterlistMetadata = getNonUserMetadata(plugin, masterlistMetadata);
 
-    BOOST_LOG_TRIVIAL(trace)
-        << "Getting userlist metadata for: " << plugin->GetName();
+    if (logger) {
+      logger->trace("Getting userlist metadata for: {}", plugin->GetName());
+    }
     auto userlistMetadata =
         state_.getCurrentGame().GetUserMetadata(plugin->GetName());
 
@@ -131,7 +133,6 @@ private:
   static std::vector<SimpleMessage> toSimpleMessages(
       const std::vector<Message>& messages,
       const std::string& language) {
-    BOOST_LOG_TRIVIAL(info) << "Using message language: " << language;
     std::vector<SimpleMessage> simpleMessages(messages.size());
     std::transform(begin(messages),
                    end(messages),
@@ -148,11 +149,13 @@ private:
     try {
       master = state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
     } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error)
-          << "\"" << pluginName
-          << "\"'s masterlist metadata contains a condition that could not be "
-             "evaluated. Details: "
-          << e.what();
+      auto logger = state_.getLogger();
+      if (logger) {
+        logger->error("\"{}\"'s masterlist metadata contains a condition that "
+                      "could not be evaluated. Details: {}",
+                      pluginName,
+                      e.what());
+      }
       master.SetMessages({
           Message(MessageType::error,
                   (boost::format(boost::locale::translate(
@@ -171,10 +174,11 @@ private:
     try {
       user = state_.getCurrentGame().GetUserMetadata(pluginName, true);
     } catch (std::exception& e) {
-      BOOST_LOG_TRIVIAL(error) << "\"" << pluginName
-                               << "\"'s user metadata contains a condition "
-                                  "that could not be evaluated. Details: "
-                               << e.what();
+      auto logger = state_.getLogger();
+      if (logger) {
+        logger->error("\"{}\"'s user metadata contains a condition that could "
+                      "not be evaluated. Details: {}", pluginName, e.what());
+      }
       user.SetMessages({
           Message(MessageType::error,
                   (boost::format(boost::locale::translate(
@@ -192,18 +196,22 @@ private:
     using boost::locale::translate;
 
     MasterlistInfo info;
+    auto logger = state_.getLogger();
     try {
       info = state_.getCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
     } catch (FileAccessError&) {
-      BOOST_LOG_TRIVIAL(warning) << "No masterlist present at "
-                                 << state_.getCurrentGame().MasterlistPath();
+      if (logger) {
+        logger->warn("No masterlist present at {}",
+          state_.getCurrentGame().MasterlistPath().string());
+      }
       info.revision_id = translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError&) {
-      BOOST_LOG_TRIVIAL(warning)
-          << "Not a Git repository: "
-          << state_.getCurrentGame().MasterlistPath().parent_path();
+      if (logger) {
+        logger->warn("Not a Git repository: {}",
+          state_.getCurrentGame().MasterlistPath().parent_path().string());
+      }
       info.revision_id = translate("Unknown: Git repository missing").str();
       info.revision_date = translate("Unknown: Git repository missing").str();
     }

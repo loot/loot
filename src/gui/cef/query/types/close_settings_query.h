@@ -38,8 +38,11 @@ public:
       settings_(settings) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(trace) << "Settings dialog closed and changes accepted, "
-                                "updating settings object.";
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->trace("Settings dialog closed and changes accepted, updating "
+                    "settings object.");
+    }
 
     state_.setDefaultGame(settings_.value("game", ""));
     state_.setLanguage(settings_.value("language", ""));

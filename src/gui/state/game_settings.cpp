@@ -25,7 +25,6 @@
 #include "gui/state/game_settings.h"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/log/trivial.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -110,42 +109,31 @@ std::string GameSettings::RepoBranch() const { return repositoryBranch_; }
 fs::path GameSettings::GamePath() const { return gamePath_; }
 
 GameSettings& GameSettings::SetName(const std::string& name) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_ << "\" name to: " << name;
   name_ = name;
   return *this;
 }
 
 GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
-                           << "\" master file to: " << masterFile;
   masterFile_ = masterFile;
   return *this;
 }
 
 GameSettings& GameSettings::SetRegistryKey(const std::string& registry) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
-                           << "\" registry key to: " << registry;
   registryKey_ = registry;
   return *this;
 }
 
 GameSettings& GameSettings::SetRepoURL(const std::string& repositoryURL) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
-                           << "\" repo URL to: " << repositoryURL;
   repositoryURL_ = repositoryURL;
   return *this;
 }
 
 GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
-                           << "\" repo branch to: " << repositoryBranch;
   repositoryBranch_ = repositoryBranch;
   return *this;
 }
 
 GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
-  BOOST_LOG_TRIVIAL(trace) << "Setting \"" << name_
-                           << "\" game path to: " << path;
   gamePath_ = path;
   return *this;
 }

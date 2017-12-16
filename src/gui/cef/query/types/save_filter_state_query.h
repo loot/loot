@@ -25,8 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_SAVE_FILTER_STATE_QUERY
 #define LOOT_GUI_QUERY_SAVE_FILTER_STATE_QUERY
 
-#include <boost/log/trivial.hpp>
-
 #include "gui/cef/query/query.h"
 #include "gui/state/loot_state.h"
 
@@ -41,7 +39,10 @@ public:
       enabled_(enabled) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(trace) << "Saving filter states.";
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->trace("Saving filter states.");
+    }
     state_.storeFilterState(filterId_, enabled_);
     return "";
   }

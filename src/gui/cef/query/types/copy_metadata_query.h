@@ -36,7 +36,10 @@ public:
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug) << "Copying metadata for plugin " << pluginName_;
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Copying metadata for plugin {}", pluginName_);
+    }
 
     // Get metadata from masterlist and userlist.
     PluginMetadata metadata =
@@ -50,8 +53,11 @@ public:
 
     copyToClipboard(text);
 
-    BOOST_LOG_TRIVIAL(info) << "Exported userlist metadata text for \""
-                            << pluginName_ << "\": " << text;
+    if (logger) {
+      logger->debug("Exported userlist metadata text for \"{}\": {}",
+        pluginName_,
+        text);
+    }
 
     return "";
   }

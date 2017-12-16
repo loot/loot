@@ -30,15 +30,10 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/support/date_time.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/utility/setup/file.hpp>
 
 #include "gui/helpers.h"
 #include "gui/state/game_detection_error.h"
+#include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
 #include "loot/api.h"
@@ -60,27 +55,32 @@ namespace fs = boost::filesystem;
 
 namespace loot {
 void apiLogCallback(LogLevel level, const char* message) {
+  auto logger = getLogger();
+  if (!logger) {
+    return;
+  }
+
   switch (level) {
     case LogLevel::trace:
-      BOOST_LOG_TRIVIAL(trace) << message;
+      logger->trace(message);
       break;
     case LogLevel::debug:
-      BOOST_LOG_TRIVIAL(debug) << message;
+      logger->debug(message);
       break;
     case LogLevel::info:
-      BOOST_LOG_TRIVIAL(info) << message;
+      logger->info(message);
       break;
     case LogLevel::warning:
-      BOOST_LOG_TRIVIAL(warning) << message;
+      logger->warn(message);
       break;
     case LogLevel::error:
-      BOOST_LOG_TRIVIAL(error) << message;
+      logger->error(message);
       break;
     case LogLevel::fatal:
-      BOOST_LOG_TRIVIAL(fatal) << message;
+      logger->critical(message);
       break;
     default:
-      BOOST_LOG_TRIVIAL(trace) << message;
+      logger->trace(message);
       break;
   }
 }
@@ -106,8 +106,6 @@ void LootState::init(const std::string& cmdLineGame,
 
   // Check if the LOOT local app data folder exists, and create it if not.
   if (!fs::exists(LootPaths::getLootDataPath())) {
-    BOOST_LOG_TRIVIAL(info)
-        << "Local app data LOOT folder doesn't exist, creating it.";
     try {
       fs::create_directory(LootPaths::getLootDataPath());
     } catch (exception& e) {
@@ -129,33 +127,32 @@ void LootState::init(const std::string& cmdLineGame,
   }
 
   // Set up logging.
-  boost::log::add_file_log(
-      boost::log::keywords::file_name =
-          LootPaths::getLogPath().string().c_str(),
-      boost::log::keywords::auto_flush = true,
-      boost::log::keywords::format =
-          (boost::log::expressions::stream
-           << "["
-           << boost::log::expressions::format_date_time<
-                  boost::posix_time::ptime>("TimeStamp", "%H:%M:%S.%f")
-           << "]"
-           << " [" << boost::log::trivial::severity
-           << "]: " << boost::log::expressions::smessage));
-  boost::log::add_common_attributes();
+  fs::remove(LootPaths::getLogPath());
+  spdlog::set_pattern("[%T.%f] [%l]: %v");
+  logger_ = spdlog::basic_logger_mt(LOGGER_NAME,
+    LootPaths::getLogPath().string().c_str());
+  if (!logger_) {
+    initErrors_.push_back(
+      translate("Error: Could not initialise logging.").str());
+  }
   SetLoggingCallback(apiLogCallback);
   enableDebugLogging(isDebugLoggingEnabled());
 
   // Log some useful info.
-  BOOST_LOG_TRIVIAL(info) << "LOOT Version: " << gui::Version::string() << "+"
-                          << gui::Version::revision;
-  BOOST_LOG_TRIVIAL(info) << "LOOT API Version: " << LootVersion::string()
-                          << "+" << LootVersion::revision;
+  if (logger_) {
+    logger_->info("LOOT Version: {}+{}",
+      gui::Version::string(),
+      gui::Version::revision);
+    logger_->info("LOOT API Version: {}+{}",
+      LootVersion::string(),
+      LootVersion::revision);
+  }
 
 #ifdef _WIN32
   // Check if LOOT is being run through Mod Organiser.
   bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;
-  if (runFromMO) {
-    BOOST_LOG_TRIVIAL(info) << "LOOT is being run through Mod Organiser.";
+  if (runFromMO && logger_) {
+    logger_->info("LOOT is being run through Mod Organiser.");
   }
 #endif
 
@@ -166,8 +163,10 @@ void LootState::init(const std::string& cmdLineGame,
   // Now that settings have been loaded, set the locale again to handle
   // translations.
   if (getLanguage() != MessageContent::defaultLanguage) {
-    BOOST_LOG_TRIVIAL(debug) << "Initialising language settings.";
-    BOOST_LOG_TRIVIAL(debug) << "Selected language: " << getLanguage();
+    if (logger_) {
+      logger_->debug("Initialising language settings.");
+      logger_->debug("Selected language: {}", getLanguage());
+    }
 
     // Boost.Locale initialisation: Generate and imbue locales.
     locale::global(gen(getLanguage() + ".UTF-8"));
@@ -179,12 +178,16 @@ void LootState::init(const std::string& cmdLineGame,
   //-----------------------------------
 
   // Detect installed games.
-  BOOST_LOG_TRIVIAL(debug) << "Detecting installed games.";
+  if (logger_) {
+    logger_->debug("Detecting installed games.");
+  }
   installedGames_.clear();
   for (const auto& gameSettings : getGameSettings()) {
     if (gui::Game::IsInstalled(gameSettings)) {
-      BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: "
-                               << gameSettings.FolderName();
+      if (logger_) {
+        logger_->trace("Adding new installed game entry for: {}",
+          gameSettings.FolderName());
+      }
       installedGames_.push_back(gui::Game(
           gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
       updateStoredGamePathSetting(installedGames_.back());
@@ -192,14 +195,17 @@ void LootState::init(const std::string& cmdLineGame,
   }
 
   try {
-    BOOST_LOG_TRIVIAL(debug) << "Selecting game.";
     selectGame(cmdLineGame);
-    BOOST_LOG_TRIVIAL(debug) << "Game selected is " << currentGame_->Name();
-    BOOST_LOG_TRIVIAL(debug) << "Initialising game-specific settings.";
+    if (logger_) {
+      logger_->debug("Game selected is {}", currentGame_->Name());
+      logger_->debug("Initialising game-specific settings.");
+    }
     currentGame_->Init();
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error)
-        << "Game-specific settings could not be initialised. " << e.what();
+    if (logger_) {
+      logger_->error("Game-specific settings could not be initialised: {}",
+        e.what());
+    }
     initErrors_.push_back(
         (format(translate(
              "Error: Game-specific settings could not be initialised. %1%")) %
@@ -221,8 +227,10 @@ void LootState::save(const boost::filesystem::path& file) {
 void LootState::changeGame(const std::string& newGameFolder) {
   lock_guard<mutex> guard(mutex_);
 
-  BOOST_LOG_TRIVIAL(debug) << "Changing current game to that with folder: "
-                           << newGameFolder;
+  if (logger_) {
+    logger_->debug("Changing current game to that with folder: {}",
+      newGameFolder);
+  }
   currentGame_ =
       find_if(installedGames_.begin(),
               installedGames_.end(),
@@ -230,7 +238,9 @@ void LootState::changeGame(const std::string& newGameFolder) {
                 return boost::iequals(newGameFolder, game.FolderName());
               });
   currentGame_->Init();
-  BOOST_LOG_TRIVIAL(debug) << "New game is " << currentGame_->Name();
+  if (logger_) {
+    logger_->debug("New game is: {}", currentGame_->Name());
+  }
 }
 
 gui::Game& LootState::getCurrentGame() {
@@ -288,10 +298,11 @@ void LootState::enableDebugLogging(bool enable) {
 
   LootSettings::enableDebugLogging(enable);
   if (enable) {
-    boost::log::core::get()->reset_filter();
-  } else {
-    boost::log::core::get()->set_filter(boost::log::trivial::severity >=
-                                        boost::log::trivial::warning);
+    if (logger_) {
+      logger_->set_level(spdlog::level::level_enum::trace);
+    }
+  } else if (logger_) {
+    logger_->set_level(spdlog::level::level_enum::warn);
   }
 }
 
@@ -303,7 +314,9 @@ void LootState::storeGameSettings(
 
   // Update existing games, add new games.
   std::unordered_set<string> newGameFolders;
-  BOOST_LOG_TRIVIAL(trace) << "Updating existing games and adding new games.";
+  if (logger_) {
+    logger_->trace("Updating existing games and adding new games.");
+  }
   for (const auto& gameSettings : getGameSettings()) {
     auto pos =
         find(installedGames_.begin(), installedGames_.end(), gameSettings);
@@ -317,8 +330,10 @@ void LootState::storeGameSettings(
           .SetRegistryKey(gameSettings.RegistryKey());
     } else {
       if (gui::Game::IsInstalled(gameSettings)) {
-        BOOST_LOG_TRIVIAL(trace) << "Adding new installed game entry for: "
-                                 << gameSettings.FolderName();
+        if (logger_) {
+          logger_->trace("Adding new installed game entry for: {}",
+            gameSettings.FolderName());
+        }
         installedGames_.push_back(gui::Game(
             gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
         updateStoredGamePathSetting(installedGames_.back());
@@ -330,10 +345,14 @@ void LootState::storeGameSettings(
 
   // Remove deleted games. As the current game is stored using its index,
   // removing an earlier game may invalidate it.
-  BOOST_LOG_TRIVIAL(trace) << "Removing deleted games.";
+  if (logger_) {
+    logger_->trace("Removing deleted games.");
+  }
   for (auto it = installedGames_.begin(); it != installedGames_.end();) {
     if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
-      BOOST_LOG_TRIVIAL(trace) << "Removing game: " << it->FolderName();
+      if (logger_) {
+        logger_->trace("Removing game: {}", it->FolderName());
+      }
       it = installedGames_.erase(it);
     } else
       ++it;
@@ -349,7 +368,12 @@ void LootState::storeGameSettings(
   }
 }
 
+std::shared_ptr<spdlog::logger> LootState::getLogger() const {
+  return logger_;
+}
+
 void LootState::updateStoredGamePathSetting(const gui::Game& game) {
+
   auto gameSettings = getGameSettings();
   auto pos = find_if(begin(gameSettings),
                      end(gameSettings),
@@ -357,10 +381,9 @@ void LootState::updateStoredGamePathSetting(const gui::Game& game) {
                        return boost::iequals(game.FolderName(),
                                              gameSettings.FolderName());
                      });
-  if (pos == end(gameSettings)) {
-    BOOST_LOG_TRIVIAL(error)
-        << "Could not find the settings for the current game (" << game.Name()
-        << ")";
+  if (pos == end(gameSettings) && logger_) {
+    logger_->error("Could not find the settings for the current game ({})",
+      game.Name());
   } else {
     pos->SetGamePath(game.GamePath());
     LootSettings::storeGameSettings(gameSettings);

@@ -33,7 +33,10 @@ namespace loot {
 class OpenReadmeQuery : public Query {
 public:
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Opening LOOT readme.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Opening LOOT's readme.");
+    }
     OpenInDefaultApplication(LootPaths::getReadmePath());
 
     return "";

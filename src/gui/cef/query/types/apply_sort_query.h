@@ -35,8 +35,10 @@ public:
       plugins_(plugins) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(trace)
-        << "User has accepted sorted load order, applying it.";
+    auto logger = state_.getLogger();
+    if (logger) {
+      logger->trace("User has accepted sorted load order, applying it.");
+    }
     state_.decrementUnappliedChangeCounter();
     state_.getCurrentGame().SetLoadOrder(plugins_);
 

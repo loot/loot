@@ -29,6 +29,7 @@
 #include <string>
 
 #include <boost/filesystem.hpp>
+#include <spdlog/spdlog.h>
 
 #include "gui/state/game_settings.h"
 #include "loot/api.h"
@@ -120,6 +121,8 @@ private:
 
   std::vector<Message> messages_;
   unsigned short loadOrderSortCount_;
+
+  std::shared_ptr<spdlog::logger> logger_;
 
   mutable std::mutex mutex_;
 };

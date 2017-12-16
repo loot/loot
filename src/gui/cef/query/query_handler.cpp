@@ -29,7 +29,6 @@
 #include <string>
 
 #include <boost/filesystem.hpp>
-#include <boost/log/trivial.hpp>
 #include <include/base/cef_bind.h>
 #include <include/cef_app.h>
 #include <include/cef_task.h>
@@ -37,7 +36,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <boost/log/trivial.hpp>
 
 #include "gui/cef/loot_app.h"
 #include "gui/cef/loot_handler.h"
@@ -90,8 +88,12 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
 
     CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
   } catch (std::exception& e) {
-    BOOST_LOG_TRIVIAL(error) << "Failed to parse CEF query request \""
-                             << request.ToString() << "\": " << e.what();
+    auto logger = lootState_.getLogger();
+    if (logger) {
+      logger->error("Failed to parse CEF query request \"{}\": {}",
+        request.ToString(),
+        e.what());
+    }
     callback->Failure(-1, e.what());
   }
 

@@ -37,7 +37,10 @@ public:
       game_(state.getCurrentGame()) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug) << "Clearing all user metadata.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Clearing all user metadata.");
+    }
 
     // Record which plugins have userlist entries.
     auto userlistPluginNames = getUserlistPluginNames();
@@ -46,9 +49,10 @@ public:
     game_.ClearAllUserMetadata();
     game_.SaveUserMetadata();
 
-    BOOST_LOG_TRIVIAL(trace)
-        << "Rederiving display metadata for " << userlistPluginNames.size()
-        << " plugins that had user metadata.";
+    if (logger) {
+      logger->trace("Rederiving display metadata for {} plugins that had user "
+                    "metadata.", userlistPluginNames.size());
+    }
 
     return getDerivedMetadataJson(userlistPluginNames);
   }

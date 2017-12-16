@@ -38,8 +38,10 @@ public:
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(debug)
-        << "Searching for plugins that conflict with " << pluginName_;
+    logger_ = getLogger();
+    if (logger_) {
+      logger_->debug("Searching for plugins that conflict with {}", pluginName_);
+    }
 
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
@@ -70,8 +72,9 @@ private:
       const std::shared_ptr<const PluginInterface>& plugin,
       const std::shared_ptr<const PluginInterface>& otherPlugin) {
     if (plugin->DoFormIDsOverlap(*otherPlugin)) {
-      BOOST_LOG_TRIVIAL(debug)
-          << "Found conflicting plugin: " << otherPlugin->GetName();
+      if (logger_) {
+        logger_->debug("Found conflicting plugin: {}", otherPlugin->GetName());
+      }
       return true;
     } else {
       return false;
@@ -80,6 +83,7 @@ private:
 
   gui::Game& game_;
   const std::string pluginName_;
+  std::shared_ptr<spdlog::logger> logger_;
 };
 }
 

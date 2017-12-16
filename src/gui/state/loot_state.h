@@ -25,6 +25,8 @@
 #ifndef LOOT_GUI_STATE_LOOT_STATE
 #define LOOT_GUI_STATE_LOOT_STATE
 
+#include <spdlog/spdlog.h>
+
 #include "gui/state/game.h"
 #include "gui/state/loot_settings.h"
 
@@ -51,11 +53,14 @@ public:
   void enableDebugLogging(bool enable);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
 
+  std::shared_ptr<spdlog::logger> getLogger() const;
+
 private:
   // Select initial game.
   void selectGame(std::string cmdLineGame);
   void updateStoredGamePathSetting(const gui::Game& game);
 
+  std::shared_ptr<spdlog::logger> logger_;
   std::string gameAppDataPath;
   std::list<gui::Game> installedGames_;
   std::list<gui::Game>::iterator currentGame_;

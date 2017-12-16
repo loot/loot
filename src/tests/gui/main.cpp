@@ -23,7 +23,6 @@
     */
 
 #include <boost/locale.hpp>
-#include <boost/log/core.hpp>
 
 #include "tests/gui/state/game_settings_test.h"
 #include "tests/gui/state/game_test.h"
@@ -38,7 +37,6 @@ int main(int argc, char **argv) {
   loot::InitialiseLocale("");
 
   // Disable logging or else stdout will get overrun.
-  boost::log::core::get()->set_logging_enabled(false);
   loot::SetLoggingCallback([&](loot::LogLevel level, const char *message) {});
 
   ::testing::InitGoogleTest(&argc, argv);

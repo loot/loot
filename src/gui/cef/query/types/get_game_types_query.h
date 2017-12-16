@@ -36,7 +36,10 @@ namespace loot {
 class GetGameTypesQuery : public Query {
 public:
   std::string executeLogic() {
-    BOOST_LOG_TRIVIAL(info) << "Getting LOOT's supported game types.";
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Getting LOOT's supported game types.");
+    }
     return getGameTypesAsJson();
   }
 
