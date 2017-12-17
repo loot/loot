@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2017-08-04 17:06+0100\n"
-"PO-Revision-Date: 2017-09-13 07:54+0900\n"
+"PO-Revision-Date: 2017-12-17 17:12+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -33,7 +33,7 @@ msgstr "マスターリストがリビジョン %s に更新されました。"
 
 #: src/gui/html/js/events.js:100
 msgid "No masterlist update was necessary."
-msgstr "マスターリストの更新は必要ありません。"
+msgstr "現在マスターリストの更新は必要ありません。"
 
 #: src/gui/html/js/events.js:131
 #, javascript-format
@@ -159,7 +159,7 @@ msgstr "空のプラグイン"
 
 #: src/gui/html/js/translateStaticText.js:33
 msgid "Loads Archive"
-msgstr "アーカイブ読み込み"
+msgstr "アーカイブ読み取り"
 
 #: src/gui/html/js/translateStaticText.js:34
 #: src/gui/html/js/translateStaticText.js:111
@@ -448,7 +448,7 @@ msgstr "設定"
 
 #: src/gui/html/js/translateStaticText.js:232
 msgid "Search cards"
-msgstr "カード検索"
+msgstr "カード内を検索"
 
 #: src/gui/html/js/translateStaticText.js:244
 msgid "Plugins"
@@ -465,7 +465,7 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:247
 msgid "Show only plugins with cards that contain"
-msgstr "以下のカードを含むプラグインのみ表示"
+msgstr "カードに以下の文字列を含むプラグインのみ表示"
 
 #: src/gui/html/js/translateStaticText.js:248
 msgid "No text specified"
@@ -787,15 +787,15 @@ msgid ""
 msgstr ""
 "メタデータのリスト解析中にエラーが発生: %1%\n"
 "\n"
-"エラーを解消するにはマスターリストを更新してみてください。ユーザーメタデータ"
-"にエラーが発生している場合は、おそらくLOOTの更新によってメタデータの構文サ"
-"ポートが変更されたことが原因です。ユーザーメタデータを手動で更新してくださ"
-"い。\n"
+"マスターリストを更新してみてください。エラーが解消されるかもしれません。ユー"
+"ザーメタデータにエラーが発生している場合は、おそらくLOOTの更新によってメタ"
+"データの対応構文が変更されたことが原因です。その場合は、ユーザーメタデータを"
+"手動で更新する必要があります。\n"
 "\n"
-"手動で更新するには、メニューから 'デバッグログの保存先を開く'をクリックして"
-"LOOTのデータフォルダを開き、対応するゲームのフォルダにあるuserlist.yamlファイ"
-"ルを開きましょう。ファイル内のメタデータをマニュアル（メインメニューから開け"
-"ます）を参照しながら編集してください。\n"
+"メニューから 'デバッグログの保存先を開く'をクリックしてLOOTのデータフォルダを"
+"開き、対応するゲームのフォルダにあるuserlist.yamlファイルを開いてください。マ"
+"ニュアル（メインメニューから開けます）を参照しつつ、ファイル内のメタデータを"
+"編集して手動で更新しましょう。\n"
 "\n"
 "LOOTのForum Threadでサポートを求めることもできます。[LOOTのウェブページ]"
 "(https://loot.github.io/)よりアクセス可能です。"
@@ -803,7 +803,7 @@ msgstr ""
 #: src/gui/state/game.cpp:466
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
-msgstr[0] "%1%のITM レコード"
+msgstr[0] "%1%のITMレコード"
 
 #: src/gui/state/game.cpp:467
 msgid "%1% deleted reference"
@@ -817,21 +817,21 @@ msgstr[0] "%1%の削除されたNavmesh"
 
 #: src/gui/state/game.cpp:472
 msgid "%1% found %2%, %3% and %4%."
-msgstr "%1%によって%2%、%3%、%4%が見つかりました。"
+msgstr "%1%によって%2%、%3%、%4%が見つかっています。"
 
 #: src/gui/state/game.cpp:474
 msgid "%1% found dirty edits."
-msgstr "%1%によってdirty editが見つかりました。"
+msgstr "%1%によってdirty editが見つかっています。"
 
 #: src/gui/state/game.cpp:477 src/gui/state/game.cpp:479
 #: src/gui/state/game.cpp:481
 msgid "%1% found %2% and %3%."
-msgstr "%1%によって%2%、%3%が見つかりました。"
+msgstr "%1%によって%2%、%3%が見つかっています。"
 
 #: src/gui/state/game.cpp:484 src/gui/state/game.cpp:486
 #: src/gui/state/game.cpp:488
 msgid "%1% found %2%."
-msgstr "%1%によって%2%が見つかりました。"
+msgstr "%1%によって%2%が見つかっています。"
 
 #: src/gui/state/loot_state.cpp:137
 msgid "Error: Could not create LOOT settings file. %1%"
