@@ -221,7 +221,7 @@ std::vector<Message> Game::CheckInstallValidity(
     }
   }
 
-  if (plugin->IsLightMaster()) {
+  if (plugin->IsLightMaster() && !boost::iends_with(plugin->GetName(), ".esp")) {
     for (const auto& masterName : plugin->GetMasters()) {
       try {
         auto master = GetPlugin(masterName);
