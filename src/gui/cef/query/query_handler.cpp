@@ -108,7 +108,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   const std::string name = json.at("name");
 
   if (name == "applySort")
-    return new ApplySortQuery(lootState_, json.at("pluginNames").at("plugins"));
+    return new ApplySortQuery(lootState_, json.at("pluginNames"));
   else if (name == "cancelFind")
     return new CancelFindQuery(browser);
   else if (name == "cancelSort")
@@ -124,7 +124,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "copyContent")
     return new CopyContentQuery(json.at("content"));
   else if (name == "copyLoadOrder")
-    return new CopyLoadOrderQuery(lootState_, json.at("pluginNames").at("plugins"));
+    return new CopyLoadOrderQuery(lootState_, json.at("pluginNames"));
   else if (name == "copyMetadata")
     return new CopyMetadataQuery(lootState_, json.at("targetName"));
   else if (name == "discardUnappliedChanges")

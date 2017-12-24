@@ -18,9 +18,7 @@
   };
   if (payload) {
     if (Array.isArray(payload)) {
-      request.plugin_names = {
-        plugins: payload
-      };
+      request.pluginNames = payload;
     } else if (_.isString(payload)) {
       request.targetName = payload;
     } else if (payload.name) {
