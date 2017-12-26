@@ -88,7 +88,11 @@ private:
     for (const auto& pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
 
-      json["plugins"].push_back(generateDerivedMetadata(plugin));
+      auto derivedMetadata = generateDerivedMetadata(plugin);
+      derivedMetadata.setLoadOrderIndex(
+        state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, plugins));
+      
+      json["plugins"].push_back(derivedMetadata);
     }
 
     return json.dump();

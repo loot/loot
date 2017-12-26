@@ -65,6 +65,10 @@ public:
     userMetadata = userlistEntry;
   }
 
+  void setLoadOrderIndex(short loadOrderIndex) {
+    this->loadOrderIndex = loadOrderIndex;
+  }
+
   static DerivedPluginMetadata none() {
     return DerivedPluginMetadata();
   }
