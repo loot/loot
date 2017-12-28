@@ -59,6 +59,34 @@ bool LootHandler::OnProcessMessageReceived(
       browser, source_process, message);
 }
 
+// CefDisplayHandler methods
+//--------------------------
+
+bool LootHandler::OnConsoleMessage(CefRefPtr< CefBrowser > browser,
+  const CefString& message,
+  const CefString& source,
+  int line) {
+  auto logger = lootState_.getLogger();
+  if (logger) {
+    auto messageString = message.ToString();
+    if (boost::icontains(messageString, "error")) {
+      if (source.length() == 0) {
+        logger->error("Chromium console message: {}", messageString);
+      } else {
+        logger->error("Chromium console message from {} at line {}: {}",
+          source.ToString(), line, messageString);
+      }
+    } else if (source.length() == 0) {
+      logger->info("Chromium console message: {}", messageString);
+    } else {
+      logger->info("Chromium console message from {} at line {}: {}",
+        source.ToString(), line, messageString);
+    }
+  }
+
+  return false;
+}
+
 // CefLifeSpanHandler methods
 //---------------------------
 

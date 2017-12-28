@@ -52,6 +52,14 @@ public:
       CefProcessId source_process,
       CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
+  // CefDisplayHandler methods
+  //--------------------------
+
+  virtual bool OnConsoleMessage(CefRefPtr< CefBrowser > browser, 
+    const CefString& message, 
+    const CefString& source, 
+    int line) OVERRIDE;
+
   // CefLifeSpanHandler methods
   //---------------------------
   virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
