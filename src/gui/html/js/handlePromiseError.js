@@ -11,7 +11,7 @@
   }
 })(this, loot => error => {
   /* Error.stack seems to be Chromium-specific. */
-  console.log(error.stack); // eslint-disable-line no-console
+  console.error(error.stack); // eslint-disable-line no-console
   loot.Dialog.closeProgress();
   loot.Dialog.showMessage(loot.l10n.translate('Error'), error.message);
 });

@@ -20,7 +20,7 @@ fs.readdirSync(l10nPath).forEach(file => {
 
       helpers.safeExecFileSync('msgfmt', [poPath, '-o', moPath]);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 });

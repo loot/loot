@@ -66,7 +66,7 @@
 
         return translationDataPromise
           .catch(error => {
-            console.log(`Error loading translation data: ${error.message}`); // eslint-disable-line no-console
+            console.error(`Error loading translation data: ${error.message}`); // eslint-disable-line no-console
             return defaultTranslationData;
           })
           .then(result => {
