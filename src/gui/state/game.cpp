@@ -81,8 +81,12 @@ Game::Game(const GameSettings& gameSettings,
     throw GameDetectionError("Game path could not be detected.");
   }
 
+  if (!localDataPath.empty()) {
+    SetGameLocalPath(localDataPath);
+  }
+
   gameHandle_ =
-      CreateGameHandle(Type(), GamePath().string(), localDataPath.string());
+      CreateGameHandle(Type(), GamePath().string(), GameLocalPath().string());
   gameHandle_->IdentifyMainMasterFile(Master());
 }
 

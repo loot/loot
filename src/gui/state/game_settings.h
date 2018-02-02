@@ -52,6 +52,7 @@ public:
   std::string RepoURL() const;
   std::string RepoBranch() const;
   boost::filesystem::path GamePath() const;
+  boost::filesystem::path GameLocalPath() const;
 
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
@@ -59,6 +60,7 @@ public:
   GameSettings& SetRepoURL(const std::string& repositoryURL);
   GameSettings& SetRepoBranch(const std::string& repositoryBranch);
   GameSettings& SetGamePath(const boost::filesystem::path& path);
+  GameSettings& SetGameLocalPath(const boost::filesystem::path& GameLocalPath);
 
 private:
   static const std::set<std::string> oldDefaultBranches;
@@ -70,10 +72,12 @@ private:
   std::string registryKey_;
 
   std::string lootFolderName_;
+
   std::string repositoryURL_;
   std::string repositoryBranch_;
 
   boost::filesystem::path gamePath_;  // Path to the game's folder.
+  boost::filesystem::path gameLocalPath_;
 };
 }
 

@@ -327,6 +327,7 @@ void LootState::storeGameSettings(
           .SetRepoURL(gameSettings.RepoURL())
           .SetRepoBranch(gameSettings.RepoBranch())
           .SetGamePath(gameSettings.GamePath())
+          .SetGameLocalPath(gameSettings.GameLocalPath())
           .SetRegistryKey(gameSettings.RegistryKey());
     } else {
       if (gui::Game::IsInstalled(gameSettings)) {

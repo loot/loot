@@ -108,6 +108,10 @@ std::string GameSettings::RepoBranch() const { return repositoryBranch_; }
 
 fs::path GameSettings::GamePath() const { return gamePath_; }
 
+fs::path GameSettings::GameLocalPath() const {
+  return gameLocalPath_;
+}
+
 GameSettings& GameSettings::SetName(const std::string& name) {
   name_ = name;
   return *this;
@@ -135,6 +139,11 @@ GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
 
 GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
   gamePath_ = path;
+  return *this;
+}
+
+GameSettings& GameSettings::SetGameLocalPath(const boost::filesystem::path& path) {
+  gameLocalPath_ = path;
   return *this;
 }
 }

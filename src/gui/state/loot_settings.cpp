@@ -107,6 +107,11 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     game.SetGamePath(*path);
   }
 
+  auto localPath = table->get_as<std::string>("local_path");
+  if (localPath) {
+    game.SetGameLocalPath(*localPath);
+  }
+
   auto registry = table->get_as<std::string>("registry");
   if (registry) {
     game.SetRegistryKey(*registry);
@@ -233,6 +238,7 @@ void LootSettings::save(const boost::filesystem::path& file) {
       game->insert("repo", gameSettings.RepoURL());
       game->insert("branch", gameSettings.RepoBranch());
       game->insert("path", gameSettings.GamePath().string());
+      game->insert("local_path", gameSettings.GameLocalPath().string());
       game->insert("registry", gameSettings.RegistryKey());
       games->push_back(game);
     }

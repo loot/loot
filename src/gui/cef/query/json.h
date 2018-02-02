@@ -258,6 +258,7 @@ void to_json(nlohmann::json& json, const GameSettings& game) {
     { "repo", game.RepoURL() },
     { "branch", game.RepoBranch() },
     { "path", game.GamePath().string() },
+    { "localPath", game.GameLocalPath().string() },
   };
 }
 
@@ -271,6 +272,7 @@ void from_json(const nlohmann::json& json, GameSettings& game) {
   game.SetRepoURL(json.value("repo", ""));
   game.SetRepoBranch(json.value("branch", ""));
   game.SetGamePath(json.value("path", ""));
+  game.SetGameLocalPath(json.value("localPath", ""));
 }
 
 nlohmann::json to_json_with_language(const PluginMetadata& metadata,
