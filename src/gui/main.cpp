@@ -73,7 +73,6 @@ namespace loot {
 struct CommandLineOptions {
   std::string defaultGame;
   std::string lootDataPath;
-  std::string gameAppDataPath;
   std::string url;
 
   CommandLineOptions(int argc, const char *const *argv) {
@@ -92,10 +91,6 @@ struct CommandLineOptions {
 
     if (command_line->HasSwitch("loot-data-path")) {
       lootDataPath = command_line->GetSwitchValue("loot-data-path");
-    }
-
-    if (command_line->HasSwitch("game-appdata-path")) {
-      gameAppDataPath = command_line->GetSwitchValue("game-appdata-path");
     }
 
     url = "http://loot/ui/index.html";
@@ -172,7 +167,6 @@ int main(int argc, char *argv[]) {
 #endif
   const auto cliOptions = loot::CommandLineOptions(argc, argv);
   app.get()->Initialise(cliOptions.defaultGame,
-                        cliOptions.gameAppDataPath,
                         cliOptions.lootDataPath,
                         cliOptions.url);
 

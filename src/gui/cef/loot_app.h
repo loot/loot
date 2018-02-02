@@ -37,7 +37,6 @@ class LootApp : public CefApp,
                 public CefRenderProcessHandler {
 public:
   void Initialise(const std::string& defaultGame,
-                  const std::string& gameAppDataPath,
                   const std::string& lootDataPath,
                   const std::string& url);
 

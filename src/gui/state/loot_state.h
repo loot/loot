@@ -35,7 +35,7 @@ class LootState : public LootSettings {
 public:
   LootState();
 
-  void init(const std::string& cmdLineGame, const std::string& gameAppDataPath);
+  void init(const std::string& cmdLineGame);
   const std::vector<std::string>& getInitErrors() const;
 
   void save(const boost::filesystem::path& file);

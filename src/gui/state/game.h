@@ -39,8 +39,7 @@ namespace gui {
 class Game : public GameSettings {
 public:
   Game(const GameSettings& gameSettings,
-       const boost::filesystem::path& lootDataPath,
-       const boost::filesystem::path& localDataPath = "");
+       const boost::filesystem::path& lootDataPath);
   Game(const Game& game);
 
   Game& operator=(const Game& game);

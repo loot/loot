@@ -12,9 +12,6 @@ LOOT's initialisation can be customised using command line parameters:
 ``--loot-data-path=<path>``:
   Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_CONFIG_HOME/LOOT``, ``$HOME/.config/LOOT`` or the current path on Linux.
 
-``--game-appdata-path=<path>``:
-  Set the path to use for the all games' local application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\<game folder name>``. Specifying this is unnecessary and generally wrong on Windows, but useful on Linux when running for a single game.
-
 If LOOT cannot detect any supported game installs, it will immediately open the :doc:`Settings dialog <settings>`. There you can edit LOOT’s settings to provide a path to a supported game, after which you can select it from the game menu.
 
 Once a game has been set, LOOT will scan its plugins and load the game’s masterlist, if one is present. The plugins and any metadata they have are then listed in their current load order.

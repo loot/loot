@@ -87,7 +87,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
   settings.SetGamePath(dataPath.parent_path());
-  Game game(settings, lootDataPath, localPath);
+  settings.SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
 
   EXPECT_EQ(GetParam(), game.Type());
   EXPECT_EQ(settings.Name(), game.Name());
@@ -106,7 +107,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 // Testing on Windows will find real game installs in the Registry, so cannot
 // test autodetection fully unless on Linux.
 TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  EXPECT_THROW(Game(GameSettings(GetParam()), "", localPath),
+  EXPECT_THROW(Game(GameSettings(GetParam()).SetGameLocalPath(localPath), ""),
                GameDetectionError);
 }
 
@@ -117,14 +118,15 @@ TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {
 #else
 TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
   auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
-  EXPECT_NO_THROW(Game(settings, lootDataPath, ""));
+  EXPECT_NO_THROW(Game(settings, lootDataPath));
 }
 #endif
 
 TEST_P(GameTest, copyConstructorShouldCopyGameData) {
-  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-             lootDataPath,
-             localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game1(settings, lootDataPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2(game1);
@@ -135,9 +137,10 @@ TEST_P(GameTest, copyConstructorShouldCopyGameData) {
 }
 
 TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
-  Game game1(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-             lootDataPath,
-             localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game1(settings, lootDataPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2 = game1;
@@ -289,9 +292,10 @@ TEST_P(
 }
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
-  Game game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-            "",
-            localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());
@@ -300,9 +304,10 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
 }
 
 TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());
@@ -311,17 +316,19 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
 }
 
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
 
   EXPECT_NO_THROW(game.Init());
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -341,9 +348,10 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
 
 TEST_P(GameTest,
        checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -362,9 +370,10 @@ TEST_P(GameTest,
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -390,9 +399,10 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
@@ -410,9 +420,10 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
@@ -426,9 +437,10 @@ TEST_P(
 TEST_P(
     GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -463,9 +475,10 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
@@ -483,9 +496,10 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
@@ -501,17 +515,19 @@ TEST_P(
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
 
   EXPECT_FALSE(game.ArePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
@@ -519,9 +535,10 @@ TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
 }
 
 TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
@@ -531,9 +548,10 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -545,9 +563,10 @@ TEST_P(
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   "",
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -565,9 +584,10 @@ TEST_P(
 }
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   game.Init();
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
@@ -598,9 +618,10 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
 }
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -632,9 +653,10 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
 }
 
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -678,9 +700,10 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 }
 
 TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   game.Init();
 
   ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
@@ -745,18 +768,20 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 }
 
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
 
   ASSERT_EQ(1, game.GetMessages().size());
 }
 
 TEST_P(GameTest,
        incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   game.IncrementLoadOrderSortCount();
 
   EXPECT_TRUE(game.GetMessages().empty());
@@ -764,9 +789,10 @@ TEST_P(GameTest,
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
@@ -777,9 +803,10 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.DecrementLoadOrderSortCount();
 
@@ -789,9 +816,10 @@ TEST_P(
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
@@ -801,9 +829,10 @@ TEST_P(
 }
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   std::vector<Message> messages({
       Message(MessageType::say, "1"),
       Message(MessageType::error, "2"),
@@ -816,9 +845,10 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  Game game = Game(GameSettings(GetParam()).SetGamePath(dataPath.parent_path()),
-                   lootDataPath,
-                   localPath);
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
   std::vector<Message> messages({
       Message(MessageType::say, "1"),
       Message(MessageType::error, "2"),

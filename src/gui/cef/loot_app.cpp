@@ -35,11 +35,10 @@
 
 namespace loot {
 void LootApp::Initialise(const std::string& defaultGame,
-                         const std::string& gameAppDataPath,
                          const std::string& lootDataPath,
                          const std::string& url) {
   LootPaths::initialise(lootDataPath);
-  lootState_.init(defaultGame, gameAppDataPath);
+  lootState_.init(defaultGame);
   url_ = url;
 }
 

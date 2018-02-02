@@ -89,9 +89,7 @@ LootState::LootState() :
     unappliedChangeCounter_(0),
     currentGame_(installedGames_.end()) {}
 
-void LootState::init(const std::string& cmdLineGame,
-                     const std::string& gameAppDataPath) {
-  this->gameAppDataPath = gameAppDataPath;
+void LootState::init(const std::string& cmdLineGame) {
   // Do some preliminary locale / UTF-8 support setup here, in case the settings
   // file reading requires it.
   // Boost.Locale initialisation: Specify location of language dictionaries.
@@ -189,7 +187,7 @@ void LootState::init(const std::string& cmdLineGame,
           gameSettings.FolderName());
       }
       installedGames_.push_back(gui::Game(
-          gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
+          gameSettings, LootPaths::getLootDataPath()));
       updateStoredGamePathSetting(installedGames_.back());
     }
   }
@@ -336,7 +334,7 @@ void LootState::storeGameSettings(
             gameSettings.FolderName());
         }
         installedGames_.push_back(gui::Game(
-            gameSettings, LootPaths::getLootDataPath(), gameAppDataPath));
+            gameSettings, LootPaths::getLootDataPath()));
         updateStoredGamePathSetting(installedGames_.back());
       }
     }

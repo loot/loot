@@ -68,8 +68,7 @@ bool hasPluginFileExtension(const std::string& filename) {
 }
 
 Game::Game(const GameSettings& gameSettings,
-           const boost::filesystem::path& lootDataPath,
-           const boost::filesystem::path& localDataPath) :
+           const boost::filesystem::path& lootDataPath) :
     GameSettings(gameSettings),
     lootDataPath_(lootDataPath),
     pluginsFullyLoaded_(false),
@@ -79,10 +78,6 @@ Game::Game(const GameSettings& gameSettings,
 
   if (GamePath().empty()) {
     throw GameDetectionError("Game path could not be detected.");
-  }
-
-  if (!localDataPath.empty()) {
-    SetGameLocalPath(localDataPath);
   }
 
   gameHandle_ =
