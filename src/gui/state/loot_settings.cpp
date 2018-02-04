@@ -72,6 +72,8 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     game = GameSettings(GameType::fonv, *folder);
   } else if (*type == GameSettings(GameType::fo4).FolderName()) {
     game = GameSettings(GameType::fo4, *folder);
+  } else if (*type == GameSettings(GameType::fo4vr).FolderName()) {
+    game = GameSettings(GameType::fo4vr, *folder);
   } else
     throw std::runtime_error(
         "invalid value for 'type' key in game settings table");
@@ -135,6 +137,7 @@ LootSettings::LootSettings() :
         GameSettings(GameType::fo3),
         GameSettings(GameType::fonv),
         GameSettings(GameType::fo4),
+        GameSettings(GameType::fo4vr),
         GameSettings(GameType::tes4, "Nehrim")
             .SetName("Nehrim - At Fate's Edge")
             .SetMaster("Nehrim.esm")
@@ -404,5 +407,10 @@ void LootSettings::appendBaseGames() {
            end(gameSettings_),
            GameSettings(GameType::fo4)) == end(gameSettings_))
     gameSettings_.push_back(GameSettings(GameType::fo4));
+
+  if (find(begin(gameSettings_),
+    end(gameSettings_),
+    GameSettings(GameType::fo4vr)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::fo4vr));
 }
 }

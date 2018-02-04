@@ -61,9 +61,9 @@ set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
 set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.12.2/loot_api-0.12.2-0-g7ab0445_dev-win32.7z")
+    set(LOOT_API_URL "https://bintray.com/wrinklyninja/loot/download_file?file_path=loot_api-0.12.2-6-g3bd2350_fallout4vr-win32.7z")
 else()
-    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.12.2/loot-api.tar.xz")
+    set(LOOT_API_URL "https://bintray.com/wrinklyninja/loot/download_file?file_path=loot_api-0.12.2-6-g3bd2350_fallout4vr-Linux.tar.xz")
 endif()
 
 ExternalProject_Add(json
@@ -280,8 +280,8 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -std=c++14")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14")
 
-    set (LOOT_GUI_LIBS X11 pthread)
-    set (LOOT_TEST_LIBS pthread)
+    set (LOOT_GUI_LIBS X11 pthread http_parser ssh2)
+    set (LOOT_TEST_LIBS pthread http_parser ssh2)
 ENDIF ()
 
 IF (MSVC)

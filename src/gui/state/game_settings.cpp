@@ -77,6 +77,12 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
     repositoryURL_ = "https://github.com/loot/fallout4.git";
+  } else if (Type() == GameType::fo4vr) {
+    name_ = "Fallout 4 VR";
+    registryKey_ = "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path";
+    lootFolderName_ = "Fallout4VR";
+    masterFile_ = "Fallout4.esm";
+    repositoryURL_ = "https://github.com/loot/fallout4.git";
   }
 
   if (!folder.empty())

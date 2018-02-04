@@ -54,6 +54,7 @@ private:
       GameSettings(GameType::fo3).FolderName(),
       GameSettings(GameType::fonv).FolderName(),
       GameSettings(GameType::fo4).FolderName(),
+      GameSettings(GameType::fo4vr).FolderName(),
     };
 
     return json.dump();

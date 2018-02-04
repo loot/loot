@@ -53,6 +53,7 @@ public:
 
     if ((state_.getCurrentGame().Type() == GameType::tes5 ||
          state_.getCurrentGame().Type() == GameType::fo4 ||
+         state_.getCurrentGame().Type() == GameType::fo4vr ||
          state_.getCurrentGame().Type() == GameType::tes5se))
       applyUnchangedLoadOrder(plugins);
 

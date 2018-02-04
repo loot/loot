@@ -72,6 +72,8 @@ GameType mapGameType(const std::string& gameType) {
     return GameType::fonv;
   else if (gameType == GameSettings(GameType::fo4).FolderName())
     return GameType::fo4;
+  else if (gameType == GameSettings(GameType::fo4vr).FolderName())
+    return GameType::fo4vr;
   else
     throw std::runtime_error("Invalid game type value: " + gameType);
 }
