@@ -4,6 +4,46 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.12.2 - 2018-02-05
+===================
+
+Added
+-----
+
+- Support for Fallout 4 VR.
+- Support for configuring games' local paths, i.e. the directory in which their
+  ``plugins.txt`` is stored. Each game entry in LOOT's ``settings.toml`` now has
+  a ``local_path`` variable that is blank by default, which leaves it up to
+  libloadorder (via the LOOT API) to determine the path. There is no GUI option
+  to configure the value.
+- Chromium console messages are now logged to ``LOOTDebugLog.txt`` to help when
+  debugging.
+
+Changed
+-------
+
+- Updated LOOT API to v0.12.3.
+- Replaced Protocol Buffers serialisation dependency with nlohmann/json v2.1.1.
+- Replaced Boost.Log with spdlog v0.14.0.
+- Downgraded Boost to 1.63.0 to take advantage of pre-built binaries on
+  AppVeyor.
+- Updated Japanese translation.
+
+Removed
+-------
+
+- The ``--game-appdata-path`` CLI parameter, which set the local path to use for
+  all games, and which has been superceded by game-specific ``local_path``
+  configuration variables.
+
+Fixed
+-----
+
+- Plugins with a ``.esp`` file extension and the light master flag set are no
+  longer treated as masters when sorting, so they can have other ``.esp`` files
+  as masters without causing cyclic interaction sorting errors (via LOOT API).
+- Sorting didn't update sidebar indices.
+
 0.12.1 - 2017-12-03
 ===================
 
