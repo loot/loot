@@ -154,7 +154,13 @@ LootSettings::LootSettings() :
 void LootSettings::load(const boost::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  auto settings = cpptoml::parse_file(file.string());
+  // Don't use cpptoml::parse_file() as it just uses a std stream,
+  // which don't support UTF-8 paths on Windows.
+  boost::filesystem::ifstream in(file);
+  if (!in.is_open())
+    throw cpptoml::parse_exception(file.string() + " could not be opened for parsing");
+
+  auto settings = cpptoml::parser(in).parse();
 
   enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
                             .value_or(enableDebugLogging_);

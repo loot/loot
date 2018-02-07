@@ -35,11 +35,17 @@ namespace loot {
 namespace test {
 class LootSettingsTest : public ::testing::Test {
 protected:
-  LootSettingsTest() : settingsFile_("./settings_.toml") {}
+  LootSettingsTest() :
+    settingsFile_("./settings_.toml"),
+    unicodeSettingsFile_("./Andr\xc3\xa9_settings_.toml") {}
 
-  ~LootSettingsTest() { boost::filesystem::remove(settingsFile_); }
+  ~LootSettingsTest() {
+    boost::filesystem::remove(settingsFile_);
+    boost::filesystem::remove(unicodeSettingsFile_);
+  }
 
   const boost::filesystem::path settingsFile_;
+  const boost::filesystem::path unicodeSettingsFile_;
   LootSettings settings_;
 };
 
@@ -170,6 +176,21 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
 
   EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
   EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
+}
+
+TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
+  using std::endl;
+  boost::filesystem::ofstream out(unicodeSettingsFile_);
+  out << "enableDebugLogging = true" << endl
+    << "updateMasterlist = true" << endl
+    << "game = \"Oblivion\"" << endl;
+  out.close();
+
+  settings_.load(unicodeSettingsFile_);
+
+  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isDebugLoggingEnabled());
+  EXPECT_EQ("Oblivion", settings_.getGame());
 }
 
 TEST_F(LootSettingsTest,
