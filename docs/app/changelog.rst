@@ -4,6 +4,24 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.12.3 - 2018-02-10
+===================
+
+Fixed
+-----
+
+- LOOT wouldn't start when run by a user with a ``%LOCALAPPDATA`` path
+  containing non-ASCII characters, which was a regression introduced in v0.12.0.
+- The log buffer is flushed after every statement, fixing the regression
+  introduced in v0.12.2.
+- The uninstaller didn't remove ``settings.toml``.
+
+Changed
+-------
+
+- Disabled CEF debug logging, as the ``CEFDebugLog.txt`` has generally been more
+  misleading than helpful.
+
 0.12.2 - 2018-02-05
 ===================
 
