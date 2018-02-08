@@ -257,7 +257,6 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${CPPTOML_INCLUDE_DIRS}
                      ${CEF_INCLUDE_DIRS}
                      ${JSON_INCLUDE_DIRS}
-                     ${LIBESPM_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
                      ${SPDLOG_INCLUDE_DIRS})
