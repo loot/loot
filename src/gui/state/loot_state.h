@@ -25,6 +25,8 @@
 #ifndef LOOT_GUI_STATE_LOOT_STATE
 #define LOOT_GUI_STATE_LOOT_STATE
 
+#define SPDLOG_WCHAR_FILENAMES
+
 #include <spdlog/spdlog.h>
 
 #include "gui/state/game.h"

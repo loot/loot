@@ -128,7 +128,11 @@ void LootState::init(const std::string& cmdLineGame) {
   fs::remove(LootPaths::getLogPath());
   spdlog::set_pattern("[%T.%f] [%l]: %v");
   logger_ = spdlog::basic_logger_mt(LOGGER_NAME,
-    LootPaths::getLogPath().string().c_str());
+#if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
+    LootPaths::getLogPath().wstring());
+#else
+    LootPaths::getLogPath().string());
+#endif
   if (!logger_) {
     initErrors_.push_back(
       translate("Error: Could not initialise logging.").str());
