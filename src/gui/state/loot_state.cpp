@@ -137,6 +137,7 @@ void LootState::init(const std::string& cmdLineGame) {
     initErrors_.push_back(
       translate("Error: Could not initialise logging.").str());
   }
+  logger_->flush_on(spdlog::level::trace);
   SetLoggingCallback(apiLogCallback);
   enableDebugLogging(isDebugLoggingEnabled());
 
