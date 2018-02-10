@@ -40,10 +40,8 @@ CefSettings GetCefSettings() {
   // Enable CEF command line args.
   cef_settings.command_line_args_disabled = false;
 
-  // Set CEF logging.
-  CefString(&cef_settings.log_file)
-      .FromString(
-          (loot::LootPaths::getLootDataPath() / "CEFDebugLog.txt").string());
+  // Disable CEF logging.
+  cef_settings.log_severity = LOGSEVERITY_DISABLE;
 
   // Load locale pack files from LOOT's l10n path.
   CefString(&cef_settings.locales_dir_path)

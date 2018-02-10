@@ -152,7 +152,6 @@ Root: HKLM; Subkey: "Software\LOOT"; ValueType: string; ValueName: "Installed Pa
 
 [UninstallDelete]
 Type: files; Name: "{localappdata}\{#MyAppName}\";
-Type: files; Name: "{localappdata}\{#MyAppName}\";
 
 Type: files; Name: "{localappdata}\{#MyAppName}\Oblivion\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\Skyrim\masterlist.yaml";
@@ -289,7 +288,6 @@ begin
     if MsgBox(CustomMessage('DeleteUserFiles'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES
     then begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\LOOTDebugLog.txt'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\CEFDebugLog.txt'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.toml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Oblivion\userlist.yaml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Skyrim\userlist.yaml'));

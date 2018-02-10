@@ -159,10 +159,6 @@ void LootState::init(const std::string& cmdLineGame) {
   }
 #endif
 
-  // The CEF debug log is appended to, not overwritten, so it gets really long.
-  // Delete the current CEF debug log.
-  fs::remove(LootPaths::getLootDataPath() / "CEFDebugLog.txt");
-
   // Now that settings have been loaded, set the locale again to handle
   // translations.
   if (getLanguage() != MessageContent::defaultLanguage) {
