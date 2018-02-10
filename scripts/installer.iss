@@ -290,7 +290,7 @@ begin
     then begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\LOOTDebugLog.txt'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\CEFDebugLog.txt'));
-      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.yaml'));
+      DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\settings.toml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Oblivion\userlist.yaml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Skyrim\userlist.yaml'));
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout3\userlist.yaml'));
