@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2014-2017    WrinklyNinja
+    Copyright (C) 2014-2018    WrinklyNinja
 
     This file is part of LOOT.
 
@@ -55,9 +55,9 @@ public:
   // CefDisplayHandler methods
   //--------------------------
 
-  virtual bool OnConsoleMessage(CefRefPtr< CefBrowser > browser, 
-    const CefString& message, 
-    const CefString& source, 
+  virtual bool OnConsoleMessage(CefRefPtr< CefBrowser > browser,
+    const CefString& message,
+    const CefString& source,
     int line) OVERRIDE;
 
   // CefLifeSpanHandler methods
