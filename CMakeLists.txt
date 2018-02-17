@@ -149,7 +149,7 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(spdlog
                     PREFIX "external"
-                    URL "https://github.com/gabime/spdlog/archive/v0.14.0.tar.gz"
+                    URL "https://github.com/gabime/spdlog/archive/v0.16.3.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
