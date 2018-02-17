@@ -51,11 +51,22 @@ public:
                        boost::locale::translate("Sorting load order..."));
     std::vector<std::string> plugins = state_.getCurrentGame().SortPlugins();
 
-    if ((state_.getCurrentGame().Type() == GameType::tes5 ||
-         state_.getCurrentGame().Type() == GameType::fo4 ||
-         state_.getCurrentGame().Type() == GameType::fo4vr ||
-         state_.getCurrentGame().Type() == GameType::tes5se))
-      applyUnchangedLoadOrder(plugins);
+    try {
+      if ((state_.getCurrentGame().Type() == GameType::tes5 ||
+        state_.getCurrentGame().Type() == GameType::fo4 ||
+        state_.getCurrentGame().Type() == GameType::fo4vr ||
+        state_.getCurrentGame().Type() == GameType::tes5se))
+        applyUnchangedLoadOrder(plugins);
+    }
+    catch (...) {
+      setErrorMessage(boost::locale::translate(
+        "Oh no, something went wrong! This is usually because your "
+        "plugins.txt is set to be read-only. If it is, unset it and "
+        "try again. If it isn't, you can check your LOOTDebugLog.txt "
+        "(you can get to it through the main menu) for more information.")
+        .str());
+      throw;
+    }
 
     std::string json = generateJsonResponse(plugins);
 

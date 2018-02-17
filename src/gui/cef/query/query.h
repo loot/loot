@@ -41,12 +41,17 @@ public:
       if (logger) {
         logger->error("Exception while executing query: {}", e.what());
       }
-      callback->Failure(-1,
-                        boost::locale::translate(
-                            "Oh no, something went wrong! You can check your "
-                            "LOOTDebugLog.txt (you can get to it through the "
-                            "main menu) for more information.")
-                            .str());
+      if (errorMessage.empty()) {
+        callback->Failure(-1,
+          boost::locale::translate(
+            "Oh no, something went wrong! You can check your "
+            "LOOTDebugLog.txt (you can get to it through the "
+            "main menu) for more information.")
+          .str());
+      }
+      else {
+        callback->Failure(-1, errorMessage);
+      }
     }
   }
 
@@ -63,7 +68,13 @@ protected:
         "loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
   }
 
+  void setErrorMessage(const std::string message) {
+    errorMessage = message;
+  }
+
 private:
+  std::string errorMessage;
+
   IMPLEMENT_REFCOUNTING(Query);
 };
 }

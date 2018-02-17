@@ -39,8 +39,19 @@ public:
     if (logger) {
       logger->trace("User has accepted sorted load order, applying it.");
     }
-    state_.decrementUnappliedChangeCounter();
-    state_.getCurrentGame().SetLoadOrder(plugins_);
+    try {
+      state_.getCurrentGame().SetLoadOrder(plugins_);
+      state_.decrementUnappliedChangeCounter();
+    }
+    catch (...) {
+      setErrorMessage(boost::locale::translate(
+        "Oh no, something went wrong! This is usually because your "
+        "plugins.txt is set to be read-only. If it is, unset it and "
+        "try again. If it isn't, you can check your LOOTDebugLog.txt "
+        "(you can get to it through the main menu) for more information.")
+        .str());
+      throw;
+    }
 
     return "";
   }
