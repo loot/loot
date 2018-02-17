@@ -733,9 +733,8 @@
     firstRun.querySelector(
       'p:last-of-type'
     ).innerHTML = l10n.translateFormatted(
-      "LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s or %s.",
-      '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>',
-      '<a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>'
+      "LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s.",
+      '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>'
     );
 
     firstRun.getElementsByTagName(
@@ -757,9 +756,8 @@
     );
 
     about.querySelector('p:nth-child(4)').innerHTML = l10n.translateFormatted(
-      "LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s or %s.",
-      '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>',
-      '<a href="https://wrinklyninja.github.io/bitcoin/">Bitcoin</a>'
+      "LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s.",
+      '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>'
     );
   }
 
