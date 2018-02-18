@@ -62,25 +62,35 @@ bool LootHandler::OnProcessMessageReceived(
 // CefDisplayHandler methods
 //--------------------------
 
-bool LootHandler::OnConsoleMessage(CefRefPtr< CefBrowser > browser,
+bool LootHandler::OnConsoleMessage(CefRefPtr< CefBrowser > browser, 
+  cef_log_severity_t level,
   const CefString& message,
   const CefString& source,
   int line) {
   auto logger = lootState_.getLogger();
   if (logger) {
-    auto messageString = message.ToString();
-    if (boost::icontains(messageString, "error")) {
-      if (source.length() == 0) {
-        logger->error("Chromium console message: {}", messageString);
-      } else {
-        logger->error("Chromium console message from {} at line {}: {}",
-          source.ToString(), line, messageString);
-      }
-    } else if (source.length() == 0) {
-      logger->info("Chromium console message: {}", messageString);
-    } else {
-      logger->info("Chromium console message from {} at line {}: {}",
-        source.ToString(), line, messageString);
+    std::string logMessage;
+    if (source.empty()) {
+      logMessage = fmt::format("Chromium console message: {}", message.ToString());
+    }
+    else {
+      logMessage = fmt::format("Chromium console message from {} at line {}: {}",
+        source.ToString(), line, message.ToString());
+    }
+
+    switch (level) {
+    case LOGSEVERITY_INFO:
+      logger->info(logMessage);
+      break;
+    case LOGSEVERITY_WARNING:
+      logger->warn(logMessage);
+      break;
+    case LOGSEVERITY_ERROR:
+      logger->error(logMessage);
+      break;
+    default:
+      logger->trace(logMessage);
+      break;
     }
   }
 
