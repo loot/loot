@@ -4,6 +4,35 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.12.4 - 2018-02-22
+===================
+
+Fixed
+-----
+
+- Loading or saving a load order could be very slow because the plugins
+  directory was scanned recursively, which is unnecessary. In the reported case,
+  this fix caused saving a load order to go from 23 seconds to 43 milliseconds
+  (via the LOOT API).
+- Plugin parsing errors were being logged with trace severity, they are now
+  logged as errors (via the LOOT API).
+- Chromium console messages are now logged with severity levels that better
+  match the severity with which they appear in the console (via the LOOT API).
+- Saving a load order for Oblivion, Fallout 3 or Fallout: New Vegas now updates
+  plugin access times to the current time for correctness (via the LOOT API).
+
+Changed
+-------
+
+- Added a specific message for sorting errors that mentions plugins.txt probably
+  being read-only, as it's the most common cause of issues filed.
+- Added missing mentions of Fallout 4 VR support.
+- Performance improvement for load order operations (via the LOOT API).
+- Updated the LOOT API to v0.12.4.
+- Updated spdlog to v0.16.3.
+- Updated nlohmann/json to v3.1.1.
+- Updated CEF to v3.3282.1733.g9091548.
+
 0.12.3 - 2018-02-10
 ===================
 
