@@ -13,7 +13,7 @@ Copyright License Texts
   :literal:
 
 `cpptoml`_
-======
+==========
 
 .. _cpptoml: https://github.com/skystrife/cpptoml
 
@@ -53,7 +53,7 @@ Copyright License Texts
   :literal:
 
 `Lodash`_
-=====================
+=========
 
 .. _Lodash: https://lodash.com/
 
@@ -83,7 +83,7 @@ LOOT Documentation
   :literal:
 
 `nlohmann/json`_
-=========
+================
 
 .. _nlohmann/json: https://github.com/nlohmann/json
 
