@@ -90,13 +90,6 @@ link_directories(${LOOT_API_EXTRACTED_PATH})
 set(LOOT_API_STATIC_LIBRARY "${CMAKE_STATIC_LIBRARY_PREFIX}loot_api${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set(LOOT_API_SHARED_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}loot_api${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-ExternalProject_Add(testing-metadata
-                    PREFIX "external"
-                    URL "https://github.com/loot/testing-metadata/archive/1.2.0.tar.gz"
-                    CONFIGURE_COMMAND ""
-                    BUILD_COMMAND ""
-                    INSTALL_COMMAND "")
-
 ExternalProject_Add(testing-plugins
                     PREFIX "external"
                     URL "https://github.com/WrinklyNinja/testing-plugins/archive/1.0.0.tar.gz"
@@ -313,7 +306,7 @@ target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_L
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests cpptoml loot_api spdlog GTest testing-metadata testing-plugins)
+add_dependencies     (loot_gui_tests cpptoml loot_api spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS})
 
 ##############################
@@ -378,13 +371,6 @@ add_custom_command(TARGET loot_gui_tests POST_BUILD
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND yarn build
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-# Copy testing metadata
-ExternalProject_Get_Property(testing-metadata SOURCE_DIR)
-add_custom_command(TARGET loot_gui_tests POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${SOURCE_DIR}
-        "$<TARGET_FILE_DIR:loot_gui_tests>/testing-metadata")
 
 # Copy testing plugins
 ExternalProject_Get_Property(testing-plugins SOURCE_DIR)
