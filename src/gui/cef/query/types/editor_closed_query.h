@@ -75,6 +75,10 @@ private:
     auto nonUserMetadata = getNonUserMetadata();
     auto userMetadata = metadata_.NewMetadata(nonUserMetadata);
 
+    if (metadata_.GetGroup() != nonUserMetadata.GetGroup()) {
+      userMetadata.SetGroup(metadata_.GetGroup());
+    }
+
     if (metadata_.GetLocalPriority().GetValue() !=
         nonUserMetadata.GetLocalPriority().GetValue()) {
       userMetadata.SetLocalPriority(metadata_.GetLocalPriority());

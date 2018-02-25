@@ -27,6 +27,7 @@
 
 #include <mutex>
 #include <string>
+#include <unordered_set>
 
 #include <boost/filesystem.hpp>
 #include <spdlog/spdlog.h>
@@ -89,11 +90,16 @@ public:
 
   void LoadMetadata();
   std::set<std::string> GetKnownBashTags() const;
+
+  std::unordered_set<Group> GetMasterlistGroups() const;
+  std::unordered_set<Group> GetUserGroups() const;
+
   PluginMetadata GetMasterlistMetadata(const std::string& pluginName,
                                        bool evaluateConditions = false) const;
   PluginMetadata GetUserMetadata(const std::string& pluginName,
                                  bool evaluateConditions = false) const;
 
+  void SetUserGroups(const std::unordered_set<Group>& groups);
   void AddUserMetadata(const PluginMetadata& metadata);
   void ClearUserMetadata(const std::string& pluginName);
   void ClearAllUserMetadata();

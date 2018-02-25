@@ -61,9 +61,9 @@ set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
 set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.12.5/loot_api-0.12.5-0-g9ba600c_dev-win32.7z")
+    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.13.0/loot_api-0.13.0-0-g498a9f0_dev-win32.7z")
 else()
-    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.12.5/loot-api.tar.xz")
+    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.13.0/loot-api.tar.xz")
 endif()
 
 ExternalProject_Add(json

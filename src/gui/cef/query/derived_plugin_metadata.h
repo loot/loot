@@ -49,6 +49,7 @@ public:
     loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
       state.getCurrentGame().GetLoadOrder());
 
+    group = evaluatedMetadata.GetGroup();
     priority = evaluatedMetadata.GetLocalPriority().GetValue();
     globalPriority = evaluatedMetadata.GetGlobalPriority().GetValue();
     if (!evaluatedMetadata.GetCleanInfo().empty()) {
@@ -85,6 +86,7 @@ private:
   uint32_t crc;
   short loadOrderIndex;
 
+  std::string group;
   short priority;
   short globalPriority;
   std::string cleanedWith;

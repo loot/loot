@@ -36,6 +36,7 @@
 #include "gui/state/game_detection_error.h"
 #include "gui/state/logging.h"
 #include "loot/exception/file_access_error.h"
+#include "loot/exception/undefined_group_error.h"
 
 #ifdef _WIN32
 #ifndef UNICODE
@@ -308,6 +309,19 @@ void Game::RedatePlugins() {
 }
 
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
+  try {
+    gameHandle_->LoadCurrentLoadOrderState();
+  }
+  catch (std::exception& e) {
+    if (logger_) {
+      logger_->error("Failed to load current load order. Details: {}", e.what());
+    }
+    AppendMessage(Message(
+      MessageType::error,
+      boost::locale::translate("Failed to load the current load order, information displayed may be incorrect.")
+      .str()));
+  }
+
   gameHandle_->LoadPlugins(GetInstalledPluginNames(), headersOnly);
 
   pluginsFullyLoaded_ = !headersOnly;
@@ -369,6 +383,20 @@ short Game::GetActiveLoadOrderIndex(
 
 std::vector<std::string> Game::SortPlugins() {
   std::vector<std::string> plugins = GetInstalledPluginNames();
+
+  try {
+    gameHandle_->LoadCurrentLoadOrderState();
+  }
+  catch (std::exception& e) {
+    if (logger_) {
+      logger_->error("Failed to load current load order. Details: {}", e.what());
+    }
+    AppendMessage(Message(
+      MessageType::error,
+        boost::locale::translate("Failed to load the current load order, information displayed may be incorrect.")
+        .str()));
+  }
+
   try {
     // Clear any existing game-specific messages, as these only relate to
     // state that has been changed by sorting.
@@ -384,10 +412,21 @@ std::vector<std::string> Game::SortPlugins() {
     AppendMessage(Message(
         MessageType::error,
         (boost::format(boost::locale::translate("Cyclic interaction detected "
-                                                "between plugins \"%1%\" and "
+                                                "between \"%1%\" and "
                                                 "\"%2%\". Back cycle: %3%")) %
          e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle())
             .str()));
+    plugins.clear();
+  }
+  catch (UndefinedGroupError& e) {
+    if (logger_) {
+      logger_->error("Failed to sort plugins. Details: {}", e.what());
+    }
+    AppendMessage(Message(
+      MessageType::error,
+      (boost::format(boost::locale::translate("The group \"%1%\" does not "
+        "exist.")) % e.getGroupName())
+      .str()));
     plugins.clear();
   } catch (std::exception& e) {
     if (logger_) {
@@ -535,6 +574,14 @@ std::set<std::string> Game::GetKnownBashTags() const {
   return gameHandle_->GetDatabase()->GetKnownBashTags();
 }
 
+std::unordered_set<Group> Game::GetMasterlistGroups() const {
+  return gameHandle_->GetDatabase()->GetGroups(false);
+}
+
+std::unordered_set<Group> Game::GetUserGroups() const {
+  return gameHandle_->GetDatabase()->GetUserGroups();
+}
+
 PluginMetadata Game::GetMasterlistMetadata(const std::string& pluginName,
                                            bool evaluateConditions) const {
   return gameHandle_->GetDatabase()->GetPluginMetadata(
@@ -545,6 +592,10 @@ PluginMetadata Game::GetUserMetadata(const std::string& pluginName,
                                      bool evaluateConditions) const {
   return gameHandle_->GetDatabase()->GetPluginUserMetadata(pluginName,
                                                            evaluateConditions);
+}
+
+void Game::SetUserGroups(const std::unordered_set<Group>& groups) {
+  return gameHandle_->GetDatabase()->SetUserGroups(groups);
 }
 
 void Game::AddUserMetadata(const PluginMetadata& metadata) {

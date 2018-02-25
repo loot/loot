@@ -228,6 +228,26 @@ void from_json(const nlohmann::json& json, File& file) {
     condition);
 }
 
+void to_json(nlohmann::json& json, const Group& group) {
+  json = {
+    { "name", group.GetName() },
+    { "after", group.GetAfterGroups() },
+  };
+}
+
+void from_json(const nlohmann::json& json, Group& group) {
+  if (json.count("name") == 0) {
+    throw std::runtime_error("Group object has an empty 'name' value");
+  }
+
+  auto condition = json.value("condition", "");
+
+  testConditionSyntax("File", condition);
+
+  group = Group(json.at("name"),
+    json.value("after", std::unordered_set<std::string>()));
+}
+
 void to_json(nlohmann::json& json, const Location& location) {
   json = {
     { "link", location.GetURL() },
@@ -282,6 +302,7 @@ nlohmann::json to_json_with_language(const PluginMetadata& metadata,
   return {
     { "name", metadata.GetName() },
     { "enabled", metadata.IsEnabled() },
+    { "group", metadata.GetGroup() },
     { "priority", metadata.GetLocalPriority().GetValue() },
     { "globalPriority", metadata.GetGlobalPriority().GetValue() },
     { "after", metadata.GetLoadAfterFiles() },
@@ -329,6 +350,13 @@ void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
 
   metadata.SetEnabled(json.value("enabled", false));
 
+  // This will register the group as explicit, but that's OK because
+  // explicitness is ignored when this deserialised data is used.
+  auto group = json.value("group", "default");
+  if (group != Group().GetName()) {
+    metadata.SetGroup(json.value("group", "default"));
+  }
+
   // These two will register all priorities as explicit, but that's OK because
   // explicitness is ignored where this deserialised data is used.
   metadata.SetLocalPriority(Priority(json.value("priority", 0)));
@@ -356,6 +384,7 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
     { "loadsArchive", plugin.loadsArchive },
     { "crc", plugin.crc },
     { "loadOrderIndex", plugin.loadOrderIndex },
+    { "group", plugin.group },
     { "priority", plugin.priority },
     { "globalPriority", plugin.globalPriority },
     { "messages", plugin.messages },
