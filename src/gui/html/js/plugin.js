@@ -176,8 +176,6 @@ export default class Plugin {
     this._userlist = obj.userlist;
 
     this._group = obj.group || 'default';
-    this._priority = obj.priority || 0;
-    this._globalPriority = obj.globalPriority || 0;
     this._messages = obj.messages || [];
     this._tags = obj.tags || [];
     this._isDirty = obj.isDirty || false;
@@ -279,8 +277,6 @@ export default class Plugin {
         detail: {
           pluginId: this.id,
           group: this.group,
-          priority: this.priority,
-          globalPriority: this.globalPriority,
           isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
           loadOrderIndex: this.loadOrderIndex,
@@ -431,30 +427,6 @@ export default class Plugin {
   set group(group) {
     if (this._group !== group) {
       this._group = group;
-
-      this._dispatchItemContentChangeEvent();
-    }
-  }
-
-  get priority() {
-    return this._priority;
-  }
-
-  set priority(priority) {
-    if (this._priority !== priority) {
-      this._priority = priority;
-
-      this._dispatchItemContentChangeEvent();
-    }
-  }
-
-  get globalPriority() {
-    return this._globalPriority;
-  }
-
-  set globalPriority(globalPriority) {
-    if (this._globalPriority !== globalPriority) {
-      this._globalPriority = globalPriority;
 
       this._dispatchItemContentChangeEvent();
     }

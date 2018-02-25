@@ -50,8 +50,6 @@ public:
       state.getCurrentGame().GetLoadOrder());
 
     group = evaluatedMetadata.GetGroup();
-    priority = evaluatedMetadata.GetLocalPriority().GetValue();
-    globalPriority = evaluatedMetadata.GetGlobalPriority().GetValue();
     if (!evaluatedMetadata.GetCleanInfo().empty()) {
       cleanedWith = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
     }
@@ -87,8 +85,6 @@ private:
   short loadOrderIndex;
 
   std::string group;
-  short priority;
-  short globalPriority;
   std::string cleanedWith;
   std::vector<SimpleMessage> messages;
   std::set<Tag> tags;

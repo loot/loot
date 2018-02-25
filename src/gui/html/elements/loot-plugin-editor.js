@@ -96,10 +96,6 @@ export default class LootPluginEditor extends Polymer.Element {
         iron-pages > *:not(.iron-selected) {
           display: none;
         }
-        #priorityValue,
-        #globalPriorityValue {
-          width: 250px;
-        }
 
         /* Misc Styling. */
         app-toolbar {
@@ -160,14 +156,6 @@ export default class LootPluginEditor extends Polymer.Element {
           <div>
             <div>Enable Edits</div>
             <paper-toggle-button id="enableEdits"></paper-toggle-button>
-          </div>
-          <div>
-            <div>Priority</div>
-            <paper-input id="priorityValue" error-message="Must be an integer between +/- 127 inclusive" type="number" max="127" min="-127" step="1" auto-validate no-label-float></paper-input>
-          </div>
-          <div>
-            <div>Global Priority</div>
-            <paper-input id="globalPriorityValue" error-message="Must be an integer between +/- 127 inclusive" type="number" max="127" min="-127" step="1" auto-validate no-label-float></paper-input>
           </div>
           <div>
             <div>Group</div>
@@ -341,16 +329,14 @@ export default class LootPluginEditor extends Polymer.Element {
 
   readFromEditor() {
     /* Need to turn all the editor controls' values into data to
-        process. Determining whether or not priority values have changed
+        process. Determining whether or not the group has changed
         is left to the C++ side of things, and masterlist rows in
         the tables can be ignored because they're immutable. */
 
     const metadata = {
       name: this.querySelector('h1').textContent,
       enabled: this.$.enableEdits.checked,
-      group: this.$.group.value,
-      priority: parseInt(this.$.priorityValue.value, 10),
-      global_priority: parseInt(this.$.globalPriorityValue.value, 10)
+      group: this.$.group.value
     };
 
     const tables = this.shadowRoot.querySelectorAll('editable-table');
@@ -432,8 +418,6 @@ export default class LootPluginEditor extends Polymer.Element {
       this.$.enableEdits.checked = true;
     }
     this.$.group.value = newData.group;
-    this.$.priorityValue.value = newData.priority;
-    this.$.globalPriorityValue.value = newData.globalPriority;
 
     /* Clear then fill in editor table data. Masterlist-originated
         rows should have their contents made read-only. */

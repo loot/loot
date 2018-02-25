@@ -319,8 +319,6 @@ describe('Game', () => {
           userlist: {},
 
           group: 'group1',
-          priority: -100,
-          globalPriority: 100,
           messages: [
             {
               type: 'warn',
@@ -350,8 +348,6 @@ describe('Game', () => {
             loadsArchive: game._plugins[0].loadsArchive,
 
             group: game._plugins[0].group,
-            priority: game._plugins[0].priority,
-            globalPriority: game._plugins[0].globalPriority,
             messages: game._plugins[0].messages,
             tags: game._plugins[0].tags,
             isDirty: game._plugins[0].isDirty

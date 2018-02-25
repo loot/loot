@@ -79,20 +79,6 @@ private:
       userMetadata.SetGroup(metadata_.GetGroup());
     }
 
-    if (metadata_.GetLocalPriority().GetValue() !=
-        nonUserMetadata.GetLocalPriority().GetValue()) {
-      userMetadata.SetLocalPriority(metadata_.GetLocalPriority());
-    } else {
-      userMetadata.SetLocalPriority(Priority());
-    }
-
-    if (metadata_.GetGlobalPriority().GetValue() !=
-        nonUserMetadata.GetGlobalPriority().GetValue()) {
-      userMetadata.SetGlobalPriority(metadata_.GetGlobalPriority());
-    } else {
-      userMetadata.SetGlobalPriority(Priority());
-    }
-
     return userMetadata;
   }
 

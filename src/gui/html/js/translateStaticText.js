@@ -64,12 +64,6 @@ function translatePluginEditor(l10n) {
   pluginEditor.getElementById(
     'group'
   ).previousElementSibling.textContent = l10n.translate('Group');
-  pluginEditor.getElementById(
-    'priorityValue'
-  ).previousElementSibling.textContent = l10n.translate('Priority');
-  pluginEditor.getElementById(
-    'globalPriorityValue'
-  ).previousElementSibling.textContent = l10n.translate('Global Priority');
 
   pluginEditor
     .getElementById('tableTabs')
@@ -218,12 +212,6 @@ function translatePluginEditor(l10n) {
 
 function translatePluginListItem(l10n, element) {
   element.querySelector('#groupTooltip').textContent = l10n.translate('Group');
-  element.querySelector('#globalPriorityTooltip').textContent = l10n.translate(
-    'Global Priority'
-  );
-  element.querySelector('#localPriorityTooltip').textContent = l10n.translate(
-    'Priority'
-  );
   element.querySelector(
     'paper-tooltip[for=hasUserEdits]'
   ).textContent = l10n.translate('Has User Metadata');

@@ -229,8 +229,6 @@ export default class Game {
         loadsArchive: plugin.loadsArchive,
 
         group: plugin.group,
-        priority: plugin.priority,
-        globalPriority: plugin.globalPriority,
         messages: plugin.messages,
         tags: plugin.tags,
         isDirty: plugin.isDirty

@@ -24,14 +24,6 @@ export default class LootPluginItem extends Polymer.Element {
         type: String,
         value: 'default'
       },
-      priority: {
-        type: String,
-        value: ''
-      },
-      globalPriority: {
-        type: String,
-        value: ''
-      },
       isEditorOpen: {
         type: Boolean,
         value: false
@@ -157,16 +149,6 @@ export default class LootPluginItem extends Polymer.Element {
         <paper-item-body two-line>
           <div id="primary"><slot></slot></div>
           <div id="secondary" secondary>
-            <span hidden$="[[!globalPriority]]">
-              <iron-icon icon="star"></iron-icon>
-              <span>[[globalPriority]]</span>
-              <paper-tooltip id="globalPriorityTooltip" position="right">[[_localise('Global Priority')]]</paper-tooltip>
-            </span>
-            <span hidden$="[[!priority]]">
-              <iron-icon icon="star-border"></iron-icon>
-              <span>[[priority]]</span>
-              <paper-tooltip id="localPriorityTooltip" position="right">[[_localise('Priority')]]</paper-tooltip>
-            </span>
             <span id="groupSpan" hidden$="[[computeIsGroupHidden(group)]]">
               <span>[[group]]</span>
               <paper-tooltip id="groupTooltip" position="right">Group</paper-tooltip>
@@ -236,8 +218,6 @@ export default class LootPluginItem extends Polymer.Element {
   updateContent(pluginData) {
     this.loadOrderIndex = pluginData.loadOrderIndex;
     this.group = pluginData.group;
-    this.priority = pluginData.priority;
-    this.globalPriority = pluginData.globalPriority;
     this.isEditorOpen = pluginData.isEditorOpen;
     this.hasUserEdits = pluginData.hasUserEdits;
     this.isLightMaster = pluginData.isLightMaster;

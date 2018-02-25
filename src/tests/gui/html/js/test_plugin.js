@@ -186,36 +186,6 @@ describe('Plugin', () => {
       expect(plugin.group).toBe('group1');
     });
 
-    it('should set priority to 0 if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.priority).toBe(0);
-    });
-
-    test("should set priority to passed key's value", () => {
-      const plugin = new Plugin({
-        name: 'test',
-        priority: 5
-      });
-
-      expect(plugin.priority).toBe(5);
-    });
-
-    test('should set global priority to 0 if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.globalPriority).toBe(0);
-    });
-
-    test("should set global priority to passed key's value", () => {
-      const plugin = new Plugin({
-        name: 'test',
-        globalPriority: 5
-      });
-
-      expect(plugin.globalPriority).toBe(5);
-    });
-
     test('should set messages value to an empty array if no key was passed', () => {
       const plugin = new Plugin({ name: 'test' });
 
@@ -889,8 +859,6 @@ describe('Plugin', () => {
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
         expect(evt.detail.group).toBe(plugin.group);
-        expect(evt.detail.priority).toBe(plugin.priority);
-        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
         expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
         expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
@@ -898,7 +866,7 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
-      plugin.userlist = { priority: 1 };
+      plugin.userlist = { group: 'test' };
     });
   });
 
@@ -955,8 +923,6 @@ describe('Plugin', () => {
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
         expect(evt.detail.group).toBe(plugin.group);
-        expect(evt.detail.priority).toBe(plugin.priority);
-        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
         expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
         expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
@@ -965,136 +931,6 @@ describe('Plugin', () => {
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
       plugin.group = 'group1';
-    });
-  });
-
-  describe('#priority', () => {
-    let handleEvent;
-
-    afterEach(() => {
-      document.removeEventListener(
-        'loot-plugin-item-content-change',
-        handleEvent
-      );
-    });
-
-    test('getting value should return 0 if it has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.priority).toBe(0);
-    });
-
-    test('getting value should return the value that was set', () => {
-      const plugin = new Plugin({
-        name: 'test',
-        priority: 5
-      });
-
-      expect(plugin.priority).toBe(5);
-    });
-
-    test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      plugin.priority = 5;
-
-      expect(plugin.priority).toBe(5);
-    });
-
-    test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
-
-      handleEvent = () => {
-        done(new Error('Should not have fired an event'));
-      };
-
-      document.addEventListener('loot-plugin-item-content-change', handleEvent);
-
-      plugin.priority = plugin.priority;
-
-      setTimeout(done, 100);
-    });
-
-    test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
-
-      handleEvent = evt => {
-        expect(evt.detail.pluginId).toBe(plugin.id);
-        expect(evt.detail.priority).toBe(plugin.priority);
-        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
-        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
-        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
-        done();
-      };
-
-      document.addEventListener('loot-plugin-item-content-change', handleEvent);
-
-      plugin.priority = 5;
-    });
-  });
-
-  describe('#globalPriority', () => {
-    let handleEvent;
-
-    afterEach(() => {
-      document.removeEventListener(
-        'loot-plugin-item-content-change',
-        handleEvent
-      );
-    });
-
-    test('getting value should return 0 if it has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.globalPriority).toBe(0);
-    });
-
-    test('getting value should return the value that was set', () => {
-      const plugin = new Plugin({
-        name: 'test',
-        globalPriority: 5
-      });
-
-      expect(plugin.globalPriority).toBe(5);
-    });
-
-    test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      plugin.globalPriority = 5;
-
-      expect(plugin.globalPriority).toBe(5);
-    });
-
-    test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
-
-      handleEvent = () => {
-        done(new Error('Should not have fired an event'));
-      };
-
-      document.addEventListener('loot-plugin-item-content-change', handleEvent);
-
-      plugin.globalPriority = plugin.globalPriority;
-
-      setTimeout(done, 100);
-    });
-
-    test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
-
-      handleEvent = evt => {
-        expect(evt.detail.pluginId).toBe(plugin.id);
-        expect(evt.detail.priority).toBe(plugin.priority);
-        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
-        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
-        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
-        done();
-      };
-
-      document.addEventListener('loot-plugin-item-content-change', handleEvent);
-
-      plugin.globalPriority = 5;
     });
   });
 
@@ -1142,8 +978,6 @@ describe('Plugin', () => {
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
         expect(evt.detail.group).toBe(plugin.group);
-        expect(evt.detail.priority).toBe(plugin.priority);
-        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
         expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
         expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
