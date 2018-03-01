@@ -18,9 +18,9 @@ module.exports = config => {
     basePath: '',
     frameworks: ['mocha', 'chai'],
     files: [
-      'bower_components/Jed/jed.js',
-      'bower_components/jed-gettext-parser/jedGettextParser.js',
-      'bower_components/lodash/dist/lodash.core.min.js',
+      'node_modules/jed/jed.js',
+      'node_modules/jed-gettext-parser/jedGettextParser.js',
+      'node_modules/lodash/core.min.js',
       'src/tests/gui/html/js/mock_*.js',
       'src/gui/html/js/filters.js',
       'src/gui/html/js/plugin.js',

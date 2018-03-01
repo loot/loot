@@ -27,7 +27,7 @@
 (function exportModule(root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['bower_components/lodash/dist/lodash.core.min'], factory);
+    define(['node_modules/lodash/core.min'], factory);
   } else {
     // Browser globals
     root.loot = root.loot || {};

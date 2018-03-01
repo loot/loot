@@ -28,11 +28,6 @@
     "paper-tabs": "PolymerElements/paper-tabs#2.0.0",
     "paper-toast": "PolymerElements/paper-toast#2.0.0",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#2.0.0",
-    "paper-tooltip": "PolymerElements/paper-tooltip#2.0.0",
-    "webcomponentsjs": "1.0.5",
-    "Jed": "SlexAxton/Jed#1.1.1",
-    "jed-gettext-parser": "1.0.0",
-    "marked": "0.3.6",
-    "lodash": "4.17.4"
+    "paper-tooltip": "PolymerElements/paper-tooltip#2.0.0"
   }
 }

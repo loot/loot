@@ -5,8 +5,8 @@
     // AMD. Register as an anonymous module.
     define(
       [
-        'bower_components/Jed/jed',
-        'bower_components/jed-gettext-parser/jedGettextParser'
+        'node_modules/jed/jed',
+        'node_modules/jed-gettext-parser/jedGettextParser'
       ],
       factory
     );
