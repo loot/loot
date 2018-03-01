@@ -39,7 +39,45 @@
     "prettier": "^1.8.2"
   },
   "scripts": {
-    "test": "karma start"
+    "test": "karma start",
+    "lint": "eslint --ignore-path .gitignore ."
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 7,
+      "sourceType": "script"
+    },
+    "env": {
+      "es6": true,
+      "mocha": true,
+      "amd": true,
+      "node": true,
+      "browser": true
+    },
+    "globals": {
+      "loot": false,
+      "should": false
+    },
+    "plugins": [
+      "html",
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "airbnb-base",
+      "prettier"
+    ],
+    "rules": {
+      "curly": ["error", "all"],
+      "linebreak-style": "off",
+      "no-confusing-arrow": "error",
+      "no-param-reassign": [
+        "error",
+        { "props": false }
+      ],
+      "no-underscore-dangle": "off",
+      "prettier/prettier": "error"
+    }
   },
   "prettier": {
     "singleQuote": true
