@@ -56,7 +56,8 @@
     },
     "globals": {
       "loot": false,
-      "should": false
+      "should": false,
+      "Polymer": false
     },
     "plugins": [
       "html",
@@ -76,6 +77,7 @@
         { "props": false }
       ],
       "no-underscore-dangle": "off",
+      "prefer-destructuring": "off",
       "prettier/prettier": "error"
     }
   },
