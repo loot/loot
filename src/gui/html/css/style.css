@@ -240,3 +240,41 @@ iron-icon {
 paper-icon-button[hidden] {
     display: none;
 }
+
+/* Editable table */
+editable-table td,
+editable-table th {
+  vertical-align: middle;
+  text-align: left;
+  padding: 0 7px;
+}
+editable-table th:first-child,
+editable-table td:first-child {
+  padding-left: 16px;
+}
+editable-table th:last-child,
+editable-table td:last-child {
+  padding-left: 0;
+}
+editable-table thead > tr {
+  height: 56px;
+}
+editable-table tbody > tr {
+  height: 48px;
+}
+editable-table th {
+    color: var(--secondary-text-color);
+    border-bottom: 1px solid var(--divider-color);
+}
+editable-table paper-icon-button {
+    color: var(--secondary-text-color);
+}
+editable-table paper-icon-button[disabled] {
+    color: var(--disabled-text-color);
+}
+editable-table paper-icon-button[icon=delete]:hover {
+    color: red;
+}
+editable-table paper-icon-button[icon=add]:hover {
+    color: green;
+}

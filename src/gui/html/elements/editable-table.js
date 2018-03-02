@@ -1,0 +1,255 @@
+// import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+// <link rel="import" href="../../../../bower_components/polymer/lib/utils/render-status.html">
+
+function getRowTemplate(templateId) {
+  let template = document.getElementById(templateId);
+  if (!template) {
+    template = document.querySelector(
+      `link[rel="import"][href$="editable-table-rows.html"]`
+    ).import;
+  }
+  template = template.querySelector(`#${templateId}`);
+
+  if (template.tagName !== 'TEMPLATE') {
+    return template.querySelector('template');
+  }
+
+  return template;
+}
+
+export class EditableTable extends Polymer.Element {
+  static get is() {
+    return 'editable-table';
+  }
+
+  static get template() {
+    return Polymer.html`
+      <style>
+      ::slotted(table) {
+          background-color: inherit;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      </style>
+      <slot></slot>`;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    Polymer.RenderStatus.beforeNextRender(this, () => {
+      /* Add "add new row" row. */
+      const content = getRowTemplate('newRow').content;
+      let row = document.importNode(content, true);
+      this.querySelector('tbody').appendChild(row);
+      row = this.querySelector('tbody').lastElementChild;
+
+      /* Add new row listener. */
+      row
+        .querySelector('paper-icon-button')
+        .addEventListener('click', this.onAddEmptyRow);
+
+      /* Add drag 'n' drop listeners.
+            Drag 'n' drop should only be enabled for file-row tables.
+        */
+      if (this.getAttribute('data-template') === 'fileRow') {
+        this.addEventListener('drop', this.onDrop);
+        this.addEventListener('dragover', this.onDragOver);
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    /* Remove deletion listener. */
+    const icons = this.querySelector('tbody').getElementsByClassName('delete');
+    for (let i = 0; i < icons.length; i += 1) {
+      icons[i].removeEventListener('click', this.onRemoveRow);
+    }
+
+    /* Remove new row listener. */
+    this.querySelector(
+      'tbody tr:last-child paper-icon-button'
+    ).removeEventListener('click', this.onAddEmptyRow);
+
+    /* Remove drag 'n' drop listeners. */
+    this.removeEventListener('drop', this.onDrop);
+    this.removeEventListener('dragover', this.onDragOver);
+  }
+
+  onDrop(evt) {
+    evt.stopPropagation();
+
+    if (
+      evt.currentTarget.tagName === 'EDITABLE-TABLE' &&
+      evt.currentTarget.getAttribute('data-template') === 'fileRow'
+    ) {
+      evt.currentTarget.addRow({
+        name: evt.dataTransfer.getData('text/plain')
+      });
+    }
+
+    return false;
+  }
+
+  onDragOver(evt) {
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy';
+  }
+
+  getRowsData(writableOnly) {
+    const writableRows = [];
+    const rows = this.querySelector('tbody').rows;
+
+    for (let i = 0; i < rows.length; i += 1) {
+      const trash = rows[i].getElementsByClassName('delete');
+      if (trash.length > 0 && (!writableOnly || !trash[0].disabled)) {
+        const rowData = {};
+
+        const inputs = rows[i].querySelectorAll(
+          'paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu'
+        );
+        for (let j = 0; j < inputs.length; j += 1) {
+          rowData[inputs[j].className] = inputs[j].value || '';
+        }
+        const autocompletes = rows[i].getElementsByTagName(
+          'paper-autocomplete'
+        );
+        for (let j = 0; j < autocompletes.length; j += 1) {
+          rowData[autocompletes[j].className] = autocompletes[j].text;
+        }
+
+        writableRows.push(rowData);
+      }
+    }
+
+    return writableRows;
+  }
+
+  setReadOnly(row, classMask, readOnly) {
+    const trash = row.getElementsByClassName('delete')[0];
+    if (classMask) {
+      if (classMask.indexOf('delete') !== -1) {
+        trash.disabled = readOnly || true;
+      }
+    } else {
+      trash.disabled = readOnly || true;
+    }
+
+    const inputs = row.querySelectorAll(
+      'paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu'
+    );
+    for (let i = 0; i < inputs.length; i += 1) {
+      if (classMask) {
+        for (let j = 0; j < classMask.length; j += 1) {
+          if (inputs[i].classList.contains(classMask[j])) {
+            inputs[i].disabled = readOnly;
+            break;
+          }
+        }
+      } else {
+        inputs[i].disabled = readOnly;
+      }
+    }
+  }
+
+  clear() {
+    const rowDeletes = this.querySelector('tbody').getElementsByClassName(
+      'delete'
+    );
+    while (rowDeletes.length > 0) {
+      rowDeletes[0].click();
+    }
+  }
+
+  onRemoveRow(evt) {
+    const tr = evt.target.parentElement.parentElement.parentElement;
+    const tbody = tr.parentElement;
+    const table = tbody.parentElement;
+
+    /* Remove deletion listener. */
+    evt.target.removeEventListener('click', table.parentElement.onRemoveRow);
+
+    /* Now remove row. */
+    tbody.removeChild(tr);
+
+    /* Notify that the table size has changed. */
+    this.dispatchEvent(
+      new CustomEvent('iron-resize', {
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
+
+  onAddEmptyRow(evt) {
+    evt.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.addRow(
+      {}
+    );
+
+    /* Notify that the table size has changed. */
+    this.dispatchEvent(
+      new CustomEvent('iron-resize', {
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
+
+  addRow(tableData) {
+    const rowTemplateId = this.getAttribute('data-template');
+    const content = getRowTemplate(rowTemplateId).content;
+    let row = document.importNode(content, true);
+    this.querySelector('tbody').insertBefore(
+      row,
+      this.querySelector('tbody').lastElementChild
+    );
+    row = this.querySelector('tbody').lastElementChild.previousElementSibling;
+
+    /* Data is an object with keys that match element class names. */
+    Object.entries(tableData).forEach(([key, value]) => {
+      const elems = row.getElementsByClassName(key);
+      if (value !== undefined && elems.length === 1) {
+        if (elems[0].tagName === 'PAPER-AUTOCOMPLETE') {
+          elems[0].text = value;
+        } else {
+          elems[0].value = value;
+        }
+      }
+    });
+
+    /* Add deletion listener. */
+    row
+      .getElementsByClassName('delete')[0]
+      .addEventListener('click', this.onRemoveRow);
+
+    /* Notify that the table size has changed. */
+    this.dispatchEvent(
+      new CustomEvent('iron-resize', {
+        bubbles: true,
+        composed: true
+      })
+    );
+
+    return row;
+  }
+
+  addReadOnlyRow(tableData) {
+    this.setReadOnly(this.addRow(tableData));
+  }
+
+  validate() {
+    const inputs = this.querySelectorAll(
+      'paper-autocomplete, paper-input, paper-textarea'
+    );
+    for (let i = 0; i < inputs.length; i += 1) {
+      if (!inputs[i].validate()) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+customElements.define(EditableTable.is, EditableTable);

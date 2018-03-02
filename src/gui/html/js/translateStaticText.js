@@ -276,7 +276,7 @@
 
   function translateFileRowTemplate(l10n) {
     /* File row template */
-    const fileRow = getTemplate('fileRow', 'editable-table');
+    const fileRow = getTemplate('fileRow', 'editable-table-rows');
 
     fileRow
       .querySelector('.name')
@@ -288,7 +288,7 @@
 
   function translateMessageRowTemplate(l10n) {
     /* Message row template */
-    const messageRow = getTemplate('messageRow', 'editable-table');
+    const messageRow = getTemplate('messageRow', 'editable-table-rows');
 
     messageRow.querySelector('.type').children[0].textContent = l10n.translate(
       'Note'
@@ -312,7 +312,7 @@
 
   function translateTagRowTemplate(l10n) {
     /* Tag row template */
-    const tagRow = getTemplate('tagRow', 'editable-table');
+    const tagRow = getTemplate('tagRow', 'editable-table-rows');
 
     tagRow.querySelector('.type').children[0].textContent = l10n.translate(
       'Add'
@@ -330,7 +330,7 @@
 
   function translateDirtyInfoRowTemplate(l10n) {
     /* Dirty Info row template */
-    const dirtyInfoRow = getTemplate('dirtyInfoRow', 'editable-table');
+    const dirtyInfoRow = getTemplate('dirtyInfoRow', 'editable-table-rows');
 
     dirtyInfoRow
       .querySelector('.crc')
@@ -366,7 +366,7 @@
 
   function translateCleanInfoRowTemplate(l10n) {
     /* Dirty Info row template */
-    const cleanInfoRow = getTemplate('cleanInfoRow', 'editable-table');
+    const cleanInfoRow = getTemplate('cleanInfoRow', 'editable-table-rows');
 
     cleanInfoRow
       .querySelector('.crc')
@@ -384,7 +384,7 @@
 
   function translateLocationRowTemplate(l10n) {
     /* Location row template */
-    const locationRow = getTemplate('locationRow', 'editable-table');
+    const locationRow = getTemplate('locationRow', 'editable-table-rows');
 
     locationRow
       .querySelector('.link')
@@ -396,7 +396,7 @@
 
   function translateGameRowTemplate(l10n) {
     /* Game row template */
-    const gameRow = getTemplate('gameRow', 'editable-table');
+    const gameRow = getTemplate('gameRow', 'editable-table-rows');
 
     gameRow
       .querySelector('.name')
@@ -411,7 +411,7 @@
 
   function translateNewRowTemplate(l10n) {
     /* New row template */
-    const newRow = getTemplate('newRow', 'editable-table');
+    const newRow = getTemplate('newRow', 'editable-table-rows');
 
     newRow.querySelector('paper-tooltip').textContent = l10n.translate(
       'Add New Row'

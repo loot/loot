@@ -12,7 +12,7 @@
 })(this, marked => {
   function getElementInTableRowTemplate(rowTemplateId, elementClass) {
     const select = document.querySelector(
-      'link[rel="import"][href$="editable-table.html"]'
+      'link[rel="import"][href$="editable-table-rows.html"]'
     );
     if (select) {
       return select.import
