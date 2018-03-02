@@ -483,7 +483,7 @@ function onEditorClose(evt) {
   plugin.isEditorOpen = false;
 
   /* evt.detail is true if the apply button was pressed. */
-  const metadata = evt.target.readFromEditor(plugin);
+  const metadata = evt.target.readFromEditor();
   const payload = {
     applyEdits: evt.detail,
     metadata
