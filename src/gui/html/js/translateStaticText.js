@@ -274,16 +274,6 @@
     translatePluginListItem(l10n, getTemplate('loot-plugin-item'));
   }
 
-  function translateMessageDialogTemplate(l10n) {
-    /* Plugin List Item Template */
-    const messageDialog = getTemplate('loot-message-dialog');
-
-    messageDialog.getElementById('confirm').textContent = l10n.translate('OK');
-    messageDialog.getElementById('dismiss').textContent = l10n.translate(
-      'Cancel'
-    );
-  }
-
   function translateFileRowTemplate(l10n) {
     /* File row template */
     const fileRow = getTemplate('fileRow', 'editable-table');
@@ -762,7 +752,6 @@
     translatePluginEditor(l10n);
     translatePluginListItemInstance(l10n);
     translatePluginListItemTemplate(l10n);
-    translateMessageDialogTemplate(l10n);
 
     translateFileRowTemplate(l10n);
     translateMessageRowTemplate(l10n);
