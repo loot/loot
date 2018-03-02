@@ -270,10 +270,6 @@
     }
   }
 
-  function translatePluginListItemTemplate(l10n) {
-    translatePluginListItem(l10n, getTemplate('loot-plugin-item'));
-  }
-
   function translateFileRowTemplate(l10n) {
     /* File row template */
     const fileRow = getTemplate('fileRow', 'editable-table-rows');
@@ -751,7 +747,6 @@
     translatePluginCardInstance(l10n);
     translatePluginEditor(l10n);
     translatePluginListItemInstance(l10n);
-    translatePluginListItemTemplate(l10n);
 
     translateFileRowTemplate(l10n);
     translateMessageRowTemplate(l10n);
