@@ -66,10 +66,6 @@
     }
   }
 
-  function translatePluginCardTemplate(l10n) {
-    translatePluginCard(l10n, getTemplate('loot-plugin-card'));
-  }
-
   function translatePluginEditor(l10n) {
     /* Plugin editor template. */
     const pluginEditor = document.getElementById('editor').shadowRoot;
@@ -763,7 +759,6 @@
 
   return (l10n, version) => {
     translatePluginCardInstance(l10n);
-    translatePluginCardTemplate(l10n);
     translatePluginEditor(l10n);
     translatePluginListItemInstance(l10n);
     translatePluginListItemTemplate(l10n);
