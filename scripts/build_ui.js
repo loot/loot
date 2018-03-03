@@ -89,12 +89,14 @@ Promise.resolve()
       const index = 'src/gui/html/index.html';
       const destinationRootPath = `${releasePath.path}/resources/ui`;
 
-      const urls = getFeatureURLs(index, ['html-import', 'html-script']);
+      const urls = getFeatureURLs(index, ['html-import', 'html-script', 'js-import']);
       const htmlImportUrls = urls.then(features => features['html-import']);
       const scriptUrls = urls.then(features => features['html-script']);
+      const moduleUrls = urls.then(features => features['js-import']);
 
       copyFiles(htmlImportUrls, destinationRootPath);
       copyFiles(scriptUrls, destinationRootPath);
+      copyFiles(moduleUrls, destinationRootPath);
       fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
       fs.copySync(
         'resources/ui/css/dark-theme.css',

@@ -21,7 +21,7 @@
     "jed-gettext-parser": "^1.0.0",
     "lodash": "^4.17.5",
     "marked": "^0.3.17",
-    "polymer-analyzer": "^2.1.0",
+    "polymer-analyzer": "^2.7.0",
     "replace": "^0.3.0",
     "request": "^2.79.0"
   },
