@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
+import {askQuestion, closeProgress, showNotification, showProgress} from './dialog.js';
 
 // Depends on the following globals:
-// - loot.Dialog
 // - loot.DOM
 // - loot.Plugin
 // - loot.Filters
@@ -33,7 +33,7 @@ export function onConflictsFilter(evt) {
      if the filter has been deactivated. */
   if (evt.currentTarget.value) {
     /* Now get conflicts for the plugin. */
-    loot.Dialog.showProgress(
+    showProgress(
       loot.l10n.translate('Identifying conflicting plugins...')
     );
     loot.filters
@@ -56,7 +56,7 @@ export function onConflictsFilter(evt) {
         );
         list.scrollToIndex(index);
 
-        loot.Dialog.closeProgress();
+        closeProgress();
       })
       .catch(loot.handlePromiseError);
   } else {
@@ -105,13 +105,13 @@ export function onChangeGame(evt) {
         loot.DOM.initialiseVirtualLists(loot.game.plugins);
       }
 
-      loot.Dialog.closeProgress();
+      closeProgress();
     })
     .catch(loot.handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
 export function updateMasterlist() {
-  loot.Dialog.showProgress(
+  showProgress(
     loot.l10n.translate('Updating and parsing masterlist...')
   );
   return loot
@@ -135,14 +135,14 @@ export function updateMasterlist() {
           }
         });
 
-        loot.Dialog.showNotification(
+        showNotification(
           loot.l10n.translateFormatted(
             'Masterlist updated to revision %s.',
             loot.game.masterlist.revision
           )
         );
       } else {
-        loot.Dialog.showNotification(
+        showNotification(
           loot.l10n.translate('No masterlist update was necessary.')
         );
       }
@@ -152,7 +152,7 @@ export function updateMasterlist() {
 export function onUpdateMasterlist() {
   updateMasterlist()
     .then(() => {
-      loot.Dialog.closeProgress();
+      closeProgress();
     })
     .catch(loot.handlePromiseError);
 }
@@ -207,8 +207,8 @@ export function onSortPlugins() {
         /* Send discardUnappliedChanges query. Not doing so prevents LOOT's window
          from closing. */
         loot.query('discardUnappliedChanges');
-        loot.Dialog.closeProgress();
-        loot.Dialog.showNotification(
+        closeProgress();
+        showNotification(
           loot.l10n.translate('Sorting made no changes to the load order.')
         );
         return;
@@ -220,7 +220,7 @@ export function onSortPlugins() {
 
       loot.state.enterSortingState();
 
-      loot.Dialog.closeProgress();
+      closeProgress();
     })
     .catch(loot.handlePromiseError);
 }
@@ -250,7 +250,7 @@ export function onCancelSort() {
 }
 
 export function onRedatePlugins(evt) {
-  loot.Dialog.askQuestion(
+  askQuestion(
     loot.l10n.translate('Redate Plugins?'),
     loot.l10n.translate(
       'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam (this does not affect Skyrim Special Edition). Do you wish to continue?'
@@ -261,7 +261,7 @@ export function onRedatePlugins(evt) {
         loot
           .query('redatePlugins')
           .then(() => {
-            loot.Dialog.showNotification(
+            showNotification(
               loot.l10n.translate('Plugins were successfully redated.')
             );
           })
@@ -271,7 +271,7 @@ export function onRedatePlugins(evt) {
   );
 }
 export function onClearAllMetadata() {
-  loot.Dialog.askQuestion(
+  askQuestion(
     '',
     loot.l10n.translate(
       'Are you sure you want to clear all existing user-added metadata from all plugins?'
@@ -291,7 +291,7 @@ export function onClearAllMetadata() {
 
           loot.game.clearMetadata(response.plugins);
 
-          loot.Dialog.showNotification(
+          showNotification(
             loot.l10n.translate('All user-added metadata has been cleared.')
           );
         })
@@ -326,7 +326,7 @@ export function onCopyContent() {
   loot
     .query('copyContent', content)
     .then(() => {
-      loot.Dialog.showNotification(
+      showNotification(
         loot.l10n.translate("LOOT's content has been copied to the clipboard.")
       );
     })
@@ -342,7 +342,7 @@ export function onCopyLoadOrder() {
   loot
     .query('copyLoadOrder', plugins)
     .then(() => {
-      loot.Dialog.showNotification(
+      showNotification(
         loot.l10n.translate('The load order has been copied to the clipboard.')
       );
     })
@@ -367,7 +367,7 @@ export function onContentRefresh() {
         loot.DOM.initialiseVirtualLists(loot.game.plugins);
       }
 
-      loot.Dialog.closeProgress();
+      closeProgress();
     })
     .catch(loot.handlePromiseError);
 }
@@ -379,7 +379,7 @@ export function onOpenLogLocation() {
   loot.query('openLogLocation').catch(loot.handlePromiseError);
 }
 export function handleUnappliedChangesClose(change) {
-  loot.Dialog.askQuestion(
+  askQuestion(
     '',
     loot.l10n.translateFormatted(
       'You have not yet applied or cancelled your %s. Are you sure you want to quit?',
@@ -536,7 +536,7 @@ export function onCopyMetadata(evt) {
   loot
     .query('copyMetadata', evt.target.getName())
     .then(() => {
-      loot.Dialog.showNotification(
+      showNotification(
         loot.l10n.translateFormatted(
           'The metadata for "%s" has been copied to the clipboard.',
           evt.target.getName()
@@ -546,7 +546,7 @@ export function onCopyMetadata(evt) {
     .catch(loot.handlePromiseError);
 }
 export function onClearMetadata(evt) {
-  loot.Dialog.askQuestion(
+  askQuestion(
     '',
     loot.l10n.translateFormatted(
       'Are you sure you want to clear all existing user-added metadata from "%s"?',
@@ -573,7 +573,7 @@ export function onClearMetadata(evt) {
 
             existingPlugin.update(plugin);
           }
-          loot.Dialog.showNotification(
+          showNotification(
             loot.l10n.translateFormatted(
               'The user-added metadata for "%s" has been cleared.',
               evt.target.getName()

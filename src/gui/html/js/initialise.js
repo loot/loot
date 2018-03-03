@@ -50,11 +50,11 @@ import {
   onSearchEnd,
   onFolderChange
 } from './events.js';
+import {closeProgress, showProgress} from './dialog.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
 
-const Dialog = loot.Dialog;
 const dom = loot.DOM;
 const Filters = loot.Filters;
 const Game = loot.Game;
@@ -270,7 +270,7 @@ function getErrorMessages(object) {
 
 function handleInitErrors(error) {
   dom.listInitErrors(getErrorMessages(error.message));
-  Dialog.closeProgress();
+  closeProgress();
   dom.enableGameOperations(false);
   dom.openDialog('settingsDialog');
 }
@@ -328,12 +328,12 @@ function setGameData(appData) {
       );
     }
 
-    Dialog.closeProgress();
+    closeProgress();
   });
 }
 
 export function initialise(loot) {
-  Dialog.showProgress('Initialising user interface...');
+  showProgress('Initialising user interface...');
 
   /* Make sure settings are what I want. */
   window.marked.setOptions({

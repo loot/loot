@@ -487,7 +487,6 @@
   <script src="../../../node_modules/jed-gettext-parser/jedGettextParser.js"></script>
   <script src="../../../node_modules/lodash/core.min.js"></script>
   <script src="../../../node_modules/github-api/dist/GitHub.bundle.min.js"></script>
-  <script src="js/dialog.js"></script>
   <script src="js/dom.js"></script>
   <script src="js/plugin.js"></script>
   <script src="js/game.js"></script>
@@ -497,8 +496,16 @@
   <script src="js/state.js"></script>
   <script type="module">
       import {initialise} from './js/initialise.js';
+      import {closeProgress, showMessage, showProgress} from './js/dialog.js';
 
       window.loot = window.loot || {};
+      // FIXME: These are needed for handlePromiseError and showProgress is assumed to exist by C++ callbacks.
+      window.loot.Dialog = {
+        closeProgress,
+        showMessage,
+        showProgress
+      };
+
       initialise(loot);
   </script>
 </body>
