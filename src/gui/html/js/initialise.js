@@ -51,6 +51,7 @@ import {
   onFolderChange
 } from './events.js';
 import {closeProgress, showProgress} from './dialog.js';
+import {handlePromiseError} from './handlePromiseError.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
@@ -58,7 +59,6 @@ import {updateExists} from './updateExists.js';
 const dom = loot.DOM;
 const Filters = loot.Filters;
 const Game = loot.Game;
-const handlePromiseError = loot.handlePromiseError;
 const Plugin = loot.Plugin;
 const query = loot.query;
 

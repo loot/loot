@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import {askQuestion, closeProgress, showNotification, showProgress} from './dialog.js';
+import {handlePromiseError} from './handlePromiseError.js';
 
 // Depends on the following globals:
 // - loot.DOM
@@ -7,7 +8,6 @@ import {askQuestion, closeProgress, showNotification, showProgress} from './dial
 // - loot.Filters
 // - loot.filters
 // - loot.query
-// - loot.handlePromiseError
 // - loot.game
 // - loot.l10n
 // - loot.settings
@@ -21,7 +21,7 @@ export function onSidebarFilterToggle(evt) {
     name: evt.target.id,
     state: evt.target.checked
   };
-  loot.query('saveFilterState', payload).catch(loot.handlePromiseError);
+  loot.query('saveFilterState', payload).catch(handlePromiseError);
   loot.filters.apply(loot.game.plugins);
 }
 export function onContentFilter(evt) {
@@ -58,7 +58,7 @@ export function onConflictsFilter(evt) {
 
         closeProgress();
       })
-      .catch(loot.handlePromiseError);
+      .catch(handlePromiseError);
   } else {
     loot.filters.deactivateConflictsFilter();
     loot.filters.apply(loot.game.plugins);
@@ -107,7 +107,7 @@ export function onChangeGame(evt) {
 
       closeProgress();
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
 export function updateMasterlist() {
@@ -147,14 +147,14 @@ export function updateMasterlist() {
         );
       }
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onUpdateMasterlist() {
   updateMasterlist()
     .then(() => {
       closeProgress();
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onSortPlugins() {
   if (loot.filters.deactivateConflictsFilter()) {
@@ -222,7 +222,7 @@ export function onSortPlugins() {
 
       closeProgress();
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onApplySort() {
   const loadOrder = loot.game.getPluginNames();
@@ -233,7 +233,7 @@ export function onApplySort() {
 
       loot.state.exitSortingState();
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onCancelSort() {
   return loot
@@ -246,7 +246,7 @@ export function onCancelSort() {
 
       loot.state.exitSortingState();
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 
 export function onRedatePlugins(evt) {
@@ -265,7 +265,7 @@ export function onRedatePlugins(evt) {
               loot.l10n.translate('Plugins were successfully redated.')
             );
           })
-          .catch(loot.handlePromiseError);
+          .catch(handlePromiseError);
       }
     }
   );
@@ -295,7 +295,7 @@ export function onClearAllMetadata() {
             loot.l10n.translate('All user-added metadata has been cleared.')
           );
         })
-        .catch(loot.handlePromiseError);
+        .catch(handlePromiseError);
     }
   );
 }
@@ -330,7 +330,7 @@ export function onCopyContent() {
         loot.l10n.translate("LOOT's content has been copied to the clipboard.")
       );
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onCopyLoadOrder() {
   let plugins = [];
@@ -346,7 +346,7 @@ export function onCopyLoadOrder() {
         loot.l10n.translate('The load order has been copied to the clipboard.')
       );
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onContentRefresh() {
   /* Send a query for updated load order and plugin header info. */
@@ -369,14 +369,14 @@ export function onContentRefresh() {
 
       closeProgress();
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 
 export function onOpenReadme() {
-  loot.query('openReadme').catch(loot.handlePromiseError);
+  loot.query('openReadme').catch(handlePromiseError);
 }
 export function onOpenLogLocation() {
-  loot.query('openLogLocation').catch(loot.handlePromiseError);
+  loot.query('openLogLocation').catch(handlePromiseError);
 }
 export function handleUnappliedChangesClose(change) {
   askQuestion(
@@ -396,7 +396,7 @@ export function handleUnappliedChangesClose(change) {
         .then(() => {
           window.close();
         })
-        .catch(loot.handlePromiseError);
+        .catch(handlePromiseError);
     }
   );
 }
@@ -448,7 +448,7 @@ export function onCloseSettingsDialog(evt) {
         loot.DOM.enableGameOperations(true);
       }
     })
-    .catch(loot.handlePromiseError)
+    .catch(handlePromiseError)
     .then(() => {
       loot.settings = settings;
       loot.DOM.updateSettingsDialog(loot.settings);
@@ -462,7 +462,7 @@ export function onCloseSettingsDialog(evt) {
         onContentRefresh();
       }
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onEditorOpen(evt) {
   /* Set the editor data. */
@@ -485,7 +485,7 @@ export function onEditorOpen(evt) {
     elements[i].addEventListener('dragstart', elements[i].onDragStart);
   }
 
-  return loot.query('editorOpened').catch(loot.handlePromiseError);
+  return loot.query('editorOpened').catch(handlePromiseError);
 }
 export function onEditorClose(evt) {
   const plugin = loot.game.plugins.find(
@@ -515,7 +515,7 @@ export function onEditorClose(evt) {
        do anything. */
       document.getElementById('searchBar').search();
     })
-    .catch(loot.handlePromiseError)
+    .catch(handlePromiseError)
     .then(() => {
       loot.state.exitEditingState();
       /* Sidebar items have been resized. */
@@ -530,7 +530,7 @@ export function onEditorClose(evt) {
         elements[i].removeEventListener('dragstart', elements[i].onDragStart);
       }
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onCopyMetadata(evt) {
   loot
@@ -543,7 +543,7 @@ export function onCopyMetadata(evt) {
         )
       );
     })
-    .catch(loot.handlePromiseError);
+    .catch(handlePromiseError);
 }
 export function onClearMetadata(evt) {
   askQuestion(
@@ -583,7 +583,7 @@ export function onClearMetadata(evt) {
          do anything. */
           document.getElementById('searchBar').search();
         })
-        .catch(loot.handlePromiseError);
+        .catch(handlePromiseError);
     }
   );
 }

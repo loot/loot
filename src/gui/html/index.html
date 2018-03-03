@@ -491,20 +491,18 @@
   <script src="js/plugin.js"></script>
   <script src="js/game.js"></script>
   <script src="js/query.js"></script>
-  <script src="js/handlePromiseError.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/state.js"></script>
   <script type="module">
       import {initialise} from './js/initialise.js';
-      import {closeProgress, showMessage, showProgress} from './js/dialog.js';
+      import {showProgress} from './js/dialog.js';
+      import {handlePromiseError} from './js/handlePromiseError.js';
 
       window.loot = window.loot || {};
-      // FIXME: These are needed for handlePromiseError and showProgress is assumed to exist by C++ callbacks.
-      window.loot.Dialog = {
-        closeProgress,
-        showMessage,
-        showProgress
-      };
+      // FIXME: This is assumed to exist by C++ callbacks.
+      window.loot.Dialog = { showProgress };
+      // FIXME: This is assumed to exist by filters.js.
+      window.loot.handlePromiseError = handlePromiseError;
 
       initialise(loot);
   </script>
