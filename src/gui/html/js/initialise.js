@@ -21,13 +21,13 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
+import {translateStaticText} from './translateStaticText.js';
 
 const Dialog = loot.Dialog;
 const dom = loot.DOM;
 const Filters = loot.Filters;
 const Game = loot.Game;
 const handlePromiseError = loot.handlePromiseError;
-const translateStaticText = loot.translateStaticText;
 const Plugin = loot.Plugin;
 const query = loot.query;
 const Translator = loot.Translator;
