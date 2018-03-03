@@ -1,7 +1,7 @@
-import {handlePromiseError} from './handlePromiseError.js';
-import {query} from './query.js';
+import handlePromiseError from './handlePromiseError.js';
+import query from './query.js';
 
-export class Filters {
+export default class Filters {
   constructor(l10n) {
     /* Plugin filters */
     this.hideMessagelessPlugins = false;
@@ -73,9 +73,7 @@ export class Filters {
 
     this.conflictingPluginNames = [];
 
-    document.dispatchEvent(
-      new CustomEvent('loot-filter-conflicts-deactivate')
-    );
+    document.dispatchEvent(new CustomEvent('loot-filter-conflicts-deactivate'));
 
     return wasEnabled;
   }

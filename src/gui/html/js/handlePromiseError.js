@@ -1,8 +1,8 @@
 // Depends on the loot.l10n global.
 
-import {closeProgress, showMessage} from './dialog.js';
+import { closeProgress, showMessage } from './dialog.js';
 
-export function handlePromiseError(error) {
+export default function handlePromiseError(error) {
   /* Error.stack seems to be Chromium-specific. */
   console.error(error.stack); // eslint-disable-line no-console
   closeProgress();

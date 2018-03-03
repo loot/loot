@@ -1,5 +1,10 @@
 /* eslint-disable no-unused-vars */
-import {askQuestion, closeProgress, showNotification, showProgress} from './dialog.js';
+import {
+  askQuestion,
+  closeProgress,
+  showNotification,
+  showProgress
+} from './dialog.js';
 import {
   initialiseVirtualLists,
   initialiseAutocompleteBashTags,
@@ -10,9 +15,11 @@ import {
   updateSelectedGame,
   enable
 } from './dom.js';
-import {handlePromiseError} from './handlePromiseError.js';
-import {Plugin} from './plugin.js';
-import {query} from './query.js';
+import Filters from './filters.js';
+import Game from './game.js';
+import handlePromiseError from './handlePromiseError.js';
+import Plugin from './plugin.js';
+import query from './query.js';
 
 // Depends on the following globals:
 // - loot.filters
@@ -41,9 +48,7 @@ export function onConflictsFilter(evt) {
      if the filter has been deactivated. */
   if (evt.currentTarget.value) {
     /* Now get conflicts for the plugin. */
-    showProgress(
-      loot.l10n.translate('Identifying conflicting plugins...')
-    );
+    showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
     loot.filters
       .activateConflictsFilter(evt.currentTarget.value)
       .then(plugins => {
@@ -117,10 +122,8 @@ export function onChangeGame(evt) {
     .catch(handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
-export function updateMasterlist() {
-  showProgress(
-    loot.l10n.translate('Updating and parsing masterlist...')
-  );
+function updateMasterlist() {
+  showProgress(loot.l10n.translate('Updating and parsing masterlist...'));
   return query('updateMasterlist')
     .then(JSON.parse)
     .then(result => {
@@ -377,7 +380,7 @@ export function onOpenReadme() {
 export function onOpenLogLocation() {
   query('openLogLocation').catch(handlePromiseError);
 }
-export function handleUnappliedChangesClose(change) {
+function handleUnappliedChangesClose(change) {
   askQuestion(
     '',
     loot.l10n.translateFormatted(

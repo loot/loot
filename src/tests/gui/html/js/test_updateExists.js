@@ -1,5 +1,3 @@
-'use strict';
-
 describe('updateExists()', () => {
   it('should reject if no arguments are passed', () =>
     loot.updateExists().catch(error => error.should.be.an('error')));

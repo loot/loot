@@ -1,4 +1,3 @@
-
 // import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 // import {PaperButton} from 'paper-button/paper-button.js">
 // import {PaperDialog} from 'paper-dialog/paper-dialog.js">
@@ -7,7 +6,7 @@
 // import {FadeOutAnimation} from 'neon-animation/animations/fade-out-animation.js">
 // Also depends on the loot.l10n global.
 
-export class LootMessageDialog extends Polymer.Element {
+export default class LootMessageDialog extends Polymer.Element {
   static get is() {
     return 'loot-message-dialog';
   }
@@ -41,9 +40,11 @@ export class LootMessageDialog extends Polymer.Element {
       </paper-dialog>`;
   }
 
+  /* eslint-disable class-methods-use-this */
   _localise(text) {
     return loot.l10n.translate(text);
   }
+  /* eslint-enable class-methods-use-this */
 
   setConfirmText(confirmText) {
     this.shadowRoot.getElementById('confirm').textContent = confirmText;
@@ -53,7 +54,7 @@ export class LootMessageDialog extends Polymer.Element {
     this.shadowRoot.getElementById('dismiss').hidden = !isDialogDismissable;
   }
 
-  onClose(evt) {
+  static onClose(evt) {
     if (evt.target.parentNode.host.closeCallback) {
       evt.target.parentNode.host.closeCallback(
         evt.target.closingReason.confirmed
@@ -94,13 +95,19 @@ export class LootMessageDialog extends Polymer.Element {
       this.appendChild(p);
     }
 
-    this.$.dialog.addEventListener('iron-overlay-closed', this.onClose);
+    this.$.dialog.addEventListener(
+      'iron-overlay-closed',
+      LootMessageDialog.onClose
+    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    this.$.dialog.removeEventListener('iron-overlay-closed', this.onClose);
+    this.$.dialog.removeEventListener(
+      'iron-overlay-closed',
+      LootMessageDialog.onClose
+    );
   }
 }
 

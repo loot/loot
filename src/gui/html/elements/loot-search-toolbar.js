@@ -8,7 +8,7 @@
 <link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 */
 
-export class LootSearchToolbar extends Polymer.Element {
+export default class LootSearchToolbar extends Polymer.Element {
   static get is() {
     return 'loot-search-toolbar';
   }
@@ -103,23 +103,23 @@ export class LootSearchToolbar extends Polymer.Element {
 
   connectedCallback() {
     super.connectedCallback();
-    this.$.search.addEventListener('input', this._onSearch);
-    this.$.search.addEventListener('keyup', this._onEnter);
-    this.$.prev.addEventListener('click', this._onPrev);
-    this.$.next.addEventListener('click', this._onNext);
-    this.$.close.addEventListener('click', this._onClose);
+    this.$.search.addEventListener('input', LootSearchToolbar._onSearch);
+    this.$.search.addEventListener('keyup', LootSearchToolbar._onEnter);
+    this.$.prev.addEventListener('click', LootSearchToolbar._onPrev);
+    this.$.next.addEventListener('click', LootSearchToolbar._onNext);
+    this.$.close.addEventListener('click', LootSearchToolbar._onClose);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.$.search.removeEventListener('input', this._onSearch);
-    this.$.search.removeEventListener('keyup', this._onEnter);
-    this.$.prev.removeEventListener('click', this._onPrev);
-    this.$.next.removeEventListener('click', this._onNext);
-    this.$.close.removeEventListener('change', this._onClose);
+    this.$.search.removeEventListener('input', LootSearchToolbar._onSearch);
+    this.$.search.removeEventListener('keyup', LootSearchToolbar._onEnter);
+    this.$.prev.removeEventListener('click', LootSearchToolbar._onPrev);
+    this.$.next.removeEventListener('click', LootSearchToolbar._onNext);
+    this.$.close.removeEventListener('change', LootSearchToolbar._onClose);
   }
 
-  _onEnter(evt) {
+  static _onEnter(evt) {
     const host = evt.target.parentElement.parentNode.host;
     if (evt.keyCode !== 13 || host.results.length === 0) {
       return;
@@ -146,7 +146,7 @@ export class LootSearchToolbar extends Polymer.Element {
     this.$.search.dispatchEvent(new Event('input'));
   }
 
-  _onSearch(evt) {
+  static _onSearch(evt) {
     evt.target.parentElement.parentNode.host._resetResults();
 
     const needle = evt.target.value ? evt.target.value.toLowerCase() : '';
@@ -159,15 +159,15 @@ export class LootSearchToolbar extends Polymer.Element {
     );
   }
 
-  _onPrev(evt) {
+  static _onPrev(evt) {
     evt.target.parentElement.parentNode.host._currentResult -= 1;
   }
 
-  _onNext(evt) {
+  static _onNext(evt) {
     evt.target.parentElement.parentNode.host._currentResult += 1;
   }
 
-  _onClose(evt) {
+  static _onClose(evt) {
     const host = evt.target.parentElement.parentNode.host;
     host._resetResults();
     host.$.search.value = '';
@@ -180,9 +180,11 @@ export class LootSearchToolbar extends Polymer.Element {
     );
   }
 
+  /* eslint-disable class-methods-use-this */
   _computeResultNum(currentResult) {
     return currentResult + 1;
   }
+  /* eslint-enable class-methods-use-this */
 }
 
 customElements.define(LootSearchToolbar.is, LootSearchToolbar);

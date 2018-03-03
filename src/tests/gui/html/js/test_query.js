@@ -1,5 +1,3 @@
-'use strict';
-
 describe('query()', () => {
   it('should throw if no arguments are passed', () => {
     (() => {

@@ -1,7 +1,5 @@
 // Helper functions shared across scripts.
 
-'use strict';
-
 const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs');

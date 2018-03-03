@@ -9,7 +9,7 @@
 // <link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
 // Also depends on the loot.l10n global.
 
-export class LootPluginItem extends Polymer.Element {
+export default class LootPluginItem extends Polymer.Element {
   static get is() {
     return 'loot-plugin-item';
   }
@@ -174,6 +174,7 @@ export class LootPluginItem extends Polymer.Element {
       </paper-icon-item>`;
   }
 
+  /* eslint-disable class-methods-use-this */
   _localise(text) {
     return loot.l10n.translate(text);
   }
@@ -191,8 +192,9 @@ export class LootPluginItem extends Polymer.Element {
     }
     return '';
   }
+  /* eslint-enable class-methods-use-this */
 
-  _asHexString(number, numberOfDigits) {
+  static _asHexString(number, numberOfDigits) {
     const text = number.toString(16);
     return '0'.repeat(numberOfDigits - text.length) + text;
   }
@@ -200,10 +202,10 @@ export class LootPluginItem extends Polymer.Element {
   computeLoadOrderIndexText(loadOrderIndex) {
     if (loadOrderIndex > -1) {
       if (this.isLightMaster) {
-        return `FE\n${this._asHexString(loadOrderIndex, 3)}`;
+        return `FE\n${LootPluginItem._asHexString(loadOrderIndex, 3)}`;
       }
 
-      return this._asHexString(loadOrderIndex, 2);
+      return LootPluginItem._asHexString(loadOrderIndex, 2);
     }
 
     return '';
@@ -213,11 +215,13 @@ export class LootPluginItem extends Polymer.Element {
     return this.textContent.trim();
   }
 
+  /* eslint-disable class-methods-use-this */
   onDragStart(evt) {
     evt.dataTransfer.effectAllowed = 'copy';
     evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
     evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
   }
+  /* eslint-enable class-methods-use-this */
 
   updateContent(pluginData) {
     this.loadOrderIndex = pluginData.loadOrderIndex;

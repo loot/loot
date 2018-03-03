@@ -1,7 +1,5 @@
 /* eslint-disable class-methods-use-this */
 
-'use strict';
-
 /* Mock the GitHub library methods used. */
 class Repo {
   getRelease(/* latest */) {

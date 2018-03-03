@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
 
-'use strict';
-
 describe('Filters', () => {
   /* Mock the Translator class. */
 

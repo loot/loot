@@ -3,8 +3,6 @@
 // repository's root. Requires 7-zip and Git to be installed, and Git to be
 // available on the system path.
 
-'use strict';
-
 const childProcess = require('child_process');
 const path = require('path');
 const fs = require('fs-extra');

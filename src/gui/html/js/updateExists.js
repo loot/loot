@@ -28,7 +28,7 @@ function compare(lhs, rhs) {
   return 0;
 }
 
-export function updateExists(currentVersion, currentBuild) {
+export default function updateExists(currentVersion, currentBuild) {
   if (currentVersion === undefined || currentBuild === undefined) {
     return Promise.reject(
       new Error('Invalid arguments, both version and build must be given')

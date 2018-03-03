@@ -156,10 +156,7 @@ export function fillGameTypesList(gameTypes) {
   });
 
   forceSelectDefaultValue(select);
-  select.setAttribute(
-    'value',
-    select.firstElementChild.getAttribute('value')
-  );
+  select.setAttribute('value', select.firstElementChild.getAttribute('value'));
 }
 
 export function fillLanguagesList(languages) {
@@ -207,10 +204,8 @@ export function listInitErrors(errorMessages) {
 
   document.getElementById('filterTotalMessageNo').textContent =
     errorMessages.length;
-  document.getElementById('totalMessageNo').textContent =
-    errorMessages.length;
-  document.getElementById('totalErrorNo').textContent =
-    errorMessages.length;
+  document.getElementById('totalMessageNo').textContent = errorMessages.length;
+  document.getElementById('totalErrorNo').textContent = errorMessages.length;
 }
 
 export function onJumpToGeneralInfo() {
@@ -266,9 +261,7 @@ export function onSearchOpen() {
 }
 
 export function onSearchChangeSelection(evt) {
-  document
-    .getElementById('pluginCardList')
-    .scrollToIndex(evt.detail.selection);
+  document.getElementById('pluginCardList').scrollToIndex(evt.detail.selection);
 }
 
 export function initialiseAutocompleteFilenames(filenames) {
@@ -289,10 +282,10 @@ export function setUIState(state) {
   document.body.setAttribute('data-state', state);
 }
 
-export function enableGameOperations(enable) {
-  document.getElementById('sortButton').disabled = !enable;
-  document.getElementById('updateMasterlistButton').disabled = !enable;
-  document.getElementById('wipeUserlistButton').disabled = !enable;
-  document.getElementById('copyLoadOrderButton').disabled = !enable;
-  document.getElementById('refreshContentButton').disabled = !enable;
+export function enableGameOperations(shouldEnable) {
+  document.getElementById('sortButton').disabled = !shouldEnable;
+  document.getElementById('updateMasterlistButton').disabled = !shouldEnable;
+  document.getElementById('wipeUserlistButton').disabled = !shouldEnable;
+  document.getElementById('copyLoadOrderButton').disabled = !shouldEnable;
+  document.getElementById('refreshContentButton').disabled = !shouldEnable;
 }

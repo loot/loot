@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-'use strict';
-
 const helpers = require('./helpers');
 const { Analyzer, FSUrlLoader } = require('polymer-analyzer');
 const fs = require('fs-extra');
@@ -89,7 +87,11 @@ Promise.resolve()
       const index = 'src/gui/html/index.html';
       const destinationRootPath = `${releasePath.path}/resources/ui`;
 
-      const urls = getFeatureURLs(index, ['html-import', 'html-script', 'js-import']);
+      const urls = getFeatureURLs(index, [
+        'html-import',
+        'html-script',
+        'js-import'
+      ]);
       const htmlImportUrls = urls.then(features => features['html-import']);
       const scriptUrls = urls.then(features => features['html-script']);
       const moduleUrls = urls.then(features => features['js-import']);

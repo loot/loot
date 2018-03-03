@@ -1,6 +1,6 @@
-import {show, enable, setUIState} from './dom.js';
+import { show, enable, setUIState } from './dom.js';
 
-export class State {
+export default class State {
   static get DEFAULT_STATE() {
     return 0;
   }

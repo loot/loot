@@ -1,7 +1,7 @@
 // Depends on the jed and jed-gettext-parser libraries, which aren't available
 // as ES2015 modules.
 
-export class Translator {
+export default class Translator {
   /* Returns a Promise */
   constructor(locale) {
     this.locale = locale || 'en';

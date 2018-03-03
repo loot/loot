@@ -1,6 +1,6 @@
 // Depends on the lodash library, which isn't available as an ES2015 module.
 
-export function query(requestName, payload) {
+export default function query(requestName, payload) {
   if (!requestName) {
     throw new Error('No request name passed');
   }

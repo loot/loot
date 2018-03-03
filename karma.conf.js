@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-'use strict';
-
 const helpers = require('./scripts/helpers');
 const path = require('path');
 

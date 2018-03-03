@@ -35,12 +35,12 @@ function translatePluginCard(l10n, element) {
     'paper-tooltip[for=hasUserEdits]'
   ).textContent = l10n.translate('Has User Metadata');
 
-  element.querySelector(
-    '#editMetadata'
-  ).lastChild.textContent = l10n.translate('Edit Metadata');
-  element.querySelector(
-    '#copyMetadata'
-  ).lastChild.textContent = l10n.translate('Copy Metadata');
+  element.querySelector('#editMetadata').lastChild.textContent = l10n.translate(
+    'Edit Metadata'
+  );
+  element.querySelector('#copyMetadata').lastChild.textContent = l10n.translate(
+    'Copy Metadata'
+  );
   element.querySelector(
     '#clearMetadata'
   ).lastChild.textContent = l10n.translate('Clear User Metadata');
@@ -93,9 +93,7 @@ function translatePluginEditor(l10n) {
   );
   pluginEditor
     .getElementById('tableTabs')
-    .querySelector('[data-for=tags]').textContent = l10n.translate(
-    'Bash Tags'
-  );
+    .querySelector('[data-for=tags]').textContent = l10n.translate('Bash Tags');
   pluginEditor
     .getElementById('tableTabs')
     .querySelector('[data-for=dirty]').textContent = l10n.translate(
@@ -108,9 +106,7 @@ function translatePluginEditor(l10n) {
   );
   pluginEditor
     .getElementById('tableTabs')
-    .querySelector('[data-for=url]').textContent = l10n.translate(
-    'Locations'
-  );
+    .querySelector('[data-for=url]').textContent = l10n.translate('Locations');
 
   pluginEditor
     .getElementById('after')
@@ -122,9 +118,7 @@ function translatePluginEditor(l10n) {
   );
   pluginEditor
     .getElementById('after')
-    .querySelector('th:nth-child(3)').textContent = l10n.translate(
-    'Condition'
-  );
+    .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
     .getElementById('req')
@@ -136,9 +130,7 @@ function translatePluginEditor(l10n) {
   );
   pluginEditor
     .getElementById('req')
-    .querySelector('th:nth-child(3)').textContent = l10n.translate(
-    'Condition'
-  );
+    .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
     .getElementById('inc')
@@ -150,9 +142,7 @@ function translatePluginEditor(l10n) {
   );
   pluginEditor
     .getElementById('inc')
-    .querySelector('th:nth-child(3)').textContent = l10n.translate(
-    'Condition'
-  );
+    .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
     .getElementById('message')
@@ -162,39 +152,27 @@ function translatePluginEditor(l10n) {
     .querySelector('th:nth-child(2)').textContent = l10n.translate('Content');
   pluginEditor
     .getElementById('message')
-    .querySelector('th:nth-child(3)').textContent = l10n.translate(
-    'Condition'
-  );
+    .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
   pluginEditor
     .getElementById('message')
-    .querySelector('th:nth-child(4)').textContent = l10n.translate(
-    'Language'
-  );
+    .querySelector('th:nth-child(4)').textContent = l10n.translate('Language');
 
   pluginEditor
     .getElementById('tags')
-    .querySelector('th:first-child').textContent = l10n.translate(
-    'Add/Remove'
-  );
+    .querySelector('th:first-child').textContent = l10n.translate('Add/Remove');
   pluginEditor
     .getElementById('tags')
-    .querySelector('th:nth-child(2)').textContent = l10n.translate(
-    'Bash Tag'
-  );
+    .querySelector('th:nth-child(2)').textContent = l10n.translate('Bash Tag');
   pluginEditor
     .getElementById('tags')
-    .querySelector('th:nth-child(3)').textContent = l10n.translate(
-    'Condition'
-  );
+    .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
     .getElementById('dirty')
     .querySelector('th:first-child').textContent = l10n.translate('CRC');
   pluginEditor
     .getElementById('dirty')
-    .querySelector('th:nth-child(2)').textContent = l10n.translate(
-    'ITM Count'
-  );
+    .querySelector('th:nth-child(2)').textContent = l10n.translate('ITM Count');
   pluginEditor
     .getElementById('dirty')
     .querySelector('th:nth-child(3)').textContent = l10n.translate(
@@ -236,9 +214,9 @@ function translatePluginEditor(l10n) {
 }
 
 function translatePluginListItem(l10n, element) {
-  element.querySelector(
-    '#globalPriorityTooltip'
-  ).textContent = l10n.translate('Global Priority');
+  element.querySelector('#globalPriorityTooltip').textContent = l10n.translate(
+    'Global Priority'
+  );
   element.querySelector('#localPriorityTooltip').textContent = l10n.translate(
     'Priority'
   );
@@ -298,9 +276,7 @@ function translateTagRowTemplate(l10n) {
   /* Tag row template */
   const tagRow = getTemplate('tagRow', 'editable-table-rows');
 
-  tagRow.querySelector('.type').children[0].textContent = l10n.translate(
-    'Add'
-  );
+  tagRow.querySelector('.type').children[0].textContent = l10n.translate('Add');
   tagRow.querySelector('.type').children[1].textContent = l10n.translate(
     'Remove'
   );
@@ -321,22 +297,13 @@ function translateDirtyInfoRowTemplate(l10n) {
     .setAttribute('error-message', l10n.translate('A CRC is required.'));
   dirtyInfoRow
     .querySelector('.itm')
-    .setAttribute(
-      'error-message',
-      l10n.translate('Values must be integers.')
-    );
+    .setAttribute('error-message', l10n.translate('Values must be integers.'));
   dirtyInfoRow
     .querySelector('.udr')
-    .setAttribute(
-      'error-message',
-      l10n.translate('Values must be integers.')
-    );
+    .setAttribute('error-message', l10n.translate('Values must be integers.'));
   dirtyInfoRow
     .querySelector('.nav')
-    .setAttribute(
-      'error-message',
-      l10n.translate('Values must be integers.')
-    );
+    .setAttribute('error-message', l10n.translate('Values must be integers.'));
   dirtyInfoRow
     .querySelector('.utility')
     .setAttribute(
@@ -443,25 +410,23 @@ function translateMainToolbar(l10n) {
   document.getElementById(
     'refreshContentButton'
   ).lastChild.textContent = l10n.translate('Refresh Content');
-  document.getElementById(
-    'helpButton'
-  ).lastChild.textContent = l10n.translate('View Documentation');
-  document.getElementById(
-    'aboutButton'
-  ).lastChild.textContent = l10n.translate('About');
+  document.getElementById('helpButton').lastChild.textContent = l10n.translate(
+    'View Documentation'
+  );
+  document.getElementById('aboutButton').lastChild.textContent = l10n.translate(
+    'About'
+  );
   document.getElementById(
     'settingsButton'
   ).lastChild.textContent = l10n.translate('Settings');
-  document.getElementById(
-    'quitButton'
-  ).lastChild.textContent = l10n.translate('Quit');
+  document.getElementById('quitButton').lastChild.textContent = l10n.translate(
+    'Quit'
+  );
 
   /* Search bar */
   document
     .getElementById('searchBar')
-    .shadowRoot.getElementById('search').label = l10n.translate(
-    'Search cards'
-  );
+    .shadowRoot.getElementById('search').label = l10n.translate('Search cards');
 }
 
 function updateDropdownSelectedItemText(dropdownElement) {
@@ -502,9 +467,7 @@ function translateSidebar(l10n) {
   document.getElementById('hideVersionNumbers').textContent = l10n.translate(
     'Hide version numbers'
   );
-  document.getElementById('hideCRCs').textContent = l10n.translate(
-    'Hide CRCs'
-  );
+  document.getElementById('hideCRCs').textContent = l10n.translate('Hide CRCs');
   document.getElementById('hideBashTags').textContent = l10n.translate(
     'Hide Bash Tags'
   );
@@ -514,9 +477,9 @@ function translateSidebar(l10n) {
   document.getElementById(
     'hideDoNotCleanMessages'
   ).textContent = l10n.translate("Hide 'Do not clean' messages");
-  document.getElementById(
-    'hideAllPluginMessages'
-  ).textContent = l10n.translate('Hide all plugin messages');
+  document.getElementById('hideAllPluginMessages').textContent = l10n.translate(
+    'Hide all plugin messages'
+  );
   document.getElementById('hideInactivePlugins').textContent = l10n.translate(
     'Hide inactive plugins'
   );
@@ -547,9 +510,7 @@ function translateSummaryCard(l10n) {
   ).firstElementChild.textContent = l10n.translate('General Information');
   document.getElementById(
     'masterlistRevision'
-  ).previousElementSibling.textContent = l10n.translate(
-    'Masterlist Revision'
-  );
+  ).previousElementSibling.textContent = l10n.translate('Masterlist Revision');
   document.getElementById(
     'masterlistDate'
   ).previousElementSibling.textContent = l10n.translate('Masterlist Date');
@@ -600,9 +561,7 @@ function translateSettingsDialog(l10n) {
 
   document.getElementById(
     'enableDebugLogging'
-  ).previousElementSibling.textContent = l10n.translate(
-    'Enable debug logging'
-  );
+  ).previousElementSibling.textContent = l10n.translate('Enable debug logging');
   document.getElementById(
     'enableDebugLogging'
   ).nextElementSibling.textContent = l10n.translate(
@@ -649,33 +608,23 @@ function translateSettingsDialog(l10n) {
 
   document
     .getElementById('settingsDialog')
-    .getElementsByClassName('accept')[0].textContent = l10n.translate(
-    'Apply'
-  );
+    .getElementsByClassName('accept')[0].textContent = l10n.translate('Apply');
   document
     .getElementById('settingsDialog')
-    .getElementsByClassName('cancel')[0].textContent = l10n.translate(
-    'Cancel'
-  );
+    .getElementsByClassName('cancel')[0].textContent = l10n.translate('Cancel');
 }
 
 function translateFirstRunDialog(l10n, version) {
   /* First-run dialog */
   const firstRun = document.getElementById('firstRun');
-  firstRun.querySelector('h2').textContent = l10n.translate(
-    'First-Time Tips'
-  );
+  firstRun.querySelector('h2').textContent = l10n.translate('First-Time Tips');
 
-  firstRun.querySelector(
-    'p:first-of-type'
-  ).innerHTML = l10n.translateFormatted(
+  firstRun.querySelector('p:first-of-type').innerHTML = l10n.translateFormatted(
     'This appears to be the first time you have run LOOT v%s. Here are some tips to help you get started with the interface.',
     version.release
   );
 
-  firstRun.querySelector(
-    'li:nth-child(1)'
-  ).innerHTML = l10n.translateFormatted(
+  firstRun.querySelector('li:nth-child(1)').innerHTML = l10n.translateFormatted(
     'Click %(menu_icon)s buttons to open menus.',
     {
       menu_icon: '<iron-icon icon="more-vert"></iron-icon>'
@@ -700,16 +649,14 @@ function translateFirstRunDialog(l10n, version) {
     "Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out. Otherwise, LOOT's documentation can be accessed through the main menu."
   );
 
-  firstRun.querySelector(
-    'p:last-of-type'
-  ).innerHTML = l10n.translateFormatted(
+  firstRun.querySelector('p:last-of-type').innerHTML = l10n.translateFormatted(
     "LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using %s.",
     '<a href="https://www.paypal.me/OliverHamlet">PayPal</a>'
   );
 
-  firstRun.getElementsByTagName(
-    'paper-button'
-  )[0].textContent = l10n.translate('OK');
+  firstRun.getElementsByTagName('paper-button')[0].textContent = l10n.translate(
+    'OK'
+  );
 }
 
 function translateAboutDialog(l10n, version) {
@@ -731,7 +678,7 @@ function translateAboutDialog(l10n, version) {
   );
 }
 
-export function translateStaticText(l10n, version) {
+export default function translateStaticText(l10n, version) {
   translatePluginCardInstance(l10n);
   translatePluginEditor(l10n);
   translatePluginListItemInstance(l10n);

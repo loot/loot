@@ -47,20 +47,18 @@
     "lint": "eslint --ignore-path .gitignore ."
   },
   "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 7,
-      "sourceType": "script"
-    },
     "env": {
-      "es6": true,
-      "mocha": true,
-      "amd": true,
       "node": true,
-      "browser": true
+      "browser": true,
+      "jest": true
     },
     "globals": {
+      "_": false,
+      "GitHub": false,
+      "Jed": false,
+      "jedGettextParser": false,
       "loot": false,
-      "should": false,
+      "marked": false,
       "Polymer": false
     },
     "plugins": [
@@ -87,6 +85,9 @@
       ],
       "no-underscore-dangle": "off",
       "prefer-destructuring": "off",
+      "import/extensions": {
+        "js": "always"
+      },
       "prettier/prettier": "error"
     }
   },

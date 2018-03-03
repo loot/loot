@@ -1,5 +1,3 @@
-'use strict';
-
 /* Mock the filters class. */
 class Filters {
   constructor() {

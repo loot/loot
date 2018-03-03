@@ -26,7 +26,6 @@ import {
   onContentFilter,
   onConflictsFilter,
   onChangeGame,
-  updateMasterlist,
   onUpdateMasterlist,
   onSortPlugins,
   onApplySort,
@@ -38,7 +37,6 @@ import {
   onContentRefresh,
   onOpenReadme,
   onOpenLogLocation,
-  handleUnappliedChangesClose,
   onQuit,
   onApplySettings,
   onCloseSettingsDialog,
@@ -50,7 +48,7 @@ import {
   onSearchEnd,
   onFolderChange
 } from './events.js';
-import {closeProgress, showProgress} from './dialog.js';
+import { closeProgress, showProgress } from './dialog.js';
 import {
   onShowSettingsDialog,
   onShowAboutDialog,
@@ -72,15 +70,15 @@ import {
   initialiseVirtualLists,
   appendGeneralMessages
 } from './dom.js';
-import {Filters} from './filters.js';
-import {Game} from './game.js';
-import {handlePromiseError} from './handlePromiseError.js';
-import {Plugin} from './plugin.js';
-import {query} from './query.js';
-import {State} from './state.js';
-import {translateStaticText} from './translateStaticText.js';
-import {Translator} from './translator.js';
-import {updateExists} from './updateExists.js';
+import Filters from './filters.js';
+import Game from './game.js';
+import handlePromiseError from './handlePromiseError.js';
+import Plugin from './plugin.js';
+import query from './query.js';
+import State from './state.js';
+import translateStaticText from './translateStaticText.js';
+import Translator from './translator.js';
+import updateExists from './updateExists.js';
 
 function setupEventHandlers() {
   /* eslint-disable no-undef */
@@ -143,9 +141,7 @@ function setupEventHandlers() {
   document
     .getElementById('settingsButton')
     .addEventListener('click', onShowSettingsDialog);
-  document
-    .getElementById('helpButton')
-    .addEventListener('click', onOpenReadme);
+  document.getElementById('helpButton').addEventListener('click', onOpenReadme);
   document
     .getElementById('aboutButton')
     .addEventListener('click', onShowAboutDialog);
@@ -173,9 +169,7 @@ function setupEventHandlers() {
     .addEventListener('click', onJumpToGeneralInfo);
 
   /* Set up search event handlers. */
-  document
-    .getElementById('showSearch')
-    .addEventListener('click', onSearchOpen);
+  document.getElementById('showSearch').addEventListener('click', onSearchOpen);
   document
     .getElementById('searchBar')
     .addEventListener('loot-search-begin', onSearchBegin);
@@ -206,9 +200,7 @@ function setupEventHandlers() {
 
   /* eslint-enable no-undef */
 
-  document
-    .getElementById('cardsNav')
-    .addEventListener('click', onSidebarClick);
+  document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
   document
     .getElementById('cardsNav')
     .addEventListener('dblclick', onSidebarClick);
@@ -249,10 +241,7 @@ function setupEventHandlers() {
     'loot-game-global-messages-change',
     Game.ongeneralMessagesChange
   );
-  document.addEventListener(
-    'loot-game-plugins-change',
-    Game.onPluginsChange
-  );
+  document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
 }
 
 function setVersion(appData) {
@@ -352,7 +341,7 @@ function setGameData(appData) {
   });
 }
 
-export function initialise(loot) {
+export default function initialise(loot) {
   showProgress('Initialising user interface...');
 
   /* Make sure settings are what I want. */
@@ -419,4 +408,4 @@ export function initialise(loot) {
       ]);
     })
     .catch(handlePromiseError);
-};
+}

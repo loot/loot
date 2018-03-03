@@ -6,7 +6,7 @@
 // Also depends on the marked library.
 // Also depends on the loot.l10n and loot.filters globals.
 
-export class LootPluginCard extends Polymer.Element {
+export default class LootPluginCard extends Polymer.Element {
   static get is() {
     return 'loot-plugin-card';
   }
@@ -152,20 +152,34 @@ export class LootPluginCard extends Polymer.Element {
   connectedCallback() {
     super.connectedCallback();
     this.$.editMetadata.addEventListener('click', this.onShowEditor);
-    this.$.copyMetadata.addEventListener('click', this._onCopyMetadata);
-    this.$.clearMetadata.addEventListener('click', this._onClearMetadata);
+    this.$.copyMetadata.addEventListener(
+      'click',
+      LootPluginCard._onCopyMetadata
+    );
+    this.$.clearMetadata.addEventListener(
+      'click',
+      LootPluginCard._onClearMetadata
+    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.$.editMetadata.removeEventListener('click', this.onShowEditor);
-    this.$.copyMetadata.removeEventListener('click', this._onCopyMetadata);
-    this.$.clearMetadata.removeEventListener('click', this._onClearMetadata);
+    this.$.copyMetadata.removeEventListener(
+      'click',
+      LootPluginCard._onCopyMetadata
+    );
+    this.$.clearMetadata.removeEventListener(
+      'click',
+      LootPluginCard._onClearMetadata
+    );
   }
 
+  /* eslint-disable class-methods-use-this */
   _localise(text) {
     return loot.l10n.translate(text);
   }
+  /* eslint-enable class-methods-use-this */
 
   _dataChanged(newValue /* , oldValue */) {
     if (newValue) {
@@ -273,7 +287,7 @@ export class LootPluginCard extends Polymer.Element {
     );
   }
 
-  _onCopyMetadata(evt) {
+  static _onCopyMetadata(evt) {
     evt.target.dispatchEvent(
       new CustomEvent('loot-copy-metadata', {
         bubbles: true,
@@ -282,7 +296,7 @@ export class LootPluginCard extends Polymer.Element {
     );
   }
 
-  _onClearMetadata(evt) {
+  static _onClearMetadata(evt) {
     evt.target.dispatchEvent(
       new CustomEvent('loot-clear-metadata', {
         bubbles: true,

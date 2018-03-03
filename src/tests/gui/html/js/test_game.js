@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
 
-'use strict';
-
 describe('Game', () => {
   /* Mock the Translator class. */
   class Translator {

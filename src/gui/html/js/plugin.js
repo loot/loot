@@ -159,7 +159,7 @@ class PluginCardContent {
   }
 }
 
-export class Plugin {
+export default class Plugin {
   constructor(obj) {
     /* Plugin data */
     this.name = obj.name;
@@ -405,9 +405,7 @@ export class Plugin {
   }
 
   get hasUserEdits() {
-    return (
-      this.userlist !== undefined && Object.keys(this.userlist).length > 1
-    );
+    return this.userlist !== undefined && Object.keys(this.userlist).length > 1;
   }
 
   get userlist() {

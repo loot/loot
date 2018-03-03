@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Translator', () => {
   describe('#Tranlsator()', () => {
     it('should set locale to "en" if no locale is given', () => {

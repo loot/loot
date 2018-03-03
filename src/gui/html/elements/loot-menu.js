@@ -1,7 +1,7 @@
 // import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 // import {PaperListbox} from 'paper-listbox/paper-listbox.js">
 
-export class LootMenu extends Polymer.Element {
+export default class LootMenu extends Polymer.Element {
   static get is() {
     return 'loot-menu';
   }

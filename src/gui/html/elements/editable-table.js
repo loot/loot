@@ -17,7 +17,7 @@ function getRowTemplate(templateId) {
   return template;
 }
 
-export class EditableTable extends Polymer.Element {
+export default class EditableTable extends Polymer.Element {
   static get is() {
     return 'editable-table';
   }
@@ -53,8 +53,8 @@ export class EditableTable extends Polymer.Element {
             Drag 'n' drop should only be enabled for file-row tables.
         */
       if (this.getAttribute('data-template') === 'fileRow') {
-        this.addEventListener('drop', this.onDrop);
-        this.addEventListener('dragover', this.onDragOver);
+        this.addEventListener('drop', EditableTable.onDrop);
+        this.addEventListener('dragover', EditableTable.onDragOver);
       }
     });
   }
@@ -74,11 +74,11 @@ export class EditableTable extends Polymer.Element {
     ).removeEventListener('click', this.onAddEmptyRow);
 
     /* Remove drag 'n' drop listeners. */
-    this.removeEventListener('drop', this.onDrop);
-    this.removeEventListener('dragover', this.onDragOver);
+    this.removeEventListener('drop', EditableTable.onDrop);
+    this.removeEventListener('dragover', EditableTable.onDragOver);
   }
 
-  onDrop(evt) {
+  static onDrop(evt) {
     evt.stopPropagation();
 
     if (
@@ -93,7 +93,7 @@ export class EditableTable extends Polymer.Element {
     return false;
   }
 
-  onDragOver(evt) {
+  static onDragOver(evt) {
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy';
   }
@@ -127,6 +127,7 @@ export class EditableTable extends Polymer.Element {
     return writableRows;
   }
 
+  /* eslint-disable class-methods-use-this */
   setReadOnly(row, classMask, readOnly) {
     const trash = row.getElementsByClassName('delete')[0];
     if (classMask) {
@@ -153,6 +154,7 @@ export class EditableTable extends Polymer.Element {
       }
     }
   }
+  /* eslint-enable class-methods-use-this */
 
   clear() {
     const rowDeletes = this.querySelector('tbody').getElementsByClassName(

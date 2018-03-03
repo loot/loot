@@ -1,10 +1,13 @@
 // Depends on the lodash library, which isn't available as an ES2015 module.
 
-import {initialiseAutocompleteBashTags, initialiseAutocompleteFilenames} from './dom.js';
-import {Filters} from './filters.js';
-import {Plugin} from './plugin.js';
+import {
+  initialiseAutocompleteBashTags,
+  initialiseAutocompleteFilenames
+} from './dom.js';
+import Filters from './filters.js';
+import Plugin from './plugin.js';
 
-export class Game {
+export default class Game {
   constructor(obj, l10n) {
     this.folder = obj.folder || '';
     this.generalMessages = obj.generalMessages || [];
@@ -69,11 +72,7 @@ export class Game {
       });
     }
 
-    if (
-      newTotal !== oldTotal ||
-      newWarns !== oldWarns ||
-      newErrs !== oldErrs
-    ) {
+    if (newTotal !== oldTotal || newWarns !== oldWarns || newErrs !== oldErrs) {
       document.dispatchEvent(
         new CustomEvent('loot-game-global-messages-change', {
           detail: {
@@ -350,9 +349,7 @@ export class Game {
       .getElementById('summary')
       .getElementsByTagName('ul')[0];
     while (generalMessagesList.firstElementChild) {
-      generalMessagesList.removeChild(
-        generalMessagesList.firstElementChild
-      );
+      generalMessagesList.removeChild(generalMessagesList.firstElementChild);
     }
 
     /* Add new messages. */

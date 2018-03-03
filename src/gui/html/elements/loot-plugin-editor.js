@@ -18,9 +18,9 @@
 <link rel="import" href="editable-table.html">
 <link rel="import" href="loot-custom-icons.html">
 */
-import {Plugin} from '../js/plugin.js';
+import Plugin from '../js/plugin.js';
 
-export class LootPluginEditor extends Polymer.Element {
+export default class LootPluginEditor extends Polymer.Element {
   static get is() {
     return 'loot-plugin-editor';
   }
@@ -271,9 +271,12 @@ export class LootPluginEditor extends Polymer.Element {
 
   connectedCallback() {
     super.connectedCallback();
-    this.$.accept.addEventListener('click', this._onHideEditor);
-    this.$.cancel.addEventListener('click', this._onHideEditor);
-    this.$.splitter.addEventListener('mousedown', this._stopPropagation);
+    this.$.accept.addEventListener('click', LootPluginEditor._onHideEditor);
+    this.$.cancel.addEventListener('click', LootPluginEditor._onHideEditor);
+    this.$.splitter.addEventListener(
+      'mousedown',
+      LootPluginEditor._stopPropagation
+    );
     Polymer.Gestures.addListener(
       this.$.splitter,
       'track',
@@ -283,9 +286,12 @@ export class LootPluginEditor extends Polymer.Element {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.$.accept.removeEventListener('click', this._onHideEditor);
-    this.$.cancel.removeEventListener('click', this._onHideEditor);
-    this.$.splitter.removeEventListener('mousedown', this._stopPropagation);
+    this.$.accept.removeEventListener('click', LootPluginEditor._onHideEditor);
+    this.$.cancel.removeEventListener('click', LootPluginEditor._onHideEditor);
+    this.$.splitter.removeEventListener(
+      'mousedown',
+      LootPluginEditor._stopPropagation
+    );
     Polymer.Gestures.removeListener(
       this.$.splitter,
       'track',
@@ -293,7 +299,7 @@ export class LootPluginEditor extends Polymer.Element {
     );
   }
 
-  _stopPropagation(evt) {
+  static _stopPropagation(evt) {
     evt.preventDefault();
     evt.stopPropagation();
   }
@@ -317,7 +323,7 @@ export class LootPluginEditor extends Polymer.Element {
     evt.stopPropagation();
   }
 
-  _rowDataToCrc(rowData) {
+  static _rowDataToCrc(rowData) {
     return {
       crc: parseInt(rowData.crc, 16),
       itm: rowData.itm,
@@ -355,9 +361,9 @@ export class LootPluginEditor extends Polymer.Element {
         } else if (tables[j].parentElement.id === 'tags') {
           metadata.tag = rowsData.map(Plugin.tagFromRowData);
         } else if (tables[j].parentElement.id === 'dirty') {
-          metadata.dirty = rowsData.map(this._rowDataToCrc);
+          metadata.dirty = rowsData.map(LootPluginEditor._rowDataToCrc);
         } else if (tables[j].parentElement.id === 'clean') {
-          metadata.clean = rowsData.map(this._rowDataToCrc);
+          metadata.clean = rowsData.map(LootPluginEditor._rowDataToCrc);
         } else if (tables[j].parentElement.id === 'url') {
           metadata.url = rowsData;
         }
@@ -367,7 +373,7 @@ export class LootPluginEditor extends Polymer.Element {
     return metadata;
   }
 
-  _onHideEditor(evt) {
+  static _onHideEditor(evt) {
     /* First validate table inputs. */
     let isValid = true;
     const inputs = evt.target.parentElement.parentNode.querySelectorAll(
@@ -398,7 +404,7 @@ export class LootPluginEditor extends Polymer.Element {
     }
   }
 
-  _dirtyInfoToRowData(dirtyInfo) {
+  static _dirtyInfoToRowData(dirtyInfo) {
     return {
       crc: dirtyInfo.crc.toString(16).toUpperCase(),
       itm: dirtyInfo.itm,
@@ -447,23 +453,23 @@ export class LootPluginEditor extends Polymer.Element {
       } else if (tables[j].parentElement.id === 'dirty') {
         if (newData.masterlist && newData.masterlist.dirty) {
           newData.masterlist.dirty
-            .map(this._dirtyInfoToRowData)
+            .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(tables[j].addReadOnlyRow, tables[j]);
         }
         if (newData.userlist && newData.userlist.dirty) {
           newData.userlist.dirty
-            .map(this._dirtyInfoToRowData)
+            .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(tables[j].addRow, tables[j]);
         }
       } else if (tables[j].parentElement.id === 'clean') {
         if (newData.masterlist && newData.masterlist.clean) {
           newData.masterlist.clean
-            .map(this._dirtyInfoToRowData)
+            .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(tables[j].addReadOnlyRow, tables[j]);
         }
         if (newData.userlist && newData.userlist.clean) {
           newData.userlist.clean
-            .map(this._dirtyInfoToRowData)
+            .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(tables[j].addRow, tables[j]);
         }
       } else {

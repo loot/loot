@@ -1,5 +1,3 @@
-'use strict';
-
 function getShown(elementId) {
   return loot.DOM.elementShownStates.get(elementId);
 }
