@@ -487,31 +487,13 @@
   <script src="../../../node_modules/jed-gettext-parser/jedGettextParser.js"></script>
   <script src="../../../node_modules/lodash/core.min.js"></script>
   <script src="../../../node_modules/github-api/dist/GitHub.bundle.min.js"></script>
-  <script src="js/game.js"></script>
   <script type="module">
       import {initialise} from './js/initialise.js';
       import {showProgress} from './js/dialog.js';
-      import {
-        initialiseAutocompleteFilenames,
-        initialiseAutocompleteBashTags,
-        show,
-        enable,
-        setUIState
-      } from './js/dom.js';
-      import {handlePromiseError} from './js/handlePromiseError.js';
-      import {Plugin} from './js/plugin.js';
-      import {Filters} from './js/filters.js';
 
       window.loot = window.loot || {};
       // FIXME: This is assumed to exist by C++ callbacks.
       window.loot.Dialog = { showProgress };
-      // FIXME: These are assumed to exist by game.js.
-      window.loot.DOM = {
-        initialiseAutocompleteFilenames,
-        initialiseAutocompleteBashTags
-      };
-      window.loot.Plugin = Plugin;
-      window.loot.Filters = Filters;
 
       initialise(loot);
   </script>

@@ -73,6 +73,7 @@ import {
   appendGeneralMessages
 } from './dom.js';
 import {Filters} from './filters.js';
+import {Game} from './game.js';
 import {handlePromiseError} from './handlePromiseError.js';
 import {Plugin} from './plugin.js';
 import {query} from './query.js';
@@ -80,8 +81,6 @@ import {State} from './state.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
-
-const Game = loot.Game;
 
 function setupEventHandlers() {
   /* eslint-disable no-undef */

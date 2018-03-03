@@ -101,7 +101,7 @@ export function onChangeGame(evt) {
 
       /* Parse the data sent from C++. */
       const gameInfo = JSON.parse(result, Plugin.fromJson);
-      loot.game = new loot.Game(gameInfo, loot.l10n);
+      loot.game = new Game(gameInfo, loot.l10n);
 
       loot.game.initialiseUI();
 
@@ -354,7 +354,7 @@ export function onContentRefresh() {
     .then(result => {
       /* Parse the data sent from C++. */
       const game = JSON.parse(result, Plugin.fromJson);
-      loot.game = new loot.Game(game, loot.l10n);
+      loot.game = new Game(game, loot.l10n);
 
       /* Re-initialise conflicts filter plugin list. */
       Filters.fillConflictsFilterList(loot.game.plugins);
