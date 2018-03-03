@@ -22,6 +22,7 @@
     <https://www.gnu.org/licenses/>.
 */
 import {translateStaticText} from './translateStaticText.js';
+import {updateExists} from './updateExists.js';
 
 const Dialog = loot.Dialog;
 const dom = loot.DOM;
@@ -31,7 +32,6 @@ const handlePromiseError = loot.handlePromiseError;
 const Plugin = loot.Plugin;
 const query = loot.query;
 const Translator = loot.Translator;
-const updateExists = loot.updateExists;
 
 function setupEventHandlers() {
   /* eslint-disable no-undef */
