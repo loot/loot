@@ -15,7 +15,6 @@ import {Plugin} from './plugin.js';
 import {query} from './query.js';
 
 // Depends on the following globals:
-// - loot.Filters
 // - loot.filters
 // - loot.game
 // - loot.l10n
@@ -358,7 +357,7 @@ export function onContentRefresh() {
       loot.game = new loot.Game(game, loot.l10n);
 
       /* Re-initialise conflicts filter plugin list. */
-      loot.Filters.fillConflictsFilterList(loot.game.plugins);
+      Filters.fillConflictsFilterList(loot.game.plugins);
 
       /* Reapply filters. */
       if (loot.filters.areAnyFiltersActive()) {

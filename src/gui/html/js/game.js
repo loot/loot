@@ -7,7 +7,7 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Game = factory(root.marked, root.loot.Filters);
+    root.loot.Game = factory(root.marked);
   }
 })(
   this,
@@ -287,7 +287,7 @@
         loot.DOM.initialiseAutocompleteBashTags(this.bashTags);
 
         /* Re-initialise conflicts filter plugin list. */
-        Filters.fillConflictsFilterList(this.plugins);
+        loot.Filters.fillConflictsFilterList(this.plugins);
       }
 
       static onPluginsChange(evt) {
