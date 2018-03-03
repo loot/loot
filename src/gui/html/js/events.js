@@ -1,9 +1,18 @@
 /* eslint-disable no-unused-vars */
 import {askQuestion, closeProgress, showNotification, showProgress} from './dialog.js';
+import {
+  initialiseVirtualLists,
+  initialiseAutocompleteBashTags,
+  updateSettingsDialog,
+  updateEnabledGames,
+  enableGameOperations,
+  setGameMenuItems,
+  updateSelectedGame,
+  enable
+} from './dom.js';
 import {handlePromiseError} from './handlePromiseError.js';
 
 // Depends on the following globals:
-// - loot.DOM
 // - loot.Plugin
 // - loot.Filters
 // - loot.filters
@@ -96,13 +105,13 @@ export function onChangeGame(evt) {
       const gameInfo = JSON.parse(result, loot.Plugin.fromJson);
       loot.game = new loot.Game(gameInfo, loot.l10n);
 
-      loot.game.initialiseUI(loot.DOM, loot.Filters);
+      loot.game.initialiseUI();
 
       /* Now update virtual lists. */
       if (loot.filters.areAnyFiltersActive()) {
         loot.filters.apply(loot.game.plugins);
       } else {
-        loot.DOM.initialiseVirtualLists(loot.game.plugins);
+        initialiseVirtualLists(loot.game.plugins);
       }
 
       closeProgress();
@@ -124,7 +133,7 @@ export function updateMasterlist() {
         loot.game.generalMessages = result.generalMessages;
 
         /* Update Bash Tag autocomplete suggestions. */
-        loot.DOM.initialiseAutocompleteBashTags(result.bashTags);
+        initialiseAutocompleteBashTags(result.bashTags);
 
         result.plugins.forEach(resultPlugin => {
           const existingPlugin = loot.game.plugins.find(
@@ -364,7 +373,7 @@ export function onContentRefresh() {
       if (loot.filters.areAnyFiltersActive()) {
         loot.filters.apply(loot.game.plugins);
       } else {
-        loot.DOM.initialiseVirtualLists(loot.game.plugins);
+        initialiseVirtualLists(loot.game.plugins);
       }
 
       closeProgress();
@@ -422,7 +431,7 @@ export function onCloseSettingsDialog(evt) {
   }
   if (!evt.detail.confirmed) {
     /* Re-apply the existing settings to the settings dialog elements. */
-    loot.DOM.updateSettingsDialog(loot.settings);
+    updateSettingsDialog(loot.settings);
     return;
   }
 
@@ -443,18 +452,18 @@ export function onCloseSettingsDialog(evt) {
     .then(JSON.parse)
     .then(response => {
       loot.installedGames = response.installedGames;
-      loot.DOM.updateEnabledGames(loot.installedGames);
+      updateEnabledGames(loot.installedGames);
       if (loot.installedGames.length > 0) {
-        loot.DOM.enableGameOperations(true);
+        enableGameOperations(true);
       }
     })
     .catch(handlePromiseError)
     .then(() => {
       loot.settings = settings;
-      loot.DOM.updateSettingsDialog(loot.settings);
-      loot.DOM.setGameMenuItems(loot.settings.games);
-      loot.DOM.updateEnabledGames(loot.installedGames);
-      loot.DOM.updateSelectedGame(loot.game.folder);
+      updateSettingsDialog(loot.settings);
+      setGameMenuItems(loot.settings.games);
+      updateEnabledGames(loot.installedGames);
+      updateSelectedGame(loot.game.folder);
     })
     .then(() => {
       if (loot.installedGames.length > 0 && loot.game.folder.length === 0) {
@@ -617,7 +626,7 @@ export function onSearchEnd(evt) {
   document.getElementById('mainToolbar').classList.remove('search');
 }
 export function onFolderChange(evt) {
-  loot.DOM.updateSelectedGame(evt.detail.folder);
+  updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let gameSettings;
   if (loot.settings && loot.settings.games) {
@@ -627,5 +636,5 @@ export function onFolderChange(evt) {
         game.folder === evt.detail.folder
     );
   }
-  loot.DOM.enable('redatePluginsButton', gameSettings !== undefined);
+  enable('redatePluginsButton', gameSettings !== undefined);
 }

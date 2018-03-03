@@ -51,12 +51,32 @@ import {
   onFolderChange
 } from './events.js';
 import {closeProgress, showProgress} from './dialog.js';
+import {
+  onShowSettingsDialog,
+  onShowAboutDialog,
+  onSwitchSidebarTab,
+  onJumpToGeneralInfo,
+  onSearchOpen,
+  onFocusSearch,
+  onSearchChangeSelection,
+  onSidebarClick,
+  fillLanguagesList,
+  listInitErrors,
+  enableGameOperations,
+  openDialog,
+  fillGameTypesList,
+  updateEnabledGames,
+  updateSettingsDialog,
+  setGameMenuItems,
+  updateSelectedGame,
+  initialiseVirtualLists,
+  appendGeneralMessages
+} from './dom.js';
 import {handlePromiseError} from './handlePromiseError.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
 
-const dom = loot.DOM;
 const Filters = loot.Filters;
 const Game = loot.Game;
 const Plugin = loot.Plugin;
@@ -122,13 +142,13 @@ function setupEventHandlers() {
     .addEventListener('click', onContentRefresh);
   document
     .getElementById('settingsButton')
-    .addEventListener('click', dom.onShowSettingsDialog);
+    .addEventListener('click', onShowSettingsDialog);
   document
     .getElementById('helpButton')
     .addEventListener('click', onOpenReadme);
   document
     .getElementById('aboutButton')
-    .addEventListener('click', dom.onShowAboutDialog);
+    .addEventListener('click', onShowAboutDialog);
   document.getElementById('quitButton').addEventListener('click', onQuit);
   document
     .getElementById('gameMenu')
@@ -147,15 +167,15 @@ function setupEventHandlers() {
     .addEventListener('click', onCancelSort);
   document
     .getElementById('sidebarTabs')
-    .addEventListener('iron-select', dom.onSwitchSidebarTab);
+    .addEventListener('iron-select', onSwitchSidebarTab);
   document
     .getElementById('jumpToGeneralInfo')
-    .addEventListener('click', dom.onJumpToGeneralInfo);
+    .addEventListener('click', onJumpToGeneralInfo);
 
   /* Set up search event handlers. */
   document
     .getElementById('showSearch')
-    .addEventListener('click', dom.onSearchOpen);
+    .addEventListener('click', onSearchOpen);
   document
     .getElementById('searchBar')
     .addEventListener('loot-search-begin', onSearchBegin);
@@ -163,13 +183,13 @@ function setupEventHandlers() {
     .getElementById('searchBar')
     .addEventListener(
       'loot-search-change-selection',
-      dom.onSearchChangeSelection,
+      onSearchChangeSelection,
       false
     );
   document
     .getElementById('searchBar')
     .addEventListener('loot-search-end', onSearchEnd);
-  window.addEventListener('keyup', dom.onFocusSearch);
+  window.addEventListener('keyup', onFocusSearch);
 
   /* Set up event handlers for settings dialog. */
   const settings = document.getElementById('settingsDialog');
@@ -188,10 +208,10 @@ function setupEventHandlers() {
 
   document
     .getElementById('cardsNav')
-    .addEventListener('click', dom.onSidebarClick);
+    .addEventListener('click', onSidebarClick);
   document
     .getElementById('cardsNav')
-    .addEventListener('dblclick', dom.onSidebarClick);
+    .addEventListener('dblclick', onSidebarClick);
 
   /* Set up handler for plugin data changes. */
   document.addEventListener(
@@ -247,7 +267,7 @@ function setLanguages() {
   return query('getLanguages')
     .then(JSON.parse)
     .then(response => response.languages)
-    .then(dom.fillLanguagesList);
+    .then(fillLanguagesList);
 }
 
 function getInitErrors() {
@@ -269,17 +289,17 @@ function getErrorMessages(object) {
 }
 
 function handleInitErrors(error) {
-  dom.listInitErrors(getErrorMessages(error.message));
+  listInitErrors(getErrorMessages(error.message));
   closeProgress();
-  dom.enableGameOperations(false);
-  dom.openDialog('settingsDialog');
+  enableGameOperations(false);
+  openDialog('settingsDialog');
 }
 
 function setGameTypes() {
   return query('getGameTypes')
     .then(JSON.parse)
     .then(response => response.gameTypes)
-    .then(dom.fillGameTypesList);
+    .then(fillGameTypesList);
 }
 
 function setInstalledGames(appData) {
@@ -287,7 +307,7 @@ function setInstalledGames(appData) {
     .then(JSON.parse)
     .then(response => {
       appData.installedGames = response.installedGames;
-      dom.updateEnabledGames(response.installedGames);
+      updateEnabledGames(response.installedGames);
     });
 }
 
@@ -296,10 +316,10 @@ function setSettings(appData) {
     .then(JSON.parse)
     .then(result => {
       appData.settings = result;
-      dom.updateSettingsDialog(appData.settings);
-      dom.setGameMenuItems(appData.settings.games);
-      dom.updateEnabledGames(appData.installedGames);
-      dom.updateSelectedGame(appData.game.folder);
+      updateSettingsDialog(appData.settings);
+      setGameMenuItems(appData.settings.games);
+      updateEnabledGames(appData.installedGames);
+      updateSelectedGame(appData.game.folder);
     });
 }
 
@@ -308,13 +328,13 @@ function setGameData(appData) {
     const game = JSON.parse(result, Plugin.fromJson);
     appData.game = new Game(game, appData.l10n);
 
-    appData.game.initialiseUI(dom, appData.Filters);
+    appData.game.initialiseUI();
     appData.filters.load(appData.settings.filters);
 
     /* Initialise the lists before checking if any filters need to be applied.
       This causes the UI to be initialised faster thanks to scheduling
       behaviour. */
-    dom.initialiseVirtualLists(appData.game.plugins);
+    initialiseVirtualLists(appData.game.plugins);
     if (appData.filters.areAnyFiltersActive()) {
       /* Schedule applying the filters instead of applying them immediately.
         This improves the UI initialisation speed, and is quick enough that
@@ -365,10 +385,10 @@ export function initialise(loot) {
       loot.filters = new Filters(loot.l10n);
       translateStaticText(loot.l10n, loot.version);
       /* Also need to update the settings UI. */
-      dom.updateSettingsDialog(loot.settings);
-      dom.setGameMenuItems(loot.settings.games);
-      dom.updateEnabledGames(loot.installedGames);
-      dom.updateSelectedGame(loot.game.folder);
+      updateSettingsDialog(loot.settings);
+      setGameMenuItems(loot.settings.games);
+      updateEnabledGames(loot.installedGames);
+      updateSelectedGame(loot.game.folder);
     })
     .catch(handlePromiseError)
     .then(getInitErrors)
@@ -376,7 +396,7 @@ export function initialise(loot) {
     .catch(handleInitErrors)
     .then(() => {
       if (loot.settings.lastVersion !== loot.version.release) {
-        dom.openDialog('firstRun');
+        openDialog('firstRun');
       }
     })
     .then(() => loot.query('getVersion'))
@@ -387,7 +407,7 @@ export function initialise(loot) {
         return;
       }
 
-      dom.appendGeneralMessages([
+      appendGeneralMessages([
         {
           type: 'warn',
           content: loot.l10n.translateFormatted(

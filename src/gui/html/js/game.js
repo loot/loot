@@ -7,11 +7,11 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Game = factory(root.marked, root.loot.Plugin);
+    root.loot.Game = factory(root.marked, root.loot.Plugin, root.loot.Filters);
   }
 })(
   this,
-  (marked, Plugin) =>
+  (marked, Plugin, Filters) =>
     class {
       constructor(obj, l10n) {
         this.folder = obj.folder || '';
@@ -281,10 +281,10 @@
         });
       }
 
-      initialiseUI(DOM, Filters) {
+      initialiseUI() {
         /* Re-initialise autocomplete suggestions. */
-        DOM.initialiseAutocompleteFilenames(this.getPluginNames());
-        DOM.initialiseAutocompleteBashTags(this.bashTags);
+        loot.DOM.initialiseAutocompleteFilenames(this.getPluginNames());
+        loot.DOM.initialiseAutocompleteBashTags(this.bashTags);
 
         /* Re-initialise conflicts filter plugin list. */
         Filters.fillConflictsFilterList(this.plugins);

@@ -1,311 +1,298 @@
-'use strict';
+// Depends on the marked libraries, which isn't available as an ES2015 module.
 
-(function exportModule(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define([], factory);
-  } else {
-    // Browser globals
-    root.loot = root.loot || {};
-    root.loot.DOM = factory(root.marked);
-  }
-})(this, marked => {
-  function getElementInTableRowTemplate(rowTemplateId, elementClass) {
-    const select = document.querySelector(
-      'link[rel="import"][href$="editable-table-rows.html"]'
-    );
-    if (select) {
-      return select.import
-        .querySelector(`#${rowTemplateId}`)
-        .content.querySelector(`.${elementClass}`);
-    }
-    return document
+function getElementInTableRowTemplate(rowTemplateId, elementClass) {
+  const select = document.querySelector(
+    'link[rel="import"][href$="editable-table-rows.html"]'
+  );
+  if (select) {
+    return select.import
       .querySelector(`#${rowTemplateId}`)
       .content.querySelector(`.${elementClass}`);
   }
+  return document
+    .querySelector(`#${rowTemplateId}`)
+    .content.querySelector(`.${elementClass}`);
+}
 
-  function createGameItem(game) {
-    const menuItem = document.createElement('paper-item');
-    menuItem.setAttribute('value', game.folder);
-    menuItem.textContent = game.name;
+function createGameItem(game) {
+  const menuItem = document.createElement('paper-item');
+  menuItem.setAttribute('value', game.folder);
+  menuItem.textContent = game.name;
 
-    return menuItem;
+  return menuItem;
+}
+
+function createLanguageItem(language) {
+  const item = document.createElement('paper-item');
+  item.setAttribute('value', language.locale);
+  item.textContent = language.name;
+
+  return item;
+}
+
+function createMessageItem(type, content) {
+  const li = document.createElement('li');
+  li.className = type;
+  /* Use the Marked library for Markdown formatting support. */
+  li.innerHTML = marked(content);
+
+  return li;
+}
+
+function createGameTypeItem(gameType) {
+  const item = document.createElement('paper-item');
+  item.setAttribute('value', gameType);
+  item.textContent = gameType;
+
+  return item;
+}
+
+function forceSelectDefaultValue(element) {
+  element.setAttribute(
+    'value',
+    element.firstElementChild.getAttribute('value')
+  );
+}
+
+export function show(elementId, showElement = true) {
+  document.getElementById(elementId).hidden = !showElement;
+}
+
+export function enable(elementOrId, enableElement = true) {
+  let element = elementOrId;
+  if (typeof element === 'string' || element instanceof String) {
+    element = document.getElementById(element);
   }
 
-  function createLanguageItem(language) {
-    const item = document.createElement('paper-item');
-    item.setAttribute('value', language.locale);
-    item.textContent = language.name;
-
-    return item;
+  if (enableElement) {
+    element.removeAttribute('disabled');
+  } else {
+    element.setAttribute('disabled', '');
   }
+}
 
-  function createMessageItem(type, content) {
-    const li = document.createElement('li');
-    li.className = type;
-    /* Use the Marked library for Markdown formatting support. */
-    li.innerHTML = marked(content);
+export function openDialog(dialogElementId) {
+  document.getElementById(dialogElementId).open();
+}
 
-    return li;
+export function initialiseVirtualLists(plugins) {
+  document.getElementById('cardsNav').items = plugins;
+  document.getElementById('pluginCardList').items = plugins;
+}
+
+export function updateSelectedGame(gameFolder) {
+  document.getElementById('gameMenu').value = gameFolder;
+
+  /* Also disable deletion of the game's row in the settings dialog. */
+  const table = document.getElementById('gameTable');
+  for (let i = 0; i < table.querySelector('tbody').rows.length; i += 1) {
+    const folderElements = table
+      .querySelector('tbody')
+      .rows[i].getElementsByClassName('folder');
+    if (folderElements.length === 1) {
+      table.setReadOnly(
+        table.querySelector('tbody').rows[i],
+        ['delete'],
+        folderElements[0].value === gameFolder
+      );
+    }
   }
+}
 
-  function createGameTypeItem(gameType) {
-    const item = document.createElement('paper-item');
-    item.setAttribute('value', gameType);
-    item.textContent = gameType;
-
-    return item;
-  }
-
-  function forceSelectDefaultValue(element) {
-    element.setAttribute(
-      'value',
-      element.firstElementChild.getAttribute('value')
+export function updateEnabledGames(installedGames) {
+  const gameMenuItems = document.getElementById('gameMenu').children;
+  for (let i = 0; i < gameMenuItems.length; i += 1) {
+    enable(
+      gameMenuItems[i],
+      installedGames.indexOf(gameMenuItems[i].getAttribute('value')) !== -1
     );
   }
+}
 
-  return class DOM {
-    static show(elementId, showElement = true) {
-      document.getElementById(elementId).hidden = !showElement;
-    }
+export function setGameMenuItems(games) {
+  const gameMenu = document.getElementById('gameMenu');
 
-    static enable(elementOrId, enableElement = true) {
-      let element = elementOrId;
-      if (typeof element === 'string' || element instanceof String) {
-        element = document.getElementById(element);
-      }
+  /* First make sure game listing elements don't have any existing entries. */
+  while (gameMenu.firstElementChild) {
+    gameMenu.removeChild(gameMenu.firstElementChild);
+  }
 
-      if (enableElement) {
-        element.removeAttribute('disabled');
-      } else {
-        element.setAttribute('disabled', '');
-      }
-    }
+  games.forEach(game => {
+    gameMenu.appendChild(createGameItem(game));
+  });
+}
 
-    static openDialog(dialogElementId) {
-      document.getElementById(dialogElementId).open();
-    }
+export function updateSettingsDialog(settings) {
+  const gameSelect = document.getElementById('defaultGameSelect');
+  const gameTable = document.getElementById('gameTable');
 
-    static initialiseVirtualLists(plugins) {
-      document.getElementById('cardsNav').items = plugins;
-      document.getElementById('pluginCardList').items = plugins;
-    }
+  /* First make sure game listing elements don't have any existing entries. */
+  while (gameSelect.children.length > 1) {
+    gameSelect.removeChild(gameSelect.lastElementChild);
+  }
+  gameTable.clear();
 
-    static updateSelectedGame(gameFolder) {
-      document.getElementById('gameMenu').value = gameFolder;
+  /* Now fill with new values. */
+  settings.games.forEach(game => {
+    gameSelect.appendChild(createGameItem(game));
 
-      /* Also disable deletion of the game's row in the settings dialog. */
-      const table = document.getElementById('gameTable');
-      for (let i = 0; i < table.querySelector('tbody').rows.length; i += 1) {
-        const folderElements = table
-          .querySelector('tbody')
-          .rows[i].getElementsByClassName('folder');
-        if (folderElements.length === 1) {
-          table.setReadOnly(
-            table.querySelector('tbody').rows[i],
-            ['delete'],
-            folderElements[0].value === gameFolder
-          );
-        }
-      }
-    }
+    const row = gameTable.addRow(game);
+    gameTable.setReadOnly(row, ['name', 'folder', 'type']);
+  });
 
-    static updateEnabledGames(installedGames) {
-      const gameMenuItems = document.getElementById('gameMenu').children;
-      for (let i = 0; i < gameMenuItems.length; i += 1) {
-        DOM.enable(
-          gameMenuItems[i],
-          installedGames.indexOf(gameMenuItems[i].getAttribute('value')) !== -1
-        );
-      }
-    }
+  gameSelect.value = settings.game;
+  document.getElementById('languageSelect').value = settings.language;
+  document.getElementById('enableDebugLogging').checked =
+    settings.enableDebugLogging;
+  document.getElementById('updateMasterlist').checked =
+    settings.updateMasterlist;
+}
 
-    static setGameMenuItems(games) {
-      const gameMenu = document.getElementById('gameMenu');
+export function fillGameTypesList(gameTypes) {
+  const select = getElementInTableRowTemplate('gameRow', 'type');
 
-      /* First make sure game listing elements don't have any existing entries. */
-      while (gameMenu.firstElementChild) {
-        gameMenu.removeChild(gameMenu.firstElementChild);
-      }
+  gameTypes.forEach(gameType => {
+    select.appendChild(createGameTypeItem(gameType));
+  });
 
-      games.forEach(game => {
-        gameMenu.appendChild(createGameItem(game));
-      });
-    }
+  forceSelectDefaultValue(select);
+  select.setAttribute(
+    'value',
+    select.firstElementChild.getAttribute('value')
+  );
+}
 
-    static updateSettingsDialog(settings) {
-      const gameSelect = document.getElementById('defaultGameSelect');
-      const gameTable = document.getElementById('gameTable');
+export function fillLanguagesList(languages) {
+  const settingsLangSelect = document.getElementById('languageSelect');
+  const messageLangSelect = getElementInTableRowTemplate(
+    'messageRow',
+    'language'
+  );
 
-      /* First make sure game listing elements don't have any existing entries. */
-      while (gameSelect.children.length > 1) {
-        gameSelect.removeChild(gameSelect.lastElementChild);
-      }
-      gameTable.clear();
+  languages.forEach(language => {
+    const settingsItem = createLanguageItem(language);
+    settingsLangSelect.appendChild(settingsItem);
+    messageLangSelect.appendChild(settingsItem.cloneNode(true));
+  });
 
-      /* Now fill with new values. */
-      settings.games.forEach(game => {
-        gameSelect.appendChild(createGameItem(game));
+  forceSelectDefaultValue(messageLangSelect);
+}
 
-        const row = gameTable.addRow(game);
-        gameTable.setReadOnly(row, ['name', 'folder', 'type']);
-      });
+export function appendGeneralMessages(messages) {
+  if (!messages) {
+    return;
+  }
 
-      gameSelect.value = settings.game;
-      document.getElementById('languageSelect').value = settings.language;
-      document.getElementById('enableDebugLogging').checked =
-        settings.enableDebugLogging;
-      document.getElementById('updateMasterlist').checked =
-        settings.updateMasterlist;
-    }
+  const generalMessagesList = document
+    .getElementById('summary')
+    .getElementsByTagName('ul')[0];
+  messages.forEach(message => {
+    generalMessagesList.appendChild(
+      createMessageItem(message.type, message.content)
+    );
+  });
+}
 
-    static fillGameTypesList(gameTypes) {
-      const select = getElementInTableRowTemplate('gameRow', 'type');
+export function listInitErrors(errorMessages) {
+  if (!errorMessages) {
+    return;
+  }
 
-      gameTypes.forEach(gameType => {
-        select.appendChild(createGameTypeItem(gameType));
-      });
+  appendGeneralMessages(
+    errorMessages.map(element => ({
+      type: 'error',
+      content: element
+    }))
+  );
 
-      forceSelectDefaultValue(select);
-      select.setAttribute(
-        'value',
-        select.firstElementChild.getAttribute('value')
-      );
-    }
+  document.getElementById('filterTotalMessageNo').textContent =
+    errorMessages.length;
+  document.getElementById('totalMessageNo').textContent =
+    errorMessages.length;
+  document.getElementById('totalErrorNo').textContent =
+    errorMessages.length;
+}
 
-    static fillLanguagesList(languages) {
-      const settingsLangSelect = document.getElementById('languageSelect');
-      const messageLangSelect = getElementInTableRowTemplate(
-        'messageRow',
-        'language'
-      );
+export function onJumpToGeneralInfo() {
+  document.getElementById('pluginCardList').scroll(0, 0);
+}
 
-      languages.forEach(language => {
-        const settingsItem = createLanguageItem(language);
-        settingsLangSelect.appendChild(settingsItem);
-        messageLangSelect.appendChild(settingsItem.cloneNode(true));
-      });
+export function onShowAboutDialog() {
+  document.getElementById('about').open();
+}
 
-      forceSelectDefaultValue(messageLangSelect);
-    }
+export function onSwitchSidebarTab(evt) {
+  document.getElementById(evt.target.selected).parentElement.selected =
+    evt.target.selected;
+}
 
-    static appendGeneralMessages(messages) {
-      if (!messages) {
-        return;
-      }
+export function onSidebarClick(evt) {
+  if (evt.target.hasAttribute('data-index')) {
+    const index = parseInt(evt.target.getAttribute('data-index'), 10);
+    document.getElementById('pluginCardList').scrollToIndex(index);
 
-      const generalMessagesList = document
-        .getElementById('summary')
-        .getElementsByTagName('ul')[0];
-      messages.forEach(message => {
-        generalMessagesList.appendChild(
-          createMessageItem(message.type, message.content)
-        );
-      });
-    }
+    if (evt.type === 'dblclick') {
+      /* Double-clicking can select the item's text, clear the selection in
+          case that has happened. */
+      window.getSelection().removeAllRanges();
 
-    static listInitErrors(errorMessages) {
-      if (!errorMessages) {
-        return;
-      }
-
-      DOM.appendGeneralMessages(
-        errorMessages.map(element => ({
-          type: 'error',
-          content: element
-        }))
-      );
-
-      document.getElementById('filterTotalMessageNo').textContent =
-        errorMessages.length;
-      document.getElementById('totalMessageNo').textContent =
-        errorMessages.length;
-      document.getElementById('totalErrorNo').textContent =
-        errorMessages.length;
-    }
-
-    static onJumpToGeneralInfo() {
-      document.getElementById('pluginCardList').scroll(0, 0);
-    }
-
-    static onShowAboutDialog() {
-      document.getElementById('about').open();
-    }
-
-    static onSwitchSidebarTab(evt) {
-      document.getElementById(evt.target.selected).parentElement.selected =
-        evt.target.selected;
-    }
-
-    static onSidebarClick(evt) {
-      if (evt.target.hasAttribute('data-index')) {
-        const index = parseInt(evt.target.getAttribute('data-index'), 10);
-        document.getElementById('pluginCardList').scrollToIndex(index);
-
-        if (evt.type === 'dblclick') {
-          /* Double-clicking can select the item's text, clear the selection in
-             case that has happened. */
-          window.getSelection().removeAllRanges();
-
-          if (
-            document.body.getAttribute('data-state') !== 'editing' &&
-            document.body.getAttribute('data-state') !== 'sorting'
-          ) {
-            document
-              .getElementById(evt.target.getAttribute('data-id'))
-              .onShowEditor();
-          }
-        }
+      if (
+        document.body.getAttribute('data-state') !== 'editing' &&
+        document.body.getAttribute('data-state') !== 'sorting'
+      ) {
+        document
+          .getElementById(evt.target.getAttribute('data-id'))
+          .onShowEditor();
       }
     }
+  }
+}
 
-    static onShowSettingsDialog() {
-      document.getElementById('settingsDialog').open();
-    }
+export function onShowSettingsDialog() {
+  document.getElementById('settingsDialog').open();
+}
 
-    static onFocusSearch(evt) {
-      // Focus search if ctrl-f is pressed.
-      if (evt.ctrlKey && evt.keyCode === 70) {
-        document.getElementById('mainToolbar').classList.add('search');
-        document.getElementById('searchBar').focusInput();
-      }
-    }
+export function onFocusSearch(evt) {
+  // Focus search if ctrl-f is pressed.
+  if (evt.ctrlKey && evt.keyCode === 70) {
+    document.getElementById('mainToolbar').classList.add('search');
+    document.getElementById('searchBar').focusInput();
+  }
+}
 
-    static onSearchOpen() {
-      document.getElementById('mainToolbar').classList.add('search');
-      document.getElementById('searchBar').focusInput();
-    }
+export function onSearchOpen() {
+  document.getElementById('mainToolbar').classList.add('search');
+  document.getElementById('searchBar').focusInput();
+}
 
-    static onSearchChangeSelection(evt) {
-      document
-        .getElementById('pluginCardList')
-        .scrollToIndex(evt.detail.selection);
-    }
+export function onSearchChangeSelection(evt) {
+  document
+    .getElementById('pluginCardList')
+    .scrollToIndex(evt.detail.selection);
+}
 
-    static initialiseAutocompleteFilenames(filenames) {
-      getElementInTableRowTemplate('fileRow', 'name').setAttribute(
-        'source',
-        JSON.stringify(filenames)
-      );
-    }
+export function initialiseAutocompleteFilenames(filenames) {
+  getElementInTableRowTemplate('fileRow', 'name').setAttribute(
+    'source',
+    JSON.stringify(filenames)
+  );
+}
 
-    static initialiseAutocompleteBashTags(tags) {
-      getElementInTableRowTemplate('tagRow', 'name').setAttribute(
-        'source',
-        JSON.stringify(tags)
-      );
-    }
+export function initialiseAutocompleteBashTags(tags) {
+  getElementInTableRowTemplate('tagRow', 'name').setAttribute(
+    'source',
+    JSON.stringify(tags)
+  );
+}
 
-    static setUIState(state) {
-      document.body.setAttribute('data-state', state);
-    }
+export function setUIState(state) {
+  document.body.setAttribute('data-state', state);
+}
 
-    static enableGameOperations(enable) {
-      document.getElementById('sortButton').disabled = !enable;
-      document.getElementById('updateMasterlistButton').disabled = !enable;
-      document.getElementById('wipeUserlistButton').disabled = !enable;
-      document.getElementById('copyLoadOrderButton').disabled = !enable;
-      document.getElementById('refreshContentButton').disabled = !enable;
-    }
-  };
-});
+export function enableGameOperations(enable) {
+  document.getElementById('sortButton').disabled = !enable;
+  document.getElementById('updateMasterlistButton').disabled = !enable;
+  document.getElementById('wipeUserlistButton').disabled = !enable;
+  document.getElementById('copyLoadOrderButton').disabled = !enable;
+  document.getElementById('refreshContentButton').disabled = !enable;
+}
