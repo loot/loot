@@ -499,11 +499,10 @@
   <script src="js/state.js"></script>
   <script src="js/translator.js"></script>
   <script src="js/updateExists.js"></script>
-  <script src="js/initialise.js"></script>
-  <script>
-    'use strict';
-    window.addEventListener('WebComponentsReady', () => {
-      loot.initialise(loot);
-    });
+  <script type="module">
+      import {initialise} from './js/initialise.js';
+
+      window.loot = window.loot || {};
+      initialise(loot);
   </script>
 </body>
