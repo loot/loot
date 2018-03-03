@@ -55,3 +55,4 @@ bower_components
 node_modules
 *.pb.h
 *.pb.cc
+coverage/

@@ -1,295 +1,296 @@
-/* Mock the filters class. */
-class Filters {
-  constructor() {
-    this.hideVersionNumbers = false;
-    this.hideCRCs = false;
-    this.hideBashTags = false;
-    this.hideAllPluginMessages = false;
-    this.hideNotes = false;
-    this.hideDoNotCleanMessages = false;
-  }
+import * as _ from 'lodash';
+import Plugin from '../../../../gui/html/js/plugin.js';
+import Filters from '../../../../gui/html/js/filters.js';
 
-  messageFilter(message, index) {
-    if (this.hideAllPluginMessages) {
-      return false;
+jest.mock('../../../../gui/html/js/filters.js', () =>
+  jest.fn().mockImplementation(() => ({
+    messageFilter(message) {
+      if (this.hideAllPluginMessages) {
+        return false;
+      }
+
+      if (this.hideNotes && message.type === 'say') {
+        return false;
+      }
+
+      if (
+        this.hideDoNotCleanMessages &&
+        message.text.toLowerCase().indexOf('do not clean') !== -1
+      ) {
+        return false;
+      }
+
+      return true;
     }
-
-    if (this.hideNotes && index === 0) {
-      return false;
-    }
-
-    if (this.hideDoNotCleanMessages && index === 1) {
-      return false;
-    }
-
-    return true;
-  }
-}
+  }))
+);
 
 /* eslint-disable no-unused-expressions */
 describe('Plugin', () => {
+  window._ = _;
+
   describe('#Plugin()', () => {
-    it('should throw if nothing is passed', () => {
-      (() => {
-        new loot.Plugin(); // eslint-disable-line no-new
-      }).should.throw();
+    test('should throw if nothing is passed', () => {
+      expect(() => {
+        new Plugin(); // eslint-disable-line no-new
+      }).toThrow();
     });
 
-    it('should throw if an object with no name key is passed', () => {
-      (() => {
-        new loot.Plugin({}); // eslint-disable-line no-new
-      }).should.throw();
+    test('should throw if an object with no name key is passed', () => {
+      expect(() => {
+        new Plugin({}); // eslint-disable-line no-new
+      }).toThrow();
     });
 
-    it('should not throw if some members are undefined', () => {
-      (() => {
-        new loot.Plugin({ name: 'test' }); // eslint-disable-line no-new
-      }).should.not.throw();
+    test('should not throw if some members are undefined', () => {
+      expect(() => {
+        new Plugin({ name: 'test' }); // eslint-disable-line no-new
+      }).not.toThrow();
     });
 
-    it("should set name to passed key's value", () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test("should set name to passed key's value", () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.name.should.equal('test');
+      expect(plugin.name).toBe('test');
     });
 
-    it('should set crc to zero if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set crc to zero if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.crc.should.equal(0);
+      expect(plugin.crc).toBe(0);
     });
 
-    it("should set crc to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set crc to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         crc: 0xdeadbeef
       });
 
-      plugin.crc.should.equal(0xdeadbeef);
+      expect(plugin.crc).toBe(0xdeadbeef);
     });
 
-    it('should set version to an empty string if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set version to an empty string if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.version.should.equal('');
+      expect(plugin.version).toBe('');
     });
 
-    it("should set version to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set version to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         version: 'foo'
       });
 
-      plugin.version.should.equal('foo');
+      expect(plugin.version).toBe('foo');
     });
 
-    it('should set isActive value to false if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set isActive value to false if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isActive.should.be.false;
+      expect(plugin.isActive).toBe(false);
     });
 
-    it("should set isActive to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set isActive to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         isActive: true
       });
 
-      plugin.isActive.should.be.true;
+      expect(plugin.isActive).toBe(true);
     });
 
-    it('should set isEmpty value to false if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set isEmpty value to false if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isEmpty.should.be.false;
+      expect(plugin.isEmpty).toBe(false);
     });
 
-    it("should set isEmpty to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set isEmpty to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         isEmpty: true
       });
 
-      plugin.isEmpty.should.be.true;
+      expect(plugin.isEmpty).toBe(true);
     });
 
-    it('should set isMaster value to false if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set isMaster value to false if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isMaster.should.be.false;
+      expect(plugin.isMaster).toBe(false);
     });
 
-    it("should set isMaster to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set isMaster to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         isMaster: true
       });
 
-      plugin.isMaster.should.be.true;
+      expect(plugin.isMaster).toBe(true);
     });
 
-    it('should set loadsArchive value to false if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set loadsArchive value to false if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.loadsArchive.should.be.false;
+      expect(plugin.loadsArchive).toBe(false);
     });
 
-    it("should set loadsArchive to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set loadsArchive to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         loadsArchive: true
       });
 
-      plugin.loadsArchive.should.be.true;
+      expect(plugin.loadsArchive).toBe(true);
     });
 
-    it('should set masterlist value to undefined if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set masterlist value to undefined if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      should.equal(undefined, plugin.masterlist);
+      expect(plugin.masterlist).toBe(undefined);
     });
 
-    it("should set masterlist to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set masterlist to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         masterlist: {}
       });
 
-      plugin.masterlist.should.be.deep.equal({});
+      expect(plugin.masterlist).toEqual({});
     });
 
-    it('should set userlist value to undefined if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set userlist value to undefined if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      should.equal(undefined, plugin.userlist);
+      expect(plugin.userlist).toBe(undefined);
     });
 
-    it("should set userlist to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set userlist to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         userlist: {}
       });
 
-      plugin.userlist.should.be.deep.equal({});
+      expect(plugin.userlist).toEqual({});
     });
 
-    it('should set priority to 0 if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set priority to 0 if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.priority.should.equal(0);
+      expect(plugin.priority).toBe(0);
     });
 
-    it("should set priority to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set priority to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         priority: 5
       });
 
-      plugin.priority.should.equal(5);
+      expect(plugin.priority).toBe(5);
     });
 
-    it('should set global priority to 0 if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set global priority to 0 if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.globalPriority.should.equal(0);
+      expect(plugin.globalPriority).toBe(0);
     });
 
-    it("should set global priority to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set global priority to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         globalPriority: 5
       });
 
-      plugin.globalPriority.should.equal(5);
+      expect(plugin.globalPriority).toBe(5);
     });
 
-    it('should set messages value to an empty array if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set messages value to an empty array if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.messages.length.should.equal(0);
+      expect(plugin.messages.length).toBe(0);
     });
 
-    it("should set messages to passed key's value", () => {
+    test("should set messages to passed key's value", () => {
       const messages = [
         {
           type: 'say',
           text: 'test message'
         }
       ];
-      const plugin = new loot.Plugin({
+      const plugin = new Plugin({
         name: 'test',
         messages
       });
 
-      plugin.messages.should.deep.equal(messages);
+      expect(plugin.messages).toEqual(messages);
     });
 
-    it('should set tags value to an empty array if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set tags value to an empty array if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.tags.length.should.equal(0);
+      expect(plugin.tags.length).toBe(0);
     });
 
-    it("should set tags to passed key's value", () => {
+    test("should set tags to passed key's value", () => {
       const tags = [
         {
           name: 'Delev'
         }
       ];
-      const plugin = new loot.Plugin({
+      const plugin = new Plugin({
         name: 'test',
         tags
       });
 
-      plugin.tags.should.deep.equal(tags);
+      expect(plugin.tags).toEqual(tags);
     });
 
-    it('should set isDirty value to false if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set isDirty value to false if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isDirty.should.be.false;
+      expect(plugin.isDirty).toBe(false);
     });
 
-    it("should set isDirty to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set isDirty to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         isDirty: true
       });
 
-      plugin.isDirty.should.be.true;
+      expect(plugin.isDirty).toBe(true);
     });
 
-    it('should set cleanedWith value to an empty string if no key was passed', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set cleanedWith value to an empty string if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.cleanedWith.should.equal('');
+      expect(plugin.cleanedWith).toBe('');
     });
 
-    it("should set cleanedWith to passed key's value", () => {
-      const plugin = new loot.Plugin({
+    test("should set cleanedWith to passed key's value", () => {
+      const plugin = new Plugin({
         name: 'test',
         cleanedWith: 'TES5Edit 3.11'
       });
 
-      plugin.cleanedWith.should.equal('TES5Edit 3.11');
+      expect(plugin.cleanedWith).toBe('TES5Edit 3.11');
     });
 
-    it('should set id to the plugins name without spaces', () => {
-      const plugin = new loot.Plugin({ name: 'test plugin name' });
+    test('should set id to the plugins name without spaces', () => {
+      const plugin = new Plugin({ name: 'test plugin name' });
 
-      plugin.id.should.equal('testpluginname');
+      expect(plugin.id).toBe('testpluginname');
     });
 
-    it('should set isEditorOpen to false', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set isEditorOpen to false', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isEditorOpen.should.be.false;
+      expect(plugin.isEditorOpen).toBe(false);
     });
 
-    it('should set isSearchResult to false', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('should set isSearchResult to false', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isSearchResult.should.be.false;
+      expect(plugin.isSearchResult).toBe(false);
     });
   });
 
@@ -302,45 +303,45 @@ describe('Plugin', () => {
     };
 
     beforeEach(() => {
-      plugin = new loot.Plugin({ name: 'test' });
+      plugin = new Plugin({ name: 'test' });
     });
 
-    it('should do nothing if its argument is undefined', () => {
+    test('should do nothing if its argument is undefined', () => {
       plugin.update();
 
-      plugin.should.deep.equal(new loot.Plugin({ name: 'test' }));
+      expect(plugin).toEqual(new Plugin({ name: 'test' }));
     });
 
-    it('should throw if the argument has no name property', () => {
-      (() => {
+    test('should throw if the argument has no name property', () => {
+      expect(() => {
         plugin.update({});
-      }).should.throw(Error);
+      }).toThrow(Error);
     });
 
-    it("should throw if the argument's name property doesn't match the plugin's name", () => {
-      (() => {
+    test("should throw if the argument's name property doesn't match the plugin's name", () => {
+      expect(() => {
         plugin.update({ name: 'other test' });
-      }).should.throw(Error);
+      }).toThrow(Error);
     });
 
-    it("should set property values for all the given argument's properties", () => {
+    test("should set property values for all the given argument's properties", () => {
       plugin.update(updatedPlugin);
 
-      plugin.foo.should.equal(updatedPlugin.foo);
-      plugin.crc.should.equal(updatedPlugin.crc);
+      expect(plugin.foo).toBe(updatedPlugin.foo);
+      expect(plugin.crc).toBe(updatedPlugin.crc);
     });
 
-    it('should not change property values for properties not present in the argument', () => {
+    test('should not change property values for properties not present in the argument', () => {
       plugin.isActive = true;
 
       plugin.update(updatedPlugin);
 
-      plugin.foo.should.equal(updatedPlugin.foo);
-      plugin.crc.should.equal(updatedPlugin.crc);
-      plugin.isActive.should.be.true;
+      expect(plugin.foo).toBe(updatedPlugin.foo);
+      expect(plugin.crc).toBe(updatedPlugin.crc);
+      expect(plugin.isActive).toBe(true);
     });
 
-    it('should set explicitly undefined values', () => {
+    test('should set explicitly undefined values', () => {
       plugin.isActive = true;
 
       plugin.update({
@@ -348,24 +349,22 @@ describe('Plugin', () => {
         isActive: undefined
       });
 
-      should.equal(undefined, plugin.isActive);
+      expect(plugin.isActive).toBe(undefined);
     });
   });
 
   describe('#fromJson()', () => {
-    it('should return the value object if the JSON object does not have name and isEmpty fields', () => {
+    test('should return the value object if the JSON object does not have name and isEmpty fields', () => {
       const testInputObj = {
         name: 'test',
         crc: 0xdeadbeef
       };
       const testInputJson = JSON.stringify(testInputObj);
 
-      JSON.parse(testInputJson, loot.Plugin.fromJson).should.deep.equal(
-        testInputObj
-      );
+      expect(JSON.parse(testInputJson, Plugin.fromJson)).toEqual(testInputObj);
     });
 
-    it('should return a Plugin object if the JSON object has name and isEmpty fields', () => {
+    test('should return a Plugin object if the JSON object has name and isEmpty fields', () => {
       const testInputObj = {
         name: 'test',
         crc: 0xdeadbeef,
@@ -373,42 +372,44 @@ describe('Plugin', () => {
       };
       const testInputJson = JSON.stringify(testInputObj);
 
-      JSON.parse(testInputJson, loot.Plugin.fromJson).should.be.instanceof(
-        loot.Plugin
-      );
+      expect(JSON.parse(testInputJson, Plugin.fromJson)).toBeInstanceOf(Plugin);
     });
   });
 
   describe('#tagFromRowData()', () => {
-    it('should throw if passed nothing', () => {
-      (() => {
-        loot.Plugin.tagFromRowData();
-      }).should.throw();
+    test('should throw if passed nothing', () => {
+      expect(() => {
+        Plugin.tagFromRowData();
+      }).toThrow();
     });
 
-    it('should return an empty object if passed nothing', () => {
-      (() => {
-        loot.Plugin.tagFromRowData({});
-      }).should.throw();
+    test('should return an empty object if passed nothing', () => {
+      expect(() => {
+        Plugin.tagFromRowData({});
+      }).toThrow();
     });
 
-    it('should return a raw metadata object if passed a row data object that removes a tag', () => {
-      loot.Plugin.tagFromRowData({
-        condition: 'foo',
-        type: 'remove',
-        name: 'bar'
-      }).should.deep.equal({
+    test('should return a raw metadata object if passed a row data object that removes a tag', () => {
+      expect(
+        Plugin.tagFromRowData({
+          condition: 'foo',
+          type: 'remove',
+          name: 'bar'
+        })
+      ).toEqual({
         condition: 'foo',
         name: '-bar'
       });
     });
 
-    it('should return a raw metadata object if passed a row data object that adds a tag', () => {
-      loot.Plugin.tagFromRowData({
-        condition: 'foo',
-        type: 'add',
-        name: 'bar'
-      }).should.deep.equal({
+    test('should return a raw metadata object if passed a row data object that adds a tag', () => {
+      expect(
+        Plugin.tagFromRowData({
+          condition: 'foo',
+          type: 'add',
+          name: 'bar'
+        })
+      ).toEqual({
         condition: 'foo',
         name: 'bar'
       });
@@ -416,34 +417,38 @@ describe('Plugin', () => {
   });
 
   describe('#tagToRowData()', () => {
-    it('should throw if passed nothing', () => {
-      (() => {
-        loot.Plugin.tagToRowData();
-      }).should.throw();
+    test('should throw if passed nothing', () => {
+      expect(() => {
+        Plugin.tagToRowData();
+      }).toThrow();
     });
 
-    it('should return an empty object if passed nothing', () => {
-      (() => {
-        loot.Plugin.tagToRowData({});
-      }).should.throw();
+    test('should return an empty object if passed nothing', () => {
+      expect(() => {
+        Plugin.tagToRowData({});
+      }).toThrow();
     });
 
-    it('should return a row data object if passed a raw metadata object that removes a tag', () => {
-      loot.Plugin.tagToRowData({
-        condition: 'foo',
-        name: '-bar'
-      }).should.deep.equal({
+    test('should return a row data object if passed a raw metadata object that removes a tag', () => {
+      expect(
+        Plugin.tagToRowData({
+          condition: 'foo',
+          name: '-bar'
+        })
+      ).toEqual({
         condition: 'foo',
         type: 'remove',
         name: 'bar'
       });
     });
 
-    it('should return a row data object if passed a raw metadata object that adds a tag', () => {
-      loot.Plugin.tagToRowData({
-        condition: 'foo',
-        name: 'bar'
-      }).should.deep.equal({
+    test('should return a row data object if passed a raw metadata object that adds a tag', () => {
+      expect(
+        Plugin.tagToRowData({
+          condition: 'foo',
+          name: 'bar'
+        })
+      ).toEqual({
         condition: 'foo',
         type: 'add',
         name: 'bar'
@@ -458,39 +463,33 @@ describe('Plugin', () => {
       document.removeEventListener('loot-plugin-message-change', handleEvent);
     });
 
-    it('getting messages if they are undefined should return undefined', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
-
-      plugin.should.not.have.ownProperty('messages');
-    });
-
-    it('getting messages if the array is empty should return an empty array', () => {
-      const plugin = new loot.Plugin({
+    test('getting messages if the array is empty should return an empty array', () => {
+      const plugin = new Plugin({
         name: 'test',
         messages: []
       });
 
-      plugin.messages.should.be.an('array');
-      plugin.messages.should.be.empty;
+      expect(plugin.messages).toBeInstanceOf(Array);
+      expect(plugin.messages.length).toBe(0);
     });
 
-    it('getting messages should return any that are set', () => {
+    test('getting messages should return any that are set', () => {
       const messages = [
         {
           type: 'say',
           text: 'test message'
         }
       ];
-      const plugin = new loot.Plugin({
+      const plugin = new Plugin({
         name: 'test',
         messages
       });
 
-      plugin.messages.should.be.deep.equal(messages);
+      expect(plugin.messages).toEqual(messages);
     });
 
-    it('setting messages should store any set', () => {
-      const plugin = new loot.Plugin({
+    test('setting messages should store any set', () => {
+      const plugin = new Plugin({
         name: 'test',
         messages: []
       });
@@ -503,11 +502,11 @@ describe('Plugin', () => {
 
       plugin.messages = messages;
 
-      plugin.messages.should.be.deep.equal(messages);
+      expect(plugin.messages).toEqual(messages);
     });
 
-    it('setting messages should not fire an event if no messages were changed', done => {
-      const plugin = new loot.Plugin({
+    test('setting messages should not fire an event if no messages were changed', done => {
+      const plugin = new Plugin({
         name: 'test',
         messages: [
           {
@@ -528,8 +527,8 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting messages should fire an event if the messages were changed', done => {
-      const plugin = new loot.Plugin({
+    test('setting messages should fire an event if the messages were changed', done => {
+      const plugin = new Plugin({
         name: 'test',
         messages: []
       });
@@ -541,10 +540,10 @@ describe('Plugin', () => {
       ];
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
-        evt.detail.totalDiff.should.equal(1);
-        evt.detail.warningDiff.should.equal(0);
-        evt.detail.errorDiff.should.equal(1);
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.totalDiff).toBe(1);
+        expect(evt.detail.warningDiff).toBe(0);
+        expect(evt.detail.errorDiff).toBe(1);
         done();
       };
 
@@ -564,31 +563,31 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return false if isDirty has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return false if isDirty has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isDirty.should.be.false;
+      expect(plugin.isDirty).toBe(false);
     });
 
-    it('getting value should return true if isDirty is set to true in the constructor', () => {
-      const plugin = new loot.Plugin({
+    test('getting value should return true if isDirty is set to true in the constructor', () => {
+      const plugin = new Plugin({
         name: 'test',
         isDirty: true
       });
 
-      plugin.isDirty.should.be.true;
+      expect(plugin.isDirty).toBe(true);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.isDirty = true;
 
-      plugin.isDirty.should.be.true;
+      expect(plugin.isDirty).toBe(true);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -604,11 +603,11 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.isDirty.should.be.true;
+        expect(evt.detail.isDirty).toBe(true);
         done();
       };
 
@@ -631,31 +630,31 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return an empty string if cleanedWith has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return an empty string if cleanedWith has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.cleanedWith.should.equal('');
+      expect(plugin.cleanedWith).toBe('');
     });
 
-    it('getting value should return a string if cleanedWith is set in the constructor', () => {
-      const plugin = new loot.Plugin({
+    test('getting value should return a string if cleanedWith is set in the constructor', () => {
+      const plugin = new Plugin({
         name: 'test',
         cleanedWith: 'utility'
       });
 
-      plugin.cleanedWith.should.equal('utility');
+      expect(plugin.cleanedWith).toBe('utility');
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.cleanedWith = 'utility';
 
-      plugin.cleanedWith.should.equal('utility');
+      expect(plugin.cleanedWith).toBe('utility');
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -671,11 +670,11 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.cleanedWith.should.equal('utility');
+        expect(evt.detail.cleanedWith).toBe('utility');
         done();
       };
 
@@ -698,31 +697,31 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return 0 if crc has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return 0 if crc has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.crc.should.equal(0);
+      expect(plugin.crc).toBe(0);
     });
 
-    it('getting value should return 0xDEADBEEF if it was set in the constructor', () => {
-      const plugin = new loot.Plugin({
+    test('getting value should return 0xDEADBEEF if it was set in the constructor', () => {
+      const plugin = new Plugin({
         name: 'test',
         crc: 0xdeadbeef
       });
 
-      plugin.crc.should.equal(0xdeadbeef);
+      expect(plugin.crc).toBe(0xdeadbeef);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.crc = 0xdeadbeef;
 
-      plugin.crc.should.equal(0xdeadbeef);
+      expect(plugin.crc).toBe(0xdeadbeef);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -735,11 +734,11 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
+        expect(evt.detail.pluginId).toBe(plugin.id);
         done();
       };
 
@@ -759,28 +758,28 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return an empty array if tags have not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return an empty array if tags have not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.tags.length.should.equal(0);
+      expect(plugin.tags.length).toBe(0);
     });
 
-    it('getting value should return any tags that are set', () => {
+    test('getting value should return any tags that are set', () => {
       const tags = [
         {
           name: 'Delev'
         }
       ];
-      const plugin = new loot.Plugin({
+      const plugin = new Plugin({
         name: 'test',
         tags
       });
 
-      plugin.tags.should.deep.equal(tags);
+      expect(plugin.tags).toEqual(tags);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
       const tags = [
         {
           name: 'Delev'
@@ -789,11 +788,11 @@ describe('Plugin', () => {
 
       plugin.tags = tags;
 
-      plugin.tags.should.deep.equal(tags);
+      expect(plugin.tags).toEqual(tags);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -806,8 +805,8 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
       const tags = [
         {
           name: 'Delev'
@@ -815,7 +814,7 @@ describe('Plugin', () => {
       ];
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
+        expect(evt.detail.pluginId).toBe(plugin.id);
         done();
       };
 
@@ -835,31 +834,31 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return undefined if it has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return undefined if it has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      should.equal(undefined, plugin.userlist);
+      expect(plugin.userlist).toBe(undefined);
     });
 
-    it('getting value should return the value that was set', () => {
-      const plugin = new loot.Plugin({
+    test('getting value should return the value that was set', () => {
+      const plugin = new Plugin({
         name: 'test',
         userlist: {}
       });
 
-      plugin.userlist.should.deep.equal({});
+      expect(plugin.userlist).toEqual({});
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.userlist = {};
 
-      plugin.userlist.should.deep.equal({});
+      expect(plugin.userlist).toEqual({});
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -872,15 +871,15 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
-        evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.globalPriority.should.equal(plugin.globalPriority);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
-        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.priority).toBe(plugin.priority);
+        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
+        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
+        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
       };
 
@@ -900,31 +899,31 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return 0 if it has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return 0 if it has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.priority.should.equal(0);
+      expect(plugin.priority).toBe(0);
     });
 
-    it('getting value should return the value that was set', () => {
-      const plugin = new loot.Plugin({
+    test('getting value should return the value that was set', () => {
+      const plugin = new Plugin({
         name: 'test',
         priority: 5
       });
 
-      plugin.priority.should.equal(5);
+      expect(plugin.priority).toBe(5);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.priority = 5;
 
-      plugin.priority.should.equal(5);
+      expect(plugin.priority).toBe(5);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -937,15 +936,15 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
-        evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.globalPriority.should.equal(plugin.globalPriority);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
-        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.priority).toBe(plugin.priority);
+        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
+        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
+        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
       };
 
@@ -965,31 +964,31 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return 0 if it has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return 0 if it has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.globalPriority.should.equal(0);
+      expect(plugin.globalPriority).toBe(0);
     });
 
-    it('getting value should return the value that was set', () => {
-      const plugin = new loot.Plugin({
+    test('getting value should return the value that was set', () => {
+      const plugin = new Plugin({
         name: 'test',
         globalPriority: 5
       });
 
-      plugin.globalPriority.should.equal(5);
+      expect(plugin.globalPriority).toBe(5);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.globalPriority = 5;
 
-      plugin.globalPriority.should.equal(5);
+      expect(plugin.globalPriority).toBe(5);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -1002,15 +1001,15 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
-        evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.globalPriority.should.equal(plugin.globalPriority);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
-        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.priority).toBe(plugin.priority);
+        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
+        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
+        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
       };
 
@@ -1030,22 +1029,22 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return false if it has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return false if it has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isEditorOpen.should.be.false;
+      expect(plugin.isEditorOpen).toBe(false);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.isEditorOpen = true;
 
-      plugin.isEditorOpen.should.be.true;
+      expect(plugin.isEditorOpen).toBe(true);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -1058,15 +1057,15 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
-        evt.detail.priority.should.equal(plugin.priority);
-        evt.detail.globalPriority.should.equal(plugin.globalPriority);
-        evt.detail.isEditorOpen.should.equal(plugin.isEditorOpen);
-        evt.detail.hasUserEdits.should.equal(plugin.hasUserEdits);
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.priority).toBe(plugin.priority);
+        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
+        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
+        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
         done();
       };
 
@@ -1086,22 +1085,22 @@ describe('Plugin', () => {
       );
     });
 
-    it('getting value should return false if it has not been set in the constructor', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('getting value should return false if it has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
 
-      plugin.isSearchResult.should.be.false;
+      expect(plugin.isSearchResult).toBe(false);
     });
 
-    it('setting value should store set value', () => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
 
       plugin.isSearchResult = true;
 
-      plugin.isSearchResult.should.be.true;
+      expect(plugin.isSearchResult).toBe(true);
     });
 
-    it('setting value to the current value should not fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -1114,11 +1113,11 @@ describe('Plugin', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value not equal to the current value should fire an event', done => {
-      const plugin = new loot.Plugin({ name: 'test' });
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
 
       handleEvent = evt => {
-        evt.detail.pluginId.should.equal(plugin.id);
+        expect(evt.detail.pluginId).toBe(plugin.id);
         done();
       };
 
@@ -1131,16 +1130,16 @@ describe('Plugin', () => {
   describe('#getCardContent()', () => {
     let plugin;
     beforeEach(() => {
-      plugin = new loot.Plugin({ name: 'test' });
+      plugin = new Plugin({ name: 'test' });
     });
 
-    it('should throw if no argument was passed', () => {
-      (() => {
+    test('should throw if no argument was passed', () => {
+      expect(() => {
         plugin.getCardContent();
-      }).should.throw();
+      }).toThrow();
     });
 
-    it('should throw with an empty object', () => {
+    test('should throw with an empty object', () => {
       plugin.messages = [
         {
           type: 'say',
@@ -1148,15 +1147,15 @@ describe('Plugin', () => {
         }
       ];
 
-      (() => {
+      expect(() => {
         plugin.getCardContent({});
-      }).should.throw();
+      }).toThrow();
     });
 
-    it('should succeed if passed a filters object', () => {
-      (() => {
+    test('should succeed if passed a filters object', () => {
+      expect(() => {
         plugin.getCardContent(new Filters());
-      }).should.not.throw();
+      }).not.toThrow();
     });
   });
 });
@@ -1166,7 +1165,7 @@ describe('PluginCardContent', () => {
   let filters;
 
   beforeEach(() => {
-    plugin = new loot.Plugin({
+    plugin = new Plugin({
       name: 'test',
       version: 'foo',
       messages: [
@@ -1187,93 +1186,93 @@ describe('PluginCardContent', () => {
   });
 
   describe('#name', () => {
-    it("getting value should return plugin's value", () => {
-      plugin.getCardContent(filters).name.should.equal(plugin.name);
+    test("getting value should return plugin's value", () => {
+      expect(plugin.getCardContent(filters).name).toBe(plugin.name);
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).name = '';
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#isActive', () => {
-    it("getting value should return plugin's value", () => {
-      plugin.getCardContent(filters).isActive.should.equal(plugin.isActive);
+    test("getting value should return plugin's value", () => {
+      expect(plugin.getCardContent(filters).isActive).toBe(plugin.isActive);
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).isActive = true;
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#isEmpty', () => {
-    it("getting value should return plugin's value", () => {
-      plugin.getCardContent(filters).isEmpty.should.equal(plugin.isEmpty);
+    test("getting value should return plugin's value", () => {
+      expect(plugin.getCardContent(filters).isEmpty).toBe(plugin.isEmpty);
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).isEmpty = true;
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#isMaster', () => {
-    it("getting value should return plugin's value", () => {
-      plugin.getCardContent(filters).isMaster.should.equal(plugin.isMaster);
+    test("getting value should return plugin's value", () => {
+      expect(plugin.getCardContent(filters).isMaster).toBe(plugin.isMaster);
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).isMaster = true;
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#loadsArchive', () => {
-    it("getting value should return plugin's value", () => {
-      plugin
-        .getCardContent(filters)
-        .loadsArchive.should.equal(plugin.loadsArchive);
+    test("getting value should return plugin's value", () => {
+      expect(plugin.getCardContent(filters).loadsArchive).toBe(
+        plugin.loadsArchive
+      );
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).loadsArchive = true;
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#version', () => {
-    it("getting value should return plugin's value if the version filter is not enabled", () => {
-      plugin.getCardContent(filters).version.should.equal(plugin.version);
+    test("getting value should return plugin's value if the version filter is not enabled", () => {
+      expect(plugin.getCardContent(filters).version).toBe(plugin.version);
     });
 
-    it('getting value should return empty string if the version filter is enabled', () => {
+    test('getting value should return empty string if the version filter is enabled', () => {
       filters.hideVersionNumbers = true;
-      plugin.getCardContent(filters).version.should.equal('');
+      expect(plugin.getCardContent(filters).version).toBe('');
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).version = '';
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#tags', () => {
-    it('should return an object containing empty strings if no tags are set', () => {
-      plugin.getCardContent(filters).tags.should.deep.equal({
+    test('should return an object containing empty strings if no tags are set', () => {
+      expect(plugin.getCardContent(filters).tags).toEqual({
         added: '',
         removed: ''
       });
     });
 
-    it('should return an object containing strings of comma-separated tag names if tags are set', () => {
+    test('should return an object containing strings of comma-separated tag names if tags are set', () => {
       plugin.tags = [
         { name: 'Relev' },
         { name: 'Delev' },
@@ -1282,13 +1281,13 @@ describe('PluginCardContent', () => {
         { name: '-Actor.ABCS' }
       ];
 
-      plugin.getCardContent(filters).tags.should.deep.equal({
+      expect(plugin.getCardContent(filters).tags).toEqual({
         added: 'Relev, Delev, Names',
         removed: 'C.Climate, Actor.ABCS'
       });
     });
 
-    it('should return an object containing empty strings if tags are set and the tags filter is enabled', () => {
+    test('should return an object containing empty strings if tags are set and the tags filter is enabled', () => {
       plugin.tags = [
         { name: 'Relev' },
         { name: 'Delev' },
@@ -1298,120 +1297,118 @@ describe('PluginCardContent', () => {
       ];
       filters.hideBashTags = true;
 
-      plugin.getCardContent(filters).tags.should.deep.equal({
+      expect(plugin.getCardContent(filters).tags).toEqual({
         added: '',
         removed: ''
       });
     });
 
-    it('should output a tag in the removed string if it appears as both added and removed', () => {
+    test('should output a tag in the removed string if it appears as both added and removed', () => {
       plugin.tags = [{ name: 'Relev' }, { name: '-Relev' }];
 
-      plugin.getCardContent(filters).tags.should.deep.equal({
+      expect(plugin.getCardContent(filters).tags).toEqual({
         added: '',
         removed: 'Relev'
       });
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).tags = {
           added: 'Relev',
           removed: 'Delev'
         };
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#crc', () => {
-    it('should return an empty string if crc is undefined', () => {
-      plugin.getCardContent(filters).crc.should.equal('');
+    test('should return an empty string if crc is undefined', () => {
+      expect(plugin.getCardContent(filters).crc).toBe('');
     });
 
-    it('should return an empty string if crc is zero', () => {
+    test('should return an empty string if crc is zero', () => {
       plugin.crc = 0;
 
-      plugin.getCardContent(filters).crc.should.equal('');
+      expect(plugin.getCardContent(filters).crc).toBe('');
     });
 
-    it('should return crc value as string if non zero', () => {
+    test('should return crc value as string if non zero', () => {
       plugin.crc = 0xdeadbeef;
 
-      plugin.getCardContent(filters).crc.should.equal('DEADBEEF');
+      expect(plugin.getCardContent(filters).crc).toBe('DEADBEEF');
     });
 
-    it('should return an empty string if crc is non-zero and the CRC filter is enabled', () => {
+    test('should return an empty string if crc is non-zero and the CRC filter is enabled', () => {
       plugin.crc = 0xdeadbeef;
       filters.hideCRCs = true;
 
-      plugin.getCardContent(filters).crc.should.equal('');
+      expect(plugin.getCardContent(filters).crc).toBe('');
     });
 
-    it('should pad crc value to eight digits', () => {
+    test('should pad crc value to eight digits', () => {
       plugin.crc = 0xbeef;
 
-      plugin.getCardContent(filters).crc.should.equal('0000BEEF');
+      expect(plugin.getCardContent(filters).crc).toBe('0000BEEF');
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).crc = 0xbecadeca;
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#messages', () => {
-    it("should return message objects mapped from the plugin's message objects", () => {
-      plugin
-        .getCardContent(filters)
-        .messages.should.deep.equal(plugin.messages);
+    test("should return message objects mapped from the plugin's message objects", () => {
+      expect(plugin.getCardContent(filters).messages).toEqual(plugin.messages);
     });
 
-    it('should return an array missing the note message when the notes filter is enabled', () => {
+    test('should return an array missing the note message when the notes filter is enabled', () => {
       filters.hideNotes = true;
-      plugin
-        .getCardContent(filters)
-        .messages.should.deep.equal([plugin.messages[1]]);
+      expect(plugin.getCardContent(filters).messages).toEqual([
+        plugin.messages[1]
+      ]);
     });
 
-    it('should return an array missing the "do not clean" message when the "do not clean" messages filter is enabled', () => {
+    test('should return an array missing the "do not clean" message when the "do not clean" messages filter is enabled', () => {
       filters.hideDoNotCleanMessages = true;
-      plugin
-        .getCardContent(filters)
-        .messages.should.deep.equal([plugin.messages[0]]);
+      expect(plugin.getCardContent(filters).messages).toEqual([
+        plugin.messages[0]
+      ]);
     });
 
-    it('should return an empty array when the all messages filter is enabled', () => {
+    test('should return an empty array when the all messages filter is enabled', () => {
       filters.hideAllPluginMessages = true;
-      plugin.getCardContent(filters).messages.should.deep.equal([]);
+      expect(plugin.getCardContent(filters).messages).toEqual([]);
     });
 
-    it('setting value should throw', () => {
-      (() => {
+    test('setting value should throw', () => {
+      expect(() => {
         plugin.getCardContent(filters).messages = [];
-      }).should.throw();
+      }).toThrow();
     });
   });
 
   describe('#containsText()', () => {
-    it('should return true if argument is undefined', () => {
-      plugin.getCardContent(filters).containsText().should.be.true;
+    test('should return true if argument is undefined', () => {
+      expect(plugin.getCardContent(filters).containsText()).toBe(true);
     });
 
-    it('should return true if argument is an empty string', () => {
-      plugin.getCardContent(filters).containsText('').should.be.true;
+    test('should return true if argument is an empty string', () => {
+      expect(plugin.getCardContent(filters).containsText('')).toBe(true);
     });
 
-    it('should search name case-insensitively', () => {
-      plugin.getCardContent(filters).containsText('Tes').should.be.true;
+    test('should search name case-insensitively', () => {
+      expect(plugin.getCardContent(filters).containsText('Tes')).toBe(true);
     });
 
-    it('should search CRC case-insensitively', () => {
+    test('should search CRC case-insensitively', () => {
       plugin.crc = 0xdeadbeef;
-      plugin.getCardContent(filters).containsText('dead').should.be.true;
+      expect(plugin.getCardContent(filters).containsText('dead')).toBe(true);
     });
 
-    it('should search added tags case-insensitively', () => {
+    test('should search added tags case-insensitively', () => {
       plugin.tags = [
         { name: 'Relev' },
         { name: 'Delev' },
@@ -1419,10 +1416,10 @@ describe('PluginCardContent', () => {
         { name: '-C.Climate' },
         { name: '-Actor.ABCS' }
       ];
-      plugin.getCardContent(filters).containsText('climate').should.be.true;
+      expect(plugin.getCardContent(filters).containsText('climate')).toBe(true);
     });
 
-    it('should search removed tags case-insensitively', () => {
+    test('should search removed tags case-insensitively', () => {
       plugin.tags = [
         { name: 'Relev' },
         { name: 'Delev' },
@@ -1430,15 +1427,15 @@ describe('PluginCardContent', () => {
         { name: '-C.Climate' },
         { name: '-Actor.ABCS' }
       ];
-      plugin.getCardContent(filters).containsText('.abc').should.be.true;
+      expect(plugin.getCardContent(filters).containsText('.abc')).toBe(true);
     });
 
-    it('should search message content case-insensitively', () => {
-      plugin.getCardContent(filters).containsText('Clean').should.be.true;
+    test('should search message content case-insensitively', () => {
+      expect(plugin.getCardContent(filters).containsText('Clean')).toBe(true);
     });
 
-    it('should not find text that is not present', () => {
-      plugin.getCardContent(filters).containsText('say').should.be.false;
+    test('should not find text that is not present', () => {
+      expect(plugin.getCardContent(filters).containsText('say')).toBe(false);
     });
   });
 });

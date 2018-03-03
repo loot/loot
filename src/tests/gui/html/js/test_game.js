@@ -1,102 +1,110 @@
-/* eslint-disable no-unused-expressions */
+import * as _ from 'lodash';
+import Game from '../../../../gui/html/js/game.js';
+import Plugin from '../../../../gui/html/js/plugin.js';
+
+jest.mock('../../../../gui/html/js/dom.js');
+jest.mock('../../../../gui/html/js/filters.js');
+jest.mock('../../../../gui/html/js/plugin.js', () =>
+  jest.fn().mockImplementation(({ name, crc, isActive, loadOrderIndex }) => ({
+    name,
+    crc,
+    isActive,
+    loadOrderIndex,
+    update(other) {
+      Object.assign(this, other);
+    }
+  }))
+);
 
 describe('Game', () => {
-  /* Mock the Translator class. */
-  class Translator {
-    /* eslint-disable class-methods-use-this */
-    translate(text) {
-      return text;
-    }
-    /* eslint-enable class-methods-use-this */
-  }
-  let l10n;
+  window._ = _;
 
-  beforeEach(() => {
-    l10n = new Translator();
-  });
+  const l10n = {
+    translate: jest.fn().mockImplementation(text => text)
+  };
 
   describe('#constructor()', () => {
-    it('should throw if passed no paramters', () => {
-      (() => {
-        new loot.Game(); // eslint-disable-line no-new
-      }).should.throw();
+    test('should throw if passed no paramters', () => {
+      expect(() => {
+        new Game(); // eslint-disable-line no-new
+      }).toThrow();
     });
 
-    it('should throw if passed no l10n parameter', () => {
-      (() => {
-        new loot.Game({}); // eslint-disable-line no-new
-      }).should.throw();
+    test('should throw if passed no l10n parameter', () => {
+      expect(() => {
+        new Game({}); // eslint-disable-line no-new
+      }).toThrow();
     });
 
-    it('should not throw if passed an empty object as the first parameter', () => {
-      (() => {
-        new loot.Game({}, l10n); // eslint-disable-line no-new
-      }).should.not.throw();
+    test('should not throw if passed an empty object as the first parameter', () => {
+      expect(() => {
+        new Game({}, l10n); // eslint-disable-line no-new
+      }).not.toThrow();
     });
 
-    it('should set folder to a blank string by default', () => {
-      const game = new loot.Game({}, l10n);
-      game.folder.should.equal('');
+    test('should set folder to a blank string by default', () => {
+      const game = new Game({}, l10n);
+      expect(game.folder).toBe('');
     });
 
-    it("should set folder to the object's value if defined", () => {
-      const game = new loot.Game({ folder: 'test' }, l10n);
-      game.folder.should.equal('test');
+    test("should set folder to the object's value if defined", () => {
+      const game = new Game({ folder: 'test' }, l10n);
+      expect(game.folder).toBe('test');
     });
 
-    it('should set generalMessages to an empty array by default', () => {
-      const game = new loot.Game({}, l10n);
-      game.generalMessages.should.deep.equal([]);
+    test('should set generalMessages to an empty array by default', () => {
+      const game = new Game({}, l10n);
+      expect(game.generalMessages).toEqual([]);
     });
 
-    it("should set generalMessages to the object's value if defined", () => {
-      const game = new loot.Game({ generalMessages: ['test'] }, l10n);
-      game.generalMessages.should.deep.equal(['test']);
+    test("should set generalMessages to the object's value if defined", () => {
+      const game = new Game({ generalMessages: ['test'] }, l10n);
+      expect(game.generalMessages).toEqual(['test']);
     });
 
-    it('should set masterlist to an empty object by default', () => {
-      const game = new loot.Game({}, l10n);
-      game.masterlist.should.deep.equal({});
+    test('should set masterlist to an empty object by default', () => {
+      const game = new Game({}, l10n);
+      expect(game.masterlist).toEqual({});
     });
 
-    it("should set masterlist to the object's value if defined", () => {
-      const game = new loot.Game({ masterlist: { revision: 0 } }, l10n);
-      game.masterlist.should.deep.equal({ revision: 0 });
+    test("should set masterlist to the object's value if defined", () => {
+      const game = new Game({ masterlist: { revision: 0 } }, l10n);
+      expect(game.masterlist).toEqual({ revision: 0 });
     });
 
-    it('should set plugins to an empty array by default', () => {
-      const game = new loot.Game({}, l10n);
-      game.plugins.should.deep.equal([]);
+    test('should set plugins to an empty array by default', () => {
+      const game = new Game({}, l10n);
+      expect(game.plugins).toEqual([]);
     });
 
-    it("should set plugins to the object's value if defined", () => {
-      const game = new loot.Game({ plugins: [{ name: 'test' }] }, l10n);
-      game.plugins.should.deep.equal([{ name: 'test', cardZIndex: 1 }]);
+    test("should set plugins to the object's value if defined", () => {
+      const game = new Game({ plugins: [{ name: 'test' }] }, l10n);
+      expect(game.plugins).toEqual([{ name: 'test', cardZIndex: 1 }]);
     });
 
-    it('should set loadOrder to undefined by default', () => {
-      const game = new loot.Game({}, l10n);
-      should.equal(undefined, game.loadOrder);
+    test('should set loadOrder to undefined by default', () => {
+      const game = new Game({}, l10n);
+      expect(game.loadOrder).toBe(undefined);
     });
 
-    it("should set loadOrder to undefined even if the object's value if defined", () => {
-      const game = new loot.Game({ loadOrder: ['test'] }, l10n);
-      should.equal(undefined, game.loadOrder);
+    test("should set loadOrder to undefined even if the object's value if defined", () => {
+      const game = new Game({ loadOrder: ['test'] }, l10n);
+      expect(game.loadOrder).toBe(undefined);
     });
 
-    it('should set oldLoadOrder to undefined by default', () => {
-      const game = new loot.Game({}, l10n);
-      should.equal(undefined, game.oldLoadOrder);
+    test('should set oldLoadOrder to undefined by default', () => {
+      const game = new Game({}, l10n);
+      expect(game.oldLoadOrder).toBe(undefined);
     });
 
-    it("should set oldLoadOrder to undefined even if the object's value if defined", () => {
-      const game = new loot.Game({ oldLoadOrder: ['test'] }, l10n);
-      should.equal(undefined, game.oldLoadOrder);
+    test("should set oldLoadOrder to undefined even if the object's value if defined", () => {
+      const game = new Game({ oldLoadOrder: ['test'] }, l10n);
+      expect(game.oldLoadOrder).toBe(undefined);
     });
 
-    it('should initialise _notApplicableString', () => {
-      const game = new loot.Game({ oldLoadOrder: ['test'] }, l10n);
-      game._notApplicableString.should.equal('N/A');
+    test('should initialise _notApplicableString', () => {
+      const game = new Game({ oldLoadOrder: ['test'] }, l10n);
+      expect(game._notApplicableString).toBe('N/A');
     });
   });
 
@@ -105,14 +113,14 @@ describe('Game', () => {
     let handleEvent;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
     afterEach(() => {
       document.removeEventListener('loot-game-folder-change', handleEvent);
     });
 
-    it('setting value should not dispatch an event if the new value is equal to the old one', done => {
+    test('setting value should not dispatch an event if the new value is equal to the old one', done => {
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
       };
@@ -122,9 +130,9 @@ describe('Game', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value should dispatch an event if the new value differs from the old one', done => {
+    test('setting value should dispatch an event if the new value differs from the old one', done => {
       handleEvent = evt => {
-        evt.detail.folder.should.equal('test');
+        expect(evt.detail.folder).toBe('test');
         done();
       };
       document.addEventListener('loot-game-folder-change', handleEvent);
@@ -138,7 +146,7 @@ describe('Game', () => {
     let handleEvent;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
     afterEach(() => {
@@ -148,7 +156,7 @@ describe('Game', () => {
       );
     });
 
-    it('setting value should not dispatch an event if the new value is equal to the old one', done => {
+    test('setting value should not dispatch an event if the new value is equal to the old one', done => {
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
       };
@@ -161,13 +169,13 @@ describe('Game', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value should dispatch an event if the new value differs from the old one', done => {
+    test('setting value should dispatch an event if the new value differs from the old one', done => {
       const newMessages = [{ type: 'warn' }, { type: 'error' }];
       handleEvent = evt => {
-        evt.detail.messages.should.deep.equal(newMessages);
-        evt.detail.totalDiff.should.equal(2);
-        evt.detail.errorDiff.should.equal(1);
-        evt.detail.warningDiff.should.equal(1);
+        expect(evt.detail.messages).toEqual(newMessages);
+        expect(evt.detail.totalDiff).toBe(2);
+        expect(evt.detail.errorDiff).toBe(1);
+        expect(evt.detail.warningDiff).toBe(1);
         done();
       };
       document.addEventListener(
@@ -184,14 +192,14 @@ describe('Game', () => {
     let handleEvent;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
     afterEach(() => {
       document.removeEventListener('loot-game-masterlist-change', handleEvent);
     });
 
-    it('setting value should not dispatch an event if the new value is equal to the old one', done => {
+    test('setting value should not dispatch an event if the new value is equal to the old one', done => {
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
       };
@@ -201,13 +209,13 @@ describe('Game', () => {
       setTimeout(done, 100);
     });
 
-    it('setting value should dispatch an event if the new value differs from the old one', done => {
+    test('setting value should dispatch an event if the new value differs from the old one', done => {
       const newMasterlist = {
         revision: 'foo',
         date: 'bar'
       };
       handleEvent = evt => {
-        evt.detail.should.deep.equal(newMasterlist);
+        expect(evt.detail).toEqual(newMasterlist);
         done();
       };
       document.addEventListener('loot-game-masterlist-change', handleEvent);
@@ -215,10 +223,10 @@ describe('Game', () => {
       game.masterlist = newMasterlist;
     });
 
-    it('setting value to undefined should dispatch an event with the details being the not applicable string', done => {
+    test('setting value to undefined should dispatch an event with the details being the not applicable string', done => {
       handleEvent = evt => {
-        evt.detail.revision.should.equal(game._notApplicableString);
-        evt.detail.date.should.equal(game._notApplicableString);
+        expect(evt.detail.revision).toBe(game._notApplicableString);
+        expect(evt.detail.date).toBe(game._notApplicableString);
         done();
       };
       document.addEventListener('loot-game-masterlist-change', handleEvent);
@@ -232,14 +240,14 @@ describe('Game', () => {
     let handleEvent;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
     afterEach(() => {
       document.removeEventListener('loot-game-plugins-change', handleEvent);
     });
 
-    it('setting value should dispatch an event if the new value is equal to the old one', done => {
+    test('setting value should dispatch an event if the new value is equal to the old one', done => {
       handleEvent = () => {
         done();
       };
@@ -248,7 +256,7 @@ describe('Game', () => {
       game.plugins = game.plugins;
     });
 
-    it('setting value should dispatch an event if the new value differs from the old one', done => {
+    test('setting value should dispatch an event if the new value differs from the old one', done => {
       const newPlugins = [
         {
           isActive: true,
@@ -260,13 +268,13 @@ describe('Game', () => {
         }
       ];
       handleEvent = evt => {
-        evt.detail.valuesAreTotals.should.be.true;
-        evt.detail.totalMessageNo.should.equal(4);
-        evt.detail.warnMessageNo.should.equal(2);
-        evt.detail.errorMessageNo.should.equal(1);
-        evt.detail.totalPluginNo.should.equal(2);
-        evt.detail.activePluginNo.should.equal(1);
-        evt.detail.dirtyPluginNo.should.equal(1);
+        expect(evt.detail.valuesAreTotals).toBe(true);
+        expect(evt.detail.totalMessageNo).toBe(4);
+        expect(evt.detail.warnMessageNo).toBe(2);
+        expect(evt.detail.errorMessageNo).toBe(1);
+        expect(evt.detail.totalPluginNo).toBe(2);
+        expect(evt.detail.activePluginNo).toBe(1);
+        expect(evt.detail.dirtyPluginNo).toBe(1);
         done();
       };
       document.addEventListener('loot-game-plugins-change', handleEvent);
@@ -282,17 +290,17 @@ describe('Game', () => {
     let game;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
-    it('should return an object of two empty arrays if there is no game data', () => {
-      game.getContent().should.deep.equal({
+    test('should return an object of two empty arrays if there is no game data', () => {
+      expect(game.getContent()).toEqual({
         messages: [],
         plugins: []
       });
     });
 
-    it('should return a structure containing converted plugin and message structures', () => {
+    test('should return a structure containing converted plugin and message structures', () => {
       game._generalMessages = [
         {
           type: 'say',
@@ -332,7 +340,7 @@ describe('Game', () => {
         }
       ];
 
-      game.getContent().should.deep.equal({
+      expect(game.getContent()).toEqual({
         messages: game._generalMessages,
         plugins: [
           {
@@ -358,14 +366,14 @@ describe('Game', () => {
     let game;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
-    it('should return an empty array if there are no plugins', () => {
-      game.getPluginNames().should.be.empty;
+    test('should return an empty array if there are no plugins', () => {
+      expect(game.getPluginNames().length).toBe(0);
     });
 
-    it('should return an array of plugin filenames if there are plugins', () => {
+    test('should return an array of plugin filenames if there are plugins', () => {
       game._plugins = [
         {
           name: 'foo',
@@ -374,7 +382,7 @@ describe('Game', () => {
         }
       ];
 
-      game.getPluginNames().should.deep.equal(['foo']);
+      expect(game.getPluginNames()).toEqual(['foo']);
     });
   });
 
@@ -383,26 +391,26 @@ describe('Game', () => {
     let handleEvent;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
     afterEach(() => {
       document.removeEventListener('loot-game-plugins-change', handleEvent);
     });
 
-    it('should append new plugins to the plugins array', () => {
+    test('should append new plugins to the plugins array', () => {
       game.setSortedPlugins([
         {
           name: 'foo'
         }
       ]);
 
-      game.plugins[0].name.should.equal('foo');
+      expect(game.plugins[0].name).toBe('foo');
     });
 
-    it('should update existing plugins with new data', () => {
+    test('should update existing plugins with new data', () => {
       game._plugins = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo',
           isActive: true,
           messages: [{ type: 'warn' }]
@@ -416,16 +424,16 @@ describe('Game', () => {
         }
       ]);
 
-      game.plugins[0].crc.should.equal(0xdeadbeef);
-      game.plugins[0].isActive.should.be.true;
+      expect(game.plugins[0].crc).toBe(0xdeadbeef);
+      expect(game.plugins[0].isActive).toBe(true);
     });
 
-    it('should reorder plugins to given order', () => {
+    test('should reorder plugins to given order', () => {
       game._plugins = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo'
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'bar'
         })
       ];
@@ -439,16 +447,16 @@ describe('Game', () => {
         }
       ]);
 
-      game.plugins[0].name.should.equal('bar');
-      game.plugins[1].name.should.equal('foo');
+      expect(game.plugins[0].name).toBe('bar');
+      expect(game.plugins[1].name).toBe('foo');
     });
 
-    it('should store old load order', () => {
+    test('should store old load order', () => {
       game._plugins = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo'
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'bar'
         })
       ];
@@ -462,11 +470,11 @@ describe('Game', () => {
         }
       ]);
 
-      game.oldLoadOrder[0].name.should.equal('foo');
-      game.oldLoadOrder[1].name.should.equal('bar');
+      expect(game.oldLoadOrder[0].name).toBe('foo');
+      expect(game.oldLoadOrder[1].name).toBe('bar');
     });
 
-    it('should dispatch an event', done => {
+    test('should dispatch an event', done => {
       handleEvent = () => {
         done();
       };
@@ -484,15 +492,15 @@ describe('Game', () => {
     let game;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
-    it('should delete the stored old load order', () => {
+    test('should delete the stored old load order', () => {
       game.oldLoadOrder = [0, 1, 2];
 
       game.applySort();
 
-      should.equal(undefined, game.oldLoadOrder);
+      expect(game.oldLoadOrder).toBe(undefined);
     });
   });
 
@@ -500,90 +508,90 @@ describe('Game', () => {
     let game;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
-    it('should throw if no parameters are supplied', () => {
-      (() => {
+    test('should throw if no parameters are supplied', () => {
+      expect(() => {
         game.cancelSort();
-      }).should.throw();
+      }).toThrow();
     });
 
-    it('should set the current load order to the old load order', () => {
+    test('should set the current load order to the old load order', () => {
       const oldLoadOrder = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo'
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'bar'
         })
       ];
       game.oldLoadOrder = oldLoadOrder;
       game.plugins = [
-        new loot.Plugin({
+        new Plugin({
           name: 'bar'
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'foo'
         })
       ];
 
       game.cancelSort([]);
 
-      game.plugins.should.deep.equal(oldLoadOrder);
+      expect(game.plugins).toEqual(oldLoadOrder);
     });
 
-    it('should delete the stored old load order', () => {
+    test('should delete the stored old load order', () => {
       game.oldLoadOrder = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo'
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'bar'
         })
       ];
 
       game.cancelSort([]);
 
-      should.equal(undefined, game.oldLoadOrder);
+      expect(game.oldLoadOrder).toBe(undefined);
     });
 
-    it('should set plugin load order indices using the array passed as the first parameter', () => {
+    test('should set plugin load order indices using the array passed as the first parameter', () => {
       game.oldLoadOrder = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo',
           loadOrderIndex: 1
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'bar',
           loadOrderIndex: 0
         })
       ];
 
       game.cancelSort([
-        new loot.Plugin({
+        new Plugin({
           name: 'bar',
           loadOrderIndex: 1
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'foo',
           loadOrderIndex: 0
         })
       ]);
 
-      game.plugins[0].name.should.equal('foo');
-      game.plugins[0].loadOrderIndex.should.equal(0);
-      game.plugins[1].name.should.equal('bar');
-      game.plugins[1].loadOrderIndex.should.equal(1);
+      expect(game.plugins[0].name).toBe('foo');
+      expect(game.plugins[0].loadOrderIndex).toBe(0);
+      expect(game.plugins[1].name).toBe('bar');
+      expect(game.plugins[1].loadOrderIndex).toBe(1);
     });
 
-    it('should set the general messages to the second passed parameter', () => {
+    test('should set the general messages to the second passed parameter', () => {
       game.oldLoadOrder = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo',
           loadOrderIndex: 1
         }),
-        new loot.Plugin({
+        new Plugin({
           name: 'bar',
           loadOrderIndex: 0
         })
@@ -591,7 +599,7 @@ describe('Game', () => {
 
       game.cancelSort([], ['foo']);
 
-      game.generalMessages.should.deep.equal(['foo']);
+      expect(game.generalMessages).toEqual(['foo']);
     });
   });
 
@@ -599,12 +607,12 @@ describe('Game', () => {
     let game;
 
     beforeEach(() => {
-      game = new loot.Game({}, l10n);
+      game = new Game({}, l10n);
     });
 
-    it('should delete stored userlist data for existing plugins', () => {
+    test('should delete stored userlist data for existing plugins', () => {
       game._plugins = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo',
           userlist: {}
         })
@@ -616,12 +624,12 @@ describe('Game', () => {
         }
       ]);
 
-      should.equal(undefined, game.plugins[0].userlist);
+      expect(game.plugins[0].userlist).toBe(undefined);
     });
 
-    it('should update existing plugin data', () => {
+    test('should update existing plugin data', () => {
       game._plugins = [
-        new loot.Plugin({
+        new Plugin({
           name: 'foo',
           isActive: true
         })
@@ -634,8 +642,8 @@ describe('Game', () => {
         }
       ]);
 
-      game.plugins[0].crc.should.equal(0xdeadbeef);
-      game.plugins[0].isActive.should.be.true;
+      expect(game.plugins[0].crc).toBe(0xdeadbeef);
+      expect(game.plugins[0].isActive).toBe(true);
     });
   });
 });

@@ -1,61 +1,52 @@
-/* eslint-disable no-unused-expressions */
+import Filters from '../../../../gui/html/js/filters.js';
+
+jest.mock('../../../../gui/html/js/handlePromiseError.js');
+jest.mock('../../../../gui/html/js/query.js');
 
 describe('Filters', () => {
-  /* Mock the Translator class. */
-
-  class Translator {
-    /* eslint-disable class-methods-use-this */
-    translate(text) {
-      return text;
-    }
-    /* eslint-enable class-methods-use-this */
-  }
-
-  let l10n;
-
-  beforeEach(() => {
-    l10n = new Translator();
-  });
+  const l10n = {
+    translate: jest.fn().mockImplementation(text => text)
+  };
 
   describe('#constructor()', () => {
-    it('should throw if no parameter is passed', () => {
-      (() => {
-        new loot.Filters(); // eslint-disable-line no-new
-      }).should.throw();
+    test('should throw if no parameter is passed', () => {
+      expect(() => {
+        new Filters(); // eslint-disable-line no-new
+      }).toThrow();
     });
 
-    it('should throw if an empty object is passed', () => {
-      (() => {
-        new loot.Filters({}); // eslint-disable-line no-new
-      }).should.throw();
+    test('should throw if an empty object is passed', () => {
+      expect(() => {
+        new Filters({}); // eslint-disable-line no-new
+      }).toThrow();
     });
 
-    it('should not throw if a valid Translator object is passed', () => {
-      (() => {
-        new loot.Filters(l10n); // eslint-disable-line no-new
-      }).should.not.throw();
+    test('should not throw if a valid Translator object is passed', () => {
+      expect(() => {
+        new Filters(l10n); // eslint-disable-line no-new
+      }).not.toThrow();
     });
 
-    it('should initialise filters as not enabled', () => {
-      const filters = new loot.Filters(l10n);
+    test('should initialise filters as not enabled', () => {
+      const filters = new Filters(l10n);
 
-      filters.hideMessagelessPlugins.should.be.false;
-      filters.hideInactivePlugins.should.be.false;
-      filters.conflictingPluginNames.should.deep.equal([]);
-      filters.contentSearchString.should.equal('');
+      expect(filters.hideMessagelessPlugins).toBe(false);
+      expect(filters.hideInactivePlugins).toBe(false);
+      expect(filters.conflictingPluginNames).toEqual([]);
+      expect(filters.contentSearchString).toBe('');
 
-      filters.hideVersionNumbers.should.be.false;
-      filters.hideCRCs.should.be.false;
-      filters.hideBashTags.should.be.false;
-      filters.hideAllPluginMessages.should.be.false;
-      filters.hideNotes.should.be.false;
-      filters.hideDoNotCleanMessages.should.be.false;
+      expect(filters.hideVersionNumbers).toBe(false);
+      expect(filters.hideCRCs).toBe(false);
+      expect(filters.hideBashTags).toBe(false);
+      expect(filters.hideAllPluginMessages).toBe(false);
+      expect(filters.hideNotes).toBe(false);
+      expect(filters.hideDoNotCleanMessages).toBe(false);
     });
 
-    it('should initialise "do not clean" search string', () => {
-      const filters = new loot.Filters(l10n);
+    test('should initialise "do not clean" search string', () => {
+      const filters = new Filters(l10n);
 
-      filters._doNotCleanString.should.equal('do not clean');
+      expect(filters._doNotCleanString).toBe('do not clean');
     });
   });
 
@@ -98,61 +89,61 @@ describe('Filters', () => {
     }
 
     beforeEach(() => {
-      filters = new loot.Filters(l10n);
+      filters = new Filters(l10n);
       plugin = new Plugin();
     });
 
-    it('should return true if no filters are enabled', () => {
-      filters.pluginFilter(plugin).should.be.true;
+    test('should return true if no filters are enabled', () => {
+      expect(filters.pluginFilter(plugin)).toBe(true);
     });
 
-    it('should return false if inactive plugins filter is enabled', () => {
+    test('should return false if inactive plugins filter is enabled', () => {
       filters.hideInactivePlugins = true;
-      filters.pluginFilter(plugin).should.be.false;
+      expect(filters.pluginFilter(plugin)).toBe(false);
     });
 
-    it('should return true if inactive plugins filter is enabled and plugin is active', () => {
+    test('should return true if inactive plugins filter is enabled and plugin is active', () => {
       filters.hideInactivePlugins = true;
       plugin.isActive = true;
-      filters.pluginFilter(plugin).should.be.true;
+      expect(filters.pluginFilter(plugin)).toBe(true);
     });
 
-    it('should return false if messageless plugins filter is enabled', () => {
+    test('should return false if messageless plugins filter is enabled', () => {
       filters.hideMessagelessPlugins = true;
-      filters.pluginFilter(plugin).should.be.false;
+      expect(filters.pluginFilter(plugin)).toBe(false);
     });
 
-    it('should return true if messageless plugins filter is enabled and plugin has a non-zero message array', () => {
+    test('should return true if messageless plugins filter is enabled and plugin has a non-zero message array', () => {
       filters.hideMessagelessPlugins = true;
       plugin.messages = [0];
-      filters.pluginFilter(plugin).should.be.true;
+      expect(filters.pluginFilter(plugin)).toBe(true);
     });
 
-    it('should return false if all plugin messages and messageless plugin filters are enabled and plugin has a non-zero message array', () => {
+    test('should return false if all plugin messages and messageless plugin filters are enabled and plugin has a non-zero message array', () => {
       filters.hideAllPluginMessages = true;
       filters.hideMessagelessPlugins = true;
       plugin.messages = [0];
-      filters.pluginFilter(plugin).should.be.false;
+      expect(filters.pluginFilter(plugin)).toBe(false);
     });
 
-    it('should return false if conflicting plugins filter is enabled', () => {
+    test('should return false if conflicting plugins filter is enabled', () => {
       filters.conflictingPluginNames = ['conflicting plugin'];
-      filters.pluginFilter(plugin).should.be.false;
+      expect(filters.pluginFilter(plugin)).toBe(false);
     });
 
-    it('should return true if conflicting plugins filter is enabled and plugin name is in the conflicting plugins array', () => {
+    test('should return true if conflicting plugins filter is enabled and plugin name is in the conflicting plugins array', () => {
       filters.conflictingPluginNames = ['conflicting plugin', plugin.name];
-      filters.pluginFilter(plugin).should.be.true;
+      expect(filters.pluginFilter(plugin)).toBe(true);
     });
 
-    it('should return false if plugin content filter is enabled', () => {
+    test('should return false if plugin content filter is enabled', () => {
       filters.contentSearchString = 'unfound text';
-      filters.pluginFilter(plugin).should.be.false;
+      expect(filters.pluginFilter(plugin)).toBe(false);
     });
 
-    it('should return true if plugin content filter is enabled and plugin contains the filter text', () => {
+    test('should return true if plugin content filter is enabled and plugin contains the filter text', () => {
       filters.contentSearchString = 'found text';
-      filters.pluginFilter(plugin).should.be.true;
+      expect(filters.pluginFilter(plugin)).toBe(true);
     });
   });
 
@@ -162,7 +153,7 @@ describe('Filters', () => {
     let doNotCleanMessage;
 
     beforeEach(() => {
-      filters = new loot.Filters(l10n);
+      filters = new Filters(l10n);
       note = {
         type: 'say',
         text: 'test message'
@@ -173,42 +164,42 @@ describe('Filters', () => {
       };
     });
 
-    it('should return true for a note message when no filters are enabled', () => {
-      filters.messageFilter(note).should.be.true;
+    test('should return true for a note message when no filters are enabled', () => {
+      expect(filters.messageFilter(note)).toBe(true);
     });
 
-    it('should return true for a warning "do not clean" message when no filters are enabled', () => {
-      filters.messageFilter(doNotCleanMessage).should.be.true;
+    test('should return true for a warning "do not clean" message when no filters are enabled', () => {
+      expect(filters.messageFilter(doNotCleanMessage)).toBe(true);
     });
 
-    it('should return false for a note message when the notes filter is enabled', () => {
+    test('should return false for a note message when the notes filter is enabled', () => {
       filters.hideNotes = true;
-      filters.messageFilter(note).should.be.false;
+      expect(filters.messageFilter(note)).toBe(false);
     });
 
-    it('should return true for a warning message when the notes filter is enabled', () => {
+    test('should return true for a warning message when the notes filter is enabled', () => {
       filters.hideNotes = true;
-      filters.messageFilter(doNotCleanMessage).should.be.true;
+      expect(filters.messageFilter(doNotCleanMessage)).toBe(true);
     });
 
-    it('should return false for a "do not clean" message when the "do not clean" messages filter is enabled', () => {
+    test('should return false for a "do not clean" message when the "do not clean" messages filter is enabled', () => {
       filters.hideDoNotCleanMessages = true;
-      filters.messageFilter(doNotCleanMessage).should.be.false;
+      expect(filters.messageFilter(doNotCleanMessage)).toBe(false);
     });
 
-    it('should return true for a message not containing "do not clean" when the "do not clean" messages filter is enabled', () => {
+    test('should return true for a message not containing "do not clean" when the "do not clean" messages filter is enabled', () => {
       filters.hideDoNotCleanMessages = true;
-      filters.messageFilter(note).should.be.true;
+      expect(filters.messageFilter(note)).toBe(true);
     });
 
-    it('should return false for a note message when the all messages filter is enabled', () => {
+    test('should return false for a note message when the all messages filter is enabled', () => {
       filters.hideAllPluginMessages = true;
-      filters.messageFilter(note).should.be.false;
+      expect(filters.messageFilter(note)).toBe(false);
     });
 
-    it('should return false for a "do not clean" message when the all messages filter is enabled', () => {
+    test('should return false for a "do not clean" message when the all messages filter is enabled', () => {
       filters.hideAllPluginMessages = true;
-      filters.messageFilter(doNotCleanMessage).should.be.false;
+      expect(filters.messageFilter(doNotCleanMessage)).toBe(false);
     });
   });
 
@@ -217,7 +208,7 @@ describe('Filters', () => {
     let handleEvent;
 
     beforeEach(() => {
-      filters = new loot.Filters(l10n);
+      filters = new Filters(l10n);
     });
 
     afterEach(() => {
@@ -227,24 +218,24 @@ describe('Filters', () => {
       );
     });
 
-    it('should return false if the conflicts filter was not active', () => {
-      filters.deactivateConflictsFilter().should.be.false;
+    test('should return false if the conflicts filter was not active', () => {
+      expect(filters.deactivateConflictsFilter()).toBe(false);
     });
 
-    it('should return true if the conflicts filter was active', () => {
+    test('should return true if the conflicts filter was active', () => {
       filters.conflictingPluginNames = ['Skyrim.esm'];
 
-      filters.deactivateConflictsFilter().should.be.true;
+      expect(filters.deactivateConflictsFilter()).toBe(true);
     });
 
-    it('should empty the conflicting plugin names array', () => {
+    test('should empty the conflicting plugin names array', () => {
       filters.conflictingPluginNames = ['Skyrim.esm'];
 
-      filters.deactivateConflictsFilter().should.be.true;
-      filters.conflictingPluginNames.should.have.length(0);
+      expect(filters.deactivateConflictsFilter()).toBe(true);
+      expect(filters.conflictingPluginNames.length).toBe(0);
     });
 
-    it('should fire an event', done => {
+    test('should fire an event', done => {
       handleEvent = () => {
         done();
       };
@@ -262,86 +253,84 @@ describe('Filters', () => {
     let filters;
 
     beforeEach(() => {
-      filters = new loot.Filters(l10n);
+      filters = new Filters(l10n);
     });
 
-    it('should return a promise that resolves to an empty array if the argument is falsy', () => {
+    test('should return a promise that resolves to an empty array if the argument is falsy', () =>
       filters.activateConflictsFilter().then(result => {
-        result.should.be.an('array');
-        return result.should.be.empty;
-      });
-    });
+        expect(result.length).toBe(0);
+      }));
   });
 
   describe('#areAnyFiltersActive', () => {
     let filters;
 
     beforeEach(() => {
-      filters = new loot.Filters(l10n);
+      filters = new Filters(l10n);
     });
 
-    it('should return false if all the boolean filters are false, and the content and conflict filter lengths are zero', () => {
-      filters.areAnyFiltersActive().should.be.false;
+    test('should return false if all the boolean filters are false, and the content and conflict filter lengths are zero', () => {
+      expect(filters.areAnyFiltersActive()).toBe(false);
     });
 
-    it('should return true if hideMessagelessPlugins is true', () => {
+    test('should return true if hideMessagelessPlugins is true', () => {
       filters.hideMessagelessPlugins = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideInactivePlugins is true', () => {
+    test('should return true if hideInactivePlugins is true', () => {
       filters.hideInactivePlugins = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideVersionNumbers is true', () => {
+    test('should return true if hideVersionNumbers is true', () => {
       filters.hideVersionNumbers = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideCRCs is true', () => {
+    test('should return true if hideCRCs is true', () => {
       filters.hideCRCs = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideBashTags is true', () => {
+    test('should return true if hideBashTags is true', () => {
       filters.hideBashTags = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideAllPluginMessages is true', () => {
+    test('should return true if hideAllPluginMessages is true', () => {
       filters.hideAllPluginMessages = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideNotes is true', () => {
+    test('should return true if hideNotes is true', () => {
       filters.hideNotes = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if hideDoNotCleanMessages is true', () => {
+    test('should return true if hideDoNotCleanMessages is true', () => {
       filters.hideDoNotCleanMessages = true;
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if conflictingPluginNames is a non-empty array', () => {
+    test('should return true if conflictingPluginNames is a non-empty array', () => {
       filters.conflictingPluginNames = ['foo'];
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
 
-    it('should return true if contentSearchString is a non-empty string', () => {
+    test('should return true if contentSearchString is a non-empty string', () => {
       filters.contentSearchString = 'foo';
 
-      filters.areAnyFiltersActive().should.be.true;
+      expect(filters.areAnyFiltersActive()).toBe(true);
     });
   });
 });

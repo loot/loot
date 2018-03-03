@@ -1,25 +1,50 @@
+import Translator from '../../../../gui/html/js/translator.js';
+
 describe('Translator', () => {
-  describe('#Tranlsator()', () => {
-    it('should set locale to "en" if no locale is given', () => {
-      const l10n = new loot.Translator();
-      l10n.locale.should.equal('en');
+  let localeData;
+
+  beforeEach(() => {
+    localeData = {
+      messages: {
+        '': {
+          domain: 'messages',
+          lang: 'en',
+          plural_forms: 'nplurals=2; plural=(n != 1);'
+        },
+        foo: ['foo'],
+        'foo %1$s %2$s': ['bar is bar']
+      }
+    };
+    window.Jed = jest.fn().mockImplementation(() => ({
+      translate: jest.fn().mockImplementation(input => ({
+        fetch: () => localeData.messages[input][0]
+      }))
+    }));
+  });
+
+  describe('#Translator()', () => {
+    test('should set locale to "en" if no locale is given', () => {
+      const l10n = new Translator();
+      expect(l10n.locale).toBe('en');
     });
 
-    it('should set the locale to the given value', () => {
-      const l10n = new loot.Translator('de');
-      l10n.locale.should.equal('de');
+    test('should set the locale to the given value', () => {
+      const l10n = new Translator('de');
+      expect(l10n.locale).toBe('de');
     });
   });
 
   describe('#load()', () => {
-    it('should return a Promise', () => {
-      const l10n = new loot.Translator();
+    test('should return a Promise', () => {
+      const l10n = new Translator();
 
-      l10n.load().should.be.a('promise'); // eslint-disable-line new-cap
+      return l10n.load().then(result => {
+        expect(result).toBe(undefined);
+      });
     });
 
-    it('should be fulfilled for a locale of "en"', () => {
-      const l10n = new loot.Translator('en');
+    test('should be fulfilled for a locale of "en"', () => {
+      const l10n = new Translator('en');
 
       return l10n.load();
     });
@@ -32,41 +57,30 @@ describe('Translator', () => {
     let l10n;
 
     beforeEach(() => {
-      l10n = new loot.Translator();
+      l10n = new Translator();
     });
 
-    it('should return original string if the translator has not been loaded', () => {
-      l10n.translate('foo').should.equal('foo');
+    test('should return original string if the translator has not been loaded', () => {
+      expect(l10n.translate('foo')).toBe('foo');
     });
 
-    it('should return an empty string if nothing is passed', () =>
+    test('should return an empty string if nothing is passed', () =>
       l10n.load().then(() => {
-        l10n.translate().should.equal('');
+        expect(l10n.translate()).toBe('');
       }));
 
-    it('should return the input string if the current locale is "en"', () =>
+    test('should return the input string if the current locale is "en"', () =>
       l10n.load().then(() => {
-        l10n.translate('foo').should.equal('foo');
+        expect(l10n.translate('foo')).toBe('foo');
       }));
 
-    it('should return the translated string if locale data has been loaded', () => {
+    test('should return the translated string if locale data has been loaded', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
          data manually. */
-      l10n.jed = new window.Jed({
-        locale_data: {
-          messages: {
-            '': {
-              domain: 'messages',
-              lang: 'en',
-              plural_forms: 'nplurals=2; plural=(n != 1);'
-            },
-            foo: ['bar']
-          }
-        },
-        domain: 'messages'
-      });
+      l10n.jed = window.Jed();
+      localeData.messages.foo = ['bar'];
 
-      l10n.translate('foo').should.equal('bar');
+      expect(l10n.translate('foo')).toBe('bar');
     });
   });
 
@@ -74,63 +88,40 @@ describe('Translator', () => {
     let l10n;
 
     beforeEach(() => {
-      l10n = new loot.Translator();
+      l10n = new Translator();
     });
 
-    it('should return original string if the translator has not been loaded', () => {
-      l10n.translateFormatted('foo').should.equal('foo');
+    test('should return original string if the translator has not been loaded', () => {
+      expect(l10n.translateFormatted('foo')).toBe('foo');
     });
 
-    it('should return an empty string if nothing is passed', () =>
+    test('should return an empty string if nothing is passed', () =>
       l10n.load().then(() => {
-        l10n.translateFormatted().should.equal('');
+        expect(l10n.translateFormatted()).toBe('');
       }));
 
-    it('should return the input string if the current locale is "en"', () =>
+    test('should return the input string if the current locale is "en"', () =>
       l10n.load().then(() => {
-        l10n.translateFormatted('foo').should.equal('foo');
+        expect(l10n.translateFormatted('foo')).toBe('foo');
       }));
 
-    it('should return the translated string if locale data has been loaded', () => {
+    test('should return the translated string if locale data has been loaded', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
          data manually. */
-      l10n.jed = new window.Jed({
-        locale_data: {
-          messages: {
-            '': {
-              domain: 'messages',
-              lang: 'en',
-              plural_forms: 'nplurals=2; plural=(n != 1);'
-            },
-            foo: ['bar']
-          }
-        },
-        domain: 'messages'
-      });
+      l10n.jed = window.Jed();
+      localeData.messages.foo = ['bar'];
 
-      l10n.translateFormatted('foo').should.equal('bar');
+      expect(l10n.translateFormatted('foo')).toBe('bar');
     });
 
-    it('should subsitute additional arguments into string', () => {
+    test('should subsitute additional arguments into string', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
          data manually. */
-      l10n.jed = new window.Jed({
-        locale_data: {
-          messages: {
-            '': {
-              domain: 'messages',
-              lang: 'en',
-              plural_forms: 'nplurals=2; plural=(n != 1);'
-            },
-            'foo %1$s %2$s': ['%2$s is bar']
-          }
-        },
-        domain: 'messages'
-      });
+      l10n.jed = window.Jed();
 
-      l10n
-        .translateFormatted('foo %1$s %2$s', 'is not', 'bar')
-        .should.equal('bar is bar');
+      expect(l10n.translateFormatted('foo %1$s %2$s', 'is not', 'bar')).toBe(
+        'bar is bar'
+      );
     });
   });
 });

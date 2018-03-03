@@ -1,280 +1,287 @@
-function getShown(elementId) {
-  return loot.DOM.elementShownStates.get(elementId);
+import * as DOM from '../../../../gui/html/js/dom.js';
+import State from '../../../../gui/html/js/state.js';
+
+jest.mock('../../../../gui/html/js/dom.js');
+
+function clearMocks() {
+  DOM.enable.mockClear();
+  DOM.setUIState.mockClear();
+  DOM.show.mockClear();
 }
 
-function getEnabled(elementId) {
-  return loot.DOM.elementEnabledStates.get(elementId);
-}
-
-function getDomState() {
-  return loot.DOM.state;
-}
-
-beforeEach(() => {
-  loot.DOM.elementShownStates.clear();
-  loot.DOM.elementEnabledStates.clear();
-});
-
-/* eslint-disable no-unused-expressions */
 describe('State', () => {
+  beforeEach(clearMocks);
+
   describe('State()', () => {
-    it('should set the current state to DEFAULT_STATE', () => {
-      const state = new loot.State();
-      state.currentState.should.equal(loot.State.DEFAULT_STATE);
+    test('should set the current state to DEFAULT_STATE', () => {
+      const state = new State();
+      expect(state.currentState).toBe(State.DEFAULT_STATE);
     });
   });
 
   describe('DEFAULT_STATE', () => {
-    it('should not equal EDITING_STATE', () => {
-      loot.State.DEFAULT_STATE.should.not.equal(loot.State.EDITING_STATE);
+    test('should not equal EDITING_STATE', () => {
+      expect(State.DEFAULT_STATE).not.toBe(State.EDITING_STATE);
     });
 
-    it('should not equal SORTING_STATE', () => {
-      loot.State.DEFAULT_STATE.should.not.equal(loot.State.SORTING_STATE);
+    test('should not equal SORTING_STATE', () => {
+      expect(State.DEFAULT_STATE).not.toBe(State.SORTING_STATE);
     });
   });
 
   describe('EDITING_STATE', () => {
-    it('should not equal SORTING_STATE', () => {
-      loot.State.EDITING_STATE.should.not.equal(loot.State.SORTING_STATE);
+    test('should not equal SORTING_STATE', () => {
+      expect(State.SORTING_STATE).not.toBe(State.EDITING_STATE);
     });
   });
 
   describe('isInDefaultState()', () => {
-    it('should return true if the default state is the current state', () => {
-      const state = new loot.State();
+    test('should return true if the default state is the current state', () => {
+      const state = new State();
 
-      state.isInDefaultState().should.be.true;
+      expect(state.isInDefaultState()).toBe(true);
     });
 
-    it('should return false if the editing state is the current state', () => {
-      const state = new loot.State();
+    test('should return false if the editing state is the current state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      state.isInDefaultState().should.be.false;
+      expect(state.isInDefaultState()).toBe(false);
     });
 
-    it('should return false if the sorting state is the current state', () => {
-      const state = new loot.State();
+    test('should return false if the sorting state is the current state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      state.isInDefaultState().should.be.false;
+      expect(state.isInDefaultState()).toBe(false);
     });
   });
 
   describe('isInEditingState()', () => {
-    it('should return true if the editing state is the current state', () => {
-      const state = new loot.State();
+    test('should return true if the editing state is the current state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      state.isInEditingState().should.be.true;
+      expect(state.isInEditingState()).toBe(true);
     });
 
-    it('should return false if the default state is the current state', () => {
-      const state = new loot.State();
+    test('should return false if the default state is the current state', () => {
+      const state = new State();
 
-      state.isInEditingState().should.be.false;
+      expect(state.isInEditingState()).toBe(false);
     });
 
-    it('should return false if the sorting state is the current state', () => {
-      const state = new loot.State();
+    test('should return false if the sorting state is the current state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      state.isInEditingState().should.be.false;
+      expect(state.isInEditingState()).toBe(false);
     });
   });
 
   describe('isInSortingState()', () => {
-    it('should return true if the sorting state is the current state', () => {
-      const state = new loot.State();
+    test('should return true if the sorting state is the current state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      state.isInSortingState().should.be.true;
+      expect(state.isInSortingState()).toBe(true);
     });
 
-    it('should return false if the editing state is the current state', () => {
-      const state = new loot.State();
+    test('should return false if the editing state is the current state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      state.isInSortingState().should.be.false;
+      expect(state.isInSortingState()).toBe(false);
     });
 
-    it('should return false if the default state is the current state', () => {
-      const state = new loot.State();
+    test('should return false if the default state is the current state', () => {
+      const state = new State();
 
-      state.isInSortingState().should.be.false;
+      expect(state.isInSortingState()).toBe(false);
     });
   });
 
   describe('enterSortingState()', () => {
-    it('should change state to the sorting state from the default state', () => {
-      const state = new loot.State();
+    test('should change state to the sorting state from the default state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      state.currentState.should.equal(loot.State.SORTING_STATE);
+      expect(state.currentState).toBe(State.SORTING_STATE);
 
-      getShown('updateMasterlistButton').should.be.false;
-      getShown('sortButton').should.be.false;
-      getShown('applySortButton').should.be.true;
-      getShown('cancelSortButton').should.be.true;
-      getEnabled('gameMenu').should.be.false;
-      getEnabled('refreshContentButton').should.be.false;
+      expect(DOM.show.mock.calls.length).toBe(4);
+      expect(DOM.show.mock.calls[0]).toEqual(['updateMasterlistButton', false]);
+      expect(DOM.show.mock.calls[1]).toEqual(['sortButton', false]);
+      expect(DOM.show.mock.calls[2]).toEqual(['applySortButton']);
+      expect(DOM.show.mock.calls[3]).toEqual(['cancelSortButton']);
 
-      getDomState().should.equal('sorting');
+      expect(DOM.enable.mock.calls.length).toBe(2);
+      expect(DOM.enable.mock.calls[0]).toEqual(['gameMenu', false]);
+      expect(DOM.enable.mock.calls[1]).toEqual(['refreshContentButton', false]);
+
+      expect(DOM.setUIState.mock.calls.length).toBe(1);
+      expect(DOM.setUIState.mock.calls[0]).toEqual(['sorting']);
     });
 
-    it('should throw an error if called in the editing state', () => {
-      const state = new loot.State();
+    test('should throw an error if called in the editing state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      should.throw(() => {
+      expect(() => {
         state.enterSortingState();
-      }, Error);
+      }).toThrow(Error);
     });
 
-    it('should have no effect if already in the sorting state', () => {
-      const state = new loot.State();
-      state.enterSortingState();
+    test('should have no effect if already in the sorting state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      state.currentState.should.equal(loot.State.SORTING_STATE);
+      clearMocks();
 
-      getShown('updateMasterlistButton').should.be.false;
-      getShown('sortButton').should.be.false;
-      getShown('applySortButton').should.be.true;
-      getShown('cancelSortButton').should.be.true;
-      getEnabled('gameMenu').should.be.false;
-      getEnabled('refreshContentButton').should.be.false;
+      state.enterSortingState();
+
+      expect(state.currentState).toBe(State.SORTING_STATE);
+      expect(DOM.show.mock.calls.length).toBe(0);
+      expect(DOM.enable.mock.calls.length).toBe(0);
+      expect(DOM.setUIState.mock.calls.length).toBe(0);
     });
   });
 
   describe('exitSortingState()', () => {
-    it('should change state to the default state from the sorting state', () => {
-      const state = new loot.State();
+    test('should change state to the default state from the sorting state', () => {
+      const state = new State();
       state.enterSortingState();
+
+      clearMocks();
+
       state.exitSortingState();
 
-      state.currentState.should.equal(loot.State.DEFAULT_STATE);
+      expect(state.currentState).toBe(State.DEFAULT_STATE);
 
-      getShown('updateMasterlistButton').should.be.true;
-      getShown('sortButton').should.be.true;
-      getShown('applySortButton').should.be.false;
-      getShown('cancelSortButton').should.be.false;
-      getEnabled('gameMenu').should.be.true;
-      getEnabled('refreshContentButton').should.be.true;
+      expect(DOM.show.mock.calls.length).toBe(4);
+      expect(DOM.show.mock.calls[0]).toEqual(['updateMasterlistButton']);
+      expect(DOM.show.mock.calls[1]).toEqual(['sortButton']);
+      expect(DOM.show.mock.calls[2]).toEqual(['applySortButton', false]);
+      expect(DOM.show.mock.calls[3]).toEqual(['cancelSortButton', false]);
 
-      getDomState().should.equal('default');
+      expect(DOM.enable.mock.calls.length).toBe(2);
+      expect(DOM.enable.mock.calls[0]).toEqual(['gameMenu']);
+      expect(DOM.enable.mock.calls[1]).toEqual(['refreshContentButton']);
+
+      expect(DOM.setUIState.mock.calls.length).toBe(1);
+      expect(DOM.setUIState.mock.calls[0]).toEqual(['default']);
     });
 
-    it('should throw an error if called in the editing state', () => {
-      const state = new loot.State();
+    test('should throw an error if called in the editing state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      should.throw(() => {
+      expect(() => {
         state.exitSortingState();
-      }, Error);
+      }).toThrow(Error);
     });
 
-    it('should have no effect if already in the default state', () => {
-      const state = new loot.State();
+    test('should have no effect if already in the default state', () => {
+      const state = new State();
       state.exitSortingState();
 
-      state.currentState.should.equal(loot.State.DEFAULT_STATE);
-
-      should.equal(undefined, getShown('updateMasterlistButton'));
-      should.equal(undefined, getShown('sortButton'));
-      should.equal(undefined, getShown('applySortButton'));
-      should.equal(undefined, getShown('cancelSortButton'));
-      should.equal(undefined, getEnabled('gameMenu'));
-      should.equal(undefined, getEnabled('refreshContentButton'));
+      expect(state.currentState).toBe(State.DEFAULT_STATE);
+      expect(DOM.show.mock.calls.length).toBe(0);
+      expect(DOM.enable.mock.calls.length).toBe(0);
+      expect(DOM.setUIState.mock.calls.length).toBe(0);
     });
   });
 
   describe('enterEditingState()', () => {
-    it('should change state to the editing state from the default state', () => {
-      const state = new loot.State();
+    test('should change state to the editing state from the default state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      state.currentState.should.equal(loot.State.EDITING_STATE);
+      expect(state.currentState).toBe(State.EDITING_STATE);
 
-      getEnabled('wipeUserlistButton').should.be.false;
-      getEnabled('copyContentButton').should.be.false;
-      getEnabled('refreshContentButton').should.be.false;
-      getEnabled('settingsButton').should.be.false;
-      getEnabled('gameMenu').should.be.false;
-      getEnabled('updateMasterlistButton').should.be.false;
-      getEnabled('sortButton').should.be.false;
+      expect(DOM.enable.mock.calls.length).toBe(7);
+      expect(DOM.enable.mock.calls[0]).toEqual(['wipeUserlistButton', false]);
+      expect(DOM.enable.mock.calls[1]).toEqual(['copyContentButton', false]);
+      expect(DOM.enable.mock.calls[2]).toEqual(['refreshContentButton', false]);
+      expect(DOM.enable.mock.calls[3]).toEqual(['settingsButton', false]);
+      expect(DOM.enable.mock.calls[4]).toEqual(['gameMenu', false]);
+      expect(DOM.enable.mock.calls[5]).toEqual([
+        'updateMasterlistButton',
+        false
+      ]);
+      expect(DOM.enable.mock.calls[6]).toEqual(['sortButton', false]);
 
-      getDomState().should.equal('editing');
+      expect(DOM.setUIState.mock.calls.length).toBe(1);
+      expect(DOM.setUIState.mock.calls[0]).toEqual(['editing']);
     });
 
-    it('should throw an error if called in the sorting state', () => {
-      const state = new loot.State();
+    test('should throw an error if called in the sorting state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      should.throw(() => {
+      expect(() => {
         state.enterEditingState();
-      }, Error);
+      }).toThrow(Error);
     });
 
-    it('should have no effect if already in the editing state', () => {
-      const state = new loot.State();
-      state.enterEditingState();
+    test('should have no effect if already in the editing state', () => {
+      const state = new State();
       state.enterEditingState();
 
-      state.currentState.should.equal(loot.State.EDITING_STATE);
+      clearMocks();
 
-      getEnabled('wipeUserlistButton').should.be.false;
-      getEnabled('copyContentButton').should.be.false;
-      getEnabled('refreshContentButton').should.be.false;
-      getEnabled('settingsButton').should.be.false;
-      getEnabled('gameMenu').should.be.false;
-      getEnabled('updateMasterlistButton').should.be.false;
-      getEnabled('sortButton').should.be.false;
+      state.enterEditingState();
+
+      expect(state.currentState).toBe(State.EDITING_STATE);
+      expect(DOM.show.mock.calls.length).toBe(0);
+      expect(DOM.enable.mock.calls.length).toBe(0);
+      expect(DOM.setUIState.mock.calls.length).toBe(0);
     });
   });
 
   describe('exitEditingState()', () => {
-    it('should change state to the default state from the editing state', () => {
-      const state = new loot.State();
+    test('should change state to the default state from the editing state', () => {
+      const state = new State();
       state.enterEditingState();
+
+      clearMocks();
+
       state.exitEditingState();
 
-      state.currentState.should.equal(loot.State.DEFAULT_STATE);
+      expect(state.currentState).toBe(State.DEFAULT_STATE);
 
-      getEnabled('wipeUserlistButton').should.be.true;
-      getEnabled('copyContentButton').should.be.true;
-      getEnabled('refreshContentButton').should.be.true;
-      getEnabled('settingsButton').should.be.true;
-      getEnabled('gameMenu').should.be.true;
-      getEnabled('updateMasterlistButton').should.be.true;
-      getEnabled('sortButton').should.be.true;
+      expect(DOM.enable.mock.calls.length).toBe(7);
+      expect(DOM.enable.mock.calls[0]).toEqual(['wipeUserlistButton']);
+      expect(DOM.enable.mock.calls[1]).toEqual(['copyContentButton']);
+      expect(DOM.enable.mock.calls[2]).toEqual(['refreshContentButton']);
+      expect(DOM.enable.mock.calls[3]).toEqual(['settingsButton']);
+      expect(DOM.enable.mock.calls[4]).toEqual(['gameMenu']);
+      expect(DOM.enable.mock.calls[5]).toEqual(['updateMasterlistButton']);
+      expect(DOM.enable.mock.calls[6]).toEqual(['sortButton']);
 
-      getDomState().should.equal('default');
+      expect(DOM.setUIState.mock.calls.length).toBe(1);
+      expect(DOM.setUIState.mock.calls[0]).toEqual(['default']);
     });
 
-    it('should throw an error if called in the sorting state', () => {
-      const state = new loot.State();
+    test('should throw an error if called in the sorting state', () => {
+      const state = new State();
       state.enterSortingState();
 
-      should.throw(() => {
+      expect(() => {
         state.exitEditingState();
-      }, Error);
+      }).toThrow(Error);
     });
 
-    it('should have no effect if already in the default state', () => {
-      const state = new loot.State();
+    test('should have no effect if already in the default state', () => {
+      const state = new State();
+
+      clearMocks();
+
       state.exitEditingState();
 
-      state.currentState.should.equal(loot.State.DEFAULT_STATE);
-
-      should.equal(undefined, getEnabled('wipeUserlistButton'));
-      should.equal(undefined, getEnabled('copyContentButton'));
-      should.equal(undefined, getEnabled('refreshContentButton'));
-      should.equal(undefined, getEnabled('settingsButton'));
-      should.equal(undefined, getEnabled('gameMenu'));
-      should.equal(undefined, getEnabled('updateMasterlistButton'));
-      should.equal(undefined, getEnabled('sortButton'));
+      expect(state.currentState).toBe(State.DEFAULT_STATE);
+      expect(DOM.show.mock.calls.length).toBe(0);
+      expect(DOM.enable.mock.calls.length).toBe(0);
+      expect(DOM.setUIState.mock.calls.length).toBe(0);
     });
   });
 });
