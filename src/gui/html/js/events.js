@@ -11,9 +11,9 @@ import {
   enable
 } from './dom.js';
 import {handlePromiseError} from './handlePromiseError.js';
+import {Plugin} from './plugin.js';
 
 // Depends on the following globals:
-// - loot.Plugin
 // - loot.Filters
 // - loot.filters
 // - loot.query
@@ -102,7 +102,7 @@ export function onChangeGame(evt) {
       }
 
       /* Parse the data sent from C++. */
-      const gameInfo = JSON.parse(result, loot.Plugin.fromJson);
+      const gameInfo = JSON.parse(result, Plugin.fromJson);
       loot.game = new loot.Game(gameInfo, loot.l10n);
 
       loot.game.initialiseUI();
@@ -363,7 +363,7 @@ export function onContentRefresh() {
     .query('getGameData')
     .then(result => {
       /* Parse the data sent from C++. */
-      const game = JSON.parse(result, loot.Plugin.fromJson);
+      const game = JSON.parse(result, Plugin.fromJson);
       loot.game = new loot.Game(game, loot.l10n);
 
       /* Re-initialise conflicts filter plugin list. */

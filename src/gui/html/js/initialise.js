@@ -73,13 +73,13 @@ import {
   appendGeneralMessages
 } from './dom.js';
 import {handlePromiseError} from './handlePromiseError.js';
+import {Plugin} from './plugin.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
 
 const Filters = loot.Filters;
 const Game = loot.Game;
-const Plugin = loot.Plugin;
 const query = loot.query;
 
 function setupEventHandlers() {

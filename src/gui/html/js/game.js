@@ -7,11 +7,11 @@
   } else {
     // Browser globals
     root.loot = root.loot || {};
-    root.loot.Game = factory(root.marked, root.loot.Plugin, root.loot.Filters);
+    root.loot.Game = factory(root.marked, root.loot.Filters);
   }
 })(
   this,
-  (marked, Plugin, Filters) =>
+  (marked, Filters) =>
     class {
       constructor(obj, l10n) {
         this.folder = obj.folder || '';
@@ -238,7 +238,7 @@
           if (existingPlugin) {
             existingPlugin.update(plugin);
           } else {
-            existingPlugin = new Plugin(plugin);
+            existingPlugin = new loot.Plugin(plugin);
           }
           newPlugins.push(existingPlugin);
         });

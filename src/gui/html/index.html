@@ -487,7 +487,6 @@
   <script src="../../../node_modules/jed-gettext-parser/jedGettextParser.js"></script>
   <script src="../../../node_modules/lodash/core.min.js"></script>
   <script src="../../../node_modules/github-api/dist/GitHub.bundle.min.js"></script>
-  <script src="js/plugin.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/game.js"></script>
   <script src="js/query.js"></script>
@@ -503,6 +502,7 @@
         setUIState
       } from './js/dom.js';
       import {handlePromiseError} from './js/handlePromiseError.js';
+      import {Plugin} from './js/plugin.js';
 
       window.loot = window.loot || {};
       // FIXME: This is assumed to exist by C++ callbacks.
@@ -517,6 +517,8 @@
         enable,
         setUIState
       };
+      // FIXME: This is assumed to exist by game.js.
+      window.loot.Plugin = Plugin;
 
       initialise(loot);
   </script>

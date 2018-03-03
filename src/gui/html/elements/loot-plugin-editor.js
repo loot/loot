@@ -18,7 +18,8 @@
 <link rel="import" href="editable-table.html">
 <link rel="import" href="loot-custom-icons.html">
 */
-// Also depends on the loot.l10n and loot.Plugin globals.
+// Also depends on the loot.l10n global.
+import {Plugin} from '../js/plugin.js';
 
 export class LootPluginEditor extends Polymer.Element {
   static get is() {
@@ -353,7 +354,7 @@ export class LootPluginEditor extends Polymer.Element {
         } else if (tables[j].parentElement.id === 'message') {
           metadata.msg = rowsData;
         } else if (tables[j].parentElement.id === 'tags') {
-          metadata.tag = rowsData.map(loot.Plugin.tagFromRowData);
+          metadata.tag = rowsData.map(Plugin.tagFromRowData);
         } else if (tables[j].parentElement.id === 'dirty') {
           metadata.dirty = rowsData.map(this._rowDataToCrc);
         } else if (tables[j].parentElement.id === 'clean') {
@@ -436,12 +437,12 @@ export class LootPluginEditor extends Polymer.Element {
       } else if (tables[j].parentElement.id === 'tags') {
         if (newData.masterlist && newData.masterlist.tag) {
           newData.masterlist.tag
-            .map(loot.Plugin.tagToRowData)
+            .map(Plugin.tagToRowData)
             .forEach(tables[j].addReadOnlyRow, tables[j]);
         }
         if (newData.userlist && newData.userlist.tag) {
           newData.userlist.tag
-            .map(loot.Plugin.tagToRowData)
+            .map(Plugin.tagToRowData)
             .forEach(tables[j].addRow, tables[j]);
         }
       } else if (tables[j].parentElement.id === 'dirty') {
