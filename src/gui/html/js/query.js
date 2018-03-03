@@ -1,15 +1,6 @@
-'use strict';
+// Depends on the lodash library, which isn't available as an ES2015 module.
 
-(function exportModule(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['node_modules/lodash/core.min'], factory);
-  } else {
-    // Browser globals
-    root.loot = root.loot || {};
-    root.loot.query = factory(root._);
-  }
-})(this, _ => (requestName, payload) => {
+export function query(requestName, payload) {
   if (!requestName) {
     throw new Error('No request name passed');
   }
@@ -44,4 +35,4 @@
       }
     });
   });
-});
+}

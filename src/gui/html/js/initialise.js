@@ -74,13 +74,13 @@ import {
 } from './dom.js';
 import {handlePromiseError} from './handlePromiseError.js';
 import {Plugin} from './plugin.js';
+import {query} from './query.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
 
 const Filters = loot.Filters;
 const Game = loot.Game;
-const query = loot.query;
 
 function setupEventHandlers() {
   /* eslint-disable no-undef */
@@ -399,7 +399,7 @@ export function initialise(loot) {
         openDialog('firstRun');
       }
     })
-    .then(() => loot.query('getVersion'))
+    .then(() => query('getVersion'))
     .then(JSON.parse)
     .then(version => updateExists(version.release, version.build))
     .then(isUpdateAvailable => {

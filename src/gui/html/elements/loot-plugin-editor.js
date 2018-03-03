@@ -18,7 +18,6 @@
 <link rel="import" href="editable-table.html">
 <link rel="import" href="loot-custom-icons.html">
 */
-// Also depends on the loot.l10n global.
 import {Plugin} from '../js/plugin.js';
 
 export class LootPluginEditor extends Polymer.Element {

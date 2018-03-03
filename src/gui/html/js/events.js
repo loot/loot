@@ -12,11 +12,11 @@ import {
 } from './dom.js';
 import {handlePromiseError} from './handlePromiseError.js';
 import {Plugin} from './plugin.js';
+import {query} from './query.js';
 
 // Depends on the following globals:
 // - loot.Filters
 // - loot.filters
-// - loot.query
 // - loot.game
 // - loot.l10n
 // - loot.settings
@@ -30,7 +30,7 @@ export function onSidebarFilterToggle(evt) {
     name: evt.target.id,
     state: evt.target.checked
   };
-  loot.query('saveFilterState', payload).catch(handlePromiseError);
+  query('saveFilterState', payload).catch(handlePromiseError);
   loot.filters.apply(loot.game.plugins);
 }
 export function onContentFilter(evt) {
@@ -83,8 +83,7 @@ export function onChangeGame(evt) {
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
-  loot
-    .query('changeGame', evt.detail.item.getAttribute('value'))
+  query('changeGame', evt.detail.item.getAttribute('value'))
     .then(result => {
       /* Filters should be re-applied on game change, except the conflicts
        filter. Don't need to deactivate the others beforehand. Strictly not
@@ -123,8 +122,7 @@ export function updateMasterlist() {
   showProgress(
     loot.l10n.translate('Updating and parsing masterlist...')
   );
-  return loot
-    .query('updateMasterlist')
+  return query('updateMasterlist')
     .then(JSON.parse)
     .then(result => {
       if (result) {
@@ -176,7 +174,7 @@ export function onSortPlugins() {
     promise = promise.then(updateMasterlist);
   }
   promise
-    .then(() => loot.query('sortPlugins'))
+    .then(() => query('sortPlugins'))
     .then(JSON.parse)
     .then(result => {
       if (!result) {
@@ -215,7 +213,7 @@ export function onSortPlugins() {
         });
         /* Send discardUnappliedChanges query. Not doing so prevents LOOT's window
          from closing. */
-        loot.query('discardUnappliedChanges');
+        query('discardUnappliedChanges');
         closeProgress();
         showNotification(
           loot.l10n.translate('Sorting made no changes to the load order.')
@@ -235,8 +233,7 @@ export function onSortPlugins() {
 }
 export function onApplySort() {
   const loadOrder = loot.game.getPluginNames();
-  return loot
-    .query('applySort', loadOrder)
+  return query('applySort', loadOrder)
     .then(() => {
       loot.game.applySort();
 
@@ -245,8 +242,7 @@ export function onApplySort() {
     .catch(handlePromiseError);
 }
 export function onCancelSort() {
-  return loot
-    .query('cancelSort')
+  return query('cancelSort')
     .then(JSON.parse)
     .then(response => {
       loot.game.cancelSort(response.plugins, response.generalMessages);
@@ -267,8 +263,7 @@ export function onRedatePlugins(evt) {
     loot.l10n.translate('Redate'),
     result => {
       if (result) {
-        loot
-          .query('redatePlugins')
+        query('redatePlugins')
           .then(() => {
             showNotification(
               loot.l10n.translate('Plugins were successfully redated.')
@@ -290,8 +285,7 @@ export function onClearAllMetadata() {
       if (!result) {
         return;
       }
-      loot
-        .query('clearAllMetadata')
+      query('clearAllMetadata')
         .then(JSON.parse)
         .then(response => {
           if (!response || !response.plugins) {
@@ -332,8 +326,7 @@ export function onCopyContent() {
     }
   }
 
-  loot
-    .query('copyContent', content)
+  query('copyContent', content)
     .then(() => {
       showNotification(
         loot.l10n.translate("LOOT's content has been copied to the clipboard.")
@@ -348,8 +341,7 @@ export function onCopyLoadOrder() {
     plugins = loot.game.getPluginNames();
   }
 
-  loot
-    .query('copyLoadOrder', plugins)
+  query('copyLoadOrder', plugins)
     .then(() => {
       showNotification(
         loot.l10n.translate('The load order has been copied to the clipboard.')
@@ -359,8 +351,7 @@ export function onCopyLoadOrder() {
 }
 export function onContentRefresh() {
   /* Send a query for updated load order and plugin header info. */
-  loot
-    .query('getGameData')
+  query('getGameData')
     .then(result => {
       /* Parse the data sent from C++. */
       const game = JSON.parse(result, Plugin.fromJson);
@@ -382,10 +373,10 @@ export function onContentRefresh() {
 }
 
 export function onOpenReadme() {
-  loot.query('openReadme').catch(handlePromiseError);
+  query('openReadme').catch(handlePromiseError);
 }
 export function onOpenLogLocation() {
-  loot.query('openLogLocation').catch(handlePromiseError);
+  query('openLogLocation').catch(handlePromiseError);
 }
 export function handleUnappliedChangesClose(change) {
   askQuestion(
@@ -400,8 +391,7 @@ export function handleUnappliedChangesClose(change) {
         return;
       }
       /* Discard any unapplied changes. */
-      loot
-        .query('discardUnappliedChanges')
+      query('discardUnappliedChanges')
         .then(() => {
           window.close();
         })
@@ -447,8 +437,7 @@ export function onCloseSettingsDialog(evt) {
   };
 
   /* Send the settings back to the C++ side. */
-  loot
-    .query('closeSettings', settings)
+  query('closeSettings', settings)
     .then(JSON.parse)
     .then(response => {
       loot.installedGames = response.installedGames;
@@ -494,7 +483,7 @@ export function onEditorOpen(evt) {
     elements[i].addEventListener('dragstart', elements[i].onDragStart);
   }
 
-  return loot.query('editorOpened').catch(handlePromiseError);
+  return query('editorOpened').catch(handlePromiseError);
 }
 export function onEditorClose(evt) {
   const plugin = loot.game.plugins.find(
@@ -510,8 +499,7 @@ export function onEditorClose(evt) {
     metadata
   };
 
-  loot
-    .query('editorClosed', payload)
+  query('editorClosed', payload)
     .then(JSON.parse)
     .then(result => {
       plugin.update(result);
@@ -542,8 +530,7 @@ export function onEditorClose(evt) {
     .catch(handlePromiseError);
 }
 export function onCopyMetadata(evt) {
-  loot
-    .query('copyMetadata', evt.target.getName())
+  query('copyMetadata', evt.target.getName())
     .then(() => {
       showNotification(
         loot.l10n.translateFormatted(
@@ -566,8 +553,7 @@ export function onClearMetadata(evt) {
       if (!result) {
         return;
       }
-      loot
-        .query('clearPluginMetadata', evt.target.getName())
+      query('clearPluginMetadata', evt.target.getName())
         .then(JSON.parse)
         .then(plugin => {
           if (!result) {
