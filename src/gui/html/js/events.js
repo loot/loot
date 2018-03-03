@@ -1,8 +1,20 @@
 /* eslint-disable no-unused-vars */
 
-'use strict';
+// Depends on the following globals:
+// - loot.Dialog
+// - loot.DOM
+// - loot.Plugin
+// - loot.Filters
+// - loot.filters
+// - loot.query
+// - loot.handlePromiseError
+// - loot.game
+// - loot.l10n
+// - loot.settings
+// - loot.state
+// - loot.installedGames
 
-function onSidebarFilterToggle(evt) {
+export function onSidebarFilterToggle(evt) {
   loot.filters[evt.target.id] = evt.target.checked;
 
   const payload = {
@@ -12,11 +24,11 @@ function onSidebarFilterToggle(evt) {
   loot.query('saveFilterState', payload).catch(loot.handlePromiseError);
   loot.filters.apply(loot.game.plugins);
 }
-function onContentFilter(evt) {
+export function onContentFilter(evt) {
   loot.filters.contentSearchString = evt.target.value;
   loot.filters.apply(loot.game.plugins);
 }
-function onConflictsFilter(evt) {
+export function onConflictsFilter(evt) {
   /* evt.currentTarget.value is the name of the target plugin, or an empty string
      if the filter has been deactivated. */
   if (evt.currentTarget.value) {
@@ -53,7 +65,7 @@ function onConflictsFilter(evt) {
   }
 }
 
-function onChangeGame(evt) {
+export function onChangeGame(evt) {
   if (
     evt.detail.item.getAttribute('value') === loot.game.folder ||
     loot.game.folder.length === 0
@@ -98,7 +110,7 @@ function onChangeGame(evt) {
     .catch(loot.handlePromiseError);
 }
 /* Masterlist update process, minus progress dialog. */
-function updateMasterlist() {
+export function updateMasterlist() {
   loot.Dialog.showProgress(
     loot.l10n.translate('Updating and parsing masterlist...')
   );
@@ -137,14 +149,14 @@ function updateMasterlist() {
     })
     .catch(loot.handlePromiseError);
 }
-function onUpdateMasterlist() {
+export function onUpdateMasterlist() {
   updateMasterlist()
     .then(() => {
       loot.Dialog.closeProgress();
     })
     .catch(loot.handlePromiseError);
 }
-function onSortPlugins() {
+export function onSortPlugins() {
   if (loot.filters.deactivateConflictsFilter()) {
     /* Conflicts filter was undone, update the displayed cards. */
     loot.filters.apply(loot.game.plugins);
@@ -212,7 +224,7 @@ function onSortPlugins() {
     })
     .catch(loot.handlePromiseError);
 }
-function onApplySort() {
+export function onApplySort() {
   const loadOrder = loot.game.getPluginNames();
   return loot
     .query('applySort', loadOrder)
@@ -223,7 +235,7 @@ function onApplySort() {
     })
     .catch(loot.handlePromiseError);
 }
-function onCancelSort() {
+export function onCancelSort() {
   return loot
     .query('cancelSort')
     .then(JSON.parse)
@@ -237,7 +249,7 @@ function onCancelSort() {
     .catch(loot.handlePromiseError);
 }
 
-function onRedatePlugins(evt) {
+export function onRedatePlugins(evt) {
   loot.Dialog.askQuestion(
     loot.l10n.translate('Redate Plugins?'),
     loot.l10n.translate(
@@ -258,7 +270,7 @@ function onRedatePlugins(evt) {
     }
   );
 }
-function onClearAllMetadata() {
+export function onClearAllMetadata() {
   loot.Dialog.askQuestion(
     '',
     loot.l10n.translate(
@@ -287,7 +299,7 @@ function onClearAllMetadata() {
     }
   );
 }
-function onCopyContent() {
+export function onCopyContent() {
   let content = {
     messages: [],
     plugins: []
@@ -320,7 +332,7 @@ function onCopyContent() {
     })
     .catch(loot.handlePromiseError);
 }
-function onCopyLoadOrder() {
+export function onCopyLoadOrder() {
   let plugins = [];
 
   if (loot.game && loot.game.plugins) {
@@ -336,7 +348,7 @@ function onCopyLoadOrder() {
     })
     .catch(loot.handlePromiseError);
 }
-function onContentRefresh() {
+export function onContentRefresh() {
   /* Send a query for updated load order and plugin header info. */
   loot
     .query('getGameData')
@@ -360,13 +372,13 @@ function onContentRefresh() {
     .catch(loot.handlePromiseError);
 }
 
-function onOpenReadme() {
+export function onOpenReadme() {
   loot.query('openReadme').catch(loot.handlePromiseError);
 }
-function onOpenLogLocation() {
+export function onOpenLogLocation() {
   loot.query('openLogLocation').catch(loot.handlePromiseError);
 }
-function handleUnappliedChangesClose(change) {
+export function handleUnappliedChangesClose(change) {
   loot.Dialog.askQuestion(
     '',
     loot.l10n.translateFormatted(
@@ -388,7 +400,7 @@ function handleUnappliedChangesClose(change) {
     }
   );
 }
-function onQuit() {
+export function onQuit() {
   if (loot.state.isInSortingState()) {
     handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
   } else if (loot.state.isInEditingState()) {
@@ -397,12 +409,12 @@ function onQuit() {
     window.close();
   }
 }
-function onApplySettings(evt) {
+export function onApplySettings(evt) {
   if (!document.getElementById('gameTable').validate()) {
     evt.stopPropagation();
   }
 }
-function onCloseSettingsDialog(evt) {
+export function onCloseSettingsDialog(evt) {
   if (evt.target.id !== 'settingsDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
@@ -452,7 +464,7 @@ function onCloseSettingsDialog(evt) {
     })
     .catch(loot.handlePromiseError);
 }
-function onEditorOpen(evt) {
+export function onEditorOpen(evt) {
   /* Set the editor data. */
   document.getElementById('editor').setEditorData(evt.target.data);
 
@@ -475,7 +487,7 @@ function onEditorOpen(evt) {
 
   return loot.query('editorOpened').catch(loot.handlePromiseError);
 }
-function onEditorClose(evt) {
+export function onEditorClose(evt) {
   const plugin = loot.game.plugins.find(
     item => item.name === evt.target.querySelector('h1').textContent
   );
@@ -520,7 +532,7 @@ function onEditorClose(evt) {
     })
     .catch(loot.handlePromiseError);
 }
-function onCopyMetadata(evt) {
+export function onCopyMetadata(evt) {
   loot
     .query('copyMetadata', evt.target.getName())
     .then(() => {
@@ -533,7 +545,7 @@ function onCopyMetadata(evt) {
     })
     .catch(loot.handlePromiseError);
 }
-function onClearMetadata(evt) {
+export function onClearMetadata(evt) {
   loot.Dialog.askQuestion(
     '',
     loot.l10n.translateFormatted(
@@ -576,7 +588,7 @@ function onClearMetadata(evt) {
   );
 }
 
-function onSearchBegin(evt) {
+export function onSearchBegin(evt) {
   loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
@@ -598,13 +610,13 @@ function onSearchBegin(evt) {
 
   evt.target.results = results;
 }
-function onSearchEnd(evt) {
+export function onSearchEnd(evt) {
   loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
   document.getElementById('mainToolbar').classList.remove('search');
 }
-function onFolderChange(evt) {
+export function onFolderChange(evt) {
   loot.DOM.updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let gameSettings;

@@ -21,6 +21,35 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
+import {
+  onSidebarFilterToggle,
+  onContentFilter,
+  onConflictsFilter,
+  onChangeGame,
+  updateMasterlist,
+  onUpdateMasterlist,
+  onSortPlugins,
+  onApplySort,
+  onCancelSort,
+  onRedatePlugins,
+  onClearAllMetadata,
+  onCopyContent,
+  onCopyLoadOrder,
+  onContentRefresh,
+  onOpenReadme,
+  onOpenLogLocation,
+  handleUnappliedChangesClose,
+  onQuit,
+  onApplySettings,
+  onCloseSettingsDialog,
+  onEditorOpen,
+  onEditorClose,
+  onCopyMetadata,
+  onClearMetadata,
+  onSearchBegin,
+  onSearchEnd,
+  onFolderChange
+} from './events.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
