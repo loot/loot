@@ -75,6 +75,7 @@ import {
 import {handlePromiseError} from './handlePromiseError.js';
 import {Plugin} from './plugin.js';
 import {query} from './query.js';
+import {State} from './state.js';
 import {translateStaticText} from './translateStaticText.js';
 import {Translator} from './translator.js';
 import {updateExists} from './updateExists.js';
@@ -368,6 +369,7 @@ export function initialise(loot) {
   loot.l10n = new Translator();
   loot.game = new Game({}, loot.l10n);
   loot.filters = new Filters(loot.l10n);
+  loot.state = new State();
 
   Promise.all([
     setLanguages(),
