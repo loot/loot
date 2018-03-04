@@ -36,6 +36,7 @@ build:
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
+  - npm run lint
   - npm test
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
   - .\loot_gui_tests.exe --gtest_output=xml:loot_gui_tests.xml
