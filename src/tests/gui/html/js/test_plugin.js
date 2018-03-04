@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import Plugin from '../../../../gui/html/js/plugin.js';
 import Filters from '../../../../gui/html/js/filters.js';
 
@@ -27,8 +26,6 @@ jest.mock('../../../../gui/html/js/filters.js', () =>
 
 /* eslint-disable no-unused-expressions */
 describe('Plugin', () => {
-  window._ = _;
-
   describe('#Plugin()', () => {
     test('should throw if nothing is passed', () => {
       expect(() => {

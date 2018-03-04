@@ -1,4 +1,4 @@
-// Depends on the github-api library, which isn't available as an ES2015 module.
+import GitHub from 'github-api/dist/GitHub.bundle.min';
 
 const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
 

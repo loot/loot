@@ -47,6 +47,15 @@ function normalisePaths(html) {
     .replace(/src="(\.\.\/){3}/g, 'src="');
 }
 
+function resolveBowerPaths(sourceFile, destinationFile) {
+  const html = fs
+    .readFileSync(sourceFile, { encoding: 'utf8' })
+    .replace(/bower_components/g, '../../../bower_components');
+
+  fs.mkdirsSync(path.dirname(destinationFile));
+  fs.writeFileSync(destinationFile, html);
+}
+
 function copyNormalisedFile(sourceFile, destinationFile) {
   const html = fs.readFileSync(sourceFile, { encoding: 'utf8' });
   fs.mkdirsSync(path.dirname(destinationFile));
@@ -54,7 +63,7 @@ function copyNormalisedFile(sourceFile, destinationFile) {
 }
 
 function copyFiles(pathsPromise, destinationRootPath) {
-  pathsPromise
+  return pathsPromise
     .then(paths => {
       paths.forEach(filePath => {
         const destinationPath = `${destinationRootPath}/${getRelativePath(
@@ -70,6 +79,8 @@ function copyFiles(pathsPromise, destinationRootPath) {
     .catch(handleError);
 }
 
+const index = 'src/gui/html/index.html';
+const tempIndex = 'src/gui/html/index.bower.html';
 const url =
   'https://github.com/google/roboto/releases/download/v2.135/roboto-hinted.zip';
 const fontsPath = 'build/fonts';
@@ -82,30 +93,20 @@ Promise.resolve()
 
     return '';
   })
+  .then(() => resolveBowerPaths(index, tempIndex))
   .then(() => {
+    const promises = [];
     helpers.getAppReleasePaths('.').forEach(releasePath => {
-      const index = 'src/gui/html/index.html';
       const destinationRootPath = `${releasePath.path}/resources/ui`;
 
-      const urls = getFeatureURLs(index, [
-        'html-import',
-        'html-script',
-        'js-import'
-      ]);
+      const urls = getFeatureURLs(tempIndex, ['html-import', 'html-script']);
       const htmlImportUrls = urls.then(features => features['html-import']);
       const scriptUrls = urls.then(features => features['html-script']);
-      const moduleUrls = urls.then(features => features['js-import']);
 
-      copyFiles(htmlImportUrls, destinationRootPath);
-      copyFiles(scriptUrls, destinationRootPath);
-      copyFiles(moduleUrls, destinationRootPath);
-      fs.copySync('src/gui/html/css', `${destinationRootPath}/css`);
-      fs.copySync(
-        'resources/ui/css/dark-theme.css',
-        `${destinationRootPath}/css/dark-theme.css`
-      );
-      fs.copySync(fontsPath, `${destinationRootPath}/fonts`);
-      copyNormalisedFile(index, `${destinationRootPath}/index.html`);
+      promises.push(copyFiles(htmlImportUrls, destinationRootPath));
+      promises.push(copyFiles(scriptUrls, destinationRootPath));
     });
+    return Promise.all(promises);
   })
+  .then(() => fs.unlinkSync(tempIndex))
   .catch(handleError);

@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import Game from '../../../../gui/html/js/game.js';
 import Plugin from '../../../../gui/html/js/plugin.js';
 
@@ -17,8 +16,6 @@ jest.mock('../../../../gui/html/js/plugin.js', () =>
 );
 
 describe('Game', () => {
-  window._ = _;
-
   const l10n = {
     translate: jest.fn().mockImplementation(text => text)
   };

@@ -344,12 +344,6 @@ function setGameData(appData) {
 export default function initialise(loot) {
   showProgress('Initialising user interface...');
 
-  /* Make sure settings are what I want. */
-  window.marked.setOptions({
-    gfm: true,
-    tables: true,
-    sanitize: true
-  });
   setupEventHandlers();
 
   loot.version = {};

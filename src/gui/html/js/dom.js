@@ -1,4 +1,4 @@
-// Depends on the marked libraries, which isn't available as an ES2015 module.
+import marked from 'marked/marked.min';
 
 function getElementInTableRowTemplate(rowTemplateId, elementClass) {
   const select = document.querySelector(

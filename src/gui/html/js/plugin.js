@@ -21,7 +21,8 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
-// Depends on the lodash library, which isn't available as an ES2015 module.
+
+import * as _ from 'lodash/core.min';
 
 /* Messages, tags, CRCs and version strings can all be hidden by filters.
     Use getters with no setters for member variables as data should not be

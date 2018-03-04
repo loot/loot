@@ -376,7 +376,7 @@ add_custom_command(TARGET loot_gui_tests POST_BUILD
 
 # Build the UI HTML.
 add_custom_command(TARGET LOOT POST_BUILD
-    COMMAND "node" "${CMAKE_SOURCE_DIR}/scripts/build_ui.js"
+    COMMAND npm run build
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # Copy testing metadata

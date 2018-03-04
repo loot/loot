@@ -1,5 +1,5 @@
-// Depends on the jed and jed-gettext-parser libraries, which aren't available
-// as ES2015 modules.
+import Jed from 'jed';
+import jedGettextParser from 'jed-gettext-parser';
 
 export default class Translator {
   /* Returns a Promise */

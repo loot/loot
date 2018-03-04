@@ -56,3 +56,4 @@ node_modules
 *.pb.h
 *.pb.cc
 coverage/
+index.bower.html

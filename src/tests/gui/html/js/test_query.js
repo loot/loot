@@ -1,10 +1,7 @@
-import * as _ from 'lodash';
 import query from '../../../../gui/html/js/query.js';
 
 describe('query()', () => {
   beforeAll(() => {
-    window._ = _;
-
     window.cefQuery = jest
       .fn()
       .mockImplementation(({ request, onSuccess, onFailure }) => {

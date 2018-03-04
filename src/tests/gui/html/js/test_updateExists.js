@@ -1,69 +1,70 @@
+import GitHub from 'github-api/dist/GitHub.bundle.min';
 import updateExists from '../../../../gui/html/js/updateExists.js';
 
-describe('updateExists()', () => {
-  beforeAll(() => {
-    window.GitHub = jest.fn().mockImplementation(() => ({
-      getRepo: jest.fn().mockImplementation(() => ({
-        getRelease: jest.fn().mockReturnValue(
-          Promise.resolve({
-            data: {
-              tag_name: '0.9.2'
-            }
-          })
-        ),
-        listTags: jest.fn().mockReturnValue(
-          Promise.resolve({
-            data: [
-              {
-                name: '0.9.2',
-                commit: {
-                  sha: '6b58f92a5d41f5d7f149a1263dac78687a065ff5'
-                }
-              },
-              {
-                name: '0.9.1',
-                commit: {
-                  sha: 'dc24e10a4774903ede4e94165e7d6fa806466e4a'
-                }
-              },
-              {
-                name: '0.9.0',
-                commit: {
-                  sha: '44a0d8505d5402dd24cf0fda9540da9557866c80'
-                }
-              }
-            ]
-          })
-        ),
-        getCommit: jest.fn().mockReturnValue(
-          Promise.resolve({
-            data: {
-              committer: {
-                date: '2011-04-14T16:00:49Z'
-              }
-            }
-          })
-        ),
-        getSingleCommit: jest.fn().mockImplementation(ref =>
-          Promise.resolve({
-            data: {
+jest.mock('github-api/dist/GitHub.bundle.min', () =>
+  jest.fn().mockImplementation(() => ({
+    getRepo: jest.fn().mockImplementation(() => ({
+      getRelease: jest.fn().mockReturnValue(
+        Promise.resolve({
+          data: {
+            tag_name: '0.9.2'
+          }
+        })
+      ),
+      listTags: jest.fn().mockReturnValue(
+        Promise.resolve({
+          data: [
+            {
+              name: '0.9.2',
               commit: {
-                committer: {
-                  date:
-                    ref === 'deadbeef'
-                      ? '2011-04-14T16:00:00Z'
-                      : '2011-04-14T16:00:49Z'
-                }
+                sha: '6b58f92a5d41f5d7f149a1263dac78687a065ff5'
+              }
+            },
+            {
+              name: '0.9.1',
+              commit: {
+                sha: 'dc24e10a4774903ede4e94165e7d6fa806466e4a'
+              }
+            },
+            {
+              name: '0.9.0',
+              commit: {
+                sha: '44a0d8505d5402dd24cf0fda9540da9557866c80'
               }
             }
-          })
-        )
-      }))
-    }));
-  });
+          ]
+        })
+      ),
+      getCommit: jest.fn().mockReturnValue(
+        Promise.resolve({
+          data: {
+            committer: {
+              date: '2011-04-14T16:00:49Z'
+            }
+          }
+        })
+      ),
+      getSingleCommit: jest.fn().mockImplementation(ref =>
+        Promise.resolve({
+          data: {
+            commit: {
+              committer: {
+                date:
+                  ref === 'deadbeef'
+                    ? '2011-04-14T16:00:00Z'
+                    : '2011-04-14T16:00:49Z'
+              }
+            }
+          }
+        })
+      )
+    }))
+  }))
+);
 
+describe('updateExists()', () => {
   beforeEach(() => {
-    window.GitHub.mockClear();
+    GitHub.mockClear();
   });
 
   test('should reject if no arguments are passed', () =>

@@ -3,8 +3,9 @@
 // import {PaperMaterial} from 'paper-material/paper-material.js">
 // <link rel="import" href="elements/loot-custom-icons.html">
 // <link rel="import" href="elements/loot-menu.html">
-// Also depends on the marked library.
 // Also depends on the loot.l10n and loot.filters globals.
+
+import marked from 'marked/marked.min';
 
 export default class LootPluginCard extends Polymer.Element {
   static get is() {
@@ -221,7 +222,7 @@ export default class LootPluginCard extends Polymer.Element {
         const messageListItem = document.createElement('li');
         messageListItem.className = message.type;
         // Use the Marked library for Markdown formatting support.
-        messageListItem.innerHTML = window.marked(message.text);
+        messageListItem.innerHTML = marked(message.text);
         messageList.appendChild(messageListItem);
       });
       messageList.hidden = messages.length === 0;

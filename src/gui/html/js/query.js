@@ -1,4 +1,5 @@
 // Depends on the lodash library, which isn't available as an ES2015 module.
+import * as _ from 'lodash/core.min';
 
 export default function query(requestName, payload) {
   if (!requestName) {

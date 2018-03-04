@@ -1,4 +1,4 @@
-// Depends on the lodash library, which isn't available as an ES2015 module.
+import marked from 'marked/marked.min';
 
 import {
   initialiseAutocompleteBashTags,
