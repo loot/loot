@@ -7,6 +7,7 @@ configuration: Release
 cache:
   - node_modules
   - bower_components
+  - "%LOCALAPPDATA%\\Yarn"
 
 environment:
   github_auth_token:
@@ -18,7 +19,7 @@ install:
   - ps: Install-Product node LTS
   - choco install -y imagemagick.tool
   - python -m pip install sphinx sphinx_rtd_theme
-  - npm install
+  - yarn install
   - .\node_modules\.bin\bower install
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.2.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
 
@@ -36,8 +37,8 @@ build:
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - npm run lint
-  - npm test
+  - yarn lint
+  - yarn test
   - cd %APPVEYOR_BUILD_FOLDER%\build\%CONFIGURATION%
   - .\loot_gui_tests.exe --gtest_output=xml:loot_gui_tests.xml
 

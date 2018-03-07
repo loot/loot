@@ -11,7 +11,7 @@ function Get-BranchName() {
 }
 
 if ($env:APPVEYOR_REPO_TAG -eq 'true') {
-  npm install -g lomad
+  yarn global add lomad
   $branchName = Get-BranchName
 
   Write-Output "`nUpdating masterlists' default branch to $branchName..."

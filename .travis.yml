@@ -30,17 +30,18 @@ cache:
     - $TRAVIS_BUILD_DIR/bower_components
     - $HOME/boost_1_65_1/boost
     - $HOME/boost_1_65_1/stage/lib
+  yarn: true
+
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+  - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
   # Use GCC 5.
   - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
   - export CXXFLAGS="-fPIC" CFLAGS="-fPIC"
-  # Install the latest stable Node.js. The default Node.js version is too old
-  # for some of the JavaScript syntax used.
-  - npm install -g nvm
-  - nvm install node
   # Install Node.js dependencies
-  - npm install
+  - yarn install
   # Add local binary path to PATH
   - export PATH="./node_modules/.bin:$PATH"
   # Install runtime dependencies using Bower
