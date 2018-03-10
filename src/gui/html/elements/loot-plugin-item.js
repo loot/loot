@@ -149,7 +149,7 @@ export default class LootPluginItem extends Polymer.Element {
       </style>
       <paper-icon-item>
         <paper-ripple></paper-ripple>
-        <div id="icon" slot="item-icon" class$="[[computeLoadOrderIndexClass(isLightMaster)]]" hidden$="[[!computeLoadOrderIndexText(loadOrderIndex)]]">[[computeLoadOrderIndexText(loadOrderIndex)]]</div>
+        <div id="icon" slot="item-icon" class$="[[computeLoadOrderIndexClass(isLightMaster)]]" hidden$="[[!computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]">[[computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]</div>
         <paper-item-body two-line>
           <div id="primary"><slot></slot></div>
           <div id="secondary" secondary>
@@ -174,6 +174,11 @@ export default class LootPluginItem extends Polymer.Element {
       </paper-icon-item>`;
   }
 
+  static _asHexString(number, numberOfDigits) {
+    const text = number.toString(16);
+    return '0'.repeat(numberOfDigits - text.length) + text;
+  }
+
   /* eslint-disable class-methods-use-this */
   _localise(text) {
     return loot.l10n.translate(text);
@@ -192,16 +197,10 @@ export default class LootPluginItem extends Polymer.Element {
     }
     return '';
   }
-  /* eslint-enable class-methods-use-this */
 
-  static _asHexString(number, numberOfDigits) {
-    const text = number.toString(16);
-    return '0'.repeat(numberOfDigits - text.length) + text;
-  }
-
-  computeLoadOrderIndexText(loadOrderIndex) {
+  computeLoadOrderIndexText(loadOrderIndex, isLightMaster) {
     if (loadOrderIndex > -1) {
-      if (this.isLightMaster) {
+      if (isLightMaster) {
         return `FE\n${LootPluginItem._asHexString(loadOrderIndex, 3)}`;
       }
 
@@ -211,17 +210,16 @@ export default class LootPluginItem extends Polymer.Element {
     return '';
   }
 
-  getName() {
-    return this.textContent.trim();
-  }
-
-  /* eslint-disable class-methods-use-this */
   onDragStart(evt) {
     evt.dataTransfer.effectAllowed = 'copy';
     evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
     evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
   }
   /* eslint-enable class-methods-use-this */
+
+  getName() {
+    return this.textContent.trim();
+  }
 
   updateContent(pluginData) {
     this.loadOrderIndex = pluginData.loadOrderIndex;
@@ -231,7 +229,10 @@ export default class LootPluginItem extends Polymer.Element {
     this.hasUserEdits = pluginData.hasUserEdits;
     this.isLightMaster = pluginData.isLightMaster;
 
-    const indexText = this.computeLoadOrderIndexText(this.loadOrderIndex);
+    const indexText = this.computeLoadOrderIndexText(
+      this.loadOrderIndex,
+      this.isLightMaster
+    );
     this.$.icon.className = this.computeLoadOrderIndexClass(this.isLightMaster);
     this.$.icon.hidden = !indexText;
     this.$.icon.textContent = indexText;
