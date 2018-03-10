@@ -81,8 +81,6 @@ import Translator from './translator.js';
 import updateExists from './updateExists.js';
 
 function setupEventHandlers() {
-  /* eslint-disable no-undef */
-
   /* Set up handlers for filters. */
   document
     .getElementById('hideVersionNumbers')
@@ -198,8 +196,6 @@ function setupEventHandlers() {
   document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
   document.body.addEventListener('loot-clear-metadata', onClearMetadata);
 
-  /* eslint-enable no-undef */
-
   document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
   document
     .getElementById('cardsNav')
@@ -232,7 +228,7 @@ function setupEventHandlers() {
   );
 
   /* Set up event handlers for game member variable changes. */
-  document.addEventListener('loot-game-folder-change', onFolderChange); // eslint-disable-line no-undef
+  document.addEventListener('loot-game-folder-change', onFolderChange);
   document.addEventListener(
     'loot-game-masterlist-change',
     Game.onMasterlistChange

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   askQuestion,
   closeProgress,
@@ -256,7 +255,7 @@ export function onCancelSort() {
     .catch(handlePromiseError);
 }
 
-export function onRedatePlugins(evt) {
+export function onRedatePlugins(/* evt */) {
   askQuestion(
     loot.l10n.translate('Redate Plugins?'),
     loot.l10n.translate(
@@ -607,7 +606,7 @@ export function onSearchBegin(evt) {
 
   evt.target.results = results;
 }
-export function onSearchEnd(evt) {
+export function onSearchEnd(/* evt */) {
   loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
