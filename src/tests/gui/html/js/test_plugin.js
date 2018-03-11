@@ -171,7 +171,22 @@ describe('Plugin', () => {
       expect(plugin.userlist).toEqual({});
     });
 
-    test('should set priority to 0 if no key was passed', () => {
+    test('should set group to default if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
+
+      expect(plugin.group).toBe('default');
+    });
+
+    test("should set group to passed key's value", () => {
+      const plugin = new Plugin({
+        name: 'test',
+        group: 'group1'
+      });
+
+      expect(plugin.group).toBe('group1');
+    });
+
+    it('should set priority to 0 if no key was passed', () => {
       const plugin = new Plugin({ name: 'test' });
 
       expect(plugin.priority).toBe(0);
@@ -873,6 +888,7 @@ describe('Plugin', () => {
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.group).toBe(plugin.group);
         expect(evt.detail.priority).toBe(plugin.priority);
         expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
         expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
@@ -883,6 +899,72 @@ describe('Plugin', () => {
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
       plugin.userlist = { priority: 1 };
+    });
+  });
+
+  describe('#group', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener(
+        'loot-plugin-item-content-change',
+        handleEvent
+      );
+    });
+
+    test('getting value should return default if it has not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
+
+      expect(plugin.group).toBe('default');
+    });
+
+    test('getting value should return the value that was set', () => {
+      const plugin = new Plugin({
+        name: 'test',
+        group: 'group1'
+      });
+
+      expect(plugin.group).toBe('group1');
+    });
+
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
+
+      plugin.group = 'group1';
+
+      expect(plugin.group).toBe('group1');
+    });
+
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.group = plugin.group;
+
+      setTimeout(done, 100);
+    });
+
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
+
+      handleEvent = evt => {
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.group).toBe(plugin.group);
+        expect(evt.detail.priority).toBe(plugin.priority);
+        expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
+        expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);
+        expect(evt.detail.hasUserEdits).toBe(plugin.hasUserEdits);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-item-content-change', handleEvent);
+
+      plugin.group = 'group1';
     });
   });
 
@@ -1059,6 +1141,7 @@ describe('Plugin', () => {
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
+        expect(evt.detail.group).toBe(plugin.group);
         expect(evt.detail.priority).toBe(plugin.priority);
         expect(evt.detail.globalPriority).toBe(plugin.globalPriority);
         expect(evt.detail.isEditorOpen).toBe(plugin.isEditorOpen);

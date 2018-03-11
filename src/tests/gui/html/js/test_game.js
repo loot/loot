@@ -318,6 +318,7 @@ describe('Game', () => {
           masterlist: {},
           userlist: {},
 
+          group: 'group1',
           priority: -100,
           globalPriority: 100,
           messages: [
@@ -348,6 +349,7 @@ describe('Game', () => {
             isEmpty: game._plugins[0].isEmpty,
             loadsArchive: game._plugins[0].loadsArchive,
 
+            group: game._plugins[0].group,
             priority: game._plugins[0].priority,
             globalPriority: game._plugins[0].globalPriority,
             messages: game._plugins[0].messages,

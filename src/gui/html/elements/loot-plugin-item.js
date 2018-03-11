@@ -20,6 +20,10 @@ export default class LootPluginItem extends Polymer.Element {
         type: Number,
         value: undefined
       },
+      group: {
+        type: String,
+        value: 'default'
+      },
       priority: {
         type: String,
         value: ''
@@ -163,6 +167,10 @@ export default class LootPluginItem extends Polymer.Element {
               <span>[[priority]]</span>
               <paper-tooltip id="localPriorityTooltip" position="right">[[_localise('Priority')]]</paper-tooltip>
             </span>
+            <span id="groupSpan" hidden$="[[computeIsGroupHidden(group)]]">
+              <span>[[group]]</span>
+              <paper-tooltip id="groupTooltip" position="right">Group</paper-tooltip>
+            </span>
           </div>
         </paper-item-body>
         <paper-tooltip for="editorIsOpen" position="left">[[_localise('Editor Is Open')]]</paper-tooltip>
@@ -189,6 +197,10 @@ export default class LootPluginItem extends Polymer.Element {
       return 'flipped';
     }
     return '';
+  }
+
+  computeIsGroupHidden(group) {
+    return group === 'default';
   }
 
   computeLoadOrderIndexClass(isLightMaster) {
@@ -223,6 +235,7 @@ export default class LootPluginItem extends Polymer.Element {
 
   updateContent(pluginData) {
     this.loadOrderIndex = pluginData.loadOrderIndex;
+    this.group = pluginData.group;
     this.priority = pluginData.priority;
     this.globalPriority = pluginData.globalPriority;
     this.isEditorOpen = pluginData.isEditorOpen;
@@ -236,6 +249,8 @@ export default class LootPluginItem extends Polymer.Element {
     this.$.icon.className = this.computeLoadOrderIndexClass(this.isLightMaster);
     this.$.icon.hidden = !indexText;
     this.$.icon.textContent = indexText;
+
+    this.$.groupSpan.hidden = this.computeIsGroupHidden(this.group);
   }
 }
 

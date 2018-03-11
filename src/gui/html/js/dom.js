@@ -47,6 +47,14 @@ function createGameTypeItem(gameType) {
   return item;
 }
 
+function createGroupItem(group) {
+  const item = document.createElement('paper-item');
+  item.setAttribute('value', group.name);
+  item.textContent = group.name;
+
+  return item;
+}
+
 function forceSelectDefaultValue(element) {
   element.setAttribute(
     'value',
@@ -157,6 +165,24 @@ export function fillGameTypesList(gameTypes) {
 
   forceSelectDefaultValue(select);
   select.setAttribute('value', select.firstElementChild.getAttribute('value'));
+}
+
+export function fillGroupsList(groups) {
+  const groupsSelect = document
+    .getElementById('editor')
+    .shadowRoot.querySelector('#group');
+
+  while (groupsSelect.firstElementChild) {
+    groupsSelect.removeChild(groupsSelect.firstElementChild);
+  }
+
+  groups.forEach(group => {
+    groupsSelect.appendChild(createGroupItem(group));
+  });
+
+  if (groups.length > 0) {
+    forceSelectDefaultValue(groupsSelect);
+  }
 }
 
 export function fillLanguagesList(languages) {

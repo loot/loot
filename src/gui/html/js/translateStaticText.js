@@ -62,6 +62,9 @@ function translatePluginEditor(l10n) {
     'enableEdits'
   ).previousElementSibling.textContent = l10n.translate('Enable Edits');
   pluginEditor.getElementById(
+    'group'
+  ).previousElementSibling.textContent = l10n.translate('Group');
+  pluginEditor.getElementById(
     'priorityValue'
   ).previousElementSibling.textContent = l10n.translate('Priority');
   pluginEditor.getElementById(
@@ -214,6 +217,7 @@ function translatePluginEditor(l10n) {
 }
 
 function translatePluginListItem(l10n, element) {
+  element.querySelector('#groupTooltip').textContent = l10n.translate('Group');
   element.querySelector('#globalPriorityTooltip').textContent = l10n.translate(
     'Global Priority'
   );

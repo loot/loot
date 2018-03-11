@@ -175,6 +175,7 @@ export default class Plugin {
     this.masterlist = obj.masterlist;
     this._userlist = obj.userlist;
 
+    this._group = obj.group || 'default';
     this._priority = obj.priority || 0;
     this._globalPriority = obj.globalPriority || 0;
     this._messages = obj.messages || [];
@@ -277,6 +278,7 @@ export default class Plugin {
       new CustomEvent('loot-plugin-item-content-change', {
         detail: {
           pluginId: this.id,
+          group: this.group,
           priority: this.priority,
           globalPriority: this.globalPriority,
           isEditorOpen: this.isEditorOpen,
@@ -419,6 +421,18 @@ export default class Plugin {
 
       this._dispatchItemContentChangeEvent();
       this._dispatchCardStylingChangeEvent();
+    }
+  }
+
+  get group() {
+    return this._group;
+  }
+
+  set group(group) {
+    if (this._group !== group) {
+      this._group = group;
+
+      this._dispatchItemContentChangeEvent();
     }
   }
 

@@ -1,6 +1,8 @@
 import marked from 'marked/marked.min';
+import mergeGroups from './group.js';
 
 import {
+  fillGroupsList,
   initialiseAutocompleteBashTags,
   initialiseAutocompleteFilenames
 } from './dom.js';
@@ -14,6 +16,18 @@ export default class Game {
     this.masterlist = obj.masterlist || {};
     this.plugins = obj.plugins || [];
     this.bashTags = obj.bashTags || [];
+
+    if (obj.groups) {
+      this.groups = mergeGroups(obj.groups.masterlist, obj.groups.userlist);
+    } else {
+      this.groups = [
+        {
+          name: 'default',
+          isUserAdded: false,
+          after: []
+        }
+      ];
+    }
 
     this.oldLoadOrder = undefined;
 
@@ -200,6 +214,7 @@ export default class Game {
         isEmpty: plugin.isEmpty,
         loadsArchive: plugin.loadsArchive,
 
+        group: plugin.group,
         priority: plugin.priority,
         globalPriority: plugin.globalPriority,
         messages: plugin.messages,
@@ -279,6 +294,8 @@ export default class Game {
 
     /* Re-initialise conflicts filter plugin list. */
     Filters.fillConflictsFilterList(this.plugins);
+
+    fillGroupsList(this.groups);
   }
 
   static onPluginsChange(evt) {

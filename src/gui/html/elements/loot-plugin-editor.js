@@ -169,6 +169,12 @@ export default class LootPluginEditor extends Polymer.Element {
             <div>Global Priority</div>
             <paper-input id="globalPriorityValue" error-message="Must be an integer between +/- 127 inclusive" type="number" max="127" min="-127" step="1" auto-validate no-label-float></paper-input>
           </div>
+          <div>
+            <div>Group</div>
+            <loot-dropdown-menu id="group" no-label-float>
+              <!-- Group <paper-item> elements go here. -->
+            </loot-dropdown-menu>
+          </div>
         </div>
         <div id="after">
           <editable-table data-template="fileRow">
@@ -342,6 +348,7 @@ export default class LootPluginEditor extends Polymer.Element {
     const metadata = {
       name: this.querySelector('h1').textContent,
       enabled: this.$.enableEdits.checked,
+      group: this.$.group.value,
       priority: parseInt(this.$.priorityValue.value, 10),
       global_priority: parseInt(this.$.globalPriorityValue.value, 10)
     };
@@ -424,6 +431,7 @@ export default class LootPluginEditor extends Polymer.Element {
     } else {
       this.$.enableEdits.checked = true;
     }
+    this.$.group.value = newData.group;
     this.$.priorityValue.value = newData.priority;
     this.$.globalPriorityValue.value = newData.globalPriority;
 
