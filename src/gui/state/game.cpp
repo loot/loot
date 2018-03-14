@@ -123,7 +123,7 @@ void Game::Init() {
   if (!lootDataPath_.empty()) {
     // Make sure that the LOOT game path exists.
     try {
-      if (!fs::exists(lootDataPath_ / FolderName()))
+      if (!fs::is_directory(lootDataPath_ / FolderName()))
         fs::create_directories(lootDataPath_ / FolderName());
     } catch (fs::filesystem_error& e) {
       throw FileAccessError(

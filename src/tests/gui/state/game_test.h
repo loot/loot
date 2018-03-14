@@ -303,7 +303,22 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
 }
 
-TEST_P(GameTest, initShouldCreateAGameFolderIfTheCreateFolderArgumentIsTrue) {
+TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootGamePathIsNotEmpty) {
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
+
+  boost::filesystem::ofstream out(lootDataPath / game.FolderName());
+  out << "";
+  out.close();
+
+  ASSERT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+  ASSERT_FALSE(boost::filesystem::is_directory(lootDataPath / game.FolderName()));
+  EXPECT_ANY_THROW(game.Init());
+}
+
+TEST_P(GameTest, initShouldThrowIfTheLootDataPathExistsAndIsNotADirectory) {
   GameSettings settings = GameSettings(GetParam())
     .SetGamePath(dataPath.parent_path())
     .SetGameLocalPath(localPath);
