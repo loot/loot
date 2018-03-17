@@ -4,7 +4,8 @@ import mergeGroups from './group.js';
 import {
   fillGroupsList,
   initialiseAutocompleteBashTags,
-  initialiseAutocompleteFilenames
+  initialiseAutocompleteFilenames,
+  initialiseGroupsEditor
 } from './dom.js';
 import Filters from './filters.js';
 import Plugin from './plugin.js';
@@ -16,18 +17,7 @@ export default class Game {
     this.masterlist = obj.masterlist || {};
     this.plugins = obj.plugins || [];
     this.bashTags = obj.bashTags || [];
-
-    if (obj.groups) {
-      this.groups = mergeGroups(obj.groups.masterlist, obj.groups.userlist);
-    } else {
-      this.groups = [
-        {
-          name: 'default',
-          isUserAdded: false,
-          after: []
-        }
-      ];
-    }
+    this.groups = obj.groups;
 
     this.oldLoadOrder = undefined;
 
@@ -198,6 +188,30 @@ export default class Game {
     this._plugins = plugins;
   }
 
+  get groups() {
+    return this._groups;
+  }
+
+  set groups(groups) {
+    if (groups) {
+      this._groups = mergeGroups(groups.masterlist, groups.userlist);
+    } else {
+      this._groups = [
+        {
+          name: 'default',
+          isUserAdded: false,
+          after: []
+        }
+      ];
+    }
+
+    document.dispatchEvent(
+      new CustomEvent('loot-game-groups-change', {
+        detail: { groups: this._groups }
+      })
+    );
+  }
+
   getContent() {
     let messages = [];
     let plugins = [];
@@ -294,8 +308,6 @@ export default class Game {
 
     /* Re-initialise conflicts filter plugin list. */
     Filters.fillConflictsFilterList(this.plugins);
-
-    fillGroupsList(this.groups);
   }
 
   static onPluginsChange(evt) {
@@ -393,5 +405,10 @@ export default class Game {
     document.getElementById('masterlistRevision').textContent =
       evt.detail.revision;
     document.getElementById('masterlistDate').textContent = evt.detail.date;
+  }
+
+  static onGroupsChange(evt) {
+    fillGroupsList(evt.detail.groups);
+    initialiseGroupsEditor(evt.detail.groups);
   }
 }

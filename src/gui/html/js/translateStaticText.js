@@ -686,6 +686,7 @@ export default function translateStaticText(l10n, version) {
   translatePluginCardInstance(l10n);
   translatePluginEditor(l10n);
   translatePluginListItemInstance(l10n);
+  document.getElementById('groupsEditor').localise(l10n);
 
   translateFileRowTemplate(l10n);
   translateMessageRowTemplate(l10n);

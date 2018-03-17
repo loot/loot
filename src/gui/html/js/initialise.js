@@ -37,6 +37,7 @@ import {
   onContentRefresh,
   onOpenReadme,
   onOpenLogLocation,
+  onSaveUserGroups,
   onQuit,
   onApplySettings,
   onCloseSettingsDialog,
@@ -50,6 +51,8 @@ import {
 } from './events.js';
 import { closeProgress, showProgress } from './dialog.js';
 import {
+  onOpenGroupsEditor,
+  onGroupsEditorOpened,
   onShowSettingsDialog,
   onShowAboutDialog,
   onSwitchSidebarTab,
@@ -125,6 +128,9 @@ function setupEventHandlers() {
     .getElementById('openLogButton')
     .addEventListener('click', onOpenLogLocation);
   document
+    .getElementById('groupsEditorButton')
+    .addEventListener('click', onOpenGroupsEditor);
+  document
     .getElementById('wipeUserlistButton')
     .addEventListener('click', onClearAllMetadata);
   document
@@ -183,6 +189,11 @@ function setupEventHandlers() {
     .addEventListener('loot-search-end', onSearchEnd);
   window.addEventListener('keyup', onFocusSearch);
 
+  /* Set up event handlers for groups editor dialog. */
+  const groupsEditor = document.getElementById('groupsEditorDialog');
+  groupsEditor.addEventListener('iron-overlay-closed', onSaveUserGroups);
+  groupsEditor.addEventListener('iron-overlay-opened', onGroupsEditorOpened);
+
   /* Set up event handlers for settings dialog. */
   const settings = document.getElementById('settingsDialog');
   settings.addEventListener('iron-overlay-closed', onCloseSettingsDialog);
@@ -238,6 +249,7 @@ function setupEventHandlers() {
     Game.ongeneralMessagesChange
   );
   document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
+  document.addEventListener('loot-game-groups-change', Game.onGroupsChange);
 }
 
 function setVersion(appData) {

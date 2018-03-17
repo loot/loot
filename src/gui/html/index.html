@@ -247,6 +247,10 @@
               <iron-icon icon="today"slot="item-icon"></iron-icon>
               Redate Plugins
             </paper-icon-item>
+            <paper-icon-item id="groupsEditorButton">
+              <iron-icon icon="group-work" slot="item-icon"></iron-icon>
+              Open Groups Editor
+            </paper-icon-item>
             <paper-icon-item id="wipeUserlistButton">
               <iron-icon icon="delete"slot="item-icon"></iron-icon>
               Clear All User Metadata
@@ -393,6 +397,18 @@
     </paper-dialog-scrollable>
     <div class="buttons">
       <paper-button dialog-confirm autofocus>OK</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-dialog id="groupsEditorDialog"
+                modal
+                entry-animation="fade-in-animation"
+                exit-animation="fade-out-animation">
+    <h2>Groups Editor</h2>
+    <loot-groups-editor id="groupsEditor"></loot-groups-editor>
+    <div class="buttons">
+      <paper-button class="cancel" dialog-dismiss>Cancel</paper-button>
+      <paper-button class="accept" dialog-confirm>Apply</paper-button>
     </div>
   </paper-dialog>
 

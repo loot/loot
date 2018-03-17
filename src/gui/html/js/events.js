@@ -5,6 +5,7 @@ import {
   showProgress
 } from './dialog.js';
 import {
+  fillGroupsList,
   initialiseVirtualLists,
   initialiseAutocompleteBashTags,
   updateSettingsDialog,
@@ -130,6 +131,7 @@ function updateMasterlist() {
         /* Update JS variables. */
         loot.game.masterlist = result.masterlist;
         loot.game.generalMessages = result.generalMessages;
+        loot.game.groups = result.groups;
 
         /* Update Bash Tag autocomplete suggestions. */
         initialiseAutocompleteBashTags(result.bashTags);
@@ -463,6 +465,32 @@ export function onCloseSettingsDialog(evt) {
     })
     .catch(handlePromiseError);
 }
+
+export function onSaveUserGroups(evt) {
+  if (evt.target.id !== 'groupsEditorDialog') {
+    /* The event can be fired by dropdowns in the settings dialog, so ignore
+       any events that don't come from the dialog itself. */
+    return;
+  }
+  const editor = document.getElementById('groupsEditor');
+  if (!evt.detail.confirmed) {
+    /* Re-apply the existing groups to the editor. */
+    editor.setGroups(loot.game.groups);
+    return;
+  }
+
+  /* Send the settings back to the C++ side. */
+  const userGroups = editor.getUserGroups();
+  query('saveUserGroups', { userGroups })
+    .then(JSON.parse)
+    .then(response => {
+      loot.game.groups = response;
+      fillGroupsList(loot.game.groups);
+      editor.setGroups(loot.game.groups);
+    })
+    .catch(handlePromiseError);
+}
+
 export function onEditorOpen(evt) {
   /* Set the editor data. */
   document.getElementById('editor').setEditorData(evt.target.data);

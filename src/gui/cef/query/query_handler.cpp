@@ -64,6 +64,7 @@
 #include "gui/cef/query/types/open_readme_query.h"
 #include "gui/cef/query/types/redate_plugins_query.h"
 #include "gui/cef/query/types/save_filter_state_query.h"
+#include "gui/cef/query/types/save_user_groups_query.h"
 #include "gui/cef/query/types/sort_plugins_query.h"
 #include "gui/cef/query/types/update_masterlist_query.h"
 
@@ -155,6 +156,8 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
     return new OpenReadmeQuery();
   else if (name == "redatePlugins")
     return new RedatePluginsQuery(lootState_);
+  else if (name == "saveUserGroups")
+    return new SaveUserGroupsQuery(lootState_, json.at("userGroups"));
   else if (name == "saveFilterState")
     return new SaveFilterStateQuery(
         lootState_, json.at("filter").at("name"), json.at("filter").at("state"));

@@ -201,6 +201,10 @@ export function fillLanguagesList(languages) {
   forceSelectDefaultValue(messageLangSelect);
 }
 
+export function initialiseGroupsEditor(groups) {
+  document.getElementById('groupsEditor').setGroups(groups);
+}
+
 export function appendGeneralMessages(messages) {
   if (!messages) {
     return;
@@ -271,6 +275,13 @@ export function onSidebarClick(evt) {
 
 export function onShowSettingsDialog() {
   document.getElementById('settingsDialog').open();
+}
+
+export function onOpenGroupsEditor() {
+  document.getElementById('groupsEditorDialog').open();
+}
+export function onGroupsEditorOpened() {
+  document.getElementById('groupsEditor').render();
 }
 
 export function onFocusSearch(evt) {

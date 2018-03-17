@@ -5,6 +5,7 @@ import { showProgress } from './dialog.js';
 
 import '../elements/editable-table.js';
 import '../elements/loot-dropdown-menu.js';
+import '../elements/loot-groups-editor.js';
 import '../elements/loot-menu.js';
 import '../elements/loot-message-dialog.js';
 import '../elements/loot-plugin-card.js';

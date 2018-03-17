@@ -23,6 +23,8 @@ export default function query(requestName, payload) {
       request.settings = payload;
     } else if (payload.metadata) {
       request.editorState = payload;
+    } else if (payload.userGroups) {
+      request.userGroups = payload.userGroups;
     }
   }
 
