@@ -33,13 +33,14 @@ const std::set<std::string> GameSettings::oldDefaultBranches({
     "master",
     "v0.7",
     "v0.8",
+    "v0.10"
 });
 
 GameSettings::GameSettings() : type_(GameType::tes4) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode),
-    repositoryBranch_("v0.10") {
+    repositoryBranch_("v0.13") {
   if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
