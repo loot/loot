@@ -4,6 +4,30 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.12.5 - 2018-03-19
+===================
+
+Fixed
+-----
+
+- LOOT now checks that its game subdirectories are actually directories, not
+  just that they exist, erroring earlier and more helpfully when there is
+  somehow a file with the same name in the LOOT data directory.
+- Windows 7 users can now update their masterlists again without having to
+  manually enable system-wide TLS 1.2 support. This was an issue after GitHub
+  disabled support for older, insecure versions of TLS encryption because
+  Microsoft didn't enable TLS 1.2 support in Windows 7 by default. Fixed via the
+  LOOT API.
+
+Changed
+-------
+
+- Migrated all non-Polymer GUI dependencies from Bower to NPM.
+- Refactored GUI JavaScript and custom elements into ES2015 modules.
+- Introduced Webpack to bundle JavaScript and CSS for the GUI.
+- Updated Polymer to v2.5.0.
+- Updated the LOOT API to v0.12.5.
+
 0.12.4 - 2018-02-22
 ===================
 
