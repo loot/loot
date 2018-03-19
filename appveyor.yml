@@ -73,9 +73,7 @@ deploy:
     tag: $(APPVEYOR_REPO_TAG_NAME)
     release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
     description: |
-      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives. Windows 7 users must also ensure that they have [enabled TLS 1.2 support](https://support.microsoft.com/en-us/help/3140245/update-to-enable-tls-1-1-and-tls-1-2-as-a-default-secure-protocols-in) to support updating the masterlists from LOOT's official repositories on GitHub.
-
-      The list of changes can be found [here](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html).
+      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html).
     auth_token:
       secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
     artifact: LOOT,installer
