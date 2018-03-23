@@ -278,3 +278,6 @@ editable-table paper-icon-button[icon=delete]:hover {
 editable-table paper-icon-button[icon=add]:hover {
     color: green;
 }
+paper-dialog-scrollable::before {
+    z-index: 1;
+}
