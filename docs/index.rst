@@ -10,7 +10,8 @@ LOOT
   app/installation
   app/usage/initialisation
   app/usage/main
-  app/usage/editor
+  app/usage/plugin_editor
+  app/usage/groups_editor
   app/usage/settings
   app/theme
   app/contributing

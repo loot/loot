@@ -4,13 +4,12 @@ Editing Plugin Metadata
 
 LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and to help it sort plugins that it can't otherwise sort correctly. Users can add to their plugins' metadata through the metadata editor panel, and plugins with user metadata are indicated with a "Has User Metadata" icon.
 
-The editor panel is accessed by clicking the "Edit Metadata" item in a plugin's menu, or by double-clicking a plugin name in the sidebar. Only one plugin's metadata can be edited at a time. While the editor panel is open, the plugin sidebar also displays any non-zero plugin priorities, to aid setting new priority values. The editor can be resized by grabbing the top of the editor's header and dragging it up or down.
+The editor panel is accessed by clicking the "Edit Metadata" item in a plugin's menu, or by double-clicking a plugin name in the sidebar. Only one plugin's metadata can be edited at a time. While the editor panel is open, the plugin sidebar also displays any non-default plugin groups, to aid setting new group memberships. The editor can be resized by grabbing the top of the editor's header and dragging it up or down.
 
 The editor's header displays the name of the plugin being edited, "Save Metadata" and "Cancel" buttons, and a row of tabs. The MAIN tab's page contains the following inputs:
 
 - The "Enable Edits" toggle must be on for LOOT to use any user-added metadata during sorting, otherwise it will be ignored.
-- The "Global Priority" input sets the plugin's global priority value, which is used to modify plugin position relative to all other plugins. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default global priority of 0.
-- The "Priority Value" input sets the plugin's local priority value, which is used to modify plugin position relative to other plugins that conflict, load archives or are empty. Plugins with higher priority values load after plugins with lower priority values. Plugins have a default local priority of 0.
+- The "Group" dropdown sets the group that the plugin belongs to, which is the "default" group by default. Plugin groups are used to concisely load groups of plugins after others. The dropdown lists all defined groups: to define new groups or edit existing groups, use the Groups Editor.
 
 The other tab pages contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist cannot. The LOAD AFTER, REQUIREMENTS and INCOMPATIBILITIES tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
 
