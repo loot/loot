@@ -87,7 +87,7 @@ export default class LootGroupsEditor extends Polymer.Element {
           <paper-input id="newGroupInput" label="Add a new group" placeholder="Group name" always-float-label></paper-input>
           <paper-icon-button id="newGroupButton" icon="add" disabled></paper-icon-button>
         </div>
-        <div id="addEdgeText">Add new ordering rules by clicking on one group and dragging a line to another.</div>
+        <div id="addEdgeText">Add new ordering rules by clicking on one group and dragging a line from the white circle that appears to another group.</div>
         <div id="removeEdgeText">Remove existing ordering rules by right-clicking the lines between groups. Lightly shaded lines are for masterlist metadata and cannot be removed.</div>
         <div id="removeNodeText">Remove existing groups by right-clicking them. Lightly shaded groups are for masterlist metadata and cannot be removed.</div>
       </div>
@@ -250,7 +250,7 @@ export default class LootGroupsEditor extends Polymer.Element {
     this.$.newGroupInput.label = l10n.translate('Add a new group');
     this.$.newGroupInput.placeholder = l10n.translate('Group name');
     this.$.addEdgeText.textContent = l10n.translate(
-      'Add new ordering rules by clicking on one group and dragging a line to another.'
+      'Add new ordering rules by clicking on one group and dragging a line from the white circle that appears to another group.'
     );
     this.$.removeEdgeText.textContent = l10n.translate(
       'Remove existing ordering rules by right-clicking the lines between groups. Lightly shaded lines are for masterlist metadata and cannot be removed.'
