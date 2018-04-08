@@ -68,6 +68,7 @@ deploy:
     package: loot
     version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
+    override: true
     artifact: LOOT
 
   - provider: GitHub
