@@ -17,17 +17,18 @@ environment:
 
 install:
   - ps: Install-Product node LTS
-  - choco install -y imagemagick.tool
   - python -m pip install sphinx sphinx_rtd_theme
   - yarn install
   - .\node_modules\.bin\bower install
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.2.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
+  - ps: (New-Object Net.WebClient).DownloadFile('https://github.com/WrinklyNinja/svg_to_ico/releases/download/0.1.0/svg_to_ico.7z', "$env:APPVEYOR_BUILD_FOLDER\svg_to_ico.7z")
+  - 7z e -y svg_to_ico.7z
+
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - ps: mkdir build
-  - set PATH=C:\ProgramData\chocolatey\lib\imagemagick.tool\tools;%PATH%;C:\Program Files\Inkscape
-  - node scripts\create_ico.js
+  - .\svg_to_ico.exe -i resources\icon.svg -o build\icon\icon.ico
   - cd build
   - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\Libraries\boost_1_63_0" -DBOOST_LIBRARYDIR="C:\Libraries\boost_1_63_0\lib32-msvc-14.0" -DMSVC_STATIC_RUNTIME=ON
 

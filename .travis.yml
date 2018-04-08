@@ -21,8 +21,6 @@ addons:
       - libxss-dev
       - libasound2-dev
       - libxtst-dev
-      # Scripting dependencies
-      - imagemagick
 
 cache:
   directories:
@@ -56,10 +54,12 @@ install:
   - wget --no-check-certificate https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz
   - tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz
   - export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH
+  - wget https://github.com/WrinklyNinja/svg_to_ico/releases/download/0.1.0/svg_to_ico.tar.xz
+  - tar -xJf svg_to_ico.tar.xz
 
 before_script:
   - mkdir build
-  - node scripts/create_ico.js
+  - ./svg_to_ico -i resources/icon.svg -o build/icon/icon.ico
   # Move into the cloned LOOT repo build path.
   - cd build
   # Link dynamically to the C++ standard library runtime.
