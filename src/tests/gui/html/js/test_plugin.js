@@ -380,7 +380,8 @@ describe('Plugin', () => {
         })
       ).toEqual({
         condition: 'foo',
-        name: '-bar'
+        name: 'bar',
+        isAddition: false
       });
     });
 
@@ -393,7 +394,8 @@ describe('Plugin', () => {
         })
       ).toEqual({
         condition: 'foo',
-        name: 'bar'
+        name: 'bar',
+        isAddition: true
       });
     });
   });
@@ -415,7 +417,8 @@ describe('Plugin', () => {
       expect(
         Plugin.tagToRowData({
           condition: 'foo',
-          name: '-bar'
+          name: 'bar',
+          isAddition: false
         })
       ).toEqual({
         condition: 'foo',
@@ -428,7 +431,8 @@ describe('Plugin', () => {
       expect(
         Plugin.tagToRowData({
           condition: 'foo',
-          name: 'bar'
+          name: 'bar',
+          isAddition: true
         })
       ).toEqual({
         condition: 'foo',
@@ -1188,11 +1192,11 @@ describe('PluginCardContent', () => {
 
     test('should return an object containing strings of comma-separated tag names if tags are set', () => {
       plugin.tags = [
-        { name: 'Relev' },
-        { name: 'Delev' },
-        { name: 'Names' },
-        { name: '-C.Climate' },
-        { name: '-Actor.ABCS' }
+        { name: 'Relev', isAddition: true },
+        { name: 'Delev', isAddition: true },
+        { name: 'Names', isAddition: true },
+        { name: 'C.Climate', isAddition: false },
+        { name: 'Actor.ABCS', isAddition: false }
       ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
@@ -1203,11 +1207,11 @@ describe('PluginCardContent', () => {
 
     test('should return an object containing empty strings if tags are set and the tags filter is enabled', () => {
       plugin.tags = [
-        { name: 'Relev' },
-        { name: 'Delev' },
-        { name: 'Names' },
-        { name: '-C.Climate' },
-        { name: '-Actor.ABCS' }
+        { name: 'Relev', isAddition: true },
+        { name: 'Delev', isAddition: true },
+        { name: 'Names', isAddition: true },
+        { name: 'C.Climate', isAddition: false },
+        { name: 'Actor.ABCS', isAddition: false }
       ];
       filters.hideBashTags = true;
 
@@ -1218,7 +1222,10 @@ describe('PluginCardContent', () => {
     });
 
     test('should output a tag in the removed string if it appears as both added and removed', () => {
-      plugin.tags = [{ name: 'Relev' }, { name: '-Relev' }];
+      plugin.tags = [
+        { name: 'Relev', isAddition: true },
+        { name: 'Relev', isAddition: false }
+      ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
         added: '',
@@ -1324,22 +1331,22 @@ describe('PluginCardContent', () => {
 
     test('should search added tags case-insensitively', () => {
       plugin.tags = [
-        { name: 'Relev' },
-        { name: 'Delev' },
-        { name: 'Names' },
-        { name: '-C.Climate' },
-        { name: '-Actor.ABCS' }
+        { name: 'Relev', isAddition: true },
+        { name: 'Delev', isAddition: true },
+        { name: 'Names', isAddition: true },
+        { name: 'C.Climate', isAddition: false },
+        { name: 'Actor.ABCS', isAddition: false }
       ];
       expect(plugin.getCardContent(filters).containsText('climate')).toBe(true);
     });
 
     test('should search removed tags case-insensitively', () => {
       plugin.tags = [
-        { name: 'Relev' },
-        { name: 'Delev' },
-        { name: 'Names' },
-        { name: '-C.Climate' },
-        { name: '-Actor.ABCS' }
+        { name: 'Relev', isAddition: true },
+        { name: 'Delev', isAddition: true },
+        { name: 'Names', isAddition: true },
+        { name: 'C.Climate', isAddition: false },
+        { name: 'Actor.ABCS', isAddition: false }
       ];
       expect(plugin.getCardContent(filters).containsText('.abc')).toBe(true);
     });

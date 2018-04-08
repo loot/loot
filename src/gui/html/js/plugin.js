@@ -100,10 +100,10 @@ class PluginCardContent {
 
     if (this._tags) {
       for (let i = 0; i < this._tags.length; i += 1) {
-        if (this._tags[i].name[0] === '-') {
-          tagsRemoved.push(this._tags[i].name.substr(1));
-        } else {
+        if (this._tags[i].isAddition) {
           tagsAdded.push(this._tags[i].name);
+        } else {
+          tagsRemoved.push(this._tags[i].name);
         }
       }
     }
@@ -223,33 +223,27 @@ export default class Plugin {
     ) {
       throw new TypeError('Row data members are undefined');
     }
-    const tag = {
-      condition: rowData.condition,
-      name: ''
+    return {
+      name: rowData.name,
+      isAddition: rowData.type === 'add',
+      condition: rowData.condition
     };
-
-    if (rowData.type === 'remove') {
-      tag.name = '-';
-    }
-    tag.name += rowData.name;
-
-    return tag;
   }
 
   static tagToRowData(tag) {
-    const rowData = {
-      condition: tag.condition
-    };
-
-    if (tag.name[0] === '-') {
-      rowData.type = 'remove';
-      rowData.name = tag.name.substr(1);
-    } else {
-      rowData.type = 'add';
-      rowData.name = tag.name;
+    if (
+      tag.condition === undefined ||
+      tag.name === undefined ||
+      tag.isAddition === undefined
+    ) {
+      throw new TypeError('Tag members are undefined');
     }
 
-    return rowData;
+    return {
+      name: tag.name,
+      type: tag.isAddition ? 'add' : 'remove',
+      condition: tag.condition
+    };
   }
 
   _dispatchCardContentChangeEvent(mayChangeCardHeight) {
