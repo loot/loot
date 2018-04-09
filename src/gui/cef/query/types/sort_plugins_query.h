@@ -52,10 +52,11 @@ public:
     std::vector<std::string> plugins = state_.getCurrentGame().SortPlugins();
 
     try {
-      if ((state_.getCurrentGame().Type() == GameType::tes5 ||
+      if (state_.getCurrentGame().Type() == GameType::tes5 ||
+        state_.getCurrentGame().Type() == GameType::tes5se ||
+        state_.getCurrentGame().Type() == GameType::tes5vr ||
         state_.getCurrentGame().Type() == GameType::fo4 ||
-        state_.getCurrentGame().Type() == GameType::fo4vr ||
-        state_.getCurrentGame().Type() == GameType::tes5se))
+        state_.getCurrentGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     }
     catch (...) {

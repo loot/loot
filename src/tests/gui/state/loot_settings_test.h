@@ -55,6 +55,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::tes4),
       GameSettings(GameType::tes5),
       GameSettings(GameType::tes5se),
+      GameSettings(GameType::tes5vr),
       GameSettings(GameType::fo3),
       GameSettings(GameType::fonv),
       GameSettings(GameType::fo4),
@@ -284,12 +285,13 @@ TEST_F(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
       GameSettings(GameType::tes4),
       GameSettings(GameType::tes5),
       GameSettings(GameType::tes5se),
+      GameSettings(GameType::tes5vr),
       GameSettings(GameType::fo3),
       GameSettings(GameType::fonv),
       GameSettings(GameType::fo4),
       GameSettings(GameType::fo4vr),
   });
-  EXPECT_EQ(8, settings_.getGameSettings().size());
+  EXPECT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
 }
 

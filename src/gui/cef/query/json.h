@@ -66,6 +66,8 @@ GameType mapGameType(const std::string& gameType) {
     return GameType::tes5;
   else if (gameType == GameSettings(GameType::tes5se).FolderName())
     return GameType::tes5se;
+  else if (gameType == GameSettings(GameType::tes5vr).FolderName())
+    return GameType::tes5vr;
   else if (gameType == GameSettings(GameType::fo3).FolderName())
     return GameType::fo3;
   else if (gameType == GameSettings(GameType::fonv).FolderName())
