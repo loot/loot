@@ -24,27 +24,15 @@ export default class Translator {
       /* Just resolve to an empty data set. */
       translationDataPromise = Promise.resolve(defaultTranslationData);
     } else {
-      translationDataPromise = new Promise((resolve, reject) => {
-        const url = `http://loot/l10n/${this.locale}/LC_MESSAGES/loot.mo`;
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
-        xhr.responseType = 'arraybuffer';
-        xhr.addEventListener(
-          'readystatechange',
-          evt => {
-            if (evt.target.readyState === 4) {
-              /* Status is 0 for local file URL loading. */
-              if (evt.target.status >= 200 && evt.target.status < 400) {
-                resolve(jedGettextParser.mo.parse(evt.target.response));
-              } else {
-                reject(new Error(evt.target.statusText));
-              }
-            }
-          },
-          false
-        );
-        xhr.send();
-      });
+      const url = `http://loot/l10n/${this.locale}/LC_MESSAGES/loot.mo`;
+      translationDataPromise = fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.arrayBuffer();
+          }
+          throw new Error(response.statusText);
+        })
+        .then(jedGettextParser.mo.parse);
     }
 
     return translationDataPromise
