@@ -361,6 +361,29 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
             messages);
 }
 
+TEST_P(
+  GameTest,
+  checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetRequirements({
+    File(missingEsp, "foo"),
+    File(blankEsp),
+    });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+    Message(MessageType::error,
+    "This plugin requires \"foo\" to be installed, but it is missing."),
+    }),
+    messages);
+}
+
 TEST_P(GameTest,
        checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
   GameSettings settings = GameSettings(GetParam())
@@ -382,6 +405,28 @@ TEST_P(GameTest,
                             "\", but both are present."),
             }),
             messages);
+}
+
+TEST_P(GameTest,
+  checkInstallValidityShouldUseDisplayNamesInIncompatibilityMessagesIfPresent) {
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetIncompatibilities({
+    File(missingEsp),
+    File(masterFile, "foo"),
+    });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+    Message(MessageType::error,
+    "This plugin is incompatible with \"foo\", but both are present."),
+    }),
+    messages);
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {

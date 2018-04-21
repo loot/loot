@@ -201,7 +201,7 @@ std::vector<Message> Game::CheckInstallValidity(
                                    (boost::format(boost::locale::translate(
                                         "This plugin requires \"%1%\" to be "
                                         "installed, but it is missing.")) %
-                                    req.GetName())
+                                    req.GetDisplayName())
                                        .str()));
       }
     }
@@ -215,7 +215,7 @@ std::vector<Message> Game::CheckInstallValidity(
                                    (boost::format(boost::locale::translate(
                                         "This plugin is incompatible with "
                                         "\"%1%\", but both are present.")) %
-                                    inc.GetName())
+                                    inc.GetDisplayName())
                                        .str()));
       }
     }
