@@ -55,13 +55,6 @@ protected:
     tags.insert(begin(fileTags), end(fileTags));
     metadata.SetTags(tags);
 
-    auto messages = metadata.GetMessages();
-    auto validityMessages =
-        state_.getCurrentGame().CheckInstallValidity(file, metadata);
-    messages.insert(
-        end(messages), begin(validityMessages), end(validityMessages));
-    metadata.SetMessages(messages);
-
     return metadata;
   }
 
@@ -96,6 +89,13 @@ protected:
 
     auto evaluatedMetadata = getNonUserMetadata(plugin, master);
     evaluatedMetadata.MergeMetadata(user);
+
+    auto messages = evaluatedMetadata.GetMessages();
+    auto validityMessages =
+      state_.getCurrentGame().CheckInstallValidity(plugin, evaluatedMetadata);
+    messages.insert(
+      end(messages), begin(validityMessages), end(validityMessages));
+    evaluatedMetadata.SetMessages(messages);
 
     auto derived = DerivedPluginMetadata(state_, plugin, evaluatedMetadata);
 
