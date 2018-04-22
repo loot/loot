@@ -203,7 +203,9 @@ export function onSortPlugins() {
 
       /* Check if sorted load order differs from current load order. */
       const loadOrderIsUnchanged = result.plugins.every(
-        (plugin, index) => plugin.name === loot.game.plugins[index].name
+        (plugin, index) =>
+          loot.game.plugins[index] &&
+          plugin.name === loot.game.plugins[index].name
       );
       if (loadOrderIsUnchanged) {
         result.plugins.forEach(plugin => {
