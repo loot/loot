@@ -26,9 +26,12 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_QUERY
 
 #include <include/wrapper/cef_message_router.h>
+#include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/state/logging.h"
+#include "gui/state/loot_paths.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class Query : public CefBaseRefCounted {
@@ -70,6 +73,19 @@ protected:
 
   void setErrorMessage(const std::string message) {
     errorMessage = message;
+  }
+
+  void setSortingErrorMessage(LootState& state) {
+    auto pluginsTxtPath = LootPaths::getLootDataPath().parent_path() /
+      state.getCurrentGame().FolderName() /
+      "plugins.txt";
+
+    errorMessage = (boost::format(boost::locale::translate(
+      "Oh no, something went wrong! This is usually because \"%1%\" "
+      "is set to be read-only. If it is, unset it and try again. If "
+      "it isn't, you can check your LOOTDebugLog.txt (you can get to "
+      "it through the main menu) for more information.")) % 
+      pluginsTxtPath.string()).str();
   }
 
 private:
