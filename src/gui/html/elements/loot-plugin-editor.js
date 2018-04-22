@@ -127,6 +127,18 @@ export default class LootPluginEditor extends Polymer.Element {
         #splitter:active {
           background: var(--divider-color);
         }
+        editable-table paper-icon-button {
+          color: var(--secondary-text-color);
+        }
+        editable-table paper-icon-button[disabled] {
+            color: var(--disabled-text-color);
+        }
+        editable-table paper-icon-button[icon=delete]:hover {
+            color: red;
+        }
+        editable-table paper-icon-button[icon=add]:hover {
+            color: green;
+        }
       </style>
       <div id="splitter"></div>
       <app-toolbar>
