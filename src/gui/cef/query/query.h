@@ -65,7 +65,7 @@ protected:
       logger->trace("Sending progress update: {}", message);
     }
     frame->ExecuteJavaScript(
-        "loot.Dialog.showProgress('" + message + "');", frame->GetURL(), 0);
+        "loot.showProgress('" + message + "');", frame->GetURL(), 0);
   }
 
   void setErrorMessage(const std::string message) {

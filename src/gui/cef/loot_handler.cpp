@@ -62,7 +62,7 @@ bool LootHandler::OnProcessMessageReceived(
 // CefDisplayHandler methods
 //--------------------------
 
-bool LootHandler::OnConsoleMessage(CefRefPtr< CefBrowser > browser, 
+bool LootHandler::OnConsoleMessage(CefRefPtr< CefBrowser > browser,
   cef_log_severity_t level,
   const CefString& message,
   const CefString& source,
@@ -119,7 +119,7 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   // Check if unapplied changes exist.
   if (lootState_.hasUnappliedChanges()) {
     browser->GetMainFrame()->ExecuteJavaScript(
-        "onQuit();", browser->GetMainFrame()->GetURL(), 0);
+        "loot.onQuit();", browser->GetMainFrame()->GetURL(), 0);
     return true;
   }
 
