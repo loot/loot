@@ -2,6 +2,8 @@
 Editing Plugin Groups
 *********************
 
+.. image:: ../../images/groups_editor.png
+
 LOOT assigns each plugin to one plugin group, with plugins belonging to the
 ``default`` group by default. Each group has a name and a list of zero or more
 other groups it loads after. In this way, it's possible to concisely load groups
