@@ -128,21 +128,21 @@ export default class EditableTable extends Polymer.Element {
   }
 
   /* eslint-disable class-methods-use-this */
-  setReadOnly(row, classMask, readOnly) {
+  setReadOnly(row, classMask = [], readOnly = true) {
     const trash = row.getElementsByClassName('delete')[0];
-    if (classMask) {
+    if (classMask.length > 0) {
       if (classMask.indexOf('delete') !== -1) {
-        trash.disabled = readOnly || true;
+        trash.disabled = readOnly;
       }
     } else {
-      trash.disabled = readOnly || true;
+      trash.disabled = readOnly;
     }
 
     const inputs = row.querySelectorAll(
       'paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu'
     );
     for (let i = 0; i < inputs.length; i += 1) {
-      if (classMask) {
+      if (classMask.length > 0) {
         for (let j = 0; j < classMask.length; j += 1) {
           if (inputs[i].classList.contains(classMask[j])) {
             inputs[i].disabled = readOnly;
