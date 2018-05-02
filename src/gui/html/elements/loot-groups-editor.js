@@ -154,6 +154,12 @@ export default class LootGroupsEditor extends Polymer.Element {
           }
         },
         {
+          selector: 'node#default',
+          style: {
+            'background-color': 'orange'
+          }
+        },
+        {
           selector: 'node[[indegree = 0]][[outdegree > 0]]',
           style: {
             'background-color': '#64b5f6'
