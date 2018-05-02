@@ -181,6 +181,9 @@ li.warn {
 .crc {
     color: #795548;
 }
+.tag.current {
+    color: silver;
+}
 .tag.add {
     color: #4CAF50;
 }

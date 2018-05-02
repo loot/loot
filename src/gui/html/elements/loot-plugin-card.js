@@ -52,8 +52,8 @@ export default class LootPluginCard extends Polymer.Element {
 
     /* Content styling. */
     ::slotted(.tag) {
-    display: block;
-    padding: 0 16px 16px;
+    display: inline-block;
+    padding: 0 0 16px 16px;
     }
     ::slotted(ul) {
     display: block;
@@ -143,6 +143,7 @@ export default class LootPluginCard extends Polymer.Element {
     </paper-menu-button>
     </app-toolbar>
     <div id="content">
+    <slot name="tag current"></slot>
     <slot name="tag add"></slot>
     <slot name="tag remove"></slot>
     <slot></slot>
@@ -199,13 +200,17 @@ export default class LootPluginCard extends Polymer.Element {
 
   _setTagsContent(tags) {
     if (tags) {
-      const tagsAdded = this.getElementsByClassName('tag add')[0];
-      tagsAdded.textContent = tags.added;
-      tagsAdded.hidden = tags.added.length === 0;
+      const currentTags = this.getElementsByClassName('tag current')[0];
+      currentTags.textContent = tags.current;
+      currentTags.hidden = tags.current.length === 0;
 
-      const tagsRemoved = this.getElementsByClassName('tag remove')[0];
-      tagsRemoved.textContent = tags.removed;
-      tagsRemoved.hidden = tags.removed.length === 0;
+      const tagsToAdd = this.getElementsByClassName('tag add')[0];
+      tagsToAdd.textContent = tags.add;
+      tagsToAdd.hidden = tags.add.length === 0;
+
+      const tagsToRemove = this.getElementsByClassName('tag remove')[0];
+      tagsToRemove.textContent = tags.remove;
+      tagsToRemove.hidden = tags.remove.length === 0;
     }
   }
 

@@ -24,6 +24,37 @@
 
 import * as _ from 'lodash/core.min';
 
+function deduplicateTags(currentTags, suggestedTags) {
+  const currentTagNames = currentTags.map(tag => tag.name);
+  const removalTagNames = suggestedTags
+    .filter(tag => !tag.isAddition)
+    .map(tag => tag.name);
+
+  /* Ignore any removal suggestions that aren't in the current list. */
+  let tagsToIgnore = currentTagNames.map(tag => tag.toLowerCase());
+
+  const filteredRemovalTagNames = removalTagNames.filter(tag =>
+    tagsToIgnore.includes(tag.toLowerCase())
+  );
+
+  /* Ignore any addition suggestions that are in the current or remove lists. */
+  tagsToIgnore = tagsToIgnore.concat(
+    removalTagNames.map(tag => tag.toLowerCase())
+  );
+
+  const additionTagNames = suggestedTags
+    .filter(
+      tag => tag.isAddition && !tagsToIgnore.includes(tag.name.toLowerCase())
+    )
+    .map(tag => tag.name);
+
+  return {
+    current: currentTagNames.join(', '),
+    add: additionTagNames.join(', '),
+    remove: filteredRemovalTagNames.join(', ')
+  };
+}
+
 /* Messages, tags, CRCs and version strings can all be hidden by filters.
     Use getters with no setters for member variables as data should not be
     written to objects of this class. */
@@ -49,9 +80,9 @@ class PluginCardContent {
     }
 
     if (!filters.hideBashTags) {
-      this._tags = plugin.tags;
+      this._tags = deduplicateTags(plugin.currentTags, plugin.suggestedTags);
     } else {
-      this._tags = [];
+      this._tags = deduplicateTags([], []);
     }
 
     this._messages = plugin.messages.filter(filters.messageFilter, filters);
@@ -95,34 +126,7 @@ class PluginCardContent {
   }
 
   get tags() {
-    const tagsAdded = [];
-    const tagsRemoved = [];
-
-    if (this._tags) {
-      for (let i = 0; i < this._tags.length; i += 1) {
-        if (this._tags[i].isAddition) {
-          tagsAdded.push(this._tags[i].name);
-        } else {
-          tagsRemoved.push(this._tags[i].name);
-        }
-      }
-    }
-    /* Now make sure that the same tag doesn't appear in both arrays.
-        Prefer the removed list. */
-    for (let i = 0; i < tagsAdded.length; i += 1) {
-      for (let j = 0; j < tagsRemoved.length; j += 1) {
-        if (tagsRemoved[j].toLowerCase() === tagsAdded[i].toLowerCase()) {
-          /* Remove tag from the tagsAdded array. */
-          tagsAdded.splice(i, 1);
-          i -= 1;
-        }
-      }
-    }
-
-    return {
-      added: tagsAdded.join(', '),
-      removed: tagsRemoved.join(', ')
-    };
+    return this._tags;
   }
 
   get messages() {
@@ -144,8 +148,9 @@ class PluginCardContent {
     }
 
     if (
-      this.tags.added.toLowerCase().indexOf(needle) !== -1 ||
-      this.tags.removed.toLowerCase().indexOf(needle) !== -1
+      this.tags.current.toLowerCase().indexOf(needle) !== -1 ||
+      this.tags.add.toLowerCase().indexOf(needle) !== -1 ||
+      this.tags.remove.toLowerCase().indexOf(needle) !== -1
     ) {
       return true;
     }
@@ -177,7 +182,8 @@ export default class Plugin {
 
     this._group = obj.group || 'default';
     this._messages = obj.messages || [];
-    this._tags = obj.tags || [];
+    this._suggestedTags = obj.suggestedTags || [];
+    this._currentTags = obj.currentTags || [];
     this._isDirty = obj.isDirty || false;
     this._loadOrderIndex = obj.loadOrderIndex;
     this.cleanedWith = obj.cleanedWith || '';
@@ -385,13 +391,25 @@ export default class Plugin {
     }
   }
 
-  get tags() {
-    return this._tags;
+  get currentTags() {
+    return this._currentTags;
   }
 
-  set tags(tags) {
-    if (!_.isEqual(this._tags, tags)) {
-      this._tags = tags;
+  set currentTags(tags) {
+    if (!_.isEqual(this._currentTags, tags)) {
+      this._currentTags = tags;
+
+      this._dispatchCardContentChangeEvent(true);
+    }
+  }
+
+  get suggestedTags() {
+    return this._suggestedTags;
+  }
+
+  set suggestedTags(tags) {
+    if (!_.isEqual(this._suggestedTags, tags)) {
+      this._suggestedTags = tags;
 
       this._dispatchCardContentChangeEvent(true);
     }

@@ -230,7 +230,8 @@ export default class Game {
 
         group: plugin.group,
         messages: plugin.messages,
-        tags: plugin.tags,
+        currentTags: plugin.currentTags,
+        suggestedTags: plugin.suggestedTags,
         isDirty: plugin.isDirty
       }));
     }

@@ -54,7 +54,8 @@ public:
       cleanedWith = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
     }
     messages = evaluatedMetadata.GetSimpleMessages(state.getLanguage());
-    tags = evaluatedMetadata.GetTags();
+    suggestedTags = evaluatedMetadata.GetTags();
+    currentTags = file->GetBashTags();
 
     language = state.getLanguage();
   }
@@ -87,7 +88,8 @@ private:
   std::string group;
   std::string cleanedWith;
   std::vector<SimpleMessage> messages;
-  std::set<Tag> tags;
+  std::set<Tag> currentTags;
+  std::set<Tag> suggestedTags;
 
   PluginMetadata masterlistMetadata;
   PluginMetadata userMetadata;

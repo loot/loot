@@ -327,7 +327,20 @@ describe('Game', () => {
               text: 'Hello world'
             }
           ],
-          tags: ['invalidStructure'],
+          currentTags: [
+            {
+              name: 'Relev',
+              isAddition: true,
+              condition: ''
+            }
+          ],
+          suggestedTags: [
+            {
+              name: 'Delev',
+              isAddition: true,
+              condition: ''
+            }
+          ],
           isDirty: true,
 
           id: '',
@@ -349,7 +362,8 @@ describe('Game', () => {
 
             group: game._plugins[0].group,
             messages: game._plugins[0].messages,
-            tags: game._plugins[0].tags,
+            currentTags: game._plugins[0].currentTags,
+            suggestedTags: game._plugins[0].suggestedTags,
             isDirty: game._plugins[0].isDirty
           }
         ]

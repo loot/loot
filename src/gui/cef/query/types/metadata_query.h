@@ -84,11 +84,8 @@ protected:
     auto userlistMetadata =
         state_.getCurrentGame().GetUserMetadata(plugin->GetName());
 
-    auto master = evaluateMasterlistMetadata(plugin->GetName());
-    auto user = evaluateUserlistMetadata(plugin->GetName());
-
-    auto evaluatedMetadata = getNonUserMetadata(plugin, master);
-    evaluatedMetadata.MergeMetadata(user);
+    auto evaluatedMetadata = evaluateMasterlistMetadata(plugin->GetName());
+    evaluatedMetadata.MergeMetadata(evaluateUserlistMetadata(plugin->GetName()));
 
     auto messages = evaluatedMetadata.GetMessages();
     auto validityMessages =

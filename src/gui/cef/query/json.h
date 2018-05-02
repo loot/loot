@@ -381,7 +381,8 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
     { "loadOrderIndex", plugin.loadOrderIndex },
     { "group", plugin.group },
     { "messages", plugin.messages },
-    { "tags", plugin.tags },
+    { "suggestedTags", plugin.suggestedTags },
+    { "currentTags", plugin.currentTags },
   };
 
   if (!plugin.cleanedWith.empty()) {

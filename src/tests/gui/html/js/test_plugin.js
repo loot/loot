@@ -207,24 +207,44 @@ describe('Plugin', () => {
       expect(plugin.messages).toEqual(messages);
     });
 
-    test('should set tags value to an empty array if no key was passed', () => {
+    test('should set currentTags value to an empty array if no key was passed', () => {
       const plugin = new Plugin({ name: 'test' });
 
-      expect(plugin.tags.length).toBe(0);
+      expect(plugin.currentTags.length).toBe(0);
     });
 
-    test("should set tags to passed key's value", () => {
-      const tags = [
+    test("should set currentTags to passed key's value", () => {
+      const currentTags = [
         {
           name: 'Delev'
         }
       ];
       const plugin = new Plugin({
         name: 'test',
-        tags
+        currentTags
       });
 
-      expect(plugin.tags).toEqual(tags);
+      expect(plugin.currentTags).toEqual(currentTags);
+    });
+
+    test('should set suggestedTags value to an empty array if no key was passed', () => {
+      const plugin = new Plugin({ name: 'test' });
+
+      expect(plugin.suggestedTags.length).toBe(0);
+    });
+
+    test("should set suggestedTags to passed key's value", () => {
+      const suggestedTags = [
+        {
+          name: 'Delev'
+        }
+      ];
+      const plugin = new Plugin({
+        name: 'test',
+        suggestedTags
+      });
+
+      expect(plugin.suggestedTags).toEqual(suggestedTags);
     });
 
     test('should set isDirty value to false if no key was passed', () => {
@@ -734,7 +754,7 @@ describe('Plugin', () => {
     });
   });
 
-  describe('#tags', () => {
+  describe('#currentTags', () => {
     let handleEvent;
 
     afterEach(() => {
@@ -747,21 +767,21 @@ describe('Plugin', () => {
     test('getting value should return an empty array if tags have not been set in the constructor', () => {
       const plugin = new Plugin({ name: 'test' });
 
-      expect(plugin.tags.length).toBe(0);
+      expect(plugin.currentTags.length).toBe(0);
     });
 
     test('getting value should return any tags that are set', () => {
-      const tags = [
+      const currentTags = [
         {
           name: 'Delev'
         }
       ];
       const plugin = new Plugin({
         name: 'test',
-        tags
+        currentTags
       });
 
-      expect(plugin.tags).toEqual(tags);
+      expect(plugin.currentTags).toEqual(currentTags);
     });
 
     test('setting value should store set value', () => {
@@ -772,9 +792,9 @@ describe('Plugin', () => {
         }
       ];
 
-      plugin.tags = tags;
+      plugin.currentTags = tags;
 
-      expect(plugin.tags).toEqual(tags);
+      expect(plugin.currentTags).toEqual(tags);
     });
 
     test('setting value to the current value should not fire an event', done => {
@@ -786,7 +806,7 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-card-content-change', handleEvent);
 
-      plugin.tags = plugin.tags;
+      plugin.currentTags = plugin.currentTags;
 
       setTimeout(done, 100);
     });
@@ -806,7 +826,83 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-card-content-change', handleEvent);
 
-      plugin.tags = tags;
+      plugin.currentTags = tags;
+    });
+  });
+
+  describe('#suggestedTags', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener(
+        'loot-plugin-card-content-change',
+        handleEvent
+      );
+    });
+
+    test('getting value should return an empty array if tags have not been set in the constructor', () => {
+      const plugin = new Plugin({ name: 'test' });
+
+      expect(plugin.suggestedTags.length).toBe(0);
+    });
+
+    test('getting value should return any tags that are set', () => {
+      const suggestedTags = [
+        {
+          name: 'Delev'
+        }
+      ];
+      const plugin = new Plugin({
+        name: 'test',
+        suggestedTags
+      });
+
+      expect(plugin.suggestedTags).toEqual(suggestedTags);
+    });
+
+    test('setting value should store set value', () => {
+      const plugin = new Plugin({ name: 'test' });
+      const tags = [
+        {
+          name: 'Delev'
+        }
+      ];
+
+      plugin.suggestedTags = tags;
+
+      expect(plugin.suggestedTags).toEqual(tags);
+    });
+
+    test('setting value to the current value should not fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
+
+      handleEvent = () => {
+        done(new Error('Should not have fired an event'));
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.suggestedTags = plugin.suggestedTags;
+
+      setTimeout(done, 100);
+    });
+
+    test('setting value not equal to the current value should fire an event', done => {
+      const plugin = new Plugin({ name: 'test' });
+      const tags = [
+        {
+          name: 'Delev'
+        }
+      ];
+
+      handleEvent = evt => {
+        expect(evt.detail.pluginId).toBe(plugin.id);
+        done();
+      };
+
+      document.addEventListener('loot-plugin-card-content-change', handleEvent);
+
+      plugin.suggestedTags = tags;
     });
   });
 
@@ -1185,13 +1281,15 @@ describe('PluginCardContent', () => {
   describe('#tags', () => {
     test('should return an object containing empty strings if no tags are set', () => {
       expect(plugin.getCardContent(filters).tags).toEqual({
-        added: '',
-        removed: ''
+        current: '',
+        add: '',
+        remove: ''
       });
     });
 
     test('should return an object containing strings of comma-separated tag names if tags are set', () => {
-      plugin.tags = [
+      plugin.currentTags = [{ name: 'C.Climate' }];
+      plugin.suggestedTags = [
         { name: 'Relev', isAddition: true },
         { name: 'Delev', isAddition: true },
         { name: 'Names', isAddition: true },
@@ -1200,13 +1298,14 @@ describe('PluginCardContent', () => {
       ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
-        added: 'Relev, Delev, Names',
-        removed: 'C.Climate, Actor.ABCS'
+        current: 'C.Climate',
+        add: 'Relev, Delev, Names',
+        remove: 'C.Climate'
       });
     });
 
     test('should return an object containing empty strings if tags are set and the tags filter is enabled', () => {
-      plugin.tags = [
+      plugin.suggestedTags = [
         { name: 'Relev', isAddition: true },
         { name: 'Delev', isAddition: true },
         { name: 'Names', isAddition: true },
@@ -1216,26 +1315,61 @@ describe('PluginCardContent', () => {
       filters.hideBashTags = true;
 
       expect(plugin.getCardContent(filters).tags).toEqual({
-        added: '',
-        removed: ''
+        current: '',
+        add: '',
+        remove: ''
       });
     });
 
-    test('should output a tag in the removed string if it appears as both added and removed', () => {
-      plugin.tags = [
+    test('should not output a tag if it appears as removed but not current', () => {
+      plugin.suggestedTags = [{ name: 'Relev', isAddition: false }];
+
+      expect(plugin.getCardContent(filters).tags).toEqual({
+        current: '',
+        add: '',
+        remove: ''
+      });
+    });
+
+    test('should not output a tag if it appears as both added and removed', () => {
+      plugin.suggestedTags = [
         { name: 'Relev', isAddition: true },
         { name: 'Relev', isAddition: false }
       ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
-        added: '',
-        removed: 'Relev'
+        current: '',
+        add: '',
+        remove: ''
+      });
+    });
+
+    test('should output a tag in the current and removed strings if it appears as both current and removed', () => {
+      plugin.currentTags = [{ name: 'Relev' }];
+      plugin.suggestedTags = [{ name: 'Relev', isAddition: false }];
+
+      expect(plugin.getCardContent(filters).tags).toEqual({
+        current: 'Relev',
+        add: '',
+        remove: 'Relev'
+      });
+    });
+
+    test('should output a tag in the current string if it appears as both current and added', () => {
+      plugin.currentTags = [{ name: 'Relev' }];
+      plugin.suggestedTags = [{ name: 'Relev', isAddition: true }];
+
+      expect(plugin.getCardContent(filters).tags).toEqual({
+        current: 'Relev',
+        add: '',
+        remove: ''
       });
     });
 
     test('setting value should throw', () => {
       expect(() => {
         plugin.getCardContent(filters).tags = {
+          current: '',
           added: 'Relev',
           removed: 'Delev'
         };
@@ -1329,8 +1463,8 @@ describe('PluginCardContent', () => {
       expect(plugin.getCardContent(filters).containsText('dead')).toBe(true);
     });
 
-    test('should search added tags case-insensitively', () => {
-      plugin.tags = [
+    test('should search current tags case-insensitively', () => {
+      plugin.currentTags = [
         { name: 'Relev', isAddition: true },
         { name: 'Delev', isAddition: true },
         { name: 'Names', isAddition: true },
@@ -1340,8 +1474,20 @@ describe('PluginCardContent', () => {
       expect(plugin.getCardContent(filters).containsText('climate')).toBe(true);
     });
 
+    test('should search added tags case-insensitively', () => {
+      plugin.suggestedTags = [
+        { name: 'Relev', isAddition: true },
+        { name: 'Delev', isAddition: true },
+        { name: 'Names', isAddition: true },
+        { name: 'C.Climate', isAddition: false },
+        { name: 'Actor.ABCS', isAddition: false }
+      ];
+      expect(plugin.getCardContent(filters).containsText('relev')).toBe(true);
+    });
+
     test('should search removed tags case-insensitively', () => {
-      plugin.tags = [
+      plugin.currentTags = [{ name: 'Actor.ABCS' }];
+      plugin.suggestedTags = [
         { name: 'Relev', isAddition: true },
         { name: 'Delev', isAddition: true },
         { name: 'Names', isAddition: true },
