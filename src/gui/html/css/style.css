@@ -49,6 +49,10 @@
   height: 100%;
 }
 
+[unresolved] {
+    visibility: hidden;
+}
+
 /* Misc */
 a {
     color: var(--dark-accent-color);

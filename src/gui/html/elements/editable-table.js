@@ -1,29 +1,18 @@
-// import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-// <link rel="import" href="../../../../bower_components/polymer/lib/utils/render-status.html">
+import { PolymerElement, html } from '@polymer/polymer';
+import { beforeNextRender } from '@polymer/polymer/lib/utils/render-status';
+import './editable-table-rows.js';
 
 function getRowTemplate(templateId) {
-  let template = document.getElementById(templateId);
-  if (!template) {
-    template = document.querySelector(
-      `link[rel="import"][href$="editable-table-rows.html"]`
-    ).import;
-  }
-  template = template.querySelector(`#${templateId}`);
-
-  if (template.tagName !== 'TEMPLATE') {
-    return template.querySelector('template');
-  }
-
-  return template;
+  return document.getElementById(templateId);
 }
 
-export default class EditableTable extends Polymer.Element {
+export default class EditableTable extends PolymerElement {
   static get is() {
     return 'editable-table';
   }
 
   static get template() {
-    return Polymer.html`
+    return html`
       <style>
       ::slotted(table) {
           background-color: inherit;
@@ -37,7 +26,7 @@ export default class EditableTable extends Polymer.Element {
   connectedCallback() {
     super.connectedCallback();
 
-    Polymer.RenderStatus.beforeNextRender(this, () => {
+    beforeNextRender(this, () => {
       /* Add "add new row" row. */
       const content = getRowTemplate('newRow').content;
       let row = document.importNode(content, true);

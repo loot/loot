@@ -6,7 +6,6 @@ configuration: Release
 
 cache:
   - node_modules
-  - bower_components
   - "%LOCALAPPDATA%\\Yarn"
 
 environment:
@@ -19,7 +18,6 @@ install:
   - ps: Install-Product node LTS
   - python -m pip install sphinx sphinx_rtd_theme
   - yarn install
-  - .\node_modules\.bin\bower install
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/2.0.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
   - ps: (New-Object Net.WebClient).DownloadFile('https://github.com/WrinklyNinja/svg_to_ico/releases/download/0.1.0/svg_to_ico.7z', "$env:APPVEYOR_BUILD_FOLDER\svg_to_ico.7z")
   - 7z e -y svg_to_ico.7z

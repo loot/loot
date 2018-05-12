@@ -14,6 +14,32 @@
   "private": true,
   "dependencies": {
     "@octokit/rest": "^15.6.2",
+    "@polymer/app-layout": "^3.0.0",
+    "@polymer/iron-flex-layout": "^3.0.0",
+    "@polymer/iron-icon": "^3.0.0",
+    "@polymer/iron-icons": "^3.0.0",
+    "@polymer/iron-iconset-svg": "^3.0.0",
+    "@polymer/iron-list": "^3.0.0",
+    "@polymer/iron-pages": "^3.0.0",
+    "@polymer/neon-animation": "^3.0.0",
+    "@polymer/paper-button": "^3.0.0",
+    "@polymer/paper-checkbox": "^3.0.0",
+    "@polymer/paper-dialog": "^3.0.0",
+    "@polymer/paper-dialog-scrollable": "^3.0.0",
+    "@polymer/paper-dropdown-menu": "^3.0.0",
+    "@polymer/paper-icon-button": "^3.0.0",
+    "@polymer/paper-input": "^3.0.0",
+    "@polymer/paper-item": "^3.0.0",
+    "@polymer/paper-listbox": "^3.0.0",
+    "@polymer/paper-material": "^3.0.0",
+    "@polymer/paper-menu-button": "^3.0.0",
+    "@polymer/paper-progress": "^3.0.0",
+    "@polymer/paper-ripple": "^3.0.0",
+    "@polymer/paper-tabs": "^3.0.0",
+    "@polymer/paper-toast": "^3.0.0",
+    "@polymer/paper-toggle-button": "^3.0.0",
+    "@polymer/paper-tooltip": "^3.0.0",
+    "@polymer/polymer": "^3.0.5",
     "cytoscape": "^3.2.11",
     "cytoscape-cose-bilkent": "^4.0.0",
     "cytoscape-edgehandles": "^3.2.3",
@@ -26,13 +52,13 @@
     "marked": "^0.3.17",
     "polymer-analyzer": "^2.7.0",
     "replace": "^0.3.0",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^22.4.1",
     "babel-preset-env": "^1.6.1",
-    "bower": "^1.7.1",
     "copy-webpack-plugin": "^4.5.0",
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
@@ -50,7 +76,7 @@
     "webpack-cli": "^2.0.10"
   },
   "scripts": {
-    "build": "node ./scripts/build_ui.js && webpack",
+    "build": "node ./scripts/get_roboto_files.js && webpack",
     "test": "jest",
     "lint": "eslint --ignore-path .gitignore ."
   },
@@ -66,13 +92,7 @@
       "jest": true
     },
     "globals": {
-      "_": false,
-      "GitHub": false,
-      "Jed": false,
-      "jedGettextParser": false,
-      "loot": false,
-      "marked": false,
-      "Polymer": false
+      "loot": false
     },
     "plugins": [
       "html",

@@ -1,18 +1,5 @@
-function getTemplate(templateId, importHtml) {
-  let template = document.getElementById(templateId);
-  if (!template) {
-    const htmlBasename = importHtml === undefined ? templateId : importHtml;
-    template = document.querySelector(
-      `link[rel="import"][href$="${htmlBasename}.html"]`
-    ).import;
-  }
-  template = template.querySelector(`#${templateId}`);
-
-  if (template.tagName !== 'TEMPLATE') {
-    template = template.querySelector('template');
-  }
-
-  return template.content;
+function getTemplate(templateId) {
+  return document.getElementById(templateId).content;
 }
 
 function translatePluginCard(l10n, element) {

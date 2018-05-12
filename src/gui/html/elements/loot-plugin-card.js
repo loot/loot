@@ -1,13 +1,13 @@
-// import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-// import {PaperIconItem} from 'paper-item/paper-icon-item.js">
-// import {PaperMaterial} from 'paper-material/paper-material.js">
-// <link rel="import" href="elements/loot-custom-icons.html">
-// <link rel="import" href="elements/loot-menu.html">
-// Also depends on the loot.l10n and loot.filters globals.
-
+import { PolymerElement, html } from '@polymer/polymer';
+import '@polymer/paper-item/paper-icon-item.js';
+import '@polymer/paper-material/paper-material.js';
 import marked from 'marked/marked.min';
 
-export default class LootPluginCard extends Polymer.Element {
+import './loot-custom-icons.js';
+import './loot-menu.js';
+// Also depends on the loot.l10n and loot.filters globals.
+
+export default class LootPluginCard extends PolymerElement {
   static get is() {
     return 'loot-plugin-card';
   }
@@ -22,7 +22,7 @@ export default class LootPluginCard extends Polymer.Element {
   }
 
   static get template() {
-    return Polymer.html`<style>
+    return html`<style>
     /* Host styling. */
     #wrapper {
     display: block;

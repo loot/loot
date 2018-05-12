@@ -1,15 +1,15 @@
-// <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
-//
-// link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
-// <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-//
-// <link rel="import" href="../../../../bower_components/paper-item/paper-item.html">
-// <link rel="import" href="../../../../bower_components/paper-item/paper-item-body.html">
-// <link rel="import" href="../../../../bower_components/paper-ripple/paper-ripple.html">
-// <link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
+import { PolymerElement, html } from '@polymer/polymer';
+
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
+
+import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-item/paper-item-body.js';
+import '@polymer/paper-ripple/paper-ripple.js';
+import '@polymer/paper-tooltip/paper-tooltip.js';
 // Also depends on the loot.l10n global.
 
-export default class LootPluginItem extends Polymer.Element {
+export default class LootPluginItem extends PolymerElement {
   static get is() {
     return 'loot-plugin-item';
   }
@@ -40,7 +40,7 @@ export default class LootPluginItem extends Polymer.Element {
   }
 
   static get template() {
-    return Polymer.html`
+    return html`
       <style>
         /* Flip effect for user metadata / editor open icons. */
         #flipper {

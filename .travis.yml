@@ -25,7 +25,6 @@ addons:
 cache:
   directories:
     - $TRAVIS_BUILD_DIR/node_modules
-    - $TRAVIS_BUILD_DIR/bower_components
     - $HOME/boost_1_67_0/boost
     - $HOME/boost_1_67_0/stage/lib
   yarn: true
@@ -42,8 +41,7 @@ install:
   - yarn install
   # Add local binary path to PATH
   - export PATH="./node_modules/.bin:$PATH"
-  # Install runtime dependencies using Bower
-  - bower install
+  # Install Boost
   - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py
   - python install_boost.py --directory ~ --boost-version 1.67.0 filesystem locale system
   # Install packages for generating documentation

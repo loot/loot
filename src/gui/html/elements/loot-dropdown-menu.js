@@ -1,8 +1,8 @@
-// import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-// import {PaperDropdownMenu} from 'paper-dropdown-menu/paper-dropdown-menu.js">
-// import {PaperListbox} from 'paper-listbox/paper-listbox.js">
+import { PolymerElement, html } from '@polymer/polymer';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+import '@polymer/paper-listbox/paper-listbox.js';
 
-export default class LootDropdownMenu extends Polymer.Element {
+export default class LootDropdownMenu extends PolymerElement {
   static get is() {
     return 'loot-dropdown-menu';
   }
@@ -33,7 +33,7 @@ export default class LootDropdownMenu extends Polymer.Element {
   }
 
   static get template() {
-    return Polymer.html`
+    return html`
       <style>
         paper-dropdown-menu {
           width: 100%;

@@ -1,12 +1,13 @@
-// import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-// import {PaperButton} from 'paper-button/paper-button.js">
-// import {PaperDialog} from 'paper-dialog/paper-dialog.js">
-// import {WebAnimations} from 'neon-animation/web-animations.js">
-// import {FadeInAnimation} from 'neon-animation/animations/fade-in-animation.js">
-// import {FadeOutAnimation} from 'neon-animation/animations/fade-out-animation.js">
+import { PolymerElement, html } from '@polymer/polymer';
+import { flush } from '@polymer/polymer/lib/utils/flush.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/neon-animation/animations/fade-in-animation.js';
+import '@polymer/neon-animation/animations/fade-out-animation.js';
+import 'web-animations-js/web-animations-next.min.js';
 // Also depends on the loot.l10n global.
 
-export default class LootMessageDialog extends Polymer.Element {
+export default class LootMessageDialog extends PolymerElement {
   static get is() {
     return 'loot-message-dialog';
   }
@@ -18,7 +19,7 @@ export default class LootMessageDialog extends Polymer.Element {
   }
 
   static get template() {
-    return Polymer.html`
+    return html`
       <style>
         paper-dialog {
           margin: 24px 40px;
@@ -73,7 +74,7 @@ export default class LootMessageDialog extends Polymer.Element {
 
     // This is necessary to prevent the dialog position changing when it is
     // displayed.
-    Polymer.dom.flush(); // eslint-disable-line new-cap, no-undef
+    flush();
 
     this.$.dialog.open();
   }

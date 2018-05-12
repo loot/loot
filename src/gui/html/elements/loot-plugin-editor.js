@@ -1,26 +1,24 @@
-/*
-<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../../../bower_components/shadycss/apply-shim.html">
+import { PolymerElement, html } from '@polymer/polymer';
+import * as Gestures from '@polymer/polymer/lib/utils/gestures.js';
 
-<link rel="import" href="../../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-<link rel="import" href="../../../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../../../bower_components/iron-pages/iron-pages.html">
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-pages/iron-pages.js';
 
-<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../../../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../../../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../../../bower_components/paper-tooltip/paper-tooltip.html">
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-tabs/paper-tabs.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@polymer/paper-tooltip/paper-tooltip.js';
 
-<link rel="import" href="editable-table.html">
-<link rel="import" href="loot-custom-icons.html">
-*/
+import './editable-table.js';
+import './loot-custom-icons.js';
 import Plugin from '../js/plugin.js';
 
-export default class LootPluginEditor extends Polymer.Element {
+export default class LootPluginEditor extends PolymerElement {
   static get is() {
     return 'loot-plugin-editor';
   }
@@ -35,7 +33,7 @@ export default class LootPluginEditor extends Polymer.Element {
   }
 
   static get template() {
-    return Polymer.html`
+    return html`
       <style>
         :host {
           position: relative;
@@ -283,11 +281,7 @@ export default class LootPluginEditor extends Polymer.Element {
       'mousedown',
       LootPluginEditor._stopPropagation
     );
-    Polymer.Gestures.addListener(
-      this.$.splitter,
-      'track',
-      this._onSplitterDrag
-    );
+    Gestures.addListener(this.$.splitter, 'track', this._onSplitterDrag);
   }
 
   disconnectedCallback() {
@@ -298,11 +292,7 @@ export default class LootPluginEditor extends Polymer.Element {
       'mousedown',
       LootPluginEditor._stopPropagation
     );
-    Polymer.Gestures.removeListener(
-      this.$.splitter,
-      'track',
-      this._onSplitterDrag
-    );
+    Gestures.removeListener(this.$.splitter, 'track', this._onSplitterDrag);
   }
 
   static _stopPropagation(evt) {
