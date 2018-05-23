@@ -1,17 +1,17 @@
-import GitHub from 'github-api/dist/GitHub.bundle.min';
+import Octokit from '@octokit/rest';
 import updateExists from '../../../../gui/html/js/updateExists.js';
 
-jest.mock('github-api/dist/GitHub.bundle.min', () =>
+jest.mock('@octokit/rest', () =>
   jest.fn().mockImplementation(() => ({
-    getRepo: jest.fn().mockImplementation(() => ({
-      getRelease: jest.fn().mockReturnValue(
+    repos: {
+      getLatestRelease: jest.fn().mockReturnValue(
         Promise.resolve({
           data: {
             tag_name: '0.9.2'
           }
         })
       ),
-      listTags: jest.fn().mockReturnValue(
+      getTags: jest.fn().mockReturnValue(
         Promise.resolve({
           data: [
             {
@@ -35,6 +35,22 @@ jest.mock('github-api/dist/GitHub.bundle.min', () =>
           ]
         })
       ),
+      getCommit: jest.fn().mockImplementation(args =>
+        Promise.resolve({
+          data: {
+            commit: {
+              committer: {
+                date:
+                  args.sha === 'deadbeef'
+                    ? '2011-04-14T16:00:00Z'
+                    : '2011-04-14T16:00:49Z'
+              }
+            }
+          }
+        })
+      )
+    },
+    gitdata: {
       getCommit: jest.fn().mockReturnValue(
         Promise.resolve({
           data: {
@@ -43,28 +59,14 @@ jest.mock('github-api/dist/GitHub.bundle.min', () =>
             }
           }
         })
-      ),
-      getSingleCommit: jest.fn().mockImplementation(ref =>
-        Promise.resolve({
-          data: {
-            commit: {
-              committer: {
-                date:
-                  ref === 'deadbeef'
-                    ? '2011-04-14T16:00:00Z'
-                    : '2011-04-14T16:00:49Z'
-              }
-            }
-          }
-        })
       )
-    }))
+    }
   }))
 );
 
 describe('updateExists()', () => {
   beforeEach(() => {
-    GitHub.mockClear();
+    Octokit.mockClear();
   });
 
   test('should reject if no arguments are passed', () =>

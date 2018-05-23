@@ -393,7 +393,20 @@ export default function initialise(loot) {
     })
     .then(() => query('getVersion'))
     .then(JSON.parse)
+    .catch(handlePromiseError)
     .then(version => updateExists(version.release, version.build))
+    .catch(() => {
+      appendGeneralMessages([
+        {
+          type: 'error',
+          content: loot.l10n.translate(
+            'Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.'
+          )
+        }
+      ]);
+
+      return false;
+    })
     .then(isUpdateAvailable => {
       if (!isUpdateAvailable) {
         return;

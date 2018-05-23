@@ -1,4 +1,4 @@
-import GitHub from 'github-api/dist/GitHub.bundle.min';
+import Octokit from '@octokit/rest';
 
 const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
 
@@ -35,10 +35,15 @@ export default function updateExists(currentVersion, currentBuild) {
     );
   }
 
-  const repo = new GitHub().getRepo('loot', 'loot');
+  const octokit = new Octokit();
 
-  return repo
-    .getRelease('latest')
+  const repo = {
+    owner: 'loot',
+    repo: 'loot'
+  };
+
+  return octokit.repos
+    .getLatestRelease(repo)
     .then(response => {
       const latestReleaseTagName = response.data.tag_name;
       const comparison = compare(currentVersion, latestReleaseTagName);
@@ -48,8 +53,8 @@ export default function updateExists(currentVersion, currentBuild) {
         return false;
       }
 
-      return repo
-        .listTags()
+      return octokit.repos
+        .getTags(repo)
         .then(tagsResponse =>
           tagsResponse.data.find(
             element => element.name === latestReleaseTagName
@@ -60,14 +65,14 @@ export default function updateExists(currentVersion, currentBuild) {
             return false;
           }
 
-          return repo
-            .getCommit(tag.commit.sha)
+          return octokit.gitdata
+            .getCommit({ ...repo, commit_sha: tag.commit.sha })
             .then(commitResponse =>
               Date.parse(commitResponse.data.committer.date)
             )
             .then(tagDate =>
-              repo
-                .getSingleCommit(currentBuild)
+              octokit.repos
+                .getCommit({ ...repo, sha: currentBuild })
                 .then(commitResponse =>
                   Date.parse(commitResponse.data.commit.committer.date)
                 )
@@ -75,11 +80,9 @@ export default function updateExists(currentVersion, currentBuild) {
             );
         });
     })
+
     .catch(error => {
-      if (!error.message) {
-        console.error(error); // eslint-disable-line no-console
-      } else {
-        throw error;
-      }
+      console.error(`Failed to check for LOOT updates, details: ${error}`); // eslint-disable-line no-console
+      throw error;
     });
 }
