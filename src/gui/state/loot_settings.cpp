@@ -150,6 +150,7 @@ LootSettings::LootSettings() :
     }),
     enableDebugLogging_(false),
     updateMasterlist_(true),
+    enableLootUpdateCheck_(true),
     game_("auto"),
     language_("en"),
     lastGame_("auto") {}
@@ -161,7 +162,8 @@ void LootSettings::load(const boost::filesystem::path& file) {
   // which don't support UTF-8 paths on Windows.
   boost::filesystem::ifstream in(file);
   if (!in.is_open())
-    throw cpptoml::parse_exception(file.string() + " could not be opened for parsing");
+    throw cpptoml::parse_exception(file.string() +
+                                   " could not be opened for parsing");
 
   auto settings = cpptoml::parser(in).parse();
 
@@ -169,6 +171,8 @@ void LootSettings::load(const boost::filesystem::path& file) {
                             .value_or(enableDebugLogging_);
   updateMasterlist_ =
       settings->get_as<bool>("updateMasterlist").value_or(updateMasterlist_);
+  enableLootUpdateCheck_ = settings->get_as<bool>("enableLootUpdateCheck")
+                               .value_or(enableLootUpdateCheck_);
   game_ = settings->get_as<std::string>("game").value_or(game_);
   language_ = settings->get_as<std::string>("language").value_or(language_);
   lastGame_ = settings->get_as<std::string>("lastGame").value_or(lastGame_);
@@ -223,6 +227,7 @@ void LootSettings::save(const boost::filesystem::path& file) {
 
   root->insert("enableDebugLogging", enableDebugLogging_);
   root->insert("updateMasterlist", updateMasterlist_);
+  root->insert("enableLootUpdateCheck", enableLootUpdateCheck_);
   root->insert("game", game_);
   root->insert("language", language_);
   root->insert("lastGame", lastGame_);
@@ -280,6 +285,12 @@ bool LootSettings::updateMasterlist() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return updateMasterlist_;
+}
+
+bool LootSettings::isLootUpdateCheckEnabled() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return enableLootUpdateCheck_;
 }
 
 bool LootSettings::isWindowPositionStored() const {
@@ -355,6 +366,12 @@ void LootSettings::updateMasterlist(bool update) {
   updateMasterlist_ = update;
 }
 
+void LootSettings::enableLootUpdateCheck(bool enable) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  enableLootUpdateCheck_ = enable;
+}
+
 void LootSettings::storeLastGame(const std::string& lastGame) {
   lock_guard<recursive_mutex> guard(mutex_);
 
@@ -403,8 +420,8 @@ void LootSettings::appendBaseGames() {
     gameSettings_.push_back(GameSettings(GameType::tes5se));
 
   if (find(begin(gameSettings_),
-    end(gameSettings_),
-    GameSettings(GameType::tes5vr)) == end(gameSettings_))
+           end(gameSettings_),
+           GameSettings(GameType::tes5vr)) == end(gameSettings_))
     gameSettings_.push_back(GameSettings(GameType::tes5vr));
 
   if (find(begin(gameSettings_),
@@ -423,8 +440,8 @@ void LootSettings::appendBaseGames() {
     gameSettings_.push_back(GameSettings(GameType::fo4));
 
   if (find(begin(gameSettings_),
-    end(gameSettings_),
-    GameSettings(GameType::fo4vr)) == end(gameSettings_))
+           end(gameSettings_),
+           GameSettings(GameType::fo4vr)) == end(gameSettings_))
     gameSettings_.push_back(GameSettings(GameType::fo4vr));
 }
 }

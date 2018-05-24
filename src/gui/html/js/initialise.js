@@ -349,6 +349,40 @@ function setGameData(appData) {
   });
 }
 
+function checkForLootUpdate() {
+  return query('getVersion')
+    .then(JSON.parse)
+    .catch(handlePromiseError)
+    .then(version => updateExists(version.release, version.build))
+    .catch(() => {
+      appendGeneralMessages([
+        {
+          type: 'error',
+          content: loot.l10n.translate(
+            'Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.'
+          )
+        }
+      ]);
+
+      return false;
+    })
+    .then(isUpdateAvailable => {
+      if (!isUpdateAvailable) {
+        return;
+      }
+
+      appendGeneralMessages([
+        {
+          type: 'warn',
+          content: loot.l10n.translateFormatted(
+            'A [new release](%s) of LOOT is available.',
+            'https://github.com/loot/loot/releases/latest'
+          )
+        }
+      ]);
+    });
+}
+
 export default function initialise(loot) {
   showProgress('Initialising user interface...');
 
@@ -391,36 +425,12 @@ export default function initialise(loot) {
         openDialog('firstRun');
       }
     })
-    .then(() => query('getVersion'))
-    .then(JSON.parse)
-    .catch(handlePromiseError)
-    .then(version => updateExists(version.release, version.build))
-    .catch(() => {
-      appendGeneralMessages([
-        {
-          type: 'error',
-          content: loot.l10n.translate(
-            'Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.'
-          )
-        }
-      ]);
-
-      return false;
-    })
-    .then(isUpdateAvailable => {
-      if (!isUpdateAvailable) {
-        return;
+    .then(() => {
+      if (loot.settings.enableLootUpdateCheck) {
+        return checkForLootUpdate();
       }
 
-      appendGeneralMessages([
-        {
-          type: 'warn',
-          content: loot.l10n.translateFormatted(
-            'A [new release](%s) of LOOT is available.',
-            'https://github.com/loot/loot/releases/latest'
-          )
-        }
-      ]);
+      return Promise.resolve();
     })
     .catch(handlePromiseError);
 }

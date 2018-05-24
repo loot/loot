@@ -566,6 +566,12 @@ function translateSettingsDialog(l10n) {
     'Update masterlist before sorting'
   );
 
+  document.getElementById(
+    'enableLootUpdateCheck'
+  ).previousElementSibling.textContent = l10n.translate(
+    'Check for LOOT updates on startup'
+  );
+
   const gameTable = document.getElementById('gameTable');
   gameTable.querySelector('th:first-child').textContent = l10n.translate(
     'Name'

@@ -154,6 +154,8 @@ export function updateSettingsDialog(settings) {
     settings.enableDebugLogging;
   document.getElementById('updateMasterlist').checked =
     settings.updateMasterlist;
+  document.getElementById('enableLootUpdateCheck').checked =
+    settings.enableLootUpdateCheck;
 }
 
 export function fillGameTypesList(gameTypes) {

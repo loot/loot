@@ -438,6 +438,8 @@ export function onCloseSettingsDialog(evt) {
     language: document.getElementById('languageSelect').value,
     lastGame: loot.settings.lastGame,
     updateMasterlist: document.getElementById('updateMasterlist').checked,
+    enableLootUpdateCheck: document.getElementById('enableLootUpdateCheck')
+      .checked,
     filters: loot.settings.filters
   };
 

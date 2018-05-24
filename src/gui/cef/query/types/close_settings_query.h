@@ -40,15 +40,19 @@ public:
   std::string executeLogic() {
     auto logger = state_.getLogger();
     if (logger) {
-      logger->trace("Settings dialog closed and changes accepted, updating "
-                    "settings object.");
+      logger->trace(
+          "Settings dialog closed and changes accepted, updating "
+          "settings object.");
     }
 
     state_.setDefaultGame(settings_.value("game", ""));
     state_.setLanguage(settings_.value("language", ""));
     state_.enableDebugLogging(settings_.value("enableDebugLogging", false));
-    state_.updateMasterlist(settings_.value("updateMasterlist", false));
-    state_.storeGameSettings(settings_.value("games", std::vector<GameSettings>()));
+    state_.updateMasterlist(settings_.value("updateMasterlist", true));
+    state_.enableLootUpdateCheck(
+        settings_.value("enableLootUpdateCheck", true));
+    state_.storeGameSettings(
+        settings_.value("games", std::vector<GameSettings>()));
 
     return GetInstalledGamesQuery::executeLogic();
   }

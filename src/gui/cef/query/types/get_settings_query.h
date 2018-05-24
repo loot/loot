@@ -44,13 +44,14 @@ public:
     }
 
     nlohmann::json json = {
-      { "game", settings_.getGame() },
-      { "lastVersion", settings_.getLastVersion() },
-      { "language", settings_.getLanguage() },
-      { "enableDebugLogging", settings_.isDebugLoggingEnabled() },
-      { "updateMasterlist", settings_.updateMasterlist() },
-      { "games", settings_.getGameSettings() },
-      { "filters", settings_.getFilters() },
+        {"game", settings_.getGame()},
+        {"lastVersion", settings_.getLastVersion()},
+        {"language", settings_.getLanguage()},
+        {"enableDebugLogging", settings_.isDebugLoggingEnabled()},
+        {"updateMasterlist", settings_.updateMasterlist()},
+        {"enableLootUpdateCheck", settings_.isLootUpdateCheckEnabled()},
+        {"games", settings_.getGameSettings()},
+        {"filters", settings_.getFilters()},
     };
 
     return json.dump();

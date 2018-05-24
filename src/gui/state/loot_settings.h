@@ -54,6 +54,7 @@ public:
 
   bool isDebugLoggingEnabled() const;
   bool updateMasterlist() const;
+  bool isLootUpdateCheckEnabled() const;
   bool isWindowPositionStored() const;
   std::string getGame() const;
   std::string getLastGame() const;
@@ -67,6 +68,7 @@ public:
   void setLanguage(const std::string& language);
   void enableDebugLogging(bool enable);
   void updateMasterlist(bool update);
+  void enableLootUpdateCheck(bool enable);
 
   void storeLastGame(const std::string& lastGame);
   void storeWindowPosition(const WindowPosition& position);
@@ -77,6 +79,7 @@ public:
 private:
   bool enableDebugLogging_;
   bool updateMasterlist_;
+  bool enableLootUpdateCheck_;
   std::string game_;
   std::string lastGame_;
   std::string lastVersion_;

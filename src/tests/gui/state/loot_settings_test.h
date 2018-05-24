@@ -36,8 +36,8 @@ namespace test {
 class LootSettingsTest : public ::testing::Test {
 protected:
   LootSettingsTest() :
-    settingsFile_("./settings_.toml"),
-    unicodeSettingsFile_("./Andr\xc3\xa9_settings_.toml") {}
+      settingsFile_("./settings_.toml"),
+      unicodeSettingsFile_("./Andr\xc3\xa9_settings_.toml") {}
 
   ~LootSettingsTest() {
     boost::filesystem::remove(settingsFile_);
@@ -69,6 +69,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isLootUpdateCheckEnabled());
   EXPECT_FALSE(settings_.isWindowPositionStored());
   EXPECT_EQ("auto", settings_.getGame());
   EXPECT_EQ("auto", settings_.getLastGame());
@@ -136,6 +137,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   boost::filesystem::ofstream out(settingsFile_);
   out << "enableDebugLogging = true" << endl
       << "updateMasterlist = true" << endl
+      << "enableLootUpdateCheck = false" << endl
       << "game = \"Oblivion\"" << endl
       << "lastGame = \"Skyrim\"" << endl
       << "language = \"fr\"" << endl
@@ -162,6 +164,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_FALSE(settings_.isLootUpdateCheckEnabled());
   EXPECT_EQ("Oblivion", settings_.getGame());
   EXPECT_EQ("Skyrim", settings_.getLastGame());
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
@@ -183,8 +186,8 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   using std::endl;
   boost::filesystem::ofstream out(unicodeSettingsFile_);
   out << "enableDebugLogging = true" << endl
-    << "updateMasterlist = true" << endl
-    << "game = \"Oblivion\"" << endl;
+      << "updateMasterlist = true" << endl
+      << "game = \"Oblivion\"" << endl;
   out.close();
 
   settings_.load(unicodeSettingsFile_);
@@ -344,6 +347,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   settings_.enableDebugLogging(true);
   settings_.updateMasterlist(true);
+  settings_.enableLootUpdateCheck(false);
   settings_.setDefaultGame(game);
   settings_.storeLastGame(lastGame);
   settings_.setLanguage(language);
@@ -361,6 +365,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
   EXPECT_TRUE(settings.updateMasterlist());
+  EXPECT_FALSE(settings.isLootUpdateCheckEnabled());
   EXPECT_EQ(game, settings.getGame());
   EXPECT_EQ(lastGame, settings.getLastGame());
   EXPECT_EQ(language, settings.getLanguage());
