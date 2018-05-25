@@ -779,7 +779,7 @@ std::vector<std::string> Game::GetInstalledPluginNames() {
       string name = it->path().filename().string();
 
       if (logger_) {
-        logger_->info("Found plugin: ", name);
+        logger_->info("Found plugin: {}", name);
       }
 
       plugins.push_back(name);
