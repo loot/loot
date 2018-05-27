@@ -667,7 +667,7 @@ function translateAboutDialog(l10n, version) {
     version.build
   );
   about.querySelector('p:nth-child(2)').textContent = l10n.translate(
-    'Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.'
+    'Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.'
   );
 
   about.querySelector('p:nth-child(4)').innerHTML = l10n.translateFormatted(
