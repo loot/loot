@@ -44,7 +44,7 @@ Fallout: New Vegas.
 
 namespace loot {
 boost::filesystem::path LootPaths::getReadmePath() {
-  return lootAppPath_ / "docs" / "index.html";
+  return lootAppPath_ / "docs";
 }
 
 boost::filesystem::path LootPaths::getResourcesPath() {

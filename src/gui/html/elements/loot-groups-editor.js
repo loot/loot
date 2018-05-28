@@ -129,7 +129,9 @@ export default class LootGroupsEditor extends Polymer.Element {
       this._onAddGroup(evt)
     );
 
-    this.$.groupsHelpText.addEventListener('click', onOpenReadme);
+    this.$.groupsHelpText.addEventListener('click', evt => {
+      onOpenReadme(evt, 'app/usage/groups_editor.html');
+    });
 
     cytoscape.use(edgehandles);
     cytoscape.use(coseBilkent);

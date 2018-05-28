@@ -377,8 +377,8 @@ export function onContentRefresh() {
     .catch(handlePromiseError);
 }
 
-export function onOpenReadme() {
-  query('openReadme').catch(handlePromiseError);
+export function onOpenReadme(evt, relativeFilePath = 'index.html') {
+  query('openReadme', { relativeFilePath }).catch(handlePromiseError);
 }
 export function onOpenLogLocation() {
   query('openLogLocation').catch(handlePromiseError);

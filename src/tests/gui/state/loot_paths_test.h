@@ -34,7 +34,7 @@ namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "docs" / "index.html",
+  EXPECT_EQ(boost::filesystem::current_path() / "docs",
             LootPaths::getReadmePath());
 }
 
@@ -70,7 +70,7 @@ TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
   LootPaths::initialise("");
 
   EXPECT_EQ(boost::filesystem::current_path(),
-            LootPaths::getReadmePath().parent_path().parent_path());
+            LootPaths::getReadmePath().parent_path());
 }
 
 TEST(

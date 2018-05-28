@@ -25,6 +25,8 @@ export default function query(requestName, payload) {
       request.editorState = payload;
     } else if (payload.userGroups) {
       request.userGroups = payload.userGroups;
+    } else {
+      Object.assign(request, payload);
     }
   }
 

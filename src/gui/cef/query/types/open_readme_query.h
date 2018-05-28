@@ -32,15 +32,34 @@ along with LOOT.  If not, see
 namespace loot {
 class OpenReadmeQuery : public Query {
 public:
+  OpenReadmeQuery(const std::string& relativeFilePath) :
+      relativeFilePath_(relativeFilePath) {}
+
   std::string executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's readme.");
     }
-    OpenInDefaultApplication(LootPaths::getReadmePath());
+
+    auto canonicalPath = boost::filesystem::canonical(
+        LootPaths::getReadmePath() / relativeFilePath_);
+    auto canonicalReadmePath =
+        boost::filesystem::canonical(LootPaths::getReadmePath());
+
+    if (!boost::starts_with(canonicalPath.string(),
+                            canonicalReadmePath.string())) {
+      throw std::runtime_error(
+          "Attempted to open readme file outside of recognised readme "
+          "directory.");
+    }
+
+    OpenInDefaultApplication(canonicalPath);
 
     return "";
   }
+
+private:
+  const std::string relativeFilePath_;
 };
 }
 
