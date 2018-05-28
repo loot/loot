@@ -1,6 +1,7 @@
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
 import coseBilkent from 'cytoscape-cose-bilkent';
+import { onOpenReadme } from '../js/events.js';
 
 function graphElements(groups) {
   const nodes = groups.map(group => ({
@@ -49,27 +50,34 @@ export default class LootGroupsEditor extends Polymer.Element {
     return Polymer.html`
       <style>
         :host > div {
-          display: flex;
           padding: 0 24px;
           height: calc(100vh - 214px);
           width: calc(100% - 48px);
-          flex-direction: column;
+          position: relative;
         }
         #cy {
-          flex: 1 0 auto;
-          height: calc(100% - 132px);
+          border: var(--divider-color) solid 1px;
+          height: 100%;
           width: 100%;
           position: relative;
         }
         .inputContainer {
-          display: flex;
-          align-items: center;
-          flex-direction: row;
+          position: absolute;
+          top: 0;
+          right: 22px;
+          height: 120px;
+          padding: 0 8px 8px 8px;
+          background: white;
+          border: var(--divider-color) solid 1px;
         }
-        #newGroupInput {
-          height: 72px;
-          position: relative;
-          top: -5px;
+        #groupsHelpText {
+          display: block;
+          margin: 16px 0 12px 0;
+        }
+        #newGroupButton {
+          padding: 0;
+          height: 24px;
+          width: 24px;
         }
         paper-icon-button {
           color: var(--secondary-text-color);
@@ -84,12 +92,11 @@ export default class LootGroupsEditor extends Polymer.Element {
       <div>
         <div id="cy"></div>
         <div class="inputContainer">
-          <paper-input id="newGroupInput" label="Add a new group" placeholder="Group name" always-float-label></paper-input>
-          <paper-icon-button id="newGroupButton" icon="add" disabled></paper-icon-button>
+          <a id="groupsHelpText" href="#">View Documentation</a>
+          <paper-input id="newGroupInput" label="Add a new group" placeholder="Group name" always-float-label>
+            <paper-icon-button id="newGroupButton" icon="add" slot="suffix" disabled></paper-icon-button>
+          </paper-input>
         </div>
-        <div id="addEdgeText">Add new ordering rules by clicking on one group and dragging a line from the white circle that appears to another group.</div>
-        <div id="removeEdgeText">Remove existing ordering rules by right-clicking the lines between groups. Lightly shaded lines are for masterlist metadata and cannot be removed.</div>
-        <div id="removeNodeText">Remove existing groups by right-clicking them. Lightly shaded groups are for masterlist metadata and cannot be removed.</div>
       </div>
     `;
   }
@@ -121,6 +128,8 @@ export default class LootGroupsEditor extends Polymer.Element {
     this.$.newGroupInput.addEventListener('keyup', evt =>
       this._onAddGroup(evt)
     );
+
+    this.$.groupsHelpText.addEventListener('click', onOpenReadme);
 
     cytoscape.use(edgehandles);
     cytoscape.use(coseBilkent);
@@ -255,16 +264,6 @@ export default class LootGroupsEditor extends Polymer.Element {
 
     this.$.newGroupInput.label = l10n.translate('Add a new group');
     this.$.newGroupInput.placeholder = l10n.translate('Group name');
-    this.$.addEdgeText.textContent = l10n.translate(
-      'Add new ordering rules by clicking on one group and dragging a line from the white circle that appears to another group.'
-    );
-    this.$.removeEdgeText.textContent = l10n.translate(
-      'Remove existing ordering rules by right-clicking the lines between groups. Lightly shaded lines are for masterlist metadata and cannot be removed.'
-    );
-    this.$.removeNodeText.textContent = l10n.translate(
-      'Remove existing groups by right-clicking them. Lightly shaded groups are for masterlist metadata and cannot be removed.'
-    );
-
     this.messages.groupAlreadyExists = l10n.translate('Group already exists!');
   }
 
@@ -279,7 +278,7 @@ export default class LootGroupsEditor extends Polymer.Element {
       input = evt.currentTarget;
       button = evt.currentTarget.nextElementSibling;
     } else {
-      input = evt.currentTarget.previousElementSibling;
+      input = evt.currentTarget.parentElement;
       button = evt.currentTarget;
     }
 
