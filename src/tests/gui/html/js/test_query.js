@@ -34,7 +34,7 @@ describe('query()', () => {
     }));
 
   test('should succeed if a request name and arguments are passed', () =>
-    query('copyContent', { messages: {} }).then(() => {
+    query('copyContent', { content: {} }).then(() => {
       expect(window.cefQuery.mock.calls.length).toBe(1);
     }));
 

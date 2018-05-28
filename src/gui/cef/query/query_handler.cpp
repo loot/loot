@@ -115,11 +115,11 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "cancelSort")
     return new CancelSortQuery(lootState_);
   else if (name == "changeGame")
-    return new ChangeGameQuery(lootState_, frame, json.at("targetName"));
+    return new ChangeGameQuery(lootState_, frame, json.at("gameFolder"));
   else if (name == "clearAllMetadata")
     return new ClearAllMetadataQuery(lootState_);
   else if (name == "clearPluginMetadata")
-    return new ClearPluginMetadataQuery(lootState_, json.at("targetName"));
+    return new ClearPluginMetadataQuery(lootState_, json.at("pluginName"));
   else if (name == "closeSettings")
     return new CloseSettingsQuery(lootState_, json.at("settings"));
   else if (name == "copyContent")
@@ -127,7 +127,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "copyLoadOrder")
     return new CopyLoadOrderQuery(lootState_, json.at("pluginNames"));
   else if (name == "copyMetadata")
-    return new CopyMetadataQuery(lootState_, json.at("targetName"));
+    return new CopyMetadataQuery(lootState_, json.at("pluginName"));
   else if (name == "discardUnappliedChanges")
     return new DiscardUnappliedChangesQuery(lootState_);
   else if (name == "editorClosed")
@@ -135,7 +135,7 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "editorOpened")
     return new EditorOpenedQuery(lootState_);
   else if (name == "getConflictingPlugins")
-    return new GetConflictingPluginsQuery(lootState_, json.at("targetName"));
+    return new GetConflictingPluginsQuery(lootState_, json.at("pluginName"));
   else if (name == "getGameTypes")
     return new GetGameTypesQuery();
   else if (name == "getGameData")

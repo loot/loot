@@ -87,7 +87,7 @@ export default class Filters {
     conflicts. */
     this.conflictingPluginNames = [targetPluginName];
 
-    return query('getConflictingPlugins', targetPluginName)
+    return query('getConflictingPlugins', { pluginName: targetPluginName })
       .then(JSON.parse)
       .then(response =>
         response.plugins.map(plugin => {

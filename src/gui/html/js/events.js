@@ -32,11 +32,11 @@ import query from './query.js';
 export function onSidebarFilterToggle(evt) {
   loot.filters[evt.target.id] = evt.target.checked;
 
-  const payload = {
+  const filter = {
     name: evt.target.id,
     state: evt.target.checked
   };
-  query('saveFilterState', payload).catch(handlePromiseError);
+  query('saveFilterState', { filter }).catch(handlePromiseError);
   loot.filters.apply(loot.game.plugins);
 }
 export function onContentFilter(evt) {
@@ -87,7 +87,7 @@ export function onChangeGame(evt) {
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
-  query('changeGame', evt.detail.item.getAttribute('value'))
+  query('changeGame', { gameFolder: evt.detail.item.getAttribute('value') })
     .then(result => {
       /* Filters should be re-applied on game change, except the conflicts
        filter. Don't need to deactivate the others beforehand. Strictly not
@@ -237,8 +237,8 @@ export function onSortPlugins() {
     .catch(handlePromiseError);
 }
 export function onApplySort() {
-  const loadOrder = loot.game.getPluginNames();
-  return query('applySort', loadOrder)
+  const pluginNames = loot.game.getPluginNames();
+  return query('applySort', { pluginNames })
     .then(() => {
       loot.game.applySort();
 
@@ -331,7 +331,7 @@ export function onCopyContent() {
     }
   }
 
-  query('copyContent', content)
+  query('copyContent', { content })
     .then(() => {
       showNotification(
         loot.l10n.translate("LOOT's content has been copied to the clipboard.")
@@ -340,13 +340,13 @@ export function onCopyContent() {
     .catch(handlePromiseError);
 }
 export function onCopyLoadOrder() {
-  let plugins = [];
+  let pluginNames = [];
 
   if (loot.game && loot.game.plugins) {
-    plugins = loot.game.getPluginNames();
+    pluginNames = loot.game.getPluginNames();
   }
 
-  query('copyLoadOrder', plugins)
+  query('copyLoadOrder', { pluginNames })
     .then(() => {
       showNotification(
         loot.l10n.translate('The load order has been copied to the clipboard.')
@@ -444,7 +444,7 @@ export function onCloseSettingsDialog(evt) {
   };
 
   /* Send the settings back to the C++ side. */
-  query('closeSettings', settings)
+  query('closeSettings', { settings })
     .then(JSON.parse)
     .then(response => {
       loot.installedGames = response.installedGames;
@@ -527,12 +527,12 @@ export function onEditorClose(evt) {
 
   /* evt.detail is true if the apply button was pressed. */
   const metadata = evt.target.readFromEditor();
-  const payload = {
+  const editorState = {
     applyEdits: evt.detail,
     metadata
   };
 
-  query('editorClosed', payload)
+  query('editorClosed', { editorState })
     .then(JSON.parse)
     .then(result => {
       plugin.update(result);
@@ -563,7 +563,7 @@ export function onEditorClose(evt) {
     .catch(handlePromiseError);
 }
 export function onCopyMetadata(evt) {
-  query('copyMetadata', evt.target.getName())
+  query('copyMetadata', { pluginName: evt.target.getName() })
     .then(() => {
       showNotification(
         loot.l10n.translateFormatted(
@@ -586,7 +586,7 @@ export function onClearMetadata(evt) {
       if (!result) {
         return;
       }
-      query('clearPluginMetadata', evt.target.getName())
+      query('clearPluginMetadata', { pluginName: evt.target.getName() })
         .then(JSON.parse)
         .then(plugin => {
           if (!result) {
