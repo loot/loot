@@ -11,7 +11,7 @@
 #include <idplang\spanish.iss>
 
 #define MyAppName "LOOT"
-#define MyAppVersion "0.12.5"
+#define MyAppVersion "0.13.0"
 #define MyAppPublisher "LOOT Team"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"

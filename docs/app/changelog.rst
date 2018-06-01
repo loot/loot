@@ -4,6 +4,65 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.13.0 - 2018-06-01
+===================
+
+Added
+-----
+
+- Support for Skyrim VR.
+- Support for plugin groups. Each plugin belongs to a group, and groups can load
+  after zero or more other groups, providing a concise way to load groups of
+  plugins after other groups of plugins. The group a plugin belongs to can be
+  set in the metadata editor, and groups can be edited in the new Groups Editor
+  accessible through the main menu.
+- LOOT's update checking on startup can now be toggled from the settings dialog.
+
+
+Changed
+-------
+
+- Sorting error messages now includes the full path to ``plugins.txt`` when
+  suggesting it may be read-only.
+- Updated the LOOT API to v0.13.3.
+- Updated CEF to v3.3325.1758.g9aea513.
+- Updated nlohmann/json to v3.1.2.
+
+Removed
+-------
+
+- Support for local and global priority metadata. Priorities have been
+  superseded by groups, which provide similar functionality more accessibly.
+
+Fixed
+-----
+
+- ``Cannot read property 'status' of undefined`` errors could occur when LOOT
+  attempted to check for updated and no Internet connection was available.
+- An error that occurred when attempting to apply edits to clean or dirty plugin
+  metadata.
+- A potential error during sorting if the number of plugins installed changed
+  since LOOT was started or its content was last refreshed.
+- An error when applying a load order for Oblivion, Fallout 3 or Fallout: New
+  Vegas involving a plugin with a timestamp earlier than 1970-01-01 00:00:00
+  UTC (via LOOT API).
+- An error when loading the current load order for Skyrim with a
+  ``loadorder.txt`` incorrectly encoded in Windows-1252 (via LOOT API).
+- Various filesystem-related issues that could be encountered when updating
+  masterlists, including failure due to file handles being left open while
+  attempting to remove the files they referenced (via LOOT API).
+- Incorrect load order positions were given for light-master-flagged ``.esp``
+  plugins when getting the load order (via LOOT API).
+- Closing LOOT with the metadata editor open or unapplied sorting results
+  displayed would not display a confirmation dialog.
+- Editable table rows for non-user metadata were not being made read-only.
+- User metadata was not used when checking the validity of a plugin's install
+  environment (e.g. if any incompatible plugins are present).
+- Bash Tag removal suggestions were treated as addition suggestions unless the
+  tag name was prefixed by an additional ``-``.
+- File metadata's ``display`` field wasn't used in generated UI messages.
+- The top divider in a scrollable dialog could be hidden when scrolling.
+
 0.12.5 - 2018-03-19
 ===================
 
