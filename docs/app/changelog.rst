@@ -24,7 +24,7 @@ Changed
 
 - Sorting error messages now includes the full path to ``plugins.txt`` when
   suggesting it may be read-only.
-- Updated the LOOT API to v0.13.3.
+- Updated the LOOT API to v0.13.4.
 - Updated CEF to v3.3325.1758.g9aea513.
 - Updated nlohmann/json to v3.1.2.
 
