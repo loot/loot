@@ -47,7 +47,7 @@ removed.
 
 The graph can be zoomed in and out of using your mouse's scroll wheel.
 Left-clicking and dragging an empty space will move the whole graph, while
-left-clicking a and dragging a node will move it. Multiple nodes can also be
+left-clicking and dragging a node will move it. Multiple nodes can also be
 selected by left-clicking with the Ctrl key held down, then dragging the box
 that appears over the nodes to select. The selected nodes can then be dragged
 around together.
