@@ -67,7 +67,7 @@ export default class LootGroupsEditor extends Polymer.Element {
           right: 22px;
           height: 120px;
           padding: 0 8px 8px 8px;
-          background: white;
+          background: var(--primary-background-color);
           border: var(--divider-color) solid 1px;
         }
         #groupsHelpText {
@@ -87,6 +87,10 @@ export default class LootGroupsEditor extends Polymer.Element {
         }
         paper-icon-button[icon=add]:hover {
             color: green;
+        }
+        a {
+          color: var(--dark-accent-color);
+          text-decoration: none;
         }
       </style>
       <div>
@@ -142,6 +146,12 @@ export default class LootGroupsEditor extends Polymer.Element {
   }
 
   setGroups(groups) {
+    const bodyStyle = getComputedStyle(document.body);
+    const textColor = bodyStyle.getPropertyValue('--primary-text-color');
+    const textBackgroundColor = bodyStyle.getPropertyValue(
+      '--primary-background-color'
+    );
+
     this.cy = cytoscape({
       container: this.$.cy,
       elements: graphElements(groups),
@@ -154,7 +164,8 @@ export default class LootGroupsEditor extends Polymer.Element {
           style: {
             'background-color': '#666',
             label: 'data(id)',
-            'text-background-color': 'white',
+            color: textColor,
+            'text-background-color': textBackgroundColor,
             'text-background-opacity': 1
           }
         },
