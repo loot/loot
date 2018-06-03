@@ -4,7 +4,19 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.13.0 - 2018-06-01
+0.13.1 - 2018-06-03
+===================
+
+Changed
+-------
+
+- Sorting now enforces hardcoded plugin positions without the need for LOOT
+  metadata. This helps LOOT avoid producing invalid load orders, particularly
+  those involving Creation Club plugins (via LOOT API).
+- Updated LOOT API to v0.13.5.
+- Updated spdlog to v0.17.0.
+
+0.13.0 - 2018-06-02
 ===================
 
 Added
