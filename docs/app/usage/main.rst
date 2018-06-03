@@ -80,7 +80,7 @@ The plugin card's header holds the following information, some of which is only 
 
 Bash Tag suggestions and messages are displayed below the plugin card's header.
 
-If LOOT suggests any Bash Tags to be added, they will be displayed in green text, while any Bash Tags to be removed will be displayed in red text. For completeness, the list of Bash Tags to add will include any Bash Tags that are already specified in the plugin's description field. Users generally don't need to do anything with this information, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply.
+If LOOT suggests any Bash Tags to be added, they will be displayed in green text, while any Bash Tags to be removed will be displayed in red text. Bash Tags that are already listed in the plugin's description field will be displayed in silver text. Users generally don't need to do anything with this information, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply.
 
 LOOT's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action. If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
 

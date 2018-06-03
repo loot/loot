@@ -34,6 +34,8 @@ Added
 Changed
 -------
 
+- Bash Tag suggestions now display tags that are present in the plugin's
+  description field in silver text.
 - Sorting error messages now includes the full path to ``plugins.txt`` when
   suggesting it may be read-only.
 - Updated the LOOT API to v0.13.4.
