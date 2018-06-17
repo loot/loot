@@ -59,11 +59,10 @@ protected:
   }
 
   DerivedPluginMetadata generateDerivedMetadata(const std::string& pluginName) {
-    try {
-      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
-
+    auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+    if (plugin) {
       return generateDerivedMetadata(plugin);
-    } catch (...) {
+    } else {
       return DerivedPluginMetadata::none();
     }
   }

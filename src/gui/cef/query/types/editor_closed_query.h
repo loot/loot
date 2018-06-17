@@ -62,10 +62,9 @@ private:
     auto masterlistMetadata =
         state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
 
-    try {
-      auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
+    auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
+    if (plugin) {
       return MetadataQuery::getNonUserMetadata(plugin, masterlistMetadata);
-    } catch (...) {
     }
 
     return masterlistMetadata;

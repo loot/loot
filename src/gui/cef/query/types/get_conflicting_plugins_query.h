@@ -58,6 +58,11 @@ private:
 
     json["plugins"] = nlohmann::json::array();
     auto plugin = game_.GetPlugin(pluginName_);
+    if (!plugin) {
+      throw std::runtime_error("The plugin \"" + pluginName_ +
+                               "\" is not loaded.");
+    }
+
     for (const auto& otherPlugin : game_.GetPlugins()) {
       json["plugins"].push_back({
         { "metadata", generateDerivedMetadata(otherPlugin) },

@@ -53,13 +53,16 @@ public:
 
 private:
   void writePluginLine(std::ostream& stream,
-                       const std::string& plugin,
+                       const std::string& pluginName,
                        Counters& counters) {
-    auto isActive = state_.getCurrentGame().IsPluginActive(plugin);
-    auto isLightMaster =
-        state_.getCurrentGame().GetPlugin(plugin)->IsLightMaster();
+    auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+    if (!plugin) {
+      return;
+    }
 
-    if (isActive && isLightMaster) {
+    auto isActive = state_.getCurrentGame().IsPluginActive(pluginName);
+
+    if (isActive && plugin->IsLightMaster()) {
       stream << "254 FE " << std::setw(3) << std::hex
         << counters.activeLightMasters << std::dec << " ";
       counters.activeLightMasters += 1;
@@ -71,7 +74,7 @@ private:
       stream << "           ";
     }
 
-    stream << plugin << "\r\n";
+    stream << pluginName << "\r\n";
   }
 
   LootState& state_;

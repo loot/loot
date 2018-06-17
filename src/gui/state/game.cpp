@@ -138,7 +138,15 @@ void Game::Init() {
 
 std::shared_ptr<const PluginInterface> Game::GetPlugin(
     const std::string& name) const {
-  return gameHandle_->GetPlugin(name);
+  try {
+    return gameHandle_->GetPlugin(name);
+  } catch (std::exception& e) {
+    if (logger_) {
+      logger_->error(
+          "Couldn't get plugin data for \"{}\". Details: {}", name, e.what());
+    }
+    return nullptr;
+  }
 }
 
 std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
@@ -149,8 +157,10 @@ std::vector<Message> Game::CheckInstallValidity(
     const std::shared_ptr<const PluginInterface>& plugin,
     const PluginMetadata& metadata) {
   if (logger_) {
-    logger_->trace("Checking that the current install is valid according to {}"
-                   "'s data.", plugin->GetName());
+    logger_->trace(
+        "Checking that the current install is valid according to {}"
+        "'s data.",
+        plugin->GetName());
   }
   std::vector<Message> messages;
   if (IsPluginActive(plugin->GetName())) {
@@ -165,8 +175,8 @@ std::vector<Message> Game::CheckInstallValidity(
         if (!pluginExists(master)) {
           if (logger_) {
             logger_->error("\"{}\" requires \"{}\", but it is missing.",
-              plugin->GetName(),
-              master);
+                           plugin->GetName(),
+                           master);
           }
           messages.push_back(Message(MessageType::error,
                                      (boost::format(boost::locale::translate(
@@ -177,8 +187,8 @@ std::vector<Message> Game::CheckInstallValidity(
         } else if (!IsPluginActive(master)) {
           if (logger_) {
             logger_->error("\"{}\" requires \"{}\", but it is inactive.",
-              plugin->GetName(),
-              master);
+                           plugin->GetName(),
+                           master);
           }
           messages.push_back(Message(MessageType::error,
                                      (boost::format(boost::locale::translate(
@@ -194,8 +204,8 @@ std::vector<Message> Game::CheckInstallValidity(
       if (!pluginExists(req.GetName())) {
         if (logger_) {
           logger_->error("\"{}\" requires \"{}\", but it is missing.",
-            plugin->GetName(),
-            req.GetName());
+                         plugin->GetName(),
+                         req.GetName());
         }
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
@@ -208,8 +218,11 @@ std::vector<Message> Game::CheckInstallValidity(
     for (const auto& inc : metadata.GetIncompatibilities()) {
       if (pluginExists(inc.GetName()) && IsPluginActive(inc.GetName())) {
         if (logger_) {
-          logger_->error("\"{}\" is incompatible with \"{}\", but both are "
-                         "present.", plugin->GetName(), inc.GetName());
+          logger_->error(
+              "\"{}\" is incompatible with \"{}\", but both are "
+              "present.",
+              plugin->GetName(),
+              inc.GetName());
         }
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
@@ -221,33 +234,38 @@ std::vector<Message> Game::CheckInstallValidity(
     }
   }
 
-  if (plugin->IsLightMaster() && !boost::iends_with(plugin->GetName(), ".esp")) {
+  if (plugin->IsLightMaster() &&
+      !boost::iends_with(plugin->GetName(), ".esp")) {
     for (const auto& masterName : plugin->GetMasters()) {
-      try {
-        auto master = GetPlugin(masterName);
-        if (!master->IsLightMaster() && !master->IsMaster()) {
-          if (logger_) {
-            logger_->error("This plugin is a light master and requires the "
-                           "non-master plugin \"{}\". This can cause issues "
-                           "in-game, and sorting will fail while this plugin "
-                           "is installed.", masterName);
-          }
-          messages.push_back(Message(
-              MessageType::error,
-              (boost::format(boost::locale::translate(
-                   "This plugin is a light master and requires the non-master "
-                   "plugin \"%1%\". This can cause issues in-game, and sorting "
-                   "will fail while this plugin is installed.")) %
-               masterName)
-                  .str()));
+      auto master = GetPlugin(masterName);
+      if (!master) {
+        if (logger_) {
+          logger_->info(
+              "Tried to get plugin object for master \"{}\" of "
+              "\"{}\" but it was not loaded.",
+              masterName,
+              plugin->GetName());
         }
-      } catch (...) {
-          if (logger_) {
-            logger_->info("Tried to get plugin object for master \"{}\" of "
-                          "\"{}\" but it was not loaded.",
-                          masterName,
-                          plugin->GetName());
-          }
+        continue;
+      }
+
+      if (!master->IsLightMaster() && !master->IsMaster()) {
+        if (logger_) {
+          logger_->error(
+              "This plugin is a light master and requires the "
+              "non-master plugin \"{}\". This can cause issues "
+              "in-game, and sorting will fail while this plugin "
+              "is installed.",
+              masterName);
+        }
+        messages.push_back(Message(
+            MessageType::error,
+            (boost::format(boost::locale::translate(
+                 "This plugin is a light master and requires the non-master "
+                 "plugin \"%1%\". This can cause issues in-game, and sorting "
+                 "will fail while this plugin is installed.")) %
+             masterName)
+                .str()));
       }
     }
   }
@@ -283,15 +301,15 @@ void Game::RedatePlugins() {
       time_t thisTime = fs::last_write_time(filepath);
       if (logger_) {
         logger_->info("Current timestamp for \"{}\": {}",
-          filepath.filename().string(),
-          thisTime);
+                      filepath.filename().string(),
+                      thisTime);
       }
       if (thisTime >= lastTime) {
         lastTime = thisTime;
 
         if (logger_) {
           logger_->trace("No need to redate \"{}\".",
-            filepath.filename().string());
+                         filepath.filename().string());
         }
       } else {
         lastTime += 60;
@@ -299,9 +317,8 @@ void Game::RedatePlugins() {
                             lastTime);  // Space timestamps by a minute.
 
         if (logger_) {
-          logger_->info("Redated \"{}\" to: {}",
-            filepath.filename().string(),
-            lastTime);
+          logger_->info(
+              "Redated \"{}\" to: {}", filepath.filename().string(), lastTime);
         }
       }
     }
@@ -311,15 +328,16 @@ void Game::RedatePlugins() {
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
   try {
     gameHandle_->LoadCurrentLoadOrderState();
-  }
-  catch (std::exception& e) {
+  } catch (std::exception& e) {
     if (logger_) {
-      logger_->error("Failed to load current load order. Details: {}", e.what());
+      logger_->error("Failed to load current load order. Details: {}",
+                     e.what());
     }
     AppendMessage(Message(
-      MessageType::error,
-      boost::locale::translate("Failed to load the current load order, information displayed may be incorrect.")
-      .str()));
+        MessageType::error,
+        boost::locale::translate("Failed to load the current load order, "
+                                 "information displayed may be incorrect.")
+            .str()));
   }
 
   gameHandle_->LoadPlugins(GetInstalledPluginNames(), headersOnly);
@@ -372,7 +390,8 @@ short Game::GetActiveLoadOrderIndex(
       return numberOfActivePlugins;
 
     auto otherPlugin = GetPlugin(otherPluginName);
-    if (plugin->IsLightMaster() == otherPlugin->IsLightMaster() &&
+    if (otherPlugin &&
+        plugin->IsLightMaster() == otherPlugin->IsLightMaster() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
     }
@@ -386,15 +405,16 @@ std::vector<std::string> Game::SortPlugins() {
 
   try {
     gameHandle_->LoadCurrentLoadOrderState();
-  }
-  catch (std::exception& e) {
+  } catch (std::exception& e) {
     if (logger_) {
-      logger_->error("Failed to load current load order. Details: {}", e.what());
+      logger_->error("Failed to load current load order. Details: {}",
+                     e.what());
     }
     AppendMessage(Message(
-      MessageType::error,
-        boost::locale::translate("Failed to load the current load order, information displayed may be incorrect.")
-        .str()));
+        MessageType::error,
+        boost::locale::translate("Failed to load the current load order, "
+                                 "information displayed may be incorrect.")
+            .str()));
   }
 
   try {
@@ -417,16 +437,16 @@ std::vector<std::string> Game::SortPlugins() {
          e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle())
             .str()));
     plugins.clear();
-  }
-  catch (UndefinedGroupError& e) {
+  } catch (UndefinedGroupError& e) {
     if (logger_) {
       logger_->error("Failed to sort plugins. Details: {}", e.what());
     }
     AppendMessage(Message(
-      MessageType::error,
-      (boost::format(boost::locale::translate("The group \"%1%\" does not "
-        "exist.")) % e.getGroupName())
-      .str()));
+        MessageType::error,
+        (boost::format(boost::locale::translate("The group \"%1%\" does not "
+                                                "exist.")) %
+         e.getGroupName())
+            .str()));
     plugins.clear();
   } catch (std::exception& e) {
     if (logger_) {
@@ -476,8 +496,9 @@ std::vector<Message> Game::GetMessages() const {
 
   if (activeNormalPluginsCount > 254 && hasActiveEsl) {
     if (logger_) {
-      logger_->warn("255 normal plugins and at least one light master are "
-                    "active at the same time.");
+      logger_->warn(
+          "255 normal plugins and at least one light master are "
+          "active at the same time.");
     }
     output.push_back(Message(
         MessageType::warn,
@@ -548,7 +569,7 @@ void Game::LoadMetadata() {
   } catch (std::exception& e) {
     if (logger_) {
       logger_->error("An error occurred while parsing the metadata list(s): {}",
-        e.what());
+                     e.what());
     }
     AppendMessage(Message(
         MessageType::error,
@@ -630,7 +651,7 @@ boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
   try {
     if (logger) {
       logger->trace("Checking if game \"{}\" is installed.",
-        gameSettings.Name());
+                    gameSettings.Name());
     }
     if (!gameSettings.GamePath().empty() &&
         fs::exists(gameSettings.GamePath() / "Data" / gameSettings.Master()))
@@ -657,8 +678,8 @@ boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
   } catch (std::exception& e) {
     if (logger) {
       logger->error("Error while checking if game \"{}\" is installed: {}",
-        gameSettings.Name(),
-        e.what());
+                    gameSettings.Name(),
+                    e.what());
     }
   }
 
@@ -767,8 +788,7 @@ std::vector<std::string> Game::GetInstalledPluginNames() {
   std::vector<std::string> plugins;
 
   if (logger_) {
-    logger_->trace("Scanning for plugins in {}",
-      this->DataPath().string());
+    logger_->trace("Scanning for plugins in {}", this->DataPath().string());
   }
 
   for (fs::directory_iterator it(this->DataPath());
@@ -812,8 +832,12 @@ std::string Game::RegKeyStringValue(const std::string& keyStr,
 
   auto logger = getLogger();
   if (logger) {
-    logger->trace("Getting string for registry key, subkey and value: {}, {}, "
-                   "{}", keyStr, subkey, value);
+    logger->trace(
+        "Getting string for registry key, subkey and value: {}, {}, "
+        "{}",
+        keyStr,
+        subkey,
+        value);
   }
 
   LONG ret = RegGetValue(hKey,

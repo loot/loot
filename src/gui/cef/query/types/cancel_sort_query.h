@@ -39,19 +39,23 @@ public:
     state_.getCurrentGame().DecrementLoadOrderSortCount();
 
     nlohmann::json json = {
-      { "plugins", nlohmann::json::array() },
-      { "generalMessages", getGeneralMessages() },
+        {"plugins", nlohmann::json::array()},
+        {"generalMessages", getGeneralMessages()},
     };
 
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
-    for (const auto& plugin : loadOrder) {
-      auto pluginObject = state_.getCurrentGame().GetPlugin(plugin);
+    for (const auto& pluginName : loadOrder) {
+      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      if (!plugin) {
+        continue;
+      }
+
       auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(
-          pluginObject, loadOrder);
+          plugin, loadOrder);
 
       json["plugins"].push_back({
-        { "name", plugin },
-        { "loadOrderIndex", loadOrderIndex },
+          {"name", pluginName},
+          {"loadOrderIndex", loadOrderIndex},
       });
     }
 

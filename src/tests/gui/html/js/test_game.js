@@ -526,28 +526,36 @@ describe('Game', () => {
       }).toThrow();
     });
 
-    test('should set the current load order to the old load order', () => {
+    test('should set the current load order to the given plugins', () => {
       const oldLoadOrder = [
         new Plugin({
           name: 'foo'
         }),
         new Plugin({
           name: 'bar'
+        }),
+        new Plugin({
+          name: 'baz'
         })
       ];
       game.oldLoadOrder = oldLoadOrder;
-      game.plugins = [
-        new Plugin({
-          name: 'bar'
-        }),
-        new Plugin({
-          name: 'foo'
-        })
-      ];
+      game.plugins = [oldLoadOrder[2], oldLoadOrder[1], oldLoadOrder[0]];
 
-      game.cancelSort([]);
+      game.cancelSort([
+        {
+          name: 'baz',
+          isActive: true
+        },
+        {
+          name: 'foo',
+          isMaster: true
+        }
+      ]);
 
-      expect(game.plugins).toEqual(oldLoadOrder);
+      expect(game.plugins).toEqual([
+        Object.assign({}, oldLoadOrder[2], { isActive: true }),
+        Object.assign({}, oldLoadOrder[0], { isMaster: true })
+      ]);
     });
 
     test('should delete the stored old load order', () => {
@@ -580,18 +588,18 @@ describe('Game', () => {
       game.cancelSort([
         new Plugin({
           name: 'bar',
-          loadOrderIndex: 1
+          loadOrderIndex: 0
         }),
         new Plugin({
           name: 'foo',
-          loadOrderIndex: 0
+          loadOrderIndex: 2
         })
       ]);
 
-      expect(game.plugins[0].name).toBe('foo');
+      expect(game.plugins[0].name).toBe('bar');
       expect(game.plugins[0].loadOrderIndex).toBe(0);
-      expect(game.plugins[1].name).toBe('bar');
-      expect(game.plugins[1].loadOrderIndex).toBe(1);
+      expect(game.plugins[1].name).toBe('foo');
+      expect(game.plugins[1].loadOrderIndex).toBe(2);
     });
 
     test('should set the general messages to the second passed parameter', () => {

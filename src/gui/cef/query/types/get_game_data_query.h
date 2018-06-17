@@ -57,10 +57,9 @@ public:
     std::vector<std::shared_ptr<const PluginInterface>> installed;
     std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      try {
-        const auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      const auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      if (plugin) {
         installed.push_back(plugin);
-      } catch (...) {
       }
     }
 

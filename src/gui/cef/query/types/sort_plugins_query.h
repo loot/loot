@@ -25,7 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_SORT_PLUGINS_QUERY
 
-
 #include <boost/locale.hpp>
 
 #include "gui/cef/query/json.h"
@@ -53,13 +52,12 @@ public:
 
     try {
       if (state_.getCurrentGame().Type() == GameType::tes5 ||
-        state_.getCurrentGame().Type() == GameType::tes5se ||
-        state_.getCurrentGame().Type() == GameType::tes5vr ||
-        state_.getCurrentGame().Type() == GameType::fo4 ||
-        state_.getCurrentGame().Type() == GameType::fo4vr)
+          state_.getCurrentGame().Type() == GameType::tes5se ||
+          state_.getCurrentGame().Type() == GameType::tes5vr ||
+          state_.getCurrentGame().Type() == GameType::fo4 ||
+          state_.getCurrentGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
-    }
-    catch (...) {
+    } catch (...) {
       setSortingErrorMessage(state_);
       throw;
     }
@@ -89,16 +87,19 @@ private:
 
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
     nlohmann::json json = {
-      { "generalMessages", getGeneralMessages() },
-      { "plugins", nlohmann::json::array() },
+        {"generalMessages", getGeneralMessages()},
+        {"plugins", nlohmann::json::array()},
     };
 
     for (const auto& pluginName : plugins) {
       auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      if (!plugin) {
+        continue;
+      }
 
       auto derivedMetadata = generateDerivedMetadata(plugin);
       derivedMetadata.setLoadOrderIndex(
-        state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, plugins));
+          state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, plugins));
 
       json["plugins"].push_back(derivedMetadata);
     }
