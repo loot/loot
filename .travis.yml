@@ -26,8 +26,8 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/node_modules
     - $TRAVIS_BUILD_DIR/bower_components
-    - $HOME/boost_1_65_1/boost
-    - $HOME/boost_1_65_1/stage/lib
+    - $HOME/boost_1_67_0/boost
+    - $HOME/boost_1_67_0/stage/lib
   yarn: true
 
 before_install:
@@ -45,7 +45,7 @@ install:
   # Install runtime dependencies using Bower
   - bower install
   - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py
-  - python install_boost.py --directory ~ --boost-version 1.65.1 filesystem locale system
+  - python install_boost.py --directory ~ --boost-version 1.67.0 filesystem locale system
   # Install packages for generating documentation
   - pip install --user sphinx sphinx_rtd_theme
   # Add sphinx-build to PATH
@@ -63,7 +63,7 @@ before_script:
   # Move into the cloned LOOT repo build path.
   - cd build
   # Link dynamically to the C++ standard library runtime.
-  - cmake .. -DBOOST_ROOT=~/boost_1_65_1
+  - cmake .. -DBOOST_ROOT=~/boost_1_67_0
 
 script:
   - make all
