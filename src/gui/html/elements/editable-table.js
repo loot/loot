@@ -111,13 +111,13 @@ export default class EditableTable extends Polymer.Element {
           'paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu'
         );
         for (let j = 0; j < inputs.length; j += 1) {
-          rowData[inputs[j].className] = inputs[j].value || '';
+          rowData[inputs[j].className] = (inputs[j].value || '').trim();
         }
         const autocompletes = rows[i].getElementsByTagName(
           'paper-autocomplete'
         );
         for (let j = 0; j < autocompletes.length; j += 1) {
-          rowData[autocompletes[j].className] = autocompletes[j].text;
+          rowData[autocompletes[j].className] = autocompletes[j].text.trim();
         }
 
         writableRows.push(rowData);
