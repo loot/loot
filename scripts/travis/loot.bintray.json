@@ -1,8 +1,8 @@
 {
   "package": {
     "name": "loot",
-    "repo": "loot",
-    "subject": "wrinklyninja"
+    "repo": "snapshots",
+    "subject": "loot"
   },
   "version": {
     "name": "REPLACE_THIS_VERSION"

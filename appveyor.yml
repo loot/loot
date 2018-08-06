@@ -63,8 +63,8 @@ deploy:
     username: wrinklyninja
     api_key:
       secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
-    subject: wrinklyninja
-    repo: loot
+    subject: loot
+    repo: snapshots
     package: loot
     version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
     publish: true
