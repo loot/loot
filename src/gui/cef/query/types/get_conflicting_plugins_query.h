@@ -54,9 +54,11 @@ public:
 
 private:
   std::string getJsonResponse() {
-    nlohmann::json json;
+    nlohmann::json json = {
+        {"generalMessages", getGeneralMessages()},
+        {"plugins", nlohmann::json::array()},
+    };
 
-    json["plugins"] = nlohmann::json::array();
     auto plugin = game_.GetPlugin(pluginName_);
     if (!plugin) {
       throw std::runtime_error("The plugin \"" + pluginName_ +

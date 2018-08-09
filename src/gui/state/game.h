@@ -118,6 +118,8 @@ private:
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                               const boost::filesystem::path& backupDirectory);
   std::vector<std::string> GetInstalledPluginNames();
+  void warnAboutRemovedPlugins(const std::vector<std::string> pluginsBefore,
+                               const std::vector<std::string> pluginsAfter);
 
   boost::filesystem::path lootDataPath_;
 

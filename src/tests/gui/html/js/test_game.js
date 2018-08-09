@@ -166,7 +166,25 @@ describe('Game', () => {
       setTimeout(done, 100);
     });
 
-    test('setting value should dispatch an event if the new value differs from the old one', done => {
+    test('setting value should dispatch an event if the new and old message strings differ', done => {
+      game._generalMessages = [{ type: 'warn', content: 'foo' }];
+      const newMessages = [{ type: 'warn', content: 'bar' }];
+      handleEvent = evt => {
+        expect(evt.detail.messages).toEqual(newMessages);
+        expect(evt.detail.totalDiff).toBe(0);
+        expect(evt.detail.errorDiff).toBe(0);
+        expect(evt.detail.warningDiff).toBe(0);
+        done();
+      };
+      document.addEventListener(
+        'loot-game-global-messages-change',
+        handleEvent
+      );
+
+      game.generalMessages = newMessages;
+    });
+
+    test('setting value should dispatch an event if the new and old message type counts differ', done => {
       const newMessages = [{ type: 'warn' }, { type: 'error' }];
       handleEvent = evt => {
         expect(evt.detail.messages).toEqual(newMessages);

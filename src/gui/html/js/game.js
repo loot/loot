@@ -1,3 +1,4 @@
+import * as _ from 'lodash/core.min';
 import marked from 'marked/marked.min';
 import mergeGroups from './group.js';
 
@@ -76,7 +77,12 @@ export default class Game {
       });
     }
 
-    if (newTotal !== oldTotal || newWarns !== oldWarns || newErrs !== oldErrs) {
+    if (
+      newTotal !== oldTotal ||
+      newWarns !== oldWarns ||
+      newErrs !== oldErrs ||
+      !_.isEqual(this._generalMessages, generalMessages)
+    ) {
       document.dispatchEvent(
         new CustomEvent('loot-game-global-messages-change', {
           detail: {

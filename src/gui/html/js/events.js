@@ -51,10 +51,10 @@ export function onConflictsFilter(evt) {
     showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
     loot.filters
       .activateConflictsFilter(evt.currentTarget.value)
-      .then(responsePlugins => {
+      .then(response => {
         const newGamePlugins = [];
         loot.game.plugins.forEach(plugin => {
-          const responsePlugin = responsePlugins.find(
+          const responsePlugin = response.plugins.find(
             item => item.name === plugin.name
           );
           if (responsePlugin) {
@@ -62,6 +62,9 @@ export function onConflictsFilter(evt) {
             newGamePlugins.push(plugin);
           }
         });
+
+        loot.game.generalMessages = response.generalMessages;
+
         loot.game.plugins = newGamePlugins;
         loot.filters.apply(loot.game.plugins);
 

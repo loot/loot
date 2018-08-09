@@ -340,7 +340,15 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
             .str()));
   }
 
-  gameHandle_->LoadPlugins(GetInstalledPluginNames(), headersOnly);
+  auto installedPluginNames = GetInstalledPluginNames();
+  gameHandle_->LoadPlugins(installedPluginNames, headersOnly);
+
+  // Check if any plugins have been removed.
+  std::vector<std::string> loadedPluginNames;
+  for (auto plugin : gameHandle_->GetLoadedPlugins()) {
+    loadedPluginNames.push_back(plugin->GetName());
+  }
+  warnAboutRemovedPlugins(installedPluginNames, loadedPluginNames);
 
   pluginsFullyLoaded_ = !headersOnly;
 }
@@ -417,12 +425,15 @@ std::vector<std::string> Game::SortPlugins() {
             .str()));
   }
 
+  std::vector<std::string> sortedPlugins;
   try {
     // Clear any existing game-specific messages, as these only relate to
     // state that has been changed by sorting.
     ClearMessages();
 
-    plugins = gameHandle_->SortPlugins(plugins);
+    sortedPlugins = gameHandle_->SortPlugins(plugins);
+
+    warnAboutRemovedPlugins(plugins, sortedPlugins);
 
     IncrementLoadOrderSortCount();
   } catch (CyclicInteractionError& e) {
@@ -436,7 +447,7 @@ std::vector<std::string> Game::SortPlugins() {
                                                 "\"%2%\". Back cycle: %3%")) %
          e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle())
             .str()));
-    plugins.clear();
+    sortedPlugins.clear();
   } catch (UndefinedGroupError& e) {
     if (logger_) {
       logger_->error("Failed to sort plugins. Details: {}", e.what());
@@ -447,15 +458,15 @@ std::vector<std::string> Game::SortPlugins() {
                                                 "exist.")) %
          e.getGroupName())
             .str()));
-    plugins.clear();
+    sortedPlugins.clear();
   } catch (std::exception& e) {
     if (logger_) {
       logger_->error("Failed to sort plugins. Details: {}", e.what());
     }
-    plugins.clear();
+    sortedPlugins.clear();
   }
 
-  return plugins;
+  return sortedPlugins;
 }
 
 void Game::IncrementLoadOrderSortCount() {
@@ -863,5 +874,24 @@ std::string Game::RegKeyStringValue(const std::string& keyStr,
   }
 }
 #endif
+
+void Game::warnAboutRemovedPlugins(
+    const std::vector<std::string> pluginsBefore,
+    const std::vector<std::string> pluginsAfter) {
+  // Plugin name case won't change, so can compare strings
+  // without normalising case.
+  std::set<std::string> pluginsSet(pluginsAfter.cbegin(), pluginsAfter.cend());
+
+  for (auto& plugin : pluginsBefore) {
+    if (pluginsSet.count(plugin) == 0) {
+      AppendMessage(Message(MessageType::warn,
+                            (boost::format(boost::locale::translate(
+                                 "LOOT has detected that \"%1%\" is invalid "
+                                 "and is now ignoring it.")) %
+                             plugin)
+                                .str()));
+    }
+  }
+}
 }
 }

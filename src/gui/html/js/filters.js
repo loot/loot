@@ -89,14 +89,16 @@ export default class Filters {
 
     return query('getConflictingPlugins', { pluginName: targetPluginName })
       .then(JSON.parse)
-      .then(response =>
-        response.plugins.map(plugin => {
+      .then(response => {
+        response.plugins = response.plugins.map(plugin => {
           if (plugin.conflicts) {
             this.conflictingPluginNames.push(plugin.metadata.name);
           }
           return plugin.metadata;
-        })
-      )
+        });
+
+        return response;
+      })
       .catch(handlePromiseError);
   }
 
