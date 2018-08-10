@@ -191,7 +191,7 @@ export default class LootPluginCard extends Polymer.Element {
 
       /* Set icons' visibility */
       this.$.activeTick.hidden = !this.data.isActive;
-      this.$.isMaster.hidden = !this.data.isMaster || this.data.isLightMaster;
+      this.$.isMaster.hidden = !this.data.isMaster;
       this.$.isLightMaster.hidden = !this.data.isLightMaster;
       this.$.isEmpty.hidden = !this.data.isEmpty;
       this.$.loadsArchive.hidden = !this.data.loadsArchive;
