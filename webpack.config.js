@@ -53,13 +53,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ['source-map-loader']
+        use: ['babel-loader', 'source-map-loader']
       }
     ]
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js', '.jsx']
   }
 };

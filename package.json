@@ -51,6 +51,8 @@
     "lodash": "^4.17.5",
     "marked": "^0.3.17",
     "polymer-analyzer": "^2.7.0",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
     "replace": "^0.3.0",
     "request": "^2.79.0",
     "web-animations-js": "^2.3.1"
@@ -58,7 +60,10 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^22.4.1",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
     "copy-webpack-plugin": "^4.5.0",
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
@@ -66,6 +71,7 @@
     "eslint-plugin-html": "^4.0.2",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.11.1",
     "html-webpack-plugin": "^3.0.4",
     "jest": "^22.4.2",
     "mkdirp": "^0.5.1",
@@ -78,14 +84,23 @@
   "scripts": {
     "build": "node ./scripts/get_roboto_files.js && webpack",
     "test": "jest",
-    "lint": "eslint --ignore-path .gitignore ."
+    "lint": "eslint --ignore-path .gitignore --ext .js --ext .jsx ."
   },
   "babel": {
+    "plugins": [
+      "babel-plugin-transform-object-rest-spread"
+    ],
     "presets": [
-      "env"
+      "env",
+      "react"
     ]
   },
   "eslintConfig": {
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
     "env": {
       "node": true,
       "browser": true,
@@ -98,6 +113,16 @@
       "html",
       "prettier"
     ],
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
+        }
+      }
+    },
     "extends": [
       "eslint:recommended",
       "airbnb-base",
