@@ -93,7 +93,13 @@
       "babel-plugin-transform-object-rest-spread"
     ],
     "presets": [
-      "env",
+      [
+        "env", {
+          "targets": {
+            "chrome": 68
+          }
+        }
+      ],
       "react"
     ]
   },
