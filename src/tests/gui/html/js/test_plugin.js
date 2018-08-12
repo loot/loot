@@ -1,3 +1,4 @@
+/* eslint-disable no-self-assign */
 import Plugin from '../../../../gui/html/js/plugin.js';
 import Filters from '../../../../gui/html/js/filters.js';
 

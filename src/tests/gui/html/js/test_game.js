@@ -1,3 +1,5 @@
+/* eslint-disable no-self-assign */
+
 import Game from '../../../../gui/html/js/game.js';
 import Plugin from '../../../../gui/html/js/plugin.js';
 

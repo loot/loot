@@ -65,11 +65,11 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "copy-webpack-plugin": "^4.5.0",
-    "eslint": "^4.18.2",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-html": "^4.0.2",
-    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.11.1",
     "html-webpack-plugin": "^3.0.4",
@@ -110,7 +110,6 @@
       "loot": false
     },
     "plugins": [
-      "html",
       "prettier"
     ],
     "settings": {
@@ -125,7 +124,7 @@
     },
     "extends": [
       "eslint:recommended",
-      "airbnb-base",
+      "airbnb",
       "prettier"
     ],
     "rules": {
@@ -146,7 +145,10 @@
       "import/extensions": {
         "js": "always"
       },
-      "prettier/prettier": "error"
+      "prettier/prettier": "error",
+      "react/destructuring-assignment": 0,
+      "react/jsx-one-expression-per-line": 0,
+      "react/sort-comp": 0
     }
   },
   "jest": {
