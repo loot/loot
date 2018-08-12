@@ -11,9 +11,9 @@ cache:
 
 environment:
   github_auth_token:
-    secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
+    secure: yDqT5l/e5MntbW99V6+MHlfFgNv+UIogFfeyUVqtFk5lFRB/dAraLLwKCLl6y+DH
   bintray_auth_token:
-    secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
+    secure: PgsEA6TjHVf718zMnK7J/fT1hUAVNKBeWhpYgYaeCyeZk37VT4Ics6j7+B7ElLEr
 
 install:
   - ps: Install-Product node LTS
@@ -62,7 +62,7 @@ deploy:
   - provider: BinTray
     username: wrinklyninja
     api_key:
-      secure: fBQJmUDK/EgEUWjjbo6bWcitczeFTJZT4OZ3ZZ4FoUT6soBsTWPQJnr8YEVMFhGP
+      secure: PgsEA6TjHVf718zMnK7J/fT1hUAVNKBeWhpYgYaeCyeZk37VT4Ics6j7+B7ElLEr
     subject: loot
     repo: snapshots
     package: loot
@@ -77,7 +77,7 @@ deploy:
     description: |
       Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](http://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html).
     auth_token:
-      secure: V1GojGQfrAiQtUWtNNXfm3samiH+1yNF5UYhkn8B8mbif20IGTGWNlBS9E4S0SUC
+      secure: yDqT5l/e5MntbW99V6+MHlfFgNv+UIogFfeyUVqtFk5lFRB/dAraLLwKCLl6y+DH
     artifact: LOOT,installer
     draft: false
     force_update: true
