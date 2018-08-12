@@ -43,156 +43,157 @@ function translatePluginCardInstance(l10n) {
 
 function translatePluginEditor(l10n) {
   /* Plugin editor template. */
-  const pluginEditor = document.getElementById('editor').shadowRoot;
+  const pluginEditor = document.getElementById('editor');
+  const pluginEditorShadow = pluginEditor.shadowRoot;
 
-  pluginEditor.getElementById(
+  pluginEditorShadow.getElementById(
     'enableEdits'
   ).previousElementSibling.textContent = l10n.translate('Enable Edits');
-  pluginEditor.getElementById(
+  pluginEditorShadow.getElementById(
     'group'
   ).previousElementSibling.textContent = l10n.translate('Group');
 
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=main]').textContent = l10n.translate('Main');
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=after]').textContent = l10n.translate(
     'Load After'
   );
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=req]').textContent = l10n.translate(
     'Requirements'
   );
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=inc]').textContent = l10n.translate(
     'Incompatibilities'
   );
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=message]').textContent = l10n.translate(
     'Messages'
   );
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=tags]').textContent = l10n.translate('Bash Tags');
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=dirty]').textContent = l10n.translate(
     'Dirty Plugin Info'
   );
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=clean]').textContent = l10n.translate(
     'Clean Plugin Info'
   );
-  pluginEditor
+  pluginEditorShadow
     .getElementById('tableTabs')
     .querySelector('[data-for=url]').textContent = l10n.translate('Locations');
 
   pluginEditor
-    .getElementById('after')
+    .querySelector('[slot=after]')
     .querySelector('th:first-child').textContent = l10n.translate('Filename');
   pluginEditor
-    .getElementById('after')
+    .querySelector('[slot=after]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate(
     'Display Name'
   );
   pluginEditor
-    .getElementById('after')
+    .querySelector('[slot=after]')
     .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
-    .getElementById('req')
+    .querySelector('[slot=req]')
     .querySelector('th:first-child').textContent = l10n.translate('Filename');
   pluginEditor
-    .getElementById('req')
+    .querySelector('[slot=req]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate(
     'Display Name'
   );
   pluginEditor
-    .getElementById('req')
+    .querySelector('[slot=req]')
     .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
-    .getElementById('inc')
+    .querySelector('[slot=inc]')
     .querySelector('th:first-child').textContent = l10n.translate('Filename');
   pluginEditor
-    .getElementById('inc')
+    .querySelector('[slot=inc]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate(
     'Display Name'
   );
   pluginEditor
-    .getElementById('inc')
+    .querySelector('[slot=inc]')
     .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
-    .getElementById('message')
+    .querySelector('[slot=message]')
     .querySelector('th:first-child').textContent = l10n.translate('Type');
   pluginEditor
-    .getElementById('message')
+    .querySelector('[slot=message]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate('Content');
   pluginEditor
-    .getElementById('message')
+    .querySelector('[slot=message]')
     .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
   pluginEditor
-    .getElementById('message')
+    .querySelector('[slot=message]')
     .querySelector('th:nth-child(4)').textContent = l10n.translate('Language');
 
   pluginEditor
-    .getElementById('tags')
+    .querySelector('[slot=tags]')
     .querySelector('th:first-child').textContent = l10n.translate('Add/Remove');
   pluginEditor
-    .getElementById('tags')
+    .querySelector('[slot=tags]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate('Bash Tag');
   pluginEditor
-    .getElementById('tags')
+    .querySelector('[slot=tags]')
     .querySelector('th:nth-child(3)').textContent = l10n.translate('Condition');
 
   pluginEditor
-    .getElementById('dirty')
+    .querySelector('[slot=dirty]')
     .querySelector('th:first-child').textContent = l10n.translate('CRC');
   pluginEditor
-    .getElementById('dirty')
+    .querySelector('[slot=dirty]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate('ITM Count');
   pluginEditor
-    .getElementById('dirty')
+    .querySelector('[slot=dirty]')
     .querySelector('th:nth-child(3)').textContent = l10n.translate(
     'Deleted References'
   );
   pluginEditor
-    .getElementById('dirty')
+    .querySelector('[slot=dirty]')
     .querySelector('th:nth-child(4)').textContent = l10n.translate(
     'Deleted Navmeshes'
   );
   pluginEditor
-    .getElementById('dirty')
+    .querySelector('[slot=dirty]')
     .querySelector('th:nth-child(5)').textContent = l10n.translate(
     'Cleaning Utility'
   );
 
   pluginEditor
-    .getElementById('clean')
+    .querySelector('[slot=clean]')
     .querySelector('th:first-child').textContent = l10n.translate('CRC');
   pluginEditor
-    .getElementById('clean')
+    .querySelector('[slot=clean]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate(
     'Cleaning Utility'
   );
 
   pluginEditor
-    .getElementById('url')
+    .querySelector('[slot=url]')
     .querySelector('th:first-child').textContent = l10n.translate('URL');
   pluginEditor
-    .getElementById('url')
+    .querySelector('[slot=url]')
     .querySelector('th:nth-child(2)').textContent = l10n.translate('Name');
 
-  pluginEditor.querySelector(
+  pluginEditorShadow.querySelector(
     'paper-tooltip[for=accept]'
   ).textContent = l10n.translate('Save Metadata');
-  pluginEditor.querySelector(
+  pluginEditorShadow.querySelector(
     'paper-tooltip[for=cancel]'
   ).textContent = l10n.translate('Cancel');
 }

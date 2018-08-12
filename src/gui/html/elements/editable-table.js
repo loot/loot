@@ -102,12 +102,6 @@ export default class EditableTable extends PolymerElement {
         for (let j = 0; j < inputs.length; j += 1) {
           rowData[inputs[j].className] = (inputs[j].value || '').trim();
         }
-        const autocompletes = rows[i].getElementsByTagName(
-          'paper-autocomplete'
-        );
-        for (let j = 0; j < autocompletes.length; j += 1) {
-          rowData[autocompletes[j].className] = autocompletes[j].text.trim();
-        }
 
         writableRows.push(rowData);
       }
@@ -202,11 +196,7 @@ export default class EditableTable extends PolymerElement {
     Object.entries(tableData).forEach(([key, value]) => {
       const elems = row.getElementsByClassName(key);
       if (value !== undefined && elems.length === 1) {
-        if (elems[0].tagName === 'PAPER-AUTOCOMPLETE') {
-          elems[0].text = value;
-        } else {
-          elems[0].value = value;
-        }
+        elems[0].value = value;
       }
     });
 

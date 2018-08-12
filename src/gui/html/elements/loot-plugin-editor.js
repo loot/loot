@@ -91,7 +91,7 @@ export default class LootPluginEditor extends PolymerElement {
           height: calc(100% - 103px);
           overflow: auto;
         }
-        iron-pages > *:not(.iron-selected) {
+        iron-pages > slot > div:not(.iron-selected) {
           display: none;
         }
 
@@ -161,8 +161,8 @@ export default class LootPluginEditor extends PolymerElement {
           <paper-tab data-for="url">Locations</paper-tab>
         </paper-tabs>
       </app-toolbar>
-      <iron-pages id="tablePages" selected="{{selected}}" attr-for-selected="id">
-        <div id="main">
+      <iron-pages id="tablePages" selected="{{selected}}" attr-for-selected="data-page">
+        <div id="main" data-page="main">
           <div>
             <div>Enable Edits</div>
             <paper-toggle-button id="enableEdits"></paper-toggle-button>
@@ -174,102 +174,14 @@ export default class LootPluginEditor extends PolymerElement {
             </loot-dropdown-menu>
           </div>
         </div>
-        <div id="after">
-          <editable-table data-template="fileRow">
-            <table>
-              <thead>
-                <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- File rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="req">
-          <editable-table data-template="fileRow">
-            <table>
-              <thead>
-                <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- File rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="inc">
-          <editable-table data-template="fileRow">
-            <table>
-              <thead>
-                <tr><th>Filename</th><th>Display Name</th><th>Condition</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- File rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="message">
-          <editable-table data-template="messageRow">
-            <table>
-              <thead>
-                <tr><th>Type</th><th>Content</th><th>Condition</th><th>Language</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- Message rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="tags">
-          <editable-table data-template="tagRow">
-            <table>
-              <thead>
-                <tr><th>Add/Remove</th><th>Bash Tag</th><th>Condition</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- Bash Tag rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="dirty">
-          <editable-table data-template="dirtyInfoRow">
-            <table>
-              <thead>
-                <tr><th>CRC</th><th>ITM Count</th><th>Deleted References</th><th>Deleted Navmeshes</th><th>Cleaning Utility</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- Dirty info rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="clean">
-          <editable-table data-template="cleanInfoRow">
-            <table>
-              <thead>
-                <tr><th>CRC</th><th>Cleaning Utility</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- Clean info rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
-        <div id="url">
-          <editable-table data-template="locationRow">
-            <table>
-              <thead>
-                <tr><th>URL</th><th>Name</th><th></th></tr>
-              </thead>
-              <tbody>
-                <!-- Location rows go here. -->
-              </tbody>
-            </table>
-          </editable-table>
-        </div>
+        <slot name="after"></slot>
+        <slot name="req"></slot>
+        <slot name="inc"></slot>
+        <slot name="message"></slot>
+        <slot name="tags"></slot>
+        <slot name="dirty"></slot>
+        <slot name="clean"></slot>
+        <slot name="url"></slot>
       </iron-pages>`;
   }
 
@@ -341,25 +253,26 @@ export default class LootPluginEditor extends PolymerElement {
       group: this.$.group.value
     };
 
-    const tables = this.shadowRoot.querySelectorAll('editable-table');
+    const tables = this.querySelectorAll('editable-table');
     for (let j = 0; j < tables.length; j += 1) {
       const rowsData = tables[j].getRowsData(true);
+      const tableType = tables[j].parentElement.getAttribute('data-page');
       if (rowsData.length > 0) {
-        if (tables[j].parentElement.id === 'after') {
+        if (tableType === 'after') {
           metadata.after = rowsData;
-        } else if (tables[j].parentElement.id === 'req') {
+        } else if (tableType === 'req') {
           metadata.req = rowsData;
-        } else if (tables[j].parentElement.id === 'inc') {
+        } else if (tableType === 'inc') {
           metadata.inc = rowsData;
-        } else if (tables[j].parentElement.id === 'message') {
+        } else if (tableType === 'message') {
           metadata.msg = rowsData;
-        } else if (tables[j].parentElement.id === 'tags') {
+        } else if (tableType === 'tags') {
           metadata.tag = rowsData.map(Plugin.tagFromRowData);
-        } else if (tables[j].parentElement.id === 'dirty') {
+        } else if (tableType === 'dirty') {
           metadata.dirty = rowsData.map(LootPluginEditor._rowDataToCrc);
-        } else if (tables[j].parentElement.id === 'clean') {
+        } else if (tableType === 'clean') {
           metadata.clean = rowsData.map(LootPluginEditor._rowDataToCrc);
-        } else if (tables[j].parentElement.id === 'url') {
+        } else if (tableType === 'url') {
           metadata.url = rowsData;
         }
       }
@@ -371,8 +284,8 @@ export default class LootPluginEditor extends PolymerElement {
   static _onHideEditor(evt) {
     /* First validate table inputs. */
     let isValid = true;
-    const inputs = evt.target.parentElement.parentNode.querySelectorAll(
-      'paper-input'
+    const inputs = evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
+      'editable-table'
     );
     for (let i = 0; i < inputs.length; i += 1) {
       if (!inputs[i].validate()) {
@@ -382,11 +295,9 @@ export default class LootPluginEditor extends PolymerElement {
 
     if (isValid || evt.target.id !== 'accept') {
       /* Now hide editor. */
-      evt.target.parentElement.parentElement.parentNode.host.style.height = '';
-      evt.target.parentElement.parentElement.parentNode.host.classList.toggle(
-        'hidden',
-        true
-      );
+      const editor = evt.target.parentElement.parentElement.parentNode.host;
+      editor.style.height = '';
+      editor.classList.toggle('hidden', true);
 
       /* Fire the close event, saying whether or not to save data. */
       evt.target.dispatchEvent(
@@ -423,17 +334,18 @@ export default class LootPluginEditor extends PolymerElement {
 
     /* Clear then fill in editor table data. Masterlist-originated
         rows should have their contents made read-only. */
-    const tables = this.shadowRoot.querySelectorAll('editable-table');
+    const tables = this.querySelectorAll('editable-table');
     for (let j = 0; j < tables.length; j += 1) {
       tables[j].clear();
-      if (tables[j].parentElement.id === 'message') {
+      const tableType = tables[j].parentElement.getAttribute('data-page');
+      if (tableType === 'message') {
         if (newData.masterlist && newData.masterlist.msg) {
           newData.masterlist.msg.forEach(tables[j].addReadOnlyRow, tables[j]);
         }
         if (newData.userlist && newData.userlist.msg) {
           newData.userlist.msg.forEach(tables[j].addRow, tables[j]);
         }
-      } else if (tables[j].parentElement.id === 'tags') {
+      } else if (tableType === 'tags') {
         if (newData.masterlist && newData.masterlist.tag) {
           newData.masterlist.tag
             .map(Plugin.tagToRowData)
@@ -444,7 +356,7 @@ export default class LootPluginEditor extends PolymerElement {
             .map(Plugin.tagToRowData)
             .forEach(tables[j].addRow, tables[j]);
         }
-      } else if (tables[j].parentElement.id === 'dirty') {
+      } else if (tableType === 'dirty') {
         if (newData.masterlist && newData.masterlist.dirty) {
           newData.masterlist.dirty
             .map(LootPluginEditor._dirtyInfoToRowData)
@@ -455,7 +367,7 @@ export default class LootPluginEditor extends PolymerElement {
             .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(tables[j].addRow, tables[j]);
         }
-      } else if (tables[j].parentElement.id === 'clean') {
+      } else if (tableType === 'clean') {
         if (newData.masterlist && newData.masterlist.clean) {
           newData.masterlist.clean
             .map(LootPluginEditor._dirtyInfoToRowData)
@@ -467,20 +379,14 @@ export default class LootPluginEditor extends PolymerElement {
             .forEach(tables[j].addRow, tables[j]);
         }
       } else {
-        if (
-          newData.masterlist &&
-          newData.masterlist[tables[j].parentElement.id]
-        ) {
-          newData.masterlist[tables[j].parentElement.id].forEach(
+        if (newData.masterlist && newData.masterlist[tableType]) {
+          newData.masterlist[tableType].forEach(
             tables[j].addReadOnlyRow,
             tables[j]
           );
         }
-        if (newData.userlist && newData.userlist[tables[j].parentElement.id]) {
-          newData.userlist[tables[j].parentElement.id].forEach(
-            tables[j].addRow,
-            tables[j]
-          );
+        if (newData.userlist && newData.userlist[tableType]) {
+          newData.userlist[tableType].forEach(tables[j].addRow, tables[j]);
         }
       }
     }

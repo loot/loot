@@ -1,10 +1,10 @@
-import '@polymer/iron-icons/iron-icons.js';
-// import 'paper-autocomplete/paper-autocomplete.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-input/paper-textarea.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/paper-icon-button';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-input/paper-textarea';
+import '@polymer/paper-item/paper-item';
+import '@polymer/paper-tooltip';
+import './paper-autocomplete';
 
 const $documentContainer = document.createElement('div');
 $documentContainer.setAttribute('style', 'display: none;');
