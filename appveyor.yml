@@ -20,7 +20,7 @@ install:
   - python -m pip install sphinx sphinx_rtd_theme
   - yarn install
   - .\node_modules\.bin\bower install
-  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.2.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
+  - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/2.0.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
   - ps: (New-Object Net.WebClient).DownloadFile('https://github.com/WrinklyNinja/svg_to_ico/releases/download/0.1.0/svg_to_ico.7z', "$env:APPVEYOR_BUILD_FOLDER\svg_to_ico.7z")
   - 7z e -y svg_to_ico.7z
 
@@ -85,7 +85,7 @@ deploy:
       appveyor_repo_tag: true
 
 on_success:
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -o loot -g loot -u loot -b snapshots -p loot -t $env:bintray_auth_token -a $env:github_auth_token -n 30
+  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k $env:bintray_auth_token -t $env:github_auth_token -n 30
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
