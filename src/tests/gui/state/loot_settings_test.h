@@ -33,23 +33,24 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class LootSettingsTest : public ::testing::Test {
+class LootSettingsTest : public CommonGameTestFixture {
 protected:
   LootSettingsTest() :
-      settingsFile_("./settings_.toml"),
-      unicodeSettingsFile_("./Andr\xc3\xa9_settings_.toml") {}
-
-  ~LootSettingsTest() {
-    boost::filesystem::remove(settingsFile_);
-    boost::filesystem::remove(unicodeSettingsFile_);
-  }
+      settingsFile_(lootDataPath / "settings_.toml"),
+      unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml") {}
 
   const boost::filesystem::path settingsFile_;
   const boost::filesystem::path unicodeSettingsFile_;
   LootSettings settings_;
 };
 
-TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+// Just test with one game because if it works for one it will work for them
+// all.
+INSTANTIATE_TEST_CASE_P(, LootSettingsTest, ::testing::Values(GameType::tes5));
+
+TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   const std::string currentVersion = gui::Version::string();
   const std::vector<GameSettings> expectedGameSettings({
       GameSettings(GameType::tes4),
@@ -132,7 +133,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[5].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
+TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "enableDebugLogging = true" << endl
@@ -182,7 +183,7 @@ TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
 }
 
-TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
+TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   using std::endl;
   boost::filesystem::ofstream out(unicodeSettingsFile_);
   out << "enableDebugLogging = true" << endl
@@ -197,7 +198,7 @@ TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   EXPECT_EQ("Oblivion", settings_.getGame());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
@@ -215,7 +216,7 @@ TEST_F(LootSettingsTest,
   EXPECT_EQ(games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(
+TEST_P(
     LootSettingsTest,
     loadingTomlShouldNotUpgradeNonDefaultBranchesForDefaultGameRepositories) {
   const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
@@ -234,7 +235,7 @@ TEST_F(
   EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        loadingTomlShouldNotUpgradeBranchesForNonDefaultGameRepositories) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
@@ -251,7 +252,7 @@ TEST_F(LootSettingsTest,
   EXPECT_EQ("v0.7", settings_.getGameSettings()[0].RepoBranch());
 }
 
-TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
+TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -267,7 +268,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
             settings_.getGameSettings()[0].FolderName());
 }
 
-TEST_F(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
+TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -298,7 +299,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
   EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
 }
 
-TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
+TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   using std::endl;
   boost::filesystem::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -316,7 +317,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_F(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
+TEST_P(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
   boost::filesystem::ofstream out(settingsFile_);
   out << "[filters]" << std::endl << "contentFilter = \"foo\"" << std::endl;
   out.close();
@@ -326,7 +327,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
   EXPECT_TRUE(settings_.getFilters().empty());
 }
 
-TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
+TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
@@ -381,7 +382,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(filters, settings.getFilters());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
   LootSettings::WindowPosition position;
   settings_.storeWindowPosition(position);
@@ -389,7 +390,7 @@ TEST_F(LootSettingsTest,
   EXPECT_FALSE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        isWindowPositionStoredShouldReturnTrueIfTopPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.top = 1;
@@ -398,7 +399,7 @@ TEST_F(LootSettingsTest,
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        isWindowPositionStoredShouldReturnTrueIfBottomPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.bottom = 1;
@@ -407,7 +408,7 @@ TEST_F(LootSettingsTest,
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        isWindowPositionStoredShouldReturnTrueIfLeftPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.left = 1;
@@ -416,7 +417,7 @@ TEST_F(LootSettingsTest,
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest,
+TEST_P(LootSettingsTest,
        isWindowPositionStoredShouldReturnTrueIfRightPositionValueIsNonZero) {
   LootSettings::WindowPosition position;
   position.right = 1;
@@ -425,20 +426,20 @@ TEST_F(LootSettingsTest,
   EXPECT_TRUE(settings_.isWindowPositionStored());
 }
 
-TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
+TEST_P(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
   const std::vector<GameSettings> gameSettings({GameSettings(GameType::tes5)});
   settings_.storeGameSettings(gameSettings);
 
   EXPECT_EQ(gameSettings, settings_.getGameSettings());
 }
 
-TEST_F(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
+TEST_P(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
   settings_.storeLastGame("Fallout3");
 
   EXPECT_EQ("Fallout3", settings_.getLastGame());
 }
 
-TEST_F(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
+TEST_P(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
   LootSettings::WindowPosition expectedPosition;
   expectedPosition.top = 1;
   settings_.storeWindowPosition(expectedPosition);
@@ -450,7 +451,7 @@ TEST_F(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
   EXPECT_EQ(expectedPosition.right, actualPosition.right);
 }
 
-TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
+TEST_P(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   const std::string currentVersion = gui::Version::string();
 
   boost::filesystem::ofstream out(settingsFile_);
