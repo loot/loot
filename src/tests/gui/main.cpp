@@ -36,9 +36,6 @@ int main(int argc, char **argv) {
   boost::filesystem::path::imbue(std::locale());
   loot::InitialiseLocale("");
 
-  // Disable logging or else stdout will get overrun.
-  loot::SetLoggingCallback([&](loot::LogLevel level, const char *message) {});
-
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

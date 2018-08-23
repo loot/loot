@@ -25,6 +25,8 @@
 #ifndef LOOT_GUI_STATE_GAME
 #define LOOT_GUI_STATE_GAME
 
+#define FMT_NO_FMT_STRING_ALIAS
+
 #include <mutex>
 #include <string>
 #include <unordered_set>

@@ -24,6 +24,8 @@
 #ifndef LOOT_GUI_STATE_LOGGING
 #define LOOT_GUI_STATE_LOGGING
 
+#define FMT_NO_FMT_STRING_ALIAS
+
 #include <spdlog/spdlog.h>
 
 namespace loot {

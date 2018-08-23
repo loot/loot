@@ -25,6 +25,7 @@
 #ifndef LOOT_GUI_STATE_LOOT_STATE
 #define LOOT_GUI_STATE_LOOT_STATE
 
+#define FMT_NO_FMT_STRING_ALIAS
 #define SPDLOG_WCHAR_FILENAMES
 
 #include <spdlog/spdlog.h>

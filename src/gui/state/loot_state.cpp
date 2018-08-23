@@ -30,6 +30,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <spdlog/sinks/basic_file_sink.h>
 
 #include "gui/helpers.h"
 #include "gui/state/game_detection_error.h"
