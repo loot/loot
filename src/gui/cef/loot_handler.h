@@ -80,9 +80,10 @@ public:
 
   virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE;
 
-  virtual bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
                               CefRefPtr<CefFrame> frame,
                               CefRefPtr<CefRequest> request,
+                              bool user_gesture,
                               bool is_redirect) OVERRIDE;
 
   virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(

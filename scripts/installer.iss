@@ -104,6 +104,8 @@ Source: "{#buildir}\Release\natives_blob.bin"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\snapshot_blob.bin"; \
 DestDir: "{app}"; Flags: ignoreversion
+Source: "{#buildir}\Release\v8_context_snapshot.bin"; \
+DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 

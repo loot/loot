@@ -46,7 +46,7 @@ CefSettings GetCefSettings() {
   // Load locale pack files from LOOT's l10n path.
   CefString(&cef_settings.locales_dir_path)
       .FromString(loot::LootPaths::getL10nPath().string());
-
+      
   return cef_settings;
 }
 
@@ -73,10 +73,15 @@ struct CommandLineOptions {
   std::string lootDataPath;
   std::string url;
 
-  CommandLineOptions(int argc, const char *const *argv) {
+  CommandLineOptions(int argc, const char *const *argv) : url("http://loot/ui/index.html") {
     // Record command line arguments.
     CefRefPtr<CefCommandLine> command_line =
         CefCommandLine::CreateCommandLine();
+
+    if (!command_line) {
+      return;
+    }
+
 #ifdef _WIN32
     command_line->InitFromString(::GetCommandLineW());
 #else
@@ -91,7 +96,6 @@ struct CommandLineOptions {
       lootDataPath = command_line->GetSwitchValue("loot-data-path");
     }
 
-    url = "http://loot/ui/index.html";
     if (command_line->HasArguments()) {
       std::vector<CefString> arguments;
       command_line->GetArguments(arguments);

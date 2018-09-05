@@ -221,6 +221,7 @@ CefRefPtr<CefRequestHandler> LootHandler::GetRequestHandler() { return this; }
 bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
                                  CefRefPtr<CefFrame> frame,
                                  CefRefPtr<CefRequest> request,
+                                 bool user_gesture,
                                  bool is_redirect) {
   auto logger = lootState_.getLogger();
   if (logger) {
