@@ -53,7 +53,7 @@ find_package(Boost REQUIRED COMPONENTS locale filesystem system)
 
 ExternalProject_Add(GTest
                     PREFIX "external"
-                    URL "https://github.com/google/googletest/archive/718fd88d8f145c63b8cc134cf8fed92743cc112f.tar.gz"
+                    URL "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
                     CMAKE_ARGS -Dgtest_force_shared_crt=${MSVC_SHARED_RUNTIME}
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
