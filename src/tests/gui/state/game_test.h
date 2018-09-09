@@ -385,7 +385,7 @@ TEST_P(
 }
 
 TEST_P(GameTest,
-       checkInstallValidityShouldCheckThatIncompatibilitiesAreAbsent) {
+       checkInstallValidityShouldAddAMessageForActiveIncompatiblePlugins) {
   GameSettings settings = GameSettings(GetParam())
     .SetGamePath(dataPath.parent_path())
     .SetGameLocalPath(localPath);
@@ -402,9 +402,35 @@ TEST_P(GameTest,
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
                         "This plugin is incompatible with \"" + masterFile +
-                            "\", but both are present."),
+                            "\", but both files are present."),
             }),
             messages);
+}
+
+TEST_P(GameTest,
+  checkInstallValidityShouldShowAMessageForIncompatibleNonPluginFilesThatArePresent) {
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
+  game.LoadAllInstalledPlugins(true);
+
+  std::string incompatibleFilename = "incompatible.txt";
+  boost::filesystem::ofstream out(dataPath / incompatibleFilename);
+  out.close();
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetIncompatibilities({
+      File(incompatibleFilename),
+    });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+                Message(MessageType::error,
+                        "This plugin is incompatible with \"" + incompatibleFilename +
+                            "\", but both files are present."),
+    }),
+    messages);
 }
 
 TEST_P(GameTest,
@@ -424,7 +450,7 @@ TEST_P(GameTest,
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
     Message(MessageType::error,
-    "This plugin is incompatible with \"foo\", but both are present."),
+    "This plugin is incompatible with \"foo\", but both files are present."),
     }),
     messages);
 }

@@ -164,7 +164,8 @@ std::vector<Message> Game::CheckInstallValidity(
   }
   std::vector<Message> messages;
   if (IsPluginActive(plugin->GetName())) {
-    auto pluginExists = [&](const std::string& file) {
+
+    auto fileExists = [&](const std::string& file) {
       return boost::filesystem::exists(DataPath() / file) ||
              (hasPluginFileExtension(file) &&
               boost::filesystem::exists(DataPath() / (file + ".ghost")));
@@ -172,7 +173,7 @@ std::vector<Message> Game::CheckInstallValidity(
     auto tags = metadata.GetTags();
     if (tags.find(Tag("Filter")) == std::end(tags)) {
       for (const auto& master : plugin->GetMasters()) {
-        if (!pluginExists(master)) {
+        if (!fileExists(master)) {
           if (logger_) {
             logger_->error("\"{}\" requires \"{}\", but it is missing.",
                            plugin->GetName(),
@@ -201,7 +202,7 @@ std::vector<Message> Game::CheckInstallValidity(
     }
 
     for (const auto& req : metadata.GetRequirements()) {
-      if (!pluginExists(req.GetName())) {
+      if (!fileExists(req.GetName())) {
         if (logger_) {
           logger_->error("\"{}\" requires \"{}\", but it is missing.",
                          plugin->GetName(),
@@ -216,10 +217,11 @@ std::vector<Message> Game::CheckInstallValidity(
       }
     }
     for (const auto& inc : metadata.GetIncompatibilities()) {
-      if (pluginExists(inc.GetName()) && IsPluginActive(inc.GetName())) {
+      if (fileExists(inc.GetName()) && 
+        (!hasPluginFileExtension(inc.GetName()) || IsPluginActive(inc.GetName()))) {
         if (logger_) {
           logger_->error(
-              "\"{}\" is incompatible with \"{}\", but both are "
+              "\"{}\" is incompatible with \"{}\", but both files are "
               "present.",
               plugin->GetName(),
               inc.GetName());
@@ -227,7 +229,7 @@ std::vector<Message> Game::CheckInstallValidity(
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
                                         "This plugin is incompatible with "
-                                        "\"%1%\", but both are present.")) %
+                                        "\"%1%\", but both files are present.")) %
                                     inc.GetDisplayName())
                                        .str()));
       }
