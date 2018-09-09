@@ -8,7 +8,7 @@ export default class LootMenu extends Polymer.Element {
 
   static get template() {
     return Polymer.html`<style>
-        ::slotted(*) {
+        ::slotted(*:not([disabled])) {
           cursor: pointer;
         }
       </style>

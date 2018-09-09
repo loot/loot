@@ -64,6 +64,9 @@ export default class LootDropdownMenu extends Polymer.Element {
         ::slotted(paper-item) {
           white-space: nowrap;
         }
+        ::slotted(paper-item:not([disabled])) {
+          cursor: pointer;
+        }
       </style>
       <paper-dropdown-menu disabled$="[[disabled]]" no-label-float="[[noLabelFloat]]" label="[[label]]" vertical-align="[[verticalAlign]]">
         <paper-listbox slot="dropdown-content" attr-for-selected="value" selected="{{value}}">
