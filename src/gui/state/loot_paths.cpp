@@ -29,6 +29,7 @@ Fallout: New Vegas.
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "gui/state/logging.h"
 #include "loot/api.h"
 
 #ifdef _WIN32
@@ -43,6 +44,44 @@ Fallout: New Vegas.
 #endif
 
 namespace loot {
+boost::filesystem::path getExecutableDirectory() {
+  std::string executablePathString;
+#ifdef _WIN32
+  // Despite its name, paths can be longer than MAX_PATH, just not by default.
+  // FIXME: Make this work with long paths.
+  std::wstring wstr(MAX_PATH, 0);
+
+  if (GetModuleFileName(NULL, &wstr[0], MAX_PATH) == 0) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Failed to get LOOT executable path.");
+    }
+    throw std::system_error(GetLastError(),
+      std::system_category(),
+      "Failed to get LOOT executable path.");
+  }
+
+  executablePathString = FromWinWide(wstr.c_str());
+#else
+  char result[PATH_MAX];
+
+  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+  if (count < 0) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Failed to get LOOT executable path.");
+    }
+    throw std::system_error(count,
+      std::system_category(),
+      "Failed to get LOOT executable path.");
+  }
+
+  executablePathString = std::string(result, count);
+#endif
+
+  return boost::filesystem::path(executablePathString).parent_path();
+}
+
 boost::filesystem::path LootPaths::getReadmePath() {
   return lootAppPath_ / "docs";
 }
@@ -71,7 +110,7 @@ void LootPaths::initialise(const std::string& lootDataPath) {
   boost::filesystem::path::imbue(std::locale());
   loot::InitialiseLocale("");
 
-  lootAppPath_ = boost::filesystem::current_path();
+  lootAppPath_ = getExecutableDirectory();
 
   if (!lootDataPath.empty())
     lootDataPath_ = lootDataPath;
@@ -106,8 +145,8 @@ boost::filesystem::path LootPaths::getLocalAppDataPath() {
   if (xdgConfigHome != nullptr)
     return boost::filesystem::path(xdgConfigHome) / ".config";
 
-  // If somehow both are missing, use the current path.
-  return boost::filesystem::current_path();
+  // If somehow both are missing, use the executable's directory.
+  return getExecutableDirectory();
 #endif
 }
 
