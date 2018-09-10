@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.13.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-08-10 21:35+0200\n"
+"POT-Creation-Date: 2018-09-10 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -695,59 +695,59 @@ msgid ""
 "information."
 msgstr ""
 
-#: src/gui/state/game.cpp:183 src/gui/state/game.cpp:212
+#: src/gui/state/game.cpp:184 src/gui/state/game.cpp:213
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game.cpp:195
+#: src/gui/state/game.cpp:196
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game.cpp:229
-msgid "This plugin is incompatible with \"%1%\", but both are present."
+#: src/gui/state/game.cpp:231
+msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr ""
 
-#: src/gui/state/game.cpp:264
+#: src/gui/state/game.cpp:266
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game.cpp:338 src/gui/state/game.cpp:423
+#: src/gui/state/game.cpp:340 src/gui/state/game.cpp:425
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game.cpp:445
+#: src/gui/state/game.cpp:447
 msgid ""
 "Cyclic interaction detected between \"%1%\" and \"%2%\". Back cycle: %3%"
 msgstr ""
 
-#: src/gui/state/game.cpp:457
+#: src/gui/state/game.cpp:459
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game.cpp:494
+#: src/gui/state/game.cpp:496
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game.cpp:517
+#: src/gui/state/game.cpp:519
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game.cpp:544
+#: src/gui/state/game.cpp:546
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game.cpp:588
+#: src/gui/state/game.cpp:590
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -765,58 +765,58 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game.cpp:728
+#: src/gui/state/game.cpp:730
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:732
+#: src/gui/state/game.cpp:734
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:738
+#: src/gui/state/game.cpp:740
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game.cpp:748
+#: src/gui/state/game.cpp:750
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game.cpp:754
+#: src/gui/state/game.cpp:756
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game.cpp:760 src/gui/state/game.cpp:766
-#: src/gui/state/game.cpp:771
+#: src/gui/state/game.cpp:762 src/gui/state/game.cpp:768
+#: src/gui/state/game.cpp:773
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game.cpp:775 src/gui/state/game.cpp:778
-#: src/gui/state/game.cpp:781
+#: src/gui/state/game.cpp:777 src/gui/state/game.cpp:780
+#: src/gui/state/game.cpp:783
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/game.cpp:889
+#: src/gui/state/game.cpp:891
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:112
+#: src/gui/state/loot_state.cpp:113
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:122
+#: src/gui/state/loot_state.cpp:123
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:138
+#: src/gui/state/loot_state.cpp:139
 msgid "Error: Could not initialise logging."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:210
+#: src/gui/state/loot_state.cpp:211
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
