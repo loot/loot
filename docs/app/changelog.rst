@@ -4,6 +4,39 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.13.2 - 2018-09-10
+===================
+
+Fixed
+-----
+
+- Plugins with a `.esp` file extension and the light master flag set no longer
+  appear as masters.
+- Running LOOT outside of its executable's directory no longer results in a
+  blank window.
+- Cursor displaying as text selector in dropdown lists.
+- Incompatibility messages not being displayed for non-plugin files.
+- Fallout 4's `DLCUltraHighResolution.esm` is now handled as a hardcoded plugin
+  (via libloadorder via the LOOT API).
+- Plugins that are corrupt past their TES4 header are now handled gracefully
+  when sorting and removed from the UI, with a warning message displayed for
+  each removed plugin.
+- Metadata editor text fields now trim whitespace to avoid unexpected metadata
+  mismatches.
+
+Changed
+-------
+
+- Updated Boost to v1.67.0.
+- Updated spdlog to v1.1.0.
+- Updated Google Test to v1.8.1.
+- Updated cpptoml v0.1.0.
+- Updated CEF to v3.3440.1806.g65046b7.
+- Updated nlohmann/json to v3.2.0.
+- Updated LOOT API to v0.13.7 which should carry a number of performance
+  improvements with it.
+- Updated Danish translation.
+
 0.13.1 - 2018-06-03
 ===================
 
