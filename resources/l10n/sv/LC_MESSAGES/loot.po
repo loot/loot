@@ -654,11 +654,11 @@ msgstr ""
 "För att göra det, välj \"Öppna felsökningsloggens mapp\" i LOOT:s huvudmeny "
 "för att öppna dess datamapp och öppna därefter filen \"userlist.yaml\" i den "
 "relevanta spelmappen. Du kan därefter redigera den metadata den innehåller i "
-"enlighet med [syntaxhjälpdokumentationen](http://loot.github.io/docs/%2%.%3%."
+"enlighet med [syntaxhjälpdokumentationen](https://loot.github.io/docs/%2%.%3%."
 "%4%/LOOT%%20Metadata%%20Syntax.html).\n"
 "\n"
 "Du kan även söka hjälp via LOOT:s forumtråd, till vilken du finner en länk "
-"på [LOOT:s webbplats](http://loot.github.io/)."
+"på [LOOT:s webbplats](https://loot.github.io/)."
 
 #: src/gui/query_handler.cpp:719 src/gui/query_handler.cpp:722
 msgid "Failed to get game data. Details: %1%"
