@@ -7,7 +7,7 @@ Copyright License Texts
 `Boost`_
 ========
 
-.. _Boost: http://www.boost.org/
+.. _Boost: https://www.boost.org/
 
 .. include:: Boost Software License v1.0.txt
   :literal:
