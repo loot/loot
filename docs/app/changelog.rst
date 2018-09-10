@@ -18,6 +18,11 @@ Fixed
 - Incompatibility messages not being displayed for non-plugin files.
 - Fallout 4's `DLCUltraHighResolution.esm` is now handled as a hardcoded plugin
   (via libloadorder via the LOOT API).
+- Plugins that are corrupt past their TES4 header are now handled gracefully
+  when sorting and removed from the UI, with a warning message displayed for
+  each removed plugin.
+- Metadata editor text fields now trim whitespace to avoid unexpected metadata
+  mismatches.
 
 Changed
 -------
@@ -27,6 +32,7 @@ Changed
 - Updated Google Test to v1.8.1.
 - Updated cpptoml v0.1.0.
 - Updated CEF to v3.3440.1806.g65046b7.
+- Updated nlohmann/json to v3.2.0.
 - Updated LOOT API to v0.13.7 which should carry a number of performance
   improvements with it.
 - Updated Danish translation.
