@@ -31,7 +31,7 @@ LOOT uses the `Boost`_, `cpptoml`_, `github-api`_, `Jed`_, `Jed Gettext Parser`_
 .. _GitHub: https://github.com/loot/
 .. _here: https://loot.github.io/credits/
 .. _BOSS: https://boss-developers.github.io/
-.. _Boost: http://www.boost.org/
+.. _Boost: https://www.boost.org/
 .. _cpptoml: https://github.com/skystrife/cpptoml
 .. _github-api: https://github.com/github-tools/github
 .. _Jed: https://github.com/SlexAxton/Jed

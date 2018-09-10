@@ -2,7 +2,7 @@
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)](https://ci.appveyor.com/project/WrinklyNinja/loot)
 [![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
-[![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](http://loot.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](https://loot.readthedocs.io/en/latest/?badge=latest)
 
 ## Introduction
 
@@ -67,4 +67,4 @@ Packaging scripts are provided for creating an installer on Windows and compress
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. The script requires the [Inno Download Plugin](https://bitbucket.org/mitrich_k/inno-download-plugin) to be installed. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](http://7-zip.org), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
+The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
