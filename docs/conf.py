@@ -346,5 +346,5 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 intersphinx_mapping = {
-    'loot_api': ('http://loot-api.readthedocs.io/en/latest/', None),
+    'loot_api': ('https://loot-api.readthedocs.io/en/latest/', None),
 }
