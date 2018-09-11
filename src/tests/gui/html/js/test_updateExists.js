@@ -2,66 +2,82 @@ import Octokit from '@octokit/rest';
 import updateExists from '../../../../gui/html/js/updateExists.js';
 
 jest.mock('@octokit/rest', () =>
-  jest.fn().mockImplementation(() => ({
-    repos: {
-      getLatestRelease: jest.fn().mockReturnValue(
-        Promise.resolve({
-          data: {
-            tag_name: '0.9.2'
-          }
-        })
-      ),
-      getTags: jest.fn().mockReturnValue(
-        Promise.resolve({
+  jest.fn().mockImplementation(() => {
+    let getNextPageCallCount = 0;
+
+    return {
+      repos: {
+        getLatestRelease: jest.fn().mockReturnValue(
+          Promise.resolve({
+            data: {
+              tag_name: '0.9.2'
+            }
+          })
+        ),
+        getTags: jest.fn().mockReturnValue(
+          Promise.resolve({
+            data: [
+              {
+                name: '0.9.1',
+                commit: {
+                  sha: 'dc24e10a4774903ede4e94165e7d6fa806466e4a'
+                }
+              },
+              {
+                name: '0.9.0',
+                commit: {
+                  sha: '44a0d8505d5402dd24cf0fda9540da9557866c80'
+                }
+              }
+            ]
+          })
+        ),
+        getCommit: jest.fn().mockImplementation(args =>
+          Promise.resolve({
+            data: {
+              commit: {
+                committer: {
+                  date:
+                    args.sha === 'deadbeef'
+                      ? '2011-04-14T16:00:00Z'
+                      : '2011-04-14T16:00:49Z'
+                }
+              }
+            }
+          })
+        )
+      },
+      gitdata: {
+        getCommit: jest.fn().mockReturnValue(
+          Promise.resolve({
+            data: {
+              committer: {
+                date: '2011-04-14T16:00:49Z'
+              }
+            }
+          })
+        )
+      },
+      hasNextPage: jest.fn().mockReturnValue(true),
+      getNextPage: jest.fn().mockImplementation(() => {
+        getNextPageCallCount += 1;
+        if (getNextPageCallCount % 3 !== 0) {
+          return Promise.resolve({ data: [] });
+        }
+
+        return Promise.resolve({
           data: [
             {
               name: '0.9.2',
               commit: {
                 sha: '6b58f92a5d41f5d7f149a1263dac78687a065ff5'
               }
-            },
-            {
-              name: '0.9.1',
-              commit: {
-                sha: 'dc24e10a4774903ede4e94165e7d6fa806466e4a'
-              }
-            },
-            {
-              name: '0.9.0',
-              commit: {
-                sha: '44a0d8505d5402dd24cf0fda9540da9557866c80'
-              }
             }
           ]
-        })
-      ),
-      getCommit: jest.fn().mockImplementation(args =>
-        Promise.resolve({
-          data: {
-            commit: {
-              committer: {
-                date:
-                  args.sha === 'deadbeef'
-                    ? '2011-04-14T16:00:00Z'
-                    : '2011-04-14T16:00:49Z'
-              }
-            }
-          }
-        })
-      )
-    },
-    gitdata: {
-      getCommit: jest.fn().mockReturnValue(
-        Promise.resolve({
-          data: {
-            committer: {
-              date: '2011-04-14T16:00:49Z'
-            }
-          }
-        })
-      )
-    }
-  }))
+        });
+      })
+    };
+  })
 );
 
 describe('updateExists()', () => {

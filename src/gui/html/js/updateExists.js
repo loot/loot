@@ -28,6 +28,22 @@ function compare(lhs, rhs) {
   return 0;
 }
 
+function findTag(tags, tagName) {
+  return tags.find(element => element.name === tagName);
+}
+
+async function paginatedFindTag(octokit, repo, tagName) {
+  let response = await octokit.repos.getTags({ ...repo, per_page: 100 });
+  let tag = findTag(response.data, tagName);
+
+  while (!tag && octokit.hasNextPage(response)) {
+    response = await octokit.getNextPage(response); // eslint-disable-line no-await-in-loop
+    tag = findTag(response.data, tagName);
+  }
+
+  return tag;
+}
+
 export default function updateExists(currentVersion, currentBuild) {
   if (currentVersion === undefined || currentBuild === undefined) {
     return Promise.reject(
@@ -53,32 +69,31 @@ export default function updateExists(currentVersion, currentBuild) {
         return false;
       }
 
-      return octokit.repos
-        .getTags(repo)
-        .then(tagsResponse =>
-          tagsResponse.data.find(
-            element => element.name === latestReleaseTagName
-          )
-        )
-        .then(tag => {
-          if (tag.commit.sha.startsWith(currentBuild)) {
-            return false;
-          }
+      return paginatedFindTag(octokit, repo, latestReleaseTagName).then(tag => {
+        if (!tag) {
+          throw new Error(
+            `Couldn't find tag data for tag "${latestReleaseTagName}"`
+          );
+        }
 
-          return octokit.gitdata
-            .getCommit({ ...repo, commit_sha: tag.commit.sha })
-            .then(commitResponse =>
-              Date.parse(commitResponse.data.committer.date)
-            )
-            .then(tagDate =>
-              octokit.repos
-                .getCommit({ ...repo, sha: currentBuild })
-                .then(commitResponse =>
-                  Date.parse(commitResponse.data.commit.committer.date)
-                )
-                .then(buildCommitDate => tagDate > buildCommitDate)
-            );
-        });
+        if (tag.commit.sha.startsWith(currentBuild)) {
+          return false;
+        }
+
+        return octokit.gitdata
+          .getCommit({ ...repo, commit_sha: tag.commit.sha })
+          .then(commitResponse =>
+            Date.parse(commitResponse.data.committer.date)
+          )
+          .then(tagDate =>
+            octokit.repos
+              .getCommit({ ...repo, sha: currentBuild })
+              .then(commitResponse =>
+                Date.parse(commitResponse.data.commit.committer.date)
+              )
+              .then(buildCommitDate => tagDate > buildCommitDate)
+          );
+      });
     })
 
     .catch(error => {
