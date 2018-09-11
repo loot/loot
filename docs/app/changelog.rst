@@ -4,6 +4,16 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.13.3 - 2018-09-11
+===================
+
+Fixed
+-----
+
+- LOOT's "check for updates" functionality was failing due to the latest release
+  unexpectedly not appearing on the first page of results when fetching
+  repository tag data.
+
 0.13.2 - 2018-09-10
 ===================
 
