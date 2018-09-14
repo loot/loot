@@ -113,8 +113,7 @@ export default class Game {
       const {
         revision = this._notApplicableString,
         date = this._notApplicableString
-      } =
-        masterlist || {};
+      } = masterlist || {};
 
       document.dispatchEvent(
         new CustomEvent('loot-game-masterlist-change', {
