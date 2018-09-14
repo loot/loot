@@ -46,7 +46,7 @@ install:
   - wget https://raw.githubusercontent.com/WrinklyNinja/ci-scripts/1.0.0/install_boost.py
   - python install_boost.py --directory ~ --boost-version 1.67.0 filesystem locale system
   # Install packages for generating documentation
-  - pip install --user sphinx sphinx_rtd_theme
+  - pip install --user -r docs/requirements.txt
   # Add sphinx-build to PATH
   - export PATH="$HOME/.local/bin:$PATH"
   # Get CMake (version available in repositories is too old, needs to be 3.1+)
