@@ -48,7 +48,7 @@
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",
     "lodash": "^4.17.5",
-    "marked": "^0.3.17",
+    "marked": "^0.5.0",
     "prop-types": "^15.6.2",
     "react": "^16.5.1",
     "react-autosuggest": "^9.3.4",
