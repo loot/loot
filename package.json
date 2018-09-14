@@ -73,7 +73,7 @@
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.11.1",
     "html-webpack-plugin": "^3.0.4",
-    "jest": "^22.4.2",
+    "jest": "^23.6.0",
     "mkdirp": "^0.5.1",
     "prettier": "^1.11.1",
     "source-map-loader": "^0.2.3",
