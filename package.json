@@ -58,12 +58,13 @@
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-jest": "^22.4.1",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
+    "@babel/core": "^7.0.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.2",
     "copy-webpack-plugin": "^4.5.0",
     "eslint": "^5.5.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -87,18 +88,18 @@
   },
   "babel": {
     "plugins": [
-      "babel-plugin-transform-object-rest-spread"
+      "@babel/plugin-proposal-object-rest-spread"
     ],
     "presets": [
       [
-        "env",
+        "@babel/preset-env",
         {
           "targets": {
             "chrome": 68
           }
         }
       ],
-      "react"
+      "@babel/preset-react"
     ]
   },
   "eslintConfig": {
