@@ -44,7 +44,7 @@
     "cytoscape-cose-bilkent": "^4.0.0",
     "cytoscape-edgehandles": "^3.2.3",
     "decompress": "^4.0.0",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^7.0.0",
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",
     "lodash": "^4.17.5",
@@ -53,7 +53,7 @@
     "react": "^16.5.1",
     "react-autosuggest": "^9.3.4",
     "react-dom": "^16.5.1",
-    "replace": "^0.3.0",
+    "replace": "^1.0.0",
     "request": "^2.79.0",
     "web-animations-js": "^2.3.1"
   },
