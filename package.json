@@ -78,7 +78,7 @@
     "prettier": "^1.11.1",
     "source-map-loader": "^0.2.3",
     "webpack": "^4.1.0",
-    "webpack-cli": "^2.0.10"
+    "webpack-cli": "^3.1.0"
   },
   "scripts": {
     "build": "node ./scripts/get_roboto_files.js && webpack",
@@ -91,7 +91,8 @@
     ],
     "presets": [
       [
-        "env", {
+        "env",
+        {
           "targets": {
             "chrome": 68
           }
