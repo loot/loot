@@ -204,14 +204,14 @@ private:
     } catch (FileAccessError&) {
       if (logger) {
         logger->warn("No masterlist present at {}",
-          state_.getCurrentGame().MasterlistPath().string());
+          state_.getCurrentGame().MasterlistPath().u8string());
       }
       info.revision_id = translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError&) {
       if (logger) {
         logger->warn("Not a Git repository: {}",
-          state_.getCurrentGame().MasterlistPath().parent_path().string());
+          state_.getCurrentGame().MasterlistPath().parent_path().u8string());
       }
       info.revision_id = translate("Unknown: Git repository missing").str();
       info.revision_date = translate("Unknown: Git repository missing").str();

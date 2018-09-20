@@ -304,7 +304,7 @@ void Game::RedatePlugins() {
 
         if (logger_) {
           logger_->trace("No need to redate \"{}\".",
-                         filepath.filename().string());
+                         filepath.filename().u8string());
         }
       } else {
         lastTime += std::chrono::seconds(60);
@@ -313,7 +313,7 @@ void Game::RedatePlugins() {
 
         if (logger_) {
           logger_->info(
-              "Redated \"{}\"", filepath.filename().string());
+              "Redated \"{}\"", filepath.filename().u8string());
         }
       }
     }
@@ -794,7 +794,7 @@ std::vector<std::string> Game::GetInstalledPluginNames() {
   std::vector<std::string> plugins;
 
   if (logger_) {
-    logger_->trace("Scanning for plugins in {}", this->DataPath().string());
+    logger_->trace("Scanning for plugins in {}", this->DataPath().u8string());
   }
 
   for (fs::directory_iterator it(this->DataPath());

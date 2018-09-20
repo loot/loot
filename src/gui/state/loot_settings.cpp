@@ -163,7 +163,7 @@ void LootSettings::load(const std::filesystem::path& file) {
   // which don't support UTF-8 paths on Windows.
   std::ifstream in(file);
   if (!in.is_open())
-    throw cpptoml::parse_exception(file.string() +
+    throw cpptoml::parse_exception(file.u8string() +
                                    " could not be opened for parsing");
 
   auto settings = cpptoml::parser(in).parse();
