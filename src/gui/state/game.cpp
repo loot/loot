@@ -83,7 +83,7 @@ Game::Game(const GameSettings& gameSettings,
   }
 
   gameHandle_ =
-      CreateGameHandle(Type(), GamePath().string(), GameLocalPath().string());
+      CreateGameHandle(Type(), GamePath().u8string(), GameLocalPath().u8string());
   gameHandle_->IdentifyMainMasterFile(Master());
 }
 

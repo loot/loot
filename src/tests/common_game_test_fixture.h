@@ -42,10 +42,10 @@ namespace loot {
 namespace test {
 
 std::filesystem::path getRootTestPath() {
-  auto directoryName = "LOOT-" + boost::lexical_cast<std::string>(
+  auto directoryName = u8"LOOT-t\u00E9st-" + boost::lexical_cast<std::string>(
                                       (boost::uuids::random_generator())());
   return std::filesystem::absolute(std::filesystem::temp_directory_path() /
-                                    directoryName);
+    std::filesystem::u8path(directoryName));
 }
 
 class CommonGameTestFixture : public ::testing::TestWithParam<GameType> {
