@@ -24,16 +24,15 @@
 
 #include "gui/cef/query/query_handler.h"
 
+#include <filesystem>
 #include <iomanip>
 #include <sstream>
 #include <string>
 
-#include <boost/filesystem.hpp>
 #include <include/base/cef_bind.h>
 #include <include/cef_app.h>
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
-#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 

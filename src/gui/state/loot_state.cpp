@@ -28,7 +28,6 @@
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 
@@ -52,7 +51,7 @@ using std::mutex;
 using std::string;
 using std::vector;
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 namespace loot {
 void apiLogCallback(LogLevel level, const char* message) {
@@ -109,7 +108,6 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   // Boost.Locale initialisation: Generate and imbue locales.
   locale::global(gen("en.UTF-8"));
   loot::InitialiseLocale("en.UTF-8");
-  boost::filesystem::path::imbue(locale());
 
   // Check if the LOOT local app data folder exists, and create it if not.
   if (!fs::exists(LootPaths::getLootDataPath())) {
@@ -178,7 +176,6 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     // Boost.Locale initialisation: Generate and imbue locales.
     locale::global(gen(getLanguage() + ".UTF-8"));
     loot::InitialiseLocale(getLanguage() + ".UTF-8");
-    boost::filesystem::path::imbue(locale());
   }
 
   // Detect games & select startup game
@@ -225,7 +222,7 @@ const std::vector<std::string>& LootState::getInitErrors() const {
   return initErrors_;
 }
 
-void LootState::save(const boost::filesystem::path& file) {
+void LootState::save(const std::filesystem::path& file) {
   if (currentGame_ != installedGames_.end()) {
     storeLastGame(currentGame_->FolderName());
   }

@@ -51,7 +51,7 @@ CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(
   }
   const string filePath = GetPath(request->GetURL());
 
-  if (boost::filesystem::exists(filePath)) {
+  if (std::filesystem::exists(filePath)) {
     return new CefStreamResourceHandler(
         200,
         "OK",

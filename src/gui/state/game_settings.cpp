@@ -26,7 +26,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches({
@@ -151,12 +151,12 @@ GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
   return *this;
 }
 
-GameSettings& GameSettings::SetGamePath(const boost::filesystem::path& path) {
+GameSettings& GameSettings::SetGamePath(const std::filesystem::path& path) {
   gamePath_ = path;
   return *this;
 }
 
-GameSettings& GameSettings::SetGameLocalPath(const boost::filesystem::path& path) {
+GameSettings& GameSettings::SetGameLocalPath(const std::filesystem::path& path) {
   gameLocalPath_ = path;
   return *this;
 }

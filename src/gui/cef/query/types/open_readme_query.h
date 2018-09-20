@@ -41,10 +41,10 @@ public:
       logger->info("Opening LOOT's readme.");
     }
 
-    auto canonicalPath = boost::filesystem::canonical(
+    auto canonicalPath = std::filesystem::canonical(
         LootPaths::getReadmePath() / relativeFilePath_);
     auto canonicalReadmePath =
-        boost::filesystem::canonical(LootPaths::getReadmePath());
+        std::filesystem::canonical(LootPaths::getReadmePath());
 
     if (!boost::starts_with(canonicalPath.string(),
                             canonicalReadmePath.string())) {

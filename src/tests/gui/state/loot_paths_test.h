@@ -34,21 +34,21 @@ namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "docs",
+  EXPECT_EQ(std::filesystem::current_path() / "docs",
             LootPaths::getReadmePath());
 }
 
 TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "resources",
+  EXPECT_EQ(std::filesystem::current_path() / "resources",
             LootPaths::getResourcesPath());
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path() / "resources" / "l10n",
+  EXPECT_EQ(std::filesystem::current_path() / "resources" / "l10n",
             LootPaths::getL10nPath());
 }
 
@@ -69,7 +69,7 @@ TEST(LootPaths, getLogPathShouldUseLootDataPath) {
 TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
   LootPaths::initialise("");
 
-  EXPECT_EQ(boost::filesystem::current_path(),
+  EXPECT_EQ(std::filesystem::current_path(),
             LootPaths::getReadmePath().parent_path());
 }
 
@@ -83,7 +83,7 @@ TEST(
   EXPECT_EQ("LOOT", LootPaths::getLootDataPath().filename());
   EXPECT_FALSE(LootPaths::getLootDataPath().parent_path().empty());
   EXPECT_TRUE(
-      boost::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
+      std::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
 }
 
 TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {

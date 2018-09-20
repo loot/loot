@@ -43,7 +43,7 @@ install:
   - export PATH="./node_modules/.bin:$PATH"
   # Install Boost
   - wget https://raw.githubusercontent.com/Ortham/ci-scripts/1.5.0/install_boost.py
-  - python install_boost.py --directory ~ --boost-version 1.67.0 -a 64 -t gcc-8 filesystem locale system
+  - python install_boost.py --directory ~ --boost-version 1.67.0 -a 64 -t gcc-8 locale system
   # Install packages for generating documentation
   - pip install --user -r docs/requirements.txt
   # Add sphinx-build to PATH

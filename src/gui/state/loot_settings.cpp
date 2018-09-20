@@ -24,6 +24,7 @@
 
 #include "gui/state/loot_settings.h"
 
+#include <fstream>
 #include <thread>
 
 #include <cpptoml.h>
@@ -55,8 +56,8 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     folder = type;
 
     auto path = LootPaths::getLootDataPath() / "SkyrimSE";
-    if (boost::filesystem::exists(path)) {
-      boost::filesystem::rename(path, LootPaths::getLootDataPath() / *folder);
+    if (std::filesystem::exists(path)) {
+      std::filesystem::rename(path, LootPaths::getLootDataPath() / *folder);
     }
   }
 
@@ -155,12 +156,12 @@ LootSettings::LootSettings() :
     language_("en"),
     lastGame_("auto") {}
 
-void LootSettings::load(const boost::filesystem::path& file) {
+void LootSettings::load(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   // Don't use cpptoml::parse_file() as it just uses a std stream,
   // which don't support UTF-8 paths on Windows.
-  boost::filesystem::ifstream in(file);
+  std::ifstream in(file);
   if (!in.is_open())
     throw cpptoml::parse_exception(file.string() +
                                    " could not be opened for parsing");
@@ -220,7 +221,7 @@ void LootSettings::load(const boost::filesystem::path& file) {
   }
 }
 
-void LootSettings::save(const boost::filesystem::path& file) {
+void LootSettings::save(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   auto root = cpptoml::make_table();
@@ -271,7 +272,7 @@ void LootSettings::save(const boost::filesystem::path& file) {
     root->insert("filters", filters);
   }
 
-  boost::filesystem::ofstream out(file);
+  std::ofstream out(file);
   out << *root;
 }
 

@@ -25,12 +25,11 @@
 #ifndef LOOT_GUI_STATE_LOOT_SETTINGS
 #define LOOT_GUI_STATE_LOOT_SETTINGS
 
+#include <filesystem>
 #include <map>
 #include <mutex>
 #include <string>
 #include <vector>
-
-#include <boost/filesystem.hpp>
 
 #include "gui/state/game_settings.h"
 
@@ -49,8 +48,8 @@ public:
 
   LootSettings();
 
-  void load(const boost::filesystem::path& file);
-  void save(const boost::filesystem::path& file);
+  void load(const std::filesystem::path& file);
+  void save(const std::filesystem::path& file);
 
   bool isDebugLoggingEnabled() const;
   bool updateMasterlist() const;

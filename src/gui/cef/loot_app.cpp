@@ -128,7 +128,6 @@ void LootApp::OnContextInitialized() {
     }
     std::locale::global(gen(lootState_.getLanguage() + ".UTF-8"));
     loot::InitialiseLocale(lootState_.getLanguage() + ".UTF-8");
-    boost::filesystem::path::imbue(std::locale());
   }
 
   CefRefPtr<CefBrowserView> browser_view = CefBrowserView::CreateBrowserView(

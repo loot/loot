@@ -24,6 +24,7 @@
 
 #include "gui/cef/loot_handler.h"
 
+#include <filesystem>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -32,7 +33,6 @@
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 
 #include "gui/cef/loot_scheme_handler_factory.h"
 #include "gui/cef/query/query_handler.h"
@@ -246,7 +246,7 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
     logger->info("Opening link in Windows' default handler.");
   }
   OpenInDefaultApplication(
-      boost::filesystem::path(request->GetURL().ToString()));
+      std::filesystem::path(request->GetURL().ToString()));
 
   return true;
 }

@@ -44,7 +44,7 @@ Fallout: New Vegas.
 #endif
 
 namespace loot {
-boost::filesystem::path getExecutableDirectory() {
+std::filesystem::path getExecutableDirectory() {
   std::string executablePathString;
 #ifdef _WIN32
   // Despite its name, paths can be longer than MAX_PATH, just not by default.
@@ -79,35 +79,34 @@ boost::filesystem::path getExecutableDirectory() {
   executablePathString = std::string(result, count);
 #endif
 
-  return boost::filesystem::path(executablePathString).parent_path();
+  return std::filesystem::path(executablePathString).parent_path();
 }
 
-boost::filesystem::path LootPaths::getReadmePath() {
+std::filesystem::path LootPaths::getReadmePath() {
   return lootAppPath_ / "docs";
 }
 
-boost::filesystem::path LootPaths::getResourcesPath() {
+std::filesystem::path LootPaths::getResourcesPath() {
   return lootAppPath_ / "resources";
 }
 
-boost::filesystem::path LootPaths::getL10nPath() {
+std::filesystem::path LootPaths::getL10nPath() {
   return getResourcesPath() / "l10n";
 }
 
-boost::filesystem::path LootPaths::getLootDataPath() { return lootDataPath_; }
+std::filesystem::path LootPaths::getLootDataPath() { return lootDataPath_; }
 
-boost::filesystem::path LootPaths::getSettingsPath() {
+std::filesystem::path LootPaths::getSettingsPath() {
   return lootDataPath_ / "settings.toml";
 }
 
-boost::filesystem::path LootPaths::getLogPath() {
+std::filesystem::path LootPaths::getLogPath() {
   return lootDataPath_ / "LOOTDebugLog.txt";
 }
 
 void LootPaths::initialise(const std::string& lootDataPath) {
   // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
-  boost::filesystem::path::imbue(std::locale());
   loot::InitialiseLocale("");
 
   lootAppPath_ = getExecutableDirectory();
@@ -118,7 +117,7 @@ void LootPaths::initialise(const std::string& lootDataPath) {
     lootDataPath_ = getLocalAppDataPath() / "LOOT";
 }
 
-boost::filesystem::path LootPaths::getLocalAppDataPath() {
+std::filesystem::path LootPaths::getLocalAppDataPath() {
 #ifdef _WIN32
   HWND owner = 0;
   PWSTR path;
@@ -128,7 +127,7 @@ boost::filesystem::path LootPaths::getLocalAppDataPath() {
                             std::system_category(),
                             "Failed to get %LOCALAPPDATA% path.");
 
-  boost::filesystem::path localAppDataPath(FromWinWide(path));
+  std::filesystem::path localAppDataPath(FromWinWide(path));
   CoTaskMemFree(path);
 
   return localAppDataPath;
@@ -137,19 +136,19 @@ boost::filesystem::path LootPaths::getLocalAppDataPath() {
   const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
 
   if (xdgConfigHome != nullptr)
-    return boost::filesystem::path(xdgConfigHome);
+    return std::filesystem::path(xdgConfigHome);
 
   // Otherwise, use the HOME env. var. if it's available.
   xdgConfigHome = getenv("HOME");
 
   if (xdgConfigHome != nullptr)
-    return boost::filesystem::path(xdgConfigHome) / ".config";
+    return std::filesystem::path(xdgConfigHome) / ".config";
 
   // If somehow both are missing, use the executable's directory.
   return getExecutableDirectory();
 #endif
 }
 
-boost::filesystem::path LootPaths::lootAppPath_;
-boost::filesystem::path LootPaths::lootDataPath_;
+std::filesystem::path LootPaths::lootAppPath_;
+std::filesystem::path LootPaths::lootDataPath_;
 }

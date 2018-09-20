@@ -53,7 +53,7 @@ IF (NOT Boost_USE_STATIC_LIBS)
     add_definitions(-DBOOST_LOG_DYN_LINK)
 ENDIF ()
 
-find_package(Boost REQUIRED COMPONENTS locale filesystem system)
+find_package(Boost REQUIRED COMPONENTS locale system)
 
 ExternalProject_Add(GTest
                     PREFIX "external"
@@ -275,8 +275,9 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};.")
     set (CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
-    set (LOOT_GUI_LIBS X11 pthread http_parser ssh2)
-    set (LOOT_TEST_LIBS pthread http_parser ssh2)
+    set (LOOT_LIBS pthread http_parser ssh2 stdc++fs)
+    set (LOOT_GUI_LIBS X11 ${LOOT_LIBS})
+    set (LOOT_TEST_LIBS ${LOOT_LIBS})
 ENDIF ()
 
 IF (MSVC)

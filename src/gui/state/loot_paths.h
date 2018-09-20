@@ -25,17 +25,17 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_STATE_LOOT_PATHS
 #define LOOT_GUI_STATE_LOOT_PATHS
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace loot {
 class LootPaths {
 public:
-  static boost::filesystem::path getReadmePath();
-  static boost::filesystem::path getResourcesPath();
-  static boost::filesystem::path getL10nPath();
-  static boost::filesystem::path getLootDataPath();
-  static boost::filesystem::path getSettingsPath();
-  static boost::filesystem::path getLogPath();
+  static std::filesystem::path getReadmePath();
+  static std::filesystem::path getResourcesPath();
+  static std::filesystem::path getL10nPath();
+  static std::filesystem::path getLootDataPath();
+  static std::filesystem::path getSettingsPath();
+  static std::filesystem::path getLogPath();
 
   // Sets the app path to the current path, and the data path to the given
   // path or (if it is an empty string), local app data path / "LOOT".
@@ -43,10 +43,10 @@ public:
 
 private:
   // Get the local application data path.
-  static boost::filesystem::path getLocalAppDataPath();
+  static std::filesystem::path getLocalAppDataPath();
 
-  static boost::filesystem::path lootAppPath_;
-  static boost::filesystem::path lootDataPath_;
+  static std::filesystem::path lootAppPath_;
+  static std::filesystem::path lootDataPath_;
 };
 }
 

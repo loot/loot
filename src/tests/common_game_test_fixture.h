@@ -25,13 +25,13 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_COMMON_GAME_TEST_FIXTURE
 #define LOOT_TESTS_COMMON_GAME_TEST_FIXTURE
 
+#include <filesystem>
+#include <fstream>
 #include <map>
 #include <unordered_set>
 
 #include <gtest/gtest.h>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -41,10 +41,10 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 
-boost::filesystem::path getRootTestPath() {
+std::filesystem::path getRootTestPath() {
   auto directoryName = "LOOT-" + boost::lexical_cast<std::string>(
                                       (boost::uuids::random_generator())());
-  return boost::filesystem::absolute(boost::filesystem::temp_directory_path() /
+  return std::filesystem::absolute(std::filesystem::temp_directory_path() /
                                     directoryName);
 }
 
@@ -76,8 +76,8 @@ protected:
   }
 
   void assertInitialState() {
-    using boost::filesystem::create_directories;
-    using boost::filesystem::exists;
+    using std::filesystem::create_directories;
+    using std::filesystem::exists;
 
     create_directories(dataPath);
     ASSERT_TRUE(exists(dataPath));
@@ -103,14 +103,14 @@ protected:
 
     // Make sure the game master file exists.
     ASSERT_NO_THROW(
-        boost::filesystem::copy_file(dataPath / blankEsm, dataPath / masterFile));
+        std::filesystem::copy_file(dataPath / blankEsm, dataPath / masterFile));
     ASSERT_TRUE(exists(dataPath / masterFile));
 
     // Set initial load order and active plugins.
     setLoadOrder(getInitialLoadOrder());
 
     // Ghost a plugin.
-    ASSERT_NO_THROW(boost::filesystem::rename(
+    ASSERT_NO_THROW(std::filesystem::rename(
         dataPath / blankMasterDependentEsm,
         dataPath / (blankMasterDependentEsm + ".ghost")));
     ASSERT_FALSE(exists(dataPath / blankMasterDependentEsm));
@@ -123,20 +123,20 @@ protected:
   void TearDown() {
     // Grant write permissions to everything in rootTestPath
     // in case the test made anything read only.
-    for (const auto& path : boost::filesystem::recursive_directory_iterator(rootTestPath)) {
-      boost::filesystem::permissions(path, boost::filesystem::perms::all_all | boost::filesystem::perms::add_perms);
+    for (const auto& path : std::filesystem::recursive_directory_iterator(rootTestPath)) {
+      std::filesystem::permissions(path, std::filesystem::perms::owner_write, std::filesystem::perm_options::add);
     }
 
-    boost::filesystem::remove_all(rootTestPath);
+    std::filesystem::remove_all(rootTestPath);
   }
 
-  void copyPlugin(const boost::filesystem::path& sourceParentPath, const std::string& filename) {
-    boost::filesystem::copy_file(sourceParentPath / filename, dataPath / filename);
-    ASSERT_TRUE(boost::filesystem::exists(dataPath / filename));
+  void copyPlugin(const std::filesystem::path& sourceParentPath, const std::string& filename) {
+    std::filesystem::copy_file(sourceParentPath / filename, dataPath / filename);
+    ASSERT_TRUE(std::filesystem::exists(dataPath / filename));
   }
 
-  std::vector<std::string> readFileLines(const boost::filesystem::path& file) {
-    boost::filesystem::ifstream in(file);
+  std::vector<std::string> readFileLines(const std::filesystem::path& file) {
+    std::ifstream in(file);
 
     std::vector<std::string> lines;
     while (in) {
@@ -154,23 +154,23 @@ protected:
   std::vector<std::string> getLoadOrder() {
     std::vector<std::string> actual;
     if (isLoadOrderTimestampBased(GetParam())) {
-      std::map<time_t, std::string> loadOrder;
-      for (boost::filesystem::directory_iterator it(dataPath);
-           it != boost::filesystem::directory_iterator();
+      std::map<std::filesystem::file_time_type, std::string> loadOrder;
+      for (std::filesystem::directory_iterator it(dataPath);
+           it != std::filesystem::directory_iterator();
            ++it) {
-        if (boost::filesystem::is_regular_file(it->status())) {
-          std::string filename = it->path().filename().string();
+        if (std::filesystem::is_regular_file(it->status())) {
+          std::string filename = it->path().filename().u8string();
           if (boost::ends_with(filename, ".ghost"))
-            filename = it->path().stem().string();
+            filename = it->path().stem().u8string();
           if (boost::ends_with(filename, ".esp") ||
               boost::ends_with(filename, ".esm"))
-            loadOrder.emplace(boost::filesystem::last_write_time(it->path()),
+            loadOrder.emplace(std::filesystem::last_write_time(it->path()),
                               filename);
         }
       }
       for (const auto& plugin : loadOrder) actual.push_back(plugin.second);
     } else if (GetParam() == GameType::tes5) {
-      boost::filesystem::ifstream in(localPath / "loadorder.txt");
+      std::ifstream in(localPath / "loadorder.txt");
       while (in) {
         std::string line;
         std::getline(in, line);
@@ -206,13 +206,13 @@ protected:
   }
 
 private:
-  const boost::filesystem::path rootTestPath;
+  const std::filesystem::path rootTestPath;
 
 protected:
-  const boost::filesystem::path missingPath;
-  const boost::filesystem::path dataPath;
-  const boost::filesystem::path localPath;
-  const boost::filesystem::path lootDataPath;
+  const std::filesystem::path missingPath;
+  const std::filesystem::path dataPath;
+  const std::filesystem::path localPath;
+  const std::filesystem::path lootDataPath;
 
   const std::string masterFile;
   const std::string missingEsp;
@@ -230,7 +230,7 @@ protected:
   const uint32_t blankEsmCrc;
 
 private:
-  boost::filesystem::path getSourcePluginsPath() const {
+  std::filesystem::path getSourcePluginsPath() const {
     if (GetParam() == GameType::tes4)
       return "./Oblivion/Data";
     else
@@ -259,7 +259,7 @@ private:
 
   void setLoadOrder(
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
-    boost::filesystem::ofstream out(localPath / "plugins.txt");
+    std::ofstream out(localPath / "plugins.txt");
     for (const auto& plugin : loadOrder) {
       if (GetParam() == GameType::fo4 || GetParam() == GameType::tes5se) {
         if (plugin.second)
@@ -271,21 +271,22 @@ private:
     }
 
     if (isLoadOrderTimestampBased(GetParam())) {
-      time_t modificationTime = time(NULL);  // Current time.
+      std::filesystem::file_time_type modificationTime =
+        std::filesystem::file_time_type::clock::now();
       for (const auto& plugin : loadOrder) {
-        if (boost::filesystem::exists(
-                dataPath / boost::filesystem::path(plugin.first + ".ghost"))) {
-          boost::filesystem::last_write_time(
-              dataPath / boost::filesystem::path(plugin.first + ".ghost"),
+        if (std::filesystem::exists(
+                dataPath / std::filesystem::path(plugin.first + ".ghost"))) {
+          std::filesystem::last_write_time(
+              dataPath / std::filesystem::path(plugin.first + ".ghost"),
               modificationTime);
         } else {
-          boost::filesystem::last_write_time(dataPath / plugin.first,
+          std::filesystem::last_write_time(dataPath / plugin.first,
                                              modificationTime);
         }
-        modificationTime += 60;
+        modificationTime += std::chrono::seconds(60);;
       }
     } else if (GetParam() == GameType::tes5) {
-      boost::filesystem::ofstream out(localPath / "loadorder.txt");
+      std::ofstream out(localPath / "loadorder.txt");
       for (const auto& plugin : loadOrder) out << plugin.first << std::endl;
     }
   }

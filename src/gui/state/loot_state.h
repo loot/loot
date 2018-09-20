@@ -41,7 +41,7 @@ public:
   void init(const std::string& cmdLineGame, bool autoSort);
   const std::vector<std::string>& getInitErrors() const;
 
-  void save(const boost::filesystem::path& file);
+  void save(const std::filesystem::path& file);
 
   gui::Game& getCurrentGame();
   void changeGame(const std::string& newGameFolder);

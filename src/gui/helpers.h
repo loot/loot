@@ -24,10 +24,10 @@
 #ifndef LOOT_GUI_HELPERS
 #define LOOT_GUI_HELPERS
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace loot {
-void OpenInDefaultApplication(const boost::filesystem::path& file);
+void OpenInDefaultApplication(const std::filesystem::path& file);
 
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str);

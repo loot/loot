@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <thread>
 
 #include <boost/algorithm/string.hpp>
@@ -58,7 +59,7 @@ using std::string;
 using std::thread;
 using std::vector;
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 namespace loot {
 namespace gui {
@@ -69,7 +70,7 @@ bool hasPluginFileExtension(const std::string& filename) {
 }
 
 Game::Game(const GameSettings& gameSettings,
-           const boost::filesystem::path& lootDataPath) :
+           const std::filesystem::path& lootDataPath) :
     GameSettings(gameSettings),
     lootDataPath_(lootDataPath),
     pluginsFullyLoaded_(false),
@@ -123,15 +124,12 @@ void Game::Init() {
 
   if (!lootDataPath_.empty()) {
     // Make sure that the LOOT game path exists.
-    try {
-      if (!fs::is_directory(lootDataPath_ / FolderName()))
-        fs::create_directories(lootDataPath_ / FolderName());
-    } catch (fs::filesystem_error& e) {
-      throw FileAccessError(
-          (boost::format(
-               "Could not create LOOT folder for game. Details: %1%") %
-           e.what())
-              .str());
+    auto lootGamePath = lootDataPath_ / FolderName();
+    if (!fs::is_directory(lootGamePath)) {
+      if (fs::exists(lootGamePath)) {
+        throw FileAccessError("Could not create LOOT folder for game, the path exists but is not a directory");
+      }
+      fs::create_directories(lootGamePath);
     }
   }
 }
@@ -166,9 +164,9 @@ std::vector<Message> Game::CheckInstallValidity(
   if (IsPluginActive(plugin->GetName())) {
 
     auto fileExists = [&](const std::string& file) {
-      return boost::filesystem::exists(DataPath() / file) ||
+      return std::filesystem::exists(DataPath() / file) ||
              (hasPluginFileExtension(file) &&
-              boost::filesystem::exists(DataPath() / (file + ".ghost")));
+              std::filesystem::exists(DataPath() / (file + ".ghost")));
     };
     auto tags = metadata.GetTags();
     if (tags.find(Tag("Filter")) == std::end(tags)) {
@@ -290,7 +288,7 @@ void Game::RedatePlugins() {
 
   vector<string> loadorder = gameHandle_->GetLoadOrder();
   if (!loadorder.empty()) {
-    time_t lastTime = 0;
+    std::filesystem::file_time_type lastTime = std::filesystem::file_time_type::clock::time_point::min();
     for (const auto& pluginName : loadorder) {
       fs::path filepath = DataPath() / pluginName;
       if (!fs::exists(filepath)) {
@@ -300,12 +298,7 @@ void Game::RedatePlugins() {
           continue;
       }
 
-      time_t thisTime = fs::last_write_time(filepath);
-      if (logger_) {
-        logger_->info("Current timestamp for \"{}\": {}",
-                      filepath.filename().string(),
-                      thisTime);
-      }
+      auto thisTime = fs::last_write_time(filepath);
       if (thisTime >= lastTime) {
         lastTime = thisTime;
 
@@ -314,13 +307,13 @@ void Game::RedatePlugins() {
                          filepath.filename().string());
         }
       } else {
-        lastTime += 60;
+        lastTime += std::chrono::seconds(60);
         fs::last_write_time(filepath,
                             lastTime);  // Space timestamps by a minute.
 
         if (logger_) {
           logger_->info(
-              "Redated \"{}\" to: {}", filepath.filename().string(), lastTime);
+              "Redated \"{}\"", filepath.filename().string());
         }
       }
     }
@@ -357,7 +350,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
-boost::filesystem::path Game::DataPath() const {
+std::filesystem::path Game::DataPath() const {
   if (GamePath().empty())
     throw std::logic_error("Cannot get data path from empty game path");
   return GamePath() / "Data";
@@ -560,14 +553,14 @@ MasterlistInfo Game::GetMasterlistInfo() const {
 void Game::LoadMetadata() {
   std::string masterlistPath;
   std::string userlistPath;
-  if (boost::filesystem::exists(MasterlistPath())) {
+  if (std::filesystem::exists(MasterlistPath())) {
     if (logger_) {
       logger_->debug("Preparing to parse masterlist.");
     }
     masterlistPath = MasterlistPath().string();
   }
 
-  if (boost::filesystem::exists(UserlistPath())) {
+  if (std::filesystem::exists(UserlistPath())) {
     if (logger_) {
       logger_->debug("Preparing to parse userlist.");
     }
@@ -649,7 +642,7 @@ void Game::SaveUserMetadata() {
 }
 
 bool Game::ExecutableExists(const GameType& gameType,
-                            const boost::filesystem::path& gamePath) {
+                            const std::filesystem::path& gamePath) {
   if (gameType == GameType::tes5) {
     return fs::exists(gamePath / "TESV.exe");
   } else if (gameType == GameType::tes5se) {
@@ -659,7 +652,7 @@ bool Game::ExecutableExists(const GameType& gameType,
   }
 }
 
-boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
+std::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
   auto logger = getLogger();
   try {
     if (logger) {
@@ -670,7 +663,7 @@ boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
         fs::exists(gameSettings.GamePath() / "Data" / gameSettings.Master()))
       return gameSettings.GamePath();
 
-    boost::filesystem::path gamePath = "..";
+    std::filesystem::path gamePath = "..";
     if (fs::exists(gamePath / "Data" / gameSettings.Master()) &&
         ExecutableExists(gameSettings.Type(), gamePath)) {
       return gamePath;
@@ -696,28 +689,28 @@ boost::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
     }
   }
 
-  return boost::filesystem::path();
+  return std::filesystem::path();
 }
 
 void Game::BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                           const boost::filesystem::path& backupDirectory) {
+                           const std::filesystem::path& backupDirectory) {
   const int maxBackupIndex = 2;
   boost::format filenameFormat = boost::format("loadorder.bak.%1%");
 
-  boost::filesystem::path backupFilePath =
+  std::filesystem::path backupFilePath =
       backupDirectory / (filenameFormat % 2).str();
-  if (boost::filesystem::exists(backupFilePath))
-    boost::filesystem::remove(backupFilePath);
+  if (std::filesystem::exists(backupFilePath))
+    std::filesystem::remove(backupFilePath);
 
   for (int i = maxBackupIndex - 1; i > -1; --i) {
-    const boost::filesystem::path backupFilePath =
+    const std::filesystem::path backupFilePath =
         backupDirectory / (filenameFormat % i).str();
-    if (boost::filesystem::exists(backupFilePath))
-      boost::filesystem::rename(
+    if (std::filesystem::exists(backupFilePath))
+      std::filesystem::rename(
           backupFilePath, backupDirectory / (filenameFormat % (i + 1)).str());
   }
 
-  boost::filesystem::ofstream out(backupDirectory / (filenameFormat % 0).str());
+  std::ofstream out(backupDirectory / (filenameFormat % 0).str());
   for (const auto& plugin : loadOrder) out << plugin << std::endl;
 }
 

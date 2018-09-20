@@ -33,7 +33,6 @@
 int main(int argc, char **argv) {
   // Set the locale to get encoding conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
-  boost::filesystem::path::imbue(std::locale());
   loot::InitialiseLocale("");
 
   ::testing::InitGoogleTest(&argc, argv);

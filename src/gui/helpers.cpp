@@ -37,7 +37,7 @@
 #endif
 
 namespace loot {
-void OpenInDefaultApplication(const boost::filesystem::path& file) {
+void OpenInDefaultApplication(const std::filesystem::path& file) {
 #ifdef _WIN32
   HINSTANCE ret = ShellExecute(
       0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);

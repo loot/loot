@@ -25,10 +25,9 @@
 #ifndef LOOT_GUI_STATE_GAME_SETTINGS
 #define LOOT_GUI_STATE_GAME_SETTINGS
 
+#include <filesystem>
 #include <set>
 #include <string>
-
-#include <boost/filesystem.hpp>
 
 #include "loot/enum/game_type.h"
 
@@ -51,16 +50,16 @@ public:
   std::string RegistryKey() const;
   std::string RepoURL() const;
   std::string RepoBranch() const;
-  boost::filesystem::path GamePath() const;
-  boost::filesystem::path GameLocalPath() const;
+  std::filesystem::path GamePath() const;
+  std::filesystem::path GameLocalPath() const;
 
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetRegistryKey(const std::string& registry);
   GameSettings& SetRepoURL(const std::string& repositoryURL);
   GameSettings& SetRepoBranch(const std::string& repositoryBranch);
-  GameSettings& SetGamePath(const boost::filesystem::path& path);
-  GameSettings& SetGameLocalPath(const boost::filesystem::path& GameLocalPath);
+  GameSettings& SetGamePath(const std::filesystem::path& path);
+  GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
 
 private:
   static const std::set<std::string> oldDefaultBranches;
@@ -76,8 +75,8 @@ private:
   std::string repositoryURL_;
   std::string repositoryBranch_;
 
-  boost::filesystem::path gamePath_;  // Path to the game's folder.
-  boost::filesystem::path gameLocalPath_;
+  std::filesystem::path gamePath_;  // Path to the game's folder.
+  std::filesystem::path gameLocalPath_;
 };
 }
 

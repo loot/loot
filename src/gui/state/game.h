@@ -27,11 +27,11 @@
 
 #define FMT_NO_FMT_STRING_ALIAS
 
+#include <filesystem>
 #include <mutex>
 #include <string>
 #include <unordered_set>
 
-#include <boost/filesystem.hpp>
 #include <spdlog/spdlog.h>
 
 #include "gui/state/game_settings.h"
@@ -42,7 +42,7 @@ namespace gui {
 class Game : public GameSettings {
 public:
   Game(const GameSettings& gameSettings,
-       const boost::filesystem::path& lootDataPath);
+       const std::filesystem::path& lootDataPath);
   Game(const Game& game);
 
   Game& operator=(const Game& game);
@@ -67,9 +67,9 @@ public:
   bool ArePluginsFullyLoaded()
       const;  // Checks if the game's plugins have already been loaded.
 
-  boost::filesystem::path DataPath() const;
-  boost::filesystem::path MasterlistPath() const;
-  boost::filesystem::path UserlistPath() const;
+  std::filesystem::path DataPath() const;
+  std::filesystem::path MasterlistPath() const;
+  std::filesystem::path UserlistPath() const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
@@ -114,16 +114,16 @@ private:
                                        const std::string& value);
 #endif
   static bool ExecutableExists(const GameType& gameType,
-                               const boost::filesystem::path& gamePath);
-  static boost::filesystem::path DetectGamePath(
+                               const std::filesystem::path& gamePath);
+  static std::filesystem::path DetectGamePath(
       const GameSettings& gameSettings);
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                              const boost::filesystem::path& backupDirectory);
+                              const std::filesystem::path& backupDirectory);
   std::vector<std::string> GetInstalledPluginNames();
   void warnAboutRemovedPlugins(const std::vector<std::string> pluginsBefore,
                                const std::vector<std::string> pluginsAfter);
 
-  boost::filesystem::path lootDataPath_;
+  std::filesystem::path lootDataPath_;
 
   std::shared_ptr<GameInterface> gameHandle_;
   bool pluginsFullyLoaded_;

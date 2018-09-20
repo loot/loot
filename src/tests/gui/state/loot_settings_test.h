@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_LOOT_SETTINGS_TEST
 #define LOOT_TESTS_GUI_STATE_LOOT_SETTINGS_TEST
 
+#include <fstream>
+
 #include "gui/state/loot_settings.h"
 
 #include <gtest/gtest.h>
@@ -39,8 +41,8 @@ protected:
       settingsFile_(lootDataPath / "settings_.toml"),
       unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml") {}
 
-  const boost::filesystem::path settingsFile_;
-  const boost::filesystem::path unicodeSettingsFile_;
+  const std::filesystem::path settingsFile_;
+  const std::filesystem::path unicodeSettingsFile_;
   LootSettings settings_;
 };
 
@@ -135,7 +137,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "enableDebugLogging = true" << endl
       << "updateMasterlist = true" << endl
       << "enableLootUpdateCheck = false" << endl
@@ -185,7 +187,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
 
 TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   using std::endl;
-  boost::filesystem::ofstream out(unicodeSettingsFile_);
+  std::ofstream out(unicodeSettingsFile_);
   out << "enableDebugLogging = true" << endl
       << "updateMasterlist = true" << endl
       << "game = \"Oblivion\"" << endl;
@@ -201,7 +203,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
 TEST_P(LootSettingsTest,
        loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
@@ -222,7 +224,7 @@ TEST_P(
   const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
 
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
@@ -238,7 +240,7 @@ TEST_P(
 TEST_P(LootSettingsTest,
        loadingTomlShouldNotUpgradeBranchesForNonDefaultGameRepositories) {
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
@@ -254,7 +256,7 @@ TEST_P(LootSettingsTest,
 
 TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"SkyrimSE\"" << endl
@@ -270,7 +272,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
 
 TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
@@ -301,7 +303,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
 
 TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   using std::endl;
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
       << "name = \"Foobar\"" << endl
       << "type = \"Foobar\"" << endl
@@ -318,7 +320,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
 }
 
 TEST_P(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "[filters]" << std::endl << "contentFilter = \"foo\"" << std::endl;
   out.close();
 
@@ -454,7 +456,7 @@ TEST_P(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
 TEST_P(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   const std::string currentVersion = gui::Version::string();
 
-  boost::filesystem::ofstream out(settingsFile_);
+  std::ofstream out(settingsFile_);
   out << "lastVersion = \"0.7.1\"" << std::endl;
   out.close();
 

@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_GAME_TEST
 #define LOOT_TESTS_GUI_STATE_GAME_TEST
 
+#include <fstream>
+
 #include "gui/state/game.h"
 
 #include "gui/state/game_detection_error.h"
@@ -160,16 +162,16 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
 }
 
 TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
-  auto currentPath = boost::filesystem::current_path();
+  auto currentPath = std::filesystem::current_path();
 
-  boost::filesystem::create_directory(dataPath / ".." / "LOOT");
-  boost::filesystem::current_path(dataPath / ".." / "LOOT");
+  std::filesystem::create_directory(dataPath / ".." / "LOOT");
+  std::filesystem::current_path(dataPath / ".." / "LOOT");
   if (GetParam() == GameType::tes5) {
-    boost::filesystem::ofstream out(boost::filesystem::path("..") / "TESV.exe");
+    std::ofstream out(std::filesystem::path("..") / "TESV.exe");
     // out << "";
     out.close();
   } else if (GetParam() == GameType::tes5se) {
-    boost::filesystem::ofstream out(boost::filesystem::path("..") /
+    std::ofstream out(std::filesystem::path("..") /
                                     "SkyrimSE.exe");
     // out << "";
     out.close();
@@ -191,12 +193,12 @@ TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
     }
   }
 
-  boost::filesystem::current_path(currentPath);
-  boost::filesystem::remove_all(dataPath / ".." / "LOOT");
+  std::filesystem::current_path(currentPath);
+  std::filesystem::remove_all(dataPath / ".." / "LOOT");
   if (GetParam() == GameType::tes5) {
-    boost::filesystem::remove(dataPath / ".." / "TESV.exe");
+    std::filesystem::remove(dataPath / ".." / "TESV.exe");
   } else if (GetParam() == GameType::tes5se) {
-    boost::filesystem::remove(dataPath / ".." / "SkyrimSE.exe");
+    std::filesystem::remove(dataPath / ".." / "SkyrimSE.exe");
   }
 }
 
@@ -297,37 +299,37 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
     .SetGameLocalPath(localPath);
   Game game(settings, "");
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName()));
   EXPECT_NO_THROW(game.Init());
 
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName()));
 }
 
-TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootGamePathIsNotEmpty) {
+TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   GameSettings settings = GameSettings(GetParam())
     .SetGamePath(dataPath.parent_path())
     .SetGameLocalPath(localPath);
   Game game(settings, lootDataPath);
 
-  boost::filesystem::ofstream out(lootDataPath / game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_NO_THROW(game.Init());
+
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName()));
+}
+
+TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, lootDataPath);
+
+  std::ofstream out(lootDataPath / game.FolderName());
   out << "";
   out.close();
 
-  ASSERT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName()));
-  ASSERT_FALSE(boost::filesystem::is_directory(lootDataPath / game.FolderName()));
+  ASSERT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName()));
+  ASSERT_FALSE(std::filesystem::is_directory(lootDataPath / game.FolderName()));
   EXPECT_ANY_THROW(game.Init());
-}
-
-TEST_P(GameTest, initShouldThrowIfTheLootDataPathExistsAndIsNotADirectory) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
-
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName()));
-  EXPECT_NO_THROW(game.Init());
-
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName()));
 }
 
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
@@ -416,7 +418,7 @@ TEST_P(GameTest,
   game.LoadAllInstalledPlugins(true);
 
   std::string incompatibleFilename = "incompatible.txt";
-  boost::filesystem::ofstream out(dataPath / incompatibleFilename);
+  std::ofstream out(dataPath / incompatibleFilename);
   out.close();
 
   PluginMetadata metadata(blankEsm);
@@ -533,28 +535,28 @@ TEST_P(
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
   // First set reverse timestamps to be sure.
-  time_t time = boost::filesystem::last_write_time(dataPath / masterFile);
+  auto time = std::filesystem::last_write_time(dataPath / masterFile);
   for (size_t i = 1; i < loadOrder.size(); ++i) {
-    if (!boost::filesystem::exists(dataPath / loadOrder[i].first))
+    if (!std::filesystem::exists(dataPath / loadOrder[i].first))
       loadOrder[i].first += ".ghost";
 
-    boost::filesystem::last_write_time(dataPath / loadOrder[i].first,
-                                       time - i * 60);
+    std::filesystem::last_write_time(dataPath / loadOrder[i].first,
+                                       time - i * std::chrono::seconds(60));
     ASSERT_EQ(
-        time - i * 60,
-        boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
+        time - i * std::chrono::seconds(60),
+        std::filesystem::last_write_time(dataPath / loadOrder[i].first));
   }
 
   EXPECT_NO_THROW(game.RedatePlugins());
 
-  time_t interval = 60;
+  auto interval = std::chrono::seconds(60);
   if (GetParam() != GameType::tes5 && GetParam() != GameType::tes5se)
     interval *= -1;
 
   for (size_t i = 0; i < loadOrder.size(); ++i) {
     EXPECT_EQ(
         time + i * interval,
-        boost::filesystem::last_write_time(dataPath / loadOrder[i].first));
+        std::filesystem::last_write_time(dataPath / loadOrder[i].first));
   }
 }
 
@@ -690,25 +692,25 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   Game game(settings, lootDataPath);
   game.Init();
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile0));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
@@ -725,25 +727,25 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile0));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
@@ -760,13 +762,13 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
@@ -781,13 +783,13 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile0));
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile1));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
@@ -806,13 +808,13 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   Game game(settings, lootDataPath);
   game.Init();
 
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
@@ -845,13 +847,13 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile0));
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile1));
-  EXPECT_TRUE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                         loadOrderBackupFile2));
-  EXPECT_FALSE(boost::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
