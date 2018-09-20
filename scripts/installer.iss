@@ -264,24 +264,9 @@ var
   InstalledVersionMinor: Cardinal;
   InstalledVersionBld: Cardinal;
 begin
-  VersionMajor := 14;
-  VersionMinor := 0;
-  VersionBld := 24215;
-  RegKey := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86';
-  IsRuntimeInstalled := 0;
-  InstalledVersionMajor := 0;
-  InstalledVersionMinor := 0;
-  InstalledVersionBld := 0;
+  RegKey := 'Installer\Dependencies\,,x86,14.0,bundle\Dependents\{7e9fae12-5bbf-47fb-b944-09c49e75c061}';
 
-  RegQueryDWordValue(HKLM, RegKey, 'Installed', IsRuntimeInstalled);
-  RegQueryDWordValue(HKLM, RegKey, 'Major', InstalledVersionMajor);
-  RegQueryDWordValue(HKLM, RegKey, 'Minor', InstalledVersionMinor);
-  RegQueryDWordValue(HKLM, RegKey, 'Bld', InstalledVersionBld);
-
-  Result := (IsRuntimeInstalled = 0)
-    or (InstalledVersionMajor < VersionMajor)
-    or (InstalledVersionMinor < VersionMinor)
-    or (InstalledVersionBld < VersionBld);
+  Result := not RegKeyExists(HKEY_CLASSES_ROOT, RegKey);
 end;
 
 // Query user whether their data files should be deleted on uninstall.
@@ -307,7 +292,7 @@ end;
 procedure InitializeWizard();
 begin
   if VCRedistNeedsInstall then begin
-    idpAddFile('https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe', ExpandConstant('{tmp}\vc_redist.x86.exe'));
+    idpAddFile('https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe', ExpandConstant('{tmp}\vc_redist.x86.exe'));
 
     idpDownloadAfter(wpReady);
   end

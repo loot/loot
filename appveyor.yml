@@ -1,4 +1,4 @@
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 version: "{build}-{branch}"
 
@@ -28,7 +28,7 @@ before_build:
   - ps: mkdir build
   - .\svg_to_ico.exe -i resources\icon.svg -o build\icon\icon.ico
   - cd build
-  - cmake .. -G "Visual Studio 14 2015" -DBOOST_ROOT="C:\Libraries\boost_1_67_0" -DBOOST_LIBRARYDIR="C:\Libraries\boost_1_67_0\lib32-msvc-14.0" -DMSVC_STATIC_RUNTIME=ON
+  - cmake .. -G "Visual Studio 15 2017" -DBOOST_ROOT="C:\Libraries\boost_1_67_0" -DBOOST_LIBRARYDIR="C:\Libraries\boost_1_67_0\lib32-msvc-14.1" -DMSVC_STATIC_RUNTIME=ON
 
 build:
   verbosity: minimal
@@ -74,7 +74,7 @@ deploy:
     tag: $(APPVEYOR_REPO_TAG_NAME)
     release: LOOT v$(APPVEYOR_REPO_TAG_NAME)
     description: |
-      Requires Windows 7 or later and the [MSVC 2015 x86 redistributable](https://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html).
+      Requires Windows 7 or later and the [MSVC 2017 x86 redistributable](https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/$(APPVEYOR_REPO_TAG_NAME)/app/changelog.html).
     auth_token:
       secure: yDqT5l/e5MntbW99V6+MHlfFgNv+UIogFfeyUVqtFk5lFRB/dAraLLwKCLl6y+DH
     artifact: LOOT,installer

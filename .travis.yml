@@ -11,8 +11,8 @@ addons:
       - libhttp-parser-dev
       - libssh2-1-dev
       - libssl-dev
-      - gcc-5
-      - g++-5
+      - gcc-8
+      - g++-8
       # GUI dependencies
       - libx11-dev
       - libgtk2.0-dev
@@ -26,7 +26,7 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/node_modules
     - $HOME/boost_1_67_0/boost
-    - $HOME/boost_1_67_0/stage/lib
+    - $HOME/boost_1_67_0/stage/64/lib
   yarn: true
 
 before_install:
@@ -36,33 +36,25 @@ before_install:
 
 install:
   # Use GCC 5.
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
-  - export CXXFLAGS="-fPIC" CFLAGS="-fPIC"
+  - export CXX="g++-8" CC="gcc-8"
   # Install Node.js dependencies
   - yarn install
   # Add local binary path to PATH
   - export PATH="./node_modules/.bin:$PATH"
   # Install Boost
-  - wget https://raw.githubusercontent.com/Ortham/ci-scripts/1.0.0/install_boost.py
-  - python install_boost.py --directory ~ --boost-version 1.67.0 filesystem locale system
+  - wget https://raw.githubusercontent.com/Ortham/ci-scripts/1.5.0/install_boost.py
+  - python install_boost.py --directory ~ --boost-version 1.67.0 -a 64 -t gcc-8 filesystem locale system
   # Install packages for generating documentation
   - pip install --user -r docs/requirements.txt
   # Add sphinx-build to PATH
   - export PATH="$HOME/.local/bin:$PATH"
-  # Get CMake (version available in repositories is too old, needs to be 3.1+)
-  - wget --no-check-certificate https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz
-  - tar -xzf cmake-3.7.2-Linux-x86_64.tar.gz
-  - export PATH=$PWD/cmake-3.7.2-Linux-x86_64/bin:$PATH
-  - wget https://github.com/Ortham/svg_to_ico/releases/download/0.1.0/svg_to_ico.tar.xz
-  - tar -xJf svg_to_ico.tar.xz
 
 before_script:
   - mkdir build
-  - ./svg_to_ico -i resources/icon.svg -o build/icon/icon.ico
   # Move into the cloned LOOT repo build path.
   - cd build
   # Link dynamically to the C++ standard library runtime.
-  - cmake .. -DBOOST_ROOT=~/boost_1_67_0
+  - cmake .. -DBOOST_ROOT=~/boost_1_67_0 -DBOOST_LIBRARYDIR=~/boost_1_67_0/stage/64/lib
 
 script:
   - make all
