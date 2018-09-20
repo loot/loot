@@ -292,10 +292,10 @@ void Game::RedatePlugins() {
     for (const auto& pluginName : loadorder) {
       fs::path filepath = DataPath() / pluginName;
       if (!fs::exists(filepath)) {
-        if (fs::exists(filepath.string() + ".ghost"))
-          filepath += ".ghost";
-        else
+        filepath += ".ghost";
+        if (!fs::exists(filepath)) {
           continue;
+        }
       }
 
       auto thisTime = fs::last_write_time(filepath);
