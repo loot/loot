@@ -83,7 +83,10 @@ deploy:
       appveyor_repo_tag: true
 
 on_success:
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k $env:bintray_auth_token -t $env:github_auth_token -n 30
+  - ps: |
+      if ($env:bintray_auth_token -And $env:github_auth_token) {
+        python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k $env:bintray_auth_token -t $env:github_auth_token -n 30
+      }
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
