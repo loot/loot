@@ -4,6 +4,15 @@ Mod Authors and LOOT
 
 As a mod author you will sometimes be asked various questions or get comments related to LOOT or wonder how or why LOOT does something in relation to your mod. The purpose of this article is to hopefully clear up any questions and make sure that your mod(s) and LOOT works as well together as possible.
 
+Working with the LOOT team
+==========================
+
+The "regular" LOOT team consists of only a handful of volunteer contributors, across 5+ different games and masterlists, which means we just can't know every intricacy of every mod in combination with any other mod out there—if you've made a mod and have been asked for whether it's compatible with a number of other mods, you know how this is.
+
+We very much appreciate it when mod authors come to us to let us know of discrepancies between how LOOT treats your mod(s) and how you believe it ought to be treated. This can be erraneous messages, getting load ordering wrong, or other information. Keep in mind that LOOT is for an entire load order, so a statement such as "load my mod last" is not very useful, since multiple mods may claim that—and which one of these should really be loaded last then? It's much better to tell us why it needs to load later than what other (types of) mod(s).
+
+Below are listed a number of ways you can work with and provide information to LOOT/the LOOT team.
+
 Provide information to LOOT directly in the mod
 ===============================================
 
@@ -19,8 +28,6 @@ For plugin files, having a line with just something like "Version 2.1.3" in the 
 (Is there any other metadata that can be provided directly by the mod?)
 -----------------------------------------------------------------------
 
-Working with the LOOT team
-==========================
 
 FAQs
 ====
