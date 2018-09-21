@@ -28,6 +28,12 @@ For plugin files, having a line with just something like "Version 2.1.3" in the 
 (Is there any other metadata that can be provided directly by the mod?)
 -----------------------------------------------------------------------
 
+Provide information to LOOT's masterlists
+=========================================
+
+Ideally you would add the information to the masterlist directly and make a pull request, see `How To Contribute`_ for more information on doing it this way. If you're not used to working with git and YAML gives you a headache, you can also provide the information in other ways though, as described in the :doc:`contributing` page.
+
+.. _How To Contribute: https://loot.github.io/docs/contributing/How-To-Contribute.html
 
 FAQs
 ====
