@@ -15,6 +15,7 @@ LOOT
   app/usage/settings
   app/theme
   app/contributing
+  app/modauthors
   app/credits
   app/changelog
 
