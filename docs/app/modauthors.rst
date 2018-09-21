@@ -2,24 +2,24 @@
 Mod Authors and LOOT
 ********************
 
-As a mod author you will sometimes be asked various questions or get comments related to LOOT or wonder how or why LOOT does something in relation to your mod. The purpose of this article is to hopefully clear up any questions and make sure that your mod(s) and LOOT works as well together as possible.
+As a mod author you will sometimes be asked various questions or get comments related to LOOT or wonder how or why LOOT does something in relation to your mod. The purpose of this article is to hopefully clear up such questions and make sure that your mod(s) and LOOT work as well together as possible.
 
 Working with the LOOT team
 ==========================
 
 The "regular" LOOT team consists of only a handful of volunteer contributors, across 5+ different games and masterlists, which means we just can't know every intricacy of every mod in combination with any other mod out there—if you've made a mod and have been asked for whether it's compatible with a number of other mods, you know how this is.
 
-We very much appreciate it when mod authors come to us to let us know of discrepancies between how LOOT treats your mod(s) and how you believe it ought to be treated. This can be erraneous messages, getting load ordering wrong, or other information. Keep in mind that LOOT is for an entire load order, so a statement such as "load my mod last" is not very useful, since multiple mods may claim that—and which one of these should really be loaded last then? It's much better to tell us why it needs to load later than what other (types of) mod(s).
+We very much appreciate it when mod authors come to us to let us know of discrepancies between how LOOT treats your mod(s) and how you believe it ought to be treated. This can be erraneous messages, getting load ordering wrong, or other information. Keep in mind that LOOT is for an entire load order, so a blanket statement such as "load my mod last" is not very useful, as multiple mods may claim that—and which one of these should really be loaded last then? It's much better to tell us why it needs to load later than what other (types of) mod(s).
 
 Below are listed a number of ways you can work with and provide information to LOOT/the LOOT team.
 
 Provide information to LOOT directly in the mod
 ===============================================
 
-Verson strings
---------------
+Version strings
+---------------
 
-LOOT parses the "Description" field in plugin files (:file:`.esp`, :file:`.esm`, and :file:`.esl` files) and is also able to check the ``FileVersion`` of :file:`.exe` and :file:`.dll` files (e.g., :abbr:`SKSE (Skyrim Script Extender)` and :abbr:`F4SE (Fallout 4 Script Extender)` plugins). This allows the masterlist to have checks such as whether a mod is the latest version but also enables version compatibility checks. We strongly recommend all plugin authors to include a version directly in the plugin.
+LOOT parses the "Description" field in plugin files (:file:`.esp`, :file:`.esm`, and :file:`.esl` files) and is also able to check the ``FileVersion`` attribute of :file:`.exe` and :file:`.dll` files (e.g., :abbr:`SKSE (Skyrim Script Extender)` and :abbr:`F4SE (Fallout 4 Script Extender)` plugins). This allows the masterlist to have checks such as whether a mod is the latest version but also enables version compatibility (and incompatibility!) checks. We strongly recommend all plugin authors to include the version directly in the plugin.
 
 For plugin files, having a line with just something like "Version 2.1.3" in the plugin description [#snam_records]_ makes it the most obvious for LOOT's parsing, but LOOT tries to be smart and thus also recognises a number of other formats (e.g., "v2.1.3" or simply just "2.1.3") [#version_format]_. Since LOOT has no way of know what versioning scheme is being used, it will general compare versions using the `Semantic Versioning scheme`_, so it would also make it easier on LOOT if you follow that (or a scheme compatible with it).
 
@@ -31,7 +31,7 @@ For plugin files, having a line with just something like "Version 2.1.3" in the 
 Provide information to LOOT's masterlists
 =========================================
 
-Ideally you would add the information to the masterlist directly and make a pull request, see `How To Contribute`_ for more information on doing it this way. If you're not used to working with |git|_ and |YAML|_ gives you a headache, you can also provide the information in other ways though, as described in the :doc:`contributing` page.
+Ideally you would add the information to the masterlist directly and make a pull request, see `How To Contribute`_ for more information on doing it this way. If you're not used to working with |git|_ and |YAML|_ gives you a headache, you can also provide the information in other ways, as described on the :doc:`contributing` page.
 
 .. _How To Contribute: https://loot.github.io/docs/contributing/How-To-Contribute.html
 .. |git| replace:: :command:`git`
@@ -42,9 +42,9 @@ Ideally you would add the information to the masterlist directly and make a pull
 FAQs
 ====
 
-- Users tell me LOOT says that my plugin has dirty edits
-- My mod is incompatible with…
-- My mod needs to be loaded after/before…
+* Users tell me LOOT says that my plugin has dirty edits
+* My mod is incompatible with…
+* My mod needs to be loaded after/before…
 
 .. rubric:: Footnotes
 
