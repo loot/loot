@@ -32,7 +32,8 @@ FAQs
 .. rubric:: Footnotes
 
 .. [#snam_records] The plugin description is the ``SNAM`` record of the plugin's File Header and can be added and edited either using `xEdit`_ or via the relevant game's Creation Kit, typically in the window where you also edit masters.
-.. [#version_format] The version parsing happens in LOOT API's ```api/helpers/version.cpp```_ which you are welcome to inspect for more details.
+.. [#version_format] The version parsing happens in LOOT API's |api/helpers/version.cpp|_ which you are welcome to inspect for more details.
 
 .. _xEdit: https://tes5edit.github.io/
-.. _``api/helpers/version.cpp``: https://github.com/loot/loot-api/blob/master/src/api/helpers/version.cpp
+.. |api/helpers/version.cpp| replace:: :file:`api/helpers/version.cpp`
+.. _api/helpers/version.cpp: https://github.com/loot/loot-api/blob/master/src/api/helpers/version.cpp
