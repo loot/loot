@@ -71,6 +71,7 @@ protected:
       blankPluginDependentEsp("Blank - Plugin Dependent.esp"),
       blankDifferentPluginDependentEsp(
           "Blank - Different Plugin Dependent.esp"),
+      nonAsciiEsp(u8"non\u00C1scii.esp"),
       blankEsmCrc(getBlankEsmCrc()) {
     assertInitialState();
   }
@@ -105,6 +106,11 @@ protected:
     ASSERT_NO_THROW(
         std::filesystem::copy_file(dataPath / blankEsm, dataPath / masterFile));
     ASSERT_TRUE(exists(dataPath / masterFile));
+
+    // Create the non-ASCII plugin.
+    ASSERT_NO_THROW(
+        std::filesystem::copy_file(dataPath / blankEsp, dataPath / std::filesystem::u8path(nonAsciiEsp)));
+    ASSERT_TRUE(exists(dataPath / std::filesystem::u8path(nonAsciiEsp)));
 
     // Set initial load order and active plugins.
     setLoadOrder(getInitialLoadOrder());
@@ -202,6 +208,7 @@ protected:
         {blankDifferentMasterDependentEsp, true},
         {blankPluginDependentEsp, false},
         {blankDifferentPluginDependentEsp, false},
+        {nonAsciiEsp, true},
     });
   }
 
@@ -226,6 +233,7 @@ protected:
   const std::string blankDifferentMasterDependentEsp;
   const std::string blankPluginDependentEsp;
   const std::string blankDifferentPluginDependentEsp;
+  const std::string nonAsciiEsp;
 
   const uint32_t blankEsmCrc;
 
@@ -259,6 +267,8 @@ private:
 
   void setLoadOrder(
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
+    using std::filesystem::u8path;
+
     std::ofstream out(localPath / "plugins.txt");
     for (const auto& plugin : loadOrder) {
       if (GetParam() == GameType::fo4 || GetParam() == GameType::tes5se) {
@@ -274,13 +284,13 @@ private:
       std::filesystem::file_time_type modificationTime =
         std::filesystem::file_time_type::clock::now();
       for (const auto& plugin : loadOrder) {
-        if (std::filesystem::exists(
-                dataPath / std::filesystem::path(plugin.first + ".ghost"))) {
+        auto ghostedPath = dataPath / u8path(plugin.first + ".ghost");
+        if (std::filesystem::exists(ghostedPath)) {
           std::filesystem::last_write_time(
-              dataPath / std::filesystem::path(plugin.first + ".ghost"),
+              ghostedPath,
               modificationTime);
         } else {
-          std::filesystem::last_write_time(dataPath / plugin.first,
+          std::filesystem::last_write_time(dataPath / u8path(plugin.first),
                                              modificationTime);
         }
         modificationTime += std::chrono::seconds(60);;

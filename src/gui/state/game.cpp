@@ -279,6 +279,8 @@ std::vector<Message> Game::CheckInstallValidity(
 }
 
 void Game::RedatePlugins() {
+  using std::filesystem::u8path;
+
   if (Type() != GameType::tes5 && Type() != GameType::tes5se) {
     if (logger_) {
       logger_->warn("Cannot redate plugins for game {}.", Name());
@@ -290,7 +292,7 @@ void Game::RedatePlugins() {
   if (!loadorder.empty()) {
     std::filesystem::file_time_type lastTime = std::filesystem::file_time_type::clock::time_point::min();
     for (const auto& pluginName : loadorder) {
-      fs::path filepath = DataPath() / pluginName;
+      fs::path filepath = DataPath() / u8path(pluginName);
       if (!fs::exists(filepath)) {
         filepath += ".ghost";
         if (!fs::exists(filepath)) {
@@ -801,8 +803,8 @@ std::vector<std::string> Game::GetInstalledPluginNames() {
        it != fs::directory_iterator();
        ++it) {
     if (fs::is_regular_file(it->status()) &&
-        gameHandle_->IsValidPlugin(it->path().filename().string())) {
-      string name = it->path().filename().string();
+        gameHandle_->IsValidPlugin(it->path().filename().u8string())) {
+      string name = it->path().filename().u8string();
 
       if (logger_) {
         logger_->info("Found plugin: {}", name);

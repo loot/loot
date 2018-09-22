@@ -525,6 +525,8 @@ TEST_P(
 TEST_P(
     GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
+  using std::filesystem::u8path;
+
   GameSettings settings = GameSettings(GetParam())
     .SetGamePath(dataPath.parent_path())
     .SetGameLocalPath(localPath);
@@ -535,16 +537,17 @@ TEST_P(
   std::vector<std::pair<std::string, bool>> loadOrder = getInitialLoadOrder();
 
   // First set reverse timestamps to be sure.
-  auto time = std::filesystem::last_write_time(dataPath / masterFile);
+  auto time = std::filesystem::last_write_time(dataPath / u8path(masterFile));
   for (size_t i = 1; i < loadOrder.size(); ++i) {
-    if (!std::filesystem::exists(dataPath / loadOrder[i].first))
-      loadOrder[i].first += ".ghost";
+    auto pluginPath = dataPath / u8path(loadOrder[i].first);
+    if (!std::filesystem::exists(pluginPath))
+      pluginPath += ".ghost";
 
-    std::filesystem::last_write_time(dataPath / loadOrder[i].first,
+    std::filesystem::last_write_time(pluginPath,
                                        time - i * std::chrono::seconds(60));
     ASSERT_EQ(
         time - i * std::chrono::seconds(60),
-        std::filesystem::last_write_time(dataPath / loadOrder[i].first));
+        std::filesystem::last_write_time(pluginPath));
   }
 
   EXPECT_NO_THROW(game.RedatePlugins());
@@ -554,9 +557,13 @@ TEST_P(
     interval *= -1;
 
   for (size_t i = 0; i < loadOrder.size(); ++i) {
+    auto pluginPath = dataPath / u8path(loadOrder[i].first);
+    if (!std::filesystem::exists(pluginPath))
+      pluginPath += ".ghost";
+
     EXPECT_EQ(
         time + i * interval,
-        std::filesystem::last_write_time(dataPath / loadOrder[i].first));
+        std::filesystem::last_write_time(pluginPath));
   }
 }
 
@@ -570,7 +577,7 @@ TEST_P(
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
-  EXPECT_EQ(11, game.GetPlugins().size());
+  EXPECT_EQ(12, game.GetPlugins().size());
 
   // Check that one plugin's header has been read.
   ASSERT_NO_THROW(game.GetPlugin(masterFile));
@@ -591,7 +598,7 @@ TEST_P(
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
-  EXPECT_EQ(11, game.GetPlugins().size());
+  EXPECT_EQ(12, game.GetPlugins().size());
 
   // Check that one plugin's header has been read.
   ASSERT_NO_THROW(game.GetPlugin(blankEsm));
