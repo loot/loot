@@ -155,11 +155,11 @@ TEST_P(GameSettingsTest, setRepoBranchShouldStoreGivenValue) {
 }
 
 TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
-  std::string pathValue = "path";
+  std::string pathValue = u8"p\u00E1th";
   GameSettings settings_;
 
-  settings_.SetGamePath(pathValue);
-  EXPECT_EQ(pathValue, settings_.GamePath().string());
+  settings_.SetGamePath(std::filesystem::u8path(pathValue));
+  EXPECT_EQ(pathValue, settings_.GamePath().u8string());
 }
 }
 }
