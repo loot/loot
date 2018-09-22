@@ -30,7 +30,6 @@ along with LOOT.  If not, see
 #include <include/cef_parser.h>
 #include <include/wrapper/cef_stream_resource_handler.h>
 
-#include <boost/algorithm/string.hpp>
 #include <string>
 
 using namespace std;

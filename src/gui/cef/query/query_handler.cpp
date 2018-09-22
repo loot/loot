@@ -33,8 +33,6 @@
 #include <include/cef_app.h>
 #include <include/cef_task.h>
 #include <include/wrapper/cef_closure_task.h>
-#include <boost/format.hpp>
-#include <boost/locale.hpp>
 
 #include "gui/cef/loot_app.h"
 #include "gui/cef/loot_handler.h"

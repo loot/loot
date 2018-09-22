@@ -25,7 +25,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_METADATA_QUERY
 #define LOOT_GUI_QUERY_METADATA_QUERY
 
-#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 
