@@ -281,12 +281,14 @@ void to_json(nlohmann::json& json, const GameSettings& game) {
     { "folder", game.FolderName() },
     { "repo", game.RepoURL() },
     { "branch", game.RepoBranch() },
-    { "path", game.GamePath().string() },
-    { "localPath", game.GameLocalPath().string() },
+    { "path", game.GamePath().u8string() },
+    { "localPath", game.GameLocalPath().u8string() },
   };
 }
 
 void from_json(const nlohmann::json& json, GameSettings& game) {
+  using std::filesystem::u8path;
+
   auto gameType = mapGameType(json.at("type"));
   game = GameSettings(gameType, json.at("folder"));
 
@@ -295,8 +297,8 @@ void from_json(const nlohmann::json& json, GameSettings& game) {
   game.SetRegistryKey(json.value("registry", ""));
   game.SetRepoURL(json.value("repo", ""));
   game.SetRepoBranch(json.value("branch", ""));
-  game.SetGamePath(json.value("path", ""));
-  game.SetGameLocalPath(json.value("localPath", ""));
+  game.SetGamePath(u8path(json.value("path", "")));
+  game.SetGameLocalPath(u8path(json.value("localPath", "")));
 }
 
 nlohmann::json to_json_with_language(const PluginMetadata& metadata,

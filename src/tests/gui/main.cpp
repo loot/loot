@@ -24,6 +24,7 @@
 
 #include <boost/locale.hpp>
 
+#include "tests/gui/cef/query/json_test.h"
 #include "tests/gui/state/game_settings_test.h"
 #include "tests/gui/state/game_test.h"
 #include "tests/gui/state/loot_paths_test.h"
