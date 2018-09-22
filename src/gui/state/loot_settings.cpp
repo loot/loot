@@ -32,6 +32,7 @@
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
 
+using std::filesystem::u8path;
 using std::lock_guard;
 using std::recursive_mutex;
 using std::string;
@@ -57,7 +58,9 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
 
     auto path = LootPaths::getLootDataPath() / "SkyrimSE";
     if (std::filesystem::exists(path)) {
-      std::filesystem::rename(path, LootPaths::getLootDataPath() / *folder);
+      std::filesystem::rename(
+          path,
+          LootPaths::getLootDataPath() / u8path(*folder));
     }
   }
 
@@ -109,12 +112,12 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
 
   auto path = table->get_as<std::string>("path");
   if (path) {
-    game.SetGamePath(*path);
+    game.SetGamePath(u8path(*path));
   }
 
   auto localPath = table->get_as<std::string>("local_path");
   if (localPath) {
-    game.SetGameLocalPath(*localPath);
+    game.SetGameLocalPath(u8path(*localPath));
   }
 
   auto registry = table->get_as<std::string>("registry");
@@ -255,8 +258,8 @@ void LootSettings::save(const std::filesystem::path& file) {
       game->insert("master", gameSettings.Master());
       game->insert("repo", gameSettings.RepoURL());
       game->insert("branch", gameSettings.RepoBranch());
-      game->insert("path", gameSettings.GamePath().string());
-      game->insert("local_path", gameSettings.GameLocalPath().string());
+      game->insert("path", gameSettings.GamePath().u8string());
+      game->insert("local_path", gameSettings.GameLocalPath().u8string());
       game->insert("registry", gameSettings.RegistryKey());
       games->push_back(game);
     }

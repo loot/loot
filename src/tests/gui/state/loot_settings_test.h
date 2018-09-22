@@ -200,6 +200,25 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   EXPECT_EQ("Oblivion", settings_.getGame());
 }
 
+TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+    << "name = \"Game Name\"" << endl
+    << "type = \"Oblivion\"" << endl
+    << "folder = \"Oblivion\"" << endl
+    << u8"path = \"non\u00C1sciiGamePath\"" << endl
+    << u8"local_path = \"non\u00C1sciiGameLocalPath\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(8, settings_.getGameSettings().size());
+  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
+  EXPECT_EQ(u8"non\u00C1sciiGamePath", settings_.getGameSettings()[0].GamePath().u8string());
+  EXPECT_EQ(u8"non\u00C1sciiGameLocalPath", settings_.getGameSettings()[0].GameLocalPath().u8string());
+}
+
 TEST_P(LootSettingsTest,
        loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
@@ -382,6 +401,24 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
 
   EXPECT_EQ(filters, settings.getFilters());
+}
+
+TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
+  using std::filesystem::u8path;
+  settings_.storeGameSettings({
+      GameSettings(GameType::tes4)
+      .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
+    .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"))
+    });
+  settings_.save(settingsFile_);
+
+  std::ifstream in(settingsFile_);
+  std::stringstream buffer;
+  buffer << in.rdbuf();
+  std::string contents = buffer.str();
+
+  EXPECT_NE(std::string::npos, contents.find(u8"non\u00C1sciiGamePath"));
+  EXPECT_NE(std::string::npos, contents.find(u8"non\u00C1sciiGameLocalPath"));
 }
 
 TEST_P(LootSettingsTest,
