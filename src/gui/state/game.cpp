@@ -661,11 +661,11 @@ std::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
                     gameSettings.Name());
     }
     if (!gameSettings.GamePath().empty() &&
-        fs::exists(gameSettings.GamePath() / "Data" / gameSettings.Master()))
+        fs::exists(gameSettings.GamePath() / "Data" / u8path(gameSettings.Master())))
       return gameSettings.GamePath();
 
     std::filesystem::path gamePath = "..";
-    if (fs::exists(gamePath / "Data" / gameSettings.Master()) &&
+    if (fs::exists(gamePath / "Data" / u8path(gameSettings.Master())) &&
         ExecutableExists(gameSettings.Type(), gamePath)) {
       return gamePath;
     }

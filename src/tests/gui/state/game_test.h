@@ -160,6 +160,13 @@ TEST_P(GameTest, isInstalledShouldBeTrueIfGamePathIsValid) {
       GameSettings(GetParam()).SetGamePath(dataPath.parent_path())));
 }
 
+TEST_P(GameTest, isInstalledShouldSupportNonAsciiGameMasters) {
+  auto settings = defaultGameSettings;
+  settings.SetMaster(nonAsciiEsp);
+
+  EXPECT_TRUE(Game::IsInstalled(settings));
+}
+
 TEST_P(GameTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
   auto currentPath = std::filesystem::current_path();
 
