@@ -671,11 +671,15 @@ std::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
     }
 
 #ifdef _WIN32
-    std::string key_parent =
-        fs::path(gameSettings.RegistryKey()).parent_path().string();
-    std::string key_name =
-        fs::path(gameSettings.RegistryKey()).filename().string();
-    gamePath = RegKeyStringValue("HKEY_LOCAL_MACHINE", key_parent, key_name);
+    auto registryKey = gameSettings.RegistryKey();
+    auto lastBackslash = registryKey.rfind("\\");
+    if (lastBackslash == std::string::npos || lastBackslash == registryKey.length() - 1) {
+      return std::filesystem::path();
+    }
+    std::string keyParent = registryKey.substr(0, lastBackslash);
+    std::string keyName = registryKey.substr(lastBackslash + 1);
+    
+    gamePath = RegKeyStringValue("HKEY_LOCAL_MACHINE", keyParent, keyName);
     if (!gamePath.empty() &&
         fs::exists(gamePath / "Data" / gameSettings.Master()) &&
         ExecutableExists(gameSettings.Type(), gamePath)) {
