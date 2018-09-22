@@ -24,7 +24,7 @@
 
 #include "gui/state/game_settings.h"
 
-#include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
 
 namespace fs = std::filesystem;
 
@@ -102,8 +102,9 @@ bool GameSettings::IsRepoBranchOldDefault() const {
 }
 
 bool GameSettings::operator==(const GameSettings& rhs) const {
-  return (boost::iequals(name_, rhs.Name()) ||
-          boost::iequals(lootFolderName_, rhs.FolderName()));
+  using boost::locale::to_lower;
+  return to_lower(name_) == to_lower(rhs.Name()) ||
+    to_lower(lootFolderName_) == to_lower(rhs.FolderName());
 }
 
 GameType GameSettings::Type() const { return type_; }

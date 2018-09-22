@@ -124,6 +124,20 @@ TEST_P(GameSettingsTest, gameSettingsWithDifferentIdsAndNamesShouldNotBeEqual) {
   EXPECT_FALSE(game1 == game2);
 }
 
+TEST_P(GameSettingsTest, gameSettingsWithCaseInsensitivelyEqualNamesShouldBeEqual) {
+  GameSettings game1 = GameSettings(GameType::tes4).SetName(u8"non\u00C1sciiName");
+  GameSettings game2 = GameSettings(GameType::tes5).SetName(u8"non\u00E1sciiName");
+
+  EXPECT_TRUE(game1 == game2);
+}
+
+TEST_P(GameSettingsTest, gameSettingsWithCaseInsensitivelyEqualFolderNamesShouldBeEqual) {
+  GameSettings game1 = GameSettings(GameType::tes4, u8"non\u00C1sciiFolder");
+  GameSettings game2 = GameSettings(GameType::tes5, u8"non\u00E1sciiFolder");
+
+  EXPECT_TRUE(game1 == game2);
+}
+
 TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
   GameSettings settings_;
   settings_.SetName("name");

@@ -660,6 +660,18 @@ TEST_P(
   EXPECT_EQ(2, index);
 }
 
+TEST_P(
+  GameTest,
+  GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
+  Game game(defaultGameSettings, "");
+  game.Init();
+  game.LoadAllInstalledPlugins(true);
+
+  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(nonAsciiEsp),
+    { u8"non\u00E1scii.esp" });
+  EXPECT_EQ(0, index);
+}
+
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath);

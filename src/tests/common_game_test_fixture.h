@@ -189,6 +189,7 @@ protected:
       for (auto& line : actual) {
         if (line[0] == '*')
           line = line.substr(1);
+        line = boost::locale::conv::to_utf<char>(line, "Windows-1252");
       }
     }
 
@@ -277,7 +278,7 @@ private:
       } else if (!plugin.second)
         continue;
 
-      out << plugin.first << std::endl;
+      out << boost::locale::conv::from_utf(plugin.first, "Windows-1252") << std::endl;
     }
 
     if (isLoadOrderTimestampBased(GetParam())) {
