@@ -53,10 +53,12 @@ public:
       auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(
           plugin, loadOrder);
 
-      json["plugins"].push_back({
-          {"name", pluginName},
-          {"loadOrderIndex", loadOrderIndex},
-      });
+      nlohmann::json pluginJson = { {"name", pluginName} };
+      if (loadOrderIndex.has_value()) {
+        pluginJson["loadOrderIndex"] = loadOrderIndex.value();
+      }
+
+      json["plugins"].push_back(pluginJson);
     }
 
     return json.dump();

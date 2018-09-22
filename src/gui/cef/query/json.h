@@ -380,12 +380,15 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
     { "isLightMaster", plugin.isLightMaster },
     { "loadsArchive", plugin.loadsArchive },
     { "crc", plugin.crc },
-    { "loadOrderIndex", plugin.loadOrderIndex },
     { "group", plugin.group },
     { "messages", plugin.messages },
     { "suggestedTags", plugin.suggestedTags },
     { "currentTags", plugin.currentTags },
   };
+
+  if (plugin.loadOrderIndex.has_value()) {
+    json["loadOrderIndex"] = plugin.loadOrderIndex.value();
+  }
 
   if (!plugin.cleanedWith.empty()) {
     json["cleanedWith"] = plugin.cleanedWith;

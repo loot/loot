@@ -630,14 +630,14 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 
 TEST_P(
     GameTest,
-    GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
+    GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
   Game game(defaultGameSettings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp),
+  auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp),
                                              game.GetLoadOrder());
-  EXPECT_EQ(-1, index);
+  EXPECT_FALSE(index.has_value());
 }
 
 TEST_P(
@@ -647,17 +647,17 @@ TEST_P(
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile),
+  auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile),
                                              game.GetLoadOrder());
-  EXPECT_EQ(0, index);
+  EXPECT_EQ(0, index.value());
 
   index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm),
                                        game.GetLoadOrder());
-  EXPECT_EQ(1, index);
+  EXPECT_EQ(1, index.value());
 
   index = game.GetActiveLoadOrderIndex(
       game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
-  EXPECT_EQ(2, index);
+  EXPECT_EQ(2, index.value());
 }
 
 TEST_P(
@@ -667,9 +667,9 @@ TEST_P(
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  short index = game.GetActiveLoadOrderIndex(game.GetPlugin(nonAsciiEsp),
+  auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(nonAsciiEsp),
     { u8"non\u00E1scii.esp" });
-  EXPECT_EQ(0, index);
+  EXPECT_EQ(0, index.value());
 }
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {

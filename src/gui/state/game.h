@@ -29,6 +29,7 @@
 
 #include <filesystem>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <unordered_set>
 
@@ -75,7 +76,7 @@ public:
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
 
   bool IsPluginActive(const std::string& pluginName) const;
-  short GetActiveLoadOrderIndex(
+  std::optional<short> GetActiveLoadOrderIndex(
       const std::shared_ptr<const PluginInterface>& plugin,
       const std::vector<std::string>& loadOrder) const;
 
@@ -115,7 +116,7 @@ private:
 #endif
   static bool ExecutableExists(const GameType& gameType,
                                const std::filesystem::path& gamePath);
-  static std::filesystem::path DetectGamePath(
+  static std::optional<std::filesystem::path> DetectGamePath(
       const GameSettings& gameSettings);
   static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                               const std::filesystem::path& backupDirectory);

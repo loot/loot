@@ -98,8 +98,10 @@ private:
       }
 
       auto derivedMetadata = generateDerivedMetadata(plugin);
-      derivedMetadata.setLoadOrderIndex(
-          state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, plugins));
+      auto index = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, plugins);
+      if (index.has_value()) {
+        derivedMetadata.setLoadOrderIndex(index.value());
+      }
 
       json["plugins"].push_back(derivedMetadata);
     }

@@ -77,9 +77,10 @@ Game::Game(const GameSettings& gameSettings,
     pluginsFullyLoaded_(false),
     loadOrderSortCount_(0),
     logger_(getLogger()) {
-  SetGamePath(DetectGamePath(*this));
-
-  if (GamePath().empty()) {
+  auto gamePath = DetectGamePath(*this);
+  if (gamePath.has_value()) {
+    SetGamePath(gamePath.value());
+  } else {
     throw GameDetectionError("Game path could not be detected.");
   }
 
@@ -113,9 +114,7 @@ Game& Game::operator=(const Game& game) {
 }
 
 bool Game::IsInstalled(const GameSettings& gameSettings) {
-  auto gamePath = DetectGamePath(gameSettings);
-
-  return !gamePath.empty();
+  return DetectGamePath(gameSettings).has_value();
 }
 
 void Game::Init() {
@@ -378,16 +377,16 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
   return gameHandle_->IsPluginActive(pluginName);
 }
 
-short Game::GetActiveLoadOrderIndex(
+std::optional<short> Game::GetActiveLoadOrderIndex(
     const std::shared_ptr<const PluginInterface>& plugin,
     const std::vector<std::string>& loadOrder) const {
   using boost::locale::to_lower;
   // Get the full load order, then count the number of active plugins until the
   // given plugin is encountered. If the plugin isn't active or in the load
-  // order, return -1.
+  // order, return nullopt.
 
   if (!IsPluginActive(plugin->GetName()))
-    return -1;
+    return std::nullopt;
 
   short numberOfActivePlugins = 0;
   for (const std::string& otherPluginName : loadOrder) {
@@ -402,7 +401,7 @@ short Game::GetActiveLoadOrderIndex(
     }
   }
 
-  return -1;
+  return std::nullopt;
 }
 
 std::vector<std::string> Game::SortPlugins() {
@@ -654,7 +653,7 @@ bool Game::ExecutableExists(const GameType& gameType,
   }
 }
 
-std::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
+std::optional<std::filesystem::path> Game::DetectGamePath(const GameSettings& gameSettings) {
   auto logger = getLogger();
   try {
     if (logger) {
@@ -675,7 +674,7 @@ std::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
     auto registryKey = gameSettings.RegistryKey();
     auto lastBackslash = registryKey.rfind("\\");
     if (lastBackslash == std::string::npos || lastBackslash == registryKey.length() - 1) {
-      return std::filesystem::path();
+      return std::nullopt;
     }
     std::string keyParent = registryKey.substr(0, lastBackslash);
     std::string keyName = registryKey.substr(lastBackslash + 1);
@@ -695,7 +694,7 @@ std::filesystem::path Game::DetectGamePath(const GameSettings& gameSettings) {
     }
   }
 
-  return std::filesystem::path();
+  return std::nullopt;
 }
 
 void Game::BackupLoadOrder(const std::vector<std::string>& loadOrder,

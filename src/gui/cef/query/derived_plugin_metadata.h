@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 #define LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 
+#include <optional>
+
 #include <json.hpp>
 #include <loot/api.h>
 
@@ -83,7 +85,7 @@ private:
   bool loadsArchive;
 
   uint32_t crc;
-  short loadOrderIndex;
+  std::optional<short> loadOrderIndex;
 
   std::string group;
   std::string cleanedWith;
