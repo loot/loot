@@ -571,10 +571,10 @@ TEST_P(
   // Check that one plugin's header has been read.
   ASSERT_NO_THROW(game.GetPlugin(masterFile));
   auto plugin = game.GetPlugin(masterFile);
-  EXPECT_EQ("5.0", plugin->GetVersion());
+  EXPECT_EQ("5.0", plugin->GetVersion().value());
 
   // Check that only the header has been read.
-  EXPECT_EQ(0, plugin->GetCRC());
+  EXPECT_FALSE(plugin->GetCRC().has_value());
 }
 
 TEST_P(
@@ -589,10 +589,10 @@ TEST_P(
   // Check that one plugin's header has been read.
   ASSERT_NO_THROW(game.GetPlugin(blankEsm));
   auto plugin = game.GetPlugin(blankEsm);
-  EXPECT_EQ("5.0", plugin->GetVersion());
+  EXPECT_EQ("5.0", plugin->GetVersion().value());
 
   // Check that not only the header has been read.
-  EXPECT_EQ(blankEsmCrc, plugin->GetCRC());
+  EXPECT_EQ(blankEsmCrc, plugin->GetCRC().value());
 }
 
 TEST_P(GameTest,
@@ -649,7 +649,7 @@ TEST_P(
 
   auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile),
                                              game.GetLoadOrder());
-  EXPECT_EQ(0, index.value());
+  EXPECT_EQ(0, index);
 
   index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm),
                                        game.GetLoadOrder());

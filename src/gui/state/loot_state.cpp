@@ -154,7 +154,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     logger_->info(
         "LOOT Version: {}+{}", gui::Version::string(), gui::Version::revision);
     logger_->info("LOOT API Version: {}+{}",
-                  LootVersion::string(),
+                  LootVersion::GetVersionString(),
                   LootVersion::revision);
   }
 

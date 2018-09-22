@@ -42,10 +42,18 @@ public:
     }
 
     // Get metadata from masterlist and userlist.
-    PluginMetadata metadata =
-        state_.getCurrentGame().GetMasterlistMetadata(pluginName_);
-    metadata.MergeMetadata(
-        state_.getCurrentGame().GetUserMetadata(pluginName_));
+    PluginMetadata metadata(pluginName_);
+
+    auto masterlistMetadata =
+      state_.getCurrentGame().GetMasterlistMetadata(pluginName_);
+    if (masterlistMetadata.has_value()) {
+      metadata.MergeMetadata(masterlistMetadata.value());
+    }
+
+    auto userMetadata = state_.getCurrentGame().GetUserMetadata(pluginName_);
+    if (userMetadata.has_value()) {
+      metadata.MergeMetadata(userMetadata.value());
+    }
 
     // Generate text representation.
     std::string text =

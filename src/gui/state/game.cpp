@@ -52,13 +52,13 @@
 #include "windows.h"
 #endif
 
-using std::filesystem::u8path;
 using std::list;
 using std::lock_guard;
 using std::mutex;
 using std::string;
 using std::thread;
 using std::vector;
+using std::filesystem::u8path;
 
 namespace fs = std::filesystem;
 
@@ -84,8 +84,8 @@ Game::Game(const GameSettings& gameSettings,
     throw GameDetectionError("Game path could not be detected.");
   }
 
-  gameHandle_ =
-      CreateGameHandle(Type(), GamePath().u8string(), GameLocalPath().u8string());
+  gameHandle_ = CreateGameHandle(
+      Type(), GamePath(), GameLocalPath());
   gameHandle_->IdentifyMainMasterFile(Master());
 }
 
@@ -127,7 +127,9 @@ void Game::Init() {
     auto lootGamePath = lootDataPath_ / u8path(FolderName());
     if (!fs::is_directory(lootGamePath)) {
       if (fs::exists(lootGamePath)) {
-        throw FileAccessError("Could not create LOOT folder for game, the path exists but is not a directory");
+        throw FileAccessError(
+            "Could not create LOOT folder for game, the path exists but is not "
+            "a directory");
       }
       fs::create_directories(lootGamePath);
     }
@@ -136,15 +138,7 @@ void Game::Init() {
 
 std::shared_ptr<const PluginInterface> Game::GetPlugin(
     const std::string& name) const {
-  try {
-    return gameHandle_->GetPlugin(name);
-  } catch (std::exception& e) {
-    if (logger_) {
-      logger_->error(
-          "Couldn't get plugin data for \"{}\". Details: {}", name, e.what());
-    }
-    return nullptr;
-  }
+  return gameHandle_->GetPlugin(name);
 }
 
 std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
@@ -162,7 +156,6 @@ std::vector<Message> Game::CheckInstallValidity(
   }
   std::vector<Message> messages;
   if (IsPluginActive(plugin->GetName())) {
-
     auto fileExists = [&](const std::string& file) {
       return std::filesystem::exists(DataPath() / u8path(file)) ||
              (hasPluginFileExtension(file) &&
@@ -216,7 +209,8 @@ std::vector<Message> Game::CheckInstallValidity(
     }
     for (const auto& inc : metadata.GetIncompatibilities()) {
       if (fileExists(inc.GetName()) &&
-        (!hasPluginFileExtension(inc.GetName()) || IsPluginActive(inc.GetName()))) {
+          (!hasPluginFileExtension(inc.GetName()) ||
+           IsPluginActive(inc.GetName()))) {
         if (logger_) {
           logger_->error(
               "\"{}\" is incompatible with \"{}\", but both files are "
@@ -224,12 +218,13 @@ std::vector<Message> Game::CheckInstallValidity(
               plugin->GetName(),
               inc.GetName());
         }
-        messages.push_back(Message(MessageType::error,
-                                   (boost::format(boost::locale::translate(
-                                        "This plugin is incompatible with "
-                                        "\"%1%\", but both files are present.")) %
-                                    inc.GetDisplayName())
-                                       .str()));
+        messages.push_back(
+            Message(MessageType::error,
+                    (boost::format(boost::locale::translate(
+                         "This plugin is incompatible with "
+                         "\"%1%\", but both files are present.")) %
+                     inc.GetDisplayName())
+                        .str()));
       }
     }
   }
@@ -288,7 +283,8 @@ void Game::RedatePlugins() {
 
   vector<string> loadorder = gameHandle_->GetLoadOrder();
   if (!loadorder.empty()) {
-    std::filesystem::file_time_type lastTime = std::filesystem::file_time_type::clock::time_point::min();
+    std::filesystem::file_time_type lastTime =
+        std::filesystem::file_time_type::clock::time_point::min();
     for (const auto& pluginName : loadorder) {
       fs::path filepath = DataPath() / u8path(pluginName);
       if (!fs::exists(filepath)) {
@@ -312,8 +308,7 @@ void Game::RedatePlugins() {
                             lastTime);  // Space timestamps by a minute.
 
         if (logger_) {
-          logger_->info(
-              "Redated \"{}\"", filepath.filename().u8string());
+          logger_->info("Redated \"{}\"", filepath.filename().u8string());
         }
       }
     }
@@ -404,6 +399,49 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
   return std::nullopt;
 }
 
+std::string describe(EdgeType edgeType) {
+  switch (edgeType) {
+    case EdgeType::hardcoded:
+      return "Hardcoded";
+    case EdgeType::masterFlag:
+      return "Master Flag";
+    case EdgeType::master:
+      return "Master";
+    case EdgeType::masterlistRequirement:
+      return "Masterlist Requirement";
+    case EdgeType::userRequirement:
+      return "User Requirement";
+    case EdgeType::masterlistLoadAfter:
+      return "Masterlist Load After";
+    case EdgeType::userLoadAfter:
+      return "User Load After";
+    case EdgeType::group:
+      return "Group";
+    case EdgeType::overlap:
+      return "Overlap";
+    case EdgeType::tieBreak:
+      return "Tie Break";
+    default:
+      return "Unknown";
+  }
+}
+
+std::string describeCycle(const std::vector<Vertex>& cycle) {
+  std::string text;
+  for (const auto& vertex : cycle) {
+    text += vertex.GetName();
+    if (vertex.GetTypeOfEdgeToNextVertex().has_value()) {
+      text += " --[" + describe(vertex.GetTypeOfEdgeToNextVertex().value()) +
+              "]-> ";
+    }
+  }
+  if (!cycle.empty()) {
+    text += cycle[0].GetName();
+  }
+
+  return text;
+}
+
 std::vector<std::string> Game::SortPlugins() {
   std::vector<std::string> plugins = GetInstalledPluginNames();
 
@@ -440,8 +478,9 @@ std::vector<std::string> Game::SortPlugins() {
         MessageType::error,
         (boost::format(boost::locale::translate("Cyclic interaction detected "
                                                 "between \"%1%\" and "
-                                                "\"%2%\". Back cycle: %3%")) %
-         e.getFirstPlugin() % e.getLastPlugin() % e.getBackCycle())
+                                                "\"%2%\": %3%")) %
+         e.GetCycle().front().GetName() % e.GetCycle().back().GetName() %
+         describeCycle(e.GetCycle()))
             .str()));
     sortedPlugins.clear();
   } catch (UndefinedGroupError& e) {
@@ -452,7 +491,7 @@ std::vector<std::string> Game::SortPlugins() {
         MessageType::error,
         (boost::format(boost::locale::translate("The group \"%1%\" does not "
                                                 "exist.")) %
-         e.getGroupName())
+         e.GetGroupName())
             .str()));
     sortedPlugins.clear();
   } catch (std::exception& e) {
@@ -532,9 +571,9 @@ void Game::ClearMessages() {
 
 bool Game::UpdateMasterlist() {
   bool wasUpdated = gameHandle_->GetDatabase()->UpdateMasterlist(
-      MasterlistPath().string(), RepoURL(), RepoBranch());
+      MasterlistPath(), RepoURL(), RepoBranch());
   if (wasUpdated && !gameHandle_->GetDatabase()->IsLatestMasterlist(
-                        MasterlistPath().string(), RepoBranch())) {
+                        MasterlistPath(), RepoBranch())) {
     AppendMessage(Message(
         MessageType::error,
         boost::locale::translate("The latest masterlist revision contains a "
@@ -547,25 +586,25 @@ bool Game::UpdateMasterlist() {
 }
 
 MasterlistInfo Game::GetMasterlistInfo() const {
-  return gameHandle_->GetDatabase()->GetMasterlistRevision(
-      MasterlistPath().string(), true);
+  return gameHandle_->GetDatabase()->GetMasterlistRevision(MasterlistPath(),
+                                                           true);
 }
 
 void Game::LoadMetadata() {
-  std::string masterlistPath;
-  std::string userlistPath;
+  std::filesystem::path masterlistPath;
+  std::filesystem::path userlistPath;
   if (std::filesystem::exists(MasterlistPath())) {
     if (logger_) {
       logger_->debug("Preparing to parse masterlist.");
     }
-    masterlistPath = MasterlistPath().string();
+    masterlistPath = MasterlistPath();
   }
 
   if (std::filesystem::exists(UserlistPath())) {
     if (logger_) {
       logger_->debug("Preparing to parse userlist.");
     }
-    userlistPath = UserlistPath().string();
+    userlistPath = UserlistPath();
   }
 
   if (logger_) {
@@ -610,14 +649,16 @@ std::unordered_set<Group> Game::GetUserGroups() const {
   return gameHandle_->GetDatabase()->GetUserGroups();
 }
 
-PluginMetadata Game::GetMasterlistMetadata(const std::string& pluginName,
-                                           bool evaluateConditions) const {
+std::optional<PluginMetadata> Game::GetMasterlistMetadata(
+    const std::string& pluginName,
+    bool evaluateConditions) const {
   return gameHandle_->GetDatabase()->GetPluginMetadata(
       pluginName, false, evaluateConditions);
 }
 
-PluginMetadata Game::GetUserMetadata(const std::string& pluginName,
-                                     bool evaluateConditions) const {
+std::optional<PluginMetadata> Game::GetUserMetadata(
+    const std::string& pluginName,
+    bool evaluateConditions) const {
   return gameHandle_->GetDatabase()->GetPluginUserMetadata(pluginName,
                                                            evaluateConditions);
 }
@@ -639,7 +680,7 @@ void Game::ClearAllUserMetadata() {
 }
 
 void Game::SaveUserMetadata() {
-  gameHandle_->GetDatabase()->WriteUserMetadata(UserlistPath().string(), true);
+  gameHandle_->GetDatabase()->WriteUserMetadata(UserlistPath(), true);
 }
 
 bool Game::ExecutableExists(const GameType& gameType,
@@ -653,7 +694,8 @@ bool Game::ExecutableExists(const GameType& gameType,
   }
 }
 
-std::optional<std::filesystem::path> Game::DetectGamePath(const GameSettings& gameSettings) {
+std::optional<std::filesystem::path> Game::DetectGamePath(
+    const GameSettings& gameSettings) {
   auto logger = getLogger();
   try {
     if (logger) {
@@ -661,7 +703,8 @@ std::optional<std::filesystem::path> Game::DetectGamePath(const GameSettings& ga
                     gameSettings.Name());
     }
     if (!gameSettings.GamePath().empty() &&
-        fs::exists(gameSettings.GamePath() / "Data" / u8path(gameSettings.Master())))
+        fs::exists(gameSettings.GamePath() / "Data" /
+                   u8path(gameSettings.Master())))
       return gameSettings.GamePath();
 
     std::filesystem::path gamePath = "..";
@@ -673,12 +716,13 @@ std::optional<std::filesystem::path> Game::DetectGamePath(const GameSettings& ga
 #ifdef _WIN32
     auto registryKey = gameSettings.RegistryKey();
     auto lastBackslash = registryKey.rfind("\\");
-    if (lastBackslash == std::string::npos || lastBackslash == registryKey.length() - 1) {
+    if (lastBackslash == std::string::npos ||
+        lastBackslash == registryKey.length() - 1) {
       return std::nullopt;
     }
     std::string keyParent = registryKey.substr(0, lastBackslash);
     std::string keyName = registryKey.substr(lastBackslash + 1);
-    
+
     gamePath = RegKeyStringValue("HKEY_LOCAL_MACHINE", keyParent, keyName);
     if (!gamePath.empty() &&
         fs::exists(gamePath / "Data" / gameSettings.Master()) &&

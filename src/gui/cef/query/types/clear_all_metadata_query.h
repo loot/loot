@@ -61,7 +61,7 @@ private:
   std::vector<std::string> getUserlistPluginNames() const {
     std::vector<std::string> userlistPluginNames;
     for (const auto& plugin : game_.GetPlugins()) {
-      if (!game_.GetUserMetadata(plugin->GetName()).HasNameOnly()) {
+      if (game_.GetUserMetadata(plugin->GetName()).has_value()) {
         userlistPluginNames.push_back(plugin->GetName());
       }
     }
@@ -75,7 +75,10 @@ private:
 
     json["plugins"] = nlohmann::json::array();
     for (const auto& pluginName : userlistPluginNames) {
-      json["plugins"].push_back(generateDerivedMetadata(pluginName));
+      auto derivedMetadata = generateDerivedMetadata(pluginName);
+      if (derivedMetadata.has_value()) {
+        json["plugins"].push_back(derivedMetadata.value());
+      }
     }
 
     return json.dump();

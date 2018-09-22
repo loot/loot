@@ -65,9 +65,9 @@ set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
 set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.13.8/loot_api-0.13.8-0-g47797cc_dev-win32.7z")
+    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.0/libloot-0.14.0-0-g2e074a4_dev-win32.7z")
 else()
-    set(LOOT_API_URL "https://github.com/loot/loot-api/releases/download/0.13.8/loot-api.tar.xz")
+    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.0/libloot.tar.xz")
 endif()
 
 ExternalProject_Add(json
@@ -79,20 +79,20 @@ ExternalProject_Add(json
                     INSTALL_COMMAND "")
 set(JSON_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/external/src")
 
-ExternalProject_Add(loot_api
+ExternalProject_Add(libloot
                     PREFIX "external"
-                    URL ${LOOT_API_URL}
+                    URL ${LIBLOOT_URL}
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
-ExternalProject_Get_Property(loot_api SOURCE_DIR)
-set(LOOT_API_EXTRACTED_PATH ${SOURCE_DIR})
+ExternalProject_Get_Property(libloot SOURCE_DIR)
+set(LIBLOOT_EXTRACTED_PATH ${SOURCE_DIR})
 
 include_directories("${CMAKE_SOURCE_DIR}/src"
-                    "${LOOT_API_EXTRACTED_PATH}/include")
-link_directories(${LOOT_API_EXTRACTED_PATH})
-set(LOOT_API_STATIC_LIBRARY "${CMAKE_STATIC_LIBRARY_PREFIX}loot_api${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set(LOOT_API_SHARED_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}loot_api${CMAKE_SHARED_LIBRARY_SUFFIX}")
+                    "${LIBLOOT_EXTRACTED_PATH}/include")
+link_directories(${LIBLOOT_EXTRACTED_PATH})
+set(LIBLOOT_STATIC_LIBRARY "${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(LIBLOOT_SHARED_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 ExternalProject_Add(testing-plugins
                     PREFIX "external"
@@ -267,9 +267,9 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     add_definitions (-DUNICODE -D_UNICODE)
-    set(LOOT_API_LINK_LIBRARY ${LOOT_API_STATIC_LIBRARY})
+    set(LIBLOOT_LINK_LIBRARY ${LIBLOOT_STATIC_LIBRARY})
 else()
-    set(LOOT_API_LINK_LIBRARY ${LOOT_API_SHARED_LIBRARY})
+    set(LIBLOOT_LINK_LIBRARY ${LIBLOOT_SHARED_LIBRARY})
 endif()
 
 IF (CMAKE_COMPILER_IS_GNUCXX)
@@ -310,13 +310,13 @@ ENDIF ()
 
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
-add_dependencies     (LOOT cef cpptoml json loot_api spdlog)
-target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${LOOT_GUI_LIBS})
+add_dependencies     (LOOT cef cpptoml json libloot spdlog)
+target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests cpptoml loot_api spdlog GTest testing-plugins)
-target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LOOT_API_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS})
+add_dependencies     (loot_gui_tests cpptoml libloot spdlog GTest testing-plugins)
+target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS})
 
 ##############################
 # Set Target-Specific Flags
@@ -369,12 +369,12 @@ add_custom_command(TARGET LOOT POST_BUILD
 # Copy the API binary to the build directory.
 add_custom_command(TARGET LOOT POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${LOOT_API_EXTRACTED_PATH}/${LOOT_API_SHARED_LIBRARY}"
-        "$<TARGET_FILE_DIR:LOOT>/${LOOT_API_SHARED_LIBRARY}")
+        "${LIBLOOT_EXTRACTED_PATH}/${LIBLOOT_SHARED_LIBRARY}"
+        "$<TARGET_FILE_DIR:LOOT>/${LIBLOOT_SHARED_LIBRARY}")
 add_custom_command(TARGET loot_gui_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${LOOT_API_EXTRACTED_PATH}/${LOOT_API_SHARED_LIBRARY}"
-        "$<TARGET_FILE_DIR:loot_gui_tests>/${LOOT_API_SHARED_LIBRARY}")
+        "${LIBLOOT_EXTRACTED_PATH}/${LIBLOOT_SHARED_LIBRARY}"
+        "$<TARGET_FILE_DIR:loot_gui_tests>/${LIBLOOT_SHARED_LIBRARY}")
 
 # Build the UI HTML.
 add_custom_command(TARGET LOOT POST_BUILD

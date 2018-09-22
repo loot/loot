@@ -36,12 +36,10 @@ namespace loot {
 class DerivedPluginMetadata {
 public:
   DerivedPluginMetadata(LootState& state,
-                        const std::shared_ptr<const PluginInterface>& file,
-                        const PluginMetadata& evaluatedMetadata) {
+                        const std::shared_ptr<const PluginInterface>& file) {
     name = file->GetName();
     version = file->GetVersion();
     isActive = state.getCurrentGame().IsPluginActive(name);
-    isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
     isEmpty = file->IsEmpty();
     isMaster = file->IsMaster();
     isLightMaster = file->IsLightMaster();
@@ -51,32 +49,36 @@ public:
     loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
       state.getCurrentGame().GetLoadOrder());
 
-    group = evaluatedMetadata.GetGroup();
-    if (!evaluatedMetadata.GetCleanInfo().empty()) {
-      cleanedWith = evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
-    }
-    messages = evaluatedMetadata.GetSimpleMessages(state.getLanguage());
-    suggestedTags = evaluatedMetadata.GetTags();
     currentTags = file->GetBashTags();
 
     language = state.getLanguage();
   }
 
-  void storeUnevaluatedMetadata(PluginMetadata masterlistEntry, PluginMetadata userlistEntry) {
-    masterlistMetadata = masterlistEntry;
-    userMetadata = userlistEntry;
+  void setEvaluatedMetadata(PluginMetadata metadata) {
+    isDirty = !metadata.GetDirtyInfo().empty();
+    group = metadata.GetGroup();
+    if (!metadata.GetCleanInfo().empty()) {
+      cleanedWith = metadata.GetCleanInfo().begin()->GetCleaningUtility();
+    }
+    messages = metadata.GetSimpleMessages(language);
+    suggestedTags = metadata.GetTags();
+  }
+
+  void setMasterlistMetadata(PluginMetadata masterlistEntry) {
+    this->masterlistMetadata = masterlistEntry;
+  }
+
+  void setUserMetadata(PluginMetadata userlistEntry) {
+    this->userMetadata = userlistEntry;
   }
 
   void setLoadOrderIndex(short loadOrderIndex) {
     this->loadOrderIndex = loadOrderIndex;
   }
 
-  static DerivedPluginMetadata none() {
-    return DerivedPluginMetadata();
-  }
 private:
   std::string name;
-  std::string version;
+  std::optional<std::string> version;
   bool isActive;
   bool isDirty;
   bool isEmpty;
@@ -84,21 +86,19 @@ private:
   bool isLightMaster;
   bool loadsArchive;
 
-  uint32_t crc;
+  std::optional<uint32_t> crc;
   std::optional<short> loadOrderIndex;
 
-  std::string group;
+  std::optional<std::string> group;
   std::string cleanedWith;
   std::vector<SimpleMessage> messages;
   std::set<Tag> currentTags;
   std::set<Tag> suggestedTags;
 
-  PluginMetadata masterlistMetadata;
-  PluginMetadata userMetadata;
+  std::optional<PluginMetadata> masterlistMetadata;
+  std::optional<PluginMetadata> userMetadata;
 
   std::string language;
-
-  DerivedPluginMetadata() {}
 
   friend void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin);
 };

@@ -44,66 +44,72 @@ protected:
     return toSimpleMessages(messages, state_.getLanguage());
   }
 
-  PluginMetadata getNonUserMetadata(
-      const std::shared_ptr<const PluginInterface>& file,
-      const PluginMetadata& masterlistEntry) {
-    auto metadata = masterlistEntry;
+  std::optional<PluginMetadata> getNonUserMetadata(
+      const std::shared_ptr<const PluginInterface>& file) {
+    auto fileBashTags = file->GetBashTags();
+    auto masterlistMetadata =
+      state_.getCurrentGame().GetMasterlistMetadata(file->GetName());
 
-    auto fileTags = file->GetBashTags();
-    auto tags = metadata.GetTags();
-    tags.insert(begin(fileTags), end(fileTags));
-    metadata.SetTags(tags);
+    if (fileBashTags.empty()) {
+      return masterlistMetadata;
+    }
+
+    PluginMetadata metadata(file->GetName());
+    metadata.SetTags(fileBashTags);
+    
+    if (masterlistMetadata.has_value()) {
+      metadata.MergeMetadata(masterlistMetadata.value());
+    }
 
     return metadata;
   }
 
-  DerivedPluginMetadata generateDerivedMetadata(const std::string& pluginName) {
+  std::optional<DerivedPluginMetadata> generateDerivedMetadata(const std::string& pluginName) {
     auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
     if (plugin) {
       return generateDerivedMetadata(plugin);
-    } else {
-      return DerivedPluginMetadata::none();
     }
+
+    return std::nullopt;
   }
 
   DerivedPluginMetadata generateDerivedMetadata(
       const std::shared_ptr<const PluginInterface>& plugin) {
-    auto logger = state_.getLogger();
-    if (logger) {
-      logger->trace("Getting masterlist metadata for: {}", plugin->GetName());
-    }
-    auto masterlistMetadata =
-        state_.getCurrentGame().GetMasterlistMetadata(plugin->GetName());
-    masterlistMetadata = getNonUserMetadata(plugin, masterlistMetadata);
+    auto derived = DerivedPluginMetadata(state_, plugin);
 
-    if (logger) {
-      logger->trace("Getting userlist metadata for: {}", plugin->GetName());
+    auto nonUserMetadata = getNonUserMetadata(plugin);
+    if (nonUserMetadata.has_value()) {
+      derived.setMasterlistMetadata(nonUserMetadata.value());
     }
-    auto userlistMetadata =
+
+    auto userMetadata =
         state_.getCurrentGame().GetUserMetadata(plugin->GetName());
+    if (userMetadata.has_value()) {
+      derived.setUserMetadata(userMetadata.value());
+    }
 
-    auto evaluatedMetadata = evaluateMasterlistMetadata(plugin->GetName());
-    evaluatedMetadata.MergeMetadata(evaluateUserlistMetadata(plugin->GetName()));
+    auto evaluatedMetadata = evaluateMetadata(plugin->GetName());
+    if (evaluatedMetadata.has_value()) {
+      auto messages = evaluatedMetadata.value().GetMessages();
+      auto validityMessages =
+        state_.getCurrentGame().CheckInstallValidity(plugin, evaluatedMetadata.value());
+      messages.insert(
+        end(messages), begin(validityMessages), end(validityMessages));
+      evaluatedMetadata.value().SetMessages(messages);
 
-    auto messages = evaluatedMetadata.GetMessages();
-    auto validityMessages =
-      state_.getCurrentGame().CheckInstallValidity(plugin, evaluatedMetadata);
-    messages.insert(
-      end(messages), begin(validityMessages), end(validityMessages));
-    evaluatedMetadata.SetMessages(messages);
-
-    auto derived = DerivedPluginMetadata(state_, plugin, evaluatedMetadata);
-
-    derived.storeUnevaluatedMetadata(
-        masterlistMetadata, userlistMetadata);
+      derived.setEvaluatedMetadata(evaluatedMetadata.value());
+    }
 
     return derived;
   }
 
   std::string generateJsonResponse(const std::string& pluginName) {
-    nlohmann::json json = generateDerivedMetadata(pluginName);
+    auto derivedMetadata = generateDerivedMetadata(pluginName);
+    if (derivedMetadata.has_value()) {
+      return nlohmann::json(derivedMetadata.value()).dump();
+    }
 
-    return json.dump();
+    return "";
   }
 
   template<typename InputIterator>
@@ -144,10 +150,26 @@ private:
     return simpleMessages;
   }
 
-  PluginMetadata evaluateMasterlistMetadata(const std::string& pluginName) {
-    PluginMetadata master(pluginName);
+  std::optional<PluginMetadata> evaluateMetadata(const std::string& pluginName) {
+    auto evaluatedMasterlistMetadata = evaluateMasterlistMetadata(pluginName);
+    auto evaluatedUserMetadata = evaluateUserlistMetadata(pluginName);
+
+    if (!evaluatedMasterlistMetadata.has_value()) {
+      return evaluatedUserMetadata;
+    }
+
+    if (!evaluatedUserMetadata.has_value()) {
+      return evaluatedMasterlistMetadata;
+    }
+
+    evaluatedMasterlistMetadata.value().MergeMetadata(evaluatedUserMetadata.value());
+
+    return evaluatedMasterlistMetadata;
+  }
+
+  std::optional<PluginMetadata> evaluateMasterlistMetadata(const std::string& pluginName) {
     try {
-      master = state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
+      return state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
     } catch (std::exception& e) {
       auto logger = state_.getLogger();
       if (logger) {
@@ -156,6 +178,8 @@ private:
                       pluginName,
                       e.what());
       }
+
+      PluginMetadata master(pluginName);
       master.SetMessages({
           Message(MessageType::error,
                   (boost::format(boost::locale::translate(
@@ -164,21 +188,22 @@ private:
                    pluginName % e.what())
                       .str()),
       });
-    }
 
-    return master;
+      return master;
+    }
   }
 
-  PluginMetadata evaluateUserlistMetadata(const std::string& pluginName) {
-    PluginMetadata user(pluginName);
+  std::optional<PluginMetadata> evaluateUserlistMetadata(const std::string& pluginName) {
     try {
-      user = state_.getCurrentGame().GetUserMetadata(pluginName, true);
+      return state_.getCurrentGame().GetUserMetadata(pluginName, true);
     } catch (std::exception& e) {
       auto logger = state_.getLogger();
       if (logger) {
         logger->error("\"{}\"'s user metadata contains a condition that could "
                       "not be evaluated. Details: {}", pluginName, e.what());
       }
+
+      PluginMetadata user(pluginName);
       user.SetMessages({
           Message(MessageType::error,
                   (boost::format(boost::locale::translate(
@@ -187,9 +212,10 @@ private:
                    pluginName % e.what())
                       .str()),
       });
+
+      return user;
     }
 
-    return user;
   }
 
   MasterlistInfo getMasterlistInfo() {

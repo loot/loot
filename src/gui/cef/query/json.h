@@ -303,10 +303,9 @@ void from_json(const nlohmann::json& json, GameSettings& game) {
 
 nlohmann::json to_json_with_language(const PluginMetadata& metadata,
                                      const std::string& language) {
-  return {
+  nlohmann::json json = {
     { "name", metadata.GetName() },
     { "enabled", metadata.IsEnabled() },
-    { "group", metadata.GetGroup() },
     { "after", metadata.GetLoadAfterFiles() },
     { "req", metadata.GetRequirements() },
     { "inc", metadata.GetIncompatibilities() },
@@ -316,6 +315,12 @@ nlohmann::json to_json_with_language(const PluginMetadata& metadata,
     { "clean", metadata.GetCleanInfo() },
     { "url", metadata.GetLocations() }
   };
+
+  if (metadata.GetGroup().has_value()) {
+    json["group"] = metadata.GetGroup().value();
+  }
+
+  return json;
 }
 
 void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
@@ -352,11 +357,9 @@ void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
 
   metadata.SetEnabled(json.value("enabled", false));
 
-  // This will register the group as explicit, but that's OK because
-  // explicitness is ignored when this deserialised data is used.
   auto group = json.value("group", "default");
   if (group != Group().GetName()) {
-    metadata.SetGroup(json.value("group", "default"));
+    metadata.SetGroup(group);
   }
 
   metadata.SetLoadAfterFiles(json.value("after", std::set<File>()));
@@ -372,19 +375,28 @@ void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
 void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
   json = {
     { "name", plugin.name },
-    { "version", plugin.version },
     { "isActive", plugin.isActive },
     { "isDirty", plugin.isDirty },
     { "isEmpty", plugin.isEmpty },
     { "isMaster", plugin.isMaster },
     { "isLightMaster", plugin.isLightMaster },
     { "loadsArchive", plugin.loadsArchive },
-    { "crc", plugin.crc },
-    { "group", plugin.group },
     { "messages", plugin.messages },
     { "suggestedTags", plugin.suggestedTags },
     { "currentTags", plugin.currentTags },
   };
+
+  if (plugin.version.has_value()) {
+    json["version"] = plugin.version.value();
+  }
+
+  if (plugin.crc.has_value()) {
+    json["crc"] = plugin.crc.value();
+  }
+
+  if (plugin.group.has_value()) {
+    json["group"] = plugin.group.value();
+  }
 
   if (plugin.loadOrderIndex.has_value()) {
     json["loadOrderIndex"] = plugin.loadOrderIndex.value();
@@ -394,12 +406,12 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
     json["cleanedWith"] = plugin.cleanedWith;
   }
 
-  if (!plugin.masterlistMetadata.HasNameOnly()) {
-    json["masterlist"] = to_json_with_language(plugin.masterlistMetadata, plugin.language);
+  if (plugin.masterlistMetadata.has_value()) {
+    json["masterlist"] = to_json_with_language(plugin.masterlistMetadata.value(), plugin.language);
   }
 
-  if (!plugin.userMetadata.HasNameOnly()) {
-    json["userlist"] = to_json_with_language(plugin.userMetadata, plugin.language);
+  if (plugin.userMetadata.has_value()) {
+    json["userlist"] = to_json_with_language(plugin.userMetadata.value(), plugin.language);
   }
 }
 }

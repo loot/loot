@@ -79,7 +79,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#buildir}\Release\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\loot_api.dll"; \
+Source: "{#buildir}\Release\loot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\cef.pak"; \
 DestDir: "{app}"; Flags: ignoreversion

@@ -54,31 +54,27 @@ public:
   }
 
 private:
-  PluginMetadata getNonUserMetadata() {
+  std::optional<PluginMetadata> getNonUserMetadata() {
     auto logger = state_.getLogger();
     if (logger) {
       logger->trace("Getting non-user metadata for: {}", metadata_.GetName());
     }
-    auto masterlistMetadata =
-        state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
 
     auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
     if (plugin) {
-      return MetadataQuery::getNonUserMetadata(plugin, masterlistMetadata);
+      return MetadataQuery::getNonUserMetadata(plugin);
     }
 
-    return masterlistMetadata;
+    return state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
   }
 
   PluginMetadata getUserMetadata() {
     auto nonUserMetadata = getNonUserMetadata();
-    auto userMetadata = metadata_.NewMetadata(nonUserMetadata);
-
-    if (metadata_.GetGroup() != nonUserMetadata.GetGroup()) {
-      userMetadata.SetGroup(metadata_.GetGroup());
+    if (nonUserMetadata.has_value()) {
+      return metadata_.NewMetadata(nonUserMetadata.value());
     }
 
-    return userMetadata;
+    return metadata_;
   }
 
   void applyUserEdits() {
@@ -94,7 +90,7 @@ private:
     if (logger) {
       logger->trace("Erasing the existing userlist entry.");
     }
-    state_.getCurrentGame().ClearUserMetadata(userMetadata.GetName());
+    state_.getCurrentGame().ClearUserMetadata(metadata_.GetName());
 
     // Add a new userlist entry if necessary.
     if (!userMetadata.HasNameOnly()) {
