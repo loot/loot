@@ -120,7 +120,7 @@ void LootApp::OnContextInitialized() {
   }
   if (lootState_.getLanguage() != MessageContent::defaultLanguage) {
     boost::locale::generator gen;
-    gen.add_messages_path(LootPaths::getL10nPath().string());
+    gen.add_messages_path(LootPaths::getL10nPath().u8string());
     gen.add_messages_domain("loot");
 
     if (logger) {

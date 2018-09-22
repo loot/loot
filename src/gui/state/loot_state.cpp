@@ -102,7 +102,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   // file reading requires it.
   // Boost.Locale initialisation: Specify location of language dictionaries.
   boost::locale::generator gen;
-  gen.add_messages_path(LootPaths::getL10nPath().string());
+  gen.add_messages_path(LootPaths::getL10nPath().u8string());
   gen.add_messages_domain("loot");
 
   // Boost.Locale initialisation: Generate and imbue locales.
@@ -138,7 +138,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
 #if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
                                     LootPaths::getLogPath().wstring());
 #else
-                                    LootPaths::getLogPath().string());
+                                    LootPaths::getLogPath().u8string());
 #endif
   if (!logger_) {
     initErrors_.push_back(

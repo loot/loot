@@ -45,13 +45,12 @@ Fallout: New Vegas.
 
 namespace loot {
 std::filesystem::path getExecutableDirectory() {
-  std::string executablePathString;
 #ifdef _WIN32
   // Despite its name, paths can be longer than MAX_PATH, just not by default.
   // FIXME: Make this work with long paths.
-  std::wstring wstr(MAX_PATH, 0);
+  std::wstring executablePathString(MAX_PATH, 0);
 
-  if (GetModuleFileName(NULL, &wstr[0], MAX_PATH) == 0) {
+  if (GetModuleFileName(NULL, &executablePathString[0], MAX_PATH) == 0) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Failed to get LOOT executable path.");
@@ -61,7 +60,7 @@ std::filesystem::path getExecutableDirectory() {
       "Failed to get LOOT executable path.");
   }
 
-  executablePathString = FromWinWide(wstr.c_str());
+  return std::filesystem::path(executablePathString).parent_path();
 #else
   char result[PATH_MAX];
 
@@ -76,10 +75,8 @@ std::filesystem::path getExecutableDirectory() {
       "Failed to get LOOT executable path.");
   }
 
-  executablePathString = std::string(result, count);
+  return std::filesystem::u8path(std::string(result, count)).parent_path();
 #endif
-
-  return std::filesystem::path(executablePathString).parent_path();
 }
 
 std::filesystem::path LootPaths::getReadmePath() {
@@ -127,7 +124,7 @@ std::filesystem::path LootPaths::getLocalAppDataPath() {
                             std::system_category(),
                             "Failed to get %LOCALAPPDATA% path.");
 
-  std::filesystem::path localAppDataPath(FromWinWide(path));
+  std::filesystem::path localAppDataPath(path);
   CoTaskMemFree(path);
 
   return localAppDataPath;
@@ -136,13 +133,13 @@ std::filesystem::path LootPaths::getLocalAppDataPath() {
   const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
 
   if (xdgConfigHome != nullptr)
-    return std::filesystem::path(xdgConfigHome);
+    return std::filesystem::u8path(xdgConfigHome);
 
   // Otherwise, use the HOME env. var. if it's available.
   xdgConfigHome = getenv("HOME");
 
   if (xdgConfigHome != nullptr)
-    return std::filesystem::path(xdgConfigHome) / ".config";
+    return std::filesystem::u8path(xdgConfigHome) / ".config";
 
   // If somehow both are missing, use the executable's directory.
   return getExecutableDirectory();

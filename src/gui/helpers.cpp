@@ -40,13 +40,13 @@ namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file) {
 #ifdef _WIN32
   HINSTANCE ret = ShellExecute(
-      0, NULL, ToWinWide(file.string()).c_str(), NULL, NULL, SW_SHOWNORMAL);
+      0, NULL, file.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
   if ((int)ret <= 32)
     throw std::system_error(GetLastError(),
                             std::system_category(),
                             "Failed to open file in its default application.");
 #else
-  if (system(("/usr/bin/xdg-open " + file.string()).c_str()) != 0)
+  if (system(("/usr/bin/xdg-open " + file.u8string()).c_str()) != 0)
     throw std::system_error(errno,
                             std::system_category(),
                             "Failed to open file in its default application.");

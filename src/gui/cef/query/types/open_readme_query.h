@@ -46,8 +46,8 @@ public:
     auto canonicalReadmePath =
         std::filesystem::canonical(LootPaths::getReadmePath());
 
-    if (!boost::starts_with(canonicalPath.string(),
-                            canonicalReadmePath.string())) {
+    if (!boost::starts_with(canonicalPath.u8string(),
+                            canonicalReadmePath.u8string())) {
       throw std::runtime_error(
           "Attempted to open readme file outside of recognised readme "
           "directory.");

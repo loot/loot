@@ -25,6 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_LOOT_SCHEME_HANDLER_FACTORY
 #define LOOT_GUI_LOOT_SCHEME_HANDLER_FACTORY
 
+#include <filesystem>
+
 #include <include/cef_base.h>
 #include <include/cef_scheme.h>
 
@@ -38,7 +40,7 @@ public:
       CefRefPtr<CefRequest> request) OVERRIDE;
 
 private:
-  std::string GetPath(const CefString& url) const;
+  std::filesystem::path GetPath(const CefString& url) const;
   std::string GetMimeType(const std::string& file) const;
   CefResponse::HeaderMap GetHeaders() const;
 

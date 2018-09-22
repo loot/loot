@@ -246,7 +246,7 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
     logger->info("Opening link in Windows' default handler.");
   }
   OpenInDefaultApplication(
-      std::filesystem::path(request->GetURL().ToString()));
+      std::filesystem::u8path(request->GetURL().ToString()));
 
   return true;
 }
