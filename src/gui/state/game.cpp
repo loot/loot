@@ -52,6 +52,7 @@
 #include "windows.h"
 #endif
 
+using std::filesystem::u8path;
 using std::list;
 using std::lock_guard;
 using std::mutex;
@@ -164,9 +165,9 @@ std::vector<Message> Game::CheckInstallValidity(
   if (IsPluginActive(plugin->GetName())) {
 
     auto fileExists = [&](const std::string& file) {
-      return std::filesystem::exists(DataPath() / file) ||
+      return std::filesystem::exists(DataPath() / u8path(file)) ||
              (hasPluginFileExtension(file) &&
-              std::filesystem::exists(DataPath() / (file + ".ghost")));
+              std::filesystem::exists(DataPath() / u8path(file + ".ghost")));
     };
     auto tags = metadata.GetTags();
     if (tags.find(Tag("Filter")) == std::end(tags)) {
@@ -279,8 +280,6 @@ std::vector<Message> Game::CheckInstallValidity(
 }
 
 void Game::RedatePlugins() {
-  using std::filesystem::u8path;
-
   if (Type() != GameType::tes5 && Type() != GameType::tes5se) {
     if (logger_) {
       logger_->warn("Cannot redate plugins for game {}.", Name());

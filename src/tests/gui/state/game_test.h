@@ -363,6 +363,28 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
             messages);
 }
 
+TEST_P(GameTest, checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) {
+  using std::filesystem::u8path;
+  ASSERT_NO_THROW(std::filesystem::rename(
+    dataPath / blankEsp,
+    dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
+
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetRequirements({ 
+    File(nonAsciiEsp),
+    File(u8"nonAsc\u00EDi.esp"),
+  });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_TRUE(messages.empty());
+}
+
 TEST_P(
   GameTest,
   checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
