@@ -57,7 +57,10 @@ protected:
       loadOrderBackupFile0("loadorder.bak.0"),
       loadOrderBackupFile1("loadorder.bak.1"),
       loadOrderBackupFile2("loadorder.bak.2"),
-      loadOrderBackupFile3("loadorder.bak.3") {}
+      loadOrderBackupFile3("loadorder.bak.3"),
+      defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
+        .SetGamePath(dataPath.parent_path())
+        .SetGameLocalPath(localPath)) {}
 
   void TearDown() { CommonGameTestFixture::TearDown(); }
 
@@ -68,6 +71,8 @@ protected:
   const std::string loadOrderBackupFile3;
 
   const std::vector<MessageContent> info_;
+
+  const GameSettings defaultGameSettings;
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -82,14 +87,13 @@ INSTANTIATE_TEST_CASE_P(,
                                           GameType::tes5se));
 
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
-  GameSettings settings = GameSettings(GetParam(), "folder");
+  using std::filesystem::u8path;
+  GameSettings settings = defaultGameSettings;
   settings.SetName("foo");
   settings.SetMaster(blankEsm);
   settings.SetRegistryKey("foo");
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
-  settings.SetGamePath(dataPath.parent_path());
-  settings.SetGameLocalPath(localPath);
   Game game(settings, lootDataPath);
 
   EXPECT_EQ(GetParam(), game.Type());
@@ -101,8 +105,9 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
 
   EXPECT_EQ(settings.GamePath(), game.GamePath());
-  EXPECT_EQ(lootDataPath / "folder" / "masterlist.yaml", game.MasterlistPath());
-  EXPECT_EQ(lootDataPath / "folder" / "userlist.yaml", game.UserlistPath());
+  auto lootGamePath = lootDataPath / u8path(defaultGameSettings.FolderName());
+  EXPECT_EQ(lootGamePath / "masterlist.yaml", game.MasterlistPath());
+  EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
 }
 
 #ifndef _WIN32
@@ -125,10 +130,7 @@ TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
 #endif
 
 TEST_P(GameTest, copyConstructorShouldCopyGameData) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game1(settings, lootDataPath);
+  Game game1(defaultGameSettings, lootDataPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2(game1);
@@ -139,10 +141,7 @@ TEST_P(GameTest, copyConstructorShouldCopyGameData) {
 }
 
 TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game1(settings, lootDataPath);
+  Game game1(defaultGameSettings, lootDataPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2 = game1;
@@ -294,58 +293,49 @@ TEST_P(
 }
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, "");
 
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName()));
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
 
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath));
 }
 
 TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath);
 
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName()));
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
 
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName()));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath));
 }
 
 TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath);
 
-  std::ofstream out(lootDataPath / game.FolderName());
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  std::ofstream out(lootGamePath);
   out << "";
   out.close();
 
-  ASSERT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName()));
-  ASSERT_FALSE(std::filesystem::is_directory(lootDataPath / game.FolderName()));
+  ASSERT_TRUE(std::filesystem::exists(lootGamePath));
+  ASSERT_FALSE(std::filesystem::is_directory(lootGamePath));
   EXPECT_ANY_THROW(game.Init());
 }
 
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
 
   EXPECT_NO_THROW(game.Init());
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -369,14 +359,11 @@ TEST_P(GameTest, checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) 
     dataPath / blankEsp,
     dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
 
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
-  metadata.SetRequirements({ 
+  metadata.SetRequirements({
     File(nonAsciiEsp),
     File(u8"nonAsc\u00EDi.esp"),
   });
@@ -388,10 +375,7 @@ TEST_P(GameTest, checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) 
 TEST_P(
   GameTest,
   checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -410,10 +394,7 @@ TEST_P(
 
 TEST_P(GameTest,
        checkInstallValidityShouldAddAMessageForActiveIncompatiblePlugins) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -433,10 +414,7 @@ TEST_P(GameTest,
 
 TEST_P(GameTest,
   checkInstallValidityShouldShowAMessageForIncompatibleNonPluginFilesThatArePresent) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   std::string incompatibleFilename = "incompatible.txt";
@@ -459,10 +437,7 @@ TEST_P(GameTest,
 
 TEST_P(GameTest,
   checkInstallValidityShouldUseDisplayNamesInIncompatibilityMessagesIfPresent) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -480,10 +455,7 @@ TEST_P(GameTest,
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -509,10 +481,7 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
@@ -530,10 +499,7 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
@@ -549,10 +515,7 @@ TEST_P(
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   using std::filesystem::u8path;
 
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -592,10 +555,7 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
@@ -613,10 +573,7 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
@@ -633,10 +590,7 @@ TEST_P(
 
 TEST_P(GameTest,
   loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
@@ -646,19 +600,13 @@ TEST_P(GameTest,
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
 
   EXPECT_FALSE(game.ArePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
@@ -666,10 +614,7 @@ TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
 }
 
 TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
@@ -679,10 +624,7 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnNegativeOneForAPluginThatIsNotActive) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -694,10 +636,7 @@ TEST_P(
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(defaultGameSettings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -715,89 +654,86 @@ TEST_P(
 }
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath);
   game.Init();
 
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile0));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+      readFileLines(lootGamePath / loadOrderBackupFile0);
 
   EXPECT_TRUE(loadOrder.empty());
 }
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile0));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+      readFileLines(lootGamePath / loadOrderBackupFile0);
 
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath);
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
@@ -812,38 +748,37 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile0));
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+      readFileLines(lootGamePath / loadOrderBackupFile0);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 
   loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
+      readFileLines(lootGamePath / loadOrderBackupFile1);
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
 TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath);
   game.Init();
 
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
@@ -876,43 +811,37 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile0));
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile1));
-  EXPECT_TRUE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
                                         loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootDataPath / game.FolderName() /
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
                                          loadOrderBackupFile3));
 
   auto loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile0);
+      readFileLines(lootGamePath / loadOrderBackupFile0);
   EXPECT_EQ(thirdSetLoadOrder, loadOrder);
 
   loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile1);
+      readFileLines(lootGamePath / loadOrderBackupFile1);
   EXPECT_EQ(secondSetLoadOrder, loadOrder);
 
   loadOrder =
-      readFileLines(lootDataPath / game.FolderName() / loadOrderBackupFile2);
+      readFileLines(lootGamePath / loadOrderBackupFile2);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 }
 
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
 
   ASSERT_EQ(1, game.GetMessages().size());
 }
 
 TEST_P(GameTest,
        incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
   game.IncrementLoadOrderSortCount();
 
   EXPECT_TRUE(game.GetMessages().empty());
@@ -920,10 +849,7 @@ TEST_P(GameTest,
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
@@ -934,10 +860,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.DecrementLoadOrderSortCount();
 
@@ -947,10 +870,7 @@ TEST_P(
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
@@ -960,10 +880,7 @@ TEST_P(
 }
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
   std::vector<Message> messages({
       Message(MessageType::say, "1"),
       Message(MessageType::error, "2"),
@@ -976,10 +893,7 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  GameSettings settings = GameSettings(GetParam())
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
-  Game game(settings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath);
   std::vector<Message> messages({
       Message(MessageType::say, "1"),
       Message(MessageType::error, "2"),

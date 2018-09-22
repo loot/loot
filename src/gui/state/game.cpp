@@ -125,7 +125,7 @@ void Game::Init() {
 
   if (!lootDataPath_.empty()) {
     // Make sure that the LOOT game path exists.
-    auto lootGamePath = lootDataPath_ / FolderName();
+    auto lootGamePath = lootDataPath_ / u8path(FolderName());
     if (!fs::is_directory(lootGamePath)) {
       if (fs::exists(lootGamePath)) {
         throw FileAccessError("Could not create LOOT folder for game, the path exists but is not a directory");
@@ -358,11 +358,11 @@ std::filesystem::path Game::DataPath() const {
 }
 
 fs::path Game::MasterlistPath() const {
-  return lootDataPath_ / FolderName() / "masterlist.yaml";
+  return lootDataPath_ / u8path(FolderName()) / "masterlist.yaml";
 }
 
 fs::path Game::UserlistPath() const {
-  return lootDataPath_ / FolderName() / "userlist.yaml";
+  return lootDataPath_ / u8path(FolderName()) / "userlist.yaml";
 }
 
 std::vector<std::string> Game::GetLoadOrder() const {
@@ -370,7 +370,7 @@ std::vector<std::string> Game::GetLoadOrder() const {
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
-  BackupLoadOrder(GetLoadOrder(), lootDataPath_ / FolderName());
+  BackupLoadOrder(GetLoadOrder(), lootDataPath_ / u8path(FolderName()));
   gameHandle_->SetLoadOrder(loadOrder);
 }
 
