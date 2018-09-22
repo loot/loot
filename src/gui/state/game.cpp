@@ -217,7 +217,7 @@ std::vector<Message> Game::CheckInstallValidity(
       }
     }
     for (const auto& inc : metadata.GetIncompatibilities()) {
-      if (fileExists(inc.GetName()) && 
+      if (fileExists(inc.GetName()) &&
         (!hasPluginFileExtension(inc.GetName()) || IsPluginActive(inc.GetName()))) {
         if (logger_) {
           logger_->error(
@@ -885,7 +885,13 @@ void Game::warnAboutRemovedPlugins(
   std::set<std::string> pluginsSet(pluginsAfter.cbegin(), pluginsAfter.cend());
 
   for (auto& plugin : pluginsBefore) {
-    if (pluginsSet.count(plugin) == 0) {
+    std::string unghostedPluginName;
+    if (boost::iends_with(plugin, ".ghost")) {
+      unghostedPluginName = plugin.substr(0, plugin.length() - 6);
+    } else {
+      unghostedPluginName = plugin;
+    }
+    if (pluginsSet.count(unghostedPluginName) == 0) {
       AppendMessage(Message(MessageType::warn,
                             (boost::format(boost::locale::translate(
                                  "LOOT has detected that \"%1%\" is invalid "

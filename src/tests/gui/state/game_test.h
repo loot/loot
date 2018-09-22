@@ -600,6 +600,20 @@ TEST_P(
   EXPECT_EQ(blankEsmCrc, plugin->GetCRC());
 }
 
+TEST_P(GameTest,
+  loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
+  GameSettings settings = GameSettings(GetParam())
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  Game game(settings, "");
+  ASSERT_NO_THROW(game.Init());
+
+  EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
+
+  EXPECT_EQ(1, game.GetMessages().size());
+  EXPECT_EQ("You have not sorted your load order this session.", game.GetMessages()[0].GetContent()[0].GetText());
+}
+
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
   GameSettings settings = GameSettings(GetParam())
     .SetGamePath(dataPath.parent_path())
