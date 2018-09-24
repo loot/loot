@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.13.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-09-21 16:22+0200\n"
+"POT-Creation-Date: 2018-09-24 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,65 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: src/gui/cef/query/query.h:50
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+
+#: src/gui/cef/query/query.h:84
+msgid ""
+"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"read-only. If it is, unset it and try again. If it isn't, you can check your "
+"LOOTDebugLog.txt (you can get to it through the main menu) for more "
+"information."
+msgstr ""
+
+#: src/gui/cef/query/types/get_game_data_query.h:45
+msgid "Parsing, merging and evaluating metadata..."
+msgstr ""
+
+#: src/gui/cef/query/types/metadata_query.h:163
+#: src/gui/cef/query/types/metadata_query.h:186
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+
+#: src/gui/cef/query/types/metadata_query.h:209
+#: src/gui/cef/query/types/metadata_query.h:210
+msgid "N/A: No masterlist present"
+msgstr ""
+
+#: src/gui/cef/query/types/metadata_query.h:216
+#: src/gui/cef/query/types/metadata_query.h:217
+msgid "Unknown: Git repository missing"
+msgstr ""
+
+#: src/gui/cef/query/types/metadata_query.h:225
+#: src/gui/cef/query/types/metadata_query.h:226
+msgid "(edited)"
+msgstr ""
+
+#: src/gui/cef/query/types/sort_plugins_query.h:50
+msgid "Sorting load order..."
+msgstr ""
+
+#: src/gui/html/elements/loot-groups-editor.js:281
+msgid "Add a new group"
+msgstr ""
+
+#: src/gui/html/elements/loot-groups-editor.js:282
+msgid "Group name"
+msgstr ""
+
+#: src/gui/html/elements/loot-groups-editor.js:283
+msgid "Group already exists!"
+msgstr ""
+
+#: src/gui/html/elements/loot-plugin-card.js:268
+#, javascript-format
+msgid "Verified clean by %s"
+msgstr ""
 
 #: src/gui/html/js/events.js:51
 msgid "Identifying conflicting plugins..."
@@ -681,20 +740,6 @@ msgid ""
 "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/cef/query/query.h:50
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-
-#: src/gui/cef/query/query.h:84
-msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
-"read-only. If it is, unset it and try again. If it isn't, you can check your "
-"LOOTDebugLog.txt (you can get to it through the main menu) for more "
-"information."
-msgstr ""
-
 #: src/gui/state/game.cpp:184 src/gui/state/game.cpp:213
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
@@ -801,7 +846,7 @@ msgstr ""
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/game.cpp:891
+#: src/gui/state/game.cpp:897
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 
