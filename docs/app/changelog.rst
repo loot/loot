@@ -4,6 +4,24 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.13.4 - 2018-09-25
+===================
+
+Fixed
+-----
+
+- Warnings were displayed for ghosted plugins saying they were invalid and would
+  be ignored when they were not.
+- Filesystem errors when trying to set permissions during a masterlist update
+  that clones a new repository (via LOOT API).
+
+Changed
+-------
+
+- The GUI is now based on a mix of Polymer 3 and React elements.
+- Updated GUI dependencies.
+- Updated LOOT API to v0.13.8.
+
 0.13.3 - 2018-09-11
 ===================
 
