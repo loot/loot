@@ -45,13 +45,14 @@ after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
   - ps: $env:GIT_DESCRIBE = ((git describe --tags --long --abbrev=7) | Out-String) -replace "`n|`r", ""
+  - ps: $env:LOOT_VERSION = "${env:GIT_DESCRIBE}_$env:APPVEYOR_REPO_BRANCH" -replace '[/<>"|]', '-'
   - ps: $env:PATH = "$env:PATH;C:\cygwin\bin\"
   - node scripts\potomo.js
   - ps: scripts\appveyor\build_installer.ps1
   - node scripts\archive.js
 
 artifacts:
-  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\loot_$(LOOT_VERSION).7z
     name: LOOT
   - path: build\LOOT Installer.exe
     name: installer
@@ -64,7 +65,7 @@ deploy:
     subject: loot
     repo: snapshots
     package: loot
-    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
+    version: $(LOOT_VERSION)
     publish: true
     override: true
     artifact: LOOT
@@ -83,7 +84,10 @@ deploy:
       appveyor_repo_tag: true
 
 on_success:
-  - ps: python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k $env:bintray_auth_token -t $env:github_auth_token -n 30
+  - ps: |
+      if ($env:bintray_auth_token -And $env:github_auth_token) {
+        python "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py" -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k $env:bintray_auth_token -t $env:github_auth_token -n 30
+      }
   - ps: scripts\appveyor\update_masterlist_branches.ps1
 
 on_finish:
