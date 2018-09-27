@@ -163,12 +163,16 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   fs.removeSync(tempPath);
 }
 
+function replaceInvalidFilenameCharacters(filename) {
+  return filename.replace(/[/<>"|]/g, '-');
+}
+
 function getFilenameSuffix(label, gitDescription) {
   if (label) {
-    return `${gitDescription}_${label}`;
+    return replaceInvalidFilenameCharacters(`${gitDescription}_${label}`);
   }
 
-  return `${gitDescription}`;
+  return replaceInvalidFilenameCharacters(gitDescription);
 }
 
 function getArchiveFileExtension() {

@@ -45,13 +45,14 @@ after_test:
   - cd %APPVEYOR_BUILD_FOLDER%
   - C:\Python27\Scripts\sphinx-build -b html docs build\docs\html
   - ps: $env:GIT_DESCRIBE = ((git describe --tags --long --abbrev=7) | Out-String) -replace "`n|`r", ""
+  - ps: $env:LOOT_VERSION = "${env:GIT_DESCRIBE}_$env:APPVEYOR_REPO_BRANCH" -replace '[/<>"|]', '-'
   - ps: $env:PATH = "$env:PATH;C:\cygwin\bin\"
   - node scripts\potomo.js
   - ps: scripts\appveyor\build_installer.ps1
   - node scripts\archive.js
 
 artifacts:
-  - path: build\loot_$(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH).7z
+  - path: build\loot_$(LOOT_VERSION).7z
     name: LOOT
   - path: build\LOOT Installer.exe
     name: installer
@@ -64,7 +65,7 @@ deploy:
     subject: loot
     repo: snapshots
     package: loot
-    version: $(GIT_DESCRIBE)_$(APPVEYOR_REPO_BRANCH)
+    version: $(LOOT_VERSION)
     publish: true
     override: true
     artifact: LOOT
