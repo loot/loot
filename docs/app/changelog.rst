@@ -18,6 +18,8 @@ Fixed
 Changed
 -------
 
+- The Group dropdown menu in the metadata editor now "drops up" to reduce the
+  amount of scrolling necesary by default to see the full list.
 - The GUI is now based on a mix of Polymer 3 and React elements.
 - Updated GUI dependencies.
 - Updated LOOT API to v0.13.8.
