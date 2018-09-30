@@ -169,7 +169,7 @@ export default class LootPluginEditor extends PolymerElement {
           </div>
           <div>
             <div>Group</div>
-            <loot-dropdown-menu id="group" no-label-float>
+            <loot-dropdown-menu id="group" no-label-float vertical-align="bottom">
               <!-- Group <paper-item> elements go here. -->
             </loot-dropdown-menu>
           </div>
