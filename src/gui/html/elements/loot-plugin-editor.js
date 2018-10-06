@@ -234,9 +234,9 @@ export default class LootPluginEditor extends PolymerElement {
   static _rowDataToCrc(rowData) {
     return {
       crc: parseInt(rowData.crc, 16),
-      itm: parseInt(rowData.itm, 10),
-      udr: parseInt(rowData.udr, 10),
-      nav: parseInt(rowData.nav, 10),
+      itm: parseInt(rowData.itm, 10) || undefined,
+      udr: parseInt(rowData.udr, 10) || undefined,
+      nav: parseInt(rowData.nav, 10) || undefined,
       util: rowData.utility
     };
   }
