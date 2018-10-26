@@ -1,3 +1,5 @@
+.. _groups_editor:
+
 *********************
 Editing Plugin Groups
 *********************

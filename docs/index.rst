@@ -13,6 +13,7 @@ LOOT
   app/usage/plugin_editor
   app/usage/groups_editor
   app/usage/settings
+  app/sorting
   app/theme
   app/contributing
   app/credits
