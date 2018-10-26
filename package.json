@@ -39,7 +39,7 @@
     "@polymer/paper-toast": "^3.0.0",
     "@polymer/paper-toggle-button": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
-    "@polymer/polymer": "^3.0.5",
+    "@polymer/polymer": "3.0.5",
     "cytoscape": "^3.2.11",
     "cytoscape-cose-bilkent": "^4.0.0",
     "cytoscape-edgehandles": "^3.2.3",
