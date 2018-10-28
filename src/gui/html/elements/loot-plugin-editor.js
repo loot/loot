@@ -333,6 +333,29 @@ export default class LootPluginEditor extends PolymerElement {
     };
   }
 
+  static _highlightNonUserGroup(groupElements, pluginData) {
+    let nonUserGroup;
+    if (pluginData.masterlist && pluginData.masterlist.group) {
+      nonUserGroup = pluginData.masterlist.group;
+    } else {
+      nonUserGroup = 'default';
+    }
+
+    for (let i = 0; i < groupElements.length; i += 1) {
+      if (
+        groupElements[i].getAttribute('value') === nonUserGroup &&
+        nonUserGroup !== pluginData.group
+      ) {
+        if (nonUserGroup !== pluginData.group) {
+          groupElements[i].style.fontWeight = 'bold';
+          groupElements[i].style.color = 'var(--primary-color)';
+        }
+      } else {
+        groupElements[i].style = undefined;
+      }
+    }
+  }
+
   setEditorData(newData) {
     /* newData is a Plugin object reference. */
     this.querySelector('h1').textContent = newData.name;
@@ -344,6 +367,8 @@ export default class LootPluginEditor extends PolymerElement {
       this.$.enableEdits.checked = true;
     }
     this.$.group.value = newData.group;
+
+    LootPluginEditor._highlightNonUserGroup(this.$.group.children, newData);
 
     /* Clear then fill in editor table data. Masterlist-originated
         rows should have their contents made read-only. */
