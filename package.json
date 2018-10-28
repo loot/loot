@@ -41,7 +41,7 @@
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "3.0.5",
     "cytoscape": "^3.2.11",
-    "cytoscape-cose-bilkent": "^4.0.0",
+    "cytoscape-dagre": "^2.2.2",
     "cytoscape-edgehandles": "^3.2.3",
     "decompress": "^4.0.0",
     "fs-extra": "^7.0.0",

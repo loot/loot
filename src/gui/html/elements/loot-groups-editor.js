@@ -1,6 +1,6 @@
 import cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
-import coseBilkent from 'cytoscape-cose-bilkent';
+import dagre from 'cytoscape-dagre';
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -141,7 +141,7 @@ export default class LootGroupsEditor extends PolymerElement {
     });
 
     cytoscape.use(edgehandles);
-    cytoscape.use(coseBilkent);
+    cytoscape.use(dagre);
   }
 
   disconnectedCallback() {
@@ -202,7 +202,7 @@ export default class LootGroupsEditor extends PolymerElement {
             width: 2,
             'curve-style': 'bezier',
             'mid-target-arrow-shape': 'triangle',
-            'arrow-scale': 1.25,
+            'arrow-scale': 2,
             'target-endpoint': 'inside-to-node'
           }
         },
@@ -233,9 +233,9 @@ export default class LootGroupsEditor extends PolymerElement {
     });
 
     this.cyLayoutOptions = {
-      name: 'cose-bilkent',
+      name: 'dagre',
       nodeDimensionsIncludeLabels: true,
-      gravityRange: 1
+      rankDir: 'LR'
     };
 
     this.cy.addListener('cxttap', onRemoveGraphElement);
