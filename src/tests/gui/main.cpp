@@ -27,6 +27,7 @@
 #include "tests/gui/cef/query/json_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
 #include "tests/gui/state/game/game_test.h"
+#include "tests/gui/state/game/helpers_test.h"
 #include "tests/gui/state/loot_paths_test.h"
 #include "tests/gui/state/loot_settings_test.h"
 #include "tests/gui/state/loot_state_test.h"

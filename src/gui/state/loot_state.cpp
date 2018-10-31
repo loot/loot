@@ -188,7 +188,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   }
   installedGames_.clear();
   for (const auto& gameSettings : getGameSettings()) {
-    if (gui::Game::IsInstalled(gameSettings)) {
+    if (gameSettings.IsInstalled()) {
       if (logger_) {
         logger_->trace("Adding new installed game entry for: {}",
                        gameSettings.FolderName());
@@ -354,7 +354,7 @@ void LootState::storeGameSettings(
           .SetGameLocalPath(gameSettings.GameLocalPath())
           .SetRegistryKey(gameSettings.RegistryKey());
     } else {
-      if (gui::Game::IsInstalled(gameSettings)) {
+      if (gameSettings.IsInstalled()) {
         if (logger_) {
           logger_->trace("Adding new installed game entry for: {}",
                          gameSettings.FolderName());

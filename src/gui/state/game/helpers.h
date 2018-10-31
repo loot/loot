@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2014-2018    WrinklyNinja
+    Copyright (C) 2018    Oliver Hamlet
 
     This file is part of LOOT.
 
@@ -21,22 +21,32 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
     */
-#ifndef LOOT_GUI_HELPERS
-#define LOOT_GUI_HELPERS
+
+#ifndef LOOT_GUI_STATE_GAME_HELPERS
+#define LOOT_GUI_STATE_GAME_HELPERS
 
 #include <filesystem>
+#include <vector>
+
+#include <loot/enum/game_type.h>
+#include <loot/metadata/message.h>
+#include <loot/metadata/plugin_cleaning_data.h>
+#include <loot/vertex.h>
 
 namespace loot {
-void OpenInDefaultApplication(const std::filesystem::path& file);
+bool ExecutableExists(const GameType& gameType,
+                      const std::filesystem::path& gamePath);
 
-#ifdef _WIN32
-std::wstring ToWinWide(const std::string& str);
+void BackupLoadOrder(const std::vector<std::string>& loadOrder,
+                     const std::filesystem::path& backupDirectory);
 
-std::string FromWinWide(const std::wstring& wstr);
+Message ToMessage(const PluginCleaningData& cleaningData);
 
-std::string RegKeyStringValue(const std::string& keyStr,
-  const std::string& subkey,
-  const std::string& value);
-#endif
+std::string DescribeCycle(const std::vector<Vertex>& cycle);
+
+std::vector<Message> CheckForRemovedPlugins(
+    const std::vector<std::string> pluginsBefore,
+    const std::vector<std::string> pluginsAfter);
 }
+
 #endif

@@ -36,6 +36,8 @@
 #include "windows.h"
 #endif
 
+#include "gui/state/logging.h"
+
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file) {
 #ifdef _WIN32
@@ -68,6 +70,60 @@ std::string FromWinWide(const std::wstring& wstr) {
   WideCharToMultiByte(
       CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
   return str;
+}
+
+std::string RegKeyStringValue(const std::string& keyStr,
+  const std::string& subkey,
+  const std::string& value) {
+  HKEY hKey = NULL;
+  DWORD len = MAX_PATH;
+  std::wstring wstr(MAX_PATH, 0);
+
+  if (keyStr == "HKEY_CLASSES_ROOT")
+    hKey = HKEY_CLASSES_ROOT;
+  else if (keyStr == "HKEY_CURRENT_CONFIG")
+    hKey = HKEY_CURRENT_CONFIG;
+  else if (keyStr == "HKEY_CURRENT_USER")
+    hKey = HKEY_CURRENT_USER;
+  else if (keyStr == "HKEY_LOCAL_MACHINE")
+    hKey = HKEY_LOCAL_MACHINE;
+  else if (keyStr == "HKEY_USERS")
+    hKey = HKEY_USERS;
+  else
+    throw std::invalid_argument("Invalid registry key given.");
+
+  auto logger = getLogger();
+  if (logger) {
+    logger->trace(
+      "Getting string for registry key, subkey and value: {}, {}, "
+      "{}",
+      keyStr,
+      subkey,
+      value);
+  }
+
+  LONG ret = RegGetValue(hKey,
+    ToWinWide(subkey).c_str(),
+    ToWinWide(value).c_str(),
+    RRF_RT_REG_SZ | KEY_WOW64_32KEY,
+    NULL,
+    &wstr[0],
+    &len);
+
+  if (ret == ERROR_SUCCESS) {
+    // Passing c_str() cuts off any unused buffer.
+    std::string value = FromWinWide(wstr.c_str());
+    if (logger) {
+      logger->info("Found string: {}", value);
+    }
+    return value;
+  }
+  else {
+    if (logger) {
+      logger->info("Failed to get string value.");
+    }
+    return "";
+  }
 }
 #endif
 }

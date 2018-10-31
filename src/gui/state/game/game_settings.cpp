@@ -26,15 +26,16 @@
 
 #include <boost/locale.hpp>
 
-namespace fs = std::filesystem;
+#include "gui/helpers.h"
+#include "gui/state/game/helpers.h"
+#include "gui/state/logging.h"
+
+using std::filesystem::exists;
+using std::filesystem::u8path;
 
 namespace loot {
-const std::set<std::string> GameSettings::oldDefaultBranches({
-    "master",
-    "v0.7",
-    "v0.8",
-    "v0.10"
-});
+const std::set<std::string> GameSettings::oldDefaultBranches(
+    {"master", "v0.7", "v0.8", "v0.10"});
 
 GameSettings::GameSettings() : type_(GameType::tes4) {}
 
@@ -62,8 +63,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::tes5vr) {
     name_ = "TES V: Skyrim VR";
-    registryKey_ =
-      "Software\\Bethesda Softworks\\Skyrim VR\\Installed Path";
+    registryKey_ = "Software\\Bethesda Softworks\\Skyrim VR\\Installed Path";
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
@@ -101,10 +101,12 @@ bool GameSettings::IsRepoBranchOldDefault() const {
   return oldDefaultBranches.count(repositoryBranch_) == 1;
 }
 
+bool GameSettings::IsInstalled() const { return FindGamePath().has_value(); }
+
 bool GameSettings::operator==(const GameSettings& rhs) const {
   using boost::locale::to_lower;
   return to_lower(name_) == to_lower(rhs.Name()) ||
-    to_lower(lootFolderName_) == to_lower(rhs.FolderName());
+         to_lower(lootFolderName_) == to_lower(rhs.FolderName());
 }
 
 GameType GameSettings::Type() const { return type_; }
@@ -121,9 +123,9 @@ std::string GameSettings::RepoURL() const { return repositoryURL_; }
 
 std::string GameSettings::RepoBranch() const { return repositoryBranch_; }
 
-fs::path GameSettings::GamePath() const { return gamePath_; }
+std::filesystem::path GameSettings::GamePath() const { return gamePath_; }
 
-fs::path GameSettings::GameLocalPath() const {
+std::filesystem::path GameSettings::GameLocalPath() const {
   return gameLocalPath_;
 }
 
@@ -157,8 +159,53 @@ GameSettings& GameSettings::SetGamePath(const std::filesystem::path& path) {
   return *this;
 }
 
-GameSettings& GameSettings::SetGameLocalPath(const std::filesystem::path& path) {
+GameSettings& GameSettings::SetGameLocalPath(
+    const std::filesystem::path& path) {
   gameLocalPath_ = path;
   return *this;
+}
+
+std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
+  auto logger = getLogger();
+  try {
+    if (logger) {
+      logger->trace("Checking if game \"{}\" is installed.", name_);
+    }
+    if (!gamePath_.empty() &&
+        exists(gamePath_ / "Data" / u8path(masterFile_))) {
+      return gamePath_;
+    }
+
+    std::filesystem::path gamePath = "..";
+    if (exists(gamePath / "Data" / u8path(masterFile_)) &&
+        ExecutableExists(type_, gamePath)) {
+      return gamePath;
+    }
+
+#ifdef _WIN32
+    auto registryKey = registryKey_;
+    auto lastBackslash = registryKey.rfind("\\");
+    if (lastBackslash == std::string::npos ||
+        lastBackslash == registryKey.length() - 1) {
+      return std::nullopt;
+    }
+    std::string keyParent = registryKey.substr(0, lastBackslash);
+    std::string keyName = registryKey.substr(lastBackslash + 1);
+
+    gamePath = RegKeyStringValue("HKEY_LOCAL_MACHINE", keyParent, keyName);
+    if (!gamePath.empty() && exists(gamePath / "Data" / u8path(masterFile_)) &&
+        ExecutableExists(type_, gamePath)) {
+      return gamePath;
+    }
+#endif
+  } catch (std::exception& e) {
+    if (logger) {
+      logger->error("Error while checking if game \"{}\" is installed: {}",
+                    name_,
+                    e.what());
+    }
+  }
+
+  return std::nullopt;
 }
 }

@@ -50,8 +50,6 @@ public:
 
   using GameSettings::Type;
 
-  static bool IsInstalled(const GameSettings& gameSettings);
-  static Message ToMessage(const PluginCleaningData& cleaningData);
   void Init();
 
   std::shared_ptr<const PluginInterface> GetPlugin(
@@ -97,10 +95,12 @@ public:
   std::unordered_set<Group> GetMasterlistGroups() const;
   std::unordered_set<Group> GetUserGroups() const;
 
-  std::optional<PluginMetadata> GetMasterlistMetadata(const std::string& pluginName,
-                                       bool evaluateConditions = false) const;
-  std::optional<PluginMetadata> GetUserMetadata(const std::string& pluginName,
-                                 bool evaluateConditions = false) const;
+  std::optional<PluginMetadata> GetMasterlistMetadata(
+      const std::string& pluginName,
+      bool evaluateConditions = false) const;
+  std::optional<PluginMetadata> GetUserMetadata(
+      const std::string& pluginName,
+      bool evaluateConditions = false) const;
 
   void SetUserGroups(const std::unordered_set<Group>& groups);
   void AddUserMetadata(const PluginMetadata& metadata);
@@ -109,30 +109,15 @@ public:
   void SaveUserMetadata();
 
 private:
-#ifdef _WIN32
-  static std::string RegKeyStringValue(const std::string& keyStr,
-                                       const std::string& subkey,
-                                       const std::string& value);
-#endif
-  static bool ExecutableExists(const GameType& gameType,
-                               const std::filesystem::path& gamePath);
-  static std::optional<std::filesystem::path> DetectGamePath(
-      const GameSettings& gameSettings);
-  static void BackupLoadOrder(const std::vector<std::string>& loadOrder,
-                              const std::filesystem::path& backupDirectory);
   std::vector<std::string> GetInstalledPluginNames();
-  void warnAboutRemovedPlugins(const std::vector<std::string> pluginsBefore,
-                               const std::vector<std::string> pluginsAfter);
-
-  std::filesystem::path lootDataPath_;
+  void AppendMessages(std::vector<Message> messages);
 
   std::shared_ptr<GameInterface> gameHandle_;
-  bool pluginsFullyLoaded_;
-
-  std::vector<Message> messages_;
-  unsigned short loadOrderSortCount_;
-
   std::shared_ptr<spdlog::logger> logger_;
+  std::vector<Message> messages_;
+  std::filesystem::path lootDataPath_;
+  unsigned short loadOrderSortCount_;
+  bool pluginsFullyLoaded_;
 
   mutable std::mutex mutex_;
 };

@@ -40,7 +40,12 @@ protected:
 // but we only have the one so no prefix is necessary.
 // Just test with one game because if it works for one it will work for them
 // all.
-INSTANTIATE_TEST_CASE_P(, GameSettingsTest, ::testing::Values(GameType::tes5));
+INSTANTIATE_TEST_CASE_P(, GameSettingsTest, ::testing::Values(GameType::tes4,
+  GameType::tes5,
+  GameType::fo3,
+  GameType::fonv,
+  GameType::fo4,
+  GameType::tes5se));
 
 TEST_P(
     GameSettingsTest,
@@ -91,6 +96,69 @@ TEST_P(GameSettingsTest,
   settings_ = GameSettings(GameType::tes5);
 
   EXPECT_FALSE(settings_.IsRepoBranchOldDefault());
+}
+
+TEST_P(GameSettingsTest, isInstalledShouldBeFalseIfGamePathIsNotSetAndGameHasNoRegistryEntry) {
+  EXPECT_FALSE(GameSettings(GetParam()).IsInstalled());
+}
+
+TEST_P(GameSettingsTest, isInstalledShouldBeTrueIfGamePathIsValid) {
+  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+
+  EXPECT_TRUE(settings.IsInstalled());
+}
+
+TEST_P(GameSettingsTest, isInstalledShouldSupportNonAsciiGameMasters) {
+  auto settings = GameSettings(GetParam(), u8"non\u00C1sciiFolder")
+    .SetGamePath(dataPath.parent_path())
+    .SetGameLocalPath(localPath);
+  settings.SetMaster(nonAsciiEsp);
+
+  EXPECT_TRUE(settings.IsInstalled());
+}
+
+TEST_P(GameSettingsTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
+  auto currentPath = std::filesystem::current_path();
+
+  std::filesystem::create_directory(dataPath / ".." / "LOOT");
+  std::filesystem::current_path(dataPath / ".." / "LOOT");
+  if (GetParam() == GameType::tes5) {
+    std::ofstream out(std::filesystem::path("..") / "TESV.exe");
+    // out << "";
+    out.close();
+  }
+  else if (GetParam() == GameType::tes5se) {
+    std::ofstream out(std::filesystem::path("..") /
+      "SkyrimSE.exe");
+    // out << "";
+    out.close();
+  }
+
+  GameType gameTypes[6] = {
+      GameType::tes4,
+      GameType::tes5,
+      GameType::fo3,
+      GameType::fonv,
+      GameType::fo4,
+      GameType::tes5se,
+  };
+  for (int i = 0; i < 6; ++i) {
+    if (gameTypes[i] == GetParam()) {
+      EXPECT_TRUE(GameSettings(gameTypes[i]).IsInstalled());
+    }
+    else {
+      EXPECT_FALSE(GameSettings(gameTypes[i]).IsInstalled());
+    }
+  }
+
+  std::filesystem::current_path(currentPath);
+  std::filesystem::remove_all(dataPath / ".." / "LOOT");
+  if (GetParam() == GameType::tes5) {
+    std::filesystem::remove(dataPath / ".." / "TESV.exe");
+  }
+  else if (GetParam() == GameType::tes5se) {
+    std::filesystem::remove(dataPath / ".." / "SkyrimSE.exe");
+  }
 }
 
 TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {

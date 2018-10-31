@@ -26,6 +26,7 @@
 #define LOOT_GUI_STATE_GAME_GAME_SETTINGS
 
 #include <filesystem>
+#include <optional>
 #include <set>
 #include <string>
 
@@ -39,6 +40,7 @@ public:
                         const std::string& lootFolder = "");
 
   bool IsRepoBranchOldDefault() const;
+  bool IsInstalled() const;
 
   bool operator==(
       const GameSettings& rhs) const;  // Compares names and folder names.
@@ -60,6 +62,9 @@ public:
   GameSettings& SetRepoBranch(const std::string& repositoryBranch);
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
+
+protected:
+  std::optional<std::filesystem::path> FindGamePath() const;
 
 private:
   static const std::set<std::string> oldDefaultBranches;
