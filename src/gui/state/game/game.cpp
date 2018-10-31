@@ -241,9 +241,10 @@ std::vector<Message> Game::CheckInstallValidity(
       if (!master->IsLightMaster() && !master->IsMaster()) {
         if (logger_) {
           logger_->error(
-              "This plugin is a light master and requires the non-master "
-              "plugin \"{}\". This can cause issues in-game, and sorting will "
-              "fail while this plugin is installed.",
+              "\"{}\" is a light master and requires the non-master plugin "
+              "\"{}\". This can cause issues in-game, and sorting will fail "
+              "while this plugin is installed.",
+              plugin->GetName(),
               masterName);
         }
         messages.push_back(Message(
@@ -256,6 +257,22 @@ std::vector<Message> Game::CheckInstallValidity(
                 .str()));
       }
     }
+  }
+
+  if (plugin->IsLightMaster() && !plugin->IsValidAsLightMaster()) {
+    if (logger_) {
+      logger_->error(
+          "\"{}\" contains records that have FormIDs outside the valid range "
+          "for an ESL plugin. Using this plugin will cause irreversible damage "
+          "to your game saves.",
+          plugin->GetName());
+    }
+    messages.push_back(
+        Message(MessageType::error,
+                boost::locale::translate(
+                    "This plugin contains records that have FormIDs outside "
+                    "the valid range for an ESL plugin. Using this plugin "
+                    "will cause irreversible damage to your game saves.")));
   }
 
   // Also generate dirty messages.

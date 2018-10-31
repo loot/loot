@@ -60,8 +60,8 @@ protected:
       loadOrderBackupFile2("loadorder.bak.2"),
       loadOrderBackupFile3("loadorder.bak.3"),
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
-        .SetGamePath(dataPath.parent_path())
-        .SetGameLocalPath(localPath)) {}
+                              .SetGamePath(dataPath.parent_path())
+                              .SetGameLocalPath(localPath)) {}
 
   void TearDown() { CommonGameTestFixture::TearDown(); }
 
@@ -213,19 +213,19 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
             messages);
 }
 
-TEST_P(GameTest, checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) {
+TEST_P(GameTest,
+       checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) {
   using std::filesystem::u8path;
   ASSERT_NO_THROW(std::filesystem::rename(
-    dataPath / blankEsp,
-    dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
+      dataPath / blankEsp, dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
 
   Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
-    File(nonAsciiEsp),
-    File(u8"nonAsc\u00EDi.esp"),
+      File(nonAsciiEsp),
+      File(u8"nonAsc\u00EDi.esp"),
   });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
@@ -233,23 +233,24 @@ TEST_P(GameTest, checkInstallValidityShouldHandleNonAsciiFileMetadataCorrectly) 
 }
 
 TEST_P(
-  GameTest,
-  checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
+    GameTest,
+    checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
   Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetRequirements({
-    File(missingEsp, "foo"),
-    File(blankEsp),
-    });
+      File(missingEsp, "foo"),
+      File(blankEsp),
+  });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
-    Message(MessageType::error,
-    "This plugin requires \"foo\" to be installed, but it is missing."),
-    }),
-    messages);
+                Message(MessageType::error,
+                        "This plugin requires \"foo\" to be installed, but it "
+                        "is missing."),
+            }),
+            messages);
 }
 
 TEST_P(GameTest,
@@ -272,8 +273,9 @@ TEST_P(GameTest,
             messages);
 }
 
-TEST_P(GameTest,
-  checkInstallValidityShouldShowAMessageForIncompatibleNonPluginFilesThatArePresent) {
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldShowAMessageForIncompatibleNonPluginFilesThatArePresent) {
   Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
@@ -284,34 +286,37 @@ TEST_P(GameTest,
   PluginMetadata metadata(blankEsm);
   metadata.SetIncompatibilities({
       File(incompatibleFilename),
-    });
+  });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin is incompatible with \"" + incompatibleFilename +
-                            "\", but both files are present."),
-    }),
-    messages);
+  EXPECT_EQ(
+      std::vector<Message>({
+          Message(MessageType::error,
+                  "This plugin is incompatible with \"" + incompatibleFilename +
+                      "\", but both files are present."),
+      }),
+      messages);
 }
 
-TEST_P(GameTest,
-  checkInstallValidityShouldUseDisplayNamesInIncompatibilityMessagesIfPresent) {
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldUseDisplayNamesInIncompatibilityMessagesIfPresent) {
   Game game(defaultGameSettings, "");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetIncompatibilities({
-    File(missingEsp),
-    File(masterFile, "foo"),
-    });
+      File(missingEsp),
+      File(masterFile, "foo"),
+  });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
-    Message(MessageType::error,
-    "This plugin is incompatible with \"foo\", but both files are present."),
-    }),
-    messages);
+                Message(MessageType::error,
+                        "This plugin is incompatible with \"foo\", but both "
+                        "files are present."),
+            }),
+            messages);
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
@@ -329,13 +334,12 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
-  EXPECT_EQ(std::vector<Message>({
-                ToMessage(
-                    PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2)),
-                ToMessage(
-                    PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10)),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<Message>({
+          ToMessage(PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2)),
+          ToMessage(PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10)),
+      }),
+      messages);
 }
 
 TEST_P(
@@ -370,6 +374,39 @@ TEST_P(
   EXPECT_TRUE(messages.empty());
 }
 
+TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
+  if (GetParam() != GameType::tes5se) {
+    return;
+  }
+
+  std::filesystem::path srcPath = std::filesystem::current_path() / "Skyrim" / "Data";
+  std::string blankEsl = "blank.esl";
+  std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
+  std::fstream out(dataPath / blankEsl,
+    std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  out.seekp(0x09, std::ios_base::beg);
+  out.put(0x02);
+  out.seekp(0x128, std::ios_base::beg);
+  out.put(0xFF);
+  out.seekp(0x129, std::ios_base::beg);
+  out.put(0xFF);
+  out.close();
+
+  Game game(defaultGameSettings, "");
+  game.LoadAllInstalledPlugins(false);
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsl),
+                                            PluginMetadata(blankEsl));
+  EXPECT_EQ(
+      std::vector<Message>({
+          Message(MessageType::error,
+                  "This plugin contains records that have FormIDs outside the "
+                  "valid range for an ESL plugin. Using this plugin will cause "
+                  "irreversible damage to your game saves."),
+      }),
+      messages);
+}
+
 TEST_P(
     GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
@@ -389,10 +426,9 @@ TEST_P(
       pluginPath += ".ghost";
 
     std::filesystem::last_write_time(pluginPath,
-                                       time - i * std::chrono::seconds(60));
-    ASSERT_EQ(
-        time - i * std::chrono::seconds(60),
-        std::filesystem::last_write_time(pluginPath));
+                                     time - i * std::chrono::seconds(60));
+    ASSERT_EQ(time - i * std::chrono::seconds(60),
+              std::filesystem::last_write_time(pluginPath));
   }
 
   EXPECT_NO_THROW(game.RedatePlugins());
@@ -406,9 +442,8 @@ TEST_P(
     if (!std::filesystem::exists(pluginPath))
       pluginPath += ".ghost";
 
-    EXPECT_EQ(
-        time + i * interval,
-        std::filesystem::last_write_time(pluginPath));
+    EXPECT_EQ(time + i * interval,
+              std::filesystem::last_write_time(pluginPath));
   }
 }
 
@@ -449,14 +484,15 @@ TEST_P(
 }
 
 TEST_P(GameTest,
-  loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
+       loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
   Game game(defaultGameSettings, "");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_EQ(1, game.GetMessages().size());
-  EXPECT_EQ("You have not sorted your load order this session.", game.GetMessages()[0].GetContent()[0].GetText());
+  EXPECT_EQ("You have not sorted your load order this session.",
+            game.GetMessages()[0].GetContent()[0].GetText());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
@@ -481,15 +517,14 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
   EXPECT_TRUE(game.ArePluginsFullyLoaded());
 }
 
-TEST_P(
-    GameTest,
-    GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
+TEST_P(GameTest,
+       GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
   Game game(defaultGameSettings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp),
-                                             game.GetLoadOrder());
+                                            game.GetLoadOrder());
   EXPECT_FALSE(index.has_value());
 }
 
@@ -501,7 +536,7 @@ TEST_P(
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile),
-                                             game.GetLoadOrder());
+                                            game.GetLoadOrder());
   EXPECT_EQ(0, index);
 
   index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm),
@@ -514,14 +549,14 @@ TEST_P(
 }
 
 TEST_P(
-  GameTest,
-  GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
+    GameTest,
+    GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
   Game game(defaultGameSettings, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
   auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(nonAsciiEsp),
-    { u8"non\u00E1scii.esp" });
+                                            {u8"non\u00E1scii.esp"});
   EXPECT_EQ(0, index.value());
 }
 
@@ -531,29 +566,20 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   game.Init();
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile0));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
 
   EXPECT_TRUE(loadOrder.empty());
 }
@@ -565,29 +591,20 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   game.LoadAllInstalledPlugins(true);
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile0));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
 
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
@@ -599,14 +616,10 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   game.LoadAllInstalledPlugins(true);
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
@@ -620,21 +633,15 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile0));
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile1));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 
-  loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile1);
+  loadOrder = readFileLines(lootGamePath / loadOrderBackupFile1);
   EXPECT_EQ(initialLoadOrder, loadOrder);
 }
 
@@ -644,14 +651,10 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   game.Init();
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile0));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile1));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile2));
-  ASSERT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
   auto initialLoadOrder = getLoadOrder();
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
@@ -683,25 +686,18 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 
   ASSERT_NO_THROW(game.SetLoadOrder(loadOrderToSet_));
 
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile0));
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile1));
-  EXPECT_TRUE(std::filesystem::exists(lootGamePath /
-                                        loadOrderBackupFile2));
-  EXPECT_FALSE(std::filesystem::exists(lootGamePath /
-                                         loadOrderBackupFile3));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
+  EXPECT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile3));
 
-  auto loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile0);
+  auto loadOrder = readFileLines(lootGamePath / loadOrderBackupFile0);
   EXPECT_EQ(thirdSetLoadOrder, loadOrder);
 
-  loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile1);
+  loadOrder = readFileLines(lootGamePath / loadOrderBackupFile1);
   EXPECT_EQ(secondSetLoadOrder, loadOrder);
 
-  loadOrder =
-      readFileLines(lootGamePath / loadOrderBackupFile2);
+  loadOrder = readFileLines(lootGamePath / loadOrderBackupFile2);
   EXPECT_EQ(firstSetLoadOrder, loadOrder);
 }
 
