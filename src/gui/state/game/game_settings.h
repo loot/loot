@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_GAME_SETTINGS
-#define LOOT_GUI_STATE_GAME_SETTINGS
+#ifndef LOOT_GUI_STATE_GAME_GAME_SETTINGS
+#define LOOT_GUI_STATE_GAME_GAME_SETTINGS
 
 #include <filesystem>
 #include <set>

@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "gui/state/game.h"
+#include "gui/state/game/game.h"
 
 #include <algorithm>
 #include <cmath>
@@ -34,7 +34,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
-#include "gui/state/game_detection_error.h"
+#include "gui/state/game/game_detection_error.h"
 #include "gui/state/logging.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"

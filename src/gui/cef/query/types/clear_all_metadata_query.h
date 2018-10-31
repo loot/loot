@@ -27,7 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/game.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class ClearAllMetadataQuery : public MetadataQuery {

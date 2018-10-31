@@ -31,7 +31,7 @@
 #include <string>
 #include <vector>
 
-#include "gui/state/game_settings.h"
+#include "gui/state/game/game_settings.h"
 
 namespace loot {
 class LootSettings {

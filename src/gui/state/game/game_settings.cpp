@@ -22,7 +22,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include "gui/state/game_settings.h"
+#include "gui/state/game/game_settings.h"
 
 #include <boost/locale.hpp>
 

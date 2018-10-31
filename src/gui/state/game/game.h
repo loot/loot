@@ -22,8 +22,8 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_GAME
-#define LOOT_GUI_STATE_GAME
+#ifndef LOOT_GUI_STATE_GAME_GAME
+#define LOOT_GUI_STATE_GAME_GAME
 
 #define FMT_NO_FMT_STRING_ALIAS
 
@@ -35,7 +35,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "gui/state/game_settings.h"
+#include "gui/state/game/game_settings.h"
 #include "loot/api.h"
 
 namespace loot {

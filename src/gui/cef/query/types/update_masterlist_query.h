@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_UPDATE_MASTERLIST_QUERY
 
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/game.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class UpdateMasterlistQuery : public MetadataQuery {

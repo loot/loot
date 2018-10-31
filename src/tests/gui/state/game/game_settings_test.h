@@ -22,10 +22,10 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_GUI_STATE_GAME_SETTINGS_TEST
-#define LOOT_TESTS_GUI_STATE_GAME_SETTINGS_TEST
+#ifndef LOOT_TESTS_GUI_STATE_GAME_GAME_SETTINGS_TEST
+#define LOOT_TESTS_GUI_STATE_GAME_GAME_SETTINGS_TEST
 
-#include "gui/state/game_settings.h"
+#include "gui/state/game/game_settings.h"
 
 #include "tests/common_game_test_fixture.h"
 

@@ -30,7 +30,7 @@ along with LOOT.  If not, see
 #include <json.hpp>
 
 #include "gui/cef/query/query.h"
-#include "gui/state/game_settings.h"
+#include "gui/state/game/game_settings.h"
 
 namespace loot {
 class GetGameTypesQuery : public Query {

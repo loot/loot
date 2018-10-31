@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/game.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class ClearPluginMetadataQuery : public MetadataQuery {

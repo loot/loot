@@ -30,7 +30,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "gui/state/game.h"
+#include "gui/state/game/game.h"
 #include "gui/state/loot_settings.h"
 
 namespace loot {
