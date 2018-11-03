@@ -60,6 +60,7 @@ protected:
       loadOrderBackupFile2("loadorder.bak.2"),
       loadOrderBackupFile3("loadorder.bak.3"),
       defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
+                              .SetMinimumHeaderVersion(0.0f)
                               .SetGamePath(dataPath.parent_path())
                               .SetGameLocalPath(localPath)) {}
 
@@ -379,11 +380,13 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
     return;
   }
 
-  std::filesystem::path srcPath = std::filesystem::current_path() / "Skyrim" / "Data";
+  std::filesystem::path srcPath =
+      std::filesystem::current_path() / "Skyrim" / "Data";
   std::string blankEsl = "blank.esl";
   std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
-  std::fstream out(dataPath / blankEsl,
-    std::ios_base::in | std::ios_base::out | std::ios_base::binary);
+  std::fstream out(
+      dataPath / blankEsl,
+      std::ios_base::in | std::ios_base::out | std::ios_base::binary);
   out.seekp(0x09, std::ios_base::beg);
   out.put(0x02);
   out.seekp(0x128, std::ios_base::beg);
@@ -405,6 +408,31 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
                   "irreversible damage to your game saves."),
       }),
       messages);
+}
+
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldCheckThatAPluginHeaderVersionIsNotLessThanTheMinimum) {
+  Game game(defaultGameSettings, "");
+  game.SetMinimumHeaderVersion(5.1f);
+  game.LoadAllInstalledPlugins(false);
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm),
+                                            PluginMetadata(blankEsm));
+
+  std::string messageText;
+  if (GetParam() == GameType::tes4) {
+    messageText =
+        "This plugin has a header version of 0.8, which is less than the "
+        "game's minimum supported header version of 5.1.";
+  } else {
+    messageText =
+        "This plugin has a header version of 0.94, which is less than the "
+        "game's minimum supported header version of 5.1.";
+  }
+
+  EXPECT_EQ(std::vector<Message>({Message(MessageType::error, messageText)}),
+            messages);
 }
 
 TEST_P(

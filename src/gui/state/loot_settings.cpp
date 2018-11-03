@@ -94,6 +94,11 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     game.SetMaster(*master);
   }
 
+  auto minimumHeaderVersion = table->get_as<double>("minimumHeaderVersion");
+  if (minimumHeaderVersion) {
+    game.SetMinimumHeaderVersion((float) *minimumHeaderVersion);
+  }
+
   auto repo = table->get_as<std::string>("repo");
   if (repo) {
     game.SetRepoURL(*repo);
@@ -256,6 +261,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       game->insert("name", gameSettings.Name());
       game->insert("folder", gameSettings.FolderName());
       game->insert("master", gameSettings.Master());
+      game->insert("minimumHeaderVersion", gameSettings.MinimumHeaderVersion());
       game->insert("repo", gameSettings.RepoURL());
       game->insert("branch", gameSettings.RepoBranch());
       game->insert("path", gameSettings.GamePath().u8string());

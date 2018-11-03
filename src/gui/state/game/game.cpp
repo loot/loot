@@ -275,6 +275,24 @@ std::vector<Message> Game::CheckInstallValidity(
                     "will cause irreversible damage to your game saves.")));
   }
 
+  if (plugin->GetHeaderVersion() < MinimumHeaderVersion()) {
+    if (logger_) {
+      logger_->warn(
+          "\"{}\" has a header version of {}, which is less than the game's "
+          "minimum supported header version of {}.",
+          plugin->GetName(),
+          plugin->GetHeaderVersion(),
+          MinimumHeaderVersion());
+    }
+    messages.push_back(Message(
+        MessageType::warn,
+        (boost::format(boost::locale::translate(
+             "This plugin has a header version of %1%, which is less than the "
+             "game's minimum supported header version of %2%.")) %
+         plugin->GetHeaderVersion() % MinimumHeaderVersion())
+            .str()));
+  }
+
   // Also generate dirty messages.
   for (const auto& element : metadata.GetDirtyInfo()) {
     messages.push_back(ToMessage(element));

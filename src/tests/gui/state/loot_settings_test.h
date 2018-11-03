@@ -185,6 +185,23 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
 }
 
+TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+    << "name = \"Game Name\"" << endl
+    << "type = \"Oblivion\"" << endl
+    << "folder = \"Oblivion\"" << endl
+    << "minimumHeaderVersion = 1.0" << endl;
+  out.close();
+
+  settings_.load(settingsFile_);
+
+  ASSERT_EQ(8, settings_.getGameSettings().size());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ(1.0, settings_.getGameSettings()[0].MinimumHeaderVersion());
+}
+
 TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   using std::endl;
   std::ofstream out(unicodeSettingsFile_);
@@ -360,7 +377,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   windowPosition.right = 4;
   windowPosition.maximised = true;
   const std::vector<GameSettings> games({
-      GameSettings(GameType::tes4).SetName("Game Name"),
+      GameSettings(GameType::tes4).SetName("Game Name").SetMinimumHeaderVersion(2.5),
   });
   const std::map<std::string, bool> filters({
       {"hideBashTags", false},
@@ -399,6 +416,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_TRUE(settings.getWindowPosition().maximised);
 
   EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
+  EXPECT_EQ(games[0].MinimumHeaderVersion(), settings.getGameSettings().at(0).MinimumHeaderVersion());
 
   EXPECT_EQ(filters, settings.getFilters());
 }

@@ -49,6 +49,7 @@ public:
   std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;
   std::string Master() const;
+  float MinimumHeaderVersion() const;
   std::string RegistryKey() const;
   std::string RepoURL() const;
   std::string RepoBranch() const;
@@ -57,6 +58,7 @@ public:
 
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
+  GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
   GameSettings& SetRegistryKey(const std::string& registry);
   GameSettings& SetRepoURL(const std::string& repositoryURL);
   GameSettings& SetRepoBranch(const std::string& repositoryBranch);
@@ -72,6 +74,7 @@ private:
   GameType type_;
   std::string name_;
   std::string masterFile_;
+  float mininumHeaderVersion_;
 
   std::string registryKey_;
 

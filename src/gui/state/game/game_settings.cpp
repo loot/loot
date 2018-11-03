@@ -37,7 +37,7 @@ namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches(
     {"master", "v0.7", "v0.8", "v0.10"});
 
-GameSettings::GameSettings() : type_(GameType::tes4) {}
+GameSettings::GameSettings() : type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode),
@@ -47,12 +47,14 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
+    mininumHeaderVersion_ = 0.8f;
     repositoryURL_ = "https://github.com/loot/oblivion.git";
   } else if (Type() == GameType::tes5) {
     name_ = "TES V: Skyrim";
     registryKey_ = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
+    mininumHeaderVersion_ = 0.94f;
     repositoryURL_ = "https://github.com/loot/skyrim.git";
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
@@ -60,36 +62,42 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
         "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path";
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
+    mininumHeaderVersion_ = 1.7f;
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::tes5vr) {
     name_ = "TES V: Skyrim VR";
     registryKey_ = "Software\\Bethesda Softworks\\Skyrim VR\\Installed Path";
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
+    mininumHeaderVersion_ = 1.7f;
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
     registryKey_ = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
+    mininumHeaderVersion_ = 0.94f;
     repositoryURL_ = "https://github.com/loot/fallout3.git";
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
     registryKey_ = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
+    mininumHeaderVersion_ = 1.32f;
     repositoryURL_ = "https://github.com/loot/falloutnv.git";
   } else if (Type() == GameType::fo4) {
     name_ = "Fallout 4";
     registryKey_ = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
+    mininumHeaderVersion_ = 0.95f;
     repositoryURL_ = "https://github.com/loot/fallout4.git";
   } else if (Type() == GameType::fo4vr) {
     name_ = "Fallout 4 VR";
     registryKey_ = "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path";
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
+    mininumHeaderVersion_ = 0.95f;
     repositoryURL_ = "https://github.com/loot/fallout4.git";
   }
 
@@ -117,6 +125,8 @@ std::string GameSettings::FolderName() const { return lootFolderName_; }
 
 std::string GameSettings::Master() const { return masterFile_; }
 
+float GameSettings::MinimumHeaderVersion() const { return mininumHeaderVersion_; }
+
 std::string GameSettings::RegistryKey() const { return registryKey_; }
 
 std::string GameSettings::RepoURL() const { return repositoryURL_; }
@@ -136,6 +146,11 @@ GameSettings& GameSettings::SetName(const std::string& name) {
 
 GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
   masterFile_ = masterFile;
+  return *this;
+}
+
+GameSettings& GameSettings::SetMinimumHeaderVersion(float mininumHeaderVersion) {
+  mininumHeaderVersion_ = mininumHeaderVersion;
   return *this;
 }
 
