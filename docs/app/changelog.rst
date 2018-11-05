@@ -4,6 +4,62 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.0 - Unreleased
+===================
+
+Added
+-----
+
+- An error message will now be displayed for any light plugin that contains new
+  records with FormIDs outside the valid range for light plugins.
+- A warning message will now be displayed for any plugin that has a header
+  version that is older than is used by the game, to help draw attention to
+  plugins that have been incorrectly ported from older games. The header version
+  checked is the value of the version field in the ``HEDR`` subrecord of the
+  plugin's ``TES4`` record.
+- A section to the documentation that explains LOOT's sorting algorithm.
+
+Fixed
+-----
+
+- The Groups Editor no longer uses a randomised layout when visualising the
+  groups graph.
+- Incorrect handling of non-ASCII characters in plugin filenames when getting
+  their active load order indices, which could lead to incorrect indices being
+  displayed in the sidebar.
+- Incorrect handling of non-ASCII characters in games' LOOT folder names. By
+  default all folder names only contained ASCII characters, so this would only
+  affect customised folder names.
+- BSAs/BA2s loaded by non-ASCII plugins for Oblivion, Fallout 3, Fallout: New
+  Vegas and Fallout 4 may not have been detected due to incorrect
+  case-insensitivity handling (via LOOT API).
+- Fixed incorrect case-insensitivity handling for non-ASCII plugin filenames and
+  File metadata names (via LOOT API).
+- Path equivalence checks could be inaccurate as they were using
+  case-insensitive string comparisons, which may not match filesystem behaviour.
+  Filesystem equivalence checks are now used to improve correctness. (Via LOOT
+  API).
+- Errors due to filesystem permissions when cloning a new masterlist repository
+  into an existing game directory. Deleting the temporary directory is now
+  deferred until after its contents have been copied into the game directory,
+  and if an error is encountered when deleting the temporary directory, it is
+  logged but does not cause the masterlist update to fail. (Via LOOT API).
+
+Changed
+-------
+
+- LOOT now requires a C++17-compatible compiler, so Windows builds now require
+  the MSVC 2017 x86 redistributable instead of the MSVC 2015 x86
+  redistributable.
+- The masterlist or default group for a plugin in the plugin editor's group
+  dropdown is now styled with bold dark blue text to make it easier to undo user
+  customisation of a plugin's group.
+- Cyclic interaction errors will now detail the data source of each interaction
+  in the cyclic path, to make it easier to identify the problematic metadata and
+  so fix it.
+- Updated the Japanese translation.
+- LOOT now supports v0.14 of the metadata syntax (via LOOT API).
+
 0.13.6 - 2018-11-27
 ===================
 
