@@ -32,13 +32,20 @@
 #include "gui/state/loot_state.h"
 
 namespace loot {
+struct CommandLineOptions {
+  CommandLineOptions(int argc, const char *const *argv);
+
+  bool autoSort;
+  std::string defaultGame;
+  std::string lootDataPath;
+  std::string url;
+};
+
 class LootApp : public CefApp,
                 public CefBrowserProcessHandler,
                 public CefRenderProcessHandler {
 public:
-  void Initialise(const std::string& defaultGame,
-                  const std::string& lootDataPath,
-                  const std::string& url);
+  void Initialise(const CommandLineOptions& options);
 
   // Override CefApp methods.
   virtual void OnBeforeCommandLineProcessing(

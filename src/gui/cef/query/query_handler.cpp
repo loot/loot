@@ -52,6 +52,7 @@
 #include "gui/cef/query/types/discard_unapplied_changes_query.h"
 #include "gui/cef/query/types/editor_closed_query.h"
 #include "gui/cef/query/types/editor_opened_query.h"
+#include "gui/cef/query/types/get_auto_sort_query.h"
 #include "gui/cef/query/types/get_conflicting_plugins_query.h"
 #include "gui/cef/query/types/get_game_data_query.h"
 #include "gui/cef/query/types/get_game_types_query.h"
@@ -165,6 +166,9 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
     return new SortPluginsQuery(lootState_, frame);
   else if (name == "updateMasterlist")
     return new UpdateMasterlistQuery(lootState_);
+  else if (name == "getAutoSort") {
+    return new GetAutoSortQuery(lootState_);
+  }
 
   return nullptr;
 }

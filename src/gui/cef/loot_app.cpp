@@ -31,15 +31,51 @@
 #include "gui/cef/loot_handler.h"
 #include "gui/cef/loot_scheme_handler_factory.h"
 #include "gui/cef/window_delegate.h"
+#include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
 namespace loot {
-void LootApp::Initialise(const std::string& defaultGame,
-                         const std::string& lootDataPath,
-                         const std::string& url) {
-  LootPaths::initialise(lootDataPath);
-  lootState_.init(defaultGame);
-  url_ = url;
+CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
+    autoSort(false),
+    url("http://loot/ui/index.html") {
+  // Record command line arguments.
+  CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
+
+  if (!command_line) {
+    return;
+  }
+
+#ifdef _WIN32
+  command_line->InitFromString(::GetCommandLineW());
+#else
+  command_line->InitFromArgv(argc, argv);
+#endif
+
+  if (command_line->HasSwitch("game")) {
+    defaultGame = command_line->GetSwitchValue("game");
+  }
+
+  if (command_line->HasSwitch("loot-data-path")) {
+    lootDataPath = command_line->GetSwitchValue("loot-data-path");
+  }
+
+  autoSort = command_line->HasSwitch("auto-sort");
+
+  if (command_line->HasArguments()) {
+    std::vector<CefString> arguments;
+    command_line->GetArguments(arguments);
+    url = arguments[0];
+    auto logger = getLogger();
+    if (logger) {
+      logger->info("Loading homepage using URL: {}", url);
+    }
+  }
+}
+
+void LootApp::Initialise(const CommandLineOptions& options) {
+  LootPaths::initialise(options.lootDataPath);
+  lootState_.init(options.defaultGame, options.autoSort);
+  url_ = options.url;
 }
 
 void LootApp::OnBeforeCommandLineProcessing(

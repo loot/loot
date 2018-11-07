@@ -38,7 +38,7 @@ class LootState : public LootSettings {
 public:
   LootState();
 
-  void init(const std::string& cmdLineGame);
+  void init(const std::string& cmdLineGame, bool autoSort);
   const std::vector<std::string>& getInitErrors() const;
 
   void save(const boost::filesystem::path& file);
@@ -49,6 +49,7 @@ public:
   // Get the folder names of the installed games.
   std::vector<std::string> getInstalledGames() const;
 
+  bool shouldAutoSort() const;
   bool hasUnappliedChanges() const;
   void incrementUnappliedChangeCounter();
   void decrementUnappliedChangeCounter();
@@ -71,6 +72,7 @@ private:
 
   // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
   size_t unappliedChangeCounter_;
+  bool autoSort_;
 
   // Mutex used to protect access to member variables.
   std::mutex mutex_;

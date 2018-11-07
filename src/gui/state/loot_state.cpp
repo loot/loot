@@ -88,9 +88,17 @@ void apiLogCallback(LogLevel level, const char* message) {
 
 LootState::LootState() :
     unappliedChangeCounter_(0),
+    autoSort_(false),
     currentGame_(installedGames_.end()) {}
 
-void LootState::init(const std::string& cmdLineGame) {
+void LootState::init(const std::string& cmdLineGame, bool autoSort) {
+  if (autoSort && cmdLineGame.empty()) {
+    initErrors_.push_back(translate(
+        "Error: --auto-sort was passed but no --game parameter was provided."));
+  } else {
+    autoSort_ = autoSort;
+  }
+
   // Do some preliminary locale / UTF-8 support setup here, in case the settings
   // file reading requires it.
   // Boost.Locale initialisation: Specify location of language dictionaries.
@@ -272,6 +280,8 @@ std::vector<std::string> LootState::getInstalledGames() const {
   }
   return installedGames;
 }
+
+bool LootState::shouldAutoSort() const { return autoSort_; }
 
 bool LootState::hasUnappliedChanges() const {
   return unappliedChangeCounter_ > 0;

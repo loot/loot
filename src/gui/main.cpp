@@ -23,7 +23,6 @@
     */
 
 #include "gui/cef/loot_app.h"
-#include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
 #ifdef _WIN32
@@ -66,48 +65,6 @@ int XErrorHandlerImpl(Display *display, XErrorEvent *event) {
 int XIOErrorHandlerImpl(Display *display) { return 0; }
 }
 #endif
-
-namespace loot {
-struct CommandLineOptions {
-  std::string defaultGame;
-  std::string lootDataPath;
-  std::string url;
-
-  CommandLineOptions(int argc, const char *const *argv) : url("http://loot/ui/index.html") {
-    // Record command line arguments.
-    CefRefPtr<CefCommandLine> command_line =
-        CefCommandLine::CreateCommandLine();
-
-    if (!command_line) {
-      return;
-    }
-
-#ifdef _WIN32
-    command_line->InitFromString(::GetCommandLineW());
-#else
-    command_line->InitFromArgv(argc, argv);
-#endif
-
-    if (command_line->HasSwitch("game")) {
-      defaultGame = command_line->GetSwitchValue("game");
-    }
-
-    if (command_line->HasSwitch("loot-data-path")) {
-      lootDataPath = command_line->GetSwitchValue("loot-data-path");
-    }
-
-    if (command_line->HasArguments()) {
-      std::vector<CefString> arguments;
-      command_line->GetArguments(arguments);
-      url = arguments[0];
-      auto logger = getLogger();
-      if (logger) {
-        logger->info("Loading homepage using URL: {}", url);
-      }
-    }
-  }
-};
-}
 
 #ifdef _WIN32
 int APIENTRY wWinMain(HINSTANCE hInstance,
@@ -168,9 +125,7 @@ int main(int argc, char *argv[]) {
   const char *const *argv = nullptr;
 #endif
   const auto cliOptions = loot::CommandLineOptions(argc, argv);
-  app.get()->Initialise(cliOptions.defaultGame,
-                        cliOptions.lootDataPath,
-                        cliOptions.url);
+  app.get()->Initialise(cliOptions);
 
   // Back to CEF
   //------------

@@ -850,18 +850,22 @@ msgstr ""
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:113
+#: src/gui/state/loot_state.cpp:97
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:121
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:123
+#: src/gui/state/loot_state.cpp:131
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:139
+#: src/gui/state/loot_state.cpp:147
 msgid "Error: Could not initialise logging."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:210
+#: src/gui/state/loot_state.cpp:218
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
