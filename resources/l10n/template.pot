@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.13.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-09-24 17:33+0100\n"
+"POT-Creation-Date: 2018-11-07 08:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,19 +60,19 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:281
+#: src/gui/html/elements/loot-groups-editor.js:291
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:282
+#: src/gui/html/elements/loot-groups-editor.js:292
 msgid "Group name"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:283
+#: src/gui/html/elements/loot-groups-editor.js:293
 msgid "Group already exists!"
 msgstr ""
 
-#: src/gui/html/elements/loot-plugin-card.js:268
+#: src/gui/html/elements/loot-plugin-card.js:284
 #, javascript-format
 msgid "Verified clean by %s"
 msgstr ""

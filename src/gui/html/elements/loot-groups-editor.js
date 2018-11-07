@@ -88,8 +88,8 @@ export default class LootGroupsEditor extends PolymerElement {
         paper-icon-button[disabled] {
           color: var(--disabled-text-color);
         }
-        paper-icon-button[icon=add]:hover {
-            color: green;
+        paper-icon-button[icon='add']:hover {
+          color: green;
         }
         a {
           color: var(--dark-accent-color);
@@ -100,8 +100,18 @@ export default class LootGroupsEditor extends PolymerElement {
         <div id="cy"></div>
         <div class="inputContainer">
           <a id="groupsHelpText" href="#">View Documentation</a>
-          <paper-input id="newGroupInput" label="Add a new group" placeholder="Group name" always-float-label>
-            <paper-icon-button id="newGroupButton" icon="add" slot="suffix" disabled></paper-icon-button>
+          <paper-input
+            id="newGroupInput"
+            label="Add a new group"
+            placeholder="Group name"
+            always-float-label
+          >
+            <paper-icon-button
+              id="newGroupButton"
+              icon="add"
+              slot="suffix"
+              disabled
+            ></paper-icon-button>
           </paper-input>
         </div>
       </div>

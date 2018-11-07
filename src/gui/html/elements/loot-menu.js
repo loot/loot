@@ -7,14 +7,14 @@ export default class LootMenu extends PolymerElement {
   }
 
   static get template() {
-    return html`<style>
+    return html`
+      <style>
         ::slotted(*:not([disabled])) {
           cursor: pointer;
         }
       </style>
-      <paper-listbox id="menu" multi>
-        <slot></slot>
-      </paper-listbox>`;
+      <paper-listbox id="menu" multi> <slot></slot> </paper-listbox>
+    `;
   }
 
   connectedCallback() {

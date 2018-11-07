@@ -76,7 +76,7 @@ export default class LootPluginItem extends PolymerElement {
 
           --paper-item-focused-before: {
             opacity: 0;
-          };
+          }
 
           --paper-item-icon-width: 32px;
         }
@@ -84,11 +84,12 @@ export default class LootPluginItem extends PolymerElement {
           min-height: 32px;
           height: 32px;
         }
-        :host-context(body[data-state=editing]) paper-item-body[two-line] {
+        :host-context(body[data-state='editing']) paper-item-body[two-line] {
           min-height: 40px;
         }
         #icon {
-          border: 1px solid var(--loot-plugin-item-index-border-color, var(--paper-grey-400));
+          border: 1px solid
+            var(--loot-plugin-item-index-border-color, var(--paper-grey-400));
           border-radius: 50%;
           color: var(--secondary-text-color);
           height: 24px;
@@ -103,26 +104,26 @@ export default class LootPluginItem extends PolymerElement {
         #secondary iron-icon {
           transition: height var(--state-transition-time);
         }
-        :host-context(body[data-state=editing]) #primary {
-            line-height: normal;
+        :host-context(body[data-state='editing']) #primary {
+          line-height: normal;
         }
         #secondary > span {
-            font-size: 0.857rem;
-            color: var(--secondary-text-color);
-            height: 13px;
-            overflow: visible;
+          font-size: 0.857rem;
+          color: var(--secondary-text-color);
+          height: 13px;
+          overflow: visible;
         }
         #secondary iron-icon {
           height: 13px;
           vertical-align: text-bottom;
         }
         iron-icon {
-            color: var(--secondary-text-color);
+          color: var(--secondary-text-color);
         }
         /* When not in edit mode, hide secondary text. */
-        :host-context(body:not([data-state=editing])) #secondary {
-            height: 0;
-            overflow: hidden;
+        :host-context(body:not([data-state='editing'])) #secondary {
+          height: 0;
+          overflow: hidden;
         }
         [hidden],
         #hasUserEdits[hidden] {
@@ -145,23 +146,41 @@ export default class LootPluginItem extends PolymerElement {
       </style>
       <paper-icon-item>
         <paper-ripple></paper-ripple>
-        <div id="icon" slot="item-icon" class$="[[computeLoadOrderIndexClass(isLightMaster)]]" hidden$="[[!computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]">[[computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]</div>
+        <div
+          id="icon"
+          slot="item-icon"
+          class$="[[computeLoadOrderIndexClass(isLightMaster)]]"
+          hidden$="[[!computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]"
+        >
+          [[computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]
+        </div>
         <paper-item-body two-line>
           <div id="primary"><slot></slot></div>
           <div id="secondary" secondary>
             <span id="groupSpan" hidden$="[[computeIsGroupHidden(group)]]">
               <span>[[group]]</span>
-              <paper-tooltip id="groupTooltip" position="right">Group</paper-tooltip>
+              <paper-tooltip id="groupTooltip" position="right"
+                >Group</paper-tooltip
+              >
             </span>
           </div>
         </paper-item-body>
-        <paper-tooltip for="editorIsOpen" position="left">[[_localise('Editor Is Open')]]</paper-tooltip>
-        <paper-tooltip for="hasUserEdits" position="left">[[_localise('Has User Metadata')]]</paper-tooltip>
+        <paper-tooltip for="editorIsOpen" position="left"
+          >[[_localise('Editor Is Open')]]</paper-tooltip
+        >
+        <paper-tooltip for="hasUserEdits" position="left"
+          >[[_localise('Has User Metadata')]]</paper-tooltip
+        >
         <div id="flipper" class$="[[computeFlipperClass(isEditorOpen)]]">
           <iron-icon id="editorIsOpen" icon="create"></iron-icon>
-          <iron-icon id="hasUserEdits" icon="account-circle" hidden$="[[!hasUserEdits]]"></iron-icon>
+          <iron-icon
+            id="hasUserEdits"
+            icon="account-circle"
+            hidden$="[[!hasUserEdits]]"
+          ></iron-icon>
         </div>
-      </paper-icon-item>`;
+      </paper-icon-item>
+    `;
   }
 
   static _asHexString(number, numberOfDigits) {

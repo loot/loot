@@ -41,7 +41,8 @@ export default class LootPluginEditor extends PolymerElement {
           height: 264px;
           min-height: 56px;
           max-height: calc(100% - 56px);
-          transition: height var(--state-transition-time), min-height var(--state-transition-time);
+          transition: height var(--state-transition-time),
+            min-height var(--state-transition-time);
           background-color: var(--primary-background-color);
         }
         :host(.hidden) {
@@ -97,7 +98,10 @@ export default class LootPluginEditor extends PolymerElement {
 
         /* Misc Styling. */
         app-toolbar {
-          background: var(--loot-plugin-editor-toolbar-background, var(--light-primary-color));
+          background: var(
+            --loot-plugin-editor-toolbar-background,
+            var(--light-primary-color)
+          );
           color: var(--primary-text-color);
           height: 104px;
         }
@@ -129,27 +133,31 @@ export default class LootPluginEditor extends PolymerElement {
           color: var(--secondary-text-color);
         }
         editable-table paper-icon-button[disabled] {
-            color: var(--disabled-text-color);
+          color: var(--disabled-text-color);
         }
-        editable-table paper-icon-button[icon=delete]:hover {
-            color: red;
+        editable-table paper-icon-button[icon='delete']:hover {
+          color: red;
         }
-        editable-table paper-icon-button[icon=add]:hover {
-            color: green;
+        editable-table paper-icon-button[icon='add']:hover {
+          color: green;
         }
       </style>
       <div id="splitter"></div>
       <app-toolbar>
         <header top-item>
-          <div id="title">
-            <slot name="title"></slot>
-          </div>
+          <div id="title"><slot name="title"></slot></div>
           <paper-icon-button id="accept" icon="save"></paper-icon-button>
           <paper-tooltip for="accept">Save Metadata</paper-tooltip>
           <paper-icon-button id="cancel" icon="close"></paper-icon-button>
           <paper-tooltip for="cancel">Cancel</paper-tooltip>
         </header>
-        <paper-tabs id="tableTabs" selected="{{selected}}" attr-for-selected="data-for" scrollable bottom-item>
+        <paper-tabs
+          id="tableTabs"
+          selected="{{selected}}"
+          attr-for-selected="data-for"
+          scrollable
+          bottom-item
+        >
           <paper-tab data-for="main">Main</paper-tab>
           <paper-tab data-for="after">Load After</paper-tab>
           <paper-tab data-for="req">Requirements</paper-tab>
@@ -161,7 +169,11 @@ export default class LootPluginEditor extends PolymerElement {
           <paper-tab data-for="url">Locations</paper-tab>
         </paper-tabs>
       </app-toolbar>
-      <iron-pages id="tablePages" selected="{{selected}}" attr-for-selected="data-page">
+      <iron-pages
+        id="tablePages"
+        selected="{{selected}}"
+        attr-for-selected="data-page"
+      >
         <div id="main" data-page="main">
           <div>
             <div>Enable Edits</div>
@@ -169,20 +181,21 @@ export default class LootPluginEditor extends PolymerElement {
           </div>
           <div>
             <div>Group</div>
-            <loot-dropdown-menu id="group" no-label-float vertical-align="bottom">
+            <loot-dropdown-menu
+              id="group"
+              no-label-float
+              vertical-align="bottom"
+            >
               <!-- Group <paper-item> elements go here. -->
             </loot-dropdown-menu>
           </div>
         </div>
-        <slot name="after"></slot>
-        <slot name="req"></slot>
-        <slot name="inc"></slot>
-        <slot name="message"></slot>
-        <slot name="tags"></slot>
-        <slot name="dirty"></slot>
-        <slot name="clean"></slot>
-        <slot name="url"></slot>
-      </iron-pages>`;
+        <slot name="after"></slot> <slot name="req"></slot>
+        <slot name="inc"></slot> <slot name="message"></slot>
+        <slot name="tags"></slot> <slot name="dirty"></slot>
+        <slot name="clean"></slot> <slot name="url"></slot>
+      </iron-pages>
+    `;
   }
 
   connectedCallback() {

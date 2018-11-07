@@ -29,16 +29,23 @@ export default class LootMessageDialog extends PolymerElement {
           display: none;
         }
       </style>
-      <paper-dialog id="dialog"
-                    entry-animation="fade-in-animation"
-                    exit-animation="fade-out-animation"
-                    modal>
+      <paper-dialog
+        id="dialog"
+        entry-animation="fade-in-animation"
+        exit-animation="fade-out-animation"
+        modal
+      >
         <slot></slot>
         <div class="buttons">
-          <paper-button id="dismiss" dialog-dismiss>[[_localise('Cancel')]]</paper-button>
-          <paper-button id="confirm" dialog-confirm autofocus>[[_localise('OK')]]</paper-button>
+          <paper-button id="dismiss" dialog-dismiss
+            >[[_localise('Cancel')]]</paper-button
+          >
+          <paper-button id="confirm" dialog-confirm autofocus
+            >[[_localise('OK')]]</paper-button
+          >
         </div>
-      </paper-dialog>`;
+      </paper-dialog>
+    `;
   }
 
   /* eslint-disable class-methods-use-this */

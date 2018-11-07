@@ -14,13 +14,14 @@ export default class EditableTable extends PolymerElement {
   static get template() {
     return html`
       <style>
-      ::slotted(table) {
+        ::slotted(table) {
           background-color: inherit;
           border-collapse: collapse;
           width: 100%;
-      }
+        }
       </style>
-      <slot></slot>`;
+      <slot></slot>
+    `;
   }
 
   connectedCallback() {

@@ -42,7 +42,7 @@ export default class LootSearchToolbar extends PolymerElement {
           --paper-input-container-color: var(--dark-theme-secondary-color);
           --paper-input-container-underline: {
             border-color: var(--dark-theme-divider-color);
-          };
+          }
 
           display: block;
         }
@@ -53,16 +53,28 @@ export default class LootSearchToolbar extends PolymerElement {
         }
       </style>
       <app-toolbar>
-        <paper-input id="search" label="Search cards" no-label-float></paper-input>
+        <paper-input
+          id="search"
+          label="Search cards"
+          no-label-float
+        ></paper-input>
         <div id="count">
-          <span>[[_computeResultNum(_currentResult)]]</span>
-          /
+          <span>[[_computeResultNum(_currentResult)]]</span> /
           <span><!-- number of results --></span>
         </div>
-        <paper-icon-button id="prev" icon="expand-less" disabled></paper-icon-button>
-        <paper-icon-button id="next" icon="expand-more" disabled></paper-icon-button>
+        <paper-icon-button
+          id="prev"
+          icon="expand-less"
+          disabled
+        ></paper-icon-button>
+        <paper-icon-button
+          id="next"
+          icon="expand-more"
+          disabled
+        ></paper-icon-button>
         <paper-icon-button id="close" icon="close"></paper-icon-button>
-      </app-toolbar>`;
+      </app-toolbar>
+    `;
   }
 
   _currentResultChanged(newValue) {
