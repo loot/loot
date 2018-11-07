@@ -92,7 +92,7 @@ set(LOOT_API_SHARED_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}loot_api${CMAKE_SHARE
 
 ExternalProject_Add(testing-plugins
                     PREFIX "external"
-                    URL "https://github.com/WrinklyNinja/testing-plugins/archive/1.0.0.tar.gz"
+                    URL "https://github.com/Ortham/testing-plugins/archive/1.0.0.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")

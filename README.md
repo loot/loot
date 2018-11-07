@@ -1,8 +1,9 @@
 # LOOT
 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/loot/loot?branch=dev&svg=true)](https://ci.appveyor.com/project/WrinklyNinja/loot)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/8hkem2a2cbkkxecf/branch/dev?svg=true)](https://ci.appveyor.com/project/LOOT/loot/branch/dev)
 [![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=dev)](https://travis-ci.org/loot/loot)
-[![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](https://loot.readthedocs.io/en/latest/?badge=latest) [![Greenkeeper badge](https://badges.greenkeeper.io/loot/loot.svg)](https://greenkeeper.io/)
+[![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](https://loot.readthedocs.io/en/latest/?badge=latest)
+[![Greenkeeper badge](https://badges.greenkeeper.io/loot/loot.svg)](https://greenkeeper.io/)
 
 ## Introduction
 

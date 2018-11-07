@@ -47,7 +47,7 @@ Copyright License Texts
 `Jed Gettext Parser`_
 =====================
 
-.. _Jed Gettext Parser: https://github.com/WrinklyNinja/jed-gettext-parser
+.. _Jed Gettext Parser: https://github.com/Ortham/jed-gettext-parser
 
 .. include:: MIT License (Jed Gettext Parser).txt
   :literal:
