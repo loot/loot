@@ -383,6 +383,51 @@ function checkForLootUpdate() {
     });
 }
 
+function appendGeneralErrorMessage(content) {
+  appendGeneralMessages([
+    {
+      type: 'error',
+      content
+    }
+  ]);
+
+  document.getElementById('totalMessageNo').textContent =
+    parseInt(document.getElementById('totalMessageNo').textContent, 10) + 1;
+  document.getElementById('totalErrorNo').textContent =
+    parseInt(document.getElementById('totalErrorNo').textContent, 10) + 1;
+}
+
+function getErrorCount() {
+  return parseInt(document.getElementById('totalErrorNo').textContent, 10);
+}
+
+function autoSort(l10n) {
+  return query('getAutoSort')
+    .then(JSON.parse)
+    .catch(handlePromiseError)
+    .then(response => {
+      if (response.autoSort) {
+        if (getErrorCount() === 0) {
+          return onSortPlugins()
+            .then(onApplySort)
+            .then(() => {
+              if (getErrorCount() === 0) {
+                onQuit();
+              }
+            });
+        }
+
+        appendGeneralErrorMessage(
+          l10n.translate(
+            'Auto-sort has been cancelled as there is at least one error message displayed.'
+          )
+        );
+      }
+
+      return Promise.resolve(undefined);
+    });
+}
+
 export default function initialise(loot) {
   showProgress('Initialising user interface...');
 
@@ -420,6 +465,7 @@ export default function initialise(loot) {
     .then(getInitErrors)
     .then(() => setGameData(loot))
     .catch(handleInitErrors)
+    .then(() => autoSort(loot.l10n))
     .then(() => {
       if (loot.settings.lastVersion !== loot.version.release) {
         openDialog('firstRun');

@@ -182,7 +182,7 @@ export function onSortPlugins() {
   if (loot.settings.updateMasterlist) {
     promise = promise.then(updateMasterlist);
   }
-  promise
+  return promise
     .then(() => query('sortPlugins'))
     .then(JSON.parse)
     .then(result => {

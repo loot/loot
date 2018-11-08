@@ -203,6 +203,12 @@ msgstr ""
 msgid "A [new release](%s) of LOOT is available."
 msgstr ""
 
+#: src/gui/html/js/initialise.js:422
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
+msgstr ""
+
 #: src/gui/html/js/translateStaticText.js:8
 msgid "Active Plugin"
 msgstr ""
