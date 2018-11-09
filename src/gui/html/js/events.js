@@ -194,7 +194,9 @@ export function onSortPlugins() {
 
       if (!result.plugins || result.plugins.length === 0) {
         const message = result.generalMessages.find(item =>
-          item.text.startsWith('Cyclic interaction detected')
+          item.text.startsWith(
+            loot.l10n.translate('Cyclic interaction detected')
+          )
         );
         const text = message
           ? message.text

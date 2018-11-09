@@ -75,7 +75,7 @@ export default class LootMessageDialog extends PolymerElement {
 
   showModal(title, text, closeCallback) {
     this.getElementsByClassName('heading')[0].textContent = title;
-    this.getElementsByClassName('message')[0].textContent = text;
+    this.getElementsByClassName('message')[0].innerHTML = text;
 
     this.closeCallback = closeCallback;
 

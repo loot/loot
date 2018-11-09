@@ -172,13 +172,13 @@ std::string DescribeEdgeType(EdgeType edgeType) {
 }
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle) {
-  std::string text;
+  std::string text = "\n\n";
   for (const auto& vertex : cycle) {
-    text += vertex.GetName();
+    text += vertex.GetName() + "\\\n";
     if (vertex.GetTypeOfEdgeToNextVertex().has_value()) {
-      text += " --[" +
+      text += "&emsp;[" +
               DescribeEdgeType(vertex.GetTypeOfEdgeToNextVertex().value()) +
-              "]-> ";
+              "]\\\n";
     }
   }
   if (!cycle.empty()) {
