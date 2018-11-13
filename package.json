@@ -52,7 +52,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-autosuggest": "^9.3.4",
-    "react-dom": "^16.5.1",
+    "react-dom": "^16.6.3",
     "replace": "^1.0.0",
     "request": "^2.79.0",
     "web-animations-js": "^2.3.1"
