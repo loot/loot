@@ -50,7 +50,7 @@
     "lodash": "^4.17.5",
     "marked": "^0.5.0",
     "prop-types": "^15.6.2",
-    "react": "^16.5.1",
+    "react": "^16.6.3",
     "react-autosuggest": "^9.3.4",
     "react-dom": "^16.5.1",
     "replace": "^1.0.0",
