@@ -298,9 +298,9 @@ void LootState::selectGame(std::string preferredGame) {
       begin(installedGames_), end(installedGames_), [&](gui::Game& game) {
         return preferredGame.empty() || preferredGame == game.FolderName();
       });
-  // If the preferred game cannot be found, get the first installed game.
+  // If the preferred game cannot be found, throw an exception.
   if (currentGame_ == end(installedGames_)) {
-    currentGame_ = begin(installedGames_);
+    throw GameDetectionError("The specified game \"" + preferredGame + "\" is not installed or does not match a game defined in LOOT's settings.");
   }
 
   // If no game can be selected, throw an exception.
