@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.13.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-11-07 08:08+0000\n"
+"POT-Creation-Date: 2018-11-21 21:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -862,6 +862,6 @@ msgstr ""
 msgid "Error: Could not initialise logging."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:211
+#: src/gui/state/loot_state.cpp:210
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
