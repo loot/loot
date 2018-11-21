@@ -1,0 +1,935 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR WrinklyNinja
+# This file is distributed under the same license as the LOOT package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LOOT 0.13.3\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2018-11-07 08:08+0000\n"
+"PO-Revision-Date: 2018-11-21 15:53+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Generator: Poedit 2.2\n"
+"Last-Translator: \n"
+"Language: cs\n"
+
+#: src/gui/cef/query/query.h:50
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"Neeee, něco se pokazilo! Můžeš zkontrolovat LOOTDebugLog.txt (Mužeš ho "
+"nalézt v hlavním menu) pro více informací."
+
+#: src/gui/cef/query/query.h:84
+msgid ""
+"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"read-only. If it is, unset it and try again. If it isn't, you can check your "
+"LOOTDebugLog.txt (you can get to it through the main menu) for more "
+"information."
+msgstr ""
+"Neeee, něco se pokazilo! Obvykle je to proto, že \"% 1%\" je nastaveno jen "
+"pro čtení. Pokud je, přenastavte to a akci opakujte. Pokud není, můžeš "
+"zkontrolovat LOOTDebugLog. txt (Mužeš ho nalézt v hlavním menu) pro více "
+"informací."
+
+#: src/gui/cef/query/types/get_game_data_query.h:45
+msgid "Parsing, merging and evaluating metadata..."
+msgstr "Analýza, slučování a vyhodnocování metadat..."
+
+#: src/gui/cef/query/types/metadata_query.h:163
+#: src/gui/cef/query/types/metadata_query.h:186
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr "\"%1%\" Obsahuje pravidlo které nemohlo být vyhodnoceno. Detaily: %2%"
+
+#: src/gui/cef/query/types/metadata_query.h:209
+#: src/gui/cef/query/types/metadata_query.h:210
+msgid "N/A: No masterlist present"
+msgstr "N/A: Žádný masterlist nenalezen"
+
+#: src/gui/cef/query/types/metadata_query.h:216
+#: src/gui/cef/query/types/metadata_query.h:217
+msgid "Unknown: Git repository missing"
+msgstr "Neznámý: úložiště Git chybí"
+
+#: src/gui/cef/query/types/metadata_query.h:225
+#: src/gui/cef/query/types/metadata_query.h:226
+msgid "(edited)"
+msgstr "(upraveno)"
+
+#: src/gui/cef/query/types/sort_plugins_query.h:50
+msgid "Sorting load order..."
+msgstr "Seřazování načítací řady..."
+
+#: src/gui/html/elements/loot-groups-editor.js:291
+msgid "Add a new group"
+msgstr "Přidat novou skupinu"
+
+#: src/gui/html/elements/loot-groups-editor.js:292
+msgid "Group name"
+msgstr "Název skupiny"
+
+#: src/gui/html/elements/loot-groups-editor.js:293
+msgid "Group already exists!"
+msgstr "Skupina již existuje!"
+
+#: src/gui/html/elements/loot-plugin-card.js:284
+#, javascript-format
+msgid "Verified clean by %s"
+msgstr "Ověřené vyčištění z %s"
+
+#: src/gui/html/js/events.js:51
+msgid "Identifying conflicting plugins..."
+msgstr "Identifikace konfliktujících pluginů..."
+
+#: src/gui/html/js/events.js:132
+msgid "Updating and parsing masterlist..."
+msgstr "Aktualizace a rozbor masterlistu..."
+
+#: src/gui/html/js/events.js:156
+#, javascript-format
+msgid "Masterlist updated to revision %s."
+msgstr "Masterlist aktualize do revize %s."
+
+#: src/gui/html/js/events.js:162
+msgid "No masterlist update was necessary."
+msgstr "Masterlist aktualizace nebyla nutná."
+
+#: src/gui/html/js/events.js:204
+#, javascript-format
+msgid "Failed to sort plugins. Details: %s"
+msgstr "Nepodařilo se seřadit pluginy. Detaily: %s"
+
+#: src/gui/html/js/events.js:230
+msgid "Sorting made no changes to the load order."
+msgstr "Seřazení neudělalo žádné změny  do seřazovací řady."
+
+#: src/gui/html/js/events.js:270
+msgid "Redate Plugins?"
+msgstr "Přehrát přílohy?"
+
+#: src/gui/html/js/events.js:272
+msgid ""
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
+msgstr ""
+"Tato funkce je poskytována proto, aby modeři používající Creation Kit mohli "
+"nastavit načítací řadu, kterou používá. Vedlejší účinek je, že všechny "
+"předplacené moduly Steam Workshop budou znovu staženy společností Steam (to "
+"neovlivní Skyrim Special Edition). Chcete pokračovat?"
+
+#: src/gui/html/js/events.js:274
+msgid "Redate"
+msgstr "Přehrát"
+
+#: src/gui/html/js/events.js:280
+msgid "Plugins were successfully redated."
+msgstr "Pluginy byly úspěšně přehrány."
+
+#: src/gui/html/js/events.js:292
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
+msgstr ""
+"Opravdu chcete vymazat všechna existující uživatelsky přidaná metadata ze "
+"všech pluginů?"
+
+#: src/gui/html/js/events.js:294 src/gui/html/js/events.js:590
+msgid "Clear"
+msgstr "Vymazat"
+
+#: src/gui/html/js/events.js:309
+msgid "All user-added metadata has been cleared."
+msgstr "Všechna uživatelská metadata byla smazána."
+
+#: src/gui/html/js/events.js:343
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "Obsah LOOT(u) byl zkopírován do schránky."
+
+#: src/gui/html/js/events.js:358
+msgid "The load order has been copied to the clipboard."
+msgstr "Pořadí načítání bylo zkopírováno do schránky."
+
+#: src/gui/html/js/events.js:396
+#, javascript-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "Dosud jsi nepoužil nebo nezrušil %s. Opravdu chcete skončit?"
+
+#: src/gui/html/js/events.js:399 src/gui/html/js/translateStaticText.js:403
+msgid "Quit"
+msgstr "Ukončit"
+
+#: src/gui/html/js/events.js:415
+msgid "sorted load order"
+msgstr "načítací řada seřazena"
+
+#: src/gui/html/js/events.js:417
+msgid "metadata edits"
+msgstr "změny metadat"
+
+#: src/gui/html/js/events.js:576
+#, javascript-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "Metadata pro \"% s\" byla zkopírována do schránky."
+
+#: src/gui/html/js/events.js:587
+#, javascript-format
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr ""
+"Opravdu chcete odstranit všechny existující metadata přidané uživatelem z "
+"\"% s\"?"
+
+#: src/gui/html/js/events.js:612
+#, javascript-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "Metadata přidaná uživatelem pro \"% s\" byla vymazána."
+
+#: src/gui/html/js/filters.js:20
+msgid "Do not clean"
+msgstr "Nečistit"
+
+#: src/gui/html/js/game.js:25
+msgid "N/A"
+msgstr "N/A"
+
+#: src/gui/html/js/handlePromiseError.js:9
+#: src/gui/html/js/translateStaticText.js:242
+msgid "Error"
+msgstr "Chyba"
+
+#: src/gui/html/js/initialise.js:362
+msgid ""
+"Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
+"can get to it through the main menu) for more information."
+msgstr ""
+"Nepodařilo se zkontrolovat aktualizace LOOT! Můžete si zkontrolovat "
+"LOOTDebugLog.txt (můžete se k němu dostat přes hlavní menu) pro více "
+"informací."
+
+#: src/gui/html/js/initialise.js:378
+#, javascript-format
+msgid "A [new release](%s) of LOOT is available."
+msgstr "K dispozici je [new release](%s) LOOT."
+
+#: src/gui/html/js/translateStaticText.js:8
+msgid "Active Plugin"
+msgstr "Aktivní Plugin"
+
+#: src/gui/html/js/translateStaticText.js:11
+#: src/gui/html/js/translateStaticText.js:574
+msgid "Master File"
+msgstr "Hlavní Soubor"
+
+#: src/gui/html/js/translateStaticText.js:14
+msgid "Light Master File"
+msgstr "Označit Hlavní Soubor"
+
+#: src/gui/html/js/translateStaticText.js:17
+msgid "Empty Plugin"
+msgstr "Vyprázdnit Plugin"
+
+#: src/gui/html/js/translateStaticText.js:20
+msgid "Loads Archive"
+msgstr "Načítací Archívy"
+
+#: src/gui/html/js/translateStaticText.js:23
+#: src/gui/html/js/translateStaticText.js:205
+msgid "Has User Metadata"
+msgstr "Obsahuje Uživatelská Metadata"
+
+#: src/gui/html/js/translateStaticText.js:26
+msgid "Edit Metadata"
+msgstr "Upravit Metadata"
+
+#: src/gui/html/js/translateStaticText.js:29
+msgid "Copy Metadata"
+msgstr "Zkopírovat Metadata"
+
+#: src/gui/html/js/translateStaticText.js:33
+msgid "Clear User Metadata"
+msgstr "Vyčistit Uživatelská Metadata"
+
+#: src/gui/html/js/translateStaticText.js:51
+msgid "Enable Edits"
+msgstr "Povolit úpravy"
+
+#: src/gui/html/js/translateStaticText.js:54
+#: src/gui/html/js/translateStaticText.js:202
+msgid "Group"
+msgstr "Skupina"
+
+#: src/gui/html/js/translateStaticText.js:58
+msgid "Main"
+msgstr "Hlavní"
+
+#: src/gui/html/js/translateStaticText.js:62
+msgid "Load After"
+msgstr "Načíst Potom"
+
+#: src/gui/html/js/translateStaticText.js:67
+msgid "Requirements"
+msgstr "Požadavky"
+
+#: src/gui/html/js/translateStaticText.js:72
+msgid "Incompatibilities"
+msgstr "Nekompatibility"
+
+#: src/gui/html/js/translateStaticText.js:77
+msgid "Messages"
+msgstr "Zprávy"
+
+#: src/gui/html/js/translateStaticText.js:81
+msgid "Bash Tags"
+msgstr "Bash Tags"
+
+#: src/gui/html/js/translateStaticText.js:85
+msgid "Dirty Plugin Info"
+msgstr "Špatné info pluginu"
+
+#: src/gui/html/js/translateStaticText.js:90
+msgid "Clean Plugin Info"
+msgstr "Vyčistit informace o pluginu"
+
+#: src/gui/html/js/translateStaticText.js:94
+msgid "Locations"
+msgstr "Lokace"
+
+#: src/gui/html/js/translateStaticText.js:98
+#: src/gui/html/js/translateStaticText.js:110
+#: src/gui/html/js/translateStaticText.js:122
+msgid "Filename"
+msgstr "Název souboru"
+
+#: src/gui/html/js/translateStaticText.js:102
+#: src/gui/html/js/translateStaticText.js:114
+#: src/gui/html/js/translateStaticText.js:126
+msgid "Display Name"
+msgstr "Zobrazený název"
+
+#: src/gui/html/js/translateStaticText.js:106
+#: src/gui/html/js/translateStaticText.js:118
+#: src/gui/html/js/translateStaticText.js:130
+#: src/gui/html/js/translateStaticText.js:140
+#: src/gui/html/js/translateStaticText.js:153
+msgid "Condition"
+msgstr "Kondice"
+
+#: src/gui/html/js/translateStaticText.js:134
+msgid "Type"
+msgstr "Typ"
+
+#: src/gui/html/js/translateStaticText.js:137
+msgid "Content"
+msgstr "Obsah"
+
+#: src/gui/html/js/translateStaticText.js:143
+#: src/gui/html/js/translateStaticText.js:534
+msgid "Language"
+msgstr "Jazyk"
+
+#: src/gui/html/js/translateStaticText.js:147
+msgid "Add/Remove"
+msgstr "Přidat/Odstranit"
+
+#: src/gui/html/js/translateStaticText.js:150
+msgid "Bash Tag"
+msgstr "Bash Tag"
+
+#: src/gui/html/js/translateStaticText.js:157
+#: src/gui/html/js/translateStaticText.js:179
+msgid "CRC"
+msgstr "CRC"
+
+#: src/gui/html/js/translateStaticText.js:160
+msgid "ITM Count"
+msgstr "ITM Součet"
+
+#: src/gui/html/js/translateStaticText.js:164
+msgid "Deleted References"
+msgstr "Smazané odkazy"
+
+#: src/gui/html/js/translateStaticText.js:169
+msgid "Deleted Navmeshes"
+msgstr "Vymazané Navmeshe"
+
+#: src/gui/html/js/translateStaticText.js:174
+#: src/gui/html/js/translateStaticText.js:183
+msgid "Cleaning Utility"
+msgstr "Čisticí Nástroj"
+
+#: src/gui/html/js/translateStaticText.js:188
+msgid "URL"
+msgstr "URL"
+
+#: src/gui/html/js/translateStaticText.js:191
+#: src/gui/html/js/translateStaticText.js:565
+msgid "Name"
+msgstr "Název"
+
+#: src/gui/html/js/translateStaticText.js:195
+msgid "Save Metadata"
+msgstr "Uložit Metadata"
+
+#: src/gui/html/js/translateStaticText.js:198
+#: src/gui/html/js/translateStaticText.js:368
+#: src/gui/html/js/translateStaticText.js:600
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/gui/html/js/translateStaticText.js:208
+msgid "Editor Is Open"
+msgstr "Editor je otevřen"
+
+#: src/gui/html/js/translateStaticText.js:225
+msgid "A filename is required."
+msgstr "Je vyžadován název souboru."
+
+#: src/gui/html/js/translateStaticText.js:227
+#: src/gui/html/js/translateStaticText.js:251
+#: src/gui/html/js/translateStaticText.js:267
+#: src/gui/html/js/translateStaticText.js:294
+#: src/gui/html/js/translateStaticText.js:312
+#: src/gui/html/js/translateStaticText.js:324
+#: src/gui/html/js/translateStaticText.js:339
+msgid "Delete Row"
+msgstr "Odstranit řádek"
+
+#: src/gui/html/js/translateStaticText.js:236
+msgid "Note"
+msgstr "Poznámka"
+
+#: src/gui/html/js/translateStaticText.js:239
+msgid "Warning"
+msgstr "Varování"
+
+#: src/gui/html/js/translateStaticText.js:248
+msgid "A content string is required."
+msgstr "Požaduje se obsahový řetězec."
+
+#: src/gui/html/js/translateStaticText.js:259
+msgid "Add"
+msgstr "Přidat"
+
+#: src/gui/html/js/translateStaticText.js:261
+msgid "Remove"
+msgstr "Odebrat"
+
+#: src/gui/html/js/translateStaticText.js:265
+#: src/gui/html/js/translateStaticText.js:334
+msgid "A name is required."
+msgstr "Název je nutný."
+
+#: src/gui/html/js/translateStaticText.js:277
+#: src/gui/html/js/translateStaticText.js:304
+msgid "A CRC is required."
+msgstr "CRC je nutné."
+
+#: src/gui/html/js/translateStaticText.js:280
+#: src/gui/html/js/translateStaticText.js:283
+#: src/gui/html/js/translateStaticText.js:286
+msgid "Values must be integers."
+msgstr "Hodnoty musí být celá čísla."
+
+#: src/gui/html/js/translateStaticText.js:291
+#: src/gui/html/js/translateStaticText.js:309
+msgid "A utility name is required."
+msgstr "Vyžaduje se název služby."
+
+#: src/gui/html/js/translateStaticText.js:322
+msgid "A link is required."
+msgstr "Je vyžadován odkaz."
+
+#: src/gui/html/js/translateStaticText.js:337
+msgid "A folder is required."
+msgstr "Je vyžadována složka."
+
+#: src/gui/html/js/translateStaticText.js:348
+#: src/gui/html/js/translateStaticText.js:593
+msgid "Add New Row"
+msgstr "Přidat nový řádek"
+
+#: src/gui/html/js/translateStaticText.js:357
+msgid "Jump To General Information"
+msgstr "Přejít na obecné informace"
+
+#: src/gui/html/js/translateStaticText.js:360
+msgid "Sort Plugins"
+msgstr "Seřadit Pluginy"
+
+#: src/gui/html/js/translateStaticText.js:363
+msgid "Update Masterlist"
+msgstr "Aktualizovat Hlavní Seznam"
+
+#: src/gui/html/js/translateStaticText.js:365
+#: src/gui/html/js/translateStaticText.js:597
+msgid "Apply"
+msgstr "Aplikovat"
+
+#: src/gui/html/js/translateStaticText.js:372
+msgid "Search Cards"
+msgstr "Hledat Karty"
+
+#: src/gui/html/js/translateStaticText.js:377
+msgid "Redate Plugins"
+msgstr "Přehrát Pluginy"
+
+#: src/gui/html/js/translateStaticText.js:380
+msgid "Open Debug Log Location"
+msgstr "Otevřít Lokaci Debug Složky"
+
+#: src/gui/html/js/translateStaticText.js:383
+msgid "Clear All User Metadata"
+msgstr "Vymazat všechny uživatelská metadata"
+
+#: src/gui/html/js/translateStaticText.js:386
+msgid "Copy Load Order"
+msgstr "Zkopírovat Načítací Řadu"
+
+#: src/gui/html/js/translateStaticText.js:389
+msgid "Copy Content"
+msgstr "Kopírovat obsah"
+
+#: src/gui/html/js/translateStaticText.js:392
+msgid "Refresh Content"
+msgstr "Obnovit obsah"
+
+#: src/gui/html/js/translateStaticText.js:394
+msgid "View Documentation"
+msgstr "Zobrazit dokumentaci"
+
+#: src/gui/html/js/translateStaticText.js:397
+msgid "About"
+msgstr "O"
+
+#: src/gui/html/js/translateStaticText.js:401
+#: src/gui/html/js/translateStaticText.js:521
+msgid "Settings"
+msgstr "Nastavení"
+
+#: src/gui/html/js/translateStaticText.js:409
+msgid "Search cards"
+msgstr "Hledat karty"
+
+#: src/gui/html/js/translateStaticText.js:426
+msgid "Plugins"
+msgstr "Pluginy"
+
+#: src/gui/html/js/translateStaticText.js:430
+msgid "Filters"
+msgstr "Filtry"
+
+#: src/gui/html/js/translateStaticText.js:437
+msgid "Press Enter or click outside the input to set the filter."
+msgstr "Stisknutím klávesy Enter nebo kliknutím mimo vstup nastavíte filtr."
+
+#: src/gui/html/js/translateStaticText.js:440
+msgid "Show only plugins with cards that contain"
+msgstr "Zobrazit pouze pluginy s kartami, které obsahují"
+
+#: src/gui/html/js/translateStaticText.js:443
+msgid "No text specified"
+msgstr "Žádný Text Nebyl Specifikován"
+
+#: src/gui/html/js/translateStaticText.js:448
+msgid "Hide version numbers"
+msgstr "Skrýt čísla verzí"
+
+#: src/gui/html/js/translateStaticText.js:450
+msgid "Hide CRCs"
+msgstr "Schovat CRC"
+
+#: src/gui/html/js/translateStaticText.js:452
+msgid "Hide Bash Tags"
+msgstr "Schovat Bash Tagy"
+
+#: src/gui/html/js/translateStaticText.js:455
+msgid "Hide notes"
+msgstr "Schovat poznámky"
+
+#: src/gui/html/js/translateStaticText.js:459
+msgid "Hide 'Do not clean' messages"
+msgstr "Schovat \"Neuklízet\" Zprávy"
+
+#: src/gui/html/js/translateStaticText.js:461
+msgid "Hide all plugin messages"
+msgstr "Schovat všechny zprávy pluginů"
+
+#: src/gui/html/js/translateStaticText.js:464
+msgid "Hide inactive plugins"
+msgstr "Schovat neaktivní pluginy"
+
+#: src/gui/html/js/translateStaticText.js:468
+msgid "Hide messageless plugins"
+msgstr "Schovat bez-zprávé pluginy"
+
+#: src/gui/html/js/translateStaticText.js:471
+msgid "Show only conflicting plugins for"
+msgstr "Zobrazit pouze konfliktující pluginy"
+
+#: src/gui/html/js/translateStaticText.js:473
+msgid "No plugin selected"
+msgstr "Není vybraný žádný plugin"
+
+#: src/gui/html/js/translateStaticText.js:479
+msgid "Hidden plugins:"
+msgstr "Schované pluginy:"
+
+#: src/gui/html/js/translateStaticText.js:482
+msgid "Hidden messages:"
+msgstr "Schované zprávy:"
+
+#: src/gui/html/js/translateStaticText.js:490
+msgid "General Information"
+msgstr "Generalní Informace"
+
+#: src/gui/html/js/translateStaticText.js:493
+msgid "Masterlist Revision"
+msgstr "Masterlist Revize"
+
+#: src/gui/html/js/translateStaticText.js:496
+msgid "Masterlist Date"
+msgstr "Masterlist Datum"
+
+#: src/gui/html/js/translateStaticText.js:499
+msgid "Warnings"
+msgstr "Varování"
+
+#: src/gui/html/js/translateStaticText.js:502
+msgid "Errors"
+msgstr "Chyby"
+
+#: src/gui/html/js/translateStaticText.js:505
+msgid "Total Messages"
+msgstr "Celkové Zprávy"
+
+#: src/gui/html/js/translateStaticText.js:508
+msgid "Active Plugins"
+msgstr "Aktivní Pluginy"
+
+#: src/gui/html/js/translateStaticText.js:511
+msgid "Dirty Plugins"
+msgstr "Znečištěné Pluginy"
+
+#: src/gui/html/js/translateStaticText.js:514
+msgid "Total Plugins"
+msgstr "Celkové Pluginy"
+
+#: src/gui/html/js/translateStaticText.js:525
+msgid "Default Game"
+msgstr "Výchozí Hra"
+
+#: src/gui/html/js/translateStaticText.js:528
+msgid "Autodetect"
+msgstr "Auto-Detekovat"
+
+#: src/gui/html/js/translateStaticText.js:539
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr "Změna jazyka bude aplikována po restartu LOOT(u)."
+
+#: src/gui/html/js/translateStaticText.js:544
+msgid "Enable debug logging"
+msgstr "Zapnout ladící záznamy"
+
+#: src/gui/html/js/translateStaticText.js:548
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "Výstup je zaznamenáván do LOOTDebugLog.txt souboru."
+
+#: src/gui/html/js/translateStaticText.js:554
+msgid "Update masterlist before sorting"
+msgstr "Aktualizujte masterlist před seřazením"
+
+#: src/gui/html/js/translateStaticText.js:560
+msgid "Check for LOOT updates on startup"
+msgstr "Zkontrolovat LOOT aktualizace při zapnutí"
+
+#: src/gui/html/js/translateStaticText.js:568
+msgid "Base Game"
+msgstr "Základní hra"
+
+#: src/gui/html/js/translateStaticText.js:571
+msgid "LOOT Folder"
+msgstr "LOOT Složka"
+
+#: src/gui/html/js/translateStaticText.js:577
+msgid "Masterlist Repository URL"
+msgstr "Masterlist úložiště URL"
+
+#: src/gui/html/js/translateStaticText.js:580
+msgid "Masterlist Repository Branch"
+msgstr "Masterlist Odvětví Úložiště"
+
+#: src/gui/html/js/translateStaticText.js:583
+msgid "Install Path"
+msgstr "Instalační Cesta"
+
+#: src/gui/html/js/translateStaticText.js:586
+msgid "Install Path Registry Key"
+msgstr "Registrační Klíč Instalační Cesty"
+
+#: src/gui/html/js/translateStaticText.js:606
+msgid "First-Time Tips"
+msgstr "Tipy Do Začátku"
+
+#: src/gui/html/js/translateStaticText.js:609
+#, javascript-format
+msgid ""
+"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"to help you get started with the interface."
+msgstr ""
+"Zdá se, že jste poprvé spustili LOOT v% s. Zde je několik tipů, které vám "
+"pomohou začít s rozhraním."
+
+#: src/gui/html/js/translateStaticText.js:614
+msgid "Click %(menu_icon)s buttons to open menus."
+msgstr "Klepnutím na tlačítko %(menu_icon) otevřete nabídky."
+
+#: src/gui/html/js/translateStaticText.js:620
+msgid ""
+"As well as messages, LOOT displays plugin <span class=\"version\">version "
+"numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
+"<span class=\"tag add\">addition</span> and <span class=\"tag remove"
+"\">removal</span>."
+msgstr ""
+"Stejně jako zprávy, LOOT také zobrazuje pluginy <span class=\"version"
+"\">version numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag "
+"suggestions for <span class=\"tag add\">addition</span> and <span class="
+"\"tag remove\">removal</span>."
+
+#: src/gui/html/js/translateStaticText.js:623
+msgid ""
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
+msgstr ""
+"CRC se zobrazují pouze po načtení pluginů, a to buď filtrováním konfliktů "
+"nebo tříděním."
+
+#: src/gui/html/js/translateStaticText.js:626
+msgid ""
+"Double-click a plugin in the sidebar to quickly open it in the metadata "
+"editor."
+msgstr ""
+"Poklepáním na plugin na postranním panelu jej rychle otevřete v editoru "
+"metadat."
+
+#: src/gui/html/js/translateStaticText.js:629
+msgid ""
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
+msgstr ""
+"Pluginy lze přetáhnout z postranního panelu do tabulky \"načíst po\", "
+"\"požadavky\" a \"nekompatibilita\" editoru metadat."
+
+#: src/gui/html/js/translateStaticText.js:632
+msgid ""
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
+msgstr ""
+"Některé funkce jsou deaktivovány při otevřeném editoru metadat, nebo když je "
+"řazen příkazem pro třídění, který nebyl aplikován nebo zlikvidován."
+
+#: src/gui/html/js/translateStaticText.js:635
+msgid ""
+"Many interface elements have tooltips. If you don't know what something is, "
+"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
+"can be accessed through the main menu."
+msgstr ""
+"Mnoho prvků rozhraní obsahuje popisky. Pokud nevíte, co je něco, zkuste "
+"umístit kurzor nad tím, abyste zjistili co to je. V opačném případě je možné "
+"získat přístup do dokumentace LOOT prostřednictvím hlavní nabídky."
+
+#: src/gui/html/js/translateStaticText.js:639
+#: src/gui/html/js/translateStaticText.js:662
+#, javascript-format
+msgid ""
+"LOOT is free, but if you want to show your appreciation with some money, "
+"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"using %s."
+msgstr ""
+"LOOT je zdarma, ale pokud chcete s jistými penězi uvést své ocenění, můžete "
+"s pomocí %s darovat WrinklyNinja (tvůrce LOOT a hlavní vývojář)."
+
+#: src/gui/html/js/translateStaticText.js:644
+msgid "OK"
+msgstr "OK"
+
+#: src/gui/html/js/translateStaticText.js:650
+msgid "About LOOT"
+msgstr "O LOOT(u)"
+
+#: src/gui/html/js/translateStaticText.js:653
+#, javascript-format
+msgid "Version %s (build %s)"
+msgstr "Verze %s (build %s)"
+
+#: src/gui/html/js/translateStaticText.js:658
+msgid ""
+"Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
+"VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
+"Načítací řada pro Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, "
+"Fallout 3, Fallout : New Vegas, Fallout 4 a Fallout 4 VR."
+
+#: src/gui/state/game.cpp:184 src/gui/state/game.cpp:213
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "Tento plugin vyžaduje instalaci \"% 1%\", ale to chybí."
+
+#: src/gui/state/game.cpp:196
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "Tento plugin vyžaduje, aby byl aktivní \"% 1%\", ale to je neaktivní."
+
+#: src/gui/state/game.cpp:231
+msgid "This plugin is incompatible with \"%1%\", but both files are present."
+msgstr ""
+"Tento plugin není kompatibilní s \"% 1%\", ale jsou přítomny oba soubory."
+
+#: src/gui/state/game.cpp:266
+msgid ""
+"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
+msgstr ""
+"Tento plugin je light master a vyžaduje plugin \"% 1%\", který není hlavní "
+"plugin. To může způsobit problémy během hry a třídění selže během instalace "
+"tohoto pluginu."
+
+#: src/gui/state/game.cpp:340 src/gui/state/game.cpp:425
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+"Nelze načíst aktuální zatížení, zobrazené informace mohou být nesprávné."
+
+#: src/gui/state/game.cpp:447
+msgid ""
+"Cyclic interaction detected between \"%1%\" and \"%2%\". Back cycle: %3%"
+msgstr ""
+"Cyklická interakce byla zjištěna mezi \"%1%\" a \"%2%\". Zpětný cyklus: %3%"
+
+#: src/gui/state/game.cpp:459
+msgid "The group \"%1%\" does not exist."
+msgstr "Skupina \"%1%\" neexistuje."
+
+#: src/gui/state/game.cpp:496
+msgid "You have not sorted your load order this session."
+msgstr "Nevybrali jste načítací řadu této relace."
+
+#: src/gui/state/game.cpp:519
+msgid ""
+"You have a normal plugin and at least one light master sharing the FE load "
+"order index. Deactivate a normal plugin or all your light masters to avoid "
+"potential issues."
+msgstr ""
+"Máte normální plugin a alespoň jeden světelný master sdílející index "
+"objednávky zatížení FE. Deaktivujte normální plugin nebo všechny světelné "
+"zdroje, abyste se vyhnuli případným problémům."
+
+#: src/gui/state/game.cpp:546
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+"Nejnovější revize hlavního seznamu obsahuje chybu syntaxe, LOOT místo toho "
+"používá nejnovější platnou revizi. Chyby syntaxe jsou zpravidla malé a "
+"opraveny během několika hodin."
+
+#: src/gui/state/game.cpp:590
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"Při analýze seznamů metadat se vyskytla chyba:% 1%.\n"
+"\n"
+"Pokuste se aktualizovat hlavní seznam a vyřešit chybu. Pokud je chyba u "
+"vašich uživatelských metadat, pravděpodobně k tomu došlo, protože "
+"aktualizace LOOT změnila podporu syntaxe metadat. Uživatelské metadata budou "
+"muset být aktualizovány ručně.\n"
+"\n"
+"Chcete-li tak učinit, otevřete složku s daty pomocí volby \"Open Debug "
+"Location Location\" v hlavní nabídce LOOT a otevřete soubor \"userlist.yaml"
+"\" v příslušné herní složce. Potom můžete upravovat metadata, které "
+"obsahuje, s odkazem na dokumentaci, která je přístupná prostřednictvím "
+"hlavní nabídky LOOT.\n"
+"\n"
+"Můžete také požádat o podporu ve fóru LOOT, který je propojen s webovou "
+"stránkou [LOOT] (https://loot.github.io/)."
+
+#: src/gui/state/game.cpp:730
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] "%1% ITM Záznam"
+msgstr[1] "%1% Záznamy"
+msgstr[2] "%1% Záznamů"
+
+#: src/gui/state/game.cpp:734
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] "%1% odstranilo odkaz"
+msgstr[1] "%1% odstranilo odkazy"
+msgstr[2] "%s% odstranilo odkazy"
+
+#: src/gui/state/game.cpp:740
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] "%1% odstranil navmesh"
+msgstr[1] "%1% odstranilo navmeshe"
+msgstr[2] "%1% odstranilo navmeshe"
+
+#: src/gui/state/game.cpp:750
+msgid "%1% found %2%, %3% and %4%."
+msgstr "%1% nalezlo %2%, %3% a %4%."
+
+#: src/gui/state/game.cpp:756
+msgid "%1% found dirty edits."
+msgstr "%1% nalezlo špatné úpravy."
+
+#: src/gui/state/game.cpp:762 src/gui/state/game.cpp:768
+#: src/gui/state/game.cpp:773
+msgid "%1% found %2% and %3%."
+msgstr "%1% nalezlo %2% a %3%."
+
+#: src/gui/state/game.cpp:777 src/gui/state/game.cpp:780
+#: src/gui/state/game.cpp:783
+msgid "%1% found %2%."
+msgstr "%1% nalezlo %2%."
+
+#: src/gui/state/game.cpp:897
+msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
+msgstr "LOOT detekoval %1% je neplatné and bude to odteď ignorovat."
+
+#: src/gui/state/loot_state.cpp:113
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr "Chyba: Nemožno vytvořit LOOT soubor nastavení. %1%"
+
+#: src/gui/state/loot_state.cpp:123
+msgid "Error: Settings parsing failed. %1%"
+msgstr "Chyba : Analýza nastavení selhala. %1%"
+
+#: src/gui/state/loot_state.cpp:139
+msgid "Error: Could not initialise logging."
+msgstr "Chyba: Nemožno započít záznamování."
+
+#: src/gui/state/loot_state.cpp:211
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr "Chyba: Specifická nastavení hry nemohla být započata. %1%"
