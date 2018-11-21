@@ -192,6 +192,7 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
 es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
 ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
+cs.DeleteUserFiles=Vymazat Uživatelské Soubory
 
 [Code]
 // Set LOOT's language in settings.toml
