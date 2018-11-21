@@ -59,6 +59,7 @@ private:
 
   static std::map<std::string, std::string> getLanguages() {
     return std::map<std::string, std::string>({
+        {"cs", "Čeština"},
         {"da", "Dansk"},
         {"de", "Deutsch"},
         {"en", "English"},

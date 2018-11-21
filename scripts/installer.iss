@@ -56,6 +56,7 @@ DisableProgramGroupPage=yes
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
 Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
@@ -115,6 +116,8 @@ DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 Source: "{#buildir}\Release\resources\ui\*"; \
 DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
+Source: "resources\l10n\cs\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\cs\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\da\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\da\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\de\LC_MESSAGES\loot.mo"; \

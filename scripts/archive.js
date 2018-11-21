@@ -37,6 +37,7 @@ function getGitDescription() {
 
 function getLanguageFolders() {
   return [
+    'cs',
     'es',
     'ru',
     'fr',
