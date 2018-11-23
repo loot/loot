@@ -13,6 +13,7 @@ In addition, the following are credited with application-related support:
 
   * Brazilian Portuguese: Kassane
   * Chinese: bluesky404
+  * Czech: ThePotatoChronicler
   * Danish: Freso
   * Finnish: 3ventic
   * French: Kaos
