@@ -35,7 +35,10 @@ export default class LootMessageDialog extends PolymerElement {
         exit-animation="fade-out-animation"
         modal
       >
-        <slot></slot>
+        <slot name="heading"></slot>
+        <paper-dialog-scrollable>
+          <slot name="message"></slot>
+        </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="dismiss" dialog-dismiss
             >[[_localise('Cancel')]]</paper-button
@@ -96,10 +99,12 @@ export default class LootMessageDialog extends PolymerElement {
     if (this.children.length === 0) {
       const h2 = document.createElement('h2');
       h2.className = 'heading';
+      h2.slot = 'heading';
       this.appendChild(h2);
 
       const p = document.createElement('p');
       p.className = 'message';
+      p.slot = 'message';
       this.appendChild(p);
     }
 
