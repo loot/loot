@@ -35,13 +35,13 @@ using std::filesystem::u8path;
 
 namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10"});
+    {"master", "v0.7", "v0.8", "v0.10", "v0.13"});
 
 GameSettings::GameSettings() : type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode),
-    repositoryBranch_("v0.13") {
+    repositoryBranch_("v0.14") {
   if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
