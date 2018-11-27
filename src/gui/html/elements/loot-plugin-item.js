@@ -151,9 +151,8 @@ export default class LootPluginItem extends PolymerElement {
           slot="item-icon"
           class$="[[computeLoadOrderIndexClass(isLightMaster)]]"
           hidden$="[[!computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]"
-        >
-          [[computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]
-        </div>
+          text-content="[[computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]"
+        ></div>
         <paper-item-body two-line>
           <div id="primary"><slot></slot></div>
           <div id="secondary" secondary>
