@@ -4,6 +4,15 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.13.6 - 2018-11-27
+===================
+
+Fixed
+-----
+
+- Load order indices in the sidebar were formatted incorrectly for light
+  plugins.
+
 0.13.5 - 2018-11-26
 ===================
 
