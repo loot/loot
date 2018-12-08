@@ -16,7 +16,7 @@ import '@polymer/paper-tooltip/paper-tooltip.js';
 
 import './editable-table.js';
 import './loot-custom-icons.js';
-import Plugin from '../js/plugin.js';
+import { crcToString, Plugin } from '../js/plugin.js';
 
 export default class LootPluginEditor extends PolymerElement {
   static get is() {
@@ -325,7 +325,7 @@ export default class LootPluginEditor extends PolymerElement {
 
   static _dirtyInfoToRowData(dirtyInfo) {
     return {
-      crc: dirtyInfo.crc.toString(16).toUpperCase(),
+      crc: crcToString(dirtyInfo.crc),
       itm: dirtyInfo.itm,
       udr: dirtyInfo.udr,
       nav: dirtyInfo.nav,

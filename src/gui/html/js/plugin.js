@@ -55,6 +55,11 @@ function deduplicateTags(currentTags, suggestedTags) {
   };
 }
 
+export function crcToString(crc) {
+  /* Pad CRC string to 8 characters. */
+  return `00000000${crc.toString(16).toUpperCase()}`.slice(-8);
+}
+
 /* Messages, tags, CRCs and version strings can all be hidden by filters.
     Use getters with no setters for member variables as data should not be
     written to objects of this class. */
@@ -122,7 +127,7 @@ class PluginCardContent {
     }
 
     /* Pad CRC string to 8 characters. */
-    return `00000000${this._crc.toString(16).toUpperCase()}`.slice(-8);
+    return crcToString(this._crc);
   }
 
   get tags() {
@@ -165,7 +170,7 @@ class PluginCardContent {
   }
 }
 
-export default class Plugin {
+export class Plugin {
   constructor(obj) {
     /* Plugin data */
     this.name = obj.name;

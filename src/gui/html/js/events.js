@@ -18,7 +18,7 @@ import {
 import Filters from './filters.js';
 import Game from './game.js';
 import handlePromiseError from './handlePromiseError.js';
-import Plugin from './plugin.js';
+import { Plugin } from './plugin.js';
 import query from './query.js';
 
 // Depends on the following globals:

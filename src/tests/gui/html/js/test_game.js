@@ -1,21 +1,24 @@
 /* eslint-disable no-self-assign */
 
 import Game from '../../../../gui/html/js/game.js';
-import Plugin from '../../../../gui/html/js/plugin.js';
+import { Plugin } from '../../../../gui/html/js/plugin.js';
 
 jest.mock('../../../../gui/html/js/dom.js');
 jest.mock('../../../../gui/html/js/filters.js');
-jest.mock('../../../../gui/html/js/plugin.js', () =>
-  jest.fn().mockImplementation(({ name, crc, isActive, loadOrderIndex }) => ({
-    name,
-    crc,
-    isActive,
-    loadOrderIndex,
-    update(other) {
-      Object.assign(this, other);
-    }
-  }))
-);
+jest.mock('../../../../gui/html/js/plugin.js', () => ({
+  crcToString: jest.fn(),
+  Plugin: jest
+    .fn()
+    .mockImplementation(({ name, crc, isActive, loadOrderIndex }) => ({
+      name,
+      crc,
+      isActive,
+      loadOrderIndex,
+      update(other) {
+        Object.assign(this, other);
+      }
+    }))
+}));
 
 describe('Game', () => {
   const l10n = {
