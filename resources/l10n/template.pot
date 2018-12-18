@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.13.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-12-10 19:07+0000\n"
+"POT-Creation-Date: 2018-12-18 19:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: src/gui/cef/query/query.h:50
 msgid ""
@@ -94,20 +93,24 @@ msgstr ""
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/html/js/events.js:204
+#: src/gui/html/js/events.js:198
+msgid "Cyclic interaction detected"
+msgstr ""
+
+#: src/gui/html/js/events.js:206
 #, javascript-format
 msgid "Failed to sort plugins. Details: %s"
 msgstr ""
 
-#: src/gui/html/js/events.js:230
+#: src/gui/html/js/events.js:232
 msgid "Sorting made no changes to the load order."
 msgstr ""
 
-#: src/gui/html/js/events.js:270
+#: src/gui/html/js/events.js:272
 msgid "Redate Plugins?"
 msgstr ""
 
-#: src/gui/html/js/events.js:272
+#: src/gui/html/js/events.js:274
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -115,66 +118,66 @@ msgid ""
 "Edition). Do you wish to continue?"
 msgstr ""
 
-#: src/gui/html/js/events.js:274
+#: src/gui/html/js/events.js:276
 msgid "Redate"
 msgstr ""
 
-#: src/gui/html/js/events.js:280
+#: src/gui/html/js/events.js:282
 msgid "Plugins were successfully redated."
 msgstr ""
 
-#: src/gui/html/js/events.js:292
+#: src/gui/html/js/events.js:294
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 
-#: src/gui/html/js/events.js:294 src/gui/html/js/events.js:590
+#: src/gui/html/js/events.js:296 src/gui/html/js/events.js:592
 msgid "Clear"
 msgstr ""
 
-#: src/gui/html/js/events.js:309
+#: src/gui/html/js/events.js:311
 msgid "All user-added metadata has been cleared."
 msgstr ""
 
-#: src/gui/html/js/events.js:343
+#: src/gui/html/js/events.js:345
 msgid "LOOT's content has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.js:358
+#: src/gui/html/js/events.js:360
 msgid "The load order has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.js:396
+#: src/gui/html/js/events.js:398
 #, javascript-format
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 
-#: src/gui/html/js/events.js:399 src/gui/html/js/translateStaticText.js:403
+#: src/gui/html/js/events.js:401 src/gui/html/js/translateStaticText.js:403
 msgid "Quit"
 msgstr ""
 
-#: src/gui/html/js/events.js:415
+#: src/gui/html/js/events.js:417
 msgid "sorted load order"
 msgstr ""
 
-#: src/gui/html/js/events.js:417
+#: src/gui/html/js/events.js:419
 msgid "metadata edits"
 msgstr ""
 
-#: src/gui/html/js/events.js:576
+#: src/gui/html/js/events.js:578
 #, javascript-format
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.js:587
+#: src/gui/html/js/events.js:589
 #, javascript-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 
-#: src/gui/html/js/events.js:612
+#: src/gui/html/js/events.js:614
 #, javascript-format
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
@@ -744,115 +747,6 @@ msgstr ""
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
 "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
-msgstr ""
-
-#: src/gui/state/game.cpp:175 src/gui/state/game.cpp:204
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr ""
-
-#: src/gui/state/game.cpp:187
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr ""
-
-#: src/gui/state/game.cpp:224
-msgid "This plugin is incompatible with \"%1%\", but both files are present."
-msgstr ""
-
-#: src/gui/state/game.cpp:259
-msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
-"This can cause issues in-game, and sorting will fail while this plugin is "
-"installed."
-msgstr ""
-
-#: src/gui/state/game.cpp:328 src/gui/state/game.cpp:457
-msgid ""
-"Failed to load the current load order, information displayed may be "
-"incorrect."
-msgstr ""
-
-#: src/gui/state/game.cpp:479
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr ""
-
-#: src/gui/state/game.cpp:492
-msgid "The group \"%1%\" does not exist."
-msgstr ""
-
-#: src/gui/state/game.cpp:529
-msgid "You have not sorted your load order this session."
-msgstr ""
-
-#: src/gui/state/game.cpp:552
-msgid ""
-"You have a normal plugin and at least one light master sharing the FE load "
-"order index. Deactivate a normal plugin or all your light masters to avoid "
-"potential issues."
-msgstr ""
-
-#: src/gui/state/game.cpp:579
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-
-#: src/gui/state/game.cpp:623
-msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
-"\n"
-"Try updating your masterlist to resolve the error. If the error is with your "
-"user metadata, this probably happened because an update to LOOT changed its "
-"metadata syntax support. Your user metadata will have to be updated "
-"manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"documentation, which is accessible through LOOT's main menu.\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-
-#: src/gui/state/game.cpp:772
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game.cpp:776
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game.cpp:782
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game.cpp:792
-msgid "%1% found %2%, %3% and %4%."
-msgstr ""
-
-#: src/gui/state/game.cpp:798
-msgid "%1% found dirty edits."
-msgstr ""
-
-#: src/gui/state/game.cpp:804 src/gui/state/game.cpp:810
-#: src/gui/state/game.cpp:815
-msgid "%1% found %2% and %3%."
-msgstr ""
-
-#: src/gui/state/game.cpp:819 src/gui/state/game.cpp:822
-#: src/gui/state/game.cpp:825
-msgid "%1% found %2%."
-msgstr ""
-
-#: src/gui/state/game.cpp:939
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 
 #: src/gui/state/loot_state.cpp:97

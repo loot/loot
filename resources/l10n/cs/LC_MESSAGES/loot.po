@@ -33,7 +33,7 @@ msgid ""
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Neeee, něco se pokazilo! Obvykle je to proto, že \"% 1%\" je nastaveno jen "
+"Neeee, něco se pokazilo! Obvykle je to proto, že \"%1%\" je nastaveno jen "
 "pro čtení. Pokud je, přenastavte to a akci opakujte. Pokud není, můžeš "
 "zkontrolovat LOOTDebugLog. txt (Mužeš ho nalézt v hlavním menu) pro více "
 "informací."
@@ -178,7 +178,7 @@ msgstr "změny metadat"
 #: src/gui/html/js/events.js:576
 #, javascript-format
 msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Metadata pro \"% s\" byla zkopírována do schránky."
+msgstr "Metadata pro \"%s\" byla zkopírována do schránky."
 
 #: src/gui/html/js/events.js:587
 #, javascript-format
@@ -186,12 +186,12 @@ msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 "Opravdu chcete odstranit všechny existující metadata přidané uživatelem z "
-"\"% s\"?"
+"\"%s\"?"
 
 #: src/gui/html/js/events.js:612
 #, javascript-format
 msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Metadata přidaná uživatelem pro \"% s\" byla vymazána."
+msgstr "Metadata přidaná uživatelem pro \"%s\" byla vymazána."
 
 #: src/gui/html/js/filters.js:20
 msgid "Do not clean"
@@ -685,7 +685,7 @@ msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"Zdá se, že jste poprvé spustili LOOT v% s. Zde je několik tipů, které vám "
+"Zdá se, že jste poprvé spustili LOOT v%s. Zde je několik tipů, které vám "
 "pomohou začít s rozhraním."
 
 #: src/gui/html/js/translateStaticText.js:614
@@ -780,16 +780,16 @@ msgstr ""
 
 #: src/gui/state/game.cpp:184 src/gui/state/game.cpp:213
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Tento plugin vyžaduje instalaci \"% 1%\", ale to chybí."
+msgstr "Tento plugin vyžaduje instalaci \"%1%\", ale to chybí."
 
 #: src/gui/state/game.cpp:196
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Tento plugin vyžaduje, aby byl aktivní \"% 1%\", ale to je neaktivní."
+msgstr "Tento plugin vyžaduje, aby byl aktivní \"%1%\", ale to je neaktivní."
 
 #: src/gui/state/game.cpp:231
 msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr ""
-"Tento plugin není kompatibilní s \"% 1%\", ale jsou přítomny oba soubory."
+"Tento plugin není kompatibilní s \"%1%\", ale jsou přítomny oba soubory."
 
 #: src/gui/state/game.cpp:266
 msgid ""
@@ -797,7 +797,7 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Tento plugin je light master a vyžaduje plugin \"% 1%\", který není hlavní "
+"Tento plugin je light master a vyžaduje plugin \"%1%\", který není hlavní "
 "plugin. To může způsobit problémy během hry a třídění selže během instalace "
 "tohoto pluginu."
 
@@ -859,7 +859,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Při analýze seznamů metadat se vyskytla chyba:% 1%.\n"
+"Při analýze seznamů metadat se vyskytla chyba: %1%.\n"
 "\n"
 "Pokuste se aktualizovat hlavní seznam a vyřešit chybu. Pokud je chyba u "
 "vašich uživatelských metadat, pravděpodobně k tomu došlo, protože "
