@@ -61,6 +61,42 @@ TEST(from_json, shouldEncodeGameSettingsPathsAsUtf8) {
   EXPECT_EQ(u8path(u8"non\u00C1sciiGamePath"), gameSettings.GamePath());
   EXPECT_EQ(u8path(u8"non\u00C1sciiGameLocalPath"), gameSettings.GameLocalPath());
 }
+
+TEST(from_json, shouldNotSetPluginMetadataGroupIfUnspecified) {
+  nlohmann::json json;
+  json["name"] = "test.esp";
+  
+  PluginMetadata pluginMetadata;
+
+  from_json(json, pluginMetadata);
+
+  EXPECT_FALSE(pluginMetadata.GetGroup().has_value());
+}
+
+TEST(from_json, shouldSetPluginMetadataDefaultGroupIfSpecified) {
+  nlohmann::json json;
+  json["name"] = "test.esp";
+  json["group"] = Group().GetName();
+
+  PluginMetadata pluginMetadata;
+
+  from_json(json, pluginMetadata);
+
+  EXPECT_EQ(Group().GetName(), pluginMetadata.GetGroup().value());
+}
+
+TEST(from_json, shouldSetPluginMetadataNonDefaultGroupIfSpecified) {
+  nlohmann::json json;
+  json["name"] = "test.esp";
+  json["group"] = "not default";
+
+  PluginMetadata pluginMetadata;
+
+  from_json(json, pluginMetadata);
+
+  ASSERT_NE("not default", Group().GetName());
+  EXPECT_EQ("not default", pluginMetadata.GetGroup().value());
+}
 }
 }
 #endif

@@ -357,9 +357,9 @@ void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
 
   metadata.SetEnabled(json.value("enabled", false));
 
-  auto group = json.value("group", "default");
-  if (group != Group().GetName()) {
-    metadata.SetGroup(group);
+  auto groupIt = json.find("group");
+  if (groupIt != json.end()) {
+    metadata.SetGroup(groupIt->get<std::string>());
   }
 
   metadata.SetLoadAfterFiles(json.value("after", std::set<File>()));
