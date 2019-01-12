@@ -690,7 +690,7 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:614
 msgid "Click %(menu_icon)s buttons to open menus."
-msgstr "Klepnutím na tlačítko %(menu_icon) otevřete nabídky."
+msgstr "Klepnutím na tlačítko %(menu_icon)s otevřete nabídky."
 
 #: src/gui/html/js/translateStaticText.js:620
 msgid ""
