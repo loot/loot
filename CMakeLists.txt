@@ -136,7 +136,7 @@ set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
 
 ExternalProject_Add(cpptoml
                     PREFIX "external"
-                    URL "https://github.com/skystrife/cpptoml/archive/v0.1.0.tar.gz"
+                    URL "https://github.com/skystrife/cpptoml/archive/v0.1.1.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
