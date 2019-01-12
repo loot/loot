@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.14.0 - Unreleased
+0.14.0 - 2019-01-12
 ===================
 
 Added
@@ -44,6 +44,8 @@ Fixed
   deferred until after its contents have been copied into the game directory,
   and if an error is encountered when deleting the temporary directory, it is
   logged but does not cause the masterlist update to fail. (Via LOOT API).
+- The Czech translation mangled placeholders in message strings, causing errors
+  when it was used.
 
 Changed
 -------
@@ -58,7 +60,13 @@ Changed
   in the cyclic path, to make it easier to identify the problematic metadata and
   so fix it.
 - Updated the Japanese translation.
+- Updated the German translation.
 - LOOT now supports v0.14 of the metadata syntax (via LOOT API).
+- Updated LOOT API, which has been renamed to libloot, to 0.14.1.
+- Updated cpptoml to v0.1.1.
+- Updated spdlog to v1.3.0.
+- Updated nlohmann/json to v3.5.0.
+- Updated JavaScript GUI dependencies.
 
 0.13.6 - 2018-11-27
 ===================
