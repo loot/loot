@@ -13,7 +13,7 @@
   "homepage": "https://github.com/loot/loot",
   "private": true,
   "dependencies": {
-    "@octokit/rest": "^15.6.2",
+    "@octokit/rest": "^16.8.0",
     "@polymer/app-layout": "^3.0.0",
     "@polymer/iron-flex-layout": "^3.0.0",
     "@polymer/iron-icon": "^3.0.0",
@@ -48,7 +48,7 @@
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",
     "lodash": "^4.17.5",
-    "marked": "^0.5.0",
+    "marked": "^0.6.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-autosuggest": "^9.3.4",
