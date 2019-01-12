@@ -706,7 +706,7 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.js:614
 msgid "Click %(menu_icon)s buttons to open menus."
-msgstr "Klicke die %(menu_icon) Schaltfläche um Menüs zu öffnen "
+msgstr "Klicke die %(menu_icon)s Schaltfläche um Menüs zu öffnen "
 
 #: src/gui/html/js/translateStaticText.js:620
 msgid ""
