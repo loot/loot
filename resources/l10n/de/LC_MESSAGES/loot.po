@@ -852,7 +852,7 @@ msgid ""
 "saves."
 msgstr ""
 "Dieses Plugin enthält Einträge dessen FormIDs außerhalb der gültigen Spanne "
-"für ESL-Plugins liegen. Benutzen dieses Plugins wird unumkehrbaren Schaden "
+"für ESL-Plugins liegen. Verwenden dieses Plugins wird unumkehrbaren Schaden "
 "an Ihren gespeicherten Spielständen anrichten."
 
 #: src/gui/state/game/game.cpp:290
