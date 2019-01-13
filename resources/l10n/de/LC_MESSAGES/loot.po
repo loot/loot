@@ -800,7 +800,8 @@ msgstr ""
 
 #: src/gui/state/loot_state.cpp:97
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
-msgstr "Fehler: --auto-sort wurde übergeben aber kein --game Parameter wurden angegeben"
+msgstr "Fehler: --auto-sort wurde übergeben aber kein "
+"--game Parameter wurden angegeben."
 
 #: src/gui/state/loot_state.cpp:120
 msgid "Error: Could not create LOOT settings file. %1%"
@@ -816,7 +817,8 @@ msgstr "Fehler: Konnte Protokollierung nicht initialisieren."
 
 #: src/gui/state/loot_state.cpp:216
 msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Fehler: Spiel-spezifische Einstellungen konnten nicht initialisiert werden. %1%"
+msgstr "Fehler: Spiel-spezifische Einstellungen konnten nicht "
+"initialisiert werden. %1%"
 
 #: src/gui/state/game/game.cpp:170 src/gui/state/game/game.cpp:199
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
@@ -839,8 +841,8 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Dieses Plugin ist ein Light-Master und setzt ein Nicht-Master Plugin"
-"\"%1%\" voraus. Dies kann Probleme im Spiel verursachen, und jegliches"
+"Dieses Plugin ist ein Light-Master und setzt ein Nicht-Master Plugin "
+"\"%1%\" voraus. Dies kann Probleme im Spiel verursachen, und jegliches "
 "Sortieren wird fehlschlagen solang dieses Plugin installiert ist."
 
 #: src/gui/state/game/game.cpp:273
@@ -849,8 +851,8 @@ msgid ""
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
-"Dieses Plugin enthält Einträge dessen FormIDs außerhalb der gültigen Spanne"
-"für ESL-Plugins liegen. Benutzen dieses Plugins wird unumkehrbaren Schaden"
+"Dieses Plugin enthält Einträge dessen FormIDs außerhalb der gültigen Spanne "
+"für ESL-Plugins liegen. Benutzen dieses Plugins wird unumkehrbaren Schaden "
 "an Ihren Gespeicherten Spielständen anrichten."
 
 #: src/gui/state/game/game.cpp:290
@@ -858,7 +860,7 @@ msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
-"Dieses Plugin hat ein Kopfzeilenversion von %1%, welcher geringer ist"
+"Dieses Plugin hat ein Kopfzeilenversion von %1%, welcher geringer ist "
 "als die minimal-unterstützte Kopfzeilenversion von %2%."
 
 #: src/gui/state/game/game.cpp:356 src/gui/state/game/game.cpp:444
@@ -866,7 +868,7 @@ msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
-"Laden der derzeitigen Ladereihenfolge fehlgeschlagen, angezeigte"
+"Laden der derzeitigen Ladereihenfolge fehlgeschlagen, angezeigte "
 "Informationen sind womöglich inakkurat."
 
 #: src/gui/state/game/game.cpp:467
@@ -887,8 +889,8 @@ msgid ""
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
-"Sie haben ein normales Plugin und mindestens ein Light-Master"
-"welche sich den FE Reihenfolge-Index teilen. Deaktiviere ein normales"
+"Sie haben ein normales Plugin und mindestens ein Light-Master "
+"welche sich den FE Reihenfolge-Index teilen. Deaktiviere ein normales "
 "Plugin oder alle Ihre Light-Master um potenziellen Problemen auszuweichen."
 
 #: src/gui/state/game/game.cpp:565
@@ -897,8 +899,8 @@ msgid ""
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
-"Die aktuellste Masterlisten-Version hat einen Syntaxfehler, LOOT nutzt"
-"stattdessen die zuletzt-gültige Version. Syntaxfehler sind meist"
+"Die aktuellste Masterlisten-Version hat einen Syntaxfehler, LOOT nutzt "
+"stattdessen die zuletzt-gültige Version. Syntaxfehler sind meist "
 "geringfügig und innerhalb von Stunden behoben."
 
 #: src/gui/state/game/game.cpp:608
@@ -974,4 +976,5 @@ msgstr "%1% hat %2% gefunden."
 
 #: src/gui/state/game/helpers.cpp:210
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT hat festgestellt das \"%1%\ ungültig ist wird es jetzt ignorieren."
+msgstr "LOOT hat festgestellt das \"%1%\ ungültig ist wird es ab sofort "
+"ignorieren."
