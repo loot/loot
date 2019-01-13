@@ -245,7 +245,9 @@ export default class LootGroupsEditor extends PolymerElement {
     this.cyLayoutOptions = {
       name: 'dagre',
       nodeDimensionsIncludeLabels: true,
-      rankDir: 'LR'
+      rankDir: 'LR',
+      animate: true,
+      animationDuration: 200
     };
 
     this.cy.addListener('cxttap', onRemoveGraphElement);
