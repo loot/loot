@@ -304,7 +304,7 @@ export default class LootGroupsEditor extends PolymerElement {
       }
 
       input = evt.currentTarget;
-      button = evt.currentTarget.nextElementSibling;
+      button = evt.currentTarget.firstElementChild;
     } else {
       input = evt.currentTarget.parentElement;
       button = evt.currentTarget;
