@@ -833,7 +833,7 @@ msgstr "Dieses Plugin setzt voraus das \"%1%\" aktiviert ist, "
 #: src/gui/state/game/game.cpp:218
 msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr "Dieses Plugin ist inkompatibel mit \"%1%\", aber beide Dateien "
-"sind vorhanden"
+"sind vorhanden."
 
 #: src/gui/state/game/game.cpp:253
 msgid ""
@@ -853,7 +853,7 @@ msgid ""
 msgstr ""
 "Dieses Plugin enthält Einträge dessen FormIDs außerhalb der gültigen Spanne "
 "für ESL-Plugins liegen. Benutzen dieses Plugins wird unumkehrbaren Schaden "
-"an Ihren Gespeicherten Spielständen anrichten."
+"an Ihren gespeicherten Spielständen anrichten."
 
 #: src/gui/state/game/game.cpp:290
 msgid ""
@@ -890,7 +890,7 @@ msgid ""
 "potential issues."
 msgstr ""
 "Sie haben ein normales Plugin und mindestens ein Light-Master "
-"welche sich den FE Reihenfolge-Index teilen. Deaktiviere ein normales "
+"welche sich den FE Reihenfolge-Index teilen. Deaktivieren Sie ein normales "
 "Plugin oder alle Ihre Light-Master um potenziellen Problemen auszuweichen."
 
 #: src/gui/state/game/game.cpp:565
@@ -976,5 +976,5 @@ msgstr "%1% hat %2% gefunden."
 
 #: src/gui/state/game/helpers.cpp:210
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT hat festgestellt das \"%1%\ ungültig ist wird es ab sofort "
+msgstr "LOOT hat festgestellt das \"%1%\" ungültig ist wird es ab sofort "
 "ignorieren."
