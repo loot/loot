@@ -21,7 +21,8 @@ xgettext \
   src/gui/cef/query/types/*.h \
   src/gui/html/elements/*.js \
   src/gui/html/js/*.js \
-  src/gui/state/*.cpp
+  src/gui/state/*.cpp \
+  src/gui/state/game/*.cpp
 
 sed -i 's|charset=CHARSET|charset=UTF-8|' resources/l10n/template.pot
 

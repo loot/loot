@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.13.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-12-18 19:57+0000\n"
+"POT-Creation-Date: 2019-01-13 10:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: src/gui/cef/query/query.h:50
 msgid ""
@@ -767,4 +768,126 @@ msgstr ""
 
 #: src/gui/state/loot_state.cpp:216
 msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr ""
+
+#: src/gui/state/game/game.cpp:170 src/gui/state/game/game.cpp:199
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:182
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:218
+msgid "This plugin is incompatible with \"%1%\", but both files are present."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:253
+msgid ""
+"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:273
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:290
+msgid ""
+"This plugin has a header version of %1%, which is less than the game's "
+"minimum supported header version of %2%."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:356 src/gui/state/game/game.cpp:444
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:467
+msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
+msgstr ""
+
+#: src/gui/state/game/game.cpp:478
+msgid "The group \"%1%\" does not exist."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:514
+msgid "You have not sorted your load order this session."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:537
+msgid ""
+"You have a normal plugin and at least one light master sharing the FE load "
+"order index. Deactivate a normal plugin or all your light masters to avoid "
+"potential issues."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:565
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:608
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:77
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game/helpers.cpp:81
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game/helpers.cpp:87
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/gui/state/game/helpers.cpp:97
+msgid "%1% found %2%, %3% and %4%."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:103
+msgid "%1% found dirty edits."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:109 src/gui/state/game/helpers.cpp:115
+#: src/gui/state/game/helpers.cpp:120
+msgid "%1% found %2% and %3%."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:124 src/gui/state/game/helpers.cpp:127
+#: src/gui/state/game/helpers.cpp:130
+msgid "%1% found %2%."
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:210
+msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
