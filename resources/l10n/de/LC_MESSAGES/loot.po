@@ -26,7 +26,7 @@ msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
 msgstr ""
-"Oh nein, etwas ist schief gelaufen! Sie können in LOOTDebugLog.txt (Sie"
+"Oh nein, etwas ist schief gelaufen! Sie können im LOOTDebugLog.txt (Sie "
 "können es über das Hauptmenü erreichen) für mehr Informationen nachsehen."
 
 #: src/gui/cef/query/query.h:84
@@ -36,9 +36,9 @@ msgid ""
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Oh nein, etwas ist schief gelaufen! Häufig geschieht das weil \"%1%\" auf"
-"Schreibgeschützt gesetzt ist. Ist dies der Fall, setzen Sie es zurück und"
-"probieren es erneut. Ist es nicht gesetzt können Sie in LOOTDebugLog.txt"
+"Oh nein, etwas ist schief gelaufen! Häufig geschieht das weil \"%1%\" auf "
+"Schreibgeschützt gesetzt ist. Ist dies der Fall, setzen Sie es zurück und "
+"probieren es erneut. Ist es nicht gesetzt können Sie in LOOTDebugLog.txt "
 "(Sie können es über das Hauptmenü erreichen) für mehr Informationen nachsehen."
 
 #: src/gui/cef/query/types/get_game_data_query.h:45
@@ -218,13 +218,14 @@ msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
 msgstr ""
-"Überprüfen auf neue LOOT Updates fehlgeschlagen"
-""
+"Überprüfen auf neue LOOT Updates fehlgeschlagen. Sie können im "
+"LOOTDebugLog.txt (Sie können es über das Hauptmenü erreichen) für "
+"mehr Informationen nachsehen."
 
 #: src/gui/html/js/initialise.js:378
 #, javascript-format
 msgid "A [new release](%s) of LOOT is available."
-msgstr "Eine [neue Version](%s) von LOOT ist verfügbar"
+msgstr "Eine [neue Version](%s) von LOOT ist verfügbar."
 
 #: src/gui/html/js/initialise.js:422
 msgid ""
@@ -232,7 +233,7 @@ msgid ""
 "displayed."
 msgstr ""
 "Automatische Sortierung wurde abgebrochen da mindestens eine "
-"Fehlermeldung aufgetreten ist"
+"Fehlermeldung aufgetreten ist."
 
 #: src/gui/html/js/translateStaticText.js:8
 msgid "Active Plugin"
@@ -543,9 +544,8 @@ msgstr "Filter"
 
 #: src/gui/html/js/translateStaticText.js:437
 msgid "Press Enter or click outside the input to set the filter."
-msgstr ""
-"Drücken Sie Enter oder klicken Sie außerhalb der Eingabe, um den Filter zu "
-"setzen."
+msgstr "Drücken Sie Enter oder klicken Sie außerhalb der Eingabe, um den "
+"Filter zu setzen."
 
 #: src/gui/html/js/translateStaticText.js:440
 msgid "Show only plugins with cards that contain"
@@ -609,7 +609,7 @@ msgstr "Allgemeine Informationen"
 
 #: src/gui/html/js/translateStaticText.js:493
 msgid "Masterlist Revision"
-msgstr "Masterlist Revision"
+msgstr "Masterlist Version"
 
 #: src/gui/html/js/translateStaticText.js:496
 msgid "Masterlist Date"
@@ -653,11 +653,11 @@ msgstr "Spracheinstellungen werden wirksam nachdem LOOT neugestartet wird."
 
 #: src/gui/html/js/translateStaticText.js:544
 msgid "Enable debug logging"
-msgstr "Aktivere Debug-Logging"
+msgstr "Aktivere Debug-Protokollierung"
 
 #: src/gui/html/js/translateStaticText.js:548
 msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr "Die Ausgabe wird in die LOOTDebugLog.txt-Datei geloggt."
+msgstr "Die Ausgabe wird in die LOOTDebugLog.txt-Datei protokolliert."
 
 #: src/gui/html/js/translateStaticText.js:554
 msgid "Update masterlist before sorting"
@@ -727,7 +727,7 @@ msgid ""
 "filtering, or by sorting."
 msgstr ""
 "CRCs werden erst angezeigt nachdem Plugins geladen wurden, entweder durch "
-"Konflikt Filter oder durch Sortierung."
+"eine Konfliktfilterung oder durch eine Sortierung."
 
 #: src/gui/html/js/translateStaticText.js:626
 msgid ""
@@ -773,9 +773,9 @@ msgid ""
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
 "using %s."
 msgstr ""
-"LOOT ist kostenfrei, aber wenn sie Ihre Wertschätzung mit ein wenig Geld"
-"zeigen wollen, Spenden können zu WrinklyNinja (LOOT sein Schöpfer "
-"und Hauptentwickler) gemacht werden mithilfe von %s."
+"LOOT ist kostenfrei, aber wenn sie Ihre Wertschätzung mit ein wenig Geld "
+"zeigen wollen, Spenden können an WrinklyNinja (LOOTs Schöpfer "
+"und Hauptentwickler) getätigt werden mithilfe von %s."
 
 #: src/gui/html/js/translateStaticText.js:644
 msgid "OK"
