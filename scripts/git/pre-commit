@@ -19,12 +19,22 @@ xgettext \
   -o resources/l10n/template.pot \
   src/gui/cef/query/*.h \
   src/gui/cef/query/types/*.h \
-  src/gui/html/elements/*.js \
-  src/gui/html/js/*.js \
   src/gui/state/*.cpp \
   src/gui/state/game/*.cpp
 
 sed -i 's|charset=CHARSET|charset=UTF-8|' resources/l10n/template.pot
+
+# Run babel to generate a .po file for the JavaScript strings.
+# Unfortunately this writes locations as absolute Windows-style paths, so turn
+# them into relative unix-style paths afterwards.
+yarn run babel --config-file ./scripts/xgettext.babel.json --no-babelrc ./src/gui/html --out-file=resources/l10n/discard.js
+rm resources/l10n/discard.js
+sed -i "/^#:/ s|\\\\|/|g" resources/l10n/js_template.po
+sed -i "s|#: [A-Za-z]:${PWD:2}/|#: |" resources/l10n/js_template.po
+
+# Now concat the two template files.
+tail -n +5 resources/l10n/js_template.po >> resources/l10n/template.pot
+rm resources/l10n/js_template.po
 
 LINES_ADDED=$(git diff --numstat resources/l10n/template.pot | cut -f 1)
 LINES_REMOVED=$(git diff --numstat resources/l10n/template.pot | cut -f 2)

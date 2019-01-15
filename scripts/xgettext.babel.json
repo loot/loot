@@ -1,0 +1,29 @@
+{
+  "plugins": [
+    [
+      "module:babel-gettext-extractor",
+      {
+        "fileName": "resources/l10n/js_template.po",
+        "functionNames": {
+          "translate": [
+            "msgid"
+          ],
+          "translateFormatted": [
+            "msgid"
+          ]
+        }
+      }
+    ]
+  ],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "chrome": 68
+        }
+      }
+    ],
+    "@babel/preset-react"
+  ]
+}
