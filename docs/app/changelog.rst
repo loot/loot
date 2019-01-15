@@ -24,6 +24,8 @@ Fixed
 
 - The Groups Editor no longer uses a randomised layout when visualising the
   groups graph.
+- Creating a new group by pressing the Enter key after typing a name in the
+  Groups Editor input field no longer leaves the group creation button enabled.
 - Incorrect handling of non-ASCII characters in plugin filenames when getting
   their active load order indices, which could lead to incorrect indices being
   displayed in the sidebar.
