@@ -3,7 +3,7 @@
 A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
 Fallout: New Vegas.
 
-Copyright (C) 2014-2018    WrinklyNinja
+Copyright (C) 2014 WrinklyNinja
 
 This file is part of LOOT.
 
@@ -56,7 +56,7 @@ protected:
 
     PluginMetadata metadata(file->GetName());
     metadata.SetTags(fileBashTags);
-    
+
     if (masterlistMetadata.has_value()) {
       metadata.MergeMetadata(masterlistMetadata.value());
     }

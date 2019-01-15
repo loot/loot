@@ -1,5 +1,5 @@
 # Danish translation of LOOT
-# Copyright (C) 2014-2018 Freso & WrinklyNinja
+# Copyright (C) 2014 Freso & WrinklyNinja
 # This file is distributed under the same license as the LOOT package.
 # Frederik “Freso” S. Olesen, 2014-2018
 msgid ""

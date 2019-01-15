@@ -3,7 +3,7 @@
 A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
 Fallout: New Vegas.
 
-Copyright (C) 2014-2018    WrinklyNinja
+Copyright (C) 2014 WrinklyNinja
 
 This file is part of LOOT.
 
@@ -65,7 +65,7 @@ TEST(from_json, shouldEncodeGameSettingsPathsAsUtf8) {
 TEST(from_json, shouldNotSetPluginMetadataGroupIfUnspecified) {
   nlohmann::json json;
   json["name"] = "test.esp";
-  
+
   PluginMetadata pluginMetadata;
 
   from_json(json, pluginMetadata);

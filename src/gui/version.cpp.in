@@ -3,7 +3,7 @@
     A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
     Fallout: New Vegas.
 
-    Copyright (C) 2017-2018    WrinklyNinja
+    Copyright (C) 2017 WrinklyNinja
 
     This file is part of the LOOT metadata validator.
 
