@@ -36,23 +36,21 @@ namespace loot {
 class DerivedPluginMetadata {
 public:
   DerivedPluginMetadata(LootState& state,
-                        const std::shared_ptr<const PluginInterface>& file) {
-    name = file->GetName();
-    version = file->GetVersion();
-    isActive = state.getCurrentGame().IsPluginActive(name);
-    isEmpty = file->IsEmpty();
-    isMaster = file->IsMaster();
-    isLightMaster = file->IsLightMaster();
-    loadsArchive = file->LoadsArchive();
-
-    crc = file->GetCRC();
-    loadOrderIndex = state.getCurrentGame().GetActiveLoadOrderIndex(file,
-      state.getCurrentGame().GetLoadOrder());
-
-    currentTags = file->GetBashTags();
-
-    language = state.getLanguage();
-  }
+                        const std::shared_ptr<const PluginInterface>& file) :
+      name(file->GetName()),
+      version(version = file->GetVersion()),
+      isActive(state.getCurrentGame().IsPluginActive(file->GetName())),
+      isDirty(false),
+      isEmpty(file->IsEmpty()),
+      isMaster(file->IsMaster()),
+      isLightMaster(file->IsLightMaster()),
+      loadsArchive(file->LoadsArchive()),
+      crc(file->GetCRC()),
+      loadOrderIndex(state.getCurrentGame().GetActiveLoadOrderIndex(
+          file,
+          state.getCurrentGame().GetLoadOrder())),
+      currentTags(file->GetBashTags()),
+      language(state.getLanguage()) {}
 
   void setEvaluatedMetadata(PluginMetadata metadata) {
     isDirty = !metadata.GetDirtyInfo().empty();
