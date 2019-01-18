@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.14.0 - 2019-01-12
+0.14.0 - 2019-01-19
 ===================
 
 Added
@@ -22,8 +22,6 @@ Added
 Fixed
 -----
 
-- The Groups Editor no longer uses a randomised layout when visualising the
-  groups graph.
 - Creating a new group by pressing the Enter key after typing a name in the
   Groups Editor input field no longer leaves the group creation button enabled.
 - Incorrect handling of non-ASCII characters in plugin filenames when getting
