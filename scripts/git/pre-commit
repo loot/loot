@@ -9,7 +9,6 @@ set -e
 xgettext \
   --keyword="translate:1,1t" \
   --keyword="translate:1,2,3t" \
-  --keyword="translateFormatted:1" \
   --add-location=full \
   --from-code=utf-8 \
   --package-name=LOOT \
