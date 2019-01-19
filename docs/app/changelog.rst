@@ -4,6 +4,15 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.1 - 2019-01-19
+===================
+
+Fixed
+-----
+
+- The LOOT update checker would fail when LOOT's version number was equal to the
+  version number of the latest release.
+
 0.14.0 - 2019-01-19
 ===================
 

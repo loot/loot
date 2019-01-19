@@ -33,7 +33,7 @@ function findTag(tags, tagName) {
 }
 
 async function paginatedFindTag(octokit, repo, tagName) {
-  let response = await octokit.repos.getTags({ ...repo, per_page: 100 });
+  let response = await octokit.repos.listTags({ ...repo, per_page: 100 });
   let tag = findTag(response.data, tagName);
 
   while (!tag && octokit.hasNextPage(response)) {

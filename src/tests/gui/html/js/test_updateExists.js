@@ -14,7 +14,7 @@ jest.mock('@octokit/rest', () =>
             }
           })
         ),
-        getTags: jest.fn().mockReturnValue(
+        listTags: jest.fn().mockReturnValue(
           Promise.resolve({
             data: [
               {
