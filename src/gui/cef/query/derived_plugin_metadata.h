@@ -38,7 +38,7 @@ public:
   DerivedPluginMetadata(LootState& state,
                         const std::shared_ptr<const PluginInterface>& file) :
       name(file->GetName()),
-      version(version = file->GetVersion()),
+      version(file->GetVersion()),
       isActive(state.getCurrentGame().IsPluginActive(file->GetName())),
       isDirty(false),
       isEmpty(file->IsEmpty()),
