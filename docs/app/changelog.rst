@@ -4,6 +4,25 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.2 - 2019-01-20
+===================
+
+Fixed
+-----
+
+- An error when loading plugins with a file present in the plugins directory
+  that has a filename containing characters that cannot be represented in the
+  system code page. Via libloot.
+- An error when trying to read the version of an executable that does not have
+  a US English version information resource. Executable versions are now read
+  from the file's first version information resource, whatever its language.
+  Via libloot.
+
+Changed
+-------
+
+- Updated libloot to 0.14.2.
+
 0.14.1 - 2019-01-19
 ===================
 
