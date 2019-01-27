@@ -33,6 +33,9 @@
 
 namespace loot {
 struct CommandLineOptions {
+#ifdef _WIN32
+  CommandLineOptions();
+#endif
   CommandLineOptions(int argc, const char *const *argv);
 
   bool autoSort;

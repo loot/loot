@@ -110,10 +110,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   // Handle command line args (not CEF args)
   //----------------------------------------
 
-  int argc = 0;
-  const char *const *argv = nullptr;
-
-  const auto cliOptions = loot::CommandLineOptions(argc, argv);
+  const auto cliOptions = loot::CommandLineOptions();
   app.get()->Initialise(cliOptions);
 
   // Back to CEF

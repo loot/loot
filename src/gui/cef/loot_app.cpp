@@ -35,6 +35,10 @@
 #include "gui/state/loot_paths.h"
 
 namespace loot {
+#ifdef _WIN32
+CommandLineOptions::CommandLineOptions() : CommandLineOptions(0, nullptr) {}
+#endif
+
 CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
     autoSort(false),
     url("http://loot/ui/index.html") {
