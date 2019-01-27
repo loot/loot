@@ -254,20 +254,16 @@ export default class Game {
   setSortedPlugins(plugins) {
     this.oldLoadOrder = this.plugins;
 
-    const newPlugins = [];
-    plugins.forEach(plugin => {
-      let existingPlugin = this.oldLoadOrder.find(
+    this.plugins = plugins.map(plugin => {
+      const existingPlugin = this.oldLoadOrder.find(
         item => item.name === plugin.name
       );
       if (existingPlugin) {
         existingPlugin.update(plugin);
-      } else {
-        existingPlugin = new Plugin(plugin);
+        return existingPlugin;
       }
-      newPlugins.push(existingPlugin);
+      return new Plugin(plugin);
     });
-
-    this.plugins = newPlugins;
   }
 
   applySort() {

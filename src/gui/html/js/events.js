@@ -52,20 +52,18 @@ export function onConflictsFilter(evt) {
     loot.filters
       .activateConflictsFilter(evt.currentTarget.value)
       .then(response => {
-        const newGamePlugins = [];
-        loot.game.plugins.forEach(plugin => {
+        loot.game.generalMessages = response.generalMessages;
+        loot.game.plugins = loot.game.plugins.reduce((plugins, plugin) => {
           const responsePlugin = response.plugins.find(
             item => item.name === plugin.name
           );
           if (responsePlugin) {
             plugin.update(responsePlugin);
-            newGamePlugins.push(plugin);
+            plugins.push(plugin);
           }
-        });
+          return plugins;
+        }, []);
 
-        loot.game.generalMessages = response.generalMessages;
-
-        loot.game.plugins = newGamePlugins;
         loot.filters.apply(loot.game.plugins);
 
         /* Scroll to the target plugin */
@@ -633,18 +631,13 @@ export function onSearchBegin(evt) {
     return;
   }
 
-  // Don't push to the target's results property directly, as the
-  // change observer doesn't work correctly unless special Polymer APIs
-  // are used, which I don't want to get into.
-  const results = [];
-  loot.game.plugins.forEach((plugin, index) => {
+  evt.target.results = loot.game.plugins.reduce((indices, plugin, index) => {
     if (plugin.getCardContent(loot.filters).containsText(evt.detail.needle)) {
-      results.push(index);
+      indices.push(index);
       plugin.isSearchResult = true;
     }
-  });
-
-  evt.target.results = results;
+    return indices;
+  }, []);
 }
 export function onSearchEnd(/* evt */) {
   loot.game.plugins.forEach(plugin => {

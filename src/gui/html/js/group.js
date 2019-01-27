@@ -18,15 +18,14 @@ function transformGroup(group, isUserAdded) {
 }
 
 function mergeGroupAfters(groupAfter1, groupAfter2) {
-  const groupAfter = groupAfter1.slice();
-
-  groupAfter2.forEach(after2 => {
-    if (groupAfter.find(after => after.name === after2.name) === undefined) {
-      groupAfter.push(after2);
-    }
-  });
-
-  return groupAfter.sort((a, b) => a.name.localeCompare(b.name));
+  return groupAfter2
+    .reduce((groups, group) => {
+      if (groups.find(after => after.name === group.name) === undefined) {
+        groups.push(group);
+      }
+      return groups;
+    }, groupAfter1.slice())
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export default function mergeGroups(masterlistGroups, userGroups) {
