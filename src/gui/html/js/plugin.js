@@ -213,6 +213,29 @@ export class Plugin {
     Object.getOwnPropertyNames(plugin).forEach(property => {
       this[property] = plugin[property];
     });
+
+    /* Set default values for fields that may not be present. */
+    if (plugin.version === undefined) {
+      this.version = '';
+    }
+    if (plugin.crc === undefined) {
+      this.crc = 0;
+    }
+    if (plugin.group === undefined) {
+      this.group = 'default';
+    }
+    if (plugin.loadOrderIndex === undefined) {
+      this.loadOrderIndex = undefined;
+    }
+    if (plugin.cleanedWith === undefined) {
+      this.cleanedWith = '';
+    }
+    if (plugin.masterlist === undefined) {
+      this.masterlist = undefined;
+    }
+    if (plugin.userlist === undefined) {
+      this.userlist = undefined;
+    }
   }
 
   static fromJson(key, value) {

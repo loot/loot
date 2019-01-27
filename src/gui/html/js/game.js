@@ -295,8 +295,6 @@ export default class Game {
         item => item.name === plugin.name
       );
       if (existingPlugin) {
-        existingPlugin.userlist = undefined;
-
         existingPlugin.update(plugin);
       }
     });

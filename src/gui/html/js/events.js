@@ -543,10 +543,6 @@ export function onEditorClose(evt) {
     .then(result => {
       plugin.update(result);
 
-      /* Explicitly set userlist to detect when user edits have been removed
-       (so result.userlist is not present). */
-      plugin.userlist = result.userlist;
-
       /* Now perform search again. If there is no current search, this won't
        do anything. */
       document.getElementById('searchBar').search();
@@ -603,8 +599,6 @@ export function onClearMetadata(evt) {
             item => item.id === evt.target.id
           );
           if (existingPlugin) {
-            existingPlugin.userlist = undefined;
-
             existingPlugin.update(plugin);
           }
           showNotification(
