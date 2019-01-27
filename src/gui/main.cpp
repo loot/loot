@@ -68,28 +68,19 @@ int XIOErrorHandlerImpl(Display *display) { return 0; }
 
 #ifdef _WIN32
 int APIENTRY wWinMain(HINSTANCE hInstance,
-                      HINSTANCE hPrevInstance,
-                      LPTSTR lpCmdLine,
-                      int nCmdShow) {
-#else
-int main(int argc, char *argv[]) {
-#endif
-
+  HINSTANCE hPrevInstance,
+  LPTSTR lpCmdLine,
+  int nCmdShow) {
   // Do all the standard CEF setup stuff.
   //-------------------------------------
 
   void *sandbox_info = nullptr;
 
-#ifdef _WIN32
   // Enable High-DPI support on Windows 7 or newer.
   CefEnableHighDPISupport();
 
   // Read command line arguments.
   CefMainArgs main_args(hInstance);
-#else
-  // Read command line arguments.
-  CefMainArgs main_args(argc, argv);
-#endif
 
   // Create the process reference.
   CefRefPtr<loot::LootApp> app(new loot::LootApp);
@@ -101,7 +92,6 @@ int main(int argc, char *argv[]) {
     return exit_code;
   }
 
-#ifdef _WIN32
   // Check if LOOT is already running
   //---------------------------------
 
@@ -111,19 +101,18 @@ int main(int argc, char *argv[]) {
     HWND hWnd = ::FindWindow(NULL, L"LOOT");
     ::SetForegroundWindow(hWnd);
     return 0;
-  } else {
+  }
+  else {
     // Create the mutex so that future instances will not run.
     hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
   }
-#endif
 
-    // Handle command line args (not CEF args)
-    //----------------------------------------
+  // Handle command line args (not CEF args)
+  //----------------------------------------
 
-#ifdef _WIN32
   int argc = 0;
   const char *const *argv = nullptr;
-#endif
+
   const auto cliOptions = loot::CommandLineOptions(argc, argv);
   app.get()->Initialise(cliOptions);
 
@@ -132,13 +121,6 @@ int main(int argc, char *argv[]) {
 
   // Initialise CEF settings.
   CefSettings cef_settings = GetCefSettings();
-
-#ifndef _WIN32
-  // Install xlib error handlers so that the application won't be terminated
-  // on non-fatal errors.
-  XSetErrorHandler(XErrorHandlerImpl);
-  XSetIOErrorHandler(XIOErrorHandlerImpl);
-#endif
 
   // Initialize CEF.
   CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
@@ -150,11 +132,60 @@ int main(int argc, char *argv[]) {
   // Shut down CEF.
   CefShutdown();
 
-#ifdef _WIN32
   // Release the program instance mutex.
-  if (hMutex != NULL)
+  if (hMutex != NULL) {
     ReleaseMutex(hMutex);
-#endif
+  }
 
   return 0;
 }
+#else
+int main(int argc, char *argv[]) {
+  // Do all the standard CEF setup stuff.
+  //-------------------------------------
+
+  void *sandbox_info = nullptr;
+
+  // Read command line arguments.
+  CefMainArgs main_args(argc, argv);
+
+  // Create the process reference.
+  CefRefPtr<loot::LootApp> app(new loot::LootApp);
+
+  // Run the process.
+  int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
+  if (exit_code >= 0) {
+    // The sub-process has completed so return here.
+    return exit_code;
+  }
+
+  // Handle command line args (not CEF args)
+  //----------------------------------------
+
+  const auto cliOptions = loot::CommandLineOptions(argc, argv);
+  app.get()->Initialise(cliOptions);
+
+  // Back to CEF
+  //------------
+
+  // Initialise CEF settings.
+  CefSettings cef_settings = GetCefSettings();
+
+  // Install xlib error handlers so that the application won't be terminated
+  // on non-fatal errors.
+  XSetErrorHandler(XErrorHandlerImpl);
+  XSetIOErrorHandler(XIOErrorHandlerImpl);
+
+  // Initialize CEF.
+  CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
+
+  // Run the CEF message loop. This will block until CefQuitMessageLoop() is
+  // called.
+  CefRunMessageLoop();
+
+  // Shut down CEF.
+  CefShutdown();
+
+  return 0;
+}
+#endif
