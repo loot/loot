@@ -275,16 +275,17 @@ export default class Game {
   }
 
   cancelSort(plugins, generalMessages) {
-    this.plugins = [];
-    plugins.forEach(plugin => {
+    this.plugins = plugins.reduce((existingPlugins, plugin) => {
       const existingPlugin = this.oldLoadOrder.find(
         item => item.name === plugin.name
       );
       if (existingPlugin) {
         existingPlugin.update(plugin);
-        this.plugins.push(existingPlugin);
+        existingPlugins.push(existingPlugin);
       }
-    });
+
+      return existingPlugins;
+    }, []);
     this.oldLoadOrder = undefined;
 
     /* Update general messages */
