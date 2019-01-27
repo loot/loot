@@ -69,12 +69,25 @@ private:
   }
 
   PluginMetadata getUserMetadata() {
+    // metadata_ may have no group or may have a group of "default" or another
+    // value. "default" should become no group if there is no non-user metadata,
+    // or if the non-user metadata also has no group or the "default" group.
     auto nonUserMetadata = getNonUserMetadata();
     if (nonUserMetadata.has_value()) {
-      return metadata_.NewMetadata(nonUserMetadata.value());
+      auto userMetadata = metadata_.NewMetadata(nonUserMetadata.value());
+      if (userMetadata.GetGroup() == std::optional(Group().GetName())
+        && nonUserMetadata.value().GetGroup().value_or(Group().GetName()) == Group().GetName()) {
+        userMetadata.UnsetGroup();
+      }
+      return userMetadata;
     }
 
-    return metadata_;
+    auto userMetadata = metadata_;
+    if (userMetadata.GetGroup() == std::optional(Group().GetName())) {
+      userMetadata.UnsetGroup();
+    }
+
+    return userMetadata;
   }
 
   void applyUserEdits() {

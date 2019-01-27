@@ -65,9 +65,9 @@ set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
 set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.3/libloot-0.14.3-0-g56d8f78_dev-win32.7z")
+    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.4/libloot-0.14.4-0-gda80a78_dev-win32.7z")
 else()
-    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.3/libloot.tar.xz")
+    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.4/libloot.tar.xz")
 endif()
 
 ExternalProject_Add(json
