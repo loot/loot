@@ -40,7 +40,7 @@ public:
       logger->trace("User has accepted sorted load order, applying it.");
     }
     try {
-      state_.getCurrentGame().SetLoadOrder(plugins_);
+      state_.GetCurrentGame().SetLoadOrder(plugins_);
       state_.DecrementUnappliedChangeCounter();
     }
     catch (...) {

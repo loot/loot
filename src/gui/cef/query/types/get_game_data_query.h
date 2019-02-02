@@ -46,18 +46,18 @@ public:
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
-    bool isFirstLoad = state_.getCurrentGame().GetPlugins().empty();
+    bool isFirstLoad = state_.GetCurrentGame().GetPlugins().empty();
 
-    state_.getCurrentGame().LoadAllInstalledPlugins(true);
+    state_.GetCurrentGame().LoadAllInstalledPlugins(true);
 
     if (isFirstLoad)
-      state_.getCurrentGame().LoadMetadata();
+      state_.GetCurrentGame().LoadMetadata();
 
     // Sort plugins into their load order.
     std::vector<std::shared_ptr<const PluginInterface>> installed;
-    std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = state_.GetCurrentGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      const auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      const auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
       if (plugin) {
         installed.push_back(plugin);
       }

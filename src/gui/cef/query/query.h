@@ -77,7 +77,7 @@ protected:
 
   void setSortingErrorMessage(LootState& state) {
     auto pluginsTxtPath = LootPaths::getLootDataPath().parent_path() /
-      state.getCurrentGame().FolderName() /
+      state.GetCurrentGame().FolderName() /
       "plugins.txt";
 
     errorMessage = (boost::format(boost::locale::translate(

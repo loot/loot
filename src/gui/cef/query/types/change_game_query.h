@@ -38,7 +38,7 @@ public:
       gameFolder_(gameFolder) {}
 
   std::string executeLogic() {
-    state_.changeGame(gameFolder_);
+    state_.SetCurrentGame(gameFolder_);
 
     return GetGameDataQuery::executeLogic();
   }

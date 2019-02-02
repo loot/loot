@@ -87,8 +87,7 @@ void apiLogCallback(LogLevel level, const char* message) {
 }
 
 LootState::LootState() :
-    autoSort_(false),
-    currentGame_(installedGames_.end()) {}
+    autoSort_(false) {}
 
 void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
@@ -175,26 +174,13 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (logger) {
     logger->debug("Detecting installed games.");
   }
-  installedGames_.clear();
-  for (const auto& gameSettings : getGameSettings()) {
-    if (gameSettings.IsInstalled()) {
-      if (logger) {
-        logger->trace("Adding new installed game entry for: {}",
-                       gameSettings.FolderName());
-      }
-      installedGames_.push_back(
-          gui::Game(gameSettings, LootPaths::getLootDataPath()));
-      updateStoredGamePathSetting(installedGames_.back());
-    }
-  }
+  LoadInstalledGames(getGameSettings(), LootPaths::getLootDataPath());
 
   try {
-    selectGame(cmdLineGame);
+    SetInitialGame(cmdLineGame);
     if (logger) {
-      logger->debug("Game selected is {}", currentGame_->Name());
-      logger->debug("Initialising game-specific settings.");
+      logger->debug("Game selected is {}", GetCurrentGame().Name());
     }
-    currentGame_->Init();
   } catch (std::exception& e) {
     if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
@@ -213,65 +199,29 @@ const std::vector<std::string>& LootState::getInitErrors() const {
 }
 
 void LootState::save(const std::filesystem::path& file) {
-  if (currentGame_ != installedGames_.end()) {
-    storeLastGame(currentGame_->FolderName());
+  try {
+    storeLastGame(GetCurrentGame().FolderName());
+  } catch (std::runtime_error& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Couldn't set last game: {}", e.what());
+    }
   }
   updateLastVersion();
   LootSettings::save(file);
 }
 
-void LootState::changeGame(const std::string& newGameFolder) {
-  lock_guard<mutex> guard(mutex_);
-
-  auto logger = getLogger();
-  if (logger) {
-    logger->debug("Changing current game to that with folder: {}",
-                   newGameFolder);
-  }
-  currentGame_ =
-      find_if(installedGames_.begin(),
-              installedGames_.end(),
-              [&](const gui::Game& game) {
-                return to_lower(newGameFolder) == to_lower(game.FolderName());
-              });
-
-  if (currentGame_ == installedGames_.end()) {
-    logger->error(
-        "Cannot change the current game: the game with folder \"{}\" is not "
-        "installed.",
-        newGameFolder);
-    throw std::invalid_argument(
-        "Cannot change the current game: the game with folder \"" +
-        newGameFolder + "\" is not installed.");
-  }
-
-  currentGame_->Init();
-  if (logger) {
-    logger->debug("New game is: {}", currentGame_->Name());
-  }
-}
-
-gui::Game& LootState::getCurrentGame() {
-  lock_guard<mutex> guard(mutex_);
-
-  if (currentGame_ == installedGames_.end()) {
-    throw std::runtime_error("No current game to get.");
-  }
-
-  return *currentGame_;
-}
-
-std::vector<std::string> LootState::getInstalledGames() const {
-  vector<string> installedGames;
-  for (const auto& game : installedGames_) {
-    installedGames.push_back(game.FolderName());
-  }
-  return installedGames;
-}
-
 bool LootState::shouldAutoSort() const { return autoSort_; }
 
-void LootState::selectGame(std::string preferredGame) {
+std::optional<std::filesystem::path> LootState::FindGamePath(const GameSettings& gameSettings) const {
+  return gameSettings.FindGamePath();
+}
+
+void LootState::InitialiseGameData(gui::Game& game) {
+  game.Init();
+}
+
+void LootState::SetInitialGame(std::string preferredGame) {
   if (preferredGame.empty()) {
     // Get preferred game from settings.
     if (getGame() != "auto")
@@ -280,103 +230,24 @@ void LootState::selectGame(std::string preferredGame) {
       preferredGame = getLastGame();
   }
 
-  // Get iterator to preferred game.
-  currentGame_ = find_if(
-      begin(installedGames_), end(installedGames_), [&](gui::Game& game) {
-        return preferredGame.empty() || preferredGame == game.FolderName();
-      });
-  // If the preferred game cannot be found, throw an exception.
-  if (currentGame_ == end(installedGames_)) {
-    throw GameDetectionError("The specified game \"" + preferredGame + "\" is not installed or does not match a game defined in LOOT's settings.");
+  if (!preferredGame.empty()) {
+    SetCurrentGame(preferredGame);
+    return;
   }
 
-  // If no game can be selected, throw an exception.
-  if (currentGame_ == end(installedGames_)) {
+  auto firstInstalledGame = GetFirstInstalledGameFolderName();
+  if (!firstInstalledGame.has_value()) {
+    // No games installed, throw an exception.
     throw GameDetectionError("None of the supported games were detected.");
   }
+
+  SetCurrentGame(firstInstalledGame.value());
 }
 
-void LootState::storeGameSettings(
-    const std::vector<GameSettings>& gameSettings) {
+void LootState::storeGameSettings(std::vector<GameSettings> gameSettings) {
   lock_guard<mutex> guard(mutex_);
 
+  gameSettings = LoadInstalledGames(gameSettings, LootPaths::getLootDataPath());
   LootSettings::storeGameSettings(gameSettings);
-
-  // Update existing games, add new games.
-  auto logger = getLogger();
-  if (logger) {
-    logger->trace("Updating existing games and adding new games.");
-  }
-  std::unordered_set<string> newGameFolders;
-  for (const auto& gameSettings : getGameSettings()) {
-    auto pos =
-        find(installedGames_.begin(), installedGames_.end(), gameSettings);
-
-    if (pos != installedGames_.end()) {
-      pos->SetName(gameSettings.Name())
-          .SetMaster(gameSettings.Master())
-          .SetRepoURL(gameSettings.RepoURL())
-          .SetRepoBranch(gameSettings.RepoBranch())
-          .SetGamePath(gameSettings.GamePath())
-          .SetGameLocalPath(gameSettings.GameLocalPath())
-          .SetRegistryKey(gameSettings.RegistryKey());
-    } else {
-      if (gameSettings.IsInstalled()) {
-        if (logger) {
-          logger->trace("Adding new installed game entry for: {}",
-                         gameSettings.FolderName());
-        }
-        installedGames_.push_back(
-            gui::Game(gameSettings, LootPaths::getLootDataPath()));
-        updateStoredGamePathSetting(installedGames_.back());
-      }
-    }
-
-    newGameFolders.insert(gameSettings.FolderName());
-  }
-
-  // Remove deleted games. As the current game is stored using its index,
-  // removing an earlier game may invalidate it.
-  if (logger) {
-    logger->trace("Removing deleted games.");
-  }
-  for (auto it = installedGames_.begin(); it != installedGames_.end();) {
-    if (newGameFolders.find(it->FolderName()) == newGameFolders.end()) {
-      if (logger) {
-        logger->trace("Removing game: {}", it->FolderName());
-      }
-      it = installedGames_.erase(it);
-    } else
-      ++it;
-  }
-
-  if (currentGame_ == end(installedGames_)) {
-    selectGame("");
-  }
-
-  if (currentGame_ != end(installedGames_)) {
-    // Re-initialise the current game in case the game path setting was changed.
-    currentGame_->Init();
-  }
-}
-
-void LootState::updateStoredGamePathSetting(const gui::Game& game) {
-  auto gameSettings = getGameSettings();
-  auto pos = find_if(begin(gameSettings),
-                     end(gameSettings),
-                     [&](const GameSettings& gameSettings) {
-                       return to_lower(game.FolderName()) ==
-                         to_lower(gameSettings.FolderName());
-                     });
-  if (pos == end(gameSettings)) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Could not find the settings for the current game ({})",
-                    game.Name());
-    }
-  } else {
-    pos->SetGamePath(game.GamePath());
-    LootSettings::storeGameSettings(gameSettings);
-  }
 }
 }

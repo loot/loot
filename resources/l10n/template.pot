@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-02-02 20:03+0000\n"
+"POT-Creation-Date: 2019-02-03 11:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,23 +36,23 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:186
+#: src/gui/cef/query/types/metadata_query.h:187
 #: src/gui/cef/query/types/metadata_query.h:210
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
+#: src/gui/cef/query/types/metadata_query.h:233
 #: src/gui/cef/query/types/metadata_query.h:234
-#: src/gui/cef/query/types/metadata_query.h:235
 msgid "N/A: No masterlist present"
 msgstr ""
 
+#: src/gui/cef/query/types/metadata_query.h:240
 #: src/gui/cef/query/types/metadata_query.h:241
-#: src/gui/cef/query/types/metadata_query.h:242
 msgid "Unknown: Git repository missing"
 msgstr ""
 
+#: src/gui/cef/query/types/metadata_query.h:249
 #: src/gui/cef/query/types/metadata_query.h:250
-#: src/gui/cef/query/types/metadata_query.h:251
 msgid "(edited)"
 msgstr ""
 
@@ -72,75 +72,75 @@ msgstr ""
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:204
+#: src/gui/state/loot_state.cpp:192
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:170 src/gui/state/game/game.cpp:199
+#: src/gui/state/game/game.cpp:167 src/gui/state/game/game.cpp:196
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:182
+#: src/gui/state/game/game.cpp:179
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:218
+#: src/gui/state/game/game.cpp:215
 msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:253
+#: src/gui/state/game/game.cpp:250
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:273
+#: src/gui/state/game/game.cpp:270
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:290
+#: src/gui/state/game/game.cpp:287
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:356 src/gui/state/game/game.cpp:444
+#: src/gui/state/game/game.cpp:356 src/gui/state/game/game.cpp:445
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:467
+#: src/gui/state/game/game.cpp:468
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:478
+#: src/gui/state/game/game.cpp:479
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:514
+#: src/gui/state/game/game.cpp:515
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:537
+#: src/gui/state/game/game.cpp:539
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:565
+#: src/gui/state/game/game.cpp:567
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:608
+#: src/gui/state/game/game.cpp:612
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

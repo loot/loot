@@ -48,14 +48,14 @@ public:
     // Sort plugins into their load order.
     sendProgressUpdate(frame_,
                        boost::locale::translate("Sorting load order..."));
-    std::vector<std::string> plugins = state_.getCurrentGame().SortPlugins();
+    std::vector<std::string> plugins = state_.GetCurrentGame().SortPlugins();
 
     try {
-      if (state_.getCurrentGame().Type() == GameType::tes5 ||
-          state_.getCurrentGame().Type() == GameType::tes5se ||
-          state_.getCurrentGame().Type() == GameType::tes5vr ||
-          state_.getCurrentGame().Type() == GameType::fo4 ||
-          state_.getCurrentGame().Type() == GameType::fo4vr)
+      if (state_.GetCurrentGame().Type() == GameType::tes5 ||
+          state_.GetCurrentGame().Type() == GameType::tes5se ||
+          state_.GetCurrentGame().Type() == GameType::tes5vr ||
+          state_.GetCurrentGame().Type() == GameType::fo4 ||
+          state_.GetCurrentGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
       setSortingErrorMessage(state_);
@@ -76,13 +76,13 @@ private:
     if (plugins.empty() ||
         !equal(begin(plugins),
                end(plugins),
-               begin(state_.getCurrentGame().GetLoadOrder())))
+               begin(state_.GetCurrentGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
     // because there are no changes to accept and some plugins' positions
     // may only be inferred and not written to loadorder.txt/plugins.txt.
-    state_.getCurrentGame().SetLoadOrder(plugins);
+    state_.GetCurrentGame().SetLoadOrder(plugins);
   }
 
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
@@ -92,13 +92,13 @@ private:
     };
 
     for (const auto& pluginName : plugins) {
-      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
       auto derivedMetadata = generateDerivedMetadata(plugin);
-      auto index = state_.getCurrentGame().GetActiveLoadOrderIndex(plugin, plugins);
+      auto index = state_.GetCurrentGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.setLoadOrderIndex(index.value());
       }

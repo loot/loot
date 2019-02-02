@@ -171,26 +171,26 @@ TEST_P(GameSettingsTest,
   EXPECT_FALSE(settings_.IsRepoBranchOldDefault());
 }
 
-TEST_P(GameSettingsTest, isInstalledShouldBeFalseIfGamePathIsNotSetAndGameHasNoRegistryEntry) {
-  EXPECT_FALSE(GameSettings(GetParam()).IsInstalled());
+TEST_P(GameSettingsTest, findGamePathShouldBeNulloptIfGamePathIsNotSetAndGameHasNoRegistryEntry) {
+  EXPECT_FALSE(GameSettings(GetParam()).FindGamePath().has_value());
 }
 
-TEST_P(GameSettingsTest, isInstalledShouldBeTrueIfGamePathIsValid) {
+TEST_P(GameSettingsTest, findGamePathShouldHaveAValueIfGamePathIsValid) {
   auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
 
-  EXPECT_TRUE(settings.IsInstalled());
+  EXPECT_TRUE(settings.FindGamePath().has_value());
 }
 
-TEST_P(GameSettingsTest, isInstalledShouldSupportNonAsciiGameMasters) {
+TEST_P(GameSettingsTest, findGamePathShouldSupportNonAsciiGameMasters) {
   auto settings = GameSettings(GetParam(), u8"non\u00C1sciiFolder")
     .SetGamePath(dataPath.parent_path())
     .SetGameLocalPath(localPath);
   settings.SetMaster(nonAsciiEsp);
 
-  EXPECT_TRUE(settings.IsInstalled());
+  EXPECT_TRUE(settings.FindGamePath().has_value());
 }
 
-TEST_P(GameSettingsTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
+TEST_P(GameSettingsTest, findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATime) {
   auto currentPath = std::filesystem::current_path();
 
   std::filesystem::create_directory(dataPath / ".." / "LOOT");
@@ -217,10 +217,10 @@ TEST_P(GameSettingsTest, isInstalledShouldBeTrueForOnlyOneSiblingGameAtATime) {
   };
   for (int i = 0; i < 6; ++i) {
     if (gameTypes[i] == GetParam()) {
-      EXPECT_TRUE(GameSettings(gameTypes[i]).IsInstalled());
+      EXPECT_TRUE(GameSettings(gameTypes[i]).FindGamePath().has_value());
     }
     else {
-      EXPECT_FALSE(GameSettings(gameTypes[i]).IsInstalled());
+      EXPECT_FALSE(GameSettings(gameTypes[i]).FindGamePath().has_value());
     }
   }
 

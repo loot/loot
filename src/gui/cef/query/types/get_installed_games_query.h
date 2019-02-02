@@ -48,7 +48,7 @@ public:
 private:
   std::string getInstalledGamesAsJson() const {
     nlohmann::json json;
-    json["installedGames"] = state_.getInstalledGames();
+    json["installedGames"] = state_.GetInstalledGameFolderNames();
 
     return json.dump();
   }

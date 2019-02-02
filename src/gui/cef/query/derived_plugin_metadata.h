@@ -39,16 +39,16 @@ public:
                         const std::shared_ptr<const PluginInterface>& file) :
       name(file->GetName()),
       version(file->GetVersion()),
-      isActive(state.getCurrentGame().IsPluginActive(file->GetName())),
+      isActive(state.GetCurrentGame().IsPluginActive(file->GetName())),
       isDirty(false),
       isEmpty(file->IsEmpty()),
       isMaster(file->IsMaster()),
       isLightMaster(file->IsLightMaster()),
       loadsArchive(file->LoadsArchive()),
       crc(file->GetCRC()),
-      loadOrderIndex(state.getCurrentGame().GetActiveLoadOrderIndex(
+      loadOrderIndex(state.GetCurrentGame().GetActiveLoadOrderIndex(
           file,
-          state.getCurrentGame().GetLoadOrder())),
+          state.GetCurrentGame().GetLoadOrder())),
       currentTags(file->GetBashTags()),
       language(state.getLanguage()) {}
 

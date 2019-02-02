@@ -33,7 +33,7 @@ class UpdateMasterlistQuery : public MetadataQuery {
 public:
   UpdateMasterlistQuery(LootState& state) :
       MetadataQuery(state),
-      game_(state.getCurrentGame()) {}
+      game_(state.GetCurrentGame()) {}
 
   std::string executeLogic() {
     auto logger = getLogger();

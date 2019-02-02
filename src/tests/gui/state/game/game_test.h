@@ -66,6 +66,12 @@ protected:
 
   void TearDown() { CommonGameTestFixture::TearDown(); }
 
+  Game CreateInitialisedGame(const std::filesystem::path& lootDataPath) {
+    Game game(defaultGameSettings, lootDataPath);
+    game.Init();
+    return game;
+  }
+
   std::vector<std::string> loadOrderToSet_;
   const std::string loadOrderBackupFile0;
   const std::string loadOrderBackupFile1;
@@ -112,27 +118,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
 }
 
-#ifndef _WIN32
-// Testing on Windows will find real game installs in the Registry, so cannot
-// test autodetection fully unless on Linux.
-TEST_P(GameTest, constructingShouldThrowOnLinuxIfGamePathIsNotGiven) {
-  EXPECT_THROW(Game(GameSettings(GetParam()).SetGameLocalPath(localPath), ""),
-               GameDetectionError);
-}
-
-TEST_P(GameTest, constructingShouldThrowOnLinuxIfLocalPathIsNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
-  EXPECT_THROW(Game(settings, lootDataPath), std::system_error);
-}
-#else
-TEST_P(GameTest, constructingShouldNotThrowOnWindowsIfLocalPathIsNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
-  EXPECT_NO_THROW(Game(settings, lootDataPath));
-}
-#endif
-
 TEST_P(GameTest, copyConstructorShouldCopyGameData) {
-  Game game1(defaultGameSettings, lootDataPath);
+  Game game1 = CreateInitialisedGame(lootDataPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2(game1);
@@ -143,7 +130,7 @@ TEST_P(GameTest, copyConstructorShouldCopyGameData) {
 }
 
 TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
-  Game game1(defaultGameSettings, lootDataPath);
+  Game game1 = CreateInitialisedGame(lootDataPath);
   game1.AppendMessage(Message(MessageType::say, "1"));
 
   Game game2 = game1;
@@ -152,6 +139,28 @@ TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
   EXPECT_EQ(game1.ArePluginsFullyLoaded(), game2.ArePluginsFullyLoaded());
   EXPECT_EQ(game1.GetMessages(), game2.GetMessages());
 }
+
+#ifndef _WIN32
+// Testing on Windows will find real game installs in the Registry, so cannot
+// test autodetection fully unless on Linux.
+TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathWasNotGiven) {
+  auto settings = GameSettings(GetParam()).SetGameLocalPath(localPath);
+  Game game(settings, "");
+  EXPECT_THROW(game.Init(), std::invalid_argument);
+}
+
+TEST_P(GameTest, initShouldThrowOnLinuxWasLocalPathIsNotGiven) {
+  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  Game game(settings, lootDataPath);
+  EXPECT_THROW(game.Init(), std::system_error);
+}
+#else
+TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
+  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  Game game(settings, lootDataPath);
+  EXPECT_NO_THROW(game.Init());
+}
+#endif
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   using std::filesystem::u8path;
@@ -196,7 +205,7 @@ TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -220,7 +229,7 @@ TEST_P(GameTest,
   ASSERT_NO_THROW(std::filesystem::rename(
       dataPath / blankEsp, dataPath / u8path(u8"nonAsc\u00EDi.esp.ghost")));
 
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -236,7 +245,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     checkInstallValidityShouldUseDisplayNamesInRequirementMessagesIfPresent) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -256,7 +265,7 @@ TEST_P(
 
 TEST_P(GameTest,
        checkInstallValidityShouldAddAMessageForActiveIncompatiblePlugins) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -277,7 +286,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     checkInstallValidityShouldShowAMessageForIncompatibleNonPluginFilesThatArePresent) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   std::string incompatibleFilename = "incompatible.txt";
@@ -302,7 +311,7 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldUseDisplayNamesInIncompatibilityMessagesIfPresent) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -321,7 +330,7 @@ TEST_P(
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
@@ -346,7 +355,7 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckIfAPluginsMastersAreAllPresentAndActiveIfNoFilterTagIsPresent) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
@@ -364,7 +373,7 @@ TEST_P(
 TEST_P(
     GameTest,
     checkInstallValidityShouldNotCheckIfAPluginsMastersAreAllActiveIfAFilterTagIsPresent) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
@@ -395,7 +404,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
   out.put(0xFF);
   out.close();
 
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(false);
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsl),
@@ -413,7 +422,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
 TEST_P(
     GameTest,
     checkInstallValidityShouldCheckThatAPluginHeaderVersionIsNotLessThanTheMinimum) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.SetMinimumHeaderVersion(5.1f);
   game.LoadAllInstalledPlugins(false);
 
@@ -440,7 +449,7 @@ TEST_P(
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
   using std::filesystem::u8path;
 
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -478,7 +487,7 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyTrueShouldLoadTheHeadersOfAllInstalledPlugins) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(true));
@@ -496,7 +505,7 @@ TEST_P(
 TEST_P(
     GameTest,
     loadAllInstalledPluginsWithHeadersOnlyFalseShouldFullyLoadAllInstalledPlugins) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
@@ -513,7 +522,7 @@ TEST_P(
 
 TEST_P(GameTest,
        loadAllInstalledPluginsShouldNotGenerateWarningsForGhostedPlugins) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
   ASSERT_NO_THROW(game.Init());
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
@@ -524,13 +533,13 @@ TEST_P(GameTest,
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
 
   EXPECT_FALSE(game.ArePluginsFullyLoaded());
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(true));
 
@@ -538,7 +547,7 @@ TEST_P(GameTest, pluginsShouldNotBeFullyLoadedAfterLoadingHeadersOnly) {
 }
 
 TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
-  Game game(defaultGameSettings, "");
+  Game game = CreateInitialisedGame("");
 
   ASSERT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
@@ -730,14 +739,14 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 }
 
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
 
   ASSERT_EQ(1, game.GetMessages().size());
 }
 
 TEST_P(GameTest,
        incrementLoadOrderSortCountShouldSupressTheDefaultCachedMessage) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
   game.IncrementLoadOrderSortCount();
 
   EXPECT_TRUE(game.GetMessages().empty());
@@ -745,7 +754,7 @@ TEST_P(GameTest,
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
@@ -756,7 +765,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.DecrementLoadOrderSortCount();
 
@@ -766,7 +775,7 @@ TEST_P(
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
   auto expectedMessages = game.GetMessages();
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
@@ -776,7 +785,7 @@ TEST_P(
 }
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
   std::vector<Message> messages({
       Message(MessageType::say, "1"),
       Message(MessageType::error, "2"),
@@ -789,7 +798,7 @@ TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
-  Game game(defaultGameSettings, lootDataPath);
+  Game game = CreateInitialisedGame(lootDataPath);
   std::vector<Message> messages({
       Message(MessageType::say, "1"),
       Message(MessageType::error, "2"),

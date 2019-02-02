@@ -55,12 +55,12 @@ private:
   void writePluginLine(std::ostream& stream,
                        const std::string& pluginName,
                        Counters& counters) {
-    auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+    auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
     if (!plugin) {
       return;
     }
 
-    auto isActive = state_.getCurrentGame().IsPluginActive(pluginName);
+    auto isActive = state_.GetCurrentGame().IsPluginActive(pluginName);
 
     if (isActive && plugin->IsLightMaster()) {
       stream << "254 FE " << std::setw(3) << std::hex

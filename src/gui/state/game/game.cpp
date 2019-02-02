@@ -76,17 +76,7 @@ Game::Game(const GameSettings& gameSettings,
     GameSettings(gameSettings),
     lootDataPath_(lootDataPath),
     pluginsFullyLoaded_(false),
-    loadOrderSortCount_(0) {
-  auto gamePath = FindGamePath();
-  if (gamePath.has_value()) {
-    SetGamePath(gamePath.value());
-  } else {
-    throw GameDetectionError("Game path could not be detected.");
-  }
-
-  gameHandle_ = CreateGameHandle(Type(), GamePath(), GameLocalPath());
-  gameHandle_->IdentifyMainMasterFile(Master());
-}
+    loadOrderSortCount_(0) {}
 
 Game::Game(const Game& game) :
     GameSettings(game),
@@ -115,6 +105,14 @@ void Game::Init() {
   if (logger) {
     logger->info("Initialising filesystem-related data for game: {}", Name());
   }
+
+  // Reset data that is dependent on the libloot game handle.
+  messages_.clear();
+  loadOrderSortCount_ = 0;
+  pluginsFullyLoaded_ = false;
+
+  gameHandle_ = CreateGameHandle(Type(), GamePath(), GameLocalPath());
+  gameHandle_->IdentifyMainMasterFile(Master());
 
   if (!lootDataPath_.empty()) {
     // Make sure that the LOOT game path exists.

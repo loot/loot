@@ -39,7 +39,7 @@ protected:
   MetadataQuery(LootState& state) : state_(state), logger_(getLogger()) {}
 
   std::vector<SimpleMessage> getGeneralMessages() const {
-    std::vector<Message> messages = state_.getCurrentGame().GetMessages();
+    std::vector<Message> messages = state_.GetCurrentGame().GetMessages();
 
     return toSimpleMessages(messages, state_.getLanguage());
   }
@@ -48,7 +48,7 @@ protected:
       const std::shared_ptr<const PluginInterface>& file) {
     auto fileBashTags = file->GetBashTags();
     auto masterlistMetadata =
-      state_.getCurrentGame().GetMasterlistMetadata(file->GetName());
+      state_.GetCurrentGame().GetMasterlistMetadata(file->GetName());
 
     if (fileBashTags.empty()) {
       return masterlistMetadata;
@@ -65,7 +65,7 @@ protected:
   }
 
   std::optional<DerivedPluginMetadata> generateDerivedMetadata(const std::string& pluginName) {
-    auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+    auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
     if (plugin) {
       return generateDerivedMetadata(plugin);
     }
@@ -83,7 +83,7 @@ protected:
     }
 
     auto userMetadata =
-        state_.getCurrentGame().GetUserMetadata(plugin->GetName());
+        state_.GetCurrentGame().GetUserMetadata(plugin->GetName());
     if (userMetadata.has_value()) {
       derived.setUserMetadata(userMetadata.value());
     }
@@ -92,7 +92,7 @@ protected:
     if (evaluatedMetadata.has_value()) {
       auto messages = evaluatedMetadata.value().GetMessages();
       auto validityMessages =
-        state_.getCurrentGame().CheckInstallValidity(plugin, evaluatedMetadata.value());
+        state_.GetCurrentGame().CheckInstallValidity(plugin, evaluatedMetadata.value());
       messages.insert(
         end(messages), begin(validityMessages), end(validityMessages));
       evaluatedMetadata.value().SetMessages(messages);
@@ -116,13 +116,13 @@ protected:
   std::string generateJsonResponse(InputIterator firstPlugin,
                                    InputIterator lastPlugin) {
     nlohmann::json json = {
-      { "folder", state_.getCurrentGame().FolderName() },
+      { "folder", state_.GetCurrentGame().FolderName() },
       { "masterlist", getMasterlistInfo() },
       { "generalMessages", getGeneralMessages() },
-      { "bashTags", state_.getCurrentGame().GetKnownBashTags() },
+      { "bashTags", state_.GetCurrentGame().GetKnownBashTags() },
       { "groups", {
-          { "masterlist", state_.getCurrentGame().GetMasterlistGroups() },
-          { "userlist", state_.getCurrentGame().GetUserGroups() },
+          { "masterlist", state_.GetCurrentGame().GetMasterlistGroups() },
+          { "userlist", state_.GetCurrentGame().GetUserGroups() },
         }
       },
       { "plugins", nlohmann::json::array() },
@@ -171,7 +171,7 @@ private:
 
   std::optional<PluginMetadata> evaluateMasterlistMetadata(const std::string& pluginName) {
     try {
-      return state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
+      return state_.GetCurrentGame().GetMasterlistMetadata(pluginName, true);
     } catch (std::exception& e) {
       if (logger_) {
         logger_->error("\"{}\"'s masterlist metadata contains a condition that "
@@ -196,7 +196,7 @@ private:
 
   std::optional<PluginMetadata> evaluateUserlistMetadata(const std::string& pluginName) {
     try {
-      return state_.getCurrentGame().GetUserMetadata(pluginName, true);
+      return state_.GetCurrentGame().GetUserMetadata(pluginName, true);
     } catch (std::exception& e) {
       if (logger_) {
         logger_->error("\"{}\"'s user metadata contains a condition that could "
@@ -223,19 +223,19 @@ private:
 
     MasterlistInfo info;
     try {
-      info = state_.getCurrentGame().GetMasterlistInfo();
+      info = state_.GetCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
     } catch (FileAccessError&) {
       if (logger_) {
         logger_->warn("No masterlist present at {}",
-          state_.getCurrentGame().MasterlistPath().u8string());
+          state_.GetCurrentGame().MasterlistPath().u8string());
       }
       info.revision_id = translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError&) {
       if (logger_) {
         logger_->warn("Not a Git repository: {}",
-          state_.getCurrentGame().MasterlistPath().parent_path().u8string());
+          state_.GetCurrentGame().MasterlistPath().parent_path().u8string());
       }
       info.revision_id = translate("Unknown: Git repository missing").str();
       info.revision_date = translate("Unknown: Git repository missing").str();

@@ -25,12 +25,12 @@
 #ifndef LOOT_GUI_STATE_LOOT_STATE
 #define LOOT_GUI_STATE_LOOT_STATE
 
-#include "gui/state/game/game.h"
+#include "gui/state/game/games_manager.h"
 #include "gui/state/loot_settings.h"
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public LootSettings, public UnappliedChangeCounter {
+class LootState : public LootSettings, public UnappliedChangeCounter, public GamesManager {
 public:
   LootState();
 
@@ -39,25 +39,17 @@ public:
 
   void save(const std::filesystem::path& file);
 
-  gui::Game& getCurrentGame();
-  void changeGame(const std::string& newGameFolder);
-
-  // Get the folder names of the installed games.
-  std::vector<std::string> getInstalledGames() const;
-
   bool shouldAutoSort() const;
 
-  void storeGameSettings(const std::vector<GameSettings>& gameSettings);
+  void storeGameSettings(std::vector<GameSettings> gameSettings);
 
 private:
-  // Select initial game.
-  void selectGame(std::string cmdLineGame);
-  void updateStoredGamePathSetting(const gui::Game& game);
+  std::optional<std::filesystem::path> FindGamePath(const GameSettings& gameSettings) const;
+  void InitialiseGameData(gui::Game& game);
 
-  std::list<gui::Game> installedGames_;
-  std::list<gui::Game>::iterator currentGame_;
+  void SetInitialGame(std::string cmdLineGame);
+
   std::vector<std::string> initErrors_;
-
   bool autoSort_;
 
   // Mutex used to protect access to member variables.

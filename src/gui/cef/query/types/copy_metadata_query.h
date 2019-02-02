@@ -45,12 +45,12 @@ public:
     PluginMetadata metadata(pluginName_);
 
     auto masterlistMetadata =
-      state_.getCurrentGame().GetMasterlistMetadata(pluginName_);
+      state_.GetCurrentGame().GetMasterlistMetadata(pluginName_);
     if (masterlistMetadata.has_value()) {
       metadata.MergeMetadata(masterlistMetadata.value());
     }
 
-    auto userMetadata = state_.getCurrentGame().GetUserMetadata(pluginName_);
+    auto userMetadata = state_.GetCurrentGame().GetUserMetadata(pluginName_);
     if (userMetadata.has_value()) {
       metadata.MergeMetadata(userMetadata.value());
     }

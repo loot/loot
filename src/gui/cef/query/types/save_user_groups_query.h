@@ -41,12 +41,12 @@ public:
       logger->trace("Setting user groups.");
     }
 
-    state_.getCurrentGame().SetUserGroups(groups_);
-    state_.getCurrentGame().SaveUserMetadata();
+    state_.GetCurrentGame().SetUserGroups(groups_);
+    state_.GetCurrentGame().SaveUserMetadata();
 
     nlohmann::json json = {
-      { "masterlist", state_.getCurrentGame().GetMasterlistGroups() },
-      { "userlist", state_.getCurrentGame().GetUserGroups() },
+      { "masterlist", state_.GetCurrentGame().GetMasterlistGroups() },
+      { "userlist", state_.GetCurrentGame().GetUserGroups() },
     };
     return json.dump();
   }

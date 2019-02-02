@@ -34,7 +34,7 @@ public:
   RedatePluginsQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    state_.getCurrentGame().RedatePlugins();
+    state_.GetCurrentGame().RedatePlugins();
     return "";
   }
 

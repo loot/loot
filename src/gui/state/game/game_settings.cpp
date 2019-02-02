@@ -109,8 +109,6 @@ bool GameSettings::IsRepoBranchOldDefault() const {
   return oldDefaultBranches.count(repositoryBranch_) == 1;
 }
 
-bool GameSettings::IsInstalled() const { return FindGamePath().has_value(); }
-
 bool GameSettings::operator==(const GameSettings& rhs) const {
   using boost::locale::to_lower;
   return to_lower(name_) == to_lower(rhs.Name()) ||

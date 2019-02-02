@@ -34,7 +34,7 @@ class GetConflictingPluginsQuery : public MetadataQuery {
 public:
   GetConflictingPluginsQuery(LootState& state, const std::string& pluginName) :
       MetadataQuery(state),
-      game_(state.getCurrentGame()),
+      game_(state.GetCurrentGame()),
       pluginName_(pluginName) {}
 
   std::string executeLogic() {

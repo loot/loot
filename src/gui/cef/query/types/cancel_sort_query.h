@@ -36,21 +36,21 @@ public:
 
   std::string executeLogic() {
     state_.DecrementUnappliedChangeCounter();
-    state_.getCurrentGame().DecrementLoadOrderSortCount();
+    state_.GetCurrentGame().DecrementLoadOrderSortCount();
 
     nlohmann::json json = {
         {"plugins", nlohmann::json::array()},
         {"generalMessages", getGeneralMessages()},
     };
 
-    std::vector<std::string> loadOrder = state_.getCurrentGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = state_.GetCurrentGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      auto plugin = state_.getCurrentGame().GetPlugin(pluginName);
+      auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
-      auto loadOrderIndex = state_.getCurrentGame().GetActiveLoadOrderIndex(
+      auto loadOrderIndex = state_.GetCurrentGame().GetActiveLoadOrderIndex(
           plugin, loadOrder);
 
       nlohmann::json pluginJson = { {"name", pluginName} };

@@ -60,12 +60,12 @@ private:
       logger->trace("Getting non-user metadata for: {}", metadata_.GetName());
     }
 
-    auto plugin = state_.getCurrentGame().GetPlugin(metadata_.GetName());
+    auto plugin = state_.GetCurrentGame().GetPlugin(metadata_.GetName());
     if (plugin) {
       return MetadataQuery::getNonUserMetadata(plugin);
     }
 
-    return state_.getCurrentGame().GetMasterlistMetadata(metadata_.GetName());
+    return state_.GetCurrentGame().GetMasterlistMetadata(metadata_.GetName());
   }
 
   PluginMetadata getUserMetadata() {
@@ -103,18 +103,18 @@ private:
     if (logger) {
       logger->trace("Erasing the existing userlist entry.");
     }
-    state_.getCurrentGame().ClearUserMetadata(metadata_.GetName());
+    state_.GetCurrentGame().ClearUserMetadata(metadata_.GetName());
 
     // Add a new userlist entry if necessary.
     if (!userMetadata.HasNameOnly()) {
       if (logger) {
         logger->trace("Adding new metadata to new userlist entry.");
       }
-      state_.getCurrentGame().AddUserMetadata(userMetadata);
+      state_.GetCurrentGame().AddUserMetadata(userMetadata);
     }
 
     // Save edited userlist.
-    state_.getCurrentGame().SaveUserMetadata();
+    state_.GetCurrentGame().SaveUserMetadata();
   }
 
   LootState& state_;
