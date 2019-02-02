@@ -62,7 +62,6 @@ private:
   void updateStoredGamePathSetting(const gui::Game& game);
 
   std::shared_ptr<spdlog::logger> logger_;
-  std::string gameAppDataPath;
   std::list<gui::Game> installedGames_;
   std::list<gui::Game>::iterator currentGame_;
   std::vector<std::string> initErrors_;
