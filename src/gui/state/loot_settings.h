@@ -48,7 +48,8 @@ public:
 
   LootSettings();
 
-  void load(const std::filesystem::path& file);
+  void load(const std::filesystem::path& file,
+            const std::filesystem::path& lootDataPath);
   void save(const std::filesystem::path& file);
 
   bool isDebugLoggingEnabled() const;

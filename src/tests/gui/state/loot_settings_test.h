@@ -163,7 +163,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "hideCRCs = true" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.updateMasterlist());
@@ -195,7 +195,7 @@ TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
     << "minimumHeaderVersion = 1.0" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   ASSERT_EQ(8, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
@@ -210,7 +210,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
       << "game = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(unicodeSettingsFile_);
+  settings_.load(unicodeSettingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_TRUE(settings_.updateMasterlist());
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
@@ -228,7 +228,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
     << u8"local_path = \"non\u00C1sciiGameLocalPath\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   ASSERT_EQ(8, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
@@ -247,7 +247,7 @@ TEST_P(LootSettingsTest,
       << "branch = \"v0.7\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
   EXPECT_NE("v0.7", settings_.getGameSettings()[0].RepoBranch());
@@ -268,7 +268,7 @@ TEST_P(
       << "branch = \"foo\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
 }
@@ -285,7 +285,7 @@ TEST_P(LootSettingsTest,
       << "branch = \"v0.7\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_EQ("v0.7", settings_.getGameSettings()[0].RepoBranch());
 }
@@ -299,7 +299,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
       << "folder = \"SkyrimSE\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_EQ(GameType::tes5se, settings_.getGameSettings()[0].Type());
   EXPECT_EQ("Skyrim Special Edition",
@@ -316,7 +316,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
       << "branch = \"foo\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   GameSettings testGame = GameSettings(GameType::tes4, "Test")
                               .SetName("Game Name")
@@ -350,7 +350,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
       << "folder = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
@@ -360,7 +360,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
   out << "[filters]" << std::endl << "contentFilter = \"foo\"" << std::endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_TRUE(settings_.getFilters().empty());
 }
@@ -400,7 +400,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.save(settingsFile_);
 
   LootSettings settings;
-  settings.load(settingsFile_);
+  settings.load(settingsFile_, LootPaths::getLootDataPath());
 
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
   EXPECT_TRUE(settings.updateMasterlist());
@@ -515,7 +515,7 @@ TEST_P(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   out << "lastVersion = \"0.7.1\"" << std::endl;
   out.close();
 
-  settings_.load(settingsFile_);
+  settings_.load(settingsFile_, LootPaths::getLootDataPath());
   settings_.updateLastVersion();
 
   EXPECT_EQ(currentVersion, settings_.getLastVersion());

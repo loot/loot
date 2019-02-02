@@ -39,7 +39,7 @@ using std::recursive_mutex;
 using std::string;
 
 namespace loot {
-GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
+GameSettings convert(const std::shared_ptr<cpptoml::table>& table, const std::filesystem::path& lootDataPath) {
   GameSettings game;
 
   auto type = table->get_as<std::string>("type");
@@ -57,11 +57,9 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
         GameSettings(GameType::tes5se).FolderName());
     folder = type;
 
-    auto path = LootPaths::getLootDataPath() / "SkyrimSE";
+    auto path = lootDataPath / "SkyrimSE";
     if (std::filesystem::exists(path)) {
-      std::filesystem::rename(
-          path,
-          LootPaths::getLootDataPath() / u8path(*folder));
+      std::filesystem::rename(path, lootDataPath / u8path(*folder));
     }
   }
 
@@ -165,7 +163,8 @@ LootSettings::LootSettings() :
     language_("en"),
     lastGame_("auto") {}
 
-void LootSettings::load(const std::filesystem::path& file) {
+void LootSettings::load(const std::filesystem::path& file,
+                        const std::filesystem::path& lootDataPath) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   // Don't use cpptoml::parse_file() as it just uses a std stream,
@@ -209,7 +208,7 @@ void LootSettings::load(const std::filesystem::path& file) {
 
     for (const auto& game : *games) {
       try {
-        gameSettings_.push_back(convert(game));
+        gameSettings_.push_back(convert(game, lootDataPath));
       } catch (...) {
         // Skip invalid games.
       }

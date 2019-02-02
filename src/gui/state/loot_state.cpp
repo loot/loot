@@ -122,7 +122,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   }
   if (fs::exists(LootPaths::getSettingsPath())) {
     try {
-      LootSettings::load(LootPaths::getSettingsPath());
+      LootSettings::load(LootPaths::getSettingsPath(), LootPaths::getLootDataPath());
     } catch (exception& e) {
       initErrors_.push_back(
           (format(translate("Error: Settings parsing failed. %1%")) % e.what())
