@@ -31,6 +31,7 @@
 
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
+#include "gui/state/logging.h"
 
 using std::filesystem::u8path;
 using std::lock_guard;
@@ -368,6 +369,7 @@ void LootSettings::enableDebugLogging(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   enableDebugLogging_ = enable;
+  loot::enableDebugLogging(enable);
 }
 
 void LootSettings::updateMasterlist(bool update) {

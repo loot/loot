@@ -54,7 +54,6 @@ public:
   void incrementUnappliedChangeCounter();
   void decrementUnappliedChangeCounter();
 
-  void enableDebugLogging(bool enable);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
 
   std::shared_ptr<spdlog::logger> getLogger() const;

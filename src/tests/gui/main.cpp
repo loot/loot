@@ -23,6 +23,8 @@
     */
 
 #include <boost/locale.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/null_sink.h>
 
 #include "tests/gui/cef/query/json_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
@@ -36,6 +38,9 @@ int main(int argc, char **argv) {
   // Set the locale to get encoding conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   loot::InitialiseLocale("");
+
+  // Set the logger to use a null sink.
+  spdlog::create<spdlog::sinks::null_sink_st>("loot_logger");
 
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

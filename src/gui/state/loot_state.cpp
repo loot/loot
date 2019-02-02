@@ -134,18 +134,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
 
   // Set up logging.
   fs::remove(LootPaths::getLogPath());
-  spdlog::set_pattern("[%T.%f] [%l]: %v");
-  logger_ = spdlog::basic_logger_mt(LOGGER_NAME,
-#if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
-                                    LootPaths::getLogPath().wstring());
-#else
-                                    LootPaths::getLogPath().u8string());
-#endif
-  if (!logger_) {
-    initErrors_.push_back(
-        translate("Error: Could not initialise logging.").str());
-  }
-  logger_->flush_on(spdlog::level::trace);
+  setLogPath(LootPaths::getLogPath());
   SetLoggingCallback(apiLogCallback);
   enableDebugLogging(isDebugLoggingEnabled());
 
@@ -314,19 +303,6 @@ void LootState::selectGame(std::string preferredGame) {
   // If no game can be selected, throw an exception.
   if (currentGame_ == end(installedGames_)) {
     throw GameDetectionError("None of the supported games were detected.");
-  }
-}
-
-void LootState::enableDebugLogging(bool enable) {
-  lock_guard<mutex> guard(mutex_);
-
-  LootSettings::enableDebugLogging(enable);
-  if (enable) {
-    if (logger_) {
-      logger_->set_level(spdlog::level::level_enum::trace);
-    }
-  } else if (logger_) {
-    logger_->set_level(spdlog::level::level_enum::warn);
   }
 }
 
