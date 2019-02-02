@@ -39,7 +39,7 @@ public:
     try {
       metadata_ = editorState.at("metadata");
     } catch (...) {
-      state_.decrementUnappliedChangeCounter();
+      state_.DecrementUnappliedChangeCounter();
       throw;
     }
   }
@@ -48,7 +48,7 @@ public:
     if (applyEdits_) {
       applyUserEdits();
     }
-    state_.decrementUnappliedChangeCounter();
+    state_.DecrementUnappliedChangeCounter();
 
     return generateJsonResponse(metadata_.GetName());
   }

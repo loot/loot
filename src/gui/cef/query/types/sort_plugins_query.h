@@ -66,7 +66,7 @@ public:
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty())
-      state_.incrementUnappliedChangeCounter();
+      state_.IncrementUnappliedChangeCounter();
 
     return json;
   }

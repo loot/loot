@@ -87,7 +87,6 @@ void apiLogCallback(LogLevel level, const char* message) {
 }
 
 LootState::LootState() :
-    unappliedChangeCounter_(0),
     autoSort_(false),
     currentGame_(installedGames_.end()) {}
 
@@ -269,17 +268,6 @@ std::vector<std::string> LootState::getInstalledGames() const {
 }
 
 bool LootState::shouldAutoSort() const { return autoSort_; }
-
-bool LootState::hasUnappliedChanges() const {
-  return unappliedChangeCounter_ > 0;
-}
-
-void LootState::incrementUnappliedChangeCounter() { ++unappliedChangeCounter_; }
-
-void LootState::decrementUnappliedChangeCounter() {
-  if (unappliedChangeCounter_ > 0)
-    --unappliedChangeCounter_;
-}
 
 void LootState::selectGame(std::string preferredGame) {
   if (preferredGame.empty()) {

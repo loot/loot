@@ -221,6 +221,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/unapplied_change_counter.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
@@ -247,7 +248,7 @@ set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
-                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_state_test.h")
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h")
 
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})

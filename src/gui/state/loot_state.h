@@ -32,9 +32,10 @@
 
 #include "gui/state/game/game.h"
 #include "gui/state/loot_settings.h"
+#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public LootSettings {
+class LootState : public LootSettings, public UnappliedChangeCounter {
 public:
   LootState();
 
@@ -50,9 +51,6 @@ public:
   std::vector<std::string> getInstalledGames() const;
 
   bool shouldAutoSort() const;
-  bool hasUnappliedChanges() const;
-  void incrementUnappliedChangeCounter();
-  void decrementUnappliedChangeCounter();
 
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
 
@@ -69,8 +67,6 @@ private:
   std::list<gui::Game>::iterator currentGame_;
   std::vector<std::string> initErrors_;
 
-  // Used to check if LOOT has unaccepted sorting or metadata changes on quit.
-  size_t unappliedChangeCounter_;
   bool autoSort_;
 
   // Mutex used to protect access to member variables.

@@ -41,7 +41,7 @@ public:
     }
     try {
       state_.getCurrentGame().SetLoadOrder(plugins_);
-      state_.decrementUnappliedChangeCounter();
+      state_.DecrementUnappliedChangeCounter();
     }
     catch (...) {
       setSortingErrorMessage(state_);

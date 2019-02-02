@@ -34,8 +34,8 @@ public:
   DiscardUnappliedChangesQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    while (state_.hasUnappliedChanges())
-      state_.decrementUnappliedChangeCounter();
+    while (state_.HasUnappliedChanges())
+      state_.DecrementUnappliedChangeCounter();
 
     return "";
   }

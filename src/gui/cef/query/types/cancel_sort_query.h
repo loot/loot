@@ -35,7 +35,7 @@ public:
   CancelSortQuery(LootState& state) : MetadataQuery(state), state_(state) {}
 
   std::string executeLogic() {
-    state_.decrementUnappliedChangeCounter();
+    state_.DecrementUnappliedChangeCounter();
     state_.getCurrentGame().DecrementLoadOrderSortCount();
 
     nlohmann::json json = {

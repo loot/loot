@@ -34,7 +34,7 @@ public:
   EditorOpenedQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    state_.incrementUnappliedChangeCounter();
+    state_.IncrementUnappliedChangeCounter();
     return "";
   }
 

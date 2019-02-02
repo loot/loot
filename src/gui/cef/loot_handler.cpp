@@ -117,7 +117,7 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   assert(CefCurrentlyOn(TID_UI));
 
   // Check if unapplied changes exist.
-  if (lootState_.hasUnappliedChanges()) {
+  if (lootState_.HasUnappliedChanges()) {
     browser->GetMainFrame()->ExecuteJavaScript(
         "loot.onQuit();", browser->GetMainFrame()->GetURL(), 0);
     return true;

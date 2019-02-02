@@ -32,7 +32,7 @@
 #include "tests/gui/state/game/helpers_test.h"
 #include "tests/gui/state/loot_paths_test.h"
 #include "tests/gui/state/loot_settings_test.h"
-#include "tests/gui/state/loot_state_test.h"
+#include "tests/gui/state/unapplied_change_counter_test.h"
 
 int main(int argc, char **argv) {
   // Set the locale to get encoding conversions working correctly.
