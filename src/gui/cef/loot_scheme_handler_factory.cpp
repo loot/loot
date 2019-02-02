@@ -41,6 +41,9 @@ namespace loot {
 // LootSchemeHandlerFactory
 ///////////////////////////////
 
+LootSchemeHandlerFactory::LootSchemeHandlerFactory(
+  std::filesystem::path resourcesPath) : resourcesPath_(resourcesPath) {}
+
 CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
@@ -78,7 +81,7 @@ std::filesystem::path LootSchemeHandlerFactory::GetPath(const CefString& url) co
   // Trim the leading slash from urlPath so the full path gets built correctly.
   auto urlPath = CefString(&urlParts.path).ToString().substr(1);
 
-  return LootPaths::getResourcesPath() / u8path(urlPath);
+  return resourcesPath_ / u8path(urlPath);
 }
 
 std::string LootSchemeHandlerFactory::GetMimeType(

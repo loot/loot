@@ -48,7 +48,10 @@ class LootApp : public CefApp,
                 public CefBrowserProcessHandler,
                 public CefRenderProcessHandler {
 public:
+  LootApp(const CommandLineOptions& options);
   void Initialise(const CommandLineOptions& options);
+
+  std::filesystem::path getL10nPath() const;
 
   // Override CefApp methods.
   virtual void OnBeforeCommandLineProcessing(

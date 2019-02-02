@@ -34,7 +34,9 @@ along with LOOT.  If not, see
 namespace loot {
 class OpenReadmeQuery : public Query {
 public:
-  OpenReadmeQuery(const std::string& relativeFilePath) :
+  OpenReadmeQuery(const std::filesystem::path readmePath,
+    const std::string& relativeFilePath) :
+      readmePath_(readmePath),
       relativeFilePath_(relativeFilePath) {}
 
   std::string executeLogic() {
@@ -44,9 +46,9 @@ public:
     }
 
     auto canonicalPath = std::filesystem::canonical(
-        LootPaths::getReadmePath() / relativeFilePath_);
+        readmePath_ / relativeFilePath_);
     auto canonicalReadmePath =
-        std::filesystem::canonical(LootPaths::getReadmePath());
+        std::filesystem::canonical(readmePath_);
 
     if (!boost::starts_with(canonicalPath.u8string(),
                             canonicalReadmePath.u8string())) {
@@ -61,6 +63,7 @@ public:
   }
 
 private:
+  const std::filesystem::path readmePath_;
   const std::string relativeFilePath_;
 };
 }

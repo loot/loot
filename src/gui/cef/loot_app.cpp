@@ -76,10 +76,16 @@ CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
   }
 }
 
+LootApp::LootApp(const CommandLineOptions& options)
+  : lootState_(options.lootDataPath) {}
+
 void LootApp::Initialise(const CommandLineOptions& options) {
-  LootPaths::initialise(options.lootDataPath);
   lootState_.init(options.defaultGame, options.autoSort);
   url_ = options.url;
+}
+
+std::filesystem::path LootApp::getL10nPath() const {
+  return lootState_.getL10nPath();
 }
 
 void LootApp::OnBeforeCommandLineProcessing(
@@ -110,8 +116,8 @@ void LootApp::OnContextInitialized() {
   CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
 
   // Register the custom "loot" domain handler.
-  CefRegisterSchemeHandlerFactory(
-      "http", "loot", new LootSchemeHandlerFactory());
+  CefRegisterSchemeHandlerFactory("http", "loot",
+      new LootSchemeHandlerFactory(lootState_.getResourcesPath()));
 
   // Specify CEF browser settings here.
   CefBrowserSettings browser_settings;
@@ -124,7 +130,7 @@ void LootApp::OnContextInitialized() {
   }
   if (lootState_.getLanguage() != MessageContent::defaultLanguage) {
     boost::locale::generator gen;
-    gen.add_messages_path(LootPaths::getL10nPath().u8string());
+    gen.add_messages_path(lootState_.getL10nPath().u8string());
     gen.add_messages_domain("loot");
 
     if (logger) {

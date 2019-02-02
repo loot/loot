@@ -76,7 +76,7 @@ protected:
   }
 
   void setSortingErrorMessage(LootState& state) {
-    auto pluginsTxtPath = LootPaths::getLootDataPath().parent_path() /
+    auto pluginsTxtPath = state.getLootDataPath().parent_path() /
       state.GetCurrentGame().FolderName() /
       "plugins.txt";
 

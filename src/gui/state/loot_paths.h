@@ -30,23 +30,23 @@ along with LOOT.  If not, see
 namespace loot {
 class LootPaths {
 public:
-  static std::filesystem::path getReadmePath();
-  static std::filesystem::path getResourcesPath();
-  static std::filesystem::path getL10nPath();
-  static std::filesystem::path getLootDataPath();
-  static std::filesystem::path getSettingsPath();
-  static std::filesystem::path getLogPath();
-
   // Sets the app path to the current path, and the data path to the given
   // path or (if it is an empty string), local app data path / "LOOT".
-  static void initialise(const std::string& lootDataPath);
+  LootPaths(const std::string& lootDataPath);
+
+  std::filesystem::path getReadmePath() const;
+  std::filesystem::path getResourcesPath() const;
+  std::filesystem::path getL10nPath() const;
+  std::filesystem::path getLootDataPath() const;
+  std::filesystem::path getSettingsPath() const;
+  std::filesystem::path getLogPath() const;
 
 private:
   // Get the local application data path.
   static std::filesystem::path getLocalAppDataPath();
 
-  static std::filesystem::path lootAppPath_;
-  static std::filesystem::path lootDataPath_;
+  std::filesystem::path lootAppPath_;
+  std::filesystem::path lootDataPath_;
 };
 }
 

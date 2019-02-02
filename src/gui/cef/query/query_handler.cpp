@@ -149,9 +149,10 @@ CefRefPtr<Query> QueryHandler::createQuery(CefRefPtr<CefBrowser> browser,
   else if (name == "getVersion")
     return new GetVersionQuery();
   else if (name == "openLogLocation")
-    return new OpenLogLocationQuery();
+    return new OpenLogLocationQuery(lootState_.getLogPath());
   else if (name == "openReadme")
-    return new OpenReadmeQuery(json.at("relativeFilePath").get<std::string>());
+    return new OpenReadmeQuery(lootState_.getReadmePath(),
+      json.at("relativeFilePath").get<std::string>());
   else if (name == "redatePlugins")
     return new RedatePluginsQuery(lootState_);
   else if (name == "saveUserGroups")

@@ -79,29 +79,7 @@ std::filesystem::path getExecutableDirectory() {
 #endif
 }
 
-std::filesystem::path LootPaths::getReadmePath() {
-  return lootAppPath_ / "docs";
-}
-
-std::filesystem::path LootPaths::getResourcesPath() {
-  return lootAppPath_ / "resources";
-}
-
-std::filesystem::path LootPaths::getL10nPath() {
-  return getResourcesPath() / "l10n";
-}
-
-std::filesystem::path LootPaths::getLootDataPath() { return lootDataPath_; }
-
-std::filesystem::path LootPaths::getSettingsPath() {
-  return lootDataPath_ / "settings.toml";
-}
-
-std::filesystem::path LootPaths::getLogPath() {
-  return lootDataPath_ / "LOOTDebugLog.txt";
-}
-
-void LootPaths::initialise(const std::string& lootDataPath) {
+LootPaths::LootPaths(const std::string& lootDataPath) {
   // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   loot::InitialiseLocale("");
@@ -112,6 +90,28 @@ void LootPaths::initialise(const std::string& lootDataPath) {
     lootDataPath_ = lootDataPath;
   else
     lootDataPath_ = getLocalAppDataPath() / "LOOT";
+}
+
+std::filesystem::path LootPaths::getReadmePath() const {
+  return lootAppPath_ / "docs";
+}
+
+std::filesystem::path LootPaths::getResourcesPath() const {
+  return lootAppPath_ / "resources";
+}
+
+std::filesystem::path LootPaths::getL10nPath() const {
+  return getResourcesPath() / "l10n";
+}
+
+std::filesystem::path LootPaths::getLootDataPath() const { return lootDataPath_; }
+
+std::filesystem::path LootPaths::getSettingsPath() const {
+  return lootDataPath_ / "settings.toml";
+}
+
+std::filesystem::path LootPaths::getLogPath() const {
+  return lootDataPath_ / "LOOTDebugLog.txt";
 }
 
 std::filesystem::path LootPaths::getLocalAppDataPath() {
@@ -145,7 +145,4 @@ std::filesystem::path LootPaths::getLocalAppDataPath() {
   return getExecutableDirectory();
 #endif
 }
-
-std::filesystem::path LootPaths::lootAppPath_;
-std::filesystem::path LootPaths::lootDataPath_;
 }

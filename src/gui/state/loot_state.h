@@ -30,9 +30,9 @@
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public LootSettings, public UnappliedChangeCounter, public GamesManager {
+class LootState : public LootSettings, public UnappliedChangeCounter, public GamesManager, public LootPaths {
 public:
-  LootState();
+  LootState(const std::string& lootDataPath);
 
   void init(const std::string& cmdLineGame, bool autoSort);
   const std::vector<std::string>& getInitErrors() const;

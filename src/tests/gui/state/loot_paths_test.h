@@ -32,64 +32,64 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
   EXPECT_EQ(std::filesystem::current_path() / "docs",
-            LootPaths::getReadmePath());
+            paths.getReadmePath());
 }
 
 TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
   EXPECT_EQ(std::filesystem::current_path() / "resources",
-            LootPaths::getResourcesPath());
+            paths.getResourcesPath());
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
   EXPECT_EQ(std::filesystem::current_path() / "resources" / "l10n",
-            LootPaths::getL10nPath());
+            paths.getL10nPath());
 }
 
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
-  EXPECT_EQ(LootPaths::getLootDataPath() / "settings.toml",
-            LootPaths::getSettingsPath());
+  EXPECT_EQ(paths.getLootDataPath() / "settings.toml",
+            paths.getSettingsPath());
 }
 
 TEST(LootPaths, getLogPathShouldUseLootDataPath) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
-  EXPECT_EQ(LootPaths::getLootDataPath() / "LOOTDebugLog.txt",
-            LootPaths::getLogPath());
+  EXPECT_EQ(paths.getLootDataPath() / "LOOTDebugLog.txt",
+            paths.getLogPath());
 }
 
 TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
   EXPECT_EQ(std::filesystem::current_path(),
-            LootPaths::getReadmePath().parent_path());
+            paths.getReadmePath().parent_path());
 }
 
 TEST(
     LootPaths,
     initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
-  LootPaths::initialise("");
+  LootPaths paths("");
 
   // Can't actually know what the path should be, but we can check
   // its properties.
-  EXPECT_EQ("LOOT", LootPaths::getLootDataPath().filename());
-  EXPECT_FALSE(LootPaths::getLootDataPath().parent_path().empty());
+  EXPECT_EQ("LOOT", paths.getLootDataPath().filename());
+  EXPECT_FALSE(paths.getLootDataPath().parent_path().empty());
   EXPECT_TRUE(
-      std::filesystem::exists(LootPaths::getLootDataPath().parent_path()));
+      std::filesystem::exists(paths.getLootDataPath().parent_path()));
 }
 
 TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {
-  LootPaths::initialise("foo");
+  LootPaths paths("foo");
 
-  EXPECT_EQ("foo", LootPaths::getLootDataPath());
+  EXPECT_EQ("foo", paths.getLootDataPath());
 }
 }
 }

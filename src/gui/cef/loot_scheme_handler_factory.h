@@ -33,6 +33,8 @@ along with LOOT.  If not, see
 namespace loot {
 class LootSchemeHandlerFactory : public CefSchemeHandlerFactory {
 public:
+  LootSchemeHandlerFactory(std::filesystem::path resourcesPath);
+
   virtual CefRefPtr<CefResourceHandler> Create(
       CefRefPtr<CefBrowser> browser,
       CefRefPtr<CefFrame> frame,
@@ -43,6 +45,8 @@ private:
   std::filesystem::path GetPath(const CefString& url) const;
   std::string GetMimeType(const std::string& file) const;
   CefResponse::HeaderMap GetHeaders() const;
+
+  const std::filesystem::path resourcesPath_;
 
   IMPLEMENT_REFCOUNTING(LootSchemeHandlerFactory);
 };

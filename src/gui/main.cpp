@@ -33,7 +33,7 @@
 #include <include/base/cef_logging.h>
 #endif
 
-CefSettings GetCefSettings() {
+CefSettings GetCefSettings(std::filesystem::path l10nPath) {
   CefSettings cef_settings;
 
   // Enable CEF command line args.
@@ -44,7 +44,7 @@ CefSettings GetCefSettings() {
 
   // Load locale pack files from LOOT's l10n path.
   CefString(&cef_settings.locales_dir_path)
-      .FromString(loot::LootPaths::getL10nPath().u8string());
+      .FromString(l10nPath.u8string());
 
   return cef_settings;
 }
@@ -81,9 +81,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
   // Read command line arguments.
   CefMainArgs main_args(hInstance);
+  const auto cliOptions = loot::CommandLineOptions();
 
   // Create the process reference.
-  CefRefPtr<loot::LootApp> app(new loot::LootApp);
+  CefRefPtr<loot::LootApp> app(new loot::LootApp(cliOptions));
 
   // Run the process.
   int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
@@ -107,17 +108,14 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
   }
 
-  // Handle command line args (not CEF args)
-  //----------------------------------------
 
-  const auto cliOptions = loot::CommandLineOptions();
+  // Initialise the LOOT application.
   app.get()->Initialise(cliOptions);
-
   // Back to CEF
   //------------
 
   // Initialise CEF settings.
-  CefSettings cef_settings = GetCefSettings();
+  CefSettings cef_settings = GetCefSettings(app.get()->getL10nPath());
 
   // Initialize CEF.
   CefInitialize(main_args, cef_settings, app.get(), sandbox_info);
@@ -145,9 +143,10 @@ int main(int argc, char *argv[]) {
 
   // Read command line arguments.
   CefMainArgs main_args(argc, argv);
+  const auto cliOptions = loot::CommandLineOptions(argc, argv);
 
   // Create the process reference.
-  CefRefPtr<loot::LootApp> app(new loot::LootApp);
+  CefRefPtr<loot::LootApp> app(new loot::LootApp(cliOptions));
 
   // Run the process.
   int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
@@ -156,17 +155,14 @@ int main(int argc, char *argv[]) {
     return exit_code;
   }
 
-  // Handle command line args (not CEF args)
-  //----------------------------------------
-
-  const auto cliOptions = loot::CommandLineOptions(argc, argv);
+  // Initialise the LOOT application.
   app.get()->Initialise(cliOptions);
 
   // Back to CEF
   //------------
 
   // Initialise CEF settings.
-  CefSettings cef_settings = GetCefSettings();
+  CefSettings cef_settings = GetCefSettings(app.get()->getL10nPath());
 
   // Install xlib error handlers so that the application won't be terminated
   // on non-fatal errors.

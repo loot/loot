@@ -156,7 +156,7 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   lootState_.storeWindowPosition(position);
 
   try {
-    lootState_.save(LootPaths::getSettingsPath());
+    lootState_.save(lootState_.getSettingsPath());
   } catch (std::exception& e) {
     if (logger) {
       logger->error("Failed to save LOOT's settings. Error: {}", e.what());
