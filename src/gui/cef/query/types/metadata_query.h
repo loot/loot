@@ -36,7 +36,7 @@ along with LOOT.  If not, see
 namespace loot {
 class MetadataQuery : public Query {
 protected:
-  MetadataQuery(LootState& state) : state_(state) {}
+  MetadataQuery(LootState& state) : state_(state), logger_(getLogger()) {}
 
   std::vector<SimpleMessage> getGeneralMessages() const {
     std::vector<Message> messages = state_.getCurrentGame().GetMessages();
@@ -135,6 +135,8 @@ protected:
     return json.dump();
   }
 
+  std::shared_ptr<spdlog::logger> logger_;
+
 private:
   static std::vector<SimpleMessage> toSimpleMessages(
       const std::vector<Message>& messages,
@@ -171,9 +173,8 @@ private:
     try {
       return state_.getCurrentGame().GetMasterlistMetadata(pluginName, true);
     } catch (std::exception& e) {
-      auto logger = state_.getLogger();
-      if (logger) {
-        logger->error("\"{}\"'s masterlist metadata contains a condition that "
+      if (logger_) {
+        logger_->error("\"{}\"'s masterlist metadata contains a condition that "
                       "could not be evaluated. Details: {}",
                       pluginName,
                       e.what());
@@ -197,9 +198,8 @@ private:
     try {
       return state_.getCurrentGame().GetUserMetadata(pluginName, true);
     } catch (std::exception& e) {
-      auto logger = state_.getLogger();
-      if (logger) {
-        logger->error("\"{}\"'s user metadata contains a condition that could "
+      if (logger_) {
+        logger_->error("\"{}\"'s user metadata contains a condition that could "
                       "not be evaluated. Details: {}", pluginName, e.what());
       }
 
@@ -222,20 +222,19 @@ private:
     using boost::locale::translate;
 
     MasterlistInfo info;
-    auto logger = state_.getLogger();
     try {
       info = state_.getCurrentGame().GetMasterlistInfo();
       addSuffixIfModified(info);
     } catch (FileAccessError&) {
-      if (logger) {
-        logger->warn("No masterlist present at {}",
+      if (logger_) {
+        logger_->warn("No masterlist present at {}",
           state_.getCurrentGame().MasterlistPath().u8string());
       }
       info.revision_id = translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError&) {
-      if (logger) {
-        logger->warn("Not a Git repository: {}",
+      if (logger_) {
+        logger_->warn("Not a Git repository: {}",
           state_.getCurrentGame().MasterlistPath().parent_path().u8string());
       }
       info.revision_id = translate("Unknown: Git repository missing").str();

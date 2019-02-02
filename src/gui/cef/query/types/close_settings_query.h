@@ -38,7 +38,7 @@ public:
       settings_(settings) {}
 
   std::string executeLogic() {
-    auto logger = state_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->trace(
           "Settings dialog closed and changes accepted, updating "

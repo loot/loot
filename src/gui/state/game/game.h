@@ -113,7 +113,6 @@ private:
   void AppendMessages(std::vector<Message> messages);
 
   std::shared_ptr<GameInterface> gameHandle_;
-  std::shared_ptr<spdlog::logger> logger_;
   std::vector<Message> messages_;
   std::filesystem::path lootDataPath_;
   unsigned short loadOrderSortCount_;

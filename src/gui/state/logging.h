@@ -25,6 +25,7 @@
 #define LOOT_GUI_STATE_LOGGING
 
 #define FMT_NO_FMT_STRING_ALIAS
+#define SPDLOG_WCHAR_FILENAMES
 
 #include <filesystem>
 

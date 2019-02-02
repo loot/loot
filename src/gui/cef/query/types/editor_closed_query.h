@@ -55,7 +55,7 @@ public:
 
 private:
   std::optional<PluginMetadata> getNonUserMetadata() {
-    auto logger = state_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->trace("Getting non-user metadata for: {}", metadata_.GetName());
     }
@@ -91,7 +91,7 @@ private:
   }
 
   void applyUserEdits() {
-    auto logger = state_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->trace("Applying user edits for: {}", metadata_.GetName());
     }

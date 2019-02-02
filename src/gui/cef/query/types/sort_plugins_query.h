@@ -40,7 +40,7 @@ public:
       frame_(frame) {}
 
   std::string executeLogic() {
-    auto logger = state_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->info("Beginning sorting operation.");
     }

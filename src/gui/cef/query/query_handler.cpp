@@ -87,7 +87,7 @@ bool QueryHandler::OnQuery(CefRefPtr<CefBrowser> browser,
 
     CefPostTask(TID_FILE, base::Bind(&Query::execute, query, callback));
   } catch (std::exception& e) {
-    auto logger = lootState_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->error("Failed to parse CEF query request \"{}\": {}",
         request.ToString(),

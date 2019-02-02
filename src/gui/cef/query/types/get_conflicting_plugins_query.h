@@ -79,9 +79,6 @@ private:
       const std::shared_ptr<const PluginInterface>& plugin,
       const std::shared_ptr<const PluginInterface>& otherPlugin) {
     if (plugin->DoFormIDsOverlap(*otherPlugin)) {
-      if (logger_) {
-        logger_->debug("Found conflicting plugin: {}", otherPlugin->GetName());
-      }
       return true;
     } else {
       return false;
@@ -90,7 +87,6 @@ private:
 
   gui::Game& game_;
   const std::string pluginName_;
-  std::shared_ptr<spdlog::logger> logger_;
 };
 }
 

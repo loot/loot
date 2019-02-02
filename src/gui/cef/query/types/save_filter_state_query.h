@@ -39,7 +39,7 @@ public:
       enabled_(enabled) {}
 
   std::string executeLogic() {
-    auto logger = state_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->trace("Saving filter states.");
     }

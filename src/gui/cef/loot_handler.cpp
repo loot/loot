@@ -67,7 +67,7 @@ bool LootHandler::OnConsoleMessage(CefRefPtr< CefBrowser > browser,
   const CefString& message,
   const CefString& source,
   int line) {
-  auto logger = lootState_.getLogger();
+  auto logger = getLogger();
   if (logger) {
     std::string logMessage;
     if (source.empty()) {
@@ -123,7 +123,7 @@ bool LootHandler::DoClose(CefRefPtr<CefBrowser> browser) {
     return true;
   }
 
-  auto logger = lootState_.getLogger();
+  auto logger = getLogger();
 
   auto browserView = CefBrowserView::GetForBrowser(browser);
   if (browserView == nullptr) {
@@ -223,7 +223,7 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
                                  CefRefPtr<CefRequest> request,
                                  bool user_gesture,
                                  bool is_redirect) {
-  auto logger = lootState_.getLogger();
+  auto logger = getLogger();
   if (logger) {
     logger->info("Attempting to open link: {}", request->GetURL().ToString());
   }
@@ -258,7 +258,7 @@ CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(
     CefRefPtr<CefRequestCallback> callback) {
   if (boost::starts_with(request->GetURL().ToString(),
                          "https://fonts.googleapis.com")) {
-    auto logger = lootState_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->warn("Blocking load of resource at {}",
         request->GetURL().ToString());

@@ -38,7 +38,7 @@ public:
   GetInstalledGamesQuery(LootState& state) : state_(state) {}
 
   std::string executeLogic() {
-    auto logger = state_.getLogger();
+    auto logger = getLogger();
     if (logger) {
       logger->info("Getting LOOT's detected games.");
     }

@@ -118,7 +118,7 @@ void LootApp::OnContextInitialized() {
 
   // Need to set the global locale for this process so that messages will
   // be translated.
-  auto logger = lootState_.getLogger();
+  auto logger = getLogger();
   if (logger) {
     logger->debug("Initialising language settings in UI thread.");
   }
