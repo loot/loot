@@ -52,6 +52,7 @@ public:
             const std::filesystem::path& lootDataPath);
   void save(const std::filesystem::path& file);
 
+  bool shouldAutoSort() const;
   bool isDebugLoggingEnabled() const;
   bool updateMasterlist() const;
   bool isLootUpdateCheckEnabled() const;
@@ -66,6 +67,7 @@ public:
 
   void setDefaultGame(const std::string& game);
   void setLanguage(const std::string& language);
+  void setAutoSort(bool autSort);
   void enableDebugLogging(bool enable);
   void updateMasterlist(bool update);
   void enableLootUpdateCheck(bool enable);
@@ -77,6 +79,7 @@ public:
   void updateLastVersion();
 
 private:
+  bool autoSort_;
   bool enableDebugLogging_;
   bool updateMasterlist_;
   bool enableLootUpdateCheck_;

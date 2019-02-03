@@ -39,8 +39,6 @@ public:
 
   void save(const std::filesystem::path& file);
 
-  bool shouldAutoSort() const;
-
   void storeGameSettings(std::vector<GameSettings> gameSettings);
 
 private:
@@ -50,7 +48,6 @@ private:
   void SetInitialGame(std::string cmdLineGame);
 
   std::vector<std::string> initErrors_;
-  bool autoSort_;
 
   // Mutex used to protect access to member variables.
   std::mutex mutex_;

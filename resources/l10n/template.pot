@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-02-03 11:25+0000\n"
+"POT-Creation-Date: 2019-02-03 11:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,19 +60,19 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:96
+#: src/gui/state/loot_state.cpp:95
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:119
+#: src/gui/state/loot_state.cpp:118
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:129
+#: src/gui/state/loot_state.cpp:128
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:192
+#: src/gui/state/loot_state.cpp:191
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 

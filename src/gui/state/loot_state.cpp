@@ -87,15 +87,14 @@ void apiLogCallback(LogLevel level, const char* message) {
 }
 
 LootState::LootState(const std::string& lootDataPath) :
-    LootPaths(lootDataPath),
-    autoSort_(false) {}
+    LootPaths(lootDataPath) {}
 
 void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
     initErrors_.push_back(translate(
         "Error: --auto-sort was passed but no --game parameter was provided."));
   } else {
-    autoSort_ = autoSort;
+    setAutoSort(autoSort);
   }
 
   // Do some preliminary locale / UTF-8 support setup here, in case the settings
@@ -211,8 +210,6 @@ void LootState::save(const std::filesystem::path& file) {
   updateLastVersion();
   LootSettings::save(file);
 }
-
-bool LootState::shouldAutoSort() const { return autoSort_; }
 
 std::optional<std::filesystem::path> LootState::FindGamePath(const GameSettings& gameSettings) const {
   return gameSettings.FindGamePath();

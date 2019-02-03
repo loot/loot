@@ -156,6 +156,7 @@ LootSettings::LootSettings() :
                             "stall\\Nehrim - At Fate's "
                             "Edge_is1\\InstallLocation"),
     }),
+    autoSort_(false),
     enableDebugLogging_(false),
     updateMasterlist_(true),
     enableLootUpdateCheck_(true),
@@ -285,6 +286,12 @@ void LootSettings::save(const std::filesystem::path& file) {
   out << *root;
 }
 
+bool LootSettings::shouldAutoSort() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return autoSort_;
+}
+
 bool LootSettings::isDebugLoggingEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
@@ -362,6 +369,12 @@ void LootSettings::setLanguage(const std::string& language) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   language_ = language;
+}
+
+void LootSettings::setAutoSort(bool autoSort) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  autoSort_ = autoSort;
 }
 
 void LootSettings::enableDebugLogging(bool enable) {
