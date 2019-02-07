@@ -34,10 +34,11 @@ along with LOOT.  If not, see
 namespace loot {
 class SortPluginsQuery : public MetadataQuery {
 public:
-  SortPluginsQuery(LootState& state, CefRefPtr<CefFrame> frame) :
+  SortPluginsQuery(LootState& state,
+                   std::function<void(std::string)> sendProgressUpdate) :
       MetadataQuery(state),
       state_(state),
-      frame_(frame) {}
+      sendProgressUpdate_(sendProgressUpdate) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -46,8 +47,7 @@ public:
     }
 
     // Sort plugins into their load order.
-    sendProgressUpdate(frame_,
-                       boost::locale::translate("Sorting load order..."));
+    sendProgressUpdate_(boost::locale::translate("Sorting load order..."));
     std::vector<std::string> plugins = state_.GetCurrentGame().SortPlugins();
 
     try {
@@ -58,7 +58,7 @@ public:
           state_.GetCurrentGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
-      setSortingErrorMessage(state_);
+      errorMessage = getSortingErrorMessage(state_);
       throw;
     }
 
@@ -70,6 +70,8 @@ public:
 
     return json;
   }
+
+  std::optional<std::string> getErrorMessage() override { return errorMessage; }
 
 private:
   void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
@@ -98,7 +100,8 @@ private:
       }
 
       auto derivedMetadata = generateDerivedMetadata(plugin);
-      auto index = state_.GetCurrentGame().GetActiveLoadOrderIndex(plugin, plugins);
+      auto index =
+          state_.GetCurrentGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.setLoadOrderIndex(index.value());
       }
@@ -110,7 +113,8 @@ private:
   }
 
   LootState& state_;
-  CefRefPtr<CefFrame> frame_;
+  std::function<void(std::string)> sendProgressUpdate_;
+  std::optional<std::string> errorMessage;
 };
 }
 

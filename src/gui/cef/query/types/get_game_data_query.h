@@ -34,15 +34,15 @@ along with LOOT.  If not, see
 namespace loot {
 class GetGameDataQuery : public MetadataQuery {
 public:
-  GetGameDataQuery(LootState& state, CefRefPtr<CefFrame> frame) :
+  GetGameDataQuery(LootState& state,
+                   std::function<void(std::string)> sendProgressUpdate) :
       MetadataQuery(state),
       state_(state),
-      frame_(frame) {}
+      sendProgressUpdate_(sendProgressUpdate) {}
 
   std::string executeLogic() {
-    sendProgressUpdate(frame_,
-                       boost::locale::translate(
-                           "Parsing, merging and evaluating metadata..."));
+    sendProgressUpdate_(boost::locale::translate(
+        "Parsing, merging and evaluating metadata..."));
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
@@ -68,7 +68,7 @@ public:
 
 private:
   LootState& state_;
-  CefRefPtr<CefFrame> frame_;
+  std::function<void(std::string)> sendProgressUpdate_;
 };
 }
 

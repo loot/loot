@@ -44,7 +44,7 @@ public:
                        CefRefPtr<Callback> callback) OVERRIDE;
 
 private:
-  CefRefPtr<Query> createQuery(CefRefPtr<CefBrowser> browser,
+  std::unique_ptr<Query> createQuery(CefRefPtr<CefBrowser> browser,
                                CefRefPtr<CefFrame> frame,
                                const std::string& request);
 

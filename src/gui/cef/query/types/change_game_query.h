@@ -31,9 +31,9 @@ namespace loot {
 class ChangeGameQuery : public GetGameDataQuery {
 public:
   ChangeGameQuery(LootState& state,
-                  CefRefPtr<CefFrame> frame,
-                  const std::string& gameFolder) :
-      GetGameDataQuery(state, frame),
+                  std::string gameFolder,
+                  std::function<void(std::string)> sendProgressUpdate) :
+      GetGameDataQuery(state, sendProgressUpdate),
       state_(state),
       gameFolder_(gameFolder) {}
 

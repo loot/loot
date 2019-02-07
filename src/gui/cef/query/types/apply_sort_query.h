@@ -44,16 +44,21 @@ public:
       state_.DecrementUnappliedChangeCounter();
     }
     catch (...) {
-      setSortingErrorMessage(state_);
+      errorMessage = getSortingErrorMessage(state_);
       throw;
     }
 
     return "";
   }
 
+  std::optional<std::string> getErrorMessage() override {
+    return errorMessage;
+  }
+
 private:
   LootState& state_;
   const std::vector<std::string> plugins_;
+  std::optional<std::string> errorMessage;
 };
 }
 
