@@ -27,19 +27,23 @@ along with LOOT.  If not, see
 
 #include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
+#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
 class EditorClosedQuery : public MetadataQuery {
 public:
-  EditorClosedQuery(LootState& state, nlohmann::json editorState) :
-      MetadataQuery(state),
-      state_(state),
+  EditorClosedQuery(gui::Game& game,
+                    UnappliedChangeCounter& counter,
+                    std::string language,
+                    nlohmann::json editorState) :
+      MetadataQuery(game, language),
+      counter_(counter),
       applyEdits_(editorState.at("applyEdits")) {
     try {
       metadata_ = editorState.at("metadata");
     } catch (...) {
-      state_.DecrementUnappliedChangeCounter();
+      counter_.DecrementUnappliedChangeCounter();
       throw;
     }
   }
@@ -48,7 +52,7 @@ public:
     if (applyEdits_) {
       applyUserEdits();
     }
-    state_.DecrementUnappliedChangeCounter();
+    counter_.DecrementUnappliedChangeCounter();
 
     return generateJsonResponse(metadata_.GetName());
   }
@@ -60,12 +64,12 @@ private:
       logger->trace("Getting non-user metadata for: {}", metadata_.GetName());
     }
 
-    auto plugin = state_.GetCurrentGame().GetPlugin(metadata_.GetName());
+    auto plugin = getGame().GetPlugin(metadata_.GetName());
     if (plugin) {
       return MetadataQuery::getNonUserMetadata(plugin);
     }
 
-    return state_.GetCurrentGame().GetMasterlistMetadata(metadata_.GetName());
+    return getGame().GetMasterlistMetadata(metadata_.GetName());
   }
 
   PluginMetadata getUserMetadata() {
@@ -75,8 +79,9 @@ private:
     auto nonUserMetadata = getNonUserMetadata();
     if (nonUserMetadata.has_value()) {
       auto userMetadata = metadata_.NewMetadata(nonUserMetadata.value());
-      if (userMetadata.GetGroup() == std::optional(Group().GetName())
-        && nonUserMetadata.value().GetGroup().value_or(Group().GetName()) == Group().GetName()) {
+      if (userMetadata.GetGroup() == std::optional(Group().GetName()) &&
+          nonUserMetadata.value().GetGroup().value_or(Group().GetName()) ==
+              Group().GetName()) {
         userMetadata.UnsetGroup();
       }
       return userMetadata;
@@ -103,21 +108,21 @@ private:
     if (logger) {
       logger->trace("Erasing the existing userlist entry.");
     }
-    state_.GetCurrentGame().ClearUserMetadata(metadata_.GetName());
+    getGame().ClearUserMetadata(metadata_.GetName());
 
     // Add a new userlist entry if necessary.
     if (!userMetadata.HasNameOnly()) {
       if (logger) {
         logger->trace("Adding new metadata to new userlist entry.");
       }
-      state_.GetCurrentGame().AddUserMetadata(userMetadata);
+      getGame().AddUserMetadata(userMetadata);
     }
 
     // Save edited userlist.
-    state_.GetCurrentGame().SaveUserMetadata();
+    getGame().SaveUserMetadata();
   }
 
-  LootState& state_;
+  UnappliedChangeCounter& counter_;
   const bool applyEdits_;
   PluginMetadata metadata_;
 };

@@ -26,22 +26,23 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_DISCARD_UNAPPLIED_CHANGES_QUERY
 
 #include "gui/cef/query/query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
 class DiscardUnappliedChangesQuery : public Query {
 public:
-  DiscardUnappliedChangesQuery(LootState& state) : state_(state) {}
+  DiscardUnappliedChangesQuery(UnappliedChangeCounter& unappliedChangeCounter) :
+      unappliedChangeCounter_(unappliedChangeCounter) {}
 
   std::string executeLogic() {
-    while (state_.HasUnappliedChanges())
-      state_.DecrementUnappliedChangeCounter();
+    while (unappliedChangeCounter_.HasUnappliedChanges())
+      unappliedChangeCounter_.DecrementUnappliedChangeCounter();
 
     return "";
   }
 
 private:
-  LootState& state_;
+  UnappliedChangeCounter& unappliedChangeCounter_;
 };
 }
 

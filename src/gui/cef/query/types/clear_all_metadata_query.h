@@ -32,9 +32,8 @@ along with LOOT.  If not, see
 namespace loot {
 class ClearAllMetadataQuery : public MetadataQuery {
 public:
-  ClearAllMetadataQuery(LootState& state) :
-      MetadataQuery(state),
-      game_(state.GetCurrentGame()) {}
+  ClearAllMetadataQuery(gui::Game& game, std::string language) :
+      MetadataQuery(game, language) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -46,12 +45,14 @@ public:
     auto userlistPluginNames = getUserlistPluginNames();
 
     // Clear the user metadata.
-    game_.ClearAllUserMetadata();
-    game_.SaveUserMetadata();
+    getGame().ClearAllUserMetadata();
+    getGame().SaveUserMetadata();
 
     if (logger) {
-      logger->trace("Rederiving display metadata for {} plugins that had user "
-                    "metadata.", userlistPluginNames.size());
+      logger->trace(
+          "Rederiving display metadata for {} plugins that had user "
+          "metadata.",
+          userlistPluginNames.size());
     }
 
     return getDerivedMetadataJson(userlistPluginNames);
@@ -60,8 +61,8 @@ public:
 private:
   std::vector<std::string> getUserlistPluginNames() const {
     std::vector<std::string> userlistPluginNames;
-    for (const auto& plugin : game_.GetPlugins()) {
-      if (game_.GetUserMetadata(plugin->GetName()).has_value()) {
+    for (const auto& plugin : getGame().GetPlugins()) {
+      if (getGame().GetUserMetadata(plugin->GetName()).has_value()) {
         userlistPluginNames.push_back(plugin->GetName());
       }
     }
@@ -83,8 +84,6 @@ private:
 
     return json.dump();
   }
-
-  gui::Game& game_;
 };
 }
 

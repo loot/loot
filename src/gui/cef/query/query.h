@@ -42,16 +42,13 @@ public:
   virtual std::optional<std::string> getErrorMessage() { return std::nullopt; };
 };
 
-inline std::string getSortingErrorMessage(LootState& state) {
-  auto pluginsTxtPath = state.getLootDataPath().parent_path() /
-                        state.GetCurrentGame().FolderName() / "plugins.txt";
-
+inline std::string getSortingErrorMessage(const gui::Game& game) {
   return (boost::format(boost::locale::translate(
               "Oh no, something went wrong! This is usually because \"%1%\" "
               "is set to be read-only. If it is, unset it and try again. If "
               "it isn't, you can check your LOOTDebugLog.txt (you can get to "
               "it through the main menu) for more information.")) %
-          pluginsTxtPath.u8string())
+          game.PluginsTxtPath().u8string())
       .str();
 }
 }

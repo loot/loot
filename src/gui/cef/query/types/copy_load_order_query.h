@@ -35,9 +35,9 @@ struct Counters {
 
 class CopyLoadOrderQuery : public ClipboardQuery {
 public:
-  CopyLoadOrderQuery(LootState& state,
+  CopyLoadOrderQuery(const gui::Game& game,
                      const std::vector<std::string>& plugins) :
-      state_(state),
+      game_(game),
       plugins_(plugins) {}
 
   std::string executeLogic() {
@@ -55,16 +55,16 @@ private:
   void writePluginLine(std::ostream& stream,
                        const std::string& pluginName,
                        Counters& counters) {
-    auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
+    auto plugin = game_.GetPlugin(pluginName);
     if (!plugin) {
       return;
     }
 
-    auto isActive = state_.GetCurrentGame().IsPluginActive(pluginName);
+    auto isActive = game_.IsPluginActive(pluginName);
 
     if (isActive && plugin->IsLightMaster()) {
       stream << "254 FE " << std::setw(3) << std::hex
-        << counters.activeLightMasters << std::dec << " ";
+             << counters.activeLightMasters << std::dec << " ";
       counters.activeLightMasters += 1;
     } else if (isActive) {
       stream << std::setw(3) << counters.activeNormal << " " << std::hex
@@ -77,7 +77,7 @@ private:
     stream << pluginName << "\r\n";
   }
 
-  LootState& state_;
+  const gui::Game& game_;
   const std::vector<std::string> plugins_;
 };
 }

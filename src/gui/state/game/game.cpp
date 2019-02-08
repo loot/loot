@@ -390,6 +390,10 @@ fs::path Game::UserlistPath() const {
   return lootDataPath_ / u8path(FolderName()) / "userlist.yaml";
 }
 
+fs::path Game::PluginsTxtPath() const {
+  return lootDataPath_.parent_path() / u8path(FolderName()) / "plugins.txt";
+}
+
 std::vector<std::string> Game::GetLoadOrder() const {
   return gameHandle_->GetLoadOrder();
 }

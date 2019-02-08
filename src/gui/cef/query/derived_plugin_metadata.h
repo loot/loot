@@ -27,30 +27,29 @@ along with LOOT.  If not, see
 
 #include <optional>
 
-#include <json.hpp>
 #include <loot/api.h>
+#include <json.hpp>
 
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class DerivedPluginMetadata {
 public:
-  DerivedPluginMetadata(LootState& state,
-                        const std::shared_ptr<const PluginInterface>& file) :
+  DerivedPluginMetadata(const std::shared_ptr<const PluginInterface>& file,
+                        const gui::Game& game,
+                        std::string language) :
       name(file->GetName()),
       version(file->GetVersion()),
-      isActive(state.GetCurrentGame().IsPluginActive(file->GetName())),
+      isActive(game.IsPluginActive(file->GetName())),
       isDirty(false),
       isEmpty(file->IsEmpty()),
       isMaster(file->IsMaster()),
       isLightMaster(file->IsLightMaster()),
       loadsArchive(file->LoadsArchive()),
       crc(file->GetCRC()),
-      loadOrderIndex(state.GetCurrentGame().GetActiveLoadOrderIndex(
-          file,
-          state.GetCurrentGame().GetLoadOrder())),
+      loadOrderIndex(game.GetActiveLoadOrderIndex(file, game.GetLoadOrder())),
       currentTags(file->GetBashTags()),
-      language(state.getLanguage()) {}
+      language(language) {}
 
   void setEvaluatedMetadata(PluginMetadata metadata) {
     isDirty = !metadata.GetDirtyInfo().empty();
@@ -98,7 +97,8 @@ private:
 
   std::string language;
 
-  friend void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin);
+  friend void to_json(nlohmann::json& json,
+                      const DerivedPluginMetadata& plugin);
 };
 }
 

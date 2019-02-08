@@ -35,7 +35,7 @@ along with LOOT.  If not, see
 namespace loot {
 class GetInitErrorsQuery : public Query {
 public:
-  GetInitErrorsQuery(LootState& state) : state_(state) {}
+  GetInitErrorsQuery(const LootState& state) : state_(state) {}
 
   std::string executeLogic() {
     nlohmann::json json;
@@ -45,7 +45,7 @@ public:
   }
 
 private:
-  LootState& state_;
+  const LootState& state_;
 };
 }
 

@@ -35,7 +35,7 @@ along with LOOT.  If not, see
 namespace loot {
 class GetSettingsQuery : public Query {
 public:
-  GetSettingsQuery(LootSettings& settings) : settings_(settings) {}
+  GetSettingsQuery(const LootSettings& settings) : settings_(settings) {}
 
   std::string executeLogic() {
     auto logger = getLogger();

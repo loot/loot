@@ -119,70 +119,95 @@ std::unique_ptr<Query> QueryHandler::createQuery(
 
   const std::string name = json.at("name");
 
-  if (name == "applySort")
-    return std::make_unique<ApplySortQuery>(lootState_, json.at("pluginNames"));
-  else if (name == "cancelSort")
-    return std::make_unique<CancelSortQuery>(lootState_);
-  else if (name == "changeGame") {
+  if (name == "applySort") {
+    return std::make_unique<ApplySortQuery>(
+        lootState_.GetCurrentGame(), lootState_, json.at("pluginNames"));
+  } else if (name == "cancelSort") {
+    return std::make_unique<CancelSortQuery>(
+        lootState_.GetCurrentGame(), lootState_, lootState_.getLanguage());
+  } else if (name == "changeGame") {
     return std::make_unique<ChangeGameQuery>(
-        lootState_, json.at("gameFolder"), [frame](std::string message) {
-          sendProgressUpdate(frame, message);
-        });
-  } else if (name == "clearAllMetadata")
-    return std::make_unique<ClearAllMetadataQuery>(lootState_);
-  else if (name == "clearPluginMetadata")
-    return std::make_unique<ClearPluginMetadataQuery>(lootState_, json.at("pluginName"));
-  else if (name == "closeSettings")
-    return std::make_unique<CloseSettingsQuery>(lootState_, json.at("settings"));
-  else if (name == "copyContent")
+        lootState_,
+        lootState_.getLanguage(),
+        json.at("gameFolder"),
+        [frame](std::string message) { sendProgressUpdate(frame, message); });
+  } else if (name == "clearAllMetadata") {
+    return std::make_unique<ClearAllMetadataQuery>(lootState_.GetCurrentGame(),
+                                                   lootState_.getLanguage());
+  } else if (name == "clearPluginMetadata") {
+    return std::make_unique<ClearPluginMetadataQuery>(
+        lootState_.GetCurrentGame(),
+        lootState_.getLanguage(),
+        json.at("pluginName"));
+  } else if (name == "closeSettings") {
+    return std::make_unique<CloseSettingsQuery>(lootState_,
+                                                json.at("settings"));
+  } else if (name == "copyContent") {
     return std::make_unique<CopyContentQuery>(json.at("content"));
-  else if (name == "copyLoadOrder")
-    return std::make_unique<CopyLoadOrderQuery>(lootState_, json.at("pluginNames"));
-  else if (name == "copyMetadata")
-    return std::make_unique<CopyMetadataQuery>(lootState_, json.at("pluginName"));
-  else if (name == "discardUnappliedChanges")
+  } else if (name == "copyLoadOrder") {
+    return std::make_unique<CopyLoadOrderQuery>(lootState_.GetCurrentGame(),
+                                                json.at("pluginNames"));
+  } else if (name == "copyMetadata") {
+    return std::make_unique<CopyMetadataQuery>(lootState_.GetCurrentGame(),
+                                               lootState_.getLanguage(),
+                                               json.at("pluginName"));
+  } else if (name == "discardUnappliedChanges") {
     return std::make_unique<DiscardUnappliedChangesQuery>(lootState_);
-  else if (name == "editorClosed")
-    return std::make_unique<EditorClosedQuery>(lootState_, json.at("editorState"));
-  else if (name == "editorOpened")
+  } else if (name == "editorClosed") {
+    return std::make_unique<EditorClosedQuery>(lootState_.GetCurrentGame(),
+                                               lootState_,
+                                               lootState_.getLanguage(),
+                                               json.at("editorState"));
+  } else if (name == "editorOpened") {
     return std::make_unique<EditorOpenedQuery>(lootState_);
-  else if (name == "getConflictingPlugins")
-    return std::make_unique<GetConflictingPluginsQuery>(lootState_, json.at("pluginName"));
-  else if (name == "getGameTypes")
+  } else if (name == "getConflictingPlugins") {
+    return std::make_unique<GetConflictingPluginsQuery>(
+        lootState_.GetCurrentGame(),
+        lootState_.getLanguage(),
+        json.at("pluginName"));
+  } else if (name == "getGameTypes") {
     return std::make_unique<GetGameTypesQuery>();
-  else if (name == "getGameData") {
+  } else if (name == "getGameData") {
     return std::make_unique<GetGameDataQuery>(
-        lootState_,
+        lootState_.GetCurrentGame(),
+        lootState_.getLanguage(),
         [frame](std::string message) { sendProgressUpdate(frame, message); });
-  } else if (name == "getInitErrors")
+  } else if (name == "getInitErrors") {
     return std::make_unique<GetInitErrorsQuery>(lootState_);
-  else if (name == "getInstalledGames")
+  } else if (name == "getInstalledGames") {
     return std::make_unique<GetInstalledGamesQuery>(lootState_);
-  else if (name == "getLanguages")
+  } else if (name == "getLanguages") {
     return std::make_unique<GetLanguagesQuery>();
-  else if (name == "getSettings")
+  } else if (name == "getSettings") {
     return std::make_unique<GetSettingsQuery>(lootState_);
-  else if (name == "getVersion")
+  } else if (name == "getVersion") {
     return std::make_unique<GetVersionQuery>();
-  else if (name == "openLogLocation")
+  } else if (name == "openLogLocation") {
     return std::make_unique<OpenLogLocationQuery>(lootState_.getLogPath());
-  else if (name == "openReadme")
-    return std::make_unique<OpenReadmeQuery>(lootState_.getReadmePath(),
-      json.at("relativeFilePath").get<std::string>());
-  else if (name == "redatePlugins")
-    return std::make_unique<RedatePluginsQuery>(lootState_);
-  else if (name == "saveUserGroups")
-    return std::make_unique<SaveUserGroupsQuery>(lootState_, json.at("userGroups"));
-  else if (name == "saveFilterState")
+  } else if (name == "openReadme") {
+    return std::make_unique<OpenReadmeQuery>(
+        lootState_.getReadmePath(),
+        json.at("relativeFilePath").get<std::string>());
+  } else if (name == "redatePlugins") {
+    return std::make_unique<RedatePluginsQuery>(lootState_.GetCurrentGame());
+  } else if (name == "saveUserGroups") {
+    return std::make_unique<SaveUserGroupsQuery>(lootState_.GetCurrentGame(),
+                                                 json.at("userGroups"));
+  } else if (name == "saveFilterState") {
     return std::make_unique<SaveFilterStateQuery>(
-        lootState_, json.at("filter").at("name"), json.at("filter").at("state"));
-  else if (name == "sortPlugins") {
-    return std::make_unique<SortPluginsQuery>(
         lootState_,
+        json.at("filter").at("name"),
+        json.at("filter").at("state"));
+  } else if (name == "sortPlugins") {
+    return std::make_unique<SortPluginsQuery>(
+        lootState_.GetCurrentGame(),
+        lootState_,
+        lootState_.getLanguage(),
         [frame](std::string message) { sendProgressUpdate(frame, message); });
-  } else if (name == "updateMasterlist")
-    return std::make_unique<UpdateMasterlistQuery>(lootState_);
-  else if (name == "getAutoSort") {
+  } else if (name == "updateMasterlist") {
+    return std::make_unique<UpdateMasterlistQuery>(lootState_.GetCurrentGame(),
+                                                   lootState_.getLanguage());
+  } else if (name == "getAutoSort") {
     return std::make_unique<GetAutoSortQuery>(lootState_);
   }
 

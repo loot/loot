@@ -26,20 +26,21 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_REDATE_PLUGINS_QUERY
 
 #include "gui/cef/query/query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class RedatePluginsQuery : public Query {
 public:
-  RedatePluginsQuery(LootState& state) : state_(state) {}
+  RedatePluginsQuery(gui::Game& game) :
+      game_(game) {}
 
   std::string executeLogic() {
-    state_.GetCurrentGame().RedatePlugins();
+    game_.RedatePlugins();
     return "";
   }
 
 private:
-  LootState& state_;
+  gui::Game& game_;
 };
 }
 

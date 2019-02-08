@@ -59,7 +59,7 @@ public:
 
 private:
   LootState& state_;
-  nlohmann::json settings_;
+  const nlohmann::json settings_;
 };
 }
 

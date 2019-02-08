@@ -30,21 +30,24 @@ along with LOOT.  If not, see
 namespace loot {
 class ChangeGameQuery : public GetGameDataQuery {
 public:
-  ChangeGameQuery(LootState& state,
+  ChangeGameQuery(GamesManager& gamesManager,
+                  std::string language,
                   std::string gameFolder,
                   std::function<void(std::string)> sendProgressUpdate) :
-      GetGameDataQuery(state, sendProgressUpdate),
-      state_(state),
+      GetGameDataQuery(gamesManager.GetCurrentGame(),
+                       language,
+                       sendProgressUpdate),
+      gamesManager_(gamesManager),
       gameFolder_(gameFolder) {}
 
   std::string executeLogic() {
-    state_.SetCurrentGame(gameFolder_);
+    gamesManager_.SetCurrentGame(gameFolder_);
 
     return GetGameDataQuery::executeLogic();
   }
 
 private:
-  LootState& state_;
+  GamesManager& gamesManager_;
   const std::string gameFolder_;
 };
 }

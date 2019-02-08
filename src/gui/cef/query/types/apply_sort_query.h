@@ -30,8 +30,11 @@ along with LOOT.  If not, see
 namespace loot {
 class ApplySortQuery : public Query {
 public:
-  ApplySortQuery(LootState& state, const std::vector<std::string>& plugins) :
-      state_(state),
+  ApplySortQuery(gui::Game& game,
+                 UnappliedChangeCounter& counter,
+                 const std::vector<std::string>& plugins) :
+      game_(game),
+      counter_(counter),
       plugins_(plugins) {}
 
   std::string executeLogic() {
@@ -40,23 +43,21 @@ public:
       logger->trace("User has accepted sorted load order, applying it.");
     }
     try {
-      state_.GetCurrentGame().SetLoadOrder(plugins_);
-      state_.DecrementUnappliedChangeCounter();
-    }
-    catch (...) {
-      errorMessage = getSortingErrorMessage(state_);
+      game_.SetLoadOrder(plugins_);
+      counter_.DecrementUnappliedChangeCounter();
+    } catch (...) {
+      errorMessage = getSortingErrorMessage(game_);
       throw;
     }
 
     return "";
   }
 
-  std::optional<std::string> getErrorMessage() override {
-    return errorMessage;
-  }
+  std::optional<std::string> getErrorMessage() override { return errorMessage; }
 
 private:
-  LootState& state_;
+  gui::Game& game_;
+  UnappliedChangeCounter& counter_;
   const std::vector<std::string> plugins_;
   std::optional<std::string> errorMessage;
 };

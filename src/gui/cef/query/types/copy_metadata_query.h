@@ -31,8 +31,11 @@ along with LOOT.  If not, see
 namespace loot {
 class CopyMetadataQuery : public ClipboardQuery {
 public:
-  CopyMetadataQuery(LootState& state, const std::string& pluginName) :
-      state_(state),
+  CopyMetadataQuery(const gui::Game& game,
+                    std::string language,
+                    std::string pluginName) :
+      game_(game),
+      language_(language),
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
@@ -44,13 +47,12 @@ public:
     // Get metadata from masterlist and userlist.
     PluginMetadata metadata(pluginName_);
 
-    auto masterlistMetadata =
-      state_.GetCurrentGame().GetMasterlistMetadata(pluginName_);
+    auto masterlistMetadata = game_.GetMasterlistMetadata(pluginName_);
     if (masterlistMetadata.has_value()) {
       metadata.MergeMetadata(masterlistMetadata.value());
     }
 
-    auto userMetadata = state_.GetCurrentGame().GetUserMetadata(pluginName_);
+    auto userMetadata = game_.GetUserMetadata(pluginName_);
     if (userMetadata.has_value()) {
       metadata.MergeMetadata(userMetadata.value());
     }
@@ -62,9 +64,8 @@ public:
     copyToClipboard(text);
 
     if (logger) {
-      logger->debug("Exported userlist metadata text for \"{}\": {}",
-        pluginName_,
-        text);
+      logger->debug(
+          "Exported userlist metadata text for \"{}\": {}", pluginName_, text);
     }
 
     return "";
@@ -72,11 +73,12 @@ public:
 
 private:
   std::string asText(const PluginMetadata& metadata) {
-    return to_json_with_language(metadata, state_.getLanguage()).dump(4);
+    return to_json_with_language(metadata, language_).dump(4);
   }
 
-  LootState& state_;
-  std::string pluginName_;
+  const gui::Game& game_;
+  const std::string language_;
+  const std::string pluginName_;
 };
 }
 

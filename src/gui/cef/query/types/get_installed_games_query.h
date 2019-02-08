@@ -30,12 +30,13 @@ along with LOOT.  If not, see
 #include <json.hpp>
 
 #include "gui/cef/query/query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/games_manager.h"
 
 namespace loot {
 class GetInstalledGamesQuery : public Query {
 public:
-  GetInstalledGamesQuery(LootState& state) : state_(state) {}
+  GetInstalledGamesQuery(const GamesManager& gamesManager) :
+      gamesManager_(gamesManager) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -48,12 +49,12 @@ public:
 private:
   std::string getInstalledGamesAsJson() const {
     nlohmann::json json;
-    json["installedGames"] = state_.GetInstalledGameFolderNames();
+    json["installedGames"] = gamesManager_.GetInstalledGameFolderNames();
 
     return json.dump();
   }
 
-  LootState& state_;
+  const GamesManager& gamesManager_;
 };
 }
 

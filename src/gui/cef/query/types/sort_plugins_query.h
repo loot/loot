@@ -29,15 +29,17 @@ along with LOOT.  If not, see
 
 #include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
+#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
 class SortPluginsQuery : public MetadataQuery {
 public:
-  SortPluginsQuery(LootState& state,
+  SortPluginsQuery(gui::Game& game, UnappliedChangeCounter& counter,
+                   std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
-      MetadataQuery(state),
-      state_(state),
+      MetadataQuery(game, language),
+      counter_(counter),
       sendProgressUpdate_(sendProgressUpdate) {}
 
   std::string executeLogic() {
@@ -48,17 +50,17 @@ public:
 
     // Sort plugins into their load order.
     sendProgressUpdate_(boost::locale::translate("Sorting load order..."));
-    std::vector<std::string> plugins = state_.GetCurrentGame().SortPlugins();
+    std::vector<std::string> plugins = getGame().SortPlugins();
 
     try {
-      if (state_.GetCurrentGame().Type() == GameType::tes5 ||
-          state_.GetCurrentGame().Type() == GameType::tes5se ||
-          state_.GetCurrentGame().Type() == GameType::tes5vr ||
-          state_.GetCurrentGame().Type() == GameType::fo4 ||
-          state_.GetCurrentGame().Type() == GameType::fo4vr)
+      if (getGame().Type() == GameType::tes5 ||
+          getGame().Type() == GameType::tes5se ||
+          getGame().Type() == GameType::tes5vr ||
+          getGame().Type() == GameType::fo4 ||
+          getGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
-      errorMessage = getSortingErrorMessage(state_);
+      errorMessage = getSortingErrorMessage(getGame());
       throw;
     }
 
@@ -66,7 +68,7 @@ public:
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty())
-      state_.IncrementUnappliedChangeCounter();
+      counter_.IncrementUnappliedChangeCounter();
 
     return json;
   }
@@ -78,13 +80,13 @@ private:
     if (plugins.empty() ||
         !equal(begin(plugins),
                end(plugins),
-               begin(state_.GetCurrentGame().GetLoadOrder())))
+               begin(getGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
     // because there are no changes to accept and some plugins' positions
     // may only be inferred and not written to loadorder.txt/plugins.txt.
-    state_.GetCurrentGame().SetLoadOrder(plugins);
+    getGame().SetLoadOrder(plugins);
   }
 
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
@@ -94,14 +96,14 @@ private:
     };
 
     for (const auto& pluginName : plugins) {
-      auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
+      auto plugin = getGame().GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
       auto derivedMetadata = generateDerivedMetadata(plugin);
       auto index =
-          state_.GetCurrentGame().GetActiveLoadOrderIndex(plugin, plugins);
+          getGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.setLoadOrderIndex(index.value());
       }
@@ -112,8 +114,8 @@ private:
     return json.dump();
   }
 
-  LootState& state_;
-  std::function<void(std::string)> sendProgressUpdate_;
+  UnappliedChangeCounter& counter_;
+  const std::function<void(std::string)> sendProgressUpdate_;
   std::optional<std::string> errorMessage;
 };
 }

@@ -28,16 +28,16 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
 #include "loot/loot_version.h"
 
 namespace loot {
 class GetGameDataQuery : public MetadataQuery {
 public:
-  GetGameDataQuery(LootState& state,
+  GetGameDataQuery(gui::Game& game,
+                   std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
-      MetadataQuery(state),
-      state_(state),
+      MetadataQuery(game, language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
   std::string executeLogic() {
@@ -46,18 +46,18 @@ public:
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
-    bool isFirstLoad = state_.GetCurrentGame().GetPlugins().empty();
+    bool isFirstLoad = getGame().GetPlugins().empty();
 
-    state_.GetCurrentGame().LoadAllInstalledPlugins(true);
+    getGame().LoadAllInstalledPlugins(true);
 
     if (isFirstLoad)
-      state_.GetCurrentGame().LoadMetadata();
+      getGame().LoadMetadata();
 
     // Sort plugins into their load order.
     std::vector<std::shared_ptr<const PluginInterface>> installed;
-    std::vector<std::string> loadOrder = state_.GetCurrentGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = getGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      const auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
+      const auto plugin = getGame().GetPlugin(pluginName);
       if (plugin) {
         installed.push_back(plugin);
       }
@@ -67,7 +67,6 @@ public:
   }
 
 private:
-  LootState& state_;
   std::function<void(std::string)> sendProgressUpdate_;
 };
 }

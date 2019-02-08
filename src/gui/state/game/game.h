@@ -69,6 +69,7 @@ public:
   std::filesystem::path DataPath() const;
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
+  std::filesystem::path PluginsTxtPath() const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);

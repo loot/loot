@@ -36,19 +36,21 @@ along with LOOT.  If not, see
 namespace loot {
 class MetadataQuery : public Query {
 protected:
-  MetadataQuery(LootState& state) : state_(state), logger_(getLogger()) {}
+  MetadataQuery(gui::Game& game, std::string language) :
+      game_(game),
+      language_(language),
+      logger_(getLogger()) {}
 
   std::vector<SimpleMessage> getGeneralMessages() const {
-    std::vector<Message> messages = state_.GetCurrentGame().GetMessages();
+    std::vector<Message> messages = game_.GetMessages();
 
-    return toSimpleMessages(messages, state_.getLanguage());
+    return toSimpleMessages(messages, language_);
   }
 
   std::optional<PluginMetadata> getNonUserMetadata(
       const std::shared_ptr<const PluginInterface>& file) {
     auto fileBashTags = file->GetBashTags();
-    auto masterlistMetadata =
-      state_.GetCurrentGame().GetMasterlistMetadata(file->GetName());
+    auto masterlistMetadata = game_.GetMasterlistMetadata(file->GetName());
 
     if (fileBashTags.empty()) {
       return masterlistMetadata;
@@ -64,8 +66,9 @@ protected:
     return metadata;
   }
 
-  std::optional<DerivedPluginMetadata> generateDerivedMetadata(const std::string& pluginName) {
-    auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
+  std::optional<DerivedPluginMetadata> generateDerivedMetadata(
+      const std::string& pluginName) {
+    auto plugin = game_.GetPlugin(pluginName);
     if (plugin) {
       return generateDerivedMetadata(plugin);
     }
@@ -75,15 +78,14 @@ protected:
 
   DerivedPluginMetadata generateDerivedMetadata(
       const std::shared_ptr<const PluginInterface>& plugin) {
-    auto derived = DerivedPluginMetadata(state_, plugin);
+    auto derived = DerivedPluginMetadata(plugin, game_, language_);
 
     auto nonUserMetadata = getNonUserMetadata(plugin);
     if (nonUserMetadata.has_value()) {
       derived.setMasterlistMetadata(nonUserMetadata.value());
     }
 
-    auto userMetadata =
-        state_.GetCurrentGame().GetUserMetadata(plugin->GetName());
+    auto userMetadata = game_.GetUserMetadata(plugin->GetName());
     if (userMetadata.has_value()) {
       derived.setUserMetadata(userMetadata.value());
     }
@@ -92,9 +94,9 @@ protected:
     if (evaluatedMetadata.has_value()) {
       auto messages = evaluatedMetadata.value().GetMessages();
       auto validityMessages =
-        state_.GetCurrentGame().CheckInstallValidity(plugin, evaluatedMetadata.value());
+          game_.CheckInstallValidity(plugin, evaluatedMetadata.value());
       messages.insert(
-        end(messages), begin(validityMessages), end(validityMessages));
+          end(messages), begin(validityMessages), end(validityMessages));
       evaluatedMetadata.value().SetMessages(messages);
 
       derived.setEvaluatedMetadata(evaluatedMetadata.value());
@@ -116,16 +118,16 @@ protected:
   std::string generateJsonResponse(InputIterator firstPlugin,
                                    InputIterator lastPlugin) {
     nlohmann::json json = {
-      { "folder", state_.GetCurrentGame().FolderName() },
-      { "masterlist", getMasterlistInfo() },
-      { "generalMessages", getGeneralMessages() },
-      { "bashTags", state_.GetCurrentGame().GetKnownBashTags() },
-      { "groups", {
-          { "masterlist", state_.GetCurrentGame().GetMasterlistGroups() },
-          { "userlist", state_.GetCurrentGame().GetUserGroups() },
-        }
-      },
-      { "plugins", nlohmann::json::array() },
+        {"folder", game_.FolderName()},
+        {"masterlist", getMasterlistInfo()},
+        {"generalMessages", getGeneralMessages()},
+        {"bashTags", game_.GetKnownBashTags()},
+        {"groups",
+         {
+             {"masterlist", game_.GetMasterlistGroups()},
+             {"userlist", game_.GetUserGroups()},
+         }},
+        {"plugins", nlohmann::json::array()},
     };
 
     for (auto it = firstPlugin; it != lastPlugin; ++it) {
@@ -135,7 +137,13 @@ protected:
     return json.dump();
   }
 
-  std::shared_ptr<spdlog::logger> logger_;
+  gui::Game& getGame() {
+    return game_;
+  }
+
+  const gui::Game& getGame() const {
+    return game_;
+  }
 
 private:
   static std::vector<SimpleMessage> toSimpleMessages(
@@ -152,7 +160,8 @@ private:
     return simpleMessages;
   }
 
-  std::optional<PluginMetadata> evaluateMetadata(const std::string& pluginName) {
+  std::optional<PluginMetadata> evaluateMetadata(
+      const std::string& pluginName) {
     auto evaluatedMasterlistMetadata = evaluateMasterlistMetadata(pluginName);
     auto evaluatedUserMetadata = evaluateUserlistMetadata(pluginName);
 
@@ -164,20 +173,23 @@ private:
       return evaluatedMasterlistMetadata;
     }
 
-    evaluatedMasterlistMetadata.value().MergeMetadata(evaluatedUserMetadata.value());
+    evaluatedMasterlistMetadata.value().MergeMetadata(
+        evaluatedUserMetadata.value());
 
     return evaluatedMasterlistMetadata;
   }
 
-  std::optional<PluginMetadata> evaluateMasterlistMetadata(const std::string& pluginName) {
+  std::optional<PluginMetadata> evaluateMasterlistMetadata(
+      const std::string& pluginName) {
     try {
-      return state_.GetCurrentGame().GetMasterlistMetadata(pluginName, true);
+      return game_.GetMasterlistMetadata(pluginName, true);
     } catch (std::exception& e) {
       if (logger_) {
-        logger_->error("\"{}\"'s masterlist metadata contains a condition that "
-                      "could not be evaluated. Details: {}",
-                      pluginName,
-                      e.what());
+        logger_->error(
+            "\"{}\"'s masterlist metadata contains a condition that "
+            "could not be evaluated. Details: {}",
+            pluginName,
+            e.what());
       }
 
       PluginMetadata master(pluginName);
@@ -194,13 +206,17 @@ private:
     }
   }
 
-  std::optional<PluginMetadata> evaluateUserlistMetadata(const std::string& pluginName) {
+  std::optional<PluginMetadata> evaluateUserlistMetadata(
+      const std::string& pluginName) {
     try {
-      return state_.GetCurrentGame().GetUserMetadata(pluginName, true);
+      return game_.GetUserMetadata(pluginName, true);
     } catch (std::exception& e) {
       if (logger_) {
-        logger_->error("\"{}\"'s user metadata contains a condition that could "
-                      "not be evaluated. Details: {}", pluginName, e.what());
+        logger_->error(
+            "\"{}\"'s user metadata contains a condition that could "
+            "not be evaluated. Details: {}",
+            pluginName,
+            e.what());
       }
 
       PluginMetadata user(pluginName);
@@ -215,7 +231,6 @@ private:
 
       return user;
     }
-
   }
 
   MasterlistInfo getMasterlistInfo() {
@@ -223,19 +238,19 @@ private:
 
     MasterlistInfo info;
     try {
-      info = state_.GetCurrentGame().GetMasterlistInfo();
+      info = game_.GetMasterlistInfo();
       addSuffixIfModified(info);
     } catch (FileAccessError&) {
       if (logger_) {
         logger_->warn("No masterlist present at {}",
-          state_.GetCurrentGame().MasterlistPath().u8string());
+                      game_.MasterlistPath().u8string());
       }
       info.revision_id = translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError&) {
       if (logger_) {
         logger_->warn("Not a Git repository: {}",
-          state_.GetCurrentGame().MasterlistPath().parent_path().u8string());
+                      game_.MasterlistPath().parent_path().u8string());
       }
       info.revision_id = translate("Unknown: Git repository missing").str();
       info.revision_date = translate("Unknown: Git repository missing").str();
@@ -251,7 +266,9 @@ private:
     }
   }
 
-  LootState& state_;
+  gui::Game& game_;
+  std::shared_ptr<spdlog::logger> logger_;
+  const std::string language_;
 };
 }
 

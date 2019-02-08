@@ -31,9 +31,8 @@ along with LOOT.  If not, see
 namespace loot {
 class UpdateMasterlistQuery : public MetadataQuery {
 public:
-  UpdateMasterlistQuery(LootState& state) :
-      MetadataQuery(state),
-      game_(state.GetCurrentGame()) {}
+  UpdateMasterlistQuery(gui::Game& game, std::string language) :
+      MetadataQuery(game, language) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -44,24 +43,22 @@ public:
     if (!updateMasterlist())
       return "null";
 
-    auto plugins = game_.GetPlugins();
+    auto plugins = getGame().GetPlugins();
     return generateJsonResponse(plugins.cbegin(), plugins.cend());
   }
 
 private:
   bool updateMasterlist() {
     try {
-      return game_.UpdateMasterlist();
+      return getGame().UpdateMasterlist();
     } catch (std::exception&) {
       try {
-        game_.LoadMetadata();
+        getGame().LoadMetadata();
       } catch (...) {
       }
       throw;
     }
   }
-
-  gui::Game& game_;
 };
 }
 

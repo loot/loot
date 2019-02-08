@@ -26,13 +26,13 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_SAVE_USER_GROUPS_QUERY
 
 #include "gui/cef/query/query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class SaveUserGroupsQuery : public Query {
 public:
-  SaveUserGroupsQuery(LootState& state, std::unordered_set<Group> groups) :
-      state_(state),
+  SaveUserGroupsQuery(gui::Game& game, std::unordered_set<Group> groups) :
+      game_(game),
       groups_(groups) {}
 
   std::string executeLogic() {
@@ -41,19 +41,19 @@ public:
       logger->trace("Setting user groups.");
     }
 
-    state_.GetCurrentGame().SetUserGroups(groups_);
-    state_.GetCurrentGame().SaveUserMetadata();
+    game_.SetUserGroups(groups_);
+    game_.SaveUserMetadata();
 
     nlohmann::json json = {
-      { "masterlist", state_.GetCurrentGame().GetMasterlistGroups() },
-      { "userlist", state_.GetCurrentGame().GetUserGroups() },
+        {"masterlist", game_.GetMasterlistGroups()},
+        {"userlist", game_.GetUserGroups()},
     };
     return json.dump();
   }
 
 private:
-  LootState& state_;
-  std::unordered_set<Group> groups_;
+  gui::Game& game_;
+  const std::unordered_set<Group> groups_;
 };
 }
 

@@ -115,6 +115,16 @@ public:
     return *currentGame_;
   }
 
+  const gui::Game& GetCurrentGame() const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    if (currentGame_ == installedGames_.end()) {
+      throw std::runtime_error("No current game to get.");
+    }
+
+    return *currentGame_;
+  }
+
   void SetCurrentGame(const std::string& newGameFolder) {
     using boost::locale::to_lower;
 

@@ -32,22 +32,24 @@ along with LOOT.  If not, see
 namespace loot {
 class GetConflictingPluginsQuery : public MetadataQuery {
 public:
-  GetConflictingPluginsQuery(LootState& state, const std::string& pluginName) :
-      MetadataQuery(state),
-      game_(state.GetCurrentGame()),
+  GetConflictingPluginsQuery(gui::Game& game,
+                             std::string language,
+                             std::string pluginName) :
+      MetadataQuery(game, language),
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
-    logger_ = getLogger();
-    if (logger_) {
-      logger_->debug("Searching for plugins that conflict with {}", pluginName_);
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Searching for plugins that conflict with {}",
+                     pluginName_);
     }
 
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
     // all plugins.
-    if (!game_.ArePluginsFullyLoaded())
-      game_.LoadAllInstalledPlugins(false);
+    if (!getGame().ArePluginsFullyLoaded())
+      getGame().LoadAllInstalledPlugins(false);
 
     return getJsonResponse();
   }
@@ -59,16 +61,16 @@ private:
         {"plugins", nlohmann::json::array()},
     };
 
-    auto plugin = game_.GetPlugin(pluginName_);
+    auto plugin = getGame().GetPlugin(pluginName_);
     if (!plugin) {
       throw std::runtime_error("The plugin \"" + pluginName_ +
                                "\" is not loaded.");
     }
 
-    for (const auto& otherPlugin : game_.GetPlugins()) {
+    for (const auto& otherPlugin : getGame().GetPlugins()) {
       json["plugins"].push_back({
-        { "metadata", generateDerivedMetadata(otherPlugin) },
-        { "conflicts", doPluginsConflict(plugin, otherPlugin) },
+          {"metadata", generateDerivedMetadata(otherPlugin)},
+          {"conflicts", doPluginsConflict(plugin, otherPlugin)},
       });
     }
 
@@ -85,7 +87,6 @@ private:
     }
   }
 
-  gui::Game& game_;
   const std::string pluginName_;
 };
 }

@@ -26,20 +26,21 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_EDITOR_OPENED_QUERY
 
 #include "gui/cef/query/query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
 class EditorOpenedQuery : public Query {
 public:
-  EditorOpenedQuery(LootState& state) : state_(state) {}
+  EditorOpenedQuery(UnappliedChangeCounter& unappliedChangeCounter) :
+      unappliedChangeCounter_(unappliedChangeCounter) {}
 
   std::string executeLogic() {
-    state_.IncrementUnappliedChangeCounter();
+    unappliedChangeCounter_.IncrementUnappliedChangeCounter();
     return "";
   }
 
 private:
-  LootState& state_;
+  UnappliedChangeCounter& unappliedChangeCounter_;
 };
 }
 

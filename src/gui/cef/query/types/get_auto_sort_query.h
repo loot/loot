@@ -30,12 +30,12 @@ along with LOOT.  If not, see
 #include <json.hpp>
 
 #include "gui/cef/query/query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/loot_settings.h"
 
 namespace loot {
 class GetAutoSortQuery : public Query {
 public:
-  GetAutoSortQuery(const LootState& state) : state_(state) {}
+  GetAutoSortQuery(const LootSettings& settings) : settings_(settings) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -44,14 +44,14 @@ public:
     }
 
     nlohmann::json json = {
-        {"autoSort", state_.shouldAutoSort()},
+        {"autoSort", settings_.shouldAutoSort()},
     };
 
     return json.dump();
   }
 
 private:
-  const LootState& state_;
+  const LootSettings& settings_;
 };
 }
 

@@ -27,33 +27,36 @@ along with LOOT.  If not, see
 
 #include "gui/cef/query/json.h"
 #include "gui/cef/query/types/metadata_query.h"
-#include "gui/state/loot_state.h"
+#include "gui/state/game/game.h"
 
 namespace loot {
 class CancelSortQuery : public MetadataQuery {
 public:
-  CancelSortQuery(LootState& state) : MetadataQuery(state), state_(state) {}
+  CancelSortQuery(gui::Game& game,
+                  UnappliedChangeCounter& counter,
+                  std::string language) :
+      MetadataQuery(game, language),
+      counter_(counter) {}
 
   std::string executeLogic() {
-    state_.DecrementUnappliedChangeCounter();
-    state_.GetCurrentGame().DecrementLoadOrderSortCount();
+    counter_.DecrementUnappliedChangeCounter();
+    getGame().DecrementLoadOrderSortCount();
 
     nlohmann::json json = {
         {"plugins", nlohmann::json::array()},
         {"generalMessages", getGeneralMessages()},
     };
 
-    std::vector<std::string> loadOrder = state_.GetCurrentGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = getGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      auto plugin = state_.GetCurrentGame().GetPlugin(pluginName);
+      auto plugin = getGame().GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
-      auto loadOrderIndex = state_.GetCurrentGame().GetActiveLoadOrderIndex(
-          plugin, loadOrder);
+      auto loadOrderIndex = getGame().GetActiveLoadOrderIndex(plugin, loadOrder);
 
-      nlohmann::json pluginJson = { {"name", pluginName} };
+      nlohmann::json pluginJson = {{"name", pluginName}};
       if (loadOrderIndex.has_value()) {
         pluginJson["loadOrderIndex"] = loadOrderIndex.value();
       }
@@ -65,7 +68,7 @@ public:
   }
 
 private:
-  LootState& state_;
+  UnappliedChangeCounter& counter_;
 };
 }
 
