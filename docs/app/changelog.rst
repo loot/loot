@@ -4,6 +4,32 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.3 - 2019-02-10
+===================
+
+Fixed
+-----
+
+- Plugin counters would be set to zero after cancelling a load order sort.
+- The user interface would not display default values for some data if
+  overriding values were removed (e.g. removing a plugin's user metadata would
+  not set its group back to the default if no group was set in the masterlist).
+- Saving user metadata with the default group would store that group membership
+  in user metadata even if the plugin was already in the default group.
+- Condition parsing now errors if it does not consume the whole condition
+  string, so invalid syntax is not silently ignored (via libloot).
+- Conditions were not parsed past the first instance of ``file(<regex>)``,
+  ``active(<regex>)``, ``many(<regex>)`` or ``many_active(<regex>)``
+  (via libloot).
+- LOOT could crash on startup or changing game when trying to check if the game
+  or data paths are symlinks. If a check fails, LOOT will now assume the path is
+  not a symlink. Via libloot.
+
+Changed
+-------
+
+- Updated libloot to v0.14.4.
+
 0.14.2 - 2019-01-20
 ===================
 
