@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-02-03 11:53+0000\n"
+"POT-Creation-Date: 2019-02-09 22:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/gui/cef/query/query.h:50
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-
-#: src/gui/cef/query/query.h:84
+#: src/gui/cef/query/query.h:48
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -32,31 +26,37 @@ msgid ""
 "information."
 msgstr ""
 
-#: src/gui/cef/query/types/get_game_data_query.h:45
+#: src/gui/cef/query/query_executor.h:43
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+
+#: src/gui/cef/query/types/get_game_data_query.h:46
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:187
-#: src/gui/cef/query/types/metadata_query.h:210
+#: src/gui/cef/query/types/metadata_query.h:200
+#: src/gui/cef/query/types/metadata_query.h:227
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
-
-#: src/gui/cef/query/types/metadata_query.h:233
-#: src/gui/cef/query/types/metadata_query.h:234
-msgid "N/A: No masterlist present"
-msgstr ""
-
-#: src/gui/cef/query/types/metadata_query.h:240
-#: src/gui/cef/query/types/metadata_query.h:241
-msgid "Unknown: Git repository missing"
 msgstr ""
 
 #: src/gui/cef/query/types/metadata_query.h:249
 #: src/gui/cef/query/types/metadata_query.h:250
+msgid "N/A: No masterlist present"
+msgstr ""
+
+#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/cef/query/types/metadata_query.h:257
+msgid "Unknown: Git repository missing"
+msgstr ""
+
+#: src/gui/cef/query/types/metadata_query.h:265
+#: src/gui/cef/query/types/metadata_query.h:266
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/cef/query/types/sort_plugins_query.h:50
+#: src/gui/cef/query/types/sort_plugins_query.h:53
 msgid "Sorting load order..."
 msgstr ""
 
@@ -76,71 +76,71 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:167 src/gui/state/game/game.cpp:196
+#: src/gui/state/game/game.cpp:168 src/gui/state/game/game.cpp:197
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:179
+#: src/gui/state/game/game.cpp:180
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:215
+#: src/gui/state/game/game.cpp:216
 msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:250
+#: src/gui/state/game/game.cpp:251
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:270
+#: src/gui/state/game/game.cpp:271
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:287
+#: src/gui/state/game/game.cpp:288
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:356 src/gui/state/game/game.cpp:445
+#: src/gui/state/game/game.cpp:357 src/gui/state/game/game.cpp:450
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:468
+#: src/gui/state/game/game.cpp:473
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:479
+#: src/gui/state/game/game.cpp:484
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:515
+#: src/gui/state/game/game.cpp:520
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:539
+#: src/gui/state/game/game.cpp:544
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:567
+#: src/gui/state/game/game.cpp:572
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:612
+#: src/gui/state/game/game.cpp:617
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
