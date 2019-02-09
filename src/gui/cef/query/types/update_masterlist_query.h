@@ -29,10 +29,11 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
-class UpdateMasterlistQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class UpdateMasterlistQuery : public MetadataQuery<G> {
 public:
-  UpdateMasterlistQuery(gui::Game& game, std::string language) :
-      MetadataQuery(game, language) {}
+  UpdateMasterlistQuery(G& game, std::string language) :
+      MetadataQuery<G>(game, language) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -43,17 +44,17 @@ public:
     if (!updateMasterlist())
       return "null";
 
-    auto plugins = getGame().GetPlugins();
-    return generateJsonResponse(plugins.cbegin(), plugins.cend());
+    auto plugins = this->getGame().GetPlugins();
+    return this->generateJsonResponse(plugins.cbegin(), plugins.cend());
   }
 
 private:
   bool updateMasterlist() {
     try {
-      return getGame().UpdateMasterlist();
+      return this->getGame().UpdateMasterlist();
     } catch (std::exception&) {
       try {
-        getGame().LoadMetadata();
+        this->getGame().LoadMetadata();
       } catch (...) {
       }
       throw;

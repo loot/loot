@@ -42,7 +42,8 @@ public:
   virtual std::optional<std::string> getErrorMessage() { return std::nullopt; };
 };
 
-inline std::string getSortingErrorMessage(const gui::Game& game) {
+template<typename G>
+inline std::string getSortingErrorMessage(const G& game) {
   return (boost::format(boost::locale::translate(
               "Oh no, something went wrong! This is usually because \"%1%\" "
               "is set to be read-only. If it is, unset it and try again. If "

@@ -33,12 +33,13 @@ along with LOOT.  If not, see
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class SortPluginsQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class SortPluginsQuery : public MetadataQuery<G> {
 public:
-  SortPluginsQuery(gui::Game& game, UnappliedChangeCounter& counter,
+  SortPluginsQuery(G& game, UnappliedChangeCounter& counter,
                    std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
-      MetadataQuery(game, language),
+      MetadataQuery<G>(game, language),
       counter_(counter),
       sendProgressUpdate_(sendProgressUpdate) {}
 
@@ -50,17 +51,17 @@ public:
 
     // Sort plugins into their load order.
     sendProgressUpdate_(boost::locale::translate("Sorting load order..."));
-    std::vector<std::string> plugins = getGame().SortPlugins();
+    std::vector<std::string> plugins = this->getGame().SortPlugins();
 
     try {
-      if (getGame().Type() == GameType::tes5 ||
-          getGame().Type() == GameType::tes5se ||
-          getGame().Type() == GameType::tes5vr ||
-          getGame().Type() == GameType::fo4 ||
-          getGame().Type() == GameType::fo4vr)
+      if (this->getGame().Type() == GameType::tes5 ||
+          this->getGame().Type() == GameType::tes5se ||
+          this->getGame().Type() == GameType::tes5vr ||
+          this->getGame().Type() == GameType::fo4 ||
+          this->getGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
-      errorMessage = getSortingErrorMessage(getGame());
+      errorMessage = getSortingErrorMessage(this->getGame());
       throw;
     }
 
@@ -80,30 +81,30 @@ private:
     if (plugins.empty() ||
         !equal(begin(plugins),
                end(plugins),
-               begin(getGame().GetLoadOrder())))
+               begin(this->getGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
     // because there are no changes to accept and some plugins' positions
     // may only be inferred and not written to loadorder.txt/plugins.txt.
-    getGame().SetLoadOrder(plugins);
+    this->getGame().SetLoadOrder(plugins);
   }
 
   std::string generateJsonResponse(const std::vector<std::string>& plugins) {
     nlohmann::json json = {
-        {"generalMessages", getGeneralMessages()},
+        {"generalMessages", this->getGeneralMessages()},
         {"plugins", nlohmann::json::array()},
     };
 
     for (const auto& pluginName : plugins) {
-      auto plugin = getGame().GetPlugin(pluginName);
+      auto plugin = this->getGame().GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
-      auto derivedMetadata = generateDerivedMetadata(plugin);
+      auto derivedMetadata = this->generateDerivedMetadata(plugin);
       auto index =
-          getGame().GetActiveLoadOrderIndex(plugin, plugins);
+          this->getGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.setLoadOrderIndex(index.value());
       }

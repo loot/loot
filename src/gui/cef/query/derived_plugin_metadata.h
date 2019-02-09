@@ -33,10 +33,11 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
+template<typename G>
 class DerivedPluginMetadata {
 public:
   DerivedPluginMetadata(const std::shared_ptr<const PluginInterface>& file,
-                        const gui::Game& game,
+                        const G& game,
                         std::string language) :
       name(file->GetName()),
       version(file->GetVersion()),
@@ -97,8 +98,9 @@ private:
 
   std::string language;
 
+  template<typename T>
   friend void to_json(nlohmann::json& json,
-                      const DerivedPluginMetadata& plugin);
+                      const DerivedPluginMetadata<T>& plugin);
 };
 }
 

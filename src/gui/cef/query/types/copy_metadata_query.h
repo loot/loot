@@ -29,9 +29,10 @@ along with LOOT.  If not, see
 #include "gui/cef/query/types/clipboard_query.h"
 
 namespace loot {
+template<typename G = gui::Game>
 class CopyMetadataQuery : public ClipboardQuery {
 public:
-  CopyMetadataQuery(const gui::Game& game,
+  CopyMetadataQuery(const G& game,
                     std::string language,
                     std::string pluginName) :
       game_(game),
@@ -76,7 +77,7 @@ private:
     return to_json_with_language(metadata, language_).dump(4);
   }
 
-  const gui::Game& game_;
+  const G& game_;
   const std::string language_;
   const std::string pluginName_;
 };

@@ -29,12 +29,13 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
-class ClearPluginMetadataQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class ClearPluginMetadataQuery : public MetadataQuery<G> {
 public:
-  ClearPluginMetadataQuery(gui::Game& game,
+  ClearPluginMetadataQuery(G& game,
                            std::string language,
                            std::string pluginName) :
-      MetadataQuery(game, language),
+      MetadataQuery<G>(game, language),
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
@@ -43,10 +44,10 @@ public:
       logger->debug("Clearing user metadata for plugin {}", pluginName_);
     }
 
-    getGame().ClearUserMetadata(pluginName_);
-    getGame().SaveUserMetadata();
+    this->getGame().ClearUserMetadata(pluginName_);
+    this->getGame().SaveUserMetadata();
 
-    return generateJsonResponse(pluginName_);
+    return this->generateJsonResponse(pluginName_);
   }
 
 private:

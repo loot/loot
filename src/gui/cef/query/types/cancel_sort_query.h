@@ -30,31 +30,32 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
-class CancelSortQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class CancelSortQuery : public MetadataQuery<G> {
 public:
-  CancelSortQuery(gui::Game& game,
+  CancelSortQuery(G& game,
                   UnappliedChangeCounter& counter,
                   std::string language) :
-      MetadataQuery(game, language),
+      MetadataQuery<G>(game, language),
       counter_(counter) {}
 
   std::string executeLogic() {
     counter_.DecrementUnappliedChangeCounter();
-    getGame().DecrementLoadOrderSortCount();
+    this->getGame().DecrementLoadOrderSortCount();
 
     nlohmann::json json = {
         {"plugins", nlohmann::json::array()},
-        {"generalMessages", getGeneralMessages()},
+        {"generalMessages", this->getGeneralMessages()},
     };
 
-    std::vector<std::string> loadOrder = getGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = this->getGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      auto plugin = getGame().GetPlugin(pluginName);
+      auto plugin = this->getGame().GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
-      auto loadOrderIndex = getGame().GetActiveLoadOrderIndex(plugin, loadOrder);
+      auto loadOrderIndex = this->getGame().GetActiveLoadOrderIndex(plugin, loadOrder);
 
       nlohmann::json pluginJson = {{"name", pluginName}};
       if (loadOrderIndex.has_value()) {

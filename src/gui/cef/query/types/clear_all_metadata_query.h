@@ -30,10 +30,11 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
-class ClearAllMetadataQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class ClearAllMetadataQuery : public MetadataQuery<G> {
 public:
-  ClearAllMetadataQuery(gui::Game& game, std::string language) :
-      MetadataQuery(game, language) {}
+  ClearAllMetadataQuery(G& game, std::string language) :
+      MetadataQuery<G>(game, language) {}
 
   std::string executeLogic() {
     auto logger = getLogger();
@@ -45,8 +46,8 @@ public:
     auto userlistPluginNames = getUserlistPluginNames();
 
     // Clear the user metadata.
-    getGame().ClearAllUserMetadata();
-    getGame().SaveUserMetadata();
+    this->getGame().ClearAllUserMetadata();
+    this->getGame().SaveUserMetadata();
 
     if (logger) {
       logger->trace(
@@ -61,8 +62,8 @@ public:
 private:
   std::vector<std::string> getUserlistPluginNames() const {
     std::vector<std::string> userlistPluginNames;
-    for (const auto& plugin : getGame().GetPlugins()) {
-      if (getGame().GetUserMetadata(plugin->GetName()).has_value()) {
+    for (const auto& plugin : this->getGame().GetPlugins()) {
+      if (this->getGame().GetUserMetadata(plugin->GetName()).has_value()) {
         userlistPluginNames.push_back(plugin->GetName());
       }
     }
@@ -76,7 +77,7 @@ private:
 
     json["plugins"] = nlohmann::json::array();
     for (const auto& pluginName : userlistPluginNames) {
-      auto derivedMetadata = generateDerivedMetadata(pluginName);
+      auto derivedMetadata = this->generateDerivedMetadata(pluginName);
       if (derivedMetadata.has_value()) {
         json["plugins"].push_back(derivedMetadata.value());
       }

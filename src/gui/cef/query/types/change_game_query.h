@@ -28,13 +28,14 @@ along with LOOT.  If not, see
 #include "gui/cef/query/types/get_game_data_query.h"
 
 namespace loot {
-class ChangeGameQuery : public GetGameDataQuery {
+template<typename G = gui::Game>
+class ChangeGameQuery : public GetGameDataQuery<G> {
 public:
   ChangeGameQuery(GamesManager& gamesManager,
                   std::string language,
                   std::string gameFolder,
                   std::function<void(std::string)> sendProgressUpdate) :
-      GetGameDataQuery(gamesManager.GetCurrentGame(),
+      GetGameDataQuery<G>(gamesManager.GetCurrentGame(),
                        language,
                        sendProgressUpdate),
       gamesManager_(gamesManager),
@@ -43,7 +44,7 @@ public:
   std::string executeLogic() {
     gamesManager_.SetCurrentGame(gameFolder_);
 
-    return GetGameDataQuery::executeLogic();
+    return GetGameDataQuery<G>::executeLogic();
   }
 
 private:

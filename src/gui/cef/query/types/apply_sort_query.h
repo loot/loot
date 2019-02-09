@@ -28,9 +28,10 @@ along with LOOT.  If not, see
 #include "gui/cef/query/query.h"
 
 namespace loot {
+template<typename G = gui::Game>
 class ApplySortQuery : public Query {
 public:
-  ApplySortQuery(gui::Game& game,
+  ApplySortQuery(G& game,
                  UnappliedChangeCounter& counter,
                  const std::vector<std::string>& plugins) :
       game_(game),
@@ -56,7 +57,7 @@ public:
   std::optional<std::string> getErrorMessage() override { return errorMessage; }
 
 private:
-  gui::Game& game_;
+  G& game_;
   UnappliedChangeCounter& counter_;
   const std::vector<std::string> plugins_;
   std::optional<std::string> errorMessage;

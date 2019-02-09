@@ -29,9 +29,10 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
+template<typename G = gui::Game>
 class RedatePluginsQuery : public Query {
 public:
-  RedatePluginsQuery(gui::Game& game) :
+  RedatePluginsQuery(G& game) :
       game_(game) {}
 
   std::string executeLogic() {
@@ -40,7 +41,7 @@ public:
   }
 
 private:
-  gui::Game& game_;
+  G& game_;
 };
 }
 

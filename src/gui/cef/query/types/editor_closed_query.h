@@ -31,13 +31,14 @@ along with LOOT.  If not, see
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class EditorClosedQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class EditorClosedQuery : public MetadataQuery<G> {
 public:
-  EditorClosedQuery(gui::Game& game,
+  EditorClosedQuery(G& game,
                     UnappliedChangeCounter& counter,
                     std::string language,
                     nlohmann::json editorState) :
-      MetadataQuery(game, language),
+      MetadataQuery<G>(game, language),
       counter_(counter),
       applyEdits_(editorState.at("applyEdits")) {
     try {
@@ -54,7 +55,7 @@ public:
     }
     counter_.DecrementUnappliedChangeCounter();
 
-    return generateJsonResponse(metadata_.GetName());
+    return this->generateJsonResponse(metadata_.GetName());
   }
 
 private:
@@ -64,12 +65,12 @@ private:
       logger->trace("Getting non-user metadata for: {}", metadata_.GetName());
     }
 
-    auto plugin = getGame().GetPlugin(metadata_.GetName());
+    auto plugin = this->getGame().GetPlugin(metadata_.GetName());
     if (plugin) {
-      return MetadataQuery::getNonUserMetadata(plugin);
+      return MetadataQuery<G>::getNonUserMetadata(plugin);
     }
 
-    return getGame().GetMasterlistMetadata(metadata_.GetName());
+    return this->getGame().GetMasterlistMetadata(metadata_.GetName());
   }
 
   PluginMetadata getUserMetadata() {
@@ -108,18 +109,18 @@ private:
     if (logger) {
       logger->trace("Erasing the existing userlist entry.");
     }
-    getGame().ClearUserMetadata(metadata_.GetName());
+    this->getGame().ClearUserMetadata(metadata_.GetName());
 
     // Add a new userlist entry if necessary.
     if (!userMetadata.HasNameOnly()) {
       if (logger) {
         logger->trace("Adding new metadata to new userlist entry.");
       }
-      getGame().AddUserMetadata(userMetadata);
+      this->getGame().AddUserMetadata(userMetadata);
     }
 
     // Save edited userlist.
-    getGame().SaveUserMetadata();
+    this->getGame().SaveUserMetadata();
   }
 
   UnappliedChangeCounter& counter_;

@@ -33,9 +33,10 @@ struct Counters {
   size_t activeLightMasters = 0;
 };
 
+template<typename G = gui::Game>
 class CopyLoadOrderQuery : public ClipboardQuery {
 public:
-  CopyLoadOrderQuery(const gui::Game& game,
+  CopyLoadOrderQuery(const G& game,
                      const std::vector<std::string>& plugins) :
       game_(game),
       plugins_(plugins) {}
@@ -77,7 +78,7 @@ private:
     stream << pluginName << "\r\n";
   }
 
-  const gui::Game& game_;
+  const G& game_;
   const std::vector<std::string> plugins_;
 };
 }

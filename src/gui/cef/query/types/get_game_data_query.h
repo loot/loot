@@ -32,12 +32,13 @@ along with LOOT.  If not, see
 #include "loot/loot_version.h"
 
 namespace loot {
-class GetGameDataQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class GetGameDataQuery : public MetadataQuery<G> {
 public:
-  GetGameDataQuery(gui::Game& game,
+  GetGameDataQuery(G& game,
                    std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
-      MetadataQuery(game, language),
+      MetadataQuery<G>(game, language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
   std::string executeLogic() {
@@ -46,24 +47,24 @@ public:
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
-    bool isFirstLoad = getGame().GetPlugins().empty();
+    bool isFirstLoad = this->getGame().GetPlugins().empty();
 
-    getGame().LoadAllInstalledPlugins(true);
+    this->getGame().LoadAllInstalledPlugins(true);
 
     if (isFirstLoad)
-      getGame().LoadMetadata();
+      this->getGame().LoadMetadata();
 
     // Sort plugins into their load order.
     std::vector<std::shared_ptr<const PluginInterface>> installed;
-    std::vector<std::string> loadOrder = getGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = this->getGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
-      const auto plugin = getGame().GetPlugin(pluginName);
+      const auto plugin = this->getGame().GetPlugin(pluginName);
       if (plugin) {
         installed.push_back(plugin);
       }
     }
 
-    return generateJsonResponse(installed.cbegin(), installed.cend());
+    return this->generateJsonResponse(installed.cbegin(), installed.cend());
   }
 
 private:

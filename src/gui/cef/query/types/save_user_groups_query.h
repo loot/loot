@@ -29,9 +29,10 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
+template<typename G = gui::Game>
 class SaveUserGroupsQuery : public Query {
 public:
-  SaveUserGroupsQuery(gui::Game& game, std::unordered_set<Group> groups) :
+  SaveUserGroupsQuery(G& game, std::unordered_set<Group> groups) :
       game_(game),
       groups_(groups) {}
 
@@ -52,7 +53,7 @@ public:
   }
 
 private:
-  gui::Game& game_;
+  G& game_;
   const std::unordered_set<Group> groups_;
 };
 }

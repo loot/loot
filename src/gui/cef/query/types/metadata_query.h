@@ -34,9 +34,10 @@ along with LOOT.  If not, see
 #include "loot/exception/git_state_error.h"
 
 namespace loot {
+template<typename G = gui::Game>
 class MetadataQuery : public Query {
 protected:
-  MetadataQuery(gui::Game& game, std::string language) :
+  MetadataQuery(G& game, std::string language) :
       game_(game),
       language_(language),
       logger_(getLogger()) {}
@@ -66,7 +67,7 @@ protected:
     return metadata;
   }
 
-  std::optional<DerivedPluginMetadata> generateDerivedMetadata(
+  std::optional<DerivedPluginMetadata<G>> generateDerivedMetadata(
       const std::string& pluginName) {
     auto plugin = game_.GetPlugin(pluginName);
     if (plugin) {
@@ -76,9 +77,9 @@ protected:
     return std::nullopt;
   }
 
-  DerivedPluginMetadata generateDerivedMetadata(
+  DerivedPluginMetadata<G> generateDerivedMetadata(
       const std::shared_ptr<const PluginInterface>& plugin) {
-    auto derived = DerivedPluginMetadata(plugin, game_, language_);
+    auto derived = DerivedPluginMetadata<G>(plugin, game_, language_);
 
     auto nonUserMetadata = getNonUserMetadata(plugin);
     if (nonUserMetadata.has_value()) {
@@ -137,11 +138,11 @@ protected:
     return json.dump();
   }
 
-  gui::Game& getGame() {
+  G& getGame() {
     return game_;
   }
 
-  const gui::Game& getGame() const {
+  const G& getGame() const {
     return game_;
   }
 
@@ -266,7 +267,7 @@ private:
     }
   }
 
-  gui::Game& game_;
+  G& game_;
   std::shared_ptr<spdlog::logger> logger_;
   const std::string language_;
 };

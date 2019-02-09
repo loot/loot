@@ -30,12 +30,13 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 
 namespace loot {
-class GetConflictingPluginsQuery : public MetadataQuery {
+template<typename G = gui::Game>
+class GetConflictingPluginsQuery : public MetadataQuery<G> {
 public:
-  GetConflictingPluginsQuery(gui::Game& game,
+  GetConflictingPluginsQuery(G& game,
                              std::string language,
                              std::string pluginName) :
-      MetadataQuery(game, language),
+      MetadataQuery<G>(game, language),
       pluginName_(pluginName) {}
 
   std::string executeLogic() {
@@ -48,8 +49,8 @@ public:
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
     // all plugins.
-    if (!getGame().ArePluginsFullyLoaded())
-      getGame().LoadAllInstalledPlugins(false);
+    if (!this->getGame().ArePluginsFullyLoaded())
+      this->getGame().LoadAllInstalledPlugins(false);
 
     return getJsonResponse();
   }
@@ -57,19 +58,19 @@ public:
 private:
   std::string getJsonResponse() {
     nlohmann::json json = {
-        {"generalMessages", getGeneralMessages()},
+        {"generalMessages", this->getGeneralMessages()},
         {"plugins", nlohmann::json::array()},
     };
 
-    auto plugin = getGame().GetPlugin(pluginName_);
+    auto plugin = this->getGame().GetPlugin(pluginName_);
     if (!plugin) {
       throw std::runtime_error("The plugin \"" + pluginName_ +
                                "\" is not loaded.");
     }
 
-    for (const auto& otherPlugin : getGame().GetPlugins()) {
+    for (const auto& otherPlugin : this->getGame().GetPlugins()) {
       json["plugins"].push_back({
-          {"metadata", generateDerivedMetadata(otherPlugin)},
+          {"metadata", this->generateDerivedMetadata(otherPlugin)},
           {"conflicts", doPluginsConflict(plugin, otherPlugin)},
       });
     }

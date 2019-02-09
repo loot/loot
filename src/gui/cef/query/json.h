@@ -372,7 +372,8 @@ void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
   metadata.SetLocations(json.value("url", std::set<Location>()));
 }
 
-void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
+template<typename G>
+void to_json(nlohmann::json& json, const DerivedPluginMetadata<G>& plugin) {
   json = {
     { "name", plugin.name },
     { "isActive", plugin.isActive },
