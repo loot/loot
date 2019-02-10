@@ -30,10 +30,9 @@ along with LOOT.  If not, see
 #include "gui/state/loot_state.h"
 
 namespace loot {
-class CloseSettingsQuery : public GetInstalledGamesQuery {
+class CloseSettingsQuery : public Query {
 public:
   CloseSettingsQuery(LootState& state, nlohmann::json settings) :
-      GetInstalledGamesQuery(state),
       state_(state),
       settings_(settings) {}
 
@@ -54,7 +53,7 @@ public:
     state_.storeGameSettings(
         settings_.value("games", std::vector<GameSettings>()));
 
-    return GetInstalledGamesQuery::executeLogic();
+    return GetInstalledGamesQuery(state_).executeLogic();
   }
 
 private:

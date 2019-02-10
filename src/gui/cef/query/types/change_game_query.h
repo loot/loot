@@ -29,27 +29,30 @@ along with LOOT.  If not, see
 
 namespace loot {
 template<typename G = gui::Game>
-class ChangeGameQuery : public GetGameDataQuery<G> {
+class ChangeGameQuery : public Query {
 public:
   ChangeGameQuery(GamesManager& gamesManager,
                   std::string language,
                   std::string gameFolder,
                   std::function<void(std::string)> sendProgressUpdate) :
-      GetGameDataQuery<G>(gamesManager.GetCurrentGame(),
-                       language,
-                       sendProgressUpdate),
       gamesManager_(gamesManager),
-      gameFolder_(gameFolder) {}
+      gameFolder_(gameFolder),
+      language_(language),
+      sendProgressUpdate_(sendProgressUpdate) {}
 
   std::string executeLogic() {
     gamesManager_.SetCurrentGame(gameFolder_);
 
-    return GetGameDataQuery<G>::executeLogic();
+    GetGameDataQuery<G> subQuery(gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
+
+    return subQuery.executeLogic();
   }
 
 private:
   GamesManager& gamesManager_;
   const std::string gameFolder_;
+  const std::string language_;
+  const std::function<void(std::string)> sendProgressUpdate_;
 };
 }
 
