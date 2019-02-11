@@ -33,7 +33,18 @@ Refer to `appveyor.yml` for the build process. The Appveyor configuration assume
 
 ### Linux
 
-Refer to `.travis.yml` for the build process. A [local Docker image](https://docs.travis-ci.com/user/common-build-problems/#Troubleshooting-Locally-in-a-Docker-Image) can be used to ensure the assumed build environment.
+Refer to `.travis.yml` for the build process. It assumes that you have already
+cloned the LOOT repository, that the current working directory is its root, and
+that the following applications are already installed:
+
+- `cmake` v3.6+
+- `curl`
+- `git`
+- `nvm`, or just install Node.js 8+ and ignore the `nvm` call in `.travis.yml`.
+- `python` and `pip` (2.7 or 3, it shouldn't matter)
+- `wget`
+
+(The list above may be incomplete.)
 
 Not all LOOT's features have been implemented for Linux builds. Issues labelled
 `linux` on LOOT's issue tracker cover such missing features where they can be
