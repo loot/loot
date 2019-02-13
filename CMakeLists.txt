@@ -64,10 +64,12 @@ ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
 set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
 set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
-if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.4/libloot-0.14.4-0-gda80a78_dev-win32.7z")
-else()
-    set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.4/libloot.tar.xz")
+if (NOT DEFINED LIBLOOT_URL)
+    if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.4/libloot-0.14.4-0-gda80a78_dev-win32.7z")
+    else()
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.4/libloot.tar.xz")
+    endif()
 endif()
 
 ExternalProject_Add(json
