@@ -28,6 +28,7 @@
 #include <filesystem>
 #include <map>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -56,12 +57,11 @@ public:
   bool isDebugLoggingEnabled() const;
   bool updateMasterlist() const;
   bool isLootUpdateCheckEnabled() const;
-  bool isWindowPositionStored() const;
   std::string getGame() const;
   std::string getLastGame() const;
   std::string getLastVersion() const;
   std::string getLanguage() const;
-  const WindowPosition& getWindowPosition() const;
+  std::optional<WindowPosition> getWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
   const std::map<std::string, bool>& getFilters() const;
 
@@ -87,7 +87,7 @@ private:
   std::string lastGame_;
   std::string lastVersion_;
   std::string language_;
-  WindowPosition windowPosition_;
+  std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_;
   std::map<std::string, bool> filters_;
 

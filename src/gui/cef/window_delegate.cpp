@@ -27,10 +27,11 @@
 #include "gui/state/loot_paths.h"
 
 namespace loot {
-WindowDelegate::WindowDelegate(CefRefPtr<CefBrowserView> browser_view,
-                               LootState& lootState) :
+WindowDelegate::WindowDelegate(
+    CefRefPtr<CefBrowserView> browser_view,
+    std::optional<LootSettings::WindowPosition> windowPosition) :
     browser_view_(browser_view),
-    lootState_(lootState) {}
+    windowPosition_(windowPosition) {}
 
 void WindowDelegate::OnWindowCreated(CefRefPtr<CefWindow> window) {
   window->SetTitle("LOOT");
@@ -39,8 +40,8 @@ void WindowDelegate::OnWindowCreated(CefRefPtr<CefWindow> window) {
   window->AddChildView(browser_view_);
 
   bool isMaximised = false;
-  if (lootState_.isWindowPositionStored()) {
-    auto windowPosition = lootState_.getWindowPosition();
+  if (windowPosition_) {
+    auto windowPosition = windowPosition_.value();
     isMaximised = windowPosition.maximised;
     SetWindowPosition(windowPosition);
   } else {

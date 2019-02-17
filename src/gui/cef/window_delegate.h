@@ -29,13 +29,14 @@
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
 
-#include "gui/state/loot_state.h"
+#include "gui/state/loot_settings.h"
 
 namespace loot {
 class WindowDelegate : public CefWindowDelegate {
 public:
-  explicit WindowDelegate(CefRefPtr<CefBrowserView> browser_view,
-                          LootState& lootState);
+  explicit WindowDelegate(
+      CefRefPtr<CefBrowserView> browser_view,
+      std::optional<LootSettings::WindowPosition> windowPosition);
 
   void OnWindowCreated(CefRefPtr<CefWindow> window) OVERRIDE;
 
@@ -51,7 +52,7 @@ private:
   void SetWindowIcon(CefRefPtr<CefWindow> window);
 
   CefRefPtr<CefBrowserView> browser_view_;
-  LootState& lootState_;
+  std::optional<LootSettings::WindowPosition> windowPosition_;
 
   IMPLEMENT_REFCOUNTING(WindowDelegate);
   DISALLOW_COPY_AND_ASSIGN(WindowDelegate);

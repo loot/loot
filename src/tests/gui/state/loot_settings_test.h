@@ -73,7 +73,6 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.updateMasterlist());
   EXPECT_TRUE(settings_.isLootUpdateCheckEnabled());
-  EXPECT_FALSE(settings_.isWindowPositionStored());
   EXPECT_EQ("auto", settings_.getGame());
   EXPECT_EQ("auto", settings_.getLastGame());
   EXPECT_TRUE(settings_.getLastVersion().empty());
@@ -173,11 +172,12 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
 
-  EXPECT_EQ(1, settings_.getWindowPosition().top);
-  EXPECT_EQ(2, settings_.getWindowPosition().bottom);
-  EXPECT_EQ(3, settings_.getWindowPosition().left);
-  EXPECT_EQ(4, settings_.getWindowPosition().right);
-  EXPECT_TRUE(settings_.getWindowPosition().maximised);
+  ASSERT_TRUE(settings_.getWindowPosition().has_value());
+  EXPECT_EQ(1, settings_.getWindowPosition().value().top);
+  EXPECT_EQ(2, settings_.getWindowPosition().value().bottom);
+  EXPECT_EQ(3, settings_.getWindowPosition().value().left);
+  EXPECT_EQ(4, settings_.getWindowPosition().value().right);
+  EXPECT_TRUE(settings_.getWindowPosition().value().maximised);
 
   EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
 
@@ -409,11 +409,12 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(lastGame, settings.getLastGame());
   EXPECT_EQ(language, settings.getLanguage());
 
-  EXPECT_EQ(1, settings.getWindowPosition().top);
-  EXPECT_EQ(2, settings.getWindowPosition().bottom);
-  EXPECT_EQ(3, settings.getWindowPosition().left);
-  EXPECT_EQ(4, settings.getWindowPosition().right);
-  EXPECT_TRUE(settings.getWindowPosition().maximised);
+  ASSERT_TRUE(settings_.getWindowPosition().has_value());
+  EXPECT_EQ(1, settings_.getWindowPosition().value().top);
+  EXPECT_EQ(2, settings.getWindowPosition().value().bottom);
+  EXPECT_EQ(3, settings.getWindowPosition().value().left);
+  EXPECT_EQ(4, settings.getWindowPosition().value().right);
+  EXPECT_TRUE(settings.getWindowPosition().value().maximised);
 
   EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
   EXPECT_EQ(games[0].MinimumHeaderVersion(), settings.getGameSettings().at(0).MinimumHeaderVersion());
@@ -439,50 +440,6 @@ TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
   EXPECT_NE(std::string::npos, contents.find(u8"non\u00C1sciiGameLocalPath"));
 }
 
-TEST_P(LootSettingsTest,
-       isWindowPositionStoredShouldReturnFalseIfAllPositionValuesAreZero) {
-  LootSettings::WindowPosition position;
-  settings_.storeWindowPosition(position);
-
-  EXPECT_FALSE(settings_.isWindowPositionStored());
-}
-
-TEST_P(LootSettingsTest,
-       isWindowPositionStoredShouldReturnTrueIfTopPositionValueIsNonZero) {
-  LootSettings::WindowPosition position;
-  position.top = 1;
-  settings_.storeWindowPosition(position);
-
-  EXPECT_TRUE(settings_.isWindowPositionStored());
-}
-
-TEST_P(LootSettingsTest,
-       isWindowPositionStoredShouldReturnTrueIfBottomPositionValueIsNonZero) {
-  LootSettings::WindowPosition position;
-  position.bottom = 1;
-  settings_.storeWindowPosition(position);
-
-  EXPECT_TRUE(settings_.isWindowPositionStored());
-}
-
-TEST_P(LootSettingsTest,
-       isWindowPositionStoredShouldReturnTrueIfLeftPositionValueIsNonZero) {
-  LootSettings::WindowPosition position;
-  position.left = 1;
-  settings_.storeWindowPosition(position);
-
-  EXPECT_TRUE(settings_.isWindowPositionStored());
-}
-
-TEST_P(LootSettingsTest,
-       isWindowPositionStoredShouldReturnTrueIfRightPositionValueIsNonZero) {
-  LootSettings::WindowPosition position;
-  position.right = 1;
-  settings_.storeWindowPosition(position);
-
-  EXPECT_TRUE(settings_.isWindowPositionStored());
-}
-
 TEST_P(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
   const std::vector<GameSettings> gameSettings({GameSettings(GameType::tes5)});
   settings_.storeGameSettings(gameSettings);
@@ -501,7 +458,8 @@ TEST_P(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
   expectedPosition.top = 1;
   settings_.storeWindowPosition(expectedPosition);
 
-  LootSettings::WindowPosition actualPosition = settings_.getWindowPosition();
+  ASSERT_TRUE(settings_.getWindowPosition().has_value());
+  LootSettings::WindowPosition actualPosition = settings_.getWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
   EXPECT_EQ(expectedPosition.left, actualPosition.left);
