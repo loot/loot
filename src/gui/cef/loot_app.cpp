@@ -76,13 +76,9 @@ CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
   }
 }
 
-LootApp::LootApp(const CommandLineOptions& options) :
+LootApp::LootApp(CommandLineOptions options) :
+  commandLineOptions_(options),
     lootState_(options.lootDataPath) {}
-
-void LootApp::Initialise(const CommandLineOptions& options) {
-  lootState_.init(options.defaultGame, options.autoSort);
-  url_ = options.url;
-}
 
 std::filesystem::path LootApp::getL10nPath() const {
   return lootState_.getL10nPath();
@@ -112,6 +108,9 @@ void LootApp::OnContextInitialized() {
   // Make sure this is running in the UI thread.
   assert(CefCurrentlyOn(TID_UI));
 
+  // Initialise LOOT's state.
+  lootState_.init(commandLineOptions_.defaultGame, commandLineOptions_.autoSort);
+
   // Set the handler for browser-level callbacks.
   CefRefPtr<LootHandler> handler(new LootHandler(lootState_));
 
@@ -124,26 +123,8 @@ void LootApp::OnContextInitialized() {
   // Specify CEF browser settings here.
   CefBrowserSettings browser_settings;
 
-  // Need to set the global locale for this process so that messages will
-  // be translated.
-  auto logger = getLogger();
-  if (logger) {
-    logger->debug("Initialising language settings in UI thread.");
-  }
-  if (lootState_.getLanguage() != MessageContent::defaultLanguage) {
-    boost::locale::generator gen;
-    gen.add_messages_path(lootState_.getL10nPath().u8string());
-    gen.add_messages_domain("loot");
-
-    if (logger) {
-      logger->debug("Selected language: {}", lootState_.getLanguage());
-    }
-    std::locale::global(gen(lootState_.getLanguage() + ".UTF-8"));
-    loot::InitialiseLocale(lootState_.getLanguage() + ".UTF-8");
-  }
-
   CefRefPtr<CefBrowserView> browser_view = CefBrowserView::CreateBrowserView(
-      handler, url_, browser_settings, NULL, NULL);
+      handler, commandLineOptions_.url, browser_settings, NULL, NULL);
 
   CefWindow::CreateTopLevelWindow(
       new WindowDelegate(browser_view, lootState_.getWindowPosition()));

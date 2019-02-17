@@ -48,8 +48,7 @@ class LootApp : public CefApp,
                 public CefBrowserProcessHandler,
                 public CefRenderProcessHandler {
 public:
-  LootApp(const CommandLineOptions& options);
-  void Initialise(const CommandLineOptions& options);
+  LootApp(CommandLineOptions options);
 
   std::filesystem::path getL10nPath() const;
 
@@ -76,9 +75,9 @@ private:
                                 CefRefPtr<CefFrame> frame,
                                 CefRefPtr<CefV8Context> context) OVERRIDE;
 
+  CommandLineOptions commandLineOptions_;
   LootState lootState_;
   CefRefPtr<CefMessageRouterRendererSide> message_router_;
-  std::string url_;
 
   IMPLEMENT_REFCOUNTING(LootApp);
 };

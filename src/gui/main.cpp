@@ -108,9 +108,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
   }
 
-
-  // Initialise the LOOT application.
-  app.get()->Initialise(cliOptions);
   // Back to CEF
   //------------
 
@@ -154,12 +151,6 @@ int main(int argc, char *argv[]) {
     // The sub-process has completed so return here.
     return exit_code;
   }
-
-  // Initialise the LOOT application.
-  app.get()->Initialise(cliOptions);
-
-  // Back to CEF
-  //------------
 
   // Initialise CEF settings.
   CefSettings cef_settings = GetCefSettings(app.get()->getL10nPath());
