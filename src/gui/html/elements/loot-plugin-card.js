@@ -1,8 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-material/paper-material.js';
-import marked from 'marked/marked.min';
 
+import { createMessageItem } from '../js/dom';
 import './loot-custom-icons.js';
 import './loot-menu.js';
 // Also depends on the loot.l10n and loot.filters globals.
@@ -240,11 +240,7 @@ export default class LootPluginCard extends PolymerElement {
     if (messages) {
       /* Now add new messages. */
       messages.forEach(message => {
-        const messageListItem = document.createElement('li');
-        messageListItem.className = message.type;
-        // Use the Marked library for Markdown formatting support.
-        messageListItem.innerHTML = marked(message.text);
-        messageList.appendChild(messageListItem);
+        messageList.appendChild(createMessageItem(message.type, message.text));
       });
       messageList.hidden = messages.length === 0;
     }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-02-09 22:35+0000\n"
+"POT-Creation-Date: 2019-03-03 09:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Group already exists!"
 msgstr ""
 
-#: src/gui/html/elements/loot-plugin-card.js:283
+#: src/gui/html/elements/loot-plugin-card.js:279
 msgid "Verified clean by %s"
 msgstr ""
 

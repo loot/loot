@@ -30,7 +30,7 @@ function createLanguageItem(language) {
   return item;
 }
 
-function createMessageItem(type, content) {
+export function createMessageItem(type, content) {
   const li = document.createElement('li');
   li.className = type;
   /* Use the Marked library for Markdown formatting support. */

@@ -1,8 +1,8 @@
 import * as _ from 'lodash/core.min';
-import marked from 'marked/marked.min';
 import mergeGroups from './group.js';
 
 import {
+  createMessageItem,
   fillGroupsList,
   initialiseAutocompleteBashTags,
   initialiseAutocompleteFilenames,
@@ -383,11 +383,9 @@ export default class Game {
     /* Add new messages. */
     if (evt.detail.messages) {
       evt.detail.messages.forEach(message => {
-        const li = document.createElement('li');
-        li.className = message.type;
-        /* Use the Marked library for Markdown formatting support. */
-        li.innerHTML = marked(message.text);
-        generalMessagesList.appendChild(li);
+        generalMessagesList.appendChild(
+          createMessageItem(message.type, message.text)
+        );
       });
     }
 
