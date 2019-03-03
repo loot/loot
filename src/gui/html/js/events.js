@@ -1,3 +1,5 @@
+import marked from 'marked/marked.min';
+
 import {
   askQuestion,
   closeProgress,
@@ -197,7 +199,7 @@ export function onSortPlugins() {
           )
         );
         const text = message
-          ? message.text
+          ? marked(message.text)
           : 'see general messages for details.';
         throw new Error(
           loot.l10n.translateFormatted(
