@@ -364,8 +364,8 @@ TEST_P(
       game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
-                        "This plugin requires \"" + blankDifferentEsm +
-                            "\" to be active, but it is inactive."),
+                        "This plugin requires \"" + EscapeMarkdownSpecialChars(blankDifferentEsm) +
+                            "\" to be active, but it is inactive\\."),
             }),
             messages);
 }
@@ -413,8 +413,8 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
       std::vector<Message>({
           Message(MessageType::error,
                   "This plugin contains records that have FormIDs outside the "
-                  "valid range for an ESL plugin. Using this plugin will cause "
-                  "irreversible damage to your game saves."),
+                  "valid range for an ESL plugin\\. Using this plugin will cause "
+                  "irreversible damage to your game saves\\."),
       }),
       messages);
 }
@@ -432,12 +432,12 @@ TEST_P(
   std::string messageText;
   if (GetParam() == GameType::tes4) {
     messageText =
-        "This plugin has a header version of 0.8, which is less than the "
-        "game's minimum supported header version of 5.1.";
+        "This plugin has a header version of 0\\.8, which is less than the "
+        "game's minimum supported header version of 5\\.1\\.";
   } else {
     messageText =
-        "This plugin has a header version of 0.94, which is less than the "
-        "game's minimum supported header version of 5.1.";
+        "This plugin has a header version of 0\\.94, which is less than the "
+        "game's minimum supported header version of 5\\.1\\.";
   }
 
   EXPECT_EQ(std::vector<Message>({Message(MessageType::error, messageText)}),
@@ -528,7 +528,7 @@ TEST_P(GameTest,
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
   EXPECT_EQ(1, game.GetMessages().size());
-  EXPECT_EQ("You have not sorted your load order this session.",
+  EXPECT_EQ("You have not sorted your load order this session\\.",
             game.GetMessages()[0].GetContent()[0].GetText());
 }
 

@@ -32,6 +32,69 @@
 namespace loot {
 namespace test {
 
+TEST(EscapeMarkdownSpecialChars, shouldEscapeBackslash) {
+  EXPECT_EQ("\\\\", EscapeMarkdownSpecialChars("\\"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeBacktick) {
+  EXPECT_EQ("\\`", EscapeMarkdownSpecialChars("`"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeAsterisk) {
+  EXPECT_EQ("\\*", EscapeMarkdownSpecialChars("*"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeUnderscore) {
+  EXPECT_EQ("\\_", EscapeMarkdownSpecialChars("_"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeCurlyBraces) {
+  EXPECT_EQ("\\{", EscapeMarkdownSpecialChars("{"));
+  EXPECT_EQ("\\}", EscapeMarkdownSpecialChars("}"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeSquareBrackets) {
+  EXPECT_EQ("\\[", EscapeMarkdownSpecialChars("["));
+  EXPECT_EQ("\\]", EscapeMarkdownSpecialChars("]"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeParentheses) {
+  EXPECT_EQ("\\(", EscapeMarkdownSpecialChars("("));
+  EXPECT_EQ("\\)", EscapeMarkdownSpecialChars(")"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeHash) {
+  EXPECT_EQ("\\#", EscapeMarkdownSpecialChars("#"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapePlus) {
+  EXPECT_EQ("\\+", EscapeMarkdownSpecialChars("+"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeHyphen) {
+  EXPECT_EQ("\\-", EscapeMarkdownSpecialChars("-"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapePeriod) {
+  EXPECT_EQ("\\.", EscapeMarkdownSpecialChars("."));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldEscapeExclamationMark) {
+  EXPECT_EQ("\\!", EscapeMarkdownSpecialChars("!"));
+}
+
+TEST(EscapeMarkdownSpecialChars, shouldNotEscapeNonSpecialCharacters) {
+  auto text = "normal, text & \"symbols\"";
+  EXPECT_EQ(text, EscapeMarkdownSpecialChars(text));
+}
+
+TEST(PlainTextMessage, shouldEscapeMarkdownSpecialCharacters) {
+  auto message = PlainTextMessage(MessageType::say, "normal text\\`*_{}[]()#+-.!");
+
+  auto expectedText = R"raw(normal text\\\`\*\_\{\}\[\]\(\)\#\+\-\.\!)raw";
+  EXPECT_EQ(expectedText, message.GetContent()[0].GetText());
+}
+
 TEST(ToMessage, shouldOutputAllNonZeroCounts) {
   const auto info = std::vector<MessageContent>({
       MessageContent("info"),

@@ -30,6 +30,7 @@ along with LOOT.  If not, see
 
 #include "gui/cef/query/derived_plugin_metadata.h"
 #include "gui/cef/query/query.h"
+#include "gui/state/game/helpers.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/git_state_error.h"
 
@@ -195,7 +196,7 @@ private:
 
       PluginMetadata master(pluginName);
       master.SetMessages({
-          Message(MessageType::error,
+          PlainTextMessage(MessageType::error,
                   (boost::format(boost::locale::translate(
                        "\"%1%\" contains a condition that could not be "
                        "evaluated. Details: %2%")) %
@@ -222,7 +223,7 @@ private:
 
       PluginMetadata user(pluginName);
       user.SetMessages({
-          Message(MessageType::error,
+          PlainTextMessage(MessageType::error,
                   (boost::format(boost::locale::translate(
                        "\"%1%\" contains a condition that could not be "
                        "evaluated. Details: %2%")) %

@@ -160,27 +160,29 @@ std::vector<Message> Game::CheckInstallValidity(
         if (!fileExists(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is missing.",
-                           plugin->GetName(),
-                           master);
+                          plugin->GetName(),
+                          master);
           }
-          messages.push_back(Message(MessageType::error,
-                                     (boost::format(boost::locale::translate(
-                                          "This plugin requires \"%1%\" to be "
-                                          "installed, but it is missing.")) %
-                                      master)
-                                         .str()));
+          messages.push_back(
+              PlainTextMessage(MessageType::error,
+                               (boost::format(boost::locale::translate(
+                                    "This plugin requires \"%1%\" to be "
+                                    "installed, but it is missing.")) %
+                                master)
+                                   .str()));
         } else if (!IsPluginActive(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is inactive.",
-                           plugin->GetName(),
-                           master);
+                          plugin->GetName(),
+                          master);
           }
-          messages.push_back(Message(MessageType::error,
-                                     (boost::format(boost::locale::translate(
-                                          "This plugin requires \"%1%\" to be "
-                                          "active, but it is inactive.")) %
-                                      master)
-                                         .str()));
+          messages.push_back(
+              PlainTextMessage(MessageType::error,
+                               (boost::format(boost::locale::translate(
+                                    "This plugin requires \"%1%\" to be "
+                                    "active, but it is inactive.")) %
+                                master)
+                                   .str()));
         }
       }
     }
@@ -189,8 +191,8 @@ std::vector<Message> Game::CheckInstallValidity(
       if (!fileExists(req.GetName())) {
         if (logger) {
           logger->error("\"{}\" requires \"{}\", but it is missing.",
-                         plugin->GetName(),
-                         req.GetName());
+                        plugin->GetName(),
+                        req.GetName());
         }
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
@@ -245,7 +247,7 @@ std::vector<Message> Game::CheckInstallValidity(
               plugin->GetName(),
               masterName);
         }
-        messages.push_back(Message(
+        messages.push_back(PlainTextMessage(
             MessageType::error,
             (boost::format(boost::locale::translate(
                  "This plugin is a light master and requires the non-master "
@@ -265,12 +267,12 @@ std::vector<Message> Game::CheckInstallValidity(
           "to your game saves.",
           plugin->GetName());
     }
-    messages.push_back(
-        Message(MessageType::error,
-                boost::locale::translate(
-                    "This plugin contains records that have FormIDs outside "
-                    "the valid range for an ESL plugin. Using this plugin "
-                    "will cause irreversible damage to your game saves.")));
+    messages.push_back(PlainTextMessage(
+        MessageType::error,
+        boost::locale::translate(
+            "This plugin contains records that have FormIDs outside "
+            "the valid range for an ESL plugin. Using this plugin "
+            "will cause irreversible damage to your game saves.")));
   }
 
   if (plugin->GetHeaderVersion() < MinimumHeaderVersion()) {
@@ -282,7 +284,7 @@ std::vector<Message> Game::CheckInstallValidity(
           plugin->GetHeaderVersion(),
           MinimumHeaderVersion());
     }
-    messages.push_back(Message(
+    messages.push_back(PlainTextMessage(
         MessageType::warn,
         (boost::format(boost::locale::translate(
              "This plugin has a header version of %1%, which is less than the "
@@ -328,7 +330,7 @@ void Game::RedatePlugins() {
 
         if (logger) {
           logger->trace("No need to redate \"{}\".",
-                         filepath.filename().u8string());
+                        filepath.filename().u8string());
         }
       } else {
         lastTime += std::chrono::seconds(60);
@@ -349,10 +351,9 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
   } catch (std::exception& e) {
     auto logger = getLogger();
     if (logger) {
-      logger->error("Failed to load current load order. Details: {}",
-                     e.what());
+      logger->error("Failed to load current load order. Details: {}", e.what());
     }
-    AppendMessage(Message(
+    AppendMessage(PlainTextMessage(
         MessageType::error,
         boost::locale::translate("Failed to load the current load order, "
                                  "information displayed may be incorrect.")
@@ -442,10 +443,9 @@ std::vector<std::string> Game::SortPlugins() {
     gameHandle_->LoadCurrentLoadOrderState();
   } catch (std::exception& e) {
     if (logger) {
-      logger->error("Failed to load current load order. Details: {}",
-                     e.what());
+      logger->error("Failed to load current load order. Details: {}", e.what());
     }
-    AppendMessage(Message(
+    AppendMessage(PlainTextMessage(
         MessageType::error,
         boost::locale::translate("Failed to load the current load order, "
                                  "information displayed may be incorrect.")
@@ -471,7 +471,8 @@ std::vector<std::string> Game::SortPlugins() {
         MessageType::error,
         (boost::format(boost::locale::translate(
              "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%")) %
-         e.GetCycle().front().GetName() % e.GetCycle().back().GetName() %
+         EscapeMarkdownSpecialChars(e.GetCycle().front().GetName()) %
+         EscapeMarkdownSpecialChars(e.GetCycle().back().GetName()) %
          DescribeCycle(e.GetCycle()))
             .str()));
     sortedPlugins.clear();
@@ -479,11 +480,11 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(Message(MessageType::error,
-                          (boost::format(boost::locale::translate(
-                               "The group \"%1%\" does not exist.")) %
-                           e.GetGroupName())
-                              .str()));
+    AppendMessage(PlainTextMessage(MessageType::error,
+                                   (boost::format(boost::locale::translate(
+                                        "The group \"%1%\" does not exist.")) %
+                                    e.GetGroupName())
+                                       .str()));
     sortedPlugins.clear();
   } catch (std::exception& e) {
     if (logger) {
@@ -514,10 +515,10 @@ std::vector<Message> Game::GetMessages() const {
   output.insert(end(output), begin(messages_), end(messages_));
 
   if (loadOrderSortCount_ == 0)
-    output.push_back(
-        Message(MessageType::warn,
-                boost::locale::translate(
-                    "You have not sorted your load order this session.")));
+    output.push_back(PlainTextMessage(
+        MessageType::warn,
+        boost::locale::translate(
+            "You have not sorted your load order this session.")));
 
   size_t activeNormalPluginsCount = 0;
   bool hasActiveEsl = false;
@@ -538,7 +539,7 @@ std::vector<Message> Game::GetMessages() const {
           "255 normal plugins and at least one light master are active at the "
           "same time.");
     }
-    output.push_back(Message(
+    output.push_back(PlainTextMessage(
         MessageType::warn,
         boost::locale::translate(
             "You have a normal plugin and at least one light master sharing "
@@ -566,7 +567,7 @@ bool Game::UpdateMasterlist() {
       MasterlistPath(), RepoURL(), RepoBranch());
   if (wasUpdated && !gameHandle_->GetDatabase()->IsLatestMasterlist(
                         MasterlistPath(), RepoBranch())) {
-    AppendMessage(Message(
+    AppendMessage(PlainTextMessage(
         MessageType::error,
         boost::locale::translate(
             "The latest masterlist revision contains a syntax error, LOOT is "
@@ -609,7 +610,7 @@ void Game::LoadMetadata() {
   } catch (std::exception& e) {
     if (logger) {
       logger->error("An error occurred while parsing the metadata list(s): {}",
-                     e.what());
+                    e.what());
     }
     AppendMessage(Message(
         MessageType::error,
@@ -626,7 +627,7 @@ void Game::LoadMetadata() {
              "LOOT's main menu.\n\nYou can also seek support on LOOT's forum "
              "thread, which is linked to on [LOOT's "
              "website](https://loot.github.io/).")) %
-         e.what())
+         EscapeMarkdownSpecialChars(e.what()))
             .str()));
   }
 }

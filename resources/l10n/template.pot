@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-03-03 09:42+0000\n"
+"POT-Creation-Date: 2019-03-03 12:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,23 +36,23 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:200
-#: src/gui/cef/query/types/metadata_query.h:227
+#: src/gui/cef/query/types/metadata_query.h:201
+#: src/gui/cef/query/types/metadata_query.h:228
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:249
 #: src/gui/cef/query/types/metadata_query.h:250
+#: src/gui/cef/query/types/metadata_query.h:251
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:256
 #: src/gui/cef/query/types/metadata_query.h:257
+#: src/gui/cef/query/types/metadata_query.h:258
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:265
 #: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/cef/query/types/metadata_query.h:267
 msgid "(edited)"
 msgstr ""
 
@@ -76,39 +76,39 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:168 src/gui/state/game/game.cpp:197
+#: src/gui/state/game/game.cpp:169 src/gui/state/game/game.cpp:199
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:180
+#: src/gui/state/game/game.cpp:182
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:216
+#: src/gui/state/game/game.cpp:218
 msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:251
+#: src/gui/state/game/game.cpp:253
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:271
+#: src/gui/state/game/game.cpp:273
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:288
+#: src/gui/state/game/game.cpp:290
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:357 src/gui/state/game/game.cpp:450
+#: src/gui/state/game/game.cpp:358 src/gui/state/game/game.cpp:450
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -118,29 +118,29 @@ msgstr ""
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:484
+#: src/gui/state/game/game.cpp:485
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:520
+#: src/gui/state/game/game.cpp:521
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:544
+#: src/gui/state/game/game.cpp:545
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:572
+#: src/gui/state/game/game.cpp:573
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:617
+#: src/gui/state/game/game.cpp:618
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -158,43 +158,43 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:77
+#: src/gui/state/game/helpers.cpp:87
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:81
+#: src/gui/state/game/helpers.cpp:91
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:87
+#: src/gui/state/game/helpers.cpp:97
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:97
+#: src/gui/state/game/helpers.cpp:107
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:103
+#: src/gui/state/game/helpers.cpp:113
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:109 src/gui/state/game/helpers.cpp:115
-#: src/gui/state/game/helpers.cpp:120
+#: src/gui/state/game/helpers.cpp:119 src/gui/state/game/helpers.cpp:125
+#: src/gui/state/game/helpers.cpp:130
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:124 src/gui/state/game/helpers.cpp:127
-#: src/gui/state/game/helpers.cpp:130
+#: src/gui/state/game/helpers.cpp:134 src/gui/state/game/helpers.cpp:137
+#: src/gui/state/game/helpers.cpp:140
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:210
+#: src/gui/state/game/helpers.cpp:221
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 

@@ -25,6 +25,7 @@
 #include "gui/state/game/helpers.h"
 
 #include <fstream>
+#include <regex>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
@@ -66,6 +67,15 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
   for (const auto& plugin : loadOrder) {
     out << plugin << std::endl;
   }
+}
+
+Message PlainTextMessage(MessageType type, std::string text) {
+  return Message(type, EscapeMarkdownSpecialChars(text));
+}
+
+std::string EscapeMarkdownSpecialChars(std::string text) { 
+  auto specialCharsRegex = std::regex("([\\\\`*_{}\\[\\]()#+.!-])");
+  return std::regex_replace(text, specialCharsRegex, "\\$1");
 }
 
 Message ToMessage(const PluginCleaningData& cleaningData) {
@@ -205,12 +215,13 @@ std::vector<Message> CheckForRemovedPlugins(
     }
 
     if (pluginsSet.count(unghostedPluginName) == 0) {
-      messages.push_back(Message(MessageType::warn,
-                                 (boost::format(boost::locale::translate(
-                                      "LOOT has detected that \"%1%\" is "
-                                      "invalid and is now ignoring it.")) %
-                                  plugin)
-                                     .str()));
+      messages.push_back(PlainTextMessage(
+          MessageType::warn,
+          (boost::format(
+               boost::locale::translate("LOOT has detected that \"%1%\" is "
+                                        "invalid and is now ignoring it.")) %
+           plugin)
+              .str()));
     }
   }
 
