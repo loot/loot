@@ -26,6 +26,7 @@
 #define LOOT_GUI_STATE_GAME_HELPERS
 
 #include <filesystem>
+#include <tuple>
 #include <vector>
 
 #include <loot/enum/game_type.h>
@@ -53,6 +54,9 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle);
 std::vector<Message> CheckForRemovedPlugins(
     const std::vector<std::string> pluginsBefore,
     const std::vector<std::string> pluginsAfter);
+
+std::tuple<std::string, std::string, std::string> SplitRegistryPath(
+  const std::string& registryPath);
 }
 
 #endif

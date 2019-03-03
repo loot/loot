@@ -72,22 +72,22 @@ std::string FromWinWide(const std::wstring& wstr) {
   return str;
 }
 
-std::string RegKeyStringValue(const std::string& keyStr,
+std::string RegKeyStringValue(const std::string& rootKey,
   const std::string& subkey,
   const std::string& value) {
   HKEY hKey = NULL;
   DWORD len = MAX_PATH;
   std::wstring wstr(MAX_PATH, 0);
 
-  if (keyStr == "HKEY_CLASSES_ROOT")
+  if (rootKey == "HKEY_CLASSES_ROOT")
     hKey = HKEY_CLASSES_ROOT;
-  else if (keyStr == "HKEY_CURRENT_CONFIG")
+  else if (rootKey == "HKEY_CURRENT_CONFIG")
     hKey = HKEY_CURRENT_CONFIG;
-  else if (keyStr == "HKEY_CURRENT_USER")
+  else if (rootKey == "HKEY_CURRENT_USER")
     hKey = HKEY_CURRENT_USER;
-  else if (keyStr == "HKEY_LOCAL_MACHINE")
+  else if (rootKey == "HKEY_LOCAL_MACHINE")
     hKey = HKEY_LOCAL_MACHINE;
-  else if (keyStr == "HKEY_USERS")
+  else if (rootKey == "HKEY_USERS")
     hKey = HKEY_USERS;
   else
     throw std::invalid_argument("Invalid registry key given.");
@@ -97,7 +97,7 @@ std::string RegKeyStringValue(const std::string& keyStr,
     logger->trace(
       "Getting string for registry key, subkey and value: {}, {}, "
       "{}",
-      keyStr,
+      rootKey,
       subkey,
       value);
   }

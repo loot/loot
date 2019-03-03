@@ -34,7 +34,7 @@ std::wstring ToWinWide(const std::string& str);
 
 std::string FromWinWide(const std::wstring& wstr);
 
-std::string RegKeyStringValue(const std::string& keyStr,
+std::string RegKeyStringValue(const std::string& rootKey,
   const std::string& subkey,
   const std::string& value);
 #endif

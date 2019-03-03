@@ -37,7 +37,9 @@ namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches(
     {"master", "v0.7", "v0.8", "v0.10", "v0.13"});
 
-GameSettings::GameSettings() : type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
+GameSettings::GameSettings() :
+    type_(GameType::tes4),
+    mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode),
@@ -123,7 +125,9 @@ std::string GameSettings::FolderName() const { return lootFolderName_; }
 
 std::string GameSettings::Master() const { return masterFile_; }
 
-float GameSettings::MinimumHeaderVersion() const { return mininumHeaderVersion_; }
+float GameSettings::MinimumHeaderVersion() const {
+  return mininumHeaderVersion_;
+}
 
 std::string GameSettings::RegistryKey() const { return registryKey_; }
 
@@ -147,7 +151,8 @@ GameSettings& GameSettings::SetMaster(const std::string& masterFile) {
   return *this;
 }
 
-GameSettings& GameSettings::SetMinimumHeaderVersion(float mininumHeaderVersion) {
+GameSettings& GameSettings::SetMinimumHeaderVersion(
+    float mininumHeaderVersion) {
   mininumHeaderVersion_ = mininumHeaderVersion;
   return *this;
 }
@@ -196,16 +201,8 @@ std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
     }
 
 #ifdef _WIN32
-    auto registryKey = registryKey_;
-    auto lastBackslash = registryKey.rfind("\\");
-    if (lastBackslash == std::string::npos ||
-        lastBackslash == registryKey.length() - 1) {
-      return std::nullopt;
-    }
-    std::string keyParent = registryKey.substr(0, lastBackslash);
-    std::string keyName = registryKey.substr(lastBackslash + 1);
-
-    gamePath = RegKeyStringValue("HKEY_LOCAL_MACHINE", keyParent, keyName);
+    auto [rootKey, subKey, value] = SplitRegistryPath(registryKey_);
+    gamePath = RegKeyStringValue(rootKey, subKey, value);
     if (!gamePath.empty() && exists(gamePath / "Data" / u8path(masterFile_)) &&
         ExecutableExists(type_, gamePath)) {
       return gamePath;
