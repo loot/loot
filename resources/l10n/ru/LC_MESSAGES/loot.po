@@ -84,7 +84,7 @@ msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr "Этот плагин требует установленного плагина \"%1%\", но он отсутствует."
 
 #: src/gui/state/game/game.cpp:182
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."f
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "Этот плагин требует подключенного плагина \"%1%\", но он не подключен."
 
 #: src/gui/state/game/game.cpp:218
