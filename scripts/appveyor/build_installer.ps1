@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 function DownloadLanguageFile($languageFile, $innoPath) {
-  $url = 'https://raw.github.com/jrsoftware/issrc/master/Files/Languages/Unofficial/' + $languageFile
+  $url = 'https://raw.github.com/jrsoftware/issrc/is-5_6_1/Files/Languages/Unofficial/' + $languageFile
   $installPath = $innoPath + '\Languages\' + $languageFile
 
   (New-Object System.Net.WebClient).DownloadFile($url, $installPath)
