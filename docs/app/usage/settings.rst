@@ -31,7 +31,7 @@ Update masterlist before sorting
 Game Settings
 =============
 
-LOOT's game-specific settings can be customised in the games table. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the "Nehrim - At Fate's Edge" total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the base games it supports (Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR) when it is next run.
+LOOT's game-specific settings can be customised in the games table. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the "Nehrim - At Fate's Edge" total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the base games it supports (Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR) when it is next run.
 
 Name
   The name of the game, or another identifying text, that is displayed in menus and the LOOT's title bar.
@@ -39,6 +39,7 @@ Name
 Base Game Type
   Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
 
+  - TES III: Morrowind
   - TES IV: Oblivion
   - TES V: Skyrim
   - TES V: Skyrim Special Edition

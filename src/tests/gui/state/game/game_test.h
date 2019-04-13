@@ -87,7 +87,8 @@ protected:
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_CASE_P(,
                         GameTest,
-                        ::testing::Values(GameType::tes4,
+                        ::testing::Values(GameType::tes3,
+                                          GameType::tes4,
                                           GameType::tes5,
                                           GameType::fo3,
                                           GameType::fonv,
@@ -364,7 +365,8 @@ TEST_P(
       game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
-                        "This plugin requires \"" + EscapeMarkdownSpecialChars(blankDifferentEsm) +
+                        "This plugin requires \"" +
+                            EscapeMarkdownSpecialChars(blankDifferentEsm) +
                             "\" to be active, but it is inactive\\."),
             }),
             messages);
@@ -389,18 +391,12 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
     return;
   }
 
-  std::filesystem::path srcPath =
-      std::filesystem::current_path() / "Skyrim" / "Data";
   std::string blankEsl = "blank.esl";
   std::filesystem::copy(dataPath / blankEsm, dataPath / blankEsl);
   std::fstream out(
       dataPath / blankEsl,
       std::ios_base::in | std::ios_base::out | std::ios_base::binary);
-  out.seekp(0x09, std::ios_base::beg);
-  out.put(0x02);
-  out.seekp(0x128, std::ios_base::beg);
-  out.put(0xFF);
-  out.seekp(0x129, std::ios_base::beg);
+  out.seekp(0x10619, std::ios_base::beg);
   out.put(0xFF);
   out.close();
 
@@ -411,10 +407,11 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
                                             PluginMetadata(blankEsl));
   EXPECT_EQ(
       std::vector<Message>({
-          Message(MessageType::error,
-                  "This plugin contains records that have FormIDs outside the "
-                  "valid range for an ESL plugin\\. Using this plugin will cause "
-                  "irreversible damage to your game saves\\."),
+          Message(
+              MessageType::error,
+              "This plugin contains records that have FormIDs outside the "
+              "valid range for an ESL plugin\\. Using this plugin will cause "
+              "irreversible damage to your game saves\\."),
       }),
       messages);
 }
@@ -430,7 +427,11 @@ TEST_P(
                                             PluginMetadata(blankEsm));
 
   std::string messageText;
-  if (GetParam() == GameType::tes4) {
+  if (GetParam() == GameType::tes3) {
+    messageText =
+        "This plugin has a header version of 1\\.2, which is less than the "
+        "game's minimum supported header version of 5\\.1\\.";
+  } else if (GetParam() == GameType::tes4) {
     messageText =
         "This plugin has a header version of 0\\.8, which is less than the "
         "game's minimum supported header version of 5\\.1\\.";

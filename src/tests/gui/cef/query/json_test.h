@@ -31,6 +31,10 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
+  TEST(mapGameType, shouldConvertMorrowindToGameType) {
+    EXPECT_EQ(GameType::tes3, mapGameType("Morrowind"));
+}
+
 TEST(to_json, shouldEncodeGameSettingsPathsAsUtf8) {
   using std::filesystem::u8path;
 

@@ -7,7 +7,7 @@ When LOOT is run, it will attempt to detect which of the supported games are ins
 LOOT's initialisation can be customised using command line parameters:
 
 ``--game=<game folder name>``:
-  Set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are ``Oblivion``, ``Skyrim``, ``Skyrim Special Edition``, ``Fallout3``, ``FalloutNV``, ``Fallout4`` and ``Fallout4VR``.
+  Set the game to run for. If the supplied game folder name is valid, the default and last game values are ignored. The default folder names are ``Morrowind``, ``Oblivion``, ``Skyrim``, ``Skyrim Special Edition``, ``Fallout3``, ``FalloutNV``, ``Fallout4`` and ``Fallout4VR``.
 
 ``--loot-data-path=<path>``:
   Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_CONFIG_HOME/LOOT``, ``$HOME/.config/LOOT`` or the current path on Linux.

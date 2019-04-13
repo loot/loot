@@ -389,12 +389,6 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
-std::filesystem::path Game::DataPath() const {
-  if (GamePath().empty())
-    throw std::logic_error("Cannot get data path from empty game path");
-  return GamePath() / "Data";
-}
-
 fs::path Game::MasterlistPath() const {
   return lootDataPath_ / u8path(FolderName()) / "masterlist.yaml";
 }

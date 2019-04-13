@@ -40,7 +40,8 @@ protected:
 // but we only have the one so no prefix is necessary.
 // Just test with one game because if it works for one it will work for them
 // all.
-INSTANTIATE_TEST_CASE_P(, GameSettingsTest, ::testing::Values(GameType::tes4,
+INSTANTIATE_TEST_CASE_P(, GameSettingsTest, ::testing::Values(GameType::tes3,
+  GameType::tes4,
   GameType::tes5,
   GameType::fo3,
   GameType::fonv,
@@ -108,6 +109,15 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path",
       settings_.RegistryKey());
     EXPECT_EQ("https://github.com/loot/fallout4.git", settings_.RepoURL());
+    break;
+  case GameType::tes3:
+    EXPECT_EQ("TES III: Morrowind", settings_.Name());
+    EXPECT_EQ("Morrowind", settings_.FolderName());
+    EXPECT_EQ("Morrowind.esm", settings_.Master());
+    EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
+    EXPECT_EQ("Software\\Bethesda Softworks\\Morrowind\\Installed Path",
+      settings_.RegistryKey());
+    EXPECT_EQ("https://github.com/loot/morrowind.git", settings_.RepoURL());
     break;
   case GameType::tes4:
     EXPECT_EQ("TES IV: Oblivion", settings_.Name());

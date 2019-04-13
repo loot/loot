@@ -64,7 +64,9 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     }
   }
 
-  if (*type == GameSettings(GameType::tes4).FolderName()) {
+  if (*type == GameSettings(GameType::tes3).FolderName()) {
+    game = GameSettings(GameType::tes3, *folder);
+  } else if (*type == GameSettings(GameType::tes4).FolderName()) {
     game = GameSettings(GameType::tes4, *folder);
   } else if (*type == GameSettings(GameType::tes5).FolderName()) {
     game = GameSettings(GameType::tes5, *folder);
@@ -165,6 +167,7 @@ LootSettings::WindowPosition::WindowPosition() :
 
 LootSettings::LootSettings() :
     gameSettings_({
+        GameSettings(GameType::tes3),
         GameSettings(GameType::tes4),
         GameSettings(GameType::tes5),
         GameSettings(GameType::tes5se),
@@ -509,6 +512,11 @@ void LootSettings::updateLastVersion() {
 }
 
 void LootSettings::appendBaseGames() {
+  if (find(begin(gameSettings_),
+           end(gameSettings_),
+           GameSettings(GameType::tes3)) == end(gameSettings_))
+    gameSettings_.push_back(GameSettings(GameType::tes3));
+
   if (find(begin(gameSettings_),
            end(gameSettings_),
            GameSettings(GameType::tes4)) == end(gameSettings_))

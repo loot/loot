@@ -66,7 +66,6 @@ public:
   bool ArePluginsFullyLoaded()
       const;  // Checks if the game's plugins have already been loaded.
 
-  std::filesystem::path DataPath() const;
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
   std::filesystem::path PluginsTxtPath() const;

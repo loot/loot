@@ -54,6 +54,7 @@ public:
   std::string RepoBranch() const;
   std::filesystem::path GamePath() const;
   std::filesystem::path GameLocalPath() const;
+  std::filesystem::path DataPath() const;
 
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
@@ -76,6 +77,7 @@ private:
 
   std::string registryKey_;
 
+  std::string pluginsFolderName_;
   std::string lootFolderName_;
 
   std::string repositoryURL_;

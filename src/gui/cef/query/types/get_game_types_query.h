@@ -48,6 +48,7 @@ private:
     nlohmann::json json;
 
     json["gameTypes"] = {
+      GameSettings(GameType::tes3).FolderName(),
       GameSettings(GameType::tes4).FolderName(),
       GameSettings(GameType::tes5).FolderName(),
       GameSettings(GameType::tes5se).FolderName(),

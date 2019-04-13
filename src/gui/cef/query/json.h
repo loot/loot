@@ -61,6 +61,8 @@ void validateMessageContents(const std::vector<MessageContent>& contents) {
 }
 
 GameType mapGameType(const std::string& gameType) {
+  if (gameType == GameSettings(GameType::tes3).FolderName())
+    return GameType::tes3;
   if (gameType == GameSettings(GameType::tes4).FolderName())
     return GameType::tes4;
   else if (gameType == GameSettings(GameType::tes5).FolderName())

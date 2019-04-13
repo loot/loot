@@ -73,12 +73,12 @@ set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE
 if (NOT DEFINED LIBLOOT_URL)
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         if (NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.9/libloot-0.14.9-0-gfedd630_master-win32.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.10/libloot-0.14.10-0-g848d1cc_master-win32.7z")
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.9/libloot-0.14.9-0-gfedd630_master-win64.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.10/libloot-0.14.10-0-g848d1cc_master-win64.7z")
         endif()
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.9/libloot.tar.xz")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.10/libloot.tar.xz")
     endif()
 endif()
 
@@ -108,7 +108,7 @@ set(LIBLOOT_SHARED_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIB
 
 ExternalProject_Add(testing-plugins
                     PREFIX "external"
-                    URL "https://github.com/Ortham/testing-plugins/archive/1.0.0.tar.gz"
+                    URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")

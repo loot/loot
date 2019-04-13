@@ -109,6 +109,11 @@ exists.
 Each pair of plugins is checked in lexicographical order for overlap, and all
 overlap rules are applied, unless adding a rule would cause a cycle.
 
+Morrowind plugins that have one or more masters that are not installed have
+their total record count used in place of their override record count, as unlike
+for other games, a Morrowind plugin's override records can only be counted by
+comparing the plugin against its masters.
+
 Tie Breaks
 ----------
 
