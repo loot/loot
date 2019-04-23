@@ -293,6 +293,18 @@ std::vector<Message> Game::CheckInstallValidity(
             .str()));
   }
 
+  if (metadata.GetGroup().has_value()) {
+    auto group = Group(metadata.GetGroup().value());
+    if (gameHandle_->GetDatabase()->GetGroups().count(group) == 0) {
+      messages.push_back(PlainTextMessage(
+        MessageType::error,
+        (boost::format(boost::locale::translate(
+          "This plugin belongs to the group \"%1%\", which does not exist.")) %
+          group.GetName())
+        .str()));
+    }
+  }
+
   // Also generate dirty messages.
   for (const auto& element : metadata.GetDirtyInfo()) {
     messages.push_back(ToMessage(element));

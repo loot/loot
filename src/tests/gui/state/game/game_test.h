@@ -444,6 +444,23 @@ TEST_P(
             messages);
 }
 
+TEST_P(GameTest,
+  checkInstallValidityShouldCheckThatAPluginGroupExists) {
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetGroup("missing group");
+
+  auto messages = game.CheckInstallValidity(
+    game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+                Message(MessageType::error,
+                        "This plugin belongs to the group \"missing group\", which does not exist\\."),
+    }),
+    messages);
+}
+
 TEST_P(
     GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {

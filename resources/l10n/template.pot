@@ -108,39 +108,43 @@ msgid ""
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:358 src/gui/state/game/game.cpp:450
+#: src/gui/state/game/game.cpp:302
+msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:370 src/gui/state/game/game.cpp:462
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:473
+#: src/gui/state/game/game.cpp:485
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:485
+#: src/gui/state/game/game.cpp:497
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:521
+#: src/gui/state/game/game.cpp:533
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:545
+#: src/gui/state/game/game.cpp:557
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:573
+#: src/gui/state/game/game.cpp:585
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:618
+#: src/gui/state/game/game.cpp:630
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
