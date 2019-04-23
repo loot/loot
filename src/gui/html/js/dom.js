@@ -203,7 +203,11 @@ export function fillLanguagesList(languages) {
   forceSelectDefaultValue(messageLangSelect);
 }
 
-export function initialiseGroupsEditor(groups) {
+export function initialiseGroupsEditor(getter) {
+  document.getElementById('groupsEditor').setGroupPluginNamesGetter(getter);
+}
+
+export function updateGroupsEditorState(groups) {
   document.getElementById('groupsEditor').setGroups(groups);
 }
 

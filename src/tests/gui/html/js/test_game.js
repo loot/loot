@@ -418,6 +418,36 @@ describe('Game', () => {
     });
   });
 
+  describe('#getGroupPluginNames()', () => {
+    let game;
+
+    beforeEach(() => {
+      const plugins = [
+        {
+          name: 'foo',
+          group: 'test group'
+        },
+        {
+          name: 'bar',
+          group: 'other group'
+        },
+        {
+          name: 'foobar',
+          group: 'test group'
+        }
+      ];
+      game = new Game({ plugins }, l10n);
+    });
+
+    test('should return an empty array if there are no plugins in the given group', () => {
+      expect(game.getGroupPluginNames('empty group').length).toBe(0);
+    });
+
+    test('should return an array of filenames of plugins in the given group', () => {
+      expect(game.getGroupPluginNames('test group')).toEqual(['foo', 'foobar']);
+    });
+  });
+
   describe('#setSortedPlugins', () => {
     let game;
     let handleEvent;

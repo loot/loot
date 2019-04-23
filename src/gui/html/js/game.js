@@ -6,7 +6,8 @@ import {
   fillGroupsList,
   initialiseAutocompleteBashTags,
   initialiseAutocompleteFilenames,
-  initialiseGroupsEditor
+  initialiseGroupsEditor,
+  updateGroupsEditorState
 } from './dom.js';
 import Filters from './filters.js';
 import { Plugin } from './plugin.js';
@@ -251,6 +252,12 @@ export default class Game {
     return this.plugins.map(plugin => plugin.name);
   }
 
+  getGroupPluginNames(groupName) {
+    return this.plugins
+      .filter(plugin => plugin.group === groupName)
+      .map(plugin => plugin.name);
+  }
+
   setSortedPlugins(plugins) {
     this.oldLoadOrder = this.plugins;
 
@@ -307,6 +314,8 @@ export default class Game {
 
     /* Re-initialise conflicts filter plugin list. */
     Filters.fillConflictsFilterList(this.plugins);
+
+    initialiseGroupsEditor(groupName => this.getGroupPluginNames(groupName));
   }
 
   static onPluginsChange(evt) {
@@ -406,6 +415,6 @@ export default class Game {
 
   static onGroupsChange(evt) {
     fillGroupsList(evt.detail.groups);
-    initialiseGroupsEditor(evt.detail.groups);
+    updateGroupsEditorState(evt.detail.groups);
   }
 }
