@@ -66,9 +66,9 @@ set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE
 
 if (NOT DEFINED LIBLOOT_URL)
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.5/libloot-0.14.5-0-g68ecc02_dev-win32.7z")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.6/libloot-0.14.6-0-g8fed4b0_dev-win32.7z")
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.5/libloot.tar.xz")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.6/libloot.tar.xz")
     endif()
 endif()
 
