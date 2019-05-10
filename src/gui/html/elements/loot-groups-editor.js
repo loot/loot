@@ -63,6 +63,7 @@ export default class LootGroupsEditor extends PolymerElement {
           border-left: var(--divider-color) solid 1px;
           overflow: hidden;
           padding: 0 8px 8px 8px;
+          min-width: 240px;
         }
         #cy {
           flex: auto;
