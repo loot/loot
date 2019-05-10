@@ -4,6 +4,45 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.4 - 2019-05-11
+===================
+
+Fixed
+-----
+
+- Any instances of ``\.`` in messages would be incorrectly displayed as ``.``.
+- LOOT would unnecessarily ignore intermediate plugins in a non-master to master
+  cycle involving groups, leading to unexpected results when sorting plugins
+  (via libloot).
+- ``HearthFires.esm`` was not recognised as a hardcoded plugin on case-sensitive
+  filesystems, causing a cyclic interaction error when sorting Skyrim or Skyrim
+  SE (via libloot).
+
+Changed
+-------
+
+- Groups that contain installed plugins can no longer be deleted in the groups
+  editor.
+- Clicking on a group in the groups editor will now display a list of the
+  installed plugins in that group in the editor's sidebar.
+- An error message is now displayed for each plugin that belongs to a
+  nonexistent group.
+- Game configuration can now include the root Registry key when specifying a
+  registry key. If no root key is specified, ``HKEY_LOCAL_MACHINE`` is used. The
+  recognised root keys are:
+
+  - ``HKEY_CLASSES_ROOT``
+  - ``HKEY_CURRENT_CONFIG``
+  - ``HKEY_CURRENT_USER``
+  - ``HKEY_LOCAL_MACHINE``
+  - ``HKEY_USERS``
+
+- Updated the Russian translation.
+- Updated libloot to v0.14.6.
+- Updated CEF to v74.1.16+ge20b240+chromium-74.0.3729.131.
+- Updated nlohmann/json to v3.6.1.
+- Updated spdlog to v1.3.1.
+
 0.14.3 - 2019-02-10
 ===================
 
