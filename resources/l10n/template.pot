@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-04-23 18:05+0100\n"
+"POT-Creation-Date: 2019-05-10 21:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,23 +202,23 @@ msgstr ""
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:311
+#: src/gui/html/elements/loot-groups-editor.js:312
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:312
+#: src/gui/html/elements/loot-groups-editor.js:313
 msgid "Group name"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:313
+#: src/gui/html/elements/loot-groups-editor.js:314
 msgid "Group already exists!"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:314
+#: src/gui/html/elements/loot-groups-editor.js:315
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.js:324
+#: src/gui/html/elements/loot-groups-editor.js:325
 msgid "Plugins in %s"
 msgstr ""
 
