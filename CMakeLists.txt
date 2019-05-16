@@ -105,7 +105,7 @@ ExternalProject_Add(testing-plugins
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_74.1.16%2Bge20b240%2Bchromium-74.0.3729.131_windows32_minimal.tar.bz2")
-    set(CEF_URL_HASH "44cd67b846185c9f19e58af40a09f68072cd4ea9")
+    set(CEF_URL_HASH "03e9219625f090983d649146d469be61386bb793")
     set(CEF_PRECOMPILED_BINARIES "libcef.dll" "natives_blob.bin" "snapshot_blob.bin" "v8_context_snapshot.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll" "chrome_elf.dll")
     set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
 ELSE ()
