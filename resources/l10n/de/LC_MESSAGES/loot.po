@@ -71,7 +71,7 @@ msgstr "Sortiere Ladereihenfolge"
 
 #: src/gui/state/loot_state.cpp:95
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
-msgid ""
+msgstr ""
 "Fehler: --auto-sort wurde übergeben aber kein "
 "--game Parameter wurden angegeben."
 
