@@ -112,9 +112,8 @@ bool GameSettings::IsRepoBranchOldDefault() const {
 }
 
 bool GameSettings::operator==(const GameSettings& rhs) const {
-  using boost::locale::to_lower;
-  return to_lower(name_) == to_lower(rhs.Name()) ||
-         to_lower(lootFolderName_) == to_lower(rhs.FolderName());
+  return name_ == rhs.Name() ||
+         lootFolderName_ == rhs.FolderName();
 }
 
 GameType GameSettings::Type() const { return type_; }

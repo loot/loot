@@ -162,8 +162,6 @@ private:
   }
 
   void SetCurrentGameWithoutInit(const std::string& newGameFolder) {
-    using boost::locale::to_lower;
-
     auto logger = getLogger();
     if (logger) {
       logger->debug("Setting the current game to that with folder: {}",
@@ -172,7 +170,7 @@ private:
 
     currentGame_ = find_if(
         installedGames_.begin(), installedGames_.end(), [&](const gui::Game& game) {
-          return to_lower(newGameFolder) == to_lower(game.FolderName());
+          return newGameFolder == game.FolderName();
         });
 
     if (currentGame_ == installedGames_.end()) {
