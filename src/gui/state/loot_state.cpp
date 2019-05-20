@@ -43,7 +43,6 @@
 #endif
 
 using boost::format;
-using boost::locale::to_lower;
 using boost::locale::translate;
 using std::exception;
 using std::locale;

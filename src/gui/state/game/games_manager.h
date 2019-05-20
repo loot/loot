@@ -126,8 +126,6 @@ public:
   }
 
   void SetCurrentGame(const std::string& newGameFolder) {
-    using boost::locale::to_lower;
-
     SetCurrentGameWithoutInit(newGameFolder);
     InitialiseGameData(GetCurrentGame());
   }
