@@ -126,4 +126,26 @@ std::string RegKeyStringValue(const std::string& rootKey,
   }
 }
 #endif
+
+int CompareFilenames(const std::string& lhs, const std::string& rhs) {
+#ifdef _WIN32
+  // On Windows, use CompareStringOrdinal as that will perform case conversion
+  // using the operating system uppercase table information, which (I think)
+  // will give results that match the filesystem, and is not locale-dependent.
+  int result = CompareStringOrdinal(ToWinWide(lhs).c_str(), -1, ToWinWide(rhs).c_str(), -1, true);
+  switch (result) {
+    case CSTR_LESS_THAN:
+    return -1;
+    case CSTR_EQUAL:
+    return 0;
+    case CSTR_GREATER_THAN:
+    return 1;
+    default:
+    throw std::invalid_argument("One of the filenames to compare was invalid.");
+  }
+#else
+  using boost::locale::to_upper;
+  return to_upper(lhs).compare(to_upper(rhs));
+#endif
+}
 }

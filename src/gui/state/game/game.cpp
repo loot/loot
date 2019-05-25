@@ -423,7 +423,6 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
 std::optional<short> Game::GetActiveLoadOrderIndex(
     const std::shared_ptr<const PluginInterface>& plugin,
     const std::vector<std::string>& loadOrder) const {
-  using boost::locale::to_lower;
   // Get the full load order, then count the number of active plugins until the
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return nullopt.
@@ -433,8 +432,9 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
 
   short numberOfActivePlugins = 0;
   for (const std::string& otherPluginName : loadOrder) {
-    if (to_lower(otherPluginName) == to_lower(plugin->GetName()))
+    if (CompareFilenames(plugin->GetName(), otherPluginName) == 0) {
       return numberOfActivePlugins;
+    }
 
     auto otherPlugin = GetPlugin(otherPluginName);
     if (otherPlugin &&

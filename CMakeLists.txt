@@ -264,7 +264,8 @@ set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
-                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h")
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h")
 
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})

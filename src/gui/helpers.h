@@ -38,5 +38,10 @@ std::string RegKeyStringValue(const std::string& rootKey,
   const std::string& subkey,
   const std::string& value);
 #endif
+
+// Compare strings as if they're filenames, respecting filesystem case
+// insensitivity on Windows. Returns -1 if lhs < rhs, 0 if lhs == rhs, and 1 if
+// lhs > rhs.
+int CompareFilenames(const std::string& lhs, const std::string& rhs);
 }
 #endif
