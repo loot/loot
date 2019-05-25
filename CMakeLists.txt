@@ -55,6 +55,12 @@ ENDIF ()
 
 find_package(Boost REQUIRED COMPONENTS locale system)
 
+if (NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+    find_package(ICU REQUIRED COMPONENTS uc)
+    include_directories($ICU_INCLUDE_DIRS)
+    link_directories($ICU_LIBRARY_DIRS)
+endif()
+
 ExternalProject_Add(GTest
                     PREFIX "external"
                     URL "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
@@ -335,12 +341,12 @@ ENDIF ()
 # Build application.
 add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 add_dependencies     (LOOT cef cpptoml json libloot spdlog)
-target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS})
+target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
 add_dependencies     (loot_gui_tests cpptoml libloot spdlog GTest testing-plugins)
-target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS})
+target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS} ${ICU_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags

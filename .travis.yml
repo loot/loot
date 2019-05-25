@@ -21,6 +21,7 @@ addons:
       - libxss-dev
       - libasound2-dev
       - libxtst-dev
+      - libicu-dev
 
 cache:
   directories:

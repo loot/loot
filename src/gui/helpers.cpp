@@ -34,6 +34,9 @@
 #include "shlobj.h"
 #include "shlwapi.h"
 #include "windows.h"
+#else
+#include <unicode/uchar.h>
+#include <unicode/unistr.h>
 #endif
 
 #include "gui/state/logging.h"
@@ -41,8 +44,8 @@
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file) {
 #ifdef _WIN32
-  HINSTANCE ret = ShellExecute(
-      0, NULL, file.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
+  HINSTANCE ret =
+      ShellExecute(0, NULL, file.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
   if ((int)ret <= 32)
     throw std::system_error(GetLastError(),
                             std::system_category(),
@@ -73,8 +76,8 @@ std::string FromWinWide(const std::wstring& wstr) {
 }
 
 std::string RegKeyStringValue(const std::string& rootKey,
-  const std::string& subkey,
-  const std::string& value) {
+                              const std::string& subkey,
+                              const std::string& value) {
   HKEY hKey = NULL;
   DWORD len = MAX_PATH;
   std::wstring wstr(MAX_PATH, 0);
@@ -95,20 +98,20 @@ std::string RegKeyStringValue(const std::string& rootKey,
   auto logger = getLogger();
   if (logger) {
     logger->trace(
-      "Getting string for registry key, subkey and value: {}, {}, "
-      "{}",
-      rootKey,
-      subkey,
-      value);
+        "Getting string for registry key, subkey and value: {}, {}, "
+        "{}",
+        rootKey,
+        subkey,
+        value);
   }
 
   LONG ret = RegGetValue(hKey,
-    ToWinWide(subkey).c_str(),
-    ToWinWide(value).c_str(),
-    RRF_RT_REG_SZ | KEY_WOW64_32KEY,
-    NULL,
-    &wstr[0],
-    &len);
+                         ToWinWide(subkey).c_str(),
+                         ToWinWide(value).c_str(),
+                         RRF_RT_REG_SZ | KEY_WOW64_32KEY,
+                         NULL,
+                         &wstr[0],
+                         &len);
 
   if (ret == ERROR_SUCCESS) {
     // Passing c_str() cuts off any unused buffer.
@@ -117,8 +120,7 @@ std::string RegKeyStringValue(const std::string& rootKey,
       logger->info("Found string: {}", value);
     }
     return value;
-  }
-  else {
+  } else {
     if (logger) {
       logger->info("Failed to get string value.");
     }
@@ -132,20 +134,23 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs) {
   // On Windows, use CompareStringOrdinal as that will perform case conversion
   // using the operating system uppercase table information, which (I think)
   // will give results that match the filesystem, and is not locale-dependent.
-  int result = CompareStringOrdinal(ToWinWide(lhs).c_str(), -1, ToWinWide(rhs).c_str(), -1, true);
+  int result = CompareStringOrdinal(
+      ToWinWide(lhs).c_str(), -1, ToWinWide(rhs).c_str(), -1, true);
   switch (result) {
     case CSTR_LESS_THAN:
-    return -1;
+      return -1;
     case CSTR_EQUAL:
-    return 0;
+      return 0;
     case CSTR_GREATER_THAN:
-    return 1;
+      return 1;
     default:
-    throw std::invalid_argument("One of the filenames to compare was invalid.");
+      throw std::invalid_argument(
+          "One of the filenames to compare was invalid.");
   }
 #else
-  using boost::locale::to_upper;
-  return to_upper(lhs).compare(to_upper(rhs));
+  auto unicodeLhs = UnicodeString::fromUTF8(lhs);
+  auto unicodeRhs = UnicodeString::fromUTF8(rhs);
+  return unicodeLhs.caseCompare(unicodeRhs, U_FOLD_CASE_DEFAULT);
 #endif
 }
 }

@@ -42,14 +42,22 @@ namespace test {
 // \u0131 is turkish 'ı'
 
 TEST(CompareFilenames, shouldBeCaseInsensitiveAndLocaleInvariant) {
+  // ICU sees all three greek rhos as case-insensitively equal, unlike Windows.
+  // A small enough deviation that it should hopefully be insignificant.
+
   EXPECT_EQ(0, CompareFilenames("i", "I"));
   EXPECT_EQ(-1, CompareFilenames("i", u8"\u0130"));
   EXPECT_EQ(-1, CompareFilenames("i", u8"\u0131"));
   EXPECT_EQ(-1, CompareFilenames("I", u8"\u0130"));
   EXPECT_EQ(-1, CompareFilenames("I", u8"\u0131"));
   EXPECT_EQ(-1, CompareFilenames(u8"\u0130", u8"\u0131"));
+#ifdef _WIN32
   EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03a1"));
   EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+#else
+  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+#endif
   EXPECT_EQ(0, CompareFilenames(u8"\u03a1", u8"\u03c1"));
 
   // Set locale to Turkish.
@@ -61,8 +69,13 @@ TEST(CompareFilenames, shouldBeCaseInsensitiveAndLocaleInvariant) {
   EXPECT_EQ(-1, CompareFilenames("I", u8"\u0130"));
   EXPECT_EQ(-1, CompareFilenames("I", u8"\u0131"));
   EXPECT_EQ(-1, CompareFilenames(u8"\u0130", u8"\u0131"));
+#ifdef _WIN32
   EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03a1"));
   EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+#else
+  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+#endif
   EXPECT_EQ(0, CompareFilenames(u8"\u03a1", u8"\u03c1"));
 
   // Set locale to Greek.
@@ -74,8 +87,13 @@ TEST(CompareFilenames, shouldBeCaseInsensitiveAndLocaleInvariant) {
   EXPECT_EQ(-1, CompareFilenames("I", u8"\u0130"));
   EXPECT_EQ(-1, CompareFilenames("I", u8"\u0131"));
   EXPECT_EQ(-1, CompareFilenames(u8"\u0130", u8"\u0131"));
+#ifdef _WIN32
   EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03a1"));
   EXPECT_EQ(1, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+#else
+  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03a1"));
+  EXPECT_EQ(0, CompareFilenames(u8"\u03f1", u8"\u03c1"));
+#endif
   EXPECT_EQ(0, CompareFilenames(u8"\u03a1", u8"\u03c1"));
 
   // Reset locale.
