@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-03-03 12:26+0000\n"
-"PO-Revision-Date: 2019-03-28 11:34+0500\n"
+"POT-Creation-Date: 2019-05-10 21:00+0100\n"
+"PO-Revision-Date: 2019-06-13 11:03+0500\n"
 "Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -97,8 +97,8 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Этот плагин является легким мастером и требует не-мастер плагин \"%1%\". "
-"Это может вызвать проблемы в игре, и сортировка не удастся, пока этот плагин "
+"Этот плагин является легким мастером и требует не-мастер плагин \"%1%\". Это "
+"может вызвать проблемы в игре, и сортировка не удастся, пока этот плагин "
 "установлен."
 
 #: src/gui/state/game/game.cpp:273
@@ -119,7 +119,11 @@ msgstr ""
 "Этот плагин имеет версию заголовка %1%, которая старее, чтом минимальная "
 "игровая поддерживаемая версия заголовка %2%."
 
-#: src/gui/state/game/game.cpp:358 src/gui/state/game/game.cpp:450
+#: src/gui/state/game/game.cpp:302
+msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgstr "Плагин в группе \"%1%\", которая не существует."
+
+#: src/gui/state/game/game.cpp:370 src/gui/state/game/game.cpp:462
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -127,20 +131,20 @@ msgstr ""
 "Не удалось загрузкить текущий порядок загрузки, отображаемая информация "
 "может быть неверной."
 
-#: src/gui/state/game/game.cpp:473
+#: src/gui/state/game/game.cpp:485
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 "Циклическое взаимодействие обнаружено между плагинами \"%1%\" и \"%2%\": %3%"
 
-#: src/gui/state/game/game.cpp:485
+#: src/gui/state/game/game.cpp:497
 msgid "The group \"%1%\" does not exist."
 msgstr "Группа \"%1%\" не существует."
 
-#: src/gui/state/game/game.cpp:521
+#: src/gui/state/game/game.cpp:533
 msgid "You have not sorted your load order this session."
 msgstr "В этой сессии порядок загрузки ещё не отсортирован!"
 
-#: src/gui/state/game/game.cpp:545
+#: src/gui/state/game/game.cpp:557
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
@@ -150,7 +154,7 @@ msgstr ""
 "расшаренный через индекс порядка загрузки FE. Отключите нормальный плагин "
 "или все ваши легкие мастерфайлы, чтобы избежать возможных проблем."
 
-#: src/gui/state/game/game.cpp:573
+#: src/gui/state/game/game.cpp:585
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
@@ -160,7 +164,7 @@ msgstr ""
 "использует самую последнюю без ошибок. Синтаксические ошибки обычно "
 "небольшие и исправляются в считанные часы."
 
-#: src/gui/state/game/game.cpp:618
+#: src/gui/state/game/game.cpp:630
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -224,7 +228,7 @@ msgstr "%1% содержит грязные правки."
 #: src/gui/state/game/helpers.cpp:119 src/gui/state/game/helpers.cpp:125
 #: src/gui/state/game/helpers.cpp:130
 msgid "%1% found %2% and %3%."
-msgstr "%1% содержит %2% and %3%."
+msgstr "%1% содержит %2% и %3%."
 
 #: src/gui/state/game/helpers.cpp:134 src/gui/state/game/helpers.cpp:137
 #: src/gui/state/game/helpers.cpp:140
@@ -235,17 +239,25 @@ msgstr "%1% содержит %2%."
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr "LOOT определил, что \"%1%\" неверен и теперь игнорирует это."
 
-#: src/gui/html/elements/loot-groups-editor.js:293
+#: src/gui/html/elements/loot-groups-editor.js:312
 msgid "Add a new group"
 msgstr "Добавить новую группу"
 
-#: src/gui/html/elements/loot-groups-editor.js:294
+#: src/gui/html/elements/loot-groups-editor.js:313
 msgid "Group name"
 msgstr "Имя группы"
 
-#: src/gui/html/elements/loot-groups-editor.js:295
+#: src/gui/html/elements/loot-groups-editor.js:314
 msgid "Group already exists!"
 msgstr "Группа уже существует!"
+
+#: src/gui/html/elements/loot-groups-editor.js:315
+msgid "No plugins are in this group."
+msgstr "Нет плагинов в этой группе."
+
+#: src/gui/html/elements/loot-groups-editor.js:325
+msgid "Plugins in %s"
+msgstr "Плагины в %s"
 
 #: src/gui/html/elements/loot-plugin-card.js:279
 msgid "Verified clean by %s"
@@ -365,7 +377,7 @@ msgstr "Пользовательские метаданные для \"%s\" бы
 msgid "Do not clean"
 msgstr "Не чистить"
 
-#: src/gui/html/js/game.js:25
+#: src/gui/html/js/game.js:26
 msgid "N/A"
 msgstr "Нет"
 
