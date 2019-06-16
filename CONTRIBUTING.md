@@ -7,9 +7,11 @@ A general guide to contributing to LOOT may be found on [LOOT's website](https:/
 
 The repository branching structure is pretty simple:
 
-* The `master` branch holds released code.
-* The `dev` branch is a next-release branch. It holds code that's working towards the next big release but which isn't there yet. Code on `dev` is generally pretty stable as CI must pass before anything can be merged into it, but may not be release-ready.
-* Other branches are generally themed on specific features or groups of changes, and come and go as they are merged into one of the two above, or discarded.
+* The `master` branch holds code that's released or that will be in the next
+  release. Code on `master` is generally pretty stable as CI must pass before
+  anything can be merged into it.
+* Other branches are generally themed on specific features or groups of changes,
+  and come and go as they are merged into one of the two above, or discarded.
 
 ## Getting Involved
 
