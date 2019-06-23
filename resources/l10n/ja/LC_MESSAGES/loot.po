@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.10.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2018-09-24 17:33+0100\n"
-"PO-Revision-Date: 2018-11-04 20:04+0900\n"
+"POT-Creation-Date: 2019-05-20 07:04+0100\n"
+"PO-Revision-Date: 2019-06-23 11:57+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -16,17 +16,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.2.3\n"
 
-#: src/gui/cef/query/query.h:50
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-"エラーが発生しました！LOOTDebugLog.txt（メニューから開けます）にて詳細を確認"
-"できます。"
-
-#: src/gui/cef/query/query.h:84
+#: src/gui/cef/query/query.h:48
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -37,61 +29,243 @@ msgstr ""
 "用のチェックを外してみてください。そうでない場合は、LOOTDebugLog.txt（メ"
 "ニューから開けます）にて詳細を確認してください。"
 
-#: src/gui/cef/query/types/get_game_data_query.h:45
+#: src/gui/cef/query/query_executor.h:43
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"エラーが発生しました！LOOTDebugLog.txt（メニューから開けます）にて詳細を確認"
+"できます。"
+
+#: src/gui/cef/query/types/get_game_data_query.h:46
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "メタデータの解析・マージ・評価中…"
 
-#: src/gui/cef/query/types/metadata_query.h:163
-#: src/gui/cef/query/types/metadata_query.h:186
+#: src/gui/cef/query/types/metadata_query.h:201
+#: src/gui/cef/query/types/metadata_query.h:228
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\" には評価できない条件が含まれています。詳細: %2%"
 
-#: src/gui/cef/query/types/metadata_query.h:209
-#: src/gui/cef/query/types/metadata_query.h:210
+#: src/gui/cef/query/types/metadata_query.h:250
+#: src/gui/cef/query/types/metadata_query.h:251
 msgid "N/A: No masterlist present"
 msgstr "利用不可: マスターリストなし"
 
-#: src/gui/cef/query/types/metadata_query.h:216
-#: src/gui/cef/query/types/metadata_query.h:217
+#: src/gui/cef/query/types/metadata_query.h:257
+#: src/gui/cef/query/types/metadata_query.h:258
 msgid "Unknown: Git repository missing"
 msgstr "不明: Gitリポジトリが消失"
 
-#: src/gui/cef/query/types/metadata_query.h:225
-#: src/gui/cef/query/types/metadata_query.h:226
+#: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/cef/query/types/metadata_query.h:267
 msgid "(edited)"
 msgstr "(編集有り)"
 
-#: src/gui/cef/query/types/sort_plugins_query.h:50
+#: src/gui/cef/query/types/sort_plugins_query.h:53
 msgid "Sorting load order..."
 msgstr "ロード順のソート中…"
 
-#: src/gui/html/elements/loot-groups-editor.js:281
+#: src/gui/state/loot_state.cpp:94
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr ""
+"エラー: --auto-sortを渡されましたが--game parameterが指定されていません。"
+
+#: src/gui/state/loot_state.cpp:117
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr "エラー: LOOTの設定ファイルを作成できませんでした。 %1%"
+
+#: src/gui/state/loot_state.cpp:127
+msgid "Error: Settings parsing failed. %1%"
+msgstr "エラー: 設定の解析に失敗しました。 %1%"
+
+#: src/gui/state/loot_state.cpp:190
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr "エラー: ゲームごとの固有設定の初期化に失敗しました。 %1%"
+
+#: src/gui/state/game/game.cpp:169 src/gui/state/game/game.cpp:199
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr ""
+"このプラグインを使用するには \"%1%\" をインストールする必要があります。"
+
+#: src/gui/state/game/game.cpp:182
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr ""
+"このプラグインを使用するには \"%1%\" をアクティブにする必要があります。"
+
+#: src/gui/state/game/game.cpp:218
+msgid "This plugin is incompatible with \"%1%\", but both files are present."
+msgstr "このプラグインは \"%1%\" との互換性がありません。"
+
+#: src/gui/state/game/game.cpp:253
+msgid ""
+"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
+msgstr ""
+"このプラグインはライトマスターファイルです。マスターファイルではない \"%1%\" "
+"が必要です。ゲーム中に不具合が発生する恐れがあるため、このプラグインがインス"
+"トールされている間はソートが機能しません。"
+
+#: src/gui/state/game/game.cpp:273
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"このプラグインにはESLプラグインの有効範囲から外れたFormIDのレコードが含まれて"
+"います。このプラグインを使用した場合、セーブデータを破損させ修復不能になる恐"
+"れがあります。"
+
+#: src/gui/state/game/game.cpp:290
+msgid ""
+"This plugin has a header version of %1%, which is less than the game's "
+"minimum supported header version of %2%."
+msgstr ""
+"このプラグインのヘッダーバージョンは%1%です。サポートされている最低バージョ"
+"ン %2% を下回っています。"
+
+#: src/gui/state/game/game.cpp:302
+msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgstr "このプラグインは存在しないグループ  \"%1%\" に属しています。"
+
+#: src/gui/state/game/game.cpp:370 src/gui/state/game/game.cpp:462
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+"現在のロードオーダーの読み込みに失敗しました。不正確な情報が表示されている可"
+"能性があります。"
+
+#: src/gui/state/game/game.cpp:485
+msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
+msgstr "\"%1%\" と \"%2%\" の間で循環参照が発生しています: %3%"
+
+#: src/gui/state/game/game.cpp:497
+msgid "The group \"%1%\" does not exist."
+msgstr "グループ \"%1%\" が存在しません。"
+
+#: src/gui/state/game/game.cpp:533
+msgid "You have not sorted your load order this session."
+msgstr "ロードオーダーのソートはまだ行われていません。"
+
+#: src/gui/state/game/game.cpp:557
+msgid ""
+"You have a normal plugin and at least one light master sharing the FE load "
+"order index. Deactivate a normal plugin or all your light masters to avoid "
+"potential issues."
+msgstr ""
+"ロードオーダーのインデックスがFEに達している通常プラグインがライトマスターと"
+"同時に読み込まれています。ライトマスター側の予期せぬ不具合を避けるため、通常"
+"プラグインを無効にしてください。"
+
+#: src/gui/state/game/game.cpp:585
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+"最新のリビジョンのマスターリストに構文エラーが含まれているため、直近の有効リ"
+"ビジョンのマスターリストをかわりに使用します。基本的に構文エラーは小さな不具"
+"合ですので、数時間内に修正されるでしょう。"
+
+#: src/gui/state/game/game.cpp:630
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"メタデータのリスト解析中にエラーが発生: %1%\n"
+"\n"
+"マスターリストを更新してみてください。エラーが解消されるかもしれません。ユー"
+"ザーメタデータにエラーが発生している場合は、おそらくLOOTの更新によってメタ"
+"データの対応構文が変更されたことが原因です。その場合は、ユーザーメタデータを"
+"手動で更新する必要があります。\n"
+"\n"
+"メニューから 'デバッグログの保存先を開く'をクリックしてLOOTのデータフォルダを"
+"開き、対応するゲームのフォルダにあるuserlist.yamlファイルを開いてください。マ"
+"ニュアル（メインメニューから開けます）を参照しつつ、ファイル内のメタデータを"
+"編集して手動で更新しましょう。\n"
+"\n"
+"LOOTのForum Threadでサポートを求めることもできます。[LOOTのウェブページ]"
+"(https://loot.github.io/)よりアクセス可能です。"
+
+#: src/gui/state/game/helpers.cpp:87
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] "%1%のITMレコード"
+
+#: src/gui/state/game/helpers.cpp:91
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] "%1%の削除されたリファレンス"
+
+#: src/gui/state/game/helpers.cpp:97
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] "%1%の削除されたNavmesh"
+
+#: src/gui/state/game/helpers.cpp:107
+msgid "%1% found %2%, %3% and %4%."
+msgstr "%1%によって%2%、%3%、%4%が見つかっています。"
+
+#: src/gui/state/game/helpers.cpp:113
+msgid "%1% found dirty edits."
+msgstr "%1%によってdirty editが見つかっています。"
+
+#: src/gui/state/game/helpers.cpp:119 src/gui/state/game/helpers.cpp:125
+#: src/gui/state/game/helpers.cpp:130
+msgid "%1% found %2% and %3%."
+msgstr "%1%によって%2%、%3%が見つかっています。"
+
+#: src/gui/state/game/helpers.cpp:134 src/gui/state/game/helpers.cpp:137
+#: src/gui/state/game/helpers.cpp:140
+msgid "%1% found %2%."
+msgstr "%1%によって%2%が見つかっています。"
+
+#: src/gui/state/game/helpers.cpp:221
+msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
+msgstr "\"%1%\" は利用できなくなっているため除外されます。"
+
+#: src/gui/html/elements/loot-groups-editor.js:312
 msgid "Add a new group"
 msgstr "新しいグループを追加"
 
-#: src/gui/html/elements/loot-groups-editor.js:282
+#: src/gui/html/elements/loot-groups-editor.js:313
 msgid "Group name"
 msgstr "グループ名"
 
-#: src/gui/html/elements/loot-groups-editor.js:283
+#: src/gui/html/elements/loot-groups-editor.js:314
 msgid "Group already exists!"
 msgstr "グループが既に存在しています！"
 
-#: src/gui/html/elements/loot-plugin-card.js:268
-#, javascript-format
+#: src/gui/html/elements/loot-groups-editor.js:315
+msgid "No plugins are in this group."
+msgstr "プラグインが見つかりません。"
+
+#: src/gui/html/elements/loot-groups-editor.js:325
+msgid "Plugins in %s"
+msgstr "グループ: %s"
+
+#: src/gui/html/elements/loot-plugin-card.js:279
 msgid "Verified clean by %s"
 msgstr "クリーン確認済（by %s）"
-
-#: src/gui/html/js/events.js:51
-msgid "Identifying conflicting plugins..."
-msgstr "競合するプラグインを特定中…"
 
 #: src/gui/html/js/events.js:132
 msgid "Updating and parsing masterlist..."
 msgstr "マスターリストの更新・解析中…"
 
-#: src/gui/html/js/events.js:156
-#, javascript-format
+#: src/gui/html/js/events.js:155
 msgid "Masterlist updated to revision %s."
 msgstr "マスターリストがリビジョン %s に更新されました。"
 
@@ -99,20 +273,23 @@ msgstr "マスターリストがリビジョン %s に更新されました。"
 msgid "No masterlist update was necessary."
 msgstr "現在マスターリストの更新は必要ありません。"
 
-#: src/gui/html/js/events.js:204
-#, javascript-format
+#: src/gui/html/js/events.js:198
+msgid "Cyclic interaction detected"
+msgstr "循環参照を検出"
+
+#: src/gui/html/js/events.js:205
 msgid "Failed to sort plugins. Details: %s"
 msgstr "プラグインのソートに失敗しました。詳細: %s"
 
-#: src/gui/html/js/events.js:230
+#: src/gui/html/js/events.js:232
 msgid "Sorting made no changes to the load order."
 msgstr "ロードオーダーは変更されませんでした。"
 
-#: src/gui/html/js/events.js:270
+#: src/gui/html/js/events.js:272
 msgid "Redate Plugins?"
 msgstr "プラグインの日付を変更しますか？"
 
-#: src/gui/html/js/events.js:272
+#: src/gui/html/js/events.js:273
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -124,15 +301,15 @@ msgstr ""
 "度ダウンロードされてしまいます（Skyrim Special Editionの場合は影響ありませ"
 "ん）。続行しますか？"
 
-#: src/gui/html/js/events.js:274
+#: src/gui/html/js/events.js:276
 msgid "Redate"
 msgstr "日付を変更する"
 
-#: src/gui/html/js/events.js:280
+#: src/gui/html/js/events.js:282
 msgid "Plugins were successfully redated."
 msgstr "プラグインの日付が正常に変更されました。"
 
-#: src/gui/html/js/events.js:292
+#: src/gui/html/js/events.js:293
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -140,54 +317,54 @@ msgstr ""
 "全プラグインのユーザーメタデータが消去されます。本当に実行してもよろしいです"
 "か？"
 
-#: src/gui/html/js/events.js:294 src/gui/html/js/events.js:590
+#: src/gui/html/js/events.js:296 src/gui/html/js/events.js:588
 msgid "Clear"
 msgstr "消去する"
 
-#: src/gui/html/js/events.js:309
+#: src/gui/html/js/events.js:311
 msgid "All user-added metadata has been cleared."
 msgstr "ユーザーによって追加されたすべてのメタデータが消去されました。"
 
-#: src/gui/html/js/events.js:343
+#: src/gui/html/js/events.js:345
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOTのデータ内容をクリップボードにコピーしました。"
 
-#: src/gui/html/js/events.js:358
+#: src/gui/html/js/events.js:360
 msgid "The load order has been copied to the clipboard."
 msgstr "ロードオーダーをクリップボードにコピーしました。"
 
-#: src/gui/html/js/events.js:396
-#, javascript-format
+#: src/gui/html/js/events.js:397
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 "%sが適用（もしくはキャンセル）されていません。終了してもよろしいですか？"
 
-#: src/gui/html/js/events.js:399 src/gui/html/js/translateStaticText.js:403
+#: src/gui/html/js/events.js:401 src/gui/html/js/translateStaticText.js:402
 msgid "Quit"
 msgstr "終了"
 
-#: src/gui/html/js/events.js:415
+#: src/gui/html/js/events.js:417
 msgid "sorted load order"
 msgstr "ソート済みのロードオーダー"
 
-#: src/gui/html/js/events.js:417
+#: src/gui/html/js/events.js:419
 msgid "metadata edits"
 msgstr "メタデータ編集"
 
-#: src/gui/html/js/events.js:576
-#, javascript-format
+#: src/gui/html/js/events.js:53
+msgid "Identifying conflicting plugins..."
+msgstr "競合するプラグインを特定中…"
+
+#: src/gui/html/js/events.js:573
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "\"%s\" のメタデータをクリップボードにコピーしました。"
 
-#: src/gui/html/js/events.js:587
-#, javascript-format
+#: src/gui/html/js/events.js:584
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr "\"%s\" のユーザーメタデータを消去しますか？"
 
-#: src/gui/html/js/events.js:612
-#, javascript-format
+#: src/gui/html/js/events.js:607
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "\"%s\" のユーザーメタデータを消去しました。"
 
@@ -195,16 +372,16 @@ msgstr "\"%s\" のユーザーメタデータを消去しました。"
 msgid "Do not clean"
 msgstr "クリーン禁止"
 
-#: src/gui/html/js/game.js:25
+#: src/gui/html/js/game.js:26
 msgid "N/A"
 msgstr "利用不可"
 
-#: src/gui/html/js/handlePromiseError.js:9
-#: src/gui/html/js/translateStaticText.js:242
+#: src/gui/html/js/handlePromiseError.js:8
+#: src/gui/html/js/translateStaticText.js:241
 msgid "Error"
 msgstr "エラー"
 
-#: src/gui/html/js/initialise.js:362
+#: src/gui/html/js/initialise.js:361
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -212,103 +389,20 @@ msgstr ""
 "更新のチェックに失敗しました！詳細はLOOTDebugLog.txt（メニューから開けます）"
 "から確認できます。"
 
-#: src/gui/html/js/initialise.js:378
-#, javascript-format
+#: src/gui/html/js/initialise.js:377
 msgid "A [new release](%s) of LOOT is available."
 msgstr "[新しいバージョンのLOOT](%s)が利用できます。"
 
-#: src/gui/html/js/translateStaticText.js:8
-msgid "Active Plugin"
-msgstr "アクティブ"
+#: src/gui/html/js/initialise.js:421
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
+msgstr ""
+"1つ以上のエラーメッセージが表示されているため自動ソートは中止されました。"
 
-#: src/gui/html/js/translateStaticText.js:11
-#: src/gui/html/js/translateStaticText.js:574
-msgid "Master File"
-msgstr "マスターファイル"
-
-#: src/gui/html/js/translateStaticText.js:14
-msgid "Light Master File"
-msgstr "ライトマスターファイル"
-
-#: src/gui/html/js/translateStaticText.js:17
-msgid "Empty Plugin"
-msgstr "空のプラグイン"
-
-#: src/gui/html/js/translateStaticText.js:20
-msgid "Loads Archive"
-msgstr "アーカイブ読み取り"
-
-#: src/gui/html/js/translateStaticText.js:23
-#: src/gui/html/js/translateStaticText.js:205
-msgid "Has User Metadata"
-msgstr "ユーザーメタデータ有り"
-
-#: src/gui/html/js/translateStaticText.js:26
-msgid "Edit Metadata"
-msgstr "メタデータ編集"
-
-#: src/gui/html/js/translateStaticText.js:29
-msgid "Copy Metadata"
-msgstr "メタデータをコピー"
-
-#: src/gui/html/js/translateStaticText.js:33
-msgid "Clear User Metadata"
-msgstr "ユーザーメタデータを消去"
-
-#: src/gui/html/js/translateStaticText.js:51
-msgid "Enable Edits"
-msgstr "編集を有効にする"
-
-#: src/gui/html/js/translateStaticText.js:54
-#: src/gui/html/js/translateStaticText.js:202
-msgid "Group"
-msgstr "グループ"
-
-#: src/gui/html/js/translateStaticText.js:58
-msgid "Main"
-msgstr "メイン"
-
-#: src/gui/html/js/translateStaticText.js:62
-msgid "Load After"
-msgstr "後にロード"
-
-#: src/gui/html/js/translateStaticText.js:67
-msgid "Requirements"
-msgstr "必須"
-
-#: src/gui/html/js/translateStaticText.js:72
-msgid "Incompatibilities"
-msgstr "非互換"
-
-#: src/gui/html/js/translateStaticText.js:77
-msgid "Messages"
-msgstr "メッセージ"
-
-#: src/gui/html/js/translateStaticText.js:81
-msgid "Bash Tags"
-msgstr "Bash Tags"
-
-#: src/gui/html/js/translateStaticText.js:85
-msgid "Dirty Plugin Info"
-msgstr "Dirtyプラグイン情報"
-
-#: src/gui/html/js/translateStaticText.js:90
-msgid "Clean Plugin Info"
-msgstr "クリーン情報"
-
-#: src/gui/html/js/translateStaticText.js:94
-msgid "Locations"
-msgstr "公開ページ"
-
-#: src/gui/html/js/translateStaticText.js:98
-#: src/gui/html/js/translateStaticText.js:110
-#: src/gui/html/js/translateStaticText.js:122
-msgid "Filename"
-msgstr "ファイル名"
-
-#: src/gui/html/js/translateStaticText.js:102
-#: src/gui/html/js/translateStaticText.js:114
-#: src/gui/html/js/translateStaticText.js:126
+#: src/gui/html/js/translateStaticText.js:101
+#: src/gui/html/js/translateStaticText.js:113
+#: src/gui/html/js/translateStaticText.js:125
 msgid "Display Name"
 msgstr "表示名"
 
@@ -318,7 +412,18 @@ msgstr "表示名"
 #: src/gui/html/js/translateStaticText.js:140
 #: src/gui/html/js/translateStaticText.js:153
 msgid "Condition"
-msgstr "条件(Condition)"
+msgstr "条件文"
+
+#: src/gui/html/js/translateStaticText.js:11
+#: src/gui/html/js/translateStaticText.js:573
+msgid "Master File"
+msgstr "マスターファイル"
+
+#: src/gui/html/js/translateStaticText.js:110
+#: src/gui/html/js/translateStaticText.js:122
+#: src/gui/html/js/translateStaticText.js:98
+msgid "Filename"
+msgstr "ファイル名"
 
 #: src/gui/html/js/translateStaticText.js:134
 msgid "Type"
@@ -328,8 +433,12 @@ msgstr "タイプ"
 msgid "Content"
 msgstr "内容"
 
+#: src/gui/html/js/translateStaticText.js:14
+msgid "Light Master File"
+msgstr "ライトマスターファイル"
+
 #: src/gui/html/js/translateStaticText.js:143
-#: src/gui/html/js/translateStaticText.js:534
+#: src/gui/html/js/translateStaticText.js:533
 msgid "Language"
 msgstr "言語"
 
@@ -350,16 +459,20 @@ msgstr "CRC"
 msgid "ITM Count"
 msgstr "ITM数"
 
-#: src/gui/html/js/translateStaticText.js:164
+#: src/gui/html/js/translateStaticText.js:163
 msgid "Deleted References"
 msgstr "削除されたリファレンス"
 
-#: src/gui/html/js/translateStaticText.js:169
+#: src/gui/html/js/translateStaticText.js:168
 msgid "Deleted Navmeshes"
 msgstr "削除されたNavmesh"
 
-#: src/gui/html/js/translateStaticText.js:174
-#: src/gui/html/js/translateStaticText.js:183
+#: src/gui/html/js/translateStaticText.js:17
+msgid "Empty Plugin"
+msgstr "空のプラグイン"
+
+#: src/gui/html/js/translateStaticText.js:173
+#: src/gui/html/js/translateStaticText.js:182
 msgid "Cleaning Utility"
 msgstr "クリーニングツール"
 
@@ -368,7 +481,7 @@ msgid "URL"
 msgstr "URL"
 
 #: src/gui/html/js/translateStaticText.js:191
-#: src/gui/html/js/translateStaticText.js:565
+#: src/gui/html/js/translateStaticText.js:564
 msgid "Name"
 msgstr "名前"
 
@@ -377,10 +490,24 @@ msgid "Save Metadata"
 msgstr "メタデータを保存"
 
 #: src/gui/html/js/translateStaticText.js:198
-#: src/gui/html/js/translateStaticText.js:368
+#: src/gui/html/js/translateStaticText.js:367
 #: src/gui/html/js/translateStaticText.js:600
 msgid "Cancel"
 msgstr "キャンセル"
+
+#: src/gui/html/js/translateStaticText.js:20
+msgid "Loads Archive"
+msgstr "アーカイブ読み取り"
+
+#: src/gui/html/js/translateStaticText.js:202
+#: src/gui/html/js/translateStaticText.js:54
+msgid "Group"
+msgstr "グループ"
+
+#: src/gui/html/js/translateStaticText.js:205
+#: src/gui/html/js/translateStaticText.js:23
+msgid "Has User Metadata"
+msgstr "ユーザーメタデータ有り"
 
 #: src/gui/html/js/translateStaticText.js:208
 msgid "Editor Is Open"
@@ -390,21 +517,21 @@ msgstr "エディット中"
 msgid "A filename is required."
 msgstr "ファイル名を入れてください。"
 
-#: src/gui/html/js/translateStaticText.js:227
-#: src/gui/html/js/translateStaticText.js:251
-#: src/gui/html/js/translateStaticText.js:267
-#: src/gui/html/js/translateStaticText.js:294
-#: src/gui/html/js/translateStaticText.js:312
-#: src/gui/html/js/translateStaticText.js:324
-#: src/gui/html/js/translateStaticText.js:339
+#: src/gui/html/js/translateStaticText.js:226
+#: src/gui/html/js/translateStaticText.js:250
+#: src/gui/html/js/translateStaticText.js:266
+#: src/gui/html/js/translateStaticText.js:293
+#: src/gui/html/js/translateStaticText.js:311
+#: src/gui/html/js/translateStaticText.js:323
+#: src/gui/html/js/translateStaticText.js:338
 msgid "Delete Row"
 msgstr "行を削除"
 
-#: src/gui/html/js/translateStaticText.js:236
+#: src/gui/html/js/translateStaticText.js:235
 msgid "Note"
 msgstr "メモ"
 
-#: src/gui/html/js/translateStaticText.js:239
+#: src/gui/html/js/translateStaticText.js:238
 msgid "Warning"
 msgstr "警告"
 
@@ -412,11 +539,15 @@ msgstr "警告"
 msgid "A content string is required."
 msgstr "内容を書いてください。"
 
+#: src/gui/html/js/translateStaticText.js:25
+msgid "Edit Metadata"
+msgstr "メタデータ編集"
+
 #: src/gui/html/js/translateStaticText.js:259
 msgid "Add"
 msgstr "追加"
 
-#: src/gui/html/js/translateStaticText.js:261
+#: src/gui/html/js/translateStaticText.js:260
 msgid "Remove"
 msgstr "削除"
 
@@ -429,6 +560,10 @@ msgstr "名前を入れてください。"
 #: src/gui/html/js/translateStaticText.js:304
 msgid "A CRC is required."
 msgstr "CRCを入れてください。"
+
+#: src/gui/html/js/translateStaticText.js:28
+msgid "Copy Metadata"
+msgstr "メタデータをコピー"
 
 #: src/gui/html/js/translateStaticText.js:280
 #: src/gui/html/js/translateStaticText.js:283
@@ -445,11 +580,15 @@ msgstr "ツール名を入れてください。"
 msgid "A link is required."
 msgstr "リンクを入れてください。"
 
+#: src/gui/html/js/translateStaticText.js:33
+msgid "Clear User Metadata"
+msgstr "ユーザーメタデータを消去"
+
 #: src/gui/html/js/translateStaticText.js:337
 msgid "A folder is required."
 msgstr "フォルダが必要です。"
 
-#: src/gui/html/js/translateStaticText.js:348
+#: src/gui/html/js/translateStaticText.js:347
 #: src/gui/html/js/translateStaticText.js:593
 msgid "Add New Row"
 msgstr "新しい行を追加"
@@ -466,7 +605,7 @@ msgstr "プラグインのソート"
 msgid "Update Masterlist"
 msgstr "マスターリストの更新"
 
-#: src/gui/html/js/translateStaticText.js:365
+#: src/gui/html/js/translateStaticText.js:364
 #: src/gui/html/js/translateStaticText.js:597
 msgid "Apply"
 msgstr "適用"
@@ -499,11 +638,11 @@ msgstr "データ内容をコピー"
 msgid "Refresh Content"
 msgstr "データ内容を更新"
 
-#: src/gui/html/js/translateStaticText.js:394
+#: src/gui/html/js/translateStaticText.js:393
 msgid "View Documentation"
 msgstr "マニュアルを開く"
 
-#: src/gui/html/js/translateStaticText.js:397
+#: src/gui/html/js/translateStaticText.js:396
 msgid "About"
 msgstr "LOOTについて"
 
@@ -520,24 +659,24 @@ msgstr "カード内を検索"
 msgid "Plugins"
 msgstr "PLUGINS"
 
-#: src/gui/html/js/translateStaticText.js:430
+#: src/gui/html/js/translateStaticText.js:429
 msgid "Filters"
 msgstr "FILTERS"
 
-#: src/gui/html/js/translateStaticText.js:437
+#: src/gui/html/js/translateStaticText.js:436
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 "Enterキーを押すか入力欄の外をクリックしてフィルターを確定してください。"
 
-#: src/gui/html/js/translateStaticText.js:440
+#: src/gui/html/js/translateStaticText.js:439
 msgid "Show only plugins with cards that contain"
 msgstr "カードに以下の文字列を含むプラグインのみ表示"
 
-#: src/gui/html/js/translateStaticText.js:443
+#: src/gui/html/js/translateStaticText.js:442
 msgid "No text specified"
 msgstr "テキスト未入力"
 
-#: src/gui/html/js/translateStaticText.js:448
+#: src/gui/html/js/translateStaticText.js:447
 msgid "Hide version numbers"
 msgstr "バージョン番号を隠す"
 
@@ -545,11 +684,11 @@ msgstr "バージョン番号を隠す"
 msgid "Hide CRCs"
 msgstr "CRCを隠す"
 
-#: src/gui/html/js/translateStaticText.js:452
+#: src/gui/html/js/translateStaticText.js:451
 msgid "Hide Bash Tags"
 msgstr "Bash Tagsを隠す"
 
-#: src/gui/html/js/translateStaticText.js:455
+#: src/gui/html/js/translateStaticText.js:454
 msgid "Hide notes"
 msgstr "メモを隠す"
 
@@ -557,11 +696,11 @@ msgstr "メモを隠す"
 msgid "Hide 'Do not clean' messages"
 msgstr "'クリーン禁止' メッセージを隠す"
 
-#: src/gui/html/js/translateStaticText.js:461
+#: src/gui/html/js/translateStaticText.js:460
 msgid "Hide all plugin messages"
 msgstr "全てのプラグインのメッセージを隠す"
 
-#: src/gui/html/js/translateStaticText.js:464
+#: src/gui/html/js/translateStaticText.js:463
 msgid "Hide inactive plugins"
 msgstr "非アクティブのプラグインを隠す"
 
@@ -573,15 +712,15 @@ msgstr "メッセージ無しのプラグインを隠す"
 msgid "Show only conflicting plugins for"
 msgstr "以下と競合するプラグインのみ表示"
 
-#: src/gui/html/js/translateStaticText.js:473
+#: src/gui/html/js/translateStaticText.js:472
 msgid "No plugin selected"
 msgstr "プラグイン未選択"
 
-#: src/gui/html/js/translateStaticText.js:479
+#: src/gui/html/js/translateStaticText.js:478
 msgid "Hidden plugins:"
 msgstr "非表示のプラグイン:"
 
-#: src/gui/html/js/translateStaticText.js:482
+#: src/gui/html/js/translateStaticText.js:481
 msgid "Hidden messages:"
 msgstr "非表示のメッセージ:"
 
@@ -613,6 +752,10 @@ msgstr "合計メッセージ数"
 msgid "Active Plugins"
 msgstr "アクティブなプラグイン"
 
+#: src/gui/html/js/translateStaticText.js:51
+msgid "Enable Edits"
+msgstr "編集を有効にする"
+
 #: src/gui/html/js/translateStaticText.js:511
 msgid "Dirty Plugins"
 msgstr "Dirtyプラグイン"
@@ -621,15 +764,15 @@ msgstr "Dirtyプラグイン"
 msgid "Total Plugins"
 msgstr "合計プラグイン数"
 
-#: src/gui/html/js/translateStaticText.js:525
+#: src/gui/html/js/translateStaticText.js:524
 msgid "Default Game"
 msgstr "デフォルトのゲーム"
 
-#: src/gui/html/js/translateStaticText.js:528
+#: src/gui/html/js/translateStaticText.js:527
 msgid "Autodetect"
 msgstr "自動検出"
 
-#: src/gui/html/js/translateStaticText.js:539
+#: src/gui/html/js/translateStaticText.js:538
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "変更した言語はLOOTの再起動後に適用されます。"
 
@@ -637,39 +780,43 @@ msgstr "変更した言語はLOOTの再起動後に適用されます。"
 msgid "Enable debug logging"
 msgstr "デバッグログの取得を有効"
 
-#: src/gui/html/js/translateStaticText.js:548
+#: src/gui/html/js/translateStaticText.js:547
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "出力された内容はLOOTDebugLog.txtに記録されます。"
 
-#: src/gui/html/js/translateStaticText.js:554
+#: src/gui/html/js/translateStaticText.js:553
 msgid "Update masterlist before sorting"
 msgstr "ソートの前にマスターリストを更新"
 
-#: src/gui/html/js/translateStaticText.js:560
+#: src/gui/html/js/translateStaticText.js:559
 msgid "Check for LOOT updates on startup"
 msgstr "起動時に更新をチェック"
 
-#: src/gui/html/js/translateStaticText.js:568
+#: src/gui/html/js/translateStaticText.js:567
 msgid "Base Game"
 msgstr "ゲーム種別"
 
-#: src/gui/html/js/translateStaticText.js:571
+#: src/gui/html/js/translateStaticText.js:570
 msgid "LOOT Folder"
 msgstr "LOOTのフォルダ"
 
-#: src/gui/html/js/translateStaticText.js:577
+#: src/gui/html/js/translateStaticText.js:576
 msgid "Masterlist Repository URL"
 msgstr "マスターリストのリポジトリURL"
 
-#: src/gui/html/js/translateStaticText.js:580
+#: src/gui/html/js/translateStaticText.js:579
 msgid "Masterlist Repository Branch"
 msgstr "マスターリストのリポジトリブランチ"
 
-#: src/gui/html/js/translateStaticText.js:583
+#: src/gui/html/js/translateStaticText.js:58
+msgid "Main"
+msgstr "メイン"
+
+#: src/gui/html/js/translateStaticText.js:582
 msgid "Install Path"
 msgstr "インストールパス"
 
-#: src/gui/html/js/translateStaticText.js:586
+#: src/gui/html/js/translateStaticText.js:585
 msgid "Install Path Registry Key"
 msgstr "インストールパスのレジストリキー"
 
@@ -677,8 +824,7 @@ msgstr "インストールパスのレジストリキー"
 msgid "First-Time Tips"
 msgstr "最初のヒント"
 
-#: src/gui/html/js/translateStaticText.js:609
-#, javascript-format
+#: src/gui/html/js/translateStaticText.js:608
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
@@ -686,11 +832,15 @@ msgstr ""
 "このメッセージはLOOT v%sを初めて起動したときに表示されます。以下は使い始める"
 "ためのヒント集です。"
 
-#: src/gui/html/js/translateStaticText.js:614
+#: src/gui/html/js/translateStaticText.js:61
+msgid "Load After"
+msgstr "後にロード"
+
+#: src/gui/html/js/translateStaticText.js:613
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "%(menu_icon)s ボタンをクリックするとメニューが開きます。"
 
-#: src/gui/html/js/translateStaticText.js:620
+#: src/gui/html/js/translateStaticText.js:619
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
@@ -702,7 +852,7 @@ msgstr ""
 "add\">追加</span>または<span class=\"tag remove\">削除</span>するべきBash Tag"
 "の候補などが表示されます。"
 
-#: src/gui/html/js/translateStaticText.js:623
+#: src/gui/html/js/translateStaticText.js:622
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -710,7 +860,7 @@ msgstr ""
 "CRCはフィルターかソートの実行によってプラグインが読み込まれるまで表示されませ"
 "ん。"
 
-#: src/gui/html/js/translateStaticText.js:626
+#: src/gui/html/js/translateStaticText.js:625
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
@@ -718,7 +868,7 @@ msgstr ""
 "画面左のサイドバー内のプラグインをダブルクリックするとメタデータ編集画面を直"
 "接開くことができます。"
 
-#: src/gui/html/js/translateStaticText.js:629
+#: src/gui/html/js/translateStaticText.js:628
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -726,7 +876,7 @@ msgstr ""
 "サイドバー内のプラグインはメタデータ編集画面の \"後にロード\" , \"必須\" , "
 "\"非互換\" テーブルにドロップすることができます。"
 
-#: src/gui/html/js/translateStaticText.js:632
+#: src/gui/html/js/translateStaticText.js:631
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -734,7 +884,7 @@ msgstr ""
 "メタデータ編集画面を開いている間、またはソートしたロードオーダーを適用・破棄"
 "するまでの間は一部の機能が使えなくなります。"
 
-#: src/gui/html/js/translateStaticText.js:635
+#: src/gui/html/js/translateStaticText.js:634
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -744,9 +894,8 @@ msgstr ""
 "らカーソルを載せて調べてみてください。また、メニューからLOOTのマニュアルを開"
 "くこともできます。"
 
-#: src/gui/html/js/translateStaticText.js:639
-#: src/gui/html/js/translateStaticText.js:662
-#, javascript-format
+#: src/gui/html/js/translateStaticText.js:638
+#: src/gui/html/js/translateStaticText.js:661
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -755,7 +904,7 @@ msgstr ""
 "LOOTはフリーウェアですが、お気持ちをいただけるのでしたら%sより、"
 "WrinklyNinja（LOOTの作者でありメイン開発者）まで寄付を受け付けています。"
 
-#: src/gui/html/js/translateStaticText.js:644
+#: src/gui/html/js/translateStaticText.js:643
 msgid "OK"
 msgstr "OK"
 
@@ -763,12 +912,11 @@ msgstr "OK"
 msgid "About LOOT"
 msgstr "LOOTについて"
 
-#: src/gui/html/js/translateStaticText.js:653
-#, javascript-format
+#: src/gui/html/js/translateStaticText.js:652
 msgid "Version %s (build %s)"
 msgstr "バージョン %s (ビルド %s)"
 
-#: src/gui/html/js/translateStaticText.js:658
+#: src/gui/html/js/translateStaticText.js:657
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
 "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
@@ -777,155 +925,40 @@ msgstr ""
 "Fallout: New Vegas、Fallout 4、Fallout 4 VRのロードオーダー（ロード順）を最適"
 "化します。"
 
-#: src/gui/state/game.cpp:184 src/gui/state/game.cpp:213
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr ""
-"このプラグインを使用するには \"%1%\" をインストールする必要があります。"
+#: src/gui/html/js/translateStaticText.js:66
+msgid "Requirements"
+msgstr "必須"
 
-#: src/gui/state/game.cpp:196
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr ""
-"このプラグインを使用するには \"%1%\" をアクティブにする必要があります。"
+#: src/gui/html/js/translateStaticText.js:71
+msgid "Incompatibilities"
+msgstr "非互換"
 
-#: src/gui/state/game.cpp:231
-msgid "This plugin is incompatible with \"%1%\", but both files are present."
-msgstr "このプラグインは \"%1%\" との互換性がありません。"
+#: src/gui/html/js/translateStaticText.js:76
+msgid "Messages"
+msgstr "メッセージ"
 
-#: src/gui/state/game.cpp:266
-msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
-"This can cause issues in-game, and sorting will fail while this plugin is "
-"installed."
-msgstr ""
-"このプラグインはライトマスターファイルです。マスターファイルではない \"%1%\" "
-"が必要です。ゲーム中に不具合が発生する恐れがあるため、このプラグインがインス"
-"トールされている間はソートが機能しません。"
+#: src/gui/html/js/translateStaticText.js:8
+msgid "Active Plugin"
+msgstr "アクティブ"
 
-#: src/gui/state/game.cpp:340 src/gui/state/game.cpp:425
-msgid ""
-"Failed to load the current load order, information displayed may be "
-"incorrect."
-msgstr ""
-"現在のロードオーダーの読み込みに失敗しました。不正確な情報が表示されている可"
-"能性があります。"
+#: src/gui/html/js/translateStaticText.js:81
+msgid "Bash Tags"
+msgstr "Bash Tags"
 
-#: src/gui/state/game.cpp:447
-msgid ""
-"Cyclic interaction detected between \"%1%\" and \"%2%\". Back cycle: %3%"
-msgstr "\"%1%\" と \"%2%\" の間で応答がループしています。前のループ: %3%"
+#: src/gui/html/js/translateStaticText.js:84
+msgid "Dirty Plugin Info"
+msgstr "Dirtyプラグイン情報"
 
-#: src/gui/state/game.cpp:459
-msgid "The group \"%1%\" does not exist."
-msgstr "グループ \"%1%\" が存在しません。"
+#: src/gui/html/js/translateStaticText.js:89
+msgid "Clean Plugin Info"
+msgstr "クリーン情報"
 
-#: src/gui/state/game.cpp:496
-msgid "You have not sorted your load order this session."
-msgstr "ロードオーダーのソートはまだ行われていません。"
+#: src/gui/html/js/translateStaticText.js:94
+msgid "Locations"
+msgstr "公開ページ"
 
-#: src/gui/state/game.cpp:519
-msgid ""
-"You have a normal plugin and at least one light master sharing the FE load "
-"order index. Deactivate a normal plugin or all your light masters to avoid "
-"potential issues."
-msgstr ""
-"ロードオーダーのインデックスがFEに達している通常プラグインがライトマスターと"
-"同時に読み込まれています。ライトマスター側の予期せぬ不具合を避けるため、通常"
-"プラグインを無効にしてください。"
-
-#: src/gui/state/game.cpp:546
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-"最新のリビジョンのマスターリストに構文エラーが含まれているため、直近の有効リ"
-"ビジョンのマスターリストをかわりに使用します。基本的に構文エラーは小さな不具"
-"合ですので、数時間内に修正されるでしょう。"
-
-#: src/gui/state/game.cpp:590
-msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
-"\n"
-"Try updating your masterlist to resolve the error. If the error is with your "
-"user metadata, this probably happened because an update to LOOT changed its "
-"metadata syntax support. Your user metadata will have to be updated "
-"manually.\n"
-"\n"
-"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
-"data folder, then open your 'userlist.yaml' file in the relevant game "
-"folder. You can then edit the metadata it contains with reference to the "
-"documentation, which is accessible through LOOT's main menu.\n"
-"\n"
-"You can also seek support on LOOT's forum thread, which is linked to on "
-"[LOOT's website](https://loot.github.io/)."
-msgstr ""
-"メタデータのリスト解析中にエラーが発生: %1%\n"
-"\n"
-"マスターリストを更新してみてください。エラーが解消されるかもしれません。ユー"
-"ザーメタデータにエラーが発生している場合は、おそらくLOOTの更新によってメタ"
-"データの対応構文が変更されたことが原因です。その場合は、ユーザーメタデータを"
-"手動で更新する必要があります。\n"
-"\n"
-"メニューから 'デバッグログの保存先を開く'をクリックしてLOOTのデータフォルダを"
-"開き、対応するゲームのフォルダにあるuserlist.yamlファイルを開いてください。マ"
-"ニュアル（メインメニューから開けます）を参照しつつ、ファイル内のメタデータを"
-"編集して手動で更新しましょう。\n"
-"\n"
-"LOOTのForum Threadでサポートを求めることもできます。[LOOTのウェブページ]"
-"(https://loot.github.io/)よりアクセス可能です。"
-
-#: src/gui/state/game.cpp:730
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1%のITMレコード"
-
-#: src/gui/state/game.cpp:734
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1%の削除されたリファレンス"
-
-#: src/gui/state/game.cpp:740
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1%の削除されたNavmesh"
-
-#: src/gui/state/game.cpp:750
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1%によって%2%、%3%、%4%が見つかっています。"
-
-#: src/gui/state/game.cpp:756
-msgid "%1% found dirty edits."
-msgstr "%1%によってdirty editが見つかっています。"
-
-#: src/gui/state/game.cpp:762 src/gui/state/game.cpp:768
-#: src/gui/state/game.cpp:773
-msgid "%1% found %2% and %3%."
-msgstr "%1%によって%2%、%3%が見つかっています。"
-
-#: src/gui/state/game.cpp:777 src/gui/state/game.cpp:780
-#: src/gui/state/game.cpp:783
-msgid "%1% found %2%."
-msgstr "%1%によって%2%が見つかっています。"
-
-#: src/gui/state/game.cpp:897
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "\"%1%\" は利用できなくなっているため除外されます。"
-
-#: src/gui/state/loot_state.cpp:113
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "エラー: LOOTの設定ファイルを作成できませんでした。 %1%"
-
-#: src/gui/state/loot_state.cpp:123
-msgid "Error: Settings parsing failed. %1%"
-msgstr "エラー: 設定の解析に失敗しました。 %1%"
-
-#: src/gui/state/loot_state.cpp:139
-msgid "Error: Could not initialise logging."
-msgstr "エラー: ログの出力を開始できません。"
-
-#: src/gui/state/loot_state.cpp:211
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "エラー: ゲームごとの固有設定の初期化に失敗しました。 %1%"
+#~ msgid "Error: Could not initialise logging."
+#~ msgstr "エラー: ログの出力を開始できません。"
 
 #~ msgid "Priority"
 #~ msgstr "優先度"
