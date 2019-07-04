@@ -4,6 +4,42 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.5 - 2019-07-04
+===================
+
+Fixed
+-----
+
+- Filename comparisons implemented case-insensitivity incorrectly, which caused
+  LOOT to not properly recognise some files, depending on the characters in
+  their filename and the current locale. On Windows, LOOT now implements
+  case-insensitivity using the same case folding rules as Windows itself. On
+  Linux, LOOT uses the locale-independent case folding rules provided by the ICU
+  library, which are very similar but not identical to the rules used by
+  Windows.
+- Evaluating `version()` and `product_version()` conditions will no longer error
+  if the given executable has no version fields. Instead, it will be evaluated
+  as having no version. Via libloot.
+- Sorting would not preserve the existing relative positions of plugins that had
+  no relative positioning enforced by plugin data or metadata, if one or both of
+  their filenames were not case-sensitively equal to their entries in
+  plugins.txt / loadorder.txt. Load order position comparison is now correctly
+  case-insensitive. Via libloot.
+
+Changed
+-------
+
+- Improved load order sorting performance.
+- Game names and game folder names are now handled case-sensitively to avoid
+  unnecessary and possibly incorrect case folding.
+- Updated libloot to v0.14.8.
+- Downgraded CEF to v3.3440.1806.g65046b7, as the hashes for
+  v74.1.16+ge20b240+chromium-74.0.3729.131 kept changing unexpectedly, causing
+  builds to fail.
+- Updated the German translation.
+- Updated the Japanese translation.
+- Updated the Russian translation.
+
 0.14.4 - 2019-05-11
 ===================
 
