@@ -49,6 +49,8 @@ Message PlainTextMessage(MessageType type, std::string text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
 
+std::string DescribeEdgeType(EdgeType edgeType);
+
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<Message> CheckForRemovedPlugins(

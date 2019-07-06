@@ -447,6 +447,26 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
   return std::nullopt;
 }
 
+LoadOrderGraph Game::GenerateLoadOrderGraph() {
+  auto logger = getLogger();
+  std::vector<std::string> plugins = GetInstalledPluginNames();
+
+  try {
+    gameHandle_->LoadCurrentLoadOrderState();
+  } catch (std::exception& e) {
+    if (logger) {
+      logger->error("Failed to load current load order. Details: {}", e.what());
+    }
+    AppendMessage(PlainTextMessage(
+        MessageType::error,
+        boost::locale::translate("Failed to load the current load order, "
+                                 "information displayed may be incorrect.")
+            .str()));
+  }
+
+  return gameHandle_->GenerateLoadOrderGraph(plugins);
+}
+
 std::vector<std::string> Game::SortPlugins() {
   auto logger = getLogger();
   std::vector<std::string> plugins = GetInstalledPluginNames();

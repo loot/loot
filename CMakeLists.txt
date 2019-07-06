@@ -73,12 +73,12 @@ set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE
 if (NOT DEFINED LIBLOOT_URL)
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         if (NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.8/libloot-0.14.8-0-gb0d0f3e_master-win32.7z")
+            set(LIBLOOT_URL "https://bintray.com/loot/snapshots/download_file?file_path=libloot-0.14.8-1-g4f1b5d2_export-plugin-graph-win32.7z")
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.8/libloot-0.14.8-0-gb0d0f3e_master-win64.7z")
+            set(LIBLOOT_URL "https://bintray.com/loot/snapshots/download_file?file_path=libloot-0.14.8-1-g4f1b5d2_export-plugin-graph-win64.7z")
         endif()
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.14.8/libloot.tar.xz")
+        set(LIBLOOT_URL "https://bintray.com/loot/snapshots/download_file?file_path=libloot-0.14.8-1-g4f1b5d2_export-plugin-graph-Linux.tar.xz")
     endif()
 endif()
 
@@ -221,6 +221,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_init_errors_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_installed_games_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_languages_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_load_order_graph_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_settings_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_version_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/metadata_query.h"

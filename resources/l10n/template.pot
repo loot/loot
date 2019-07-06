@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-05-20 07:04+0100\n"
+"POT-Creation-Date: 2019-07-06 14:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,6 +34,10 @@ msgstr ""
 
 #: src/gui/cef/query/types/get_game_data_query.h:46
 msgid "Parsing, merging and evaluating metadata..."
+msgstr ""
+
+#: src/gui/cef/query/types/get_load_order_graph_query.h:50
+msgid "Generating load order graph..."
 msgstr ""
 
 #: src/gui/cef/query/types/metadata_query.h:201
@@ -113,38 +117,39 @@ msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:370 src/gui/state/game/game.cpp:462
+#: src/gui/state/game/game.cpp:482
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:485
+#: src/gui/state/game/game.cpp:505
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:497
+#: src/gui/state/game/game.cpp:517
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:533
+#: src/gui/state/game/game.cpp:553
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:557
+#: src/gui/state/game/game.cpp:577
 msgid ""
 "You have a normal plugin and at least one light master sharing the FE load "
 "order index. Deactivate a normal plugin or all your light masters to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:585
+#: src/gui/state/game/game.cpp:605
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:630
+#: src/gui/state/game/game.cpp:650
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

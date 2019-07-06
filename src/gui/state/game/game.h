@@ -79,6 +79,7 @@ public:
       const std::shared_ptr<const PluginInterface>& plugin,
       const std::vector<std::string>& loadOrder) const;
 
+  LoadOrderGraph GenerateLoadOrderGraph();
   std::vector<std::string> SortPlugins();
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();

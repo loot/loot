@@ -32,6 +32,7 @@ along with LOOT.  If not, see
 #include <json.hpp>
 
 #include "gui/cef/query/derived_plugin_metadata.h"
+#include "gui/state/game/helpers.h"
 
 namespace loot {
 void testConditionSyntax(const std::string& objectType,
@@ -404,4 +405,17 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata<G>& plugin) {
   }
 }
 
+void to_json(nlohmann::json& json, const LoadOrderEdge& edge) {
+  json = {{"type", DescribeEdgeType(edge.edgeType)},
+          {"sourceIndex", edge.sourceIndex},
+          {"targetIndex", edge.targetIndex}};
+}
+
+void to_json(nlohmann::json& json, const LoadOrderGraph& graph) {
+  json = {
+      {"vertices", graph.vertices},
+      {"edges", graph.edges},
+  };
+}
+}
 #endif

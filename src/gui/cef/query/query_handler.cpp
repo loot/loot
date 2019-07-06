@@ -56,6 +56,7 @@
 #include "gui/cef/query/types/get_init_errors_query.h"
 #include "gui/cef/query/types/get_installed_games_query.h"
 #include "gui/cef/query/types/get_languages_query.h"
+#include "gui/cef/query/types/get_load_order_graph_query.h"
 #include "gui/cef/query/types/get_settings_query.h"
 #include "gui/cef/query/types/get_version_query.h"
 #include "gui/cef/query/types/open_log_location_query.h"
@@ -178,6 +179,11 @@ std::unique_ptr<Query> QueryHandler::createQuery(
     return std::make_unique<GetInstalledGamesQuery>(lootState_);
   } else if (name == "getLanguages") {
     return std::make_unique<GetLanguagesQuery>();
+  } else if (name == "getLoadOrderGraph") {
+    return std::make_unique<GetLoadOrderGraphQuery<>>(
+        lootState_.GetCurrentGame(),
+        lootState_.getLanguage(),
+        [frame](std::string message) { sendProgressUpdate(frame, message); });
   } else if (name == "getSettings") {
     return std::make_unique<GetSettingsQuery>(lootState_);
   } else if (name == "getVersion") {
