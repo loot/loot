@@ -224,6 +224,17 @@ li.warn {
 #firstRun > ul {
     padding-left: 48px;
 }
+#graphLegend {
+  position: absolute;
+  margin: 5px;
+}
+#graphContainer {
+    flex: auto;
+    position: relative;
+  height: 80vh;
+  width: 80vw;
+  margin: 0;
+}
 
 /* For Material Design generic dividers. */
 .divider {

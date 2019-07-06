@@ -44,6 +44,7 @@
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-edgehandles": "^3.2.3",
     "decompress": "^4.0.0",
+    "force-graph": "^1.17.4",
     "fs-extra": "^7.0.0",
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",

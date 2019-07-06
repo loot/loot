@@ -197,6 +197,10 @@
               <iron-icon icon="delete"slot="item-icon"></iron-icon>
               Clear All User Metadata
             </paper-icon-item>
+            <paper-icon-item id="showGraphButton">
+                <iron-icon icon="fingerprint" slot="item-icon"></iron-icon>
+                Show Load Order Graph
+            </paper-icon-item>
             <paper-icon-item id="copyLoadOrderButton">
               <iron-icon icon="receipt"slot="item-icon"></iron-icon>
               Copy Load Order
@@ -529,6 +533,17 @@
       <li>Many interface elements have tooltips. If you don't know what something is, try hovering your mouse over it to find out. Otherwise, LOOT's documentation can be accessed through the main menu.</li>
     </ul>
     <p>LOOT is free, but if you want to show your appreciation with some money, donations may be made to WrinklyNinja (LOOT's creator and main developer) using <a href="https://www.paypal.me/OliverHamlet">PayPal</a>.</p>
+    <div class="buttons">
+      <paper-button dialog-confirm autofocus>OK</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-dialog id="graphDialog">
+    <h2>Load Order Constraints Graph</h2>
+
+    <p id="graphLegend"></p>
+    <div id="graphContainer"></div>
+
     <div class="buttons">
       <paper-button dialog-confirm autofocus>OK</paper-button>
     </div>

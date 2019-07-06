@@ -10,6 +10,7 @@ import {
   fillGroupsList,
   initialiseVirtualLists,
   initialiseAutocompleteBashTags,
+  openDialog,
   updateSettingsDialog,
   updateEnabledGames,
   enableGameOperations,
@@ -20,6 +21,7 @@ import {
 import Filters from './filters.js';
 import Game from './game.js';
 import handlePromiseError from './handlePromiseError.js';
+import { writeGraphLegend, drawGraph } from './loadOrderGraph.js';
 import { Plugin } from './plugin.js';
 import query from './query.js';
 
@@ -653,4 +655,18 @@ export function onFolderChange(evt) {
     );
   }
   enable('redatePluginsButton', gameSettings !== undefined);
+}
+export function onOpenLoadOrderGraphDialog() {
+  const legend = document.getElementById('graphLegend');
+
+  writeGraphLegend(legend);
+
+  openDialog('graphDialog');
+  query('getLoadOrderGraph')
+    .then(JSON.parse)
+    .then(graph => {
+      drawGraph(document.getElementById('graphContainer'), graph);
+      closeProgress();
+    })
+    .catch(handlePromiseError);
 }

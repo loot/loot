@@ -47,7 +47,8 @@ import {
   onClearMetadata,
   onSearchBegin,
   onSearchEnd,
-  onFolderChange
+  onFolderChange,
+  onOpenLoadOrderGraphDialog
 } from './events.js';
 import { closeProgress, showProgress } from './dialog.js';
 import {
@@ -133,6 +134,9 @@ function setupEventHandlers() {
   document
     .getElementById('wipeUserlistButton')
     .addEventListener('click', onClearAllMetadata);
+  document
+    .getElementById('showGraphButton')
+    .addEventListener('click', onOpenLoadOrderGraphDialog);
   document
     .getElementById('copyLoadOrderButton')
     .addEventListener('click', onCopyLoadOrder);
