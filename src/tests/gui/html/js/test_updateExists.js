@@ -38,7 +38,7 @@ jest.mock('@octokit/rest', () =>
               commit: {
                 committer: {
                   date:
-                    args.sha === 'deadbeef'
+                    args.ref === 'deadbeef'
                       ? '2011-04-14T16:00:00Z'
                       : '2011-04-14T16:00:49Z'
                 }

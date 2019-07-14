@@ -88,7 +88,7 @@ export default function updateExists(currentVersion, currentBuild) {
           )
           .then(tagDate =>
             octokit.repos
-              .getCommit({ ...repo, sha: currentBuild })
+              .getCommit({ ...repo, ref: currentBuild })
               .then(commitResponse =>
                 Date.parse(commitResponse.data.commit.committer.date)
               )
