@@ -35,22 +35,13 @@ function getGitDescription() {
   return `${describe}_${branch}`;
 }
 
-function getLanguageFolders() {
-  return [
-    'cs',
-    'es',
-    'ru',
-    'fr',
-    'zh_CN',
-    'pl',
-    'pt_BR',
-    'fi',
-    'de',
-    'da',
-    'ko',
-    'sv',
-    'ja'
-  ];
+function getLanguageFolders(rootPath) {
+  return fs
+    .readdirSync(path.join(rootPath, 'resources', 'l10n'), {
+      withFileTypes: true
+    })
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name);
 }
 
 function compress(sourcePath, destPath) {
