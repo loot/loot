@@ -52,6 +52,7 @@ public:
         {"enableLootUpdateCheck", settings_.isLootUpdateCheckEnabled()},
         {"games", settings_.getGameSettings()},
         {"filters", settings_.getFilters()},
+        {"languages", settings_.getLanguages()}
     };
 
     return json.dump();

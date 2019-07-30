@@ -61,7 +61,6 @@ import {
   onFocusSearch,
   onSearchChangeSelection,
   onSidebarClick,
-  fillLanguagesList,
   listInitErrors,
   enableGameOperations,
   openDialog,
@@ -71,7 +70,8 @@ import {
   setGameMenuItems,
   updateSelectedGame,
   initialiseVirtualLists,
-  appendGeneralMessages
+  appendGeneralMessages,
+  setDocumentFontFamily
 } from './dom.js';
 import Filters from './filters.js';
 import Game from './game.js';
@@ -260,13 +260,6 @@ function setVersion(appData) {
     });
 }
 
-function setLanguages() {
-  return query('getLanguages')
-    .then(JSON.parse)
-    .then(response => response.languages)
-    .then(fillLanguagesList);
-}
-
 function getInitErrors() {
   return query('getInitErrors')
     .then(JSON.parse)
@@ -317,6 +310,13 @@ function setSettings(appData) {
       setGameMenuItems(appData.settings.games);
       updateEnabledGames(appData.installedGames);
       updateSelectedGame(appData.game.folder);
+
+      const currentLanguage = result.languages.find(
+        language => language.locale === result.language
+      );
+      if (currentLanguage && currentLanguage.fontFamily) {
+        setDocumentFontFamily(currentLanguage.fontFamily);
+      }
     });
 }
 
@@ -441,7 +441,6 @@ export default function initialise(loot) {
   loot.state = new State();
 
   Promise.all([
-    setLanguages(),
     setGameTypes(),
     setInstalledGames(loot),
     setVersion(loot),

@@ -34,6 +34,12 @@ along with LOOT.  If not, see
 #include "gui/version.h"
 
 namespace loot {
+bool operator==(const LootSettings::Language& lhs,
+                const LootSettings::Language& rhs) {
+  return lhs.locale == rhs.locale && lhs.name == rhs.name &&
+         lhs.fontFamily == rhs.fontFamily;
+}
+
 namespace test {
 class LootSettingsTest : public CommonGameTestFixture {
 protected:
@@ -132,6 +138,38 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(expectedGameSettings[5].RepoURL(), actualGameSettings[5].RepoURL());
   EXPECT_EQ(expectedGameSettings[5].RepoBranch(),
             actualGameSettings[5].RepoBranch());
+
+  auto actualLanguages = settings_.getLanguages();
+  EXPECT_EQ(14, actualLanguages.size());
+  EXPECT_EQ(LootSettings::Language({"cs", "Čeština", std::nullopt}),
+            actualLanguages[0]);
+  EXPECT_EQ(LootSettings::Language({"da", "Dansk", std::nullopt}),
+            actualLanguages[1]);
+  EXPECT_EQ(LootSettings::Language({"de", "Deutsch", std::nullopt}),
+            actualLanguages[2]);
+  EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
+            actualLanguages[3]);
+  EXPECT_EQ(LootSettings::Language({"es", "Español", std::nullopt}),
+            actualLanguages[4]);
+  EXPECT_EQ(LootSettings::Language({"fi", "suomi", std::nullopt}),
+            actualLanguages[5]);
+  EXPECT_EQ(LootSettings::Language({"fr", "Français", std::nullopt}),
+            actualLanguages[6]);
+  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
+            actualLanguages[7]);
+  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
+            actualLanguages[8]);
+  EXPECT_EQ(
+      LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
+      actualLanguages[9]);
+  EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
+            actualLanguages[10]);
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
+            actualLanguages[11]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+            actualLanguages[12]);
+  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
+            actualLanguages[13]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
@@ -159,7 +197,11 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << endl
       << "[filters]" << endl
       << "hideBashTags = false" << endl
-      << "hideCRCs = true" << endl;
+      << "hideCRCs = true" << endl
+      << "[[languages]]" << endl
+      << "locale = \"en\"" << endl
+      << "name = \"English\"" << endl
+      << "fontFamily = \"Times New Roman\"" << endl;
   out.close();
 
   settings_.load(settingsFile_, lootDataPath);
@@ -183,16 +225,20 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
 
   EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
   EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
+
+  EXPECT_EQ(1, settings_.getLanguages().size());
+  EXPECT_EQ(LootSettings::Language({"en", "English", "Times New Roman"}),
+            settings_.getLanguages()[0]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
-    << "name = \"Game Name\"" << endl
-    << "type = \"Oblivion\"" << endl
-    << "folder = \"Oblivion\"" << endl
-    << "minimumHeaderVersion = 1.0" << endl;
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "minimumHeaderVersion = 1.0" << endl;
   out.close();
 
   settings_.load(settingsFile_, lootDataPath);
@@ -221,19 +267,21 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
-    << "name = \"Game Name\"" << endl
-    << "type = \"Oblivion\"" << endl
-    << "folder = \"Oblivion\"" << endl
-    << u8"path = \"non\u00C1sciiGamePath\"" << endl
-    << u8"local_path = \"non\u00C1sciiGameLocalPath\"" << endl;
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << u8"path = \"non\u00C1sciiGamePath\"" << endl
+      << u8"local_path = \"non\u00C1sciiGameLocalPath\"" << endl;
   out.close();
 
   settings_.load(settingsFile_, lootDataPath);
 
   ASSERT_EQ(8, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
-  EXPECT_EQ(u8"non\u00C1sciiGamePath", settings_.getGameSettings()[0].GamePath().u8string());
-  EXPECT_EQ(u8"non\u00C1sciiGameLocalPath", settings_.getGameSettings()[0].GameLocalPath().u8string());
+  EXPECT_EQ(u8"non\u00C1sciiGamePath",
+            settings_.getGameSettings()[0].GamePath().u8string());
+  EXPECT_EQ(u8"non\u00C1sciiGameLocalPath",
+            settings_.getGameSettings()[0].GameLocalPath().u8string());
 }
 
 TEST_P(LootSettingsTest,
@@ -377,7 +425,9 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   windowPosition.right = 4;
   windowPosition.maximised = true;
   const std::vector<GameSettings> games({
-      GameSettings(GameType::tes4).SetName("Game Name").SetMinimumHeaderVersion(2.5),
+      GameSettings(GameType::tes4)
+          .SetName("Game Name")
+          .SetMinimumHeaderVersion(2.5),
   });
   const std::map<std::string, bool> filters({
       {"hideBashTags", false},
@@ -417,18 +467,18 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_TRUE(settings.getWindowPosition().value().maximised);
 
   EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
-  EXPECT_EQ(games[0].MinimumHeaderVersion(), settings.getGameSettings().at(0).MinimumHeaderVersion());
+  EXPECT_EQ(games[0].MinimumHeaderVersion(),
+            settings.getGameSettings().at(0).MinimumHeaderVersion());
 
   EXPECT_EQ(filters, settings.getFilters());
 }
 
 TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
   using std::filesystem::u8path;
-  settings_.storeGameSettings({
-      GameSettings(GameType::tes4)
-      .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
-    .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"))
-    });
+  settings_.storeGameSettings(
+      {GameSettings(GameType::tes4)
+           .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
+           .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"))});
   settings_.save(settingsFile_);
 
   std::ifstream in(settingsFile_);
@@ -459,7 +509,8 @@ TEST_P(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
   settings_.storeWindowPosition(expectedPosition);
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
-  LootSettings::WindowPosition actualPosition = settings_.getWindowPosition().value();
+  LootSettings::WindowPosition actualPosition =
+      settings_.getWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
   EXPECT_EQ(expectedPosition.left, actualPosition.left);

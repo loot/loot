@@ -32,6 +32,7 @@ along with LOOT.  If not, see
 #include <loot/api.h>
 
 #include "gui/cef/query/derived_plugin_metadata.h"
+#include "gui/state/loot_settings.h"
 
 namespace loot {
 void testConditionSyntax(const std::string& objectType,
@@ -299,6 +300,14 @@ void from_json(const nlohmann::json& json, GameSettings& game) {
   game.SetRepoBranch(json.value("branch", ""));
   game.SetGamePath(u8path(json.value("path", "")));
   game.SetGameLocalPath(u8path(json.value("localPath", "")));
+}
+
+void to_json(nlohmann::json& json, const LootSettings::Language& language) {
+  json = {{"locale", language.locale}, {"name", language.name}};
+
+  if (language.fontFamily.has_value()) {
+    json["fontFamily"] = language.fontFamily.value();
+  }
 }
 
 nlohmann::json to_json_with_language(const PluginMetadata& metadata,

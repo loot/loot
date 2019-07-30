@@ -133,6 +133,29 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
   return game;
 }
 
+LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
+  auto locale = table->get_as<std::string>("locale");
+  if (!locale) {
+    throw std::runtime_error("'locale' key missing from language table");
+  }
+
+  auto name = table->get_as<std::string>("name");
+  if (!name) {
+    throw std::runtime_error("'name' key missing from language table");
+  }
+
+  LootSettings::Language language;
+  language.locale = *locale;
+  language.name = *name;
+
+  auto fontFamily = table->get_as<std::string>("fontFamily");
+  if (fontFamily) {
+    language.fontFamily = *fontFamily;
+  }
+
+  return language;
+}
+
 LootSettings::WindowPosition::WindowPosition() :
     top(0),
     bottom(0),
@@ -157,6 +180,22 @@ LootSettings::LootSettings() :
                             "stall\\Nehrim - At Fate's "
                             "Edge_is1\\InstallLocation"),
     }),
+    languages_({
+        Language({"cs", "Čeština", std::nullopt}),
+        Language({"da", "Dansk", std::nullopt}),
+        Language({"de", "Deutsch", std::nullopt}),
+        Language({"en", "English", std::nullopt}),
+        Language({"es", "Español", std::nullopt}),
+        Language({"fi", "suomi", std::nullopt}),
+        Language({"fr", "Français", std::nullopt}),
+        Language({"ko", "한국어", "Malgun Gothic"}),
+        Language({"pl", "Polski", std::nullopt}),
+        Language({"pt_BR", "Português do Brasil", std::nullopt}),
+        Language({"ru", "Русский", std::nullopt}),
+        Language({"sv", "Svenska", std::nullopt}),
+        Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+        Language({"ja", "日本語", "Meiryo"}),
+      }),
     autoSort_(false),
     enableDebugLogging_(false),
     updateMasterlist_(true),
@@ -231,6 +270,14 @@ void LootSettings::load(const std::filesystem::path& file,
       }
     }
   }
+
+  auto languages = settings->get_table_array("languages");
+  if (languages) {
+    languages_.clear();
+    for (const auto& language : *languages) {
+      languages_.push_back(convert(language));
+    }
+  }
 }
 
 void LootSettings::save(const std::filesystem::path& file) {
@@ -284,6 +331,21 @@ void LootSettings::save(const std::filesystem::path& file) {
       filters->insert(filter.first, filter.second);
     }
     root->insert("filters", filters);
+  }
+
+  if (!languages_.empty()) {
+    auto languageTables = cpptoml::make_table_array();
+
+    for (const auto& language : languages_) {
+      auto languageTable = cpptoml::make_table();
+      languageTable->insert("locale", language.locale);
+      languageTable->insert("name", language.name);
+      if (language.fontFamily.has_value()) {
+        languageTable->insert("fontFamily", language.fontFamily.value());
+      }
+      languageTables->push_back(languageTable);
+    }
+    root->insert("languages", languageTables);
   }
 
   std::ofstream out(file);
@@ -355,6 +417,12 @@ const std::map<std::string, bool>& LootSettings::getFilters() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return filters_;
+}
+
+const std::vector<LootSettings::Language>& LootSettings::getLanguages() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return languages_;
 }
 
 void LootSettings::setDefaultGame(const std::string& game) {

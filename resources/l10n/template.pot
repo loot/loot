@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-07-30 17:06+0100\n"
+"POT-Creation-Date: 2019-07-30 18:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,17 +341,17 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/gui/html/js/initialise.js:363
+#: src/gui/html/js/initialise.js:361
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/html/js/initialise.js:379
+#: src/gui/html/js/initialise.js:377
 msgid "A [new release](%s) of LOOT is available."
 msgstr ""
 
-#: src/gui/html/js/initialise.js:423
+#: src/gui/html/js/initialise.js:421
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."

@@ -68,8 +68,9 @@ Some strings to be translated may contain special characters. Different types of
 
 If you're adding a new translation, LOOT's source code must be updated to recognise it. You can do this yourself and include the changes in your translation's pull request if you wish. The files and functions which must be updated are given below.
 
-* In [get_languages_query.h](src/gui/cef/query/types/get_languages_query.h), add the language's ISO code and name to the map returned by `getLanguages()`.
-* In [archive.js](scripts/archive.js), add the language folder to the list returned by `getLanguageFolders()`.
+* In [loot_settings.cpp](src/gui/state/loot_settings.cpp), add the language's
+  ISO code, name  and optional font family override to the `languages_`
+  initialiser list in the `LootSettings()` constructor.
 * In [installer.iss](scripts/installer.iss):
   - If the Inno Download Plugin provides a translation file for your language,
     add it to the block of `#include <idplang\...` lines at the top of the file.

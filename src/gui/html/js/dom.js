@@ -62,6 +62,27 @@ function forceSelectDefaultValue(element) {
   );
 }
 
+function fillLanguagesList(languages) {
+  const settingsLangSelect = document.getElementById('languageSelect');
+  const messageLangSelect = getElementInTableRowTemplate(
+    'messageRow',
+    'language'
+  );
+
+  if (settingsLangSelect.childElementCount > 0) {
+    // Languages are read-only while LOOT is running, so don't re-fill the lists.
+    return;
+  }
+
+  languages.forEach(language => {
+    const settingsItem = createLanguageItem(language);
+    settingsLangSelect.appendChild(settingsItem);
+    messageLangSelect.appendChild(settingsItem.cloneNode(true));
+  });
+
+  forceSelectDefaultValue(messageLangSelect);
+}
+
 export function show(elementId, showElement = true) {
   document.getElementById(elementId).hidden = !showElement;
 }
@@ -148,6 +169,8 @@ export function updateSettingsDialog(settings) {
     gameTable.setReadOnly(row, ['name', 'folder', 'type']);
   });
 
+  fillLanguagesList(settings.languages);
+
   gameSelect.value = settings.game;
   document.getElementById('languageSelect').value = settings.language;
   document.getElementById('enableDebugLogging').checked =
@@ -185,22 +208,6 @@ export function fillGroupsList(groups) {
   if (groups.length > 0) {
     forceSelectDefaultValue(groupsSelect);
   }
-}
-
-export function fillLanguagesList(languages) {
-  const settingsLangSelect = document.getElementById('languageSelect');
-  const messageLangSelect = getElementInTableRowTemplate(
-    'messageRow',
-    'language'
-  );
-
-  languages.forEach(language => {
-    const settingsItem = createLanguageItem(language);
-    settingsLangSelect.appendChild(settingsItem);
-    messageLangSelect.appendChild(settingsItem.cloneNode(true));
-  });
-
-  forceSelectDefaultValue(messageLangSelect);
 }
 
 export function initialiseGroupsEditor(getter) {
@@ -331,4 +338,10 @@ export function enableGameOperations(shouldEnable) {
   document.getElementById('wipeUserlistButton').disabled = !shouldEnable;
   document.getElementById('copyLoadOrderButton').disabled = !shouldEnable;
   document.getElementById('refreshContentButton').disabled = !shouldEnable;
+}
+
+export function setDocumentFontFamily(fontFamily) {
+  document.documentElement.style.fontFamily = `${fontFamily}, ${
+    getComputedStyle(document.documentElement).fontFamily
+  }`;
 }

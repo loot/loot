@@ -47,6 +47,12 @@ public:
     bool maximised;
   };
 
+  struct Language {
+    std::string locale;
+    std::string name;
+    std::optional<std::string> fontFamily;
+  };
+
   LootSettings();
 
   void load(const std::filesystem::path& file,
@@ -64,6 +70,7 @@ public:
   std::optional<WindowPosition> getWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
   const std::map<std::string, bool>& getFilters() const;
+  const std::vector<Language>& getLanguages() const;
 
   void setDefaultGame(const std::string& game);
   void setLanguage(const std::string& language);
@@ -90,6 +97,7 @@ private:
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_;
   std::map<std::string, bool> filters_;
+  std::vector<Language> languages_;
 
   mutable std::recursive_mutex mutex_;
 

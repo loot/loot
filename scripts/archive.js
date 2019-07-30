@@ -126,7 +126,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   );
 
   // Translation files.
-  getLanguageFolders().forEach(lang => {
+  getLanguageFolders(rootPath).forEach(lang => {
     fs.mkdirsSync(
       path.join(tempPath, 'resources', 'l10n', lang, 'LC_MESSAGES')
     );
