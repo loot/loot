@@ -145,12 +145,17 @@
 }
 
 /* Typography */
+:root {
+    --loot-font-family: Roboto, Noto, sans-serif;
+}
 html {
+    color: var(--primary-text-color);
     /* Languages can also define their own font family to use instead of these
        in LOOT's settings. */
-    font:13px/1.429 Roboto, Noto, sans-serif;
-    color: var(--primary-text-color);
+    font-family: var(--loot-font-family);
+    font-size: 13px;
     font-weight: 400;
+    line-height: 1.429;
     text-rendering: optimizeLegibility;
 }
 h1 {

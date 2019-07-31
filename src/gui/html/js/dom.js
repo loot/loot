@@ -341,7 +341,8 @@ export function enableGameOperations(shouldEnable) {
 }
 
 export function setDocumentFontFamily(fontFamily) {
-  document.documentElement.style.fontFamily = `${fontFamily}, ${
-    getComputedStyle(document.documentElement).fontFamily
-  }`;
+  document.documentElement.style.setProperty(
+    '--loot-font-family',
+    `${fontFamily}, ${getComputedStyle(document.documentElement).fontFamily}`
+  );
 }
