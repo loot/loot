@@ -16,7 +16,7 @@ const paths = {
 module.exports = {
   mode: 'production',
   context: path.join(__dirname),
-  entry: path.join(paths.SRC, 'js', 'app.js'),
+  entry: path.join(paths.SRC, 'js', 'app.ts'),
   output: {
     path: paths.DIST,
     filename: 'app.bundle.js'
