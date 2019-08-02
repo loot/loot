@@ -243,10 +243,6 @@ void from_json(const nlohmann::json& json, Group& group) {
     throw std::runtime_error("Group object has an empty 'name' value");
   }
 
-  auto condition = json.value("condition", "");
-
-  testConditionSyntax("File", condition);
-
   group = Group(json.at("name"),
     json.value("after", std::unordered_set<std::string>()));
 }
