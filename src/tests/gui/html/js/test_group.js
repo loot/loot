@@ -1,4 +1,4 @@
-import mergeGroups from '../../../../gui/html/js/group.js';
+import mergeGroups from '../../../../gui/html/js/group';
 
 describe('mergeGroups', () => {
   let masterlist;
@@ -57,11 +57,13 @@ describe('mergeGroups', () => {
 
     expect(merged[1].after[0]).toEqual({
       name: 'A',
-      isUserAdded: false
+      isUserAdded: false,
+      after: []
     });
     expect(merged[2].after[0]).toEqual({
       name: 'B',
-      isUserAdded: false
+      isUserAdded: false,
+      after: []
     });
   });
 
@@ -95,7 +97,8 @@ describe('mergeGroups', () => {
 
     expect(merged[3].after[0]).toEqual({
       name: 'C',
-      isUserAdded: true
+      isUserAdded: true,
+      after: []
     });
   });
 
@@ -105,11 +108,13 @@ describe('mergeGroups', () => {
     expect(merged[2].after.length).toBe(2);
     expect(merged[2].after[0]).toEqual({
       name: 'A',
-      isUserAdded: true
+      isUserAdded: true,
+      after: []
     });
     expect(merged[2].after[1]).toEqual({
       name: 'B',
-      isUserAdded: false
+      isUserAdded: false,
+      after: []
     });
   });
 

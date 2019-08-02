@@ -1,5 +1,5 @@
 import * as _ from 'lodash/core.min';
-import mergeGroups from './group.js';
+import mergeGroups from './group';
 
 import {
   createMessageItem,

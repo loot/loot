@@ -1,4 +1,18 @@
-function transformGroupAfter(afterGroups, isUserAdded) {
+interface Group {
+  name: string;
+  after: string[];
+}
+
+interface TransformedGroup {
+  name: string;
+  after: TransformedGroup[];
+  isUserAdded: boolean;
+}
+
+function transformGroupAfter(
+  afterGroups: string[],
+  isUserAdded: boolean
+): TransformedGroup[] {
   if (afterGroups === undefined) {
     return [];
   }
@@ -6,18 +20,22 @@ function transformGroupAfter(afterGroups, isUserAdded) {
   return afterGroups
     .map(groupName => ({
       name: groupName,
-      isUserAdded
+      isUserAdded,
+      after: []
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function transformGroup(group, isUserAdded) {
+function transformGroup(group: Group, isUserAdded: boolean): TransformedGroup {
   const after = transformGroupAfter(group.after, isUserAdded);
 
   return Object.assign({}, group, { isUserAdded, after });
 }
 
-function mergeGroupAfters(groupAfter1, groupAfter2) {
+function mergeGroupAfters(
+  groupAfter1: TransformedGroup[],
+  groupAfter2: TransformedGroup[]
+): TransformedGroup[] {
   return groupAfter2
     .reduce((groups, group) => {
       if (groups.find(after => after.name === group.name) === undefined) {
@@ -28,7 +46,10 @@ function mergeGroupAfters(groupAfter1, groupAfter2) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export default function mergeGroups(masterlistGroups, userGroups) {
+export default function mergeGroups(
+  masterlistGroups: Group[],
+  userGroups: Group[]
+): TransformedGroup[] {
   const groups = masterlistGroups.map(group => transformGroup(group, false));
 
   userGroups.forEach(userGroup => {
