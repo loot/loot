@@ -1,5 +1,5 @@
 /* eslint-disable no-self-assign */
-import { Plugin } from '../../../../gui/html/js/plugin.js';
+import { Plugin } from '../../../../gui/html/js/plugin';
 import Filters from '../../../../gui/html/js/filters.js';
 
 jest.mock('../../../../gui/html/js/filters.js', () =>

@@ -10,7 +10,7 @@ import {
   updateGroupsEditorState
 } from './dom.js';
 import Filters from './filters.js';
-import { Plugin } from './plugin.js';
+import { Plugin } from './plugin';
 
 export default class Game {
   constructor(obj, l10n) {

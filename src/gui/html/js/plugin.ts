@@ -22,9 +22,142 @@
     <https://www.gnu.org/licenses/>.
 */
 
-import * as _ from 'lodash/core.min';
+import { isEqual } from 'lodash';
+import LootPluginCard from '../elements/loot-plugin-card';
+import Filters from './filters';
 
-function deduplicateTags(currentTags, suggestedTags) {
+interface Tag {
+  name: string;
+  isAddition: boolean;
+  condition: string;
+}
+
+interface PluginTags {
+  current: string;
+  add: string;
+  remove: string;
+}
+
+interface SimpleMessage {
+  type: string;
+  text: string;
+  language: string;
+  condition: string;
+}
+
+interface MessageContent {
+  text: string;
+  language: string;
+}
+
+interface File {
+  name: string;
+  display: string;
+  condition: string;
+}
+
+interface PluginCleaningData {
+  crc: number;
+  util: string;
+  itm: number;
+  udr: number;
+  nav: number;
+  info: MessageContent[];
+}
+
+interface ModLocation {
+  name: string;
+  link: string;
+}
+
+interface PluginMetadata {
+  name: string;
+  enabled: boolean;
+  after: File[];
+  req: File[];
+  inc: File[];
+  msg: SimpleMessage[];
+  tag: Tag[];
+  dirty: PluginCleaningData[];
+  clean: PluginCleaningData[];
+  url: ModLocation[];
+
+  group?: string;
+}
+
+interface TagRowData {
+  name: string;
+  type: string;
+  condition: string;
+}
+
+interface DerivedPluginMetadata {
+  name: string;
+  isActive: boolean;
+  isDirty: boolean;
+  isEmpty: boolean;
+  isMaster: boolean;
+  isLightMaster: boolean;
+  loadsArchive: boolean;
+  messages: SimpleMessage[];
+  suggestedTags: Tag[];
+  currentTags: Tag[];
+
+  version?: string;
+  crc?: number;
+  group?: string;
+  loadOrderIndex?: number;
+  cleanedWith?: string;
+  masterlist?: PluginMetadata;
+  userlist?: PluginMetadata;
+}
+
+interface PluginMessageChangeEvent extends CustomEvent {
+  detail: {
+    pluginId: string;
+    mayChangeCardHeight: boolean;
+    totalDiff: number;
+    warningDiff: number;
+    errorDiff: number;
+  };
+}
+
+interface PluginCleaningDataChangeEvent extends CustomEvent {
+  detail: {
+    isDirty?: boolean;
+    cleanedWith?: string;
+    pluginId?: string;
+  };
+}
+
+interface PluginContentChangeEvent extends CustomEvent {
+  detail: {
+    pluginId: string;
+    mayChangeCardHeight: boolean;
+    totalDiff?: number;
+    warningDiff?: number;
+    errorDiff?: number;
+  };
+}
+
+interface PluginCardStylingChangeEvent extends CustomEvent {
+  detail: {
+    pluginId: string;
+  };
+}
+
+interface PluginItemContentChangeEvent extends CustomEvent {
+  detail: {
+    pluginId: string;
+    group: string;
+    isEditorOpen: boolean;
+    hasUserEdits: boolean;
+    loadOrderIndex: number;
+    isLightMaster: boolean;
+  };
+}
+
+function deduplicateTags(currentTags: Tag[], suggestedTags: Tag[]): PluginTags {
   const currentTagNames = currentTags.map(tag => tag.name);
   const removalTagNames = suggestedTags
     .filter(tag => !tag.isAddition)
@@ -55,7 +188,7 @@ function deduplicateTags(currentTags, suggestedTags) {
   };
 }
 
-export function crcToString(crc) {
+export function crcToString(crc: number): string {
   /* Pad CRC string to 8 characters. */
   return `00000000${crc.toString(16).toUpperCase()}`.slice(-8);
 }
@@ -64,7 +197,27 @@ export function crcToString(crc) {
     Use getters with no setters for member variables as data should not be
     written to objects of this class. */
 class PluginCardContent {
-  constructor(plugin, filters) {
+  private readonly _name: string;
+
+  private _isActive: boolean;
+
+  private _isEmpty: boolean;
+
+  private _isMaster: boolean;
+
+  private _isLightMaster: boolean;
+
+  private _loadsArchive: boolean;
+
+  private _version: string;
+
+  private _crc: number;
+
+  private _tags: PluginTags;
+
+  private _messages: SimpleMessage[];
+
+  public constructor(plugin: Plugin, filters: Filters) {
     this._name = plugin.name;
     this._isActive = plugin.isActive || false;
     this._isEmpty = plugin.isEmpty;
@@ -93,35 +246,35 @@ class PluginCardContent {
     this._messages = plugin.messages.filter(filters.messageFilter, filters);
   }
 
-  get name() {
+  public get name(): string {
     return this._name;
   }
 
-  get isActive() {
+  public get isActive(): boolean {
     return this._isActive;
   }
 
-  get isEmpty() {
+  public get isEmpty(): boolean {
     return this._isEmpty;
   }
 
-  get isMaster() {
+  public get isMaster(): boolean {
     return this._isMaster;
   }
 
-  get isLightMaster() {
+  public get isLightMaster(): boolean {
     return this._isLightMaster;
   }
 
-  get loadsArchive() {
+  public get loadsArchive(): boolean {
     return this._loadsArchive;
   }
 
-  get version() {
+  public get version(): string {
     return this._version;
   }
 
-  get crc() {
+  public get crc(): string {
     if (this._crc === 0) {
       return '';
     }
@@ -130,15 +283,15 @@ class PluginCardContent {
     return crcToString(this._crc);
   }
 
-  get tags() {
+  public get tags(): PluginTags {
     return this._tags;
   }
 
-  get messages() {
+  public get messages(): SimpleMessage[] {
     return this._messages;
   }
 
-  containsText(text) {
+  public containsText(text: string): boolean {
     if (text === undefined || text.length === 0) {
       return true;
     }
@@ -171,7 +324,49 @@ class PluginCardContent {
 }
 
 export class Plugin {
-  constructor(obj) {
+  public readonly name: string;
+
+  public isActive: boolean;
+
+  private _isDirty: boolean;
+
+  public isEmpty: boolean;
+
+  public isMaster: boolean;
+
+  public isLightMaster: boolean;
+
+  public loadsArchive: boolean;
+
+  private _messages: SimpleMessage[];
+
+  private _suggestedTags: Tag[];
+
+  private _currentTags: Tag[];
+
+  public version: string;
+
+  private _crc: number;
+
+  private _group: string;
+
+  private _loadOrderIndex: number;
+
+  private _cleanedWith: string;
+
+  public masterlist: PluginMetadata;
+
+  private _userlist: PluginMetadata;
+
+  public id: string;
+
+  private _isEditorOpen: boolean;
+
+  private _isSearchResult: boolean;
+
+  public cardZIndex: number;
+
+  public constructor(obj: DerivedPluginMetadata) {
     /* Plugin data */
     this.name = obj.name;
     this._crc = obj.crc || 0;
@@ -200,7 +395,7 @@ export class Plugin {
     this.cardZIndex = 0;
   }
 
-  update(plugin) {
+  public update(plugin: DerivedPluginMetadata): void {
     if (!plugin) {
       return;
     }
@@ -210,9 +405,14 @@ export class Plugin {
       );
     }
 
-    Object.getOwnPropertyNames(plugin).forEach(property => {
-      this[property] = plugin[property];
-    });
+    Object.getOwnPropertyNames(plugin).forEach(
+      (propertyName: keyof DerivedPluginMetadata) => {
+        if (propertyName !== 'name') {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (this as any)[propertyName] = plugin[propertyName];
+        }
+      }
+    );
 
     /* Set default values for fields that may not be present. */
     if (plugin.version === undefined) {
@@ -238,18 +438,19 @@ export class Plugin {
     }
   }
 
-  static fromJson(key, value) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public static fromJson(_propertyName: string, propertyValue: any): any {
     if (
-      value !== null &&
-      Object.prototype.hasOwnProperty.call(value, 'name') &&
-      Object.prototype.hasOwnProperty.call(value, 'isEmpty')
+      propertyValue !== null &&
+      Object.prototype.hasOwnProperty.call(propertyValue, 'name') &&
+      Object.prototype.hasOwnProperty.call(propertyValue, 'isEmpty')
     ) {
-      return new Plugin(value);
+      return new Plugin(propertyValue);
     }
-    return value;
+    return propertyValue;
   }
 
-  static tagFromRowData(rowData) {
+  public static tagFromRowData(rowData: TagRowData): Tag {
     if (
       rowData.condition === undefined ||
       rowData.name === undefined ||
@@ -264,7 +465,7 @@ export class Plugin {
     };
   }
 
-  static tagToRowData(tag) {
+  public static tagToRowData(tag: Tag): TagRowData {
     if (
       tag.condition === undefined ||
       tag.name === undefined ||
@@ -280,7 +481,7 @@ export class Plugin {
     };
   }
 
-  _dispatchCardContentChangeEvent(mayChangeCardHeight) {
+  private _dispatchCardContentChangeEvent(mayChangeCardHeight: boolean): void {
     document.dispatchEvent(
       new CustomEvent('loot-plugin-card-content-change', {
         detail: {
@@ -291,7 +492,7 @@ export class Plugin {
     );
   }
 
-  _dispatchCardStylingChangeEvent() {
+  private _dispatchCardStylingChangeEvent(): void {
     document.dispatchEvent(
       new CustomEvent('loot-plugin-card-styling-change', {
         detail: { pluginId: this.id }
@@ -299,7 +500,7 @@ export class Plugin {
     );
   }
 
-  _dispatchItemContentChangeEvent() {
+  private _dispatchItemContentChangeEvent(): void {
     document.dispatchEvent(
       new CustomEvent('loot-plugin-item-content-change', {
         detail: {
@@ -314,11 +515,11 @@ export class Plugin {
     );
   }
 
-  get messages() {
+  public get messages(): SimpleMessage[] {
     return this._messages;
   }
 
-  set messages(messages) {
+  public set messages(messages) {
     /* Update the message counts. */
     let oldTotal = 0;
     let newTotal = 0;
@@ -351,7 +552,7 @@ export class Plugin {
       newTotal !== oldTotal ||
       newWarns !== oldWarns ||
       newErrs !== oldErrs ||
-      !_.isEqual(this._messages, messages)
+      !isEqual(this._messages, messages)
     ) {
       this._messages = messages;
 
@@ -369,11 +570,11 @@ export class Plugin {
     }
   }
 
-  get isDirty() {
+  public get isDirty(): boolean {
     return this._isDirty;
   }
 
-  set isDirty(dirty) {
+  public set isDirty(dirty) {
     /* Update dirty counts. */
     if (dirty !== this._isDirty) {
       this._isDirty = dirty;
@@ -388,11 +589,11 @@ export class Plugin {
     }
   }
 
-  get cleanedWith() {
+  public get cleanedWith(): string {
     return this._cleanedWith;
   }
 
-  set cleanedWith(cleanedWith) {
+  public set cleanedWith(cleanedWith) {
     if (cleanedWith !== this._cleanedWith) {
       this._cleanedWith = cleanedWith;
 
@@ -407,11 +608,11 @@ export class Plugin {
     }
   }
 
-  get crc() {
+  public get crc(): number {
     return this._crc;
   }
 
-  set crc(crc) {
+  public set crc(crc) {
     if (this._crc !== crc) {
       this._crc = crc;
 
@@ -419,40 +620,40 @@ export class Plugin {
     }
   }
 
-  get currentTags() {
+  public get currentTags(): Tag[] {
     return this._currentTags;
   }
 
-  set currentTags(tags) {
-    if (!_.isEqual(this._currentTags, tags)) {
+  public set currentTags(tags) {
+    if (!isEqual(this._currentTags, tags)) {
       this._currentTags = tags;
 
       this._dispatchCardContentChangeEvent(true);
     }
   }
 
-  get suggestedTags() {
+  public get suggestedTags(): Tag[] {
     return this._suggestedTags;
   }
 
-  set suggestedTags(tags) {
-    if (!_.isEqual(this._suggestedTags, tags)) {
+  public set suggestedTags(tags) {
+    if (!isEqual(this._suggestedTags, tags)) {
       this._suggestedTags = tags;
 
       this._dispatchCardContentChangeEvent(true);
     }
   }
 
-  get hasUserEdits() {
+  public get hasUserEdits(): boolean {
     return this.userlist !== undefined && Object.keys(this.userlist).length > 1;
   }
 
-  get userlist() {
+  public get userlist(): PluginMetadata {
     return this._userlist;
   }
 
-  set userlist(userlist) {
-    if (!_.isEqual(this._userlist, userlist)) {
+  public set userlist(userlist) {
+    if (!isEqual(this._userlist, userlist)) {
       this._userlist = userlist;
 
       this._dispatchItemContentChangeEvent();
@@ -460,11 +661,11 @@ export class Plugin {
     }
   }
 
-  get group() {
+  public get group(): string {
     return this._group;
   }
 
-  set group(group) {
+  public set group(group) {
     if (this._group !== group) {
       this._group = group;
 
@@ -472,11 +673,11 @@ export class Plugin {
     }
   }
 
-  get isEditorOpen() {
+  public get isEditorOpen(): boolean {
     return this._isEditorOpen;
   }
 
-  set isEditorOpen(isEditorOpen) {
+  public set isEditorOpen(isEditorOpen) {
     if (this._isEditorOpen !== isEditorOpen) {
       this._isEditorOpen = isEditorOpen;
 
@@ -484,11 +685,11 @@ export class Plugin {
     }
   }
 
-  get isSearchResult() {
+  public get isSearchResult(): boolean {
     return this._isSearchResult;
   }
 
-  set isSearchResult(isSearchResult) {
+  public set isSearchResult(isSearchResult) {
     if (this._isSearchResult !== isSearchResult) {
       this._isSearchResult = isSearchResult;
 
@@ -496,11 +697,11 @@ export class Plugin {
     }
   }
 
-  get loadOrderIndex() {
+  public get loadOrderIndex(): number {
     return this._loadOrderIndex;
   }
 
-  set loadOrderIndex(loadOrderIndex) {
+  public set loadOrderIndex(loadOrderIndex) {
     if (this._loadOrderIndex !== loadOrderIndex) {
       this._loadOrderIndex = loadOrderIndex;
 
@@ -508,65 +709,71 @@ export class Plugin {
     }
   }
 
-  getCardContent(filters) {
+  public getCardContent(filters: Filters): PluginCardContent {
     return new PluginCardContent(this, filters);
   }
 
-  static onMessageChange(evt) {
-    document.getElementById('filterTotalMessageNo').textContent =
+  public static onMessageChange(evt: PluginMessageChangeEvent): void {
+    document.getElementById('filterTotalMessageNo').textContent = (
       parseInt(
         document.getElementById('filterTotalMessageNo').textContent,
         10
-      ) + evt.detail.totalDiff;
-    document.getElementById('totalMessageNo').textContent =
+      ) + evt.detail.totalDiff
+    ).toString();
+    document.getElementById('totalMessageNo').textContent = (
       parseInt(document.getElementById('totalMessageNo').textContent, 10) +
-      evt.detail.totalDiff;
-    document.getElementById('totalWarningNo').textContent =
+      evt.detail.totalDiff
+    ).toString();
+    document.getElementById('totalWarningNo').textContent = (
       parseInt(document.getElementById('totalWarningNo').textContent, 10) +
-      evt.detail.warningDiff;
-    document.getElementById('totalErrorNo').textContent =
+      evt.detail.warningDiff
+    ).toString();
+    document.getElementById('totalErrorNo').textContent = (
       parseInt(document.getElementById('totalErrorNo').textContent, 10) +
-      evt.detail.errorDiff;
+      evt.detail.errorDiff
+    ).toString();
   }
 
-  static onCleaningDataChange(evt) {
+  public static onCleaningDataChange(evt: PluginCleaningDataChangeEvent): void {
     if (evt.detail.isDirty !== undefined) {
       if (evt.detail.isDirty) {
-        document.getElementById('dirtyPluginNo').textContent =
-          parseInt(document.getElementById('dirtyPluginNo').textContent, 10) +
-          1;
+        document.getElementById('dirtyPluginNo').textContent = (
+          parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1
+        ).toString();
       } else {
-        document.getElementById('dirtyPluginNo').textContent =
-          parseInt(document.getElementById('dirtyPluginNo').textContent, 10) -
-          1;
+        document.getElementById('dirtyPluginNo').textContent = (
+          parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1
+        ).toString();
       }
     }
     if (evt.detail.cleanedWith !== undefined) {
-      const card = document.getElementById(evt.detail.pluginId);
+      const card = document.getElementById(
+        evt.detail.pluginId
+      ) as LootPluginCard;
       if (card) {
         card.updateIsCleanIcon();
       }
     }
   }
 
-  static onContentChange(evt) {
-    const card = document.getElementById(evt.detail.pluginId);
+  public static onContentChange(evt: PluginContentChangeEvent): void {
+    const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
     if (card) {
       card.updateContent(evt.detail.mayChangeCardHeight);
     }
   }
 
-  static onCardStylingChange(evt) {
-    const card = document.getElementById(evt.detail.pluginId);
+  public static onCardStylingChange(evt: PluginCardStylingChangeEvent): void {
+    const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
     if (card) {
       card.updateStyling();
     }
   }
 
-  static onItemContentChange(evt) {
+  public static onItemContentChange(evt: PluginItemContentChangeEvent): void {
     const item = document
       .getElementById('cardsNav')
-      .querySelector(`[data-id="${evt.detail.pluginId}"]`);
+      .querySelector(`[data-id="${evt.detail.pluginId}"]`) as LootPluginCard;
     if (item) {
       item.updateContent(evt.detail);
     }
