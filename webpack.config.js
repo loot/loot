@@ -56,10 +56,11 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: ['babel-loader', 'source-map-loader']
-      }
+      },
+      { test: /\.tsx?$/, loader: 'awesome-typescript-loader' }
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   }
 };
