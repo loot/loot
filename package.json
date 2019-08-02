@@ -63,6 +63,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@types/jest": "^24.0.16",
     "@types/node": "^12.6.9",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
@@ -84,6 +85,7 @@
     "mkdirp": "^0.5.1",
     "prettier": "^1.15.1",
     "source-map-loader": "^0.2.3",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.5.3",
     "webpack": "^4.1.0",
     "webpack-cli": "^3.1.0"
@@ -134,7 +136,9 @@
         "node": {
           "extensions": [
             ".js",
-            ".jsx"
+            ".jsx",
+            ".ts",
+            ".tsx"
           ]
         }
       }
@@ -174,7 +178,11 @@
   },
   "jest": {
     "collectCoverage": true,
-    "testRegex": "tests/gui/html/js/.+\\.js$"
+    "testRegex": "tests/gui/html/js/.+\\.[jt]sx?$",
+    "transform": {
+      "\\.tsx?$": "ts-jest",
+      "\\.jsx?$": "babel-jest"
+    }
   },
   "prettier": {
     "singleQuote": true
