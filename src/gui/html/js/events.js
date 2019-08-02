@@ -5,7 +5,7 @@ import {
   closeProgress,
   showNotification,
   showProgress
-} from './dialog.js';
+} from './dialog';
 import {
   fillGroupsList,
   initialiseVirtualLists,

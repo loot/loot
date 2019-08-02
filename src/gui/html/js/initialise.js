@@ -49,7 +49,7 @@ import {
   onSearchEnd,
   onFolderChange
 } from './events.js';
-import { closeProgress, showProgress } from './dialog.js';
+import { closeProgress, showProgress } from './dialog';
 import {
   onOpenGroupsEditor,
   onGroupsEditorOpened,

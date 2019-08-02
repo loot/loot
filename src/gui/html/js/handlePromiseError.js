@@ -1,5 +1,5 @@
 // Depends on the loot.l10n global.
-import { closeProgress, showMessage } from './dialog.js';
+import { closeProgress, showMessage } from './dialog';
 
 export default function handlePromiseError(error) {
   /* Error.stack seems to be Chromium-specific. */
