@@ -10,6 +10,7 @@ jest.mock('@octokit/rest', () =>
         getLatestRelease: jest.fn().mockReturnValue(
           Promise.resolve({
             data: {
+              // eslint-disable-next-line @typescript-eslint/camelcase
               tag_name: '0.9.2'
             }
           })

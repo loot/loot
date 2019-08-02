@@ -14,6 +14,7 @@ export default class Translator {
         '': {
           domain: 'messages',
           lang: 'en',
+          // eslint-disable-next-line @typescript-eslint/camelcase
           plural_forms: 'nplurals=2; plural=(n != 1);'
         }
       }
@@ -42,6 +43,7 @@ export default class Translator {
       })
       .then(result => {
         this.jed = new Jed({
+          // eslint-disable-next-line @typescript-eslint/camelcase
           locale_data: result,
           domain: 'messages'
         });

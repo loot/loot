@@ -33,6 +33,7 @@ function findTag(tags, tagName) {
 }
 
 async function paginatedFindTag(octokit, repo, tagName) {
+  // eslint-disable-next-line @typescript-eslint/camelcase
   let response = await octokit.repos.listTags({ ...repo, per_page: 100 });
   let tag = findTag(response.data, tagName);
 
@@ -82,7 +83,7 @@ export default function updateExists(currentVersion, currentBuild) {
         }
 
         return octokit.gitdata
-          .getCommit({ ...repo, commit_sha: tag.commit.sha })
+          .getCommit({ ...repo, commit_sha: tag.commit.sha }) // eslint-disable-line @typescript-eslint/camelcase
           .then(commitResponse =>
             Date.parse(commitResponse.data.committer.date)
           )

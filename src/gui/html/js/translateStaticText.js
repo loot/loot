@@ -613,6 +613,7 @@ function translateFirstRunDialog(l10n, version) {
   firstRun.querySelector('li:nth-child(1)').innerHTML = l10n.translateFormatted(
     'Click %(menu_icon)s buttons to open menus.',
     {
+      // eslint-disable-next-line @typescript-eslint/camelcase
       menu_icon: '<iron-icon icon="more-vert"></iron-icon>'
     }
   );

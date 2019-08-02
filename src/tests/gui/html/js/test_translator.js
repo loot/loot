@@ -9,6 +9,7 @@ describe('Translator', () => {
         '': {
           domain: 'messages',
           lang: 'en',
+          // eslint-disable-next-line @typescript-eslint/camelcase
           plural_forms: 'nplurals=2; plural=(n != 1);'
         },
         foo: ['foo'],
