@@ -78,7 +78,7 @@ import Game from './game.js';
 import handlePromiseError from './handlePromiseError.js';
 import { Plugin } from './plugin';
 import query from './query';
-import State from './state.js';
+import State from './state';
 import translateStaticText from './translateStaticText.js';
 import Translator from './translator.js';
 import updateExists from './updateExists.js';

@@ -1,5 +1,5 @@
 import * as DOM from '../../../../gui/html/js/dom.js';
-import State from '../../../../gui/html/js/state.js';
+import State from '../../../../gui/html/js/state';
 
 jest.mock('../../../../gui/html/js/dom.js');
 

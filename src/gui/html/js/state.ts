@@ -1,35 +1,43 @@
 import { show, enable, setUIState } from './dom.js';
 
+enum ApplicationState {
+  Default,
+  Sorting,
+  Editing
+}
+
 export default class State {
-  static get DEFAULT_STATE() {
-    return 0;
+  private currentState: ApplicationState;
+
+  public static get DEFAULT_STATE(): ApplicationState {
+    return ApplicationState.Default;
   }
 
-  static get SORTING_STATE() {
-    return 1;
+  public static get SORTING_STATE(): ApplicationState {
+    return ApplicationState.Sorting;
   }
 
-  static get EDITING_STATE() {
-    return 2;
+  public static get EDITING_STATE(): ApplicationState {
+    return ApplicationState.Editing;
   }
 
-  constructor() {
+  public constructor() {
     this.currentState = State.DEFAULT_STATE;
   }
 
-  isInDefaultState() {
+  public isInDefaultState(): boolean {
     return this.currentState === State.DEFAULT_STATE;
   }
 
-  isInEditingState() {
+  public isInEditingState(): boolean {
     return this.currentState === State.EDITING_STATE;
   }
 
-  isInSortingState() {
+  public isInSortingState(): boolean {
     return this.currentState === State.SORTING_STATE;
   }
 
-  enterSortingState() {
+  public enterSortingState(): void {
     if (this.isInSortingState()) {
       return;
     }
@@ -53,7 +61,7 @@ export default class State {
     this.currentState = State.SORTING_STATE;
   }
 
-  exitSortingState() {
+  public exitSortingState(): void {
     if (this.isInDefaultState()) {
       return;
     }
@@ -77,7 +85,7 @@ export default class State {
     this.currentState = State.DEFAULT_STATE;
   }
 
-  enterEditingState() {
+  public enterEditingState(): void {
     if (this.isInEditingState()) {
       return;
     }
@@ -99,7 +107,7 @@ export default class State {
     this.currentState = State.EDITING_STATE;
   }
 
-  exitEditingState() {
+  public exitEditingState(): void {
     if (this.isInDefaultState()) {
       return;
     }
