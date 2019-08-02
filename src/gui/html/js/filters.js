@@ -1,5 +1,5 @@
 import handlePromiseError from './handlePromiseError.js';
-import query from './query.js';
+import query from './query';
 
 export default class Filters {
   constructor(l10n) {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-07-30 18:23+0100\n"
+"POT-Creation-Date: 2019-08-05 18:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -794,7 +794,7 @@ msgstr ""
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:619
+#: src/gui/html/js/translateStaticText.js:620
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions "
@@ -802,58 +802,58 @@ msgid ""
 "remove\">removal</span>."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:622
+#: src/gui/html/js/translateStaticText.js:623
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:625
+#: src/gui/html/js/translateStaticText.js:626
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:628
+#: src/gui/html/js/translateStaticText.js:629
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:631
+#: src/gui/html/js/translateStaticText.js:632
 msgid ""
 "Some features are disabled while the metadata editor is open, or while "
 "there is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:634
+#: src/gui/html/js/translateStaticText.js:635
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's "
 "documentation can be accessed through the main menu."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:638
-#: src/gui/html/js/translateStaticText.js:661
+#: src/gui/html/js/translateStaticText.js:639
+#: src/gui/html/js/translateStaticText.js:662
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
 "using %s."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:643
+#: src/gui/html/js/translateStaticText.js:644
 msgid "OK"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:650
+#: src/gui/html/js/translateStaticText.js:651
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:652
+#: src/gui/html/js/translateStaticText.js:653
 msgid "Version %s (build %s)"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.js:657
+#: src/gui/html/js/translateStaticText.js:658
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, "
 "Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."

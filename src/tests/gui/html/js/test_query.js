@@ -1,4 +1,4 @@
-import query from '../../../../gui/html/js/query.js';
+import query from '../../../../gui/html/js/query';
 
 describe('query()', () => {
   beforeAll(() => {

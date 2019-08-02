@@ -21,7 +21,7 @@ import Filters from './filters.js';
 import Game from './game.js';
 import handlePromiseError from './handlePromiseError.js';
 import { Plugin } from './plugin.js';
-import query from './query.js';
+import query from './query';
 
 // Depends on the following globals:
 // - loot.filters
