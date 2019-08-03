@@ -1,8 +1,13 @@
-import Octokit from '@octokit/rest';
+import * as Octokit from '@octokit/rest';
+
+interface Repo {
+  owner: string;
+  repo: string;
+}
 
 const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
 
-function compare(lhs, rhs) {
+function compare(lhs: string, rhs: string): number {
   if (!versionRegex.test(lhs) || !versionRegex.test(rhs)) {
     throw new Error(
       `versions to compare are of unexpected format: ${lhs}, ${rhs}`
@@ -28,24 +33,41 @@ function compare(lhs, rhs) {
   return 0;
 }
 
-function findTag(tags, tagName) {
+function findTag(
+  tags: Octokit.ReposListTagsResponseItem[],
+  tagName: string
+): Octokit.ReposListTagsResponseItem {
   return tags.find(element => element.name === tagName);
 }
 
-async function paginatedFindTag(octokit, repo, tagName) {
-  // eslint-disable-next-line @typescript-eslint/camelcase
-  let response = await octokit.repos.listTags({ ...repo, per_page: 100 });
-  let tag = findTag(response.data, tagName);
+async function paginatedFindTag(
+  octokit: Octokit,
+  repo: Repo,
+  tagName: string
+): Promise<Octokit.ReposListTagsResponseItem> {
+  const options = octokit.repos.listTags.endpoint.merge({
+    ...repo,
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    per_page: 100
+  });
 
-  while (!tag && octokit.hasNextPage(response)) {
-    response = await octokit.getNextPage(response); // eslint-disable-line no-await-in-loop
-    tag = findTag(response.data, tagName);
+  // The version of Chromium used by LOOT natively supports async iterators, so
+  // disable the syntax restriction lint.
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const page of octokit.paginate.iterator(options)) {
+    const tag = findTag(page.data, tagName);
+    if (tag) {
+      return tag;
+    }
   }
 
-  return tag;
+  return undefined;
 }
 
-export default function updateExists(currentVersion, currentBuild) {
+export default function updateExists(
+  currentVersion: string,
+  currentBuild: string
+): Promise<boolean> {
   if (currentVersion === undefined || currentBuild === undefined) {
     return Promise.reject(
       new Error('Invalid arguments, both version and build must be given')
@@ -82,7 +104,7 @@ export default function updateExists(currentVersion, currentBuild) {
           return false;
         }
 
-        return octokit.gitdata
+        return octokit.git
           .getCommit({ ...repo, commit_sha: tag.commit.sha }) // eslint-disable-line @typescript-eslint/camelcase
           .then(commitResponse =>
             Date.parse(commitResponse.data.committer.date)

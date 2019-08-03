@@ -81,7 +81,7 @@ import query from './query';
 import State from './state';
 import translateStaticText from './translateStaticText.js';
 import Translator from './translator.js';
-import updateExists from './updateExists.js';
+import updateExists from './updateExists';
 
 function setupEventHandlers() {
   /* Set up handlers for filters. */
