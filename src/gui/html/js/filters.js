@@ -1,4 +1,4 @@
-import handlePromiseError from './handlePromiseError.js';
+import handlePromiseError from './handlePromiseError';
 import query from './query';
 
 export default class Filters {

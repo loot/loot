@@ -50,14 +50,6 @@ import initialise from './initialise.js';
 import { showProgress } from './dialog';
 import { onQuit } from './events.js';
 
-declare global {
-  interface Window {
-    // The global loot object is an unfortunate necessity...
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    loot: any;
-  }
-}
-
 window.loot = window.loot || {};
 // These are assumed to exist by C++ callbacks.
 window.loot.showProgress = showProgress;

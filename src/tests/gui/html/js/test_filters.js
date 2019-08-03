@@ -1,6 +1,6 @@
 import Filters from '../../../../gui/html/js/filters.js';
 
-jest.mock('../../../../gui/html/js/handlePromiseError.js');
+jest.mock('../../../../gui/html/js/handlePromiseError');
 jest.mock('../../../../gui/html/js/query');
 
 describe('Filters', () => {
