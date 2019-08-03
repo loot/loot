@@ -182,7 +182,8 @@
         {
           "allowExpressions": true
         }
-      ]
+      ],
+      "no-useless-constructor": "off"
     }
   },
   "jest": {

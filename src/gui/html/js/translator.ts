@@ -1,14 +1,17 @@
-import Jed from 'jed';
+import { Jed } from 'jed';
 import jedGettextParser from 'jed-gettext-parser';
 
 export default class Translator {
+  private locale: string;
+
+  private jed?: Jed;
+
   /* Returns a Promise */
-  constructor(locale) {
+  public constructor(locale: string) {
     this.locale = locale || 'en';
-    this.jed = undefined;
   }
 
-  load() {
+  public load(): Promise<void> {
     const defaultTranslationData = {
       messages: {
         '': {
@@ -50,11 +53,14 @@ export default class Translator {
       });
   }
 
-  translate(text) {
+  public translate(text: string): string {
     return this.translateFormatted(text);
   }
 
-  translateFormatted(text, ...substitutions) {
+  public translateFormatted(
+    text: string,
+    ...substitutions: (string | object)[]
+  ): string {
     if (text === undefined) {
       return '';
     }

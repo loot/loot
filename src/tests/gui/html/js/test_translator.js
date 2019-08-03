@@ -1,26 +1,27 @@
-import Translator from '../../../../gui/html/js/translator.js';
+import Translator from '../../../../gui/html/js/translator';
 
 describe('Translator', () => {
-  let localeData;
+  let mockedJed;
 
   beforeEach(() => {
-    localeData = {
-      messages: {
-        '': {
-          domain: 'messages',
-          lang: 'en',
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          plural_forms: 'nplurals=2; plural=(n != 1);'
-        },
-        foo: ['foo'],
-        'foo %1$s %2$s': ['bar is bar']
-      }
+    mockedJed = {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      locale_data: {
+        messages: {
+          '': {
+            domain: 'messages',
+            lang: 'en',
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            plural_forms: 'nplurals=2; plural=(n != 1);'
+          },
+          foo: ['bar'],
+          'foo %1$s %2$s': ['bar is bar']
+        }
+      },
+      translate: input => ({
+        fetch: () => mockedJed.locale_data.messages[input][0]
+      })
     };
-    window.Jed = jest.fn().mockImplementation(() => ({
-      translate: jest.fn().mockImplementation(input => ({
-        fetch: () => localeData.messages[input][0]
-      }))
-    }));
   });
 
   describe('#Translator()', () => {
@@ -78,8 +79,7 @@ describe('Translator', () => {
     test('should return the translated string if locale data has been loaded', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
          data manually. */
-      l10n.jed = window.Jed();
-      localeData.messages.foo = ['bar'];
+      l10n.jed = mockedJed;
 
       expect(l10n.translate('foo')).toBe('bar');
     });
@@ -109,8 +109,7 @@ describe('Translator', () => {
     test('should return the translated string if locale data has been loaded', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
          data manually. */
-      l10n.jed = window.Jed();
-      localeData.messages.foo = ['bar'];
+      l10n.jed = mockedJed;
 
       expect(l10n.translateFormatted('foo')).toBe('bar');
     });
@@ -118,7 +117,7 @@ describe('Translator', () => {
     test('should subsitute additional arguments into string', () => {
       /* Since loading data doesn't work in the browser, hack it by setting some
          data manually. */
-      l10n.jed = window.Jed();
+      l10n.jed = mockedJed;
 
       expect(l10n.translateFormatted('foo %1$s %2$s', 'is not', 'bar')).toBe(
         'bar is bar'

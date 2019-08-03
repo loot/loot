@@ -80,7 +80,7 @@ import { Plugin } from './plugin';
 import query from './query';
 import State from './state';
 import translateStaticText from './translateStaticText.js';
-import Translator from './translator.js';
+import Translator from './translator';
 import updateExists from './updateExists';
 
 function setupEventHandlers() {
