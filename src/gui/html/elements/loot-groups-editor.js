@@ -4,7 +4,6 @@ import dagre from 'cytoscape-dagre';
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import { onOpenReadme } from '../js/events.js';
 
 function graphElements(groups) {
   const nodes = groups.map(group => ({
@@ -157,8 +156,14 @@ export default class LootGroupsEditor extends PolymerElement {
       this._onAddGroup(evt)
     );
 
-    this.$.groupsHelpText.addEventListener('click', evt => {
-      onOpenReadme(evt, 'app/usage/groups_editor.html');
+    this.$.groupsHelpText.addEventListener('click', () => {
+      this.dispatchEvent(
+        new CustomEvent('loot-open-readme', {
+          detail: { relativeFilePath: 'app/usage/groups_editor.html' },
+          bubbles: true,
+          composed: true
+        })
+      );
     });
 
     cytoscape.use(edgehandles);

@@ -193,6 +193,7 @@ function setupEventHandlers() {
   const groupsEditor = document.getElementById('groupsEditorDialog');
   groupsEditor.addEventListener('iron-overlay-closed', onSaveUserGroups);
   groupsEditor.addEventListener('iron-overlay-opened', onGroupsEditorOpened);
+  groupsEditor.addEventListener('loot-open-readme', onOpenReadme);
 
   /* Set up event handlers for settings dialog. */
   const settings = document.getElementById('settingsDialog');

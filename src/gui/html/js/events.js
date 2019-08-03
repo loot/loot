@@ -385,7 +385,10 @@ export function onContentRefresh() {
     .catch(handlePromiseError);
 }
 
-export function onOpenReadme(evt, relativeFilePath = 'index.html') {
+export function onOpenReadme(evt) {
+  const relativeFilePath =
+    (evt.detail && evt.detail.relativeFilePath) || 'index.html';
+
   query('openReadme', { relativeFilePath }).catch(handlePromiseError);
 }
 export function onOpenLogLocation() {
