@@ -25,12 +25,12 @@
 import { isEqual } from 'lodash';
 import LootPluginCard from '../elements/loot-plugin-card';
 import Filters from './filters';
-
-interface Tag {
-  name: string;
-  isAddition: boolean;
-  condition: string;
-}
+import {
+  SimpleMessage,
+  DerivedPluginMetadata,
+  Tag,
+  PluginMetadata
+} from './interfaces';
 
 interface PluginTags {
   current: string;
@@ -38,78 +38,10 @@ interface PluginTags {
   remove: string;
 }
 
-interface SimpleMessage {
-  type: string;
-  text: string;
-  language: string;
-  condition: string;
-}
-
-interface MessageContent {
-  text: string;
-  language: string;
-}
-
-interface File {
-  name: string;
-  display: string;
-  condition: string;
-}
-
-interface PluginCleaningData {
-  crc: number;
-  util: string;
-  itm: number;
-  udr: number;
-  nav: number;
-  info: MessageContent[];
-}
-
-interface ModLocation {
-  name: string;
-  link: string;
-}
-
-interface PluginMetadata {
-  name: string;
-  enabled: boolean;
-  after: File[];
-  req: File[];
-  inc: File[];
-  msg: SimpleMessage[];
-  tag: Tag[];
-  dirty: PluginCleaningData[];
-  clean: PluginCleaningData[];
-  url: ModLocation[];
-
-  group?: string;
-}
-
 interface TagRowData {
   name: string;
   type: string;
   condition: string;
-}
-
-interface DerivedPluginMetadata {
-  name: string;
-  isActive: boolean;
-  isDirty: boolean;
-  isEmpty: boolean;
-  isMaster: boolean;
-  isLightMaster: boolean;
-  loadsArchive: boolean;
-  messages: SimpleMessage[];
-  suggestedTags: Tag[];
-  currentTags: Tag[];
-
-  version?: string;
-  crc?: number;
-  group?: string;
-  loadOrderIndex?: number;
-  cleanedWith?: string;
-  masterlist?: PluginMetadata;
-  userlist?: PluginMetadata;
 }
 
 interface PluginMessageChangeEvent extends CustomEvent {
@@ -775,7 +707,7 @@ export class Plugin {
       .getElementById('cardsNav')
       .querySelector(`[data-id="${evt.detail.pluginId}"]`) as LootPluginCard;
     if (item) {
-      item.updateContent(evt.detail);
+      item.updateContent(true);
     }
   }
 }

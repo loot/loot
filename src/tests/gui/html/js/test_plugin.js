@@ -1,8 +1,8 @@
 /* eslint-disable no-self-assign */
 import { Plugin } from '../../../../gui/html/js/plugin';
-import Filters from '../../../../gui/html/js/filters.js';
+import Filters from '../../../../gui/html/js/filters';
 
-jest.mock('../../../../gui/html/js/filters.js', () =>
+jest.mock('../../../../gui/html/js/filters', () =>
   jest.fn().mockImplementation(() => ({
     messageFilter(message) {
       if (this.hideAllPluginMessages) {

@@ -4,7 +4,7 @@ import Game from '../../../../gui/html/js/game.js';
 import { Plugin } from '../../../../gui/html/js/plugin';
 
 jest.mock('../../../../gui/html/js/dom');
-jest.mock('../../../../gui/html/js/filters.js');
+jest.mock('../../../../gui/html/js/filters');
 jest.mock('../../../../gui/html/js/plugin', () => ({
   crcToString: jest.fn(),
   Plugin: jest

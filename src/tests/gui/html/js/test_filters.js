@@ -1,4 +1,4 @@
-import Filters from '../../../../gui/html/js/filters.js';
+import Filters from '../../../../gui/html/js/filters';
 
 jest.mock('../../../../gui/html/js/handlePromiseError');
 jest.mock('../../../../gui/html/js/query');
@@ -256,9 +256,10 @@ describe('Filters', () => {
       filters = new Filters(l10n);
     });
 
-    test('should return a promise that resolves to an empty array if the argument is falsy', () =>
+    test('should return a promise that resolves to an object with empty arrays if the argument is falsy', () =>
       filters.activateConflictsFilter().then(result => {
-        expect(result.length).toBe(0);
+        expect(result.generalMessages.length).toBe(0);
+        expect(result.plugins.length).toBe(0);
       }));
   });
 

@@ -9,7 +9,7 @@ import {
   initialiseGroupsEditor,
   updateGroupsEditorState
 } from './dom';
-import Filters from './filters.js';
+import Filters from './filters';
 import { Plugin } from './plugin';
 
 export default class Game {

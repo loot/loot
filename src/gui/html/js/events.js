@@ -17,7 +17,7 @@ import {
   updateSelectedGame,
   enable
 } from './dom';
-import Filters from './filters.js';
+import Filters from './filters';
 import Game from './game.js';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
