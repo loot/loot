@@ -608,8 +608,7 @@ export function onClearMetadata(evt) {
               evt.target.getName()
             )
           );
-          /* Now perform search again. If there is no current search, this won't
-         do anything. */
+          /* Now perform search again. If there is no current search, this won't do anything. */
           document.getElementById('searchBar').search();
         })
         .catch(handlePromiseError);
