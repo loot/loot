@@ -5,7 +5,7 @@
         "sourceMap": true,
         "moduleResolution": "node",
         "module": "es6",
-        "target": "es6",
+        "target": "es2018",
         "jsx": "react",
         "alwaysStrict": true,
         "noImplicitAny": true,
