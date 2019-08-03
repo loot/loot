@@ -72,7 +72,7 @@ import {
   initialiseVirtualLists,
   appendGeneralMessages,
   setDocumentFontFamily
-} from './dom.js';
+} from './dom';
 import Filters from './filters.js';
 import Game from './game.js';
 import handlePromiseError from './handlePromiseError.js';

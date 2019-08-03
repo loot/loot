@@ -1,7 +1,7 @@
-import * as DOM from '../../../../gui/html/js/dom.js';
+import * as DOM from '../../../../gui/html/js/dom';
 import State from '../../../../gui/html/js/state';
 
-jest.mock('../../../../gui/html/js/dom.js');
+jest.mock('../../../../gui/html/js/dom');
 
 function clearMocks() {
   DOM.enable.mockClear();

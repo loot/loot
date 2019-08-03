@@ -1,4 +1,4 @@
-import { show, enable, setUIState } from './dom.js';
+import { show, enable, setUIState } from './dom';
 
 enum ApplicationState {
   Default,

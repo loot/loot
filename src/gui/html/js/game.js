@@ -8,7 +8,7 @@ import {
   initialiseAutocompleteFilenames,
   initialiseGroupsEditor,
   updateGroupsEditorState
-} from './dom.js';
+} from './dom';
 import Filters from './filters.js';
 import { Plugin } from './plugin';
 
