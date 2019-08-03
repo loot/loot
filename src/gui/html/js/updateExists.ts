@@ -64,7 +64,7 @@ async function paginatedFindTag(
   return undefined;
 }
 
-export default function updateExists(
+export default async function updateExists(
   currentVersion: string,
   currentBuild: string
 ): Promise<boolean> {
@@ -81,47 +81,46 @@ export default function updateExists(
     repo: 'loot'
   };
 
-  return octokit.repos
-    .getLatestRelease(repo)
-    .then(response => {
-      const latestReleaseTagName = response.data.tag_name;
-      const comparison = compare(currentVersion, latestReleaseTagName);
-      if (comparison === -1) {
-        return true;
-      }
-      if (comparison === 1) {
-        return false;
-      }
+  try {
+    const latestReleaseResponse = await octokit.repos.getLatestRelease(repo);
 
-      return paginatedFindTag(octokit, repo, latestReleaseTagName).then(tag => {
-        if (!tag) {
-          throw new Error(
-            `Couldn't find tag data for tag "${latestReleaseTagName}"`
-          );
-        }
+    const latestReleaseTagName = latestReleaseResponse.data.tag_name;
+    const comparison = compare(currentVersion, latestReleaseTagName);
+    if (comparison === -1) {
+      return true;
+    }
+    if (comparison === 1) {
+      return false;
+    }
 
-        if (tag.commit.sha.startsWith(currentBuild)) {
-          return false;
-        }
+    const tag = await paginatedFindTag(octokit, repo, latestReleaseTagName);
 
-        return octokit.git
-          .getCommit({ ...repo, commit_sha: tag.commit.sha }) // eslint-disable-line @typescript-eslint/camelcase
-          .then(commitResponse =>
-            Date.parse(commitResponse.data.committer.date)
-          )
-          .then(tagDate =>
-            octokit.repos
-              .getCommit({ ...repo, ref: currentBuild })
-              .then(commitResponse =>
-                Date.parse(commitResponse.data.commit.committer.date)
-              )
-              .then(buildCommitDate => tagDate > buildCommitDate)
-          );
-      });
-    })
+    if (!tag) {
+      throw new Error(
+        `Couldn't find tag data for tag "${latestReleaseTagName}"`
+      );
+    }
 
-    .catch(error => {
-      console.error(`Failed to check for LOOT updates, details: ${error}`); // eslint-disable-line no-console
-      throw error;
+    if (tag.commit.sha.startsWith(currentBuild)) {
+      return false;
+    }
+
+    const gitCommitResponse = await octokit.git.getCommit({
+      ...repo,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      commit_sha: tag.commit.sha
     });
+
+    const tagDate = Date.parse(gitCommitResponse.data.committer.date);
+
+    const repoCommitResponse = await octokit.repos.getCommit({
+      ...repo,
+      ref: currentBuild
+    });
+
+    return tagDate > Date.parse(repoCommitResponse.data.commit.committer.date);
+  } catch (error) {
+    console.error(`Failed to check for LOOT updates, details: ${error}`); // eslint-disable-line no-console
+    throw error;
+  }
 }
