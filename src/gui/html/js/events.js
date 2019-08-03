@@ -444,7 +444,6 @@ export function onCloseSettingsDialog(evt) {
     game: document.getElementById('defaultGameSelect').value,
     games: document.getElementById('gameTable').getRowsData(false),
     language: document.getElementById('languageSelect').value,
-    lastGame: loot.settings.lastGame,
     updateMasterlist: document.getElementById('updateMasterlist').checked,
     enableLootUpdateCheck: document.getElementById('enableLootUpdateCheck')
       .checked,
