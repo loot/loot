@@ -74,7 +74,7 @@ import {
   setDocumentFontFamily
 } from './dom';
 import Filters from './filters';
-import Game from './game.js';
+import Game from './game';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
 import query from './query';
@@ -247,7 +247,7 @@ function setupEventHandlers() {
   );
   document.addEventListener(
     'loot-game-global-messages-change',
-    Game.ongeneralMessagesChange
+    Game.onGeneralMessagesChange
   );
   document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
   document.addEventListener('loot-game-groups-change', Game.onGroupsChange);

@@ -18,7 +18,7 @@ import {
   enable
 } from './dom';
 import Filters from './filters';
-import Game from './game.js';
+import Game from './game';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
 import query from './query';
@@ -137,7 +137,7 @@ function updateMasterlist() {
         /* Update JS variables. */
         loot.game.masterlist = result.masterlist;
         loot.game.generalMessages = result.generalMessages;
-        loot.game.groups = result.groups;
+        loot.game.setGroups(result.groups);
 
         /* Update Bash Tag autocomplete suggestions. */
         initialiseAutocompleteBashTags(result.bashTags);
@@ -498,7 +498,7 @@ export function onSaveUserGroups(evt) {
   query('saveUserGroups', { userGroups })
     .then(JSON.parse)
     .then(response => {
-      loot.game.groups = response;
+      loot.game.setGroups(response);
       fillGroupsList(loot.game.groups);
       editor.setGroups(loot.game.groups);
     })

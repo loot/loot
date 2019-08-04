@@ -1,4 +1,5 @@
-import * as _ from 'lodash/core.min';
+import { isEqual } from 'lodash';
+import { IronListElement } from '@polymer/iron-list';
 import mergeGroups from './group';
 
 import {
@@ -11,26 +12,115 @@ import {
 } from './dom';
 import Filters from './filters';
 import { Plugin } from './plugin';
+import Translator from './translator';
+import { SimpleMessage, SourcedGroup, RawGroup, Tag } from './interfaces';
+
+interface GameContent {
+  messages: SimpleMessage[];
+  plugins: PluginContent[];
+}
+
+interface GameData {
+  folder: string;
+  generalMessages: SimpleMessage[];
+  masterlist: Masterlist;
+  groups: GameGroups;
+  plugins: Plugin[];
+  bashTags: string[];
+}
+
+interface Masterlist {
+  revision: string;
+  date: string;
+}
+
+interface GameGroups {
+  masterlist: RawGroup[];
+  userlist: RawGroup[];
+}
+
+interface PluginContent {
+  name: string;
+  crc: number;
+  version: string;
+  isActive: boolean;
+  isEmpty: boolean;
+  loadsArchive: boolean;
+  isDirty: boolean;
+
+  group: string;
+  messages: SimpleMessage[];
+  currentTags: Tag[];
+  suggestedTags: Tag[];
+}
+
+interface GamePluginsChangeEvent extends CustomEvent {
+  detail: {
+    valuesAreTotals: boolean;
+    totalMessageNo: number;
+    warnMessageNo: number;
+    errorMessageNo: number;
+    totalPluginNo: number;
+    activePluginNo: number;
+    dirtyPluginNo: number;
+  };
+}
+
+interface GameGlobalMessagesChangeEvent extends CustomEvent {
+  detail: {
+    totalDiff: number;
+    warningDiff: number;
+    errorDiff: number;
+    messages: SimpleMessage[];
+  };
+}
+
+interface GameMasterlistChangeEvent extends CustomEvent {
+  detail: {
+    revision: string;
+    date: string;
+  };
+}
+
+interface GameGroupsChangeEvent extends CustomEvent {
+  detail: { groups: SourcedGroup[] };
+}
 
 export default class Game {
-  constructor(obj, l10n) {
+  private _folder: string;
+
+  private _generalMessages: SimpleMessage[];
+
+  private _masterlist: Masterlist;
+
+  private _plugins: Plugin[];
+
+  private _groups: SourcedGroup[];
+
+  private bashTags: string[];
+
+  public oldLoadOrder: Plugin[];
+
+  private _notApplicableString: string;
+
+  public constructor(obj: GameData, l10n: Translator) {
     this.folder = obj.folder || '';
     this.generalMessages = obj.generalMessages || [];
-    this.masterlist = obj.masterlist || {};
+    this.masterlist = obj.masterlist || { revision: '', date: '' };
     this.plugins = obj.plugins || [];
     this.bashTags = obj.bashTags || [];
-    this.groups = obj.groups;
+    this.setGroups(obj.groups);
 
     this.oldLoadOrder = undefined;
 
     this._notApplicableString = l10n.translate('N/A');
   }
 
-  get folder() {
+  public get folder(): string {
     return this._folder;
   }
 
-  set folder(folder) {
+  public set folder(folder) {
     if (folder !== this._folder) {
       document.dispatchEvent(
         new CustomEvent('loot-game-folder-change', {
@@ -42,11 +132,11 @@ export default class Game {
     this._folder = folder;
   }
 
-  get generalMessages() {
+  public get generalMessages(): SimpleMessage[] {
     return this._generalMessages;
   }
 
-  set generalMessages(generalMessages) {
+  public set generalMessages(generalMessages) {
     /* Update the message counts. */
     let oldTotal = 0;
     let newTotal = 0;
@@ -82,7 +172,7 @@ export default class Game {
       newTotal !== oldTotal ||
       newWarns !== oldWarns ||
       newErrs !== oldErrs ||
-      !_.isEqual(this._generalMessages, generalMessages)
+      !isEqual(this._generalMessages, generalMessages)
     ) {
       document.dispatchEvent(
         new CustomEvent('loot-game-global-messages-change', {
@@ -99,11 +189,11 @@ export default class Game {
     this._generalMessages = generalMessages;
   }
 
-  get masterlist() {
+  public get masterlist(): Masterlist {
     return this._masterlist;
   }
 
-  set masterlist(masterlist) {
+  public set masterlist(masterlist) {
     if (
       masterlist !== this._masterlist &&
       (masterlist === undefined ||
@@ -129,11 +219,11 @@ export default class Game {
     this._masterlist = masterlist;
   }
 
-  get plugins() {
+  public get plugins(): Plugin[] {
     return this._plugins;
   }
 
-  set plugins(plugins) {
+  public set plugins(plugins) {
     /* Update plugin and message counts. Unlike for general messages
     it's not worth calculating the count differences, just count
     from zero. */
@@ -194,11 +284,11 @@ export default class Game {
     this._plugins = plugins;
   }
 
-  get groups() {
+  public get groups(): SourcedGroup[] {
     return this._groups;
   }
 
-  set groups(groups) {
+  public setGroups(groups: GameGroups): void {
     if (groups) {
       this._groups = mergeGroups(groups.masterlist, groups.userlist);
     } else {
@@ -218,9 +308,9 @@ export default class Game {
     );
   }
 
-  getContent() {
-    let messages = [];
-    let plugins = [];
+  public getContent(): GameContent {
+    let messages: SimpleMessage[] = [];
+    let plugins: PluginContent[] = [];
 
     if (this.generalMessages) {
       messages = this.generalMessages;
@@ -248,17 +338,17 @@ export default class Game {
     };
   }
 
-  getPluginNames() {
+  public getPluginNames(): string[] {
     return this.plugins.map(plugin => plugin.name);
   }
 
-  getGroupPluginNames(groupName) {
+  public getGroupPluginNames(groupName: string): string[] {
     return this.plugins
       .filter(plugin => plugin.group === groupName)
       .map(plugin => plugin.name);
   }
 
-  setSortedPlugins(plugins) {
+  public setSortedPlugins(plugins: Plugin[]): void {
     this.oldLoadOrder = this.plugins;
 
     this.plugins = plugins.map(plugin => {
@@ -273,11 +363,11 @@ export default class Game {
     });
   }
 
-  applySort() {
+  public applySort(): void {
     this.oldLoadOrder = undefined;
   }
 
-  cancelSort(plugins, generalMessages) {
+  public cancelSort(plugins: Plugin[], generalMessages: SimpleMessage[]): void {
     this.plugins = plugins.reduce((existingPlugins, plugin) => {
       const existingPlugin = this.oldLoadOrder.find(
         item => item.name === plugin.name
@@ -295,7 +385,7 @@ export default class Game {
     this.generalMessages = generalMessages;
   }
 
-  clearMetadata(plugins) {
+  public clearMetadata(plugins: Plugin[]): void {
     /* Need to empty the UI-side user metadata. */
     plugins.forEach(plugin => {
       const existingPlugin = this.plugins.find(
@@ -307,7 +397,7 @@ export default class Game {
     });
   }
 
-  initialiseUI() {
+  public initialiseUI(): void {
     /* Re-initialise autocomplete suggestions. */
     initialiseAutocompleteFilenames(this.getPluginNames());
     initialiseAutocompleteBashTags(this.bashTags);
@@ -318,7 +408,7 @@ export default class Game {
     initialiseGroupsEditor(groupName => this.getGroupPluginNames(groupName));
   }
 
-  static onPluginsChange(evt) {
+  public static onPluginsChange(evt: GamePluginsChangeEvent): void {
     if (!evt.detail.valuesAreTotals) {
       evt.detail.totalMessageNo += parseInt(
         document.getElementById('totalMessageNo').textContent,
@@ -346,40 +436,54 @@ export default class Game {
       );
     }
 
-    document.getElementById('filterTotalMessageNo').textContent =
-      evt.detail.totalMessageNo;
-    document.getElementById('totalMessageNo').textContent =
-      evt.detail.totalMessageNo;
-    document.getElementById('totalWarningNo').textContent =
-      evt.detail.warnMessageNo;
-    document.getElementById('totalErrorNo').textContent =
-      evt.detail.errorMessageNo;
+    document.getElementById(
+      'filterTotalMessageNo'
+    ).textContent = evt.detail.totalMessageNo.toString();
+    document.getElementById(
+      'totalMessageNo'
+    ).textContent = evt.detail.totalMessageNo.toString();
+    document.getElementById(
+      'totalWarningNo'
+    ).textContent = evt.detail.warnMessageNo.toString();
+    document.getElementById(
+      'totalErrorNo'
+    ).textContent = evt.detail.errorMessageNo.toString();
 
-    document.getElementById('filterTotalPluginNo').textContent =
-      evt.detail.totalPluginNo;
-    document.getElementById('totalPluginNo').textContent =
-      evt.detail.totalPluginNo;
-    document.getElementById('activePluginNo').textContent =
-      evt.detail.activePluginNo;
-    document.getElementById('dirtyPluginNo').textContent =
-      evt.detail.dirtyPluginNo;
+    document.getElementById(
+      'filterTotalPluginNo'
+    ).textContent = evt.detail.totalPluginNo.toString();
+    document.getElementById(
+      'totalPluginNo'
+    ).textContent = evt.detail.totalPluginNo.toString();
+    document.getElementById(
+      'activePluginNo'
+    ).textContent = evt.detail.activePluginNo.toString();
+    document.getElementById(
+      'dirtyPluginNo'
+    ).textContent = evt.detail.dirtyPluginNo.toString();
   }
 
-  static ongeneralMessagesChange(evt) {
-    document.getElementById('filterTotalMessageNo').textContent =
+  public static onGeneralMessagesChange(
+    evt: GameGlobalMessagesChangeEvent
+  ): void {
+    document.getElementById('filterTotalMessageNo').textContent = (
       parseInt(
         document.getElementById('filterTotalMessageNo').textContent,
         10
-      ) + evt.detail.totalDiff;
-    document.getElementById('totalMessageNo').textContent =
+      ) + evt.detail.totalDiff
+    ).toString();
+    document.getElementById('totalMessageNo').textContent = (
       parseInt(document.getElementById('totalMessageNo').textContent, 10) +
-      evt.detail.totalDiff;
-    document.getElementById('totalWarningNo').textContent =
+      evt.detail.totalDiff
+    ).toString();
+    document.getElementById('totalWarningNo').textContent = (
       parseInt(document.getElementById('totalWarningNo').textContent, 10) +
-      evt.detail.warningDiff;
-    document.getElementById('totalErrorNo').textContent =
+      evt.detail.warningDiff
+    ).toString();
+    document.getElementById('totalErrorNo').textContent = (
       parseInt(document.getElementById('totalErrorNo').textContent, 10) +
-      evt.detail.errorDiff;
+      evt.detail.errorDiff
+    ).toString();
 
     /* Remove old messages from UI. */
     const generalMessagesList = document
@@ -399,21 +503,25 @@ export default class Game {
     }
 
     /* Update the plugin card list's configured offset. */
+    const cardList = document.getElementById(
+      'pluginCardList'
+    ) as IronListElement;
     const summary = document.getElementById('summary');
     const summaryStyle = getComputedStyle(summary);
-    document.getElementById('pluginCardList').scrollOffset =
+
+    cardList.scrollOffset =
       summary.offsetHeight +
       parseInt(summaryStyle.marginTop, 10) +
       parseInt(summaryStyle.marginBottom, 10);
   }
 
-  static onMasterlistChange(evt) {
+  public static onMasterlistChange(evt: GameMasterlistChangeEvent): void {
     document.getElementById('masterlistRevision').textContent =
       evt.detail.revision;
     document.getElementById('masterlistDate').textContent = evt.detail.date;
   }
 
-  static onGroupsChange(evt) {
+  public static onGroupsChange(evt: GameGroupsChangeEvent): void {
     fillGroupsList(evt.detail.groups);
     updateGroupsEditorState(evt.detail.groups);
   }

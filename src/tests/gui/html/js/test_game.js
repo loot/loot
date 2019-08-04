@@ -1,6 +1,6 @@
 /* eslint-disable no-self-assign */
 
-import Game from '../../../../gui/html/js/game.js';
+import Game from '../../../../gui/html/js/game';
 import { Plugin } from '../../../../gui/html/js/plugin';
 
 jest.mock('../../../../gui/html/js/dom');
@@ -64,9 +64,9 @@ describe('Game', () => {
       expect(game.generalMessages).toEqual(['test']);
     });
 
-    test('should set masterlist to an empty object by default', () => {
+    test('should set masterlist to have empty revision and date strings by default', () => {
       const game = new Game({}, l10n);
-      expect(game.masterlist).toEqual({});
+      expect(game.masterlist).toEqual({ revision: '', date: '' });
     });
 
     test("should set masterlist to the object's value if defined", () => {
@@ -303,6 +303,79 @@ describe('Game', () => {
       game.generalMessages = [{ type: 'warn' }, { type: 'error' }];
 
       game.plugins = newPlugins;
+    });
+  });
+
+  describe('groups', () => {
+    test("get should return the game's groups", () => {
+      const groups = {
+        masterlist: [{ name: 'a' }],
+        userlist: [{ name: 'b' }]
+      };
+      const game = new Game({ groups }, l10n);
+
+      expect(game.groups).toStrictEqual([
+        { name: 'a', after: [], isUserAdded: false },
+        { name: 'b', after: [], isUserAdded: true }
+      ]);
+    });
+
+    test('set should error', () => {
+      const game = new Game({}, l10n);
+
+      expect(() => {
+        game.groups = [];
+      }).toThrow(TypeError);
+    });
+  });
+
+  describe('#setGroups()', () => {
+    let handleEvent;
+
+    afterEach(() => {
+      document.removeEventListener('loot-game-groups-change', handleEvent);
+    });
+
+    test('should set groups to the default group if no groups are given', () => {
+      const game = new Game({}, l10n);
+
+      game.setGroups();
+
+      expect(game.groups).toStrictEqual([
+        { name: 'default', after: [], isUserAdded: false }
+      ]);
+    });
+
+    test('should merge the given masterlist and userlist groups arrays', () => {
+      const game = new Game({}, l10n);
+
+      const groups = {
+        masterlist: [{ name: 'a' }],
+        userlist: [{ name: 'b' }]
+      };
+
+      game.setGroups(groups);
+
+      expect(game.groups).toStrictEqual([
+        { name: 'a', after: [], isUserAdded: false },
+        { name: 'b', after: [], isUserAdded: true }
+      ]);
+    });
+
+    test('should dispatch an event', done => {
+      handleEvent = () => {
+        done();
+      };
+      document.addEventListener('loot-game-groups-change', handleEvent);
+
+      const game = new Game({}, l10n);
+
+      const groups = {
+        masterlist: [{ name: 'a' }],
+        userlist: [{ name: 'b' }]
+      };
+
+      game.setGroups(groups);
     });
   });
 
