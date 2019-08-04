@@ -84,7 +84,7 @@ interface PluginItemContentChangeEvent extends CustomEvent {
     group: string;
     isEditorOpen: boolean;
     hasUserEdits: boolean;
-    loadOrderIndex: number;
+    loadOrderIndex?: number;
     isLightMaster: boolean;
   };
 }
@@ -282,13 +282,13 @@ export class Plugin {
 
   private _group: string;
 
-  private _loadOrderIndex: number;
+  private _loadOrderIndex?: number;
 
   private _cleanedWith: string;
 
-  public masterlist: PluginMetadata;
+  public masterlist?: PluginMetadata;
 
-  private _userlist: PluginMetadata;
+  private _userlist?: PluginMetadata;
 
   public id: string;
 
@@ -368,18 +368,6 @@ export class Plugin {
     if (plugin.userlist === undefined) {
       this.userlist = undefined;
     }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static fromJson(_propertyName: string, propertyValue: any): any {
-    if (
-      propertyValue !== null &&
-      Object.prototype.hasOwnProperty.call(propertyValue, 'name') &&
-      Object.prototype.hasOwnProperty.call(propertyValue, 'isEmpty')
-    ) {
-      return new Plugin(propertyValue);
-    }
-    return propertyValue;
   }
 
   public static tagFromRowData(rowData: TagRowData): Tag {

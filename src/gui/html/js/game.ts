@@ -13,46 +13,16 @@ import {
 import Filters from './filters';
 import { Plugin } from './plugin';
 import Translator from './translator';
-import { SimpleMessage, SourcedGroup, RawGroup, Tag } from './interfaces';
-
-interface GameContent {
-  messages: SimpleMessage[];
-  plugins: PluginContent[];
-}
-
-interface GameData {
-  folder: string;
-  generalMessages: SimpleMessage[];
-  masterlist: Masterlist;
-  groups: GameGroups;
-  plugins: Plugin[];
-  bashTags: string[];
-}
-
-interface Masterlist {
-  revision: string;
-  date: string;
-}
-
-interface GameGroups {
-  masterlist: RawGroup[];
-  userlist: RawGroup[];
-}
-
-interface PluginContent {
-  name: string;
-  crc: number;
-  version: string;
-  isActive: boolean;
-  isEmpty: boolean;
-  loadsArchive: boolean;
-  isDirty: boolean;
-
-  group: string;
-  messages: SimpleMessage[];
-  currentTags: Tag[];
-  suggestedTags: Tag[];
-}
+import {
+  GameContent,
+  GameData,
+  PluginContent,
+  SimpleMessage,
+  SourcedGroup,
+  Masterlist,
+  GameGroups,
+  DerivedPluginMetadata
+} from './interfaces';
 
 interface GamePluginsChangeEvent extends CustomEvent {
   detail: {
@@ -107,7 +77,7 @@ export default class Game {
     this.folder = obj.folder || '';
     this.generalMessages = obj.generalMessages || [];
     this.masterlist = obj.masterlist || { revision: '', date: '' };
-    this.plugins = obj.plugins || [];
+    this.plugins = obj.plugins ? obj.plugins.map(p => new Plugin(p)) : [];
     this.bashTags = obj.bashTags || [];
     this.setGroups(obj.groups);
 
@@ -348,7 +318,7 @@ export default class Game {
       .map(plugin => plugin.name);
   }
 
-  public setSortedPlugins(plugins: Plugin[]): void {
+  public setSortedPlugins(plugins: DerivedPluginMetadata[]): void {
     this.oldLoadOrder = this.plugins;
 
     this.plugins = plugins.map(plugin => {
@@ -367,7 +337,10 @@ export default class Game {
     this.oldLoadOrder = undefined;
   }
 
-  public cancelSort(plugins: Plugin[], generalMessages: SimpleMessage[]): void {
+  public cancelSort(
+    plugins: DerivedPluginMetadata[],
+    generalMessages: SimpleMessage[]
+  ): void {
     this.plugins = plugins.reduce((existingPlugins, plugin) => {
       const existingPlugin = this.oldLoadOrder.find(
         item => item.name === plugin.name
@@ -385,7 +358,7 @@ export default class Game {
     this.generalMessages = generalMessages;
   }
 
-  public clearMetadata(plugins: Plugin[]): void {
+  public clearMetadata(plugins: DerivedPluginMetadata[]): void {
     /* Need to empty the UI-side user metadata. */
     plugins.forEach(plugin => {
       const existingPlugin = this.plugins.find(

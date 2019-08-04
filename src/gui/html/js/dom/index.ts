@@ -10,7 +10,13 @@ import LootPluginCard from '../../elements/loot-plugin-card';
 import LootGroupsEditor from '../../elements/loot-groups-editor';
 import LootSearchToolbar from '../../elements/loot-search-toolbar';
 import LootDropdownMenu from '../../elements/loot-dropdown-menu';
-import { Game, Group, Language, SourcedGroup } from '../interfaces';
+import {
+  Game,
+  Group,
+  Language,
+  LootSettings,
+  SourcedGroup
+} from '../interfaces';
 import {
   createGameItem,
   createGameTypeItem,
@@ -18,38 +24,11 @@ import {
   createLanguageItem,
   createMessageItem
 } from './createItem';
+import { Plugin } from '../plugin';
 
 interface Message {
   type: string;
   content: string;
-}
-
-interface GameSettings {
-  type: string;
-  name: string;
-  master: string;
-  registry: string;
-  folder: string;
-  repo: string;
-  branch: string;
-  path: string;
-  localPath: string;
-}
-
-interface Filters {
-  [id: string]: boolean;
-}
-
-interface LootSettings {
-  game: string;
-  games: GameSettings[];
-  lastVersion: string;
-  language: string;
-  languages: Language[];
-  enableDebugLogging: boolean;
-  updateMasterlist: boolean;
-  enableLootUpdateCheck: boolean;
-  filters: Filters;
 }
 
 function getElementInTableRowTemplate(

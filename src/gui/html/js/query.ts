@@ -6,7 +6,7 @@ declare global {
 
 export default function query(
   requestName: string,
-  payload: object
+  payload?: object
 ): Promise<string> {
   if (!requestName) {
     throw new Error('No request name passed');

@@ -9,8 +9,9 @@ jest.mock('../../../../gui/html/js/plugin', () => ({
   crcToString: jest.fn(),
   Plugin: jest
     .fn()
-    .mockImplementation(({ name, crc, isActive, loadOrderIndex }) => ({
+    .mockImplementation(({ name, group, crc, isActive, loadOrderIndex }) => ({
       name,
+      group,
       crc,
       isActive,
       loadOrderIndex,
@@ -79,9 +80,12 @@ describe('Game', () => {
       expect(game.plugins).toEqual([]);
     });
 
-    test("should set plugins to the object's value if defined", () => {
+    test("should construct plugins from the object's plugins value if defined", () => {
       const game = new Game({ plugins: [{ name: 'test' }] }, l10n);
-      expect(game.plugins).toEqual([{ name: 'test', cardZIndex: 1 }]);
+      expect(game.plugins.length).toBe(1);
+      expect(game.plugins[0]).toHaveProperty('update');
+      expect(game.plugins[0].name).toBe('test');
+      expect(game.plugins[0].cardZIndex).toBe(1);
     });
 
     test('should set loadOrder to undefined by default', () => {

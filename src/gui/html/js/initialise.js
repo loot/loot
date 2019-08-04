@@ -48,7 +48,7 @@ import {
   onSearchBegin,
   onSearchEnd,
   onFolderChange
-} from './events.js';
+} from './events';
 import { closeProgress, showProgress } from './dialog';
 import {
   onOpenGroupsEditor,
@@ -322,32 +322,33 @@ function setSettings(appData) {
 }
 
 function setGameData(appData) {
-  return query('getGameData').then(result => {
-    const game = JSON.parse(result, Plugin.fromJson);
-    appData.game = new Game(game, appData.l10n);
+  return query('getGameData')
+    .then(JSON.parse)
+    .then(result => {
+      appData.game = new Game(result, appData.l10n);
 
-    appData.game.initialiseUI();
-    appData.filters.load(appData.settings.filters);
+      appData.game.initialiseUI();
+      appData.filters.load(appData.settings.filters);
 
-    /* Initialise the lists before checking if any filters need to be applied.
-      This causes the UI to be initialised faster thanks to scheduling
-      behaviour. */
-    initialiseVirtualLists(appData.game.plugins);
-    if (appData.filters.areAnyFiltersActive()) {
-      /* Schedule applying the filters instead of applying them immediately.
-        This improves the UI initialisation speed, and is quick enough that
-        the lists aren't visible pre-filtration. */
-      setTimeout(
-        plugins => {
-          appData.filters.apply(plugins);
-        },
-        0,
-        appData.game.plugins
-      );
-    }
+      /* Initialise the lists before checking if any filters need to be applied.
+        This causes the UI to be initialised faster thanks to scheduling
+        behaviour. */
+      initialiseVirtualLists(appData.game.plugins);
+      if (appData.filters.areAnyFiltersActive()) {
+        /* Schedule applying the filters instead of applying them immediately.
+          This improves the UI initialisation speed, and is quick enough that
+          the lists aren't visible pre-filtration. */
+        setTimeout(
+          plugins => {
+            appData.filters.apply(plugins);
+          },
+          0,
+          appData.game.plugins
+        );
+      }
 
-    closeProgress();
-  });
+      closeProgress();
+    });
 }
 
 function checkForLootUpdate() {

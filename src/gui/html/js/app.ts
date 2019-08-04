@@ -48,7 +48,7 @@ import '../elements/loot-search-toolbar.js';
 /* Import the modules actually used in this script. */
 import initialise from './initialise.js';
 import { showProgress } from './dialog';
-import { onQuit } from './events.js';
+import { onQuit } from './events';
 
 window.loot = window.loot || {};
 // These are assumed to exist by C++ callbacks.

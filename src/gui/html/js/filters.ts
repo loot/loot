@@ -4,21 +4,15 @@ import handlePromiseError from './handlePromiseError';
 import query from './query';
 import Translator from './translator';
 import { Plugin } from './plugin';
-import { SimpleMessage, DerivedPluginMetadata } from './interfaces';
+import {
+  SimpleMessage,
+  DerivedPluginMetadata,
+  FilterStates,
+  MainContent
+} from './interfaces';
 import LootPluginCard from '../elements/loot-plugin-card';
 import LootSearchToolbar from '../elements/loot-search-toolbar';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
-
-interface FilterStates {
-  hideMessagelessPlugins: boolean;
-  hideInactivePlugins: boolean;
-  hideVersionNumbers: boolean;
-  hideCRCs: boolean;
-  hideBashTags: boolean;
-  hideAllPluginMessages: boolean;
-  hideNotes: boolean;
-  hideDoNotCleanMessages: boolean;
-}
 
 interface PluginData {
   metadata: DerivedPluginMetadata;
@@ -28,11 +22,6 @@ interface PluginData {
 interface GetConflictingPluginsQueryResponse {
   generalMessages: SimpleMessage[];
   plugins: PluginData[];
-}
-
-interface MainContent {
-  generalMessages: SimpleMessage[];
-  plugins: DerivedPluginMetadata[];
 }
 
 export default class Filters implements FilterStates {

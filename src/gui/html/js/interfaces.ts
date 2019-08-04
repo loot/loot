@@ -96,3 +96,82 @@ export interface DerivedPluginMetadata {
   masterlist?: PluginMetadata;
   userlist?: PluginMetadata;
 }
+
+export interface GameSettings {
+  type: string;
+  name: string;
+  master: string;
+  registry: string;
+  folder: string;
+  repo: string;
+  branch: string;
+  path: string;
+  localPath: string;
+}
+
+export interface FilterStates {
+  hideMessagelessPlugins: boolean;
+  hideInactivePlugins: boolean;
+  hideVersionNumbers: boolean;
+  hideCRCs: boolean;
+  hideBashTags: boolean;
+  hideAllPluginMessages: boolean;
+  hideNotes: boolean;
+  hideDoNotCleanMessages: boolean;
+}
+
+export interface LootSettings {
+  game: string;
+  games: GameSettings[];
+  lastVersion: string;
+  language: string;
+  languages: Language[];
+  enableDebugLogging: boolean;
+  updateMasterlist: boolean;
+  enableLootUpdateCheck: boolean;
+  filters: FilterStates;
+}
+
+export interface PluginContent {
+  name: string;
+  crc: number;
+  version: string;
+  isActive: boolean;
+  isEmpty: boolean;
+  loadsArchive: boolean;
+  isDirty: boolean;
+
+  group: string;
+  messages: SimpleMessage[];
+  currentTags: Tag[];
+  suggestedTags: Tag[];
+}
+
+export interface GameContent {
+  messages: SimpleMessage[];
+  plugins: PluginContent[];
+}
+
+export interface GameData {
+  folder: string;
+  generalMessages: SimpleMessage[];
+  masterlist: Masterlist;
+  groups: GameGroups;
+  plugins: DerivedPluginMetadata[];
+  bashTags: string[];
+}
+
+export interface Masterlist {
+  revision: string;
+  date: string;
+}
+
+export interface GameGroups {
+  masterlist: RawGroup[];
+  userlist: RawGroup[];
+}
+
+export interface MainContent {
+  generalMessages: SimpleMessage[];
+  plugins: DerivedPluginMetadata[];
+}

@@ -414,29 +414,6 @@ describe('Plugin', () => {
     });
   });
 
-  describe('#fromJson()', () => {
-    test('should return the value object if the JSON object does not have name and isEmpty fields', () => {
-      const testInputObj = {
-        name: 'test',
-        crc: 0xdeadbeef
-      };
-      const testInputJson = JSON.stringify(testInputObj);
-
-      expect(JSON.parse(testInputJson, Plugin.fromJson)).toEqual(testInputObj);
-    });
-
-    test('should return a Plugin object if the JSON object has name and isEmpty fields', () => {
-      const testInputObj = {
-        name: 'test',
-        crc: 0xdeadbeef,
-        isEmpty: false
-      };
-      const testInputJson = JSON.stringify(testInputObj);
-
-      expect(JSON.parse(testInputJson, Plugin.fromJson)).toBeInstanceOf(Plugin);
-    });
-  });
-
   describe('#tagFromRowData()', () => {
     test('should throw if passed nothing', () => {
       expect(() => {
