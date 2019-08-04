@@ -2,4 +2,5 @@
 // because it gets added at runtime as part of its Polymer element init.
 export default interface LootDropdownMenu extends HTMLElement {
   value: string;
+  label: string;
 }

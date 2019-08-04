@@ -79,7 +79,7 @@ import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
 import query from './query';
 import State from './state';
-import translateStaticText from './translateStaticText.js';
+import translateStaticText from './translateStaticText';
 import Translator from './translator';
 import updateExists from './updateExists';
 

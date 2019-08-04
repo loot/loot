@@ -1,8 +1,18 @@
-function getTemplate(templateId) {
-  return document.getElementById(templateId).content;
+import { PaperInputElement } from '@polymer/paper-input/paper-input';
+import Translator from './translator';
+import LootGroupsEditor from '../elements/loot-groups-editor';
+import LootDropdownMenu from '../elements/loot-dropdown-menu';
+
+interface LootVersion {
+  release: string;
+  build: string;
 }
 
-function translatePluginCard(l10n, element) {
+function getTemplate(templateId: string): DocumentFragment {
+  return (document.getElementById(templateId) as HTMLTemplateElement).content;
+}
+
+function translatePluginCard(l10n: Translator, element: ShadowRoot): void {
   element.querySelector(
     'paper-tooltip[for=activeTick]'
   ).textContent = l10n.translate('Active Plugin');
@@ -33,7 +43,7 @@ function translatePluginCard(l10n, element) {
   ).lastChild.textContent = l10n.translate('Clear User Metadata');
 }
 
-function translatePluginCardInstance(l10n) {
+function translatePluginCardInstance(l10n: Translator): void {
   const elements = document.getElementById('pluginCardList').children;
 
   if (elements.length > 1 && elements[1].tagName === 'LOOT-PLUGIN-CARD') {
@@ -41,7 +51,7 @@ function translatePluginCardInstance(l10n) {
   }
 }
 
-function translatePluginEditor(l10n) {
+function translatePluginEditor(l10n: Translator): void {
   /* Plugin editor template. */
   const pluginEditor = document.getElementById('editor');
   const pluginEditorShadow = pluginEditor.shadowRoot;
@@ -198,7 +208,7 @@ function translatePluginEditor(l10n) {
   ).textContent = l10n.translate('Cancel');
 }
 
-function translatePluginListItem(l10n, element) {
+function translatePluginListItem(l10n: Translator, element: ShadowRoot): void {
   element.querySelector('#groupTooltip').textContent = l10n.translate('Group');
   element.querySelector(
     'paper-tooltip[for=hasUserEdits]'
@@ -208,7 +218,7 @@ function translatePluginListItem(l10n, element) {
   ).textContent = l10n.translate('Editor Is Open');
 }
 
-function translatePluginListItemInstance(l10n) {
+function translatePluginListItemInstance(l10n: Translator): void {
   const elements = document.getElementById('cardsNav').children;
 
   if (elements.length > 1 && elements[1].tagName === 'LOOT-PLUGIN-ITEM') {
@@ -216,9 +226,9 @@ function translatePluginListItemInstance(l10n) {
   }
 }
 
-function translateFileRowTemplate(l10n) {
+function translateFileRowTemplate(l10n: Translator): void {
   /* File row template */
-  const fileRow = getTemplate('fileRow', 'editable-table-rows');
+  const fileRow = getTemplate('fileRow');
 
   fileRow
     .querySelector('.name')
@@ -228,9 +238,9 @@ function translateFileRowTemplate(l10n) {
   );
 }
 
-function translateMessageRowTemplate(l10n) {
+function translateMessageRowTemplate(l10n: Translator): void {
   /* Message row template */
-  const messageRow = getTemplate('messageRow', 'editable-table-rows');
+  const messageRow = getTemplate('messageRow');
 
   messageRow.querySelector('.type').children[0].textContent = l10n.translate(
     'Note'
@@ -252,9 +262,9 @@ function translateMessageRowTemplate(l10n) {
   );
 }
 
-function translateTagRowTemplate(l10n) {
+function translateTagRowTemplate(l10n: Translator): void {
   /* Tag row template */
-  const tagRow = getTemplate('tagRow', 'editable-table-rows');
+  const tagRow = getTemplate('tagRow');
 
   tagRow.querySelector('.type').children[0].textContent = l10n.translate('Add');
   tagRow.querySelector('.type').children[1].textContent = l10n.translate(
@@ -268,9 +278,9 @@ function translateTagRowTemplate(l10n) {
   );
 }
 
-function translateDirtyInfoRowTemplate(l10n) {
+function translateDirtyInfoRowTemplate(l10n: Translator): void {
   /* Dirty Info row template */
-  const dirtyInfoRow = getTemplate('dirtyInfoRow', 'editable-table-rows');
+  const dirtyInfoRow = getTemplate('dirtyInfoRow');
 
   dirtyInfoRow
     .querySelector('.crc')
@@ -295,9 +305,9 @@ function translateDirtyInfoRowTemplate(l10n) {
   );
 }
 
-function translateCleanInfoRowTemplate(l10n) {
+function translateCleanInfoRowTemplate(l10n: Translator): void {
   /* Dirty Info row template */
-  const cleanInfoRow = getTemplate('cleanInfoRow', 'editable-table-rows');
+  const cleanInfoRow = getTemplate('cleanInfoRow');
 
   cleanInfoRow
     .querySelector('.crc')
@@ -313,9 +323,9 @@ function translateCleanInfoRowTemplate(l10n) {
   );
 }
 
-function translateLocationRowTemplate(l10n) {
+function translateLocationRowTemplate(l10n: Translator): void {
   /* Location row template */
-  const locationRow = getTemplate('locationRow', 'editable-table-rows');
+  const locationRow = getTemplate('locationRow');
 
   locationRow
     .querySelector('.link')
@@ -325,9 +335,9 @@ function translateLocationRowTemplate(l10n) {
   );
 }
 
-function translateGameRowTemplate(l10n) {
+function translateGameRowTemplate(l10n: Translator): void {
   /* Game row template */
-  const gameRow = getTemplate('gameRow', 'editable-table-rows');
+  const gameRow = getTemplate('gameRow');
 
   gameRow
     .querySelector('.name')
@@ -340,16 +350,16 @@ function translateGameRowTemplate(l10n) {
   );
 }
 
-function translateNewRowTemplate(l10n) {
+function translateNewRowTemplate(l10n: Translator): void {
   /* New row template */
-  const newRow = getTemplate('newRow', 'editable-table-rows');
+  const newRow = getTemplate('newRow');
 
   newRow.querySelector('paper-tooltip').textContent = l10n.translate(
     'Add New Row'
   );
 }
 
-function translateMainToolbar(l10n) {
+function translateMainToolbar(l10n: Translator): void {
   /* Main toolbar */
   const mainToolbar = document.getElementById('mainToolbar');
   mainToolbar.querySelector(
@@ -404,22 +414,25 @@ function translateMainToolbar(l10n) {
   );
 
   /* Search bar */
-  document
+  (document
     .getElementById('searchBar')
-    .shadowRoot.getElementById('search').label = l10n.translate('Search cards');
+    .shadowRoot.getElementById(
+      'search'
+    ) as PaperInputElement).label = l10n.translate('Search cards');
 }
 
-function updateDropdownSelectedItemText(dropdownElement) {
+function updateDropdownSelectedItemText(dropdownElement: HTMLElement): void {
   const paperDropdownMenu = dropdownElement.shadowRoot.querySelector(
     'paper-dropdown-menu'
   );
   if (paperDropdownMenu.selectedItem) {
-    paperDropdownMenu.shadowRoot.querySelector('paper-input').value =
-      paperDropdownMenu.selectedItem.textContent;
+    paperDropdownMenu.shadowRoot.querySelector(
+      'paper-input'
+    ).value = (paperDropdownMenu.selectedItem as HTMLElement).textContent;
   }
 }
 
-function translateSidebar(l10n) {
+function translateSidebar(l10n: Translator): void {
   /* Nav items */
   document.getElementById(
     'sidebarTabs'
@@ -436,12 +449,13 @@ function translateSidebar(l10n) {
     ).textContent = l10n.translate(
     'Press Enter or click outside the input to set the filter.'
   );
-  document.getElementById('contentFilter').label = l10n.translate(
+  const contentFilter = document.getElementById(
+    'contentFilter'
+  ) as PaperInputElement;
+  contentFilter.label = l10n.translate(
     'Show only plugins with cards that contain'
   );
-  document.getElementById('contentFilter').placeholder = l10n.translate(
-    'No text specified'
-  );
+  contentFilter.placeholder = l10n.translate('No text specified');
 
   /* Filters */
   document.getElementById('hideVersionNumbers').textContent = l10n.translate(
@@ -467,7 +481,9 @@ function translateSidebar(l10n) {
     'hideMessagelessPlugins'
   ).textContent = l10n.translate('Hide messageless plugins');
 
-  const conflictsFilter = document.getElementById('conflictsFilter');
+  const conflictsFilter = document.getElementById(
+    'conflictsFilter'
+  ) as LootDropdownMenu;
   conflictsFilter.label = l10n.translate('Show only conflicting plugins for');
   conflictsFilter.firstElementChild.textContent = l10n.translate(
     'No plugin selected'
@@ -483,7 +499,7 @@ function translateSidebar(l10n) {
   );
 }
 
-function translateSummaryCard(l10n) {
+function translateSummaryCard(l10n: Translator): void {
   /* Summary */
   document.getElementById(
     'summary'
@@ -514,7 +530,7 @@ function translateSummaryCard(l10n) {
   ).previousElementSibling.textContent = l10n.translate('Total Plugins');
 }
 
-function translateSettingsDialog(l10n) {
+function translateSettingsDialog(l10n: Translator): void {
   /* Settings dialog */
   document
     .getElementById('settingsDialog')
@@ -600,7 +616,7 @@ function translateSettingsDialog(l10n) {
     .getElementsByClassName('cancel')[0].textContent = l10n.translate('Cancel');
 }
 
-function translateFirstRunDialog(l10n, version) {
+function translateFirstRunDialog(l10n: Translator, version: LootVersion): void {
   /* First-run dialog */
   const firstRun = document.getElementById('firstRun');
   firstRun.querySelector('h2').textContent = l10n.translate('First-Time Tips');
@@ -646,7 +662,7 @@ function translateFirstRunDialog(l10n, version) {
   );
 }
 
-function translateAboutDialog(l10n, version) {
+function translateAboutDialog(l10n: Translator, version: LootVersion): void {
   const about = document.getElementById('about');
   about.querySelector('h2').textContent = l10n.translate('About LOOT');
 
@@ -665,11 +681,14 @@ function translateAboutDialog(l10n, version) {
   );
 }
 
-export default function translateStaticText(l10n, version) {
+export default function translateStaticText(
+  l10n: Translator,
+  version: LootVersion
+): void {
   translatePluginCardInstance(l10n);
   translatePluginEditor(l10n);
   translatePluginListItemInstance(l10n);
-  document.getElementById('groupsEditor').localise(l10n);
+  (document.getElementById('groupsEditor') as LootGroupsEditor).localise(l10n);
 
   translateFileRowTemplate(l10n);
   translateMessageRowTemplate(l10n);
