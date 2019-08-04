@@ -1,5 +1,7 @@
-import marked from 'marked/marked.min';
+import * as marked from 'marked';
 
+import { IronListElement } from '@polymer/iron-list';
+import { PaperCheckboxElement } from '@polymer/paper-checkbox';
 import {
   askQuestion,
   closeProgress,
@@ -22,54 +24,132 @@ import Game from './game';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
 import query from './query';
+import {
+  FilterStates,
+  GameContent,
+  GameData,
+  MainContent,
+  GameSettings,
+  DerivedPluginMetadata,
+  GameGroups
+} from './interfaces';
+import EditableTable from '../elements/editable-table';
+import LootGroupsEditor from '../elements/loot-groups-editor';
+import LootPluginCard from '../elements/loot-plugin-card';
+import LootPluginItem from '../elements/loot-plugin-item';
+import LootPluginEditor from '../elements/loot-plugin-editor';
+import LootDropdownMenu from '../elements/loot-dropdown-menu';
+import LootSearchToolbar from '../elements/loot-search-toolbar';
 
-// Depends on the following globals:
-// - loot.filters
-// - loot.game
-// - loot.l10n
-// - loot.settings
-// - loot.state
-// - loot.installedGames
+interface ClearAllMetadataResponse {
+  plugins: DerivedPluginMetadata[];
+}
 
-export function onSidebarFilterToggle(evt) {
-  loot.filters[evt.target.id] = evt.target.checked;
+interface GetInstalledGamesResponse {
+  installedGames: string[];
+}
+
+interface PaperCheckboxChangeEvent extends CustomEvent {
+  target: EventTarget & {
+    id: keyof FilterStates;
+    checked: boolean;
+  };
+}
+
+interface PaperInputChangeEvent extends CustomEvent {
+  target: EventTarget & { value: string };
+}
+
+interface LootDropdownMenuChangeEvent extends CustomEvent {
+  currentTarget: EventTarget & { value: string };
+  target: EventTarget & { value: string };
+}
+
+interface LootDropdownMenuSelectEvent extends CustomEvent {
+  detail: { item: Element };
+}
+
+interface OpenReadmeEvent extends CustomEvent {
+  detail: { relativeFilePath?: string };
+}
+
+interface IronOverlayClosedEvent extends CustomEvent {
+  target: EventTarget & Element;
+  detail: { confirmed: boolean };
+}
+
+interface LootPluginEditorOpenEvent extends CustomEvent {
+  target: EventTarget & { data: Plugin };
+}
+
+interface LootPluginEditorCloseEvent extends CustomEvent {
+  target: EventTarget & LootPluginEditor;
+}
+
+interface LootCopyMetadataEvent extends CustomEvent {
+  target: EventTarget & LootPluginCard;
+}
+
+interface LootClearMetadataEvent extends CustomEvent {
+  target: EventTarget & LootPluginCard;
+}
+
+interface LootSearchBeginEvent extends CustomEvent {
+  target: EventTarget & LootSearchToolbar;
+}
+
+interface LootGameFolderChangeEvent extends CustomEvent {
+  detail: { folder: string };
+}
+
+export function onSidebarFilterToggle(evt: PaperCheckboxChangeEvent): void {
+  window.loot.filters[evt.target.id] = evt.target.checked;
 
   const filter = {
     name: evt.target.id,
     state: evt.target.checked
   };
   query('saveFilterState', { filter }).catch(handlePromiseError);
-  loot.filters.apply(loot.game.plugins);
+  window.loot.filters.apply(window.loot.game.plugins);
 }
-export function onContentFilter(evt) {
-  loot.filters.contentSearchString = evt.target.value;
-  loot.filters.apply(loot.game.plugins);
+
+export function onContentFilter(evt: PaperInputChangeEvent): void {
+  window.loot.filters.contentSearchString = evt.target.value;
+  window.loot.filters.apply(window.loot.game.plugins);
 }
-export function onConflictsFilter(evt) {
+
+export function onConflictsFilter(evt: LootDropdownMenuChangeEvent): void {
   /* evt.currentTarget.value is the name of the target plugin, or an empty string
      if the filter has been deactivated. */
   if (evt.currentTarget.value) {
     /* Now get conflicts for the plugin. */
-    showProgress(loot.l10n.translate('Identifying conflicting plugins...'));
-    loot.filters
+    showProgress(
+      window.loot.l10n.translate('Identifying conflicting plugins...')
+    );
+    window.loot.filters
       .activateConflictsFilter(evt.currentTarget.value)
       .then(response => {
-        loot.game.generalMessages = response.generalMessages;
-        loot.game.plugins = loot.game.plugins.reduce((plugins, plugin) => {
-          const responsePlugin = response.plugins.find(
-            item => item.name === plugin.name
-          );
-          if (responsePlugin) {
-            plugin.update(responsePlugin);
-            plugins.push(plugin);
-          }
-          return plugins;
-        }, []);
+        window.loot.game.generalMessages = response.generalMessages;
+        window.loot.game.plugins = window.loot.game.plugins.reduce(
+          (plugins, plugin) => {
+            const responsePlugin = response.plugins.find(
+              item => item.name === plugin.name
+            );
+            if (responsePlugin) {
+              plugin.update(responsePlugin);
+              plugins.push(plugin);
+            }
+            return plugins;
+          },
+          []
+        );
 
-        loot.filters.apply(loot.game.plugins);
+        window.loot.filters.apply(window.loot.game.plugins);
 
         /* Scroll to the target plugin */
-        const list = document.getElementById('pluginCardList');
+        const list = document.getElementById(
+          'pluginCardList'
+        ) as IronListElement;
         const index = list.items.findIndex(
           item => item.name === evt.target.value
         );
@@ -79,27 +159,28 @@ export function onConflictsFilter(evt) {
       })
       .catch(handlePromiseError);
   } else {
-    loot.filters.deactivateConflictsFilter();
-    loot.filters.apply(loot.game.plugins);
+    window.loot.filters.deactivateConflictsFilter();
+    window.loot.filters.apply(window.loot.game.plugins);
   }
 }
 
-export function onChangeGame(evt) {
+export function onChangeGame(evt: LootDropdownMenuSelectEvent): void {
   if (
-    evt.detail.item.getAttribute('value') === loot.game.folder ||
-    loot.game.folder.length === 0
+    evt.detail.item.getAttribute('value') === window.loot.game.folder ||
+    window.loot.game.folder.length === 0
   ) {
     // Game folder length is zero if LOOT is being initalised.
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
   query('changeGame', { gameFolder: evt.detail.item.getAttribute('value') })
-    .then(result => {
+    .then(JSON.parse)
+    .then((result: GameData) => {
       /* Filters should be re-applied on game change, except the conflicts
        filter. Don't need to deactivate the others beforehand. Strictly not
        deactivating the conflicts filter either, just resetting it's value.
        */
-      loot.filters.deactivateConflictsFilter();
+      window.loot.filters.deactivateConflictsFilter();
 
       /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
@@ -110,40 +191,41 @@ export function onChangeGame(evt) {
         generalMessages.removeChild(generalMessages.firstElementChild);
       }
 
-      /* Parse the data sent from C++. */
-      const gameInfo = JSON.parse(result, Plugin.fromJson);
-      loot.game = new Game(gameInfo, loot.l10n);
+      window.loot.game = new Game(result, window.loot.l10n);
 
-      loot.game.initialiseUI();
+      window.loot.game.initialiseUI();
 
       /* Now update virtual lists. */
-      if (loot.filters.areAnyFiltersActive()) {
-        loot.filters.apply(loot.game.plugins);
+      if (window.loot.filters.areAnyFiltersActive()) {
+        window.loot.filters.apply(window.loot.game.plugins);
       } else {
-        initialiseVirtualLists(loot.game.plugins);
+        initialiseVirtualLists(window.loot.game.plugins);
       }
 
       closeProgress();
     })
     .catch(handlePromiseError);
 }
+
 /* Masterlist update process, minus progress dialog. */
-function updateMasterlist() {
-  showProgress(loot.l10n.translate('Updating and parsing masterlist...'));
+function updateMasterlist(): Promise<void> {
+  showProgress(
+    window.loot.l10n.translate('Updating and parsing masterlist...')
+  );
   return query('updateMasterlist')
     .then(JSON.parse)
-    .then(result => {
+    .then((result: GameData) => {
       if (result) {
         /* Update JS variables. */
-        loot.game.masterlist = result.masterlist;
-        loot.game.generalMessages = result.generalMessages;
-        loot.game.setGroups(result.groups);
+        window.loot.game.masterlist = result.masterlist;
+        window.loot.game.generalMessages = result.generalMessages;
+        window.loot.game.setGroups(result.groups);
 
         /* Update Bash Tag autocomplete suggestions. */
         initialiseAutocompleteBashTags(result.bashTags);
 
         result.plugins.forEach(resultPlugin => {
-          const existingPlugin = loot.game.plugins.find(
+          const existingPlugin = window.loot.game.plugins.find(
             plugin => plugin.name === resultPlugin.name
           );
           if (existingPlugin) {
@@ -152,57 +234,58 @@ function updateMasterlist() {
         });
 
         showNotification(
-          loot.l10n.translateFormatted(
+          window.loot.l10n.translateFormatted(
             'Masterlist updated to revision %s.',
-            loot.game.masterlist.revision
+            window.loot.game.masterlist.revision
           )
         );
       } else {
         showNotification(
-          loot.l10n.translate('No masterlist update was necessary.')
+          window.loot.l10n.translate('No masterlist update was necessary.')
         );
       }
     })
     .catch(handlePromiseError);
 }
-export function onUpdateMasterlist() {
+export function onUpdateMasterlist(): void {
   updateMasterlist()
     .then(() => {
       closeProgress();
     })
     .catch(handlePromiseError);
 }
-export function onSortPlugins() {
-  if (loot.filters.deactivateConflictsFilter()) {
+
+export function onSortPlugins(): Promise<void> {
+  if (window.loot.filters.deactivateConflictsFilter()) {
     /* Conflicts filter was undone, update the displayed cards. */
-    loot.filters.apply(loot.game.plugins);
+    window.loot.filters.apply(window.loot.game.plugins);
   }
 
   let promise = Promise.resolve();
-  if (loot.settings.updateMasterlist) {
+  if (window.loot.settings.updateMasterlist) {
     promise = promise.then(updateMasterlist);
   }
   return promise
     .then(() => query('sortPlugins'))
     .then(JSON.parse)
-    .then(result => {
+    .then((result: MainContent) => {
       if (!result) {
         return;
       }
 
-      loot.game.generalMessages = result.generalMessages;
+      window.loot.game.generalMessages = result.generalMessages;
 
       if (!result.plugins || result.plugins.length === 0) {
         const message = result.generalMessages.find(item =>
           item.text.startsWith(
-            loot.l10n.translate('Cyclic interaction detected')
+            window.loot.l10n.translate('Cyclic interaction detected')
           )
         );
         const text = message
           ? marked(message.text)
           : 'see general messages for details.';
         throw new Error(
-          loot.l10n.translateFormatted(
+          window.loot.l10n.translateFormatted(
             'Failed to sort plugins. Details: %s',
             text
           )
@@ -212,12 +295,12 @@ export function onSortPlugins() {
       /* Check if sorted load order differs from current load order. */
       const loadOrderIsUnchanged = result.plugins.every(
         (plugin, index) =>
-          loot.game.plugins[index] &&
-          plugin.name === loot.game.plugins[index].name
+          window.loot.game.plugins[index] &&
+          plugin.name === window.loot.game.plugins[index].name
       );
       if (loadOrderIsUnchanged) {
         result.plugins.forEach(plugin => {
-          const existingPlugin = loot.game.plugins.find(
+          const existingPlugin = window.loot.game.plugins.find(
             item => item.name === plugin.name
           );
           if (existingPlugin) {
@@ -229,57 +312,61 @@ export function onSortPlugins() {
         query('discardUnappliedChanges');
         closeProgress();
         showNotification(
-          loot.l10n.translate('Sorting made no changes to the load order.')
+          window.loot.l10n.translate(
+            'Sorting made no changes to the load order.'
+          )
         );
         return;
       }
-      loot.game.setSortedPlugins(result.plugins);
+      window.loot.game.setSortedPlugins(result.plugins);
 
       /* Now update the UI for the new order. */
-      loot.filters.apply(loot.game.plugins);
+      window.loot.filters.apply(window.loot.game.plugins);
 
-      loot.state.enterSortingState();
+      window.loot.state.enterSortingState();
 
       closeProgress();
     })
     .catch(handlePromiseError);
 }
-export function onApplySort() {
-  const pluginNames = loot.game.getPluginNames();
+
+export function onApplySort(): Promise<void> {
+  const pluginNames = window.loot.game.getPluginNames();
   return query('applySort', { pluginNames })
     .then(() => {
-      loot.game.applySort();
+      window.loot.game.applySort();
 
-      loot.state.exitSortingState();
+      window.loot.state.exitSortingState();
     })
     .catch(handlePromiseError);
 }
-export function onCancelSort() {
+
+export function onCancelSort(): Promise<void> {
   return query('cancelSort')
     .then(JSON.parse)
-    .then(response => {
-      loot.game.cancelSort(response.plugins, response.generalMessages);
+    .then((response: MainContent) => {
+      window.loot.game.cancelSort(response.plugins, response.generalMessages);
       /* Sort UI elements again according to stored old load order. */
-      loot.filters.apply(loot.game.plugins);
+      window.loot.filters.apply(window.loot.game.plugins);
 
-      loot.state.exitSortingState();
+      window.loot.state.exitSortingState();
     })
     .catch(handlePromiseError);
 }
 
-export function onRedatePlugins(/* evt */) {
+export function onRedatePlugins(/* evt */): void {
   askQuestion(
-    loot.l10n.translate('Redate Plugins?'),
-    loot.l10n.translate(
+    window.loot.l10n.translate('Redate Plugins?'),
+    window.loot.l10n.translate(
       'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam (this does not affect Skyrim Special Edition). Do you wish to continue?'
     ),
-    loot.l10n.translate('Redate'),
+    window.loot.l10n.translate('Redate'),
     result => {
       if (result) {
         query('redatePlugins')
           .then(() => {
             showNotification(
-              loot.l10n.translate('Plugins were successfully redated.')
+              window.loot.l10n.translate('Plugins were successfully redated.')
             );
           })
           .catch(handlePromiseError);
@@ -287,54 +374,59 @@ export function onRedatePlugins(/* evt */) {
     }
   );
 }
-export function onClearAllMetadata() {
+
+export function onClearAllMetadata(): void {
   askQuestion(
     '',
-    loot.l10n.translate(
+    window.loot.l10n.translate(
       'Are you sure you want to clear all existing user-added metadata from all plugins?'
     ),
-    loot.l10n.translate('Clear'),
+    window.loot.l10n.translate('Clear'),
     result => {
       if (!result) {
         return;
       }
       query('clearAllMetadata')
         .then(JSON.parse)
-        .then(response => {
+        .then((response: ClearAllMetadataResponse) => {
           if (!response || !response.plugins) {
             return;
           }
 
-          loot.game.clearMetadata(response.plugins);
+          window.loot.game.clearMetadata(response.plugins);
 
           showNotification(
-            loot.l10n.translate('All user-added metadata has been cleared.')
+            window.loot.l10n.translate(
+              'All user-added metadata has been cleared.'
+            )
           );
         })
         .catch(handlePromiseError);
     }
   );
 }
-export function onCopyContent() {
-  let content = {
+
+export function onCopyContent(): void {
+  let content: GameContent = {
     messages: [],
     plugins: []
   };
 
-  if (loot.game) {
-    content = loot.game.getContent();
+  if (window.loot.game) {
+    content = window.loot.game.getContent();
   } else {
     const message = document
       .getElementById('summary')
       .getElementsByTagName('ul')[0].firstElementChild;
 
-    const { language = 'en' } = loot.settings || {};
+    const { language = 'en' } = window.loot.settings || {};
 
     if (message) {
       content.messages.push({
         type: message.className,
         text: message.textContent,
-        language
+        language,
+        condition: ''
       });
     }
   }
@@ -342,42 +434,47 @@ export function onCopyContent() {
   query('copyContent', { content })
     .then(() => {
       showNotification(
-        loot.l10n.translate("LOOT's content has been copied to the clipboard.")
+        window.loot.l10n.translate(
+          "LOOT's content has been copied to the clipboard."
+        )
       );
     })
     .catch(handlePromiseError);
 }
-export function onCopyLoadOrder() {
-  let pluginNames = [];
 
-  if (loot.game && loot.game.plugins) {
-    pluginNames = loot.game.getPluginNames();
+export function onCopyLoadOrder(): void {
+  let pluginNames: string[] = [];
+
+  if (window.loot.game && window.loot.game.plugins) {
+    pluginNames = window.loot.game.getPluginNames();
   }
 
   query('copyLoadOrder', { pluginNames })
     .then(() => {
       showNotification(
-        loot.l10n.translate('The load order has been copied to the clipboard.')
+        window.loot.l10n.translate(
+          'The load order has been copied to the clipboard.'
+        )
       );
     })
     .catch(handlePromiseError);
 }
-export function onContentRefresh() {
+
+export function onContentRefresh(): void {
   /* Send a query for updated load order and plugin header info. */
   query('getGameData')
-    .then(result => {
-      /* Parse the data sent from C++. */
-      const game = JSON.parse(result, Plugin.fromJson);
-      loot.game = new Game(game, loot.l10n);
+    .then(JSON.parse)
+    .then((result: GameData) => {
+      window.loot.game = new Game(result, window.loot.l10n);
 
       /* Re-initialise conflicts filter plugin list. */
-      Filters.fillConflictsFilterList(loot.game.plugins);
+      Filters.fillConflictsFilterList(window.loot.game.plugins);
 
       /* Reapply filters. */
-      if (loot.filters.areAnyFiltersActive()) {
-        loot.filters.apply(loot.game.plugins);
+      if (window.loot.filters.areAnyFiltersActive()) {
+        window.loot.filters.apply(window.loot.game.plugins);
       } else {
-        initialiseVirtualLists(loot.game.plugins);
+        initialiseVirtualLists(window.loot.game.plugins);
       }
 
       closeProgress();
@@ -385,23 +482,25 @@ export function onContentRefresh() {
     .catch(handlePromiseError);
 }
 
-export function onOpenReadme(evt) {
+export function onOpenReadme(evt: OpenReadmeEvent): void {
   const relativeFilePath =
     (evt.detail && evt.detail.relativeFilePath) || 'index.html';
 
   query('openReadme', { relativeFilePath }).catch(handlePromiseError);
 }
-export function onOpenLogLocation() {
+
+export function onOpenLogLocation(): void {
   query('openLogLocation').catch(handlePromiseError);
 }
-function handleUnappliedChangesClose(change) {
+
+function handleUnappliedChangesClose(change: string): void {
   askQuestion(
     '',
-    loot.l10n.translateFormatted(
+    window.loot.l10n.translateFormatted(
       'You have not yet applied or cancelled your %s. Are you sure you want to quit?',
       change
     ),
-    loot.l10n.translate('Quit'),
+    window.loot.l10n.translate('Quit'),
     result => {
       if (!result) {
         return;
@@ -415,21 +514,26 @@ function handleUnappliedChangesClose(change) {
     }
   );
 }
-export function onQuit() {
-  if (loot.state.isInSortingState()) {
-    handleUnappliedChangesClose(loot.l10n.translate('sorted load order'));
-  } else if (loot.state.isInEditingState()) {
-    handleUnappliedChangesClose(loot.l10n.translate('metadata edits'));
+
+export function onQuit(): void {
+  if (window.loot.state.isInSortingState()) {
+    handleUnappliedChangesClose(
+      window.loot.l10n.translate('sorted load order')
+    );
+  } else if (window.loot.state.isInEditingState()) {
+    handleUnappliedChangesClose(window.loot.l10n.translate('metadata edits'));
   } else {
     window.close();
   }
 }
-export function onApplySettings(evt) {
-  if (!document.getElementById('gameTable').validate()) {
+
+export function onApplySettings(evt: Event): void {
+  if (!(document.getElementById('gameTable') as EditableTable).validate()) {
     evt.stopPropagation();
   }
 }
-export function onCloseSettingsDialog(evt) {
+
+export function onCloseSettingsDialog(evt: IronOverlayClosedEvent): void {
   if (evt.target.id !== 'settingsDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
@@ -437,42 +541,56 @@ export function onCloseSettingsDialog(evt) {
   }
   if (!evt.detail.confirmed) {
     /* Re-apply the existing settings to the settings dialog elements. */
-    updateSettingsDialog(loot.settings);
+    updateSettingsDialog(window.loot.settings);
     return;
   }
 
   /* Update the JS variable values. */
   const settings = {
-    enableDebugLogging: document.getElementById('enableDebugLogging').checked,
-    game: document.getElementById('defaultGameSelect').value,
-    games: document.getElementById('gameTable').getRowsData(false),
-    language: document.getElementById('languageSelect').value,
-    updateMasterlist: document.getElementById('updateMasterlist').checked,
-    enableLootUpdateCheck: document.getElementById('enableLootUpdateCheck')
-      .checked,
-    filters: loot.settings.filters
+    enableDebugLogging: (document.getElementById(
+      'enableDebugLogging'
+    ) as PaperCheckboxElement).checked,
+    game: (document.getElementById('defaultGameSelect') as LootDropdownMenu)
+      .value,
+    games: (document.getElementById('gameTable') as EditableTable).getRowsData(
+      false
+    ) as GameSettings[],
+    language: (document.getElementById('languageSelect') as LootDropdownMenu)
+      .value,
+    updateMasterlist: (document.getElementById(
+      'updateMasterlist'
+    ) as PaperCheckboxElement).checked,
+    enableLootUpdateCheck: (document.getElementById(
+      'enableLootUpdateCheck'
+    ) as PaperCheckboxElement).checked,
+    filters: window.loot.settings.filters,
+    lastVersion: window.loot.settings.lastVersion,
+    languages: window.loot.settings.languages
   };
 
   /* Send the settings back to the C++ side. */
   query('closeSettings', { settings })
     .then(JSON.parse)
-    .then(response => {
-      loot.installedGames = response.installedGames;
-      updateEnabledGames(loot.installedGames);
-      if (loot.installedGames.length > 0) {
+    .then((response: GetInstalledGamesResponse) => {
+      window.loot.installedGames = response.installedGames;
+      updateEnabledGames(window.loot.installedGames);
+      if (window.loot.installedGames.length > 0) {
         enableGameOperations(true);
       }
     })
     .catch(handlePromiseError)
     .then(() => {
-      loot.settings = settings;
-      updateSettingsDialog(loot.settings);
-      setGameMenuItems(loot.settings.games);
-      updateEnabledGames(loot.installedGames);
-      updateSelectedGame(loot.game.folder);
+      window.loot.settings = settings;
+      updateSettingsDialog(window.loot.settings);
+      setGameMenuItems(window.loot.settings.games);
+      updateEnabledGames(window.loot.installedGames);
+      updateSelectedGame(window.loot.game.folder);
     })
     .then(() => {
-      if (loot.installedGames.length > 0 && loot.game.folder.length === 0) {
+      if (
+        window.loot.installedGames.length > 0 &&
+        window.loot.game.folder.length === 0
+      ) {
         /* Initialisation failed and game was configured in settings. */
         onContentRefresh();
       }
@@ -480,16 +598,16 @@ export function onCloseSettingsDialog(evt) {
     .catch(handlePromiseError);
 }
 
-export function onSaveUserGroups(evt) {
+export function onSaveUserGroups(evt: IronOverlayClosedEvent): void {
   if (evt.target.id !== 'groupsEditorDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
     return;
   }
-  const editor = document.getElementById('groupsEditor');
+  const editor = document.getElementById('groupsEditor') as LootGroupsEditor;
   if (!evt.detail.confirmed) {
     /* Re-apply the existing groups to the editor. */
-    editor.setGroups(loot.game.groups);
+    editor.setGroups(window.loot.game.groups);
     return;
   }
 
@@ -497,22 +615,26 @@ export function onSaveUserGroups(evt) {
   const userGroups = editor.getUserGroups();
   query('saveUserGroups', { userGroups })
     .then(JSON.parse)
-    .then(response => {
-      loot.game.setGroups(response);
-      fillGroupsList(loot.game.groups);
-      editor.setGroups(loot.game.groups);
+    .then((response: GameGroups) => {
+      window.loot.game.setGroups(response);
+      fillGroupsList(window.loot.game.groups);
+      editor.setGroups(window.loot.game.groups);
     })
     .catch(handlePromiseError);
 }
 
-export function onEditorOpen(evt) {
+export function onEditorOpen(
+  evt: LootPluginEditorOpenEvent
+): Promise<string | void> {
   /* Set the editor data. */
-  document.getElementById('editor').setEditorData(evt.target.data);
+  (document.getElementById('editor') as LootPluginEditor).setEditorData(
+    evt.target.data
+  );
 
-  loot.state.enterEditingState();
+  window.loot.state.enterEditingState();
 
   /* Sidebar items have been resized. */
-  document.getElementById('cardsNav').notifyResize();
+  (document.getElementById('cardsNav') as IronListElement).notifyResize();
 
   /* Update the plugin's editor state tracker */
   evt.target.data.isEditorOpen = true;
@@ -522,14 +644,16 @@ export function onEditorOpen(evt) {
     .getElementById('cardsNav')
     .getElementsByTagName('loot-plugin-item');
   for (let i = 0; i < elements.length; i += 1) {
-    elements[i].draggable = true;
-    elements[i].addEventListener('dragstart', elements[i].onDragStart);
+    const element = elements[i] as LootPluginItem;
+    element.draggable = true;
+    element.addEventListener('dragstart', element.onDragStart);
   }
 
   return query('editorOpened').catch(handlePromiseError);
 }
-export function onEditorClose(evt) {
-  const plugin = loot.game.plugins.find(
+
+export function onEditorClose(evt: LootPluginEditorCloseEvent): void {
+  const plugin = window.loot.game.plugins.find(
     item => item.name === evt.target.querySelector('h1').textContent
   );
   /* Update the plugin's editor state tracker */
@@ -544,35 +668,37 @@ export function onEditorClose(evt) {
 
   query('editorClosed', { editorState })
     .then(JSON.parse)
-    .then(result => {
+    .then((result: DerivedPluginMetadata) => {
       plugin.update(result);
 
       /* Now perform search again. If there is no current search, this won't
        do anything. */
-      document.getElementById('searchBar').search();
+      (document.getElementById('searchBar') as LootSearchToolbar).search();
     })
     .catch(handlePromiseError)
     .then(() => {
-      loot.state.exitEditingState();
+      window.loot.state.exitEditingState();
       /* Sidebar items have been resized. */
-      document.getElementById('cardsNav').notifyResize();
+      (document.getElementById('cardsNav') as IronListElement).notifyResize();
 
       /* Remove drag 'n' drop event handlers. */
       const elements = document
         .getElementById('cardsNav')
         .getElementsByTagName('loot-plugin-item');
       for (let i = 0; i < elements.length; i += 1) {
-        elements[i].removeAttribute('draggable');
-        elements[i].removeEventListener('dragstart', elements[i].onDragStart);
+        const element = elements[i] as LootPluginItem;
+        element.removeAttribute('draggable');
+        element.removeEventListener('dragstart', element.onDragStart);
       }
     })
     .catch(handlePromiseError);
 }
-export function onCopyMetadata(evt) {
+
+export function onCopyMetadata(evt: LootCopyMetadataEvent): void {
   query('copyMetadata', { pluginName: evt.target.getName() })
     .then(() => {
       showNotification(
-        loot.l10n.translateFormatted(
+        window.loot.l10n.translateFormatted(
           'The metadata for "%s" has been copied to the clipboard.',
           evt.target.getName()
         )
@@ -580,47 +706,48 @@ export function onCopyMetadata(evt) {
     })
     .catch(handlePromiseError);
 }
-export function onClearMetadata(evt) {
+
+export function onClearMetadata(evt: LootClearMetadataEvent): void {
   askQuestion(
     '',
-    loot.l10n.translateFormatted(
+    window.loot.l10n.translateFormatted(
       'Are you sure you want to clear all existing user-added metadata from "%s"?',
       evt.target.getName()
     ),
-    loot.l10n.translate('Clear'),
+    window.loot.l10n.translate('Clear'),
     result => {
       if (!result) {
         return;
       }
       query('clearPluginMetadata', { pluginName: evt.target.getName() })
         .then(JSON.parse)
-        .then(plugin => {
+        .then((plugin: DerivedPluginMetadata) => {
           if (!result) {
             return;
           }
           /* Need to empty the UI-side user metadata. */
-          const existingPlugin = loot.game.plugins.find(
+          const existingPlugin = window.loot.game.plugins.find(
             item => item.id === evt.target.id
           );
           if (existingPlugin) {
             existingPlugin.update(plugin);
           }
           showNotification(
-            loot.l10n.translateFormatted(
+            window.loot.l10n.translateFormatted(
               'The user-added metadata for "%s" has been cleared.',
               evt.target.getName()
             )
           );
           /* Now perform search again. If there is no current search, this won't do anything. */
-          document.getElementById('searchBar').search();
+          (document.getElementById('searchBar') as LootSearchToolbar).search();
         })
         .catch(handlePromiseError);
     }
   );
 }
 
-export function onSearchBegin(evt) {
-  loot.game.plugins.forEach(plugin => {
+export function onSearchBegin(evt: LootSearchBeginEvent): void {
+  window.loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
 
@@ -628,26 +755,35 @@ export function onSearchBegin(evt) {
     return;
   }
 
-  evt.target.results = loot.game.plugins.reduce((indices, plugin, index) => {
-    if (plugin.getCardContent(loot.filters).containsText(evt.detail.needle)) {
-      indices.push(index);
-      plugin.isSearchResult = true;
-    }
-    return indices;
-  }, []);
+  evt.target.results = window.loot.game.plugins.reduce(
+    (indices, plugin, index) => {
+      if (
+        plugin
+          .getCardContent(window.loot.filters)
+          .containsText(evt.detail.needle)
+      ) {
+        indices.push(index);
+        plugin.isSearchResult = true;
+      }
+      return indices;
+    },
+    []
+  );
 }
-export function onSearchEnd(/* evt */) {
-  loot.game.plugins.forEach(plugin => {
+
+export function onSearchEnd(/* evt */): void {
+  window.loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
   document.getElementById('mainToolbar').classList.remove('search');
 }
-export function onFolderChange(evt) {
+
+export function onFolderChange(evt: LootGameFolderChangeEvent): void {
   updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let gameSettings;
-  if (loot.settings && loot.settings.games) {
-    gameSettings = loot.settings.games.find(
+  if (window.loot.settings && window.loot.settings.games) {
+    gameSettings = window.loot.settings.games.find(
       game =>
         (game.type === 'Skyrim' || game.type === 'Skyrim Special Edition') &&
         game.folder === evt.detail.folder
