@@ -123,17 +123,10 @@ export function updateSelectedGame(gameFolder: string): void {
   }
 }
 
-export function updateEnabledGames(installedGames: string[]): void {
-  const gameMenuItems = document.getElementById('gameMenu').children;
-  for (let i = 0; i < gameMenuItems.length; i += 1) {
-    enable(
-      gameMenuItems[i],
-      installedGames.indexOf(gameMenuItems[i].getAttribute('value')) !== -1
-    );
-  }
-}
-
-export function setGameMenuItems(games: Game[]): void {
+export function setGameMenuItems(
+  games: Game[],
+  installedGames: string[]
+): void {
   const gameMenu = document.getElementById('gameMenu');
 
   /* First make sure game listing elements don't have any existing entries. */
@@ -142,7 +135,11 @@ export function setGameMenuItems(games: Game[]): void {
   }
 
   games.forEach(game => {
-    gameMenu.appendChild(createGameItem(game));
+    const gameItem = gameMenu.appendChild(createGameItem(game));
+    enable(
+      gameItem,
+      installedGames.indexOf(gameItem.getAttribute('value')) !== -1
+    );
   });
 }
 

@@ -7,7 +7,7 @@ export default class Translator {
   private jed?: Jed;
 
   /* Returns a Promise */
-  public constructor(locale: string) {
+  public constructor(locale?: string) {
     this.locale = locale || 'en';
   }
 

@@ -21,6 +21,7 @@ export interface SourcedGroup extends Group {
 export interface Language {
   name: string;
   locale: string;
+  fontFamily?: string;
 }
 
 export interface SimpleMessage {
@@ -174,4 +175,13 @@ export interface GameGroups {
 export interface MainContent {
   generalMessages: SimpleMessage[];
   plugins: DerivedPluginMetadata[];
+}
+
+export interface LootVersion {
+  release: string;
+  build: string;
+}
+
+export interface GetInstalledGamesResponse {
+  installedGames: string[];
 }

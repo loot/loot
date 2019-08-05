@@ -8,7 +8,9 @@ import {
   initialiseAutocompleteBashTags,
   initialiseAutocompleteFilenames,
   initialiseGroupsEditor,
-  updateGroupsEditorState
+  updateGroupsEditorState,
+  initialiseVirtualLists,
+  updateSelectedGame
 } from './dom';
 import Filters from './filters';
 import { Plugin } from './plugin';
@@ -370,7 +372,7 @@ export default class Game {
     });
   }
 
-  public initialiseUI(): void {
+  public initialiseUI(filters: Filters): void {
     /* Re-initialise autocomplete suggestions. */
     initialiseAutocompleteFilenames(this.getPluginNames());
     initialiseAutocompleteBashTags(this.bashTags);
@@ -379,6 +381,18 @@ export default class Game {
     Filters.fillConflictsFilterList(this.plugins);
 
     initialiseGroupsEditor(groupName => this.getGroupPluginNames(groupName));
+
+    updateSelectedGame(this.folder);
+
+    /* Now update virtual lists. */
+    if (filters.areAnyFiltersActive()) {
+      /* Schedule applying the filters instead of applying them immediately.
+        This improves the UI initialisation speed, and is quick enough that
+        the lists aren't visible pre-filtration. */
+      setTimeout(() => filters.apply(this.plugins), 0);
+    } else {
+      initialiseVirtualLists(this.plugins);
+    }
   }
 
   public static onPluginsChange(evt: GamePluginsChangeEvent): void {

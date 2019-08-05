@@ -2,11 +2,7 @@ import { PaperInputElement } from '@polymer/paper-input/paper-input';
 import Translator from './translator';
 import LootGroupsEditor from '../elements/loot-groups-editor';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
-
-interface LootVersion {
-  release: string;
-  build: string;
-}
+import { LootVersion } from './interfaces';
 
 function getTemplate(templateId: string): DocumentFragment {
   return (document.getElementById(templateId) as HTMLTemplateElement).content;

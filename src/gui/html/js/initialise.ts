@@ -65,11 +65,8 @@ import {
   enableGameOperations,
   openDialog,
   fillGameTypesList,
-  updateEnabledGames,
   updateSettingsDialog,
   setGameMenuItems,
-  updateSelectedGame,
-  initialiseVirtualLists,
   appendGeneralMessages,
   setDocumentFontFamily
 } from './dom';
@@ -82,8 +79,27 @@ import State from './state';
 import translateStaticText from './translateStaticText';
 import Translator from './translator';
 import updateExists from './updateExists';
+import {
+  LootVersion,
+  LootSettings,
+  GameData,
+  GetInstalledGamesResponse
+} from './interfaces';
+import Loot from '../type-declarations/loot.d';
 
-function setupEventHandlers() {
+interface GetInitErrorsResponse {
+  errors: string[];
+}
+
+interface GetGameTypesResponse {
+  gameTypes: string[];
+}
+
+interface GetAutoSortResponse {
+  autoSort: boolean;
+}
+
+function setupEventHandlers(): void {
   /* Set up handlers for filters. */
   document
     .getElementById('hideVersionNumbers')
@@ -253,64 +269,48 @@ function setupEventHandlers() {
   document.addEventListener('loot-game-groups-change', Game.onGroupsChange);
 }
 
-function setVersion(appData) {
+function setVersion(appData: Loot): Promise<void> {
   return query('getVersion')
     .then(JSON.parse)
-    .then(version => {
+    .then((version: LootVersion) => {
       appData.version = version;
     });
 }
 
-function getInitErrors() {
+function getInitErrors(): Promise<string[]> {
   return query('getInitErrors')
     .then(JSON.parse)
-    .then(response => {
-      if (response.errors && response.errors.length > 0) {
-        throw new Error(response.errors);
-      }
-    });
+    .then((response: GetInitErrorsResponse) => response.errors);
 }
 
-function getErrorMessages(object) {
-  if (Array.isArray(object)) {
-    return object;
-  }
-
-  return [object];
-}
-
-function handleInitErrors(error) {
-  listInitErrors(getErrorMessages(error.message));
+function handleInitErrors(errors: string[]): void {
+  listInitErrors(errors);
   closeProgress();
   enableGameOperations(false);
   openDialog('settingsDialog');
 }
 
-function setGameTypes() {
+function setGameTypes(): Promise<void> {
   return query('getGameTypes')
     .then(JSON.parse)
-    .then(response => response.gameTypes)
+    .then((response: GetGameTypesResponse) => response.gameTypes)
     .then(fillGameTypesList);
 }
 
-function setInstalledGames(appData) {
+function setInstalledGames(appData: Loot): Promise<void> {
   return query('getInstalledGames')
     .then(JSON.parse)
-    .then(response => {
+    .then((response: GetInstalledGamesResponse) => {
       appData.installedGames = response.installedGames;
-      updateEnabledGames(response.installedGames);
     });
 }
 
-function setSettings(appData) {
+function setSettings(appData: Loot): Promise<void> {
   return query('getSettings')
     .then(JSON.parse)
-    .then(result => {
+    .then((result: LootSettings) => {
       appData.settings = result;
       updateSettingsDialog(appData.settings);
-      setGameMenuItems(appData.settings.games);
-      updateEnabledGames(appData.installedGames);
-      updateSelectedGame(appData.game.folder);
 
       const currentLanguage = result.languages.find(
         language => language.locale === result.language
@@ -321,46 +321,28 @@ function setSettings(appData) {
     });
 }
 
-function setGameData(appData) {
+function setGameData(appData: Loot): Promise<void> {
   return query('getGameData')
     .then(JSON.parse)
-    .then(result => {
+    .then((result: GameData) => {
       appData.game = new Game(result, appData.l10n);
-
-      appData.game.initialiseUI();
-      appData.filters.load(appData.settings.filters);
-
-      /* Initialise the lists before checking if any filters need to be applied.
-        This causes the UI to be initialised faster thanks to scheduling
-        behaviour. */
-      initialiseVirtualLists(appData.game.plugins);
-      if (appData.filters.areAnyFiltersActive()) {
-        /* Schedule applying the filters instead of applying them immediately.
-          This improves the UI initialisation speed, and is quick enough that
-          the lists aren't visible pre-filtration. */
-        setTimeout(
-          plugins => {
-            appData.filters.apply(plugins);
-          },
-          0,
-          appData.game.plugins
-        );
-      }
+      appData.game.initialiseUI(appData.filters);
 
       closeProgress();
     });
 }
 
-function checkForLootUpdate() {
+function checkForLootUpdate(l10n: Translator): Promise<void> {
   return query('getVersion')
     .then(JSON.parse)
-    .catch(handlePromiseError)
-    .then(version => updateExists(version.release, version.build))
+    .then((version: LootVersion) =>
+      updateExists(version.release, version.build)
+    )
     .catch(() => {
       appendGeneralMessages([
         {
           type: 'error',
-          content: loot.l10n.translate(
+          content: l10n.translate(
             'Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you can get to it through the main menu) for more information.'
           )
         }
@@ -376,7 +358,7 @@ function checkForLootUpdate() {
       appendGeneralMessages([
         {
           type: 'warn',
-          content: loot.l10n.translateFormatted(
+          content: l10n.translateFormatted(
             'A [new release](%s) of LOOT is available.',
             'https://github.com/loot/loot/releases/latest'
           )
@@ -385,7 +367,7 @@ function checkForLootUpdate() {
     });
 }
 
-function appendGeneralErrorMessage(content) {
+function appendGeneralErrorMessage(content: string): void {
   appendGeneralMessages([
     {
       type: 'error',
@@ -393,21 +375,22 @@ function appendGeneralErrorMessage(content) {
     }
   ]);
 
-  document.getElementById('totalMessageNo').textContent =
-    parseInt(document.getElementById('totalMessageNo').textContent, 10) + 1;
-  document.getElementById('totalErrorNo').textContent =
-    parseInt(document.getElementById('totalErrorNo').textContent, 10) + 1;
+  document.getElementById('totalMessageNo').textContent = (
+    parseInt(document.getElementById('totalMessageNo').textContent, 10) + 1
+  ).toString();
+  document.getElementById('totalErrorNo').textContent = (
+    parseInt(document.getElementById('totalErrorNo').textContent, 10) + 1
+  ).toString();
 }
 
-function getErrorCount() {
+function getErrorCount(): number {
   return parseInt(document.getElementById('totalErrorNo').textContent, 10);
 }
 
-function autoSort(l10n) {
+function autoSort(l10n: Translator): Promise<void> {
   return query('getAutoSort')
     .then(JSON.parse)
-    .catch(handlePromiseError)
-    .then(response => {
+    .then((response: GetAutoSortResponse) => {
       if (response.autoSort) {
         if (getErrorCount() === 0) {
           return onSortPlugins()
@@ -427,18 +410,16 @@ function autoSort(l10n) {
       }
 
       return Promise.resolve(undefined);
-    });
+    })
+    .catch(handlePromiseError);
 }
 
-export default function initialise(loot) {
+export default function initialise(loot: Loot): void {
   showProgress('Initialising user interface...');
 
   setupEventHandlers();
 
-  loot.version = {};
-  loot.settings = {};
   loot.l10n = new Translator();
-  loot.game = new Game({}, loot.l10n);
   loot.filters = new Filters(loot.l10n);
   loot.state = new State();
 
@@ -455,17 +436,22 @@ export default function initialise(loot) {
     })
     .then(() => {
       loot.filters = new Filters(loot.l10n);
+      loot.filters.load(loot.settings.filters);
+
       translateStaticText(loot.l10n, loot.version);
-      /* Also need to update the settings UI. */
-      updateSettingsDialog(loot.settings);
-      setGameMenuItems(loot.settings.games);
-      updateEnabledGames(loot.installedGames);
-      updateSelectedGame(loot.game.folder);
+
+      setGameMenuItems(loot.settings.games, loot.installedGames);
     })
     .catch(handlePromiseError)
     .then(getInitErrors)
-    .then(() => setGameData(loot))
-    .catch(handleInitErrors)
+    .then(initErrors => {
+      if (initErrors.length > 0) {
+        handleInitErrors(initErrors);
+        return Promise.resolve();
+      }
+
+      return setGameData(loot);
+    })
     .then(() => autoSort(loot.l10n))
     .then(() => {
       if (loot.settings.lastVersion !== loot.version.release) {
@@ -474,7 +460,7 @@ export default function initialise(loot) {
     })
     .then(() => {
       if (loot.settings.enableLootUpdateCheck) {
-        return checkForLootUpdate();
+        return checkForLootUpdate(loot.l10n);
       }
 
       return Promise.resolve();

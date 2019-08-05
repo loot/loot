@@ -10,16 +10,13 @@ import {
 } from './dialog';
 import {
   fillGroupsList,
-  initialiseVirtualLists,
   initialiseAutocompleteBashTags,
   updateSettingsDialog,
-  updateEnabledGames,
   enableGameOperations,
   setGameMenuItems,
   updateSelectedGame,
   enable
 } from './dom';
-import Filters from './filters';
 import Game from './game';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
@@ -31,7 +28,8 @@ import {
   MainContent,
   GameSettings,
   DerivedPluginMetadata,
-  GameGroups
+  GameGroups,
+  GetInstalledGamesResponse
 } from './interfaces';
 import EditableTable from '../elements/editable-table';
 import LootGroupsEditor from '../elements/loot-groups-editor';
@@ -43,10 +41,6 @@ import LootSearchToolbar from '../elements/loot-search-toolbar';
 
 interface ClearAllMetadataResponse {
   plugins: DerivedPluginMetadata[];
-}
-
-interface GetInstalledGamesResponse {
-  installedGames: string[];
 }
 
 interface PaperCheckboxChangeEvent extends CustomEvent {
@@ -166,10 +160,10 @@ export function onConflictsFilter(evt: LootDropdownMenuChangeEvent): void {
 
 export function onChangeGame(evt: LootDropdownMenuSelectEvent): void {
   if (
-    evt.detail.item.getAttribute('value') === window.loot.game.folder ||
-    window.loot.game.folder.length === 0
+    !window.loot.game ||
+    evt.detail.item.getAttribute('value') === window.loot.game.folder
   ) {
-    // Game folder length is zero if LOOT is being initalised.
+    // window.loot.game is undefined if LOOT is being initalised.
     return;
   }
   /* Send off a CEF query with the folder name of the new game. */
@@ -192,15 +186,7 @@ export function onChangeGame(evt: LootDropdownMenuSelectEvent): void {
       }
 
       window.loot.game = new Game(result, window.loot.l10n);
-
-      window.loot.game.initialiseUI();
-
-      /* Now update virtual lists. */
-      if (window.loot.filters.areAnyFiltersActive()) {
-        window.loot.filters.apply(window.loot.game.plugins);
-      } else {
-        initialiseVirtualLists(window.loot.game.plugins);
-      }
+      window.loot.game.initialiseUI(window.loot.filters);
 
       closeProgress();
     })
@@ -466,16 +452,7 @@ export function onContentRefresh(): void {
     .then(JSON.parse)
     .then((result: GameData) => {
       window.loot.game = new Game(result, window.loot.l10n);
-
-      /* Re-initialise conflicts filter plugin list. */
-      Filters.fillConflictsFilterList(window.loot.game.plugins);
-
-      /* Reapply filters. */
-      if (window.loot.filters.areAnyFiltersActive()) {
-        window.loot.filters.apply(window.loot.game.plugins);
-      } else {
-        initialiseVirtualLists(window.loot.game.plugins);
-      }
+      window.loot.game.initialiseUI(window.loot.filters);
 
       closeProgress();
     })
@@ -573,7 +550,6 @@ export function onCloseSettingsDialog(evt: IronOverlayClosedEvent): void {
     .then(JSON.parse)
     .then((response: GetInstalledGamesResponse) => {
       window.loot.installedGames = response.installedGames;
-      updateEnabledGames(window.loot.installedGames);
       if (window.loot.installedGames.length > 0) {
         enableGameOperations(true);
       }
@@ -582,8 +558,7 @@ export function onCloseSettingsDialog(evt: IronOverlayClosedEvent): void {
     .then(() => {
       window.loot.settings = settings;
       updateSettingsDialog(window.loot.settings);
-      setGameMenuItems(window.loot.settings.games);
-      updateEnabledGames(window.loot.installedGames);
+      setGameMenuItems(window.loot.settings.games, window.loot.installedGames);
       updateSelectedGame(window.loot.game.folder);
     })
     .then(() => {
