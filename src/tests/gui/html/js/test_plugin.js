@@ -332,7 +332,8 @@ describe('Plugin', () => {
         userlist: { name: plugin.name },
         group: 'default',
         loadOrderIndex: 1,
-        cleanedWith: 'xEdit'
+        cleanedWith: 'xEdit',
+        messages: []
       };
       plugin.update(updatedPlugin);
 
@@ -344,12 +345,13 @@ describe('Plugin', () => {
       expect(plugin.group).toBe(updatedPlugin.group);
       expect(plugin.loadOrderIndex).toBe(updatedPlugin.loadOrderIndex);
       expect(plugin.cleanedWith).toBe(updatedPlugin.cleanedWith);
+      expect(plugin.messages).toEqual(updatedPlugin.messages);
     });
 
     test('should set version to an empty string if not given', () => {
       plugin.version = '1.0.0';
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.version).toBe('');
     });
@@ -357,7 +359,7 @@ describe('Plugin', () => {
     test('should set crc to 0 if not given', () => {
       plugin.crc = 0xdeadbeef;
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.crc).toBe(0);
     });
@@ -365,7 +367,7 @@ describe('Plugin', () => {
     test('should set group to default if not given', () => {
       plugin.group = 'DLC';
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.group).toBe('default');
     });
@@ -373,7 +375,7 @@ describe('Plugin', () => {
     test('should set loadOrderIndex to be undefined if not given', () => {
       plugin.loadOrderIndex = 1;
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.loadOrderIndex).toBe(undefined);
     });
@@ -381,7 +383,7 @@ describe('Plugin', () => {
     test('should set cleanedWith to an empty string if not given', () => {
       plugin.cleanedWith = 'xEdit';
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.cleanedWith).toBe('');
     });
@@ -389,7 +391,7 @@ describe('Plugin', () => {
     test('should set masterlist to be undefined if not given', () => {
       plugin.masterlist = { name: plugin.name };
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.masterlist).toBe(undefined);
     });
@@ -397,20 +399,9 @@ describe('Plugin', () => {
     test('should set userlist to be undefined if not given', () => {
       plugin.userlist = { name: plugin.name };
 
-      plugin.update({ name: plugin.name });
+      plugin.update({ name: plugin.name, messages: [] });
 
       expect(plugin.userlist).toBe(undefined);
-    });
-
-    test('should set explicitly undefined values', () => {
-      plugin.isActive = true;
-
-      plugin.update({
-        name: plugin.name,
-        isActive: undefined
-      });
-
-      expect(plugin.isActive).toBe(undefined);
     });
   });
 

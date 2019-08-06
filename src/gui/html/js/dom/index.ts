@@ -31,6 +31,24 @@ interface Message {
   content: string;
 }
 
+interface IronSelectEvent extends CustomEvent {
+  target: EventTarget & IronSelectableBehavior;
+}
+
+function isIronSelectEvent(evt: Event): evt is IronSelectEvent {
+  return 'selected' in evt.target;
+}
+
+interface LootSearchChangeSelectionEvent extends CustomEvent {
+  detail: { selection: number };
+}
+
+function isLootSearchChangeSelectionEvent(
+  evt: Event
+): evt is LootSearchChangeSelectionEvent {
+  return evt instanceof CustomEvent && typeof evt.detail.selection === 'number';
+}
+
 function getElementInTableRowTemplate(
   rowTemplateId: string,
   elementClass: string
@@ -267,11 +285,11 @@ export function onShowAboutDialog(): void {
   (document.getElementById('about') as PaperDialogElement).open();
 }
 
-interface IronSelectEvent extends CustomEvent {
-  target: EventTarget & IronSelectableBehavior;
-}
+export function onSwitchSidebarTab(evt: Event): void {
+  if (!isIronSelectEvent(evt)) {
+    throw new TypeError(`Expected a IronSelectEvent, got ${evt}`);
+  }
 
-export function onSwitchSidebarTab(evt: IronSelectEvent): void {
   if (typeof evt.target.selected === 'string') {
     const selector = document.getElementById(evt.target.selected)
       .parentElement as HTMLElement & IronSelectableBehavior;
@@ -333,13 +351,13 @@ export function onSearchOpen(): void {
   (document.getElementById('searchBar') as LootSearchToolbar).focusInput();
 }
 
-interface LootSearchChangeSelectionEvent extends CustomEvent {
-  detail: { selection: number };
-}
+export function onSearchChangeSelection(evt: Event): void {
+  if (!isLootSearchChangeSelectionEvent(evt)) {
+    throw new TypeError(
+      `Expected a LootSearchChangeSelectionEvent, got ${evt}`
+    );
+  }
 
-export function onSearchChangeSelection(
-  evt: LootSearchChangeSelectionEvent
-): void {
   const list = document.getElementById('pluginCardList') as IronListElement;
   list.scrollToIndex(evt.detail.selection);
 }

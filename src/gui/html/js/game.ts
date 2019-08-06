@@ -38,13 +38,38 @@ interface GamePluginsChangeEvent extends CustomEvent {
   };
 }
 
-interface GameGlobalMessagesChangeEvent extends CustomEvent {
+function isPluginsChangeEvent(evt: Event): evt is GamePluginsChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.valuesAreTotals === 'boolean' &&
+    typeof evt.detail.totalMessageNo === 'number' &&
+    typeof evt.detail.warnMessageNo === 'number' &&
+    typeof evt.detail.errorMessageNo === 'number' &&
+    typeof evt.detail.totalPluginNo === 'number' &&
+    typeof evt.detail.activePluginNo === 'number' &&
+    typeof evt.detail.dirtyPluginNo === 'number'
+  );
+}
+
+interface GameGeneralMessagesChangeEvent extends CustomEvent {
   detail: {
     totalDiff: number;
     warningDiff: number;
     errorDiff: number;
     messages: SimpleMessage[];
   };
+}
+
+function isGeneralMessagesChangeEvent(
+  evt: Event
+): evt is GameGeneralMessagesChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.totalDiff === 'number' &&
+    typeof evt.detail.warningDiff === 'number' &&
+    typeof evt.detail.errorDiff === 'number' &&
+    Array.isArray(evt.detail.messages)
+  );
 }
 
 interface GameMasterlistChangeEvent extends CustomEvent {
@@ -54,8 +79,20 @@ interface GameMasterlistChangeEvent extends CustomEvent {
   };
 }
 
+function isMasterlistChangeEvent(evt: Event): evt is GameMasterlistChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.revision === 'string' &&
+    typeof evt.detail.date === 'string'
+  );
+}
+
 interface GameGroupsChangeEvent extends CustomEvent {
   detail: { groups: SourcedGroup[] };
+}
+
+function isGroupsChangeEvent(evt: Event): evt is GameGroupsChangeEvent {
+  return evt instanceof CustomEvent && Array.isArray(evt.detail.groups);
 }
 
 export default class Game {
@@ -395,7 +432,11 @@ export default class Game {
     }
   }
 
-  public static onPluginsChange(evt: GamePluginsChangeEvent): void {
+  public static onPluginsChange(evt: Event): void {
+    if (!isPluginsChangeEvent(evt)) {
+      throw new TypeError(`Expected a GamePluginsChangeEvent, got ${evt}`);
+    }
+
     if (!evt.detail.valuesAreTotals) {
       evt.detail.totalMessageNo += parseInt(
         document.getElementById('totalMessageNo').textContent,
@@ -450,9 +491,13 @@ export default class Game {
     ).textContent = evt.detail.dirtyPluginNo.toString();
   }
 
-  public static onGeneralMessagesChange(
-    evt: GameGlobalMessagesChangeEvent
-  ): void {
+  public static onGeneralMessagesChange(evt: Event): void {
+    if (!isGeneralMessagesChangeEvent(evt)) {
+      throw new TypeError(
+        `Expected a GameGeneralMessagesChangeEvent, got ${evt}`
+      );
+    }
+
     document.getElementById('filterTotalMessageNo').textContent = (
       parseInt(
         document.getElementById('filterTotalMessageNo').textContent,
@@ -502,13 +547,20 @@ export default class Game {
       parseInt(summaryStyle.marginBottom, 10);
   }
 
-  public static onMasterlistChange(evt: GameMasterlistChangeEvent): void {
+  public static onMasterlistChange(evt: Event): void {
+    if (!isMasterlistChangeEvent(evt)) {
+      throw new TypeError(`Expected a GameMasterlistChangeEvent, got ${evt}`);
+    }
+
     document.getElementById('masterlistRevision').textContent =
       evt.detail.revision;
     document.getElementById('masterlistDate').textContent = evt.detail.date;
   }
 
-  public static onGroupsChange(evt: GameGroupsChangeEvent): void {
+  public static onGroupsChange(evt: Event): void {
+    if (!isGroupsChangeEvent(evt)) {
+      throw new TypeError(`Expected a GameGroupsChangeEvent, got ${evt}`);
+    }
     fillGroupsList(evt.detail.groups);
     updateGroupsEditorState(evt.detail.groups);
   }

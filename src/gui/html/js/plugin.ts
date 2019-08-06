@@ -54,12 +54,39 @@ interface PluginMessageChangeEvent extends CustomEvent {
   };
 }
 
+function isPluginMessageChangeEvent(
+  evt: Event
+): evt is PluginMessageChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.pluginId === 'string' &&
+    typeof evt.detail.mayChangeCardHeight === 'boolean' &&
+    typeof evt.detail.totalDiff === 'number' &&
+    typeof evt.detail.warningDiff === 'number' &&
+    typeof evt.detail.errorDiff === 'number'
+  );
+}
+
 interface PluginCleaningDataChangeEvent extends CustomEvent {
   detail: {
     isDirty?: boolean;
     cleanedWith?: string;
     pluginId?: string;
   };
+}
+
+function isPluginCleaningDataChangeEvent(
+  evt: Event
+): evt is PluginCleaningDataChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    (typeof evt.detail.isDirty === 'boolean' ||
+      typeof evt.detail.isDirty === 'undefined') &&
+    (typeof evt.detail.cleanedWith === 'string' ||
+      typeof evt.detail.cleanedWith === 'undefined') &&
+    (typeof evt.detail.pluginId === 'string' ||
+      typeof evt.detail.pluginId === 'undefined')
+  );
 }
 
 interface PluginContentChangeEvent extends CustomEvent {
@@ -72,10 +99,32 @@ interface PluginContentChangeEvent extends CustomEvent {
   };
 }
 
+function isPluginContentChangeEvent(
+  evt: Event
+): evt is PluginContentChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.pluginId === 'string' &&
+    typeof evt.detail.mayChangeCardHeight === 'boolean' &&
+    (typeof evt.detail.totalDiff === 'number' ||
+      typeof evt.detail.totalDiff === 'undefined') &&
+    (typeof evt.detail.warningDiff === 'number' ||
+      typeof evt.detail.warningDiff === 'undefined') &&
+    (typeof evt.detail.errorDiff === 'number' ||
+      typeof evt.detail.errorDiff === 'undefined')
+  );
+}
+
 interface PluginCardStylingChangeEvent extends CustomEvent {
   detail: {
     pluginId: string;
   };
+}
+
+function isPluginCardStylingChangeEvent(
+  evt: Event
+): evt is PluginCardStylingChangeEvent {
+  return evt instanceof CustomEvent && typeof evt.detail.pluginId === 'string';
 }
 
 interface PluginItemContentChangeEvent extends CustomEvent {
@@ -87,6 +136,21 @@ interface PluginItemContentChangeEvent extends CustomEvent {
     loadOrderIndex?: number;
     isLightMaster: boolean;
   };
+}
+
+function isPluginItemContentChangeEvent(
+  evt: Event
+): evt is PluginItemContentChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.pluginId === 'string' &&
+    typeof evt.detail.group === 'string' &&
+    typeof evt.detail.isEditorOpen === 'boolean' &&
+    typeof evt.detail.hasUserEdits === 'boolean' &&
+    (typeof evt.detail.loadOrderIndex === 'number' ||
+      typeof evt.detail.loadOrderIndex === 'undefined') &&
+    typeof evt.detail.isLightMaster === 'boolean'
+  );
 }
 
 function deduplicateTags(currentTags: Tag[], suggestedTags: Tag[]): PluginTags {
@@ -337,36 +401,56 @@ export class Plugin {
       );
     }
 
-    Object.getOwnPropertyNames(plugin).forEach(
-      (propertyName: keyof DerivedPluginMetadata) => {
-        if (propertyName !== 'name') {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this as any)[propertyName] = plugin[propertyName];
-        }
-      }
-    );
+    this.isActive = plugin.isActive;
+    this.isDirty = plugin.isDirty;
+    this.isEmpty = plugin.isEmpty;
+    this.isMaster = plugin.isMaster;
+    this.isLightMaster = plugin.isLightMaster;
+    this.loadsArchive = plugin.loadsArchive;
+    this.messages = plugin.messages;
+    this.suggestedTags = plugin.suggestedTags;
+    this.currentTags = plugin.currentTags;
 
     /* Set default values for fields that may not be present. */
     if (plugin.version === undefined) {
       this.version = '';
+    } else {
+      this.version = plugin.version;
     }
+
     if (plugin.crc === undefined) {
       this.crc = 0;
+    } else {
+      this.crc = plugin.crc;
     }
+
     if (plugin.group === undefined) {
       this.group = 'default';
+    } else {
+      this.group = plugin.group;
     }
+
     if (plugin.loadOrderIndex === undefined) {
       this.loadOrderIndex = undefined;
+    } else {
+      this.loadOrderIndex = plugin.loadOrderIndex;
     }
+
     if (plugin.cleanedWith === undefined) {
       this.cleanedWith = '';
+    } else {
+      this.cleanedWith = plugin.cleanedWith;
     }
+
     if (plugin.masterlist === undefined) {
       this.masterlist = undefined;
+    } else {
+      this.masterlist = plugin.masterlist;
     }
     if (plugin.userlist === undefined) {
       this.userlist = undefined;
+    } else {
+      this.userlist = plugin.userlist;
     }
   }
 
@@ -633,7 +717,11 @@ export class Plugin {
     return new PluginCardContent(this, filters);
   }
 
-  public static onMessageChange(evt: PluginMessageChangeEvent): void {
+  public static onMessageChange(evt: Event): void {
+    if (!isPluginMessageChangeEvent(evt)) {
+      throw new TypeError(`Expected a PluginMessageChangeEvent, got ${evt}`);
+    }
+
     document.getElementById('filterTotalMessageNo').textContent = (
       parseInt(
         document.getElementById('filterTotalMessageNo').textContent,
@@ -654,7 +742,13 @@ export class Plugin {
     ).toString();
   }
 
-  public static onCleaningDataChange(evt: PluginCleaningDataChangeEvent): void {
+  public static onCleaningDataChange(evt: Event): void {
+    if (!isPluginCleaningDataChangeEvent(evt)) {
+      throw new TypeError(
+        `Expected a PluginCleaningDataChangeEvent, got ${evt}`
+      );
+    }
+
     if (evt.detail.isDirty !== undefined) {
       if (evt.detail.isDirty) {
         document.getElementById('dirtyPluginNo').textContent = (
@@ -676,21 +770,37 @@ export class Plugin {
     }
   }
 
-  public static onContentChange(evt: PluginContentChangeEvent): void {
+  public static onContentChange(evt: Event): void {
+    if (!isPluginContentChangeEvent(evt)) {
+      throw new TypeError(`Expected a PluginContentChangeEvent, got ${evt}`);
+    }
+
     const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
     if (card) {
       card.updateContent(evt.detail.mayChangeCardHeight);
     }
   }
 
-  public static onCardStylingChange(evt: PluginCardStylingChangeEvent): void {
+  public static onCardStylingChange(evt: Event): void {
+    if (!isPluginCardStylingChangeEvent(evt)) {
+      throw new TypeError(
+        `Expected a PluginCardStylingChangeEvent, got ${evt}`
+      );
+    }
+
     const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
     if (card) {
       card.updateStyling();
     }
   }
 
-  public static onItemContentChange(evt: PluginItemContentChangeEvent): void {
+  public static onItemContentChange(evt: Event): void {
+    if (!isPluginItemContentChangeEvent(evt)) {
+      throw new TypeError(
+        `Expected a PluginItemContentChangeEvent, got ${evt}`
+      );
+    }
+
     const item = document
       .getElementById('cardsNav')
       .querySelector(`[data-id="${evt.detail.pluginId}"]`) as LootPluginCard;

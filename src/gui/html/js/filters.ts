@@ -176,16 +176,26 @@ export default class Filters implements FilterStates {
   }
 
   public load(filterSettings: FilterStates): void {
-    if (filterSettings) {
-      Object.getOwnPropertyNames(filterSettings).forEach(
-        (filter: keyof FilterStates) => {
-          this[filter] = filterSettings[filter];
-          (document.getElementById(
-            filter
-          ) as PaperCheckboxElement).checked = this[filter];
-        }
-      );
+    if (!filterSettings) {
+      return;
     }
+
+    const filters: (keyof FilterStates)[] = [
+      'hideMessagelessPlugins',
+      'hideInactivePlugins',
+      'hideVersionNumbers',
+      'hideCRCs',
+      'hideBashTags',
+      'hideAllPluginMessages',
+      'hideNotes',
+      'hideDoNotCleanMessages'
+    ];
+
+    filters.forEach(filter => {
+      this[filter] = filterSettings[filter];
+      (document.getElementById(filter) as PaperCheckboxElement).checked =
+        filterSettings[filter];
+    });
   }
 
   public apply(plugins: Plugin[]): void {

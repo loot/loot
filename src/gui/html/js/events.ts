@@ -43,60 +43,116 @@ interface ClearAllMetadataResponse {
   plugins: DerivedPluginMetadata[];
 }
 
-interface PaperCheckboxChangeEvent extends CustomEvent {
+interface PaperCheckboxChangeEvent extends Event {
   target: EventTarget & {
     id: keyof FilterStates;
     checked: boolean;
   };
 }
 
-interface PaperInputChangeEvent extends CustomEvent {
+function isPaperCheckboxChangeEvent(
+  evt: Event
+): evt is PaperCheckboxChangeEvent {
+  return 'id' in evt.target && 'checked' in evt.target;
+}
+
+interface PaperInputChangeEvent extends Event {
   target: EventTarget & { value: string };
 }
 
-interface LootDropdownMenuChangeEvent extends CustomEvent {
+function isPaperInputChangeEvent(evt: Event): evt is PaperInputChangeEvent {
+  return 'value' in evt.target;
+}
+
+interface LootDropdownMenuChangeEvent extends Event {
   currentTarget: EventTarget & { value: string };
   target: EventTarget & { value: string };
 }
 
-interface LootDropdownMenuSelectEvent extends CustomEvent {
+function isLootDropdownMenuChangeEvent(
+  evt: Event
+): evt is LootDropdownMenuChangeEvent {
+  return 'value' in evt.currentTarget && 'value' in evt.target;
+}
+
+interface LootDropdownMenuSelectEvent extends Event {
   detail: { item: Element };
 }
 
-interface OpenReadmeEvent extends CustomEvent {
-  detail: { relativeFilePath?: string };
+function isLootDropdownMenuSelectEvent(
+  evt: Event
+): evt is LootDropdownMenuSelectEvent {
+  // Not ideal, but iron-select isn't a CustomEvent, so a typesafe check for
+  // evt.detail.item is tricky.
+  return evt.type === 'iron-select';
 }
 
-interface IronOverlayClosedEvent extends CustomEvent {
+interface IronOverlayClosedEvent extends Event {
   target: EventTarget & Element;
   detail: { confirmed: boolean };
+}
+
+function isIronOverlayClosedEvent(evt: Event): evt is IronOverlayClosedEvent {
+  // Not ideal, but iron-select isn't a CustomEvent, so a typesafe check for
+  // evt.detail.item is tricky.
+  return evt.type === 'iron-overlay-closed' && evt.target instanceof Element;
 }
 
 interface LootPluginEditorOpenEvent extends CustomEvent {
   target: EventTarget & { data: Plugin };
 }
 
+function isPluginEditorOpenEvent(evt: Event): evt is LootPluginEditorOpenEvent {
+  return 'data' in evt.target;
+}
+
 interface LootPluginEditorCloseEvent extends CustomEvent {
   target: EventTarget & LootPluginEditor;
+}
+
+function isPluginEditorCloseEvent(
+  evt: Event
+): evt is LootPluginEditorCloseEvent {
+  return evt.target instanceof LootPluginEditor;
 }
 
 interface LootCopyMetadataEvent extends CustomEvent {
   target: EventTarget & LootPluginCard;
 }
 
+function isCopyMetadataEvent(evt: Event): evt is LootCopyMetadataEvent {
+  return evt.target instanceof LootPluginCard;
+}
+
 interface LootClearMetadataEvent extends CustomEvent {
   target: EventTarget & LootPluginCard;
+}
+
+function isClearMetadataEvent(evt: Event): evt is LootClearMetadataEvent {
+  return evt.target instanceof LootPluginCard;
 }
 
 interface LootSearchBeginEvent extends CustomEvent {
   target: EventTarget & LootSearchToolbar;
 }
 
+function isSearchBeginEvent(evt: Event): evt is LootSearchBeginEvent {
+  return evt.target instanceof LootSearchToolbar;
+}
+
 interface LootGameFolderChangeEvent extends CustomEvent {
   detail: { folder: string };
 }
 
-export function onSidebarFilterToggle(evt: PaperCheckboxChangeEvent): void {
+function isGameFolderChangeEvent(evt: Event): evt is LootGameFolderChangeEvent {
+  return evt instanceof CustomEvent && typeof evt.detail.folder === 'string';
+}
+
+export function onSidebarFilterToggle(evt: Event): void {
+  if (!isPaperCheckboxChangeEvent(evt)) {
+    throw new TypeError(`Expected a PaperCheckboxChangeEvent, got ${evt}`);
+  }
+
   window.loot.filters[evt.target.id] = evt.target.checked;
 
   const filter = {
@@ -107,12 +163,20 @@ export function onSidebarFilterToggle(evt: PaperCheckboxChangeEvent): void {
   window.loot.filters.apply(window.loot.game.plugins);
 }
 
-export function onContentFilter(evt: PaperInputChangeEvent): void {
+export function onContentFilter(evt: Event): void {
+  if (!isPaperInputChangeEvent(evt)) {
+    throw new TypeError(`Expected a PaperInputChangeEvent, got ${evt}`);
+  }
+
   window.loot.filters.contentSearchString = evt.target.value;
   window.loot.filters.apply(window.loot.game.plugins);
 }
 
-export function onConflictsFilter(evt: LootDropdownMenuChangeEvent): void {
+export function onConflictsFilter(evt: Event): void {
+  if (!isLootDropdownMenuChangeEvent(evt)) {
+    throw new TypeError(`Expected a LootDropdownMenuChangeEvent, got ${evt}`);
+  }
+
   /* evt.currentTarget.value is the name of the target plugin, or an empty string
      if the filter has been deactivated. */
   if (evt.currentTarget.value) {
@@ -158,7 +222,11 @@ export function onConflictsFilter(evt: LootDropdownMenuChangeEvent): void {
   }
 }
 
-export function onChangeGame(evt: LootDropdownMenuSelectEvent): void {
+export function onChangeGame(evt: Event): void {
+  if (!isLootDropdownMenuSelectEvent(evt)) {
+    throw new TypeError(`Expected a LootDropdownMenuSelectEvent, got ${evt}`);
+  }
+
   if (
     !window.loot.game ||
     evt.detail.item.getAttribute('value') === window.loot.game.folder
@@ -459,9 +527,11 @@ export function onContentRefresh(): void {
     .catch(handlePromiseError);
 }
 
-export function onOpenReadme(evt: OpenReadmeEvent): void {
-  const relativeFilePath =
-    (evt.detail && evt.detail.relativeFilePath) || 'index.html';
+export function onOpenReadme(evt: Event): void {
+  let relativeFilePath = 'index.html';
+  if (evt instanceof CustomEvent && evt.detail.relativeFilePath) {
+    relativeFilePath = evt.detail.relativeFilePath;
+  }
 
   query('openReadme', { relativeFilePath }).catch(handlePromiseError);
 }
@@ -510,7 +580,11 @@ export function onApplySettings(evt: Event): void {
   }
 }
 
-export function onCloseSettingsDialog(evt: IronOverlayClosedEvent): void {
+export function onCloseSettingsDialog(evt: Event): void {
+  if (!isIronOverlayClosedEvent(evt)) {
+    throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt}`);
+  }
+
   if (evt.target.id !== 'settingsDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
@@ -573,7 +647,11 @@ export function onCloseSettingsDialog(evt: IronOverlayClosedEvent): void {
     .catch(handlePromiseError);
 }
 
-export function onSaveUserGroups(evt: IronOverlayClosedEvent): void {
+export function onSaveUserGroups(evt: Event): void {
+  if (!isIronOverlayClosedEvent(evt)) {
+    throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt}`);
+  }
+
   if (evt.target.id !== 'groupsEditorDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
@@ -598,9 +676,11 @@ export function onSaveUserGroups(evt: IronOverlayClosedEvent): void {
     .catch(handlePromiseError);
 }
 
-export function onEditorOpen(
-  evt: LootPluginEditorOpenEvent
-): Promise<string | void> {
+export function onEditorOpen(evt: Event): Promise<string | void> {
+  if (!isPluginEditorOpenEvent(evt)) {
+    throw new TypeError(`Expected a LootPluginEditorOpenEvent, got ${evt}`);
+  }
+
   /* Set the editor data. */
   (document.getElementById('editor') as LootPluginEditor).setEditorData(
     evt.target.data
@@ -627,7 +707,11 @@ export function onEditorOpen(
   return query('editorOpened').catch(handlePromiseError);
 }
 
-export function onEditorClose(evt: LootPluginEditorCloseEvent): void {
+export function onEditorClose(evt: Event): void {
+  if (!isPluginEditorCloseEvent(evt)) {
+    throw new TypeError(`Expected a LootPluginEditorCloseEvent, got ${evt}`);
+  }
+
   const plugin = window.loot.game.plugins.find(
     item => item.name === evt.target.querySelector('h1').textContent
   );
@@ -669,7 +753,11 @@ export function onEditorClose(evt: LootPluginEditorCloseEvent): void {
     .catch(handlePromiseError);
 }
 
-export function onCopyMetadata(evt: LootCopyMetadataEvent): void {
+export function onCopyMetadata(evt: Event): void {
+  if (!isCopyMetadataEvent(evt)) {
+    throw new TypeError(`Expected a LootCopyMetadataEvent, got ${evt}`);
+  }
+
   query('copyMetadata', { pluginName: evt.target.getName() })
     .then(() => {
       showNotification(
@@ -682,7 +770,11 @@ export function onCopyMetadata(evt: LootCopyMetadataEvent): void {
     .catch(handlePromiseError);
 }
 
-export function onClearMetadata(evt: LootClearMetadataEvent): void {
+export function onClearMetadata(evt: Event): void {
+  if (!isClearMetadataEvent(evt)) {
+    throw new TypeError(`Expected a LootClearMetadataEvent, got ${evt}`);
+  }
+
   askQuestion(
     '',
     window.loot.l10n.translateFormatted(
@@ -721,7 +813,11 @@ export function onClearMetadata(evt: LootClearMetadataEvent): void {
   );
 }
 
-export function onSearchBegin(evt: LootSearchBeginEvent): void {
+export function onSearchBegin(evt: Event): void {
+  if (!isSearchBeginEvent(evt)) {
+    throw new TypeError(`Expected a LootSearchBeginEvent, got ${evt}`);
+  }
+
   window.loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
@@ -753,7 +849,11 @@ export function onSearchEnd(/* evt */): void {
   document.getElementById('mainToolbar').classList.remove('search');
 }
 
-export function onFolderChange(evt: LootGameFolderChangeEvent): void {
+export function onFolderChange(evt: Event): void {
+  if (!isGameFolderChangeEvent(evt)) {
+    throw new TypeError(`Expected a LootGameFolderChangeEvent, got ${evt}`);
+  }
+
   updateSelectedGame(evt.detail.folder);
   /* Enable/disable the redate plugins option. */
   let gameSettings;
