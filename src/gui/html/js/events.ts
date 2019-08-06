@@ -38,6 +38,7 @@ import LootPluginItem from '../elements/loot-plugin-item';
 import LootPluginEditor from '../elements/loot-plugin-editor';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
 import LootSearchToolbar from '../elements/loot-search-toolbar';
+import { getElementById, querySelector } from './dom/helpers';
 
 interface ClearAllMetadataResponse {
   plugins: DerivedPluginMetadata[];
@@ -53,7 +54,7 @@ interface PaperCheckboxChangeEvent extends Event {
 function isPaperCheckboxChangeEvent(
   evt: Event
 ): evt is PaperCheckboxChangeEvent {
-  return 'id' in evt.target && 'checked' in evt.target;
+  return evt.target !== null && 'id' in evt.target && 'checked' in evt.target;
 }
 
 interface PaperInputChangeEvent extends Event {
@@ -61,7 +62,7 @@ interface PaperInputChangeEvent extends Event {
 }
 
 function isPaperInputChangeEvent(evt: Event): evt is PaperInputChangeEvent {
-  return 'value' in evt.target;
+  return evt.target !== null && 'value' in evt.target;
 }
 
 interface LootDropdownMenuChangeEvent extends Event {
@@ -72,7 +73,12 @@ interface LootDropdownMenuChangeEvent extends Event {
 function isLootDropdownMenuChangeEvent(
   evt: Event
 ): evt is LootDropdownMenuChangeEvent {
-  return 'value' in evt.currentTarget && 'value' in evt.target;
+  return (
+    evt.currentTarget !== null &&
+    'value' in evt.currentTarget &&
+    evt.target !== null &&
+    'value' in evt.target
+  );
 }
 
 interface LootDropdownMenuSelectEvent extends Event {
@@ -103,7 +109,7 @@ interface LootPluginEditorOpenEvent extends CustomEvent {
 }
 
 function isPluginEditorOpenEvent(evt: Event): evt is LootPluginEditorOpenEvent {
-  return 'data' in evt.target;
+  return evt.target !== null && 'data' in evt.target;
 }
 
 interface LootPluginEditorCloseEvent extends CustomEvent {
@@ -189,7 +195,7 @@ export function onConflictsFilter(evt: Event): void {
       .then(response => {
         window.loot.game.generalMessages = response.generalMessages;
         window.loot.game.plugins = window.loot.game.plugins.reduce(
-          (plugins, plugin) => {
+          (plugins: Plugin[], plugin) => {
             const responsePlugin = response.plugins.find(
               item => item.name === plugin.name
             );
@@ -205,9 +211,11 @@ export function onConflictsFilter(evt: Event): void {
         window.loot.filters.apply(window.loot.game.plugins);
 
         /* Scroll to the target plugin */
-        const list = document.getElementById(
-          'pluginCardList'
-        ) as IronListElement;
+        const list = getElementById('pluginCardList') as IronListElement;
+        if (list.items === null || list.items === undefined) {
+          throw new Error('Plugin card list is null or undefined');
+        }
+
         const index = list.items.findIndex(
           item => item.name === evt.target.value
         );
@@ -246,9 +254,9 @@ export function onChangeGame(evt: Event): void {
 
       /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
-      const generalMessages = document
-        .getElementById('summary')
-        .getElementsByTagName('ul')[0];
+      const generalMessages = getElementById('summary').getElementsByTagName(
+        'ul'
+      )[0];
       while (generalMessages.firstElementChild) {
         generalMessages.removeChild(generalMessages.firstElementChild);
       }
@@ -469,16 +477,15 @@ export function onCopyContent(): void {
   if (window.loot.game) {
     content = window.loot.game.getContent();
   } else {
-    const message = document
-      .getElementById('summary')
-      .getElementsByTagName('ul')[0].firstElementChild;
+    const message = getElementById('summary').getElementsByTagName('ul')[0]
+      .firstElementChild;
 
     const { language = 'en' } = window.loot.settings || {};
 
     if (message) {
       content.messages.push({
         type: message.className,
-        text: message.textContent,
+        text: message.textContent || '',
         language,
         condition: ''
       });
@@ -575,7 +582,7 @@ export function onQuit(): void {
 }
 
 export function onApplySettings(evt: Event): void {
-  if (!(document.getElementById('gameTable') as EditableTable).validate()) {
+  if (!(getElementById('gameTable') as EditableTable).validate()) {
     evt.stopPropagation();
   }
 }
@@ -598,22 +605,20 @@ export function onCloseSettingsDialog(evt: Event): void {
 
   /* Update the JS variable values. */
   const settings = {
-    enableDebugLogging: (document.getElementById(
-      'enableDebugLogging'
-    ) as PaperCheckboxElement).checked,
-    game: (document.getElementById('defaultGameSelect') as LootDropdownMenu)
-      .value,
-    games: (document.getElementById('gameTable') as EditableTable).getRowsData(
+    enableDebugLogging:
+      (getElementById('enableDebugLogging') as PaperCheckboxElement).checked ||
+      false,
+    game: (getElementById('defaultGameSelect') as LootDropdownMenu).value,
+    games: (getElementById('gameTable') as EditableTable).getRowsData(
       false
     ) as GameSettings[],
-    language: (document.getElementById('languageSelect') as LootDropdownMenu)
-      .value,
-    updateMasterlist: (document.getElementById(
-      'updateMasterlist'
-    ) as PaperCheckboxElement).checked,
-    enableLootUpdateCheck: (document.getElementById(
-      'enableLootUpdateCheck'
-    ) as PaperCheckboxElement).checked,
+    language: (getElementById('languageSelect') as LootDropdownMenu).value,
+    updateMasterlist:
+      (getElementById('updateMasterlist') as PaperCheckboxElement).checked ||
+      false,
+    enableLootUpdateCheck:
+      (getElementById('enableLootUpdateCheck') as PaperCheckboxElement)
+        .checked || false,
     filters: window.loot.settings.filters,
     lastVersion: window.loot.settings.lastVersion,
     languages: window.loot.settings.languages
@@ -657,7 +662,7 @@ export function onSaveUserGroups(evt: Event): void {
        any events that don't come from the dialog itself. */
     return;
   }
-  const editor = document.getElementById('groupsEditor') as LootGroupsEditor;
+  const editor = getElementById('groupsEditor') as LootGroupsEditor;
   if (!evt.detail.confirmed) {
     /* Re-apply the existing groups to the editor. */
     editor.setGroups(window.loot.game.groups);
@@ -682,22 +687,20 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
   }
 
   /* Set the editor data. */
-  (document.getElementById('editor') as LootPluginEditor).setEditorData(
-    evt.target.data
-  );
+  (getElementById('editor') as LootPluginEditor).setEditorData(evt.target.data);
 
   window.loot.state.enterEditingState();
 
   /* Sidebar items have been resized. */
-  (document.getElementById('cardsNav') as IronListElement).notifyResize();
+  (getElementById('cardsNav') as IronListElement).notifyResize();
 
   /* Update the plugin's editor state tracker */
   evt.target.data.isEditorOpen = true;
 
   /* Set up drag 'n' drop event handlers. */
-  const elements = document
-    .getElementById('cardsNav')
-    .getElementsByTagName('loot-plugin-item');
+  const elements = getElementById('cardsNav').getElementsByTagName(
+    'loot-plugin-item'
+  );
   for (let i = 0; i < elements.length; i += 1) {
     const element = elements[i] as LootPluginItem;
     element.draggable = true;
@@ -712,9 +715,14 @@ export function onEditorClose(evt: Event): void {
     throw new TypeError(`Expected a LootPluginEditorCloseEvent, got ${evt}`);
   }
 
+  const pluginName = querySelector(evt.target, 'h1').textContent;
   const plugin = window.loot.game.plugins.find(
-    item => item.name === evt.target.querySelector('h1').textContent
+    item => item.name === pluginName
   );
+  if (plugin === undefined) {
+    throw new Error(`Cannot find plugin with name "${pluginName}"`);
+  }
+
   /* Update the plugin's editor state tracker */
   plugin.isEditorOpen = false;
 
@@ -732,18 +740,18 @@ export function onEditorClose(evt: Event): void {
 
       /* Now perform search again. If there is no current search, this won't
        do anything. */
-      (document.getElementById('searchBar') as LootSearchToolbar).search();
+      (getElementById('searchBar') as LootSearchToolbar).search();
     })
     .catch(handlePromiseError)
     .then(() => {
       window.loot.state.exitEditingState();
       /* Sidebar items have been resized. */
-      (document.getElementById('cardsNav') as IronListElement).notifyResize();
+      (getElementById('cardsNav') as IronListElement).notifyResize();
 
       /* Remove drag 'n' drop event handlers. */
-      const elements = document
-        .getElementById('cardsNav')
-        .getElementsByTagName('loot-plugin-item');
+      const elements = getElementById('cardsNav').getElementsByTagName(
+        'loot-plugin-item'
+      );
       for (let i = 0; i < elements.length; i += 1) {
         const element = elements[i] as LootPluginItem;
         element.removeAttribute('draggable');
@@ -763,7 +771,7 @@ export function onCopyMetadata(evt: Event): void {
       showNotification(
         window.loot.l10n.translateFormatted(
           'The metadata for "%s" has been copied to the clipboard.',
-          evt.target.getName()
+          evt.target.getName() || ''
         )
       );
     })
@@ -779,7 +787,7 @@ export function onClearMetadata(evt: Event): void {
     '',
     window.loot.l10n.translateFormatted(
       'Are you sure you want to clear all existing user-added metadata from "%s"?',
-      evt.target.getName()
+      evt.target.getName() || ''
     ),
     window.loot.l10n.translate('Clear'),
     result => {
@@ -802,11 +810,11 @@ export function onClearMetadata(evt: Event): void {
           showNotification(
             window.loot.l10n.translateFormatted(
               'The user-added metadata for "%s" has been cleared.',
-              evt.target.getName()
+              evt.target.getName() || ''
             )
           );
           /* Now perform search again. If there is no current search, this won't do anything. */
-          (document.getElementById('searchBar') as LootSearchToolbar).search();
+          (getElementById('searchBar') as LootSearchToolbar).search();
         })
         .catch(handlePromiseError);
     }
@@ -827,7 +835,7 @@ export function onSearchBegin(evt: Event): void {
   }
 
   evt.target.results = window.loot.game.plugins.reduce(
-    (indices, plugin, index) => {
+    (indices: number[], plugin, index) => {
       if (
         plugin
           .getCardContent(window.loot.filters)
@@ -846,7 +854,7 @@ export function onSearchEnd(/* evt */): void {
   window.loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
-  document.getElementById('mainToolbar').classList.remove('search');
+  getElementById('mainToolbar').classList.remove('search');
 }
 
 export function onFolderChange(evt: Event): void {

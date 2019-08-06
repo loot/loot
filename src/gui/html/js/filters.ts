@@ -13,6 +13,7 @@ import {
 import LootPluginCard from '../elements/loot-plugin-card';
 import LootSearchToolbar from '../elements/loot-search-toolbar';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
+import { getElementById } from './dom/helpers';
 
 interface PluginData {
   metadata: DerivedPluginMetadata;
@@ -193,7 +194,7 @@ export default class Filters implements FilterStates {
 
     filters.forEach(filter => {
       this[filter] = filterSettings[filter];
-      (document.getElementById(filter) as PaperCheckboxElement).checked =
+      (getElementById(filter) as PaperCheckboxElement).checked =
         filterSettings[filter];
     });
   }
@@ -201,10 +202,8 @@ export default class Filters implements FilterStates {
   public apply(plugins: Plugin[]): void {
     const filteredPlugins = plugins.filter(this.pluginFilter, this);
 
-    const cardsNav = document.getElementById('cardsNav') as IronListElement;
-    const cardsList = document.getElementById(
-      'pluginCardList'
-    ) as IronListElement;
+    const cardsNav = getElementById('cardsNav') as IronListElement;
+    const cardsList = getElementById('pluginCardList') as IronListElement;
 
     cardsNav.items = filteredPlugins;
     cardsList.items = filteredPlugins;
@@ -223,13 +222,14 @@ export default class Filters implements FilterStates {
 
     /* Now perform search again. If there is no current search, this won't
     do anything. */
-    (document.getElementById('searchBar') as LootSearchToolbar).search();
+    (getElementById('searchBar') as LootSearchToolbar).search();
 
     /* Re-count all hidden plugins and messages. */
-    document.getElementById('hiddenPluginNo').textContent = (
+    getElementById('hiddenPluginNo').textContent = (
       plugins.length - filteredPlugins.length
     ).toString();
-    document.getElementById('hiddenMessageNo').textContent = plugins
+
+    getElementById('hiddenMessageNo').textContent = plugins
       .reduce(
         (previousValue, currentValue) =>
           previousValue +
@@ -241,11 +241,11 @@ export default class Filters implements FilterStates {
   }
 
   public static fillConflictsFilterList(plugins: Plugin[]): void {
-    const list = document.getElementById('conflictsFilter');
+    const list = getElementById('conflictsFilter');
 
     /* Remove any existing plugin items. */
     while (list.children.length > 1) {
-      list.removeChild(list.lastElementChild);
+      list.removeChild(list.children[1]);
     }
 
     plugins.forEach(plugin => {
@@ -258,6 +258,6 @@ export default class Filters implements FilterStates {
   }
 
   public static onDeactivateConflictsFilter(): void {
-    (document.getElementById('conflictsFilter') as LootDropdownMenu).value = '';
+    (getElementById('conflictsFilter') as LootDropdownMenu).value = '';
   }
 }

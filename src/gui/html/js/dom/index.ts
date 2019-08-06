@@ -25,6 +25,7 @@ import {
   createMessageItem
 } from './createItem';
 import { Plugin } from '../plugin';
+import { getElementById, getAttribute, querySelector } from './helpers';
 
 interface Message {
   type: string;
@@ -36,7 +37,7 @@ interface IronSelectEvent extends CustomEvent {
 }
 
 function isIronSelectEvent(evt: Event): evt is IronSelectEvent {
-  return 'selected' in evt.target;
+  return evt.target !== null && 'selected' in evt.target;
 }
 
 interface LootSearchChangeSelectionEvent extends CustomEvent {
@@ -52,23 +53,34 @@ function isLootSearchChangeSelectionEvent(
 function getElementInTableRowTemplate(
   rowTemplateId: string,
   elementClass: string
-): HTMLElement {
-  const template = document.querySelector(
+): Element {
+  const template = querySelector(
+    document,
     `#${rowTemplateId}`
   ) as HTMLTemplateElement;
 
-  return template.content.querySelector(`.${elementClass}`);
+  const element = querySelector(template.content, `.${elementClass}`);
+
+  return element;
 }
 
 function forceSelectDefaultValue(element: Element): void {
-  element.setAttribute(
-    'value',
-    element.firstElementChild.getAttribute('value')
-  );
+  if (element.firstElementChild === null) {
+    throw new Error('Expected element to have at least one child element');
+  }
+
+  const value = element.firstElementChild.getAttribute('value');
+  if (value === null) {
+    throw new Error(
+      "Expected element's first element child to have a 'value' attribute"
+    );
+  }
+
+  element.setAttribute('value', value);
 }
 
 function fillLanguagesList(languages: Language[]): void {
-  const settingsLangSelect = document.getElementById('languageSelect');
+  const settingsLangSelect = getElementById('languageSelect');
   const messageLangSelect = getElementInTableRowTemplate(
     'messageRow',
     'language'
@@ -91,7 +103,7 @@ function fillLanguagesList(languages: Language[]): void {
 export * from './createItem';
 
 export function show(elementId: string, showElement = true): void {
-  document.getElementById(elementId).hidden = !showElement;
+  getElementById(elementId).hidden = !showElement;
 }
 
 export function enable(
@@ -100,7 +112,7 @@ export function enable(
 ): void {
   let element = elementOrId;
   if (typeof element === 'string') {
-    element = document.getElementById(element);
+    element = getElementById(element);
   }
 
   if (enableElement) {
@@ -111,29 +123,32 @@ export function enable(
 }
 
 export function openDialog(dialogElementId: string): void {
-  (document.getElementById(dialogElementId) as PaperDialogElement).open();
+  (getElementById(dialogElementId) as PaperDialogElement).open();
 }
 
 export function initialiseVirtualLists(plugins: Plugin[]): void {
-  (document.getElementById('cardsNav') as IronListElement).items = plugins;
-  (document.getElementById(
-    'pluginCardList'
-  ) as IronListElement).items = plugins;
+  (getElementById('cardsNav') as IronListElement).items = plugins;
+  (getElementById('pluginCardList') as IronListElement).items = plugins;
 }
 
 export function updateSelectedGame(gameFolder: string): void {
-  (document.getElementById('gameMenu') as LootDropdownMenu).value = gameFolder;
+  (getElementById('gameMenu') as LootDropdownMenu).value = gameFolder;
 
   /* Also disable deletion of the game's row in the settings dialog. */
-  const table = document.getElementById('gameTable') as EditableTable;
-  for (let i = 0; i < table.querySelector('tbody').rows.length; i += 1) {
-    const folderElements = table
-      .querySelector('tbody')
-      .rows[i].getElementsByClassName('folder');
+  const table = getElementById('gameTable') as EditableTable;
+  const tableBody = table.querySelector('tbody');
+  if (tableBody === null) {
+    throw new Error(
+      'Expected element with ID "gameTable" to have a tbody child element'
+    );
+  }
+
+  for (let i = 0; i < tableBody.rows.length; i += 1) {
+    const folderElements = tableBody.rows[i].getElementsByClassName('folder');
 
     if (folderElements.length === 1) {
       table.setReadOnly(
-        table.querySelector('tbody').rows[i],
+        tableBody.rows[i],
         ['delete'],
         (folderElements[0] as PaperInputElement).value === gameFolder
       );
@@ -145,7 +160,7 @@ export function setGameMenuItems(
   games: Game[],
   installedGames: string[]
 ): void {
-  const gameMenu = document.getElementById('gameMenu');
+  const gameMenu = getElementById('gameMenu');
 
   /* First make sure game listing elements don't have any existing entries. */
   while (gameMenu.firstElementChild) {
@@ -156,25 +171,22 @@ export function setGameMenuItems(
     const gameItem = gameMenu.appendChild(createGameItem(game));
     enable(
       gameItem,
-      installedGames.indexOf(gameItem.getAttribute('value')) !== -1
+      installedGames.indexOf(getAttribute(gameItem, 'value')) !== -1
     );
   });
 }
 
 export function updateSettingsDialog(settings: LootSettings): void {
-  const gameSelect = document.getElementById(
-    'defaultGameSelect'
-  ) as LootDropdownMenu;
+  const gameSelect = getElementById('defaultGameSelect') as LootDropdownMenu;
 
-  const languageSelect = document.getElementById(
-    'languageSelect'
-  ) as LootDropdownMenu;
+  const languageSelect = getElementById('languageSelect') as LootDropdownMenu;
 
-  const gameTable = document.getElementById('gameTable') as EditableTable;
+  const gameTable = getElementById('gameTable') as EditableTable;
 
-  /* First make sure game listing elements don't have any existing entries. */
+  /* First make sure game listing elements don't have any existing entries.
+     Leave the autodetect entry in the game select dropdown. */
   while (gameSelect.children.length > 1) {
-    gameSelect.removeChild(gameSelect.lastElementChild);
+    gameSelect.removeChild(gameSelect.children[1]);
   }
   gameTable.clear();
 
@@ -191,15 +203,13 @@ export function updateSettingsDialog(settings: LootSettings): void {
   gameSelect.value = settings.game;
   languageSelect.value = settings.language;
 
-  (document.getElementById(
-    'enableDebugLogging'
-  ) as PaperToggleButtonElement).checked = settings.enableDebugLogging;
+  (getElementById('enableDebugLogging') as PaperToggleButtonElement).checked =
+    settings.enableDebugLogging;
 
-  (document.getElementById(
-    'updateMasterlist'
-  ) as PaperToggleButtonElement).checked = settings.updateMasterlist;
+  (getElementById('updateMasterlist') as PaperToggleButtonElement).checked =
+    settings.updateMasterlist;
 
-  (document.getElementById(
+  (getElementById(
     'enableLootUpdateCheck'
   ) as PaperToggleButtonElement).checked = settings.enableLootUpdateCheck;
 }
@@ -212,13 +222,15 @@ export function fillGameTypesList(gameTypes: string[]): void {
   });
 
   forceSelectDefaultValue(select);
-  select.setAttribute('value', select.firstElementChild.getAttribute('value'));
 }
 
 export function fillGroupsList(groups: Group[]): void {
-  const groupsSelect = document
-    .getElementById('editor')
-    .shadowRoot.querySelector('#group');
+  const shadowRoot = getElementById('editor').shadowRoot;
+  if (shadowRoot === null) {
+    throw new Error('Expected element with ID "editor" to have a shadow root');
+  }
+
+  const groupsSelect = querySelector(shadowRoot, '#group');
 
   while (groupsSelect.firstElementChild) {
     groupsSelect.removeChild(groupsSelect.firstElementChild);
@@ -236,12 +248,12 @@ export function fillGroupsList(groups: Group[]): void {
 export function initialiseGroupsEditor(
   getter: (groupName: string) => string[]
 ): void {
-  const editor = document.getElementById('groupsEditor') as LootGroupsEditor;
+  const editor = getElementById('groupsEditor') as LootGroupsEditor;
   editor.setGroupPluginNamesGetter(getter);
 }
 
 export function updateGroupsEditorState(groups: SourcedGroup[]): void {
-  const editor = document.getElementById('groupsEditor') as LootGroupsEditor;
+  const editor = getElementById('groupsEditor') as LootGroupsEditor;
   editor.setGroups(groups);
 }
 
@@ -250,9 +262,9 @@ export function appendGeneralMessages(messages: Message[]): void {
     return;
   }
 
-  const generalMessagesList = document
-    .getElementById('summary')
-    .getElementsByTagName('ul')[0];
+  const generalMessagesList = getElementById('summary').getElementsByTagName(
+    'ul'
+  )[0];
   messages.forEach(message => {
     generalMessagesList.appendChild(
       createMessageItem(message.type, message.content)
@@ -273,16 +285,16 @@ export function listInitErrors(errorMessages: string[]): void {
   );
 
   ['filterTotalMessageNo', 'totalMessageNo', 'totalErrorNo'].forEach(id => {
-    document.getElementById(id).textContent = errorMessages.length.toString();
+    getElementById(id).textContent = errorMessages.length.toString();
   });
 }
 
 export function onJumpToGeneralInfo(): void {
-  document.getElementById('pluginCardList').scroll(0, 0);
+  getElementById('pluginCardList').scroll(0, 0);
 }
 
 export function onShowAboutDialog(): void {
-  (document.getElementById('about') as PaperDialogElement).open();
+  (getElementById('about') as PaperDialogElement).open();
 }
 
 export function onSwitchSidebarTab(evt: Event): void {
@@ -291,7 +303,7 @@ export function onSwitchSidebarTab(evt: Event): void {
   }
 
   if (typeof evt.target.selected === 'string') {
-    const selector = document.getElementById(evt.target.selected)
+    const selector = getElementById(evt.target.selected)
       .parentElement as HTMLElement & IronSelectableBehavior;
 
     selector.selected = evt.target.selected;
@@ -303,22 +315,25 @@ export function onSidebarClick(evt: MouseEvent): void {
     evt.target instanceof HTMLElement &&
     evt.target.hasAttribute('data-index')
   ) {
-    const index = parseInt(evt.target.getAttribute('data-index'), 10);
+    const index = parseInt(getAttribute(evt.target, 'data-index'), 10);
 
-    const list = document.getElementById('pluginCardList') as IronListElement;
+    const list = getElementById('pluginCardList') as IronListElement;
     list.scrollToIndex(index);
 
     if (evt.type === 'dblclick') {
       /* Double-clicking can select the item's text, clear the selection in
           case that has happened. */
-      window.getSelection().removeAllRanges();
+      const selection = window.getSelection();
+      if (selection !== null) {
+        selection.removeAllRanges();
+      }
 
       if (
         document.body.getAttribute('data-state') !== 'editing' &&
         document.body.getAttribute('data-state') !== 'sorting'
       ) {
-        const pluginCard = document.getElementById(
-          evt.target.getAttribute('data-id')
+        const pluginCard = getElementById(
+          getAttribute(evt.target, 'data-id')
         ) as LootPluginCard;
 
         pluginCard.onShowEditor();
@@ -328,27 +343,27 @@ export function onSidebarClick(evt: MouseEvent): void {
 }
 
 export function onShowSettingsDialog(): void {
-  (document.getElementById('settingsDialog') as PaperDialogElement).open();
+  (getElementById('settingsDialog') as PaperDialogElement).open();
 }
 
 export function onOpenGroupsEditor(): void {
-  (document.getElementById('groupsEditorDialog') as PaperDialogElement).open();
+  (getElementById('groupsEditorDialog') as PaperDialogElement).open();
 }
 export function onGroupsEditorOpened(): void {
-  (document.getElementById('groupsEditor') as LootGroupsEditor).render();
+  (getElementById('groupsEditor') as LootGroupsEditor).render();
 }
 
 export function onFocusSearch(evt: KeyboardEvent): void {
   // Focus search if ctrl-f is pressed.
   if (evt.ctrlKey && evt.keyCode === 70) {
-    document.getElementById('mainToolbar').classList.add('search');
-    (document.getElementById('searchBar') as LootSearchToolbar).focusInput();
+    getElementById('mainToolbar').classList.add('search');
+    (getElementById('searchBar') as LootSearchToolbar).focusInput();
   }
 }
 
 export function onSearchOpen(): void {
-  document.getElementById('mainToolbar').classList.add('search');
-  (document.getElementById('searchBar') as LootSearchToolbar).focusInput();
+  getElementById('mainToolbar').classList.add('search');
+  (getElementById('searchBar') as LootSearchToolbar).focusInput();
 }
 
 export function onSearchChangeSelection(evt: Event): void {
@@ -358,7 +373,7 @@ export function onSearchChangeSelection(evt: Event): void {
     );
   }
 
-  const list = document.getElementById('pluginCardList') as IronListElement;
+  const list = getElementById('pluginCardList') as IronListElement;
   list.scrollToIndex(evt.detail.selection);
 }
 
@@ -381,23 +396,23 @@ export function setUIState(state: string): void {
 }
 
 export function enableGameOperations(shouldEnable: boolean): void {
-  (document.getElementById(
+  (getElementById(
     'sortButton'
   ) as PaperIconButtonElement).disabled = !shouldEnable;
 
-  (document.getElementById(
+  (getElementById(
     'updateMasterlistButton'
   ) as PaperIconButtonElement).disabled = !shouldEnable;
 
-  (document.getElementById(
+  (getElementById(
     'wipeUserlistButton'
   ) as PaperIconItemElement).disabled = !shouldEnable;
 
-  (document.getElementById(
+  (getElementById(
     'copyLoadOrderButton'
   ) as PaperIconItemElement).disabled = !shouldEnable;
 
-  (document.getElementById(
+  (getElementById(
     'refreshContentButton'
   ) as PaperIconItemElement).disabled = !shouldEnable;
 }

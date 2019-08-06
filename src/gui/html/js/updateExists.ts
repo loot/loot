@@ -36,7 +36,7 @@ function compare(lhs: string, rhs: string): number {
 function findTag(
   tags: Octokit.ReposListTagsResponseItem[],
   tagName: string
-): Octokit.ReposListTagsResponseItem {
+): Octokit.ReposListTagsResponseItem | undefined {
   return tags.find(element => element.name === tagName);
 }
 
@@ -44,7 +44,7 @@ async function paginatedFindTag(
   octokit: Octokit,
   repo: Repo,
   tagName: string
-): Promise<Octokit.ReposListTagsResponseItem> {
+): Promise<Octokit.ReposListTagsResponseItem | undefined> {
   const options = octokit.repos.listTags.endpoint.merge({
     ...repo,
     // eslint-disable-next-line @typescript-eslint/camelcase

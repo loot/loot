@@ -1,11 +1,10 @@
 import { PaperDialogElement } from '@polymer/paper-dialog';
 import { PaperToastElement } from '@polymer/paper-toast';
 import LootMessageDialog from '../elements/loot-message-dialog';
+import { getElementById } from './dom/helpers';
 
 export function showProgress(text: string): void {
-  const progressDialog = document.getElementById(
-    'progressDialog'
-  ) as PaperDialogElement;
+  const progressDialog = getElementById('progressDialog') as PaperDialogElement;
   progressDialog.getElementsByTagName('p')[0].textContent = text;
   if (!progressDialog.opened) {
     progressDialog.open();
@@ -15,9 +14,7 @@ export function showProgress(text: string): void {
 }
 
 export function closeProgress(): void {
-  const progressDialog = document.getElementById(
-    'progressDialog'
-  ) as PaperDialogElement;
+  const progressDialog = getElementById('progressDialog') as PaperDialogElement;
   if (progressDialog.opened) {
     progressDialog.refit();
     progressDialog.close();
@@ -48,7 +45,7 @@ export function askQuestion(
 }
 
 export function showNotification(text: string): void {
-  const toast = document.getElementById('toast') as PaperToastElement;
+  const toast = getElementById('toast') as PaperToastElement;
   if (toast.opened) {
     toast.hide();
   }

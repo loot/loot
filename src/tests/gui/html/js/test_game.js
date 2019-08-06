@@ -98,14 +98,14 @@ describe('Game', () => {
       expect(game.loadOrder).toBe(undefined);
     });
 
-    test('should set oldLoadOrder to undefined by default', () => {
+    test('should set oldLoadOrder to an empty array by default', () => {
       const game = new Game({}, l10n);
-      expect(game.oldLoadOrder).toBe(undefined);
+      expect(game.oldLoadOrder).toEqual([]);
     });
 
-    test("should set oldLoadOrder to undefined even if the object's value if defined", () => {
+    test("should set oldLoadOrder to an empty array even if the object's value if defined", () => {
       const game = new Game({ oldLoadOrder: ['test'] }, l10n);
-      expect(game.oldLoadOrder).toBe(undefined);
+      expect(game.oldLoadOrder).toEqual([]);
     });
 
     test('should initialise _notApplicableString', () => {
@@ -639,7 +639,7 @@ describe('Game', () => {
 
       game.applySort();
 
-      expect(game.oldLoadOrder).toBe(undefined);
+      expect(game.oldLoadOrder).toEqual([]);
     });
   });
 
@@ -700,7 +700,7 @@ describe('Game', () => {
 
       game.cancelSort([]);
 
-      expect(game.oldLoadOrder).toBe(undefined);
+      expect(game.oldLoadOrder).toEqual([]);
     });
 
     test('should set plugin load order indices using the array passed as the first parameter', () => {

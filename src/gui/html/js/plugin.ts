@@ -31,6 +31,11 @@ import {
   Tag,
   PluginMetadata
 } from './interfaces';
+import {
+  incrementCounterText,
+  getElementById,
+  querySelector
+} from './dom/helpers';
 
 interface PluginTags {
   current: string;
@@ -382,7 +387,7 @@ export class Plugin {
     this._currentTags = obj.currentTags || [];
     this._isDirty = obj.isDirty || false;
     this._loadOrderIndex = obj.loadOrderIndex;
-    this.cleanedWith = obj.cleanedWith || '';
+    this._cleanedWith = obj.cleanedWith || '';
 
     /* UI state variables */
     this.id = this.name.replace(/\s+/g, '');
@@ -652,7 +657,7 @@ export class Plugin {
     return this.userlist !== undefined && Object.keys(this.userlist).length > 1;
   }
 
-  public get userlist(): PluginMetadata {
+  public get userlist(): PluginMetadata | undefined {
     return this._userlist;
   }
 
@@ -701,7 +706,7 @@ export class Plugin {
     }
   }
 
-  public get loadOrderIndex(): number {
+  public get loadOrderIndex(): number | undefined {
     return this._loadOrderIndex;
   }
 
@@ -722,24 +727,10 @@ export class Plugin {
       throw new TypeError(`Expected a PluginMessageChangeEvent, got ${evt}`);
     }
 
-    document.getElementById('filterTotalMessageNo').textContent = (
-      parseInt(
-        document.getElementById('filterTotalMessageNo').textContent,
-        10
-      ) + evt.detail.totalDiff
-    ).toString();
-    document.getElementById('totalMessageNo').textContent = (
-      parseInt(document.getElementById('totalMessageNo').textContent, 10) +
-      evt.detail.totalDiff
-    ).toString();
-    document.getElementById('totalWarningNo').textContent = (
-      parseInt(document.getElementById('totalWarningNo').textContent, 10) +
-      evt.detail.warningDiff
-    ).toString();
-    document.getElementById('totalErrorNo').textContent = (
-      parseInt(document.getElementById('totalErrorNo').textContent, 10) +
-      evt.detail.errorDiff
-    ).toString();
+    incrementCounterText('filterTotalMessageNo', evt.detail.totalDiff);
+    incrementCounterText('totalMessageNo', evt.detail.totalDiff);
+    incrementCounterText('totalWarningNo', evt.detail.warningDiff);
+    incrementCounterText('totalErrorNo', evt.detail.errorDiff);
   }
 
   public static onCleaningDataChange(evt: Event): void {
@@ -751,20 +742,19 @@ export class Plugin {
 
     if (evt.detail.isDirty !== undefined) {
       if (evt.detail.isDirty) {
-        document.getElementById('dirtyPluginNo').textContent = (
-          parseInt(document.getElementById('dirtyPluginNo').textContent, 10) + 1
-        ).toString();
+        incrementCounterText('dirtyPluginNo', 1);
       } else {
-        document.getElementById('dirtyPluginNo').textContent = (
-          parseInt(document.getElementById('dirtyPluginNo').textContent, 10) - 1
-        ).toString();
+        incrementCounterText('dirtyPluginNo', -1);
       }
     }
-    if (evt.detail.cleanedWith !== undefined) {
+    if (
+      evt.detail.cleanedWith !== undefined &&
+      evt.detail.pluginId !== undefined
+    ) {
       const card = document.getElementById(
         evt.detail.pluginId
       ) as LootPluginCard;
-      if (card) {
+      if (card !== null) {
         card.updateIsCleanIcon();
       }
     }
@@ -776,7 +766,7 @@ export class Plugin {
     }
 
     const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
-    if (card) {
+    if (card !== null) {
       card.updateContent(evt.detail.mayChangeCardHeight);
     }
   }
@@ -789,7 +779,7 @@ export class Plugin {
     }
 
     const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
-    if (card) {
+    if (card !== null) {
       card.updateStyling();
     }
   }
@@ -801,9 +791,10 @@ export class Plugin {
       );
     }
 
-    const item = document
-      .getElementById('cardsNav')
-      .querySelector(`[data-id="${evt.detail.pluginId}"]`) as LootPluginCard;
+    const item = querySelector(
+      getElementById('cardsNav'),
+      `[data-id="${evt.detail.pluginId}"]`
+    ) as LootPluginCard;
     if (item) {
       item.updateContent(true);
     }

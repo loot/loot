@@ -86,6 +86,12 @@ import {
   GetInstalledGamesResponse
 } from './interfaces';
 import Loot from '../type-declarations/loot.d';
+import {
+  getElementById,
+  incrementCounterText,
+  querySelector,
+  getTextAsInt
+} from './dom/helpers';
 
 interface GetInitErrorsResponse {
   errors: string[];
@@ -101,122 +107,116 @@ interface GetAutoSortResponse {
 
 function setupEventHandlers(): void {
   /* Set up handlers for filters. */
-  document
-    .getElementById('hideVersionNumbers')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideCRCs')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideBashTags')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideNotes')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideDoNotCleanMessages')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideInactivePlugins')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideAllPluginMessages')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('hideMessagelessPlugins')
-    .addEventListener('change', onSidebarFilterToggle);
-  document
-    .getElementById('contentFilter')
-    .addEventListener('change', onContentFilter);
-  document
-    .getElementById('conflictsFilter')
-    .addEventListener('value-changed', onConflictsFilter);
+  getElementById('hideVersionNumbers').addEventListener(
+    'change',
+    onSidebarFilterToggle
+  );
+  getElementById('hideCRCs').addEventListener('change', onSidebarFilterToggle);
+  getElementById('hideBashTags').addEventListener(
+    'change',
+    onSidebarFilterToggle
+  );
+  getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
+  getElementById('hideDoNotCleanMessages').addEventListener(
+    'change',
+    onSidebarFilterToggle
+  );
+  getElementById('hideInactivePlugins').addEventListener(
+    'change',
+    onSidebarFilterToggle
+  );
+  getElementById('hideAllPluginMessages').addEventListener(
+    'change',
+    onSidebarFilterToggle
+  );
+  getElementById('hideMessagelessPlugins').addEventListener(
+    'change',
+    onSidebarFilterToggle
+  );
+  getElementById('contentFilter').addEventListener('change', onContentFilter);
+  getElementById('conflictsFilter').addEventListener(
+    'value-changed',
+    onConflictsFilter
+  );
   document.addEventListener(
     'loot-filter-conflicts-deactivate',
     Filters.onDeactivateConflictsFilter
   );
 
   /* Set up handlers for buttons. */
-  document
-    .getElementById('redatePluginsButton')
-    .addEventListener('click', onRedatePlugins);
-  document
-    .getElementById('openLogButton')
-    .addEventListener('click', onOpenLogLocation);
-  document
-    .getElementById('groupsEditorButton')
-    .addEventListener('click', onOpenGroupsEditor);
-  document
-    .getElementById('wipeUserlistButton')
-    .addEventListener('click', onClearAllMetadata);
-  document
-    .getElementById('copyLoadOrderButton')
-    .addEventListener('click', onCopyLoadOrder);
-  document
-    .getElementById('copyContentButton')
-    .addEventListener('click', onCopyContent);
-  document
-    .getElementById('refreshContentButton')
-    .addEventListener('click', onContentRefresh);
-  document
-    .getElementById('settingsButton')
-    .addEventListener('click', onShowSettingsDialog);
-  document.getElementById('helpButton').addEventListener('click', onOpenReadme);
-  document
-    .getElementById('aboutButton')
-    .addEventListener('click', onShowAboutDialog);
-  document.getElementById('quitButton').addEventListener('click', onQuit);
-  document
-    .getElementById('gameMenu')
-    .addEventListener('iron-select', onChangeGame);
-  document
-    .getElementById('updateMasterlistButton')
-    .addEventListener('click', onUpdateMasterlist);
-  document
-    .getElementById('sortButton')
-    .addEventListener('click', onSortPlugins);
-  document
-    .getElementById('applySortButton')
-    .addEventListener('click', onApplySort);
-  document
-    .getElementById('cancelSortButton')
-    .addEventListener('click', onCancelSort);
-  document
-    .getElementById('sidebarTabs')
-    .addEventListener('iron-select', onSwitchSidebarTab);
-  document
-    .getElementById('jumpToGeneralInfo')
-    .addEventListener('click', onJumpToGeneralInfo);
+  getElementById('redatePluginsButton').addEventListener(
+    'click',
+    onRedatePlugins
+  );
+  getElementById('openLogButton').addEventListener('click', onOpenLogLocation);
+  getElementById('groupsEditorButton').addEventListener(
+    'click',
+    onOpenGroupsEditor
+  );
+  getElementById('wipeUserlistButton').addEventListener(
+    'click',
+    onClearAllMetadata
+  );
+  getElementById('copyLoadOrderButton').addEventListener(
+    'click',
+    onCopyLoadOrder
+  );
+  getElementById('copyContentButton').addEventListener('click', onCopyContent);
+  getElementById('refreshContentButton').addEventListener(
+    'click',
+    onContentRefresh
+  );
+  getElementById('settingsButton').addEventListener(
+    'click',
+    onShowSettingsDialog
+  );
+  getElementById('helpButton').addEventListener('click', onOpenReadme);
+  getElementById('aboutButton').addEventListener('click', onShowAboutDialog);
+  getElementById('quitButton').addEventListener('click', onQuit);
+  getElementById('gameMenu').addEventListener('iron-select', onChangeGame);
+  getElementById('updateMasterlistButton').addEventListener(
+    'click',
+    onUpdateMasterlist
+  );
+  getElementById('sortButton').addEventListener('click', onSortPlugins);
+  getElementById('applySortButton').addEventListener('click', onApplySort);
+  getElementById('cancelSortButton').addEventListener('click', onCancelSort);
+  getElementById('sidebarTabs').addEventListener(
+    'iron-select',
+    onSwitchSidebarTab
+  );
+  getElementById('jumpToGeneralInfo').addEventListener(
+    'click',
+    onJumpToGeneralInfo
+  );
 
   /* Set up search event handlers. */
-  document.getElementById('showSearch').addEventListener('click', onSearchOpen);
-  document
-    .getElementById('searchBar')
-    .addEventListener('loot-search-begin', onSearchBegin);
-  document
-    .getElementById('searchBar')
-    .addEventListener(
-      'loot-search-change-selection',
-      onSearchChangeSelection,
-      false
-    );
-  document
-    .getElementById('searchBar')
-    .addEventListener('loot-search-end', onSearchEnd);
+  getElementById('showSearch').addEventListener('click', onSearchOpen);
+  getElementById('searchBar').addEventListener(
+    'loot-search-begin',
+    onSearchBegin
+  );
+  getElementById('searchBar').addEventListener(
+    'loot-search-change-selection',
+    onSearchChangeSelection,
+    false
+  );
+  getElementById('searchBar').addEventListener('loot-search-end', onSearchEnd);
   window.addEventListener('keyup', onFocusSearch);
 
   /* Set up event handlers for groups editor dialog. */
-  const groupsEditor = document.getElementById('groupsEditorDialog');
+  const groupsEditor = getElementById('groupsEditorDialog');
   groupsEditor.addEventListener('iron-overlay-closed', onSaveUserGroups);
   groupsEditor.addEventListener('iron-overlay-opened', onGroupsEditorOpened);
   groupsEditor.addEventListener('loot-open-readme', onOpenReadme);
 
   /* Set up event handlers for settings dialog. */
-  const settings = document.getElementById('settingsDialog');
+  const settings = getElementById('settingsDialog');
   settings.addEventListener('iron-overlay-closed', onCloseSettingsDialog);
-  settings
-    .querySelector('[dialog-confirm]')
-    .addEventListener('tap', onApplySettings);
+  querySelector(settings, '[dialog-confirm]').addEventListener(
+    'tap',
+    onApplySettings
+  );
 
   /* Set up handler for opening and closing editors. */
   document.body.addEventListener('loot-editor-open', onEditorOpen);
@@ -224,10 +224,8 @@ function setupEventHandlers(): void {
   document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
   document.body.addEventListener('loot-clear-metadata', onClearMetadata);
 
-  document.getElementById('cardsNav').addEventListener('click', onSidebarClick);
-  document
-    .getElementById('cardsNav')
-    .addEventListener('dblclick', onSidebarClick);
+  getElementById('cardsNav').addEventListener('click', onSidebarClick);
+  getElementById('cardsNav').addEventListener('dblclick', onSidebarClick);
 
   /* Set up handler for plugin data changes. */
   document.addEventListener(
@@ -375,16 +373,12 @@ function appendGeneralErrorMessage(content: string): void {
     }
   ]);
 
-  document.getElementById('totalMessageNo').textContent = (
-    parseInt(document.getElementById('totalMessageNo').textContent, 10) + 1
-  ).toString();
-  document.getElementById('totalErrorNo').textContent = (
-    parseInt(document.getElementById('totalErrorNo').textContent, 10) + 1
-  ).toString();
+  incrementCounterText('totalMessageNo', 1);
+  incrementCounterText('totalErrorNo', 1);
 }
 
 function getErrorCount(): number {
-  return parseInt(document.getElementById('totalErrorNo').textContent, 10);
+  return getTextAsInt('totalErrorNo');
 }
 
 function autoSort(l10n: Translator): Promise<void> {
