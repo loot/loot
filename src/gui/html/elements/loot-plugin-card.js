@@ -3,7 +3,7 @@ import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-material/paper-material.js';
 
 import { createMessageItem } from '../js/dom/createItem';
-import './loot-custom-icons.js';
+import './loot-custom-icons';
 import './loot-menu.js';
 // Also depends on the loot.l10n and loot.filters globals.
 

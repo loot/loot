@@ -15,7 +15,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 
 import './editable-table.js';
-import './loot-custom-icons.js';
+import './loot-custom-icons';
 import { crcToString, Plugin } from '../js/plugin';
 
 export default class LootPluginEditor extends PolymerElement {

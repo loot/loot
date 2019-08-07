@@ -1,6 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { beforeNextRender } from '@polymer/polymer/lib/utils/render-status';
-import './editable-table-rows.js';
+import './editable-table-rows';
 
 function getRowTemplate(templateId) {
   return document.getElementById(templateId);
