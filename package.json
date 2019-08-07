@@ -183,7 +183,14 @@
           "allowExpressions": true
         }
       ],
-      "no-useless-constructor": "off"
+      "no-useless-constructor": "off",
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": ["webpack.config.js", "**/tests/**"],
+          "optionalDependencies": false
+        }
+      ]
     }
   },
   "jest": {

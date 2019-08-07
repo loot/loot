@@ -1,6 +1,13 @@
+interface CefQueryParameters {
+  request: string;
+  persistent: boolean;
+  onSuccess: (response: string) => void;
+  onFailure: (errorCode: number, errorMessage: string) => void;
+}
+
 declare global {
   interface Window {
-    cefQuery: (query: object) => number;
+    cefQuery: (query: CefQueryParameters) => number;
   }
 }
 
@@ -17,7 +24,7 @@ export default function query(
       request: JSON.stringify(Object.assign({ name: requestName }, payload)),
       persistent: false,
       onSuccess: resolve,
-      onFailure: (_errorCode: number, errorMessage: string): void => {
+      onFailure: (_errorCode, errorMessage) => {
         reject(new Error(errorMessage));
       }
     });
