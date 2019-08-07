@@ -9,32 +9,20 @@ enum ApplicationState {
 export default class State {
   private currentState: ApplicationState;
 
-  public static get DEFAULT_STATE(): ApplicationState {
-    return ApplicationState.Default;
-  }
-
-  public static get SORTING_STATE(): ApplicationState {
-    return ApplicationState.Sorting;
-  }
-
-  public static get EDITING_STATE(): ApplicationState {
-    return ApplicationState.Editing;
-  }
-
   public constructor() {
-    this.currentState = State.DEFAULT_STATE;
+    this.currentState = ApplicationState.Default;
   }
 
   public isInDefaultState(): boolean {
-    return this.currentState === State.DEFAULT_STATE;
+    return this.currentState === ApplicationState.Default;
   }
 
   public isInEditingState(): boolean {
-    return this.currentState === State.EDITING_STATE;
+    return this.currentState === ApplicationState.Editing;
   }
 
   public isInSortingState(): boolean {
-    return this.currentState === State.SORTING_STATE;
+    return this.currentState === ApplicationState.Sorting;
   }
 
   public enterSortingState(): void {
@@ -58,7 +46,7 @@ export default class State {
 
     setUIState('sorting');
 
-    this.currentState = State.SORTING_STATE;
+    this.currentState = ApplicationState.Sorting;
   }
 
   public exitSortingState(): void {
@@ -82,7 +70,7 @@ export default class State {
 
     setUIState('default');
 
-    this.currentState = State.DEFAULT_STATE;
+    this.currentState = ApplicationState.Default;
   }
 
   public enterEditingState(): void {
@@ -104,7 +92,7 @@ export default class State {
 
     setUIState('editing');
 
-    this.currentState = State.EDITING_STATE;
+    this.currentState = ApplicationState.Editing;
   }
 
   public exitEditingState(): void {
@@ -126,6 +114,6 @@ export default class State {
 
     setUIState('default');
 
-    this.currentState = State.DEFAULT_STATE;
+    this.currentState = ApplicationState.Default;
   }
 }
