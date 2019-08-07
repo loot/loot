@@ -1,66 +1,58 @@
 /* eslint-disable no-self-assign */
 import { Plugin } from '../../../../gui/html/js/plugin';
 import Filters from '../../../../gui/html/js/filters';
+import Translator from '../../../../gui/html/js/translator';
 
-jest.mock('../../../../gui/html/js/filters', () =>
-  jest.fn().mockImplementation(() => ({
-    messageFilter(message) {
-      if (this.hideAllPluginMessages) {
-        return false;
-      }
+const defaultDerivedPluginMetadata = {
+  name: 'test',
+  isActive: false,
+  isDirty: false,
+  isEmpty: false,
+  isMaster: false,
+  isLightMaster: false,
+  loadsArchive: false,
+  messages: [],
+  suggestedTags: [],
+  currentTags: []
+};
 
-      if (this.hideNotes && message.type === 'say') {
-        return false;
-      }
-
-      if (
-        this.hideDoNotCleanMessages &&
-        message.text.toLowerCase().indexOf('do not clean') !== -1
-      ) {
-        return false;
-      }
-
-      return true;
-    }
-  }))
-);
+const defaultPluginMetadata = {
+  name: 'test',
+  enabled: false,
+  after: [],
+  req: [],
+  inc: [],
+  msg: [],
+  tag: [],
+  dirty: [],
+  clean: [],
+  url: []
+};
 
 /* eslint-disable no-unused-expressions */
 describe('Plugin', () => {
   describe('#Plugin()', () => {
-    test('should throw if nothing is passed', () => {
-      expect(() => {
-        new Plugin(); // eslint-disable-line no-new
-      }).toThrow();
-    });
-
-    test('should throw if an object with no name key is passed', () => {
-      expect(() => {
-        new Plugin({}); // eslint-disable-line no-new
-      }).toThrow();
-    });
-
     test('should not throw if some members are undefined', () => {
       expect(() => {
-        new Plugin({ name: 'test' }); // eslint-disable-line no-new
+        new Plugin(defaultDerivedPluginMetadata); // eslint-disable-line no-new
       }).not.toThrow();
     });
 
     test("should set name to passed key's value", () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.name).toBe('test');
     });
 
     test('should set crc to zero if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.crc).toBe(0);
     });
 
     test("should set crc to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         crc: 0xdeadbeef
       });
 
@@ -68,74 +60,50 @@ describe('Plugin', () => {
     });
 
     test('should set version to an empty string if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.version).toBe('');
     });
 
     test("should set version to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         version: 'foo'
       });
 
       expect(plugin.version).toBe('foo');
     });
 
-    test('should set isActive value to false if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.isActive).toBe(false);
-    });
-
     test("should set isActive to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         isActive: true
       });
 
       expect(plugin.isActive).toBe(true);
     });
 
-    test('should set isEmpty value to false if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.isEmpty).toBe(false);
-    });
-
     test("should set isEmpty to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         isEmpty: true
       });
 
       expect(plugin.isEmpty).toBe(true);
     });
 
-    test('should set isMaster value to false if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.isMaster).toBe(false);
-    });
-
     test("should set isMaster to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         isMaster: true
       });
 
       expect(plugin.isMaster).toBe(true);
     });
 
-    test('should set loadsArchive value to false if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.loadsArchive).toBe(false);
-    });
-
     test("should set loadsArchive to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         loadsArchive: true
       });
 
@@ -143,120 +111,92 @@ describe('Plugin', () => {
     });
 
     test('should set masterlist value to undefined if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.masterlist).toBe(undefined);
     });
 
     test("should set masterlist to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
-        masterlist: {}
+        ...defaultDerivedPluginMetadata,
+        masterlist: defaultPluginMetadata
       });
 
-      expect(plugin.masterlist).toEqual({});
+      expect(plugin.masterlist).toEqual(defaultPluginMetadata);
     });
 
     test('should set userlist value to undefined if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.userlist).toBe(undefined);
     });
 
     test("should set userlist to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
-        userlist: {}
+        ...defaultDerivedPluginMetadata,
+        userlist: defaultPluginMetadata
       });
 
-      expect(plugin.userlist).toEqual({});
+      expect(plugin.userlist).toEqual(defaultPluginMetadata);
     });
 
     test('should set group to default if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.group).toBe('default');
     });
 
     test("should set group to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         group: 'group1'
       });
 
       expect(plugin.group).toBe('group1');
     });
 
-    test('should set messages value to an empty array if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.messages.length).toBe(0);
-    });
-
     test("should set messages to passed key's value", () => {
       const messages = [
         {
           type: 'say',
-          text: 'test message'
+          text: 'test message',
+          language: 'en',
+          condition: ''
         }
       ];
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         messages
       });
 
       expect(plugin.messages).toEqual(messages);
     });
 
-    test('should set currentTags value to an empty array if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.currentTags.length).toBe(0);
-    });
-
     test("should set currentTags to passed key's value", () => {
-      const currentTags = [
-        {
-          name: 'Delev'
-        }
-      ];
+      const currentTags = [{ name: 'Delev', isAddition: false, condition: '' }];
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         currentTags
       });
 
       expect(plugin.currentTags).toEqual(currentTags);
     });
 
-    test('should set suggestedTags value to an empty array if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.suggestedTags.length).toBe(0);
-    });
-
     test("should set suggestedTags to passed key's value", () => {
       const suggestedTags = [
-        {
-          name: 'Delev'
-        }
+        { name: 'Delev', isAddition: false, condition: '' }
       ];
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         suggestedTags
       });
 
       expect(plugin.suggestedTags).toEqual(suggestedTags);
     });
 
-    test('should set isDirty value to false if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
-
-      expect(plugin.isDirty).toBe(false);
-    });
-
     test("should set isDirty to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         isDirty: true
       });
 
@@ -264,14 +204,14 @@ describe('Plugin', () => {
     });
 
     test('should set cleanedWith value to an empty string if no key was passed', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.cleanedWith).toBe('');
     });
 
     test("should set cleanedWith to passed key's value", () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         cleanedWith: 'TES5Edit 3.11'
       });
 
@@ -279,57 +219,48 @@ describe('Plugin', () => {
     });
 
     test('should set id to the plugins name without spaces', () => {
-      const plugin = new Plugin({ name: 'test plugin name' });
+      const plugin = new Plugin({
+        ...defaultDerivedPluginMetadata,
+        name: 'test plugin name'
+      });
 
       expect(plugin.id).toBe('testpluginname');
     });
 
     test('should set isEditorOpen to false', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.isEditorOpen).toBe(false);
     });
 
     test('should set isSearchResult to false', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.isSearchResult).toBe(false);
     });
   });
 
   describe('#update()', () => {
-    let plugin;
+    let plugin: Plugin;
 
     beforeEach(() => {
-      plugin = new Plugin({ name: 'test' });
-    });
-
-    test('should do nothing if its argument is undefined', () => {
-      plugin.update();
-
-      expect(plugin).toEqual(new Plugin({ name: 'test' }));
-    });
-
-    test('should throw if the argument has no name property', () => {
-      expect(() => {
-        plugin.update({});
-      }).toThrow(Error);
+      plugin = new Plugin(defaultDerivedPluginMetadata);
     });
 
     test("should throw if the argument's name property doesn't match the plugin's name", () => {
       expect(() => {
-        plugin.update({ name: 'other test' });
+        plugin.update({ ...defaultDerivedPluginMetadata, name: 'other test' });
       }).toThrow(Error);
     });
 
     test("should set property values for all the given argument's properties", () => {
       const updatedPlugin = {
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         crc: 0xdeadbeef,
         version: '1.0.0',
         isActive: true,
-        masterlist: { name: plugin.name },
-        userlist: { name: plugin.name },
+        masterlist: defaultPluginMetadata,
+        userlist: defaultPluginMetadata,
         group: 'default',
         loadOrderIndex: 1,
         cleanedWith: 'xEdit',
@@ -351,7 +282,7 @@ describe('Plugin', () => {
     test('should set version to an empty string if not given', () => {
       plugin.version = '1.0.0';
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.version).toBe('');
     });
@@ -359,7 +290,7 @@ describe('Plugin', () => {
     test('should set crc to 0 if not given', () => {
       plugin.crc = 0xdeadbeef;
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.crc).toBe(0);
     });
@@ -367,7 +298,7 @@ describe('Plugin', () => {
     test('should set group to default if not given', () => {
       plugin.group = 'DLC';
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.group).toBe('default');
     });
@@ -375,7 +306,7 @@ describe('Plugin', () => {
     test('should set loadOrderIndex to be undefined if not given', () => {
       plugin.loadOrderIndex = 1;
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.loadOrderIndex).toBe(undefined);
     });
@@ -383,41 +314,29 @@ describe('Plugin', () => {
     test('should set cleanedWith to an empty string if not given', () => {
       plugin.cleanedWith = 'xEdit';
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.cleanedWith).toBe('');
     });
 
     test('should set masterlist to be undefined if not given', () => {
-      plugin.masterlist = { name: plugin.name };
+      plugin.masterlist = defaultPluginMetadata;
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.masterlist).toBe(undefined);
     });
 
     test('should set userlist to be undefined if not given', () => {
-      plugin.userlist = { name: plugin.name };
+      plugin.userlist = defaultPluginMetadata;
 
-      plugin.update({ name: plugin.name, messages: [] });
+      plugin.update(defaultDerivedPluginMetadata);
 
       expect(plugin.userlist).toBe(undefined);
     });
   });
 
   describe('#tagFromRowData()', () => {
-    test('should throw if passed nothing', () => {
-      expect(() => {
-        Plugin.tagFromRowData();
-      }).toThrow();
-    });
-
-    test('should return an empty object if passed nothing', () => {
-      expect(() => {
-        Plugin.tagFromRowData({});
-      }).toThrow();
-    });
-
     test('should return a raw metadata object if passed a row data object that removes a tag', () => {
       expect(
         Plugin.tagFromRowData({
@@ -448,18 +367,6 @@ describe('Plugin', () => {
   });
 
   describe('#tagToRowData()', () => {
-    test('should throw if passed nothing', () => {
-      expect(() => {
-        Plugin.tagToRowData();
-      }).toThrow();
-    });
-
-    test('should return an empty object if passed nothing', () => {
-      expect(() => {
-        Plugin.tagToRowData({});
-      }).toThrow();
-    });
-
     test('should return a row data object if passed a raw metadata object that removes a tag', () => {
       expect(
         Plugin.tagToRowData({
@@ -490,7 +397,10 @@ describe('Plugin', () => {
   });
 
   describe('#messages', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener('loot-plugin-message-change', handleEvent);
@@ -498,7 +408,7 @@ describe('Plugin', () => {
 
     test('getting messages if the array is empty should return an empty array', () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         messages: []
       });
 
@@ -510,11 +420,13 @@ describe('Plugin', () => {
       const messages = [
         {
           type: 'say',
-          text: 'test message'
+          text: 'test message',
+          language: 'en',
+          condition: ''
         }
       ];
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         messages
       });
 
@@ -523,13 +435,15 @@ describe('Plugin', () => {
 
     test('setting messages should store any set', () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         messages: []
       });
       const messages = [
         {
           type: 'say',
-          text: 'test message'
+          text: 'test message',
+          language: 'en',
+          condition: ''
         }
       ];
 
@@ -540,11 +454,13 @@ describe('Plugin', () => {
 
     test('setting messages should not fire an event if no messages were changed', done => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         messages: [
           {
             type: 'say',
-            text: 'test message'
+            text: 'test message',
+            language: 'en',
+            condition: ''
           }
         ]
       });
@@ -562,13 +478,15 @@ describe('Plugin', () => {
 
     test('setting messages should fire an event if the messages were changed', done => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         messages: []
       });
       const messages = [
         {
           type: 'error',
-          text: 'test message'
+          text: 'test message',
+          language: 'en',
+          condition: ''
         }
       ];
 
@@ -587,7 +505,10 @@ describe('Plugin', () => {
   });
 
   describe('#isDirty', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -597,14 +518,14 @@ describe('Plugin', () => {
     });
 
     test('getting value should return false if isDirty has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.isDirty).toBe(false);
     });
 
     test('getting value should return true if isDirty is set to true in the constructor', () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         isDirty: true
       });
 
@@ -612,7 +533,7 @@ describe('Plugin', () => {
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       plugin.isDirty = true;
 
@@ -620,7 +541,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -637,7 +558,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.isDirty).toBe(true);
@@ -654,7 +575,10 @@ describe('Plugin', () => {
   });
 
   describe('#cleanedWith', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -664,14 +588,14 @@ describe('Plugin', () => {
     });
 
     test('getting value should return an empty string if cleanedWith has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.cleanedWith).toBe('');
     });
 
     test('getting value should return a string if cleanedWith is set in the constructor', () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         cleanedWith: 'utility'
       });
 
@@ -679,7 +603,7 @@ describe('Plugin', () => {
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       plugin.cleanedWith = 'utility';
 
@@ -687,7 +611,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -704,7 +628,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.cleanedWith).toBe('utility');
@@ -721,7 +645,10 @@ describe('Plugin', () => {
   });
 
   describe('#crc', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -731,14 +658,14 @@ describe('Plugin', () => {
     });
 
     test('getting value should return 0 if crc has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.crc).toBe(0);
     });
 
     test('getting value should return 0xDEADBEEF if it was set in the constructor', () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         crc: 0xdeadbeef
       });
 
@@ -746,7 +673,7 @@ describe('Plugin', () => {
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       plugin.crc = 0xdeadbeef;
 
@@ -754,7 +681,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -768,7 +695,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -782,7 +709,10 @@ describe('Plugin', () => {
   });
 
   describe('#currentTags', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -792,19 +722,15 @@ describe('Plugin', () => {
     });
 
     test('getting value should return an empty array if tags have not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.currentTags.length).toBe(0);
     });
 
     test('getting value should return any tags that are set', () => {
-      const currentTags = [
-        {
-          name: 'Delev'
-        }
-      ];
+      const currentTags = [{ name: 'Delev', isAddition: false, condition: '' }];
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         currentTags
       });
 
@@ -812,12 +738,8 @@ describe('Plugin', () => {
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
-      const tags = [
-        {
-          name: 'Delev'
-        }
-      ];
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
+      const tags = [{ name: 'Delev', isAddition: false, condition: '' }];
 
       plugin.currentTags = tags;
 
@@ -825,7 +747,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -839,12 +761,8 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
-      const tags = [
-        {
-          name: 'Delev'
-        }
-      ];
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
+      const tags = [{ name: 'Delev', isAddition: false, condition: '' }];
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -858,7 +776,10 @@ describe('Plugin', () => {
   });
 
   describe('#suggestedTags', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -868,19 +789,17 @@ describe('Plugin', () => {
     });
 
     test('getting value should return an empty array if tags have not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.suggestedTags.length).toBe(0);
     });
 
     test('getting value should return any tags that are set', () => {
       const suggestedTags = [
-        {
-          name: 'Delev'
-        }
+        { name: 'Delev', isAddition: false, condition: '' }
       ];
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         suggestedTags
       });
 
@@ -888,12 +807,8 @@ describe('Plugin', () => {
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
-      const tags = [
-        {
-          name: 'Delev'
-        }
-      ];
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
+      const tags = [{ name: 'Delev', isAddition: false, condition: '' }];
 
       plugin.suggestedTags = tags;
 
@@ -901,7 +816,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -915,12 +830,8 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
-      const tags = [
-        {
-          name: 'Delev'
-        }
-      ];
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
+      const tags = [{ name: 'Delev', isAddition: false, condition: '' }];
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -934,7 +845,10 @@ describe('Plugin', () => {
   });
 
   describe('#userlist', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -944,30 +858,30 @@ describe('Plugin', () => {
     });
 
     test('getting value should return undefined if it has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.userlist).toBe(undefined);
     });
 
     test('getting value should return the value that was set', () => {
       const plugin = new Plugin({
-        name: 'test',
-        userlist: {}
+        ...defaultDerivedPluginMetadata,
+        userlist: defaultPluginMetadata
       });
 
-      expect(plugin.userlist).toEqual({});
+      expect(plugin.userlist).toEqual(defaultPluginMetadata);
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
-      plugin.userlist = {};
+      plugin.userlist = defaultPluginMetadata;
 
-      expect(plugin.userlist).toEqual({});
+      expect(plugin.userlist).toEqual(defaultPluginMetadata);
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -981,7 +895,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -993,12 +907,15 @@ describe('Plugin', () => {
 
       document.addEventListener('loot-plugin-item-content-change', handleEvent);
 
-      plugin.userlist = { group: 'test' };
+      plugin.userlist = { ...defaultPluginMetadata, group: 'test' };
     });
   });
 
   describe('#group', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -1008,14 +925,14 @@ describe('Plugin', () => {
     });
 
     test('getting value should return default if it has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.group).toBe('default');
     });
 
     test('getting value should return the value that was set', () => {
       const plugin = new Plugin({
-        name: 'test',
+        ...defaultDerivedPluginMetadata,
         group: 'group1'
       });
 
@@ -1023,7 +940,7 @@ describe('Plugin', () => {
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       plugin.group = 'group1';
 
@@ -1031,7 +948,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -1045,7 +962,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -1062,7 +979,10 @@ describe('Plugin', () => {
   });
 
   describe('#isEditorOpen', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -1072,13 +992,13 @@ describe('Plugin', () => {
     });
 
     test('getting value should return false if it has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.isEditorOpen).toBe(false);
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       plugin.isEditorOpen = true;
 
@@ -1086,7 +1006,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -1100,7 +1020,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -1117,7 +1037,10 @@ describe('Plugin', () => {
   });
 
   describe('#isSearchResult', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener(
@@ -1127,13 +1050,13 @@ describe('Plugin', () => {
     });
 
     test('getting value should return false if it has not been set in the constructor', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       expect(plugin.isSearchResult).toBe(false);
     });
 
     test('setting value should store set value', () => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       plugin.isSearchResult = true;
 
@@ -1141,7 +1064,7 @@ describe('Plugin', () => {
     });
 
     test('setting value to the current value should not fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = () => {
         done(new Error('Should not have fired an event'));
@@ -1155,7 +1078,7 @@ describe('Plugin', () => {
     });
 
     test('setting value not equal to the current value should fire an event', done => {
-      const plugin = new Plugin({ name: 'test' });
+      const plugin = new Plugin(defaultDerivedPluginMetadata);
 
       handleEvent = evt => {
         expect(evt.detail.pluginId).toBe(plugin.id);
@@ -1169,72 +1092,50 @@ describe('Plugin', () => {
   });
 
   describe('#getCardContent()', () => {
-    let plugin;
+    let plugin: Plugin;
     beforeEach(() => {
-      plugin = new Plugin({ name: 'test' });
-    });
-
-    test('should throw if no argument was passed', () => {
-      expect(() => {
-        plugin.getCardContent();
-      }).toThrow();
-    });
-
-    test('should throw with an empty object', () => {
-      plugin.messages = [
-        {
-          type: 'say',
-          text: 'test message'
-        }
-      ];
-
-      expect(() => {
-        plugin.getCardContent({});
-      }).toThrow();
+      plugin = new Plugin(defaultDerivedPluginMetadata);
     });
 
     test('should succeed if passed a filters object', () => {
       expect(() => {
-        plugin.getCardContent(new Filters());
+        plugin.getCardContent(new Filters(new Translator()));
       }).not.toThrow();
     });
   });
 });
 
 describe('PluginCardContent', () => {
-  let plugin;
-  let filters;
+  let plugin: Plugin;
+  let filters: Filters;
 
   beforeEach(() => {
     plugin = new Plugin({
+      ...defaultDerivedPluginMetadata,
       name: 'test',
       version: 'foo',
       messages: [
         {
           type: 'say',
           text: 'test message',
-          language: 'en'
+          language: 'en',
+          condition: ''
         },
         {
           type: 'warn',
           text: 'do not clean',
-          language: 'en'
+          language: 'en',
+          condition: ''
         }
       ]
     });
 
-    filters = new Filters();
+    filters = new Filters(new Translator());
   });
 
   describe('#name', () => {
     test("getting value should return plugin's value", () => {
       expect(plugin.getCardContent(filters).name).toBe(plugin.name);
-    });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).name = '';
-      }).toThrow();
     });
   });
 
@@ -1242,35 +1143,17 @@ describe('PluginCardContent', () => {
     test("getting value should return plugin's value", () => {
       expect(plugin.getCardContent(filters).isActive).toBe(plugin.isActive);
     });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).isActive = true;
-      }).toThrow();
-    });
   });
 
   describe('#isEmpty', () => {
     test("getting value should return plugin's value", () => {
       expect(plugin.getCardContent(filters).isEmpty).toBe(plugin.isEmpty);
     });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).isEmpty = true;
-      }).toThrow();
-    });
   });
 
   describe('#isMaster', () => {
     test("getting value should return plugin's value", () => {
       expect(plugin.getCardContent(filters).isMaster).toBe(plugin.isMaster);
-    });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).isMaster = true;
-      }).toThrow();
     });
   });
 
@@ -1279,12 +1162,6 @@ describe('PluginCardContent', () => {
       expect(plugin.getCardContent(filters).loadsArchive).toBe(
         plugin.loadsArchive
       );
-    });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).loadsArchive = true;
-      }).toThrow();
     });
   });
 
@@ -1296,12 +1173,6 @@ describe('PluginCardContent', () => {
     test('getting value should return empty string if the version filter is enabled', () => {
       filters.hideVersionNumbers = true;
       expect(plugin.getCardContent(filters).version).toBe('');
-    });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).version = '';
-      }).toThrow();
     });
   });
 
@@ -1315,13 +1186,15 @@ describe('PluginCardContent', () => {
     });
 
     test('should return an object containing strings of comma-separated tag names if tags are set', () => {
-      plugin.currentTags = [{ name: 'C.Climate' }];
+      plugin.currentTags = [
+        { name: 'C.Climate', isAddition: false, condition: '' }
+      ];
       plugin.suggestedTags = [
-        { name: 'Relev', isAddition: true },
-        { name: 'Delev', isAddition: true },
-        { name: 'Names', isAddition: true },
-        { name: 'C.Climate', isAddition: false },
-        { name: 'Actor.ABCS', isAddition: false }
+        { name: 'Relev', isAddition: true, condition: '' },
+        { name: 'Delev', isAddition: true, condition: '' },
+        { name: 'Names', isAddition: true, condition: '' },
+        { name: 'C.Climate', isAddition: false, condition: '' },
+        { name: 'Actor.ABCS', isAddition: false, condition: '' }
       ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
@@ -1333,11 +1206,11 @@ describe('PluginCardContent', () => {
 
     test('should return an object containing empty strings if tags are set and the tags filter is enabled', () => {
       plugin.suggestedTags = [
-        { name: 'Relev', isAddition: true },
-        { name: 'Delev', isAddition: true },
-        { name: 'Names', isAddition: true },
-        { name: 'C.Climate', isAddition: false },
-        { name: 'Actor.ABCS', isAddition: false }
+        { name: 'Relev', isAddition: true, condition: '' },
+        { name: 'Delev', isAddition: true, condition: '' },
+        { name: 'Names', isAddition: true, condition: '' },
+        { name: 'C.Climate', isAddition: false, condition: '' },
+        { name: 'Actor.ABCS', isAddition: false, condition: '' }
       ];
       filters.hideBashTags = true;
 
@@ -1349,7 +1222,9 @@ describe('PluginCardContent', () => {
     });
 
     test('should not output a tag if it appears as removed but not current', () => {
-      plugin.suggestedTags = [{ name: 'Relev', isAddition: false }];
+      plugin.suggestedTags = [
+        { name: 'Relev', isAddition: false, condition: '' }
+      ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
         current: '',
@@ -1360,8 +1235,8 @@ describe('PluginCardContent', () => {
 
     test('should not output a tag if it appears as both added and removed', () => {
       plugin.suggestedTags = [
-        { name: 'Relev', isAddition: true },
-        { name: 'Relev', isAddition: false }
+        { name: 'Relev', isAddition: true, condition: '' },
+        { name: 'Relev', isAddition: false, condition: '' }
       ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
@@ -1372,8 +1247,12 @@ describe('PluginCardContent', () => {
     });
 
     test('should output a tag in the current and removed strings if it appears as both current and removed', () => {
-      plugin.currentTags = [{ name: 'Relev' }];
-      plugin.suggestedTags = [{ name: 'Relev', isAddition: false }];
+      plugin.currentTags = [
+        { name: 'Relev', isAddition: false, condition: '' }
+      ];
+      plugin.suggestedTags = [
+        { name: 'Relev', isAddition: false, condition: '' }
+      ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
         current: 'Relev',
@@ -1383,24 +1262,18 @@ describe('PluginCardContent', () => {
     });
 
     test('should output a tag in the current string if it appears as both current and added', () => {
-      plugin.currentTags = [{ name: 'Relev' }];
-      plugin.suggestedTags = [{ name: 'Relev', isAddition: true }];
+      plugin.currentTags = [
+        { name: 'Relev', isAddition: false, condition: '' }
+      ];
+      plugin.suggestedTags = [
+        { name: 'Relev', isAddition: true, condition: '' }
+      ];
 
       expect(plugin.getCardContent(filters).tags).toEqual({
         current: 'Relev',
         add: '',
         remove: ''
       });
-    });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).tags = {
-          current: '',
-          added: 'Relev',
-          removed: 'Delev'
-        };
-      }).toThrow();
     });
   });
 
@@ -1433,12 +1306,6 @@ describe('PluginCardContent', () => {
 
       expect(plugin.getCardContent(filters).crc).toBe('0000BEEF');
     });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).crc = 0xbecadeca;
-      }).toThrow();
-    });
   });
 
   describe('#messages', () => {
@@ -1464,19 +1331,9 @@ describe('PluginCardContent', () => {
       filters.hideAllPluginMessages = true;
       expect(plugin.getCardContent(filters).messages).toEqual([]);
     });
-
-    test('setting value should throw', () => {
-      expect(() => {
-        plugin.getCardContent(filters).messages = [];
-      }).toThrow();
-    });
   });
 
   describe('#containsText()', () => {
-    test('should return true if argument is undefined', () => {
-      expect(plugin.getCardContent(filters).containsText()).toBe(true);
-    });
-
     test('should return true if argument is an empty string', () => {
       expect(plugin.getCardContent(filters).containsText('')).toBe(true);
     });
@@ -1492,34 +1349,36 @@ describe('PluginCardContent', () => {
 
     test('should search current tags case-insensitively', () => {
       plugin.currentTags = [
-        { name: 'Relev', isAddition: true },
-        { name: 'Delev', isAddition: true },
-        { name: 'Names', isAddition: true },
-        { name: 'C.Climate', isAddition: false },
-        { name: 'Actor.ABCS', isAddition: false }
+        { name: 'Relev', isAddition: true, condition: '' },
+        { name: 'Delev', isAddition: true, condition: '' },
+        { name: 'Names', isAddition: true, condition: '' },
+        { name: 'C.Climate', isAddition: false, condition: '' },
+        { name: 'Actor.ABCS', isAddition: false, condition: '' }
       ];
       expect(plugin.getCardContent(filters).containsText('climate')).toBe(true);
     });
 
     test('should search added tags case-insensitively', () => {
       plugin.suggestedTags = [
-        { name: 'Relev', isAddition: true },
-        { name: 'Delev', isAddition: true },
-        { name: 'Names', isAddition: true },
-        { name: 'C.Climate', isAddition: false },
-        { name: 'Actor.ABCS', isAddition: false }
+        { name: 'Relev', isAddition: true, condition: '' },
+        { name: 'Delev', isAddition: true, condition: '' },
+        { name: 'Names', isAddition: true, condition: '' },
+        { name: 'C.Climate', isAddition: false, condition: '' },
+        { name: 'Actor.ABCS', isAddition: false, condition: '' }
       ];
       expect(plugin.getCardContent(filters).containsText('relev')).toBe(true);
     });
 
     test('should search removed tags case-insensitively', () => {
-      plugin.currentTags = [{ name: 'Actor.ABCS' }];
+      plugin.currentTags = [
+        { name: 'Actor.ABCS', isAddition: false, condition: '' }
+      ];
       plugin.suggestedTags = [
-        { name: 'Relev', isAddition: true },
-        { name: 'Delev', isAddition: true },
-        { name: 'Names', isAddition: true },
-        { name: 'C.Climate', isAddition: false },
-        { name: 'Actor.ABCS', isAddition: false }
+        { name: 'Relev', isAddition: true, condition: '' },
+        { name: 'Delev', isAddition: true, condition: '' },
+        { name: 'Names', isAddition: true, condition: '' },
+        { name: 'C.Climate', isAddition: false, condition: '' },
+        { name: 'Actor.ABCS', isAddition: false, condition: '' }
       ];
       expect(plugin.getCardContent(filters).containsText('.abc')).toBe(true);
     });
