@@ -1,9 +1,10 @@
-import Octokit from '@octokit/rest';
+import * as Octokit from '@octokit/rest';
+import { mocked } from 'ts-jest/utils';
 import updateExists from '../../../../gui/html/js/updateExists';
 
 jest.mock('@octokit/rest', () =>
   jest.fn().mockImplementation(() => {
-    async function* createPageIterator() {
+    async function* createPageIterator(): AsyncIterator<object> {
       const listTagsPages = [
         {
           data: [
@@ -89,22 +90,8 @@ jest.mock('@octokit/rest', () =>
 
 describe('updateExists()', () => {
   beforeEach(() => {
-    Octokit.mockClear();
+    mocked(Octokit).mockClear();
   });
-
-  test('should reject if no arguments are passed', () =>
-    updateExists().catch(error =>
-      expect(error).toEqual(
-        new Error('Invalid arguments, both version and build must be given')
-      )
-    ));
-
-  test('should reject if one argument is passed', () =>
-    updateExists('1.0.0').catch(error =>
-      expect(error).toEqual(
-        new Error('Invalid arguments, both version and build must be given')
-      )
-    ));
 
   test('should reject if passed a version number has less than three parts', () =>
     updateExists('1.0', 'deadbeef').catch(error =>
