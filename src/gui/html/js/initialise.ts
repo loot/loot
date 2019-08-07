@@ -425,8 +425,7 @@ export default function initialise(loot: Loot): void {
   ])
     .then(() => {
       /* Translate static text. */
-      loot.l10n = new Translator(loot.settings.language);
-      return loot.l10n.load();
+      return loot.l10n.load(loot.settings.language);
     })
     .then(() => {
       loot.filters = new Filters(loot.l10n);

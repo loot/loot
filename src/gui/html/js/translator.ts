@@ -2,16 +2,9 @@ import { Jed } from 'jed';
 import jedGettextParser from 'jed-gettext-parser';
 
 export default class Translator {
-  private locale: string;
-
   private jed?: Jed;
 
-  /* Returns a Promise */
-  public constructor(locale?: string) {
-    this.locale = locale || 'en';
-  }
-
-  public load(): Promise<void> {
+  public load(locale: string): Promise<void> {
     const defaultTranslationData = {
       messages: {
         '': {
@@ -24,11 +17,11 @@ export default class Translator {
     };
 
     let translationDataPromise;
-    if (this.locale === 'en') {
+    if (locale === 'en') {
       /* Just resolve to an empty data set. */
       translationDataPromise = Promise.resolve(defaultTranslationData);
     } else {
-      const url = `http://loot/l10n/${this.locale}/LC_MESSAGES/loot.mo`;
+      const url = `http://loot/l10n/${locale}/LC_MESSAGES/loot.mo`;
       translationDataPromise = fetch(url)
         .then(response => {
           if (response.ok) {
