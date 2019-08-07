@@ -1,13 +1,15 @@
 import mergeGroups from '../../../../gui/html/js/group';
+import { RawGroup } from '../../../../gui/html/js/interfaces';
 
 describe('mergeGroups', () => {
-  let masterlist;
-  let userlist;
+  let masterlist: RawGroup[];
+  let userlist: RawGroup[];
 
   beforeAll(() => {
     masterlist = [
       {
-        name: 'A'
+        name: 'A',
+        after: []
       },
       {
         name: 'B',
@@ -29,7 +31,8 @@ describe('mergeGroups', () => {
         after: ['C']
       },
       {
-        name: 'E'
+        name: 'E',
+        after: []
       }
     ];
   });
@@ -39,7 +42,8 @@ describe('mergeGroups', () => {
 
     expect(masterlist).toEqual([
       {
-        name: 'A'
+        name: 'A',
+        after: []
       },
       {
         name: 'B',
@@ -65,12 +69,6 @@ describe('mergeGroups', () => {
       isUserAdded: false,
       after: []
     });
-  });
-
-  test('should add missing "after" keys to masterlist groups', () => {
-    const merged = mergeGroups(masterlist, []);
-
-    expect(merged[0].after).toEqual([]);
   });
 
   test('should add isUserAdded false to masterlist groups', () => {
@@ -116,12 +114,6 @@ describe('mergeGroups', () => {
       isUserAdded: false,
       after: []
     });
-  });
-
-  test('should add missing "after" keys to masterlist groups', () => {
-    const merged = mergeGroups(masterlist, userlist);
-
-    expect(merged[4].after).toEqual([]);
   });
 
   test('should not add isUserAdded true to merged userlist groups', () => {
