@@ -1,26 +1,15 @@
 import Filters from '../../../../gui/html/js/filters';
+import Translator from '../../../../gui/html/js/translator';
+import { SimpleMessage } from '../../../../gui/html/js/interfaces';
+import { Plugin } from '../../../../gui/html/js/plugin';
 
 jest.mock('../../../../gui/html/js/handlePromiseError');
 jest.mock('../../../../gui/html/js/query');
 
 describe('Filters', () => {
-  const l10n = {
-    translate: jest.fn().mockImplementation(text => text)
-  };
+  const l10n = new Translator();
 
   describe('#constructor()', () => {
-    test('should throw if no parameter is passed', () => {
-      expect(() => {
-        new Filters(); // eslint-disable-line no-new
-      }).toThrow();
-    });
-
-    test('should throw if an empty object is passed', () => {
-      expect(() => {
-        new Filters({}); // eslint-disable-line no-new
-      }).toThrow();
-    });
-
     test('should not throw if a valid Translator object is passed', () => {
       expect(() => {
         new Filters(l10n); // eslint-disable-line no-new
@@ -42,55 +31,26 @@ describe('Filters', () => {
       expect(filters.hideNotes).toBe(false);
       expect(filters.hideDoNotCleanMessages).toBe(false);
     });
-
-    test('should initialise "do not clean" search string', () => {
-      const filters = new Filters(l10n);
-
-      expect(filters._doNotCleanString).toBe('do not clean');
-    });
   });
 
   describe('#pluginFilter()', () => {
-    let filters;
-    let plugin;
-
-    /* Mock the PluginCardContent class */
-    class PluginCardContent {
-      constructor(pluginObj, filtersObj) {
-        this._messages = pluginObj.messages;
-        this._hideMessages = filtersObj.hideAllPluginMessages;
-      }
-
-      get messages() {
-        if (this._hideMessages) {
-          return [];
-        }
-        return this._messages;
-      }
-
-      /* eslint-disable class-methods-use-this */
-      containsText(text) {
-        return text === 'found text';
-      }
-      /* eslint-enable class-methods-use-this */
-    }
-
-    /* Mock the Plugin class */
-    class Plugin {
-      constructor() {
-        this.name = 'test';
-        this.isActive = false;
-        this.messages = [];
-      }
-
-      getCardContent(filtersObj) {
-        return new PluginCardContent(this, filtersObj);
-      }
-    }
+    let filters: Filters;
+    let plugin: Plugin;
 
     beforeEach(() => {
       filters = new Filters(l10n);
-      plugin = new Plugin();
+      plugin = new Plugin({
+        name: 'found text',
+        isActive: false,
+        isDirty: false,
+        isEmpty: false,
+        isMaster: false,
+        isLightMaster: false,
+        loadsArchive: false,
+        messages: [],
+        suggestedTags: [],
+        currentTags: []
+      });
     });
 
     test('should return true if no filters are enabled', () => {
@@ -115,14 +75,28 @@ describe('Filters', () => {
 
     test('should return true if messageless plugins filter is enabled and plugin has a non-zero message array', () => {
       filters.hideMessagelessPlugins = true;
-      plugin.messages = [0];
+      plugin.messages = [
+        {
+          type: 'say',
+          text: 'test',
+          language: 'en',
+          condition: ''
+        }
+      ];
       expect(filters.pluginFilter(plugin)).toBe(true);
     });
 
     test('should return false if all plugin messages and messageless plugin filters are enabled and plugin has a non-zero message array', () => {
       filters.hideAllPluginMessages = true;
       filters.hideMessagelessPlugins = true;
-      plugin.messages = [0];
+      plugin.messages = [
+        {
+          type: 'say',
+          text: 'test',
+          language: 'en',
+          condition: ''
+        }
+      ];
       expect(filters.pluginFilter(plugin)).toBe(false);
     });
 
@@ -148,19 +122,23 @@ describe('Filters', () => {
   });
 
   describe('#messageFilter()', () => {
-    let filters;
-    let note;
-    let doNotCleanMessage;
+    let filters: Filters;
+    let note: SimpleMessage;
+    let doNotCleanMessage: SimpleMessage;
 
     beforeEach(() => {
       filters = new Filters(l10n);
       note = {
         type: 'say',
-        text: 'test message'
+        text: 'test message',
+        language: 'en',
+        condition: ''
       };
       doNotCleanMessage = {
         type: 'warn',
-        text: 'do not clean'
+        text: 'do not clean',
+        language: 'en',
+        condition: ''
       };
     });
 
@@ -204,8 +182,8 @@ describe('Filters', () => {
   });
 
   describe('#deactivateConflictsFilter', () => {
-    let filters;
-    let handleEvent;
+    let filters: Filters;
+    let handleEvent: () => void;
 
     beforeEach(() => {
       filters = new Filters(l10n);
@@ -250,21 +228,21 @@ describe('Filters', () => {
   });
 
   describe('#activateConflictsFilter', () => {
-    let filters;
+    let filters: Filters;
 
     beforeEach(() => {
       filters = new Filters(l10n);
     });
 
     test('should return a promise that resolves to an object with empty arrays if the argument is falsy', () =>
-      filters.activateConflictsFilter().then(result => {
+      filters.activateConflictsFilter('').then(result => {
         expect(result.generalMessages.length).toBe(0);
         expect(result.plugins.length).toBe(0);
       }));
   });
 
   describe('#areAnyFiltersActive', () => {
-    let filters;
+    let filters: Filters;
 
     beforeEach(() => {
       filters = new Filters(l10n);
