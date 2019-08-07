@@ -23,7 +23,8 @@ import {
   SourcedGroup,
   Masterlist,
   GameGroups,
-  DerivedPluginMetadata
+  DerivedPluginMetadata,
+  PluginLoadOrderIndex
 } from './interfaces';
 import {
   getTextAsInt,
@@ -389,7 +390,7 @@ export default class Game {
   }
 
   public cancelSort(
-    plugins: DerivedPluginMetadata[],
+    plugins: PluginLoadOrderIndex[],
     generalMessages: SimpleMessage[]
   ): void {
     this.plugins = plugins.reduce((existingPlugins: Plugin[], plugin) => {
@@ -397,7 +398,7 @@ export default class Game {
         item => item.name === plugin.name
       );
       if (existingPlugin) {
-        existingPlugin.update(plugin);
+        existingPlugin.loadOrderIndex = plugin.loadOrderIndex;
         existingPlugins.push(existingPlugin);
       }
 

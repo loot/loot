@@ -2,124 +2,87 @@
 
 import Game from '../../../../gui/html/js/game';
 import { Plugin } from '../../../../gui/html/js/plugin';
+import Translator from '../../../../gui/html/js/translator';
 
 jest.mock('../../../../gui/html/js/dom');
 jest.mock('../../../../gui/html/js/filters');
-jest.mock('../../../../gui/html/js/plugin', () => ({
-  crcToString: jest.fn(),
-  Plugin: jest
-    .fn()
-    .mockImplementation(({ name, group, crc, isActive, loadOrderIndex }) => ({
-      name,
-      group,
-      crc,
-      isActive,
-      loadOrderIndex,
-      update(other) {
-        Object.assign(this, other);
-      }
-    }))
-}));
 
 describe('Game', () => {
-  const l10n = {
-    translate: jest.fn().mockImplementation(text => text)
+  const l10n = new Translator();
+  const defaultDerivedPluginMetadata = {
+    name: 'test',
+    isActive: false,
+    isDirty: false,
+    isEmpty: false,
+    isMaster: false,
+    isLightMaster: false,
+    loadsArchive: false,
+    messages: [],
+    suggestedTags: [],
+    currentTags: []
+  };
+  const gameData = {
+    folder: 'test',
+    generalMessages: [
+      {
+        type: 'say',
+        text: 'test',
+        language: 'en',
+        condition: ''
+      }
+    ],
+    masterlist: { revision: '0', date: '' },
+    groups: { masterlist: [], userlist: [] },
+    plugins: [defaultDerivedPluginMetadata],
+    bashTags: []
   };
 
   describe('#constructor()', () => {
-    test('should throw if passed no paramters', () => {
-      expect(() => {
-        new Game(); // eslint-disable-line no-new
-      }).toThrow();
-    });
-
-    test('should throw if passed no l10n parameter', () => {
-      expect(() => {
-        new Game({}); // eslint-disable-line no-new
-      }).toThrow();
-    });
-
-    test('should not throw if passed an empty object as the first parameter', () => {
-      expect(() => {
-        new Game({}, l10n); // eslint-disable-line no-new
-      }).not.toThrow();
-    });
-
-    test('should set folder to a blank string by default', () => {
-      const game = new Game({}, l10n);
-      expect(game.folder).toBe('');
-    });
-
-    test("should set folder to the object's value if defined", () => {
-      const game = new Game({ folder: 'test' }, l10n);
+    test("should set folder to the object's value", () => {
+      const game = new Game(gameData, l10n);
       expect(game.folder).toBe('test');
     });
 
-    test('should set generalMessages to an empty array by default', () => {
-      const game = new Game({}, l10n);
-      expect(game.generalMessages).toEqual([]);
+    test("should set generalMessages to the object's value", () => {
+      const game = new Game(gameData, l10n);
+      expect(game.generalMessages).toEqual([
+        {
+          type: 'say',
+          text: 'test',
+          language: 'en',
+          condition: ''
+        }
+      ]);
     });
 
-    test("should set generalMessages to the object's value if defined", () => {
-      const game = new Game({ generalMessages: ['test'] }, l10n);
-      expect(game.generalMessages).toEqual(['test']);
+    test("should set masterlist to the object's value", () => {
+      const game = new Game(gameData, l10n);
+      expect(game.masterlist).toEqual({ revision: '0', date: '' });
     });
 
-    test('should set masterlist to have empty revision and date strings by default', () => {
-      const game = new Game({}, l10n);
-      expect(game.masterlist).toEqual({ revision: '', date: '' });
-    });
-
-    test("should set masterlist to the object's value if defined", () => {
-      const game = new Game({ masterlist: { revision: 0 } }, l10n);
-      expect(game.masterlist).toEqual({ revision: 0 });
-    });
-
-    test('should set plugins to an empty array by default', () => {
-      const game = new Game({}, l10n);
-      expect(game.plugins).toEqual([]);
-    });
-
-    test("should construct plugins from the object's plugins value if defined", () => {
-      const game = new Game({ plugins: [{ name: 'test' }] }, l10n);
+    test("should construct plugins from the object's plugins value", () => {
+      const game = new Game(gameData, l10n);
       expect(game.plugins.length).toBe(1);
       expect(game.plugins[0]).toHaveProperty('update');
       expect(game.plugins[0].name).toBe('test');
       expect(game.plugins[0].cardZIndex).toBe(1);
     });
 
-    test('should set loadOrder to undefined by default', () => {
-      const game = new Game({}, l10n);
-      expect(game.loadOrder).toBe(undefined);
-    });
-
-    test("should set loadOrder to undefined even if the object's value if defined", () => {
-      const game = new Game({ loadOrder: ['test'] }, l10n);
-      expect(game.loadOrder).toBe(undefined);
-    });
-
-    test('should set oldLoadOrder to an empty array by default', () => {
-      const game = new Game({}, l10n);
-      expect(game.oldLoadOrder).toEqual([]);
-    });
-
     test("should set oldLoadOrder to an empty array even if the object's value if defined", () => {
-      const game = new Game({ oldLoadOrder: ['test'] }, l10n);
+      const game = new Game(gameData, l10n);
       expect(game.oldLoadOrder).toEqual([]);
-    });
-
-    test('should initialise _notApplicableString', () => {
-      const game = new Game({ oldLoadOrder: ['test'] }, l10n);
-      expect(game._notApplicableString).toBe('N/A');
     });
   });
 
   describe('#folder', () => {
-    let game;
-    let handleEvent;
+    let game: Game;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     afterEach(() => {
@@ -138,21 +101,24 @@ describe('Game', () => {
 
     test('setting value should dispatch an event if the new value differs from the old one', done => {
       handleEvent = evt => {
-        expect(evt.detail.folder).toBe('test');
+        expect(evt.detail.folder).toBe('other test');
         done();
       };
       document.addEventListener('loot-game-folder-change', handleEvent);
 
-      game.folder = 'test';
+      game.folder = 'other test';
     });
   });
 
   describe('#generalMessages', () => {
-    let game;
-    let handleEvent;
+    let game: Game;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     afterEach(() => {
@@ -176,8 +142,14 @@ describe('Game', () => {
     });
 
     test('setting value should dispatch an event if the new and old message strings differ', done => {
-      game._generalMessages = [{ type: 'warn', content: 'foo' }];
-      const newMessages = [{ type: 'warn', content: 'bar' }];
+      const newMessages = [
+        {
+          type: 'say',
+          text: 'bar',
+          language: 'en',
+          condition: ''
+        }
+      ];
       handleEvent = evt => {
         expect(evt.detail.messages).toEqual(newMessages);
         expect(evt.detail.totalDiff).toBe(0);
@@ -194,7 +166,21 @@ describe('Game', () => {
     });
 
     test('setting value should dispatch an event if the new and old message type counts differ', done => {
-      const newMessages = [{ type: 'warn' }, { type: 'error' }];
+      const newMessages = [
+        {
+          type: 'warn',
+          text: 'foo',
+          language: 'en',
+          condition: ''
+        },
+        {
+          type: 'error',
+          text: 'bar',
+          language: 'en',
+          condition: ''
+        }
+      ];
+      game.generalMessages = [];
       handleEvent = evt => {
         expect(evt.detail.messages).toEqual(newMessages);
         expect(evt.detail.totalDiff).toBe(2);
@@ -212,11 +198,14 @@ describe('Game', () => {
   });
 
   describe('#masterlist', () => {
-    let game;
-    let handleEvent;
+    let game: Game;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     afterEach(() => {
@@ -246,25 +235,17 @@ describe('Game', () => {
 
       game.masterlist = newMasterlist;
     });
-
-    test('setting value to undefined should dispatch an event with the details being the not applicable string', done => {
-      handleEvent = evt => {
-        expect(evt.detail.revision).toBe(game._notApplicableString);
-        expect(evt.detail.date).toBe(game._notApplicableString);
-        done();
-      };
-      document.addEventListener('loot-game-masterlist-change', handleEvent);
-
-      game.masterlist = undefined;
-    });
   });
 
   describe('#plugins', () => {
-    let game;
-    let handleEvent;
+    let game: Game;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     afterEach(() => {
@@ -281,15 +262,33 @@ describe('Game', () => {
     });
 
     test('setting value should dispatch an event if the new value differs from the old one', done => {
-      const newPlugins = [
+      const newMessages = [
         {
-          isActive: true,
-          messages: [{ type: 'warn' }]
+          type: 'warn',
+          text: 'foo',
+          language: 'en',
+          condition: ''
         },
         {
-          isDirty: true,
-          messages: [{ type: 'say' }]
+          type: 'error',
+          text: 'bar',
+          language: 'en',
+          condition: ''
         }
+      ];
+      const newPlugins = [
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
+          name: 'a',
+          isActive: true,
+          messages: [newMessages[0]]
+        }),
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
+          name: 'b',
+          isDirty: true,
+          messages: [{ ...newMessages[0], type: 'say' }]
+        })
       ];
       handleEvent = evt => {
         expect(evt.detail.valuesAreTotals).toBe(true);
@@ -303,9 +302,7 @@ describe('Game', () => {
       };
       document.addEventListener('loot-game-plugins-change', handleEvent);
 
-      /* Set general messages to check they are also counted in the totals. */
-      game.generalMessages = [{ type: 'warn' }, { type: 'error' }];
-
+      game.generalMessages = newMessages;
       game.plugins = newPlugins;
     });
   });
@@ -313,49 +310,34 @@ describe('Game', () => {
   describe('groups', () => {
     test("get should return the game's groups", () => {
       const groups = {
-        masterlist: [{ name: 'a' }],
-        userlist: [{ name: 'b' }]
+        masterlist: [{ name: 'a', after: [] }],
+        userlist: [{ name: 'b', after: [] }]
       };
-      const game = new Game({ groups }, l10n);
+      const game = new Game({ ...gameData, groups }, l10n);
 
       expect(game.groups).toStrictEqual([
         { name: 'a', after: [], isUserAdded: false },
         { name: 'b', after: [], isUserAdded: true }
       ]);
     });
-
-    test('set should error', () => {
-      const game = new Game({}, l10n);
-
-      expect(() => {
-        game.groups = [];
-      }).toThrow(TypeError);
-    });
   });
 
   describe('#setGroups()', () => {
-    let handleEvent;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     afterEach(() => {
       document.removeEventListener('loot-game-groups-change', handleEvent);
     });
 
-    test('should set groups to the default group if no groups are given', () => {
-      const game = new Game({}, l10n);
-
-      game.setGroups();
-
-      expect(game.groups).toStrictEqual([
-        { name: 'default', after: [], isUserAdded: false }
-      ]);
-    });
-
     test('should merge the given masterlist and userlist groups arrays', () => {
-      const game = new Game({}, l10n);
+      const game = new Game(gameData, l10n);
 
       const groups = {
-        masterlist: [{ name: 'a' }],
-        userlist: [{ name: 'b' }]
+        masterlist: [{ name: 'a', after: [] }],
+        userlist: [{ name: 'b', after: [] }]
       };
 
       game.setGroups(groups);
@@ -372,11 +354,11 @@ describe('Game', () => {
       };
       document.addEventListener('loot-game-groups-change', handleEvent);
 
-      const game = new Game({}, l10n);
+      const game = new Game(gameData, l10n);
 
       const groups = {
-        masterlist: [{ name: 'a' }],
-        userlist: [{ name: 'b' }]
+        masterlist: [{ name: 'a', after: [] }],
+        userlist: [{ name: 'b', after: [] }]
       };
 
       game.setGroups(groups);
@@ -384,13 +366,16 @@ describe('Game', () => {
   });
 
   describe('#getContent()', () => {
-    let game;
+    let game: Game;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     test('should return an object of two empty arrays if there is no game data', () => {
+      game.plugins = [];
+      game.generalMessages = [];
+
       expect(game.getContent()).toEqual({
         messages: [],
         plugins: []
@@ -398,7 +383,7 @@ describe('Game', () => {
     });
 
     test('should return a structure containing converted plugin and message structures', () => {
-      game._generalMessages = [
+      game.generalMessages = [
         {
           type: 'say',
           condition: 'file("foo.esp")',
@@ -406,17 +391,16 @@ describe('Game', () => {
           text: 'Bonjour le monde'
         }
       ];
-      game._plugins = [
-        {
+      game.plugins = [
+        new Plugin({
           name: 'foo',
           crc: 0xdeadbeef,
           version: '1.0',
           isActive: true,
           isEmpty: true,
+          isMaster: false,
+          isLightMaster: false,
           loadsArchive: true,
-
-          masterlist: {},
-          userlist: {},
 
           group: 'group1',
           messages: [
@@ -441,30 +425,26 @@ describe('Game', () => {
               condition: ''
             }
           ],
-          isDirty: true,
-
-          id: '',
-          _isEditorOpen: true,
-          _isSearchResult: true
-        }
+          isDirty: true
+        })
       ];
 
       expect(game.getContent()).toEqual({
-        messages: game._generalMessages,
+        messages: game.generalMessages,
         plugins: [
           {
-            name: game._plugins[0].name,
-            crc: game._plugins[0].crc,
-            version: game._plugins[0].version,
-            isActive: game._plugins[0].isActive,
-            isEmpty: game._plugins[0].isEmpty,
-            loadsArchive: game._plugins[0].loadsArchive,
+            name: game.plugins[0].name,
+            crc: game.plugins[0].crc,
+            version: game.plugins[0].version,
+            isActive: game.plugins[0].isActive,
+            isEmpty: game.plugins[0].isEmpty,
+            loadsArchive: game.plugins[0].loadsArchive,
 
-            group: game._plugins[0].group,
-            messages: game._plugins[0].messages,
-            currentTags: game._plugins[0].currentTags,
-            suggestedTags: game._plugins[0].suggestedTags,
-            isDirty: game._plugins[0].isDirty
+            group: game.plugins[0].group,
+            messages: game.plugins[0].messages,
+            currentTags: game.plugins[0].currentTags,
+            suggestedTags: game.plugins[0].suggestedTags,
+            isDirty: game.plugins[0].isDirty
           }
         ]
       });
@@ -472,23 +452,25 @@ describe('Game', () => {
   });
 
   describe('#getPluginNames()', () => {
-    let game;
+    let game: Game;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     test('should return an empty array if there are no plugins', () => {
+      game.plugins = [];
       expect(game.getPluginNames().length).toBe(0);
     });
 
     test('should return an array of plugin filenames if there are plugins', () => {
-      game._plugins = [
-        {
+      game.plugins = [
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           isActive: true,
-          messages: [{ type: 'warn' }]
-        }
+          messages: [{ type: 'warn', text: '', language: 'en', condition: '' }]
+        })
       ];
 
       expect(game.getPluginNames()).toEqual(['foo']);
@@ -496,24 +478,27 @@ describe('Game', () => {
   });
 
   describe('#getGroupPluginNames()', () => {
-    let game;
+    let game: Game;
 
     beforeEach(() => {
       const plugins = [
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           group: 'test group'
-        },
-        {
+        }),
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar',
           group: 'other group'
-        },
-        {
+        }),
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foobar',
           group: 'test group'
-        }
+        })
       ];
-      game = new Game({ plugins }, l10n);
+      game = new Game({ ...gameData, plugins }, l10n);
     });
 
     test('should return an empty array if there are no plugins in the given group', () => {
@@ -526,11 +511,14 @@ describe('Game', () => {
   });
 
   describe('#setSortedPlugins', () => {
-    let game;
-    let handleEvent;
+    let game: Game;
+    // It's not worth the hassle of defining and checking the event type in test
+    // code.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handleEvent: (evt: any) => void;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     afterEach(() => {
@@ -539,51 +527,58 @@ describe('Game', () => {
 
     test('should append new plugins to the plugins array', () => {
       game.setSortedPlugins([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
-        }
+        })
       ]);
 
       expect(game.plugins[0].name).toBe('foo');
     });
 
     test('should update existing plugins with new data', () => {
-      game._plugins = [
+      game.plugins = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           isActive: true,
-          messages: [{ type: 'warn' }]
+          messages: [{ type: 'warn', text: '', language: 'en', condition: '' }]
         })
       ];
 
       game.setSortedPlugins([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           crc: 0xdeadbeef
-        }
+        })
       ]);
 
       expect(game.plugins[0].crc).toBe(0xdeadbeef);
-      expect(game.plugins[0].isActive).toBe(true);
+      expect(game.plugins[0].isActive).toBe(false);
     });
 
     test('should reorder plugins to given order', () => {
-      game._plugins = [
+      game.plugins = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar'
         })
       ];
 
       game.setSortedPlugins([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar'
-        },
-        {
+        }),
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
-        }
+        })
       ]);
 
       expect(game.plugins[0].name).toBe('bar');
@@ -591,22 +586,26 @@ describe('Game', () => {
     });
 
     test('should store old load order', () => {
-      game._plugins = [
+      game.plugins = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar'
         })
       ];
 
       game.setSortedPlugins([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar'
-        },
-        {
+        }),
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
-        }
+        })
       ]);
 
       expect(game.oldLoadOrder[0].name).toBe('foo');
@@ -620,22 +619,23 @@ describe('Game', () => {
       document.addEventListener('loot-game-plugins-change', handleEvent);
 
       game.setSortedPlugins([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
-        }
+        })
       ]);
     });
   });
 
   describe('#applySort', () => {
-    let game;
+    let game: Game;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     test('should delete the stored old load order', () => {
-      game.oldLoadOrder = [0, 1, 2];
+      game.oldLoadOrder = gameData.plugins.map(p => new Plugin(p));
 
       game.applySort();
 
@@ -644,61 +644,51 @@ describe('Game', () => {
   });
 
   describe('#cancelSort', () => {
-    let game;
+    let game: Game;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
-    });
-
-    test('should throw if no parameters are supplied', () => {
-      expect(() => {
-        game.cancelSort();
-      }).toThrow();
+      game = new Game(gameData, l10n);
     });
 
     test('should set the current load order to the given plugins', () => {
       const oldLoadOrder = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar'
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'baz'
         })
       ];
       game.oldLoadOrder = oldLoadOrder;
       game.plugins = [oldLoadOrder[2], oldLoadOrder[1], oldLoadOrder[0]];
 
-      game.cancelSort([
-        {
-          name: 'baz',
-          isActive: true
-        },
-        {
-          name: 'foo',
-          isMaster: true
-        }
-      ]);
+      game.cancelSort(
+        [{ name: 'baz', loadOrderIndex: 0 }, { name: 'foo' }],
+        []
+      );
 
-      expect(game.plugins).toEqual([
-        Object.assign({}, oldLoadOrder[2], { isActive: true }),
-        Object.assign({}, oldLoadOrder[0], { isMaster: true })
-      ]);
+      expect(game.plugins).toEqual([oldLoadOrder[2], oldLoadOrder[0]]);
     });
 
     test('should delete the stored old load order', () => {
       game.oldLoadOrder = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar'
         })
       ];
 
-      game.cancelSort([]);
+      game.cancelSort([], []);
 
       expect(game.oldLoadOrder).toEqual([]);
     });
@@ -706,25 +696,24 @@ describe('Game', () => {
     test('should set plugin load order indices using the array passed as the first parameter', () => {
       game.oldLoadOrder = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           loadOrderIndex: 1
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar',
           loadOrderIndex: 0
         })
       ];
 
-      game.cancelSort([
-        new Plugin({
-          name: 'bar',
-          loadOrderIndex: 0
-        }),
-        new Plugin({
-          name: 'foo',
-          loadOrderIndex: 2
-        })
-      ]);
+      game.cancelSort(
+        [
+          { name: 'bar', loadOrderIndex: 0 },
+          { name: 'foo', loadOrderIndex: 2 }
+        ],
+        []
+      );
 
       expect(game.plugins[0].name).toBe('bar');
       expect(game.plugins[0].loadOrderIndex).toBe(0);
@@ -735,62 +724,88 @@ describe('Game', () => {
     test('should set the general messages to the second passed parameter', () => {
       game.oldLoadOrder = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           loadOrderIndex: 1
         }),
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'bar',
           loadOrderIndex: 0
         })
       ];
 
-      game.cancelSort([], ['foo']);
+      const messages = [
+        {
+          type: 'say',
+          text: 'foo',
+          language: 'en',
+          condition: ''
+        }
+      ];
 
-      expect(game.generalMessages).toEqual(['foo']);
+      game.cancelSort([], messages);
+
+      expect(game.generalMessages).toEqual(messages);
     });
   });
 
   describe('#clearMetadata', () => {
-    let game;
+    let game: Game;
 
     beforeEach(() => {
-      game = new Game({}, l10n);
+      game = new Game(gameData, l10n);
     });
 
     test('should delete stored userlist data for existing plugins', () => {
-      game._plugins = [
+      game.plugins = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
-          userlist: {}
+          userlist: {
+            name: '',
+            enabled: false,
+            after: [],
+            req: [],
+            inc: [],
+            msg: [],
+            tag: [],
+            dirty: [],
+            clean: [],
+            url: []
+          }
         })
       ];
 
       game.clearMetadata([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo'
-        }
+        })
       ]);
 
       expect(game.plugins[0].userlist).toBe(undefined);
     });
 
     test('should update existing plugin data', () => {
-      game._plugins = [
+      game.plugins = [
         new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           isActive: true
         })
       ];
 
       game.clearMetadata([
-        {
+        new Plugin({
+          ...defaultDerivedPluginMetadata,
           name: 'foo',
           crc: 0xdeadbeef
-        }
+        })
       ]);
 
       expect(game.plugins[0].crc).toBe(0xdeadbeef);
-      expect(game.plugins[0].isActive).toBe(true);
+      expect(game.plugins[0].isActive).toBe(false);
     });
   });
 });

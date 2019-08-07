@@ -29,7 +29,9 @@ import {
   GameSettings,
   DerivedPluginMetadata,
   GameGroups,
-  GetInstalledGamesResponse
+  GetInstalledGamesResponse,
+  SimpleMessage,
+  PluginLoadOrderIndex
 } from './interfaces';
 import EditableTable from '../elements/editable-table';
 import LootGroupsEditor from '../elements/loot-groups-editor';
@@ -39,6 +41,11 @@ import LootPluginEditor from '../elements/loot-plugin-editor';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
 import LootSearchToolbar from '../elements/loot-search-toolbar';
 import { getElementById, querySelector } from './dom/helpers';
+
+interface CancelSortResponse {
+  plugins: PluginLoadOrderIndex[];
+  generalMessages: SimpleMessage[];
+}
 
 interface ClearAllMetadataResponse {
   plugins: DerivedPluginMetadata[];
@@ -406,7 +413,7 @@ export function onApplySort(): Promise<void> {
 export function onCancelSort(): Promise<void> {
   return query('cancelSort')
     .then(JSON.parse)
-    .then((response: MainContent) => {
+    .then((response: CancelSortResponse) => {
       window.loot.game.cancelSort(response.plugins, response.generalMessages);
       /* Sort UI elements again according to stored old load order. */
       window.loot.filters.apply(window.loot.game.plugins);
