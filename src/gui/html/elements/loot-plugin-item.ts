@@ -7,14 +7,49 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-item/paper-item-body.js';
 import '@polymer/paper-ripple/paper-ripple.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
+import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
+import { PluginItemContentChangePayload } from '../js/interfaces';
 // Also depends on the loot.l10n global.
 
+interface DragStartEvent extends DragEvent {
+  dataTransfer: DataTransfer;
+  currentTarget: LootPluginItem;
+}
+
+function isDragStartEvent(evt: Event): evt is DragStartEvent {
+  return (
+    evt instanceof DragEvent &&
+    evt.dataTransfer !== null &&
+    evt.currentTarget !== null &&
+    'getName' in evt.currentTarget
+  );
+}
+
 export default class LootPluginItem extends PolymerElement {
-  static get is() {
+  public loadOrderIndex?: number;
+
+  public group: string;
+
+  public isEditorOpen: boolean;
+
+  public hasUserEdits: boolean;
+
+  public isLightMaster: boolean;
+
+  public constructor() {
+    super();
+
+    this.group = 'default';
+    this.isEditorOpen = false;
+    this.hasUserEdits = false;
+    this.isLightMaster = false;
+  }
+
+  public static get is(): string {
     return 'loot-plugin-item';
   }
 
-  static get properties() {
+  public static get properties(): PolymerElementProperties {
     return {
       loadOrderIndex: {
         type: Number,
@@ -39,7 +74,7 @@ export default class LootPluginItem extends PolymerElement {
     };
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         /* Flip effect for user metadata / editor open icons. */
@@ -182,36 +217,40 @@ export default class LootPluginItem extends PolymerElement {
     `;
   }
 
-  static _asHexString(number, numberOfDigits) {
+  public static _asHexString(number: number, numberOfDigits: number): string {
     const text = number.toString(16);
     return '0'.repeat(numberOfDigits - text.length) + text;
   }
 
   /* eslint-disable class-methods-use-this */
-  _localise(text) {
-    return loot.l10n.translate(text);
+  // @ts-ignore _localise is called in template bindings.
+  private _localise(text: string): string {
+    return window.loot.l10n.translate(text);
   }
 
-  computeFlipperClass(isEditorOpen) {
+  public computeFlipperClass(isEditorOpen: boolean): string {
     if (isEditorOpen) {
       return 'flipped';
     }
     return '';
   }
 
-  computeIsGroupHidden(group) {
+  public computeIsGroupHidden(group: string): boolean {
     return group === 'default';
   }
 
-  computeLoadOrderIndexClass(isLightMaster) {
+  public computeLoadOrderIndexClass(isLightMaster: boolean): string {
     if (isLightMaster) {
       return 'lightMaster';
     }
     return '';
   }
 
-  computeLoadOrderIndexText(loadOrderIndex, isLightMaster) {
-    if (loadOrderIndex > -1) {
+  public computeLoadOrderIndexText(
+    loadOrderIndex: number | undefined,
+    isLightMaster: boolean
+  ): string {
+    if (loadOrderIndex !== undefined) {
       if (isLightMaster) {
         return `FE\n${LootPluginItem._asHexString(loadOrderIndex, 3)}`;
       }
@@ -222,18 +261,35 @@ export default class LootPluginItem extends PolymerElement {
     return '';
   }
 
-  onDragStart(evt) {
+  public onDragStart(evt: Event): void {
+    if (!isDragStartEvent(evt)) {
+      throw new Error(`Expected DragEvent on loot-plugin-item, got ${evt}`);
+    }
+
     evt.dataTransfer.effectAllowed = 'copy';
     evt.dataTransfer.setData('text/plain', evt.currentTarget.getName());
     evt.dataTransfer.setDragImage(evt.currentTarget, 325, 175);
   }
   /* eslint-enable class-methods-use-this */
 
-  getName() {
+  public getName(): string {
+    if (this.textContent === null) {
+      return '';
+    }
+
     return this.textContent.trim();
   }
 
-  updateContent(pluginData) {
+  public updateContent(pluginData: PluginItemContentChangePayload): void {
+    if (!(this.$.icon instanceof HTMLElement)) {
+      throw new Error('Expected element with ID "icon" to be an HTMLElement');
+    }
+    if (!(this.$.groupSpan instanceof HTMLElement)) {
+      throw new Error(
+        'Expected element with ID "groupSpan" to be an HTMLElement'
+      );
+    }
+
     this.loadOrderIndex = pluginData.loadOrderIndex;
     this.group = pluginData.group;
     this.isEditorOpen = pluginData.isEditorOpen;

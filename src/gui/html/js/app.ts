@@ -42,7 +42,7 @@ import '../elements/loot-menu';
 import '../elements/loot-message-dialog';
 import '../elements/loot-plugin-card.js';
 import '../elements/loot-plugin-editor.js';
-import '../elements/loot-plugin-item.js';
+import '../elements/loot-plugin-item';
 import '../elements/loot-search-toolbar';
 
 /* Import the modules actually used in this script. */

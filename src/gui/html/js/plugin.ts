@@ -24,12 +24,14 @@
 
 import { isEqual } from 'lodash';
 import LootPluginCard from '../elements/loot-plugin-card';
+import LootPluginItem from '../elements/loot-plugin-item';
 import Filters from './filters';
 import {
   SimpleMessage,
   DerivedPluginMetadata,
   Tag,
-  PluginMetadata
+  PluginMetadata,
+  PluginItemContentChangePayload
 } from './interfaces';
 import {
   incrementCounterText,
@@ -133,14 +135,7 @@ function isPluginCardStylingChangeEvent(
 }
 
 interface PluginItemContentChangeEvent extends CustomEvent {
-  detail: {
-    pluginId: string;
-    group: string;
-    isEditorOpen: boolean;
-    hasUserEdits: boolean;
-    loadOrderIndex?: number;
-    isLightMaster: boolean;
-  };
+  detail: PluginItemContentChangePayload;
 }
 
 function isPluginItemContentChangeEvent(
@@ -794,9 +789,9 @@ export class Plugin {
     const item = querySelector(
       getElementById('cardsNav'),
       `[data-id="${evt.detail.pluginId}"]`
-    ) as LootPluginCard;
+    ) as LootPluginItem;
     if (item) {
-      item.updateContent(true);
+      item.updateContent(evt.detail);
     }
   }
 }

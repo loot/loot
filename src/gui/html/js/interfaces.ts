@@ -190,3 +190,12 @@ export interface PluginLoadOrderIndex {
   name: string;
   loadOrderIndex?: number;
 }
+
+export interface PluginItemContentChangePayload {
+  pluginId: string;
+  group: string;
+  isEditorOpen: boolean;
+  hasUserEdits: boolean;
+  loadOrderIndex?: number;
+  isLightMaster: boolean;
+}
