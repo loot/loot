@@ -31,19 +31,14 @@ import {
   DerivedPluginMetadata,
   Tag,
   PluginMetadata,
-  PluginItemContentChangePayload
+  PluginItemContentChangePayload,
+  PluginTags
 } from './interfaces';
 import {
   incrementCounterText,
   getElementById,
   querySelector
 } from './dom/helpers';
-
-interface PluginTags {
-  current: string;
-  add: string;
-  remove: string;
-}
 
 interface TagRowData {
   name: string;
@@ -762,7 +757,7 @@ export class Plugin {
 
     const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
     if (card !== null) {
-      card.updateContent(evt.detail.mayChangeCardHeight);
+      card.updateContent(evt.detail.mayChangeCardHeight, false);
     }
   }
 

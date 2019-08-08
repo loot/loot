@@ -1,18 +1,23 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-material/paper-material.js';
+import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
 
 import { createMessageItem } from '../js/dom/createItem';
 import './loot-custom-icons';
 import './loot-menu';
+import { SimpleMessage, PluginTags } from '../js/interfaces';
+import { Plugin } from '../js/plugin';
 // Also depends on the loot.l10n and loot.filters globals.
 
 export default class LootPluginCard extends PolymerElement {
-  static get is() {
+  public data?: Plugin;
+
+  public static get is(): string {
     return 'loot-plugin-card';
   }
 
-  static get properties() {
+  public static get properties(): PolymerElementProperties {
     return {
       data: {
         notify: true,
@@ -21,7 +26,7 @@ export default class LootPluginCard extends PolymerElement {
     };
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         /* Host styling. */
@@ -167,7 +172,7 @@ export default class LootPluginCard extends PolymerElement {
     `;
   }
 
-  connectedCallback() {
+  public connectedCallback(): void {
     super.connectedCallback();
     this.$.editMetadata.addEventListener('click', this.onShowEditor);
     this.$.copyMetadata.addEventListener(
@@ -180,7 +185,7 @@ export default class LootPluginCard extends PolymerElement {
     );
   }
 
-  disconnectedCallback() {
+  public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.$.editMetadata.removeEventListener('click', this.onShowEditor);
     this.$.copyMetadata.removeEventListener(
@@ -194,43 +199,89 @@ export default class LootPluginCard extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  _localise(text) {
-    return loot.l10n.translate(text);
+  // @ts-ignore _localise is called in template bindings.
+  private _localise(text: string): string {
+    return window.loot.l10n.translate(text);
   }
   /* eslint-enable class-methods-use-this */
 
-  _dataChanged(newValue /* , oldValue */) {
+  // @ts-ignore _dataChanged is called in Polymer's data bindings.
+  private _dataChanged(newValue: Plugin | undefined /* , oldValue */): void {
     if (newValue) {
       /* Initialise the card content data. */
       this.updateContent(true, true);
       this.updateStyling();
 
+      if (!(this.$.activeTick instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with ID "activeTick" to be a HTMLElement'
+        );
+      }
+      if (!(this.$.isMaster instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with ID "isMaster" to be a HTMLElement'
+        );
+      }
+      if (!(this.$.isLightMaster instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with ID "isLightMaster" to be a HTMLElement'
+        );
+      }
+      if (!(this.$.isEmpty instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with ID "isEmpty" to be a HTMLElement'
+        );
+      }
+      if (!(this.$.loadsArchive instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with ID "loadsArchive" to be a HTMLElement'
+        );
+      }
+
       /* Set icons' visibility */
-      this.$.activeTick.hidden = !this.data.isActive;
-      this.$.isMaster.hidden = !this.data.isMaster;
-      this.$.isLightMaster.hidden = !this.data.isLightMaster;
-      this.$.isEmpty.hidden = !this.data.isEmpty;
-      this.$.loadsArchive.hidden = !this.data.loadsArchive;
+      this.$.activeTick.hidden = !newValue.isActive;
+      this.$.isMaster.hidden = !newValue.isMaster;
+      this.$.isLightMaster.hidden = !newValue.isLightMaster;
+      this.$.isEmpty.hidden = !newValue.isEmpty;
+      this.$.loadsArchive.hidden = !newValue.loadsArchive;
     }
   }
 
-  _setTagsContent(tags) {
+  private _setTagsContent(tags: PluginTags): void {
     if (tags) {
       const currentTags = this.getElementsByClassName('tag current')[0];
+      if (!(currentTags instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with class "tag current" to be a HTMLElement'
+        );
+      }
+
       currentTags.textContent = tags.current;
       currentTags.hidden = tags.current.length === 0;
 
       const tagsToAdd = this.getElementsByClassName('tag add')[0];
+      if (!(tagsToAdd instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with class "tag add" to be a HTMLElement'
+        );
+      }
+
       tagsToAdd.textContent = tags.add;
       tagsToAdd.hidden = tags.add.length === 0;
 
       const tagsToRemove = this.getElementsByClassName('tag remove')[0];
+      if (!(tagsToRemove instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with class "tag remove" to be a HTMLElement'
+        );
+      }
+
       tagsToRemove.textContent = tags.remove;
       tagsToRemove.hidden = tags.remove.length === 0;
     }
   }
 
-  _setMessagesContent(messages) {
+  private _setMessagesContent(messages: SimpleMessage[]): void {
     /* First clear any existing messages. */
     const messageList = this.getElementsByTagName('ul')[0];
     while (messageList.firstElementChild) {
@@ -246,9 +297,12 @@ export default class LootPluginCard extends PolymerElement {
     }
   }
 
-  updateContent(updateBodyContent, suppressResizeEvent) {
+  public updateContent(
+    updateBodyContent: boolean,
+    suppressResizeEvent: boolean
+  ): void {
     if (this.data) {
-      const cardContent = this.data.getCardContent(loot.filters);
+      const cardContent = this.data.getCardContent(window.loot.filters);
 
       this.getElementsByClassName('version')[0].textContent =
         cardContent.version;
@@ -274,16 +328,30 @@ export default class LootPluginCard extends PolymerElement {
     }
   }
 
-  updateIsCleanIcon() {
+  public updateIsCleanIcon(): void {
+    if (!(this.$.isClean instanceof HTMLElement)) {
+      throw new Error('Expected element with ID "isClean" to be a HTMLElement');
+    }
+
+    if (this.data === undefined) {
+      throw new Error('Expected loot-plugin-card data to be defined');
+    }
+
     this.$.isClean.hidden = !this.data.cleanedWith;
-    this.$.isCleanTooltip.textContent = loot.l10n.translateFormatted(
+    this.$.isCleanTooltip.textContent = window.loot.l10n.translateFormatted(
       'Verified clean by %s',
       this.data.cleanedWith
     );
   }
 
-  updateStyling() {
+  public updateStyling(): void {
     if (this.data) {
+      if (!(this.$.hasUserEdits instanceof HTMLElement)) {
+        throw new Error(
+          'Expected element with ID "hasUserEdits" to be a HTMLElement'
+        );
+      }
+
       this.$.hasUserEdits.hidden = !this.data.hasUserEdits;
 
       /* Set highlight if the plugin is a search result. */
@@ -291,11 +359,11 @@ export default class LootPluginCard extends PolymerElement {
     }
   }
 
-  getName() {
-    return this.getElementsByTagName('h1')[0].textContent;
+  public getName(): string {
+    return this.getElementsByTagName('h1')[0].textContent || '';
   }
 
-  onShowEditor() {
+  public onShowEditor(): void {
     /* Fire an open event, so that the UI can enter edit mode. */
     this.dispatchEvent(
       new CustomEvent('loot-editor-open', {
@@ -305,7 +373,11 @@ export default class LootPluginCard extends PolymerElement {
     );
   }
 
-  static _onCopyMetadata(evt) {
+  private static _onCopyMetadata(evt: Event): void {
+    if (evt.target === null) {
+      throw new TypeError('Expected event target to be non-null');
+    }
+
     evt.target.dispatchEvent(
       new CustomEvent('loot-copy-metadata', {
         bubbles: true,
@@ -314,7 +386,11 @@ export default class LootPluginCard extends PolymerElement {
     );
   }
 
-  static _onClearMetadata(evt) {
+  private static _onClearMetadata(evt: Event): void {
+    if (evt.target === null) {
+      throw new TypeError('Expected event target to be non-null');
+    }
+
     evt.target.dispatchEvent(
       new CustomEvent('loot-clear-metadata', {
         bubbles: true,

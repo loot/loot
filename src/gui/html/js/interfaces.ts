@@ -199,3 +199,9 @@ export interface PluginItemContentChangePayload {
   loadOrderIndex?: number;
   isLightMaster: boolean;
 }
+
+export interface PluginTags {
+  current: string;
+  add: string;
+  remove: string;
+}

@@ -211,10 +211,8 @@ export default class Filters implements FilterStates {
     const pluginCards = cardsList.children;
     for (let i = 0; i < pluginCards.length; i += 1) {
       const card = pluginCards[i] as LootPluginCard;
-      // TODO: This cast won't be necessary once LootPluginCard is converted to TypeScript.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((card as any).data) {
-        card.updateContent(true);
+      if (card.data) {
+        card.updateContent(true, false);
       }
     }
     cardsNav.notifyResize();
