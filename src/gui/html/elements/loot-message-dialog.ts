@@ -1,24 +1,56 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { flush } from '@polymer/polymer/lib/utils/flush.js';
 import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-dialog/paper-dialog.js';
+import { PaperDialogElement } from '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/neon-animation/animations/fade-in-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
 import 'web-animations-js/web-animations-next.min.js';
+import { getShadowElementById } from '../js/dom/helpers';
+
 // Also depends on the loot.l10n global.
 
+interface ClosingReason {
+  confirmed?: boolean;
+}
+
+interface LootMessageDialogCloseEvent extends Event {
+  target: EventTarget &
+    PaperDialogElement & {
+      closingReason: ClosingReason | null | undefined;
+      parentNode: ShadowRoot & { host: LootMessageDialog };
+    };
+}
+
+function isLootMessageDialogCloseEvent(
+  evt: Event
+): evt is LootMessageDialogCloseEvent {
+  return (
+    evt.type === 'iron-overlay-closed' &&
+    evt.target instanceof Element &&
+    evt.target.id === 'dialog'
+  );
+}
+
+function isPaperDialog(
+  element: Element
+): element is Element & PaperDialogElement {
+  return element.tagName === 'PAPER-DIALOG';
+}
+
 export default class LootMessageDialog extends PolymerElement {
-  static get is() {
+  private closeCallback?: (confirmed: boolean) => void;
+
+  public static get is(): string {
     return 'loot-message-dialog';
   }
 
-  constructor() {
+  public constructor() {
     super();
 
     this.closeCallback = undefined;
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         paper-dialog {
@@ -52,31 +84,58 @@ export default class LootMessageDialog extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  _localise(text) {
-    return loot.l10n.translate(text);
+  // @ts-ignore _localise is called in template bindings.
+  private _localise(text: string): string {
+    return window.loot.l10n.translate(text);
   }
   /* eslint-enable class-methods-use-this */
 
-  setConfirmText(confirmText) {
-    this.shadowRoot.getElementById('confirm').textContent = confirmText;
-  }
-
-  setDismissable(isDialogDismissable) {
-    this.shadowRoot.getElementById('dismiss').hidden = !isDialogDismissable;
-  }
-
-  static onClose(evt) {
-    if (evt.target.parentNode.host.closeCallback) {
-      evt.target.parentNode.host.closeCallback(
-        evt.target.closingReason.confirmed
+  public setConfirmText(confirmText: string): void {
+    if (this.shadowRoot === null) {
+      throw new Error(
+        'Expected loot-message-dialog element to have a shadow root'
       );
     }
+    getShadowElementById(this.shadowRoot, 'confirm').textContent = confirmText;
+  }
+
+  public setDismissable(isDialogDismissable: boolean): void {
+    if (this.shadowRoot === null) {
+      throw new Error(
+        'Expected loot-message-dialog element to have a shadow root'
+      );
+    }
+    getShadowElementById(
+      this.shadowRoot,
+      'dismiss'
+    ).hidden = !isDialogDismissable;
+  }
+
+  public static onClose(evt: Event): void {
+    if (!isLootMessageDialogCloseEvent(evt)) {
+      throw new TypeError(`Expected a LootMessageDialogCloseEvent, got ${evt}`);
+    }
+
+    if (evt.target.parentNode.host.closeCallback) {
+      evt.target.parentNode.host.closeCallback(
+        !!evt.target.closingReason && !!evt.target.closingReason.confirmed
+      );
+    }
+
+    if (evt.target.parentNode.host.parentElement === null) {
+      throw new Error('Expected loot-message-dialog to have a parent element');
+    }
+
     evt.target.parentNode.host.parentElement.removeChild(
       evt.target.parentNode.host
     );
   }
 
-  showModal(title, text, closeCallback) {
+  public showModal(
+    title: string,
+    text: string,
+    closeCallback?: (confirmed: boolean) => void
+  ): void {
     this.getElementsByClassName('heading')[0].textContent = title;
     this.getElementsByClassName('message')[0].innerHTML = text;
 
@@ -86,14 +145,26 @@ export default class LootMessageDialog extends PolymerElement {
     // displayed.
     flush();
 
+    if (!isPaperDialog(this.$.dialog)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain a paper-dialog with ID 'dialog'"
+      );
+    }
+
     this.$.dialog.open();
   }
 
-  close() {
+  public close(): void {
+    if (!isPaperDialog(this.$.dialog)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain a paper-dialog with ID 'dialog'"
+      );
+    }
+
     this.$.dialog.close();
   }
 
-  connectedCallback() {
+  public connectedCallback(): void {
     super.connectedCallback();
 
     if (this.children.length === 0) {
@@ -114,7 +185,7 @@ export default class LootMessageDialog extends PolymerElement {
     );
   }
 
-  disconnectedCallback() {
+  public disconnectedCallback(): void {
     super.disconnectedCallback();
 
     this.$.dialog.removeEventListener(

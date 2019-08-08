@@ -3,7 +3,11 @@ import Translator from './translator';
 import LootGroupsEditor from '../elements/loot-groups-editor';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
 import { LootVersion } from './interfaces';
-import { getElementById, querySelector } from './dom/helpers';
+import {
+  getElementById,
+  querySelector,
+  getShadowElementById
+} from './dom/helpers';
 
 function getFirstElementChildById(elementId: string): Element {
   const sibling = getElementById(elementId).firstElementChild;
@@ -47,15 +51,6 @@ function getLastChildById(elementId: string): ChildNode {
   }
 
   return child;
-}
-
-function getShadowElementById(shadowRoot: ShadowRoot, id: string): HTMLElement {
-  const element = shadowRoot.getElementById(id);
-  if (element === null) {
-    throw new Error(`Expected to get an element with ID ${id}`);
-  }
-
-  return element;
 }
 
 function getPreviousElementSibling(element: Element): Element {

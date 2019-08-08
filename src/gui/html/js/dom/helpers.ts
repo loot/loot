@@ -30,6 +30,18 @@ export function getElementById(elementId: string): HTMLElement {
   return element;
 }
 
+export function getShadowElementById(
+  shadowRoot: ShadowRoot,
+  id: string
+): HTMLElement {
+  const element = shadowRoot.getElementById(id);
+  if (element === null) {
+    throw new Error(`Expected to get an element with ID ${id}`);
+  }
+
+  return element;
+}
+
 export function setTextContent(elementId: string, value: number): void {
   getElementById(elementId).textContent = value.toString();
 }
