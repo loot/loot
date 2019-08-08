@@ -1,13 +1,24 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import '@polymer/paper-listbox/paper-listbox.js';
+import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
 
 export default class LootDropdownMenu extends PolymerElement {
-  static get is() {
+  public value: string;
+
+  public label: string;
+
+  public constructor() {
+    super();
+    this.value = '';
+    this.label = '';
+  }
+
+  public static get is(): string {
     return 'loot-dropdown-menu';
   }
 
-  static get properties() {
+  public static get properties(): PolymerElementProperties {
     return {
       disabled: {
         type: Boolean,
@@ -17,6 +28,10 @@ export default class LootDropdownMenu extends PolymerElement {
       value: {
         type: String,
         notify: true,
+        reflectToAttribute: true
+      },
+      label: {
+        type: String,
         reflectToAttribute: true
       },
       noLabelFloat: {
@@ -32,7 +47,7 @@ export default class LootDropdownMenu extends PolymerElement {
     };
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         paper-dropdown-menu {

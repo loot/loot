@@ -36,7 +36,7 @@ import 'web-animations-js/web-animations-next.min.js';
 
 /* Also import the custom elements here so they're bundled by webpack */
 import '../elements/editable-table.js';
-import '../elements/loot-dropdown-menu.js';
+import '../elements/loot-dropdown-menu';
 import '../elements/loot-groups-editor.js';
 import '../elements/loot-menu';
 import '../elements/loot-message-dialog.js';
