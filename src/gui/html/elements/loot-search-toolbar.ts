@@ -2,16 +2,80 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
+import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
+import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
+
+function isPaperIconButton(
+  element: Element
+): element is PaperIconButtonElement {
+  return element.tagName === 'PAPER-ICON-BUTTON';
+}
+
+function isHTMLElement(element: Element): element is HTMLElement {
+  return element instanceof HTMLElement;
+}
+
+function isPaperInput(
+  element: Element
+): element is Element & PaperInputElement {
+  return element.tagName === 'PAPER-INPUT';
+}
+
+interface LootSearchToolbarEnterPrevNextEvent extends KeyboardEvent {
+  target: Element & {
+    parentElement: Element & {
+      parentNode: ShadowRoot & { host: LootSearchToolbar };
+    };
+  };
+}
+
+function isLootSearchToolbarEnterPrevNextEvent(
+  evt: Event
+): evt is LootSearchToolbarEnterPrevNextEvent {
+  return (
+    evt.target instanceof Element &&
+    evt.target.parentElement !== null &&
+    evt.target.parentElement.parentNode instanceof ShadowRoot
+  );
+}
+
+interface LootSearchToolbarSearchEvent extends KeyboardEvent {
+  target: Element & {
+    value: string;
+    parentElement: Element & {
+      parentNode: ShadowRoot & { host: LootSearchToolbar };
+    };
+  };
+}
+
+function isLootSearchToolbarSearchEvent(
+  evt: Event
+): evt is LootSearchToolbarSearchEvent {
+  return (
+    evt.target instanceof Element &&
+    evt.target.parentElement !== null &&
+    evt.target.parentElement.parentNode instanceof ShadowRoot
+  );
+}
 
 export default class LootSearchToolbar extends PolymerElement {
-  static get is() {
+  private _currentResult: number;
+
+  public results: number[];
+
+  public constructor() {
+    super();
+    this._currentResult = 0;
+    this.results = [];
+  }
+
+  public static get is(): string {
     return 'loot-search-toolbar';
   }
 
-  static get properties() {
+  public static get properties(): PolymerElementProperties {
     return {
       _currentResult: {
         type: Number,
@@ -26,7 +90,7 @@ export default class LootSearchToolbar extends PolymerElement {
     };
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         app-toolbar {
@@ -77,8 +141,21 @@ export default class LootSearchToolbar extends PolymerElement {
     `;
   }
 
-  _currentResultChanged(newValue) {
+  // @ts-ignore used in the Polymer template
+  private _currentResultChanged(newValue: number): void {
     if (this.results && this.results.length > 0) {
+      if (!isPaperIconButton(this.$.prev)) {
+        throw new TypeError(
+          "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'prev'"
+        );
+      }
+
+      if (!isPaperIconButton(this.$.next)) {
+        throw new TypeError(
+          "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'next'"
+        );
+      }
+
       if (this.results.length === 1) {
         this.$.prev.disabled = true;
         this.$.next.disabled = true;
@@ -104,14 +181,27 @@ export default class LootSearchToolbar extends PolymerElement {
     }
   }
 
-  _resultsChanged(newValue) {
-    this.$.count.lastElementChild.textContent = newValue.length;
+  // @ts-ignore used in the Polymer template
+  private _resultsChanged(newValue: number[]): void {
+    if (!isHTMLElement(this.$.count)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'prev'"
+      );
+    }
+
+    if (this.$.count.lastElementChild === null) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'prev' and a child element"
+      );
+    }
+
+    this.$.count.lastElementChild.textContent = newValue.length.toString();
     if (newValue.length > 0) {
       this._currentResult = 0;
     }
   }
 
-  connectedCallback() {
+  public connectedCallback(): void {
     super.connectedCallback();
     this.$.search.addEventListener('input', LootSearchToolbar._onSearch);
     this.$.search.addEventListener('keyup', LootSearchToolbar._onEnter);
@@ -120,7 +210,7 @@ export default class LootSearchToolbar extends PolymerElement {
     this.$.close.addEventListener('click', LootSearchToolbar._onClose);
   }
 
-  disconnectedCallback() {
+  public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.$.search.removeEventListener('input', LootSearchToolbar._onSearch);
     this.$.search.removeEventListener('keyup', LootSearchToolbar._onEnter);
@@ -129,7 +219,13 @@ export default class LootSearchToolbar extends PolymerElement {
     this.$.close.removeEventListener('change', LootSearchToolbar._onClose);
   }
 
-  static _onEnter(evt) {
+  private static _onEnter(evt: Event): void {
+    if (!isLootSearchToolbarEnterPrevNextEvent(evt)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'prev'"
+      );
+    }
+
     const host = evt.target.parentElement.parentNode.host;
     if (evt.keyCode !== 13 || host.results.length === 0) {
       return;
@@ -141,22 +237,34 @@ export default class LootSearchToolbar extends PolymerElement {
     }
   }
 
-  focusInput() {
+  public focusInput(): void {
+    if (!isPaperInput(this.$.search)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'prev'"
+      );
+    }
+
     this.$.search.focus();
   }
 
-  _resetResults() {
+  private _resetResults(): void {
     this.results = [];
     this._currentResult = -1;
     this.$.prev.setAttribute('disabled', '');
     this.$.next.setAttribute('disabled', '');
   }
 
-  search() {
+  public search(): void {
     this.$.search.dispatchEvent(new Event('input'));
   }
 
-  static _onSearch(evt) {
+  private static _onSearch(evt: Event): void {
+    if (!isLootSearchToolbarSearchEvent(evt)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's search event to come from a subchild"
+      );
+    }
+
     evt.target.parentElement.parentNode.host._resetResults();
 
     const needle = evt.target.value ? evt.target.value.toLowerCase() : '';
@@ -169,16 +277,41 @@ export default class LootSearchToolbar extends PolymerElement {
     );
   }
 
-  static _onPrev(evt) {
+  private static _onPrev(evt: Event): void {
+    if (!isLootSearchToolbarEnterPrevNextEvent(evt)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's search event to come from a subchild"
+      );
+    }
+
     evt.target.parentElement.parentNode.host._currentResult -= 1;
   }
 
-  static _onNext(evt) {
+  private static _onNext(evt: Event): void {
+    if (!isLootSearchToolbarEnterPrevNextEvent(evt)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's search event to come from a subchild"
+      );
+    }
+
     evt.target.parentElement.parentNode.host._currentResult += 1;
   }
 
-  static _onClose(evt) {
+  private static _onClose(evt: Event): void {
+    if (!isLootSearchToolbarEnterPrevNextEvent(evt)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's search event to come from a subchild"
+      );
+    }
+
     const host = evt.target.parentElement.parentNode.host;
+
+    if (!isPaperInput(host.$.search)) {
+      throw new TypeError(
+        "Expected loot-message-dialog's shadow root to contain an HTML element with ID 'prev'"
+      );
+    }
+
     host._resetResults();
     host.$.search.value = '';
     host.$.count.classList.toggle('hidden', true);
@@ -191,7 +324,8 @@ export default class LootSearchToolbar extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  _computeResultNum(currentResult) {
+  // @ts-ignore used in the Polymer template
+  private _computeResultNum(currentResult: number): number {
     return currentResult + 1;
   }
   /* eslint-enable class-methods-use-this */
