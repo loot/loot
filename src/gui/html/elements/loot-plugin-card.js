@@ -4,7 +4,7 @@ import '@polymer/paper-material/paper-material.js';
 
 import { createMessageItem } from '../js/dom/createItem';
 import './loot-custom-icons';
-import './loot-menu.js';
+import './loot-menu';
 // Also depends on the loot.l10n and loot.filters globals.
 
 export default class LootPluginCard extends PolymerElement {
