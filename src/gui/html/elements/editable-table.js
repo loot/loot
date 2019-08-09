@@ -54,8 +54,8 @@ export default class EditableTable extends PolymerElement {
 
     /* Remove deletion listener. */
     const icons = this.querySelector('tbody').getElementsByClassName('delete');
-    for (let i = 0; i < icons.length; i += 1) {
-      icons[i].removeEventListener('click', this.onRemoveRow);
+    for (const icon of icons) {
+      icon.removeEventListener('click', this.onRemoveRow);
     }
 
     /* Remove new row listener. */
@@ -92,16 +92,16 @@ export default class EditableTable extends PolymerElement {
     const writableRows = [];
     const rows = this.querySelector('tbody').rows;
 
-    for (let i = 0; i < rows.length; i += 1) {
-      const trash = rows[i].getElementsByClassName('delete');
+    for (const row of rows) {
+      const trash = row.getElementsByClassName('delete');
       if (trash.length > 0 && (!writableOnly || !trash[0].disabled)) {
         const rowData = {};
 
-        const inputs = rows[i].querySelectorAll(
+        const inputs = row.querySelectorAll(
           'paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu'
         );
-        for (let j = 0; j < inputs.length; j += 1) {
-          rowData[inputs[j].className] = (inputs[j].value || '').trim();
+        for (const input of inputs) {
+          rowData[input.className] = (input.value || '').trim();
         }
 
         writableRows.push(rowData);
@@ -125,16 +125,16 @@ export default class EditableTable extends PolymerElement {
     const inputs = row.querySelectorAll(
       'paper-autocomplete, paper-input, paper-textarea, loot-dropdown-menu'
     );
-    for (let i = 0; i < inputs.length; i += 1) {
+    for (const input of inputs) {
       if (classMask.length > 0) {
-        for (let j = 0; j < classMask.length; j += 1) {
-          if (inputs[i].classList.contains(classMask[j])) {
-            inputs[i].disabled = readOnly;
+        for (const className of classMask) {
+          if (input.classList.contains(className)) {
+            input.disabled = readOnly;
             break;
           }
         }
       } else {
-        inputs[i].disabled = readOnly;
+        input.disabled = readOnly;
       }
     }
   }
@@ -225,8 +225,8 @@ export default class EditableTable extends PolymerElement {
     const inputs = this.querySelectorAll(
       'paper-autocomplete, paper-input, paper-textarea'
     );
-    for (let i = 0; i < inputs.length; i += 1) {
-      if (!inputs[i].validate()) {
+    for (const input of inputs) {
+      if (!input.validate()) {
         return false;
       }
     }

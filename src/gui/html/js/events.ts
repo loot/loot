@@ -708,10 +708,11 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
   const elements = getElementById('cardsNav').getElementsByTagName(
     'loot-plugin-item'
   );
-  for (let i = 0; i < elements.length; i += 1) {
-    const element = elements[i] as LootPluginItem;
-    element.draggable = true;
-    element.addEventListener('dragstart', element.onDragStart);
+
+  for (const element of elements) {
+    const item = element as LootPluginItem;
+    item.draggable = true;
+    item.addEventListener('dragstart', item.onDragStart);
   }
 
   return query('editorOpened').catch(handlePromiseError);
@@ -759,10 +760,11 @@ export function onEditorClose(evt: Event): void {
       const elements = getElementById('cardsNav').getElementsByTagName(
         'loot-plugin-item'
       );
-      for (let i = 0; i < elements.length; i += 1) {
-        const element = elements[i] as LootPluginItem;
-        element.removeAttribute('draggable');
-        element.removeEventListener('dragstart', element.onDragStart);
+
+      for (const element of elements) {
+        const item = element as LootPluginItem;
+        item.removeAttribute('draggable');
+        item.removeEventListener('dragstart', item.onDragStart);
       }
     })
     .catch(handlePromiseError);

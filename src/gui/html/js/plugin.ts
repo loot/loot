@@ -304,8 +304,8 @@ class PluginCardContent {
       return true;
     }
 
-    for (let i = 0; i < this.messages.length; i += 1) {
-      if (this.messages[i].text.toLowerCase().indexOf(needle) !== -1) {
+    for (const message of this.messages) {
+      if (message.text.toLowerCase().indexOf(needle) !== -1) {
         return true;
       }
     }

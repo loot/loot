@@ -143,12 +143,12 @@ export function updateSelectedGame(gameFolder: string): void {
     );
   }
 
-  for (let i = 0; i < tableBody.rows.length; i += 1) {
-    const folderElements = tableBody.rows[i].getElementsByClassName('folder');
+  for (const row of tableBody.rows) {
+    const folderElements = row.getElementsByClassName('folder');
 
     if (folderElements.length === 1) {
       table.setReadOnly(
-        tableBody.rows[i],
+        row,
         ['delete'],
         (folderElements[0] as PaperInputElement).value === gameFolder
       );

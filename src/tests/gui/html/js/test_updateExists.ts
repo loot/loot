@@ -34,7 +34,6 @@ jest.mock('@octokit/rest', () =>
         }
       ];
 
-      // eslint-disable-next-line no-restricted-syntax
       for (const tagsPage of listTagsPages) {
         yield tagsPage;
       }

@@ -51,9 +51,6 @@ async function paginatedFindTag(
     per_page: 100
   });
 
-  // The version of Chromium used by LOOT natively supports async iterators, so
-  // disable the syntax restriction lint.
-  // eslint-disable-next-line no-restricted-syntax
   for await (const page of octokit.paginate.iterator(options)) {
     const tag = findTag(page.data, tagName);
     if (tag) {

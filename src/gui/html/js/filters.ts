@@ -208,9 +208,8 @@ export default class Filters implements FilterStates {
     cardsNav.items = filteredPlugins;
     cardsList.items = filteredPlugins;
 
-    const pluginCards = cardsList.children;
-    for (let i = 0; i < pluginCards.length; i += 1) {
-      const card = pluginCards[i] as LootPluginCard;
+    for (const pluginCard of cardsList.children) {
+      const card = pluginCard as LootPluginCard;
       if (card.data) {
         card.updateContent(true, false);
       }

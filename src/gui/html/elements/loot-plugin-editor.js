@@ -267,9 +267,9 @@ export default class LootPluginEditor extends PolymerElement {
     };
 
     const tables = this.querySelectorAll('editable-table');
-    for (let j = 0; j < tables.length; j += 1) {
-      const rowsData = tables[j].getRowsData(true);
-      const tableType = tables[j].parentElement.getAttribute('data-page');
+    for (const table of tables) {
+      const rowsData = table.getRowsData(true);
+      const tableType = table.parentElement.getAttribute('data-page');
       if (rowsData.length > 0) {
         if (tableType === 'after') {
           metadata.after = rowsData;
@@ -300,9 +300,10 @@ export default class LootPluginEditor extends PolymerElement {
     const inputs = evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
       'editable-table'
     );
-    for (let i = 0; i < inputs.length; i += 1) {
-      if (!inputs[i].validate()) {
+    for (const input of inputs) {
+      if (!input.validate()) {
         isValid = false;
+        break;
       }
     }
 
@@ -341,17 +342,17 @@ export default class LootPluginEditor extends PolymerElement {
       nonUserGroup = 'default';
     }
 
-    for (let i = 0; i < groupElements.length; i += 1) {
+    for (const groupElement of groupElements) {
       if (
-        groupElements[i].getAttribute('value') === nonUserGroup &&
+        groupElement.getAttribute('value') === nonUserGroup &&
         nonUserGroup !== pluginData.group
       ) {
         if (nonUserGroup !== pluginData.group) {
-          groupElements[i].style.fontWeight = 'bold';
-          groupElements[i].style.color = 'var(--primary-color)';
+          groupElement.style.fontWeight = 'bold';
+          groupElement.style.color = 'var(--primary-color)';
         }
       } else {
-        groupElements[i].style = undefined;
+        groupElement.style = undefined;
       }
     }
   }
@@ -373,58 +374,55 @@ export default class LootPluginEditor extends PolymerElement {
     /* Clear then fill in editor table data. Masterlist-originated
         rows should have their contents made read-only. */
     const tables = this.querySelectorAll('editable-table');
-    for (let j = 0; j < tables.length; j += 1) {
-      tables[j].clear();
-      const tableType = tables[j].parentElement.getAttribute('data-page');
+    for (const table of tables) {
+      table.clear();
+      const tableType = table.parentElement.getAttribute('data-page');
       if (tableType === 'message') {
         if (newData.masterlist && newData.masterlist.msg) {
-          newData.masterlist.msg.forEach(tables[j].addReadOnlyRow, tables[j]);
+          newData.masterlist.msg.forEach(table.addReadOnlyRow, table);
         }
         if (newData.userlist && newData.userlist.msg) {
-          newData.userlist.msg.forEach(tables[j].addRow, tables[j]);
+          newData.userlist.msg.forEach(table.addRow, table);
         }
       } else if (tableType === 'tags') {
         if (newData.masterlist && newData.masterlist.tag) {
           newData.masterlist.tag
             .map(Plugin.tagToRowData)
-            .forEach(tables[j].addReadOnlyRow, tables[j]);
+            .forEach(table.addReadOnlyRow, table);
         }
         if (newData.userlist && newData.userlist.tag) {
           newData.userlist.tag
             .map(Plugin.tagToRowData)
-            .forEach(tables[j].addRow, tables[j]);
+            .forEach(table.addRow, table);
         }
       } else if (tableType === 'dirty') {
         if (newData.masterlist && newData.masterlist.dirty) {
           newData.masterlist.dirty
             .map(LootPluginEditor._dirtyInfoToRowData)
-            .forEach(tables[j].addReadOnlyRow, tables[j]);
+            .forEach(table.addReadOnlyRow, table);
         }
         if (newData.userlist && newData.userlist.dirty) {
           newData.userlist.dirty
             .map(LootPluginEditor._dirtyInfoToRowData)
-            .forEach(tables[j].addRow, tables[j]);
+            .forEach(table.addRow, table);
         }
       } else if (tableType === 'clean') {
         if (newData.masterlist && newData.masterlist.clean) {
           newData.masterlist.clean
             .map(LootPluginEditor._dirtyInfoToRowData)
-            .forEach(tables[j].addReadOnlyRow, tables[j]);
+            .forEach(table.addReadOnlyRow, table);
         }
         if (newData.userlist && newData.userlist.clean) {
           newData.userlist.clean
             .map(LootPluginEditor._dirtyInfoToRowData)
-            .forEach(tables[j].addRow, tables[j]);
+            .forEach(table.addRow, table);
         }
       } else {
         if (newData.masterlist && newData.masterlist[tableType]) {
-          newData.masterlist[tableType].forEach(
-            tables[j].addReadOnlyRow,
-            tables[j]
-          );
+          newData.masterlist[tableType].forEach(table.addReadOnlyRow, table);
         }
         if (newData.userlist && newData.userlist[tableType]) {
-          newData.userlist[tableType].forEach(tables[j].addRow, tables[j]);
+          newData.userlist[tableType].forEach(table.addRow, table);
         }
       }
     }
