@@ -19,6 +19,7 @@
     "@polymer/iron-icon": "^3.0.0",
     "@polymer/iron-icons": "^3.0.0",
     "@polymer/iron-iconset-svg": "^3.0.0",
+    "@polymer/iron-input": "^3.0.1",
     "@polymer/iron-list": "^3.0.0",
     "@polymer/iron-pages": "^3.0.0",
     "@polymer/iron-selector": "^3.0.1",
@@ -41,6 +42,9 @@
     "@polymer/paper-toggle-button": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
+    "@types/react": "^16.9.1",
+    "@types/react-autosuggest": "^9.3.10",
+    "@types/react-dom": "^16.8.5",
     "cytoscape": "^3.2.11",
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-edgehandles": "^3.2.3",
@@ -208,6 +212,15 @@
         {
           "selector": "WithStatement",
           "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
+        }
+      ],
+      "react/jsx-filename-extension": [
+        "error",
+        {
+          "extensions": [
+            ".jsx",
+            ".tsx"
+          ]
         }
       ]
     }
