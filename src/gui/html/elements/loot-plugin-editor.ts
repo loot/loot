@@ -11,19 +11,88 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-tabs/paper-tabs.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import { PaperToggleButtonElement } from '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-tooltip/paper-tooltip.js';
+import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
 
-import './editable-table.js';
+import EditableTable from './editable-table.js';
 import './loot-custom-icons';
 import { crcToString, Plugin } from '../js/plugin';
+import {
+  PluginCleaningData,
+  PluginMetadata,
+  File,
+  SimpleMessage,
+  TagRowData,
+  ModLocation
+} from '../js/interfaces';
+import { querySelector } from '../js/dom/helpers';
+import LootDropdownMenu from './loot-dropdown-menu';
+
+interface CleaningRowData {
+  crc: string;
+  itm: string;
+  udr: string;
+  nav: string;
+  utility: string;
+}
+
+interface HideEditorEvent extends Event {
+  target: EventTarget &
+    Element & {
+      parentElement: Element & {
+        parentElement: Element & {
+          parentNode: Node & { host: LootPluginEditor };
+        };
+      };
+    };
+}
+
+function isHideEditorEvent(evt: Event): evt is HideEditorEvent {
+  return (
+    evt.target instanceof Element &&
+    evt.target.parentElement !== null &&
+    evt.target.parentElement.parentElement !== null &&
+    evt.target.parentElement.parentElement.parentNode instanceof ShadowRoot &&
+    evt.target.parentElement.parentElement.parentNode.host.tagName ===
+      'LOOT-PLUGIN-EDITOR'
+  );
+}
+
+interface SplitterDragEvent extends Event {
+  target: EventTarget &
+    Element & { parentNode: Node & { host: LootPluginEditor } };
+  detail: {
+    state: string;
+    ddy: number;
+  };
+}
+
+function isSplitterDragEvent(evt: Event): evt is SplitterDragEvent {
+  // Not ideal, but track isn't a CustomEvent, so a typesafe check for
+  // evt.detail.* is tricky.
+  return (
+    evt instanceof Event &&
+    evt.type === 'track' &&
+    evt.target instanceof Element &&
+    evt.target.parentNode instanceof ShadowRoot &&
+    evt.target.parentNode.host.tagName === 'LOOT-PLUGIN-EDITOR' &&
+    'detail' in evt
+  );
+}
+
+function isPaperToggleButton(
+  element: Element
+): element is PaperToggleButtonElement {
+  return element.tagName === 'PAPER-TOGGLE-BUTTON';
+}
 
 export default class LootPluginEditor extends PolymerElement {
-  static get is() {
+  public static get is(): string {
     return 'loot-plugin-editor';
   }
 
-  static get properties() {
+  public static get properties(): PolymerElementProperties {
     return {
       selected: {
         type: String,
@@ -32,7 +101,7 @@ export default class LootPluginEditor extends PolymerElement {
     };
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         :host {
@@ -190,15 +259,19 @@ export default class LootPluginEditor extends PolymerElement {
             </loot-dropdown-menu>
           </div>
         </div>
-        <slot name="after"></slot> <slot name="req"></slot>
-        <slot name="inc"></slot> <slot name="message"></slot>
-        <slot name="tags"></slot> <slot name="dirty"></slot>
-        <slot name="clean"></slot> <slot name="url"></slot>
+        <slot name="after"></slot>
+        <slot name="req"></slot>
+        <slot name="inc"></slot>
+        <slot name="message"></slot>
+        <slot name="tags"></slot>
+        <slot name="dirty"></slot>
+        <slot name="clean"></slot>
+        <slot name="url"></slot>
       </iron-pages>
     `;
   }
 
-  connectedCallback() {
+  public connectedCallback(): void {
     super.connectedCallback();
     this.$.accept.addEventListener('click', LootPluginEditor._onHideEditor);
     this.$.cancel.addEventListener('click', LootPluginEditor._onHideEditor);
@@ -206,10 +279,14 @@ export default class LootPluginEditor extends PolymerElement {
       'mousedown',
       LootPluginEditor._stopPropagation
     );
-    Gestures.addListener(this.$.splitter, 'track', this._onSplitterDrag);
+    Gestures.addListener(
+      this.$.splitter,
+      'track',
+      LootPluginEditor._onSplitterDrag
+    );
   }
 
-  disconnectedCallback() {
+  public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.$.accept.removeEventListener('click', LootPluginEditor._onHideEditor);
     this.$.cancel.removeEventListener('click', LootPluginEditor._onHideEditor);
@@ -217,91 +294,149 @@ export default class LootPluginEditor extends PolymerElement {
       'mousedown',
       LootPluginEditor._stopPropagation
     );
-    Gestures.removeListener(this.$.splitter, 'track', this._onSplitterDrag);
+    Gestures.removeListener(
+      this.$.splitter,
+      'track',
+      LootPluginEditor._onSplitterDrag
+    );
   }
 
-  static _stopPropagation(evt) {
+  private static _stopPropagation(evt: Event): void {
     evt.preventDefault();
     evt.stopPropagation();
   }
 
-  _onSplitterDrag(evt) {
+  private static _onSplitterDrag(evt: Event): void {
+    if (!isSplitterDragEvent(evt)) {
+      throw new Error(`Expected a SplitterDragEvent, got ${evt}`);
+    }
+
+    const editor = evt.target.parentNode.host;
+
     if (evt.detail.state === 'start') {
-      this.parentNode.host.classList.toggle('resizing', true);
-      this.parentNode.host.style.height = `${parseInt(
-        window.getComputedStyle(this.parentNode.host).height,
+      editor.classList.toggle('resizing', true);
+      editor.style.height = `${parseInt(
+        window.getComputedStyle(editor).height || '0',
         10
       )}px`;
     } else if (evt.detail.state === 'end') {
-      this.parentNode.host.classList.toggle('resizing', false);
+      editor.classList.toggle('resizing', false);
     }
-    window.getSelection().removeAllRanges();
-    this.parentNode.host.style.height = `${parseInt(
-      this.parentNode.host.style.height,
-      10
-    ) - evt.detail.ddy}px`;
+
+    const selection = window.getSelection();
+    if (selection !== null) {
+      selection.removeAllRanges();
+    }
+
+    editor.style.height = `${parseInt(editor.style.height || '0', 10) -
+      evt.detail.ddy}px`;
     evt.preventDefault();
     evt.stopPropagation();
   }
 
-  static _rowDataToCrc(rowData) {
+  private static _rowDataToCrc(rowData: CleaningRowData): PluginCleaningData {
     return {
       crc: parseInt(rowData.crc, 16),
-      itm: parseInt(rowData.itm, 10) || undefined,
-      udr: parseInt(rowData.udr, 10) || undefined,
-      nav: parseInt(rowData.nav, 10) || undefined,
-      util: rowData.utility
+      itm: parseInt(rowData.itm, 10) || 0,
+      udr: parseInt(rowData.udr, 10) || 0,
+      nav: parseInt(rowData.nav, 10) || 0,
+      util: rowData.utility,
+      info: []
     };
   }
 
-  readFromEditor() {
+  public readFromEditor(): PluginMetadata {
     /* Need to turn all the editor controls' values into data to
         process. Determining whether or not the group has changed
         is left to the C++ side of things, and masterlist rows in
         the tables can be ignored because they're immutable. */
 
-    const metadata = {
-      name: this.querySelector('h1').textContent,
-      enabled: this.$.enableEdits.checked,
-      group: this.$.group.value
+    if (!isPaperToggleButton(this.$.enableEdits)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a paper-toggle-button with ID 'enableEdits'"
+      );
+    }
+
+    if (!(this.$.group instanceof LootDropdownMenu)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a loot-dropdown-menu with ID 'group'"
+      );
+    }
+
+    const metadata: PluginMetadata = {
+      name: querySelector(this, 'h1').textContent || '',
+      enabled: !!this.$.enableEdits.checked,
+      group: this.$.group.value,
+      after: [],
+      req: [],
+      inc: [],
+      msg: [],
+      tag: [],
+      dirty: [],
+      clean: [],
+      url: []
     };
 
     const tables = this.querySelectorAll('editable-table');
-    for (const table of tables) {
+    tables.forEach(table => {
+      if (!(table instanceof EditableTable)) {
+        throw new Error('Expected editable-table to be an editable-table');
+      }
+
+      if (table.parentElement === null) {
+        throw new Error('Expected table to have a parent element');
+      }
+
+      // TODO: Replace the type assertions once EditableTable has been converted to TypeScript.
       const rowsData = table.getRowsData(true);
       const tableType = table.parentElement.getAttribute('data-page');
       if (rowsData.length > 0) {
         if (tableType === 'after') {
-          metadata.after = rowsData;
+          metadata.after = rowsData as File[];
         } else if (tableType === 'req') {
-          metadata.req = rowsData;
+          metadata.req = rowsData as File[];
         } else if (tableType === 'inc') {
-          metadata.inc = rowsData;
+          metadata.inc = rowsData as File[];
         } else if (tableType === 'message') {
-          metadata.msg = rowsData;
+          metadata.msg = rowsData as SimpleMessage[];
         } else if (tableType === 'tags') {
-          metadata.tag = rowsData.map(Plugin.tagFromRowData);
+          metadata.tag = rowsData.map(rowData =>
+            Plugin.tagFromRowData(rowData as TagRowData)
+          );
         } else if (tableType === 'dirty') {
-          metadata.dirty = rowsData.map(LootPluginEditor._rowDataToCrc);
+          metadata.dirty = rowsData.map(rowData =>
+            LootPluginEditor._rowDataToCrc(rowData as CleaningRowData)
+          );
         } else if (tableType === 'clean') {
-          metadata.clean = rowsData.map(LootPluginEditor._rowDataToCrc);
+          metadata.clean = rowsData.map(rowData =>
+            LootPluginEditor._rowDataToCrc(rowData as CleaningRowData)
+          );
         } else if (tableType === 'url') {
-          metadata.url = rowsData;
+          metadata.url = rowsData as ModLocation[];
         }
       }
-    }
+    });
 
     return metadata;
   }
 
-  static _onHideEditor(evt) {
+  private static _onHideEditor(evt: Event): void {
+    if (!isHideEditorEvent(evt)) {
+      throw new Error(`Expected a HideEditorEvent, got ${evt}`);
+    }
+
     /* First validate table inputs. */
     let isValid = true;
-    const inputs = evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
+    const tables = evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
       'editable-table'
     );
-    for (const input of inputs) {
-      if (!input.validate()) {
+
+    for (const table of tables) {
+      if (!(table instanceof EditableTable)) {
+        throw new Error('Expected editable-table to be an editable-table');
+      }
+
+      if (!table.validate()) {
         isValid = false;
         break;
       }
@@ -324,17 +459,22 @@ export default class LootPluginEditor extends PolymerElement {
     }
   }
 
-  static _dirtyInfoToRowData(dirtyInfo) {
+  private static _dirtyInfoToRowData(
+    dirtyInfo: PluginCleaningData
+  ): CleaningRowData {
     return {
       crc: crcToString(dirtyInfo.crc),
-      itm: dirtyInfo.itm,
-      udr: dirtyInfo.udr,
-      nav: dirtyInfo.nav,
+      itm: dirtyInfo.itm.toString(),
+      udr: dirtyInfo.udr.toString(),
+      nav: dirtyInfo.nav.toString(),
       utility: dirtyInfo.util
     };
   }
 
-  static _highlightNonUserGroup(groupElements, pluginData) {
+  private static _highlightNonUserGroup(
+    groupElements: HTMLCollection,
+    pluginData: Plugin
+  ): void {
     let nonUserGroup;
     if (pluginData.masterlist && pluginData.masterlist.group) {
       nonUserGroup = pluginData.masterlist.group;
@@ -343,6 +483,10 @@ export default class LootPluginEditor extends PolymerElement {
     }
 
     for (const groupElement of groupElements) {
+      if (!(groupElement instanceof HTMLElement)) {
+        throw new Error('Expected group element to be a HTML element');
+      }
+
       if (
         groupElement.getAttribute('value') === nonUserGroup &&
         nonUserGroup !== pluginData.group
@@ -352,14 +496,27 @@ export default class LootPluginEditor extends PolymerElement {
           groupElement.style.color = 'var(--primary-color)';
         }
       } else {
-        groupElement.style = undefined;
+        groupElement.style.fontWeight = null;
+        groupElement.style.color = null;
       }
     }
   }
 
-  setEditorData(newData) {
+  public setEditorData(newData: Plugin): void {
+    if (!isPaperToggleButton(this.$.enableEdits)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a paper-toggle-button with ID 'enableEdits'"
+      );
+    }
+
+    if (!(this.$.group instanceof LootDropdownMenu)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a loot-dropdown-menu with ID 'group'"
+      );
+    }
+
     /* newData is a Plugin object reference. */
-    this.querySelector('h1').textContent = newData.name;
+    querySelector(this, 'h1').textContent = newData.name;
 
     /* Fill in the editor input values. */
     if (newData.userlist && !newData.userlist.enabled) {
@@ -374,7 +531,15 @@ export default class LootPluginEditor extends PolymerElement {
     /* Clear then fill in editor table data. Masterlist-originated
         rows should have their contents made read-only. */
     const tables = this.querySelectorAll('editable-table');
-    for (const table of tables) {
+    tables.forEach(table => {
+      if (!(table instanceof EditableTable)) {
+        throw new Error('Expected editable-table to be an editable-table');
+      }
+
+      if (table.parentElement === null) {
+        throw new Error('Expected table to have a parent element');
+      }
+
       table.clear();
       const tableType = table.parentElement.getAttribute('data-page');
       if (tableType === 'message') {
@@ -417,7 +582,12 @@ export default class LootPluginEditor extends PolymerElement {
             .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(table.addRow, table);
         }
-      } else {
+      } else if (
+        tableType === 'after' ||
+        tableType === 'req' ||
+        tableType === 'inc' ||
+        tableType === 'url'
+      ) {
         if (newData.masterlist && newData.masterlist[tableType]) {
           newData.masterlist[tableType].forEach(table.addReadOnlyRow, table);
         }
@@ -425,7 +595,7 @@ export default class LootPluginEditor extends PolymerElement {
           newData.userlist[tableType].forEach(table.addRow, table);
         }
       }
-    }
+    });
 
     /* Now show editor. */
     this.classList.toggle('hidden', false);

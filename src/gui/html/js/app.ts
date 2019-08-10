@@ -40,8 +40,8 @@ import '../elements/loot-dropdown-menu';
 import '../elements/loot-groups-editor';
 import '../elements/loot-menu';
 import '../elements/loot-message-dialog';
-import '../elements/loot-plugin-card.ts';
-import '../elements/loot-plugin-editor.js';
+import '../elements/loot-plugin-card';
+import '../elements/loot-plugin-editor';
 import '../elements/loot-plugin-item';
 import '../elements/loot-search-toolbar';
 

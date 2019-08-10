@@ -32,19 +32,14 @@ import {
   Tag,
   PluginMetadata,
   PluginItemContentChangePayload,
-  PluginTags
+  PluginTags,
+  TagRowData
 } from './interfaces';
 import {
   incrementCounterText,
   getElementById,
   querySelector
 } from './dom/helpers';
-
-interface TagRowData {
-  name: string;
-  type: string;
-  condition: string;
-}
 
 interface PluginMessageChangeEvent extends CustomEvent {
   detail: {

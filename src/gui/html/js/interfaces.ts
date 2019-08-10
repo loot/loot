@@ -205,3 +205,9 @@ export interface PluginTags {
   add: string;
   remove: string;
 }
+
+export interface TagRowData {
+  name: string;
+  type: string;
+  condition: string;
+}
