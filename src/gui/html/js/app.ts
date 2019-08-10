@@ -35,7 +35,7 @@ import '@polymer/paper-tooltip/paper-tooltip.js';
 import 'web-animations-js/web-animations-next.min.js';
 
 /* Also import the custom elements here so they're bundled by webpack */
-import '../elements/editable-table.js';
+import '../elements/editable-table';
 import '../elements/loot-dropdown-menu';
 import '../elements/loot-groups-editor';
 import '../elements/loot-menu';

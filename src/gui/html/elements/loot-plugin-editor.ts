@@ -15,7 +15,7 @@ import { PaperToggleButtonElement } from '@polymer/paper-toggle-button/paper-tog
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
 
-import EditableTable from './editable-table.js';
+import EditableTable from './editable-table';
 import './loot-custom-icons';
 import { crcToString, Plugin } from '../js/plugin';
 import {
@@ -24,18 +24,11 @@ import {
   File,
   SimpleMessage,
   TagRowData,
-  ModLocation
+  ModLocation,
+  CleaningRowData
 } from '../js/interfaces';
 import { querySelector } from '../js/dom/helpers';
 import LootDropdownMenu from './loot-dropdown-menu';
-
-interface CleaningRowData {
-  crc: string;
-  itm: string;
-  udr: string;
-  nav: string;
-  utility: string;
-}
 
 interface HideEditorEvent extends Event {
   target: EventTarget &
@@ -542,14 +535,7 @@ export default class LootPluginEditor extends PolymerElement {
 
       table.clear();
       const tableType = table.parentElement.getAttribute('data-page');
-      if (tableType === 'message') {
-        if (newData.masterlist && newData.masterlist.msg) {
-          newData.masterlist.msg.forEach(table.addReadOnlyRow, table);
-        }
-        if (newData.userlist && newData.userlist.msg) {
-          newData.userlist.msg.forEach(table.addRow, table);
-        }
-      } else if (tableType === 'tags') {
+      if (tableType === 'tags') {
         if (newData.masterlist && newData.masterlist.tag) {
           newData.masterlist.tag
             .map(Plugin.tagToRowData)
@@ -583,6 +569,7 @@ export default class LootPluginEditor extends PolymerElement {
             .forEach(table.addRow, table);
         }
       } else if (
+        tableType === 'msg' ||
         tableType === 'after' ||
         tableType === 'req' ||
         tableType === 'inc' ||

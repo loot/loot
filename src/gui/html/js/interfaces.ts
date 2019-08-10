@@ -211,3 +211,11 @@ export interface TagRowData {
   type: string;
   condition: string;
 }
+
+export interface CleaningRowData {
+  crc: string;
+  itm: string;
+  udr: string;
+  nav: string;
+  utility: string;
+}
