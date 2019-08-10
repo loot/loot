@@ -1,3 +1,6 @@
+import { PaperInputElement } from '@polymer/paper-input/paper-input';
+import { PaperIconButtonElement } from '@polymer/paper-icon-button';
+
 export function incrementCounterText(
   elementId: string,
   increment: number
@@ -68,4 +71,16 @@ export function querySelector(
   }
 
   return selected;
+}
+
+export function isPaperInput(
+  element: Element
+): element is Element & PaperInputElement {
+  return element.tagName === 'PAPER-INPUT';
+}
+
+export function isPaperIconButton(
+  element: Element
+): element is PaperIconButtonElement {
+  return element.tagName === 'PAPER-ICON-BUTTON';
 }

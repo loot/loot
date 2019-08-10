@@ -1,11 +1,55 @@
-import cytoscape from 'cytoscape';
+import * as cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
 import dagre from 'cytoscape-dagre';
 import { PolymerElement, html } from '@polymer/polymer';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
+import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
+import { SourcedGroup, RawGroup } from '../js/interfaces';
+import Translator from '../js/translator';
 
-function graphElements(groups) {
+import { isPaperInput, isPaperIconButton } from '../js/dom/helpers';
+
+interface AddGroupClickEvent extends Event {
+  currentTarget: EventTarget &
+    PaperIconButtonElement & { parentElement: PaperInputElement };
+}
+
+function isAddGroupClickEvent(evt: Event): evt is AddGroupClickEvent {
+  return (
+    evt.currentTarget instanceof Element &&
+    isPaperIconButton(evt.currentTarget) &&
+    evt.currentTarget.parentElement !== null &&
+    isPaperInput(evt.currentTarget.parentElement)
+  );
+}
+
+interface AddGroupKeyboardEvent extends Event {
+  currentTarget: EventTarget &
+    PaperInputElement & { firstElementChild: PaperIconButtonElement };
+  key: string;
+}
+
+function isAddGroupKeyboardEvent(evt: Event): evt is AddGroupKeyboardEvent {
+  return (
+    evt instanceof KeyboardEvent &&
+    evt.currentTarget instanceof Element &&
+    isPaperInput(evt.currentTarget) &&
+    evt.currentTarget.firstElementChild !== null &&
+    isPaperIconButton(evt.currentTarget.firstElementChild)
+  );
+}
+
+interface NewGroupInputEvent extends Event {
+  currentTarget: EventTarget & PaperInputElement;
+}
+
+function isNewGroupInputEvent(evt: Event): evt is NewGroupInputEvent {
+  return (
+    evt.currentTarget instanceof Element && isPaperInput(evt.currentTarget)
+  );
+}
+
+function graphElements(groups: SourcedGroup[]): cytoscape.ElementDefinition[] {
   const nodes = groups.map(group => ({
     data: { id: group.name },
     classes: group.isUserAdded ? 'userlist' : 'masterlist'
@@ -27,7 +71,9 @@ function graphElements(groups) {
   return nodes.concat(edges);
 }
 
-function removeGraphElement(element) {
+function removeGraphElement(
+  element: cytoscape.SingularData & cytoscape.CollectionGraphManipulation
+): void {
   element.remove();
 
   if (element.isEdge()) {
@@ -40,11 +86,11 @@ function removeGraphElement(element) {
 }
 
 export default class LootGroupsEditor extends PolymerElement {
-  static get is() {
+  public static get is(): string {
     return 'loot-groups-editor';
   }
 
-  static get template() {
+  public static get template(): HTMLTemplateElement {
     return html`
       <style>
         :host > div {
@@ -126,15 +172,24 @@ export default class LootGroupsEditor extends PolymerElement {
     `;
   }
 
-  constructor() {
+  private cy?: cytoscape.Core & { edgehandles: (config: object) => void };
+
+  private cyLayoutOptions?: cytoscape.LayoutOptions & { rankDir: string };
+
+  private getGroupPluginNames: (groupName: string) => string[];
+
+  private l10n: Translator;
+
+  private messages: {
+    groupAlreadyExists: string;
+    noPluginsInGroup: string;
+  };
+
+  public constructor() {
     super();
-    this.cy = undefined;
-    this.cyLayoutOptions = {};
+
     this.getGroupPluginNames = () => [];
-    this.l10n = {
-      translate: text => text,
-      translateFormatted: text => text
-    };
+    this.l10n = new Translator();
 
     this.messages = {
       groupAlreadyExists: 'Group already exists!',
@@ -142,7 +197,7 @@ export default class LootGroupsEditor extends PolymerElement {
     };
   }
 
-  connectedCallback() {
+  public connectedCallback(): void {
     super.connectedCallback();
 
     this.$.newGroupButton.addEventListener('click', evt =>
@@ -170,15 +225,23 @@ export default class LootGroupsEditor extends PolymerElement {
     cytoscape.use(dagre);
   }
 
-  disconnectedCallback() {
+  public disconnectedCallback(): void {
     super.disconnectedCallback();
   }
 
-  setGroupPluginNamesGetter(getGroupPluginNames) {
+  public setGroupPluginNamesGetter(
+    getGroupPluginNames: (groupName: string) => string[]
+  ): void {
     this.getGroupPluginNames = getGroupPluginNames;
   }
 
-  setGroups(groups) {
+  public setGroups(groups: SourcedGroup[]): void {
+    if (!(this.$.cy instanceof HTMLElement)) {
+      throw new Error(
+        'Expected loot-groups-editor shadow child with ID "cy" to be a HTML element'
+      );
+    }
+
     const bodyStyle = getComputedStyle(document.body);
     const textColor = bodyStyle.getPropertyValue('--primary-text-color');
     const textBackgroundColor = bodyStyle.getPropertyValue(
@@ -232,6 +295,8 @@ export default class LootGroupsEditor extends PolymerElement {
             width: 2,
             'curve-style': 'bezier',
             'mid-target-arrow-shape': 'triangle',
+            // @ts-ignore arrow-scale is a valid style property, the types are
+            // incomplete.
             'arrow-scale': 2,
             'target-endpoint': 'inside-to-node'
           }
@@ -270,6 +335,10 @@ export default class LootGroupsEditor extends PolymerElement {
       animationDuration: 200
     };
 
+    if (this.cy === undefined) {
+      throw new Error('Expected cy field to be defined');
+    }
+
     this.cy.addListener('cxttap', evt => this._onRemoveGraphElement(evt));
     this.cy.addListener('select', 'node', evt => this._onSelectNode(evt));
 
@@ -282,25 +351,39 @@ export default class LootGroupsEditor extends PolymerElement {
     this.$.pluginList.textContent = '';
   }
 
-  render() {
+  public render(): void {
+    if (this.cy === undefined) {
+      throw new Error('Expected cy field to be defined');
+    }
+
+    if (this.cyLayoutOptions === undefined) {
+      throw new Error('Expected cyLayoutOptions field to be defined');
+    }
+
     this.cy.resize();
     this.cy.center();
     this.cy.layout(this.cyLayoutOptions).run();
   }
 
-  getUserGroups() {
+  public getUserGroups(): RawGroup[] {
+    if (this.cy === undefined) {
+      throw new Error('Expected cy field to be defined');
+    }
+
     const userGroups = this.cy
       .nodes()
       .filter(
         node =>
           node.hasClass('userlist') ||
-          node.incomers('edge').some(edge => edge.hasClass('userlist'))
+          node
+            .incomers('edge')
+            .some(edge => (edge as cytoscape.EdgeSingular).hasClass('userlist'))
       )
-      .map(node => {
+      .map((node: cytoscape.NodeSingular) => {
         const afterNames = node
           .incomers('edge')
           .filter(edge => edge.hasClass('userlist'))
-          .map(edge => edge.source().id());
+          .map((edge: cytoscape.EdgeSingular) => edge.source().id());
 
         return {
           name: node.id(),
@@ -311,8 +394,14 @@ export default class LootGroupsEditor extends PolymerElement {
     return userGroups;
   }
 
-  localise(l10n) {
+  public localise(l10n: Translator): void {
     this.l10n = l10n;
+
+    if (!isPaperInput(this.$.newGroupInput)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a paper-input with ID 'newGroupInput'"
+      );
+    }
 
     this.$.newGroupInput.label = l10n.translate('Add a new group');
     this.$.newGroupInput.placeholder = l10n.translate('Group name');
@@ -322,7 +411,7 @@ export default class LootGroupsEditor extends PolymerElement {
     );
   }
 
-  _onSelectNode(evt) {
+  private _onSelectNode(evt: cytoscape.EventObject): void {
     if (!evt.target.isNode()) {
       return;
     }
@@ -344,7 +433,13 @@ export default class LootGroupsEditor extends PolymerElement {
     }
   }
 
-  _onRemoveGraphElement(evt) {
+  private _onRemoveGraphElement(evt: cytoscape.EventObject): void {
+    if (!(this.$.groupSubtitle instanceof HTMLHeadingElement)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a h3 with ID 'groupSubtitle'"
+      );
+    }
+
     if (evt.target === evt.cy || !evt.target.hasClass('userlist')) {
       return;
     }
@@ -358,25 +453,40 @@ export default class LootGroupsEditor extends PolymerElement {
 
     removeGraphElement(evt.target);
 
-    if (this.$.groupSubtitle.textContent.includes(evt.target.id())) {
+    if (
+      this.$.groupSubtitle.textContent !== null &&
+      this.$.groupSubtitle.textContent.includes(evt.target.id())
+    ) {
       this.$.groupSubtitle.textContent = '';
       this.$.pluginList.textContent = '';
     }
   }
 
-  _onAddGroup(evt) {
-    let input;
-    let button;
-    if (evt.type === 'keyup') {
+  private _onAddGroup(evt: Event): void {
+    if (this.cy === undefined) {
+      throw new Error('Expected cy field to be defined');
+    }
+
+    if (this.cyLayoutOptions === undefined) {
+      throw new Error('Expected cyLayoutOptions field to be defined');
+    }
+
+    let input: PaperInputElement;
+    let button: PaperIconButtonElement;
+    if (isAddGroupKeyboardEvent(evt) && evt.type === 'keyup') {
       if (evt.key !== 'Enter') {
         return;
       }
 
       input = evt.currentTarget;
       button = evt.currentTarget.firstElementChild;
-    } else {
+    } else if (isAddGroupClickEvent(evt)) {
       input = evt.currentTarget.parentElement;
       button = evt.currentTarget;
+    } else {
+      throw new Error(
+        `Expected an AddGroupClickEvent or AddGroupKeyboardEvent, got ${evt}`
+      );
     }
 
     if (input.value === '' || input.invalid) {
@@ -387,7 +497,7 @@ export default class LootGroupsEditor extends PolymerElement {
 
     this.cy.add({
       group: 'nodes',
-      data: { id: input.value },
+      data: { id: input.value || undefined },
       classes: 'userlist'
     });
 
@@ -398,10 +508,28 @@ export default class LootGroupsEditor extends PolymerElement {
     button.disabled = true;
   }
 
-  _onNewGroupInput(evt) {
+  private _onNewGroupInput(evt: Event): void {
+    if (this.cy === undefined) {
+      throw new Error('Expected cy field to be defined');
+    }
+
+    if (!isPaperIconButton(this.$.newGroupButton)) {
+      throw new TypeError(
+        "Expected loot-groups-editor's shadow root to contain a paper-input with ID 'newGroupInput'"
+      );
+    }
+
+    if (!isNewGroupInputEvent(evt)) {
+      throw new Error(`Expected an NewGroupInputEvent, got ${evt}`);
+    }
+
     const newGroupName = evt.currentTarget.value;
 
-    if (newGroupName === '') {
+    if (
+      newGroupName === '' ||
+      newGroupName === undefined ||
+      newGroupName === null
+    ) {
       this.$.newGroupButton.disabled = true;
       evt.currentTarget.invalid = false;
       return;

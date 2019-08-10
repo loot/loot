@@ -2,25 +2,12 @@ import { PolymerElement, html } from '@polymer/polymer';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
-import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
-
-function isPaperIconButton(
-  element: Element
-): element is PaperIconButtonElement {
-  return element.tagName === 'PAPER-ICON-BUTTON';
-}
+import { isPaperInput, isPaperIconButton } from '../js/dom/helpers';
 
 function isHTMLElement(element: Element): element is HTMLElement {
   return element instanceof HTMLElement;
-}
-
-function isPaperInput(
-  element: Element
-): element is Element & PaperInputElement {
-  return element.tagName === 'PAPER-INPUT';
 }
 
 interface LootSearchToolbarEnterPrevNextEvent extends KeyboardEvent {
