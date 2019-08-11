@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-08-11 16:18+0100\n"
+"POT-Creation-Date: 2019-08-11 20:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -357,6 +357,36 @@ msgid ""
 "displayed."
 msgstr ""
 
+#: src/gui/html/js/translateStaticText.ts:73
+msgid "Active Plugin"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.ts:77
+#: src/gui/html/js/translateStaticText.ts:692
+msgid "Master File"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.ts:81
+msgid "Light Master File"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.ts:85
+msgid "Empty Plugin"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.ts:89
+msgid "Loads Archive"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.ts:93
+#: src/gui/html/js/translateStaticText.ts:296
+msgid "Has User Metadata"
+msgstr ""
+
+#: src/gui/html/js/translateStaticText.ts:98
+msgid "Edit Metadata"
+msgstr ""
+
 #: src/gui/html/js/translateStaticText.ts:102
 msgid "Copy Metadata"
 msgstr ""
@@ -490,11 +520,6 @@ msgstr ""
 #: src/gui/html/js/translateStaticText.ts:472
 #: src/gui/html/js/translateStaticText.ts:720
 msgid "Cancel"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:296
-#: src/gui/html/js/translateStaticText.ts:93
-msgid "Has User Metadata"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:300
@@ -771,11 +796,6 @@ msgstr ""
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:692
-#: src/gui/html/js/translateStaticText.ts:77
-msgid "Master File"
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:695
 msgid "Masterlist Repository URL"
 msgstr ""
@@ -794,10 +814,6 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:726
 msgid "First-Time Tips"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:73
-msgid "Active Plugin"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:731
@@ -873,20 +889,4 @@ msgstr ""
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, "
 "Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:81
-msgid "Light Master File"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:85
-msgid "Empty Plugin"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:89
-msgid "Loads Archive"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:98
-msgid "Edit Metadata"
 msgstr ""
