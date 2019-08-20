@@ -19,7 +19,7 @@ install:
   - python -m pip install -r docs/requirements.txt
   - yarn install
   - ps: (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/Ortham/ci-scripts/2.0.0/delete_old_bintray_versions.py', "$env:APPVEYOR_BUILD_FOLDER\delete_old_bintray_versions.py")
-  - ps: (New-Object Net.WebClient).DownloadFile('https://github.com/Ortham/svg_to_ico/releases/download/0.1.0/svg_to_ico.7z', "$env:APPVEYOR_BUILD_FOLDER\svg_to_ico.7z")
+  - ps: (New-Object Net.WebClient).DownloadFile('https://github.com/Ortham/svg_to_ico/releases/download/1.1.0/svg_to_ico.7z', "$env:APPVEYOR_BUILD_FOLDER\svg_to_ico.7z")
   - 7z e -y svg_to_ico.7z
 
 
