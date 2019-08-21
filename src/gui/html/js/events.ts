@@ -20,18 +20,34 @@ import {
 import Game from './game';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
-import query from './query';
+import {
+  changeGame,
+  updateMasterlist as updateMasterlistQuery,
+  sortPlugins,
+  cancelSort,
+  clearAllMetadata,
+  getGameData,
+  closeSettings,
+  saveUserGroups,
+  editorClosed,
+  clearPluginMetadata,
+  EditorState,
+  saveFilterState,
+  discardUnappliedChanges,
+  applySort,
+  redatePlugins,
+  copyContent,
+  copyLoadOrder,
+  openReadme,
+  openLogLocation,
+  editorOpened,
+  copyMetadata
+} from './query';
 import {
   FilterStates,
   GameContent,
-  GameData,
-  MainContent,
   GameSettings,
-  DerivedPluginMetadata,
-  GameGroups,
-  GetInstalledGamesResponse,
-  SimpleMessage,
-  PluginLoadOrderIndex
+  LootSettings
 } from './interfaces';
 import EditableTable from '../elements/editable-table';
 import LootGroupsEditor from '../elements/loot-groups-editor';
@@ -41,15 +57,6 @@ import LootPluginEditor from '../elements/loot-plugin-editor';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
 import LootSearchToolbar from '../elements/loot-search-toolbar';
 import { getElementById, querySelector } from './dom/helpers';
-
-interface CancelSortResponse {
-  plugins: PluginLoadOrderIndex[];
-  generalMessages: SimpleMessage[];
-}
-
-interface ClearAllMetadataResponse {
-  plugins: DerivedPluginMetadata[];
-}
 
 interface PaperCheckboxChangeEvent extends Event {
   target: EventTarget & {
@@ -168,11 +175,7 @@ export function onSidebarFilterToggle(evt: Event): void {
 
   window.loot.filters[evt.target.id] = evt.target.checked;
 
-  const filter = {
-    name: evt.target.id,
-    state: evt.target.checked
-  };
-  query('saveFilterState', { filter }).catch(handlePromiseError);
+  saveFilterState(evt.target.id, evt.target.checked).catch(handlePromiseError);
   window.loot.filters.apply(window.loot.game.plugins);
 }
 
@@ -242,17 +245,19 @@ export function onChangeGame(evt: Event): void {
     throw new TypeError(`Expected a LootDropdownMenuSelectEvent, got ${evt}`);
   }
 
+  const newGameFolder = evt.detail.item.getAttribute('value');
   if (
     !window.loot.game ||
-    evt.detail.item.getAttribute('value') === window.loot.game.folder
+    newGameFolder === null ||
+    newGameFolder === window.loot.game.folder
   ) {
     // window.loot.game is undefined if LOOT is being initalised.
     return;
   }
+
   /* Send off a CEF query with the folder name of the new game. */
-  query('changeGame', { gameFolder: evt.detail.item.getAttribute('value') })
-    .then(JSON.parse)
-    .then((result: GameData) => {
+  changeGame(newGameFolder)
+    .then(result => {
       /* Filters should be re-applied on game change, except the conflicts
        filter. Don't need to deactivate the others beforehand. Strictly not
        deactivating the conflicts filter either, just resetting it's value.
@@ -281,9 +286,8 @@ function updateMasterlist(): Promise<void> {
   showProgress(
     window.loot.l10n.translate('Updating and parsing masterlist...')
   );
-  return query('updateMasterlist')
-    .then(JSON.parse)
-    .then((result: GameData) => {
+  return updateMasterlistQuery()
+    .then(result => {
       if (result) {
         /* Update JS variables. */
         window.loot.game.masterlist = result.masterlist;
@@ -335,9 +339,8 @@ export function onSortPlugins(): Promise<void> {
     promise = promise.then(updateMasterlist);
   }
   return promise
-    .then(() => query('sortPlugins'))
-    .then(JSON.parse)
-    .then((result: MainContent) => {
+    .then(sortPlugins)
+    .then(result => {
       if (!result) {
         return;
       }
@@ -378,7 +381,7 @@ export function onSortPlugins(): Promise<void> {
         });
         /* Send discardUnappliedChanges query. Not doing so prevents LOOT's window
          from closing. */
-        query('discardUnappliedChanges');
+        discardUnappliedChanges();
         closeProgress();
         showNotification(
           window.loot.l10n.translate(
@@ -401,7 +404,7 @@ export function onSortPlugins(): Promise<void> {
 
 export function onApplySort(): Promise<void> {
   const pluginNames = window.loot.game.getPluginNames();
-  return query('applySort', { pluginNames })
+  return applySort(pluginNames)
     .then(() => {
       window.loot.game.applySort();
 
@@ -411,9 +414,8 @@ export function onApplySort(): Promise<void> {
 }
 
 export function onCancelSort(): Promise<void> {
-  return query('cancelSort')
-    .then(JSON.parse)
-    .then((response: CancelSortResponse) => {
+  return cancelSort()
+    .then(response => {
       window.loot.game.cancelSort(response.plugins, response.generalMessages);
       /* Sort UI elements again according to stored old load order. */
       window.loot.filters.apply(window.loot.game.plugins);
@@ -432,7 +434,7 @@ export function onRedatePlugins(/* evt */): void {
     window.loot.l10n.translate('Redate'),
     result => {
       if (result) {
-        query('redatePlugins')
+        redatePlugins()
           .then(() => {
             showNotification(
               window.loot.l10n.translate('Plugins were successfully redated.')
@@ -455,9 +457,8 @@ export function onClearAllMetadata(): void {
       if (!result) {
         return;
       }
-      query('clearAllMetadata')
-        .then(JSON.parse)
-        .then((response: ClearAllMetadataResponse) => {
+      clearAllMetadata()
+        .then(response => {
           if (!response || !response.plugins) {
             return;
           }
@@ -499,7 +500,7 @@ export function onCopyContent(): void {
     }
   }
 
-  query('copyContent', { content })
+  copyContent(content)
     .then(() => {
       showNotification(
         window.loot.l10n.translate(
@@ -517,7 +518,7 @@ export function onCopyLoadOrder(): void {
     pluginNames = window.loot.game.getPluginNames();
   }
 
-  query('copyLoadOrder', { pluginNames })
+  copyLoadOrder(pluginNames)
     .then(() => {
       showNotification(
         window.loot.l10n.translate(
@@ -530,9 +531,8 @@ export function onCopyLoadOrder(): void {
 
 export function onContentRefresh(): void {
   /* Send a query for updated load order and plugin header info. */
-  query('getGameData')
-    .then(JSON.parse)
-    .then((result: GameData) => {
+  getGameData()
+    .then(result => {
       window.loot.game = new Game(result, window.loot.l10n);
       window.loot.game.initialiseUI(window.loot.filters);
 
@@ -547,11 +547,11 @@ export function onOpenReadme(evt: Event): void {
     relativeFilePath = evt.detail.relativeFilePath;
   }
 
-  query('openReadme', { relativeFilePath }).catch(handlePromiseError);
+  openReadme(relativeFilePath).catch(handlePromiseError);
 }
 
 export function onOpenLogLocation(): void {
-  query('openLogLocation').catch(handlePromiseError);
+  openLogLocation().catch(handlePromiseError);
 }
 
 function handleUnappliedChangesClose(change: string): void {
@@ -567,7 +567,7 @@ function handleUnappliedChangesClose(change: string): void {
         return;
       }
       /* Discard any unapplied changes. */
-      query('discardUnappliedChanges')
+      discardUnappliedChanges()
         .then(() => {
           window.close();
         })
@@ -611,7 +611,7 @@ export function onCloseSettingsDialog(evt: Event): void {
   }
 
   /* Update the JS variable values. */
-  const settings = {
+  const settings: LootSettings = {
     enableDebugLogging:
       (getElementById('enableDebugLogging') as PaperCheckboxElement).checked ||
       false,
@@ -632,9 +632,8 @@ export function onCloseSettingsDialog(evt: Event): void {
   };
 
   /* Send the settings back to the C++ side. */
-  query('closeSettings', { settings })
-    .then(JSON.parse)
-    .then((response: GetInstalledGamesResponse) => {
+  closeSettings(settings)
+    .then(response => {
       window.loot.installedGames = response.installedGames;
       if (window.loot.installedGames.length > 0) {
         enableGameOperations(true);
@@ -678,9 +677,8 @@ export function onSaveUserGroups(evt: Event): void {
 
   /* Send the settings back to the C++ side. */
   const userGroups = editor.getUserGroups();
-  query('saveUserGroups', { userGroups })
-    .then(JSON.parse)
-    .then((response: GameGroups) => {
+  saveUserGroups(userGroups)
+    .then(response => {
       window.loot.game.setGroups(response);
       fillGroupsList(window.loot.game.groups);
       editor.setGroups(window.loot.game.groups);
@@ -715,7 +713,7 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
     item.addEventListener('dragstart', item.onDragStart);
   }
 
-  return query('editorOpened').catch(handlePromiseError);
+  return editorOpened().catch(handlePromiseError);
 }
 
 export function onEditorClose(evt: Event): void {
@@ -736,14 +734,13 @@ export function onEditorClose(evt: Event): void {
 
   /* evt.detail is true if the apply button was pressed. */
   const metadata = evt.target.readFromEditor();
-  const editorState = {
+  const editorState: EditorState = {
     applyEdits: evt.detail,
     metadata
   };
 
-  query('editorClosed', { editorState })
-    .then(JSON.parse)
-    .then((result: DerivedPluginMetadata) => {
+  editorClosed(editorState)
+    .then(result => {
       plugin.update(result);
 
       /* Now perform search again. If there is no current search, this won't
@@ -775,7 +772,7 @@ export function onCopyMetadata(evt: Event): void {
     throw new TypeError(`Expected a LootCopyMetadataEvent, got ${evt}`);
   }
 
-  query('copyMetadata', { pluginName: evt.target.getName() })
+  copyMetadata(evt.target.getName())
     .then(() => {
       showNotification(
         window.loot.l10n.translateFormatted(
@@ -803,9 +800,8 @@ export function onClearMetadata(evt: Event): void {
       if (!result) {
         return;
       }
-      query('clearPluginMetadata', { pluginName: evt.target.getName() })
-        .then(JSON.parse)
-        .then((plugin: DerivedPluginMetadata) => {
+      clearPluginMetadata(evt.target.getName())
+        .then(plugin => {
           if (!result) {
             return;
           }

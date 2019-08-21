@@ -74,17 +74,19 @@ import Filters from './filters';
 import Game from './game';
 import handlePromiseError from './handlePromiseError';
 import { Plugin } from './plugin';
-import query from './query';
+import {
+  getVersion,
+  getInitErrors,
+  getGameTypes,
+  getInstalledGames,
+  getSettings,
+  getGameData,
+  getAutoSort
+} from './query';
 import State from './state';
 import translateStaticText from './translateStaticText';
 import Translator from './translator';
 import updateExists from './updateExists';
-import {
-  LootVersion,
-  LootSettings,
-  GameData,
-  GetInstalledGamesResponse
-} from './interfaces';
 import Loot from '../type-declarations/loot.d';
 import {
   getElementById,
@@ -92,18 +94,6 @@ import {
   querySelector,
   getTextAsInt
 } from './dom/helpers';
-
-interface GetInitErrorsResponse {
-  errors: string[];
-}
-
-interface GetGameTypesResponse {
-  gameTypes: string[];
-}
-
-interface GetAutoSortResponse {
-  autoSort: boolean;
-}
 
 function setupEventHandlers(): void {
   /* Set up handlers for filters. */
@@ -268,17 +258,9 @@ function setupEventHandlers(): void {
 }
 
 function setVersion(appData: Loot): Promise<void> {
-  return query('getVersion')
-    .then(JSON.parse)
-    .then((version: LootVersion) => {
-      appData.version = version;
-    });
-}
-
-function getInitErrors(): Promise<string[]> {
-  return query('getInitErrors')
-    .then(JSON.parse)
-    .then((response: GetInitErrorsResponse) => response.errors);
+  return getVersion().then(version => {
+    appData.version = version;
+  });
 }
 
 function handleInitErrors(errors: string[]): void {
@@ -289,53 +271,43 @@ function handleInitErrors(errors: string[]): void {
 }
 
 function setGameTypes(): Promise<void> {
-  return query('getGameTypes')
-    .then(JSON.parse)
-    .then((response: GetGameTypesResponse) => response.gameTypes)
+  return getGameTypes()
+    .then(response => response.gameTypes)
     .then(fillGameTypesList);
 }
 
 function setInstalledGames(appData: Loot): Promise<void> {
-  return query('getInstalledGames')
-    .then(JSON.parse)
-    .then((response: GetInstalledGamesResponse) => {
-      appData.installedGames = response.installedGames;
-    });
+  return getInstalledGames().then(response => {
+    appData.installedGames = response.installedGames;
+  });
 }
 
 function setSettings(appData: Loot): Promise<void> {
-  return query('getSettings')
-    .then(JSON.parse)
-    .then((result: LootSettings) => {
-      appData.settings = result;
-      updateSettingsDialog(appData.settings);
+  return getSettings().then(settings => {
+    appData.settings = settings;
+    updateSettingsDialog(appData.settings);
 
-      const currentLanguage = result.languages.find(
-        language => language.locale === result.language
-      );
-      if (currentLanguage && currentLanguage.fontFamily) {
-        setDocumentFontFamily(currentLanguage.fontFamily);
-      }
-    });
+    const currentLanguage = settings.languages.find(
+      language => language.locale === settings.language
+    );
+    if (currentLanguage && currentLanguage.fontFamily) {
+      setDocumentFontFamily(currentLanguage.fontFamily);
+    }
+  });
 }
 
 function setGameData(appData: Loot): Promise<void> {
-  return query('getGameData')
-    .then(JSON.parse)
-    .then((result: GameData) => {
-      appData.game = new Game(result, appData.l10n);
-      appData.game.initialiseUI(appData.filters);
+  return getGameData().then(result => {
+    appData.game = new Game(result, appData.l10n);
+    appData.game.initialiseUI(appData.filters);
 
-      closeProgress();
-    });
+    closeProgress();
+  });
 }
 
 function checkForLootUpdate(l10n: Translator): Promise<void> {
-  return query('getVersion')
-    .then(JSON.parse)
-    .then((version: LootVersion) =>
-      updateExists(version.release, version.build)
-    )
+  return getVersion()
+    .then(version => updateExists(version.release, version.build))
     .catch(() => {
       appendGeneralMessages([
         {
@@ -382,9 +354,8 @@ function getErrorCount(): number {
 }
 
 function autoSort(l10n: Translator): Promise<void> {
-  return query('getAutoSort')
-    .then(JSON.parse)
-    .then((response: GetAutoSortResponse) => {
+  return getAutoSort()
+    .then(response => {
       if (response.autoSort) {
         if (getErrorCount() === 0) {
           return onSortPlugins()
@@ -437,9 +408,9 @@ export default function initialise(loot: Loot): void {
     })
     .catch(handlePromiseError)
     .then(getInitErrors)
-    .then(initErrors => {
-      if (initErrors.length > 0) {
-        handleInitErrors(initErrors);
+    .then(response => {
+      if (response.errors.length > 0) {
+        handleInitErrors(response.errors);
         return Promise.resolve();
       }
 

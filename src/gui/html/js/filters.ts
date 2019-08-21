@@ -1,29 +1,14 @@
 import { PaperCheckboxElement } from '@polymer/paper-checkbox';
 import { IronListElement } from '@polymer/iron-list';
 import handlePromiseError from './handlePromiseError';
-import query from './query';
+import { getConflictingPlugins } from './query';
 import Translator from './translator';
 import { Plugin } from './plugin';
-import {
-  SimpleMessage,
-  DerivedPluginMetadata,
-  FilterStates,
-  MainContent
-} from './interfaces';
+import { SimpleMessage, FilterStates, MainContent } from './interfaces';
 import LootPluginCard from '../elements/loot-plugin-card';
 import LootSearchToolbar from '../elements/loot-search-toolbar';
 import LootDropdownMenu from '../elements/loot-dropdown-menu';
 import { getElementById } from './dom/helpers';
-
-interface PluginData {
-  metadata: DerivedPluginMetadata;
-  conflicts: boolean;
-}
-
-interface GetConflictingPluginsQueryResponse {
-  generalMessages: SimpleMessage[];
-  plugins: PluginData[];
-}
 
 export default class Filters implements FilterStates {
   public hideMessagelessPlugins: boolean;
@@ -140,9 +125,8 @@ export default class Filters implements FilterStates {
     conflicts. */
     this.conflictingPluginNames = [targetPluginName];
 
-    return query('getConflictingPlugins', { pluginName: targetPluginName })
-      .then(JSON.parse)
-      .then((response: GetConflictingPluginsQueryResponse) => {
+    return getConflictingPlugins(targetPluginName)
+      .then(response => {
         const plugins = response.plugins.map(plugin => {
           if (plugin.conflicts) {
             this.conflictingPluginNames.push(plugin.metadata.name);
