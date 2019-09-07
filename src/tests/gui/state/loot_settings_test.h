@@ -83,6 +83,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ("auto", settings_.getLastGame());
   EXPECT_TRUE(settings_.getLastVersion().empty());
   EXPECT_EQ("en", settings_.getLanguage());
+  EXPECT_EQ("default", settings_.getTheme());
   EXPECT_TRUE(settings_.getFilters().empty());
 
   // GameSettings equality only checks name and folder, so check
@@ -181,6 +182,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "game = \"Oblivion\"" << endl
       << "lastGame = \"Skyrim\"" << endl
       << "language = \"fr\"" << endl
+      << "theme = \"dark\"" << endl
       << "lastVersion = \"0.7.1\"" << endl
       << endl
       << "[window]" << endl
@@ -213,6 +215,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("Skyrim", settings_.getLastGame());
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
+  EXPECT_EQ("dark", settings_.getTheme());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
   EXPECT_EQ(1, settings_.getWindowPosition().value().top);
@@ -417,6 +420,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
+  const std::string theme = "dark";
 
   LootSettings::WindowPosition windowPosition;
   windowPosition.top = 1;
@@ -440,6 +444,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.setDefaultGame(game);
   settings_.storeLastGame(lastGame);
   settings_.setLanguage(language);
+  settings_.setTheme(theme);
 
   settings_.storeWindowPosition(windowPosition);
   settings_.storeGameSettings(games);
@@ -458,6 +463,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(game, settings.getGame());
   EXPECT_EQ(lastGame, settings.getLastGame());
   EXPECT_EQ(language, settings.getLanguage());
+  EXPECT_EQ(theme, settings.getTheme());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
   EXPECT_EQ(1, settings_.getWindowPosition().value().top);

@@ -620,6 +620,7 @@ export function onCloseSettingsDialog(evt: Event): void {
       false
     ) as GameSettings[],
     language: (getElementById('languageSelect') as LootDropdownMenu).value,
+    theme: (getElementById('themeSelect') as LootDropdownMenu).value,
     updateMasterlist:
       (getElementById('updateMasterlist') as PaperCheckboxElement).checked ||
       false,

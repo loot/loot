@@ -17,6 +17,14 @@ export function createLanguageItem(language: Language): HTMLElement {
   return item;
 }
 
+export function createThemeItem(theme: string): HTMLElement {
+  const item = document.createElement('paper-item');
+  item.setAttribute('value', theme);
+  item.textContent = theme;
+
+  return item;
+}
+
 export function createMessageItem(type: string, content: string): HTMLElement {
   const li = document.createElement('li');
   li.className = type;

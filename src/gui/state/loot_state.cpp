@@ -85,8 +85,9 @@ void apiLogCallback(LogLevel level, const char* message) {
   }
 }
 
-LootState::LootState(const std::string& lootDataPath) :
-    LootPaths(lootDataPath) {}
+LootState::LootState(const std::filesystem::path& lootAppPath,
+                     const std::filesystem::path& lootDataPath) :
+    LootPaths(lootAppPath, lootDataPath) {}
 
 void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {

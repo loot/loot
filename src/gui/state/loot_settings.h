@@ -67,6 +67,7 @@ public:
   std::string getLastGame() const;
   std::string getLastVersion() const;
   std::string getLanguage() const;
+  std::string getTheme() const;
   std::optional<WindowPosition> getWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
   const std::map<std::string, bool>& getFilters() const;
@@ -74,6 +75,7 @@ public:
 
   void setDefaultGame(const std::string& game);
   void setLanguage(const std::string& language);
+  void setTheme(const std::string& theme);
   void setAutoSort(bool autSort);
   void enableDebugLogging(bool enable);
   void updateMasterlist(bool update);
@@ -94,6 +96,7 @@ private:
   std::string lastGame_;
   std::string lastVersion_;
   std::string language_;
+  std::string theme_;
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_;
   std::map<std::string, bool> filters_;

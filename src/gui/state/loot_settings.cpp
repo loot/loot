@@ -202,6 +202,7 @@ LootSettings::LootSettings() :
     enableLootUpdateCheck_(true),
     game_("auto"),
     language_("en"),
+    theme_("default"),
     lastGame_("auto") {}
 
 void LootSettings::load(const std::filesystem::path& file,
@@ -225,6 +226,7 @@ void LootSettings::load(const std::filesystem::path& file,
                                .value_or(enableLootUpdateCheck_);
   game_ = settings->get_as<std::string>("game").value_or(game_);
   language_ = settings->get_as<std::string>("language").value_or(language_);
+  theme_ = settings->get_as<std::string>("theme").value_or(theme_);
   lastGame_ = settings->get_as<std::string>("lastGame").value_or(lastGame_);
   lastVersion_ =
       settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
@@ -290,6 +292,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   root->insert("enableLootUpdateCheck", enableLootUpdateCheck_);
   root->insert("game", game_);
   root->insert("language", language_);
+  root->insert("theme", theme_);
   root->insert("lastGame", lastGame_);
   root->insert("lastVersion", lastVersion_);
 
@@ -400,6 +403,12 @@ std::string LootSettings::getLanguage() const {
   return language_;
 }
 
+std::string LootSettings::getTheme() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return theme_;
+}
+
 std::optional<LootSettings::WindowPosition> LootSettings::getWindowPosition()
     const {
   lock_guard<recursive_mutex> guard(mutex_);
@@ -435,6 +444,12 @@ void LootSettings::setLanguage(const std::string& language) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   language_ = language;
+}
+
+void LootSettings::setTheme(const std::string& theme) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  theme_ = theme;
 }
 
 void LootSettings::setAutoSort(bool autoSort) {

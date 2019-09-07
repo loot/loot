@@ -56,8 +56,8 @@ std::filesystem::path getExecutableDirectory() {
       logger->error("Failed to get LOOT executable path.");
     }
     throw std::system_error(GetLastError(),
-      std::system_category(),
-      "Failed to get LOOT executable path.");
+                            std::system_category(),
+                            "Failed to get LOOT executable path.");
   }
 
   return std::filesystem::path(executablePathString).parent_path();
@@ -70,21 +70,25 @@ std::filesystem::path getExecutableDirectory() {
     if (logger) {
       logger->error("Failed to get LOOT executable path.");
     }
-    throw std::system_error(count,
-      std::system_category(),
-      "Failed to get LOOT executable path.");
+    throw std::system_error(
+        count, std::system_category(), "Failed to get LOOT executable path.");
   }
 
   return std::filesystem::u8path(std::string(result, count)).parent_path();
 #endif
 }
 
-LootPaths::LootPaths(const std::string& lootDataPath) {
+LootPaths::LootPaths(const std::filesystem::path& lootAppPath,
+                     const std::filesystem::path& lootDataPath) {
   // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
   loot::InitialiseLocale("");
 
-  lootAppPath_ = getExecutableDirectory();
+  if (lootAppPath.empty()) {
+    lootAppPath_ = getExecutableDirectory();
+  } else {
+    lootAppPath_ = lootAppPath;
+  }
 
   if (!lootDataPath.empty())
     lootDataPath_ = lootDataPath;
@@ -104,7 +108,9 @@ std::filesystem::path LootPaths::getL10nPath() const {
   return getResourcesPath() / "l10n";
 }
 
-std::filesystem::path LootPaths::getLootDataPath() const { return lootDataPath_; }
+std::filesystem::path LootPaths::getLootDataPath() const {
+  return lootDataPath_;
+}
 
 std::filesystem::path LootPaths::getSettingsPath() const {
   return lootDataPath_ / "settings.toml";

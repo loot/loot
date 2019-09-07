@@ -221,6 +221,7 @@ set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_init_errors_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_installed_games_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_settings_query.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_themes_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/get_version_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/metadata_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/query/types/open_log_location_query.h"
@@ -262,7 +263,10 @@ set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                             "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
                             "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/cef/query/json_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/cef/query/types/close_settings_query_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/cef/query/types/editor_closed_query_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/cef/query/types/get_settings_query_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/cef/query/types/get_themes_query_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
@@ -270,7 +274,8 @@ set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
-                            "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h")
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/test_helpers.h")
 
 source_group("Header Files\\gui" FILES ${LOOT_GUI_HEADERS})
 source_group("Header Files\\tests" FILES ${LOOT_TESTS_HEADERS})

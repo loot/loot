@@ -17,6 +17,9 @@ Default Game
 Language
   Controls the language LOOT uses. Any plugin messages that do not have translations in the selected language will be displayed in English, if available, or in their available language otherwise.
 
+Theme
+  Controls the theme LOOT loads. If the specified theme is not found, LOOT falls back to the default theme.
+
 Enable Debug Logging
   If enabled, writes debug output to ``%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt``. Debug logging can have a noticeable impact on performance, so it is off by default.
 

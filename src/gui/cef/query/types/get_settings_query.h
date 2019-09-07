@@ -47,6 +47,7 @@ public:
         {"game", settings_.getGame()},
         {"lastVersion", settings_.getLastVersion()},
         {"language", settings_.getLanguage()},
+        {"theme", settings_.getTheme()},
         {"enableDebugLogging", settings_.isDebugLoggingEnabled()},
         {"updateMasterlist", settings_.updateMasterlist()},
         {"enableLootUpdateCheck", settings_.isLootUpdateCheckEnabled()},

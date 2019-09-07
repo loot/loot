@@ -37,7 +37,7 @@ module.exports = {
           to: path.join(paths.DIST, 'css')
         },
         {
-          from: path.join(paths.RESOURCES, 'css', 'dark-theme.css'),
+          from: path.join(paths.RESOURCES, 'css', 'dark.theme.css'),
           to: path.join(paths.DIST, 'css')
         },
         {

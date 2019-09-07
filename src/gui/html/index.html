@@ -478,6 +478,14 @@
           </loot-dropdown-menu>
         </div>
         <div>
+          <span id="themeLabel">Theme</span>
+          <paper-tooltip for="themeLabel">Theme changes will be applied after LOOT is restarted.</paper-tooltip>
+          <loot-dropdown-menu id="themeSelect" no-label-float>
+            <paper-item value="default">default</paper-item>
+            <!-- Language <option> elements go here. -->
+          </loot-dropdown-menu>
+        </div>
+        <div>
           <div>Enable debug logging</div>
           <paper-toggle-button id="enableDebugLogging"></paper-toggle-button>
           <paper-tooltip>The output is logged to the LOOTDebugLog.txt file.</paper-tooltip>

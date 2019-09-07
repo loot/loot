@@ -127,6 +127,7 @@ export interface LootSettings {
   lastVersion: string;
   language: string;
   languages: Language[];
+  theme: string;
   enableDebugLogging: boolean;
   updateMasterlist: boolean;
   enableLootUpdateCheck: boolean;

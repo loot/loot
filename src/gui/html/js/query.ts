@@ -107,6 +107,12 @@ export function getSettings(): Promise<LootSettings> {
   return query('getSettings').then(JSON.parse);
 }
 
+export function getThemes(): Promise<string[]> {
+  return query('getThemes')
+    .then(JSON.parse)
+    .then(response => response.themes);
+}
+
 export function getGameData(): Promise<GameData> {
   return query('getGameData').then(JSON.parse);
 }

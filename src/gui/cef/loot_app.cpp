@@ -78,7 +78,7 @@ CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
 
 LootApp::LootApp(CommandLineOptions options) :
   commandLineOptions_(options),
-    lootState_(options.lootDataPath) {}
+    lootState_("", options.lootDataPath) {}
 
 std::filesystem::path LootApp::getL10nPath() const {
   return lootState_.getL10nPath();

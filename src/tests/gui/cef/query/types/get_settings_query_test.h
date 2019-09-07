@@ -22,31 +22,25 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_GUI_STATE_LOOT_PATHS
-#define LOOT_GUI_STATE_LOOT_PATHS
+#ifndef LOOT_TESTS_GUI_CEF_QUERY_TYPES_GET_SETTINGS_QUERY_TEST
+#define LOOT_TESTS_GUI_CEF_QUERY_TYPES_GET_SETTINGS_QUERY_TEST
 
-#include <filesystem>
+#include "gui/cef/query/types/get_settings_query.h"
+
+#include <gtest/gtest.h>
 
 namespace loot {
-class LootPaths {
-public:
-  LootPaths(const std::filesystem::path& lootAppPath, 
-            const std::filesystem::path& lootDataPath);
+namespace test {
+TEST(GetSettingsQuery, shouldIncludeThemeInOutput) {
+  LootSettings settings;
+  settings.setTheme("test");
 
-  std::filesystem::path getReadmePath() const;
-  std::filesystem::path getResourcesPath() const;
-  std::filesystem::path getL10nPath() const;
-  std::filesystem::path getLootDataPath() const;
-  std::filesystem::path getSettingsPath() const;
-  std::filesystem::path getLogPath() const;
+  GetSettingsQuery query(settings);
+  auto json = query.executeLogic();
 
-private:
-  // Get the local application data path.
-  static std::filesystem::path getLocalAppDataPath();
-
-  std::filesystem::path lootAppPath_;
-  std::filesystem::path lootDataPath_;
-};
+  EXPECT_NE(std::string::npos, json.find("\"theme\":\"test\""));
+}
+}
 }
 
 #endif

@@ -32,7 +32,8 @@
 namespace loot {
 class LootState : public LootSettings, public UnappliedChangeCounter, public GamesManager, public LootPaths {
 public:
-  LootState(const std::string& lootDataPath);
+  LootState(const std::filesystem::path& lootAppPath, 
+            const std::filesystem::path& lootDataPath);
 
   void init(const std::string& cmdLineGame, bool autoSort);
   const std::vector<std::string>& getInitErrors() const;

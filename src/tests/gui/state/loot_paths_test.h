@@ -32,42 +32,42 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
-  LootPaths paths("");
+  LootPaths paths("app", "");
 
-  EXPECT_EQ(std::filesystem::current_path() / "docs",
+  EXPECT_EQ(std::filesystem::u8path("app") / "docs",
             paths.getReadmePath());
 }
 
 TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
-  LootPaths paths("");
+  LootPaths paths("app", "");
 
-  EXPECT_EQ(std::filesystem::current_path() / "resources",
+  EXPECT_EQ(std::filesystem::u8path("app") / "resources",
             paths.getResourcesPath());
 }
 
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
-  LootPaths paths("");
+  LootPaths paths("app", "");
 
-  EXPECT_EQ(std::filesystem::current_path() / "resources" / "l10n",
+  EXPECT_EQ(std::filesystem::u8path("app") / "resources" / "l10n",
             paths.getL10nPath());
 }
 
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
-  LootPaths paths("");
+  LootPaths paths("", "");
 
   EXPECT_EQ(paths.getLootDataPath() / "settings.toml",
             paths.getSettingsPath());
 }
 
 TEST(LootPaths, getLogPathShouldUseLootDataPath) {
-  LootPaths paths("");
+  LootPaths paths("", "");
 
   EXPECT_EQ(paths.getLootDataPath() / "LOOTDebugLog.txt",
             paths.getLogPath());
 }
 
-TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
-  LootPaths paths("");
+TEST(LootPaths, constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
+  LootPaths paths("", "");
 
   EXPECT_EQ(std::filesystem::current_path(),
             paths.getReadmePath().parent_path());
@@ -76,7 +76,7 @@ TEST(LootPaths, initialiseShouldSetTheAppPathToTheCurrentPath) {
 TEST(
     LootPaths,
     initialiseShouldSetTheDataPathToTheLocalAppDataPathSlashLootIfGivenAnEmptyString) {
-  LootPaths paths("");
+  LootPaths paths("app", "");
 
   // Can't actually know what the path should be, but we can check
   // its properties.
@@ -87,7 +87,7 @@ TEST(
 }
 
 TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {
-  LootPaths paths("foo");
+  LootPaths paths("", "foo");
 
   EXPECT_EQ("foo", paths.getLootDataPath());
 }

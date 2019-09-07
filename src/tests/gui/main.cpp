@@ -27,7 +27,10 @@
 #include <spdlog/sinks/null_sink.h>
 
 #include "tests/gui/cef/query/json_test.h"
+#include "tests/gui/cef/query/types/close_settings_query_test.h"
 #include "tests/gui/cef/query/types/editor_closed_query_test.h"
+#include "tests/gui/cef/query/types/get_settings_query_test.h"
+#include "tests/gui/cef/query/types/get_themes_query_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
 #include "tests/gui/state/game/game_test.h"
 #include "tests/gui/state/game/games_manager_test.h"

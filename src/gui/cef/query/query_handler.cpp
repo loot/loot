@@ -56,6 +56,7 @@
 #include "gui/cef/query/types/get_init_errors_query.h"
 #include "gui/cef/query/types/get_installed_games_query.h"
 #include "gui/cef/query/types/get_settings_query.h"
+#include "gui/cef/query/types/get_themes_query.h"
 #include "gui/cef/query/types/get_version_query.h"
 #include "gui/cef/query/types/open_log_location_query.h"
 #include "gui/cef/query/types/open_readme_query.h"
@@ -177,6 +178,8 @@ std::unique_ptr<Query> QueryHandler::createQuery(
     return std::make_unique<GetInstalledGamesQuery>(lootState_);
   } else if (name == "getSettings") {
     return std::make_unique<GetSettingsQuery>(lootState_);
+  } else if (name == "getThemes") {
+    return std::make_unique<GetThemesQuery>(lootState_.getResourcesPath());
   } else if (name == "getVersion") {
     return std::make_unique<GetVersionQuery>();
   } else if (name == "openLogLocation") {

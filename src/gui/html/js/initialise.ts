@@ -68,7 +68,8 @@ import {
   updateSettingsDialog,
   setGameMenuItems,
   appendGeneralMessages,
-  setDocumentFontFamily
+  setDocumentFontFamily,
+  initialiseSettingsDialog
 } from './dom';
 import Filters from './filters';
 import Game from './game';
@@ -81,7 +82,8 @@ import {
   getInstalledGames,
   getSettings,
   getGameData,
-  getAutoSort
+  getAutoSort,
+  getThemes
 } from './query';
 import State from './state';
 import translateStaticText from './translateStaticText';
@@ -282,18 +284,20 @@ function setInstalledGames(appData: Loot): Promise<void> {
   });
 }
 
-function setSettings(appData: Loot): Promise<void> {
-  return getSettings().then(settings => {
-    appData.settings = settings;
-    updateSettingsDialog(appData.settings);
+async function setSettings(appData: Loot): Promise<void> {
+  const settings = await getSettings();
+  const themes = await getThemes();
 
-    const currentLanguage = settings.languages.find(
-      language => language.locale === settings.language
-    );
-    if (currentLanguage && currentLanguage.fontFamily) {
-      setDocumentFontFamily(currentLanguage.fontFamily);
-    }
-  });
+  appData.settings = settings;
+  initialiseSettingsDialog(appData.settings, themes);
+  updateSettingsDialog(appData.settings);
+
+  const currentLanguage = settings.languages.find(
+    language => language.locale === settings.language
+  );
+  if (currentLanguage && currentLanguage.fontFamily) {
+    setDocumentFontFamily(currentLanguage.fontFamily);
+  }
 }
 
 function setGameData(appData: Loot): Promise<void> {

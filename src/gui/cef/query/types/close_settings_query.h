@@ -44,8 +44,11 @@ public:
           "settings object.");
     }
 
+    copyThemeFile();
+
     state_.setDefaultGame(settings_.value("game", ""));
     state_.setLanguage(settings_.value("language", ""));
+    state_.setTheme(settings_.value("theme", "default"));
     state_.enableDebugLogging(settings_.value("enableDebugLogging", false));
     state_.updateMasterlist(settings_.value("updateMasterlist", true));
     state_.enableLootUpdateCheck(
@@ -57,6 +60,28 @@ public:
   }
 
 private:
+  void copyThemeFile() {
+    auto themesDirectory = state_.getResourcesPath() / "ui" / "css";
+    auto currentTheme = state_.getTheme();
+    auto newTheme = settings_.value("theme", "default");
+    auto currentThemePath = themesDirectory / "theme.css";
+
+    if (currentTheme == newTheme) {
+      return;
+    }
+
+    if (std::filesystem::exists(currentThemePath)) {
+      std::filesystem::remove(currentThemePath);
+    }
+
+    if (newTheme != "default") {
+      auto sourceThemePath = themesDirectory / std::filesystem::u8path(newTheme + ".theme.css");
+      if (std::filesystem::exists(sourceThemePath)) {
+        std::filesystem::copy_file(sourceThemePath, currentThemePath);
+      }
+    }
+  }
+
   LootState& state_;
   const nlohmann::json settings_;
 };

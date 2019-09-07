@@ -22,7 +22,8 @@ import {
   createGameTypeItem,
   createGroupItem,
   createLanguageItem,
-  createMessageItem
+  createMessageItem,
+  createThemeItem
 } from './createItem';
 import { Plugin } from '../plugin';
 import { getElementById, getAttribute, querySelector } from './helpers';
@@ -176,11 +177,23 @@ export function setGameMenuItems(
   });
 }
 
+export function initialiseSettingsDialog(
+  settings: LootSettings,
+  themes: string[]
+): void {
+  const themeSelect = getElementById('themeSelect') as LootDropdownMenu;
+
+  if (themeSelect.childElementCount === 1) {
+    themes.forEach(theme => themeSelect.appendChild(createThemeItem(theme)));
+  }
+
+  fillLanguagesList(settings.languages);
+}
+
 export function updateSettingsDialog(settings: LootSettings): void {
   const gameSelect = getElementById('defaultGameSelect') as LootDropdownMenu;
-
   const languageSelect = getElementById('languageSelect') as LootDropdownMenu;
-
+  const themeSelect = getElementById('themeSelect') as LootDropdownMenu;
   const gameTable = getElementById('gameTable') as EditableTable;
 
   /* First make sure game listing elements don't have any existing entries.
@@ -198,10 +211,9 @@ export function updateSettingsDialog(settings: LootSettings): void {
     gameTable.setReadOnly(row, ['name', 'folder', 'type']);
   });
 
-  fillLanguagesList(settings.languages);
-
   gameSelect.value = settings.game;
   languageSelect.value = settings.language;
+  themeSelect.value = settings.theme;
 
   (getElementById('enableDebugLogging') as PaperToggleButtonElement).checked =
     settings.enableDebugLogging;

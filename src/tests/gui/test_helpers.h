@@ -3,7 +3,7 @@
 A load order optimisation tool for Oblivion, Skyrim, Fallout 3 and
 Fallout: New Vegas.
 
-Copyright (C) 2014 WrinklyNinja
+Copyright (C) 2014-2016    WrinklyNinja
 
 This file is part of LOOT.
 
@@ -21,32 +21,31 @@ You should have received a copy of the GNU General Public License
 along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
-
-#ifndef LOOT_GUI_STATE_LOOT_PATHS
-#define LOOT_GUI_STATE_LOOT_PATHS
+#ifndef LOOT_TESTS_GUI_TEST_HELPERS
+#define LOOT_TESTS_GUI_TEST_HELPERS
 
 #include <filesystem>
+#include <string>
+
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace loot {
-class LootPaths {
-public:
-  LootPaths(const std::filesystem::path& lootAppPath, 
-            const std::filesystem::path& lootDataPath);
+namespace test {
+std::filesystem::path getTempPath() {
+  auto directoryName = u8"LOOT-" + boost::lexical_cast<std::string>(
+                                       (boost::uuids::random_generator())());
 
-  std::filesystem::path getReadmePath() const;
-  std::filesystem::path getResourcesPath() const;
-  std::filesystem::path getL10nPath() const;
-  std::filesystem::path getLootDataPath() const;
-  std::filesystem::path getSettingsPath() const;
-  std::filesystem::path getLogPath() const;
+  return std::filesystem::absolute(std::filesystem::temp_directory_path() /
+                                   std::filesystem::u8path(directoryName));
+}
 
-private:
-  // Get the local application data path.
-  static std::filesystem::path getLocalAppDataPath();
-
-  std::filesystem::path lootAppPath_;
-  std::filesystem::path lootDataPath_;
-};
+void touch(const std::filesystem::path& path) {
+  std::ofstream out(path);
+  out.close();
+}
+}
 }
 
 #endif

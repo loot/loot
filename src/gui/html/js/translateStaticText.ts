@@ -664,6 +664,16 @@ function translateSettingsDialog(l10n: Translator): void {
     'Language changes will be applied after LOOT is restarted.'
   );
 
+  getElementById('themeLabel').textContent = l10n.translate('Theme');
+  getNextElementSiblingById('themeLabel').textContent = l10n.translate(
+    'Theme changes will be applied after LOOT is restarted.'
+  );
+  getFirstElementChildById('themeSelect').textContent = l10n.translate(
+    'Default'
+  );
+  /* The selected text doesn't update, so force that translation. */
+  updateDropdownSelectedItemText(getElementById('themeSelect'));
+
   getPreviousElementSiblingById(
     'enableDebugLogging'
   ).textContent = l10n.translate('Enable debug logging');
