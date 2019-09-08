@@ -669,7 +669,7 @@ function translateSettingsDialog(l10n: Translator): void {
     'Theme changes will be applied after LOOT is restarted.'
   );
   getFirstElementChildById('themeSelect').textContent = l10n.translate(
-    'Default'
+    'default'
   );
   /* The selected text doesn't update, so force that translation. */
   updateDropdownSelectedItemText(getElementById('themeSelect'));
