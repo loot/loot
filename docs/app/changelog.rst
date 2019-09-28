@@ -4,6 +4,41 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.14.6 - 2019-09-28
+===================
+
+Added
+-----
+
+- Support for TES III: Morrowind.
+- Support for selecting a theme in LOOT's settings dialog, making it easier to
+  use the dark theme that LOOT has bundled since v0.9.2.
+- Support for specifying a font family to use per language, so that different
+  languages can use different fonts. The default font families are ``Roboto,
+  Noto, sans-serif``. Korean prefixes this with Malgun Gothic, Chinese with
+  Microsoft Yahei, and Japanese with Meiryo. Font families are specified in the
+  new ``languages`` table in LOOT's ``settings.toml``.
+
+Fixed
+-----
+
+- Regular expressions in condition strings are now prefixed with ``^`` and
+  suffixed with ``$`` before evaluation to ensure that only exact matches to the
+  given expression are found. Via libloot.
+- LOOT's taskbar icon would sometimes be displayed with a black bar down its
+  left side.
+
+Changed
+-------
+
+- The languages that LOOT supports are no longer hardcoded: the list is now read
+  from the new ``languages`` table in LOOT's ``settings.toml``. A supported
+  language is expected to have a Gettext MO file at
+  ``resources/l10n/<ISO code>/LC_MESSAGES/loot.mo``, relative to ``LOOT.exe``.
+- Updated libloot to v0.14.10.
+- Updated nlohmann/json to v3.7.0.
+- Updated JS package dependencies.
+
 0.14.5 - 2019-07-04
 ===================
 
