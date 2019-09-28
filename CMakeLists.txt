@@ -84,7 +84,8 @@ endif()
 
 ExternalProject_Add(json
                     PREFIX "external"
-                    URL "https://github.com/nlohmann/json/releases/download/v3.6.1/json.hpp"
+                    URL "https://github.com/nlohmann/json/releases/download/v3.7.0/json.hpp"
+                    URL_HASH SHA256=a503214947952b69f0062f572cb74c17582a495767446347ce2e452963fc2ca4
                     DOWNLOAD_NO_EXTRACT 1
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
