@@ -40,8 +40,7 @@ CommandLineOptions::CommandLineOptions() : CommandLineOptions(0, nullptr) {}
 #endif
 
 CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
-    autoSort(false),
-    url("http://loot/ui/index.html") {
+    autoSort(false) {
   // Record command line arguments.
   CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
 
@@ -64,16 +63,6 @@ CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
   }
 
   autoSort = command_line->HasSwitch("auto-sort");
-
-  if (command_line->HasArguments()) {
-    std::vector<CefString> arguments;
-    command_line->GetArguments(arguments);
-    url = arguments[0];
-    auto logger = getLogger();
-    if (logger) {
-      logger->info("Loading homepage using URL: {}", url);
-    }
-  }
 }
 
 LootApp::LootApp(CommandLineOptions options) :
@@ -124,7 +113,7 @@ void LootApp::OnContextInitialized() {
   CefBrowserSettings browser_settings;
 
   CefRefPtr<CefBrowserView> browser_view = CefBrowserView::CreateBrowserView(
-      handler, commandLineOptions_.url, browser_settings, NULL, NULL);
+      handler, "http://loot/ui/index.html", browser_settings, NULL, NULL);
 
   CefWindow::CreateTopLevelWindow(
       new WindowDelegate(browser_view, lootState_.getWindowPosition()));

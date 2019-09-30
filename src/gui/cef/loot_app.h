@@ -41,7 +41,6 @@ struct CommandLineOptions {
   bool autoSort;
   std::string defaultGame;
   std::string lootDataPath;
-  std::string url;
 };
 
 class LootApp : public CefApp,
