@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer';
 import { beforeNextRender } from '@polymer/polymer/lib/utils/render-status';
 import './editable-table-rows';
-import { PaperIconButtonElement } from '@polymer/paper-icon-button';
+import { PaperButtonElement } from '@polymer/paper-button';
 import {
   getElementById,
   querySelector,
@@ -15,6 +15,7 @@ import {
   ModLocation,
   GameSettings
 } from '../js/interfaces';
+import Translator from '../js/translator';
 
 type RowData =
   | File
@@ -49,7 +50,7 @@ function isDragEvent(evt: Event): evt is EditableTableDragEvent {
 
 interface RemoveRowEvent extends Event {
   target: EventTarget &
-    PaperIconButtonElement & {
+    PaperButtonElement & {
       parentElement: Element & {
         parentElement: Element & {
           parentElement: HTMLTableRowElement;
@@ -71,17 +72,9 @@ function isRemoveRowEvent(evt: Event): evt is RemoveRowEvent {
 
 interface AddEmptyRowEvent extends MouseEvent {
   target: EventTarget &
-    Element & {
-      parentElement: Element & {
-        parentElement: Element & {
-          parentElement: Element & {
-            parentElement: Element & {
-              parentElement: Element & {
-                parentElement: EditableTable;
-              };
-            };
-          };
-        };
+    PaperButtonElement & {
+      parentNode: ShadowRoot & {
+        host: EditableTable;
       };
     };
 }
@@ -89,17 +82,9 @@ interface AddEmptyRowEvent extends MouseEvent {
 function isAddEmptyRowEvent(evt: Event): evt is AddEmptyRowEvent {
   return (
     evt.target instanceof Element &&
-    evt.target.parentElement !== null &&
-    evt.target.parentElement.parentElement !== null &&
-    evt.target.parentElement.parentElement.parentElement !== null &&
-    evt.target.parentElement.parentElement.parentElement.parentElement !==
-      null &&
-    evt.target.parentElement.parentElement.parentElement.parentElement
-      .parentElement !== null &&
-    evt.target.parentElement.parentElement.parentElement.parentElement
-      .parentElement.parentElement !== null &&
-    evt.target.parentElement.parentElement.parentElement.parentElement
-      .parentElement.parentElement.tagName === 'EDITABLE-TABLE'
+    evt.target.parentNode instanceof ShadowRoot &&
+    evt.target.parentNode.host !== null &&
+    evt.target.parentNode.host.tagName === 'EDITABLE-TABLE'
   );
 }
 
@@ -142,8 +127,12 @@ export default class EditableTable extends PolymerElement {
           border-collapse: collapse;
           width: 100%;
         }
+        #addRowButton {
+          margin-left: 8px;
+        }
       </style>
       <slot></slot>
+      <paper-button id="addRowButton">Add New Row</paper-button>
     `;
   }
 
@@ -151,25 +140,12 @@ export default class EditableTable extends PolymerElement {
     super.connectedCallback();
 
     beforeNextRender(this, () => {
-      /* Add "add new row" row. */
-      const content = getRowTemplate('newRow').content;
-      const rowDocFragment = document.importNode(content, true);
-      querySelector(this, 'tbody').appendChild(rowDocFragment);
-      const row = querySelector(this, 'tbody').lastElementChild;
-
-      if (row === null) {
-        throw new Error('Expected table body to contain at least one row');
-      }
-
       /* Add new row listener. */
-      querySelector(row, 'paper-icon-button').addEventListener(
-        'click',
-        this.onAddEmptyRow
-      );
+      this.$.addRowButton.addEventListener('click', this.onAddEmptyRow);
 
       /* Add drag 'n' drop listeners.
-            Drag 'n' drop should only be enabled for file-row tables.
-        */
+         Drag 'n' drop should only be enabled for file-row tables.
+      */
       if (this.getAttribute('data-template') === 'fileRow') {
         this.addEventListener('drop', EditableTable.onDrop);
         this.addEventListener('dragover', EditableTable.onDragOver);
@@ -187,10 +163,7 @@ export default class EditableTable extends PolymerElement {
     }
 
     /* Remove new row listener. */
-    querySelector(
-      this,
-      'tbody tr:last-child paper-icon-button'
-    ).removeEventListener('click', this.onAddEmptyRow);
+    this.$.addRowButton.removeEventListener('click', this.onAddEmptyRow);
 
     /* Remove drag 'n' drop listeners. */
     this.removeEventListener('drop', EditableTable.onDrop);
@@ -383,9 +356,7 @@ export default class EditableTable extends PolymerElement {
       throw new Error(`Expected event to be a AddEmptyRowEvent, got ${evt}`);
     }
 
-    evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.addRow(
-      {}
-    );
+    evt.target.parentNode.host.addRow({});
 
     /* Notify that the table size has changed. */
     this.dispatchEvent(
@@ -406,14 +377,8 @@ export default class EditableTable extends PolymerElement {
     const rowDocFragment = document.importNode(content, true);
 
     const tbody = querySelector(this, 'tbody');
-    const lastRow = tbody.lastElementChild;
-
-    if (lastRow === null) {
-      throw new Error('Expected table body to contain at least one row');
-    }
-
-    tbody.insertBefore(rowDocFragment, lastRow);
-    const row = lastRow.previousElementSibling;
+    tbody.appendChild(rowDocFragment);
+    const row = tbody.lastElementChild;
 
     if (row === null) {
       throw new Error('Expected table body to contain at least two rows');
@@ -465,6 +430,10 @@ export default class EditableTable extends PolymerElement {
       }
     }
     return true;
+  }
+
+  public localise(l10n: Translator): void {
+    this.$.addRowButton.textContent = l10n.translate('Add New Row');
   }
 }
 

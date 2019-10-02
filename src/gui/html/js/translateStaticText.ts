@@ -8,6 +8,7 @@ import {
   querySelector,
   getShadowElementById
 } from './dom/helpers';
+import EditableTable from '../elements/editable-table';
 
 function getFirstElementChildById(elementId: string): Element {
   const sibling = getElementById(elementId).firstElementChild;
@@ -167,6 +168,11 @@ function translatePluginEditor(l10n: Translator): void {
     pluginEditorShadow,
     '#tableTabs [data-for=url]'
   ).textContent = l10n.translate('Locations');
+
+  const editableTables = pluginEditor.getElementsByTagName('editable-table');
+  for (const editableTable of editableTables) {
+    (editableTable as EditableTable).localise(l10n);
+  }
 
   querySelector(
     pluginEditor,
@@ -444,15 +450,6 @@ function translateGameRowTemplate(l10n: Translator): void {
   );
 }
 
-function translateNewRowTemplate(l10n: Translator): void {
-  /* New row template */
-  const newRow = getTemplate('newRow');
-
-  querySelector(newRow, 'paper-tooltip').textContent = l10n.translate(
-    'Add New Row'
-  );
-}
-
 function translateMainToolbar(l10n: Translator): void {
   /* Main toolbar */
   const mainToolbar = getElementById('mainToolbar');
@@ -689,7 +686,8 @@ function translateSettingsDialog(l10n: Translator): void {
     'enableLootUpdateCheck'
   ).textContent = l10n.translate('Check for LOOT updates on startup');
 
-  const gameTable = getElementById('gameTable');
+  const gameTable = getElementById('gameTable') as EditableTable;
+  gameTable.localise(l10n);
   querySelector(gameTable, 'th:first-child').textContent = l10n.translate(
     'Name'
   );
@@ -817,7 +815,6 @@ export default function translateStaticText(
   translateCleanInfoRowTemplate(l10n);
   translateLocationRowTemplate(l10n);
   translateGameRowTemplate(l10n);
-  translateNewRowTemplate(l10n);
 
   translateMainToolbar(l10n);
   translateSidebar(l10n);

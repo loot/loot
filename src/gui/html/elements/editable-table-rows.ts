@@ -119,16 +119,6 @@ $documentContainer.innerHTML = `<template id="fileRow">
       </span>
     </td>
   </tr>
-</template><template id="newRow">
-  <tr>
-    <td>
-      <span>
-        <paper-icon-button icon="add"></paper-icon-button>
-        <paper-tooltip position="right">Add New Row</paper-tooltip>
-      </span>
-    </td>
-    <td></td>
-  </tr>
 </template>`;
 
 document.head.appendChild($documentContainer);
