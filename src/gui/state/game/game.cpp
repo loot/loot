@@ -444,7 +444,6 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
 
 std::vector<std::string> Game::SortPlugins() {
   auto logger = getLogger();
-  std::vector<std::string> plugins = GetInstalledPluginNames();
 
   try {
     gameHandle_->LoadCurrentLoadOrderState();
@@ -465,9 +464,11 @@ std::vector<std::string> Game::SortPlugins() {
     // state that has been changed by sorting.
     ClearMessages();
 
-    sortedPlugins = gameHandle_->SortPlugins(plugins);
+    auto currentLoadOrder = gameHandle_->GetLoadOrder();
 
-    AppendMessages(CheckForRemovedPlugins(plugins, sortedPlugins));
+    sortedPlugins = gameHandle_->SortPlugins(currentLoadOrder);
+
+    AppendMessages(CheckForRemovedPlugins(currentLoadOrder, sortedPlugins));
 
     IncrementLoadOrderSortCount();
   } catch (CyclicInteractionError& e) {

@@ -43,7 +43,6 @@
 int main(int argc, char **argv) {
   // Set the locale to get encoding conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
-  loot::InitialiseLocale("");
 
   // Set the logger to use a null sink.
   spdlog::create<spdlog::sinks::null_sink_st>("loot_logger");

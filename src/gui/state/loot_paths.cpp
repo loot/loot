@@ -83,7 +83,6 @@ LootPaths::LootPaths(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) {
   // Set the locale to get UTF-8 conversions working correctly.
   std::locale::global(boost::locale::generator().generate(""));
-  loot::InitialiseLocale("");
 
   if (lootAppPath.empty()) {
     lootAppPath_ = getExecutableDirectory();
