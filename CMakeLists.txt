@@ -311,7 +311,7 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
     set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};.")
     set (CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
-    set (LOOT_LIBS pthread http_parser ssh2 stdc++fs)
+    set (LOOT_LIBS pthread http_parser ssh2 stdc++fs icui18n)
     set (LOOT_GUI_LIBS X11 ${LOOT_LIBS})
     set (LOOT_TEST_LIBS ${LOOT_LIBS})
 ENDIF ()
