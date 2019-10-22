@@ -38,6 +38,7 @@
 #else
 #include <unicode/uchar.h>
 #include <unicode/unistr.h>
+using icu::UnicodeString;
 #endif
 
 #include "gui/state/logging.h"
