@@ -417,6 +417,10 @@ export function enableGameOperations(shouldEnable: boolean): void {
   ) as PaperIconButtonElement).disabled = !shouldEnable;
 
   (getElementById(
+    'groupsEditorButton'
+  ) as PaperIconItemElement).disabled = !shouldEnable;
+
+  (getElementById(
     'wipeUserlistButton'
   ) as PaperIconItemElement).disabled = !shouldEnable;
 
