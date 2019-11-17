@@ -480,6 +480,9 @@ function translateMainToolbar(l10n: Translator): void {
     'Open Debug Log Location'
   );
   getLastChildById('wipeUserlistButton').textContent = l10n.translate(
+    'Open Groups Editor'
+  );
+  getLastChildById('wipeUserlistButton').textContent = l10n.translate(
     'Clear All User Metadata'
   );
   getLastChildById('copyLoadOrderButton').textContent = l10n.translate(
