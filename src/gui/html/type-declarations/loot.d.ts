@@ -6,9 +6,9 @@ import { LootSettings, LootVersion } from '../js/interfaces';
 
 export default interface Loot {
   filters: Filters;
-  game: Game;
+  game?: Game;
   l10n: Translator;
-  settings: LootSettings;
+  settings?: LootSettings;
   state: State;
   installedGames: string[];
   version: LootVersion;

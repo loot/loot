@@ -398,11 +398,14 @@ export default function initialise(loot: Loot): void {
     setVersion(loot),
     setSettings(loot)
   ])
-    .then(() => {
+    .then(async () => {
+      if (loot.settings === undefined) {
+        throw new Error('Failed to load settings');
+      }
+
       /* Translate static text. */
-      return loot.l10n.load(loot.settings.language);
-    })
-    .then(() => {
+      await loot.l10n.load(loot.settings.language);
+
       loot.filters = new Filters(loot.l10n);
       loot.filters.load(loot.settings.filters);
 
@@ -422,11 +425,14 @@ export default function initialise(loot: Loot): void {
     })
     .then(() => autoSort(loot.l10n))
     .then(() => {
+      if (loot.settings === undefined) {
+        throw new Error('Failed to load settings');
+      }
+
       if (loot.settings.lastVersion !== loot.version.release) {
         openDialog('firstRun');
       }
-    })
-    .then(() => {
+
       if (loot.settings.enableLootUpdateCheck) {
         return checkForLootUpdate(loot.l10n);
       }

@@ -176,7 +176,10 @@ export function onSidebarFilterToggle(evt: Event): void {
   window.loot.filters[evt.target.id] = evt.target.checked;
 
   saveFilterState(evt.target.id, evt.target.checked).catch(handlePromiseError);
-  window.loot.filters.apply(window.loot.game.plugins);
+
+  if (window.loot.game !== undefined) {
+    window.loot.filters.apply(window.loot.game.plugins);
+  }
 }
 
 export function onContentFilter(evt: Event): void {
@@ -185,12 +188,19 @@ export function onContentFilter(evt: Event): void {
   }
 
   window.loot.filters.contentSearchString = evt.target.value;
-  window.loot.filters.apply(window.loot.game.plugins);
+  if (window.loot.game !== undefined) {
+    window.loot.filters.apply(window.loot.game.plugins);
+  }
 }
 
 export function onConflictsFilter(evt: Event): void {
   if (!isLootDropdownMenuChangeEvent(evt)) {
     throw new TypeError(`Expected a LootDropdownMenuChangeEvent, got ${evt}`);
+  }
+
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error('Attempted to filter conflicts with no game loaded.');
   }
 
   /* evt.currentTarget.value is the name of the target plugin, or an empty string
@@ -200,11 +210,12 @@ export function onConflictsFilter(evt: Event): void {
     showProgress(
       window.loot.l10n.translate('Identifying conflicting plugins...')
     );
+
     window.loot.filters
       .activateConflictsFilter(evt.currentTarget.value)
       .then(response => {
-        window.loot.game.generalMessages = response.generalMessages;
-        window.loot.game.plugins = window.loot.game.plugins.reduce(
+        currentGame.generalMessages = response.generalMessages;
+        currentGame.plugins = currentGame.plugins.reduce(
           (plugins: Plugin[], plugin) => {
             const responsePlugin = response.plugins.find(
               item => item.name === plugin.name
@@ -218,7 +229,7 @@ export function onConflictsFilter(evt: Event): void {
           []
         );
 
-        window.loot.filters.apply(window.loot.game.plugins);
+        window.loot.filters.apply(currentGame.plugins);
 
         /* Scroll to the target plugin */
         const list = getElementById('pluginCardList') as IronListElement;
@@ -236,7 +247,7 @@ export function onConflictsFilter(evt: Event): void {
       .catch(handlePromiseError);
   } else {
     window.loot.filters.deactivateConflictsFilter();
-    window.loot.filters.apply(window.loot.game.plugins);
+    window.loot.filters.apply(currentGame.plugins);
   }
 }
 
@@ -283,6 +294,13 @@ export function onChangeGame(evt: Event): void {
 
 /* Masterlist update process, minus progress dialog. */
 function updateMasterlist(): Promise<void> {
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    // There's nothing to do if no game has been loaded.
+    // eslint-disable-next-line no-console
+    throw new Error('Attempted to update masterlist with no game loaded.');
+  }
+
   showProgress(
     window.loot.l10n.translate('Updating and parsing masterlist...')
   );
@@ -290,15 +308,15 @@ function updateMasterlist(): Promise<void> {
     .then(result => {
       if (result) {
         /* Update JS variables. */
-        window.loot.game.masterlist = result.masterlist;
-        window.loot.game.generalMessages = result.generalMessages;
-        window.loot.game.setGroups(result.groups);
+        currentGame.masterlist = result.masterlist;
+        currentGame.generalMessages = result.generalMessages;
+        currentGame.setGroups(result.groups);
 
         /* Update Bash Tag autocomplete suggestions. */
         initialiseAutocompleteBashTags(result.bashTags);
 
         result.plugins.forEach(resultPlugin => {
-          const existingPlugin = window.loot.game.plugins.find(
+          const existingPlugin = currentGame.plugins.find(
             plugin => plugin.name === resultPlugin.name
           );
           if (existingPlugin) {
@@ -309,7 +327,7 @@ function updateMasterlist(): Promise<void> {
         showNotification(
           window.loot.l10n.translateFormatted(
             'Masterlist updated to revision %s.',
-            window.loot.game.masterlist.revision
+            currentGame.masterlist.revision
           )
         );
       } else {
@@ -329,13 +347,20 @@ export function onUpdateMasterlist(): void {
 }
 
 export function onSortPlugins(): Promise<void> {
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error('Attempted to sort plugins with no game loaded.');
+  }
+
   if (window.loot.filters.deactivateConflictsFilter()) {
     /* Conflicts filter was undone, update the displayed cards. */
-    window.loot.filters.apply(window.loot.game.plugins);
+    window.loot.filters.apply(currentGame.plugins);
   }
 
   let promise = Promise.resolve();
-  if (window.loot.settings.updateMasterlist) {
+  // window.loot.settings being undefined is an unexpected failure state, no
+  // point updating the masterlist in it.
+  if (window.loot.settings && window.loot.settings.updateMasterlist) {
     promise = promise.then(updateMasterlist);
   }
   return promise
@@ -345,7 +370,7 @@ export function onSortPlugins(): Promise<void> {
         return;
       }
 
-      window.loot.game.generalMessages = result.generalMessages;
+      currentGame.generalMessages = result.generalMessages;
 
       if (!result.plugins || result.plugins.length === 0) {
         const message = result.generalMessages.find(item =>
@@ -367,12 +392,12 @@ export function onSortPlugins(): Promise<void> {
       /* Check if sorted load order differs from current load order. */
       const loadOrderIsUnchanged = result.plugins.every(
         (plugin, index) =>
-          window.loot.game.plugins[index] &&
-          plugin.name === window.loot.game.plugins[index].name
+          currentGame.plugins[index] &&
+          plugin.name === currentGame.plugins[index].name
       );
       if (loadOrderIsUnchanged) {
         result.plugins.forEach(plugin => {
-          const existingPlugin = window.loot.game.plugins.find(
+          const existingPlugin = currentGame.plugins.find(
             item => item.name === plugin.name
           );
           if (existingPlugin) {
@@ -390,10 +415,10 @@ export function onSortPlugins(): Promise<void> {
         );
         return;
       }
-      window.loot.game.setSortedPlugins(result.plugins);
+      currentGame.setSortedPlugins(result.plugins);
 
       /* Now update the UI for the new order. */
-      window.loot.filters.apply(window.loot.game.plugins);
+      window.loot.filters.apply(currentGame.plugins);
 
       window.loot.state.enterSortingState();
 
@@ -403,10 +428,15 @@ export function onSortPlugins(): Promise<void> {
 }
 
 export function onApplySort(): Promise<void> {
-  const pluginNames = window.loot.game.getPluginNames();
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error('Attempted to apply sort with no game loaded.');
+  }
+
+  const pluginNames = currentGame.getPluginNames();
   return applySort(pluginNames)
     .then(() => {
-      window.loot.game.applySort();
+      currentGame.applySort();
 
       window.loot.state.exitSortingState();
     })
@@ -414,11 +444,16 @@ export function onApplySort(): Promise<void> {
 }
 
 export function onCancelSort(): Promise<void> {
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error('Attempted to cancel sort with no game loaded.');
+  }
+
   return cancelSort()
     .then(response => {
-      window.loot.game.cancelSort(response.plugins, response.generalMessages);
+      currentGame.cancelSort(response.plugins, response.generalMessages);
       /* Sort UI elements again according to stored old load order. */
-      window.loot.filters.apply(window.loot.game.plugins);
+      window.loot.filters.apply(currentGame.plugins);
 
       window.loot.state.exitSortingState();
     })
@@ -447,6 +482,13 @@ export function onRedatePlugins(/* evt */): void {
 }
 
 export function onClearAllMetadata(): void {
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error(
+      'Attempted to clear all user metadata with no game loaded.'
+    );
+  }
+
   askQuestion(
     '',
     window.loot.l10n.translate(
@@ -463,7 +505,7 @@ export function onClearAllMetadata(): void {
             return;
           }
 
-          window.loot.game.clearMetadata(response.plugins);
+          currentGame.clearMetadata(response.plugins);
 
           showNotification(
             window.loot.l10n.translate(
@@ -599,6 +641,12 @@ export function onCloseSettingsDialog(evt: Event): void {
     throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt}`);
   }
 
+  if (window.loot.settings === undefined) {
+    throw new Error(
+      'Attempted to close settings dialog with no settings loaded.'
+    );
+  }
+
   if (evt.target.id !== 'settingsDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
@@ -645,11 +693,14 @@ export function onCloseSettingsDialog(evt: Event): void {
       window.loot.settings = settings;
       updateSettingsDialog(window.loot.settings);
       setGameMenuItems(window.loot.settings.games, window.loot.installedGames);
-      updateSelectedGame(window.loot.game.folder);
+      if (window.loot.game !== undefined) {
+        updateSelectedGame(window.loot.game.folder);
+      }
     })
     .then(() => {
       if (
         window.loot.installedGames.length > 0 &&
+        window.loot.game !== undefined &&
         window.loot.game.folder.length === 0
       ) {
         /* Initialisation failed and game was configured in settings. */
@@ -664,6 +715,11 @@ export function onSaveUserGroups(evt: Event): void {
     throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt}`);
   }
 
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error('Attempted to save user groups with no game loaded.');
+  }
+
   if (evt.target.id !== 'groupsEditorDialog') {
     /* The event can be fired by dropdowns in the settings dialog, so ignore
        any events that don't come from the dialog itself. */
@@ -672,7 +728,7 @@ export function onSaveUserGroups(evt: Event): void {
   const editor = getElementById('groupsEditor') as LootGroupsEditor;
   if (!evt.detail.confirmed) {
     /* Re-apply the existing groups to the editor. */
-    editor.setGroups(window.loot.game.groups);
+    editor.setGroups(currentGame.groups);
     return;
   }
 
@@ -680,9 +736,9 @@ export function onSaveUserGroups(evt: Event): void {
   const userGroups = editor.getUserGroups();
   saveUserGroups(userGroups)
     .then(response => {
-      window.loot.game.setGroups(response);
-      fillGroupsList(window.loot.game.groups);
-      editor.setGroups(window.loot.game.groups);
+      currentGame.setGroups(response);
+      fillGroupsList(currentGame.groups);
+      editor.setGroups(currentGame.groups);
     })
     .catch(handlePromiseError);
 }
@@ -720,6 +776,10 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
 export function onEditorClose(evt: Event): void {
   if (!isPluginEditorCloseEvent(evt)) {
     throw new TypeError(`Expected a LootPluginEditorCloseEvent, got ${evt}`);
+  }
+
+  if (window.loot.game === undefined) {
+    throw new Error('Attempted to save metadata edits with no game loaded.');
   }
 
   const pluginName = querySelector(evt.target, 'h1').textContent;
@@ -790,6 +850,11 @@ export function onClearMetadata(evt: Event): void {
     throw new TypeError(`Expected a LootClearMetadataEvent, got ${evt}`);
   }
 
+  const currentGame = window.loot.game;
+  if (currentGame === undefined) {
+    throw new Error('Attempted to clear user metadata with no game loaded.');
+  }
+
   askQuestion(
     '',
     window.loot.l10n.translateFormatted(
@@ -807,7 +872,7 @@ export function onClearMetadata(evt: Event): void {
             return;
           }
           /* Need to empty the UI-side user metadata. */
-          const existingPlugin = window.loot.game.plugins.find(
+          const existingPlugin = currentGame.plugins.find(
             item => item.id === evt.target.id
           );
           if (existingPlugin) {
@@ -830,6 +895,10 @@ export function onClearMetadata(evt: Event): void {
 export function onSearchBegin(evt: Event): void {
   if (!isSearchBeginEvent(evt)) {
     throw new TypeError(`Expected a LootSearchBeginEvent, got ${evt}`);
+  }
+
+  if (window.loot.game === undefined) {
+    throw new Error('Attempted to search content with no game loaded.');
   }
 
   window.loot.game.plugins.forEach(plugin => {
@@ -857,6 +926,10 @@ export function onSearchBegin(evt: Event): void {
 }
 
 export function onSearchEnd(/* evt */): void {
+  if (window.loot.game === undefined) {
+    throw new Error('Attempted to search content with no game loaded.');
+  }
+
   window.loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
