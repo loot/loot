@@ -247,9 +247,9 @@ export function onChangeGame(evt: Event): void {
 
   const newGameFolder = evt.detail.item.getAttribute('value');
   if (
-    !window.loot.game ||
     newGameFolder === null ||
-    newGameFolder === window.loot.game.folder
+    (window.loot.game !== undefined &&
+      newGameFolder === window.loot.game.folder)
   ) {
     // window.loot.game is undefined if LOOT is being initalised.
     return;

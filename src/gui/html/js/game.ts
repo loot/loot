@@ -10,7 +10,8 @@ import {
   initialiseGroupsEditor,
   updateGroupsEditorState,
   initialiseVirtualLists,
-  updateSelectedGame
+  updateSelectedGame,
+  enableGameOperations
 } from './dom';
 import Filters from './filters';
 import { Plugin } from './plugin';
@@ -423,6 +424,9 @@ export default class Game {
   }
 
   public initialiseUI(filters: Filters): void {
+    /* Enable game operations if they were disabled. */
+    enableGameOperations(true);
+
     /* Re-initialise autocomplete suggestions. */
     initialiseAutocompleteFilenames(this.getPluginNames());
     initialiseAutocompleteBashTags(this.bashTags);
