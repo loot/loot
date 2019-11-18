@@ -46,13 +46,14 @@ import '../elements/loot-plugin-item';
 import '../elements/loot-search-toolbar';
 
 /* Import the modules actually used in this script. */
-import initialise from './initialise';
-import { showProgress } from './dialog';
-import { onQuit } from './events';
+import Loot from './loot';
 
-window.loot = window.loot || {};
-// These are assumed to exist by C++ callbacks.
-window.loot.showProgress = showProgress;
-window.loot.onQuit = onQuit;
+window.loot = new Loot();
 
-window.addEventListener('load', () => initialise(window.loot));
+window.addEventListener('load', () => window.loot.initialise());
+
+declare global {
+  interface Window {
+    loot: Loot;
+  }
+}

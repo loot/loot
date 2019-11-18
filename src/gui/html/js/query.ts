@@ -2,7 +2,6 @@ import {
   LootVersion,
   SimpleMessage,
   DerivedPluginMetadata,
-  GetInstalledGamesResponse,
   LootSettings,
   GameData,
   MainContent,
@@ -31,10 +30,6 @@ export interface EditorState {
   metadata: PluginMetadata;
 }
 
-export interface GetInitErrorsResponse {
-  errors: string[];
-}
-
 export interface PluginData {
   metadata: DerivedPluginMetadata;
   conflicts: boolean;
@@ -45,21 +40,9 @@ export interface GetConflictingPluginsResponse {
   plugins: PluginData[];
 }
 
-export interface GetGameTypesResponse {
-  gameTypes: string[];
-}
-
-export interface GetAutoSortResponse {
-  autoSort: boolean;
-}
-
 export interface CancelSortResponse {
   plugins: PluginLoadOrderIndex[];
   generalMessages: SimpleMessage[];
-}
-
-export interface ClearAllMetadataResponse {
-  plugins: DerivedPluginMetadata[];
 }
 
 function query(requestName: string, payload?: object): Promise<string> {
@@ -83,8 +66,9 @@ export function getVersion(): Promise<LootVersion> {
   return query('getVersion').then(JSON.parse);
 }
 
-export function getInitErrors(): Promise<GetInitErrorsResponse> {
-  return query('getInitErrors').then(JSON.parse);
+export async function getInitErrors(): Promise<string[]> {
+  const json = await query('getInitErrors');
+  return JSON.parse(json).errors;
 }
 
 export function getConflictingPlugins(
@@ -95,12 +79,14 @@ export function getConflictingPlugins(
   );
 }
 
-export function getGameTypes(): Promise<GetGameTypesResponse> {
-  return query('getGameTypes').then(JSON.parse);
+export async function getGameTypes(): Promise<string[]> {
+  const json = await query('getGameTypes');
+  return JSON.parse(json).gameTypes;
 }
 
-export function getInstalledGames(): Promise<GetInstalledGamesResponse> {
-  return query('getInstalledGames').then(JSON.parse);
+export async function getInstalledGames(): Promise<string[]> {
+  const json = await query('getInstalledGames');
+  return JSON.parse(json).installedGames;
 }
 
 export function getSettings(): Promise<LootSettings> {
@@ -117,8 +103,9 @@ export function getGameData(): Promise<GameData> {
   return query('getGameData').then(JSON.parse);
 }
 
-export function getAutoSort(): Promise<GetAutoSortResponse> {
-  return query('getAutoSort').then(JSON.parse);
+export async function getAutoSort(): Promise<boolean> {
+  const json = await query('getAutoSort');
+  return JSON.parse(json).autoSort;
 }
 
 export function changeGame(gameFolder: string): Promise<GameData> {
@@ -143,14 +130,14 @@ export function clearPluginMetadata(
   return query('clearPluginMetadata', { pluginName }).then(JSON.parse);
 }
 
-export function clearAllMetadata(): Promise<ClearAllMetadataResponse> {
-  return query('clearAllMetadata').then(JSON.parse);
+export async function clearAllMetadata(): Promise<DerivedPluginMetadata[]> {
+  const json = await query('clearAllMetadata');
+  return JSON.parse(json).plugins;
 }
 
-export function closeSettings(
-  settings: LootSettings
-): Promise<GetInstalledGamesResponse> {
-  return query('closeSettings', { settings }).then(JSON.parse);
+export async function closeSettings(settings: LootSettings): Promise<string[]> {
+  const json = await query('closeSettings', { settings });
+  return JSON.parse(json).installedGames;
 }
 
 export function saveUserGroups(userGroups: RawGroup[]): Promise<GameGroups> {

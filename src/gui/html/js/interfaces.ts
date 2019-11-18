@@ -183,10 +183,6 @@ export interface LootVersion {
   build: string;
 }
 
-export interface GetInstalledGamesResponse {
-  installedGames: string[];
-}
-
 export interface PluginLoadOrderIndex {
   name: string;
   loadOrderIndex?: number;

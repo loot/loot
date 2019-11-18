@@ -26,9 +26,9 @@ describe('query()', () => {
   });
 
   test('should succeed if a request name is passed', () =>
-    getInitErrors().then(response => {
+    getInitErrors().then(errors => {
       expect(mocked(window.cefQuery).mock.calls.length).toBe(1);
-      expect(response.errors.length).toBe(0);
+      expect(errors.length).toBe(0);
     }));
 
   test('should succeed if a request name and arguments are passed', () =>

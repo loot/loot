@@ -21,6 +21,7 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
+import { LootSettings, LootVersion } from './interfaces';
 import {
   onSidebarFilterToggle,
   onContentFilter,
@@ -89,7 +90,6 @@ import State from './state';
 import translateStaticText from './translateStaticText';
 import Translator from './translator';
 import updateExists from './updateExists';
-import Loot from '../type-declarations/loot.d';
 import {
   getElementById,
   incrementCounterText,
@@ -97,7 +97,7 @@ import {
   getTextAsInt
 } from './dom/helpers';
 
-function setupEventHandlers(): void {
+function addEventListeners(): void {
   /* Set up handlers for filters. */
   getElementById('hideVersionNumbers').addEventListener(
     'change',
@@ -259,12 +259,6 @@ function setupEventHandlers(): void {
   document.addEventListener('loot-game-groups-change', Game.onGroupsChange);
 }
 
-function setVersion(appData: Loot): Promise<void> {
-  return getVersion().then(version => {
-    appData.version = version;
-  });
-}
-
 function handleInitErrors(errors: string[]): void {
   listInitErrors(errors);
   closeProgress();
@@ -272,25 +266,15 @@ function handleInitErrors(errors: string[]): void {
   openDialog('settingsDialog');
 }
 
-function setGameTypes(): Promise<void> {
-  return getGameTypes()
-    .then(response => response.gameTypes)
-    .then(fillGameTypesList);
+function initialiseGameTypesList(): Promise<void> {
+  return getGameTypes().then(fillGameTypesList);
 }
 
-function setInstalledGames(appData: Loot): Promise<void> {
-  return getInstalledGames().then(response => {
-    appData.installedGames = response.installedGames;
-  });
-}
-
-async function setSettings(appData: Loot): Promise<void> {
-  const settings = await getSettings();
+async function initialiseUISettings(settings: LootSettings): Promise<void> {
   const themes = await getThemes();
 
-  appData.settings = settings;
-  initialiseSettingsDialog(appData.settings, themes);
-  updateSettingsDialog(appData.settings);
+  initialiseSettingsDialog(settings, themes);
+  updateSettingsDialog(settings);
 
   const currentLanguage = settings.languages.find(
     language => language.locale === settings.language
@@ -298,15 +282,6 @@ async function setSettings(appData: Loot): Promise<void> {
   if (currentLanguage && currentLanguage.fontFamily) {
     setDocumentFontFamily(currentLanguage.fontFamily);
   }
-}
-
-function setGameData(appData: Loot): Promise<void> {
-  return getGameData().then(result => {
-    appData.game = new Game(result, appData.l10n);
-    appData.game.initialiseUI(appData.filters);
-
-    closeProgress();
-  });
 }
 
 function checkForLootUpdate(l10n: Translator): Promise<void> {
@@ -359,8 +334,8 @@ function getErrorCount(): number {
 
 function autoSort(l10n: Translator): Promise<void> {
   return getAutoSort()
-    .then(response => {
-      if (response.autoSort) {
+    .then(shouldAutoSort => {
+      if (shouldAutoSort) {
         if (getErrorCount() === 0) {
           return onSortPlugins()
             .then(onApplySort)
@@ -383,61 +358,121 @@ function autoSort(l10n: Translator): Promise<void> {
     .catch(handlePromiseError);
 }
 
-export default function initialise(loot: Loot): void {
-  showProgress('Initialising user interface...');
+export default class Loot {
+  public filters: Filters;
 
-  setupEventHandlers();
+  public game?: Game;
 
-  loot.l10n = new Translator();
-  loot.filters = new Filters(loot.l10n);
-  loot.state = new State();
+  public l10n: Translator;
 
-  Promise.all([
-    setGameTypes(),
-    setInstalledGames(loot),
-    setVersion(loot),
-    setSettings(loot)
-  ])
-    .then(async () => {
-      if (loot.settings === undefined) {
+  public settings?: LootSettings;
+
+  public state: State;
+
+  public installedGames: string[];
+
+  public version: LootVersion;
+
+  // Used by C++ callbacks.
+  public showProgress: (text: string) => void;
+
+  // Used by C++ callbacks.
+  public onQuit: () => void;
+
+  public constructor() {
+    this.l10n = new Translator();
+    this.filters = new Filters(this.l10n);
+    this.state = new State();
+    this.installedGames = [];
+    this.version = {
+      release: 'unknown',
+      build: 'unknown'
+    };
+
+    this.showProgress = showProgress;
+    this.onQuit = onQuit;
+  }
+
+  private async loadLootData(): Promise<void> {
+    const [version, installedGames, settings] = await Promise.all([
+      getVersion(),
+      getInstalledGames(),
+      getSettings()
+    ]);
+
+    this.version = version;
+    this.installedGames = installedGames;
+    this.settings = settings;
+  }
+
+  private async loadGameData(): Promise<void> {
+    const gameData = await getGameData();
+    this.game = new Game(gameData, this.l10n);
+  }
+
+  private async initialiseGeneralUIElements(): Promise<void> {
+    if (this.settings === undefined) {
+      throw new Error('Failed to load settings');
+    }
+
+    await initialiseGameTypesList();
+    await initialiseUISettings(this.settings);
+
+    /* Translate static text. */
+    await this.l10n.load(this.settings.language);
+
+    this.filters = new Filters(this.l10n);
+    this.filters.load(this.settings.filters);
+
+    translateStaticText(this.l10n, this.version);
+
+    setGameMenuItems(this.settings.games, this.installedGames);
+  }
+
+  public async initialise(): Promise<void> {
+    showProgress('Initialising user interface...');
+
+    addEventListeners();
+
+    try {
+      await this.loadLootData();
+      await this.initialiseGeneralUIElements();
+    } catch (error) {
+      handlePromiseError(error);
+    }
+
+    try {
+      if (this.settings === undefined) {
         throw new Error('Failed to load settings');
       }
 
-      /* Translate static text. */
-      await loot.l10n.load(loot.settings.language);
+      const initErrors = await getInitErrors();
 
-      loot.filters = new Filters(loot.l10n);
-      loot.filters.load(loot.settings.filters);
+      if (initErrors.length > 0) {
+        handleInitErrors(initErrors);
+      } else {
+        await this.loadGameData();
 
-      translateStaticText(loot.l10n, loot.version);
+        if (this.game === undefined) {
+          throw new Error('Failed to load game');
+        }
 
-      setGameMenuItems(loot.settings.games, loot.installedGames);
-    })
-    .catch(handlePromiseError)
-    .then(getInitErrors)
-    .then(response => {
-      if (response.errors.length > 0) {
-        handleInitErrors(response.errors);
-        return Promise.resolve();
+        this.game.initialiseUI(this.filters);
+
+        closeProgress();
+
+        await autoSort(this.l10n);
       }
 
-      return setGameData(loot);
-    })
-    .then(() => autoSort(loot.l10n))
-    .then(() => {
-      if (loot.settings === undefined) {
-        throw new Error('Failed to load settings');
-      }
-
-      if (loot.settings.lastVersion !== loot.version.release) {
+      if (this.settings.lastVersion !== this.version.release) {
         openDialog('firstRun');
       }
 
-      if (loot.settings.enableLootUpdateCheck) {
-        return checkForLootUpdate(loot.l10n);
+      if (this.settings.enableLootUpdateCheck) {
+        await checkForLootUpdate(this.l10n);
       }
-
-      return Promise.resolve();
-    })
-    .catch(handlePromiseError);
+    } catch (error) {
+      handlePromiseError(error);
+    }
+  }
 }

@@ -500,12 +500,8 @@ export function onClearAllMetadata(): void {
         return;
       }
       clearAllMetadata()
-        .then(response => {
-          if (!response || !response.plugins) {
-            return;
-          }
-
-          currentGame.clearMetadata(response.plugins);
+        .then(plugins => {
+          currentGame.clearMetadata(plugins);
 
           showNotification(
             window.loot.l10n.translate(
@@ -682,8 +678,8 @@ export function onCloseSettingsDialog(evt: Event): void {
 
   /* Send the settings back to the C++ side. */
   closeSettings(settings)
-    .then(response => {
-      window.loot.installedGames = response.installedGames;
+    .then(installedGames => {
+      window.loot.installedGames = installedGames;
       if (window.loot.installedGames.length > 0) {
         enableGameOperations(true);
       }
