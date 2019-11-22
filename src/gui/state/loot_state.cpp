@@ -27,6 +27,19 @@
 
 #include <unordered_set>
 
+#ifdef _WIN32
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif
+
 #include <spdlog/sinks/basic_file_sink.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
@@ -38,10 +51,6 @@
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
 #include "loot/api.h"
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 using boost::format;
 using boost::locale::translate;

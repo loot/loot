@@ -26,15 +26,11 @@
 #ifndef LOOT_GUI_STATE_GAME_GAME
 #define LOOT_GUI_STATE_GAME_GAME
 
-#define FMT_NO_FMT_STRING_ALIAS
-
 #include <filesystem>
 #include <mutex>
 #include <optional>
 #include <string>
 #include <unordered_set>
-
-#include <spdlog/spdlog.h>
 
 #include "gui/state/game/game_settings.h"
 #include "loot/api.h"

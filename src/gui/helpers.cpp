@@ -32,9 +32,12 @@
 #ifndef _UNICODE
 #define _UNICODE
 #endif
-#include "shlobj.h"
-#include "shlwapi.h"
-#include "windows.h"
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <shlobj.h>
+#include <shlwapi.h>
+#include <windows.h>
 #else
 #include <unicode/uchar.h>
 #include <unicode/unistr.h>

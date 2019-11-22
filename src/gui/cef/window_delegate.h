@@ -25,7 +25,6 @@
 
 #ifndef LOOT_GUI_WINDOW_DELEGATE
 #define LOOT_GUI_WINDOW_DELEGATE
-#define NOMINMAX
 
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>

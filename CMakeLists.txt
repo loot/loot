@@ -165,7 +165,7 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(spdlog
                     PREFIX "external"
-                    URL "https://github.com/gabime/spdlog/archive/v1.3.1.tar.gz"
+                    URL "https://github.com/gabime/spdlog/archive/v1.4.2.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
@@ -301,7 +301,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE)
+    add_definitions (-DUNICODE -D_UNICODE -DNOMINMAX)
     set(LIBLOOT_LINK_LIBRARY ${LIBLOOT_STATIC_LIBRARY})
 else()
     set(LIBLOOT_LINK_LIBRARY ${LIBLOOT_SHARED_LIBRARY})

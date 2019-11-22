@@ -30,6 +30,21 @@
 #include <fstream>
 #include <thread>
 
+#ifdef _WIN32
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <shlobj.h>
+#include <shlwapi.h>
+#include <windows.h>
+#endif
+
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -40,19 +55,6 @@
 #include "gui/state/logging.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"
-
-#ifdef _WIN32
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#define NOMINMAX
-#include "shlobj.h"
-#include "shlwapi.h"
-#include "windows.h"
-#endif
 
 using std::list;
 using std::lock_guard;

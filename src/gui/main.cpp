@@ -27,8 +27,17 @@
 #include "gui/state/loot_paths.h"
 
 #ifdef _WIN32
-#include <include/cef_sandbox_win.h>
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
+#include <include/cef_sandbox_win.h>
 #else
 #include <X11/Xlib.h>
 #include <include/base/cef_logging.h>
