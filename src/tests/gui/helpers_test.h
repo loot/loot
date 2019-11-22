@@ -31,7 +31,6 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-#ifdef _WIN32
 // MSVC interprets source files in the default code page, so
 // for me u8"\xC3\x9C" != u8"\u00DC", which is a lot of fun.
 // To avoid insanity, write non-ASCII characters as \uXXXX escapes.
@@ -99,7 +98,6 @@ TEST(CompareFilenames, shouldBeCaseInsensitiveAndLocaleInvariant) {
   // Reset locale.
   std::locale::global(boost::locale::generator().generate(""));
 }
-#endif
 }
 }
 
