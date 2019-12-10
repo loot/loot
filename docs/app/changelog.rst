@@ -4,6 +4,48 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.15.0 - 2019-12-10
+===================
+
+Fixed
+-----
+
+- The "Open Groups Editor" menu item could not be translated.
+- The "Open Groups Editor" menu item was not disabled if game loading failed.
+- LOOT would fail to select a game if the preferred game was not installed but
+  another game was.
+- LOOT was unable to extract versions from plugin descriptions containing
+  ``version:`` followed by whitespace and one or more digits. Via libloot.
+- LOOT did not error if masterlist metadata defined a group that loaded after
+  another group that was not defined in the masterlist, but which was defined in
+  user metadata. This was unintentional, and now all groups mentioned in
+  masterlist metadata must now be defined in the masterlist. Via libloot.
+
+Changed
+-------
+
+- The GUI is now better at handling initialisation failures.
+- The "Add New Row" icon button in editable tables has been replaced by
+  text-only button, and its implementation tweaked to reduce the chance of
+  breakage.
+- The range of FormIDs that are recognised as valid in light masters has been
+  extended for Fallout 4 plugins, from between ``0x800`` and ``0xFFF`` inclusive
+  to between ``0x001`` and ``0xFFF`` inclusive, to reflect the extended range
+  supported by Fallout 4 v1.10.162.0.0. The valid range for Skyrim Special
+  Edition plugins is unchanged. Via libloot.
+- LOOT now supports v0.15 of the metadata syntax. Via libloot.
+- Updated the German translation.
+- Updated libloot to v0.15.1.
+- Updated nlohmann/json to v3.7.3.
+- Updated spdlog to v1.4.2.
+
+Removed
+-------
+
+- The ability to specify the HTML file URL to load as a CLI parameter, as it
+  could cause users to see a white screen on launch if they ran LOOT with an
+  unrecognised CLI parameter.
+
 0.14.6 - 2019-09-28
 ===================
 
