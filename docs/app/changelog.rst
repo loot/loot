@@ -4,6 +4,16 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.15.1 - 2019-12-10
+===================
+
+Fixed
+-----
+
+- The "Open Groups Editor" menu item could not be translated (this wasn't
+  properly fixed in v0.15.0).
+- The changelog for the 0.15.0 release was missing.
+
 0.15.0 - 2019-12-10
 ===================
 
