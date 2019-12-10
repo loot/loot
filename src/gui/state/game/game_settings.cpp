@@ -36,7 +36,7 @@ using std::filesystem::u8path;
 
 namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10", "v0.13"});
+    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14"});
 
 GameSettings::GameSettings() :
     type_(GameType::tes4),
@@ -44,7 +44,7 @@ GameSettings::GameSettings() :
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode),
-    repositoryBranch_("v0.14") {
+    repositoryBranch_("v0.15") {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
     registryKey_ = "Software\\Bethesda Softworks\\Morrowind\\Installed Path";
