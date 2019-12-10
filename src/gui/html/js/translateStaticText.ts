@@ -479,7 +479,7 @@ function translateMainToolbar(l10n: Translator): void {
   getLastChildById('openLogButton').textContent = l10n.translate(
     'Open Debug Log Location'
   );
-  getLastChildById('wipeUserlistButton').textContent = l10n.translate(
+  getLastChildById('groupsEditorButton').textContent = l10n.translate(
     'Open Groups Editor'
   );
   getLastChildById('wipeUserlistButton').textContent = l10n.translate(
