@@ -249,13 +249,6 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
       logger->trace("Link is to LOOT page, allowing CEF's default handling.");
     }
     return false;
-  } else if (boost::starts_with(url, "http://localhost:")) {
-    if (logger) {
-      logger->warn(
-          "Link is to a page on localhost, if this isn't happening "
-          "while running tests, something has gone wrong");
-    }
-    return false;
   }
 
   if (logger) {
