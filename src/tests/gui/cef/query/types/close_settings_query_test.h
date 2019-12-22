@@ -69,7 +69,7 @@ protected:
 
 TEST_F(CloseSettingsQueryTest,
        executeLogicShouldRemoveThemeDotCssIfTheOldThemeIsNotDefaultAndTheNewThemeIsDefault) {
-  auto themePath = state.getResourcesPath() / "ui" / "css" / "theme.css";
+  auto themePath = state.getLootDataPath() / "theme.css";
   touch(themePath);
   ASSERT_TRUE(std::filesystem::exists(themePath));
 
@@ -89,7 +89,7 @@ TEST_F(CloseSettingsQueryTest,
   CloseSettingsQuery query(state, {{"theme", "blue"}});
   query.executeLogic();
 
-  auto themePath = state.getResourcesPath() / "ui" / "css" / "theme.css";
+  auto themePath = state.getLootDataPath() / "theme.css";
   EXPECT_TRUE(std::filesystem::exists(themePath));
   EXPECT_TRUE(std::filesystem::exists(newThemePath));
 }

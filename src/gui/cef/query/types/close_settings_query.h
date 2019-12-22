@@ -62,10 +62,9 @@ public:
 
 private:
   void copyThemeFile() {
-    auto themesDirectory = state_.getResourcesPath() / "ui" / "css";
     auto currentTheme = state_.getTheme();
     auto newTheme = settings_.value("theme", "default");
-    auto currentThemePath = themesDirectory / "theme.css";
+    auto currentThemePath = state_.getLootDataPath() / "theme.css";
 
     if (currentTheme == newTheme) {
       return;
@@ -76,7 +75,7 @@ private:
     }
 
     if (newTheme != "default") {
-      auto sourceThemePath = themesDirectory / std::filesystem::u8path(newTheme + ".theme.css");
+      auto sourceThemePath = state_.getResourcesPath() / "ui" / "css" / std::filesystem::u8path(newTheme + ".theme.css");
       if (std::filesystem::exists(sourceThemePath)) {
         std::filesystem::copy_file(sourceThemePath, currentThemePath);
       }

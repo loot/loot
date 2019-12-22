@@ -110,6 +110,11 @@ void LootApp::OnContextInitialized() {
       "loot",
       new LootSchemeHandlerFactory(lootState_.getResourcesPath()));
 
+  CefRegisterSchemeHandlerFactory(
+      "http",
+      "data.loot",
+      new LootSchemeHandlerFactory(lootState_.getLootDataPath()));
+
   // Specify CEF browser settings here.
   CefBrowserSettings browser_settings;
 
