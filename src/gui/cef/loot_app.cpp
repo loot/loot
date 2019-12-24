@@ -119,7 +119,7 @@ void LootApp::OnContextInitialized() {
   CefBrowserSettings browser_settings;
 
   CefRefPtr<CefBrowserView> browser_view = CefBrowserView::CreateBrowserView(
-      handler, "http://loot/ui/index.html", browser_settings, NULL, NULL);
+      handler, "http://loot/ui/index.html", browser_settings, NULL, NULL, NULL);
 
   CefWindow::CreateTopLevelWindow(
       new WindowDelegate(browser_view, lootState_.getWindowPosition()));
@@ -132,11 +132,12 @@ void LootApp::OnWebKitInitialized() {
 }
 
 bool LootApp::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                       CefRefPtr<CefFrame> frame,
                                        CefProcessId source_process,
                                        CefRefPtr<CefProcessMessage> message) {
   // Handle IPC messages from the browser process...
   return message_router_->OnProcessMessageReceived(
-      browser, source_process, message);
+      browser, frame, source_process, message);
 }
 
 void LootApp::OnContextCreated(CefRefPtr<CefBrowser> browser,

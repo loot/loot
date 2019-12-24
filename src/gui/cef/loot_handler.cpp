@@ -31,6 +31,7 @@
 #include <string>
 
 #include <include/cef_app.h>
+#include <include/cef_parser.h>
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
 #include <boost/algorithm/string.hpp>
@@ -86,10 +87,11 @@ CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() { return this; }
 
 bool LootHandler::OnProcessMessageReceived(
     CefRefPtr<CefBrowser> browser,
+  CefRefPtr<CefFrame> frame,
     CefProcessId source_process,
     CefRefPtr<CefProcessMessage> message) {
   return browser_side_router_->OnProcessMessageReceived(
-      browser, source_process, message);
+      browser, frame, source_process, message);
 }
 
 // CefDisplayHandler methods
@@ -208,6 +210,12 @@ void LootHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
 // CefLoadHandler methods
 //-----------------------
 
+std::string GetDataURI(std::string text, std::string mimeType) {
+  return "data:" + mimeType + ";base64," +
+         CefURIEncode(CefBase64Encode(text.c_str(), text.size()), false)
+             .ToString();
+}
+
 void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                               CefRefPtr<CefFrame> frame,
                               ErrorCode errorCode,
@@ -225,13 +233,24 @@ void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
      << "<h2>Failed to load URL " << std::string(failedUrl) << " with error "
      << std::string(errorText) << " (" << errorCode << ").</h2></body></html>";
 
-  frame->LoadString(ss.str(), failedUrl);
+  frame->LoadURL(GetDataURI(ss.str(), "text/html"));
 }
 
 // CefRequestHandler methods
 //--------------------------
 
 CefRefPtr<CefRequestHandler> LootHandler::GetRequestHandler() { return this; }
+
+CefRefPtr<CefResourceRequestHandler> LootHandler::GetResourceRequestHandler(
+  CefRefPtr<CefBrowser> browser,
+  CefRefPtr<CefFrame> frame,
+  CefRefPtr<CefRequest> request,
+  bool is_navigation,
+  bool is_download,
+  const CefString& request_initiator,
+  bool& disable_default_handling) {
+  return this;
+}
 
 bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
                                  CefRefPtr<CefFrame> frame,
@@ -260,7 +279,7 @@ bool LootHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
   return true;
 }
 
-CefRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(
+CefResourceRequestHandler::ReturnValue LootHandler::OnBeforeResourceLoad(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
     CefRefPtr<CefRequest> request,

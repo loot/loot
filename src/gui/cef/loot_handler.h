@@ -38,7 +38,8 @@ class LootHandler : public CefClient,
                     public CefDisplayHandler,
                     public CefLifeSpanHandler,
                     public CefLoadHandler,
-                    public CefRequestHandler {
+                    public CefRequestHandler,
+                    public CefResourceRequestHandler {
 public:
   LootHandler(LootState& lootState);
 
@@ -50,17 +51,18 @@ public:
 
   virtual bool OnProcessMessageReceived(
       CefRefPtr<CefBrowser> browser,
+      CefRefPtr<CefFrame> frame,
       CefProcessId source_process,
       CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
   // CefDisplayHandler methods
   //--------------------------
 
-  virtual bool OnConsoleMessage(CefRefPtr< CefBrowser > browser,
-    cef_log_severity_t level,
-    const CefString& message,
-    const CefString& source,
-    int line) OVERRIDE;
+  virtual bool OnConsoleMessage(CefRefPtr<CefBrowser> browser,
+                                cef_log_severity_t level,
+                                const CefString& message,
+                                const CefString& source,
+                                int line) OVERRIDE;
 
   // CefLifeSpanHandler methods
   //---------------------------
@@ -81,13 +83,22 @@ public:
 
   virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE;
 
-  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
-                              CefRefPtr<CefFrame> frame,
-                              CefRefPtr<CefRequest> request,
-                              bool user_gesture,
-                              bool is_redirect) OVERRIDE;
+  virtual CefRefPtr<CefResourceRequestHandler> GetResourceRequestHandler(
+      CefRefPtr<CefBrowser> browser,
+      CefRefPtr<CefFrame> frame,
+      CefRefPtr<CefRequest> request,
+      bool is_navigation,
+      bool is_download,
+      const CefString& request_initiator,
+      bool& disable_default_handling) OVERRIDE;
 
-  virtual CefRequestHandler::ReturnValue OnBeforeResourceLoad(
+  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+                      CefRefPtr<CefFrame> frame,
+                      CefRefPtr<CefRequest> request,
+                      bool user_gesture,
+                      bool is_redirect) OVERRIDE;
+
+  virtual CefResourceRequestHandler::ReturnValue OnBeforeResourceLoad(
       CefRefPtr<CefBrowser> browser,
       CefRefPtr<CefFrame> frame,
       CefRefPtr<CefRequest> request,
