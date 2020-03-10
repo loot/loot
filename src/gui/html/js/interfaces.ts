@@ -12,9 +12,14 @@ export interface RawGroup extends Group {
   after: string[];
 }
 
+export interface SourcedGroupReference extends Group {
+  name: string;
+  isUserAdded: boolean;
+}
+
 export interface SourcedGroup extends Group {
   name: string;
-  after: SourcedGroup[];
+  after: SourcedGroupReference[];
   isUserAdded: boolean;
 }
 

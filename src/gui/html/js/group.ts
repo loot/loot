@@ -1,9 +1,9 @@
-import { RawGroup, SourcedGroup } from './interfaces';
+import { RawGroup, SourcedGroup, SourcedGroupReference } from './interfaces';
 
 function transformGroupAfter(
   afterGroups: string[],
   isUserAdded: boolean
-): SourcedGroup[] {
+): SourcedGroupReference[] {
   if (afterGroups === undefined) {
     return [];
   }
@@ -11,8 +11,7 @@ function transformGroupAfter(
   return afterGroups
     .map(groupName => ({
       name: groupName,
-      isUserAdded,
-      after: []
+      isUserAdded
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -24,9 +23,9 @@ function transformGroup(group: RawGroup, isUserAdded: boolean): SourcedGroup {
 }
 
 function mergeGroupAfters(
-  groupAfter1: SourcedGroup[],
-  groupAfter2: SourcedGroup[]
-): SourcedGroup[] {
+  groupAfter1: SourcedGroupReference[],
+  groupAfter2: SourcedGroupReference[]
+): SourcedGroupReference[] {
   return groupAfter2
     .reduce((groups, group) => {
       if (groups.find(after => after.name === group.name) === undefined) {

@@ -41,6 +41,13 @@ groups and a list of plugins in the currently selected group.
 - Metadata defined in the masterlist is greyed out, while user-defined metadata
   is not.
 
+If any group definitions reference another group that does not exist, the groups
+editor will create the missing group as user metadata. This is to help when
+there is user metadata that says the user-defined group B must load after the
+masterlist-defined group A, but then group A is removed in a masterlist update.
+In that case, just open up the groups editor and link group A back into the
+graph as it was before.
+
 New load after metadata can be added by clicking on one group and dragging a
 line from the white circle that appears to another group.
 

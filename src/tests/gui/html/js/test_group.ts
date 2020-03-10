@@ -61,13 +61,11 @@ describe('mergeGroups', () => {
 
     expect(merged[1].after[0]).toEqual({
       name: 'A',
-      isUserAdded: false,
-      after: []
+      isUserAdded: false
     });
     expect(merged[2].after[0]).toEqual({
       name: 'B',
-      isUserAdded: false,
-      after: []
+      isUserAdded: false
     });
   });
 
@@ -95,8 +93,7 @@ describe('mergeGroups', () => {
 
     expect(merged[3].after[0]).toEqual({
       name: 'C',
-      isUserAdded: true,
-      after: []
+      isUserAdded: true
     });
   });
 
@@ -106,13 +103,11 @@ describe('mergeGroups', () => {
     expect(merged[2].after.length).toBe(2);
     expect(merged[2].after[0]).toEqual({
       name: 'A',
-      isUserAdded: true,
-      after: []
+      isUserAdded: true
     });
     expect(merged[2].after[1]).toEqual({
       name: 'B',
-      isUserAdded: false,
-      after: []
+      isUserAdded: false
     });
   });
 

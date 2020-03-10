@@ -49,6 +49,20 @@ function isNewGroupInputEvent(evt: Event): evt is NewGroupInputEvent {
   );
 }
 
+function addMissingGroups(groups: SourcedGroup[]): SourcedGroup[] {
+  const groupNames = new Set(groups.map(group => group.name));
+  const missingGroups = [];
+  for (const group of groups) {
+    for (const afterGroup of group.after) {
+      if (!groupNames.has(afterGroup.name)) {
+        missingGroups.push(Object.assign({ after: [] }, afterGroup));
+      }
+    }
+  }
+
+  return groups.concat(missingGroups);
+}
+
 function graphElements(groups: SourcedGroup[]): cytoscape.ElementDefinition[] {
   const nodes = groups.map(group => ({
     data: { id: group.name },
@@ -250,7 +264,7 @@ export default class LootGroupsEditor extends PolymerElement {
 
     this.cy = cytoscape({
       container: this.$.cy,
-      elements: graphElements(groups),
+      elements: graphElements(addMissingGroups(groups)),
       minZoom: 0.33,
       maxZoom: 3,
       wheelSensitivity: 0.25,
