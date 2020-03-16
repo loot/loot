@@ -3,37 +3,88 @@
 const fs = require('fs-extra');
 const path = require('path');
 const request = require('request');
-const extractZip = require('extract-zip');
+const yauzl = require('yauzl');
+const mkdirp = require('mkdirp');
 
-function getRobotoFiles(url, destinationPath) {
-  const extractPath = path.dirname(destinationPath);
-  const downloadPath = path.join(extractPath, 'roboto-hinted.zip');
+function downloadRobotoZip(url) {
+  return new Promise((resolve, reject) => {
+    request(url, { encoding: null }, (err, response, body) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        reject(
+          new Error(`Received a HTTP status code of ${response.statusCode}`)
+        );
+        return;
+      }
+
+      resolve(body);
+    });
+  });
+}
+
+// The archive is expected to contain a single 'roboto-hinted' directory that
+// contains all the font files.
+function unzip(zipBuffer, destinationPath) {
+  const expectedRootDir = 'roboto-hinted/';
+
+  mkdirp.sync(destinationPath);
 
   return new Promise((resolve, reject) => {
-    request(url)
-      .pipe(fs.createWriteStream(downloadPath))
-      .on('close', err => {
-        if (err) {
-          reject(err);
+    yauzl.fromBuffer(zipBuffer, { lazyEntries: true }, (err, zipFile) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      zipFile.on('entry', entry => {
+        if (!entry.fileName.startsWith(expectedRootDir)) {
+          reject(new Error(`Unexpected zip entry: "${entry.fileName}".`));
+          return;
         }
-        resolve();
-      });
-  })
-    .then(() => {
-      return new Promise((resolve, reject) => {
-        extractZip(downloadPath, { dir: extractPath }, err => {
-          if (err) {
+
+        if (entry.fileName.endsWith('/')) {
+          if (entry.fileName !== expectedRootDir) {
             reject(err);
-          } else {
-            resolve();
+            return;
           }
+          zipFile.readEntry();
+          return;
+        }
+
+        zipFile.openReadStream(entry, (streamErr, stream) => {
+          if (streamErr) {
+            reject(streamErr);
+            return;
+          }
+
+          stream.on('end', () => zipFile.readEntry());
+
+          const destinationFilename = entry.fileName.substr(
+            expectedRootDir.length
+          );
+          stream.pipe(
+            fs.createWriteStream(
+              path.join(destinationPath, destinationFilename)
+            )
+          );
         });
       });
-    })
-    .then(() => {
-      fs.renameSync(path.join(extractPath, 'roboto-hinted'), destinationPath);
-      fs.removeSync(downloadPath);
+
+      zipFile.on('end', resolve);
+      zipFile.on('error', reject);
+
+      zipFile.readEntry();
     });
+  });
+}
+
+async function getRobotoFiles(url, destinationPath) {
+  const zipBuffer = await downloadRobotoZip(url);
+
+  await unzip(zipBuffer, destinationPath);
 }
 
 function handleError(error) {
