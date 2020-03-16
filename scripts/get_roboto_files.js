@@ -3,7 +3,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const request = require('request');
-const decompress = require('decompress');
+const extractZip = require('extract-zip');
 
 function getRobotoFiles(url, destinationPath) {
   const extractPath = path.dirname(destinationPath);
@@ -19,7 +19,17 @@ function getRobotoFiles(url, destinationPath) {
         resolve();
       });
   })
-    .then(() => decompress(downloadPath, extractPath))
+    .then(() => {
+      return new Promise((resolve, reject) => {
+        extractZip(downloadPath, { dir: extractPath }, err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+    })
     .then(() => {
       fs.renameSync(path.join(extractPath, 'roboto-hinted'), destinationPath);
       fs.removeSync(downloadPath);
@@ -33,7 +43,7 @@ function handleError(error) {
 
 const url =
   'https://github.com/google/roboto/releases/download/v2.135/roboto-hinted.zip';
-const fontsPath = 'build/fonts';
+const fontsPath = path.join(process.cwd(), 'build', 'fonts');
 
 Promise.resolve()
   .then(() => {
