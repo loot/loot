@@ -63,7 +63,8 @@ protected:
     metadata.SetTags(fileBashTags);
 
     if (masterlistMetadata.has_value()) {
-      metadata.MergeMetadata(masterlistMetadata.value());
+      masterlistMetadata.value().MergeMetadata(metadata);
+      return masterlistMetadata.value();
     }
 
     return metadata;
@@ -178,10 +179,10 @@ private:
       return evaluatedMasterlistMetadata;
     }
 
-    evaluatedMasterlistMetadata.value().MergeMetadata(
-        evaluatedUserMetadata.value());
+    evaluatedUserMetadata.value().MergeMetadata(
+        evaluatedMasterlistMetadata.value());
 
-    return evaluatedMasterlistMetadata;
+    return evaluatedUserMetadata;
   }
 
   std::optional<PluginMetadata> evaluateMasterlistMetadata(

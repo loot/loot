@@ -51,12 +51,13 @@ public:
 
     auto masterlistMetadata = game_.GetMasterlistMetadata(pluginName_);
     if (masterlistMetadata.has_value()) {
-      metadata.MergeMetadata(masterlistMetadata.value());
+      metadata = masterlistMetadata.value();
     }
 
     auto userMetadata = game_.GetUserMetadata(pluginName_);
     if (userMetadata.has_value()) {
-      metadata.MergeMetadata(userMetadata.value());
+      userMetadata.value().MergeMetadata(metadata);
+      metadata = userMetadata.value();
     }
 
     // Generate text representation.
