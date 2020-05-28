@@ -94,16 +94,18 @@ protected:
     }
 
     auto evaluatedMetadata = evaluateMetadata(plugin->GetName());
-    if (evaluatedMetadata.has_value()) {
-      auto messages = evaluatedMetadata.value().GetMessages();
-      auto validityMessages =
-          game_.CheckInstallValidity(plugin, evaluatedMetadata.value());
-      messages.insert(
-          end(messages), begin(validityMessages), end(validityMessages));
-      evaluatedMetadata.value().SetMessages(messages);
-
-      derived.setEvaluatedMetadata(evaluatedMetadata.value());
+    if (!evaluatedMetadata.has_value()) {
+      evaluatedMetadata = PluginMetadata(plugin->GetName());
     }
+
+    auto messages = evaluatedMetadata.value().GetMessages();
+    auto validityMessages =
+        game_.CheckInstallValidity(plugin, evaluatedMetadata.value());
+    messages.insert(
+        end(messages), begin(validityMessages), end(validityMessages));
+    evaluatedMetadata.value().SetMessages(messages);
+
+    derived.setEvaluatedMetadata(evaluatedMetadata.value());
 
     return derived;
   }
