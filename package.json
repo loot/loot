@@ -47,7 +47,7 @@
     "@types/react-dom": "^16.8.5",
     "cytoscape": "^3.2.11",
     "cytoscape-dagre": "^2.2.2",
-    "cytoscape-edgehandles": "^3.2.3",
+    "cytoscape-edgehandles": "^3.6.0",
     "fs-extra": "^8.0.0",
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",

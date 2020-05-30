@@ -2852,10 +2852,10 @@ cytoscape-dagre@^2.2.2:
   dependencies:
     dagre "^0.8.2"
 
-cytoscape-edgehandles@^3.2.3:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/cytoscape-edgehandles/-/cytoscape-edgehandles-3.5.1.tgz#d3cf4f6e77a70ec3f593aef0ba895af2e62b3183"
-  integrity sha512-c61ZVE3YBKqSNEEiCWzRPxIrNlCjwkVA7zDywgh6IsA7+34nklNNquKL6oayZcwY6f8eWA6nQdm8bzh/Clpspg==
+cytoscape-edgehandles@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/cytoscape-edgehandles/-/cytoscape-edgehandles-3.6.0.tgz#daba87b424c6d17ceada1a4be82ec6b094410bfd"
+  integrity sha512-XUzz+zmK42cN6l8uV7b66uUIZruAGgtgrfj/iuUOoCDWHMExARCS23bUju3Pqxywafe75Te3prXH0jrnZ+fYxw==
   dependencies:
     lodash.memoize "^4.1.2"
     lodash.throttle "^4.1.1"
