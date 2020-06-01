@@ -485,13 +485,11 @@ export default class LootPluginEditor extends PolymerElement {
         groupElement.getAttribute('value') === nonUserGroup &&
         nonUserGroup !== pluginData.group
       ) {
-        if (nonUserGroup !== pluginData.group) {
-          groupElement.style.fontWeight = 'bold';
-          groupElement.style.color = 'var(--primary-color)';
-        }
+        groupElement.style.fontWeight = 'bold';
+        groupElement.style.color = 'var(--primary-color)';
       } else {
-        groupElement.style.fontWeight = null;
-        groupElement.style.color = null;
+        delete groupElement.style.fontWeight;
+        delete groupElement.style.color;
       }
     }
   }

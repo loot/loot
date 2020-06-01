@@ -1,6 +1,6 @@
 import * as cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
-import dagre from 'cytoscape-dagre';
+import dagre, { DagreLayoutOptions } from 'cytoscape-dagre';
 import { PolymerElement, html } from '@polymer/polymer';
 import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
@@ -186,9 +186,9 @@ export default class LootGroupsEditor extends PolymerElement {
     `;
   }
 
-  private cy?: cytoscape.Core & { edgehandles: (config: object) => void };
+  private cy?: cytoscape.Core & { edgehandles?: (config: object) => void };
 
-  private cyLayoutOptions?: cytoscape.LayoutOptions & { rankDir: string };
+  private cyLayoutOptions?: cytoscape.LayoutOptions | DagreLayoutOptions;
 
   private getGroupPluginNames: (groupName: string) => string[];
 
@@ -262,6 +262,18 @@ export default class LootGroupsEditor extends PolymerElement {
       '--primary-background-color'
     );
 
+    const baseEdgeStyle: cytoscape.Css.Edge = {
+      width: 2,
+      'curve-style': 'bezier',
+      'mid-target-arrow-shape': 'triangle',
+      // @ts-ignore arrow-scale is a valid style property, the types are
+      // incomplete.
+      'arrow-scale': 2,
+      // @ts-ignore target-endpoint is a valid style property, the types
+      // are incomplete.
+      'target-endpoint': 'inside-to-node'
+    };
+
     this.cy = cytoscape({
       container: this.$.cy,
       elements: graphElements(addMissingGroups(groups)),
@@ -305,15 +317,7 @@ export default class LootGroupsEditor extends PolymerElement {
         },
         {
           selector: 'edge',
-          style: {
-            width: 2,
-            'curve-style': 'bezier',
-            'mid-target-arrow-shape': 'triangle',
-            // @ts-ignore arrow-scale is a valid style property, the types are
-            // incomplete.
-            'arrow-scale': 2,
-            'target-endpoint': 'inside-to-node'
-          }
+          style: baseEdgeStyle
         },
         {
           selector: 'edge.masterlist',
@@ -355,6 +359,10 @@ export default class LootGroupsEditor extends PolymerElement {
 
     this.cy.addListener('cxttap', evt => this._onRemoveGraphElement(evt));
     this.cy.addListener('select', 'node', evt => this._onSelectNode(evt));
+
+    if (this.cy.edgehandles === undefined) {
+      throw new Error('Expected cy field to have an edgehandles method');
+    }
 
     this.cy.edgehandles({
       handlePosition: () => 'middle middle',
