@@ -26,8 +26,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(paths.SRC, 'index.html')
     }),
-    new CopyWebpackPlugin(
-      [
+    new CopyWebpackPlugin({
+      patterns: [
         {
           from: path.join(paths.SRC, 'css', 'style.css'),
           to: path.join(paths.DIST, 'css')
@@ -44,11 +44,8 @@ module.exports = {
           from: path.join('build', 'fonts'),
           to: path.join(paths.DIST, 'fonts')
         }
-      ],
-      {
-        copyUnmodified: true
-      }
-    )
+      ]
+    })
   ],
   module: {
     rules: [
