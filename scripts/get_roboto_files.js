@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const request = require('request');
+const { get } = require('https');
 const yauzl = require('yauzl');
 const { promisify } = require('util');
 
@@ -10,20 +10,36 @@ const mkdir = promisify(fs.mkdir);
 
 function downloadRobotoZip(url) {
   return new Promise((resolve, reject) => {
-    request(url, { encoding: null }, (err, response, body) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      if (response.statusCode < 200 || response.statusCode >= 300) {
+    const request = get(url, response => {
+      if (response.statusCode < 200 || response.statusCode >= 400) {
+        console.log(response.headers);
         reject(
           new Error(`Received a HTTP status code of ${response.statusCode}`)
         );
         return;
       }
 
-      resolve(body);
+      if (response.statusCode >= 300) {
+        if (!response.headers.location) {
+          reject(
+            new Error(
+              `Received a HTTP status code of ${response.statusCode} but no Location header.`
+            )
+          );
+          return;
+        }
+        downloadRobotoZip(response.headers.location)
+          .then(resolve)
+          .catch(reject);
+        return;
+      }
+
+      const chunks = [];
+      response.on('data', chunk => chunks.push(chunk));
+      response.on('end', () => resolve(Buffer.concat(chunks)));
     });
+
+    request.on('error', reject);
   });
 }
 
