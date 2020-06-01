@@ -1,10 +1,12 @@
 /* eslint-disable no-console */
 
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const request = require('request');
 const yauzl = require('yauzl');
-const mkdirp = require('mkdirp');
+const { promisify } = require('util');
+
+const mkdir = promisify(fs.mkdir);
 
 function downloadRobotoZip(url) {
   return new Promise((resolve, reject) => {
@@ -27,10 +29,10 @@ function downloadRobotoZip(url) {
 
 // The archive is expected to contain a single 'roboto-hinted' directory that
 // contains all the font files.
-function unzip(zipBuffer, destinationPath) {
+async function unzip(zipBuffer, destinationPath) {
   const expectedRootDir = 'roboto-hinted/';
 
-  mkdirp.sync(destinationPath);
+  await mkdir(destinationPath, { recursive: true });
 
   return new Promise((resolve, reject) => {
     yauzl.fromBuffer(zipBuffer, { lazyEntries: true }, (err, zipFile) => {
