@@ -36,7 +36,7 @@
     "@polymer/paper-material": "^3.0.0",
     "@polymer/paper-menu-button": "^3.0.0",
     "@polymer/paper-progress": "^3.0.0",
-    "@polymer/paper-ripple": "^3.0.0",
+    "@polymer/paper-ripple": "^3.0.2",
     "@polymer/paper-tabs": "^3.0.0",
     "@polymer/paper-toast": "^3.0.0",
     "@polymer/paper-toggle-button": "^3.0.0",
