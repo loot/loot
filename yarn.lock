@@ -1654,9 +1654,9 @@
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
 "@types/cytoscape@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.8.0.tgz#334006612fc6285dac83ee3665132743d7651f58"
-  integrity sha512-8TJL7HuMEgjQRCcUC3xKenb7Y6Ra3ZJ3LvYDlpxlt5LlAatzRyTBtIuE1JOdRelqAla8r87XJUzTgi92mlUlQQ==
+  version "3.14.3"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.3.tgz#d44bac36fd62dd878f7146bf90e149ec7d11ca7d"
+  integrity sha512-Gc6N7sqOoCQ2iP3uCqvB1KXvhw9Jo2m9Ve4Ypnk9C03xfeTxWF1kNsDgIuosox0GF3D/4T2dV6bdngENEFPB/A==
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
