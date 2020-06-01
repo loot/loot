@@ -321,8 +321,9 @@ export default class LootPluginEditor extends PolymerElement {
       selection.removeAllRanges();
     }
 
-    editor.style.height = `${parseInt(editor.style.height || '0', 10) -
-      evt.detail.ddy}px`;
+    editor.style.height = `${
+      parseInt(editor.style.height || '0', 10) - evt.detail.ddy
+    }px`;
     evt.preventDefault();
     evt.stopPropagation();
   }
