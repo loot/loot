@@ -4930,10 +4930,11 @@ istanbul-reports@^2.1.1:
     handlebars "^4.1.2"
 
 jed-gettext-parser@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/jed-gettext-parser/-/jed-gettext-parser-1.0.0.tgz#d30d3ce4da31899f2bfc4a7aa36a4cf8b17be29e"
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jed-gettext-parser/-/jed-gettext-parser-1.0.1.tgz#21732d4e27842ab32f5d2dad5d11695048265aa4"
+  integrity sha512-bzmQkB/Kh3Bc+o4dVIbIzP255vFYrcoB1l8HhnuO7JY/WjL+rXTsED9sHL+w6ylYPNxufUw3jeH7lI0FdtZsQg==
   dependencies:
-    text-encoding "0.1.0"
+    text-encoding "^0.7.0"
 
 jed@^1.1.1:
   version "1.1.1"
@@ -7760,9 +7761,10 @@ test-exclude@^5.2.3:
     read-pkg-up "^4.0.0"
     require-main-filename "^2.0.0"
 
-text-encoding@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.1.0.tgz#dfae5dfb298c3bbe5a8e5a95f4de7fffd010cc5b"
+text-encoding@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.7.0.tgz#f895e836e45990624086601798ea98e8f36ee643"
+  integrity sha512-oJQ3f1hrOnbRLOcwKz0Liq2IcrvDeZRHXhd9RgLrsT+DjWY/nty1Hi7v3dtkaEYbPYe0mUoOfzRrMwfXXwgPUA==
 
 text-table@^0.2.0:
   version "0.2.0"
