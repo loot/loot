@@ -41,7 +41,7 @@
     "@polymer/paper-toast": "^3.0.0",
     "@polymer/paper-toggle-button": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
-    "@polymer/polymer": "^3.0.0",
+    "@polymer/polymer": "^3.4.1",
     "@types/react": "^16.9.35",
     "@types/react-autosuggest": "^9.3.10",
     "@types/react-dom": "^16.9.8",
