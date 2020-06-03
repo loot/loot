@@ -1,8 +1,15 @@
-import * as Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 
 interface Repo {
   owner: string;
   repo: string;
+}
+
+interface Tag {
+  name: string;
+  commit: {
+    sha: string;
+  };
 }
 
 const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
@@ -33,10 +40,7 @@ function compare(lhs: string, rhs: string): number {
   return 0;
 }
 
-function findTag(
-  tags: Octokit.ReposListTagsResponseItem[],
-  tagName: string
-): Octokit.ReposListTagsResponseItem | undefined {
+function findTag(tags: Tag[], tagName: string): Tag | undefined {
   return tags.find(element => element.name === tagName);
 }
 
@@ -44,14 +48,14 @@ async function paginatedFindTag(
   octokit: Octokit,
   repo: Repo,
   tagName: string
-): Promise<Octokit.ReposListTagsResponseItem | undefined> {
-  const options = octokit.repos.listTags.endpoint.merge({
+): Promise<Tag | undefined> {
+  const iterator = octokit.paginate.iterator(octokit.repos.listTags, {
     ...repo,
     // eslint-disable-next-line @typescript-eslint/camelcase
     per_page: 100
   });
 
-  for await (const page of octokit.paginate.iterator(options)) {
+  for await (const page of iterator) {
     const tag = findTag(page.data, tagName);
     if (tag) {
       return tag;

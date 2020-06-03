@@ -1,91 +1,89 @@
-import * as Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 import { mocked } from 'ts-jest/utils';
 import updateExists from '../../../../gui/html/js/updateExists';
 
-jest.mock('@octokit/rest', () =>
-  jest.fn().mockImplementation(() => {
-    async function* createPageIterator(): AsyncIterator<object> {
-      const listTagsPages = [
-        {
-          data: [
-            {
-              name: '0.9.1',
-              commit: {
-                sha: 'dc24e10a4774903ede4e94165e7d6fa806466e4a'
-              }
-            },
-            {
-              name: '0.9.0',
-              commit: {
-                sha: '44a0d8505d5402dd24cf0fda9540da9557866c80'
-              }
+jest.mock('@octokit/rest', () => {
+  async function* createPageIterator(): AsyncIterator<object> {
+    const listTagsPages = [
+      {
+        data: [
+          {
+            name: '0.9.1',
+            commit: {
+              sha: 'dc24e10a4774903ede4e94165e7d6fa806466e4a'
             }
-          ]
-        },
-        {
-          data: [
-            {
-              name: '0.9.2',
-              commit: {
-                sha: '6b58f92a5d41f5d7f149a1263dac78687a065ff5'
-              }
+          },
+          {
+            name: '0.9.0',
+            commit: {
+              sha: '44a0d8505d5402dd24cf0fda9540da9557866c80'
             }
-          ]
-        }
-      ];
-
-      for (const tagsPage of listTagsPages) {
-        yield tagsPage;
-      }
-    }
-
-    return {
-      repos: {
-        getLatestRelease: jest.fn().mockReturnValue(
-          Promise.resolve({
-            data: {
-              // eslint-disable-next-line @typescript-eslint/camelcase
-              tag_name: '0.9.2'
-            }
-          })
-        ),
-        listTags: {
-          endpoint: {
-            merge: () => {}
           }
-        },
-        getCommit: jest.fn().mockImplementation(args =>
-          Promise.resolve({
-            data: {
-              commit: {
-                committer: {
-                  date:
-                    args.ref === 'deadbeef'
-                      ? '2011-04-14T16:00:00Z'
-                      : '2011-04-14T16:00:49Z'
+        ]
+      },
+      {
+        data: [
+          {
+            name: '0.9.2',
+            commit: {
+              sha: '6b58f92a5d41f5d7f149a1263dac78687a065ff5'
+            }
+          }
+        ]
+      }
+    ];
+
+    for (const tagsPage of listTagsPages) {
+      yield tagsPage;
+    }
+  }
+
+  return {
+    Octokit: jest.fn().mockImplementation(() => {
+      return {
+        repos: {
+          getLatestRelease: jest.fn().mockReturnValue(
+            Promise.resolve({
+              data: {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                tag_name: '0.9.2'
+              }
+            })
+          ),
+          listTags: {},
+          getCommit: jest.fn().mockImplementation(args =>
+            Promise.resolve({
+              data: {
+                commit: {
+                  committer: {
+                    date:
+                      args.ref === 'deadbeef'
+                        ? '2011-04-14T16:00:00Z'
+                        : '2011-04-14T16:00:49Z'
+                  }
                 }
               }
-            }
-          })
-        )
-      },
-      git: {
-        getCommit: jest.fn().mockReturnValue(
-          Promise.resolve({
-            data: {
-              committer: {
-                date: '2011-04-14T16:00:49Z'
+            })
+          )
+        },
+        git: {
+          getCommit: jest.fn().mockReturnValue(
+            Promise.resolve({
+              data: {
+                committer: {
+                  date: '2011-04-14T16:00:49Z'
+                }
               }
-            }
-          })
-        )
-      },
-      paginate: {
-        iterator: createPageIterator
-      }
-    };
-  })
-);
+            })
+          )
+        },
+        paginate: {
+          iterator: createPageIterator
+        }
+      };
+    })
+  };
+});
 
 describe('updateExists()', () => {
   beforeEach(() => {
