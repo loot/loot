@@ -101,8 +101,6 @@ Source: "{#buildir}\Release\libEGL.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\libGLESv2.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\natives_blob.bin"; \
-DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\snapshot_blob.bin"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\v8_context_snapshot.bin"; \
