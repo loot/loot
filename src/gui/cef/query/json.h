@@ -247,7 +247,7 @@ void from_json(const nlohmann::json& json, Group& group) {
   }
 
   group = Group(json.at("name"),
-    json.value("after", std::unordered_set<std::string>()));
+    json.value("after", std::vector<std::string>()));
 }
 
 void to_json(nlohmann::json& json, const Location& location) {
@@ -313,7 +313,6 @@ nlohmann::json to_json_with_language(const PluginMetadata& metadata,
                                      const std::string& language) {
   nlohmann::json json = {
     { "name", metadata.GetName() },
-    { "enabled", metadata.IsEnabled() },
     { "after", metadata.GetLoadAfterFiles() },
     { "req", metadata.GetRequirements() },
     { "inc", metadata.GetIncompatibilities() },
@@ -363,21 +362,19 @@ void from_json(const nlohmann::json& json, PluginMetadata& metadata) {
     }
   }
 
-  metadata.SetEnabled(json.value("enabled", false));
-
   auto groupIt = json.find("group");
   if (groupIt != json.end()) {
     metadata.SetGroup(groupIt->get<std::string>());
   }
 
-  metadata.SetLoadAfterFiles(json.value("after", std::set<File>()));
-  metadata.SetRequirements(json.value("req", std::set<File>()));
-  metadata.SetIncompatibilities(json.value("inc", std::set<File>()));
+  metadata.SetLoadAfterFiles(json.value("after", std::vector<File>()));
+  metadata.SetRequirements(json.value("req", std::vector<File>()));
+  metadata.SetIncompatibilities(json.value("inc", std::vector<File>()));
   metadata.SetMessages(json.value("msg", std::vector<Message>()));
-  metadata.SetTags(json.value("tag", std::set<Tag>()));
-  metadata.SetDirtyInfo(json.value("dirty", std::set<PluginCleaningData>()));
-  metadata.SetCleanInfo(json.value("clean", std::set<PluginCleaningData>()));
-  metadata.SetLocations(json.value("url", std::set<Location>()));
+  metadata.SetTags(json.value("tag", std::vector<Tag>()));
+  metadata.SetDirtyInfo(json.value("dirty", std::vector<PluginCleaningData>()));
+  metadata.SetCleanInfo(json.value("clean", std::vector<PluginCleaningData>()));
+  metadata.SetLocations(json.value("url", std::vector<Location>()));
 }
 
 template<typename G>

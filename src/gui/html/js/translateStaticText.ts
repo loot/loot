@@ -126,9 +126,6 @@ function translatePluginEditor(l10n: Translator): void {
   }
 
   getPreviousElementSibling(
-    getShadowElementById(pluginEditorShadow, 'enableEdits')
-  ).textContent = l10n.translate('Enable Edits');
-  getPreviousElementSibling(
     getShadowElementById(pluginEditorShadow, 'group')
   ).textContent = l10n.translate('Group');
 

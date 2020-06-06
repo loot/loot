@@ -51,7 +51,7 @@ public:
 
   std::shared_ptr<const PluginInterface> GetPlugin(
       const std::string& name) const;
-  std::set<std::shared_ptr<const PluginInterface>> GetPlugins() const;
+  std::vector<std::shared_ptr<const PluginInterface>> GetPlugins() const;
   std::vector<Message> CheckInstallValidity(
       const std::shared_ptr<const PluginInterface>& plugin,
       const PluginMetadata& metadata);
@@ -87,10 +87,10 @@ public:
   MasterlistInfo GetMasterlistInfo() const;
 
   void LoadMetadata();
-  std::set<std::string> GetKnownBashTags() const;
+  std::vector<std::string> GetKnownBashTags() const;
 
-  std::unordered_set<Group> GetMasterlistGroups() const;
-  std::unordered_set<Group> GetUserGroups() const;
+  std::vector<Group> GetMasterlistGroups() const;
+  std::vector<Group> GetUserGroups() const;
 
   std::optional<PluginMetadata> GetMasterlistMetadata(
       const std::string& pluginName,
@@ -99,7 +99,7 @@ public:
       const std::string& pluginName,
       bool evaluateConditions = false) const;
 
-  void SetUserGroups(const std::unordered_set<Group>& groups);
+  void SetUserGroups(const std::vector<Group>& groups);
   void AddUserMetadata(const PluginMetadata& metadata);
   void ClearUserMetadata(const std::string& pluginName);
   void ClearAllUserMetadata();

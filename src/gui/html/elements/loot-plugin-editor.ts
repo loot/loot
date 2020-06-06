@@ -11,7 +11,6 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-tabs/paper-tabs.js';
-import { PaperToggleButtonElement } from '@polymer/paper-toggle-button/paper-toggle-button';
 import '@polymer/paper-tooltip/paper-tooltip.js';
 import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
 
@@ -72,12 +71,6 @@ function isSplitterDragEvent(evt: Event): evt is SplitterDragEvent {
     evt.target.parentNode.host.tagName === 'LOOT-PLUGIN-EDITOR' &&
     'detail' in evt
   );
-}
-
-function isPaperToggleButton(
-  element: Element
-): element is PaperToggleButtonElement {
-  return element.tagName === 'PAPER-TOGGLE-BUTTON';
 }
 
 type TableType =
@@ -261,10 +254,6 @@ export default class LootPluginEditor extends PolymerElement {
       >
         <div id="main" data-page="main">
           <div>
-            <div>Enable Edits</div>
-            <paper-toggle-button id="enableEdits"></paper-toggle-button>
-          </div>
-          <div>
             <div>Group</div>
             <loot-dropdown-menu
               id="group"
@@ -368,12 +357,6 @@ export default class LootPluginEditor extends PolymerElement {
         is left to the C++ side of things, and masterlist rows in
         the tables can be ignored because they're immutable. */
 
-    if (!isPaperToggleButton(this.$.enableEdits)) {
-      throw new TypeError(
-        "Expected loot-groups-editor's shadow root to contain a paper-toggle-button with ID 'enableEdits'"
-      );
-    }
-
     if (!(this.$.group instanceof LootDropdownMenu)) {
       throw new TypeError(
         "Expected loot-groups-editor's shadow root to contain a loot-dropdown-menu with ID 'group'"
@@ -382,7 +365,6 @@ export default class LootPluginEditor extends PolymerElement {
 
     const metadata: PluginMetadata = {
       name: querySelector(this, 'h1').textContent || '',
-      enabled: !!this.$.enableEdits.checked,
       group: this.$.group.value,
       after: [],
       req: [],
@@ -534,12 +516,6 @@ export default class LootPluginEditor extends PolymerElement {
   }
 
   public setEditorData(newData: Plugin): void {
-    if (!isPaperToggleButton(this.$.enableEdits)) {
-      throw new TypeError(
-        "Expected loot-groups-editor's shadow root to contain a paper-toggle-button with ID 'enableEdits'"
-      );
-    }
-
     if (!(this.$.group instanceof LootDropdownMenu)) {
       throw new TypeError(
         "Expected loot-groups-editor's shadow root to contain a loot-dropdown-menu with ID 'group'"
@@ -550,11 +526,6 @@ export default class LootPluginEditor extends PolymerElement {
     querySelector(this, 'h1').textContent = newData.name;
 
     /* Fill in the editor input values. */
-    if (newData.userlist && !newData.userlist.enabled) {
-      this.$.enableEdits.checked = false;
-    } else {
-      this.$.enableEdits.checked = true;
-    }
     this.$.group.value = newData.group;
 
     LootPluginEditor._highlightNonUserGroup(this.$.group.children, newData);

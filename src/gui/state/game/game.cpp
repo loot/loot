@@ -136,7 +136,7 @@ std::shared_ptr<const PluginInterface> Game::GetPlugin(
   return gameHandle_->GetPlugin(name);
 }
 
-std::set<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
+std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
@@ -157,8 +157,14 @@ std::vector<Message> Game::CheckInstallValidity(
              (hasPluginFileExtension(file) &&
               std::filesystem::exists(DataPath() / u8path(file + ".ghost")));
     };
+
     auto tags = metadata.GetTags();
-    if (tags.find(Tag("Filter")) == std::end(tags)) {
+    auto hasFilterTag =
+        std::any_of(tags.cbegin(), tags.cend(), [&](const Tag& tag) {
+          return tag.GetName() == "Filter";
+        });
+
+    if (!hasFilterTag) {
       for (const auto& master : plugin->GetMasters()) {
         if (!fileExists(master)) {
           if (logger) {
@@ -190,12 +196,18 @@ std::vector<Message> Game::CheckInstallValidity(
       }
     }
 
+    std::unordered_set<std::string> displayNamesWithMessages;
+
     for (const auto& req : metadata.GetRequirements()) {
-      if (!fileExists(req.GetName())) {
+      auto file = std::string(req.GetName());
+      if (!fileExists(file)) {
         if (logger) {
           logger->error("\"{}\" requires \"{}\", but it is missing.",
                         plugin->GetName(),
-                        req.GetName());
+                        file);
+        }
+        if (displayNamesWithMessages.count(req.GetDisplayName()) > 0) {
+          continue;
         }
         messages.push_back(Message(MessageType::error,
                                    (boost::format(boost::locale::translate(
@@ -203,17 +215,24 @@ std::vector<Message> Game::CheckInstallValidity(
                                         "installed, but it is missing.")) %
                                     req.GetDisplayName())
                                        .str()));
+        displayNamesWithMessages.insert(req.GetDisplayName());
       }
     }
+
+    displayNamesWithMessages.clear();
+
     for (const auto& inc : metadata.GetIncompatibilities()) {
-      if (fileExists(inc.GetName()) &&
-          (!hasPluginFileExtension(inc.GetName()) ||
-           IsPluginActive(inc.GetName()))) {
+      auto file = std::string(inc.GetName());
+      if (fileExists(file) &&
+          (!hasPluginFileExtension(file) || IsPluginActive(file))) {
         if (logger) {
           logger->error(
               "\"{}\" is incompatible with \"{}\", but both files are present.",
               plugin->GetName(),
-              inc.GetName());
+              file);
+        }
+        if (displayNamesWithMessages.count(inc.GetDisplayName()) > 0) {
+          continue;
         }
         messages.push_back(
             Message(MessageType::error,
@@ -222,6 +241,7 @@ std::vector<Message> Game::CheckInstallValidity(
                          "files are present.")) %
                      inc.GetDisplayName())
                         .str()));
+        displayNamesWithMessages.insert(inc.GetDisplayName());
       }
     }
   }
@@ -297,14 +317,21 @@ std::vector<Message> Game::CheckInstallValidity(
   }
 
   if (metadata.GetGroup().has_value()) {
-    auto group = Group(metadata.GetGroup().value());
-    if (gameHandle_->GetDatabase()->GetGroups().count(group) == 0) {
+    auto groupName = metadata.GetGroup().value();
+    auto groups = gameHandle_->GetDatabase()->GetGroups();
+    auto groupIsUndefined =
+        std::none_of(groups.cbegin(), groups.cend(), [&](const Group& group) {
+          return group.GetName() == groupName;
+        });
+
+    if (groupIsUndefined) {
       messages.push_back(PlainTextMessage(
-        MessageType::error,
-        (boost::format(boost::locale::translate(
-          "This plugin belongs to the group \"%1%\", which does not exist.")) %
-          group.GetName())
-        .str()));
+          MessageType::error,
+          (boost::format(
+               boost::locale::translate("This plugin belongs to the group "
+                                        "\"%1%\", which does not exist.")) %
+           groupName)
+              .str()));
     }
   }
 
@@ -642,15 +669,15 @@ void Game::LoadMetadata() {
   }
 }
 
-std::set<std::string> Game::GetKnownBashTags() const {
+std::vector<std::string> Game::GetKnownBashTags() const {
   return gameHandle_->GetDatabase()->GetKnownBashTags();
 }
 
-std::unordered_set<Group> Game::GetMasterlistGroups() const {
+std::vector<Group> Game::GetMasterlistGroups() const {
   return gameHandle_->GetDatabase()->GetGroups(false);
 }
 
-std::unordered_set<Group> Game::GetUserGroups() const {
+std::vector<Group> Game::GetUserGroups() const {
   return gameHandle_->GetDatabase()->GetUserGroups();
 }
 
@@ -668,7 +695,7 @@ std::optional<PluginMetadata> Game::GetUserMetadata(
                                                            evaluateConditions);
 }
 
-void Game::SetUserGroups(const std::unordered_set<Group>& groups) {
+void Game::SetUserGroups(const std::vector<Group>& groups) {
   return gameHandle_->GetDatabase()->SetUserGroups(groups);
 }
 

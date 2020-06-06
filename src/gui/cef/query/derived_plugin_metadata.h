@@ -91,8 +91,8 @@ private:
   std::optional<std::string> group;
   std::string cleanedWith;
   std::vector<SimpleMessage> messages;
-  std::set<Tag> currentTags;
-  std::set<Tag> suggestedTags;
+  std::vector<Tag> currentTags;
+  std::vector<Tag> suggestedTags;
 
   std::optional<PluginMetadata> masterlistMetadata;
   std::optional<PluginMetadata> userMetadata;

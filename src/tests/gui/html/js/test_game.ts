@@ -764,7 +764,6 @@ describe('Game', () => {
           name: 'foo',
           userlist: {
             name: '',
-            enabled: false,
             after: [],
             req: [],
             inc: [],

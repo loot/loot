@@ -167,10 +167,12 @@ function deduplicateTags(currentTags: Tag[], suggestedTags: Tag[]): PluginTags {
     )
     .map(tag => tag.name);
 
+  // Addition and removal arrays may contain duplicates, pass them through sets
+  // to remove any duplicates.
   return {
     current: currentTagNames.join(', '),
-    add: additionTagNames.join(', '),
-    remove: filteredRemovalTagNames.join(', ')
+    add: Array.from(new Set(additionTagNames)).join(', '),
+    remove: Array.from(new Set(filteredRemovalTagNames)).join(', ')
   };
 }
 

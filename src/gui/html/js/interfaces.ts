@@ -69,7 +69,6 @@ export interface ModLocation {
 
 export interface PluginMetadata {
   name: string;
-  enabled: boolean;
   after: File[];
   req: File[];
   inc: File[];

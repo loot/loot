@@ -33,7 +33,7 @@ namespace loot {
 template<typename G = gui::Game>
 class SaveUserGroupsQuery : public Query {
 public:
-  SaveUserGroupsQuery(G& game, std::unordered_set<Group> groups) :
+  SaveUserGroupsQuery(G& game, std::vector<Group> groups) :
       game_(game),
       groups_(groups) {}
 
@@ -55,7 +55,7 @@ public:
 
 private:
   G& game_;
-  const std::unordered_set<Group> groups_;
+  const std::vector<Group> groups_;
 };
 }
 

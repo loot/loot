@@ -47,7 +47,7 @@ public:
     return std::vector<std::string>();
   }
 
-  std::set<Tag> GetBashTags() const { return std::set<Tag>(); }
+  std::vector<Tag> GetBashTags() const { return std::vector<Tag>(); }
 
   std::optional<uint32_t> GetCRC() const { return std::optional<uint32_t>(); }
 

@@ -264,6 +264,28 @@ TEST_P(
             messages);
 }
 
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldNotDisplayMoreThanOneRequirementMessageForAnyOneDisplayName) {
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetRequirements({
+      File(missingEsp, "foo"),
+      File(missingEsp, "foo", "file(\"master.esm\")"),
+      File(blankEsp),
+  });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+                Message(MessageType::error,
+                        "This plugin requires \"foo\" to be installed, but it "
+                        "is missing."),
+            }),
+            messages);
+}
+
 TEST_P(GameTest,
        checkInstallValidityShouldAddAMessageForActiveIncompatiblePlugins) {
   Game game = CreateInitialisedGame("");
@@ -330,6 +352,31 @@ TEST_P(
             messages);
 }
 
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldNotDisplayMoreThanOneIncompatibilityMessageForAnyOneDisplayName) {
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  std::string incompatibleFilename = "incompatible.txt";
+  std::ofstream out(dataPath / incompatibleFilename);
+  out.close();
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetIncompatibilities({
+      File(incompatibleFilename, "test file"),
+      File(incompatibleFilename, "test file", "file(\"master.esm\")"),
+  });
+
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
+  EXPECT_EQ(std::vector<Message>({
+                Message(MessageType::error,
+                        "This plugin is incompatible with \"test file\", but "
+                        "both files are present."),
+            }),
+            messages);
+}
+
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
@@ -380,6 +427,20 @@ TEST_P(
 
   PluginMetadata metadata(blankDifferentMasterDependentEsp);
   metadata.SetTags({Tag("Filter")});
+
+  auto messages = game.CheckInstallValidity(
+      game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
+  EXPECT_TRUE(messages.empty());
+}
+
+TEST_P(
+    GameTest,
+    checkInstallValidityShouldNotCompareConditionsWhenCheckingIfAFilterTagIsPresent) {
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankDifferentMasterDependentEsp);
+  metadata.SetTags({Tag("Filter", true, "file(\"master.esm\")")});
 
   auto messages = game.CheckInstallValidity(
       game.GetPlugin(blankDifferentMasterDependentEsp), metadata);
@@ -441,25 +502,24 @@ TEST_P(
         "game's minimum supported header version of 5\\.1\\.";
   }
 
-  EXPECT_EQ(std::vector<Message>({Message(MessageType::error, messageText)}),
+  EXPECT_EQ(std::vector<Message>({Message(MessageType::warn, messageText)}),
             messages);
 }
 
-TEST_P(GameTest,
-  checkInstallValidityShouldCheckThatAPluginGroupExists) {
+TEST_P(GameTest, checkInstallValidityShouldCheckThatAPluginGroupExists) {
   Game game = CreateInitialisedGame("");
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
   metadata.SetGroup("missing group");
 
-  auto messages = game.CheckInstallValidity(
-    game.GetPlugin(blankEsm), metadata);
+  auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
-                        "This plugin belongs to the group \"missing group\", which does not exist\\."),
-    }),
-    messages);
+                        "This plugin belongs to the group \"missing group\", "
+                        "which does not exist\\."),
+            }),
+            messages);
 }
 
 TEST_P(
