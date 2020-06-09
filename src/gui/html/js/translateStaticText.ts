@@ -154,7 +154,7 @@ function translatePluginEditor(l10n: Translator): void {
   ).textContent = l10n.translate('Messages');
   querySelector(
     pluginEditorShadow,
-    '#tableTabs [data-for=tags]'
+    '#tableTabs [data-for=tag]'
   ).textContent = l10n.translate('Bash Tags');
   querySelector(
     pluginEditorShadow,
@@ -234,15 +234,15 @@ function translatePluginEditor(l10n: Translator): void {
 
   querySelector(
     pluginEditor,
-    '[slot=tags] th:first-child'
+    '[slot=tag] th:first-child'
   ).textContent = l10n.translate('Add/Remove');
   querySelector(
     pluginEditor,
-    '[slot=tags] th:nth-child(2)'
+    '[slot=tag] th:nth-child(2)'
   ).textContent = l10n.translate('Bash Tag');
   querySelector(
     pluginEditor,
-    '[slot=tags] th:nth-child(3)'
+    '[slot=tag] th:nth-child(3)'
   ).textContent = l10n.translate('Condition');
 
   querySelector(

@@ -80,6 +80,29 @@ function isPaperToggleButton(
   return element.tagName === 'PAPER-TOGGLE-BUTTON';
 }
 
+type TableType =
+  | 'tag'
+  | 'dirty'
+  | 'clean'
+  | 'msg'
+  | 'after'
+  | 'req'
+  | 'inc'
+  | 'url';
+
+function isTableType(tableType: string | null): tableType is TableType {
+  return (
+    tableType === 'tag' ||
+    tableType === 'dirty' ||
+    tableType === 'clean' ||
+    tableType === 'msg' ||
+    tableType === 'after' ||
+    tableType === 'req' ||
+    tableType === 'inc' ||
+    tableType === 'url'
+  );
+}
+
 export default class LootPluginEditor extends PolymerElement {
   public static get is(): string {
     return 'loot-plugin-editor';
@@ -225,7 +248,7 @@ export default class LootPluginEditor extends PolymerElement {
           <paper-tab data-for="req">Requirements</paper-tab>
           <paper-tab data-for="inc">Incompatibilities</paper-tab>
           <paper-tab data-for="message">Messages</paper-tab>
-          <paper-tab data-for="tags">Bash Tags</paper-tab>
+          <paper-tab data-for="tag">Bash Tags</paper-tab>
           <paper-tab data-for="dirty">Dirty Plugin Info</paper-tab>
           <paper-tab data-for="clean">Clean Plugin Info</paper-tab>
           <paper-tab data-for="url">Locations</paper-tab>
@@ -256,7 +279,7 @@ export default class LootPluginEditor extends PolymerElement {
         <slot name="req"></slot>
         <slot name="inc"></slot>
         <slot name="message"></slot>
-        <slot name="tags"></slot>
+        <slot name="tag"></slot>
         <slot name="dirty"></slot>
         <slot name="clean"></slot>
         <slot name="url"></slot>
@@ -393,7 +416,7 @@ export default class LootPluginEditor extends PolymerElement {
           metadata.inc = rowsData as File[];
         } else if (tableType === 'message') {
           metadata.msg = rowsData as SimpleMessage[];
-        } else if (tableType === 'tags') {
+        } else if (tableType === 'tag') {
           metadata.tag = rowsData.map(rowData =>
             Plugin.tagFromRowData(rowData as TagRowData)
           );
@@ -494,6 +517,22 @@ export default class LootPluginEditor extends PolymerElement {
     }
   }
 
+  private _showUserMetadataIcon(tabType: string, show: boolean): void {
+    const tab = this.$.tableTabs.querySelector(
+      `:scope > paper-tab[data-for=${tabType}]`
+    );
+
+    if (tab === null || !(tab instanceof HTMLElement)) {
+      return;
+    }
+
+    if (!show) {
+      tab.innerHTML = tab.innerText;
+    } else {
+      tab.innerHTML = `${tab.innerText}<iron-icon icon="account-circle"></iron-icon>`;
+    }
+  }
+
   public setEditorData(newData: Plugin): void {
     if (!isPaperToggleButton(this.$.enableEdits)) {
       throw new TypeError(
@@ -534,36 +573,25 @@ export default class LootPluginEditor extends PolymerElement {
 
       table.clear();
       const tableType = table.parentElement.getAttribute('data-page');
-      if (tableType === 'tags') {
-        if (newData.masterlist && newData.masterlist.tag) {
+      if (tableType === 'tag') {
+        if (newData.masterlist) {
           newData.masterlist.tag
             .map(Plugin.tagToRowData)
             .forEach(table.addReadOnlyRow, table);
         }
-        if (newData.userlist && newData.userlist.tag) {
+        if (newData.userlist && newData.userlist.tag.length > 0) {
           newData.userlist.tag
             .map(Plugin.tagToRowData)
             .forEach(table.addRow, table);
         }
-      } else if (tableType === 'dirty') {
-        if (newData.masterlist && newData.masterlist.dirty) {
-          newData.masterlist.dirty
+      } else if (tableType === 'dirty' || tableType === 'clean') {
+        if (newData.masterlist) {
+          newData.masterlist[tableType]
             .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(table.addReadOnlyRow, table);
         }
-        if (newData.userlist && newData.userlist.dirty) {
-          newData.userlist.dirty
-            .map(LootPluginEditor._dirtyInfoToRowData)
-            .forEach(table.addRow, table);
-        }
-      } else if (tableType === 'clean') {
-        if (newData.masterlist && newData.masterlist.clean) {
-          newData.masterlist.clean
-            .map(LootPluginEditor._dirtyInfoToRowData)
-            .forEach(table.addReadOnlyRow, table);
-        }
-        if (newData.userlist && newData.userlist.clean) {
-          newData.userlist.clean
+        if (newData.userlist && newData.userlist[tableType].length > 0) {
+          newData.userlist[tableType]
             .map(LootPluginEditor._dirtyInfoToRowData)
             .forEach(table.addRow, table);
         }
@@ -574,12 +602,18 @@ export default class LootPluginEditor extends PolymerElement {
         tableType === 'inc' ||
         tableType === 'url'
       ) {
-        if (newData.masterlist && newData.masterlist[tableType]) {
+        if (newData.masterlist) {
           newData.masterlist[tableType].forEach(table.addReadOnlyRow, table);
         }
-        if (newData.userlist && newData.userlist[tableType]) {
+        if (newData.userlist && newData.userlist[tableType].length > 0) {
           newData.userlist[tableType].forEach(table.addRow, table);
         }
+      }
+
+      if (isTableType(tableType)) {
+        const hasUserMetadata =
+          !!newData.userlist && newData.userlist[tableType].length > 0;
+        this._showUserMetadataIcon(tableType, hasUserMetadata);
       }
     });
 
