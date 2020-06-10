@@ -2458,10 +2458,6 @@ axobject-query@^2.0.2:
   dependencies:
     ast-types-flow "0.0.7"
 
-babel-core@^7.0.0-bridge.0:
-  version "7.0.0-bridge.0"
-  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
-
 "babel-gettext-extractor@git://github.com/loot/babel-gettext-extractor#v4.1.3+improved-entry-sorting.1":
   version "4.1.3"
   resolved "git://github.com/loot/babel-gettext-extractor#ea233714bc92dda34e63a52a4dc81b2e6b3647e5"
