@@ -13,7 +13,7 @@
   "homepage": "https://github.com/loot/loot",
   "private": true,
   "dependencies": {
-    "@octokit/rest": "^17.11.0",
+    "@octokit/rest": "^18.0.0",
     "@polymer/app-layout": "^3.0.0",
     "@polymer/iron-flex-layout": "^3.0.0",
     "@polymer/iron-icon": "^3.0.0",
