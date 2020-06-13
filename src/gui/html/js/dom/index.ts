@@ -133,7 +133,13 @@ export function initialiseVirtualLists(plugins: Plugin[]): void {
 }
 
 export function updateSelectedGame(gameFolder: string): void {
-  (getElementById('gameMenu') as LootDropdownMenu).value = gameFolder;
+  const gameMenu = getElementById('gameMenu') as LootDropdownMenu;
+
+  // Check first because assigning the same value still fires off an iron-select
+  // event.
+  if (gameMenu.value !== gameFolder) {
+    gameMenu.value = gameFolder;
+  }
 
   /* Also disable deletion of the game's row in the settings dialog. */
   const table = getElementById('gameTable') as EditableTable;

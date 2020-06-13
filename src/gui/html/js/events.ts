@@ -256,13 +256,14 @@ export function onChangeGame(evt: Event): void {
     throw new TypeError(`Expected a LootDropdownMenuSelectEvent, got ${evt}`);
   }
 
+  if (window.loot.game === undefined) {
+    // The current game is only undefined during initialisation, when we're not
+    // actually changing the game.
+    return;
+  }
+
   const newGameFolder = evt.detail.item.getAttribute('value');
-  if (
-    newGameFolder === null ||
-    (window.loot.game !== undefined &&
-      newGameFolder === window.loot.game.folder)
-  ) {
-    // window.loot.game is undefined if LOOT is being initalised.
+  if (newGameFolder === null || newGameFolder === window.loot.game.folder) {
     return;
   }
 
