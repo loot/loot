@@ -247,7 +247,7 @@ export default class LootPluginEditor extends PolymerElement {
           <paper-tab data-for="after">Load After</paper-tab>
           <paper-tab data-for="req">Requirements</paper-tab>
           <paper-tab data-for="inc">Incompatibilities</paper-tab>
-          <paper-tab data-for="message">Messages</paper-tab>
+          <paper-tab data-for="msg">Messages</paper-tab>
           <paper-tab data-for="tag">Bash Tags</paper-tab>
           <paper-tab data-for="dirty">Dirty Plugin Info</paper-tab>
           <paper-tab data-for="clean">Clean Plugin Info</paper-tab>
@@ -278,7 +278,7 @@ export default class LootPluginEditor extends PolymerElement {
         <slot name="after"></slot>
         <slot name="req"></slot>
         <slot name="inc"></slot>
-        <slot name="message"></slot>
+        <slot name="msg"></slot>
         <slot name="tag"></slot>
         <slot name="dirty"></slot>
         <slot name="clean"></slot>
@@ -414,7 +414,7 @@ export default class LootPluginEditor extends PolymerElement {
           metadata.req = rowsData as File[];
         } else if (tableType === 'inc') {
           metadata.inc = rowsData as File[];
-        } else if (tableType === 'message') {
+        } else if (tableType === 'msg') {
           metadata.msg = rowsData as SimpleMessage[];
         } else if (tableType === 'tag') {
           metadata.tag = rowsData.map(rowData =>

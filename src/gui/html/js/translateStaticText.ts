@@ -150,7 +150,7 @@ function translatePluginEditor(l10n: Translator): void {
   ).textContent = l10n.translate('Incompatibilities');
   querySelector(
     pluginEditorShadow,
-    '#tableTabs [data-for=message]'
+    '#tableTabs [data-for=msg]'
   ).textContent = l10n.translate('Messages');
   querySelector(
     pluginEditorShadow,
@@ -217,19 +217,19 @@ function translatePluginEditor(l10n: Translator): void {
 
   querySelector(
     pluginEditor,
-    '[slot=message] th:first-child'
+    '[slot=msg] th:first-child'
   ).textContent = l10n.translate('Type');
   querySelector(
     pluginEditor,
-    '[slot=message] th:nth-child(2)'
+    '[slot=msg] th:nth-child(2)'
   ).textContent = l10n.translate('Content');
   querySelector(
     pluginEditor,
-    '[slot=message] th:nth-child(3)'
+    '[slot=msg] th:nth-child(3)'
   ).textContent = l10n.translate('Condition');
   querySelector(
     pluginEditor,
-    '[slot=message] th:nth-child(4)'
+    '[slot=msg] th:nth-child(4)'
   ).textContent = l10n.translate('Language');
 
   querySelector(
