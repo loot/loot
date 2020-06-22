@@ -70,7 +70,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@types/cytoscape": "^3.14.5",
     "@types/jest": "^26.0.0",
-    "@types/lodash": "^4.14.155",
+    "@types/lodash": "^4.14.156",
     "@types/marked": "^0.7.4",
     "@types/node": "^12.12.47",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
