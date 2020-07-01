@@ -65,7 +65,7 @@
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
-    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@types/cytoscape": "^3.14.6",
