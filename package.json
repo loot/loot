@@ -90,7 +90,7 @@
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.1.0",
     "prettier": "^2.0.5",
-    "source-map-loader": "^1.0.0",
+    "source-map-loader": "^1.0.1",
     "ts-jest": "^26.1.1",
     "typescript": "^3.9.5",
     "webpack": "^4.1.0",
