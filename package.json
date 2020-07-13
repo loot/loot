@@ -68,7 +68,7 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
-    "@types/cytoscape": "^3.14.6",
+    "@types/cytoscape": "^3.14.7",
     "@types/jest": "^26.0.4",
     "@types/lodash": "^4.14.157",
     "@types/marked": "^1.1.0",

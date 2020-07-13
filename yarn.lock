@@ -1756,10 +1756,10 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
-"@types/cytoscape@^3.14.6":
-  version "3.14.6"
-  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.6.tgz#0f01d0a38e8004e8dcefac6b3f942d908b7c49cd"
-  integrity sha512-HjaN8Qtgv0nnU0I2eY2AbwS8Uh+1cK+QRWz89T0WZJtl3aucEw9bJ3X4dF18YYsN8fmkMIGEzWlApk8XQEqrOg==
+"@types/cytoscape@^3.14.7":
+  version "3.14.7"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.7.tgz#2482ff7bfce0f91039135d5366b9239c22db41f2"
+  integrity sha512-r/3luR7HMfjp9LFrvpHzvQ0fiZp6Ko6ijw0rh4eIKpJRBDHt1406tyR/JjTbhq3WTuqrrYfFNbeYvq+Rv3aTQQ==
 
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
