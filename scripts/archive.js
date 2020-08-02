@@ -9,7 +9,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const helpers = require('./helpers');
 
-function getGitDescription() {
+function getGitDescription(givenBranch) {
   const describe = String(
     helpers.safeExecFileSync('git', [
       'describe',
@@ -18,19 +18,12 @@ function getGitDescription() {
       '--abbrev=7'
     ])
   ).slice(0, -1);
-  let branch = String(
-    helpers.safeExecFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
-  ).slice(0, -1);
 
-  /* On AppVeyor and Travis CI, a specific commit is checked out, so the branch
-     is HEAD. Use their stored branch value instead. */
-  if (branch === 'HEAD') {
-    if (process.env.APPVEYOR_REPO_BRANCH) {
-      branch = process.env.APPVEYOR_REPO_BRANCH;
-    } else if (process.env.TRAVIS_BRANCH) {
-      branch = process.env.TRAVIS_BRANCH;
-    }
-  }
+  const branch =
+    givenBranch ||
+    String(
+      helpers.safeExecFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
+    ).slice(0, -1);
 
   return `${describe}_${branch}`;
 }
@@ -151,6 +144,9 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
 
   // Finally, delete the temporary folder.
   fs.removeSync(tempPath);
+
+  // eslint-disable-next-line no-console
+  console.log(destPath);
 }
 
 function replaceInvalidFilenameCharacters(filename) {
@@ -173,8 +169,8 @@ function getArchiveFileExtension() {
   return '.tar.xz';
 }
 
-const [, , rootPath = '.'] = process.argv;
-const gitDesc = getGitDescription();
+const [, , rootPath = '.', givenBranch = undefined] = process.argv;
+const gitDesc = getGitDescription(givenBranch);
 const fileExtension = getArchiveFileExtension();
 
 helpers.getAppReleasePaths(rootPath).forEach(releasePath => {

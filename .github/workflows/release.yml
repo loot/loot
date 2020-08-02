@@ -1,0 +1,105 @@
+name: Release
+
+on:
+  push:
+    tags: '*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create_release:
+    runs-on: ubuntu-18.04
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      git_tag: ${{ steps.get-git-tag.outputs.name }}
+    steps:
+      - name: Get Git tag
+        id: get-git-tag
+        run: |
+          GIT_REF=${{ github.ref }}
+          echo "::set-output name=name::${GIT_REF#refs/*/}"
+
+      - id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get-git-tag.outputs.name }}
+          release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
+          body: |
+            Requires Windows 7 or later and the [MSVC 2017 x86 redistributable](https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+
+  windows:
+    runs-on: windows-2016
+    needs: create_release
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install JS dependencies
+        run: yarn install
+
+      - name: Download and extract svg_to_ico
+        run: |
+          curl -sfSLO 'https://github.com/Ortham/svg_to_ico/releases/download/1.1.0/svg_to_ico.7z'
+          7z e -y svg_to_ico.7z
+
+      - name: Generate ICO file
+        run: .\svg_to_ico.exe -i resources\icon.svg -o build\icon\icon.ico
+
+      - name: Run CMake
+        run: |
+          cd build
+          cmake .. -G "Visual Studio 15 2017" -DBOOST_ROOT="${env:BOOST_ROOT_1_69_0}" -DBOOST_LIBRARYDIR="${env:BOOST_ROOT_1_69_0}\lib" -DMSVC_STATIC_RUNTIME=ON
+          cmake --build . --config Release
+
+      - name: Install packages for building docs
+        run: |
+          python -m pip install -r docs/requirements.txt
+
+      - name: Build docs
+        run: C:\hostedtoolcache\windows\Python\3.7.8\x64\Scripts\sphinx-build -b html docs build\docs\html
+
+      - name: Build translation message object files
+        run: node scripts\potomo.js
+
+      - name: Build archive
+        run: node scripts\archive.js . ${{ needs.create_release.outputs.git_tag }}
+
+      - name: Build installer
+        run: scripts\build_installer.ps1
+
+      - name: Get descriptive LOOT version
+        id: get-loot-version
+        shell: bash
+        run: |
+          GIT_DESCRIBE=$(git describe --tags --long --abbrev=7)
+          GIT_REF=${{ github.ref }}
+          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
+          LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
+          echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
+
+      - name: Upload Archive
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: build\loot_${{ steps.get-loot-version.outputs.version }}.7z
+          asset_name: loot_${{ steps.get-loot-version.outputs.version }}.7z
+          asset_content_type: application/x-7z-compressed
+
+      - name: Upload Installer
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: build\LOOT Installer.exe
+          asset_name: LOOT Installer.exe
+          asset_content_type: application/octet-stream
+
+      - name: Update default masterlist branches
+        run: .\scripts\update_masterlist_branches.ps1 -gitTagName ${{ needs.create_release.outputs.upload_url }} -githubToken ${{ secrets.GITHUB_TOKEN }}

@@ -67,7 +67,7 @@ after_success:
   - git fetch --unshallow
   - node scripts/potomo.js
   - sphinx-build -b html docs build/docs/html
-  - node scripts/archive.js
+  - node scripts/archive.js . $TRAVIS_BRANCH
   # Need to replace the HEAD branch descriptor in the archive filenames
   - for ARCHIVE in build/*.tar.xz; do mv $ARCHIVE $(echo $ARCHIVE | sed "s/HEAD/$TRAVIS_BRANCH/"); done
   # Need to replace the Bintray config files' version placeholders.

@@ -2,7 +2,9 @@
 ; This file must be encoded in UTF-8 WITH a BOM for Unicode text to
 ; be displayed correctly.
 
-#include <idp.iss>
+; The Inno Download Plugin installer doesn't support adding its include path to
+; Inno Setup 6, so build the path here.
+#include ReadReg(HKLM, 'Software\WOW6432Node\Mitrich Software\Inno Download Plugin', 'InstallDir') + '\idp.iss'
 #include <idplang\finnish.iss>
 #include <idplang\french.iss>
 #include <idplang\german.iss>
@@ -24,6 +26,10 @@
 #define SimplifiedChineseExists
 #endif
 
+#if FileExists(AddBackslash(CompilerPath) + 'Languages\Swedish.isl')
+#define SwedishExists
+#endif
+
 #if FileExists(SourcePath + '..\build\32\Release\LOOT.exe')
 #define buildir "build\32"
 #else
@@ -43,7 +49,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 AppCopyright=Copyright (C) 2009 {#MyAppPublisher}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={autopf}\{#MyAppName}
 SourceDir=..\
 OutputBaseFilename=LOOT Installer
 OutputDir=build
@@ -53,6 +59,7 @@ SolidCompression=yes
 DisableDirPage=no
 DisableReadyPage=yes
 DisableProgramGroupPage=yes
+WizardStyle=modern
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -67,6 +74,9 @@ Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
 #endif
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+#ifdef SwedishExists
+Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
+#endif
 #ifdef SimplifiedChineseExists
 Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 #endif
@@ -142,8 +152,8 @@ Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 
 [Icons]
-Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

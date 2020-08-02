@@ -1,6 +1,6 @@
 # LOOT
 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/8hkem2a2cbkkxecf/branch/master?svg=true)](https://ci.appveyor.com/project/LOOT/loot/branch/master)
+![CI](https://github.com/loot/loot/workflows/CI/badge.svg?branch=master&event=push)
 [![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=master)](https://travis-ci.org/loot/loot)
 [![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](https://loot.readthedocs.io/en/latest/?badge=latest)
 
@@ -28,7 +28,7 @@ For example `LOOT v0.7.0-alpha-2-10-gf6d7e80_dev.7z` was built using the revisio
 
 ### Windows
 
-Refer to `appveyor.yml` for the build process. The Appveyor configuration assumes that [CMake](https://cmake.org) and [Node.js](https://nodejs.org/) are already installed.
+Refer to `.github/workflows/release.yml` for the build process. The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017, Yarn and 7-zip are already installed.
 
 ### Linux
 
