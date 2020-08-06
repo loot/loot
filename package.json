@@ -93,7 +93,7 @@
     "source-map-loader": "^1.0.1",
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.6",
-    "webpack": "^4.1.0",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
   "scripts": {
