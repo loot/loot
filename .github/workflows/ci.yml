@@ -98,7 +98,7 @@ jobs:
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           FILENAME="loot_${VERSION}.7z"
-          curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME};publish=1&override=1"
+          curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
         if: github.event_name == 'push'
 
       - name: Remove old artifacts from Bintray
