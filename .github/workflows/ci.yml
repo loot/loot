@@ -24,6 +24,11 @@ jobs:
 
   windows:
     runs-on: windows-2016
+
+    strategy:
+      matrix:
+        platform: [Win32, x64]
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -69,7 +74,7 @@ jobs:
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 15 2017" -DBOOST_ROOT="${env:BOOST_ROOT_1_69_0}" -DBOOST_LIBRARYDIR="${env:BOOST_ROOT_1_69_0}\lib" -DMSVC_STATIC_RUNTIME=ON
+          cmake .. -G "Visual Studio 15 2017" -A ${{ matrix.platform }} -DBOOST_ROOT="${env:BOOST_ROOT_1_69_0}" -DBOOST_LIBRARYDIR="${env:BOOST_ROOT_1_69_0}\lib" -DMSVC_STATIC_RUNTIME=ON
           cmake --build . --config Release
 
       - name: Run C++ tests
@@ -108,6 +113,15 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          FILENAME="loot_${VERSION}.7z"
+          if [[ "${{ matrix.platform }}" == "Win32" ]]
+          then
+            PLATFORM=win32
+          else
+            PLATFORM=win64
+          fi
+          FILENAME="loot_${VERSION}-${PLATFORM}.7z"
+
+          mv build/loot_${VERSION}.7z build/$FILENAME
+
           curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
         if: github.event_name == 'push'

@@ -19,10 +19,8 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 Releases are hosted on [GitHub](https://github.com/loot/loot/releases), and snapshot builds are available on [Bintray](https://bintray.com/loot/snapshots/loot). The snapshot build archives are named like so:
 
 ```
-loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>.7z
+loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.7z
 ```
-
-For example `LOOT v0.7.0-alpha-2-10-gf6d7e80_dev.7z` was built using the revision with shortened commit ID `f6d7e80`, which is `10` revisions after the revision tagged `v0.7.0-alpha-2`, and is on the `dev` branch.
 
 ## Building LOOT
 

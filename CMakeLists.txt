@@ -72,7 +72,7 @@ set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE
 
 if (NOT DEFINED LIBLOOT_URL)
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-        if (NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+        if ("${CMAKE_GENERATOR_PLATFORM}" MATCHES "Win32")
             set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.0/libloot-0.16.0-0-gb4dc6e2_master-win32.7z")
         else()
             set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.0/libloot-0.16.0-0-gb4dc6e2_master-win64.7z")
@@ -115,7 +115,7 @@ ExternalProject_Add(testing-plugins
                     INSTALL_COMMAND "")
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if (NOT "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+    if ("${CMAKE_GENERATOR_PLATFORM}" MATCHES "Win32")
         set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_83.3.12%2Bg0889ff0%2Bchromium-83.0.4103.97_windows32_minimal.tar.bz2")
         set(CEF_URL_HASH "f6968e424999df883b972784b89ef90e512efec3")
         set(CEF_PRECOMPILED_BINARIES "libcef.dll" "snapshot_blob.bin" "v8_context_snapshot.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll" "chrome_elf.dll")
