@@ -11,6 +11,17 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  bintray-cleanup:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Remove old artifacts from Bintray
+        shell: bash
+        run: |
+          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.4/delete_old_bintray_versions.py'
+          python3 delete_old_bintray_versions.py -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k ${{ secrets.BINTRAY_API_KEY }} -t ${{ secrets.GITHUB_TOKEN }} -n 30
+        if: github.event_name == 'push'
+
   windows:
     runs-on: windows-2016
     steps:
@@ -99,10 +110,4 @@ jobs:
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           FILENAME="loot_${VERSION}.7z"
           curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
-        if: github.event_name == 'push'
-
-      - name: Remove old artifacts from Bintray
-        run: |
-          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.4/delete_old_bintray_versions.py'
-          python delete_old_bintray_versions.py -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k ${{ secrets.BINTRAY_API_KEY }} -t ${{ secrets.GITHUB_TOKEN }} -n 30
         if: github.event_name == 'push'
