@@ -218,7 +218,8 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
-                        "This plugin requires \"" + missingEsp +
+                        "This plugin requires \"" +
+                            EscapeMarkdownSpecialChars(missingEsp) +
                             "\" to be installed, but it is missing."),
             }),
             messages);
@@ -300,7 +301,8 @@ TEST_P(GameTest,
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
-                        "This plugin is incompatible with \"" + masterFile +
+                        "This plugin is incompatible with \"" +
+                            EscapeMarkdownSpecialChars(masterFile) +
                             "\", but both files are present."),
             }),
             messages);
@@ -325,7 +327,8 @@ TEST_P(
   EXPECT_EQ(
       std::vector<Message>({
           Message(MessageType::error,
-                  "This plugin is incompatible with \"" + incompatibleFilename +
+                        "This plugin is incompatible with \"" +
+                            EscapeMarkdownSpecialChars(incompatibleFilename) +
                       "\", but both files are present."),
       }),
       messages);
