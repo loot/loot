@@ -4,6 +4,66 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.16.0 - 2020-08-22
+===================
+
+Fixed
+-----
+
+- LOOT did not display generated messages (such as errors about missing masters)
+  for plugins that had no metadata after evaluating conditions.
+- Existing messages were not displayed in the plugin metadata editor.
+- Game data was loaded twice on startup.
+- Changing LOOT's theme now stores ``theme.css`` in ``%LOCALAPPDATA%\LOOT`` to
+  avoid permissions issues due to User Account Control (UAC).
+- When getting metadata for a plugin, LOOT would prefer masterlist metadata over
+  userlist metadata if they conflicted, which was the opposite of the intended
+  behaviour.
+- Clearing user groups metadata using the "Clear All User Metadata" menu option
+  did not remove them from the UI.
+- LOOT now correctly identifies the BSAs that a Skyrim SE or Skyrim VR loads.
+  This assumes that Skyrim VR plugins load BSAs in the same way as Skyrim SE.
+  Previously LOOT would use the same rules as the Fallout games for Skyrim SE or
+  VR, which was incorrect. Via libloot.
+
+Changed
+-------
+
+- Missing groups are now added as userlist groups when the groups editor is
+  opened, to make it easier to recover from sorting errors due to missing
+  groups.
+- The "has user metadata" icon is now displayed on each tab of the metadata
+  editor that contains user metadata, apart from the "Main" tab.
+- When getting metadata for a plugin, metadata from a plugin's specific metadata
+  object is preferred over metadata from any matching regex entries, and earlier
+  regex entries now take precedence over later regex entries (as listed in the
+  masterlist or userlist). Via libloot.
+- CRC calculations in metadata conditions are now much faster for larger files.
+  Via libloot.
+- Directory paths are now handled more gracefully when encountered by
+  ``checksum()``, ``version()`` and ``product_version()`` conditions. Via
+  libloot.
+- When comparing metadata objects, all their fields are now compared. This means
+  that objects that were previously treated as equal but had unequal fields that
+  were not taken into account are now treated as unequal. For example, two
+  requirements with the same filename but different conditions will now both
+  appear in the metadata editor. Via libloot.
+- When loading plugins, LOOT identifies their corresponding archive files
+  (``*.bsa`` or ``*.ba2``, depending on the game) more quickly. Via libloot.
+- The order of collection elements in plugin metadata objects is now preserved.
+  Via libloot.
+- Updated CEF to v84.4.1+gfdc7504+chromium-84.0.4147.105.
+- Updated spdlog to v1.7.0.
+- Updated libloot to v0.16.1.
+- Updated nlohmann/json to v3.9.1.
+- Updated JS package dependencies.
+
+Removed
+-------
+
+- It's no longer possible to disable plugin metadata, though doing so has never
+  had any effect.
+
 0.15.1 - 2019-12-10
 ===================
 
