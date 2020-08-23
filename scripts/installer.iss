@@ -2,16 +2,6 @@
 ; This file must be encoded in UTF-8 WITH a BOM for Unicode text to
 ; be displayed correctly.
 
-; The Inno Download Plugin installer doesn't support adding its include path to
-; Inno Setup 6, so build the path here.
-#include ReadReg(HKLM, 'Software\WOW6432Node\Mitrich Software\Inno Download Plugin', 'InstallDir') + '\idp.iss'
-#include <idplang\finnish.iss>
-#include <idplang\french.iss>
-#include <idplang\german.iss>
-#include <idplang\polish.iss>
-#include <idplang\russian.iss>
-#include <idplang\spanish.iss>
-
 #define MyAppName "LOOT"
 #define MyAppVersion "0.15.1"
 #define MyAppPublisher "LOOT Team"
@@ -151,13 +141,15 @@ DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 
+Source: "build\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist
+Filename: "{tmp}\vc_redist.x86.exe"; Check: VCRedistNeedsInstall; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -301,15 +293,6 @@ begin
   end;
 end;
 
-procedure InitializeWizard();
-begin
-  if VCRedistNeedsInstall then begin
-    idpAddFile('https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe', ExpandConstant('{tmp}\vc_redist.x86.exe'));
-
-    idpDownloadAfter(wpReady);
-  end
-end;
-
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then
@@ -317,6 +300,5 @@ begin
 
   if CurStep = ssPostInstall then begin
     SetLootLanguage();
-    DeleteFile(ExpandConstant('{tmp}\vc_redist.x86.exe'));
   end
 end;

@@ -72,14 +72,6 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
   ISO code, name  and optional font family override to the `languages_`
   initialiser list in the `LootSettings()` constructor.
 * In [installer.iss](scripts/installer.iss):
-  - If the Inno Download Plugin provides a translation file for your language,
-    add it to the block of `#include <idplang\...` lines at the top of the file.
-    If you have Inno Download Plugin installed, you can see what files it
-    provides at `C:\Program Files (x86)\Inno Download Plugin\unicode\idplang\`.
-
-    Note that the translation file must use the correct ISO code internally,
-    otherwise it can't be used: the Brazilian Portuguese, Czech and Simplified
-    Chinese translations are not used for this reason.
   - Add a line for your language in the `[Languages]` section. If you have Inno
     Setup installed, the available translation files are at
     `C:\Program Files (x86)\Inno Setup 5\Languages\`.
