@@ -45,6 +45,11 @@ export interface CancelSortResponse {
   generalMessages: SimpleMessage[];
 }
 
+export interface ClearAllMetadataResponse {
+  plugins: DerivedPluginMetadata[];
+  groups: GameGroups;
+}
+
 function query(requestName: string, payload?: object): Promise<string> {
   if (!requestName) {
     throw new Error('No request name passed');
@@ -130,9 +135,9 @@ export function clearPluginMetadata(
   return query('clearPluginMetadata', { pluginName }).then(JSON.parse);
 }
 
-export async function clearAllMetadata(): Promise<DerivedPluginMetadata[]> {
+export async function clearAllMetadata(): Promise<ClearAllMetadataResponse> {
   const json = await query('clearAllMetadata');
-  return JSON.parse(json).plugins;
+  return JSON.parse(json);
 }
 
 export async function closeSettings(settings: LootSettings): Promise<string[]> {

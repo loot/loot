@@ -501,8 +501,9 @@ export function onClearAllMetadata(): void {
         return;
       }
       clearAllMetadata()
-        .then(plugins => {
-          currentGame.clearMetadata(plugins);
+        .then(response => {
+          currentGame.clearMetadata(response.plugins);
+          currentGame.setGroups(response.groups);
 
           showNotification(
             window.loot.l10n.translate(

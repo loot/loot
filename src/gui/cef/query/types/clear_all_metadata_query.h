@@ -84,6 +84,11 @@ private:
       }
     }
 
+    json["groups"] = {
+        {"masterlist", this->getGame().GetMasterlistGroups()},
+        {"userlist", this->getGame().GetUserGroups()},
+    };
+
     return json.dump();
   }
 };
