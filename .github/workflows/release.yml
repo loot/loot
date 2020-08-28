@@ -60,7 +60,7 @@ jobs:
           python -m pip install -r docs/requirements.txt
 
       - name: Build docs
-        run: ${{ runner.tool_cache }}\Python\3.7.8\x64\Scripts\sphinx-build -b html docs build\docs\html
+        run: sphinx-build -b html docs build\docs\html
 
       - name: Build translation message object files
         run: node scripts\potomo.js
