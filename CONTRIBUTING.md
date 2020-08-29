@@ -74,7 +74,7 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 * In [installer.iss](scripts/installer.iss):
   - Add a line for your language in the `[Languages]` section. If you have Inno
     Setup installed, the available translation files are at
-    `C:\Program Files (x86)\Inno Setup 5\Languages\`.
+    `C:\Program Files (x86)\Inno Setup 6\Languages\`.
   - Add an entry for your language's translation file to the `[Files]` section.
   - Add a translation for your language to the `[CustomMessages]` section.
 
