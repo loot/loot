@@ -121,6 +121,7 @@ jobs:
             PLATFORM=win64
           fi
           echo "::set-output name=basename::loot_${VERSION}-${PLATFORM}"
+        if: github.event_name == 'push'
 
       - name: Upload archive to BinTray
         shell: bash
@@ -138,4 +139,4 @@ jobs:
           FILENAME="${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
           curl -sfSL -T "build/LOOT Installer.exe" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
-        if: matrix.platform == 'Win32'
+        if: github.event_name == 'push' && matrix.platform == 'Win32'
