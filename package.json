@@ -72,7 +72,7 @@
     "@types/jest": "^26.0.8",
     "@types/lodash": "^4.14.161",
     "@types/marked": "^1.1.0",
-    "@types/node": "^12.12.50",
+    "@types/node": "^12.12.54",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "awesome-typescript-loader": "^5.2.1",
