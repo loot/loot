@@ -45,7 +45,7 @@
     "@types/react": "^16.9.44",
     "@types/react-autosuggest": "^10.0.0",
     "@types/react-dom": "^16.9.8",
-    "cytoscape": "^3.15.2",
+    "cytoscape": "^3.16.1",
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-edgehandles": "^3.6.0",
     "fs-extra": "^9.0.1",
