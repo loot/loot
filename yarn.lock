@@ -3347,10 +3347,10 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cytoscape-dagre@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/cytoscape-dagre/-/cytoscape-dagre-2.3.0.tgz#e07bdbd810609692d2dcb5c5a4adef7bc5ac1475"
-  integrity sha512-3rDcTleqpbU6D4NVr5jlm/xZpDmDxPy2/2pS6dGkjt7y8R4XUjk1GjVP46x03UbMb9BKA2ZD/bdlppMKG5Z2SQ==
+cytoscape-dagre@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/cytoscape-dagre/-/cytoscape-dagre-2.3.1.tgz#39fca747a54f0872a94de14ef0dc9ba8fe80b7ef"
+  integrity sha512-6IEs0dzXNuftxhL52oueFExYKQGJDYhhIhPfr0GIHLSTCSBoGwdEeEGWnNdFXh6epv0u+3A6INR+9un/vCiaOg==
   dependencies:
     dagre "^0.8.5"
 
