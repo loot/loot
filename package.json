@@ -54,7 +54,7 @@
     "lodash": "^4.17.20",
     "marked": "^1.2.0",
     "prop-types": "^15.6.2",
-    "react": "^16.6.3",
+    "react": "^16.14.0",
     "react-autosuggest": "^10.0.2",
     "react-dom": "^16.6.3",
     "replace": "^1.2.0",
