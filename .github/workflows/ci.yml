@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.4/delete_old_bintray_versions.py'
-          python3 delete_old_bintray_versions.py -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k ${{ secrets.BINTRAY_API_KEY }} -t ${{ secrets.GITHUB_TOKEN }} -n 30
+          python3 delete_old_bintray_versions.py -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k ${{ secrets.BINTRAY_API_KEY }} -t ${{ secrets.GITHUB_TOKEN }} -n 10
         if: github.event_name == 'push'
 
   windows:
