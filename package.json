@@ -89,7 +89,7 @@
     "eslint-plugin-react": "^7.20.5",
     "html-webpack-plugin": "^4.4.1",
     "jest": "^26.4.2",
-    "prettier": "^2.1.2",
+    "prettier": "^2.2.1",
     "source-map-loader": "^1.1.0",
     "ts-jest": "^26.3.0",
     "typescript": "^3.9.7",
