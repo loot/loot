@@ -3398,10 +3398,10 @@ cytoscape-edgehandles@^3.6.0:
     lodash.memoize "^4.1.2"
     lodash.throttle "^4.1.1"
 
-cytoscape@^3.16.1:
-  version "3.16.1"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.16.1.tgz#eed220bb2ee96426491709a492aa58974095e1de"
-  integrity sha512-/v5x34izBlUs0ELZP5ELYJzKZjHLkgWtoe4Uu0OEUcagzo/198hUzTze2R1Td8Ve9ASeU5y36C355aR1I2pd7w==
+cytoscape@^3.17.0:
+  version "3.17.0"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.17.0.tgz#9dc476636a32e2b6f272ee0620177b933427c571"
+  integrity sha512-zPAB2UVV4QWArs+0UEq0ojYn7riFfz8CjivL67wibE/zdnAE8TTvDO5bFxsShSTutmG+1NkCnTXJjOxfosDMwA==
   dependencies:
     heap "^0.2.6"
     lodash.debounce "^4.0.8"
