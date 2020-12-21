@@ -141,7 +141,7 @@ DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "build\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+Source: "{tmp}\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -149,7 +149,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Check: VCRedistNeedsInstall; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -201,6 +201,8 @@ ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 cs.DeleteUserFiles=Vymazat Uživatelské Soubory
 
 [Code]
+var DownloadPage: TDownloadWizardPage;
+
 // Set LOOT's language in settings.toml
 procedure SetLootLanguage();
 var
@@ -256,6 +258,14 @@ begin
   end;
 end;
 
+function GetHKCR: Integer;
+begin
+  if IsWin64 then
+    Result := HKEY_CLASSES_ROOT_64
+  else
+    Result := HKEY_CLASSES_ROOT_32
+end;
+
 function VCRedistNeedsInstall: Boolean;
 var
   VersionMajor : Integer;
@@ -269,7 +279,14 @@ var
 begin
   RegKey := 'Installer\Dependencies\,,x86,14.0,bundle\Dependents\{7e9fae12-5bbf-47fb-b944-09c49e75c061}';
 
-  Result := not RegKeyExists(HKEY_CLASSES_ROOT, RegKey);
+  Result := not RegKeyExists(GetHKCR, RegKey);
+end;
+
+function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
+begin
+  if Progress = ProgressMax then
+    Log(Format('Successfully downloaded file to {tmp}: %s', [FileName]));
+  Result := True;
 end;
 
 // Query user whether their data files should be deleted on uninstall.
@@ -291,6 +308,35 @@ begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout4\userlist.yaml'));
     end;
   end;
+end;
+
+procedure InitializeWizard;
+begin
+  if VCRedistNeedsInstall then begin
+    DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+  end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+        Log(Format('Current page ID: %d', [CurPageID]));
+  if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
+    DownloadPage.Clear;
+    DownloadPage.Add('https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe', 'vc_redist.x86.exe', '');
+    DownloadPage.Show;
+    try
+      try
+        DownloadPage.Download;
+        Result := True;
+      except
+        SuppressibleMsgBox(AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
+        Result := False;
+      end;
+    finally
+      DownloadPage.Hide;
+    end;
+  end else
+    Result := True;
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);

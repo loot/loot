@@ -9,10 +9,6 @@ function DownloadLanguageFile($languageFile, $innoPath) {
 
 $innoInstallPath = 'C:\Program Files (x86)\Inno Setup 6'
 
-# Download the MSVC 2017 redistributable.
-$url = 'https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe'
-(New-Object System.Net.WebClient).DownloadFile($url, (Get-Location).path + '/build/vc_redist.x86.exe')
-
 # Install the unofficial Korean, Simplified Chinese and Swedish translation
 # files for Inno Setup.
 DownloadLanguageFile '\Korean.isl'  $innoInstallPath
