@@ -44,7 +44,7 @@
     "@polymer/polymer": "^3.4.1",
     "@types/react": "^16.9.55",
     "@types/react-autosuggest": "^10.0.1",
-    "@types/react-dom": "^16.9.9",
+    "@types/react-dom": "^17.0.0",
     "cytoscape": "^3.17.1",
     "cytoscape-dagre": "^2.3.1",
     "cytoscape-edgehandles": "^3.6.0",
