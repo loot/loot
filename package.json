@@ -91,7 +91,7 @@
     "jest": "^26.4.2",
     "prettier": "^2.2.1",
     "source-map-loader": "^1.1.2",
-    "ts-jest": "^26.3.0",
+    "ts-jest": "^26.4.4",
     "typescript": "^3.9.7",
     "webpack": "^5.11.1",
     "webpack-cli": "^4.3.1"
