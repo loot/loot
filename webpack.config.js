@@ -19,7 +19,8 @@ module.exports = {
   entry: path.join(paths.SRC, 'js', 'app.ts'),
   output: {
     path: paths.DIST,
-    filename: 'app.bundle.js'
+    filename: 'app.bundle.js',
+    publicPath: ''
   },
   devtool: 'source-map',
   plugins: [
