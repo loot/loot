@@ -124,8 +124,14 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
   }
 
   auto localPath = table->get_as<std::string>("local_path");
-  if (localPath) {
+  auto localFolder = table->get_as<std::string>("local_folder");
+  if (localPath && localFolder) {
+    throw std::runtime_error(
+        "Game settings have local_path and local_folder set, use only one.");
+  } else if (localPath) {
     game.SetGameLocalPath(u8path(*localPath));
+  } else if (localFolder) {
+    game.SetGameLocalFolder(*localFolder);
   }
 
   auto registry = table->get_as<std::string>("registry");
@@ -253,13 +259,17 @@ void LootSettings::load(const std::filesystem::path& file,
 
   auto games = settings->get_table_array("games");
   if (games) {
+    auto logger = getLogger();
     gameSettings_.clear();
 
     for (const auto& game : *games) {
       try {
         gameSettings_.push_back(convert(game, lootDataPath));
-      } catch (...) {
+      } catch (std::exception& e) {
         // Skip invalid games.
+        if (logger) {
+          logger->error("Failed to load config in [[games]] table: {}", e.what());
+        }
       }
     }
 

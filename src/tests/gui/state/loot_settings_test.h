@@ -289,6 +289,44 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
 }
 
 TEST_P(LootSettingsTest,
+  loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "local_path = \"path\"" << endl
+      << "local_folder = \"folder\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("TES III: Morrowind", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ("TES IV: Oblivion", settings_.getGameSettings()[1].Name());
+  EXPECT_TRUE(settings_.getGameSettings()[1].GameLocalPath().empty());
+}
+
+TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << u8"local_folder = \"non\u00C1sciiGameFolder\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
+  EXPECT_EQ(getLocalAppDataPath() / std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
+            settings_.getGameSettings()[0].GameLocalPath());
+}
+
+TEST_P(LootSettingsTest,
        loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   std::ofstream out(settingsFile_);
