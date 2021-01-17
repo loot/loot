@@ -203,6 +203,11 @@ GameSettings& GameSettings::SetGameLocalPath(
   return *this;
 }
 
+GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
+  gameLocalPath_ = getLocalAppDataPath() / u8path(folderName);
+  return *this;
+}
+
 std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
   auto logger = getLogger();
   try {

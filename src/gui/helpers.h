@@ -45,5 +45,9 @@ std::string RegKeyStringValue(const std::string& rootKey,
 // lhs > rhs. The comparison may give different results on Linux, but is still
 // locale-invariant.
 int CompareFilenames(const std::string& lhs, const std::string& rhs);
+
+std::filesystem::path getExecutableDirectory();
+
+std::filesystem::path getLocalAppDataPath();
 }
 #endif

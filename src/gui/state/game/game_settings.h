@@ -65,6 +65,7 @@ public:
   GameSettings& SetRepoBranch(const std::string& repositoryBranch);
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
+  GameSettings& SetGameLocalFolder(const std::string& folderName);
 
   std::optional<std::filesystem::path> FindGamePath() const;
 
