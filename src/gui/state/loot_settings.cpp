@@ -189,6 +189,12 @@ LootSettings::LootSettings() :
             .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Unin"
                             "stall\\Nehrim - At Fate's "
                             "Edge_is1\\InstallLocation"),
+        GameSettings(GameType::tes5, "Enderal")
+            .SetName("Enderal: Forgotten Stories")
+            .SetRegistryKey(
+                "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path")
+            .SetGameLocalFolder("enderal")
+            .SetRepoURL("https://github.com/loot/enderal.git"),
     }),
     languages_({
         Language({"cs", "Čeština", std::nullopt}),

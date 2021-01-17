@@ -75,6 +75,12 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetMaster("Nehrim.esm")
           .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
                           "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
+      GameSettings(GameType::tes5, "Enderal")
+          .SetName("Enderal: Forgotten Stories")
+          .SetRegistryKey(
+              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path")
+          .SetGameLocalFolder("enderal")
+          .SetRepoURL("https://github.com/loot/enderal.git"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
