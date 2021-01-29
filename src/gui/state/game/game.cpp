@@ -573,15 +573,15 @@ std::vector<Message> Game::GetMessages() const {
     auto logger = getLogger();
     if (logger) {
       logger->warn(
-          "255 normal plugins and at least one light master are active at the "
+          "255 normal plugins and at least one light plugin are active at the "
           "same time.");
     }
     output.push_back(PlainTextMessage(
         MessageType::warn,
         boost::locale::translate(
-            "You have a normal plugin and at least one light master sharing "
+            "You have a normal plugin and at least one light plugin sharing "
             "the FE load order index. Deactivate a normal plugin or all your "
-            "light masters to avoid potential issues.")));
+            "light plugins to avoid potential issues.")));
   }
 
   return output;

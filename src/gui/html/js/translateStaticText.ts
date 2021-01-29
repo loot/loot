@@ -79,7 +79,7 @@ function translatePluginCard(l10n: Translator, element: ShadowRoot): void {
   querySelector(
     element,
     'paper-tooltip[for=isLightMaster]'
-  ).textContent = l10n.translate('Light Master File');
+  ).textContent = l10n.translate('Light Plugin');
   querySelector(
     element,
     'paper-tooltip[for=isEmpty]'
