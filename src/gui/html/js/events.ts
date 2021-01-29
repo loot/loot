@@ -899,6 +899,9 @@ export function onSearchBegin(evt: Event): void {
     throw new Error('Attempted to search content with no game loaded.');
   }
 
+  // Initialise search by marking all plugins as not results, even those not
+  // currently visible, in case there was an existing search and it was
+  // filtered.
   window.loot.game.plugins.forEach(plugin => {
     plugin.isSearchResult = false;
   });
@@ -907,7 +910,17 @@ export function onSearchBegin(evt: Event): void {
     return;
   }
 
-  evt.target.results = window.loot.game.plugins.reduce(
+  // Only collect search results for plugins that are not filtered.
+  const cardsNav = getElementById('cardsNav') as IronListElement;
+
+  if (cardsNav.items === undefined || cardsNav.items === null) {
+    return;
+  }
+
+  // This type assertion narrows the type from any[].
+  const filteredPlugins = cardsNav.items as Plugin[];
+
+  evt.target.results = filteredPlugins.reduce(
     (indices: number[], plugin, index) => {
       if (
         plugin
