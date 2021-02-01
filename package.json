@@ -48,7 +48,7 @@
     "cytoscape": "^3.18.0",
     "cytoscape-dagre": "^2.3.1",
     "cytoscape-edgehandles": "^3.6.0",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^9.1.0",
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",
     "lodash": "^4.17.20",
