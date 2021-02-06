@@ -22,6 +22,111 @@ jobs:
           python3 delete_old_bintray_versions.py -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k ${{ secrets.BINTRAY_API_KEY }} -t ${{ secrets.GITHUB_TOKEN }} -n 10
         if: github.event_name == 'push'
 
+  linux:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: pip cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
+      - name: Yarn cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install JS dependencies
+        run: yarn install
+
+      - name: Lint JS code
+        run: yarn lint
+
+      - name: Test JS code
+        run: yarn test
+
+      - name: Install C++ dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-upgrade \
+            libbz2-dev \
+            libhttp-parser-dev \
+            libssh2-1-dev \
+            libssl-dev \
+            libx11-dev \
+            libgtk2.0-dev \
+            libnss3-dev \
+            libgconf2-dev \
+            libxss-dev \
+            libasound2-dev \
+            libxtst-dev \
+            libicu-dev
+
+      - name: Run CMake
+        run: |
+          mkdir build
+          cd build
+          export CXX="g++-8" CC="gcc-8"
+          cmake .. -DBOOST_ROOT="$BOOST_ROOT_1_72_0"
+          make all
+
+      - name: Run C++ tests
+        run: |
+          cd build
+          ./loot_gui_tests
+
+      - name: Install packages for building docs
+        run: |
+          python -m pip install -r docs/requirements.txt
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build docs
+        run: sphinx-build -b html docs build/docs/html
+
+      - name: Build translation message object files
+        run: node scripts/potomo.js
+
+      - name: Build archive
+        run: node scripts/archive.js
+
+      - name: Get descriptive LOOT version
+        id: get-loot-version
+        shell: bash
+        run: |
+          GIT_DESCRIBE=$(git describe --tags --long --abbrev=7)
+          GIT_REF=${{ github.ref }}
+          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
+          LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
+          echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
+        if: github.event_name == 'push'
+
+      - name: Get LOOT artifact basename
+        id: get-artifact-basename
+        shell: bash
+        run: |
+          VERSION="${{ steps.get-loot-version.outputs.version }}"
+          echo "::set-output name=basename::loot_${VERSION}-Linux"
+        if: github.event_name == 'push'
+
+      - name: Upload archive to BinTray
+        shell: bash
+        run: |
+          VERSION="${{ steps.get-loot-version.outputs.version }}"
+          FILENAME="${{ steps.get-artifact-basename.outputs.basename }}.tar.xz"
+
+          curl -sfSL -T "build/loot_${VERSION}.tar.xz" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
+        if: github.event_name == 'push'
+
   windows:
     runs-on: windows-2016
 
