@@ -96,6 +96,36 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 See commit [8c28aed7f54dee3a381425b2d4ecf4341309d139](https://github.com/loot/loot/commit/8c28aed7f54dee3a381425b2d4ecf4341309d139)
 for an example of the relevant changes.
 
+## Depending on libloot snapshot builds
+
+It's occasionally useful to build LOOT using a snapshot build of libloot, e.g. when integrating
+unreleased libloot changes. To do this, download a snapshot build artifact from GitHub Actions (you
+need to be logged into GitHub to do so) and unzip it to get a 7-zip or XZ-compressed tar file, then
+pass `-DLIBLOOT_URL=<path to that file>` when running `cmake`.
+
+To download and extract a snapshot build artifact during the GitHub Actions CI workflow, add the
+following step before the step that runs `cmake`:
+
+```yaml
+- name: Download libloot snapshot build artifact
+  run: |
+    curl -sSfL \
+      -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+      -H 'Accept: application/vnd.github.v3+json' \
+      -o 'libloot.zip' \
+      https://api.github.com/repos/loot/libloot/actions/artifacts/39467110/zip
+    unzip libloot.zip
+    echo "LIBLOOT_URL=$PWD/$(ls -1 libloot-*)" >> $GITHUB_ENV
+```
+
+Replace `39467110` with the relevant artifact's ID. You can get an artifact's ID from the last
+path component in its download URL on the libloot build's GitHub Actions page in your browser: for
+example, the page at `https://github.com/loot/libloot/actions/runs/542851787` lists
+`libloot-0.16.1-9-ge97208c_linux-github-actions-Linux.tar.xz` as an artifact, and its download URL
+is `https://github.com/loot/libloot/suites/1982340583/artifacts/39467110`.
+
+Also append ` -DLIBLOOT_URL="$LIBLOOT_URL"` to the arguments passed to `cmake`.
+
 ## Code Style
 
 LOOT's JavaScript code style is codified by the included ESLint configuration, which is based off the Airbnb and Prettier rules.
