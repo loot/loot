@@ -179,7 +179,7 @@ jobs:
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 15 2017" -A ${{ matrix.platform }} -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}" -DBOOST_LIBRARYDIR="${env:BOOST_ROOT_1_72_0}\lib" -DMSVC_STATIC_RUNTIME=ON
+          cmake .. -G "Visual Studio 15 2017" -A ${{ matrix.platform }} -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}" -DMSVC_STATIC_RUNTIME=ON
           cmake --build . --config Release
 
       - name: Run C++ tests
