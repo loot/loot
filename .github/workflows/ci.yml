@@ -22,6 +22,57 @@ jobs:
           python3 delete_old_bintray_versions.py -g loot/loot -b loot/snapshots/loot -u wrinklyninja -k ${{ secrets.BINTRAY_API_KEY }} -t ${{ secrets.GITHUB_TOKEN }} -n 10
         if: github.event_name == 'push'
 
+  # Publish to Artifactory as a separate job that runs after the build jobs
+  # because we must first clean out any existing artifacts for this Git ref,
+  # and we don't want to do that as a pre-build step in case the build fails
+  # and we're left with no artifacts published.
+  publish-to-artifactory:
+    runs-on: ubuntu-18.04
+    needs: [linux, windows]
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Clean up artifacts on Artifactory
+        run: |
+          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.0/remove_old_artifactory_files.py'
+
+          python3 remove_old_artifactory_files.py \
+            --artifactory-host loot.jfrog.io \
+            --artifactory-api-key ${{ secrets.ARTIFACTORY_API_KEY }} \
+            --artifactory-repository loot \
+            --current-branch "${GITHUB_REF#refs/*/}" \
+            --github-repository loot/loot \
+            --github-token ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create empty directory for artifacts
+        run: |
+          rm -rf downloaded_artifacts
+          mkdir downloaded_artifacts
+
+      - name: Download all artifacts for this workflow from GitHub Actions
+        uses: actions/download-artifact@v2
+        with:
+          path: downloaded_artifacts
+
+      - name: Publish artifacts to Artifactory
+        shell: bash
+        run: |
+          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.0/percent_encode.py'
+
+          PERCENT_ENCODED_GIT_REF_NAME=$(python3 percent_encode.py "${GITHUB_REF#refs/*/}")
+
+          for ARTIFACT_DIRECTORY in downloaded_artifacts/*
+          do
+            ARTIFACT_NAME="${ARTIFACT_DIRECTORY#downloaded_artifacts/}"
+            PERCENT_ENCODED_ARTIFACT_NAME=$(python3 percent_encode.py "$ARTIFACT_NAME")
+
+            curl -sSfL \
+              -X PUT \
+              -T "$ARTIFACT_DIRECTORY/$ARTIFACT_NAME" \
+              -H "X-JFrog-Art-Api: ${{ secrets.ARTIFACTORY_API_KEY }}" \
+              "https://loot.jfrog.io/artifactory/loot/${PERCENT_ENCODED_GIT_REF_NAME}/$PERCENT_ENCODED_ARTIFACT_NAME"
+          done
+
   linux:
     runs-on: ubuntu-18.04
 
@@ -118,9 +169,6 @@ jobs:
       - name: Build translation message object files
         run: node scripts/potomo.js
 
-      - name: Build archive
-        run: node scripts/archive.js
-
       - name: Get descriptive LOOT version
         id: get-loot-version
         shell: bash
@@ -132,28 +180,33 @@ jobs:
           echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
         if: github.event_name == 'push'
 
-      - name: Get LOOT artifact basename
-        id: get-artifact-basename
+      - name: Build archive
+        id: build-archive
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          echo "::set-output name=basename::loot_${VERSION}-Linux"
+          FILENAME="loot_${VERSION}-Linux.tar.xz"
+
+          node scripts/archive.js
+          mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
+
+          echo "::set-output name=filename::$FILENAME"
         if: github.event_name == 'push'
 
       - name: Upload archive to BinTray
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          FILENAME="${{ steps.get-artifact-basename.outputs.basename }}.tar.xz"
+          FILENAME="${{ steps.build-archive.outputs.filename }}"
 
-          curl -sfSL -T "build/loot_${VERSION}.tar.xz" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
+          curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
         if: github.event_name == 'push'
 
       - name: Upload archive
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.get-artifact-basename.outputs.basename }}.tar.xz
-          path: build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz
+          name: ${{ steps.build-archive.outputs.filename }}
+          path: build/${{ steps.build-archive.outputs.filename }}
         if: github.event_name == 'push'
 
   windows:
@@ -254,12 +307,6 @@ jobs:
       - name: Build translation message object files
         run: node scripts\potomo.js
 
-      - name: Build archive
-        run: node scripts\archive.js
-
-      - name: Build installer
-        run: scripts\build_installer.ps1
-
       - name: Get descriptive LOOT version
         id: get-loot-version
         shell: bash
@@ -285,13 +332,23 @@ jobs:
           echo "::set-output name=basename::loot_${VERSION}-${PLATFORM}"
         if: github.event_name == 'push'
 
+      - name: Build archive
+        run: |
+          node scripts\archive.js
+          mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
+
+      - name: Build installer
+        run: |
+          scripts\build_installer.ps1
+          mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
+
       - name: Upload archive to BinTray
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           FILENAME="${{ steps.get-artifact-basename.outputs.basename }}.7z"
 
-          curl -sfSL -T "build/loot_${VERSION}.7z" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
+          curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
         if: github.event_name == 'push'
 
       - name: Upload installer to BinTray
@@ -300,19 +357,19 @@ jobs:
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           FILENAME="${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
-          curl -sfSL -T "build/LOOT Installer.exe" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
+          curl -sfSL -T "build/$FILENAME" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
         if: github.event_name == 'push' && matrix.platform == 'Win32'
 
       - name: Upload archive
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
-          path: build/loot_${{ steps.get-loot-version.outputs.version }}.7z
+          path: build/${{ steps.get-artifact-basename.outputs.basename }}.7z
         if: github.event_name == 'push'
 
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
-          path: build/LOOT Installer.exe
+          path: build/${{ steps.get-artifact-basename.outputs.basename }}.exe
         if: github.event_name == 'push' && matrix.platform == 'Win32'
