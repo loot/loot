@@ -149,6 +149,13 @@ jobs:
           curl -sfSL -T "build/loot_${VERSION}.tar.xz" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
         if: github.event_name == 'push'
 
+      - name: Upload archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.get-artifact-basename.outputs.basename }}.tar.xz
+          path: build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz
+        if: github.event_name == 'push'
+
   windows:
     runs-on: windows-2016
 
@@ -294,4 +301,18 @@ jobs:
           FILENAME="${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
           curl -sfSL -T "build/LOOT Installer.exe" -u "wrinklyninja:${{ secrets.BINTRAY_API_KEY }}" "https://bintray.com/api/v1/content/loot/snapshots/loot/${VERSION}/${FILENAME}?publish=1&override=1"
+        if: github.event_name == 'push' && matrix.platform == 'Win32'
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
+          path: build/loot_${{ steps.get-loot-version.outputs.version }}.7z
+        if: github.event_name == 'push'
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
+          path: build/LOOT Installer.exe
         if: github.event_name == 'push' && matrix.platform == 'Win32'
