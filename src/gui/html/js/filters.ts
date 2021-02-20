@@ -2,7 +2,6 @@ import { PaperCheckboxElement } from '@polymer/paper-checkbox';
 import { IronListElement } from '@polymer/iron-list';
 import handlePromiseError from './handlePromiseError';
 import { getConflictingPlugins } from './query';
-import Translator from './translator';
 import { Plugin } from './plugin';
 import { SimpleMessage, FilterStates, MainContent } from './interfaces';
 import LootPluginCard from '../elements/loot-plugin-card';
@@ -25,15 +24,11 @@ export default class Filters implements FilterStates {
 
   public hideNotes: boolean;
 
-  public hideDoNotCleanMessages: boolean;
-
   public conflictingPluginNames: string[];
 
   public contentSearchString: string;
 
-  private _doNotCleanString: string;
-
-  public constructor(l10n: Translator) {
+  public constructor() {
     /* Plugin filters */
     this.hideMessagelessPlugins = false;
     this.hideInactivePlugins = false;
@@ -46,9 +41,6 @@ export default class Filters implements FilterStates {
     this.hideBashTags = false;
     this.hideAllPluginMessages = false;
     this.hideNotes = false;
-    this.hideDoNotCleanMessages = false;
-
-    this._doNotCleanString = l10n.translate('Do not clean').toLowerCase();
   }
 
   public pluginFilter(plugin: Plugin): boolean {
@@ -86,13 +78,6 @@ export default class Filters implements FilterStates {
     }
 
     if (this.hideNotes && message.type === 'say') {
-      return false;
-    }
-
-    if (
-      this.hideDoNotCleanMessages &&
-      message.text.toLowerCase().indexOf(this._doNotCleanString) !== -1
-    ) {
       return false;
     }
 
@@ -155,8 +140,7 @@ export default class Filters implements FilterStates {
       this.hideCRCs ||
       this.hideBashTags ||
       this.hideAllPluginMessages ||
-      this.hideNotes ||
-      this.hideDoNotCleanMessages
+      this.hideNotes
     );
   }
 
@@ -172,8 +156,7 @@ export default class Filters implements FilterStates {
       'hideCRCs',
       'hideBashTags',
       'hideAllPluginMessages',
-      'hideNotes',
-      'hideDoNotCleanMessages'
+      'hideNotes'
     ];
 
     filters.forEach(filter => {

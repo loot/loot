@@ -98,8 +98,6 @@ Hide Bash Tags
   Hides all Bash Tag suggestions.
 Hide notes
   Hides all plugin messages that have the Note: prefix, or the equivalent text for the language selected in LOOT's settings.
-Hide 'Do not clean' messages
-  Hides all messages that contain the text Do not clean, or the equivalent text for the language selected in LOOT's settings.
 Hide all plugin messages
   Hides all plugin messages.
 Hide inactive plugins

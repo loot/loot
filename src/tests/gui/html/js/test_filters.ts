@@ -1,5 +1,4 @@
 import Filters from '../../../../gui/html/js/filters';
-import Translator from '../../../../gui/html/js/translator';
 import { SimpleMessage } from '../../../../gui/html/js/interfaces';
 import { Plugin } from '../../../../gui/html/js/plugin';
 
@@ -7,17 +6,15 @@ jest.mock('../../../../gui/html/js/handlePromiseError');
 jest.mock('../../../../gui/html/js/query');
 
 describe('Filters', () => {
-  const l10n = new Translator();
-
   describe('#constructor()', () => {
     test('should not throw if a valid Translator object is passed', () => {
       expect(() => {
-        new Filters(l10n); // eslint-disable-line no-new
+        new Filters(); // eslint-disable-line no-new
       }).not.toThrow();
     });
 
     test('should initialise filters as not enabled', () => {
-      const filters = new Filters(l10n);
+      const filters = new Filters();
 
       expect(filters.hideMessagelessPlugins).toBe(false);
       expect(filters.hideInactivePlugins).toBe(false);
@@ -29,7 +26,6 @@ describe('Filters', () => {
       expect(filters.hideBashTags).toBe(false);
       expect(filters.hideAllPluginMessages).toBe(false);
       expect(filters.hideNotes).toBe(false);
-      expect(filters.hideDoNotCleanMessages).toBe(false);
     });
   });
 
@@ -38,7 +34,7 @@ describe('Filters', () => {
     let plugin: Plugin;
 
     beforeEach(() => {
-      filters = new Filters(l10n);
+      filters = new Filters();
       plugin = new Plugin({
         name: 'found text',
         isActive: false,
@@ -124,19 +120,19 @@ describe('Filters', () => {
   describe('#messageFilter()', () => {
     let filters: Filters;
     let note: SimpleMessage;
-    let doNotCleanMessage: SimpleMessage;
+    let warning: SimpleMessage;
 
     beforeEach(() => {
-      filters = new Filters(l10n);
+      filters = new Filters();
       note = {
         type: 'say',
         text: 'test message',
         language: 'en',
         condition: ''
       };
-      doNotCleanMessage = {
+      warning = {
         type: 'warn',
-        text: 'do not clean',
+        text: 'warning message',
         language: 'en',
         condition: ''
       };
@@ -146,8 +142,8 @@ describe('Filters', () => {
       expect(filters.messageFilter(note)).toBe(true);
     });
 
-    test('should return true for a warning "do not clean" message when no filters are enabled', () => {
-      expect(filters.messageFilter(doNotCleanMessage)).toBe(true);
+    test('should return true for a warning message when no filters are enabled', () => {
+      expect(filters.messageFilter(warning)).toBe(true);
     });
 
     test('should return false for a note message when the notes filter is enabled', () => {
@@ -157,17 +153,7 @@ describe('Filters', () => {
 
     test('should return true for a warning message when the notes filter is enabled', () => {
       filters.hideNotes = true;
-      expect(filters.messageFilter(doNotCleanMessage)).toBe(true);
-    });
-
-    test('should return false for a "do not clean" message when the "do not clean" messages filter is enabled', () => {
-      filters.hideDoNotCleanMessages = true;
-      expect(filters.messageFilter(doNotCleanMessage)).toBe(false);
-    });
-
-    test('should return true for a message not containing "do not clean" when the "do not clean" messages filter is enabled', () => {
-      filters.hideDoNotCleanMessages = true;
-      expect(filters.messageFilter(note)).toBe(true);
+      expect(filters.messageFilter(warning)).toBe(true);
     });
 
     test('should return false for a note message when the all messages filter is enabled', () => {
@@ -175,9 +161,9 @@ describe('Filters', () => {
       expect(filters.messageFilter(note)).toBe(false);
     });
 
-    test('should return false for a "do not clean" message when the all messages filter is enabled', () => {
+    test('should return false for a warning message when the all messages filter is enabled', () => {
       filters.hideAllPluginMessages = true;
-      expect(filters.messageFilter(doNotCleanMessage)).toBe(false);
+      expect(filters.messageFilter(warning)).toBe(false);
     });
   });
 
@@ -186,7 +172,7 @@ describe('Filters', () => {
     let handleEvent: () => void;
 
     beforeEach(() => {
-      filters = new Filters(l10n);
+      filters = new Filters();
     });
 
     afterEach(() => {
@@ -231,7 +217,7 @@ describe('Filters', () => {
     let filters: Filters;
 
     beforeEach(() => {
-      filters = new Filters(l10n);
+      filters = new Filters();
     });
 
     test('should return a promise that resolves to an object with empty arrays if the argument is falsy', () =>
@@ -245,7 +231,7 @@ describe('Filters', () => {
     let filters: Filters;
 
     beforeEach(() => {
-      filters = new Filters(l10n);
+      filters = new Filters();
     });
 
     test('should return false if all the boolean filters are false, and the content and conflict filter lengths are zero', () => {
@@ -290,12 +276,6 @@ describe('Filters', () => {
 
     test('should return true if hideNotes is true', () => {
       filters.hideNotes = true;
-
-      expect(filters.areAnyFiltersActive()).toBe(true);
-    });
-
-    test('should return true if hideDoNotCleanMessages is true', () => {
-      filters.hideDoNotCleanMessages = true;
 
       expect(filters.areAnyFiltersActive()).toBe(true);
     });

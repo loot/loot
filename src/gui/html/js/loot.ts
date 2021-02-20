@@ -109,10 +109,6 @@ function addEventListeners(): void {
     onSidebarFilterToggle
   );
   getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
-  getElementById('hideDoNotCleanMessages').addEventListener(
-    'change',
-    onSidebarFilterToggle
-  );
   getElementById('hideInactivePlugins').addEventListener(
     'change',
     onSidebarFilterToggle
@@ -381,7 +377,7 @@ export default class Loot {
 
   public constructor() {
     this.l10n = new Translator();
-    this.filters = new Filters(this.l10n);
+    this.filters = new Filters();
     this.state = new State();
     this.installedGames = [];
     this.version = {
@@ -421,7 +417,7 @@ export default class Loot {
     /* Translate static text. */
     await this.l10n.load(this.settings.language);
 
-    this.filters = new Filters(this.l10n);
+    this.filters = new Filters();
     this.filters.load(this.settings.filters);
 
     translateStaticText(this.l10n, this.version);

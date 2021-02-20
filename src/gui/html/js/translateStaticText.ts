@@ -579,9 +579,6 @@ function translateSidebar(l10n: Translator): void {
   getElementById('hideCRCs').textContent = l10n.translate('Hide CRCs');
   getElementById('hideBashTags').textContent = l10n.translate('Hide Bash Tags');
   getElementById('hideNotes').textContent = l10n.translate('Hide notes');
-  getElementById('hideDoNotCleanMessages').textContent = l10n.translate(
-    "Hide 'Do not clean' messages"
-  );
   getElementById('hideAllPluginMessages').textContent = l10n.translate(
     'Hide all plugin messages'
   );
