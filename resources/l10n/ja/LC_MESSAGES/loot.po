@@ -692,10 +692,6 @@ msgstr "Bash Tagsを隠す"
 msgid "Hide notes"
 msgstr "メモを隠す"
 
-#: src/gui/html/js/translateStaticText.js:459
-msgid "Hide 'Do not clean' messages"
-msgstr "'クリーン禁止' メッセージを隠す"
-
 #: src/gui/html/js/translateStaticText.js:460
 msgid "Hide all plugin messages"
 msgstr "全てのプラグインのメッセージを隠す"

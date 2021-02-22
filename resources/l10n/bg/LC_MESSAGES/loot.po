@@ -1,15 +1,15 @@
 # LOOT - Bulgarian Translation
 # Copyright (C) 2020 WrinklyNinja
 # This file is distributed under the same license as the LOOT package.
-# Georgi Georgiev <georgiev_1994@abv.bg>, 2020.
+# Georgi Georgiev <g.georgiev.shumen@gmail.com>, 2020, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.14.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2019-08-21 22:37+0100\n"
-"PO-Revision-Date: 2020-09-22 22:56+0200\n"
-"Last-Translator: Georgi Georgiev <georgiev_1994@abv.bg>\n"
+"PO-Revision-Date: 2021-02-22 10:33+0200\n"
+"Last-Translator: Georgi Georgiev <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Тази приставка е основна за \"%1%\" и я изисква. "
+"Тази приставка се нуждае от \"%1%\". "
 "Това може да създаде проблеми в играта и сортирането няма да е успешно, "
 "докато тя е инсталирана."
 
@@ -161,8 +161,8 @@ msgid ""
 "fixed within hours."
 msgstr ""
 "Най-новата ревизия на основния списък съдържа синтактична грешка, LOOT "
-"ще използва най-новата валидна версия на негово място. Обикновено "
-"синтактичните грешки не са големи и биват поправени за няколко часа."
+"ще използва най-новата валидна версия на негово място. Синтактичните "
+"грешки са лесни за отстраняване и биват поправени за няколко часа."
 
 #: src/gui/state/game/game.cpp:630
 msgid ""
@@ -185,7 +185,7 @@ msgstr ""
 "\n"
 "Моля, обновете основния списък за да поправите грешката. Ако грешката е "
 "в потребителските метаданни, причината може да е в обновяване на LOOT, "
-"което е възможно да е променило синтаксиса. Потребителските метданни "
+"което е променило поддържания синтаксис. Потребителските метданни "
 "трябва да се обновят ръчно.\n"
 "\n"
 "За да го направите, отворете 'Отвори Файла за регистриране на грешки' "
@@ -551,7 +551,7 @@ msgstr "Програма за почистване"
 
 #: src/gui/html/js/translateStaticText.ts:275
 msgid "URL"
-msgstr "URL"
+msgstr "Връзка"
 
 #: src/gui/html/js/translateStaticText.ts:279
 #: src/gui/html/js/translateStaticText.ts:683
@@ -620,7 +620,7 @@ msgstr "Изисква се CRC."
 #: src/gui/html/js/translateStaticText.ts:383
 #: src/gui/html/js/translateStaticText.ts:388
 msgid "Values must be integers."
-msgstr "Стойнотите трябва да са цели числа."
+msgstr "Стойностите трябва да са цели числа."
 
 #: src/gui/html/js/translateStaticText.ts:393
 #: src/gui/html/js/translateStaticText.ts:410
@@ -712,7 +712,7 @@ msgstr "Филтри"
 
 #: src/gui/html/js/translateStaticText.ts:569
 msgid "Press Enter or click outside the input to set the filter."
-msgstr "Натиснете Enter или с цъкнете извън полето, за да зададете филтъра."
+msgstr "Натиснете Enter или натиснете извън полето, за да зададете филтъра."
 
 #: src/gui/html/js/translateStaticText.ts:573
 msgid "Show only plugins with cards that contain"
@@ -724,7 +724,7 @@ msgstr "Не е посочен текст"
 
 #: src/gui/html/js/translateStaticText.ts:579
 msgid "Hide version numbers"
-msgstr "Скрий номера на версията"
+msgstr "Скрий версията"
 
 #: src/gui/html/js/translateStaticText.ts:582
 msgid "Hide CRCs"
@@ -737,10 +737,6 @@ msgstr "Скрий Bash етикетите"
 #: src/gui/html/js/translateStaticText.ts:584
 msgid "Hide notes"
 msgstr "Скрий бележките"
-
-#: src/gui/html/js/translateStaticText.ts:585
-msgid "Hide 'Do not clean' messages"
-msgstr "Скрий съобщенията 'Не почиствай'"
 
 #: src/gui/html/js/translateStaticText.ts:588
 msgid "Hide all plugin messages"
@@ -832,7 +828,7 @@ msgstr "Обнови основния списък преди сортиране
 
 #: src/gui/html/js/translateStaticText.ts:680
 msgid "Check for LOOT updates on startup"
-msgstr "Провери за обновявания при стартирането на LOOT"
+msgstr "Проверявай за обновявания при стартирането на LOOT"
 
 #: src/gui/html/js/translateStaticText.ts:686
 msgid "Base Game"
@@ -844,7 +840,7 @@ msgstr "Папка на LOOT"
 
 #: src/gui/html/js/translateStaticText.ts:695
 msgid "Masterlist Repository URL"
-msgstr "URL на хранилището на основния списък"
+msgstr "Връзка към хранилището на основния списък"
 
 #: src/gui/html/js/translateStaticText.ts:698
 msgid "Masterlist Repository Branch"
@@ -872,7 +868,7 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:739
 msgid "Click %(menu_icon)s buttons to open menus."
-msgstr "Цъкнете върху %(menu_icon)s за да отворите менютата."
+msgstr "Натиснете върху %(menu_icon)s за да отворите менютата."
 
 #: src/gui/html/js/translateStaticText.ts:746
 msgid ""
@@ -899,7 +895,7 @@ msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr ""
-"Цъкнете два пъти върху приставка в страничната лента за нейното "
+"Натиснете два пъти върху приставка в страничната лента за нейното "
 "бързо отваряне в редактора за метаданни."
 
 #: src/gui/html/js/translateStaticText.ts:755
@@ -936,8 +932,7 @@ msgid ""
 "using %s."
 msgstr ""
 "LOOT е безплатен, но ако искате да направите дарение, може да подкрепите "
-"WrinklyNinja (той е създателя на LOOT и главния разработчик) "
-"чрез %s."
+"WrinklyNinja (той е създател и главен разработчик на LOOT) чрез %s."
 
 #: src/gui/html/js/translateStaticText.ts:770
 msgid "OK"

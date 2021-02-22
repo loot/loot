@@ -763,10 +763,6 @@ msgstr "Bash Tags ausblenden"
 msgid "Hide notes"
 msgstr "Notizen ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:585
-msgid "Hide 'Do not clean' messages"
-msgstr "'Nicht säubern'-Nachrichten ausblenden"
-
 #: src/gui/html/js/translateStaticText.ts:588
 msgid "Hide all plugin messages"
 msgstr "Alle aktiven Plugins ausblenden"

@@ -555,10 +555,6 @@ msgstr "Schovat Bash Tagy"
 msgid "Hide notes"
 msgstr "Schovat poznámky"
 
-#: src/gui/html/js/translateStaticText.js:459
-msgid "Hide 'Do not clean' messages"
-msgstr "Schovat \"Neuklízet\" Zprávy"
-
 #: src/gui/html/js/translateStaticText.js:461
 msgid "Hide all plugin messages"
 msgstr "Schovat všechny zprávy pluginů"

@@ -691,10 +691,6 @@ msgstr "배쉬 태그 숨기기"
 msgid "Hide notes"
 msgstr "노트 숨기기"
 
-#: resources/report/js/l10n.js:250
-msgid "Hide 'Do not clean' messages"
-msgstr "'청소 금지'메시지 숨기기"
-
 #: resources/report/js/l10n.js:251
 msgid "Hide all plugin messages"
 msgstr "모든 플러그인 메시지 숨기기"
