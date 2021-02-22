@@ -437,10 +437,6 @@ msgstr "Masquer les étiquettes bash"
 msgid "Hide notes"
 msgstr "Masquer les notes"
 
-#: src/gui/html/js/translateStaticText.js:201
-msgid "Hide 'Do not clean' messages"
-msgstr "Masquer les messages 'Ne pas nettoyer'"
-
 #: src/gui/html/js/translateStaticText.js:202
 msgid "Hide all plugin messages"
 msgstr "Masquer les messages des plugins"

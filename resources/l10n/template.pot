@@ -692,10 +692,6 @@ msgstr ""
 msgid "Hide notes"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:585
-msgid "Hide 'Do not clean' messages"
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:588
 msgid "Hide all plugin messages"
 msgstr ""

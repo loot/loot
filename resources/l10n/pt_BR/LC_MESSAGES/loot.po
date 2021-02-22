@@ -481,10 +481,6 @@ msgstr "Marcações Bash"
 msgid "Hide notes"
 msgstr "Esconder Notas"
 
-#: resources/report/js/l10n.js:157
-msgid "Hide 'Do not clean' messages"
-msgstr "Esconder Mensagem 'Não limpe'"
-
 #: resources/report/js/l10n.js:158
 msgid "Hide inactive plugin messages"
 msgstr "Esconder as Mensagens do Plugin Inativo"

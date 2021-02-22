@@ -908,10 +908,6 @@ msgstr "Ocultar Sugerencias Bash Tag(s)"
 msgid "Hide Notes"
 msgstr "Ocultar Notas"
 
-#: backend/generators.h:555
-msgid "Hide 'Do Not Clean' Messages"
-msgstr "Ocultar mensajes 'No Se Limpia'"
-
 #: backend/generators.h:563
 msgid "Hide All Plugin Messages"
 msgstr "Ocultar todos los mensajes de los Plugins"

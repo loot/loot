@@ -627,12 +627,6 @@ msgid "Hidden plugins:"
 msgstr "Skjulte plugins:"
 
 #
-# File: src/gui/html/js/translateStaticText.js, line: 471
-# File: src/gui/html/js/translateStaticText.js, line: 471
-msgid "Hide 'Do not clean' messages"
-msgstr "Skjul “Rengør ikke”‐beskeder"
-
-#
 # File: src/gui/html/js/translateStaticText.js, line: 464
 # File: src/gui/html/js/translateStaticText.js, line: 464
 msgid "Hide Bash Tags"
