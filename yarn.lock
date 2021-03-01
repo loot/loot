@@ -3240,10 +3240,10 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.2.tgz#ee5ff8f208c8cd613b389f7b222c9801ca62b3f7"
   integrity sha512-ofovWglpqoqbfLNOTBNZLSbMuGrblAf1efvvArGKOZMBrIoJeu5UsAipQolkijtyQx5MtAzT/J9IHj/CEY1mJw==
 
-cytoscape-dagre@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/cytoscape-dagre/-/cytoscape-dagre-2.3.1.tgz#39fca747a54f0872a94de14ef0dc9ba8fe80b7ef"
-  integrity sha512-6IEs0dzXNuftxhL52oueFExYKQGJDYhhIhPfr0GIHLSTCSBoGwdEeEGWnNdFXh6epv0u+3A6INR+9un/vCiaOg==
+cytoscape-dagre@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/cytoscape-dagre/-/cytoscape-dagre-2.3.2.tgz#f83d4357642c86d3bd7530dd9c1dffc2e1079d3c"
+  integrity sha512-dL9+RvGkatSlIdOKXiFwHpnpTo8ydFMqIYzZFkImJXNbDci3feyYxR46wFoaG9GFiWimc6XD9Lm0x29b1wvWpw==
   dependencies:
     dagre "^0.8.5"
 
