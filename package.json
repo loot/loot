@@ -42,7 +42,7 @@
     "@polymer/paper-toggle-button": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.4.1",
-    "@types/react": "^17.0.0",
+    "@types/react": "^17.0.2",
     "@types/react-autosuggest": "^10.0.1",
     "@types/react-dom": "^17.0.0",
     "cytoscape": "^3.18.0",
