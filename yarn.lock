@@ -2159,10 +2159,10 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
 
-"@types/react-autosuggest@^10.0.1":
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/@types/react-autosuggest/-/react-autosuggest-10.0.1.tgz#6d7cdf2a2741742ef48bef26d918af08be521d90"
-  integrity sha512-CrgPh7phWH/i3ediedml4b1w9d8F0uefzAooh69OXqRU84h1UiJdBR6EoUff+PPPiBeCvh4wI7fgQtVqOe5q4g==
+"@types/react-autosuggest@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@types/react-autosuggest/-/react-autosuggest-10.1.2.tgz#23bb6df41dd000954a38564bb61ddfde31824e10"
+  integrity sha512-K23lmXhC3Bbd8y/jm5+wYrw/NAeN4U/wlHTgAEBIwLOyQKFCFYA3ONKte9P21L+RGIXRP8UlzHOSRtmIZw5Nqw==
   dependencies:
     "@types/react" "*"
 
@@ -6518,10 +6518,10 @@ randombytes@^2.1.0:
   dependencies:
     safe-buffer "^5.1.0"
 
-react-autosuggest@^10.0.3:
-  version "10.0.3"
-  resolved "https://registry.yarnpkg.com/react-autosuggest/-/react-autosuggest-10.0.3.tgz#d18b74a083d27c295331884d1d6a9de4cc1a212a"
-  integrity sha512-h+Cv1emcw7AQsDuN5MYPkmpDvg14jScmKyiQv5LqYRn/gqI6VHzmBdL2I2CHVFARHOvK2R+D35sNd5AEvGc3mQ==
+react-autosuggest@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/react-autosuggest/-/react-autosuggest-10.1.0.tgz#4d25b8acc78bb518eb70189bb96bcd777dc71ffb"
+  integrity sha512-/azBHmc6z/31s/lBf6irxPf/7eejQdR0IqnZUzjdSibtlS8+Rw/R79pgDAo6Ft5QqCUTyEQ+f0FhL+1olDQ8OA==
   dependencies:
     es6-promise "^4.2.8"
     prop-types "^15.7.2"
