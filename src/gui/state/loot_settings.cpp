@@ -195,6 +195,12 @@ LootSettings::LootSettings() :
                 "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path")
             .SetGameLocalFolder("enderal")
             .SetRepoURL("https://github.com/loot/enderal.git"),
+        GameSettings(GameType::tes5se, "Enderal Special Edition")
+            .SetName("Enderal: Forgotten Stories (Special Edition)")
+            .SetRegistryKey(
+                "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path")
+            .SetGameLocalFolder("Enderal Special Edition")
+            .SetRepoURL("https://github.com/loot/enderal.git"),
     }),
     languages_({
         Language({"cs", "Čeština", std::nullopt}),
