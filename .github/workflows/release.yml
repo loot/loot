@@ -39,6 +39,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get Boost metadata
+        id: boost-metadata
+        run: |
+          echo "::set-output name=address-model::32"
+          echo "::set-output name=root::${{ github.workspace }}/boost_1_72_0"
+          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_72_0/stage/32/lib"
+
+      - name: Boost cache
+        id: boost-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ steps.boost-metadata.outputs.root }}/boost
+            ${{ steps.boost-metadata.outputs.root }}/stage
+          key: ${{ runner.os }}-Win32-Boost-1.72.0
+
       - name: Install JS dependencies
         run: yarn install
 
@@ -50,10 +66,16 @@ jobs:
       - name: Generate ICO file
         run: .\svg_to_ico.exe -i resources\icon.svg -o build\icon\icon.ico
 
+      - name: Download & build Boost
+        run: |
+          curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.72.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
+        if: steps.boost-cache.outputs.cache-hit != 'true'
+
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 15 2017" -A Win32 -DBOOST_ROOT="${env:BOOST_ROOT_1_72_0}" -DMSVC_STATIC_RUNTIME=ON
+          cmake .. -G "Visual Studio 15 2017" -A Win32 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DMSVC_STATIC_RUNTIME=ON
           cmake --build . --config Release
 
       - name: Install packages for building docs
