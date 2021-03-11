@@ -49,10 +49,6 @@ ELSE()
     set (Boost_USE_STATIC_RUNTIME OFF)
 ENDIF()
 
-IF (NOT Boost_USE_STATIC_LIBS)
-    add_definitions(-DBOOST_LOG_DYN_LINK)
-ENDIF ()
-
 find_package(Boost REQUIRED COMPONENTS locale system)
 
 if (NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
