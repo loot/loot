@@ -154,7 +154,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[5].RepoBranch());
 
   auto actualLanguages = settings_.getLanguages();
-  EXPECT_EQ(14, actualLanguages.size());
+  EXPECT_EQ(15, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"cs", "Čeština", std::nullopt}),
             actualLanguages[0]);
   EXPECT_EQ(LootSettings::Language({"da", "Dansk", std::nullopt}),
@@ -176,14 +176,17 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(
       LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
       actualLanguages[9]);
+  EXPECT_EQ(
+      LootSettings::Language({"pt_PT", "Português de Portugal", std::nullopt}),
+      actualLanguages[10]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
-            actualLanguages[10]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[11]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[12]);
-  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
             actualLanguages[13]);
+  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
+            actualLanguages[14]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
