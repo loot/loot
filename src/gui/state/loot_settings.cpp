@@ -213,6 +213,7 @@ LootSettings::LootSettings() :
         Language({"ko", "한국어", "Malgun Gothic"}),
         Language({"pl", "Polski", std::nullopt}),
         Language({"pt_BR", "Português do Brasil", std::nullopt}),
+        Language({"pt_PT", "Português de Portugal", std::nullopt}),
         Language({"ru", "Русский", std::nullopt}),
         Language({"sv", "Svenska", std::nullopt}),
         Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
