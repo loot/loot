@@ -186,7 +186,7 @@ Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
 [CustomMessages]
 en.DeleteUserFiles=Do you want to delete your settings and user metadata?
-;pt_BR.DeleteUserFiles=
+pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
 pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
 da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
 fi.DeleteUserFiles=Haluatko poistaa asetukset ja käyttäjä metatiedot?
