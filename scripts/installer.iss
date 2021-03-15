@@ -55,6 +55,7 @@ WizardStyle=modern
 Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
 Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
@@ -132,6 +133,8 @@ Source: "resources\l10n\pl\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\pl\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\pt_BR\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\pt_BR\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\pt_PT\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\pt_PT\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ru\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
@@ -184,6 +187,7 @@ Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 [CustomMessages]
 en.DeleteUserFiles=Do you want to delete your settings and user metadata?
 pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
+pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
 da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
 fi.DeleteUserFiles=Haluatko poistaa asetukset ja käyttäjä metatiedot?
 fr.DeleteUserFiles=Voulez-vous supprimer vos paramètres et les métadonnées de l'utilisateur?
