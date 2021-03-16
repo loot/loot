@@ -8,6 +8,10 @@
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
+#if FileExists(AddBackslash(CompilerPath) + 'Languages\Bulgarian.isl')
+#define BulgarianExists
+#endif
+
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')
 #define KoreanExists
 #endif
@@ -53,6 +57,9 @@ WizardStyle=modern
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
+#ifdef BulgarianExists
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
+#endif
 Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"
@@ -115,6 +122,8 @@ DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 Source: "{#buildir}\Release\resources\ui\*"; \
 DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
+Source: "resources\l10n\bg\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\bg\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\cs\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\cs\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\da\LC_MESSAGES\loot.mo"; \
@@ -186,6 +195,9 @@ Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
 [CustomMessages]
 en.DeleteUserFiles=Do you want to delete your settings and user metadata?
+#ifdef BulgarianExists
+bg.DeleteUserFiles=Искате ли да изтриете Вашите настройки и потребителските метаданни?
+#endif
 cs.DeleteUserFiles=Vymazat Uživatelské Soubory
 da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
 de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten löschen?
