@@ -9,11 +9,11 @@ function DownloadLanguageFile($languageFile, $innoPath) {
 
 $innoInstallPath = 'C:\Program Files (x86)\Inno Setup 6'
 
-# Install the unofficial Korean, Simplified Chinese and Swedish translation
+# Install the unofficial Korean, Swedish and Simplified Chinese translation
 # files for Inno Setup.
 DownloadLanguageFile '\Korean.isl'  $innoInstallPath
-DownloadLanguageFile '\ChineseSimplified.isl'  $innoInstallPath
 DownloadLanguageFile '\Swedish.isl'  $innoInstallPath
+DownloadLanguageFile '\ChineseSimplified.isl'  $innoInstallPath
 
 $env:PATH += ';' + $innoInstallPath
 
