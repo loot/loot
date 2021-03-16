@@ -16,12 +16,12 @@
 #define KoreanExists
 #endif
 
-#if FileExists(AddBackslash(CompilerPath) + 'Languages\ChineseSimplified.isl')
-#define SimplifiedChineseExists
-#endif
-
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Swedish.isl')
 #define SwedishExists
+#endif
+
+#if FileExists(AddBackslash(CompilerPath) + 'Languages\ChineseSimplified.isl')
+#define SimplifiedChineseExists
 #endif
 
 #if FileExists(SourcePath + '..\build\32\Release\LOOT.exe')
