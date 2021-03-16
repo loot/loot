@@ -204,6 +204,7 @@ LootSettings::LootSettings() :
     }),
     languages_({
         Language({"en", "English", std::nullopt}),
+        Language({"bg", "Български", std::nullopt}),
         Language({"cs", "Čeština", std::nullopt}),
         Language({"da", "Dansk", std::nullopt}),
         Language({"de", "Deutsch", std::nullopt}),
