@@ -1,18 +1,18 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.7\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-09 10:40-0000\n"
-"PO-Revision-Date: 2015-01-18 13:26+0900\n"
+"Project-Id-Version: LOOT 0.14.0\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2019-08-21 22:37+0100\n"
+"PO-Revision-Date: 2021-03-21 03:52+0900\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
-"X-Poedit-Basepath: ../../\n"
+"X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: src/backend\n"
@@ -22,818 +22,891 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: resources/report/js/marked.js\n"
 "X-Poedit-SearchPathExcluded-2: resources/report/js/require.js\n"
 
-#: src/backend/game.cpp:347
-msgid "Invalid game ID supplied."
-msgstr "잘못된 게임 ID가 제공되었습니다."
-
-#: src/backend/game.cpp:371
-msgid "Game path could not be detected."
-msgstr "게임 경로를 감지 할 수 없습니다."
-
-#: src/backend/game.cpp:489
+#: src/gui/cef/query/query.h:48
 msgid ""
-"libloadorder failed to create a game handle. Details could not be fetched."
+"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"read-only. If it is, unset it and try again. If it isn't, you can check your "
+"LOOTDebugLog.txt (you can get to it through the main menu) for more "
+"information."
 msgstr ""
-"libloadorder가 게임 핸들을 만들지 못했습니다. 자세한 사항은 가져올 수 없습니"
-"다."
+"이런, 문제가 발생했습니다! \"%1%\"가 읽기 전용으로 설정되어 있기 때문입니다. "
+"만약 그렇다면 해당 설정을 해제한 후 다시 시도하십시오. 그렇지 않다면 "
+"LOOTDebugLog.txt (메인 메뉴를 통해 얻을 수 있음)에서 자세한 정보를 확인할 수 "
+"있습니다."
 
-#: src/backend/game.cpp:493
-msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder가 게임 핸들을 만들지 못했습니다. 자세한 사항:"
-
-#: src/backend/game.cpp:510
+#: src/gui/cef/query/query_executor.h:43
 msgid ""
-"libloadorder failed to initialise game master file support. Details could "
-"not be fetched."
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
 msgstr ""
-"libloadorder가 게임 마스터 파일 지원을 초기화하지 못했습니다. 자세한 사항은 "
-"가져올 수 없습니다."
+"이런, 문제가 발생했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메뉴를 통해 "
+"얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/backend/game.cpp:514
-msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr ""
-"libloadorder가 게임 마스터 파일 지원을 초기화하지 못했습니다. 자세한 사항:"
+#: src/gui/cef/query/types/get_game_data_query.h:46
+msgid "Parsing, merging and evaluating metadata..."
+msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중..."
 
-#: src/backend/game.cpp:534
-msgid ""
-"libloadorder failed to get the active plugins list. Details could not be "
-"fetched."
-msgstr ""
-"libloadorder가 활성 플러그인 목록을 가져오지 못했습니다. 자세한 사항은 가져"
-"올 수 없습니다."
-
-#: src/backend/game.cpp:538
-msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "libloadorder가 활성 플러그인 목록을 가져오지 못했습니다. 자세한 사항:"
-
-#: src/backend/game.cpp:567
-msgid ""
-"libloadorder failed to get the load order. Details could not be fetched."
-msgstr ""
-"libloadorder가 로드 순서를 가져오지 못했습니다. 자세한 사항은 가져올 수 없습"
-"니다."
-
-#: src/backend/game.cpp:571
-msgid "libloadorder failed to get the load order. Details:"
-msgstr "libloadorder가 로드 순서를 가져오지 못했습니다. 자세한 사항:"
-
-#: src/backend/game.cpp:593
-msgid ""
-"libloadorder failed to set the load order. Details could not be fetched."
-msgstr ""
-"libloadorder가 로드 순서를 설정하지 못했습니다. 자세한 사항은 가져올 수 없습"
-"니다."
-
-#: src/backend/game.cpp:597
-msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder가 로드 순서를 설정하지 못했습니다. 자세한 사항:"
-
-#: src/backend/game.cpp:701
-msgid "An exception occurred while loading this plugin. Details: "
-msgstr "이 플러그인을 로드하는 동안 예외가 발생했습니다. 자세한 사항: "
-
-#: src/backend/game.cpp:719
-msgid "An exception occurred while loading this plugin. Details:"
-msgstr "이 플러그인을 로드하는 동안 예외가 발생했습니다. 자세한 사항:"
-
-#: src/backend/game.cpp:779
-msgid "Could not create LOOT folder for game. Details:"
-msgstr "게임에 대한 LOOT폴더를 생성할 수 없습니다. 자세한 사항:"
-
-#: src/backend/game.cpp:787
-msgid "Building plugin graph..."
-msgstr "플러그인 그래프 빌드 중..."
-
-#: src/backend/game.cpp:813 src/gui/handler.cpp:968
+#: src/gui/cef/query/types/metadata_query.h:201
+#: src/gui/cef/query/types/metadata_query.h:228
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\"에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: %2%"
 
-#: src/backend/game.cpp:823
-msgid "Adding edges to plugin graph and performing topological sort..."
-msgstr "플러그인 그래프에 엣지를 추가하고 위상 정렬을 수행 중..."
-
-#: src/backend/git.cpp:132
-msgid "Git operation failed. Error: %1%"
-msgstr "Git 작업이 실패했습니다. 오류: %1%"
-
-#: src/backend/git.cpp:179
-msgid "Object memory already allocated!"
-msgstr "개체 메모리는 이미 할당되어있습니다!"
-
-#: src/backend/git.cpp:183
-msgid "Tree memory already allocated!"
-msgstr "계층 트리 메모리는 이미 할당되어있습니다!"
-
-#: src/backend/git.cpp:187
-msgid "Diff memory already allocated!"
-msgstr "차분 메모리는 이미 할당되어있습니다!"
-
-#: src/backend/git.cpp:191
-msgid "Repository handle not open!"
-msgstr "저장소 핸들을 열 수 없습니다!"
-
-#: src/backend/git.cpp:222
-msgid "Unknown: Git repository missing"
-msgstr "알 수 없음: Git 저장소 누락"
-
-#: src/backend/git.cpp:226
+#: src/gui/cef/query/types/metadata_query.h:250
+#: src/gui/cef/query/types/metadata_query.h:251
 msgid "N/A: No masterlist present"
 msgstr "N/A: 마스터 리스트가 존재하지 않음"
 
-#: src/backend/git.cpp:231
-msgid ""
-"An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
-msgstr ""
-"로컬 마스터 리스트의 버전을 읽는 동안 오류가 발생했습니다. 이 오류가 다시 발"
-"생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+#: src/gui/cef/query/types/metadata_query.h:257
+#: src/gui/cef/query/types/metadata_query.h:258
+msgid "Unknown: Git repository missing"
+msgstr "알 수 없음: Git 저장소 누락"
 
-#: src/backend/git.cpp:264 src/backend/git.cpp:265
+#: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/cef/query/types/metadata_query.h:267
 msgid "(edited)"
 msgstr "(편집됨)"
 
-#: src/backend/git.cpp:294
-msgid ""
-"An error occurred while trying to clone the remote masterlist repository."
-msgstr "원격 마스터 리스트 저장소를 복재하는 동안 오류가 발생했습니다."
+#: src/gui/cef/query/types/sort_plugins_query.h:53
+msgid "Sorting load order..."
+msgstr "로드 순서 정렬 중..."
 
-#: src/backend/git.cpp:350 src/backend/git.cpp:383
-msgid ""
-"An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
+#: src/gui/state/loot_state.cpp:94
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
-"로컬 마스터 리스트 저장소에 저장하는 동안 오류가 발생했습니다. 이 오류가 다"
-"시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+"오류: --auto-sort가 전달되었지만 --game 매개 변수가 제공되지 않았습니다."
 
-#: src/backend/git.cpp:374
-msgid ""
-"An error occurred while trying to update the masterlist. This could be due "
-"to a server-side error. Try again in a few minutes."
-msgstr ""
-"마스터 리스트를 갱신하는 동안 오류가 발생했습니다. 이것은 서버 측의 오류로 인"
-"한 것일 수도 있습니다. 잠시 후에 다시 시도하십시오."
-
-#: src/backend/git.cpp:517
-msgid ""
-"An error occurred while trying to read information on the updated "
-"masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
-msgstr ""
-"갱신된 마스터 리스트에 대한 정보를 읽는 동안 오류가 발생했습니다. 이 오류가 "
-"다시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
-
-#: src/backend/git.cpp:587
-msgid "Masterlist revision"
-msgstr "마스터 리스트 버전"
-
-#: src/backend/git.cpp:587
-msgid "Rolled back to the previous revision."
-msgstr "이전 버전으로 되돌립니다."
-
-#: src/backend/graph.cpp:77
-msgid ""
-"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
-"%3%"
-msgstr ""
-"\"%1%\"와 \"%2%\"플러그인 사이의 순환 참조를 검출합니다. 순환 주기: %3%"
-
-#: src/backend/helpers.cpp:153
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "CRC 연산을 위해 \"%1%\"을 열 수 없습니다."
-
-#: src/backend/metadata.cpp:146 src/backend/metadata.cpp:178
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "\"%1%\"조건을 구문 분석하지 못했습니다: %2%"
-
-#: src/backend/metadata.cpp:151 src/backend/metadata.cpp:183
-msgid "Failed to parse condition \"%1%\"."
-msgstr "\"%1%\"조건을 구문 분석하지 못했습니다."
-
-#: src/backend/metadata.cpp:457
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr "\"%1%\"을 읽을 수 없습니다. 자세한 사항: %2%"
-
-#: src/backend/metadata.cpp:882 src/backend/metadata.cpp:893
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "이 플러그인은 \"%1%\"가 설치되어야 하지만 찾을 수 없습니다."
-
-#: src/backend/metadata.cpp:886
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "이 플러그인은 \"%1%\"가 활성화되어야 하지만 비활성화되어있습니다."
-
-#: src/backend/metadata.cpp:901
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "이 플러그인은 \"%1%\"와 호환되지 않지만 양쪽 모두 존재합니다."
-
-#: src/backend/metadata.cpp:910
-msgid ""
-"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
-"Clean with %4%."
-msgstr ""
-"%1%개의 ITM 레코드, %2%개의 삭제된 참조와 %3%개의 삭제된 Navmesh가 포함되어있"
-"습니다. %4%를 사용하여 청소하십시오."
-
-#: src/backend/metadata.cpp:912
-msgid "Clean with %1%."
-msgstr "%1%를 사용하여 청소하십시오."
-
-#: src/backend/metadata.cpp:915
-msgid ""
-"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-"%1%개의 삭제된 참조와 %2%개의 삭제된 Navmesh가 포함되어있습니다. %3%를 사용하"
-"여 청소하십시오."
-
-#: src/backend/metadata.cpp:917
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
-"%1%개의 삭제된 navmesh가 포함되어있습니다. %2%를 사용하여 청소하십시오."
-
-#: src/backend/metadata.cpp:919
-msgid "Contains %1% deleted references. Clean with %2%."
-msgstr "%1%개의 삭제된 참조가 포함되어있습니다. %2%를 사용하여 청소하십시오."
-
-#: src/backend/metadata.cpp:922
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-"%1%개의 ITM 레코드와 %2%개의 삭제된 Navmesh가 포함되어있습니다. %3%를 사용하"
-"여 청소하십시오."
-
-#: src/backend/metadata.cpp:924
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "%1%개의 ITM 레코드가 포함되어있습니다. %2%를 사용하여 청소하십시오."
-
-#: src/backend/metadata.cpp:927
-msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
-msgstr ""
-"%1%개의 ITM 레코드와 %2%개의 삭제된 참조가 포함되어있습니다. %3%를 사용하여 "
-"청소하십시오."
-
-#: src/gui/app.cpp:174
+#: src/gui/state/loot_state.cpp:117
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr "오류: LOOT 설정 파일을 만들 수 없습니다. %1%"
 
-#: src/gui/app.cpp:184
+#: src/gui/state/loot_state.cpp:127
 msgid "Error: Settings parsing failed. %1%"
 msgstr "오류: 설정의 구문 분석을 하지 못했습니다. %1%"
 
-#: src/gui/app.cpp:249
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr "오류: 게임 설정의 구문 분석을 하지 못했습니다. %1%"
-
-#: src/gui/app.cpp:269
+#: src/gui/state/loot_state.cpp:190
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. %1%"
 
-#: src/gui/app.cpp:410
-msgid "None of the supported games were detected."
-msgstr "지원되는 게임 중 어느 것도 감지되지 않았습니다."
+#: src/gui/state/game/game.cpp:169 src/gui/state/game/game.cpp:199
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "이 플러그인은 \"%1%\"가 설치되어야 하지만 찾을 수 없습니다."
 
-#: src/gui/handler.cpp:226 src/gui/handler.cpp:230
-msgid "Failed to change game. Details: %1%"
-msgstr "게임을 변경하지 못했습니다. 자세한 사항: %1%"
+#: src/gui/state/game/game.cpp:182
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "이 플러그인은 \"%1%\"가 활성화되어야 하지만 비활성화되어있습니다."
 
-#: src/gui/handler.cpp:247 src/gui/handler.cpp:251 src/gui/handler.cpp:328
-#: src/gui/handler.cpp:332
-msgid "Failed to copy plugin metadata. Details: %1%"
-msgstr "플러그인 메타데이터를 복사하지 못했습니다. 자세한 사항: %1%"
+#: src/gui/state/game/game.cpp:218
+msgid "This plugin is incompatible with \"%1%\", but both files are present."
+msgstr "이 플러그인은 \"%1%\"와 호환되지 않지만 두 파일이 모두 존재합니다."
 
-#: src/gui/handler.cpp:347 src/gui/handler.cpp:907
-msgid "Loading plugin contents..."
-msgstr "플러그인 내용 로드 중..."
-
-#: src/gui/handler.cpp:351
-msgid "Checking for conflicting plugins..."
-msgstr "플러그인 충돌에 대해 확인중..."
-
-#: src/gui/handler.cpp:518 src/gui/handler.cpp:526
-msgid "Shell execute failed."
-msgstr "명령을 실행하지 못했습니다."
-
-#: src/gui/handler.cpp:584
-msgid "Loading plugin headers..."
-msgstr "플러그인 헤더 로드 중..."
-
-#: src/gui/handler.cpp:610
-msgid "Parsing masterlist..."
-msgstr "마스터 리스트 구문 분석 중..."
-
-#: src/gui/handler.cpp:616
-msgid "An error occurred while parsing the masterlist: %1%"
-msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
-
-#: src/gui/handler.cpp:622
-msgid "Parsing userlist..."
-msgstr "유저리스트 구문 분석 중..."
-
-#: src/gui/handler.cpp:628
-msgid "An error occurred while parsing the userlist: %1%"
-msgstr "유저리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
-
-#: src/gui/handler.cpp:653
-msgid "Merging and evaluating plugin metadata..."
-msgstr "플러그인 메타데이터를 병합 및 평가 중..."
-
-#: src/gui/handler.cpp:718
-msgid "Loading general messages..."
-msgstr "일반 메시지 로드 중..."
-
-#: src/gui/handler.cpp:742 src/gui/handler.cpp:848
+#: src/gui/state/game/game.cpp:253
 msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
+"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
 msgstr ""
-"전역 메세지에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: %1%"
+"이 플러그인은 경량 마스터이며 비 마스터 플러그인 \"%1%\"가 필요합니다. 이로 "
+"인해 게임 내에서 문제가 발생하고 플러그인이 설치된 동안 정렬이 실패할 수 있습"
+"니다."
 
-#: src/gui/handler.cpp:752 src/gui/handler.cpp:756
-msgid "Failed to get game data. Details: %1%"
-msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: %1%"
+#: src/gui/state/game/game.cpp:273
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"이 플러그인에는 ESL 플러그인의 유효한 범위를 벗어난 FormID가 있는 레코드가 포"
+"함되어 있습니다. 이 플러그인을 사용하면 게임 저장에 돌이킬 수 없는 손상이 발"
+"생합니다."
 
-#: src/gui/handler.cpp:775
+#: src/gui/state/game/game.cpp:290
+msgid ""
+"This plugin has a header version of %1%, which is less than the game's "
+"minimum supported header version of %2%."
+msgstr ""
+"이 플러그인의 헤더 버전은 %1%이며,  이는 게임에서 지원되는 최소 헤더 버전인 "
+"%2%보다 낮습니다."
+
+#: src/gui/state/game/game.cpp:302
+msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgstr "이 플러그인은 존재하지 않는 \"%1%\" 그룹에 속해 있습니다."
+
+#: src/gui/state/game/game.cpp:370 src/gui/state/game/game.cpp:462
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+"현재 로드 순서를 로드하지 못했습니다. 표시된 정보가 올바르지 않을 수 있습니"
+"다."
+
+#: src/gui/state/game/game.cpp:485
+msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
+msgstr "\"%1%\"와 \"%2%\"플러그인 사이의 순환 참조가 감지됨 : %3%"
+
+#: src/gui/state/game/game.cpp:497
+msgid "The group \"%1%\" does not exist."
+msgstr "\"%1%\" 그룹이 존재하지 않습니다."
+
+#: src/gui/state/game/game.cpp:533
+msgid "You have not sorted your load order this session."
+msgstr "이 세션에서 로드 순서를 정렬하지 않았습니다."
+
+#: src/gui/state/game/game.cpp:557
+msgid ""
+"You have a normal plugin and at least one light master sharing the FE load "
+"order index. Deactivate a normal plugin or all your light masters to avoid "
+"potential issues."
+msgstr ""
+"일반 플러그인과 FE로드 순서 색인을 공유하는 하나 이상의 경량 마스터가 있습니"
+"다. 잠재적인 문제를 방지하려면 일반 플러그인 또는 모든 경량 마스터를 비활성화"
+"하십시오."
+
+#: src/gui/state/game/game.cpp:585
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
+msgstr ""
+"최신 마스터 목록 수정본에 구문 오류가 있습니다. 대신에 LOOT는 유효한 최신 수"
+"정본을 사용하고 있습니다. 구문 오류는 일반적으로 경미하고 몇 시간 내에 수정됩"
+"니다."
+
+#: src/gui/state/game/game.cpp:630
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"메타데이터 목록을 구문 분석하는 동안 오류가 발생했습니다. : %1%.\n"
+"\n"
+"마스터 목록을 업데이트하여 오류를 해결하십시오. 사용자 메타데이터에 오류가 있"
+"는 경우 LOOT 업데이트로 메타데이터 구문 지원이 변경되었기 때문일 수 있습니"
+"다. 사용자 메타데이터를 수동으로 업데이트해야 합니다.\n"
+"\n"
+"그러기 위해서는 LOOT의 기본 메뉴에 있는 '디버그 로그 위치 열기'를 사용하여 데"
+"이터 폴더를 연다음 해당 게임 폴더에 있는 'userlist.yaml'파일을 여십시오. 그"
+"런 다음 LOOT의 기본 메뉴를 통해 액세스할 수 있는 설명서를 참조하여 메타데이터"
+"에 포함된 메타데이터를 편집할 수 있습니다.\n"
+"\n"
+"[LOOT 홈페이지](https://loot.github.io/)에 링크된 LOOT의 포럼 스레드에서 지원"
+"을 요청할 수도 있습니다."
+
+#: src/gui/state/game/helpers.cpp:87
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] "ITM 레코드 %1% 개"
+
+#: src/gui/state/game/helpers.cpp:91
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] "삭제된 참조 %1%개"
+
+#: src/gui/state/game/helpers.cpp:97
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] "삭제된 Navmesh %1%개"
+
+#: src/gui/state/game/helpers.cpp:107
+msgid "%1% found %2%, %3% and %4%."
+msgstr "%2%, %3%과 %4% %1%개 찾음."
+
+#: src/gui/state/game/helpers.cpp:113
+msgid "%1% found dirty edits."
+msgstr "지저분한 편집 %1% 개 찾음."
+
+#: src/gui/state/game/helpers.cpp:119 src/gui/state/game/helpers.cpp:125
+#: src/gui/state/game/helpers.cpp:130
+msgid "%1% found %2% and %3%."
+msgstr "%2%과 %3% %1%개 찾음."
+
+#: src/gui/state/game/helpers.cpp:134 src/gui/state/game/helpers.cpp:137
+#: src/gui/state/game/helpers.cpp:140
+msgid "%1% found %2%."
+msgstr "%2% %1%개 찾음."
+
+#: src/gui/state/game/helpers.cpp:221
+msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
+msgstr "LOOT에서 %1%가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
+
+#: src/gui/html/elements/loot-groups-editor.ts:406
+msgid "Add a new group"
+msgstr "새 그룹 추가"
+
+#: src/gui/html/elements/loot-groups-editor.ts:407
+msgid "Group name"
+msgstr "그룹 이르"
+
+#: src/gui/html/elements/loot-groups-editor.ts:408
+msgid "Group already exists!"
+msgstr "그룹이 이미 존재함!"
+
+#: src/gui/html/elements/loot-groups-editor.ts:409
+msgid "No plugins are in this group."
+msgstr "이 그룹에는 플러그인이 없습니다."
+
+#: src/gui/html/elements/loot-groups-editor.ts:419
+msgid "Plugins in %s"
+msgstr "%s의 플러그인"
+
+#: src/gui/html/elements/loot-plugin-card.ts:341
+msgid "Verified clean by %s"
+msgstr "%s에서 정리 확인"
+
+#: src/gui/html/js/events.ts:201
+msgid "Identifying conflicting plugins..."
+msgstr "플러그인 충돌 식별 중..."
+
+#: src/gui/html/js/events.ts:287
 msgid "Updating and parsing masterlist..."
 msgstr "마스터 리스트 갱신 및 구문 분석 중..."
 
-#: src/gui/handler.cpp:791
-msgid "Regenerating displayed content..."
-msgstr "표시되는 내용을 재생성 중..."
+#: src/gui/html/js/events.ts:310
+msgid "Masterlist updated to revision %s."
+msgstr "마스터 리스트를 %s버전으로 갱신되었습니다."
 
-#: src/gui/handler.cpp:861 src/gui/handler.cpp:865
-msgid "Failed to update the masterlist. Details: %1%"
-msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: %1%"
+#: src/gui/html/js/events.ts:317
+msgid "No masterlist update was necessary."
+msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
 
-#: src/gui/handler.cpp:941
-msgid "Failed to sort plugins. Details: %1%"
-msgstr "플러그인을 정렬하지 못했습니다. 자세한 사항: %1%"
+#: src/gui/html/js/events.ts:353
+msgid "Cyclic interaction detected"
+msgstr "순환 상호 작용 감지됨"
 
-#: src/backend/parsers.h:553 src/backend/parsers.h:645
-msgid "Invalid file path:"
-msgstr "잘못된 파일 경로:"
+#: src/gui/html/js/events.ts:360
+msgid "Failed to sort plugins. Details: %s"
+msgstr "플러그인을 정렬하지 못했습니다. 세부 정ㅂ: %1%"
 
-#: src/backend/parsers.h:607
-msgid "Invalid folder path:"
-msgstr "잘못된 폴더 경로:"
+#: src/gui/html/js/events.ts:387
+msgid "Sorting made no changes to the load order."
+msgstr "정렬은 순서를 변경하지 않았습니다."
 
-#: src/backend/parsers.h:625
-msgid "Invalid regex string:"
-msgstr "잘못된 정규식 문자열:"
+#: src/gui/html/js/events.ts:430
+msgid "Redate Plugins?"
+msgstr "플러그인 날짜를 변경할까요?"
 
-#: src/backend/parsers.h:727
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "\"%1%\"에서 \"%2%\"가 예상됩니다."
-
-#: resources/report/js/filters.js:121
-msgid "Do not clean"
-msgstr "청소 금지"
-
-#: resources/report/js/l10n.js:61 resources/report/js/l10n.js:80
-msgid "Active Plugin"
-msgstr "활성화된 플러그인"
-
-#: resources/report/js/l10n.js:62 resources/report/js/l10n.js:289
-msgid "Master File"
-msgstr "마스터 파일"
-
-#: resources/report/js/l10n.js:63 resources/report/js/l10n.js:81
-msgid "Empty Plugin"
-msgstr "빈 플러그인"
-
-#: resources/report/js/l10n.js:64 resources/report/js/l10n.js:82
-#: resources/report/js/l10n.js:139
-msgid "Loads BSA"
-msgstr "BSA 로드"
-
-#: resources/report/js/l10n.js:65 resources/report/js/l10n.js:140
-msgid "Has User Metadata"
-msgstr "사용자 메타데이터를 가짐"
-
-#: resources/report/js/l10n.js:67
-msgid "Show Only Conflicts"
-msgstr "충돌만 보기"
-
-#: resources/report/js/l10n.js:68
-msgid "Edit Metadata"
-msgstr "메타데이터 편집"
-
-#: resources/report/js/l10n.js:69
-msgid "Copy Metadata"
-msgstr "메타데이터 복사"
-
-#: resources/report/js/l10n.js:70
-msgid "Clear User Metadata"
-msgstr "유저 데이터 삭제"
-
-#: resources/report/js/l10n.js:84
-msgid "Enable Edits"
-msgstr "편집 사용"
-
-#: resources/report/js/l10n.js:85
+#: src/gui/html/js/events.ts:431
 msgid ""
-"Global priorities are compared against all other plugins. Normal priorities "
-"are compared against only conflicting plugins."
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
 msgstr ""
-"전역 우선 순위는 다른 모든 플러그인에 대해 비교됩니다. 일반 우선 순위는 충돌"
-"하는 플러그인과 비교됩니다."
+"이 기능은 Creation Kit을 사용하는 모더가 사용하는 로드 순서를 설정할 수 있도"
+"록 제공됩니다. 부작용으로는 구독한 모든 Steam 창작 마당 모드가 Steam에서 다"
+"시 다운로드 된다는 것입니다 (Skyrim Special Edition에는 영향을 주지 않음). 계"
+"속하시겠습니까?"
 
-#: resources/report/js/l10n.js:86 resources/report/js/l10n.js:138
-msgid "Global Priority"
-msgstr "전역 우선 순위"
+#: src/gui/html/js/events.ts:434
+msgid "Redate"
+msgstr "날짜 변경"
 
-#: resources/report/js/l10n.js:87
-msgid "Priority Value"
-msgstr "우선 순위 값"
+#: src/gui/html/js/events.ts:440
+msgid "Plugins were successfully redated."
+msgstr "플러그인이 성공적으로 수정되었습니다."
 
-#: resources/report/js/l10n.js:89
-msgid "Main"
-msgstr "메인"
+#: src/gui/html/js/events.ts:452
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
+msgstr ""
+"모든 플러그인에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: resources/report/js/l10n.js:90
-msgid "Load After"
-msgstr "선행 로드"
+#: src/gui/html/js/events.ts:455 src/gui/html/js/events.ts:798
+msgid "Clear"
+msgstr "삭제"
 
-#: resources/report/js/l10n.js:91
-msgid "Requirements"
-msgstr "요구 사항"
+#: src/gui/html/js/events.ts:469
+msgid "All user-added metadata has been cleared."
+msgstr "모든 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: resources/report/js/l10n.js:92
-msgid "Incompatibilities"
-msgstr "비호환성"
+#: src/gui/html/js/events.ts:506
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "LOOT의 내용이 클립보드에 복사되었습니다."
 
-#: resources/report/js/l10n.js:93
-msgid "Messages"
-msgstr "메시지"
+#: src/gui/html/js/events.ts:524
+msgid "The load order has been copied to the clipboard."
+msgstr "로드 순서가 클립보드에 복사되었습니다."
 
-#: resources/report/js/l10n.js:94
-msgid "Bash Tags"
-msgstr "배쉬 태그"
+#: src/gui/html/js/events.ts:560
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "아직 %s을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
 
-#: resources/report/js/l10n.js:95
-msgid "Dirty Info"
-msgstr "지저분한 정보"
-
-#: resources/report/js/l10n.js:96
-msgid "Locations"
-msgstr "위치"
-
-#: resources/report/js/l10n.js:98 resources/report/js/l10n.js:102
-#: resources/report/js/l10n.js:106
-msgid "Filename"
-msgstr "파일 이름"
-
-#: resources/report/js/l10n.js:99 resources/report/js/l10n.js:103
-#: resources/report/js/l10n.js:107
-msgid "Display Name"
-msgstr "표시되는 이름"
-
-#: resources/report/js/l10n.js:100 resources/report/js/l10n.js:104
-#: resources/report/js/l10n.js:108 resources/report/js/l10n.js:112
-#: resources/report/js/l10n.js:117
-msgid "Condition"
-msgstr "상태"
-
-#: resources/report/js/l10n.js:110
-msgid "Type"
-msgstr "형식"
-
-#: resources/report/js/l10n.js:111
-msgid "Content"
-msgstr "내용"
-
-#: resources/report/js/l10n.js:113 resources/report/js/l10n.js:277
-msgid "Language"
-msgstr "언어"
-
-#: resources/report/js/l10n.js:115
-msgid "Add/Remove"
-msgstr "추가/제거"
-
-#: resources/report/js/l10n.js:116
-msgid "Bash Tag"
-msgstr "배쉬 태그"
-
-#: resources/report/js/l10n.js:119
-msgid "CRC"
-msgstr "CRC"
-
-#: resources/report/js/l10n.js:120
-msgid "ITM Count"
-msgstr "ITM 개수"
-
-#: resources/report/js/l10n.js:121
-msgid "Deleted References"
-msgstr "삭제된 참조"
-
-#: resources/report/js/l10n.js:122
-msgid "Deleted Navmeshes"
-msgstr "삭제된 Navmesh"
-
-#: resources/report/js/l10n.js:123
-msgid "Cleaning Utility"
-msgstr "청소 유틸리티"
-
-#: resources/report/js/l10n.js:125
-msgid "URL"
-msgstr "URL"
-
-#: resources/report/js/l10n.js:126
-msgid "Version"
-msgstr "버전"
-
-#: resources/report/js/l10n.js:128 resources/report/js/l10n.js:225
-#: resources/report/js/l10n.js:299
-msgid "Apply"
-msgstr "적용"
-
-#: resources/report/js/l10n.js:129 resources/report/js/l10n.js:226
-#: resources/report/js/l10n.js:300 resources/report/js/script.js:418
-msgid "Cancel"
-msgstr "취소"
-
-#: resources/report/js/l10n.js:149
-msgid "A filename is required."
-msgstr "파일 이름이 필요합니다."
-
-#: resources/report/js/l10n.js:150 resources/report/js/l10n.js:163
-#: resources/report/js/l10n.js:175 resources/report/js/l10n.js:189
-#: resources/report/js/l10n.js:199 resources/report/js/l10n.js:210
-msgid "Delete Row"
-msgstr "행 삭제"
-
-#: resources/report/js/l10n.js:159
-msgid "Note"
-msgstr "노트"
-
-#: resources/report/js/l10n.js:160
-msgid "Warning"
-msgstr "경고"
-
-#: resources/report/js/l10n.js:161 resources/report/js/script.js:346
-msgid "Error"
-msgstr "오류"
-
-#: resources/report/js/l10n.js:162
-msgid "A content string is required."
-msgstr "내용 문자열이 필요합니다."
-
-#: resources/report/js/l10n.js:172
-msgid "Add"
-msgstr "추가"
-
-#: resources/report/js/l10n.js:173
-msgid "Remove"
-msgstr "제거"
-
-#: resources/report/js/l10n.js:174 resources/report/js/l10n.js:208
-msgid "A name is required."
-msgstr "이름이 필요합니다."
-
-#: resources/report/js/l10n.js:184
-msgid "A CRC is required."
-msgstr "CRC가 필요합니다."
-
-#: resources/report/js/l10n.js:185 resources/report/js/l10n.js:186
-#: resources/report/js/l10n.js:187
-msgid "Values must be integers."
-msgstr "값은 정수여야 합니다."
-
-#: resources/report/js/l10n.js:188
-msgid "A utility name is required."
-msgstr "유틸리티 이름이 필요합니다."
-
-#: resources/report/js/l10n.js:198
-msgid "A link is required."
-msgstr "링크가 필요합니다."
-
-#: resources/report/js/l10n.js:209
-msgid "A folder is required."
-msgstr "폴더가 필요합니다."
-
-#: resources/report/js/l10n.js:219 resources/report/js/l10n.js:297
-msgid "Add New Row"
-msgstr "새 행 추가"
-
-#: resources/report/js/l10n.js:222
-msgid "Jump To General Information"
-msgstr "일반 정보로 이동"
-
-#: resources/report/js/l10n.js:223
-msgid "Sort Plugins"
-msgstr "플러그인 정렬"
-
-#: resources/report/js/l10n.js:224
-msgid "Update Masterlist"
-msgstr "마스터 리스트 갱신"
-
-#: resources/report/js/l10n.js:229
-msgid "Redate Plugins"
-msgstr "플러그인 날짜 변경"
-
-#: resources/report/js/l10n.js:230
-msgid "Open Debug Log Location"
-msgstr "디버그 로그 위치 열기"
-
-#: resources/report/js/l10n.js:231
-msgid "Clear All User Metadata"
-msgstr "유저 메타데이터 모두 삭제"
-
-#: resources/report/js/l10n.js:232
-msgid "Copy Content"
-msgstr "내용 복사"
-
-#: resources/report/js/l10n.js:233
-msgid "Refresh Content"
-msgstr "내용 새로고침"
-
-#: resources/report/js/l10n.js:234
-msgid "View Documentation"
-msgstr "문서 보기"
-
-#: resources/report/js/l10n.js:235
-msgid "About"
-msgstr "정보"
-
-#: resources/report/js/l10n.js:236 resources/report/js/l10n.js:269
-msgid "Settings"
-msgstr "설정"
-
-#: resources/report/js/l10n.js:237 resources/report/js/script.js:808
+#: src/gui/html/js/events.ts:564 src/gui/html/js/translateStaticText.ts:502
 msgid "Quit"
 msgstr "종료"
 
-#: resources/report/js/l10n.js:240
-msgid "Plugins"
-msgstr "플러그인"
+#: src/gui/html/js/events.ts:582
+msgid "sorted load order"
+msgstr "정렬된 로드 순서"
 
-#: resources/report/js/l10n.js:241
-msgid "Filters"
-msgstr "필터"
+#: src/gui/html/js/events.ts:585
+msgid "metadata edits"
+msgstr "메타데이터 편집"
 
-#: resources/report/js/l10n.js:242
-msgid "Press Enter or click outside the input to set the filter."
-msgstr "필터를 설정하기 위해 Enter를 누르거나 바깥 쪽을 클릭하십시오."
+#: src/gui/html/js/events.ts:778
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "\"%s\"에 대한 메타데이터가 클립보드에 복사되었습니다."
 
-#: resources/report/js/l10n.js:243
-msgid "Filter content..."
-msgstr "필터링할 콘텐츠..."
+#: src/gui/html/js/events.ts:794
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr "\"%s\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: resources/report/js/l10n.js:246
-msgid "Hide version numbers"
-msgstr "버전 번호 숨기기"
+#: src/gui/html/js/events.ts:816
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "\"%s\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: resources/report/js/l10n.js:247
-msgid "Hide CRCs"
-msgstr "CRC 숨기기"
+#: src/gui/html/js/filters.ts:51
+msgid "Do not clean"
+msgstr "청소 금지"
 
-#: resources/report/js/l10n.js:248
-msgid "Hide Bash Tags"
-msgstr "배쉬 태그 숨기기"
+#: src/gui/html/js/game.ts:138
+msgid "N/A"
+msgstr "N/A"
 
-#: resources/report/js/l10n.js:249
-msgid "Hide notes"
-msgstr "노트 숨기기"
-
-#: resources/report/js/l10n.js:251
-msgid "Hide all plugin messages"
-msgstr "모든 플러그인 메시지 숨기기"
-
-#: resources/report/js/l10n.js:252
-msgid "Hide inactive plugins"
-msgstr "비활성 플러그인 숨기기"
-
-#: resources/report/js/l10n.js:253
-msgid "Hide messageless plugins"
-msgstr "메시지 적은 플러그인 숨기기"
-
-#: resources/report/js/l10n.js:254
-msgid "Hidden plugins:"
-msgstr "숨겨진 플러그인:"
-
-#: resources/report/js/l10n.js:255
-msgid "Hidden messages:"
-msgstr "숨겨진 메시지:"
-
-#: resources/report/js/l10n.js:258
-msgid "General Information"
-msgstr "일반 정보"
-
-#: resources/report/js/l10n.js:259
-msgid "Masterlist Revision"
-msgstr "마스터 리스트 버전"
-
-#: resources/report/js/l10n.js:260
-msgid "Masterlist Date"
-msgstr "마스터 리스트 일자"
-
-#: resources/report/js/l10n.js:261
-msgid "Warnings"
-msgstr "경고"
-
-#: resources/report/js/l10n.js:262
-msgid "Errors"
+#: src/gui/html/js/handlePromiseError.ts:8
+#: src/gui/html/js/translateStaticText.ts:336
+msgid "Error"
 msgstr "오류"
 
-#: resources/report/js/l10n.js:263
-msgid "Total Messages"
-msgstr "전체 메시지"
+#: src/gui/html/js/initialise.ts:315
+msgid ""
+"Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
+"can get to it through the main menu) for more information."
+msgstr ""
+"LOOT 업데이트를 확인하지 못했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메"
+"뉴를 통해 얻을 수 있음)에서 확인할 수 있습니다."
 
-#: resources/report/js/l10n.js:264
-msgid "Active Plugins"
+#: src/gui/html/js/initialise.ts:331
+msgid "A [new release](%s) of LOOT is available."
+msgstr "LOOT의 [새 버전] (%s)을 사용할 수 있습니다."
+
+#: src/gui/html/js/initialise.ts:371
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
+msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
+
+#: src/gui/html/js/translateStaticText.ts:73
+msgid "Active Plugin"
 msgstr "활성화된 플러그인"
 
-#: resources/report/js/l10n.js:265
-msgid "Dirty Plugins"
-msgstr "지저분한 플러그인"
+#: src/gui/html/js/translateStaticText.ts:77
+#: src/gui/html/js/translateStaticText.ts:692
+msgid "Master File"
+msgstr "마스터 파일"
 
-#: resources/report/js/l10n.js:266
-msgid "Total Plugins"
-msgstr "전체 플러그인"
+#: src/gui/html/js/translateStaticText.ts:81
+msgid "Light Master File"
+msgstr "경량 마스터 파일"
 
-#: resources/report/js/l10n.js:272
-msgid "Default Game"
-msgstr "기본 게임"
+#: src/gui/html/js/translateStaticText.ts:85
+msgid "Empty Plugin"
+msgstr "빈 플러그인"
 
-#: resources/report/js/l10n.js:273 resources/report/js/l10n.js:275
-msgid "Autodetect"
-msgstr "자동 감지"
+#: src/gui/html/js/translateStaticText.ts:89
+msgid "Loads Archive"
+msgstr "아카이브 로드"
 
-#: resources/report/js/l10n.js:278
-msgid "Language changes will be applied after LOOT is restarted."
-msgstr "LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
+#: src/gui/html/js/translateStaticText.ts:93
+#: src/gui/html/js/translateStaticText.ts:296
+msgid "Has User Metadata"
+msgstr "사용자 메타데이터를 가짐"
 
-#: resources/report/js/l10n.js:280
-msgid "Enable debug logging"
-msgstr "디버그 로깅 사용"
+#: src/gui/html/js/translateStaticText.ts:98
+msgid "Edit Metadata"
+msgstr "메타데이터 편집"
 
-#: resources/report/js/l10n.js:281
-msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr "출력은 LOOTDebugLog.txt 파일에 기록됩니다."
+#: src/gui/html/js/translateStaticText.ts:102
+msgid "Copy Metadata"
+msgstr "메타데이터 복사"
 
-#: resources/report/js/l10n.js:283
-msgid "Update masterlist before sorting"
-msgstr "정렬하기 전에 마스터 리스트 갱신"
+#: src/gui/html/js/translateStaticText.ts:106
+msgid "Clear User Metadata"
+msgstr "유저 데이터 삭제"
 
-#: resources/report/js/l10n.js:286
+#: src/gui/html/js/translateStaticText.ts:129
+msgid "Enable Edits"
+msgstr "편집 사용"
+
+#: src/gui/html/js/translateStaticText.ts:132
+#: src/gui/html/js/translateStaticText.ts:292
+msgid "Group"
+msgstr "그루"
+
+#: src/gui/html/js/translateStaticText.ts:137
+msgid "Main"
+msgstr "메인"
+
+#: src/gui/html/js/translateStaticText.ts:141
+msgid "Load After"
+msgstr "선행 로드"
+
+#: src/gui/html/js/translateStaticText.ts:145
+msgid "Requirements"
+msgstr "요구 사항"
+
+#: src/gui/html/js/translateStaticText.ts:149
+msgid "Incompatibilities"
+msgstr "비호환성"
+
+#: src/gui/html/js/translateStaticText.ts:153
+msgid "Messages"
+msgstr "메시지"
+
+#: src/gui/html/js/translateStaticText.ts:157
+msgid "Bash Tags"
+msgstr "배쉬 태그"
+
+#: src/gui/html/js/translateStaticText.ts:161
+msgid "Dirty Plugin Info"
+msgstr "지저분한 플러그인 정보"
+
+#: src/gui/html/js/translateStaticText.ts:165
+msgid "Clean Plugin Info"
+msgstr "정리된 플러그인 정보"
+
+#: src/gui/html/js/translateStaticText.ts:169
+msgid "Locations"
+msgstr "위치"
+
+#: src/gui/html/js/translateStaticText.ts:174
+#: src/gui/html/js/translateStaticText.ts:189
+#: src/gui/html/js/translateStaticText.ts:202
+msgid "Filename"
+msgstr "파일 이름"
+
+#: src/gui/html/js/translateStaticText.ts:179
+#: src/gui/html/js/translateStaticText.ts:193
+#: src/gui/html/js/translateStaticText.ts:206
+msgid "Display Name"
+msgstr "표시되는 이름"
+
+#: src/gui/html/js/translateStaticText.ts:184
+#: src/gui/html/js/translateStaticText.ts:197
+#: src/gui/html/js/translateStaticText.ts:210
+#: src/gui/html/js/translateStaticText.ts:223
+#: src/gui/html/js/translateStaticText.ts:240
+msgid "Condition"
+msgstr "상태"
+
+#: src/gui/html/js/translateStaticText.ts:215
+msgid "Type"
+msgstr "형식"
+
+#: src/gui/html/js/translateStaticText.ts:219
+msgid "Content"
+msgstr "내용"
+
+#: src/gui/html/js/translateStaticText.ts:227
+#: src/gui/html/js/translateStaticText.ts:662
+msgid "Language"
+msgstr "언어"
+
+#: src/gui/html/js/translateStaticText.ts:232
+msgid "Add/Remove"
+msgstr "추가/제거"
+
+#: src/gui/html/js/translateStaticText.ts:236
+msgid "Bash Tag"
+msgstr "배쉬 태그"
+
+#: src/gui/html/js/translateStaticText.ts:245
+#: src/gui/html/js/translateStaticText.ts:266
+msgid "CRC"
+msgstr "CRC"
+
+#: src/gui/html/js/translateStaticText.ts:249
+msgid "ITM Count"
+msgstr "ITM 개수"
+
+#: src/gui/html/js/translateStaticText.ts:253
+msgid "Deleted References"
+msgstr "삭제된 참조"
+
+#: src/gui/html/js/translateStaticText.ts:257
+msgid "Deleted Navmeshes"
+msgstr "삭제된 Navmesh"
+
+#: src/gui/html/js/translateStaticText.ts:261
+#: src/gui/html/js/translateStaticText.ts:270
+msgid "Cleaning Utility"
+msgstr "청소 유틸리티"
+
+#: src/gui/html/js/translateStaticText.ts:275
+msgid "URL"
+msgstr "URL"
+
+#: src/gui/html/js/translateStaticText.ts:279
+#: src/gui/html/js/translateStaticText.ts:683
 msgid "Name"
 msgstr "이름"
 
-#: resources/report/js/l10n.js:287
+#: src/gui/html/js/translateStaticText.ts:284
+msgid "Save Metadata"
+msgstr "메타데이터 저장"
+
+#: src/gui/html/js/translateStaticText.ts:288
+#: src/gui/html/js/translateStaticText.ts:472
+#: src/gui/html/js/translateStaticText.ts:720
+msgid "Cancel"
+msgstr "취소"
+
+#: src/gui/html/js/translateStaticText.ts:300
+msgid "Editor Is Open"
+msgstr "편집기 열림"
+
+#: src/gui/html/js/translateStaticText.ts:319
+msgid "A filename is required."
+msgstr "파일 이름이 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:321
+#: src/gui/html/js/translateStaticText.ts:343
+#: src/gui/html/js/translateStaticText.ts:362
+#: src/gui/html/js/translateStaticText.ts:395
+#: src/gui/html/js/translateStaticText.ts:412
+#: src/gui/html/js/translateStaticText.ts:425
+#: src/gui/html/js/translateStaticText.ts:442
+msgid "Delete Row"
+msgstr "행 삭제"
+
+#: src/gui/html/js/translateStaticText.ts:330
+msgid "Note"
+msgstr "노트"
+
+#: src/gui/html/js/translateStaticText.ts:333
+msgid "Warning"
+msgstr "경고"
+
+#: src/gui/html/js/translateStaticText.ts:341
+msgid "A content string is required."
+msgstr "내용 문자열이 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:352
+msgid "Add"
+msgstr "추가"
+
+#: src/gui/html/js/translateStaticText.ts:355
+msgid "Remove"
+msgstr "제거"
+
+#: src/gui/html/js/translateStaticText.ts:360
+#: src/gui/html/js/translateStaticText.ts:436
+msgid "A name is required."
+msgstr "이름이 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:373
+#: src/gui/html/js/translateStaticText.ts:406
+msgid "A CRC is required."
+msgstr "CRC가 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:378
+#: src/gui/html/js/translateStaticText.ts:383
+#: src/gui/html/js/translateStaticText.ts:388
+msgid "Values must be integers."
+msgstr "값은 정수여야 합니다."
+
+#: src/gui/html/js/translateStaticText.ts:393
+#: src/gui/html/js/translateStaticText.ts:410
+msgid "A utility name is required."
+msgstr "유틸리티 이름이 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:423
+msgid "A link is required."
+msgstr "링크가 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:440
+msgid "A folder is required."
+msgstr "폴더가 필요합니다."
+
+#: src/gui/html/js/translateStaticText.ts:451
+#: src/gui/html/js/translateStaticText.ts:713
+msgid "Add New Row"
+msgstr "새 행 추가"
+
+#: src/gui/html/js/translateStaticText.ts:462
+msgid "Jump To General Information"
+msgstr "일반 정보로 이동"
+
+#: src/gui/html/js/translateStaticText.ts:466
+msgid "Sort Plugins"
+msgstr "플러그인 정렬"
+
+#: src/gui/html/js/translateStaticText.ts:470
+msgid "Update Masterlist"
+msgstr "마스터 리스트 갱신"
+
+#: src/gui/html/js/translateStaticText.ts:471
+#: src/gui/html/js/translateStaticText.ts:717
+msgid "Apply"
+msgstr "적용"
+
+#: src/gui/html/js/translateStaticText.ts:476
+msgid "Search Cards"
+msgstr "카드 검색"
+
+#: src/gui/html/js/translateStaticText.ts:479
+msgid "Redate Plugins"
+msgstr "플러그인 날짜 변경"
+
+#: src/gui/html/js/translateStaticText.ts:482
+msgid "Open Debug Log Location"
+msgstr "디버그 로그 위치 열기"
+
+#: src/gui/html/js/translateStaticText.ts:485
+msgid "Clear All User Metadata"
+msgstr "유저 메타데이터 모두 삭제"
+
+#: src/gui/html/js/translateStaticText.ts:488
+msgid "Copy Load Order"
+msgstr "로드 순서 복사"
+
+#: src/gui/html/js/translateStaticText.ts:491
+msgid "Copy Content"
+msgstr "내용 복사"
+
+#: src/gui/html/js/translateStaticText.ts:494
+msgid "Refresh Content"
+msgstr "내용 새로고침"
+
+#: src/gui/html/js/translateStaticText.ts:497
+msgid "View Documentation"
+msgstr "문서 보기"
+
+#: src/gui/html/js/translateStaticText.ts:500
+msgid "About"
+msgstr "정보"
+
+#: src/gui/html/js/translateStaticText.ts:501
+#: src/gui/html/js/translateStaticText.ts:650
+msgid "Settings"
+msgstr "설정"
+
+#: src/gui/html/js/translateStaticText.ts:513
+msgid "Search cards"
+msgstr "카드 검색"
+
+#: src/gui/html/js/translateStaticText.ts:553
+msgid "Plugins"
+msgstr "플러그인"
+
+#: src/gui/html/js/translateStaticText.ts:564
+msgid "Filters"
+msgstr "필터"
+
+#: src/gui/html/js/translateStaticText.ts:569
+msgid "Press Enter or click outside the input to set the filter."
+msgstr "필터를 설정하기 위해 Enter를 누르거나 바깥 쪽을 클릭하십시오."
+
+#: src/gui/html/js/translateStaticText.ts:573
+msgid "Show only plugins with cards that contain"
+msgstr "다음을 포함하는 카드가 있는 플러그인만 표시"
+
+#: src/gui/html/js/translateStaticText.ts:576
+msgid "No text specified"
+msgstr "지정된 텍스트 없음"
+
+#: src/gui/html/js/translateStaticText.ts:579
+msgid "Hide version numbers"
+msgstr "버전 번호 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:582
+msgid "Hide CRCs"
+msgstr "CRC 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:583
+msgid "Hide Bash Tags"
+msgstr "배쉬 태그 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:584
+msgid "Hide notes"
+msgstr "노트 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:588
+msgid "Hide all plugin messages"
+msgstr "모든 플러그인 메시지 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:591
+msgid "Hide inactive plugins"
+msgstr "비활성 플러그인 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:594
+msgid "Hide messageless plugins"
+msgstr "메시지 적은 플러그인 숨기기"
+
+#: src/gui/html/js/translateStaticText.ts:599
+msgid "Show only conflicting plugins for"
+msgstr "다음에 대해 충돌하는 플러그인만 표시"
+
+#: src/gui/html/js/translateStaticText.ts:600
+msgid "No plugin selected"
+msgstr "선택한 플러그인 없음"
+
+#: src/gui/html/js/translateStaticText.ts:606
+msgid "Hidden plugins:"
+msgstr "숨겨진 플러그인:"
+
+#: src/gui/html/js/translateStaticText.ts:609
+msgid "Hidden messages:"
+msgstr "숨겨진 메시지:"
+
+#: src/gui/html/js/translateStaticText.ts:616
+msgid "General Information"
+msgstr "일반 정보"
+
+#: src/gui/html/js/translateStaticText.ts:621
+msgid "Masterlist Revision"
+msgstr "마스터 리스트 버전"
+
+#: src/gui/html/js/translateStaticText.ts:622
+msgid "Masterlist Date"
+msgstr "마스터 리스트 일자"
+
+#: src/gui/html/js/translateStaticText.ts:625
+msgid "Warnings"
+msgstr "경고"
+
+#: src/gui/html/js/translateStaticText.ts:628
+msgid "Errors"
+msgstr "오류"
+
+#: src/gui/html/js/translateStaticText.ts:631
+msgid "Total Messages"
+msgstr "전체 메시지"
+
+#: src/gui/html/js/translateStaticText.ts:634
+msgid "Active Plugins"
+msgstr "활성화된 플러그인"
+
+#: src/gui/html/js/translateStaticText.ts:637
+msgid "Dirty Plugins"
+msgstr "지저분한 플러그인"
+
+#: src/gui/html/js/translateStaticText.ts:640
+msgid "Total Plugins"
+msgstr "전체 플러그인"
+
+#: src/gui/html/js/translateStaticText.ts:655
+msgid "Default Game"
+msgstr "기본 게임"
+
+#: src/gui/html/js/translateStaticText.ts:656
+msgid "Autodetect"
+msgstr "자동 감지"
+
+#: src/gui/html/js/translateStaticText.ts:663
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr "LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
+
+#: src/gui/html/js/translateStaticText.ts:669
+msgid "Enable debug logging"
+msgstr "디버그 로깅 사용"
+
+#: src/gui/html/js/translateStaticText.ts:670
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "출력은 LOOTDebugLog.txt 파일에 기록됩니다."
+
+#: src/gui/html/js/translateStaticText.ts:676
+msgid "Update masterlist before sorting"
+msgstr "정렬하기 전에 마스터 리스트 갱신"
+
+#: src/gui/html/js/translateStaticText.ts:680
+msgid "Check for LOOT updates on startup"
+msgstr "시작시 LOOT 업데이트 확인"
+
+#: src/gui/html/js/translateStaticText.ts:686
 msgid "Base Game"
 msgstr "기반 게임"
 
-#: resources/report/js/l10n.js:288
+#: src/gui/html/js/translateStaticText.ts:689
 msgid "LOOT Folder"
 msgstr "LOOT 폴더"
 
-#: resources/report/js/l10n.js:290
+#: src/gui/html/js/translateStaticText.ts:695
 msgid "Masterlist Repository URL"
 msgstr "마스터 리스트 저장소 URL"
 
-#: resources/report/js/l10n.js:291
+#: src/gui/html/js/translateStaticText.ts:698
 msgid "Masterlist Repository Branch"
 msgstr "마스터 리스트 저장소 브랜치"
 
-#: resources/report/js/l10n.js:292
+#: src/gui/html/js/translateStaticText.ts:701
 msgid "Install Path"
 msgstr "설치 경로"
 
-#: resources/report/js/l10n.js:293
+#: src/gui/html/js/translateStaticText.ts:704
 msgid "Install Path Registry Key"
 msgstr "설치 경로 레지스트리 키"
 
-#: resources/report/js/l10n.js:304
+#: src/gui/html/js/translateStaticText.ts:726
 msgid "First-Time Tips"
 msgstr "처음 팁"
 
-#: resources/report/js/l10n.js:306
+#: src/gui/html/js/translateStaticText.ts:731
+msgid ""
+"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"to help you get started with the interface."
+msgstr ""
+"LOOT v%s를 실행하신 것은 이번이 처음이신 것 같습니다. 다음은 인터페이스를 시"
+"작하는데 도움이되는 몇가지 팁입니다."
+
+#: src/gui/html/js/translateStaticText.ts:739
+msgid "Click %(menu_icon)s buttons to open menus."
+msgstr "%(menu_icon)s 버튼을 클릭하여 메뉴를 엽니다."
+
+#: src/gui/html/js/translateStaticText.ts:746
+msgid ""
+"As well as messages, LOOT displays plugin <span class=\"version\">version "
+"numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
+"<span class=\"tag add\">addition</span> and <span class=\"tag remove"
+"\">removal</span>."
+msgstr ""
+"LOOT는 메시지뿐만 아니라 <span class=\"tag add\">추가</span> 및 <span class="
+"\"tag remove\">제거</span>를 위한 플러그인 <span class=\"version\">버전 번호"
+"</span>, <span class=\"crc\">CRC</span> 및 Bash 태그 제안을 표시합니다."
+
+#: src/gui/html/js/translateStaticText.ts:749
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr "CRC는 플러그인이 로드된후 충돌 필터링이나 정렬 중에서 표시됩니다."
 
-#: resources/report/js/l10n.js:307
+#: src/gui/html/js/translateStaticText.ts:752
 msgid ""
-"Double-click a plugin in the sidebar to quickly open its metadata editor. "
-"Multiple metadata editors can be opened at once."
+"Double-click a plugin in the sidebar to quickly open it in the metadata "
+"editor."
 msgstr ""
-"사이드바에서 플러그인을 두번 클릭하여 빠르게 메타데이터 편집기를 엽니다. 메타"
-"데이터 편집기는 한번에 여러개를 열 수 있습니다."
+"사이드바에서 플러그인을 두 번 클릭하여 빠르게 메타데이터 편집기를 엽니다."
 
-#: resources/report/js/l10n.js:308
+#: src/gui/html/js/translateStaticText.ts:755
 msgid ""
-"Plugins can be drag and dropped from the sidebar into editors' \"load after\", "
-"\"requirements\" and \"incompatibility\" tables."
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"플러그인은 사이드바에서 편집기로 '선행 로드',  요구 사항', '비호환성'테이블"
-"을 끌어다 놓을 수 있습니다."
+"플러그인은 사이드바에서 메타데이터 편집기로 '선행 로드',  요구 사항', '비호환"
+"성'테이블을 끌어다 놓을 수 있습니다."
 
-#: resources/report/js/l10n.js:309
+#: src/gui/html/js/translateStaticText.ts:758
 msgid ""
-"Some features are disabled while there is an editor open, or while there is "
-"a sorted load order that has not been applied or discarded."
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
 msgstr ""
-"편집기가 열렸을 때는 일부 기능을 사용하거나 정렬된 로드 순서를 적용 또는 폐기"
-"할 수 없습니다."
+"메타 데이터 편집기가 열려있거나 적용 또는 삭제되지 않은 정렬된 로드 순서가 있"
+"는 동안에는 일부 기능이 비활성화됩니다."
 
-#: resources/report/js/l10n.js:310
+#: src/gui/html/js/translateStaticText.ts:761
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -843,110 +916,312 @@ msgstr ""
 "스를 올려 찾을 수 있습니다. 그래도 알 수 없다면 메인 메뉴를 통해 LOOT의 문서"
 "에 접근할 수 있습니다."
 
-#: resources/report/js/l10n.js:312 resources/report/js/script.js:424
+#: src/gui/html/js/translateStaticText.ts:765
+#: src/gui/html/js/translateStaticText.ts:788
+msgid ""
+"LOOT is free, but if you want to show your appreciation with some money, "
+"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"using %s."
+msgstr ""
+"LOOT는 무료입니다. 하지만 약간의 기부금으로 감사의 마음을 표현하고 싶다면 %s"
+"를 사용하여 WrinklyNinja (LOOT의 제작자 및 메인 개발자)에게 기부할 수 있습니"
+"다."
+
+#: src/gui/html/js/translateStaticText.ts:770
 msgid "OK"
 msgstr "확인"
 
-#: resources/report/js/script.js:209 resources/report/js/script.js:214
-msgid "N/A"
-msgstr "N/A"
+#: src/gui/html/js/translateStaticText.ts:777
+msgid "About LOOT"
+msgstr "LOOT 정보"
 
-#: resources/report/js/script.js:383
-msgid "Checking if plugins have been loaded..."
-msgstr "플러그인이 로드되었는지 확인 중..."
+#: src/gui/html/js/translateStaticText.ts:779
+msgid "Version %s (build %s)"
+msgstr "버전 %s (빌드 %s)"
 
-#: resources/report/js/script.js:438
-msgid "Loading game data..."
-msgstr "게임 데이터 로드 중..."
-
-#: resources/report/js/script.js:508
-#, javascript-format
-msgid "Masterlist updated to revision %s."
-msgstr "마스터 리스트를 %s버전으로 갱신되었습니다."
-
-#: resources/report/js/script.js:510
-msgid "No masterlist update was necessary."
-msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
-
-#: resources/report/js/script.js:515
-msgid "Updating masterlist..."
-msgstr "마스터 리스트 갱신 중..."
-
-#: resources/report/js/script.js:545
-msgid "Sorting plugins..."
-msgstr "플러그인 정렬 중..."
-
-#: resources/report/js/script.js:647
-msgid "Redate Plugins?"
-msgstr "플러그인 날짜를 변경할까요?"
-
-#: resources/report/js/script.js:647
+#: src/gui/html/js/translateStaticText.ts:784
 msgid ""
-"This feature is provided so that modders using the Creation Kit may set the "
-"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
+"Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
+"VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
-"이 기능은 모더가 크리에이션 킷을 사용해 로드 순서를 설정할 수 있도록 제공합니"
-"다. 부작용으로 모든 구독된 스팀 워크샵 모드들을 다시 다운로드할 것입니다. 계"
-"속하시겠습니까?"
+"Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout : "
+"New Vegas, Fallout 4 및 Fallout 4 VR에 대한 로드 순서 최적화."
 
-#: resources/report/js/script.js:647
-msgid "Redate"
-msgstr "날짜 변경"
+#~ msgid "Invalid game ID supplied."
+#~ msgstr "잘못된 게임 ID가 제공되었습니다."
 
-#: resources/report/js/script.js:656
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from all "
-"plugins?"
-msgstr ""
-"모든 플러그인에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
+#~ msgid "Game path could not be detected."
+#~ msgstr "게임 경로를 감지 할 수 없습니다."
 
-#: resources/report/js/script.js:656 resources/report/js/script.js:961
-msgid "Clear"
-msgstr "삭제"
+#~ msgid ""
+#~ "libloadorder failed to create a game handle. Details could not be fetched."
+#~ msgstr ""
+#~ "libloadorder가 게임 핸들을 만들지 못했습니다. 자세한 사항은 가져올 수 없습"
+#~ "니다."
 
-#: resources/report/js/script.js:677
-msgid "All user-added metadata has been cleared."
-msgstr "모든 사용자 추가 메타데이터가 삭제되었습니다."
+#~ msgid "libloadorder failed to create a game handle. Details:"
+#~ msgstr "libloadorder가 게임 핸들을 만들지 못했습니다. 자세한 사항:"
 
-#: resources/report/js/script.js:734
-msgid "LOOT's content has been copied to the clipboard."
-msgstr "LOOT의 내용이 클립보드에 복사되었습니다."
+#~ msgid ""
+#~ "libloadorder failed to initialise game master file support. Details could "
+#~ "not be fetched."
+#~ msgstr ""
+#~ "libloadorder가 게임 마스터 파일 지원을 초기화하지 못했습니다. 자세한 사항"
+#~ "은 가져올 수 없습니다."
 
-#: resources/report/js/script.js:808
-#, javascript-format
-msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "아직 %s을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
+#~ msgid "libloadorder failed to initialise game master file support. Details:"
+#~ msgstr ""
+#~ "libloadorder가 게임 마스터 파일 지원을 초기화하지 못했습니다. 자세한 사항:"
 
-#: resources/report/js/script.js:957
-#, javascript-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "\"%s\"에 대한 메타데이터가 클립보드에 복사되었습니다."
+#~ msgid ""
+#~ "libloadorder failed to get the active plugins list. Details could not be "
+#~ "fetched."
+#~ msgstr ""
+#~ "libloadorder가 활성 플러그인 목록을 가져오지 못했습니다. 자세한 사항은 가"
+#~ "져올 수 없습니다."
 
-#: resources/report/js/script.js:961
-#, javascript-format
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr "\"%s\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
+#~ msgid "libloadorder failed to get the active plugins list. Details:"
+#~ msgstr ""
+#~ "libloadorder가 활성 플러그인 목록을 가져오지 못했습니다. 자세한 사항:"
 
-#: resources/report/js/script.js:986
-#, javascript-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "\"%s\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
+#~ msgid ""
+#~ "libloadorder failed to get the load order. Details could not be fetched."
+#~ msgstr ""
+#~ "libloadorder가 로드 순서를 가져오지 못했습니다. 자세한 사항은 가져올 수 없"
+#~ "습니다."
 
-#: resources/report/js/script.js:1006
-msgid "sorted load order"
-msgstr "정렬된 로드 순서"
+#~ msgid "libloadorder failed to get the load order. Details:"
+#~ msgstr "libloadorder가 로드 순서를 가져오지 못했습니다. 자세한 사항:"
 
-#: resources/report/js/script.js:1008
-msgid "metadata edits"
-msgstr "메타데이터 편집"
+#~ msgid ""
+#~ "libloadorder failed to set the load order. Details could not be fetched."
+#~ msgstr ""
+#~ "libloadorder가 로드 순서를 설정하지 못했습니다. 자세한 사항은 가져올 수 없"
+#~ "습니다."
 
-#: resources/report/js/script.js:1074
-msgid "unknown"
-msgstr "알 수 없음"
+#~ msgid "libloadorder failed to set the load order. Details:"
+#~ msgstr "libloadorder가 로드 순서를 설정하지 못했습니다. 자세한 사항:"
 
-#: resources/report/js/script.js:1215
-msgid "Refreshing data..."
-msgstr "데이터 새로 고침 중..."
+#~ msgid "An exception occurred while loading this plugin. Details: "
+#~ msgstr "이 플러그인을 로드하는 동안 예외가 발생했습니다. 자세한 사항: "
+
+#~ msgid "An exception occurred while loading this plugin. Details:"
+#~ msgstr "이 플러그인을 로드하는 동안 예외가 발생했습니다. 자세한 사항:"
+
+#~ msgid "Could not create LOOT folder for game. Details:"
+#~ msgstr "게임에 대한 LOOT폴더를 생성할 수 없습니다. 자세한 사항:"
+
+#~ msgid "Building plugin graph..."
+#~ msgstr "플러그인 그래프 빌드 중..."
+
+#~ msgid "Adding edges to plugin graph and performing topological sort..."
+#~ msgstr "플러그인 그래프에 엣지를 추가하고 위상 정렬을 수행 중..."
+
+#~ msgid "Git operation failed. Error: %1%"
+#~ msgstr "Git 작업이 실패했습니다. 오류: %1%"
+
+#~ msgid "Object memory already allocated!"
+#~ msgstr "개체 메모리는 이미 할당되어있습니다!"
+
+#~ msgid "Tree memory already allocated!"
+#~ msgstr "계층 트리 메모리는 이미 할당되어있습니다!"
+
+#~ msgid "Diff memory already allocated!"
+#~ msgstr "차분 메모리는 이미 할당되어있습니다!"
+
+#~ msgid "Repository handle not open!"
+#~ msgstr "저장소 핸들을 열 수 없습니다!"
+
+#~ msgid ""
+#~ "An error occurred while trying to read the local masterlist's version. If "
+#~ "this error happens again, try deleting the \".git\" folder in %1%."
+#~ msgstr ""
+#~ "로컬 마스터 리스트의 버전을 읽는 동안 오류가 발생했습니다. 이 오류가 다시 "
+#~ "발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+
+#~ msgid ""
+#~ "An error occurred while trying to clone the remote masterlist repository."
+#~ msgstr "원격 마스터 리스트 저장소를 복재하는 동안 오류가 발생했습니다."
+
+#~ msgid ""
+#~ "An error occurred while trying to access the local masterlist repository. "
+#~ "If this error happens again, try deleting the \".git\" folder in %1%."
+#~ msgstr ""
+#~ "로컬 마스터 리스트 저장소에 저장하는 동안 오류가 발생했습니다. 이 오류가 "
+#~ "다시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+
+#~ msgid ""
+#~ "An error occurred while trying to update the masterlist. This could be "
+#~ "due to a server-side error. Try again in a few minutes."
+#~ msgstr ""
+#~ "마스터 리스트를 갱신하는 동안 오류가 발생했습니다. 이것은 서버 측의 오류"
+#~ "로 인한 것일 수도 있습니다. 잠시 후에 다시 시도하십시오."
+
+#~ msgid ""
+#~ "An error occurred while trying to read information on the updated "
+#~ "masterlist. If this error happens again, try deleting the \".git\" folder "
+#~ "in %1%."
+#~ msgstr ""
+#~ "갱신된 마스터 리스트에 대한 정보를 읽는 동안 오류가 발생했습니다. 이 오류"
+#~ "가 다시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+
+#~ msgid "Masterlist revision"
+#~ msgstr "마스터 리스트 버전"
+
+#~ msgid "Rolled back to the previous revision."
+#~ msgstr "이전 버전으로 되돌립니다."
+
+#~ msgid "Unable to open \"%1%\" for CRC calculation."
+#~ msgstr "CRC 연산을 위해 \"%1%\"을 열 수 없습니다."
+
+#~ msgid "Failed to parse condition \"%1%\": %2%"
+#~ msgstr "\"%1%\"조건을 구문 분석하지 못했습니다: %2%"
+
+#~ msgid "Failed to parse condition \"%1%\"."
+#~ msgstr "\"%1%\"조건을 구문 분석하지 못했습니다."
+
+#~ msgid "Cannot read \"%1%\". Details: %2%"
+#~ msgstr "\"%1%\"을 읽을 수 없습니다. 자세한 사항: %2%"
+
+#~ msgid ""
+#~ "Contains %1% ITM records, %2% deleted references and %3% deleted "
+#~ "navmeshes. Clean with %4%."
+#~ msgstr ""
+#~ "%1%개의 ITM 레코드, %2%개의 삭제된 참조와 %3%개의 삭제된 Navmesh가 포함되"
+#~ "어있습니다. %4%를 사용하여 청소하십시오."
+
+#~ msgid "Clean with %1%."
+#~ msgstr "%1%를 사용하여 청소하십시오."
+
+#~ msgid ""
+#~ "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "%1%개의 삭제된 참조와 %2%개의 삭제된 Navmesh가 포함되어있습니다. %3%를 사"
+#~ "용하여 청소하십시오."
+
+#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
+#~ msgstr ""
+#~ "%1%개의 삭제된 navmesh가 포함되어있습니다. %2%를 사용하여 청소하십시오."
+
+#~ msgid "Contains %1% deleted references. Clean with %2%."
+#~ msgstr ""
+#~ "%1%개의 삭제된 참조가 포함되어있습니다. %2%를 사용하여 청소하십시오."
+
+#~ msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "%1%개의 ITM 레코드와 %2%개의 삭제된 Navmesh가 포함되어있습니다. %3%를 사용"
+#~ "하여 청소하십시오."
+
+#~ msgid "Contains %1% ITM records. Clean with %2%."
+#~ msgstr "%1%개의 ITM 레코드가 포함되어있습니다. %2%를 사용하여 청소하십시오."
+
+#~ msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+#~ msgstr ""
+#~ "%1%개의 ITM 레코드와 %2%개의 삭제된 참조가 포함되어있습니다. %3%를 사용하"
+#~ "여 청소하십시오."
+
+#~ msgid "Error: Games' settings parsing failed. %1%"
+#~ msgstr "오류: 게임 설정의 구문 분석을 하지 못했습니다. %1%"
+
+#~ msgid "None of the supported games were detected."
+#~ msgstr "지원되는 게임 중 어느 것도 감지되지 않았습니다."
+
+#~ msgid "Failed to change game. Details: %1%"
+#~ msgstr "게임을 변경하지 못했습니다. 자세한 사항: %1%"
+
+#~ msgid "Failed to copy plugin metadata. Details: %1%"
+#~ msgstr "플러그인 메타데이터를 복사하지 못했습니다. 자세한 사항: %1%"
+
+#~ msgid "Loading plugin contents..."
+#~ msgstr "플러그인 내용 로드 중..."
+
+#~ msgid "Shell execute failed."
+#~ msgstr "명령을 실행하지 못했습니다."
+
+#~ msgid "Loading plugin headers..."
+#~ msgstr "플러그인 헤더 로드 중..."
+
+#~ msgid "Parsing masterlist..."
+#~ msgstr "마스터 리스트 구문 분석 중..."
+
+#~ msgid "An error occurred while parsing the masterlist: %1%"
+#~ msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
+
+#~ msgid "Parsing userlist..."
+#~ msgstr "유저리스트 구문 분석 중..."
+
+#~ msgid "An error occurred while parsing the userlist: %1%"
+#~ msgstr "유저리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
+
+#~ msgid "Loading general messages..."
+#~ msgstr "일반 메시지 로드 중..."
+
+#~ msgid ""
+#~ "A global message contains a condition that could not be evaluated. "
+#~ "Details: %1%"
+#~ msgstr ""
+#~ "전역 메세지에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: %1%"
+
+#~ msgid "Failed to get game data. Details: %1%"
+#~ msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: %1%"
+
+#~ msgid "Regenerating displayed content..."
+#~ msgstr "표시되는 내용을 재생성 중..."
+
+#~ msgid "Failed to update the masterlist. Details: %1%"
+#~ msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: %1%"
+
+#~ msgid "Invalid file path:"
+#~ msgstr "잘못된 파일 경로:"
+
+#~ msgid "Invalid folder path:"
+#~ msgstr "잘못된 폴더 경로:"
+
+#~ msgid "Invalid regex string:"
+#~ msgstr "잘못된 정규식 문자열:"
+
+#~ msgid "Expected \"%1%\" at \"%2%\"."
+#~ msgstr "\"%1%\"에서 \"%2%\"가 예상됩니다."
+
+#~ msgid "Show Only Conflicts"
+#~ msgstr "충돌만 보기"
+
+#~ msgid ""
+#~ "Global priorities are compared against all other plugins. Normal "
+#~ "priorities are compared against only conflicting plugins."
+#~ msgstr ""
+#~ "전역 우선 순위는 다른 모든 플러그인에 대해 비교됩니다. 일반 우선 순위는 충"
+#~ "돌하는 플러그인과 비교됩니다."
+
+#~ msgid "Global Priority"
+#~ msgstr "전역 우선 순위"
+
+#~ msgid "Priority Value"
+#~ msgstr "우선 순위 값"
+
+#~ msgid "Dirty Info"
+#~ msgstr "지저분한 정보"
+
+#~ msgid "Version"
+#~ msgstr "버전"
+
+#~ msgid "Filter content..."
+#~ msgstr "필터링할 콘텐츠..."
+
+#~ msgid "Checking if plugins have been loaded..."
+#~ msgstr "플러그인이 로드되었는지 확인 중..."
+
+#~ msgid "Loading game data..."
+#~ msgstr "게임 데이터 로드 중..."
+
+#~ msgid "Updating masterlist..."
+#~ msgstr "마스터 리스트 갱신 중..."
+
+#~ msgid "Sorting plugins..."
+#~ msgstr "플러그인 정렬 중..."
+
+#~ msgid "unknown"
+#~ msgstr "알 수 없음"
+
+#~ msgid "Refreshing data..."
+#~ msgstr "데이터 새로 고침 중..."
