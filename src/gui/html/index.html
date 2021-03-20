@@ -34,14 +34,10 @@
       @apply --layout-horizontal;
       @apply --layout-center;
     }
-    #settingsDialog > paper-dialog-scrollable > div {
+    #generalSettings > div {
       @apply --layout-horizontal;
       @apply --layout-center;
-      @apply --layout-wrap;
-    }
-    #settingsDialog > paper-dialog-scrollable > div > div {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      @apply --layout-flex;
     }
     #conflictsFilter {
       --paper-dropdown-menu: {
@@ -460,8 +456,15 @@
                 entry-animation="fade-in-animation"
                 exit-animation="fade-out-animation">
     <h2>Settings</h2>
-    <paper-dialog-scrollable>
+    <div id="settingsMain">
       <div>
+        <paper-listbox id="settingsSidebarList" attr-for-selected="value">
+          <div hidden></div>
+          <paper-item id="settingsGeneralItem" value="">General</paper-item>
+        </paper-listbox>
+        <div id="addGameButtonContainer"><paper-button id="addGameButton">Add new game</paper-button></div>
+      </div>
+      <div id="generalSettings">
         <div>
           <div>Default Game</div>
           <loot-dropdown-menu id="defaultGameSelect" no-label-float>
@@ -485,11 +488,6 @@
           </loot-dropdown-menu>
         </div>
         <div>
-          <div>Enable debug logging</div>
-          <paper-toggle-button id="enableDebugLogging"></paper-toggle-button>
-          <paper-tooltip>The output is logged to the LOOTDebugLog.txt file.</paper-tooltip>
-        </div>
-        <div>
           <div>Update masterlist before sorting</div>
           <paper-toggle-button id="updateMasterlist"></paper-toggle-button>
         </div>
@@ -497,28 +495,47 @@
           <div>Check for LOOT updates on startup</div>
           <paper-toggle-button id="enableLootUpdateCheck"></paper-toggle-button>
         </div>
+        <div>
+          <div>Enable debug logging</div>
+          <paper-toggle-button id="enableDebugLogging"></paper-toggle-button>
+          <paper-tooltip>The output is logged to the LOOTDebugLog.txt file.</paper-tooltip>
+        </div>
       </div>
-      <editable-table id="gameTable" data-template="gameRow">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Base Game</th>
-              <th>LOOT Folder</th>
-              <th>Master File</th>
-              <th>Masterlist Repository URL</th>
-              <th>Masterlist Repository Branch</th>
-              <th>Install Path</th>
-              <th>Install Path Registry Key</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Game rows go here. -->
-          </tbody>
-        </table>
-      </editable-table>
-    </paper-dialog-scrollable>
+      <div id="gameSettings" hidden>
+        <div>
+          <paper-input id="settingsGameName" error-message="A name is required." class="name" required="" auto-validate="" label="Name" disabled></paper-input>
+        </div>
+        <div>
+          <loot-dropdown-menu id="settingsGameTypeDropdown" class="type" label="Base Game" disabled>
+            <!-- Game <option> elements go here. -->
+          </loot-dropdown-menu>
+        </div>
+        <div>
+          <paper-input id="settingsGameFolder" error-message="A folder is required." class="folder" required="" auto-validate="" label="LOOT Folder" disabled></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsGameMaster" class="master" label="Master File" disabled></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsGameMasterlistUrl" class="repo" label="Masterlist Repository URL" disabled></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsGameMasterlistBranch" class="branch" label="Masterlist Repository Branch" disabled></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsGamePath" class="path" label="Install Path" disabled></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsGameRegistry" class="registry" label="Install Path Registry Key" disabled></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsGameLocalPath" class="localPath" label="Local Data Path" disabled></paper-input>
+        </div>
+        <div>
+          <paper-button id="deleteGameButton" disabled>Delete game</paper-button>
+        </div>
+      </div>
+    </div>
     <div class="buttons">
       <paper-button class="cancel" dialog-dismiss>Cancel</paper-button>
       <paper-button class="accept" dialog-confirm>Apply</paper-button>

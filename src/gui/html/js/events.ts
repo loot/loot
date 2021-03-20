@@ -2,6 +2,9 @@ import * as marked from 'marked';
 
 import { IronListElement } from '@polymer/iron-list';
 import { PaperCheckboxElement } from '@polymer/paper-checkbox';
+import { PaperInputElement } from '@polymer/paper-input/paper-input';
+import { PaperButtonElement } from '@polymer/paper-button';
+import { PaperListboxElement } from '@polymer/paper-listbox';
 import {
   askQuestion,
   closeProgress,
@@ -15,7 +18,10 @@ import {
   enableGameOperations,
   setGameMenuItems,
   updateSelectedGame,
-  enable
+  enable,
+  initialiseGameSettingsUI,
+  initialiseGameSettingsInputsForNewGame,
+  createGameItem
 } from './dom';
 import Game from './game';
 import handlePromiseError from './handlePromiseError';
@@ -47,10 +53,8 @@ import {
   DerivedPluginMetadata,
   FilterStates,
   GameContent,
-  GameSettings,
   LootSettings
 } from './interfaces';
-import EditableTable from '../elements/editable-table';
 import LootGroupsEditor from '../elements/loot-groups-editor';
 import LootPluginCard from '../elements/loot-plugin-card';
 import LootPluginItem from '../elements/loot-plugin-item';
@@ -479,7 +483,7 @@ export function onApplySort(): Promise<void> {
 export function onCancelSort(): Promise<void> {
   const currentGame = window.loot.game;
   if (currentGame === undefined) {
-    throw new Error('Attempted to cancel sort with no game loaded.');
+    throw new Error('A*ttempted to cancel sort with no game loaded.');
   }
 
   return cancelSort()
@@ -660,10 +664,208 @@ export function onQuit(): void {
   }
 }
 
-export function onApplySettings(evt: Event): void {
-  if (!(getElementById('gameTable') as EditableTable).validate()) {
-    evt.stopPropagation();
+function validateGameSettingsInputs(): boolean {
+  const inputToValidateIds = [
+    'settingsGameName',
+    'settingsGameFolder',
+    'settingsGameMaster',
+    'settingsGameMasterlistUrl',
+    'settingsGameMasterlistBranch',
+    'settingsGamePath',
+    'settingsGameRegistry',
+    'settingsGameLocalPath'
+  ];
+
+  let validationFailed = true;
+  for (const inputId of inputToValidateIds) {
+    const input = getElementById(inputId) as PaperInputElement;
+    validationFailed = validationFailed && input.validate();
   }
+
+  return validationFailed;
+}
+
+type HTMLElementWithValue = HTMLElement & { value: string | null | undefined };
+
+function isElementWithValue(
+  element: HTMLElement
+): element is HTMLElementWithValue {
+  return 'value' in element;
+}
+
+function getValue(element: HTMLElement): string {
+  if (!isElementWithValue(element)) {
+    throw new Error(`No value property on element with ID ${element.id}`);
+  }
+
+  const value = element.value;
+
+  if (typeof value !== 'string') {
+    throw new Error(`No value given for element with ID ${element.id}`);
+  }
+
+  return value;
+}
+
+function recordUnappliedGameSettings(evt: Event): void {
+  if (!validateGameSettingsInputs()) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    return;
+  }
+
+  const gameSettings = {
+    name: getValue(getElementById('settingsGameName')),
+    type: getValue(getElementById('settingsGameTypeDropdown')),
+    folder: getValue(getElementById('settingsGameFolder')),
+    master: getValue(getElementById('settingsGameMaster')),
+    repo: getValue(getElementById('settingsGameMasterlistUrl')),
+    branch: getValue(getElementById('settingsGameMasterlistBranch')),
+    path: getValue(getElementById('settingsGamePath')),
+    registry: getValue(getElementById('settingsGameRegistry')),
+    localPath: getValue(getElementById('settingsGameLocalPath'))
+  };
+
+  const isExistingGame = window.loot.unappliedGamesSettings.has(
+    gameSettings.folder
+  );
+
+  window.loot.unappliedGamesSettings.set(gameSettings.folder, gameSettings);
+
+  if (!isExistingGame) {
+    getElementById('settingsSidebarList').appendChild(
+      createGameItem(gameSettings)
+    );
+  }
+}
+
+export function onApplySettings(evt: Event): void {
+  recordUnappliedGameSettings(evt);
+}
+
+export function onSettingsDeselectGame(evt: Event): void {
+  recordUnappliedGameSettings(evt);
+}
+
+export function onSettingsSelectGame(evt: Event): void {
+  const selectedItem = ((evt as CustomEvent).detail as { item: Element }).item;
+
+  const gameFolder = selectedItem.getAttribute('value');
+
+  if (gameFolder === null) {
+    throw new Error('Event target has no "value" attribute!');
+  }
+
+  if (gameFolder === '') {
+    // The 'none' game is selected, do nothing.
+    getElementById('generalSettings').hidden = false;
+    getElementById('gameSettings').hidden = true;
+    return;
+  }
+
+  if (!window.loot.settings) {
+    // Settings haven't initialised yet, don't do anything.
+    return;
+  }
+
+  getElementById('generalSettings').hidden = true;
+  getElementById('gameSettings').hidden = false;
+
+  const gameSettings = window.loot.unappliedGamesSettings.get(gameFolder);
+
+  if (gameSettings === undefined) {
+    throw new Error(
+      `Can't find settings for game with folder "${gameFolder}"!`
+    );
+  }
+
+  const nameInput = getElementById('settingsGameName') as PaperInputElement;
+  nameInput.value = gameSettings.name;
+  nameInput.disabled = true;
+
+  const gameTypeDropdown = getElementById(
+    'settingsGameTypeDropdown'
+  ) as LootDropdownMenu;
+  gameTypeDropdown.value = gameSettings.type;
+  gameTypeDropdown.disabled = true;
+
+  const folderInput = getElementById('settingsGameFolder') as PaperInputElement;
+  folderInput.value = gameSettings.folder;
+  folderInput.disabled = true;
+
+  const masterInput = getElementById('settingsGameMaster') as PaperInputElement;
+  masterInput.value = gameSettings.master;
+  masterInput.disabled = false;
+
+  const masterlistUrlInput = getElementById(
+    'settingsGameMasterlistUrl'
+  ) as PaperInputElement;
+  masterlistUrlInput.value = gameSettings.repo;
+  masterlistUrlInput.disabled = false;
+
+  const masterlistBranchInput = getElementById(
+    'settingsGameMasterlistBranch'
+  ) as PaperInputElement;
+  masterlistBranchInput.value = gameSettings.branch;
+  masterlistBranchInput.disabled = false;
+
+  const pathInput = getElementById('settingsGamePath') as PaperInputElement;
+  pathInput.value = gameSettings.path;
+  pathInput.disabled = false;
+
+  const registryInput = getElementById(
+    'settingsGameRegistry'
+  ) as PaperInputElement;
+  registryInput.value = gameSettings.registry;
+  registryInput.disabled = false;
+
+  const localPathInput = getElementById(
+    'settingsGameLocalPath'
+  ) as PaperInputElement;
+  localPathInput.value = gameSettings.localPath;
+  localPathInput.disabled = false;
+
+  (getElementById('deleteGameButton') as PaperButtonElement).disabled =
+    window.loot.game && window.loot.game.folder === gameFolder;
+}
+
+export function onSettingsAddGame(/* evt: Event */): void {
+  (getElementById('settingsSidebarList') as PaperListboxElement).selectIndex(0);
+  getElementById('generalSettings').hidden = true;
+  getElementById('gameSettings').hidden = false;
+
+  initialiseGameSettingsInputsForNewGame();
+  getElementById('settingsGameName').focus();
+}
+
+export function onSettingsDeleteGame(/* evt: Event */): void {
+  const selectedGameFolder = (getElementById(
+    'settingsGameFolder'
+  ) as PaperInputElement).value;
+
+  if (typeof selectedGameFolder !== 'string') {
+    return;
+  }
+
+  const settingsRecorded = window.loot.unappliedGamesSettings.has(
+    selectedGameFolder
+  );
+  if (settingsRecorded) {
+    // Forget the game settings.
+    window.loot.unappliedGamesSettings.delete(selectedGameFolder);
+
+    // Remove the game's entry from the settings sidebar.
+    const gamesList = getElementById('settingsSidebarList');
+    for (const child of Array.from(gamesList.children)) {
+      if (child.getAttribute('value') === selectedGameFolder) {
+        gamesList.removeChild(child);
+        break;
+      }
+    }
+  }
+
+  // Re-initialise the game settings UI to select a different game.
+  initialiseGameSettingsUI();
 }
 
 export function onCloseSettingsDialog(evt: Event): void {
@@ -694,9 +896,7 @@ export function onCloseSettingsDialog(evt: Event): void {
       (getElementById('enableDebugLogging') as PaperCheckboxElement).checked ||
       false,
     game: (getElementById('defaultGameSelect') as LootDropdownMenu).value,
-    games: (getElementById('gameTable') as EditableTable).getRowsData(
-      false
-    ) as GameSettings[],
+    games: Array.from(window.loot.unappliedGamesSettings.values()),
     language: (getElementById('languageSelect') as LootDropdownMenu).value,
     theme: (getElementById('themeSelect') as LootDropdownMenu).value,
     updateMasterlist:

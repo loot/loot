@@ -97,28 +97,6 @@ $documentContainer.innerHTML = `<template id="fileRow">
       </span>
     </td>
   </tr>
-</template><template id="gameRow">
-  <tr>
-    <td><paper-input error-message="A name is required." class="name" required="" auto-validate="" no-label-float=""></paper-input></td>
-    <td>
-      <loot-dropdown-menu class="type" no-label-float="">
-        <!-- Game <option> elements go here. -->
-      </loot-dropdown-menu>
-    </td>
-    <td><paper-input error-message="A folder is required." class="folder" required="" auto-validate="" no-label-float=""></paper-input></td>
-    <td><paper-input class="master" no-label-float=""></paper-input></td>
-    <td><paper-input class="repo" no-label-float=""></paper-input></td>
-    <td><paper-input class="branch" no-label-float=""></paper-input></td>
-    <td><paper-input class="path" no-label-float=""></paper-input></td>
-    <td hidden=""><paper-input class="localPath" no-label-float=""></paper-input></td>
-    <td><paper-input class="registry" no-label-float=""></paper-input></td>
-    <td>
-      <span>
-        <paper-icon-button class="delete" icon="delete"></paper-icon-button>
-        <paper-tooltip position="left">Delete Row</paper-tooltip>
-      </span>
-    </td>
-  </tr>
 </template>`;
 
 document.head.appendChild($documentContainer);

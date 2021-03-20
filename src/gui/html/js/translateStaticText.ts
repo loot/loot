@@ -430,23 +430,6 @@ function translateLocationRowTemplate(l10n: Translator): void {
   );
 }
 
-function translateGameRowTemplate(l10n: Translator): void {
-  /* Game row template */
-  const gameRow = getTemplate('gameRow');
-
-  querySelector(gameRow, '.name').setAttribute(
-    'error-message',
-    l10n.translate('A name is required.')
-  );
-  querySelector(gameRow, '.folder').setAttribute(
-    'error-message',
-    l10n.translate('A folder is required.')
-  );
-  querySelector(gameRow, 'paper-tooltip').textContent = l10n.translate(
-    'Delete Row'
-  );
-}
-
 function translateMainToolbar(l10n: Translator): void {
   /* Main toolbar */
   const mainToolbar = getElementById('mainToolbar');
@@ -643,6 +626,8 @@ function translateSettingsDialog(l10n: Translator): void {
     'h2'
   ).textContent = l10n.translate('Settings');
 
+  getElementById('settingsGeneralItem').textContent = l10n.translate('General');
+
   const defaultGameSelect = getElementById('defaultGameSelect');
   getPreviousElementSiblingById(
     'defaultGameSelect'
@@ -683,39 +668,63 @@ function translateSettingsDialog(l10n: Translator): void {
     'enableLootUpdateCheck'
   ).textContent = l10n.translate('Check for LOOT updates on startup');
 
-  const gameTable = getElementById('gameTable') as EditableTable;
-  gameTable.localise(l10n);
-  querySelector(gameTable, 'th:first-child').textContent = l10n.translate(
-    'Name'
+  getElementById('settingsGameName').setAttribute(
+    'error-message',
+    l10n.translate('A name is required.')
   );
-  querySelector(gameTable, 'th:nth-child(2)').textContent = l10n.translate(
-    'Base Game'
-  );
-  querySelector(gameTable, 'th:nth-child(3)').textContent = l10n.translate(
-    'LOOT Folder'
-  );
-  querySelector(gameTable, 'th:nth-child(4)').textContent = l10n.translate(
-    'Master File'
-  );
-  querySelector(gameTable, 'th:nth-child(5)').textContent = l10n.translate(
-    'Masterlist Repository URL'
-  );
-  querySelector(gameTable, 'th:nth-child(6)').textContent = l10n.translate(
-    'Masterlist Repository Branch'
-  );
-  querySelector(gameTable, 'th:nth-child(7)').textContent = l10n.translate(
-    'Install Path'
-  );
-  querySelector(gameTable, 'th:nth-child(8)').textContent = l10n.translate(
-    'Install Path Registry Key'
+  getElementById('settingsGameName').setAttribute(
+    'label',
+    l10n.translate('Name')
   );
 
-  /* As the game table is attached on launch, its "Add New Row"
-      tooltip doesn't benefit from the template translation above. */
-  querySelector(
-    gameTable,
-    'tr:last-child paper-tooltip'
-  ).textContent = l10n.translate('Add New Row');
+  getElementById('settingsGameTypeDropdown').setAttribute(
+    'label',
+    l10n.translate('Base Game')
+  );
+
+  getElementById('settingsGameFolder').setAttribute(
+    'error-message',
+    l10n.translate('A folder is required.')
+  );
+  getElementById('settingsGameFolder').setAttribute(
+    'label',
+    l10n.translate('LOOT Folder')
+  );
+
+  getElementById('settingsGameMaster').setAttribute(
+    'label',
+    l10n.translate('Master File')
+  );
+
+  getElementById('settingsGameMasterlistUrl').setAttribute(
+    'label',
+    l10n.translate('Masterlist Repository URL')
+  );
+
+  getElementById('settingsGameMasterlistBranch').setAttribute(
+    'label',
+    l10n.translate('Masterlist Repository Branch')
+  );
+
+  getElementById('settingsGamePath').setAttribute(
+    'label',
+    l10n.translate('Install Path')
+  );
+
+  getElementById('settingsGameRegistry').setAttribute(
+    'label',
+    l10n.translate('Install Path Registry Key')
+  );
+
+  getElementById('settingsGameLocalPath').setAttribute(
+    'label',
+    l10n.translate('Local Data Path')
+  );
+
+  getElementById('addGameButton').textContent = l10n.translate('Add new game');
+  getElementById('deleteGameButton').textContent = l10n.translate(
+    'Delete game'
+  );
 
   getElementById('settingsDialog').getElementsByClassName(
     'accept'
@@ -811,7 +820,6 @@ export default function translateStaticText(
   translateDirtyInfoRowTemplate(l10n);
   translateCleanInfoRowTemplate(l10n);
   translateLocationRowTemplate(l10n);
-  translateGameRowTemplate(l10n);
 
   translateMainToolbar(l10n);
   translateSidebar(l10n);
