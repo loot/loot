@@ -43,6 +43,12 @@ First check that an [Inno Setup translation](http://www.jrsoftware.org/files/ist
 4. Translate the string(s) in the `[CustomMessages]` into your language, following the example of the existing translations. Again, if your language only has an unofficial translation, wrap its line(s) in `#ifdef` and `#endif` lines.
 5. Save your changes.
 
+If your language's Inno Setup translation is unofficial, also do the following:
+
+1. Open the script at `scripts/build_installer.ps1` in a text editor of your choice.
+2. Add an entry for your language's translation file to the `$unofficialLanguageFiles` array.
+3. Save your changes.
+
 ### Translating the LOOT application
 
 1. Download and install the latest version of [Poedit](https://poedit.net/).
@@ -71,12 +77,19 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 * In [loot_settings.cpp](src/gui/state/loot_settings.cpp), add the language's
   ISO code, name  and optional font family override to the `languages_`
   initialiser list in the `LootSettings()` constructor.
+* In [loot_settings_test.h](src/tests/gui/state/loot_settings_test.h), update
+  the `defaultConstructorShouldSetDefaultValues` test so that it includes the
+  added language, updating the `actualLanguages.size()` check and adding a new
+  `EXPECT_EQ(...)` line for the new language.
 * In [installer.iss](scripts/installer.iss):
   - Add a line for your language in the `[Languages]` section. If you have Inno
     Setup installed, the available translation files are at
     `C:\Program Files (x86)\Inno Setup 6\Languages\`.
   - Add an entry for your language's translation file to the `[Files]` section.
   - Add a translation for your language to the `[CustomMessages]` section.
+
+See commit [8c28aed7f54dee3a381425b2d4ecf4341309d139](https://github.com/loot/loot/commit/8c28aed7f54dee3a381425b2d4ecf4341309d139)
+for an example of the relevant changes.
 
 ## Code Style
 
