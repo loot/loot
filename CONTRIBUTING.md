@@ -41,7 +41,7 @@ First check that an [Inno Setup translation](http://www.jrsoftware.org/files/ist
 
 1. Open the installer script at `scripts/installer.iss` in a text editor of your choice.
 2. If your language only has an unofficial translation, add a `#define <Language>Exists` block for it near the top of the script, like it has been done for Korean and Simplified Chinese.
-3. Add your language to the `[Languages]` section. The `Name` must be the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language. The `MessagesFile` filename is the filename of the Inno Setup translation that you checked exists. If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
+3. Add your language to the `[Languages]` section. The `Name` should be the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language. The `MessagesFile` filename is the filename of the Inno Setup translation that you checked exists. If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
 4. Translate the string(s) in the `[CustomMessages]` into your language, following the example of the existing translations. Again, if your language only has an unofficial translation, wrap its line(s) in `#ifdef` and `#endif` lines.
 5. Save your changes.
 
