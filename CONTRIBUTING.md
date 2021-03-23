@@ -74,7 +74,7 @@ Some strings to be translated may contain special characters. Different types of
 
 ### Adding A New Translation
 
-If you're adding a new translation, LOOT's source code must be updated to recognise it. You can do this yourself and include the changes in your translation's pull request if you wish. The files and functions which must be updated are given below.
+If you're adding a new translation, LOOT's source code must be updated to recognise it. While you're welcome to do this yourself and include the changes in your translation's pull request, you don't have to if you're not comfortable with them; we can add them later. The files and functions which must be updated are given below:
 
 * In [loot_settings.cpp](src/gui/state/loot_settings.cpp), add the language's
   ISO code, name  and optional font family override to the `languages_`
