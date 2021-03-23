@@ -59,7 +59,7 @@ If your language's Inno Setup translation is unofficial, also do the following:
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
 5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
 
-Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, create an issue for your request in LOOT's [source code issue tracker](https://github.com/loot/loot/issues), quoting the string for which you are requesting contextual information.
+Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, comment on issue [#1438](https://github.com/loot/loot/issues/1438) with your request, quoting the string for which you are requesting contextual information.
 
 Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
 
