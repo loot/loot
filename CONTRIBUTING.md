@@ -33,6 +33,8 @@ LOOT supports translation into other languages, with the following limitations:
 
 To translate everything but masterlist messages, first fork this repository. All file paths given below are relative to its base folder.
 
+Keep in mind that you don't need to submit a perfect pull request; just follow the instructions below to the best of your ability and we will correct any coding-related mistakes when we review your submission.
+
 ### Translating the Installer
 
 First check that an [Inno Setup translation](http://www.jrsoftware.org/files/istrans/) exists for your language. Unofficial translations are acceptable, but require a bit of extra handling. If there isn't an official or unofficial translation for Inno Setup, you're better off making a translation and getting it listed on the linked page before continuing.
