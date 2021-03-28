@@ -54,8 +54,8 @@ If your language's Inno Setup translation is unofficial, also do the following:
 ### Translating the LOOT application
 
 1. Download and install the latest version of [Poedit](https://poedit.net/).
-2. If you are starting a new translation, select `File->New catalogue from POT file...` and choose the template file at `resources/l10n/template.pot`. In the `Catalog properties` dialog, just click `OK` without changing anything.
-3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalogue->Update from POT file...` and choose the template file you downloaded. Click `OK` in the `Update summary` dialog.
+2. If you are starting a new translation, select `Create new translation` on the welcome page or `File -> New from POT/PO file...` and choose the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
+3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalog -> Update from POT file...` and choose the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
 5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
 
