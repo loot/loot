@@ -71,6 +71,7 @@ Some strings to be translated may contain special characters. Different types of
 
   If formatting placeholders are used in the untranslated string, they **must all** be present in the translated string, or LOOT will encounter an error when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
 * A small number of strings also include HTML `<span>` elements that wrap translatable text. While the text inside the elements should be translated, the element tags and their attributes should not be.
+* A small number of strings also include Markdown hyperlinks (e.g. `[example text](http://example.com/)`). Similar to HTML `<span>` elements, the text between the square brackets should be translated, but the text between the parentheses should not be.
 
 ### Adding A New Translation
 
