@@ -66,6 +66,7 @@ Name: "de"; MessagesFile: "compiler:Languages\German.isl"
 Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
 Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
 #ifdef KoreanExists
 Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
@@ -136,6 +137,8 @@ Source: "resources\l10n\fi\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\fi\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\fr\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\fr\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\it\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\it\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ko\LC_MESSAGES\loot.mo"; \
@@ -204,6 +207,7 @@ de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten lösch
 es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
 fi.DeleteUserFiles=Haluatko poistaa asetukset ja käyttäjä metatiedot?
 fr.DeleteUserFiles=Voulez-vous supprimer vos paramètres et les métadonnées de l'utilisateur?
+it.DeleteUserFiles=Vuoi cancellare le tue impostazioni e i meta-dati utente?
 ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 #ifdef KoreanExists
 ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
