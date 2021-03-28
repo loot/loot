@@ -211,6 +211,7 @@ LootSettings::LootSettings() :
         Language({"es", "Español", std::nullopt}),
         Language({"fi", "Suomi", std::nullopt}),
         Language({"fr", "Français", std::nullopt}),
+        Language({"it", "Italiano", std::nullopt}),
         Language({"ja", "日本語", "Meiryo"}),
         Language({"ko", "한국어", "Malgun Gothic"}),
         Language({"pl", "Polski", std::nullopt}),
