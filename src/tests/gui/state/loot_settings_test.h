@@ -154,7 +154,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[5].RepoBranch());
 
   auto actualLanguages = settings_.getLanguages();
-  EXPECT_EQ(16, actualLanguages.size());
+  EXPECT_EQ(17, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
             actualLanguages[0]);
   EXPECT_EQ(LootSettings::Language({"bg", "Български", std::nullopt}),
@@ -171,22 +171,24 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualLanguages[6]);
   EXPECT_EQ(LootSettings::Language({"fr", "Français", std::nullopt}),
             actualLanguages[7]);
-  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
+  EXPECT_EQ(LootSettings::Language({"it", "Italiano", std::nullopt}),
             actualLanguages[8]);
-  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
+  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
             actualLanguages[9]);
-  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
             actualLanguages[10]);
+  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
+            actualLanguages[11]);
   EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil",
-            std::nullopt}), actualLanguages[11]);
-  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
             std::nullopt}), actualLanguages[12]);
+  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
+            std::nullopt}), actualLanguages[13]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
-            actualLanguages[13]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[14]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[15]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+            actualLanguages[16]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
