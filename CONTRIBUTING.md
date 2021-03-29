@@ -31,6 +31,8 @@ LOOT supports translation into other languages, with the following limitations:
 * Masterlist messages can be translated, but translations must be submitted to the masterlist maintainers for addition. Translating masterlist messages won't be covered here.
 * The languages LOOT supports is hardcoded, so LOOT must be updated to include new translations.
 
+This guide assumes you have a basic understanding of how to use a Git client and GitHub to submit your changes. If you don't, don't worry! You can still contribute; simply follow the previously linked [guide](https://loot.github.io/docs/contributing/How-To-Contribute) to learn the basic principles needed. If you're having any trouble, feel free to ask a team member for help, such as in the **#dev-questions** or **#translations** channels in our [Discord](https://loot.github.io/discord/) or at our dedicated [localization issue](https://github.com/loot/loot.github.io/issues/77). If you're still uncomfortable with the process, we can always submit your translations for you, but we encourage you to try submitting them yourself first.
+
 To translate everything but masterlist messages, first fork this repository. All file paths given below are relative to its base folder.
 
 Keep in mind that you don't need to submit a perfect pull request; just follow the instructions below to the best of your ability and we will correct any coding-related mistakes when we review your submission.
@@ -54,9 +56,9 @@ If your language's Inno Setup translation is unofficial, also do the following:
 ### Translating the LOOT application
 
 1. Download and install the latest version of [Poedit](https://poedit.net/).
-2. If you are starting a new translation, select `File->New catalogue from POT file...` and choose the template file at `resources/l10n/template.pot`. In the `Catalog properties` dialog, just click `OK` without changing anything.
-3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalogue->Update from POT file...` and choose the template file you downloaded. Click `OK` in the `Update summary` dialog.
-4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
+2. If you are starting a new translation, select `Create new translation` on the welcome page or `File -> New from POT/PO file...` and choose the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
+3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalog -> Update from POT file...` and choose the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
+4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation will be missing a translation, and strings that have been changed since the last translation will be highlighted in orange.
 5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
 
 Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, comment on issue [#1438](https://github.com/loot/loot/issues/1438) with your request, quoting the string for which you are requesting contextual information.
@@ -65,12 +67,13 @@ Some strings to be translated may contain special characters. Different types of
 
 * Backslashes (`\`). These are used to escape backslashes and double-quotation marks (`"`) in the C++ translation strings. Don't add new backslashes into translations, and make sure all backslashes in the original string are retained in the translation.
 * Formatting placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear in a few different formats:
-  1. A number surrounded by percentage signs, eg. `%1%`.
-  2. A named placeholder, eg. `%(icon)s` (the name in parentheses must not be changed).
+  1. A number surrounded by percentage signs, e.g. `%1%`.
+  2. A named placeholder, e.g. `%(icon)s` (the name in parentheses must not be changed).
   3. A simple placeholder `%s`.
 
   If formatting placeholders are used in the untranslated string, they **must all** be present in the translated string, or LOOT will encounter an error when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
 * A small number of strings also include HTML `<span>` elements that wrap translatable text. While the text inside the elements should be translated, the element tags and their attributes should not be.
+* A small number of strings also include Markdown hyperlinks (e.g. `[example text](http://example.com/)`). Similar to HTML `<span>` elements, the text between the square brackets should be translated, but the text between the parentheses should not be.
 
 ### Adding A New Translation
 
@@ -104,7 +107,7 @@ The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) 
 #### C++ Features
 
 * Static variables may contain non-POD types.
-* Reference arguments don't need to be `const` (ie. they can be used for output variables).
+* Reference arguments don't need to be `const` (i.e. they can be used for output variables).
 * Exceptions can be used.
 * Unsigned integer types can be used.
 * There's no restriction on which Boost libraries can be used.
