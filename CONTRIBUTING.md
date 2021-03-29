@@ -31,6 +31,8 @@ LOOT supports translation into other languages, with the following limitations:
 * Masterlist messages can be translated, but translations must be submitted to the masterlist maintainers for addition. Translating masterlist messages won't be covered here.
 * The languages LOOT supports is hardcoded, so LOOT must be updated to include new translations.
 
+This guide assumes you have a basic understanding of how to use a Git client and GitHub to submit your changes. If you don't, don't worry! You can still contribute; simply follow the previously linked [guide](https://loot.github.io/docs/contributing/How-To-Contribute) to learn the basic principles needed. If you're having any trouble, feel free to ask a team member for help, such as in the **#dev-questions** or **#translations** channels in our [Discord](https://loot.github.io/discord/) or at our dedicated [localization issue](https://github.com/loot/loot.github.io/issues/77). If you're still uncomfortable with the process, we can always submit your translations for you, but we encourage you to try submitting them yourself first.
+
 To translate everything but masterlist messages, first fork this repository. All file paths given below are relative to its base folder.
 
 Keep in mind that you don't need to submit a perfect pull request; just follow the instructions below to the best of your ability and we will correct any coding-related mistakes when we review your submission.
