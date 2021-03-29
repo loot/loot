@@ -67,8 +67,8 @@ Some strings to be translated may contain special characters. Different types of
 
 * Backslashes (`\`). These are used to escape backslashes and double-quotation marks (`"`) in the C++ translation strings. Don't add new backslashes into translations, and make sure all backslashes in the original string are retained in the translation.
 * Formatting placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear in a few different formats:
-  1. A number surrounded by percentage signs, eg. `%1%`.
-  2. A named placeholder, eg. `%(icon)s` (the name in parentheses must not be changed).
+  1. A number surrounded by percentage signs, e.g. `%1%`.
+  2. A named placeholder, e.g. `%(icon)s` (the name in parentheses must not be changed).
   3. A simple placeholder `%s`.
 
   If formatting placeholders are used in the untranslated string, they **must all** be present in the translated string, or LOOT will encounter an error when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
@@ -107,7 +107,7 @@ The [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) 
 #### C++ Features
 
 * Static variables may contain non-POD types.
-* Reference arguments don't need to be `const` (ie. they can be used for output variables).
+* Reference arguments don't need to be `const` (i.e. they can be used for output variables).
 * Exceptions can be used.
 * Unsigned integer types can be used.
 * There's no restriction on which Boost libraries can be used.
