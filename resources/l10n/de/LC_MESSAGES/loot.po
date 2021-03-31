@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-03-21 14:31+0000\n"
-"PO-Revision-Date: 2021-03-21 22:54+0100\n"
-"Last-Translator: DaCoolX\n"
+"POT-Creation-Date: 2021-03-26 12:21+0000\n"
+"PO-Revision-Date: 2021-03-30 23:13+0200\n"
+"Last-Translator: DaCoolX <2771553+DaCoolX@users.noreply.github.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -258,7 +258,6 @@ msgstr ""
 "LOOT hat festgestellt das \"%1%\" ungültig ist wird es ab sofort ignorieren."
 
 #: src/gui/html/elements/editable-table.ts:436
-#: src/gui/html/js/translateStaticText.ts:718
 msgid "Add New Row"
 msgstr "Neue Reihe hinzügen"
 
@@ -286,39 +285,39 @@ msgstr "Plugins im %s"
 msgid "Verified clean by %s"
 msgstr "Sauberkeit verifiziert von %s"
 
-#: src/gui/html/js/events.ts:211
+#: src/gui/html/js/events.ts:216
 msgid "Identifying conflicting plugins..."
 msgstr "Identifiziere inkompatible Plugins..."
 
-#: src/gui/html/js/events.ts:306
+#: src/gui/html/js/events.ts:311
 msgid "Updating and parsing masterlist..."
 msgstr "Aktualisieren und einlesen der Masterliste..."
 
-#: src/gui/html/js/events.ts:329
+#: src/gui/html/js/events.ts:334
 msgid "Masterlist updated to revision %s."
 msgstr "Masterliste wurde zur Version %s aktualisiert."
 
-#: src/gui/html/js/events.ts:336
+#: src/gui/html/js/events.ts:341
 msgid "No masterlist update was necessary."
 msgstr "Aktualisierung der Masterlist nicht nötig."
 
-#: src/gui/html/js/events.ts:379
+#: src/gui/html/js/events.ts:415
 msgid "Cyclic interaction detected"
 msgstr "Zyklische Interaktion festgestellt"
 
-#: src/gui/html/js/events.ts:386
+#: src/gui/html/js/events.ts:422
 msgid "Failed to sort plugins. Details: %s"
 msgstr "Sortieren der Plugins fehlgeschlagen. Details: %s"
 
-#: src/gui/html/js/events.ts:413
+#: src/gui/html/js/events.ts:458
 msgid "Sorting made no changes to the load order."
 msgstr "Das Sortieren hat keine Änderungen der Ladereihenfolge bewirkt."
 
-#: src/gui/html/js/events.ts:466
+#: src/gui/html/js/events.ts:502
 msgid "Redate Plugins?"
 msgstr "Plugins neu datieren?"
 
-#: src/gui/html/js/events.ts:467
+#: src/gui/html/js/events.ts:503
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -331,15 +330,15 @@ msgstr ""
 "Workshop von Steam erneut heruntergeladen werden. (betrifft nicht Skyrim "
 "Special Edition) Wollen Sie fortfahren?"
 
-#: src/gui/html/js/events.ts:470
+#: src/gui/html/js/events.ts:506
 msgid "Redate"
 msgstr "Neu datieren"
 
-#: src/gui/html/js/events.ts:476
+#: src/gui/html/js/events.ts:512
 msgid "Plugins were successfully redated."
 msgstr "Plugins wurden erfolgreich neu datiert."
 
-#: src/gui/html/js/events.ts:495
+#: src/gui/html/js/events.ts:531
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -347,53 +346,53 @@ msgstr ""
 "Sind Sie sicher, dass Sie alle bestehenden vom Benutzer hinzugefügten "
 "Metadaten von allen Plugins entfernen wollen?"
 
-#: src/gui/html/js/events.ts:498 src/gui/html/js/events.ts:862
+#: src/gui/html/js/events.ts:534 src/gui/html/js/events.ts:1094
 msgid "Clear"
 msgstr "Entfernen"
 
-#: src/gui/html/js/events.ts:509
+#: src/gui/html/js/events.ts:545
 msgid "All user-added metadata has been cleared."
 msgstr "Alle vom Benutzer hinzugefügten Metadaten wurden entfernt."
 
-#: src/gui/html/js/events.ts:546
+#: src/gui/html/js/events.ts:582
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Der Inhalt von LOOT wurde in die Zwischenablage kopiert."
 
-#: src/gui/html/js/events.ts:564
+#: src/gui/html/js/events.ts:600
 msgid "The load order has been copied to the clipboard."
 msgstr "Die Ladereihenfolge wurde in die Zwischenablage kopiert."
 
-#: src/gui/html/js/events.ts:600
+#: src/gui/html/js/events.ts:636
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 "Sie haben %s noch nicht angewendet oder verworfen. Sind Sie sicher das Sie "
 "beenden möchten?"
 
-#: src/gui/html/js/events.ts:604 src/gui/html/js/translateStaticText.ts:499
+#: src/gui/html/js/events.ts:640 src/gui/html/js/translateStaticText.ts:482
 msgid "Quit"
 msgstr "Beenden"
 
-#: src/gui/html/js/events.ts:622
+#: src/gui/html/js/events.ts:658
 msgid "sorted load order"
 msgstr "sortierte Ladereihenfolge"
 
-#: src/gui/html/js/events.ts:625
+#: src/gui/html/js/events.ts:661
 msgid "metadata edits"
 msgstr "Metadaten Änderungen"
 
-#: src/gui/html/js/events.ts:837
+#: src/gui/html/js/events.ts:1069
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "Die Metadaten für \"%s\" wurden in die Zwischenablage kopiert."
 
-#: src/gui/html/js/events.ts:858
+#: src/gui/html/js/events.ts:1090
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 "Sind Sie sicher das Sie alle existierenden benutzerdefinierten Metadaten von "
 "\"%s\" bereinigen wollen?"
 
-#: src/gui/html/js/events.ts:880
+#: src/gui/html/js/events.ts:1112
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "Die benutzerdefinierten Metadaten für \"%s\" wurden bereinigt."
 
@@ -406,7 +405,7 @@ msgstr "Nicht verfügbar"
 msgid "Error"
 msgstr "Fehler"
 
-#: src/gui/html/js/loot.ts:290
+#: src/gui/html/js/loot.ts:306
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -415,11 +414,11 @@ msgstr ""
 "txt (Sie können es über das Hauptmenü erreichen) für mehr Informationen "
 "nachsehen."
 
-#: src/gui/html/js/loot.ts:306
+#: src/gui/html/js/loot.ts:322
 msgid "A [new release](%s) of LOOT is available."
 msgstr "Eine [neue Version](%s) von LOOT ist verfügbar."
 
-#: src/gui/html/js/loot.ts:346
+#: src/gui/html/js/loot.ts:362
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -432,7 +431,7 @@ msgid "Active Plugin"
 msgstr "Aktives Plugin"
 
 #: src/gui/html/js/translateStaticText.ts:78
-#: src/gui/html/js/translateStaticText.ts:697
+#: src/gui/html/js/translateStaticText.ts:696
 msgid "Master File"
 msgstr "Master Datei"
 
@@ -535,7 +534,7 @@ msgid "Content"
 msgstr "Inhalt"
 
 #: src/gui/html/js/translateStaticText.ts:230
-#: src/gui/html/js/translateStaticText.ts:656
+#: src/gui/html/js/translateStaticText.ts:641
 msgid "Language"
 msgstr "Sprache"
 
@@ -574,7 +573,7 @@ msgid "URL"
 msgstr "URL"
 
 #: src/gui/html/js/translateStaticText.ts:282
-#: src/gui/html/js/translateStaticText.ts:688
+#: src/gui/html/js/translateStaticText.ts:677
 msgid "Name"
 msgstr "Name"
 
@@ -583,8 +582,8 @@ msgid "Save Metadata"
 msgstr "Metadaten speichern"
 
 #: src/gui/html/js/translateStaticText.ts:291
-#: src/gui/html/js/translateStaticText.ts:466
-#: src/gui/html/js/translateStaticText.ts:725
+#: src/gui/html/js/translateStaticText.ts:449
+#: src/gui/html/js/translateStaticText.ts:734
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -602,7 +601,6 @@ msgstr "Ein Dateiname ist erforderlich."
 #: src/gui/html/js/translateStaticText.ts:398
 #: src/gui/html/js/translateStaticText.ts:415
 #: src/gui/html/js/translateStaticText.ts:428
-#: src/gui/html/js/translateStaticText.ts:445
 msgid "Delete Row"
 msgstr "Reihe löschen"
 
@@ -627,7 +625,7 @@ msgid "Remove"
 msgstr "Entfernen"
 
 #: src/gui/html/js/translateStaticText.ts:363
-#: src/gui/html/js/translateStaticText.ts:439
+#: src/gui/html/js/translateStaticText.ts:673
 msgid "A name is required."
 msgstr "Ein Name ist erforderlich."
 
@@ -651,247 +649,263 @@ msgstr "Ein Tool-Name ist erforderlich."
 msgid "A link is required."
 msgstr "Ein Link ist erforderlich."
 
-#: src/gui/html/js/translateStaticText.ts:443
-msgid "A folder is required."
-msgstr "Es wird ein Ordner benötigt."
-
-#: src/gui/html/js/translateStaticText.ts:456
+#: src/gui/html/js/translateStaticText.ts:439
 msgid "Jump To General Information"
 msgstr "Springe zu allgemeinen Informationen"
 
-#: src/gui/html/js/translateStaticText.ts:460
+#: src/gui/html/js/translateStaticText.ts:443
 msgid "Sort Plugins"
 msgstr "Plugins sortieren"
 
-#: src/gui/html/js/translateStaticText.ts:464
+#: src/gui/html/js/translateStaticText.ts:447
 msgid "Update Masterlist"
 msgstr "Aktualisiere Masterlist"
 
-#: src/gui/html/js/translateStaticText.ts:465
-#: src/gui/html/js/translateStaticText.ts:722
+#: src/gui/html/js/translateStaticText.ts:448
+#: src/gui/html/js/translateStaticText.ts:731
 msgid "Apply"
 msgstr "Anwenden"
 
-#: src/gui/html/js/translateStaticText.ts:470
+#: src/gui/html/js/translateStaticText.ts:453
 msgid "Search Cards"
 msgstr "Suche Karten"
 
-#: src/gui/html/js/translateStaticText.ts:473
+#: src/gui/html/js/translateStaticText.ts:456
 msgid "Redate Plugins"
 msgstr "Datiere Plugins neu"
 
-#: src/gui/html/js/translateStaticText.ts:476
+#: src/gui/html/js/translateStaticText.ts:459
 msgid "Open Debug Log Location"
 msgstr "Öffne Debug-Log Pfad"
 
-#: src/gui/html/js/translateStaticText.ts:479
+#: src/gui/html/js/translateStaticText.ts:462
 msgid "Open Groups Editor"
 msgstr "Öffne Gruppen-Editor"
 
-#: src/gui/html/js/translateStaticText.ts:482
+#: src/gui/html/js/translateStaticText.ts:465
 msgid "Clear All User Metadata"
 msgstr "Entferne alle Benutzer-Metadaten"
 
-#: src/gui/html/js/translateStaticText.ts:485
+#: src/gui/html/js/translateStaticText.ts:468
 msgid "Copy Load Order"
 msgstr "Kopiere Ladereihenfolge"
 
-#: src/gui/html/js/translateStaticText.ts:488
+#: src/gui/html/js/translateStaticText.ts:471
 msgid "Copy Content"
 msgstr "Kopiere Inhalt"
 
-#: src/gui/html/js/translateStaticText.ts:491
+#: src/gui/html/js/translateStaticText.ts:474
 msgid "Refresh Content"
 msgstr "Aktualisiere Inhalt"
 
-#: src/gui/html/js/translateStaticText.ts:494
+#: src/gui/html/js/translateStaticText.ts:477
 msgid "View Documentation"
 msgstr "Öffne Dokumentation"
 
-#: src/gui/html/js/translateStaticText.ts:497
+#: src/gui/html/js/translateStaticText.ts:480
 msgid "About"
 msgstr "Über"
 
-#: src/gui/html/js/translateStaticText.ts:498
-#: src/gui/html/js/translateStaticText.ts:644
+#: src/gui/html/js/translateStaticText.ts:481
+#: src/gui/html/js/translateStaticText.ts:627
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: src/gui/html/js/translateStaticText.ts:510
+#: src/gui/html/js/translateStaticText.ts:493
 msgid "Search cards"
 msgstr "Suche Karten"
 
-#: src/gui/html/js/translateStaticText.ts:550
+#: src/gui/html/js/translateStaticText.ts:533
 msgid "Plugins"
 msgstr "Plugins"
 
-#: src/gui/html/js/translateStaticText.ts:561
+#: src/gui/html/js/translateStaticText.ts:544
 msgid "Filters"
 msgstr "Filter"
 
-#: src/gui/html/js/translateStaticText.ts:566
+#: src/gui/html/js/translateStaticText.ts:549
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 "Drücken Sie Enter oder klicken Sie außerhalb der Eingabe, um den Filter zu "
 "setzen."
 
-#: src/gui/html/js/translateStaticText.ts:570
+#: src/gui/html/js/translateStaticText.ts:553
 msgid "Show only plugins with cards that contain"
 msgstr "Zeige nur Plugins mit Karten die folgendes beinhalten"
 
-#: src/gui/html/js/translateStaticText.ts:573
+#: src/gui/html/js/translateStaticText.ts:556
 msgid "No text specified"
 msgstr "Kein Text angegeben"
 
-#: src/gui/html/js/translateStaticText.ts:576
+#: src/gui/html/js/translateStaticText.ts:559
 msgid "Hide version numbers"
 msgstr "Versionsnummern ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:579
+#: src/gui/html/js/translateStaticText.ts:562
 msgid "Hide CRCs"
 msgstr "CRC Prüfsummen ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:580
+#: src/gui/html/js/translateStaticText.ts:563
 msgid "Hide Bash Tags"
 msgstr "Bash Tags ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:581
+#: src/gui/html/js/translateStaticText.ts:564
 msgid "Hide notes"
 msgstr "Notizen ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:582
+#: src/gui/html/js/translateStaticText.ts:565
 msgid "Hide all plugin messages"
 msgstr "Alle aktiven Plugins ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:585
+#: src/gui/html/js/translateStaticText.ts:568
 msgid "Hide inactive plugins"
 msgstr "Inaktive Plugins ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:588
+#: src/gui/html/js/translateStaticText.ts:571
 msgid "Hide messageless plugins"
 msgstr "Nachrichtenlose Plugins ausblenden"
 
-#: src/gui/html/js/translateStaticText.ts:593
+#: src/gui/html/js/translateStaticText.ts:576
 msgid "Show only conflicting plugins for"
 msgstr "Zeige nur inkompatible Plugins für"
 
-#: src/gui/html/js/translateStaticText.ts:594
+#: src/gui/html/js/translateStaticText.ts:577
 msgid "No plugin selected"
 msgstr "Kein Plugin ausgewählt"
 
-#: src/gui/html/js/translateStaticText.ts:600
+#: src/gui/html/js/translateStaticText.ts:583
 msgid "Hidden plugins:"
 msgstr "Ausgeblendete Plugins:"
 
-#: src/gui/html/js/translateStaticText.ts:603
+#: src/gui/html/js/translateStaticText.ts:586
 msgid "Hidden messages:"
 msgstr "Ausgeblendete Nachrichten:"
 
-#: src/gui/html/js/translateStaticText.ts:610
+#: src/gui/html/js/translateStaticText.ts:593
 msgid "General Information"
 msgstr "Allgemeine Informationen"
 
-#: src/gui/html/js/translateStaticText.ts:615
+#: src/gui/html/js/translateStaticText.ts:598
 msgid "Masterlist Revision"
 msgstr "Masterlist Version"
 
-#: src/gui/html/js/translateStaticText.ts:616
+#: src/gui/html/js/translateStaticText.ts:599
 msgid "Masterlist Date"
 msgstr "Masterlist Datum"
 
-#: src/gui/html/js/translateStaticText.ts:619
+#: src/gui/html/js/translateStaticText.ts:602
 msgid "Warnings"
 msgstr "Warnungen"
 
-#: src/gui/html/js/translateStaticText.ts:622
+#: src/gui/html/js/translateStaticText.ts:605
 msgid "Errors"
 msgstr "Fehler"
 
-#: src/gui/html/js/translateStaticText.ts:625
+#: src/gui/html/js/translateStaticText.ts:608
 msgid "Total Messages"
 msgstr "Nachrichten insgesamt"
 
-#: src/gui/html/js/translateStaticText.ts:628
+#: src/gui/html/js/translateStaticText.ts:611
 msgid "Active Plugins"
 msgstr "Aktive Plugins"
 
-#: src/gui/html/js/translateStaticText.ts:631
+#: src/gui/html/js/translateStaticText.ts:614
 msgid "Dirty Plugins"
 msgstr "Schmutzige Plugins"
 
-#: src/gui/html/js/translateStaticText.ts:634
+#: src/gui/html/js/translateStaticText.ts:617
 msgid "Total Plugins"
 msgstr "Plugins insgesamt"
 
-#: src/gui/html/js/translateStaticText.ts:649
+#: src/gui/html/js/translateStaticText.ts:629
+msgid "General"
+msgstr "Allgemein"
+
+#: src/gui/html/js/translateStaticText.ts:634
 msgid "Default Game"
 msgstr "Standard-Auswahl"
 
-#: src/gui/html/js/translateStaticText.ts:650
+#: src/gui/html/js/translateStaticText.ts:635
 msgid "Autodetect"
 msgstr "Automatisch erkennen"
 
-#: src/gui/html/js/translateStaticText.ts:657
+#: src/gui/html/js/translateStaticText.ts:642
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "Spracheinstellungen werden wirksam nachdem LOOT neugestartet wird."
 
-#: src/gui/html/js/translateStaticText.ts:661
+#: src/gui/html/js/translateStaticText.ts:646
 msgid "Theme"
 msgstr "Design"
 
-#: src/gui/html/js/translateStaticText.ts:662
+#: src/gui/html/js/translateStaticText.ts:647
 msgid "Theme changes will be applied after LOOT is restarted."
 msgstr "Designeinstellungen werden wirksam nachdem LOOT neugestartet wird."
 
-#: src/gui/html/js/translateStaticText.ts:665
+#: src/gui/html/js/translateStaticText.ts:650
 msgid "default"
 msgstr "Standard"
 
-#: src/gui/html/js/translateStaticText.ts:673
+#: src/gui/html/js/translateStaticText.ts:658
 msgid "Enable debug logging"
 msgstr "Aktivere Debug-Protokollierung"
 
-#: src/gui/html/js/translateStaticText.ts:674
+#: src/gui/html/js/translateStaticText.ts:659
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "Die Ausgabe wird in die LOOTDebugLog.txt-Datei protokolliert."
 
-#: src/gui/html/js/translateStaticText.ts:680
+#: src/gui/html/js/translateStaticText.ts:665
 msgid "Update masterlist before sorting"
 msgstr "Aktualisiere Masterlist vor dem Sortieren"
 
-#: src/gui/html/js/translateStaticText.ts:684
+#: src/gui/html/js/translateStaticText.ts:669
 msgid "Check for LOOT updates on startup"
 msgstr "Prüfe auf LOOT Updates beim Programmstart"
 
-#: src/gui/html/js/translateStaticText.ts:691
+#: src/gui/html/js/translateStaticText.ts:682
 msgid "Base Game"
 msgstr "Grund-Spiel"
 
-#: src/gui/html/js/translateStaticText.ts:694
+#: src/gui/html/js/translateStaticText.ts:687
+msgid "A folder is required."
+msgstr "Ein Ordner wird benötigt."
+
+#: src/gui/html/js/translateStaticText.ts:691
 msgid "LOOT Folder"
 msgstr "LOOT Ordner"
 
-#: src/gui/html/js/translateStaticText.ts:700
+#: src/gui/html/js/translateStaticText.ts:701
 msgid "Masterlist Repository URL"
 msgstr "Masterlist Repository URL"
 
-#: src/gui/html/js/translateStaticText.ts:703
+#: src/gui/html/js/translateStaticText.ts:706
 msgid "Masterlist Repository Branch"
 msgstr "Masterlist Repository Zweig"
 
-#: src/gui/html/js/translateStaticText.ts:706
+#: src/gui/html/js/translateStaticText.ts:711
 msgid "Install Path"
 msgstr "Installationspfad"
 
-#: src/gui/html/js/translateStaticText.ts:709
+#: src/gui/html/js/translateStaticText.ts:716
 msgid "Install Path Registry Key"
 msgstr "Installationspfad Registry-key"
 
-#: src/gui/html/js/translateStaticText.ts:731
+#: src/gui/html/js/translateStaticText.ts:721
+msgid "Local Data Path"
+msgstr "Lokaler Datenpfad"
+
+#: src/gui/html/js/translateStaticText.ts:724
+msgid "Add new game"
+msgstr "Füge neues Spiel hinzu"
+
+#: src/gui/html/js/translateStaticText.ts:725
+msgid "Delete game"
+msgstr "Lösche Spiel"
+
+#: src/gui/html/js/translateStaticText.ts:740
 msgid "First-Time Tips"
 msgstr "Anfänger-Tips"
 
-#: src/gui/html/js/translateStaticText.ts:736
+#: src/gui/html/js/translateStaticText.ts:745
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
@@ -900,11 +914,11 @@ msgstr ""
 "sind einige Tipps die Ihnen helfen Sie mit der Benutzeroberfläche vertraut "
 "zu machen."
 
-#: src/gui/html/js/translateStaticText.ts:744
+#: src/gui/html/js/translateStaticText.ts:753
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "Klicke die %(menu_icon)s Schaltfläche um Menüs zu öffnen ."
 
-#: src/gui/html/js/translateStaticText.ts:751
+#: src/gui/html/js/translateStaticText.ts:760
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
@@ -916,7 +930,7 @@ msgstr ""
 "Vorschläge zu <span class=\"tag add\">Additionen</span> und <span class="
 "\"tag remove\">Entfernungen</span>."
 
-#: src/gui/html/js/translateStaticText.ts:754
+#: src/gui/html/js/translateStaticText.ts:763
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -924,7 +938,7 @@ msgstr ""
 "CRC Prüfsummen werden erst angezeigt nachdem Plugins geladen wurden, "
 "entweder durch eine Konfliktfilterung oder durch eine Sortierung."
 
-#: src/gui/html/js/translateStaticText.ts:757
+#: src/gui/html/js/translateStaticText.ts:766
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
@@ -932,7 +946,7 @@ msgstr ""
 "Doppelklick auf ein Plugin in der Seitenleiste öffnet dieses direkt im "
 "Metadaten-Editor."
 
-#: src/gui/html/js/translateStaticText.ts:760
+#: src/gui/html/js/translateStaticText.ts:769
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -941,7 +955,7 @@ msgstr ""
 "Nach\", \"Voraussetzungen\" und \"Inkompatibilitäten\" des Metadaten-Editors "
 "platziert werden."
 
-#: src/gui/html/js/translateStaticText.ts:763
+#: src/gui/html/js/translateStaticText.ts:772
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -950,7 +964,7 @@ msgstr ""
 "oder während es eine sortierte Ladereihenfolge gibt, die nicht gespeichert "
 "oder verworfen wurde."
 
-#: src/gui/html/js/translateStaticText.ts:766
+#: src/gui/html/js/translateStaticText.ts:775
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -960,8 +974,8 @@ msgstr ""
 "ist, versuchen Sie, mit der Maus darüber zu fahren, um mehr zu erfahren. "
 "Außerdem kann die LOOT-Dokumentation über das Hauptmenü geöffnet werden."
 
-#: src/gui/html/js/translateStaticText.ts:770
-#: src/gui/html/js/translateStaticText.ts:793
+#: src/gui/html/js/translateStaticText.ts:779
+#: src/gui/html/js/translateStaticText.ts:802
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -971,19 +985,19 @@ msgstr ""
 "zeigen wollen, Spenden können an WrinklyNinja (LOOTs Schöpfer und "
 "Hauptentwickler) getätigt werden mithilfe von %s."
 
-#: src/gui/html/js/translateStaticText.ts:775
+#: src/gui/html/js/translateStaticText.ts:784
 msgid "OK"
 msgstr "OK"
 
-#: src/gui/html/js/translateStaticText.ts:782
+#: src/gui/html/js/translateStaticText.ts:791
 msgid "About LOOT"
 msgstr "Über LOOT"
 
-#: src/gui/html/js/translateStaticText.ts:784
+#: src/gui/html/js/translateStaticText.ts:793
 msgid "Version %s (build %s)"
 msgstr "Version %s (Build %s)"
 
-#: src/gui/html/js/translateStaticText.ts:789
+#: src/gui/html/js/translateStaticText.ts:798
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
 "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
