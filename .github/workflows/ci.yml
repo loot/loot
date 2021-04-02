@@ -85,7 +85,8 @@ jobs:
             libxss-dev \
             libasound2-dev \
             libxtst-dev \
-            libicu-dev
+            libicu-dev \
+            g++-8
 
       - name: Download & build Boost
         run: |
