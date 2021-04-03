@@ -71,7 +71,7 @@
     "@types/cytoscape": "^3.14.7",
     "@types/jest": "^26.0.22",
     "@types/lodash": "^4.14.168",
-    "@types/marked": "^1.1.0",
+    "@types/marked": "^2.0.1",
     "@types/node": "^12.12.54",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
