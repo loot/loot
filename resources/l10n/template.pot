@@ -85,7 +85,7 @@ msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"%1%\", but both files are present."
+msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:276
