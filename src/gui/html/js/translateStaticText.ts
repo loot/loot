@@ -796,7 +796,7 @@ function translateAboutDialog(l10n: Translator, version: LootVersion): void {
     version.build
   );
   querySelector(about, 'p:nth-child(2)').textContent = l10n.translate(
-    'Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.'
+    'Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.'
   );
 
   querySelector(about, 'p:nth-child(4)').innerHTML = l10n.translateFormatted(
