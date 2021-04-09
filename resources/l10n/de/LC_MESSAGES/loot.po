@@ -1,16 +1,16 @@
 # German LOOT translation
 # Copyright (C) 2012 WrinklyNinja
-# Copyright (C) Ipradel 2014
-# Copyright (C) Freso 2015
-# Copyright (C) DaCoolX 2019
+# Copyright (C) 2014 Ipradel
+# Copyright (C) 2015 Freso
+# Copyright (C) 2019 DaCoolX
 # This file is distributed under the same license as the LOOT package.
 # Diese Datei untersteht derselben Lizenz wie das LOOT Paket
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-03-26 12:21+0000\n"
-"PO-Revision-Date: 2021-03-30 23:13+0200\n"
+"POT-Creation-Date: 2021-04-07 16:29-0700\n"
+"PO-Revision-Date: 2021-04-09 21:02+0200\n"
 "Last-Translator: DaCoolX <2771553+DaCoolX@users.noreply.github.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -104,10 +104,8 @@ msgstr ""
 "deaktiviert."
 
 #: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"%1%\", but both files are present."
-msgstr ""
-"Dieses Plugin ist inkompatibel mit \"%1%\", aber beide Dateien sind "
-"vorhanden."
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr "Dieses Plugin ist inkompatibel mit \"%1%\", aber beide sind vorhanden."
 
 #: src/gui/state/game/game.cpp:276
 msgid ""
@@ -999,11 +997,13 @@ msgstr "Version %s (Build %s)"
 
 #: src/gui/html/js/translateStaticText.ts:798
 msgid ""
-"Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
-"VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
+"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
+"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
-"Ladereihenfolgen-Optimierung für Oblivion, Skyrim, Skyrim Special Edition, "
-"Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+"Ladereihenfolgen-Optimierung für Morrowind, Oblivion, Nehrim, Skyrim, "
+"Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
+"3, Fallout: New Vegas, Fallout 4 und Fallout 4 VR."
 
 #~ msgid "Do not clean"
 #~ msgstr "Nicht säubern"
