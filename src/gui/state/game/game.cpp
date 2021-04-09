@@ -227,7 +227,7 @@ std::vector<Message> Game::CheckInstallValidity(
           (!hasPluginFileExtension(file) || IsPluginActive(file))) {
         if (logger) {
           logger->error(
-              "\"{}\" is incompatible with \"{}\", but both files are present.",
+              "\"{}\" is incompatible with \"{}\", but both are present.",
               plugin->GetName(),
               file);
         }
@@ -238,7 +238,7 @@ std::vector<Message> Game::CheckInstallValidity(
             Message(MessageType::error,
                     (boost::format(boost::locale::translate(
                          "This plugin is incompatible with \"%1%\", but both "
-                         "files are present.")) %
+                         "are present.")) %
                      inc.GetDisplayName())
                         .str()));
         displayNamesWithMessages.insert(inc.GetDisplayName());

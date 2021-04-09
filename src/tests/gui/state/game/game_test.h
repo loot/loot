@@ -303,7 +303,7 @@ TEST_P(GameTest,
                 Message(MessageType::error,
                         "This plugin is incompatible with \"" +
                             EscapeMarkdownSpecialChars(masterFile) +
-                            "\", but both files are present."),
+                            "\", but both are present."),
             }),
             messages);
 }
@@ -329,7 +329,7 @@ TEST_P(
           Message(MessageType::error,
                         "This plugin is incompatible with \"" +
                             EscapeMarkdownSpecialChars(incompatibleFilename) +
-                      "\", but both files are present."),
+                      "\", but both are present."),
       }),
       messages);
 }
@@ -350,7 +350,7 @@ TEST_P(
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
                         "This plugin is incompatible with \"foo\", but both "
-                        "files are present."),
+                        "are present."),
             }),
             messages);
 }
@@ -375,7 +375,7 @@ TEST_P(
   EXPECT_EQ(std::vector<Message>({
                 Message(MessageType::error,
                         "This plugin is incompatible with \"test file\", but "
-                        "both files are present."),
+                        "both are present."),
             }),
             messages);
 }
