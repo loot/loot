@@ -84,10 +84,9 @@ function translatePluginCard(l10n: Translator, element: ShadowRoot): void {
     element,
     'paper-tooltip[for=isEmpty]'
   ).textContent = l10n.translate('Empty Plugin');
-  querySelector(
-    element,
-    'paper-tooltip[for=loadsArchive]'
-  ).textContent = l10n.translate('Loads Archive');
+  querySelector(element, 'paper-tooltip[for=loadsArchive]').textContent =
+    // translators: Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
+    l10n.translate('Loads Archive');
   querySelector(
     element,
     'paper-tooltip[for=hasUserEdits]'
@@ -149,10 +148,9 @@ function translatePluginEditor(l10n: Translator): void {
     pluginEditorShadow,
     '#tableTabs [data-for=msg]'
   ).textContent = l10n.translate('Messages');
-  querySelector(
-    pluginEditorShadow,
-    '#tableTabs [data-for=tag]'
-  ).textContent = l10n.translate('Bash Tags');
+  querySelector(pluginEditorShadow, '#tableTabs [data-for=tag]').textContent =
+    // translators: Title of a tab in the metadata editor.
+    l10n.translate('Bash Tags');
   querySelector(
     pluginEditorShadow,
     '#tableTabs [data-for=dirty]'
@@ -341,6 +339,7 @@ function translateMessageRowTemplate(l10n: Translator): void {
   );
   querySelector(messageRow, '.text').setAttribute(
     'error-message',
+    // translators: The error message displayed if you add a message with no content in the metadata editor.
     l10n.translate('A content string is required.')
   );
   querySelector(messageRow, 'paper-tooltip').textContent = l10n.translate(
@@ -447,15 +446,14 @@ function translateMainToolbar(l10n: Translator): void {
   ).textContent = l10n.translate('Update Masterlist');
   getElementById('applySortButton').textContent = l10n.translate('Apply');
   getElementById('cancelSortButton').textContent = l10n.translate('Cancel');
-  querySelector(
-    mainToolbar,
-    'paper-tooltip[for=showSearch]'
-  ).textContent = l10n.translate('Search Cards');
+  querySelector(mainToolbar, 'paper-tooltip[for=showSearch]').textContent =
+    // translators: The tooltip for the search icon that reveals the content search input when clicked.
+    l10n.translate('Search Cards');
 
   /* Toolbar menu */
-  getLastChildById('redatePluginsButton').textContent = l10n.translate(
-    'Redate Plugins'
-  );
+  getLastChildById('redatePluginsButton').textContent =
+    // translators: Text of menu option that triggers display of the Redate Plugins dialog.
+    l10n.translate('Redate Plugins');
   getLastChildById('openLogButton').textContent = l10n.translate(
     'Open Debug Log Location'
   );
@@ -487,10 +485,9 @@ function translateMainToolbar(l10n: Translator): void {
     throw new Error('Expected search bar to have a shadow root');
   }
 
-  (getShadowElementById(
-    shadowRoot,
-    'search'
-  ) as PaperInputElement).label = l10n.translate('Search cards');
+  (getShadowElementById(shadowRoot, 'search') as PaperInputElement).label =
+    // translators: The label on the content search text input.
+    l10n.translate('Search cards');
 }
 
 function updateDropdownSelectedItemText(dropdownElement: HTMLElement): void {
@@ -560,7 +557,9 @@ function translateSidebar(l10n: Translator): void {
     'Hide version numbers'
   );
   getElementById('hideCRCs').textContent = l10n.translate('Hide CRCs');
-  getElementById('hideBashTags').textContent = l10n.translate('Hide Bash Tags');
+  getElementById('hideBashTags').textContent =
+    // translators: Text of a filter in the sidebar.
+    l10n.translate('Hide Bash Tags');
   getElementById('hideNotes').textContent = l10n.translate('Hide notes');
   getElementById('hideAllPluginMessages').textContent = l10n.translate(
     'Hide all plugin messages'
@@ -747,16 +746,12 @@ function translateFirstRunDialog(l10n: Translator, version: LootVersion): void {
     version.release
   );
 
-  querySelector(
-    firstRun,
-    'li:nth-child(1)'
-  ).innerHTML = l10n.translateFormatted(
-    'Click %(menu_icon)s buttons to open menus.',
-    {
+  querySelector(firstRun, 'li:nth-child(1)').innerHTML =
+    // translators: The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
+    l10n.translateFormatted('Click %(menu_icon)s buttons to open menus.', {
       // eslint-disable-next-line @typescript-eslint/camelcase
       menu_icon: '<iron-icon icon="more-vert"></iron-icon>'
-    }
-  );
+    });
   querySelector(firstRun, 'li:nth-child(2)').innerHTML = l10n.translate(
     'As well as messages, LOOT displays plugin <span class="version">version numbers</span>, <span class="crc">CRCs</span> and Bash Tag suggestions for <span class="tag add">addition</span> and <span class="tag remove">removal</span>.'
   );

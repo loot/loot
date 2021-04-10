@@ -499,16 +499,19 @@ export function onCancelSort(): Promise<void> {
 
 export function onRedatePlugins(/* evt */): void {
   askQuestion(
+    // translators: Title of a dialog box.
     window.loot.l10n.translate('Redate Plugins?'),
     window.loot.l10n.translate(
       'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam (this does not affect Skyrim Special Edition). Do you wish to continue?'
     ),
+    // translators: Affirmative confirmation button text for the Redate Plugins dialog box.
     window.loot.l10n.translate('Redate'),
     result => {
       if (result) {
         redatePlugins()
           .then(() => {
             showNotification(
+              // translators: Notification text.
               window.loot.l10n.translate('Plugins were successfully redated.')
             );
           })
@@ -658,7 +661,10 @@ export function onQuit(): void {
       window.loot.l10n.translate('sorted load order')
     );
   } else if (window.loot.state.isInEditingState()) {
-    handleUnappliedChangesClose(window.loot.l10n.translate('metadata edits'));
+    handleUnappliedChangesClose(
+      // translators: Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
+      window.loot.l10n.translate('metadata edits')
+    );
   } else {
     window.close();
   }

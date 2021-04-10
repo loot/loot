@@ -136,7 +136,9 @@ export default class Game {
 
     this.oldLoadOrder = [];
 
-    this._notApplicableString = l10n.translate('N/A');
+    this._notApplicableString =
+      // translators: An abbreviation of Not Applicable.
+      l10n.translate('N/A');
   }
 
   public get folder(): string {
