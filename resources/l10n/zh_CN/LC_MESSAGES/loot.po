@@ -483,10 +483,6 @@ msgstr "隐藏Bash标签"
 msgid "Hide notes"
 msgstr "隐藏注释"
 
-#: src/gui/html/js/translateStaticText.js:255
-msgid "Hide 'Do not clean' messages"
-msgstr "隐藏 '不要清理' 信息"
-
 #: src/gui/html/js/translateStaticText.js:256
 msgid "Hide all plugin messages"
 msgstr "隐藏所有插件信息"

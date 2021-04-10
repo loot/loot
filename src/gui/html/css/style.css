@@ -206,18 +206,50 @@ li.warn {
 #about blockquote {
     white-space: pre-line;
 }
-#settingsDialog > paper-dialog-scrollable > div > * {
-    margin: 16px;
+#generalSettings > * {
+    margin: 16px 0;
 }
-#settingsDialog > paper-dialog-scrollable > div > div > :first-child {
+#generalSettings > div {
+    height: 42px;
+}
+#generalSettings > div > :first-child {
     margin-right: 16px;
-    margin-left: 0;
+    flex-grow: 1;
 }
-#settingsDialog > paper-dialog-scrollable > div > :last-child {
-    margin-right: 0;
+#settingsMain {
+    display: flex;
+    max-height: calc(100vh - 48px - 24px - 28px - 20px - 16px - 39px);
+    padding-left: 24px;
+    padding-right: 0;
 }
-#gameTable {
-    margin: 32px 0 0;
+#settingsSidebarList {
+    border-right: 1px var(--divider-color) solid;
+    max-height: calc(100% - 48px);
+    overflow: auto;
+}
+#addGameButtonContainer {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#generalSettings, #gameSettings {
+    overflow: auto;
+    padding: 16px;
+    padding-right: 24px;
+    width: 450px;
+}
+#gameSettings > div:first-child {
+    padding-top: 0;
+}
+#gameSettings > div {
+    padding: 2px 0;
+}
+#gameSettings > div:last-child {
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #progressDialog paper-progress {
     width: 100%;

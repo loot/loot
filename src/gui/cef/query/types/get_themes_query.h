@@ -75,6 +75,9 @@ private:
       themes.push_back(themeName);
     }
 
+    // Ensure a consistent order.
+    std::sort(themes.begin(), themes.end());
+
     return themes;
   }
 

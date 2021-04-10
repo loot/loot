@@ -51,7 +51,7 @@ A few items in the main menu are not self-explanatory:
 
   1. Decimal load order index
   2. Hexadecimal load order index
-  3. Hexadecimal light master index
+  3. Hexadecimal light plugin index
   4. Plugin name
 
 - "Copy Content" copies the data displayed in LOOT's cards to the clipboard as YAML-formatted text.
@@ -62,7 +62,7 @@ Users running LOOT natively on Linux must have ``xclip`` installed in order to u
 Plugin Cards & Sidebar Items
 ============================
 
-Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's PLUGINS tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Light masters also have their light master index displayed below their load order index. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
+Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's PLUGINS tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Light plugins also have their light plugins index displayed below their load order index. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
 
 The plugin card's header holds the following information, some of which is only displayed if applicable:
 
@@ -71,7 +71,7 @@ The plugin card's header holds the following information, some of which is only 
 - The plugin's version number, extracted from its description field.
 - The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting, except the the CRC of the game's main master file, which is never displayed.
 - The "Master File" icon.
-- The "Light Master File" icon.
+- The "Light Plugin" icon.
 - The "Empty Plugin" icon.
 - The "Loads Archive" icon.
 - The "Verified clean" icon.
@@ -98,8 +98,6 @@ Hide Bash Tags
   Hides all Bash Tag suggestions.
 Hide notes
   Hides all plugin messages that have the Note: prefix, or the equivalent text for the language selected in LOOT's settings.
-Hide 'Do not clean' messages
-  Hides all messages that contain the text Do not clean, or the equivalent text for the language selected in LOOT's settings.
 Hide all plugin messages
   Hides all plugin messages.
 Hide inactive plugins

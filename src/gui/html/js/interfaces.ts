@@ -122,7 +122,6 @@ export interface FilterStates {
   hideBashTags: boolean;
   hideAllPluginMessages: boolean;
   hideNotes: boolean;
-  hideDoNotCleanMessages: boolean;
 }
 
 export interface LootSettings {

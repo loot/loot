@@ -8,16 +8,20 @@
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
+#if FileExists(AddBackslash(CompilerPath) + 'Languages\Bulgarian.isl')
+#define BulgarianExists
+#endif
+
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')
 #define KoreanExists
 #endif
 
-#if FileExists(AddBackslash(CompilerPath) + 'Languages\ChineseSimplified.isl')
-#define SimplifiedChineseExists
-#endif
-
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Swedish.isl')
 #define SwedishExists
+#endif
+
+#if FileExists(AddBackslash(CompilerPath) + 'Languages\ChineseSimplified.isl')
+#define SimplifiedChineseExists
 #endif
 
 #if FileExists(SourcePath + '..\build\32\Release\LOOT.exe')
@@ -53,16 +57,23 @@ WizardStyle=modern
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
+#ifdef BulgarianExists
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
+#endif
 Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
 #ifdef KoreanExists
 Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
 #endif
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 #ifdef SwedishExists
 Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
@@ -70,8 +81,6 @@ Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
 #ifdef SimplifiedChineseExists
 Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 #endif
-Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -114,6 +123,8 @@ DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 Source: "{#buildir}\Release\resources\ui\*"; \
 DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
+Source: "resources\l10n\bg\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\bg\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\cs\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\cs\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\da\LC_MESSAGES\loot.mo"; \
@@ -126,22 +137,26 @@ Source: "resources\l10n\fi\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\fi\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\fr\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\fr\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\it\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\it\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ko\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ko\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\pl\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\pl\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\pt_BR\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\pt_BR\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\pt_PT\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\pt_PT\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ru\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\sv\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
-Source: "resources\l10n\ja\LC_MESSAGES\loot.mo"; \
-DestDir: "{app}\resources\l10n\ja\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "build\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+Source: "{tmp}\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -149,7 +164,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Check: VCRedistNeedsInstall; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -183,24 +198,34 @@ Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
 [CustomMessages]
 en.DeleteUserFiles=Do you want to delete your settings and user metadata?
-;pt_BR.DeleteUserFiles=
+#ifdef BulgarianExists
+bg.DeleteUserFiles=Искате ли да изтриете Вашите настройки и потребителските метаданни?
+#endif
+cs.DeleteUserFiles=Vymazat Uživatelské Soubory
 da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
+de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten löschen?
+es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
 fi.DeleteUserFiles=Haluatko poistaa asetukset ja käyttäjä metatiedot?
 fr.DeleteUserFiles=Voulez-vous supprimer vos paramètres et les métadonnées de l'utilisateur?
-de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten löschen?
+it.DeleteUserFiles=Vuoi cancellare le tue impostazioni e i meta-dati utente?
+ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 #ifdef KoreanExists
 ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
 #endif
 pl.DeleteUserFiles=Czy chcesz usunąć ustawienia i metadane użytkownika?
+pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
+pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
 ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
+;#ifdef SwedishExists
+;sv.DeleteUserFiles=
+;#endif
 #ifdef SimplifiedChineseExists
 zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
-es.DeleteUserFiles=¿Quieres borrar sus ajustes y metadatos de usuario?
-ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
-cs.DeleteUserFiles=Vymazat Uživatelské Soubory
 
 [Code]
+var DownloadPage: TDownloadWizardPage;
+
 // Set LOOT's language in settings.toml
 procedure SetLootLanguage();
 var
@@ -256,6 +281,14 @@ begin
   end;
 end;
 
+function GetHKCR: Integer;
+begin
+  if IsWin64 then
+    Result := HKEY_CLASSES_ROOT_64
+  else
+    Result := HKEY_CLASSES_ROOT_32
+end;
+
 function VCRedistNeedsInstall: Boolean;
 var
   VersionMajor : Integer;
@@ -269,7 +302,14 @@ var
 begin
   RegKey := 'Installer\Dependencies\,,x86,14.0,bundle\Dependents\{7e9fae12-5bbf-47fb-b944-09c49e75c061}';
 
-  Result := not RegKeyExists(HKEY_CLASSES_ROOT, RegKey);
+  Result := not RegKeyExists(GetHKCR, RegKey);
+end;
+
+function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
+begin
+  if Progress = ProgressMax then
+    Log(Format('Successfully downloaded file to {tmp}: %s', [FileName]));
+  Result := True;
 end;
 
 // Query user whether their data files should be deleted on uninstall.
@@ -291,6 +331,35 @@ begin
       DeleteFile(ExpandConstant('{localappdata}\{#MyAppName}\Fallout4\userlist.yaml'));
     end;
   end;
+end;
+
+procedure InitializeWizard;
+begin
+  if VCRedistNeedsInstall then begin
+    DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+  end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+        Log(Format('Current page ID: %d', [CurPageID]));
+  if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
+    DownloadPage.Clear;
+    DownloadPage.Add('https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe', 'vc_redist.x86.exe', '');
+    DownloadPage.Show;
+    try
+      try
+        DownloadPage.Download;
+        Result := True;
+      except
+        SuppressibleMsgBox(AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
+        Result := False;
+      end;
+    finally
+      DownloadPage.Hide;
+    end;
+  end else
+    Result := True;
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);

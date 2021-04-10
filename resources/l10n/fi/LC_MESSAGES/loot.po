@@ -1029,10 +1029,6 @@ msgstr "Piilota Bash-tagiehdotukset"
 msgid "Hide Notes"
 msgstr "Piilota huomautukset"
 
-#: backend/generators.h:491
-msgid "Hide 'Do Not Clean' Messages"
-msgstr "Piilota \"älä puhdista\"-viestit"
-
 #: backend/generators.h:499
 msgid "Hide All Plugin Messages"
 msgstr "Piilota kaikki lisäosaviestit"

@@ -1,7 +1,6 @@
 # LOOT
 
 ![CI](https://github.com/loot/loot/workflows/CI/badge.svg?branch=master&event=push)
-[![Travis Build Status](https://travis-ci.org/loot/loot.svg?branch=master)](https://travis-ci.org/loot/loot)
 [![Documentation Status](https://readthedocs.org/projects/loot/badge/?version=latest)](https://loot.readthedocs.io/en/latest/?badge=latest)
 
 ## Introduction
@@ -24,20 +23,22 @@ loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.7
 
 ## Building LOOT
 
+Refer to `.github/workflows/release.yml` for the build process.
+
 ### Windows
 
-Refer to `.github/workflows/release.yml` for the build process. The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017, Yarn and 7-zip are already installed.
+The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017, Yarn and 7-zip are already installed.
 
 ### Linux
 
-Refer to `.travis.yml` for the build process. It assumes that you have already
-cloned the LOOT repository, that the current working directory is its root, and
-that the following applications are already installed:
+The GitHub Actions workflow assumes that you have already cloned the LOOT
+repository, that the current working directory is its root, and that the
+following applications are already installed:
 
 - `cmake` v3.6+
 - `curl`
 - `git`
-- `nvm`, or just install Node.js 8+ and ignore the `nvm` call in `.travis.yml`.
+- Node.js 8+
 - `python` and `pip` (2.7 or 3, it shouldn't matter)
 - `wget`
 
@@ -70,6 +71,8 @@ The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/).
 pip install -r docs/requirements.txt
 sphinx-build -b html docs build/docs/html
 ```
+
+Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs -v ${PWD}/build:/docs/build sphinxdoc/sphinx bash` to obtain a shell that you can use to run the two commands above.
 
 ## Packaging Releases
 

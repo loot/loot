@@ -440,10 +440,6 @@ msgstr "Dölj bashtaggar"
 msgid "Hide notes"
 msgstr "Dölj anteckningar"
 
-#: src/gui/html/js/translateStaticText.js:201
-msgid "Hide 'Do not clean' messages"
-msgstr "Dölj meddelandet \"Rensa inte\""
-
 #: src/gui/html/js/translateStaticText.js:202
 msgid "Hide all plugin messages"
 msgstr "Dölj alla insticksmodulmeddelanden"

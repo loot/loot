@@ -4,8 +4,9 @@ import { IronSelectableBehavior } from '@polymer/iron-selector/iron-selectable';
 import { PaperIconButtonElement } from '@polymer/paper-icon-button';
 import { PaperIconItemElement } from '@polymer/paper-item/paper-icon-item';
 import { PaperToggleButtonElement } from '@polymer/paper-toggle-button';
+import { PaperListboxElement } from '@polymer/paper-listbox';
+import { PaperButtonElement } from '@polymer/paper-button';
 import { PaperInputElement } from '@polymer/paper-input/paper-input';
-import EditableTable from '../../elements/editable-table';
 import LootPluginCard from '../../elements/loot-plugin-card';
 import LootGroupsEditor from '../../elements/loot-groups-editor';
 import LootSearchToolbar from '../../elements/loot-search-toolbar';
@@ -140,27 +141,6 @@ export function updateSelectedGame(gameFolder: string): void {
   if (gameMenu.value !== gameFolder) {
     gameMenu.value = gameFolder;
   }
-
-  /* Also disable deletion of the game's row in the settings dialog. */
-  const table = getElementById('gameTable') as EditableTable;
-  const tableBody = table.querySelector('tbody');
-  if (tableBody === null) {
-    throw new Error(
-      'Expected element with ID "gameTable" to have a tbody child element'
-    );
-  }
-
-  for (const row of tableBody.rows) {
-    const folderElements = row.getElementsByClassName('folder');
-
-    if (folderElements.length === 1) {
-      table.setReadOnly(
-        row,
-        ['delete'],
-        (folderElements[0] as PaperInputElement).value === gameFolder
-      );
-    }
-  }
 }
 
 export function setGameMenuItems(
@@ -200,21 +180,22 @@ export function updateSettingsDialog(settings: LootSettings): void {
   const gameSelect = getElementById('defaultGameSelect') as LootDropdownMenu;
   const languageSelect = getElementById('languageSelect') as LootDropdownMenu;
   const themeSelect = getElementById('themeSelect') as LootDropdownMenu;
-  const gameTable = getElementById('gameTable') as EditableTable;
+  const gamesList = getElementById('settingsSidebarList');
 
   /* First make sure game listing elements don't have any existing entries.
      Leave the autodetect entry in the game select dropdown. */
   while (gameSelect.children.length > 1) {
     gameSelect.removeChild(gameSelect.children[1]);
   }
-  gameTable.clear();
+  /* Leave the empty hidden child in the list of game with settings. */
+  while (gamesList.children.length > 2) {
+    gamesList.removeChild(gamesList.children[2]);
+  }
 
   /* Now fill with new values. */
   settings.games.forEach(game => {
     gameSelect.appendChild(createGameItem(game));
-
-    const row = gameTable.addRow(game);
-    gameTable.setReadOnly(row, ['name', 'folder', 'type']);
+    gamesList.appendChild(createGameItem(game));
   });
 
   gameSelect.value = settings.game;
@@ -233,7 +214,7 @@ export function updateSettingsDialog(settings: LootSettings): void {
 }
 
 export function fillGameTypesList(gameTypes: string[]): void {
-  const select = getElementInTableRowTemplate('gameRow', 'type');
+  const select = getElementById('settingsGameTypeDropdown');
 
   gameTypes.forEach(gameType => {
     select.appendChild(createGameTypeItem(gameType));
@@ -315,7 +296,7 @@ export function onShowAboutDialog(): void {
   (getElementById('about') as PaperDialogElement).open();
 }
 
-export function onSwitchSidebarTab(evt: Event): void {
+export function onSwitchTab(evt: Event): void {
   if (!isIronSelectEvent(evt)) {
     throw new TypeError(`Expected a IronSelectEvent, got ${evt}`);
   }
@@ -360,7 +341,76 @@ export function onSidebarClick(evt: MouseEvent): void {
   }
 }
 
+export function clearGameSettingsInputs(): void {
+  forceSelectDefaultValue(getElementById('settingsGameTypeDropdown'));
+
+  const inputElementIds = [
+    'settingsGameName',
+    'settingsGameFolder',
+    'settingsGameMaster',
+    'settingsGameMasterlistUrl',
+    'settingsGameMasterlistBranch',
+    'settingsGamePath',
+    'settingsGameRegistry',
+    'settingsGameLocalPath'
+  ];
+
+  for (const inputId of inputElementIds) {
+    const input = getElementById(inputId) as PaperInputElement;
+    input.value = '';
+    input.disabled = true;
+  }
+
+  (getElementById('deleteGameButton') as PaperButtonElement).disabled = true;
+}
+
+export function initialiseGameSettingsInputsForNewGame(): void {
+  const gameTypeDropdown = getElementById(
+    'settingsGameTypeDropdown'
+  ) as LootDropdownMenu;
+  forceSelectDefaultValue(gameTypeDropdown);
+  gameTypeDropdown.disabled = false;
+
+  const inputElementIds = [
+    'settingsGameName',
+    'settingsGameFolder',
+    'settingsGameMaster',
+    'settingsGameMasterlistUrl',
+    'settingsGameMasterlistBranch',
+    'settingsGamePath',
+    'settingsGameRegistry',
+    'settingsGameLocalPath'
+  ];
+
+  for (const inputId of inputElementIds) {
+    const input = getElementById(inputId) as PaperInputElement;
+    input.value = '';
+    input.disabled = false;
+  }
+
+  (getElementById('deleteGameButton') as PaperButtonElement).disabled = false;
+}
+
+export function initialiseGameSettingsUI(): void {
+  const gamesList = getElementById(
+    'settingsSidebarList'
+  ) as PaperListboxElement;
+  if (window.loot.game) {
+    gamesList.select(window.loot.game.folder);
+  } else if (gamesList.children.length > 2) {
+    gamesList.selectIndex(2);
+  } else {
+    clearGameSettingsInputs();
+  }
+}
+
 export function onShowSettingsDialog(): void {
+  const gamesSettings = window.loot.settings?.games ?? [];
+  window.loot.unappliedGamesSettings = new Map(
+    gamesSettings.map(settings => [settings.folder, settings])
+  );
+
+  initialiseGameSettingsUI();
   (getElementById('settingsDialog') as PaperDialogElement).open();
 }
 

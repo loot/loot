@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/game/game_settings.h"
 
+#include "gui/helpers.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -333,6 +334,18 @@ TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
 
   settings_.SetGamePath(std::filesystem::u8path(pathValue));
   EXPECT_EQ(pathValue, settings_.GamePath().u8string());
+}
+
+TEST_P(GameSettingsTest,
+       setGameLocalFolderShouldSetLocalPathToTheNamedFolderInLocalAppData) {
+  std::string folderName = u8"p\u00E1th";
+  GameSettings settings_;
+
+  settings_.SetGameLocalFolder(folderName);
+
+  auto expectedPath =
+      getLocalAppDataPath() / std::filesystem::u8path(folderName);
+  EXPECT_EQ(expectedPath, settings_.GameLocalPath());
 }
 }
 }

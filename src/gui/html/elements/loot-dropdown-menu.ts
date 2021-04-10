@@ -4,12 +4,15 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import { PolymerElementProperties } from '@polymer/polymer/interfaces.d';
 
 export default class LootDropdownMenu extends PolymerElement {
+  public disabled: boolean;
+
   public value: string;
 
   public label: string;
 
   public constructor() {
     super();
+    this.disabled = false;
     this.value = '';
     this.label = '';
   }

@@ -49,10 +49,6 @@ ELSE()
     set (Boost_USE_STATIC_RUNTIME OFF)
 ENDIF()
 
-IF (NOT Boost_USE_STATIC_LIBS)
-    add_definitions(-DBOOST_LOG_DYN_LINK)
-ENDIF ()
-
 find_package(Boost REQUIRED COMPONENTS locale system)
 
 if (NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -73,12 +69,12 @@ set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE
 if (NOT DEFINED LIBLOOT_URL)
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         if ("${CMAKE_GENERATOR_PLATFORM}" MATCHES "Win32")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.1/libloot-0.16.1-0-gd8c9b98_0.16.1-win32.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.2/libloot-0.16.2-0-gc74c16b_0.16.2-win32.7z")
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.1/libloot-0.16.1-0-gd8c9b98_0.16.1-win64.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.2/libloot-0.16.2-0-gc74c16b_0.16.2-win64.7z")
         endif()
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.1/libloot.tar.xz")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.16.2/libloot-0.16.2-0-gc74c16b_0.16.2-Linux.tar.xz")
     endif()
 endif()
 
@@ -116,18 +112,18 @@ ExternalProject_Add(testing-plugins
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     if ("${CMAKE_GENERATOR_PLATFORM}" MATCHES "Win32")
-        set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_windows32_minimal.tar.bz2")
+        set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_windows32_minimal.tar.bz2")
         set(CEF_URL_HASH "a2f7b18e0925520ce06f2d6bba6dfd4937414be1")
         set(CEF_PRECOMPILED_BINARIES "libcef.dll" "snapshot_blob.bin" "v8_context_snapshot.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll" "chrome_elf.dll")
         set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
     else()
-        set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_windows64_minimal.tar.bz2")
+        set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_windows64_minimal.tar.bz2")
         set(CEF_URL_HASH "73226dc6298392700999ef2ca24c02fbbe284111")
         set(CEF_PRECOMPILED_BINARIES "libcef.dll" "snapshot_blob.bin" "v8_context_snapshot.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll" "chrome_elf.dll")
         set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
 ELSE ()
-    set(CEF_URL "http://opensource.spotify.com/cefbuilds/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_linux64_minimal.tar.bz2")
+    set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_linux64_minimal.tar.bz2")
     set(CEF_URL_HASH "7c2b335fbe873a1970a9b76f42e7e4d2238e2543")
     set(CEF_PRECOMPILED_BINARIES "libcef.so" "snapshot_blob.bin" "v8_context_snapshot.bin" "chrome-sandbox")
     set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -165,7 +161,7 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(spdlog
                     PREFIX "external"
-                    URL "https://github.com/gabime/spdlog/archive/v1.7.0.tar.gz"
+                    URL "https://github.com/gabime/spdlog/archive/v1.8.2.tar.gz"
                     CONFIGURE_COMMAND ""
                     BUILD_COMMAND ""
                     INSTALL_COMMAND "")
@@ -301,7 +297,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
 
 # Settings when compiling for Windows.
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    add_definitions (-DUNICODE -D_UNICODE -DNOMINMAX)
+    add_definitions (-DUNICODE -D_UNICODE -DNOMINMAX -DBOOST_UUID_FORCE_AUTO_LINK)
     set(LIBLOOT_LINK_LIBRARY ${LIBLOOT_STATIC_LIBRARY})
 else()
     set(LIBLOOT_LINK_LIBRARY ${LIBLOOT_SHARED_LIBRARY})

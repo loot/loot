@@ -1019,10 +1019,6 @@ msgstr "Ukryj sugestie tagów Bash"
 msgid "Hide Notes"
 msgstr "Ukryj notatki"
 
-#: backend/generators.h:490
-msgid "Hide 'Do Not Clean' Messages"
-msgstr "Ukryj wiadomości \"Nie czyścić\""
-
 #: backend/generators.h:498
 msgid "Hide All Plugin Messages"
 msgstr "Ukryj wszystkie wiadomości wtyczek"

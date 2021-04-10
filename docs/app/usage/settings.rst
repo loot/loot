@@ -20,18 +20,21 @@ Language
 Theme
   Controls the theme LOOT loads. If the specified theme is not found, LOOT falls back to the default theme.
 
-Enable Debug Logging
-  If enabled, writes debug output to ``%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt``. Debug logging can have a noticeable impact on performance, so it is off by default.
-
 .. _update-masterlist:
 
 Update masterlist before sorting
   If checked, LOOT will update its masterlist, should an update be available, before sorting plugins.
 
+Check for LOOT updates on startup
+  If checked, LOOT will check for updates on startup and display a general message if an update is available.
+
+Enable Debug Logging
+  If enabled, writes debug output to ``%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt``. Debug logging can have a noticeable impact on performance, so it is off by default.
+
 Game Settings
 =============
 
-LOOT's game-specific settings can be customised in the games table. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the "Nehrim - At Fate's Edge" total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the base games it supports (Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR) when it is next run.
+LOOT's game-specific settings can be customised by selecting a game in the sidebar. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the "Nehrim - At Fate's Edge" total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the base games it supports (Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR) when it is next run.
 
 Name
   The name of the game, or another identifying text, that is displayed in menus and the LOOT's title bar.
@@ -68,5 +71,8 @@ Install Path
 
 Install Path Registry Key
   The registry key, in ``HKEY_LOCAL_MACHINE``, that contains the install path of the game. This is used to obtain the install path if LOOT has no previous record of the game's install path, or LOOT's stored install path is invalid. Either this or an install path must be supplied.
+
+Local Data Path
+  The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``.
 
 .. _Git: https://git-scm.com/

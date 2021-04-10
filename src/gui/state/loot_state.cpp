@@ -129,6 +129,13 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
               .str());
     }
   }
+
+  // Initialise logging.
+  fs::remove(LootPaths::getLogPath());
+  setLogPath(LootPaths::getLogPath());
+  SetLoggingCallback(apiLogCallback);
+
+  // Load settings.
   if (fs::exists(LootPaths::getSettingsPath())) {
     try {
       LootSettings::load(LootPaths::getSettingsPath(), LootPaths::getLootDataPath());
@@ -139,10 +146,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     }
   }
 
-  // Set up logging.
-  fs::remove(LootPaths::getLogPath());
-  setLogPath(LootPaths::getLogPath());
-  SetLoggingCallback(apiLogCallback);
+  // Apply debug logging settings.
   enableDebugLogging(isDebugLoggingEnabled());
 
   // Log some useful info.

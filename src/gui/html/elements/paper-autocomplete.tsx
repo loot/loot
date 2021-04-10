@@ -112,31 +112,21 @@ class Autocomplete extends React.Component<
   }
 
   public renderInputComponent(
-    inputProps: Autosuggest.InputProps<string>
+    inputProps: Autosuggest.RenderInputComponentProps
   ): JSX.Element {
-    const { onChange, ...otherProps } = inputProps;
     return (
       <paper-input-container
-        disabled={otherProps.disabled ? true : null}
+        disabled={inputProps.disabled ? true : null}
         auto-validate
         no-label-float
       >
         <iron-input
           slot="input"
           auto-validate
-          bind-value={otherProps.value}
+          bind-value={inputProps.value}
           ref={this.ironInput}
         >
-          <input
-            required
-            onChange={evt => {
-              onChange(evt, {
-                newValue: evt.currentTarget.value,
-                method: 'type'
-              });
-            }}
-            {...otherProps}
-          />
+          <input required {...inputProps} />
         </iron-input>
         <paper-input-error slot="add-on">
           A value is required.

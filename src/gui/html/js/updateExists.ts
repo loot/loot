@@ -119,7 +119,14 @@ export default async function updateExists(
       ref: currentBuild
     });
 
-    return tagDate > Date.parse(repoCommitResponse.data.commit.committer.date);
+    const dateString = repoCommitResponse.data.commit.committer?.date;
+    if (!dateString) {
+      throw new Error(
+        `Couldn't get commit date for tag "${latestReleaseTagName}"`
+      );
+    }
+
+    return tagDate > Date.parse(dateString);
   } catch (error) {
     console.error(`Failed to check for LOOT updates, details: ${error}`); // eslint-disable-line no-console
     throw error;

@@ -48,40 +48,6 @@
 #include "loot/api.h"
 
 namespace loot {
-std::filesystem::path getExecutableDirectory() {
-#ifdef _WIN32
-  // Despite its name, paths can be longer than MAX_PATH, just not by default.
-  // FIXME: Make this work with long paths.
-  std::wstring executablePathString(MAX_PATH, 0);
-
-  if (GetModuleFileName(NULL, &executablePathString[0], MAX_PATH) == 0) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Failed to get LOOT executable path.");
-    }
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to get LOOT executable path.");
-  }
-
-  return std::filesystem::path(executablePathString).parent_path();
-#else
-  char result[PATH_MAX];
-
-  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-  if (count < 0) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Failed to get LOOT executable path.");
-    }
-    throw std::system_error(
-        count, std::system_category(), "Failed to get LOOT executable path.");
-  }
-
-  return std::filesystem::u8path(std::string(result, count)).parent_path();
-#endif
-}
-
 LootPaths::LootPaths(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) {
   // Set the locale to get UTF-8 conversions working correctly.
@@ -121,37 +87,5 @@ std::filesystem::path LootPaths::getSettingsPath() const {
 
 std::filesystem::path LootPaths::getLogPath() const {
   return lootDataPath_ / "LOOTDebugLog.txt";
-}
-
-std::filesystem::path LootPaths::getLocalAppDataPath() {
-#ifdef _WIN32
-  HWND owner = 0;
-  PWSTR path;
-
-  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
-    throw std::system_error(GetLastError(),
-                            std::system_category(),
-                            "Failed to get %LOCALAPPDATA% path.");
-
-  std::filesystem::path localAppDataPath(path);
-  CoTaskMemFree(path);
-
-  return localAppDataPath;
-#else
-  // Use XDG_CONFIG_HOME environmental variable if it's available.
-  const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
-
-  if (xdgConfigHome != nullptr)
-    return std::filesystem::u8path(xdgConfigHome);
-
-  // Otherwise, use the HOME env. var. if it's available.
-  xdgConfigHome = getenv("HOME");
-
-  if (xdgConfigHome != nullptr)
-    return std::filesystem::u8path(xdgConfigHome) / ".config";
-
-  // If somehow both are missing, use the executable's directory.
-  return getExecutableDirectory();
-#endif
 }
 }

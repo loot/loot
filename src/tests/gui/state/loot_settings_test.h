@@ -75,6 +75,18 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetMaster("Nehrim.esm")
           .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
                           "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
+      GameSettings(GameType::tes5, "Enderal")
+          .SetName("Enderal: Forgotten Stories")
+          .SetRegistryKey(
+              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path")
+          .SetGameLocalFolder("enderal")
+          .SetRepoURL("https://github.com/loot/enderal.git"),
+      GameSettings(GameType::tes5se, "Enderal Special Edition")
+        .SetName("Enderal: Forgotten Stories (Special Edition)")
+        .SetRegistryKey(
+            "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path")
+        .SetGameLocalFolder("Enderal Special Edition")
+        .SetRepoURL("https://github.com/loot/enderal.git"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
@@ -142,36 +154,41 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[5].RepoBranch());
 
   auto actualLanguages = settings_.getLanguages();
-  EXPECT_EQ(14, actualLanguages.size());
-  EXPECT_EQ(LootSettings::Language({"cs", "Čeština", std::nullopt}),
-            actualLanguages[0]);
-  EXPECT_EQ(LootSettings::Language({"da", "Dansk", std::nullopt}),
-            actualLanguages[1]);
-  EXPECT_EQ(LootSettings::Language({"de", "Deutsch", std::nullopt}),
-            actualLanguages[2]);
+  EXPECT_EQ(17, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
+            actualLanguages[0]);
+  EXPECT_EQ(LootSettings::Language({"bg", "Български", std::nullopt}),
+            actualLanguages[1]);
+  EXPECT_EQ(LootSettings::Language({"cs", "Čeština", std::nullopt}),
+            actualLanguages[2]);
+  EXPECT_EQ(LootSettings::Language({"da", "Dansk", std::nullopt}),
             actualLanguages[3]);
-  EXPECT_EQ(LootSettings::Language({"es", "Español", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"de", "Deutsch", std::nullopt}),
             actualLanguages[4]);
-  EXPECT_EQ(LootSettings::Language({"fi", "suomi", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"es", "Español", std::nullopt}),
             actualLanguages[5]);
-  EXPECT_EQ(LootSettings::Language({"fr", "Français", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"fi", "Suomi", std::nullopt}),
             actualLanguages[6]);
-  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
+  EXPECT_EQ(LootSettings::Language({"fr", "Français", std::nullopt}),
             actualLanguages[7]);
-  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"it", "Italiano", std::nullopt}),
             actualLanguages[8]);
-  EXPECT_EQ(
-      LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
-      actualLanguages[9]);
-  EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
-            actualLanguages[10]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
-            actualLanguages[11]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
-            actualLanguages[12]);
   EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
-            actualLanguages[13]);
+            actualLanguages[9]);
+  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
+            actualLanguages[10]);
+  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
+            actualLanguages[11]);
+  EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil",
+            std::nullopt}), actualLanguages[12]);
+  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
+            std::nullopt}), actualLanguages[13]);
+  EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
+            actualLanguages[14]);
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
+            actualLanguages[15]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+            actualLanguages[16]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
@@ -286,6 +303,44 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
             settings_.getGameSettings()[0].GamePath().u8string());
   EXPECT_EQ(u8"non\u00C1sciiGameLocalPath",
             settings_.getGameSettings()[0].GameLocalPath().u8string());
+}
+
+TEST_P(LootSettingsTest,
+  loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "local_path = \"path\"" << endl
+      << "local_folder = \"folder\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("TES III: Morrowind", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ("TES IV: Oblivion", settings_.getGameSettings()[1].Name());
+  EXPECT_TRUE(settings_.getGameSettings()[1].GameLocalPath().empty());
+}
+
+TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << u8"local_folder = \"non\u00C1sciiGameFolder\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
+  EXPECT_EQ(getLocalAppDataPath() / std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
+            settings_.getGameSettings()[0].GameLocalPath());
 }
 
 TEST_P(LootSettingsTest,

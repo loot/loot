@@ -699,10 +699,6 @@ msgstr "Скрыть bash-теги"
 msgid "Hide notes"
 msgstr "Скрыть примечания"
 
-#: src/gui/html/js/translateStaticText.js:459
-msgid "Hide 'Do not clean' messages"
-msgstr "Скрыть сообщения 'Не чистить'"
-
 #: src/gui/html/js/translateStaticText.js:460
 msgid "Hide all plugin messages"
 msgstr "Скрыть все сообщения плагинов"

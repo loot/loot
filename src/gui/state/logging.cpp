@@ -36,10 +36,14 @@ std::shared_ptr<spdlog::logger> getLogger() {
 
   if (!logger) {
     spdlog::set_pattern("[%T.%f] [%l]: %v");
-    logger = spdlog::stdout_logger_mt(LOGGER_NAME);
+    try {
+      logger = spdlog::stdout_logger_mt(LOGGER_NAME);
 
-    if (logger) {
-      logger->flush_on(spdlog::level::trace);
+      if (logger) {
+        logger->flush_on(spdlog::level::trace);
+      }
+    } catch (...) {
+        return nullptr;
     }
   }
 

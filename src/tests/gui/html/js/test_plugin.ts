@@ -1,7 +1,6 @@
 /* eslint-disable no-self-assign */
 import { Plugin } from '../../../../gui/html/js/plugin';
 import Filters from '../../../../gui/html/js/filters';
-import Translator from '../../../../gui/html/js/translator';
 
 const defaultDerivedPluginMetadata = {
   name: 'test',
@@ -1098,7 +1097,7 @@ describe('Plugin', () => {
 
     test('should succeed if passed a filters object', () => {
       expect(() => {
-        plugin.getCardContent(new Filters(new Translator()));
+        plugin.getCardContent(new Filters());
       }).not.toThrow();
     });
   });
@@ -1122,14 +1121,14 @@ describe('PluginCardContent', () => {
         },
         {
           type: 'warn',
-          text: 'do not clean',
+          text: 'test warning',
           language: 'en',
           condition: ''
         }
       ]
     });
 
-    filters = new Filters(new Translator());
+    filters = new Filters();
   });
 
   describe('#name', () => {
@@ -1348,13 +1347,6 @@ describe('PluginCardContent', () => {
       ]);
     });
 
-    test('should return an array missing the "do not clean" message when the "do not clean" messages filter is enabled', () => {
-      filters.hideDoNotCleanMessages = true;
-      expect(plugin.getCardContent(filters).messages).toEqual([
-        plugin.messages[0]
-      ]);
-    });
-
     test('should return an empty array when the all messages filter is enabled', () => {
       filters.hideAllPluginMessages = true;
       expect(plugin.getCardContent(filters).messages).toEqual([]);
@@ -1412,7 +1404,7 @@ describe('PluginCardContent', () => {
     });
 
     test('should search message content case-insensitively', () => {
-      expect(plugin.getCardContent(filters).containsText('Clean')).toBe(true);
+      expect(plugin.getCardContent(filters).containsText('MESSAGE')).toBe(true);
     });
 
     test('should not find text that is not present', () => {

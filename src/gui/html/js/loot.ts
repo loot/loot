@@ -21,7 +21,7 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
-import { LootSettings, LootVersion } from './interfaces';
+import { GameSettings, LootSettings, LootVersion } from './interfaces';
 import {
   onSidebarFilterToggle,
   onContentFilter,
@@ -48,7 +48,11 @@ import {
   onClearMetadata,
   onSearchBegin,
   onSearchEnd,
-  onFolderChange
+  onFolderChange,
+  onSettingsSelectGame,
+  onSettingsAddGame,
+  onSettingsDeleteGame,
+  onSettingsDeselectGame
 } from './events';
 import { closeProgress, showProgress } from './dialog';
 import {
@@ -56,7 +60,7 @@ import {
   onGroupsEditorOpened,
   onShowSettingsDialog,
   onShowAboutDialog,
-  onSwitchSidebarTab,
+  onSwitchTab,
   onJumpToGeneralInfo,
   onSearchOpen,
   onFocusSearch,
@@ -109,10 +113,6 @@ function addEventListeners(): void {
     onSidebarFilterToggle
   );
   getElementById('hideNotes').addEventListener('change', onSidebarFilterToggle);
-  getElementById('hideDoNotCleanMessages').addEventListener(
-    'change',
-    onSidebarFilterToggle
-  );
   getElementById('hideInactivePlugins').addEventListener(
     'change',
     onSidebarFilterToggle
@@ -173,10 +173,7 @@ function addEventListeners(): void {
   getElementById('sortButton').addEventListener('click', onSortPlugins);
   getElementById('applySortButton').addEventListener('click', onApplySort);
   getElementById('cancelSortButton').addEventListener('click', onCancelSort);
-  getElementById('sidebarTabs').addEventListener(
-    'iron-select',
-    onSwitchSidebarTab
-  );
+  getElementById('sidebarTabs').addEventListener('iron-select', onSwitchTab);
   getElementById('jumpToGeneralInfo').addEventListener(
     'click',
     onJumpToGeneralInfo
@@ -208,6 +205,21 @@ function addEventListeners(): void {
   querySelector(settings, '[dialog-confirm]').addEventListener(
     'tap',
     onApplySettings
+  );
+
+  getElementById('settingsSidebarList').addEventListener(
+    'iron-select',
+    onSettingsSelectGame
+  );
+  getElementById('settingsSidebarList').addEventListener(
+    'iron-activate',
+    onSettingsDeselectGame
+  );
+
+  getElementById('addGameButton').addEventListener('click', onSettingsAddGame);
+  getElementById('deleteGameButton').addEventListener(
+    'click',
+    onSettingsDeleteGame
   );
 
   /* Set up handler for opening and closing editors. */
@@ -373,6 +385,8 @@ export default class Loot {
 
   public version: LootVersion;
 
+  public unappliedGamesSettings: Map<string, GameSettings> = new Map();
+
   // Used by C++ callbacks.
   public showProgress: (text: string) => void;
 
@@ -381,7 +395,7 @@ export default class Loot {
 
   public constructor() {
     this.l10n = new Translator();
-    this.filters = new Filters(this.l10n);
+    this.filters = new Filters();
     this.state = new State();
     this.installedGames = [];
     this.version = {
@@ -421,7 +435,7 @@ export default class Loot {
     /* Translate static text. */
     await this.l10n.load(this.settings.language);
 
-    this.filters = new Filters(this.l10n);
+    this.filters = new Filters();
     this.filters.load(this.settings.filters);
 
     translateStaticText(this.l10n, this.version);

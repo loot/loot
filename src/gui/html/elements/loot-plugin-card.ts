@@ -125,7 +125,7 @@ export default class LootPluginCard extends PolymerElement {
           >
           <iron-icon id="isLightMaster" icon="image:flare"></iron-icon>
           <paper-tooltip for="isLightMaster"
-            >[[_localise('Light Master File')]]</paper-tooltip
+            >[[_localise('Light Plugin')]]</paper-tooltip
           >
           <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
           <paper-tooltip for="isEmpty"

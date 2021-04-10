@@ -42,9 +42,6 @@ public:
   std::filesystem::path getLogPath() const;
 
 private:
-  // Get the local application data path.
-  static std::filesystem::path getLocalAppDataPath();
-
   std::filesystem::path lootAppPath_;
   std::filesystem::path lootDataPath_;
 };
