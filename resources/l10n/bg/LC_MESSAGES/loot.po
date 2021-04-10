@@ -90,8 +90,8 @@ msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "Тази приставка изисква \"%1%\" да бъде активна, но тя е неактивна."
 
 #: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"%1%\", but both files are present."
-msgstr "Тази приставка не е съвместима с \"%1%\", но и двата файла са налични."
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr "Тази приставка не е съвместима с \"%1%\", но и двете са налични."
 
 #: src/gui/state/game/game.cpp:276
 msgid ""
@@ -969,8 +969,10 @@ msgstr "Версия %s (компилация %s)"
 
 #: src/gui/html/js/translateStaticText.ts:798
 msgid ""
-"Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
-"VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
+"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
+"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
-"Оптимизация на реда за зареждане на Oblivion, Skyrim, Skyrim, Skyrim SE, "
-"Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 и Fallout 4 VR."
+"Оптимизация на реда за зареждане за Morrowind, Oblivion, Nehrim, Skyrim, "
+"Enderal, Skyrim SE, Enderal SE, Skyrim VR, Fallout 3, Fallout: NV, "
+"Fallout 4 и Fallout 4 VR."
