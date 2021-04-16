@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-04-10 20:27+0100\n"
-"PO-Revision-Date: 2021-04-16 11:29+0800\n"
+"PO-Revision-Date: 2021-04-16 11:47+0800\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
 "Language: zh_CN\n"
@@ -68,7 +68,7 @@ msgstr "排序加载顺序..."
 
 #: src/gui/state/loot_state.cpp:105
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
-msgstr "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr "错误: --auto-sort 已完成但是没有 --game 参数被提供。"
 
 #: src/gui/state/loot_state.cpp:127
 msgid "Error: Could not create LOOT settings file. %1%"
