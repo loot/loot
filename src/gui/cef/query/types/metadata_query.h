@@ -251,14 +251,18 @@ private:
         logger_->warn("No masterlist present at {}",
                       game_.MasterlistPath().u8string());
       }
-      info.revision_id = translate("N/A: No masterlist present").str();
+      info.revision_id =
+        /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
+        translate("N/A: No masterlist present").str();
       info.revision_date = translate("N/A: No masterlist present").str();
     } catch (GitStateError&) {
       if (logger_) {
         logger_->warn("Not a Git repository: {}",
                       game_.MasterlistPath().parent_path().u8string());
       }
-      info.revision_id = translate("Unknown: Git repository missing").str();
+      info.revision_id =
+        /* translators: Git is the software LOOT uses to track changes to the source code. */
+        translate("Unknown: Git repository missing").str();
       info.revision_date = translate("Unknown: Git repository missing").str();
     }
 

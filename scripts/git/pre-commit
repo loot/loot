@@ -10,6 +10,7 @@ xgettext \
   --keyword="translate:1,1t" \
   --keyword="translate:1,2,3t" \
   --add-location=full \
+  --add-comments=translators: \
   --from-code=utf-8 \
   --package-name=LOOT \
   --package-version=0.16.0 \

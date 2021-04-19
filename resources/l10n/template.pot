@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-04-10 20:27+0100\n"
+"POT-Creation-Date: 2021-04-19 01:56-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,18 +41,20 @@ msgstr ""
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:254
-#: src/gui/cef/query/types/metadata_query.h:255
+#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
+#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/cef/query/types/metadata_query.h:257
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:261
-#: src/gui/cef/query/types/metadata_query.h:262
+#. translators: Git is the software LOOT uses to track changes to the source code.
+#: src/gui/cef/query/types/metadata_query.h:265
+#: src/gui/cef/query/types/metadata_query.h:266
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:270
-#: src/gui/cef/query/types/metadata_query.h:271
+#: src/gui/cef/query/types/metadata_query.h:274
+#: src/gui/cef/query/types/metadata_query.h:275
 msgid "(edited)"
 msgstr ""
 
@@ -60,19 +62,20 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:105
+#. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
+#: src/gui/state/loot_state.cpp:106
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:127
+#: src/gui/state/loot_state.cpp:129
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:144
+#: src/gui/state/loot_state.cpp:146
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:203
+#: src/gui/state/loot_state.cpp:205
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
@@ -102,49 +105,50 @@ msgid ""
 "saves."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:313
+#. translators: A header is the part of a file that stores data like file name and version.
+#: src/gui/state/game/game.cpp:314
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:331
+#: src/gui/state/game/game.cpp:333
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:400 src/gui/state/game/game.cpp:485
+#: src/gui/state/game/game.cpp:402 src/gui/state/game/game.cpp:487
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:510
+#: src/gui/state/game/game.cpp:512
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:522
+#: src/gui/state/game/game.cpp:524
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:558
+#: src/gui/state/game/game.cpp:560
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:582
+#: src/gui/state/game/game.cpp:584
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:610
+#: src/gui/state/game/game.cpp:612
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:655
+#: src/gui/state/game/game.cpp:657
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
