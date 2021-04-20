@@ -17,7 +17,7 @@ In addition, the following are credited with application-related support:
   * Danish: Freso
   * Finnish: 3ventic
   * French: Kaos, cpasmoi, Sita
-  * German: lpradel, DaCoolX, Infernio, pStyl3, Deka-O
+  * German: lpradel, DaCoolX, Infernio, pStyl3
   * Italian: Griam, nicola89b, albie
   * Japanese: kuroko, tktk11
   * Korean: SteamB23, sean-kang
