@@ -15,7 +15,7 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Downloads
 
-Releases are hosted on [GitHub](https://github.com/loot/loot/releases), and snapshot builds are available on [Bintray](https://bintray.com/loot/snapshots/loot). The snapshot build archives are named like so:
+Releases are hosted on [GitHub](https://github.com/loot/loot/releases), and snapshot builds are available on [Artifactory](https://loot.jfrog.io/ui/repos/tree/General/loot). The snapshot build archives are named like so:
 
 ```
 loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.7z
