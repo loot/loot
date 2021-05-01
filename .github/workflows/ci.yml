@@ -164,9 +164,12 @@ jobs:
         run: |
           GIT_DESCRIBE=$(git describe --tags --long --abbrev=7)
           GIT_REF=${{ github.ref }}
-          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
+          GIT_REF_SUFFIX=${GIT_REF#refs/*/}
+          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
+          SAFE_GIT_REF_SUFFIX=${GIT_REF_SUFFIX//[\/<>\"|]/_}
           echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
+          echo "::set-output name=ref::$SAFE_GIT_REF_SUFFIX"
 
       - name: Build archive
         id: build-archive
@@ -175,7 +178,7 @@ jobs:
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           FILENAME="loot_${VERSION}-Linux.tar.xz"
 
-          node scripts/archive.js
+          node scripts/archive.js . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
 
           echo "::set-output name=filename::$FILENAME"
@@ -284,9 +287,12 @@ jobs:
         run: |
           GIT_DESCRIBE=$(git describe --tags --long --abbrev=7)
           GIT_REF=${{ github.ref }}
-          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
+          GIT_REF_SUFFIX=${GIT_REF#refs/*/}
+          LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
+          SAFE_GIT_REF_SUFFIX=${GIT_REF_SUFFIX//[\/<>\"|]/_}
           echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
+          echo "::set-output name=ref::$SAFE_GIT_REF_SUFFIX"
 
       - name: Get LOOT artifact basename
         id: get-artifact-basename
@@ -303,7 +309,7 @@ jobs:
 
       - name: Build archive
         run: |
-          node scripts\archive.js
+          node scripts\archive.js . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
 
       - name: Build installer
