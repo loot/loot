@@ -68,7 +68,7 @@
     "@types/cytoscape": "^3.14.7",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.168",
-    "@types/marked": "^2.0.1",
+    "@types/marked": "^2.0.2",
     "@types/node": "^12.20.7",
     "@types/react": "^17.0.2",
     "@types/react-autosuggest": "^10.1.3",
