@@ -51,9 +51,9 @@
     "lodash": "^4.17.20",
     "marked": "^2.0.3",
     "prop-types": "^15.6.2",
-    "react": "^16.14.0",
+    "react": "^17.0.2",
     "react-autosuggest": "^10.1.0",
-    "react-dom": "^16.14.0",
+    "react-dom": "^17.0.2",
     "replace": "^1.2.0",
     "web-animations-js": "^2.3.1",
     "yauzl": "^2.10.0"
