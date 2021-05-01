@@ -1692,10 +1692,10 @@
     "@polymer/paper-dialog-behavior" "^3.0.0-pre.26"
     "@polymer/polymer" "^3.0.0"
 
-"@polymer/paper-dropdown-menu@^3.0.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@polymer/paper-dropdown-menu/-/paper-dropdown-menu-3.1.0.tgz#3983baafc9a05c1475a680a7aa6512f994c89c88"
-  integrity sha512-orxH2FzBCjUleXex//STZHjgWXm7z09+JRPnhJld7xEheRDE7XrKsrsS0Xl7f8bBqUrisdaL9HTX9yBJ/k8bbQ==
+"@polymer/paper-dropdown-menu@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@polymer/paper-dropdown-menu/-/paper-dropdown-menu-3.2.0.tgz#17f507ef864dc18365a92e256bde628c2d352956"
+  integrity sha512-2ohwSHF+RLSK6kA0UkkMiMQF6EZcaEYWAA25kfisI6DWie7yozKrpQNsqvwfOEHU6DdDMIotrOtH1TM88YS8Zg==
   dependencies:
     "@polymer/iron-a11y-keys-behavior" "^3.0.0-pre.26"
     "@polymer/iron-form-element-behavior" "^3.0.0-pre.26"
@@ -1704,7 +1704,7 @@
     "@polymer/iron-validatable-behavior" "^3.0.0-pre.26"
     "@polymer/paper-behaviors" "^3.0.0-pre.27"
     "@polymer/paper-input" "^3.1.0"
-    "@polymer/paper-menu-button" "^3.0.0-pre.26"
+    "@polymer/paper-menu-button" "^3.1.0"
     "@polymer/paper-ripple" "^3.0.0-pre.26"
     "@polymer/paper-styles" "^3.0.0-pre.26"
     "@polymer/polymer" "^3.3.1"
@@ -1757,7 +1757,7 @@
     "@polymer/paper-styles" "^3.0.0-pre.26"
     "@polymer/polymer" "^3.0.0"
 
-"@polymer/paper-menu-button@^3.0.0-pre.26", "@polymer/paper-menu-button@^3.1.0":
+"@polymer/paper-menu-button@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@polymer/paper-menu-button/-/paper-menu-button-3.1.0.tgz#3eb2fb88ba3cdaa4c39be6ae3530efa40b1eccf3"
   integrity sha512-q0G0/rvYD/FFmIBMGCQWjfXzRqwFw9+WHSYV4uOQzM1Ln8LMXSAd+2CENsbVwtMh6fmBePj15ZlU8SM2dt1WDQ==
