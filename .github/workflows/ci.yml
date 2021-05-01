@@ -167,7 +167,6 @@ jobs:
           LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
           echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
-        if: github.event_name == 'push'
 
       - name: Build archive
         id: build-archive
@@ -180,7 +179,6 @@ jobs:
           mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
 
           echo "::set-output name=filename::$FILENAME"
-        if: github.event_name == 'push'
 
   windows:
     runs-on: windows-2016
@@ -289,7 +287,6 @@ jobs:
           LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
           echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
-        if: github.event_name == 'push'
 
       - name: Get LOOT artifact basename
         id: get-artifact-basename
@@ -303,7 +300,6 @@ jobs:
             PLATFORM=win64
           fi
           echo "::set-output name=basename::loot_${VERSION}-${PLATFORM}"
-        if: github.event_name == 'push'
 
       - name: Build archive
         run: |
