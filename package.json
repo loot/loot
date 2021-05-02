@@ -79,7 +79,7 @@
     "babel-gettext-extractor": "git://github.com/loot/babel-gettext-extractor#v4.1.3+improved-entry-sorting.2",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^7.0.0",
+    "copy-webpack-plugin": "^8.1.1",
     "eslint": "^5.5.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^6.15.0",
