@@ -145,7 +145,7 @@ export default class Game {
     return this._folder;
   }
 
-  public set folder(folder) {
+  public set folder(folder: string) {
     if (folder !== this._folder) {
       document.dispatchEvent(
         new CustomEvent('loot-game-folder-change', {
@@ -161,7 +161,7 @@ export default class Game {
     return this._generalMessages;
   }
 
-  public set generalMessages(generalMessages) {
+  public set generalMessages(generalMessages: SimpleMessage[]) {
     /* Update the message counts. */
     let oldTotal = 0;
     let newTotal = 0;
@@ -218,7 +218,7 @@ export default class Game {
     return this._masterlist;
   }
 
-  public set masterlist(masterlist) {
+  public set masterlist(masterlist: Masterlist) {
     if (
       masterlist !== this._masterlist &&
       (masterlist === undefined ||
@@ -248,7 +248,7 @@ export default class Game {
     return this._plugins;
   }
 
-  public set plugins(plugins) {
+  public set plugins(plugins: Plugin[]) {
     /* Update plugin and message counts. Unlike for general messages
     it's not worth calculating the count differences, just count
     from zero. */
@@ -453,7 +453,7 @@ export default class Game {
 
   public static onPluginsChange(evt: Event): void {
     if (!isPluginsChangeEvent(evt)) {
-      throw new TypeError(`Expected a GamePluginsChangeEvent, got ${evt}`);
+      throw new TypeError(`Expected a GamePluginsChangeEvent, got ${evt.type}`);
     }
 
     if (!evt.detail.valuesAreTotals) {
@@ -479,7 +479,7 @@ export default class Game {
   public static onGeneralMessagesChange(evt: Event): void {
     if (!isGeneralMessagesChangeEvent(evt)) {
       throw new TypeError(
-        `Expected a GameGeneralMessagesChangeEvent, got ${evt}`
+        `Expected a GameGeneralMessagesChangeEvent, got ${evt.type}`
       );
     }
 
@@ -518,7 +518,9 @@ export default class Game {
 
   public static onMasterlistChange(evt: Event): void {
     if (!isMasterlistChangeEvent(evt)) {
-      throw new TypeError(`Expected a GameMasterlistChangeEvent, got ${evt}`);
+      throw new TypeError(
+        `Expected a GameMasterlistChangeEvent, got ${evt.type}`
+      );
     }
 
     getElementById('masterlistRevision').textContent = evt.detail.revision;
@@ -527,7 +529,7 @@ export default class Game {
 
   public static onGroupsChange(evt: Event): void {
     if (!isGroupsChangeEvent(evt)) {
-      throw new TypeError(`Expected a GameGroupsChangeEvent, got ${evt}`);
+      throw new TypeError(`Expected a GameGroupsChangeEvent, got ${evt.type}`);
     }
     fillGroupsList(evt.detail.groups);
     updateGroupsEditorState(evt.detail.groups);

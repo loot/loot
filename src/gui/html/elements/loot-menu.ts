@@ -46,7 +46,7 @@ export default class LootMenu extends PolymerElement {
 
   public static onSelect(evt: Event): void {
     if (!isLootMenuSelectEvent(evt)) {
-      throw new TypeError(`Expected a LootMenuSelectEvent, got ${evt}`);
+      throw new TypeError(`Expected a LootMenuSelectEvent, got ${evt.type}`);
     }
     evt.currentTarget.select(evt.currentTarget.indexOf(evt.detail.item));
   }

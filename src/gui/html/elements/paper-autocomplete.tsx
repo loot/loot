@@ -114,6 +114,7 @@ class Autocomplete extends React.Component<
   public renderInputComponent(
     inputProps: Autosuggest.RenderInputComponentProps
   ): JSX.Element {
+    /* eslint-disable react/jsx-props-no-spreading */
     return (
       <paper-input-container
         disabled={inputProps.disabled ? true : null}
@@ -133,6 +134,7 @@ class Autocomplete extends React.Component<
         </paper-input-error>
       </paper-input-container>
     );
+    /* eslint-enable react/jsx-props-no-spreading */
   }
 
   public render(): JSX.Element {
@@ -193,7 +195,7 @@ export default class PaperAutocomplete extends HTMLElement {
     return this.autocomplete.current.value;
   }
 
-  public set value(value) {
+  public set value(value: string) {
     if (this.autocomplete.current === null) {
       throw new Error('Expected current autocomplete ref to be non-null');
     }

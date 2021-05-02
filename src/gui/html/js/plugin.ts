@@ -515,7 +515,7 @@ export class Plugin {
     return this._messages;
   }
 
-  public set messages(messages) {
+  public set messages(messages: SimpleMessage[]) {
     /* Update the message counts. */
     let oldTotal = 0;
     let newTotal = 0;
@@ -570,7 +570,7 @@ export class Plugin {
     return this._isDirty;
   }
 
-  public set isDirty(dirty) {
+  public set isDirty(dirty: boolean) {
     /* Update dirty counts. */
     if (dirty !== this._isDirty) {
       this._isDirty = dirty;
@@ -589,7 +589,7 @@ export class Plugin {
     return this._cleanedWith;
   }
 
-  public set cleanedWith(cleanedWith) {
+  public set cleanedWith(cleanedWith: string) {
     if (cleanedWith !== this._cleanedWith) {
       this._cleanedWith = cleanedWith;
 
@@ -608,7 +608,7 @@ export class Plugin {
     return this._crc;
   }
 
-  public set crc(crc) {
+  public set crc(crc: number) {
     if (this._crc !== crc) {
       this._crc = crc;
 
@@ -620,7 +620,7 @@ export class Plugin {
     return this._currentTags;
   }
 
-  public set currentTags(tags) {
+  public set currentTags(tags: Tag[]) {
     if (!isEqual(this._currentTags, tags)) {
       this._currentTags = tags;
 
@@ -632,7 +632,7 @@ export class Plugin {
     return this._suggestedTags;
   }
 
-  public set suggestedTags(tags) {
+  public set suggestedTags(tags: Tag[]) {
     if (!isEqual(this._suggestedTags, tags)) {
       this._suggestedTags = tags;
 
@@ -648,7 +648,7 @@ export class Plugin {
     return this._userlist;
   }
 
-  public set userlist(userlist) {
+  public set userlist(userlist: PluginMetadata | undefined) {
     if (!isEqual(this._userlist, userlist)) {
       this._userlist = userlist;
 
@@ -661,7 +661,7 @@ export class Plugin {
     return this._group;
   }
 
-  public set group(group) {
+  public set group(group: string) {
     if (this._group !== group) {
       this._group = group;
 
@@ -673,7 +673,7 @@ export class Plugin {
     return this._isEditorOpen;
   }
 
-  public set isEditorOpen(isEditorOpen) {
+  public set isEditorOpen(isEditorOpen: boolean) {
     if (this._isEditorOpen !== isEditorOpen) {
       this._isEditorOpen = isEditorOpen;
 
@@ -685,7 +685,7 @@ export class Plugin {
     return this._isSearchResult;
   }
 
-  public set isSearchResult(isSearchResult) {
+  public set isSearchResult(isSearchResult: boolean) {
     if (this._isSearchResult !== isSearchResult) {
       this._isSearchResult = isSearchResult;
 
@@ -697,7 +697,7 @@ export class Plugin {
     return this._loadOrderIndex;
   }
 
-  public set loadOrderIndex(loadOrderIndex) {
+  public set loadOrderIndex(loadOrderIndex: number | undefined) {
     if (this._loadOrderIndex !== loadOrderIndex) {
       this._loadOrderIndex = loadOrderIndex;
 
@@ -711,7 +711,9 @@ export class Plugin {
 
   public static onMessageChange(evt: Event): void {
     if (!isPluginMessageChangeEvent(evt)) {
-      throw new TypeError(`Expected a PluginMessageChangeEvent, got ${evt}`);
+      throw new TypeError(
+        `Expected a PluginMessageChangeEvent, got ${evt.type}`
+      );
     }
 
     incrementCounterText('filterTotalMessageNo', evt.detail.totalDiff);
@@ -723,7 +725,7 @@ export class Plugin {
   public static onCleaningDataChange(evt: Event): void {
     if (!isPluginCleaningDataChangeEvent(evt)) {
       throw new TypeError(
-        `Expected a PluginCleaningDataChangeEvent, got ${evt}`
+        `Expected a PluginCleaningDataChangeEvent, got ${evt.type}`
       );
     }
 
@@ -749,7 +751,9 @@ export class Plugin {
 
   public static onContentChange(evt: Event): void {
     if (!isPluginContentChangeEvent(evt)) {
-      throw new TypeError(`Expected a PluginContentChangeEvent, got ${evt}`);
+      throw new TypeError(
+        `Expected a PluginContentChangeEvent, got ${evt.type}`
+      );
     }
 
     const card = document.getElementById(evt.detail.pluginId) as LootPluginCard;
@@ -761,7 +765,7 @@ export class Plugin {
   public static onCardStylingChange(evt: Event): void {
     if (!isPluginCardStylingChangeEvent(evt)) {
       throw new TypeError(
-        `Expected a PluginCardStylingChangeEvent, got ${evt}`
+        `Expected a PluginCardStylingChangeEvent, got ${evt.type}`
       );
     }
 
@@ -774,7 +778,7 @@ export class Plugin {
   public static onItemContentChange(evt: Event): void {
     if (!isPluginItemContentChangeEvent(evt)) {
       throw new TypeError(
-        `Expected a PluginItemContentChangeEvent, got ${evt}`
+        `Expected a PluginItemContentChangeEvent, got ${evt.type}`
       );
     }
 

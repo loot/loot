@@ -298,7 +298,7 @@ export function onShowAboutDialog(): void {
 
 export function onSwitchTab(evt: Event): void {
   if (!isIronSelectEvent(evt)) {
-    throw new TypeError(`Expected a IronSelectEvent, got ${evt}`);
+    throw new TypeError(`Expected a IronSelectEvent, got ${evt.type}`);
   }
 
   if (typeof evt.target.selected === 'string') {
@@ -437,7 +437,7 @@ export function onSearchOpen(): void {
 export function onSearchChangeSelection(evt: Event): void {
   if (!isLootSearchChangeSelectionEvent(evt)) {
     throw new TypeError(
-      `Expected a LootSearchChangeSelectionEvent, got ${evt}`
+      `Expected a LootSearchChangeSelectionEvent, got ${evt.type}`
     );
   }
 

@@ -1,5 +1,6 @@
 import { show, enable, setUIState } from './dom';
 
+// eslint-disable-next-line no-shadow
 enum ApplicationState {
   Default,
   Sorting,

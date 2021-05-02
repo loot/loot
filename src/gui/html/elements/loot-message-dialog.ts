@@ -84,8 +84,7 @@ export default class LootMessageDialog extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  // @ts-ignore _localise is called in template bindings.
-  private _localise(text: string): string {
+  public _localise(text: string): string {
     return window.loot.l10n.translate(text);
   }
   /* eslint-enable class-methods-use-this */
@@ -113,7 +112,9 @@ export default class LootMessageDialog extends PolymerElement {
 
   public static onClose(evt: Event): void {
     if (!isLootMessageDialogCloseEvent(evt)) {
-      throw new TypeError(`Expected a LootMessageDialogCloseEvent, got ${evt}`);
+      throw new TypeError(
+        `Expected a LootMessageDialogCloseEvent, got ${evt.type}`
+      );
     }
 
     if (evt.target.parentNode.host.closeCallback) {

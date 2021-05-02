@@ -170,9 +170,15 @@ function addEventListeners(): void {
     'click',
     onUpdateMasterlist
   );
-  getElementById('sortButton').addEventListener('click', onSortPlugins);
-  getElementById('applySortButton').addEventListener('click', onApplySort);
-  getElementById('cancelSortButton').addEventListener('click', onCancelSort);
+  getElementById('sortButton').addEventListener('click', () => {
+    onSortPlugins().catch(handlePromiseError);
+  });
+  getElementById('applySortButton').addEventListener('click', () => {
+    onApplySort().catch(handlePromiseError);
+  });
+  getElementById('cancelSortButton').addEventListener('click', () => {
+    onCancelSort().catch(handlePromiseError);
+  });
   getElementById('sidebarTabs').addEventListener('iron-select', onSwitchTab);
   getElementById('jumpToGeneralInfo').addEventListener(
     'click',
@@ -223,7 +229,9 @@ function addEventListeners(): void {
   );
 
   /* Set up handler for opening and closing editors. */
-  document.body.addEventListener('loot-editor-open', onEditorOpen);
+  document.body.addEventListener('loot-editor-open', evt => {
+    onEditorOpen(evt).catch(handlePromiseError);
+  });
   document.body.addEventListener('loot-editor-close', onEditorClose);
   document.body.addEventListener('loot-copy-metadata', onCopyMetadata);
   document.body.addEventListener('loot-clear-metadata', onClearMetadata);

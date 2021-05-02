@@ -749,7 +749,7 @@ function translateFirstRunDialog(l10n: Translator, version: LootVersion): void {
   querySelector(firstRun, 'li:nth-child(1)').innerHTML =
     // translators: The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
     l10n.translateFormatted('Click %(menu_icon)s buttons to open menus.', {
-      // eslint-disable-next-line @typescript-eslint/camelcase
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       menu_icon: '<iron-icon icon="more-vert"></iron-icon>'
     });
   querySelector(firstRun, 'li:nth-child(2)').innerHTML = l10n.translate(

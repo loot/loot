@@ -223,8 +223,7 @@ export default class LootPluginItem extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  // @ts-ignore _localise is called in template bindings.
-  private _localise(text: string): string {
+  public _localise(text: string): string {
     return window.loot.l10n.translate(text);
   }
 
@@ -263,7 +262,9 @@ export default class LootPluginItem extends PolymerElement {
 
   public onDragStart(evt: Event): void {
     if (!isDragStartEvent(evt)) {
-      throw new Error(`Expected DragEvent on loot-plugin-item, got ${evt}`);
+      throw new Error(
+        `Expected DragEvent on loot-plugin-item, got ${evt.type}`
+      );
     }
 
     evt.dataTransfer.effectAllowed = 'copy';

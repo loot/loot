@@ -12,16 +12,16 @@ import {
   GameContent
 } from './interfaces';
 
-interface CefQueryParameters {
-  request: string;
-  persistent: boolean;
-  onSuccess: (response: string) => void;
-  onFailure: (errorCode: number, errorMessage: string) => void;
-}
-
 declare global {
+  interface CefQueryParameters {
+    request: string;
+    persistent: boolean;
+    onSuccess: (response: string) => void;
+    onFailure: (errorCode: number, errorMessage: string) => void;
+  }
+
   interface Window {
-    cefQuery: (query: CefQueryParameters) => number;
+    cefQuery: (queryParameters: CefQueryParameters) => number;
   }
 }
 
@@ -50,14 +50,17 @@ export interface ClearAllMetadataResponse {
   groups: GameGroups;
 }
 
-function query(requestName: string, payload?: object): Promise<string> {
+function query(
+  requestName: string,
+  payload?: Record<string, unknown>
+): Promise<string> {
   if (!requestName) {
     throw new Error('No request name passed');
   }
 
   return new Promise((resolve, reject): void => {
     window.cefQuery({
-      request: JSON.stringify(Object.assign({ name: requestName }, payload)),
+      request: JSON.stringify({ name: requestName, ...payload }),
       persistent: false,
       onSuccess: resolve,
       onFailure: (_errorCode, errorMessage) => {

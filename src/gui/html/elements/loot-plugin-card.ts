@@ -199,14 +199,12 @@ export default class LootPluginCard extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  // @ts-ignore _localise is called in template bindings.
-  private _localise(text: string): string {
+  public _localise(text: string): string {
     return window.loot.l10n.translate(text);
   }
   /* eslint-enable class-methods-use-this */
 
-  // @ts-ignore _dataChanged is called in Polymer's data bindings.
-  private _dataChanged(newValue: Plugin | undefined /* , oldValue */): void {
+  public _dataChanged(newValue: Plugin | undefined /* , oldValue */): void {
     if (newValue) {
       /* Initialise the card content data. */
       this.updateContent(true, true);
