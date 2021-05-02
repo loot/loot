@@ -493,8 +493,8 @@ export default class LootPluginEditor extends PolymerElement {
         groupElement.style.fontWeight = 'bold';
         groupElement.style.color = 'var(--primary-color)';
       } else {
-        delete groupElement.style.fontWeight;
-        delete groupElement.style.color;
+        groupElement.style.fontWeight = 'unset';
+        groupElement.style.color = 'unset';
       }
     }
   }
