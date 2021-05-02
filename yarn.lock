@@ -1878,9 +1878,9 @@
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
 "@types/cytoscape@^3.14.7":
-  version "3.14.7"
-  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.7.tgz#2482ff7bfce0f91039135d5366b9239c22db41f2"
-  integrity sha512-r/3luR7HMfjp9LFrvpHzvQ0fiZp6Ko6ijw0rh4eIKpJRBDHt1406tyR/JjTbhq3WTuqrrYfFNbeYvq+Rv3aTQQ==
+  version "3.14.14"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.14.tgz#3380da350873d0bd2ab9a413686324efc89af936"
+  integrity sha512-aW3NzsFfbw1LmPdutaH9tT5ZEuZ9+xqqK4NaH/VyYJZAG5g7SQtRuqNMGwFLUi0uxXDrjn4bJnAsn2Z3RHcI9A==
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"
@@ -3195,9 +3195,9 @@ cytoscape-edgehandles@^3.6.0:
     lodash.throttle "^4.1.1"
 
 cytoscape@^3.18.0:
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.18.0.tgz#26999eb1a19631527a9c56ebc881a995981cb474"
-  integrity sha512-9GeAWkcy8gzecNyUGqFe2P42JgA8O+pJ4bFxr85jyXmH92042e/e9ERMqwfM1UWGMfIDasMoe7dvKMLGlF5vzQ==
+  version "3.18.2"
+  resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.18.2.tgz#e5a1b37de3b53946a6d8f8586eefa44a0978ade4"
+  integrity sha512-NRY3JTrUzx0fSn44LyMlPqC8/zuuOo8kbr2hFlfjiObRmtir+lnxVg08f8wUA4X/P80df9vSThKDASl39yH+Iw==
   dependencies:
     heap "^0.2.6"
     lodash.debounce "^4.0.8"
