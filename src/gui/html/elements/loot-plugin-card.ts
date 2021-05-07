@@ -123,8 +123,8 @@ export default class LootPluginCard extends PolymerElement {
           <paper-tooltip for="isMaster"
             >[[_localise('Master File')]]</paper-tooltip
           >
-          <iron-icon id="isLightMaster" icon="image:flare"></iron-icon>
-          <paper-tooltip for="isLightMaster"
+          <iron-icon id="isLightPlugin" icon="image:flare"></iron-icon>
+          <paper-tooltip for="isLightPlugin"
             >[[_localise('Light Plugin')]]</paper-tooltip
           >
           <iron-icon id="isEmpty" icon="visibility-off"></iron-icon>
@@ -220,9 +220,9 @@ export default class LootPluginCard extends PolymerElement {
           'Expected element with ID "isMaster" to be a HTMLElement'
         );
       }
-      if (!(this.$.isLightMaster instanceof HTMLElement)) {
+      if (!(this.$.isLightPlugin instanceof HTMLElement)) {
         throw new Error(
-          'Expected element with ID "isLightMaster" to be a HTMLElement'
+          'Expected element with ID "isLightPlugin" to be a HTMLElement'
         );
       }
       if (!(this.$.isEmpty instanceof HTMLElement)) {
@@ -239,7 +239,7 @@ export default class LootPluginCard extends PolymerElement {
       /* Set icons' visibility */
       this.$.activeTick.hidden = !newValue.isActive;
       this.$.isMaster.hidden = !newValue.isMaster;
-      this.$.isLightMaster.hidden = !newValue.isLightMaster;
+      this.$.isLightPlugin.hidden = !newValue.isLightPlugin;
       this.$.isEmpty.hidden = !newValue.isEmpty;
       this.$.loadsArchive.hidden = !newValue.loadsArchive;
     }

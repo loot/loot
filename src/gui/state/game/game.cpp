@@ -246,7 +246,7 @@ std::vector<Message> Game::CheckInstallValidity(
     }
   }
 
-  if (plugin->IsLightMaster() &&
+  if (plugin->IsLightPlugin() &&
       !boost::iends_with(plugin->GetName(), ".esp")) {
     for (const auto& masterName : plugin->GetMasters()) {
       auto master = GetPlugin(masterName);
@@ -261,7 +261,7 @@ std::vector<Message> Game::CheckInstallValidity(
         continue;
       }
 
-      if (!master->IsLightMaster() && !master->IsMaster()) {
+      if (!master->IsLightPlugin() && !master->IsMaster()) {
         if (logger) {
           logger->error(
               "\"{}\" is a light master and requires the non-master plugin "
@@ -282,7 +282,7 @@ std::vector<Message> Game::CheckInstallValidity(
     }
   }
 
-  if (plugin->IsLightMaster() && !plugin->IsValidAsLightMaster()) {
+  if (plugin->IsLightPlugin() && !plugin->IsValidAsLightPlugin()) {
     if (logger) {
       logger->error(
           "\"{}\" contains records that have FormIDs outside the valid range "
@@ -464,7 +464,7 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
 
     auto otherPlugin = GetPlugin(otherPluginName);
     if (otherPlugin &&
-        plugin->IsLightMaster() == otherPlugin->IsLightMaster() &&
+        plugin->IsLightPlugin() == otherPlugin->IsLightPlugin() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
     }
@@ -563,7 +563,7 @@ std::vector<Message> Game::GetMessages() const {
   bool hasActiveEsl = false;
   for (const auto& plugin : GetPlugins()) {
     if (IsPluginActive(plugin->GetName())) {
-      if (plugin->IsLightMaster()) {
+      if (plugin->IsLightPlugin()) {
         hasActiveEsl = true;
       } else {
         ++activeNormalPluginsCount;

@@ -139,7 +139,7 @@ function isPluginItemContentChangeEvent(
     typeof evt.detail.hasUserEdits === 'boolean' &&
     (typeof evt.detail.loadOrderIndex === 'number' ||
       typeof evt.detail.loadOrderIndex === 'undefined') &&
-    typeof evt.detail.isLightMaster === 'boolean'
+    typeof evt.detail.isLightPlugin === 'boolean'
   );
 }
 
@@ -193,7 +193,7 @@ class PluginCardContent {
 
   private _isMaster: boolean;
 
-  private _isLightMaster: boolean;
+  private _isLightPlugin: boolean;
 
   private _loadsArchive: boolean;
 
@@ -210,7 +210,7 @@ class PluginCardContent {
     this._isActive = plugin.isActive || false;
     this._isEmpty = plugin.isEmpty;
     this._isMaster = plugin.isMaster;
-    this._isLightMaster = plugin.isLightMaster;
+    this._isLightPlugin = plugin.isLightPlugin;
     this._loadsArchive = plugin.loadsArchive;
 
     if (!filters.hideVersionNumbers) {
@@ -250,8 +250,8 @@ class PluginCardContent {
     return this._isMaster;
   }
 
-  public get isLightMaster(): boolean {
-    return this._isLightMaster;
+  public get isLightPlugin(): boolean {
+    return this._isLightPlugin;
   }
 
   public get loadsArchive(): boolean {
@@ -322,7 +322,7 @@ export class Plugin {
 
   public isMaster: boolean;
 
-  public isLightMaster: boolean;
+  public isLightPlugin: boolean;
 
   public loadsArchive: boolean;
 
@@ -362,7 +362,7 @@ export class Plugin {
     this.isActive = obj.isActive || false;
     this.isEmpty = obj.isEmpty || false;
     this.isMaster = obj.isMaster || false;
-    this.isLightMaster = obj.isLightMaster || false;
+    this.isLightPlugin = obj.isLightPlugin || false;
     this.loadsArchive = obj.loadsArchive || false;
 
     this.masterlist = obj.masterlist;
@@ -397,7 +397,7 @@ export class Plugin {
     this.isDirty = plugin.isDirty;
     this.isEmpty = plugin.isEmpty;
     this.isMaster = plugin.isMaster;
-    this.isLightMaster = plugin.isLightMaster;
+    this.isLightPlugin = plugin.isLightPlugin;
     this.loadsArchive = plugin.loadsArchive;
     this.messages = plugin.messages;
     this.suggestedTags = plugin.suggestedTags;
@@ -505,7 +505,7 @@ export class Plugin {
           isEditorOpen: this.isEditorOpen,
           hasUserEdits: this.hasUserEdits,
           loadOrderIndex: this.loadOrderIndex,
-          isLightMaster: this.isLightMaster
+          isLightPlugin: this.isLightPlugin
         }
       })
     );

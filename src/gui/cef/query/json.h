@@ -385,7 +385,7 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata<G>& plugin) {
     { "isDirty", plugin.isDirty },
     { "isEmpty", plugin.isEmpty },
     { "isMaster", plugin.isMaster },
-    { "isLightMaster", plugin.isLightMaster },
+    { "isLightPlugin", plugin.isLightPlugin },
     { "loadsArchive", plugin.loadsArchive },
     { "messages", plugin.messages },
     { "suggestedTags", plugin.suggestedTags },
