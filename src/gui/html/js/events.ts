@@ -722,6 +722,12 @@ function recordUnappliedGameSettings(evt: Event): void {
     return;
   }
 
+  if (getElementById('gameSettings').hidden) {
+    // The current panel is does not contain game settings, so there are no
+    // unapplied game settings to record.
+    return;
+  }
+
   const gameSettings = {
     name: getValue(getElementById('settingsGameName')),
     type: getValue(getElementById('settingsGameTypeDropdown')),
