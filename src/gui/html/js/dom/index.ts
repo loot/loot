@@ -395,13 +395,9 @@ export function initialiseGameSettingsUI(): void {
   const gamesList = getElementById(
     'settingsSidebarList'
   ) as PaperListboxElement;
-  if (window.loot.game) {
-    gamesList.select(window.loot.game.folder);
-  } else if (gamesList.children.length > 2) {
-    gamesList.selectIndex(2);
-  } else {
-    clearGameSettingsInputs();
-  }
+
+  // Initially select the General sidebar item.
+  gamesList.select('');
 }
 
 export function onShowSettingsDialog(): void {
