@@ -90,15 +90,13 @@ Source: "{#buildir}\Release\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\loot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\cef.pak"; \
+Source: "{#buildir}\Release\chrome_100_percent.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\cef_100_percent.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\cef_200_percent.pak"; \
+Source: "{#buildir}\Release\chrome_200_percent.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\d3dcompiler_47.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\devtools_resources.pak"; \
+Source: "{#buildir}\Release\resources.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "{#buildir}\Release\icudtl.dat"; \
 DestDir: "{app}"; Flags: ignoreversion

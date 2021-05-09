@@ -112,19 +112,19 @@ ExternalProject_Add(testing-plugins
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
     if ("${CMAKE_GENERATOR_PLATFORM}" MATCHES "Win32")
-        set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_windows32_minimal.tar.bz2")
-        set(CEF_URL_HASH "a2f7b18e0925520ce06f2d6bba6dfd4937414be1")
+        set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_90.6.5%2Bg7a604aa%2Bchromium-90.0.4430.93_windows32_minimal.tar.bz2")
+        set(CEF_URL_HASH "71a8a4a643d28a9711574ffdf0e96c6b6fee9be3")
         set(CEF_PRECOMPILED_BINARIES "libcef.dll" "snapshot_blob.bin" "v8_context_snapshot.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll" "chrome_elf.dll")
         set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
     else()
-        set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_windows64_minimal.tar.bz2")
-        set(CEF_URL_HASH "73226dc6298392700999ef2ca24c02fbbe284111")
+        set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_90.6.5%2Bg7a604aa%2Bchromium-90.0.4430.93_windows64_minimal.tar.bz2")
+        set(CEF_URL_HASH "ff215765fb431bc70eb4058a728c5bfa914f60b3")
         set(CEF_PRECOMPILED_BINARIES "libcef.dll" "snapshot_blob.bin" "v8_context_snapshot.bin" "d3dcompiler_47.dll" "libEGL.dll" "libGLESv2.dll" "chrome_elf.dll")
         set(CEF_LIB libcef${CMAKE_STATIC_LIBRARY_SUFFIX})
     endif()
 ELSE ()
-    set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_84.4.1%2Bgfdc7504%2Bchromium-84.0.4147.105_linux64_minimal.tar.bz2")
-    set(CEF_URL_HASH "7c2b335fbe873a1970a9b76f42e7e4d2238e2543")
+    set(CEF_URL "https://cef-builds.spotifycdn.com/cef_binary_90.6.5%2Bg7a604aa%2Bchromium-90.0.4430.93_linux64_minimal.tar.bz2")
+    set(CEF_URL_HASH "c81f998e45d2abbdfb4fb138f0f0593baac1ecf7")
     set(CEF_PRECOMPILED_BINARIES "libcef.so" "snapshot_blob.bin" "v8_context_snapshot.bin" "chrome-sandbox")
     set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
@@ -141,11 +141,10 @@ set(CEF_INCLUDE_DIRS "${SOURCE_DIR}")
 set(CEF_LIBRARIES "${SOURCE_DIR}/Release/${CEF_LIB}"
                   "${BINARY_DIR}/libcef_dll_wrapper/${CMAKE_CFG_INTDIR}/libcef_dll_wrapper${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set(CEF_RESOURCES_DIR "${SOURCE_DIR}/Resources")
-set(CEF_RESOURCES "cef.pak"
-                  "cef_100_percent.pak"
-                  "cef_200_percent.pak"
-                  "devtools_resources.pak"
-                  "icudtl.dat")
+set(CEF_RESOURCES "chrome_100_percent.pak"
+                  "chrome_200_percent.pak"
+                  "icudtl.dat"
+                  "resources.pak")
 set(CEF_LOCALES_DIR "${CEF_RESOURCES_DIR}/locales")
 set(CEF_LOCALE_FILE "en-US.pak")
 set(CEF_PRECOMPILED_BINARIES_DIR "${SOURCE_DIR}/Release")
