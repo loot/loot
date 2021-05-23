@@ -123,6 +123,3 @@ jobs:
           asset_path: build\LOOT Installer.exe
           asset_name: LOOT Installer.exe
           asset_content_type: application/octet-stream
-
-      - name: Update default masterlist branches
-        run: .\scripts\update_masterlist_branches.ps1 -gitTagName ${{ needs.create_release.outputs.upload_url }} -githubToken ${{ secrets.GITHUB_TOKEN }}
