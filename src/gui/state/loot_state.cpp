@@ -143,7 +143,10 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
       LootSettings::load(LootPaths::getSettingsPath(), LootPaths::getLootDataPath());
     } catch (exception& e) {
       initErrors_.push_back(
-          (format(translate("Error: Settings parsing failed. %1%")) % e.what())
+          (format(
+               /* translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong. */
+               translate("Error: Settings parsing failed. %1%")) %
+           e.what())
               .str());
     }
   }
