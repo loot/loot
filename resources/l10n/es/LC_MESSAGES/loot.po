@@ -1,945 +1,1269 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-26 11:41-0000\n"
-"PO-Revision-Date: 2013-10-26 11:41-0000\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2021-05-28 19:50+0100\n"
+"PO-Revision-Date: 2021-05-29 16:35-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: Spanish\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 2.4.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: backend/game.cpp:96
-msgid "Invalid game ID supplied."
-msgstr "ID del juego suministra incorrecto."
-
-#: backend/game.cpp:147
-msgid "Game path could not be detected."
-msgstr "Ruta del juego no se pudo encontrar."
-
-#: backend/game.cpp:248 backend/game.cpp:308 backend/game.cpp:363
-msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder no pudo crear un puñado del juego. Detalles:"
-
-#: backend/game.cpp:260 backend/game.cpp:320 backend/game.cpp:374
-msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr "libloadorder falló de iniciar apoyo del archivo master. Detalles:"
-
-#: backend/game.cpp:270
-msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr "libloadorer no pudo obtener la lista de plugins activos. Detalles:"
-
-#: backend/game.cpp:330 backend/game.cpp:396
-msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder no podría establecer el orden de carga. Detalles:"
-
-#: backend/game.cpp:415
-msgid "Could not create BOSS folder for game. Details:"
-msgstr "No se puede crear la carpeta datos de BOSS para este juego"
-
-#: backend/graph.cpp:46
-msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr "Interacción cíclica detectada entre plugins \"%1%\" y \"%2%\"."
-
-#: backend/helpers.cpp:140
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "No se pudo abrir \"%1%\" para la cálculacion CDN."
-
-#: backend/helpers.cpp:302
-msgid "Could not create pipe for process."
-msgstr "No se puede crear la tubería de proceso"
-
-#: backend/helpers.cpp:335
-msgid "Could not create process."
-msgstr "No se puede crear el proceso."
-
-#: backend/helpers.cpp:346
-msgid "Could not get process exit code."
-msgstr "No se puede obtener el código para detener el proceso."
-
-#: backend/helpers.cpp:353
-msgid "Could not read process output."
-msgstr "No se puede leer la salida del proceso."
-
-#: backend/metadata.cpp:142
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "No se ha podido analizar la condición \"%1%\": %2%"
-
-#: backend/metadata.cpp:147
-msgid "Failed to parse condition \"%1%\"."
-msgstr "No se ha podido analizar la condición \"%1%\"."
-
-#: backend/network.cpp:75
-msgid "Git operation failed. Error: %1%"
-msgstr "Operación Git falló. Error: %1%"
-
-#: backend/network.cpp:338
-msgid "Masterlist revision"
-msgstr "Revisión de la MasterList"
-
-#: gui/editor.cpp:37
-msgid "Note"
-msgstr "Nota"
-
-#: gui/editor.cpp:38
-msgid "Warning"
-msgstr "Advertencia"
-
-#: gui/editor.cpp:39
-msgid "Error"
-msgstr "Error"
-
-#: gui/editor.cpp:43
-msgid "Add"
-msgstr "Agregar"
-
-#: gui/editor.cpp:44
-msgid "Remove"
-msgstr "Eliminar"
-
-#: gui/editor.cpp:48
-msgid "Type"
-msgstr "Tipo"
-
-#: gui/editor.cpp:49
-msgid "Content"
-msgstr "Contenido"
-
-#: gui/editor.cpp:50 gui/editor.cpp:155 gui/editor.cpp:159 gui/editor.cpp:163
-#: gui/editor.cpp:167
-msgid "Condition"
-msgstr "Condición"
-
-#: gui/editor.cpp:51 gui/editor.cpp:990
-msgid "Language"
-msgstr "Idioma"
-
-#: gui/editor.cpp:125
-msgid "Enable User Changes"
-msgstr "Activar Cambios de usuario"
-
-#: gui/editor.cpp:127 gui/editor.cpp:375
-msgid "Add File"
-msgstr "Agregar un Archivo"
-
-#: gui/editor.cpp:128 gui/editor.cpp:376
-msgid "Edit File"
-msgstr "Editar un archivo"
-
-#: gui/editor.cpp:129 gui/editor.cpp:377
-msgid "Remove File"
-msgstr "Eliminar archivo"
-
-#: gui/editor.cpp:130
-msgid "Save Changes"
-msgstr "Guardar cambios"
-
-#: gui/editor.cpp:131
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: gui/editor.cpp:132
-msgid "Copy Metadata As Text"
-msgstr "Copiar Metadatos como texto"
-
-#: gui/editor.cpp:143
-msgid "Requirements"
-msgstr "Requisitos"
-
-#: gui/editor.cpp:144
-msgid "Incompatibilities"
-msgstr "Incompatibilidades"
-
-#: gui/editor.cpp:145
-msgid "Load After"
-msgstr "Después De"
-
-#: gui/editor.cpp:146
-msgid "Messages"
-msgstr "Mensajes"
-
-#: gui/editor.cpp:147
-msgid "Bash Tags"
-msgstr "Etiquetas de Bash"
-
-#: gui/editor.cpp:148
-msgid "Dirty Info"
-msgstr "Informacion de ediciones sucias"
-
-#: gui/editor.cpp:151
-msgid "Plugins"
-msgstr "Plugins"
-
-#: gui/editor.cpp:153 gui/editor.cpp:157 gui/editor.cpp:161
-msgid "Filename"
-msgstr "Nombre del archivo"
-
-#: gui/editor.cpp:154 gui/editor.cpp:158 gui/editor.cpp:162
-msgid "Display Name"
-msgstr "Nombre para Mostrar"
-
-#: gui/editor.cpp:165
-msgid "Add/Remove"
-msgstr "Agregar o Quitar"
-
-#: gui/editor.cpp:166
-msgid "Bash Tag"
-msgstr "Etiqueta de Bash"
-
-#: gui/editor.cpp:169
-msgid "CRC"
-msgstr "CDN"
-
-#: gui/editor.cpp:170
-msgid "ITM Count"
-msgstr "La enumeración de ITM"
-
-#: gui/editor.cpp:171
-msgid "UDR Count"
-msgstr "La enumeración de UDR"
-
-#: gui/editor.cpp:172
-msgid "Deleted Navmesh Count"
-msgstr "Enumeración Navmesh eliminado"
-
-#: gui/editor.cpp:173
-msgid "Cleaning Utility"
-msgstr "Utilidad de limpieza"
-
-#: gui/editor.cpp:217
-msgid "Priority: "
-msgstr "Prioridad: "
-
-#: gui/editor.cpp:379
-msgid "Add Plugin"
-msgstr "Agregar un plugin"
-
-#: gui/editor.cpp:380
-msgid "Edit Plugin"
-msgstr "Editar el plugin"
-
-#: gui/editor.cpp:381
-msgid "Remove Plugin"
-msgstr "Eliminar plugin"
-
-#: gui/editor.cpp:383
-msgid "Add Message"
-msgstr "Añadir un mensaje"
-
-#: gui/editor.cpp:384
-msgid "Edit Message"
-msgstr "Editar mensaje"
-
-#: gui/editor.cpp:385
-msgid "Remove Message"
-msgstr "Eliminar mensaje"
-
-#: gui/editor.cpp:387
-msgid "Add Bash Tag"
-msgstr "Añadir una etiqueta Bash"
-
-#: gui/editor.cpp:388
-msgid "Edit Bash Tag"
-msgstr "Editar una etiqueta Bash"
-
-#: gui/editor.cpp:389
-msgid "Remove Bash Tag"
-msgstr "Eliminar una etiqueta Bash"
-
-#: gui/editor.cpp:391
-msgid "Add Dirty Info"
-msgstr "Añadir informacion de ediciones sucias"
-
-#: gui/editor.cpp:392
-msgid "Edit Dirty Info"
-msgstr "Editar informacion de ediciones sucias"
-
-#: gui/editor.cpp:393
-msgid "Remove Dirty Info"
-msgstr "Eliminar informacion de ediciones sucias"
-
-#: gui/editor.cpp:411
-msgid "BOSS: Add File/Plugin"
-msgstr "BOSS: Agregar Archivo / Plugin"
-
-#: gui/editor.cpp:433
-msgid "BOSS: Add Message"
-msgstr "BOSS: Añadir un mensaje"
-
-#: gui/editor.cpp:443
-msgid "Error: No content specified. Row will not be added."
-msgstr "Error: Ningun contenido especificado.  La fila no se añadirá."
-
-#: gui/editor.cpp:444 gui/editor.cpp:526 gui/editor.cpp:1122
-#: gui/editor.cpp:1137 gui/main.cpp:164 gui/main.cpp:181 gui/main.cpp:194
-#: gui/main.cpp:273 gui/main.cpp:283 gui/main.cpp:296 gui/main.cpp:304
-#: gui/main.cpp:335 gui/main.cpp:352 gui/main.cpp:820 gui/main.cpp:873
-#: gui/main.cpp:893 gui/main.cpp:972 gui/main.cpp:1009 gui/main.cpp:1040
-#: gui/main.cpp:1060 gui/main.cpp:1075 gui/main.cpp:1182 gui/main.cpp:1227
-#: gui/settings.cpp:287 gui/settings.cpp:299 gui/settings.cpp:307
-#: gui/settings.cpp:350 gui/settings.cpp:358 gui/settings.cpp:366
-msgid "BOSS: Error"
-msgstr "BOSS: Error de"
-
-#: gui/editor.cpp:454
-msgid "BOSS: Add Tag"
-msgstr "BOSS: Añadir una etiqueta"
-
-#: gui/editor.cpp:468
-msgid "BOSS: Add Dirty Info"
-msgstr "BOSS: Añadir informacion de ediciones sucias"
-
-#: gui/editor.cpp:487
-msgid "BOSS: Edit File/Plugin"
-msgstr "BOSS: Editar Archivo o Plugin"
-
-#: gui/editor.cpp:511
-msgid "BOSS: Edit Message"
-msgstr "BOSS: Editar mensaje"
-
-#: gui/editor.cpp:525
-msgid "Error: No content specified. Row will not be edited."
-msgstr "Error:  Ningun contenido especificado. La fila no se editará."
-
-#: gui/editor.cpp:535
-msgid "BOSS: Edit Tag"
-msgstr "BOSS: Editar etiqueta Bash"
-
-#: gui/editor.cpp:557
-msgid "BOSS: Edit Dirty Info"
-msgstr "BOSS: Editar informacion de ediciones sucias"
-
-#: gui/editor.cpp:932
-msgid "Filename (required):"
-msgstr "Nombre de archivo (requerido):"
-
-#: gui/editor.cpp:935
-msgid "Displayed Name:"
-msgstr "Nombre Mostrada:"
-
-#: gui/editor.cpp:938 gui/editor.cpp:1016 gui/editor.cpp:1172
-msgid "Condition:"
-msgstr "Condición:"
-
-#: gui/editor.cpp:986
-msgid "Add Content"
-msgstr "Añadir contenido:"
-
-#: gui/editor.cpp:987
-msgid "Edit Content"
-msgstr "Editar contenido:"
-
-#: gui/editor.cpp:988
-msgid "Remove Content"
-msgstr "Eliminar contenido:"
-
-#: gui/editor.cpp:991
-msgid "String"
-msgstr "Cadena"
-
-#: gui/editor.cpp:1013 gui/settings.cpp:425
-msgid "Type:"
-msgstr "Tipo:"
-
-#: gui/editor.cpp:1028 gui/settings.cpp:101
-msgid "Language:"
-msgstr "Idioma:"
-
-#: gui/editor.cpp:1031
-msgid "Content:"
-msgstr "Contenido:"
-
-#: gui/editor.cpp:1121 gui/editor.cpp:1136
-msgid "Error: No content row selected."
-msgstr "Error: No fila de contenido seleccionado."
-
-#: gui/editor.cpp:1166
-msgid "Add/Remove:"
-msgstr "Agregar o Quitar:"
-
-#: gui/editor.cpp:1169 gui/settings.cpp:422
-msgid "Name (required):"
-msgstr "Nombre (requerido):"
-
-#: gui/editor.cpp:1234
-msgid "CRC (required):"
-msgstr "CDN (requerido):"
-
-#: gui/editor.cpp:1237
-msgid "ITM Count:"
-msgstr "La enumeración de ITM:"
-
-#: gui/editor.cpp:1240
-msgid "UDR Count:"
-msgstr "La enumeración de UDR:"
-
-#: gui/editor.cpp:1243
-msgid "Deleted Navmesh Count:"
-msgstr "Enumeración Navmesh eliminado:"
-
-#: gui/editor.cpp:1246
-msgid "Cleaning Utility (required):"
-msgstr "Utilidad de limpieza (requerido):"
-
-#: gui/ids.cpp:31
-msgid "None Specified"
-msgstr "Ninguno Especificado"
-
-#: gui/main.cpp:118
-msgid "Masterlist update failed. Details: %1%"
-msgstr "Falló actualización del masterlist. Detalles: %1%"
-
-#: gui/main.cpp:134
-msgid "Masterlist parsing failed. Details: %1%"
-msgstr "Falla en la lectura del archivo de reglas 'master'. Detalles: %1%"
-
-#: gui/main.cpp:142
-msgid "Unknown"
-msgstr "Desconocido"
-
-#: gui/main.cpp:144
-msgid "No masterlist"
-msgstr "No existe el archivo Masterlist"
-
-#: gui/main.cpp:163
-msgid "Error: BOSS is already running. This instance will now quit."
-msgstr ""
-"Error: La interfaz gráfica de usuario de BOSS ya se está ejecutando. Esta "
-"instancia ahora se cerrará."
-
-#: gui/main.cpp:180
-msgid "Error: Could not create local app data BOSS folder."
-msgstr "Error: No se puede crear una carpeta local para datos del aplicación BOSS."
-
-#: gui/main.cpp:193
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Error: Falla en la lectura del configuración. %1%"
-
-#: gui/main.cpp:272
-msgid "Error: Could not apply translation."
-msgstr "Error: No se pudo aplicar la traducción."
-
-#: gui/main.cpp:282
-msgid "Error: The selected language is not available on this system."
-msgstr ""
-
-#: gui/main.cpp:295 gui/main.cpp:351 gui/main.cpp:1039
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-
-#: gui/main.cpp:303
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr ""
-
-#: gui/main.cpp:334
-msgid "Error: None of the supported games were detected."
-msgstr ""
-
-#: gui/main.cpp:379
-msgid "Edit Metadata"
-msgstr ""
-
-#: gui/main.cpp:380
-msgid "Sort Plugins"
-msgstr "Ordenar Plugins"
-
-#: gui/main.cpp:381
-msgid "View Last Report"
-msgstr ""
-
-#: gui/main.cpp:385
-msgid "&View Last Report"
-msgstr ""
-
-#: gui/main.cpp:386
-msgid "View &Debug Log"
-msgstr ""
-
-#: gui/main.cpp:387
-msgid "&Sort Plugins"
-msgstr "&Ordenar Plugins"
-
-#: gui/main.cpp:388
-#, fuzzy
-msgid "&Redate Plugins"
-msgstr "&Ordenar Plugins"
-
-#: gui/main.cpp:391
-msgid "&File"
-msgstr "&Archivo"
-
-#: gui/main.cpp:393
-msgid "&Metadata..."
-msgstr ""
-
-#: gui/main.cpp:394
-msgid "&Settings..."
-msgstr "&Configuración..."
-
-#: gui/main.cpp:395
-msgid "&Edit"
-msgstr "&Editar"
-
-#: gui/main.cpp:407
-msgid "&Game"
-msgstr ""
-
-#: gui/main.cpp:412
-msgid "&Help"
-msgstr "&Ayuda"
-
-#: gui/main.cpp:496 gui/main.cpp:851
-msgid "BOSS: Working..."
-msgstr "BOSS: Trabajando..."
-
-#: gui/main.cpp:496 gui/main.cpp:851
-msgid "BOSS working..."
-msgstr "BOSS trabajando..."
-
-#: gui/main.cpp:547
-msgid "Userlist parsing failed. Details: %1%"
-msgstr ""
-
-#: gui/main.cpp:584
+#: src/gui/cef/query/query.h:49
 msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
+"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"read-only. If it is, unset it and try again. If it isn't, you can check your "
+"LOOTDebugLog.txt (you can get to it through the main menu) for more "
+"information."
 msgstr ""
+"¡Oh no, algo salió mal! Esto suele deberse a que \"%1%\" está configurado "
+"para ser de solo lectura. Si es así, desmárquelo como tal e inténtelo de "
+"nuevo. Si no está como \"solo lectura\", compruebe el LOOTDebugLog.txt "
+"(puede acceder a él a través del menú principal) para obtener más "
+"información."
 
-#: gui/main.cpp:615
+#: src/gui/cef/query/query_executor.h:44
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"¡Oh no, algo salió mal! Puede comprobar su LOOTDebugLog.txt (puede llegar a "
+"él a través del menú principal) para obtener más información."
+
+#: src/gui/cef/query/types/get_game_data_query.h:47
+msgid "Parsing, merging and evaluating metadata..."
+msgstr "Analizando, mezclando y evaluando metadatos..."
+
+#: src/gui/cef/query/types/metadata_query.h:205
+#: src/gui/cef/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
+msgstr "\"%1%\" contiene una condición que no se pudo evaluar. Detalles: %2%"
 
-#: gui/main.cpp:627
-msgid "\"%1%\" is incompatible with \"%2%\" and is present."
-msgstr ""
+#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
+#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/cef/query/types/metadata_query.h:257
+msgid "N/A: No masterlist present"
+msgstr "No aplica: No se encuentra la lista de referencia (masterlist)"
 
-#: gui/main.cpp:630
-msgid "\"%1%\" is required by \"%2%\" but is missing."
-msgstr ""
+#. translators: Git is the software LOOT uses to track changes to the source code.
+#: src/gui/cef/query/types/metadata_query.h:265
+#: src/gui/cef/query/types/metadata_query.h:266
+msgid "Unknown: Git repository missing"
+msgstr "Desconocido: Falta el repositorio Git"
 
-#: gui/main.cpp:670
-msgid "Failed to generate graph image. Details: %1%"
-msgstr ""
+#: src/gui/cef/query/types/metadata_query.h:274
+#: src/gui/cef/query/types/metadata_query.h:275
+msgid "(edited)"
+msgstr "(editado)"
 
-#: gui/main.cpp:687
-msgid "BOSS: Calculated Load Order"
-msgstr ""
+#: src/gui/cef/query/types/sort_plugins_query.h:54
+msgid "Sorting load order..."
+msgstr "Ordenando la lista de mods..."
 
-#: gui/main.cpp:765
-msgid "Failed to set the load order. Details: %1%"
+#. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
+#: src/gui/state/loot_state.cpp:106
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
+"Error: --auto-sort se realizó pero no se indicaron los parámetros --game."
 
-#: gui/main.cpp:769
+#: src/gui/state/loot_state.cpp:129
+msgid "Error: Could not create LOOT settings file. %1%"
+msgstr "Error: No se pudo crear el archivo de configuración de LOOT. %1%"
+
+#. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
+#: src/gui/state/loot_state.cpp:148
+msgid "Error: Settings parsing failed. %1%"
+msgstr "Error: Falla en las opciones de análisis. %1%"
+
+#: src/gui/state/loot_state.cpp:208
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr "Error: Las opciones específicas del juego no se pudieron cargar. %1%"
+
+#: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr ""
+"Este plugin requiere que esté instalado \"%1%\" pero no puede encontrarse."
+
+#: src/gui/state/game/game.cpp:191
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr "Este plugin requiere que \"%1%\" esté activo pero está inactivo."
+
+#: src/gui/state/game/game.cpp:240
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr ""
+"Este plugin es incompatible con \"%1%\", pero ambos se encuentran presentes."
+
+#: src/gui/state/game/game.cpp:276
 msgid ""
-"The load order displayed in the Details tab was not applied as sorting was "
-"canceled."
+"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
 msgstr ""
+"Este plugin es un light master (*.esl) y requiere del plugin\"%1%\" que no "
+"está marcado como master. Esto puede causar problemas en el juego, y el "
+"ordenamiento va a fallar siempre que este plugin esté instalado."
 
-#: gui/main.cpp:778
-msgid "Failed to calculate the load order. Details: %1%"
+#: src/gui/state/game/game.cpp:296
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
 msgstr ""
+"Este plugin contiene registros que tienen FormIDs que se salen del rango "
+"válido para un plugin ESL. Usar este plugin causará daños irreversibles a su "
+"salve del juego."
 
-#: gui/main.cpp:819
-msgid "Error: %1%"
-msgstr "Error: %1%"
-
-#: gui/main.cpp:839 gui/main.cpp:954
-msgid "BOSS: Report Viewer"
+#. translators: A header is the part of a file that stores data like file name and version.
+#: src/gui/state/game/game.cpp:314
+msgid ""
+"This plugin has a header version of %1%, which is less than the game's "
+"minimum supported header version of %2%."
 msgstr ""
+"Este plugin tiene un encabezado versión %1%, que es menor que la versión más "
+"baja que permite el juego, la cual es %2%."
 
-#: gui/main.cpp:872
-msgid "Error: Masterlist parsing failed. %1%"
+#: src/gui/state/game/game.cpp:333
+msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgstr "Este plugin pertenece al grupo \"%1%\", el cual no existe."
+
+#: src/gui/state/game/game.cpp:402 src/gui/state/game/game.cpp:487
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
 msgstr ""
+"Hubo un error al cargar la lista de mods actual, la información mostrada "
+"puede ser incorrecta."
 
-#: gui/main.cpp:892
-msgid "Error: Userlist parsing failed. %1%"
+#: src/gui/state/game/game.cpp:512
+msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
+msgstr "Interacción cíclica detectada entre los plugins \"%1%\" y \"%2%\":%3%"
+
+#: src/gui/state/game/game.cpp:524
+msgid "The group \"%1%\" does not exist."
+msgstr "EL grupo %1% no existe."
+
+#: src/gui/state/game/game.cpp:560
+msgid "You have not sorted your load order this session."
+msgstr "No ha ordenado la lista de mods en esta sección."
+
+#: src/gui/state/game/game.cpp:584
+msgid ""
+"You have a normal plugin and at least one light plugin sharing the FE load "
+"order index. Deactivate a normal plugin or all your light plugins to avoid "
+"potential issues."
 msgstr ""
+"Tiene un plugin normal y al menos un light plugin compartiendo el mismo "
+"index FE en su lista. Desactive un plugin normal o todos sus light plugins "
+"para evitar posibles problemas."
 
-#: gui/main.cpp:939
-msgid "BOSS: Metadata Editor"
+#: src/gui/state/game/game.cpp:612
+msgid ""
+"The latest masterlist revision contains a syntax error, LOOT is using the "
+"most recent valid revision instead. Syntax errors are usually minor and "
+"fixed within hours."
 msgstr ""
+"La última versión de la lista madre (masterlist) contiene un error de "
+"sintaxis, LOOT está usando la versión más reciente válida en su lugar. Los "
+"errores de sintaxis son poco graves y son corregidos en pocas horas."
 
-#: gui/main.cpp:961
+#: src/gui/state/game/game.cpp:657
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
+"data folder, then open your 'userlist.yaml' file in the relevant game "
+"folder. You can then edit the metadata it contains with reference to the "
+"documentation, which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"Ocurrió un error mientras se analizaban la lista de metadatos: %1%.\n"
+"\n"
+"Actualice la lista maestra (masterlist) para resolver el error. Si el error "
+"se encuentra en los metadatos del usuario, esto probablemente ocurrió porque "
+"la actualización de LOOT cambió el soporte a la sintaxis de los metadatos. "
+"Los metadatos del usuario tendrán que ser actualizados manualmente.\n"
+"\n"
+" Para hacerlo, seleccione Abrir la ubicación del log de depuración en el "
+"menú principal de LOOT para abrir la carpeta de datos, luego abra el archivo "
+"userlist.yaml en la carpeta del juego en cuestión. Puede entonces proceder a "
+"editar los metadatos teniendo como referencia la documentación, la cual se "
+"encuentra disponible a través del menú principal de LOOT.\n"
+"\n"
+"También tiene la opción de buscar apoyo en el hilo principal de LOOT, enlace "
+"que puede encontrar en el [sitio web de LOOT](https://loot.github.io/)."
+
+#: src/gui/state/game/helpers.cpp:88
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] "%1% ITM record"
+msgstr[1] "%1% ITM records"
+
+#: src/gui/state/game/helpers.cpp:92
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] "%1% referencia eliminada"
+msgstr[1] "%1% referencias eliminadas"
+
+#: src/gui/state/game/helpers.cpp:98
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] "%1% navmesh eliminada"
+msgstr[1] "%1% navmeshes eliminadas"
+
+#: src/gui/state/game/helpers.cpp:108
+msgid "%1% found %2%, %3% and %4%."
+msgstr "%1% encontró %2%, %3% y %4%."
+
+#: src/gui/state/game/helpers.cpp:114
+msgid "%1% found dirty edits."
+msgstr "%1% encontró cambios dañinos."
+
+#: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
+#: src/gui/state/game/helpers.cpp:131
+msgid "%1% found %2% and %3%."
+msgstr "%1% encontró %2% y %3%."
+
+#: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
+#: src/gui/state/game/helpers.cpp:141
+msgid "%1% found %2%."
+msgstr "%1% encontró %2%."
+
+#: src/gui/state/game/helpers.cpp:222
+msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
+msgstr "LOOT ha detectado que %1% es inválido y lo está ignorando."
+
+#: src/gui/html/elements/editable-table.ts:438
+msgid "Add New Row"
+msgstr "Agregar una nueva línea"
+
+#: src/gui/html/elements/loot-groups-editor.ts:426
+msgid "Add a new group"
+msgstr "Agregar un nuevo grupo"
+
+#: src/gui/html/elements/loot-groups-editor.ts:427
+msgid "Group name"
+msgstr "Nombre del grupo"
+
+#: src/gui/html/elements/loot-groups-editor.ts:428
+msgid "Group already exists!"
+msgstr "¡El grupo ya existe!"
+
+#: src/gui/html/elements/loot-groups-editor.ts:429
+msgid "No plugins are in this group."
+msgstr "No existen plugins en este grupo."
+
+#: src/gui/html/elements/loot-groups-editor.ts:439
+msgid "Plugins in %s"
+msgstr "Plugins en %s"
+
+#: src/gui/html/elements/loot-plugin-card.ts:339
+msgid "Verified clean by %s"
+msgstr "%s ha verificado que está limpio"
+
+#: src/gui/html/js/events.ts:218
+msgid "Identifying conflicting plugins..."
+msgstr "Identificando plugins con conflictos..."
+
+#: src/gui/html/js/events.ts:315
+msgid "Updating and parsing masterlist..."
+msgstr "Actualizando y analizando la masterlist..."
+
+#: src/gui/html/js/events.ts:338
+msgid "Masterlist updated to revision %s."
+msgstr "Masterlist actualizada a la versión %2."
+
+#: src/gui/html/js/events.ts:345
+msgid "No masterlist update was necessary."
+msgstr "No fue necesario actualizar la masterlist."
+
+#: src/gui/html/js/events.ts:418
+msgid "Cyclic interaction detected"
+msgstr "Se detectó una interacción cíclica"
+
+#: src/gui/html/js/events.ts:425
+msgid "Failed to sort plugins. Details: %s"
+msgstr "Hubo un error al organizar los plugins. Detalles: %s"
+
+#: src/gui/html/js/events.ts:461
+msgid "Sorting made no changes to the load order."
+msgstr "La organización no realizó cambios a la lista de mods."
+
+#. Title of a dialog box.
+#: src/gui/html/js/events.ts:505
+msgid "Redate Plugins?"
+msgstr "Cambiar fecha?"
+
+#: src/gui/html/js/events.ts:506
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
 msgstr ""
+"Esta prestación se incluye para que los modders usando el Creation Kit "
+"puedan definir el lugar en la lista que deseen. Un efecto secundario es que "
+"cualquier mod del Steam Workshop será redescargado por Steam (esto no afecta "
+"a Skyrim Special Edition). ¿Desea continuar?"
 
-#: gui/main.cpp:961
-#, fuzzy
-msgid "BOSS: Warning"
-msgstr "BOSS: Trabajando..."
+#. Affirmative confirmation button text for the Redate Plugins dialog box.
+#: src/gui/html/js/events.ts:510
+msgid "Redate"
+msgstr "Cambiar fecha"
 
-#: gui/main.cpp:971
-msgid "Error: Failed to get load order. %1%"
-msgstr ""
-
-#: gui/main.cpp:1008
-msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr ""
-
-#: gui/main.cpp:1015
+#. Notification text.
+#: src/gui/html/js/events.ts:517
 msgid "Plugins were successfully redated."
-msgstr ""
+msgstr "El cambio de fecha de los plugins fue exitoso."
 
-#: gui/main.cpp:1016
-msgid "BOSS: Plugin Redate"
-msgstr ""
-
-#: gui/main.cpp:1024
-msgid "BOSS: Settings"
-msgstr "BOSS: Configuracion"
-
-#: gui/main.cpp:1059 gui/main.cpp:1074
-msgid "Error: \"%1%\" cannot be found."
-msgstr "Error: \"%1%\" no se puede encontrar."
-
-#: gui/main.cpp:1086
+#: src/gui/html/js/events.ts:536
 msgid ""
-"A load order optimisation tool for games using the Elder Scrolls Plugin/"
-"Master system."
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
 msgstr ""
+"¿Está seguro de que quiere borrar todos los metadatos agregados por el "
+"usuario?"
 
-#: gui/main.cpp:1110
-msgid "Up"
-msgstr ""
+#: src/gui/html/js/events.ts:539 src/gui/html/js/events.ts:1115
+msgid "Clear"
+msgstr "Eliminar"
 
-#: gui/main.cpp:1111
-msgid "Down"
-msgstr ""
+#: src/gui/html/js/events.ts:550
+msgid "All user-added metadata has been cleared."
+msgstr "Todos los metadatos del usuario han sido eliminados."
 
-#: gui/main.cpp:1114
-msgid "Load Order"
-msgstr ""
+#: src/gui/html/js/events.ts:587
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "El contenido de LOOT ha sido copiado al portapapeles."
 
-#: gui/main.cpp:1136
+#: src/gui/html/js/events.ts:605
+msgid "The load order has been copied to the clipboard."
+msgstr "La lista de mods ha sido copiada al portapapeles."
+
+#: src/gui/html/js/events.ts:641
 msgid ""
-"Please submit any alterations made for reasons other than user preference \n"
-"to the BOSS team so that they may include the changes in the masterlist."
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "No ha aplicado o cancelado todavía sus %s. ¿Seguro que quiere cerrar?"
+
+#: src/gui/html/js/events.ts:645 src/gui/html/js/translateStaticText.ts:480
+msgid "Quit"
+msgstr "Cerrar"
+
+#: src/gui/html/js/events.ts:663
+msgid "sorted load order"
+msgstr "la lista ha sido ordenada"
+
+#. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
+#: src/gui/html/js/events.ts:668
+msgid "metadata edits"
+msgstr "cambios en los metadatos"
+
+#: src/gui/html/js/events.ts:1090
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "Los metadatos de \"%s\" han sido copiados al portapapeles."
+
+#: src/gui/html/js/events.ts:1111
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
+"¿Está seguro de que quiere borrar todos los metadatos agregados por el "
+"usuario?"
 
-#: gui/main.cpp:1181 gui/main.cpp:1226
-msgid "Error: Cannot load \"%1%\" before \"%2%\"."
-msgstr "Error: Ordenar %1% antes de %2%"
+#: src/gui/html/js/events.ts:1133
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "Todos los metadatos del usuario han sido eliminados."
 
-#: gui/settings.cpp:40
-msgid "None"
+#. An abbreviation of Not Applicable.
+#: src/gui/html/js/game.ts:141
+msgid "N/A"
+msgstr "No aplica"
+
+#: src/gui/html/js/handlePromiseError.ts:8
+#: src/gui/html/js/translateStaticText.ts:337
+msgid "Error"
+msgstr "Error"
+
+#: src/gui/html/js/loot.ts:314
+msgid ""
+"Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
+"can get to it through the main menu) for more information."
 msgstr ""
+"Hubo un fallo al buscar actualizaciones de LOOT. Puede revisar su "
+"LOOTDebugLog.txt (puede acceder a él a través del menú principal) para más "
+"información."
 
-#: gui/settings.cpp:41
-msgid "Low"
+#: src/gui/html/js/loot.ts:330
+msgid "A [new release](%s) of LOOT is available."
+msgstr "Una [nueva versión](%s) de LOOT se encuentra disponible."
+
+#: src/gui/html/js/loot.ts:370
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
 msgstr ""
+"La organización automática fue interrumpida pues hay al menos un mensaje de "
+"error presente."
 
-#: gui/settings.cpp:42
-msgid "Medium"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:74
+msgid "Active Plugin"
+msgstr "Plugin activo"
 
-#: gui/settings.cpp:43
-msgid "High"
-msgstr ""
-
-#: gui/settings.cpp:47
-msgid "Autodetect"
-msgstr "Detección automática"
-
-#: gui/settings.cpp:59
-msgid "Add Game"
-msgstr ""
-
-#: gui/settings.cpp:60
-msgid "Edit Game"
-msgstr ""
-
-#: gui/settings.cpp:61
-msgid "Remove Game"
-msgstr ""
-
-#: gui/settings.cpp:63
-msgid "Update masterlist before sorting."
-msgstr ""
-
-#: gui/settings.cpp:64
-msgid "View reports externally in default browser."
-msgstr ""
-
-#: gui/settings.cpp:65
-msgid "Generate and display plugin graph images."
-msgstr ""
-
-#: gui/settings.cpp:68
-msgid "Name"
-msgstr ""
-
-#: gui/settings.cpp:69
-msgid "Base Game Type"
-msgstr ""
-
-#: gui/settings.cpp:70
-msgid "BOSS Folder Name"
-msgstr ""
-
-#: gui/settings.cpp:71
+#: src/gui/html/js/translateStaticText.ts:78
+#: src/gui/html/js/translateStaticText.ts:695
 msgid "Master File"
-msgstr ""
+msgstr "Master file"
 
-#: gui/settings.cpp:72
-msgid "Online Masterlist URL"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:82
+msgid "Light Plugin"
+msgstr "Light plugin"
 
-#: gui/settings.cpp:73
-msgid "Install Path"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:86
+msgid "Empty Plugin"
+msgstr "Plugin vacío"
 
-#: gui/settings.cpp:74
-msgid "Install Path Registry Key"
-msgstr ""
+#. Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
+#: src/gui/html/js/translateStaticText.ts:89
+msgid "Loads Archive"
+msgstr "Carga archivos"
 
-#: gui/settings.cpp:98
-msgid "Default Game:"
-msgstr "Juego por defecto:"
+#: src/gui/html/js/translateStaticText.ts:93
+#: src/gui/html/js/translateStaticText.ts:297
+msgid "Has User Metadata"
+msgstr "Contiene metadatos de usuario"
 
-#: gui/settings.cpp:104
-msgid "Debug Verbosity:"
-msgstr "Nivel de detalle de la salida de depuración:"
+#: src/gui/html/js/translateStaticText.ts:98
+msgid "Edit Metadata"
+msgstr "Editar metadatos"
 
-#: gui/settings.cpp:126
-msgid "Language and game changes will be applied after BOSS is restarted."
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:102
+msgid "Copy Metadata"
+msgstr "Copiar Metadatos"
 
-#: gui/settings.cpp:139
-msgid "The output is logged to the BOSSDebugLog.txt file."
-msgstr "La salida se registra en el archivo BOSSDebugLog.txt"
+#: src/gui/html/js/translateStaticText.ts:106
+msgid "Clear User Metadata"
+msgstr "Limpiar los metadatos de usuario"
 
-#: gui/settings.cpp:279
-msgid "BOSS: Add Game"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:129
+#: src/gui/html/js/translateStaticText.ts:293
+msgid "Group"
+msgstr "Grupo"
 
-#: gui/settings.cpp:286 gui/settings.cpp:365
-msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:134
+msgid "Main"
+msgstr "Principal"
 
-#: gui/settings.cpp:298
-msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:138
+msgid "Load After"
+msgstr "Cargar después de"
 
-#: gui/settings.cpp:306
-msgid ""
-"Error: A game with this folder name is already defined. Row will not be "
-"added."
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:142
+msgid "Requirements"
+msgstr "Requisitos"
 
-#: gui/settings.cpp:328
-msgid "BOSS: Edit Game"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:146
+msgid "Incompatibilities"
+msgstr "Incompatibilidades"
 
-#: gui/settings.cpp:349
-msgid "Error: Name is required. Row will not be added."
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:150
+msgid "Messages"
+msgstr "Mensajes"
 
-#: gui/settings.cpp:357
-msgid "Error: Folder is required. Row will not be added."
-msgstr ""
+#. Title of a tab in the metadata editor.
+#: src/gui/html/js/translateStaticText.ts:153
+msgid "Bash Tags"
+msgstr "Etiquetas de Bash"
 
-#: gui/settings.cpp:428
-msgid "BOSS Folder Name (required):"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:157
+msgid "Dirty Plugin Info"
+msgstr "Información sobre plugins dañinos"
 
-#: gui/settings.cpp:431
-msgid "Master File:"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:161
+msgid "Clean Plugin Info"
+msgstr "Información sobre plugins limpios"
 
-#: gui/settings.cpp:434
-msgid "Masterlist URL:"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:165
+msgid "Locations"
+msgstr "Ubicación"
 
-#: gui/settings.cpp:437
-msgid "Install Path:"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:175
+#: src/gui/html/js/translateStaticText.ts:190
+#: src/gui/html/js/translateStaticText.ts:203
+msgid "Filename"
+msgstr "Nombre del archivo"
 
-#: gui/settings.cpp:440
-msgid "Install Path Registry Key:"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:180
+#: src/gui/html/js/translateStaticText.ts:194
+#: src/gui/html/js/translateStaticText.ts:207
+msgid "Display Name"
+msgstr "Nombre para Mostrar"
 
-#: backend/generators.h:80
-msgid "Note:"
-msgstr "Nota:"
+#: src/gui/html/js/translateStaticText.ts:185
+#: src/gui/html/js/translateStaticText.ts:198
+#: src/gui/html/js/translateStaticText.ts:211
+#: src/gui/html/js/translateStaticText.ts:224
+#: src/gui/html/js/translateStaticText.ts:241
+msgid "Condition"
+msgstr "Condición"
 
-#: backend/generators.h:82
-msgid "Bash Tag Suggestion(s):"
-msgstr "Bash Sugerencia de Tag(s):"
+#: src/gui/html/js/translateStaticText.ts:216
+msgid "Type"
+msgstr "Tipo"
 
-#: backend/generators.h:84
-msgid "Warning:"
-msgstr "Adverten:"
+#: src/gui/html/js/translateStaticText.ts:220
+msgid "Content"
+msgstr "Contenido"
 
-#: backend/generators.h:86
-msgid "Error:"
-msgstr "Errores:"
+#: src/gui/html/js/translateStaticText.ts:228
+#: src/gui/html/js/translateStaticText.ts:640
+msgid "Language"
+msgstr "Idioma"
 
-#: backend/generators.h:159
-msgid "BOSS Report"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:233
+msgid "Add/Remove"
+msgstr "Agregar o Quitar"
 
-#: backend/generators.h:191 backend/generators.h:262
-msgid "Summary"
-msgstr "Resumen"
+#: src/gui/html/js/translateStaticText.ts:237
+msgid "Bash Tag"
+msgstr "Etiqueta de Bash"
 
-#: backend/generators.h:197
-msgid "Details"
-msgstr "Detalles"
+#: src/gui/html/js/translateStaticText.ts:246
+#: src/gui/html/js/translateStaticText.ts:267
+msgid "CRC"
+msgstr "CRC"
 
-#: backend/generators.h:204
-msgid "Graph"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:250
+msgid "ITM Count"
+msgstr "Cantidad de ITMs"
 
-#: backend/generators.h:211
+#: src/gui/html/js/translateStaticText.ts:254
+msgid "Deleted References"
+msgstr "Referencias eliminadas"
+
+#: src/gui/html/js/translateStaticText.ts:258
+msgid "Deleted Navmeshes"
+msgstr "Navmeshes eliminadas"
+
+#: src/gui/html/js/translateStaticText.ts:262
+#: src/gui/html/js/translateStaticText.ts:271
+msgid "Cleaning Utility"
+msgstr "Utilidad de limpieza"
+
+#: src/gui/html/js/translateStaticText.ts:276
+msgid "URL"
+msgstr "URL"
+
+#: src/gui/html/js/translateStaticText.ts:280
+#: src/gui/html/js/translateStaticText.ts:676
+msgid "Name"
+msgstr "Nombre"
+
+#: src/gui/html/js/translateStaticText.ts:285
+msgid "Save Metadata"
+msgstr "Guardar metadatos"
+
+#: src/gui/html/js/translateStaticText.ts:289
+#: src/gui/html/js/translateStaticText.ts:448
+#: src/gui/html/js/translateStaticText.ts:733
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/gui/html/js/translateStaticText.ts:301
+msgid "Editor Is Open"
+msgstr "El editor se encuentra abierto"
+
+#: src/gui/html/js/translateStaticText.ts:320
+msgid "A filename is required."
+msgstr "Se requiere un nombre de archivo."
+
+#: src/gui/html/js/translateStaticText.ts:322
+#: src/gui/html/js/translateStaticText.ts:345
+#: src/gui/html/js/translateStaticText.ts:364
+#: src/gui/html/js/translateStaticText.ts:397
+#: src/gui/html/js/translateStaticText.ts:414
+#: src/gui/html/js/translateStaticText.ts:427
+msgid "Delete Row"
+msgstr "Eliminar fila"
+
+#: src/gui/html/js/translateStaticText.ts:331
+msgid "Note"
+msgstr "Nota"
+
+#: src/gui/html/js/translateStaticText.ts:334
+msgid "Warning"
+msgstr "Advertencia"
+
+#. The error message displayed if you add a message with no content in the metadata editor.
+#: src/gui/html/js/translateStaticText.ts:343
+msgid "A content string is required."
+msgstr "Se requiere una cadena de contenido."
+
+#: src/gui/html/js/translateStaticText.ts:354
+msgid "Add"
+msgstr "Agregar"
+
+#: src/gui/html/js/translateStaticText.ts:357
+msgid "Remove"
+msgstr "Eliminar"
+
+#: src/gui/html/js/translateStaticText.ts:362
+#: src/gui/html/js/translateStaticText.ts:672
+msgid "A name is required."
+msgstr "Se requiere de un nombre."
+
+#: src/gui/html/js/translateStaticText.ts:375
+#: src/gui/html/js/translateStaticText.ts:408
+msgid "A CRC is required."
+msgstr "Se requiere un CRC."
+
+#: src/gui/html/js/translateStaticText.ts:380
+#: src/gui/html/js/translateStaticText.ts:385
+#: src/gui/html/js/translateStaticText.ts:390
+msgid "Values must be integers."
+msgstr "Los valores deben ser números enteros."
+
+#: src/gui/html/js/translateStaticText.ts:395
+#: src/gui/html/js/translateStaticText.ts:412
+msgid "A utility name is required."
+msgstr "Se requiere un nombre para la utilidad."
+
+#: src/gui/html/js/translateStaticText.ts:425
+msgid "A link is required."
+msgstr "Se requiere un enlace."
+
+#: src/gui/html/js/translateStaticText.ts:438
+msgid "Jump To General Information"
+msgstr "Ir a Información general"
+
+#: src/gui/html/js/translateStaticText.ts:442
+msgid "Sort Plugins"
+msgstr "Ordenar Plugins"
+
+#: src/gui/html/js/translateStaticText.ts:446
+msgid "Update Masterlist"
+msgstr "Actualizar Masterlist"
+
+#: src/gui/html/js/translateStaticText.ts:447
+#: src/gui/html/js/translateStaticText.ts:730
+msgid "Apply"
+msgstr "Aplicar"
+
+#. The tooltip for the search icon that reveals the content search input when clicked.
+#: src/gui/html/js/translateStaticText.ts:451
+msgid "Search Cards"
+msgstr "Buscar líneas"
+
+#. Text of menu option that triggers display of the Redate Plugins dialog.
+#: src/gui/html/js/translateStaticText.ts:456
+msgid "Redate Plugins"
+msgstr "Cambiar fecha a plugins"
+
+#: src/gui/html/js/translateStaticText.ts:457
+msgid "Open Debug Log Location"
+msgstr "Abrir la ubicación del registro de depuración"
+
+#: src/gui/html/js/translateStaticText.ts:460
+msgid "Open Groups Editor"
+msgstr "Abrir el editor de grupos"
+
+#: src/gui/html/js/translateStaticText.ts:463
+msgid "Clear All User Metadata"
+msgstr "Eliminar todos los metadatos del usuario"
+
+#: src/gui/html/js/translateStaticText.ts:466
+msgid "Copy Load Order"
+msgstr "Copiar la lista de carga"
+
+#: src/gui/html/js/translateStaticText.ts:469
+msgid "Copy Content"
+msgstr "Copiar contenido"
+
+#: src/gui/html/js/translateStaticText.ts:472
+msgid "Refresh Content"
+msgstr "Actualizar contenido"
+
+#: src/gui/html/js/translateStaticText.ts:475
+msgid "View Documentation"
+msgstr "Ver la documentación"
+
+#: src/gui/html/js/translateStaticText.ts:478
+msgid "About"
+msgstr "Acerca de"
+
+#: src/gui/html/js/translateStaticText.ts:479
+#: src/gui/html/js/translateStaticText.ts:626
+msgid "Settings"
+msgstr "Configuración"
+
+#. The label on the content search text input.
+#: src/gui/html/js/translateStaticText.ts:490
+msgid "Search cards"
+msgstr "Buscar filas"
+
+#: src/gui/html/js/translateStaticText.ts:530
+msgid "Plugins"
+msgstr "Plugins"
+
+#: src/gui/html/js/translateStaticText.ts:541
 msgid "Filters"
 msgstr "Filtros"
 
-#: backend/generators.h:275
-msgid "BOSS Version"
-msgstr "BOSS Version"
+#: src/gui/html/js/translateStaticText.ts:546
+msgid "Press Enter or click outside the input to set the filter."
+msgstr "Presione Enter o cliquee fuera para aplicar el filtro."
 
-#: backend/generators.h:284
-msgid "Masterlist Version"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:550
+msgid "Show only plugins with cards that contain"
+msgstr "Mostrar solo plugins con líneas que contengan"
 
-#: backend/generators.h:293
-msgid "Masterlist Updating"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:553
+msgid "No text specified"
+msgstr "No se especificó texto"
 
-#: backend/generators.h:297
-msgid "Enabled"
-msgstr ""
+#: src/gui/html/js/translateStaticText.ts:556
+msgid "Hide version numbers"
+msgstr "Ocultar los números de la versión"
 
-#: backend/generators.h:299
-msgid "Disabled"
-msgstr ""
-
-#: backend/generators.h:306
-msgid "No change in details since last run."
-msgstr "Ningún cambio desde la última ejecución."
-
-#: backend/generators.h:316
-msgid "General Messages"
-msgstr ""
-
-#: backend/generators.h:326
-msgid "Total Number of Messages"
-msgstr ""
-
-#: backend/generators.h:335
-msgid "Number of Warnings"
-msgstr ""
-
-#: backend/generators.h:344
-msgid "Number of Errors"
-msgstr ""
-
-#: backend/generators.h:385
-msgid "Version:"
-msgstr "Version:"
-
-#: backend/generators.h:405
-msgid "Add:"
-msgstr ""
-
-#: backend/generators.h:411
-msgid "Remove:"
-msgstr ""
-
-#: backend/generators.h:419
-msgid ""
-"Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
-"with %4%."
-msgstr ""
-
-#: backend/generators.h:421
-msgid "Clean with %1%."
-msgstr ""
-
-#: backend/generators.h:425
-msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-
-#: backend/generators.h:427
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr ""
-
-#: backend/generators.h:429
-msgid "Contains %1% UDR records. Clean with %2%."
-msgstr ""
-
-#: backend/generators.h:432
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr ""
-
-#: backend/generators.h:434
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr ""
-
-#: backend/generators.h:437
-msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr ""
-
-#: backend/generators.h:474
-msgid "The BOSS Report requires Javascript to be enabled in order to function."
-msgstr ""
-"El reportar de BOSS requiere que Javascript esté habilitado para funcionar."
-
-#: backend/generators.h:521
-msgid "Hide Version Numbers"
-msgstr "Ocultar los números de versión"
-
-#: backend/generators.h:530
+#: src/gui/html/js/translateStaticText.ts:559
 msgid "Hide CRCs"
-msgstr ""
+msgstr "Ocultar CRCs"
 
-#: backend/generators.h:539
-msgid "Hide Bash Tag Suggestions"
-msgstr "Ocultar Sugerencias Bash Tag(s)"
+#. Text of a filter in the sidebar.
+#: src/gui/html/js/translateStaticText.ts:562
+msgid "Hide Bash Tags"
+msgstr "Ocultar etiquetas de Bash"
 
-#: backend/generators.h:547
-msgid "Hide Notes"
+#: src/gui/html/js/translateStaticText.ts:563
+#, fuzzy
+#| msgid "Hide Notes"
+msgid "Hide notes"
 msgstr "Ocultar Notas"
 
-#: backend/generators.h:563
-msgid "Hide All Plugin Messages"
-msgstr "Ocultar todos los mensajes de los Plugins"
+#: src/gui/html/js/translateStaticText.ts:564
+msgid "Hide all plugin messages"
+msgstr "Ocultar todos los mensajes de los plugins"
 
-#: backend/generators.h:571
-msgid "Hide Messageless Plugins"
-msgstr "Ocultar Plugins sin mensajes"
+#: src/gui/html/js/translateStaticText.ts:567
+msgid "Hide inactive plugins"
+msgstr "Ocultar plugins inactivos"
 
-#: backend/generators.h:581
-msgid "%1% of %2% plugins hidden."
-msgstr "%1% de %2% los plugins ocultos."
+#: src/gui/html/js/translateStaticText.ts:570
+msgid "Hide messageless plugins"
+msgstr "Ocultar plugins sin mensajes"
 
-#: backend/generators.h:589
-msgid "%1% of %2% messages hidden."
-msgstr "%1% de %2% los mensajes ocultos."
+#: src/gui/html/js/translateStaticText.ts:575
+msgid "Show only conflicting plugins for"
+msgstr "Mostrar solo plugins en conflicto con"
 
-#: backend/generators.h:631
-msgid "Could not write BOSS report."
+#: src/gui/html/js/translateStaticText.ts:576
+msgid "No plugin selected"
+msgstr "Ningún plugin seleccionado"
+
+#: src/gui/html/js/translateStaticText.ts:582
+msgid "Hidden plugins:"
+msgstr "Plugins cocultos:"
+
+#: src/gui/html/js/translateStaticText.ts:585
+msgid "Hidden messages:"
+msgstr "Mensajes ocultos:"
+
+#: src/gui/html/js/translateStaticText.ts:592
+msgid "General Information"
+msgstr "Información general"
+
+#: src/gui/html/js/translateStaticText.ts:597
+#, fuzzy
+#| msgid "Masterlist revision"
+msgid "Masterlist Revision"
+msgstr "Revisión de la MasterList"
+
+#: src/gui/html/js/translateStaticText.ts:598
+msgid "Masterlist Date"
+msgstr "Fecha de la masterlist"
+
+#: src/gui/html/js/translateStaticText.ts:601
+msgid "Warnings"
+msgstr "Advertencias"
+
+#: src/gui/html/js/translateStaticText.ts:604
+msgid "Errors"
+msgstr "Errores"
+
+#: src/gui/html/js/translateStaticText.ts:607
+msgid "Total Messages"
+msgstr "Cantidad de mensajes"
+
+#: src/gui/html/js/translateStaticText.ts:610
+msgid "Active Plugins"
+msgstr "Plugins activos"
+
+#: src/gui/html/js/translateStaticText.ts:613
+msgid "Dirty Plugins"
+msgstr "Plugins dañinos"
+
+#: src/gui/html/js/translateStaticText.ts:616
+msgid "Total Plugins"
+msgstr "Cantidad de plugins"
+
+#: src/gui/html/js/translateStaticText.ts:628
+msgid "General"
+msgstr "General"
+
+#: src/gui/html/js/translateStaticText.ts:633
+msgid "Default Game"
+msgstr "Juego por defecto"
+
+#: src/gui/html/js/translateStaticText.ts:634
+msgid "Autodetect"
+msgstr "Autodetectar"
+
+#: src/gui/html/js/translateStaticText.ts:641
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr "Los cambios de idioma no tendrán efecto hasta que no se reinicie LOOT."
+
+#: src/gui/html/js/translateStaticText.ts:645
+msgid "Theme"
+msgstr "Tema"
+
+#: src/gui/html/js/translateStaticText.ts:646
+msgid "Theme changes will be applied after LOOT is restarted."
+msgstr "Los cambios de tema no tendrán efecto hasta que no se reinicie LOOT."
+
+#: src/gui/html/js/translateStaticText.ts:649
+msgid "default"
+msgstr "por defecto"
+
+#: src/gui/html/js/translateStaticText.ts:657
+msgid "Enable debug logging"
+msgstr "Activar el registro para la depuración"
+
+#: src/gui/html/js/translateStaticText.ts:658
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "La información se registra en el archivo LOOTDebugLot.txt."
+
+#: src/gui/html/js/translateStaticText.ts:664
+msgid "Update masterlist before sorting"
+msgstr "Actualizar la masterlist antes de ordenar"
+
+#: src/gui/html/js/translateStaticText.ts:668
+msgid "Check for LOOT updates on startup"
+msgstr "Buscar actualizaciones de LOOT al iniciar"
+
+#: src/gui/html/js/translateStaticText.ts:681
+msgid "Base Game"
+msgstr "Juego base"
+
+#: src/gui/html/js/translateStaticText.ts:686
+msgid "A folder is required."
+msgstr "Se requiere de una carpeta."
+
+#: src/gui/html/js/translateStaticText.ts:690
+msgid "LOOT Folder"
+msgstr "Carpeta de LOOT"
+
+#: src/gui/html/js/translateStaticText.ts:700
+msgid "Masterlist Repository URL"
+msgstr "Dirección URL del repositorio maestro"
+
+#: src/gui/html/js/translateStaticText.ts:705
+msgid "Masterlist Repository Branch"
+msgstr "Rama del repositorio de la masterlist"
+
+#: src/gui/html/js/translateStaticText.ts:710
+msgid "Install Path"
+msgstr "Ubicación de la instalación"
+
+#: src/gui/html/js/translateStaticText.ts:715
+msgid "Install Path Registry Key"
+msgstr "Llave de registro de la ubicación de la instalación"
+
+#: src/gui/html/js/translateStaticText.ts:720
+msgid "Local Data Path"
+msgstr "Ubicación de los datos locales"
+
+#: src/gui/html/js/translateStaticText.ts:723
+msgid "Add new game"
+msgstr "Agregar un nuevo juego"
+
+#: src/gui/html/js/translateStaticText.ts:724
+msgid "Delete game"
+msgstr "Eliminar juego"
+
+#: src/gui/html/js/translateStaticText.ts:739
+msgid "First-Time Tips"
+msgstr "Consejos para el primer uso"
+
+#: src/gui/html/js/translateStaticText.ts:744
+msgid ""
+"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"to help you get started with the interface."
 msgstr ""
+"Parece que es la primera vez que inicia LOOT v%s. Estos son algunos consejos "
+"para ayudarlo con la interfaz."
 
-#: backend/parsers.h:466 backend/parsers.h:549
-msgid "Invalid file path:"
-msgstr ""
+#. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
+#: src/gui/html/js/translateStaticText.ts:751
+msgid "Click %(menu_icon)s buttons to open menus."
+msgstr "Clic %(menu_icon)s para abrir los menús."
 
-#: backend/parsers.h:514
-msgid "Invalid folder path:"
+#: src/gui/html/js/translateStaticText.ts:755
+msgid ""
+"As well as messages, LOOT displays plugin <span class=\"version\">version "
+"numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
+"<span class=\"tag add\">addition</span> and <span class=\"tag remove"
+"\">removal</span>."
 msgstr ""
+"Como mismo los mensajes, LOOT muestra <span class=\"version\">los números de "
+"la versión</span>, <span class=\"crc\">CRCs</span> y sugerencias de "
+"etiquetas Bash Tag para <span class=\"tag add\">agregar</span> y <span class="
+"\"tag remove\">remover</span>."
 
-#: backend/parsers.h:531
-msgid "Invalid regex string:"
+#: src/gui/html/js/translateStaticText.ts:758
+msgid ""
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
 msgstr ""
+"Los CRCs solo se muestran junto a plugins que han sido cargados, ya sea por "
+"el filtro de conflictos or al ordenarlos."
 
-#: backend/parsers.h:626
-msgid "Expected \"%1%\" at \"%2%\"."
+#: src/gui/html/js/translateStaticText.ts:761
+msgid ""
+"Double-click a plugin in the sidebar to quickly open it in the metadata "
+"editor."
 msgstr ""
+"Haga doble clic en un plugin en la barra lateral para abrir el editor de "
+"metadatos rápidamente."
+
+#: src/gui/html/js/translateStaticText.ts:764
+msgid ""
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
+msgstr ""
+"Los plugins pueden ser arrastrados y soltados desde la barra lateral en los "
+"campos del \"cargar después de\", \"requerimientos\" e \"incompatibilidad\" "
+"del editor de metadatos."
+
+#: src/gui/html/js/translateStaticText.ts:767
+msgid ""
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
+msgstr ""
+"Algunas funciones se encuentran deshabilitadas mientras el editor de "
+"metadatos se encuentra abierto, o mientras hay una lista de carga ordenada "
+"que no ha sido aprobada o descartada."
+
+#: src/gui/html/js/translateStaticText.ts:770
+msgid ""
+"Many interface elements have tooltips. If you don't know what something is, "
+"try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
+"can be accessed through the main menu."
+msgstr ""
+"Muchos elementos de la interfaz tienen ayuda. Si no sabe que función cumple "
+"algo, trate de sostener sobre ello el ratón para averiguarlo. También puede "
+"acceder a la documentación de LOOT a través del menú principal."
+
+#: src/gui/html/js/translateStaticText.ts:774
+#: src/gui/html/js/translateStaticText.ts:797
+msgid ""
+"LOOT is free, but if you want to show your appreciation with some money, "
+"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"using %s."
+msgstr ""
+"LOOT es gratuito, pero si quiere mostrar su apreciación con algo de dinero, "
+"las donaciones pueden ser enviadas a WrinklyNinja (el creador y principal "
+"desarrollador de LOOT) mediante %s."
+
+#: src/gui/html/js/translateStaticText.ts:779
+msgid "OK"
+msgstr "Ok"
+
+#: src/gui/html/js/translateStaticText.ts:786
+msgid "About LOOT"
+msgstr "Acerca de LOOT"
+
+#: src/gui/html/js/translateStaticText.ts:788
+msgid "Version %s (build %s)"
+msgstr "Versión %s (revisión %s)"
+
+#: src/gui/html/js/translateStaticText.ts:793
+msgid ""
+"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
+"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
+"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
+"Optimización de la lista de carga para Morrowind, Oblivion, Nehrim, Skyrim, "
+"Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
+"3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+
+#~ msgid "Invalid game ID supplied."
+#~ msgstr "ID del juego suministra incorrecto."
+
+#~ msgid "Game path could not be detected."
+#~ msgstr "Ruta del juego no se pudo encontrar."
+
+#~ msgid "libloadorder failed to create a game handle. Details:"
+#~ msgstr "libloadorder no pudo crear un puñado del juego. Detalles:"
+
+#~ msgid "libloadorder failed to initialise game master file support. Details:"
+#~ msgstr "libloadorder falló de iniciar apoyo del archivo master. Detalles:"
+
+#~ msgid "libloadorder failed to get the active plugins list. Details:"
+#~ msgstr "libloadorer no pudo obtener la lista de plugins activos. Detalles:"
+
+#~ msgid "libloadorder failed to set the load order. Details:"
+#~ msgstr "libloadorder no podría establecer el orden de carga. Detalles:"
+
+#~ msgid "Could not create BOSS folder for game. Details:"
+#~ msgstr "No se puede crear la carpeta datos de BOSS para este juego"
+
+#~ msgid "Unable to open \"%1%\" for CRC calculation."
+#~ msgstr "No se pudo abrir \"%1%\" para la cálculacion CDN."
+
+#~ msgid "Could not create pipe for process."
+#~ msgstr "No se puede crear la tubería de proceso"
+
+#~ msgid "Could not create process."
+#~ msgstr "No se puede crear el proceso."
+
+#~ msgid "Could not get process exit code."
+#~ msgstr "No se puede obtener el código para detener el proceso."
+
+#~ msgid "Could not read process output."
+#~ msgstr "No se puede leer la salida del proceso."
+
+#~ msgid "Failed to parse condition \"%1%\": %2%"
+#~ msgstr "No se ha podido analizar la condición \"%1%\": %2%"
+
+#~ msgid "Failed to parse condition \"%1%\"."
+#~ msgstr "No se ha podido analizar la condición \"%1%\"."
+
+#~ msgid "Git operation failed. Error: %1%"
+#~ msgstr "Operación Git falló. Error: %1%"
+
+#~ msgid "Enable User Changes"
+#~ msgstr "Activar Cambios de usuario"
+
+#~ msgid "Add File"
+#~ msgstr "Agregar un Archivo"
+
+#~ msgid "Edit File"
+#~ msgstr "Editar un archivo"
+
+#~ msgid "Remove File"
+#~ msgstr "Eliminar archivo"
+
+#~ msgid "Save Changes"
+#~ msgstr "Guardar cambios"
+
+#~ msgid "UDR Count"
+#~ msgstr "La enumeración de UDR"
+
+#~ msgid "Priority: "
+#~ msgstr "Prioridad: "
+
+#~ msgid "Remove Plugin"
+#~ msgstr "Eliminar plugin"
+
+#~ msgid "Edit Message"
+#~ msgstr "Editar mensaje"
+
+#~ msgid "Remove Message"
+#~ msgstr "Eliminar mensaje"
+
+#~ msgid "Add Bash Tag"
+#~ msgstr "Añadir una etiqueta Bash"
+
+#~ msgid "Edit Bash Tag"
+#~ msgstr "Editar una etiqueta Bash"
+
+#~ msgid "Remove Bash Tag"
+#~ msgstr "Eliminar una etiqueta Bash"
+
+#~ msgid "Add Dirty Info"
+#~ msgstr "Añadir informacion de ediciones sucias"
+
+#~ msgid "Edit Dirty Info"
+#~ msgstr "Editar informacion de ediciones sucias"
+
+#~ msgid "Remove Dirty Info"
+#~ msgstr "Eliminar informacion de ediciones sucias"
+
+#~ msgid "BOSS: Add File/Plugin"
+#~ msgstr "BOSS: Agregar Archivo / Plugin"
+
+#~ msgid "BOSS: Add Message"
+#~ msgstr "BOSS: Añadir un mensaje"
+
+#~ msgid "Error: No content specified. Row will not be added."
+#~ msgstr "Error: Ningun contenido especificado.  La fila no se añadirá."
+
+#~ msgid "BOSS: Error"
+#~ msgstr "BOSS: Error de"
+
+#~ msgid "BOSS: Add Tag"
+#~ msgstr "BOSS: Añadir una etiqueta"
+
+#~ msgid "BOSS: Add Dirty Info"
+#~ msgstr "BOSS: Añadir informacion de ediciones sucias"
+
+#~ msgid "BOSS: Edit File/Plugin"
+#~ msgstr "BOSS: Editar Archivo o Plugin"
+
+#~ msgid "BOSS: Edit Message"
+#~ msgstr "BOSS: Editar mensaje"
+
+#~ msgid "Error: No content specified. Row will not be edited."
+#~ msgstr "Error:  Ningun contenido especificado. La fila no se editará."
+
+#~ msgid "BOSS: Edit Tag"
+#~ msgstr "BOSS: Editar etiqueta Bash"
+
+#~ msgid "BOSS: Edit Dirty Info"
+#~ msgstr "BOSS: Editar informacion de ediciones sucias"
+
+#~ msgid "Displayed Name:"
+#~ msgstr "Nombre Mostrada:"
+
+#~ msgid "Condition:"
+#~ msgstr "Condición:"
+
+#~ msgid "Add Content"
+#~ msgstr "Añadir contenido:"
+
+#~ msgid "Edit Content"
+#~ msgstr "Editar contenido:"
+
+#~ msgid "String"
+#~ msgstr "Cadena"
+
+#~ msgid "Type:"
+#~ msgstr "Tipo:"
+
+#~ msgid "Language:"
+#~ msgstr "Idioma:"
+
+#~ msgid "Content:"
+#~ msgstr "Contenido:"
+
+#~ msgid "Error: No content row selected."
+#~ msgstr "Error: No fila de contenido seleccionado."
+
+#~ msgid "Add/Remove:"
+#~ msgstr "Agregar o Quitar:"
+
+#~ msgid "ITM Count:"
+#~ msgstr "La enumeración de ITM:"
+
+#~ msgid "UDR Count:"
+#~ msgstr "La enumeración de UDR:"
+
+#~ msgid "Deleted Navmesh Count:"
+#~ msgstr "Enumeración Navmesh eliminado:"
+
+#~ msgid "Cleaning Utility (required):"
+#~ msgstr "Utilidad de limpieza (requerido):"
+
+#~ msgid "Masterlist update failed. Details: %1%"
+#~ msgstr "Falló actualización del masterlist. Detalles: %1%"
+
+#~ msgid "Masterlist parsing failed. Details: %1%"
+#~ msgstr "Falla en la lectura del archivo de reglas 'master'. Detalles: %1%"
+
+#~ msgid "Unknown"
+#~ msgstr "Desconocido"
+
+#~ msgid "Error: BOSS is already running. This instance will now quit."
+#~ msgstr ""
+#~ "Error: La interfaz gráfica de usuario de BOSS ya se está ejecutando. Esta "
+#~ "instancia ahora se cerrará."
+
+#~ msgid "Error: Could not apply translation."
+#~ msgstr "Error: No se pudo aplicar la traducción."
+
+#~ msgid "&Sort Plugins"
+#~ msgstr "&Ordenar Plugins"
+
+#~ msgid "&File"
+#~ msgstr "&Archivo"
+
+#~ msgid "&Edit"
+#~ msgstr "&Editar"
+
+#~ msgid "&Help"
+#~ msgstr "&Ayuda"
+
+#~ msgid "BOSS: Working..."
+#~ msgstr "BOSS: Trabajando..."
+
+#~ msgid "BOSS working..."
+#~ msgstr "BOSS trabajando..."
+
+#~ msgid "Error: %1%"
+#~ msgstr "Error: %1%"
+
+#, fuzzy
+#~ msgid "BOSS: Warning"
+#~ msgstr "BOSS: Trabajando..."
+
+#~ msgid "BOSS: Settings"
+#~ msgstr "BOSS: Configuracion"
+
+#~ msgid "Error: \"%1%\" cannot be found."
+#~ msgstr "Error: \"%1%\" no se puede encontrar."
+
+#~ msgid "Error: Cannot load \"%1%\" before \"%2%\"."
+#~ msgstr "Error: Ordenar %1% antes de %2%"
+
+#~ msgid "Debug Verbosity:"
+#~ msgstr "Nivel de detalle de la salida de depuración:"
+
+#~ msgid "Note:"
+#~ msgstr "Nota:"
+
+#~ msgid "Bash Tag Suggestion(s):"
+#~ msgstr "Bash Sugerencia de Tag(s):"
+
+#~ msgid "Warning:"
+#~ msgstr "Adverten:"
+
+#~ msgid "Error:"
+#~ msgstr "Errores:"
+
+#~ msgid "Summary"
+#~ msgstr "Resumen"
+
+#~ msgid "Details"
+#~ msgstr "Detalles"
+
+#~ msgid "BOSS Version"
+#~ msgstr "BOSS Version"
+
+#~ msgid "No change in details since last run."
+#~ msgstr "Ningún cambio desde la última ejecución."
+
+#~ msgid "Version:"
+#~ msgstr "Version:"
+
+#~ msgid ""
+#~ "The BOSS Report requires Javascript to be enabled in order to function."
+#~ msgstr ""
+#~ "El reportar de BOSS requiere que Javascript esté habilitado para "
+#~ "funcionar."
+
+#~ msgid "Hide Bash Tag Suggestions"
+#~ msgstr "Ocultar Sugerencias Bash Tag(s)"
+
+#~ msgid "%1% of %2% plugins hidden."
+#~ msgstr "%1% de %2% los plugins ocultos."
+
+#~ msgid "%1% of %2% messages hidden."
+#~ msgstr "%1% de %2% los mensajes ocultos."
