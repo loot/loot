@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BOSS v3.0.0\n"
+"Project-Id-Version: LOOT v.0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-05-28 19:50+0100\n"
-"PO-Revision-Date: 2021-05-29 16:35-0500\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2021-05-30 05:53-0500\n"
+"Last-Translator: Ale <alejandroamaro791@gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -281,7 +281,7 @@ msgstr "Actualizando y analizando la masterlist..."
 
 #: src/gui/html/js/events.ts:338
 msgid "Masterlist updated to revision %s."
-msgstr "Masterlist actualizada a la versión %2."
+msgstr "Masterlist actualizada a la versión %s."
 
 #: src/gui/html/js/events.ts:345
 msgid "No masterlist update was necessary."
@@ -377,11 +377,11 @@ msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 "¿Está seguro de que quiere borrar todos los metadatos agregados por el "
-"usuario?"
+"usuario de \"%s\"?"
 
 #: src/gui/html/js/events.ts:1133
 msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Todos los metadatos del usuario han sido eliminados."
+msgstr "Todos los metadatos del usuario  de \"%s\" han sido eliminados."
 
 #. An abbreviation of Not Applicable.
 #: src/gui/html/js/game.ts:141
@@ -788,7 +788,7 @@ msgstr "Revisión de la MasterList"
 
 #: src/gui/html/js/translateStaticText.ts:598
 msgid "Masterlist Date"
-msgstr "Fecha de la masterlist"
+msgstr "Fecha de la MasterList"
 
 #: src/gui/html/js/translateStaticText.ts:601
 msgid "Warnings"
@@ -848,11 +848,11 @@ msgstr "Activar el registro para la depuración"
 
 #: src/gui/html/js/translateStaticText.ts:658
 msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr "La información se registra en el archivo LOOTDebugLot.txt."
+msgstr "La información se registra en el archivo LOOTDebugLog.txt."
 
 #: src/gui/html/js/translateStaticText.ts:664
 msgid "Update masterlist before sorting"
-msgstr "Actualizar la masterlist antes de ordenar"
+msgstr "Actualice la masterlist antes de ordenar"
 
 #: src/gui/html/js/translateStaticText.ts:668
 msgid "Check for LOOT updates on startup"
