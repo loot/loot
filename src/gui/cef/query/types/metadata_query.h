@@ -271,8 +271,11 @@ private:
 
   void addSuffixIfModified(MasterlistInfo& info) {
     if (info.is_modified) {
-      info.revision_date += " " + boost::locale::translate("(edited)").str();
-      info.revision_id += " " + boost::locale::translate("(edited)").str();
+      auto suffix = " " +
+        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
+        boost::locale::translate("(edited)").str();
+      info.revision_date += suffix;
+      info.revision_id += suffix;
     }
   }
 

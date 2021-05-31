@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-05-28 19:50+0100\n"
+"POT-Creation-Date: 2021-05-31 21:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgstr ""
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:274
-#: src/gui/cef/query/types/metadata_query.h:275
+#. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
+#: src/gui/cef/query/types/metadata_query.h:276
 msgid "(edited)"
 msgstr ""
 
