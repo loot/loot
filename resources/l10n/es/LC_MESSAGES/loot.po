@@ -103,7 +103,7 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Este plugin es un light master (*.esl) y requiere del plugin\"%1%\" que no "
+"Este plugin es un light master (*.esl) y requiere del plugin \"%1%\" que no "
 "está marcado como master. Esto puede causar problemas en el juego, y el "
 "ordenamiento va a fallar siempre que este plugin esté instalado."
 
@@ -140,11 +140,11 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:512
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Interacción cíclica detectada entre los plugins \"%1%\" y \"%2%\":%3%"
+msgstr "Interacción cíclica detectada entre los plugins \"%1%\" y \"%2%\": %3%"
 
 #: src/gui/state/game/game.cpp:524
 msgid "The group \"%1%\" does not exist."
-msgstr "EL grupo %1% no existe."
+msgstr "EL grupo \"%1%\" no existe."
 
 #: src/gui/state/game/game.cpp:560
 msgid "You have not sorted your load order this session."
@@ -241,7 +241,7 @@ msgstr "%1% encontró %2%."
 
 #: src/gui/state/game/helpers.cpp:222
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT ha detectado que %1% es inválido y lo está ignorando."
+msgstr "LOOT ha detectado que \"%1%\" es inválido y lo está ignorando."
 
 #: src/gui/html/elements/editable-table.ts:438
 msgid "Add New Row"
