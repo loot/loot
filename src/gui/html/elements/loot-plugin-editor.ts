@@ -426,9 +426,10 @@ export default class LootPluginEditor extends PolymerElement {
 
     /* First validate table inputs. */
     let isValid = true;
-    const tables = evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
-      'editable-table'
-    );
+    const tables =
+      evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
+        'editable-table'
+      );
 
     for (const table of tables) {
       if (!(table instanceof EditableTable)) {

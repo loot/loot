@@ -287,9 +287,8 @@ export function onChangeGame(evt: Event): void {
 
       /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
-      const generalMessages = getElementById('summary').getElementsByTagName(
-        'ul'
-      )[0];
+      const generalMessages =
+        getElementById('summary').getElementsByTagName('ul')[0];
       while (generalMessages.firstElementChild) {
         generalMessages.removeChild(generalMessages.firstElementChild);
       }
@@ -566,8 +565,8 @@ export function onCopyContent(): void {
   if (window.loot.game) {
     content = window.loot.game.getContent();
   } else {
-    const message = getElementById('summary').getElementsByTagName('ul')[0]
-      .firstElementChild;
+    const message =
+      getElementById('summary').getElementsByTagName('ul')[0].firstElementChild;
 
     const { language = 'en' } = window.loot.settings || {};
 
@@ -853,17 +852,16 @@ export function onSettingsAddGame(/* evt: Event */): void {
 }
 
 export function onSettingsDeleteGame(/* evt: Event */): void {
-  const selectedGameFolder = (getElementById(
-    'settingsGameFolder'
-  ) as PaperInputElement).value;
+  const selectedGameFolder = (
+    getElementById('settingsGameFolder') as PaperInputElement
+  ).value;
 
   if (typeof selectedGameFolder !== 'string') {
     return;
   }
 
-  const settingsRecorded = window.loot.unappliedGamesSettings.has(
-    selectedGameFolder
-  );
+  const settingsRecorded =
+    window.loot.unappliedGamesSettings.has(selectedGameFolder);
   if (settingsRecorded) {
     // Forget the game settings.
     window.loot.unappliedGamesSettings.delete(selectedGameFolder);
@@ -1006,9 +1004,8 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
   evt.target.data.isEditorOpen = true;
 
   /* Set up drag 'n' drop event handlers. */
-  const elements = getElementById('cardsNav').getElementsByTagName(
-    'loot-plugin-item'
-  );
+  const elements =
+    getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
 
   for (const element of elements) {
     const item = element as LootPluginItem;
@@ -1066,9 +1063,8 @@ export function onEditorClose(evt: Event): void {
       (getElementById('cardsNav') as IronListElement).notifyResize();
 
       /* Remove drag 'n' drop event handlers. */
-      const elements = getElementById('cardsNav').getElementsByTagName(
-        'loot-plugin-item'
-      );
+      const elements =
+        getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
 
       for (const element of elements) {
         const item = element as LootPluginItem;
