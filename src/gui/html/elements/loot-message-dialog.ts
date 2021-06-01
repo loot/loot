@@ -104,10 +104,8 @@ export default class LootMessageDialog extends PolymerElement {
         'Expected loot-message-dialog element to have a shadow root'
       );
     }
-    getShadowElementById(
-      this.shadowRoot,
-      'dismiss'
-    ).hidden = !isDialogDismissable;
+    getShadowElementById(this.shadowRoot, 'dismiss').hidden =
+      !isDialogDismissable;
   }
 
   public static onClose(evt: Event): void {
