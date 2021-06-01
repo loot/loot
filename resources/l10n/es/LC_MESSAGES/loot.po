@@ -1,17 +1,16 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.16.1\n"
-"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-05-28 19:50+0100\n"
-"PO-Revision-Date: 2021-05-30 05:53-0500\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
 "Last-Translator: Ale <alejandroamaro791@gmail.com>\n"
 "Language-Team: \n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "X-Generator: Poedit 2.4.3\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/gui/cef/query/query.h:49
 msgid ""
@@ -58,7 +57,7 @@ msgstr "Desconocido: Falta el repositorio Git"
 #: src/gui/cef/query/types/metadata_query.h:274
 #: src/gui/cef/query/types/metadata_query.h:275
 msgid "(edited)"
-msgstr "(editado)"
+msgstr "(editada)"
 
 #: src/gui/cef/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
@@ -144,7 +143,7 @@ msgstr "Interacción cíclica detectada entre los plugins \"%1%\" y \"%2%\": %3%
 
 #: src/gui/state/game/game.cpp:524
 msgid "The group \"%1%\" does not exist."
-msgstr "EL grupo \"%1%\" no existe."
+msgstr "El grupo \"%1%\" no existe."
 
 #: src/gui/state/game/game.cpp:560
 msgid "You have not sorted your load order this session."
@@ -168,7 +167,7 @@ msgid ""
 msgstr ""
 "La última versión de la lista madre (masterlist) contiene un error de "
 "sintaxis, LOOT está usando la versión más reciente válida en su lugar. Los "
-"errores de sintaxis son poco graves y son corregidos en pocas horas."
+"errores de sintaxis no son graves y son corregidos en pocas horas."
 
 #: src/gui/state/game/game.cpp:657
 msgid ""
@@ -194,8 +193,8 @@ msgstr ""
 "la actualización de LOOT cambió el soporte a la sintaxis de los metadatos. "
 "Los metadatos del usuario tendrán que ser actualizados manualmente.\n"
 "\n"
-" Para hacerlo, seleccione Abrir la ubicación del log de depuración en el "
-"menú principal de LOOT para abrir la carpeta de datos, luego abra el archivo "
+"Para hacerlo, seleccione Abrir la ubicación del log de depuración en el menú "
+"principal de LOOT para abrir la carpeta de datos, luego abra el archivo "
 "userlist.yaml en la carpeta del juego en cuestión. Puede entonces proceder a "
 "editar los metadatos teniendo como referencia la documentación, la cual se "
 "encuentra disponible a través del menú principal de LOOT.\n"
@@ -381,7 +380,7 @@ msgstr ""
 
 #: src/gui/html/js/events.ts:1133
 msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Todos los metadatos del usuario  de \"%s\" han sido eliminados."
+msgstr "Todos los metadatos del usuario de \"%s\" han sido eliminados."
 
 #. An abbreviation of Not Applicable.
 #: src/gui/html/js/game.ts:141
@@ -744,7 +743,6 @@ msgstr "Ocultar etiquetas de Bash"
 
 #: src/gui/html/js/translateStaticText.ts:563
 #, fuzzy
-#| msgid "Hide Notes"
 msgid "Hide notes"
 msgstr "Ocultar Notas"
 
@@ -781,14 +779,12 @@ msgid "General Information"
 msgstr "Información general"
 
 #: src/gui/html/js/translateStaticText.ts:597
-#, fuzzy
-#| msgid "Masterlist revision"
 msgid "Masterlist Revision"
-msgstr "Revisión de la MasterList"
+msgstr "Revisión de la Masterlist"
 
 #: src/gui/html/js/translateStaticText.ts:598
 msgid "Masterlist Date"
-msgstr "Fecha de la MasterList"
+msgstr "Fecha de la Masterlist"
 
 #: src/gui/html/js/translateStaticText.ts:601
 msgid "Warnings"
@@ -1002,7 +998,7 @@ msgid ""
 msgstr ""
 "Optimización de la lista de carga para Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
-"3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+"Fallout 3, Fallout: New Vegas, Fallout 4 y Fallout 4 VR."
 
 #~ msgid "Invalid game ID supplied."
 #~ msgstr "ID del juego suministra incorrecto."
