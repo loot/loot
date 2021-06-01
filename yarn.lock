@@ -1839,10 +1839,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/cytoscape@^3.14.7":
-  version "3.14.14"
-  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.14.tgz#3380da350873d0bd2ab9a413686324efc89af936"
-  integrity sha512-aW3NzsFfbw1LmPdutaH9tT5ZEuZ9+xqqK4NaH/VyYJZAG5g7SQtRuqNMGwFLUi0uxXDrjn4bJnAsn2Z3RHcI9A==
+"@types/cytoscape@^3.14.15":
+  version "3.14.15"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.15.tgz#ce3fc1b494f44d6bccb93a099eb005553fc2a14e"
+  integrity sha512-gl4fmjtiV027bgKyAkPPksa2XVCWfwZ3TOaEejeQQ6cmtdrKqrr13m8zpOYkcIYtRqzA4AT8iUzn7P4/p4sUkA==
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"
