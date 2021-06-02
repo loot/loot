@@ -129,12 +129,18 @@ ELSE ()
     set(CEF_LIB libcef${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
 
+
+IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(CEF_BUILD_COMMAND, "${CMAKE_COMMAND} --build . --target libcef_dll_wrapper --config $(CONFIGURATION)")
+ELSE ()
+    set(CEF_BUILD_COMMAND, "${CMAKE_COMMAND} --build . --target libcef_dll_wrapper")
+ENDIF()
 ExternalProject_Add(cef
                     PREFIX "external"
                     URL ${CEF_URL}
                     URL_HASH SHA1=${CEF_URL_HASH}
                     CMAKE_ARGS -DUSE_SANDBOX=OFF
-                    BUILD_COMMAND ${CMAKE_COMMAND} --build . --target libcef_dll_wrapper --config $(CONFIGURATION)
+                    BUILD_COMMAND ${CEF_BUILD_COMMAND}
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(cef SOURCE_DIR BINARY_DIR)
 set(CEF_INCLUDE_DIRS "${SOURCE_DIR}")
