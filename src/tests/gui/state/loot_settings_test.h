@@ -183,7 +183,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             std::nullopt}), actualLanguages[12]);
   EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
             std::nullopt}), actualLanguages[13]);
-  EXPECT_EQ(LootSettings::Language({"uk_UK", "Ukrainian",
+  EXPECT_EQ(LootSettings::Language({"uk_UA", "Ukrainian",
             std::nullopt}), actualLanguages[14]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
             actualLanguages[15]);
