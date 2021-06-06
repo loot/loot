@@ -74,11 +74,11 @@ Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 #ifdef SwedishExists
 Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
 #endif
+Name: "uk_UA"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 #ifdef SimplifiedChineseExists
 Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 #endif
