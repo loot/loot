@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-06-01 20:35+0100\n"
-"PO-Revision-Date: 2021-06-06 17:17+0300\n"
+"PO-Revision-Date: 2021-06-06 17:21+0300\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -68,7 +68,7 @@ msgstr "Сортировка порядка загрузки..."
 #: src/gui/state/loot_state.cpp:106
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
-"Ошибка: --auto-sort (автосортировка) прошла, но --game параметр не был "
+"Ошибка: --auto-sort (автосортировка) прошла, но параметр --game не был "
 "указан."
 
 #: src/gui/state/loot_state.cpp:129
