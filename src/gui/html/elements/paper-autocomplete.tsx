@@ -29,6 +29,7 @@ function renderSuggestion(suggestion: string): JSX.Element {
 
 interface AutocompleteProps {
   source: string[];
+  errorMessage: string;
 }
 
 interface AutocompleteState {
@@ -130,7 +131,7 @@ class Autocomplete extends React.Component<
           <input required {...inputProps} />
         </iron-input>
         <paper-input-error slot="add-on">
-          A value is required.
+          {this.props.errorMessage}
         </paper-input-error>
       </paper-input-container>
     );
@@ -181,8 +182,14 @@ export default class PaperAutocomplete extends HTMLElement {
     const sourceAttribute = this.getAttribute('source') || '[]';
     const suggestionsSource = JSON.parse(sourceAttribute);
 
+    const errorMessage = this.getAttribute('error-message') || '';
+
     ReactDOM.render(
-      <Autocomplete ref={this.autocomplete} source={suggestionsSource} />,
+      <Autocomplete
+        ref={this.autocomplete}
+        source={suggestionsSource}
+        errorMessage={errorMessage}
+      />,
       mountPoint
     );
   }
