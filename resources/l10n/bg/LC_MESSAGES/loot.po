@@ -901,7 +901,7 @@ msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"Изглежда това е първото стартиране на LOOT %s. Ето някои съвети, които ще са "
+"Изглежда това е първото стартиране на LOOT в%s. Ето някои съвети, които ще са "
 "Ви от полза."
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
