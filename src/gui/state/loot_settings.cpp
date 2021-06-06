@@ -219,6 +219,7 @@ LootSettings::LootSettings() :
         Language({"pt_PT", "Português de Portugal", std::nullopt}),
         Language({"ru", "Русский", std::nullopt}),
         Language({"sv", "Svenska", std::nullopt}),
+        Language({"uk_UA", "Українська", std::nullopt}),
         Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
       }),
     autoSort_(false),
