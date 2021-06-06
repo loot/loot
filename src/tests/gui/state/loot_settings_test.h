@@ -154,7 +154,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[5].RepoBranch());
 
   auto actualLanguages = settings_.getLanguages();
-  EXPECT_EQ(17, actualLanguages.size());
+  EXPECT_EQ(18, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
             actualLanguages[0]);
   EXPECT_EQ(LootSettings::Language({"bg", "Български", std::nullopt}),
@@ -183,12 +183,14 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             std::nullopt}), actualLanguages[12]);
   EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
             std::nullopt}), actualLanguages[13]);
+  EXPECT_EQ(LootSettings::Language({"uk_UK", "Ukrainian",
+            std::nullopt}), actualLanguages[14]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
-            actualLanguages[14]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[15]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[16]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+            actualLanguages[17]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
