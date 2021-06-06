@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-06-06 16:00+0100\n"
+"POT-Creation-Date: 2021-06-06 16:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -377,7 +377,7 @@ msgid "Active Plugin"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:74
-#: src/gui/html/js/translateStaticText.ts:568
+#: src/gui/html/js/translateStaticText.ts:570
 msgid "Master File"
 msgstr ""
 
@@ -482,7 +482,7 @@ msgid "Content"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:170
-#: src/gui/html/js/translateStaticText.ts:517
+#: src/gui/html/js/translateStaticText.ts:519
 msgid "Language"
 msgstr ""
 
@@ -521,7 +521,7 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:198
-#: src/gui/html/js/translateStaticText.ts:549
+#: src/gui/html/js/translateStaticText.ts:551
 msgid "Name"
 msgstr ""
 
@@ -531,8 +531,8 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:203
 #: src/gui/html/js/translateStaticText.ts:345
-#: src/gui/html/js/translateStaticText.ts:605
-#: src/gui/html/js/translateStaticText.ts:617
+#: src/gui/html/js/translateStaticText.ts:607
+#: src/gui/html/js/translateStaticText.ts:619
 msgid "Cancel"
 msgstr ""
 
@@ -575,7 +575,7 @@ msgid "Remove"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:265
-#: src/gui/html/js/translateStaticText.ts:545
+#: src/gui/html/js/translateStaticText.ts:547
 msgid "A name is required."
 msgstr ""
 
@@ -612,8 +612,8 @@ msgid "Update Masterlist"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:344
-#: src/gui/html/js/translateStaticText.ts:602
-#: src/gui/html/js/translateStaticText.ts:615
+#: src/gui/html/js/translateStaticText.ts:604
+#: src/gui/html/js/translateStaticText.ts:617
 msgid "Apply"
 msgstr ""
 
@@ -656,7 +656,7 @@ msgid "About"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:371
-#: src/gui/html/js/translateStaticText.ts:505
+#: src/gui/html/js/translateStaticText.ts:507
 msgid "Settings"
 msgstr ""
 
@@ -742,134 +742,136 @@ msgstr ""
 msgid "Masterlist Date"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:489
+#: src/gui/html/js/translateStaticText.ts:490
+#. The number of warning messages present. This text appears in the General Information card.
 msgid "Warnings"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:491
+#: src/gui/html/js/translateStaticText.ts:493
+#. The number of error messages present. This text appears in the General Information card.
 msgid "Errors"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:493
+#: src/gui/html/js/translateStaticText.ts:495
 msgid "Total Messages"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:495
+#: src/gui/html/js/translateStaticText.ts:497
 msgid "Active Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:497
+#: src/gui/html/js/translateStaticText.ts:499
 msgid "Dirty Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:499
+#: src/gui/html/js/translateStaticText.ts:501
 msgid "Total Plugins"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:507
+#: src/gui/html/js/translateStaticText.ts:509
 msgid "General"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:511
+#: src/gui/html/js/translateStaticText.ts:513
 msgid "Default Game"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:513
+#: src/gui/html/js/translateStaticText.ts:515
 msgid "Autodetect"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:518
+#: src/gui/html/js/translateStaticText.ts:520
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:522
+#: src/gui/html/js/translateStaticText.ts:524
 msgid "Theme"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:523
+#: src/gui/html/js/translateStaticText.ts:525
 msgid "Theme changes will be applied after LOOT is restarted."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:527
+#: src/gui/html/js/translateStaticText.ts:529
 msgid "default"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:532
+#: src/gui/html/js/translateStaticText.ts:534
 msgid "Enable debug logging"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:533
+#: src/gui/html/js/translateStaticText.ts:535
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:538
+#: src/gui/html/js/translateStaticText.ts:540
 msgid "Update masterlist before sorting"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:541
+#: src/gui/html/js/translateStaticText.ts:543
 msgid "Check for LOOT updates on startup"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:554
+#: src/gui/html/js/translateStaticText.ts:556
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:559
+#: src/gui/html/js/translateStaticText.ts:561
 msgid "A folder is required."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:563
+#: src/gui/html/js/translateStaticText.ts:565
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:573
+#: src/gui/html/js/translateStaticText.ts:575
 msgid "Masterlist Repository URL"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:578
+#: src/gui/html/js/translateStaticText.ts:580
 msgid "Masterlist Repository Branch"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:583
+#: src/gui/html/js/translateStaticText.ts:585
 msgid "Install Path"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:588
+#: src/gui/html/js/translateStaticText.ts:590
 msgid "Install Path Registry Key"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:593
+#: src/gui/html/js/translateStaticText.ts:595
 msgid "Local Data Path"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:596
+#: src/gui/html/js/translateStaticText.ts:598
 msgid "Add new game"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:598
+#: src/gui/html/js/translateStaticText.ts:600
 msgid "Delete game"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:612
+#: src/gui/html/js/translateStaticText.ts:614
 msgid "Groups Editor"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:623
+#: src/gui/html/js/translateStaticText.ts:625
 msgid "First-Time Tips"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:626
+#: src/gui/html/js/translateStaticText.ts:628
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:633
+#: src/gui/html/js/translateStaticText.ts:635
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:637
+#: src/gui/html/js/translateStaticText.ts:639
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions "
@@ -877,58 +879,58 @@ msgid ""
 "remove\">removal</span>."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:640
+#: src/gui/html/js/translateStaticText.ts:642
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:643
+#: src/gui/html/js/translateStaticText.ts:645
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:646
+#: src/gui/html/js/translateStaticText.ts:648
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:649
+#: src/gui/html/js/translateStaticText.ts:651
 msgid ""
 "Some features are disabled while the metadata editor is open, or while "
 "there is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:652
+#: src/gui/html/js/translateStaticText.ts:654
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's "
 "documentation can be accessed through the main menu."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:656
-#: src/gui/html/js/translateStaticText.ts:678
+#: src/gui/html/js/translateStaticText.ts:658
+#: src/gui/html/js/translateStaticText.ts:680
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
 "using %s."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:662
+#: src/gui/html/js/translateStaticText.ts:664
 msgid "OK"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:667
+#: src/gui/html/js/translateStaticText.ts:669
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:669
+#: src/gui/html/js/translateStaticText.ts:671
 msgid "Version %s (build %s)"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:674
+#: src/gui/html/js/translateStaticText.ts:676
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "

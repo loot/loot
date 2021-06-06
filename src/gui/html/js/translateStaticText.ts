@@ -486,8 +486,10 @@ function translateSummaryCard(l10n: Translator): void {
   getPreviousElementSiblingById('masterlistDate').textContent =
     l10n.translate('Masterlist Date');
   getPreviousElementSiblingById('totalWarningNo').textContent =
+    // translators: The number of warning messages present. This text appears in the General Information card.
     l10n.translate('Warnings');
   getPreviousElementSiblingById('totalErrorNo').textContent =
+    // translators: The number of error messages present. This text appears in the General Information card.
     l10n.translate('Errors');
   getPreviousElementSiblingById('totalMessageNo').textContent =
     l10n.translate('Total Messages');
