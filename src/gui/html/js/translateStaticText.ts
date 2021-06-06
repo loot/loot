@@ -605,6 +605,18 @@ function translateSettingsDialog(l10n: Translator): void {
   )[0].textContent = l10n.translate('Cancel');
 }
 
+function translateGroupsEditorDialog(l10n: Translator): void {
+  const dialog = getElementById('groupsEditorDialog');
+
+  dialog.getElementsByTagName('h2')[0].textContent =
+    l10n.translate('Groups Editor');
+
+  dialog.getElementsByClassName('accept')[0].textContent =
+    l10n.translate('Apply');
+  dialog.getElementsByClassName('cancel')[0].textContent =
+    l10n.translate('Cancel');
+}
+
 function translateFirstRunDialog(l10n: Translator, version: LootVersion): void {
   /* First-run dialog */
   const firstRun = getElementById('firstRun');
@@ -690,6 +702,7 @@ export default function translateStaticText(
 
   translateSummaryCard(l10n);
   translateSettingsDialog(l10n);
+  translateGroupsEditorDialog(l10n);
   translateFirstRunDialog(l10n, version);
   translateAboutDialog(l10n, version);
 }

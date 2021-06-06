@@ -423,6 +423,7 @@ export default class LootGroupsEditor extends PolymerElement {
       );
     }
 
+    this.$.groupsHelpText.textContent = l10n.translate('View Documentation');
     this.$.newGroupInput.label = l10n.translate('Add a new group');
     this.$.newGroupInput.placeholder = l10n.translate('Group name');
     this.messages.groupAlreadyExists = l10n.translate('Group already exists!');
