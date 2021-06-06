@@ -74,6 +74,7 @@ Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "uk_UK"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 #ifdef SwedishExists
 Name: "sv"; MessagesFile: "compiler:Languages\Swedish.isl"
@@ -147,6 +148,8 @@ Source: "resources\l10n\pt_BR\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\pt_BR\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\pt_PT\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\pt_PT\LC_MESSAGES"; Flags: ignoreversion
+Source: "resources\l10n\uk_UK\LC_MESSAGES\loot.mo"; \
+DestDir: "{app}\resources\l10n\uk_UK\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\ru\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\ru\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\sv\LC_MESSAGES\loot.mo"; \
@@ -213,6 +216,7 @@ ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 �
 pl.DeleteUserFiles=Czy chcesz usunąć ustawienia i metadane użytkownika?
 pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
 pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
+uk_UK.DeleteUserFiles=Чи ви хочете видалити ваші налаштування та метадані користувача?
 ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
 ;#ifdef SwedishExists
 ;sv.DeleteUserFiles=
