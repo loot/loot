@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-06-01 20:35+0100\n"
-"PO-Revision-Date: 2021-06-06 19:47+0300\n"
+"POT-Creation-Date: 2021-06-06 16:00+0100\n"
+"PO-Revision-Date: 2021-06-07 18:21+0300\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -251,22 +251,27 @@ msgid "Add New Row"
 msgstr "Добавить новую строку"
 
 #: src/gui/html/elements/loot-groups-editor.ts:426
+#: src/gui/html/js/translateStaticText.ts:369
+msgid "View Documentation"
+msgstr "Смотреть документацию"
+
+#: src/gui/html/elements/loot-groups-editor.ts:427
 msgid "Add a new group"
 msgstr "Добавить новую группу"
 
-#: src/gui/html/elements/loot-groups-editor.ts:427
+#: src/gui/html/elements/loot-groups-editor.ts:428
 msgid "Group name"
 msgstr "Имя группы"
 
-#: src/gui/html/elements/loot-groups-editor.ts:428
+#: src/gui/html/elements/loot-groups-editor.ts:429
 msgid "Group already exists!"
 msgstr "Группа уже существует!"
 
-#: src/gui/html/elements/loot-groups-editor.ts:429
+#: src/gui/html/elements/loot-groups-editor.ts:430
 msgid "No plugins are in this group."
 msgstr "Нет плагинов в этой группе."
 
-#: src/gui/html/elements/loot-groups-editor.ts:439
+#: src/gui/html/elements/loot-groups-editor.ts:440
 msgid "Plugins in %s"
 msgstr "Плагины в %s"
 
@@ -578,6 +583,7 @@ msgstr "Сохранить метаданные"
 #: src/gui/html/js/translateStaticText.ts:203
 #: src/gui/html/js/translateStaticText.ts:345
 #: src/gui/html/js/translateStaticText.ts:605
+#: src/gui/html/js/translateStaticText.ts:617
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -658,6 +664,7 @@ msgstr "Обновить мастерлист"
 
 #: src/gui/html/js/translateStaticText.ts:344
 #: src/gui/html/js/translateStaticText.ts:602
+#: src/gui/html/js/translateStaticText.ts:615
 msgid "Apply"
 msgstr "Принять"
 
@@ -694,10 +701,6 @@ msgstr "Скопировать содержимое"
 #: src/gui/html/js/translateStaticText.ts:367
 msgid "Refresh Content"
 msgstr "Обновить содержимое"
-
-#: src/gui/html/js/translateStaticText.ts:369
-msgid "View Documentation"
-msgstr "Смотреть документацию"
 
 #: src/gui/html/js/translateStaticText.ts:370
 msgid "About"
@@ -902,11 +905,15 @@ msgstr "Добавить новую игру"
 msgid "Delete game"
 msgstr "Удалить игру"
 
-#: src/gui/html/js/translateStaticText.ts:611
+#: src/gui/html/js/translateStaticText.ts:612
+msgid "Groups Editor"
+msgstr "Редактор групп"
+
+#: src/gui/html/js/translateStaticText.ts:623
 msgid "First-Time Tips"
 msgstr "Советы для новичков"
 
-#: src/gui/html/js/translateStaticText.ts:614
+#: src/gui/html/js/translateStaticText.ts:626
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
@@ -915,11 +922,11 @@ msgstr ""
 "которые помогут вам начать работу с интерфейсом."
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
-#: src/gui/html/js/translateStaticText.ts:621
+#: src/gui/html/js/translateStaticText.ts:633
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "Нажмите на значок %(menu_icon)s для открытия меню."
 
-#: src/gui/html/js/translateStaticText.ts:625
+#: src/gui/html/js/translateStaticText.ts:637
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
@@ -931,7 +938,7 @@ msgstr ""
 "Bash-теги для <span class=\"tag add\"> добавления </span> и <span class="
 "\"tag remove\"> удаления </span>."
 
-#: src/gui/html/js/translateStaticText.ts:628
+#: src/gui/html/js/translateStaticText.ts:640
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -939,7 +946,7 @@ msgstr ""
 "CRC отображаются только после загрузки плагинов, фильтрации конфликтов или "
 "сортировки."
 
-#: src/gui/html/js/translateStaticText.ts:631
+#: src/gui/html/js/translateStaticText.ts:643
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
@@ -947,7 +954,7 @@ msgstr ""
 "Дважды кликните по плагину на боковой панели для быстрого открытия в "
 "редакторе метаданных."
 
-#: src/gui/html/js/translateStaticText.ts:634
+#: src/gui/html/js/translateStaticText.ts:646
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -956,7 +963,7 @@ msgstr ""
 "редактор метаданных, в поля таблицы \"Грузить после\", \"Требования\" и "
 "\"Несовместимости\"."
 
-#: src/gui/html/js/translateStaticText.ts:637
+#: src/gui/html/js/translateStaticText.ts:649
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -964,7 +971,7 @@ msgstr ""
 "Некоторые функции отключены, пока открыт редактор метаданных или пока "
 "отсортированный порядок загрузки не был применен или отменен."
 
-#: src/gui/html/js/translateStaticText.ts:640
+#: src/gui/html/js/translateStaticText.ts:652
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -974,8 +981,8 @@ msgstr ""
 "назначение какого-то элемента, попробуйте навести на него курсор мышки. В "
 "противном случае документация LOOT всегда доступна через главное меню."
 
-#: src/gui/html/js/translateStaticText.ts:644
-#: src/gui/html/js/translateStaticText.ts:666
+#: src/gui/html/js/translateStaticText.ts:656
+#: src/gui/html/js/translateStaticText.ts:678
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -985,19 +992,19 @@ msgstr ""
 "пожертвования могут быть направлены WrinklyNinja (создатель и основной "
 "разработчик LOOT), через %s."
 
-#: src/gui/html/js/translateStaticText.ts:650
+#: src/gui/html/js/translateStaticText.ts:662
 msgid "OK"
 msgstr "Принять"
 
-#: src/gui/html/js/translateStaticText.ts:655
+#: src/gui/html/js/translateStaticText.ts:667
 msgid "About LOOT"
 msgstr "Про LOOT"
 
-#: src/gui/html/js/translateStaticText.ts:657
+#: src/gui/html/js/translateStaticText.ts:669
 msgid "Version %s (build %s)"
 msgstr "Версия %s (сборка %s)"
 
-#: src/gui/html/js/translateStaticText.ts:662
+#: src/gui/html/js/translateStaticText.ts:674
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
