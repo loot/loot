@@ -24,9 +24,10 @@ In addition, the following are credited with application-related support:
   * Polish: Łukasz Niemczyk, Yoosk
   * Portuguese: ironmagician
   * Portuguese (Brazil): Kassane, zDasF1xer
-  * Russian: Tokc.D.K., Kerber
-  * Spanish: Sharlikran, Artaios, Mr. Robo
+  * Russian: Tokc.D.K., Kerber, IllusiveMan196
+  * Spanish: Sharlikran, Artaios, Mr. Robo, Allen1351 (Ale)
   * Swedish: Mikael Hiort af Ornäs, simoneddeland, ddbb07
+  * Ukrainian: IllusiveMan196
 
 * Testing: Too many to list, thank you all!
 
