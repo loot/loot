@@ -1,7 +1,7 @@
 Contributing To LOOT
 ====================
 
-A general guide to contributing to LOOT may be found on [LOOT's website](https://loot.github.io/docs/contributing/How-To-Contribute). Information more specific to this repository is found here.
+A [general guide](https://loot.github.io/docs/contributing/How-To-Contribute) to contributing to LOOT may be found on LOOT's website. Information more specific to this repository is found here.
 
 ## Repository Branching Structure
 
@@ -56,8 +56,8 @@ If your language's Inno Setup translation is unofficial, also do the following:
 ### Translating the LOOT application
 
 1. Download and install the latest version of [Poedit](https://poedit.net/).
-2. If you are starting a new translation, select `Create new...` on the welcome page or `File -> New from POT/PO file...` and choose the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
-3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Translation -> Update from POT file...` and choose the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
+2. If you are starting a new translation, select `Create new...` on the welcome page or `File -> New from POT/PO file...` and select the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
+3. If you are updating a previous translation, in Poedit, open the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Translation -> Update from POT file...` and select the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation will be missing a translation, and strings that have been changed since the last translation will be highlighted in orange.
 5. Go to `Translation -> Properties... -> Translation Properties -> Project name and version:` and check that it matches the latest version of LOOT. If it doesn't, please update it. Then go to `File -> Preferences -> General -> Information about the translator` and fill the `Name:` field with your name/alias. If you don't mind, you can also fill out the `Email:` field so that we or future translators can contact you if need be.
 6. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
