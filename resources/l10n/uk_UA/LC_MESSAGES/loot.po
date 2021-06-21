@@ -3,10 +3,10 @@ msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-06-06 16:00+0100\n"
-"PO-Revision-Date: 2021-06-07 09:56-0700\n"
+"PO-Revision-Date: 2021-06-21 16:18+0300\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Ukrainian\n"
-"Language: uk_UA\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,12 +36,12 @@ msgstr ""
 
 #: src/gui/cef/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
-msgstr "Обробка, об'єднання та перевірка метаданих..."
+msgstr "Обробка, об'єднання та оцінка метаданих..."
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" містить вираз, який неможливо оцінити. Деталі: %2%"
+msgstr "\"%1%\" містить умову, який неможливо оцінити. Деталі: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
 #: src/gui/cef/query/types/metadata_query.h:256
@@ -113,7 +113,7 @@ msgid ""
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
-"Плагін містить записи, котрі мають FormID за межами допустимих для ESL-"
+"Плагін містить записи, які мають FormID за межами допустимих для ESL-"
 "плагіна. Використання цього плагіна призведе до необоротнього пошкодження "
 "ваших ігрових сейв-файлів."
 
@@ -351,7 +351,7 @@ msgstr "Користувацькі метадані було очищено."
 
 #: src/gui/html/js/events.ts:586
 msgid "LOOT's content has been copied to the clipboard."
-msgstr "Вміст LOOT скопійовано до буферу обміну."
+msgstr "Вміст  LOOT скопійовано до буферу обміну."
 
 #: src/gui/html/js/events.ts:604
 msgid "The load order has been copied to the clipboard."
@@ -417,7 +417,7 @@ msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
-"Автосортування відмінено, так як відображається як мінімум одне повідомлення "
+"Автосортування скасовано, так як відображається як мінімум одне повідомлення "
 "про помилку."
 
 #: src/gui/html/js/translateStaticText.ts:72
@@ -677,7 +677,7 @@ msgstr "Редатувати плагіни"
 
 #: src/gui/html/js/translateStaticText.ts:354
 msgid "Open Debug Log Location"
-msgstr "Відкрити папку з логом налаштування"
+msgstr "Відкрити  папку з логом налаштування"
 
 #: src/gui/html/js/translateStaticText.ts:358
 msgid "Open Groups Editor"
@@ -744,7 +744,7 @@ msgstr "Сховати CRC"
 #. Text of a filter in the sidebar.
 #: src/gui/html/js/translateStaticText.ts:454
 msgid "Hide Bash Tags"
-msgstr "Сховати Bash-теги"
+msgstr "Сховати bash-теги"
 
 #: src/gui/html/js/translateStaticText.ts:455
 msgid "Hide notes"
@@ -928,10 +928,10 @@ msgid ""
 "<span class=\"tag add\">addition</span> and <span class=\"tag remove"
 "\">removal</span>."
 msgstr ""
-"Разом із повідомленнями LOOT відображає <span class=\"version\">номери "
-"версій</span> плагінів, <span class=\"crc\">CRC</span> та рекомендовані Bash-"
-"теги для <span class=\"tag add\">додавання</span>й <span class=\"tag remove"
-"\">видалення</span>."
+"Разом із повідомленнями LOOT відображає <span class=\"version\"> номери "
+"версій </span> плагінів, <span class=\"crc\"> CRC </span> та рекомендовані "
+"Bash-теги для <span class=\"tag add\"> додавання </span>й <span class=\"tag "
+"remove\"> видалення </span>."
 
 #: src/gui/html/js/translateStaticText.ts:640
 msgid ""
@@ -954,9 +954,8 @@ msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Плагіни можуть бути переміщені шляхом перетаскування із бокової панелі у "
-"редактор метаданих у поля таблиці \"Завантажувати після\", \"Вимоги\" та "
-"\"Несумісності\"."
+"Плагіни можна перетягувати і скидати з бічної панелі в таблиці "
+"\"завантажувати після\", \"вимоги\" і \"несумісність\" редактора метаданих."
 
 #: src/gui/html/js/translateStaticText.ts:649
 msgid ""
@@ -964,7 +963,7 @@ msgid ""
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 "Деякі функції відключені поки відкрито редактор метаданих чи поки "
-"відсортований порядок завантаження не було застосовано чи відмінено."
+"відсортований порядок завантаження не було застосовано чи скасовано."
 
 #: src/gui/html/js/translateStaticText.ts:652
 msgid ""
@@ -973,8 +972,8 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 "Більшість елементів інтерфейсу мають підказки. Якщо ви не знаєте призначення "
-"якого-небудь елементу, то спробуйте навести на нього вказівник миші. У "
-"іншому випадку документація LOOT завжди доступна через головне меню."
+"якого-небудь елементу, спробуйте навести на нього вказівник миші. У іншому "
+"випадку документація LOOT завжди доступна через головне меню."
 
 #: src/gui/html/js/translateStaticText.ts:656
 #: src/gui/html/js/translateStaticText.ts:678
@@ -1008,3 +1007,1146 @@ msgstr ""
 "Оптимізація порядку завантаження для Morrowind, Oblivion, Nehrim, Skyrim, "
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 та Fallout 4 VR."
+
+#~ msgid "Do not clean"
+#~ msgstr "Не чистить"
+
+#~ msgid "Light Master File"
+#~ msgstr "Легкий мастерфайл"
+
+#~ msgid "Enable Edits"
+#~ msgstr "Включить правки"
+
+#~ msgid "Priority"
+#~ msgstr "Приоритет"
+
+#~ msgid "Global Priority"
+#~ msgstr "Глобальный приоритет"
+
+#~ msgid ""
+#~ "An error occurred while parsing the masterlist: %1%. This probably "
+#~ "happened because an update to LOOT changed its metadata syntax support. "
+#~ "Try updating your masterlist to resolve the error."
+#~ msgstr ""
+#~ "Во время обработки мастерлиста произошла ошибка: %1%. Возможно это "
+#~ "произошло потому, что в обновлении LOOT изменена поддержка синтаксиса "
+#~ "метаданных. Попробуйте обновить мастерлист, чтобы исправить ошибку."
+
+#~ msgid ""
+#~ "An error occurred while parsing the userlist: %1%. This probably happened "
+#~ "because an update to LOOT changed its metadata syntax support. Your user "
+#~ "metadata will have to be updated manually.\n"
+#~ "\n"
+#~ "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open "
+#~ "its data folder, then open your 'userlist.yaml' file in the relevant game "
+#~ "folder. You can then edit the metadata it contains with reference to the "
+#~ "documentation, which is accessible through LOOT's main menu.\n"
+#~ "\n"
+#~ "You can also seek support on LOOT's forum thread, which is linked to on "
+#~ "[LOOT's website](https://loot.github.io/)."
+#~ msgstr ""
+#~ "Ошибка при обработке пользовательских правил: %1%. Возможно в обновлении "
+#~ "LOOT изменилась поддержка синтаксиса метаданных. Пользовательские правила "
+#~ "нужно обновить вручную.\n"
+#~ "\n"
+#~ "Чтобы это сделать, испольуйте опцию главного меню LOOT 'Открыть "
+#~ "расположение лога отладки', чтобы открыть папку с данными, потом откройте "
+#~ "файл 'userlist.yaml' в папке соответствующей игры. Тогда вы сможете "
+#~ "отредактировать содержащиеся метаданные в соответствии с документацией, "
+#~ "посмотреть которую можно в главном меню LOOT.\n"
+#~ "\n"
+#~ "Также вы можете задать вопросы на форумах, в теме LOOT, ссылки на которые "
+#~ "есть на [сайте LOOT](https://loot.github.io/)."
+
+#~ msgid ""
+#~ "A global message contains a condition that could not be evaluated. "
+#~ "Details: %1%"
+#~ msgstr ""
+#~ "Глобальное сообщение включает выражение, которое не может быть оценено. "
+#~ "Детали: %1%"
+
+#~ msgid "Loading plugin contents..."
+#~ msgstr "Загрузка содержимого плагинов..."
+
+#~ msgid ""
+#~ "An error occurred while trying to clone the remote masterlist repository."
+#~ msgstr "Ошибка при попытке клонировать удаленное хранилище мастерлиста."
+
+#~ msgid ""
+#~ "An error occurred while trying to update the masterlist. This could be "
+#~ "due to a server-side error. Try again in a few minutes."
+#~ msgstr ""
+#~ "Ошибка при попытке обновления мастерлиста. Это может быть из-за ошибка на "
+#~ "стороне сервера. Попробуйте через несколько минут."
+
+#~ msgid "Cannot read \"%1%\". Details: %2%"
+#~ msgstr "Невозможно прочесть \"%1%\". Детали: %2%"
+
+#~ msgid ""
+#~ "An error occurred while trying to read the local masterlist's version. If "
+#~ "this error happens again, try deleting the \".git\" folder in %1%."
+#~ msgstr ""
+#~ "Ошибка при попытке прочитать версию локального мастерлиста. Если эта "
+#~ "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+
+#~ msgid ""
+#~ "An error occurred while trying to access the local masterlist repository. "
+#~ "If this error happens again, try deleting the \".git\" folder in %1%."
+#~ msgstr ""
+#~ "Ошибка при попытке доступа к локальному хранилищу мастерлиста. Если эта "
+#~ "ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+
+#~ msgid ""
+#~ "An error occurred while trying to read information on the updated "
+#~ "masterlist. If this error happens again, try deleting the \".git\" folder "
+#~ "in %1%."
+#~ msgstr ""
+#~ "Ошибка при попытке прочитать информацию об обновлении мастерлиста. Если "
+#~ "эта ошибка происходит повторно, попробуйте удалить папку \".git\" в %1%."
+
+#~ msgid ""
+#~ "Masterlist revision %1%: %2%. The latest masterlist revision contains a "
+#~ "syntax error, LOOT is using the most recent valid revision instead. "
+#~ "Syntax errors are usually minor and fixed within hours."
+#~ msgstr ""
+#~ "Версия мастерлиста %1%: %2%. Последняя версия мастерлиста содержит "
+#~ "синтаксическую ошибку, LOOT использует наиболее новую версию вместо этой. "
+#~ "Синтаксические ошибки обычно небольшие и исправляются в течение "
+#~ "нескольких часов."
+
+#~ msgid "Failed to get %LOCALAPPDATA% path."
+#~ msgstr "Не удалось получить путь %LOCALAPPDATA%."
+
+#~ msgid "None of the supported games were detected."
+#~ msgstr "Не удалось найти поддерживаемые игры."
+
+#~ msgid "Game path could not be detected."
+#~ msgstr "Путь к игре найти не удалось."
+
+#~ msgid "Could not create LOOT folder for game. Details: %1%"
+#~ msgstr "Невозможно создать папку LOOT для игры. Детали: %1%"
+
+#~ msgid "Game path is not initialised."
+#~ msgstr "Путь к игре не инициализирован"
+
+#~ msgid ""
+#~ "libloadorder failed to create a game handle. Details could not be fetched."
+#~ msgstr ""
+#~ "libloadorder не удалось создать дескриптор игры. Детали не могут быть "
+#~ "получены."
+
+#~ msgid "libloadorder failed to create a game handle. Details: %1%"
+#~ msgstr "libloadorder не удалось создать дескриптор игры. Детали: %1%"
+
+#~ msgid ""
+#~ "libloadorder failed to check if a plugin is active. Details could not be "
+#~ "fetched."
+#~ msgstr ""
+#~ "libloadorder не удалось проверить активен ли плагин. Детали не могут быть "
+#~ "извлечены."
+
+#~ msgid "libloadorder failed to check if a plugin is active. Details: %1%"
+#~ msgstr "libloadorder не удалось проверить активен ли плагин. Details: %1%"
+
+#~ msgid ""
+#~ "libloadorder failed to get the load order. Details could not be fetched."
+#~ msgstr ""
+#~ "libloadorder не удалось получить порядок загрузки. Детали не могут быть "
+#~ "извлечены."
+
+#~ msgid "libloadorder failed to get the load order. Details: %1%"
+#~ msgstr "libloadorder не удалось получить порядок загрузки. Детали: %1%"
+
+#~ msgid ""
+#~ "libloadorder failed to set the load order. Details could not be fetched."
+#~ msgstr ""
+#~ "libloadorder не удалось установить порядок загрузки. Детали не могут быть "
+#~ "получены."
+
+#~ msgid "libloadorder failed to set the load order. Details: %1%"
+#~ msgstr "libloadorder не удалось установить порядок загрузки. Детали: %1%"
+
+#~ msgid "Git operation failed. Error: %1%"
+#~ msgstr "Не удалась операция с Git. Ошибка: %1%"
+
+#~ msgid "Unable to open \"%1%\" for CRC calculation."
+#~ msgstr "Не удается открыть \"%1%\" для подсчета CRC."
+
+#~ msgid "Failed to open file in its default application."
+#~ msgstr "Не удалось открыть файл в приложении по умолчанию."
+
+#~ msgid "Invalid file path: %1%"
+#~ msgstr "Неверный путь к файлу: %1%"
+
+#~ msgid "Invalid regex string \"%1%\": %2%"
+#~ msgstr "Неверная строка regex \"%1%\": %2%"
+
+#~ msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
+#~ msgstr ""
+#~ "Не удалось обработать выражеие \"%1%\": ожидалось \"%2%\" на \"%3%\"."
+
+#~ msgid ""
+#~ "Failed to parse condition \"%1%\": only partially matched expected syntax."
+#~ msgstr ""
+#~ "Не удалось обработать выражение \"%1%\": лишь частичное соответствиет "
+#~ "ожидаемому синтаксису."
+
+#~ msgid "Could not create LOOT folder for game. Details:"
+#~ msgstr "Не удалось создать папку LOOT для игры. Детали:"
+
+#~ msgid "libloadorder failed to create a game handle. Details:"
+#~ msgstr "libloadorder не удалось создать дескриптор игры. Детали:"
+
+#~ msgid "libloadorder failed to check if a plugin is active. Details:"
+#~ msgstr "libloadorder не удалось проверить активен ли плагин. Детали:"
+
+#~ msgid "libloadorder failed to get the load order. Details:"
+#~ msgstr "libloadorder не удалось получить порядок загрузки. Детали:"
+
+#~ msgid "libloadorder failed to set the load order. Details:"
+#~ msgstr "libloadorder не удалось установить порядок загрузки. Детали:"
+
+#~ msgid "Invalid file path:"
+#~ msgstr "Неверный путь к файлу:"
+
+#~ msgid ""
+#~ "%1% found %2% ITM records, %3% deleted references and %4% deleted "
+#~ "navmeshes."
+#~ msgstr ""
+#~ "%1% содержит %2% ITM-записей, %3% удаленных ссылок и %4% удаленных "
+#~ "навмешей."
+
+#~ msgid "%1% found %2% deleted references and %3% deleted navmeshes."
+#~ msgstr "%1% содержит %2% удаленных ссылок и %3% удаленных навмешей."
+
+#~ msgid "%1% found %2% deleted navmeshes."
+#~ msgstr "%1% содержит %2% удаленных навмешей."
+
+#~ msgid "%1% found %2% deleted references."
+#~ msgstr "%1% содержит %2% удаленных ссылок."
+
+#~ msgid "%1% found %2% ITM records and %3% deleted navmeshes."
+#~ msgstr "%1% содержит %2% ITM-записей и %3% удаленных навмешей."
+
+#~ msgid "%1% found %2% ITM records."
+#~ msgstr "%1% содержит %2% ITM-записей."
+
+#~ msgid "%1% found %2% ITM records and %3% deleted references."
+#~ msgstr "%1% содержит %2% ITM-записей и %3% удаленных ссылок."
+
+#~ msgid "Masterlist revision"
+#~ msgstr "Версия мастерлиста"
+
+#~ msgid ""
+#~ "This feature is provided so that modders using the Creation Kit may set "
+#~ "the load order it uses. A side-effect is that any subscribed Steam "
+#~ "Workshop mods will be re-downloaded by Steam. Do you wish to continue?"
+#~ msgstr ""
+#~ "Эта возможность предоставлена для того, чтобы авторы модов, использующие "
+#~ "Creation Kit, могли установить там используемый ими порядок загрузки. "
+#~ "Обратная сторона этого то, что любые, подписанные в Steam Workshop моды, "
+#~ "могут быть заново загружены с помощью Steam. Вы желаете продолжить?"
+
+#~ msgid "Invalid game ID supplied."
+#~ msgstr "Предоставлен неверный идентификатор игры."
+
+#~ msgid "Unsupported game ID supplied."
+#~ msgstr "Предоставлен неверный идентификатор игры."
+
+#~ msgid "Expected \"%1%\" at \"%2%\"."
+#~ msgstr "Ожидалось \"%1%\" на \"%2%\"."
+
+#~ msgid "Failed to parse condition \"%1%\": %2%"
+#~ msgstr "Не удалось обработать выражение \"%1%\": %2%"
+
+#~ msgid "Failed to parse condition \"%1%\"."
+#~ msgstr "Не удалось обработать выражение \"%1%\"."
+
+#~ msgid "Failed to change game. Details: %1%"
+#~ msgstr "Не удалось изменить игру. Детали: %1%"
+
+#~ msgid "Failed to copy plugin metadata. Details: %1%"
+#~ msgstr "Не удалось скопировать метаданные. Детали: %1%"
+
+#~ msgid "Failed to apply plugin metadata. Details: %1%"
+#~ msgstr "Не удалось применить метаданные плагина. Детали: %1%"
+
+#~ msgid ""
+#~ "An error occurred while parsing the userlist: %1%. This probably happened "
+#~ "because an update to LOOT changed its metadata syntax support. Your user "
+#~ "metadata will have to be updated manually.\n"
+#~ "\n"
+#~ "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open "
+#~ "its data folder, then open your 'userlist.yaml' file in the relevant game "
+#~ "folder. You can then edit the metadata it contains with reference to the "
+#~ "[syntax documentation](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%"
+#~ "%20Metadata%%20Syntax.html).\n"
+#~ "\n"
+#~ "You can also seek support on LOOT's forum thread, which is linked to on "
+#~ "[LOOT's website](https://loot.github.io/)."
+#~ msgstr ""
+#~ "Во время обработки мастерлиста произошла ошибка: %1%. Возможно это "
+#~ "произошло потому, что в обновлении LOOT изменена поддержка синтаксиса "
+#~ "метаданных. Пользовательские метаданные необходимо обновить вручную.\n"
+#~ "\n"
+#~ "Это делается так, используйте опцию 'Открыть расположение лога отладки' в "
+#~ "главном меню LOOT, для открытия папки с данными, тогда откройте ваш файл "
+#~ "'userlist.yaml' в соответствующей папке с игрой. Тогда вы сможете "
+#~ "отредактировать метаданные, содержащиеся в файле в соовтетствии с "
+#~ "[документацией по синтаксису](https://loot.github.io/docs/%2%.%3%.%4%/LOOT"
+#~ "%%20Metadata%%20Syntax.html).\n"
+#~ "\n"
+#~ "Можете также поискать в официальной ветке форума по LOOT, ссылку на "
+#~ "которую можно найти на [сайте LOOT](https://loot.github.io/)."
+
+#~ msgid "Failed to get game data. Details: %1%"
+#~ msgstr "Не удалось получить данные игры. Детали: %1%"
+
+#~ msgid "Failed to update the masterlist. Details: %1%"
+#~ msgstr "Не удалось обновить мастерлист. Детали: %1%"
+
+#~ msgid "Failed to sort plugins. Details: %1%"
+#~ msgstr "Не удалось отсортировать плагины. Детали: %1%"
+
+#~ msgid "An exception occurred while loading this plugin. Details:"
+#~ msgstr "Исключение при загрузке этого плагина. Детали:"
+
+#~ msgid ""
+#~ "libloadorder failed to initialise game master file support. Details could "
+#~ "not be fetched."
+#~ msgstr ""
+#~ "libloadorder не удалось инициализировать поддержку мастер-файла игры. "
+#~ "Детали не могут быть получены."
+
+#~ msgid "libloadorder failed to initialise game master file support. Details:"
+#~ msgstr ""
+#~ "libloadorder не удалось инициализировать поддержку мастер-файла игры. "
+#~ "Детали:"
+
+#~ msgid ""
+#~ "libloadorder failed to get the active plugins list. Details could not be "
+#~ "fetched."
+#~ msgstr ""
+#~ "libloadorder не удалось получить список активных плагинов. Детали не "
+#~ "могут быть получены."
+
+#~ msgid "libloadorder failed to get the active plugins list. Details:"
+#~ msgstr "libloadorder не удалось получить список активных плагинов. Детали:"
+
+#~ msgid ""
+#~ "Contains %1% ITM records, %2% deleted references and %3% deleted "
+#~ "navmeshes. Clean with %4%."
+#~ msgstr ""
+#~ "Включает %1% ITM записей, %2% удаленных ссылок и %3% удаленных навмешей. "
+#~ "Очистить в %4%."
+
+#~ msgid "Clean with %1%."
+#~ msgstr "Очистить с помощью %1%."
+
+#~ msgid ""
+#~ "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "Включает %1% удаленных ссылок и %2% удаленных навмешей. Очистить в %3%."
+
+#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
+#~ msgstr "Содержит %1% удаленных navmesh-записей. Очистить с помощью %2%."
+
+#~ msgid "Contains %1% deleted references. Clean with %2%."
+#~ msgstr "Включает %1% удаленных ссылок. Очистить в %2%."
+
+#~ msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с "
+#~ "помощью %3%."
+
+#~ msgid "Contains %1% ITM records. Clean with %2%."
+#~ msgstr "Содержит %1% ITM записей. Очистить с помощью %2%."
+
+#~ msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+#~ msgstr "Включает %1% ITM записей и %2% удаленных ссылок. Очистить в %3%."
+
+#~ msgid "Building plugin graph..."
+#~ msgstr "Построение графика плагина..."
+
+#~ msgid "Adding edges to plugin graph and performing topological sort..."
+#~ msgstr ""
+#~ "Добавление страниц к графику плагина и выполнение топологической "
+#~ "сортировки..."
+
+#~ msgid "Checking for conflicting plugins..."
+#~ msgstr "Проверка на конфликтующие плагины..."
+
+#~ msgid "Shell execute failed."
+#~ msgstr "Исполнение оболочки не удалось."
+
+#~ msgid "Loading plugin headers..."
+#~ msgstr "Загрузка заголовков плагинов..."
+
+#~ msgid "Parsing masterlist..."
+#~ msgstr "Обработка мастерлиста..."
+
+#~ msgid "Parsing userlist..."
+#~ msgstr "Обработка списка пользовательских правил..."
+
+#~ msgid "Merging and evaluating plugin metadata..."
+#~ msgstr "Объединение и обработка метаданных плагина..."
+
+#~ msgid "Loading general messages..."
+#~ msgstr "Загрузка основных сообщений..."
+
+#~ msgid "Regenerating displayed content..."
+#~ msgstr "Генерация отображаемого содержимого..."
+
+#~ msgid "Error: Games' settings parsing failed. %1%"
+#~ msgstr "Ошибка: Обработка настроек игры не удалась. %1%"
+
+#~ msgid "Invalid folder path:"
+#~ msgstr "Неверный путь к папке:"
+
+#~ msgid "Invalid regex string:"
+#~ msgstr "Неверная строка regex:"
+
+#~ msgid "Loading game data..."
+#~ msgstr "Загрузка данных игры..."
+
+#~ msgid "Updating masterlist..."
+#~ msgstr "Обновление мастерлиста..."
+
+#~ msgid "Sorting plugins..."
+#~ msgstr "Сортировка плагинов..."
+
+#~ msgid "Refreshing data..."
+#~ msgstr "Обновление данных..."
+
+#~ msgid "Checking if plugins have been loaded..."
+#~ msgstr "Проверка загруженности плагинов..."
+
+#~ msgid "unknown"
+#~ msgstr "неизвестно"
+
+#~ msgid "Loads BSA"
+#~ msgstr "Загружает BSA"
+
+#~ msgid "Show Only Conflicts"
+#~ msgstr "Показать только конфликты"
+
+#~ msgid ""
+#~ "Global priorities are compared against all other plugins. Normal "
+#~ "priorities are compared against only conflicting plugins."
+#~ msgstr ""
+#~ "Глобальные приоритеты сравниваются со всеми прочими плагинами. Нормальные "
+#~ "приоритеты сравниваются только с конфликтующими."
+
+#~ msgid "Priority Value"
+#~ msgstr "Значение приоритета"
+
+#~ msgid "Dirty Info"
+#~ msgstr "Инфо. о \"грязных\" правках"
+
+#~ msgid "Filter content"
+#~ msgstr "Фильтр содержимого"
+
+#~ msgid ""
+#~ "Double-click a plugin in the sidebar to quickly open its metadata editor. "
+#~ "Multiple metadata editors can be opened at once."
+#~ msgstr ""
+#~ "Кликнете два раза на боковую панель для быстрого открытия редактора "
+#~ "метаданных. Несколько редакторов могут быть открыты одновременно."
+
+#~ msgid ""
+#~ "Plugins can be drag and dropped from the sidebar into editors' \"load "
+#~ "after\", \"requirements\" and \"incompatibility\" tables."
+#~ msgstr ""
+#~ "Плагины можно перетащить из боковой панели в таблицы редакторов ' "
+#~ "\"грузить после\", \"требования\" и  \"несовместимости\"."
+
+#~ msgid ""
+#~ "Some features are disabled while there is an editor open, or while there "
+#~ "is a sorted load order that has not been applied or discarded."
+#~ msgstr ""
+#~ "Некоторые возможности отключены пока открыт редактор или пока не принята "
+#~ "или пока порядок загрузки не был применен/отклонен."
+
+#~ msgid "An exception occurred while loading this plugin. Details: "
+#~ msgstr "Исключение при загрузке этого плагина. Детали:"
+
+#~ msgid "Object memory already allocated!"
+#~ msgstr "Память объекта уже выделена!"
+
+#~ msgid "Tree memory already allocated!"
+#~ msgstr "Память древа уже выделена!"
+
+#~ msgid "Diff memory already allocated!"
+#~ msgstr "Память Diff уже выделена!"
+
+#~ msgid "Repository handle not open!"
+#~ msgstr "Обрабатываемое хранилище не открыть!"
+
+#~ msgid "Rolled back to the previous revision."
+#~ msgstr "Выполнен откат к предыдущей версии."
+
+#~ msgid "An error occurred while parsing the masterlist: %1%"
+#~ msgstr "Ошибка при обработке мастерлиста: %1%"
+
+#~ msgid "An error occurred while parsing the userlist: %1%"
+#~ msgstr "Ошибка при обработке списка пользовательских правил: %1%"
+
+#~ msgid "Version"
+#~ msgstr "Версия"
+
+#~ msgid "Filter content..."
+#~ msgstr "Фильтр содержимого..."
+
+#~ msgid ""
+#~ "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. "
+#~ "Clean with %4%."
+#~ msgstr ""
+#~ "Содержит %1% ITM записей, %2% UDR записей и %3% удаленных navmesh-"
+#~ "записей. Очистить с помощью %1%."
+
+#~ msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
+#~ msgstr ""
+#~ "Содержит %1% ITM записей и %2% удаленных navmesh-записей. Очистить с "
+#~ "помощью %1%."
+
+#~ msgid "Contains %1% UDR records. Clean with %2%."
+#~ msgstr "Содержит %1% UDR записей. Очистить с помощью %1%."
+
+#~ msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
+#~ msgstr "Содержит %1% ITM записей и %2% UDR записей. Очистить с помощью %1%."
+
+#~ msgid "Yes"
+#~ msgstr "Да"
+
+#, fuzzy
+#~ msgid "Dummy Plugin"
+#~ msgstr "Грязных плагинов"
+
+#~ msgid "Click to open the plugin menu."
+#~ msgstr "Нажать для открытия меню плагина"
+
+#~ msgid "UDR Count"
+#~ msgstr "Число UDR"
+
+#, fuzzy
+#~ msgid "Priority Is Global"
+#~ msgstr "Глобальный приоритет"
+
+#~ msgid "Copy Metadata As Text"
+#~ msgstr "Копировать метаданные как текст"
+
+#, fuzzy
+#~ msgid "File"
+#~ msgstr "&Файл"
+
+#, fuzzy
+#~ msgid "Copy Content As Text"
+#~ msgstr "Копировать метаданные как текст"
+
+#, fuzzy
+#~ msgid "Game"
+#~ msgstr "&Игра"
+
+#, fuzzy
+#~ msgid "Help"
+#~ msgstr "&Справка"
+
+#~ msgid "Sort"
+#~ msgstr "Сортировать"
+
+#~ msgid "Summary"
+#~ msgstr "Сводка"
+
+#~ msgid "Press Enter when searching to select the next match."
+#~ msgstr "Нажмите Ввод во время поиска, чтобы перейти к следующему совпадению"
+
+#, fuzzy
+#~ msgid "Hide inactive plugin messages"
+#~ msgstr "Скрыть все сообщения"
+
+#, fuzzy
+#~ msgid "Hidden plugins"
+#~ msgstr "Добавить плагин"
+
+#, fuzzy
+#~ msgid "Hidden messages"
+#~ msgstr "Добавить сообщение"
+
+#~ msgid "Automatically refresh content on window refocus"
+#~ msgstr "Автоматически обновлять содержимое при переключении на окно LOOT"
+
+#~ msgid ""
+#~ "Multiple metadata editors can be opened at once, and the menu bar is "
+#~ "disabled while any editors are open."
+#~ msgstr ""
+#~ "За раз может быть открыто сразу несколько редакторов метаданных. При "
+#~ "открытых редакторах панель меню будет отключена"
+
+#~ msgid ""
+#~ "Many interface elements have tooltips. If you don't know what something "
+#~ "is, try hovering your mouse over it to find out."
+#~ msgstr ""
+#~ "Большинство элементов интерфейса имеют подсказки. Если вы что-то не "
+#~ "знаете, попробуйте навести мышь на элемент."
+
+#~ msgid "Do not clean."
+#~ msgstr "Не чистить."
+
+#~ msgid "None Specified"
+#~ msgstr "Не определено"
+
+#~ msgid "Compare priority against all other plugins"
+#~ msgstr "Сравнивать приоритет со всеми плагинами"
+
+#~ msgid "Plugin Name"
+#~ msgstr "Имя плагина"
+
+#~ msgid "Copy Plugin Name"
+#~ msgstr "Скопировать имя"
+
+#~ msgid "Copy Plugin Metadata As Text"
+#~ msgstr "Скопировать метаданные"
+
+#~ msgid "Remove Plugin User-Added Metadata"
+#~ msgstr "Удалить пользовательские метаданные плагина"
+
+#~ msgid ""
+#~ "Please submit any edits made for reasons other than personal preference "
+#~ "to the LOOT team so that they may be included in the masterlist."
+#~ msgstr ""
+#~ "Пожалуйста, сообщайте команде LOOT о любых сделанных изменениях (кроме "
+#~ "личных предпочтений), для того, чтобы эти изменения могли быть внесены в "
+#~ "мастерлист."
+
+#~ msgid "Remove Plugin"
+#~ msgstr "Удалить плагин"
+
+#~ msgid "Plugin"
+#~ msgstr "Плагин"
+
+#~ msgid "Otherwise, priorities are only compared between conflicting plugins."
+#~ msgstr ""
+#~ "Иначе приоритеты будут сравниваться только между конфликтующими плагинами."
+
+#~ msgid "Select a plugin to edit its load order metadata."
+#~ msgstr "Выберете плагин для правки его метаданных порядка загрузки."
+
+#~ msgid ""
+#~ "Drag and drop a plugin here to make the selected plugin load after it. "
+#~ "The \"Show only conflicting plugins\" checkbox must be checked."
+#~ msgstr ""
+#~ "Перетащите сюда плагин, чтобы сделать его загружвемым после выбранного. "
+#~ "Поле \"Показать только конфликтующие плагины\" должно быть отмечено."
+
+#~ msgid ""
+#~ "Plugins with higher priorities will load after plugins with smaller "
+#~ "priorities that they conflict with, unless one must explicitly load after "
+#~ "the other."
+#~ msgstr ""
+#~ "Плагины с большим приоритетом будут загружены после конфликтующих "
+#~ "плагинов с меньшим, если конечно какой-либо из них должен грузиться "
+#~ "конкретно после определенного другого."
+
+#~ msgid ""
+#~ "Filters the plugin list to only display plugins which can be loaded after "
+#~ "the currently selected plugin, and which either conflict with it, or, if "
+#~ "it loads a BSA, also load BSAs. Also enables drag and drop of plugins "
+#~ "into the Load After box."
+#~ msgstr ""
+#~ "Фильтры для списка плагинов, для отображения только плагинов, которые "
+#~ "могут быть загружены после выбранного плагина и которые имеют любой "
+#~ "конфликт с ним или если он грузит BSA, также грузят BSA. Также включает "
+#~ "перетаскивание плагинов в поле Грузить после."
+
+#~ msgid ""
+#~ "Only newly-added plugins may be removed here. Use the metadata editor to "
+#~ "remove other user-added plugins."
+#~ msgstr ""
+#~ "Только вновь добавленные плагины могут быть удалены отсюда. Используйте "
+#~ "редактор метаданных, для удаления других, добавленных пользователем "
+#~ "плагинов."
+
+#~ msgid "Enable User Changes"
+#~ msgstr "Включить пользовательские правки"
+
+#~ msgid "Add File"
+#~ msgstr "Добавить файл"
+
+#~ msgid "Edit File"
+#~ msgstr "Править файл"
+
+#~ msgid "Remove File"
+#~ msgstr "Удалить файл"
+
+#~ msgid "Save Changes"
+#~ msgstr "Сохранить изменения"
+
+#~ msgid "Copy Name"
+#~ msgstr "Скопировать имя"
+
+#~ msgid ""
+#~ "If unchecked, any user-added metadata will be ignored during sorting."
+#~ msgstr ""
+#~ "Если не помечено, любые добавленные пользователем метаданные будут "
+#~ "проигнорированы при сортировке."
+
+#~ msgid "Only user-added data may be removed."
+#~ msgstr "Только добавленные пользователем данные могут быть удалены."
+
+#~ msgid ""
+#~ "Are you sure you want to clear all existing user-added metadata from this "
+#~ "plugin?"
+#~ msgstr ""
+#~ "Вы уверены, что хотите очистить все существующие пользовательские "
+#~ "метаданные для этого плагина?"
+
+#~ msgid "LOOT: Warning"
+#~ msgstr "LOOT: Предупреждение"
+
+#~ msgid "Edit Message"
+#~ msgstr "Править сообщение"
+
+#~ msgid "Remove Message"
+#~ msgstr "Удалить сообщение"
+
+#~ msgid "Add Bash Tag"
+#~ msgstr "Добавить Bash-тег"
+
+#~ msgid "Edit Bash Tag"
+#~ msgstr "Править Bash-тег"
+
+#~ msgid "Remove Bash Tag"
+#~ msgstr "Удалить Bash-тег"
+
+#~ msgid "Add Dirty Info"
+#~ msgstr "Добавить инфо. о \"грязных\" правках"
+
+#~ msgid "Edit Dirty Info"
+#~ msgstr "Править инфо. о \"грязных\" правках"
+
+#~ msgid "Remove Dirty Info"
+#~ msgstr "Удалить инфо. о \"грязных\" правках"
+
+#~ msgid "LOOT: Add File/Plugin"
+#~ msgstr "LOOT: Добавить файл/плагин"
+
+#~ msgid "LOOT: Add Message"
+#~ msgstr "LOOT: Добавить сообщение"
+
+#~ msgid "Error: No content specified. Row will not be added."
+#~ msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
+
+#~ msgid "LOOT: Error"
+#~ msgstr "LOOT: Ошибка"
+
+#~ msgid "LOOT: Add Tag"
+#~ msgstr "LOOT: Добавить тег"
+
+#~ msgid "LOOT: Add Dirty Info"
+#~ msgstr "LOOT: Добавить инфо. о \"грязных\" правках"
+
+#~ msgid "LOOT: Edit File/Plugin"
+#~ msgstr "LOOT: Править файл/плагин"
+
+#~ msgid "LOOT: Edit Message"
+#~ msgstr "LOOT: Править сообщение"
+
+#~ msgid "Error: No content specified. Row will not be edited."
+#~ msgstr "Ошибка: Не указано содержимое. Строка не будет добавлена."
+
+#~ msgid "LOOT: Edit Tag"
+#~ msgstr "LOOT: Править тег"
+
+#~ msgid "LOOT: Edit Dirty Info"
+#~ msgstr "LOOT: Править инфо. о \"грязных\" правках"
+
+#~ msgid ""
+#~ "If LOOT has gotten something wrong, please let the team know. See the "
+#~ "Contributing To LOOT section of the readme for details."
+#~ msgstr ""
+#~ "Если LOOT сделал что-то неправильно, пожалуйста, сообщите об этом "
+#~ "команде. Подробнее в секции Contributing To LOOT, в документации."
+
+#~ msgid "Masterlist update failed. Details: %1%"
+#~ msgstr "Проверка обновлений мастерлиста не удалась. Детали: %1%"
+
+#~ msgid "Masterlist revision check failed. Details: %1%"
+#~ msgstr "Проверка версии мастерлиста не удалась. Детали: %1%"
+
+#~ msgid "Masterlist parsing failed. Details: %1%"
+#~ msgstr "Обработка мастерлиста не удалась. Детали: %1%"
+
+#~ msgid "Unknown"
+#~ msgstr "Неизвестно"
+
+#~ msgid "Error: LOOT is already running. This instance will now quit."
+#~ msgstr "Ошибка: LOOT уже запущен. Этот экземпляр будет закрыт."
+
+#~ msgid "Error: Could not apply translation."
+#~ msgstr "Ошибка: Невозможно применить перевод."
+
+#~ msgid "Error: The selected language is not available on this system."
+#~ msgstr "Ошибка: Выбранный язык не доступен на этой системе."
+
+#~ msgid "Error: None of the supported games were detected."
+#~ msgstr "Ошибка: Не найдено ни одной поддерживаемой игры."
+
+#~ msgid "View Last Report"
+#~ msgstr "Просмотр последнего отчета"
+
+#~ msgid "&View Last Report"
+#~ msgstr "&Просмотр последнего отчета"
+
+#~ msgid "View &Debug Log"
+#~ msgstr "Просмотр лога &отладки"
+
+#~ msgid "&Sort Plugins"
+#~ msgstr "&Сортировать плагины"
+
+#~ msgid "&Metadata..."
+#~ msgstr "&Метаданные..."
+
+#~ msgid "&Edit"
+#~ msgstr "&Правка"
+
+#~ msgid ""
+#~ "Opens the Metadata Editor, where plugins' sorting metadata, messages, "
+#~ "dirty info and Bash Tag suggestions can be edited."
+#~ msgstr ""
+#~ "Открывает редактор метаданных, где присутствуют метаданные сортировки "
+#~ "плагинов: сообщения, инфо о грязных правках, теги для Wrye Bash, которые "
+#~ "могут быть изменены."
+
+#~ msgid "Sorts your plugins, then displays a report of the results."
+#~ msgstr "Сортирует ваши плагины, а после отображает отчет с результатами."
+
+#~ msgid "Opens the last report generated for the current game."
+#~ msgstr "Открывает последний отчет, сгенерированный для текущей игры."
+
+#~ msgid "LOOT: Report Viewer"
+#~ msgstr "LOOT: Просмотр отчета"
+
+#~ msgid "LOOT: Settings"
+#~ msgstr "LOOT: Настройки"
+
+#~ msgid "Error: \"%1%\" cannot be found."
+#~ msgstr "Ошибка: \"%1%\" не найден."
+
+#~ msgid ""
+#~ "Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
+#~ "Vegas."
+#~ msgstr ""
+#~ "Оптимизация порядка загрузки для Oblivion, Skyrim, Fallout 3 и Fallout: "
+#~ "New Vegas."
+
+#~ msgid "LOOT: Working..."
+#~ msgstr "LOOT: Работает..."
+
+#~ msgid "LOOT working..."
+#~ msgstr "LOOT работает..."
+
+#~ msgid "Userlist parsing failed. Details: %1%"
+#~ msgstr "Обработка пользовательского списка не удалась. Детали: %1%"
+
+#~ msgid "LOOT: Calculated Load Order"
+#~ msgstr "LOOT: Рассчитанный порядок загрузки"
+
+#~ msgid "Recalculating load order..."
+#~ msgstr "Пересчет порядка загрузки..."
+
+#~ msgid "Failed to set the load order. Details: %1%"
+#~ msgstr "Не удалось установить порядок загрузки. Детали: %1%"
+
+#~ msgid ""
+#~ "The load order displayed in the Details tab was not applied as sorting "
+#~ "was canceled."
+#~ msgstr ""
+#~ "Порядок загрузки, показанный на вкладке Детали не был применен, так как "
+#~ "сортировка была отменена."
+
+#~ msgid "Failed to calculate the load order. Details: %1%"
+#~ msgstr "Не удалось рассчитать порядок загрузки. Детали: %1%"
+
+#~ msgid "Error: %1%"
+#~ msgstr "Ошибка: %1%"
+
+#~ msgid "Error: Masterlist parsing failed. %1%"
+#~ msgstr "Ошибка: Обработка мастерлиста не удалась. %1%"
+
+#~ msgid "Error: Userlist parsing failed. %1%"
+#~ msgstr "Ошибка: Обработка пользовательского списка не удалась. %1%"
+
+#~ msgid "LOOT: Metadata Editor"
+#~ msgstr "LOOT: Редактор метаданных"
+
+#~ msgid "Error: Failed to get load order. %1%"
+#~ msgstr "Ошибка: Не удалось получить порядок загрузки. %1%"
+
+#~ msgid "Error: Failed to set plugin timestamps. %1%"
+#~ msgstr "Ошибка: Не удалось присвоить временные метки плагинам. %1%"
+
+#~ msgid "LOOT: Plugin Redate"
+#~ msgstr "LOOT: Редатирование плагинов"
+
+#~ msgid "Filename (required):"
+#~ msgstr "Имя файла (требуется):"
+
+#~ msgid "Displayed Name:"
+#~ msgstr "Отображаемое имя:"
+
+#~ msgid "Condition:"
+#~ msgstr "Выражение:"
+
+#~ msgid "Add Content"
+#~ msgstr "Добавить содержимое"
+
+#~ msgid "Edit Content"
+#~ msgstr "Править содержимое"
+
+#~ msgid "String"
+#~ msgstr "Строка"
+
+#~ msgid "Type:"
+#~ msgstr "Тип:"
+
+#~ msgid "Language:"
+#~ msgstr "Язык:"
+
+#~ msgid "Content:"
+#~ msgstr "Содержимое:"
+
+#~ msgid "Error: No content row selected."
+#~ msgstr "Ошибка: Не выбрана строка с содержимым."
+
+#~ msgid "Add/Remove:"
+#~ msgstr "Добавить/Удалить:"
+
+#~ msgid "Name (required):"
+#~ msgstr "Имя (требуется):"
+
+#~ msgid "CRC (required):"
+#~ msgstr "CRC (требуется):"
+
+#~ msgid "ITM Count:"
+#~ msgstr "Число ITM:"
+
+#~ msgid "UDR Count:"
+#~ msgstr "Число UDR:"
+
+#~ msgid "Deleted Navmesh Count:"
+#~ msgstr "Число удаленных Navmesh-записей:"
+
+#~ msgid "Cleaning Utility (required):"
+#~ msgstr "Утилита для очистки (требуется):"
+
+#~ msgid "None"
+#~ msgstr "Нет"
+
+#~ msgid "Low"
+#~ msgstr "Низкая"
+
+#~ msgid "Medium"
+#~ msgstr "Средняя"
+
+#~ msgid "High"
+#~ msgstr "Высокая"
+
+#~ msgid "Edit Game"
+#~ msgstr "Редактировать игру"
+
+#~ msgid "Remove Game"
+#~ msgstr "Удалить игру"
+
+#~ msgid "View reports externally in default browser."
+#~ msgstr "Просмотреть отчет во внешнем браузере по умолчанию."
+
+#~ msgid "Debug Verbosity:"
+#~ msgstr "Детализация отладки:"
+
+#~ msgid "LOOT: Add Game"
+#~ msgstr "LOOT: Добавить игру"
+
+#~ msgid ""
+#~ "Error: A path and/or registry key is required. Row will not be added."
+#~ msgstr ""
+#~ "Ошибка: Требуется путь и/или ключ реестра. Строка не будет добавлена."
+
+#~ msgid ""
+#~ "Error: A game with this name is already defined. Row will not be added."
+#~ msgstr ""
+#~ "Ошибка: Игра с этим именем уже определена. Строка не будет добавлена."
+
+#~ msgid ""
+#~ "Error: A game with this folder name is already defined. Row will not be "
+#~ "added."
+#~ msgstr ""
+#~ "Ошибка: Игра с этим именем папки уже определена. Строка не будет "
+#~ "добавлена."
+
+#~ msgid "LOOT: Edit Game"
+#~ msgstr "LOOT: Править игру"
+
+#~ msgid "Error: Name is required. Row will not be added."
+#~ msgstr "Ошибка: Требуется имя. Строка не будет добавлена."
+
+#~ msgid "Error: Folder is required. Row will not be added."
+#~ msgstr "Ошибка: Требуется папка. Строка не будет добавлена."
+
+#~ msgid "LOOT Folder Name (required):"
+#~ msgstr "LOOT: Имя папки (требуется):"
+
+#~ msgid "Master File:"
+#~ msgstr "Мастерфайл:"
+
+#~ msgid "Masterlist Repository URL:"
+#~ msgstr "URL хранилища мастерлиста:"
+
+#~ msgid "Masterlist Repository Branch:"
+#~ msgstr "Ветка хранилища мастерлиста:"
+
+#~ msgid "Install Path:"
+#~ msgstr "Путь установки:"
+
+#~ msgid "Install Path Registry Key:"
+#~ msgstr "Ключ реестра для пути установки:"
+
+#~ msgid "Version Information"
+#~ msgstr "Информация о версии"
+
+#~ msgid "Plugin & Message Counts"
+#~ msgstr "Количество плагинов и сообщений"
+
+#~ msgid "Note:"
+#~ msgstr "Примечание:"
+
+#~ msgid "Bash Tag Suggestion(s):"
+#~ msgstr "Bash-теги:"
+
+#~ msgid "Warning:"
+#~ msgstr "Предупреждение:"
+
+#~ msgid "Error:"
+#~ msgstr "Ошибка:"
+
+#~ msgid "LOOT Report"
+#~ msgstr "Отчет LOOT"
+
+#~ msgid "Details"
+#~ msgstr "Детали"
+
+#~ msgid "LOOT Version"
+#~ msgstr "Версия LOOT"
+
+#~ msgid "Masterlist Version"
+#~ msgstr "Версия мастерлиста"
+
+#~ msgid "Masterlist Updating"
+#~ msgstr "Обновление мастерлиста"
+
+#~ msgid "Disabled"
+#~ msgstr "Отключено"
+
+#~ msgid ""
+#~ "There have been no changes in the Details tab since LOOT was last run for "
+#~ "this game."
+#~ msgstr ""
+#~ "Никаких изменений во вкладке Детали, со времени последнего запуска LOOT "
+#~ "для этой игры."
+
+#~ msgid "Total Number of Messages"
+#~ msgstr "Общее число сообщений"
+
+#~ msgid "Number of Warnings"
+#~ msgstr "Количество предупреждений"
+
+#~ msgid "Number of Errors"
+#~ msgstr "Количество ошибок"
+
+#~ msgid "Version:"
+#~ msgstr "Версия:"
+
+#~ msgid "Add:"
+#~ msgstr "Добавить:"
+
+#~ msgid "Remove:"
+#~ msgstr "Удалить:"
+
+#~ msgid ""
+#~ "The LOOT Report requires Javascript to be enabled in order to function."
+#~ msgstr "Для работы всех функций отчета LOOT требуется включить JavaScript"
+
+#~ msgid "Hide Bash Tag Suggestions"
+#~ msgstr "Скрыть Bash-теги"
+
+#~ msgid "%1% of %2% plugins hidden."
+#~ msgstr "%1% из %2% плагинов скрыто."
+
+#~ msgid "%1% of %2% messages hidden."
+#~ msgstr "%1% из %2% сообщений скрыто."
+
+#~ msgid "\"%1%\" is required by \"%2%\" but is missing."
+#~ msgstr "\"%1%\" требуется для \"%2%\", но отсутствует."
+
+#~ msgid "Could not create pipe for process."
+#~ msgstr "Невозможно создать канал для процесса."
+
+#~ msgid "Could not create process."
+#~ msgstr "Невозможно создать процесс."
+
+#~ msgid "Could not get process exit code."
+#~ msgstr "Не удалось получить код выхода процесса."
+
+#~ msgid "Could not read process output."
+#~ msgstr "Не удалось прочесть выходной поток процесса."
+
+#~ msgid "Failed to generate graph image. Details: %1%"
+#~ msgstr "Не удалось сгенерировать изображение графика. Детали: %1%"
+
+#~ msgid ""
+#~ "A load order optimisation tool for games using the Elder Scrolls Plugin/"
+#~ "Master system."
+#~ msgstr ""
+#~ "Инструмент для оптимизации порядка загрузки, для игр, использующих "
+#~ "систему плагин/мастер Elder Scrolls."
+
+#~ msgid "Up"
+#~ msgstr "Выше"
+
+#~ msgid "Down"
+#~ msgstr "Ниже"
+
+#~ msgid "Load Order"
+#~ msgstr "Порядок загрузки"
+
+#~ msgid "Generate and display plugin graph images."
+#~ msgstr "Сгенерировать и отобразить изображения графиков плагинов"
+
+#~ msgid "Online Masterlist URL"
+#~ msgstr "URL онлайн-мастерлиста"
+
+#~ msgid "Graph"
+#~ msgstr "График"
+
+#~ msgid "No change in details since last run."
+#~ msgstr "Никаких изменений в деталях с последнего запуска."
+
+#~ msgid "Could not write BOSS report."
+#~ msgstr "Не удалось записать отчет BOSS."
+
+#~ msgid "Name:"
+#~ msgstr "Имя:"
+
+#~ msgid "Error: No filename specified. Row will not be added."
+#~ msgstr "Ошибка: Не указано имя файла. Строка не будет отредактирована."
+
+#~ msgid "Error: No Bash Tag specified. Row will not be added."
+#~ msgstr "Ошибка: Не указан Bash-тег. Строка не будет отредактирована."
+
+#~ msgid "Error: No filename specified. Row will not be edited."
+#~ msgstr "Ошибка: Не указано имя файла. Строка не будет отредактирована."
+
+#~ msgid "Error: No Bash Tag specified. Row will not be edited."
+#~ msgstr "Ошибка: Не указан Bash-тег. Строка не будет отредактирована."
+
+#~ msgid "Add %1%."
+#~ msgstr "Добавить %1%."

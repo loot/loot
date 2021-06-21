@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-06-06 16:00+0100\n"
-"PO-Revision-Date: 2021-06-07 21:22-0700\n"
+"PO-Revision-Date: 2021-06-10 13:30+0300\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -36,12 +36,12 @@ msgstr ""
 
 #: src/gui/cef/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
-msgstr "Обработка, объединение и проверка метаданных..."
+msgstr "Обработка, объединение и оценка метаданных..."
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" включает выражение, которое не может быть оценено. Детали: %2%"
+msgstr "\"%1%\" включает условие, которое не может быть оценено. Детали: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
 #: src/gui/cef/query/types/metadata_query.h:256
@@ -192,7 +192,7 @@ msgstr ""
 "\n"
 "Для исправления ошибки попробуйте обновить мастерлист. Если ошибка в ваших "
 "пользовательских метаданных, то причина может заключаться в изменении "
-"синтаксисаметаданных в обновленном LOOT. Пользовательские метаданные должны "
+"синтаксисаметаданных  в обновленном LOOT. Пользовательские метаданные должны "
 "быть обновлены вручную.\n"
 "\n"
 "Для этого используйте пункт 'Открыть папку с логом отладки' в главном меню "
@@ -749,7 +749,7 @@ msgstr "Скрыть CRC"
 #. Text of a filter in the sidebar.
 #: src/gui/html/js/translateStaticText.ts:454
 msgid "Hide Bash Tags"
-msgstr "Скрыть Bash-теги"
+msgstr "Скрыть bash-теги"
 
 #: src/gui/html/js/translateStaticText.ts:455
 msgid "Hide notes"
@@ -933,10 +933,10 @@ msgid ""
 "<span class=\"tag add\">addition</span> and <span class=\"tag remove"
 "\">removal</span>."
 msgstr ""
-"Также, как и сообщения, LOOT отображает <span class=\"version\">номера "
-"версий</span> плагинов, <span class=\"crc\">CRC</span> и рекомендуемые Bash-"
-"теги для <span class=\"tag add\">добавления</span> и <span class=\"tag remove"
-"\">удаления</span>."
+"Также, как и сообщения, LOOT отображает <span class=\"version\"> номера "
+"версий </span> плагинов, <span class=\"crc\"> CRC </span> и рекомендуемые "
+"Bash-теги для <span class=\"tag add\"> добавления </span> и <span class="
+"\"tag remove\"> удаления </span>."
 
 #: src/gui/html/js/translateStaticText.ts:640
 msgid ""
