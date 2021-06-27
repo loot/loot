@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-06-06 16:00+0100\n"
-"PO-Revision-Date: 2021-06-27 03:27+0300\n"
+"PO-Revision-Date: 2021-06-27 03:33+0300\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -749,7 +749,7 @@ msgstr "Скрыть CRC"
 #. Text of a filter in the sidebar.
 #: src/gui/html/js/translateStaticText.ts:454
 msgid "Hide Bash Tags"
-msgstr "Скрыть bash-теги"
+msgstr "Скрыть Bash-теги"
 
 #: src/gui/html/js/translateStaticText.ts:455
 msgid "Hide notes"
