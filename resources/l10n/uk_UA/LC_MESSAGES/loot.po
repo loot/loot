@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-06-06 16:00+0100\n"
-"PO-Revision-Date: 2021-06-07 09:56-0700\n"
+"PO-Revision-Date: 2021-06-27 03:34+0300\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Ukrainian\n"
 "Language: uk_UA\n"
@@ -36,12 +36,12 @@ msgstr ""
 
 #: src/gui/cef/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
-msgstr "Обробка, об'єднання та перевірка метаданих..."
+msgstr "Обробка, об'єднання та оцінка метаданих..."
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" містить вираз, який неможливо оцінити. Деталі: %2%"
+msgstr "\"%1%\" містить умову, який неможливо оцінити. Деталі: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
 #: src/gui/cef/query/types/metadata_query.h:256
@@ -113,7 +113,7 @@ msgid ""
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
-"Плагін містить записи, котрі мають FormID за межами допустимих для ESL-"
+"Плагін містить записи, які мають FormID за межами допустимих для ESL-"
 "плагіна. Використання цього плагіна призведе до необоротнього пошкодження "
 "ваших ігрових сейв-файлів."
 
@@ -417,7 +417,7 @@ msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
-"Автосортування відмінено, так як відображається як мінімум одне повідомлення "
+"Автосортування скасовано, так як відображається як мінімум одне повідомлення "
 "про помилку."
 
 #: src/gui/html/js/translateStaticText.ts:72
@@ -954,9 +954,8 @@ msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Плагіни можуть бути переміщені шляхом перетаскування із бокової панелі у "
-"редактор метаданих у поля таблиці \"Завантажувати після\", \"Вимоги\" та "
-"\"Несумісності\"."
+"Плагіни можна перетягувати і скидати з бічної панелі в таблиці "
+"\"завантажувати після\", \"вимоги\" і \"несумісність\" редактора метаданих."
 
 #: src/gui/html/js/translateStaticText.ts:649
 msgid ""
@@ -964,7 +963,7 @@ msgid ""
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 "Деякі функції відключені поки відкрито редактор метаданих чи поки "
-"відсортований порядок завантаження не було застосовано чи відмінено."
+"відсортований порядок завантаження не було застосовано чи скасовано."
 
 #: src/gui/html/js/translateStaticText.ts:652
 msgid ""
@@ -973,8 +972,8 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 "Більшість елементів інтерфейсу мають підказки. Якщо ви не знаєте призначення "
-"якого-небудь елементу, то спробуйте навести на нього вказівник миші. У "
-"іншому випадку документація LOOT завжди доступна через головне меню."
+"якого-небудь елементу, спробуйте навести на нього вказівник миші. У іншому "
+"випадку документація LOOT завжди доступна через головне меню."
 
 #: src/gui/html/js/translateStaticText.ts:656
 #: src/gui/html/js/translateStaticText.ts:678
