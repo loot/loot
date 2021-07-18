@@ -34,6 +34,10 @@
 #include "loot/enum/game_type.h"
 
 namespace loot {
+constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
+    "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
+    "1014940\\InstallLocation";
+
 class GameSettings {
 public:
   GameSettings();

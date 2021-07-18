@@ -191,21 +191,24 @@ LootSettings::LootSettings() :
         GameSettings(GameType::tes4, "Nehrim")
             .SetName("Nehrim - At Fate's Edge")
             .SetMaster("Nehrim.esm")
-            .SetRegistryKeys(
-                {"Software\\Microsoft\\Windows\\CurrentVersion\\Unin"
-                 "stall\\Nehrim - At Fate's "
-                 "Edge_is1\\InstallLocation"}),
+            .SetRegistryKeys({
+              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation",
+                std::string(NEHRIM_STEAM_REGISTRY_KEY)
+            }),
         GameSettings(GameType::tes5, "Enderal")
             .SetName("Enderal: Forgotten Stories")
-            .SetRegistryKeys(
-                {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
+            .SetRegistryKeys({
+              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
+              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 933480\\InstallLocation"
+            })
             .SetGameLocalFolder("enderal")
             .SetRepoURL("https://github.com/loot/enderal.git"),
         GameSettings(GameType::tes5se, "Enderal Special Edition")
             .SetName("Enderal: Forgotten Stories (Special Edition)")
-            .SetRegistryKeys(
-                {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_"
-                 "Path"})
+            .SetRegistryKeys({
+              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
+              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 976620\\InstallLocation"
+            })
             .SetGameLocalFolder("Enderal Special Edition")
             .SetRepoURL("https://github.com/loot/enderal.git"),
     }),
