@@ -735,7 +735,7 @@ function recordUnappliedGameSettings(evt: Event): void {
     repo: getValue(getElementById('settingsGameMasterlistUrl')),
     branch: getValue(getElementById('settingsGameMasterlistBranch')),
     path: getValue(getElementById('settingsGamePath')),
-    registry: getValue(getElementById('settingsGameRegistry')),
+    registry: getValue(getElementById('settingsGameRegistry')).split('\n'),
     localPath: getValue(getElementById('settingsGameLocalPath'))
   };
 
@@ -829,7 +829,7 @@ export function onSettingsSelectGame(evt: Event): void {
   const registryInput = getElementById(
     'settingsGameRegistry'
   ) as PaperInputElement;
-  registryInput.value = gameSettings.registry;
+  registryInput.value = gameSettings.registry.join('\n');
   registryInput.disabled = false;
 
   const localPathInput = getElementById(

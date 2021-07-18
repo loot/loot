@@ -78,7 +78,7 @@ public:
         GetCurrentGame()
             .SetName(gameSettings.Name())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
-            .SetRegistryKey(gameSettings.RegistryKey())
+            .SetRegistryKeys(gameSettings.RegistryKeys())
             .SetRepoURL(gameSettings.RepoURL())
             .SetRepoBranch(gameSettings.RepoBranch());
 

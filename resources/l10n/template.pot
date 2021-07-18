@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-06-06 16:25+0100\n"
+"POT-Creation-Date: 2021-07-18 08:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -837,7 +837,7 @@ msgid "Install Path"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:590
-msgid "Install Path Registry Key"
+msgid "Install Path Registry Keys"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:595

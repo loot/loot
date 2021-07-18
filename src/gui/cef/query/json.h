@@ -277,7 +277,7 @@ void to_json(nlohmann::json& json, const GameSettings& game) {
     { "type", GameSettings(game.Type()).FolderName() },
     { "name", game.Name() },
     { "master", game.Master() },
-    { "registry", game.RegistryKey() },
+    { "registry", game.RegistryKeys() },
     { "folder", game.FolderName() },
     { "repo", game.RepoURL() },
     { "branch", game.RepoBranch() },
@@ -294,7 +294,7 @@ void from_json(const nlohmann::json& json, GameSettings& game) {
 
   game.SetName(json.value("name", ""));
   game.SetMaster(json.value("master", ""));
-  game.SetRegistryKey(json.value("registry", ""));
+  game.SetRegistryKeys(json.value("registry", std::vector<std::string>()));
   game.SetRepoURL(json.value("repo", ""));
   game.SetRepoBranch(json.value("branch", ""));
   game.SetGamePath(u8path(json.value("path", "")));

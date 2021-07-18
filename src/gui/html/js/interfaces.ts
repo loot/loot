@@ -106,7 +106,7 @@ export interface GameSettings {
   type: string;
   name: string;
   master: string;
-  registry: string;
+  registry: string[];
   folder: string;
   repo: string;
   branch: string;

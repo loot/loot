@@ -39,15 +39,13 @@ const std::set<std::string> GameSettings::oldDefaultBranches(
     {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14"});
 
 GameSettings::GameSettings() :
-    type_(GameType::tes4),
-    mininumHeaderVersion_(0.0f) {}
+    type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
-    type_(gameCode),
-    repositoryBranch_("v0.15") {
+    type_(gameCode), repositoryBranch_("v0.15") {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
-    registryKey_ = "Software\\Bethesda Softworks\\Morrowind\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\Morrowind\\Installed Path"};
     pluginsFolderName_ = "Data Files";
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
@@ -55,7 +53,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/morrowind.git";
   } else if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
-    registryKey_ = "Software\\Bethesda Softworks\\Oblivion\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\Oblivion\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
@@ -63,7 +61,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/oblivion.git";
   } else if (Type() == GameType::tes5) {
     name_ = "TES V: Skyrim";
-    registryKey_ = "Software\\Bethesda Softworks\\Skyrim\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
@@ -71,8 +69,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrim.git";
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
-    registryKey_ =
-        "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path";
+    registryKeys_ = {
+        "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
@@ -80,7 +78,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::tes5vr) {
     name_ = "TES V: Skyrim VR";
-    registryKey_ = "Software\\Bethesda Softworks\\Skyrim VR\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
@@ -88,7 +86,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
-    registryKey_ = "Software\\Bethesda Softworks\\Fallout3\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\Fallout3\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
@@ -96,7 +94,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/fallout3.git";
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
-    registryKey_ = "Software\\Bethesda Softworks\\FalloutNV\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
@@ -104,7 +102,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/falloutnv.git";
   } else if (Type() == GameType::fo4) {
     name_ = "Fallout 4";
-    registryKey_ = "Software\\Bethesda Softworks\\Fallout4\\Installed Path";
+    registryKeys_ = {"Software\\Bethesda Softworks\\Fallout4\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
@@ -112,7 +110,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/fallout4.git";
   } else if (Type() == GameType::fo4vr) {
     name_ = "Fallout 4 VR";
-    registryKey_ = "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path";
+    registryKeys_ = {
+        "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
@@ -129,8 +128,7 @@ bool GameSettings::IsRepoBranchOldDefault() const {
 }
 
 bool GameSettings::operator==(const GameSettings& rhs) const {
-  return name_ == rhs.Name() ||
-         lootFolderName_ == rhs.FolderName();
+  return name_ == rhs.Name() || lootFolderName_ == rhs.FolderName();
 }
 
 GameType GameSettings::Type() const { return type_; }
@@ -145,7 +143,9 @@ float GameSettings::MinimumHeaderVersion() const {
   return mininumHeaderVersion_;
 }
 
-std::string GameSettings::RegistryKey() const { return registryKey_; }
+std::vector<std::string> GameSettings::RegistryKeys() const {
+  return registryKeys_;
+}
 
 std::string GameSettings::RepoURL() const { return repositoryURL_; }
 
@@ -177,8 +177,9 @@ GameSettings& GameSettings::SetMinimumHeaderVersion(
   return *this;
 }
 
-GameSettings& GameSettings::SetRegistryKey(const std::string& registry) {
-  registryKey_ = registry;
+GameSettings& GameSettings::SetRegistryKeys(
+    const std::vector<std::string>& registry) {
+  registryKeys_ = registry;
   return *this;
 }
 
@@ -226,11 +227,14 @@ std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
     }
 
 #ifdef _WIN32
-    auto [rootKey, subKey, value] = SplitRegistryPath(registryKey_);
-    gamePath = RegKeyStringValue(rootKey, subKey, value);
-    if (!gamePath.empty() && exists(gamePath / pluginsFolderName_ / u8path(masterFile_)) &&
-        ExecutableExists(type_, gamePath)) {
-      return gamePath;
+    for (const auto& registryKey : registryKeys_) {
+      auto [rootKey, subKey, value] = SplitRegistryPath(registryKey);
+      gamePath = RegKeyStringValue(rootKey, subKey, value);
+      if (!gamePath.empty() &&
+          exists(gamePath / pluginsFolderName_ / u8path(masterFile_)) &&
+          ExecutableExists(type_, gamePath)) {
+        return gamePath;
+      }
     }
 #endif
   } catch (std::exception& e) {

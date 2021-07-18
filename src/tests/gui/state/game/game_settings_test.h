@@ -57,7 +57,7 @@ TEST_P(
   EXPECT_EQ("", settings_.FolderName());
   EXPECT_EQ("", settings_.Master());
   EXPECT_EQ(0.0, settings_.MinimumHeaderVersion());
-  EXPECT_EQ("", settings_.RegistryKey());
+  EXPECT_EQ(std::vector<std::string>(), settings_.RegistryKeys());
   EXPECT_EQ("", settings_.RepoURL());
   EXPECT_EQ("", settings_.RepoBranch());
 
@@ -79,8 +79,9 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Fallout3", settings_.FolderName());
     EXPECT_EQ("Fallout3.esm", settings_.Master());
     EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Fallout3\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(std::vector<std::string>(
+                  {"Software\\Bethesda Softworks\\Fallout3\\Installed Path"}),
+              settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/fallout3.git", settings_.RepoURL());
     break;
   case GameType::fonv:
@@ -88,8 +89,10 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("FalloutNV", settings_.FolderName());
     EXPECT_EQ("FalloutNV.esm", settings_.Master());
     EXPECT_EQ(1.32f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(
+        std::vector<std::string>(
+            {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path"}),
+        settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/falloutnv.git", settings_.RepoURL());
     break;
   case GameType::fo4:
@@ -97,8 +100,9 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Fallout4", settings_.FolderName());
     EXPECT_EQ("Fallout4.esm", settings_.Master());
     EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Fallout4\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(std::vector<std::string>(
+                  {"Software\\Bethesda Softworks\\Fallout4\\Installed Path"}),
+              settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/fallout4.git", settings_.RepoURL());
     break;
   case GameType::fo4vr:
@@ -107,8 +111,10 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Fallout4.esm", settings_.Master());
     // TODO: Get the real value off someone who owns Fallout 4 VR.
     EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(
+        std::vector<std::string>(
+            {"Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path"}),
+        settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/fallout4.git", settings_.RepoURL());
     break;
   case GameType::tes3:
@@ -116,8 +122,10 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Morrowind", settings_.FolderName());
     EXPECT_EQ("Morrowind.esm", settings_.Master());
     EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Morrowind\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(
+        std::vector<std::string>(
+            {"Software\\Bethesda Softworks\\Morrowind\\Installed Path"}),
+        settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/morrowind.git", settings_.RepoURL());
     break;
   case GameType::tes4:
@@ -125,8 +133,9 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Oblivion", settings_.FolderName());
     EXPECT_EQ("Oblivion.esm", settings_.Master());
     EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Oblivion\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(std::vector<std::string>(
+                  {"Software\\Bethesda Softworks\\Oblivion\\Installed Path"}),
+              settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/oblivion.git", settings_.RepoURL());
     break;
   case GameType::tes5:
@@ -134,8 +143,9 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Skyrim", settings_.FolderName());
     EXPECT_EQ("Skyrim.esm", settings_.Master());
     EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Skyrim\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(std::vector<std::string>(
+                  {"Software\\Bethesda Softworks\\Skyrim\\Installed Path"}),
+              settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/skyrim.git", settings_.RepoURL());
     break;
   case GameType::tes5se:
@@ -143,8 +153,10 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Skyrim Special Edition", settings_.FolderName());
     EXPECT_EQ("Skyrim.esm", settings_.Master());
     EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(
+        std::vector<std::string>({"Software\\Bethesda Softworks\\Skyrim "
+                                  "Special Edition\\Installed Path"}),
+        settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/skyrimse.git", settings_.RepoURL());
     break;
   case GameType::tes5vr:
@@ -153,8 +165,10 @@ TEST_P(GameSettingsTest,
     EXPECT_EQ("Skyrim.esm", settings_.Master());
     // TODO: Get the real value off someone who owns Skyrim VR.
     EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
-    EXPECT_EQ("Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
-      settings_.RegistryKey());
+    EXPECT_EQ(
+        std::vector<std::string>(
+            {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path"}),
+        settings_.RegistryKeys());
     EXPECT_EQ("https://github.com/loot/skyrimse.git", settings_.RepoURL());
     break;
   default:
@@ -249,14 +263,14 @@ TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
   GameSettings game1 = GameSettings(GameType::tes5, "game1")
                            .SetMaster("master1")
                            .SetMinimumHeaderVersion(0.94f)
-                           .SetRegistryKey("key1")
+                           .SetRegistryKeys({"key1"})
                            .SetRepoURL("url1")
                            .SetRepoBranch("branch1")
                            .SetGamePath("path1");
   GameSettings game2 = GameSettings(GameType::tes5, "game2")
                            .SetMaster("master2")
                            .SetMinimumHeaderVersion(1.34f)
-                           .SetRegistryKey("key2")
+                           .SetRegistryKeys({"key2"})
                            .SetRepoURL("url2")
                            .SetRepoBranch("branch2")
                            .SetGamePath("path2");
@@ -312,8 +326,9 @@ TEST_P(GameSettingsTest, setMinimumHeaderVersionShouldStoreGivenValue) {
 
 TEST_P(GameSettingsTest, setRegistryKeyShouldStoreGivenValue) {
   GameSettings settings_;
-  settings_.SetRegistryKey("key");
-  EXPECT_EQ("key", settings_.RegistryKey());
+  auto keys = std::vector<std::string>({"key"});
+  settings_.SetRegistryKeys(keys);
+  EXPECT_EQ(keys, settings_.RegistryKeys());
 }
 
 TEST_P(GameSettingsTest, setRepoUrlShouldStoreGivenValue) {

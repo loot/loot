@@ -587,7 +587,7 @@ function translateSettingsDialog(l10n: Translator): void {
 
   getElementById('settingsGameRegistry').setAttribute(
     'label',
-    l10n.translate('Install Path Registry Key')
+    l10n.translate('Install Path Registry Keys')
   );
 
   getElementById('settingsGameLocalPath').setAttribute(
