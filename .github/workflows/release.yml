@@ -29,7 +29,7 @@ jobs:
           release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
           draft: true
           body: |
-            Requires Windows 7 or later and the [MSVC 2017 x86 redistributable](https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+            Requires Windows 7 or later and the [MSVC 2017 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
 
   windows:
     runs-on: windows-2016

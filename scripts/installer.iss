@@ -285,18 +285,49 @@ end;
 
 function VCRedistNeedsInstall: Boolean;
 var
-  VersionMajor : Integer;
-  VersionMinor: Integer;
-  VersionBld: Integer;
-  RegKey: String;
+  SubKeyName: String;
+  IsSuccessful: Boolean;
   IsRuntimeInstalled: Cardinal;
   InstalledVersionMajor: Cardinal;
   InstalledVersionMinor: Cardinal;
   InstalledVersionBld: Cardinal;
 begin
-  RegKey := 'Installer\Dependencies\,,x86,14.0,bundle\Dependents\{7e9fae12-5bbf-47fb-b944-09c49e75c061}';
+  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86';
 
-  Result := not RegKeyExists(GetHKCR, RegKey);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Installed', IsRuntimeInstalled);
+
+  if (IsSuccessful = False) or (IsRuntimeInstalled <> 1) then begin
+    Log('MSVC 14.0 x86 runtime is not installed');
+    Result := True;
+    exit;
+  end;
+
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Major', InstalledVersionMajor);
+
+  if (IsSuccessful = False) or (InstalledVersionMajor <> 14) then begin
+    Log('MSVC 14.0 x86 runtime major version is not 14: ' + IntToStr(InstalledVersionMajor));
+    Result := True;
+    exit;
+  end;
+
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Minor', InstalledVersionMinor);
+
+  if (IsSuccessful = False) or (InstalledVersionMinor < 15) then begin
+    Log('MSVC 14.0 x86 runtime major version is less than 15: ' + IntToStr(InstalledVersionMinor));
+    Result := True;
+    exit;
+  end;
+
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Bld', InstalledVersionBld);
+
+  if (IsSuccessful = False) or (InstalledVersionBld < 26706) then begin
+    Log('MSVC 14.0 x86 runtime build is less than 26706: ' + IntToStr(InstalledVersionBld));
+    Result := True
+  end
+  else begin
+    Log('MSVC 14.0 x86 runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
+    Result := False;
+  end;
 end;
 
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
@@ -339,7 +370,7 @@ begin
         Log(Format('Current page ID: %d', [CurPageID]));
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
     DownloadPage.Clear;
-    DownloadPage.Add('https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe', 'vc_redist.x86.exe', '');
+    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x86.exe', 'vc_redist.x86.exe', '');
     DownloadPage.Show;
     try
       try
