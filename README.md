@@ -78,6 +78,6 @@ Alternatively, you can use Docker to avoid changing your development environment
 
 Packaging scripts are provided for creating an installer on Windows and compressed archives on Windows and Linux.
 
-Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. The script requires the MSVC 2017 Redistributable to be present at `build/vc_redist.x86.exe`. If the unofficial Korean and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
+Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean, Swedish and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
 The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
