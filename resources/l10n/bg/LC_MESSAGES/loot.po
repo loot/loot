@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-06-06 16:00+0100\n"
-"PO-Revision-Date: 2021-06-07 20:57+0300\n"
+"POT-Creation-Date: 2021-07-18 08:47+0100\n"
+"PO-Revision-Date: 2021-07-28 08:53+0300\n"
 "Last-Translator: Georgi Georgiev (Жоро) <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <g.georgiev.shumen@gmail.com>\n"
 "Language: bg\n"
@@ -56,7 +56,7 @@ msgstr "Внимание: Основният списък липсва"
 #: src/gui/cef/query/types/metadata_query.h:265
 #: src/gui/cef/query/types/metadata_query.h:266
 msgid "Unknown: Git repository missing"
-msgstr "Внимание: Хранилището в Git липсва"
+msgstr "Внимание: Хранилището в „Git“ липсва"
 
 #. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
 #: src/gui/cef/query/types/metadata_query.h:276
@@ -74,7 +74,7 @@ msgstr "Грешка: Параметърът --auto-sort е отчетен, но
 
 #: src/gui/state/loot_state.cpp:129
 msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "Грешка: Файлът с настройките на LOOT не може да бъде създаден. %1%"
+msgstr "Грешка: Файлът с настройките на „LOOT“ не може да бъде създаден. %1%"
 
 #. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
 #: src/gui/state/loot_state.cpp:148
@@ -165,7 +165,7 @@ msgid ""
 "most recent valid revision instead. Syntax errors are usually minor and "
 "fixed within hours."
 msgstr ""
-"Най-новата ревизия на основния списък съдържа синтактична грешка, LOOT ще "
+"Най-новата ревизия на основния списък съдържа синтактична грешка, „LOOT“ ще "
 "използва най-новата валидна версия на негово място. Синтактичните грешки са "
 "лесни за отстраняване и биват поправени за няколко часа."
 
@@ -189,16 +189,17 @@ msgstr ""
 "Възникна грешка, по време на разбора на списъ(ка)ците с метаданни: %1%.\n"
 "\n"
 "Моля, обновете основния списък за да поправите грешката. Ако грешката е в "
-"потребителските метаданни, причината може да е в обновяване на LOOT, което е "
-"променило синтаксиса. Потребителските метданни трябва да се обновят ръчно.\n"
+"потребителските метаданни, причината може да е в обновяване на „LOOT“, което "
+"е променило синтаксиса. Потребителските метданни трябва да се обновят "
+"ръчно.\n"
 "\n"
-"За да го направите, отворете 'Намери файла за регистриране на грешки' в "
-"главното меню на LOOT, след това отворете файла 'userlist.yaml' в папката на "
-"играта. Може да редактирате метаданните, съобразно документацията, която е "
-"налична в главното меню на LOOT.\n"
+"За да го направите, отворете „Намери файла за регистриране на грешки“ в "
+"главното меню на „LOOT“, след това отворете файла 'userlist.yaml' в папката "
+"на играта. Може да редактирате метаданните, съобразно документацията, която "
+"е налична в главното меню на „LOOT“.\n"
 "\n"
-"Ако имате въпроси, посетете форума на LOOT, който се намира [тук](https://"
-"loot.github.io/)."
+"Ако имате въпроси, посетете форума на „LOOT“ от [тук](https://loot.github."
+"io/)."
 
 #: src/gui/state/game/helpers.cpp:88
 msgid "%1% ITM record"
@@ -220,7 +221,7 @@ msgstr[1] "%1% изтрити навигационни обекта"
 
 #: src/gui/state/game/helpers.cpp:108
 msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% намерен %2%, %3% и %4%."
+msgstr "%1% намери %2%, %3% и %4%."
 
 #: src/gui/state/game/helpers.cpp:114
 msgid "%1% found dirty edits."
@@ -229,16 +230,16 @@ msgstr "%1% намерени мръсни редакции."
 #: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
 #: src/gui/state/game/helpers.cpp:131
 msgid "%1% found %2% and %3%."
-msgstr "%1% намерен %2% и %3%."
+msgstr "%1% намери %2% и %3%."
 
 #: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
 #: src/gui/state/game/helpers.cpp:141
 msgid "%1% found %2%."
-msgstr "%1% намерен %2%."
+msgstr "%1% намери %2%."
 
 #: src/gui/state/game/helpers.cpp:222
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT установи, че „%1%“ е невалиден и ще бъде игнориран."
+msgstr "„LOOT“ установи, че „%1%“ е невалиден и ще бъде игнориран."
 
 #: src/gui/html/elements/editable-table.ts:438
 msgid "Add New Row"
@@ -271,7 +272,7 @@ msgstr "Приставки в %s"
 
 #: src/gui/html/elements/loot-plugin-card.ts:339
 msgid "Verified clean by %s"
-msgstr "Според %s, приставката е чиста"
+msgstr "Според „%s“, приставката е чиста"
 
 #: src/gui/html/js/events.ts:218
 msgid "Identifying conflicting plugins..."
@@ -315,7 +316,7 @@ msgid ""
 msgstr ""
 "Тази функция е за потребителите, използващи „Creation Kit“, чрез нея те "
 "могат да променят реда за зареждане. Обаче, всеки мод от „Steam Workshop“ "
-"трябва да бъде изтеглен отново от „Steam“ (това не засяга Skyrim SE). Искате "
+"трябва да бъде изтеглен отново от „Steam“ (не важи за „Skyrim SE“). Искате "
 "ли да продължите?"
 
 #. Affirmative confirmation button text for the Redate Plugins dialog box.
@@ -346,7 +347,7 @@ msgstr "Всички добавени метаданни бяха изчисте
 
 #: src/gui/html/js/events.ts:586
 msgid "LOOT's content has been copied to the clipboard."
-msgstr "Съдържанието на LOOT беше копирано в клипборда."
+msgstr "Съдържанието на „LOOT“ беше копирано в клипборда."
 
 #: src/gui/html/js/events.ts:604
 msgid "The load order has been copied to the clipboard."
@@ -402,12 +403,12 @@ msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
 msgstr ""
-"Проверката за обновявания на LOOT е неуспешна! Проверете LOOTDebugLog.txt "
+"Проверката за обновявания на „LOOT“ е неуспешна! Проверете LOOTDebugLog.txt "
 "(от главното меню) за повече информация."
 
 #: src/gui/html/js/loot.ts:330
 msgid "A [new release](%s) of LOOT is available."
-msgstr "Налична е [нова версия](%s) на LOOT."
+msgstr "Налична е [нова версия](%s) на „LOOT“."
 
 #: src/gui/html/js/loot.ts:370
 msgid ""
@@ -421,7 +422,7 @@ msgid "Active Plugin"
 msgstr "Активна приставка"
 
 #: src/gui/html/js/translateStaticText.ts:74
-#: src/gui/html/js/translateStaticText.ts:568
+#: src/gui/html/js/translateStaticText.ts:570
 msgid "Master File"
 msgstr "Основен файл"
 
@@ -483,7 +484,7 @@ msgstr "Съобщения"
 #. Title of a tab in the metadata editor.
 #: src/gui/html/js/translateStaticText.ts:127
 msgid "Bash Tags"
-msgstr "Bash етикети"
+msgstr "Етикети на „Bash“"
 
 #: src/gui/html/js/translateStaticText.ts:129
 msgid "Dirty Plugin Info"
@@ -526,7 +527,7 @@ msgid "Content"
 msgstr "Съдържание"
 
 #: src/gui/html/js/translateStaticText.ts:170
-#: src/gui/html/js/translateStaticText.ts:517
+#: src/gui/html/js/translateStaticText.ts:519
 msgid "Language"
 msgstr "Език"
 
@@ -565,7 +566,7 @@ msgid "URL"
 msgstr "Връзка"
 
 #: src/gui/html/js/translateStaticText.ts:198
-#: src/gui/html/js/translateStaticText.ts:549
+#: src/gui/html/js/translateStaticText.ts:551
 msgid "Name"
 msgstr "Име"
 
@@ -575,8 +576,8 @@ msgstr "Запази метаданните"
 
 #: src/gui/html/js/translateStaticText.ts:203
 #: src/gui/html/js/translateStaticText.ts:345
-#: src/gui/html/js/translateStaticText.ts:605
-#: src/gui/html/js/translateStaticText.ts:617
+#: src/gui/html/js/translateStaticText.ts:607
+#: src/gui/html/js/translateStaticText.ts:619
 msgid "Cancel"
 msgstr "Отказ"
 
@@ -619,7 +620,7 @@ msgid "Remove"
 msgstr "Премахни"
 
 #: src/gui/html/js/translateStaticText.ts:265
-#: src/gui/html/js/translateStaticText.ts:545
+#: src/gui/html/js/translateStaticText.ts:547
 msgid "A name is required."
 msgstr "Изисква се име."
 
@@ -656,8 +657,8 @@ msgid "Update Masterlist"
 msgstr "Обнови основния списък"
 
 #: src/gui/html/js/translateStaticText.ts:344
-#: src/gui/html/js/translateStaticText.ts:602
-#: src/gui/html/js/translateStaticText.ts:615
+#: src/gui/html/js/translateStaticText.ts:604
+#: src/gui/html/js/translateStaticText.ts:617
 msgid "Apply"
 msgstr "Приложи"
 
@@ -700,7 +701,7 @@ msgid "About"
 msgstr "Относно"
 
 #: src/gui/html/js/translateStaticText.ts:371
-#: src/gui/html/js/translateStaticText.ts:505
+#: src/gui/html/js/translateStaticText.ts:507
 msgid "Settings"
 msgstr "Настройки"
 
@@ -720,7 +721,7 @@ msgstr "Филтри"
 #: src/gui/html/js/translateStaticText.ts:438
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
-"Натиснете клавиша Enter или натиснете извън полето, за да зададете филтъра."
+"Натиснете клавиша „Enter“ или натиснете извън полето, за да зададете филтъра."
 
 #: src/gui/html/js/translateStaticText.ts:442
 msgid "Show only plugins with cards that contain"
@@ -741,7 +742,7 @@ msgstr "Скрий всички CRC"
 #. Text of a filter in the sidebar.
 #: src/gui/html/js/translateStaticText.ts:454
 msgid "Hide Bash Tags"
-msgstr "Скрий Bash етикетите"
+msgstr "Скрий етикетите на „Bash“"
 
 #: src/gui/html/js/translateStaticText.ts:455
 msgid "Hide notes"
@@ -787,148 +788,150 @@ msgstr "Ревизия на основния списък"
 msgid "Masterlist Date"
 msgstr "Дата на основния списък"
 
-#: src/gui/html/js/translateStaticText.ts:489
+#. The number of warning messages present. This text appears in the General Information card.
+#: src/gui/html/js/translateStaticText.ts:490
 msgid "Warnings"
 msgstr "Предупреждения"
 
-#: src/gui/html/js/translateStaticText.ts:491
+#. The number of error messages present. This text appears in the General Information card.
+#: src/gui/html/js/translateStaticText.ts:493
 msgid "Errors"
 msgstr "Грешки"
 
-#: src/gui/html/js/translateStaticText.ts:493
+#: src/gui/html/js/translateStaticText.ts:495
 msgid "Total Messages"
 msgstr "Общо съобщения"
 
-#: src/gui/html/js/translateStaticText.ts:495
+#: src/gui/html/js/translateStaticText.ts:497
 msgid "Active Plugins"
 msgstr "Активни приставки"
 
-#: src/gui/html/js/translateStaticText.ts:497
+#: src/gui/html/js/translateStaticText.ts:499
 msgid "Dirty Plugins"
 msgstr "Мръсни приставки"
 
-#: src/gui/html/js/translateStaticText.ts:499
+#: src/gui/html/js/translateStaticText.ts:501
 msgid "Total Plugins"
 msgstr "Общо приставки"
 
-#: src/gui/html/js/translateStaticText.ts:507
+#: src/gui/html/js/translateStaticText.ts:509
 msgid "General"
 msgstr "Общи"
 
-#: src/gui/html/js/translateStaticText.ts:511
+#: src/gui/html/js/translateStaticText.ts:513
 msgid "Default Game"
 msgstr "Игра по подразбиране"
 
-#: src/gui/html/js/translateStaticText.ts:513
+#: src/gui/html/js/translateStaticText.ts:515
 msgid "Autodetect"
 msgstr "Автоматично откриване"
 
-#: src/gui/html/js/translateStaticText.ts:518
+#: src/gui/html/js/translateStaticText.ts:520
 msgid "Language changes will be applied after LOOT is restarted."
-msgstr "Промяната на езика ще бъде приложена след рестартиране на LOOT."
+msgstr "Промяната на езика ще бъде приложена след рестартиране на „LOOT“."
 
-#: src/gui/html/js/translateStaticText.ts:522
+#: src/gui/html/js/translateStaticText.ts:524
 msgid "Theme"
 msgstr "Тема"
 
-#: src/gui/html/js/translateStaticText.ts:523
+#: src/gui/html/js/translateStaticText.ts:525
 msgid "Theme changes will be applied after LOOT is restarted."
-msgstr "Промяната на темата ще бъде приложена след рестартиране на LOOT."
+msgstr "Промяната на темата ще бъде приложена след рестартиране на „LOOT“."
 
-#: src/gui/html/js/translateStaticText.ts:527
+#: src/gui/html/js/translateStaticText.ts:529
 msgid "default"
 msgstr "по подразбиране"
 
-#: src/gui/html/js/translateStaticText.ts:532
+#: src/gui/html/js/translateStaticText.ts:534
 msgid "Enable debug logging"
-msgstr "Включи регистриране на грешките"
+msgstr "Включи регистрирането на грешки"
 
-#: src/gui/html/js/translateStaticText.ts:533
+#: src/gui/html/js/translateStaticText.ts:535
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "Резултатите се записват във файла LOOTDebugLog.txt."
 
-#: src/gui/html/js/translateStaticText.ts:538
+#: src/gui/html/js/translateStaticText.ts:540
 msgid "Update masterlist before sorting"
 msgstr "Обновявай основния списък преди сортиране"
 
-#: src/gui/html/js/translateStaticText.ts:541
+#: src/gui/html/js/translateStaticText.ts:543
 msgid "Check for LOOT updates on startup"
-msgstr "Проверявай за обновявания при стартиране на LOOT"
+msgstr "Проверявай за обновявания при стартиране на „LOOT“"
 
-#: src/gui/html/js/translateStaticText.ts:554
+#: src/gui/html/js/translateStaticText.ts:556
 msgid "Base Game"
-msgstr "Базова игра"
+msgstr "Игра"
 
-#: src/gui/html/js/translateStaticText.ts:559
+#: src/gui/html/js/translateStaticText.ts:561
 msgid "A folder is required."
 msgstr "Изисква се папка."
 
-#: src/gui/html/js/translateStaticText.ts:563
+#: src/gui/html/js/translateStaticText.ts:565
 msgid "LOOT Folder"
-msgstr "Папка на LOOT"
+msgstr "Папка на „LOOT“"
 
-#: src/gui/html/js/translateStaticText.ts:573
+#: src/gui/html/js/translateStaticText.ts:575
 msgid "Masterlist Repository URL"
 msgstr "Връзка към хранилището на основния списък"
 
-#: src/gui/html/js/translateStaticText.ts:578
+#: src/gui/html/js/translateStaticText.ts:580
 msgid "Masterlist Repository Branch"
 msgstr "Клон на хранилището на основния списък"
 
-#: src/gui/html/js/translateStaticText.ts:583
+#: src/gui/html/js/translateStaticText.ts:585
 msgid "Install Path"
 msgstr "Инсталационен път"
 
-#: src/gui/html/js/translateStaticText.ts:588
-msgid "Install Path Registry Key"
-msgstr "Ключ от регистъра"
+#: src/gui/html/js/translateStaticText.ts:590
+msgid "Install Path Registry Keys"
+msgstr "Ключове от регистъра"
 
-#: src/gui/html/js/translateStaticText.ts:593
+#: src/gui/html/js/translateStaticText.ts:595
 msgid "Local Data Path"
 msgstr "Местоположение на данните"
 
-#: src/gui/html/js/translateStaticText.ts:596
+#: src/gui/html/js/translateStaticText.ts:598
 msgid "Add new game"
 msgstr "Добави нова игра"
 
-#: src/gui/html/js/translateStaticText.ts:598
+#: src/gui/html/js/translateStaticText.ts:600
 msgid "Delete game"
 msgstr "Изтрий играта"
 
-#: src/gui/html/js/translateStaticText.ts:612
+#: src/gui/html/js/translateStaticText.ts:614
 msgid "Groups Editor"
 msgstr "Редактор на групи"
 
-#: src/gui/html/js/translateStaticText.ts:623
+#: src/gui/html/js/translateStaticText.ts:625
 msgid "First-Time Tips"
 msgstr "Начални съвети"
 
-#: src/gui/html/js/translateStaticText.ts:626
+#: src/gui/html/js/translateStaticText.ts:628
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"Изглежда това е първото стартиране на LOOT в%s. Ето някои съвети, които ще "
+"Изглежда това е първото стартиране на „LOOT“ в%s. Ето някои съвети, които ще "
 "са Ви от полза."
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
-#: src/gui/html/js/translateStaticText.ts:633
+#: src/gui/html/js/translateStaticText.ts:635
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "Натиснете върху %(menu_icon)s за да отворите менютата."
 
-#: src/gui/html/js/translateStaticText.ts:637
+#: src/gui/html/js/translateStaticText.ts:639
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
 "<span class=\"tag add\">addition</span> and <span class=\"tag remove"
 "\">removal</span>."
 msgstr ""
-"Освен съобщения, LOOT показва <span class=\"version\">версията</span>, <span "
-"class=\"crc\">CRC</span> и Bash етикетите на приставката с предложения за "
-"<span class=\"tag add\">добавяне</span> и <span class=\"tag remove"
-"\">премахване</span>."
+"Освен съобщения, „LOOT“ показва <span class=\"version\">версията</span>, "
+"<span class=\"crc\">CRC</span> и етикетите на „Bash“ на приставката с "
+"предложения за <span class=\"tag add\">добавяне</span> и <span class=\"tag "
+"remove\">премахване</span>."
 
-#: src/gui/html/js/translateStaticText.ts:640
+#: src/gui/html/js/translateStaticText.ts:642
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -936,7 +939,7 @@ msgstr ""
 "CRC се показват само след като приставките бъдат заредени чрез филтър за "
 "несъвместимост или чрез сортиране."
 
-#: src/gui/html/js/translateStaticText.ts:643
+#: src/gui/html/js/translateStaticText.ts:645
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
@@ -944,7 +947,7 @@ msgstr ""
 "Натиснете два пъти върху приставка в страничната лента за нейното бързо "
 "отваряне в редактора на метаданни."
 
-#: src/gui/html/js/translateStaticText.ts:646
+#: src/gui/html/js/translateStaticText.ts:648
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -953,7 +956,7 @@ msgstr ""
 "таблиците на редактора на метаданни - „Зареди след“, „Изисквания“ и "
 "„Несъвместимости“."
 
-#: src/gui/html/js/translateStaticText.ts:649
+#: src/gui/html/js/translateStaticText.ts:651
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -961,44 +964,44 @@ msgstr ""
 "Някои функции са изключени, докато редактора на метаданни е отворен или "
 "докато има сортиран ред за зареждане, който не е приложен или отхвърлен."
 
-#: src/gui/html/js/translateStaticText.ts:652
+#: src/gui/html/js/translateStaticText.ts:654
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
 "can be accessed through the main menu."
 msgstr ""
 "Голяма част от интерфейса има пояснения. Ако не знаете нещо, плъзнете "
-"мишката върху него и ще разберете. В противен случай, документацията на LOOT "
-"е достъпна през главното меню."
+"мишката върху него и ще разберете. В противен случай, документацията на "
+"„LOOT“ е достъпна през главното меню."
 
-#: src/gui/html/js/translateStaticText.ts:656
-#: src/gui/html/js/translateStaticText.ts:678
+#: src/gui/html/js/translateStaticText.ts:658
+#: src/gui/html/js/translateStaticText.ts:680
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
 "using %s."
 msgstr ""
-"LOOT е безплатен, но ако искате да направите дарение, може да подкрепите "
-"WrinklyNinja (той е създател и главен разработчик на LOOT) чрез %s."
+"„LOOT“ е безплатен, но ако искате да направите дарение, може да подкрепите "
+"WrinklyNinja (той е създател и главен разработчик на „LOOT“) чрез %s."
 
-#: src/gui/html/js/translateStaticText.ts:662
+#: src/gui/html/js/translateStaticText.ts:664
 msgid "OK"
 msgstr "ОК"
 
-#: src/gui/html/js/translateStaticText.ts:667
-msgid "About LOOT"
-msgstr "За LOOT"
-
 #: src/gui/html/js/translateStaticText.ts:669
+msgid "About LOOT"
+msgstr "За „LOOT“"
+
+#: src/gui/html/js/translateStaticText.ts:671
 msgid "Version %s (build %s)"
 msgstr "Версия %s (Компилация %s)"
 
-#: src/gui/html/js/translateStaticText.ts:674
+#: src/gui/html/js/translateStaticText.ts:676
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
 "Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
-"Оптимизация на реда за зареждане за Morrowind, Oblivion, Nehrim, Skyrim, "
-"Enderal, Skyrim SE, Enderal SE, Skyrim VR, Fallout 3, Fallout: NV, Fallout 4 "
-"и Fallout 4 VR."
+"Оптимизация на реда за зареждане за „Morrowind“, „Oblivion“, „Nehrim“, "
+"„Skyrim“, „Enderal“, „Skyrim SE“, „Enderal SE“, „Skyrim VR“, „Fallout 3“, "
+"„Fallout: NV“, „Fallout 4“ и „Fallout 4 VR“."
