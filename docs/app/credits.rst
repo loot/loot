@@ -19,7 +19,7 @@ In addition, the following are credited with application-related support:
   * French: Kaos, cpasmoi, Sita
   * German: lpradel, DaCoolX, Infernio, pStyl3
   * Italian: Griam, nicola89b, albie
-  * Japanese: kuroko, tktk11
+  * Japanese: kuroko, tktk11, Menchi
   * Korean: SteamB23, sean-kang
   * Polish: Łukasz Niemczyk, Yoosk
   * Portuguese: ironmagician
