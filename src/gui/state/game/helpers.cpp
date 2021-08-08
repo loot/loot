@@ -74,7 +74,7 @@ Message PlainTextMessage(MessageType type, std::string text) {
   return Message(type, EscapeMarkdownSpecialChars(text));
 }
 
-std::string EscapeMarkdownSpecialChars(std::string text) { 
+std::string EscapeMarkdownSpecialChars(std::string text) {
   auto specialCharsRegex = std::regex("([\\\\`*_{}\\[\\]()#+.!-])");
   return std::regex_replace(text, specialCharsRegex, "\\$1");
 }
@@ -142,17 +142,17 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
         cleaningData.GetCleaningUtility() % deletedNavmeshes;
 
   std::string message = f.str();
-  if (cleaningData.GetInfo().empty()) {
+  auto detail = cleaningData.GetDetail();
+  if (detail.empty()) {
     return Message(MessageType::warn, message);
   }
 
-  auto info = cleaningData.GetInfo();
-  for (auto& content : info) {
+  for (auto& content : detail) {
     content = MessageContent(message + " " + content.GetText(),
                              content.GetLanguage());
   }
 
-  return Message(MessageType::warn, info);
+  return Message(MessageType::warn, detail);
 }
 
 std::string DescribeEdgeType(EdgeType edgeType) {

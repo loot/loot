@@ -59,7 +59,7 @@ export interface PluginCleaningData {
   itm: number;
   udr: number;
   nav: number;
-  info: MessageContent[];
+  detail: MessageContent[];
 }
 
 export interface ModLocation {
@@ -160,14 +160,14 @@ export interface GameContent {
 export interface GameData {
   folder: string;
   generalMessages: SimpleMessage[];
-  masterlist: Masterlist;
+  masterlist: FileRevision;
   groups: GameGroups;
   plugins: DerivedPluginMetadata[];
   bashTags: string[];
 }
 
-export interface Masterlist {
-  revision: string;
+export interface FileRevision {
+  id: string;
   date: string;
 }
 

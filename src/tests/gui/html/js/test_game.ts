@@ -31,7 +31,7 @@ describe('Game', () => {
         condition: ''
       }
     ],
-    masterlist: { revision: '0', date: '' },
+    masterlist: { id: '0', date: '' },
     groups: { masterlist: [], userlist: [] },
     plugins: [defaultDerivedPluginMetadata],
     bashTags: []
@@ -57,7 +57,7 @@ describe('Game', () => {
 
     test("should set masterlist to the object's value", () => {
       const game = new Game(gameData, l10n);
-      expect(game.masterlist).toEqual({ revision: '0', date: '' });
+      expect(game.masterlist).toEqual({ id: '0', date: '' });
     });
 
     test("should construct plugins from the object's plugins value", () => {
@@ -224,7 +224,7 @@ describe('Game', () => {
 
     test('setting value should dispatch an event if the new value differs from the old one', done => {
       const newMasterlist = {
-        revision: 'foo',
+        id: 'foo',
         date: 'bar'
       };
       handleEvent = evt => {

@@ -347,7 +347,7 @@ export default class LootPluginEditor extends PolymerElement {
       udr: parseInt(rowData.udr, 10) || 0,
       nav: parseInt(rowData.nav, 10) || 0,
       util: rowData.utility,
-      info: []
+      detail: []
     };
   }
 

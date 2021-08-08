@@ -37,7 +37,7 @@ public:
 
   std::string GetName() const override { return name_; }
 
-  float GetHeaderVersion() const { return 0.0f; }
+  std::optional<float> GetHeaderVersion() const { return 0.0f; }
 
   std::optional<std::string> GetVersion() const {
     return std::optional<std::string>();

@@ -96,97 +96,97 @@ TEST(PlainTextMessage, shouldEscapeMarkdownSpecialCharacters) {
 }
 
 TEST(ToMessage, shouldOutputAllNonZeroCounts) {
-  const auto info = std::vector<MessageContent>({
-      MessageContent("info"),
+  const auto detail = std::vector<MessageContent>({
+      MessageContent("detail"),
   });
 
   Message message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 2, 10, 30));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 2 ITM records, 10 deleted references and 30 deleted "
-      "navmeshes. info",
-      message.GetContent(MessageContent::defaultLanguage).GetText());
+      "navmeshes. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 0, 0, 0));
+  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found dirty edits. info",
-            message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found dirty edits. detail",
+            message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 0, 10, 30));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
-      "cleaner found 10 deleted references and 30 deleted navmeshes. info",
-      message.GetContent(MessageContent::defaultLanguage).GetText());
+      "cleaner found 10 deleted references and 30 deleted navmeshes. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 0, 0, 30));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 30 deleted navmeshes. info",
-            message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 30 deleted navmeshes. detail",
+            message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 0, 10, 0));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references. info",
-            message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 10 deleted references. detail",
+            message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 2, 0, 30));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. info",
-            message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. detail",
+            message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 2, 0, 0));
+  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records. info",
-            message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 2 ITM records. detail",
+            message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 2, 10, 0));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. info",
-            message.GetContent(MessageContent::defaultLanguage).GetText());
+  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. detail",
+            message.GetContent(MessageContent::defaultLanguage).value().GetText());
 }
 
 TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
-  const auto info = std::vector<MessageContent>({
-      MessageContent("info"),
+  const auto detail = std::vector<MessageContent>({
+      MessageContent("detail"),
   });
 
   Message message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 1, 2, 3));
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 1, 2, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
-      "navmeshes. info",
-      message.GetContent(MessageContent::defaultLanguage).GetText());
+      "navmeshes. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 2, 1, 3));
+  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 2 ITM records, 1 deleted reference and 3 deleted "
-      "navmeshes. info",
-      message.GetContent(MessageContent::defaultLanguage).GetText());
+      "navmeshes. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", info, 3, 2, 1));
+  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 3 ITM records, 2 deleted references and 1 deleted "
-      "navmesh. info",
-      message.GetContent(MessageContent::defaultLanguage).GetText());
+      "navmesh. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 }
 
 TEST(ToMessage,
-     shouldReturnAMessageWithCountsButNoInfoStringIfInfoIsAnEmptyString) {
+     shouldReturnAMessageWithCountsButNoDetailStringIfDetailIsAnEmptyVector) {
   Message message = ToMessage(PluginCleaningData(
       0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
       "navmeshes.",
-      message.GetContent(MessageContent::defaultLanguage).GetText());
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 }
 
 TEST(SplitRegistryPath, shouldAssumeHKLMIfNoRootKeyIsGiven) {

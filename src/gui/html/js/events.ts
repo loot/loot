@@ -336,7 +336,7 @@ function updateMasterlist(): Promise<void> {
         showNotification(
           window.loot.l10n.translateFormatted(
             'Masterlist updated to revision %s.',
-            currentGame.masterlist.revision
+            currentGame.masterlist.id
           )
         );
       } else {

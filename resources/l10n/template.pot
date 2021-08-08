@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-07-18 08:47+0100\n"
+"POT-Creation-Date: 2021-08-12 20:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,50 +106,42 @@ msgid ""
 "saves."
 msgstr ""
 
-#. translators: A header is the part of a file that stores data like file name and version.
-#: src/gui/state/game/game.cpp:314
+#: src/gui/state/game/game.cpp:317
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:333
+#: src/gui/state/game/game.cpp:337
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:402 src/gui/state/game/game.cpp:487
+#: src/gui/state/game/game.cpp:406 src/gui/state/game/game.cpp:491
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:512
+#: src/gui/state/game/game.cpp:516
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:524
+#: src/gui/state/game/game.cpp:528
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:560
+#: src/gui/state/game/game.cpp:564
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:584
+#: src/gui/state/game/game.cpp:588
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:612
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-
-#: src/gui/state/game/game.cpp:657
+#: src/gui/state/game/game.cpp:648
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

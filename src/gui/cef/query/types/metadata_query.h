@@ -155,13 +155,13 @@ private:
   static std::vector<SimpleMessage> toSimpleMessages(
       const std::vector<Message>& messages,
       const std::string& language) {
-    std::vector<SimpleMessage> simpleMessages(messages.size());
-    std::transform(begin(messages),
-                   end(messages),
-                   begin(simpleMessages),
-                   [&](const Message& message) {
-                     return message.ToSimpleMessage(language);
-                   });
+    std::vector<SimpleMessage> simpleMessages;
+    for (const auto message : messages) {
+      auto simpleMessage = message.ToSimpleMessage(language);
+      if (simpleMessage.has_value()) {
+        simpleMessages.push_back(simpleMessage.value());
+      }
+    }
 
     return simpleMessages;
   }
@@ -239,43 +239,45 @@ private:
     }
   }
 
-  MasterlistInfo getMasterlistInfo() {
+  FileRevision getMasterlistInfo() {
     using boost::locale::translate;
 
-    MasterlistInfo info;
+    FileRevision revision;
     try {
-      info = game_.GetMasterlistInfo();
-      addSuffixIfModified(info);
+      revision = game_.GetMasterlistInfo();
+      addSuffixIfModified(revision);
     } catch (FileAccessError&) {
       if (logger_) {
         logger_->warn("No masterlist present at {}",
                       game_.MasterlistPath().u8string());
       }
-      info.revision_id =
-        /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
-        translate("N/A: No masterlist present").str();
-      info.revision_date = translate("N/A: No masterlist present").str();
+      auto text =
+          /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
+          translate("N/A: No masterlist present").str();
+      revision.id = text;
+      revision.date = text;
     } catch (GitStateError&) {
       if (logger_) {
         logger_->warn("Not a Git repository: {}",
                       game_.MasterlistPath().parent_path().u8string());
       }
-      info.revision_id =
+      auto text =
         /* translators: Git is the software LOOT uses to track changes to the source code. */
         translate("Unknown: Git repository missing").str();
-      info.revision_date = translate("Unknown: Git repository missing").str();
+      revision.id = text;
+      revision.date = text;
     }
 
-    return info;
+    return revision;
   }
 
-  void addSuffixIfModified(MasterlistInfo& info) {
-    if (info.is_modified) {
+  void addSuffixIfModified(FileRevision& revision) {
+    if (revision.is_modified) {
       auto suffix = " " +
         /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
         boost::locale::translate("(edited)").str();
-      info.revision_date += suffix;
-      info.revision_id += suffix;
+      revision.date += suffix;
+      revision.id += suffix;
     }
   }
 

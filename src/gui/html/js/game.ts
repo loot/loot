@@ -22,7 +22,7 @@ import {
   PluginContent,
   SimpleMessage,
   SourcedGroup,
-  Masterlist,
+  FileRevision,
   GameGroups,
   DerivedPluginMetadata,
   PluginLoadOrderIndex
@@ -108,7 +108,7 @@ export default class Game {
 
   private _generalMessages: SimpleMessage[];
 
-  private _masterlist: Masterlist;
+  private _masterlist: FileRevision;
 
   private _plugins: Plugin[];
 
@@ -123,7 +123,7 @@ export default class Game {
   public constructor(obj: GameData, l10n: Translator) {
     this._folder = '';
     this._generalMessages = [];
-    this._masterlist = { revision: '', date: '' };
+    this._masterlist = { id: '', date: '' };
     this._plugins = [];
     this._groups = [];
 
@@ -214,27 +214,27 @@ export default class Game {
     this._generalMessages = generalMessages;
   }
 
-  public get masterlist(): Masterlist {
+  public get masterlist(): FileRevision {
     return this._masterlist;
   }
 
-  public set masterlist(masterlist: Masterlist) {
+  public set masterlist(masterlist: FileRevision) {
     if (
       masterlist !== this._masterlist &&
       (masterlist === undefined ||
         this._masterlist === undefined ||
-        masterlist.revision !== this._masterlist.revision ||
+        masterlist.id !== this._masterlist.id ||
         masterlist.date !== this._masterlist.date)
     ) {
       const {
-        revision = this._notApplicableString,
+        id = this._notApplicableString,
         date = this._notApplicableString
       } = masterlist || {};
 
       document.dispatchEvent(
         new CustomEvent('loot-game-masterlist-change', {
           detail: {
-            revision,
+            id,
             date
           }
         })

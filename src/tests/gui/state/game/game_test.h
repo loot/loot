@@ -52,8 +52,8 @@ protected:
           blankDifferentMasterDependentEsp,
           blankPluginDependentEsp,
       }),
-      info_(std::vector<MessageContent>({
-          MessageContent("info"),
+      detail_(std::vector<MessageContent>({
+          MessageContent("detail"),
       })),
       loadOrderBackupFile0("loadorder.bak.0"),
       loadOrderBackupFile1("loadorder.bak.1"),
@@ -78,7 +78,7 @@ protected:
   const std::string loadOrderBackupFile2;
   const std::string loadOrderBackupFile3;
 
-  const std::vector<MessageContent> info_;
+  const std::vector<MessageContent> detail_;
 
   const GameSettings defaultGameSettings;
 };
@@ -385,20 +385,22 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
   game.LoadAllInstalledPlugins(true);
 
   PluginMetadata metadata(blankEsm);
-  const std::vector<MessageContent> info = std::vector<MessageContent>({
-      MessageContent("info", MessageContent::defaultLanguage),
+  const std::vector<MessageContent> detail = std::vector<MessageContent>({
+      MessageContent("detail", MessageContent::defaultLanguage),
   });
 
   metadata.SetDirtyInfo({
-      PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2),
-      PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10),
+      PluginCleaningData(blankEsmCrc, "utility1", detail, 0, 1, 2),
+      PluginCleaningData(0xDEADBEEF, "utility2", detail, 0, 5, 10),
   });
 
   auto messages = game.CheckInstallValidity(game.GetPlugin(blankEsm), metadata);
   EXPECT_EQ(
       std::vector<Message>({
-          ToMessage(PluginCleaningData(blankEsmCrc, "utility1", info, 0, 1, 2)),
-          ToMessage(PluginCleaningData(0xDEADBEEF, "utility2", info, 0, 5, 10)),
+          ToMessage(
+              PluginCleaningData(blankEsmCrc, "utility1", detail, 0, 1, 2)),
+                ToMessage(PluginCleaningData(
+                    0xDEADBEEF, "utility2", detail, 0, 5, 10)),
       }),
       messages);
 }

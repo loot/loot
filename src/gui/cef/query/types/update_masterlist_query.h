@@ -42,24 +42,14 @@ public:
       logger->debug("Updating and parsing masterlist.");
     }
 
-    if (!updateMasterlist())
+    if (!this->getGame().UpdateMasterlist()) {
       return "null";
+    }
+
+    this->getGame().LoadMetadata();
 
     auto plugins = this->getGame().GetPlugins();
     return this->generateJsonResponse(plugins.cbegin(), plugins.cend());
-  }
-
-private:
-  bool updateMasterlist() {
-    try {
-      return this->getGame().UpdateMasterlist();
-    } catch (std::exception&) {
-      try {
-        this->getGame().LoadMetadata();
-      } catch (...) {
-      }
-      throw;
-    }
   }
 };
 }

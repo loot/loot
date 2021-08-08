@@ -186,7 +186,7 @@ void to_json(nlohmann::json& json, const PluginCleaningData& data) {
     { "itm", data.GetITMCount() },
     { "udr", data.GetDeletedReferenceCount() },
     { "nav", data.GetDeletedNavmeshCount() },
-    { "info", data.GetInfo() },
+    { "detail", data.GetDetail() },
   };
 }
 
@@ -200,13 +200,13 @@ void from_json(const nlohmann::json& json, PluginCleaningData& data) {
         "CleaningData object has an empty 'util' value");
   }
 
-  auto info = json.value("info", std::vector<MessageContent>());
+  auto detail = json.value("detail", std::vector<MessageContent>());
 
-  validateMessageContents(info);
+  validateMessageContents(detail);
 
   data = PluginCleaningData(json.at("crc"),
                             json.at("util"),
-                            info,
+                            detail,
                             json.value("itm", 0),
                             json.value("udr", 0),
                             json.value("nav", 0));
@@ -265,10 +265,10 @@ void from_json(const nlohmann::json& json, Location& location) {
   location = Location(json.at("link"), json.value("name", ""));
 }
 
-void to_json(nlohmann::json& json, const MasterlistInfo& info) {
+void to_json(nlohmann::json& json, const FileRevision& revision) {
   json = {
-    { "revision", info.revision_id },
-    { "date", info.revision_date },
+    { "id", revision.id },
+    { "date", revision.date },
   };
 }
 

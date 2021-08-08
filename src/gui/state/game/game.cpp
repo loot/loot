@@ -298,23 +298,27 @@ std::vector<Message> Game::CheckInstallValidity(
             "will cause irreversible damage to your game saves.")));
   }
 
-  if (plugin->GetHeaderVersion() < MinimumHeaderVersion()) {
+  if (plugin->GetHeaderVersion().has_value() &&
+      plugin->GetHeaderVersion().value() < MinimumHeaderVersion()) {
     if (logger) {
       logger->warn(
           "\"{}\" has a header version of {}, which is less than the game's "
           "minimum supported header version of {}.",
           plugin->GetName(),
-          plugin->GetHeaderVersion(),
+          plugin->GetHeaderVersion().value(),
           MinimumHeaderVersion());
     }
     messages.push_back(PlainTextMessage(
         MessageType::warn,
         (boost::format(
-          /* translators: A header is the part of a file that stores data like file name and version. */
-          boost::locale::translate("This plugin has a header version of %1%, "
-            "which is less than the game's minimum supported header version of "
-            "%2%.")) %
-         plugin->GetHeaderVersion() % MinimumHeaderVersion())
+             /* translators: A header is the part of a file that stores data
+                like file name and version. */
+             boost::locale::translate(
+                 "This plugin has a header version of %1%, "
+                 "which is less than the game's minimum supported header "
+                 "version of "
+                 "%2%.")) %
+         plugin->GetHeaderVersion().value() % MinimumHeaderVersion())
             .str()));
   }
 
@@ -601,25 +605,12 @@ void Game::ClearMessages() {
   messages_.clear();
 }
 
-bool Game::UpdateMasterlist() {
-  bool wasUpdated = gameHandle_->GetDatabase()->UpdateMasterlist(
-      MasterlistPath(), RepoURL(), RepoBranch());
-  if (wasUpdated && !gameHandle_->GetDatabase()->IsLatestMasterlist(
-                        MasterlistPath(), RepoBranch())) {
-    AppendMessage(PlainTextMessage(
-        MessageType::error,
-        boost::locale::translate(
-            "The latest masterlist revision contains a syntax error, LOOT is "
-            "using the most recent valid revision instead. Syntax errors are "
-            "usually minor and fixed within hours.")));
-  }
-
-  return wasUpdated;
+bool Game::UpdateMasterlist() const {
+  return UpdateFile(MasterlistPath(), RepoURL(), RepoBranch());
 }
 
-MasterlistInfo Game::GetMasterlistInfo() const {
-  return gameHandle_->GetDatabase()->GetMasterlistRevision(MasterlistPath(),
-                                                           true);
+FileRevision Game::GetMasterlistInfo() const {
+  return GetFileRevision(MasterlistPath(), true);
 }
 
 void Game::LoadMetadata() {
