@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.14.0\n"
+"Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2019-08-21 22:37+0100\n"
-"PO-Revision-Date: 2021-03-21 03:52+0900\n"
+"POT-Creation-Date: 2021-03-21 14:31+0000\n"
+"PO-Revision-Date: 2021-08-11 23:38+0900\n"
 "Last-Translator: SteamB23 <steamb23@gmail.com>\n"
 "Language-Team: SteamB23 <steamb23@gmail.com>\n"
 "Language: ko\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: resources/report/js/marked.js\n"
 "X-Poedit-SearchPathExcluded-2: resources/report/js/require.js\n"
 
-#: src/gui/cef/query/query.h:48
+#: src/gui/cef/query/query.h:49
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -34,7 +34,7 @@ msgstr ""
 "LOOTDebugLog.txt (메인 메뉴를 통해 얻을 수 있음)에서 자세한 정보를 확인할 수 "
 "있습니다."
 
-#: src/gui/cef/query/query_executor.h:43
+#: src/gui/cef/query/query_executor.h:44
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -42,64 +42,64 @@ msgstr ""
 "이런, 문제가 발생했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메뉴를 통해 "
 "얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/gui/cef/query/types/get_game_data_query.h:46
+#: src/gui/cef/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중..."
 
-#: src/gui/cef/query/types/metadata_query.h:201
-#: src/gui/cef/query/types/metadata_query.h:228
+#: src/gui/cef/query/types/metadata_query.h:205
+#: src/gui/cef/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\"에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: %2%"
 
-#: src/gui/cef/query/types/metadata_query.h:250
-#: src/gui/cef/query/types/metadata_query.h:251
+#: src/gui/cef/query/types/metadata_query.h:254
+#: src/gui/cef/query/types/metadata_query.h:255
 msgid "N/A: No masterlist present"
 msgstr "N/A: 마스터 리스트가 존재하지 않음"
 
-#: src/gui/cef/query/types/metadata_query.h:257
-#: src/gui/cef/query/types/metadata_query.h:258
+#: src/gui/cef/query/types/metadata_query.h:261
+#: src/gui/cef/query/types/metadata_query.h:262
 msgid "Unknown: Git repository missing"
 msgstr "알 수 없음: Git 저장소 누락"
 
-#: src/gui/cef/query/types/metadata_query.h:266
-#: src/gui/cef/query/types/metadata_query.h:267
+#: src/gui/cef/query/types/metadata_query.h:270
+#: src/gui/cef/query/types/metadata_query.h:271
 msgid "(edited)"
 msgstr "(편집됨)"
 
-#: src/gui/cef/query/types/sort_plugins_query.h:53
+#: src/gui/cef/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr "로드 순서 정렬 중..."
 
-#: src/gui/state/loot_state.cpp:94
+#: src/gui/state/loot_state.cpp:105
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "오류: --auto-sort가 전달되었지만 --game 매개 변수가 제공되지 않았습니다."
 
-#: src/gui/state/loot_state.cpp:117
+#: src/gui/state/loot_state.cpp:127
 msgid "Error: Could not create LOOT settings file. %1%"
 msgstr "오류: LOOT 설정 파일을 만들 수 없습니다. %1%"
 
-#: src/gui/state/loot_state.cpp:127
+#: src/gui/state/loot_state.cpp:144
 msgid "Error: Settings parsing failed. %1%"
 msgstr "오류: 설정의 구문 분석을 하지 못했습니다. %1%"
 
-#: src/gui/state/loot_state.cpp:190
+#: src/gui/state/loot_state.cpp:203
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. %1%"
 
-#: src/gui/state/game/game.cpp:169 src/gui/state/game/game.cpp:199
+#: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr "이 플러그인은 \"%1%\"가 설치되어야 하지만 찾을 수 없습니다."
 
-#: src/gui/state/game/game.cpp:182
+#: src/gui/state/game/game.cpp:191
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "이 플러그인은 \"%1%\"가 활성화되어야 하지만 비활성화되어있습니다."
 
-#: src/gui/state/game/game.cpp:218
+#: src/gui/state/game/game.cpp:240
 msgid "This plugin is incompatible with \"%1%\", but both files are present."
 msgstr "이 플러그인은 \"%1%\"와 호환되지 않지만 두 파일이 모두 존재합니다."
 
-#: src/gui/state/game/game.cpp:253
+#: src/gui/state/game/game.cpp:276
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
@@ -109,7 +109,7 @@ msgstr ""
 "인해 게임 내에서 문제가 발생하고 플러그인이 설치된 동안 정렬이 실패할 수 있습"
 "니다."
 
-#: src/gui/state/game/game.cpp:273
+#: src/gui/state/game/game.cpp:296
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -119,7 +119,7 @@ msgstr ""
 "함되어 있습니다. 이 플러그인을 사용하면 게임 저장에 돌이킬 수 없는 손상이 발"
 "생합니다."
 
-#: src/gui/state/game/game.cpp:290
+#: src/gui/state/game/game.cpp:313
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
@@ -127,11 +127,11 @@ msgstr ""
 "이 플러그인의 헤더 버전은 %1%이며,  이는 게임에서 지원되는 최소 헤더 버전인 "
 "%2%보다 낮습니다."
 
-#: src/gui/state/game/game.cpp:302
+#: src/gui/state/game/game.cpp:331
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr "이 플러그인은 존재하지 않는 \"%1%\" 그룹에 속해 있습니다."
 
-#: src/gui/state/game/game.cpp:370 src/gui/state/game/game.cpp:462
+#: src/gui/state/game/game.cpp:400 src/gui/state/game/game.cpp:485
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -139,29 +139,29 @@ msgstr ""
 "현재 로드 순서를 로드하지 못했습니다. 표시된 정보가 올바르지 않을 수 있습니"
 "다."
 
-#: src/gui/state/game/game.cpp:485
+#: src/gui/state/game/game.cpp:510
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr "\"%1%\"와 \"%2%\"플러그인 사이의 순환 참조가 감지됨 : %3%"
 
-#: src/gui/state/game/game.cpp:497
+#: src/gui/state/game/game.cpp:522
 msgid "The group \"%1%\" does not exist."
 msgstr "\"%1%\" 그룹이 존재하지 않습니다."
 
-#: src/gui/state/game/game.cpp:533
+#: src/gui/state/game/game.cpp:558
 msgid "You have not sorted your load order this session."
 msgstr "이 세션에서 로드 순서를 정렬하지 않았습니다."
 
-#: src/gui/state/game/game.cpp:557
+#: src/gui/state/game/game.cpp:582
 msgid ""
-"You have a normal plugin and at least one light master sharing the FE load "
-"order index. Deactivate a normal plugin or all your light masters to avoid "
+"You have a normal plugin and at least one light plugin sharing the FE load "
+"order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 "일반 플러그인과 FE로드 순서 색인을 공유하는 하나 이상의 경량 마스터가 있습니"
 "다. 잠재적인 문제를 방지하려면 일반 플러그인 또는 모든 경량 마스터를 비활성화"
 "하십시오."
 
-#: src/gui/state/game/game.cpp:585
+#: src/gui/state/game/game.cpp:610
 msgid ""
 "The latest masterlist revision contains a syntax error, LOOT is using the "
 "most recent valid revision instead. Syntax errors are usually minor and "
@@ -171,7 +171,7 @@ msgstr ""
 "정본을 사용하고 있습니다. 구문 오류는 일반적으로 경미하고 몇 시간 내에 수정됩"
 "니다."
 
-#: src/gui/state/game/game.cpp:630
+#: src/gui/state/game/game.cpp:655
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -202,60 +202,65 @@ msgstr ""
 "[LOOT 홈페이지](https://loot.github.io/)에 링크된 LOOT의 포럼 스레드에서 지원"
 "을 요청할 수도 있습니다."
 
-#: src/gui/state/game/helpers.cpp:87
+#: src/gui/state/game/helpers.cpp:88
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] "ITM 레코드 %1% 개"
 
-#: src/gui/state/game/helpers.cpp:91
+#: src/gui/state/game/helpers.cpp:92
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] "삭제된 참조 %1%개"
 
-#: src/gui/state/game/helpers.cpp:97
+#: src/gui/state/game/helpers.cpp:98
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] "삭제된 Navmesh %1%개"
 
-#: src/gui/state/game/helpers.cpp:107
+#: src/gui/state/game/helpers.cpp:108
 msgid "%1% found %2%, %3% and %4%."
 msgstr "%2%, %3%과 %4% %1%개 찾음."
 
-#: src/gui/state/game/helpers.cpp:113
+#: src/gui/state/game/helpers.cpp:114
 msgid "%1% found dirty edits."
 msgstr "지저분한 편집 %1% 개 찾음."
 
-#: src/gui/state/game/helpers.cpp:119 src/gui/state/game/helpers.cpp:125
-#: src/gui/state/game/helpers.cpp:130
+#: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
+#: src/gui/state/game/helpers.cpp:131
 msgid "%1% found %2% and %3%."
 msgstr "%2%과 %3% %1%개 찾음."
 
-#: src/gui/state/game/helpers.cpp:134 src/gui/state/game/helpers.cpp:137
-#: src/gui/state/game/helpers.cpp:140
+#: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
+#: src/gui/state/game/helpers.cpp:141
 msgid "%1% found %2%."
 msgstr "%2% %1%개 찾음."
 
-#: src/gui/state/game/helpers.cpp:221
+#: src/gui/state/game/helpers.cpp:222
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr "LOOT에서 %1%가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
 
-#: src/gui/html/elements/loot-groups-editor.ts:406
+#: src/gui/html/elements/editable-table.ts:436
+#: src/gui/html/js/translateStaticText.ts:718
+msgid "Add New Row"
+msgstr "새 행 추가"
+
+#: src/gui/html/elements/loot-groups-editor.ts:428
 msgid "Add a new group"
 msgstr "새 그룹 추가"
 
-#: src/gui/html/elements/loot-groups-editor.ts:407
+#: src/gui/html/elements/loot-groups-editor.ts:429
 msgid "Group name"
-msgstr "그룹 이르"
+msgstr "그룹 이름"
 
-#: src/gui/html/elements/loot-groups-editor.ts:408
+#: src/gui/html/elements/loot-groups-editor.ts:430
 msgid "Group already exists!"
 msgstr "그룹이 이미 존재함!"
 
-#: src/gui/html/elements/loot-groups-editor.ts:409
+#: src/gui/html/elements/loot-groups-editor.ts:431
 msgid "No plugins are in this group."
 msgstr "이 그룹에는 플러그인이 없습니다."
 
-#: src/gui/html/elements/loot-groups-editor.ts:419
+#: src/gui/html/elements/loot-groups-editor.ts:441
 msgid "Plugins in %s"
 msgstr "%s의 플러그인"
 
@@ -263,39 +268,39 @@ msgstr "%s의 플러그인"
 msgid "Verified clean by %s"
 msgstr "%s에서 정리 확인"
 
-#: src/gui/html/js/events.ts:201
+#: src/gui/html/js/events.ts:211
 msgid "Identifying conflicting plugins..."
 msgstr "플러그인 충돌 식별 중..."
 
-#: src/gui/html/js/events.ts:287
+#: src/gui/html/js/events.ts:306
 msgid "Updating and parsing masterlist..."
 msgstr "마스터 리스트 갱신 및 구문 분석 중..."
 
-#: src/gui/html/js/events.ts:310
+#: src/gui/html/js/events.ts:329
 msgid "Masterlist updated to revision %s."
 msgstr "마스터 리스트를 %s버전으로 갱신되었습니다."
 
-#: src/gui/html/js/events.ts:317
+#: src/gui/html/js/events.ts:336
 msgid "No masterlist update was necessary."
 msgstr "마스터 리스트를 갱신할 필요가 없었습니다."
 
-#: src/gui/html/js/events.ts:353
+#: src/gui/html/js/events.ts:379
 msgid "Cyclic interaction detected"
 msgstr "순환 상호 작용 감지됨"
 
-#: src/gui/html/js/events.ts:360
+#: src/gui/html/js/events.ts:386
 msgid "Failed to sort plugins. Details: %s"
 msgstr "플러그인을 정렬하지 못했습니다. 세부 정ㅂ: %1%"
 
-#: src/gui/html/js/events.ts:387
+#: src/gui/html/js/events.ts:413
 msgid "Sorting made no changes to the load order."
 msgstr "정렬은 순서를 변경하지 않았습니다."
 
-#: src/gui/html/js/events.ts:430
+#: src/gui/html/js/events.ts:466
 msgid "Redate Plugins?"
 msgstr "플러그인 날짜를 변경할까요?"
 
-#: src/gui/html/js/events.ts:431
+#: src/gui/html/js/events.ts:467
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -307,81 +312,77 @@ msgstr ""
 "시 다운로드 된다는 것입니다 (Skyrim Special Edition에는 영향을 주지 않음). 계"
 "속하시겠습니까?"
 
-#: src/gui/html/js/events.ts:434
+#: src/gui/html/js/events.ts:470
 msgid "Redate"
 msgstr "날짜 변경"
 
-#: src/gui/html/js/events.ts:440
+#: src/gui/html/js/events.ts:476
 msgid "Plugins were successfully redated."
 msgstr "플러그인이 성공적으로 수정되었습니다."
 
-#: src/gui/html/js/events.ts:452
+#: src/gui/html/js/events.ts:495
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 "모든 플러그인에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: src/gui/html/js/events.ts:455 src/gui/html/js/events.ts:798
+#: src/gui/html/js/events.ts:498 src/gui/html/js/events.ts:862
 msgid "Clear"
 msgstr "삭제"
 
-#: src/gui/html/js/events.ts:469
+#: src/gui/html/js/events.ts:509
 msgid "All user-added metadata has been cleared."
 msgstr "모든 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: src/gui/html/js/events.ts:506
+#: src/gui/html/js/events.ts:546
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "LOOT의 내용이 클립보드에 복사되었습니다."
 
-#: src/gui/html/js/events.ts:524
+#: src/gui/html/js/events.ts:564
 msgid "The load order has been copied to the clipboard."
 msgstr "로드 순서가 클립보드에 복사되었습니다."
 
-#: src/gui/html/js/events.ts:560
+#: src/gui/html/js/events.ts:600
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr "아직 %s을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
 
-#: src/gui/html/js/events.ts:564 src/gui/html/js/translateStaticText.ts:502
+#: src/gui/html/js/events.ts:604 src/gui/html/js/translateStaticText.ts:499
 msgid "Quit"
 msgstr "종료"
 
-#: src/gui/html/js/events.ts:582
+#: src/gui/html/js/events.ts:622
 msgid "sorted load order"
 msgstr "정렬된 로드 순서"
 
-#: src/gui/html/js/events.ts:585
+#: src/gui/html/js/events.ts:625
 msgid "metadata edits"
 msgstr "메타데이터 편집"
 
-#: src/gui/html/js/events.ts:778
+#: src/gui/html/js/events.ts:837
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "\"%s\"에 대한 메타데이터가 클립보드에 복사되었습니다."
 
-#: src/gui/html/js/events.ts:794
+#: src/gui/html/js/events.ts:858
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr "\"%s\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
-#: src/gui/html/js/events.ts:816
+#: src/gui/html/js/events.ts:880
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "\"%s\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
 
-#: src/gui/html/js/filters.ts:51
-msgid "Do not clean"
-msgstr "청소 금지"
-
-#: src/gui/html/js/game.ts:138
+#: src/gui/html/js/game.ts:139
 msgid "N/A"
 msgstr "N/A"
 
 #: src/gui/html/js/handlePromiseError.ts:8
-#: src/gui/html/js/translateStaticText.ts:336
+#: src/gui/html/js/translateStaticText.ts:339
 msgid "Error"
 msgstr "오류"
 
-#: src/gui/html/js/initialise.ts:315
+#: src/gui/html/js/loot.ts:290
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -389,472 +390,479 @@ msgstr ""
 "LOOT 업데이트를 확인하지 못했습니다! 자세한 내용은 LOOTDebugLog.txt (메인 메"
 "뉴를 통해 얻을 수 있음)에서 확인할 수 있습니다."
 
-#: src/gui/html/js/initialise.ts:331
+#: src/gui/html/js/loot.ts:306
 msgid "A [new release](%s) of LOOT is available."
 msgstr "LOOT의 [새 버전] (%s)을 사용할 수 있습니다."
 
-#: src/gui/html/js/initialise.ts:371
+#: src/gui/html/js/loot.ts:346
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr "하나 이상의 오류 메시지가 표시되어 자동 정렬이 취소되었습니다."
 
-#: src/gui/html/js/translateStaticText.ts:73
+#: src/gui/html/js/translateStaticText.ts:74
 msgid "Active Plugin"
 msgstr "활성화된 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:77
-#: src/gui/html/js/translateStaticText.ts:692
+#: src/gui/html/js/translateStaticText.ts:78
+#: src/gui/html/js/translateStaticText.ts:697
 msgid "Master File"
 msgstr "마스터 파일"
 
-#: src/gui/html/js/translateStaticText.ts:81
-msgid "Light Master File"
-msgstr "경량 마스터 파일"
+#: src/gui/html/js/translateStaticText.ts:82
+msgid "Light Plugin"
+msgstr "경량 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:85
+#: src/gui/html/js/translateStaticText.ts:86
 msgid "Empty Plugin"
 msgstr "빈 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:89
+#: src/gui/html/js/translateStaticText.ts:90
 msgid "Loads Archive"
 msgstr "아카이브 로드"
 
-#: src/gui/html/js/translateStaticText.ts:93
-#: src/gui/html/js/translateStaticText.ts:296
+#: src/gui/html/js/translateStaticText.ts:94
+#: src/gui/html/js/translateStaticText.ts:299
 msgid "Has User Metadata"
 msgstr "사용자 메타데이터를 가짐"
 
-#: src/gui/html/js/translateStaticText.ts:98
+#: src/gui/html/js/translateStaticText.ts:99
 msgid "Edit Metadata"
 msgstr "메타데이터 편집"
 
-#: src/gui/html/js/translateStaticText.ts:102
+#: src/gui/html/js/translateStaticText.ts:103
 msgid "Copy Metadata"
 msgstr "메타데이터 복사"
 
-#: src/gui/html/js/translateStaticText.ts:106
+#: src/gui/html/js/translateStaticText.ts:107
 msgid "Clear User Metadata"
 msgstr "유저 데이터 삭제"
 
-#: src/gui/html/js/translateStaticText.ts:129
-msgid "Enable Edits"
-msgstr "편집 사용"
-
-#: src/gui/html/js/translateStaticText.ts:132
-#: src/gui/html/js/translateStaticText.ts:292
+#: src/gui/html/js/translateStaticText.ts:130
+#: src/gui/html/js/translateStaticText.ts:295
 msgid "Group"
 msgstr "그루"
 
-#: src/gui/html/js/translateStaticText.ts:137
+#: src/gui/html/js/translateStaticText.ts:135
 msgid "Main"
 msgstr "메인"
 
-#: src/gui/html/js/translateStaticText.ts:141
+#: src/gui/html/js/translateStaticText.ts:139
 msgid "Load After"
 msgstr "선행 로드"
 
-#: src/gui/html/js/translateStaticText.ts:145
+#: src/gui/html/js/translateStaticText.ts:143
 msgid "Requirements"
 msgstr "요구 사항"
 
-#: src/gui/html/js/translateStaticText.ts:149
+#: src/gui/html/js/translateStaticText.ts:147
 msgid "Incompatibilities"
 msgstr "비호환성"
 
-#: src/gui/html/js/translateStaticText.ts:153
+#: src/gui/html/js/translateStaticText.ts:151
 msgid "Messages"
 msgstr "메시지"
 
-#: src/gui/html/js/translateStaticText.ts:157
+#: src/gui/html/js/translateStaticText.ts:155
 msgid "Bash Tags"
 msgstr "배쉬 태그"
 
-#: src/gui/html/js/translateStaticText.ts:161
+#: src/gui/html/js/translateStaticText.ts:159
 msgid "Dirty Plugin Info"
 msgstr "지저분한 플러그인 정보"
 
-#: src/gui/html/js/translateStaticText.ts:165
+#: src/gui/html/js/translateStaticText.ts:163
 msgid "Clean Plugin Info"
 msgstr "정리된 플러그인 정보"
 
-#: src/gui/html/js/translateStaticText.ts:169
+#: src/gui/html/js/translateStaticText.ts:167
 msgid "Locations"
 msgstr "위치"
 
-#: src/gui/html/js/translateStaticText.ts:174
-#: src/gui/html/js/translateStaticText.ts:189
-#: src/gui/html/js/translateStaticText.ts:202
+#: src/gui/html/js/translateStaticText.ts:177
+#: src/gui/html/js/translateStaticText.ts:192
+#: src/gui/html/js/translateStaticText.ts:205
 msgid "Filename"
 msgstr "파일 이름"
 
-#: src/gui/html/js/translateStaticText.ts:179
-#: src/gui/html/js/translateStaticText.ts:193
-#: src/gui/html/js/translateStaticText.ts:206
+#: src/gui/html/js/translateStaticText.ts:182
+#: src/gui/html/js/translateStaticText.ts:196
+#: src/gui/html/js/translateStaticText.ts:209
 msgid "Display Name"
 msgstr "표시되는 이름"
 
-#: src/gui/html/js/translateStaticText.ts:184
-#: src/gui/html/js/translateStaticText.ts:197
-#: src/gui/html/js/translateStaticText.ts:210
-#: src/gui/html/js/translateStaticText.ts:223
-#: src/gui/html/js/translateStaticText.ts:240
+#: src/gui/html/js/translateStaticText.ts:187
+#: src/gui/html/js/translateStaticText.ts:200
+#: src/gui/html/js/translateStaticText.ts:213
+#: src/gui/html/js/translateStaticText.ts:226
+#: src/gui/html/js/translateStaticText.ts:243
 msgid "Condition"
 msgstr "상태"
 
-#: src/gui/html/js/translateStaticText.ts:215
+#: src/gui/html/js/translateStaticText.ts:218
 msgid "Type"
 msgstr "형식"
 
-#: src/gui/html/js/translateStaticText.ts:219
+#: src/gui/html/js/translateStaticText.ts:222
 msgid "Content"
 msgstr "내용"
 
-#: src/gui/html/js/translateStaticText.ts:227
-#: src/gui/html/js/translateStaticText.ts:662
+#: src/gui/html/js/translateStaticText.ts:230
+#: src/gui/html/js/translateStaticText.ts:656
 msgid "Language"
 msgstr "언어"
 
-#: src/gui/html/js/translateStaticText.ts:232
+#: src/gui/html/js/translateStaticText.ts:235
 msgid "Add/Remove"
 msgstr "추가/제거"
 
-#: src/gui/html/js/translateStaticText.ts:236
+#: src/gui/html/js/translateStaticText.ts:239
 msgid "Bash Tag"
 msgstr "배쉬 태그"
 
-#: src/gui/html/js/translateStaticText.ts:245
-#: src/gui/html/js/translateStaticText.ts:266
+#: src/gui/html/js/translateStaticText.ts:248
+#: src/gui/html/js/translateStaticText.ts:269
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/html/js/translateStaticText.ts:249
+#: src/gui/html/js/translateStaticText.ts:252
 msgid "ITM Count"
 msgstr "ITM 개수"
 
-#: src/gui/html/js/translateStaticText.ts:253
+#: src/gui/html/js/translateStaticText.ts:256
 msgid "Deleted References"
 msgstr "삭제된 참조"
 
-#: src/gui/html/js/translateStaticText.ts:257
+#: src/gui/html/js/translateStaticText.ts:260
 msgid "Deleted Navmeshes"
 msgstr "삭제된 Navmesh"
 
-#: src/gui/html/js/translateStaticText.ts:261
-#: src/gui/html/js/translateStaticText.ts:270
+#: src/gui/html/js/translateStaticText.ts:264
+#: src/gui/html/js/translateStaticText.ts:273
 msgid "Cleaning Utility"
 msgstr "청소 유틸리티"
 
-#: src/gui/html/js/translateStaticText.ts:275
+#: src/gui/html/js/translateStaticText.ts:278
 msgid "URL"
 msgstr "URL"
 
-#: src/gui/html/js/translateStaticText.ts:279
-#: src/gui/html/js/translateStaticText.ts:683
+#: src/gui/html/js/translateStaticText.ts:282
+#: src/gui/html/js/translateStaticText.ts:688
 msgid "Name"
 msgstr "이름"
 
-#: src/gui/html/js/translateStaticText.ts:284
+#: src/gui/html/js/translateStaticText.ts:287
 msgid "Save Metadata"
 msgstr "메타데이터 저장"
 
-#: src/gui/html/js/translateStaticText.ts:288
-#: src/gui/html/js/translateStaticText.ts:472
-#: src/gui/html/js/translateStaticText.ts:720
+#: src/gui/html/js/translateStaticText.ts:291
+#: src/gui/html/js/translateStaticText.ts:466
+#: src/gui/html/js/translateStaticText.ts:725
 msgid "Cancel"
 msgstr "취소"
 
-#: src/gui/html/js/translateStaticText.ts:300
+#: src/gui/html/js/translateStaticText.ts:303
 msgid "Editor Is Open"
 msgstr "편집기 열림"
 
-#: src/gui/html/js/translateStaticText.ts:319
+#: src/gui/html/js/translateStaticText.ts:322
 msgid "A filename is required."
 msgstr "파일 이름이 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:321
-#: src/gui/html/js/translateStaticText.ts:343
-#: src/gui/html/js/translateStaticText.ts:362
-#: src/gui/html/js/translateStaticText.ts:395
-#: src/gui/html/js/translateStaticText.ts:412
-#: src/gui/html/js/translateStaticText.ts:425
-#: src/gui/html/js/translateStaticText.ts:442
+#: src/gui/html/js/translateStaticText.ts:324
+#: src/gui/html/js/translateStaticText.ts:346
+#: src/gui/html/js/translateStaticText.ts:365
+#: src/gui/html/js/translateStaticText.ts:398
+#: src/gui/html/js/translateStaticText.ts:415
+#: src/gui/html/js/translateStaticText.ts:428
+#: src/gui/html/js/translateStaticText.ts:445
 msgid "Delete Row"
 msgstr "행 삭제"
 
-#: src/gui/html/js/translateStaticText.ts:330
+#: src/gui/html/js/translateStaticText.ts:333
 msgid "Note"
 msgstr "노트"
 
-#: src/gui/html/js/translateStaticText.ts:333
+#: src/gui/html/js/translateStaticText.ts:336
 msgid "Warning"
 msgstr "경고"
 
-#: src/gui/html/js/translateStaticText.ts:341
+#: src/gui/html/js/translateStaticText.ts:344
 msgid "A content string is required."
 msgstr "내용 문자열이 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:352
+#: src/gui/html/js/translateStaticText.ts:355
 msgid "Add"
 msgstr "추가"
 
-#: src/gui/html/js/translateStaticText.ts:355
+#: src/gui/html/js/translateStaticText.ts:358
 msgid "Remove"
 msgstr "제거"
 
-#: src/gui/html/js/translateStaticText.ts:360
-#: src/gui/html/js/translateStaticText.ts:436
+#: src/gui/html/js/translateStaticText.ts:363
+#: src/gui/html/js/translateStaticText.ts:439
 msgid "A name is required."
 msgstr "이름이 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:373
-#: src/gui/html/js/translateStaticText.ts:406
+#: src/gui/html/js/translateStaticText.ts:376
+#: src/gui/html/js/translateStaticText.ts:409
 msgid "A CRC is required."
 msgstr "CRC가 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:378
-#: src/gui/html/js/translateStaticText.ts:383
-#: src/gui/html/js/translateStaticText.ts:388
+#: src/gui/html/js/translateStaticText.ts:381
+#: src/gui/html/js/translateStaticText.ts:386
+#: src/gui/html/js/translateStaticText.ts:391
 msgid "Values must be integers."
 msgstr "값은 정수여야 합니다."
 
-#: src/gui/html/js/translateStaticText.ts:393
-#: src/gui/html/js/translateStaticText.ts:410
+#: src/gui/html/js/translateStaticText.ts:396
+#: src/gui/html/js/translateStaticText.ts:413
 msgid "A utility name is required."
 msgstr "유틸리티 이름이 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:423
+#: src/gui/html/js/translateStaticText.ts:426
 msgid "A link is required."
 msgstr "링크가 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:440
+#: src/gui/html/js/translateStaticText.ts:443
 msgid "A folder is required."
 msgstr "폴더가 필요합니다."
 
-#: src/gui/html/js/translateStaticText.ts:451
-#: src/gui/html/js/translateStaticText.ts:713
-msgid "Add New Row"
-msgstr "새 행 추가"
-
-#: src/gui/html/js/translateStaticText.ts:462
+#: src/gui/html/js/translateStaticText.ts:456
 msgid "Jump To General Information"
 msgstr "일반 정보로 이동"
 
-#: src/gui/html/js/translateStaticText.ts:466
+#: src/gui/html/js/translateStaticText.ts:460
 msgid "Sort Plugins"
 msgstr "플러그인 정렬"
 
-#: src/gui/html/js/translateStaticText.ts:470
+#: src/gui/html/js/translateStaticText.ts:464
 msgid "Update Masterlist"
 msgstr "마스터 리스트 갱신"
 
-#: src/gui/html/js/translateStaticText.ts:471
-#: src/gui/html/js/translateStaticText.ts:717
+#: src/gui/html/js/translateStaticText.ts:465
+#: src/gui/html/js/translateStaticText.ts:722
 msgid "Apply"
 msgstr "적용"
 
-#: src/gui/html/js/translateStaticText.ts:476
+#: src/gui/html/js/translateStaticText.ts:470
 msgid "Search Cards"
 msgstr "카드 검색"
 
-#: src/gui/html/js/translateStaticText.ts:479
+#: src/gui/html/js/translateStaticText.ts:473
 msgid "Redate Plugins"
 msgstr "플러그인 날짜 변경"
 
-#: src/gui/html/js/translateStaticText.ts:482
+#: src/gui/html/js/translateStaticText.ts:476
 msgid "Open Debug Log Location"
 msgstr "디버그 로그 위치 열기"
 
-#: src/gui/html/js/translateStaticText.ts:485
+#: src/gui/html/js/translateStaticText.ts:479
+msgid "Open Groups Editor"
+msgstr "그룹 편집기 열기"
+
+#: src/gui/html/js/translateStaticText.ts:482
 msgid "Clear All User Metadata"
 msgstr "유저 메타데이터 모두 삭제"
 
-#: src/gui/html/js/translateStaticText.ts:488
+#: src/gui/html/js/translateStaticText.ts:485
 msgid "Copy Load Order"
 msgstr "로드 순서 복사"
 
-#: src/gui/html/js/translateStaticText.ts:491
+#: src/gui/html/js/translateStaticText.ts:488
 msgid "Copy Content"
 msgstr "내용 복사"
 
-#: src/gui/html/js/translateStaticText.ts:494
+#: src/gui/html/js/translateStaticText.ts:491
 msgid "Refresh Content"
 msgstr "내용 새로고침"
 
-#: src/gui/html/js/translateStaticText.ts:497
+#: src/gui/html/js/translateStaticText.ts:494
 msgid "View Documentation"
 msgstr "문서 보기"
 
-#: src/gui/html/js/translateStaticText.ts:500
+#: src/gui/html/js/translateStaticText.ts:497
 msgid "About"
 msgstr "정보"
 
-#: src/gui/html/js/translateStaticText.ts:501
-#: src/gui/html/js/translateStaticText.ts:650
+#: src/gui/html/js/translateStaticText.ts:498
+#: src/gui/html/js/translateStaticText.ts:644
 msgid "Settings"
 msgstr "설정"
 
-#: src/gui/html/js/translateStaticText.ts:513
+#: src/gui/html/js/translateStaticText.ts:510
 msgid "Search cards"
 msgstr "카드 검색"
 
-#: src/gui/html/js/translateStaticText.ts:553
+#: src/gui/html/js/translateStaticText.ts:550
 msgid "Plugins"
 msgstr "플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:564
+#: src/gui/html/js/translateStaticText.ts:561
 msgid "Filters"
 msgstr "필터"
 
-#: src/gui/html/js/translateStaticText.ts:569
+#: src/gui/html/js/translateStaticText.ts:566
 msgid "Press Enter or click outside the input to set the filter."
 msgstr "필터를 설정하기 위해 Enter를 누르거나 바깥 쪽을 클릭하십시오."
 
-#: src/gui/html/js/translateStaticText.ts:573
+#: src/gui/html/js/translateStaticText.ts:570
 msgid "Show only plugins with cards that contain"
 msgstr "다음을 포함하는 카드가 있는 플러그인만 표시"
 
-#: src/gui/html/js/translateStaticText.ts:576
+#: src/gui/html/js/translateStaticText.ts:573
 msgid "No text specified"
 msgstr "지정된 텍스트 없음"
 
-#: src/gui/html/js/translateStaticText.ts:579
+#: src/gui/html/js/translateStaticText.ts:576
 msgid "Hide version numbers"
 msgstr "버전 번호 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:582
+#: src/gui/html/js/translateStaticText.ts:579
 msgid "Hide CRCs"
 msgstr "CRC 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:583
+#: src/gui/html/js/translateStaticText.ts:580
 msgid "Hide Bash Tags"
 msgstr "배쉬 태그 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:584
+#: src/gui/html/js/translateStaticText.ts:581
 msgid "Hide notes"
 msgstr "노트 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:588
+#: src/gui/html/js/translateStaticText.ts:582
 msgid "Hide all plugin messages"
 msgstr "모든 플러그인 메시지 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:591
+#: src/gui/html/js/translateStaticText.ts:585
 msgid "Hide inactive plugins"
 msgstr "비활성 플러그인 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:594
+#: src/gui/html/js/translateStaticText.ts:588
 msgid "Hide messageless plugins"
 msgstr "메시지 적은 플러그인 숨기기"
 
-#: src/gui/html/js/translateStaticText.ts:599
+#: src/gui/html/js/translateStaticText.ts:593
 msgid "Show only conflicting plugins for"
 msgstr "다음에 대해 충돌하는 플러그인만 표시"
 
-#: src/gui/html/js/translateStaticText.ts:600
+#: src/gui/html/js/translateStaticText.ts:594
 msgid "No plugin selected"
 msgstr "선택한 플러그인 없음"
 
-#: src/gui/html/js/translateStaticText.ts:606
+#: src/gui/html/js/translateStaticText.ts:600
 msgid "Hidden plugins:"
 msgstr "숨겨진 플러그인:"
 
-#: src/gui/html/js/translateStaticText.ts:609
+#: src/gui/html/js/translateStaticText.ts:603
 msgid "Hidden messages:"
 msgstr "숨겨진 메시지:"
 
-#: src/gui/html/js/translateStaticText.ts:616
+#: src/gui/html/js/translateStaticText.ts:610
 msgid "General Information"
 msgstr "일반 정보"
 
-#: src/gui/html/js/translateStaticText.ts:621
+#: src/gui/html/js/translateStaticText.ts:615
 msgid "Masterlist Revision"
 msgstr "마스터 리스트 버전"
 
-#: src/gui/html/js/translateStaticText.ts:622
+#: src/gui/html/js/translateStaticText.ts:616
 msgid "Masterlist Date"
 msgstr "마스터 리스트 일자"
 
-#: src/gui/html/js/translateStaticText.ts:625
+#: src/gui/html/js/translateStaticText.ts:619
 msgid "Warnings"
 msgstr "경고"
 
-#: src/gui/html/js/translateStaticText.ts:628
+#: src/gui/html/js/translateStaticText.ts:622
 msgid "Errors"
 msgstr "오류"
 
-#: src/gui/html/js/translateStaticText.ts:631
+#: src/gui/html/js/translateStaticText.ts:625
 msgid "Total Messages"
 msgstr "전체 메시지"
 
-#: src/gui/html/js/translateStaticText.ts:634
+#: src/gui/html/js/translateStaticText.ts:628
 msgid "Active Plugins"
 msgstr "활성화된 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:637
+#: src/gui/html/js/translateStaticText.ts:631
 msgid "Dirty Plugins"
 msgstr "지저분한 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:640
+#: src/gui/html/js/translateStaticText.ts:634
 msgid "Total Plugins"
 msgstr "전체 플러그인"
 
-#: src/gui/html/js/translateStaticText.ts:655
+#: src/gui/html/js/translateStaticText.ts:649
 msgid "Default Game"
 msgstr "기본 게임"
 
-#: src/gui/html/js/translateStaticText.ts:656
+#: src/gui/html/js/translateStaticText.ts:650
 msgid "Autodetect"
 msgstr "자동 감지"
 
-#: src/gui/html/js/translateStaticText.ts:663
+#: src/gui/html/js/translateStaticText.ts:657
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
 
-#: src/gui/html/js/translateStaticText.ts:669
+#: src/gui/html/js/translateStaticText.ts:661
+msgid "Theme"
+msgstr "테마"
+
+#: src/gui/html/js/translateStaticText.ts:662
+msgid "Theme changes will be applied after LOOT is restarted."
+msgstr "테마 변경 사항은 LOOT가 다시 시작 된후 언어 변경이 적용됩니다."
+
+#: src/gui/html/js/translateStaticText.ts:665
+msgid "default"
+msgstr "기본"
+
+#: src/gui/html/js/translateStaticText.ts:673
 msgid "Enable debug logging"
 msgstr "디버그 로깅 사용"
 
-#: src/gui/html/js/translateStaticText.ts:670
+#: src/gui/html/js/translateStaticText.ts:674
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "출력은 LOOTDebugLog.txt 파일에 기록됩니다."
 
-#: src/gui/html/js/translateStaticText.ts:676
+#: src/gui/html/js/translateStaticText.ts:680
 msgid "Update masterlist before sorting"
 msgstr "정렬하기 전에 마스터 리스트 갱신"
 
-#: src/gui/html/js/translateStaticText.ts:680
+#: src/gui/html/js/translateStaticText.ts:684
 msgid "Check for LOOT updates on startup"
 msgstr "시작시 LOOT 업데이트 확인"
 
-#: src/gui/html/js/translateStaticText.ts:686
+#: src/gui/html/js/translateStaticText.ts:691
 msgid "Base Game"
 msgstr "기반 게임"
 
-#: src/gui/html/js/translateStaticText.ts:689
+#: src/gui/html/js/translateStaticText.ts:694
 msgid "LOOT Folder"
 msgstr "LOOT 폴더"
 
-#: src/gui/html/js/translateStaticText.ts:695
+#: src/gui/html/js/translateStaticText.ts:700
 msgid "Masterlist Repository URL"
 msgstr "마스터 리스트 저장소 URL"
 
-#: src/gui/html/js/translateStaticText.ts:698
+#: src/gui/html/js/translateStaticText.ts:703
 msgid "Masterlist Repository Branch"
 msgstr "마스터 리스트 저장소 브랜치"
 
-#: src/gui/html/js/translateStaticText.ts:701
+#: src/gui/html/js/translateStaticText.ts:706
 msgid "Install Path"
 msgstr "설치 경로"
 
-#: src/gui/html/js/translateStaticText.ts:704
+#: src/gui/html/js/translateStaticText.ts:709
 msgid "Install Path Registry Key"
 msgstr "설치 경로 레지스트리 키"
 
-#: src/gui/html/js/translateStaticText.ts:726
+#: src/gui/html/js/translateStaticText.ts:731
 msgid "First-Time Tips"
 msgstr "처음 팁"
 
-#: src/gui/html/js/translateStaticText.ts:731
+#: src/gui/html/js/translateStaticText.ts:736
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
@@ -862,11 +870,11 @@ msgstr ""
 "LOOT v%s를 실행하신 것은 이번이 처음이신 것 같습니다. 다음은 인터페이스를 시"
 "작하는데 도움이되는 몇가지 팁입니다."
 
-#: src/gui/html/js/translateStaticText.ts:739
+#: src/gui/html/js/translateStaticText.ts:744
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "%(menu_icon)s 버튼을 클릭하여 메뉴를 엽니다."
 
-#: src/gui/html/js/translateStaticText.ts:746
+#: src/gui/html/js/translateStaticText.ts:751
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
@@ -877,20 +885,20 @@ msgstr ""
 "\"tag remove\">제거</span>를 위한 플러그인 <span class=\"version\">버전 번호"
 "</span>, <span class=\"crc\">CRC</span> 및 Bash 태그 제안을 표시합니다."
 
-#: src/gui/html/js/translateStaticText.ts:749
+#: src/gui/html/js/translateStaticText.ts:754
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr "CRC는 플러그인이 로드된후 충돌 필터링이나 정렬 중에서 표시됩니다."
 
-#: src/gui/html/js/translateStaticText.ts:752
+#: src/gui/html/js/translateStaticText.ts:757
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
 msgstr ""
 "사이드바에서 플러그인을 두 번 클릭하여 빠르게 메타데이터 편집기를 엽니다."
 
-#: src/gui/html/js/translateStaticText.ts:755
+#: src/gui/html/js/translateStaticText.ts:760
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -898,7 +906,7 @@ msgstr ""
 "플러그인은 사이드바에서 메타데이터 편집기로 '선행 로드',  요구 사항', '비호환"
 "성'테이블을 끌어다 놓을 수 있습니다."
 
-#: src/gui/html/js/translateStaticText.ts:758
+#: src/gui/html/js/translateStaticText.ts:763
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -906,7 +914,7 @@ msgstr ""
 "메타 데이터 편집기가 열려있거나 적용 또는 삭제되지 않은 정렬된 로드 순서가 있"
 "는 동안에는 일부 기능이 비활성화됩니다."
 
-#: src/gui/html/js/translateStaticText.ts:761
+#: src/gui/html/js/translateStaticText.ts:766
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -916,8 +924,8 @@ msgstr ""
 "스를 올려 찾을 수 있습니다. 그래도 알 수 없다면 메인 메뉴를 통해 LOOT의 문서"
 "에 접근할 수 있습니다."
 
-#: src/gui/html/js/translateStaticText.ts:765
-#: src/gui/html/js/translateStaticText.ts:788
+#: src/gui/html/js/translateStaticText.ts:770
+#: src/gui/html/js/translateStaticText.ts:793
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -927,25 +935,34 @@ msgstr ""
 "를 사용하여 WrinklyNinja (LOOT의 제작자 및 메인 개발자)에게 기부할 수 있습니"
 "다."
 
-#: src/gui/html/js/translateStaticText.ts:770
+#: src/gui/html/js/translateStaticText.ts:775
 msgid "OK"
 msgstr "확인"
 
-#: src/gui/html/js/translateStaticText.ts:777
+#: src/gui/html/js/translateStaticText.ts:782
 msgid "About LOOT"
 msgstr "LOOT 정보"
 
-#: src/gui/html/js/translateStaticText.ts:779
+#: src/gui/html/js/translateStaticText.ts:784
 msgid "Version %s (build %s)"
 msgstr "버전 %s (빌드 %s)"
 
-#: src/gui/html/js/translateStaticText.ts:784
+#: src/gui/html/js/translateStaticText.ts:789
 msgid ""
 "Load order optimisation for Oblivion, Skyrim, Skyrim Special Edition, Skyrim "
 "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 "Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout : "
 "New Vegas, Fallout 4 및 Fallout 4 VR에 대한 로드 순서 최적화."
+
+#~ msgid "Do not clean"
+#~ msgstr "청소 금지"
+
+#~ msgid "Light Master File"
+#~ msgstr "경량 마스터 파일"
+
+#~ msgid "Enable Edits"
+#~ msgstr "편집 사용"
 
 #~ msgid "Invalid game ID supplied."
 #~ msgstr "잘못된 게임 ID가 제공되었습니다."
