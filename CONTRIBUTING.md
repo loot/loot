@@ -33,15 +33,23 @@ LOOT supports translation into other languages, with the following limitations:
 
 To translate everything but masterlist messages, first fork this repository. All file paths given below are relative to its base folder.
 
+Keep in mind that you don't need to submit a perfect pull request; just follow the instructions below to the best of your ability and we will correct any coding-related mistakes when we review your submission.
+
 ### Translating the Installer
 
 First check that an [Inno Setup translation](http://www.jrsoftware.org/files/istrans/) exists for your language. Unofficial translations are acceptable, but require a bit of extra handling. If there isn't an official or unofficial translation for Inno Setup, you're better off making a translation and getting it listed on the linked page before continuing.
 
 1. Open the installer script at `scripts/installer.iss` in a text editor of your choice.
 2. If your language only has an unofficial translation, add a `#define <Language>Exists` block for it near the top of the script, like it has been done for Korean and Simplified Chinese.
-3. Add your language to the `[Languages]` section. The `Name` must be the POSIX locale code for your language. The `MessagesFile` filename is the filename of the Inno Setup translation that you checked exists. If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
+3. Add your language to the `[Languages]` section. The `Name` should be the [POSIX locale code](https://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html) for your language. The `MessagesFile` filename is the filename of the Inno Setup translation that you checked exists. If your language only has an unofficial translation, wrap its line in `#ifdef` and `#endif` lines, again like it has been done for Korean and Simplified Chinese.
 4. Translate the string(s) in the `[CustomMessages]` into your language, following the example of the existing translations. Again, if your language only has an unofficial translation, wrap its line(s) in `#ifdef` and `#endif` lines.
 5. Save your changes.
+
+If your language's Inno Setup translation is unofficial, also do the following:
+
+1. Open the script at `scripts/build_installer.ps1` in a text editor of your choice.
+2. Add an entry for your language's translation file to the `$unofficialLanguageFiles` array.
+3. Save your changes.
 
 ### Translating the LOOT application
 
@@ -51,7 +59,7 @@ First check that an [Inno Setup translation](http://www.jrsoftware.org/files/ist
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation are displayed in bold and dark blue, and strings you have edited the translations of are marked with a star to the left of their source text in the main list.
 5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
 
-Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, create an issue for your request in LOOT's [source code issue tracker](https://github.com/loot/loot/issues), quoting the string for which you are requesting contextual information.
+Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, comment on issue [#1438](https://github.com/loot/loot/issues/1438) with your request, quoting the string for which you are requesting contextual information.
 
 Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
 
@@ -66,17 +74,24 @@ Some strings to be translated may contain special characters. Different types of
 
 ### Adding A New Translation
 
-If you're adding a new translation, LOOT's source code must be updated to recognise it. You can do this yourself and include the changes in your translation's pull request if you wish. The files and functions which must be updated are given below.
+If you're adding a new translation, LOOT's source code must be updated to recognise it. While you're welcome to do this yourself and include the changes in your translation's pull request, you don't have to if you're not comfortable with them; we can add them later. The files and functions which must be updated are given below:
 
 * In [loot_settings.cpp](src/gui/state/loot_settings.cpp), add the language's
   ISO code, name  and optional font family override to the `languages_`
   initialiser list in the `LootSettings()` constructor.
+* In [loot_settings_test.h](src/tests/gui/state/loot_settings_test.h), update
+  the `defaultConstructorShouldSetDefaultValues` test so that it includes the
+  added language, updating the `actualLanguages.size()` check and adding a new
+  `EXPECT_EQ(...)` line for the new language.
 * In [installer.iss](scripts/installer.iss):
   - Add a line for your language in the `[Languages]` section. If you have Inno
     Setup installed, the available translation files are at
     `C:\Program Files (x86)\Inno Setup 6\Languages\`.
   - Add an entry for your language's translation file to the `[Files]` section.
   - Add a translation for your language to the `[CustomMessages]` section.
+
+See commit [8c28aed7f54dee3a381425b2d4ecf4341309d139](https://github.com/loot/loot/commit/8c28aed7f54dee3a381425b2d4ecf4341309d139)
+for an example of the relevant changes.
 
 ## Code Style
 

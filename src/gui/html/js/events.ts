@@ -44,6 +44,7 @@ import {
   copyMetadata
 } from './query';
 import {
+  DerivedPluginMetadata,
   FilterStates,
   GameContent,
   GameSettings,
@@ -347,6 +348,37 @@ export function onUpdateMasterlist(): void {
     .catch(handlePromiseError);
 }
 
+/*
+  Check if sorted load order differs from current load order.
+  Don't count removed invalid plugins as changing the load order.
+*/
+function hasLoadOrderChanged(
+  oldLoadOrder: DerivedPluginMetadata[],
+  newLoadOrder: DerivedPluginMetadata[]
+): boolean {
+  if (oldLoadOrder.length !== newLoadOrder.length) {
+    return true;
+  }
+
+  return newLoadOrder.some(
+    (plugin, index) => plugin.name !== oldLoadOrder[index].name
+  );
+
+  const pluginsInNewLoadOrder = new Set(
+    newLoadOrder.map(plugin => plugin.name)
+  );
+
+  const filteredOldLoadOrder = oldLoadOrder.filter(plugin =>
+    pluginsInNewLoadOrder.has(plugin.name)
+  );
+
+  return newLoadOrder.every(
+    (plugin, index) =>
+      filteredOldLoadOrder[index] &&
+      plugin.name === filteredOldLoadOrder[index].name
+  );
+}
+
 export function onSortPlugins(): Promise<void> {
   const currentGame = window.loot.game;
   if (currentGame === undefined) {
@@ -391,39 +423,39 @@ export function onSortPlugins(): Promise<void> {
       }
 
       /* Check if sorted load order differs from current load order. */
-      const loadOrderIsUnchanged = result.plugins.every(
-        (plugin, index) =>
-          currentGame.plugins[index] &&
-          plugin.name === currentGame.plugins[index].name
+      const loadOrderIsUnchanged = !hasLoadOrderChanged(
+        currentGame.plugins,
+        result.plugins
       );
+
+      /* Set sorted plugins even if the load order hasn't changed because
+         plugin metadata may have been updated. */
+      currentGame.setSortedPlugins(result.plugins);
       if (loadOrderIsUnchanged) {
-        result.plugins.forEach(plugin => {
-          const existingPlugin = currentGame.plugins.find(
-            item => item.name === plugin.name
-          );
-          if (existingPlugin) {
-            existingPlugin.update(plugin);
-          }
-        });
-        /* Send discardUnappliedChanges query. Not doing so prevents LOOT's window
-         from closing. */
+        /* Immediately 'apply' the load order to forget the 'old' load order. */
+        currentGame.applySort();
+      }
+
+      /* Now update the UI for the new order. */
+      window.loot.filters.apply(currentGame.plugins);
+
+      if (loadOrderIsUnchanged) {
+        /* Send discardUnappliedChanges query. Not doing so prevents LOOT's
+           window from closing. */
         discardUnappliedChanges();
-        closeProgress();
+      } else {
+        window.loot.state.enterSortingState();
+      }
+
+      closeProgress();
+
+      if (loadOrderIsUnchanged) {
         showNotification(
           window.loot.l10n.translate(
             'Sorting made no changes to the load order.'
           )
         );
-        return;
       }
-      currentGame.setSortedPlugins(result.plugins);
-
-      /* Now update the UI for the new order. */
-      window.loot.filters.apply(currentGame.plugins);
-
-      window.loot.state.enterSortingState();
-
-      closeProgress();
     })
     .catch(handlePromiseError);
 }
