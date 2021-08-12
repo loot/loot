@@ -41,6 +41,7 @@
 #endif
 
 #include <spdlog/sinks/basic_file_sink.h>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -126,7 +127,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     } catch (exception& e) {
       initErrors_.push_back(
           (format(
-               translate("Error: Could not create LOOT settings file. %1%")) %
+               translate("Error: Could not create LOOT data directory. %1%")) %
            e.what())
               .str());
     }
@@ -140,7 +141,8 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   // Load settings.
   if (fs::exists(LootPaths::getSettingsPath())) {
     try {
-      LootSettings::load(LootPaths::getSettingsPath(), LootPaths::getLootDataPath());
+      LootSettings::load(LootPaths::getSettingsPath(),
+                         LootPaths::getLootDataPath());
     } catch (exception& e) {
       initErrors_.push_back(
           (format(
@@ -160,8 +162,8 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     logger->info(
         "LOOT Version: {}+{}", gui::Version::string(), gui::Version::revision);
     logger->info("LOOT API Version: {}+{}",
-                  LootVersion::GetVersionString(),
-                  LootVersion::revision);
+                 LootVersion::GetVersionString(),
+                 LootVersion::revision);
   }
 
 #ifdef _WIN32
@@ -184,6 +186,20 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     locale::global(gen(getLanguage() + ".UTF-8"));
   }
 
+  // Check if the prelude directory exists and create it if not.
+  auto preludeDir = LootPaths::getPreludePath().parent_path();
+  if (!fs::exists(preludeDir)) {
+    try {
+      fs::create_directory(preludeDir);
+    } catch (exception& e) {
+      initErrors_.push_back(
+          (format(translate(
+               "Error: Could not create LOOT prelude directory. %1%")) %
+           e.what())
+              .str());
+    }
+  }
+
   // Detect games & select startup game
   //-----------------------------------
 
@@ -191,7 +207,9 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (logger) {
     logger->debug("Detecting installed games.");
   }
-  LoadInstalledGames(getGameSettings(), LootPaths::getLootDataPath());
+  LoadInstalledGames(getGameSettings(),
+                     LootPaths::getLootDataPath(),
+                     LootPaths::getPreludePath());
 
   try {
     SetInitialGame(cmdLineGame);
@@ -201,7 +219,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   } catch (std::exception& e) {
     if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
-                     e.what());
+                    e.what());
     }
     initErrors_.push_back(
         (format(translate(
@@ -228,13 +246,12 @@ void LootState::save(const std::filesystem::path& file) {
   LootSettings::save(file);
 }
 
-std::optional<std::filesystem::path> LootState::FindGamePath(const GameSettings& gameSettings) const {
+std::optional<std::filesystem::path> LootState::FindGamePath(
+    const GameSettings& gameSettings) const {
   return gameSettings.FindGamePath();
 }
 
-void LootState::InitialiseGameData(gui::Game& game) {
-  game.Init();
-}
+void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }
 
 void LootState::SetInitialGame(std::string preferredGame) {
   if (preferredGame.empty()) {
@@ -262,7 +279,8 @@ void LootState::SetInitialGame(std::string preferredGame) {
 void LootState::storeGameSettings(std::vector<GameSettings> gameSettings) {
   lock_guard<mutex> guard(mutex_);
 
-  gameSettings = LoadInstalledGames(gameSettings, LootPaths::getLootDataPath());
+  gameSettings = LoadInstalledGames(
+      gameSettings, LootPaths::getLootDataPath(), LootPaths::getPreludePath());
   LootSettings::storeGameSettings(gameSettings);
 }
 }

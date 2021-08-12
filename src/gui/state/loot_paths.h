@@ -40,6 +40,7 @@ public:
   std::filesystem::path getLootDataPath() const;
   std::filesystem::path getSettingsPath() const;
   std::filesystem::path getLogPath() const;
+  std::filesystem::path getPreludePath() const;
 
 private:
   std::filesystem::path lootAppPath_;

@@ -33,6 +33,7 @@
 #include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
+#include <loot/struct/file_revision.h>
 #include <loot/vertex.h>
 
 namespace loot {
@@ -57,7 +58,10 @@ std::vector<Message> CheckForRemovedPlugins(
     const std::vector<std::string> pluginsAfter);
 
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
-  const std::string& registryPath);
+    const std::string& registryPath);
+
+void AddSuffixIfModified(FileRevision& revision);
 }
+
 
 #endif

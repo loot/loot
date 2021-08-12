@@ -54,7 +54,9 @@ public:
         {"enableLootUpdateCheck", settings_.isLootUpdateCheckEnabled()},
         {"games", settings_.getGameSettings()},
         {"filters", settings_.getFilters()},
-        {"languages", settings_.getLanguages()}
+        {"languages", settings_.getLanguages()},
+        {"preludeURL", settings_.getPreludeRepositoryURL()},
+        {"preludeBranch", settings_.getPreludeRepositoryBranch()}
     };
 
     return json.dump();

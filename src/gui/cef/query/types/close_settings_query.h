@@ -56,6 +56,8 @@ public:
         settings_.value("enableLootUpdateCheck", true));
     state_.storeGameSettings(
         settings_.value("games", std::vector<GameSettings>()));
+    state_.setPreludeRepositoryURL(settings_.value("preludeURL", ""));
+    state_.setPreludeRepositoryBranch(settings_.value("preludeBranch", ""));
 
     return GetInstalledGamesQuery(state_).executeLogic();
   }

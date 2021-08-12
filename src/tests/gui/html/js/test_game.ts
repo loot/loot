@@ -32,6 +32,7 @@ describe('Game', () => {
       }
     ],
     masterlist: { id: '0', date: '' },
+    prelude: { id: '0', date: '' },
     groups: { masterlist: [], userlist: [] },
     plugins: [defaultDerivedPluginMetadata],
     bashTags: []

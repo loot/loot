@@ -98,6 +98,9 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ("en", settings_.getLanguage());
   EXPECT_EQ("default", settings_.getTheme());
   EXPECT_TRUE(settings_.getFilters().empty());
+  EXPECT_EQ("https://github.com/loot/prelude.git",
+            settings_.getPreludeRepositoryURL());
+  EXPECT_EQ("v0.17", settings_.getPreludeRepositoryBranch());
 
   // GameSettings equality only checks name and folder, so check
   // other settings individually.
@@ -204,6 +207,8 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "language = \"fr\"" << endl
       << "theme = \"dark\"" << endl
       << "lastVersion = \"0.7.1\"" << endl
+      << "preludeRepo = \"https://github.com/loot/prelude-test.git\"" << endl
+      << "preludeBranch = \"v1.0\"" << endl
       << endl
       << "[window]" << endl
       << "top = 1" << endl
@@ -236,6 +241,8 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
   EXPECT_EQ("dark", settings_.getTheme());
+  EXPECT_EQ("https://github.com/loot/prelude-test.git", settings_.getPreludeRepositoryURL());
+  EXPECT_EQ("v1.0", settings_.getPreludeRepositoryBranch());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
   EXPECT_EQ(1, settings_.getWindowPosition().value().top);
@@ -519,6 +526,8 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
   const std::string theme = "dark";
+  const std::string preludeRepo = "../prelude";
+  const std::string preludeBranch = "v1.0";
 
   LootSettings::WindowPosition windowPosition;
   windowPosition.top = 1;
@@ -543,6 +552,8 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.storeLastGame(lastGame);
   settings_.setLanguage(language);
   settings_.setTheme(theme);
+  settings_.setPreludeRepositoryURL(preludeRepo);
+  settings_.setPreludeRepositoryBranch(preludeBranch);
 
   settings_.storeWindowPosition(windowPosition);
   settings_.storeGameSettings(games);
@@ -562,6 +573,8 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(lastGame, settings.getLastGame());
   EXPECT_EQ(language, settings.getLanguage());
   EXPECT_EQ(theme, settings.getTheme());
+  EXPECT_EQ(preludeRepo, settings.getPreludeRepositoryURL());
+  EXPECT_EQ(preludeBranch, settings.getPreludeRepositoryBranch());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
   EXPECT_EQ(1, settings_.getWindowPosition().value().top);

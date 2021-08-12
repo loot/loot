@@ -93,6 +93,16 @@ TEST_F(CloseSettingsQueryTest,
   EXPECT_TRUE(std::filesystem::exists(themePath));
   EXPECT_TRUE(std::filesystem::exists(newThemePath));
 }
+
+TEST_F(CloseSettingsQueryTest, executeLogicShouldSetPreludeURLAndBranch) {
+  CloseSettingsQuery query(
+      state, {{"preludeURL", "test-url"}, {"preludeBranch", "test-branch"}});
+
+  query.executeLogic();
+
+  EXPECT_EQ("test-url", state.getPreludeRepositoryURL());
+  EXPECT_EQ("test-branch", state.getPreludeRepositoryBranch());
+}
 }
 }
 

@@ -47,7 +47,8 @@ import {
   openReadme,
   openLogLocation,
   editorOpened,
-  copyMetadata
+  copyMetadata,
+  updatePrelude
 } from './query';
 import {
   DerivedPluginMetadata,
@@ -302,7 +303,7 @@ export function onChangeGame(evt: Event): void {
 }
 
 /* Masterlist update process, minus progress dialog. */
-function updateMasterlist(): Promise<void> {
+async function updateMasterlist(): Promise<void> {
   const currentGame = window.loot.game;
   if (currentGame === undefined) {
     // There's nothing to do if no game has been loaded.
@@ -313,39 +314,43 @@ function updateMasterlist(): Promise<void> {
   showProgress(
     window.loot.l10n.translate('Updating and parsing masterlist...')
   );
-  return updateMasterlistQuery()
-    .then(result => {
-      if (result) {
-        /* Update JS variables. */
-        currentGame.masterlist = result.masterlist;
-        currentGame.generalMessages = result.generalMessages;
-        currentGame.setGroups(result.groups);
 
-        /* Update Bash Tag autocomplete suggestions. */
-        initialiseAutocompleteBashTags(result.bashTags);
+  const preludeInfo = await updatePrelude();
+  if (preludeInfo) {
+    window.loot.preludeVersionInfo = preludeInfo;
+  }
 
-        result.plugins.forEach(resultPlugin => {
-          const existingPlugin = currentGame.plugins.find(
-            plugin => plugin.name === resultPlugin.name
-          );
-          if (existingPlugin) {
-            existingPlugin.update(resultPlugin);
-          }
-        });
+  const result = await updateMasterlistQuery();
 
-        showNotification(
-          window.loot.l10n.translateFormatted(
-            'Masterlist updated to revision %s.',
-            currentGame.masterlist.id
-          )
-        );
-      } else {
-        showNotification(
-          window.loot.l10n.translate('No masterlist update was necessary.')
-        );
+  if (result) {
+    /* Update JS variables. */
+    currentGame.masterlist = result.masterlist;
+    currentGame.generalMessages = result.generalMessages;
+    currentGame.setGroups(result.groups);
+
+    /* Update Bash Tag autocomplete suggestions. */
+    initialiseAutocompleteBashTags(result.bashTags);
+
+    result.plugins.forEach(resultPlugin => {
+      const existingPlugin = currentGame.plugins.find(
+        plugin => plugin.name === resultPlugin.name
+      );
+      if (existingPlugin) {
+        existingPlugin.update(resultPlugin);
       }
-    })
-    .catch(handlePromiseError);
+    });
+
+    showNotification(
+      window.loot.l10n.translateFormatted(
+        'Masterlist updated to revision %s.',
+        currentGame.masterlist.id
+      )
+    );
+  } else {
+    showNotification(
+      window.loot.l10n.translate('No masterlist update was necessary.')
+    );
+  }
 }
 export function onUpdateMasterlist(): void {
   updateMasterlist()
@@ -671,6 +676,16 @@ export function onQuit(): void {
   }
 }
 
+function arePaperInputValuesValid(inputIds: string[]): boolean {
+  let validationFailed = true;
+  for (const inputId of inputIds) {
+    const input = getElementById(inputId) as PaperInputElement;
+    validationFailed = validationFailed && input.validate();
+  }
+
+  return validationFailed;
+}
+
 function validateGameSettingsInputs(): boolean {
   const inputToValidateIds = [
     'settingsGameName',
@@ -683,13 +698,7 @@ function validateGameSettingsInputs(): boolean {
     'settingsGameLocalPath'
   ];
 
-  let validationFailed = true;
-  for (const inputId of inputToValidateIds) {
-    const input = getElementById(inputId) as PaperInputElement;
-    validationFailed = validationFailed && input.validate();
-  }
-
-  return validationFailed;
+  return arePaperInputValuesValid(inputToValidateIds);
 }
 
 type HTMLElementWithValue = HTMLElement & { value: string | null | undefined };
@@ -712,6 +721,15 @@ function getValue(element: HTMLElement): string {
   }
 
   return value;
+}
+
+function validatePreludeSettings(evt: Event): void {
+  const inputIds = ['settingsPreludeURL', 'settingsPreludeBranch'];
+
+  if (!arePaperInputValuesValid(inputIds)) {
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
 }
 
 function recordUnappliedGameSettings(evt: Event): void {
@@ -753,14 +771,16 @@ function recordUnappliedGameSettings(evt: Event): void {
 }
 
 export function onApplySettings(evt: Event): void {
+  validatePreludeSettings(evt);
   recordUnappliedGameSettings(evt);
 }
 
-export function onSettingsDeselectGame(evt: Event): void {
+export function onDeselectSettingsSidebarEntry(evt: Event): void {
+  validatePreludeSettings(evt);
   recordUnappliedGameSettings(evt);
 }
 
-export function onSettingsSelectGame(evt: Event): void {
+export function onSelectSettingsSidebarEntry(evt: Event): void {
   const selectedItem = ((evt as CustomEvent).detail as { item: Element }).item;
 
   const gameFolder = selectedItem.getAttribute('value');
@@ -919,7 +939,11 @@ export function onCloseSettingsDialog(evt: Event): void {
         .checked || false,
     filters: window.loot.settings.filters,
     lastVersion: window.loot.settings.lastVersion,
-    languages: window.loot.settings.languages
+    languages: window.loot.settings.languages,
+    preludeURL:
+      (getElementById('settingsPreludeURL') as PaperInputElement).value ?? '',
+    preludeBranch:
+      (getElementById('settingsPreludeBranch') as PaperInputElement).value ?? ''
   };
 
   /* Send the settings back to the C++ side. */

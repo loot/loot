@@ -53,6 +53,7 @@
 #include "gui/state/game/game_detection_error.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
+#include "gui/state/loot_paths.h"
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"
 
@@ -75,15 +76,18 @@ bool hasPluginFileExtension(const std::string& filename) {
 }
 
 Game::Game(const GameSettings& gameSettings,
-           const std::filesystem::path& lootDataPath) :
+           const std::filesystem::path& lootDataPath,
+           const std::filesystem::path& preludePath) :
     GameSettings(gameSettings),
     lootDataPath_(lootDataPath),
+    preludePath_(preludePath),
     pluginsFullyLoaded_(false),
     loadOrderSortCount_(0) {}
 
 Game::Game(const Game& game) :
     GameSettings(game),
     lootDataPath_(game.lootDataPath_),
+    preludePath_(game.preludePath_),
     gameHandle_(game.gameHandle_),
     pluginsFullyLoaded_(game.pluginsFullyLoaded_),
     messages_(game.messages_),
@@ -94,6 +98,7 @@ Game& Game::operator=(const Game& game) {
     GameSettings::operator=(game);
 
     lootDataPath_ = game.lootDataPath_;
+    preludePath_ = game.preludePath_;
     gameHandle_ = game.gameHandle_;
     pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
     messages_ = game.messages_;
@@ -616,8 +621,17 @@ FileRevision Game::GetMasterlistInfo() const {
 void Game::LoadMetadata() {
   auto logger = getLogger();
 
+  std::filesystem::path masterlistPreludePath;
   std::filesystem::path masterlistPath;
   std::filesystem::path userlistPath;
+
+  if (std::filesystem::exists(preludePath_)) {
+    if (logger) {
+      logger->debug("Preparing to parse masterlist prelude.");
+    }
+    masterlistPreludePath = preludePath_;
+  }
+
   if (std::filesystem::exists(MasterlistPath())) {
     if (logger) {
       logger->debug("Preparing to parse masterlist.");
@@ -636,7 +650,8 @@ void Game::LoadMetadata() {
     logger->debug("Parsing metadata list(s).");
   }
   try {
-    gameHandle_->GetDatabase()->LoadLists(masterlistPath, userlistPath);
+    gameHandle_->GetDatabase()->LoadLists(
+        masterlistPath, userlistPath, masterlistPreludePath);
   } catch (std::exception& e) {
     if (logger) {
       logger->error("An error occurred while parsing the metadata list(s): {}",

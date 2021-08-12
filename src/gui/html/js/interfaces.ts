@@ -135,6 +135,8 @@ export interface LootSettings {
   updateMasterlist: boolean;
   enableLootUpdateCheck: boolean;
   filters: FilterStates;
+  preludeURL: string;
+  preludeBranch: string;
 }
 
 export interface PluginContent {

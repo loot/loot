@@ -40,6 +40,26 @@ TEST(GetSettingsQuery, shouldIncludeThemeInOutput) {
 
   EXPECT_NE(std::string::npos, json.find("\"theme\":\"test\""));
 }
+
+TEST(GetSettingsQuery, shouldIncludePreludeURLInOutput) {
+  LootSettings settings;
+  settings.setPreludeRepositoryURL("test");
+
+  GetSettingsQuery query(settings);
+  auto json = query.executeLogic();
+
+  EXPECT_NE(std::string::npos, json.find("\"preludeURL\":\"test\""));
+}
+
+TEST(GetSettingsQuery, shouldIncludePreludeBranchInOutput) {
+  LootSettings settings;
+  settings.setPreludeRepositoryBranch("test");
+
+  GetSettingsQuery query(settings);
+  auto json = query.executeLogic();
+
+  EXPECT_NE(std::string::npos, json.find("\"preludeBranch\":\"test\""));
+}
 }
 }
 

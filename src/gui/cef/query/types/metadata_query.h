@@ -245,7 +245,7 @@ private:
     FileRevision revision;
     try {
       revision = game_.GetMasterlistInfo();
-      addSuffixIfModified(revision);
+      AddSuffixIfModified(revision);
     } catch (FileAccessError&) {
       if (logger_) {
         logger_->warn("No masterlist present at {}",
@@ -269,16 +269,6 @@ private:
     }
 
     return revision;
-  }
-
-  void addSuffixIfModified(FileRevision& revision) {
-    if (revision.is_modified) {
-      auto suffix = " " +
-        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
-        boost::locale::translate("(edited)").str();
-      revision.date += suffix;
-      revision.id += suffix;
-    }
   }
 
   G& game_;

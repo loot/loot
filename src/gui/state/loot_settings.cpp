@@ -25,10 +25,10 @@
 
 #include "gui/state/loot_settings.h"
 
+#include <cpptoml.h>
+
 #include <fstream>
 #include <thread>
-
-#include <cpptoml.h>
 
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -171,11 +171,7 @@ LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
 }
 
 LootSettings::WindowPosition::WindowPosition() :
-    top(0),
-    bottom(0),
-    left(0),
-    right(0),
-    maximised(false) {}
+    top(0), bottom(0), left(0), right(0), maximised(false) {}
 
 LootSettings::LootSettings() :
     gameSettings_({
@@ -191,24 +187,24 @@ LootSettings::LootSettings() :
         GameSettings(GameType::tes4, "Nehrim")
             .SetName("Nehrim - At Fate's Edge")
             .SetMaster("Nehrim.esm")
-            .SetRegistryKeys({
-              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation",
-                std::string(NEHRIM_STEAM_REGISTRY_KEY)
-            }),
+            .SetRegistryKeys(
+                {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehr"
+                 "im - At Fate's Edge_is1\\InstallLocation",
+                 std::string(NEHRIM_STEAM_REGISTRY_KEY)}),
         GameSettings(GameType::tes5, "Enderal")
             .SetName("Enderal: Forgotten Stories")
-            .SetRegistryKeys({
-              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
-              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 933480\\InstallLocation"
-            })
+            .SetRegistryKeys(
+                {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
+                 "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Stea"
+                 "m App 933480\\InstallLocation"})
             .SetGameLocalFolder("enderal")
             .SetRepoURL("https://github.com/loot/enderal.git"),
         GameSettings(GameType::tes5se, "Enderal Special Edition")
             .SetName("Enderal: Forgotten Stories (Special Edition)")
-            .SetRegistryKeys({
-              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
-              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 976620\\InstallLocation"
-            })
+            .SetRegistryKeys(
+                {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
+                 "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Stea"
+                 "m App 976620\\InstallLocation"})
             .SetGameLocalFolder("Enderal Special Edition")
             .SetRepoURL("https://github.com/loot/enderal.git"),
     }),
@@ -231,7 +227,7 @@ LootSettings::LootSettings() :
         Language({"sv", "Svenska", std::nullopt}),
         Language({"uk_UA", "Українська", std::nullopt}),
         Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
-      }),
+    }),
     autoSort_(false),
     enableDebugLogging_(false),
     updateMasterlist_(true),
@@ -239,7 +235,9 @@ LootSettings::LootSettings() :
     game_("auto"),
     language_("en"),
     theme_("default"),
-    lastGame_("auto") {}
+    lastGame_("auto"),
+    preludeRepositoryBranch_("v0.17"),
+    preludeRepositoryURL_("https://github.com/loot/prelude.git") {}
 
 void LootSettings::load(const std::filesystem::path& file,
                         const std::filesystem::path& lootDataPath) {
@@ -266,6 +264,11 @@ void LootSettings::load(const std::filesystem::path& file,
   lastGame_ = settings->get_as<std::string>("lastGame").value_or(lastGame_);
   lastVersion_ =
       settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
+
+  preludeRepositoryURL_ = settings->get_as<std::string>("preludeRepo")
+                              .value_or(preludeRepositoryURL_);
+  preludeRepositoryBranch_ = settings->get_as<std::string>("preludeBranch")
+                                 .value_or(preludeRepositoryBranch_);
 
   auto windowTop = settings->get_qualified_as<long>("window.top");
   auto windowBottom = settings->get_qualified_as<long>("window.bottom");
@@ -294,7 +297,8 @@ void LootSettings::load(const std::filesystem::path& file,
       } catch (std::exception& e) {
         // Skip invalid games.
         if (logger) {
-          logger->error("Failed to load config in [[games]] table: {}", e.what());
+          logger->error("Failed to load config in [[games]] table: {}",
+                        e.what());
         }
       }
     }
@@ -335,6 +339,8 @@ void LootSettings::save(const std::filesystem::path& file) {
   root->insert("theme", theme_);
   root->insert("lastGame", lastGame_);
   root->insert("lastVersion", lastVersion_);
+  root->insert("preludeRepo", preludeRepositoryURL_);
+  root->insert("preludeBranch", preludeRepositoryBranch_);
 
   if (windowPosition_.has_value()) {
     auto windowPosition = windowPosition_.value();
@@ -455,6 +461,18 @@ std::string LootSettings::getTheme() const {
   return theme_;
 }
 
+std::string LootSettings::getPreludeRepositoryURL() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return preludeRepositoryURL_;
+}
+
+std::string LootSettings::getPreludeRepositoryBranch() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return preludeRepositoryBranch_;
+}
+
 std::optional<LootSettings::WindowPosition> LootSettings::getWindowPosition()
     const {
   lock_guard<recursive_mutex> guard(mutex_);
@@ -496,6 +514,18 @@ void LootSettings::setTheme(const std::string& theme) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   theme_ = theme;
+}
+
+void LootSettings::setPreludeRepositoryURL(const std::string& url) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  preludeRepositoryURL_ = url;
+}
+
+void LootSettings::setPreludeRepositoryBranch(const std::string& branch) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  preludeRepositoryBranch_ = branch;
 }
 
 void LootSettings::setAutoSort(bool autoSort) {

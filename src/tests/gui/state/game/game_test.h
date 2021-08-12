@@ -67,7 +67,7 @@ protected:
   void TearDown() { CommonGameTestFixture::TearDown(); }
 
   Game CreateInitialisedGame(const std::filesystem::path& lootDataPath) {
-    Game game(defaultGameSettings, lootDataPath);
+    Game game(defaultGameSettings, lootDataPath, "");
     game.Init();
     return game;
   }
@@ -103,7 +103,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetRegistryKeys({"foo"});
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
-  Game game(settings, lootDataPath);
+  Game game(settings, lootDataPath, "");
 
   EXPECT_EQ(GetParam(), game.Type());
   EXPECT_EQ(settings.Name(), game.Name());
@@ -146,26 +146,26 @@ TEST_P(GameTest, assignmentOperatorShouldCopyGameData) {
 // test autodetection fully unless on Linux.
 TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathWasNotGiven) {
   auto settings = GameSettings(GetParam()).SetGameLocalPath(localPath);
-  Game game(settings, "");
+  Game game(settings, "", "");
   EXPECT_THROW(game.Init(), std::invalid_argument);
 }
 
 TEST_P(GameTest, initShouldThrowOnLinuxWasLocalPathIsNotGiven) {
   auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
-  Game game(settings, lootDataPath);
+  Game game(settings, lootDataPath, "");
   EXPECT_THROW(game.Init(), std::system_error);
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
   auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
-  Game game(settings, lootDataPath);
+  Game game(settings, lootDataPath, "");
   EXPECT_NO_THROW(game.Init());
 }
 #endif
 
 TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, "");
+  Game game(defaultGameSettings, "", "");
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
@@ -176,7 +176,7 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
 
 TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath, "");
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
@@ -187,7 +187,7 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
 
 TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath, "");
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
   std::ofstream out(lootGamePath);
@@ -200,7 +200,7 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
 }
 
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
-  Game game(defaultGameSettings, "");
+  Game game(defaultGameSettings, "", "");
 
   EXPECT_NO_THROW(game.Init());
 }
@@ -639,7 +639,7 @@ TEST_P(GameTest, pluginsShouldBeFullyLoadedAfterFullyLoadingThem) {
 
 TEST_P(GameTest,
        GetActiveLoadOrderIndexShouldReturnNulloptForAPluginThatIsNotActive) {
-  Game game(defaultGameSettings, "");
+  Game game(defaultGameSettings, "", "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -651,7 +651,7 @@ TEST_P(GameTest,
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldReturnTheLoadOrderIndexOmittingInactivePlugins) {
-  Game game(defaultGameSettings, "");
+  Game game(defaultGameSettings, "", "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -671,7 +671,7 @@ TEST_P(
 TEST_P(
     GameTest,
     GetActiveLoadOrderIndexShouldCaseInsensitivelyCompareNonAsciiPluginNamesCorrectly) {
-  Game game(defaultGameSettings, "");
+  Game game(defaultGameSettings, "", "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -682,7 +682,7 @@ TEST_P(
 
 TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());
@@ -706,7 +706,7 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
 
 TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -731,7 +731,7 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
 
 TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
@@ -767,7 +767,7 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
 
 TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   using std::filesystem::u8path;
-  Game game(defaultGameSettings, lootDataPath);
+  Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
 
   auto lootGamePath = lootDataPath / u8path(game.FolderName());

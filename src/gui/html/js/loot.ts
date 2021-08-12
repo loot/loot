@@ -21,7 +21,12 @@
     along with LOOT.  If not, see
     <https://www.gnu.org/licenses/>.
 */
-import { GameSettings, LootSettings, LootVersion } from './interfaces';
+import {
+  FileRevision,
+  GameSettings,
+  LootSettings,
+  LootVersion
+} from './interfaces';
 import {
   onSidebarFilterToggle,
   onContentFilter,
@@ -49,10 +54,10 @@ import {
   onSearchBegin,
   onSearchEnd,
   onFolderChange,
-  onSettingsSelectGame,
+  onSelectSettingsSidebarEntry,
   onSettingsAddGame,
   onSettingsDeleteGame,
-  onSettingsDeselectGame
+  onDeselectSettingsSidebarEntry
 } from './events';
 import { closeProgress, showProgress } from './dialog';
 import {
@@ -88,7 +93,8 @@ import {
   getSettings,
   getGameData,
   getAutoSort,
-  getThemes
+  getThemes,
+  getPreludeInfo
 } from './query';
 import State from './state';
 import translateStaticText from './translateStaticText';
@@ -215,11 +221,11 @@ function addEventListeners(): void {
 
   getElementById('settingsSidebarList').addEventListener(
     'iron-select',
-    onSettingsSelectGame
+    onSelectSettingsSidebarEntry
   );
   getElementById('settingsSidebarList').addEventListener(
     'iron-activate',
-    onSettingsDeselectGame
+    onDeselectSettingsSidebarEntry
   );
 
   getElementById('addGameButton').addEventListener('click', onSettingsAddGame);
@@ -277,6 +283,34 @@ function addEventListeners(): void {
   );
   document.addEventListener('loot-game-plugins-change', Game.onPluginsChange);
   document.addEventListener('loot-game-groups-change', Game.onGroupsChange);
+
+  document.addEventListener('loot-prelude-change', onPreludeChange);
+}
+
+interface PreludeChangeEvent extends CustomEvent {
+  detail: {
+    revision: string;
+    date: string;
+  };
+}
+
+function isPreludeChangeEvent(evt: Event): evt is PreludeChangeEvent {
+  return (
+    evt instanceof CustomEvent &&
+    typeof evt.detail.revision === 'string' &&
+    typeof evt.detail.date === 'string'
+  );
+}
+
+function onPreludeChange(evt: Event): void {
+  if (!isPreludeChangeEvent(evt)) {
+    throw new TypeError(
+      `Expected a GameMasterlistChangeEvent, got ${evt.type}`
+    );
+  }
+
+  getElementById('preludeRevision').textContent = evt.detail.revision;
+  getElementById('preludeDate').textContent = evt.detail.date;
 }
 
 function handleInitErrors(errors: string[]): void {
@@ -395,6 +429,8 @@ export default class Loot {
 
   public unappliedGamesSettings: Map<string, GameSettings> = new Map();
 
+  private _preludeVersionInfo?: FileRevision;
+
   // Used by C++ callbacks.
   public showProgress: (text: string) => void;
 
@@ -430,6 +466,10 @@ export default class Loot {
   private async loadGameData(): Promise<void> {
     const gameData = await getGameData();
     this.game = new Game(gameData, this.l10n);
+  }
+
+  private async loadPreludeInfo(): Promise<void> {
+    this.preludeVersionInfo = await getPreludeInfo();
   }
 
   private async initialiseGeneralUIElements(): Promise<void> {
@@ -473,7 +513,7 @@ export default class Loot {
       if (initErrors.length > 0) {
         handleInitErrors(initErrors);
       } else {
-        await this.loadGameData();
+        await Promise.all([this.loadPreludeInfo(), this.loadGameData()]);
 
         if (this.game === undefined) {
           throw new Error('Failed to load game');
@@ -496,5 +536,35 @@ export default class Loot {
     } catch (error) {
       handlePromiseError(error);
     }
+  }
+
+  public get preludeVersionInfo(): FileRevision | undefined {
+    return this._preludeVersionInfo;
+  }
+
+  public set preludeVersionInfo(info: FileRevision | undefined) {
+    if (
+      info !== this._preludeVersionInfo &&
+      (info === undefined ||
+        this._preludeVersionInfo === undefined ||
+        info.id !== this._preludeVersionInfo.id ||
+        info.date !== this._preludeVersionInfo.date)
+    ) {
+      const {
+        id = this.l10n.translate('N/A'),
+        date = this.l10n.translate('N/A')
+      } = info ?? {};
+
+      document.dispatchEvent(
+        new CustomEvent('loot-prelude-change', {
+          detail: {
+            id,
+            date
+          }
+        })
+      );
+    }
+
+    this._preludeVersionInfo = info;
   }
 }

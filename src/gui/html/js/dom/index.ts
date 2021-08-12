@@ -208,9 +208,11 @@ export function updateSettingsDialog(settings: LootSettings): void {
   (getElementById('updateMasterlist') as PaperToggleButtonElement).checked =
     settings.updateMasterlist;
 
-  (
-    getElementById('enableLootUpdateCheck') as PaperToggleButtonElement
-  ).checked = settings.enableLootUpdateCheck;
+  (getElementById('settingsPreludeURL') as PaperInputElement).value =
+    settings.preludeURL;
+
+  (getElementById('settingsPreludeBranch') as PaperInputElement).value =
+    settings.preludeBranch;
 }
 
 export function fillGameTypesList(gameTypes: string[]): void {

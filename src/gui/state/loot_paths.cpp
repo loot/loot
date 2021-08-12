@@ -88,4 +88,8 @@ std::filesystem::path LootPaths::getSettingsPath() const {
 std::filesystem::path LootPaths::getLogPath() const {
   return lootDataPath_ / "LOOTDebugLog.txt";
 }
+
+std::filesystem::path LootPaths::getPreludePath() const {
+  return lootDataPath_ / "prelude" / "prelude.yaml";
+}
 }

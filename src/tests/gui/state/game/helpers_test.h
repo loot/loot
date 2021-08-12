@@ -225,6 +225,30 @@ TEST(SplitRegistryPath, shouldThrowIfInputIsEmptyOrOnlyBackslashes) {
   EXPECT_THROW(SplitRegistryPath("\\"), std::invalid_argument);
   EXPECT_THROW(SplitRegistryPath(""), std::invalid_argument);
 }
+
+TEST(AddSuffixIfModified, shouldDoNothingIfFileIsNotModified) {
+  FileRevision revision;
+  revision.date = "date";
+  revision.id = "id";
+  ASSERT_FALSE(revision.is_modified);
+
+  AddSuffixIfModified(revision);
+
+  EXPECT_EQ("date", revision.date);
+  EXPECT_EQ("id", revision.id);
+}
+
+TEST(AddSuffixIfModified, shouldAppendEditedIfFileIsModified) {
+  FileRevision revision;
+  revision.date = "date";
+  revision.id = "id";
+  revision.is_modified = true;
+
+  AddSuffixIfModified(revision);
+
+  EXPECT_EQ("date (edited)", revision.date);
+  EXPECT_EQ("id (edited)", revision.id);
+}
 }
 }
 

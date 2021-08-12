@@ -485,6 +485,12 @@ function translateSummaryCard(l10n: Translator): void {
     l10n.translate('Masterlist Revision');
   getPreviousElementSiblingById('masterlistDate').textContent =
     l10n.translate('Masterlist Date');
+  getPreviousElementSiblingById('preludeRevision').textContent = l10n.translate(
+    'Masterlist Prelude Revision'
+  );
+  getPreviousElementSiblingById('preludeDate').textContent = l10n.translate(
+    'Masterlist Prelude Date'
+  );
   getPreviousElementSiblingById('totalWarningNo').textContent =
     // translators: The number of warning messages present. This text appears in the General Information card.
     l10n.translate('Warnings');
@@ -541,6 +547,24 @@ function translateSettingsDialog(l10n: Translator): void {
 
   getPreviousElementSiblingById('enableLootUpdateCheck').textContent =
     l10n.translate('Check for LOOT updates on startup');
+
+  getElementById('settingsPreludeURL').setAttribute(
+    'error-message',
+    l10n.translate('A prelude URL is required.')
+  );
+  getElementById('settingsPreludeURL').setAttribute(
+    'label',
+    l10n.translate('Masterlist prelude repository URL')
+  );
+
+  getElementById('settingsPreludeBranch').setAttribute(
+    'error-message',
+    l10n.translate('A prelude branch is required.')
+  );
+  getElementById('settingsPreludeBranch').setAttribute(
+    'label',
+    l10n.translate('Masterlist prelude repository branch')
+  );
 
   getElementById('settingsGameName').setAttribute(
     'error-message',

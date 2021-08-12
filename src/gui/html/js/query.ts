@@ -9,7 +9,8 @@ import {
   GameGroups,
   RawGroup,
   PluginMetadata,
-  GameContent
+  GameContent,
+  FileRevision
 } from './interfaces';
 
 declare global {
@@ -101,6 +102,10 @@ export function getSettings(): Promise<LootSettings> {
   return query('getSettings').then(JSON.parse);
 }
 
+export function getPreludeInfo(): Promise<FileRevision> {
+  return query('getPreludeInfo').then(JSON.parse);
+}
+
 export function getThemes(): Promise<string[]> {
   return query('getThemes')
     .then(JSON.parse)
@@ -120,8 +125,12 @@ export function changeGame(gameFolder: string): Promise<GameData> {
   return query('changeGame', { gameFolder }).then(JSON.parse);
 }
 
-export function updateMasterlist(): Promise<GameData> {
+export function updateMasterlist(): Promise<GameData | null> {
   return query('updateMasterlist').then(JSON.parse);
+}
+
+export function updatePrelude(): Promise<FileRevision | null> {
+  return query('updatePrelude').then(JSON.parse);
 }
 
 export function sortPlugins(): Promise<MainContent> {

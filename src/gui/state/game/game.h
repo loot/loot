@@ -40,7 +40,8 @@ namespace gui {
 class Game : public GameSettings {
 public:
   Game(const GameSettings& gameSettings,
-       const std::filesystem::path& lootDataPath);
+       const std::filesystem::path& lootDataPath,
+       const std::filesystem::path& preludePath);
   Game(const Game& game);
 
   Game& operator=(const Game& game);
@@ -112,6 +113,7 @@ private:
   std::shared_ptr<GameInterface> gameHandle_;
   std::vector<Message> messages_;
   std::filesystem::path lootDataPath_;
+  std::filesystem::path preludePath_;
   unsigned short loadOrderSortCount_;
   bool pluginsFullyLoaded_;
 

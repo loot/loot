@@ -48,7 +48,8 @@ public:
   // Installed games have their game paths set in the returned settings.
   std::vector<GameSettings> LoadInstalledGames(
       std::vector<GameSettings> gamesSettings,
-      const std::filesystem::path& lootDataPath) {
+      const std::filesystem::path& lootDataPath,
+      const std::filesystem::path& preludePath) {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
     auto logger = getLogger();
@@ -90,7 +91,8 @@ public:
                         gameSettings.FolderName());
         }
 
-        installedGames.push_back(gui::Game(gameSettings, lootDataPath));
+        installedGames.push_back(
+            gui::Game(gameSettings, lootDataPath, preludePath));
       }
     }
     installedGames_ = installedGames;

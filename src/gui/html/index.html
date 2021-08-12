@@ -249,6 +249,14 @@
                 <td>Masterlist Date</td>
                 <td id="masterlistDate">N/A</td>
               </tr>
+              <tr>
+                <td>Masterlist Prelude Revision</td>
+                <td id="preludeRevision">N/A</td>
+              </tr>
+              <tr>
+                <td>Masterlist Prelude Date</td>
+                <td id="preludeDate">N/A</td>
+              </tr>
             </tbody>
           </table>
           <table>
@@ -499,6 +507,12 @@
           <div>Enable debug logging</div>
           <paper-toggle-button id="enableDebugLogging"></paper-toggle-button>
           <paper-tooltip>The output is logged to the LOOTDebugLog.txt file.</paper-tooltip>
+        </div>
+        <div>
+          <paper-input id="settingsPreludeURL" error-message="A prelude URL is required." class="preludeURL" required="" auto-validate="" label="Masterlist prelude repository URL"></paper-input>
+        </div>
+        <div>
+          <paper-input id="settingsPreludeBranch" error-message="A prelude branch is required." class="preludeBranch" required="" auto-validate="" label="Masterlist prelude repository branch"></paper-input>
         </div>
       </div>
       <div id="gameSettings" hidden>

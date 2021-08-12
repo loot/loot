@@ -259,4 +259,15 @@ std::tuple<std::string, std::string, std::string> SplitRegistryPath(
 
   return std::make_tuple(rootKey, subKey, value);
 }
+
+void AddSuffixIfModified(FileRevision& revision) {
+  if (revision.is_modified) {
+    auto suffix =
+        " " +
+        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
+        boost::locale::translate("(edited)").str();
+    revision.date += suffix;
+    revision.id += suffix;
+  }
+}
 }

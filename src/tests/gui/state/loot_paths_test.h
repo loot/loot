@@ -66,6 +66,12 @@ TEST(LootPaths, getLogPathShouldUseLootDataPath) {
             paths.getLogPath());
 }
 
+TEST(LootPaths, getPreludePathShouldUseLootDataPath) {
+  LootPaths paths("", "");
+
+  EXPECT_EQ(paths.getLootDataPath() / "prelude" / "prelude.yaml", paths.getPreludePath());
+}
+
 TEST(LootPaths, constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
   LootPaths paths("", "");
 
