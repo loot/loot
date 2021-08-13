@@ -299,7 +299,7 @@ msgstr "순환 상호 작용 감지됨"
 
 #: src/gui/html/js/events.ts:424
 msgid "Failed to sort plugins. Details: %s"
-msgstr "플러그인을 정렬하지 못했습니다. 세부 정ㅂ: %1%"
+msgstr "플러그인을 정렬하지 못했습니다. 세부 정보: %s"
 
 #: src/gui/html/js/events.ts:460
 msgid "Sorting made no changes to the load order."
