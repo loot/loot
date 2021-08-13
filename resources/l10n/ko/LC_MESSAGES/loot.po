@@ -812,7 +812,7 @@ msgstr "전체 플러그인"
 
 #: src/gui/html/js/translateStaticText.ts:509
 msgid "General"
-msgstr ""
+msgstr "일반"
 
 #: src/gui/html/js/translateStaticText.ts:513
 msgid "Default Game"
