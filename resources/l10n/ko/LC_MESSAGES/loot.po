@@ -406,7 +406,7 @@ msgstr ""
 
 #: src/gui/html/js/loot.ts:330
 msgid "A [new release](%s) of LOOT is available."
-msgstr "LOOT의 [새 버전] (%s)을 사용할 수 있습니다."
+msgstr "LOOT의 [새 버전](%s)을 사용할 수 있습니다."
 
 #: src/gui/html/js/loot.ts:370
 msgid ""
