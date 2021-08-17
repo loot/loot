@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-08-15 20:56+0100\n"
+"POT-Creation-Date: 2021-08-17 22:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,68 +83,68 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:183 src/gui/state/game/game.cpp:219
+#: src/gui/state/game/game.cpp:184 src/gui/state/game/game.cpp:222
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:196
+#: src/gui/state/game/game.cpp:197
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:245
+#: src/gui/state/game/game.cpp:256
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:281
+#: src/gui/state/game/game.cpp:299
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:301
+#: src/gui/state/game/game.cpp:319
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:322
+#: src/gui/state/game/game.cpp:340
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:342
+#: src/gui/state/game/game.cpp:360
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:411 src/gui/state/game/game.cpp:496
+#: src/gui/state/game/game.cpp:429 src/gui/state/game/game.cpp:514
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:521
+#: src/gui/state/game/game.cpp:539
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:533
+#: src/gui/state/game/game.cpp:551
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:569
+#: src/gui/state/game/game.cpp:587
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:593
+#: src/gui/state/game/game.cpp:611
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:663
+#: src/gui/state/game/game.cpp:681
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
