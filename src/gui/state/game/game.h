@@ -55,7 +55,8 @@ public:
   std::vector<std::shared_ptr<const PluginInterface>> GetPlugins() const;
   std::vector<Message> CheckInstallValidity(
       const std::shared_ptr<const PluginInterface>& plugin,
-      const PluginMetadata& metadata);
+      const PluginMetadata& metadata,
+      const std::string& language);
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 

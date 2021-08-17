@@ -116,7 +116,8 @@ public:
 
   std::vector<Message> CheckInstallValidity(
       std::shared_ptr<const PluginInterface> file,
-      PluginMetadata metadata) {
+      PluginMetadata metadata,
+      const std::string& language) {
     return {};
   }
 

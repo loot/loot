@@ -147,7 +147,8 @@ std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
 
 std::vector<Message> Game::CheckInstallValidity(
     const std::shared_ptr<const PluginInterface>& plugin,
-    const PluginMetadata& metadata) {
+    const PluginMetadata& metadata,
+    const std::string& language) {
   auto logger = getLogger();
 
   if (logger) {
@@ -207,19 +208,29 @@ std::vector<Message> Game::CheckInstallValidity(
       auto file = std::string(req.GetName());
       if (!fileExists(file)) {
         if (logger) {
-          logger->error("\"{}\" requires \"{}\", but it is missing.",
+          logger->error("\"{}\" requires \"{}\", but it is missing. {}",
                         plugin->GetName(),
-                        file);
+                        file,
+                        req.ChooseDetail(MessageContent::defaultLanguage)
+                            .value_or(MessageContent())
+                            .GetText());
         }
         if (displayNamesWithMessages.count(req.GetDisplayName()) > 0) {
           continue;
         }
-        messages.push_back(Message(MessageType::error,
-                                   (boost::format(boost::locale::translate(
-                                        "This plugin requires \"%1%\" to be "
-                                        "installed, but it is missing.")) %
-                                    req.GetDisplayName())
-                                       .str()));
+
+        auto localisedText = (boost::format(boost::locale::translate(
+                                  "This plugin requires \"%1%\" to be "
+                                  "installed, but it is missing.")) %
+                              req.GetDisplayName())
+                                 .str();
+        auto detailContent = req.ChooseDetail(language);
+        auto messageText =
+            detailContent.has_value()
+                ? localisedText + " " + detailContent.value().GetText()
+                : localisedText;
+
+        messages.push_back(Message(MessageType::error, messageText));
         displayNamesWithMessages.insert(req.GetDisplayName());
       }
     }
@@ -232,20 +243,30 @@ std::vector<Message> Game::CheckInstallValidity(
           (!hasPluginFileExtension(file) || IsPluginActive(file))) {
         if (logger) {
           logger->error(
-              "\"{}\" is incompatible with \"{}\", but both are present.",
+              "\"{}\" is incompatible with \"{}\", but both are present. {}",
               plugin->GetName(),
-              file);
+              file,
+              inc.ChooseDetail(MessageContent::defaultLanguage)
+                  .value_or(MessageContent())
+                  .GetText());
         }
         if (displayNamesWithMessages.count(inc.GetDisplayName()) > 0) {
           continue;
         }
-        messages.push_back(
-            Message(MessageType::error,
-                    (boost::format(boost::locale::translate(
-                         "This plugin is incompatible with \"%1%\", but both "
-                         "are present.")) %
-                     inc.GetDisplayName())
-                        .str()));
+
+        auto localisedText =
+            (boost::format(boost::locale::translate(
+                 "This plugin is incompatible with \"%1%\", but both "
+                 "are present.")) %
+             inc.GetDisplayName())
+                .str();
+        auto detailContent = inc.ChooseDetail(language);
+        auto messageText =
+            detailContent.has_value()
+                ? localisedText + " " + detailContent.value().GetText()
+                : localisedText;
+
+        messages.push_back(Message(MessageType::error, messageText));
         displayNamesWithMessages.insert(inc.GetDisplayName());
       }
     }

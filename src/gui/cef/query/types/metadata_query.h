@@ -101,7 +101,7 @@ protected:
 
     auto messages = evaluatedMetadata.value().GetMessages();
     auto validityMessages =
-        game_.CheckInstallValidity(plugin, evaluatedMetadata.value());
+        game_.CheckInstallValidity(plugin, evaluatedMetadata.value(), language_);
     messages.insert(
         end(messages), begin(validityMessages), end(validityMessages));
     evaluatedMetadata.value().SetMessages(messages);
