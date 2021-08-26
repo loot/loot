@@ -9,7 +9,13 @@ Otherwise, general discussion and support takes place in LOOT's official `forum 
 
 If you want to submit metadata, the easiest way to do so is to add the metadata to your own LOOT install, then use the Copy Metadata feature to easily get it in a form that you can then edit into a masterlist on GitHub or post in the official forum thread.
 
-Information on dirty plugins is very welcome, but for such information to be useful we require at least the filename and the CRC of the dirty plugin. The CRC may be calculated using Wrye Bash or 7-Zip, with other sources being unverified as correct. In the case of 7-Zip, the "CRC checksum for data" is the one required. Any other information, such as the ITM record and deleted reference counts, is very welcome.
+Information on dirty plugins is very welcome in the form of `Quick Auto Clean`_ reports (QAC) from xEdit. In addition to the QAC report we also require a link to a plugins source, so we can always verify and reevaluate the plugin at a later date. It also would be ideal if the user would check if the masterlist already includes information on the plugin in question.
+
+In order to guarantee the safety of our users, links to mods must follow these guidelines:
+  * The link should refer to an official/canonical/supported source, as opposed to unverified uploads.
+  * Whenever possible, the url should use ``https`` instead of ``http``.
+  * The plugin in question mustn't be behind a paywall of any sort.
+  * The LOOT Team reserves the right to reject URLs to websites that contain illegal content.
 
 .. _make changes yourself: https://loot.github.io/docs/contributing/How-To-Contribute
 .. _credits: https://loot.github.io/credits/
@@ -17,3 +23,4 @@ Information on dirty plugins is very welcome, but for such information to be use
 .. _LOOT's homepage: https://loot.github.io/
 .. _forum thread: https://www.afkmods.com/index.php?/topic/5042-relz-loot-load-order-optimisation-tool/
 .. _Discord: https://discord.com/invite/SZVPRzf
+.. _Quick Auto Clean: https://tes5edit.github.io/docs/7-mod-cleaning-and-error-checking.html
