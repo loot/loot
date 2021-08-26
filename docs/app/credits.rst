@@ -16,7 +16,7 @@ In addition, the following are credited with application-related support:
   * Czech: ThePotatoChronicler
   * Danish: Freso
   * Finnish: 3ventic
-  * French: Kaos, cpasmoi, Sita
+  * French: Kaos, cpasmoi, Sita, Zamix
   * German: lpradel, DaCoolX, Infernio, pStyl3
   * Italian: Griam, nicola89b, albie
   * Japanese: kuroko, tktk11, Menchi
