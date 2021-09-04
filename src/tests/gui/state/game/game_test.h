@@ -100,7 +100,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   GameSettings settings = defaultGameSettings;
   settings.SetName("foo");
   settings.SetMaster(blankEsm);
-  settings.SetRegistryKey("foo");
+  settings.SetRegistryKeys({"foo"});
   settings.SetRepoURL("foo");
   settings.SetRepoBranch("foo");
   Game game(settings, lootDataPath);
@@ -109,7 +109,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.Name(), game.Name());
   EXPECT_EQ(settings.FolderName(), game.FolderName());
   EXPECT_EQ(settings.Master(), game.Master());
-  EXPECT_EQ(settings.RegistryKey(), game.RegistryKey());
+  EXPECT_EQ(settings.RegistryKeys(), game.RegistryKeys());
   EXPECT_EQ(settings.RepoURL(), game.RepoURL());
   EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
 

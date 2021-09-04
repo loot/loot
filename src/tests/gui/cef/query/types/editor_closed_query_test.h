@@ -55,7 +55,11 @@ public:
 
   bool IsLightMaster() const { return false; }
 
+  bool IsLightPlugin() const { return false; }
+
   bool IsValidAsLightMaster() const { return false; }
+
+  bool IsValidAsLightPlugin() const { return false; }
 
   bool IsEmpty() const { return false; }
 

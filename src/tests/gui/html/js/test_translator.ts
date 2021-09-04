@@ -10,7 +10,7 @@ describe('Translator', () => {
         '': {
           domain: 'messages',
           lang: 'en',
-          // eslint-disable-next-line @typescript-eslint/camelcase
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           plural_forms: 'nplurals=2; plural=(n != 1);'
         },
         foo: ['bar'],
@@ -50,12 +50,12 @@ describe('Translator', () => {
       expect(l10n.translate('foo')).toBe('foo');
     });
 
-    test('should return the input string if the current locale is "en"', () => {
+    test('should return the input string if the current locale is "en"', async () => {
       const l10n = new Translator();
 
-      l10n.load('en').then(() => {
-        expect(l10n.translate('foo')).toBe('foo');
-      });
+      await l10n.load('en');
+
+      expect(l10n.translate('foo')).toBe('foo');
     });
 
     test('should return the translated string if locale data has been loaded', () => {
@@ -75,12 +75,12 @@ describe('Translator', () => {
       expect(l10n.translateFormatted('foo')).toBe('foo');
     });
 
-    test('should return the input string if the current locale is "en"', () => {
+    test('should return the input string if the current locale is "en"', async () => {
       const l10n = new Translator();
 
-      l10n.load('en').then(() => {
-        expect(l10n.translateFormatted('foo')).toBe('foo');
-      });
+      await l10n.load('en');
+
+      expect(l10n.translateFormatted('foo')).toBe('foo');
     });
 
     test('should return the translated string if locale data has been loaded', () => {

@@ -19,7 +19,7 @@ function transformGroupAfter(
 function transformGroup(group: RawGroup, isUserAdded: boolean): SourcedGroup {
   const after = transformGroupAfter(group.after, isUserAdded);
 
-  return Object.assign({}, group, { isUserAdded, after });
+  return { ...group, isUserAdded, after };
 }
 
 function mergeGroupAfters(

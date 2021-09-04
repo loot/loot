@@ -9,16 +9,18 @@ describe('query()', () => {
   beforeAll(() => {
     window.cefQuery = jest
       .fn()
-      .mockImplementation(({ request, onSuccess, onFailure }) => {
-        if (request === '{"name":"getVersion"}') {
-          onFailure(-1, 'error message');
-        } else if (request === '{"name":"getInitErrors"}') {
-          onSuccess('{"errors": []}');
-        } else {
-          onSuccess('{"generalMessages": [], "plugins": []}');
+      .mockImplementation(
+        ({ request, onSuccess, onFailure }: CefQueryParameters) => {
+          if (request === '{"name":"getVersion"}') {
+            onFailure(-1, 'error message');
+          } else if (request === '{"name":"getInitErrors"}') {
+            onSuccess('{"errors": []}');
+          } else {
+            onSuccess('{"generalMessages": [], "plugins": []}');
+          }
+          return 0;
         }
-        return 0;
-      });
+      );
   });
 
   beforeEach(() => {

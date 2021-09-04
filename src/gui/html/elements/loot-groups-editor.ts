@@ -55,7 +55,7 @@ function addMissingGroups(groups: SourcedGroup[]): SourcedGroup[] {
   for (const group of groups) {
     for (const afterGroup of group.after) {
       if (!groupNames.has(afterGroup.name)) {
-        missingGroups.push(Object.assign({ after: [] }, afterGroup));
+        missingGroups.push({ after: [], ...afterGroup });
       }
     }
   }
@@ -186,7 +186,9 @@ export default class LootGroupsEditor extends PolymerElement {
     `;
   }
 
-  private cy?: cytoscape.Core & { edgehandles?: (config: object) => void };
+  private cy?: cytoscape.Core & {
+    edgehandles?: (config: Record<string, unknown>) => void;
+  };
 
   private cyLayoutOptions?: cytoscape.LayoutOptions | DagreLayoutOptions;
 
@@ -266,11 +268,7 @@ export default class LootGroupsEditor extends PolymerElement {
       width: 2,
       'curve-style': 'bezier',
       'mid-target-arrow-shape': 'triangle',
-      // @ts-ignore arrow-scale is a valid style property, the types are
-      // incomplete.
       'arrow-scale': 2,
-      // @ts-ignore target-endpoint is a valid style property, the types
-      // are incomplete.
       'target-endpoint': 'inside-to-node'
     };
 
@@ -425,6 +423,7 @@ export default class LootGroupsEditor extends PolymerElement {
       );
     }
 
+    this.$.groupsHelpText.textContent = l10n.translate('View Documentation');
     this.$.newGroupInput.label = l10n.translate('Add a new group');
     this.$.newGroupInput.placeholder = l10n.translate('Group name');
     this.messages.groupAlreadyExists = l10n.translate('Group already exists!');
@@ -507,7 +506,7 @@ export default class LootGroupsEditor extends PolymerElement {
       button = evt.currentTarget;
     } else {
       throw new Error(
-        `Expected an AddGroupClickEvent or AddGroupKeyboardEvent, got ${evt}`
+        `Expected an AddGroupClickEvent or AddGroupKeyboardEvent, got ${evt.type}`
       );
     }
 
@@ -542,7 +541,7 @@ export default class LootGroupsEditor extends PolymerElement {
     }
 
     if (!isNewGroupInputEvent(evt)) {
-      throw new Error(`Expected an NewGroupInputEvent, got ${evt}`);
+      throw new Error(`Expected an NewGroupInputEvent, got ${evt.type}`);
     }
 
     const newGroupName = evt.currentTarget.value;

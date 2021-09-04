@@ -223,7 +223,7 @@ TEST(
   auto newGameSettings = GameSettings(GameType::tes5)
                              .SetName("different")
                              .SetMinimumHeaderVersion(100.0f)
-                             .SetRegistryKey("different")
+                             .SetRegistryKeys({"different"})
                              .SetRepoURL("different")
                              .SetRepoBranch("different");
   auto settings = manager.LoadInstalledGames({newGameSettings}, std::filesystem::path());
@@ -234,8 +234,8 @@ TEST(
   EXPECT_EQ(newGameSettings.Name(), manager.GetCurrentGame().Name());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
             manager.GetCurrentGame().MinimumHeaderVersion());
-  EXPECT_EQ(newGameSettings.RegistryKey(),
-            manager.GetCurrentGame().RegistryKey());
+  EXPECT_EQ(newGameSettings.RegistryKeys(),
+            manager.GetCurrentGame().RegistryKeys());
   EXPECT_EQ(newGameSettings.RepoURL(), manager.GetCurrentGame().RepoURL());
   EXPECT_EQ(newGameSettings.RepoBranch(),
             manager.GetCurrentGame().RepoBranch());
@@ -243,7 +243,7 @@ TEST(
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ(newGameSettings.Name(), settings[0].Name());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(), settings[0].MinimumHeaderVersion());
-  EXPECT_EQ(newGameSettings.RegistryKey(), settings[0].RegistryKey());
+  EXPECT_EQ(newGameSettings.RegistryKeys(), settings[0].RegistryKeys());
   EXPECT_EQ(newGameSettings.RepoURL(), settings[0].RepoURL());
   EXPECT_EQ(newGameSettings.RepoBranch(), settings[0].RepoBranch());
 }

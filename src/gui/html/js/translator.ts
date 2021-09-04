@@ -10,7 +10,7 @@ export default class Translator {
         '': {
           domain: 'messages',
           lang: 'en',
-          // eslint-disable-next-line @typescript-eslint/camelcase
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           plural_forms: 'nplurals=2; plural=(n != 1);'
         }
       }
@@ -39,7 +39,7 @@ export default class Translator {
       })
       .then(result => {
         this.jed = new Jed({
-          // eslint-disable-next-line @typescript-eslint/camelcase
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           locale_data: result,
           domain: 'messages'
         });
@@ -52,7 +52,7 @@ export default class Translator {
 
   public translateFormatted(
     text: string,
-    ...substitutions: (string | object)[]
+    ...substitutions: (string | Record<string, unknown>)[]
   ): string {
     if (text === undefined) {
       return '';

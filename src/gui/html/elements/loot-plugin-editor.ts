@@ -313,7 +313,7 @@ export default class LootPluginEditor extends PolymerElement {
 
   private static _onSplitterDrag(evt: Event): void {
     if (!isSplitterDragEvent(evt)) {
-      throw new Error(`Expected a SplitterDragEvent, got ${evt}`);
+      throw new Error(`Expected a SplitterDragEvent, got ${evt.type}`);
     }
 
     const editor = evt.target.parentNode.host;
@@ -421,14 +421,15 @@ export default class LootPluginEditor extends PolymerElement {
 
   private static _onHideEditor(evt: Event): void {
     if (!isHideEditorEvent(evt)) {
-      throw new Error(`Expected a HideEditorEvent, got ${evt}`);
+      throw new Error(`Expected a HideEditorEvent, got ${evt.type}`);
     }
 
     /* First validate table inputs. */
     let isValid = true;
-    const tables = evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
-      'editable-table'
-    );
+    const tables =
+      evt.target.parentElement.parentElement.parentNode.host.querySelectorAll(
+        'editable-table'
+      );
 
     for (const table of tables) {
       if (!(table instanceof EditableTable)) {
@@ -493,8 +494,8 @@ export default class LootPluginEditor extends PolymerElement {
         groupElement.style.fontWeight = 'bold';
         groupElement.style.color = 'var(--primary-color)';
       } else {
-        delete groupElement.style.fontWeight;
-        delete groupElement.style.color;
+        groupElement.style.fontWeight = 'unset';
+        groupElement.style.color = 'unset';
       }
     }
   }

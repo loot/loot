@@ -10,7 +10,6 @@ function DownloadLanguageFile($languageFile, $innoPath) {
 $innoInstallPath = 'C:\Program Files (x86)\Inno Setup 6'
 # Unofficial language files to download and install.
 $unofficialLanguageFiles = @(
-  'Bulgarian.isl',
   'Korean.isl',
   'Swedish.isl',
   'ChineseSimplified.isl'

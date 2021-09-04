@@ -29,6 +29,7 @@ function renderSuggestion(suggestion: string): JSX.Element {
 
 interface AutocompleteProps {
   source: string[];
+  errorMessage: string;
 }
 
 interface AutocompleteState {
@@ -114,6 +115,7 @@ class Autocomplete extends React.Component<
   public renderInputComponent(
     inputProps: Autosuggest.RenderInputComponentProps
   ): JSX.Element {
+    /* eslint-disable react/jsx-props-no-spreading */
     return (
       <paper-input-container
         disabled={inputProps.disabled ? true : null}
@@ -129,10 +131,11 @@ class Autocomplete extends React.Component<
           <input required {...inputProps} />
         </iron-input>
         <paper-input-error slot="add-on">
-          A value is required.
+          {this.props.errorMessage}
         </paper-input-error>
       </paper-input-container>
     );
+    /* eslint-enable react/jsx-props-no-spreading */
   }
 
   public render(): JSX.Element {
@@ -179,8 +182,14 @@ export default class PaperAutocomplete extends HTMLElement {
     const sourceAttribute = this.getAttribute('source') || '[]';
     const suggestionsSource = JSON.parse(sourceAttribute);
 
+    const errorMessage = this.getAttribute('error-message') || '';
+
     ReactDOM.render(
-      <Autocomplete ref={this.autocomplete} source={suggestionsSource} />,
+      <Autocomplete
+        ref={this.autocomplete}
+        source={suggestionsSource}
+        errorMessage={errorMessage}
+      />,
       mountPoint
     );
   }
@@ -193,7 +202,7 @@ export default class PaperAutocomplete extends HTMLElement {
     return this.autocomplete.current.value;
   }
 
-  public set value(value) {
+  public set value(value: string) {
     if (this.autocomplete.current === null) {
       throw new Error('Expected current autocomplete ref to be non-null');
     }

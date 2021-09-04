@@ -51,7 +51,7 @@ async function paginatedFindTag(
 ): Promise<Tag | undefined> {
   const iterator = octokit.paginate.iterator(octokit.repos.listTags, {
     ...repo,
-    // eslint-disable-next-line @typescript-eslint/camelcase
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     per_page: 100
   });
 
@@ -108,7 +108,7 @@ export default async function updateExists(
 
     const gitCommitResponse = await octokit.git.getCommit({
       ...repo,
-      // eslint-disable-next-line @typescript-eslint/camelcase
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       commit_sha: tag.commit.sha
     });
 
@@ -128,7 +128,8 @@ export default async function updateExists(
 
     return tagDate > Date.parse(dateString);
   } catch (error) {
-    console.error(`Failed to check for LOOT updates, details: ${error}`); // eslint-disable-line no-console
+    // eslint-disable-next-line no-console
+    console.error(`Failed to check for LOOT updates, details: ${error}`);
     throw error;
   }
 }

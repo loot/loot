@@ -175,7 +175,7 @@ function isGameFolderChangeEvent(evt: Event): evt is LootGameFolderChangeEvent {
 
 export function onSidebarFilterToggle(evt: Event): void {
   if (!isPaperCheckboxChangeEvent(evt)) {
-    throw new TypeError(`Expected a PaperCheckboxChangeEvent, got ${evt}`);
+    throw new TypeError(`Expected a PaperCheckboxChangeEvent, got ${evt.type}`);
   }
 
   window.loot.filters[evt.target.id] = evt.target.checked;
@@ -189,7 +189,7 @@ export function onSidebarFilterToggle(evt: Event): void {
 
 export function onContentFilter(evt: Event): void {
   if (!isPaperInputChangeEvent(evt)) {
-    throw new TypeError(`Expected a PaperInputChangeEvent, got ${evt}`);
+    throw new TypeError(`Expected a PaperInputChangeEvent, got ${evt.type}`);
   }
 
   window.loot.filters.contentSearchString = evt.target.value;
@@ -200,7 +200,9 @@ export function onContentFilter(evt: Event): void {
 
 export function onConflictsFilter(evt: Event): void {
   if (!isLootDropdownMenuChangeEvent(evt)) {
-    throw new TypeError(`Expected a LootDropdownMenuChangeEvent, got ${evt}`);
+    throw new TypeError(
+      `Expected a LootDropdownMenuChangeEvent, got ${evt.type}`
+    );
   }
 
   const currentGame = window.loot.game;
@@ -258,7 +260,9 @@ export function onConflictsFilter(evt: Event): void {
 
 export function onChangeGame(evt: Event): void {
   if (!isLootDropdownMenuSelectEvent(evt)) {
-    throw new TypeError(`Expected a LootDropdownMenuSelectEvent, got ${evt}`);
+    throw new TypeError(
+      `Expected a LootDropdownMenuSelectEvent, got ${evt.type}`
+    );
   }
 
   if (window.loot.game === undefined) {
@@ -283,9 +287,8 @@ export function onChangeGame(evt: Event): void {
 
       /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
-      const generalMessages = getElementById('summary').getElementsByTagName(
-        'ul'
-      )[0];
+      const generalMessages =
+        getElementById('summary').getElementsByTagName('ul')[0];
       while (generalMessages.firstElementChild) {
         generalMessages.removeChild(generalMessages.firstElementChild);
       }
@@ -383,7 +386,7 @@ function hasLoadOrderChanged(
   );
 }
 
-export function onSortPlugins(): Promise<void> {
+export async function onSortPlugins(): Promise<void> {
   const currentGame = window.loot.game;
   if (currentGame === undefined) {
     throw new Error('Attempted to sort plugins with no game loaded.');
@@ -394,74 +397,72 @@ export function onSortPlugins(): Promise<void> {
     window.loot.filters.apply(currentGame.plugins);
   }
 
-  let promise = Promise.resolve();
-  // window.loot.settings being undefined is an unexpected failure state, no
-  // point updating the masterlist in it.
-  if (window.loot.settings && window.loot.settings.updateMasterlist) {
-    promise = promise.then(updateMasterlist);
-  }
-  return promise
-    .then(sortPlugins)
-    .then(result => {
-      if (!result) {
-        return;
-      }
+  try {
+    // window.loot.settings being undefined is an unexpected failure state, no
+    // point updating the masterlist in it.
+    if (window.loot.settings && window.loot.settings.updateMasterlist) {
+      await updateMasterlist();
+    }
 
-      currentGame.generalMessages = result.generalMessages;
+    const result = await sortPlugins();
+    if (!result) {
+      return;
+    }
 
-      if (!result.plugins || result.plugins.length === 0) {
-        const message = result.generalMessages.find(item =>
-          item.text.startsWith(
-            window.loot.l10n.translate('Cyclic interaction detected')
-          )
-        );
-        const text = message
-          ? marked(message.text)
-          : 'see general messages for details.';
-        throw new Error(
-          window.loot.l10n.translateFormatted(
-            'Failed to sort plugins. Details: %s',
-            text
-          )
-        );
-      }
+    currentGame.generalMessages = result.generalMessages;
 
-      /* Check if sorted load order differs from current load order. */
-      const loadOrderIsUnchanged = !hasLoadOrderChanged(
-        currentGame.plugins,
-        result.plugins
+    if (!result.plugins || result.plugins.length === 0) {
+      const message = result.generalMessages.find(item =>
+        item.text.startsWith(
+          window.loot.l10n.translate('Cyclic interaction detected')
+        )
       );
+      const text = message
+        ? marked(message.text)
+        : 'see general messages for details.';
+      throw new Error(
+        window.loot.l10n.translateFormatted(
+          'Failed to sort plugins. Details: %s',
+          text
+        )
+      );
+    }
 
-      /* Set sorted plugins even if the load order hasn't changed because
+    /* Check if sorted load order differs from current load order. */
+    const loadOrderIsUnchanged = !hasLoadOrderChanged(
+      currentGame.plugins,
+      result.plugins
+    );
+
+    /* Set sorted plugins even if the load order hasn't changed because
          plugin metadata may have been updated. */
-      currentGame.setSortedPlugins(result.plugins);
-      if (loadOrderIsUnchanged) {
-        /* Immediately 'apply' the load order to forget the 'old' load order. */
-        currentGame.applySort();
-      }
+    currentGame.setSortedPlugins(result.plugins);
+    if (loadOrderIsUnchanged) {
+      /* Immediately 'apply' the load order to forget the 'old' load order. */
+      currentGame.applySort();
+    }
 
-      /* Now update the UI for the new order. */
-      window.loot.filters.apply(currentGame.plugins);
+    /* Now update the UI for the new order. */
+    window.loot.filters.apply(currentGame.plugins);
 
-      if (loadOrderIsUnchanged) {
-        /* Send discardUnappliedChanges query. Not doing so prevents LOOT's
+    if (loadOrderIsUnchanged) {
+      /* Send discardUnappliedChanges query. Not doing so prevents LOOT's
            window from closing. */
-        discardUnappliedChanges();
-      } else {
-        window.loot.state.enterSortingState();
-      }
+      await discardUnappliedChanges();
+    } else {
+      window.loot.state.enterSortingState();
+    }
 
-      closeProgress();
+    closeProgress();
 
-      if (loadOrderIsUnchanged) {
-        showNotification(
-          window.loot.l10n.translate(
-            'Sorting made no changes to the load order.'
-          )
-        );
-      }
-    })
-    .catch(handlePromiseError);
+    if (loadOrderIsUnchanged) {
+      showNotification(
+        window.loot.l10n.translate('Sorting made no changes to the load order.')
+      );
+    }
+  } catch (err) {
+    handlePromiseError(err);
+  }
 }
 
 export function onApplySort(): Promise<void> {
@@ -499,16 +500,19 @@ export function onCancelSort(): Promise<void> {
 
 export function onRedatePlugins(/* evt */): void {
   askQuestion(
+    // translators: Title of a dialog box.
     window.loot.l10n.translate('Redate Plugins?'),
     window.loot.l10n.translate(
       'This feature is provided so that modders using the Creation Kit may set the load order it uses. A side-effect is that any subscribed Steam Workshop mods will be re-downloaded by Steam (this does not affect Skyrim Special Edition). Do you wish to continue?'
     ),
+    // translators: Affirmative confirmation button text for the Redate Plugins dialog box.
     window.loot.l10n.translate('Redate'),
     result => {
       if (result) {
         redatePlugins()
           .then(() => {
             showNotification(
+              // translators: Notification text.
               window.loot.l10n.translate('Plugins were successfully redated.')
             );
           })
@@ -561,8 +565,8 @@ export function onCopyContent(): void {
   if (window.loot.game) {
     content = window.loot.game.getContent();
   } else {
-    const message = getElementById('summary').getElementsByTagName('ul')[0]
-      .firstElementChild;
+    const message =
+      getElementById('summary').getElementsByTagName('ul')[0].firstElementChild;
 
     const { language = 'en' } = window.loot.settings || {};
 
@@ -658,7 +662,10 @@ export function onQuit(): void {
       window.loot.l10n.translate('sorted load order')
     );
   } else if (window.loot.state.isInEditingState()) {
-    handleUnappliedChangesClose(window.loot.l10n.translate('metadata edits'));
+    handleUnappliedChangesClose(
+      // translators: Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
+      window.loot.l10n.translate('metadata edits')
+    );
   } else {
     window.close();
   }
@@ -714,6 +721,12 @@ function recordUnappliedGameSettings(evt: Event): void {
     return;
   }
 
+  if (getElementById('gameSettings').hidden) {
+    // The current panel is does not contain game settings, so there are no
+    // unapplied game settings to record.
+    return;
+  }
+
   const gameSettings = {
     name: getValue(getElementById('settingsGameName')),
     type: getValue(getElementById('settingsGameTypeDropdown')),
@@ -722,7 +735,7 @@ function recordUnappliedGameSettings(evt: Event): void {
     repo: getValue(getElementById('settingsGameMasterlistUrl')),
     branch: getValue(getElementById('settingsGameMasterlistBranch')),
     path: getValue(getElementById('settingsGamePath')),
-    registry: getValue(getElementById('settingsGameRegistry')),
+    registry: getValue(getElementById('settingsGameRegistry')).split('\n'),
     localPath: getValue(getElementById('settingsGameLocalPath'))
   };
 
@@ -816,7 +829,7 @@ export function onSettingsSelectGame(evt: Event): void {
   const registryInput = getElementById(
     'settingsGameRegistry'
   ) as PaperInputElement;
-  registryInput.value = gameSettings.registry;
+  registryInput.value = gameSettings.registry.join('\n');
   registryInput.disabled = false;
 
   const localPathInput = getElementById(
@@ -839,17 +852,16 @@ export function onSettingsAddGame(/* evt: Event */): void {
 }
 
 export function onSettingsDeleteGame(/* evt: Event */): void {
-  const selectedGameFolder = (getElementById(
-    'settingsGameFolder'
-  ) as PaperInputElement).value;
+  const selectedGameFolder = (
+    getElementById('settingsGameFolder') as PaperInputElement
+  ).value;
 
   if (typeof selectedGameFolder !== 'string') {
     return;
   }
 
-  const settingsRecorded = window.loot.unappliedGamesSettings.has(
-    selectedGameFolder
-  );
+  const settingsRecorded =
+    window.loot.unappliedGamesSettings.has(selectedGameFolder);
   if (settingsRecorded) {
     // Forget the game settings.
     window.loot.unappliedGamesSettings.delete(selectedGameFolder);
@@ -870,7 +882,7 @@ export function onSettingsDeleteGame(/* evt: Event */): void {
 
 export function onCloseSettingsDialog(evt: Event): void {
   if (!isIronOverlayClosedEvent(evt)) {
-    throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt}`);
+    throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt.type}`);
   }
 
   if (window.loot.settings === undefined) {
@@ -942,7 +954,7 @@ export function onCloseSettingsDialog(evt: Event): void {
 
 export function onSaveUserGroups(evt: Event): void {
   if (!isIronOverlayClosedEvent(evt)) {
-    throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt}`);
+    throw new TypeError(`Expected a IronOverlayClosedEvent, got ${evt.type}`);
   }
 
   const currentGame = window.loot.game;
@@ -975,7 +987,9 @@ export function onSaveUserGroups(evt: Event): void {
 
 export function onEditorOpen(evt: Event): Promise<string | void> {
   if (!isPluginEditorOpenEvent(evt)) {
-    throw new TypeError(`Expected a LootPluginEditorOpenEvent, got ${evt}`);
+    throw new TypeError(
+      `Expected a LootPluginEditorOpenEvent, got ${evt.type}`
+    );
   }
 
   /* Set the editor data. */
@@ -990,9 +1004,8 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
   evt.target.data.isEditorOpen = true;
 
   /* Set up drag 'n' drop event handlers. */
-  const elements = getElementById('cardsNav').getElementsByTagName(
-    'loot-plugin-item'
-  );
+  const elements =
+    getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
 
   for (const element of elements) {
     const item = element as LootPluginItem;
@@ -1005,7 +1018,9 @@ export function onEditorOpen(evt: Event): Promise<string | void> {
 
 export function onEditorClose(evt: Event): void {
   if (!isPluginEditorCloseEvent(evt)) {
-    throw new TypeError(`Expected a LootPluginEditorCloseEvent, got ${evt}`);
+    throw new TypeError(
+      `Expected a LootPluginEditorCloseEvent, got ${evt.type}`
+    );
   }
 
   if (window.loot.game === undefined) {
@@ -1013,6 +1028,9 @@ export function onEditorClose(evt: Event): void {
   }
 
   const pluginName = querySelector(evt.target, 'h1').textContent;
+  if (pluginName === null) {
+    throw new Error('Could not get the name of the edited plugin');
+  }
   const plugin = window.loot.game.plugins.find(
     item => item.name === pluginName
   );
@@ -1045,9 +1063,8 @@ export function onEditorClose(evt: Event): void {
       (getElementById('cardsNav') as IronListElement).notifyResize();
 
       /* Remove drag 'n' drop event handlers. */
-      const elements = getElementById('cardsNav').getElementsByTagName(
-        'loot-plugin-item'
-      );
+      const elements =
+        getElementById('cardsNav').getElementsByTagName('loot-plugin-item');
 
       for (const element of elements) {
         const item = element as LootPluginItem;
@@ -1060,7 +1077,7 @@ export function onEditorClose(evt: Event): void {
 
 export function onCopyMetadata(evt: Event): void {
   if (!isCopyMetadataEvent(evt)) {
-    throw new TypeError(`Expected a LootCopyMetadataEvent, got ${evt}`);
+    throw new TypeError(`Expected a LootCopyMetadataEvent, got ${evt.type}`);
   }
 
   copyMetadata(evt.target.getName())
@@ -1077,7 +1094,7 @@ export function onCopyMetadata(evt: Event): void {
 
 export function onClearMetadata(evt: Event): void {
   if (!isClearMetadataEvent(evt)) {
-    throw new TypeError(`Expected a LootClearMetadataEvent, got ${evt}`);
+    throw new TypeError(`Expected a LootClearMetadataEvent, got ${evt.type}`);
   }
 
   const currentGame = window.loot.game;
@@ -1124,7 +1141,7 @@ export function onClearMetadata(evt: Event): void {
 
 export function onSearchBegin(evt: Event): void {
   if (!isSearchBeginEvent(evt)) {
-    throw new TypeError(`Expected a LootSearchBeginEvent, got ${evt}`);
+    throw new TypeError(`Expected a LootSearchBeginEvent, got ${evt.type}`);
   }
 
   if (window.loot.game === undefined) {
@@ -1181,7 +1198,9 @@ export function onSearchEnd(/* evt */): void {
 
 export function onFolderChange(evt: Event): void {
   if (!isGameFolderChangeEvent(evt)) {
-    throw new TypeError(`Expected a LootGameFolderChangeEvent, got ${evt}`);
+    throw new TypeError(
+      `Expected a LootGameFolderChangeEvent, got ${evt.type}`
+    );
   }
 
   updateSelectedGame(evt.detail.folder);

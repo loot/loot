@@ -69,8 +69,12 @@ Masterlist Repository Branch
 Install Path
   The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
 
-Install Path Registry Key
-  The registry key, in ``HKEY_LOCAL_MACHINE``, that contains the install path of the game. This is used to obtain the install path if LOOT has no previous record of the game's install path, or LOOT's stored install path is invalid. Either this or an install path must be supplied.
+Install Path Registry Keys
+  The registry keys that may contain the install path of the game. These are used to obtain the install path if LOOT has no previous record of the game's install path, or LOOT's stored install path is invalid. If a key does not specify its root, it is assumed to be ``HKEY_LOCAL_MACHINE``. The other recognised roots are ``HKEY_CLASSES_ROOT``, ``HKEY_CURRENT_CONFIG``, ``HKEY_CURRENT_USER`` and ``HKEY_USERS``.
+
+  Multiple keys can be provided, one per line, and are checked in the order they are given, stopping at the first key that exists and stores a valid install path.
+
+  Either this or an install path must be supplied.
 
 Local Data Path
   The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``.

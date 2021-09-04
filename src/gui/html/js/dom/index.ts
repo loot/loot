@@ -208,9 +208,9 @@ export function updateSettingsDialog(settings: LootSettings): void {
   (getElementById('updateMasterlist') as PaperToggleButtonElement).checked =
     settings.updateMasterlist;
 
-  (getElementById(
-    'enableLootUpdateCheck'
-  ) as PaperToggleButtonElement).checked = settings.enableLootUpdateCheck;
+  (
+    getElementById('enableLootUpdateCheck') as PaperToggleButtonElement
+  ).checked = settings.enableLootUpdateCheck;
 }
 
 export function fillGameTypesList(gameTypes: string[]): void {
@@ -261,9 +261,8 @@ export function appendGeneralMessages(messages: Message[]): void {
     return;
   }
 
-  const generalMessagesList = getElementById('summary').getElementsByTagName(
-    'ul'
-  )[0];
+  const generalMessagesList =
+    getElementById('summary').getElementsByTagName('ul')[0];
   messages.forEach(message => {
     generalMessagesList.appendChild(
       createMessageItem(message.type, message.content)
@@ -298,7 +297,7 @@ export function onShowAboutDialog(): void {
 
 export function onSwitchTab(evt: Event): void {
   if (!isIronSelectEvent(evt)) {
-    throw new TypeError(`Expected a IronSelectEvent, got ${evt}`);
+    throw new TypeError(`Expected a IronSelectEvent, got ${evt.type}`);
   }
 
   if (typeof evt.target.selected === 'string') {
@@ -395,13 +394,9 @@ export function initialiseGameSettingsUI(): void {
   const gamesList = getElementById(
     'settingsSidebarList'
   ) as PaperListboxElement;
-  if (window.loot.game) {
-    gamesList.select(window.loot.game.folder);
-  } else if (gamesList.children.length > 2) {
-    gamesList.selectIndex(2);
-  } else {
-    clearGameSettingsInputs();
-  }
+
+  // Initially select the General sidebar item.
+  gamesList.select('');
 }
 
 export function onShowSettingsDialog(): void {
@@ -437,7 +432,7 @@ export function onSearchOpen(): void {
 export function onSearchChangeSelection(evt: Event): void {
   if (!isLootSearchChangeSelectionEvent(evt)) {
     throw new TypeError(
-      `Expected a LootSearchChangeSelectionEvent, got ${evt}`
+      `Expected a LootSearchChangeSelectionEvent, got ${evt.type}`
     );
   }
 
@@ -464,29 +459,24 @@ export function setUIState(state: string): void {
 }
 
 export function enableGameOperations(shouldEnable: boolean): void {
-  (getElementById(
-    'sortButton'
-  ) as PaperIconButtonElement).disabled = !shouldEnable;
+  (getElementById('sortButton') as PaperIconButtonElement).disabled =
+    !shouldEnable;
 
-  (getElementById(
-    'updateMasterlistButton'
-  ) as PaperIconButtonElement).disabled = !shouldEnable;
+  (
+    getElementById('updateMasterlistButton') as PaperIconButtonElement
+  ).disabled = !shouldEnable;
 
-  (getElementById(
-    'groupsEditorButton'
-  ) as PaperIconItemElement).disabled = !shouldEnable;
+  (getElementById('groupsEditorButton') as PaperIconItemElement).disabled =
+    !shouldEnable;
 
-  (getElementById(
-    'wipeUserlistButton'
-  ) as PaperIconItemElement).disabled = !shouldEnable;
+  (getElementById('wipeUserlistButton') as PaperIconItemElement).disabled =
+    !shouldEnable;
 
-  (getElementById(
-    'copyLoadOrderButton'
-  ) as PaperIconItemElement).disabled = !shouldEnable;
+  (getElementById('copyLoadOrderButton') as PaperIconItemElement).disabled =
+    !shouldEnable;
 
-  (getElementById(
-    'refreshContentButton'
-  ) as PaperIconItemElement).disabled = !shouldEnable;
+  (getElementById('refreshContentButton') as PaperIconItemElement).disabled =
+    !shouldEnable;
 }
 
 export function setDocumentFontFamily(fontFamily: string): void {

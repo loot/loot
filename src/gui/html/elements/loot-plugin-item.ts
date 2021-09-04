@@ -34,7 +34,7 @@ export default class LootPluginItem extends PolymerElement {
 
   public hasUserEdits: boolean;
 
-  public isLightMaster: boolean;
+  public isLightPlugin: boolean;
 
   public constructor() {
     super();
@@ -42,7 +42,7 @@ export default class LootPluginItem extends PolymerElement {
     this.group = 'default';
     this.isEditorOpen = false;
     this.hasUserEdits = false;
-    this.isLightMaster = false;
+    this.isLightPlugin = false;
   }
 
   public static get is(): string {
@@ -67,7 +67,7 @@ export default class LootPluginItem extends PolymerElement {
         type: Boolean,
         value: false
       },
-      isLightMaster: {
+      isLightPlugin: {
         type: Boolean,
         value: false
       }
@@ -170,7 +170,7 @@ export default class LootPluginItem extends PolymerElement {
         paper-ripple {
           color: var(--accent-color);
         }
-        #icon.lightMaster {
+        #icon.lightPlugin {
           white-space: pre;
           line-height: 12px;
           width: 32px;
@@ -184,9 +184,9 @@ export default class LootPluginItem extends PolymerElement {
         <div
           id="icon"
           slot="item-icon"
-          class$="[[computeLoadOrderIndexClass(isLightMaster)]]"
-          hidden$="[[!computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]"
-          text-content="[[computeLoadOrderIndexText(loadOrderIndex, isLightMaster)]]"
+          class$="[[computeLoadOrderIndexClass(isLightPlugin)]]"
+          hidden$="[[!computeLoadOrderIndexText(loadOrderIndex, isLightPlugin)]]"
+          text-content="[[computeLoadOrderIndexText(loadOrderIndex, isLightPlugin)]]"
         ></div>
         <paper-item-body two-line>
           <div id="primary"><slot></slot></div>
@@ -223,8 +223,7 @@ export default class LootPluginItem extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  // @ts-ignore _localise is called in template bindings.
-  private _localise(text: string): string {
+  public _localise(text: string): string {
     return window.loot.l10n.translate(text);
   }
 
@@ -239,19 +238,19 @@ export default class LootPluginItem extends PolymerElement {
     return group === 'default';
   }
 
-  public computeLoadOrderIndexClass(isLightMaster: boolean): string {
-    if (isLightMaster) {
-      return 'lightMaster';
+  public computeLoadOrderIndexClass(isLightPlugin: boolean): string {
+    if (isLightPlugin) {
+      return 'lightPlugin';
     }
     return '';
   }
 
   public computeLoadOrderIndexText(
     loadOrderIndex: number | undefined,
-    isLightMaster: boolean
+    isLightPlugin: boolean
   ): string {
     if (loadOrderIndex !== undefined) {
-      if (isLightMaster) {
+      if (isLightPlugin) {
         return `FE\n${LootPluginItem._asHexString(loadOrderIndex, 3)}`;
       }
 
@@ -263,7 +262,9 @@ export default class LootPluginItem extends PolymerElement {
 
   public onDragStart(evt: Event): void {
     if (!isDragStartEvent(evt)) {
-      throw new Error(`Expected DragEvent on loot-plugin-item, got ${evt}`);
+      throw new Error(
+        `Expected DragEvent on loot-plugin-item, got ${evt.type}`
+      );
     }
 
     evt.dataTransfer.effectAllowed = 'copy';
@@ -294,13 +295,13 @@ export default class LootPluginItem extends PolymerElement {
     this.group = pluginData.group;
     this.isEditorOpen = pluginData.isEditorOpen;
     this.hasUserEdits = pluginData.hasUserEdits;
-    this.isLightMaster = pluginData.isLightMaster;
+    this.isLightPlugin = pluginData.isLightPlugin;
 
     const indexText = this.computeLoadOrderIndexText(
       this.loadOrderIndex,
-      this.isLightMaster
+      this.isLightPlugin
     );
-    this.$.icon.className = this.computeLoadOrderIndexClass(this.isLightMaster);
+    this.$.icon.className = this.computeLoadOrderIndexClass(this.isLightPlugin);
     this.$.icon.hidden = !indexText;
     this.$.icon.textContent = indexText;
 

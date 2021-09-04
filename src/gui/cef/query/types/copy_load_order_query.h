@@ -31,7 +31,7 @@ along with LOOT.  If not, see
 namespace loot {
 struct Counters {
   size_t activeNormal = 0;
-  size_t activeLightMasters = 0;
+  size_t activeLightPlugins = 0;
 };
 
 template<typename G = gui::Game>
@@ -64,10 +64,10 @@ private:
 
     auto isActive = game_.IsPluginActive(pluginName);
 
-    if (isActive && plugin->IsLightMaster()) {
+    if (isActive && plugin->IsLightPlugin()) {
       stream << "254 FE " << std::setw(3) << std::hex
-             << counters.activeLightMasters << std::dec << " ";
-      counters.activeLightMasters += 1;
+             << counters.activeLightPlugins << std::dec << " ";
+      counters.activeLightPlugins += 1;
     } else if (isActive) {
       stream << std::setw(3) << counters.activeNormal << " " << std::hex
              << std::setw(2) << counters.activeNormal << std::dec << "     ";

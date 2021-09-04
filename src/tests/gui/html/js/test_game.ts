@@ -15,7 +15,7 @@ describe('Game', () => {
     isDirty: false,
     isEmpty: false,
     isMaster: false,
-    isLightMaster: false,
+    isLightPlugin: false,
     loadsArchive: false,
     messages: [],
     suggestedTags: [],
@@ -399,7 +399,7 @@ describe('Game', () => {
           isActive: true,
           isEmpty: true,
           isMaster: false,
-          isLightMaster: false,
+          isLightPlugin: false,
           loadsArchive: true,
 
           group: 'group1',

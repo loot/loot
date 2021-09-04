@@ -8,7 +8,7 @@ const defaultDerivedPluginMetadata = {
   isDirty: false,
   isEmpty: false,
   isMaster: false,
-  isLightMaster: false,
+  isLightPlugin: false,
   loadsArchive: false,
   messages: [],
   suggestedTags: [],

@@ -133,7 +133,7 @@
                               group="[[item.group]]"
                               is-editor-open="[[item.isEditorOpen]]"
                               has-user-edits="[[item.hasUserEdits]]"
-                              is-light-master="[[item.isLightMaster]]">[[item.name]]</loot-plugin-item>
+                              is-light-master="[[item.isLightPlugin]]">[[item.name]]</loot-plugin-item>
           </template>
           <!-- Generated <loot-plugin-item> elements go here. -->
         </iron-list>
@@ -526,7 +526,7 @@
           <paper-input id="settingsGamePath" class="path" label="Install Path" disabled></paper-input>
         </div>
         <div>
-          <paper-input id="settingsGameRegistry" class="registry" label="Install Path Registry Key" disabled></paper-input>
+          <paper-textarea id="settingsGameRegistry" class="registry" label="Install Path Registry Keys" disabled></paper-textarea>
         </div>
         <div>
           <paper-input id="settingsGameLocalPath" class="localPath" label="Local Data Path" disabled></paper-input>

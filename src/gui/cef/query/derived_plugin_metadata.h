@@ -46,7 +46,7 @@ public:
       isDirty(false),
       isEmpty(file->IsEmpty()),
       isMaster(file->IsMaster()),
-      isLightMaster(file->IsLightMaster()),
+      isLightPlugin(file->IsLightPlugin()),
       loadsArchive(file->LoadsArchive()),
       crc(file->GetCRC()),
       loadOrderIndex(game.GetActiveLoadOrderIndex(file, game.GetLoadOrder())),
@@ -82,7 +82,7 @@ private:
   bool isDirty;
   bool isEmpty;
   bool isMaster;
-  bool isLightMaster;
+  bool isLightPlugin;
   bool loadsArchive;
 
   std::optional<uint32_t> crc;

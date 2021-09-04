@@ -21,7 +21,7 @@ declare module 'jed' {
   }
 
   interface Chain {
-    fetch: (...substitutions: (string | object)[]) => string;
+    fetch: (...substitutions: (string | Record<string, unknown>)[]) => string;
   }
 
   export class Jed {

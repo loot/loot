@@ -128,8 +128,7 @@ export default class LootSearchToolbar extends PolymerElement {
     `;
   }
 
-  // @ts-ignore used in the Polymer template
-  private _currentResultChanged(newValue: number): void {
+  public _currentResultChanged(newValue: number): void {
     if (this.results && this.results.length > 0) {
       if (!isPaperIconButton(this.$.prev)) {
         throw new TypeError(
@@ -168,6 +167,7 @@ export default class LootSearchToolbar extends PolymerElement {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore used in the Polymer template
   private _resultsChanged(newValue: number[]): void {
     if (!isHTMLElement(this.$.count)) {
@@ -311,10 +311,10 @@ export default class LootSearchToolbar extends PolymerElement {
   }
 
   /* eslint-disable class-methods-use-this */
-  // @ts-ignore used in the Polymer template
-  private _computeResultNum(currentResult: number): number {
+  public _computeResultNum(currentResult: number): number {
     return currentResult + 1;
   }
+
   /* eslint-enable class-methods-use-this */
 }
 

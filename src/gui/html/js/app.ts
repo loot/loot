@@ -47,10 +47,13 @@ import '../elements/loot-search-toolbar';
 
 /* Import the modules actually used in this script. */
 import Loot from './loot';
+import handlePromiseError from './handlePromiseError';
 
 window.loot = new Loot();
 
-window.addEventListener('load', () => window.loot.initialise());
+window.addEventListener('load', () => {
+  window.loot.initialise().catch(handlePromiseError);
+});
 
 declare global {
   interface Window {

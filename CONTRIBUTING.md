@@ -1,7 +1,7 @@
 Contributing To LOOT
 ====================
 
-A general guide to contributing to LOOT may be found on [LOOT's website](https://loot.github.io/docs/contributing/How-To-Contribute). Information more specific to this repository is found here.
+A [general guide](https://loot.github.io/docs/contributing/How-To-Contribute) to contributing to LOOT may be found on LOOT's website. Information more specific to this repository is found here.
 
 ## Repository Branching Structure
 
@@ -56,12 +56,19 @@ If your language's Inno Setup translation is unofficial, also do the following:
 ### Translating the LOOT application
 
 1. Download and install the latest version of [Poedit](https://poedit.net/).
-2. If you are starting a new translation, select `Create new translation` on the welcome page or `File -> New from POT/PO file...` and choose the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
-3. If you are updating a previous translation, open in Poedit the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Catalog -> Update from POT file...` and choose the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
+2. If you are starting a new translation, select `Create new...` on the welcome page or `File -> New from POT/PO file...` and select the template file at `resources/l10n/template.pot`. Select your language from the drop-down list, specifying a region/dialect if desired, and click `OK`.
+3. If you are updating a previous translation, in Poedit, open the `loot.po` translation file in the relevant subdirectory of `resources/l10n`, then select `Translation -> Update from POT file...` and select the template file at `resources/l10n/template.pot`. Click `OK` in the `Update summary` dialog if it appears.
 4. Edit the translation file to add or update translations of the programs' text. Strings that were added since the last translation will be missing a translation, and strings that have been changed since the last translation will be highlighted in orange.
-5. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
+5. Go to `Translation -> Properties... -> Translation Properties -> Project name and version:` and check that it matches the latest version of LOOT. If it doesn't, please update it. Then go to `File -> Preferences -> General -> Information about the translator` and fill the `Name:` field with your name/alias. If you don't mind, you can also fill out the `Email:` field so that we or future translators can contact you if need be.
+6. Save the translation file with the filename `loot.po` in `resources/l10n/<locale>/LC_MESSAGES/`, where `<locale>` is your language's POSIX locale code.
 
-Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. While no contextual information is supplied to translators by default, it can be added on request. To request the addition of contextual information to a text string, comment on issue [#1438](https://github.com/loot/loot/issues/1438) with your request, quoting the string for which you are requesting contextual information.
+Some helpful Poedit settings include:
+* Deselecting `File -> Preferences... -> General -> Editing -> Automatically compile MO file when saving`. This file is built by LOOT at runtime and doesn't need to be included in your PR, but you might accidentally submit it alongside your translation.
+* Selecting `File -> Preferences... -> General -> Editing -> Show summary after updating files`. This will show you a brief summary of strings that were changed/obsoleted when you update from the template.
+
+Some languages may use different words or phrases for different contexts where only one word or phrase may be used for all contexts in English. Context for strings can be seen in the bottom-right corner in Poedit (if available) under **Notes for translators**. While contextual information isn't supplied for all strings by default, it can be added on request. To request the addition of contextual information to a text string, create an issue for your request in LOOT's [source code issue tracker](https://github.com/loot/loot/issues), quoting the string for which you are requesting contextual information.
+
+You can also add comments of your own for future translators such as why you translated something a certain way or why you left something untranslated. To do so, right-click a string you want to comment on and select `Edit comment`. They can also be seen in the bottom-right corner in Poedit under **Comment**.
 
 Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
 
@@ -95,6 +102,36 @@ If you're adding a new translation, LOOT's source code must be updated to recogn
 
 See commit [8c28aed7f54dee3a381425b2d4ecf4341309d139](https://github.com/loot/loot/commit/8c28aed7f54dee3a381425b2d4ecf4341309d139)
 for an example of the relevant changes.
+
+## Depending on libloot snapshot builds
+
+It's occasionally useful to build LOOT using a snapshot build of libloot, e.g. when integrating
+unreleased libloot changes. To do this, download a snapshot build artifact from GitHub Actions (you
+need to be logged into GitHub to do so) and unzip it to get a 7-zip or XZ-compressed tar file, then
+pass `-DLIBLOOT_URL=<path to that file>` when running `cmake`.
+
+To download and extract a snapshot build artifact during the GitHub Actions CI workflow, add the
+following step before the step that runs `cmake`:
+
+```yaml
+- name: Download libloot snapshot build artifact
+  run: |
+    curl -sSfL \
+      -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+      -H 'Accept: application/vnd.github.v3+json' \
+      -o 'libloot.zip' \
+      https://api.github.com/repos/loot/libloot/actions/artifacts/39467110/zip
+    unzip libloot.zip
+    echo "LIBLOOT_URL=$PWD/$(ls -1 libloot-*)" >> $GITHUB_ENV
+```
+
+Replace `39467110` with the relevant artifact's ID. You can get an artifact's ID from the last
+path component in its download URL on the libloot build's GitHub Actions page in your browser: for
+example, the page at `https://github.com/loot/libloot/actions/runs/542851787` lists
+`libloot-0.16.1-9-ge97208c_linux-github-actions-Linux.tar.xz` as an artifact, and its download URL
+is `https://github.com/loot/libloot/suites/1982340583/artifacts/39467110`.
+
+Also append ` -DLIBLOOT_URL="$LIBLOOT_URL"` to the arguments passed to `cmake`.
 
 ## Code Style
 

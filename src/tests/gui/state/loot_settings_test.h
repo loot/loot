@@ -73,18 +73,18 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
           .SetMaster("Nehrim.esm")
-          .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
-                          "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"),
+          .SetRegistryKeys({"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
+                          "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
-          .SetRegistryKey(
-              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path")
+          .SetRegistryKeys(
+              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
           .SetGameLocalFolder("enderal")
           .SetRepoURL("https://github.com/loot/enderal.git"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
         .SetName("Enderal: Forgotten Stories (Special Edition)")
-        .SetRegistryKey(
-            "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path")
+        .SetRegistryKeys(
+            {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
         .SetGameLocalFolder("Enderal Special Edition")
         .SetRepoURL("https://github.com/loot/enderal.git"),
   });
@@ -107,54 +107,54 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   EXPECT_EQ(expectedGameSettings[0].Type(), actualGameSettings[0].Type());
   EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
-  EXPECT_EQ(expectedGameSettings[0].RegistryKey(),
-            actualGameSettings[0].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[0].RegistryKeys(),
+            actualGameSettings[0].RegistryKeys());
   EXPECT_EQ(expectedGameSettings[0].RepoURL(), actualGameSettings[0].RepoURL());
   EXPECT_EQ(expectedGameSettings[0].RepoBranch(),
             actualGameSettings[0].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
   EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
-  EXPECT_EQ(expectedGameSettings[1].RegistryKey(),
-            actualGameSettings[1].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[1].RegistryKeys(),
+            actualGameSettings[1].RegistryKeys());
   EXPECT_EQ(expectedGameSettings[1].RepoURL(), actualGameSettings[1].RepoURL());
   EXPECT_EQ(expectedGameSettings[1].RepoBranch(),
             actualGameSettings[1].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
   EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
-  EXPECT_EQ(expectedGameSettings[2].RegistryKey(),
-            actualGameSettings[2].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[2].RegistryKeys(),
+            actualGameSettings[2].RegistryKeys());
   EXPECT_EQ(expectedGameSettings[2].RepoURL(), actualGameSettings[2].RepoURL());
   EXPECT_EQ(expectedGameSettings[2].RepoBranch(),
             actualGameSettings[2].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
   EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
-  EXPECT_EQ(expectedGameSettings[3].RegistryKey(),
-            actualGameSettings[3].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[3].RegistryKeys(),
+            actualGameSettings[3].RegistryKeys());
   EXPECT_EQ(expectedGameSettings[3].RepoURL(), actualGameSettings[3].RepoURL());
   EXPECT_EQ(expectedGameSettings[3].RepoBranch(),
             actualGameSettings[3].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
   EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
-  EXPECT_EQ(expectedGameSettings[4].RegistryKey(),
-            actualGameSettings[4].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[4].RegistryKeys(),
+            actualGameSettings[4].RegistryKeys());
   EXPECT_EQ(expectedGameSettings[4].RepoURL(), actualGameSettings[4].RepoURL());
   EXPECT_EQ(expectedGameSettings[4].RepoBranch(),
             actualGameSettings[4].RepoBranch());
 
   EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
   EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
-  EXPECT_EQ(expectedGameSettings[5].RegistryKey(),
-            actualGameSettings[5].RegistryKey());
+  EXPECT_EQ(expectedGameSettings[5].RegistryKeys(),
+            actualGameSettings[5].RegistryKeys());
   EXPECT_EQ(expectedGameSettings[5].RepoURL(), actualGameSettings[5].RepoURL());
   EXPECT_EQ(expectedGameSettings[5].RepoBranch(),
             actualGameSettings[5].RepoBranch());
 
   auto actualLanguages = settings_.getLanguages();
-  EXPECT_EQ(17, actualLanguages.size());
+  EXPECT_EQ(18, actualLanguages.size());
   EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
             actualLanguages[0]);
   EXPECT_EQ(LootSettings::Language({"bg", "Български", std::nullopt}),
@@ -187,8 +187,10 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualLanguages[14]);
   EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
             actualLanguages[15]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+  EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська", std::nullopt}),
             actualLanguages[16]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+            actualLanguages[17]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
@@ -267,6 +269,45 @@ TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_EQ(1.0, settings_.getGameSettings()[0].MinimumHeaderVersion());
+}
+
+TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyStringValues) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "registry = \"a registry path\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ(1, settings_.getGameSettings()[0].RegistryKeys().size());
+  EXPECT_EQ("a registry path", settings_.getGameSettings()[0].RegistryKeys()[0]);
+}
+
+TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyArrayValues) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "registry = [\"a registry path\", \"another registry path\"]" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_EQ(2, settings_.getGameSettings()[0].RegistryKeys().size());
+  EXPECT_EQ("a registry path",
+            settings_.getGameSettings()[0].RegistryKeys()[0]);
+  EXPECT_EQ("another registry path",
+            settings_.getGameSettings()[0].RegistryKeys()[1]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {

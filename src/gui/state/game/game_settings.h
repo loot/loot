@@ -34,6 +34,10 @@
 #include "loot/enum/game_type.h"
 
 namespace loot {
+constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
+    "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
+    "1014940\\InstallLocation";
+
 class GameSettings {
 public:
   GameSettings();
@@ -50,7 +54,7 @@ public:
   std::string FolderName() const;
   std::string Master() const;
   float MinimumHeaderVersion() const;
-  std::string RegistryKey() const;
+  std::vector<std::string> RegistryKeys() const;
   std::string RepoURL() const;
   std::string RepoBranch() const;
   std::filesystem::path GamePath() const;
@@ -60,7 +64,7 @@ public:
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
-  GameSettings& SetRegistryKey(const std::string& registry);
+  GameSettings& SetRegistryKeys(const std::vector<std::string>& registry);
   GameSettings& SetRepoURL(const std::string& repositoryURL);
   GameSettings& SetRepoBranch(const std::string& repositoryBranch);
   GameSettings& SetGamePath(const std::filesystem::path& path);
@@ -77,7 +81,7 @@ private:
   std::string masterFile_;
   float mininumHeaderVersion_;
 
-  std::string registryKey_;
+  std::vector<std::string> registryKeys_;
 
   std::string pluginsFolderName_;
   std::string lootFolderName_;

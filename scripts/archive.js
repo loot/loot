@@ -84,11 +84,10 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       'libcef.dll',
       'snapshot_blob.bin',
       'v8_context_snapshot.bin',
-      'cef.pak',
-      'cef_100_percent.pak',
-      'cef_200_percent.pak',
-      'devtools_resources.pak',
-      'icudtl.dat'
+      'chrome_100_percent.pak',
+      'chrome_200_percent.pak',
+      'icudtl.dat',
+      'resources.pak'
     ];
   } else {
     binaries = [
@@ -98,11 +97,10 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       'libcef.so',
       'snapshot_blob.bin',
       'v8_context_snapshot.bin',
-      'cef.pak',
-      'cef_100_percent.pak',
-      'cef_200_percent.pak',
-      'devtools_resources.pak',
-      'icudtl.dat'
+      'chrome_100_percent.pak',
+      'chrome_200_percent.pak',
+      'icudtl.dat',
+      'resources.pak'
     ];
   }
   binaries.forEach(file => {

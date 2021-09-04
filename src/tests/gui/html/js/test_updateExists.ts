@@ -3,7 +3,8 @@ import { mocked } from 'ts-jest/utils';
 import updateExists from '../../../../gui/html/js/updateExists';
 
 jest.mock('@octokit/rest', () => {
-  async function* createPageIterator(): AsyncIterator<object> {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async function* createPageIterator(): AsyncIterator<Record<string, unknown>> {
     const listTagsPages = [
       {
         data: [
@@ -39,49 +40,47 @@ jest.mock('@octokit/rest', () => {
   }
 
   return {
-    Octokit: jest.fn().mockImplementation(() => {
-      return {
-        repos: {
-          getLatestRelease: jest.fn().mockReturnValue(
-            Promise.resolve({
-              data: {
-                // eslint-disable-next-line @typescript-eslint/camelcase
-                tag_name: '0.9.2'
-              }
-            })
-          ),
-          listTags: {},
-          getCommit: jest.fn().mockImplementation(args =>
-            Promise.resolve({
-              data: {
-                commit: {
-                  committer: {
-                    date:
-                      args.ref === 'deadbeef'
-                        ? '2011-04-14T16:00:00Z'
-                        : '2011-04-14T16:00:49Z'
-                  }
-                }
-              }
-            })
-          )
-        },
-        git: {
-          getCommit: jest.fn().mockReturnValue(
-            Promise.resolve({
-              data: {
+    Octokit: jest.fn().mockImplementation(() => ({
+      repos: {
+        getLatestRelease: jest.fn().mockReturnValue(
+          Promise.resolve({
+            data: {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              tag_name: '0.9.2'
+            }
+          })
+        ),
+        listTags: {},
+        getCommit: jest.fn().mockImplementation((args: { ref: string }) =>
+          Promise.resolve({
+            data: {
+              commit: {
                 committer: {
-                  date: '2011-04-14T16:00:49Z'
+                  date:
+                    args.ref === 'deadbeef'
+                      ? '2011-04-14T16:00:00Z'
+                      : '2011-04-14T16:00:49Z'
                 }
               }
-            })
-          )
-        },
-        paginate: {
-          iterator: createPageIterator
-        }
-      };
-    })
+            }
+          })
+        )
+      },
+      git: {
+        getCommit: jest.fn().mockReturnValue(
+          Promise.resolve({
+            data: {
+              committer: {
+                date: '2011-04-14T16:00:49Z'
+              }
+            }
+          })
+        )
+      },
+      paginate: {
+        iterator: createPageIterator
+      }
+    }))
   };
 });
 

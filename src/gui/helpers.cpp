@@ -113,10 +113,26 @@ std::string RegKeyStringValue(const std::string& rootKey,
   LONG ret = RegGetValue(hKey,
                          ToWinWide(subkey).c_str(),
                          ToWinWide(value).c_str(),
-                         RRF_RT_REG_SZ | KEY_WOW64_32KEY,
+                         RRF_RT_REG_SZ | RRF_SUBKEY_WOW6432KEY,
                          NULL,
                          &wstr[0],
                          &len);
+
+  if (ret != ERROR_SUCCESS) {
+    // Try again using the native registry view. On 32-bit Windows
+    // this just does the same thing again. I don't think it's worth
+    // trying to skip for the few 32-bit Windows users that remain.
+    logger->info(
+        "Failed to get string value from 32-bit Registry view, trying 64-bit "
+        "Registry view.");
+    ret = RegGetValue(hKey,
+                      ToWinWide(subkey).c_str(),
+                      ToWinWide(value).c_str(),
+                      RRF_RT_REG_SZ | RRF_SUBKEY_WOW6464KEY,
+                      NULL,
+                      &wstr[0],
+                      &len);
+  }
 
   if (ret == ERROR_SUCCESS) {
     // Passing c_str() cuts off any unused buffer.

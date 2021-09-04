@@ -4,6 +4,66 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.16.1 - 2021-05-09
+===================
+
+Added
+-----
+
+- Support for Enderal: Forgotten Stories and Enderal: Forgotten Stories
+  (Special Edition). LOOT's default configuration includes the necessary
+  configuration for these games: if upgrading from an older version of LOOT,
+  remove any existing ``settings.toml`` to have LOOT generate its default
+  configuration.
+- It is now possible to set the name of a game's folder within
+  ``%LOCALAPPDATA%`` using the ``local_folder`` config property in LOOT's
+  ``settings.toml`` file. It cannot be used at the same time as the
+  ``local_path`` property.
+- A Bulgarian translation by RacerBG.
+- An Italian translation by Griam, nicola89b and albie.
+- A Portuguese translation by ironmagician.
+
+Fixed
+-----
+
+- The "Hide inactive plugins" and "Hide messageless plugins" filters did not
+  affect LOOT's search, which would count hidden plugins in its results and
+  attempt to navigate between them.
+- Invalid plugins were not hidden in some cases.
+- Linux builds did not correctly handle case-insensitivity of plugin names
+  during sorting on filesystems with case folding enabled. Via libloot.
+
+Changed
+-------
+
+- The settings dialog has been redesigned to better accommodate a longer list of
+  supported games and give more space to their configuration inputs.
+- If the selected game cannot be found, the error message displayed by LOOT now
+  suggests running the game's launcher as this is a very common fix.
+- If LOOT fails to read a game's settings from ``settings.toml``, it will now
+  log the error in its debug log.
+- Themes are now sorted lexicographically in their selection dropdown in LOOT's
+  settings.
+- Most occurances of the terms "Light Master" or "Light Master File" have been
+  replaced by "Light Plugin" to reflect that whether or not a plugin is light
+  is independent of whether it is a master.
+- The installer once again downloads the MSVC redistributable if it is not
+  already installed, as it did before LOOT v0.16.0.
+- Updated the Brazilian Portuguese translation.
+- Updated the Chinese translation.
+- Updated the German translation.
+- Updated Boost to 1.72.0.
+- Updated CEF to v90.6.5+g7a604aa+chromium-90.0.4430.93.
+- Updated libloot to 0.16.3.
+- Updated spdlog to 1.8.5.
+- Updated JS package dependencies.
+
+Removed
+-------
+
+- The "do not clean" filter, as messages using that filter no longer exist in
+  recent versions of any of LOOT's masterlists.
+
 0.16.0 - 2020-08-22
 ===================
 
@@ -52,6 +112,9 @@ Changed
   (``*.bsa`` or ``*.ba2``, depending on the game) more quickly. Via libloot.
 - The order of collection elements in plugin metadata objects is now preserved.
   Via libloot.
+- The installer now bundles the MSVC redistributable instead of downloading it
+  if required, as the plugin providing the download functionality is no longer
+  available.
 - Updated CEF to v84.4.1+gfdc7504+chromium-84.0.4147.105.
 - Updated spdlog to v1.7.0.
 - Updated libloot to v0.16.1.

@@ -13,7 +13,7 @@
   "homepage": "https://github.com/loot/loot",
   "private": true,
   "dependencies": {
-    "@octokit/rest": "^18.0.15",
+    "@octokit/rest": "^18.6.6",
     "@polymer/app-layout": "^3.0.0",
     "@polymer/iron-flex-layout": "^3.0.0",
     "@polymer/iron-icon": "^3.0.0",
@@ -28,7 +28,7 @@
     "@polymer/paper-checkbox": "^3.0.0",
     "@polymer/paper-dialog": "^3.0.0",
     "@polymer/paper-dialog-scrollable": "^3.0.0",
-    "@polymer/paper-dropdown-menu": "^3.0.0",
+    "@polymer/paper-dropdown-menu": "^3.2.0",
     "@polymer/paper-icon-button": "^3.0.0",
     "@polymer/paper-input": "^3.2.1",
     "@polymer/paper-item": "^3.0.0",
@@ -42,59 +42,60 @@
     "@polymer/paper-toggle-button": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.4.1",
-    "@types/react": "^17.0.2",
-    "@types/react-autosuggest": "^10.1.3",
-    "@types/react-dom": "^17.0.0",
-    "cytoscape": "^3.18.0",
+    "cytoscape": "^3.19.1",
     "cytoscape-dagre": "^2.3.2",
     "cytoscape-edgehandles": "^3.6.0",
     "fs-extra": "^9.1.0",
     "jed": "^1.1.1",
     "jed-gettext-parser": "^1.0.0",
     "lodash": "^4.17.20",
-    "marked": "^2.0.1",
+    "marked": "^2.0.3",
     "prop-types": "^15.6.2",
-    "react": "^16.14.0",
+    "react": "^17.0.2",
     "react-autosuggest": "^10.1.0",
-    "react-dom": "^16.14.0",
+    "react-dom": "^17.0.2",
     "replace": "^1.2.0",
     "web-animations-js": "^2.3.1",
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.9",
-    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.4",
     "@babel/preset-env": "^7.13.12",
-    "@babel/preset-react": "^7.12.7",
-    "@babel/preset-typescript": "^7.13.0",
-    "@types/cytoscape": "^3.14.7",
-    "@types/jest": "^26.0.22",
-    "@types/lodash": "^4.14.168",
-    "@types/marked": "^2.0.1",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/cytoscape": "^3.14.15",
+    "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.170",
+    "@types/marked": "^2.0.4",
     "@types/node": "^12.20.7",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "awesome-typescript-loader": "^5.2.1",
-    "babel-gettext-extractor": "git://github.com/loot/babel-gettext-extractor#v4.1.3+improved-entry-sorting.1",
-    "babel-jest": "^26.3.0",
+    "@types/react": "^17.0.11",
+    "@types/react-autosuggest": "^10.1.4",
+    "@types/react-dom": "^17.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "babel-gettext-extractor": "git://github.com/loot/babel-gettext-extractor#v4.1.3+improved-entry-sorting.2",
+    "babel-jest": "^27.0.6",
     "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^7.0.0",
-    "eslint": "^5.5.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-import": "^2.22.1",
+    "copy-webpack-plugin": "^9.0.1",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.20.5",
-    "html-webpack-plugin": "^5.3.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "html-webpack-plugin": "^5.3.2",
     "jest": "^26.6.3",
-    "prettier": "^2.2.1",
-    "source-map-loader": "^2.0.0",
-    "ts-jest": "^26.5.2",
-    "typescript": "^3.9.7",
-    "webpack": "^5.30.0",
-    "webpack-cli": "^4.6.0"
+    "prettier": "^2.3.2",
+    "source-map-loader": "^3.0.0",
+    "ts-jest": "^26.5.6",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.3.5",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
   },
   "scripts": {
     "build": "node ./scripts/get_roboto_files.js && webpack",
@@ -123,7 +124,7 @@
       "ecmaFeatures": {
         "jsx": true
       },
-      "project": "./tsconfig.json"
+      "project": "./tsconfig.eslint.json"
     },
     "env": {
       "node": true,
@@ -151,42 +152,20 @@
     },
     "extends": [
       "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended",
       "airbnb",
-      "prettier",
-      "prettier/@typescript-eslint"
+      "prettier"
     ],
     "rules": {
       "curly": [
         "error",
         "all"
       ],
-      "linebreak-style": "off",
-      "no-confusing-arrow": "error",
-      "no-param-reassign": [
+      "import/extensions": [
         "error",
         {
-          "props": false
+          "js": "ignorePackages"
         }
       ],
-      "no-underscore-dangle": "off",
-      "prefer-destructuring": "off",
-      "import/extensions": {
-        "js": "always"
-      },
-      "prettier/prettier": "error",
-      "react/destructuring-assignment": 0,
-      "react/jsx-one-expression-per-line": 0,
-      "react/sort-comp": 0,
-      "@typescript-eslint/no-var-requires": "off",
-      "@typescript-eslint/explicit-function-return-type": [
-        "error",
-        {
-          "allowExpressions": true
-        }
-      ],
-      "no-useless-constructor": "off",
       "import/no-extraneous-dependencies": [
         "error",
         {
@@ -195,6 +174,15 @@
             "**/tests/**"
           ],
           "optionalDependencies": false
+        }
+      ],
+      "linebreak-style": "off",
+      "max-classes-per-file": "off",
+      "no-confusing-arrow": "error",
+      "no-param-reassign": [
+        "error",
+        {
+          "props": false
         }
       ],
       "no-restricted-syntax": [
@@ -212,6 +200,14 @@
           "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
         }
       ],
+      "no-underscore-dangle": "off",
+      "no-use-before-define": "off",
+      "no-useless-constructor": "off",
+      "prefer-destructuring": "off",
+      "prettier/prettier": "error",
+      "react/destructuring-assignment": 0,
+      "react/jsx-one-expression-per-line": 0,
+      "react/sort-comp": 0,
       "react/jsx-filename-extension": [
         "error",
         {
@@ -221,7 +217,41 @@
           ]
         }
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.ts",
+          "*.tsx"
+        ],
+        "extends": [
+          "eslint:recommended",
+          "plugin:@typescript-eslint/recommended",
+          "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        ],
+        "rules": {
+          "@typescript-eslint/explicit-function-return-type": [
+            "error",
+            {
+              "allowExpressions": true
+            }
+          ],
+          "@typescript-eslint/no-empty-function": "off",
+          "@typescript-eslint/no-unsafe-assignment": "warn",
+          "@typescript-eslint/no-unsafe-call": "warn",
+          "@typescript-eslint/no-unsafe-member-access": "warn",
+          "@typescript-eslint/no-unsafe-return": "warn",
+          "@typescript-eslint/no-var-requires": "off",
+          "@typescript-eslint/restrict-template-expressions": [
+            "error",
+            {
+              "allowAny": true
+            }
+          ],
+          "@typescript-eslint/unbound-method": "warn"
+        }
+      }
+    ]
   },
   "jest": {
     "collectCoverage": true,

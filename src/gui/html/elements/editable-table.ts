@@ -173,7 +173,7 @@ export default class EditableTable extends PolymerElement {
   public static onDrop(evt: Event): boolean {
     if (!isDragEvent(evt)) {
       throw new Error(
-        `Expected event to be a EditableTableDragEvent, got ${evt}`
+        `Expected event to be a EditableTableDragEvent, got ${evt.type}`
       );
     }
     evt.stopPropagation();
@@ -201,7 +201,7 @@ export default class EditableTable extends PolymerElement {
   public static onDragOver(evt: Event): void {
     if (!isDragEvent(evt)) {
       throw new Error(
-        `Expected event to be a EditableTableDragEvent, got ${evt}`
+        `Expected event to be a EditableTableDragEvent, got ${evt.type}`
       );
     }
 
@@ -315,7 +315,7 @@ export default class EditableTable extends PolymerElement {
 
   public onRemoveRow(evt: Event): void {
     if (!isRemoveRowEvent(evt)) {
-      throw new Error(`Expected event to be a RemoveRowEvent, got ${evt}`);
+      throw new Error(`Expected event to be a RemoveRowEvent, got ${evt.type}`);
     }
 
     const tr = evt.target.parentElement.parentElement.parentElement;
@@ -353,7 +353,9 @@ export default class EditableTable extends PolymerElement {
 
   public onAddEmptyRow(evt: Event): void {
     if (!isAddEmptyRowEvent(evt)) {
-      throw new Error(`Expected event to be a AddEmptyRowEvent, got ${evt}`);
+      throw new Error(
+        `Expected event to be a AddEmptyRowEvent, got ${evt.type}`
+      );
     }
 
     evt.target.parentNode.host.addRow({});
@@ -367,7 +369,7 @@ export default class EditableTable extends PolymerElement {
     );
   }
 
-  public addRow(tableData: RowData | {}): Element {
+  public addRow(tableData: RowData | Record<string, unknown>): Element {
     const rowTemplateId = this.getAttribute('data-template');
     if (rowTemplateId === null) {
       throw new Error('Expected template ID for new row to be non-null');

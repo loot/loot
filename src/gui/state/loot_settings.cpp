@@ -134,9 +134,14 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     game.SetGameLocalFolder(*localFolder);
   }
 
-  auto registry = table->get_as<std::string>("registry");
+  auto registry = table->get_array_of<std::string>("registry");
   if (registry) {
-    game.SetRegistryKey(*registry);
+    game.SetRegistryKeys(*registry);
+  } else {
+    auto registry = table->get_as<std::string>("registry");
+    if (registry) {
+      game.SetRegistryKeys({*registry});
+    }
   }
 
   return game;
@@ -186,19 +191,24 @@ LootSettings::LootSettings() :
         GameSettings(GameType::tes4, "Nehrim")
             .SetName("Nehrim - At Fate's Edge")
             .SetMaster("Nehrim.esm")
-            .SetRegistryKey("Software\\Microsoft\\Windows\\CurrentVersion\\Unin"
-                            "stall\\Nehrim - At Fate's "
-                            "Edge_is1\\InstallLocation"),
+            .SetRegistryKeys({
+              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim - At Fate's Edge_is1\\InstallLocation",
+                std::string(NEHRIM_STEAM_REGISTRY_KEY)
+            }),
         GameSettings(GameType::tes5, "Enderal")
             .SetName("Enderal: Forgotten Stories")
-            .SetRegistryKey(
-                "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path")
+            .SetRegistryKeys({
+              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
+              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 933480\\InstallLocation"
+            })
             .SetGameLocalFolder("enderal")
             .SetRepoURL("https://github.com/loot/enderal.git"),
         GameSettings(GameType::tes5se, "Enderal Special Edition")
             .SetName("Enderal: Forgotten Stories (Special Edition)")
-            .SetRegistryKey(
-                "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path")
+            .SetRegistryKeys({
+              "HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
+              "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 976620\\InstallLocation"
+            })
             .SetGameLocalFolder("Enderal Special Edition")
             .SetRepoURL("https://github.com/loot/enderal.git"),
     }),
@@ -219,6 +229,7 @@ LootSettings::LootSettings() :
         Language({"pt_PT", "Português de Portugal", std::nullopt}),
         Language({"ru", "Русский", std::nullopt}),
         Language({"sv", "Svenska", std::nullopt}),
+        Language({"uk_UA", "Українська", std::nullopt}),
         Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
       }),
     autoSort_(false),
@@ -350,7 +361,13 @@ void LootSettings::save(const std::filesystem::path& file) {
       game->insert("branch", gameSettings.RepoBranch());
       game->insert("path", gameSettings.GamePath().u8string());
       game->insert("local_path", gameSettings.GameLocalPath().u8string());
-      game->insert("registry", gameSettings.RegistryKey());
+
+      auto registry = cpptoml::make_array();
+      for (const auto& key : gameSettings.RegistryKeys()) {
+        registry->push_back(key);
+      }
+
+      game->insert("registry", registry);
       games->push_back(game);
     }
 

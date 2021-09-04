@@ -87,7 +87,7 @@ export interface DerivedPluginMetadata {
   isDirty: boolean;
   isEmpty: boolean;
   isMaster: boolean;
-  isLightMaster: boolean;
+  isLightPlugin: boolean;
   loadsArchive: boolean;
   messages: SimpleMessage[];
   suggestedTags: Tag[];
@@ -106,7 +106,7 @@ export interface GameSettings {
   type: string;
   name: string;
   master: string;
-  registry: string;
+  registry: string[];
   folder: string;
   repo: string;
   branch: string;
@@ -197,7 +197,7 @@ export interface PluginItemContentChangePayload {
   isEditorOpen: boolean;
   hasUserEdits: boolean;
   loadOrderIndex?: number;
-  isLightMaster: boolean;
+  isLightPlugin: boolean;
 }
 
 export interface PluginTags {
