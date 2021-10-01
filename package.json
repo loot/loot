@@ -67,7 +67,7 @@
     "@babel/preset-typescript": "^7.15.0",
     "@types/cytoscape": "^3.14.15",
     "@types/jest": "^26.0.23",
-    "@types/lodash": "^4.14.170",
+    "@types/lodash": "^4.14.175",
     "@types/marked": "^2.0.4",
     "@types/node": "^12.20.27",
     "@types/react": "^17.0.11",
