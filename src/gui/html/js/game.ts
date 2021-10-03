@@ -82,7 +82,7 @@ function isGeneralMessagesChangeEvent(
 
 interface GameMasterlistChangeEvent extends CustomEvent {
   detail: {
-    revision: string;
+    id: string;
     date: string;
   };
 }
@@ -90,7 +90,7 @@ interface GameMasterlistChangeEvent extends CustomEvent {
 function isMasterlistChangeEvent(evt: Event): evt is GameMasterlistChangeEvent {
   return (
     evt instanceof CustomEvent &&
-    typeof evt.detail.revision === 'string' &&
+    typeof evt.detail.id === 'string' &&
     typeof evt.detail.date === 'string'
   );
 }
@@ -129,7 +129,7 @@ export default class Game {
 
     this.folder = obj.folder || '';
     this.generalMessages = obj.generalMessages || [];
-    this.masterlist = obj.masterlist || { revision: '', date: '' };
+    this.masterlist = obj.masterlist || { id: '', date: '' };
     this.plugins = obj.plugins ? obj.plugins.map(p => new Plugin(p)) : [];
     this.bashTags = obj.bashTags || [];
     this.setGroups(obj.groups);
@@ -523,7 +523,7 @@ export default class Game {
       );
     }
 
-    getElementById('masterlistRevision').textContent = evt.detail.revision;
+    getElementById('masterlistRevision').textContent = evt.detail.id;
     getElementById('masterlistDate').textContent = evt.detail.date;
   }
 

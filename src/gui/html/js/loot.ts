@@ -289,7 +289,7 @@ function addEventListeners(): void {
 
 interface PreludeChangeEvent extends CustomEvent {
   detail: {
-    revision: string;
+    id: string;
     date: string;
   };
 }
@@ -297,7 +297,7 @@ interface PreludeChangeEvent extends CustomEvent {
 function isPreludeChangeEvent(evt: Event): evt is PreludeChangeEvent {
   return (
     evt instanceof CustomEvent &&
-    typeof evt.detail.revision === 'string' &&
+    typeof evt.detail.id === 'string' &&
     typeof evt.detail.date === 'string'
   );
 }
@@ -309,7 +309,7 @@ function onPreludeChange(evt: Event): void {
     );
   }
 
-  getElementById('preludeRevision').textContent = evt.detail.revision;
+  getElementById('preludeRevision').textContent = evt.detail.id;
   getElementById('preludeDate').textContent = evt.detail.date;
 }
 
