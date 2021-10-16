@@ -324,15 +324,6 @@ describe('Game', () => {
   });
 
   describe('#setGroups()', () => {
-    // It's not worth the hassle of defining and checking the event type in test
-    // code.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let handleEvent: (evt: any) => void;
-
-    afterEach(() => {
-      document.removeEventListener('loot-game-groups-change', handleEvent);
-    });
-
     test('should merge the given masterlist and userlist groups arrays', () => {
       const game = new Game(gameData, l10n);
 
@@ -350,7 +341,8 @@ describe('Game', () => {
     });
 
     test('should dispatch an event', done => {
-      handleEvent = () => {
+      const handleEvent: () => void = () => {
+        document.removeEventListener('loot-game-groups-change', handleEvent);
         done();
       };
       document.addEventListener('loot-game-groups-change', handleEvent);
