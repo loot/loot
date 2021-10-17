@@ -225,20 +225,26 @@ export function fillGameTypesList(gameTypes: string[]): void {
   forceSelectDefaultValue(select);
 }
 
-export function fillGroupsList(groups: Group[]): void {
+export function fillGroupsLists(groups: Group[]): void {
   const shadowRoot = getElementById('editor').shadowRoot;
   if (shadowRoot === null) {
     throw new Error('Expected element with ID "editor" to have a shadow root');
   }
 
   const groupsSelect = querySelector(shadowRoot, '#group');
+  const groupsFilter = getElementById('groupsFilter');
 
   while (groupsSelect.firstElementChild) {
     groupsSelect.removeChild(groupsSelect.firstElementChild);
   }
 
+  while (groupsFilter.children.length > 1) {
+    groupsFilter.removeChild(groupsFilter.children[1]);
+  }
+
   groups.forEach(group => {
     groupsSelect.appendChild(createGroupItem(group));
+    groupsFilter.appendChild(createGroupItem(group));
   });
 
   if (groups.length > 0) {

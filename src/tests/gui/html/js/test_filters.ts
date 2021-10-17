@@ -20,6 +20,7 @@ describe('Filters', () => {
       expect(filters.hideInactivePlugins).toBe(false);
       expect(filters.conflictingPluginNames).toEqual([]);
       expect(filters.contentSearchString).toBe('');
+      expect(filters.groupName).toBe('');
 
       expect(filters.hideVersionNumbers).toBe(false);
       expect(filters.hideCRCs).toBe(false);
@@ -213,6 +214,46 @@ describe('Filters', () => {
     });
   });
 
+  describe('#resetGroupsFilter', () => {
+    let filters: Filters;
+    let handleEvent: () => void;
+
+    beforeEach(() => {
+      filters = new Filters();
+    });
+
+    afterEach(() => {
+      document.removeEventListener('loot-groups-filter-reset', handleEvent);
+    });
+
+    test('should return false if the conflicts filter was not active', () => {
+      expect(filters.resetGroupsFilter()).toBe(false);
+    });
+
+    test('should return true if the conflicts filter was active', () => {
+      filters.groupName = 'default';
+
+      expect(filters.resetGroupsFilter()).toBe(true);
+    });
+
+    test('should empty the conflicting plugin names array', () => {
+      filters.groupName = 'default';
+
+      expect(filters.resetGroupsFilter()).toBe(true);
+      expect(filters.groupName.length).toBe(0);
+    });
+
+    test('should fire an event', done => {
+      handleEvent = () => {
+        done();
+      };
+
+      document.addEventListener('loot-groups-filter-reset', handleEvent);
+
+      filters.resetGroupsFilter();
+    });
+  });
+
   describe('#activateConflictsFilter', () => {
     let filters: Filters;
 
@@ -288,6 +329,12 @@ describe('Filters', () => {
 
     test('should return true if contentSearchString is a non-empty string', () => {
       filters.contentSearchString = 'foo';
+
+      expect(filters.areAnyFiltersActive()).toBe(true);
+    });
+
+    test('should return true if groupName is a non-empty string', () => {
+      filters.groupName = 'foo';
 
       expect(filters.areAnyFiltersActive()).toBe(true);
     });

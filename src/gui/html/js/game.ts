@@ -4,7 +4,7 @@ import mergeGroups from './group';
 
 import {
   createMessageItem,
-  fillGroupsList,
+  fillGroupsLists,
   initialiseAutocompleteBashTags,
   initialiseAutocompleteFilenames,
   initialiseGroupsEditor,
@@ -531,7 +531,7 @@ export default class Game {
     if (!isGroupsChangeEvent(evt)) {
       throw new TypeError(`Expected a GameGroupsChangeEvent, got ${evt.type}`);
     }
-    fillGroupsList(evt.detail.groups);
+    fillGroupsLists(evt.detail.groups);
     updateGroupsEditorState(evt.detail.groups);
   }
 }

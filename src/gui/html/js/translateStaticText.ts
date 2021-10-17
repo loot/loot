@@ -470,6 +470,13 @@ function translateSidebar(l10n: Translator): void {
   /* The selected text doesn't update, so force that translation. */
   updateDropdownSelectedItemText(conflictsFilter);
 
+  const groupsFilter = getElementById('groupsFilter') as LootDropdownMenu;
+  groupsFilter.label = l10n.translate('Show only plugins in group');
+  getFirstElementChildById('groupsFilter').textContent =
+    l10n.translate('No group selected');
+  /* The selected text doesn't update, so force that translation. */
+  updateDropdownSelectedItemText(groupsFilter);
+
   getElementById('hiddenPluginsTxt').textContent =
     l10n.translate('Hidden plugins:');
   getElementById('hiddenMessagesTxt').textContent =

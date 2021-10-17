@@ -121,11 +121,11 @@ app-drawer > iron-pages {
     line-height: 48px;
 }
 #contentFilter,
-#conflictsFilter {
+#conflictsFilter, #groupsFilter {
     padding: 0 16px;
     min-height: 64px;
 }
-#conflictsFilter > paper-item {
+#conflictsFilter > paper-item, #groupsFilter > paper-item {
   --paper-item-min-height: 36px;
   font-size: 1rem;
 }

@@ -57,7 +57,8 @@ import {
   onSelectSettingsSidebarEntry,
   onSettingsAddGame,
   onSettingsDeleteGame,
-  onDeselectSettingsSidebarEntry
+  onDeselectSettingsSidebarEntry,
+  onGroupsFilter
 } from './events';
 import { closeProgress, showProgress } from './dialog';
 import {
@@ -136,9 +137,17 @@ function addEventListeners(): void {
     'value-changed',
     onConflictsFilter
   );
+  getElementById('groupsFilter').addEventListener(
+    'value-changed',
+    onGroupsFilter
+  );
   document.addEventListener(
     'loot-filter-conflicts-deactivate',
     Filters.onDeactivateConflictsFilter
+  );
+  document.addEventListener(
+    'loot-groups-filter-reset',
+    Filters.onResetGroupsFilter
   );
 
   /* Set up handlers for buttons. */

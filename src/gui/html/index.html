@@ -39,7 +39,7 @@
       @apply --layout-center;
       @apply --layout-flex;
     }
-    #conflictsFilter {
+    #conflictsFilter, #groupsFilter {
       --paper-dropdown-menu: {
         display: block;
       };
@@ -140,6 +140,10 @@
         <div id="filters">
           <loot-dropdown-menu id="conflictsFilter" label="Show only conflicting plugins for" value="">
             <paper-item value="">No plugin selected</paper-item>
+            <!-- Generated <div> plugin elements go here. -->
+          </loot-dropdown-menu>
+          <loot-dropdown-menu id="groupsFilter" label="Show only plugins in group" value="">
+            <paper-item value="">No group selected</paper-item>
             <!-- Generated <div> plugin elements go here. -->
           </loot-dropdown-menu>
           <paper-input id="contentFilter" label="Show only plugins with cards that contain" always-float-label placeholder="No text specified"></paper-input>

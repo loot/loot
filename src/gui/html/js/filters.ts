@@ -28,12 +28,15 @@ export default class Filters implements FilterStates {
 
   public contentSearchString: string;
 
+  public groupName: string;
+
   public constructor() {
     /* Plugin filters */
     this.hideMessagelessPlugins = false;
     this.hideInactivePlugins = false;
     this.conflictingPluginNames = [];
     this.contentSearchString = '';
+    this.groupName = '';
 
     /* Plugin content filters */
     this.hideVersionNumbers = false;
@@ -45,6 +48,10 @@ export default class Filters implements FilterStates {
 
   public pluginFilter(plugin: Plugin): boolean {
     if (this.hideInactivePlugins && !plugin.isActive) {
+      return false;
+    }
+
+    if (this.groupName.length !== 0 && plugin.group !== this.groupName) {
       return false;
     }
 
@@ -94,6 +101,16 @@ export default class Filters implements FilterStates {
     return wasEnabled;
   }
 
+  public resetGroupsFilter(): boolean {
+    const wasEnabled = this.groupName.length > 0;
+
+    this.groupName = '';
+
+    document.dispatchEvent(new CustomEvent('loot-groups-filter-reset'));
+
+    return wasEnabled;
+  }
+
   public activateConflictsFilter(
     targetPluginName: string
   ): Promise<MainContent> {
@@ -134,6 +151,7 @@ export default class Filters implements FilterStates {
     return (
       this.hideMessagelessPlugins ||
       this.hideInactivePlugins ||
+      this.groupName.length !== 0 ||
       this.conflictingPluginNames.length !== 0 ||
       this.contentSearchString.length !== 0 ||
       this.hideVersionNumbers ||
@@ -223,5 +241,9 @@ export default class Filters implements FilterStates {
 
   public static onDeactivateConflictsFilter(): void {
     (getElementById('conflictsFilter') as LootDropdownMenu).value = '';
+  }
+
+  public static onResetGroupsFilter(): void {
+    (getElementById('groupsFilter') as LootDropdownMenu).value = '';
   }
 }

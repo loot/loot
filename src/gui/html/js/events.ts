@@ -12,7 +12,7 @@ import {
   showProgress
 } from './dialog';
 import {
-  fillGroupsList,
+  fillGroupsLists,
   initialiseAutocompleteBashTags,
   updateSettingsDialog,
   enableGameOperations,
@@ -259,6 +259,19 @@ export function onConflictsFilter(evt: Event): void {
   }
 }
 
+export function onGroupsFilter(evt: Event): void {
+  if (!isLootDropdownMenuChangeEvent(evt)) {
+    throw new TypeError(
+      `Expected a LootDropdownMenuChangeEvent, got ${evt.type}`
+    );
+  }
+
+  window.loot.filters.groupName = evt.currentTarget.value;
+  if (window.loot.game !== undefined) {
+    window.loot.filters.apply(window.loot.game.plugins);
+  }
+}
+
 export function onChangeGame(evt: Event): void {
   if (!isLootDropdownMenuSelectEvent(evt)) {
     throw new TypeError(
@@ -285,6 +298,10 @@ export function onChangeGame(evt: Event): void {
        deactivating the conflicts filter either, just resetting it's value.
        */
       window.loot.filters.deactivateConflictsFilter();
+      /* Also reset the value of the groups filter, because the currently
+         selected group might not exist for the new game.
+       */
+      window.loot.filters.resetGroupsFilter();
 
       /* Clear the UI of all existing game-specific data. Also
        clear the card and li variables for each plugin object. */
@@ -397,8 +414,11 @@ export async function onSortPlugins(): Promise<void> {
     throw new Error('Attempted to sort plugins with no game loaded.');
   }
 
-  if (window.loot.filters.deactivateConflictsFilter()) {
-    /* Conflicts filter was undone, update the displayed cards. */
+  if (
+    window.loot.filters.deactivateConflictsFilter() ||
+    window.loot.filters.resetGroupsFilter()
+  ) {
+    /* Conflicts and/or groups filter was undone, update the displayed cards. */
     window.loot.filters.apply(currentGame.plugins);
   }
 
@@ -1003,7 +1023,7 @@ export function onSaveUserGroups(evt: Event): void {
   saveUserGroups(userGroups)
     .then(response => {
       currentGame.setGroups(response);
-      fillGroupsList(currentGame.groups);
+      fillGroupsLists(currentGame.groups);
       editor.setGroups(currentGame.groups);
     })
     .catch(handlePromiseError);
