@@ -58,7 +58,8 @@ import {
   onSettingsAddGame,
   onSettingsDeleteGame,
   onDeselectSettingsSidebarEntry,
-  onGroupsFilter
+  onGroupsFilter,
+  assertIsError
 } from './events';
 import { closeProgress, showProgress } from './dialog';
 import {
@@ -509,6 +510,7 @@ export default class Loot {
       await this.loadLootData();
       await this.initialiseGeneralUIElements();
     } catch (error) {
+      assertIsError(error);
       handlePromiseError(error);
     }
 
@@ -543,6 +545,7 @@ export default class Loot {
         await checkForLootUpdate(this.l10n);
       }
     } catch (error) {
+      assertIsError(error);
       handlePromiseError(error);
     }
   }

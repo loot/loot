@@ -174,6 +174,12 @@ function isGameFolderChangeEvent(evt: Event): evt is LootGameFolderChangeEvent {
   return evt instanceof CustomEvent && typeof evt.detail.folder === 'string';
 }
 
+export function assertIsError(err: unknown): asserts err is Error {
+  if (!(err instanceof Error)) {
+    throw new Error(`Expected an Error, got ${typeof err}`);
+  }
+}
+
 export function onSidebarFilterToggle(evt: Event): void {
   if (!isPaperCheckboxChangeEvent(evt)) {
     throw new TypeError(`Expected a PaperCheckboxChangeEvent, got ${evt.type}`);
@@ -486,6 +492,7 @@ export async function onSortPlugins(): Promise<void> {
       );
     }
   } catch (err) {
+    assertIsError(err);
     handlePromiseError(err);
   }
 }

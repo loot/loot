@@ -128,7 +128,7 @@ export default async function updateExists(
 
     return tagDate > Date.parse(dateString);
   } catch (error) {
-    // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console, @typescript-eslint/restrict-template-expressions
     console.error(`Failed to check for LOOT updates, details: ${error}`);
     throw error;
   }

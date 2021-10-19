@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-10-19 15:52+0100\n"
+"POT-Creation-Date: 2021-10-19 15:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -240,40 +240,40 @@ msgstr ""
 msgid "Verified clean by %s"
 msgstr ""
 
-#: src/gui/html/js/events.ts:219
+#: src/gui/html/js/events.ts:225
 msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: src/gui/html/js/events.ts:332
+#: src/gui/html/js/events.ts:338
 msgid "Updating and parsing masterlist..."
 msgstr ""
 
-#: src/gui/html/js/events.ts:361
+#: src/gui/html/js/events.ts:367
 msgid "Masterlist updated to revision %s."
 msgstr ""
 
-#: src/gui/html/js/events.ts:368
+#: src/gui/html/js/events.ts:374
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/html/js/events.ts:442
+#: src/gui/html/js/events.ts:448
 msgid "Cyclic interaction detected"
 msgstr ""
 
-#: src/gui/html/js/events.ts:449
+#: src/gui/html/js/events.ts:455
 msgid "Failed to sort plugins. Details: %s"
 msgstr ""
 
-#: src/gui/html/js/events.ts:485
+#: src/gui/html/js/events.ts:491
 msgid "Sorting made no changes to the load order."
 msgstr ""
 
-#: src/gui/html/js/events.ts:529
+#: src/gui/html/js/events.ts:536
 #. Title of a dialog box.
 msgid "Redate Plugins?"
 msgstr ""
 
-#: src/gui/html/js/events.ts:530
+#: src/gui/html/js/events.ts:537
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop "
@@ -281,74 +281,75 @@ msgid ""
 "Edition). Do you wish to continue?"
 msgstr ""
 
-#: src/gui/html/js/events.ts:534
+#: src/gui/html/js/events.ts:541
 #. Affirmative confirmation button text for the Redate Plugins dialog box.
 msgid "Redate"
 msgstr ""
 
-#: src/gui/html/js/events.ts:541
+#: src/gui/html/js/events.ts:548
 #. Notification text.
 msgid "Plugins were successfully redated."
 msgstr ""
 
-#: src/gui/html/js/events.ts:560
+#: src/gui/html/js/events.ts:567
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 
-#: src/gui/html/js/events.ts:563
-#: src/gui/html/js/events.ts:1155
+#: src/gui/html/js/events.ts:570
+#: src/gui/html/js/events.ts:1162
 msgid "Clear"
 msgstr ""
 
-#: src/gui/html/js/events.ts:574
+#: src/gui/html/js/events.ts:581
 msgid "All user-added metadata has been cleared."
 msgstr ""
 
-#: src/gui/html/js/events.ts:611
+#: src/gui/html/js/events.ts:618
 msgid "LOOT's content has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.ts:629
+#: src/gui/html/js/events.ts:636
 msgid "The load order has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.ts:665
+#: src/gui/html/js/events.ts:672
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to "
 "quit?"
 msgstr ""
 
-#: src/gui/html/js/events.ts:669
+#: src/gui/html/js/events.ts:676
 #: src/gui/html/js/translateStaticText.ts:372
 msgid "Quit"
 msgstr ""
 
-#: src/gui/html/js/events.ts:687
+#: src/gui/html/js/events.ts:694
 msgid "sorted load order"
 msgstr ""
 
-#: src/gui/html/js/events.ts:692
+#: src/gui/html/js/events.ts:699
 #. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
 msgid "metadata edits"
 msgstr ""
 
-#: src/gui/html/js/events.ts:1130
+#: src/gui/html/js/events.ts:1137
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/html/js/events.ts:1151
+#: src/gui/html/js/events.ts:1158
 msgid "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 
-#: src/gui/html/js/events.ts:1173
+#: src/gui/html/js/events.ts:1180
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
 
 #: src/gui/html/js/game.ts:141
-#: src/gui/html/js/loot.ts:563
-#: src/gui/html/js/loot.ts:564
+#: src/gui/html/js/loot.ts:566
+#: src/gui/html/js/loot.ts:567
+#. An abbreviation of Not Applicable.
 msgid "N/A"
 msgstr ""
 
@@ -357,17 +358,17 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/gui/html/js/loot.ts:357
+#: src/gui/html/js/loot.ts:358
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/html/js/loot.ts:373
+#: src/gui/html/js/loot.ts:374
 msgid "A [new release](%s) of LOOT is available."
 msgstr ""
 
-#: src/gui/html/js/loot.ts:413
+#: src/gui/html/js/loot.ts:414
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
