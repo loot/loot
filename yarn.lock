@@ -1999,9 +1999,9 @@
     "@babel/types" "^7.3.0"
 
 "@types/cytoscape@^3.14.15":
-  version "3.14.15"
-  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.14.15.tgz#ce3fc1b494f44d6bccb93a099eb005553fc2a14e"
-  integrity sha512-gl4fmjtiV027bgKyAkPPksa2XVCWfwZ3TOaEejeQQ6cmtdrKqrr13m8zpOYkcIYtRqzA4AT8iUzn7P4/p4sUkA==
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.19.0.tgz#1acd8df260af0eb088191f84df8ca055353f6196"
+  integrity sha512-EbUrbDqequXtSkpPvtpX1Xf7nDFh+eB/2h/Sv1SiQ9IjCJENSwi9Wfv/vRkH9YTcgNoCot20eyIyMbxHfh0YDg==
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"
