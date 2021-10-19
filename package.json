@@ -72,8 +72,8 @@
     "@types/react": "^17.0.26",
     "@types/react-autosuggest": "^10.1.4",
     "@types/react-dom": "^17.0.9",
-    "@typescript-eslint/eslint-plugin": "^4.32.0",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
     "babel-gettext-extractor": "git://github.com/loot/babel-gettext-extractor#v4.1.3+improved-entry-sorting.2",
     "babel-jest": "^27.2.4",
     "babel-loader": "^8.2.2",
@@ -233,6 +233,7 @@
             }
           ],
           "@typescript-eslint/no-empty-function": "off",
+          "@typescript-eslint/no-unsafe-argument": "warn",
           "@typescript-eslint/no-unsafe-assignment": "warn",
           "@typescript-eslint/no-unsafe-call": "warn",
           "@typescript-eslint/no-unsafe-member-access": "warn",

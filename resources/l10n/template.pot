@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-10-17 18:12+0100\n"
+"POT-Creation-Date: 2021-10-19 15:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -349,7 +349,6 @@ msgstr ""
 #: src/gui/html/js/game.ts:141
 #: src/gui/html/js/loot.ts:563
 #: src/gui/html/js/loot.ts:564
-#. An abbreviation of Not Applicable.
 msgid "N/A"
 msgstr ""
 
