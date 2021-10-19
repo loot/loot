@@ -107,7 +107,7 @@
         "@babel/preset-env",
         {
           "targets": {
-            "chrome": 68
+            "chrome": 90
           }
         }
       ],
