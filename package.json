@@ -68,7 +68,7 @@
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.176",
     "@types/marked": "^3.0.1",
-    "@types/node": "^12.20.27",
+    "@types/node": "^12.20.36",
     "@types/react": "^17.0.26",
     "@types/react-autosuggest": "^10.1.4",
     "@types/react-dom": "^17.0.10",
