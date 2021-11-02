@@ -42,7 +42,7 @@
     "@polymer/paper-toggle-button": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.4.1",
-    "cytoscape": "^3.19.1",
+    "cytoscape": "^3.20.0",
     "cytoscape-dagre": "^2.3.2",
     "cytoscape-edgehandles": "^3.6.0",
     "fs-extra": "^10.0.0",
