@@ -76,7 +76,7 @@
     "@typescript-eslint/parser": "^5.1.0",
     "babel-gettext-extractor": "git://github.com/loot/babel-gettext-extractor#v4.1.3+improved-entry-sorting.2",
     "babel-jest": "^27.2.4",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^9.0.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
