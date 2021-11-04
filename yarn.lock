@@ -2070,7 +2070,14 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/cytoscape@^3.14.15":
+"@types/cytoscape-dagre@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape-dagre/-/cytoscape-dagre-2.3.0.tgz#e9193f710f47472bed9c80430ca0d6cb98cf1620"
+  integrity sha512-1WwDnCcdySVwhxhHWHxRFlWoz7InlXlA9O9gQjtBkk1Sf7hW0+uaRxS6nr1TLBSPZRX0QNpYGvGqh13NuFEDaA==
+  dependencies:
+    "@types/cytoscape" "*"
+
+"@types/cytoscape@*", "@types/cytoscape@^3.14.15":
   version "3.19.0"
   resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.19.0.tgz#1acd8df260af0eb088191f84df8ca055353f6196"
   integrity sha512-EbUrbDqequXtSkpPvtpX1Xf7nDFh+eB/2h/Sv1SiQ9IjCJENSwi9Wfv/vRkH9YTcgNoCot20eyIyMbxHfh0YDg==

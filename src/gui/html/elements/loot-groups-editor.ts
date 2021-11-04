@@ -1,6 +1,6 @@
 import * as cytoscape from 'cytoscape';
 import edgehandles from 'cytoscape-edgehandles';
-import dagre, { DagreLayoutOptions } from 'cytoscape-dagre';
+import * as dagre from 'cytoscape-dagre';
 import { PolymerElement, html } from '@polymer/polymer';
 import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
@@ -190,7 +190,7 @@ export default class LootGroupsEditor extends PolymerElement {
     edgehandles?: (config: Record<string, unknown>) => void;
   };
 
-  private cyLayoutOptions?: cytoscape.LayoutOptions | DagreLayoutOptions;
+  private cyLayoutOptions?: cytoscape.LayoutOptions | dagre.DagreLayoutOptions;
 
   private getGroupPluginNames: (groupName: string) => string[];
 

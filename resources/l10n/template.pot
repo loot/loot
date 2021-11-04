@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-11-01 08:38+0000\n"
+"POT-Creation-Date: 2021-11-04 21:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -268,8 +268,8 @@ msgstr ""
 msgid "Sorting made no changes to the load order."
 msgstr ""
 
-# Title of a dialog box.
 #: src/gui/html/js/events.ts:536
+#. Title of a dialog box.
 msgid "Redate Plugins?"
 msgstr ""
 
@@ -281,13 +281,13 @@ msgid ""
 "Edition). Do you wish to continue?"
 msgstr ""
 
-# Affirmative confirmation button text for the Redate Plugins dialog box.
 #: src/gui/html/js/events.ts:541
+#. Affirmative confirmation button text for the Redate Plugins dialog box.
 msgid "Redate"
 msgstr ""
 
-# Notification text.
 #: src/gui/html/js/events.ts:548
+#. Notification text.
 msgid "Plugins were successfully redated."
 msgstr ""
 
@@ -329,8 +329,8 @@ msgstr ""
 msgid "sorted load order"
 msgstr ""
 
-# Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
 #: src/gui/html/js/events.ts:699
+#. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
 msgid "metadata edits"
 msgstr ""
 
@@ -346,10 +346,10 @@ msgstr ""
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
 
-# An abbreviation of Not Applicable.
 #: src/gui/html/js/game.ts:141
 #: src/gui/html/js/loot.ts:566
 #: src/gui/html/js/loot.ts:567
+#. An abbreviation of Not Applicable.
 msgid "N/A"
 msgstr ""
 
@@ -391,8 +391,8 @@ msgstr ""
 msgid "Empty Plugin"
 msgstr ""
 
-# Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
 #: src/gui/html/js/translateStaticText.ts:81
+#. Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
 msgid "Loads Archive"
 msgstr ""
 
@@ -438,8 +438,8 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-# Title of a tab in the metadata editor.
 #: src/gui/html/js/translateStaticText.ts:127
+#. Title of a tab in the metadata editor.
 msgid "Bash Tags"
 msgstr ""
 
@@ -563,8 +563,8 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-# The error message displayed if you add a message with no content in the metadata editor.
 #: src/gui/html/js/translateStaticText.ts:249
+#. The error message displayed if you add a message with no content in the metadata editor.
 msgid "A content string is required."
 msgstr ""
 
@@ -619,13 +619,13 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-# The tooltip for the search icon that reveals the content search input when clicked.
 #: src/gui/html/js/translateStaticText.ts:348
+#. The tooltip for the search icon that reveals the content search input when clicked.
 msgid "Search Cards"
 msgstr ""
 
-# Text of menu option that triggers display of the Redate Plugins dialog.
 #: src/gui/html/js/translateStaticText.ts:353
+#. Text of menu option that triggers display of the Redate Plugins dialog.
 msgid "Redate Plugins"
 msgstr ""
 
@@ -662,8 +662,8 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-# The label on the content search text input.
 #: src/gui/html/js/translateStaticText.ts:382
+#. The label on the content search text input.
 msgid "Search cards"
 msgstr ""
 
@@ -695,8 +695,8 @@ msgstr ""
 msgid "Hide CRCs"
 msgstr ""
 
-# Text of a filter in the sidebar.
 #: src/gui/html/js/translateStaticText.ts:454
+#. Text of a filter in the sidebar.
 msgid "Hide Bash Tags"
 msgstr ""
 
@@ -760,13 +760,13 @@ msgstr ""
 msgid "Masterlist Prelude Date"
 msgstr ""
 
-# The number of warning messages present. This text appears in the General Information card.
 #: src/gui/html/js/translateStaticText.ts:503
+#. The number of warning messages present. This text appears in the General Information card.
 msgid "Warnings"
 msgstr ""
 
-# The number of error messages present. This text appears in the General Information card.
 #: src/gui/html/js/translateStaticText.ts:506
+#. The number of error messages present. This text appears in the General Information card.
 msgid "Errors"
 msgstr ""
 
@@ -900,8 +900,8 @@ msgid ""
 "to help you get started with the interface."
 msgstr ""
 
-# The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
 #: src/gui/html/js/translateStaticText.ts:666
+#. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr ""
 
