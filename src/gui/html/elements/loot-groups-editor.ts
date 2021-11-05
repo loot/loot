@@ -155,7 +155,7 @@ export default class LootGroupsEditor extends PolymerElement {
         #drawingModeToggleContainer {
           display: flex;
         }
-        #drawingModeToggleContainer > div:first-child {
+        #drawingModeToggleLabel {
           flex-grow: 1;
         }
         #pluginList {
@@ -198,7 +198,7 @@ export default class LootGroupsEditor extends PolymerElement {
             </paper-input>
           </div>
           <div id="drawingModeToggleContainer">
-            <div>Drawing mode</div>
+            <div id="drawingModeToggleLabel">Drawing mode</div>
             <paper-toggle-button id="drawingModeToggle"></paper-toggle-button>
           </div>
           <h3 id="groupSubtitle"></h3>
@@ -386,6 +386,7 @@ export default class LootGroupsEditor extends PolymerElement {
       })
     });
 
+    (this.$.drawingModeToggle as PaperToggleButtonElement).checked = false;
     this.$.groupSubtitle.textContent = '';
     this.$.pluginList.textContent = '';
   }
@@ -445,6 +446,7 @@ export default class LootGroupsEditor extends PolymerElement {
     this.$.groupsHelpText.textContent = l10n.translate('View Documentation');
     this.$.newGroupInput.label = l10n.translate('Add a new group');
     this.$.newGroupInput.placeholder = l10n.translate('Group name');
+    this.$.drawingModeToggleLabel.textContent = l10n.translate('Drawing mode');
     this.messages.groupAlreadyExists = l10n.translate('Group already exists!');
     this.messages.noPluginsInGroup = l10n.translate(
       'No plugins are in this group.'
