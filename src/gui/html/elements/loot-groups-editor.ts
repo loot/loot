@@ -1,9 +1,10 @@
 import * as cytoscape from 'cytoscape';
-import edgehandles from 'cytoscape-edgehandles';
-import dagre, { DagreLayoutOptions } from 'cytoscape-dagre';
+import * as edgehandles from 'cytoscape-edgehandles';
+import * as dagre from 'cytoscape-dagre';
 import { PolymerElement, html } from '@polymer/polymer';
 import { PaperInputElement } from '@polymer/paper-input/paper-input.js';
 import { PaperIconButtonElement } from '@polymer/paper-icon-button/paper-icon-button.js';
+import { PaperToggleButtonElement } from '@polymer/paper-toggle-button';
 import { SourcedGroup, RawGroup } from '../js/interfaces';
 import Translator from '../js/translator';
 
@@ -46,6 +47,17 @@ interface NewGroupInputEvent extends Event {
 function isNewGroupInputEvent(evt: Event): evt is NewGroupInputEvent {
   return (
     evt.currentTarget instanceof Element && isPaperInput(evt.currentTarget)
+  );
+}
+
+interface DrawingModeToggleEvent extends Event {
+  currentTarget: EventTarget & PaperToggleButtonElement;
+}
+
+function isDrawingModeToggleEvent(evt: Event): evt is DrawingModeToggleEvent {
+  return (
+    evt.currentTarget instanceof Element &&
+    evt.currentTarget.tagName === 'PAPER-TOGGLE-BUTTON'
   );
 }
 
@@ -140,6 +152,12 @@ export default class LootGroupsEditor extends PolymerElement {
           height: 24px;
           width: 24px;
         }
+        #drawingModeToggleContainer {
+          display: flex;
+        }
+        #drawingModeToggleContainer > div:first-child {
+          flex-grow: 1;
+        }
         #pluginList {
           background-color: var(--primary-background-color);
           flex: auto;
@@ -179,6 +197,10 @@ export default class LootGroupsEditor extends PolymerElement {
               ></paper-icon-button>
             </paper-input>
           </div>
+          <div id="drawingModeToggleContainer">
+            <div>Drawing mode</div>
+            <paper-toggle-button id="drawingModeToggle"></paper-toggle-button>
+          </div>
           <h3 id="groupSubtitle"></h3>
           <div id="pluginList"></div>
         </div>
@@ -186,11 +208,11 @@ export default class LootGroupsEditor extends PolymerElement {
     `;
   }
 
-  private cy?: cytoscape.Core & {
-    edgehandles?: (config: Record<string, unknown>) => void;
-  };
+  private cy?: cytoscape.Core;
 
-  private cyLayoutOptions?: cytoscape.LayoutOptions | DagreLayoutOptions;
+  private eh?: edgehandles.EdgeHandlesInstance;
+
+  private cyLayoutOptions?: cytoscape.LayoutOptions | dagre.DagreLayoutOptions;
 
   private getGroupPluginNames: (groupName: string) => string[];
 
@@ -226,6 +248,10 @@ export default class LootGroupsEditor extends PolymerElement {
     this.$.newGroupInput.addEventListener('keyup', evt =>
       this._onAddGroup(evt)
     );
+
+    this.$.drawingModeToggle.addEventListener('checked-changed', evt => {
+      this._onToggleDrawingMode(evt);
+    });
 
     this.$.groupsHelpText.addEventListener('click', () => {
       this.dispatchEvent(
@@ -330,15 +356,6 @@ export default class LootGroupsEditor extends PolymerElement {
             'line-color': '#666',
             'mid-target-arrow-color': '#666'
           }
-        },
-        {
-          selector: 'node.eh-handle',
-          style: {
-            label: '',
-            'background-color': 'white',
-            height: 15,
-            width: 15
-          }
         }
       ]
     });
@@ -362,9 +379,11 @@ export default class LootGroupsEditor extends PolymerElement {
       throw new Error('Expected cy field to have an edgehandles method');
     }
 
-    this.cy.edgehandles({
-      handlePosition: () => 'middle middle',
-      edgeParams: () => ({ classes: 'userlist' })
+    this.eh = this.cy.edgehandles({
+      edgeParams: (source, target) => ({
+        data: { source: source.id(), target: target.id() },
+        classes: 'userlist'
+      })
     });
 
     this.$.groupSubtitle.textContent = '';
@@ -430,6 +449,22 @@ export default class LootGroupsEditor extends PolymerElement {
     this.messages.noPluginsInGroup = l10n.translate(
       'No plugins are in this group.'
     );
+  }
+
+  private _onToggleDrawingMode(evt: Event): void {
+    if (this.eh === undefined) {
+      throw new Error('Expected eh field to be defined');
+    }
+
+    if (!isDrawingModeToggleEvent(evt)) {
+      throw new Error(`Expected a DrawingModeToggleEvent, got ${evt.type}`);
+    }
+
+    if (evt.currentTarget.checked) {
+      this.eh.enableDrawMode();
+    } else {
+      this.eh.disableDrawMode();
+    }
   }
 
   private _onSelectNode(evt: cytoscape.EventObject): void {
