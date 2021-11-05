@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-11-04 21:19+0000\n"
+"POT-Creation-Date: 2021-11-05 18:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,28 +211,28 @@ msgstr ""
 msgid "Add New Row"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:426
+#: src/gui/html/elements/loot-groups-editor.ts:445
 #: src/gui/html/js/translateStaticText.ts:369
 msgid "View Documentation"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:427
+#: src/gui/html/elements/loot-groups-editor.ts:446
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:428
+#: src/gui/html/elements/loot-groups-editor.ts:447
 msgid "Group name"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:429
+#: src/gui/html/elements/loot-groups-editor.ts:448
 msgid "Group already exists!"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:430
+#: src/gui/html/elements/loot-groups-editor.ts:449
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:440
+#: src/gui/html/elements/loot-groups-editor.ts:475
 msgid "Plugins in %s"
 msgstr ""
 

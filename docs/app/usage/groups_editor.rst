@@ -48,8 +48,9 @@ masterlist-defined group A, but then group A is removed in a masterlist update.
 In that case, just open up the groups editor and link group A back into the
 graph as it was before.
 
-New load after metadata can be added by clicking on one group and dragging a
-line from the white circle that appears to another group.
+New load after metadata can be added by first enabling drawing mode using
+the toggle button, then dragging a line from any group node to any other
+group node. Moving nodes around is disabled while in drawing mode.
 
 Clicking on a group will cause any installed plugins in that group to be listed
 in the sidebar.

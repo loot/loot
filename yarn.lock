@@ -2077,6 +2077,13 @@
   dependencies:
     "@types/cytoscape" "*"
 
+"@types/cytoscape-edgehandles@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/cytoscape-edgehandles/-/cytoscape-edgehandles-4.0.0.tgz#b154bc8cb9ff33e1bfe25bfd37f30af20246e463"
+  integrity sha512-150ohT1VxeS6fa414KLvv6B85CdHAFLI/rInFdCrzhOBgSwStSNonu0rypthliq9AxDjZ+wPOI5hB7VJOyu0wQ==
+  dependencies:
+    "@types/cytoscape" "*"
+
 "@types/cytoscape@*", "@types/cytoscape@^3.14.15":
   version "3.19.0"
   resolved "https://registry.yarnpkg.com/@types/cytoscape/-/cytoscape-3.19.0.tgz#1acd8df260af0eb088191f84df8ca055353f6196"
