@@ -27,7 +27,7 @@ Refer to `.github/workflows/release.yml` for the build process.
 
 ### Windows
 
-The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017, Yarn and 7-zip are already installed.
+The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017 and 7-zip are already installed.
 
 ### Linux
 
@@ -61,7 +61,7 @@ You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
 
 ### Rebuilding the HTML UI
 
-The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `yarn build` from the repository root.
+The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `npm run build` from the repository root.
 
 ## Building The Documentation
 
