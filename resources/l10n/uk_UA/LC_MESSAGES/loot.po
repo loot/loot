@@ -2,22 +2,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-<<<<<<< Updated upstream
-"POT-Creation-Date: 2021-11-01 08:38+0000\n"
-"PO-Revision-Date: 2021-11-08 13:37+0200\n"
-=======
-"POT-Creation-Date: 2021-11-05 18:49+0000\n"
-"PO-Revision-Date: 2021-11-08 14:13+0200\n"
->>>>>>> Stashed changes
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
 "Last-Translator: IllusiveMan196\n"
-"Language-Team: Ukrainian\n"
-"Language: uk_UA\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: uk_UA\n"
 "X-Generator: Poedit 3.0\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 #: src/gui/cef/query/query.h:49
 msgid ""
@@ -307,10 +302,7 @@ msgstr "Не вдалося відсортувати плагіни. Детал�
 msgid "Sorting made no changes to the load order."
 msgstr "Сортування не змінило порядок завантаження."
 
-<<<<<<< Updated upstream
-=======
 #. Title of a dialog box.
->>>>>>> Stashed changes
 #: src/gui/html/js/events.ts:536
 msgid "Redate Plugins?"
 msgstr "Редатувати плагіни?"
@@ -328,18 +320,12 @@ msgstr ""
 "будуть завантажені через Steam знову (це не стосується Skyrim Special "
 "Edition). Продовжити?"
 
-<<<<<<< Updated upstream
-=======
 #. Affirmative confirmation button text for the Redate Plugins dialog box.
->>>>>>> Stashed changes
 #: src/gui/html/js/events.ts:541
 msgid "Redate"
 msgstr "Редатувати"
 
-<<<<<<< Updated upstream
-=======
 #. Notification text.
->>>>>>> Stashed changes
 #: src/gui/html/js/events.ts:548
 msgid "Plugins were successfully redated."
 msgstr "Плагіны було успішно редатовано."
@@ -381,10 +367,7 @@ msgstr "Вихід"
 msgid "sorted load order"
 msgstr "відсортований порядок завантаження"
 
-<<<<<<< Updated upstream
-=======
 #. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
->>>>>>> Stashed changes
 #: src/gui/html/js/events.ts:699
 msgid "metadata edits"
 msgstr "правки метаданих"
@@ -404,10 +387,7 @@ msgstr ""
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "Користувацькі метадані для \"%s\" були очищені."
 
-<<<<<<< Updated upstream
-=======
 #. An abbreviation of Not Applicable.
->>>>>>> Stashed changes
 #: src/gui/html/js/game.ts:141 src/gui/html/js/loot.ts:566
 #: src/gui/html/js/loot.ts:567
 msgid "N/A"
@@ -818,19 +798,13 @@ msgid "Masterlist Prelude Date"
 msgstr "Дата prelude-файлу"
 
 # Used in menu, translation should be in "numbered plural": 5 warnings - 5 попереджень
-<<<<<<< Updated upstream
-=======
 #. The number of warning messages present. This text appears in the General Information card.
->>>>>>> Stashed changes
 #: src/gui/html/js/translateStaticText.ts:503
 msgid "Warnings"
 msgstr "Попереджень"
 
 # Used in menu, translation should be in "numbered plural": 5 errors- 5 помилок
-<<<<<<< Updated upstream
-=======
 #. The number of error messages present. This text appears in the General Information card.
->>>>>>> Stashed changes
 #: src/gui/html/js/translateStaticText.ts:506
 msgid "Errors"
 msgstr "Помилок"
@@ -967,10 +941,7 @@ msgstr ""
 "Схоже, що це перший раз, коли ви запустили LOOT %s. Ось деякі поради, які "
 "допоможуть вам почати роботу з інтерфейсом."
 
-<<<<<<< Updated upstream
-=======
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
->>>>>>> Stashed changes
 #: src/gui/html/js/translateStaticText.ts:666
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "Натисніть на значок %(menu_icon)s для відкриття меню."
