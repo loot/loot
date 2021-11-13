@@ -152,6 +152,16 @@ public:
     return std::nullopt;
   }
 
+  bool IsGameInstalled(const std::string& gameFolder) const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    return std::any_of(installedGames_.cbegin(),
+                       installedGames_.cend(),
+                       [&](const gui::Game& game) { 
+      return gameFolder == game.FolderName();
+                       });
+  }
+
 private:
   virtual std::optional<std::filesystem::path> FindGamePath(
       const GameSettings& gameSettings) const = 0;

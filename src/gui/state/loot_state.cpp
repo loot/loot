@@ -262,7 +262,7 @@ void LootState::SetInitialGame(std::string preferredGame) {
       preferredGame = getLastGame();
   }
 
-  if (!preferredGame.empty()) {
+  if (!preferredGame.empty() && IsGameInstalled(preferredGame)) {
     SetCurrentGame(preferredGame);
     return;
   }
