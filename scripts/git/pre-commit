@@ -18,7 +18,8 @@ xgettext \
   --msgid-bugs-address="https://github.com/loot/loot/issues" \
   -o resources/l10n/template.pot \
   src/gui/cef/query/*.h \
-  src/gui/cef/query/types/*.h \
+  src/gui/query/*.h \
+  src/gui/query/types/*.h \
   src/gui/state/*.cpp \
   src/gui/state/game/*.cpp
 

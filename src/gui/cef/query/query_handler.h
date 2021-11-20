@@ -28,7 +28,7 @@
 
 #include <include/wrapper/cef_message_router.h>
 
-#include "gui/cef/query/query.h"
+#include "gui/query/query.h"
 #include "gui/state/loot_state.h"
 
 namespace loot {

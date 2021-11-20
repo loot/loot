@@ -31,7 +31,7 @@ along with LOOT.  If not, see
 #include <include/wrapper/cef_message_router.h>
 #include <boost/locale.hpp>
 
-#include "gui/cef/query/query.h"
+#include "gui/query/query.h"
 #include "gui/state/logging.h"
 
 namespace loot {

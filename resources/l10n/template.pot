@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-11-05 18:49+0000\n"
+"POT-Creation-Date: 2021-11-20 01:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/gui/cef/query/query.h:49
+#: src/gui/cef/query/query_executor.h:44
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+
+#: src/gui/query/query.h:49
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -26,38 +32,32 @@ msgid ""
 "information."
 msgstr ""
 
-#: src/gui/cef/query/query_executor.h:44
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-
-#: src/gui/cef/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/get_prelude_info_query.h:49
+#: src/gui/query/types/get_prelude_info_query.h:49
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
 #. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/cef/query/types/get_prelude_info_query.h:59
-#: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/query/types/get_prelude_info_query.h:59
+#: src/gui/query/types/metadata_query.h:266
 msgid "Unknown: Git repository missing"
 msgstr ""
 
-#: src/gui/cef/query/types/metadata_query.h:205
-#: src/gui/cef/query/types/metadata_query.h:232
+#: src/gui/query/types/metadata_query.h:205
+#: src/gui/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/query/types/metadata_query.h:256
 msgid "N/A: No masterlist present"
 msgstr ""
 
-#: src/gui/cef/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr ""
 
