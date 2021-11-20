@@ -46,12 +46,12 @@ endif()
 
 ExternalProject_Add(GTest
                     PREFIX "external"
-                    URL "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
+                    URL "https://github.com/google/googletest/archive/release-1.11.0.tar.gz"
                     CMAKE_ARGS -Dgtest_force_shared_crt=ON
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
 set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
-set (GTEST_LIBRARIES "${BINARY_DIR}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set (GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if (NOT DEFINED LIBLOOT_URL)
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")

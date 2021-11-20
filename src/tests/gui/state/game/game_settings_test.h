@@ -41,7 +41,7 @@ protected:
 // but we only have the one so no prefix is necessary.
 // Just test with one game because if it works for one it will work for them
 // all.
-INSTANTIATE_TEST_CASE_P(, GameSettingsTest, ::testing::Values(GameType::tes3,
+INSTANTIATE_TEST_SUITE_P(, GameSettingsTest, ::testing::Values(GameType::tes3,
   GameType::tes4,
   GameType::tes5,
   GameType::fo3,
