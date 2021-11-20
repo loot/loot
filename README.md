@@ -54,7 +54,6 @@ LOOT uses the following CMake variables to set build parameters:
 
 Parameter | Values | Default |Description
 ----------|--------|---------|-----------
-`MSVC_STATIC_RUNTIME` | `ON`, `OFF` | `OFF` | Whether to link the C++ runtime statically or not when building with MSVC.
 `LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost.

@@ -3,14 +3,6 @@ cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 include(ExternalProject)
 
-option(MSVC_STATIC_RUNTIME "Build with static runtime libs (/MT)" OFF)
-
-IF (${MSVC_STATIC_RUNTIME})
-    set (MSVC_SHARED_RUNTIME OFF)
-ELSE()
-    set (MSVC_SHARED_RUNTIME ON)
-ENDIF()
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -42,12 +34,7 @@ include_directories("${CMAKE_BINARY_DIR}/generated")
 
 set (Boost_USE_STATIC_LIBS ON)
 set (Boost_USE_MULTITHREADED ON)
-
-IF (MSVC)
-    set (Boost_USE_STATIC_RUNTIME ${MSVC_STATIC_RUNTIME})
-ELSE()
-    set (Boost_USE_STATIC_RUNTIME OFF)
-ENDIF()
+set (Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost REQUIRED COMPONENTS locale system)
 
@@ -60,7 +47,7 @@ endif()
 ExternalProject_Add(GTest
                     PREFIX "external"
                     URL "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
-                    CMAKE_ARGS -Dgtest_force_shared_crt=${MSVC_SHARED_RUNTIME}
+                    CMAKE_ARGS -Dgtest_force_shared_crt=ON
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
 set (GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
@@ -139,7 +126,7 @@ ExternalProject_Add(cef
                     PREFIX "external"
                     URL ${CEF_URL}
                     URL_HASH SHA1=${CEF_URL_HASH}
-                    CMAKE_ARGS -DUSE_SANDBOX=OFF
+                    CMAKE_ARGS -DUSE_SANDBOX=OFF -DCEF_RUNTIME_LIBRARY_FLAG=/MD
                     BUILD_COMMAND ${CEF_BUILD_COMMAND}
                     INSTALL_COMMAND "")
 ExternalProject_Get_Property(cef SOURCE_DIR BINARY_DIR)
@@ -326,18 +313,6 @@ IF (MSVC)
 
     # Set /bigobj to allow building Debug tests
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /bigobj")
-
-    # Update compiler flags.
-    IF (MSVC_STATIC_RUNTIME)
-        FOREACH(flag
-            CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
-            CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT
-            CMAKE_CXX_FLAGS_RELEASE  CMAKE_CXX_FLAGS_RELWITHDEBINFO
-            CMAKE_CXX_FLAGS_DEBUG  CMAKE_CXX_FLAGS_DEBUG_INIT)
-            STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
-            SET("${flag}" "${${flag}} /EHsc")
-        ENDFOREACH()
-    ENDIF ()
 
     set (LOOT_GUI_LIBS comctl32
                        Psapi)

@@ -277,7 +277,7 @@ jobs:
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 15 2017" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DMSVC_STATIC_RUNTIME=ON
+          cmake .. -G "Visual Studio 15 2017" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
