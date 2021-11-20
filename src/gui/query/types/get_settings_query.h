@@ -38,7 +38,7 @@ class GetSettingsQuery : public Query {
 public:
   GetSettingsQuery(const LootSettings& settings) : settings_(settings) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Getting LOOT's settings.");
@@ -59,7 +59,7 @@ public:
         {"preludeBranch", settings_.getPreludeRepositoryBranch()}
     };
 
-    return json.dump();
+    return json;
   }
 
 private:

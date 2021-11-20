@@ -35,11 +35,11 @@ public:
   DiscardUnappliedChangesQuery(UnappliedChangeCounter& unappliedChangeCounter) :
       unappliedChangeCounter_(unappliedChangeCounter) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     while (unappliedChangeCounter_.HasUnappliedChanges())
       unappliedChangeCounter_.DecrementUnappliedChangeCounter();
 
-    return "";
+    return nlohmann::json();
   }
 
 private:

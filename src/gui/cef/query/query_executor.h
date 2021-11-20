@@ -48,7 +48,7 @@ public:
 
   void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
     try {
-      callback->Success(query_->executeLogic());
+      callback->Success(query_->executeLogic().dump());
     } catch (std::exception& e) {
       auto logger = getLogger();
       if (logger) {

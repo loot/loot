@@ -38,7 +38,7 @@ TEST(GetSettingsQuery, shouldIncludeThemeInOutput) {
   GetSettingsQuery query(settings);
   auto json = query.executeLogic();
 
-  EXPECT_NE(std::string::npos, json.find("\"theme\":\"test\""));
+  EXPECT_EQ("test", json.at("theme"));
 }
 
 TEST(GetSettingsQuery, shouldIncludePreludeURLInOutput) {
@@ -48,7 +48,7 @@ TEST(GetSettingsQuery, shouldIncludePreludeURLInOutput) {
   GetSettingsQuery query(settings);
   auto json = query.executeLogic();
 
-  EXPECT_NE(std::string::npos, json.find("\"preludeURL\":\"test\""));
+  EXPECT_EQ("test", json.at("preludeURL"));
 }
 
 TEST(GetSettingsQuery, shouldIncludePreludeBranchInOutput) {
@@ -58,7 +58,7 @@ TEST(GetSettingsQuery, shouldIncludePreludeBranchInOutput) {
   GetSettingsQuery query(settings);
   auto json = query.executeLogic();
 
-  EXPECT_NE(std::string::npos, json.find("\"preludeBranch\":\"test\""));
+  EXPECT_EQ("test", json.at("preludeBranch"));
 }
 }
 }

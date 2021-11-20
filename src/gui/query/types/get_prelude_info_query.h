@@ -68,15 +68,13 @@ class GetPreludeInfoQuery : public Query {
 public:
   GetPreludeInfoQuery(std::filesystem::path filePath) : filePath_(filePath) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Getting the masterlist prelude's revision.");
     }
 
-    nlohmann::json json = GetMasterlistPreludeRevision(filePath_);
-
-    return json.dump();
+    return GetMasterlistPreludeRevision(filePath_);
   }
 
 private:

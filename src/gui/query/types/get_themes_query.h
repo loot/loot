@@ -38,7 +38,7 @@ class GetThemesQuery : public Query {
 public:
   GetThemesQuery(const std::filesystem::path resourcesPath) : resourcesPath_(resourcesPath) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Getting LOOT's installed themes.");
@@ -47,7 +47,7 @@ public:
     nlohmann::json json;
     json["themes"] = findThemes();
 
-    return json.dump();
+    return json;
   }
 
 private:

@@ -36,7 +36,7 @@ along with LOOT.  If not, see
 namespace loot {
 class GetGameTypesQuery : public Query {
 public:
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Getting LOOT's supported game types.");
@@ -45,7 +45,7 @@ public:
   }
 
 private:
-  static std::string getGameTypesAsJson() {
+  static nlohmann::json getGameTypesAsJson() {
     nlohmann::json json;
 
     json["gameTypes"] = {
@@ -60,7 +60,7 @@ private:
       GameSettings(GameType::fo4vr).FolderName(),
     };
 
-    return json.dump();
+    return json;
   }
 };
 }

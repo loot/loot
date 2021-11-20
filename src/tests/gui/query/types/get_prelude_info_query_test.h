@@ -71,8 +71,8 @@ TEST_F(GetPreludeInfoQueryTest,
   GetPreludeInfoQuery query(preludePath);
 
   auto output = query.executeLogic();
-  EXPECT_NE(std::string::npos, output.find("\"date\""));
-  EXPECT_NE(std::string::npos, output.find("\"id\""));
+  EXPECT_EQ(1, output.count("date"));
+  EXPECT_EQ(1, output.count("id"));
 }
 
 TEST_F(GetPreludeInfoQueryTest,
@@ -91,9 +91,9 @@ TEST_F(GetPreludeInfoQueryTest,
   GetPreludeInfoQuery query(preludePath);
 
   auto output = query.executeLogic();
-  EXPECT_NE(std::string::npos, output.find("\"date\""));
-  EXPECT_NE(std::string::npos, output.find("\"id\""));
-  EXPECT_NE(std::string::npos, output.find("(edited)"));
+  EXPECT_EQ(1, output.count("date"));
+  EXPECT_EQ(1, output.count("id"));
+  EXPECT_NE(std::string::npos, output.value("id", "").find("(edited)"));
 }
 
 TEST_F(
@@ -102,10 +102,8 @@ TEST_F(
   GetPreludeInfoQuery query(preludePath);
 
   auto output = query.executeLogic();
-  auto expectedOutput =
-      "{\"date\":\"Unknown: Git repository missing\",\"id\":\"Unknown: "
-      "Git repository missing\"}";
-  EXPECT_EQ(expectedOutput, output);
+  EXPECT_EQ("Unknown: Git repository missing", output.at("date"));
+  EXPECT_EQ("Unknown: Git repository missing", output.at("id"));
 }
 
 TEST_F(GetPreludeInfoQueryTest,
@@ -115,10 +113,8 @@ TEST_F(GetPreludeInfoQueryTest,
   GetPreludeInfoQuery query(preludePath);
 
   auto output = query.executeLogic();
-  auto expectedOutput =
-      "{\"date\":\"N/A: No masterlist prelude present\",\"id\":\"N/A: No "
-      "masterlist prelude present\"}";
-  EXPECT_EQ(expectedOutput, output);
+  EXPECT_EQ("N/A: No masterlist prelude present", output.at("date"));
+  EXPECT_EQ("N/A: No masterlist prelude present", output.at("id"));
 }
 }
 }

@@ -37,7 +37,7 @@ public:
       game_(game),
       groups_(groups) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->trace("Setting user groups.");
@@ -50,7 +50,7 @@ public:
         {"masterlist", game_.GetMasterlistGroups()},
         {"userlist", game_.GetUserGroups()},
     };
-    return json.dump();
+    return json;
   }
 
 private:

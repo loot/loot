@@ -37,7 +37,7 @@ public:
   ClearAllMetadataQuery(G& game, std::string language) :
       MetadataQuery<G>(game, language) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing all user metadata.");
@@ -72,7 +72,7 @@ private:
     return userlistPluginNames;
   }
 
-  std::string getDerivedMetadataJson(
+  nlohmann::json getDerivedMetadataJson(
       const std::vector<std::string>& userlistPluginNames) {
     nlohmann::json json;
 
@@ -89,7 +89,7 @@ private:
         {"userlist", this->getGame().GetUserGroups()},
     };
 
-    return json.dump();
+    return json;
   }
 };
 }

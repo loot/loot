@@ -35,9 +35,9 @@ public:
   EditorOpenedQuery(UnappliedChangeCounter& unappliedChangeCounter) :
       unappliedChangeCounter_(unappliedChangeCounter) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     unappliedChangeCounter_.IncrementUnappliedChangeCounter();
-    return "";
+    return nlohmann::json();
   }
 
 private:

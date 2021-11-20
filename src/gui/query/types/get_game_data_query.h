@@ -42,7 +42,7 @@ public:
       MetadataQuery<G>(game, language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     sendProgressUpdate_(boost::locale::translate(
         "Parsing, merging and evaluating metadata..."));
 

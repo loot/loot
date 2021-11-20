@@ -40,7 +40,7 @@ public:
       MetadataQuery<G>(game, language),
       counter_(counter) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     counter_.DecrementUnappliedChangeCounter();
     this->getGame().DecrementLoadOrderSortCount();
 
@@ -66,7 +66,7 @@ public:
       json["plugins"].push_back(pluginJson);
     }
 
-    return json.dump();
+    return json;
   }
 
 private:

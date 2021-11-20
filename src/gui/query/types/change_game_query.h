@@ -41,7 +41,7 @@ public:
       language_(language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     gamesManager_.SetCurrentGame(gameFolder_);
 
     GetGameDataQuery<G> subQuery(gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);

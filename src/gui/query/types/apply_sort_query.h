@@ -39,7 +39,7 @@ public:
       counter_(counter),
       plugins_(plugins) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->trace("User has accepted sorted load order, applying it.");
@@ -52,7 +52,7 @@ public:
       throw;
     }
 
-    return "";
+    return nlohmann::json();
   }
 
   std::optional<std::string> getErrorMessage() override { return errorMessage; }

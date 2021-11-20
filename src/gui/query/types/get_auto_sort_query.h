@@ -38,7 +38,7 @@ class GetAutoSortQuery : public Query {
 public:
   GetAutoSortQuery(const LootSettings& settings) : settings_(settings) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Getting whether or not LOOT was run to auto-sort.");
@@ -48,7 +48,7 @@ public:
         {"autoSort", settings_.shouldAutoSort()},
     };
 
-    return json.dump();
+    return json;
   }
 
 private:

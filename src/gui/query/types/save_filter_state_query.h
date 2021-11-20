@@ -39,13 +39,13 @@ public:
       filterId_(filterId),
       enabled_(enabled) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->trace("Saving filter states.");
     }
     settings_.storeFilterState(filterId_, enabled_);
-    return "";
+    return nlohmann::json();
   }
 
 private:

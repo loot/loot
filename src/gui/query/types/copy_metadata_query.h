@@ -40,7 +40,7 @@ public:
       language_(language),
       pluginName_(pluginName) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Copying metadata for plugin {}", pluginName_);
@@ -72,7 +72,7 @@ public:
           "Exported userlist metadata text for \"{}\": {}", pluginName_, text);
     }
 
-    return "";
+    return nlohmann::json();
   }
 
 private:

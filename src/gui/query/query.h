@@ -31,6 +31,7 @@ along with LOOT.  If not, see
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <json.hpp>
 
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -39,7 +40,7 @@ along with LOOT.  If not, see
 namespace loot {
 class Query {
 public:
-  virtual std::string executeLogic() = 0;
+  virtual nlohmann::json executeLogic() = 0;
   virtual std::optional<std::string> getErrorMessage() { return std::nullopt; };
 };
 

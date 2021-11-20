@@ -40,7 +40,7 @@ public:
       readmePath_(readmePath),
       relativeFilePath_(relativeFilePath) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's readme.");
@@ -60,7 +60,7 @@ public:
 
     OpenInDefaultApplication(canonicalPath);
 
-    return "";
+    return nlohmann::json();
   }
 
 private:

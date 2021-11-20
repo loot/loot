@@ -36,7 +36,7 @@ along with LOOT.  If not, see
 namespace loot {
 class GetVersionQuery : public Query {
 public:
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Getting LOOT's version.");
@@ -47,7 +47,7 @@ public:
       { "build", gui::Version::revision },
     };
 
-    return json.dump();
+    return json;
   }
 };
 }

@@ -37,7 +37,7 @@ public:
                      std::string remoteBranch) :
       filePath_(filePath), remoteURL_(remoteURL), remoteBranch_(remoteBranch) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Updating the masterlist prelude.");
@@ -45,12 +45,12 @@ public:
 
     bool wasUpdated = UpdateFile(filePath_, remoteURL_, remoteBranch_);
     if (!wasUpdated) {
-      return "null";
+      return nullptr;
     }
 
     nlohmann::json json = GetMasterlistPreludeRevision(filePath_);
 
-    return json.dump();
+    return json;
   }
 
 private:

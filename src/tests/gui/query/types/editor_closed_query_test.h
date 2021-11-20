@@ -149,7 +149,7 @@ TEST(EditorClosedQuery,
                            {"group", "default"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::NO_MASTERLIST_METADATA_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -167,7 +167,7 @@ TEST(EditorClosedQuery, shouldLeaveGroupUnsetIfThereIsNoNonUserMetadata) {
                           }}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::NO_MASTERLIST_METADATA_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -185,7 +185,7 @@ TEST(EditorClosedQuery,
        {{"name", TestGame::NO_MASTERLIST_METADATA_PLUGIN}, {"group", "DLC"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::NO_MASTERLIST_METADATA_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -203,7 +203,7 @@ TEST(EditorClosedQuery,
                            {"group", "default"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::MASTERLIST_DEFAULT_GROUP_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -221,7 +221,7 @@ TEST(EditorClosedQuery,
        {{"name", TestGame::MASTERLIST_NO_GROUP_PLUGIN}, {"group", "default"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::MASTERLIST_NO_GROUP_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -239,7 +239,7 @@ TEST(EditorClosedQuery,
                            {"group", "default"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::MASTERLIST_DLC_GROUP_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -258,7 +258,7 @@ TEST(EditorClosedQuery,
                            {"group", "DLC"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::MASTERLIST_DEFAULT_GROUP_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -276,7 +276,7 @@ TEST(EditorClosedQuery,
        {{"name", TestGame::MASTERLIST_NO_GROUP_PLUGIN}, {"group", "DLC"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::MASTERLIST_NO_GROUP_PLUGIN,
             responseJson.at("name").get<std::string>());
@@ -295,7 +295,7 @@ TEST(
        {{"name", TestGame::MASTERLIST_LATE_GROUP_PLUGIN}, {"group", "DLC"}}}};
   EditorClosedQuery<TestGame> query(game, counter, "en", json);
 
-  nlohmann::json responseJson = nlohmann::json::parse(query.executeLogic());
+  nlohmann::json responseJson = query.executeLogic();
 
   EXPECT_EQ(TestGame::MASTERLIST_LATE_GROUP_PLUGIN,
             responseJson.at("name").get<std::string>());

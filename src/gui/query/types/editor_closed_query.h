@@ -50,7 +50,7 @@ public:
     }
   }
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     if (applyEdits_) {
       applyUserEdits();
     }

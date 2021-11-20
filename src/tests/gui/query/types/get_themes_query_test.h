@@ -56,7 +56,9 @@ TEST_F(GetThemesQueryTest, executeLogicShouldFindFilesEndingInDotThemeDotCss) {
 
   GetThemesQuery query(resourcesPath);
 
-  EXPECT_EQ("{\"themes\":[\"1\",\"2\"]}", query.executeLogic());
+  nlohmann::json json = {{"themes", {"1", "2"}}};
+
+  EXPECT_EQ(json, query.executeLogic());
 }
 
 TEST_F(GetThemesQueryTest, executeLogicShouldNotFindNonThemeCssFiles) {
@@ -64,7 +66,9 @@ TEST_F(GetThemesQueryTest, executeLogicShouldNotFindNonThemeCssFiles) {
 
   GetThemesQuery query(resourcesPath);
 
-  EXPECT_EQ("{\"themes\":[]}", query.executeLogic());
+  nlohmann::json json = {{"themes", nlohmann::json::array()}};
+
+  EXPECT_EQ(json, query.executeLogic());
 }
 
 TEST_F(GetThemesQueryTest,
@@ -73,7 +77,9 @@ TEST_F(GetThemesQueryTest,
 
   GetThemesQuery query(resourcesPath);
 
-  EXPECT_EQ("{\"themes\":[]}", query.executeLogic());
+  nlohmann::json json = {{"themes", nlohmann::json::array()}};
+
+  EXPECT_EQ(json, query.executeLogic());
 }
 }
 }

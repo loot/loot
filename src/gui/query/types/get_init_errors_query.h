@@ -38,11 +38,11 @@ class GetInitErrorsQuery : public Query {
 public:
   GetInitErrorsQuery(const LootState& state) : state_(state) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     nlohmann::json json;
     json["errors"] = state_.getInitErrors();
 
-    return json.dump();
+    return json;
   }
 
 private:

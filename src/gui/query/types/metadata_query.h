@@ -111,17 +111,17 @@ protected:
     return derived;
   }
 
-  std::string generateJsonResponse(const std::string& pluginName) {
+  nlohmann::json generateJsonResponse(const std::string& pluginName) {
     auto derivedMetadata = generateDerivedMetadata(pluginName);
     if (derivedMetadata.has_value()) {
-      return nlohmann::json(derivedMetadata.value()).dump();
+      return nlohmann::json(derivedMetadata.value());
     }
 
     return "";
   }
 
   template<typename InputIterator>
-  std::string generateJsonResponse(InputIterator firstPlugin,
+  nlohmann::json generateJsonResponse(InputIterator firstPlugin,
                                    InputIterator lastPlugin) {
     nlohmann::json json = {
         {"folder", game_.FolderName()},
@@ -140,7 +140,7 @@ protected:
       json["plugins"].push_back(generateDerivedMetadata(*it));
     }
 
-    return json.dump();
+    return json;
   }
 
   G& getGame() {

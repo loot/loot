@@ -42,7 +42,7 @@ public:
       game_(game),
       plugins_(plugins) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     Counters counters;
     std::stringstream stream;
     for (const auto& pluginName : plugins_) {
@@ -50,7 +50,7 @@ public:
     }
 
     copyToClipboard(stream.str());
-    return "";
+    return nlohmann::json();
   }
 
 private:

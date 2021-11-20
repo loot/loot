@@ -36,9 +36,9 @@ public:
   RedatePluginsQuery(G& game) :
       game_(game) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     game_.RedatePlugins();
-    return "";
+    return nlohmann::json();
   }
 
 private:

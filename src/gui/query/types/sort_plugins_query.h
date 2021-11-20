@@ -44,7 +44,7 @@ public:
       counter_(counter),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Beginning sorting operation.");
@@ -66,7 +66,7 @@ public:
       throw;
     }
 
-    std::string json = generateJsonResponse(plugins);
+    auto json = generateJsonResponse(plugins);
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty())
@@ -91,7 +91,7 @@ private:
     this->getGame().SetLoadOrder(plugins);
   }
 
-  std::string generateJsonResponse(const std::vector<std::string>& plugins) {
+  nlohmann::json generateJsonResponse(const std::vector<std::string>& plugins) {
     nlohmann::json json = {
         {"generalMessages", this->getGeneralMessages()},
         {"plugins", nlohmann::json::array()},
@@ -113,7 +113,7 @@ private:
       json["plugins"].push_back(derivedMetadata);
     }
 
-    return json.dump();
+    return json;
   }
 
   UnappliedChangeCounter& counter_;

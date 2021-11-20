@@ -37,12 +37,12 @@ class CopyContentQuery : public ClipboardQuery {
 public:
   CopyContentQuery(const nlohmann::json& content) : content_(content) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     const std::string text =
         "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
 
     copyToClipboard(text);
-    return "";
+    return nlohmann::json();
   }
 
 private:

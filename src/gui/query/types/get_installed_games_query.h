@@ -39,7 +39,7 @@ public:
   GetInstalledGamesQuery(const GamesManager& gamesManager) :
       gamesManager_(gamesManager) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Getting LOOT's detected games.");
@@ -48,11 +48,11 @@ public:
   }
 
 private:
-  std::string getInstalledGamesAsJson() const {
+  nlohmann::json getInstalledGamesAsJson() const {
     nlohmann::json json;
     json["installedGames"] = gamesManager_.GetInstalledGameFolderNames();
 
-    return json.dump();
+    return json;
   }
 
   const GamesManager& gamesManager_;

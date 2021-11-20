@@ -37,7 +37,7 @@ public:
       state_(state),
       settings_(settings) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->trace(

@@ -40,7 +40,7 @@ public:
       MetadataQuery<G>(game, language),
       pluginName_(pluginName) {}
 
-  std::string executeLogic() {
+  nlohmann::json executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Searching for plugins that conflict with {}",
@@ -57,7 +57,7 @@ public:
   }
 
 private:
-  std::string getJsonResponse() {
+  nlohmann::json getJsonResponse() {
     nlohmann::json json = {
         {"generalMessages", this->getGeneralMessages()},
         {"plugins", nlohmann::json::array()},
@@ -76,7 +76,7 @@ private:
       });
     }
 
-    return json.dump();
+    return json;
   }
 
   bool doPluginsConflict(
