@@ -104,7 +104,9 @@ jobs:
         run: node scripts\potomo.js
 
       - name: Build archive
-        run: node scripts\archive.js . ${{ needs.create_release.outputs.git_tag }}
+        run: |
+          $env:PATH="${{ steps.qt-metadata.outputs.root }}/bin;$env:PATH"
+          node scripts\archive.js . ${{ needs.create_release.outputs.git_tag }}
 
       - name: Build installer
         run: scripts\build_installer.ps1 -LOOTIs64Bit

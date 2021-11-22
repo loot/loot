@@ -194,6 +194,7 @@ jobs:
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           FILENAME="loot_${VERSION}-Linux.tar.xz"
+          export PATH="${{ steps.qt-metadata.outputs.root }}/bin:$PATH"
 
           node scripts/archive.js . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
@@ -328,6 +329,7 @@ jobs:
 
       - name: Build archive
         run: |
+          $env:PATH="${{ steps.qt-metadata.outputs.root }}/bin;$env:PATH"
           node scripts\archive.js . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
 

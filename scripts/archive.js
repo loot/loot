@@ -67,6 +67,19 @@ function compress(sourcePath, destPath) {
   });
 }
 
+function copyQtResources(executablePath, outputPath) {
+  if (os.platform() !== 'win32') {
+    return;
+  }
+
+  helpers.safeExecFileSync('windeployqt.exe', [
+    '--release',
+    '--dir',
+    outputPath,
+    executablePath
+  ]);
+}
+
 function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   // Ensure that the output directory is empty.
   fs.emptyDirSync(tempPath);
@@ -76,6 +89,7 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   if (os.platform() === 'win32') {
     binaries = [
       'LOOT.exe',
+      'LOOT_qt.exe',
       'loot.dll',
       'chrome_elf.dll',
       'd3dcompiler_47.dll',
@@ -89,9 +103,12 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       'icudtl.dat',
       'resources.pak'
     ];
+
+    copyQtResources(path.join(releasePath, 'LOOT_qt.exe'), tempPath);
   } else {
     binaries = [
       'LOOT',
+      'LOOT_qt',
       'libloot.so',
       'chrome-sandbox',
       'libcef.so',
