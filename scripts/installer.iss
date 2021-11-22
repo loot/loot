@@ -20,6 +20,12 @@
 #define SimplifiedChineseExists
 #endif
 
+#ifdef MyAppIs64Bit
+#define VCRedistArch "x64"
+#else
+#define VCRedistArch "x86"
+#endif
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -44,6 +50,11 @@ DisableDirPage=no
 DisableReadyPage=yes
 DisableProgramGroupPage=yes
 WizardStyle=modern
+
+#ifdef MyAppIs64Bit
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
+#endif
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -145,7 +156,7 @@ DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "{tmp}\vc_redist.x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
+Source: "{tmp}\vc_redist.{#VCRedistArch}.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -153,7 +164,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
+Filename: "{tmp}\vc_redist.{#VCRedistArch}.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -269,14 +280,6 @@ begin
   end;
 end;
 
-function GetHKCR: Integer;
-begin
-  if IsWin64 then
-    Result := HKEY_CLASSES_ROOT_64
-  else
-    Result := HKEY_CLASSES_ROOT_32
-end;
-
 function VCRedistNeedsInstall: Boolean;
 var
   SubKeyName: String;
@@ -285,41 +288,42 @@ var
   InstalledVersionMajor: Cardinal;
   InstalledVersionMinor: Cardinal;
   InstalledVersionBld: Cardinal;
+  Arch: String;
 begin
-  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86';
+  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\{#VCRedistArch}';
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Installed', IsRuntimeInstalled);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Installed', IsRuntimeInstalled);
 
   if (IsSuccessful = False) or (IsRuntimeInstalled <> 1) then begin
-    Log('MSVC 14.0 x86 runtime is not installed');
+    Log('MSVC 14.0 {#VCRedistArch} runtime is not installed');
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Major', InstalledVersionMajor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Major', InstalledVersionMajor);
 
   if (IsSuccessful = False) or (InstalledVersionMajor <> 14) then begin
-    Log('MSVC 14.0 x86 runtime major version is not 14: ' + IntToStr(InstalledVersionMajor));
+    Log('MSVC 14.0 {#VCRedistArch} runtime major version is not 14: ' + IntToStr(InstalledVersionMajor));
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Minor', InstalledVersionMinor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Minor', InstalledVersionMinor);
 
   if (IsSuccessful = False) or (InstalledVersionMinor < 15) then begin
-    Log('MSVC 14.0 x86 runtime major version is less than 15: ' + IntToStr(InstalledVersionMinor));
+    Log('MSVC 14.0 {#VCRedistArch} runtime major version is less than 15: ' + IntToStr(InstalledVersionMinor));
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE_32, SubKeyName, 'Bld', InstalledVersionBld);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Bld', InstalledVersionBld);
 
   if (IsSuccessful = False) or (InstalledVersionBld < 26706) then begin
-    Log('MSVC 14.0 x86 runtime build is less than 26706: ' + IntToStr(InstalledVersionBld));
+    Log('MSVC 14.0 {#VCRedistArch} runtime build is less than 26706: ' + IntToStr(InstalledVersionBld));
     Result := True
   end
   else begin
-    Log('MSVC 14.0 x86 runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
+    Log('MSVC 14.0 {#VCRedistArch} runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
     Result := False;
   end;
 end;
@@ -364,7 +368,7 @@ begin
         Log(Format('Current page ID: %d', [CurPageID]));
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
     DownloadPage.Clear;
-    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x86.exe', 'vc_redist.x86.exe', '');
+    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.{#VCRedistArch}.exe', 'vc_redist.{#VCRedistArch}.exe', '');
     DownloadPage.Show;
     try
       try

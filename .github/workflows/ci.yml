@@ -334,7 +334,11 @@ jobs:
 
       - name: Build installer
         run: |
-          scripts\build_installer.ps1
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            scripts\build_installer.ps1
+          } else {
+            scripts\build_installer.ps1 -LOOTIs64Bit
+          }
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
       - name: Upload archive
