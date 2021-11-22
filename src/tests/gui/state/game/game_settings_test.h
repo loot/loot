@@ -141,7 +141,7 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 611660\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/fallout4.git", settings_.RepoURL());
+      EXPECT_EQ("https://github.com/loot/fallout4vr.git", settings_.RepoURL());
       break;
     case GameType::tes3:
       EXPECT_EQ("TES III: Morrowind", settings_.Name());
@@ -222,7 +222,7 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 611670\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/skyrimse.git", settings_.RepoURL());
+      EXPECT_EQ("https://github.com/loot/skyrimvr.git", settings_.RepoURL());
       break;
     default:
       FAIL();

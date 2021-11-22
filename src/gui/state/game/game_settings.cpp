@@ -106,7 +106,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = 1.7f;
-    repositoryURL_ = "https://github.com/loot/skyrimse.git";
+    repositoryURL_ = "https://github.com/loot/skyrimvr.git";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
     registryKeys_ = {
@@ -160,7 +160,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = 0.95f;
-    repositoryURL_ = "https://github.com/loot/fallout4.git";
+    repositoryURL_ = "https://github.com/loot/fallout4vr.git";
   }
 
   if (!folder.empty())
