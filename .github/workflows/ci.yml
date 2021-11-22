@@ -194,10 +194,6 @@ jobs:
   windows:
     runs-on: windows-2019
 
-    strategy:
-      matrix:
-        platform: [Win32, x64]
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -232,15 +228,8 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          if ("${{ matrix.platform }}" -eq "Win32") {
-            $addressModel = 32
-          } else {
-            $addressModel = 64
-          }
-
-          echo "::set-output name=address-model::$addressModel"
           echo "::set-output name=root::${{ github.workspace }}/boost_1_77_0"
-          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib"
+          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/64/lib"
 
       - name: Boost cache
         id: boost-cache
@@ -249,7 +238,7 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
+          key: ${{ runner.os }}-x64-Boost-1.77.0
 
       - name: Install JS dependencies
         run: npm ci
@@ -271,13 +260,13 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
@@ -319,13 +308,7 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          if [[ "${{ matrix.platform }}" == "Win32" ]]
-          then
-            PLATFORM=win32
-          else
-            PLATFORM=win64
-          fi
-          echo "::set-output name=basename::loot_${VERSION}-${PLATFORM}"
+          echo "::set-output name=basename::loot_${VERSION}-win64"
 
       - name: Build archive
         run: |
@@ -334,11 +317,7 @@ jobs:
 
       - name: Build installer
         run: |
-          if ("${{ matrix.platform }}" -eq "Win32") {
-            scripts\build_installer.ps1
-          } else {
-            scripts\build_installer.ps1 -LOOTIs64Bit
-          }
+          scripts\build_installer.ps1 -LOOTIs64Bit
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
       - name: Upload archive
@@ -346,11 +325,11 @@ jobs:
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
           path: build/${{ steps.get-artifact-basename.outputs.basename }}.7z
-        if: github.event_name == 'push' && matrix.platform == 'Win32'
+        if: github.event_name == 'push'
 
       - name: Upload installer
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
           path: build/${{ steps.get-artifact-basename.outputs.basename }}.exe
-        if: github.event_name == 'push' && matrix.platform == 'Win32'
+        if: github.event_name == 'push'
