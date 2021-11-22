@@ -91,8 +91,8 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          echo "::set-output name=root::~/boost_1_72_0"
-          echo "::set-output name=librarydir::~/boost_1_72_0/stage/64/lib"
+          echo "::set-output name=root::~/boost_1_77_0"
+          echo "::set-output name=librarydir::~/boost_1_77_0/stage/64/lib"
 
       - name: Boost cache
         id: boost-cache
@@ -101,7 +101,7 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-Boost-1.72.0
+          key: ${{ runner.os }}-Boost-1.77.0
 
       - name: Install JS dependencies
         run: npm ci
@@ -133,7 +133,7 @@ jobs:
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ~ --boost-version 1.72.0 -a 64 -t gcc-8 locale system
+          python install_boost.py --directory ~ --boost-version 1.77.0 -a 64 -t gcc-8 locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Run CMake
@@ -239,8 +239,8 @@ jobs:
           }
 
           echo "::set-output name=address-model::$addressModel"
-          echo "::set-output name=root::${{ github.workspace }}/boost_1_72_0"
-          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_72_0/stage/$addressModel/lib"
+          echo "::set-output name=root::${{ github.workspace }}/boost_1_77_0"
+          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib"
 
       - name: Boost cache
         id: boost-cache
@@ -249,7 +249,7 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.72.0
+          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
 
       - name: Install JS dependencies
         run: npm ci
@@ -271,7 +271,7 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.72.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Run CMake
