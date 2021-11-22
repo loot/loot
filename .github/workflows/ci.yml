@@ -16,7 +16,7 @@ jobs:
   # and we don't want to do that as a pre-build step in case the build fails
   # and we're left with no artifacts published.
   publish-to-artifactory:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: [linux, windows]
     if: github.event_name == 'push'
 
@@ -63,7 +63,7 @@ jobs:
           done
 
   linux:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
