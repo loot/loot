@@ -27,7 +27,7 @@ Refer to `.github/workflows/release.yml` for the build process.
 
 ### Windows
 
-The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017 and 7-zip are already installed.
+The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2019 and 7-zip are already installed.
 
 ### Linux
 

@@ -164,7 +164,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.{#VCRedistArch}.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2017 Redistributable...
+Filename: "{tmp}\vc_redist.{#VCRedistArch}.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2019 Redistributable...
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.

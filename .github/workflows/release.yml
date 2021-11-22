@@ -29,10 +29,10 @@ jobs:
           release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
           draft: true
           body: |
-            Requires Windows 7 or later and the [MSVC 2017 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+            Requires Windows 7 or later and the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
 
   windows:
-    runs-on: windows-2016
+    runs-on: windows-2019
     needs: create_release
     steps:
       - uses: actions/checkout@v2
@@ -79,7 +79,7 @@ jobs:
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 15 2017" -A Win32 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}"
+          cmake .. -G "Visual Studio 16 2019" -A Win32 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}"
           cmake --build . --config Release
 
       - uses: actions/setup-python@v2
