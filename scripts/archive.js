@@ -151,14 +151,6 @@ function replaceInvalidFilenameCharacters(filename) {
   return filename.replace(/[/<>"|]/g, '-');
 }
 
-function getFilenameSuffix(label, gitDescription) {
-  if (label) {
-    return replaceInvalidFilenameCharacters(`${gitDescription}_${label}`);
-  }
-
-  return replaceInvalidFilenameCharacters(gitDescription);
-}
-
 function getArchiveFileExtension() {
   if (os.platform() === 'win32') {
     return '.7z';
@@ -171,12 +163,11 @@ const [, , rootPath = '.', givenBranch = undefined] = process.argv;
 const gitDesc = getGitDescription(givenBranch);
 const fileExtension = getArchiveFileExtension();
 
-helpers.getAppReleasePaths(rootPath).forEach(releasePath => {
-  const filename = `loot_${getFilenameSuffix(releasePath.label, gitDesc)}`;
-  createAppArchive(
-    rootPath,
-    releasePath.path,
-    path.join(rootPath, 'build', filename),
-    path.join(rootPath, 'build', filename + fileExtension)
-  );
-});
+const releasePath = helpers.getAppReleasePath(rootPath);
+const filename = `loot_${replaceInvalidFilenameCharacters(gitDesc)}`;
+createAppArchive(
+  rootPath,
+  releasePath,
+  path.join(rootPath, 'build', filename),
+  path.join(rootPath, 'build', filename + fileExtension)
+);

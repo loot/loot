@@ -21,40 +21,12 @@ function fileExists(filePath) {
   return false;
 }
 
-function getBinaryParentPaths(rootPath) {
-  const paths = [
-    {
-      path: path.join(rootPath, 'build'),
-      label: null
-    },
-    {
-      path: path.join(rootPath, 'build', '32'),
-      label: '32-bit'
-    },
-    {
-      path: path.join(rootPath, 'build', '64'),
-      label: '64-bit'
-    }
-  ];
-
+function getAppReleasePath(rootPath) {
   if (os.platform() === 'win32') {
-    paths.forEach(parentPath => {
-      parentPath.path = path.join(parentPath.path, 'Release');
-    });
+    return path.join(rootPath, 'build', 'Release');
   }
 
-  return paths;
-}
-
-function getAppReleasePaths(rootPath) {
-  let file = 'LOOT';
-  if (os.platform() === 'win32') {
-    file += '.exe';
-  }
-
-  return getBinaryParentPaths(rootPath).filter(parentPath =>
-    fileExists(path.join(parentPath.path, file))
-  );
+  return path.join(rootPath, 'build');
 }
 
 function safeExecFileSync(file, args, options) {
@@ -66,5 +38,5 @@ function safeExecFileSync(file, args, options) {
 }
 
 module.exports.fileExists = fileExists;
-module.exports.getAppReleasePaths = getAppReleasePaths;
+module.exports.getAppReleasePath = getAppReleasePath;
 module.exports.safeExecFileSync = safeExecFileSync;

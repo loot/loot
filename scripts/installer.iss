@@ -20,12 +20,6 @@
 #define SimplifiedChineseExists
 #endif
 
-#if FileExists(SourcePath + '..\build\32\Release\LOOT.exe')
-#define buildir "build\32"
-#else
-#define buildir "build"
-#endif
-
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -81,39 +75,39 @@ Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#buildir}\Release\LOOT.exe"; \
+Source: "build\Release\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\loot.dll"; \
+Source: "build\Release\loot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\chrome_100_percent.pak"; \
+Source: "build\Release\chrome_100_percent.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\chrome_200_percent.pak"; \
+Source: "build\Release\chrome_200_percent.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\d3dcompiler_47.dll"; \
+Source: "build\Release\d3dcompiler_47.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\resources.pak"; \
+Source: "build\Release\resources.pak"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\icudtl.dat"; \
+Source: "build\Release\icudtl.dat"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\chrome_elf.dll"; \
+Source: "build\Release\chrome_elf.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\libcef.dll"; \
+Source: "build\Release\libcef.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\libEGL.dll"; \
+Source: "build\Release\libEGL.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\libGLESv2.dll"; \
+Source: "build\Release\libGLESv2.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\snapshot_blob.bin"; \
+Source: "build\Release\snapshot_blob.bin"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\v8_context_snapshot.bin"; \
+Source: "build\Release\v8_context_snapshot.bin"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "{#buildir}\Release\resources\l10n\en-US.pak"; \
+Source: "build\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
-Source: "{#buildir}\docs\html\*"; \
+Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 
-Source: "{#buildir}\Release\resources\ui\*"; \
+Source: "build\Release\resources\ui\*"; \
 DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
 Source: "resources\l10n\bg\LC_MESSAGES\loot.mo"; \

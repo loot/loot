@@ -1,9 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { getAppReleasePaths } = require('./scripts/helpers');
+const { getAppReleasePath } = require('./scripts/helpers');
 
-const releasePath = getAppReleasePaths(__dirname)[0].path;
+const releasePath = getAppReleasePath(__dirname);
 
 // Constant with our paths
 const paths = {
