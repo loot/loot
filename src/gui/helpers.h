@@ -26,6 +26,7 @@
 #define LOOT_GUI_HELPERS
 
 #include <loot/enum/message_type.h>
+#include <loot/struct/simple_message.h>
 
 #include <filesystem>
 
@@ -55,5 +56,9 @@ std::filesystem::path getLocalAppDataPath();
 MessageType mapMessageType(const std::string& type);
 
 void CopyToClipboard(const std::string& text);
+
+std::string crcToString(uint32_t crc);
+
+std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages);
 }
 #endif

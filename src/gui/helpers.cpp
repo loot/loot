@@ -44,6 +44,8 @@
 using icu::UnicodeString;
 #endif
 
+#include <boost/format.hpp>
+
 #include "gui/state/logging.h"
 
 namespace loot {
@@ -295,5 +297,33 @@ void CopyToClipboard(const std::string& text) {
         "Failed to run clipboard copy command: " + copyCommand);
   }
 #endif
+}
+
+std::string crcToString(uint32_t crc) {
+  return (boost::format("%08X") % crc).str();
+}
+
+std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages) {
+  if (messages.empty()) {
+    return "";
+  }
+
+  std::string content = "## Messages\n\n";
+
+  for (const auto& message : messages) {
+    content += "- ";
+
+    if (message.type == MessageType::warn) {
+      content += "Warning: ";
+    } else if (message.type == MessageType::error) {
+      content += "Error: ";
+    } else {
+      content += "Note: ";
+    }
+
+    content += message.text + "\n";
+  }
+
+  return content;
 }
 }

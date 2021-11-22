@@ -82,6 +82,14 @@ LOOT Documentation
 .. include:: MIT License (Marked).txt
   :literal:
 
+`Material Icons`_
+=================
+
+.. _Material Icons: https://fonts.google.com/icons
+
+.. include:: Apache-LICENSE-2.0.txt
+  :literal:
+
 `nlohmann/json`_
 ================
 

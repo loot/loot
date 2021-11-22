@@ -107,6 +107,8 @@ public:
     return gamesSettings;
   }
 
+  bool HasCurrentGame() const { return currentGame_ != installedGames_.end(); }
+
   gui::Game& GetCurrentGame() {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 

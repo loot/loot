@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.6)
+cmake_minimum_required (VERSION 3.16)
 cmake_policy(SET CMP0015 NEW)
 project (LOOT)
 include(ExternalProject)
@@ -6,6 +6,10 @@ include(ExternalProject)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 ##############################
 # Get Build Revision
@@ -43,6 +47,8 @@ if (NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
     include_directories($ICU_INCLUDE_DIRS)
     link_directories($ICU_LIBRARY_DIRS)
 endif()
+
+find_package(Qt6 COMPONENTS Widgets Network REQUIRED)
 
 ExternalProject_Add(GTest
                     PREFIX "external"
@@ -163,6 +169,105 @@ set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
 ##############################
 # General Settings
 ##############################
+
+set (LOOT_QT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
+                "${CMAKE_SOURCE_DIR}/resources/resources.qrc"
+                "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_states.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_widget.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/general_info.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/general_info_card.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/edge.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/groups_editor_dialog.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/graph_view.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/node.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/icon_factory.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/main.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/main_window.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/messages_widget.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_card.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/delegates.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/group_tab.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/message_content_editor.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/file_table_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/location_table_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/message_content_table_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/message_table_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/tag_table_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/plugin_editor_widget.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/table_tabs.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_filter_model.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/search_dialog.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/game_tab.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/general_tab.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/new_game_dialog.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/qt/style.cpp"
+                "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/logging.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
+
+set (LOOT_QT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/application_mutex.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_states.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_widget.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/general_info.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/general_info_card.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/edge.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/groups_editor_dialog.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/graph_view.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/node.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/icon_factory.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/main_window.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/messages_widget.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_card.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/delegates.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/group_tab.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/message_content_editor.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/cleaning_data_table_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/file_table_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/location_table_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/message_content_table_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/message_table_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/tag_table_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/plugin_editor_widget.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/table_tabs.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_filter_model.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/query_worker_thread.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/search_dialog.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/game_tab.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/general_tab.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/new_game_dialog.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/qt/style.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection_error.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/logging.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/state/unapplied_change_counter.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/resource.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
 set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/main.cpp"
@@ -308,6 +413,8 @@ IF (CMAKE_COMPILER_IS_GNUCXX)
 ENDIF ()
 
 IF (MSVC)
+    list(APPEND LOOT_QT_GUI_SRC "${CMAKE_SOURCE_DIR}/resources/resources.windows.qrc")
+
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive-")
 
@@ -327,6 +434,11 @@ add_executable       (LOOT ${LOOT_GUI_SRC} ${LOOT_GUI_HEADERS})
 add_dependencies     (LOOT cef cpptoml json libloot spdlog)
 target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
 
+# Build Qt application.
+add_executable(LOOT_qt ${LOOT_QT_GUI_SRC}  ${LOOT_QT_GUI_HEADERS})
+add_dependencies     (LOOT_qt cpptoml json libloot spdlog)
+target_link_libraries(LOOT_qt PRIVATE Qt6::Widgets Qt6::Network ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
+
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
 add_dependencies     (loot_gui_tests cpptoml json libloot spdlog GTest testing-plugins)
@@ -343,6 +455,8 @@ IF (MSVC)
         set (LOOT_LINK_FLAGS "${EXISTING_LINK_FLAGS} ${LOOT_LINK_FLAGS}")
     ENDIF ()
     set_target_properties (LOOT PROPERTIES LINK_FLAGS ${LOOT_LINK_FLAGS})
+
+    set_target_properties(LOOT_qt PROPERTIES WIN32_EXECUTABLE TRUE)
 ENDIF ()
 
 ##############################
@@ -356,6 +470,11 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         COMMAND "mt.exe" -manifest \"${CMAKE_SOURCE_DIR}/src/gui/LOOT.exe.manifest\" -inputresource:"$(TargetDir)$(TargetFileName)"\;\#1 -outputresource:"$(TargetDir)$(TargetFileName)"\;\#1
         COMMENT "Adding manifest..."
     )
+
+    # Copy Qt binaries and resources.
+    add_custom_command(TARGET LOOT_qt POST_BUILD
+        COMMAND ${Qt6_DIR}/../../../bin/windeployqt --release $<TARGET_FILE:LOOT_qt>
+        COMMENT "Running windeployqt...")
 ENDIF ()
 
 # Copy CEF binaries.

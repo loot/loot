@@ -31,6 +31,7 @@ along with LOOT.  If not, see
 #include <json.hpp>
 #include <optional>
 #include <string>
+#include <variant>
 
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
