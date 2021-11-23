@@ -51,27 +51,7 @@ protected:
     return toSimpleMessages(messages, language_);
   }
 
-  std::optional<PluginMetadata> getNonUserMetadata(
-      const std::shared_ptr<const PluginInterface>& file) {
-    auto fileBashTags = file->GetBashTags();
-    auto masterlistMetadata = game_.GetMasterlistMetadata(file->GetName());
-
-    if (fileBashTags.empty()) {
-      return masterlistMetadata;
-    }
-
-    PluginMetadata metadata(file->GetName());
-    metadata.SetTags(fileBashTags);
-
-    if (masterlistMetadata.has_value()) {
-      masterlistMetadata.value().MergeMetadata(metadata);
-      return masterlistMetadata.value();
-    }
-
-    return metadata;
-  }
-
-  std::optional<DerivedPluginMetadata<G>> generateDerivedMetadata(
+  std::optional<DerivedPluginMetadata> generateDerivedMetadata(
       const std::string& pluginName) {
     auto plugin = game_.GetPlugin(pluginName);
     if (plugin) {
@@ -81,44 +61,18 @@ protected:
     return std::nullopt;
   }
 
-  DerivedPluginMetadata<G> generateDerivedMetadata(
+  DerivedPluginMetadata generateDerivedMetadata(
       const std::shared_ptr<const PluginInterface>& plugin) {
-    auto derived = DerivedPluginMetadata<G>(plugin, game_, language_);
-
-    auto nonUserMetadata = getNonUserMetadata(plugin);
-    if (nonUserMetadata.has_value()) {
-      derived.setMasterlistMetadata(nonUserMetadata.value());
-    }
-
-    auto userMetadata = game_.GetUserMetadata(plugin->GetName());
-    if (userMetadata.has_value()) {
-      derived.setUserMetadata(userMetadata.value());
-    }
-
-    auto evaluatedMetadata = evaluateMetadata(plugin->GetName());
-    if (!evaluatedMetadata.has_value()) {
-      evaluatedMetadata = PluginMetadata(plugin->GetName());
-    }
-
-    auto messages = evaluatedMetadata.value().GetMessages();
-    auto validityMessages =
-        game_.CheckInstallValidity(plugin, evaluatedMetadata.value(), language_);
-    messages.insert(
-        end(messages), begin(validityMessages), end(validityMessages));
-    evaluatedMetadata.value().SetMessages(messages);
-
-    derived.setEvaluatedMetadata(evaluatedMetadata.value());
-
-    return derived;
+    return DerivePluginMetadata(plugin, game_, language_);
   }
 
   template<typename InputIterator>
-  std::vector<DerivedPluginMetadata<G>> generateDerivedMetadata(
+  std::vector<DerivedPluginMetadata> generateDerivedMetadata(
       InputIterator firstPlugin,
       InputIterator lastPlugin) {
-    std::vector<DerivedPluginMetadata<G>> metadata;
+    std::vector<DerivedPluginMetadata> metadata;
     for (auto it = firstPlugin; it != lastPlugin; ++it) {
-      metadata.push_back(generateDerivedMetadata(*it));
+      metadata.push_back(DerivePluginMetadata(*it, game_, language_));
     }
 
     return metadata;
@@ -173,79 +127,6 @@ private:
     }
 
     return simpleMessages;
-  }
-
-  std::optional<PluginMetadata> evaluateMetadata(
-      const std::string& pluginName) {
-    auto evaluatedMasterlistMetadata = evaluateMasterlistMetadata(pluginName);
-    auto evaluatedUserMetadata = evaluateUserlistMetadata(pluginName);
-
-    if (!evaluatedMasterlistMetadata.has_value()) {
-      return evaluatedUserMetadata;
-    }
-
-    if (!evaluatedUserMetadata.has_value()) {
-      return evaluatedMasterlistMetadata;
-    }
-
-    evaluatedUserMetadata.value().MergeMetadata(
-        evaluatedMasterlistMetadata.value());
-
-    return evaluatedUserMetadata;
-  }
-
-  std::optional<PluginMetadata> evaluateMasterlistMetadata(
-      const std::string& pluginName) {
-    try {
-      return game_.GetMasterlistMetadata(pluginName, true);
-    } catch (std::exception& e) {
-      if (logger_) {
-        logger_->error(
-            "\"{}\"'s masterlist metadata contains a condition that "
-            "could not be evaluated. Details: {}",
-            pluginName,
-            e.what());
-      }
-
-      PluginMetadata master(pluginName);
-      master.SetMessages({
-          PlainTextMessage(MessageType::error,
-                  (boost::format(boost::locale::translate(
-                       "\"%1%\" contains a condition that could not be "
-                       "evaluated. Details: %2%")) %
-                   pluginName % e.what())
-                      .str()),
-      });
-
-      return master;
-    }
-  }
-
-  std::optional<PluginMetadata> evaluateUserlistMetadata(
-      const std::string& pluginName) {
-    try {
-      return game_.GetUserMetadata(pluginName, true);
-    } catch (std::exception& e) {
-      if (logger_) {
-        logger_->error(
-            "\"{}\"'s user metadata contains a condition that could "
-            "not be evaluated. Details: {}",
-            pluginName,
-            e.what());
-      }
-
-      PluginMetadata user(pluginName);
-      user.SetMessages({
-          PlainTextMessage(MessageType::error,
-                  (boost::format(boost::locale::translate(
-                       "\"%1%\" contains a condition that could not be "
-                       "evaluated. Details: %2%")) %
-                   pluginName % e.what())
-                      .str()),
-      });
-
-      return user;
-    }
   }
 
   G& game_;

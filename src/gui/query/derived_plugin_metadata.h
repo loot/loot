@@ -26,30 +26,33 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 #define LOOT_GUI_QUERY_DERIVED_PLUGIN_METADATA
 
+#include <loot/api.h>
+
+#include <boost/format.hpp>
+#include <json.hpp>
 #include <optional>
 
-#include <loot/api.h>
-#include <json.hpp>
-
 #include "gui/state/game/game.h"
+#include "gui/state/game/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
-template<typename G>
 class DerivedPluginMetadata {
 public:
   DerivedPluginMetadata(const std::shared_ptr<const PluginInterface>& file,
-                        const G& game,
+                        bool isActive,
+                        std::optional<short> loadOrderIndex,
                         std::string language) :
       name(file->GetName()),
       version(file->GetVersion()),
-      isActive(game.IsPluginActive(file->GetName())),
+      isActive(isActive),
       isDirty(false),
       isEmpty(file->IsEmpty()),
       isMaster(file->IsMaster()),
       isLightPlugin(file->IsLightPlugin()),
       loadsArchive(file->LoadsArchive()),
       crc(file->GetCRC()),
-      loadOrderIndex(game.GetActiveLoadOrderIndex(file, game.GetLoadOrder())),
+      loadOrderIndex(loadOrderIndex),
       currentTags(file->GetBashTags()),
       language(language) {}
 
@@ -99,10 +102,128 @@ private:
 
   std::string language;
 
-  template<typename T>
   friend void to_json(nlohmann::json& json,
-                      const DerivedPluginMetadata<T>& plugin);
+                      const DerivedPluginMetadata& plugin);
 };
+
+template<typename G>
+std::optional<PluginMetadata> evaluateMasterlistMetadata(
+    const G& game,
+    const std::string& pluginName) {
+  try {
+    return game.GetMasterlistMetadata(pluginName, true);
+  } catch (std::exception& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "\"{}\"'s masterlist metadata contains a condition that "
+          "could not be evaluated. Details: {}",
+          pluginName,
+          e.what());
+    }
+
+    PluginMetadata master(pluginName);
+    master.SetMessages({
+        PlainTextMessage(MessageType::error,
+                         (boost::format(boost::locale::translate(
+                              "\"%1%\" contains a condition that could not be "
+                              "evaluated. Details: %2%")) %
+                          pluginName % e.what())
+                             .str()),
+    });
+
+    return master;
+  }
+}
+
+template<typename G>
+std::optional<PluginMetadata> evaluateUserlistMetadata(
+    const G& game,
+    const std::string& pluginName) {
+  try {
+    return game.GetUserMetadata(pluginName, true);
+  } catch (std::exception& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "\"{}\"'s user metadata contains a condition that could "
+          "not be evaluated. Details: {}",
+          pluginName,
+          e.what());
+    }
+
+    PluginMetadata user(pluginName);
+    user.SetMessages({
+        PlainTextMessage(MessageType::error,
+                         (boost::format(boost::locale::translate(
+                              "\"%1%\" contains a condition that could not be "
+                              "evaluated. Details: %2%")) %
+                          pluginName % e.what())
+                             .str()),
+    });
+
+    return user;
+  }
+}
+
+template<typename G>
+std::optional<PluginMetadata> evaluateMetadata(const G& game,
+                                               const std::string& pluginName) {
+  auto evaluatedMasterlistMetadata =
+      evaluateMasterlistMetadata(game, pluginName);
+  auto evaluatedUserMetadata = evaluateUserlistMetadata(game, pluginName);
+
+  if (!evaluatedMasterlistMetadata.has_value()) {
+    return evaluatedUserMetadata;
+  }
+
+  if (!evaluatedUserMetadata.has_value()) {
+    return evaluatedMasterlistMetadata;
+  }
+
+  evaluatedUserMetadata.value().MergeMetadata(
+      evaluatedMasterlistMetadata.value());
+
+  return evaluatedUserMetadata;
+}
+
+template<typename G>
+DerivedPluginMetadata DerivePluginMetadata(
+    const std::shared_ptr<const PluginInterface>& plugin,
+    const G& game,
+    std::string language) {
+  auto isActive = game.IsPluginActive(plugin->GetName());
+  auto loadOrderIndex =
+      game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder());
+  auto derived =
+      DerivedPluginMetadata(plugin, isActive, loadOrderIndex, language);
+
+  auto nonUserMetadata = game.GetNonUserMetadata(plugin);
+  if (nonUserMetadata.has_value()) {
+    derived.setMasterlistMetadata(nonUserMetadata.value());
+  }
+
+  auto userMetadata = game.GetUserMetadata(plugin->GetName());
+  if (userMetadata.has_value()) {
+    derived.setUserMetadata(userMetadata.value());
+  }
+
+  auto evaluatedMetadata = evaluateMetadata(game, plugin->GetName());
+  if (!evaluatedMetadata.has_value()) {
+    evaluatedMetadata = PluginMetadata(plugin->GetName());
+  }
+
+  auto messages = evaluatedMetadata.value().GetMessages();
+  auto validityMessages =
+      game.CheckInstallValidity(plugin, evaluatedMetadata.value(), language);
+  messages.insert(
+      end(messages), begin(validityMessages), end(validityMessages));
+  evaluatedMetadata.value().SetMessages(messages);
+
+  derived.setEvaluatedMetadata(evaluatedMetadata.value());
+
+  return derived;
+}
 }
 
 #endif

@@ -68,7 +68,7 @@ private:
 
     auto plugin = this->getGame().GetPlugin(metadata_.GetName());
     if (plugin) {
-      return MetadataQuery<G>::getNonUserMetadata(plugin);
+      return this->getGame().GetNonUserMetadata(plugin);
     }
 
     return this->getGame().GetMasterlistMetadata(metadata_.GetName());

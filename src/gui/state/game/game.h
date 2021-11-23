@@ -56,7 +56,7 @@ public:
   std::vector<Message> CheckInstallValidity(
       const std::shared_ptr<const PluginInterface>& plugin,
       const PluginMetadata& metadata,
-      const std::string& language);
+      const std::string& language) const;
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
@@ -98,6 +98,9 @@ public:
       bool evaluateConditions = false) const;
   std::optional<PluginMetadata> GetUserMetadata(
       const std::string& pluginName,
+      bool evaluateConditions = false) const;
+  std::optional<PluginMetadata> GetNonUserMetadata(
+      const std::shared_ptr<const PluginInterface>& plugin,
       bool evaluateConditions = false) const;
 
   void SetUserGroups(const std::vector<Group>& groups);

@@ -114,10 +114,16 @@ public:
     return metadata;
   }
 
+  std::optional<PluginMetadata> GetNonUserMetadata(
+    const std::shared_ptr<const PluginInterface>& plugin,
+      bool evaluateConditions = false) const {
+    return GetMasterlistMetadata(plugin->GetName(), evaluateConditions);
+  }
+
   std::vector<Message> CheckInstallValidity(
       std::shared_ptr<const PluginInterface> file,
       PluginMetadata metadata,
-      const std::string& language) {
+      const std::string& language) const {
     return {};
   }
 

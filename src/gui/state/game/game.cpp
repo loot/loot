@@ -148,7 +148,7 @@ std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
 std::vector<Message> Game::CheckInstallValidity(
     const std::shared_ptr<const PluginInterface>& plugin,
     const PluginMetadata& metadata,
-    const std::string& language) {
+    const std::string& language) const {
   auto logger = getLogger();
 
   if (logger) {
@@ -711,6 +711,27 @@ std::optional<PluginMetadata> Game::GetMasterlistMetadata(
     bool evaluateConditions) const {
   return gameHandle_->GetDatabase()->GetPluginMetadata(
       pluginName, false, evaluateConditions);
+}
+
+std::optional<PluginMetadata> Game::GetNonUserMetadata(
+    const std::shared_ptr<const PluginInterface>& plugin,
+    bool evaluateConditions) const {
+  auto fileBashTags = plugin->GetBashTags();
+  auto masterlistMetadata = GetMasterlistMetadata(plugin->GetName());
+
+  if (fileBashTags.empty()) {
+    return masterlistMetadata;
+  }
+
+  PluginMetadata metadata(plugin->GetName());
+  metadata.SetTags(fileBashTags);
+
+  if (masterlistMetadata.has_value()) {
+    masterlistMetadata.value().MergeMetadata(metadata);
+    return masterlistMetadata.value();
+  }
+
+  return metadata;
 }
 
 std::optional<PluginMetadata> Game::GetUserMetadata(
