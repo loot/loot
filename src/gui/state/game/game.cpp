@@ -635,10 +635,6 @@ bool Game::UpdateMasterlist() const {
   return UpdateFile(MasterlistPath(), RepoURL(), RepoBranch());
 }
 
-FileRevision Game::GetMasterlistInfo() const {
-  return GetFileRevision(MasterlistPath(), true);
-}
-
 void Game::LoadMetadata() {
   auto logger = getLogger();
 

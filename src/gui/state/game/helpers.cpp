@@ -31,6 +31,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <loot/api.h>
+
+#include "gui/state/logging.h"
 
 namespace loot {
 bool ExecutableExists(const GameType& gameType,
@@ -260,14 +263,53 @@ std::tuple<std::string, std::string, std::string> SplitRegistryPath(
   return std::make_tuple(rootKey, subKey, value);
 }
 
-void AddSuffixIfModified(FileRevision& revision) {
-  if (revision.is_modified) {
-    auto suffix =
-        " " +
-        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
-        boost::locale::translate("(edited)").str();
-    revision.date += suffix;
-    revision.id += suffix;
+FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
+  FileType fileType) {
+  using boost::locale::translate;
+
+  auto logger = getLogger();
+
+  FileRevision revision;
+  try {
+    revision = GetFileRevision(filePath, true);
+    if (revision.is_modified) {
+      auto suffix =
+          " " +
+          /* translators: this text is displayed if LOOT has detected that the
+             masterlist has been modified since it was downloaded. */
+          translate("(edited)").str();
+      revision.date += suffix;
+      revision.id += suffix;
+    }
+  } catch (FileAccessError&) {
+    if (logger) {
+      if (fileType == FileType::Masterlist) {
+        logger->warn("No masterlist present at {}", filePath.u8string());
+      } else {
+        logger->warn("No masterlist prelude present at {}",
+                     filePath.u8string());
+      }
+    }
+    auto text = fileType ==
+                FileType::Masterlist ? translate("N/A: No masterlist present").str() :
+        /* translators: N/A is an abbreviation for Not Applicable. A masterlist
+           is a database that contains information for various mods. */
+        translate("N/A: No masterlist prelude present").str();
+    revision.id = text;
+    revision.date = text;
+  } catch (GitStateError&) {
+    if (logger) {
+      logger->warn("Not a Git repository: {}",
+                   filePath.parent_path().u8string());
+    }
+    auto text =
+        /* translators: Git is the software LOOT uses to track changes to the
+           source code. */
+        translate("Unknown: Git repository missing").str();
+    revision.id = text;
+    revision.date = text;
   }
+
+  return revision;
 }
 }

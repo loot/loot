@@ -138,7 +138,7 @@ protected:
                                    InputIterator lastPlugin) {
     nlohmann::json json = {
         {"folder", game_.FolderName()},
-        {"masterlist", getMasterlistInfo()},
+        {"masterlist", GetFileRevisionToDisplay(game_.MasterlistPath(), FileType::Masterlist)},
         {"generalMessages", getGeneralMessages()},
         {"bashTags", game_.GetKnownBashTags()},
         {"groups",
@@ -246,38 +246,6 @@ private:
 
       return user;
     }
-  }
-
-  FileRevision getMasterlistInfo() {
-    using boost::locale::translate;
-
-    FileRevision revision;
-    try {
-      revision = game_.GetMasterlistInfo();
-      AddSuffixIfModified(revision);
-    } catch (FileAccessError&) {
-      if (logger_) {
-        logger_->warn("No masterlist present at {}",
-                      game_.MasterlistPath().u8string());
-      }
-      auto text =
-          /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
-          translate("N/A: No masterlist present").str();
-      revision.id = text;
-      revision.date = text;
-    } catch (GitStateError&) {
-      if (logger_) {
-        logger_->warn("Not a Git repository: {}",
-                      game_.MasterlistPath().parent_path().u8string());
-      }
-      auto text =
-        /* translators: Git is the software LOOT uses to track changes to the source code. */
-        translate("Unknown: Git repository missing").str();
-      revision.id = text;
-      revision.date = text;
-    }
-
-    return revision;
   }
 
   G& game_;

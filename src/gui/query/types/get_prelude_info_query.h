@@ -30,40 +30,6 @@ along with LOOT.  If not, see
 #include "loot/api.h"
 
 namespace loot {
-FileRevision GetMasterlistPreludeRevision(
-    const std::filesystem::path& filePath) {
-  using boost::locale::translate;
-
-  auto logger = getLogger();
-
-  FileRevision revision;
-  try {
-    revision = GetFileRevision(filePath, true);
-    AddSuffixIfModified(revision);
-  } catch (FileAccessError&) {
-    if (logger) {
-      logger->warn("No masterlist prelude present at {}", filePath.u8string());
-    }
-    auto text =
-        /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
-        translate("N/A: No masterlist prelude present").str();
-    revision.id = text;
-    revision.date = text;
-  } catch (GitStateError&) {
-    if (logger) {
-      logger->warn("Not a Git repository: {}",
-                   filePath.parent_path().u8string());
-    }
-    auto text =
-        /* translators: Git is the software LOOT uses to track changes to the source code. */
-        translate("Unknown: Git repository missing").str();
-    revision.id = text;
-    revision.date = text;
-  }
-
-  return revision;
-}
-
 class GetPreludeInfoQuery : public Query {
 public:
   GetPreludeInfoQuery(std::filesystem::path filePath) : filePath_(filePath) {}
@@ -74,7 +40,7 @@ public:
       logger->debug("Getting the masterlist prelude's revision.");
     }
 
-    return GetMasterlistPreludeRevision(filePath_);
+    return GetFileRevisionToDisplay(filePath_, FileType::MasterlistPrelude);
   }
 
 private:

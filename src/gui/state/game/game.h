@@ -86,7 +86,6 @@ public:
   void ClearMessages();
 
   bool UpdateMasterlist() const;
-  FileRevision GetMasterlistInfo() const;
 
   void LoadMetadata();
   std::vector<std::string> GetKnownBashTags() const;

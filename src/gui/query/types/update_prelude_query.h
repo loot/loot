@@ -26,8 +26,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_UPDATE_PRELUDE_QUERY
 #define LOOT_GUI_QUERY_UPDATE_PRELUDE_QUERY
 
-#include "gui/query/types/get_prelude_info_query.h"
-#include "loot/api.h"
+#include <loot/api.h>
+
+#include "gui/state/game/helpers.h"
 
 namespace loot {
 class UpdatePreludeQuery : public Query {
@@ -48,9 +49,7 @@ public:
       return nullptr;
     }
 
-    nlohmann::json json = GetMasterlistPreludeRevision(filePath_);
-
-    return json;
+    return GetFileRevisionToDisplay(filePath_, FileType::MasterlistPrelude);
   }
 
 private:

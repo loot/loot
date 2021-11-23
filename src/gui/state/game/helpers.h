@@ -37,6 +37,8 @@
 #include <loot/vertex.h>
 
 namespace loot {
+enum class FileType { Masterlist, MasterlistPrelude };
+
 bool ExecutableExists(const GameType& gameType,
                       const std::filesystem::path& gamePath);
 
@@ -60,7 +62,8 @@ std::vector<Message> CheckForRemovedPlugins(
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath);
 
-void AddSuffixIfModified(FileRevision& revision);
+FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
+                                      FileType fileType);
 }
 
 
