@@ -54,6 +54,18 @@ public:
     std::optional<std::string> fontFamily;
   };
 
+  struct Filters {
+    Filters();
+
+    bool hideVersionNumbers;
+    bool hideCRCs;
+    bool hideBashTags;
+    bool hideNotes;
+    bool hideAllPluginMessages;
+    bool hideInactivePlugins;
+    bool hideMessagelessPlugins;
+  };
+
   LootSettings();
 
   void load(const std::filesystem::path& file,
@@ -73,7 +85,7 @@ public:
   std::string getPreludeRepositoryBranch() const;
   std::optional<WindowPosition> getWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
-  const std::map<std::string, bool>& getFilters() const;
+  const Filters& getFilters() const;
   const std::vector<Language>& getLanguages() const;
 
   void setDefaultGame(const std::string& game);
@@ -89,7 +101,7 @@ public:
   void storeLastGame(const std::string& lastGame);
   void storeWindowPosition(const WindowPosition& position);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
-  void storeFilterState(const std::string& filterId, bool enabled);
+  void storeFilters(const Filters& filters);
   void updateLastVersion();
 
 private:
@@ -106,7 +118,7 @@ private:
   std::string theme_;
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_;
-  std::map<std::string, bool> filters_;
+  Filters filters_;
   std::vector<Language> languages_;
 
   mutable std::recursive_mutex mutex_;

@@ -290,6 +290,16 @@ void from_json(const nlohmann::json& json, GameSettings& game) {
   game.SetGameLocalPath(u8path(json.value("localPath", "")));
 }
 
+void to_json(nlohmann::json& json, const LootSettings::Filters& filters) {
+  json = {{"hideVersionNumbers", filters.hideVersionNumbers},
+          {"hideCRCs", filters.hideCRCs},
+          {"hideBashTags", filters.hideBashTags},
+          {"hideNotes", filters.hideNotes},
+          {"hideAllPluginMessages", filters.hideAllPluginMessages},
+          {"hideInactivePlugins", filters.hideInactivePlugins},
+          {"hideMessagelessPlugins", filters.hideMessagelessPlugins}};
+}
+
 void to_json(nlohmann::json& json, const LootSettings::Language& language) {
   json = {{"locale", language.locale}, {"name", language.name}};
 

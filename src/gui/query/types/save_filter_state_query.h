@@ -42,7 +42,26 @@ public:
     if (logger) {
       logger->trace("Saving filter states.");
     }
-    settings_.storeFilterState(filterId_, enabled_);
+
+    auto filters = settings_.getFilters();
+
+    if (filterId_ == "hideVersionNumbers") {
+      filters.hideVersionNumbers = enabled_;
+    } else if (filterId_ == "hideCRCs") {
+      filters.hideCRCs = enabled_;
+    } else if (filterId_ == "hideBashTags") {
+      filters.hideBashTags = enabled_;
+    } else if (filterId_ == "hideNotes") {
+      filters.hideNotes = enabled_;
+    } else if (filterId_ == "hideAllPluginMessages") {
+      filters.hideAllPluginMessages = enabled_;
+    } else if (filterId_ == "hideInactivePlugins") {
+      filters.hideInactivePlugins = enabled_;
+    } else if (filterId_ == "hideMessagelessPlugins") {
+      filters.hideMessagelessPlugins = enabled_;
+    }
+
+    settings_.storeFilters(filters);
     return nlohmann::json();
   }
 

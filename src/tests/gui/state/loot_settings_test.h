@@ -97,7 +97,13 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_TRUE(settings_.getLastVersion().empty());
   EXPECT_EQ("en", settings_.getLanguage());
   EXPECT_EQ("default", settings_.getTheme());
-  EXPECT_TRUE(settings_.getFilters().empty());
+  EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_FALSE(settings_.getFilters().hideBashTags);
+  EXPECT_FALSE(settings_.getFilters().hideCRCs);
+  EXPECT_FALSE(settings_.getFilters().hideNotes);
+  EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
+  EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
   EXPECT_EQ("https://github.com/loot/prelude.git",
             settings_.getPreludeRepositoryURL());
   EXPECT_EQ("v0.17", settings_.getPreludeRepositoryBranch());
@@ -256,8 +262,8 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
 
   EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
 
-  EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
-  EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
+  EXPECT_FALSE(settings_.getFilters().hideBashTags);
+  EXPECT_TRUE(settings_.getFilters().hideCRCs);
 
   EXPECT_EQ(1, settings_.getLanguages().size());
   EXPECT_EQ(LootSettings::Language({"en", "English", "Times New Roman"}),
@@ -516,16 +522,6 @@ TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_P(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
-  std::ofstream out(settingsFile_);
-  out << "[filters]" << std::endl << "contentFilter = \"foo\"" << std::endl;
-  out.close();
-
-  settings_.load(settingsFile_, lootDataPath);
-
-  EXPECT_TRUE(settings_.getFilters().empty());
-}
-
 TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
@@ -545,10 +541,9 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
           .SetName("Game Name")
           .SetMinimumHeaderVersion(2.5),
   });
-  const std::map<std::string, bool> filters({
-      {"hideBashTags", false},
-      {"hideCRCs", true},
-  });
+  LootSettings::Filters filters;
+  filters.hideBashTags = false;
+  filters.hideCRCs = true;
 
   settings_.enableDebugLogging(true);
   settings_.updateMasterlist(true);
@@ -562,9 +557,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   settings_.storeWindowPosition(windowPosition);
   settings_.storeGameSettings(games);
-  for (const auto& filter : filters) {
-    settings_.storeFilterState(filter.first, filter.second);
-  }
+  settings_.storeFilters(filters);
 
   settings_.save(settingsFile_);
 
@@ -592,7 +585,8 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(games[0].MinimumHeaderVersion(),
             settings.getGameSettings().at(0).MinimumHeaderVersion());
 
-  EXPECT_EQ(filters, settings.getFilters());
+  EXPECT_EQ(filters.hideBashTags, settings.getFilters().hideBashTags);
+  EXPECT_EQ(filters.hideCRCs, settings.getFilters().hideCRCs);
 }
 
 TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
