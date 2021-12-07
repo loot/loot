@@ -36,23 +36,24 @@ using std::filesystem::u8path;
 
 namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14"});
+    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15"});
 
 GameSettings::GameSettings() :
     type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
-    type_(gameCode), repositoryBranch_("v0.15") {
+    type_(gameCode), repositoryBranch_("v0.17") {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\Morrowind\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 22320\\InstallLocation",
-      "Software\\GOG.com\\Games\\1440163901\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1440163901_is1\\InstallLocation",
-      "Software\\GOG.com\\Games\\1435828767\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1435828767_is1\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\Morrowind\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 22320\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1440163901\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1440163901_is1\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1435828767\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1435828767_is1\\InstallLocation"};
     pluginsFolderName_ = "Data Files";
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
@@ -60,15 +61,17 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/morrowind.git";
   } else if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\Oblivion\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 22330\\InstallLocation",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 900883\\InstallLocation",
-      "Software\\GOG.com\\Games\\1242989820\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1242989820_is1\\InstallLocation",
-      "Software\\GOG.com\\Games\\1458058109\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1458058109_is1\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\Oblivion\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 22330\\InstallLocation",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 900883\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1242989820\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1242989820_is1\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1458058109\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1458058109_is1\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
@@ -76,10 +79,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/oblivion.git";
   } else if (Type() == GameType::tes5) {
     name_ = "TES V: Skyrim";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\Skyrim\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 72850\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 72850\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
@@ -88,9 +90,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
     registryKeys_ = {
-      "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 489830\\InstallLocation"
-    };
+        "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path",
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
+        "489830\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
@@ -98,10 +100,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrimse.git";
   } else if (Type() == GameType::tes5vr) {
     name_ = "TES V: Skyrim VR";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 611670\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 611670\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
@@ -109,15 +110,17 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/skyrimvr.git";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\Fallout3\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 22300\\InstallLocation",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 22370\\InstallLocation",
-      "Software\\GOG.com\\Games\\1454315831\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1454315831_is1\\InstallLocation",
-      "Software\\GOG.com\\Games\\1248282609\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1248282609_is1\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\Fallout3\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 22300\\InstallLocation",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 22370\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1454315831\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1454315831_is1\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1248282609\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1248282609_is1\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
@@ -125,15 +128,17 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/fallout3.git";
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 22380\\InstallLocation",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 22490\\InstallLocation",
-      "Software\\GOG.com\\Games\\1312824873\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1312824873_is1\\InstallLocation",
-      "Software\\GOG.com\\Games\\1454587428\\path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\1454587428_is1\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 22380\\InstallLocation",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 22490\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1312824873\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1312824873_is1\\InstallLocation",
+                     "Software\\GOG.com\\Games\\1454587428\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1454587428_is1\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
@@ -141,10 +146,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     repositoryURL_ = "https://github.com/loot/falloutnv.git";
   } else if (Type() == GameType::fo4) {
     name_ = "Fallout 4";
-    registryKeys_ = {
-      "Software\\Bethesda Softworks\\Fallout4\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 377160\\InstallLocation"
-    };
+    registryKeys_ = {"Software\\Bethesda Softworks\\Fallout4\\Installed Path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "Steam App 377160\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
@@ -153,9 +157,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
   } else if (Type() == GameType::fo4vr) {
     name_ = "Fallout 4 VR";
     registryKeys_ = {
-      "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path",
-      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 611660\\InstallLocation"
-    };
+        "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path",
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
+        "611660\\InstallLocation"};
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
