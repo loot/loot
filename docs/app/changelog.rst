@@ -4,6 +4,47 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.17.0 - 2021-12-07
+===================
+
+Added
+-----
+
+- Support for multiple registry keys per game.
+- Support for registry keys in the 64-bit registry view.
+- Steam and GOG registry keys for all supported games on each platform.
+- Support for the masterlist prelude, a metadata file that is used to supply common metadata to all masterlists.
+- The ability to filter plugins by their group.
+- The ``detail`` message string is now appended when generating requirement and incompatibility messages.
+- A Ukrainian translation by IllusiveMan196.
+
+Fixed
+-----
+
+- LOOT will only attempt to start for the preferred game if it is installed, and will otherwise fall back to the first listed installed game.
+- Autocomplete error translations were unused.
+- Some groups editor text was untranslatable.
+
+Changed
+-------
+
+- The groups editor now has a "drawing mode" toggle button. Edges can only be added in drawing mode, and nodes can only be moved around outside of drawing mode.
+- The Skyrim VR and Fallout VR games now use new `skyrimvr` and `falloutvr` masterlist repositories. The new repositories are independent from the `skyrimse` and `fallout4` repositories that were previously used.
+- LOOT's installer now downloads the latest MSVC 2015/2017/2019 redistributable if it is not already installed, or if it is older than 14.15.26706.
+- Sorting now checks for cycles before adding overlap edges, so that any cycles are caught before the slowest steps in the sorting process. Via libloot.
+- Masterlist update no longer supports rolling back through revisions until a revision that can be successfully loaded is found. Via libloot.
+- Updated libloot to v0.17.1.
+- Updated nlohmann/json to v0.17.0.
+- Updated spdlog to v1.9.2.
+- Updated JS package dependencies.
+- Updated to Inno Setup v6.2.0.
+- Updated the German translation.
+- Updated the Italian translation.
+- Updated the Korean translation.
+- Updated the Bulgarian translation.
+- Updated the Russian translation.
+- Updated the Spanish translation.
+
 0.16.1 - 2021-05-09
 ===================
 
