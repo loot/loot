@@ -34,8 +34,9 @@ sed -i "/^#:/ s|\\\\|/|g" resources/l10n/js_template.po
 sed -i "s|#: [A-Za-z]:${PWD:2}/|#: |" resources/l10n/js_template.po
 
 # Now concat the two template files.
-tail -n +5 resources/l10n/js_template.po >> resources/l10n/template.pot
-rm resources/l10n/js_template.po
+tail -n +5 resources/l10n/js_template.po > resources/l10n/js_template.tailed.po
+msgcat -o resources/l10n/template.pot resources/l10n/template.pot resources/l10n/js_template.tailed.po
+rm resources/l10n/js_template.po resources/l10n/js_template.tailed.po
 
 LINES_ADDED=$(git diff --numstat resources/l10n/template.pot | cut -f 1)
 LINES_REMOVED=$(git diff --numstat resources/l10n/template.pot | cut -f 2)
