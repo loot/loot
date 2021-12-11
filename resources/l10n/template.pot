@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-12-25 15:41+0000\n"
+"POT-Creation-Date: 2021-12-25 15:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,874 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/gui/cef/query/query_executor.h:44
+#: src/gui/qt/filters_widget.cpp:179 src/gui/html/js/translateStaticText.ts:467
+msgid "Show only conflicting plugins for"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:180 src/gui/html/js/translateStaticText.ts:474
+msgid "Show only plugins in group"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:182 src/gui/html/js/translateStaticText.ts:442
+msgid "Show only plugins with cards that contain"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:183 src/gui/html/js/translateStaticText.ts:448
+msgid "Hide version numbers"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:184 src/gui/html/js/translateStaticText.ts:451
+msgid "Hide CRCs"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. Text of a filter in the sidebar.
+#: src/gui/qt/filters_widget.cpp:185 src/gui/html/js/translateStaticText.ts:454
+msgid "Hide Bash Tags"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:186 src/gui/html/js/translateStaticText.ts:455
+msgid "Hide notes"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:187 src/gui/html/js/translateStaticText.ts:456
+msgid "Hide all plugin messages"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:188 src/gui/html/js/translateStaticText.ts:459
+msgid "Hide inactive plugins"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:189 src/gui/html/js/translateStaticText.ts:462
+msgid "Hide messageless plugins"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:190 src/gui/html/js/translateStaticText.ts:481
+msgid "Hidden plugins:"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:191 src/gui/html/js/translateStaticText.ts:483
+msgid "Hidden messages:"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:193 src/gui/html/js/translateStaticText.ts:469
+msgid "No plugin selected"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:200 src/gui/html/js/translateStaticText.ts:476
+msgid "No group selected"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:207 src/gui/html/js/translateStaticText.ts:445
+msgid "No text specified"
+msgstr ""
+
+#: src/gui/qt/filters_widget.cpp:209 src/gui/html/js/translateStaticText.ts:438
+msgid "Press Enter or click outside the input to set the filter."
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:140
+#: src/gui/html/js/translateStaticText.ts:488
+msgid "General Information"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:142
+#: src/gui/html/js/translateStaticText.ts:492
+msgid "Masterlist Revision"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:143
+#: src/gui/html/js/translateStaticText.ts:494
+msgid "Masterlist Date"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:144
+#: src/gui/html/js/translateStaticText.ts:495
+msgid "Masterlist Prelude Revision"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:145
+#: src/gui/html/js/translateStaticText.ts:498
+msgid "Masterlist Prelude Date"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. The number of warning messages present. This text appears in the General Information card.
+#: src/gui/qt/general_info_frame.cpp:147
+#: src/gui/html/js/translateStaticText.ts:503
+msgid "Warnings"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. The number of error messages present. This text appears in the General Information card.
+#: src/gui/qt/general_info_frame.cpp:148
+#: src/gui/html/js/translateStaticText.ts:506
+msgid "Errors"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:149
+#: src/gui/html/js/translateStaticText.ts:508
+msgid "Total Messages"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:151
+#: src/gui/html/js/translateStaticText.ts:510
+msgid "Active Plugins"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:152
+#: src/gui/html/js/translateStaticText.ts:512
+msgid "Dirty Plugins"
+msgstr ""
+
+#: src/gui/qt/general_info_frame.cpp:153
+#: src/gui/html/js/translateStaticText.ts:514
+msgid "Total Plugins"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:548
+msgid "LOOT"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:551 src/gui/html/js/translateStaticText.ts:339
+msgid "Sort Plugins"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:552 src/gui/html/js/translateStaticText.ts:343
+msgid "Update Masterlist"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:553
+msgid "Apply Sorted Load Order"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:554
+msgid "Discard Sorted Load Order"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:557
+msgid "File"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:558
+msgid "Settings..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:559 src/gui/html/js/events.ts:676
+#: src/gui/html/js/translateStaticText.ts:372
+msgid "Quit"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:561
+msgid "Game"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:562
+msgid "Edit Groups..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:563
+msgid "Search Cards..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:564 src/gui/html/js/translateStaticText.ts:363
+msgid "Copy Load Order"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:565 src/gui/html/js/translateStaticText.ts:365
+msgid "Copy Content"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:566 src/gui/html/js/translateStaticText.ts:367
+msgid "Refresh Content"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:567
+msgid "Redate Plugins..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:568
+msgid "Clear All User Metadata..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:570
+msgid "Plugin"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:571 src/gui/html/js/translateStaticText.ts:88
+msgid "Copy Metadata"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:572
+msgid "Copy Card Content"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:573
+msgid "Edit Metadata..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:574
+msgid "Clear User Metadata..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:576
+msgid "Help"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:577
+#: src/gui/html/elements/loot-groups-editor.ts:446
+#: src/gui/html/js/translateStaticText.ts:369
+msgid "View Documentation"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:578 src/gui/html/js/translateStaticText.ts:354
+msgid "Open Debug Log Location"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:579 src/gui/html/js/translateStaticText.ts:370
+msgid "About"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:582 src/gui/html/js/translateStaticText.ts:424
+msgid "Plugins"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:583 src/gui/html/js/translateStaticText.ts:433
+msgid "Filters"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:751 src/gui/qt/main_window.cpp:1612
+#: src/gui/html/js/events.ts:338
+msgid "Updating and parsing masterlist..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:803 src/gui/html/js/translateStaticText.ts:659
+#, c-format
+msgid ""
+"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"to help you get started with the interface."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:809 src/gui/html/js/translateStaticText.ts:673
+msgid ""
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:813 src/gui/html/js/translateStaticText.ts:679
+msgid ""
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:818 src/gui/html/js/translateStaticText.ts:682
+msgid ""
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:823 src/gui/qt/main_window.cpp:1499
+#: src/gui/html/js/translateStaticText.ts:689
+#: src/gui/html/js/translateStaticText.ts:711
+#, c-format
+msgid ""
+"LOOT is free, but if you want to show your appreciation with some money, "
+"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"using %s."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:834 src/gui/html/js/translateStaticText.ts:656
+msgid "First-Time Tips"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
+#: src/gui/qt/main_window.cpp:864 src/gui/html/js/events.ts:699
+msgid "metadata edits"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:865 src/gui/html/js/events.ts:694
+msgid "sorted load order"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:867 src/gui/html/js/events.ts:672
+#, c-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1002 src/gui/html/js/loot.ts:374
+#, c-format
+msgid "A [new release](%s) of LOOT is available."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1013 src/gui/html/js/loot.ts:358
+msgid ""
+"Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
+"can get to it through the main menu) for more information."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1032 src/gui/qt/plugin_editor/table_tab.cpp:291
+#: src/gui/qt/plugin_editor/table_tab.cpp:323
+#: src/gui/html/js/handlePromiseError.ts:8
+#: src/gui/html/js/translateStaticText.ts:245
+msgid "Error"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1042 src/gui/query/query.h:45
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/query/query.h:50
+#: src/gui/qt/main_window.cpp:1092 src/gui/html/js/events.ts:367
+#, c-format
+msgid "Masterlist updated to revision %s."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1100 src/gui/html/js/events.ts:374
+msgid "No masterlist update was necessary."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1117
+msgid ""
+"Failed to sort plugins. Details may be provided in the General Information "
+"section."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1139 src/gui/html/js/events.ts:491
+msgid "Sorting made no changes to the load order."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1204 src/gui/html/js/events.ts:636
+msgid "The load order has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1222 src/gui/html/js/events.ts:618
+msgid "LOOT's content has been copied to the clipboard."
+msgstr ""
+
+#. #-#-#-#-#  template.pot (LOOT 0.17.0)  #-#-#-#-#
+#. translators: Title of a dialog box.
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. Title of a dialog box.
+#: src/gui/qt/main_window.cpp:1241 src/gui/html/js/events.ts:536
+msgid "Redate Plugins?"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1243 src/gui/html/js/events.ts:537
+msgid ""
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
+msgstr ""
+
+#. #-#-#-#-#  template.pot (LOOT 0.17.0)  #-#-#-#-#
+#. translators: Notification text.
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. Notification text.
+#: src/gui/qt/main_window.cpp:1255 src/gui/html/js/events.ts:548
+msgid "Plugins were successfully redated."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1267 src/gui/html/js/events.ts:567
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1314 src/gui/html/js/events.ts:581
+msgid "All user-added metadata has been cleared."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1327
+msgid ""
+"The plugin metadata editor is already open, first close the editor before "
+"attempting to edit another plugin's metadata."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1366 src/gui/html/js/events.ts:1137
+#, c-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1385
+#, c-format
+msgid "The card content for \"%s\" has been copied to the clipboard."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1400 src/gui/html/js/events.ts:1158
+#, c-format
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1441 src/gui/html/js/events.ts:1180
+#, c-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1488 src/gui/html/js/translateStaticText.ts:702
+#, c-format
+msgid "Version %s (build %s)"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1493 src/gui/html/js/translateStaticText.ts:707
+msgid ""
+"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
+"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
+"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1509 src/gui/html/js/translateStaticText.ts:700
+msgid "About LOOT"
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1773 src/gui/html/js/events.ts:225
+msgid "Identifying conflicting plugins..."
+msgstr ""
+
+#: src/gui/qt/main_window.cpp:1869 src/gui/html/js/loot.ts:414
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:160 src/gui/html/elements/loot-plugin-card.ts:339
+#, c-format
+msgid "Verified clean by %s"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:278 src/gui/html/js/translateStaticText.ts:72
+msgid "Active Plugin"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:279 src/gui/qt/settings/game_tab.cpp:154
+#: src/gui/html/js/translateStaticText.ts:74
+#: src/gui/html/js/translateStaticText.ts:601
+msgid "Master File"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:280 src/gui/html/js/translateStaticText.ts:76
+msgid "Light Plugin"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:281 src/gui/html/js/translateStaticText.ts:78
+msgid "Empty Plugin"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
+#: src/gui/qt/plugin_card.cpp:282 src/gui/html/js/translateStaticText.ts:81
+msgid "Loads Archive"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:283 src/gui/qt/plugin_item_model.cpp:125
+#: src/gui/html/js/translateStaticText.ts:83
+#: src/gui/html/js/translateStaticText.ts:209
+msgid "Has User Metadata"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. Title of a tab in the metadata editor.
+#: src/gui/qt/plugin_card.cpp:285
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
+#: src/gui/html/js/translateStaticText.ts:127
+msgid "Bash Tags"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:286
+msgid "Current"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:287 src/gui/qt/plugin_editor/table_tab.cpp:411
+#: src/gui/html/js/translateStaticText.ts:260
+msgid "Add"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:288 src/gui/qt/plugin_editor/table_tab.cpp:411
+#: src/gui/html/js/translateStaticText.ts:262
+msgid "Remove"
+msgstr ""
+
+#: src/gui/qt/plugin_item_model.cpp:123
+#: src/gui/html/js/translateStaticText.ts:211
+msgid "Editor Is Open"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. The tooltip for the search icon that reveals the content search input when clicked.
+#: src/gui/qt/search_dialog.cpp:91 src/gui/html/js/translateStaticText.ts:348
+msgid "Search Cards"
+msgstr ""
+
+#. #-#-#-#-#  js_template.tailed.po  #-#-#-#-#
+#. The label on the content search text input.
+#: src/gui/qt/search_dialog.cpp:93 src/gui/html/js/translateStaticText.ts:382
+msgid "Search cards"
+msgstr ""
+
+#: src/gui/qt/search_dialog.cpp:94
+msgid "Find Previous"
+msgstr ""
+
+#: src/gui/qt/search_dialog.cpp:95
+msgid "Find Next"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:107
+#: src/gui/html/js/translateStaticText.ts:645
+msgid "Groups Editor"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:109
+#: src/gui/html/elements/loot-groups-editor.ts:448
+msgid "Group name"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:110
+#: src/gui/html/elements/loot-groups-editor.ts:447
+msgid "Add a new group"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:128
+#: src/gui/html/elements/loot-groups-editor.ts:451
+msgid "No plugins are in this group."
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:140
+#: src/gui/html/elements/loot-groups-editor.ts:477
+#, c-format
+msgid "Plugins in %s"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:160
+#: src/gui/html/elements/loot-groups-editor.ts:450
+msgid "Group already exists!"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/main_tab.cpp:79
+#: src/gui/html/js/translateStaticText.ts:113
+#: src/gui/html/js/translateStaticText.ts:207
+msgid "Group"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+#: src/gui/html/js/translateStaticText.ts:116
+msgid "Main"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+#: src/gui/html/js/translateStaticText.ts:118
+msgid "Load After"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+#: src/gui/html/js/translateStaticText.ts:120
+msgid "Requirements"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+#: src/gui/html/js/translateStaticText.ts:122
+msgid "Incompatibilities"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+#: src/gui/html/js/translateStaticText.ts:124
+msgid "Messages"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+#: src/gui/html/js/translateStaticText.ts:129
+msgid "Dirty Plugin Info"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+#: src/gui/html/js/translateStaticText.ts:131
+msgid "Clean Plugin Info"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+#: src/gui/html/js/translateStaticText.ts:133
+msgid "Locations"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+msgid "This tab contains user metadata."
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tab.cpp:180
+msgid "Add new row"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tab.cpp:181
+msgid "Delete row"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tab.cpp:289
+#: src/gui/qt/plugin_editor/table_tab.cpp:321
+#: src/gui/html/js/translateStaticText.ts:241
+msgid "Note"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/table_tab.cpp:290
+#: src/gui/qt/plugin_editor/table_tab.cpp:322
+#: src/gui/html/js/translateStaticText.ts:243
+msgid "Warning"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:113
+#: src/gui/html/js/translateStaticText.ts:180
+#: src/gui/html/js/translateStaticText.ts:191
+msgid "CRC"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:115
+#: src/gui/html/js/translateStaticText.ts:182
+msgid "ITM Count"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:117
+#: src/gui/html/js/translateStaticText.ts:184
+msgid "Deleted References"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:119
+#: src/gui/html/js/translateStaticText.ts:186
+msgid "Deleted Navmeshes"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:121
+#: src/gui/html/js/translateStaticText.ts:188
+#: src/gui/html/js/translateStaticText.ts:193
+msgid "Cleaning Utility"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:123
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:107
+msgid "Detail"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:103
+#: src/gui/html/js/translateStaticText.ts:141
+#: src/gui/html/js/translateStaticText.ts:150
+#: src/gui/html/js/translateStaticText.ts:157
+msgid "Filename"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:105
+#: src/gui/html/js/translateStaticText.ts:144
+#: src/gui/html/js/translateStaticText.ts:152
+#: src/gui/html/js/translateStaticText.ts:159
+msgid "Display Name"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:109
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:116
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:102
+#: src/gui/html/js/translateStaticText.ts:147
+#: src/gui/html/js/translateStaticText.ts:154
+#: src/gui/html/js/translateStaticText.ts:161
+#: src/gui/html/js/translateStaticText.ts:168
+#: src/gui/html/js/translateStaticText.ts:177
+msgid "Condition"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:91
+#: src/gui/html/js/translateStaticText.ts:196
+msgid "URL"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:93
+#: src/gui/qt/settings/game_tab.cpp:151 src/gui/qt/settings/new_game_tab.cpp:89
+#: src/gui/html/js/translateStaticText.ts:198
+#: src/gui/html/js/translateStaticText.ts:582
+msgid "Name"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:98
+#: src/gui/qt/settings/general_tab.cpp:172
+#: src/gui/html/js/translateStaticText.ts:170
+#: src/gui/html/js/translateStaticText.ts:532
+msgid "Language"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:100
+msgid "Text"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:112
+#: src/gui/html/js/translateStaticText.ts:164
+msgid "Type"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:114
+#: src/gui/html/js/translateStaticText.ts:166
+msgid "Content"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:98
+#: src/gui/html/js/translateStaticText.ts:173
+msgid "Add/Remove"
+msgstr ""
+
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:100
+#: src/gui/html/js/translateStaticText.ts:175
+msgid "Bash Tag"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:152 src/gui/qt/settings/new_game_tab.cpp:90
+#: src/gui/html/js/translateStaticText.ts:587
+msgid "Base Game"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:153 src/gui/qt/settings/new_game_tab.cpp:91
+#: src/gui/html/js/translateStaticText.ts:596
+msgid "LOOT Folder"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:155
+msgid "Minimum Header Version"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:156
+#: src/gui/html/js/translateStaticText.ts:606
+msgid "Masterlist Repository URL"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:157
+#: src/gui/html/js/translateStaticText.ts:611
+msgid "Masterlist Repository Branch"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:158
+#: src/gui/html/js/translateStaticText.ts:616
+msgid "Install Path"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:159
+#: src/gui/html/js/translateStaticText.ts:621
+msgid "Install Path Registry Keys"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:160
+#: src/gui/html/js/translateStaticText.ts:626
+msgid "Local Data Path"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:162
+#: src/gui/html/js/translateStaticText.ts:631
+msgid "Delete game"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:171
+#: src/gui/html/js/translateStaticText.ts:526
+msgid "Default Game"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:173
+#: src/gui/html/js/translateStaticText.ts:537
+msgid "Theme"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:174
+#: src/gui/html/js/translateStaticText.ts:553
+msgid "Update masterlist before sorting"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:175
+#: src/gui/html/js/translateStaticText.ts:556
+msgid "Check for LOOT updates on startup"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:176
+#: src/gui/html/js/translateStaticText.ts:547
+msgid "Enable debug logging"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:177
+#: src/gui/html/js/translateStaticText.ts:564
+msgid "Masterlist prelude repository URL"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:179
+#: src/gui/html/js/translateStaticText.ts:573
+msgid "Masterlist prelude repository branch"
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:182
+#: src/gui/html/js/translateStaticText.ts:533
+msgid "Language changes will be applied after LOOT is restarted."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:184
+#: src/gui/html/js/translateStaticText.ts:538
+msgid "Theme changes will be applied after LOOT is restarted."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:186
+#: src/gui/html/js/translateStaticText.ts:548
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:188
+#: src/gui/html/js/translateStaticText.ts:560
+msgid "A prelude URL is required."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:189
+#: src/gui/html/js/translateStaticText.ts:569
+msgid "A prelude branch is required."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:191
+#: src/gui/html/js/translateStaticText.ts:528
+msgid "Autodetect"
+msgstr ""
+
+#: src/gui/qt/settings/new_game_tab.cpp:47
+msgid "A game with this folder already exists."
+msgstr ""
+
+#: src/gui/qt/settings/new_game_tab.cpp:87
+#: src/gui/qt/settings/new_game_tab.cpp:96
+#: src/gui/html/js/translateStaticText.ts:629
+msgid "Add new game"
+msgstr ""
+
+#: src/gui/qt/settings/new_game_tab.cpp:93
+#: src/gui/html/js/translateStaticText.ts:265
+#: src/gui/html/js/translateStaticText.ts:578
+msgid "A name is required."
+msgstr ""
+
+#: src/gui/qt/settings/new_game_tab.cpp:94
+#: src/gui/html/js/translateStaticText.ts:592
+msgid "A folder is required."
+msgstr ""
+
+#: src/gui/qt/settings/settings_window.cpp:131
+#: src/gui/html/js/translateStaticText.ts:371
+#: src/gui/html/js/translateStaticText.ts:520
+msgid "Settings"
+msgstr ""
+
+#: src/gui/qt/settings/settings_window.cpp:133
+#: src/gui/html/js/translateStaticText.ts:522
+msgid "General"
+msgstr ""
+
+#: src/gui/qt/settings/settings_window.cpp:134
+msgid "Add new game..."
+msgstr ""
+
+#: src/gui/query/derived_plugin_metadata.h:181
+#: src/gui/query/derived_plugin_metadata.h:211
+msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgstr ""
+
+#: src/gui/query/query.h:55
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -32,32 +893,11 @@ msgid ""
 "information."
 msgstr ""
 
-#: src/gui/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:48
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/query/types/get_prelude_info_query.h:49
-msgid "N/A: No masterlist prelude present"
-msgstr ""
-
-#. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/query/types/get_prelude_info_query.h:59
-#: src/gui/query/types/metadata_query.h:266
-msgid "Unknown: Git repository missing"
-msgstr ""
-
-#: src/gui/query/types/metadata_query.h:205
-#: src/gui/query/types/metadata_query.h:232
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr ""
-
-#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/query/types/metadata_query.h:256
-msgid "N/A: No masterlist present"
-msgstr ""
-
-#: src/gui/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:56
 msgid "Sorting load order..."
 msgstr ""
 
@@ -83,68 +923,68 @@ msgstr ""
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:184 src/gui/state/game/game.cpp:223
+#: src/gui/state/game/game.cpp:198 src/gui/state/game/game.cpp:237
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:197
+#: src/gui/state/game/game.cpp:211
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:259
+#: src/gui/state/game/game.cpp:273
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:302
+#: src/gui/state/game/game.cpp:316
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:322
+#: src/gui/state/game/game.cpp:336
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:343
+#: src/gui/state/game/game.cpp:356
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:363
+#: src/gui/state/game/game.cpp:376
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:432 src/gui/state/game/game.cpp:517
+#: src/gui/state/game/game.cpp:445 src/gui/state/game/game.cpp:530
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:542
+#: src/gui/state/game/game.cpp:555
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:554
+#: src/gui/state/game/game.cpp:567
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:590
+#: src/gui/state/game/game.cpp:603
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:614
+#: src/gui/state/game/game.cpp:627
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:684
+#: src/gui/state/game/game.cpp:693
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -162,102 +1002,71 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:88
+#. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
+#: src/gui/state/game/helpers.cpp:47
+msgid "(edited)"
+msgstr ""
+
+#: src/gui/state/game/helpers.cpp:109
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:92
+#: src/gui/state/game/helpers.cpp:113
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:98
+#: src/gui/state/game/helpers.cpp:119
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:108
+#: src/gui/state/game/helpers.cpp:129
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:114
+#: src/gui/state/game/helpers.cpp:135
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
-#: src/gui/state/game/helpers.cpp:131
+#: src/gui/state/game/helpers.cpp:141 src/gui/state/game/helpers.cpp:147
+#: src/gui/state/game/helpers.cpp:152
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
-#: src/gui/state/game/helpers.cpp:141
+#: src/gui/state/game/helpers.cpp:156 src/gui/state/game/helpers.cpp:159
+#: src/gui/state/game/helpers.cpp:162
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:222
+#: src/gui/state/game/helpers.cpp:257
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
 
-#. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
-#: src/gui/state/game/helpers.cpp:268
-msgid "(edited)"
+#: src/gui/state/game/helpers.cpp:317
+msgid "N/A: No masterlist present"
+msgstr ""
+
+#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
+#: src/gui/state/game/helpers.cpp:320
+msgid "N/A: No masterlist prelude present"
+msgstr ""
+
+#. translators: Git is the software LOOT uses to track changes to the source code.
+#: src/gui/state/game/helpers.cpp:330
+msgid "Unknown: Git repository missing"
 msgstr ""
 
 #: src/gui/html/elements/editable-table.ts:438
 msgid "Add New Row"
 msgstr ""
 
-#: src/gui/html/elements/loot-groups-editor.ts:446
-#: src/gui/html/js/translateStaticText.ts:369
-msgid "View Documentation"
-msgstr ""
-
-#: src/gui/html/elements/loot-groups-editor.ts:447
-msgid "Add a new group"
-msgstr ""
-
-#: src/gui/html/elements/loot-groups-editor.ts:448
-msgid "Group name"
-msgstr ""
-
 #: src/gui/html/elements/loot-groups-editor.ts:449
 msgid "Drawing mode"
-msgstr ""
-
-#: src/gui/html/elements/loot-groups-editor.ts:450
-msgid "Group already exists!"
-msgstr ""
-
-#: src/gui/html/elements/loot-groups-editor.ts:451
-msgid "No plugins are in this group."
-msgstr ""
-
-#: src/gui/html/elements/loot-groups-editor.ts:477
-msgid "Plugins in %s"
-msgstr ""
-
-#: src/gui/html/elements/loot-plugin-card.ts:339
-msgid "Verified clean by %s"
-msgstr ""
-
-#: src/gui/html/js/events.ts:225
-msgid "Identifying conflicting plugins..."
-msgstr ""
-
-#: src/gui/html/js/events.ts:338
-msgid "Updating and parsing masterlist..."
-msgstr ""
-
-#: src/gui/html/js/events.ts:367
-msgid "Masterlist updated to revision %s."
-msgstr ""
-
-#: src/gui/html/js/events.ts:374
-msgid "No masterlist update was necessary."
 msgstr ""
 
 #: src/gui/html/js/events.ts:448
@@ -268,84 +1077,13 @@ msgstr ""
 msgid "Failed to sort plugins. Details: %s"
 msgstr ""
 
-#: src/gui/html/js/events.ts:491
-msgid "Sorting made no changes to the load order."
-msgstr ""
-
-#. Title of a dialog box.
-#: src/gui/html/js/events.ts:536
-msgid "Redate Plugins?"
-msgstr ""
-
-#: src/gui/html/js/events.ts:537
-msgid ""
-"This feature is provided so that modders using the Creation Kit may set the "
-"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam (this does not affect Skyrim Special "
-"Edition). Do you wish to continue?"
-msgstr ""
-
 #. Affirmative confirmation button text for the Redate Plugins dialog box.
 #: src/gui/html/js/events.ts:541
 msgid "Redate"
 msgstr ""
 
-#. Notification text.
-#: src/gui/html/js/events.ts:548
-msgid "Plugins were successfully redated."
-msgstr ""
-
-#: src/gui/html/js/events.ts:567
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from all "
-"plugins?"
-msgstr ""
-
 #: src/gui/html/js/events.ts:570 src/gui/html/js/events.ts:1162
 msgid "Clear"
-msgstr ""
-
-#: src/gui/html/js/events.ts:581
-msgid "All user-added metadata has been cleared."
-msgstr ""
-
-#: src/gui/html/js/events.ts:618
-msgid "LOOT's content has been copied to the clipboard."
-msgstr ""
-
-#: src/gui/html/js/events.ts:636
-msgid "The load order has been copied to the clipboard."
-msgstr ""
-
-#: src/gui/html/js/events.ts:672
-msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr ""
-
-#: src/gui/html/js/events.ts:676 src/gui/html/js/translateStaticText.ts:372
-msgid "Quit"
-msgstr ""
-
-#: src/gui/html/js/events.ts:694
-msgid "sorted load order"
-msgstr ""
-
-#. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
-#: src/gui/html/js/events.ts:699
-msgid "metadata edits"
-msgstr ""
-
-#: src/gui/html/js/events.ts:1137
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr ""
-
-#: src/gui/html/js/events.ts:1158
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr ""
-
-#: src/gui/html/js/events.ts:1180
-msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
 
 #. An abbreviation of Not Applicable.
@@ -354,178 +1092,12 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: src/gui/html/js/handlePromiseError.ts:8
-#: src/gui/html/js/translateStaticText.ts:245
-msgid "Error"
-msgstr ""
-
-#: src/gui/html/js/loot.ts:358
-msgid ""
-"Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
-"can get to it through the main menu) for more information."
-msgstr ""
-
-#: src/gui/html/js/loot.ts:374
-msgid "A [new release](%s) of LOOT is available."
-msgstr ""
-
-#: src/gui/html/js/loot.ts:414
-msgid ""
-"Auto-sort has been cancelled as there is at least one error message "
-"displayed."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:72
-msgid "Active Plugin"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:74
-#: src/gui/html/js/translateStaticText.ts:601
-msgid "Master File"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:76
-msgid "Light Plugin"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:78
-msgid "Empty Plugin"
-msgstr ""
-
-#. Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
-#: src/gui/html/js/translateStaticText.ts:81
-msgid "Loads Archive"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:83
-#: src/gui/html/js/translateStaticText.ts:209
-msgid "Has User Metadata"
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:86
 msgid "Edit Metadata"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:88
-msgid "Copy Metadata"
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:90
 msgid "Clear User Metadata"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:113
-#: src/gui/html/js/translateStaticText.ts:207
-msgid "Group"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:116
-msgid "Main"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:118
-msgid "Load After"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:120
-msgid "Requirements"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:122
-msgid "Incompatibilities"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:124
-msgid "Messages"
-msgstr ""
-
-#. Title of a tab in the metadata editor.
-#: src/gui/html/js/translateStaticText.ts:127
-msgid "Bash Tags"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:129
-msgid "Dirty Plugin Info"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:131
-msgid "Clean Plugin Info"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:133
-msgid "Locations"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:141
-#: src/gui/html/js/translateStaticText.ts:150
-#: src/gui/html/js/translateStaticText.ts:157
-msgid "Filename"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:144
-#: src/gui/html/js/translateStaticText.ts:152
-#: src/gui/html/js/translateStaticText.ts:159
-msgid "Display Name"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:147
-#: src/gui/html/js/translateStaticText.ts:154
-#: src/gui/html/js/translateStaticText.ts:161
-#: src/gui/html/js/translateStaticText.ts:168
-#: src/gui/html/js/translateStaticText.ts:177
-msgid "Condition"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:164
-msgid "Type"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:166
-msgid "Content"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:170
-#: src/gui/html/js/translateStaticText.ts:532
-msgid "Language"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:173
-msgid "Add/Remove"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:175
-msgid "Bash Tag"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:180
-#: src/gui/html/js/translateStaticText.ts:191
-msgid "CRC"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:182
-msgid "ITM Count"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:184
-msgid "Deleted References"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:186
-msgid "Deleted Navmeshes"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:188
-#: src/gui/html/js/translateStaticText.ts:193
-msgid "Cleaning Utility"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:196
-msgid "URL"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:198
-#: src/gui/html/js/translateStaticText.ts:582
-msgid "Name"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:201
@@ -537,10 +1109,6 @@ msgstr ""
 #: src/gui/html/js/translateStaticText.ts:638
 #: src/gui/html/js/translateStaticText.ts:650
 msgid "Cancel"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:211
-msgid "Editor Is Open"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:230
@@ -556,30 +1124,9 @@ msgstr ""
 msgid "Delete Row"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:241
-msgid "Note"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:243
-msgid "Warning"
-msgstr ""
-
 #. The error message displayed if you add a message with no content in the metadata editor.
 #: src/gui/html/js/translateStaticText.ts:249
 msgid "A content string is required."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:260
-msgid "Add"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:262
-msgid "Remove"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:265
-#: src/gui/html/js/translateStaticText.ts:578
-msgid "A name is required."
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:277
@@ -606,32 +1153,15 @@ msgstr ""
 msgid "Jump To General Information"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:339
-msgid "Sort Plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:343
-msgid "Update Masterlist"
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:344
 #: src/gui/html/js/translateStaticText.ts:635
 #: src/gui/html/js/translateStaticText.ts:648
 msgid "Apply"
 msgstr ""
 
-#. The tooltip for the search icon that reveals the content search input when clicked.
-#: src/gui/html/js/translateStaticText.ts:348
-msgid "Search Cards"
-msgstr ""
-
 #. Text of menu option that triggers display of the Redate Plugins dialog.
 #: src/gui/html/js/translateStaticText.ts:353
 msgid "Redate Plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:354
-msgid "Open Debug Log Location"
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:358
@@ -642,263 +1172,8 @@ msgstr ""
 msgid "Clear All User Metadata"
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:363
-msgid "Copy Load Order"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:365
-msgid "Copy Content"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:367
-msgid "Refresh Content"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:370
-msgid "About"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:371
-#: src/gui/html/js/translateStaticText.ts:520
-msgid "Settings"
-msgstr ""
-
-#. The label on the content search text input.
-#: src/gui/html/js/translateStaticText.ts:382
-msgid "Search cards"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:424
-msgid "Plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:433
-msgid "Filters"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:438
-msgid "Press Enter or click outside the input to set the filter."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:442
-msgid "Show only plugins with cards that contain"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:445
-msgid "No text specified"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:448
-msgid "Hide version numbers"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:451
-msgid "Hide CRCs"
-msgstr ""
-
-#. Text of a filter in the sidebar.
-#: src/gui/html/js/translateStaticText.ts:454
-msgid "Hide Bash Tags"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:455
-msgid "Hide notes"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:456
-msgid "Hide all plugin messages"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:459
-msgid "Hide inactive plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:462
-msgid "Hide messageless plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:467
-msgid "Show only conflicting plugins for"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:469
-msgid "No plugin selected"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:474
-msgid "Show only plugins in group"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:476
-msgid "No group selected"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:481
-msgid "Hidden plugins:"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:483
-msgid "Hidden messages:"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:488
-msgid "General Information"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:492
-msgid "Masterlist Revision"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:494
-msgid "Masterlist Date"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:495
-msgid "Masterlist Prelude Revision"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:498
-msgid "Masterlist Prelude Date"
-msgstr ""
-
-#. The number of warning messages present. This text appears in the General Information card.
-#: src/gui/html/js/translateStaticText.ts:503
-msgid "Warnings"
-msgstr ""
-
-#. The number of error messages present. This text appears in the General Information card.
-#: src/gui/html/js/translateStaticText.ts:506
-msgid "Errors"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:508
-msgid "Total Messages"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:510
-msgid "Active Plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:512
-msgid "Dirty Plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:514
-msgid "Total Plugins"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:522
-msgid "General"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:526
-msgid "Default Game"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:528
-msgid "Autodetect"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:533
-msgid "Language changes will be applied after LOOT is restarted."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:537
-msgid "Theme"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:538
-msgid "Theme changes will be applied after LOOT is restarted."
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:542
 msgid "default"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:547
-msgid "Enable debug logging"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:548
-msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:553
-msgid "Update masterlist before sorting"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:556
-msgid "Check for LOOT updates on startup"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:560
-msgid "A prelude URL is required."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:564
-msgid "Masterlist prelude repository URL"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:569
-msgid "A prelude branch is required."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:573
-msgid "Masterlist prelude repository branch"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:587
-msgid "Base Game"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:592
-msgid "A folder is required."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:596
-msgid "LOOT Folder"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:606
-msgid "Masterlist Repository URL"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:611
-msgid "Masterlist Repository Branch"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:616
-msgid "Install Path"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:621
-msgid "Install Path Registry Keys"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:626
-msgid "Local Data Path"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:629
-msgid "Add new game"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:631
-msgid "Delete game"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:645
-msgid "Groups Editor"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:656
-msgid "First-Time Tips"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:659
-msgid ""
-"This appears to be the first time you have run LOOT v%s. Here are some tips "
-"to help you get started with the interface."
 msgstr ""
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
@@ -914,28 +1189,10 @@ msgid ""
 "\">removal</span>."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:673
-msgid ""
-"CRCs are only displayed after plugins have been loaded, either by conflict "
-"filtering, or by sorting."
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:676
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:679
-msgid ""
-"Plugins can be drag and dropped from the sidebar into the metadata editor's "
-"\"load after\", \"requirements\" and \"incompatibility\" tables."
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:682
-msgid ""
-"Some features are disabled while the metadata editor is open, or while there "
-"is a sorted load order that has not been applied or discarded."
 msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:685
@@ -945,29 +1202,6 @@ msgid ""
 "can be accessed through the main menu."
 msgstr ""
 
-#: src/gui/html/js/translateStaticText.ts:689
-#: src/gui/html/js/translateStaticText.ts:711
-msgid ""
-"LOOT is free, but if you want to show your appreciation with some money, "
-"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
-msgstr ""
-
 #: src/gui/html/js/translateStaticText.ts:695
 msgid "OK"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:700
-msgid "About LOOT"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:702
-msgid "Version %s (build %s)"
-msgstr ""
-
-#: src/gui/html/js/translateStaticText.ts:707
-msgid ""
-"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
-"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
-"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""

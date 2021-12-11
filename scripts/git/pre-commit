@@ -18,6 +18,12 @@ xgettext \
   --msgid-bugs-address="https://github.com/loot/loot/issues" \
   -o resources/l10n/template.pot \
   src/gui/cef/query/*.h \
+  src/gui/qt/*.cpp \
+  src/gui/qt/groups_editor/*.cpp \
+  src/gui/qt/plugin_editor/*.cpp \
+  src/gui/qt/plugin_editor/*.cpp \
+  src/gui/qt/plugin_editor/models/*.cpp \
+  src/gui/qt/settings/*.cpp \
   src/gui/query/*.h \
   src/gui/query/types/*.h \
   src/gui/state/*.cpp \
