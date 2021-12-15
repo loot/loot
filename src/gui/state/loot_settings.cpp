@@ -110,12 +110,6 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
   auto branch = table->get_as<std::string>("branch");
   if (branch) {
     game.SetRepoBranch(*branch);
-
-    auto defaultGame = GameSettings(game.Type());
-    if (game.RepoURL() == defaultGame.RepoURL() &&
-        game.IsRepoBranchOldDefault()) {
-      game.SetRepoBranch(defaultGame.RepoBranch());
-    }
   }
 
   auto path = table->get_as<std::string>("path");
@@ -143,6 +137,8 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
       game.SetRegistryKeys({*registry});
     }
   }
+
+  game.MigrateSettings();
 
   return game;
 }

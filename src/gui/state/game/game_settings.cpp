@@ -25,6 +25,7 @@
 
 #include "gui/state/game/game_settings.h"
 
+#include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
@@ -37,12 +38,13 @@ using std::filesystem::u8path;
 namespace loot {
 const std::set<std::string> GameSettings::oldDefaultBranches(
     {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15"});
+const std::string GameSettings::currentDefaultBranch("v0.17");
 
 GameSettings::GameSettings() :
     type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
-    type_(gameCode), repositoryBranch_("v0.17") {
+    type_(gameCode), repositoryBranch_(currentDefaultBranch) {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
     registryKeys_ = {"Software\\Bethesda Softworks\\Morrowind\\Installed Path",
@@ -301,5 +303,28 @@ std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
   }
 
   return std::nullopt;
+}
+
+void GameSettings::MigrateSettings() {
+  // If the masterlist repository is set to an official repository and the
+  // masterlist branch is an old default branch, update the masterlist
+  // branch to the current default.
+  if (boost::starts_with(repositoryURL_, "https://github.com/loot/") &&
+      IsRepoBranchOldDefault()) {
+    SetRepoBranch(currentDefaultBranch);
+  }
+
+  // If the game is Skyrim VR or Fallout 4 VR and the masterlist repository
+  // is the official Skyrim SE or Fallout 4 repository (respectively),
+  // switch to the newer VR-specific repositories.
+  if (Type() == GameType::tes5vr &&
+      RepoURL() == GameSettings(GameType::tes5se).RepoURL()) {
+    SetRepoURL(GameSettings(GameType::tes5vr).RepoURL());
+  }
+
+  if (Type() == GameType::fo4vr &&
+      RepoURL() == GameSettings(GameType::fo4).RepoURL()) {
+    SetRepoURL(GameSettings(GameType::fo4vr).RepoURL());
+  }
 }
 }

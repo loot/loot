@@ -73,8 +73,11 @@ public:
 
   std::optional<std::filesystem::path> FindGamePath() const;
 
+  void MigrateSettings();
+
 private:
   static const std::set<std::string> oldDefaultBranches;
+  static const std::string currentDefaultBranch;
 
   GameType type_;
   std::string name_;

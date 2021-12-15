@@ -25,9 +25,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_GAME_GAME_SETTINGS_TEST
 #define LOOT_TESTS_GUI_STATE_GAME_GAME_SETTINGS_TEST
 
-#include "gui/state/game/game_settings.h"
-
 #include "gui/helpers.h"
+#include "gui/state/game/game_settings.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -41,13 +40,15 @@ protected:
 // but we only have the one so no prefix is necessary.
 // Just test with one game because if it works for one it will work for them
 // all.
-INSTANTIATE_TEST_SUITE_P(, GameSettingsTest, ::testing::Values(GameType::tes3,
-  GameType::tes4,
-  GameType::tes5,
-  GameType::fo3,
-  GameType::fonv,
-  GameType::fo4,
-  GameType::tes5se));
+INSTANTIATE_TEST_SUITE_P(,
+                         GameSettingsTest,
+                         ::testing::Values(GameType::tes3,
+                                           GameType::tes4,
+                                           GameType::tes5,
+                                           GameType::fo3,
+                                           GameType::fonv,
+                                           GameType::fo4,
+                                           GameType::tes5se));
 
 TEST_P(
     GameSettingsTest,
@@ -249,7 +250,8 @@ TEST_P(GameSettingsTest,
   EXPECT_FALSE(settings_.IsRepoBranchOldDefault());
 }
 
-TEST_P(GameSettingsTest, findGamePathShouldBeNulloptIfGamePathIsNotSetAndGameHasNoRegistryEntry) {
+TEST_P(GameSettingsTest,
+       findGamePathShouldBeNulloptIfGamePathIsNotSetAndGameHasNoRegistryEntry) {
   EXPECT_FALSE(GameSettings(GetParam()).FindGamePath().has_value());
 }
 
@@ -261,14 +263,15 @@ TEST_P(GameSettingsTest, findGamePathShouldHaveAValueIfGamePathIsValid) {
 
 TEST_P(GameSettingsTest, findGamePathShouldSupportNonAsciiGameMasters) {
   auto settings = GameSettings(GetParam(), u8"non\u00C1sciiFolder")
-    .SetGamePath(dataPath.parent_path())
-    .SetGameLocalPath(localPath);
+                      .SetGamePath(dataPath.parent_path())
+                      .SetGameLocalPath(localPath);
   settings.SetMaster(nonAsciiEsp);
 
   EXPECT_TRUE(settings.FindGamePath().has_value());
 }
 
-TEST_P(GameSettingsTest, findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATime) {
+TEST_P(GameSettingsTest,
+       findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATime) {
   auto currentPath = std::filesystem::current_path();
 
   std::filesystem::create_directory(dataPath / ".." / "LOOT");
@@ -277,10 +280,8 @@ TEST_P(GameSettingsTest, findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATim
     std::ofstream out(std::filesystem::path("..") / "TESV.exe");
     // out << "";
     out.close();
-  }
-  else if (GetParam() == GameType::tes5se) {
-    std::ofstream out(std::filesystem::path("..") /
-      "SkyrimSE.exe");
+  } else if (GetParam() == GameType::tes5se) {
+    std::ofstream out(std::filesystem::path("..") / "SkyrimSE.exe");
     // out << "";
     out.close();
   }
@@ -296,8 +297,7 @@ TEST_P(GameSettingsTest, findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATim
   for (int i = 0; i < 6; ++i) {
     if (gameTypes[i] == GetParam()) {
       EXPECT_TRUE(GameSettings(gameTypes[i]).FindGamePath().has_value());
-    }
-    else {
+    } else {
       EXPECT_FALSE(GameSettings(gameTypes[i]).FindGamePath().has_value());
     }
   }
@@ -306,8 +306,7 @@ TEST_P(GameSettingsTest, findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATim
   std::filesystem::remove_all(dataPath / ".." / "LOOT");
   if (GetParam() == GameType::tes5) {
     std::filesystem::remove(dataPath / ".." / "TESV.exe");
-  }
-  else if (GetParam() == GameType::tes5se) {
+  } else if (GetParam() == GameType::tes5se) {
     std::filesystem::remove(dataPath / ".." / "SkyrimSE.exe");
   }
 }
@@ -345,14 +344,18 @@ TEST_P(GameSettingsTest, gameSettingsWithDifferentIdsAndNamesShouldNotBeEqual) {
   EXPECT_FALSE(game1 == game2);
 }
 
-TEST_P(GameSettingsTest, gameSettingsWithCaseInsensitivelyEqualNamesShouldNotBeEqual) {
-  GameSettings game1 = GameSettings(GameType::tes4).SetName(u8"non\u00C1sciiName");
-  GameSettings game2 = GameSettings(GameType::tes5).SetName(u8"non\u00E1sciiName");
+TEST_P(GameSettingsTest,
+       gameSettingsWithCaseInsensitivelyEqualNamesShouldNotBeEqual) {
+  GameSettings game1 =
+      GameSettings(GameType::tes4).SetName(u8"non\u00C1sciiName");
+  GameSettings game2 =
+      GameSettings(GameType::tes5).SetName(u8"non\u00E1sciiName");
 
   EXPECT_FALSE(game1 == game2);
 }
 
-TEST_P(GameSettingsTest, gameSettingsWithCaseInsensitivelyEqualFolderNamesShouldNotBeEqual) {
+TEST_P(GameSettingsTest,
+       gameSettingsWithCaseInsensitivelyEqualFolderNamesShouldNotBeEqual) {
   GameSettings game1 = GameSettings(GameType::tes4, u8"non\u00C1sciiFolder");
   GameSettings game2 = GameSettings(GameType::tes5, u8"non\u00E1sciiFolder");
 
@@ -414,6 +417,78 @@ TEST_P(GameSettingsTest,
   auto expectedPath =
       getLocalAppDataPath() / std::filesystem::u8path(folderName);
   EXPECT_EQ(expectedPath, settings_.GameLocalPath());
+}
+
+TEST_P(GameSettingsTest,
+       migrateSettingsShouldUpdateAnyOfficialRepositoryDefaultBranch) {
+  GameSettings settings(GameType::tes4);
+
+  settings.SetRepoURL("https://github.com/loot/some-masterlist-repo.git");
+  settings.SetRepoBranch("v0.15");
+
+  settings.MigrateSettings();
+
+  EXPECT_EQ("v0.17", settings.RepoBranch());
+}
+
+TEST_P(GameSettingsTest,
+       migrateSettingsShouldNotUpdateAnyNonOfficialRepositoryDefaultBranch) {
+  GameSettings settings(GameType::tes4);
+
+  settings.SetRepoURL(
+      "https://github.com/loot-unofficial/some-masterlist-repo.git");
+  settings.SetRepoBranch("v0.15");
+
+  settings.MigrateSettings();
+
+  EXPECT_EQ("v0.15", settings.RepoBranch());
+}
+
+TEST_P(GameSettingsTest,
+       migrateSettingsShouldUpdateSkyrimVrRepoUrlFromOldDefaultRepoUrl) {
+  GameSettings settings(GameType::tes5vr);
+
+  settings.SetRepoURL("https://github.com/loot/skyrimse.git");
+
+  settings.MigrateSettings();
+
+  EXPECT_EQ(GameSettings(GameType::tes5vr).RepoURL(), settings.RepoURL());
+}
+
+TEST_P(GameSettingsTest,
+       migrateSettingsShouldNotUpdateSkyrimVrRepoUrlFromNonOldDefaultRepoUrl) {
+  GameSettings settings(GameType::tes5vr);
+
+  auto url = "https://github.com/loot/skyrim.git";
+  settings.SetRepoURL(url);
+
+  settings.MigrateSettings();
+
+  EXPECT_EQ(url, settings.RepoURL());
+}
+
+TEST_P(GameSettingsTest,
+       migrateSettingsShouldUpdateFallout4VrRepoUrlFromOldDefaultRepoUrl) {
+  GameSettings settings(GameType::fo4vr);
+
+  settings.SetRepoURL("https://github.com/loot/fallout4.git");
+
+  settings.MigrateSettings();
+
+  EXPECT_EQ(GameSettings(GameType::fo4vr).RepoURL(), settings.RepoURL());
+}
+
+TEST_P(
+    GameSettingsTest,
+    migrateSettingsShouldNotUpdateFallout4VrRepoUrlFromNonOldDefaultRepoUrl) {
+  GameSettings settings(GameType::fo4vr);
+
+  auto url = "https://github.com/loot/skyrim.git";
+  settings.SetRepoURL(url);
+
+  settings.MigrateSettings();
+
+  EXPECT_EQ(url, settings.RepoURL());
 }
 }
 }
