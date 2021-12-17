@@ -2,19 +2,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-11-05 18:49+0000\n"
-"PO-Revision-Date: 2021-11-08 13:39+0200\n"
+"POT-Creation-Date: 2021-12-15 20:42+0000\n"
+"PO-Revision-Date: 2021-12-17 22:09+0200\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0.1\n"
 
-#: src/gui/cef/query/query.h:49
+#: src/gui/cef/query/query_executor.h:44
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"О нет, что-то пошло не так! Дополнительную информацию можно узнать в файле "
+"LOOTDebugLog.txt (можно получить доступ к нему через главное меню)."
+
+#: src/gui/query/query.h:49
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -26,40 +34,32 @@ msgstr ""
 "дополнительную информацию можно узнать в файле LOOTDebugLog.txt (можно "
 "получить доступ к нему через главное меню)."
 
-#: src/gui/cef/query/query_executor.h:44
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-"О нет, что-то пошло не так! Дополнительную информацию можно узнать в файле "
-"LOOTDebugLog.txt (можно получить доступ к нему через главное меню)."
-
-#: src/gui/cef/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "Обработка, объединение и оценка метаданных..."
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/get_prelude_info_query.h:49
+#: src/gui/query/types/get_prelude_info_query.h:49
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: Prelude-файл отсутствует"
 
 #. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/cef/query/types/get_prelude_info_query.h:59
-#: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/query/types/get_prelude_info_query.h:59
+#: src/gui/query/types/metadata_query.h:266
 msgid "Unknown: Git repository missing"
 msgstr "Неизвестно: Отсутствует хранилище Git"
 
-#: src/gui/cef/query/types/metadata_query.h:205
-#: src/gui/cef/query/types/metadata_query.h:232
+#: src/gui/query/types/metadata_query.h:205
+#: src/gui/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\" включает условие, которое не может быть оценено. Детали: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/query/types/metadata_query.h:256
 msgid "N/A: No masterlist present"
 msgstr "N/A: Мастерлист отсутствует"
 
-#: src/gui/cef/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr "Сортировка порядка загрузки..."
 
@@ -247,28 +247,32 @@ msgstr "(изменено)"
 msgid "Add New Row"
 msgstr "Добавить новую строку"
 
-#: src/gui/html/elements/loot-groups-editor.ts:445
+#: src/gui/html/elements/loot-groups-editor.ts:446
 #: src/gui/html/js/translateStaticText.ts:369
 msgid "View Documentation"
 msgstr "Смотреть документацию"
 
-#: src/gui/html/elements/loot-groups-editor.ts:446
+#: src/gui/html/elements/loot-groups-editor.ts:447
 msgid "Add a new group"
 msgstr "Добавить новую группу"
 
-#: src/gui/html/elements/loot-groups-editor.ts:447
+#: src/gui/html/elements/loot-groups-editor.ts:448
 msgid "Group name"
 msgstr "Имя группы"
 
-#: src/gui/html/elements/loot-groups-editor.ts:448
+#: src/gui/html/elements/loot-groups-editor.ts:449
+msgid "Drawing mode"
+msgstr "Режим рисования"
+
+#: src/gui/html/elements/loot-groups-editor.ts:450
 msgid "Group already exists!"
 msgstr "Группа уже существует!"
 
-#: src/gui/html/elements/loot-groups-editor.ts:449
+#: src/gui/html/elements/loot-groups-editor.ts:451
 msgid "No plugins are in this group."
 msgstr "Нет плагинов в этой группе."
 
-#: src/gui/html/elements/loot-groups-editor.ts:475
+#: src/gui/html/elements/loot-groups-editor.ts:477
 msgid "Plugins in %s"
 msgstr "Плагины в %s"
 
