@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-10-17 18:12+0100\n"
-"PO-Revision-Date: 2021-10-18 19:12+0300\n"
+"POT-Creation-Date: 2021-12-15 20:42+0000\n"
+"PO-Revision-Date: 2021-12-17 14:17+0200\n"
 "Last-Translator: Georgi Georgiev (Жоро) <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <g.georgiev.shumen@gmail.com>\n"
 "Language: bg\n"
@@ -18,7 +18,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0\n"
 
-#: src/gui/cef/query/query.h:49
+#: src/gui/cef/query/query_executor.h:44
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"Нещо се обърка! Вижте „LOOTDebugLog.txt“ (през главното меню) за повече "
+"информация."
+
+#: src/gui/query/query.h:49
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -29,40 +37,32 @@ msgstr ""
 "така, изключете го и опитайте отново. Ако причината е друга, вижте "
 "„LOOTDebugLog.txt“ (през главното меню) за повече информация."
 
-#: src/gui/cef/query/query_executor.h:44
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-"Нещо се обърка! Вижте „LOOTDebugLog.txt“ (през главното меню) за повече "
-"информация."
-
-#: src/gui/cef/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "Анализиране, обединяване и оценяване на метаданните..."
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/get_prelude_info_query.h:49
+#: src/gui/query/types/get_prelude_info_query.h:49
 msgid "N/A: No masterlist prelude present"
 msgstr "Внимание: Основният каталожен списък липсва"
 
 #. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/cef/query/types/get_prelude_info_query.h:59
-#: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/query/types/get_prelude_info_query.h:59
+#: src/gui/query/types/metadata_query.h:266
 msgid "Unknown: Git repository missing"
 msgstr "Внимание: Хранилището в „Git“ липсва"
 
-#: src/gui/cef/query/types/metadata_query.h:205
-#: src/gui/cef/query/types/metadata_query.h:232
+#: src/gui/query/types/metadata_query.h:205
+#: src/gui/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "„%1%“ съдържа условие, което не може да бъде оценено. Детайли: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/query/types/metadata_query.h:256
 msgid "N/A: No masterlist present"
 msgstr "Внимание: Основният списък липсва"
 
-#: src/gui/cef/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr "Сортиране на реда за зареждане..."
 
@@ -242,28 +242,32 @@ msgstr "(редактиран)"
 msgid "Add New Row"
 msgstr "Добави нов ред"
 
-#: src/gui/html/elements/loot-groups-editor.ts:426
+#: src/gui/html/elements/loot-groups-editor.ts:446
 #: src/gui/html/js/translateStaticText.ts:369
 msgid "View Documentation"
 msgstr "Виж документацията"
 
-#: src/gui/html/elements/loot-groups-editor.ts:427
+#: src/gui/html/elements/loot-groups-editor.ts:447
 msgid "Add a new group"
 msgstr "Добави нова група"
 
-#: src/gui/html/elements/loot-groups-editor.ts:428
+#: src/gui/html/elements/loot-groups-editor.ts:448
 msgid "Group name"
 msgstr "Име на групата"
 
-#: src/gui/html/elements/loot-groups-editor.ts:429
+#: src/gui/html/elements/loot-groups-editor.ts:449
+msgid "Drawing mode"
+msgstr "Режим на чертане"
+
+#: src/gui/html/elements/loot-groups-editor.ts:450
 msgid "Group already exists!"
 msgstr "Групата вече съществува!"
 
-#: src/gui/html/elements/loot-groups-editor.ts:430
+#: src/gui/html/elements/loot-groups-editor.ts:451
 msgid "No plugins are in this group."
 msgstr "В тази група няма приставки."
 
-#: src/gui/html/elements/loot-groups-editor.ts:440
+#: src/gui/html/elements/loot-groups-editor.ts:477
 msgid "Plugins in %s"
 msgstr "Приставки в %s"
 
@@ -271,40 +275,40 @@ msgstr "Приставки в %s"
 msgid "Verified clean by %s"
 msgstr "Според „%s“, приставката е чиста"
 
-#: src/gui/html/js/events.ts:219
+#: src/gui/html/js/events.ts:225
 msgid "Identifying conflicting plugins..."
 msgstr "Откриване на несъвместимите приставки..."
 
-#: src/gui/html/js/events.ts:332
+#: src/gui/html/js/events.ts:338
 msgid "Updating and parsing masterlist..."
 msgstr "Обновяване и разбор на основния списък..."
 
-#: src/gui/html/js/events.ts:361
+#: src/gui/html/js/events.ts:367
 msgid "Masterlist updated to revision %s."
 msgstr "Основният списък е обновен до ревизия %s."
 
-#: src/gui/html/js/events.ts:368
+#: src/gui/html/js/events.ts:374
 msgid "No masterlist update was necessary."
 msgstr "Не беше необходимо обновяване на основния списък."
 
-#: src/gui/html/js/events.ts:442
+#: src/gui/html/js/events.ts:448
 msgid "Cyclic interaction detected"
 msgstr "Засечено е циклично взаимодействие"
 
-#: src/gui/html/js/events.ts:449
+#: src/gui/html/js/events.ts:455
 msgid "Failed to sort plugins. Details: %s"
 msgstr "Сортирането на приставките е неуспешно. Детайли: %s"
 
-#: src/gui/html/js/events.ts:485
+#: src/gui/html/js/events.ts:491
 msgid "Sorting made no changes to the load order."
 msgstr "Сортирането не промени реда за зареждане."
 
 #. Title of a dialog box.
-#: src/gui/html/js/events.ts:529
+#: src/gui/html/js/events.ts:536
 msgid "Redate Plugins?"
 msgstr "Промени датата на приставките?"
 
-#: src/gui/html/js/events.ts:530
+#: src/gui/html/js/events.ts:537
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -317,16 +321,16 @@ msgstr ""
 "ли да продължите?"
 
 #. Affirmative confirmation button text for the Redate Plugins dialog box.
-#: src/gui/html/js/events.ts:534
+#: src/gui/html/js/events.ts:541
 msgid "Redate"
 msgstr "Промени датата"
 
 #. Notification text.
-#: src/gui/html/js/events.ts:541
+#: src/gui/html/js/events.ts:548
 msgid "Plugins were successfully redated."
 msgstr "Датата на приставките беше променена успешно."
 
-#: src/gui/html/js/events.ts:560
+#: src/gui/html/js/events.ts:567
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -334,60 +338,60 @@ msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
 "всички приставки?"
 
-#: src/gui/html/js/events.ts:563 src/gui/html/js/events.ts:1155
+#: src/gui/html/js/events.ts:570 src/gui/html/js/events.ts:1162
 msgid "Clear"
 msgstr "Изчисти"
 
-#: src/gui/html/js/events.ts:574
+#: src/gui/html/js/events.ts:581
 msgid "All user-added metadata has been cleared."
 msgstr "Всички добавени метаданни бяха изчистени."
 
-#: src/gui/html/js/events.ts:611
+#: src/gui/html/js/events.ts:618
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Съдържанието на „LOOT“ беше копирано в клипборда."
 
-#: src/gui/html/js/events.ts:629
+#: src/gui/html/js/events.ts:636
 msgid "The load order has been copied to the clipboard."
 msgstr "Редът за зареждане беше копиран в клипборда."
 
-#: src/gui/html/js/events.ts:665
+#: src/gui/html/js/events.ts:672
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 "Все още не сте приложили или отказали %s. Сигурни ли сте, че искате да "
 "излезете?"
 
-#: src/gui/html/js/events.ts:669 src/gui/html/js/translateStaticText.ts:372
+#: src/gui/html/js/events.ts:676 src/gui/html/js/translateStaticText.ts:372
 msgid "Quit"
 msgstr "Изход"
 
-#: src/gui/html/js/events.ts:687
+#: src/gui/html/js/events.ts:694
 msgid "sorted load order"
 msgstr "сортиран ред за зареждане"
 
 #. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
-#: src/gui/html/js/events.ts:692
+#: src/gui/html/js/events.ts:699
 msgid "metadata edits"
 msgstr "редакции на метаданни"
 
-#: src/gui/html/js/events.ts:1130
+#: src/gui/html/js/events.ts:1137
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "Метаданните за „%s“ бяха копирани в клипборда."
 
-#: src/gui/html/js/events.ts:1151
+#: src/gui/html/js/events.ts:1158
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
 "„%s“?"
 
-#: src/gui/html/js/events.ts:1173
+#: src/gui/html/js/events.ts:1180
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "Добавените метаданни от „%s“ бяха изчистени."
 
 #. An abbreviation of Not Applicable.
-#: src/gui/html/js/game.ts:141 src/gui/html/js/loot.ts:563
-#: src/gui/html/js/loot.ts:564
+#: src/gui/html/js/game.ts:141 src/gui/html/js/loot.ts:566
+#: src/gui/html/js/loot.ts:567
 msgid "N/A"
 msgstr "Няма"
 
@@ -396,7 +400,7 @@ msgstr "Няма"
 msgid "Error"
 msgstr "Грешка"
 
-#: src/gui/html/js/loot.ts:357
+#: src/gui/html/js/loot.ts:358
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -404,11 +408,11 @@ msgstr ""
 "Проверката за обновявания на „LOOT“ е неуспешна! Проверете „LOOTDebugLog."
 "txt“ (от главното меню) за повече информация."
 
-#: src/gui/html/js/loot.ts:373
+#: src/gui/html/js/loot.ts:374
 msgid "A [new release](%s) of LOOT is available."
 msgstr "Налична е [нова версия](%s) на „LOOT“."
 
-#: src/gui/html/js/loot.ts:413
+#: src/gui/html/js/loot.ts:414
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
