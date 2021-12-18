@@ -2,19 +2,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.16.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"POT-Creation-Date: \n"
+"POT-Creation-Date: 2021-12-15 20:42+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: \n"
+"Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: uk_UA\n"
-"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0.1\n"
 
-#: src/gui/cef/query/query.h:49
+#: src/gui/cef/query/query_executor.h:44
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"О ні, щось пішло не так! Додаткову інформацію можна дізнатись у файлі "
+"LOOTDebugLog.txt (можна отримати доступ до нього через головне меню)."
+
+#: src/gui/query/query.h:49
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -26,40 +34,32 @@ msgstr ""
 "додаткову інформацію можна дізнатись у файлі LOOTDebugLog.txt (можна "
 "отримати доступ до нього через головне меню)."
 
-#: src/gui/cef/query/query_executor.h:44
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-"О ні, щось пішло не так! Додаткову інформацію можна дізнатись у файлі "
-"LOOTDebugLog.txt (можна отримати доступ до нього через головне меню)."
-
-#: src/gui/cef/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "Обробка, об'єднання та оцінка метаданих..."
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/get_prelude_info_query.h:49
+#: src/gui/query/types/get_prelude_info_query.h:49
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: Prelude-файл майстерлисту відсутній"
 
 #. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/cef/query/types/get_prelude_info_query.h:59
-#: src/gui/cef/query/types/metadata_query.h:266
+#: src/gui/query/types/get_prelude_info_query.h:59
+#: src/gui/query/types/metadata_query.h:266
 msgid "Unknown: Git repository missing"
 msgstr "Невідомо: Відсутне сховище Git"
 
-#: src/gui/cef/query/types/metadata_query.h:205
-#: src/gui/cef/query/types/metadata_query.h:232
+#: src/gui/query/types/metadata_query.h:205
+#: src/gui/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr "\"%1%\" містить умову, який неможливо оцінити. Деталі: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/metadata_query.h:256
+#: src/gui/query/types/metadata_query.h:256
 msgid "N/A: No masterlist present"
 msgstr "N/A: Майстерлист відсутній"
 
-#: src/gui/cef/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr "Сортування порядку завантження..."
 
@@ -245,28 +245,32 @@ msgstr "(змінено)"
 msgid "Add New Row"
 msgstr "Додати новий рядок"
 
-#: src/gui/html/elements/loot-groups-editor.ts:445
+#: src/gui/html/elements/loot-groups-editor.ts:446
 #: src/gui/html/js/translateStaticText.ts:369
 msgid "View Documentation"
 msgstr "Відкрити документацію"
 
-#: src/gui/html/elements/loot-groups-editor.ts:446
+#: src/gui/html/elements/loot-groups-editor.ts:447
 msgid "Add a new group"
 msgstr "Додати нову групу"
 
-#: src/gui/html/elements/loot-groups-editor.ts:447
+#: src/gui/html/elements/loot-groups-editor.ts:448
 msgid "Group name"
 msgstr "Ім'я групи"
 
-#: src/gui/html/elements/loot-groups-editor.ts:448
+#: src/gui/html/elements/loot-groups-editor.ts:449
+msgid "Drawing mode"
+msgstr "Режим малювання"
+
+#: src/gui/html/elements/loot-groups-editor.ts:450
 msgid "Group already exists!"
 msgstr "Група уже існує!"
 
-#: src/gui/html/elements/loot-groups-editor.ts:449
+#: src/gui/html/elements/loot-groups-editor.ts:451
 msgid "No plugins are in this group."
 msgstr "У цій групі немає плагінів."
 
-#: src/gui/html/elements/loot-groups-editor.ts:475
+#: src/gui/html/elements/loot-groups-editor.ts:477
 msgid "Plugins in %s"
 msgstr "Плагіни в %s"
 
@@ -435,6 +439,7 @@ msgstr "Легкий плагін"
 msgid "Empty Plugin"
 msgstr "Очистити плагін"
 
+#. Tooltip text for an icon that may be displayed on plugin cards. The icon indicates that the plugin in question loads a .bsa or .ba2 (depending on the game) archive.
 #: src/gui/html/js/translateStaticText.ts:81
 msgid "Loads Archive"
 msgstr "Завантажує архів"
@@ -481,6 +486,7 @@ msgstr "Несумісності"
 msgid "Messages"
 msgstr "Повідомлення"
 
+#. Title of a tab in the metadata editor.
 #: src/gui/html/js/translateStaticText.ts:127
 msgid "Bash Tags"
 msgstr "Bash-теги"
@@ -605,6 +611,7 @@ msgstr "Замітка"
 msgid "Warning"
 msgstr "Попередження"
 
+#. The error message displayed if you add a message with no content in the metadata editor.
 #: src/gui/html/js/translateStaticText.ts:249
 msgid "A content string is required."
 msgstr "Необхідно вміст рядка."
@@ -660,10 +667,12 @@ msgstr "Оновити майстерлист"
 msgid "Apply"
 msgstr "Застосувати"
 
+#. The tooltip for the search icon that reveals the content search input when clicked.
 #: src/gui/html/js/translateStaticText.ts:348
 msgid "Search Cards"
 msgstr "Знайти картки"
 
+#. Text of menu option that triggers display of the Redate Plugins dialog.
 #: src/gui/html/js/translateStaticText.ts:353
 msgid "Redate Plugins"
 msgstr "Редатувати плагіни"
@@ -701,6 +710,7 @@ msgstr "Про програму"
 msgid "Settings"
 msgstr "Налаштування"
 
+#. The label on the content search text input.
 #: src/gui/html/js/translateStaticText.ts:382
 msgid "Search cards"
 msgstr "Знайти картки"
@@ -733,6 +743,7 @@ msgstr "Сховати номери версій"
 msgid "Hide CRCs"
 msgstr "Сховати CRC"
 
+#. Text of a filter in the sidebar.
 #: src/gui/html/js/translateStaticText.ts:454
 msgid "Hide Bash Tags"
 msgstr "Сховати Bash-теги"
