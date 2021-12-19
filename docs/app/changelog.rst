@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.17.0 - 2021-12-07
+0.17.0 - 2021-12-19
 ===================
 
 Added
@@ -29,7 +29,7 @@ Changed
 -------
 
 - The groups editor now has a "drawing mode" toggle button. Edges can only be added in drawing mode, and nodes can only be moved around outside of drawing mode.
-- The Skyrim VR and Fallout VR games now use new `skyrimvr` and `falloutvr` masterlist repositories. The new repositories are independent from the `skyrimse` and `fallout4` repositories that were previously used.
+- The Skyrim VR and Fallout VR games now use new ``skyrimvr`` and ``falloutvr`` masterlist repositories. The new repositories are independent from the ``skyrimse`` and ``fallout4`` repositories that were previously used.
 - LOOT's installer now downloads the latest MSVC 2015/2017/2019 redistributable if it is not already installed, or if it is older than 14.15.26706.
 - Sorting now checks for cycles before adding overlap edges, so that any cycles are caught before the slowest steps in the sorting process. Via libloot.
 - Masterlist update no longer supports rolling back through revisions until a revision that can be successfully loaded is found. Via libloot.
