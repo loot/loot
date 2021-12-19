@@ -98,7 +98,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ("en", settings_.getLanguage());
   EXPECT_EQ("default", settings_.getTheme());
   EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
-  EXPECT_FALSE(settings_.getFilters().hideBashTags);
+  EXPECT_TRUE(settings_.getFilters().hideBashTags);
   EXPECT_FALSE(settings_.getFilters().hideCRCs);
   EXPECT_FALSE(settings_.getFilters().hideNotes);
   EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);

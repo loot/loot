@@ -172,7 +172,7 @@ LootSettings::WindowPosition::WindowPosition() :
 LootSettings::Filters::Filters() :
     hideVersionNumbers(false),
     hideCRCs(false),
-    hideBashTags(false),
+    hideBashTags(true),
     hideNotes(false),
     hideAllPluginMessages(false),
     hideInactivePlugins(false),
