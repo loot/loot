@@ -966,7 +966,7 @@ msgid ""
 msgstr ""
 "Разом із повідомленнями LOOT відображає <span class=\"version\">номери "
 "версій</span> плагінів, <span class=\"crc\">CRC</span> та рекомендовані Bash-"
-"теги для <span class=\"tag add\">додавання</span>й <span class=\"tag remove"
+"теги для <span class=\"tag add\">додавання</span> й <span class=\"tag remove"
 "\">видалення</span>."
 
 #: src/gui/html/js/translateStaticText.ts:673
