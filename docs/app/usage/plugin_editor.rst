@@ -6,10 +6,9 @@ LOOT uses metadata to supply plugins with messages and Bash Tag suggestions, and
 
 The editor panel is accessed by clicking the "Edit Metadata" item in a plugin's menu, or by double-clicking a plugin name in the sidebar. Only one plugin's metadata can be edited at a time. While the editor panel is open, the plugin sidebar also displays any non-default plugin groups, to aid setting new group memberships. The editor can be resized by grabbing the top of the editor's header and dragging it up or down.
 
-The editor's header displays the name of the plugin being edited, "Save Metadata" and "Cancel" buttons, and a row of tabs. The MAIN tab's page contains the following inputs:
+The editor's header displays the name of the plugin being edited, "Save Metadata" and "Cancel" buttons, and a row of tabs.
 
-- The "Enable Edits" toggle must be on for LOOT to use any user-added metadata during sorting, otherwise it will be ignored.
-- The "Group" dropdown sets the group that the plugin belongs to, which is the "default" group by default. If a plugin's group is set by user metadata, the non-user-metadata value will be highlighted in bold dark blue text.
+The MAIN tab's page contains the "Group" dropdown, which sets the group that the plugin belongs to, and is set to the "default" group by default. If a plugin's group is set by user metadata, the non-user-metadata value will be highlighted in bold dark blue text.
 
   Plugin groups are used to concisely load groups of plugins after others. The dropdown lists all defined groups: to define new groups or edit existing groups, use the Groups Editor.
 

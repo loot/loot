@@ -17,7 +17,7 @@ LOOT's active game can be changed by clicking on it in the header bar, and selec
 Masterlist Update & Sorting
 ---------------------------
 
-The masterlist update process updates the active game's masterlist to the latest revision at the location given by the game's masterlist repository settings. If the latest revision contains errors, LOOT will roll back to the latest revision that works.
+The masterlist update process updates the active game's masterlist to the latest revision at the location given by the game's masterlist repository settings.
 
 By :ref:`default <update-masterlist>`, sorting first updates the masterlist. LOOT then calculates a load order for your plugins, using their internal data and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail.
 
@@ -91,7 +91,6 @@ Clicking the FILTERS tab in the sidebar will replace the sidebar's plugin list w
 
 Hide version numbers
   Hides the version numbers displayed in blue next to those plugins that provide them.
-
 Hide CRCs
   Hides the CRCs displayed in orange next to those plugins that provide them.
 Hide Bash Tags
@@ -105,10 +104,13 @@ Hide inactive plugins
 Hide messageless plugins
   Hides all plugins that have no visible messages.
 
-The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also two other filters in the sidebar tab:
+The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also three other filters in the sidebar tab:
 
-Show only conflicting plugins for…
-  This hides any plugins that don't have the filter input value present in any of the text on their cards.
-
-Show only plugins with cards that contain…
+Show only conflicting plugins for
   This filters the plugin cards displayed so that only plugins which conflict with this plugin will be visible. If this plugin loads an archive, other plugins that load archives which may contain conflicting resources are also displayed. Sorting with the conflict filter active will first deactivate it.
+
+Show only plugins in group
+  This filters the plugin cards displayed so that only plugins in the selected group will be visible.
+
+Show only plugins with cards that contain
+  This hides any plugins that don't have the filter input value present in any of the text on their cards.
