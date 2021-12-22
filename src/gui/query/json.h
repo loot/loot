@@ -258,7 +258,14 @@ void to_json(nlohmann::json& json, const FileRevision& revision) {
   json = {
       {"id", revision.id},
       {"date", revision.date},
+      {"is_modified", revision.is_modified},
   };
+}
+
+void from_json(const nlohmann::json& json, FileRevision& revision) {
+  revision.date = json.at("date");
+  revision.id = json.at("id");
+  revision.is_modified = json.at("is_modified");
 }
 
 void to_json(nlohmann::json& json, const GameSettings& game) {
