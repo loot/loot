@@ -29,6 +29,7 @@ along with LOOT.  If not, see
 #include <loot/api.h>
 
 #include <boost/format.hpp>
+#include <boost/locale.hpp>
 #include <json.hpp>
 #include <optional>
 
@@ -88,11 +89,43 @@ public:
 
   const std::string& GetName() const { return name; }
 
+  const std::optional<std::string>& GetVersion() const { return version; }
+
   bool IsActive() const { return isActive; }
 
   bool IsDirty() const { return isDirty; }
 
+  bool IsEmpty() const { return isEmpty; }
+
+  bool IsMaster() const { return isMaster; }
+
+  bool IsLightPlugin() const { return isLightPlugin; }
+
+  bool LoadsArchive() const { return loadsArchive; }
+
+  const std::optional<uint32_t>& GetCRC() const { return crc; }
+
+  const std::optional<short>& GetLoadOrderIndex() const {
+    return loadOrderIndex;
+  }
+
+  const std::optional<std::string>& GetGroup() const { return group; }
+
+  const std::string& GetCleaningUtility() const { return cleanedWith; }
+
   const std::vector<SimpleMessage>& GetMessages() const { return messages; }
+
+  const std::vector<Tag>& GetCurrentTags() const { return currentTags; }
+
+  const std::vector<Tag>& GetSuggestedTags() const { return suggestedTags; }
+
+  const std::optional<PluginMetadata>& GetNonUserMetadata() const {
+    return masterlistMetadata;
+  }
+
+  const std::optional<PluginMetadata>& GetUserMetadata() const {
+    return userMetadata;
+  }
 
 private:
   std::string name;
