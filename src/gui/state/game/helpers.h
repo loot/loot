@@ -53,6 +53,10 @@ Message PlainTextMessage(MessageType type, std::string text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
 
+std::vector<SimpleMessage> ToSimpleMessages(
+    const std::vector<Message>& messages,
+    const std::string& language);
+
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<Message> CheckForRemovedPlugins(

@@ -158,6 +158,20 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   return Message(MessageType::warn, detail);
 }
 
+std::vector<SimpleMessage> ToSimpleMessages(
+    const std::vector<Message>& messages,
+    const std::string& language) {
+  std::vector<SimpleMessage> simpleMessages;
+  for (const auto message : messages) {
+    auto simpleMessage = message.ToSimpleMessage(language);
+    if (simpleMessage.has_value()) {
+      simpleMessages.push_back(simpleMessage.value());
+    }
+  }
+
+  return simpleMessages;
+}
+
 std::string DescribeEdgeType(EdgeType edgeType) {
   switch (edgeType) {
     case EdgeType::hardcoded:

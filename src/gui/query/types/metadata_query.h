@@ -46,7 +46,7 @@ protected:
   std::vector<SimpleMessage> getGeneralMessages() const {
     std::vector<Message> messages = game_.GetMessages();
 
-    return toSimpleMessages(messages, language_);
+    return ToSimpleMessages(messages, language_);
   }
 
   std::optional<DerivedPluginMetadata> generateDerivedMetadata(
@@ -111,20 +111,6 @@ protected:
   const G& getGame() const { return game_; }
 
 private:
-  static std::vector<SimpleMessage> toSimpleMessages(
-      const std::vector<Message>& messages,
-      const std::string& language) {
-    std::vector<SimpleMessage> simpleMessages;
-    for (const auto message : messages) {
-      auto simpleMessage = message.ToSimpleMessage(language);
-      if (simpleMessage.has_value()) {
-        simpleMessages.push_back(simpleMessage.value());
-      }
-    }
-
-    return simpleMessages;
-  }
-
   G& game_;
   std::shared_ptr<spdlog::logger> logger_;
   const std::string language_;
