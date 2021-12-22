@@ -113,6 +113,13 @@ void to_json(nlohmann::json& json, const SimpleMessage& message) {
   };
 }
 
+void from_json(const nlohmann::json& json, SimpleMessage& message) {
+  message.type = mapMessageType(json.at("type"));
+  message.text = json.at("text").get<std::string>();
+  message.language = json.at("language").get<std::string>();
+  message.condition = json.at("condition").get<std::string>();
+}
+
 void from_json(const nlohmann::json& json, Message& message) {
   if (json.count("text") == 0) {
     throw std::runtime_error("SimpleMessage object has an empty 'text' value");
@@ -407,6 +414,48 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
     json["userlist"] =
         to_json_with_language(plugin.userMetadata.value(), plugin.language);
   }
+}
+
+void from_json(const nlohmann::json& json, DerivedPluginMetadata& plugin) {
+  plugin.name = json.at("name").get<std::string>();
+  plugin.isActive = json.at("isActive").get<bool>();
+  plugin.isDirty = json.at("isDirty").get<bool>();
+  plugin.isEmpty = json.at("isEmpty").get<bool>();
+  plugin.isMaster = json.at("isMaster").get<bool>();
+  plugin.isLightPlugin = json.at("isLightPlugin").get<bool>();
+  plugin.loadsArchive = json.at("loadsArchive").get<bool>();
+  plugin.messages = json.at("messages").get<std::vector<SimpleMessage>>();
+  plugin.suggestedTags = json.at("suggestedTags").get<std::vector<Tag>>();
+  plugin.currentTags = json.at("currentTags").get<std::vector<Tag>>();
+
+  auto versionIt = json.find("version");
+  if (versionIt != json.end()) {
+    plugin.version = versionIt->get<std::string>();
+  }
+
+  auto crcIt = json.find("crc");
+  if (crcIt != json.end()) {
+    plugin.crc = crcIt->get<uint32_t>();
+  }
+
+  auto groupIt = json.find("group");
+  if (groupIt != json.end()) {
+    plugin.group = groupIt->get<std::string>();
+  }
+
+  auto loadOrderIndexIt = json.find("loadOrderIndex");
+  if (loadOrderIndexIt != json.end()) {
+    plugin.loadOrderIndex = loadOrderIndexIt->get<short>();
+  }
+
+  auto cleanedWithIt = json.find("cleanedWith");
+  if (cleanedWithIt != json.end()) {
+    plugin.cleanedWith = cleanedWithIt->get<std::string>();
+  }
+
+  // userlist and masterlist are not deserialised because they cannot be
+  // losslessly round-tripped, and having something is probably more confusing
+  // than having nothing.
 }
 }
 

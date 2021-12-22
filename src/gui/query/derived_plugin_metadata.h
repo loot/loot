@@ -39,6 +39,14 @@ along with LOOT.  If not, see
 namespace loot {
 class DerivedPluginMetadata {
 public:
+  DerivedPluginMetadata() :
+      isActive(false),
+      isDirty(false),
+      isEmpty(false),
+      isMaster(false),
+      isLightPlugin(false),
+      loadsArchive(false) {}
+
   DerivedPluginMetadata(const std::shared_ptr<const PluginInterface>& file,
                         bool isActive,
                         std::optional<short> loadOrderIndex,
@@ -78,6 +86,14 @@ public:
     this->loadOrderIndex = loadOrderIndex;
   }
 
+  const std::string& GetName() const { return name; }
+
+  bool IsActive() const { return isActive; }
+
+  bool IsDirty() const { return isDirty; }
+
+  const std::vector<SimpleMessage>& GetMessages() const { return messages; }
+
 private:
   std::string name;
   std::optional<std::string> version;
@@ -104,6 +120,9 @@ private:
 
   friend void to_json(nlohmann::json& json,
                       const DerivedPluginMetadata& plugin);
+
+  friend void from_json(const nlohmann::json& json,
+                        DerivedPluginMetadata& plugin);
 };
 
 template<typename G>
