@@ -67,7 +67,7 @@ private:
                                "\" is not loaded.");
     }
 
-    for (const auto& otherPlugin : this->getGame().GetPlugins()) {
+    for (const auto& otherPlugin : this->getGame().GetPluginsInLoadOrder()) {
       json["plugins"].push_back({
           {"metadata", this->generateDerivedMetadata(otherPlugin)},
           {"conflicts", doPluginsConflict(plugin, otherPlugin)},
