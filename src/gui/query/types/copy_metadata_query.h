@@ -27,11 +27,12 @@ along with LOOT.  If not, see
 #define LOOT_GUI_QUERY_COPY_METADATA_QUERY
 
 #include "gui/query/json.h"
-#include "gui/query/types/clipboard_query.h"
+#include "gui/query/query.h"
+#include "gui/helpers.h"
 
 namespace loot {
 template<typename G = gui::Game>
-class CopyMetadataQuery : public ClipboardQuery {
+class CopyMetadataQuery : public Query {
 public:
   CopyMetadataQuery(const G& game,
                     std::string language,
@@ -63,7 +64,7 @@ public:
     std::string text =
         "[spoiler][code]" + asText(metadata) + "[/code][/spoiler]";
 
-    copyToClipboard(text);
+    CopyToClipboard(text);
 
     if (logger) {
       logger->debug(

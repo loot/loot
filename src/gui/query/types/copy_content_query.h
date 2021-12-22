@@ -30,10 +30,11 @@ along with LOOT.  If not, see
 
 #include <json.hpp>
 
-#include "gui/query/types/clipboard_query.h"
+#include "gui/query/query.h"
+#include "gui/helpers.h"
 
 namespace loot {
-class CopyContentQuery : public ClipboardQuery {
+class CopyContentQuery : public Query {
 public:
   CopyContentQuery(const nlohmann::json& content) : content_(content) {}
 
@@ -41,7 +42,7 @@ public:
     const std::string text =
         "[spoiler][code]" + getContentAsText() + "[/code][/spoiler]";
 
-    copyToClipboard(text);
+    CopyToClipboard(text);
     return nlohmann::json();
   }
 

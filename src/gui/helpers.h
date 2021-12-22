@@ -25,8 +25,9 @@
 #ifndef LOOT_GUI_HELPERS
 #define LOOT_GUI_HELPERS
 
-#include <filesystem>
 #include <loot/enum/message_type.h>
+
+#include <filesystem>
 
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file);
@@ -52,5 +53,7 @@ std::filesystem::path getExecutableDirectory();
 std::filesystem::path getLocalAppDataPath();
 
 MessageType mapMessageType(const std::string& type);
+
+void CopyToClipboard(const std::string& text);
 }
 #endif
