@@ -25,13 +25,13 @@ along with LOOT.  If not, see
 
 #include "gui/cef/loot_scheme_handler_factory.h"
 
-#include "gui/state/logging.h"
-#include "gui/state/loot_paths.h"
-
 #include <include/cef_parser.h>
 #include <include/wrapper/cef_stream_resource_handler.h>
 
 #include <string>
+
+#include "gui/state/logging.h"
+#include "gui/state/loot_paths.h"
 
 using namespace std;
 
@@ -43,7 +43,8 @@ namespace loot {
 ///////////////////////////////
 
 LootSchemeHandlerFactory::LootSchemeHandlerFactory(
-  std::filesystem::path resourcesPath) : resourcesPath_(resourcesPath) {}
+    std::filesystem::path resourcesPath) :
+    resourcesPath_(resourcesPath) {}
 
 CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(
     CefRefPtr<CefBrowser> browser,
@@ -75,7 +76,8 @@ CefRefPtr<CefResourceHandler> LootSchemeHandlerFactory::Create(
       404, "Not Found", "text/plain", GetHeaders(), stream);
 }
 
-std::filesystem::path LootSchemeHandlerFactory::GetPath(const CefString& url) const {
+std::filesystem::path LootSchemeHandlerFactory::GetPath(
+    const CefString& url) const {
   CefURLParts urlParts;
   CefParseURL(url, urlParts);
 

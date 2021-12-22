@@ -25,9 +25,9 @@
 #ifndef LOOT_TESTS_GUI_STATE_GAME_HELPERS_TEST
 #define LOOT_TESTS_GUI_STATE_GAME_HELPERS_TEST
 
-#include "gui/state/game/helpers.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/state/game/helpers.h"
 
 namespace loot {
 namespace test {
@@ -89,7 +89,8 @@ TEST(EscapeMarkdownSpecialChars, shouldNotEscapeNonSpecialCharacters) {
 }
 
 TEST(PlainTextMessage, shouldEscapeMarkdownSpecialCharacters) {
-  auto message = PlainTextMessage(MessageType::say, "normal text\\`*_{}[]()#+-.!");
+  auto message =
+      PlainTextMessage(MessageType::say, "normal text\\`*_{}[]()#+-.!");
 
   auto expectedText = R"raw(normal text\\\`\*\_\{\}\[\]\(\)\#\+\-\.\!)raw";
   EXPECT_EQ(expectedText, message.GetContent()[0].GetText());
@@ -108,10 +109,12 @@ TEST(ToMessage, shouldOutputAllNonZeroCounts) {
       "navmeshes. detail",
       message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0));
+  message =
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found dirty edits. detail",
-            message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ(
+      "cleaner found dirty edits. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 30));
@@ -123,31 +126,37 @@ TEST(ToMessage, shouldOutputAllNonZeroCounts) {
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 30 deleted navmeshes. detail",
-            message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ(
+      "cleaner found 30 deleted navmeshes. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references. detail",
-            message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ(
+      "cleaner found 10 deleted references. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. detail",
-            message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ(
+      "cleaner found 2 ITM records and 30 deleted navmeshes. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0));
+  message =
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records. detail",
-            message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ(
+      "cleaner found 2 ITM records. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. detail",
-            message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ(
+      "cleaner found 2 ITM records and 10 deleted references. detail",
+      message.GetContent(MessageContent::defaultLanguage).value().GetText());
 }
 
 TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
@@ -163,14 +172,16 @@ TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
       "navmeshes. detail",
       message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3));
+  message =
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 2 ITM records, 1 deleted reference and 3 deleted "
       "navmeshes. detail",
       message.GetContent(MessageContent::defaultLanguage).value().GetText());
 
-  message = ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1));
+  message =
+      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 3 ITM records, 2 deleted references and 1 deleted "
@@ -190,7 +201,7 @@ TEST(ToMessage,
 }
 
 TEST(SplitRegistryPath, shouldAssumeHKLMIfNoRootKeyIsGiven) {
-  auto[rootKey, subKey, value] = SplitRegistryPath("sub\\key\\value");
+  auto [rootKey, subKey, value] = SplitRegistryPath("sub\\key\\value");
 
   EXPECT_EQ("HKEY_LOCAL_MACHINE", rootKey);
   EXPECT_EQ("sub\\key", subKey);
@@ -198,7 +209,8 @@ TEST(SplitRegistryPath, shouldAssumeHKLMIfNoRootKeyIsGiven) {
 }
 
 TEST(SplitRegistryPath, shouldUseRootKeyIfSpecified) {
-  auto[rootKey, subKey, value] = SplitRegistryPath("HKEY_DUMMY\\sub\\key\\value");
+  auto [rootKey, subKey, value] =
+      SplitRegistryPath("HKEY_DUMMY\\sub\\key\\value");
 
   EXPECT_EQ("HKEY_DUMMY", rootKey);
   EXPECT_EQ("sub\\key", subKey);
@@ -206,7 +218,8 @@ TEST(SplitRegistryPath, shouldUseRootKeyIfSpecified) {
 }
 
 TEST(SplitRegistryPath, shouldThrowIfNoValueIsGiven) {
-  EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY\\subkey\\"), std::invalid_argument);
+  EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY\\subkey\\"),
+               std::invalid_argument);
   EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY\\subkey"), std::invalid_argument);
 }
 

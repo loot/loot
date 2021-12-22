@@ -26,10 +26,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_LOOT_SCHEME_HANDLER_FACTORY
 #define LOOT_GUI_LOOT_SCHEME_HANDLER_FACTORY
 
-#include <filesystem>
-
 #include <include/cef_base.h>
 #include <include/cef_scheme.h>
+
+#include <filesystem>
 
 namespace loot {
 class LootSchemeHandlerFactory : public CefSchemeHandlerFactory {

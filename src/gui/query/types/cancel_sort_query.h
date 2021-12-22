@@ -37,8 +37,7 @@ public:
   CancelSortQuery(G& game,
                   UnappliedChangeCounter& counter,
                   std::string language) :
-      MetadataQuery<G>(game, language),
-      counter_(counter) {}
+      MetadataQuery<G>(game, language), counter_(counter) {}
 
   nlohmann::json executeLogic() {
     counter_.DecrementUnappliedChangeCounter();
@@ -56,7 +55,8 @@ public:
         continue;
       }
 
-      auto loadOrderIndex = this->getGame().GetActiveLoadOrderIndex(plugin, loadOrder);
+      auto loadOrderIndex =
+          this->getGame().GetActiveLoadOrderIndex(plugin, loadOrder);
 
       nlohmann::json pluginJson = {{"name", pluginName}};
       if (loadOrderIndex.has_value()) {

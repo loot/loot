@@ -43,7 +43,7 @@ namespace loot {
 #ifdef _WIN32
 class ApplicationMutexGuard {
 public:
-  static constexpr const wchar_t * MUTEX_NAME = L"LOOT.Shell.Instance";
+  static constexpr const wchar_t* MUTEX_NAME = L"LOOT.Shell.Instance";
 
   ApplicationMutexGuard() : hMutex(NULL) {
     hMutex = ::CreateMutex(NULL, FALSE, MUTEX_NAME);

@@ -103,9 +103,9 @@ LootState::LootState(const std::filesystem::path& lootAppPath,
 void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
     initErrors_.push_back(
-      /* translators: --auto-sort and --game are command-line arguments and shouldn't be translated. */
-      translate("Error: --auto-sort was passed but no --game parameter was "
-                "provided."));
+        /* translators: --auto-sort and --game are command-line arguments and shouldn't be translated. */
+        translate("Error: --auto-sort was passed but no --game parameter was "
+                  "provided."));
   } else {
     setAutoSort(autoSort);
   }

@@ -34,8 +34,7 @@ namespace loot {
 class CloseSettingsQuery : public Query {
 public:
   CloseSettingsQuery(LootState& state, nlohmann::json settings) :
-      state_(state),
-      settings_(settings) {}
+      state_(state), settings_(settings) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();
@@ -77,7 +76,8 @@ private:
     }
 
     if (newTheme != "default") {
-      auto sourceThemePath = state_.getResourcesPath() / "ui" / "css" / std::filesystem::u8path(newTheme + ".theme.css");
+      auto sourceThemePath = state_.getResourcesPath() / "ui" / "css" /
+                             std::filesystem::u8path(newTheme + ".theme.css");
       if (std::filesystem::exists(sourceThemePath)) {
         std::filesystem::copy_file(sourceThemePath, currentThemePath);
       }

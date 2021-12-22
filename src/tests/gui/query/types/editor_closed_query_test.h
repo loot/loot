@@ -25,9 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_CEF_QUERY_TYPES_EDITOR_CLOSED_QUERY_TEST
 #define LOOT_TESTS_GUI_CEF_QUERY_TYPES_EDITOR_CLOSED_QUERY_TEST
 
-#include "gui/query/types/editor_closed_query.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/query/types/editor_closed_query.h"
 
 namespace loot {
 namespace test {
@@ -115,7 +115,7 @@ public:
   }
 
   std::optional<PluginMetadata> GetNonUserMetadata(
-    const std::shared_ptr<const PluginInterface>& plugin,
+      const std::shared_ptr<const PluginInterface>& plugin,
       bool evaluateConditions = false) const {
     return GetMasterlistMetadata(plugin->GetName(), evaluateConditions);
   }

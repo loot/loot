@@ -36,7 +36,8 @@ along with LOOT.  If not, see
 namespace loot {
 class GetThemesQuery : public Query {
 public:
-  GetThemesQuery(const std::filesystem::path resourcesPath) : resourcesPath_(resourcesPath) {}
+  GetThemesQuery(const std::filesystem::path resourcesPath) :
+      resourcesPath_(resourcesPath) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();
@@ -57,7 +58,7 @@ private:
     auto logger = getLogger();
     for (std::filesystem::directory_iterator it(resourcesPath_ / "ui" / "css");
          it != std::filesystem::directory_iterator();
-        ++it) {
+         ++it) {
       if (!std::filesystem::is_regular_file(it->status())) {
         continue;
       }

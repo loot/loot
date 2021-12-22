@@ -46,8 +46,8 @@ public:
 
 private:
   std::unique_ptr<Query> createQuery(CefRefPtr<CefBrowser> browser,
-                               CefRefPtr<CefFrame> frame,
-                               const std::string& request);
+                                     CefRefPtr<CefFrame> frame,
+                                     const std::string& request);
 
   LootState& lootState_;
 };

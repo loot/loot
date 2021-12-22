@@ -25,12 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_CEF_QUERY_TYPES_GET_THEMES_QUERY_TEST
 #define LOOT_TESTS_GUI_CEF_QUERY_TYPES_GET_THEMES_QUERY_TEST
 
-#include "gui/query/types/get_themes_query.h"
+#include <gtest/gtest.h>
 
 #include <fstream>
 
-#include <gtest/gtest.h>
-
+#include "gui/query/types/get_themes_query.h"
 #include "tests/gui/test_helpers.h"
 
 namespace loot {
@@ -38,8 +37,7 @@ namespace test {
 class GetThemesQueryTest : public ::testing::Test {
 public:
   GetThemesQueryTest() :
-      resourcesPath(getTempPath()),
-      cssPath(resourcesPath / "ui" / "css") {}
+      resourcesPath(getTempPath()), cssPath(resourcesPath / "ui" / "css") {}
 
 protected:
   void SetUp() override { std::filesystem::create_directories(cssPath); }

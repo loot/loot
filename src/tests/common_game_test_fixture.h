@@ -25,16 +25,16 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_COMMON_GAME_TEST_FIXTURE
 #define LOOT_TESTS_COMMON_GAME_TEST_FIXTURE
 
-#include <filesystem>
-#include <fstream>
-#include <map>
-#include <unordered_set>
-
 #include <gtest/gtest.h>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <filesystem>
+#include <fstream>
+#include <map>
+#include <unordered_set>
 
 #include "loot/enum/game_type.h"
 

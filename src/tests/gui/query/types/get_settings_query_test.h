@@ -25,9 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_CEF_QUERY_TYPES_GET_SETTINGS_QUERY_TEST
 #define LOOT_TESTS_GUI_CEF_QUERY_TYPES_GET_SETTINGS_QUERY_TEST
 
-#include "gui/query/types/get_settings_query.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/query/types/get_settings_query.h"
 
 namespace loot {
 namespace test {

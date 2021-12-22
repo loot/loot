@@ -36,9 +36,7 @@ public:
   CopyMetadataQuery(const G& game,
                     std::string language,
                     std::string pluginName) :
-      game_(game),
-      language_(language),
-      pluginName_(pluginName) {}
+      game_(game), language_(language), pluginName_(pluginName) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();

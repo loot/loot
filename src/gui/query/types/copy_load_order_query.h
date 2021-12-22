@@ -37,10 +37,8 @@ struct Counters {
 template<typename G = gui::Game>
 class CopyLoadOrderQuery : public ClipboardQuery {
 public:
-  CopyLoadOrderQuery(const G& game,
-                     const std::vector<std::string>& plugins) :
-      game_(game),
-      plugins_(plugins) {}
+  CopyLoadOrderQuery(const G& game, const std::vector<std::string>& plugins) :
+      game_(game), plugins_(plugins) {}
 
   nlohmann::json executeLogic() {
     Counters counters;

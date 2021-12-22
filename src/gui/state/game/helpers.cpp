@@ -25,13 +25,13 @@
 
 #include "gui/state/game/helpers.h"
 
-#include <fstream>
-#include <regex>
+#include <loot/api.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <loot/api.h>
+#include <fstream>
+#include <regex>
 
 #include "gui/state/logging.h"
 
@@ -233,38 +233,38 @@ std::vector<Message> CheckForRemovedPlugins(
 }
 
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
-  const std::string& registryPath) {
+    const std::string& registryPath) {
   std::string rootKey;
   size_t startOfSubKey;
   if (registryPath.rfind("HKEY_", 0) == 0) {
     auto firstBackslashPos = registryPath.find('\\');
     if (firstBackslashPos == std::string::npos) {
       throw std::invalid_argument(
-        "Registry path has no subkey or value components");
+          "Registry path has no subkey or value components");
     }
     rootKey = registryPath.substr(0, firstBackslashPos);
     startOfSubKey = firstBackslashPos + 1;
-  }
-  else {
+  } else {
     rootKey = "HKEY_LOCAL_MACHINE";
     startOfSubKey = 0;
   }
 
   auto lastBackslashPos = registryPath.rfind('\\');
   if (lastBackslashPos == std::string::npos ||
-    lastBackslashPos < startOfSubKey ||
-    lastBackslashPos == registryPath.length() - 1) {
+      lastBackslashPos < startOfSubKey ||
+      lastBackslashPos == registryPath.length() - 1) {
     throw std::invalid_argument("Registry path has no value component");
   }
 
-  std::string subKey = registryPath.substr(startOfSubKey, lastBackslashPos - startOfSubKey);
+  std::string subKey =
+      registryPath.substr(startOfSubKey, lastBackslashPos - startOfSubKey);
   std::string value = registryPath.substr(lastBackslashPos + 1);
 
   return std::make_tuple(rootKey, subKey, value);
 }
 
 FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
-  FileType fileType) {
+                                      FileType fileType) {
   using boost::locale::translate;
 
   auto logger = getLogger();
@@ -275,8 +275,7 @@ FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
     if (revision.is_modified) {
       auto suffix =
           " " +
-          /* translators: this text is displayed if LOOT has detected that the
-             masterlist has been modified since it was downloaded. */
+          /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
           translate("(edited)").str();
       revision.date += suffix;
       revision.id += suffix;
@@ -290,11 +289,11 @@ FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
                      filePath.u8string());
       }
     }
-    auto text = fileType ==
-                FileType::Masterlist ? translate("N/A: No masterlist present").str() :
-        /* translators: N/A is an abbreviation for Not Applicable. A masterlist
-           is a database that contains information for various mods. */
-        translate("N/A: No masterlist prelude present").str();
+    auto text = fileType == FileType::Masterlist
+                    ? translate("N/A: No masterlist present").str()
+                    :
+                    /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
+                    translate("N/A: No masterlist prelude present").str();
     revision.id = text;
     revision.date = text;
   } catch (GitStateError&) {
@@ -303,8 +302,7 @@ FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
                    filePath.parent_path().u8string());
     }
     auto text =
-        /* translators: Git is the software LOOT uses to track changes to the
-           source code. */
+        /* translators: Git is the software LOOT uses to track changes to the source code. */
         translate("Unknown: Git repository missing").str();
     revision.id = text;
     revision.date = text;

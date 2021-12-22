@@ -41,9 +41,7 @@ template<typename G = gui::Game>
 class MetadataQuery : public Query {
 protected:
   MetadataQuery(G& game, std::string language) :
-      game_(game),
-      language_(language),
-      logger_(getLogger()) {}
+      game_(game), language_(language), logger_(getLogger()) {}
 
   std::vector<SimpleMessage> getGeneralMessages() const {
     std::vector<Message> messages = game_.GetMessages();
@@ -89,10 +87,12 @@ protected:
 
   template<typename InputIterator>
   nlohmann::json generateJsonResponse(InputIterator firstPlugin,
-                                   InputIterator lastPlugin) {
+                                      InputIterator lastPlugin) {
     nlohmann::json json = {
         {"folder", game_.FolderName()},
-        {"masterlist", GetFileRevisionToDisplay(game_.MasterlistPath(), FileType::Masterlist)},
+        {"masterlist",
+         GetFileRevisionToDisplay(game_.MasterlistPath(),
+                                  FileType::Masterlist)},
         {"generalMessages", getGeneralMessages()},
         {"bashTags", game_.GetKnownBashTags()},
         {"groups",
@@ -106,13 +106,9 @@ protected:
     return json;
   }
 
-  G& getGame() {
-    return game_;
-  }
+  G& getGame() { return game_; }
 
-  const G& getGame() const {
-    return game_;
-  }
+  const G& getGame() const { return game_; }
 
 private:
   static std::vector<SimpleMessage> toSimpleMessages(

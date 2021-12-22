@@ -22,10 +22,12 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#include <boost/locale.hpp>
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/null_sink.h>
+#include <spdlog/spdlog.h>
 
+#include <boost/locale.hpp>
+
+#include "tests/gui/helpers_test.h"
 #include "tests/gui/query/json_test.h"
 #include "tests/gui/query/types/close_settings_query_test.h"
 #include "tests/gui/query/types/editor_closed_query_test.h"
@@ -39,7 +41,6 @@
 #include "tests/gui/state/loot_paths_test.h"
 #include "tests/gui/state/loot_settings_test.h"
 #include "tests/gui/state/unapplied_change_counter_test.h"
-#include "tests/gui/helpers_test.h"
 
 int main(int argc, char **argv) {
   // Set the locale to get encoding conversions working correctly.

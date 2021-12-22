@@ -25,12 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_LOOT_SETTINGS_TEST
 #define LOOT_TESTS_GUI_STATE_LOOT_SETTINGS_TEST
 
+#include <gtest/gtest.h>
+
 #include <fstream>
 
 #include "gui/state/loot_settings.h"
-
-#include <gtest/gtest.h>
-
 #include "gui/version.h"
 
 namespace loot {
@@ -73,8 +72,9 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
           .SetMaster("Nehrim.esm")
-          .SetRegistryKeys({"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
-                          "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
+          .SetRegistryKeys(
+              {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
+               "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
           .SetRegistryKeys(
@@ -82,11 +82,11 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetGameLocalFolder("enderal")
           .SetRepoURL("https://github.com/loot/enderal.git"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
-        .SetName("Enderal: Forgotten Stories (Special Edition)")
-        .SetRegistryKeys(
-            {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
-        .SetGameLocalFolder("Enderal Special Edition")
-        .SetRepoURL("https://github.com/loot/enderal.git"),
+          .SetName("Enderal: Forgotten Stories (Special Edition)")
+          .SetRegistryKeys(
+              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
+          .SetGameLocalFolder("Enderal Special Edition")
+          .SetRepoURL("https://github.com/loot/enderal.git"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
@@ -182,10 +182,12 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualLanguages[10]);
   EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
             actualLanguages[11]);
-  EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil",
-            std::nullopt}), actualLanguages[12]);
-  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
-            std::nullopt}), actualLanguages[13]);
+  EXPECT_EQ(
+      LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
+      actualLanguages[12]);
+  EXPECT_EQ(
+      LootSettings::Language({"pt_PT", "Português de Portugal", std::nullopt}),
+      actualLanguages[13]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
             actualLanguages[14]);
   EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
@@ -241,7 +243,8 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
   EXPECT_EQ("dark", settings_.getTheme());
-  EXPECT_EQ("https://github.com/loot/prelude-test.git", settings_.getPreludeRepositoryURL());
+  EXPECT_EQ("https://github.com/loot/prelude-test.git",
+            settings_.getPreludeRepositoryURL());
   EXPECT_EQ("v1.0", settings_.getPreludeRepositoryBranch());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
@@ -293,7 +296,8 @@ TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyStringValues) {
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_EQ(1, settings_.getGameSettings()[0].RegistryKeys().size());
-  EXPECT_EQ("a registry path", settings_.getGameSettings()[0].RegistryKeys()[0]);
+  EXPECT_EQ("a registry path",
+            settings_.getGameSettings()[0].RegistryKeys()[0]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyArrayValues) {
@@ -354,7 +358,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
 }
 
 TEST_P(LootSettingsTest,
-  loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
+       loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -387,7 +391,8 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
-  EXPECT_EQ(getLocalAppDataPath() / std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
+  EXPECT_EQ(getLocalAppDataPath() /
+                std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
             settings_.getGameSettings()[0].GameLocalPath());
 }
 

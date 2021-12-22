@@ -35,8 +35,8 @@ along with LOOT.  If not, see
 namespace loot {
 
 template<typename G = gui::Game>
-std::vector<std::shared_ptr<const PluginInterface>>
-getLoadedPluginsInLoadOrder(const G& game) {
+std::vector<std::shared_ptr<const PluginInterface>> getLoadedPluginsInLoadOrder(
+    const G& game) {
   std::vector<std::shared_ptr<const PluginInterface>> installed;
   std::vector<std::string> loadOrder = game.GetLoadOrder();
   for (const auto& pluginName : loadOrder) {

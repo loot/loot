@@ -36,8 +36,8 @@ std::wstring ToWinWide(const std::string& str);
 std::string FromWinWide(const std::wstring& wstr);
 
 std::string RegKeyStringValue(const std::string& rootKey,
-  const std::string& subkey,
-  const std::string& value);
+                              const std::string& subkey,
+                              const std::string& value);
 #endif
 
 // Compare strings as if they're filenames, respecting filesystem case

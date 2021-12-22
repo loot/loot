@@ -29,8 +29,8 @@ along with LOOT.  If not, see
 #include <cstdlib>
 #include <regex>
 
-#include "gui/query/query.h"
 #include "gui/helpers.h"
+#include "gui/query/query.h"
 
 namespace loot {
 class ClipboardQuery : public Query {

@@ -27,6 +27,7 @@
 
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
+
 #include <boost/locale.hpp>
 
 #include "gui/cef/loot_handler.h"
@@ -67,8 +68,7 @@ CommandLineOptions::CommandLineOptions(int argc, const char* const* argv) :
 }
 
 LootApp::LootApp(CommandLineOptions options) :
-  commandLineOptions_(options),
-    lootState_("", options.lootDataPath) {}
+    commandLineOptions_(options), lootState_("", options.lootDataPath) {}
 
 std::filesystem::path LootApp::getL10nPath() const {
   return lootState_.getL10nPath();
@@ -99,7 +99,8 @@ void LootApp::OnContextInitialized() {
   assert(CefCurrentlyOn(TID_UI));
 
   // Initialise LOOT's state.
-  lootState_.init(commandLineOptions_.defaultGame, commandLineOptions_.autoSort);
+  lootState_.init(commandLineOptions_.defaultGame,
+                  commandLineOptions_.autoSort);
 
   // Set the handler for browser-level callbacks.
   CefRefPtr<LootHandler> handler(new LootHandler(lootState_));

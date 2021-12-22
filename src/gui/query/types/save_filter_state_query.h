@@ -35,9 +35,7 @@ public:
   SaveFilterStateQuery(LootSettings& settings,
                        const std::string& filterId,
                        bool enabled) :
-      settings_(settings),
-      filterId_(filterId),
-      enabled_(enabled) {}
+      settings_(settings), filterId_(filterId), enabled_(enabled) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();

@@ -34,8 +34,7 @@ template<typename G = gui::Game>
 class SaveUserGroupsQuery : public Query {
 public:
   SaveUserGroupsQuery(G& game, std::vector<Group> groups) :
-      game_(game),
-      groups_(groups) {}
+      game_(game), groups_(groups) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();

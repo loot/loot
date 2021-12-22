@@ -31,8 +31,7 @@ namespace loot {
 WindowDelegate::WindowDelegate(
     CefRefPtr<CefBrowserView> browser_view,
     std::optional<LootSettings::WindowPosition> windowPosition) :
-    browser_view_(browser_view),
-    windowPosition_(windowPosition) {}
+    browser_view_(browser_view), windowPosition_(windowPosition) {}
 
 void WindowDelegate::OnWindowCreated(CefRefPtr<CefWindow> window) {
   window->SetTitle("LOOT");

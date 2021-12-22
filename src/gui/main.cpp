@@ -37,8 +37,8 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <windows.h>
 #include <include/cef_sandbox_win.h>
+#include <windows.h>
 #else
 #include <X11/Xlib.h>
 #include <include/base/cef_logging.h>
@@ -54,8 +54,7 @@ CefSettings GetCefSettings(std::filesystem::path l10nPath) {
   cef_settings.log_severity = LOGSEVERITY_DISABLE;
 
   // Load locale pack files from LOOT's l10n path.
-  CefString(&cef_settings.locales_dir_path)
-      .FromString(l10nPath.u8string());
+  CefString(&cef_settings.locales_dir_path).FromString(l10nPath.u8string());
 
   return cef_settings;
 }
@@ -79,9 +78,9 @@ int XIOErrorHandlerImpl(Display *display) { return 0; }
 
 #ifdef _WIN32
 int APIENTRY wWinMain(HINSTANCE hInstance,
-  HINSTANCE hPrevInstance,
-  LPTSTR lpCmdLine,
-  int nCmdShow) {
+                      HINSTANCE hPrevInstance,
+                      LPTSTR lpCmdLine,
+                      int nCmdShow) {
   // Do all the standard CEF setup stuff.
   //-------------------------------------
 

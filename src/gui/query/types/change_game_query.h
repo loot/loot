@@ -44,7 +44,8 @@ public:
   nlohmann::json executeLogic() {
     gamesManager_.SetCurrentGame(gameFolder_);
 
-    GetGameDataQuery<G> subQuery(gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
+    GetGameDataQuery<G> subQuery(
+        gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
 
     return subQuery.executeLogic();
   }

@@ -25,22 +25,23 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_CEF_QUERY_JSON_TEST
 #define LOOT_TESTS_GUI_CEF_QUERY_JSON_TEST
 
-#include "gui/query/json.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/query/json.h"
 
 namespace loot {
 namespace test {
-  TEST(mapGameType, shouldConvertMorrowindToGameType) {
-    EXPECT_EQ(GameType::tes3, mapGameType("Morrowind"));
+TEST(mapGameType, shouldConvertMorrowindToGameType) {
+  EXPECT_EQ(GameType::tes3, mapGameType("Morrowind"));
 }
 
 TEST(to_json, shouldEncodeGameSettingsPathsAsUtf8) {
   using std::filesystem::u8path;
 
-  auto gameSettings = GameSettings(GameType::tes4)
-    .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
-    .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"));
+  auto gameSettings =
+      GameSettings(GameType::tes4)
+          .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
+          .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"));
 
   nlohmann::json json;
   to_json(json, gameSettings);
@@ -63,7 +64,8 @@ TEST(from_json, shouldEncodeGameSettingsPathsAsUtf8) {
   from_json(json, gameSettings);
 
   EXPECT_EQ(u8path(u8"non\u00C1sciiGamePath"), gameSettings.GamePath());
-  EXPECT_EQ(u8path(u8"non\u00C1sciiGameLocalPath"), gameSettings.GameLocalPath());
+  EXPECT_EQ(u8path(u8"non\u00C1sciiGameLocalPath"),
+            gameSettings.GameLocalPath());
 }
 
 TEST(from_json, shouldNotSetPluginMetadataGroupIfUnspecified) {

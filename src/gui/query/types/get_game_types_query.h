@@ -49,15 +49,15 @@ private:
     nlohmann::json json;
 
     json["gameTypes"] = {
-      GameSettings(GameType::tes3).FolderName(),
-      GameSettings(GameType::tes4).FolderName(),
-      GameSettings(GameType::tes5).FolderName(),
-      GameSettings(GameType::tes5se).FolderName(),
-      GameSettings(GameType::tes5vr).FolderName(),
-      GameSettings(GameType::fo3).FolderName(),
-      GameSettings(GameType::fonv).FolderName(),
-      GameSettings(GameType::fo4).FolderName(),
-      GameSettings(GameType::fo4vr).FolderName(),
+        GameSettings(GameType::tes3).FolderName(),
+        GameSettings(GameType::tes4).FolderName(),
+        GameSettings(GameType::tes5).FolderName(),
+        GameSettings(GameType::tes5se).FolderName(),
+        GameSettings(GameType::tes5vr).FolderName(),
+        GameSettings(GameType::fo3).FolderName(),
+        GameSettings(GameType::fonv).FolderName(),
+        GameSettings(GameType::fo4).FolderName(),
+        GameSettings(GameType::fo4vr).FolderName(),
     };
 
     return json;

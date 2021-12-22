@@ -26,15 +26,15 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
-#include <filesystem>
-#include <tuple>
-#include <vector>
-
 #include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
 #include <loot/struct/file_revision.h>
 #include <loot/vertex.h>
+
+#include <filesystem>
+#include <tuple>
+#include <vector>
 
 namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
@@ -65,6 +65,5 @@ std::tuple<std::string, std::string, std::string> SplitRegistryPath(
 FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
                                       FileType fileType);
 }
-
 
 #endif

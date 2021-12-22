@@ -26,12 +26,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
-#include <optional>
-#include <string>
-
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <json.hpp>
+#include <optional>
+#include <string>
 
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"

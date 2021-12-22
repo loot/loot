@@ -33,8 +33,7 @@ namespace loot {
 template<typename G = gui::Game>
 class RedatePluginsQuery : public Query {
 public:
-  RedatePluginsQuery(G& game) :
-      game_(game) {}
+  RedatePluginsQuery(G& game) : game_(game) {}
 
   nlohmann::json executeLogic() {
     game_.RedatePlugins();

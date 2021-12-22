@@ -26,14 +26,13 @@
 #ifndef LOOT_GUI_STATE_GAME_GAMES_MANAGER
 #define LOOT_GUI_STATE_GAME_GAMES_MANAGER
 
+#include <boost/locale.hpp>
 #include <filesystem>
 #include <mutex>
 #include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-#include <boost/locale.hpp>
 
 #include "gui/state/game/game.h"
 #include "gui/state/game/game_detection_error.h"
@@ -155,11 +154,10 @@ public:
   bool IsGameInstalled(const std::string& gameFolder) const {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
-    return std::any_of(installedGames_.cbegin(),
-                       installedGames_.cend(),
-                       [&](const gui::Game& game) { 
-      return gameFolder == game.FolderName();
-                       });
+    return std::any_of(
+        installedGames_.cbegin(),
+        installedGames_.cend(),
+        [&](const gui::Game& game) { return gameFolder == game.FolderName(); });
   }
 
 private:
@@ -181,10 +179,11 @@ private:
                     newGameFolder);
     }
 
-    currentGame_ = find_if(
-        installedGames_.begin(), installedGames_.end(), [&](const gui::Game& game) {
-          return newGameFolder == game.FolderName();
-        });
+    currentGame_ = find_if(installedGames_.begin(),
+                           installedGames_.end(),
+                           [&](const gui::Game& game) {
+                             return newGameFolder == game.FolderName();
+                           });
 
     if (currentGame_ == installedGames_.end()) {
       logger->error(
@@ -193,7 +192,9 @@ private:
           newGameFolder);
       throw GameDetectionError(
           "Cannot set the current game: the game with folder \"" +
-          newGameFolder + "\" cannot be found. If it is installed, try running the game's launcher to register its location.");
+          newGameFolder +
+          "\" cannot be found. If it is installed, try running the game's "
+          "launcher to register its location.");
     }
 
     if (logger) {

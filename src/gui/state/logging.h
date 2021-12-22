@@ -28,9 +28,9 @@
 #define FMT_NO_FMT_STRING_ALIAS
 #define SPDLOG_WCHAR_FILENAMES
 
-#include <filesystem>
-
 #include <spdlog/spdlog.h>
+
+#include <filesystem>
 
 namespace loot {
 std::shared_ptr<spdlog::logger> getLogger();

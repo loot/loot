@@ -35,9 +35,7 @@ public:
   ApplySortQuery(G& game,
                  UnappliedChangeCounter& counter,
                  const std::vector<std::string>& plugins) :
-      game_(game),
-      counter_(counter),
-      plugins_(plugins) {}
+      game_(game), counter_(counter), plugins_(plugins) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();

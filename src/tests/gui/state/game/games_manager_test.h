@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #define LOOT_TESTS_GUI_STATE_GAME_GAMES_MANAGER_TEST
 
 #include "gui/state/game/games_manager.h"
-
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {
@@ -254,7 +253,8 @@ TEST(
 
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ(newGameSettings.Name(), settings[0].Name());
-  EXPECT_EQ(newGameSettings.MinimumHeaderVersion(), settings[0].MinimumHeaderVersion());
+  EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
+            settings[0].MinimumHeaderVersion());
   EXPECT_EQ(newGameSettings.RegistryKeys(), settings[0].RegistryKeys());
   EXPECT_EQ(newGameSettings.RepoURL(), settings[0].RepoURL());
   EXPECT_EQ(newGameSettings.RepoBranch(), settings[0].RepoBranch());

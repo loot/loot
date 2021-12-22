@@ -26,10 +26,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY_EXECUTOR
 #define LOOT_GUI_QUERY_QUERY_EXECUTOR
 
-#include <string>
-
 #include <include/wrapper/cef_message_router.h>
+
 #include <boost/locale.hpp>
+#include <string>
 
 #include "gui/query/query.h"
 #include "gui/state/logging.h"

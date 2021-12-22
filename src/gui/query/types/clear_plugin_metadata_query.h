@@ -36,8 +36,7 @@ public:
   ClearPluginMetadataQuery(G& game,
                            std::string language,
                            std::string pluginName) :
-      MetadataQuery<G>(game, language),
-      pluginName_(pluginName) {}
+      MetadataQuery<G>(game, language), pluginName_(pluginName) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();

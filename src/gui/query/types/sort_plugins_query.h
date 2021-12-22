@@ -37,7 +37,8 @@ namespace loot {
 template<typename G = gui::Game>
 class SortPluginsQuery : public MetadataQuery<G> {
 public:
-  SortPluginsQuery(G& game, UnappliedChangeCounter& counter,
+  SortPluginsQuery(G& game,
+                   UnappliedChangeCounter& counter,
                    std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
       MetadataQuery<G>(game, language),
@@ -79,10 +80,9 @@ public:
 
 private:
   void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
-    if (plugins.empty() ||
-        !equal(begin(plugins),
-               end(plugins),
-               begin(this->getGame().GetLoadOrder())))
+    if (plugins.empty() || !equal(begin(plugins),
+                                  end(plugins),
+                                  begin(this->getGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
@@ -104,8 +104,7 @@ private:
       }
 
       auto derivedMetadata = this->generateDerivedMetadata(plugin);
-      auto index =
-          this->getGame().GetActiveLoadOrderIndex(plugin, plugins);
+      auto index = this->getGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.setLoadOrderIndex(index.value());
       }

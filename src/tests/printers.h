@@ -25,9 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_PRINTERS
 #define LOOT_TESTS_PRINTERS
 
-#include <iostream>
-
 #include <gtest/gtest.h>
+
+#include <iostream>
 
 #include "loot/metadata/file.h"
 #include "loot/metadata/location.h"

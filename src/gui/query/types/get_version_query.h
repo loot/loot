@@ -43,8 +43,8 @@ public:
     }
 
     nlohmann::json json = {
-      { "release", gui::Version::string() },
-      { "build", gui::Version::revision },
+        {"release", gui::Version::string()},
+        {"build", gui::Version::revision},
     };
 
     return json;

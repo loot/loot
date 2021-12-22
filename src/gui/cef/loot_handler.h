@@ -26,10 +26,10 @@
 #ifndef LOOT_GUI_LOOT_HANDLER
 #define LOOT_GUI_LOOT_HANDLER
 
-#include <list>
-
 #include <include/cef_client.h>
 #include <include/wrapper/cef_message_router.h>
+
+#include <list>
 
 #include "gui/state/loot_state.h"
 

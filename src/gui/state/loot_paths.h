@@ -31,7 +31,7 @@ along with LOOT.  If not, see
 namespace loot {
 class LootPaths {
 public:
-  LootPaths(const std::filesystem::path& lootAppPath, 
+  LootPaths(const std::filesystem::path& lootAppPath,
             const std::filesystem::path& lootDataPath);
 
   std::filesystem::path getReadmePath() const;

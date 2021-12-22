@@ -25,9 +25,9 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_UNAPPLIED_CHANGE_COUNTER_TEST
 #define LOOT_TESTS_GUI_STATE_UNAPPLIED_CHANGE_COUNTER_TEST
 
-#include "gui/state/unapplied_change_counter.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
 namespace test {
@@ -36,7 +36,8 @@ TEST(UnappliedChangeCounter, hasUnappliedChangesShouldBeFalseByDefault) {
   EXPECT_FALSE(counter.HasUnappliedChanges());
 }
 
-TEST(UnappliedChangeCounter, shouldNotHaveUnappliedChangesIfCounterIsDecremented) {
+TEST(UnappliedChangeCounter,
+     shouldNotHaveUnappliedChangesIfCounterIsDecremented) {
   UnappliedChangeCounter counter;
   counter.DecrementUnappliedChangeCounter();
 
@@ -50,7 +51,8 @@ TEST(UnappliedChangeCounter, shouldHaveUnappliedChangesIfCounterIsIncremented) {
   EXPECT_TRUE(counter.HasUnappliedChanges());
 }
 
-TEST(UnappliedChangeCounter,
+TEST(
+    UnappliedChangeCounter,
     incrementingTheChangeCounterMoreThanItIsDecrementedShouldLeaveUnappliedChanges) {
   UnappliedChangeCounter counter;
   counter.IncrementUnappliedChangeCounter();
@@ -60,7 +62,8 @@ TEST(UnappliedChangeCounter,
   EXPECT_TRUE(counter.HasUnappliedChanges());
 }
 
-TEST(UnappliedChangeCounter,
+TEST(
+    UnappliedChangeCounter,
     incrementingTheChangeCounterLessThanItIsDecrementedShouldLeaveNoUnappliedChanges) {
   UnappliedChangeCounter counter;
   counter.IncrementUnappliedChangeCounter();
@@ -70,7 +73,8 @@ TEST(UnappliedChangeCounter,
   EXPECT_FALSE(counter.HasUnappliedChanges());
 }
 
-TEST(UnappliedChangeCounter,
+TEST(
+    UnappliedChangeCounter,
     incrementingTheChangeCounterThenDecrementingItEquallyShouldLeaveNoUnappliedChanges) {
   UnappliedChangeCounter counter;
   counter.IncrementUnappliedChangeCounter();

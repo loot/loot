@@ -25,12 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_CEF_QUERY_TYPES_CLOSE_SETTINGS_QUERY_TEST
 #define LOOT_TESTS_GUI_CEF_QUERY_TYPES_CLOSE_SETTINGS_QUERY_TEST
 
-#include "gui/query/types/close_settings_query.h"
+#include <gtest/gtest.h>
 
 #include <fstream>
 
-#include <gtest/gtest.h>
-
+#include "gui/query/types/close_settings_query.h"
 #include "tests/gui/test_helpers.h"
 
 namespace loot {
@@ -67,8 +66,9 @@ protected:
   LootState state;
 };
 
-TEST_F(CloseSettingsQueryTest,
-       executeLogicShouldRemoveThemeDotCssIfTheOldThemeIsNotDefaultAndTheNewThemeIsDefault) {
+TEST_F(
+    CloseSettingsQueryTest,
+    executeLogicShouldRemoveThemeDotCssIfTheOldThemeIsNotDefaultAndTheNewThemeIsDefault) {
   auto themePath = state.getLootDataPath() / "theme.css";
   touch(themePath);
   ASSERT_TRUE(std::filesystem::exists(themePath));
@@ -82,7 +82,8 @@ TEST_F(CloseSettingsQueryTest,
 
 TEST_F(CloseSettingsQueryTest,
        executeLogicShouldCopyNewThemeCssFileAsThemeDotCss) {
-  auto newThemePath = state.getResourcesPath() / "ui" / "css" / "blue.theme.css";
+  auto newThemePath =
+      state.getResourcesPath() / "ui" / "css" / "blue.theme.css";
   touch(newThemePath);
   ASSERT_TRUE(std::filesystem::exists(newThemePath));
 

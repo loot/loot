@@ -46,9 +46,7 @@ public:
   }
 
 private:
-  std::string getContentAsText() const {
-    return content_.dump(4);
-  }
+  std::string getContentAsText() const { return content_.dump(4); }
 
   const nlohmann::json content_;
 };

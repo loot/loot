@@ -56,8 +56,7 @@ public:
         {"filters", settings_.getFilters()},
         {"languages", settings_.getLanguages()},
         {"preludeURL", settings_.getPreludeRepositoryURL()},
-        {"preludeBranch", settings_.getPreludeRepositoryBranch()}
-    };
+        {"preludeBranch", settings_.getPreludeRepositoryBranch()}};
 
     return json;
   }

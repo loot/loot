@@ -25,16 +25,16 @@
 
 #include "gui/cef/loot_handler.h"
 
-#include <filesystem>
-#include <iomanip>
-#include <sstream>
-#include <string>
-
 #include <include/cef_app.h>
 #include <include/cef_parser.h>
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
+
 #include <boost/algorithm/string.hpp>
+#include <filesystem>
+#include <iomanip>
+#include <sstream>
+#include <string>
 
 #include "gui/cef/loot_scheme_handler_factory.h"
 #include "gui/cef/query/query_handler.h"
@@ -87,7 +87,7 @@ CefRefPtr<CefLoadHandler> LootHandler::GetLoadHandler() { return this; }
 
 bool LootHandler::OnProcessMessageReceived(
     CefRefPtr<CefBrowser> browser,
-  CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefFrame> frame,
     CefProcessId source_process,
     CefRefPtr<CefProcessMessage> message) {
   return browser_side_router_->OnProcessMessageReceived(
@@ -242,13 +242,13 @@ void LootHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 CefRefPtr<CefRequestHandler> LootHandler::GetRequestHandler() { return this; }
 
 CefRefPtr<CefResourceRequestHandler> LootHandler::GetResourceRequestHandler(
-  CefRefPtr<CefBrowser> browser,
-  CefRefPtr<CefFrame> frame,
-  CefRefPtr<CefRequest> request,
-  bool is_navigation,
-  bool is_download,
-  const CefString& request_initiator,
-  bool& disable_default_handling) {
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefRequest> request,
+    bool is_navigation,
+    bool is_download,
+    const CefString& request_initiator,
+    bool& disable_default_handling) {
   return this;
 }
 
