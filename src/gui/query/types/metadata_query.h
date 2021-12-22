@@ -30,6 +30,7 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "gui/query/derived_plugin_metadata.h"
+#include "gui/query/json.h"
 #include "gui/query/query.h"
 #include "gui/state/game/helpers.h"
 #include "loot/exception/file_access_error.h"
@@ -111,6 +112,18 @@ protected:
     return derived;
   }
 
+  template<typename InputIterator>
+  std::vector<DerivedPluginMetadata<G>> generateDerivedMetadata(
+      InputIterator firstPlugin,
+      InputIterator lastPlugin) {
+    std::vector<DerivedPluginMetadata<G>> metadata;
+    for (auto it = firstPlugin; it != lastPlugin; ++it) {
+      metadata.push_back(generateDerivedMetadata(*it));
+    }
+
+    return metadata;
+  }
+
   nlohmann::json generateJsonResponse(const std::string& pluginName) {
     auto derivedMetadata = generateDerivedMetadata(pluginName);
     if (derivedMetadata.has_value()) {
@@ -133,12 +146,8 @@ protected:
              {"masterlist", game_.GetMasterlistGroups()},
              {"userlist", game_.GetUserGroups()},
          }},
-        {"plugins", nlohmann::json::array()},
+        {"plugins", generateDerivedMetadata(firstPlugin, lastPlugin)},
     };
-
-    for (auto it = firstPlugin; it != lastPlugin; ++it) {
-      json["plugins"].push_back(generateDerivedMetadata(*it));
-    }
 
     return json;
   }

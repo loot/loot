@@ -33,6 +33,22 @@ along with LOOT.  If not, see
 #include "loot/loot_version.h"
 
 namespace loot {
+
+template<typename G = gui::Game>
+std::vector<std::shared_ptr<const PluginInterface>>
+getLoadedPluginsInLoadOrder(const G& game) {
+  std::vector<std::shared_ptr<const PluginInterface>> installed;
+  std::vector<std::string> loadOrder = game.GetLoadOrder();
+  for (const auto& pluginName : loadOrder) {
+    const auto plugin = game.GetPlugin(pluginName);
+    if (plugin) {
+      installed.push_back(plugin);
+    }
+  }
+
+  return installed;
+}
+
 template<typename G = gui::Game>
 class GetGameDataQuery : public MetadataQuery<G> {
 public:
@@ -56,14 +72,7 @@ public:
       this->getGame().LoadMetadata();
 
     // Sort plugins into their load order.
-    std::vector<std::shared_ptr<const PluginInterface>> installed;
-    std::vector<std::string> loadOrder = this->getGame().GetLoadOrder();
-    for (const auto& pluginName : loadOrder) {
-      const auto plugin = this->getGame().GetPlugin(pluginName);
-      if (plugin) {
-        installed.push_back(plugin);
-      }
-    }
+    auto installed = getLoadedPluginsInLoadOrder(this->getGame());
 
     return this->generateJsonResponse(installed.cbegin(), installed.cend());
   }
