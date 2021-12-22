@@ -36,6 +36,24 @@
 #include "gui/state/logging.h"
 
 namespace loot {
+FileRevisionSummary::FileRevisionSummary() {}
+
+FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
+    id(fileRevision.id), date(fileRevision.date) {
+  if (fileRevision.is_modified) {
+    auto suffix =
+        " " +
+        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
+        boost::locale::translate("(edited)").str();
+    date += suffix;
+    id += suffix;
+  }
+}
+
+FileRevisionSummary::FileRevisionSummary(const std::string& id,
+                                         const std::string& date) :
+    id(id), date(date) {}
+
 bool ExecutableExists(const GameType& gameType,
                       const std::filesystem::path& gamePath) {
   if (gameType == GameType::tes5) {
@@ -277,23 +295,15 @@ std::tuple<std::string, std::string, std::string> SplitRegistryPath(
   return std::make_tuple(rootKey, subKey, value);
 }
 
-FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
-                                      FileType fileType) {
+FileRevisionSummary GetFileRevisionToDisplay(
+    const std::filesystem::path& filePath,
+    FileType fileType) {
   using boost::locale::translate;
 
   auto logger = getLogger();
 
-  FileRevision revision;
   try {
-    revision = GetFileRevision(filePath, true);
-    if (revision.is_modified) {
-      auto suffix =
-          " " +
-          /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
-          translate("(edited)").str();
-      revision.date += suffix;
-      revision.id += suffix;
-    }
+    return FileRevisionSummary(GetFileRevision(filePath, true));
   } catch (FileAccessError&) {
     if (logger) {
       if (fileType == FileType::Masterlist) {
@@ -308,8 +318,8 @@ FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
                     :
                     /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
                     translate("N/A: No masterlist prelude present").str();
-    revision.id = text;
-    revision.date = text;
+
+    return FileRevisionSummary(text, text);
   } catch (GitStateError&) {
     if (logger) {
       logger->warn("Not a Git repository: {}",
@@ -318,10 +328,7 @@ FileRevision GetFileRevisionToDisplay(const std::filesystem::path& filePath,
     auto text =
         /* translators: Git is the software LOOT uses to track changes to the source code. */
         translate("Unknown: Git repository missing").str();
-    revision.id = text;
-    revision.date = text;
+    return FileRevisionSummary(text, text);
   }
-
-  return revision;
 }
 }

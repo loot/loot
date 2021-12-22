@@ -35,6 +35,7 @@ along with LOOT.  If not, see
 
 #include "gui/helpers.h"
 #include "gui/query/derived_plugin_metadata.h"
+#include "gui/state/game/helpers.h"
 #include "gui/state/loot_settings.h"
 
 namespace loot {
@@ -254,18 +255,13 @@ void from_json(const nlohmann::json& json, Location& location) {
   location = Location(json.at("link"), json.value("name", ""));
 }
 
-void to_json(nlohmann::json& json, const FileRevision& revision) {
-  json = {
-      {"id", revision.id},
-      {"date", revision.date},
-      {"is_modified", revision.is_modified},
-  };
+void to_json(nlohmann::json& json, const FileRevisionSummary& revision) {
+  json = {{"id", revision.id}, {"date", revision.date}};
 }
 
-void from_json(const nlohmann::json& json, FileRevision& revision) {
+void from_json(const nlohmann::json& json, FileRevisionSummary& revision) {
   revision.date = json.at("date");
   revision.id = json.at("id");
-  revision.is_modified = json.at("is_modified");
 }
 
 void to_json(nlohmann::json& json, const GameSettings& game) {
