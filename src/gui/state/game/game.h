@@ -53,6 +53,8 @@ public:
   std::shared_ptr<const PluginInterface> GetPlugin(
       const std::string& name) const;
   std::vector<std::shared_ptr<const PluginInterface>> GetPlugins() const;
+  std::vector<std::shared_ptr<const PluginInterface>> GetPluginsInLoadOrder()
+      const;
   std::vector<Message> CheckInstallValidity(
       const std::shared_ptr<const PluginInterface>& plugin,
       const PluginMetadata& metadata,

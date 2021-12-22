@@ -145,6 +145,20 @@ std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
+std::vector<std::shared_ptr<const PluginInterface>>
+Game::GetPluginsInLoadOrder() const {
+  std::vector<std::shared_ptr<const PluginInterface>> installed;
+
+  for (const auto& pluginName : GetLoadOrder()) {
+    const auto plugin = GetPlugin(pluginName);
+    if (plugin) {
+      installed.push_back(plugin);
+    }
+  }
+
+  return installed;
+}
+
 std::vector<Message> Game::CheckInstallValidity(
     const std::shared_ptr<const PluginInterface>& plugin,
     const PluginMetadata& metadata,
