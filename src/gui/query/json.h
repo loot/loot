@@ -33,6 +33,7 @@ along with LOOT.  If not, see
 
 #include <json.hpp>
 
+#include "gui/helpers.h"
 #include "gui/query/derived_plugin_metadata.h"
 #include "gui/state/loot_settings.h"
 
@@ -82,16 +83,6 @@ GameType mapGameType(const std::string& gameType) {
     return GameType::fo4vr;
   else
     throw std::runtime_error("Invalid game type value: " + gameType);
-}
-
-MessageType mapMessageType(const std::string& type) {
-  if (type == "say") {
-    return MessageType::say;
-  } else if (type == "warn") {
-    return MessageType::warn;
-  } else {
-    return MessageType::error;
-  }
 }
 
 void to_json(nlohmann::json& json, const MessageType& type) {

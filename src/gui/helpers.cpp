@@ -240,4 +240,14 @@ std::filesystem::path getLocalAppDataPath() {
   return getExecutableDirectory();
 #endif
 }
+
+MessageType mapMessageType(const std::string& type) {
+  if (type == "say") {
+    return MessageType::say;
+  } else if (type == "warn") {
+    return MessageType::warn;
+  } else {
+    return MessageType::error;
+  }
+}
 }

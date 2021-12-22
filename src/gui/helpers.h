@@ -26,6 +26,7 @@
 #define LOOT_GUI_HELPERS
 
 #include <filesystem>
+#include <loot/enum/message_type.h>
 
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file);
@@ -49,5 +50,7 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs);
 std::filesystem::path getExecutableDirectory();
 
 std::filesystem::path getLocalAppDataPath();
+
+MessageType mapMessageType(const std::string& type);
 }
 #endif
