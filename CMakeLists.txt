@@ -181,7 +181,8 @@ set (LOOT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
 
-set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
+set (LOOT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/application_mutex.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_handler.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_app.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/cef/loot_scheme_handler_factory.h"

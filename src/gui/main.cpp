@@ -23,6 +23,7 @@
     <https://www.gnu.org/licenses/>.
     */
 
+#include "gui/application_mutex.h"
 #include "gui/cef/loot_app.h"
 #include "gui/state/loot_paths.h"
 
@@ -106,17 +107,14 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   // Check if LOOT is already running
   //---------------------------------
 
-  HANDLE hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, L"LOOT.Shell.Instance");
-  if (hMutex != NULL) {
+  if (loot::IsApplicationMutexLocked()) {
     // An instance of LOOT is already running, so focus its window then quit.
     HWND hWnd = ::FindWindow(NULL, L"LOOT");
     ::SetForegroundWindow(hWnd);
     return 0;
   }
-  else {
-    // Create the mutex so that future instances will not run.
-    hMutex = ::CreateMutex(NULL, FALSE, L"LOOT.Shell.Instance");
-  }
+
+  loot::ApplicationMutexGuard mutexGuard;
 
   // Back to CEF
   //------------
@@ -133,11 +131,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
   // Shut down CEF.
   CefShutdown();
-
-  // Release the program instance mutex.
-  if (hMutex != NULL) {
-    ReleaseMutex(hMutex);
-  }
 
   return 0;
 }
