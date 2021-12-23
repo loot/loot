@@ -22,8 +22,8 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_GUI_CEF_QUERY_JSON_TEST
-#define LOOT_TESTS_GUI_CEF_QUERY_JSON_TEST
+#ifndef LOOT_TESTS_GUI_QUERY_JSON_TEST
+#define LOOT_TESTS_GUI_QUERY_JSON_TEST
 
 #include <gtest/gtest.h>
 

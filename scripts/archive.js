@@ -84,52 +84,18 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
   // Ensure that the output directory is empty.
   fs.emptyDirSync(tempPath);
 
-  // Copy LOOT exectuable and CEF files.
+  // Copy LOOT exectuable and other binaries.
   let binaries = [];
   if (os.platform() === 'win32') {
-    binaries = [
-      'LOOT.exe',
-      'LOOT_qt.exe',
-      'loot.dll',
-      'chrome_elf.dll',
-      'd3dcompiler_47.dll',
-      'libEGL.dll',
-      'libGLESv2.dll',
-      'libcef.dll',
-      'snapshot_blob.bin',
-      'v8_context_snapshot.bin',
-      'chrome_100_percent.pak',
-      'chrome_200_percent.pak',
-      'icudtl.dat',
-      'resources.pak'
-    ];
+    binaries = ['LOOT.exe', 'loot.dll'];
 
-    copyQtResources(path.join(releasePath, 'LOOT_qt.exe'), tempPath);
+    copyQtResources(path.join(releasePath, 'LOOT.exe'), tempPath);
   } else {
-    binaries = [
-      'LOOT',
-      'LOOT_qt',
-      'libloot.so',
-      'chrome-sandbox',
-      'libcef.so',
-      'snapshot_blob.bin',
-      'v8_context_snapshot.bin',
-      'chrome_100_percent.pak',
-      'chrome_200_percent.pak',
-      'icudtl.dat',
-      'resources.pak'
-    ];
+    binaries = ['LOOT', 'libloot.so'];
   }
   binaries.forEach(file => {
     fs.copySync(path.join(releasePath, file), path.join(tempPath, file));
   });
-
-  // CEF locale file.
-  fs.mkdirsSync(path.join(tempPath, 'resources', 'l10n'));
-  fs.copySync(
-    path.join(releasePath, 'resources', 'l10n', 'en-US.pak'),
-    path.join(tempPath, 'resources', 'l10n', 'en-US.pak')
-  );
 
   // Translation files.
   getLanguageFolders(rootPath).forEach(lang => {
@@ -141,12 +107,6 @@ function createAppArchive(rootPath, releasePath, tempPath, destPath) {
       path.join(tempPath, 'resources', 'l10n', lang, 'LC_MESSAGES', 'loot.mo')
     );
   });
-
-  // UI files.
-  fs.copySync(
-    path.join(releasePath, 'resources', 'ui'),
-    path.join(tempPath, 'resources', 'ui')
-  );
 
   // Documentation.
   fs.copySync(

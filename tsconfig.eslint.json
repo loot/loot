@@ -1,9 +1,0 @@
-{
-    "extends": "./tsconfig.json",
-    "include": [
-        "./src/gui/html/**/*",
-        "./src/tests/gui/html/**/*",
-        "./scripts/*.js",
-        "webpack.config.js"
-    ]
-}

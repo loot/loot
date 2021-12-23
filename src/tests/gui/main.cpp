@@ -29,11 +29,6 @@
 
 #include "tests/gui/helpers_test.h"
 #include "tests/gui/query/json_test.h"
-#include "tests/gui/query/types/close_settings_query_test.h"
-#include "tests/gui/query/types/editor_closed_query_test.h"
-#include "tests/gui/query/types/get_prelude_info_query_test.h"
-#include "tests/gui/query/types/get_settings_query_test.h"
-#include "tests/gui/query/types/get_themes_query_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
 #include "tests/gui/state/game/game_test.h"
 #include "tests/gui/state/game/games_manager_test.h"

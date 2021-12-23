@@ -94,34 +94,8 @@ Source: "build\Release\LOOT.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\loot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\chrome_100_percent.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\chrome_200_percent.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\d3dcompiler_47.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\resources.pak"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\icudtl.dat"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\chrome_elf.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\libcef.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\libEGL.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\libGLESv2.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\snapshot_blob.bin"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\v8_context_snapshot.bin"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\resources\l10n\en-US.pak"; \
-DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
 ; Common Qt files
-Source: "build\Release\LOOT_qt.exe"; \
-DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\D3Dcompiler_47.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\opengl32sw.dll"; \
@@ -171,9 +145,6 @@ DestDir: "{app}\bearer"; Flags: ignoreversion
 
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
-
-Source: "build\Release\resources\ui\*"; \
-DestDir: "{app}\resources\ui"; Flags: ignoreversion recursesubdirs
 
 Source: "resources\l10n\bg\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\bg\LC_MESSAGES"; Flags: ignoreversion

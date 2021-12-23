@@ -116,9 +116,6 @@ jobs:
       - name: Lint JS code
         run: npm run lint
 
-      - name: Test JS code
-        run: npm test
-
       - name: Install C++ dependencies
         run: |
           sudo apt-get update
@@ -273,9 +270,6 @@ jobs:
 
       - name: Lint JS code
         run: npm run lint
-
-      - name: Test JS code
-        run: npm test
 
       - name: Download and extract svg_to_ico
         run: |

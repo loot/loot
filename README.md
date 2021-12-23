@@ -58,10 +58,6 @@ Parameter | Values | Default |Description
 
 You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and include Qt's `cmake` directory (e.g. `C:/Qt/6.2.1/msvc2019_64/lib/cmake`) in `CMAKE_PREFIX_PATH` if CMake cannot find Qt.
 
-### Rebuilding the HTML UI
-
-The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `npm run build` from the repository root.
-
 ## Building The Documentation
 
 The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python (2 or 3) and make sure it's accessible from your `PATH`, then run:
