@@ -52,10 +52,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
       - uses: actions/setup-python@v2
         with:
           python-version: '3.10'
@@ -81,9 +77,6 @@ jobs:
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
           key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
-
-      - name: Install JS dependencies
-        run: npm ci
 
       - name: Download and extract svg_to_ico
         run: |

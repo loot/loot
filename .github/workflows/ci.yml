@@ -73,10 +73,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
       - uses: actions/setup-python@v2
         with:
           python-version: '3.10'
@@ -86,14 +82,6 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-
-      - name: NPM cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: Get Boost metadata
         id: boost-metadata
@@ -109,12 +97,6 @@ jobs:
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
           key: ${{ runner.os }}-Boost-1.77.0
-
-      - name: Install JS dependencies
-        run: npm ci
-
-      - name: Lint JS code
-        run: npm run lint
 
       - name: Install C++ dependencies
         run: |
@@ -213,10 +195,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
       - uses: actions/setup-python@v2
         with:
           python-version: '3.10'
@@ -225,23 +203,11 @@ jobs:
         id: pip-cache-dir-path
         run: echo "::set-output name=dir::$(pip cache dir)"
 
-      - name: Get NPM cache directory path
-        id: npm-cache-dir-path
-        run: echo "::set-output name=dir::$(npm config get cache)"
-
       - name: pip cache
         uses: actions/cache@v2
         with:
           path: ${{ steps.pip-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-
-      - name: NPM cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: Get Boost metadata
         id: boost-metadata
@@ -264,12 +230,6 @@ jobs:
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
           key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
-
-      - name: Install JS dependencies
-        run: npm ci
-
-      - name: Lint JS code
-        run: npm run lint
 
       - name: Download and extract svg_to_ico
         run: |
