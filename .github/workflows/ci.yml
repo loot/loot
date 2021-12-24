@@ -173,7 +173,7 @@ jobs:
         run: sphinx-build -b html docs build/docs/html
 
       - name: Build translation message object files
-        run: node scripts/potomo.js
+        run: python scripts/po_to_mo.py
 
       - name: Get descriptive LOOT version
         id: get-loot-version
@@ -324,7 +324,7 @@ jobs:
         run: sphinx-build -b html docs build\docs\html
 
       - name: Build translation message object files
-        run: node scripts\potomo.js
+        run: python scripts/po_to_mo.py
 
       - name: Get descriptive LOOT version
         id: get-loot-version
