@@ -115,6 +115,38 @@ DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
+; Qt files
+Source: "build\Release\LOOT_qt.exe"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\D3Dcompiler_47.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\opengl32sw.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt6Core.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt6Gui.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt6Network.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt6Svg.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt6Widgets.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\iconengines\*"; \
+DestDir: "{app}\iconengines"; Flags: ignoreversion
+Source: "build\Release\imageformats\*"; \
+DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "build\Release\networkinformation\*"; \
+DestDir: "{app}\networkinformation"; Flags: ignoreversion
+Source: "build\Release\platforms\*"; \
+DestDir: "{app}\platforms"; Flags: ignoreversion
+Source: "build\Release\styles\*"; \
+DestDir: "{app}\styles"; Flags: ignoreversion
+Source: "build\Release\tls\*"; \
+DestDir: "{app}\tls"; Flags: ignoreversion
+Source: "build\Release\translations\*"; \
+DestDir: "{app}\translations"; Flags: ignoreversion
+
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
 
