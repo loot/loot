@@ -2,7 +2,7 @@
 Installation & Uninstallation
 *****************************
 
-**LOOT requires Windows 7 or later.**
+**LOOT requires Windows 7 or later.** The official 64-bit releases raise this requirement to a 64-bit version of Windows 10 (1809) or later.
 
 LOOT can be installed either using its automated installer or manually. If you are using the installer, just run it and follow the wizard steps. If installing manually, extract the downloaded archive to a location of your choice.
 

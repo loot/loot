@@ -4,10 +4,31 @@ The Main Interface
 
 .. image:: ../../images/main.png
 
-The Header Bar
-==============
+The Menu Bar
+============
 
-The header bar provides access to LOOT's main features. Most of these features get disabled while the metadata editor is open, so if you're trying to use an option that is faded out, first close the editor.
+The menu bar consists of the File, Game, Plugin and Help menus. Some menus and menu items are disabled when there is an unapplied sorted load order and while the metadata editor is open. If you're trying to use an option that is faded out, first close the metadata editor, or apply or discard a sorted load order. Additionally, the whole Plugin menu is disabled unless there is a plugin selected in the sidebar.
+
+A few items in the menus are not self-explanatory:
+
+- "Redate Plugins..." is provided so that Skyrim and Skyrim Special Edition modders may set the load order for the Creation Kit. It is only available for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
+- "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard. The columns are:
+
+  1. Decimal load order index
+  2. Hexadecimal load order index
+  3. Hexadecimal light plugin index
+  4. Plugin name
+
+- "Copy Content" copies the data displayed in LOOT's cards to the clipboard as YAML-formatted text.
+- "Refresh Content" re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open. Refreshing content will also discard any CRCs that were previously calculated, as they may have changed.
+- The "Search Cards..." option allows you to search all the visible text displayed on plugin cards, so the results may be affected by any filters you have active.
+
+Users running LOOT natively on Linux must have ``xclip`` installed in order to use the clipboard copy features.
+
+The Toolbar
+===========
+
+The toolbar provides access to LOOT's main features: selecting a game, sorting plugins and updating the masterlist. These features get disabled while the metadata editor is open, so if you're trying to use an option that is faded out, first close the editor.
 
 Game Menu
 ---------
@@ -32,37 +53,10 @@ Load Order Backups
 
 Before a sorted load order is applied, LOOT saves a backup of the current load order as a ``loadorder.bak.0`` text file in LOOT's data folder for the current game. Up to three load order backups are retained: ``loadorder.bak.0`` is the backup from the most recent load order change, ``loadorder.bak.1`` is the second-most recent backup, and ``loadorder.bak.2`` is the third-most recent backup.
 
-Search
-------
-
-The search toolbar is displayed by clicking the search icon in the header bar, or using the :kbd:`Ctrl-F` keyboard shortcut. It may be closed using the close button at the right of the toolbar.
-
-Searching is performed as-you-type, or when the Enter key is pressed. All content visible on the front of plugin cards is searched, so the results may be affected by any filters you have active.
-
-The plugin card list will be scrolled to the first card that contains a match. Matches may be scrolled between using the up and down chevron buttons, and the current match and the number of matches are displayed between them and the search input.
-
-Main Menu
----------
-
-A few items in the main menu are not self-explanatory:
-
-- "Redate Plugins" is provided so that Skyrim and Skyrim Special Edition modders may set the load order for the Creation Kit. It is only available for Skyrim, and changes the timestamps of the plugins in its Data folder to match their current load order. A side effect of changing the timestamps is that any Steam Workshop mods installed will be re-downloaded.
-- "Copy Load Order" copies the displayed list of plugins and the decimal and hexadecimal indices of active plugins to the clipboard. The columns are:
-
-  1. Decimal load order index
-  2. Hexadecimal load order index
-  3. Hexadecimal light plugin index
-  4. Plugin name
-
-- "Copy Content" copies the data displayed in LOOT's cards to the clipboard as YAML-formatted text.
-- "Refresh Content" re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open. Refreshing content will also discard any CRCs that were previously calculated, as they may have changed.
-
-Users running LOOT natively on Linux must have ``xclip`` installed in order to use the clipboard copy features.
-
 Plugin Cards & Sidebar Items
 ============================
 
-Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's PLUGINS tab. The sidebar item contains the plugin's name and icons for plugins that load archives or have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Light plugins also have their light plugins index displayed below their load order index. Clicking on a plugin's sidebar item will jump to its card, while double-clicking will jump to its card and open it in the metadata editor.
+Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's name and an icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Light plugins also have their light plugins index displayed below their load order index. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
 
 The plugin card's header holds the following information, some of which is only displayed if applicable:
 
@@ -76,18 +70,17 @@ The plugin card's header holds the following information, some of which is only 
 - The "Loads Archive" icon.
 - The "Verified clean" icon.
 - The "Has User Metadata" icon.
-- The plugin menu button, which provides access to metadata-related features for the plugin. These are explained in later sections.
 
-Bash Tag suggestions and messages are displayed below the plugin card's header.
-
-If LOOT suggests any Bash Tags to be added, they will be displayed in green text, while any Bash Tags to be removed will be displayed in red text. Bash Tags that are already listed in the plugin's description field will be displayed in silver text. Users generally don't need to do anything with this information, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply.
+Messages and Bash Tag suggestions are displayed below the plugin card's header.
 
 LOOT's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action. If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
+
+Users generally don't need to do anything with Bash Tag suggestions, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply.
 
 Filters
 =======
 
-Clicking the FILTERS tab in the sidebar will replace the sidebar's plugin list with a list of filter toggles that can be applied to hide various combinations of plugins and other content. The available filter toggles are:
+Clicking the Filters section header in the sidebar will replace the sidebar's plugin list with a list of filter toggles that can be applied to hide various combinations of plugins and other content. The available filter toggles are:
 
 Hide version numbers
   Hides the version numbers displayed in blue next to those plugins that provide them.

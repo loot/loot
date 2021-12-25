@@ -29,7 +29,15 @@ jobs:
           release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
           draft: true
           body: |
-            Requires Windows 7 or later. The win32 files require the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe), and the win64 files require a 64-bit version of Windows and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe). [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+            The win64 build requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe). Users are recommended to run this build if their PC meets the Windows version requirement.
+
+            The win32 build requires Windows 7 or later and the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe). This build is provided for those who cannot run the win64 build.
+
+            The `.exe` installers will automatically download and install the appropriate redistributable if you don't already have it installed.
+
+            [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archives.
+
+            The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
 
   windows:
     runs-on: windows-2019

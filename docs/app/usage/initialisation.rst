@@ -17,9 +17,7 @@ LOOT's initialisation can be customised using command line parameters:
   load order, then quit. If an error occurs at any point, the remaining steps
   are cancelled. If this is passed, ``--game`` must also be passed.
 
-If LOOT cannot detect any supported game installs, it will immediately open the :doc:`Settings dialog <settings>`. There you can edit LOOT’s settings to provide a path to a supported game, after which you can select it from the game menu.
-
-Users running LOOT natively on Linux may need to also set the local path for each game, which can only be done by editing LOOT's ``settings.toml`` file, which can be found in LOOT's data path.
+If LOOT cannot detect any supported game installs, you can edit LOOT’s settings in the :doc:`Settings dialog <settings>` to provide a path to a supported game, after which you can relaunch LOOT to detect that game.
 
 Once a game has been set, LOOT will scan its plugins and load the game’s masterlist, if one is present. The plugins and any metadata they have are then listed in their current load order.
 
