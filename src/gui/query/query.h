@@ -40,7 +40,13 @@ namespace loot {
 class Query {
 public:
   virtual nlohmann::json executeLogic() = 0;
-  virtual std::optional<std::string> getErrorMessage() { return std::nullopt; };
+  virtual std::string getErrorMessage() const {
+    return boost::locale::translate(
+               "Oh no, something went wrong! You can check your "
+               "LOOTDebugLog.txt (you can get to it through the "
+               "main menu) for more information.")
+        .str();
+  };
 };
 
 template<typename G>

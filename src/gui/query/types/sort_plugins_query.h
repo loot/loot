@@ -43,7 +43,8 @@ public:
                    std::function<void(std::string)> sendProgressUpdate) :
       MetadataQuery<G>(game, language),
       counter_(counter),
-      sendProgressUpdate_(sendProgressUpdate) {}
+      sendProgressUpdate_(sendProgressUpdate),
+      useSortingErrorMessage(false) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();
@@ -63,7 +64,7 @@ public:
           this->getGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
-      errorMessage = getSortingErrorMessage(this->getGame());
+      useSortingErrorMessage = true;
       throw;
     }
 
@@ -76,7 +77,13 @@ public:
     return json;
   }
 
-  std::optional<std::string> getErrorMessage() override { return errorMessage; }
+  std::string getErrorMessage() const override {
+    if (useSortingErrorMessage) {
+      return getSortingErrorMessage(this->getGame());
+    }
+
+    return Query::getErrorMessage();
+  }
 
 private:
   void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
@@ -117,7 +124,7 @@ private:
 
   UnappliedChangeCounter& counter_;
   const std::function<void(std::string)> sendProgressUpdate_;
-  std::optional<std::string> errorMessage;
+  bool useSortingErrorMessage;
 };
 }
 

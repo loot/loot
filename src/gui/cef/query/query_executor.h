@@ -38,13 +38,7 @@ namespace loot {
 class QueryExecutor : public CefBaseRefCounted {
 public:
   QueryExecutor(std::unique_ptr<Query> query) :
-      query_(std::move(query)),
-      genericErrorMessage_(
-          boost::locale::translate(
-              "Oh no, something went wrong! You can check your "
-              "LOOTDebugLog.txt (you can get to it through the "
-              "main menu) for more information.")
-              .str()) {}
+      query_(std::move(query)) {}
 
   void execute(CefRefPtr<CefMessageRouterBrowserSide::Callback> callback) {
     try {
@@ -56,13 +50,12 @@ public:
       }
 
       callback->Failure(
-          -1, query_->getErrorMessage().value_or(genericErrorMessage_));
+          -1, query_->getErrorMessage());
     }
   }
 
 private:
   const std::unique_ptr<Query> query_;
-  const std::string genericErrorMessage_;
 
   IMPLEMENT_REFCOUNTING(QueryExecutor);
 };

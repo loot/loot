@@ -35,7 +35,10 @@ public:
   ApplySortQuery(G& game,
                  UnappliedChangeCounter& counter,
                  const std::vector<std::string>& plugins) :
-      game_(game), counter_(counter), plugins_(plugins) {}
+      game_(game),
+      counter_(counter),
+      plugins_(plugins),
+      useSortingErrorMessage(false) {}
 
   nlohmann::json executeLogic() {
     auto logger = getLogger();
@@ -46,20 +49,26 @@ public:
       game_.SetLoadOrder(plugins_);
       counter_.DecrementUnappliedChangeCounter();
     } catch (...) {
-      errorMessage = getSortingErrorMessage(game_);
+      useSortingErrorMessage = true;
       throw;
     }
 
     return nlohmann::json();
   }
 
-  std::optional<std::string> getErrorMessage() override { return errorMessage; }
+  std::string getErrorMessage() const override {
+    if (useSortingErrorMessage) {
+      return getSortingErrorMessage(game_);
+    }
+
+    return Query::getErrorMessage();
+  }
 
 private:
   G& game_;
   UnappliedChangeCounter& counter_;
   const std::vector<std::string> plugins_;
-  std::optional<std::string> errorMessage;
+  bool useSortingErrorMessage;
 };
 }
 
