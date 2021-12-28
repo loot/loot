@@ -27,6 +27,7 @@
 
 #include <QtCore/QJsonDocument>
 #include <QtGui/QCloseEvent>
+#include <QtGui/QDesktopServices>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -428,6 +429,8 @@ void MainWindow::setupMenuBar() {
   actionOpenDebugLogLocation->setObjectName("actionOpenDebugLogLocation");
   actionOpenDebugLogLocation->setIcon(
       IconFactory::getOpenDebugLogLocationIcon());
+  actionJoinDiscordServer = new QAction(this);
+  actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
   actionAbout = new QAction(this);
   actionAbout->setObjectName("actionAbout");
   actionAbout->setIcon(IconFactory::getAboutIcon());
@@ -501,6 +504,7 @@ void MainWindow::setupMenuBar() {
   menuPlugin->addAction(actionClearMetadata);
   menuHelp->addAction(actionViewDocs);
   menuHelp->addAction(actionOpenDebugLogLocation);
+  menuHelp->addAction(actionJoinDiscordServer);
   menuHelp->addSeparator();
   menuHelp->addAction(actionAbout);
 }
@@ -630,6 +634,7 @@ void MainWindow::translateUi() {
   menuHelp->setTitle(translate("Help"));
   actionViewDocs->setText(translate("View Documentation"));
   actionOpenDebugLogLocation->setText(translate("Open Debug Log Location"));
+  actionJoinDiscordServer->setText(translate("Join Discord Server"));
   actionAbout->setText(translate("About"));
 
   // Translate sidebar.
@@ -1586,6 +1591,10 @@ void MainWindow::on_actionOpenDebugLogLocation_triggered(bool checked) {
   } catch (std::exception& e) {
     handleException(e);
   }
+}
+
+void MainWindow::on_actionJoinDiscordServer_triggered(bool checked) {
+  QDesktopServices::openUrl(QUrl("https://loot.github.io/discord/"));
 }
 
 void MainWindow::on_actionAbout_triggered(bool checked) {

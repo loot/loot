@@ -83,6 +83,7 @@ private:
   QAction *actionSearch;
   QAction *actionViewDocs;
   QAction *actionOpenDebugLogLocation;
+  QAction *actionJoinDiscordServer;
   QAction *actionAbout;
   QAction *actionQuit;
   QAction *actionOpenGroupsEditor;
@@ -205,6 +206,7 @@ private slots:
   void on_actionClearMetadata_triggered(bool checked);
   void on_actionViewDocs_triggered(bool checked);
   void on_actionOpenDebugLogLocation_triggered(bool checked);
+  void on_actionJoinDiscordServer_triggered(bool checked);
   void on_actionAbout_triggered(bool checked);
 
   void on_gameComboBox_activated(int index);
