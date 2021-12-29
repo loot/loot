@@ -38,7 +38,7 @@ following applications are already installed:
 - `cmake` v3.6+
 - `curl`
 - `git`
-- `python` and `pip` (2.7 or 3, it shouldn't matter)
+- `python` and `pip`
 - `wget`
 
 (The list above may be incomplete.)
@@ -59,7 +59,7 @@ You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and include Qt
 
 ## Building The Documentation
 
-The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python (2 or 3) and make sure it's accessible from your `PATH`, then run:
+The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python and make sure it's accessible from your `PATH`, then run:
 
 ```
 pip install -r docs/requirements.txt
