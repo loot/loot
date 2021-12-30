@@ -68,7 +68,7 @@ jobs:
           7z e -y svg_to_ico.7z
 
       - name: Generate ICO file
-        run: .\svg_to_ico.exe -i resources\icon.svg -o build\icon\icon.ico
+        run: .\svg_to_ico.exe -i resources\icons\loot.svg -o build\icon\icon.ico
 
       - name: Download & build Boost
         run: |
