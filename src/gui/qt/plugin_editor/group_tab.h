@@ -31,8 +31,6 @@
 #include <QtWidgets/QWidget>
 #include <optional>
 
-#include "gui/query/derived_plugin_metadata.h"
-
 namespace loot {
 class GroupTab : public QWidget {
   Q_OBJECT

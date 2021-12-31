@@ -97,9 +97,8 @@ private:
     this->getGame().SetLoadOrder(plugins);
   }
 
-  std::vector<DerivedPluginMetadata> getResult(
-      const std::vector<std::string>& plugins) {
-    std::vector<DerivedPluginMetadata> result;
+  std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
+    std::vector<PluginItem> result;
 
     for (const auto& pluginName : plugins) {
       auto plugin = this->getGame().GetPlugin(pluginName);
@@ -110,7 +109,7 @@ private:
       auto derivedMetadata = this->generateDerivedMetadata(plugin);
       auto index = this->getGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
-        derivedMetadata.setLoadOrderIndex(index.value());
+        derivedMetadata.loadOrderIndex = index;
       }
 
       result.push_back(derivedMetadata);

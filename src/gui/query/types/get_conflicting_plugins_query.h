@@ -54,8 +54,8 @@ public:
   }
 
 private:
-  std::vector<std::pair<DerivedPluginMetadata, bool>> getResult() {
-    std::vector<std::pair<DerivedPluginMetadata, bool>> result;
+  std::vector<std::pair<PluginItem, bool>> getResult() {
+    std::vector<std::pair<PluginItem, bool>> result;
 
     auto plugin = this->getGame().GetPlugin(pluginName_);
     if (!plugin) {

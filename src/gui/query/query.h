@@ -32,7 +32,7 @@ along with LOOT.  If not, see
 #include <string>
 #include <variant>
 
-#include "gui/query/derived_plugin_metadata.h"
+#include "gui/plugin_item.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/state/loot_state.h"
@@ -40,15 +40,14 @@ along with LOOT.  If not, see
 namespace loot {
 typedef std::vector<std::pair<std::string, std::optional<short>>>
     CancelSortResult;
-typedef std::vector<DerivedPluginMetadata> DerivedMetadataVector;
-typedef std::vector<std::pair<DerivedPluginMetadata, bool>>
-    GetConflictingPluginsResult;
+typedef std::vector<PluginItem> PluginItems;
+typedef std::vector<std::pair<PluginItem, bool>> GetConflictingPluginsResult;
 
 typedef std::variant<std::monostate,
                      CancelSortResult,
                      FileRevisionSummary,
-                     DerivedMetadataVector,
-                     DerivedPluginMetadata,
+                     PluginItems,
+                     PluginItem,
                      GetConflictingPluginsResult>
     QueryResult;
 

@@ -78,31 +78,19 @@ std::vector<std::string> GetGroupNames(const gui::Game& game) {
   return GetGroupNames(game.GetMasterlistGroups(), game.GetUserGroups());
 }
 
-bool hasLoadOrderChanged(
-    const std::vector<std::string>& oldLoadOrder,
-    const std::vector<DerivedPluginMetadata>& newLoadOrder) {
+bool hasLoadOrderChanged(const std::vector<std::string>& oldLoadOrder,
+                         const std::vector<PluginItem>& newLoadOrder) {
   if (oldLoadOrder.size() != newLoadOrder.size()) {
     return true;
   }
 
   for (size_t i = 0; i < oldLoadOrder.size(); i += 1) {
-    if (oldLoadOrder[i] != newLoadOrder[i].GetName()) {
+    if (oldLoadOrder[i] != newLoadOrder[i].name) {
       return true;
     }
   }
 
   return false;
-}
-
-std::vector<PluginItem> getPluginItems(
-    const std::vector<DerivedPluginMetadata>& plugins) {
-  std::vector<PluginItem> pluginItems;
-  pluginItems.reserve(plugins.size());
-  for (auto& plugin : plugins) {
-    pluginItems.push_back(PluginItem(plugin));
-  }
-
-  return pluginItems;
 }
 
 int compareLOOTVersion(const std::string& version) {
@@ -1197,8 +1185,7 @@ void MainWindow::handleQueryException(const std::unique_ptr<Query> query,
 void MainWindow::handleGameDataLoaded(QueryResult result) {
   progressDialog->reset();
 
-  pluginItemModel->setPluginItems(
-      getPluginItems(std::get<DerivedMetadataVector>(result)));
+  pluginItemModel->setPluginItems(std::move(std::get<PluginItems>(result)));
 
   updateGeneralInformation();
 
@@ -1213,7 +1200,7 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
 void MainWindow::handlePluginsSorted(QueryResult result) {
   filtersWidget->resetConflictsAndGroupsFilters();
 
-  auto sortedPlugins = std::get<DerivedMetadataVector>(result);
+  auto sortedPlugins = std::get<PluginItems>(result);
 
   if (sortedPlugins.empty()) {
     // If there was a sorting failure the array of plugins will be empty.
@@ -1403,7 +1390,7 @@ void MainWindow::on_actionClearAllUserMetadata_triggered(bool checked) {
     updateGeneralMessages();
 
     // These plugin items are only those that had their user metadata removed.
-    auto pluginItems = getPluginItems(std::get<DerivedMetadataVector>(result));
+    auto pluginItems = std::get<PluginItems>(result);
 
     // For each item, find its existing index in the model and update its data.
     // The sidebar item and card will be updated by handling the resulting
@@ -1531,8 +1518,7 @@ void MainWindow::on_actionClearMetadata_triggered(bool checked) {
     // The result is the changed plugin's derived metadata. Update the
     // model's data and also the message counts.
 
-    auto plugin = std::get<DerivedPluginMetadata>(result);
-    auto newPluginItem = PluginItem(plugin);
+    auto newPluginItem = std::get<PluginItem>(result);
 
     for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
       auto index = pluginItemModel->index(i, 0);
@@ -1839,12 +1825,11 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
       auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
       if (pluginItem.name == pluginName) {
-        auto plugin =
-            DerivePluginMetadata(state.GetCurrentGame().GetPlugin(pluginName),
+        auto plugin = PluginItem(state.GetCurrentGame().GetPlugin(pluginName),
                                  state.GetCurrentGame(),
                                  state.getLanguage());
 
-        auto data = QVariant::fromValue(PluginItem(plugin));
+        auto data = QVariant::fromValue(plugin);
         pluginItemModel->setData(index, data, RawDataRole);
         break;
       }
@@ -2029,7 +2014,7 @@ void MainWindow::handlePreludeUpdated(QueryResult result) {
 
 void MainWindow::handleMasterlistUpdated(QueryResult result) {
   try {
-    if (!std::holds_alternative<DerivedMetadataVector>(result)) {
+    if (!std::holds_alternative<PluginItems>(result)) {
       showNotification(translate("No masterlist update was necessary."));
       return;
     }
@@ -2053,18 +2038,17 @@ void MainWindow::handleConflictsChecked(QueryResult result) {
   try {
     progressDialog->reset();
 
-    // The result is not an array of DerivedPluginMetadata objects.
+    // The result is not an array of PluginItem objects.
     // Instead it's an array of objects, with each having a metadata property
-    // that is a DerivedPluginMetadata object, and a conflicts property that is
+    // that is a PluginItem object, and a conflicts property that is
     // a boolean.
-    std::vector<DerivedPluginMetadata> gameDataLoadedResult;
+    std::vector<PluginItem> gameDataLoadedResult;
     std::vector<std::string> conflictingPluginNames;
 
     for (const auto& pluginPair :
          std::get<GetConflictingPluginsResult>(result)) {
       if (pluginPair.second) {
-        auto name = pluginPair.first.GetName();
-        conflictingPluginNames.push_back(name);
+        conflictingPluginNames.push_back(pluginPair.first.name);
       }
 
       gameDataLoadedResult.push_back(pluginPair.first);

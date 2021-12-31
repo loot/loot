@@ -72,10 +72,10 @@ private:
     return userlistPlugins;
   }
 
-  std::vector<DerivedPluginMetadata> getDerivedMetadata(
+  std::vector<PluginItem> getDerivedMetadata(
       const std::vector<std::shared_ptr<const PluginInterface>>&
           userlistPlugins) {
-    std::vector<DerivedPluginMetadata> plugins;
+    std::vector<PluginItem> plugins;
 
     for (const auto& plugin : userlistPlugins) {
       auto derivedMetadata = this->generateDerivedMetadata(plugin);

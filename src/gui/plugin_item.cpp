@@ -27,11 +27,92 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
+#include <boost/locale.hpp>
 #include <variant>
 
 #include "gui/helpers.h"
+#include "gui/state/game/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
+std::optional<PluginMetadata> evaluateMasterlistMetadata(
+    const gui::Game& game,
+    const std::string& pluginName) {
+  try {
+    return game.GetMasterlistMetadata(pluginName, true);
+  } catch (std::exception& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "\"{}\"'s masterlist metadata contains a condition that "
+          "could not be evaluated. Details: {}",
+          pluginName,
+          e.what());
+    }
+
+    PluginMetadata master(pluginName);
+    master.SetMessages({
+        PlainTextMessage(MessageType::error,
+                         (boost::format(boost::locale::translate(
+                              "\"%1%\" contains a condition that could not be "
+                              "evaluated. Details: %2%")) %
+                          pluginName % e.what())
+                             .str()),
+    });
+
+    return master;
+  }
+}
+
+std::optional<PluginMetadata> evaluateUserlistMetadata(
+    const gui::Game& game,
+    const std::string& pluginName) {
+  try {
+    return game.GetUserMetadata(pluginName, true);
+  } catch (std::exception& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "\"{}\"'s user metadata contains a condition that could "
+          "not be evaluated. Details: {}",
+          pluginName,
+          e.what());
+    }
+
+    PluginMetadata user(pluginName);
+    user.SetMessages({
+        PlainTextMessage(MessageType::error,
+                         (boost::format(boost::locale::translate(
+                              "\"%1%\" contains a condition that could not be "
+                              "evaluated. Details: %2%")) %
+                          pluginName % e.what())
+                             .str()),
+    });
+
+    return user;
+  }
+}
+
+std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
+                                               const std::string& pluginName) {
+  auto evaluatedMasterlistMetadata =
+      evaluateMasterlistMetadata(game, pluginName);
+  auto evaluatedUserMetadata = evaluateUserlistMetadata(game, pluginName);
+
+  if (!evaluatedMasterlistMetadata.has_value()) {
+    return evaluatedUserMetadata;
+  }
+
+  if (!evaluatedUserMetadata.has_value()) {
+    return evaluatedMasterlistMetadata;
+  }
+
+  evaluatedUserMetadata.value().MergeMetadata(
+      evaluatedMasterlistMetadata.value());
+
+  return evaluatedUserMetadata;
+}
+
 std::string getCommaSeparatedTags(const std::vector<std::string>& tags) {
   std::string tagsText;
   for (const auto& tag : tags) {
@@ -50,29 +131,50 @@ PluginItem::PluginItem() :
     isMaster(false),
     loadsArchive(false) {}
 
-PluginItem::PluginItem(const DerivedPluginMetadata& plugin) :
-    name(plugin.GetName()),
-    loadOrderIndex(plugin.GetLoadOrderIndex()),
-    crc(plugin.GetCRC()),
-    version(plugin.GetVersion()),
-    group(plugin.GetGroup()),
-    cleaningUtility(plugin.GetCleaningUtility().empty()
-                        ? std::nullopt
-                        : std::optional(plugin.GetCleaningUtility())),
-    hasUserMetadata(plugin.GetUserMetadata().has_value() &&
-                    !plugin.GetUserMetadata().value().HasNameOnly()),
-    isActive(plugin.IsActive()),
-    isDirty(plugin.IsDirty()),
-    isEmpty(plugin.IsEmpty()),
-    isLightPlugin(plugin.IsLightPlugin()),
-    isMaster(plugin.IsMaster()),
-    loadsArchive(plugin.LoadsArchive()),
-    messages(plugin.GetMessages()) {
-  for (const auto& tag : plugin.GetCurrentTags()) {
+PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
+                       const gui::Game& game,
+                       std::string language) :
+    name(plugin->GetName()),
+    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder())),
+    crc(plugin->GetCRC()),
+    version(plugin->GetVersion()),
+    isActive(game.IsPluginActive(plugin->GetName())),
+    isDirty(false),
+    isEmpty(plugin->IsEmpty()),
+    isMaster(plugin->IsMaster()),
+    isLightPlugin(plugin->IsLightPlugin()),
+    loadsArchive(plugin->LoadsArchive()),
+    hasUserMetadata(false) {
+  auto userMetadata = game.GetUserMetadata(plugin->GetName());
+  if (userMetadata.has_value()) {
+    hasUserMetadata =
+        userMetadata.has_value() && !userMetadata.value().HasNameOnly();
+  }
+
+  auto evaluatedMetadata = evaluateMetadata(game, plugin->GetName())
+                               .value_or(PluginMetadata(plugin->GetName()));
+
+  isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
+  group = evaluatedMetadata.GetGroup();
+
+  auto evaluatedMessages = evaluatedMetadata.GetMessages();
+  auto validityMessages =
+      game.CheckInstallValidity(plugin, evaluatedMetadata, language);
+  evaluatedMessages.insert(
+      end(evaluatedMessages), begin(validityMessages), end(validityMessages));
+  evaluatedMetadata.SetMessages(evaluatedMessages);
+  messages = evaluatedMetadata.GetSimpleMessages(language);
+
+  if (!evaluatedMetadata.GetCleanInfo().empty()) {
+    cleaningUtility =
+        evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
+  }
+
+  for (const auto& tag : plugin->GetBashTags()) {
     currentTags.push_back(tag.GetName());
   }
 
-  for (const auto& tag : plugin.GetSuggestedTags()) {
+  for (const auto& tag : evaluatedMetadata.GetTags()) {
     if (tag.IsAddition()) {
       addTags.push_back(tag.GetName());
     } else {

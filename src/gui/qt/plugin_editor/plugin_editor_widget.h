@@ -26,6 +26,8 @@
 #ifndef LOOT_GUI_QT_PLUGIN_EDITOR_PLUGIN_EDITOR_WIDGET
 #define LOOT_GUI_QT_PLUGIN_EDITOR_PLUGIN_EDITOR_WIDGET
 
+#include <loot/metadata/plugin_metadata.h>
+
 #include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QTabWidget>
@@ -33,7 +35,6 @@
 
 #include "gui/qt/plugin_editor/group_tab.h"
 #include "gui/qt/plugin_editor/table_tabs.h"
-#include "gui/query/derived_plugin_metadata.h"
 #include "gui/state/loot_settings.h"
 
 namespace loot {

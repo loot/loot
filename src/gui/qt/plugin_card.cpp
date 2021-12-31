@@ -30,6 +30,8 @@
 #include <QtCore/QStringList>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QVBoxLayout>
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
 
 #include "gui/helpers.h"
 #include "gui/qt/counters.h"

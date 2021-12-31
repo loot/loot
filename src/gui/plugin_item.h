@@ -26,14 +26,23 @@
 #ifndef LOOT_GUI_PLUGIN_ITEM
 #define LOOT_GUI_PLUGIN_ITEM
 
-#include "gui/query/derived_plugin_metadata.h"
+#include <loot/metadata/group.h>
+#include <loot/plugin_interface.h>
+#include <loot/struct/simple_message.h>
+
+#include <optional>
+#include <string>
+
+#include "gui/state/game/game.h"
 
 namespace loot {
 inline static const std::string DEFAULT_GROUP_NAME = Group().GetName();
 
 struct PluginItem {
   PluginItem();
-  PluginItem(const DerivedPluginMetadata& plugin);
+  PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
+             const gui::Game& game,
+             std::string language);
 
   std::string name;
   std::optional<short> loadOrderIndex;

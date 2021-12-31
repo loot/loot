@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_METADATA_QUERY
 #define LOOT_GUI_QUERY_METADATA_QUERY
 
-#include "gui/query/derived_plugin_metadata.h"
 #include "gui/query/query.h"
 
 namespace loot {
@@ -36,7 +35,7 @@ protected:
   MetadataQuery(G& game, std::string language) :
       game_(game), language_(language) {}
 
-  std::optional<DerivedPluginMetadata> generateDerivedMetadata(
+  std::optional<PluginItem> generateDerivedMetadata(
       const std::string& pluginName) {
     auto plugin = game_.GetPlugin(pluginName);
     if (plugin) {
@@ -46,18 +45,18 @@ protected:
     return std::nullopt;
   }
 
-  DerivedPluginMetadata generateDerivedMetadata(
+  PluginItem generateDerivedMetadata(
       const std::shared_ptr<const PluginInterface>& plugin) {
-    return DerivePluginMetadata(plugin, game_, language_);
+    return PluginItem(plugin, game_, language_);
   }
 
   template<typename InputIterator>
-  std::vector<DerivedPluginMetadata> generateDerivedMetadata(
+  std::vector<PluginItem> generateDerivedMetadata(
       InputIterator firstPlugin,
       InputIterator lastPlugin) {
-    std::vector<DerivedPluginMetadata> metadata;
+    std::vector<PluginItem> metadata;
     for (auto it = firstPlugin; it != lastPlugin; ++it) {
-      metadata.push_back(DerivePluginMetadata(*it, game_, language_));
+      metadata.push_back(PluginItem(*it, game_, language_));
     }
 
     return metadata;

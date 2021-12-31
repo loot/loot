@@ -31,6 +31,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"
 
