@@ -28,19 +28,33 @@ along with LOOT.  If not, see
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <json.hpp>
 #include <optional>
 #include <string>
 #include <variant>
 
+#include "gui/query/derived_plugin_metadata.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/state/loot_state.h"
 
 namespace loot {
+typedef std::vector<std::pair<std::string, std::optional<short>>>
+    CancelSortResult;
+typedef std::vector<DerivedPluginMetadata> DerivedMetadataVector;
+typedef std::vector<std::pair<DerivedPluginMetadata, bool>>
+    GetConflictingPluginsResult;
+
+typedef std::variant<std::monostate,
+                     CancelSortResult,
+                     FileRevisionSummary,
+                     DerivedMetadataVector,
+                     DerivedPluginMetadata,
+                     GetConflictingPluginsResult>
+    QueryResult;
+
 class Query {
 public:
-  virtual nlohmann::json executeLogic() = 0;
+  virtual QueryResult executeLogic() = 0;
   virtual std::string getErrorMessage() const {
     return boost::locale::translate(
                "Oh no, something went wrong! You can check your "

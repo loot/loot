@@ -35,14 +35,14 @@ class OpenLogLocationQuery : public Query {
 public:
   OpenLogLocationQuery(std::filesystem::path logPath) : logPath_(logPath) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's local appdata folder.");
     }
     OpenInDefaultApplication(logPath_.parent_path());
 
-    return nlohmann::json();
+    return std::monostate();
   }
 
 private:

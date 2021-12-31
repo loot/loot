@@ -43,7 +43,7 @@ public:
   CopyLoadOrderQuery(const G& game, const std::vector<std::string>& plugins) :
       game_(game), plugins_(plugins) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     Counters counters;
     std::stringstream stream;
     for (const auto& pluginName : plugins_) {
@@ -51,7 +51,7 @@ public:
     }
 
     CopyToClipboard(stream.str());
-    return nlohmann::json();
+    return std::monostate();
   }
 
 private:

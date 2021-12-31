@@ -36,14 +36,14 @@ public:
   UpdateMasterlistQuery(G& game, std::string language) :
       MetadataQuery<G>(game, language) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Updating and parsing masterlist.");
     }
 
     if (!this->getGame().UpdateMasterlist()) {
-      return nullptr;
+      return std::monostate();
     }
 
     this->getGame().LoadMetadata();

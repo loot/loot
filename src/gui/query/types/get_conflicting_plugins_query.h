@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 
-#include "gui/query/json.h"
 #include "gui/query/types/metadata_query.h"
 #include "gui/state/game/game.h"
 
@@ -39,7 +38,7 @@ public:
                              std::string pluginName) :
       MetadataQuery<G>(game, language), pluginName_(pluginName) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Searching for plugins that conflict with {}", pluginName_);
@@ -51,12 +50,12 @@ public:
     if (!this->getGame().ArePluginsFullyLoaded())
       this->getGame().LoadAllInstalledPlugins(false);
 
-    return getJsonResponse();
+    return getResult();
   }
 
 private:
-  nlohmann::json getJsonResponse() {
-    nlohmann::json json = nlohmann::json::array();
+  std::vector<std::pair<DerivedPluginMetadata, bool>> getResult() {
+    std::vector<std::pair<DerivedPluginMetadata, bool>> result;
 
     auto plugin = this->getGame().GetPlugin(pluginName_);
     if (!plugin) {
@@ -65,13 +64,13 @@ private:
     }
 
     for (const auto& otherPlugin : this->getGame().GetPluginsInLoadOrder()) {
-      json.push_back({
-          {"metadata", this->generateDerivedMetadata(otherPlugin)},
-          {"conflicts", doPluginsConflict(plugin, otherPlugin)},
-      });
+      auto metadata = this->generateDerivedMetadata(otherPlugin);
+      auto conflict = doPluginsConflict(plugin, otherPlugin);
+
+      result.push_back(std::make_pair(metadata, conflict));
     }
 
-    return json;
+    return result;
   }
 
   bool doPluginsConflict(

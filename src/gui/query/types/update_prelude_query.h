@@ -28,7 +28,9 @@ along with LOOT.  If not, see
 
 #include <loot/api.h>
 
+#include "gui/query/query.h"
 #include "gui/state/game/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 class UpdatePreludeQuery : public Query {
@@ -38,7 +40,7 @@ public:
                      std::string remoteBranch) :
       filePath_(filePath), remoteURL_(remoteURL), remoteBranch_(remoteBranch) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Updating the masterlist prelude.");
@@ -46,7 +48,7 @@ public:
 
     bool wasUpdated = UpdateFile(filePath_, remoteURL_, remoteBranch_);
     if (!wasUpdated) {
-      return nullptr;
+      return std::monostate();
     }
 
     return GetFileRevisionToDisplay(filePath_, FileType::MasterlistPrelude);

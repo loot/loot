@@ -30,7 +30,6 @@ along with LOOT.  If not, see
 
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
-#include <json.hpp>
 #include <optional>
 
 #include "gui/state/game/game.h"
@@ -141,12 +140,6 @@ private:
   std::optional<PluginMetadata> userMetadata;
 
   std::string language;
-
-  friend void to_json(nlohmann::json& json,
-                      const DerivedPluginMetadata& plugin);
-
-  friend void from_json(const nlohmann::json& json,
-                        DerivedPluginMetadata& plugin);
 };
 
 template<typename G>
@@ -240,6 +233,11 @@ DerivedPluginMetadata DerivePluginMetadata(
       game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder());
   auto derived =
       DerivedPluginMetadata(plugin, isActive, loadOrderIndex, language);
+
+  auto userMetadata = game.GetUserMetadata(plugin->GetName());
+  if (userMetadata.has_value()) {
+    derived.setUserMetadata(userMetadata.value());
+  }
 
   auto evaluatedMetadata = evaluateMetadata(game, plugin->GetName());
   if (!evaluatedMetadata.has_value()) {

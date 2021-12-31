@@ -39,7 +39,7 @@ public:
                   const std::string& relativeFilePath) :
       readmePath_(readmePath), relativeFilePath_(relativeFilePath) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's readme.");
@@ -58,7 +58,7 @@ public:
 
     OpenInDefaultApplication(canonicalPath);
 
-    return nlohmann::json();
+    return std::monostate();
   }
 
 private:

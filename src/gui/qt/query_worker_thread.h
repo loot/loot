@@ -33,7 +33,7 @@
 
 #include "gui/query/query.h"
 
-Q_DECLARE_METATYPE(nlohmann::json);
+Q_DECLARE_METATYPE(loot::QueryResult);
 
 namespace loot {
 class ProgressUpdater : public QObject {
@@ -79,7 +79,7 @@ public:
   }
 
 signals:
-  void resultReady(nlohmann::json result);
+  void resultReady(QueryResult result);
   void error(const std::string &exception);
 
 private:

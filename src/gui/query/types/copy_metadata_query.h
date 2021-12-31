@@ -38,7 +38,7 @@ public:
                     std::string pluginName) :
       game_(game), language_(language), pluginName_(pluginName) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Copying metadata for plugin {}", pluginName_);
@@ -70,7 +70,7 @@ public:
           "Exported userlist metadata text for \"{}\": {}", pluginName_, text);
     }
 
-    return nlohmann::json();
+    return std::monostate();
   }
 
 private:

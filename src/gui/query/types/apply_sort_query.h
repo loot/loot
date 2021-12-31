@@ -40,7 +40,7 @@ public:
       plugins_(plugins),
       useSortingErrorMessage(false) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->trace("User has accepted sorted load order, applying it.");
@@ -53,7 +53,7 @@ public:
       throw;
     }
 
-    return nlohmann::json();
+    return std::monostate();
   }
 
   std::string getErrorMessage() const override {

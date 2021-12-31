@@ -38,7 +38,7 @@ public:
                            std::string pluginName) :
       MetadataQuery<G>(game, language), pluginName_(pluginName) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing user metadata for plugin {}", pluginName_);
@@ -52,7 +52,7 @@ public:
       return metadata.value();
     }
 
-    return nullptr;
+    return std::monostate();
   }
 
 private:

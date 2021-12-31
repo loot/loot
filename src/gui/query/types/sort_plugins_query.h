@@ -28,7 +28,6 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "gui/query/json.h"
 #include "gui/query/types/metadata_query.h"
 #include "gui/state/game/game.h"
 #include "gui/state/unapplied_change_counter.h"
@@ -46,7 +45,7 @@ public:
       sendProgressUpdate_(sendProgressUpdate),
       useSortingErrorMessage(false) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Beginning sorting operation.");
@@ -68,13 +67,13 @@ public:
       throw;
     }
 
-    auto json = generateJsonResponse(plugins);
+    auto result = getResult(plugins);
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty())
       counter_.IncrementUnappliedChangeCounter();
 
-    return json;
+    return result;
   }
 
   std::string getErrorMessage() const override {
@@ -98,8 +97,9 @@ private:
     this->getGame().SetLoadOrder(plugins);
   }
 
-  nlohmann::json generateJsonResponse(const std::vector<std::string>& plugins) {
-    nlohmann::json json = nlohmann::json::array();
+  std::vector<DerivedPluginMetadata> getResult(
+      const std::vector<std::string>& plugins) {
+    std::vector<DerivedPluginMetadata> result;
 
     for (const auto& pluginName : plugins) {
       auto plugin = this->getGame().GetPlugin(pluginName);
@@ -113,10 +113,10 @@ private:
         derivedMetadata.setLoadOrderIndex(index.value());
       }
 
-      json.push_back(derivedMetadata);
+      result.push_back(derivedMetadata);
     }
 
-    return json;
+    return result;
   }
 
   UnappliedChangeCounter& counter_;

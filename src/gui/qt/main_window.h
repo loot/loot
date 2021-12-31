@@ -172,11 +172,11 @@ private:
   void closeEvent(QCloseEvent *event);
 
   void executeBackgroundQuery(std::unique_ptr<Query> query,
-                              void (MainWindow::*onComplete)(nlohmann::json),
+                              void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
   void executeBackgroundQueryChain(
-      std::vector<std::pair<std::unique_ptr<Query>,
-                            void (MainWindow::*)(nlohmann::json)>>
+      std::vector<
+          std::pair<std::unique_ptr<Query>, void (MainWindow::*)(QueryResult)>>
           queriesAndHandlers,
       ProgressUpdater *progressUpdater);
 
@@ -192,8 +192,8 @@ private:
   void handleQueryException(const std::unique_ptr<Query> query,
                             const std::exception &exception);
 
-  void handleGameDataLoaded(nlohmann::json result);
-  void handlePluginsSorted(nlohmann::json result);
+  void handleGameDataLoaded(QueryResult result);
+  void handlePluginsSorted(QueryResult results);
 
   QMenu *createPopupMenu();
 
@@ -255,14 +255,14 @@ private slots:
   void on_searchDialog_textChanged(const QString &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
 
-  void handleGameChanged(nlohmann::json result);
-  void handleRefreshGameDataLoaded(nlohmann::json result);
-  void handleStartupGameDataLoaded(nlohmann::json result);
-  void handlePluginsManualSorted(nlohmann::json result);
-  void handlePluginsAutoSorted(nlohmann::json result);
-  void handlePreludeUpdated(nlohmann::json result);
-  void handleMasterlistUpdated(nlohmann::json result);
-  void handleConflictsChecked(nlohmann::json result);
+  void handleGameChanged(QueryResult result);
+  void handleRefreshGameDataLoaded(QueryResult result);
+  void handleStartupGameDataLoaded(QueryResult result);
+  void handlePluginsManualSorted(QueryResult results);
+  void handlePluginsAutoSorted(QueryResult results);
+  void handlePreludeUpdated(QueryResult result);
+  void handleMasterlistUpdated(QueryResult result);
+  void handleConflictsChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);
   void handleWorkerThreadFinished();
 
@@ -277,14 +277,14 @@ class ResultDemultiplexer : public QObject {
 public:
   ResultDemultiplexer(MainWindow *target);
 
-  void addHandler(void (MainWindow::*handler)(nlohmann::json));
+  void addHandler(void (MainWindow::*handler)(QueryResult));
 
 public slots:
-  void onResultReady(nlohmann::json result);
+  void onResultReady(QueryResult result);
 
 private:
   MainWindow *target;
-  std::vector<void (MainWindow::*)(nlohmann::json)> handlers;
+  std::vector<void (MainWindow::*)(QueryResult)> handlers;
   int signalCounter;
 };
 }

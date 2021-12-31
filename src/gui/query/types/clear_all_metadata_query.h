@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 
-#include "gui/query/json.h"
 #include "gui/query/types/metadata_query.h"
 #include "gui/state/game/game.h"
 
@@ -37,7 +36,7 @@ public:
   ClearAllMetadataQuery(G& game, std::string language) :
       MetadataQuery<G>(game, language) {}
 
-  nlohmann::json executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing all user metadata.");
@@ -57,7 +56,7 @@ public:
           userlistPlugins.size());
     }
 
-    return getDerivedMetadataJson(userlistPlugins);
+    return getDerivedMetadata(userlistPlugins);
   }
 
 private:
@@ -73,17 +72,17 @@ private:
     return userlistPlugins;
   }
 
-  nlohmann::json getDerivedMetadataJson(
+  std::vector<DerivedPluginMetadata> getDerivedMetadata(
       const std::vector<std::shared_ptr<const PluginInterface>>&
           userlistPlugins) {
-    nlohmann::json json = nlohmann::json::array();
+    std::vector<DerivedPluginMetadata> plugins;
 
     for (const auto& plugin : userlistPlugins) {
       auto derivedMetadata = this->generateDerivedMetadata(plugin);
-      json.push_back(derivedMetadata);
+      plugins.push_back(derivedMetadata);
     }
 
-    return json;
+    return plugins;
   }
 };
 }
