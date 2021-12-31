@@ -56,10 +56,7 @@ public:
 
 private:
   nlohmann::json getJsonResponse() {
-    nlohmann::json json = {
-        {"generalMessages", this->getGeneralMessages()},
-        {"plugins", nlohmann::json::array()},
-    };
+    nlohmann::json json = nlohmann::json::array();
 
     auto plugin = this->getGame().GetPlugin(pluginName_);
     if (!plugin) {
@@ -68,7 +65,7 @@ private:
     }
 
     for (const auto& otherPlugin : this->getGame().GetPluginsInLoadOrder()) {
-      json["plugins"].push_back({
+      json.push_back({
           {"metadata", this->generateDerivedMetadata(otherPlugin)},
           {"conflicts", doPluginsConflict(plugin, otherPlugin)},
       });

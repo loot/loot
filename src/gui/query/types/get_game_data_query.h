@@ -59,7 +59,7 @@ public:
     // Sort plugins into their load order.
     auto installed = this->getGame().GetPluginsInLoadOrder();
 
-    return this->generateJsonResponse(installed.cbegin(), installed.cend());
+    return this->generateDerivedMetadata(installed.cbegin(), installed.cend());
   }
 
 private:

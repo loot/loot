@@ -43,10 +43,7 @@ public:
     counter_.DecrementUnappliedChangeCounter();
     this->getGame().DecrementLoadOrderSortCount();
 
-    nlohmann::json json = {
-        {"plugins", nlohmann::json::array()},
-        {"generalMessages", this->getGeneralMessages()},
-    };
+    nlohmann::json json = nlohmann::json::array();
 
     std::vector<std::string> loadOrder = this->getGame().GetLoadOrder();
     for (const auto& pluginName : loadOrder) {
@@ -63,7 +60,7 @@ public:
         pluginJson["loadOrderIndex"] = loadOrderIndex.value();
       }
 
-      json["plugins"].push_back(pluginJson);
+      json.push_back(pluginJson);
     }
 
     return json;

@@ -44,7 +44,7 @@ public:
     }
 
     // Record which plugins have userlist entries.
-    auto userlistPluginNames = getUserlistPluginNames();
+    auto userlistPlugins = getUserlistPlugins();
 
     // Clear the user metadata.
     this->getGame().ClearAllUserMetadata();
@@ -54,40 +54,34 @@ public:
       logger->trace(
           "Rederiving display metadata for {} plugins that had user "
           "metadata.",
-          userlistPluginNames.size());
+          userlistPlugins.size());
     }
 
-    return getDerivedMetadataJson(userlistPluginNames);
+    return getDerivedMetadataJson(userlistPlugins);
   }
 
 private:
-  std::vector<std::string> getUserlistPluginNames() const {
-    std::vector<std::string> userlistPluginNames;
+  std::vector<std::shared_ptr<const PluginInterface>> getUserlistPlugins()
+      const {
+    std::vector<std::shared_ptr<const PluginInterface>> userlistPlugins;
     for (const auto& plugin : this->getGame().GetPlugins()) {
       if (this->getGame().GetUserMetadata(plugin->GetName()).has_value()) {
-        userlistPluginNames.push_back(plugin->GetName());
+        userlistPlugins.push_back(plugin);
       }
     }
 
-    return userlistPluginNames;
+    return userlistPlugins;
   }
 
   nlohmann::json getDerivedMetadataJson(
-      const std::vector<std::string>& userlistPluginNames) {
-    nlohmann::json json;
+      const std::vector<std::shared_ptr<const PluginInterface>>&
+          userlistPlugins) {
+    nlohmann::json json = nlohmann::json::array();
 
-    json["plugins"] = nlohmann::json::array();
-    for (const auto& pluginName : userlistPluginNames) {
-      auto derivedMetadata = this->generateDerivedMetadata(pluginName);
-      if (derivedMetadata.has_value()) {
-        json["plugins"].push_back(derivedMetadata.value());
-      }
+    for (const auto& plugin : userlistPlugins) {
+      auto derivedMetadata = this->generateDerivedMetadata(plugin);
+      json.push_back(derivedMetadata);
     }
-
-    json["groups"] = {
-        {"masterlist", this->getGame().GetMasterlistGroups()},
-        {"userlist", this->getGame().GetUserGroups()},
-    };
 
     return json;
   }

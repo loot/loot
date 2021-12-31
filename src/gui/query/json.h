@@ -409,11 +409,6 @@ void to_json(nlohmann::json& json, const DerivedPluginMetadata& plugin) {
     json["cleanedWith"] = plugin.cleanedWith;
   }
 
-  if (plugin.masterlistMetadata.has_value()) {
-    json["masterlist"] = to_json_with_language(
-        plugin.masterlistMetadata.value(), plugin.language);
-  }
-
   if (plugin.userMetadata.has_value()) {
     json["userlist"] =
         to_json_with_language(plugin.userMetadata.value(), plugin.language);
@@ -457,8 +452,8 @@ void from_json(const nlohmann::json& json, DerivedPluginMetadata& plugin) {
     plugin.cleanedWith = cleanedWithIt->get<std::string>();
   }
 
-  // userlist and masterlist are not deserialised because they cannot be
-  // losslessly round-tripped, and having something is probably more confusing
+  // userlist is not deserialised because it cannot be losslessly
+  // round-tripped, and having something is probably more confusing
   // than having nothing.
 }
 }

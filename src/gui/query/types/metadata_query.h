@@ -26,28 +26,15 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_METADATA_QUERY
 #define LOOT_GUI_QUERY_METADATA_QUERY
 
-#include <boost/format.hpp>
-#include <boost/locale.hpp>
-
 #include "gui/query/derived_plugin_metadata.h"
-#include "gui/query/json.h"
 #include "gui/query/query.h"
-#include "gui/state/game/helpers.h"
-#include "loot/exception/file_access_error.h"
-#include "loot/exception/git_state_error.h"
 
 namespace loot {
 template<typename G = gui::Game>
 class MetadataQuery : public Query {
 protected:
   MetadataQuery(G& game, std::string language) :
-      game_(game), language_(language), logger_(getLogger()) {}
-
-  std::vector<SimpleMessage> getGeneralMessages() const {
-    std::vector<Message> messages = game_.GetMessages();
-
-    return ToSimpleMessages(messages, language_);
-  }
+      game_(game), language_(language) {}
 
   std::optional<DerivedPluginMetadata> generateDerivedMetadata(
       const std::string& pluginName) {
@@ -76,43 +63,12 @@ protected:
     return metadata;
   }
 
-  nlohmann::json generateJsonResponse(const std::string& pluginName) {
-    auto derivedMetadata = generateDerivedMetadata(pluginName);
-    if (derivedMetadata.has_value()) {
-      return nlohmann::json(derivedMetadata.value());
-    }
-
-    return "";
-  }
-
-  template<typename InputIterator>
-  nlohmann::json generateJsonResponse(InputIterator firstPlugin,
-                                      InputIterator lastPlugin) {
-    nlohmann::json json = {
-        {"folder", game_.FolderName()},
-        {"masterlist",
-         GetFileRevisionToDisplay(game_.MasterlistPath(),
-                                  FileType::Masterlist)},
-        {"generalMessages", getGeneralMessages()},
-        {"bashTags", game_.GetKnownBashTags()},
-        {"groups",
-         {
-             {"masterlist", game_.GetMasterlistGroups()},
-             {"userlist", game_.GetUserGroups()},
-         }},
-        {"plugins", generateDerivedMetadata(firstPlugin, lastPlugin)},
-    };
-
-    return json;
-  }
-
   G& getGame() { return game_; }
 
   const G& getGame() const { return game_; }
 
 private:
   G& game_;
-  std::shared_ptr<spdlog::logger> logger_;
   const std::string language_;
 };
 }

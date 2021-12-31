@@ -99,10 +99,7 @@ private:
   }
 
   nlohmann::json generateJsonResponse(const std::vector<std::string>& plugins) {
-    nlohmann::json json = {
-        {"generalMessages", this->getGeneralMessages()},
-        {"plugins", nlohmann::json::array()},
-    };
+    nlohmann::json json = nlohmann::json::array();
 
     for (const auto& pluginName : plugins) {
       auto plugin = this->getGame().GetPlugin(pluginName);
@@ -116,7 +113,7 @@ private:
         derivedMetadata.setLoadOrderIndex(index.value());
       }
 
-      json["plugins"].push_back(derivedMetadata);
+      json.push_back(derivedMetadata);
     }
 
     return json;

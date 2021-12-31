@@ -49,7 +49,7 @@ public:
     this->getGame().LoadMetadata();
 
     auto plugins = this->getGame().GetPluginsInLoadOrder();
-    return this->generateJsonResponse(plugins.cbegin(), plugins.cend());
+    return this->generateDerivedMetadata(plugins.cbegin(), plugins.cend());
   }
 };
 }

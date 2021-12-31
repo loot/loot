@@ -75,10 +75,6 @@ public:
     suggestedTags = metadata.GetTags();
   }
 
-  void setMasterlistMetadata(PluginMetadata masterlistEntry) {
-    this->masterlistMetadata = masterlistEntry;
-  }
-
   void setUserMetadata(PluginMetadata userlistEntry) {
     this->userMetadata = userlistEntry;
   }
@@ -119,10 +115,6 @@ public:
 
   const std::vector<Tag>& GetSuggestedTags() const { return suggestedTags; }
 
-  const std::optional<PluginMetadata>& GetNonUserMetadata() const {
-    return masterlistMetadata;
-  }
-
   const std::optional<PluginMetadata>& GetUserMetadata() const {
     return userMetadata;
   }
@@ -146,7 +138,6 @@ private:
   std::vector<Tag> currentTags;
   std::vector<Tag> suggestedTags;
 
-  std::optional<PluginMetadata> masterlistMetadata;
   std::optional<PluginMetadata> userMetadata;
 
   std::string language;
@@ -249,16 +240,6 @@ DerivedPluginMetadata DerivePluginMetadata(
       game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder());
   auto derived =
       DerivedPluginMetadata(plugin, isActive, loadOrderIndex, language);
-
-  auto nonUserMetadata = game.GetNonUserMetadata(plugin);
-  if (nonUserMetadata.has_value()) {
-    derived.setMasterlistMetadata(nonUserMetadata.value());
-  }
-
-  auto userMetadata = game.GetUserMetadata(plugin->GetName());
-  if (userMetadata.has_value()) {
-    derived.setUserMetadata(userMetadata.value());
-  }
 
   auto evaluatedMetadata = evaluateMetadata(game, plugin->GetName());
   if (!evaluatedMetadata.has_value()) {

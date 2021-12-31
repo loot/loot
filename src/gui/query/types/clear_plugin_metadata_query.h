@@ -47,7 +47,12 @@ public:
     this->getGame().ClearUserMetadata(pluginName_);
     this->getGame().SaveUserMetadata();
 
-    return this->generateJsonResponse(pluginName_);
+    auto metadata = this->generateDerivedMetadata(pluginName_);
+    if (metadata.has_value()) {
+      return metadata.value();
+    }
+
+    return nullptr;
   }
 
 private:
