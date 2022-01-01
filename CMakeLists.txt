@@ -74,16 +74,6 @@ if (NOT DEFINED LIBLOOT_URL)
     endif()
 endif()
 
-ExternalProject_Add(json
-                    PREFIX "external"
-                    URL "https://github.com/nlohmann/json/releases/download/v3.10.4/json.hpp"
-                    URL_HASH SHA256=c9ac7589260f36ea7016d4d51a6c95809803298c7caec9f55830a0214c5f9140
-                    DOWNLOAD_NO_EXTRACT 1
-                    CONFIGURE_COMMAND ""
-                    BUILD_COMMAND ""
-                    INSTALL_COMMAND "")
-set(JSON_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/external/src")
-
 ExternalProject_Add(libloot
                     PREFIX "external"
                     URL ${LIBLOOT_URL}
@@ -214,7 +204,6 @@ set (LOOT_QT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/application_mutex.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/qt/style.h"
-                  "${CMAKE_SOURCE_DIR}/src/gui/query/json.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/types/apply_sort_query.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/query/types/cancel_sort_query.h"
@@ -282,7 +271,6 @@ source_group("Header Files\\tests" FILES ${LOOT_GUI_TESTS_SRC})
 # Include source and library directories.
 include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${CPPTOML_INCLUDE_DIRS}
-                     ${JSON_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
                      ${SPDLOG_INCLUDE_DIRS})
@@ -327,12 +315,12 @@ ENDIF ()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_QT_GUI_SRC}  ${LOOT_QT_GUI_HEADERS})
-add_dependencies     (LOOT cpptoml json libloot spdlog)
+add_dependencies     (LOOT cpptoml libloot spdlog)
 target_link_libraries(LOOT PRIVATE Qt::Widgets Qt::Network ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests cpptoml json libloot spdlog GTest testing-plugins)
+add_dependencies     (loot_gui_tests cpptoml libloot spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS} ${ICU_LIBRARIES})
 
 ##############################

@@ -42,14 +42,6 @@ LOOT Documentation
 .. include:: Apache-LICENSE-2.0.txt
   :literal:
 
-`nlohmann/json`_
-================
-
-.. _nlohmann/json: https://github.com/nlohmann/json
-
-.. include:: MIT License (nlohmann json).txt
-  :literal:
-
 `spdlog`_
 =========
 

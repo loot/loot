@@ -31,13 +31,12 @@ In addition, the following are credited with application-related support:
 
 * Testing: Too many to list, thank you all!
 
-LOOT uses the `Boost`_, `cpptoml`_, `nlohmann/json`_, and `spdlog`_ libraries, and the `Qt`_ framework.
+LOOT uses the `Boost`_, `cpptoml`_, and `spdlog`_ libraries, and the `Qt`_ framework.
 
 .. _GitHub: https://github.com/loot/
 .. _here: https://loot.github.io/credits/
 .. _BOSS: https://boss-developers.github.io/
 .. _Boost: https://www.boost.org/
 .. _cpptoml: https://github.com/skystrife/cpptoml
-.. _nlohmann/json: https://github.com/nlohmann/json
 .. _spdlog: https://github.com/gabime/spdlog
 .. _Qt: https://www.qt.io/
