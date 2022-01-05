@@ -60,10 +60,10 @@ Copyright License Texts
 .. include:: MIT License (lodash).txt
   :literal:
 
-LOOT & `LOOT API`_
+LOOT & `libloot`_
 ==================
 
-.. _LOOT API: https://github.com/loot/loot-api
+.. _libloot: https://github.com/loot/libloot
 
 .. include:: GNU GPL v3.txt
   :literal:
