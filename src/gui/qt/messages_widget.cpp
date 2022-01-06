@@ -25,6 +25,7 @@
 
 #include "gui/qt/messages_widget.h"
 
+#include <QtGui/QTextDocument>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QStyle>
@@ -46,6 +47,25 @@ QString getPropertyValue(MessageType messageType) {
   }
 }
 
+QString getHtmlText(const std::string& markdownText) {
+  QTextDocument document;
+
+  document.setMarkdown(QString::fromStdString(markdownText),
+                       {QTextDocument::MarkdownNoHTML,
+                        QTextDocument::MarkdownDialectCommonMark});
+
+  // It's not possible to control how a QLabel styles Markdown text beyond
+  // setting the Link color in the palette, and the default style sheet is
+  // ignored when setting Markdown (or maybe it's just not included in the
+  // HTML returned by toHtml()?), so insert a <style> element into the
+  // HTML instead.
+  auto styleSheet = QString("a { text-decoration: none; }");
+
+  auto html = document.toHtml();
+  html.replace("</head>", QString("<style>%1</style></head>").arg(styleSheet));
+  return html;
+}
+
 QLabel* createBulletPointLabel() {
   auto label = new QLabel();
   label->setTextFormat(Qt::TextFormat::PlainText);
@@ -64,7 +84,7 @@ QLabel* createBulletPointLabel() {
 
 QLabel* createMessageLabel() {
   auto label = new QLabel();
-  label->setTextFormat(Qt::TextFormat::MarkdownText);
+  label->setTextFormat(Qt::TextFormat::RichText);
 
   label->setWordWrap(true);
   label->setOpenExternalLinks(true);
@@ -87,7 +107,12 @@ void updateMessageLabel(QLabel* label, const SimpleMessage& message) {
       oldPropertyValue.isValid() && oldPropertyValue != newPropertyValue;
 
   label->setProperty(MESSAGE_TYPE_PROPERTY, newPropertyValue);
-  label->setText(QString::fromStdString(message.text));
+
+  // Set HTML because otherwise it's not possible to interpret the text as
+  // CommonMark instead of GitHub Flavored Markdown, or set custom styling
+  // beyond setting the link text (which is done by setting the palette Link
+  // color).
+  label->setText(getHtmlText(message.text));
 
   if (propertyChanged) {
     // Trigger styling changes.
@@ -114,7 +139,10 @@ bool MessagesWidget::willChangeContent(
   for (int i = MESSAGE_LABEL_COLUMN; i < layout()->count(); i += COLUMN_COUNT) {
     auto label = qobject_cast<QLabel*>(layout()->itemAt(i)->widget());
     auto messageType = label->property(MESSAGE_TYPE_PROPERTY);
-    auto text = label->text().toStdString();
+
+    auto markdownTextIndex = (i - 1) / 2;
+    auto text = markdownTexts[markdownTextIndex];
+
     currentMessages.push_back(std::make_pair(messageType, text));
   }
 
@@ -167,11 +195,17 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
     gridLayout->addWidget(messageLabel, row, MESSAGE_LABEL_COLUMN);
   }
 
+  markdownTexts.clear();
+
   // Now update the QLabels.
   for (size_t i = 0; i < messages.size(); i += 1) {
     auto label = qobject_cast<QLabel*>(
         gridLayout->itemAtPosition(i, MESSAGE_LABEL_COLUMN)->widget());
     updateMessageLabel(label, messages[i]);
+
+    // Store the source markdown text because it can't be retrieved from
+    // the QLabel text, as that's set using HTML.
+    markdownTexts.push_back(messages[i].text);
   }
 
   layout()->activate();

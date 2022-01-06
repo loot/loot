@@ -39,6 +39,8 @@ public:
   void setMessages(const std::vector<SimpleMessage>& messages);
 
 private:
+  std::vector<std::string> markdownTexts;
+
   void setupUi();
 };
 }
