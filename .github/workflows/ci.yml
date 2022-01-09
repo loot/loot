@@ -11,6 +11,37 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  # Check if the template.pot file is up to date. Run this as a separate job
+  # so that an outdated POT file causes a visible error but does not block the
+  # main CI builds.
+  check-pot:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install gettext
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-upgrade gettext
+
+      - name: Run pre-commit hook script
+        run: ./scripts/git/pre-commit
+
+      - name: Check if any changes were staged
+        run: |
+          if [[ $(git status --porcelain) ]]
+          then
+            echo "::error ::resources/l10n/template.pot is outdated"
+            exit 1
+          fi
+
   # Publish to Artifactory as a separate job that runs after the build jobs
   # because we must first clean out any existing artifacts for this Git ref,
   # and we don't want to do that as a pre-build step in case the build fails
