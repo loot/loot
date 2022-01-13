@@ -26,11 +26,14 @@
 #ifndef LOOT_GUI_QT_QUERY_WORKER_THREAD
 #define LOOT_GUI_QT_QUERY_WORKER_THREAD
 
+#include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtCore/QThread>
 #include <memory>
 
 #include "gui/query/query.h"
+
+Q_DECLARE_METATYPE(nlohmann::json);
 
 namespace loot {
 class ProgressUpdater : public QObject {

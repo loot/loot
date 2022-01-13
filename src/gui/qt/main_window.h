@@ -26,9 +26,16 @@
 #ifndef LOOT_GUI_QT_MAIN_WINDOW
 #define LOOT_GUI_QT_MAIN_WINDOW
 
+#include <QtCore/QtGlobal>
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#include <QtGui/QAction>
+#else
+#include <QtWidgets/QAction>
+#endif
+
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QApplication>
@@ -222,9 +229,15 @@ private slots:
 
   void on_pluginCardsView_entered(const QModelIndex &index);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
   void on_pluginItemModel_dataChanged(const QModelIndex &topLeft,
                                       const QModelIndex &bottomRight,
                                       const QList<int> &roles);
+#else
+  void on_pluginItemModel_dataChanged(const QModelIndex &topLeft,
+                                      const QModelIndex &bottomRight,
+                                      const QVector<int> &roles);
+#endif
 
   void on_pluginEditorWidget_accepted(PluginMetadata userMetadata);
   void on_pluginEditorWidget_rejected();

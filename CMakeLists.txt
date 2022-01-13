@@ -48,7 +48,10 @@ if (NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
     link_directories($ICU_LIBRARY_DIRS)
 endif()
 
-find_package(Qt6 COMPONENTS Widgets Network REQUIRED)
+find_package(Qt6 COMPONENTS Widgets Network)
+if (NOT Qt6_FOUND)
+    find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
+endif()
 
 ExternalProject_Add(GTest
                     PREFIX "external"
@@ -437,7 +440,7 @@ target_link_libraries(LOOT ${Boost_LIBRARIES} ${CEF_LIBRARIES} ${LIBLOOT_LINK_LI
 # Build Qt application.
 add_executable(LOOT_qt ${LOOT_QT_GUI_SRC}  ${LOOT_QT_GUI_HEADERS})
 add_dependencies     (LOOT_qt cpptoml json libloot spdlog)
-target_link_libraries(LOOT_qt PRIVATE Qt6::Widgets Qt6::Network ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
+target_link_libraries(LOOT_qt PRIVATE Qt::Widgets Qt::Network ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
@@ -471,9 +474,15 @@ IF (CMAKE_SYSTEM_NAME MATCHES "Windows")
         COMMENT "Adding manifest..."
     )
 
+    IF (Qt6_FOUND)
+        set(Qt_DIR ${Qt6_DIR})
+    ELSE()
+        set(Qt_DIR ${Qt5_DIR})
+    ENDIF()
+
     # Copy Qt binaries and resources.
     add_custom_command(TARGET LOOT_qt POST_BUILD
-        COMMAND ${Qt6_DIR}/../../../bin/windeployqt --release $<TARGET_FILE:LOOT_qt>
+        COMMAND ${Qt_DIR}/../../../bin/windeployqt --release $<TARGET_FILE:LOOT_qt>
         COMMENT "Running windeployqt...")
 ENDIF ()
 

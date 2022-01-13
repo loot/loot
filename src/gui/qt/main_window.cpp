@@ -231,6 +231,8 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
 
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
     QMainWindow(parent), state(state) {
+  qRegisterMetaType<nlohmann::json>("nlohmann::json");
+
   setupUi();
 }
 
@@ -1794,9 +1796,15 @@ void MainWindow::on_pluginCardsView_entered(const QModelIndex& index) {
   lastEnteredCardIndex = QPersistentModelIndex(index);
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
 void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
                                                 const QModelIndex& bottomRight,
                                                 const QList<int>& roles) {
+#else
+void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
+                                                const QModelIndex& bottomRight,
+                                                const QVector<int>& roles) {
+#endif
   if (!topLeft.isValid() || !bottomRight.isValid()) {
     return;
   }

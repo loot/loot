@@ -26,10 +26,16 @@
 #ifndef LOOT_GUI_QT_HELPERS
 #define LOOT_GUI_QT_HELPERS
 
+#include <loot/metadata/message_content.h>
+
+#include <QtCore/QMetaType>
 #include <QtCore/QString>
+#include <vector>
 
 namespace loot {
 QString translate(const char* text);
 }
+
+Q_DECLARE_METATYPE(loot::MessageContent);
 
 #endif
