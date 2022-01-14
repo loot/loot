@@ -102,7 +102,7 @@ jobs:
             $qtArch = "win32_msvc2019"
             $qtArchDir = "msvc2019"
           } else {
-            $qtVersion = "6.2.1"
+            $qtVersion = "6.2.2"
             $qtArch = "win64_msvc2019_64"
             $qtArchDir = "msvc2019_64"
           }
