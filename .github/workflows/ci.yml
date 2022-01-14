@@ -65,6 +65,9 @@ jobs:
   linux:
     runs-on: ubuntu-20.04
 
+    env:
+      QT_VERSION: 6.2.1
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -146,8 +149,8 @@ jobs:
         id: qt-metadata
         run: |
           python -m pip install aqtinstall
-          aqt install-qt linux desktop 6.2.1 gcc_64
-          echo "::set-output name=root::${{ github.workspace }}/6.2.1/gcc_64"
+          aqt install-qt linux desktop $QT_VERSION gcc_64
+          echo "::set-output name=root::${{ github.workspace }}/$QT_VERSION/gcc_64"
 
       - name: Run CMake
         run: |
@@ -204,6 +207,10 @@ jobs:
   windows:
     runs-on: windows-2019
 
+    strategy:
+      matrix:
+        platform: [Win32, x64]
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -242,8 +249,15 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            $addressModel = 32
+          } else {
+            $addressModel = 64
+          }
+
+          echo "::set-output name=address-model::$addressModel"
           echo "::set-output name=root::${{ github.workspace }}/boost_1_77_0"
-          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/64/lib"
+          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib"
 
       - name: Boost cache
         id: boost-cache
@@ -252,7 +266,7 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-x64-Boost-1.77.0
+          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
 
       - name: Install JS dependencies
         run: npm ci
@@ -274,20 +288,31 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
         id: qt-metadata
         run: |
           python -m pip install aqtinstall
-          aqt install-qt windows desktop 6.2.1 win64_msvc2019_64
-          echo "::set-output name=root::${{ github.workspace }}/6.2.1/msvc2019_64"
+
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            $qtVersion = "5.15.2"
+            $qtArch = "win32_msvc2019"
+            $qtArchDir = "msvc2019"
+          } else {
+            $qtVersion = "6.2.1"
+            $qtArch = "win64_msvc2019_64"
+            $qtArchDir = "msvc2019_64"
+          }
+
+          aqt install-qt windows desktop $qtVersion $qtArch
+          echo "::set-output name=root::${{ github.workspace }}/$qtVersion/$qtArchDir"
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DCMAKE_PREFIX_PATH="${{ steps.qt-metadata.outputs.root }}/lib/cmake"
+          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DCMAKE_PREFIX_PATH="${{ steps.qt-metadata.outputs.root }}/lib/cmake"
           cmake --build . --config Release
 
       - name: Run C++ tests
@@ -325,7 +350,13 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          echo "::set-output name=basename::loot_${VERSION}-win64"
+          if [[ "${{ matrix.platform }}" == "Win32" ]]
+          then
+            PLATFORM=win32
+          else
+            PLATFORM=win64
+          fi
+          echo "::set-output name=basename::loot_${VERSION}-${PLATFORM}"
 
       - name: Build archive
         run: |
@@ -335,7 +366,11 @@ jobs:
 
       - name: Build installer
         run: |
-          scripts\build_installer.ps1 -LOOTIs64Bit
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            scripts\build_installer.ps1 -QtVersion 5
+          } else {
+            scripts\build_installer.ps1 -QtVersion 6 -LOOTIs64Bit
+          }
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
       - name: Upload archive
