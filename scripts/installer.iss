@@ -26,6 +26,10 @@
 #define VCRedistArch "x86"
 #endif
 
+#ifndef QtVersion
+#define QtVersion "6"
+#endif
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -115,13 +119,26 @@ DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\resources\l10n\en-US.pak"; \
 DestDir: "{app}\resources\l10n"; Flags: ignoreversion
 
-; Qt files
+; Common Qt files
 Source: "build\Release\LOOT_qt.exe"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\D3Dcompiler_47.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\opengl32sw.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\iconengines\*"; \
+DestDir: "{app}\iconengines"; Flags: ignoreversion
+Source: "build\Release\imageformats\*"; \
+DestDir: "{app}\imageformats"; Flags: ignoreversion
+Source: "build\Release\platforms\*"; \
+DestDir: "{app}\platforms"; Flags: ignoreversion
+Source: "build\Release\styles\*"; \
+DestDir: "{app}\styles"; Flags: ignoreversion
+Source: "build\Release\translations\*"; \
+DestDir: "{app}\translations"; Flags: ignoreversion
+
+#if QtVersion == "6"
+; Qt 6 files
 Source: "build\Release\Qt6Core.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\Qt6Gui.dll"; \
@@ -132,20 +149,25 @@ Source: "build\Release\Qt6Svg.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\Qt6Widgets.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\iconengines\*"; \
-DestDir: "{app}\iconengines"; Flags: ignoreversion
-Source: "build\Release\imageformats\*"; \
-DestDir: "{app}\imageformats"; Flags: ignoreversion
 Source: "build\Release\networkinformation\*"; \
 DestDir: "{app}\networkinformation"; Flags: ignoreversion
-Source: "build\Release\platforms\*"; \
-DestDir: "{app}\platforms"; Flags: ignoreversion
-Source: "build\Release\styles\*"; \
-DestDir: "{app}\styles"; Flags: ignoreversion
 Source: "build\Release\tls\*"; \
 DestDir: "{app}\tls"; Flags: ignoreversion
-Source: "build\Release\translations\*"; \
-DestDir: "{app}\translations"; Flags: ignoreversion
+#elif QtVersion == "5"
+; Qt 5 files
+Source: "build\Release\Qt5Core.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt5Gui.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt5Network.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt5Svg.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\Qt5Widgets.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\bearer\*"; \
+DestDir: "{app}\bearer"; Flags: ignoreversion
+#endif
 
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
