@@ -25,14 +25,35 @@
 
 #include "gui/state/game/helpers.h"
 
-#include <fstream>
-#include <regex>
+#include <loot/api.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <fstream>
+#include <regex>
+
+#include "gui/state/logging.h"
 
 namespace loot {
+FileRevisionSummary::FileRevisionSummary() {}
+
+FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
+    id(fileRevision.id), date(fileRevision.date) {
+  if (fileRevision.is_modified) {
+    auto suffix =
+        " " +
+        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
+        boost::locale::translate("(edited)").str();
+    date += suffix;
+    id += suffix;
+  }
+}
+
+FileRevisionSummary::FileRevisionSummary(const std::string& id,
+                                         const std::string& date) :
+    id(id), date(date) {}
+
 bool ExecutableExists(const GameType& gameType,
                       const std::filesystem::path& gamePath) {
   if (gameType == GameType::tes5) {
@@ -155,6 +176,20 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   return Message(MessageType::warn, detail);
 }
 
+std::vector<SimpleMessage> ToSimpleMessages(
+    const std::vector<Message>& messages,
+    const std::string& language) {
+  std::vector<SimpleMessage> simpleMessages;
+  for (const auto message : messages) {
+    auto simpleMessage = message.ToSimpleMessage(language);
+    if (simpleMessage.has_value()) {
+      simpleMessages.push_back(simpleMessage.value());
+    }
+  }
+
+  return simpleMessages;
+}
+
 std::string DescribeEdgeType(EdgeType edgeType) {
   switch (edgeType) {
     case EdgeType::hardcoded:
@@ -230,44 +265,70 @@ std::vector<Message> CheckForRemovedPlugins(
 }
 
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
-  const std::string& registryPath) {
+    const std::string& registryPath) {
   std::string rootKey;
   size_t startOfSubKey;
   if (registryPath.rfind("HKEY_", 0) == 0) {
     auto firstBackslashPos = registryPath.find('\\');
     if (firstBackslashPos == std::string::npos) {
       throw std::invalid_argument(
-        "Registry path has no subkey or value components");
+          "Registry path has no subkey or value components");
     }
     rootKey = registryPath.substr(0, firstBackslashPos);
     startOfSubKey = firstBackslashPos + 1;
-  }
-  else {
+  } else {
     rootKey = "HKEY_LOCAL_MACHINE";
     startOfSubKey = 0;
   }
 
   auto lastBackslashPos = registryPath.rfind('\\');
   if (lastBackslashPos == std::string::npos ||
-    lastBackslashPos < startOfSubKey ||
-    lastBackslashPos == registryPath.length() - 1) {
+      lastBackslashPos < startOfSubKey ||
+      lastBackslashPos == registryPath.length() - 1) {
     throw std::invalid_argument("Registry path has no value component");
   }
 
-  std::string subKey = registryPath.substr(startOfSubKey, lastBackslashPos - startOfSubKey);
+  std::string subKey =
+      registryPath.substr(startOfSubKey, lastBackslashPos - startOfSubKey);
   std::string value = registryPath.substr(lastBackslashPos + 1);
 
   return std::make_tuple(rootKey, subKey, value);
 }
 
-void AddSuffixIfModified(FileRevision& revision) {
-  if (revision.is_modified) {
-    auto suffix =
-        " " +
-        /* translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded. */
-        boost::locale::translate("(edited)").str();
-    revision.date += suffix;
-    revision.id += suffix;
+FileRevisionSummary GetFileRevisionToDisplay(
+    const std::filesystem::path& filePath,
+    FileType fileType) {
+  using boost::locale::translate;
+
+  auto logger = getLogger();
+
+  try {
+    return FileRevisionSummary(GetFileRevision(filePath, true));
+  } catch (FileAccessError&) {
+    if (logger) {
+      if (fileType == FileType::Masterlist) {
+        logger->warn("No masterlist present at {}", filePath.u8string());
+      } else {
+        logger->warn("No masterlist prelude present at {}",
+                     filePath.u8string());
+      }
+    }
+    auto text = fileType == FileType::Masterlist
+                    ? translate("N/A: No masterlist present").str()
+                    :
+                    /* translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods. */
+                    translate("N/A: No masterlist prelude present").str();
+
+    return FileRevisionSummary(text, text);
+  } catch (GitStateError&) {
+    if (logger) {
+      logger->warn("Not a Git repository: {}",
+                   filePath.parent_path().u8string());
+    }
+    auto text =
+        /* translators: Git is the software LOOT uses to track changes to the source code. */
+        translate("Unknown: Git repository missing").str();
+    return FileRevisionSummary(text, text);
   }
 }
 }

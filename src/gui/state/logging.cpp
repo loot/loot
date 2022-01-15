@@ -43,7 +43,7 @@ std::shared_ptr<spdlog::logger> getLogger() {
         logger->flush_on(spdlog::level::trace);
       }
     } catch (...) {
-        return nullptr;
+      return nullptr;
     }
   }
 
@@ -55,11 +55,9 @@ void setLogPath(const std::filesystem::path& outputFile) {
 
   spdlog::drop(LOGGER_NAME);
 #if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
-  auto logger = spdlog::basic_logger_mt(LOGGER_NAME,
-                                        outputFile.wstring());
+  auto logger = spdlog::basic_logger_mt(LOGGER_NAME, outputFile.wstring());
 #else
-  auto logger = spdlog::basic_logger_mt(LOGGER_NAME,
-                                        outputFile.u8string());
+  auto logger = spdlog::basic_logger_mt(LOGGER_NAME, outputFile.u8string());
 #endif
 
   if (!logger) {

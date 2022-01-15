@@ -26,21 +26,41 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
-#include <optional>
-#include <string>
-
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
+#include <optional>
+#include <string>
+#include <variant>
 
+#include "gui/plugin_item.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/state/loot_state.h"
 
 namespace loot {
+typedef std::vector<std::pair<std::string, std::optional<short>>>
+    CancelSortResult;
+typedef std::vector<PluginItem> PluginItems;
+typedef std::vector<std::pair<PluginItem, bool>> GetConflictingPluginsResult;
+
+typedef std::variant<std::monostate,
+                     CancelSortResult,
+                     FileRevisionSummary,
+                     PluginItems,
+                     PluginItem,
+                     GetConflictingPluginsResult>
+    QueryResult;
+
 class Query {
 public:
-  virtual std::string executeLogic() = 0;
-  virtual std::optional<std::string> getErrorMessage() { return std::nullopt; };
+  virtual QueryResult executeLogic() = 0;
+  virtual std::string getErrorMessage() const {
+    return boost::locale::translate(
+               "Oh no, something went wrong! You can check your "
+               "LOOTDebugLog.txt (you can get to it through the "
+               "main menu) for more information.")
+        .str();
+  };
 };
 
 template<typename G>

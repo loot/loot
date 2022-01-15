@@ -25,6 +25,9 @@
 #ifndef LOOT_GUI_HELPERS
 #define LOOT_GUI_HELPERS
 
+#include <loot/enum/message_type.h>
+#include <loot/struct/simple_message.h>
+
 #include <filesystem>
 
 namespace loot {
@@ -36,8 +39,8 @@ std::wstring ToWinWide(const std::string& str);
 std::string FromWinWide(const std::wstring& wstr);
 
 std::string RegKeyStringValue(const std::string& rootKey,
-  const std::string& subkey,
-  const std::string& value);
+                              const std::string& subkey,
+                              const std::string& value);
 #endif
 
 // Compare strings as if they're filenames, respecting filesystem case
@@ -49,5 +52,13 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs);
 std::filesystem::path getExecutableDirectory();
 
 std::filesystem::path getLocalAppDataPath();
+
+MessageType mapMessageType(const std::string& type);
+
+void CopyToClipboard(const std::string& text);
+
+std::string crcToString(uint32_t crc);
+
+std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages);
 }
 #endif

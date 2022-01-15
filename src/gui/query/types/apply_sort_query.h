@@ -37,9 +37,10 @@ public:
                  const std::vector<std::string>& plugins) :
       game_(game),
       counter_(counter),
-      plugins_(plugins) {}
+      plugins_(plugins),
+      useSortingErrorMessage(false) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->trace("User has accepted sorted load order, applying it.");
@@ -48,20 +49,26 @@ public:
       game_.SetLoadOrder(plugins_);
       counter_.DecrementUnappliedChangeCounter();
     } catch (...) {
-      errorMessage = getSortingErrorMessage(game_);
+      useSortingErrorMessage = true;
       throw;
     }
 
-    return "";
+    return std::monostate();
   }
 
-  std::optional<std::string> getErrorMessage() override { return errorMessage; }
+  std::string getErrorMessage() const override {
+    if (useSortingErrorMessage) {
+      return getSortingErrorMessage(game_);
+    }
+
+    return Query::getErrorMessage();
+  }
 
 private:
   G& game_;
   UnappliedChangeCounter& counter_;
   const std::vector<std::string> plugins_;
-  std::optional<std::string> errorMessage;
+  bool useSortingErrorMessage;
 };
 }
 

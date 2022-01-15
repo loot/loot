@@ -4,7 +4,7 @@ Editing Settings
 
 .. image:: ../../images/settings.png
 
-LOOT's settings may be accessed through the main menu.
+LOOT's settings may be accessed through the File menu.
 
 General Settings
 ================
@@ -65,6 +65,9 @@ LOOT Folder Name
 
 Master File
   The game's main master file. This is checked for when detecting if the game is installed.
+
+Minimum Header Version
+  LOOT will display a warning message for any plugin that has a header version less than this value. Note that this version is different from any version that LOOT may be able to read from the plugin's description field.
 
 Masterlist Repository URL
   The URL of the repository that LOOT uses to update its local copy of the masterlist. If left empty, masterlist updating will be skipped.

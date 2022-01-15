@@ -23,7 +23,7 @@ The Groups Editor
 
 A group must be defined before plugins can belong to it, and defining and
 editing groups is done in the Groups Editor, which can be accessed through the
-main menu.
+Game menu.
 
 The groups editor consists of an interactive graph displaying all defined groups
 and their load after metadata, and a sidebar containing input for defining new
@@ -48,9 +48,8 @@ masterlist-defined group A, but then group A is removed in a masterlist update.
 In that case, just open up the groups editor and link group A back into the
 graph as it was before.
 
-New load after metadata can be added by first enabling drawing mode using
-the toggle button, then dragging a line from any group node to any other
-group node. Moving nodes around is disabled while in drawing mode.
+New load after metadata can be added by double-clicking on one group node and
+dragging a line from it to any other group nodes.
 
 Clicking on a group will cause any installed plugins in that group to be listed
 in the sidebar.
@@ -61,10 +60,7 @@ removed. A group cannot be removed if any installed plugins belong to it.
 
 The graph can be zoomed in and out of using your mouse's scroll wheel.
 Left-clicking and dragging an empty space will move the whole graph, while
-left-clicking and dragging a node will move it. Multiple nodes can also be
-selected by left-clicking with the Ctrl key held down, then dragging the box
-that appears over the nodes to select. The selected nodes can then be dragged
-around together.
+left-clicking and dragging a node will move it.
 
 Rules For Using Groups
 ======================

@@ -26,8 +26,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_UPDATE_PRELUDE_QUERY
 #define LOOT_GUI_QUERY_UPDATE_PRELUDE_QUERY
 
-#include "gui/query/types/get_prelude_info_query.h"
-#include "loot/api.h"
+#include <loot/api.h>
+
+#include "gui/query/query.h"
+#include "gui/state/game/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 class UpdatePreludeQuery : public Query {
@@ -37,7 +40,7 @@ public:
                      std::string remoteBranch) :
       filePath_(filePath), remoteURL_(remoteURL), remoteBranch_(remoteBranch) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Updating the masterlist prelude.");
@@ -45,12 +48,10 @@ public:
 
     bool wasUpdated = UpdateFile(filePath_, remoteURL_, remoteBranch_);
     if (!wasUpdated) {
-      return "null";
+      return std::monostate();
     }
 
-    nlohmann::json json = GetMasterlistPreludeRevision(filePath_);
-
-    return json.dump();
+    return GetFileRevisionToDisplay(filePath_, FileType::MasterlistPrelude);
   }
 
 private:

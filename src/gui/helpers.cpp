@@ -44,6 +44,8 @@
 using icu::UnicodeString;
 #endif
 
+#include <boost/format.hpp>
+
 #include "gui/state/logging.h"
 
 namespace loot {
@@ -239,5 +241,89 @@ std::filesystem::path getLocalAppDataPath() {
   // If somehow both are missing, use the executable's directory.
   return getExecutableDirectory();
 #endif
+}
+
+MessageType mapMessageType(const std::string& type) {
+  if (type == "say") {
+    return MessageType::say;
+  } else if (type == "warn") {
+    return MessageType::warn;
+  } else {
+    return MessageType::error;
+  }
+}
+
+void CopyToClipboard(const std::string& text) {
+#ifdef _WIN32
+  if (!OpenClipboard(NULL)) {
+    throw std::system_error(GetLastError(),
+                            std::system_category(),
+                            "Failed to open the Windows clipboard.");
+  }
+
+  if (!EmptyClipboard()) {
+    throw std::system_error(GetLastError(),
+                            std::system_category(),
+                            "Failed to empty the Windows clipboard.");
+  }
+
+  // The clipboard takes a Unicode (ie. UTF-16) string that it then owns and
+  // must not be destroyed by LOOT. Convert the string, then copy it into a
+  // new block of memory for the clipboard.
+  std::wstring wtext = ToWinWide(text);
+  wchar_t* wcstr = new wchar_t[wtext.length() + 1];
+  wcscpy(wcstr, wtext.c_str());
+
+  if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
+    throw std::system_error(
+        GetLastError(),
+        std::system_category(),
+        "Failed to copy metadata to the Windows clipboard.");
+  }
+
+  if (!CloseClipboard()) {
+    throw std::system_error(GetLastError(),
+                            std::system_category(),
+                            "Failed to close the Windows clipboard.");
+  }
+#else
+  std::string copyCommand = "echo '" + text + "' | xclip -selection clipboard";
+  int returnCode = system(copyCommand.c_str());
+
+  if (returnCode != 0) {
+    throw std::system_error(
+        returnCode,
+        std::system_category(),
+        "Failed to run clipboard copy command: " + copyCommand);
+  }
+#endif
+}
+
+std::string crcToString(uint32_t crc) {
+  return (boost::format("%08X") % crc).str();
+}
+
+std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages) {
+  if (messages.empty()) {
+    return "";
+  }
+
+  std::string content = "## Messages\n\n";
+
+  for (const auto& message : messages) {
+    content += "- ";
+
+    if (message.type == MessageType::warn) {
+      content += "Warning: ";
+    } else if (message.type == MessageType::error) {
+      content += "Error: ";
+    } else {
+      content += "Note: ";
+    }
+
+    content += message.text + "\n";
+  }
+
+  return content;
 }
 }

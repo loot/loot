@@ -169,6 +169,15 @@ LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
 LootSettings::WindowPosition::WindowPosition() :
     top(0), bottom(0), left(0), right(0), maximised(false) {}
 
+LootSettings::Filters::Filters() :
+    hideVersionNumbers(false),
+    hideCRCs(false),
+    hideBashTags(true),
+    hideNotes(false),
+    hideAllPluginMessages(false),
+    hideInactivePlugins(false),
+    hideMessagelessPlugins(false) {}
+
 LootSettings::LootSettings() :
     gameSettings_({
         GameSettings(GameType::tes3),
@@ -304,13 +313,22 @@ void LootSettings::load(const std::filesystem::path& file,
 
   auto filters = settings->get_table("filters");
   if (filters) {
-    filters_.clear();
-    for (const auto& filter : *filters) {
-      auto value = filter.second->as<bool>();
-      if (value) {
-        filters_.emplace(filter.first, value->get());
-      }
-    }
+    filters_.hideVersionNumbers = filters->get_as<bool>("hideVersionNumbers")
+                                      .value_or(filters_.hideVersionNumbers);
+    filters_.hideCRCs =
+        filters->get_as<bool>("hideCRCs").value_or(filters_.hideCRCs);
+    filters_.hideBashTags =
+        filters->get_as<bool>("hideBashTags").value_or(filters_.hideBashTags);
+    filters_.hideNotes =
+        filters->get_as<bool>("hideNotes").value_or(filters_.hideNotes);
+    filters_.hideAllPluginMessages =
+        filters->get_as<bool>("hideAllPluginMessages")
+            .value_or(filters_.hideAllPluginMessages);
+    filters_.hideInactivePlugins = filters->get_as<bool>("hideInactivePlugins")
+                                       .value_or(filters_.hideInactivePlugins);
+    filters_.hideMessagelessPlugins =
+        filters->get_as<bool>("hideMessagelessPlugins")
+            .value_or(filters_.hideMessagelessPlugins);
   }
 
   auto languages = settings->get_table_array("languages");
@@ -376,13 +394,16 @@ void LootSettings::save(const std::filesystem::path& file) {
     root->insert("games", games);
   }
 
-  if (!filters_.empty()) {
-    auto filters = cpptoml::make_table();
-    for (const auto& filter : filters_) {
-      filters->insert(filter.first, filter.second);
-    }
-    root->insert("filters", filters);
-  }
+  auto filters = cpptoml::make_table();
+  filters->insert("hideVersionNumbers", filters_.hideVersionNumbers);
+  filters->insert("hideCRCs", filters_.hideCRCs);
+  filters->insert("hideBashTags", filters_.hideBashTags);
+  filters->insert("hideNotes", filters_.hideNotes);
+  filters->insert("hideAllPluginMessages", filters_.hideAllPluginMessages);
+  filters->insert("hideInactivePlugins", filters_.hideInactivePlugins);
+  filters->insert("hideMessagelessPlugins", filters_.hideMessagelessPlugins);
+
+  root->insert("filters", filters);
 
   if (!languages_.empty()) {
     auto languageTables = cpptoml::make_table_array();
@@ -482,7 +503,7 @@ const std::vector<GameSettings>& LootSettings::getGameSettings() const {
   return gameSettings_;
 }
 
-const std::map<std::string, bool>& LootSettings::getFilters() const {
+const LootSettings::Filters& LootSettings::getFilters() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return filters_;
@@ -568,10 +589,10 @@ void LootSettings::storeGameSettings(
   this->gameSettings_ = gameSettings;
 }
 
-void LootSettings::storeFilterState(const std::string& filterId, bool enabled) {
+void LootSettings::storeFilters(const Filters& filters) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  filters_[filterId] = enabled;
+  filters_ = filters;
 }
 
 void LootSettings::updateLastVersion() {

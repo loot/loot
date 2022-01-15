@@ -28,7 +28,6 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "gui/query/json.h"
 #include "gui/query/types/metadata_query.h"
 #include "gui/state/game/game.h"
 #include "gui/state/unapplied_change_counter.h"
@@ -37,14 +36,16 @@ namespace loot {
 template<typename G = gui::Game>
 class SortPluginsQuery : public MetadataQuery<G> {
 public:
-  SortPluginsQuery(G& game, UnappliedChangeCounter& counter,
+  SortPluginsQuery(G& game,
+                   UnappliedChangeCounter& counter,
                    std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
       MetadataQuery<G>(game, language),
       counter_(counter),
-      sendProgressUpdate_(sendProgressUpdate) {}
+      sendProgressUpdate_(sendProgressUpdate),
+      useSortingErrorMessage(false) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Beginning sorting operation.");
@@ -62,27 +63,32 @@ public:
           this->getGame().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
-      errorMessage = getSortingErrorMessage(this->getGame());
+      useSortingErrorMessage = true;
       throw;
     }
 
-    std::string json = generateJsonResponse(plugins);
+    auto result = getResult(plugins);
 
     // plugins will be empty if there was a sorting error.
     if (!plugins.empty())
       counter_.IncrementUnappliedChangeCounter();
 
-    return json;
+    return result;
   }
 
-  std::optional<std::string> getErrorMessage() override { return errorMessage; }
+  std::string getErrorMessage() const override {
+    if (useSortingErrorMessage) {
+      return getSortingErrorMessage(this->getGame());
+    }
+
+    return Query::getErrorMessage();
+  }
 
 private:
   void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
-    if (plugins.empty() ||
-        !equal(begin(plugins),
-               end(plugins),
-               begin(this->getGame().GetLoadOrder())))
+    if (plugins.empty() || !equal(begin(plugins),
+                                  end(plugins),
+                                  begin(this->getGame().GetLoadOrder())))
       return;
 
     // Load order has not been changed, set it without asking for user input
@@ -91,11 +97,8 @@ private:
     this->getGame().SetLoadOrder(plugins);
   }
 
-  std::string generateJsonResponse(const std::vector<std::string>& plugins) {
-    nlohmann::json json = {
-        {"generalMessages", this->getGeneralMessages()},
-        {"plugins", nlohmann::json::array()},
-    };
+  std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
+    std::vector<PluginItem> result;
 
     for (const auto& pluginName : plugins) {
       auto plugin = this->getGame().GetPlugin(pluginName);
@@ -104,21 +107,20 @@ private:
       }
 
       auto derivedMetadata = this->generateDerivedMetadata(plugin);
-      auto index =
-          this->getGame().GetActiveLoadOrderIndex(plugin, plugins);
+      auto index = this->getGame().GetActiveLoadOrderIndex(plugin, plugins);
       if (index.has_value()) {
-        derivedMetadata.setLoadOrderIndex(index.value());
+        derivedMetadata.loadOrderIndex = index;
       }
 
-      json["plugins"].push_back(derivedMetadata);
+      result.push_back(derivedMetadata);
     }
 
-    return json.dump();
+    return result;
   }
 
   UnappliedChangeCounter& counter_;
   const std::function<void(std::string)> sendProgressUpdate_;
-  std::optional<std::string> errorMessage;
+  bool useSortingErrorMessage;
 };
 }
 

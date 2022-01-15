@@ -31,9 +31,12 @@
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public LootSettings, public UnappliedChangeCounter, public GamesManager, public LootPaths {
+class LootState : public LootSettings,
+                  public UnappliedChangeCounter,
+                  public GamesManager,
+                  public LootPaths {
 public:
-  LootState(const std::filesystem::path& lootAppPath, 
+  LootState(const std::filesystem::path& lootAppPath,
             const std::filesystem::path& lootDataPath);
 
   void init(const std::string& cmdLineGame, bool autoSort);
@@ -44,7 +47,8 @@ public:
   void storeGameSettings(std::vector<GameSettings> gameSettings);
 
 private:
-  std::optional<std::filesystem::path> FindGamePath(const GameSettings& gameSettings) const;
+  std::optional<std::filesystem::path> FindGamePath(
+      const GameSettings& gameSettings) const;
   void InitialiseGameData(gui::Game& game);
 
   void SetInitialGame(std::string cmdLineGame);

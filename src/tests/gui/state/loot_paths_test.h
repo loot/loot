@@ -25,17 +25,16 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_LOOT_PATHS_TEST
 #define LOOT_TESTS_GUI_STATE_LOOT_PATHS_TEST
 
-#include "gui/state/loot_paths.h"
-
 #include <gtest/gtest.h>
+
+#include "gui/state/loot_paths.h"
 
 namespace loot {
 namespace test {
 TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   LootPaths paths("app", "");
 
-  EXPECT_EQ(std::filesystem::u8path("app") / "docs",
-            paths.getReadmePath());
+  EXPECT_EQ(std::filesystem::u8path("app") / "docs", paths.getReadmePath());
 }
 
 TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
@@ -55,24 +54,24 @@ TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
 TEST(LootPaths, getSettingsPathShouldUseLootDataPath) {
   LootPaths paths("", "");
 
-  EXPECT_EQ(paths.getLootDataPath() / "settings.toml",
-            paths.getSettingsPath());
+  EXPECT_EQ(paths.getLootDataPath() / "settings.toml", paths.getSettingsPath());
 }
 
 TEST(LootPaths, getLogPathShouldUseLootDataPath) {
   LootPaths paths("", "");
 
-  EXPECT_EQ(paths.getLootDataPath() / "LOOTDebugLog.txt",
-            paths.getLogPath());
+  EXPECT_EQ(paths.getLootDataPath() / "LOOTDebugLog.txt", paths.getLogPath());
 }
 
 TEST(LootPaths, getPreludePathShouldUseLootDataPath) {
   LootPaths paths("", "");
 
-  EXPECT_EQ(paths.getLootDataPath() / "prelude" / "prelude.yaml", paths.getPreludePath());
+  EXPECT_EQ(paths.getLootDataPath() / "prelude" / "prelude.yaml",
+            paths.getPreludePath());
 }
 
-TEST(LootPaths, constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
+TEST(LootPaths,
+     constructorShouldSetAppPathToExecutableDirectoryIfGivenPathIsEmpty) {
   LootPaths paths("", "");
 
   EXPECT_EQ(std::filesystem::current_path(),
@@ -88,8 +87,7 @@ TEST(
   // its properties.
   EXPECT_EQ("LOOT", paths.getLootDataPath().filename());
   EXPECT_FALSE(paths.getLootDataPath().parent_path().empty());
-  EXPECT_TRUE(
-      std::filesystem::exists(paths.getLootDataPath().parent_path()));
+  EXPECT_TRUE(std::filesystem::exists(paths.getLootDataPath().parent_path()));
 }
 
 TEST(LootPaths, initialiseShouldSetTheDataPathToGivenStringIfNonEmpty) {

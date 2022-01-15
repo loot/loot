@@ -28,28 +28,26 @@ along with LOOT.  If not, see
 
 #include <boost/algorithm/string.hpp>
 
-#include "gui/query/query.h"
 #include "gui/helpers.h"
+#include "gui/query/query.h"
 #include "gui/state/loot_paths.h"
 
 namespace loot {
 class OpenReadmeQuery : public Query {
 public:
   OpenReadmeQuery(const std::filesystem::path readmePath,
-    const std::string& relativeFilePath) :
-      readmePath_(readmePath),
-      relativeFilePath_(relativeFilePath) {}
+                  const std::string& relativeFilePath) :
+      readmePath_(readmePath), relativeFilePath_(relativeFilePath) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's readme.");
     }
 
-    auto canonicalPath = std::filesystem::canonical(
-        readmePath_ / relativeFilePath_);
-    auto canonicalReadmePath =
-        std::filesystem::canonical(readmePath_);
+    auto canonicalPath =
+        std::filesystem::canonical(readmePath_ / relativeFilePath_);
+    auto canonicalReadmePath = std::filesystem::canonical(readmePath_);
 
     if (!boost::starts_with(canonicalPath.u8string(),
                             canonicalReadmePath.u8string())) {
@@ -60,7 +58,7 @@ public:
 
     OpenInDefaultApplication(canonicalPath);
 
-    return "";
+    return std::monostate();
   }
 
 private:

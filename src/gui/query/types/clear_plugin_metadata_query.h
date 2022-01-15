@@ -36,10 +36,9 @@ public:
   ClearPluginMetadataQuery(G& game,
                            std::string language,
                            std::string pluginName) :
-      MetadataQuery<G>(game, language),
-      pluginName_(pluginName) {}
+      MetadataQuery<G>(game, language), pluginName_(pluginName) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing user metadata for plugin {}", pluginName_);
@@ -48,7 +47,12 @@ public:
     this->getGame().ClearUserMetadata(pluginName_);
     this->getGame().SaveUserMetadata();
 
-    return this->generateJsonResponse(pluginName_);
+    auto metadata = this->generateDerivedMetadata(pluginName_);
+    if (metadata.has_value()) {
+      return metadata.value();
+    }
+
+    return std::monostate();
   }
 
 private:

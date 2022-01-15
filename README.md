@@ -27,7 +27,7 @@ Refer to `.github/workflows/release.yml` for the build process.
 
 ### Windows
 
-The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, [Node.js](https://nodejs.org/), Python, Visual Studio 2017 and 7-zip are already installed.
+The GitHub Actions workflow assumes that [CMake](https://cmake.org), curl, gettext, Git, Inno Setup 6, Python, Visual Studio 2019 and 7-zip are already installed.
 
 ### Linux
 
@@ -38,8 +38,7 @@ following applications are already installed:
 - `cmake` v3.6+
 - `curl`
 - `git`
-- Node.js 8+
-- `python` and `pip` (2.7 or 3, it shouldn't matter)
+- `python` and `pip`
 - `wget`
 
 (The list above may be incomplete.)
@@ -56,22 +55,18 @@ Parameter | Values | Default |Description
 ----------|--------|---------|-----------
 `LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
 
-You may also need to set `BOOST_ROOT` if CMake cannot find Boost.
-
-### Rebuilding the HTML UI
-
-The GUI's HTML file is automatically built when building the LOOT GUI binary, but it can also be built by running `npm run build` from the repository root.
+You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and include Qt's `cmake` directory (e.g. `C:/Qt/6.2.2/msvc2019_64/lib/cmake`) in `CMAKE_PREFIX_PATH` if CMake cannot find Qt.
 
 ## Building The Documentation
 
-The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python (2 or 3) and make sure it's accessible from your `PATH`, then run:
+The documentation is built using [Sphinx](http://www.sphinx-doc.org/en/stable/). Install Python and make sure it's accessible from your `PATH`, then run:
 
 ```
 pip install -r docs/requirements.txt
 sphinx-build -b html docs build/docs/html
 ```
 
-Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs -v ${PWD}/build:/docs/build sphinxdoc/sphinx bash` to obtain a shell that you can use to run the two commands above.
+Alternatively, you can use Docker to avoid changing your development environment, by running `docker run -it --rm -v ${PWD}/docs:/docs/docs -v ${PWD}/build:/docs/build sphinxdoc/sphinx:4.2.0 bash` to obtain a shell that you can use to run the two commands above.
 
 ## Packaging Releases
 
@@ -81,4 +76,6 @@ Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.ph
 
 Building the installer will always build a 32-bit installer executable. The installer will run in 32-bit mode by default and install the 32-bit MSVC redistributable, even if it installs a 64-bit build of LOOT. To build an installer that runs in 64-bit mode and installs the 64-bit MSVC redistributable, pass `-DMyAppIs64Bit` when building the installer.
 
-The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `node scripts/archive.js`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
+The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `python scripts/archive.py`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
+
+The archive packaging script calls `windeployqt.exe` when run on Windows: it must be accessible from your `PATH`.

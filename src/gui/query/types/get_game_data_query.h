@@ -33,6 +33,7 @@ along with LOOT.  If not, see
 #include "loot/loot_version.h"
 
 namespace loot {
+
 template<typename G = gui::Game>
 class GetGameDataQuery : public MetadataQuery<G> {
 public:
@@ -42,7 +43,7 @@ public:
       MetadataQuery<G>(game, language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     sendProgressUpdate_(boost::locale::translate(
         "Parsing, merging and evaluating metadata..."));
 
@@ -56,16 +57,9 @@ public:
       this->getGame().LoadMetadata();
 
     // Sort plugins into their load order.
-    std::vector<std::shared_ptr<const PluginInterface>> installed;
-    std::vector<std::string> loadOrder = this->getGame().GetLoadOrder();
-    for (const auto& pluginName : loadOrder) {
-      const auto plugin = this->getGame().GetPlugin(pluginName);
-      if (plugin) {
-        installed.push_back(plugin);
-      }
-    }
+    auto installed = this->getGame().GetPluginsInLoadOrder();
 
-    return this->generateJsonResponse(installed.cbegin(), installed.cend());
+    return this->generateDerivedMetadata(installed.cbegin(), installed.cend());
   }
 
 private:

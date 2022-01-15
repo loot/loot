@@ -24,10 +24,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_HELPERS_TEST
 #define LOOT_TESTS_GUI_HELPERS_TEST
 
-#include "gui/helpers.h"
+#include <gtest/gtest.h>
 
 #include <boost/locale.hpp>
-#include <gtest/gtest.h>
+
+#include "gui/helpers.h"
 
 namespace loot {
 namespace test {

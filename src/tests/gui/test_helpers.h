@@ -24,12 +24,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_TEST_HELPERS
 #define LOOT_TESTS_GUI_TEST_HELPERS
 
-#include <filesystem>
-#include <string>
-
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <filesystem>
+#include <string>
 
 namespace loot {
 namespace test {

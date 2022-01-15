@@ -5,20 +5,29 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.16.1\n"
+"Project-Id-Version: LOOT v0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2021-06-06 16:00+0100\n"
-"PO-Revision-Date: 2021-06-10 20:29-0700\n"
+"POT-Creation-Date: 2021-12-15 20:42+0000\n"
+"PO-Revision-Date: 2022-01-05 21:50-0800\n"
 "Last-Translator: Griam\n"
-"Language-Team: Italian\n"
+"Language-Team: \n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
-#: src/gui/cef/query/query.h:49
+#: src/gui/cef/query/query_executor.h:44
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"Oh no, qualcosa è andato storto! Per ulteriori informazioni, è possibile "
+"controllare il tuo LOOTDebugLog.txt (è possibile ottenerlo tramite il menu "
+"principale)."
+
+#: src/gui/query/query.h:49
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -30,84 +39,78 @@ msgstr ""
 "riprova. Se non lo è, puoi controllare il tuo LOOTDebugLog.txt (tramite il "
 "menu principale) per maggiori informazioni."
 
-#: src/gui/cef/query/query_executor.h:44
-msgid ""
-"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
-"get to it through the main menu) for more information."
-msgstr ""
-"Oh no, qualcosa è andato storto! Per ulteriori informazioni, è possibile "
-"controllare il tuo LOOTDebugLog.txt (è possibile ottenerlo tramite il menu "
-"principale)."
-
-#: src/gui/cef/query/types/get_game_data_query.h:47
+#: src/gui/query/types/get_game_data_query.h:47
 msgid "Parsing, merging and evaluating metadata..."
 msgstr "Analisi, unione e valutazione dei metadati…"
 
-#: src/gui/cef/query/types/metadata_query.h:205
-#: src/gui/cef/query/types/metadata_query.h:232
+#. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
+#: src/gui/query/types/get_prelude_info_query.h:49
+msgid "N/A: No masterlist prelude present"
+msgstr "N/D: Nessun preludio di Masterlist presente"
+
+#. translators: Git is the software LOOT uses to track changes to the source code.
+#: src/gui/query/types/get_prelude_info_query.h:59
+#: src/gui/query/types/metadata_query.h:266
+msgid "Unknown: Git repository missing"
+msgstr "Sconosciuto: Repository Git mancante"
+
+#: src/gui/query/types/metadata_query.h:205
+#: src/gui/query/types/metadata_query.h:232
 msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
 msgstr ""
 "\"%1%\" contiene una condizione che non è stato possibile valutare. "
 "Dettagli: %2%"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
-#: src/gui/cef/query/types/metadata_query.h:256
-#: src/gui/cef/query/types/metadata_query.h:257
+#: src/gui/query/types/metadata_query.h:256
 msgid "N/A: No masterlist present"
 msgstr "N/D: Nessuna Masterlist presente"
 
-#. translators: Git is the software LOOT uses to track changes to the source code.
-#: src/gui/cef/query/types/metadata_query.h:265
-#: src/gui/cef/query/types/metadata_query.h:266
-msgid "Unknown: Git repository missing"
-msgstr "Sconosciuto: Repository Git mancante"
-
-#. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
-#: src/gui/cef/query/types/metadata_query.h:276
-msgid "(edited)"
-msgstr "(modificata)"
-
-#: src/gui/cef/query/types/sort_plugins_query.h:54
+#: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr "Ordinamento dell'ordine di caricamento..."
 
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
-#: src/gui/state/loot_state.cpp:106
+#: src/gui/state/loot_state.cpp:107
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Errore: --auto-sort è stato approvato ma del --game, non è stato fornito "
 "alcun parametro."
 
-#: src/gui/state/loot_state.cpp:129
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "Errore: impossibile creare il file delle impostazioni di LOOT. %1%"
+#: src/gui/state/loot_state.cpp:130
+msgid "Error: Could not create LOOT data directory. %1%"
+msgstr "Errore: Impossibile creare la directory di dati LOOT. %1%"
 
 #. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
-#: src/gui/state/loot_state.cpp:148
+#: src/gui/state/loot_state.cpp:150
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Errore: Analisi delle impostazioni fallita. %1%"
 
-#: src/gui/state/loot_state.cpp:208
+#: src/gui/state/loot_state.cpp:197
+msgid "Error: Could not create LOOT prelude directory. %1%"
+msgstr "Errore: Impossibile creare la directory dei preludi LOOT. %1%"
+
+#: src/gui/state/loot_state.cpp:226
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 "Errore: Le impostazione specifiche del gioco non possono essere "
 "inizializzate. %1%"
 
-#: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
+#: src/gui/state/game/game.cpp:184 src/gui/state/game/game.cpp:223
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 "Questo plugin richiede \"%1%\" per essere installato, ma non è presente."
 
-#: src/gui/state/game/game.cpp:191
+#: src/gui/state/game/game.cpp:197
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr "Questo plugin richiede che \"%1%\" sia attivo, ma è inattivo."
 
-#: src/gui/state/game/game.cpp:240
+#: src/gui/state/game/game.cpp:259
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 "Questo plugin è incompatibile con \"%1%\", ma entrambi i file sono presenti."
 
-#: src/gui/state/game/game.cpp:276
+#: src/gui/state/game/game.cpp:302
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
@@ -117,18 +120,17 @@ msgstr ""
 "può causare problemi nel gioco e l'ordinamento avrà esito negativo durante "
 "l'installazione di questo plug-in."
 
-#: src/gui/state/game/game.cpp:296
+#: src/gui/state/game/game.cpp:322
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
-"Questo plug-in contiene record con FormID esterni all'intervallo valido per "
+"Questo plugin contiene record con FormID esterni all'intervallo valido per "
 "un plug-in ESL. L'utilizzo di questo plug-in causerà danni irreversibili ai "
 "salvataggi del gioco."
 
-#. translators: A header is the part of a file that stores data like file name and version.
-#: src/gui/state/game/game.cpp:314
+#: src/gui/state/game/game.cpp:343
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
@@ -136,11 +138,11 @@ msgstr ""
 "Questo plugin ha una versione di intestazione %1%, che è inferiore alla "
 "versione di intestazione supportata minima del gioco di %2%."
 
-#: src/gui/state/game/game.cpp:333
+#: src/gui/state/game/game.cpp:363
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr "Questo plugin appartiene al gruppo \"%1%\", che non è presente."
 
-#: src/gui/state/game/game.cpp:402 src/gui/state/game/game.cpp:487
+#: src/gui/state/game/game.cpp:432 src/gui/state/game/game.cpp:517
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -148,19 +150,19 @@ msgstr ""
 "Impossibile caricare l'ordine di caricamento corrente, le informazioni "
 "visualizzate potrebbero non essere corrette."
 
-#: src/gui/state/game/game.cpp:512
+#: src/gui/state/game/game.cpp:542
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr "Interazione ciclica rilevata tra \"%1%\" e \"%2%\": %3%"
 
-#: src/gui/state/game/game.cpp:524
+#: src/gui/state/game/game.cpp:554
 msgid "The group \"%1%\" does not exist."
 msgstr "Il gruppo \"%1%\" non esiste."
 
-#: src/gui/state/game/game.cpp:560
+#: src/gui/state/game/game.cpp:590
 msgid "You have not sorted your load order this session."
 msgstr "Non hai modificato l'ordine di caricamento in questa sessione."
 
-#: src/gui/state/game/game.cpp:584
+#: src/gui/state/game/game.cpp:614
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -170,17 +172,7 @@ msgstr ""
 "dell'ordine di caricamento FE. Disattiva un plugin normale o tutti i tuoi "
 "plugin light per evitare potenziali problemi."
 
-#: src/gui/state/game/game.cpp:612
-msgid ""
-"The latest masterlist revision contains a syntax error, LOOT is using the "
-"most recent valid revision instead. Syntax errors are usually minor and "
-"fixed within hours."
-msgstr ""
-"L'ultima revisione dell'elenco master contiene un errore di sintassi, LOOT "
-"utilizza invece la revisione valida più recente. Gli errori di sintassi sono "
-"in genere minori e corretti in poche ore."
-
-#: src/gui/state/game/game.cpp:657
+#: src/gui/state/game/game.cpp:684
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -237,7 +229,7 @@ msgstr "%1% trovati %2%, %3% e %4%."
 
 #: src/gui/state/game/helpers.cpp:114
 msgid "%1% found dirty edits."
-msgstr "%1% dirty edits trovati."
+msgstr "%1% dirty edit trovati."
 
 #: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
 #: src/gui/state/game/helpers.cpp:131
@@ -253,32 +245,41 @@ msgstr "%1% trovati %2%."
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr "LOOT ha rilevato che \"%1%\" non è valido e ora lo sta ignorando."
 
+#. translators: this text is displayed if LOOT has detected that the masterlist has been modified since it was downloaded.
+#: src/gui/state/game/helpers.cpp:268
+msgid "(edited)"
+msgstr "(modificata)"
+
 #: src/gui/html/elements/editable-table.ts:438
 msgid "Add New Row"
 msgstr "Aggiungi Nuova Riga"
 
-#: src/gui/html/elements/loot-groups-editor.ts:426
+#: src/gui/html/elements/loot-groups-editor.ts:446
 #: src/gui/html/js/translateStaticText.ts:369
 msgid "View Documentation"
 msgstr "Visualizza la documentazione"
 
-#: src/gui/html/elements/loot-groups-editor.ts:427
+#: src/gui/html/elements/loot-groups-editor.ts:447
 msgid "Add a new group"
 msgstr "Aggiungi un nuovo gruppo"
 
-#: src/gui/html/elements/loot-groups-editor.ts:428
+#: src/gui/html/elements/loot-groups-editor.ts:448
 msgid "Group name"
 msgstr "Nome del gruppo"
 
-#: src/gui/html/elements/loot-groups-editor.ts:429
+#: src/gui/html/elements/loot-groups-editor.ts:449
+msgid "Drawing mode"
+msgstr "Modalità Disegno"
+
+#: src/gui/html/elements/loot-groups-editor.ts:450
 msgid "Group already exists!"
 msgstr "Il gruppo esiste già!"
 
-#: src/gui/html/elements/loot-groups-editor.ts:430
+#: src/gui/html/elements/loot-groups-editor.ts:451
 msgid "No plugins are in this group."
 msgstr "Non ci sono plugin in questo gruppo."
 
-#: src/gui/html/elements/loot-groups-editor.ts:440
+#: src/gui/html/elements/loot-groups-editor.ts:477
 msgid "Plugins in %s"
 msgstr "Plugin in %s"
 
@@ -286,40 +287,40 @@ msgstr "Plugin in %s"
 msgid "Verified clean by %s"
 msgstr "Pulizia verificata da %s"
 
-#: src/gui/html/js/events.ts:218
+#: src/gui/html/js/events.ts:225
 msgid "Identifying conflicting plugins..."
 msgstr "Identificazione dei plugin in conflitto…"
 
-#: src/gui/html/js/events.ts:314
+#: src/gui/html/js/events.ts:338
 msgid "Updating and parsing masterlist..."
 msgstr "Aggiornamento e analisi della Masterlist..."
 
-#: src/gui/html/js/events.ts:337
+#: src/gui/html/js/events.ts:367
 msgid "Masterlist updated to revision %s."
 msgstr "Masterlist aggiornata alla revisione %s."
 
-#: src/gui/html/js/events.ts:344
+#: src/gui/html/js/events.ts:374
 msgid "No masterlist update was necessary."
 msgstr "Non è necessario aggiornare la Masterlist."
 
-#: src/gui/html/js/events.ts:417
+#: src/gui/html/js/events.ts:448
 msgid "Cyclic interaction detected"
 msgstr "Interazione ciclica rilevata"
 
-#: src/gui/html/js/events.ts:424
+#: src/gui/html/js/events.ts:455
 msgid "Failed to sort plugins. Details: %s"
 msgstr "Ordinamento dei plugin fallito. Dettagli: %s"
 
-#: src/gui/html/js/events.ts:460
+#: src/gui/html/js/events.ts:491
 msgid "Sorting made no changes to the load order."
 msgstr "L'ordinamento non ha modificato l'ordine di caricamento."
 
 #. Title of a dialog box.
-#: src/gui/html/js/events.ts:504
+#: src/gui/html/js/events.ts:536
 msgid "Redate Plugins?"
 msgstr "Vuoi modificare la data dei plugin?"
 
-#: src/gui/html/js/events.ts:505
+#: src/gui/html/js/events.ts:537
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -333,72 +334,73 @@ msgstr ""
 "Edition). Continuare?"
 
 #. Affirmative confirmation button text for the Redate Plugins dialog box.
-#: src/gui/html/js/events.ts:509
+#: src/gui/html/js/events.ts:541
 msgid "Redate"
 msgstr "Modifica la data"
 
 #. Notification text.
-#: src/gui/html/js/events.ts:516
+#: src/gui/html/js/events.ts:548
 msgid "Plugins were successfully redated."
 msgstr "La modifica della data dei plugin è avvenuta con successo."
 
-#: src/gui/html/js/events.ts:535
+#: src/gui/html/js/events.ts:567
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 "Cancellare tutti i metadati aggiunti dall'utente esistenti da tutti i plugin?"
 
-#: src/gui/html/js/events.ts:538 src/gui/html/js/events.ts:1111
+#: src/gui/html/js/events.ts:570 src/gui/html/js/events.ts:1162
 msgid "Clear"
 msgstr "Cancella"
 
-#: src/gui/html/js/events.ts:549
+#: src/gui/html/js/events.ts:581
 msgid "All user-added metadata has been cleared."
 msgstr "Tutti i metadati aggiunti dall'utente sono stati cancellati."
 
-#: src/gui/html/js/events.ts:586
+#: src/gui/html/js/events.ts:618
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Il contenuto di LOOT è stato copiato negli appunti."
 
-#: src/gui/html/js/events.ts:604
+#: src/gui/html/js/events.ts:636
 msgid "The load order has been copied to the clipboard."
 msgstr "L'ordine di caricamento è stato copiato negli appunti."
 
-#: src/gui/html/js/events.ts:640
+#: src/gui/html/js/events.ts:672
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 "Non hai ancora applicato o annullato il tuo %s. Sei sicuro di volere uscire?"
 
-#: src/gui/html/js/events.ts:644 src/gui/html/js/translateStaticText.ts:372
+#: src/gui/html/js/events.ts:676 src/gui/html/js/translateStaticText.ts:372
 msgid "Quit"
 msgstr "Chiudi"
 
-#: src/gui/html/js/events.ts:662
+#: src/gui/html/js/events.ts:694
 msgid "sorted load order"
 msgstr "ordine di caricamento sistemato"
 
 #. Text that is substituted into the unapplied changes dialog text, describing the type of change that is unapplied.
-#: src/gui/html/js/events.ts:667
+#: src/gui/html/js/events.ts:699
 msgid "metadata edits"
 msgstr "modifiche ai metadati"
 
-#: src/gui/html/js/events.ts:1086
+#: src/gui/html/js/events.ts:1137
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "I metadati per \"%s\" sono stati copiati negli appunti."
 
-#: src/gui/html/js/events.ts:1107
+#: src/gui/html/js/events.ts:1158
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr "Cancellare tutti i metadati aggiunti dall'utente esistenti da \"%s\"?"
 
-#: src/gui/html/js/events.ts:1129
+#: src/gui/html/js/events.ts:1180
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "I metadati aggiunti dall'utente per \"%s\" sono stati cancellati."
 
 #. An abbreviation of Not Applicable.
-#: src/gui/html/js/game.ts:141
+#: src/gui/html/js/game.ts:141 src/gui/html/js/loot.ts:566
+#: src/gui/html/js/loot.ts:567
 msgid "N/A"
 msgstr "N/A"
 
@@ -407,7 +409,7 @@ msgstr "N/A"
 msgid "Error"
 msgstr "Errore"
 
-#: src/gui/html/js/loot.ts:314
+#: src/gui/html/js/loot.ts:358
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -416,11 +418,11 @@ msgstr ""
 "informazioni, è possibile controllare LOOTDebugLog.txt (è possibile farlo "
 "tramite il menu principale)."
 
-#: src/gui/html/js/loot.ts:330
+#: src/gui/html/js/loot.ts:374
 msgid "A [new release](%s) of LOOT is available."
 msgstr "E' disponibile una [nuova versione](%s) di LOOT."
 
-#: src/gui/html/js/loot.ts:370
+#: src/gui/html/js/loot.ts:414
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -433,7 +435,7 @@ msgid "Active Plugin"
 msgstr "Plugin attivo"
 
 #: src/gui/html/js/translateStaticText.ts:74
-#: src/gui/html/js/translateStaticText.ts:568
+#: src/gui/html/js/translateStaticText.ts:601
 msgid "Master File"
 msgstr "Master File"
 
@@ -538,7 +540,7 @@ msgid "Content"
 msgstr "Contenuto"
 
 #: src/gui/html/js/translateStaticText.ts:170
-#: src/gui/html/js/translateStaticText.ts:517
+#: src/gui/html/js/translateStaticText.ts:532
 msgid "Language"
 msgstr "Lingua"
 
@@ -577,7 +579,7 @@ msgid "URL"
 msgstr "URL"
 
 #: src/gui/html/js/translateStaticText.ts:198
-#: src/gui/html/js/translateStaticText.ts:549
+#: src/gui/html/js/translateStaticText.ts:582
 msgid "Name"
 msgstr "Nome"
 
@@ -587,8 +589,8 @@ msgstr "Salva Metadati"
 
 #: src/gui/html/js/translateStaticText.ts:203
 #: src/gui/html/js/translateStaticText.ts:345
-#: src/gui/html/js/translateStaticText.ts:605
-#: src/gui/html/js/translateStaticText.ts:617
+#: src/gui/html/js/translateStaticText.ts:638
+#: src/gui/html/js/translateStaticText.ts:650
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -631,7 +633,7 @@ msgid "Remove"
 msgstr "Rimuovi"
 
 #: src/gui/html/js/translateStaticText.ts:265
-#: src/gui/html/js/translateStaticText.ts:545
+#: src/gui/html/js/translateStaticText.ts:578
 msgid "A name is required."
 msgstr "E' necessario un nome."
 
@@ -668,8 +670,8 @@ msgid "Update Masterlist"
 msgstr "Aggiorna la Masterlist"
 
 #: src/gui/html/js/translateStaticText.ts:344
-#: src/gui/html/js/translateStaticText.ts:602
-#: src/gui/html/js/translateStaticText.ts:615
+#: src/gui/html/js/translateStaticText.ts:635
+#: src/gui/html/js/translateStaticText.ts:648
 msgid "Apply"
 msgstr "Applica"
 
@@ -712,7 +714,7 @@ msgid "About"
 msgstr "Informazioni"
 
 #: src/gui/html/js/translateStaticText.ts:371
-#: src/gui/html/js/translateStaticText.ts:505
+#: src/gui/html/js/translateStaticText.ts:520
 msgid "Settings"
 msgstr "Impostazioni"
 
@@ -769,7 +771,7 @@ msgstr "Nascondi i plugin inattivi"
 
 #: src/gui/html/js/translateStaticText.ts:462
 msgid "Hide messageless plugins"
-msgstr "Nascondi i plugin senza che non hanno messaggi"
+msgstr "Nascondi i plugin senza messaggi"
 
 #: src/gui/html/js/translateStaticText.ts:467
 msgid "Show only conflicting plugins for"
@@ -780,142 +782,176 @@ msgid "No plugin selected"
 msgstr "Nessun plugin selezionato"
 
 #: src/gui/html/js/translateStaticText.ts:474
+msgid "Show only plugins in group"
+msgstr "Mostra solo i plugin in gruppo"
+
+#: src/gui/html/js/translateStaticText.ts:476
+msgid "No group selected"
+msgstr "Nessun gruppo selezionato"
+
+#: src/gui/html/js/translateStaticText.ts:481
 msgid "Hidden plugins:"
 msgstr "Plugin nascosti:"
 
-#: src/gui/html/js/translateStaticText.ts:476
+#: src/gui/html/js/translateStaticText.ts:483
 msgid "Hidden messages:"
 msgstr "Messaggi nascosti:"
 
-#: src/gui/html/js/translateStaticText.ts:481
+#: src/gui/html/js/translateStaticText.ts:488
 msgid "General Information"
 msgstr "Informazioni Generali"
 
-#: src/gui/html/js/translateStaticText.ts:485
+#: src/gui/html/js/translateStaticText.ts:492
 msgid "Masterlist Revision"
 msgstr "Revisione della Masterlist"
 
-#: src/gui/html/js/translateStaticText.ts:487
+#: src/gui/html/js/translateStaticText.ts:494
 msgid "Masterlist Date"
 msgstr "Data della Masterlist"
 
-#: src/gui/html/js/translateStaticText.ts:489
+#: src/gui/html/js/translateStaticText.ts:495
+msgid "Masterlist Prelude Revision"
+msgstr "Revisione del preludio della Masterlist"
+
+#: src/gui/html/js/translateStaticText.ts:498
+msgid "Masterlist Prelude Date"
+msgstr "Data del preludio della Masterlist"
+
+#. The number of warning messages present. This text appears in the General Information card.
+#: src/gui/html/js/translateStaticText.ts:503
 msgid "Warnings"
 msgstr "Avvertenze"
 
-#: src/gui/html/js/translateStaticText.ts:491
+#. The number of error messages present. This text appears in the General Information card.
+#: src/gui/html/js/translateStaticText.ts:506
 msgid "Errors"
 msgstr "Errori"
 
-#: src/gui/html/js/translateStaticText.ts:493
+#: src/gui/html/js/translateStaticText.ts:508
 msgid "Total Messages"
 msgstr "Messaggi Totali"
 
-#: src/gui/html/js/translateStaticText.ts:495
+#: src/gui/html/js/translateStaticText.ts:510
 msgid "Active Plugins"
 msgstr "Plugin Attivi"
 
-#: src/gui/html/js/translateStaticText.ts:497
+#: src/gui/html/js/translateStaticText.ts:512
 msgid "Dirty Plugins"
 msgstr "Plugin contenenti Errori"
 
-#: src/gui/html/js/translateStaticText.ts:499
+#: src/gui/html/js/translateStaticText.ts:514
 msgid "Total Plugins"
 msgstr "Plugin Totali"
 
-#: src/gui/html/js/translateStaticText.ts:507
+#: src/gui/html/js/translateStaticText.ts:522
 msgid "General"
 msgstr "Generale"
 
-#: src/gui/html/js/translateStaticText.ts:511
+#: src/gui/html/js/translateStaticText.ts:526
 msgid "Default Game"
 msgstr "Gioco Predefinito"
 
-#: src/gui/html/js/translateStaticText.ts:513
+#: src/gui/html/js/translateStaticText.ts:528
 msgid "Autodetect"
 msgstr "Rileva automaticamente"
 
-#: src/gui/html/js/translateStaticText.ts:518
+#: src/gui/html/js/translateStaticText.ts:533
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr "Le modifiche della lingua saranno applicate dopo il riavvio di LOOT."
 
-#: src/gui/html/js/translateStaticText.ts:522
+#: src/gui/html/js/translateStaticText.ts:537
 msgid "Theme"
 msgstr "Tema"
 
-#: src/gui/html/js/translateStaticText.ts:523
+#: src/gui/html/js/translateStaticText.ts:538
 msgid "Theme changes will be applied after LOOT is restarted."
 msgstr "Le modifiche del tema saranno applicate dopo il riavvio di LOOT."
 
-#: src/gui/html/js/translateStaticText.ts:527
+#: src/gui/html/js/translateStaticText.ts:542
 msgid "default"
 msgstr "predefinito"
 
-#: src/gui/html/js/translateStaticText.ts:532
+#: src/gui/html/js/translateStaticText.ts:547
 msgid "Enable debug logging"
 msgstr "Attiva debug logging"
 
-#: src/gui/html/js/translateStaticText.ts:533
+#: src/gui/html/js/translateStaticText.ts:548
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr "L'output viene registrato nel file LOOTDebugLog.txt."
 
-#: src/gui/html/js/translateStaticText.ts:538
+#: src/gui/html/js/translateStaticText.ts:553
 msgid "Update masterlist before sorting"
 msgstr "Aggiornare la Masterlist prima dell'ordinamento"
 
-#: src/gui/html/js/translateStaticText.ts:541
+#: src/gui/html/js/translateStaticText.ts:556
 msgid "Check for LOOT updates on startup"
 msgstr "Verificare la presenza di aggiornamenti LOOT all'avvio"
 
-#: src/gui/html/js/translateStaticText.ts:554
+#: src/gui/html/js/translateStaticText.ts:560
+msgid "A prelude URL is required."
+msgstr "E' necessario un URL del preludio."
+
+#: src/gui/html/js/translateStaticText.ts:564
+msgid "Masterlist prelude repository URL"
+msgstr "URL della Masterlist prelude repository"
+
+#: src/gui/html/js/translateStaticText.ts:569
+msgid "A prelude branch is required."
+msgstr "E' necessaria una sezione del preludio."
+
+#: src/gui/html/js/translateStaticText.ts:573
+msgid "Masterlist prelude repository branch"
+msgstr "Sezione Masterlist prelude repository"
+
+#: src/gui/html/js/translateStaticText.ts:587
 msgid "Base Game"
 msgstr "Gioco base"
 
-#: src/gui/html/js/translateStaticText.ts:559
+#: src/gui/html/js/translateStaticText.ts:592
 msgid "A folder is required."
 msgstr "E' necessaria una cartella."
 
-#: src/gui/html/js/translateStaticText.ts:563
+#: src/gui/html/js/translateStaticText.ts:596
 msgid "LOOT Folder"
 msgstr "Cartella di LOOT"
 
-#: src/gui/html/js/translateStaticText.ts:573
+#: src/gui/html/js/translateStaticText.ts:606
 msgid "Masterlist Repository URL"
-msgstr "Masterlist Repository URL"
+msgstr "URL della Masterlist Repository"
 
-#: src/gui/html/js/translateStaticText.ts:578
+#: src/gui/html/js/translateStaticText.ts:611
 msgid "Masterlist Repository Branch"
-msgstr "Masterlist Repository Branch"
+msgstr "Sezione Masterlist Repository"
 
-#: src/gui/html/js/translateStaticText.ts:583
+#: src/gui/html/js/translateStaticText.ts:616
 msgid "Install Path"
 msgstr "Percorso di Installazione"
 
-#: src/gui/html/js/translateStaticText.ts:588
-msgid "Install Path Registry Key"
-msgstr "Chiave di Registro del Percorso di Installazione"
+#: src/gui/html/js/translateStaticText.ts:621
+msgid "Install Path Registry Keys"
+msgstr "Percorso di Installazione delle chiavi di Registro"
 
-#: src/gui/html/js/translateStaticText.ts:593
+#: src/gui/html/js/translateStaticText.ts:626
 msgid "Local Data Path"
 msgstr "Percorso Data Locale"
 
-#: src/gui/html/js/translateStaticText.ts:596
+#: src/gui/html/js/translateStaticText.ts:629
 msgid "Add new game"
 msgstr "Aggiungi un nuovo gioco"
 
-#: src/gui/html/js/translateStaticText.ts:598
+#: src/gui/html/js/translateStaticText.ts:631
 msgid "Delete game"
 msgstr "Cancella il gioco"
 
-#: src/gui/html/js/translateStaticText.ts:612
+#: src/gui/html/js/translateStaticText.ts:645
 msgid "Groups Editor"
 msgstr "Apri l'Editor dei Gruppi"
 
-#: src/gui/html/js/translateStaticText.ts:623
+#: src/gui/html/js/translateStaticText.ts:656
 msgid "First-Time Tips"
 msgstr "Suggerimenti per la prima volta"
 
-#: src/gui/html/js/translateStaticText.ts:626
+#: src/gui/html/js/translateStaticText.ts:659
 msgid ""
 "This appears to be the first time you have run LOOT v%s. Here are some tips "
 "to help you get started with the interface."
@@ -924,11 +960,11 @@ msgstr ""
 "suggerimenti per iniziare a usare l'interfaccia."
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
-#: src/gui/html/js/translateStaticText.ts:633
+#: src/gui/html/js/translateStaticText.ts:666
 msgid "Click %(menu_icon)s buttons to open menus."
 msgstr "Clicca %(menu_icon)s tasti per aprire i menu."
 
-#: src/gui/html/js/translateStaticText.ts:637
+#: src/gui/html/js/translateStaticText.ts:670
 msgid ""
 "As well as messages, LOOT displays plugin <span class=\"version\">version "
 "numbers</span>, <span class=\"crc\">CRCs</span> and Bash Tag suggestions for "
@@ -940,7 +976,7 @@ msgstr ""
 "suggerimenti bash tag per <span class=\"tag add\">l'aggiunta</span> e la "
 "<span class=\"tag remove\">rimozione</span>."
 
-#: src/gui/html/js/translateStaticText.ts:640
+#: src/gui/html/js/translateStaticText.ts:673
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -948,7 +984,7 @@ msgstr ""
 "I CRC vengono mostrati solo dopo che i plugin sono stati caricati per "
 "filtraggio dei conflitti o per ordinamento."
 
-#: src/gui/html/js/translateStaticText.ts:643
+#: src/gui/html/js/translateStaticText.ts:676
 msgid ""
 "Double-click a plugin in the sidebar to quickly open it in the metadata "
 "editor."
@@ -956,7 +992,7 @@ msgstr ""
 "Fai doppio click su un plugin per aprirlo velocemente nell'Editor dei "
 "metadati."
 
-#: src/gui/html/js/translateStaticText.ts:646
+#: src/gui/html/js/translateStaticText.ts:679
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -965,7 +1001,7 @@ msgstr ""
 "dell'Editor dei metadati e alle tabelle di \"requisiti\" e \"incompatibilità"
 "\"."
 
-#: src/gui/html/js/translateStaticText.ts:649
+#: src/gui/html/js/translateStaticText.ts:682
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -974,7 +1010,7 @@ msgstr ""
 "o quando c'è un ordine di caricamento che non può essere applicato o "
 "scartato."
 
-#: src/gui/html/js/translateStaticText.ts:652
+#: src/gui/html/js/translateStaticText.ts:685
 msgid ""
 "Many interface elements have tooltips. If you don't know what something is, "
 "try hovering your mouse over it to find out. Otherwise, LOOT's documentation "
@@ -985,8 +1021,8 @@ msgstr ""
 "contrario, è possibile accedere alla documentazione di LOOT tramite il menu "
 "principale."
 
-#: src/gui/html/js/translateStaticText.ts:656
-#: src/gui/html/js/translateStaticText.ts:678
+#: src/gui/html/js/translateStaticText.ts:689
+#: src/gui/html/js/translateStaticText.ts:711
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -996,19 +1032,19 @@ msgstr ""
 "una donazione a WrinklyNinja (Creatore e sviluppatore principale di LOOT) "
 "utilizzando %s."
 
-#: src/gui/html/js/translateStaticText.ts:662
+#: src/gui/html/js/translateStaticText.ts:695
 msgid "OK"
 msgstr "OK"
 
-#: src/gui/html/js/translateStaticText.ts:667
+#: src/gui/html/js/translateStaticText.ts:700
 msgid "About LOOT"
 msgstr "Informazioni su LOOT"
 
-#: src/gui/html/js/translateStaticText.ts:669
+#: src/gui/html/js/translateStaticText.ts:702
 msgid "Version %s (build %s)"
 msgstr "Versione %s (build %s)"
 
-#: src/gui/html/js/translateStaticText.ts:674
+#: src/gui/html/js/translateStaticText.ts:707
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
@@ -1017,3 +1053,12 @@ msgstr ""
 "Ottimizzazione dell'ordine di caricamento per Morrowind, Oblivion, Nehrim, "
 "Skyrim, Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, "
 "Fallout 3, Fallout: New Vegas, Fallout 4 e Fallout 4 VR."
+
+#~ msgid ""
+#~ "The latest masterlist revision contains a syntax error, LOOT is using the "
+#~ "most recent valid revision instead. Syntax errors are usually minor and "
+#~ "fixed within hours."
+#~ msgstr ""
+#~ "L'ultima revisione dell'elenco master contiene un errore di sintassi, "
+#~ "LOOT utilizza invece la revisione valida più recente. Gli errori di "
+#~ "sintassi sono in genere minori e corretti in poche ore."

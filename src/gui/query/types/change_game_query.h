@@ -41,10 +41,11 @@ public:
       language_(language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     gamesManager_.SetCurrentGame(gameFolder_);
 
-    GetGameDataQuery<G> subQuery(gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
+    GetGameDataQuery<G> subQuery(
+        gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
 
     return subQuery.executeLogic();
   }

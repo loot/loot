@@ -145,10 +145,24 @@ std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
+std::vector<std::shared_ptr<const PluginInterface>>
+Game::GetPluginsInLoadOrder() const {
+  std::vector<std::shared_ptr<const PluginInterface>> installed;
+
+  for (const auto& pluginName : GetLoadOrder()) {
+    const auto plugin = GetPlugin(pluginName);
+    if (plugin) {
+      installed.push_back(plugin);
+    }
+  }
+
+  return installed;
+}
+
 std::vector<Message> Game::CheckInstallValidity(
     const std::shared_ptr<const PluginInterface>& plugin,
     const PluginMetadata& metadata,
-    const std::string& language) {
+    const std::string& language) const {
   auto logger = getLogger();
 
   if (logger) {
@@ -337,8 +351,7 @@ std::vector<Message> Game::CheckInstallValidity(
     messages.push_back(PlainTextMessage(
         MessageType::warn,
         (boost::format(
-             /* translators: A header is the part of a file that stores data
-                like file name and version. */
+             /* translators: A header is the part of a file that stores data like file name and version. */
              boost::locale::translate(
                  "This plugin has a header version of %1%, "
                  "which is less than the game's minimum supported header "
@@ -635,10 +648,6 @@ bool Game::UpdateMasterlist() const {
   return UpdateFile(MasterlistPath(), RepoURL(), RepoBranch());
 }
 
-FileRevision Game::GetMasterlistInfo() const {
-  return GetFileRevision(MasterlistPath(), true);
-}
-
 void Game::LoadMetadata() {
   auto logger = getLogger();
 
@@ -715,6 +724,27 @@ std::optional<PluginMetadata> Game::GetMasterlistMetadata(
     bool evaluateConditions) const {
   return gameHandle_->GetDatabase()->GetPluginMetadata(
       pluginName, false, evaluateConditions);
+}
+
+std::optional<PluginMetadata> Game::GetNonUserMetadata(
+    const std::shared_ptr<const PluginInterface>& plugin,
+    bool evaluateConditions) const {
+  auto fileBashTags = plugin->GetBashTags();
+  auto masterlistMetadata = GetMasterlistMetadata(plugin->GetName());
+
+  if (fileBashTags.empty()) {
+    return masterlistMetadata;
+  }
+
+  PluginMetadata metadata(plugin->GetName());
+  metadata.SetTags(fileBashTags);
+
+  if (masterlistMetadata.has_value()) {
+    masterlistMetadata.value().MergeMetadata(metadata);
+    return masterlistMetadata.value();
+  }
+
+  return metadata;
 }
 
 std::optional<PluginMetadata> Game::GetUserMetadata(

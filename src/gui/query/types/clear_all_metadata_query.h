@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 
-#include "gui/query/json.h"
 #include "gui/query/types/metadata_query.h"
 #include "gui/state/game/game.h"
 
@@ -37,14 +36,14 @@ public:
   ClearAllMetadataQuery(G& game, std::string language) :
       MetadataQuery<G>(game, language) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing all user metadata.");
     }
 
     // Record which plugins have userlist entries.
-    auto userlistPluginNames = getUserlistPluginNames();
+    auto userlistPlugins = getUserlistPlugins();
 
     // Clear the user metadata.
     this->getGame().ClearAllUserMetadata();
@@ -54,42 +53,36 @@ public:
       logger->trace(
           "Rederiving display metadata for {} plugins that had user "
           "metadata.",
-          userlistPluginNames.size());
+          userlistPlugins.size());
     }
 
-    return getDerivedMetadataJson(userlistPluginNames);
+    return getDerivedMetadata(userlistPlugins);
   }
 
 private:
-  std::vector<std::string> getUserlistPluginNames() const {
-    std::vector<std::string> userlistPluginNames;
+  std::vector<std::shared_ptr<const PluginInterface>> getUserlistPlugins()
+      const {
+    std::vector<std::shared_ptr<const PluginInterface>> userlistPlugins;
     for (const auto& plugin : this->getGame().GetPlugins()) {
       if (this->getGame().GetUserMetadata(plugin->GetName()).has_value()) {
-        userlistPluginNames.push_back(plugin->GetName());
+        userlistPlugins.push_back(plugin);
       }
     }
 
-    return userlistPluginNames;
+    return userlistPlugins;
   }
 
-  std::string getDerivedMetadataJson(
-      const std::vector<std::string>& userlistPluginNames) {
-    nlohmann::json json;
+  std::vector<PluginItem> getDerivedMetadata(
+      const std::vector<std::shared_ptr<const PluginInterface>>&
+          userlistPlugins) {
+    std::vector<PluginItem> plugins;
 
-    json["plugins"] = nlohmann::json::array();
-    for (const auto& pluginName : userlistPluginNames) {
-      auto derivedMetadata = this->generateDerivedMetadata(pluginName);
-      if (derivedMetadata.has_value()) {
-        json["plugins"].push_back(derivedMetadata.value());
-      }
+    for (const auto& plugin : userlistPlugins) {
+      auto derivedMetadata = this->generateDerivedMetadata(plugin);
+      plugins.push_back(derivedMetadata);
     }
 
-    json["groups"] = {
-        {"masterlist", this->getGame().GetMasterlistGroups()},
-        {"userlist", this->getGame().GetUserGroups()},
-    };
-
-    return json.dump();
+    return plugins;
   }
 };
 }

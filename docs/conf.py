@@ -344,7 +344,3 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
-
-intersphinx_mapping = {
-    'loot_api': ('https://loot-api.readthedocs.io/en/latest/', None),
-}

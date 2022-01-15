@@ -26,17 +26,28 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
-#include <filesystem>
-#include <tuple>
-#include <vector>
-
 #include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
 #include <loot/struct/file_revision.h>
 #include <loot/vertex.h>
 
+#include <filesystem>
+#include <tuple>
+#include <vector>
+
 namespace loot {
+enum class FileType { Masterlist, MasterlistPrelude };
+
+struct FileRevisionSummary {
+  FileRevisionSummary();
+  FileRevisionSummary(const FileRevision& fileRevision);
+  FileRevisionSummary(const std::string& id, const std::string& date);
+
+  std::string id;
+  std::string date;
+};
+
 bool ExecutableExists(const GameType& gameType,
                       const std::filesystem::path& gamePath);
 
@@ -51,6 +62,10 @@ Message PlainTextMessage(MessageType type, std::string text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
 
+std::vector<SimpleMessage> ToSimpleMessages(
+    const std::vector<Message>& messages,
+    const std::string& language);
+
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<Message> CheckForRemovedPlugins(
@@ -60,8 +75,9 @@ std::vector<Message> CheckForRemovedPlugins(
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath);
 
-void AddSuffixIfModified(FileRevision& revision);
+FileRevisionSummary GetFileRevisionToDisplay(
+    const std::filesystem::path& filePath,
+    FileType fileType);
 }
-
 
 #endif

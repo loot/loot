@@ -26,7 +26,10 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_COPY_LOAD_ORDER_QUERY
 #define LOOT_GUI_QUERY_COPY_LOAD_ORDER_QUERY
 
-#include "gui/query/types/clipboard_query.h"
+#include <iomanip>
+
+#include "gui/helpers.h"
+#include "gui/query/query.h"
 
 namespace loot {
 struct Counters {
@@ -35,22 +38,20 @@ struct Counters {
 };
 
 template<typename G = gui::Game>
-class CopyLoadOrderQuery : public ClipboardQuery {
+class CopyLoadOrderQuery : public Query {
 public:
-  CopyLoadOrderQuery(const G& game,
-                     const std::vector<std::string>& plugins) :
-      game_(game),
-      plugins_(plugins) {}
+  CopyLoadOrderQuery(const G& game, const std::vector<std::string>& plugins) :
+      game_(game), plugins_(plugins) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     Counters counters;
     std::stringstream stream;
     for (const auto& pluginName : plugins_) {
       writePluginLine(stream, pluginName, counters);
     }
 
-    copyToClipboard(stream.str());
-    return "";
+    CopyToClipboard(stream.str());
+    return std::monostate();
   }
 
 private:

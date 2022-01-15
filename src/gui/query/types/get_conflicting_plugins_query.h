@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 
-#include "gui/query/json.h"
 #include "gui/query/types/metadata_query.h"
 #include "gui/state/game/game.h"
 
@@ -37,14 +36,12 @@ public:
   GetConflictingPluginsQuery(G& game,
                              std::string language,
                              std::string pluginName) :
-      MetadataQuery<G>(game, language),
-      pluginName_(pluginName) {}
+      MetadataQuery<G>(game, language), pluginName_(pluginName) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
-      logger->debug("Searching for plugins that conflict with {}",
-                     pluginName_);
+      logger->debug("Searching for plugins that conflict with {}", pluginName_);
     }
 
     // Checking for FormID overlap will only work if the plugins have been
@@ -53,15 +50,12 @@ public:
     if (!this->getGame().ArePluginsFullyLoaded())
       this->getGame().LoadAllInstalledPlugins(false);
 
-    return getJsonResponse();
+    return getResult();
   }
 
 private:
-  std::string getJsonResponse() {
-    nlohmann::json json = {
-        {"generalMessages", this->getGeneralMessages()},
-        {"plugins", nlohmann::json::array()},
-    };
+  std::vector<std::pair<PluginItem, bool>> getResult() {
+    std::vector<std::pair<PluginItem, bool>> result;
 
     auto plugin = this->getGame().GetPlugin(pluginName_);
     if (!plugin) {
@@ -69,14 +63,14 @@ private:
                                "\" is not loaded.");
     }
 
-    for (const auto& otherPlugin : this->getGame().GetPlugins()) {
-      json["plugins"].push_back({
-          {"metadata", this->generateDerivedMetadata(otherPlugin)},
-          {"conflicts", doPluginsConflict(plugin, otherPlugin)},
-      });
+    for (const auto& otherPlugin : this->getGame().GetPluginsInLoadOrder()) {
+      auto metadata = this->generateDerivedMetadata(otherPlugin);
+      auto conflict = doPluginsConflict(plugin, otherPlugin);
+
+      result.push_back(std::make_pair(metadata, conflict));
     }
 
-    return json.dump();
+    return result;
   }
 
   bool doPluginsConflict(

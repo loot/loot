@@ -25,12 +25,11 @@ along with LOOT.  If not, see
 #ifndef LOOT_TESTS_GUI_STATE_LOOT_SETTINGS_TEST
 #define LOOT_TESTS_GUI_STATE_LOOT_SETTINGS_TEST
 
+#include <gtest/gtest.h>
+
 #include <fstream>
 
 #include "gui/state/loot_settings.h"
-
-#include <gtest/gtest.h>
-
 #include "gui/version.h"
 
 namespace loot {
@@ -73,8 +72,9 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
           .SetMaster("Nehrim.esm")
-          .SetRegistryKeys({"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
-                          "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
+          .SetRegistryKeys(
+              {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
+               "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
           .SetRegistryKeys(
@@ -82,11 +82,11 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetGameLocalFolder("enderal")
           .SetRepoURL("https://github.com/loot/enderal.git"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
-        .SetName("Enderal: Forgotten Stories (Special Edition)")
-        .SetRegistryKeys(
-            {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
-        .SetGameLocalFolder("Enderal Special Edition")
-        .SetRepoURL("https://github.com/loot/enderal.git"),
+          .SetName("Enderal: Forgotten Stories (Special Edition)")
+          .SetRegistryKeys(
+              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
+          .SetGameLocalFolder("Enderal Special Edition")
+          .SetRepoURL("https://github.com/loot/enderal.git"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
@@ -97,7 +97,13 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_TRUE(settings_.getLastVersion().empty());
   EXPECT_EQ("en", settings_.getLanguage());
   EXPECT_EQ("default", settings_.getTheme());
-  EXPECT_TRUE(settings_.getFilters().empty());
+  EXPECT_FALSE(settings_.getFilters().hideVersionNumbers);
+  EXPECT_TRUE(settings_.getFilters().hideBashTags);
+  EXPECT_FALSE(settings_.getFilters().hideCRCs);
+  EXPECT_FALSE(settings_.getFilters().hideNotes);
+  EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
+  EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
   EXPECT_EQ("https://github.com/loot/prelude.git",
             settings_.getPreludeRepositoryURL());
   EXPECT_EQ("v0.17", settings_.getPreludeRepositoryBranch());
@@ -182,10 +188,12 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualLanguages[10]);
   EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
             actualLanguages[11]);
-  EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil",
-            std::nullopt}), actualLanguages[12]);
-  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal",
-            std::nullopt}), actualLanguages[13]);
+  EXPECT_EQ(
+      LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
+      actualLanguages[12]);
+  EXPECT_EQ(
+      LootSettings::Language({"pt_PT", "Português de Portugal", std::nullopt}),
+      actualLanguages[13]);
   EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
             actualLanguages[14]);
   EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
@@ -241,7 +249,8 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
   EXPECT_EQ("dark", settings_.getTheme());
-  EXPECT_EQ("https://github.com/loot/prelude-test.git", settings_.getPreludeRepositoryURL());
+  EXPECT_EQ("https://github.com/loot/prelude-test.git",
+            settings_.getPreludeRepositoryURL());
   EXPECT_EQ("v1.0", settings_.getPreludeRepositoryBranch());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
@@ -253,8 +262,8 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
 
   EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
 
-  EXPECT_FALSE(settings_.getFilters().at("hideBashTags"));
-  EXPECT_TRUE(settings_.getFilters().at("hideCRCs"));
+  EXPECT_FALSE(settings_.getFilters().hideBashTags);
+  EXPECT_TRUE(settings_.getFilters().hideCRCs);
 
   EXPECT_EQ(1, settings_.getLanguages().size());
   EXPECT_EQ(LootSettings::Language({"en", "English", "Times New Roman"}),
@@ -293,7 +302,8 @@ TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyStringValues) {
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_EQ(1, settings_.getGameSettings()[0].RegistryKeys().size());
-  EXPECT_EQ("a registry path", settings_.getGameSettings()[0].RegistryKeys()[0]);
+  EXPECT_EQ("a registry path",
+            settings_.getGameSettings()[0].RegistryKeys()[0]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyArrayValues) {
@@ -354,7 +364,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
 }
 
 TEST_P(LootSettingsTest,
-  loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
+       loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -387,7 +397,8 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
-  EXPECT_EQ(getLocalAppDataPath() / std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
+  EXPECT_EQ(getLocalAppDataPath() /
+                std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
             settings_.getGameSettings()[0].GameLocalPath());
 }
 
@@ -511,16 +522,6 @@ TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_P(LootSettingsTest, loadingTomlShouldRemoveTheContentFilterSetting) {
-  std::ofstream out(settingsFile_);
-  out << "[filters]" << std::endl << "contentFilter = \"foo\"" << std::endl;
-  out.close();
-
-  settings_.load(settingsFile_, lootDataPath);
-
-  EXPECT_TRUE(settings_.getFilters().empty());
-}
-
 TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
@@ -540,10 +541,9 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
           .SetName("Game Name")
           .SetMinimumHeaderVersion(2.5),
   });
-  const std::map<std::string, bool> filters({
-      {"hideBashTags", false},
-      {"hideCRCs", true},
-  });
+  LootSettings::Filters filters;
+  filters.hideBashTags = false;
+  filters.hideCRCs = true;
 
   settings_.enableDebugLogging(true);
   settings_.updateMasterlist(true);
@@ -557,9 +557,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 
   settings_.storeWindowPosition(windowPosition);
   settings_.storeGameSettings(games);
-  for (const auto& filter : filters) {
-    settings_.storeFilterState(filter.first, filter.second);
-  }
+  settings_.storeFilters(filters);
 
   settings_.save(settingsFile_);
 
@@ -587,7 +585,8 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(games[0].MinimumHeaderVersion(),
             settings.getGameSettings().at(0).MinimumHeaderVersion());
 
-  EXPECT_EQ(filters, settings.getFilters());
+  EXPECT_EQ(filters.hideBashTags, settings.getFilters().hideBashTags);
+  EXPECT_EQ(filters.hideCRCs, settings.getFilters().hideCRCs);
 }
 
 TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {

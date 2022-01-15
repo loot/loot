@@ -31,22 +31,12 @@ In addition, the following are credited with application-related support:
 
 * Testing: Too many to list, thank you all!
 
-LOOT uses the `Boost`_, `cpptoml`_, `cytoscape`_, `Jed`_, `Jed Gettext Parser`_, `lodash`_, `Marked`_, `nlohmann/json`_, `@octokit/rest`_ `Polymer`_, `React`_ and `spdlog`_ libraries, and the `Chromium Embedded Framework`_.
+LOOT uses the `Boost`_, `cpptoml`_, and `spdlog`_ libraries, and the `Qt`_ framework.
 
 .. _GitHub: https://github.com/loot/
 .. _here: https://loot.github.io/credits/
 .. _BOSS: https://boss-developers.github.io/
 .. _Boost: https://www.boost.org/
 .. _cpptoml: https://github.com/skystrife/cpptoml
-.. _cytoscape: https://github.com/cytoscape/cytoscape.js
-.. _github-api: https://github.com/github-tools/github
-.. _Jed: https://github.com/SlexAxton/Jed
-.. _Jed Gettext Parser: https://github.com/Ortham/jed-gettext-parser
-.. _lodash: https://lodash.com/
-.. _Marked: https://github.com/chjj/marked
-.. _nlohmann/json: https://github.com/nlohmann/json
-.. _@octokit/rest: https://github.com/octokit/rest.js
-.. _Polymer: https://www.polymer-project.org/
-.. _React: https://reactjs.org/
 .. _spdlog: https://github.com/gabime/spdlog
-.. _Chromium Embedded Framework: https://bitbucket.org/chromiumembedded/cef
+.. _Qt: https://www.qt.io/

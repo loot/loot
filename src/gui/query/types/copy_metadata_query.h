@@ -26,21 +26,19 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_COPY_METADATA_QUERY
 #define LOOT_GUI_QUERY_COPY_METADATA_QUERY
 
-#include "gui/query/json.h"
-#include "gui/query/types/clipboard_query.h"
+#include "gui/helpers.h"
+#include "gui/query/query.h"
 
 namespace loot {
 template<typename G = gui::Game>
-class CopyMetadataQuery : public ClipboardQuery {
+class CopyMetadataQuery : public Query {
 public:
   CopyMetadataQuery(const G& game,
                     std::string language,
                     std::string pluginName) :
-      game_(game),
-      language_(language),
-      pluginName_(pluginName) {}
+      game_(game), language_(language), pluginName_(pluginName) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Copying metadata for plugin {}", pluginName_);
@@ -63,23 +61,19 @@ public:
 
     // Generate text representation.
     std::string text =
-        "[spoiler][code]" + asText(metadata) + "[/code][/spoiler]";
+        "[spoiler][code]" + metadata.AsYaml() + "[/code][/spoiler]";
 
-    copyToClipboard(text);
+    CopyToClipboard(text);
 
     if (logger) {
       logger->debug(
           "Exported userlist metadata text for \"{}\": {}", pluginName_, text);
     }
 
-    return "";
+    return std::monostate();
   }
 
 private:
-  std::string asText(const PluginMetadata& metadata) {
-    return to_json_with_language(metadata, language_).dump(4);
-  }
-
   const G& game_;
   const std::string language_;
   const std::string pluginName_;

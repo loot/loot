@@ -36,20 +36,20 @@ public:
   UpdateMasterlistQuery(G& game, std::string language) :
       MetadataQuery<G>(game, language) {}
 
-  std::string executeLogic() {
+  QueryResult executeLogic() {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Updating and parsing masterlist.");
     }
 
     if (!this->getGame().UpdateMasterlist()) {
-      return "null";
+      return std::monostate();
     }
 
     this->getGame().LoadMetadata();
 
-    auto plugins = this->getGame().GetPlugins();
-    return this->generateJsonResponse(plugins.cbegin(), plugins.cend());
+    auto plugins = this->getGame().GetPluginsInLoadOrder();
+    return this->generateDerivedMetadata(plugins.cbegin(), plugins.cend());
   }
 };
 }

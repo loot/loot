@@ -9,7 +9,7 @@ env:
 
 jobs:
   create_release:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
       git_tag: ${{ steps.get-git-tag.outputs.name }}
@@ -29,26 +29,45 @@ jobs:
           release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
           draft: true
           body: |
-            Requires Windows 7 or later and the [MSVC 2017 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe), and [7-Zip](https://www.7-zip.org/) to extract the archives. The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
+            The win64 build requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe). Users are recommended to run this build if their PC meets the Windows version requirement.
+
+            The win32 build requires Windows 7 or later and the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe). This build is provided for those who cannot run the win64 build.
+
+            The `.exe` installers will automatically download and install the appropriate redistributable if you don't already have it installed.
+
+            [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archives.
+
+            The list of changes can be found [here](https://loot.readthedocs.io/en/latest/app/changelog.html).
 
   windows:
-    runs-on: windows-2016
+    runs-on: windows-2019
     needs: create_release
+
+    strategy:
+      matrix:
+        platform: [Win32, x64]
+
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-python@v2
         with:
-          node-version: '16'
+          python-version: '3.10'
 
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          echo "::set-output name=address-model::32"
-          echo "::set-output name=root::${{ github.workspace }}/boost_1_72_0"
-          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_72_0/stage/32/lib"
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            $addressModel = 32
+          } else {
+            $addressModel = 64
+          }
+
+          echo "::set-output name=address-model::$addressModel"
+          echo "::set-output name=root::${{ github.workspace }}/boost_1_77_0"
+          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib"
 
       - name: Boost cache
         id: boost-cache
@@ -57,10 +76,7 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-Win32-Boost-1.72.0
-
-      - name: Install JS dependencies
-        run: npm ci
+          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
 
       - name: Download and extract svg_to_ico
         run: |
@@ -68,23 +84,38 @@ jobs:
           7z e -y svg_to_ico.7z
 
       - name: Generate ICO file
-        run: .\svg_to_ico.exe -i resources\icon.svg -o build\icon\icon.ico
+        run: .\svg_to_ico.exe -i resources\icons\loot.svg -o build\icon\icon.ico
 
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.72.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
+
+      - name: Download Qt
+        id: qt-metadata
+        run: |
+          python -m pip install aqtinstall
+
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            $qtVersion = "5.15.2"
+            $qtArch = "win32_msvc2019"
+            $qtArchDir = "msvc2019"
+          } else {
+            $qtVersion = "6.2.2"
+            $qtArch = "win64_msvc2019_64"
+            $qtArchDir = "msvc2019_64"
+          }
+
+          aqt install-qt windows desktop $qtVersion $qtArch
+          echo "::set-output name=root::${{ github.workspace }}/$qtVersion/$qtArchDir"
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 15 2017" -A Win32 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}"
+          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DCMAKE_PREFIX_PATH="${{ steps.qt-metadata.outputs.root }}/lib/cmake"
           cmake --build . --config Release
 
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
 
       - name: Install packages for building docs
         run: |
@@ -94,13 +125,7 @@ jobs:
         run: sphinx-build -b html docs build\docs\html
 
       - name: Build translation message object files
-        run: node scripts\potomo.js
-
-      - name: Build archive
-        run: node scripts\archive.js . ${{ needs.create_release.outputs.git_tag }}
-
-      - name: Build installer
-        run: scripts\build_installer.ps1
+        run: python scripts/po_to_mo.py
 
       - name: Get descriptive LOOT version
         id: get-loot-version
@@ -112,14 +137,42 @@ jobs:
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
           echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
 
+      - name: Get LOOT artifact basename
+        id: get-artifact-basename
+        shell: bash
+        run: |
+          if [[ "${{ matrix.platform }}" == "Win32" ]]
+          then
+            PLATFORM=win32
+          else
+            PLATFORM=win64
+          fi
+          echo "::set-output name=basename::loot_${{ needs.create_release.outputs.git_tag }}-${PLATFORM}"
+
+      - name: Build archive
+        run: |
+          $env:PATH="${{ steps.qt-metadata.outputs.root }}/bin;$env:PATH"
+          python scripts\archive.py . ${{ needs.create_release.outputs.git_tag }}
+          mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
+
+      - name: Build installer
+        run: |
+          if ("${{ matrix.platform }}" -eq "Win32") {
+            scripts\build_installer.ps1 -QtVersion 5
+          } else {
+            scripts\build_installer.ps1 -QtVersion 6 -LOOTIs64Bit
+          }
+
+          mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
+
       - name: Upload Archive
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: build\loot_${{ steps.get-loot-version.outputs.version }}.7z
-          asset_name: loot_${{ steps.get-loot-version.outputs.version }}.7z
+          asset_path: build\${{ steps.get-artifact-basename.outputs.basename }}.7z
+          asset_name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
           asset_content_type: application/x-7z-compressed
 
       - name: Upload Installer
@@ -128,6 +181,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: build\LOOT Installer.exe
-          asset_name: LOOT Installer.exe
+          asset_path: build\${{ steps.get-artifact-basename.outputs.basename }}.exe
+          asset_name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
           asset_content_type: application/octet-stream
