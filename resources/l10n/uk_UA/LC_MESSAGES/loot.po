@@ -72,7 +72,7 @@ msgstr "Жодної групи не обрано"
 
 #: src/gui/qt/filters_widget.cpp:207
 msgid "No text specified"
-msgstr "Текст не определен"
+msgstr "Текст не визначено"
 
 #: src/gui/qt/filters_widget.cpp:209
 msgid "Press Enter or click outside the input to set the filter."
@@ -84,11 +84,11 @@ msgstr "Основна інформація"
 
 #: src/gui/qt/general_info_card.cpp:154
 msgid "Masterlist Revision"
-msgstr "Версія майстерлисту"
+msgstr "Версія списку правил сортування"
 
 #: src/gui/qt/general_info_card.cpp:155
 msgid "Masterlist Date"
-msgstr "Дата майстерлисту"
+msgstr "Дата списку правил сортування"
 
 #: src/gui/qt/general_info_card.cpp:156
 msgid "Masterlist Prelude Revision"
@@ -134,7 +134,7 @@ msgstr "Відсортувати плагіни"
 
 #: src/gui/qt/main_window.cpp:582
 msgid "Update Masterlist"
-msgstr "Оновити майстерлист"
+msgstr "Оновити правила сортування"
 
 #: src/gui/qt/main_window.cpp:583
 msgid "Apply Sorted Load Order"
@@ -238,7 +238,7 @@ msgstr "Фільтри"
 
 #: src/gui/qt/main_window.cpp:803 src/gui/qt/main_window.cpp:1708
 msgid "Updating and parsing masterlist..."
-msgstr "Оновлення та обробка майстерлисту.."
+msgstr "Оновлення та обробка правил сортування.."
 
 #: src/gui/qt/main_window.cpp:856
 #, c-format
@@ -447,12 +447,12 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2018
 msgid "No masterlist update was necessary."
-msgstr "Оновлення майстерлиста не потрібне."
+msgstr "Оновлення правил сортування не потрібне."
 
 #: src/gui/qt/main_window.cpp:2027
 #, c-format
 msgid "Masterlist updated to revision %s."
-msgstr "Майстерлист оновлено до версії %s."
+msgstr "Список правил сортування оновлено до версії %s."
 
 #: src/gui/qt/plugin_card.cpp:182
 #, c-format
@@ -690,11 +690,11 @@ msgstr "Максимальна версія заголовку"
 
 #: src/gui/qt/settings/game_tab.cpp:156
 msgid "Masterlist Repository URL"
-msgstr "URL сховища майстерлиста"
+msgstr "URL сховища правил сортування "
 
 #: src/gui/qt/settings/game_tab.cpp:157
 msgid "Masterlist Repository Branch"
-msgstr "Гілка сховища майстерлиста"
+msgstr "Гілка сховища правил сортування"
 
 #: src/gui/qt/settings/game_tab.cpp:158
 msgid "Install Path"
@@ -722,7 +722,7 @@ msgstr "Тема"
 
 #: src/gui/qt/settings/general_tab.cpp:175
 msgid "Update masterlist before sorting"
-msgstr "Оновити майстерлист перед сортуванням"
+msgstr "Оновити правила перед сортуванням"
 
 #: src/gui/qt/settings/general_tab.cpp:176
 msgid "Check for LOOT updates on startup"
@@ -734,7 +734,7 @@ msgstr "Включити лог налаштування"
 
 #: src/gui/qt/settings/general_tab.cpp:178
 msgid "Masterlist prelude repository URL"
-msgstr "URL сховища prelude-файлу для майстерлисту"
+msgstr "URL сховища prelude-файлу для правил сортування "
 
 #: src/gui/qt/settings/general_tab.cpp:180
 msgid "Masterlist prelude repository branch"
@@ -810,7 +810,7 @@ msgstr "Обробка, об'єднання та оцінка метаданих
 
 #: src/gui/query/types/sort_plugins_query.h:55
 msgid "Sorting load order..."
-msgstr "Сортування порядку завантження..."
+msgstr "Сортування порядку завантаження..."
 
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
 #: src/gui/state/loot_state.cpp:107
@@ -930,9 +930,10 @@ msgid ""
 msgstr ""
 "Виникла помилка при опрацюванні списку метаданих: %1%.\n"
 "\n"
-"Для виправлення помилки спробуйте оновити майстерлист. Якщо помилки у ваших "
-"користувацьких метаданих, то причиною може бути зміна синтаксису у "
-"оновленому LOOT. Користувацькі метадані мають бути оновлені вручну.\n"
+"Для виправлення помилки спробуйте оновити список правил сортування . Якщо "
+"помилки у ваших користувацьких метаданих, то причиною може бути зміна "
+"синтаксису у оновленому LOOT. Користувацькі метадані мають бути оновлені "
+"вручну.\n"
 "\n"
 "Для цього використайте пункт 'Відкрити папку з логом налаштування' у "
 "головному меню LOOT, потім відкрийте файл 'userlist.yaml' у папці "
@@ -992,12 +993,12 @@ msgstr "LOOT визначив, що \"%1%\" невірний та тепер і�
 
 #: src/gui/state/game/helpers.cpp:317
 msgid "N/A: No masterlist present"
-msgstr "N/A: Майстерлист відсутній"
+msgstr "N/A: Список правил сортування відсутній"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
 #: src/gui/state/game/helpers.cpp:320
 msgid "N/A: No masterlist prelude present"
-msgstr "N/A: Prelude-файл майстерлисту відсутній"
+msgstr "N/A: Prelude-файл списку сортування відсутній"
 
 #. translators: Git is the software LOOT uses to track changes to the source code.
 #: src/gui/state/game/helpers.cpp:330
