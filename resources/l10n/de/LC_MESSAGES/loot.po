@@ -152,7 +152,7 @@ msgstr "Verwerfe sortierte Ladereihenfolge"
 
 #: src/gui/qt/main_window.cpp:587
 msgid "File"
-msgstr "Date"
+msgstr "Datei"
 
 #: src/gui/qt/main_window.cpp:588
 msgid "Settings..."
@@ -766,11 +766,11 @@ msgstr "Die Ausgabe wird in die LOOTDebugLog.txt-Datei protokolliert."
 
 #: src/gui/qt/settings/general_tab.cpp:189
 msgid "A prelude URL is required."
-msgstr "Ein Prelude URL wird benötigt."
+msgstr "Eine Prelude URL wird benötigt."
 
 #: src/gui/qt/settings/general_tab.cpp:190
 msgid "A prelude branch is required."
-msgstr "Ein Prelude Branch wird benötigt."
+msgstr "Eine Prelude Branch wird benötigt."
 
 #: src/gui/qt/settings/general_tab.cpp:192
 msgid "Autodetect"
