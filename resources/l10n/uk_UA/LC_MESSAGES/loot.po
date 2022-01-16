@@ -158,7 +158,7 @@ msgstr "Вихід"
 
 #: src/gui/qt/main_window.cpp:591
 msgid "Game"
-msgstr "Основна гра"
+msgstr "Гра"
 
 #: src/gui/qt/main_window.cpp:592
 msgid "Edit Groups..."
@@ -334,7 +334,7 @@ msgid ""
 "section."
 msgstr ""
 "Не вдалося відсортувати плагіни. Детальна інформація може бути надана в "
-"розділі Загальна інформація."
+"розділі \"Загальна інформація\"."
 
 #: src/gui/qt/main_window.cpp:1229
 msgid "Sorting made no changes to the load order."
