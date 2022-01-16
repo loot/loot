@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.16.1\n"
+"Project-Id-Version: LOOT 0.17\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-01-15 11:49+0000\n"
 "PO-Revision-Date: \n"
@@ -690,7 +690,7 @@ msgstr "Максимальна версія заголовку"
 
 #: src/gui/qt/settings/game_tab.cpp:156
 msgid "Masterlist Repository URL"
-msgstr "URL сховища правил сортування "
+msgstr "URL сховища правил сортування"
 
 #: src/gui/qt/settings/game_tab.cpp:157
 msgid "Masterlist Repository Branch"
@@ -734,7 +734,7 @@ msgstr "Включити лог налаштування"
 
 #: src/gui/qt/settings/general_tab.cpp:178
 msgid "Masterlist prelude repository URL"
-msgstr "URL сховища prelude-файлу для правил сортування "
+msgstr "URL сховища prelude-файлу для правил сортування"
 
 #: src/gui/qt/settings/general_tab.cpp:180
 msgid "Masterlist prelude repository branch"
