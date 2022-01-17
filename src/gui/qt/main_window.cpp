@@ -847,22 +847,33 @@ void MainWindow::sortPlugins(bool isAutoSort) {
 }
 
 void MainWindow::showFirstRunDialog() {
+  auto zipPath = createBackup();
+
+  auto zipPathString = zipPath.u8string();
+  auto link = "<pre><a href=\"file:" + zipPathString +
+              "\" style=\"white-space: nowrap\">" + zipPathString +
+              "</a></pre>";
+
   std::string textTemplate = R"(
 <p>%1%</p>
+<p>%2%</p>
 <ul>
-  <li>%2%</li>
   <li>%3%</li>
   <li>%4%</li>
+  <li>%5%</li>
 </ul>
-<p>%5%</p>
+<p>%6%</p>
 )";
 
   auto paragraph1 =
       (boost::format(boost::locale::translate(
-           "This appears to be the first time you have run LOOT v%s. Here are "
-           "some tips to help you get started with the interface.")) %
-       gui::Version::string())
+           "This appears to be the first time you have run LOOT v%1%. Your "
+           "current LOOT data has been backed up to: %2%")) %
+       gui::Version::string() % link)
           .str();
+
+  auto paragraph2 = boost::locale::translate(
+      "Here are some tips to help you get started with the interface.");
 
   auto listItem1 = boost::locale::translate(
       "CRCs are only displayed after plugins have been loaded, either by "
@@ -877,7 +888,7 @@ void MainWindow::showFirstRunDialog() {
       "Some features are disabled while the metadata editor is open, or while "
       "there is a sorted load order that has not been applied or discarded.");
 
-  auto paragraph2 =
+  auto paragraph3 =
       (boost::format(boost::locale::translate(
            "LOOT is free, but if you want to show your appreciation with some "
            "money, donations may be made to WrinklyNinja (LOOT's creator and "
@@ -885,8 +896,8 @@ void MainWindow::showFirstRunDialog() {
        "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>")
           .str();
 
-  std::string text = (boost::format(textTemplate) % paragraph1 % listItem1 %
-                      listItem2 % listItem3 % paragraph2)
+  std::string text = (boost::format(textTemplate) % paragraph1 % paragraph2 %
+                      listItem1 % listItem2 % listItem3 % paragraph3)
                          .str();
 
   auto messageBox = QMessageBox(QMessageBox::NoIcon,
@@ -1245,6 +1256,22 @@ QMenu* MainWindow::createPopupMenu() {
   return filteredMenu;
 }
 
+std::filesystem::path MainWindow::createBackup() {
+  auto backupBasename =
+      "LOOT-backup-" +
+      QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
+
+  auto sourceDir = state.getLootDataPath();
+  auto destDir = state.getLootDataPath() / "backups" / backupBasename;
+
+  loot::createBackup(sourceDir, destDir);
+  auto zipPath = compressDirectory(destDir);
+
+  std::filesystem::remove_all(destDir);
+
+  return zipPath;
+}
+
 void MainWindow::on_actionSettings_triggered(bool checked) {
   try {
     auto themes = findThemes(state.getResourcesPath());
@@ -1266,17 +1293,7 @@ void MainWindow::on_actionSettings_triggered(bool checked) {
 
 void MainWindow::on_actionBackupData_triggered(bool checked) {
   try {
-    auto backupBasename =
-        "LOOT-backup-" +
-        QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
-
-    auto sourceDir = state.getLootDataPath();
-    auto destDir = state.getLootDataPath() / "backups" / backupBasename;
-
-    createBackup(sourceDir, destDir);
-    auto zipPath = compressDirectory(destDir);
-
-    std::filesystem::remove_all(destDir);
+    auto zipPath = createBackup();
 
     auto zipPathString = zipPath.u8string();
     auto link = "<pre><a href=\"file:" + zipPathString +
