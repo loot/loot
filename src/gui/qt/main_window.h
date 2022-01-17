@@ -104,6 +104,7 @@ private:
   QAction *actionEditMetadata;
   QAction *actionClearMetadata;
   QAction *actionSettings;
+  QAction *actionBackupData;
   QComboBox *gameComboBox;
   QToolBox *toolBox;
   QTableView *sidebarPluginsView;
@@ -199,6 +200,7 @@ private:
 
 private slots:
   void on_actionSettings_triggered(bool checked);
+  void on_actionBackupData_triggered(bool checked);
   void on_actionQuit_triggered(bool checked);
   void on_actionOpenGroupsEditor_triggered(bool checked);
   void on_actionSearch_triggered(bool checked);

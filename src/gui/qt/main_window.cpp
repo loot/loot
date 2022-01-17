@@ -35,6 +35,7 @@
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QTextEdit>
 
+#include "gui/backup.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 #include "gui/qt/plugin_card.h"
@@ -389,6 +390,9 @@ void MainWindow::setupMenuBar() {
   actionSettings = new QAction(this);
   actionSettings->setObjectName("actionSettings");
   actionSettings->setIcon(IconFactory::getSettingsIcon());
+  actionBackupData = new QAction(this);
+  actionBackupData->setObjectName("actionBackupData");
+  actionBackupData->setIcon(IconFactory::getArchiveIcon());
   actionQuit = new QAction(this);
   actionQuit->setObjectName("actionQuit");
   actionQuit->setIcon(IconFactory::getQuitIcon());
@@ -457,6 +461,7 @@ void MainWindow::setupMenuBar() {
   menubar->addAction(menuPlugin->menuAction());
   menubar->addAction(menuHelp->menuAction());
   menuFile->addAction(actionSettings);
+  menuFile->addAction(actionBackupData);
   menuFile->addSeparator();
   menuFile->addAction(actionQuit);
   menuGame->addAction(actionOpenGroupsEditor);
@@ -586,6 +591,7 @@ void MainWindow::translateUi() {
   // Translate menu bar items.
   menuFile->setTitle(translate("File"));
   actionSettings->setText(translate("Settings..."));
+  actionBackupData->setText(translate("Backup LOOT Data"));
   actionQuit->setText(translate("Quit"));
 
   menuGame->setTitle(translate("Game"));
@@ -1253,6 +1259,32 @@ void MainWindow::on_actionSettings_triggered(bool checked) {
     // Adjust size because otherwise the size is slightly too small the first
     // time the dialog is opened.
     settingsDialog->adjustSize();
+  } catch (std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionBackupData_triggered(bool checked) {
+  try {
+    auto backupBasename =
+        "LOOT-backup-" +
+        QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
+
+    auto sourceDir = state.getLootDataPath();
+    auto destDir = state.getLootDataPath() / "backups" / backupBasename;
+
+    createBackup(sourceDir, destDir);
+
+    auto destDirString = destDir.u8string();
+    auto link = "<pre><a href=\"file:" + destDirString +
+                "\" style=\"white-space: nowrap\">" + destDirString +
+                "</a></pre>";
+    auto message = (boost::format(boost::locale::translate(
+                        "Your LOOT data has been backed up to: %1%")) %
+                    link)
+                       .str();
+
+    QMessageBox::information(this, "LOOT", QString::fromStdString(message));
   } catch (std::exception& e) {
     handleException(e);
   }

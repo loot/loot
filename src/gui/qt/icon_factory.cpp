@@ -86,6 +86,10 @@ QIcon IconFactory::getSettingsIcon() {
   return getIcon(":/icons/material-icons/settings_black_48dp.svg");
 }
 
+QIcon IconFactory::getArchiveIcon() {
+  return getIcon(":/icons/material-icons/archive_black_48dp.svg");
+}
+
 QIcon IconFactory::getQuitIcon() {
   return getIcon(":/icons/material-icons/close_black_48dp.svg");
 }

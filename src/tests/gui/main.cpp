@@ -27,6 +27,7 @@
 
 #include <boost/locale.hpp>
 
+#include "tests/gui/backup_test.h"
 #include "tests/gui/helpers_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
 #include "tests/gui/state/game/game_test.h"

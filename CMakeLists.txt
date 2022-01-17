@@ -120,6 +120,7 @@ set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 set (LOOT_QT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                 "${CMAKE_SOURCE_DIR}/resources/resources.qrc"
+                "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
                 "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
                 "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.cpp"
                 "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_states.cpp"
@@ -167,6 +168,7 @@ set (LOOT_QT_GUI_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
                   "${CMAKE_SOURCE_DIR}/src/gui/resource.rc")
 
 set (LOOT_QT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/application_mutex.h"
+                  "${CMAKE_SOURCE_DIR}/src/gui/backup.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_states.h"
@@ -234,6 +236,7 @@ set (LOOT_QT_GUI_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/application_mutex.h"
                   "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
 set(LOOT_GUI_TESTS_SRC "${CMAKE_BINARY_DIR}/generated/version.cpp"
+                       "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
                        "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
@@ -257,6 +260,7 @@ set (LOOT_GUI_TESTS_HEADERS "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
+                            "${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
                             "${CMAKE_SOURCE_DIR}/src/tests/gui/test_helpers.h")
 

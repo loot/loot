@@ -49,6 +49,7 @@ public:
   static QIcon getUpdateMasterlistIcon();
 
   static QIcon getSettingsIcon();
+  static QIcon getArchiveIcon();
   static QIcon getQuitIcon();
   static QIcon getOpenGroupsEditorIcon();
   static QIcon getSearchIcon();
