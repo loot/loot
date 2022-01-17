@@ -89,6 +89,23 @@ link_directories(${LIBLOOT_EXTRACTED_PATH})
 set(LIBLOOT_STATIC_LIBRARY "${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set(LIBLOOT_SHARED_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(ZLIB_LIB_NAME "zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}")
+else()
+    set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
+endif()
+
+ExternalProject_Add(minizip-ng
+                    PREFIX "external"
+                    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.4.tar.gz"
+                    CMAKE_ARGS -DMZ_ZLIB=ON -DMZ_BZIP2=OFF -DMZ_LZMA=OFF -DMZ_ZSTD=OFF -DMZ_FETCH_LIBS=ON -DMZ_FORCE_FETCH_LIBS=ON -DMZ_PKCRYPT=OFF -DMZ_WZAES=OFF -DMZ_OPENSSL=OFF -DMZ_LIBBSD=OFF -DMZ_SIGNING=OFF -DMZ_COMPRESS_ONLY=ON
+                    INSTALL_COMMAND "")
+ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
+set (MINIZIP_NG_INCLUDE_DIRS "${SOURCE_DIR}")
+set (MINIZIP_NG_LIBRARIES
+    "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libminizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${BINARY_DIR}/_deps/zlib-build/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
+
 ExternalProject_Add(testing-plugins
                     PREFIX "external"
                     URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
@@ -277,6 +294,7 @@ include_directories ("${CMAKE_SOURCE_DIR}/src"
                      ${CPPTOML_INCLUDE_DIRS}
                      ${Boost_INCLUDE_DIRS}
                      ${GTEST_INCLUDE_DIRS}
+                     ${MINIZIP_NG_INCLUDE_DIRS}
                      ${SPDLOG_INCLUDE_DIRS})
 
 ##############################
@@ -319,13 +337,13 @@ ENDIF ()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_QT_GUI_SRC}  ${LOOT_QT_GUI_HEADERS})
-add_dependencies     (LOOT cpptoml libloot spdlog)
-target_link_libraries(LOOT PRIVATE Qt::Widgets Qt::Network ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES})
+add_dependencies     (LOOT cpptoml libloot minizip-ng spdlog)
+target_link_libraries(LOOT PRIVATE Qt::Widgets Qt::Network ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${LOOT_GUI_LIBS} ${ICU_LIBRARIES} ${MINIZIP_NG_LIBRARIES})
 
 # Build application tests.
 add_executable       (loot_gui_tests ${LOOT_GUI_TESTS_SRC} ${LOOT_GUI_TESTS_HEADERS})
-add_dependencies     (loot_gui_tests cpptoml libloot spdlog GTest testing-plugins)
-target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS} ${ICU_LIBRARIES})
+add_dependencies     (loot_gui_tests cpptoml libloot minizip-ng spdlog GTest testing-plugins)
+target_link_libraries(loot_gui_tests ${Boost_LIBRARIES} ${LIBLOOT_LINK_LIBRARY} ${GTEST_LIBRARIES} ${LOOT_TEST_LIBS} ${ICU_LIBRARIES} ${MINIZIP_NG_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags

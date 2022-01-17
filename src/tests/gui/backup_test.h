@@ -26,16 +26,18 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
+#include <boost/crc.hpp>
 #include <filesystem>
+#include <fstream>
 
 #include "gui/backup.h"
 #include "tests/gui/test_helpers.h"
 
 namespace loot {
 namespace test {
-class CreateBackupTest : public ::testing::Test {
+class BackupTest : public ::testing::Test {
 public:
-  CreateBackupTest() : sourceRoot(getTempPath()), destRoot(getTempPath()) {}
+  BackupTest() : sourceRoot(getTempPath()), destRoot(getTempPath()) {}
 
 protected:
   static constexpr const char* emptyFolder = "emptyFolder";
@@ -69,6 +71,65 @@ protected:
   const std::filesystem::path sourceRoot;
   const std::filesystem::path destRoot;
 };
+
+class CompressDirectoryTest : public BackupTest {
+protected:
+  static size_t GetStreamSize(std::istream& stream) {
+    std::streampos startingPosition = stream.tellg();
+
+    stream.seekg(0, std::ios_base::end);
+    size_t streamSize = stream.tellg();
+    stream.seekg(startingPosition, std::ios_base::beg);
+
+    return streamSize;
+  }
+
+  static uint32_t GetCrc32(const std::filesystem::path& file) {
+    std::ifstream ifile(file, std::ios::binary);
+    ifile.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+
+    static const size_t bufferSize = 8192;
+    char buffer[bufferSize];
+    boost::crc_32_type result;
+
+    size_t bytesLeft = GetStreamSize(ifile);
+    while (bytesLeft > 0) {
+      if (bytesLeft > bufferSize)
+        ifile.read(buffer, bufferSize);
+      else
+        ifile.read(buffer, bytesLeft);
+
+      result.process_bytes(buffer, ifile.gcount());
+      bytesLeft -= ifile.gcount();
+    }
+
+    return result.checksum();
+  }
+};
+
+class CreateBackupTest : public BackupTest {};
+
+TEST_F(CompressDirectoryTest, shouldReturnThePathToAZipOfTheInput) {
+  createBackup(sourceRoot, destRoot);
+
+  auto archivePath = compressDirectory(destRoot);
+
+  EXPECT_TRUE(std::filesystem::exists(archivePath));
+
+  // Just check the file size because minizip-ng is not compiled with support
+  // for decompression. The size is different on Windows and Linux due to
+  // different amounts of filesystem metadata being stored.
+#ifdef _WIN32
+  auto expectedSize = 656;
+#else
+  auto expectedSize = 440;
+#endif
+
+  auto archiveSize = std::filesystem::file_size(archivePath);
+  EXPECT_EQ(expectedSize, archiveSize);
+
+  std::filesystem::remove(archivePath);
+}
 
 TEST_F(CreateBackupTest, shouldRecursivelyCopyFilesInSourceDirToDestDir) {
   createBackup(sourceRoot, destRoot);

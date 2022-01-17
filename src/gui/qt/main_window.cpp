@@ -1274,10 +1274,13 @@ void MainWindow::on_actionBackupData_triggered(bool checked) {
     auto destDir = state.getLootDataPath() / "backups" / backupBasename;
 
     createBackup(sourceDir, destDir);
+    auto zipPath = compressDirectory(destDir);
 
-    auto destDirString = destDir.u8string();
-    auto link = "<pre><a href=\"file:" + destDirString +
-                "\" style=\"white-space: nowrap\">" + destDirString +
+    std::filesystem::remove_all(destDir);
+
+    auto zipPathString = zipPath.u8string();
+    auto link = "<pre><a href=\"file:" + zipPathString +
+                "\" style=\"white-space: nowrap\">" + zipPathString +
                 "</a></pre>";
     auto message = (boost::format(boost::locale::translate(
                         "Your LOOT data has been backed up to: %1%")) %

@@ -29,6 +29,8 @@
 #include <filesystem>
 
 namespace loot {
+std::filesystem::path compressDirectory(const std::filesystem::path& dir);
+
 void createBackup(const std::filesystem::path& sourceDir,
                   const std::filesystem::path& destDir);
 }

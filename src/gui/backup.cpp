@@ -25,7 +25,66 @@
 
 #include "gui/backup.h"
 
+#include <mz.h>
+#include <mz_strm.h>
+#include <mz_zip.h>
+#include <mz_zip_rw.h>
+
+#include <cstdint>
+
+#include "gui/state/logging.h"
+
 namespace loot {
+std::filesystem::path compressDirectory(const std::filesystem::path& dir) {
+  auto archivePath = dir;
+  archivePath += ".zip";
+
+  auto archivePathString = archivePath.u8string();
+  auto rootPathString = dir.u8string();
+
+  void* zipWriter = NULL;
+  mz_zip_writer_create(&zipWriter);
+
+  mz_zip_writer_set_compress_method(zipWriter, MZ_COMPRESS_METHOD_DEFLATE);
+
+  auto result =
+      mz_zip_writer_open_file(zipWriter, archivePathString.c_str(), 0, 0);
+  if (result != MZ_OK) {
+    mz_zip_writer_delete(&zipWriter);
+
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Failed to open zip file at {}, got error code {}",
+                    archivePathString,
+                    result);
+    }
+
+    throw std::runtime_error("Failed to add path to zip file");
+  }
+
+  result = mz_zip_writer_add_path(
+      zipWriter, rootPathString.c_str(), rootPathString.c_str(), 0, 1);
+
+  if (result != MZ_OK) {
+    mz_zip_writer_close(zipWriter);
+    mz_zip_writer_delete(&zipWriter);
+
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Failed to add path {} to zip file, got error code {}",
+                    rootPathString,
+                    result);
+    }
+
+    throw std::runtime_error("Failed to add path to zip file");
+  }
+
+  mz_zip_writer_close(zipWriter);
+  mz_zip_writer_delete(&zipWriter);
+
+  return archivePath;
+}
+
 void createBackup(const std::filesystem::path& sourceDir,
                   const std::filesystem::path& destDir) {
   auto logger = getLogger();
