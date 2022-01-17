@@ -28,13 +28,15 @@ along with LOOT.  If not, see
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <filesystem>
+#include <fstream>
 #include <string>
 
 namespace loot {
 namespace test {
 std::filesystem::path getTempPath() {
-  auto directoryName = u8"LOOT-" + boost::lexical_cast<std::string>(
-                                       (boost::uuids::random_generator())());
+  auto directoryName =
+      u8"LOOT-t\u00E9st-" +
+      boost::lexical_cast<std::string>((boost::uuids::random_generator())());
 
   return std::filesystem::absolute(std::filesystem::temp_directory_path() /
                                    std::filesystem::u8path(directoryName));
