@@ -695,7 +695,7 @@ void Game::LoadMetadata() {
              "the error is with your user metadata, this probably happened "
              "because an update to LOOT changed its metadata syntax support. "
              "Your user metadata will have to be updated manually.\n\nTo do "
-             "so, use the 'Open Debug Log Location' in LOOT's main menu to "
+             "so, use 'Open LOOT Data Folder' in LOOT's File menu to "
              "open its data folder, then open your 'userlist.yaml' file in the "
              "relevant game folder. You can then edit the metadata it contains "
              "with reference to the documentation, which is accessible through "

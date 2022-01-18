@@ -125,7 +125,7 @@ QIcon IconFactory::getViewDocsIcon() {
   return getIcon(":/icons/material-icons/book_black_48dp.svg");
 }
 
-QIcon IconFactory::getOpenDebugLogLocationIcon() {
+QIcon IconFactory::getOpenLOOTDataFolderIcon() {
   return getIcon(":/icons/material-icons/folder_black_48dp.svg");
 }
 

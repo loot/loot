@@ -59,7 +59,7 @@ public:
   static QIcon getRedateIcon();
   static QIcon getDeleteIcon();
   static QIcon getViewDocsIcon();
-  static QIcon getOpenDebugLogLocationIcon();
+  static QIcon getOpenLOOTDataFolderIcon();
   static QIcon getAboutIcon();
 
   // Caches resized pixmaps so that the transformation only needs to be done

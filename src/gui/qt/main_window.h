@@ -89,7 +89,7 @@ private:
   QAction *actionUpdateMasterlist;
   QAction *actionSearch;
   QAction *actionViewDocs;
-  QAction *actionOpenDebugLogLocation;
+  QAction *actionOpenLOOTDataFolder;
   QAction *actionJoinDiscordServer;
   QAction *actionAbout;
   QAction *actionQuit;
@@ -216,7 +216,7 @@ private slots:
   void on_actionCopyCardContent_triggered(bool checked);
   void on_actionClearMetadata_triggered(bool checked);
   void on_actionViewDocs_triggered(bool checked);
-  void on_actionOpenDebugLogLocation_triggered(bool checked);
+  void on_actionOpenLOOTDataFolder_triggered(bool checked);
   void on_actionJoinDiscordServer_triggered(bool checked);
   void on_actionAbout_triggered(bool checked);
 

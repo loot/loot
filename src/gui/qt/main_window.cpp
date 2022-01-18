@@ -401,10 +401,9 @@ void MainWindow::setupMenuBar() {
   actionViewDocs->setObjectName("actionViewDocs");
   actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
   actionViewDocs->setShortcut(QKeySequence::HelpContents);
-  actionOpenDebugLogLocation = new QAction(this);
-  actionOpenDebugLogLocation->setObjectName("actionOpenDebugLogLocation");
-  actionOpenDebugLogLocation->setIcon(
-      IconFactory::getOpenDebugLogLocationIcon());
+  actionOpenLOOTDataFolder = new QAction(this);
+  actionOpenLOOTDataFolder->setObjectName("actionOpenLOOTDataFolder");
+  actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
   actionJoinDiscordServer = new QAction(this);
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
   actionAbout = new QAction(this);
@@ -462,6 +461,7 @@ void MainWindow::setupMenuBar() {
   menubar->addAction(menuHelp->menuAction());
   menuFile->addAction(actionSettings);
   menuFile->addAction(actionBackupData);
+  menuFile->addAction(actionOpenLOOTDataFolder);
   menuFile->addSeparator();
   menuFile->addAction(actionQuit);
   menuGame->addAction(actionOpenGroupsEditor);
@@ -480,7 +480,6 @@ void MainWindow::setupMenuBar() {
   menuPlugin->addSeparator();
   menuPlugin->addAction(actionClearMetadata);
   menuHelp->addAction(actionViewDocs);
-  menuHelp->addAction(actionOpenDebugLogLocation);
   menuHelp->addAction(actionJoinDiscordServer);
   menuHelp->addSeparator();
   menuHelp->addAction(actionAbout);
@@ -592,6 +591,7 @@ void MainWindow::translateUi() {
   menuFile->setTitle(translate("File"));
   actionSettings->setText(translate("Settings..."));
   actionBackupData->setText(translate("Backup LOOT Data"));
+  actionOpenLOOTDataFolder->setText(translate("Open LOOT Data Folder"));
   actionQuit->setText(translate("Quit"));
 
   menuGame->setTitle(translate("Game"));
@@ -611,7 +611,6 @@ void MainWindow::translateUi() {
 
   menuHelp->setTitle(translate("Help"));
   actionViewDocs->setText(translate("View Documentation"));
-  actionOpenDebugLogLocation->setText(translate("Open Debug Log Location"));
   actionJoinDiscordServer->setText(translate("Join Discord Server"));
   actionAbout->setText(translate("About"));
 
@@ -1605,7 +1604,7 @@ void MainWindow::on_actionViewDocs_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionOpenDebugLogLocation_triggered(bool checked) {
+void MainWindow::on_actionOpenLOOTDataFolder_triggered(bool checked) {
   try {
     OpenLogLocationQuery query(state.getLogPath());
 
