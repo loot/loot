@@ -34,7 +34,7 @@ Enable Debug Logging
 Masterlist prelude repository URL
   The URL of the repository that LOOT uses to update its local copy of the masterlist prelude.
 
-  Masterlist prelude repositories are `Git`_ repositories that are configured to allow unauthenticated read access and contain a file named ``prelude.yaml`` in their root directory. The LOOT team maintains an repository for the official masterlist prelude that's used with the official game masterlists.
+  Masterlist prelude repositories are `Git`_ repositories that are configured to allow unauthenticated read access and contain a file named ``prelude.yaml`` in their root directory. The LOOT team maintains a repository for the official masterlist prelude that's used with the official game masterlists.
 
 Masterlist prelude repository branch
   The branch of the masterlist prelude repository that LOOT should get updates from.

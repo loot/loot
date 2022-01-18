@@ -29,7 +29,6 @@ If provided, a palette TOML file allows the following `color roles`_ to be defin
 * midlight
 * dark
 * mid
-* mid
 * highlight
 * highlightedText
 * link
