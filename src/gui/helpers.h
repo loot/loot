@@ -29,6 +29,7 @@
 #include <loot/struct/simple_message.h>
 
 #include <filesystem>
+#include <vector>
 
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file);

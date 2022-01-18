@@ -30,6 +30,7 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "loot/enum/game_type.h"
 
