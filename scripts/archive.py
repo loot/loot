@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import glob
 import os
 import re
 import shutil
@@ -47,14 +48,74 @@ def get_app_release_path(root_path):
 def replace_invalid_filename_characters(filename):
     return INVALID_FILENAME_CHARACTERS.sub('-', filename)
 
-def copy_qt_resources(executable_path, output_path):
-    if os.name != 'nt':
+def copy_qt_resources(executable_path, output_path, qt_root_path):
+    if os.name == 'nt':
+        subprocess.run(
+            ['windeployqt', '--release', '--dir', output_path, executable_path],
+            check=True
+        )
         return
 
-    subprocess.run(
-        ['windeployqt', '--release', '--dir', output_path, executable_path],
-        check=True
+    libraries = [
+        'libicudata.so.56',
+        'libicudata.so.56.1',
+        'libicui18n.so.56',
+        'libicui18n.so.56.1',
+        'libicuuc.so.56',
+        'libicuuc.so.56.1',
+        'libQt6Core.so.6',
+        'libQt6Core.so.6.2.2',
+        'libQt6DBus.so.6',
+        'libQt6DBus.so.6.2.2',
+        'libQt6Gui.so.6',
+        'libQt6Gui.so.6.2.2',
+        'libQt6Network.so.6',
+        'libQt6Network.so.6.2.2',
+        'libQt6Widgets.so.6',
+        'libQt6Widgets.so.6.2.2',
+
+        # For xcb platform plugin.
+        'libQt6XcbQpa.so.6',
+        'libQt6XcbQpa.so.6.2.2',
+        'libQt6OpenGL.so.6',
+        'libQt6OpenGL.so.6.2.2'
+    ]
+
+    for library in libraries:
+        shutil.copy2(
+            os.path.join(qt_root_path, 'lib', library),
+            os.path.join(output_path, library)
+        )
+
+    plugins_folders = [
+        'iconengines',
+        'imageformats',
+        'networkinformation',
+        'tls'
+    ]
+
+    for plugin_folder in plugins_folders:
+        shutil.copytree(
+            os.path.join(qt_root_path, 'plugins', plugin_folder),
+            os.path.join(output_path, plugin_folder)
+        )
+
+    os.makedirs(os.path.join(output_path, 'platforms'))
+    shutil.copy2(
+        os.path.join(qt_root_path, 'plugins', 'platforms', 'libqxcb.so'),
+        os.path.join(output_path, 'platforms', 'libqxcb.so')
     )
+
+    os.makedirs(os.path.join(output_path, 'translations'))
+    qt_translations = glob.glob(
+        os.path.join(qt_root_path, 'translations', 'qt_*.qm')
+    )
+
+    for translation in qt_translations:
+        shutil.copy2(
+            translation,
+            os.path.join(output_path, 'translations', os.path.basename(translation))
+        )
 
 def get_language_folders(root_path):
     l10n_path = os.path.join(root_path, 'resources', 'l10n')
@@ -87,7 +148,7 @@ def compress(source_path, destination_path):
             check=True
         )
 
-def create_app_archive(root_path, release_path, temp_path, destination_path):
+def create_app_archive(root_path, release_path, temp_path, destination_path, qt_root_path):
     # Ensure that the output directory is empty.
     if os.path.exists(temp_path):
         shutil.rmtree(temp_path)
@@ -98,11 +159,6 @@ def create_app_archive(root_path, release_path, temp_path, destination_path):
     binaries = []
     if os.name == 'nt':
         binaries = ['LOOT.exe', 'loot.dll']
-
-        copy_qt_resources(
-            os.path.join(release_path, 'LOOT.exe'),
-            temp_path
-        )
     else:
         binaries = ['LOOT', 'libloot.so']
 
@@ -111,6 +167,12 @@ def create_app_archive(root_path, release_path, temp_path, destination_path):
             os.path.join(release_path, binary),
             os.path.join(temp_path, binary)
         )
+
+    copy_qt_resources(
+        os.path.join(release_path, 'LOOT.exe'),
+        temp_path,
+        qt_root_path
+    )
 
     # Translation files.
     for folder_name in get_language_folders(root_path):
@@ -139,12 +201,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Create an archive artifact')
     parser.add_argument('root-path', nargs=1)
     parser.add_argument('given-branch', nargs=1)
+    parser.add_argument('qt-root-path', nargs='?')
     parser.print_help()
 
     arguments = vars(parser.parse_args())
 
     given_branch = arguments['given-branch'][0]
     root_path = arguments['root-path'][0]
+    qt_root_path = arguments['qt-root-path']
 
     git_description = get_git_description(given_branch)
     file_extension = get_archive_file_extension()
@@ -155,5 +219,6 @@ if __name__ == "__main__":
         root_path,
         release_path,
         os.path.join(root_path, 'build', filename),
-        os.path.join(root_path, 'build', filename + file_extension)
+        os.path.join(root_path, 'build', filename + file_extension),
+        qt_root_path
     )
