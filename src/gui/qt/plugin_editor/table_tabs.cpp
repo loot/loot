@@ -42,8 +42,9 @@
 
 namespace loot {
 int calculateItemWidth(const QString& text) {
-  auto textWidth =
-      QApplication::fontMetrics().size(Qt::TextSingleLine, text).width();
+  auto textWidth = QFontMetricsF(QApplication::font())
+                       .size(Qt::TextSingleLine, text)
+                       .width();
 
   auto leftPadding =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutLeftMargin);

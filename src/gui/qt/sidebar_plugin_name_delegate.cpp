@@ -58,10 +58,10 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
     painter->setPen(styleOption.palette.highlightedText().color());
   }
 
-  auto name =
-      painter->fontMetrics().elidedText(QString::fromStdString(pluginItem.name),
-                                        Qt::ElideRight,
-                                        styleOption.rect.width());
+  auto name = QFontMetricsF(painter->font())
+                  .elidedText(QString::fromStdString(pluginItem.name),
+                              Qt::ElideRight,
+                              styleOption.rect.width());
   painter->drawText(styleOption.rect, Qt::AlignLeft, name);
 
   if (isEditorOpen && pluginItem.group.has_value() &&

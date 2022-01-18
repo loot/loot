@@ -25,7 +25,6 @@
 
 #include "gui/qt/icon_factory.h"
 
-#include <QtGui/QFontMetrics>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QPalette>
 #include <QtGui/QScreen>
