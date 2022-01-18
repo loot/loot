@@ -42,7 +42,7 @@ The masterlist update process updates the active game's masterlist to the latest
 
 By :ref:`default <update-masterlist>`, sorting first updates the masterlist. LOOT then calculates a load order for your plugins, using their internal data and any metadata they may have. If a cyclic interaction is detected (eg. A depends on B depends on A), then sorting will fail.
 
-Once LOOT has calculated a load order, it is compared with the current load order. If the current and calculated load orders are identical, LOOT will inform the user that no changes were made via a pop-up 'toast' notification. If the calculated load order contains changes, the plugin cards are sorted into that order and the masterlist update and sorting buttons are replaced with APPLY and CANCEL buttons, which apply and discard the calculated load order respectively. Changing games is disabled until the calculated load order is applied or discarded.
+Once LOOT has calculated a load order, it is compared with the current load order. If the current and calculated load orders are identical, LOOT will inform the user that no changes were made via a status bar notification. If the calculated load order contains changes, the plugin cards are sorted into that order and the masterlist update and sorting buttons are replaced with Apply Sorted Load Order and Discard Sorted Load Order buttons, which apply and discard the calculated load order respectively. Changing games is disabled until the calculated load order is applied or discarded.
 
 LOOT is able to sort plugins ghosted by Wrye Bash, and can extract Bash Tags and version numbers from plugin descriptions. Provided that they have the ``Filter`` Bash Tag present in their description, LOOT can recognise filter patches and so avoid displaying unnecessary error messages for any of their masters that may be missing.
 
@@ -56,7 +56,7 @@ Before a sorted load order is applied, LOOT saves a backup of the current load o
 Plugin Cards & Sidebar Items
 ============================
 
-Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's name and an icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active. Light plugins also have their light plugins index displayed below their load order index. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
+Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's name and an icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active, while light plugins have their light plugin index displayed. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
 
 The plugin card's header holds the following information, some of which is only displayed if applicable:
 
@@ -75,7 +75,7 @@ Messages and Bash Tag suggestions are displayed below the plugin card's header.
 
 LOOT's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action. If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
 
-Users generally don't need to do anything with Bash Tag suggestions, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply.
+Users generally don't need to do anything with Bash Tag suggestions, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply. For these reasons, they are hidden by default.
 
 Filters
 =======

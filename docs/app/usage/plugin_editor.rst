@@ -15,20 +15,21 @@ The Main tab's page contains the "Group" dropdown, which sets the group that the
 The other tab pages contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist cannot. The Load After, Requirements and Incompatibilities tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
 
 Load After
-  This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has four fields:
+  This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has two fields:
 
   - The filename is the path, relative to the game's Data folder, of the file to be checked for. This field is required. It gives the filenames of installed plugins as autocomplete suggestions.
-  - The display name is optional, and if specified will be used instead of the filename in any error messages that are displayed if a problem is encountered relating to the file.
-  - The detail field takes a list of localisable message texts that will be appended to the error message if one is displayed.
   - The condition is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the Metadata Syntax documentation.
 
 Requirements
-  This is a list of files that are required by the current plugin for it to function correctly. The current plugin will be loaded after any plugins listed. LOOT will also display an error message if any of the listed files are missing. Any file, not just plugins, can be listed here, and each entry has the same fields as for the load after table.
+  This is a list of files that are required by the current plugin for it to function correctly. The current plugin will be loaded after any plugins listed. LOOT will also display an error message if any of the listed files are missing. Any file, not just plugins, can be listed here. Each entry has the same fields as for the load after table and two additional fields:
+
+  - The display name is optional, and if specified will be used instead of the filename in any error messages that are displayed if a problem is encountered relating to the file.
+  - The detail field takes a list of localisable message texts that will be appended to the error message if one is displayed.
 
   Note that listing a plugin's masters as requirements is unnecessary, as LOOT already checks them.
 
 Incompatibilities
-  This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found. Any file, not just plugins, can be listed here, and each entry has the same fields as for the load after table.
+  This is a list of files that are incompatible with the plugin. LOOT will display an error message if any of the listed files are found. Any file, not just plugins, can be listed here, and each entry has the same fields as for the requirements table.
 
 Messages
   A list of messages that are to be displayed for the plugin in LOOT's report. These have no bearing on a plugin's position in the load order. Each message has three fields:
