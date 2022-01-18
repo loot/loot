@@ -39,6 +39,7 @@ jobs:
           if [[ $(git status --porcelain) ]]
           then
             echo "::error ::resources/l10n/template.pot is outdated"
+            git --no-pager diff
             exit 1
           fi
 
