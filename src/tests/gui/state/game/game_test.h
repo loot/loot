@@ -113,7 +113,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
 
   EXPECT_EQ(settings.GamePath(), game.GamePath());
-  auto lootGamePath = lootDataPath / u8path(defaultGameSettings.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(defaultGameSettings.FolderName());
   EXPECT_EQ(lootGamePath / "masterlist.yaml", game.MasterlistPath());
   EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
 }
@@ -166,7 +167,7 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, "", "");
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
 
@@ -177,7 +178,7 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
 
@@ -188,7 +189,8 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  std::filesystem::create_directory(lootDataPath / "games");
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   std::ofstream out(lootGamePath);
   out << "";
   out.close();
@@ -692,7 +694,7 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
@@ -717,7 +719,7 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
@@ -742,7 +744,7 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
@@ -777,7 +779,7 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
 
-  auto lootGamePath = lootDataPath / u8path(game.FolderName());
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));

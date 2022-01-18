@@ -112,6 +112,7 @@ public:
   void SaveUserMetadata();
 
 private:
+  std::filesystem::path GetLOOTGamePath() const;
   std::vector<std::string> GetInstalledPluginNames();
   void AppendMessages(std::vector<Message> messages);
 

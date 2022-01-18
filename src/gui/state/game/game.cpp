@@ -124,14 +124,26 @@ void Game::Init() {
 
   if (!lootDataPath_.empty()) {
     // Make sure that the LOOT game path exists.
-    auto lootGamePath = lootDataPath_ / u8path(FolderName());
+    auto lootGamePath = GetLOOTGamePath();
     if (!fs::is_directory(lootGamePath)) {
       if (fs::exists(lootGamePath)) {
         throw FileAccessError(
             "Could not create LOOT folder for game, the path exists but is not "
             "a directory");
       }
-      fs::create_directories(lootGamePath);
+
+      auto legacyGamePath = lootDataPath_ / u8path(FolderName());
+      if (fs::is_directory(legacyGamePath)) {
+        if (logger) {
+          logger->info(
+              "Found a folder for this game in the LOOT data folder, assuming "
+              "that it's a legacy game folder and moving into the correct "
+              "subdirectory...");
+        }
+        fs::rename(legacyGamePath, lootGamePath);
+      } else {
+        fs::create_directories(lootGamePath);
+      }
     }
   }
 }
@@ -465,11 +477,11 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
 fs::path Game::MasterlistPath() const {
-  return lootDataPath_ / u8path(FolderName()) / "masterlist.yaml";
+  return GetLOOTGamePath() / "masterlist.yaml";
 }
 
 fs::path Game::UserlistPath() const {
-  return lootDataPath_ / u8path(FolderName()) / "userlist.yaml";
+  return GetLOOTGamePath() / "userlist.yaml";
 }
 
 fs::path Game::PluginsTxtPath() const {
@@ -481,7 +493,7 @@ std::vector<std::string> Game::GetLoadOrder() const {
 }
 
 void Game::SetLoadOrder(const std::vector<std::string>& loadOrder) {
-  BackupLoadOrder(GetLoadOrder(), lootDataPath_ / u8path(FolderName()));
+  BackupLoadOrder(GetLoadOrder(), GetLOOTGamePath());
   gameHandle_->SetLoadOrder(loadOrder);
 }
 
@@ -772,6 +784,10 @@ void Game::ClearAllUserMetadata() {
 
 void Game::SaveUserMetadata() {
   gameHandle_->GetDatabase()->WriteUserMetadata(UserlistPath(), true);
+}
+
+std::filesystem::path Game::GetLOOTGamePath() const {
+  return lootDataPath_ / "games" / u8path(FolderName());
 }
 
 std::vector<std::string> Game::GetInstalledPluginNames() {
