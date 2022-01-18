@@ -200,24 +200,42 @@ Type: files; Name: "{localappdata}\{#MyAppName}\";
 
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Morrowind\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Oblivion\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\games\Nehrim\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\games\Enderal\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout3\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\games\FalloutNV\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4\masterlist.yaml";
+Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR\masterlist.yaml";
 
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Morrowind\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Oblivion\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Nehrim\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Skyrim\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Enderal\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Fallout3\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\FalloutNV\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Fallout4\.git";
+Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR\.git";
 
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Morrowind";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Oblivion";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Nehrim";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Skyrim";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Enderal";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Enderal Special Edition";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Skyrim VR";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Fallout3";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\FalloutNV";
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Fallout4";
+Type: dirifempty; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR";
 
 Type: dirifempty; Name: "{localappdata}\{#MyAppName}";
 
