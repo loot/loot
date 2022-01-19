@@ -33,6 +33,7 @@ along with LOOT.  If not, see
 #include <variant>
 
 #include "gui/plugin_item.h"
+#include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/state/loot_state.h"

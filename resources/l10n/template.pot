@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-01-19 17:08+0000\n"
+"POT-Creation-Date: 2022-01-19 17:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -316,7 +316,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1180 src/gui/query/query.h:59
+#: src/gui/qt/main_window.cpp:1180 src/gui/query/query.h:60
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -772,7 +772,7 @@ msgstr ""
 msgid "Add new game..."
 msgstr ""
 
-#: src/gui/query/query.h:69
+#: src/gui/query/query.h:70
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
