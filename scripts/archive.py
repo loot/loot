@@ -54,6 +54,29 @@ def copy_qt_resources(executable_path, output_path, qt_root_path):
             ['windeployqt', '--release', '--dir', output_path, executable_path],
             check=True
         )
+
+        # If creating an archive for a Qt-5-based executable, we need to also
+        # copy a couple of OpenSSL DLLs, which have slightly different names
+        # based on whether they're 32-bit or 64-bit. The DLLs will already have
+        # been copied to the same folder as executable_path by CMake, so just
+        # copy whatever exists there, as that's easier than trying to check if
+        # LOOT is 32-bit or 64-bit.
+        openssl_dlls = [
+            'libcrypto-1_1.dll',
+            'libcrypto-1_1-x64.dll',
+            'libssl-1_1.dll',
+            'libssl-1_1-x64.dll'
+        ]
+
+        binaries_path = os.path.dirname(executable_path)
+        for openssl_dll in openssl_dlls:
+            dll_path = os.path.join(binaries_path, openssl_dll)
+            if os.path.exists(dll_path):
+                shutil.copy2(
+                    dll_path,
+                    os.path.join(output_path, openssl_dll)
+                )
+
         return
 
     libraries = [

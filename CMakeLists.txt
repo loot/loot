@@ -416,6 +416,27 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(Qt_DIR ${Qt6_DIR})
     else()
         set(Qt_DIR ${Qt5_DIR})
+
+        # Copy the OpenSSL binaries, they're not included in what windeployqt
+        # deploys.
+        if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
+            set(QT_OPENSSL_PLATFORM "x86")
+            set(QT_OPENSSL_SUFFIX "")
+        else()
+            set(QT_OPENSSL_PLATFORM "x64")
+            set(QT_OPENSSL_SUFFIX "-x64")
+        endif()
+        set(QT_OPENSSL_BIN_PATH "${Qt_DIR}/../../../../../Tools/OpenSSL/Win_${QT_OPENSSL_PLATFORM}/bin")
+
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QT_OPENSSL_BIN_PATH}/libcrypto-1_1${QT_OPENSSL_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:LOOT>/libcrypto-1_1${QT_OPENSSL_SUFFIX}.dll")
+
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QT_OPENSSL_BIN_PATH}/libssl-1_1${QT_OPENSSL_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:LOOT>/libssl-1_1${QT_OPENSSL_SUFFIX}.dll")
     endif()
 
     # Copy Qt binaries and resources.

@@ -101,6 +101,8 @@ jobs:
             $qtVersion = "5.15.2"
             $qtArch = "win32_msvc2019"
             $qtArchDir = "msvc2019"
+
+            aqt install-tool windows desktop tools_openssl_x86
           } else {
             $qtVersion = "6.2.2"
             $qtArch = "win64_msvc2019_64"
