@@ -203,6 +203,7 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
     QMainWindow(parent), state(state) {
   qRegisterMetaType<QueryResult>("QueryResult");
+  qRegisterMetaType<std::string>("std::string");
 
   setupUi();
 }
