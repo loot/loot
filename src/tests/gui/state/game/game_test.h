@@ -200,6 +200,69 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
   EXPECT_ANY_THROW(game.Init());
 }
 
+TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath, "");
+
+  auto legacyGamePath = lootDataPath / u8path(game.FolderName());
+  std::filesystem::create_directory(legacyGamePath);
+  std::ofstream out(legacyGamePath / "file.txt");
+  out << "";
+  out.close();
+
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath));
+  EXPECT_NO_THROW(game.Init());
+
+  EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / "file.txt"));
+}
+
+TEST_P(GameTest, initShouldNotMoveAFileWithTheSamePathAsTheLegacyGameFolder) {
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath, "");
+
+  auto legacyGamePath = lootDataPath / u8path(game.FolderName());
+  std::ofstream out(legacyGamePath);
+  out << "";
+  out.close();
+
+  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+
+  ASSERT_FALSE(std::filesystem::exists(lootGamePath));
+  EXPECT_NO_THROW(game.Init());
+
+  EXPECT_TRUE(std::filesystem::exists(legacyGamePath));
+  EXPECT_TRUE(std::filesystem::is_directory(lootGamePath));
+}
+
+TEST_P(
+    GameTest,
+    initShouldCreateTheGamesFolderWhenItDoesNotExistAndMigratingALegacyGameFolder) {
+  using std::filesystem::u8path;
+  Game game(defaultGameSettings, lootDataPath, "");
+
+  auto legacyGamePath = lootDataPath / u8path(game.FolderName());
+  std::filesystem::create_directory(legacyGamePath);
+  std::ofstream out(legacyGamePath / "file.txt");
+  out << "";
+  out.close();
+
+  auto lootGamesPath = lootDataPath / "games";
+  std::filesystem::remove_all(lootGamesPath);
+
+  ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
+  EXPECT_NO_THROW(game.Init());
+
+  auto lootGamePath = lootGamesPath / u8path(game.FolderName());
+
+  EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / "file.txt"));
+}
+
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
   Game game(defaultGameSettings, "", "");
 

@@ -140,6 +140,7 @@ void Game::Init() {
               "that it's a legacy game folder and moving into the correct "
               "subdirectory...");
         }
+        fs::create_directories(lootGamePath.parent_path());
         fs::rename(legacyGamePath, lootGamePath);
       } else {
         fs::create_directories(lootGamePath);
