@@ -90,6 +90,16 @@ else()
     set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
 
+ExternalProject_Add(zlib
+    PREFIX "external"
+    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz"
+    INSTALL_COMMAND ""
+    BUILD_IN_SOURCE TRUE)
+ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
+set(ZLIB_ROOT ${SOURCE_DIR})
+set(ZLIB_LIBRARY
+    "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
+
 ExternalProject_Add(minizip-ng
     PREFIX "external"
     URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.4.tar.gz"
@@ -98,20 +108,22 @@ ExternalProject_Add(minizip-ng
         -DMZ_BZIP2=OFF
         -DMZ_LZMA=OFF
         -DMZ_ZSTD=OFF
-        -DMZ_FETCH_LIBS=ON
-        -DMZ_FORCE_FETCH_LIBS=ON
+        -DMZ_FETCH_LIBS=OFF
         -DMZ_PKCRYPT=OFF
         -DMZ_WZAES=OFF
         -DMZ_OPENSSL=OFF
         -DMZ_LIBBSD=OFF
         -DMZ_SIGNING=OFF
         -DMZ_COMPRESS_ONLY=ON
-    INSTALL_COMMAND "")
+        -DZLIB_ROOT=${ZLIB_ROOT}
+        -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+    INSTALL_COMMAND ""
+    DEPENDS zlib)
 ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
 set(MINIZIP_NG_INCLUDE_DIRS "${SOURCE_DIR}")
 set(MINIZIP_NG_LIBRARIES
     "${BINARY_DIR}/${CMAKE_CFG_INTDIR}/libminizip${CMAKE_STATIC_LIBRARY_SUFFIX}"
-    "${BINARY_DIR}/_deps/zlib-build/${CMAKE_CFG_INTDIR}/${ZLIB_LIB_NAME}")
+    ${ZLIB_LIBRARY})
 
 ExternalProject_Add(testing-plugins
     PREFIX "external"
