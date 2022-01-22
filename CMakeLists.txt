@@ -59,7 +59,7 @@ ExternalProject_Add(GTest
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
 set(GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
-set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}gtest$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -85,7 +85,7 @@ set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CM
 set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(ZLIB_LIB_NAME "zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(ZLIB_LIB_NAME "zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
 else()
     set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
@@ -453,7 +453,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
     # Copy Qt binaries and resources.
     add_custom_command(TARGET LOOT POST_BUILD
-        COMMAND ${Qt_DIR}/../../../bin/windeployqt --release $<TARGET_FILE:LOOT>
+        COMMAND ${Qt_DIR}/../../../bin/windeployqt $<TARGET_FILE:LOOT>
         COMMENT "Running windeployqt...")
 endif()
 
