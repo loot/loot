@@ -77,6 +77,13 @@ Message PlainTextMessage(MessageType type, std::string text) {
   return Message(type, EscapeMarkdownSpecialChars(text));
 }
 
+SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text) {
+  SimpleMessage message;
+  message.type = type;
+  message.text = EscapeMarkdownSpecialChars(text);
+  return message;
+}
+
 std::string EscapeMarkdownSpecialChars(std::string text) {
   auto specialCharsRegex = std::regex("([\\\\`*_{}\\[\\]()#+.!-])");
   return std::regex_replace(text, specialCharsRegex, "\\$1");

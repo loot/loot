@@ -49,6 +49,10 @@ std::string EscapeMarkdownSpecialChars(std::string text);
 // Create a Message, escaping any Markdown special characters in the input text.
 Message PlainTextMessage(MessageType type, std::string text);
 
+// Create a SimpleMessage, escaping any Markdown special characters in the input
+// text.
+SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text);
+
 Message ToMessage(const PluginCleaningData& cleaningData);
 
 std::vector<SimpleMessage> ToSimpleMessages(

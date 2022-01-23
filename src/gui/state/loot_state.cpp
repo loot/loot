@@ -48,6 +48,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/game_detection_error.h"
+#include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
@@ -102,10 +103,11 @@ LootState::LootState(const std::filesystem::path& lootAppPath,
 
 void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
-    initErrors_.push_back(
+    initMessages_.push_back(PlainTextSimpleMessage(
+        MessageType::error,
         /* translators: --auto-sort and --game are command-line arguments and shouldn't be translated. */
         translate("Error: --auto-sort was passed but no --game parameter was "
-                  "provided."));
+                  "provided.")));
   } else {
     setAutoSort(autoSort);
   }
@@ -125,11 +127,12 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     try {
       fs::create_directory(LootPaths::getLootDataPath());
     } catch (exception& e) {
-      initErrors_.push_back(
+      initMessages_.push_back(PlainTextSimpleMessage(
+          MessageType::error,
           (format(
                translate("Error: Could not create LOOT data directory. %1%")) %
            e.what())
-              .str());
+              .str()));
     }
   }
 
@@ -144,12 +147,13 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
       LootSettings::load(LootPaths::getSettingsPath(),
                          LootPaths::getLootDataPath());
     } catch (exception& e) {
-      initErrors_.push_back(
+      initMessages_.push_back(PlainTextSimpleMessage(
+          MessageType::error,
           (format(
                /* translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong. */
                translate("Error: Settings parsing failed. %1%")) %
            e.what())
-              .str());
+              .str()));
     }
   }
 
@@ -192,11 +196,12 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     try {
       fs::create_directory(preludeDir);
     } catch (exception& e) {
-      initErrors_.push_back(
+      initMessages_.push_back(PlainTextSimpleMessage(
+          MessageType::error,
           (format(translate(
                "Error: Could not create LOOT prelude directory. %1%")) %
            e.what())
-              .str());
+              .str()));
     }
   }
 
@@ -221,16 +226,17 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());
     }
-    initErrors_.push_back(
+    initMessages_.push_back(PlainTextSimpleMessage(
+        MessageType::error,
         (format(translate(
              "Error: Game-specific settings could not be initialised. %1%")) %
          e.what())
-            .str());
+            .str()));
   }
 }
 
-const std::vector<std::string>& LootState::getInitErrors() const {
-  return initErrors_;
+const std::vector<SimpleMessage>& LootState::getInitMessages() const {
+  return initMessages_;
 }
 
 void LootState::save(const std::filesystem::path& file) {

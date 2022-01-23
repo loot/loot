@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-01-25 08:28+0000\n"
+"POT-Creation-Date: 2022-01-25 08:29+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,159 +147,159 @@ msgstr ""
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:582
+#: src/gui/qt/main_window.cpp:579
 msgid "LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:585
+#: src/gui/qt/main_window.cpp:582
 msgid "Sort Plugins"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:586
+#: src/gui/qt/main_window.cpp:583
 msgid "Update Masterlist"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:587
+#: src/gui/qt/main_window.cpp:584
 msgid "Apply Sorted Load Order"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:588
+#: src/gui/qt/main_window.cpp:585
 msgid "Discard Sorted Load Order"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:591
+#: src/gui/qt/main_window.cpp:588
 msgid "File"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:592
+#: src/gui/qt/main_window.cpp:589
 msgid "Settings..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:593
+#: src/gui/qt/main_window.cpp:590
 msgid "Backup LOOT Data"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:594
+#: src/gui/qt/main_window.cpp:591
 msgid "Open LOOT Data Folder"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:595
+#: src/gui/qt/main_window.cpp:592
 msgid "Quit"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:597
+#: src/gui/qt/main_window.cpp:594
 msgid "Game"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:598
+#: src/gui/qt/main_window.cpp:595
 msgid "Edit Groups..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:599
+#: src/gui/qt/main_window.cpp:596
 msgid "Search Cards..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:600
+#: src/gui/qt/main_window.cpp:597
 msgid "Copy Load Order"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:601
+#: src/gui/qt/main_window.cpp:598
 msgid "Copy Content"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:602
+#: src/gui/qt/main_window.cpp:599
 msgid "Refresh Content"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:603
+#: src/gui/qt/main_window.cpp:600
 msgid "Redate Plugins..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:604
+#: src/gui/qt/main_window.cpp:601
 msgid "Clear All User Metadata..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:606
+#: src/gui/qt/main_window.cpp:603
 msgid "Plugin"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:607
+#: src/gui/qt/main_window.cpp:604
 msgid "Copy Metadata"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:608
+#: src/gui/qt/main_window.cpp:605
 msgid "Copy Card Content"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:609
+#: src/gui/qt/main_window.cpp:606
 msgid "Edit Metadata..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:610
+#: src/gui/qt/main_window.cpp:607
 msgid "Clear User Metadata..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:612
+#: src/gui/qt/main_window.cpp:609
 msgid "Help"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:613
+#: src/gui/qt/main_window.cpp:610
 msgid "View Documentation"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:614
+#: src/gui/qt/main_window.cpp:611
 msgid "Join Discord Server"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:615
+#: src/gui/qt/main_window.cpp:612
 msgid "About"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:618
+#: src/gui/qt/main_window.cpp:615
 msgid "Plugins"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:619
+#: src/gui/qt/main_window.cpp:616
 msgid "Filters"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:806 src/gui/qt/main_window.cpp:1701
+#: src/gui/qt/main_window.cpp:810 src/gui/qt/main_window.cpp:1705
 msgid "Updating and parsing masterlist..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:865
+#: src/gui/qt/main_window.cpp:869
 msgid ""
 "This appears to be the first time you have run LOOT v%1%. Your current LOOT "
 "data has been backed up to: %2%"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:872
+#: src/gui/qt/main_window.cpp:876
 msgid "This appears to be the first time you have run LOOT v%1%."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:878
+#: src/gui/qt/main_window.cpp:882
 msgid "Here are some tips to help you get started with the interface."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:881
+#: src/gui/qt/main_window.cpp:885
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:885
+#: src/gui/qt/main_window.cpp:889
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:890
+#: src/gui/qt/main_window.cpp:894
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:895 src/gui/qt/main_window.cpp:1589
+#: src/gui/qt/main_window.cpp:899 src/gui/qt/main_window.cpp:1593
 #, c-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
@@ -307,78 +307,78 @@ msgid ""
 "using %s."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:906
+#: src/gui/qt/main_window.cpp:910
 msgid "First-Time Tips"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:936
+#: src/gui/qt/main_window.cpp:940
 msgid "metadata edits"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:937
+#: src/gui/qt/main_window.cpp:941
 msgid "sorted load order"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:939
+#: src/gui/qt/main_window.cpp:943
 #, c-format
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1066
+#: src/gui/qt/main_window.cpp:1070
 #, c-format
 msgid "A [new release](%s) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1077
+#: src/gui/qt/main_window.cpp:1081
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1097 src/gui/qt/plugin_editor/table_tabs.cpp:396
+#: src/gui/qt/main_window.cpp:1101 src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:430
 msgid "Error"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1107 src/gui/query/query.h:58
+#: src/gui/qt/main_window.cpp:1111 src/gui/query/query.h:58
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1156
+#: src/gui/qt/main_window.cpp:1160
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1173
+#: src/gui/qt/main_window.cpp:1177
 msgid "Sorting made no changes to the load order."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1236
+#: src/gui/qt/main_window.cpp:1240
 msgid "Your LOOT data has been backed up to: %1%"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1243
+#: src/gui/qt/main_window.cpp:1247
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1292
+#: src/gui/qt/main_window.cpp:1296
 msgid "The load order has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1310
+#: src/gui/qt/main_window.cpp:1314
 msgid "LOOT's content has been copied to the clipboard."
 msgstr ""
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1329
+#: src/gui/qt/main_window.cpp:1333
 msgid "Redate Plugins?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1331
+#: src/gui/qt/main_window.cpp:1335
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -387,78 +387,78 @@ msgid ""
 msgstr ""
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1343
+#: src/gui/qt/main_window.cpp:1347
 msgid "Plugins were successfully redated."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1355
+#: src/gui/qt/main_window.cpp:1359
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1402
+#: src/gui/qt/main_window.cpp:1406
 msgid "All user-added metadata has been cleared."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1415
+#: src/gui/qt/main_window.cpp:1419
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1454
+#: src/gui/qt/main_window.cpp:1458
 #, c-format
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1473
+#: src/gui/qt/main_window.cpp:1477
 #, c-format
 msgid "The card content for \"%s\" has been copied to the clipboard."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1488
+#: src/gui/qt/main_window.cpp:1492
 #, c-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1527
+#: src/gui/qt/main_window.cpp:1531
 #, c-format
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1578
+#: src/gui/qt/main_window.cpp:1582
 #, c-format
 msgid "Version %s (build %s)"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1583
+#: src/gui/qt/main_window.cpp:1587
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
 "Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1600
+#: src/gui/qt/main_window.cpp:1604
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1852
+#: src/gui/qt/main_window.cpp:1856
 msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1945
+#: src/gui/qt/main_window.cpp:1949
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1988
+#: src/gui/qt/main_window.cpp:1992
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2001
+#: src/gui/qt/main_window.cpp:2005
 #, c-format
 msgid "Masterlist updated to revision %s."
 msgstr ""
@@ -806,24 +806,24 @@ msgid "Sorting load order..."
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
-#: src/gui/state/loot_state.cpp:107
+#: src/gui/state/loot_state.cpp:109
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:130
+#: src/gui/state/loot_state.cpp:133
 msgid "Error: Could not create LOOT data directory. %1%"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
-#: src/gui/state/loot_state.cpp:150
+#: src/gui/state/loot_state.cpp:154
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:197
+#: src/gui/state/loot_state.cpp:202
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:226
+#: src/gui/state/loot_state.cpp:232
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
@@ -906,42 +906,42 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:91
+#: src/gui/state/game/helpers.cpp:98
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:95
+#: src/gui/state/game/helpers.cpp:102
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:101
+#: src/gui/state/game/helpers.cpp:108
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:111
+#: src/gui/state/game/helpers.cpp:118
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:117
+#: src/gui/state/game/helpers.cpp:124
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:123 src/gui/state/game/helpers.cpp:129
-#: src/gui/state/game/helpers.cpp:134
+#: src/gui/state/game/helpers.cpp:130 src/gui/state/game/helpers.cpp:136
+#: src/gui/state/game/helpers.cpp:141
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:138 src/gui/state/game/helpers.cpp:141
-#: src/gui/state/game/helpers.cpp:144
+#: src/gui/state/game/helpers.cpp:145 src/gui/state/game/helpers.cpp:148
+#: src/gui/state/game/helpers.cpp:151
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:239
+#: src/gui/state/game/helpers.cpp:246
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""

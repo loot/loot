@@ -223,19 +223,16 @@ void MainWindow::initialise() {
       }
     }
 
-    auto initErrors = state.getInitErrors();
-    if (!initErrors.empty()) {
-      std::vector<SimpleMessage> errorMessages;
-      errorMessages.reserve(initErrors.size());
+    auto initMessages = state.getInitMessages();
+    auto initHasErrored =
+        std::any_of(initMessages.begin(),
+                    initMessages.end(),
+                    [](const SimpleMessage& message) {
+                      return message.type == MessageType::error;
+                    });
+    pluginItemModel->setGeneralMessages(std::move(initMessages));
 
-      for (const auto error : initErrors) {
-        SimpleMessage message;
-        message.type = MessageType::error;
-        message.text = error;
-        errorMessages.push_back(message);
-      }
-
-      pluginItemModel->setGeneralMessages(std::move(errorMessages));
+    if (initHasErrored) {
       return;
     }
 
@@ -733,18 +730,25 @@ void MainWindow::updateGeneralInformation() {
       state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
   auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
                                             FileType::MasterlistPrelude);
-  auto generalMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                          state.getLanguage());
+
+  auto initMessages = state.getInitMessages();
+  auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
+                                       state.getLanguage());
+  initMessages.insert(
+      initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      masterlistInfo, preludeInfo, generalMessages);
+      masterlistInfo, preludeInfo, initMessages);
 }
 
 void MainWindow::updateGeneralMessages() {
-  auto generalMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                          state.getLanguage());
+  auto initMessages = state.getInitMessages();
+  auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
+                                       state.getLanguage());
+  initMessages.insert(
+      initMessages.end(), gameMessages.begin(), gameMessages.end());
 
-  pluginItemModel->setGeneralMessages(std::move(generalMessages));
+  pluginItemModel->setGeneralMessages(std::move(initMessages));
 }
 
 void MainWindow::updateSidebarColumnWidths() {

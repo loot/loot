@@ -40,7 +40,7 @@ public:
             const std::filesystem::path& lootDataPath);
 
   void init(const std::string& cmdLineGame, bool autoSort);
-  const std::vector<std::string>& getInitErrors() const;
+  const std::vector<SimpleMessage>& getInitMessages() const;
 
   void save(const std::filesystem::path& file);
 
@@ -53,7 +53,7 @@ private:
 
   void SetInitialGame(std::string cmdLineGame);
 
-  std::vector<std::string> initErrors_;
+  std::vector<SimpleMessage> initMessages_;
 
   // Mutex used to protect access to member variables.
   std::mutex mutex_;
