@@ -28,6 +28,7 @@
 #include <cpptoml.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
 #include <fstream>
 #include <regex>
 #include <thread>
@@ -341,6 +342,32 @@ std::optional<std::string> migratePreludeRepoSettings(
   return migratedSource;
 }
 
+GameType mapGameType(const std::string& gameType) {
+  if (gameType == GameSettings(GameType::tes3).FolderName()) {
+    return GameType::tes3;
+  } else if (gameType == GameSettings(GameType::tes4).FolderName()) {
+    return GameType::tes4;
+  } else if (gameType == GameSettings(GameType::tes5).FolderName()) {
+    return GameType::tes5;
+  } else if (gameType == "SkyrimSE" ||
+             gameType == GameSettings(GameType::tes5se).FolderName()) {
+    return GameType::tes5se;
+  } else if (gameType == GameSettings(GameType::tes5vr).FolderName()) {
+    return GameType::tes5vr;
+  } else if (gameType == GameSettings(GameType::fo3).FolderName()) {
+    return GameType::fo3;
+  } else if (gameType == GameSettings(GameType::fonv).FolderName()) {
+    return GameType::fonv;
+  } else if (gameType == GameSettings(GameType::fo4).FolderName()) {
+    return GameType::fo4;
+  } else if (gameType == GameSettings(GameType::fo4vr).FolderName()) {
+    return GameType::fo4vr;
+  } else {
+    throw std::runtime_error(
+        "invalid value for 'type' key in game settings table");
+  }
+}
+
 GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
                      const std::filesystem::path& lootDataPath) {
   GameSettings game;
@@ -366,27 +393,7 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     }
   }
 
-  if (*type == GameSettings(GameType::tes3).FolderName()) {
-    game = GameSettings(GameType::tes3, *folder);
-  } else if (*type == GameSettings(GameType::tes4).FolderName()) {
-    game = GameSettings(GameType::tes4, *folder);
-  } else if (*type == GameSettings(GameType::tes5).FolderName()) {
-    game = GameSettings(GameType::tes5, *folder);
-  } else if (*type == GameSettings(GameType::tes5se).FolderName()) {
-    game = GameSettings(GameType::tes5se, *folder);
-  } else if (*type == GameSettings(GameType::tes5vr).FolderName()) {
-    game = GameSettings(GameType::tes5vr, *folder);
-  } else if (*type == GameSettings(GameType::fo3).FolderName()) {
-    game = GameSettings(GameType::fo3, *folder);
-  } else if (*type == GameSettings(GameType::fonv).FolderName()) {
-    game = GameSettings(GameType::fonv, *folder);
-  } else if (*type == GameSettings(GameType::fo4).FolderName()) {
-    game = GameSettings(GameType::fo4, *folder);
-  } else if (*type == GameSettings(GameType::fo4vr).FolderName()) {
-    game = GameSettings(GameType::fo4vr, *folder);
-  } else
-    throw std::runtime_error(
-        "invalid value for 'type' key in game settings table");
+  game = GameSettings(mapGameType(*type), *folder);
 
   auto name = table->get_as<std::string>("name");
   if (name) {
@@ -443,6 +450,60 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
   }
 
   return game;
+}
+
+std::vector<std::string> checkSettingsFile(
+    const std::filesystem::path& filePath) {
+  std::vector<std::string> warningMessages;
+
+  // Don't use cpptoml::parse_file() as it just uses a std stream,
+  // which don't support UTF-8 paths on Windows.
+  std::ifstream in(filePath);
+  if (!in.is_open()) {
+    throw cpptoml::parse_exception(filePath.u8string() +
+                                   " could not be opened for parsing");
+  }
+
+  auto settings = cpptoml::parser(in).parse();
+
+  auto preludeUrl = settings->get_as<std::string>("preludeRepo");
+  auto preludeBranch = settings->get_as<std::string>("preludeBranch");
+
+  if (preludeUrl || preludeBranch) {
+    auto migratedSource = migratePreludeRepoSettings(preludeUrl, preludeBranch);
+    if (!migratedSource.has_value()) {
+      warningMessages.push_back(boost::locale::translate(
+          "Your masterlist prelude repository URL and branch settings could "
+          "not be migrated! You can check your LOOTDebugLog.txt (you can get "
+          "to it through the File menu) for more information."));
+    }
+  }
+
+  auto games = settings->get_table_array("games");
+  if (games) {
+    for (const auto& game : *games) {
+      auto type = game->get_as<std::string>("type");
+      if (!type) {
+        throw std::runtime_error("'type' key missing from game settings table");
+      }
+
+      auto url = settings->get_as<std::string>("repo");
+      auto branch = settings->get_as<std::string>("branch");
+
+      if (url || branch) {
+        auto migratedSource =
+            migrateMasterlistRepoSettings(mapGameType(*type), url, branch);
+        if (!migratedSource.has_value()) {
+          warningMessages.push_back(boost::locale::translate(
+              "Your masterlist repository URL and branch settings could not be "
+              "migrated! You can check your LOOTDebugLog.txt (you can get to "
+              "it through the File menu) for more information."));
+        }
+      }
+    }
+  }
+
+  return warningMessages;
 }
 
 LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {

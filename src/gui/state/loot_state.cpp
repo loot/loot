@@ -190,6 +190,28 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     locale::global(gen(getLanguage() + ".UTF-8"));
   }
 
+  // Check settings after handling translations so that any messages
+  // are correctly translated.
+  if (fs::exists(LootPaths::getSettingsPath())) {
+    try {
+      auto warnings = checkSettingsFile(LootPaths::getSettingsPath());
+      for (const auto& warning : warnings) {
+        initMessages_.push_back(
+            PlainTextSimpleMessage(MessageType::warn, warning));
+      }
+    } catch (exception& e) {
+      initMessages_.push_back(PlainTextSimpleMessage(
+          MessageType::error,
+          (format(
+               /* translators: This error is displayed when LOOT is unable to
+                  load its own settings file. The placeholder is for additional
+                  detail about what went wrong. */
+               translate("Error: Settings parsing failed. %1%")) %
+           e.what())
+              .str()));
+    }
+  }
+
   // Check if the prelude directory exists and create it if not.
   auto preludeDir = LootPaths::getPreludePath().parent_path();
   if (!fs::exists(preludeDir)) {

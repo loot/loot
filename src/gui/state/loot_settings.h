@@ -36,6 +36,9 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
+std::vector<std::string> checkSettingsFile(
+    const std::filesystem::path& filePath);
+
 class LootSettings {
 public:
   struct WindowPosition {

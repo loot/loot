@@ -805,6 +805,20 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
+#: src/gui/state/loot_settings.cpp:476
+msgid ""
+"Your masterlist prelude repository URL and branch settings could not be "
+"migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
+"File menu) for more information."
+msgstr ""
+
+#: src/gui/state/loot_settings.cpp:498
+msgid ""
+"Your masterlist repository URL and branch settings could not be migrated! "
+"You can check your LOOTDebugLog.txt (you can get to it through the File "
+"menu) for more information."
+msgstr ""
+
 #. translators: --auto-sort and --game are command-line arguments and shouldn't be translated.
 #: src/gui/state/loot_state.cpp:109
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
@@ -815,15 +829,18 @@ msgid "Error: Could not create LOOT data directory. %1%"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
-#: src/gui/state/loot_state.cpp:154
+#. translators: This error is displayed when LOOT is unable to
+#. load its own settings file. The placeholder is for additional
+#. detail about what went wrong.
+#: src/gui/state/loot_state.cpp:154 src/gui/state/loot_state.cpp:209
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:202
+#: src/gui/state/loot_state.cpp:224
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:232
+#: src/gui/state/loot_state.cpp:254
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
