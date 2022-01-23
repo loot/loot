@@ -25,10 +25,12 @@
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/spdlog.h>
 
+#include <QtCore/QCoreApplication>
 #include <boost/locale.hpp>
 
 #include "tests/gui/backup_test.h"
 #include "tests/gui/helpers_test.h"
+#include "tests/gui/qt/tasks/tasks_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
 #include "tests/gui/state/game/game_test.h"
 #include "tests/gui/state/game/games_manager_test.h"
@@ -43,6 +45,12 @@ int main(int argc, char **argv) {
 
   // Set the logger to use a null sink.
   spdlog::create<spdlog::sinks::null_sink_st>("loot_logger");
+
+  // Register a few meta types for when running with Qt 5.
+  qRegisterMetaType<loot::QueryResult>("QueryResult");
+  qRegisterMetaType<std::string>("std::string");
+
+  QCoreApplication app(argc, argv);
 
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

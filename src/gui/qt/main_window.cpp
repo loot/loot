@@ -801,9 +801,7 @@ bool MainWindow::hasErrorMessages() const {
 }
 
 void MainWindow::sortPlugins(bool isAutoSort) {
-  std::vector<
-      std::pair<std::unique_ptr<Query>, void (MainWindow::*)(QueryResult)>>
-      queriesAndHandlers;
+  std::vector<Task*> tasks;
 
   if (state.updateMasterlist()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
@@ -817,11 +815,22 @@ void MainWindow::sortPlugins(bool isAutoSort) {
         std::make_unique<UpdateMasterlistQuery<>>(state.GetCurrentGame(),
                                                   state.getLanguage());
 
-    queriesAndHandlers.push_back(std::move(std::make_pair(
-        std::move(updatePrelude), &MainWindow::handlePreludeUpdated)));
-    queriesAndHandlers.push_back(
-        std::move(std::make_pair(std::move(updateMasterlistQuery),
-                                 &MainWindow::handleMasterlistUpdated)));
+    auto preludeTask = new QueryTask(std::move(updatePrelude));
+
+    connect(
+        preludeTask, &Task::finished, this, &MainWindow::handlePreludeUpdated);
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
+
+    auto masterlistTask = new QueryTask(std::move(updateMasterlistQuery));
+
+    connect(masterlistTask,
+            &Task::finished,
+            this,
+            &MainWindow::handleMasterlistUpdated);
+    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+
+    tasks.push_back(preludeTask);
+    tasks.push_back(masterlistTask);
   }
 
   auto progressUpdater = new ProgressUpdater();
@@ -837,13 +846,17 @@ void MainWindow::sortPlugins(bool isAutoSort) {
                                            state.getLanguage(),
                                            sendProgressUpdate);
 
+  auto sortTask = new QueryTask(std::move(sortPluginsQuery));
+
   auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
                                 : &MainWindow::handlePluginsManualSorted;
 
-  queriesAndHandlers.push_back(
-      std::move(std::make_pair(std::move(sortPluginsQuery), sortHandler)));
+  connect(sortTask, &Task::finished, this, sortHandler);
+  connect(sortTask, &Task::error, this, &MainWindow::handleError);
 
-  executeBackgroundQueryChain(std::move(queriesAndHandlers), progressUpdater);
+  tasks.push_back(sortTask);
+
+  executeBackgroundTasks(tasks, progressUpdater);
 }
 
 void MainWindow::showFirstRunDialog() {
@@ -1009,52 +1022,17 @@ void MainWindow::executeBackgroundQuery(
     std::unique_ptr<Query> query,
     void (MainWindow::*onComplete)(QueryResult),
     ProgressUpdater* progressUpdater) {
-  auto workerThread = new QueryWorkerThread(this, std::move(query));
+  auto task = new QueryTask(std::move(query));
 
-  if (progressUpdater != nullptr) {
-    connect(progressUpdater,
-            &ProgressUpdater::progressUpdate,
-            this,
-            &MainWindow::handleProgressUpdate);
+  connect(task, &Task::finished, this, onComplete);
+  connect(task, &Task::error, this, &MainWindow::handleError);
 
-    connect(workerThread,
-            &QueryWorkerThread::finished,
-            progressUpdater,
-            &QObject::deleteLater);
-  }
-
-  connect(workerThread, &QueryWorkerThread::resultReady, this, onComplete);
-  connect(
-      workerThread, &QueryWorkerThread::error, this, &MainWindow::handleError);
-  connect(workerThread,
-          &QueryWorkerThread::finished,
-          workerThread,
-          &QObject::deleteLater);
-
-  workerThread->start();
+  executeBackgroundTasks({task}, progressUpdater);
 }
 
-void MainWindow::executeBackgroundQueryChain(
-    std::vector<
-        std::pair<std::unique_ptr<Query>, void (MainWindow::*)(QueryResult)>>
-        queriesAndHandlers,
-    ProgressUpdater* progressUpdater) {
-  // Run each query in the vector sequentially, handling completion using each
-  // query's corresponding handler. If a query fails, all earlier query handlers
-  // should have run and the failed query's handler and later handlers should
-  // not run.
-  // In order to ensure that the correct handler runs for each query, use a
-  // demultiplexing handler that counts how many signals it's received.
-
-  std::vector<std::unique_ptr<Query>> queries;
-  auto resultDemultiplexer = new ResultDemultiplexer(this);
-
-  for (auto&& [query, handler] : queriesAndHandlers) {
-    queries.push_back(std::move(query));
-    resultDemultiplexer->addHandler(handler);
-  }
-
-  auto workerThread = new QueryWorkerThread(this, std::move(queries));
+void MainWindow::executeBackgroundTasks(std::vector<Task*> tasks,
+                                        ProgressUpdater* progressUpdater) {
+  auto executor = new TaskExecutor(this, tasks);
 
   if (progressUpdater != nullptr) {
     connect(progressUpdater,
@@ -1062,36 +1040,23 @@ void MainWindow::executeBackgroundQueryChain(
             this,
             &MainWindow::handleProgressUpdate);
 
-    connect(workerThread,
-            &QueryWorkerThread::finished,
+    connect(executor,
+            &TaskExecutor::finished,
             progressUpdater,
             &QObject::deleteLater);
   }
 
-  connect(workerThread,
-          &QueryWorkerThread::resultReady,
-          resultDemultiplexer,
-          &ResultDemultiplexer::onResultReady);
-  connect(
-      workerThread, &QueryWorkerThread::error, this, &MainWindow::handleError);
-  connect(workerThread,
-          &QueryWorkerThread::finished,
-          workerThread,
-          &QObject::deleteLater);
-  connect(workerThread,
-          &QueryWorkerThread::finished,
-          resultDemultiplexer,
-          &QObject::deleteLater);
+  connect(executor, &TaskExecutor::finished, executor, &QObject::deleteLater);
 
   // Reset (i.e. close) the progress dialog once the thread has finished in case
   // it was used while running these queries. This can't be done from any one
   // handler because none of them know if they are the last to run.
-  connect(workerThread,
-          &QueryWorkerThread::finished,
+  connect(executor,
+          &TaskExecutor::finished,
           this,
           &MainWindow::handleWorkerThreadFinished);
 
-  workerThread->start();
+  executor->start();
 }
 
 void MainWindow::sendHttpRequest(const std::string& url,
@@ -1778,26 +1743,37 @@ void MainWindow::on_actionDiscardSort_triggered(bool checked) {
 
 void MainWindow::on_actionUpdateMasterlist_triggered(bool checked) {
   try {
+    std::vector<Task*> tasks;
+
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    std::unique_ptr<Query> updateMasterlistQuery =
-        std::make_unique<UpdateMasterlistQuery<>>(state.GetCurrentGame(),
-                                                  state.getLanguage());
     std::unique_ptr<Query> updatePrelude = std::make_unique<UpdatePreludeQuery>(
         state.getPreludePath(),
         state.getPreludeRepositoryURL(),
         state.getPreludeRepositoryBranch());
 
-    std::vector<
-        std::pair<std::unique_ptr<Query>, void (MainWindow::*)(QueryResult)>>
-        queriesAndHandlers;
-    queriesAndHandlers.push_back(std::move(std::make_pair(
-        std::move(updatePrelude), &MainWindow::handlePreludeUpdated)));
-    queriesAndHandlers.push_back(
-        std::move(std::make_pair(std::move(updateMasterlistQuery),
-                                 &MainWindow::handleMasterlistUpdated)));
+    std::unique_ptr<Query> updateMasterlistQuery =
+        std::make_unique<UpdateMasterlistQuery<>>(state.GetCurrentGame(),
+                                                  state.getLanguage());
 
-    executeBackgroundQueryChain(std::move(queriesAndHandlers), nullptr);
+    auto preludeTask = new QueryTask(std::move(updatePrelude));
+
+    connect(
+        preludeTask, &Task::finished, this, &MainWindow::handlePreludeUpdated);
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
+
+    auto masterlistTask = new QueryTask(std::move(updateMasterlistQuery));
+
+    connect(masterlistTask,
+            &Task::finished,
+            this,
+            &MainWindow::handleMasterlistUpdated);
+    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+
+    tasks.push_back(preludeTask);
+    tasks.push_back(masterlistTask);
+
+    executeBackgroundTasks(tasks, nullptr);
   } catch (std::exception& e) {
     handleException(e);
   }
@@ -2289,22 +2265,5 @@ void MainWindow::handleUpdateCheckSSLError(const QList<QSslError>& errors) {
   } catch (std::exception& e) {
     handleException(e);
   }
-}
-
-ResultDemultiplexer::ResultDemultiplexer(MainWindow* target) :
-    QObject(), signalCounter(0), target(target) {}
-
-void ResultDemultiplexer::addHandler(void (MainWindow::*handler)(QueryResult)) {
-  handlers.push_back(handler);
-}
-
-void ResultDemultiplexer::onResultReady(QueryResult result) {
-  if (signalCounter > handlers.size() - 1) {
-    throw std::runtime_error("Received more signals than expected");
-  }
-
-  auto handler = handlers[signalCounter];
-  (target->*handler)(result);
-  signalCounter += 1;
 }
 }

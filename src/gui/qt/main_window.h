@@ -67,9 +67,9 @@
 #include "gui/qt/plugin_editor/plugin_editor_widget.h"
 #include "gui/qt/plugin_item_filter_model.h"
 #include "gui/qt/plugin_item_model.h"
-#include "gui/qt/query_worker_thread.h"
 #include "gui/qt/search_dialog.h"
 #include "gui/qt/settings/settings_dialog.h"
+#include "gui/qt/tasks/tasks.h"
 #include "gui/query/query.h"
 #include "gui/state/loot_state.h"
 
@@ -175,11 +175,8 @@ private:
   void executeBackgroundQuery(std::unique_ptr<Query> query,
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
-  void executeBackgroundQueryChain(
-      std::vector<
-          std::pair<std::unique_ptr<Query>, void (MainWindow::*)(QueryResult)>>
-          queriesAndHandlers,
-      ProgressUpdater *progressUpdater);
+  void executeBackgroundTasks(std::vector<Task *> tasks,
+                              ProgressUpdater *progressUpdater);
 
   void sendHttpRequest(const std::string &url,
                        void (MainWindow::*onFinished)());
@@ -274,22 +271,6 @@ private slots:
   void handleGetTagCommitResponseFinished();
   void handleUpdateCheckNetworkError(QNetworkReply::NetworkError error);
   void handleUpdateCheckSSLError(const QList<QSslError> &errors);
-};
-
-class ResultDemultiplexer : public QObject {
-  Q_OBJECT
-public:
-  ResultDemultiplexer(MainWindow *target);
-
-  void addHandler(void (MainWindow::*handler)(QueryResult));
-
-public slots:
-  void onResultReady(QueryResult result);
-
-private:
-  MainWindow *target;
-  std::vector<void (MainWindow::*)(QueryResult)> handlers;
-  int signalCounter;
 };
 }
 

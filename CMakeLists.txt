@@ -47,9 +47,9 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU REQUIRED COMPONENTS uc i18n)
 endif()
 
-find_package(Qt6 COMPONENTS Widgets Network)
+find_package(Qt6 COMPONENTS Widgets Network Test)
 if(NOT Qt6_FOUND)
-    find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
+    find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
 endif()
 
 ExternalProject_Add(GTest
@@ -193,6 +193,7 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/style.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
@@ -234,7 +235,6 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_model.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_item_filter_model.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/query_worker_thread.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/search_dialog.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/game_tab.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/general_tab.h"
@@ -242,6 +242,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/style.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/apply_sort_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/cancel_sort_query.h"
@@ -256,8 +257,6 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_log_location_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_readme_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/sort_plugins_query.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/query/types/update_masterlist_query.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/query/types/update_prelude_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection_error.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
@@ -272,7 +271,8 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/version.h")
 
 set(LOOT_SRC_TESTS_GUI_CPP_FILES
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp")
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/main.cpp"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
 
 set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_test.h"
@@ -282,6 +282,8 @@ set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/helpers_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/test_helpers.h")
@@ -314,6 +316,8 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_BINARY_DIR}/generated/version.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
@@ -323,6 +327,8 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_state.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/backup.h"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
@@ -355,7 +361,7 @@ add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
     cpptoml libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
+    Qt::Core Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -423,12 +429,14 @@ endif()
 # Post-Build Steps
 ##############################
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if(Qt6_FOUND)
-        set(Qt_DIR ${Qt6_DIR})
-    else()
-        set(Qt_DIR ${Qt5_DIR})
+if(Qt6_FOUND)
+    set(QT_DIR ${Qt6_DIR}/../../..)
+else()
+    set(QT_DIR ${Qt5_DIR}/../../..)
+endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(NOT Qt6_FOUND)
         # Copy the OpenSSL binaries, they're not included in what windeployqt
         # deploys.
         if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
@@ -438,7 +446,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
             set(QT_OPENSSL_PLATFORM "x64")
             set(QT_OPENSSL_SUFFIX "-x64")
         endif()
-        set(QT_OPENSSL_BIN_PATH "${Qt_DIR}/../../../../../Tools/OpenSSL/Win_${QT_OPENSSL_PLATFORM}/bin")
+        set(QT_OPENSSL_BIN_PATH "${QT_DIR}/../../Tools/OpenSSL/Win_${QT_OPENSSL_PLATFORM}/bin")
 
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -453,8 +461,31 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
     # Copy Qt binaries and resources.
     add_custom_command(TARGET LOOT POST_BUILD
-        COMMAND ${Qt_DIR}/../../../bin/windeployqt $<TARGET_FILE:LOOT>
+        COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
         COMMENT "Running windeployqt...")
+
+    add_custom_command(TARGET loot_gui_tests POST_BUILD
+        COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:loot_gui_tests>
+        COMMENT "Running windeployqt...")
+else()
+    set(LOOT_QT_TEST_RESOURCES
+        libicudata.so.56
+        libicudata.so.56.1
+        libicui18n.so.56
+        libicui18n.so.56.1
+        libicuuc.so.56
+        libicuuc.so.56.1
+        libQt6Core.so.6
+        libQt6Core.so.6.2.2
+        libQt6Test.so.6
+        libQt6Test.so.6.2.2)
+
+    foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
+        add_custom_command(TARGET loot_gui_tests POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${QT_DIR}/lib/${TEST_RESOURCE}"
+                $<TARGET_FILE_DIR:loot_gui_tests>/${TEST_RESOURCE})
+    endforeach()
 endif()
 
 # Copy the API binary to the build directory.

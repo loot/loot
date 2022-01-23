@@ -4,7 +4,7 @@
     Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR,
     Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.
 
-    Copyright (C) 2021    Oliver Hamlet
+    Copyright (C) 2022    Oliver Hamlet
 
     This file is part of LOOT.
 
@@ -23,17 +23,17 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_QT_QUERY_WORKER_THREAD
-#define LOOT_GUI_QT_QUERY_WORKER_THREAD
+#ifndef LOOT_GUI_QT_TASKS_TASKS
+#define LOOT_GUI_QT_TASKS_TASKS
 
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtCore/QThread>
-#include <memory>
 
 #include "gui/query/query.h"
 
 Q_DECLARE_METATYPE(loot::QueryResult);
+Q_DECLARE_METATYPE(std::string);
 
 namespace loot {
 class ProgressUpdater : public QObject {
@@ -42,48 +42,49 @@ signals:
   void progressUpdate(const QString &message);
 };
 
-class QueryWorkerThread : public QThread {
+class Task : public QObject {
   Q_OBJECT
-public:
-  QueryWorkerThread(QObject *parent, std::unique_ptr<Query> query) :
-      QThread(parent) {
-    queries.push_back(std::move(query));
-  }
-
-  QueryWorkerThread(QObject *parent,
-                    std::vector<std::unique_ptr<Query>> queries) :
-      QThread(parent), queries(std::move(queries)) {}
-
-  void run() override {
-    for (auto &&query : queries) {
-      try {
-        if (query == nullptr) {
-          throw std::runtime_error(
-              "Attempted to run a worker thread with no query set!");
-        }
-
-        emit resultReady(query->executeLogic());
-      } catch (std::exception &e) {
-        auto logger = getLogger();
-        if (logger) {
-          logger->error("Exception while executing query in worker thread: {}",
-                        e.what());
-        }
-
-        emit error(query->getErrorMessage());
-
-        // Don't execute any further queries.
-        return;
-      }
-    }
-  }
+public slots:
+  virtual void execute() = 0;
 
 signals:
-  void resultReady(QueryResult result);
+  void finished(QueryResult result);
   void error(const std::string &exception);
+};
+
+class QueryTask : public Task {
+  Q_OBJECT
+public:
+  QueryTask(std::unique_ptr<Query> query);
+
+public slots:
+  void execute() override;
 
 private:
-  std::vector<std::unique_ptr<Query>> queries;
+  std::unique_ptr<Query> query;
+};
+
+class TaskExecutor : public QObject {
+  Q_OBJECT
+public:
+  TaskExecutor(QObject *parent, std::vector<Task *> tasks);
+  ~TaskExecutor();
+
+  bool wait(unsigned long time);
+
+signals:
+  void start();
+  void finished();
+
+private:
+  QThread workerThread;
+  std::vector<Task *> tasks;
+  size_t currentTask;
+
+private slots:
+  void onTaskFinished(QueryResult result);
+  void onTaskError(const std::string &message);
+  void onWorkerThreadFinished();
 };
 }
 
