@@ -81,8 +81,7 @@ public:
   std::string getLastVersion() const;
   std::string getLanguage() const;
   std::string getTheme() const;
-  std::string getPreludeRepositoryURL() const;
-  std::string getPreludeRepositoryBranch() const;
+  std::string getPreludeSource() const;
   std::optional<WindowPosition> getWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
   const Filters& getFilters() const;
@@ -91,8 +90,7 @@ public:
   void setDefaultGame(const std::string& game);
   void setLanguage(const std::string& language);
   void setTheme(const std::string& theme);
-  void setPreludeRepositoryURL(const std::string& url);
-  void setPreludeRepositoryBranch(const std::string& branch);
+  void setPreludeSource(const std::string& source);
   void setAutoSort(bool autSort);
   void enableDebugLogging(bool enable);
   void updateMasterlist(bool update);
@@ -113,8 +111,7 @@ private:
   std::string lastGame_;
   std::string lastVersion_;
   std::string language_;
-  std::string preludeRepositoryBranch_;
-  std::string preludeRepositoryURL_;
+  std::string preludeSource_;
   std::string theme_;
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_;

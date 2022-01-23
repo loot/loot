@@ -25,10 +25,306 @@
 
 #include "gui/qt/helpers.h"
 
+#include <cpptoml.h>
+#include <loot/exception/file_access_error.h>
+
+#include <QtCore/QCryptographicHash>
+#include <QtCore/QDate>
+#include <QtCore/QFile>
+#include <QtCore/QUrl>
 #include <boost/locale.hpp>
+#include <fstream>
+
+#include "gui/state/logging.h"
 
 namespace loot {
+static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
+static constexpr const char* METADATA_ID_KEY = "blob_sha1";
+static constexpr const char* METADATA_DATE_KEY = "update_timestamp";
+
+std::filesystem::path getFileMetadataPath(std::filesystem::path filePath) {
+  filePath += METADATA_PATH_SUFFIX;
+  return filePath;
+}
+
+void writeFileRevision(const std::filesystem::path& filePath,
+                       const std::string& id,
+                       const std::string& date) {
+  auto metadataPath = getFileMetadataPath(filePath);
+
+  auto logger = getLogger();
+  if (logger) {
+    logger->info("Writing file revision info for {} with ID {} and date {}",
+                 metadataPath.u8string(),
+                 id,
+                 date);
+  }
+
+  auto root = cpptoml::make_table();
+
+  root->insert(METADATA_ID_KEY, id);
+  root->insert(METADATA_DATE_KEY, date);
+
+  std::ofstream out(metadataPath);
+  if (!out.is_open()) {
+    throw std::runtime_error(metadataPath.u8string() +
+                             " could not be opened for writing");
+  }
+
+  out << *root;
+}
+
+FileRevisionSummary::FileRevisionSummary() {}
+
+FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
+    id(fileRevision.id.substr(0, 7)), date(fileRevision.date) {
+  if (fileRevision.is_modified) {
+    auto suffix =
+        " " +
+        /* translators: this text is displayed if LOOT has detected that the
+           masterlist has been modified since it was downloaded. */
+        boost::locale::translate("(edited)").str();
+    date += suffix;
+    id += suffix;
+  }
+}
+
+FileRevisionSummary::FileRevisionSummary(const std::string& id,
+                                         const std::string& date) :
+    id(id), date(date) {}
+
 QString translate(const char* text) {
   return QString::fromStdString(boost::locale::translate(text).str());
+}
+
+std::string calculateGitBlobHash(const QByteArray& data) {
+  auto sizeString = std::to_string(data.size());
+
+  auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
+  hasher.addData("blob ", 5);
+  hasher.addData(sizeString.c_str(), sizeString.size() + 1);
+  hasher.addData(data);
+
+  return QString(hasher.result().toHex()).toStdString();
+}
+
+std::string calculateGitBlobHash(const std::filesystem::path& filePath) {
+  QFile file(QString::fromStdString(filePath.u8string()));
+
+  auto result = file.open(QIODevice::ReadOnly);
+  if (!result) {
+    throw FileAccessError(filePath.u8string() + " is not a regular file");
+  }
+
+  auto sizeString = std::to_string(file.size());
+
+  auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
+  hasher.addData("blob ", 5);
+  hasher.addData(sizeString.c_str(), sizeString.size() + 1);
+
+  const size_t bufferSize = 8192;
+  char buffer[bufferSize];
+  size_t bytesReadCount = 0;
+
+  do {
+    bytesReadCount = file.read(buffer, bufferSize);
+    if (bytesReadCount > 0) {
+      hasher.addData(buffer, bytesReadCount);
+    }
+  } while (bytesReadCount > 0);
+
+  return QString(hasher.result().toHex()).toStdString();
+}
+
+FileRevision getFileRevision(const std::filesystem::path& filePath) {
+  FileRevision revision;
+
+  revision.id = calculateGitBlobHash(filePath);
+
+  auto metadataPath = getFileMetadataPath(filePath);
+
+  if (!std::filesystem::is_regular_file(filePath)) {
+    throw FileAccessError(metadataPath.u8string() + " is not a regular file");
+  }
+
+  // Don't use cpptoml::parse_file() as it just uses a std stream,
+  // which don't support UTF-8 paths on Windows.
+  std::ifstream in(metadataPath);
+  if (!in.is_open()) {
+    throw std::runtime_error(metadataPath.u8string() +
+                             " could not be opened for parsing");
+  }
+
+  auto metadata = cpptoml::parser(in).parse();
+
+  auto hash = metadata->get_as<std::string>(METADATA_ID_KEY);
+  auto timestamp = metadata->get_as<std::string>(METADATA_DATE_KEY);
+
+  if (!hash) {
+    throw std::runtime_error("blob_sha1 field is missing");
+  }
+
+  if (!timestamp) {
+    throw std::runtime_error("update_timestamp field is missing");
+  }
+
+  revision.is_modified = revision.id != *hash;
+  revision.date = *timestamp;
+
+  return revision;
+}
+
+FileRevisionSummary getFileRevisionSummary(
+    const std::filesystem::path& filePath,
+    FileType fileType) {
+  using boost::locale::translate;
+
+  auto logger = getLogger();
+
+  try {
+    return FileRevisionSummary(getFileRevision(filePath));
+  } catch (FileAccessError&) {
+    if (logger) {
+      if (fileType == FileType::Masterlist) {
+        logger->warn("No masterlist present at {}", filePath.u8string());
+      } else {
+        logger->warn("No masterlist prelude present at {}",
+                     filePath.u8string());
+      }
+    }
+    auto text = fileType == FileType::Masterlist
+                    ? translate("N/A: No masterlist present").str()
+                    :
+                    /* translators: N/A is an abbreviation for Not Applicable. A
+                       masterlist is a database that contains information for
+                       various mods. */
+                    translate("N/A: No masterlist prelude present").str();
+
+    return FileRevisionSummary(text, text);
+  } catch (std::runtime_error&) {
+    if (logger) {
+      logger->warn("Failed to read metadata for: {}",
+                   filePath.parent_path().u8string());
+    }
+    auto text = translate("Unknown: No revision metadata found").str();
+    return FileRevisionSummary(text, text);
+  }
+}
+
+bool isFileUpToDate(const std::filesystem::path& filePath,
+                    const std::string& expectedHash) {
+  auto logger = getLogger();
+
+  try {
+    auto existingFileHash = calculateGitBlobHash(filePath);
+
+    if (logger) {
+      logger->info("Calculated blob hash for file at {}: {}",
+                   filePath.u8string(),
+                   existingFileHash);
+    }
+
+    return expectedHash == existingFileHash;
+  } catch (std::exception& e) {
+    if (logger) {
+      logger->error(
+          "Caught exception when getting file revision, assuming file is not "
+          "up to date: {}",
+          e.what());
+    }
+
+    return false;
+  }
+}
+
+bool updateFileWithData(const std::filesystem::path& filePath,
+                        const QByteArray& data) {
+  auto logger = getLogger();
+
+  auto newHash = calculateGitBlobHash(data);
+  auto hasChanged = !isFileUpToDate(filePath, newHash);
+
+  if (hasChanged) {
+    QFile masterlist(QString::fromStdString(filePath.u8string()));
+    masterlist.open(QIODevice::WriteOnly);
+    masterlist.write(data);
+    masterlist.close();
+  }
+
+  if (logger) {
+    auto logMessage = hasChanged ? "Updated file at {}, new blob hash is {}"
+                                 : "{} is already up to date with blob hash {}";
+    logger->info(logMessage, filePath.u8string(), newHash);
+  }
+
+  // Update the metadata file even if the file is up to date, as the
+  // update timestamp may have changed.
+  auto updateTimestamp =
+      QDate::currentDate().toString(Qt::ISODate).toStdString();
+  writeFileRevision(filePath, newHash, updateTimestamp);
+
+  return hasChanged;
+}
+
+bool updateFile(const std::filesystem::path& source,
+                const std::filesystem::path& destination) {
+  auto logger = getLogger();
+  if (logger) {
+    logger->info("Updating file at {} using file at {}",
+                 destination.u8string(),
+                 source.u8string());
+  }
+
+  auto newHash = calculateGitBlobHash(source);
+  auto hasChanged = !isFileUpToDate(destination, newHash);
+
+  if (hasChanged) {
+    std::filesystem::copy_file(
+        source, destination, std::filesystem::copy_options::overwrite_existing);
+  }
+
+  if (logger) {
+    auto logMessage = hasChanged ? "Updated file at {}, new blob hash is {}"
+                                 : "{} is already up to date with blob hash {}";
+    logger->info(logMessage, destination.u8string(), newHash);
+  }
+
+  // Update the metadata file even if the file is up to date, as the
+  // update timestamp may have changed.
+  auto updateTimestamp =
+      QDate::currentDate().toString(Qt::ISODate).toStdString();
+  writeFileRevision(destination, newHash, updateTimestamp);
+
+  return hasChanged;
+}
+
+bool isValidUrl(const std::string& location) {
+  auto url = QUrl(QString::fromStdString(location), QUrl::StrictMode);
+  auto scheme = url.scheme().toStdString();
+  return url.isValid() && !url.isLocalFile() &&
+         (scheme == "http" || scheme == "https");
+}
+
+std::optional<QByteArray> readHttpResponse(QNetworkReply* reply) {
+  auto statusCode =
+      reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+  auto data = reply->readAll();
+  reply->deleteLater();
+
+  if (statusCode < 200 || statusCode >= 400) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error(
+          "Error while checking for LOOT updates: unexpected HTTP response "
+          "status code: {}. Response body is: {}",
+          statusCode,
+          QString::fromUtf8(data).toStdString());
+    }
+
+    return std::nullopt;
+  }
+
+  return data;
 }
 }

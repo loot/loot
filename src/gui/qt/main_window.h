@@ -180,7 +180,6 @@ private:
 
   void sendHttpRequest(const std::string &url,
                        void (MainWindow::*onFinished)());
-  std::optional<QJsonDocument> readHttpResponse(QNetworkReply *reply);
 
   void addUpdateAvailableMessage();
   void addUpdateCheckErrorMessage();
@@ -261,7 +260,6 @@ private slots:
   void handleStartupGameDataLoaded(QueryResult result);
   void handlePluginsManualSorted(QueryResult results);
   void handlePluginsAutoSorted(QueryResult results);
-  void handlePreludeUpdated(QueryResult result);
   void handleMasterlistUpdated(QueryResult result);
   void handleConflictsChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);

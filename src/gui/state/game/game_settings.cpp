@@ -36,15 +36,12 @@ using std::filesystem::exists;
 using std::filesystem::u8path;
 
 namespace loot {
-const std::set<std::string> GameSettings::oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15"});
-const std::string GameSettings::currentDefaultBranch("v0.17");
 
 GameSettings::GameSettings() :
     type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
 
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
-    type_(gameCode), repositoryBranch_(currentDefaultBranch) {
+    type_(gameCode) {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
     registryKeys_ = {"Software\\Bethesda Softworks\\Morrowind\\Installed Path",
@@ -60,7 +57,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
     mininumHeaderVersion_ = 1.2f;
-    repositoryURL_ = "https://github.com/loot/morrowind.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/morrowind/v0.17/"
+        "masterlist.yaml";
   } else if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKeys_ = {"Software\\Bethesda Softworks\\Oblivion\\Installed Path",
@@ -78,7 +77,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
     mininumHeaderVersion_ = 0.8f;
-    repositoryURL_ = "https://github.com/loot/oblivion.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/oblivion/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5) {
     name_ = "TES V: Skyrim";
     registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim\\Installed Path",
@@ -88,7 +88,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = 0.94f;
-    repositoryURL_ = "https://github.com/loot/skyrim.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/skyrim/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
     registryKeys_ = {
@@ -99,7 +100,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = 1.7f;
-    repositoryURL_ = "https://github.com/loot/skyrimse.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/skyrimse/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5vr) {
     name_ = "TES V: Skyrim VR";
     registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
@@ -109,7 +111,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = 1.7f;
-    repositoryURL_ = "https://github.com/loot/skyrimvr.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/skyrimvr/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
     registryKeys_ = {"Software\\Bethesda Softworks\\Fallout3\\Installed Path",
@@ -127,7 +130,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
     mininumHeaderVersion_ = 0.94f;
-    repositoryURL_ = "https://github.com/loot/fallout3.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/fallout3/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
     registryKeys_ = {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
@@ -145,7 +149,9 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
     mininumHeaderVersion_ = 1.32f;
-    repositoryURL_ = "https://github.com/loot/falloutnv.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/falloutnv/v0.17/"
+        "masterlist.yaml";
   } else if (Type() == GameType::fo4) {
     name_ = "Fallout 4";
     registryKeys_ = {"Software\\Bethesda Softworks\\Fallout4\\Installed Path",
@@ -155,7 +161,8 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = 0.95f;
-    repositoryURL_ = "https://github.com/loot/fallout4.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/fallout4/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fo4vr) {
     name_ = "Fallout 4 VR";
     registryKeys_ = {
@@ -166,15 +173,13 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = 0.95f;
-    repositoryURL_ = "https://github.com/loot/fallout4vr.git";
+    masterlistSource_ =
+        "https://raw.githubusercontent.com/loot/fallout4vr/v0.17/"
+        "masterlist.yaml";
   }
 
   if (!folder.empty())
     lootFolderName_ = folder;
-}
-
-bool GameSettings::IsRepoBranchOldDefault() const {
-  return oldDefaultBranches.count(repositoryBranch_) == 1;
 }
 
 bool GameSettings::operator==(const GameSettings& rhs) const {
@@ -197,9 +202,7 @@ std::vector<std::string> GameSettings::RegistryKeys() const {
   return registryKeys_;
 }
 
-std::string GameSettings::RepoURL() const { return repositoryURL_; }
-
-std::string GameSettings::RepoBranch() const { return repositoryBranch_; }
+std::string GameSettings::MasterlistSource() const { return masterlistSource_; }
 
 std::filesystem::path GameSettings::GamePath() const { return gamePath_; }
 
@@ -233,13 +236,8 @@ GameSettings& GameSettings::SetRegistryKeys(
   return *this;
 }
 
-GameSettings& GameSettings::SetRepoURL(const std::string& repositoryURL) {
-  repositoryURL_ = repositoryURL;
-  return *this;
-}
-
-GameSettings& GameSettings::SetRepoBranch(const std::string& repositoryBranch) {
-  repositoryBranch_ = repositoryBranch;
+GameSettings& GameSettings::SetMasterlistSource(const std::string& source) {
+  masterlistSource_ = source;
   return *this;
 }
 
@@ -303,28 +301,5 @@ std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
   }
 
   return std::nullopt;
-}
-
-void GameSettings::MigrateSettings() {
-  // If the masterlist repository is set to an official repository and the
-  // masterlist branch is an old default branch, update the masterlist
-  // branch to the current default.
-  if (boost::starts_with(repositoryURL_, "https://github.com/loot/") &&
-      IsRepoBranchOldDefault()) {
-    SetRepoBranch(currentDefaultBranch);
-  }
-
-  // If the game is Skyrim VR or Fallout 4 VR and the masterlist repository
-  // is the official Skyrim SE or Fallout 4 repository (respectively),
-  // switch to the newer VR-specific repositories.
-  if (Type() == GameType::tes5vr &&
-      RepoURL() == GameSettings(GameType::tes5se).RepoURL()) {
-    SetRepoURL(GameSettings(GameType::tes5vr).RepoURL());
-  }
-
-  if (Type() == GameType::fo4vr &&
-      RepoURL() == GameSettings(GameType::fo4).RepoURL()) {
-    SetRepoURL(GameSettings(GameType::fo4vr).RepoURL());
-  }
 }
 }

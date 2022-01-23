@@ -151,10 +151,10 @@ void GeneralInfoCard::setupUi() {
 void GeneralInfoCard::translateUi() {
   headingLabel->setText(translate("General Information"));
 
-  masterlistRevisionLabel->setText(translate("Masterlist Revision"));
-  masterlistDateLabel->setText(translate("Masterlist Date"));
-  preludeRevisionLabel->setText(translate("Masterlist Prelude Revision"));
-  preludeDateLabel->setText(translate("Masterlist Prelude Date"));
+  masterlistRevisionLabel->setText(translate("Masterlist Revision ID"));
+  masterlistDateLabel->setText(translate("Masterlist Update Date"));
+  preludeRevisionLabel->setText(translate("Masterlist Prelude Revision ID"));
+  preludeDateLabel->setText(translate("Masterlist Prelude Update Date"));
 
   warningsCountLabel->setText(translate("Warnings"));
   errorsCountLabel->setText(translate("Errors"));

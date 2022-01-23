@@ -80,13 +80,15 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
           .SetGameLocalFolder("enderal")
-          .SetRepoURL("https://github.com/loot/enderal.git"),
+          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
+                               "enderal/v0.17/masterlist.yaml"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
           .SetGameLocalFolder("Enderal Special Edition")
-          .SetRepoURL("https://github.com/loot/enderal.git"),
+          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
+                               "enderal/v0.17/masterlist.yaml"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
@@ -104,9 +106,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
   EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
-  EXPECT_EQ("https://github.com/loot/prelude.git",
-            settings_.getPreludeRepositoryURL());
-  EXPECT_EQ("v0.17", settings_.getPreludeRepositoryBranch());
+  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml",
+            settings_.getPreludeSource());
 
   // GameSettings equality only checks name and folder, so check
   // other settings individually.
@@ -118,49 +119,43 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
   EXPECT_EQ(expectedGameSettings[0].RegistryKeys(),
             actualGameSettings[0].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[0].RepoURL(), actualGameSettings[0].RepoURL());
-  EXPECT_EQ(expectedGameSettings[0].RepoBranch(),
-            actualGameSettings[0].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[0].MasterlistSource(),
+            actualGameSettings[0].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
   EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
   EXPECT_EQ(expectedGameSettings[1].RegistryKeys(),
             actualGameSettings[1].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[1].RepoURL(), actualGameSettings[1].RepoURL());
-  EXPECT_EQ(expectedGameSettings[1].RepoBranch(),
-            actualGameSettings[1].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[1].MasterlistSource(),
+            actualGameSettings[1].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
   EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
   EXPECT_EQ(expectedGameSettings[2].RegistryKeys(),
             actualGameSettings[2].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[2].RepoURL(), actualGameSettings[2].RepoURL());
-  EXPECT_EQ(expectedGameSettings[2].RepoBranch(),
-            actualGameSettings[2].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[2].MasterlistSource(),
+            actualGameSettings[2].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
   EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
   EXPECT_EQ(expectedGameSettings[3].RegistryKeys(),
             actualGameSettings[3].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[3].RepoURL(), actualGameSettings[3].RepoURL());
-  EXPECT_EQ(expectedGameSettings[3].RepoBranch(),
-            actualGameSettings[3].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[3].MasterlistSource(),
+            actualGameSettings[3].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
   EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
   EXPECT_EQ(expectedGameSettings[4].RegistryKeys(),
             actualGameSettings[4].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[4].RepoURL(), actualGameSettings[4].RepoURL());
-  EXPECT_EQ(expectedGameSettings[4].RepoBranch(),
-            actualGameSettings[4].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[4].MasterlistSource(),
+            actualGameSettings[4].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
   EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
   EXPECT_EQ(expectedGameSettings[5].RegistryKeys(),
             actualGameSettings[5].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[5].RepoURL(), actualGameSettings[5].RepoURL());
-  EXPECT_EQ(expectedGameSettings[5].RepoBranch(),
-            actualGameSettings[5].RepoBranch());
+  EXPECT_EQ(expectedGameSettings[5].MasterlistSource(),
+            actualGameSettings[5].MasterlistSource());
 
   auto actualLanguages = settings_.getLanguages();
   EXPECT_EQ(18, actualLanguages.size());
@@ -215,8 +210,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "language = \"fr\"" << endl
       << "theme = \"dark\"" << endl
       << "lastVersion = \"0.7.1\"" << endl
-      << "preludeRepo = \"https://github.com/loot/prelude-test.git\"" << endl
-      << "preludeBranch = \"v1.0\"" << endl
+      << "preludeSource = \"../prelude.yaml\"" << endl
       << endl
       << "[window]" << endl
       << "top = 1" << endl
@@ -249,9 +243,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("0.7.1", settings_.getLastVersion());
   EXPECT_EQ("fr", settings_.getLanguage());
   EXPECT_EQ("dark", settings_.getTheme());
-  EXPECT_EQ("https://github.com/loot/prelude-test.git",
-            settings_.getPreludeRepositoryURL());
-  EXPECT_EQ("v1.0", settings_.getPreludeRepositoryBranch());
+  EXPECT_EQ("../prelude.yaml", settings_.getPreludeSource());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
   EXPECT_EQ(1, settings_.getWindowPosition().value().top);
@@ -415,9 +407,8 @@ TEST_P(LootSettingsTest,
 
   settings_.load(settingsFile_, lootDataPath);
 
-  const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
-  EXPECT_NE("v0.7", settings_.getGameSettings()[0].RepoBranch());
-  EXPECT_EQ(games[0].RepoBranch(), settings_.getGameSettings()[0].RepoBranch());
+  auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
 TEST_P(
@@ -436,7 +427,8 @@ TEST_P(
 
   settings_.load(settingsFile_, lootDataPath);
 
-  EXPECT_EQ("foo", settings_.getGameSettings()[0].RepoBranch());
+  auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
 TEST_P(LootSettingsTest,
@@ -453,7 +445,8 @@ TEST_P(LootSettingsTest,
 
   settings_.load(settingsFile_, lootDataPath);
 
-  EXPECT_EQ("v0.7", settings_.getGameSettings()[0].RepoBranch());
+  auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
 TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
@@ -486,7 +479,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
 
   GameSettings testGame = GameSettings(GameType::tes4, "Test")
                               .SetName("Game Name")
-                              .SetRepoBranch("foo");
+                              .SetMasterlistSource("foo");
 
   const std::vector<GameSettings> expectedGameSettings({
       testGame,
@@ -527,8 +520,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
   const std::string theme = "dark";
-  const std::string preludeRepo = "../prelude";
-  const std::string preludeBranch = "v1.0";
+  const std::string preludeSource = "../prelude";
 
   LootSettings::WindowPosition windowPosition;
   windowPosition.top = 1;
@@ -552,8 +544,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.storeLastGame(lastGame);
   settings_.setLanguage(language);
   settings_.setTheme(theme);
-  settings_.setPreludeRepositoryURL(preludeRepo);
-  settings_.setPreludeRepositoryBranch(preludeBranch);
+  settings_.setPreludeSource(preludeSource);
 
   settings_.storeWindowPosition(windowPosition);
   settings_.storeGameSettings(games);
@@ -571,8 +562,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(lastGame, settings.getLastGame());
   EXPECT_EQ(language, settings.getLanguage());
   EXPECT_EQ(theme, settings.getTheme());
-  EXPECT_EQ(preludeRepo, settings.getPreludeRepositoryURL());
-  EXPECT_EQ(preludeBranch, settings.getPreludeRepositoryBranch());
+  EXPECT_EQ(preludeSource, settings.getPreludeSource());
 
   ASSERT_TRUE(settings_.getWindowPosition().has_value());
   EXPECT_EQ(1, settings_.getWindowPosition().value().top);

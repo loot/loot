@@ -30,6 +30,7 @@
 
 #include "tests/gui/backup_test.h"
 #include "tests/gui/helpers_test.h"
+#include "tests/gui/qt/helpers_test.h"
 #include "tests/gui/qt/tasks/tasks_test.h"
 #include "tests/gui/state/game/game_settings_test.h"
 #include "tests/gui/state/game/game_test.h"

@@ -37,17 +37,6 @@
 #include <vector>
 
 namespace loot {
-enum class FileType { Masterlist, MasterlistPrelude };
-
-struct FileRevisionSummary {
-  FileRevisionSummary();
-  FileRevisionSummary(const FileRevision& fileRevision);
-  FileRevisionSummary(const std::string& id, const std::string& date);
-
-  std::string id;
-  std::string date;
-};
-
 bool ExecutableExists(const GameType& gameType,
                       const std::filesystem::path& gamePath);
 
@@ -74,10 +63,6 @@ std::vector<Message> CheckForRemovedPlugins(
 
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath);
-
-FileRevisionSummary GetFileRevisionToDisplay(
-    const std::filesystem::path& filePath,
-    FileType fileType);
 }
 
 #endif

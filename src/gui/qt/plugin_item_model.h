@@ -32,7 +32,7 @@
 #include "gui/qt/counters.h"
 #include "gui/qt/filters_states.h"
 #include "gui/qt/general_info.h"
-#include "gui/state/game/helpers.h"
+#include "gui/qt/helpers.h"
 
 Q_DECLARE_METATYPE(loot::PluginItem);
 

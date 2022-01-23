@@ -83,10 +83,8 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
   checkUpdatesCheckbox->setChecked(settings.isLootUpdateCheckEnabled());
   loggingCheckbox->setChecked(settings.isDebugLoggingEnabled());
 
-  preludeUrlInput->setText(
-      QString::fromStdString(settings.getPreludeRepositoryURL()));
-  preludeBranchInput->setText(
-      QString::fromStdString(settings.getPreludeRepositoryBranch()));
+  preludeSourceInput->setText(
+      QString::fromStdString(settings.getPreludeSource()));
 }
 
 void GeneralTab::recordInputValues(LootSettings& settings) {
@@ -97,8 +95,7 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   auto updateMasterlist = updateMasterlistCheckbox->isChecked();
   auto checkForUpdates = checkUpdatesCheckbox->isChecked();
   auto enableDebugLogging = loggingCheckbox->isChecked();
-  auto preludeUrl = preludeUrlInput->text().toStdString();
-  auto preludeBranch = preludeBranchInput->text().toStdString();
+  auto preludeSource = preludeSourceInput->text().toStdString();
 
   settings.setDefaultGame(defaultGame);
   settings.setLanguage(language);
@@ -106,22 +103,14 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   settings.updateMasterlist(updateMasterlist);
   settings.enableLootUpdateCheck(checkForUpdates);
   settings.enableDebugLogging(enableDebugLogging);
-  settings.setPreludeRepositoryURL(preludeUrl);
-  settings.setPreludeRepositoryBranch(preludeBranch);
+  settings.setPreludeSource(preludeSource);
 }
 
 bool GeneralTab::areInputValuesValid() const {
-  if (preludeUrlInput->text().isEmpty()) {
-    QToolTip::showText(preludeUrlInput->mapToGlobal(QPoint(0, 0)),
-                       preludeUrlInput->toolTip(),
-                       preludeUrlInput);
-    return false;
-  }
-
-  if (preludeBranchInput->text().isEmpty()) {
-    QToolTip::showText(preludeBranchInput->mapToGlobal(QPoint(0, 0)),
-                       preludeBranchInput->toolTip(),
-                       preludeBranchInput);
+  if (preludeSourceInput->text().isEmpty()) {
+    QToolTip::showText(preludeSourceInput->mapToGlobal(QPoint(0, 0)),
+                       preludeSourceInput->toolTip(),
+                       preludeSourceInput);
     return false;
   }
 
@@ -148,11 +137,8 @@ void GeneralTab::setupUi() {
   loggingLabel = new QLabel(this);
   loggingCheckbox = new QCheckBox(this);
 
-  preludeUrlLabel = new QLabel(this);
-  preludeUrlInput = new QLineEdit(this);
-
-  preludeBranchLabel = new QLabel(this);
-  preludeBranchInput = new QLineEdit(this);
+  preludeSourceLabel = new QLabel(this);
+  preludeSourceInput = new QLineEdit(this);
 
   auto generalLayout = new QFormLayout(this);
 
@@ -162,8 +148,7 @@ void GeneralTab::setupUi() {
   generalLayout->addRow(updateMasterlistLabel, updateMasterlistCheckbox);
   generalLayout->addRow(checkUpdatesLabel, checkUpdatesCheckbox);
   generalLayout->addRow(loggingLabel, loggingCheckbox);
-  generalLayout->addRow(preludeUrlLabel, preludeUrlInput);
-  generalLayout->addRow(preludeBranchLabel, preludeBranchInput);
+  generalLayout->addRow(preludeSourceLabel, preludeSourceInput);
 
   translateUi();
 }
@@ -175,9 +160,7 @@ void GeneralTab::translateUi() {
   updateMasterlistLabel->setText(translate("Update masterlist before sorting"));
   checkUpdatesLabel->setText(translate("Check for LOOT updates on startup"));
   loggingLabel->setText(translate("Enable debug logging"));
-  preludeUrlLabel->setText(translate("Masterlist prelude repository URL"));
-  preludeBranchLabel->setText(
-      translate("Masterlist prelude repository branch"));
+  preludeSourceLabel->setText(translate("Masterlist prelude source"));
 
   languageLabel->setToolTip(
       translate("Language changes will be applied after LOOT is restarted."));
@@ -186,8 +169,7 @@ void GeneralTab::translateUi() {
   loggingLabel->setToolTip(
       translate("The output is logged to the LOOTDebugLog.txt file."));
 
-  preludeUrlInput->setToolTip(translate("A prelude URL is required."));
-  preludeBranchInput->setToolTip(translate("A prelude branch is required."));
+  preludeSourceInput->setToolTip(translate("A prelude source is required."));
 
   defaultGameComboBox->setItemText(0, translate("Autodetect"));
 }

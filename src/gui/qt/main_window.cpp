@@ -42,6 +42,7 @@
 #include "gui/qt/plugin_item_filter_model.h"
 #include "gui/qt/sidebar_plugin_name_delegate.h"
 #include "gui/qt/style.h"
+#include "gui/qt/tasks/update_masterlist_task.h"
 #include "gui/query/types/apply_sort_query.h"
 #include "gui/query/types/cancel_sort_query.h"
 #include "gui/query/types/change_game_query.h"
@@ -54,8 +55,6 @@
 #include "gui/query/types/open_log_location_query.h"
 #include "gui/query/types/open_readme_query.h"
 #include "gui/query/types/sort_plugins_query.h"
-#include "gui/query/types/update_masterlist_query.h"
-#include "gui/query/types/update_prelude_query.h"
 #include "gui/version.h"
 
 namespace loot {
@@ -730,10 +729,10 @@ void MainWindow::updateCounts(const std::vector<SimpleMessage>& generalMessages,
 }
 
 void MainWindow::updateGeneralInformation() {
-  auto masterlistInfo = GetFileRevisionToDisplay(
+  auto masterlistInfo = getFileRevisionSummary(
       state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
-  auto preludeInfo = GetFileRevisionToDisplay(state.getPreludePath(),
-                                              FileType::MasterlistPrelude);
+  auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
+                                            FileType::MasterlistPrelude);
   auto generalMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
                                           state.getLanguage());
 
@@ -806,31 +805,12 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   if (state.updateMasterlist()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    std::unique_ptr<Query> updatePrelude = std::make_unique<UpdatePreludeQuery>(
-        state.getPreludePath(),
-        state.getPreludeRepositoryURL(),
-        state.getPreludeRepositoryBranch());
+    auto task = new UpdateMasterlistTask(state);
 
-    std::unique_ptr<Query> updateMasterlistQuery =
-        std::make_unique<UpdateMasterlistQuery<>>(state.GetCurrentGame(),
-                                                  state.getLanguage());
+    connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
+    connect(task, &Task::error, this, &MainWindow::handleError);
 
-    auto preludeTask = new QueryTask(std::move(updatePrelude));
-
-    connect(
-        preludeTask, &Task::finished, this, &MainWindow::handlePreludeUpdated);
-    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
-
-    auto masterlistTask = new QueryTask(std::move(updateMasterlistQuery));
-
-    connect(masterlistTask,
-            &Task::finished,
-            this,
-            &MainWindow::handleMasterlistUpdated);
-    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
-
-    tasks.push_back(preludeTask);
-    tasks.push_back(masterlistTask);
+    tasks.push_back(task);
   }
 
   auto progressUpdater = new ProgressUpdater();
@@ -1074,33 +1054,6 @@ void MainWindow::sendHttpRequest(const std::string& url,
           &QNetworkReply::sslErrors,
           this,
           &MainWindow::handleUpdateCheckSSLError);
-}
-
-std::optional<QJsonDocument> MainWindow::readHttpResponse(
-    QNetworkReply* reply) {
-  auto statusCode =
-      reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-  auto data = reply->readAll();
-  reply->deleteLater();
-
-  if (statusCode < 200 || statusCode >= 400) {
-    auto logger = getLogger();
-    if (logger) {
-      auto json = QJsonDocument::fromJson(data);
-
-      logger->error(
-          "Error while checking for LOOT updates: unexpected HTTP response "
-          "status code: {}. Error message in response is: {}",
-          statusCode,
-          json["message"].toString().toStdString());
-    }
-
-    addUpdateCheckErrorMessage();
-    return std::nullopt;
-  }
-
-  return QJsonDocument::fromJson(data);
 }
 
 void MainWindow::addUpdateAvailableMessage() {
@@ -1747,33 +1700,12 @@ void MainWindow::on_actionUpdateMasterlist_triggered(bool checked) {
 
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    std::unique_ptr<Query> updatePrelude = std::make_unique<UpdatePreludeQuery>(
-        state.getPreludePath(),
-        state.getPreludeRepositoryURL(),
-        state.getPreludeRepositoryBranch());
+    auto task = new UpdateMasterlistTask(state);
 
-    std::unique_ptr<Query> updateMasterlistQuery =
-        std::make_unique<UpdateMasterlistQuery<>>(state.GetCurrentGame(),
-                                                  state.getLanguage());
+    connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
+    connect(task, &Task::error, this, &MainWindow::handleError);
 
-    auto preludeTask = new QueryTask(std::move(updatePrelude));
-
-    connect(
-        preludeTask, &Task::finished, this, &MainWindow::handlePreludeUpdated);
-    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
-
-    auto masterlistTask = new QueryTask(std::move(updateMasterlistQuery));
-
-    connect(masterlistTask,
-            &Task::finished,
-            this,
-            &MainWindow::handleMasterlistUpdated);
-    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
-
-    tasks.push_back(preludeTask);
-    tasks.push_back(masterlistTask);
-
-    executeBackgroundTasks(tasks, nullptr);
+    executeBackgroundTasks({task}, nullptr);
   } catch (std::exception& e) {
     handleException(e);
   }
@@ -2049,28 +1981,21 @@ void MainWindow::handlePluginsAutoSorted(QueryResult result) {
   }
 }
 
-void MainWindow::handlePreludeUpdated(QueryResult result) {
-  try {
-    if (std::holds_alternative<FileRevisionSummary>(result)) {
-      auto preludeInfo = std::get<FileRevisionSummary>(result);
-
-      pluginItemModel->setPreludeRevision(preludeInfo);
-    }
-  } catch (std::exception& e) {
-    handleException(e);
-  }
-}
-
 void MainWindow::handleMasterlistUpdated(QueryResult result) {
   try {
     if (!std::holds_alternative<PluginItems>(result)) {
+      progressDialog->reset();
       showNotification(translate("No masterlist update was necessary."));
+
+      // Update general info as the timestamp may have changed and if metadata
+      // was previously missing it can now be displayed.
+      updateGeneralInformation();
       return;
     }
 
     handleGameDataLoaded(result);
 
-    auto masterlistInfo = GetFileRevisionToDisplay(
+    auto masterlistInfo = getFileRevisionSummary(
         state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
     auto infoText = (boost::format(boost::locale::translate(
                          "Masterlist updated to revision %s.")) %
@@ -2127,13 +2052,16 @@ void MainWindow::handleGetLatestReleaseResponseFinished() {
           "Finished receiving a response for getting the latest release's tag");
     }
 
-    auto json = readHttpResponse(qobject_cast<QNetworkReply*>(sender()));
+    auto responseData =
+        readHttpResponse(qobject_cast<QNetworkReply*>(sender()));
 
-    if (!json.has_value()) {
+    if (!responseData.has_value()) {
+      addUpdateCheckErrorMessage();
       return;
     }
 
-    auto tagName = json.value()["tag_name"].toString().toStdString();
+    auto json = QJsonDocument::fromJson(responseData.value());
+    auto tagName = json["tag_name"].toString().toStdString();
 
     auto comparisonResult = compareLOOTVersion(tagName);
     if (comparisonResult < 0) {
@@ -2162,19 +2090,22 @@ void MainWindow::handleGetTagCommitResponseFinished() {
           "commit");
     }
 
-    auto json = readHttpResponse(qobject_cast<QNetworkReply*>(sender()));
+    auto responseData =
+        readHttpResponse(qobject_cast<QNetworkReply*>(sender()));
 
-    if (!json.has_value()) {
+    if (!responseData.has_value()) {
+      addUpdateCheckErrorMessage();
       return;
     }
 
-    auto commitHash = json.value()["sha"].toString().toStdString();
+    auto json = QJsonDocument::fromJson(responseData.value());
+    auto commitHash = json["sha"].toString().toStdString();
 
     if (boost::istarts_with(commitHash, gui::Version::revision)) {
       return;
     }
 
-    auto tagCommitDate = getDateFromCommitJson(json.value(), commitHash);
+    auto tagCommitDate = getDateFromCommitJson(json, commitHash);
     if (!tagCommitDate.has_value()) {
       addUpdateCheckErrorMessage();
       return;
@@ -2195,14 +2126,16 @@ void MainWindow::handleGetTagCommitResponseFinished() {
             "commit");
       }
 
-      auto json = readHttpResponse(reply);
+      auto responseData = readHttpResponse(reply);
 
-      if (!json.has_value()) {
+      if (!responseData.has_value()) {
+        addUpdateCheckErrorMessage();
         return;
       }
 
+      auto json = QJsonDocument::fromJson(responseData.value());
       auto buildCommitDate =
-          getDateFromCommitJson(json.value(), gui::Version::revision);
+          getDateFromCommitJson(json, gui::Version::revision);
       if (!buildCommitDate.has_value()) {
         addUpdateCheckErrorMessage();
         return;

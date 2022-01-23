@@ -234,8 +234,7 @@ TEST(
                              .SetName("different")
                              .SetMinimumHeaderVersion(100.0f)
                              .SetRegistryKeys({"different"})
-                             .SetRepoURL("different")
-                             .SetRepoBranch("different");
+                             .SetMasterlistSource("different");
   auto settings = manager.LoadInstalledGames(
       {newGameSettings}, std::filesystem::path(), std::filesystem::path());
 
@@ -247,17 +246,15 @@ TEST(
             manager.GetCurrentGame().MinimumHeaderVersion());
   EXPECT_EQ(newGameSettings.RegistryKeys(),
             manager.GetCurrentGame().RegistryKeys());
-  EXPECT_EQ(newGameSettings.RepoURL(), manager.GetCurrentGame().RepoURL());
-  EXPECT_EQ(newGameSettings.RepoBranch(),
-            manager.GetCurrentGame().RepoBranch());
+  EXPECT_EQ(newGameSettings.MasterlistSource(),
+            manager.GetCurrentGame().MasterlistSource());
 
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ(newGameSettings.Name(), settings[0].Name());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
             settings[0].MinimumHeaderVersion());
   EXPECT_EQ(newGameSettings.RegistryKeys(), settings[0].RegistryKeys());
-  EXPECT_EQ(newGameSettings.RepoURL(), settings[0].RepoURL());
-  EXPECT_EQ(newGameSettings.RepoBranch(), settings[0].RepoBranch());
+  EXPECT_EQ(newGameSettings.MasterlistSource(), settings[0].MasterlistSource());
 }
 
 TEST(GamesManager, getCurrentGameShouldThrowIfNoGamesAreInstalled) {

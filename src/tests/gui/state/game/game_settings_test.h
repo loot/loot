@@ -59,8 +59,7 @@ TEST_P(
   EXPECT_EQ("", settings_.Master());
   EXPECT_EQ(0.0, settings_.MinimumHeaderVersion());
   EXPECT_EQ(std::vector<std::string>(), settings_.RegistryKeys());
-  EXPECT_EQ("", settings_.RepoURL());
-  EXPECT_EQ("", settings_.RepoBranch());
+  EXPECT_EQ("", settings_.MasterlistSource());
 
   EXPECT_EQ("", settings_.GamePath());
 }
@@ -71,8 +70,7 @@ TEST_P(GameSettingsTest,
 
   // Repo branch changes between LOOT versions, so don't check an exact value.
   EXPECT_EQ(GetParam(), settings_.Type());
-  EXPECT_NE("", settings_.RepoBranch());
-  EXPECT_EQ("", settings_.GamePath());
+  EXPECT_NE("", settings_.MasterlistSource());
 
   switch (GetParam()) {
     case GameType::fo3:
@@ -94,7 +92,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\12"
                "48282609_is1\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/fallout3.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/fallout3/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::fonv:
       EXPECT_EQ("Fallout: New Vegas", settings_.Name());
@@ -115,7 +116,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
                "54587428_is1\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/falloutnv.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/falloutnv/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::fo4:
       EXPECT_EQ("Fallout 4", settings_.Name());
@@ -128,7 +132,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 377160\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/fallout4.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/fallout4/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::fo4vr:
       EXPECT_EQ("Fallout 4 VR", settings_.Name());
@@ -142,7 +149,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 611660\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/fallout4vr.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/fallout4vr/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::tes3:
       EXPECT_EQ("TES III: Morrowind", settings_.Name());
@@ -161,7 +171,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
                "35828767_is1\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/morrowind.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/morrowind/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::tes4:
       EXPECT_EQ("TES IV: Oblivion", settings_.Name());
@@ -182,7 +195,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
                "58058109_is1\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/oblivion.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/oblivion/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::tes5:
       EXPECT_EQ("TES V: Skyrim", settings_.Name());
@@ -195,7 +211,9 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 72850\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/skyrim.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/skyrim/v0.17/masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::tes5se:
       EXPECT_EQ("TES V: Skyrim Special Edition", settings_.Name());
@@ -209,7 +227,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 489830\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/skyrimse.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/skyrimse/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     case GameType::tes5vr:
       EXPECT_EQ("TES V: Skyrim VR", settings_.Name());
@@ -223,7 +244,10 @@ TEST_P(GameSettingsTest,
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "eam App 611670\\InstallLocation"}),
           settings_.RegistryKeys());
-      EXPECT_EQ("https://github.com/loot/skyrimvr.git", settings_.RepoURL());
+      EXPECT_EQ(
+          "https://raw.githubusercontent.com/loot/skyrimvr/v0.17/"
+          "masterlist.yaml",
+          settings_.MasterlistSource());
       break;
     default:
       FAIL();
@@ -234,20 +258,6 @@ TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
   settings_ = GameSettings(GameType::tes5, "folder");
 
   EXPECT_EQ("folder", settings_.FolderName());
-}
-
-TEST_P(GameSettingsTest, isRepoBranchOldDefaultShouldBeTrueIfValueIsMaster) {
-  settings_ = GameSettings(GameType::tes5);
-  settings_.SetRepoBranch("master");
-
-  EXPECT_TRUE(settings_.IsRepoBranchOldDefault());
-}
-
-TEST_P(GameSettingsTest,
-       isRepoBranchOldDefaultShouldBeFalseIfValueIsTheDefault) {
-  settings_ = GameSettings(GameType::tes5);
-
-  EXPECT_FALSE(settings_.IsRepoBranchOldDefault());
 }
 
 TEST_P(GameSettingsTest,
@@ -316,15 +326,13 @@ TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
                            .SetMaster("master1")
                            .SetMinimumHeaderVersion(0.94f)
                            .SetRegistryKeys({"key1"})
-                           .SetRepoURL("url1")
-                           .SetRepoBranch("branch1")
+                           .SetMasterlistSource("url1")
                            .SetGamePath("path1");
   GameSettings game2 = GameSettings(GameType::tes5, "game2")
                            .SetMaster("master2")
                            .SetMinimumHeaderVersion(1.34f)
                            .SetRegistryKeys({"key2"})
-                           .SetRepoURL("url2")
-                           .SetRepoBranch("branch2")
+                           .SetMasterlistSource("url2")
                            .SetGamePath("path2");
 
   EXPECT_TRUE(game1 == game2);
@@ -387,16 +395,10 @@ TEST_P(GameSettingsTest, setRegistryKeyShouldStoreGivenValue) {
   EXPECT_EQ(keys, settings_.RegistryKeys());
 }
 
-TEST_P(GameSettingsTest, setRepoUrlShouldStoreGivenValue) {
+TEST_P(GameSettingsTest, setMasterlistSourceShouldStoreGivenValue) {
   GameSettings settings_;
-  settings_.SetRepoURL("url");
-  EXPECT_EQ("url", settings_.RepoURL());
-}
-
-TEST_P(GameSettingsTest, setRepoBranchShouldStoreGivenValue) {
-  GameSettings settings_;
-  settings_.SetRepoBranch("branch");
-  EXPECT_EQ("branch", settings_.RepoBranch());
+  settings_.SetMasterlistSource("url");
+  EXPECT_EQ("url", settings_.MasterlistSource());
 }
 
 TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
@@ -417,78 +419,6 @@ TEST_P(GameSettingsTest,
   auto expectedPath =
       getLocalAppDataPath() / std::filesystem::u8path(folderName);
   EXPECT_EQ(expectedPath, settings_.GameLocalPath());
-}
-
-TEST_P(GameSettingsTest,
-       migrateSettingsShouldUpdateAnyOfficialRepositoryDefaultBranch) {
-  GameSettings settings(GameType::tes4);
-
-  settings.SetRepoURL("https://github.com/loot/some-masterlist-repo.git");
-  settings.SetRepoBranch("v0.15");
-
-  settings.MigrateSettings();
-
-  EXPECT_EQ("v0.17", settings.RepoBranch());
-}
-
-TEST_P(GameSettingsTest,
-       migrateSettingsShouldNotUpdateAnyNonOfficialRepositoryDefaultBranch) {
-  GameSettings settings(GameType::tes4);
-
-  settings.SetRepoURL(
-      "https://github.com/loot-unofficial/some-masterlist-repo.git");
-  settings.SetRepoBranch("v0.15");
-
-  settings.MigrateSettings();
-
-  EXPECT_EQ("v0.15", settings.RepoBranch());
-}
-
-TEST_P(GameSettingsTest,
-       migrateSettingsShouldUpdateSkyrimVrRepoUrlFromOldDefaultRepoUrl) {
-  GameSettings settings(GameType::tes5vr);
-
-  settings.SetRepoURL("https://github.com/loot/skyrimse.git");
-
-  settings.MigrateSettings();
-
-  EXPECT_EQ(GameSettings(GameType::tes5vr).RepoURL(), settings.RepoURL());
-}
-
-TEST_P(GameSettingsTest,
-       migrateSettingsShouldNotUpdateSkyrimVrRepoUrlFromNonOldDefaultRepoUrl) {
-  GameSettings settings(GameType::tes5vr);
-
-  auto url = "https://github.com/loot/skyrim.git";
-  settings.SetRepoURL(url);
-
-  settings.MigrateSettings();
-
-  EXPECT_EQ(url, settings.RepoURL());
-}
-
-TEST_P(GameSettingsTest,
-       migrateSettingsShouldUpdateFallout4VrRepoUrlFromOldDefaultRepoUrl) {
-  GameSettings settings(GameType::fo4vr);
-
-  settings.SetRepoURL("https://github.com/loot/fallout4.git");
-
-  settings.MigrateSettings();
-
-  EXPECT_EQ(GameSettings(GameType::fo4vr).RepoURL(), settings.RepoURL());
-}
-
-TEST_P(
-    GameSettingsTest,
-    migrateSettingsShouldNotUpdateFallout4VrRepoUrlFromNonOldDefaultRepoUrl) {
-  GameSettings settings(GameType::fo4vr);
-
-  auto url = "https://github.com/loot/skyrim.git";
-  settings.SetRepoURL(url);
-
-  settings.MigrateSettings();
-
-  EXPECT_EQ(url, settings.RepoURL());
 }
 }
 }

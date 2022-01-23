@@ -102,14 +102,9 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     game.SetMinimumHeaderVersion((float)*minimumHeaderVersion);
   }
 
-  auto repo = table->get_as<std::string>("repo");
-  if (repo) {
-    game.SetRepoURL(*repo);
-  }
-
-  auto branch = table->get_as<std::string>("branch");
-  if (branch) {
-    game.SetRepoBranch(*branch);
+  auto source = table->get_as<std::string>("masterlistSource");
+  if (source) {
+    game.SetMasterlistSource(*source);
   }
 
   auto path = table->get_as<std::string>("path");
@@ -137,8 +132,6 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
       game.SetRegistryKeys({*registry});
     }
   }
-
-  game.MigrateSettings();
 
   return game;
 }
@@ -203,7 +196,8 @@ LootSettings::LootSettings() :
                  "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Stea"
                  "m App 933480\\InstallLocation"})
             .SetGameLocalFolder("enderal")
-            .SetRepoURL("https://github.com/loot/enderal.git"),
+            .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
+                                 "enderal/v0.17/masterlist.yaml"),
         GameSettings(GameType::tes5se, "Enderal Special Edition")
             .SetName("Enderal: Forgotten Stories (Special Edition)")
             .SetRegistryKeys(
@@ -211,7 +205,8 @@ LootSettings::LootSettings() :
                  "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Stea"
                  "m App 976620\\InstallLocation"})
             .SetGameLocalFolder("Enderal Special Edition")
-            .SetRepoURL("https://github.com/loot/enderal.git"),
+            .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
+                                 "enderal/v0.17/masterlist.yaml"),
     }),
     languages_({
         Language({"en", "English", std::nullopt}),
@@ -241,8 +236,8 @@ LootSettings::LootSettings() :
     language_("en"),
     theme_("default"),
     lastGame_("auto"),
-    preludeRepositoryBranch_("v0.17"),
-    preludeRepositoryURL_("https://github.com/loot/prelude.git") {}
+    preludeSource_(
+        "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml") {}
 
 void LootSettings::load(const std::filesystem::path& file,
                         const std::filesystem::path& lootDataPath) {
@@ -270,10 +265,8 @@ void LootSettings::load(const std::filesystem::path& file,
   lastVersion_ =
       settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
 
-  preludeRepositoryURL_ = settings->get_as<std::string>("preludeRepo")
-                              .value_or(preludeRepositoryURL_);
-  preludeRepositoryBranch_ = settings->get_as<std::string>("preludeBranch")
-                                 .value_or(preludeRepositoryBranch_);
+  preludeSource_ =
+      settings->get_as<std::string>("preludeSource").value_or(preludeSource_);
 
   auto windowTop = settings->get_qualified_as<long>("window.top");
   auto windowBottom = settings->get_qualified_as<long>("window.bottom");
@@ -353,8 +346,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   root->insert("theme", theme_);
   root->insert("lastGame", lastGame_);
   root->insert("lastVersion", lastVersion_);
-  root->insert("preludeRepo", preludeRepositoryURL_);
-  root->insert("preludeBranch", preludeRepositoryBranch_);
+  root->insert("preludeSource", preludeSource_);
 
   if (windowPosition_.has_value()) {
     auto windowPosition = windowPosition_.value();
@@ -377,8 +369,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       game->insert("folder", gameSettings.FolderName());
       game->insert("master", gameSettings.Master());
       game->insert("minimumHeaderVersion", gameSettings.MinimumHeaderVersion());
-      game->insert("repo", gameSettings.RepoURL());
-      game->insert("branch", gameSettings.RepoBranch());
+      game->insert("masterlistSource", gameSettings.MasterlistSource());
       game->insert("path", gameSettings.GamePath().u8string());
       game->insert("local_path", gameSettings.GameLocalPath().u8string());
 
@@ -478,16 +469,10 @@ std::string LootSettings::getTheme() const {
   return theme_;
 }
 
-std::string LootSettings::getPreludeRepositoryURL() const {
+std::string LootSettings::getPreludeSource() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return preludeRepositoryURL_;
-}
-
-std::string LootSettings::getPreludeRepositoryBranch() const {
-  lock_guard<recursive_mutex> guard(mutex_);
-
-  return preludeRepositoryBranch_;
+  return preludeSource_;
 }
 
 std::optional<LootSettings::WindowPosition> LootSettings::getWindowPosition()
@@ -533,16 +518,10 @@ void LootSettings::setTheme(const std::string& theme) {
   theme_ = theme;
 }
 
-void LootSettings::setPreludeRepositoryURL(const std::string& url) {
+void LootSettings::setPreludeSource(const std::string& source) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  preludeRepositoryURL_ = url;
-}
-
-void LootSettings::setPreludeRepositoryBranch(const std::string& branch) {
-  lock_guard<recursive_mutex> guard(mutex_);
-
-  preludeRepositoryBranch_ = branch;
+  preludeSource_ = source;
 }
 
 void LootSettings::setAutoSort(bool autoSort) {

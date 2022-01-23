@@ -31,13 +31,8 @@ Check for LOOT updates on startup
 Enable Debug Logging
   If enabled, writes debug output to ``%LOCALAPPDATA%\LOOT\LOOTDebugLog.txt``. Debug logging can have a noticeable impact on performance, so it is off by default.
 
-Masterlist prelude repository URL
-  The URL of the repository that LOOT uses to update its local copy of the masterlist prelude.
-
-  Masterlist prelude repositories are `Git`_ repositories that are configured to allow unauthenticated read access and contain a file named ``prelude.yaml`` in their root directory. The LOOT team maintains a repository for the official masterlist prelude that's used with the official game masterlists.
-
-Masterlist prelude repository branch
-  The branch of the masterlist prelude repository that LOOT should get updates from.
+Masterlist prelude source
+  The URL of a masterlist prelude file that LOOT uses to update its local copy of the masterlist prelude.
 
 Game Settings
 =============
@@ -69,13 +64,8 @@ Master File
 Minimum Header Version
   LOOT will display a warning message for any plugin that has a header version less than this value. Note that this version is different from any version that LOOT may be able to read from the plugin's description field.
 
-Masterlist Repository URL
-  The URL of the repository that LOOT uses to update its local copy of the masterlist. If left empty, masterlist updating will be skipped.
-
-  Masterlist repositories are `Git`_ repositories that are configured to allow unauthenticated read access and contain a masterlist file named ``masterlist.yaml`` in their root directory. The LOOT team maintains a set of official repositories for the games that LOOT supports by default.
-
-Masterlist Repository Branch
-  The branch of the masterlist repository that LOOT should get masterlist updates from.
+Masterlist Source
+  The URL of a masterlist file that LOOT uses to update its local copy of the masterlist.
 
 Install Path
   The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
@@ -89,5 +79,3 @@ Install Path Registry Keys
 
 Local Data Path
   The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``.
-
-.. _Git: https://git-scm.com/

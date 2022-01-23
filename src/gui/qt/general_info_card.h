@@ -32,8 +32,8 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
 
+#include "gui/qt/helpers.h"
 #include "gui/qt/messages_widget.h"
-#include "gui/state/game/helpers.h"
 
 namespace loot {
 class GeneralInfoCard : public QFrame {

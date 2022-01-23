@@ -53,16 +53,14 @@ private:
   QLabel *updateMasterlistLabel;
   QLabel *checkUpdatesLabel;
   QLabel *loggingLabel;
-  QLabel *preludeUrlLabel;
-  QLabel *preludeBranchLabel;
+  QLabel *preludeSourceLabel;
   QComboBox *defaultGameComboBox;
   QComboBox *languageComboBox;
   QComboBox *themeComboBox;
   QCheckBox *updateMasterlistCheckbox;
   QCheckBox *checkUpdatesCheckbox;
   QCheckBox *loggingCheckbox;
-  QLineEdit *preludeUrlInput;
-  QLineEdit *preludeBranchInput;
+  QLineEdit *preludeSourceInput;
 
   void setupUi();
   void translateUi();

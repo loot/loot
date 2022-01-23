@@ -58,16 +58,14 @@ private:
   QLabel *lootFolderLabel;
   QLabel *masterFileLabel;
   QLabel *minimumHeaderVersionLabel;
-  QLabel *repoUrlLabel;
-  QLabel *repoBranchLabel;
+  QLabel *masterlistSourceLabel;
   QLabel *installPathLabel;
   QLabel *registryKeysLabel;
   QLabel *localDataPathLabel;
   QLineEdit *nameInput;
   QLineEdit *lootFolderInput;
   QLineEdit *masterFileInput;
-  QLineEdit *repoUrlInput;
-  QLineEdit *repoBranchInput;
+  QLineEdit *masterlistSourceInput;
   QLineEdit *installPathInput;
   QLineEdit *localDataPathInput;
   QComboBox *baseGameComboBox;

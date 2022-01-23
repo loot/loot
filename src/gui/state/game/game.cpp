@@ -657,10 +657,6 @@ void Game::ClearMessages() {
   messages_.clear();
 }
 
-bool Game::UpdateMasterlist() const {
-  return UpdateFile(MasterlistPath(), RepoURL(), RepoBranch());
-}
-
 void Game::LoadMetadata() {
   auto logger = getLogger();
 

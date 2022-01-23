@@ -4,7 +4,7 @@
     Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR,
     Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.
 
-    Copyright (C) 2021    Oliver Hamlet
+    Copyright (C) 2022    Oliver Hamlet
 
     This file is part of LOOT.
 
@@ -23,24 +23,41 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_QT_GENERAL_INFO
-#define LOOT_GUI_QT_GENERAL_INFO
+#ifndef LOOT_GUI_QT_TASKS_UPDATE_MASTERLIST_TASK
+#define LOOT_GUI_QT_TASKS_UPDATE_MASTERLIST_TASK
 
-#include <loot/struct/simple_message.h>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 
-#include <QtCore/QMetaType>
-
-#include "gui/qt/helpers.h"
+#include "gui/qt/tasks/tasks.h"
 
 namespace loot {
-struct GeneralInformation {
-  FileRevisionSummary masterlistRevision;
-  FileRevisionSummary preludeRevision;
-  std::vector<SimpleMessage> generalMessages;
+class UpdateMasterlistTask : public Task {
+  Q_OBJECT
+public:
+  UpdateMasterlistTask(LootState &state);
 
-  std::string getMarkdownContent() const;
+public slots:
+  void execute() override;
+
+private:
+  LootState &state;
+
+  QNetworkAccessManager *networkAccessManager;
+
+  bool preludeUpdated;
+  bool masterlistUpdated;
+
+  void updatePrelude();
+  void updateMasterlist();
+  void finish();
+
+private slots:
+  void onMasterlistReplyFinished();
+  void onPreludeReplyFinished();
+  void onNetworkError(QNetworkReply::NetworkError error);
+  void onSSLError(const QList<QSslError> &errors);
 };
 }
 
-Q_DECLARE_METATYPE(loot::GeneralInformation);
 #endif

@@ -27,13 +27,50 @@
 #define LOOT_GUI_QT_HELPERS
 
 #include <loot/metadata/message_content.h>
+#include <loot/struct/file_revision.h>
 
+#include <QtCore/QByteArray>
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
+#include <QtNetwork/QNetworkReply>
+#include <filesystem>
 #include <vector>
 
+#include "gui/state/game/helpers.h"
+
 namespace loot {
+enum class FileType { Masterlist, MasterlistPrelude };
+
+struct FileRevisionSummary {
+  FileRevisionSummary();
+  FileRevisionSummary(const FileRevision& fileRevision);
+  FileRevisionSummary(const std::string& id, const std::string& date);
+
+  std::string id;
+  std::string date;
+};
+
 QString translate(const char* text);
+
+std::string calculateGitBlobHash(const QByteArray& data);
+
+std::string calculateGitBlobHash(const std::filesystem::path& filePath);
+
+FileRevision getFileRevision(const std::filesystem::path& filePath);
+
+FileRevisionSummary getFileRevisionSummary(
+    const std::filesystem::path& filePath,
+    FileType fileType);
+
+bool updateFileWithData(const std::filesystem::path& filePath,
+                        const QByteArray& data);
+
+bool updateFile(const std::filesystem::path& source,
+                const std::filesystem::path& destination);
+
+bool isValidUrl(const std::string& location);
+
+std::optional<QByteArray> readHttpResponse(QNetworkReply* reply);
 }
 
 Q_DECLARE_METATYPE(loot::MessageContent);

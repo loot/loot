@@ -100,8 +100,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetName("foo");
   settings.SetMaster(blankEsm);
   settings.SetRegistryKeys({"foo"});
-  settings.SetRepoURL("foo");
-  settings.SetRepoBranch("foo");
+  settings.SetMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
   EXPECT_EQ(GetParam(), game.Type());
@@ -109,8 +108,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(settings.FolderName(), game.FolderName());
   EXPECT_EQ(settings.Master(), game.Master());
   EXPECT_EQ(settings.RegistryKeys(), game.RegistryKeys());
-  EXPECT_EQ(settings.RepoURL(), game.RepoURL());
-  EXPECT_EQ(settings.RepoBranch(), game.RepoBranch());
+  EXPECT_EQ(settings.MasterlistSource(), game.MasterlistSource());
 
   EXPECT_EQ(settings.GamePath(), game.GamePath());
   auto lootGamePath =

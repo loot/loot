@@ -194,6 +194,7 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/style.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/update_masterlist_task.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
@@ -243,6 +244,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/style.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/update_masterlist_task.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/apply_sort_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/cancel_sort_query.h"
@@ -282,6 +284,7 @@ set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/unapplied_change_counter_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/helpers_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/tasks_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/backup_test.h"
@@ -317,6 +320,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
@@ -328,6 +332,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/backup.h"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
@@ -361,7 +366,7 @@ add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
     cpptoml libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Core Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
+    Qt::Core Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -477,6 +482,8 @@ else()
         libicuuc.so.56.1
         libQt6Core.so.6
         libQt6Core.so.6.2.2
+        libQt6Network.so.6
+        libQt6Network.so.6.2.2
         libQt6Test.so.6
         libQt6Test.so.6.2.2)
 

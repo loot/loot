@@ -211,6 +211,8 @@ Type: files; Name: "{localappdata}\{#MyAppName}\games\FalloutNV\masterlist.yaml"
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4\masterlist.yaml";
 Type: files; Name: "{localappdata}\{#MyAppName}\games\Fallout4VR\masterlist.yaml";
 
+; Although LOOT no longer uses Git repositories, they may be migrated from
+; previous versions of LOOT.
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Morrowind\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Oblivion\.git";
 Type: filesandordirs; Name: "{localappdata}\{#MyAppName}\games\Nehrim\.git";

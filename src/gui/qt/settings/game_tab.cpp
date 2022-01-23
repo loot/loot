@@ -64,8 +64,7 @@ GameSettings GameTab::getGameSettings() const {
   auto lootFolder = lootFolderInput->text().toStdString();
   auto masterFile = masterFileInput->text().toStdString();
   float minimumHeaderVersion = minimumHeaderVersionSpinBox->value();
-  auto repoUrl = repoUrlInput->text().toStdString();
-  auto repoBranch = repoBranchInput->text().toStdString();
+  auto masterlistSource = masterlistSourceInput->text().toStdString();
   auto installPath =
       std::filesystem::u8path(installPathInput->text().toStdString());
 
@@ -84,8 +83,7 @@ GameSettings GameTab::getGameSettings() const {
   settings.SetName(name);
   settings.SetMaster(masterFile);
   settings.SetMinimumHeaderVersion(minimumHeaderVersion);
-  settings.SetRepoURL(repoUrl);
-  settings.SetRepoBranch(repoBranch);
+  settings.SetMasterlistSource(masterlistSource);
   settings.SetRegistryKeys(registryKeys);
   settings.SetGamePath(installPath);
   settings.SetGameLocalPath(localDataPath);
@@ -109,11 +107,8 @@ void GameTab::setupUi() {
   minimumHeaderVersionLabel = new QLabel(this);
   minimumHeaderVersionSpinBox = new QDoubleSpinBox(this);
 
-  repoUrlLabel = new QLabel(this);
-  repoUrlInput = new QLineEdit(this);
-
-  repoBranchLabel = new QLabel(this);
-  repoBranchInput = new QLineEdit(this);
+  masterlistSourceLabel = new QLabel(this);
+  masterlistSourceInput = new QLineEdit(this);
 
   installPathLabel = new QLabel(this);
   installPathInput = new QLineEdit(this);
@@ -134,8 +129,7 @@ void GameTab::setupUi() {
   generalLayout->addRow(lootFolderLabel, lootFolderInput);
   generalLayout->addRow(masterFileLabel, masterFileInput);
   generalLayout->addRow(minimumHeaderVersionLabel, minimumHeaderVersionSpinBox);
-  generalLayout->addRow(repoUrlLabel, repoUrlInput);
-  generalLayout->addRow(repoBranchLabel, repoBranchInput);
+  generalLayout->addRow(masterlistSourceLabel, masterlistSourceInput);
   generalLayout->addRow(installPathLabel, installPathInput);
   generalLayout->addRow(registryKeysLabel, registryKeysInput);
   generalLayout->addRow(localDataPathLabel, localDataPathInput);
@@ -153,8 +147,7 @@ void GameTab::translateUi() {
   lootFolderLabel->setText(translate("LOOT Folder"));
   masterFileLabel->setText(translate("Master File"));
   minimumHeaderVersionLabel->setText(translate("Minimum Header Version"));
-  repoUrlLabel->setText(translate("Masterlist Repository URL"));
-  repoBranchLabel->setText(translate("Masterlist Repository Branch"));
+  masterlistSourceLabel->setText(translate("Masterlist Source"));
   installPathLabel->setText(translate("Install Path"));
   registryKeysLabel->setText(translate("Install Path Registry Keys"));
   localDataPathLabel->setText(translate("Local Data Path"));
@@ -168,8 +161,8 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   lootFolderInput->setText(QString::fromStdString(settings.FolderName()));
   masterFileInput->setText(QString::fromStdString(settings.Master()));
   minimumHeaderVersionSpinBox->setValue(settings.MinimumHeaderVersion());
-  repoUrlInput->setText(QString::fromStdString(settings.RepoURL()));
-  repoBranchInput->setText(QString::fromStdString(settings.RepoBranch()));
+  masterlistSourceInput->setText(
+      QString::fromStdString(settings.MasterlistSource()));
   installPathInput->setText(
       QString::fromStdString(settings.GamePath().u8string()));
   localDataPathInput->setText(

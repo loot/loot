@@ -34,12 +34,12 @@ std::string GeneralInformation::getMarkdownContent() const {
   content += "## Masterlist Revision\n\n";
 
   content += "- ID: " + masterlistRevision.id + "\n";
-  content += "- Date: " + masterlistRevision.date + "\n\n";
+  content += "- Update Date: " + masterlistRevision.date + "\n\n";
 
   content += "## Masterlist Prelude Revision\n\n";
 
   content += "- ID: " + preludeRevision.id + "\n";
-  content += "- Date: " + preludeRevision.date + "\n\n";
+  content += "- Update Date: " + preludeRevision.date + "\n\n";
 
   if (!generalMessages.empty()) {
     content += messagesAsMarkdown(generalMessages);

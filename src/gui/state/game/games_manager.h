@@ -79,8 +79,7 @@ public:
             .SetName(gameSettings.Name())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
             .SetRegistryKeys(gameSettings.RegistryKeys())
-            .SetRepoURL(gameSettings.RepoURL())
-            .SetRepoBranch(gameSettings.RepoBranch());
+            .SetMasterlistSource(gameSettings.MasterlistSource());
 
         installedGames.push_back(GetCurrentGame());
         currentGameUpdated = true;

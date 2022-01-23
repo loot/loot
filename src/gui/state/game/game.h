@@ -87,8 +87,6 @@ public:
   void AppendMessage(const Message& message);
   void ClearMessages();
 
-  bool UpdateMasterlist() const;
-
   void LoadMetadata();
   std::vector<std::string> GetKnownBashTags() const;
 
