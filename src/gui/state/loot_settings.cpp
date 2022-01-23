@@ -27,7 +27,9 @@
 
 #include <cpptoml.h>
 
+#include <boost/algorithm/string.hpp>
 #include <fstream>
+#include <regex>
 #include <thread>
 
 #include "gui/state/logging.h"
@@ -40,6 +42,305 @@ using std::string;
 using std::filesystem::u8path;
 
 namespace loot {
+static const std::set<std::string> oldDefaultBranches(
+    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15"});
+
+static const std::regex GITHUB_REPO_URL_REGEX =
+    std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
+               std::regex::ECMAScript | std::regex::icase);
+
+static const std::string DEFAULT_MASTERLIST_BRANCH = "v0.17";
+
+std::string getOldDefaultRepoUrl(GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+      return "https://github.com/loot/morrowind.git";
+    case GameType::tes4:
+      return "https://github.com/loot/oblivion.git";
+    case GameType::tes5:
+      return "https://github.com/loot/skyrim.git";
+    case GameType::tes5se:
+      return "https://github.com/loot/skyrimse.git";
+    case GameType::tes5vr:
+      return "https://github.com/loot/skyrimvr.git";
+    case GameType::fo3:
+      return "https://github.com/loot/fallout3.git";
+    case GameType::fonv:
+      return "https://github.com/loot/falloutnv.git";
+    case GameType::fo4:
+      return "https://github.com/loot/fallout4.git";
+    case GameType::fo4vr:
+      return "https://github.com/loot/fallout4vr.git";
+    default:
+      throw std::runtime_error(
+          "Unrecognised game type: " +
+          std::to_string(
+              static_cast<std::underlying_type_t<GameType>>(gameType)));
+  }
+}
+
+bool isLocalPath(const std::string& location, const std::string& filename) {
+  if (boost::starts_with(location, "http://") ||
+      boost::starts_with(location, "https://")) {
+    return false;
+  }
+
+  // Could be a local path. Only return true if it points to a non-bare
+  // Git repository that currently has the given branch checked out and
+  // the given filename exists in the repo root.
+  auto locationPath = std::filesystem::u8path(location);
+
+  auto filePath = locationPath / std::filesystem::u8path(filename);
+
+  if (!std::filesystem::is_regular_file(filePath)) {
+    return false;
+  }
+
+  auto headFilePath = locationPath / ".git" / "HEAD";
+
+  return std::filesystem::is_regular_file(headFilePath);
+}
+
+bool isBranchCheckedOut(const std::filesystem::path& localGitRepo,
+                        const std::string& branch) {
+  auto headFilePath = localGitRepo / ".git" / "HEAD";
+
+  std::ifstream in(headFilePath);
+  if (!in.is_open()) {
+    return false;
+  }
+
+  std::string line;
+  std::getline(in, line);
+  in.close();
+
+  return line == "ref: refs/heads/" + branch;
+}
+
+std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
+                                                         std::string url,
+                                                         std::string branch) {
+  auto logger = getLogger();
+
+  if (oldDefaultBranches.count(branch) == 1) {
+    // Update to the latest masterlist branch.
+    if (logger) {
+      logger->info("Updating masterlist repository branch from {} to {}",
+                   branch,
+                   DEFAULT_MASTERLIST_BRANCH);
+    }
+    branch = DEFAULT_MASTERLIST_BRANCH;
+  }
+
+  if (gameType == GameType::tes5vr &&
+      url == "https://github.com/loot/skyrimse.git") {
+    // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
+    auto newUrl = "https://github.com/loot/skyrimvr.git";
+    if (logger) {
+      logger->info(
+          "Updating masterlist repository URL from {} to {}", url, newUrl);
+    }
+    url = newUrl;
+  }
+
+  if (gameType == GameType::fo4vr &&
+      url == "https://github.com/loot/fallout4.git") {
+    // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
+    auto newUrl = "https://github.com/loot/fallout4vr.git";
+    if (logger) {
+      logger->info(
+          "Updating masterlist repository URL from {} to {}", url, newUrl);
+    }
+    url = newUrl;
+  }
+
+  auto filename = "masterlist.yaml";
+  if (isLocalPath(url, filename)) {
+    auto localRepoPath = std::filesystem::u8path(url);
+    if (!isBranchCheckedOut(localRepoPath, branch) && logger) {
+      logger->warn(
+          "The URL {} is a local Git repository path but the configured branch "
+          "{} is not checked out. LOOT will use the path as the masterlist "
+          "source, but there may be unexpected differences in the loaded "
+          "metadata if the {} branch is not manually checked out before the "
+          "next time the masterlist is updated.",
+          url,
+          branch,
+          branch);
+    }
+
+    return (localRepoPath / filename).u8string();
+  }
+
+  std::smatch regexMatches;
+  std::regex_match(url, regexMatches, GITHUB_REPO_URL_REGEX);
+  if (regexMatches.size() != 3) {
+    if (logger) {
+      logger->warn(
+          "Cannot migrate masterlist repository settings as the URL does not "
+          "point to a repository on GitHub.");
+    }
+    return std::nullopt;
+  }
+
+  auto githubOwner = regexMatches[1].str();
+  auto githubRepo = regexMatches[2].str();
+
+  return "https://raw.githubusercontent.com/" + githubOwner + "/" + githubRepo +
+         "/" + branch + "/masterlist.yaml";
+}
+
+std::optional<std::string> migrateMasterlistRepoSettings(
+    GameType gameType,
+    cpptoml::option<std::string> url,
+    cpptoml::option<std::string> branch) {
+  auto logger = getLogger();
+
+  if (!url && !branch) {
+    if (logger) {
+      logger->debug("Masterlist URL and branch are not configured.");
+    }
+    return std::nullopt;
+  }
+
+  if (!url) {
+    // No url, it would be set to a game-type-dependent default.
+    url = getOldDefaultRepoUrl(gameType);
+    if (logger) {
+      logger->warn(
+          "Found game branch config property but not repo, "
+          "defaulting repo to {} for migration.",
+          *url);
+    }
+  }
+
+  if (!branch) {
+    // No branch, it would be set to the default, which was v0.17.
+    branch = DEFAULT_MASTERLIST_BRANCH;
+    if (logger) {
+      logger->warn(
+          "Found repo config property but not branch, "
+          "defaulting branch to {} for migration.",
+          *branch);
+    }
+  }
+
+  auto migratedSource = migrateMasterlistRepoSettings(gameType, *url, *branch);
+  if (migratedSource.has_value() && logger) {
+    logger->info(
+        "Migrated masterlist repository URL {} and branch {} to source {}",
+        *url,
+        *branch,
+        migratedSource.value());
+  } else if (logger) {
+    logger->warn("Failed to migrate masterlist repository URL {} and branch {}",
+                 *url,
+                 *branch);
+  }
+
+  return migratedSource;
+}
+
+std::optional<std::string> migratePreludeRepoSettings(const std::string& url,
+                                                      std::string branch) {
+  auto logger = getLogger();
+
+  if (oldDefaultBranches.count(branch) == 1) {
+    // Update to the latest masterlist prelude branch.
+    if (logger) {
+      logger->info(
+          "Updating masterlist prelude repository branch from {} to {}",
+          branch,
+          DEFAULT_MASTERLIST_BRANCH);
+    }
+    branch = DEFAULT_MASTERLIST_BRANCH;
+  }
+
+  auto filename = "prelude.yaml";
+  if (isLocalPath(url, filename)) {
+    auto localRepoPath = std::filesystem::u8path(url);
+    if (!isBranchCheckedOut(localRepoPath, branch) && logger) {
+      logger->warn(
+          "The URL {} is a local Git repository path but the configured branch "
+          "{} is not checked out. LOOT will use the path as the masterlist "
+          "prelude source, but there may be unexpected differences in the "
+          "loaded metadata if the {} branch is not manually checked out before "
+          "the next time the masterlist prelude is updated.",
+          url,
+          branch,
+          branch);
+    }
+
+    return (localRepoPath / filename).u8string();
+  }
+
+  std::smatch regexMatches;
+  std::regex_match(url, regexMatches, GITHUB_REPO_URL_REGEX);
+  if (regexMatches.size() != 3) {
+    if (logger) {
+      logger->warn(
+          "Cannot migrate masterlist prelude repository settings as the URL "
+          "does not point to a repository on GitHub.");
+    }
+    return std::nullopt;
+  }
+
+  auto githubOwner = regexMatches[1].str();
+  auto githubRepo = regexMatches[2].str();
+
+  return "https://raw.githubusercontent.com/" + githubOwner + "/" + githubRepo +
+         "/" + branch + "/prelude.yaml";
+}
+
+std::optional<std::string> migratePreludeRepoSettings(
+    cpptoml::option<std::string> url,
+    cpptoml::option<std::string> branch) {
+  auto logger = getLogger();
+
+  if (!url && !branch) {
+    if (logger) {
+      logger->debug("Prelude URL and branch are not configured.");
+    }
+    return std::nullopt;
+  }
+
+  if (!url) {
+    url = std::string("https://github.com/loot/prelude.git");
+    if (logger) {
+      logger->info(
+          "Found prelude branch config but not prelude repository URL, "
+          "defaulting the latter to {} for migration.",
+          *url);
+    }
+  }
+
+  if (!branch) {
+    // No branch, it would be set to the default.
+    branch = DEFAULT_MASTERLIST_BRANCH;
+    if (logger) {
+      logger->info(
+          "Found prelude repository URL config but not prelude branch, "
+          "defaulting the latter to {} for migration.",
+          *branch);
+    }
+  }
+
+  auto migratedSource = migratePreludeRepoSettings(*url, *branch);
+  if (migratedSource.has_value() && logger) {
+    logger->info(
+        "Migrated prelude repository URL {} and branch {} to source {}.",
+        *url,
+        *branch,
+        migratedSource.value());
+  } else if (logger) {
+    logger->warn("Failed to migrate prelude repository URL {} and branch {}.",
+                 *url,
+                 *branch);
+  }
+
+  return migratedSource;
+}
+
 GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
                      const std::filesystem::path& lootDataPath) {
   GameSettings game;
@@ -105,6 +406,14 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
   auto source = table->get_as<std::string>("masterlistSource");
   if (source) {
     game.SetMasterlistSource(*source);
+  } else {
+    auto url = table->get_as<std::string>("repo");
+    auto branch = table->get_as<std::string>("branch");
+    auto migratedSource =
+        migrateMasterlistRepoSettings(game.Type(), url, branch);
+    if (migratedSource.has_value()) {
+      game.SetMasterlistSource(migratedSource.value());
+    }
   }
 
   auto path = table->get_as<std::string>("path");
@@ -185,15 +494,16 @@ LootSettings::LootSettings() :
         GameSettings(GameType::tes4, "Nehrim")
             .SetName("Nehrim - At Fate's Edge")
             .SetMaster("Nehrim.esm")
-            .SetRegistryKeys(
-                {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehr"
-                 "im - At Fate's Edge_is1\\InstallLocation",
-                 std::string(NEHRIM_STEAM_REGISTRY_KEY)}),
+            .SetRegistryKeys({"Software\\Microsoft\\Windows\\CurrentVersion\\"
+                              "Uninstall\\Nehr"
+                              "im - At Fate's Edge_is1\\InstallLocation",
+                              std::string(NEHRIM_STEAM_REGISTRY_KEY)}),
         GameSettings(GameType::tes5, "Enderal")
             .SetName("Enderal: Forgotten Stories")
             .SetRegistryKeys(
                 {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
-                 "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Stea"
+                 "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
+                 "ea"
                  "m App 933480\\InstallLocation"})
             .SetGameLocalFolder("enderal")
             .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
@@ -201,8 +511,10 @@ LootSettings::LootSettings() :
         GameSettings(GameType::tes5se, "Enderal Special Edition")
             .SetName("Enderal: Forgotten Stories (Special Edition)")
             .SetRegistryKeys(
-                {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
-                 "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Stea"
+                {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_"
+                 "Path",
+                 "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
+                 "ea"
                  "m App 976620\\InstallLocation"})
             .SetGameLocalFolder("Enderal Special Edition")
             .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
@@ -265,8 +577,17 @@ void LootSettings::load(const std::filesystem::path& file,
   lastVersion_ =
       settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
 
-  preludeSource_ =
-      settings->get_as<std::string>("preludeSource").value_or(preludeSource_);
+  auto preludeSource = settings->get_as<std::string>("preludeSource");
+  if (preludeSource) {
+    preludeSource_ = *preludeSource;
+  } else {
+    auto url = settings->get_as<std::string>("preludeRepo");
+    auto branch = settings->get_as<std::string>("preludeBranch");
+    auto migratedSource = migratePreludeRepoSettings(url, branch);
+    if (migratedSource.has_value()) {
+      preludeSource_ = migratedSource.value();
+    }
+  }
 
   auto windowTop = settings->get_qualified_as<long>("window.top");
   auto windowBottom = settings->get_qualified_as<long>("window.bottom");

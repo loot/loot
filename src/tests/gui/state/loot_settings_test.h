@@ -31,6 +31,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/loot_settings.h"
 #include "gui/version.h"
+#include "tests/gui/test_helpers.h"
 
 namespace loot {
 bool operator==(const LootSettings::Language& lhs,
@@ -44,10 +45,30 @@ class LootSettingsTest : public CommonGameTestFixture {
 protected:
   LootSettingsTest() :
       settingsFile_(lootDataPath / "settings_.toml"),
-      unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml") {}
+      unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml"),
+      gitRepoPath_(getTempPath()) {}
+
+  void SetUp() override {
+    std::filesystem::create_directories(gitRepoPath_ / ".git");
+
+    touch(gitRepoPath_ / "masterlist.yaml");
+    touch(gitRepoPath_ / "prelude.yaml");
+
+    checkoutBranch(gitRepoPath_, "v0.17");
+  }
+
+  void TearDown() override { std::filesystem::remove_all(gitRepoPath_); }
+
+  void checkoutBranch(const std::filesystem::path& gitRepoPath,
+                      const std::string& branch) {
+    std::ofstream out(gitRepoPath_ / ".git" / "HEAD");
+    out << "ref: refs/heads/" + branch;
+    out.close();
+  }
 
   const std::filesystem::path settingsFile_;
   const std::filesystem::path unicodeSettingsFile_;
+  const std::filesystem::path gitRepoPath_;
   LootSettings settings_;
 };
 
@@ -395,6 +416,64 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
 }
 
 TEST_P(LootSettingsTest,
+       loadingTomlShouldIgnoreMasterlistRepoSettingsIfASourceIsAlsoGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "repo = \"https://github.com/loot/oblivion-foo/\"" << endl
+      << "branch = \"custom\"" << endl
+      << "masterlistSource = \"masterlist-source\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = "masterlist-source";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldUseDefaultMasterlistRepoUrlWhenMigratingIfItIsNotGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "branch = \"custom\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/oblivion/custom/"
+      "masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldUseDefaultMasterlistBranchWhenMigratingIfItIsNotGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "repo = \"https://github.com/loot/oblivion-foo/\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.17/"
+      "masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
        loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -427,12 +506,14 @@ TEST_P(
 
   settings_.load(settingsFile_, lootDataPath);
 
-  auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/oblivion/foo/masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
-       loadingTomlShouldNotUpgradeBranchesForNonDefaultGameRepositories) {
+TEST_P(
+    LootSettingsTest,
+    loadingTomlCannotMigrateMasterlistRepoAndBranchForNonDefaultGameRepositories) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -447,6 +528,387 @@ TEST_P(LootSettingsTest,
 
   auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldUpdateSkyrimVrRepoUrlFromOldDefaultRepoUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Skyrim VR\"" << endl
+      << "folder = \"Skyrim VR\"" << endl
+      << "repo = \"https://github.com/loot/skyrimse.git\"" << endl
+      << "branch = \"foo\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/skyrimvr/foo/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldMigrateSkyrimVrRepoUrlFromNonOldDefaultGitHubRepoUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Skyrim VR\"" << endl
+      << "folder = \"Skyrim VR\"" << endl
+      << "repo = \"https://github.com/loot/skyrim-vr.git\"" << endl
+      << "branch = \"foo\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/skyrim-vr/foo/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldUpdateFallout4VrRepoUrlFromOldDefaultRepoUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"https://github.com/loot/fallout4.git\"" << endl
+      << "branch = \"foo\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/fallout4vr/foo/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldMigrateFallout4VrRepoUrlFromNonOldDefaultGitHubRepoUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"https://github.com/loot/fallout4-vr.git\"" << endl
+      << "branch = \"foo\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/fallout4-vr/foo/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldInterpretTheMasterlistRepoUrlAsALocalPathIfThereIsAGitRepoWithTheMasterlistFileAndTheGivenBranchCheckedOut) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"" << escapedGitRepoPath << "\"" << endl
+      << "branch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "custom");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldIgnoreMasterlistRepoSettingsIfTheUrlIsALocalPathButNotADirectoryContainingAMasterlist) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"" << escapedGitRepoPath << "\"" << endl
+      << "branch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "custom");
+  std::filesystem::remove(gitRepoPath_ / "masterlist.yaml");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = GameSettings(GameType::fo4vr).MasterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldIgnoreMasterlistRepoSettingsIfTheUrlIsALocalPathButNotAGitRepository) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"" << escapedGitRepoPath << "\"" << endl
+      << "branch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "custom");
+  std::filesystem::remove_all(gitRepoPath_ / ".git");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = GameSettings(GameType::fo4vr).MasterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldUseTheMasterlistRepoUrlIfItIsALocalGitRepoButTheGivenBranchIsNotCheckedOut) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"" << escapedGitRepoPath << "\"" << endl
+      << "branch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "v0.17");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldIgnoreMasterlistRepoSettingsIfTheUrlIsNotALocalPathAndIsNotAGitHubRepoUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"http://example.com/loot/fallout4\"" << endl
+      << "branch = \"custom\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = GameSettings(GameType::fo4vr).MasterlistSource();
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldMigrateMasterlistRepoSettingsForAnyGitHubRepositoryUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Fallout4VR\"" << endl
+      << "folder = \"Fallout4VR\"" << endl
+      << "repo = \"https://github.com/my-forks/fallout4-vr.git\"" << endl
+      << "branch = \"custom\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/my-forks/fallout4-vr/custom/"
+      "masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldIgnorePreludeRepoSettingsIfASourceIsAlsoGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"https://github.com/loot/prelude.git\"" << endl
+      << "preludeBranch = \"custom\"" << endl
+      << "preludeSource = \"prelude-source\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = "prelude-source";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldUseDefaultPreludeRepoUrlWhenMigratingIfItIsNotGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeBranch = \"custom\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/custom/"
+      "prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldUseDefaultPreludeBranchWhenMigratingIfItIsNotGiven) {
+  // This isn't actually testable, as prelude migration will ignore any URL
+  // that's not the official prelude repository's URL (as there's only ever
+  // been one), so the result is indistinguishable from the default value
+  // that is used if the old config gets ignored.
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"https://github.com/loot/prelude.git\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/v0.17/"
+      "prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldInterpretThePreludeRepoUrlAsALocalPathIfThereIsAGitRepoWithThePreludeFileAndTheGivenBranchCheckedOut) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"" << escapedGitRepoPath << "\"" << endl
+      << "preludeBranch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "custom");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = (gitRepoPath_ / "prelude.yaml").u8string();
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldIgnorePreludeRepoSettingsIfTheUrlIsALocalPathButNotADirectoryContainingAPreludeFile) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"" << escapedGitRepoPath << "\"" << endl
+      << "preludeBranch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "custom");
+  std::filesystem::remove(gitRepoPath_ / "prelude.yaml");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldIgnorePreludeRepoSettingsIfTheUrlIsALocalPathButNotAGitRepository) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"" << escapedGitRepoPath << "\"" << endl
+      << "preludeBranch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "custom");
+  std::filesystem::remove_all(gitRepoPath_ / ".git");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldUseThePreludeRepoUrlIfItIsALocalGitRepoButTheGivenBranchIsNotCheckedOut) {
+  auto escapedGitRepoPath =
+      boost::replace_all_copy(gitRepoPath_.u8string(), "\\", "\\\\");
+
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"" << escapedGitRepoPath << "\"" << endl
+      << "preludeBranch = \"custom\"";
+  out.close();
+
+  checkoutBranch(gitRepoPath_, "v0.17");
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource = (gitRepoPath_ / "prelude.yaml").u8string();
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingTomlShouldIgnorePreludeRepoSettingsIfTheUrlIsNotALocalPathAndIsNotAGitHubRepoUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"https://example.com/loot/prelude-test.git\"" << endl
+      << "preludeBranch = \"custom\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingTomlShouldMigratePreludeRepoSettingsForAnyGitHubRepositoryUrl) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeRepo = \"https://github.com/my-forks/prelude-test.git\""
+      << endl
+      << "preludeBranch = \"custom\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  auto expectedSource =
+      "https://raw.githubusercontent.com/my-forks/prelude-test/custom/"
+      "prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
 TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
