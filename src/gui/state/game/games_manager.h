@@ -96,9 +96,10 @@ public:
     installedGames_ = installedGames;
 
     if (currentGameUpdated) {
-      SetCurrentGameWithoutInit(currentGameFolder.value());
+      SetCurrentGame(currentGameFolder.value());
     } else if (currentGameFolder.has_value()) {
       SetCurrentGame(currentGameFolder.value());
+      InitialiseGameData(GetCurrentGame());
     } else {
       currentGame_ = installedGames_.end();
     }
@@ -129,8 +130,33 @@ public:
   }
 
   void SetCurrentGame(const std::string& newGameFolder) {
-    SetCurrentGameWithoutInit(newGameFolder);
-    InitialiseGameData(GetCurrentGame());
+    auto logger = getLogger();
+    if (logger) {
+      logger->debug("Setting the current game to that with folder: {}",
+                    newGameFolder);
+    }
+
+    currentGame_ = find_if(installedGames_.begin(),
+                           installedGames_.end(),
+                           [&](const gui::Game& game) {
+                             return newGameFolder == game.FolderName();
+                           });
+
+    if (currentGame_ == installedGames_.end()) {
+      logger->error(
+          "Cannot set the current game: the game with folder \"{}\" is not "
+          "installed.",
+          newGameFolder);
+      throw GameDetectionError(
+          "Cannot set the current game: the game with folder \"" +
+          newGameFolder +
+          "\" cannot be found. If it is installed, try running the game's "
+          "launcher to register its location.");
+    }
+
+    if (logger) {
+      logger->debug("New game is: {}", currentGame_->Name());
+    }
   }
 
   std::vector<std::string> GetInstalledGameFolderNames() const {
@@ -171,36 +197,6 @@ private:
     return game.GamePath() != newSettings.GamePath() ||
            game.GameLocalPath() != newSettings.GameLocalPath() ||
            game.Master() != newSettings.Master();
-  }
-
-  void SetCurrentGameWithoutInit(const std::string& newGameFolder) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->debug("Setting the current game to that with folder: {}",
-                    newGameFolder);
-    }
-
-    currentGame_ = find_if(installedGames_.begin(),
-                           installedGames_.end(),
-                           [&](const gui::Game& game) {
-                             return newGameFolder == game.FolderName();
-                           });
-
-    if (currentGame_ == installedGames_.end()) {
-      logger->error(
-          "Cannot set the current game: the game with folder \"{}\" is not "
-          "installed.",
-          newGameFolder);
-      throw GameDetectionError(
-          "Cannot set the current game: the game with folder \"" +
-          newGameFolder +
-          "\" cannot be found. If it is installed, try running the game's "
-          "launcher to register its location.");
-    }
-
-    if (logger) {
-      logger->debug("New game is: {}", currentGame_->Name());
-    }
   }
 
   std::vector<gui::Game> installedGames_;

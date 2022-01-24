@@ -40,6 +40,8 @@ public:
             const std::filesystem::path& lootDataPath);
 
   void init(const std::string& cmdLineGame, bool autoSort);
+  void initCurrentGame();
+
   const std::vector<SimpleMessage>& getInitMessages() const;
 
   void save(const std::filesystem::path& file);

@@ -205,23 +205,28 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
   qRegisterMetaType<std::string>("std::string");
 
   setupUi();
+
+  auto installedGames = state.GetInstalledGameFolderNames();
+
+  for (const auto& gameSettings : state.getGameSettings()) {
+    auto installedGame = std::find(installedGames.cbegin(),
+                                   installedGames.cend(),
+                                   gameSettings.FolderName());
+
+    if (installedGame != installedGames.cend()) {
+      gameComboBox->addItem(QString::fromStdString(gameSettings.Name()),
+                            QString::fromStdString(gameSettings.FolderName()));
+    }
+  }
 }
 
 void MainWindow::initialise() {
   try {
-    auto installedGames = state.GetInstalledGameFolderNames();
-
-    for (const auto& gameSettings : state.getGameSettings()) {
-      auto installedGame = std::find(installedGames.cbegin(),
-                                     installedGames.cend(),
-                                     gameSettings.FolderName());
-
-      if (installedGame != installedGames.cend()) {
-        gameComboBox->addItem(
-            QString::fromStdString(gameSettings.Name()),
-            QString::fromStdString(gameSettings.FolderName()));
-      }
+    if (state.getLastVersion() != gui::Version::string()) {
+      showFirstRunDialog();
     }
+
+    state.initCurrentGame();
 
     auto initMessages = state.getInitMessages();
     auto initHasErrored =
@@ -1953,8 +1958,6 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
       } else {
         sortPlugins(true);
       }
-    } else if (state.getLastVersion() != gui::Version::string()) {
-      showFirstRunDialog();
     }
   } catch (std::exception& e) {
     handleException(e);

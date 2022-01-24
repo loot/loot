@@ -26,12 +26,14 @@
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLibraryInfo>
+#include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtWidgets/QApplication>
 
 #include "gui/application_mutex.h"
 #include "gui/qt/main_window.h"
 #include "gui/qt/style.h"
+#include "gui/state/logging.h"
 #include "gui/state/loot_state.h"
 
 int main(int argc, char* argv[]) {
@@ -122,11 +124,57 @@ int main(int argc, char* argv[]) {
 
   if (wasMaximised) {
     mainWindow.showMaximized();
+
+    // If the main window is opened in its maximised state, its initial
+    // geometry (which is used to position dialog boxes) reflects its
+    // unmaximised position, so dialogs don't get centered correctly.
+    // As a workaround, repeatedly check every millisecond until the
+    // window geometry changes, and only then initialise the window
+    // content. This should only take a few milliseconds to complete,
+    // but it varies
+    auto logger = loot::getLogger();
+    const auto initialGeometry = mainWindow.geometry();
+    auto timer = new QTimer();
+    auto loopCounter = 1;
+    static constexpr int LOOP_COUNTER_MAX = 100;
+
+    timer->callOnTimeout([&]() {
+      if (logger) {
+        logger->info("Checking if maximised window geometry has updated.");
+      }
+
+      // Initialise after LOOP_COUNTER_MAX loops just in case the initial
+      // geometry is already correct. If it somehow takes over ~
+      // LOOP_COUNTER_MAX ms to update the initial geometry, then at least a UI
+      // that positions its initial dialog boxes incorrectly is better than one
+      // that never initialises at all.
+      if (mainWindow.geometry() != initialGeometry ||
+          loopCounter == LOOP_COUNTER_MAX) {
+        if (logger) {
+          auto message =
+              loopCounter == LOOP_COUNTER_MAX
+                  ? "Window geometry has not changed in " +
+                        std::to_string(LOOP_COUNTER_MAX) +
+                        " checks, initialising the UI anyway."
+                  : "Window geometry has updated, initialising the UI.";
+
+          logger->info(message);
+        }
+
+        mainWindow.initialise();
+
+        timer->stop();
+        timer->deleteLater();
+      }
+
+      loopCounter += 1;
+    });
+
+    timer->start(1);
   } else {
     mainWindow.show();
+    mainWindow.initialise();
   }
-
-  mainWindow.initialise();
 
   return app.exec();
 }

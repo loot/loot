@@ -148,7 +148,7 @@ TEST(
       std::filesystem::path());
 
   EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
-  EXPECT_EQ(2, manager.GetInitialiseCount(currentFolderName));
+  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
 
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ("different/Skyrim", settings[0].GamePath());
@@ -178,7 +178,7 @@ TEST(
       std::filesystem::path());
 
   EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
-  EXPECT_EQ(2, manager.GetInitialiseCount(currentFolderName));
+  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
 
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ("different", settings[0].GameLocalPath());
@@ -208,7 +208,7 @@ TEST(
       std::filesystem::path());
 
   EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
-  EXPECT_EQ(2, manager.GetInitialiseCount(currentFolderName));
+  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
 
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ("different", settings[0].Master());
@@ -239,7 +239,7 @@ TEST(
       {newGameSettings}, std::filesystem::path(), std::filesystem::path());
 
   EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
-  EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
+  EXPECT_EQ(0, manager.GetInitialiseCount(currentFolderName));
 
   EXPECT_EQ(newGameSettings.Name(), manager.GetCurrentGame().Name());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
@@ -294,7 +294,7 @@ TEST(GamesManager, setCurrentGameShouldUpdateStoredReference) {
             manager.GetCurrentGame().FolderName());
 }
 
-TEST(GamesManager, setCurrentGameShouldInitialiseGameData) {
+TEST(GamesManager, setCurrentGameShouldNotInitialiseGameData) {
   TestGamesManager manager;
   auto settings = manager.LoadInstalledGames(
       {
@@ -308,7 +308,7 @@ TEST(GamesManager, setCurrentGameShouldInitialiseGameData) {
   manager.SetCurrentGame(GameSettings(GameType::tes5).FolderName());
 
   EXPECT_EQ(
-      1, manager.GetInitialiseCount(GameSettings(GameType::tes5).FolderName()));
+      0, manager.GetInitialiseCount(GameSettings(GameType::tes5).FolderName()));
 }
 
 TEST(GamesManager,

@@ -43,6 +43,7 @@ public:
 
   QueryResult executeLogic() {
     gamesManager_.SetCurrentGame(gameFolder_);
+    gamesManager_.GetCurrentGame().Init();
 
     GetGameDataQuery<G> subQuery(
         gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);

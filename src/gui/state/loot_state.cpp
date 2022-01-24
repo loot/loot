@@ -245,6 +245,27 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     }
   } catch (std::exception& e) {
     if (logger) {
+      logger->error("Initial game could not be selected: {}", e.what());
+    }
+    initMessages_.push_back(PlainTextSimpleMessage(
+        MessageType::error,
+        (format(
+             translate("Error: The initial game could not be selected. %1%")) %
+         e.what())
+            .str()));
+  }
+}
+
+void LootState::initCurrentGame() {
+  auto logger = getLogger();
+
+  try {
+    GetCurrentGame().Init();
+    if (logger) {
+      logger->debug("Game named {} has been initialsed", GetCurrentGame().Name());
+    }
+  } catch (std::exception& e) {
+    if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());
     }
