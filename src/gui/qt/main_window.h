@@ -198,7 +198,7 @@ private:
 
   QMenu *createPopupMenu();
 
-  std::filesystem::path createBackup();
+  std::optional<std::filesystem::path> createBackup();
 
 private slots:
   void on_actionSettings_triggered(bool checked);

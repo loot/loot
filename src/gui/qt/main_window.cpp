@@ -849,11 +849,6 @@ void MainWindow::sortPlugins(bool isAutoSort) {
 void MainWindow::showFirstRunDialog() {
   auto zipPath = createBackup();
 
-  auto zipPathString = zipPath.u8string();
-  auto link = "<pre><a href=\"file:" + zipPathString +
-              "\" style=\"white-space: nowrap\">" + zipPathString +
-              "</a></pre>";
-
   std::string textTemplate = R"(
 <p>%1%</p>
 <p>%2%</p>
@@ -865,12 +860,26 @@ void MainWindow::showFirstRunDialog() {
 <p>%6%</p>
 )";
 
-  auto paragraph1 =
-      (boost::format(boost::locale::translate(
-           "This appears to be the first time you have run LOOT v%1%. Your "
-           "current LOOT data has been backed up to: %2%")) %
-       gui::Version::string() % link)
-          .str();
+  std::string paragraph1;
+  if (zipPath.has_value()) {
+    auto zipPathString = zipPath.value().u8string();
+    auto link = "<pre><a href=\"file:" + zipPathString +
+                "\" style=\"white-space: nowrap\">" + zipPathString +
+                "</a></pre>";
+
+    paragraph1 =
+        (boost::format(boost::locale::translate(
+             "This appears to be the first time you have run LOOT v%1%. Your "
+             "current LOOT data has been backed up to: %2%")) %
+         gui::Version::string() % link)
+            .str();
+  } else {
+    paragraph1 =
+        (boost::format(boost::locale::translate(
+             "This appears to be the first time you have run LOOT v%1%.")) %
+         gui::Version::string())
+            .str();
+  }
 
   auto paragraph2 = boost::locale::translate(
       "Here are some tips to help you get started with the interface.");
@@ -1256,7 +1265,7 @@ QMenu* MainWindow::createPopupMenu() {
   return filteredMenu;
 }
 
-std::filesystem::path MainWindow::createBackup() {
+std::optional<std::filesystem::path> MainWindow::createBackup() {
   auto backupBasename =
       "LOOT-backup-" +
       QDateTime::currentDateTime().toString("yyyyMMddThhmmss").toStdString();
@@ -1265,6 +1274,11 @@ std::filesystem::path MainWindow::createBackup() {
   auto destDir = state.getLootDataPath() / "backups" / backupBasename;
 
   loot::createBackup(sourceDir, destDir);
+
+  if (!std::filesystem::exists(destDir)) {
+    return std::nullopt;
+  }
+
   auto zipPath = compressDirectory(destDir);
 
   std::filesystem::remove_all(destDir);
@@ -1295,16 +1309,23 @@ void MainWindow::on_actionBackupData_triggered(bool checked) {
   try {
     auto zipPath = createBackup();
 
-    auto zipPathString = zipPath.u8string();
-    auto link = "<pre><a href=\"file:" + zipPathString +
-                "\" style=\"white-space: nowrap\">" + zipPathString +
-                "</a></pre>";
-    auto message = (boost::format(boost::locale::translate(
-                        "Your LOOT data has been backed up to: %1%")) %
-                    link)
-                       .str();
+    if (zipPath.has_value()) {
+      auto zipPathString = zipPath.value().u8string();
+      auto link = "<pre><a href=\"file:" + zipPathString +
+                  "\" style=\"white-space: nowrap\">" + zipPathString +
+                  "</a></pre>";
+      auto message = (boost::format(boost::locale::translate(
+                          "Your LOOT data has been backed up to: %1%")) %
+                      link)
+                         .str();
 
-    QMessageBox::information(this, "LOOT", QString::fromStdString(message));
+      QMessageBox::information(this, "LOOT", QString::fromStdString(message));
+    } else {
+      auto message = translate(
+          "No backup has been created as LOOT has no data to backup.");
+
+      QMessageBox::information(this, "LOOT", message);
+    }
   } catch (std::exception& e) {
     handleException(e);
   }

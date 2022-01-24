@@ -59,7 +59,7 @@ std::filesystem::path compressDirectory(const std::filesystem::path& dir) {
                     result);
     }
 
-    throw std::runtime_error("Failed to add path to zip file");
+    throw std::runtime_error("Failed to open zip file for writing");
   }
 
   result = mz_zip_writer_add_path(
