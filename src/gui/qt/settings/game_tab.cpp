@@ -150,7 +150,7 @@ void GameTab::translateUi() {
   masterlistSourceLabel->setText(translate("Masterlist Source"));
   installPathLabel->setText(translate("Install Path"));
   registryKeysLabel->setText(translate("Install Path Registry Keys"));
-  localDataPathLabel->setText(translate("Local Data Path"));
+  localDataPathLabel->setText(translate("Local AppData Path"));
 
   deleteGameButton->setText(translate("Delete game"));
 }
