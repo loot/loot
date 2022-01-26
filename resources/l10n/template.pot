@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-01-25 17:10+0000\n"
+"POT-Creation-Date: 2022-01-25 23:44-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -710,7 +710,7 @@ msgid "Install Path Registry Keys"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:153
-msgid "Local Data Path"
+msgid "Local AppData Path"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:155
