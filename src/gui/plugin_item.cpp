@@ -123,13 +123,13 @@ std::string getCommaSeparatedTags(const std::vector<std::string>& tags) {
 }
 
 PluginItem::PluginItem() :
-    hasUserMetadata(false),
     isActive(false),
     isDirty(false),
     isEmpty(false),
-    isLightPlugin(false),
     isMaster(false),
-    loadsArchive(false) {}
+    isLightPlugin(false),
+    loadsArchive(false),
+    hasUserMetadata(false) {}
 
 PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
                        const gui::Game& game,

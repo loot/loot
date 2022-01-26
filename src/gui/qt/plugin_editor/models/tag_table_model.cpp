@@ -34,9 +34,9 @@ TagTableModel::TagTableModel(
     std::vector<Tag> userMetadata,
     std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap) :
     QAbstractTableModel(parent),
+    suggestionTypeMap(suggestionTypeMap),
     nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata),
-    suggestionTypeMap(suggestionTypeMap) {}
+    userMetadata(userMetadata) {}
 
 std::vector<Tag> TagTableModel::getUserMetadata() const { return userMetadata; }
 

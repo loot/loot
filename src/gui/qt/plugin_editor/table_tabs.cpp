@@ -336,8 +336,8 @@ FileTableTab::FileTableTab(QWidget* parent,
                            const std::string& language,
                            const QStringList& completions) :
     BaseTableTab(parent),
-    language(language),
     languages(languages),
+    language(language),
     completions(completions) {
   acceptDrops();
 }
@@ -417,7 +417,7 @@ MessageTableTab::MessageTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    BaseTableTab(parent), language(language), languages(languages) {}
+    BaseTableTab(parent), languages(languages), language(language) {}
 
 void MessageTableTab::initialiseInputs(
     const std::vector<Message>& nonUserMetadata,
@@ -475,7 +475,7 @@ CleaningDataTableTab::CleaningDataTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    BaseTableTab(parent), language(language), languages(languages) {}
+    BaseTableTab(parent), languages(languages), language(language) {}
 
 void CleaningDataTableTab::initialiseInputs(
     const std::vector<PluginCleaningData>& nonUserMetadata,

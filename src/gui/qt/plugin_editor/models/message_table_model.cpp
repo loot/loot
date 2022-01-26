@@ -36,10 +36,10 @@ MessageTableModel::MessageTableModel(
     std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap,
     const std::string& language) :
     QAbstractTableModel(parent),
-    nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata),
     typeDisplayDataMap(typeDisplayDataMap),
-    language(language) {}
+    language(language),
+    nonUserMetadata(nonUserMetadata),
+    userMetadata(userMetadata) {}
 
 std::vector<Message> MessageTableModel::getUserMetadata() const {
   return userMetadata;

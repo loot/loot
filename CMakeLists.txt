@@ -373,8 +373,8 @@ target_link_libraries(loot_gui_tests PRIVATE
 ##############################
 
 # Include source and library directories.
-target_include_directories(LOOT PRIVATE
-    "${CMAKE_SOURCE_DIR}/src"
+target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(LOOT SYSTEM PRIVATE
     ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
@@ -382,8 +382,8 @@ target_include_directories(LOOT PRIVATE
     ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS})
 
-target_include_directories(loot_gui_tests PRIVATE
-    "${CMAKE_SOURCE_DIR}/src"
+target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
@@ -411,6 +411,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
         PROPERTIES
             INSTALL_RPATH "${CMAKE_INSTALL_RPATH};."
             BUILD_WITH_INSTALL_RPATH ON)
+
+    target_compile_options(LOOT PRIVATE "-Wall" "-Wextra")
 
     set(LOOT_LIBS pthread http_parser ssh2 stdc++fs icui18n)
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})

@@ -81,17 +81,17 @@ Game::Game(const GameSettings& gameSettings,
     GameSettings(gameSettings),
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
-    pluginsFullyLoaded_(false),
-    loadOrderSortCount_(0) {}
+    loadOrderSortCount_(0),
+    pluginsFullyLoaded_(false) {}
 
 Game::Game(const Game& game) :
     GameSettings(game),
+    gameHandle_(game.gameHandle_),
+    messages_(game.messages_),
     lootDataPath_(game.lootDataPath_),
     preludePath_(game.preludePath_),
-    gameHandle_(game.gameHandle_),
-    pluginsFullyLoaded_(game.pluginsFullyLoaded_),
-    messages_(game.messages_),
-    loadOrderSortCount_(0) {}
+    loadOrderSortCount_(0),
+    pluginsFullyLoaded_(game.pluginsFullyLoaded_) {}
 
 Game& Game::operator=(const Game& game) {
   if (&game != this) {

@@ -35,9 +35,9 @@ FileTableModel::FileTableModel(QObject* parent,
                                std::vector<File> userMetadata,
                                const std::string& language) :
     QAbstractTableModel(parent),
+    language(language),
     nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata),
-    language(language) {}
+    userMetadata(userMetadata) {}
 
 std::vector<File> FileTableModel::getUserMetadata() const {
   return userMetadata;

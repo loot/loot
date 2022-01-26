@@ -34,8 +34,8 @@ MessageContentTableModel::MessageContentTableModel(
     std::vector<MessageContent> metadata,
     std::map<std::string, QVariant> languageLocaleNameMap) :
     QAbstractTableModel(parent),
-    metadata(metadata),
-    languageLocaleNameMap(languageLocaleNameMap) {}
+    languageLocaleNameMap(languageLocaleNameMap),
+    metadata(metadata) {}
 
 std::vector<MessageContent> MessageContentTableModel::getMetadata() const {
   return metadata;

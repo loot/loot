@@ -81,7 +81,7 @@ TaskExecutor::~TaskExecutor() {
 
 bool TaskExecutor::wait(unsigned long time) { return workerThread.wait(time); }
 
-void TaskExecutor::onTaskFinished(QueryResult result) {
+void TaskExecutor::onTaskFinished() {
   auto task = qobject_cast<Task *>(sender());
 
   // Disconnect the finished task from the start signal so that it doesn't

@@ -37,9 +37,9 @@ CleaningDataTableModel::CleaningDataTableModel(
     std::vector<PluginCleaningData> userMetadata,
     const std::string& language) :
     QAbstractTableModel(parent),
+    language(language),
     nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata),
-    language(language) {}
+    userMetadata(userMetadata) {}
 
 std::vector<PluginCleaningData> CleaningDataTableModel::getUserMetadata()
     const {

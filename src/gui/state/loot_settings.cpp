@@ -542,6 +542,16 @@ LootSettings::Filters::Filters() :
     hideMessagelessPlugins(false) {}
 
 LootSettings::LootSettings() :
+    autoSort_(false),
+    enableDebugLogging_(false),
+    updateMasterlist_(true),
+    enableLootUpdateCheck_(true),
+    game_("auto"),
+    lastGame_("auto"),
+    language_("en"),
+    preludeSource_(
+        "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml"),
+    theme_("default"),
     gameSettings_({
         GameSettings(GameType::tes3),
         GameSettings(GameType::tes4),
@@ -600,17 +610,7 @@ LootSettings::LootSettings() :
         Language({"sv", "Svenska", std::nullopt}),
         Language({"uk_UA", "Українська", std::nullopt}),
         Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
-    }),
-    autoSort_(false),
-    enableDebugLogging_(false),
-    updateMasterlist_(true),
-    enableLootUpdateCheck_(true),
-    game_("auto"),
-    language_("en"),
-    theme_("default"),
-    lastGame_("auto"),
-    preludeSource_(
-        "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml") {}
+    }) {}
 
 void LootSettings::load(const std::filesystem::path& file,
                         const std::filesystem::path& lootDataPath) {

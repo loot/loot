@@ -64,11 +64,11 @@ Node::Node(GraphView *graphView,
            bool isUserMetadata,
            bool containsInstalledPlugins) :
     graph(graphView),
+    edgeToCursor(nullptr),
     textItem(new NodeLabel(name, isUserMetadata)),
     isUserMetadata_(isUserMetadata),
-    drawEdgeToCursor(false),
-    edgeToCursor(nullptr),
-    containsInstalledPlugins(containsInstalledPlugins) {
+    containsInstalledPlugins(containsInstalledPlugins),
+    drawEdgeToCursor(false) {
   setFlag(ItemIsMovable);
   setFlag(ItemSendsGeometryChanges);
   setCacheMode(DeviceCoordinateCache);

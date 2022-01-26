@@ -82,7 +82,7 @@ private:
   size_t currentTask;
 
 private slots:
-  void onTaskFinished(QueryResult result);
+  void onTaskFinished();
   void onTaskError();
   void onWorkerThreadFinished();
 };
