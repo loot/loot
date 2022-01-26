@@ -365,11 +365,10 @@ std::vector<Message> Game::CheckInstallValidity(
         MessageType::warn,
         (boost::format(
              /* translators: A header is the part of a file that stores data like file name and version. */
-             boost::locale::translate(
-                 "This plugin has a header version of %1%, "
-                 "which is less than the game's minimum supported header "
-                 "version of "
-                 "%2%.")) %
+             boost::locale::translate("This plugin has a header version of "
+                                      "%1%, which is less than the game's "
+                                      "minimum supported header version of %2%."
+                                     )) %
          plugin->GetHeaderVersion().value() % MinimumHeaderVersion())
             .str()));
   }
