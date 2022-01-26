@@ -734,8 +734,7 @@ std::optional<PluginMetadata> Game::GetMasterlistMetadata(
 }
 
 std::optional<PluginMetadata> Game::GetNonUserMetadata(
-    const std::shared_ptr<const PluginInterface>& plugin,
-    bool evaluateConditions) const {
+    const std::shared_ptr<const PluginInterface>& plugin) const {
   auto fileBashTags = plugin->GetBashTags();
   auto masterlistMetadata = GetMasterlistMetadata(plugin->GetName());
 

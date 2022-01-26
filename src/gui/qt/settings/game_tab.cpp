@@ -194,7 +194,5 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   deleteGameButton->setEnabled(!isCurrentGame);
 }
 
-void GameTab::on_deleteGameButton_clicked(bool checked) {
-  emit gameSettingsDeleted();
-}
+void GameTab::on_deleteGameButton_clicked() { emit gameSettingsDeleted(); }
 }

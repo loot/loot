@@ -78,7 +78,7 @@ private:
   void initialiseInputs(const GameSettings &settings, bool isCurrentGame);
 
 private slots:
-  void on_deleteGameButton_clicked(bool checked);
+  void on_deleteGameButton_clicked();
 };
 }
 #endif

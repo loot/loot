@@ -421,11 +421,11 @@ if(MSVC)
     set_target_properties(LOOT PROPERTIES WIN32_EXECUTABLE TRUE)
 
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
-    target_compile_options(LOOT PRIVATE "/permissive-")
+    target_compile_options(LOOT PRIVATE "/permissive-" "/W4")
 
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
-        "/permissive-" "$<$<CONFIG:DEBUG>:/bigobj>")
+        "/permissive-" "/W4" "$<$<CONFIG:DEBUG>:/bigobj>")
 
     target_link_libraries(LOOT PRIVATE comctl32 psapi)
 endif()

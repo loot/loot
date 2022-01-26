@@ -59,11 +59,12 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
   }
 
   for (int i = maxBackupIndex - 1; i > -1; --i) {
-    const std::filesystem::path backupFilePath =
+    const std::filesystem::path oldBackupFilePath =
         backupDirectory / (filenameFormat % i).str();
-    if (std::filesystem::exists(backupFilePath)) {
+    if (std::filesystem::exists(oldBackupFilePath)) {
       std::filesystem::rename(
-          backupFilePath, backupDirectory / (filenameFormat % (i + 1)).str());
+          oldBackupFilePath,
+          backupDirectory / (filenameFormat % (i + 1)).str());
     }
   }
 

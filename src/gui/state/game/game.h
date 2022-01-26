@@ -100,8 +100,7 @@ public:
       const std::string& pluginName,
       bool evaluateConditions = false) const;
   std::optional<PluginMetadata> GetNonUserMetadata(
-      const std::shared_ptr<const PluginInterface>& plugin,
-      bool evaluateConditions = false) const;
+      const std::shared_ptr<const PluginInterface>& plugin) const;
 
   void SetUserGroups(const std::vector<Group>& groups);
   void AddUserMetadata(const PluginMetadata& metadata);

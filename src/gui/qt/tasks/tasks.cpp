@@ -103,9 +103,7 @@ void TaskExecutor::onTaskFinished(QueryResult result) {
   emit start();
 }
 
-void TaskExecutor::onTaskError(const std::string &message) {
-  workerThread.quit();
-}
+void TaskExecutor::onTaskError() { workerThread.quit(); }
 
 void TaskExecutor::onWorkerThreadFinished() {
   tasks.clear();

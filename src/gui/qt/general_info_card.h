@@ -45,13 +45,9 @@ public:
 
   void setPreludeInfo(FileRevisionSummary preludeInfo);
 
-  void setMessageCounts(unsigned int warnings,
-                        unsigned int errors,
-                        unsigned int total);
+  void setMessageCounts(size_t warnings, size_t errors, size_t total);
 
-  void setPluginCounts(unsigned int active,
-                       unsigned int dirty,
-                       unsigned int total);
+  void setPluginCounts(size_t active, size_t dirty, size_t total);
 
   void setGeneralMessages(const std::vector<SimpleMessage>& messages);
 

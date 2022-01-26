@@ -52,6 +52,8 @@ typedef std::variant<std::monostate,
 
 class Query {
 public:
+  virtual ~Query() = default;
+
   virtual QueryResult executeLogic() = 0;
   virtual std::string getErrorMessage() const {
     return boost::locale::translate(

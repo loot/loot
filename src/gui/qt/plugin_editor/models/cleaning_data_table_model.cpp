@@ -46,13 +46,11 @@ std::vector<PluginCleaningData> CleaningDataTableModel::getUserMetadata()
   return userMetadata;
 }
 
-int CleaningDataTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
+int CleaningDataTableModel::rowCount(const QModelIndex&) const {
+  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int CleaningDataTableModel::columnCount(const QModelIndex& parent) const {
-  return 6;
-}
+int CleaningDataTableModel::columnCount(const QModelIndex&) const { return 6; }
 
 QVariant CleaningDataTableModel::data(const QModelIndex& index,
                                       int role) const {

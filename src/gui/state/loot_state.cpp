@@ -40,8 +40,6 @@
 #include <windows.h>
 #endif
 
-#include <spdlog/sinks/basic_file_sink.h>
-
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -105,7 +103,8 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        /* translators: --auto-sort and --game are command-line arguments and shouldn't be translated. */
+        /* translators: --auto-sort and --game are command-line arguments and
+           shouldn't be translated. */
         translate("Error: --auto-sort was passed but no --game parameter was "
                   "provided.")));
   } else {
@@ -150,7 +149,9 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
-               /* translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong. */
+               /* translators: This error is displayed when LOOT is unable to
+                  load its own settings file. The placeholder is for additional
+                  detail about what went wrong. */
                translate("Error: Settings parsing failed. %1%")) %
            e.what())
               .str()));
@@ -262,7 +263,8 @@ void LootState::initCurrentGame() {
   try {
     GetCurrentGame().Init();
     if (logger) {
-      logger->debug("Game named {} has been initialsed", GetCurrentGame().Name());
+      logger->debug("Game named {} has been initialsed",
+                    GetCurrentGame().Name());
     }
   } catch (std::exception& e) {
     if (logger) {

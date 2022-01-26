@@ -100,7 +100,7 @@ int countMaxPathLength(Node *rootNode) {
   depthFirstSearch(rootNode,
                    initialDepth,
                    visitedNodes,
-                   [&maxDepth](const Node *node, int depth) {
+                   [&maxDepth](const Node *, int depth) {
                      if (depth > maxDepth) {
                        maxDepth = depth;
                      }

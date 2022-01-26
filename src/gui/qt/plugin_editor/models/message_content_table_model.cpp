@@ -41,11 +41,11 @@ std::vector<MessageContent> MessageContentTableModel::getMetadata() const {
   return metadata;
 }
 
-int MessageContentTableModel::rowCount(const QModelIndex& parent) const {
-  return metadata.size();
+int MessageContentTableModel::rowCount(const QModelIndex&) const {
+  return static_cast<int>(metadata.size());
 }
 
-int MessageContentTableModel::columnCount(const QModelIndex& parent) const {
+int MessageContentTableModel::columnCount(const QModelIndex&) const {
   return 2;
 }
 

@@ -151,8 +151,8 @@ QPainterPath Node::shape() const {
 }
 
 void Node::paint(QPainter *painter,
-                 const QStyleOptionGraphicsItem *option,
-                 QWidget *widget) {
+                 const QStyleOptionGraphicsItem *,
+                 QWidget *) {
   painter->setPen(Qt::NoPen);
   painter->setBrush(getNodeColor());
   painter->drawEllipse(-RADIUS, -RADIUS, DIAMETER, DIAMETER);

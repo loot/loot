@@ -45,17 +45,17 @@ void GeneralInfoCard::setPreludeInfo(FileRevisionSummary preludeInfo) {
   preludeDateValue->setText(QString::fromStdString(preludeInfo.date));
 }
 
-void GeneralInfoCard::setMessageCounts(unsigned int warnings,
-                                       unsigned int errors,
-                                       unsigned int total) {
+void GeneralInfoCard::setMessageCounts(size_t warnings,
+                                       size_t errors,
+                                       size_t total) {
   warningsCountValue->setText(QString::number(warnings));
   errorsCountValue->setText(QString::number(errors));
   totalMessagesCountValue->setText(QString::number(total));
 }
 
-void GeneralInfoCard::setPluginCounts(unsigned int active,
-                                      unsigned int dirty,
-                                      unsigned int total) {
+void GeneralInfoCard::setPluginCounts(size_t active,
+                                      size_t dirty,
+                                      size_t total) {
   activeCountValue->setText(QString::number(active));
   dirtyCountValue->setText(QString::number(dirty));
   totalPluginsCountValue->setText(QString::number(total));

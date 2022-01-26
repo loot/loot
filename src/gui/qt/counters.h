@@ -28,8 +28,8 @@
 
 #include <loot/struct/simple_message.h>
 
-#include "gui/qt/filters_states.h"
 #include "gui/plugin_item.h"
+#include "gui/qt/filters_states.h"
 
 namespace loot {
 struct GeneralInformationCounters {
@@ -37,20 +37,20 @@ struct GeneralInformationCounters {
   GeneralInformationCounters(const std::vector<SimpleMessage>& generalMessages,
                              const std::vector<PluginItem>& plugins);
 
-  unsigned int warnings;
-  unsigned int errors;
-  unsigned int totalMessages;
+  size_t warnings;
+  size_t errors;
+  size_t totalMessages;
 
-  unsigned int active;
-  unsigned int dirty;
-  unsigned int totalPlugins;
+  size_t active;
+  size_t dirty;
+  size_t totalPlugins;
 
 private:
   void countMessages(const std::vector<SimpleMessage>& messages);
 };
 
-unsigned int countHiddenMessages(const std::vector<PluginItem>& plugins,
-                                 const CardContentFiltersState& filters);
+size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
+                           const CardContentFiltersState& filters);
 }
 
 Q_DECLARE_METATYPE(loot::GeneralInformationCounters);

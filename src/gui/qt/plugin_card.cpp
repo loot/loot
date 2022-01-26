@@ -420,7 +420,7 @@ QSize PluginCardDelegate::sizeHint(const QStyleOptionViewItem& option,
 }
 
 QWidget* PluginCardDelegate::createEditor(QWidget* parent,
-                                          const QStyleOptionViewItem& option,
+                                          const QStyleOptionViewItem&,
                                           const QModelIndex& index) const {
   if (!index.isValid()) {
     return nullptr;
@@ -446,9 +446,9 @@ void PluginCardDelegate::setEditorData(QWidget* editor,
   }
 }
 
-void PluginCardDelegate::setModelData(QWidget* editor,
-                                      QAbstractItemModel* model,
-                                      const QModelIndex& index) const {
+void PluginCardDelegate::setModelData(QWidget*,
+                                      QAbstractItemModel*,
+                                      const QModelIndex&) const {
   // Do nothing, it's not actually an editor.
 }
 

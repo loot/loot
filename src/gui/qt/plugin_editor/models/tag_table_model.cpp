@@ -40,11 +40,11 @@ TagTableModel::TagTableModel(
 
 std::vector<Tag> TagTableModel::getUserMetadata() const { return userMetadata; }
 
-int TagTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
+int TagTableModel::rowCount(const QModelIndex&) const {
+  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int TagTableModel::columnCount(const QModelIndex& parent) const { return 3; }
+int TagTableModel::columnCount(const QModelIndex&) const { return 3; }
 
 QVariant TagTableModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole && role != Qt::EditRole) {

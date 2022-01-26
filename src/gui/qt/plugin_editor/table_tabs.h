@@ -71,11 +71,10 @@ private:
   void translateUi();
 
 private slots:
-  void on_addNewRowButton_clicked(bool checked);
-  void on_deleteRowButton_clicked(bool checked);
+  void on_addNewRowButton_clicked();
+  void on_deleteRowButton_clicked();
 
-  void onSelectionModelSelectionChanged(const QItemSelection& selected,
-                                        const QItemSelection& deselected);
+  void onSelectionModelSelectionChanged();
 
   void onModelRowsInserted();
   void onModelRowsRemoved();

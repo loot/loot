@@ -55,9 +55,9 @@ void PluginItemFilterModel::setFiltersState(PluginFiltersState&& state) {
 
 void PluginItemFilterModel::setFiltersState(
     PluginFiltersState&& state,
-    std::vector<std::string>&& conflictingPluginNames) {
+    std::vector<std::string>&& newConflictingPluginNames) {
   filterState = state;
-  this->conflictingPluginNames = conflictingPluginNames;
+  this->conflictingPluginNames = newConflictingPluginNames;
 
   invalidateFilter();
 }

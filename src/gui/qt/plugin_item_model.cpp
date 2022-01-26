@@ -46,12 +46,12 @@ const int PluginItemModel::CARDS_COLUMN = 3;
 PluginItemModel::PluginItemModel(QObject* parent) :
     QAbstractListModel(parent) {}
 
-int PluginItemModel::rowCount(const QModelIndex& parent) const {
+int PluginItemModel::rowCount(const QModelIndex&) const {
   // Row 0 is an extra row for the general information card.
-  return items.size() + 1;
+  return static_cast<int>(items.size()) + 1;
 }
 
-int PluginItemModel::columnCount(const QModelIndex& parent) const {
+int PluginItemModel::columnCount(const QModelIndex&) const {
   // Column 0 is for plugin sidebar items, column 1 is for plugin cards.
   // Although they use the same data, they need different size hints.
   return 4;
@@ -134,8 +134,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
         if (role == CardContentFiltersRole) {
           return QVariant::fromValue(cardContentFiltersState);
         } else if (role == ContentSearchRole) {
-          int itemsIndex = index.row() - 1;
-          return QString::fromStdString(items.at(itemsIndex).contentToSearch());
+          return QString::fromStdString(plugin.contentToSearch());
         } else if (role == SearchResultRole) {
           int searchResultsIndex = index.row() - 1;
 
@@ -157,9 +156,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
-QVariant PluginItemModel::headerData(int section,
-                                     Qt::Orientation orientation,
-                                     int role) const {
+QVariant PluginItemModel::headerData(int, Qt::Orientation, int) const {
   return QVariant();
 }
 
@@ -303,7 +300,7 @@ std::unordered_map<std::string, int> PluginItemModel::getPluginNameToRowMap()
 }
 
 void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
-  beginRemoveRows(QModelIndex(), 1, items.size());
+  beginRemoveRows(QModelIndex(), 1, static_cast<int>(items.size()));
 
   items.clear();
   searchResults.clear();
@@ -311,7 +308,7 @@ void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
 
   endRemoveRows();
 
-  beginInsertRows(QModelIndex(), 1, newItems.size());
+  beginInsertRows(QModelIndex(), 1, static_cast<int>(newItems.size()));
 
   std::swap(items, newItems);
   searchResults.resize(items.size(), false);
@@ -381,7 +378,8 @@ QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {
   for (auto i = 0; i < searchResults.size(); i += 1) {
     auto isResult = searchResults[i];
     if (isResult && currentResultIndex == resultIndex) {
-      auto modelIndex = index(i + 1, CARDS_COLUMN);
+      auto row = static_cast<int>(i) + 1;
+      auto modelIndex = index(row, CARDS_COLUMN);
       // This setData will also handle unsetting the previous current result.
       setData(modelIndex,
               QVariant::fromValue(SearchResultData(true, true)),

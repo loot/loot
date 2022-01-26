@@ -101,7 +101,7 @@ int compareLOOTVersion(const std::string& version) {
     throw std::runtime_error("Unexpect number of version parts in " + version);
   }
 
-  auto givenMajor = std::stoi(parts[0]);
+  auto givenMajor = std::stoul(parts[0]);
   if (gui::Version::major > givenMajor) {
     return 1;
   }
@@ -110,7 +110,7 @@ int compareLOOTVersion(const std::string& version) {
     return -1;
   }
 
-  auto givenMinor = std::stoi(parts[1]);
+  auto givenMinor = std::stoul(parts[1]);
   if (gui::Version::minor > givenMinor) {
     return 1;
   }
@@ -119,7 +119,7 @@ int compareLOOTVersion(const std::string& version) {
     return -1;
   }
 
-  auto givenPatch = std::stoi(parts[2]);
+  auto givenPatch = std::stoul(parts[2]);
   if (gui::Version::patch > givenPatch) {
     return 1;
   }
@@ -780,8 +780,8 @@ void MainWindow::updateSidebarColumnWidths() {
   horizontalHeader->resizeSection(2, stateSectionWidth);
 }
 
-void MainWindow::setFiltersState(PluginFiltersState&& state) {
-  proxyModel->setFiltersState(std::move(state));
+void MainWindow::setFiltersState(PluginFiltersState&& filtersState) {
+  proxyModel->setFiltersState(std::move(filtersState));
 
   updateCounts(pluginItemModel->getGeneralMessages(),
                pluginItemModel->getPluginItems());
@@ -790,9 +790,9 @@ void MainWindow::setFiltersState(PluginFiltersState&& state) {
 }
 
 void MainWindow::setFiltersState(
-    PluginFiltersState&& state,
+    PluginFiltersState&& filtersState,
     std::vector<std::string>&& conflictingPluginNames) {
-  proxyModel->setFiltersState(std::move(state),
+  proxyModel->setFiltersState(std::move(filtersState),
                               std::move(conflictingPluginNames));
 
   updateCounts(pluginItemModel->getGeneralMessages(),
@@ -931,12 +931,12 @@ PluginItem MainWindow::getSelectedPlugin() const {
         "Cannot copy plugin metadata when no plugin is selected");
   }
 
-  auto data = selectedPluginIndices.first().data(RawDataRole);
-  if (!data.canConvert<PluginItem>()) {
+  auto indexData = selectedPluginIndices.first().data(RawDataRole);
+  if (!indexData.canConvert<PluginItem>()) {
     throw std::runtime_error("Cannot convert data to PluginItem");
   }
 
-  return data.value<PluginItem>();
+  return indexData.value<PluginItem>();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
@@ -1213,7 +1213,7 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
   return zipPath;
 }
 
-void MainWindow::on_actionSettings_triggered(bool checked) {
+void MainWindow::on_actionSettings_triggered() {
   try {
     auto themes = findThemes(state.getResourcesPath());
     auto currentGameFolder =
@@ -1232,7 +1232,7 @@ void MainWindow::on_actionSettings_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionBackupData_triggered(bool checked) {
+void MainWindow::on_actionBackupData_triggered() {
   try {
     auto zipPath = createBackup();
 
@@ -1258,9 +1258,9 @@ void MainWindow::on_actionBackupData_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionQuit_triggered(bool checked) { this->close(); }
+void MainWindow::on_actionQuit_triggered() { this->close(); }
 
-void MainWindow::on_actionOpenGroupsEditor_triggered(bool checked) {
+void MainWindow::on_actionOpenGroupsEditor_triggered() {
   try {
     std::set<std::string> installedPluginGroups;
     for (const auto& plugin : pluginItemModel->getPluginItems()) {
@@ -1279,11 +1279,9 @@ void MainWindow::on_actionOpenGroupsEditor_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionSearch_triggered(bool checked) {
-  searchDialog->show();
-}
+void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
-void MainWindow::on_actionCopyLoadOrder_triggered(bool checked) {
+void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
     auto plugins = state.GetCurrentGame().GetPluginsInLoadOrder();
     std::vector<std::string> pluginNames;
@@ -1304,7 +1302,7 @@ void MainWindow::on_actionCopyLoadOrder_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionCopyContent_triggered(bool checked) {
+void MainWindow::on_actionCopyContent_triggered() {
   try {
     auto content =
         pluginItemModel->getGeneralInfo().getMarkdownContent() + "\n\n";
@@ -1322,7 +1320,7 @@ void MainWindow::on_actionCopyContent_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionRefreshContent_triggered(bool checked) {
+void MainWindow::on_actionRefreshContent_triggered() {
   try {
     loadGame(false);
   } catch (std::exception& e) {
@@ -1330,7 +1328,7 @@ void MainWindow::on_actionRefreshContent_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionRedatePlugins_triggered(bool checked) {
+void MainWindow::on_actionRedatePlugins_triggered() {
   try {
     auto button = QMessageBox::question(
         this,
@@ -1356,7 +1354,7 @@ void MainWindow::on_actionRedatePlugins_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionClearAllUserMetadata_triggered(bool checked) {
+void MainWindow::on_actionClearAllUserMetadata_triggered() {
   try {
     auto button = QMessageBox::question(
         this,
@@ -1414,7 +1412,7 @@ void MainWindow::on_actionClearAllUserMetadata_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionEditMetadata_triggered(bool checked) {
+void MainWindow::on_actionEditMetadata_triggered() {
   try {
     if (pluginEditorWidget->isVisible()) {
       QMessageBox::warning(
@@ -1449,7 +1447,7 @@ void MainWindow::on_actionEditMetadata_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionCopyMetadata_triggered(bool checked) {
+void MainWindow::on_actionCopyMetadata_triggered() {
   try {
     auto selectedPluginName = getSelectedPlugin().name;
 
@@ -1470,7 +1468,7 @@ void MainWindow::on_actionCopyMetadata_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionCopyCardContent_triggered(bool checked) {
+void MainWindow::on_actionCopyCardContent_triggered() {
   try {
     auto selectedPlugin = getSelectedPlugin();
     auto content = selectedPlugin.getMarkdownContent();
@@ -1489,7 +1487,7 @@ void MainWindow::on_actionCopyCardContent_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionClearMetadata_triggered(bool checked) {
+void MainWindow::on_actionClearMetadata_triggered() {
   try {
     auto selectedPluginName = getSelectedPlugin().name;
 
@@ -1543,7 +1541,7 @@ void MainWindow::on_actionClearMetadata_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionViewDocs_triggered(bool checked) {
+void MainWindow::on_actionViewDocs_triggered() {
   try {
     OpenReadmeQuery query(state.getReadmePath(), "index.html");
 
@@ -1553,7 +1551,7 @@ void MainWindow::on_actionViewDocs_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionOpenLOOTDataFolder_triggered(bool checked) {
+void MainWindow::on_actionOpenLOOTDataFolder_triggered() {
   try {
     OpenLogLocationQuery query(state.getLogPath());
 
@@ -1563,11 +1561,11 @@ void MainWindow::on_actionOpenLOOTDataFolder_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionJoinDiscordServer_triggered(bool checked) {
+void MainWindow::on_actionJoinDiscordServer_triggered() {
   QDesktopServices::openUrl(QUrl("https://loot.github.io/discord/"));
 }
 
-void MainWindow::on_actionAbout_triggered(bool checked) {
+void MainWindow::on_actionAbout_triggered() {
   try {
     std::string textTemplate = R"(
 <p>%1%</p>
@@ -1642,7 +1640,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
   }
 }
 
-void MainWindow::on_actionSort_triggered(bool checked) {
+void MainWindow::on_actionSort_triggered() {
   try {
     sortPlugins(false);
   } catch (std::exception& e) {
@@ -1650,7 +1648,7 @@ void MainWindow::on_actionSort_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionApplySort_triggered(bool checked) {
+void MainWindow::on_actionApplySort_triggered() {
   std::unique_ptr<Query> query;
   try {
     auto sortedPluginNames = pluginItemModel->getPluginNames();
@@ -1666,7 +1664,7 @@ void MainWindow::on_actionApplySort_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionDiscardSort_triggered(bool checked) {
+void MainWindow::on_actionDiscardSort_triggered() {
   try {
     auto query =
         CancelSortQuery(state.GetCurrentGame(), state, state.getLanguage());
@@ -1703,7 +1701,7 @@ void MainWindow::on_actionDiscardSort_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionUpdateMasterlist_triggered(bool checked) {
+void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
     std::vector<Task*> tasks;
 
@@ -1726,8 +1724,7 @@ void MainWindow::on_sidebarPluginsView_doubleClicked(const QModelIndex& index) {
 }
 
 void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
-    const QItemSelection& selected,
-    const QItemSelection& deselected) {
+    const QItemSelection& selected) {
   if (selected.isEmpty()) {
     disablePluginActions();
   } else {
@@ -1819,8 +1816,8 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
                                  state.GetCurrentGame(),
                                  state.getLanguage());
 
-        auto data = QVariant::fromValue(plugin);
-        pluginItemModel->setData(index, data, RawDataRole);
+        auto indexData = QVariant::fromValue(plugin);
+        pluginItemModel->setData(index, indexData, RawDataRole);
         break;
       }
     }
@@ -1874,8 +1871,8 @@ void MainWindow::on_filtersWidget_conflictsFilterChanged(
 }
 
 void MainWindow::on_filtersWidget_cardContentFilterChanged(
-    CardContentFiltersState state) {
-  pluginItemModel->setCardContentFiltersState(std::move(state));
+    CardContentFiltersState filtersState) {
+  pluginItemModel->setCardContentFiltersState(std::move(filtersState));
 }
 
 void MainWindow::on_settingsDialog_accepted() {
@@ -1895,7 +1892,7 @@ void MainWindow::on_groupsEditor_accepted() {
   }
 }
 
-void MainWindow::on_searchDialog_finished(int result) { searchDialog->reset(); }
+void MainWindow::on_searchDialog_finished() { searchDialog->reset(); }
 
 void MainWindow::on_searchDialog_textChanged(const QString& text) {
   if (text.isEmpty()) {
@@ -1981,7 +1978,7 @@ void MainWindow::handlePluginsAutoSorted(QueryResult result) {
     }
 
     if (!hasErrorMessages()) {
-      on_actionQuit_triggered(false);
+      on_actionQuit_triggered();
     }
   } catch (std::exception& e) {
     handleException(e);

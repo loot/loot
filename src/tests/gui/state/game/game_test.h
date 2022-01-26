@@ -65,8 +65,8 @@ protected:
 
   void TearDown() { CommonGameTestFixture::TearDown(); }
 
-  Game CreateInitialisedGame(const std::filesystem::path& lootDataPath) {
-    Game game(defaultGameSettings, lootDataPath, "");
+  Game CreateInitialisedGame(const std::filesystem::path& gameLootDataPath) {
+    Game game(defaultGameSettings, gameLootDataPath, "");
     game.Init();
     return game;
   }
@@ -532,7 +532,7 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
       dataPath / blankEsl,
       std::ios_base::in | std::ios_base::out | std::ios_base::binary);
   out.seekp(0x10619, std::ios_base::beg);
-  out.put(0xFF);
+  out.put('\xFF');
   out.close();
 
   Game game = CreateInitialisedGame("");

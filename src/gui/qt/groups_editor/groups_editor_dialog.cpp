@@ -156,7 +156,7 @@ void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
   addGroupButton->setDisabled(text.isEmpty());
 }
 
-void GroupsEditorDialog::on_addGroupButton_clicked(bool checked) {
+void GroupsEditorDialog::on_addGroupButton_clicked() {
   if (groupNameInput->text().isEmpty()) {
     return;
   }

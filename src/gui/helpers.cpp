@@ -67,18 +67,36 @@ void OpenInDefaultApplication(const std::filesystem::path& file) {
 
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str) {
-  size_t len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), 0, 0);
+  size_t len = MultiByteToWideChar(
+      CP_UTF8, 0, str.c_str(), static_cast<int>(str.length()), 0, 0);
   std::wstring wstr(len, 0);
-  MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], len);
+  MultiByteToWideChar(CP_UTF8,
+                      0,
+                      str.c_str(),
+                      static_cast<int>(str.length()),
+                      &wstr[0],
+                      static_cast<int>(len));
   return wstr;
 }
 
 std::string FromWinWide(const std::wstring& wstr) {
-  size_t len = WideCharToMultiByte(
-      CP_UTF8, 0, wstr.c_str(), wstr.length(), NULL, 0, NULL, NULL);
+  size_t len = WideCharToMultiByte(CP_UTF8,
+                                   0,
+                                   wstr.c_str(),
+                                   static_cast<int>(wstr.length()),
+                                   NULL,
+                                   0,
+                                   NULL,
+                                   NULL);
   std::string str(len, 0);
-  WideCharToMultiByte(
-      CP_UTF8, 0, wstr.c_str(), wstr.length(), &str[0], len, NULL, NULL);
+  WideCharToMultiByte(CP_UTF8,
+                      0,
+                      wstr.c_str(),
+                      static_cast<int>(wstr.length()),
+                      &str[0],
+                      static_cast<int>(len),
+                      NULL,
+                      NULL);
   return str;
 }
 
@@ -138,11 +156,11 @@ std::string RegKeyStringValue(const std::string& rootKey,
 
   if (ret == ERROR_SUCCESS) {
     // Passing c_str() cuts off any unused buffer.
-    std::string value = FromWinWide(wstr.c_str());
+    std::string stringValue = FromWinWide(wstr.c_str());
     if (logger) {
-      logger->info("Found string: {}", value);
+      logger->info("Found string: {}", stringValue);
     }
-    return value;
+    return stringValue;
   } else {
     if (logger) {
       logger->info("Failed to get string value.");
@@ -213,7 +231,6 @@ std::filesystem::path getExecutableDirectory() {
 
 std::filesystem::path getLocalAppDataPath() {
 #ifdef _WIN32
-  HWND owner = 0;
   PWSTR path;
 
   if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
@@ -271,8 +288,9 @@ void CopyToClipboard(const std::string& text) {
   // must not be destroyed by LOOT. Convert the string, then copy it into a
   // new block of memory for the clipboard.
   std::wstring wtext = ToWinWide(text);
-  wchar_t* wcstr = new wchar_t[wtext.length() + 1];
-  wcscpy(wcstr, wtext.c_str());
+  size_t wcstrLength = wtext.length() + 1;
+  wchar_t* wcstr = new wchar_t[wcstrLength];
+  wcscpy_s(wcstr, wcstrLength, wtext.c_str());
 
   if (SetClipboardData(CF_UNICODETEXT, wcstr) == NULL) {
     throw std::system_error(

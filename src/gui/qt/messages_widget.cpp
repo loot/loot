@@ -167,7 +167,7 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
 
   // Delete any extra QLabels.
   QLayoutItem* child;
-  auto pastTheEndIndex = messages.size() * COLUMN_COUNT;
+  auto pastTheEndIndex = static_cast<int>(messages.size() * COLUMN_COUNT);
   auto itemRemoved = false;
   while ((child = layout()->takeAt(pastTheEndIndex)) != nullptr) {
     delete child->widget();
@@ -199,8 +199,9 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
 
   // Now update the QLabels.
   for (size_t i = 0; i < messages.size(); i += 1) {
+    auto position = static_cast<int>(i);
     auto label = qobject_cast<QLabel*>(
-        gridLayout->itemAtPosition(i, MESSAGE_LABEL_COLUMN)->widget());
+        gridLayout->itemAtPosition(position, MESSAGE_LABEL_COLUMN)->widget());
     updateMessageLabel(label, messages[i]);
 
     // Store the source markdown text because it can't be retrieved from

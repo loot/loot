@@ -83,7 +83,7 @@ private:
 
 private slots:
   void onTaskFinished(QueryResult result);
-  void onTaskError(const std::string &message);
+  void onTaskError();
   void onWorkerThreadFinished();
 };
 }

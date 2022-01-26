@@ -45,13 +45,11 @@ std::vector<Message> MessageTableModel::getUserMetadata() const {
   return userMetadata;
 }
 
-int MessageTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
+int MessageTableModel::rowCount(const QModelIndex&) const {
+  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int MessageTableModel::columnCount(const QModelIndex& parent) const {
-  return 3;
-}
+int MessageTableModel::columnCount(const QModelIndex&) const { return 3; }
 
 QVariant MessageTableModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole && role != Qt::EditRole) {

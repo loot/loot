@@ -43,12 +43,12 @@ void FiltersWidget::setGroups(const std::vector<std::string>& groupNames) {
   setComboBoxItems(groupPluginsFilter, groupNames);
 }
 
-void FiltersWidget::setMessageCounts(unsigned int hidden, unsigned int total) {
-  hiddenMessagesCountLabel->setText(QString::number(hidden) % QString(" / ") %
+void FiltersWidget::setMessageCounts(size_t hidden, size_t total) {
+  hiddenMessagesCountLabel->setText(QString::number(hidden) % " / " %
                                     QString::number(total));
 }
-void FiltersWidget::setPluginCounts(unsigned int hidden, unsigned int total) {
-  hiddenPluginsCountLabel->setText(QString::number(hidden) % QString(" / ") %
+void FiltersWidget::setPluginCounts(size_t hidden, size_t total) {
+  hiddenPluginsCountLabel->setText(QString::number(hidden) % " / " %
                                    QString::number(total));
 }
 
@@ -265,7 +265,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   return filters;
 }
 
-void FiltersWidget::on_conflictingPluginsFilter_activated(int index) {
+void FiltersWidget::on_conflictingPluginsFilter_activated() {
   // Don't emit pluginFilterChanged even though this is a plugin filter,
   // because conflict filtering is slow and requires a progress dialog,
   // and we don't want that to happen for the other plugin filters.
@@ -277,7 +277,7 @@ void FiltersWidget::on_conflictingPluginsFilter_activated(int index) {
   }
 }
 
-void FiltersWidget::on_groupPluginsFilter_activated(int index) {
+void FiltersWidget::on_groupPluginsFilter_activated() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
@@ -285,31 +285,31 @@ void FiltersWidget::on_contentFilter_editingFinished() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_versionNumbersFilter_stateChanged(int state) {
+void FiltersWidget::on_versionNumbersFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_crcsFilter_stateChanged(int state) {
+void FiltersWidget::on_crcsFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_bashTagsFilter_stateChanged(int state) {
+void FiltersWidget::on_bashTagsFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_notesFilter_stateChanged(int state) {
+void FiltersWidget::on_notesFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_pluginMessagesFilter_stateChanged(int state) {
+void FiltersWidget::on_pluginMessagesFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_inactivePluginsFilter_stateChanged(int state) {
+void FiltersWidget::on_inactivePluginsFilter_stateChanged() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_messagelessPluginsFilter_stateChanged(int state) {
+void FiltersWidget::on_messagelessPluginsFilter_stateChanged() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 }

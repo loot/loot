@@ -439,13 +439,13 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     game.SetGameLocalFolder(*localFolder);
   }
 
-  auto registry = table->get_array_of<std::string>("registry");
-  if (registry) {
-    game.SetRegistryKeys(*registry);
+  auto registryKeys = table->get_array_of<std::string>("registry");
+  if (registryKeys) {
+    game.SetRegistryKeys(*registryKeys);
   } else {
-    auto registry = table->get_as<std::string>("registry");
-    if (registry) {
-      game.SetRegistryKeys({*registry});
+    auto registryKey = table->get_as<std::string>("registry");
+    if (registryKey) {
+      game.SetRegistryKeys({*registryKey});
     }
   }
 

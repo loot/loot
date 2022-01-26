@@ -43,11 +43,11 @@ std::vector<File> FileTableModel::getUserMetadata() const {
   return userMetadata;
 }
 
-int FileTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
+int FileTableModel::rowCount(const QModelIndex&) const {
+  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int FileTableModel::columnCount(const QModelIndex& parent) const { return 4; }
+int FileTableModel::columnCount(const QModelIndex&) const { return 4; }
 
 QVariant FileTableModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole && role != Qt::EditRole) {

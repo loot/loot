@@ -67,8 +67,8 @@ private:
 
 private slots:
   void on_searchInput_textChanged(const QString &text);
-  void on_previousButton_clicked(bool checked = false);
-  void on_nextButton_clicked(bool checked = false);
+  void on_previousButton_clicked();
+  void on_nextButton_clicked();
 };
 }
 

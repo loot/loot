@@ -44,8 +44,8 @@ public:
   void setPlugins(const std::vector<std::string> &pluginNames);
   void setGroups(const std::vector<std::string> &groupNames);
 
-  void setMessageCounts(unsigned int hidden, unsigned int total);
-  void setPluginCounts(unsigned int hidden, unsigned int total);
+  void setMessageCounts(size_t hidden, size_t total);
+  void setPluginCounts(size_t hidden, size_t total);
 
   void hideVersionNumbers(bool hide);
   void hideCRCs(bool hide);
@@ -94,16 +94,16 @@ private:
                                const std::vector<std::string> &items);
 
 private slots:
-  void on_conflictingPluginsFilter_activated(int index);
-  void on_groupPluginsFilter_activated(int index);
+  void on_conflictingPluginsFilter_activated();
+  void on_groupPluginsFilter_activated();
   void on_contentFilter_editingFinished();
-  void on_versionNumbersFilter_stateChanged(int state);
-  void on_crcsFilter_stateChanged(int state);
-  void on_bashTagsFilter_stateChanged(int state);
-  void on_notesFilter_stateChanged(int state);
-  void on_pluginMessagesFilter_stateChanged(int state);
-  void on_inactivePluginsFilter_stateChanged(int state);
-  void on_messagelessPluginsFilter_stateChanged(int state);
+  void on_versionNumbersFilter_stateChanged();
+  void on_crcsFilter_stateChanged();
+  void on_bashTagsFilter_stateChanged();
+  void on_notesFilter_stateChanged();
+  void on_pluginMessagesFilter_stateChanged();
+  void on_inactivePluginsFilter_stateChanged();
+  void on_messagelessPluginsFilter_stateChanged();
 };
 }
 

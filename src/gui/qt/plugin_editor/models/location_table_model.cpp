@@ -39,13 +39,11 @@ std::vector<Location> LocationTableModel::getUserMetadata() const {
   return userMetadata;
 }
 
-int LocationTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
+int LocationTableModel::rowCount(const QModelIndex&) const {
+  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int LocationTableModel::columnCount(const QModelIndex& parent) const {
-  return 2;
-}
+int LocationTableModel::columnCount(const QModelIndex&) const { return 2; }
 
 QVariant LocationTableModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole && role != Qt::EditRole) {

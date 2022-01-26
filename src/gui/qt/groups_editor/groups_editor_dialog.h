@@ -65,7 +65,7 @@ private:
 private slots:
   void on_graphView_groupSelected(const QString &name);
   void on_groupNameInput_textChanged(const QString &text);
-  void on_addGroupButton_clicked(bool checked);
+  void on_addGroupButton_clicked();
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();
 };

@@ -192,7 +192,7 @@ void BaseTableTab::acceptDrops() {
   tableView->setDropIndicatorShown(true);
 }
 
-void BaseTableTab::resizeEvent(QResizeEvent* event) {
+void BaseTableTab::resizeEvent(QResizeEvent*) {
   auto header = tableView->horizontalHeader();
   for (int i = 0; i < header->count(); i += 1) {
     if (!header->isSectionHidden(i) &&
@@ -277,12 +277,12 @@ void BaseTableTab::translateUi() {
   deleteRowButton->setText(translate("Delete row"));
 }
 
-void BaseTableTab::on_addNewRowButton_clicked(bool checked) {
+void BaseTableTab::on_addNewRowButton_clicked() {
   auto model = tableView->model();
   model->insertRow(model->rowCount());
 }
 
-void BaseTableTab::on_deleteRowButton_clicked(bool checked) {
+void BaseTableTab::on_deleteRowButton_clicked() {
   auto model = tableView->model();
   auto selectedIndexes = tableView->selectionModel()->selectedIndexes();
 
@@ -301,9 +301,7 @@ void BaseTableTab::on_deleteRowButton_clicked(bool checked) {
   }
 }
 
-void BaseTableTab::onSelectionModelSelectionChanged(
-    const QItemSelection& selected,
-    const QItemSelection& deselected) {
+void BaseTableTab::onSelectionModelSelectionChanged() {
   // Ignore the 'selected' parameter because it only contains what's
   // changed and so would omit any already-selected editable rows.
   auto selectedIndexes = tableView->selectionModel()->selectedIndexes();

@@ -65,7 +65,7 @@ private:
 private slots:
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();
-  void on_addGameButton_clicked(bool checked);
+  void on_addGameButton_clicked();
 
   void onGameSettingsDeleted();
 };

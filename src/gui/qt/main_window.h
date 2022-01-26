@@ -197,35 +197,34 @@ private:
   std::optional<std::filesystem::path> createBackup();
 
 private slots:
-  void on_actionSettings_triggered(bool checked);
-  void on_actionBackupData_triggered(bool checked);
-  void on_actionQuit_triggered(bool checked);
-  void on_actionOpenGroupsEditor_triggered(bool checked);
-  void on_actionSearch_triggered(bool checked);
-  void on_actionCopyLoadOrder_triggered(bool checked);
-  void on_actionCopyContent_triggered(bool checked);
-  void on_actionRefreshContent_triggered(bool checked);
-  void on_actionRedatePlugins_triggered(bool checked);
-  void on_actionClearAllUserMetadata_triggered(bool checked);
-  void on_actionEditMetadata_triggered(bool checked);
-  void on_actionCopyMetadata_triggered(bool checked);
-  void on_actionCopyCardContent_triggered(bool checked);
-  void on_actionClearMetadata_triggered(bool checked);
-  void on_actionViewDocs_triggered(bool checked);
-  void on_actionOpenLOOTDataFolder_triggered(bool checked);
-  void on_actionJoinDiscordServer_triggered(bool checked);
-  void on_actionAbout_triggered(bool checked);
+  void on_actionSettings_triggered();
+  void on_actionBackupData_triggered();
+  void on_actionQuit_triggered();
+  void on_actionOpenGroupsEditor_triggered();
+  void on_actionSearch_triggered();
+  void on_actionCopyLoadOrder_triggered();
+  void on_actionCopyContent_triggered();
+  void on_actionRefreshContent_triggered();
+  void on_actionRedatePlugins_triggered();
+  void on_actionClearAllUserMetadata_triggered();
+  void on_actionEditMetadata_triggered();
+  void on_actionCopyMetadata_triggered();
+  void on_actionCopyCardContent_triggered();
+  void on_actionClearMetadata_triggered();
+  void on_actionViewDocs_triggered();
+  void on_actionOpenLOOTDataFolder_triggered();
+  void on_actionJoinDiscordServer_triggered();
+  void on_actionAbout_triggered();
 
   void on_gameComboBox_activated(int index);
-  void on_actionSort_triggered(bool checked);
-  void on_actionApplySort_triggered(bool checked);
-  void on_actionDiscardSort_triggered(bool checked);
-  void on_actionUpdateMasterlist_triggered(bool checked);
+  void on_actionSort_triggered();
+  void on_actionApplySort_triggered();
+  void on_actionDiscardSort_triggered();
+  void on_actionUpdateMasterlist_triggered();
 
   void on_sidebarPluginsView_doubleClicked(const QModelIndex &index);
   void on_sidebarPluginsSelectionModel_selectionChanged(
-      const QItemSelection &selected,
-      const QItemSelection &deselected);
+      const QItemSelection &selected);
 
   void on_pluginCardsView_entered(const QModelIndex &index);
 
@@ -251,7 +250,7 @@ private slots:
 
   void on_groupsEditor_accepted();
 
-  void on_searchDialog_finished(int result);
+  void on_searchDialog_finished();
   void on_searchDialog_textChanged(const QString &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
 

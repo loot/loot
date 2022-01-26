@@ -41,8 +41,8 @@ ComboBoxDelegate::ComboBoxDelegate(
     QStyledItemDelegate(parent), textAndData(textAndData) {}
 
 QWidget* ComboBoxDelegate::createEditor(QWidget* parent,
-                                        const QStyleOptionViewItem& option,
-                                        const QModelIndex& index) const {
+                                        const QStyleOptionViewItem&,
+                                        const QModelIndex&) const {
   QComboBox* comboBox = new QComboBox(parent);
 
   for (const auto& entry : textAndData) {
@@ -75,8 +75,8 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
 }
 
 QWidget* CrcLineEditDelegate::createEditor(QWidget* parent,
-                                           const QStyleOptionViewItem& option,
-                                           const QModelIndex& index) const {
+                                           const QStyleOptionViewItem&,
+                                           const QModelIndex&) const {
   QLineEdit* lineEdit = new QLineEdit(parent);
   lineEdit->setInputMask("HHHHHHHH");
 
@@ -107,10 +107,9 @@ MessageContentDelegate::MessageContentDelegate(
     const std::vector<LootSettings::Language>& languages) :
     QStyledItemDelegate(parent), languages(languages) {}
 
-QWidget* MessageContentDelegate::createEditor(
-    QWidget* parent,
-    const QStyleOptionViewItem& option,
-    const QModelIndex& index) const {
+QWidget* MessageContentDelegate::createEditor(QWidget* parent,
+                                              const QStyleOptionViewItem&,
+                                              const QModelIndex&) const {
   auto editor = new MessageContentEditor(parent, languages);
   editor->setFocusPolicy(Qt::StrongFocus);
 
@@ -137,10 +136,9 @@ void MessageContentDelegate::setModelData(QWidget* editor,
   }
 }
 
-void MessageContentDelegate::updateEditorGeometry(
-    QWidget* editor,
-    const QStyleOptionViewItem& option,
-    const QModelIndex& index) const {
+void MessageContentDelegate::updateEditorGeometry(QWidget* editor,
+                                                  const QStyleOptionViewItem&,
+                                                  const QModelIndex&) const {
   auto parentGeometry = editor->parentWidget()->geometry();
   auto mappedGeometry = editor->parentWidget()->parentWidget()->mapToGlobal(
       parentGeometry.topLeft());
@@ -155,8 +153,8 @@ AutocompletingLineEditDelegate::AutocompletingLineEditDelegate(
 
 QWidget* AutocompletingLineEditDelegate::createEditor(
     QWidget* parent,
-    const QStyleOptionViewItem& option,
-    const QModelIndex& index) const {
+    const QStyleOptionViewItem&,
+    const QModelIndex&) const {
   auto completer = new QCompleter(completions, parent);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
 

@@ -169,7 +169,7 @@ void SettingsDialog::on_dialogButtons_accepted() {
 
 void SettingsDialog::on_dialogButtons_rejected() { reject(); }
 
-void SettingsDialog::on_addGameButton_clicked(bool checked) {
+void SettingsDialog::on_addGameButton_clicked() {
   auto newGameDialog = new NewGameDialog(this, getGameFolderNames());
 
   auto result = newGameDialog->exec();
