@@ -53,7 +53,7 @@ void OpenInDefaultApplication(const std::filesystem::path& file) {
 #ifdef _WIN32
   HINSTANCE ret =
       ShellExecute(0, NULL, file.wstring().c_str(), NULL, NULL, SW_SHOWNORMAL);
-  if ((int)ret <= 32)
+  if (reinterpret_cast<uintptr_t>(ret) <= 32)
     throw std::system_error(GetLastError(),
                             std::system_category(),
                             "Failed to open file in its default application.");
