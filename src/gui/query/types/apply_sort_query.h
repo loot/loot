@@ -40,7 +40,7 @@ public:
       plugins_(plugins),
       useSortingErrorMessage(false) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->trace("User has accepted sorted load order, applying it.");

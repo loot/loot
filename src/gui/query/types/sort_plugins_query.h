@@ -45,7 +45,7 @@ public:
       sendProgressUpdate_(sendProgressUpdate),
       useSortingErrorMessage(false) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->info("Beginning sorting operation.");

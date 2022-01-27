@@ -36,7 +36,7 @@ public:
   ClearAllMetadataQuery(G& game, std::string language) :
       MetadataQuery<G>(game, language) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing all user metadata.");

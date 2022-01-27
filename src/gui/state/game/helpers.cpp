@@ -170,7 +170,7 @@ std::vector<SimpleMessage> ToSimpleMessages(
     const std::vector<Message>& messages,
     const std::string& language) {
   std::vector<SimpleMessage> simpleMessages;
-  for (const auto message : messages) {
+  for (const auto& message : messages) {
     auto simpleMessage = message.ToSimpleMessage(language);
     if (simpleMessage.has_value()) {
       simpleMessages.push_back(simpleMessage.value());

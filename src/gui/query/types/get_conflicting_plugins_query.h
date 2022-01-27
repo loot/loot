@@ -38,7 +38,7 @@ public:
                              std::string pluginName) :
       MetadataQuery<G>(game, language), pluginName_(pluginName) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Searching for plugins that conflict with {}", pluginName_);

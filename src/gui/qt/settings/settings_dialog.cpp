@@ -46,7 +46,7 @@ void SettingsDialog::initialiseInputs(
     removeTab(1);
   }
 
-  for (const auto game : settings.getGameSettings()) {
+  for (const auto& game : settings.getGameSettings()) {
     auto isCurrentGame = game.FolderName() == currentGameFolder;
 
     addGameTab(game, isCurrentGame);

@@ -43,7 +43,7 @@ public:
       MetadataQuery<G>(game, language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     sendProgressUpdate_(boost::locale::translate(
         "Parsing, merging and evaluating metadata..."));
 

@@ -94,7 +94,6 @@ protected:
 
 private:
   QList<Edge *> edgeList;
-  GraphView *graph;
   QGraphicsItem *edgeToCursor;
   NodeLabel *textItem;
   bool isUserMetadata_;

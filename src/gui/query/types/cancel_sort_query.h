@@ -38,7 +38,7 @@ public:
                   std::string language) :
       MetadataQuery<G>(game, language), counter_(counter) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     counter_.DecrementUnappliedChangeCounter();
     this->getGame().DecrementLoadOrderSortCount();
 

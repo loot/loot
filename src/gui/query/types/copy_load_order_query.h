@@ -43,7 +43,7 @@ public:
   CopyLoadOrderQuery(const G& game, const std::vector<std::string>& plugins) :
       game_(game), plugins_(plugins) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     Counters counters;
     std::stringstream stream;
     for (const auto& pluginName : plugins_) {

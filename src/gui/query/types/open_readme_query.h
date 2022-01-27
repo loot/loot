@@ -39,7 +39,7 @@ public:
                   const std::string& relativeFilePath) :
       readmePath_(readmePath), relativeFilePath_(relativeFilePath) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's readme.");

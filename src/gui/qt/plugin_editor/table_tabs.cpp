@@ -94,7 +94,7 @@ int calculateMinimumColumnWidth(QAbstractItemModel* model,
 
   // The values contain strings that appear in a combo box dropdown menu, check
   // their widths too.
-  for (const auto [key, value] : values) {
+  for (const auto& [key, value] : values) {
     if (value.isValid()) {
       maxColumnWidth =
           calculateMaxDropdownRowWidth(value.toString(), maxColumnWidth);
@@ -120,7 +120,7 @@ int calculateMinimumColumnWidth(
 
   // The values contain strings that appear in a combo box dropdown menu, check
   // their widths too.
-  for (const auto [text, value] : values) {
+  for (const auto& [text, value] : values) {
     maxTextWidth = calculateMaxDropdownRowWidth(text, maxTextWidth);
   }
 

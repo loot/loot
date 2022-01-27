@@ -1089,7 +1089,7 @@ void MainWindow::addUpdateCheckErrorMessage() {
           .str();
 
   auto generalMessages = pluginItemModel->getGeneralMessages();
-  for (const auto message : generalMessages) {
+  for (const auto& message : generalMessages) {
     if (message.text == text) {
       return;
     }

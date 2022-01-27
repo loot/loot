@@ -41,7 +41,7 @@ public:
       language_(language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     gamesManager_.SetCurrentGame(gameFolder_);
     gamesManager_.GetCurrentGame().Init();
 

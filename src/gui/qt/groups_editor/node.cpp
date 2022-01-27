@@ -63,7 +63,6 @@ Node::Node(GraphView *graphView,
            const QString &name,
            bool isUserMetadata,
            bool containsInstalledPlugins) :
-    graph(graphView),
     edgeToCursor(nullptr),
     textItem(new NodeLabel(name, isUserMetadata)),
     isUserMetadata_(isUserMetadata),
