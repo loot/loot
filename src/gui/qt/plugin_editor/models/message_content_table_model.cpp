@@ -46,7 +46,9 @@ int MessageContentTableModel::rowCount(const QModelIndex&) const {
 }
 
 int MessageContentTableModel::columnCount(const QModelIndex&) const {
-  return 2;
+  static constexpr int COLUMN_COUNT =
+      std::max({LANGUAGE_COLUMN, TEXT_COLUMN}) + 1;
+  return COLUMN_COUNT;
 }
 
 QVariant MessageContentTableModel::data(const QModelIndex& index,
@@ -66,7 +68,7 @@ QVariant MessageContentTableModel::data(const QModelIndex& index,
   const auto& element = metadata.at(index.row());
 
   switch (index.column()) {
-    case 0: {
+    case LANGUAGE_COLUMN: {
       if (role == Qt::DisplayRole) {
         auto it = languageLocaleNameMap.find(element.GetLanguage());
         if (it != languageLocaleNameMap.end()) {
@@ -75,7 +77,7 @@ QVariant MessageContentTableModel::data(const QModelIndex& index,
       }
       return QVariant(QString::fromStdString(element.GetLanguage()));
     }
-    case 1:
+    case TEXT_COLUMN:
       return QVariant(QString::fromStdString(element.GetText()));
     default:
       return QVariant();
@@ -94,9 +96,9 @@ QVariant MessageContentTableModel::headerData(int section,
   }
 
   switch (section) {
-    case 0:
+    case LANGUAGE_COLUMN:
       return QVariant(translate("Language"));
-    case 1:
+    case TEXT_COLUMN:
       return QVariant(translate("Text"));
     default:
       return QVariant();
@@ -124,9 +126,9 @@ bool MessageContentTableModel::setData(const QModelIndex& index,
 
   auto& element = metadata.at(index.row());
 
-  if (index.column() == 0) {
+  if (index.column() == LANGUAGE_COLUMN) {
     element = MessageContent(element.GetText(), value.toString().toStdString());
-  } else if (index.column() == 1) {
+  } else if (index.column() == TEXT_COLUMN) {
     element =
         MessageContent(value.toString().toStdString(), element.GetLanguage());
   }

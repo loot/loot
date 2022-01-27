@@ -409,6 +409,9 @@ void Game::RedatePlugins() {
     return;
   }
 
+  static constexpr std::chrono::seconds REDATE_TIMESTAMP_INTERVAL =
+      std::chrono::seconds(60);
+
   vector<string> loadorder = gameHandle_->GetLoadOrder();
   if (!loadorder.empty()) {
     std::filesystem::file_time_type lastTime =
@@ -431,7 +434,7 @@ void Game::RedatePlugins() {
                         filepath.filename().u8string());
         }
       } else {
-        lastTime += std::chrono::seconds(60);
+        lastTime += REDATE_TIMESTAMP_INTERVAL;
         fs::last_write_time(filepath,
                             lastTime);  // Space timestamps by a minute.
 
@@ -625,7 +628,10 @@ std::vector<Message> Game::GetMessages() const {
     }
   }
 
-  if (activeNormalPluginsCount > 254 && hasActiveEsl) {
+  static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 254;
+
+  if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
+      hasActiveEsl) {
     auto logger = getLogger();
     if (logger) {
       logger->warn(

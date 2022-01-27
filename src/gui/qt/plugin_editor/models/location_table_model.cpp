@@ -43,7 +43,10 @@ int LocationTableModel::rowCount(const QModelIndex&) const {
   return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int LocationTableModel::columnCount(const QModelIndex&) const { return 2; }
+int LocationTableModel::columnCount(const QModelIndex&) const {
+  static constexpr int COLUMN_COUNT = std::max({URL_COLUMN, NAME_COLUMN}) + 1;
+  return COLUMN_COUNT;
+}
 
 QVariant LocationTableModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole && role != Qt::EditRole) {
@@ -64,9 +67,9 @@ QVariant LocationTableModel::data(const QModelIndex& index, int role) const {
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
   switch (index.column()) {
-    case 0:
+    case URL_COLUMN:
       return QVariant(QString::fromStdString(element.GetURL()));
-    case 1:
+    case NAME_COLUMN:
       return QVariant(QString::fromStdString(element.GetName()));
     default:
       return QVariant();
@@ -85,9 +88,9 @@ QVariant LocationTableModel::headerData(int section,
   }
 
   switch (section) {
-    case 0:
+    case URL_COLUMN:
       return QVariant(translate("URL"));
-    case 1:
+    case NAME_COLUMN:
       return QVariant(translate("Name"));
     default:
       return QVariant();
@@ -120,7 +123,7 @@ bool LocationTableModel::setData(const QModelIndex& index,
 
   auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
 
-  if (index.column() == 0) {
+  if (index.column() == URL_COLUMN) {
     element = Location(value.toString().toStdString(), element.GetName());
   } else {
     element = Location(element.GetURL(), value.toString().toStdString());

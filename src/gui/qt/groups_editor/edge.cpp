@@ -63,7 +63,7 @@ void Edge::adjust() {
 
   prepareGeometryChange();
 
-  if (length > qreal(20.0)) {
+  if (length > qreal{Node::DIAMETER}) {
     QPointF edgeOffset((line.dx() * Node::RADIUS) / length,
                        (line.dy() * Node::RADIUS) / length);
     sourcePoint = line.p1() + edgeOffset;
@@ -79,13 +79,13 @@ QRectF Edge::boundingRect() const {
     return QRectF();
   }
 
-  auto padding = (LINE_WIDTH + ARROW_HYPOTENUSE) / 2.0;
+  static constexpr auto PADDING = (LINE_WIDTH + ARROW_HYPOTENUSE) / 2.0;
 
   return QRectF(sourcePoint,
                 QSizeF(destPoint.x() - sourcePoint.x(),
                        destPoint.y() - sourcePoint.y()))
       .normalized()
-      .adjusted(-padding, -padding, padding, padding);
+      .adjusted(-PADDING, -PADDING, PADDING, PADDING);
 }
 
 void Edge::paint(QPainter *painter,
@@ -151,6 +151,8 @@ QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
 }
 
 QColor getDefaultColor(bool isUserMetadata) {
+  static constexpr int MAX_ALPHA = 255;
+
   auto colorGroup = isUserMetadata ? QPalette::Active : QPalette::Disabled;
   auto color = QGuiApplication::palette().color(colorGroup, QPalette::Text);
 
@@ -160,7 +162,7 @@ QColor getDefaultColor(bool isUserMetadata) {
   // (QPalette::base) to work out what the equivalent opaque color is and use
   // that instead.
   auto alpha = color.alpha();
-  if (alpha == 255) {
+  if (alpha == MAX_ALPHA) {
     return color;
   }
 
@@ -168,11 +170,11 @@ QColor getDefaultColor(bool isUserMetadata) {
       QGuiApplication::palette().color(colorGroup, QPalette::Base);
 
   auto red = backgroundColor.red() +
-             (color.red() - backgroundColor.red()) * alpha / 255;
+             (color.red() - backgroundColor.red()) * alpha / MAX_ALPHA;
   auto green = backgroundColor.green() +
-               (color.green() - backgroundColor.green()) * alpha / 255;
+               (color.green() - backgroundColor.green()) * alpha / MAX_ALPHA;
   auto blue = backgroundColor.blue() +
-              (color.blue() - backgroundColor.blue()) * alpha / 255;
+              (color.blue() - backgroundColor.blue()) * alpha / MAX_ALPHA;
 
   return QColor(red, green, blue);
 }

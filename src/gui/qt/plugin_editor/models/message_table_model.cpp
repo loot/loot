@@ -70,7 +70,7 @@ QVariant MessageTableModel::data(const QModelIndex& index, int role) const {
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
   switch (index.column()) {
-    case 0: {
+    case TYPE_COLUMN: {
       auto pair = typeDisplayDataMap.at(element.GetType());
 
       if (role == Qt::DisplayRole) {
@@ -79,7 +79,7 @@ QVariant MessageTableModel::data(const QModelIndex& index, int role) const {
         return pair.second;
       }
     }
-    case 1: {
+    case CONTENT_COLUMN: {
       if (role == Qt::DisplayRole) {
         auto contentText =
             element.GetContent(language).value_or(MessageContent()).GetText();
@@ -87,7 +87,7 @@ QVariant MessageTableModel::data(const QModelIndex& index, int role) const {
       }
       return QVariant::fromValue(element.GetContent());
     }
-    case 2:
+    case CONDITION_COLUMN:
       return QVariant(QString::fromStdString(element.GetCondition()));
     default:
       return QVariant();
@@ -106,11 +106,11 @@ QVariant MessageTableModel::headerData(int section,
   }
 
   switch (section) {
-    case 0:
+    case TYPE_COLUMN:
       return QVariant(translate("Type"));
-    case 1:
+    case CONTENT_COLUMN:
       return QVariant(translate("Content"));
-    case 2:
+    case CONDITION_COLUMN:
       return QVariant(translate("Condition"));
     default:
       return QVariant();
@@ -143,15 +143,15 @@ bool MessageTableModel::setData(const QModelIndex& index,
 
   auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
 
-  if (index.column() == 0) {
+  if (index.column() == TYPE_COLUMN) {
     element = Message(mapMessageType(value.toString().toStdString()),
                       element.GetContent(),
                       element.GetCondition());
-  } else if (index.column() == 1) {
+  } else if (index.column() == CONTENT_COLUMN) {
     element = Message(element.GetType(),
                       value.value<std::vector<MessageContent>>(),
                       element.GetCondition());
-  } else if (index.column() == 2) {
+  } else if (index.column() == CONDITION_COLUMN) {
     element = Message(element.GetType(),
                       element.GetContent(),
                       value.toString().toStdString());

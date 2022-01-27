@@ -36,6 +36,12 @@ using std::filesystem::exists;
 using std::filesystem::u8path;
 
 namespace loot {
+static constexpr float MORROWIND_MINIMUM_HEADER_VERSION = 1.2f;
+static constexpr float OBLIVION_MINIMUM_HEADER_VERSION = 0.8f;
+static constexpr float SKYRIM_FO3_MINIMUM_HEADER_VERSION = 0.94f;
+static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
+static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
+static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
 
 GameSettings::GameSettings() :
     type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
@@ -56,7 +62,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data Files";
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
-    mininumHeaderVersion_ = 1.2f;
+    mininumHeaderVersion_ = MORROWIND_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/morrowind/v0.17/"
         "masterlist.yaml";
@@ -76,7 +82,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
-    mininumHeaderVersion_ = 0.8f;
+    mininumHeaderVersion_ = OBLIVION_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/oblivion/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5) {
@@ -87,7 +93,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
-    mininumHeaderVersion_ = 0.94f;
+    mininumHeaderVersion_ = SKYRIM_FO3_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/skyrim/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5se) {
@@ -99,7 +105,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
-    mininumHeaderVersion_ = 1.7f;
+    mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/skyrimse/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5vr) {
@@ -110,7 +116,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
-    mininumHeaderVersion_ = 1.7f;
+    mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/skyrimvr/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fo3) {
@@ -129,7 +135,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
-    mininumHeaderVersion_ = 0.94f;
+    mininumHeaderVersion_ = SKYRIM_FO3_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/fallout3/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fonv) {
@@ -148,7 +154,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
-    mininumHeaderVersion_ = 1.32f;
+    mininumHeaderVersion_ = FONV_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/falloutnv/v0.17/"
         "masterlist.yaml";
@@ -160,7 +166,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
-    mininumHeaderVersion_ = 0.95f;
+    mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/fallout4/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fo4vr) {
@@ -172,7 +178,7 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
-    mininumHeaderVersion_ = 0.95f;
+    mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
     masterlistSource_ =
         "https://raw.githubusercontent.com/loot/fallout4vr/v0.17/"
         "masterlist.yaml";

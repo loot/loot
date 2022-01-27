@@ -65,7 +65,7 @@ QVariant TagTableModel::data(const QModelIndex& index, int role) const {
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
   switch (index.column()) {
-    case 0: {
+    case TYPE_COLUMN: {
       auto pair = suggestionTypeMap.at(element.IsAddition());
       if (role == Qt::DisplayRole) {
         return QVariant(pair.first);
@@ -73,9 +73,9 @@ QVariant TagTableModel::data(const QModelIndex& index, int role) const {
         return pair.second;
       }
     }
-    case 1:
+    case NAME_COLUMN:
       return QVariant(QString::fromStdString(element.GetName()));
-    case 2:
+    case CONDITION_COLUMN:
       return QVariant(QString::fromStdString(element.GetCondition()));
     default:
       return QVariant();
@@ -94,11 +94,11 @@ QVariant TagTableModel::headerData(int section,
   }
 
   switch (section) {
-    case 0:
+    case TYPE_COLUMN:
       return QVariant(translate("Add/Remove"));
-    case 1:
+    case NAME_COLUMN:
       return QVariant(translate("Bash Tag"));
-    case 2:
+    case CONDITION_COLUMN:
       return QVariant(translate("Condition"));
     default:
       return QVariant();
@@ -131,9 +131,9 @@ bool TagTableModel::setData(const QModelIndex& index,
 
   auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
 
-  if (index.column() == 0) {
+  if (index.column() == TYPE_COLUMN) {
     element = Tag(element.GetName(), value.toBool(), element.GetCondition());
-  } else if (index.column() == 1) {
+  } else if (index.column() == NAME_COLUMN) {
     element = Tag(value.toString().toStdString(),
                   element.IsAddition(),
                   element.GetCondition());

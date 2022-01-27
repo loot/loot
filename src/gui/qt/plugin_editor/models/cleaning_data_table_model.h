@@ -65,6 +65,13 @@ public:
                   int count,
                   const QModelIndex& parent = QModelIndex()) override;
 
+  static constexpr int CRC_COLUMN = 0;
+  static constexpr int ITM_COLUMN = 1;
+  static constexpr int DELETED_REFERENCE_COLUMN = 2;
+  static constexpr int DELETED_NAVMESH_COLUMN = 3;
+  static constexpr int CLEANING_UTILITY_COLUMN = 4;
+  static constexpr int DETAIL_COLUMN = 5;
+
 private:
   const std::string& language;
 

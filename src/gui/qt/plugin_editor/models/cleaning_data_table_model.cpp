@@ -50,7 +50,16 @@ int CleaningDataTableModel::rowCount(const QModelIndex&) const {
   return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int CleaningDataTableModel::columnCount(const QModelIndex&) const { return 6; }
+int CleaningDataTableModel::columnCount(const QModelIndex&) const {
+  static constexpr int COLUMN_COUNT = std::max({CRC_COLUMN,
+                                                ITM_COLUMN,
+                                                DELETED_REFERENCE_COLUMN,
+                                                DELETED_NAVMESH_COLUMN,
+                                                CLEANING_UTILITY_COLUMN,
+                                                DETAIL_COLUMN}) +
+                                      1;
+  return COLUMN_COUNT;
+}
 
 QVariant CleaningDataTableModel::data(const QModelIndex& index,
                                       int role) const {
@@ -72,17 +81,17 @@ QVariant CleaningDataTableModel::data(const QModelIndex& index,
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
   switch (index.column()) {
-    case 0:
+    case CRC_COLUMN:
       return QVariant(QString::fromStdString(crcToString(element.GetCRC())));
-    case 1:
+    case ITM_COLUMN:
       return QVariant(element.GetITMCount());
-    case 2:
+    case DELETED_REFERENCE_COLUMN:
       return QVariant(element.GetDeletedReferenceCount());
-    case 3:
+    case DELETED_NAVMESH_COLUMN:
       return QVariant(element.GetDeletedNavmeshCount());
-    case 4:
+    case CLEANING_UTILITY_COLUMN:
       return QVariant(QString::fromStdString(element.GetCleaningUtility()));
-    case 5: {
+    case DETAIL_COLUMN: {
       if (role == Qt::DisplayRole) {
         auto contentText =
             element.ChooseDetail(language).value_or(MessageContent()).GetText();
@@ -107,17 +116,17 @@ QVariant CleaningDataTableModel::headerData(int section,
   }
 
   switch (section) {
-    case 0:
+    case CRC_COLUMN:
       return QVariant(translate("CRC"));
-    case 1:
+    case ITM_COLUMN:
       return QVariant(translate("ITM Count"));
-    case 2:
+    case DELETED_REFERENCE_COLUMN:
       return QVariant(translate("Deleted References"));
-    case 3:
+    case DELETED_NAVMESH_COLUMN:
       return QVariant(translate("Deleted Navmeshes"));
-    case 4:
+    case CLEANING_UTILITY_COLUMN:
       return QVariant(translate("Cleaning Utility"));
-    case 5:
+    case DETAIL_COLUMN:
       return QVariant(translate("Detail"));
     default:
       return QVariant();
@@ -150,36 +159,38 @@ bool CleaningDataTableModel::setData(const QModelIndex& index,
 
   auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
 
-  if (index.column() == 0) {
+  if (index.column() == CRC_COLUMN) {
+    static constexpr int CRC_BASE = 16;
+
     element = PluginCleaningData(
-        std::stoul(value.toString().toStdString(), nullptr, 16),
+        std::stoul(value.toString().toStdString(), nullptr, CRC_BASE),
         element.GetCleaningUtility(),
         element.GetDetail(),
         element.GetITMCount(),
         element.GetDeletedReferenceCount(),
         element.GetDeletedNavmeshCount());
-  } else if (index.column() == 1) {
+  } else if (index.column() == ITM_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  value.toInt(),
                                  element.GetDeletedReferenceCount(),
                                  element.GetDeletedNavmeshCount());
-  } else if (index.column() == 2) {
+  } else if (index.column() == DELETED_REFERENCE_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  value.toInt(),
                                  element.GetDeletedNavmeshCount());
-  } else if (index.column() == 3) {
+  } else if (index.column() == DELETED_NAVMESH_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  element.GetDeletedReferenceCount(),
                                  value.toInt());
-  } else if (index.column() == 4) {
+  } else if (index.column() == CLEANING_UTILITY_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  value.toString().toStdString(),
                                  element.GetDetail(),

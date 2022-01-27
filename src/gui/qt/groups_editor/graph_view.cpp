@@ -94,11 +94,11 @@ void reverseDepthFirstSearch(Node *node,
 
 int countMaxPathLength(Node *rootNode) {
   std::set<Node *> visitedNodes;
-  auto initialDepth = 1;
-  auto maxDepth = initialDepth;
+  static constexpr int INITIAL_DEPTH = 1;
+  auto maxDepth = INITIAL_DEPTH;
 
   depthFirstSearch(rootNode,
-                   initialDepth,
+                   INITIAL_DEPTH,
                    visitedNodes,
                    [&maxDepth](const Node *, int depth) {
                      if (depth > maxDepth) {
@@ -135,6 +135,9 @@ void visitConnectedSubgraph(Node *topLevelNode,
 };
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
+  static constexpr qreal INITIAL_SCALING_FACTOR = 0.8;
+  static constexpr int MIN_VIEW_SIZE = 400;
+
   QGraphicsScene *scene = new QGraphicsScene(this);
   scene->setItemIndexMethod(QGraphicsScene::BspTreeIndex);
   setScene(scene);
@@ -143,8 +146,8 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
   setViewportUpdateMode(BoundingRectViewportUpdate);
   setRenderHint(QPainter::Antialiasing);
   setTransformationAnchor(AnchorUnderMouse);
-  scale(qreal(0.8), qreal(0.8));
-  setMinimumSize(400, 400);
+  scale(INITIAL_SCALING_FACTOR, INITIAL_SCALING_FACTOR);
+  setMinimumSize(MIN_VIEW_SIZE, MIN_VIEW_SIZE);
 }
 
 void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
@@ -256,16 +259,22 @@ void GraphView::handleGroupSelected(const QString &name) {
 
 #if QT_CONFIG(wheelevent)
 void GraphView::wheelEvent(QWheelEvent *event) {
-  auto mouseWheelRotationAngle = event->angleDelta().y() / 240.0;
+  static constexpr double ROTATION_SCALING_FACTOR = 30.0 * 8.0;
+  static constexpr double BASE_SCALE_FACTOR = 2.0;
+  static constexpr double MINIMUM_SCALE = 0.07;
+  static constexpr double MAXIMUM_SCALE = 100;
 
-  auto scaleFactor = pow(2.0, -mouseWheelRotationAngle);
+  auto mouseWheelRotationAngle =
+      event->angleDelta().y() / ROTATION_SCALING_FACTOR;
+
+  auto scaleFactor = pow(BASE_SCALE_FACTOR, -mouseWheelRotationAngle);
 
   auto factor = transform()
                     .scale(scaleFactor, scaleFactor)
                     .mapRect(QRectF(0, 0, 1, 1))
                     .width();
 
-  if (factor < 0.07 || factor > 100) {
+  if (factor < MINIMUM_SCALE || factor > MAXIMUM_SCALE) {
     // Don't allow infinite zoom in or out.
     return;
   }
@@ -330,16 +339,16 @@ void GraphView::doLayout() {
 
   // Now visit each of the root nodes in turn, setting levels and offsets for
   // every connected node.
-  auto topLevel = 0;
+  static constexpr int TOP_LEVEL = 0;
   for (const auto rootNode : rootNodes) {
-    visitConnectedSubgraph(rootNode, topLevel, setNodePosition);
+    visitConnectedSubgraph(rootNode, TOP_LEVEL, setNodePosition);
   }
 
   for (const auto node : nodes) {
     if (nodeLevels.count(node) == 0) {
       // This shouldn't happen, but if this node has no assigned level, just
       // put it on the top level.
-      setNodePosition(node, topLevel);
+      setNodePosition(node, TOP_LEVEL);
     }
 
     auto level = nodeLevels.find(node)->second;

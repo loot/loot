@@ -57,6 +57,8 @@ std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
 }
 
 void GroupsEditorDialog::setupUi() {
+  static constexpr int SPACER_WIDTH = 20;
+
   setWindowModality(Qt::WindowModal);
 
   graphView = new GraphView(this);
@@ -68,8 +70,8 @@ void GroupsEditorDialog::setupUi() {
   groupPluginsList->setVisible(false);
   groupPluginsList->setSelectionMode(QAbstractItemView::NoSelection);
 
-  auto verticalSpacer =
-      new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  auto verticalSpacer = new QSpacerItem(
+      SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
   groupNameInputLabel = new QLabel(this);
   groupNameInput = new QLineEdit(this);

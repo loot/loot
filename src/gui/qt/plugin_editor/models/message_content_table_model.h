@@ -68,6 +68,9 @@ public:
                   int count,
                   const QModelIndex& parent = QModelIndex()) override;
 
+  static constexpr int LANGUAGE_COLUMN = 0;
+  static constexpr int TEXT_COLUMN = 1;
+
 private:
   const std::map<std::string, QVariant> languageLocaleNameMap;
 

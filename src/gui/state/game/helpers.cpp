@@ -231,11 +231,16 @@ std::vector<Message> CheckForRemovedPlugins(
   // without normalising case.
   std::set<std::string> pluginsSet(pluginsAfter.cbegin(), pluginsAfter.cend());
 
+  static constexpr const char* GHOST_EXTENSION = ".ghost";
+  static constexpr size_t GHOST_EXTENSION_LENGTH =
+      std::char_traits<char>::length(GHOST_EXTENSION);
+
   std::vector<Message> messages;
   for (auto& plugin : pluginsBefore) {
     std::string unghostedPluginName;
-    if (boost::iends_with(plugin, ".ghost")) {
-      unghostedPluginName = plugin.substr(0, plugin.length() - 6);
+    if (boost::iends_with(plugin, GHOST_EXTENSION)) {
+      unghostedPluginName =
+          plugin.substr(0, plugin.length() - GHOST_EXTENSION_LENGTH);
     } else {
       unghostedPluginName = plugin;
     }

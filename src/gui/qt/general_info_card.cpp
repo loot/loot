@@ -73,9 +73,15 @@ void GeneralInfoCard::setGeneralMessages(
 }
 
 void GeneralInfoCard::setupUi() {
-  static int TABLE_COLUMN_SPACING = 16;
-  static int TABLE_COLUMN_1_MIN_WIDTH = 72;
-  static int TABLE_COLUMN_3_MIN_WIDTH = 32;
+  static constexpr int TABLE_COLUMN_SPACING = 16;
+  static constexpr int METADATA_LABEL_COLUMN = 0;
+  static constexpr int METADATA_VALUE_COLUMN = 1;
+  static constexpr int MESSAGE_LABEL_COLUMN = 2;
+  static constexpr int MESSAGE_VALUE_COLUMN = 3;
+  static constexpr int PLUGIN_LABEL_COLUMN = 4;
+  static constexpr int PLUGIN_VALUE_COLUMN = 5;
+  static constexpr int METADATA_COLUMN_MIN_WIDTH = 72;
+  static constexpr int MESSAGE_COLUMN_MIN_WIDTH = 32;
 
   auto generalInfoLayout = new QVBoxLayout();
   generalInfoLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -84,10 +90,12 @@ void GeneralInfoCard::setupUi() {
 
   auto giGridLayout = new QGridLayout();
   giGridLayout->setHorizontalSpacing(TABLE_COLUMN_SPACING);
-  giGridLayout->setColumnMinimumWidth(1, TABLE_COLUMN_1_MIN_WIDTH);
-  giGridLayout->setColumnMinimumWidth(3, TABLE_COLUMN_3_MIN_WIDTH);
+  giGridLayout->setColumnMinimumWidth(METADATA_VALUE_COLUMN,
+                                      METADATA_COLUMN_MIN_WIDTH);
+  giGridLayout->setColumnMinimumWidth(MESSAGE_VALUE_COLUMN,
+                                      MESSAGE_COLUMN_MIN_WIDTH);
   // Stretch the last column to give static widths for all the other columns.
-  giGridLayout->setColumnStretch(5, 1);
+  giGridLayout->setColumnStretch(PLUGIN_VALUE_COLUMN, 1);
 
   masterlistRevisionLabel = new QLabel(this);
   masterlistRevisionValue = new QLabel(this);
@@ -113,30 +121,31 @@ void GeneralInfoCard::setupUi() {
   totalPluginsCountValue = new QLabel(this);
 
   messagesWidget = new MessagesWidget(this);
+
   messagesWidget->setVisible(false);
 
-  giGridLayout->addWidget(masterlistRevisionLabel, 0, 0);
-  giGridLayout->addWidget(masterlistRevisionValue, 0, 1);
-  giGridLayout->addWidget(masterlistDateLabel, 1, 0);
-  giGridLayout->addWidget(masterlistDateValue, 1, 1);
-  giGridLayout->addWidget(preludeRevisionLabel, 2, 0);
-  giGridLayout->addWidget(preludeRevisionValue, 2, 1);
-  giGridLayout->addWidget(preludeDateLabel, 3, 0);
-  giGridLayout->addWidget(preludeDateValue, 3, 1);
+  giGridLayout->addWidget(masterlistRevisionLabel, 0, METADATA_LABEL_COLUMN);
+  giGridLayout->addWidget(masterlistRevisionValue, 0, METADATA_VALUE_COLUMN);
+  giGridLayout->addWidget(masterlistDateLabel, 1, METADATA_LABEL_COLUMN);
+  giGridLayout->addWidget(masterlistDateValue, 1, METADATA_VALUE_COLUMN);
+  giGridLayout->addWidget(preludeRevisionLabel, 2, METADATA_LABEL_COLUMN);
+  giGridLayout->addWidget(preludeRevisionValue, 2, METADATA_VALUE_COLUMN);
+  giGridLayout->addWidget(preludeDateLabel, 3, METADATA_LABEL_COLUMN);
+  giGridLayout->addWidget(preludeDateValue, 3, METADATA_VALUE_COLUMN);
 
-  giGridLayout->addWidget(warningsCountLabel, 0, 2);
-  giGridLayout->addWidget(warningsCountValue, 0, 3);
-  giGridLayout->addWidget(errorsCountLabel, 1, 2);
-  giGridLayout->addWidget(errorsCountValue, 1, 3);
-  giGridLayout->addWidget(totalMessagesCountLabel, 2, 2);
-  giGridLayout->addWidget(totalMessagesCountValue, 2, 3);
+  giGridLayout->addWidget(warningsCountLabel, 0, MESSAGE_LABEL_COLUMN);
+  giGridLayout->addWidget(warningsCountValue, 0, MESSAGE_VALUE_COLUMN);
+  giGridLayout->addWidget(errorsCountLabel, 1, MESSAGE_LABEL_COLUMN);
+  giGridLayout->addWidget(errorsCountValue, 1, MESSAGE_VALUE_COLUMN);
+  giGridLayout->addWidget(totalMessagesCountLabel, 2, MESSAGE_LABEL_COLUMN);
+  giGridLayout->addWidget(totalMessagesCountValue, 2, MESSAGE_VALUE_COLUMN);
 
-  giGridLayout->addWidget(activeCountLabel, 0, 4);
-  giGridLayout->addWidget(activeCountValue, 0, 5);
-  giGridLayout->addWidget(dirtyCountLabel, 1, 4);
-  giGridLayout->addWidget(dirtyCountValue, 1, 5);
-  giGridLayout->addWidget(totalPluginsCountLabel, 2, 4);
-  giGridLayout->addWidget(totalPluginsCountValue, 2, 5);
+  giGridLayout->addWidget(activeCountLabel, 0, PLUGIN_LABEL_COLUMN);
+  giGridLayout->addWidget(activeCountValue, 0, PLUGIN_VALUE_COLUMN);
+  giGridLayout->addWidget(dirtyCountLabel, 1, PLUGIN_LABEL_COLUMN);
+  giGridLayout->addWidget(dirtyCountValue, 1, PLUGIN_VALUE_COLUMN);
+  giGridLayout->addWidget(totalPluginsCountLabel, 2, PLUGIN_LABEL_COLUMN);
+  giGridLayout->addWidget(totalPluginsCountValue, 2, PLUGIN_VALUE_COLUMN);
 
   generalInfoLayout->addWidget(headingLabel);
   generalInfoLayout->addLayout(giGridLayout);

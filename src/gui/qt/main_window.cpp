@@ -302,7 +302,9 @@ void MainWindow::setupUi() {
       setGeometry(geometry);
     }
   } else {
-    resize(1024, 768);
+    static constexpr int DEFAULT_WIDTH = 1024;
+    static constexpr int DEFAULT_HEIGHT = 768;
+    resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
   }
 
   // Set up status bar.
@@ -920,7 +922,8 @@ void MainWindow::showFirstRunDialog() {
 }
 
 void MainWindow::showNotification(const QString& message) {
-  statusBar()->showMessage(message, 5000);
+  static constexpr int NOTIFICATION_LIFETIME_MS = 5000;
+  statusBar()->showMessage(message, NOTIFICATION_LIFETIME_MS);
 }
 
 PluginItem MainWindow::getSelectedPlugin() const {

@@ -47,7 +47,13 @@ int FileTableModel::rowCount(const QModelIndex&) const {
   return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
-int FileTableModel::columnCount(const QModelIndex&) const { return 4; }
+int FileTableModel::columnCount(const QModelIndex&) const {
+  static constexpr int COLUMN_COUNT =
+      std::max(
+          {NAME_COLUMN, DISPLAY_NAME_COLUMN, DETAIL_COLUMN, CONDITION_COLUMN}) +
+      1;
+  return COLUMN_COUNT;
+}
 
 QVariant FileTableModel::data(const QModelIndex& index, int role) const {
   if (role != Qt::DisplayRole && role != Qt::EditRole) {
@@ -68,11 +74,11 @@ QVariant FileTableModel::data(const QModelIndex& index, int role) const {
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
   switch (index.column()) {
-    case 0:
+    case NAME_COLUMN:
       return QVariant(QString::fromStdString(std::string(element.GetName())));
-    case 1:
+    case DISPLAY_NAME_COLUMN:
       return QVariant(QString::fromStdString(element.GetDisplayName()));
-    case 2: {
+    case DETAIL_COLUMN: {
       if (role == Qt::DisplayRole) {
         auto contentText =
             element.ChooseDetail(language).value_or(MessageContent()).GetText();
@@ -80,7 +86,7 @@ QVariant FileTableModel::data(const QModelIndex& index, int role) const {
       }
       return QVariant::fromValue(element.GetDetail());
     }
-    case 3:
+    case CONDITION_COLUMN:
       return QVariant(QString::fromStdString(element.GetCondition()));
     default:
       return QVariant();
@@ -99,13 +105,13 @@ QVariant FileTableModel::headerData(int section,
   }
 
   switch (section) {
-    case 0:
+    case NAME_COLUMN:
       return QVariant(translate("Filename"));
-    case 1:
+    case DISPLAY_NAME_COLUMN:
       return QVariant(translate("Display Name"));
-    case 2:
+    case DETAIL_COLUMN:
       return QVariant(translate("Detail"));
-    case 3:
+    case CONDITION_COLUMN:
       return QVariant(translate("Condition"));
     default:
       return QVariant();
@@ -142,17 +148,17 @@ bool FileTableModel::setData(const QModelIndex& index,
 
   auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
 
-  if (index.column() == 0) {
+  if (index.column() == NAME_COLUMN) {
     element = File(value.toString().toStdString(),
                    element.GetDisplayName(),
                    element.GetCondition(),
                    element.GetDetail());
-  } else if (index.column() == 1) {
+  } else if (index.column() == DISPLAY_NAME_COLUMN) {
     element = File(std::string(element.GetName()),
                    value.toString().toStdString(),
                    element.GetCondition(),
                    element.GetDetail());
-  } else if (index.column() == 2) {
+  } else if (index.column() == DETAIL_COLUMN) {
     element = File(std::string(element.GetName()),
                    element.GetDisplayName(),
                    element.GetCondition(),
@@ -214,7 +220,7 @@ bool FileTableModel::dropMimeData(const QMimeData* data,
 
   insertRows(rowCount(), 1);
 
-  auto newIndex = index(rowCount() - 1, 0);
+  auto newIndex = index(rowCount() - 1, NAME_COLUMN);
   auto filename = data->data("text/plain").toStdString();
 
   setData(newIndex, QVariant(QString::fromStdString(filename)), Qt::EditRole);

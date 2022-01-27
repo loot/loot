@@ -64,6 +64,9 @@ public:
                   int count,
                   const QModelIndex& parent = QModelIndex()) override;
 
+  static constexpr int URL_COLUMN = 0;
+  static constexpr int NAME_COLUMN = 1;
+
 private:
   std::vector<Location> nonUserMetadata;
   std::vector<Location> userMetadata;

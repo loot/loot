@@ -186,15 +186,25 @@ void PluginEditorWidget::setupUi() {
 }
 
 void PluginEditorWidget::translateUi() {
-  tabs->setTabText(0, translate("Group"));
-  tabs->setTabText(1, translate("Load After"));
-  tabs->setTabText(2, translate("Requirements"));
-  tabs->setTabText(3, translate("Incompatibilities"));
-  tabs->setTabText(4, translate("Messages"));
-  tabs->setTabText(5, translate("Bash Tags"));
-  tabs->setTabText(6, translate("Dirty Plugin Info"));
-  tabs->setTabText(7, translate("Clean Plugin Info"));
-  tabs->setTabText(8, translate("Locations"));
+  static constexpr int GROUP_TAB_INDEX = 0;
+  static constexpr int LOAD_AFTER_TAB_INDEX = 1;
+  static constexpr int REQUIREMENTS_TAB_INDEX = 2;
+  static constexpr int INCOMPATIBILITIES_TAB_INDEX = 3;
+  static constexpr int MESSAGES_TAB_INDEX = 4;
+  static constexpr int BASH_TAGS_TAB_INDEX = 5;
+  static constexpr int DIRTY_PLUGIN_INFO_TAB_INDEX = 6;
+  static constexpr int CLEAN_PLUGIN_INFO_TAB_INDEX = 7;
+  static constexpr int LOCATIONS_TAB_INDEX = 8;
+
+  tabs->setTabText(GROUP_TAB_INDEX, translate("Group"));
+  tabs->setTabText(LOAD_AFTER_TAB_INDEX, translate("Load After"));
+  tabs->setTabText(REQUIREMENTS_TAB_INDEX, translate("Requirements"));
+  tabs->setTabText(INCOMPATIBILITIES_TAB_INDEX, translate("Incompatibilities"));
+  tabs->setTabText(MESSAGES_TAB_INDEX, translate("Messages"));
+  tabs->setTabText(BASH_TAGS_TAB_INDEX, translate("Bash Tags"));
+  tabs->setTabText(DIRTY_PLUGIN_INFO_TAB_INDEX, translate("Dirty Plugin Info"));
+  tabs->setTabText(CLEAN_PLUGIN_INFO_TAB_INDEX, translate("Clean Plugin Info"));
+  tabs->setTabText(LOCATIONS_TAB_INDEX, translate("Locations"));
 }
 
 PluginMetadata PluginEditorWidget::getUserMetadata() {

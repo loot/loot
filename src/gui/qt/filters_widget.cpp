@@ -47,6 +47,7 @@ void FiltersWidget::setMessageCounts(size_t hidden, size_t total) {
   hiddenMessagesCountLabel->setText(QString::number(hidden) % " / " %
                                     QString::number(total));
 }
+
 void FiltersWidget::setPluginCounts(size_t hidden, size_t total) {
   hiddenPluginsCountLabel->setText(QString::number(hidden) % " / " %
                                    QString::number(total));
@@ -98,6 +99,9 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
 }
 
 void FiltersWidget::setupUi() {
+  static constexpr int SPACER_WIDTH = 20;
+  static constexpr int SPACER_HEIGHT = 40;
+
   conflictingPluginsFilterLabel = new QLabel(this);
   conflictingPluginsFilter = new QComboBox(this);
   conflictingPluginsFilter->setObjectName("conflictingPluginsFilter");
@@ -125,8 +129,10 @@ void FiltersWidget::setupUi() {
   messagelessPluginsFilter = new QCheckBox(this);
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
 
-  auto verticalSpacer =
-      new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,
+                                        SPACER_HEIGHT,
+                                        QSizePolicy::Minimum,
+                                        QSizePolicy::Expanding);
 
   auto divider = new QFrame(this);
   divider->setFrameShape(QFrame::HLine);
@@ -141,7 +147,14 @@ void FiltersWidget::setupUi() {
   hiddenMessagesCountLabel = new QLabel(this);
 
   auto verticalLayout = new QVBoxLayout(this);
-  verticalLayout->setContentsMargins(8, 8, 8, 8);
+
+  const auto leftMargin = style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
+  const auto topMargin = style()->pixelMetric(QStyle::PM_LayoutTopMargin);
+  const auto rightMargin = style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+  const auto bottomMargin = style()->pixelMetric(QStyle::PM_LayoutBottomMargin);
+
+  verticalLayout->setContentsMargins(
+      leftMargin, topMargin, rightMargin, bottomMargin);
 
   verticalLayout->addWidget(conflictingPluginsFilterLabel);
   verticalLayout->addWidget(conflictingPluginsFilter);

@@ -101,9 +101,11 @@ int calculateMinimumColumnWidth(QAbstractItemModel* model,
     }
   }
 
-  if (maxColumnWidth > maxHeaderWidth && values.size() > 10) {
-    // If there are more than 10 (that may be variable, I don't know) items, a
-    // scroll bar will be shown, so take its width into account.
+  // If there are more than 10 (that may be variable, I don't know) items, a
+  // scroll bar will be shown, so take its width into account.
+  static constexpr size_t MAX_ITEMS_WITHOUT_SCROLLING = 10;
+  if (maxColumnWidth > maxHeaderWidth &&
+      values.size() > MAX_ITEMS_WITHOUT_SCROLLING) {
     maxColumnWidth +=
         QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent);
   }
@@ -352,8 +354,8 @@ void FileTableTab::initialiseInputs(const std::vector<File>& nonUserMetadata,
   auto filenameDelegate = new AutocompletingLineEditDelegate(this, completions);
   auto detailDelegate = new MessageContentDelegate(this, languages);
 
-  setItemDelegateForColumn(0, filenameDelegate);
-  setItemDelegateForColumn(2, detailDelegate);
+  setItemDelegateForColumn(tableModel->NAME_COLUMN, filenameDelegate);
+  setItemDelegateForColumn(tableModel->DETAIL_COLUMN, detailDelegate);
 }
 
 std::vector<File> FileTableTab::getUserMetadata() const {
@@ -369,8 +371,8 @@ void LoadAfterFileTableTab::initialiseInputs(
     const std::vector<File>& userMetadata) {
   FileTableTab::initialiseInputs(nonUserMetadata, userMetadata);
 
-  setColumnHidden(1, true);
-  setColumnHidden(2, true);
+  setColumnHidden(FileTableModel::DISPLAY_NAME_COLUMN, true);
+  setColumnHidden(FileTableModel::DETAIL_COLUMN, true);
 }
 
 MessageContentTableWidget::MessageContentTableWidget(
@@ -401,7 +403,7 @@ void MessageContentTableWidget::initialiseInputs(
 
   auto languageDelegate = new ComboBoxDelegate(this, languages);
 
-  setItemDelegateForColumn(0, languageDelegate);
+  setItemDelegateForColumn(tableModel->LANGUAGE_COLUMN, languageDelegate);
 }
 
 std::vector<MessageContent> MessageContentTableWidget::getMetadata() const {
@@ -443,8 +445,8 @@ void MessageTableTab::initialiseInputs(
   auto messageTypeDelegate = new ComboBoxDelegate(this, messageTypes);
   auto contentDelegate = new MessageContentDelegate(this, languages);
 
-  setItemDelegateForColumn(0, messageTypeDelegate);
-  setItemDelegateForColumn(1, contentDelegate);
+  setItemDelegateForColumn(tableModel->TYPE_COLUMN, messageTypeDelegate);
+  setItemDelegateForColumn(tableModel->CONTENT_COLUMN, contentDelegate);
 }
 
 std::vector<Message> MessageTableTab::getUserMetadata() const {
@@ -487,18 +489,18 @@ void CleaningDataTableTab::initialiseInputs(
 
   auto crcDelegate = new CrcLineEditDelegate(this);
 
-  setItemDelegateForColumn(0, crcDelegate);
+  setItemDelegateForColumn(tableModel->CRC_COLUMN, crcDelegate);
 
   auto detailDelegate = new MessageContentDelegate(this, languages);
 
-  setItemDelegateForColumn(5, detailDelegate);
+  setItemDelegateForColumn(tableModel->DETAIL_COLUMN, detailDelegate);
 }
 
 void CleaningDataTableTab::hideCounts(bool hide) {
-  setColumnHidden(1, hide);
-  setColumnHidden(2, hide);
-  setColumnHidden(3, hide);
-  setColumnHidden(5, hide);
+  setColumnHidden(CleaningDataTableModel::ITM_COLUMN, hide);
+  setColumnHidden(CleaningDataTableModel::DELETED_REFERENCE_COLUMN, hide);
+  setColumnHidden(CleaningDataTableModel::DELETED_NAVMESH_COLUMN, hide);
+  setColumnHidden(CleaningDataTableModel::DETAIL_COLUMN, hide);
 }
 
 std::vector<PluginCleaningData> CleaningDataTableTab::getUserMetadata() const {
@@ -528,13 +530,15 @@ void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
 
   setTableModel(tableModel);
   setColumnFixedWidth(
-      0, calculateMinimumColumnWidth(tableModel, 0, suggestionTypes));
+      tableModel->TYPE_COLUMN,
+      calculateMinimumColumnWidth(
+          tableModel, tableModel->TYPE_COLUMN, suggestionTypes));
 
   auto addRemoveDelegate = new ComboBoxDelegate(this, suggestionTypes);
   auto nameDelegate = new AutocompletingLineEditDelegate(this, completions);
 
-  setItemDelegateForColumn(0, addRemoveDelegate);
-  setItemDelegateForColumn(1, nameDelegate);
+  setItemDelegateForColumn(tableModel->TYPE_COLUMN, addRemoveDelegate);
+  setItemDelegateForColumn(tableModel->NAME_COLUMN, nameDelegate);
 }
 
 std::vector<Tag> TagTableTab::getUserMetadata() const {

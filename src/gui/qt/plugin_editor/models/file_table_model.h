@@ -73,6 +73,11 @@ public:
                     int column,
                     const QModelIndex& parent) override;
 
+  static constexpr int NAME_COLUMN = 0;
+  static constexpr int DISPLAY_NAME_COLUMN = 1;
+  static constexpr int DETAIL_COLUMN = 2;
+  static constexpr int CONDITION_COLUMN = 3;
+
 private:
   const std::string& language;
 

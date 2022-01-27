@@ -70,6 +70,10 @@ public:
                   int count,
                   const QModelIndex& parent = QModelIndex()) override;
 
+  static constexpr int TYPE_COLUMN = 0;
+  static constexpr int CONTENT_COLUMN = 1;
+  static constexpr int CONDITION_COLUMN = 2;
+
 private:
   const std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap;
   const std::string& language;

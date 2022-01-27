@@ -41,6 +41,10 @@ namespace loot {
 static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
 static constexpr const char* METADATA_ID_KEY = "blob_sha1";
 static constexpr const char* METADATA_DATE_KEY = "update_timestamp";
+static constexpr int SHORT_HASH_LENGTH = 7;
+static constexpr const char* HEADER_PREFIX = "blob ";
+static constexpr size_t HEADER_PREFIX_LENGTH =
+    std::char_traits<char>::length(HEADER_PREFIX);
 
 std::filesystem::path getFileMetadataPath(std::filesystem::path filePath) {
   filePath += METADATA_PATH_SUFFIX;
@@ -77,7 +81,7 @@ void writeFileRevision(const std::filesystem::path& filePath,
 FileRevisionSummary::FileRevisionSummary() {}
 
 FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
-    id(fileRevision.id.substr(0, 7)), date(fileRevision.date) {
+    id(fileRevision.id.substr(0, SHORT_HASH_LENGTH)), date(fileRevision.date) {
   if (fileRevision.is_modified) {
     auto suffix =
         " " +
@@ -101,7 +105,7 @@ std::string calculateGitBlobHash(const QByteArray& data) {
   auto sizeString = std::to_string(data.size());
 
   auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
-  hasher.addData("blob ", 5);
+  hasher.addData(HEADER_PREFIX, HEADER_PREFIX_LENGTH);
   hasher.addData(sizeString.c_str(), sizeString.size() + 1);
   hasher.addData(data);
 
@@ -119,10 +123,11 @@ std::string calculateGitBlobHash(const std::filesystem::path& filePath) {
   auto sizeString = std::to_string(file.size());
 
   auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
-  hasher.addData("blob ", 5);
+  hasher.addData(HEADER_PREFIX, HEADER_PREFIX_LENGTH);
   hasher.addData(sizeString.c_str(), sizeString.size() + 1);
 
-  std::array<char, 8192> buffer;
+  static constexpr int BUFFER_SIZE = 8192;
+  std::array<char, BUFFER_SIZE> buffer;
   size_t bytesReadCount = 0;
 
   do {
@@ -311,7 +316,10 @@ std::optional<QByteArray> readHttpResponse(QNetworkReply* reply) {
   auto data = reply->readAll();
   reply->deleteLater();
 
-  if (statusCode < 200 || statusCode >= 400) {
+  static constexpr int HTTP_STATUS_OK = 200;
+  static constexpr int HTTP_STATUS_BAD_REQUEST = 400;
+
+  if (statusCode < HTTP_STATUS_OK || statusCode >= HTTP_STATUS_BAD_REQUEST) {
     auto logger = getLogger();
     if (logger) {
       logger->error(

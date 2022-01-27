@@ -65,6 +65,10 @@ public:
                   int count,
                   const QModelIndex& parent = QModelIndex()) override;
 
+  static constexpr int TYPE_COLUMN = 0;
+  static constexpr int NAME_COLUMN = 1;
+  static constexpr int CONDITION_COLUMN = 2;
+
 private:
   const std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap;
 
