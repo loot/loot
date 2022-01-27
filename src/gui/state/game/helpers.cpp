@@ -262,7 +262,7 @@ std::vector<Message> CheckForRemovedPlugins(
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath) {
   std::string rootKey;
-  size_t startOfSubKey;
+  size_t startOfSubKey = 0;
   if (registryPath.rfind("HKEY_", 0) == 0) {
     auto firstBackslashPos = registryPath.find('\\');
     if (firstBackslashPos == std::string::npos) {

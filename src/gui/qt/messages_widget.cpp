@@ -166,7 +166,7 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
   // COLUMN_COUNT.
 
   // Delete any extra QLabels.
-  QLayoutItem* child;
+  QLayoutItem* child = nullptr;
   auto pastTheEndIndex = static_cast<int>(messages.size() * COLUMN_COUNT);
   auto itemRemoved = false;
   while ((child = layout()->takeAt(pastTheEndIndex)) != nullptr) {

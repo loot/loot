@@ -443,6 +443,7 @@ if(RUN_CLANG_TIDY)
         "cppcoreguidelines-avoid-c-arrays"
         "cppcoreguidelines-c-copy-assignment-signature"
         "cppcoreguidelines-explicit-virtual-functions"
+        "cppcoreguidelines-init-variables"
         "cppcoreguidelines-interfaces-global-init"
         "cppcoreguidelines-macro-usage"
         "cppcoreguidelines-no-malloc"
