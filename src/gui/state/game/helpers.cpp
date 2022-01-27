@@ -95,20 +95,23 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   using boost::locale::translate;
 
   const std::string itmRecords =
-      (format(translate(
-           "%1% ITM record", "%1% ITM records", cleaningData.GetITMCount())) %
+      (format(translate("%1% ITM record",
+                        "%1% ITM records",
+                        static_cast<int>(cleaningData.GetITMCount()))) %
        cleaningData.GetITMCount())
           .str();
   const std::string deletedReferences =
-      (format(translate("%1% deleted reference",
-                        "%1% deleted references",
-                        cleaningData.GetDeletedReferenceCount())) %
+      (format(translate(
+           "%1% deleted reference",
+           "%1% deleted references",
+           static_cast<int>(cleaningData.GetDeletedReferenceCount()))) %
        cleaningData.GetDeletedReferenceCount())
           .str();
   const std::string deletedNavmeshes =
-      (format(translate("%1% deleted navmesh",
-                        "%1% deleted navmeshes",
-                        cleaningData.GetDeletedNavmeshCount())) %
+      (format(
+           translate("%1% deleted navmesh",
+                     "%1% deleted navmeshes",
+                     static_cast<int>(cleaningData.GetDeletedNavmeshCount()))) %
        cleaningData.GetDeletedNavmeshCount())
           .str();
 

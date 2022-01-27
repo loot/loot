@@ -171,7 +171,7 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
 
   auto fontMetrics = QFontMetricsF(QApplication::font());
 
-  int maxCharWidth = 0;
+  qreal maxCharWidth = 0;
   for (const auto& hexCharacter : HEX_CHARACTERS) {
     auto width =
         fontMetrics.size(Qt::TextSingleLine, QString(QChar(hexCharacter)))
@@ -192,10 +192,11 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
     case GameType::tes5:
     case GameType::fo3:
     case GameType::fonv:
-      return 2 * maxCharWidth + paddingWidth;
+      return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
     default:
-      return fontMetrics.size(Qt::TextSingleLine, "FE ").width() +
-             3 * maxCharWidth + paddingWidth;
+      auto prefixWidth =
+          static_cast<int>(fontMetrics.size(Qt::TextSingleLine, "FE ").width());
+      return prefixWidth + 3 * static_cast<int>(maxCharWidth) + paddingWidth;
   }
 }
 

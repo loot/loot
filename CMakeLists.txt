@@ -446,6 +446,7 @@ if(RUN_CLANG_TIDY)
         "cppcoreguidelines-init-variables"
         "cppcoreguidelines-interfaces-global-init"
         "cppcoreguidelines-macro-usage"
+        "cppcoreguidelines-narrowing-conventions"
         "cppcoreguidelines-no-malloc"
         "cppcoreguidelines-pro-bounds-array-to-pointer-decay"
         "cppcoreguidelines-pro-bounds-constant-array-index"

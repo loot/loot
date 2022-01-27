@@ -51,7 +51,7 @@ int calculateItemWidth(const QString& text) {
   auto rightPadding =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  return textWidth + leftPadding + rightPadding;
+  return static_cast<int>(textWidth) + leftPadding + rightPadding;
 }
 
 int calculateMaxHeaderWidth(QAbstractItemModel* model,
@@ -223,7 +223,8 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
   auto scalingFactor = double(tableWidth) / headersWidth;
 
   for (auto i = 0; i < header->count(); i += 1) {
-    int newColumnWidth = tableView->columnWidth(i) * scalingFactor;
+    int newColumnWidth =
+        static_cast<int>(tableView->columnWidth(i) * scalingFactor);
     if (header->sectionResizeMode(i) != QHeaderView::Fixed) {
       tableView->setColumnWidth(i, newColumnWidth);
     }
