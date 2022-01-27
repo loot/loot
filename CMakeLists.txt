@@ -3,6 +3,8 @@ cmake_policy(SET CMP0015 NEW)
 project(LOOT)
 include(ExternalProject)
 
+option(RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,6 +12,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+
+if(RUN_CLANG_TIDY)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy "-header-filter=.")
+endif()
 
 ##############################
 # Get Build Revision
