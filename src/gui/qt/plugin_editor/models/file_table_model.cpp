@@ -63,7 +63,7 @@ QVariant FileTableModel::data(const QModelIndex& index, int role) const {
   }
 
   const auto& element =
-      index.row() < nonUserMetadata.size()
+      index.row() < static_cast<int>(nonUserMetadata.size())
           ? nonUserMetadata.at(index.row())
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
@@ -119,7 +119,7 @@ Qt::ItemFlags FileTableModel::flags(const QModelIndex& index) const {
     return flags | Qt::ItemIsDropEnabled;
   }
 
-  if (index.row() < nonUserMetadata.size()) {
+  if (index.row() < static_cast<int>(nonUserMetadata.size())) {
     return flags;
   }
 
@@ -135,7 +135,7 @@ bool FileTableModel::setData(const QModelIndex& index,
     return false;
   }
 
-  if (index.row() < nonUserMetadata.size() ||
+  if (index.row() < static_cast<int>(nonUserMetadata.size()) ||
       index.column() > columnCount() - 1) {
     return false;
   }
@@ -169,7 +169,7 @@ bool FileTableModel::setData(const QModelIndex& index,
 }
 
 bool FileTableModel::insertRows(int row, int count, const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount()) {
+  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount()) {
     return false;
   }
 
@@ -185,7 +185,7 @@ bool FileTableModel::insertRows(int row, int count, const QModelIndex& parent) {
 }
 
 bool FileTableModel::removeRows(int row, int count, const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount() ||
+  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount() ||
       row + count > rowCount()) {
     return false;
   }

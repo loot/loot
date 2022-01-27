@@ -60,7 +60,7 @@ QVariant TagTableModel::data(const QModelIndex& index, int role) const {
   }
 
   const auto& element =
-      index.row() < nonUserMetadata.size()
+      index.row() < static_cast<int>(nonUserMetadata.size())
           ? nonUserMetadata.at(index.row())
           : userMetadata.at(index.row() - nonUserMetadata.size());
 
@@ -110,7 +110,7 @@ Qt::ItemFlags TagTableModel::flags(const QModelIndex& index) const {
     return Qt::ItemIsEnabled;
   }
 
-  if (index.row() < nonUserMetadata.size()) {
+  if (index.row() < static_cast<int>(nonUserMetadata.size())) {
     return QAbstractItemModel::flags(index);
   }
 
@@ -124,7 +124,7 @@ bool TagTableModel::setData(const QModelIndex& index,
     return false;
   }
 
-  if (index.row() < nonUserMetadata.size() ||
+  if (index.row() < static_cast<int>(nonUserMetadata.size()) ||
       index.column() > columnCount() - 1) {
     return false;
   }
@@ -148,7 +148,7 @@ bool TagTableModel::setData(const QModelIndex& index,
 }
 
 bool TagTableModel::insertRows(int row, int count, const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount()) {
+  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount()) {
     return false;
   }
 
@@ -164,7 +164,7 @@ bool TagTableModel::insertRows(int row, int count, const QModelIndex& parent) {
 }
 
 bool TagTableModel::removeRows(int row, int count, const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount() ||
+  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount() ||
       row + count > rowCount()) {
     return false;
   }

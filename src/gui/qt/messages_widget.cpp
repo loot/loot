@@ -125,7 +125,7 @@ MessagesWidget::MessagesWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
 
 bool MessagesWidget::willChangeContent(
     const std::vector<SimpleMessage>& messages) const {
-  if (messages.size() * COLUMN_COUNT != layout()->count()) {
+  if (static_cast<int>(messages.size() * COLUMN_COUNT) != layout()->count()) {
     return true;
   }
 
@@ -183,7 +183,7 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
 
   // Add any missing QLabels.
   auto gridLayout = qobject_cast<QGridLayout*>(layout());
-  while (gridLayout->count() < messages.size() * COLUMN_COUNT) {
+  while (gridLayout->count() < pastTheEndIndex) {
     auto bulletPointLabel = createBulletPointLabel();
     auto messageLabel = createMessageLabel();
 
