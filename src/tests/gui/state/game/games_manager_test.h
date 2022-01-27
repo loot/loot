@@ -43,7 +43,7 @@ public:
 
 private:
   std::optional<std::filesystem::path> FindGamePath(
-      const GameSettings& gameSettings) const {
+      const GameSettings& gameSettings) const override {
     if (gameSettings.Type() == GameType::tes5 ||
         gameSettings.Type() == GameType::fonv) {
       return gameSettings.GamePath() / gameSettings.FolderName();
@@ -52,7 +52,7 @@ private:
     return std::nullopt;
   }
 
-  void InitialiseGameData(gui::Game& game) {
+  void InitialiseGameData(gui::Game& game) override {
     auto it = initialiseCounts_.find(game.FolderName());
     if (it == initialiseCounts_.end()) {
       initialiseCounts_.emplace(game.FolderName(), 1);

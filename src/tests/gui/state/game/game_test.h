@@ -63,7 +63,7 @@ protected:
                               .SetGamePath(dataPath.parent_path())
                               .SetGameLocalPath(localPath)) {}
 
-  void TearDown() { CommonGameTestFixture::TearDown(); }
+  void TearDown() override { CommonGameTestFixture::TearDown(); }
 
   Game CreateInitialisedGame(const std::filesystem::path& gameLootDataPath) {
     Game game(defaultGameSettings, gameLootDataPath, "");

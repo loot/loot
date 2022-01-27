@@ -50,8 +50,8 @@ public:
 
 private:
   std::optional<std::filesystem::path> FindGamePath(
-      const GameSettings& gameSettings) const;
-  void InitialiseGameData(gui::Game& game);
+      const GameSettings& gameSettings) const override;
+  void InitialiseGameData(gui::Game& game) override;
 
   void SetInitialGame(std::string cmdLineGame);
 

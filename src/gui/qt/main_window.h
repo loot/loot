@@ -170,7 +170,7 @@ private:
 
   PluginItem getSelectedPlugin() const;
 
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 
   void executeBackgroundQuery(std::unique_ptr<Query> query,
                               void (MainWindow::*onComplete)(QueryResult),
@@ -192,7 +192,7 @@ private:
   void handleGameDataLoaded(QueryResult result);
   void handlePluginsSorted(QueryResult results);
 
-  QMenu *createPopupMenu();
+  QMenu *createPopupMenu() override;
 
   std::optional<std::filesystem::path> createBackup();
 
