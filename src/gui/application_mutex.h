@@ -41,7 +41,7 @@
 
 namespace loot {
 #ifdef _WIN32
-class ApplicationMutexGuard {
+class [[maybe_unused]] ApplicationMutexGuard {
 public:
   static constexpr const wchar_t* MUTEX_NAME = L"LOOT.Shell.Instance";
 
@@ -65,7 +65,7 @@ bool IsApplicationMutexLocked() {
                      ApplicationMutexGuard::MUTEX_NAME) != NULL;
 }
 #else
-class ApplicationMutexGuard {};
+class [[maybe_unused]] ApplicationMutexGuard {};
 
 bool IsApplicationMutexLocked() { return false; }
 #endif
