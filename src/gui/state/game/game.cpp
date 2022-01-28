@@ -84,14 +84,16 @@ Game::Game(const GameSettings& gameSettings,
     loadOrderSortCount_(0),
     pluginsFullyLoaded_(false) {}
 
-Game::Game(const Game& game) :
-    GameSettings(game),
-    gameHandle_(game.gameHandle_),
-    messages_(game.messages_),
-    lootDataPath_(game.lootDataPath_),
-    preludePath_(game.preludePath_),
-    loadOrderSortCount_(0),
-    pluginsFullyLoaded_(game.pluginsFullyLoaded_) {}
+Game::Game(const Game& game) : GameSettings(game) {
+  lock_guard<mutex> guard(game.mutex_);
+
+  gameHandle_ = game.gameHandle_;
+  messages_ = game.messages_;
+  lootDataPath_ = game.lootDataPath_;
+  preludePath_ = game.preludePath_;
+  loadOrderSortCount_ = game.loadOrderSortCount_;
+  pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
+}
 
 Game::Game(Game&& game) : GameSettings(game) {
   lock_guard<mutex> guard(game.mutex_);
@@ -107,6 +109,8 @@ Game::Game(Game&& game) : GameSettings(game) {
 Game& Game::operator=(const Game& game) {
   if (&game != this) {
     GameSettings::operator=(game);
+
+    std::scoped_lock lock(mutex_, game.mutex_);
 
     lootDataPath_ = game.lootDataPath_;
     preludePath_ = game.preludePath_;
