@@ -13,10 +13,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-if(RUN_CLANG_TIDY)
-    set(CMAKE_CXX_CLANG_TIDY clang-tidy "-header-filter=.")
-endif()
-
 ##############################
 # Get Build Revision
 ##############################
@@ -436,6 +432,50 @@ if(MSVC)
         "/permissive-" "/W4" "$<$<CONFIG:DEBUG>:/bigobj>")
 
     target_link_libraries(LOOT PRIVATE comctl32 psapi)
+endif()
+
+##############################
+# Configure clang-tidy
+##############################
+
+if(RUN_CLANG_TIDY)
+    set(CLANG_TIDY_COMMON_CHECKS
+        "cppcoreguidelines-c-copy-assignment-signature"
+        "cppcoreguidelines-interfaces-global-init"
+        "cppcoreguidelines-macro-usage"
+        "cppcoreguidelines-no-malloc"
+        "cppcoreguidelines-pro-bounds-array-to-pointer-decay"
+        "cppcoreguidelines-pro-bounds-constant-array-index"
+        "cppcoreguidelines-pro-bounds-pointer-arithmetic"
+        "cppcoreguidelines-pro-type-const-cast"
+        "cppcoreguidelines-pro-type-cstyle-cast"
+        "cppcoreguidelines-pro-type-reinterpret-cast"
+        "cppcoreguidelines-pro-type-union-access"
+        "cppcoreguidelines-pro-type-vararg"
+        "cppcoreguidelines-pro-type-slicing")
+
+    set(CLANG_TIDY_APP_CHECKS
+        ${CLANG_TIDY_COMMON_CHECKS}
+        "cppcoreguidelines-avoid-goto"
+        "cppcoreguidelines-non-private-member-variables-in-classes")
+
+    # Skip some checks for tests because they're not worth the noise (e.g. GTest
+    # happens to use goto, lots of tests use magic numbers as expected values).
+    set(CLANG_TIDY_TEST_CHECKS
+        ${CLANG_TIDY_COMMON_CHECKS})
+
+    list(JOIN CLANG_TIDY_APP_CHECKS "," CLANG_TIDY_APP_CHECKS_JOINED)
+    list(JOIN CLANG_TIDY_TEST_CHECKS "," CLANG_TIDY_TEST_CHECKS_JOINED)
+
+    set(CLANG_TIDY_APP
+        clang-tidy "-header-filter=.*" "-checks=${CLANG_TIDY_APP_CHECKS_JOINED}")
+    set(CLANG_TIDY_TEST
+        clang-tidy "-header-filter=.*" "-checks=${CLANG_TIDY_TEST_CHECKS_JOINED}")
+
+    set_target_properties(LOOT PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_APP}")
+
+    set_target_properties(loot_gui_tests PROPERTIES
+        CXX_CLANG_TIDY "${CLANG_TIDY_TEST}")
 endif()
 
 ##############################
