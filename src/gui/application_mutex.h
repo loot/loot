@@ -48,12 +48,17 @@ public:
   ApplicationMutexGuard() : hMutex(NULL) {
     hMutex = ::CreateMutex(NULL, FALSE, MUTEX_NAME);
   }
+  ApplicationMutexGuard(const ApplicationMutexGuard&) = delete;
+  ApplicationMutexGuard(ApplicationMutexGuard&&) = delete;
 
   ~ApplicationMutexGuard() {
     if (hMutex != NULL) {
       ::ReleaseMutex(hMutex);
     }
   }
+
+  ApplicationMutexGuard& operator=(const ApplicationMutexGuard&) = delete;
+  ApplicationMutexGuard& operator=(ApplicationMutexGuard&&) = delete;
 
 private:
   HANDLE hMutex;
