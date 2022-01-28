@@ -376,7 +376,7 @@ void PluginItemModel::setCardContentFiltersState(
 QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {
   size_t currentResultIndex = 0;
   for (size_t i = 0; i < searchResults.size(); i += 1) {
-    auto isResult = searchResults[i];
+    auto isResult = searchResults.at(i);
     if (isResult && currentResultIndex == resultIndex) {
       auto row = static_cast<int>(i) + 1;
       auto modelIndex = index(row, CARDS_COLUMN);

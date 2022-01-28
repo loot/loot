@@ -141,7 +141,7 @@ bool MessagesWidget::willChangeContent(
     auto messageType = label->property(MESSAGE_TYPE_PROPERTY);
 
     auto markdownTextIndex = (i - 1) / 2;
-    auto text = markdownTexts[markdownTextIndex];
+    auto text = markdownTexts.at(markdownTextIndex);
 
     currentMessages.push_back(std::make_pair(messageType, text));
   }
@@ -202,11 +202,11 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
     auto position = static_cast<int>(i);
     auto label = qobject_cast<QLabel*>(
         gridLayout->itemAtPosition(position, MESSAGE_LABEL_COLUMN)->widget());
-    updateMessageLabel(label, messages[i]);
+    updateMessageLabel(label, messages.at(i));
 
     // Store the source markdown text because it can't be retrieved from
     // the QLabel text, as that's set using HTML.
-    markdownTexts.push_back(messages[i].text);
+    markdownTexts.push_back(messages.at(i).text);
   }
 
   layout()->activate();

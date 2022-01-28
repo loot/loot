@@ -66,7 +66,7 @@ TaskExecutor::TaskExecutor(QObject *parent, std::vector<Task *> tasks) :
           &TaskExecutor::onWorkerThreadFinished);
 
   if (!tasks.empty()) {
-    auto firstTask = tasks[currentTask];
+    auto firstTask = tasks.at(currentTask);
     connect(this, &TaskExecutor::start, firstTask, &Task::execute);
   }
 
@@ -97,7 +97,7 @@ void TaskExecutor::onTaskFinished() {
     return;
   }
 
-  connect(this, &TaskExecutor::start, tasks[currentTask], &Task::execute);
+  connect(this, &TaskExecutor::start, tasks.at(currentTask), &Task::execute);
 
   // Now start the next task.
   emit start();

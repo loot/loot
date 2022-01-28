@@ -184,8 +184,8 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
     return std::nullopt;
   }
 
-  auto githubOwner = regexMatches[1].str();
-  auto githubRepo = regexMatches[2].str();
+  auto githubOwner = regexMatches.str(1);
+  auto githubRepo = regexMatches.str(2);
 
   return "https://raw.githubusercontent.com/" + githubOwner + "/" + githubRepo +
          "/" + branch + "/masterlist.yaml";
@@ -286,8 +286,8 @@ std::optional<std::string> migratePreludeRepoSettings(const std::string& url,
     return std::nullopt;
   }
 
-  auto githubOwner = regexMatches[1].str();
-  auto githubRepo = regexMatches[2].str();
+  auto githubOwner = regexMatches.str(1);
+  auto githubRepo = regexMatches.str(2);
 
   return "https://raw.githubusercontent.com/" + githubOwner + "/" + githubRepo +
          "/" + branch + "/prelude.yaml";

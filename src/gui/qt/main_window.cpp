@@ -84,7 +84,7 @@ bool hasLoadOrderChanged(const std::vector<std::string>& oldLoadOrder,
   }
 
   for (size_t i = 0; i < oldLoadOrder.size(); i += 1) {
-    if (oldLoadOrder[i] != newLoadOrder[i].name) {
+    if (oldLoadOrder.at(i) != newLoadOrder.at(i).name) {
       return true;
     }
   }
@@ -100,7 +100,7 @@ int compareLOOTVersion(const std::string& version) {
     throw std::runtime_error("Unexpect number of version parts in " + version);
   }
 
-  auto givenMajor = std::stoul(parts[0]);
+  auto givenMajor = std::stoul(parts.at(0));
   if (gui::Version::major > givenMajor) {
     return 1;
   }
@@ -109,7 +109,7 @@ int compareLOOTVersion(const std::string& version) {
     return -1;
   }
 
-  auto givenMinor = std::stoul(parts[1]);
+  auto givenMinor = std::stoul(parts.at(1));
   if (gui::Version::minor > givenMinor) {
     return 1;
   }
@@ -118,7 +118,7 @@ int compareLOOTVersion(const std::string& version) {
     return -1;
   }
 
-  auto givenPatch = std::stoul(parts[2]);
+  auto givenPatch = std::stoul(parts.at(2));
   if (gui::Version::patch > givenPatch) {
     return 1;
   }
