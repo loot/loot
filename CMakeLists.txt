@@ -454,6 +454,7 @@ if(RUN_CLANG_TIDY)
         "cppcoreguidelines-pro-type-const-cast"
         "cppcoreguidelines-pro-type-cstyle-cast"
         "cppcoreguidelines-pro-type-reinterpret-cast"
+        "cppcoreguidelines-pro-type-static-cast-downcast"
         "cppcoreguidelines-pro-type-union-access"
         "cppcoreguidelines-pro-type-vararg"
         "cppcoreguidelines-pro-type-slicing")

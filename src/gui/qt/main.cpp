@@ -101,18 +101,18 @@ int main(int argc, char* argv[]) {
   auto styleSheet =
       loot::loadStyleSheet(state.getResourcesPath(), state.getTheme());
   if (styleSheet.has_value()) {
-    qApp->setStyleSheet(styleSheet.value());
+    app.setStyleSheet(styleSheet.value());
     auto palette =
         loot::loadPalette(state.getResourcesPath(), state.getTheme());
     if (palette.has_value()) {
-      qApp->setPalette(palette.value());
+      app.setPalette(palette.value());
     }
   } else {
     // Fall back to the default theme, which has a stylesheet but no palette
     // config.
     styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
     if (styleSheet.has_value()) {
-      qApp->setStyleSheet(styleSheet.value());
+      app.setStyleSheet(styleSheet.value());
     }
   }
 

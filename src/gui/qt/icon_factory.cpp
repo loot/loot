@@ -28,7 +28,6 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QPalette>
 #include <QtGui/QScreen>
-#include <QtWidgets/QApplication>
 #include <QtWidgets/QStyle>
 
 namespace loot {
@@ -139,7 +138,9 @@ QPixmap IconFactory::getPixmap(const QIcon& icon,
                                QIcon::State state) {
   // Take the device pixel ratio into account when reading or writing the cache
   // as it may change while the application is running.
-  auto scaledSize = extent * qApp->devicePixelRatio();
+  auto pixelRatio = dynamic_cast<QGuiApplication*>(QCoreApplication::instance())
+                        ->devicePixelRatio();
+  auto scaledSize = extent * pixelRatio;
   auto key = std::make_tuple(icon.cacheKey(), scaledSize, mode, state);
 
   auto it = pixmaps.find(key);
