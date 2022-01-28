@@ -691,11 +691,11 @@ void MainWindow::updateCounts(const std::vector<SimpleMessage>& generalMessages,
   auto counters = GeneralInformationCounters(generalMessages, plugins);
   auto hiddenMessageCount =
       countHiddenMessages(plugins, filtersWidget->getCardContentFiltersState());
+  auto hiddenPluginCount =
+      counters.totalPlugins - static_cast<size_t>(proxyModel->rowCount()) + 1;
 
   filtersWidget->setMessageCounts(hiddenMessageCount, counters.totalMessages);
-  filtersWidget->setPluginCounts(
-      counters.totalPlugins - (proxyModel->rowCount() - 1),
-      counters.totalPlugins);
+  filtersWidget->setPluginCounts(hiddenPluginCount, counters.totalPlugins);
 }
 
 void MainWindow::updateGeneralInformation() {
