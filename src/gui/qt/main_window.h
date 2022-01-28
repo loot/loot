@@ -53,6 +53,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableView>
@@ -83,53 +84,61 @@ public:
   void initialise();
 
 private:
-  QAction *actionSort;
-  QAction *actionApplySort;
-  QAction *actionDiscardSort;
-  QAction *actionUpdateMasterlist;
-  QAction *actionSearch;
-  QAction *actionViewDocs;
-  QAction *actionOpenLOOTDataFolder;
-  QAction *actionJoinDiscordServer;
-  QAction *actionAbout;
-  QAction *actionQuit;
-  QAction *actionOpenGroupsEditor;
-  QAction *actionCopyLoadOrder;
-  QAction *actionCopyContent;
-  QAction *actionRefreshContent;
-  QAction *actionRedatePlugins;
-  QAction *actionClearAllUserMetadata;
-  QAction *actionCopyMetadata;
-  QAction *actionCopyCardContent;
-  QAction *actionEditMetadata;
-  QAction *actionClearMetadata;
-  QAction *actionSettings;
-  QAction *actionBackupData;
-  QComboBox *gameComboBox;
-  QToolBox *toolBox;
-  QTableView *sidebarPluginsView;
-  QListView *pluginCardsView;
-  QMenuBar *menubar;
-  QMenu *menuFile;
-  QMenu *menuHelp;
-  QMenu *menuGame;
-  QMenu *menuPlugin;
-  QStatusBar *statusbar;
-  QToolBar *toolBar;
-  QProgressDialog *progressDialog;
+  LootState &state;
 
-  FiltersWidget *filtersWidget;
-  SettingsDialog *settingsDialog;
+  QAction *actionSort{new QAction(this)};
+  QAction *actionApplySort{new QAction(this)};
+  QAction *actionDiscardSort{new QAction(this)};
+  QAction *actionUpdateMasterlist{new QAction(this)};
+  QAction *actionSearch{new QAction(this)};
+  QAction *actionViewDocs{new QAction(this)};
+  QAction *actionOpenLOOTDataFolder{new QAction(this)};
+  QAction *actionJoinDiscordServer{new QAction(this)};
+  QAction *actionAbout{new QAction(this)};
+  QAction *actionQuit{new QAction(this)};
+  QAction *actionOpenGroupsEditor{new QAction(this)};
+  QAction *actionCopyLoadOrder{new QAction(this)};
+  QAction *actionCopyContent{new QAction(this)};
+  QAction *actionRefreshContent{new QAction(this)};
+  QAction *actionRedatePlugins{new QAction(this)};
+  QAction *actionClearAllUserMetadata{new QAction(this)};
+  QAction *actionCopyMetadata{new QAction(this)};
+  QAction *actionCopyCardContent{new QAction(this)};
+  QAction *actionEditMetadata{new QAction(this)};
+  QAction *actionClearMetadata{new QAction(this)};
+  QAction *actionSettings{new QAction(this)};
+  QAction *actionBackupData{new QAction(this)};
+
+  QMenuBar *menubar{new QMenuBar(this)};
+  QMenu *menuFile{new QMenu(menubar)};
+  QMenu *menuHelp{new QMenu(menubar)};
+  QMenu *menuGame{new QMenu(menubar)};
+  QMenu *menuPlugin{new QMenu(menubar)};
+  QStatusBar *statusbar{new QStatusBar(this)};
+  QToolBar *toolBar{new QToolBar(this)};
+  QComboBox *gameComboBox{new QComboBox(toolBar)};
+  QProgressDialog *progressDialog{new QProgressDialog(this)};
+
+  QSplitter *sidebarSplitter{new QSplitter(this)};
+  QToolBox *toolBox{new QToolBox(sidebarSplitter)};
+  FiltersWidget *filtersWidget{new FiltersWidget(toolBox)};
+  QTableView *sidebarPluginsView{new QTableView(toolBox)};
+
+  QSplitter *editorSplitter{
+      new QSplitter(Qt::Orientation::Vertical, sidebarSplitter)};
+  QListView *pluginCardsView{new QListView(editorSplitter)};
   PluginEditorWidget *pluginEditorWidget;
-  SearchDialog *searchDialog;
-  GroupsEditorDialog *groupsEditor;
 
-  PluginItemModel *pluginItemModel;
-  PluginItemFilterModel *proxyModel;
+  SettingsDialog *settingsDialog{new SettingsDialog(this)};
+  SearchDialog *searchDialog{new SearchDialog(this)};
+
+  PluginItemModel *pluginItemModel{new PluginItemModel(this)};
+  PluginItemFilterModel *proxyModel{new PluginItemFilterModel(this)};
+
+  GroupsEditorDialog *groupsEditor{
+      new GroupsEditorDialog(this, pluginItemModel)};
 
   QNetworkAccessManager networkAccessManager;
-
-  LootState &state;
 
   std::optional<QPersistentModelIndex> lastEnteredCardIndex;
 

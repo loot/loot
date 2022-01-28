@@ -118,27 +118,7 @@ bool GeneralTab::areInputValuesValid() const {
 }
 
 void GeneralTab::setupUi() {
-  defaultGameLabel = new QLabel(this);
-  defaultGameComboBox = new QComboBox(this);
   defaultGameComboBox->addItem(QString(), QVariant(QString("auto")));
-
-  languageLabel = new QLabel(this);
-  languageComboBox = new QComboBox(this);
-
-  themeLabel = new QLabel(this);
-  themeComboBox = new QComboBox(this);
-
-  updateMasterlistLabel = new QLabel(this);
-  updateMasterlistCheckbox = new QCheckBox(this);
-
-  checkUpdatesLabel = new QLabel(this);
-  checkUpdatesCheckbox = new QCheckBox(this);
-
-  loggingLabel = new QLabel(this);
-  loggingCheckbox = new QCheckBox(this);
-
-  preludeSourceLabel = new QLabel(this);
-  preludeSourceInput = new QLineEdit(this);
 
   auto generalLayout = new QFormLayout(this);
 

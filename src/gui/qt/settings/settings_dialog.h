@@ -26,9 +26,9 @@
 #ifndef LOOT_GUI_QT_SETTINGS_SETTINGS_DIALOG
 #define LOOT_GUI_QT_SETTINGS_SETTINGS_DIALOG
 
-#include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QWidget>
@@ -49,10 +49,10 @@ public:
   void recordInputValues(LootSettings &settings);
 
 private:
-  QAbstractButton *addGameButton;
-  QStackedWidget *stackedWidget;
-  QListWidget *listWidget;
-  GeneralTab *generalTab;
+  QPushButton *addGameButton{new QPushButton(this)};
+  QStackedWidget *stackedWidget{new QStackedWidget(this)};
+  QListWidget *listWidget{new QListWidget(this)};
+  GeneralTab *generalTab{new GeneralTab(this)};
 
   void setupUi();
   void translateUi();

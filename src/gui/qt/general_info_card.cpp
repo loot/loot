@@ -86,8 +86,6 @@ void GeneralInfoCard::setupUi() {
   auto generalInfoLayout = new QVBoxLayout();
   generalInfoLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
-  headingLabel = new QLabel(this);
-
   auto giGridLayout = new QGridLayout();
   giGridLayout->setHorizontalSpacing(TABLE_COLUMN_SPACING);
   giGridLayout->setColumnMinimumWidth(METADATA_VALUE_COLUMN,
@@ -96,31 +94,6 @@ void GeneralInfoCard::setupUi() {
                                       MESSAGE_COLUMN_MIN_WIDTH);
   // Stretch the last column to give static widths for all the other columns.
   giGridLayout->setColumnStretch(PLUGIN_VALUE_COLUMN, 1);
-
-  masterlistRevisionLabel = new QLabel(this);
-  masterlistRevisionValue = new QLabel(this);
-  masterlistDateLabel = new QLabel(this);
-  masterlistDateValue = new QLabel(this);
-  preludeRevisionLabel = new QLabel(this);
-  preludeRevisionValue = new QLabel(this);
-  preludeDateLabel = new QLabel(this);
-  preludeDateValue = new QLabel(this);
-
-  warningsCountLabel = new QLabel(this);
-  warningsCountValue = new QLabel(this);
-  errorsCountLabel = new QLabel(this);
-  errorsCountValue = new QLabel(this);
-  totalMessagesCountLabel = new QLabel(this);
-  totalMessagesCountValue = new QLabel(this);
-
-  activeCountLabel = new QLabel(this);
-  activeCountValue = new QLabel(this);
-  dirtyCountLabel = new QLabel(this);
-  dirtyCountValue = new QLabel(this);
-  totalPluginsCountLabel = new QLabel(this);
-  totalPluginsCountValue = new QLabel(this);
-
-  messagesWidget = new MessagesWidget(this);
 
   messagesWidget->setVisible(false);
 

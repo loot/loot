@@ -69,14 +69,7 @@ void SettingsDialog::recordInputValues(LootSettings& settings) {
 void SettingsDialog::setupUi() {
   setWindowModality(Qt::WindowModal);
 
-  listWidget = new QListWidget(this);
-
-  addGameButton = new QPushButton(this);
   addGameButton->setObjectName("addGameButton");
-
-  stackedWidget = new QStackedWidget(this);
-
-  generalTab = new GeneralTab(this);
 
   listWidget->addItem(QString());
   stackedWidget->addWidget(generalTab);

@@ -213,7 +213,7 @@ std::filesystem::path getExecutableDirectory() {
 
   return std::filesystem::path(executablePathString).parent_path();
 #else
-  std::array<char, PATH_MAX> result;
+  std::array<char, PATH_MAX> result{};
 
   ssize_t count = readlink("/proc/self/exe", result.data(), result.size());
   if (count < 0) {

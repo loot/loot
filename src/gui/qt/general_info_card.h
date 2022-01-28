@@ -52,28 +52,28 @@ public:
   void setGeneralMessages(const std::vector<SimpleMessage>& messages);
 
 private:
-  QLabel* headingLabel;
-  QLabel* masterlistRevisionLabel;
-  QLabel* masterlistRevisionValue;
-  QLabel* masterlistDateLabel;
-  QLabel* masterlistDateValue;
-  QLabel* preludeRevisionLabel;
-  QLabel* preludeRevisionValue;
-  QLabel* preludeDateLabel;
-  QLabel* preludeDateValue;
-  QLabel* warningsCountLabel;
-  QLabel* warningsCountValue;
-  QLabel* errorsCountLabel;
-  QLabel* errorsCountValue;
-  QLabel* totalMessagesCountLabel;
-  QLabel* totalMessagesCountValue;
-  QLabel* activeCountLabel;
-  QLabel* activeCountValue;
-  QLabel* dirtyCountLabel;
-  QLabel* dirtyCountValue;
-  QLabel* totalPluginsCountLabel;
-  QLabel* totalPluginsCountValue;
-  MessagesWidget* messagesWidget;
+  QLabel* headingLabel{new QLabel(this)};
+  QLabel* masterlistRevisionLabel{new QLabel(this)};
+  QLabel* masterlistRevisionValue{new QLabel(this)};
+  QLabel* masterlistDateLabel{new QLabel(this)};
+  QLabel* masterlistDateValue{new QLabel(this)};
+  QLabel* preludeRevisionLabel{new QLabel(this)};
+  QLabel* preludeRevisionValue{new QLabel(this)};
+  QLabel* preludeDateLabel{new QLabel(this)};
+  QLabel* preludeDateValue{new QLabel(this)};
+  QLabel* warningsCountLabel{new QLabel(this)};
+  QLabel* warningsCountValue{new QLabel(this)};
+  QLabel* errorsCountLabel{new QLabel(this)};
+  QLabel* errorsCountValue{new QLabel(this)};
+  QLabel* totalMessagesCountLabel{new QLabel(this)};
+  QLabel* totalMessagesCountValue{new QLabel(this)};
+  QLabel* activeCountLabel{new QLabel(this)};
+  QLabel* activeCountValue{new QLabel(this)};
+  QLabel* dirtyCountLabel{new QLabel(this)};
+  QLabel* dirtyCountValue{new QLabel(this)};
+  QLabel* totalPluginsCountLabel{new QLabel(this)};
+  QLabel* totalPluginsCountValue{new QLabel(this)};
+  MessagesWidget* messagesWidget{new MessagesWidget(this)};
 
   void setupUi();
 

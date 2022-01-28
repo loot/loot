@@ -39,7 +39,25 @@ PluginEditorWidget::PluginEditorWidget(
     QWidget *parent,
     const std::vector<LootSettings::Language> &languages,
     const std::string &language) :
-    QWidget(parent), languages(languages), language(language) {
+    QWidget(parent),
+    languages(languages),
+    language(language),
+    loadAfterTab(new LoadAfterFileTableTab(this,
+                                           this->languages,
+                                           this->language,
+                                           filenameCompletions)),
+    requirementsTab(new FileTableTab(this,
+                                     this->languages,
+                                     this->language,
+                                     filenameCompletions)),
+    incompatibilitiesTab(new FileTableTab(this,
+                                          this->languages,
+                                          this->language,
+                                          filenameCompletions)),
+    messagesTab(new MessageTableTab(this, this->languages, this->language)),
+    tagsTab(new TagTableTab(this, bashTagCompletions)),
+    dirtyTab(new CleaningDataTableTab(this, this->languages, this->language)),
+    cleanTab(new CleaningDataTableTab(this, this->languages, this->language)) {
   setupUi();
 }
 
@@ -132,26 +150,9 @@ void PluginEditorWidget::setupUi() {
   auto widgetLayout = new QVBoxLayout();
   auto headerLayout = new QHBoxLayout();
 
-  pluginLabel = new QLabel();
-
   auto buttonBox = new QDialogButtonBox(
       QDialogButtonBox::Save | QDialogButtonBox::Cancel, this);
   buttonBox->setObjectName("dialogButtons");
-
-  tabs = new QTabWidget(this);
-
-  groupTab = new GroupTab(this);
-  loadAfterTab = new LoadAfterFileTableTab(
-      this, languages, language, filenameCompletions);
-  requirementsTab =
-      new FileTableTab(this, languages, language, filenameCompletions);
-  incompatibilitiesTab =
-      new FileTableTab(this, languages, language, filenameCompletions);
-  messagesTab = new MessageTableTab(this, languages, language);
-  tagsTab = new TagTableTab(this, bashTagCompletions);
-  dirtyTab = new CleaningDataTableTab(this, languages, language);
-  cleanTab = new CleaningDataTableTab(this, languages, language);
-  locationsTab = new LocationTableTab(this);
 
   tabs->addTab(groupTab, QString());
   tabs->addTab(loadAfterTab, QString());

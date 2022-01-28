@@ -63,9 +63,9 @@ protected:
   void resizeEvent(QResizeEvent* event) override;
 
 private:
-  QTableView* tableView;
-  QPushButton* addNewRowButton;
-  QPushButton* deleteRowButton;
+  QTableView* tableView{new QTableView(this)};
+  QPushButton* addNewRowButton{new QPushButton(this)};
+  QPushButton* deleteRowButton{new QPushButton(this)};
 
   void setupUi();
   void translateUi();

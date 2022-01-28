@@ -61,23 +61,17 @@ void GroupsEditorDialog::setupUi() {
 
   setWindowModality(Qt::WindowModal);
 
-  graphView = new GraphView(this);
   graphView->setObjectName("graphView");
-  groupPluginsTitle = new QLabel(this);
   groupPluginsTitle->setVisible(false);
 
-  groupPluginsList = new QListWidget(this);
   groupPluginsList->setVisible(false);
   groupPluginsList->setSelectionMode(QAbstractItemView::NoSelection);
 
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-  groupNameInputLabel = new QLabel(this);
-  groupNameInput = new QLineEdit(this);
   groupNameInput->setObjectName("groupNameInput");
 
-  addGroupButton = new QPushButton(this);
   addGroupButton->setObjectName("addGroupButton");
   addGroupButton->setDisabled(true);
 

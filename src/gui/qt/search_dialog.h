@@ -36,7 +36,7 @@
 
 namespace loot {
 struct SearchState {
-  size_t resultsCount;
+  size_t resultsCount{0};
   std::optional<size_t> currentResultIndex;
 };
 
@@ -53,10 +53,10 @@ signals:
   void currentResultChanged(size_t resultIndex);
 
 private:
-  QLineEdit *searchInput;
-  QLabel *countLabel;
-  QPushButton *previousButton;
-  QPushButton *nextButton;
+  QLineEdit *searchInput{new QLineEdit(this)};
+  QLabel *countLabel{new QLabel(this)};
+  QPushButton *previousButton{new QPushButton(this)};
+  QPushButton *nextButton{new QPushButton(this)};
 
   SearchState state;
 

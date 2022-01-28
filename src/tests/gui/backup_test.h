@@ -88,7 +88,7 @@ protected:
     std::ifstream ifile(file, std::ios::binary);
     ifile.exceptions(std::ios_base::badbit | std::ios_base::failbit);
 
-    std::array<char, 8192> buffer;
+    std::array<char, 8192> buffer{};
     boost::crc_32_type result;
 
     size_t bytesLeft = GetStreamSize(ifile);

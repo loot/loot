@@ -102,31 +102,15 @@ void FiltersWidget::setupUi() {
   static constexpr int SPACER_WIDTH = 20;
   static constexpr int SPACER_HEIGHT = 40;
 
-  conflictingPluginsFilterLabel = new QLabel(this);
-  conflictingPluginsFilter = new QComboBox(this);
   conflictingPluginsFilter->setObjectName("conflictingPluginsFilter");
-
-  groupPluginsFilterLabel = new QLabel(this);
-  groupPluginsFilter = new QComboBox(this);
   groupPluginsFilter->setObjectName("groupPluginsFilter");
-
-  contentFilterLabel = new QLabel(this);
-  contentFilter = new QLineEdit(this);
   contentFilter->setObjectName("contentFilter");
-
-  versionNumbersFilter = new QCheckBox(this);
   versionNumbersFilter->setObjectName("versionNumbersFilter");
-  crcsFilter = new QCheckBox(this);
   crcsFilter->setObjectName("crcsFilter");
-  bashTagsFilter = new QCheckBox(this);
   bashTagsFilter->setObjectName("bashTagsFilter");
-  notesFilter = new QCheckBox(this);
   notesFilter->setObjectName("notesFilter");
-  pluginMessagesFilter = new QCheckBox(this);
   pluginMessagesFilter->setObjectName("pluginMessagesFilter");
-  inactivePluginsFilter = new QCheckBox(this);
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
-  messagelessPluginsFilter = new QCheckBox(this);
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
 
   auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,

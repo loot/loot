@@ -53,25 +53,25 @@ signals:
   void gameSettingsDeleted();
 
 private:
-  QLabel *nameLabel;
-  QLabel *baseGameLabel;
-  QLabel *lootFolderLabel;
-  QLabel *masterFileLabel;
-  QLabel *minimumHeaderVersionLabel;
-  QLabel *masterlistSourceLabel;
-  QLabel *installPathLabel;
-  QLabel *registryKeysLabel;
-  QLabel *localDataPathLabel;
-  QLineEdit *nameInput;
-  QLineEdit *lootFolderInput;
-  QLineEdit *masterFileInput;
-  QLineEdit *masterlistSourceInput;
-  QLineEdit *installPathInput;
-  QLineEdit *localDataPathInput;
-  QComboBox *baseGameComboBox;
-  QDoubleSpinBox *minimumHeaderVersionSpinBox;
-  QPlainTextEdit *registryKeysInput;
-  QPushButton *deleteGameButton;
+  QLabel *nameLabel{new QLabel(this)};
+  QLabel *baseGameLabel{new QLabel(this)};
+  QLabel *lootFolderLabel{new QLabel(this)};
+  QLabel *masterFileLabel{new QLabel(this)};
+  QLabel *minimumHeaderVersionLabel{new QLabel(this)};
+  QLabel *masterlistSourceLabel{new QLabel(this)};
+  QLabel *installPathLabel{new QLabel(this)};
+  QLabel *registryKeysLabel{new QLabel(this)};
+  QLabel *localDataPathLabel{new QLabel(this)};
+  QLineEdit *nameInput{new QLineEdit(this)};
+  QLineEdit *lootFolderInput{new QLineEdit(this)};
+  QLineEdit *masterFileInput{new QLineEdit(this)};
+  QLineEdit *masterlistSourceInput{new QLineEdit(this)};
+  QLineEdit *installPathInput{new QLineEdit(this)};
+  QLineEdit *localDataPathInput{new QLineEdit(this)};
+  QComboBox *baseGameComboBox{new QComboBox(this)};
+  QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
+  QPlainTextEdit *registryKeysInput{new QPlainTextEdit(this)};
+  QPushButton *deleteGameButton{new QPushButton(this)};
 
   void setupUi();
   void translateUi();

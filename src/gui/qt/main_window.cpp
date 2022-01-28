@@ -31,7 +31,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-#include <QtWidgets/QSplitter>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QTextEdit>
 
@@ -201,7 +200,11 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
 }
 
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
-    QMainWindow(parent), state(state) {
+    QMainWindow(parent),
+    state(state),
+    pluginEditorWidget(new PluginEditorWidget(editorSplitter,
+                                              state.getLanguages(),
+                                              state.getLanguage())) {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -309,49 +312,27 @@ void MainWindow::setupUi() {
   }
 
   // Set up status bar.
-  statusbar = new QStatusBar(this);
   setStatusBar(statusbar);
 
   setupMenuBar();
   setupToolBar();
 
-  settingsDialog = new SettingsDialog(this);
   settingsDialog->setObjectName("settingsDialog");
-
-  searchDialog = new SearchDialog(this);
   searchDialog->setObjectName("searchDialog");
-
-  auto sidebarSplitter = new QSplitter(this);
-
-  toolBox = new QToolBox(sidebarSplitter);
-
-  auto pluginsTab = new QWidget();
-  auto pluginsTabLayout = new QVBoxLayout(pluginsTab);
-
-  sidebarPluginsView = new QTableView(pluginsTab);
   sidebarPluginsView->setObjectName("sidebarPluginsView");
 
-  pluginsTabLayout->addWidget(sidebarPluginsView, 1);
-  pluginsTabLayout->setContentsMargins(0, 0, 0, 0);
-  toolBox->addItem(pluginsTab, QString("Plugins"));
+  toolBox->addItem(sidebarPluginsView, QString("Plugins"));
 
-  filtersWidget = new FiltersWidget(toolBox);
   filtersWidget->setObjectName("filtersWidget");
 
   toolBox->addItem(filtersWidget, QString("Filters"));
 
   sidebarSplitter->addWidget(toolBox);
 
-  auto editorSplitter =
-      new QSplitter(Qt::Orientation::Vertical, sidebarSplitter);
-
-  pluginCardsView = new QListView(editorSplitter);
   pluginCardsView->setObjectName("pluginCardsView");
 
   editorSplitter->addWidget(pluginCardsView);
 
-  pluginEditorWidget = new PluginEditorWidget(
-      editorSplitter, state.getLanguages(), state.getLanguage());
   pluginEditorWidget->setObjectName("pluginEditorWidget");
   pluginEditorWidget->hide();
 
@@ -364,21 +345,17 @@ void MainWindow::setupUi() {
 
   setCentralWidget(sidebarSplitter);
 
-  progressDialog = new QProgressDialog(this);
   progressDialog->setWindowModality(Qt::WindowModal);
   progressDialog->setCancelButton(nullptr);
   progressDialog->setMinimum(0);
   progressDialog->setMaximum(0);
   progressDialog->reset();
 
-  pluginItemModel = new PluginItemModel(this);
   pluginItemModel->setObjectName("pluginItemModel");
 
-  proxyModel = new PluginItemFilterModel(this);
   proxyModel->setObjectName("proxyModel");
   proxyModel->setSourceModel(pluginItemModel);
 
-  groupsEditor = new GroupsEditorDialog(this, pluginItemModel);
   groupsEditor->setObjectName("groupsEditor");
 
   setupViews();
@@ -392,72 +369,63 @@ void MainWindow::setupUi() {
 
 void MainWindow::setupMenuBar() {
   // Create actions.
-  actionSettings = new QAction(this);
   actionSettings->setObjectName("actionSettings");
   actionSettings->setIcon(IconFactory::getSettingsIcon());
-  actionBackupData = new QAction(this);
+
   actionBackupData->setObjectName("actionBackupData");
   actionBackupData->setIcon(IconFactory::getArchiveIcon());
-  actionQuit = new QAction(this);
+
   actionQuit->setObjectName("actionQuit");
   actionQuit->setIcon(IconFactory::getQuitIcon());
 
-  actionViewDocs = new QAction(this);
   actionViewDocs->setObjectName("actionViewDocs");
   actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
   actionViewDocs->setShortcut(QKeySequence::HelpContents);
-  actionOpenLOOTDataFolder = new QAction(this);
+
   actionOpenLOOTDataFolder->setObjectName("actionOpenLOOTDataFolder");
   actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
-  actionJoinDiscordServer = new QAction(this);
+
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
-  actionAbout = new QAction(this);
+
   actionAbout->setObjectName("actionAbout");
   actionAbout->setIcon(IconFactory::getAboutIcon());
 
-  actionOpenGroupsEditor = new QAction(this);
   actionOpenGroupsEditor->setObjectName("actionOpenGroupsEditor");
   actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
-  actionSearch = new QAction(this);
+
   actionSearch->setObjectName("actionSearch");
   actionSearch->setIcon(IconFactory::getSearchIcon());
   actionSearch->setShortcut(QKeySequence::Find);
-  actionCopyLoadOrder = new QAction(this);
+
   actionCopyLoadOrder->setObjectName("actionCopyLoadOrder");
   actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
-  actionCopyContent = new QAction(this);
+
   actionCopyContent->setObjectName("actionCopyContent");
   actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
-  actionRefreshContent = new QAction(this);
+
   actionRefreshContent->setObjectName("actionRefreshContent");
   actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
   actionRefreshContent->setShortcut(QKeySequence::Refresh);
-  actionRedatePlugins = new QAction(this);
+
   actionRedatePlugins->setObjectName("actionRedatePlugins");
   actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
-  actionClearAllUserMetadata = new QAction(this);
+
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
-  actionCopyMetadata = new QAction(this);
   actionCopyMetadata->setObjectName("actionCopyMetadata");
-  actionCopyCardContent = new QAction(this);
+
   actionCopyCardContent->setObjectName("actionCopyCardContent");
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
-  actionEditMetadata = new QAction(this);
+
   actionEditMetadata->setObjectName("actionEditMetadata");
   actionEditMetadata->setIcon(IconFactory::getEditIcon());
   actionEditMetadata->setShortcut(QString("Ctrl+E"));
-  actionClearMetadata = new QAction(this);
+
   actionClearMetadata->setObjectName("actionClearMetadata");
   actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
 
   // Create menu bar.
-  menubar = new QMenuBar(this);
-  menuFile = new QMenu(menubar);
-  menuHelp = new QMenu(menubar);
-  menuGame = new QMenu(menubar);
-  menuPlugin = new QMenu(menubar);
   setMenuBar(menubar);
 
   menubar->addAction(menuFile->menuAction());
@@ -492,28 +460,25 @@ void MainWindow::setupMenuBar() {
 
 void MainWindow::setupToolBar() {
   // Create actions.
-  actionSort = new QAction(this);
   actionSort->setObjectName("actionSort");
   actionSort->setIcon(IconFactory::getSortIcon());
-  actionUpdateMasterlist = new QAction(this);
+
   actionUpdateMasterlist->setObjectName("actionUpdateMasterlist");
   actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
-  actionApplySort = new QAction(this);
+
   actionApplySort->setObjectName("actionApplySort");
   actionApplySort->setVisible(false);
-  actionDiscardSort = new QAction(this);
+
   actionDiscardSort->setObjectName("actionDiscardSort");
   actionDiscardSort->setVisible(false);
 
   // Create toolbar.
-  toolBar = new QToolBar(this);
   toolBar->setMovable(false);
   toolBar->setFloatable(false);
   toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
   addToolBar(Qt::TopToolBarArea, toolBar);
 
-  gameComboBox = new QComboBox(toolBar);
   gameComboBox->setObjectName("gameComboBox");
 
   toolBar->addWidget(gameComboBox);

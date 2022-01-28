@@ -59,16 +59,12 @@ void SearchDialog::setSearchResults(size_t resultsCount) {
 }
 
 void SearchDialog::setupUi() {
-  searchInput = new QLineEdit(this);
   searchInput->setObjectName("searchInput");
-  countLabel = new QLabel(this);
 
   auto buttonBox = new QDialogButtonBox(this);
   buttonBox->setObjectName("dialogButtons");
 
-  previousButton = new QPushButton(this);
   previousButton->setObjectName("previousButton");
-  nextButton = new QPushButton(this);
   nextButton->setObjectName("nextButton");
 
   buttonBox->addButton(previousButton, QDialogButtonBox::YesRole);

@@ -207,59 +207,41 @@ void PluginCard::setSearchResult(bool isSearchResult,
 }
 
 void PluginCard::setupUi() {
-  nameLabel = new QLabel(this);
-  crcLabel = new QLabel(this);
   crcLabel->setObjectName("plugin-crc");
-  versionLabel = new QLabel(this);
   versionLabel->setObjectName("plugin-version");
 
   // Set this height so that cards without icons have a header the same height
   // cards with icons.
   nameLabel->setMinimumHeight(ATTRIBUTE_ICON_HEIGHT);
 
-  isActiveLabel = new QLabel(this);
   isActiveLabel->setVisible(false);
-  masterFileLabel = new QLabel(this);
   masterFileLabel->setVisible(false);
-  lightPluginLabel = new QLabel(this);
   lightPluginLabel->setVisible(false);
-  emptyPluginLabel = new QLabel(this);
   emptyPluginLabel->setVisible(false);
-  loadsArchiveLabel = new QLabel(this);
   loadsArchiveLabel->setVisible(false);
-  isCleanLabel = new QLabel(this);
   isCleanLabel->setVisible(false);
-  hasUserEditsLabel = new QLabel(this);
   hasUserEditsLabel->setVisible(false);
 
-  tagsGroupBox = new QGroupBox(this);
   tagsGroupBox->setVisible(false);
 
-  currentTagsHeaderLabel = new QLabel(this);
   currentTagsHeaderLabel->setVisible(false);
 
-  currentTagsLabel = new QLabel(this);
   currentTagsLabel->setObjectName("tags-current");
   currentTagsLabel->setWordWrap(true);
   currentTagsLabel->setVisible(false);
 
-  addTagsHeaderLabel = new QLabel(this);
   addTagsHeaderLabel->setVisible(false);
 
-  addTagsLabel = new QLabel(this);
   addTagsLabel->setObjectName("tags-add");
   addTagsLabel->setWordWrap(true);
   addTagsLabel->setVisible(false);
 
-  removeTagsHeaderLabel = new QLabel(this);
   removeTagsHeaderLabel->setVisible(false);
 
-  removeTagsLabel = new QLabel(this);
   removeTagsLabel->setObjectName("tags-remove");
   removeTagsLabel->setWordWrap(true);
   removeTagsLabel->setVisible(false);
 
-  messagesWidget = new MessagesWidget(this);
   messagesWidget->setVisible(false);
 
   setIcon(isActiveLabel, IconFactory::getIsActiveIcon());

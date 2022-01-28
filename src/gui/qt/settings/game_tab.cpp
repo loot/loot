@@ -93,34 +93,6 @@ GameSettings GameTab::getGameSettings() const {
 }
 
 void GameTab::setupUi() {
-  nameLabel = new QLabel(this);
-  nameInput = new QLineEdit(this);
-
-  baseGameLabel = new QLabel(this);
-  baseGameComboBox = new QComboBox(this);
-
-  lootFolderLabel = new QLabel(this);
-  lootFolderInput = new QLineEdit(this);
-
-  masterFileLabel = new QLabel(this);
-  masterFileInput = new QLineEdit(this);
-
-  minimumHeaderVersionLabel = new QLabel(this);
-  minimumHeaderVersionSpinBox = new QDoubleSpinBox(this);
-
-  masterlistSourceLabel = new QLabel(this);
-  masterlistSourceInput = new QLineEdit(this);
-
-  installPathLabel = new QLabel(this);
-  installPathInput = new QLineEdit(this);
-
-  registryKeysLabel = new QLabel(this);
-  registryKeysInput = new QPlainTextEdit(this);
-
-  localDataPathLabel = new QLabel(this);
-  localDataPathInput = new QLineEdit(this);
-
-  deleteGameButton = new QPushButton(this);
   deleteGameButton->setObjectName("deleteGameButton");
 
   auto generalLayout = new QFormLayout(this);

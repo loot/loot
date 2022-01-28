@@ -51,24 +51,24 @@ public:
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
 
 private:
-  QLabel* nameLabel;
-  QLabel* crcLabel;
-  QLabel* versionLabel;
-  QLabel* isActiveLabel;
-  QLabel* masterFileLabel;
-  QLabel* lightPluginLabel;
-  QLabel* emptyPluginLabel;
-  QLabel* loadsArchiveLabel;
-  QLabel* isCleanLabel;
-  QLabel* hasUserEditsLabel;
-  QLabel* currentTagsHeaderLabel;
-  QLabel* currentTagsLabel;
-  QLabel* addTagsHeaderLabel;
-  QLabel* addTagsLabel;
-  QLabel* removeTagsHeaderLabel;
-  QLabel* removeTagsLabel;
-  QGroupBox* tagsGroupBox;
-  MessagesWidget* messagesWidget;
+  QLabel* nameLabel{new QLabel(this)};
+  QLabel* crcLabel{new QLabel(this)};
+  QLabel* versionLabel{new QLabel(this)};
+  QLabel* isActiveLabel{new QLabel(this)};
+  QLabel* masterFileLabel{new QLabel(this)};
+  QLabel* lightPluginLabel{new QLabel(this)};
+  QLabel* emptyPluginLabel{new QLabel(this)};
+  QLabel* loadsArchiveLabel{new QLabel(this)};
+  QLabel* isCleanLabel{new QLabel(this)};
+  QLabel* hasUserEditsLabel{new QLabel(this)};
+  QLabel* currentTagsHeaderLabel{new QLabel(this)};
+  QLabel* currentTagsLabel{new QLabel(this)};
+  QLabel* addTagsHeaderLabel{new QLabel(this)};
+  QLabel* addTagsLabel{new QLabel(this)};
+  QLabel* removeTagsHeaderLabel{new QLabel(this)};
+  QLabel* removeTagsLabel{new QLabel(this)};
+  QGroupBox* tagsGroupBox{new QGroupBox(this)};
+  MessagesWidget* messagesWidget{new MessagesWidget(this)};
 
   void setupUi();
 

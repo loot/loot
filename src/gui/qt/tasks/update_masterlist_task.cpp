@@ -28,8 +28,7 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
-UpdateMasterlistTask::UpdateMasterlistTask(LootState &state) :
-    state(state), networkAccessManager(nullptr) {}
+UpdateMasterlistTask::UpdateMasterlistTask(LootState &state) : state(state) {}
 
 void UpdateMasterlistTask::execute() {
   try {

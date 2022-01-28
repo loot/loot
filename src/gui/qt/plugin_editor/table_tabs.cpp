@@ -248,14 +248,11 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
 }
 
 void BaseTableTab::setupUi() {
-  tableView = new QTableView(this);
   tableView->verticalHeader()->hide();
   tableView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-  addNewRowButton = new QPushButton(this);
   addNewRowButton->setObjectName("addNewRowButton");
 
-  deleteRowButton = new QPushButton(this);
   deleteRowButton->setObjectName("deleteRowButton");
   deleteRowButton->setEnabled(false);
 

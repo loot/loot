@@ -43,12 +43,12 @@ public:
   QString getGameType() const;
 
 private:
-  QLabel *nameLabel;
-  QLabel *folderLabel;
-  QLabel *typeLabel;
-  QLineEdit *nameInput;
-  QLineEdit *folderInput;
-  QComboBox *typeComboBox;
+  QLabel *nameLabel{new QLabel(this)};
+  QLabel *folderLabel{new QLabel(this)};
+  QLabel *typeLabel{new QLabel(this)};
+  QLineEdit *nameInput{new QLineEdit(this)};
+  QLineEdit *folderInput{new QLineEdit(this)};
+  QComboBox *typeComboBox{new QComboBox(this)};
 
   QStringList currentGameFolders;
 

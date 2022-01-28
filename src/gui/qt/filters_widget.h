@@ -68,23 +68,23 @@ signals:
   void cardContentFilterChanged(CardContentFiltersState state);
 
 private:
-  QLabel *conflictingPluginsFilterLabel;
-  QComboBox *conflictingPluginsFilter;
-  QLabel *groupPluginsFilterLabel;
-  QComboBox *groupPluginsFilter;
-  QLabel *contentFilterLabel;
-  QLineEdit *contentFilter;
-  QCheckBox *versionNumbersFilter;
-  QCheckBox *crcsFilter;
-  QCheckBox *bashTagsFilter;
-  QCheckBox *notesFilter;
-  QCheckBox *pluginMessagesFilter;
-  QCheckBox *inactivePluginsFilter;
-  QCheckBox *messagelessPluginsFilter;
-  QLabel *hiddenPluginsLabel;
-  QLabel *hiddenPluginsCountLabel;
-  QLabel *hiddenMessagesLabel;
-  QLabel *hiddenMessagesCountLabel;
+  QLabel *conflictingPluginsFilterLabel{new QLabel(this)};
+  QComboBox *conflictingPluginsFilter{new QComboBox(this)};
+  QLabel *groupPluginsFilterLabel{new QLabel(this)};
+  QComboBox *groupPluginsFilter{new QComboBox(this)};
+  QLabel *contentFilterLabel{new QLabel(this)};
+  QLineEdit *contentFilter{new QLineEdit(this)};
+  QCheckBox *versionNumbersFilter{new QCheckBox(this)};
+  QCheckBox *crcsFilter{new QCheckBox(this)};
+  QCheckBox *bashTagsFilter{new QCheckBox(this)};
+  QCheckBox *notesFilter{new QCheckBox(this)};
+  QCheckBox *pluginMessagesFilter{new QCheckBox(this)};
+  QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
+  QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
+  QLabel *hiddenPluginsLabel{new QLabel(this)};
+  QLabel *hiddenPluginsCountLabel{new QLabel(this)};
+  QLabel *hiddenMessagesLabel{new QLabel(this)};
+  QLabel *hiddenMessagesCountLabel{new QLabel(this)};
 
   void setupUi();
 
