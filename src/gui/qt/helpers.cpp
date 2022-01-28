@@ -122,14 +122,13 @@ std::string calculateGitBlobHash(const std::filesystem::path& filePath) {
   hasher.addData("blob ", 5);
   hasher.addData(sizeString.c_str(), sizeString.size() + 1);
 
-  const size_t bufferSize = 8192;
-  char buffer[bufferSize];
+  std::array<char, 8192> buffer;
   size_t bytesReadCount = 0;
 
   do {
-    bytesReadCount = file.read(buffer, bufferSize);
+    bytesReadCount = file.read(buffer.data(), buffer.size());
     if (bytesReadCount > 0) {
-      hasher.addData(buffer, bytesReadCount);
+      hasher.addData(buffer.data(), bytesReadCount);
     }
   } while (bytesReadCount > 0);
 

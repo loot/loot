@@ -213,9 +213,9 @@ std::filesystem::path getExecutableDirectory() {
 
   return std::filesystem::path(executablePathString).parent_path();
 #else
-  char result[PATH_MAX];
+  std::array<char, PATH_MAX> result;
 
-  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+  ssize_t count = readlink("/proc/self/exe", result.data(), result.size());
   if (count < 0) {
     auto logger = getLogger();
     if (logger) {
@@ -225,7 +225,8 @@ std::filesystem::path getExecutableDirectory() {
         count, std::system_category(), "Failed to get LOOT executable path.");
   }
 
-  return std::filesystem::u8path(std::string(result, count)).parent_path();
+  return std::filesystem::u8path(std::string(result.data(), count))
+      .parent_path();
 #endif
 }
 

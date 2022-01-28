@@ -296,7 +296,7 @@ TEST_P(GameSettingsTest,
     out.close();
   }
 
-  GameType gameTypes[6] = {
+  std::array<GameType, 6> gameTypes = {
       GameType::tes4,
       GameType::tes5,
       GameType::fo3,
@@ -304,11 +304,12 @@ TEST_P(GameSettingsTest,
       GameType::fo4,
       GameType::tes5se,
   };
-  for (int i = 0; i < 6; ++i) {
-    if (gameTypes[i] == GetParam()) {
-      EXPECT_TRUE(GameSettings(gameTypes[i]).FindGamePath().has_value());
+
+  for (const auto gameType : gameTypes) {
+    if (gameType == GetParam()) {
+      EXPECT_TRUE(GameSettings(gameType).FindGamePath().has_value());
     } else {
-      EXPECT_FALSE(GameSettings(gameTypes[i]).FindGamePath().has_value());
+      EXPECT_FALSE(GameSettings(gameType).FindGamePath().has_value());
     }
   }
 

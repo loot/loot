@@ -440,6 +440,7 @@ endif()
 
 if(RUN_CLANG_TIDY)
     set(CLANG_TIDY_COMMON_CHECKS
+        "cppcoreguidelines-avoid-c-arrays"
         "cppcoreguidelines-c-copy-assignment-signature"
         "cppcoreguidelines-interfaces-global-init"
         "cppcoreguidelines-macro-usage"
