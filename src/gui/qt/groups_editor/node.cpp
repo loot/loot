@@ -157,13 +157,13 @@ void Node::paint(QPainter *painter,
   painter->drawEllipse(-RADIUS, -RADIUS, DIAMETER, DIAMETER);
 }
 
-void Node::setPos(const QPointF &pos) {
+void Node::setPosition(const QPointF &pos) {
   QGraphicsItem::setPos(pos);
 
   updateTextPos();
 }
 
-void Node::setPos(qreal x, qreal y) { setPos(QPointF(x, y)); }
+void Node::setPosition(qreal x, qreal y) { setPosition(QPointF(x, y)); }
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value) {
   switch (change) {

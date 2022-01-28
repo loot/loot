@@ -81,8 +81,8 @@ public:
              const QStyleOptionGraphicsItem *option,
              QWidget *widget) override;
 
-  void setPos(const QPointF &pos);
-  void setPos(qreal x, qreal y);
+  void setPosition(const QPointF &pos);
+  void setPosition(qreal x, qreal y);
 
   static constexpr int RADIUS = 10;
   static constexpr int DIAMETER = RADIUS * 2;

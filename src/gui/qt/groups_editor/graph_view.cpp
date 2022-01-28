@@ -221,7 +221,7 @@ bool GraphView::addGroup(const std::string &name) {
     pos.setX(pos.x() + NODE_SPACING_HORIZONTAL);
   }
   scene()->addItem(node);
-  node->setPos(pos);
+  node->setPosition(pos);
 
   return true;
 }
@@ -354,8 +354,8 @@ void GraphView::doLayout() {
     auto level = nodeLevels.find(node)->second;
     auto offset = nodeLevelOffsets.find(node)->second;
 
-    node->setPos(offset * NODE_SPACING_HORIZONTAL,
-                 level * NODE_SPACING_VERTICAL);
+    node->setPosition(offset * NODE_SPACING_HORIZONTAL,
+                      level * NODE_SPACING_VERTICAL);
   }
 }
 }
