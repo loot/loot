@@ -93,6 +93,17 @@ Game::Game(const Game& game) :
     loadOrderSortCount_(0),
     pluginsFullyLoaded_(game.pluginsFullyLoaded_) {}
 
+Game::Game(Game&& game) : GameSettings(game) {
+  lock_guard<mutex> guard(game.mutex_);
+
+  gameHandle_ = std::move(game.gameHandle_);
+  messages_ = std::move(game.messages_);
+  lootDataPath_ = std::move(game.lootDataPath_);
+  preludePath_ = std::move(game.preludePath_);
+  loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
+  pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
+}
+
 Game& Game::operator=(const Game& game) {
   if (&game != this) {
     GameSettings::operator=(game);
@@ -103,6 +114,23 @@ Game& Game::operator=(const Game& game) {
     pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
     messages_ = game.messages_;
     loadOrderSortCount_ = game.loadOrderSortCount_;
+  }
+
+  return *this;
+}
+
+Game& Game::operator=(Game&& game) {
+  if (&game != this) {
+    GameSettings::operator=(game);
+
+    std::scoped_lock lock(mutex_, game.mutex_);
+
+    gameHandle_ = std::move(game.gameHandle_);
+    messages_ = std::move(game.messages_);
+    lootDataPath_ = std::move(game.lootDataPath_);
+    preludePath_ = std::move(game.preludePath_);
+    loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
+    pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
   }
 
   return *this;

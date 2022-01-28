@@ -43,8 +43,11 @@ public:
        const std::filesystem::path& lootDataPath,
        const std::filesystem::path& preludePath);
   Game(const Game& game);
+  Game(Game&& game);
+  ~Game() = default;
 
   Game& operator=(const Game& game);
+  Game& operator=(Game&& game);
 
   using GameSettings::Type;
 

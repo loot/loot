@@ -463,7 +463,8 @@ if(RUN_CLANG_TIDY)
         ${CLANG_TIDY_COMMON_CHECKS}
         "cppcoreguidelines-avoid-goto"
         "cppcoreguidelines-avoid-magic-numbers"
-        "cppcoreguidelines-non-private-member-variables-in-classes")
+        "cppcoreguidelines-non-private-member-variables-in-classes"
+        "cppcoreguidelines-special-member-functions")
 
     # Skip some checks for tests because they're not worth the noise (e.g. GTest
     # happens to use goto, lots of tests use magic numbers as expected values).

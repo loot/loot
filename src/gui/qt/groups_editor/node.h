@@ -54,7 +54,12 @@ public:
        const QString &name,
        bool isUserMetadata,
        bool containsInstalledPlugins);
+  Node(const Node &) = delete;
+  Node(Node &&) = delete;
   ~Node();
+
+  Node &operator=(const Node &) = delete;
+  Node &operator=(Node &&) = delete;
 
   QString getName() const;
   bool isUserMetadata() const;
