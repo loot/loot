@@ -34,18 +34,8 @@ MessageContentTableModel::MessageContentTableModel(
     std::vector<MessageContent> nonUserMetadata,
     std::vector<MessageContent> userMetadata,
     std::map<std::string, QVariant> languageLocaleNameMap) :
-    QAbstractTableModel(parent),
-    languageLocaleNameMap(languageLocaleNameMap),
-    nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata) {}
-
-std::vector<MessageContent> MessageContentTableModel::getUserMetadata() const {
-  return userMetadata;
-}
-
-int MessageContentTableModel::rowCount(const QModelIndex&) const {
-  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
-}
+    MetadataTableModel(parent, nonUserMetadata, userMetadata),
+    languageLocaleNameMap(languageLocaleNameMap) {}
 
 int MessageContentTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT =
@@ -53,26 +43,10 @@ int MessageContentTableModel::columnCount(const QModelIndex&) const {
   return COLUMN_COUNT;
 }
 
-QVariant MessageContentTableModel::data(const QModelIndex& index,
+QVariant MessageContentTableModel::data(const MessageContent& element,
+                                        int column,
                                         int role) const {
-  if (role != Qt::DisplayRole && role != Qt::EditRole) {
-    return QVariant();
-  }
-
-  if (!index.isValid()) {
-    return QVariant();
-  }
-
-  if (index.row() >= rowCount()) {
-    return QVariant();
-  }
-
-  const auto& element =
-      index.row() < static_cast<int>(nonUserMetadata.size())
-          ? nonUserMetadata.at(index.row())
-          : userMetadata.at(index.row() - nonUserMetadata.size());
-
-  switch (index.column()) {
+  switch (column) {
     case LANGUAGE_COLUMN: {
       if (role == Qt::DisplayRole) {
         auto it = languageLocaleNameMap.find(element.GetLanguage());
@@ -89,17 +63,7 @@ QVariant MessageContentTableModel::data(const QModelIndex& index,
   }
 }
 
-QVariant MessageContentTableModel::headerData(int section,
-                                              Qt::Orientation orientation,
-                                              int role) const {
-  if (role != Qt::DisplayRole) {
-    return QVariant();
-  }
-
-  if (orientation != Qt::Horizontal) {
-    return QVariant();
-  }
-
+QVariant MessageContentTableModel::headerText(int section) const {
   switch (section) {
     case LANGUAGE_COLUMN:
       return QVariant(translate("Language"));
@@ -110,83 +74,14 @@ QVariant MessageContentTableModel::headerData(int section,
   }
 }
 
-Qt::ItemFlags MessageContentTableModel::flags(const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return Qt::ItemIsEnabled;
-  }
-
-  if (index.row() < static_cast<int>(nonUserMetadata.size())) {
-    return QAbstractItemModel::flags(index);
-  }
-
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-}
-
-bool MessageContentTableModel::setData(const QModelIndex& index,
-                                       const QVariant& value,
-                                       int role) {
-  if (!index.isValid() || role != Qt::EditRole) {
-    return false;
-  }
-
-  if (index.column() > columnCount() - 1) {
-    return false;
-  }
-
-  if (index.row() < static_cast<int>(nonUserMetadata.size()) ||
-      index.column() > columnCount() - 1) {
-    return false;
-  }
-
-  auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
-
-  if (index.column() == LANGUAGE_COLUMN) {
+void MessageContentTableModel::setData(MessageContent& element,
+                                       int column,
+                                       const QVariant& value) {
+  if (column == LANGUAGE_COLUMN) {
     element = MessageContent(element.GetText(), value.toString().toStdString());
-  } else if (index.column() == TEXT_COLUMN) {
+  } else if (column == TEXT_COLUMN) {
     element =
         MessageContent(value.toString().toStdString(), element.GetLanguage());
   }
-
-  emit dataChanged(index, index, {role});
-  return true;
-}
-
-bool MessageContentTableModel::insertRows(int row,
-                                          int count,
-                                          const QModelIndex& parent) {
-  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount()) {
-    return false;
-  }
-
-  beginInsertRows(parent, row, row + count - 1);
-
-  auto index = row - nonUserMetadata.size();
-
-  userMetadata.insert(userMetadata.begin() + index, count, MessageContent());
-
-  endInsertRows();
-
-  return true;
-}
-
-bool MessageContentTableModel::removeRows(int row,
-                                          int count,
-                                          const QModelIndex& parent) {
-  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount() ||
-      row + count > rowCount()) {
-    return false;
-  }
-
-  beginRemoveRows(parent, row, row + count - 1);
-
-  auto startIndex = row - nonUserMetadata.size();
-  auto endIndex = startIndex + count;
-
-  userMetadata.erase(userMetadata.begin() + startIndex,
-                     userMetadata.begin() + endIndex);
-
-  endRemoveRows();
-
-  return true;
 }
 }

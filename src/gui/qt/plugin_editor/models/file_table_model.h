@@ -28,44 +28,21 @@
 
 #include <loot/metadata/file.h>
 
-#include <QtCore/QAbstractTableModel>
+#include "gui/qt/plugin_editor/models/metadata_table_model.h"
 
 namespace loot {
-class FileTableModel : public QAbstractTableModel {
+class FileTableModel : public MetadataTableModel<File> {
 public:
   FileTableModel(QObject* parent,
                  std::vector<File> nonUserMetadata,
                  std::vector<File> userMetadata,
                  const std::string& language);
 
-  std::vector<File> getUserMetadata() const;
-
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-
-  QVariant data(const QModelIndex& index,
-                int role = Qt::DisplayRole) const override;
-
-  QVariant headerData(int section,
-                      Qt::Orientation orientation,
-                      int role) const override;
 
   Qt::ItemFlags flags(const QModelIndex& index) const override;
 
   QStringList mimeTypes() const override;
-
-  bool setData(const QModelIndex& index,
-               const QVariant& value,
-               int role) override;
-
-  bool insertRows(int row,
-                  int count,
-                  const QModelIndex& parent = QModelIndex()) override;
-
-  bool removeRows(int row,
-                  int count,
-                  const QModelIndex& parent = QModelIndex()) override;
 
   bool dropMimeData(const QMimeData* data,
                     Qt::DropAction action,
@@ -81,8 +58,11 @@ public:
 private:
   const std::string& language;
 
-  std::vector<File> nonUserMetadata;
-  std::vector<File> userMetadata;
+  QVariant data(const File& element, int column, int role) const override;
+
+  QVariant headerText(int section) const override;
+
+  void setData(File& element, int column, const QVariant& value) override;
 };
 }
 

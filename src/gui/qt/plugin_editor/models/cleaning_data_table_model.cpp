@@ -36,19 +36,8 @@ CleaningDataTableModel::CleaningDataTableModel(
     std::vector<PluginCleaningData> nonUserMetadata,
     std::vector<PluginCleaningData> userMetadata,
     const std::string& language) :
-    QAbstractTableModel(parent),
-    language(language),
-    nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata) {}
-
-std::vector<PluginCleaningData> CleaningDataTableModel::getUserMetadata()
-    const {
-  return userMetadata;
-}
-
-int CleaningDataTableModel::rowCount(const QModelIndex&) const {
-  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
-}
+    MetadataTableModel(parent, nonUserMetadata, userMetadata),
+    language(language) {}
 
 int CleaningDataTableModel::columnCount(const QModelIndex&) const {
   static constexpr int COLUMN_COUNT = std::max({CRC_COLUMN,
@@ -61,26 +50,10 @@ int CleaningDataTableModel::columnCount(const QModelIndex&) const {
   return COLUMN_COUNT;
 }
 
-QVariant CleaningDataTableModel::data(const QModelIndex& index,
+QVariant CleaningDataTableModel::data(const PluginCleaningData& element,
+                                      int column,
                                       int role) const {
-  if (role != Qt::DisplayRole && role != Qt::EditRole) {
-    return QVariant();
-  }
-
-  if (!index.isValid()) {
-    return QVariant();
-  }
-
-  if (index.row() >= rowCount()) {
-    return QVariant();
-  }
-
-  const auto& element =
-      index.row() < static_cast<int>(nonUserMetadata.size())
-          ? nonUserMetadata.at(index.row())
-          : userMetadata.at(index.row() - nonUserMetadata.size());
-
-  switch (index.column()) {
+  switch (column) {
     case CRC_COLUMN:
       return QVariant(QString::fromStdString(crcToString(element.GetCRC())));
     case ITM_COLUMN:
@@ -104,17 +77,7 @@ QVariant CleaningDataTableModel::data(const QModelIndex& index,
   }
 }
 
-QVariant CleaningDataTableModel::headerData(int section,
-                                            Qt::Orientation orientation,
-                                            int role) const {
-  if (role != Qt::DisplayRole) {
-    return QVariant();
-  }
-
-  if (orientation != Qt::Horizontal) {
-    return QVariant();
-  }
-
+QVariant CleaningDataTableModel::headerText(int section) const {
   switch (section) {
     case CRC_COLUMN:
       return QVariant(translate("CRC"));
@@ -133,33 +96,10 @@ QVariant CleaningDataTableModel::headerData(int section,
   }
 }
 
-Qt::ItemFlags CleaningDataTableModel::flags(const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return Qt::ItemIsEnabled;
-  }
-
-  if (index.row() < static_cast<int>(nonUserMetadata.size())) {
-    return QAbstractItemModel::flags(index);
-  }
-
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-}
-
-bool CleaningDataTableModel::setData(const QModelIndex& index,
-                                     const QVariant& value,
-                                     int role) {
-  if (!index.isValid() || role != Qt::EditRole) {
-    return false;
-  }
-
-  if (index.row() < static_cast<int>(nonUserMetadata.size()) ||
-      index.column() > columnCount() - 1) {
-    return false;
-  }
-
-  auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
-
-  if (index.column() == CRC_COLUMN) {
+void CleaningDataTableModel::setData(PluginCleaningData& element,
+                                     int column,
+                                     const QVariant& value) {
+  if (column == CRC_COLUMN) {
     static constexpr int CRC_BASE = 16;
 
     element = PluginCleaningData(
@@ -169,28 +109,28 @@ bool CleaningDataTableModel::setData(const QModelIndex& index,
         element.GetITMCount(),
         element.GetDeletedReferenceCount(),
         element.GetDeletedNavmeshCount());
-  } else if (index.column() == ITM_COLUMN) {
+  } else if (column == ITM_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  value.toInt(),
                                  element.GetDeletedReferenceCount(),
                                  element.GetDeletedNavmeshCount());
-  } else if (index.column() == DELETED_REFERENCE_COLUMN) {
+  } else if (column == DELETED_REFERENCE_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  value.toInt(),
                                  element.GetDeletedNavmeshCount());
-  } else if (index.column() == DELETED_NAVMESH_COLUMN) {
+  } else if (column == DELETED_NAVMESH_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  element.GetCleaningUtility(),
                                  element.GetDetail(),
                                  element.GetITMCount(),
                                  element.GetDeletedReferenceCount(),
                                  value.toInt());
-  } else if (index.column() == CLEANING_UTILITY_COLUMN) {
+  } else if (column == CLEANING_UTILITY_COLUMN) {
     element = PluginCleaningData(element.GetCRC(),
                                  value.toString().toStdString(),
                                  element.GetDetail(),
@@ -205,48 +145,5 @@ bool CleaningDataTableModel::setData(const QModelIndex& index,
                                  element.GetDeletedReferenceCount(),
                                  element.GetDeletedNavmeshCount());
   }
-
-  emit dataChanged(index, index, {role});
-  return true;
-}
-
-bool CleaningDataTableModel::insertRows(int row,
-                                        int count,
-                                        const QModelIndex& parent) {
-  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount()) {
-    return false;
-  }
-
-  beginInsertRows(parent, row, row + count - 1);
-
-  auto index = row - nonUserMetadata.size();
-
-  userMetadata.insert(
-      userMetadata.begin() + index, count, PluginCleaningData());
-
-  endInsertRows();
-
-  return true;
-}
-
-bool CleaningDataTableModel::removeRows(int row,
-                                        int count,
-                                        const QModelIndex& parent) {
-  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount() ||
-      row + count > rowCount()) {
-    return false;
-  }
-
-  beginRemoveRows(parent, row, row + count - 1);
-
-  auto startIndex = row - nonUserMetadata.size();
-  auto endIndex = startIndex + count;
-
-  userMetadata.erase(userMetadata.begin() + startIndex,
-                     userMetadata.begin() + endIndex);
-
-  endRemoveRows();
-
-  return true;
 }
 }

@@ -28,13 +28,10 @@
 
 #include <loot/metadata/message.h>
 
-#include <QtCore/QAbstractTableModel>
-
-#include "gui/state/loot_settings.h"
+#include "gui/qt/plugin_editor/models/metadata_table_model.h"
 
 namespace loot {
-
-class MessageTableModel : public QAbstractTableModel {
+class MessageTableModel : public MetadataTableModel<Message> {
 public:
   MessageTableModel(
       QObject* parent,
@@ -43,32 +40,7 @@ public:
       std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap,
       const std::string& language);
 
-  std::vector<Message> getUserMetadata() const;
-
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
-
-  QVariant data(const QModelIndex& index,
-                int role = Qt::DisplayRole) const override;
-
-  QVariant headerData(int section,
-                      Qt::Orientation orientation,
-                      int role) const override;
-
-  Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-  bool setData(const QModelIndex& index,
-               const QVariant& value,
-               int role) override;
-
-  bool insertRows(int row,
-                  int count,
-                  const QModelIndex& parent = QModelIndex()) override;
-
-  bool removeRows(int row,
-                  int count,
-                  const QModelIndex& parent = QModelIndex()) override;
 
   static constexpr int TYPE_COLUMN = 0;
   static constexpr int CONTENT_COLUMN = 1;
@@ -78,8 +50,11 @@ private:
   const std::map<MessageType, std::pair<QString, QVariant>> typeDisplayDataMap;
   const std::string& language;
 
-  std::vector<Message> nonUserMetadata;
-  std::vector<Message> userMetadata;
+  QVariant data(const Message& element, int column, int role) const override;
+
+  QVariant headerText(int section) const override;
+
+  void setData(Message& element, int column, const QVariant& value) override;
 };
 }
 
