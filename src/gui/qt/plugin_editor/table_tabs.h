@@ -56,7 +56,7 @@ protected:
   void setColumnHidden(int column, bool hide);
   void setItemDelegateForColumn(int column, QStyledItemDelegate* delegate);
   void setColumnFixedWidth(int column, int width);
-  void acceptDrops();
+  void configureAsDropTarget();
 
   virtual bool hasUserMetadata() const = 0;
 
@@ -80,7 +80,18 @@ private slots:
   void onModelRowsRemoved();
 };
 
-class FileTableTab : public BaseTableTab {
+template<typename T>
+class MetadataTableTab : public BaseTableTab {
+public:
+  using BaseTableTab::BaseTableTab;
+
+  virtual void initialiseInputs(const std::vector<T>& nonUserMetadata,
+                                const std::vector<T>& userMetadata) = 0;
+
+  virtual std::vector<T> getUserMetadata() const = 0;
+};
+
+class FileTableTab : public MetadataTableTab<File> {
   Q_OBJECT
 public:
   FileTableTab(QWidget* parent,
@@ -89,9 +100,9 @@ public:
                const QStringList& completions);
 
   void initialiseInputs(const std::vector<File>& nonUserMetadata,
-                        const std::vector<File>& userMetadata);
+                        const std::vector<File>& userMetadata) override;
 
-  std::vector<File> getUserMetadata() const;
+  std::vector<File> getUserMetadata() const override;
 
   bool hasUserMetadata() const override;
 
@@ -106,19 +117,21 @@ public:
   using FileTableTab::FileTableTab;
 
   void initialiseInputs(const std::vector<File>& nonUserMetadata,
-                        const std::vector<File>& userMetadata);
+                        const std::vector<File>& userMetadata) override;
 };
 
-class MessageContentTableWidget : public BaseTableTab {
+class MessageContentTableWidget : public MetadataTableTab<MessageContent> {
   Q_OBJECT
 public:
   MessageContentTableWidget(
       QWidget* parent,
       const std::vector<LootSettings::Language>& languages);
 
-  void initialiseInputs(const std::vector<MessageContent>& metadata);
+  void initialiseInputs(
+      const std::vector<MessageContent>& nonUserMetadata,
+      const std::vector<MessageContent>& userMetadata) override;
 
-  std::vector<MessageContent> getMetadata() const;
+  std::vector<MessageContent> getUserMetadata() const override;
 
   bool hasUserMetadata() const override;
 
@@ -127,7 +140,7 @@ private:
   std::map<std::string, QVariant> languageMap;
 };
 
-class MessageTableTab : public BaseTableTab {
+class MessageTableTab : public MetadataTableTab<Message> {
   Q_OBJECT
 public:
   MessageTableTab(QWidget* parent,
@@ -135,9 +148,9 @@ public:
                   const std::string& language);
 
   void initialiseInputs(const std::vector<Message>& nonUserMetadata,
-                        const std::vector<Message>& userMetadata);
+                        const std::vector<Message>& userMetadata) override;
 
-  std::vector<Message> getUserMetadata() const;
+  std::vector<Message> getUserMetadata() const override;
 
   bool hasUserMetadata() const override;
 
@@ -146,32 +159,33 @@ private:
   const std::string& language;
 };
 
-class LocationTableTab : public BaseTableTab {
+class LocationTableTab : public MetadataTableTab<Location> {
   Q_OBJECT
 public:
-  using BaseTableTab::BaseTableTab;
+  using MetadataTableTab::MetadataTableTab;
 
   void initialiseInputs(const std::vector<Location>& nonUserMetadata,
-                        const std::vector<Location>& userMetadata);
+                        const std::vector<Location>& userMetadata) override;
 
-  std::vector<Location> getUserMetadata() const;
+  std::vector<Location> getUserMetadata() const override;
 
   bool hasUserMetadata() const override;
 };
 
-class CleaningDataTableTab : public BaseTableTab {
+class CleaningDataTableTab : public MetadataTableTab<PluginCleaningData> {
   Q_OBJECT
 public:
   CleaningDataTableTab(QWidget* parent,
                        const std::vector<LootSettings::Language>& languages,
                        const std::string& language);
 
-  void initialiseInputs(const std::vector<PluginCleaningData>& nonUserMetadata,
-                        const std::vector<PluginCleaningData>& userMetadata);
+  void initialiseInputs(
+      const std::vector<PluginCleaningData>& nonUserMetadata,
+      const std::vector<PluginCleaningData>& userMetadata) override;
 
   void hideCounts(bool hide);
 
-  std::vector<PluginCleaningData> getUserMetadata() const;
+  std::vector<PluginCleaningData> getUserMetadata() const override;
 
   bool hasUserMetadata() const override;
 
@@ -180,15 +194,15 @@ private:
   const std::string& language;
 };
 
-class TagTableTab : public BaseTableTab {
+class TagTableTab : public MetadataTableTab<Tag> {
   Q_OBJECT
 public:
   TagTableTab(QWidget* parent, const QStringList& completions);
 
   void initialiseInputs(const std::vector<Tag>& nonUserMetadata,
-                        const std::vector<Tag>& userMetadata);
+                        const std::vector<Tag>& userMetadata) override;
 
-  std::vector<Tag> getUserMetadata() const;
+  std::vector<Tag> getUserMetadata() const override;
 
   bool hasUserMetadata() const override;
 

@@ -31,18 +31,20 @@
 namespace loot {
 MessageContentTableModel::MessageContentTableModel(
     QObject* parent,
-    std::vector<MessageContent> metadata,
+    std::vector<MessageContent> nonUserMetadata,
+    std::vector<MessageContent> userMetadata,
     std::map<std::string, QVariant> languageLocaleNameMap) :
     QAbstractTableModel(parent),
     languageLocaleNameMap(languageLocaleNameMap),
-    metadata(metadata) {}
+    nonUserMetadata(nonUserMetadata),
+    userMetadata(userMetadata) {}
 
-std::vector<MessageContent> MessageContentTableModel::getMetadata() const {
-  return metadata;
+std::vector<MessageContent> MessageContentTableModel::getUserMetadata() const {
+  return userMetadata;
 }
 
 int MessageContentTableModel::rowCount(const QModelIndex&) const {
-  return static_cast<int>(metadata.size());
+  return static_cast<int>(nonUserMetadata.size() + userMetadata.size());
 }
 
 int MessageContentTableModel::columnCount(const QModelIndex&) const {
@@ -65,7 +67,10 @@ QVariant MessageContentTableModel::data(const QModelIndex& index,
     return QVariant();
   }
 
-  const auto& element = metadata.at(index.row());
+  const auto& element =
+      index.row() < static_cast<int>(nonUserMetadata.size())
+          ? nonUserMetadata.at(index.row())
+          : userMetadata.at(index.row() - nonUserMetadata.size());
 
   switch (index.column()) {
     case LANGUAGE_COLUMN: {
@@ -110,6 +115,10 @@ Qt::ItemFlags MessageContentTableModel::flags(const QModelIndex& index) const {
     return Qt::ItemIsEnabled;
   }
 
+  if (index.row() < static_cast<int>(nonUserMetadata.size())) {
+    return QAbstractItemModel::flags(index);
+  }
+
   return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
@@ -124,7 +133,12 @@ bool MessageContentTableModel::setData(const QModelIndex& index,
     return false;
   }
 
-  auto& element = metadata.at(index.row());
+  if (index.row() < static_cast<int>(nonUserMetadata.size()) ||
+      index.column() > columnCount() - 1) {
+    return false;
+  }
+
+  auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
 
   if (index.column() == LANGUAGE_COLUMN) {
     element = MessageContent(element.GetText(), value.toString().toStdString());
@@ -140,13 +154,15 @@ bool MessageContentTableModel::setData(const QModelIndex& index,
 bool MessageContentTableModel::insertRows(int row,
                                           int count,
                                           const QModelIndex& parent) {
-  if (row > rowCount()) {
+  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount()) {
     return false;
   }
 
   beginInsertRows(parent, row, row + count - 1);
 
-  metadata.insert(metadata.begin() + row, count, MessageContent());
+  auto index = row - nonUserMetadata.size();
+
+  userMetadata.insert(userMetadata.begin() + index, count, MessageContent());
 
   endInsertRows();
 
@@ -156,16 +172,18 @@ bool MessageContentTableModel::insertRows(int row,
 bool MessageContentTableModel::removeRows(int row,
                                           int count,
                                           const QModelIndex& parent) {
-  if (row > rowCount() || row + count > rowCount()) {
+  if (row < static_cast<int>(nonUserMetadata.size()) || row > rowCount() ||
+      row + count > rowCount()) {
     return false;
   }
 
   beginRemoveRows(parent, row, row + count - 1);
 
-  auto startIndex = row;
+  auto startIndex = row - nonUserMetadata.size();
   auto endIndex = startIndex + count;
 
-  metadata.erase(metadata.begin() + startIndex, metadata.begin() + endIndex);
+  userMetadata.erase(userMetadata.begin() + startIndex,
+                     userMetadata.begin() + endIndex);
 
   endRemoveRows();
 

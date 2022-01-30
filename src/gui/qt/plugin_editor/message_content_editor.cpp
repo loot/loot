@@ -41,11 +41,11 @@ MessageContentEditor::MessageContentEditor(
 
 void MessageContentEditor::initialiseInputs(
     const std::vector<MessageContent>& metadata) {
-  tableWidget->initialiseInputs(metadata);
+  tableWidget->initialiseInputs({}, metadata);
 }
 
 std::vector<MessageContent> MessageContentEditor::getMetadata() const {
-  return tableWidget->getMetadata();
+  return tableWidget->getUserMetadata();
 }
 
 void MessageContentEditor::setupUi() {

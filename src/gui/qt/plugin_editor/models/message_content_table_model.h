@@ -38,10 +38,11 @@ class MessageContentTableModel : public QAbstractTableModel {
 public:
   MessageContentTableModel(
       QObject* parent,
-      std::vector<MessageContent> metadata,
+      std::vector<MessageContent> nonUserMetadata,
+      std::vector<MessageContent> userMetadata,
       std::map<std::string, QVariant> languageLocaleNameMap);
 
-  std::vector<MessageContent> getMetadata() const;
+  std::vector<MessageContent> getUserMetadata() const;
 
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
@@ -74,7 +75,8 @@ public:
 private:
   const std::map<std::string, QVariant> languageLocaleNameMap;
 
-  std::vector<MessageContent> metadata;
+  std::vector<MessageContent> nonUserMetadata;
+  std::vector<MessageContent> userMetadata;
 };
 }
 

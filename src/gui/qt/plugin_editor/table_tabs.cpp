@@ -189,7 +189,7 @@ void BaseTableTab::setColumnFixedWidth(int column, int width) {
   tableView->horizontalHeader()->resizeSection(column, width);
 }
 
-void BaseTableTab::acceptDrops() {
+void BaseTableTab::configureAsDropTarget() {
   tableView->setAcceptDrops(true);
   tableView->setDropIndicatorShown(true);
 }
@@ -335,11 +335,11 @@ FileTableTab::FileTableTab(QWidget* parent,
                            const std::vector<LootSettings::Language>& languages,
                            const std::string& language,
                            const QStringList& completions) :
-    BaseTableTab(parent),
+    MetadataTableTab(parent),
     languages(languages),
     language(language),
     completions(completions) {
-  acceptDrops();
+  configureAsDropTarget();
 }
 
 void FileTableTab::initialiseInputs(const std::vector<File>& nonUserMetadata,
@@ -376,7 +376,7 @@ void LoadAfterFileTableTab::initialiseInputs(
 MessageContentTableWidget::MessageContentTableWidget(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages) :
-    BaseTableTab(parent) {
+    MetadataTableTab(parent) {
   for (const auto& language : languages) {
     auto name = QString::fromStdString(language.name);
     this->languages.push_back(
@@ -387,37 +387,41 @@ MessageContentTableWidget::MessageContentTableWidget(
 }
 
 void MessageContentTableWidget::initialiseInputs(
-    const std::vector<MessageContent>& metadata) {
+    const std::vector<MessageContent>& nonUserMetadata,
+    const std::vector<MessageContent>& userMetadata) {
   std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
       {MessageType::say, {translate("Note"), QString("say")}},
       {MessageType::warn, {translate("Warning"), QString("warn")}},
       {MessageType::error, {translate("Error"), QString("error")}}};
 
-  auto tableModel = new MessageContentTableModel(this, metadata, languageMap);
+  auto tableModel = new MessageContentTableModel(
+      this, nonUserMetadata, userMetadata, languageMap);
 
   setTableModel(tableModel);
-  setColumnFixedWidth(0,
-                      calculateMinimumColumnWidth(tableModel, 0, languageMap));
+  setColumnFixedWidth(
+      tableModel->LANGUAGE_COLUMN,
+      calculateMinimumColumnWidth(
+          tableModel, tableModel->LANGUAGE_COLUMN, languageMap));
 
   auto languageDelegate = new ComboBoxDelegate(this, languages);
 
   setItemDelegateForColumn(tableModel->LANGUAGE_COLUMN, languageDelegate);
 }
 
-std::vector<MessageContent> MessageContentTableWidget::getMetadata() const {
+std::vector<MessageContent> MessageContentTableWidget::getUserMetadata() const {
   return dynamic_cast<MessageContentTableModel*>(getTableModel())
-      ->getMetadata();
+      ->getUserMetadata();
 }
 
 bool MessageContentTableWidget::hasUserMetadata() const {
-  return !getMetadata().empty();
+  return !getUserMetadata().empty();
 }
 
 MessageTableTab::MessageTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    BaseTableTab(parent), languages(languages), language(language) {}
+    MetadataTableTab(parent), languages(languages), language(language) {}
 
 void MessageTableTab::initialiseInputs(
     const std::vector<Message>& nonUserMetadata,
@@ -475,7 +479,7 @@ CleaningDataTableTab::CleaningDataTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    BaseTableTab(parent), languages(languages), language(language) {}
+    MetadataTableTab(parent), languages(languages), language(language) {}
 
 void CleaningDataTableTab::initialiseInputs(
     const std::vector<PluginCleaningData>& nonUserMetadata,
@@ -511,7 +515,7 @@ bool CleaningDataTableTab::hasUserMetadata() const {
 }
 
 TagTableTab::TagTableTab(QWidget* parent, const QStringList& completions) :
-    BaseTableTab(parent), completions(completions) {}
+    MetadataTableTab(parent), completions(completions) {}
 
 void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
                                    const std::vector<Tag>& userMetadata) {
