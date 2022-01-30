@@ -242,7 +242,8 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   try {
     SetInitialGame(cmdLineGame);
     if (logger) {
-      logger->debug("Game selected is {}", GetCurrentGame().Name());
+      logger->debug("Game selected is {}",
+                    GetCurrentGame().GetSettings().Name());
     }
   } catch (std::exception& e) {
     if (logger) {
@@ -264,7 +265,7 @@ void LootState::initCurrentGame() {
     GetCurrentGame().Init();
     if (logger) {
       logger->debug("Game named {} has been initialsed",
-                    GetCurrentGame().Name());
+                    GetCurrentGame().GetSettings().Name());
     }
   } catch (std::exception& e) {
     if (logger) {
@@ -286,7 +287,7 @@ const std::vector<SimpleMessage>& LootState::getInitMessages() const {
 
 void LootState::save(const std::filesystem::path& file) {
   try {
-    storeLastGame(GetCurrentGame().FolderName());
+    storeLastGame(GetCurrentGame().GetSettings().FolderName());
   } catch (std::runtime_error& e) {
     auto logger = getLogger();
     if (logger) {

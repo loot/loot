@@ -261,7 +261,7 @@ void MainWindow::initialise() {
     proxyModel->setFiltersState(filtersWidget->getPluginFiltersState(), {});
 
     gameComboBox->setCurrentText(
-        QString::fromStdString(state.GetCurrentGame().Name()));
+        QString::fromStdString(state.GetCurrentGame().GetSettings().Name()));
 
     loadGame(true);
 
@@ -594,8 +594,9 @@ void MainWindow::enableGameActions() {
   actionSort->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
 
-  auto enableRedatePlugins = state.GetCurrentGame().Type() == GameType::tes5 ||
-                             state.GetCurrentGame().Type() == GameType::tes5se;
+  auto enableRedatePlugins =
+      state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
+      state.GetCurrentGame().GetSettings().Type() == GameType::tes5se;
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 }
 
@@ -736,7 +737,8 @@ void MainWindow::updateSidebarColumnWidths() {
   // that uses the wider width.
   auto loadOrderSectionWidth =
       state.HasCurrentGame()
-          ? calculateSidebarLoadOrderSectionWidth(state.GetCurrentGame().Type())
+          ? calculateSidebarLoadOrderSectionWidth(
+                state.GetCurrentGame().GetSettings().Type())
           : calculateSidebarLoadOrderSectionWidth(GameType::tes5se);
 
   auto minimumSectionWidth = stateSectionWidth < loadOrderSectionWidth
@@ -1187,7 +1189,7 @@ void MainWindow::on_actionSettings_triggered() {
     auto themes = findThemes(state.getResourcesPath());
     auto currentGameFolder =
         state.HasCurrentGame()
-            ? std::optional(state.GetCurrentGame().FolderName())
+            ? std::optional(state.GetCurrentGame().GetSettings().FolderName())
             : std::nullopt;
 
     settingsDialog->initialiseInputs(state, themes, currentGameFolder);
@@ -1588,7 +1590,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
     auto folderName = gameComboBox->currentData().toString().toStdString();
     if (folderName.empty() ||
         (state.HasCurrentGame() &&
-         folderName == state.GetCurrentGame().FolderName())) {
+         folderName == state.GetCurrentGame().GetSettings().FolderName())) {
       return;
     }
 

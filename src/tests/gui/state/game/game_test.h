@@ -103,14 +103,8 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
-  EXPECT_EQ(GetParam(), game.Type());
-  EXPECT_EQ(settings.Name(), game.Name());
-  EXPECT_EQ(settings.FolderName(), game.FolderName());
-  EXPECT_EQ(settings.Master(), game.Master());
-  EXPECT_EQ(settings.RegistryKeys(), game.RegistryKeys());
-  EXPECT_EQ(settings.MasterlistSource(), game.MasterlistSource());
+  EXPECT_EQ(settings, game.GetSettings());
 
-  EXPECT_EQ(settings.GamePath(), game.GamePath());
   auto lootGamePath =
       lootDataPath / "games" / u8path(defaultGameSettings.FolderName());
   EXPECT_EQ(lootGamePath / "masterlist.yaml", game.MasterlistPath());
@@ -165,7 +159,8 @@ TEST_P(GameTest, initShouldNotCreateAGameFolderIfTheLootDataPathIsEmpty) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, "", "");
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
 
@@ -176,7 +171,8 @@ TEST_P(GameTest, initShouldCreateAGameFolderIfTheLootDataPathIsNotEmpty) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
 
@@ -188,7 +184,8 @@ TEST_P(GameTest, initShouldThrowIfTheLootGamePathExistsAndIsNotADirectory) {
   Game game(defaultGameSettings, lootDataPath, "");
 
   std::filesystem::create_directory(lootDataPath / "games");
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   std::ofstream out(lootGamePath);
   out << "";
   out.close();
@@ -202,13 +199,14 @@ TEST_P(GameTest, initShouldMoveTheLegacyGameFolderIfItExists) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.FolderName());
+  auto legacyGamePath = lootDataPath / u8path(game.GetSettings().FolderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
   out.close();
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
 
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
@@ -222,12 +220,13 @@ TEST_P(GameTest, initShouldNotMoveAFileWithTheSamePathAsTheLegacyGameFolder) {
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.FolderName());
+  auto legacyGamePath = lootDataPath / u8path(game.GetSettings().FolderName());
   std::ofstream out(legacyGamePath);
   out << "";
   out.close();
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
 
   ASSERT_FALSE(std::filesystem::exists(lootGamePath));
   EXPECT_NO_THROW(game.Init());
@@ -242,7 +241,7 @@ TEST_P(
   using std::filesystem::u8path;
   Game game(defaultGameSettings, lootDataPath, "");
 
-  auto legacyGamePath = lootDataPath / u8path(game.FolderName());
+  auto legacyGamePath = lootDataPath / u8path(game.GetSettings().FolderName());
   std::filesystem::create_directory(legacyGamePath);
   std::ofstream out(legacyGamePath / "file.txt");
   out << "";
@@ -254,7 +253,7 @@ TEST_P(
   ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
   EXPECT_NO_THROW(game.Init());
 
-  auto lootGamePath = lootGamesPath / u8path(game.FolderName());
+  auto lootGamePath = lootGamesPath / u8path(game.GetSettings().FolderName());
 
   EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
   EXPECT_TRUE(std::filesystem::exists(lootGamePath));
@@ -555,7 +554,7 @@ TEST_P(
     GameTest,
     checkInstallValidityShouldCheckThatAPluginHeaderVersionIsNotLessThanTheMinimum) {
   Game game = CreateInitialisedGame("");
-  game.SetMinimumHeaderVersion(5.1f);
+  game.GetSettings().SetMinimumHeaderVersion(5.1f);
   game.LoadAllInstalledPlugins(false);
 
   auto messages = game.CheckInstallValidity(
@@ -755,7 +754,8 @@ TEST_P(GameTest, setLoadOrderWithoutLoadedPluginsShouldIgnoreCurrentState) {
   Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
@@ -780,7 +780,8 @@ TEST_P(GameTest, setLoadOrderShouldCreateABackupOfTheCurrentLoadOrder) {
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
@@ -805,7 +806,8 @@ TEST_P(GameTest, setLoadOrderShouldRollOverExistingBackups) {
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));
@@ -840,7 +842,8 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
   Game game(defaultGameSettings, lootDataPath, "");
   game.Init();
 
-  auto lootGamePath = lootDataPath / "games" / u8path(game.FolderName());
+  auto lootGamePath =
+      lootDataPath / "games" / u8path(game.GetSettings().FolderName());
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile0));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile1));
   ASSERT_FALSE(std::filesystem::exists(lootGamePath / loadOrderBackupFile2));

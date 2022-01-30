@@ -56,11 +56,11 @@ public:
     std::vector<std::string> plugins = this->getGame().SortPlugins();
 
     try {
-      if (this->getGame().Type() == GameType::tes5 ||
-          this->getGame().Type() == GameType::tes5se ||
-          this->getGame().Type() == GameType::tes5vr ||
-          this->getGame().Type() == GameType::fo4 ||
-          this->getGame().Type() == GameType::fo4vr)
+      if (this->getGame().GetSettings().Type() == GameType::tes5 ||
+          this->getGame().GetSettings().Type() == GameType::tes5se ||
+          this->getGame().GetSettings().Type() == GameType::tes5vr ||
+          this->getGame().GetSettings().Type() == GameType::fo4 ||
+          this->getGame().GetSettings().Type() == GameType::fo4vr)
         applyUnchangedLoadOrder(plugins);
     } catch (...) {
       useSortingErrorMessage = true;

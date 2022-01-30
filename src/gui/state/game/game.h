@@ -37,7 +37,7 @@
 
 namespace loot {
 namespace gui {
-class Game : public GameSettings {
+class Game {
 public:
   Game(const GameSettings& gameSettings,
        const std::filesystem::path& lootDataPath,
@@ -49,7 +49,8 @@ public:
   Game& operator=(const Game& game);
   Game& operator=(Game&& game);
 
-  using GameSettings::Type;
+  const GameSettings& GetSettings() const;
+  GameSettings& GetSettings();
 
   void Init();
 
@@ -116,6 +117,7 @@ private:
   std::vector<std::string> GetInstalledPluginNames();
   void AppendMessages(std::vector<Message> messages);
 
+  GameSettings settings_;
   std::shared_ptr<GameInterface> gameHandle_;
   std::vector<Message> messages_;
   std::filesystem::path lootDataPath_;

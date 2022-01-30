@@ -82,7 +82,7 @@ void UpdateMasterlistTask::updatePrelude() {
 }
 
 void UpdateMasterlistTask::updateMasterlist() {
-  auto source = state.GetCurrentGame().MasterlistSource();
+  auto source = state.GetCurrentGame().GetSettings().MasterlistSource();
   if (!isValidUrl(source)) {
     // Treat the source as a local path, and copy the file from there.
     auto sourcePath = std::filesystem::u8path(source);
