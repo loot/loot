@@ -26,33 +26,29 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 #define LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 
-#include "gui/query/types/metadata_query.h"
+#include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
 namespace loot {
-template<typename G = gui::Game>
-class CancelSortQuery : public MetadataQuery<G> {
+class CancelSortQuery : public Query {
 public:
-  CancelSortQuery(G& game,
-                  UnappliedChangeCounter& counter,
-                  std::string language) :
-      MetadataQuery<G>(game, language), counter_(counter) {}
+  CancelSortQuery(gui::Game& game, UnappliedChangeCounter& counter) :
+      game_(game), counter_(counter) {}
 
   QueryResult executeLogic() override {
     counter_.DecrementUnappliedChangeCounter();
-    this->getGame().DecrementLoadOrderSortCount();
+    game_.DecrementLoadOrderSortCount();
 
-    std::vector<std::string> loadOrder = this->getGame().GetLoadOrder();
+    std::vector<std::string> loadOrder = game_.GetLoadOrder();
 
     std::vector<std::pair<std::string, std::optional<short>>> result;
     for (const auto& pluginName : loadOrder) {
-      auto plugin = this->getGame().GetPlugin(pluginName);
+      auto plugin = game_.GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
-      auto loadOrderIndex =
-          this->getGame().GetActiveLoadOrderIndex(plugin, loadOrder);
+      auto loadOrderIndex = game_.GetActiveLoadOrderIndex(plugin, loadOrder);
 
       result.push_back(std::make_pair(pluginName, loadOrderIndex));
     }
@@ -61,6 +57,7 @@ public:
   }
 
 private:
+  gui::Game& game_;
   UnappliedChangeCounter& counter_;
 };
 }

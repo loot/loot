@@ -29,7 +29,6 @@ along with LOOT.  If not, see
 #include "gui/query/types/get_game_data_query.h"
 
 namespace loot {
-template<typename G = gui::Game>
 class ChangeGameQuery : public Query {
 public:
   ChangeGameQuery(GamesManager& gamesManager,
@@ -45,7 +44,7 @@ public:
     gamesManager_.SetCurrentGame(gameFolder_);
     gamesManager_.GetCurrentGame().Init();
 
-    GetGameDataQuery<G> subQuery(
+    GetGameDataQuery subQuery(
         gamesManager_.GetCurrentGame(), language_, sendProgressUpdate_);
 
     return subQuery.executeLogic();

@@ -678,7 +678,7 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
     emit progressUpdater->progressUpdate(QString::fromStdString(message));
   };
 
-  std::unique_ptr<Query> query = std::make_unique<GetGameDataQuery<>>(
+  std::unique_ptr<Query> query = std::make_unique<GetGameDataQuery>(
       state.GetCurrentGame(), state.getLanguage(), sendProgressUpdate);
 
   auto handler = isOnLOOTStartup ? &MainWindow::handleStartupGameDataLoaded
@@ -799,11 +799,8 @@ void MainWindow::sortPlugins(bool isAutoSort) {
     emit progressUpdater->progressUpdate(QString::fromStdString(message));
   };
 
-  std::unique_ptr<Query> sortPluginsQuery =
-      std::make_unique<SortPluginsQuery<>>(state.GetCurrentGame(),
-                                           state,
-                                           state.getLanguage(),
-                                           sendProgressUpdate);
+  std::unique_ptr<Query> sortPluginsQuery = std::make_unique<SortPluginsQuery>(
+      state.GetCurrentGame(), state, state.getLanguage(), sendProgressUpdate);
 
   auto sortTask = new QueryTask(std::move(sortPluginsQuery));
 
@@ -1601,7 +1598,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
       emit progressUpdater->progressUpdate(QString::fromStdString(message));
     };
 
-    std::unique_ptr<Query> query = std::make_unique<ChangeGameQuery<>>(
+    std::unique_ptr<Query> query = std::make_unique<ChangeGameQuery>(
         state, state.getLanguage(), folderName, sendProgressUpdate);
 
     executeBackgroundQuery(
@@ -1637,8 +1634,7 @@ void MainWindow::on_actionApplySort_triggered() {
 
 void MainWindow::on_actionDiscardSort_triggered() {
   try {
-    auto query =
-        CancelSortQuery(state.GetCurrentGame(), state, state.getLanguage());
+    auto query = CancelSortQuery(state.GetCurrentGame(), state);
 
     auto result = query.executeLogic();
 
@@ -1828,11 +1824,8 @@ void MainWindow::on_filtersWidget_conflictsFilterChanged(
 
     handleProgressUpdate(translate("Identifying conflicting plugins..."));
 
-    std::unique_ptr<Query> query =
-        std::make_unique<GetConflictingPluginsQuery<>>(
-            state.GetCurrentGame(),
-            state.getLanguage(),
-            targetPluginName.value());
+    std::unique_ptr<Query> query = std::make_unique<GetConflictingPluginsQuery>(
+        state.GetCurrentGame(), state.getLanguage(), targetPluginName.value());
 
     executeBackgroundQuery(
         std::move(query), &MainWindow::handleConflictsChecked, nullptr);

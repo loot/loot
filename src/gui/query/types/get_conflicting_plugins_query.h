@@ -26,17 +26,16 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 #define LOOT_GUI_QUERY_GET_CONFLICTING_PLUGINS_QUERY
 
-#include "gui/query/types/metadata_query.h"
+#include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
 namespace loot {
-template<typename G = gui::Game>
-class GetConflictingPluginsQuery : public MetadataQuery<G> {
+class GetConflictingPluginsQuery : public Query {
 public:
-  GetConflictingPluginsQuery(G& game,
+  GetConflictingPluginsQuery(gui::Game& game,
                              std::string language,
                              std::string pluginName) :
-      MetadataQuery<G>(game, language), pluginName_(pluginName) {}
+      game_(game), language_(language), pluginName_(pluginName) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -47,8 +46,8 @@ public:
     // Checking for FormID overlap will only work if the plugins have been
     // loaded, so check if the plugins have been fully loaded, and if not load
     // all plugins.
-    if (!this->getGame().ArePluginsFullyLoaded())
-      this->getGame().LoadAllInstalledPlugins(false);
+    if (!game_.ArePluginsFullyLoaded())
+      game_.LoadAllInstalledPlugins(false);
 
     return getResult();
   }
@@ -57,14 +56,14 @@ private:
   std::vector<std::pair<PluginItem, bool>> getResult() {
     std::vector<std::pair<PluginItem, bool>> result;
 
-    auto plugin = this->getGame().GetPlugin(pluginName_);
+    auto plugin = game_.GetPlugin(pluginName_);
     if (!plugin) {
       throw std::runtime_error("The plugin \"" + pluginName_ +
                                "\" is not loaded.");
     }
 
-    for (const auto& otherPlugin : this->getGame().GetPluginsInLoadOrder()) {
-      auto metadata = this->generateDerivedMetadata(otherPlugin);
+    for (const auto& otherPlugin : game_.GetPluginsInLoadOrder()) {
+      auto metadata = PluginItem(otherPlugin, game_, language_);
       auto conflict = doPluginsConflict(plugin, otherPlugin);
 
       result.push_back(std::make_pair(metadata, conflict));
@@ -83,6 +82,8 @@ private:
     }
   }
 
+  gui::Game& game_;
+  std::string language_;
   const std::string pluginName_;
 };
 }
