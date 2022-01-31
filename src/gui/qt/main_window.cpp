@@ -1107,18 +1107,14 @@ void MainWindow::handleException(const std::exception& exception) {
   handleError(message);
 }
 
-void MainWindow::handleQueryException(const Query* query,
+void MainWindow::handleQueryException(const Query& query,
                                       const std::exception& exception) {
-  if (query == nullptr) {
-    handleException(exception);
-  } else {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Caught an exception: {}", exception.what());
-    }
-
-    handleError(query->getErrorMessage());
+  auto logger = getLogger();
+  if (logger) {
+    logger->error("Caught an exception: {}", exception.what());
   }
+
+  handleError(query.getErrorMessage());
 }
 
 void MainWindow::handleGameDataLoaded(QueryResult result) {
@@ -1642,18 +1638,21 @@ void MainWindow::on_actionSort_triggered() {
 }
 
 void MainWindow::on_actionApplySort_triggered() {
-  std::unique_ptr<Query> query;
   try {
     auto sortedPluginNames = pluginItemModel->getPluginNames();
 
-    query = std::make_unique<ApplySortQuery<>>(
-        state.GetCurrentGame(), state, sortedPluginNames);
+    auto query =
+        ApplySortQuery<>(state.GetCurrentGame(), state, sortedPluginNames);
 
-    query->executeLogic();
+    try {
+      query.executeLogic();
 
-    exitSortingState();
+      exitSortingState();
+    } catch (std::exception& e) {
+      handleQueryException(query, e);
+    }
   } catch (std::exception& e) {
-    handleQueryException(query.get(), e);
+    handleException(e);
   }
 }
 
