@@ -131,7 +131,7 @@ void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
   QLineF line(startPos, endPos);
 
-  if (qFuzzyCompare(line.length(), qreal(0.0))) {
+  if (qFuzzyCompare(line.length(), qreal{0.0})) {
     return QPolygonF();
   }
 

@@ -128,7 +128,7 @@ bool Node::isRootNode() const {
 QRectF Node::boundingRect() const {
   auto textRect = textItem->boundingRect();
 
-  auto width = std::max(double(DIAMETER), textRect.width());
+  auto width = std::max(double{DIAMETER}, textRect.width());
   auto height = RADIUS + TEXT_Y_POS + textRect.height();
   auto leftPos = -1 * width / 2;
 
