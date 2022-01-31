@@ -63,7 +63,7 @@ private:
       return;
     }
 
-    auto isActive = game_.IsPluginActive(pluginName);
+    const auto isActive = game_.IsPluginActive(pluginName);
 
     if (isActive && plugin->IsLightPlugin()) {
       stream << "254 FE " << std::setw(3) << std::hex

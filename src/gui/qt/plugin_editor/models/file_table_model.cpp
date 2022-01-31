@@ -132,7 +132,7 @@ bool FileTableModel::dropMimeData(const QMimeData* data,
 
   insertRows(rowCount(), 1);
 
-  auto newIndex = index(rowCount() - 1, NAME_COLUMN);
+  const auto newIndex = index(rowCount() - 1, NAME_COLUMN);
   auto filename = data->data("text/plain").toStdString();
 
   MetadataTableModel::setData(

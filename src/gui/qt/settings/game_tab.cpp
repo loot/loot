@@ -63,7 +63,7 @@ GameSettings GameTab::getGameSettings() const {
   auto name = nameInput->text().toStdString();
   auto lootFolder = lootFolderInput->text().toStdString();
   auto masterFile = masterFileInput->text().toStdString();
-  float minimumHeaderVersion =
+  const float minimumHeaderVersion =
       static_cast<float>(minimumHeaderVersionSpinBox->value());
   auto masterlistSource = masterlistSourceInput->text().toStdString();
   auto installPath =

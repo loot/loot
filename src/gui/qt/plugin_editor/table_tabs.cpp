@@ -46,9 +46,9 @@ int calculateItemWidth(const QString& text) {
                        .size(Qt::TextSingleLine, text)
                        .width();
 
-  auto leftPadding =
+  const auto leftPadding =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
-  auto rightPadding =
+  const auto rightPadding =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
   return static_cast<int>(textWidth) + leftPadding + rightPadding;
@@ -69,7 +69,7 @@ int calculateMaxHeaderWidth(const QAbstractItemModel* model,
 }
 
 int calculateMaxDropdownRowWidth(const QString& text, int currentMaxRowWidth) {
-  auto rowWidth = calculateItemWidth(text);
+  const auto rowWidth = calculateItemWidth(text);
 
   return rowWidth > currentMaxRowWidth ? rowWidth : currentMaxRowWidth;
 }
@@ -89,7 +89,7 @@ int calculateMinimumColumnWidth(QAbstractItemModel* model,
                                 const std::map<std::string, QVariant>& values) {
   // Set the minimum column width longest text (plus padding) in the column.
   // First check the header width.
-  auto maxHeaderWidth = calculateMaxHeaderWidth(model, column, 0);
+  const auto maxHeaderWidth = calculateMaxHeaderWidth(model, column, 0);
   auto maxColumnWidth = maxHeaderWidth;
 
   // The values contain strings that appear in a combo box dropdown menu, check
@@ -203,7 +203,7 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
     }
   }
 
-  auto tableWidth = tableView->width();
+  const auto tableWidth = tableView->width();
 
   // Some header sections are fixed width, we don't want to resize them,
   // so exclude them from the headers width scaling factor calculation.
@@ -220,10 +220,10 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
     return;
   }
 
-  auto scalingFactor = double(tableWidth) / headersWidth;
+  const auto scalingFactor = double(tableWidth) / headersWidth;
 
   for (auto i = 0; i < header->count(); i += 1) {
-    int newColumnWidth =
+    const int newColumnWidth =
         static_cast<int>(tableView->columnWidth(i) * scalingFactor);
     if (header->sectionResizeMode(i) != QHeaderView::Fixed) {
       tableView->setColumnWidth(i, newColumnWidth);
@@ -233,7 +233,7 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
   // If the headers are now wider than the table view (e.g. due to rounding
   // errors), reduce the width of the final visible header to fit.
   // Add a fudge factor of 2 to account for border widths.
-  auto excess = header->length() + 2 - tableView->width();
+  const auto excess = header->length() + 2 - tableView->width();
   if (excess > 0) {
     auto index = header->count() - 1;
     while (index >= 0 &&
@@ -312,7 +312,7 @@ void BaseTableTab::onSelectionModelSelectionChanged() {
 
   auto model = tableView->model();
   for (const auto& index : selectedIndexes) {
-    auto flags = model->flags(index);
+    const auto flags = model->flags(index);
 
     if (flags.testFlag(Qt::ItemIsEditable)) {
       deleteRowButton->setEnabled(true);

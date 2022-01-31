@@ -252,7 +252,7 @@ void PluginEditorWidget::handleTableRowCountChanged(bool hasUserMetadata) {
   auto tableTab = qobject_cast<QWidget *>(sender());
 
   // tabWidget is null for the message content dialog.
-  auto tabIndex = tabs->indexOf(tableTab);
+  const auto tabIndex = tabs->indexOf(tableTab);
 
   if (hasUserMetadata) {
     tabs->setTabIcon(tabIndex, IconFactory::getHasUserMetadataIcon());

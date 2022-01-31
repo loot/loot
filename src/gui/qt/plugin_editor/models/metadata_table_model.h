@@ -119,7 +119,7 @@ public:
 
     beginInsertRows(parent, row, row + count - 1);
 
-    auto index = row - nonUserMetadata.size();
+    const auto index = row - nonUserMetadata.size();
 
     userMetadata.insert(userMetadata.begin() + index, count, T());
 
@@ -138,8 +138,8 @@ public:
 
     beginRemoveRows(parent, row, row + count - 1);
 
-    auto startIndex = row - nonUserMetadata.size();
-    auto endIndex = startIndex + count;
+    const auto startIndex = row - nonUserMetadata.size();
+    const auto endIndex = startIndex + count;
 
     userMetadata.erase(userMetadata.begin() + startIndex,
                        userMetadata.begin() + endIndex);

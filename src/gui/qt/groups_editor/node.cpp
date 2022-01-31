@@ -126,10 +126,10 @@ bool Node::isRootNode() const {
 }
 
 QRectF Node::boundingRect() const {
-  auto textRect = textItem->boundingRect();
+  const auto textRect = textItem->boundingRect();
 
   auto width = std::max(double{DIAMETER}, textRect.width());
-  auto height = RADIUS + TEXT_Y_POS + textRect.height();
+  const auto height = RADIUS + TEXT_Y_POS + textRect.height();
   auto leftPos = -1 * width / 2;
 
   return QRectF(leftPos, -RADIUS, width, height);
@@ -139,10 +139,10 @@ QPainterPath Node::shape() const {
   QPainterPath path;
   path.addEllipse(-RADIUS, -RADIUS, DIAMETER, DIAMETER);
 
-  auto textRect = textItem->boundingRect();
-  auto width = textRect.width();
-  auto height = textRect.height();
-  auto leftPos = -1 * width / 2;
+  const auto textRect = textItem->boundingRect();
+  const auto width = textRect.width();
+  const auto height = textRect.height();
+  const auto leftPos = -1 * width / 2;
 
   path.addRect(QRectF(leftPos, TEXT_Y_POS, width, height));
 
@@ -232,7 +232,7 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   // click.
   setFlag(ItemIsMovable);
 
-  auto mousePos = event->scenePos();
+  const auto mousePos = event->scenePos();
   auto itemsUnderMouse = scene()->items(mousePos);
 
   auto logger = getLogger();
@@ -275,7 +275,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (drawEdgeToCursor) {
     removeEdgeToCursor();
 
-    auto color = getDefaultColor(true);
+    const auto color = getDefaultColor(true);
     auto pen =
         QPen(color, LINE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     auto polygon = createLineWithArrow(scenePos(), event->scenePos());
@@ -325,7 +325,7 @@ void Node::removeEdgeToCursor() {
 }
 
 void Node::updateTextPos() {
-  auto textWidth = textItem->boundingRect().width();
+  const auto textWidth = textItem->boundingRect().width();
   textItem->setPos(x() - textWidth / 2, y() + TEXT_Y_POS);
 }
 }

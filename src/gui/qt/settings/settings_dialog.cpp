@@ -168,7 +168,7 @@ void SettingsDialog::on_dialogButtons_rejected() { reject(); }
 void SettingsDialog::on_addGameButton_clicked() {
   auto newGameDialog = new NewGameDialog(this, getGameFolderNames());
 
-  auto result = newGameDialog->exec();
+  const auto result = newGameDialog->exec();
 
   if (result != QDialog::DialogCode::Accepted) {
     return;
@@ -190,7 +190,7 @@ void SettingsDialog::on_addGameButton_clicked() {
 
 void SettingsDialog::onGameSettingsDeleted() {
   auto gameTab = qobject_cast<QWidget*>(sender());
-  auto index = stackedWidget->indexOf(gameTab);
+  const auto index = stackedWidget->indexOf(gameTab);
 
   if (index > -1) {
     removeTab(index);

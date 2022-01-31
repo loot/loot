@@ -69,11 +69,11 @@ void PluginItemFilterModel::setSearchResults(QModelIndexList results) {
   }
 
   for (int row = 1; row < rowCount(); row += 1) {
-    auto index = this->index(row, PluginItemModel::CARDS_COLUMN);
-    auto isNewResult = resultRows.find(row) != resultRows.end();
+    const auto index = this->index(row, PluginItemModel::CARDS_COLUMN);
+    const auto isNewResult = resultRows.find(row) != resultRows.end();
 
     // When setting new search results, there is no initial current result.
-    SearchResultData newValue(isNewResult, false);
+    const SearchResultData newValue(isNewResult, false);
     setData(index, QVariant::fromValue(newValue), SearchResultRole);
   }
 }
@@ -88,7 +88,7 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return true;
   }
 
-  auto sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+  const auto sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
 
   auto item = sourceIndex.data(RawDataRole).value<PluginItem>();
   auto contentFilters =
@@ -115,7 +115,7 @@ bool PluginItemFilterModel::filterAcceptsRow(
   }
 
   if (filterState.conflictsPluginName.has_value()) {
-    auto hasConflict =
+    const auto hasConflict =
         std::any_of(conflictingPluginNames.begin(),
                     conflictingPluginNames.end(),
                     [&](const auto& name) { return name == item.name; });

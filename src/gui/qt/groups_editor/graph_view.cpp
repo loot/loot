@@ -161,13 +161,13 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
 
   for (const auto &group : masterlistGroups) {
     auto name = group.GetName();
-    auto containsInstalledPlugins = installedPluginGroups.count(name) > 0;
+    const auto containsInstalledPlugins = installedPluginGroups.count(name) > 0;
     insertNode(this, groupNameNodeMap, name, false, containsInstalledPlugins);
   }
 
   for (const auto &group : userGroups) {
     auto name = group.GetName();
-    auto containsInstalledPlugins = installedPluginGroups.count(name) > 0;
+    const auto containsInstalledPlugins = installedPluginGroups.count(name) > 0;
     insertNode(this, groupNameNodeMap, name, true, containsInstalledPlugins);
   }
 
@@ -177,9 +177,9 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
   for (const auto &group : masterlistGroups) {
     for (const auto &groupName : group.GetAfterGroups()) {
       auto node = groupNameNodeMap.at(group.GetName());
-      auto containsInstalledPlugins =
+      const auto containsInstalledPlugins =
           installedPluginGroups.count(groupName) > 0;
-      auto it = insertNode(
+      const auto it = insertNode(
           this, groupNameNodeMap, groupName, true, containsInstalledPlugins);
 
       auto edge = new Edge(it->second, node, false);
@@ -190,9 +190,9 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
   for (const auto &group : userGroups) {
     for (const auto &groupName : group.GetAfterGroups()) {
       auto node = groupNameNodeMap.at(group.GetName());
-      auto containsInstalledPlugins =
+      const auto containsInstalledPlugins =
           installedPluginGroups.count(groupName) > 0;
-      auto it = insertNode(
+      const auto it = insertNode(
           this, groupNameNodeMap, groupName, true, containsInstalledPlugins);
 
       auto edge = new Edge(it->second, node, true);
@@ -264,15 +264,15 @@ void GraphView::wheelEvent(QWheelEvent *event) {
   static constexpr double MINIMUM_SCALE = 0.07;
   static constexpr double MAXIMUM_SCALE = 100;
 
-  auto mouseWheelRotationAngle =
+  const auto mouseWheelRotationAngle =
       event->angleDelta().y() / ROTATION_SCALING_FACTOR;
 
-  auto scaleFactor = pow(BASE_SCALE_FACTOR, -mouseWheelRotationAngle);
+  const auto scaleFactor = pow(BASE_SCALE_FACTOR, -mouseWheelRotationAngle);
 
-  auto factor = transform()
-                    .scale(scaleFactor, scaleFactor)
-                    .mapRect(QRectF(0, 0, 1, 1))
-                    .width();
+  const auto factor = transform()
+                          .scale(scaleFactor, scaleFactor)
+                          .mapRect(QRectF(0, 0, 1, 1))
+                          .width();
 
   if (factor < MINIMUM_SCALE || factor > MAXIMUM_SCALE) {
     // Don't allow infinite zoom in or out.
@@ -321,7 +321,7 @@ void GraphView::doLayout() {
   std::map<Node *, size_t> nodeLevelOffsets;
   std::map<int, size_t> levelNodeCounts;
 
-  auto setNodePosition = [&](Node *node, int depth) {
+  const auto setNodePosition = [&](Node *node, int depth) {
     if (nodeLevels.count(node) != 0) {
       // Don't set a position if it's already got one.
       return;

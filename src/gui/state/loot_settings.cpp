@@ -405,7 +405,8 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     game.SetMaster(*master);
   }
 
-  auto minimumHeaderVersion = table->get_as<double>("minimumHeaderVersion");
+  const auto minimumHeaderVersion =
+      table->get_as<double>("minimumHeaderVersion");
   if (minimumHeaderVersion) {
     game.SetMinimumHeaderVersion((float)*minimumHeaderVersion);
   }
@@ -623,7 +624,7 @@ void LootSettings::load(const std::filesystem::path& file,
     throw cpptoml::parse_exception(file.u8string() +
                                    " could not be opened for parsing");
 
-  auto settings = cpptoml::parser(in).parse();
+  const auto settings = cpptoml::parser(in).parse();
 
   enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
                             .value_or(enableDebugLogging_);
@@ -638,7 +639,7 @@ void LootSettings::load(const std::filesystem::path& file,
   lastVersion_ =
       settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
 
-  auto preludeSource = settings->get_as<std::string>("preludeSource");
+  const auto preludeSource = settings->get_as<std::string>("preludeSource");
   if (preludeSource) {
     preludeSource_ = *preludeSource;
   } else {
@@ -650,11 +651,12 @@ void LootSettings::load(const std::filesystem::path& file,
     }
   }
 
-  auto windowTop = settings->get_qualified_as<long>("window.top");
-  auto windowBottom = settings->get_qualified_as<long>("window.bottom");
-  auto windowLeft = settings->get_qualified_as<long>("window.left");
-  auto windowRight = settings->get_qualified_as<long>("window.right");
-  auto windowMaximised = settings->get_qualified_as<bool>("window.maximised");
+  const auto windowTop = settings->get_qualified_as<long>("window.top");
+  const auto windowBottom = settings->get_qualified_as<long>("window.bottom");
+  const auto windowLeft = settings->get_qualified_as<long>("window.left");
+  const auto windowRight = settings->get_qualified_as<long>("window.right");
+  const auto windowMaximised =
+      settings->get_qualified_as<bool>("window.maximised");
   if (windowTop && windowBottom && windowLeft && windowRight &&
       windowMaximised) {
     WindowPosition windowPosition;
@@ -666,7 +668,7 @@ void LootSettings::load(const std::filesystem::path& file,
     windowPosition_ = windowPosition;
   }
 
-  auto games = settings->get_table_array("games");
+  const auto games = settings->get_table_array("games");
   if (games) {
     auto logger = getLogger();
     gameSettings_.clear();
@@ -674,7 +676,7 @@ void LootSettings::load(const std::filesystem::path& file,
     for (const auto& game : *games) {
       try {
         gameSettings_.push_back(convert(game, lootDataPath));
-      } catch (std::exception& e) {
+      } catch (const std::exception& e) {
         // Skip invalid games.
         if (logger) {
           logger->error("Failed to load config in [[games]] table: {}",
@@ -686,7 +688,7 @@ void LootSettings::load(const std::filesystem::path& file,
     appendBaseGames();
   }
 
-  auto filters = settings->get_table("filters");
+  const auto filters = settings->get_table("filters");
   if (filters) {
     filters_.hideVersionNumbers = filters->get_as<bool>("hideVersionNumbers")
                                       .value_or(filters_.hideVersionNumbers);
@@ -706,7 +708,7 @@ void LootSettings::load(const std::filesystem::path& file,
             .value_or(filters_.hideMessagelessPlugins);
   }
 
-  auto languages = settings->get_table_array("languages");
+  const auto languages = settings->get_table_array("languages");
   if (languages) {
     languages_.clear();
     for (const auto& language : *languages) {

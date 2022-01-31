@@ -223,7 +223,7 @@ std::vector<Message> Game::CheckInstallValidity(
   }
   std::vector<Message> messages;
   if (IsPluginActive(plugin->GetName())) {
-    auto fileExists = [&](const std::string& file) {
+    const auto fileExists = [&](const std::string& file) {
       return std::filesystem::exists(settings_.DataPath() / u8path(file)) ||
              (hasPluginFileExtension(file) &&
               std::filesystem::exists(settings_.DataPath() /
@@ -231,7 +231,7 @@ std::vector<Message> Game::CheckInstallValidity(
     };
 
     auto tags = metadata.GetTags();
-    auto hasFilterTag =
+    const auto hasFilterTag =
         std::any_of(tags.cbegin(), tags.cend(), [&](const Tag& tag) {
           return tag.GetName() == "Filter";
         });
@@ -414,7 +414,7 @@ std::vector<Message> Game::CheckInstallValidity(
   if (metadata.GetGroup().has_value()) {
     auto groupName = metadata.GetGroup().value();
     auto groups = gameHandle_->GetDatabase()->GetGroups();
-    auto groupIsUndefined =
+    const auto groupIsUndefined =
         std::none_of(groups.cbegin(), groups.cend(), [&](const Group& group) {
           return group.GetName() == groupName;
         });
@@ -465,7 +465,7 @@ void Game::RedatePlugins() {
         }
       }
 
-      auto thisTime = fs::last_write_time(filepath);
+      const auto thisTime = fs::last_write_time(filepath);
       if (thisTime >= lastTime) {
         lastTime = thisTime;
 
@@ -489,7 +489,7 @@ void Game::RedatePlugins() {
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
   try {
     gameHandle_->LoadCurrentLoadOrderState();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Failed to load current load order. Details: {}", e.what());
@@ -575,7 +575,7 @@ std::vector<std::string> Game::SortPlugins() {
 
   try {
     gameHandle_->LoadCurrentLoadOrderState();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Failed to load current load order. Details: {}", e.what());
     }
@@ -622,7 +622,7 @@ std::vector<std::string> Game::SortPlugins() {
                                     e.GetGroupName())
                                        .str()));
     sortedPlugins.clear();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
@@ -735,7 +735,7 @@ void Game::LoadMetadata() {
   try {
     gameHandle_->GetDatabase()->LoadLists(
         masterlistPath, userlistPath, masterlistPreludePath);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("An error occurred while parsing the metadata list(s): {}",
                     e.what());

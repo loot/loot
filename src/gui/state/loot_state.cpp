@@ -125,7 +125,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (!fs::exists(LootPaths::getLootDataPath())) {
     try {
       fs::create_directory(LootPaths::getLootDataPath());
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
@@ -145,7 +145,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
     try {
       settings_.load(LootPaths::getSettingsPath(),
                      LootPaths::getLootDataPath());
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
@@ -200,7 +200,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
         initMessages_.push_back(
             PlainTextSimpleMessage(MessageType::warn, warning));
       }
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
@@ -218,7 +218,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (!fs::exists(preludeDir)) {
     try {
       fs::create_directory(preludeDir);
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(translate(
@@ -245,7 +245,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
       logger->debug("Game selected is {}",
                     GetCurrentGame().GetSettings().Name());
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Initial game could not be selected: {}", e.what());
     }
@@ -267,7 +267,7 @@ void LootState::initCurrentGame() {
       logger->debug("Game named {} has been initialsed",
                     GetCurrentGame().GetSettings().Name());
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());

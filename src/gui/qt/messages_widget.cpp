@@ -71,10 +71,13 @@ QLabel* createBulletPointLabel() {
   label->setTextFormat(Qt::TextFormat::PlainText);
   label->setText(QString(u8"\u2022"));
 
-  auto leftMargin = label->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
-  auto topMargin = label->style()->pixelMetric(QStyle::PM_LayoutTopMargin);
-  auto rightMargin = label->style()->pixelMetric(QStyle::PM_LayoutRightMargin);
-  auto bottomMargin =
+  const auto leftMargin =
+      label->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
+  const auto topMargin =
+      label->style()->pixelMetric(QStyle::PM_LayoutTopMargin);
+  const auto rightMargin =
+      label->style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+  const auto bottomMargin =
       label->style()->pixelMetric(QStyle::PM_LayoutBottomMargin);
 
   label->setContentsMargins(leftMargin, topMargin, rightMargin, bottomMargin);
@@ -89,10 +92,13 @@ QLabel* createMessageLabel() {
   label->setWordWrap(true);
   label->setOpenExternalLinks(true);
 
-  auto leftMargin = label->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
-  auto topMargin = label->style()->pixelMetric(QStyle::PM_LayoutTopMargin);
-  auto rightMargin = label->style()->pixelMetric(QStyle::PM_LayoutRightMargin);
-  auto bottomMargin =
+  const auto leftMargin =
+      label->style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
+  const auto topMargin =
+      label->style()->pixelMetric(QStyle::PM_LayoutTopMargin);
+  const auto rightMargin =
+      label->style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+  const auto bottomMargin =
       label->style()->pixelMetric(QStyle::PM_LayoutBottomMargin);
 
   label->setContentsMargins(leftMargin, topMargin, rightMargin, bottomMargin);
@@ -140,7 +146,7 @@ bool MessagesWidget::willChangeContent(
     auto label = qobject_cast<QLabel*>(layout()->itemAt(i)->widget());
     auto messageType = label->property(MESSAGE_TYPE_PROPERTY);
 
-    auto markdownTextIndex = (i - 1) / 2;
+    const auto markdownTextIndex = (i - 1) / 2;
     auto text = markdownTexts.at(markdownTextIndex);
 
     currentMessages.push_back(std::make_pair(messageType, text));
@@ -167,7 +173,7 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
 
   // Delete any extra QLabels.
   QLayoutItem* child = nullptr;
-  auto pastTheEndIndex = static_cast<int>(messages.size() * COLUMN_COUNT);
+  const auto pastTheEndIndex = static_cast<int>(messages.size() * COLUMN_COUNT);
   auto itemRemoved = false;
   while ((child = layout()->takeAt(pastTheEndIndex)) != nullptr) {
     delete child->widget();
@@ -187,7 +193,7 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
     auto bulletPointLabel = createBulletPointLabel();
     auto messageLabel = createMessageLabel();
 
-    auto row = gridLayout->count() / COLUMN_COUNT;
+    const auto row = gridLayout->count() / COLUMN_COUNT;
     gridLayout->addWidget(bulletPointLabel,
                           row,
                           BULLET_POINT_COLUMN,
@@ -199,7 +205,7 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
 
   // Now update the QLabels.
   for (size_t i = 0; i < messages.size(); i += 1) {
-    auto position = static_cast<int>(i);
+    const auto position = static_cast<int>(i);
     auto label = qobject_cast<QLabel*>(
         gridLayout->itemAtPosition(position, MESSAGE_LABEL_COLUMN)->widget());
     updateMessageLabel(label, messages.at(i));

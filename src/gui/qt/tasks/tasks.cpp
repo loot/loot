@@ -36,7 +36,7 @@ void QueryTask::execute() {
     }
 
     emit finished(query->executeLogic());
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Exception while executing query: {}", e.what());

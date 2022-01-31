@@ -298,7 +298,7 @@ std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
       }
     }
 #endif
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Error while checking if game \"{}\" is installed: {}",
                     name_,

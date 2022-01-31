@@ -49,7 +49,7 @@ QVariant MessageContentTableModel::data(const MessageContent& element,
   switch (column) {
     case LANGUAGE_COLUMN: {
       if (role == Qt::DisplayRole) {
-        auto it = languageLocaleNameMap.find(element.GetLanguage());
+        const auto it = languageLocaleNameMap.find(element.GetLanguage());
         if (it != languageLocaleNameMap.end()) {
           return it->second;
         }

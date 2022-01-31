@@ -39,7 +39,7 @@ void UpdateMasterlistTask::execute() {
     }
 
     updatePrelude();
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     emit this->error(e.what());
   }
 }
@@ -157,7 +157,7 @@ void UpdateMasterlistTask::onMasterlistReplyFinished() {
         updateFileWithData(masterlistPath, responseData.value());
 
     finish();
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     emit this->error(e.what());
   }
 }
@@ -182,7 +182,7 @@ void UpdateMasterlistTask::onPreludeReplyFinished() {
 
     // Now update the masterlist.
     updateMasterlist();
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     emit this->error(e.what());
   }
 }
@@ -205,7 +205,7 @@ void UpdateMasterlistTask::onNetworkError(
     }
 
     emit this->error(errorString);
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     emit this->error(e.what());
   }
 }
@@ -231,7 +231,7 @@ void UpdateMasterlistTask::onSSLError(const QList<QSslError> &errors) {
     }
 
     emit error(errorStrings);
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     emit error(e.what());
   }
 }

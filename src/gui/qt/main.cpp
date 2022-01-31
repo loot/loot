@@ -118,10 +118,10 @@ int main(int argc, char* argv[]) {
 
   loot::MainWindow mainWindow(state);
 
-  auto wasMaximised = state.getSettings()
-                          .getWindowPosition()
-                          .value_or(loot::LootSettings::WindowPosition())
-                          .maximised;
+  const auto wasMaximised = state.getSettings()
+                                .getWindowPosition()
+                                .value_or(loot::LootSettings::WindowPosition())
+                                .maximised;
 
   if (wasMaximised) {
     mainWindow.showMaximized();

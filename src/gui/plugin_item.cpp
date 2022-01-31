@@ -40,7 +40,7 @@ std::optional<PluginMetadata> evaluateMasterlistMetadata(
     const std::string& pluginName) {
   try {
     return game.GetMasterlistMetadata(pluginName, true);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error(
@@ -69,7 +69,7 @@ std::optional<PluginMetadata> evaluateUserlistMetadata(
     const std::string& pluginName) {
   try {
     return game.GetUserMetadata(pluginName, true);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error(

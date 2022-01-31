@@ -150,8 +150,8 @@ void PluginCard::setContent(const PluginItem& plugin,
   auto addTagsText = getTagsText(plugin.addTags, filters.hideBashTags);
   auto removeTagsText = getTagsText(plugin.removeTags, filters.hideBashTags);
 
-  auto showBashTags = !currentTagsText.isEmpty() || !addTagsText.isEmpty() ||
-                      !removeTagsText.isEmpty();
+  const auto showBashTags = !currentTagsText.isEmpty() ||
+                            !addTagsText.isEmpty() || !removeTagsText.isEmpty();
 
   if (showBashTags) {
     currentTagsLabel->setText(currentTagsText);
@@ -337,7 +337,7 @@ void PluginCardDelegate::paint(QPainter* painter,
     widget = setPluginCardContent(pluginCard, index);
   }
 
-  auto sizeHint = calculateSize(widget, styleOption);
+  const auto sizeHint = calculateSize(widget, styleOption);
 
   widget->setFixedSize(sizeHint);
 
@@ -469,13 +469,13 @@ PluginCard* PluginCardDelegate::setPluginCardContent(PluginCard* card,
 
 QSize PluginCardDelegate::calculateSize(const QWidget* widget,
                                         const QStyleOptionViewItem& option) {
-  auto minLayoutWidth = widget->layout()->minimumSize().width();
-  auto rectWidth = option.rect.width();
+  const auto minLayoutWidth = widget->layout()->minimumSize().width();
+  const auto rectWidth = option.rect.width();
 
-  auto width = rectWidth > minLayoutWidth ? rectWidth : minLayoutWidth;
-  auto height = widget->hasHeightForWidth()
-                    ? widget->layout()->minimumHeightForWidth(width)
-                    : widget->minimumHeight();
+  const auto width = rectWidth > minLayoutWidth ? rectWidth : minLayoutWidth;
+  const auto height = widget->hasHeightForWidth()
+                          ? widget->layout()->minimumHeightForWidth(width)
+                          : widget->minimumHeight();
 
   return QSize(width, height);
 }

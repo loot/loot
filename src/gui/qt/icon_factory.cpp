@@ -138,12 +138,13 @@ QPixmap IconFactory::getPixmap(const QIcon& icon,
                                QIcon::State state) {
   // Take the device pixel ratio into account when reading or writing the cache
   // as it may change while the application is running.
-  auto pixelRatio = dynamic_cast<QGuiApplication*>(QCoreApplication::instance())
-                        ->devicePixelRatio();
+  const auto pixelRatio =
+      dynamic_cast<QGuiApplication*>(QCoreApplication::instance())
+          ->devicePixelRatio();
   auto scaledSize = extent * pixelRatio;
   auto key = std::make_tuple(icon.cacheKey(), scaledSize, mode, state);
 
-  auto it = pixmaps.find(key);
+  const auto it = pixmaps.find(key);
   if (it != pixmaps.end()) {
     return it->second;
   }
@@ -161,7 +162,7 @@ std::map<std::tuple<qint64, double, QIcon::Mode, QIcon::State>, QPixmap>
     IconFactory::pixmaps;
 
 QIcon IconFactory::getIcon(QString resourcePath) {
-  auto it = icons.find(resourcePath);
+  const auto it = icons.find(resourcePath);
   if (it != icons.end()) {
     return it->second;
   }
