@@ -220,7 +220,7 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
     return;
   }
 
-  const auto scalingFactor = double(tableWidth) / headersWidth;
+  const auto scalingFactor = static_cast<double>(tableWidth) / headersWidth;
 
   for (auto i = 0; i < header->count(); i += 1) {
     const int newColumnWidth =
