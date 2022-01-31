@@ -32,9 +32,9 @@
 
 namespace loot {
 static constexpr const char* MESSAGE_TYPE_PROPERTY = "messageType";
-static const int COLUMN_COUNT = 2;
-static const int BULLET_POINT_COLUMN = 0;
-static const int MESSAGE_LABEL_COLUMN = 1;
+static constexpr int COLUMN_COUNT = 2;
+static constexpr int BULLET_POINT_COLUMN = 0;
+static constexpr int MESSAGE_LABEL_COLUMN = 1;
 
 QString getPropertyValue(MessageType messageType) {
   switch (messageType) {
