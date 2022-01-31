@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 
   if (loot::IsApplicationMutexLocked()) {
     // An instance of LOOT is already running, so focus its window then quit.
-    HWND hWnd = ::FindWindow(NULL, L"LOOT");
+    HWND hWnd = ::FindWindow(nullptr, L"LOOT");
     ::SetForegroundWindow(hWnd);
     return 0;
   }

@@ -173,7 +173,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
 
 #ifdef _WIN32
   // Check if LOOT is being run through Mod Organiser.
-  bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;
+  bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != nullptr;
   if (runFromMO && logger) {
     logger->info("LOOT is being run through Mod Organiser.");
   }
