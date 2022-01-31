@@ -195,7 +195,7 @@ private:
 
   void handleError(const std::string &message);
   void handleException(const std::exception &exception);
-  void handleQueryException(const std::unique_ptr<Query> query,
+  void handleQueryException(const Query *query,
                             const std::exception &exception);
 
   void handleGameDataLoaded(QueryResult result);

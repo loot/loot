@@ -545,24 +545,23 @@ bool Game::IsPluginActive(const std::string& pluginName) const {
 }
 
 std::optional<short> Game::GetActiveLoadOrderIndex(
-    const std::shared_ptr<const PluginInterface>& plugin,
+    const PluginInterface& plugin,
     const std::vector<std::string>& loadOrder) const {
   // Get the full load order, then count the number of active plugins until the
   // given plugin is encountered. If the plugin isn't active or in the load
   // order, return nullopt.
 
-  if (!IsPluginActive(plugin->GetName()))
+  if (!IsPluginActive(plugin.GetName()))
     return std::nullopt;
 
   short numberOfActivePlugins = 0;
   for (const std::string& otherPluginName : loadOrder) {
-    if (CompareFilenames(plugin->GetName(), otherPluginName) == 0) {
+    if (CompareFilenames(plugin.GetName(), otherPluginName) == 0) {
       return numberOfActivePlugins;
     }
 
     auto otherPlugin = GetPlugin(otherPluginName);
-    if (otherPlugin &&
-        plugin->IsLightPlugin() == otherPlugin->IsLightPlugin() &&
+    if (otherPlugin && plugin.IsLightPlugin() == otherPlugin->IsLightPlugin() &&
         IsPluginActive(otherPluginName)) {
       ++numberOfActivePlugins;
     }
@@ -781,15 +780,15 @@ std::optional<PluginMetadata> Game::GetMasterlistMetadata(
 }
 
 std::optional<PluginMetadata> Game::GetNonUserMetadata(
-    const std::shared_ptr<const PluginInterface>& plugin) const {
-  auto fileBashTags = plugin->GetBashTags();
-  auto masterlistMetadata = GetMasterlistMetadata(plugin->GetName());
+    const PluginInterface& plugin) const {
+  auto fileBashTags = plugin.GetBashTags();
+  auto masterlistMetadata = GetMasterlistMetadata(plugin.GetName());
 
   if (fileBashTags.empty()) {
     return masterlistMetadata;
   }
 
-  PluginMetadata metadata(plugin->GetName());
+  PluginMetadata metadata(plugin.GetName());
   metadata.SetTags(fileBashTags);
 
   if (masterlistMetadata.has_value()) {

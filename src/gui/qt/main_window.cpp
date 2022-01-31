@@ -1106,7 +1106,7 @@ void MainWindow::handleException(const std::exception& exception) {
   handleError(message);
 }
 
-void MainWindow::handleQueryException(const std::unique_ptr<Query> query,
+void MainWindow::handleQueryException(const Query* query,
                                       const std::exception& exception) {
   if (query == nullptr) {
     handleException(exception);
@@ -1418,7 +1418,7 @@ void MainWindow::on_actionEditMetadata_triggered() {
         groups,
         plugin.name,
         state.GetCurrentGame().GetNonUserMetadata(
-            state.GetCurrentGame().GetPlugin(plugin.name)),
+            *state.GetCurrentGame().GetPlugin(plugin.name)),
         state.GetCurrentGame().GetUserMetadata(plugin.name));
 
     pluginEditorWidget->show();
@@ -1652,7 +1652,7 @@ void MainWindow::on_actionApplySort_triggered() {
 
     exitSortingState();
   } catch (std::exception& e) {
-    handleQueryException(std::move(query), e);
+    handleQueryException(query.get(), e);
   }
 }
 

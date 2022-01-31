@@ -135,7 +135,7 @@ PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
                        const gui::Game& game,
                        std::string language) :
     name(plugin->GetName()),
-    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder())),
+    loadOrderIndex(game.GetActiveLoadOrderIndex(*plugin, game.GetLoadOrder())),
     crc(plugin->GetCRC()),
     version(plugin->GetVersion()),
     isActive(game.IsPluginActive(plugin->GetName())),

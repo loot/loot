@@ -48,7 +48,8 @@ public:
         continue;
       }
 
-      auto loadOrderIndex = game_.GetActiveLoadOrderIndex(plugin, loadOrder);
+      auto loadOrderIndex =
+          game_.GetActiveLoadOrderIndex(*plugin, loadOrder);
 
       result.push_back(std::make_pair(pluginName, loadOrderIndex));
     }

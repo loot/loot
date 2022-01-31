@@ -64,7 +64,7 @@ private:
 
     for (const auto& otherPlugin : game_.GetPluginsInLoadOrder()) {
       auto metadata = PluginItem(otherPlugin, game_, language_);
-      auto conflict = doPluginsConflict(plugin, otherPlugin);
+      auto conflict = doPluginsConflict(*plugin, *otherPlugin);
 
       result.push_back(std::make_pair(metadata, conflict));
     }
@@ -72,10 +72,9 @@ private:
     return result;
   }
 
-  bool doPluginsConflict(
-      const std::shared_ptr<const PluginInterface>& plugin,
-      const std::shared_ptr<const PluginInterface>& otherPlugin) {
-    if (plugin->DoFormIDsOverlap(*otherPlugin)) {
+  bool doPluginsConflict(const PluginInterface& plugin,
+                         const PluginInterface& otherPlugin) {
+    if (plugin.DoFormIDsOverlap(otherPlugin)) {
       return true;
     } else {
       return false;

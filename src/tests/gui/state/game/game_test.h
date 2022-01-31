@@ -712,7 +712,7 @@ TEST_P(GameTest,
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsp),
+  auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(blankEsp),
                                             game.GetLoadOrder());
   EXPECT_FALSE(index.has_value());
 }
@@ -724,16 +724,16 @@ TEST_P(
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(masterFile),
+  auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(masterFile),
                                             game.GetLoadOrder());
   EXPECT_EQ(0, index);
 
-  index = game.GetActiveLoadOrderIndex(game.GetPlugin(blankEsm),
+  index = game.GetActiveLoadOrderIndex(*game.GetPlugin(blankEsm),
                                        game.GetLoadOrder());
   EXPECT_EQ(1, index.value());
 
   index = game.GetActiveLoadOrderIndex(
-      game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
+      *game.GetPlugin(blankDifferentMasterDependentEsp), game.GetLoadOrder());
   EXPECT_EQ(2, index.value());
 }
 
@@ -744,7 +744,7 @@ TEST_P(
   game.Init();
   game.LoadAllInstalledPlugins(true);
 
-  auto index = game.GetActiveLoadOrderIndex(game.GetPlugin(nonAsciiEsp),
+  auto index = game.GetActiveLoadOrderIndex(*game.GetPlugin(nonAsciiEsp),
                                             {u8"non\u00E1scii.esp"});
   EXPECT_EQ(0, index.value());
 }

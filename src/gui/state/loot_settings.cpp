@@ -506,13 +506,13 @@ std::vector<std::string> checkSettingsFile(
   return warningMessages;
 }
 
-LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
-  auto locale = table->get_as<std::string>("locale");
+LootSettings::Language convert(const cpptoml::table& table) {
+  auto locale = table.get_as<std::string>("locale");
   if (!locale) {
     throw std::runtime_error("'locale' key missing from language table");
   }
 
-  auto name = table->get_as<std::string>("name");
+  auto name = table.get_as<std::string>("name");
   if (!name) {
     throw std::runtime_error("'name' key missing from language table");
   }
@@ -521,7 +521,7 @@ LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
   language.locale = *locale;
   language.name = *name;
 
-  auto fontFamily = table->get_as<std::string>("fontFamily");
+  auto fontFamily = table.get_as<std::string>("fontFamily");
   if (fontFamily) {
     language.fontFamily = *fontFamily;
   }
@@ -710,7 +710,7 @@ void LootSettings::load(const std::filesystem::path& file,
   if (languages) {
     languages_.clear();
     for (const auto& language : *languages) {
-      languages_.push_back(convert(language));
+      languages_.push_back(convert(*language));
     }
   }
 }

@@ -106,7 +106,7 @@ private:
       }
 
       auto derivedMetadata = PluginItem(plugin, game_, language_);
-      auto index = game_.GetActiveLoadOrderIndex(plugin, plugins);
+      auto index = game_.GetActiveLoadOrderIndex(*plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.loadOrderIndex = index;
       }

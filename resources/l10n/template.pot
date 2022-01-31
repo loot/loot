@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-01-31 20:11+0000\n"
+"POT-Creation-Date: 2022-01-31 20:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -472,7 +472,7 @@ msgstr ""
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/settings/game_tab.cpp:123
+#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/settings/game_tab.cpp:121
 msgid "Master File"
 msgstr ""
 
@@ -653,7 +653,7 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:120
+#: src/gui/qt/settings/game_tab.cpp:118
 #: src/gui/qt/settings/new_game_dialog.cpp:80
 msgid "Name"
 msgstr ""
@@ -683,37 +683,37 @@ msgstr ""
 msgid "Bash Tag"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:121
+#: src/gui/qt/settings/game_tab.cpp:119
 #: src/gui/qt/settings/new_game_dialog.cpp:81
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:122
+#: src/gui/qt/settings/game_tab.cpp:120
 #: src/gui/qt/settings/new_game_dialog.cpp:82
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:124
+#: src/gui/qt/settings/game_tab.cpp:122
 msgid "Minimum Header Version"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:125
+#: src/gui/qt/settings/game_tab.cpp:123
 msgid "Masterlist Source"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:126
+#: src/gui/qt/settings/game_tab.cpp:124
 msgid "Install Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:127
+#: src/gui/qt/settings/game_tab.cpp:125
 msgid "Install Path Registry Keys"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:128
+#: src/gui/qt/settings/game_tab.cpp:126
 msgid "Local AppData Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:130
+#: src/gui/qt/settings/game_tab.cpp:128
 msgid "Delete game"
 msgstr ""
 
@@ -805,14 +805,14 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:479
+#: src/gui/state/loot_settings.cpp:476
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:501
+#: src/gui/state/loot_settings.cpp:498
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -886,32 +886,32 @@ msgstr ""
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:499 src/gui/state/game/game.cpp:585
+#: src/gui/state/game/game.cpp:499 src/gui/state/game/game.cpp:584
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:610
+#: src/gui/state/game/game.cpp:609
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:622
+#: src/gui/state/game/game.cpp:621
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:658
+#: src/gui/state/game/game.cpp:657
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:685
+#: src/gui/state/game/game.cpp:684
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:747
+#: src/gui/state/game/game.cpp:746
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
