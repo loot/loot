@@ -108,7 +108,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
         translate("Error: --auto-sort was passed but no --game parameter was "
                   "provided.")));
   } else {
-    setAutoSort(autoSort);
+    settings_.setAutoSort(autoSort);
   }
 
   // Do some preliminary locale / UTF-8 support setup here, in case the settings
@@ -143,8 +143,8 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   // Load settings.
   if (fs::exists(LootPaths::getSettingsPath())) {
     try {
-      LootSettings::load(LootPaths::getSettingsPath(),
-                         LootPaths::getLootDataPath());
+      settings_.load(LootPaths::getSettingsPath(),
+                     LootPaths::getLootDataPath());
     } catch (exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
@@ -159,7 +159,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   }
 
   // Apply debug logging settings.
-  enableDebugLogging(isDebugLoggingEnabled());
+  enableDebugLogging(settings_.isDebugLoggingEnabled());
 
   // Log some useful info.
   auto logger = getLogger();
@@ -181,14 +181,14 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
 
   // Now that settings have been loaded, set the locale again to handle
   // translations.
-  if (getLanguage() != MessageContent::defaultLanguage) {
+  if (settings_.getLanguage() != MessageContent::defaultLanguage) {
     if (logger) {
       logger->debug("Initialising language settings.");
-      logger->debug("Selected language: {}", getLanguage());
+      logger->debug("Selected language: {}", settings_.getLanguage());
     }
 
     // Boost.Locale initialisation: Generate and imbue locales.
-    locale::global(gen(getLanguage() + ".UTF-8"));
+    locale::global(gen(settings_.getLanguage() + ".UTF-8"));
   }
 
   // Check settings after handling translations so that any messages
@@ -235,7 +235,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (logger) {
     logger->debug("Detecting installed games.");
   }
-  LoadInstalledGames(getGameSettings(),
+  LoadInstalledGames(settings_.getGameSettings(),
                      LootPaths::getLootDataPath(),
                      LootPaths::getPreludePath());
 
@@ -285,6 +285,10 @@ const std::vector<SimpleMessage>& LootState::getInitMessages() const {
   return initMessages_;
 }
 
+const LootSettings& LootState::getSettings() const { return settings_; }
+
+LootSettings& LootState::getSettings() { return settings_; }
+
 // warning C26436: The type 'class loot::LootState' with a virtual function
 // needs either public virtual or protected non-virtual destructor (c.35).
 std::optional<std::filesystem::path> LootState::FindGamePath(
@@ -297,10 +301,11 @@ void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }
 void LootState::SetInitialGame(std::string preferredGame) {
   if (preferredGame.empty()) {
     // Get preferred game from settings.
-    if (getGame() != "auto")
-      preferredGame = getGame();
-    else if (getLastGame() != "auto")
-      preferredGame = getLastGame();
+    if (settings_.getGame() != "auto") {
+      preferredGame = settings_.getGame();
+    } else if (settings_.getLastGame() != "auto") {
+      preferredGame = settings_.getLastGame();
+    }
   }
 
   if (!preferredGame.empty() && IsGameInstalled(preferredGame)) {

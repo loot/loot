@@ -31,8 +31,7 @@
 #include "gui/state/unapplied_change_counter.h"
 
 namespace loot {
-class LootState : public LootSettings,
-                  public UnappliedChangeCounter,
+class LootState : public UnappliedChangeCounter,
                   public GamesManager,
                   public LootPaths {
 public:
@@ -44,6 +43,9 @@ public:
 
   const std::vector<SimpleMessage>& getInitMessages() const;
 
+  const LootSettings& getSettings() const;
+  LootSettings& getSettings();
+
 private:
   std::optional<std::filesystem::path> FindGamePath(
       const GameSettings& gameSettings) const override;
@@ -52,6 +54,7 @@ private:
   void SetInitialGame(std::string cmdLineGame);
 
   std::vector<SimpleMessage> initMessages_;
+  LootSettings settings_;
 
   // Mutex used to protect access to member variables.
   std::mutex mutex_;

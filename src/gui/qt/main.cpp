@@ -87,23 +87,23 @@ int main(int argc, char* argv[]) {
       QLibraryInfo::location(QLibraryInfo::TranslationsPath);
 #endif
 
-  auto loaded =
-      translator.load(QLocale(QString::fromStdString(state.getLanguage())),
-                      QString("qt"),
-                      QString("_"),
-                      translationsPath);
+  auto loaded = translator.load(
+      QLocale(QString::fromStdString(state.getSettings().getLanguage())),
+      QString("qt"),
+      QString("_"),
+      translationsPath);
 
   if (loaded) {
     app.installTranslator(&translator);
   }
 
   // Apply theme.
-  auto styleSheet =
-      loot::loadStyleSheet(state.getResourcesPath(), state.getTheme());
+  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
+                                         state.getSettings().getTheme());
   if (styleSheet.has_value()) {
     app.setStyleSheet(styleSheet.value());
-    auto palette =
-        loot::loadPalette(state.getResourcesPath(), state.getTheme());
+    auto palette = loot::loadPalette(state.getResourcesPath(),
+                                     state.getSettings().getTheme());
     if (palette.has_value()) {
       app.setPalette(palette.value());
     }
@@ -118,7 +118,8 @@ int main(int argc, char* argv[]) {
 
   loot::MainWindow mainWindow(state);
 
-  auto wasMaximised = state.getWindowPosition()
+  auto wasMaximised = state.getSettings()
+                          .getWindowPosition()
                           .value_or(loot::LootSettings::WindowPosition())
                           .maximised;
 

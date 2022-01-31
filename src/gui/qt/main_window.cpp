@@ -202,9 +202,10 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
     QMainWindow(parent),
     state(state),
-    pluginEditorWidget(new PluginEditorWidget(editorSplitter,
-                                              state.getLanguages(),
-                                              state.getLanguage())) {
+    pluginEditorWidget(
+        new PluginEditorWidget(editorSplitter,
+                               state.getSettings().getLanguages(),
+                               state.getSettings().getLanguage())) {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -212,7 +213,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
   auto installedGames = state.GetInstalledGameFolderNames();
 
-  for (const auto& gameSettings : state.getGameSettings()) {
+  for (const auto& gameSettings : state.getSettings().getGameSettings()) {
     auto installedGame = std::find(installedGames.cbegin(),
                                    installedGames.cend(),
                                    gameSettings.FolderName());
@@ -226,7 +227,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-    if (state.getLastVersion() != gui::Version::string()) {
+    if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
     }
 
@@ -245,7 +246,7 @@ void MainWindow::initialise() {
       return;
     }
 
-    const auto& filters = state.getFilters();
+    const auto& filters = state.getSettings().getFilters();
     filtersWidget->hideVersionNumbers(filters.hideVersionNumbers);
     filtersWidget->hideCRCs(filters.hideCRCs);
     filtersWidget->hideBashTags(filters.hideBashTags);
@@ -266,7 +267,7 @@ void MainWindow::initialise() {
     loadGame(true);
 
     // Check for updates.
-    if (state.isLootUpdateCheckEnabled()) {
+    if (state.getSettings().isLootUpdateCheckEnabled()) {
       sendHttpRequest("https://api.github.com/repos/loot/loot/releases/latest",
                       &MainWindow::handleGetLatestReleaseResponseFinished);
     }
@@ -280,7 +281,7 @@ void MainWindow::setupUi() {
   setWindowIcon(QIcon(":/icon.ico"));
 #endif
 
-  auto lastWindowPosition = state.getWindowPosition();
+  auto lastWindowPosition = state.getSettings().getWindowPosition();
   if (lastWindowPosition.has_value()) {
     const auto& windowPosition = lastWindowPosition.value();
     auto width = windowPosition.right - windowPosition.left;
@@ -678,8 +679,10 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
     emit progressUpdater->progressUpdate(QString::fromStdString(message));
   };
 
-  std::unique_ptr<Query> query = std::make_unique<GetGameDataQuery>(
-      state.GetCurrentGame(), state.getLanguage(), sendProgressUpdate);
+  std::unique_ptr<Query> query =
+      std::make_unique<GetGameDataQuery>(state.GetCurrentGame(),
+                                         state.getSettings().getLanguage(),
+                                         sendProgressUpdate);
 
   auto handler = isOnLOOTStartup ? &MainWindow::handleStartupGameDataLoaded
                                  : &MainWindow::handleRefreshGameDataLoaded;
@@ -707,7 +710,7 @@ void MainWindow::updateGeneralInformation() {
 
   auto initMessages = state.getInitMessages();
   auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getLanguage());
+                                       state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -718,7 +721,7 @@ void MainWindow::updateGeneralInformation() {
 void MainWindow::updateGeneralMessages() {
   auto initMessages = state.getInitMessages();
   auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getLanguage());
+                                       state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -781,7 +784,7 @@ bool MainWindow::hasErrorMessages() const {
 void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> tasks;
 
-  if (state.updateMasterlist()) {
+  if (state.getSettings().updateMasterlist()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
     auto task = new UpdateMasterlistTask(state);
@@ -799,8 +802,11 @@ void MainWindow::sortPlugins(bool isAutoSort) {
     emit progressUpdater->progressUpdate(QString::fromStdString(message));
   };
 
-  std::unique_ptr<Query> sortPluginsQuery = std::make_unique<SortPluginsQuery>(
-      state.GetCurrentGame(), state, state.getLanguage(), sendProgressUpdate);
+  std::unique_ptr<Query> sortPluginsQuery =
+      std::make_unique<SortPluginsQuery>(state.GetCurrentGame(),
+                                         state,
+                                         state.getSettings().getLanguage(),
+                                         sendProgressUpdate);
 
   auto sortTask = new QueryTask(std::move(sortPluginsQuery));
 
@@ -946,7 +952,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     position.bottom = position.top + geometry.height();
     position.maximised = isMaximized();
 
-    state.storeWindowPosition(position);
+    state.getSettings().storeWindowPosition(position);
   } catch (std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -955,7 +961,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.storeFilters(filtersWidget->getFilterSettings());
+    state.getSettings().storeFilters(filtersWidget->getFilterSettings());
   } catch (std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -964,7 +970,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.storeLastGame(state.GetCurrentGame().GetSettings().FolderName());
+    state.getSettings().storeLastGame(
+        state.GetCurrentGame().GetSettings().FolderName());
   } catch (std::runtime_error& e) {
     auto logger = getLogger();
     if (logger) {
@@ -973,8 +980,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.updateLastVersion();
-    state.save(state.getSettingsPath());
+    state.getSettings().updateLastVersion();
+    state.getSettings().save(state.getSettingsPath());
   } catch (std::exception& e) {
     auto logger = getLogger();
     if (logger) {
@@ -1199,7 +1206,8 @@ void MainWindow::on_actionSettings_triggered() {
             ? std::optional(state.GetCurrentGame().GetSettings().FolderName())
             : std::nullopt;
 
-    settingsDialog->initialiseInputs(state, themes, currentGameFolder);
+    settingsDialog->initialiseInputs(
+        state.getSettings(), themes, currentGameFolder);
     settingsDialog->show();
 
     // Adjust size because otherwise the size is slightly too small the first
@@ -1346,7 +1354,8 @@ void MainWindow::on_actionClearAllUserMetadata_triggered() {
       return;
     }
 
-    ClearAllMetadataQuery query(state.GetCurrentGame(), state.getLanguage());
+    ClearAllMetadataQuery query(state.GetCurrentGame(),
+                                state.getSettings().getLanguage());
 
     auto result = query.executeLogic();
 
@@ -1429,8 +1438,9 @@ void MainWindow::on_actionCopyMetadata_triggered() {
   try {
     auto selectedPluginName = getSelectedPlugin().name;
 
-    CopyMetadataQuery query(
-        state.GetCurrentGame(), state.getLanguage(), selectedPluginName);
+    CopyMetadataQuery query(state.GetCurrentGame(),
+                            state.getSettings().getLanguage(),
+                            selectedPluginName);
 
     query.executeLogic();
 
@@ -1486,8 +1496,9 @@ void MainWindow::on_actionClearMetadata_triggered() {
       return;
     }
 
-    ClearPluginMetadataQuery query(
-        state.GetCurrentGame(), state.getLanguage(), selectedPluginName);
+    ClearPluginMetadataQuery query(state.GetCurrentGame(),
+                                   state.getSettings().getLanguage(),
+                                   selectedPluginName);
 
     auto result = query.executeLogic();
 
@@ -1608,8 +1619,11 @@ void MainWindow::on_gameComboBox_activated(int index) {
       emit progressUpdater->progressUpdate(QString::fromStdString(message));
     };
 
-    std::unique_ptr<Query> query = std::make_unique<ChangeGameQuery>(
-        state, state.getLanguage(), folderName, sendProgressUpdate);
+    std::unique_ptr<Query> query =
+        std::make_unique<ChangeGameQuery>(state,
+                                          state.getSettings().getLanguage(),
+                                          folderName,
+                                          sendProgressUpdate);
 
     executeBackgroundQuery(
         std::move(query), &MainWindow::handleGameChanged, progressUpdater);
@@ -1791,7 +1805,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
       if (pluginItem.name == pluginName) {
         auto plugin = PluginItem(state.GetCurrentGame().GetPlugin(pluginName),
                                  state.GetCurrentGame(),
-                                 state.getLanguage());
+                                 state.getSettings().getLanguage());
 
         auto indexData = QVariant::fromValue(plugin);
         pluginItemModel->setData(index, indexData, RawDataRole);
@@ -1835,7 +1849,9 @@ void MainWindow::on_filtersWidget_conflictsFilterChanged(
     handleProgressUpdate(translate("Identifying conflicting plugins..."));
 
     std::unique_ptr<Query> query = std::make_unique<GetConflictingPluginsQuery>(
-        state.GetCurrentGame(), state.getLanguage(), targetPluginName.value());
+        state.GetCurrentGame(),
+        state.getSettings().getLanguage(),
+        targetPluginName.value());
 
     executeBackgroundQuery(
         std::move(query), &MainWindow::handleConflictsChecked, nullptr);
@@ -1917,7 +1933,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
 
-    if (state.shouldAutoSort()) {
+    if (state.getSettings().shouldAutoSort()) {
       if (hasErrorMessages()) {
         state.GetCurrentGame().AppendMessage(
             Message(MessageType::error,

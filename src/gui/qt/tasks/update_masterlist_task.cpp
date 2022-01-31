@@ -45,7 +45,7 @@ void UpdateMasterlistTask::execute() {
 }
 
 void UpdateMasterlistTask::updatePrelude() {
-  auto source = state.getPreludeSource();
+  auto source = state.getSettings().getPreludeSource();
   if (!isValidUrl(source)) {
     // Treat the source as a local path, and copy the file from there.
     auto sourcePath = std::filesystem::u8path(source);
@@ -126,8 +126,8 @@ void UpdateMasterlistTask::finish() {
 
     std::vector<PluginItem> metadata;
     for (const auto &plugin : plugins) {
-      metadata.push_back(
-          PluginItem(plugin, state.GetCurrentGame(), state.getLanguage()));
+      metadata.push_back(PluginItem(
+          plugin, state.GetCurrentGame(), state.getSettings().getLanguage()));
     }
 
     emit finished(metadata);
