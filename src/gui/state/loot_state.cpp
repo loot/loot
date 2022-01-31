@@ -285,19 +285,8 @@ const std::vector<SimpleMessage>& LootState::getInitMessages() const {
   return initMessages_;
 }
 
-void LootState::save(const std::filesystem::path& file) {
-  try {
-    storeLastGame(GetCurrentGame().GetSettings().FolderName());
-  } catch (std::runtime_error& e) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Couldn't set last game: {}", e.what());
-    }
-  }
-  updateLastVersion();
-  LootSettings::save(file);
-}
-
+// warning C26436: The type 'class loot::LootState' with a virtual function
+// needs either public virtual or protected non-virtual destructor (c.35).
 std::optional<std::filesystem::path> LootState::FindGamePath(
     const GameSettings& gameSettings) const {
   return gameSettings.FindGamePath();
@@ -326,13 +315,5 @@ void LootState::SetInitialGame(std::string preferredGame) {
   }
 
   SetCurrentGame(firstInstalledGame.value());
-}
-
-void LootState::storeGameSettings(std::vector<GameSettings> gameSettings) {
-  lock_guard<mutex> guard(mutex_);
-
-  gameSettings = LoadInstalledGames(
-      gameSettings, LootPaths::getLootDataPath(), LootPaths::getPreludePath());
-  LootSettings::storeGameSettings(gameSettings);
 }
 }

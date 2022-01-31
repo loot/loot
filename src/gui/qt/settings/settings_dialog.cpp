@@ -53,8 +53,8 @@ void SettingsDialog::initialiseInputs(
   }
 }
 
-void SettingsDialog::recordInputValues(LootSettings& settings) {
-  generalTab->recordInputValues(settings);
+void SettingsDialog::recordInputValues(LootState& state) {
+  generalTab->recordInputValues(state);
 
   std::vector<GameSettings> gameSettings;
   // First tab is for general settings.
@@ -63,7 +63,10 @@ void SettingsDialog::recordInputValues(LootSettings& settings) {
     gameSettings.push_back(gameTab->getGameSettings());
   }
 
-  settings.storeGameSettings(gameSettings);
+  gameSettings = state.LoadInstalledGames(
+      gameSettings, state.getLootDataPath(), state.getPreludePath());
+
+  state.storeGameSettings(gameSettings);
 }
 
 void SettingsDialog::setupUi() {

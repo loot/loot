@@ -44,10 +44,6 @@ public:
 
   const std::vector<SimpleMessage>& getInitMessages() const;
 
-  void save(const std::filesystem::path& file);
-
-  void storeGameSettings(std::vector<GameSettings> gameSettings);
-
 private:
   std::optional<std::filesystem::path> FindGamePath(
       const GameSettings& gameSettings) const override;
