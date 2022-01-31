@@ -43,6 +43,12 @@ namespace loot {
 class GamesManager {
 public:
   GamesManager() : currentGame_(installedGames_.end()) {}
+  GamesManager(const GamesManager&) = delete;
+  GamesManager(GamesManager&&) = delete;
+  virtual ~GamesManager() = default;
+
+  GamesManager& operator=(const GamesManager&) = delete;
+  GamesManager& operator=(GamesManager&&) = delete;
 
   // Installed games have their game paths set in the returned settings.
   std::vector<GameSettings> LoadInstalledGames(
