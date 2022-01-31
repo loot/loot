@@ -189,7 +189,7 @@ void SettingsDialog::on_addGameButton_clicked() {
 }
 
 void SettingsDialog::onGameSettingsDeleted() {
-  auto gameTab = qobject_cast<QWidget*>(sender());
+  const auto gameTab = qobject_cast<QWidget*>(sender());
   const auto index = stackedWidget->indexOf(gameTab);
 
   if (index > -1) {

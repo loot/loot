@@ -249,7 +249,7 @@ void PluginEditorWidget::on_dialogButtons_rejected() {
 }
 
 void PluginEditorWidget::handleTableRowCountChanged(bool hasUserMetadata) {
-  auto tableTab = qobject_cast<QWidget *>(sender());
+  const auto tableTab = qobject_cast<QWidget *>(sender());
 
   // tabWidget is null for the message content dialog.
   const auto tabIndex = tabs->indexOf(tableTab);

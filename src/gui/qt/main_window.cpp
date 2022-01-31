@@ -542,7 +542,7 @@ void MainWindow::setupViews() {
 
   // Plugin selection handling needs to be set up after the model has been
   // set, as before then there is no selection model.
-  auto selectionModel = sidebarPluginsView->selectionModel();
+  const auto selectionModel = sidebarPluginsView->selectionModel();
   connect(selectionModel,
           &QItemSelectionModel::selectionChanged,
           this,
@@ -1039,7 +1039,7 @@ void MainWindow::sendHttpRequest(const std::string& url,
                                  void (MainWindow::*onFinished)()) {
   QNetworkRequest request(QUrl(QString::fromStdString(url)));
   request.setRawHeader("Accept", "application/vnd.github.v3+json");
-  auto reply = networkAccessManager.get(request);
+  const auto reply = networkAccessManager.get(request);
 
   connect(reply, &QNetworkReply::finished, this, onFinished);
   connect(reply,

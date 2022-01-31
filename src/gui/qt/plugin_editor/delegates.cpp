@@ -68,7 +68,7 @@ void ComboBoxDelegate::setEditorData(QWidget* editor,
 void ComboBoxDelegate::setModelData(QWidget* editor,
                                     QAbstractItemModel* model,
                                     const QModelIndex& index) const {
-  QComboBox* comboBox = qobject_cast<QComboBox*>(editor);
+  const QComboBox* comboBox = qobject_cast<QComboBox*>(editor);
   Q_ASSERT(comboBox);
 
   model->setData(index, comboBox->currentData(), Qt::EditRole);
@@ -96,7 +96,7 @@ void CrcLineEditDelegate::setEditorData(QWidget* editor,
 void CrcLineEditDelegate::setModelData(QWidget* editor,
                                        QAbstractItemModel* model,
                                        const QModelIndex& index) const {
-  QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
+  const QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
   Q_ASSERT(lineEdit);
 
   model->setData(index, lineEdit->text(), Qt::EditRole);
@@ -180,7 +180,7 @@ void AutocompletingLineEditDelegate::setModelData(
     QWidget* editor,
     QAbstractItemModel* model,
     const QModelIndex& index) const {
-  QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
+  const QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
   Q_ASSERT(lineEdit);
 
   model->setData(index, lineEdit->text(), Qt::EditRole);

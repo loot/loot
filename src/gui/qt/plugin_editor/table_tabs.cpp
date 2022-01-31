@@ -195,7 +195,7 @@ void BaseTableTab::configureAsDropTarget() {
 }
 
 void BaseTableTab::resizeEvent(QResizeEvent*) {
-  auto header = tableView->horizontalHeader();
+  const auto header = tableView->horizontalHeader();
   for (int i = 0; i < header->count(); i += 1) {
     if (!header->isSectionHidden(i) &&
         header->sectionResizeMode(i) != QHeaderView::Fixed) {
@@ -310,7 +310,7 @@ void BaseTableTab::onSelectionModelSelectionChanged() {
     return;
   }
 
-  auto model = tableView->model();
+  const auto model = tableView->model();
   for (const auto& index : selectedIndexes) {
     const auto flags = model->flags(index);
 

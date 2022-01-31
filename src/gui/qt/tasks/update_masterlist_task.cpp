@@ -64,7 +64,7 @@ void UpdateMasterlistTask::updatePrelude() {
 
   QNetworkRequest request(QUrl(QString::fromStdString(source)));
 
-  auto reply = networkAccessManager->get(request);
+  const auto reply = networkAccessManager->get(request);
 
   connect(reply,
           &QNetworkReply::finished,
@@ -101,7 +101,7 @@ void UpdateMasterlistTask::updateMasterlist() {
 
   QNetworkRequest request(QUrl(QString::fromStdString(source)));
 
-  auto reply = networkAccessManager->get(request);
+  const auto reply = networkAccessManager->get(request);
 
   connect(reply,
           &QNetworkReply::finished,
