@@ -54,7 +54,7 @@ int calculateItemWidth(const QString& text) {
   return static_cast<int>(textWidth) + leftPadding + rightPadding;
 }
 
-int calculateMaxHeaderWidth(QAbstractItemModel* model,
+int calculateMaxHeaderWidth(const QAbstractItemModel* model,
                             int column,
                             int currentMaxHeaderWidth) {
   auto headerText = model->headerData(column, Qt::Horizontal);

@@ -229,7 +229,7 @@ PluginMetadata PluginEditorWidget::getUserMetadata() {
 }
 
 void PluginEditorWidget::connectTableRowCountChangedSignal(
-    BaseTableTab *tableTab) {
+    const BaseTableTab *tableTab) {
   connect(tableTab,
           &BaseTableTab::tableRowCountChanged,
           this,

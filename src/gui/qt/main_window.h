@@ -185,7 +185,7 @@ private:
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
   void executeBackgroundTasks(std::vector<Task *> tasks,
-                              ProgressUpdater *progressUpdater);
+                              const ProgressUpdater *progressUpdater);
 
   void sendHttpRequest(const std::string &url,
                        void (MainWindow::*onFinished)());

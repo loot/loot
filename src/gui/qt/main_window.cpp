@@ -1004,8 +1004,9 @@ void MainWindow::executeBackgroundQuery(
   executeBackgroundTasks({task}, progressUpdater);
 }
 
-void MainWindow::executeBackgroundTasks(std::vector<Task*> tasks,
-                                        ProgressUpdater* progressUpdater) {
+void MainWindow::executeBackgroundTasks(
+    std::vector<Task*> tasks,
+    const ProgressUpdater* progressUpdater) {
   auto executor = new TaskExecutor(this, tasks);
 
   if (progressUpdater != nullptr) {

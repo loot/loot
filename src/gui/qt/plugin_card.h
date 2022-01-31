@@ -113,7 +113,7 @@ private:
   static PluginCard* setPluginCardContent(PluginCard* card,
                                           const QModelIndex& index);
 
-  static QSize calculateSize(QWidget* widget,
+  static QSize calculateSize(const QWidget* widget,
                              const QStyleOptionViewItem& option);
 };
 }

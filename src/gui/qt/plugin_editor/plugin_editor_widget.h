@@ -83,7 +83,7 @@ private:
 
   PluginMetadata getUserMetadata();
 
-  void connectTableRowCountChangedSignal(BaseTableTab *tableTab);
+  void connectTableRowCountChangedSignal(const BaseTableTab *tableTab);
 
 private slots:
   void on_dialogButtons_accepted();

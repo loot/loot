@@ -467,7 +467,7 @@ PluginCard* PluginCardDelegate::setPluginCardContent(PluginCard* card,
   return card;
 }
 
-QSize PluginCardDelegate::calculateSize(QWidget* widget,
+QSize PluginCardDelegate::calculateSize(const QWidget* widget,
                                         const QStyleOptionViewItem& option) {
   auto minLayoutWidth = widget->layout()->minimumSize().width();
   auto rectWidth = option.rect.width();
