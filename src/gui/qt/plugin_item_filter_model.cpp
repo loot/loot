@@ -48,7 +48,7 @@ PluginItemFilterModel::PluginItemFilterModel(QObject* parent) :
     QSortFilterProxyModel(parent) {}
 
 void PluginItemFilterModel::setFiltersState(PluginFiltersState&& state) {
-  filterState = state;
+  filterState = std::move(state);
 
   invalidateFilter();
 }
@@ -56,8 +56,8 @@ void PluginItemFilterModel::setFiltersState(PluginFiltersState&& state) {
 void PluginItemFilterModel::setFiltersState(
     PluginFiltersState&& state,
     std::vector<std::string>&& newConflictingPluginNames) {
-  filterState = state;
-  this->conflictingPluginNames = newConflictingPluginNames;
+  filterState = std::move(state);
+  this->conflictingPluginNames = std::move(newConflictingPluginNames);
 
   invalidateFilter();
 }

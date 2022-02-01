@@ -319,7 +319,7 @@ void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
 }
 
 void PluginItemModel::setEditorPluginName(
-    std::optional<std::string>&& editorPluginName) {
+    const std::optional<std::string>& editorPluginName) {
   currentEditorPluginName = editorPluginName;
 
   // Opening the editor changes what is displayed in the sidebar name and
@@ -353,7 +353,7 @@ void PluginItemModel::setPreludeRevision(
 void PluginItemModel::setGeneralMessages(
     std::vector<SimpleMessage>&& messages) {
   const auto infoIndex = index(0, CARDS_COLUMN);
-  generalInformation.generalMessages = messages;
+  generalInformation.generalMessages = std::move(messages);
 
   emit dataChanged(infoIndex, infoIndex, {RawDataRole});
 }
@@ -368,7 +368,7 @@ const GeneralInformation& PluginItemModel::getGeneralInfo() const {
 
 void PluginItemModel::setCardContentFiltersState(
     CardContentFiltersState&& state) {
-  cardContentFiltersState = state;
+  cardContentFiltersState = std::move(state);
 
   const auto startIndex = index(1, CARDS_COLUMN);
   const auto endIndex = index(rowCount() - 1, CARDS_COLUMN);

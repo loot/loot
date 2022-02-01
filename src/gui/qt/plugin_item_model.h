@@ -92,7 +92,7 @@ public:
 
   void setPluginItems(std::vector<PluginItem>&& items);
 
-  void setEditorPluginName(std::optional<std::string>&& editorPluginName);
+  void setEditorPluginName(const std::optional<std::string>& editorPluginName);
 
   void setGeneralInformation(const FileRevisionSummary& masterlistRevision,
                              const FileRevisionSummary& preludeRevision,
