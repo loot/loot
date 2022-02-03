@@ -59,6 +59,8 @@ protected:
   const std::filesystem::path fileMetadataPath_;
 };
 
+class CalculateGitBlobHashTest : public QtHelpersFixture {};
+
 class GetFileRevisionTest : public QtHelpersFixture {};
 
 class GetFileRevisionSummaryTest : public QtHelpersFixture {};
@@ -74,11 +76,25 @@ TEST(calculateGitBlobHash, shouldCalculateTheSameHashAsGitDoesForABlob) {
   EXPECT_EQ("f0cdcd7eb1d4118095dc0fd8bf4dd448a73354c0", hash);
 }
 
-TEST(calculateGitBlobHash, shouldCalculateTheSameHashForAFileAsGitDoes) {
+TEST_F(CalculateGitBlobHashTest, shouldCalculateTheSameHashForAFileAsGitDoes) {
   auto file = std::filesystem::u8path("./Skyrim/Data/Blank.esm");
   auto hash = calculateGitBlobHash(file);
 
   EXPECT_EQ("686d51d2991e7359e636720c5cb04446257a42af", hash);
+}
+
+TEST_F(CalculateGitBlobHashTest, shouldReplaceCRLFWithLFBeforeCalculatingHash) {
+  auto file = rootPath_ / "text.txt";
+
+  // On Windows the \n is written out as \r\n.
+  std::ofstream out(file);
+  out << "First line\n";
+  out << "Second line\n";
+  out.close();
+
+  auto hash = calculateGitBlobHash(file);
+
+  EXPECT_EQ("7d91453217afc429984c4706e8df22aaac47c9ce", hash);
 }
 
 TEST_F(GetFileRevisionTest, shouldThrowIfGivenPathIsNotARegularFile) {

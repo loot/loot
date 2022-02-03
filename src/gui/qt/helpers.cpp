@@ -120,24 +120,16 @@ std::string calculateGitBlobHash(const std::filesystem::path& filePath) {
     throw FileAccessError(filePath.u8string() + " is not a regular file");
   }
 
-  auto sizeString = std::to_string(file.size());
+  QByteArray fileContent = file.readAll();
 
-  auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
-  hasher.addData(HEADER_PREFIX, HEADER_PREFIX_LENGTH);
-  hasher.addData(sizeString.c_str(), sizeString.size() + 1);
+  // Files in LOOT's repositories are committed with LF line endings, but if the
+  // file being read is from the working directory of a local Git repository
+  // that has autocrlf enabled, it will have CRLF line endings, so the
+  // hash won't match the value calculated by Git unless the line endings
+  // are replaced.
+  fileContent.replace(QByteArray("\r\n"), QByteArray("\n"));
 
-  static constexpr int BUFFER_SIZE = 8192;
-  std::array<char, BUFFER_SIZE> buffer{};
-  size_t bytesReadCount = 0;
-
-  do {
-    bytesReadCount = file.read(buffer.data(), buffer.size());
-    if (bytesReadCount > 0) {
-      hasher.addData(buffer.data(), bytesReadCount);
-    }
-  } while (bytesReadCount > 0);
-
-  return QString(hasher.result().toHex()).toStdString();
+  return calculateGitBlobHash(fileContent);
 }
 
 FileRevision getFileRevision(const std::filesystem::path& filePath) {
