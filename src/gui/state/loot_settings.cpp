@@ -184,8 +184,8 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
     return std::nullopt;
   }
 
-  auto githubOwner = regexMatches[1].str();
-  auto githubRepo = regexMatches[2].str();
+  auto githubOwner = regexMatches.str(1);
+  auto githubRepo = regexMatches.str(2);
 
   return "https://raw.githubusercontent.com/" + githubOwner + "/" + githubRepo +
          "/" + branch + "/masterlist.yaml";
@@ -286,8 +286,8 @@ std::optional<std::string> migratePreludeRepoSettings(const std::string& url,
     return std::nullopt;
   }
 
-  auto githubOwner = regexMatches[1].str();
-  auto githubRepo = regexMatches[2].str();
+  auto githubOwner = regexMatches.str(1);
+  auto githubRepo = regexMatches.str(2);
 
   return "https://raw.githubusercontent.com/" + githubOwner + "/" + githubRepo +
          "/" + branch + "/prelude.yaml";
@@ -405,7 +405,8 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     game.SetMaster(*master);
   }
 
-  auto minimumHeaderVersion = table->get_as<double>("minimumHeaderVersion");
+  const auto minimumHeaderVersion =
+      table->get_as<double>("minimumHeaderVersion");
   if (minimumHeaderVersion) {
     game.SetMinimumHeaderVersion((float)*minimumHeaderVersion);
   }
@@ -439,13 +440,13 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     game.SetGameLocalFolder(*localFolder);
   }
 
-  auto registry = table->get_array_of<std::string>("registry");
-  if (registry) {
-    game.SetRegistryKeys(*registry);
+  auto registryKeys = table->get_array_of<std::string>("registry");
+  if (registryKeys) {
+    game.SetRegistryKeys(*registryKeys);
   } else {
-    auto registry = table->get_as<std::string>("registry");
-    if (registry) {
-      game.SetRegistryKeys({*registry});
+    auto registryKey = table->get_as<std::string>("registry");
+    if (registryKey) {
+      game.SetRegistryKeys({*registryKey});
     }
   }
 
@@ -506,13 +507,13 @@ std::vector<std::string> checkSettingsFile(
   return warningMessages;
 }
 
-LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
-  auto locale = table->get_as<std::string>("locale");
+LootSettings::Language convert(const cpptoml::table& table) {
+  auto locale = table.get_as<std::string>("locale");
   if (!locale) {
     throw std::runtime_error("'locale' key missing from language table");
   }
 
-  auto name = table->get_as<std::string>("name");
+  auto name = table.get_as<std::string>("name");
   if (!name) {
     throw std::runtime_error("'name' key missing from language table");
   }
@@ -521,7 +522,7 @@ LootSettings::Language convert(const std::shared_ptr<cpptoml::table>& table) {
   language.locale = *locale;
   language.name = *name;
 
-  auto fontFamily = table->get_as<std::string>("fontFamily");
+  auto fontFamily = table.get_as<std::string>("fontFamily");
   if (fontFamily) {
     language.fontFamily = *fontFamily;
   }
@@ -542,6 +543,16 @@ LootSettings::Filters::Filters() :
     hideMessagelessPlugins(false) {}
 
 LootSettings::LootSettings() :
+    autoSort_(false),
+    enableDebugLogging_(false),
+    updateMasterlist_(true),
+    enableLootUpdateCheck_(true),
+    game_("auto"),
+    lastGame_("auto"),
+    language_("en"),
+    preludeSource_(
+        "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml"),
+    theme_("default"),
     gameSettings_({
         GameSettings(GameType::tes3),
         GameSettings(GameType::tes4),
@@ -600,17 +611,7 @@ LootSettings::LootSettings() :
         Language({"sv", "Svenska", std::nullopt}),
         Language({"uk_UA", "Українська", std::nullopt}),
         Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
-    }),
-    autoSort_(false),
-    enableDebugLogging_(false),
-    updateMasterlist_(true),
-    enableLootUpdateCheck_(true),
-    game_("auto"),
-    language_("en"),
-    theme_("default"),
-    lastGame_("auto"),
-    preludeSource_(
-        "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml") {}
+    }) {}
 
 void LootSettings::load(const std::filesystem::path& file,
                         const std::filesystem::path& lootDataPath) {
@@ -623,7 +624,7 @@ void LootSettings::load(const std::filesystem::path& file,
     throw cpptoml::parse_exception(file.u8string() +
                                    " could not be opened for parsing");
 
-  auto settings = cpptoml::parser(in).parse();
+  const auto settings = cpptoml::parser(in).parse();
 
   enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
                             .value_or(enableDebugLogging_);
@@ -638,7 +639,7 @@ void LootSettings::load(const std::filesystem::path& file,
   lastVersion_ =
       settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
 
-  auto preludeSource = settings->get_as<std::string>("preludeSource");
+  const auto preludeSource = settings->get_as<std::string>("preludeSource");
   if (preludeSource) {
     preludeSource_ = *preludeSource;
   } else {
@@ -650,11 +651,12 @@ void LootSettings::load(const std::filesystem::path& file,
     }
   }
 
-  auto windowTop = settings->get_qualified_as<long>("window.top");
-  auto windowBottom = settings->get_qualified_as<long>("window.bottom");
-  auto windowLeft = settings->get_qualified_as<long>("window.left");
-  auto windowRight = settings->get_qualified_as<long>("window.right");
-  auto windowMaximised = settings->get_qualified_as<bool>("window.maximised");
+  const auto windowTop = settings->get_qualified_as<long>("window.top");
+  const auto windowBottom = settings->get_qualified_as<long>("window.bottom");
+  const auto windowLeft = settings->get_qualified_as<long>("window.left");
+  const auto windowRight = settings->get_qualified_as<long>("window.right");
+  const auto windowMaximised =
+      settings->get_qualified_as<bool>("window.maximised");
   if (windowTop && windowBottom && windowLeft && windowRight &&
       windowMaximised) {
     WindowPosition windowPosition;
@@ -666,7 +668,7 @@ void LootSettings::load(const std::filesystem::path& file,
     windowPosition_ = windowPosition;
   }
 
-  auto games = settings->get_table_array("games");
+  const auto games = settings->get_table_array("games");
   if (games) {
     auto logger = getLogger();
     gameSettings_.clear();
@@ -674,7 +676,7 @@ void LootSettings::load(const std::filesystem::path& file,
     for (const auto& game : *games) {
       try {
         gameSettings_.push_back(convert(game, lootDataPath));
-      } catch (std::exception& e) {
+      } catch (const std::exception& e) {
         // Skip invalid games.
         if (logger) {
           logger->error("Failed to load config in [[games]] table: {}",
@@ -686,7 +688,7 @@ void LootSettings::load(const std::filesystem::path& file,
     appendBaseGames();
   }
 
-  auto filters = settings->get_table("filters");
+  const auto filters = settings->get_table("filters");
   if (filters) {
     filters_.hideVersionNumbers = filters->get_as<bool>("hideVersionNumbers")
                                       .value_or(filters_.hideVersionNumbers);
@@ -706,11 +708,11 @@ void LootSettings::load(const std::filesystem::path& file,
             .value_or(filters_.hideMessagelessPlugins);
   }
 
-  auto languages = settings->get_table_array("languages");
+  const auto languages = settings->get_table_array("languages");
   if (languages) {
     languages_.clear();
     for (const auto& language : *languages) {
-      languages_.push_back(convert(language));
+      languages_.push_back(convert(*language));
     }
   }
 }

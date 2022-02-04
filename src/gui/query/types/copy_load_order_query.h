@@ -43,7 +43,7 @@ public:
   CopyLoadOrderQuery(const G& game, const std::vector<std::string>& plugins) :
       game_(game), plugins_(plugins) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     Counters counters;
     std::stringstream stream;
     for (const auto& pluginName : plugins_) {
@@ -63,7 +63,7 @@ private:
       return;
     }
 
-    auto isActive = game_.IsPluginActive(pluginName);
+    const auto isActive = game_.IsPluginActive(pluginName);
 
     if (isActive && plugin->IsLightPlugin()) {
       stream << "254 FE " << std::setw(3) << std::hex

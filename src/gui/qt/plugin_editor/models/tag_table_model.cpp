@@ -33,39 +33,14 @@ TagTableModel::TagTableModel(
     std::vector<Tag> nonUserMetadata,
     std::vector<Tag> userMetadata,
     std::map<bool, std::pair<QString, QVariant>> suggestionTypeMap) :
-    QAbstractTableModel(parent),
-    nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata),
+    MetadataTableModel(parent, nonUserMetadata, userMetadata),
     suggestionTypeMap(suggestionTypeMap) {}
 
-std::vector<Tag> TagTableModel::getUserMetadata() const { return userMetadata; }
+int TagTableModel::columnCount(const QModelIndex&) const { return 3; }
 
-int TagTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
-}
-
-int TagTableModel::columnCount(const QModelIndex& parent) const { return 3; }
-
-QVariant TagTableModel::data(const QModelIndex& index, int role) const {
-  if (role != Qt::DisplayRole && role != Qt::EditRole) {
-    return QVariant();
-  }
-
-  if (!index.isValid()) {
-    return QVariant();
-  }
-
-  if (index.row() >= rowCount()) {
-    return QVariant();
-  }
-
-  const auto& element =
-      index.row() < nonUserMetadata.size()
-          ? nonUserMetadata.at(index.row())
-          : userMetadata.at(index.row() - nonUserMetadata.size());
-
-  switch (index.column()) {
-    case 0: {
+QVariant TagTableModel::data(const Tag& element, int column, int role) const {
+  switch (column) {
+    case TYPE_COLUMN: {
       auto pair = suggestionTypeMap.at(element.IsAddition());
       if (role == Qt::DisplayRole) {
         return QVariant(pair.first);
@@ -73,67 +48,32 @@ QVariant TagTableModel::data(const QModelIndex& index, int role) const {
         return pair.second;
       }
     }
-    case 1:
+    case NAME_COLUMN:
       return QVariant(QString::fromStdString(element.GetName()));
-    case 2:
+    case CONDITION_COLUMN:
       return QVariant(QString::fromStdString(element.GetCondition()));
     default:
       return QVariant();
   }
 }
 
-QVariant TagTableModel::headerData(int section,
-                                   Qt::Orientation orientation,
-                                   int role) const {
-  if (role != Qt::DisplayRole) {
-    return QVariant();
-  }
-
-  if (orientation != Qt::Horizontal) {
-    return QVariant();
-  }
-
+QVariant TagTableModel::headerText(int section) const {
   switch (section) {
-    case 0:
+    case TYPE_COLUMN:
       return QVariant(translate("Add/Remove"));
-    case 1:
+    case NAME_COLUMN:
       return QVariant(translate("Bash Tag"));
-    case 2:
+    case CONDITION_COLUMN:
       return QVariant(translate("Condition"));
     default:
       return QVariant();
   }
 }
 
-Qt::ItemFlags TagTableModel::flags(const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return Qt::ItemIsEnabled;
-  }
-
-  if (index.row() < nonUserMetadata.size()) {
-    return QAbstractItemModel::flags(index);
-  }
-
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-}
-
-bool TagTableModel::setData(const QModelIndex& index,
-                            const QVariant& value,
-                            int role) {
-  if (!index.isValid() || role != Qt::EditRole) {
-    return false;
-  }
-
-  if (index.row() < nonUserMetadata.size() ||
-      index.column() > columnCount() - 1) {
-    return false;
-  }
-
-  auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
-
-  if (index.column() == 0) {
+void TagTableModel::setData(Tag& element, int column, const QVariant& value) {
+  if (column == TYPE_COLUMN) {
     element = Tag(element.GetName(), value.toBool(), element.GetCondition());
-  } else if (index.column() == 1) {
+  } else if (column == NAME_COLUMN) {
     element = Tag(value.toString().toStdString(),
                   element.IsAddition(),
                   element.GetCondition());
@@ -142,43 +82,5 @@ bool TagTableModel::setData(const QModelIndex& index,
                   element.IsAddition(),
                   value.toString().toStdString());
   }
-
-  emit dataChanged(index, index, {role});
-  return true;
-}
-
-bool TagTableModel::insertRows(int row, int count, const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount()) {
-    return false;
-  }
-
-  beginInsertRows(parent, row, row + count - 1);
-
-  auto index = row - nonUserMetadata.size();
-
-  userMetadata.insert(userMetadata.begin() + index, count, Tag());
-
-  endInsertRows();
-
-  return true;
-}
-
-bool TagTableModel::removeRows(int row, int count, const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount() ||
-      row + count > rowCount()) {
-    return false;
-  }
-
-  beginRemoveRows(parent, row, row + count - 1);
-
-  auto startIndex = row - nonUserMetadata.size();
-  auto endIndex = startIndex + count;
-
-  userMetadata.erase(userMetadata.begin() + startIndex,
-                     userMetadata.begin() + endIndex);
-
-  endRemoveRows();
-
-  return true;
 }
 }

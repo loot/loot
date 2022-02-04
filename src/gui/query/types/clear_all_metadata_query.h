@@ -26,17 +26,16 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_ALL_METADATA_QUERY
 
-#include "gui/query/types/metadata_query.h"
+#include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
 namespace loot {
-template<typename G = gui::Game>
-class ClearAllMetadataQuery : public MetadataQuery<G> {
+class ClearAllMetadataQuery : public Query {
 public:
-  ClearAllMetadataQuery(G& game, std::string language) :
-      MetadataQuery<G>(game, language) {}
+  ClearAllMetadataQuery(gui::Game& game, std::string language) :
+      game_(game), language_(language) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing all user metadata.");
@@ -46,8 +45,8 @@ public:
     auto userlistPlugins = getUserlistPlugins();
 
     // Clear the user metadata.
-    this->getGame().ClearAllUserMetadata();
-    this->getGame().SaveUserMetadata();
+    game_.ClearAllUserMetadata();
+    game_.SaveUserMetadata();
 
     if (logger) {
       logger->trace(
@@ -60,11 +59,14 @@ public:
   }
 
 private:
+  gui::Game& game_;
+  std::string language_;
+
   std::vector<std::shared_ptr<const PluginInterface>> getUserlistPlugins()
       const {
     std::vector<std::shared_ptr<const PluginInterface>> userlistPlugins;
-    for (const auto& plugin : this->getGame().GetPlugins()) {
-      if (this->getGame().GetUserMetadata(plugin->GetName()).has_value()) {
+    for (const auto& plugin : game_.GetPlugins()) {
+      if (game_.GetUserMetadata(plugin->GetName()).has_value()) {
         userlistPlugins.push_back(plugin);
       }
     }
@@ -78,7 +80,7 @@ private:
     std::vector<PluginItem> plugins;
 
     for (const auto& plugin : userlistPlugins) {
-      auto derivedMetadata = this->generateDerivedMetadata(plugin);
+      auto derivedMetadata = PluginItem(plugin, game_, language_);
       plugins.push_back(derivedMetadata);
     }
 

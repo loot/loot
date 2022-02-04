@@ -46,15 +46,15 @@ void SettingsDialog::initialiseInputs(
     removeTab(1);
   }
 
-  for (const auto game : settings.getGameSettings()) {
+  for (const auto& game : settings.getGameSettings()) {
     auto isCurrentGame = game.FolderName() == currentGameFolder;
 
     addGameTab(game, isCurrentGame);
   }
 }
 
-void SettingsDialog::recordInputValues(LootSettings& settings) {
-  generalTab->recordInputValues(settings);
+void SettingsDialog::recordInputValues(LootState& state) {
+  generalTab->recordInputValues(state.getSettings());
 
   std::vector<GameSettings> gameSettings;
   // First tab is for general settings.
@@ -63,20 +63,16 @@ void SettingsDialog::recordInputValues(LootSettings& settings) {
     gameSettings.push_back(gameTab->getGameSettings());
   }
 
-  settings.storeGameSettings(gameSettings);
+  gameSettings = state.LoadInstalledGames(
+      gameSettings, state.getLootDataPath(), state.getPreludePath());
+
+  state.getSettings().storeGameSettings(gameSettings);
 }
 
 void SettingsDialog::setupUi() {
   setWindowModality(Qt::WindowModal);
 
-  listWidget = new QListWidget(this);
-
-  addGameButton = new QPushButton(this);
   addGameButton->setObjectName("addGameButton");
-
-  stackedWidget = new QStackedWidget(this);
-
-  generalTab = new GeneralTab(this);
 
   listWidget->addItem(QString());
   stackedWidget->addWidget(generalTab);
@@ -169,10 +165,10 @@ void SettingsDialog::on_dialogButtons_accepted() {
 
 void SettingsDialog::on_dialogButtons_rejected() { reject(); }
 
-void SettingsDialog::on_addGameButton_clicked(bool checked) {
+void SettingsDialog::on_addGameButton_clicked() {
   auto newGameDialog = new NewGameDialog(this, getGameFolderNames());
 
-  auto result = newGameDialog->exec();
+  const auto result = newGameDialog->exec();
 
   if (result != QDialog::DialogCode::Accepted) {
     return;
@@ -193,8 +189,8 @@ void SettingsDialog::on_addGameButton_clicked(bool checked) {
 }
 
 void SettingsDialog::onGameSettingsDeleted() {
-  auto gameTab = qobject_cast<QWidget*>(sender());
-  auto index = stackedWidget->indexOf(gameTab);
+  const auto gameTab = qobject_cast<QWidget*>(sender());
+  const auto index = stackedWidget->indexOf(gameTab);
 
   if (index > -1) {
     removeTab(index);

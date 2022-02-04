@@ -63,7 +63,8 @@ GameSettings GameTab::getGameSettings() const {
   auto name = nameInput->text().toStdString();
   auto lootFolder = lootFolderInput->text().toStdString();
   auto masterFile = masterFileInput->text().toStdString();
-  float minimumHeaderVersion = minimumHeaderVersionSpinBox->value();
+  const float minimumHeaderVersion =
+      static_cast<float>(minimumHeaderVersionSpinBox->value());
   auto masterlistSource = masterlistSourceInput->text().toStdString();
   auto installPath =
       std::filesystem::u8path(installPathInput->text().toStdString());
@@ -92,34 +93,6 @@ GameSettings GameTab::getGameSettings() const {
 }
 
 void GameTab::setupUi() {
-  nameLabel = new QLabel(this);
-  nameInput = new QLineEdit(this);
-
-  baseGameLabel = new QLabel(this);
-  baseGameComboBox = new QComboBox(this);
-
-  lootFolderLabel = new QLabel(this);
-  lootFolderInput = new QLineEdit(this);
-
-  masterFileLabel = new QLabel(this);
-  masterFileInput = new QLineEdit(this);
-
-  minimumHeaderVersionLabel = new QLabel(this);
-  minimumHeaderVersionSpinBox = new QDoubleSpinBox(this);
-
-  masterlistSourceLabel = new QLabel(this);
-  masterlistSourceInput = new QLineEdit(this);
-
-  installPathLabel = new QLabel(this);
-  installPathInput = new QLineEdit(this);
-
-  registryKeysLabel = new QLabel(this);
-  registryKeysInput = new QPlainTextEdit(this);
-
-  localDataPathLabel = new QLabel(this);
-  localDataPathInput = new QLineEdit(this);
-
-  deleteGameButton = new QPushButton(this);
   deleteGameButton->setObjectName("deleteGameButton");
 
   auto generalLayout = new QFormLayout(this);
@@ -194,7 +167,5 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   deleteGameButton->setEnabled(!isCurrentGame);
 }
 
-void GameTab::on_deleteGameButton_clicked(bool checked) {
-  emit gameSettingsDeleted();
-}
+void GameTab::on_deleteGameButton_clicked() { emit gameSettingsDeleted(); }
 }

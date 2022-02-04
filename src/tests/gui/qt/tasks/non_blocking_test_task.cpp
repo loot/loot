@@ -36,6 +36,7 @@ NonBlockingTestTask::NonBlockingTestTask(bool fail,
 void NonBlockingTestTask::execute() {
   auto start = QString::number(timer.nsecsElapsed()).toStdString();
 
+  // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
   QTimer::singleShot(5, [this, start]() {
     if (fail) {
       emit error(ERROR_MESSAGE);

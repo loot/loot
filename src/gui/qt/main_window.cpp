@@ -31,7 +31,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
-#include <QtWidgets/QSplitter>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QTextEdit>
 
@@ -85,7 +84,7 @@ bool hasLoadOrderChanged(const std::vector<std::string>& oldLoadOrder,
   }
 
   for (size_t i = 0; i < oldLoadOrder.size(); i += 1) {
-    if (oldLoadOrder[i] != newLoadOrder[i].name) {
+    if (oldLoadOrder.at(i) != newLoadOrder.at(i).name) {
       return true;
     }
   }
@@ -101,7 +100,7 @@ int compareLOOTVersion(const std::string& version) {
     throw std::runtime_error("Unexpect number of version parts in " + version);
   }
 
-  auto givenMajor = std::stoi(parts[0]);
+  const auto givenMajor = std::stoul(parts.at(0));
   if (gui::Version::major > givenMajor) {
     return 1;
   }
@@ -110,7 +109,7 @@ int compareLOOTVersion(const std::string& version) {
     return -1;
   }
 
-  auto givenMinor = std::stoi(parts[1]);
+  const auto givenMinor = std::stoul(parts.at(1));
   if (gui::Version::minor > givenMinor) {
     return 1;
   }
@@ -119,7 +118,7 @@ int compareLOOTVersion(const std::string& version) {
     return -1;
   }
 
-  auto givenPatch = std::stoi(parts[2]);
+  const auto givenPatch = std::stoul(parts.at(2));
   if (gui::Version::patch > givenPatch) {
     return 1;
   }
@@ -171,7 +170,7 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
 
   auto fontMetrics = QFontMetricsF(QApplication::font());
 
-  int maxCharWidth = 0;
+  qreal maxCharWidth = 0;
   for (const auto& hexCharacter : HEX_CHARACTERS) {
     auto width =
         fontMetrics.size(Qt::TextSingleLine, QString(QChar(hexCharacter)))
@@ -181,7 +180,7 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
     }
   }
 
-  auto paddingWidth =
+  const auto paddingWidth =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
   // If the game supports light plugins leave enough space for their longer
@@ -192,15 +191,21 @@ int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
     case GameType::tes5:
     case GameType::fo3:
     case GameType::fonv:
-      return 2 * maxCharWidth + paddingWidth;
+      return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
     default:
-      return fontMetrics.size(Qt::TextSingleLine, "FE ").width() +
-             3 * maxCharWidth + paddingWidth;
+      auto prefixWidth =
+          static_cast<int>(fontMetrics.size(Qt::TextSingleLine, "FE ").width());
+      return prefixWidth + 3 * static_cast<int>(maxCharWidth) + paddingWidth;
   }
 }
 
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
-    QMainWindow(parent), state(state) {
+    QMainWindow(parent),
+    state(state),
+    pluginEditorWidget(
+        new PluginEditorWidget(editorSplitter,
+                               state.getSettings().getLanguages(),
+                               state.getSettings().getLanguage())) {
   qRegisterMetaType<QueryResult>("QueryResult");
   qRegisterMetaType<std::string>("std::string");
 
@@ -208,7 +213,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
   auto installedGames = state.GetInstalledGameFolderNames();
 
-  for (const auto& gameSettings : state.getGameSettings()) {
+  for (const auto& gameSettings : state.getSettings().getGameSettings()) {
     auto installedGame = std::find(installedGames.cbegin(),
                                    installedGames.cend(),
                                    gameSettings.FolderName());
@@ -222,14 +227,14 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-    if (state.getLastVersion() != gui::Version::string()) {
+    if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
     }
 
     state.initCurrentGame();
 
     auto initMessages = state.getInitMessages();
-    auto initHasErrored =
+    const auto initHasErrored =
         std::any_of(initMessages.begin(),
                     initMessages.end(),
                     [](const SimpleMessage& message) {
@@ -241,7 +246,7 @@ void MainWindow::initialise() {
       return;
     }
 
-    const auto& filters = state.getFilters();
+    const auto& filters = state.getSettings().getFilters();
     filtersWidget->hideVersionNumbers(filters.hideVersionNumbers);
     filtersWidget->hideCRCs(filters.hideCRCs);
     filtersWidget->hideBashTags(filters.hideBashTags);
@@ -257,16 +262,16 @@ void MainWindow::initialise() {
     proxyModel->setFiltersState(filtersWidget->getPluginFiltersState(), {});
 
     gameComboBox->setCurrentText(
-        QString::fromStdString(state.GetCurrentGame().Name()));
+        QString::fromStdString(state.GetCurrentGame().GetSettings().Name()));
 
     loadGame(true);
 
     // Check for updates.
-    if (state.isLootUpdateCheckEnabled()) {
+    if (state.getSettings().isLootUpdateCheckEnabled()) {
       sendHttpRequest("https://api.github.com/repos/loot/loot/releases/latest",
                       &MainWindow::handleGetLatestReleaseResponseFinished);
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -276,15 +281,15 @@ void MainWindow::setupUi() {
   setWindowIcon(QIcon(":/icon.ico"));
 #endif
 
-  auto lastWindowPosition = state.getWindowPosition();
+  auto lastWindowPosition = state.getSettings().getWindowPosition();
   if (lastWindowPosition.has_value()) {
     const auto& windowPosition = lastWindowPosition.value();
-    auto width = windowPosition.right - windowPosition.left;
-    auto height = windowPosition.bottom - windowPosition.top;
+    const auto width = windowPosition.right - windowPosition.left;
+    const auto height = windowPosition.bottom - windowPosition.top;
 
-    auto geometry =
+    const auto geometry =
         QRect(windowPosition.left, windowPosition.top, width, height);
-    auto topLeft = geometry.topLeft();
+    const auto topLeft = geometry.topLeft();
 
     if (QGuiApplication::screenAt(topLeft) == nullptr) {
       // No screen exists at the old position, just leave the Window at the
@@ -302,53 +307,33 @@ void MainWindow::setupUi() {
       setGeometry(geometry);
     }
   } else {
-    resize(1024, 768);
+    static constexpr int DEFAULT_WIDTH = 1024;
+    static constexpr int DEFAULT_HEIGHT = 768;
+    resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
   }
 
   // Set up status bar.
-  statusbar = new QStatusBar(this);
   setStatusBar(statusbar);
 
   setupMenuBar();
   setupToolBar();
 
-  settingsDialog = new SettingsDialog(this);
   settingsDialog->setObjectName("settingsDialog");
-
-  searchDialog = new SearchDialog(this);
   searchDialog->setObjectName("searchDialog");
-
-  auto sidebarSplitter = new QSplitter(this);
-
-  toolBox = new QToolBox(sidebarSplitter);
-
-  auto pluginsTab = new QWidget();
-  auto pluginsTabLayout = new QVBoxLayout(pluginsTab);
-
-  sidebarPluginsView = new QTableView(pluginsTab);
   sidebarPluginsView->setObjectName("sidebarPluginsView");
 
-  pluginsTabLayout->addWidget(sidebarPluginsView, 1);
-  pluginsTabLayout->setContentsMargins(0, 0, 0, 0);
-  toolBox->addItem(pluginsTab, QString("Plugins"));
+  toolBox->addItem(sidebarPluginsView, QString("Plugins"));
 
-  filtersWidget = new FiltersWidget(toolBox);
   filtersWidget->setObjectName("filtersWidget");
 
   toolBox->addItem(filtersWidget, QString("Filters"));
 
   sidebarSplitter->addWidget(toolBox);
 
-  auto editorSplitter =
-      new QSplitter(Qt::Orientation::Vertical, sidebarSplitter);
-
-  pluginCardsView = new QListView(editorSplitter);
   pluginCardsView->setObjectName("pluginCardsView");
 
   editorSplitter->addWidget(pluginCardsView);
 
-  pluginEditorWidget = new PluginEditorWidget(
-      editorSplitter, state.getLanguages(), state.getLanguage());
   pluginEditorWidget->setObjectName("pluginEditorWidget");
   pluginEditorWidget->hide();
 
@@ -361,21 +346,17 @@ void MainWindow::setupUi() {
 
   setCentralWidget(sidebarSplitter);
 
-  progressDialog = new QProgressDialog(this);
   progressDialog->setWindowModality(Qt::WindowModal);
   progressDialog->setCancelButton(nullptr);
   progressDialog->setMinimum(0);
   progressDialog->setMaximum(0);
   progressDialog->reset();
 
-  pluginItemModel = new PluginItemModel(this);
   pluginItemModel->setObjectName("pluginItemModel");
 
-  proxyModel = new PluginItemFilterModel(this);
   proxyModel->setObjectName("proxyModel");
   proxyModel->setSourceModel(pluginItemModel);
 
-  groupsEditor = new GroupsEditorDialog(this, pluginItemModel);
   groupsEditor->setObjectName("groupsEditor");
 
   setupViews();
@@ -389,72 +370,63 @@ void MainWindow::setupUi() {
 
 void MainWindow::setupMenuBar() {
   // Create actions.
-  actionSettings = new QAction(this);
   actionSettings->setObjectName("actionSettings");
   actionSettings->setIcon(IconFactory::getSettingsIcon());
-  actionBackupData = new QAction(this);
+
   actionBackupData->setObjectName("actionBackupData");
   actionBackupData->setIcon(IconFactory::getArchiveIcon());
-  actionQuit = new QAction(this);
+
   actionQuit->setObjectName("actionQuit");
   actionQuit->setIcon(IconFactory::getQuitIcon());
 
-  actionViewDocs = new QAction(this);
   actionViewDocs->setObjectName("actionViewDocs");
   actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
   actionViewDocs->setShortcut(QKeySequence::HelpContents);
-  actionOpenLOOTDataFolder = new QAction(this);
+
   actionOpenLOOTDataFolder->setObjectName("actionOpenLOOTDataFolder");
   actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
-  actionJoinDiscordServer = new QAction(this);
+
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
-  actionAbout = new QAction(this);
+
   actionAbout->setObjectName("actionAbout");
   actionAbout->setIcon(IconFactory::getAboutIcon());
 
-  actionOpenGroupsEditor = new QAction(this);
   actionOpenGroupsEditor->setObjectName("actionOpenGroupsEditor");
   actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
-  actionSearch = new QAction(this);
+
   actionSearch->setObjectName("actionSearch");
   actionSearch->setIcon(IconFactory::getSearchIcon());
   actionSearch->setShortcut(QKeySequence::Find);
-  actionCopyLoadOrder = new QAction(this);
+
   actionCopyLoadOrder->setObjectName("actionCopyLoadOrder");
   actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
-  actionCopyContent = new QAction(this);
+
   actionCopyContent->setObjectName("actionCopyContent");
   actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
-  actionRefreshContent = new QAction(this);
+
   actionRefreshContent->setObjectName("actionRefreshContent");
   actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
   actionRefreshContent->setShortcut(QKeySequence::Refresh);
-  actionRedatePlugins = new QAction(this);
+
   actionRedatePlugins->setObjectName("actionRedatePlugins");
   actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
-  actionClearAllUserMetadata = new QAction(this);
+
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
-  actionCopyMetadata = new QAction(this);
   actionCopyMetadata->setObjectName("actionCopyMetadata");
-  actionCopyCardContent = new QAction(this);
+
   actionCopyCardContent->setObjectName("actionCopyCardContent");
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
-  actionEditMetadata = new QAction(this);
+
   actionEditMetadata->setObjectName("actionEditMetadata");
   actionEditMetadata->setIcon(IconFactory::getEditIcon());
   actionEditMetadata->setShortcut(QString("Ctrl+E"));
-  actionClearMetadata = new QAction(this);
+
   actionClearMetadata->setObjectName("actionClearMetadata");
   actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
 
   // Create menu bar.
-  menubar = new QMenuBar(this);
-  menuFile = new QMenu(menubar);
-  menuHelp = new QMenu(menubar);
-  menuGame = new QMenu(menubar);
-  menuPlugin = new QMenu(menubar);
   setMenuBar(menubar);
 
   menubar->addAction(menuFile->menuAction());
@@ -489,28 +461,25 @@ void MainWindow::setupMenuBar() {
 
 void MainWindow::setupToolBar() {
   // Create actions.
-  actionSort = new QAction(this);
   actionSort->setObjectName("actionSort");
   actionSort->setIcon(IconFactory::getSortIcon());
-  actionUpdateMasterlist = new QAction(this);
+
   actionUpdateMasterlist->setObjectName("actionUpdateMasterlist");
   actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
-  actionApplySort = new QAction(this);
+
   actionApplySort->setObjectName("actionApplySort");
   actionApplySort->setVisible(false);
-  actionDiscardSort = new QAction(this);
+
   actionDiscardSort->setObjectName("actionDiscardSort");
   actionDiscardSort->setVisible(false);
 
   // Create toolbar.
-  toolBar = new QToolBar(this);
   toolBar->setMovable(false);
   toolBar->setFloatable(false);
   toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
   addToolBar(Qt::TopToolBarArea, toolBar);
 
-  gameComboBox = new QComboBox(toolBar);
   gameComboBox->setObjectName("gameComboBox");
 
   toolBar->addWidget(gameComboBox);
@@ -573,7 +542,7 @@ void MainWindow::setupViews() {
 
   // Plugin selection handling needs to be set up after the model has been
   // set, as before then there is no selection model.
-  auto selectionModel = sidebarPluginsView->selectionModel();
+  const auto selectionModel = sidebarPluginsView->selectionModel();
   connect(selectionModel,
           &QItemSelectionModel::selectionChanged,
           this,
@@ -626,8 +595,9 @@ void MainWindow::enableGameActions() {
   actionSort->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
 
-  auto enableRedatePlugins = state.GetCurrentGame().Type() == GameType::tes5 ||
-                             state.GetCurrentGame().Type() == GameType::tes5se;
+  const auto enableRedatePlugins =
+      state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
+      state.GetCurrentGame().GetSettings().Type() == GameType::tes5se;
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 }
 
@@ -709,25 +679,28 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
     emit progressUpdater->progressUpdate(QString::fromStdString(message));
   };
 
-  std::unique_ptr<Query> query = std::make_unique<GetGameDataQuery<>>(
-      state.GetCurrentGame(), state.getLanguage(), sendProgressUpdate);
+  std::unique_ptr<Query> query =
+      std::make_unique<GetGameDataQuery>(state.GetCurrentGame(),
+                                         state.getSettings().getLanguage(),
+                                         sendProgressUpdate);
 
-  auto handler = isOnLOOTStartup ? &MainWindow::handleStartupGameDataLoaded
-                                 : &MainWindow::handleRefreshGameDataLoaded;
+  const auto handler = isOnLOOTStartup
+                           ? &MainWindow::handleStartupGameDataLoaded
+                           : &MainWindow::handleRefreshGameDataLoaded;
 
   executeBackgroundQuery(std::move(query), handler, progressUpdater);
 }
 
 void MainWindow::updateCounts(const std::vector<SimpleMessage>& generalMessages,
                               const std::vector<PluginItem>& plugins) {
-  auto counters = GeneralInformationCounters(generalMessages, plugins);
-  auto hiddenMessageCount =
+  const auto counters = GeneralInformationCounters(generalMessages, plugins);
+  const auto hiddenMessageCount =
       countHiddenMessages(plugins, filtersWidget->getCardContentFiltersState());
+  const auto hiddenPluginCount =
+      counters.totalPlugins - static_cast<size_t>(proxyModel->rowCount()) + 1;
 
   filtersWidget->setMessageCounts(hiddenMessageCount, counters.totalMessages);
-  filtersWidget->setPluginCounts(
-      counters.totalPlugins - (proxyModel->rowCount() - 1),
-      counters.totalPlugins);
+  filtersWidget->setPluginCounts(hiddenPluginCount, counters.totalPlugins);
 }
 
 void MainWindow::updateGeneralInformation() {
@@ -738,7 +711,7 @@ void MainWindow::updateGeneralInformation() {
 
   auto initMessages = state.getInitMessages();
   auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getLanguage());
+                                       state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -749,7 +722,7 @@ void MainWindow::updateGeneralInformation() {
 void MainWindow::updateGeneralMessages() {
   auto initMessages = state.getInitMessages();
   auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getLanguage());
+                                       state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -757,7 +730,7 @@ void MainWindow::updateGeneralMessages() {
 }
 
 void MainWindow::updateSidebarColumnWidths() {
-  auto horizontalHeader = sidebarPluginsView->horizontalHeader();
+  const auto horizontalHeader = sidebarPluginsView->horizontalHeader();
 
   auto stateSectionWidth =
       QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
@@ -766,22 +739,23 @@ void MainWindow::updateSidebarColumnWidths() {
   // If there is no current game set (i.e. on initial construction), use TES5 SE
   // to calculate the load order section width because that's one of the games
   // that uses the wider width.
-  auto loadOrderSectionWidth =
+  const auto loadOrderSectionWidth =
       state.HasCurrentGame()
-          ? calculateSidebarLoadOrderSectionWidth(state.GetCurrentGame().Type())
+          ? calculateSidebarLoadOrderSectionWidth(
+                state.GetCurrentGame().GetSettings().Type())
           : calculateSidebarLoadOrderSectionWidth(GameType::tes5se);
 
-  auto minimumSectionWidth = stateSectionWidth < loadOrderSectionWidth
-                                 ? stateSectionWidth
-                                 : loadOrderSectionWidth;
+  const auto minimumSectionWidth = stateSectionWidth < loadOrderSectionWidth
+                                       ? stateSectionWidth
+                                       : loadOrderSectionWidth;
 
   horizontalHeader->setMinimumSectionSize(minimumSectionWidth);
   horizontalHeader->resizeSection(0, loadOrderSectionWidth);
   horizontalHeader->resizeSection(2, stateSectionWidth);
 }
 
-void MainWindow::setFiltersState(PluginFiltersState&& state) {
-  proxyModel->setFiltersState(std::move(state));
+void MainWindow::setFiltersState(PluginFiltersState&& filtersState) {
+  proxyModel->setFiltersState(std::move(filtersState));
 
   updateCounts(pluginItemModel->getGeneralMessages(),
                pluginItemModel->getPluginItems());
@@ -790,9 +764,9 @@ void MainWindow::setFiltersState(PluginFiltersState&& state) {
 }
 
 void MainWindow::setFiltersState(
-    PluginFiltersState&& state,
+    PluginFiltersState&& filtersState,
     std::vector<std::string>&& conflictingPluginNames) {
-  proxyModel->setFiltersState(std::move(state),
+  proxyModel->setFiltersState(std::move(filtersState),
                               std::move(conflictingPluginNames));
 
   updateCounts(pluginItemModel->getGeneralMessages(),
@@ -802,7 +776,7 @@ void MainWindow::setFiltersState(
 }
 
 bool MainWindow::hasErrorMessages() const {
-  auto counters = GeneralInformationCounters(
+  const auto counters = GeneralInformationCounters(
       pluginItemModel->getGeneralMessages(), pluginItemModel->getPluginItems());
 
   return counters.errors != 0;
@@ -811,7 +785,7 @@ bool MainWindow::hasErrorMessages() const {
 void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> tasks;
 
-  if (state.updateMasterlist()) {
+  if (state.getSettings().updateMasterlist()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
     auto task = new UpdateMasterlistTask(state);
@@ -830,15 +804,15 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   };
 
   std::unique_ptr<Query> sortPluginsQuery =
-      std::make_unique<SortPluginsQuery<>>(state.GetCurrentGame(),
-                                           state,
-                                           state.getLanguage(),
-                                           sendProgressUpdate);
+      std::make_unique<SortPluginsQuery>(state.GetCurrentGame(),
+                                         state,
+                                         state.getSettings().getLanguage(),
+                                         sendProgressUpdate);
 
   auto sortTask = new QueryTask(std::move(sortPluginsQuery));
 
-  auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
-                                : &MainWindow::handlePluginsManualSorted;
+  const auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
+                                      : &MainWindow::handlePluginsManualSorted;
 
   connect(sortTask, &Task::finished, this, sortHandler);
   connect(sortTask, &Task::error, this, &MainWindow::handleError);
@@ -920,7 +894,8 @@ void MainWindow::showFirstRunDialog() {
 }
 
 void MainWindow::showNotification(const QString& message) {
-  statusBar()->showMessage(message, 5000);
+  static constexpr int NOTIFICATION_LIFETIME_MS = 5000;
+  statusBar()->showMessage(message, NOTIFICATION_LIFETIME_MS);
 }
 
 PluginItem MainWindow::getSelectedPlugin() const {
@@ -931,12 +906,12 @@ PluginItem MainWindow::getSelectedPlugin() const {
         "Cannot copy plugin metadata when no plugin is selected");
   }
 
-  auto data = selectedPluginIndices.first().data(RawDataRole);
-  if (!data.canConvert<PluginItem>()) {
+  auto indexData = selectedPluginIndices.first().data(RawDataRole);
+  if (!indexData.canConvert<PluginItem>()) {
     throw std::runtime_error("Cannot convert data to PluginItem");
   }
 
-  return data.value<PluginItem>();
+  return indexData.value<PluginItem>();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
@@ -971,15 +946,15 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     // LOOT is opened into a maximised state, unmaximising it should restore
     // the previous unmaximised size and position, and that can't be done
     // without recording the normal geometry.
-    auto geometry = normalGeometry();
+    const auto geometry = normalGeometry();
     position.left = geometry.x();
     position.top = geometry.y();
     position.right = position.left + geometry.width();
     position.bottom = position.top + geometry.height();
     position.maximised = isMaximized();
 
-    state.storeWindowPosition(position);
-  } catch (std::exception& e) {
+    state.getSettings().storeWindowPosition(position);
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Failed to record window position: {}", e.what());
@@ -987,8 +962,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.storeFilters(filtersWidget->getFilterSettings());
-  } catch (std::exception& e) {
+    state.getSettings().storeFilters(filtersWidget->getFilterSettings());
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Failed to record filter states: {}", e.what());
@@ -996,8 +971,19 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    state.save(state.getSettingsPath());
-  } catch (std::exception& e) {
+    state.getSettings().storeLastGame(
+        state.GetCurrentGame().GetSettings().FolderName());
+  } catch (const std::runtime_error& e) {
+    auto logger = getLogger();
+    if (logger) {
+      logger->error("Couldn't set last game: {}", e.what());
+    }
+  }
+
+  try {
+    state.getSettings().updateLastVersion();
+    state.getSettings().save(state.getSettingsPath());
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Failed to save LOOT's settings. Error: {}", e.what());
@@ -1019,8 +1005,9 @@ void MainWindow::executeBackgroundQuery(
   executeBackgroundTasks({task}, progressUpdater);
 }
 
-void MainWindow::executeBackgroundTasks(std::vector<Task*> tasks,
-                                        ProgressUpdater* progressUpdater) {
+void MainWindow::executeBackgroundTasks(
+    std::vector<Task*> tasks,
+    const ProgressUpdater* progressUpdater) {
   auto executor = new TaskExecutor(this, tasks);
 
   if (progressUpdater != nullptr) {
@@ -1052,7 +1039,7 @@ void MainWindow::sendHttpRequest(const std::string& url,
                                  void (MainWindow::*onFinished)()) {
   QNetworkRequest request(QUrl(QString::fromStdString(url)));
   request.setRawHeader("Accept", "application/vnd.github.v3+json");
-  auto reply = networkAccessManager.get(request);
+  const auto reply = networkAccessManager.get(request);
 
   connect(reply, &QNetworkReply::finished, this, onFinished);
   connect(reply,
@@ -1089,7 +1076,7 @@ void MainWindow::addUpdateCheckErrorMessage() {
           .str();
 
   auto generalMessages = pluginItemModel->getGeneralMessages();
-  for (const auto message : generalMessages) {
+  for (const auto& message : generalMessages) {
     if (message.text == text) {
       return;
     }
@@ -1121,18 +1108,14 @@ void MainWindow::handleException(const std::exception& exception) {
   handleError(message);
 }
 
-void MainWindow::handleQueryException(const std::unique_ptr<Query> query,
+void MainWindow::handleQueryException(const Query& query,
                                       const std::exception& exception) {
-  if (query == nullptr) {
-    handleException(exception);
-  } else {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Caught an exception: {}", exception.what());
-    }
-
-    handleError(query->getErrorMessage());
+  auto logger = getLogger();
+  if (logger) {
+    logger->error("Caught an exception: {}", exception.what());
   }
+
+  handleError(query.getErrorMessage());
 }
 
 void MainWindow::handleGameDataLoaded(QueryResult result) {
@@ -1171,7 +1154,7 @@ void MainWindow::handlePluginsSorted(QueryResult result) {
   }
 
   auto currentLoadOrder = state.GetCurrentGame().GetLoadOrder();
-  auto loadOrderHasChanged =
+  const auto loadOrderHasChanged =
       hasLoadOrderChanged(currentLoadOrder, sortedPlugins);
 
   if (loadOrderHasChanged) {
@@ -1213,26 +1196,27 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
   return zipPath;
 }
 
-void MainWindow::on_actionSettings_triggered(bool checked) {
+void MainWindow::on_actionSettings_triggered() {
   try {
     auto themes = findThemes(state.getResourcesPath());
     auto currentGameFolder =
         state.HasCurrentGame()
-            ? std::optional(state.GetCurrentGame().FolderName())
+            ? std::optional(state.GetCurrentGame().GetSettings().FolderName())
             : std::nullopt;
 
-    settingsDialog->initialiseInputs(state, themes, currentGameFolder);
+    settingsDialog->initialiseInputs(
+        state.getSettings(), themes, currentGameFolder);
     settingsDialog->show();
 
     // Adjust size because otherwise the size is slightly too small the first
     // time the dialog is opened.
     settingsDialog->adjustSize();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionBackupData_triggered(bool checked) {
+void MainWindow::on_actionBackupData_triggered() {
   try {
     auto zipPath = createBackup();
 
@@ -1253,14 +1237,14 @@ void MainWindow::on_actionBackupData_triggered(bool checked) {
 
       QMessageBox::information(this, "LOOT", message);
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionQuit_triggered(bool checked) { this->close(); }
+void MainWindow::on_actionQuit_triggered() { this->close(); }
 
-void MainWindow::on_actionOpenGroupsEditor_triggered(bool checked) {
+void MainWindow::on_actionOpenGroupsEditor_triggered() {
   try {
     std::set<std::string> installedPluginGroups;
     for (const auto& plugin : pluginItemModel->getPluginItems()) {
@@ -1274,16 +1258,14 @@ void MainWindow::on_actionOpenGroupsEditor_triggered(bool checked) {
                             installedPluginGroups);
 
     groupsEditor->show();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionSearch_triggered(bool checked) {
-  searchDialog->show();
-}
+void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
-void MainWindow::on_actionCopyLoadOrder_triggered(bool checked) {
+void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
     auto plugins = state.GetCurrentGame().GetPluginsInLoadOrder();
     std::vector<std::string> pluginNames;
@@ -1299,12 +1281,12 @@ void MainWindow::on_actionCopyLoadOrder_triggered(bool checked) {
 
     showNotification(
         translate("The load order has been copied to the clipboard."));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionCopyContent_triggered(bool checked) {
+void MainWindow::on_actionCopyContent_triggered() {
   try {
     auto content =
         pluginItemModel->getGeneralInfo().getMarkdownContent() + "\n\n";
@@ -1317,20 +1299,20 @@ void MainWindow::on_actionCopyContent_triggered(bool checked) {
 
     showNotification(
         translate("LOOT's content has been copied to the clipboard."));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionRefreshContent_triggered(bool checked) {
+void MainWindow::on_actionRefreshContent_triggered() {
   try {
     loadGame(false);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionRedatePlugins_triggered(bool checked) {
+void MainWindow::on_actionRedatePlugins_triggered() {
   try {
     auto button = QMessageBox::question(
         this,
@@ -1351,12 +1333,12 @@ void MainWindow::on_actionRedatePlugins_triggered(bool checked) {
           /* translators: Notification text. */
           translate("Plugins were successfully redated."));
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionClearAllUserMetadata_triggered(bool checked) {
+void MainWindow::on_actionClearAllUserMetadata_triggered() {
   try {
     auto button = QMessageBox::question(
         this,
@@ -1370,7 +1352,8 @@ void MainWindow::on_actionClearAllUserMetadata_triggered(bool checked) {
       return;
     }
 
-    ClearAllMetadataQuery query(state.GetCurrentGame(), state.getLanguage());
+    ClearAllMetadataQuery query(state.GetCurrentGame(),
+                                state.getSettings().getLanguage());
 
     auto result = query.executeLogic();
 
@@ -1397,24 +1380,24 @@ void MainWindow::on_actionClearAllUserMetadata_triggered(bool checked) {
     // dataChanged signal.
     auto nameToRowMap = pluginItemModel->getPluginNameToRowMap();
     for (const auto& item : pluginItems) {
-      auto it = nameToRowMap.find(item.name);
+      const auto it = nameToRowMap.find(item.name);
       if (it == nameToRowMap.end()) {
         throw std::runtime_error(std::string("Could not find plugin named \"") +
                                  item.name + "\" in the plugin item model.");
       }
 
       // It doesn't matter which index column is used, it's the same data.
-      auto index = pluginItemModel->index(it->second, 0);
+      const auto index = pluginItemModel->index(it->second, 0);
       pluginItemModel->setData(index, QVariant::fromValue(item), RawDataRole);
     }
 
     showNotification(translate("All user-added metadata has been cleared."));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionEditMetadata_triggered(bool checked) {
+void MainWindow::on_actionEditMetadata_triggered() {
   try {
     if (pluginEditorWidget->isVisible()) {
       QMessageBox::warning(
@@ -1433,7 +1416,7 @@ void MainWindow::on_actionEditMetadata_triggered(bool checked) {
         groups,
         plugin.name,
         state.GetCurrentGame().GetNonUserMetadata(
-            state.GetCurrentGame().GetPlugin(plugin.name)),
+            *state.GetCurrentGame().GetPlugin(plugin.name)),
         state.GetCurrentGame().GetUserMetadata(plugin.name));
 
     pluginEditorWidget->show();
@@ -1444,17 +1427,18 @@ void MainWindow::on_actionEditMetadata_triggered(bool checked) {
     pluginItemModel->setEditorPluginName(plugin.name);
 
     enterEditingState();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionCopyMetadata_triggered(bool checked) {
+void MainWindow::on_actionCopyMetadata_triggered() {
   try {
     auto selectedPluginName = getSelectedPlugin().name;
 
-    CopyMetadataQuery query(
-        state.GetCurrentGame(), state.getLanguage(), selectedPluginName);
+    CopyMetadataQuery query(state.GetCurrentGame(),
+                            state.getSettings().getLanguage(),
+                            selectedPluginName);
 
     query.executeLogic();
 
@@ -1465,12 +1449,12 @@ void MainWindow::on_actionCopyMetadata_triggered(bool checked) {
             .str();
 
     showNotification(QString::fromStdString(text));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionCopyCardContent_triggered(bool checked) {
+void MainWindow::on_actionCopyCardContent_triggered() {
   try {
     auto selectedPlugin = getSelectedPlugin();
     auto content = selectedPlugin.getMarkdownContent();
@@ -1484,12 +1468,12 @@ void MainWindow::on_actionCopyCardContent_triggered(bool checked) {
             .str();
 
     showNotification(QString::fromStdString(text));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionClearMetadata_triggered(bool checked) {
+void MainWindow::on_actionClearMetadata_triggered() {
   try {
     auto selectedPluginName = getSelectedPlugin().name;
 
@@ -1510,8 +1494,9 @@ void MainWindow::on_actionClearMetadata_triggered(bool checked) {
       return;
     }
 
-    ClearPluginMetadataQuery query(
-        state.GetCurrentGame(), state.getLanguage(), selectedPluginName);
+    ClearPluginMetadataQuery query(state.GetCurrentGame(),
+                                   state.getSettings().getLanguage(),
+                                   selectedPluginName);
 
     auto result = query.executeLogic();
 
@@ -1521,7 +1506,7 @@ void MainWindow::on_actionClearMetadata_triggered(bool checked) {
     auto newPluginItem = std::get<PluginItem>(result);
 
     for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
-      auto index = pluginItemModel->index(i, 0);
+      const auto index = pluginItemModel->index(i, 0);
       auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
       if (pluginItem.name == selectedPluginName) {
@@ -1538,36 +1523,36 @@ void MainWindow::on_actionClearMetadata_triggered(bool checked) {
             .str();
 
     showNotification(QString::fromStdString(notificationText));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionViewDocs_triggered(bool checked) {
+void MainWindow::on_actionViewDocs_triggered() {
   try {
     OpenReadmeQuery query(state.getReadmePath(), "index.html");
 
     query.executeLogic();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionOpenLOOTDataFolder_triggered(bool checked) {
+void MainWindow::on_actionOpenLOOTDataFolder_triggered() {
   try {
     OpenLogLocationQuery query(state.getLogPath());
 
     query.executeLogic();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionJoinDiscordServer_triggered(bool checked) {
+void MainWindow::on_actionJoinDiscordServer_triggered() {
   QDesktopServices::openUrl(QUrl("https://loot.github.io/discord/"));
 }
 
-void MainWindow::on_actionAbout_triggered(bool checked) {
+void MainWindow::on_actionAbout_triggered() {
   try {
     std::string textTemplate = R"(
 <p>%1%</p>
@@ -1607,7 +1592,7 @@ void MainWindow::on_actionAbout_triggered(bool checked) {
 
     QMessageBox::about(
         this, translate("About LOOT"), QString::fromStdString(text));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1621,7 +1606,7 @@ void MainWindow::on_gameComboBox_activated(int index) {
     auto folderName = gameComboBox->currentData().toString().toStdString();
     if (folderName.empty() ||
         (state.HasCurrentGame() &&
-         folderName == state.GetCurrentGame().FolderName())) {
+         folderName == state.GetCurrentGame().GetSettings().FolderName())) {
       return;
     }
 
@@ -1632,17 +1617,20 @@ void MainWindow::on_gameComboBox_activated(int index) {
       emit progressUpdater->progressUpdate(QString::fromStdString(message));
     };
 
-    std::unique_ptr<Query> query = std::make_unique<ChangeGameQuery<>>(
-        state, state.getLanguage(), folderName, sendProgressUpdate);
+    std::unique_ptr<Query> query =
+        std::make_unique<ChangeGameQuery>(state,
+                                          state.getSettings().getLanguage(),
+                                          folderName,
+                                          sendProgressUpdate);
 
     executeBackgroundQuery(
         std::move(query), &MainWindow::handleGameChanged, progressUpdater);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionSort_triggered(bool checked) {
+void MainWindow::on_actionSort_triggered() {
   try {
     sortPlugins(false);
   } catch (std::exception& e) {
@@ -1650,26 +1638,28 @@ void MainWindow::on_actionSort_triggered(bool checked) {
   }
 }
 
-void MainWindow::on_actionApplySort_triggered(bool checked) {
-  std::unique_ptr<Query> query;
+void MainWindow::on_actionApplySort_triggered() {
   try {
     auto sortedPluginNames = pluginItemModel->getPluginNames();
 
-    query = std::make_unique<ApplySortQuery<>>(
-        state.GetCurrentGame(), state, sortedPluginNames);
+    auto query =
+        ApplySortQuery<>(state.GetCurrentGame(), state, sortedPluginNames);
 
-    query->executeLogic();
+    try {
+      query.executeLogic();
 
-    exitSortingState();
-  } catch (std::exception& e) {
-    handleQueryException(std::move(query), e);
+      exitSortingState();
+    } catch (const std::exception& e) {
+      handleQueryException(query, e);
+    }
+  } catch (const std::exception& e) {
+    handleException(e);
   }
 }
 
-void MainWindow::on_actionDiscardSort_triggered(bool checked) {
+void MainWindow::on_actionDiscardSort_triggered() {
   try {
-    auto query =
-        CancelSortQuery(state.GetCurrentGame(), state, state.getLanguage());
+    auto query = CancelSortQuery(state.GetCurrentGame(), state);
 
     auto result = query.executeLogic();
 
@@ -1698,12 +1688,12 @@ void MainWindow::on_actionDiscardSort_triggered(bool checked) {
     updateGeneralMessages();
 
     exitSortingState();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_actionUpdateMasterlist_triggered(bool checked) {
+void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
     std::vector<Task*> tasks;
 
@@ -1715,19 +1705,18 @@ void MainWindow::on_actionUpdateMasterlist_triggered(bool checked) {
     connect(task, &Task::error, this, &MainWindow::handleError);
 
     executeBackgroundTasks({task}, nullptr);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
 void MainWindow::on_sidebarPluginsView_doubleClicked(const QModelIndex& index) {
-  auto cardIndex = index.siblingAtColumn(PluginItemModel::CARDS_COLUMN);
+  const auto cardIndex = index.siblingAtColumn(PluginItemModel::CARDS_COLUMN);
   pluginCardsView->scrollTo(cardIndex, QAbstractItemView::PositionAtTop);
 }
 
 void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
-    const QItemSelection& selected,
-    const QItemSelection& deselected) {
+    const QItemSelection& selected) {
   if (selected.isEmpty()) {
     disablePluginActions();
   } else {
@@ -1811,16 +1800,16 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
     pluginItemModel->setEditorPluginName(std::nullopt);
 
     for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
-      auto index = pluginItemModel->index(i, 0);
+      const auto index = pluginItemModel->index(i, 0);
       auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
       if (pluginItem.name == pluginName) {
         auto plugin = PluginItem(state.GetCurrentGame().GetPlugin(pluginName),
                                  state.GetCurrentGame(),
-                                 state.getLanguage());
+                                 state.getSettings().getLanguage());
 
-        auto data = QVariant::fromValue(plugin);
-        pluginItemModel->setData(index, data, RawDataRole);
+        auto indexData = QVariant::fromValue(plugin);
+        pluginItemModel->setData(index, indexData, RawDataRole);
         break;
       }
     }
@@ -1828,7 +1817,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
     state.DecrementUnappliedChangeCounter();
 
     exitEditingState();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1860,28 +1849,27 @@ void MainWindow::on_filtersWidget_conflictsFilterChanged(
 
     handleProgressUpdate(translate("Identifying conflicting plugins..."));
 
-    std::unique_ptr<Query> query =
-        std::make_unique<GetConflictingPluginsQuery<>>(
-            state.GetCurrentGame(),
-            state.getLanguage(),
-            targetPluginName.value());
+    std::unique_ptr<Query> query = std::make_unique<GetConflictingPluginsQuery>(
+        state.GetCurrentGame(),
+        state.getSettings().getLanguage(),
+        targetPluginName.value());
 
     executeBackgroundQuery(
         std::move(query), &MainWindow::handleConflictsChecked, nullptr);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
 void MainWindow::on_filtersWidget_cardContentFilterChanged(
-    CardContentFiltersState state) {
-  pluginItemModel->setCardContentFiltersState(std::move(state));
+    CardContentFiltersState filtersState) {
+  pluginItemModel->setCardContentFiltersState(std::move(filtersState));
 }
 
 void MainWindow::on_settingsDialog_accepted() {
   try {
     settingsDialog->recordInputValues(state);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1890,12 +1878,12 @@ void MainWindow::on_groupsEditor_accepted() {
   try {
     state.GetCurrentGame().SetUserGroups(groupsEditor->getUserGroups());
     state.GetCurrentGame().SaveUserMetadata();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
 
-void MainWindow::on_searchDialog_finished(int result) { searchDialog->reset(); }
+void MainWindow::on_searchDialog_finished() { searchDialog->reset(); }
 
 void MainWindow::on_searchDialog_textChanged(const QString& text) {
   if (text.isEmpty()) {
@@ -1915,8 +1903,8 @@ void MainWindow::on_searchDialog_textChanged(const QString& text) {
 }
 
 void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {
-  auto sourceIndex = pluginItemModel->setCurrentSearchResult(resultIndex);
-  auto proxyIndex = proxyModel->mapFromSource(sourceIndex);
+  const auto sourceIndex = pluginItemModel->setCurrentSearchResult(resultIndex);
+  const auto proxyIndex = proxyModel->mapFromSource(sourceIndex);
 
   pluginCardsView->scrollTo(proxyIndex, QAbstractItemView::PositionAtTop);
 }
@@ -1929,7 +1917,7 @@ void MainWindow::handleGameChanged(QueryResult result) {
     handleGameDataLoaded(result);
 
     updateSidebarColumnWidths();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1937,7 +1925,7 @@ void MainWindow::handleGameChanged(QueryResult result) {
 void MainWindow::handleRefreshGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1946,7 +1934,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
 
-    if (state.shouldAutoSort()) {
+    if (state.getSettings().shouldAutoSort()) {
       if (hasErrorMessages()) {
         state.GetCurrentGame().AppendMessage(
             Message(MessageType::error,
@@ -1959,7 +1947,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
         sortPlugins(true);
       }
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1967,7 +1955,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
 void MainWindow::handlePluginsManualSorted(QueryResult result) {
   try {
     handlePluginsSorted(result);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -1981,9 +1969,9 @@ void MainWindow::handlePluginsAutoSorted(QueryResult result) {
     }
 
     if (!hasErrorMessages()) {
-      on_actionQuit_triggered(false);
+      on_actionQuit_triggered();
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -2010,7 +1998,7 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
                         .str();
 
     showNotification(QString::fromStdString(infoText));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -2039,7 +2027,7 @@ void MainWindow::handleConflictsChecked(QueryResult result) {
 
     setFiltersState(filtersWidget->getPluginFiltersState(),
                     std::move(conflictingPluginNames));
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -2070,7 +2058,7 @@ void MainWindow::handleGetLatestReleaseResponseFinished() {
     auto json = QJsonDocument::fromJson(responseData.value());
     auto tagName = json["tag_name"].toString().toStdString();
 
-    auto comparisonResult = compareLOOTVersion(tagName);
+    const auto comparisonResult = compareLOOTVersion(tagName);
     if (comparisonResult < 0) {
       addUpdateAvailableMessage();
       return;
@@ -2083,7 +2071,7 @@ void MainWindow::handleGetLatestReleaseResponseFinished() {
     // tag's commit hash.
     auto url = "https://api.github.com/repos/loot/loot/commits/tags/" + tagName;
     sendHttpRequest(url, &MainWindow::handleGetTagCommitResponseFinished);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -2112,7 +2100,7 @@ void MainWindow::handleGetTagCommitResponseFinished() {
       return;
     }
 
-    auto tagCommitDate = getDateFromCommitJson(json, commitHash);
+    const auto tagCommitDate = getDateFromCommitJson(json, commitHash);
     if (!tagCommitDate.has_value()) {
       addUpdateCheckErrorMessage();
       return;
@@ -2165,7 +2153,7 @@ void MainWindow::handleGetTagCommitResponseFinished() {
             &QNetworkReply::sslErrors,
             this,
             &MainWindow::handleUpdateCheckSSLError);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -2186,7 +2174,7 @@ void MainWindow::handleUpdateCheckNetworkError(
     }
 
     addUpdateCheckErrorMessage();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }
@@ -2202,7 +2190,7 @@ void MainWindow::handleUpdateCheckSSLError(const QList<QSslError>& errors) {
     }
 
     addUpdateCheckErrorMessage();
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     handleException(e);
   }
 }

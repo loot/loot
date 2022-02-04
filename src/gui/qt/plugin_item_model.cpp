@@ -46,12 +46,12 @@ const int PluginItemModel::CARDS_COLUMN = 3;
 PluginItemModel::PluginItemModel(QObject* parent) :
     QAbstractListModel(parent) {}
 
-int PluginItemModel::rowCount(const QModelIndex& parent) const {
+int PluginItemModel::rowCount(const QModelIndex&) const {
   // Row 0 is an extra row for the general information card.
-  return items.size() + 1;
+  return static_cast<int>(items.size()) + 1;
 }
 
-int PluginItemModel::columnCount(const QModelIndex& parent) const {
+int PluginItemModel::columnCount(const QModelIndex&) const {
   // Column 0 is for plugin sidebar items, column 1 is for plugin cards.
   // Although they use the same data, they need different size hints.
   return 4;
@@ -74,18 +74,18 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       return QVariant::fromValue(generalInformation);
     }
 
-    int itemsIndex = index.row() - 1;
+    const int itemsIndex = index.row() - 1;
     return QVariant::fromValue(items.at(itemsIndex));
   }
 
   if (index.row() == 0) {
     if (index.column() == CARDS_COLUMN && role == CountersRole) {
-      auto counters =
+      const auto counters =
           GeneralInformationCounters(generalInformation.generalMessages, items);
       return QVariant::fromValue(counters);
     }
   } else {
-    int itemsIndex = index.row() - 1;
+    const int itemsIndex = index.row() - 1;
     auto plugin = items.at(itemsIndex);
 
     switch (index.column()) {
@@ -106,7 +106,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
         break;
       }
       case SIDEBAR_STATE_COLUMN: {
-        auto isCurrentEditorPlugin =
+        const auto isCurrentEditorPlugin =
             currentEditorPluginName.has_value() &&
             currentEditorPluginName.value() == plugin.name;
 
@@ -134,32 +134,31 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
         if (role == CardContentFiltersRole) {
           return QVariant::fromValue(cardContentFiltersState);
         } else if (role == ContentSearchRole) {
-          int itemsIndex = index.row() - 1;
-          return QString::fromStdString(items.at(itemsIndex).contentToSearch());
+          return QString::fromStdString(plugin.contentToSearch());
         } else if (role == SearchResultRole) {
-          int searchResultsIndex = index.row() - 1;
+          const int searchResultsIndex = index.row() - 1;
 
-          auto isResult = searchResults.at(searchResultsIndex);
-          auto isCurrentResult =
+          const auto isResult = searchResults.at(searchResultsIndex);
+          const auto isCurrentResult =
               currentSearchResultIndex.has_value() &&
               currentSearchResultIndex.value() == searchResultsIndex;
 
-          SearchResultData searchResultData(isResult, isCurrentResult);
+          const SearchResultData searchResultData(isResult, isCurrentResult);
 
           return QVariant::fromValue(searchResultData);
         }
 
         break;
       }
+      default:
+        return QVariant();
     }
   }
 
   return QVariant();
 }
 
-QVariant PluginItemModel::headerData(int section,
-                                     Qt::Orientation orientation,
-                                     int role) const {
+QVariant PluginItemModel::headerData(int, Qt::Orientation, int) const {
   return QVariant();
 }
 
@@ -212,7 +211,7 @@ bool PluginItemModel::setData(const QModelIndex& index,
     if (index.row() > 0) {
       int searchResultsIndex = index.row() - 1;
       auto newData = value.value<SearchResultData>();
-      auto existingIsResult = searchResults.at(searchResultsIndex);
+      const auto existingIsResult = searchResults.at(searchResultsIndex);
 
       auto dataHasChanged = false;
       if (existingIsResult != newData.isResult) {
@@ -227,7 +226,7 @@ bool PluginItemModel::setData(const QModelIndex& index,
         // Before replacing the stored current search result index,
         // call setData for that index to ensure that item is updated.
         if (currentSearchResultIndex.has_value()) {
-          auto otherIndex =
+          const auto otherIndex =
               this->index(currentSearchResultIndex.value() + 1, CARDS_COLUMN);
           auto otherItemData =
               data(otherIndex, SearchResultRole).value<SearchResultData>();
@@ -258,14 +257,14 @@ bool PluginItemModel::setData(const QModelIndex& index,
     // The zeroth row is a special row for the general information card.
     generalInformation = value.value<GeneralInformation>();
   } else {
-    int itemsIndex = index.row() - 1;
+    const int itemsIndex = index.row() - 1;
 
     items.at(itemsIndex) = value.value<PluginItem>();
   }
 
   // The RawDataRole data changed, emit dataChanged for all columns.
-  auto topLeft = index.siblingAtColumn(SIDEBAR_LOAD_ORDER_COLUMN);
-  auto bottomRight = index.siblingAtColumn(CARDS_COLUMN);
+  const auto topLeft = index.siblingAtColumn(SIDEBAR_LOAD_ORDER_COLUMN);
+  const auto bottomRight = index.siblingAtColumn(CARDS_COLUMN);
 
   emit dataChanged(topLeft, bottomRight, {role});
   return true;
@@ -288,12 +287,12 @@ std::vector<std::string> PluginItemModel::getPluginNames() const {
 std::unordered_map<std::string, int> PluginItemModel::getPluginNameToRowMap()
     const {
   std::unordered_map<std::string, int> nameToRowMap;
-  int size = rowCount() - 1;
+  const int size = rowCount() - 1;
   nameToRowMap.reserve(size);
 
   for (int i = 1; i < rowCount(); i += 1) {
     // The column we choose doesn't matter, it's the same data for both.
-    auto index = this->index(i, 0);
+    const auto index = this->index(i, 0);
     auto indexName = index.data(RawDataRole).value<PluginItem>().name;
 
     nameToRowMap.emplace(indexName, i);
@@ -303,7 +302,7 @@ std::unordered_map<std::string, int> PluginItemModel::getPluginNameToRowMap()
 }
 
 void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
-  beginRemoveRows(QModelIndex(), 1, items.size());
+  beginRemoveRows(QModelIndex(), 1, static_cast<int>(items.size()));
 
   items.clear();
   searchResults.clear();
@@ -311,7 +310,7 @@ void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
 
   endRemoveRows();
 
-  beginInsertRows(QModelIndex(), 1, newItems.size());
+  beginInsertRows(QModelIndex(), 1, static_cast<int>(newItems.size()));
 
   std::swap(items, newItems);
   searchResults.resize(items.size(), false);
@@ -320,13 +319,13 @@ void PluginItemModel::setPluginItems(std::vector<PluginItem>&& newItems) {
 }
 
 void PluginItemModel::setEditorPluginName(
-    std::optional<std::string>&& editorPluginName) {
+    const std::optional<std::string>& editorPluginName) {
   currentEditorPluginName = editorPluginName;
 
   // Opening the editor changes what is displayed in the sidebar name and
   // state columns.
-  auto startIndex = index(1, SIDEBAR_NAME_COLUMN);
-  auto endIndex = index(rowCount() - 1, SIDEBAR_STATE_COLUMN);
+  const auto startIndex = index(1, SIDEBAR_NAME_COLUMN);
+  const auto endIndex = index(rowCount() - 1, SIDEBAR_STATE_COLUMN);
   emit dataChanged(startIndex, endIndex, {EditorStateRole});
 }
 
@@ -334,7 +333,7 @@ void PluginItemModel::setGeneralInformation(
     const FileRevisionSummary& masterlistRevision,
     const FileRevisionSummary& preludeRevision,
     const std::vector<SimpleMessage>& messages) {
-  auto infoIndex = index(0, CARDS_COLUMN);
+  const auto infoIndex = index(0, CARDS_COLUMN);
 
   generalInformation.masterlistRevision = masterlistRevision;
   generalInformation.preludeRevision = preludeRevision;
@@ -345,7 +344,7 @@ void PluginItemModel::setGeneralInformation(
 
 void PluginItemModel::setPreludeRevision(
     const FileRevisionSummary& preludeRevision) {
-  auto infoIndex = index(0, CARDS_COLUMN);
+  const auto infoIndex = index(0, CARDS_COLUMN);
   generalInformation.preludeRevision = preludeRevision;
 
   emit dataChanged(infoIndex, infoIndex, {RawDataRole});
@@ -353,8 +352,8 @@ void PluginItemModel::setPreludeRevision(
 
 void PluginItemModel::setGeneralMessages(
     std::vector<SimpleMessage>&& messages) {
-  auto infoIndex = index(0, CARDS_COLUMN);
-  generalInformation.generalMessages = messages;
+  const auto infoIndex = index(0, CARDS_COLUMN);
+  generalInformation.generalMessages = std::move(messages);
 
   emit dataChanged(infoIndex, infoIndex, {RawDataRole});
 }
@@ -369,19 +368,20 @@ const GeneralInformation& PluginItemModel::getGeneralInfo() const {
 
 void PluginItemModel::setCardContentFiltersState(
     CardContentFiltersState&& state) {
-  cardContentFiltersState = state;
+  cardContentFiltersState = std::move(state);
 
-  auto startIndex = index(1, CARDS_COLUMN);
-  auto endIndex = index(rowCount() - 1, CARDS_COLUMN);
+  const auto startIndex = index(1, CARDS_COLUMN);
+  const auto endIndex = index(rowCount() - 1, CARDS_COLUMN);
   emit dataChanged(startIndex, endIndex, {CardContentFiltersRole});
 }
 
 QModelIndex PluginItemModel::setCurrentSearchResult(size_t resultIndex) {
   size_t currentResultIndex = 0;
-  for (auto i = 0; i < searchResults.size(); i += 1) {
-    auto isResult = searchResults[i];
+  for (size_t i = 0; i < searchResults.size(); i += 1) {
+    const auto isResult = searchResults.at(i);
     if (isResult && currentResultIndex == resultIndex) {
-      auto modelIndex = index(i + 1, CARDS_COLUMN);
+      const auto row = static_cast<int>(i) + 1;
+      auto modelIndex = index(row, CARDS_COLUMN);
       // This setData will also handle unsetting the previous current result.
       setData(modelIndex,
               QVariant::fromValue(SearchResultData(true, true)),

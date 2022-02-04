@@ -40,8 +40,6 @@
 #include <windows.h>
 #endif
 
-#include <spdlog/sinks/basic_file_sink.h>
-
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
@@ -105,11 +103,12 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        /* translators: --auto-sort and --game are command-line arguments and shouldn't be translated. */
+        /* translators: --auto-sort and --game are command-line arguments and
+           shouldn't be translated. */
         translate("Error: --auto-sort was passed but no --game parameter was "
                   "provided.")));
   } else {
-    setAutoSort(autoSort);
+    settings_.setAutoSort(autoSort);
   }
 
   // Do some preliminary locale / UTF-8 support setup here, in case the settings
@@ -126,7 +125,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (!fs::exists(LootPaths::getLootDataPath())) {
     try {
       fs::create_directory(LootPaths::getLootDataPath());
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
@@ -144,13 +143,15 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   // Load settings.
   if (fs::exists(LootPaths::getSettingsPath())) {
     try {
-      LootSettings::load(LootPaths::getSettingsPath(),
-                         LootPaths::getLootDataPath());
-    } catch (exception& e) {
+      settings_.load(LootPaths::getSettingsPath(),
+                     LootPaths::getLootDataPath());
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
-               /* translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong. */
+               /* translators: This error is displayed when LOOT is unable to
+                  load its own settings file. The placeholder is for additional
+                  detail about what went wrong. */
                translate("Error: Settings parsing failed. %1%")) %
            e.what())
               .str()));
@@ -158,7 +159,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   }
 
   // Apply debug logging settings.
-  enableDebugLogging(isDebugLoggingEnabled());
+  enableDebugLogging(settings_.isDebugLoggingEnabled());
 
   // Log some useful info.
   auto logger = getLogger();
@@ -172,7 +173,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
 
 #ifdef _WIN32
   // Check if LOOT is being run through Mod Organiser.
-  bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != NULL;
+  bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != nullptr;
   if (runFromMO && logger) {
     logger->info("LOOT is being run through Mod Organiser.");
   }
@@ -180,14 +181,14 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
 
   // Now that settings have been loaded, set the locale again to handle
   // translations.
-  if (getLanguage() != MessageContent::defaultLanguage) {
+  if (settings_.getLanguage() != MessageContent::defaultLanguage) {
     if (logger) {
       logger->debug("Initialising language settings.");
-      logger->debug("Selected language: {}", getLanguage());
+      logger->debug("Selected language: {}", settings_.getLanguage());
     }
 
     // Boost.Locale initialisation: Generate and imbue locales.
-    locale::global(gen(getLanguage() + ".UTF-8"));
+    locale::global(gen(settings_.getLanguage() + ".UTF-8"));
   }
 
   // Check settings after handling translations so that any messages
@@ -199,7 +200,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
         initMessages_.push_back(
             PlainTextSimpleMessage(MessageType::warn, warning));
       }
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(
@@ -217,7 +218,7 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (!fs::exists(preludeDir)) {
     try {
       fs::create_directory(preludeDir);
-    } catch (exception& e) {
+    } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
           (format(translate(
@@ -234,16 +235,17 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
   if (logger) {
     logger->debug("Detecting installed games.");
   }
-  LoadInstalledGames(getGameSettings(),
+  LoadInstalledGames(settings_.getGameSettings(),
                      LootPaths::getLootDataPath(),
                      LootPaths::getPreludePath());
 
   try {
     SetInitialGame(cmdLineGame);
     if (logger) {
-      logger->debug("Game selected is {}", GetCurrentGame().Name());
+      logger->debug("Game selected is {}",
+                    GetCurrentGame().GetSettings().Name());
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Initial game could not be selected: {}", e.what());
     }
@@ -262,9 +264,10 @@ void LootState::initCurrentGame() {
   try {
     GetCurrentGame().Init();
     if (logger) {
-      logger->debug("Game named {} has been initialsed", GetCurrentGame().Name());
+      logger->debug("Game named {} has been initialsed",
+                    GetCurrentGame().GetSettings().Name());
     }
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());
@@ -282,19 +285,12 @@ const std::vector<SimpleMessage>& LootState::getInitMessages() const {
   return initMessages_;
 }
 
-void LootState::save(const std::filesystem::path& file) {
-  try {
-    storeLastGame(GetCurrentGame().FolderName());
-  } catch (std::runtime_error& e) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error("Couldn't set last game: {}", e.what());
-    }
-  }
-  updateLastVersion();
-  LootSettings::save(file);
-}
+const LootSettings& LootState::getSettings() const { return settings_; }
 
+LootSettings& LootState::getSettings() { return settings_; }
+
+// warning C26436: The type 'class loot::LootState' with a virtual function
+// needs either public virtual or protected non-virtual destructor (c.35).
 std::optional<std::filesystem::path> LootState::FindGamePath(
     const GameSettings& gameSettings) const {
   return gameSettings.FindGamePath();
@@ -305,10 +301,11 @@ void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }
 void LootState::SetInitialGame(std::string preferredGame) {
   if (preferredGame.empty()) {
     // Get preferred game from settings.
-    if (getGame() != "auto")
-      preferredGame = getGame();
-    else if (getLastGame() != "auto")
-      preferredGame = getLastGame();
+    if (settings_.getGame() != "auto") {
+      preferredGame = settings_.getGame();
+    } else if (settings_.getLastGame() != "auto") {
+      preferredGame = settings_.getLastGame();
+    }
   }
 
   if (!preferredGame.empty() && IsGameInstalled(preferredGame)) {
@@ -323,13 +320,5 @@ void LootState::SetInitialGame(std::string preferredGame) {
   }
 
   SetCurrentGame(firstInstalledGame.value());
-}
-
-void LootState::storeGameSettings(std::vector<GameSettings> gameSettings) {
-  lock_guard<mutex> guard(mutex_);
-
-  gameSettings = LoadInstalledGames(
-      gameSettings, LootPaths::getLootDataPath(), LootPaths::getPreludePath());
-  LootSettings::storeGameSettings(gameSettings);
 }
 }

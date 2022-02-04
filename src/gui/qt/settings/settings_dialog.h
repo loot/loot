@@ -26,15 +26,16 @@
 #ifndef LOOT_GUI_QT_SETTINGS_SETTINGS_DIALOG
 #define LOOT_GUI_QT_SETTINGS_SETTINGS_DIALOG
 
-#include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QWidget>
 
 #include "gui/qt/settings/game_tab.h"
 #include "gui/qt/settings/general_tab.h"
+#include "gui/state/loot_state.h"
 
 namespace loot {
 class SettingsDialog : public QDialog {
@@ -46,13 +47,13 @@ public:
                         const std::vector<std::string> &themes,
                         const std::optional<std::string> &currentGameFolder);
 
-  void recordInputValues(LootSettings &settings);
+  void recordInputValues(LootState &state);
 
 private:
-  QAbstractButton *addGameButton;
-  QStackedWidget *stackedWidget;
-  QListWidget *listWidget;
-  GeneralTab *generalTab;
+  QPushButton *addGameButton{new QPushButton(this)};
+  QStackedWidget *stackedWidget{new QStackedWidget(this)};
+  QListWidget *listWidget{new QListWidget(this)};
+  GeneralTab *generalTab{new GeneralTab(this)};
 
   void setupUi();
   void translateUi();
@@ -65,7 +66,7 @@ private:
 private slots:
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();
-  void on_addGameButton_clicked(bool checked);
+  void on_addGameButton_clicked();
 
   void onGameSettingsDeleted();
 };

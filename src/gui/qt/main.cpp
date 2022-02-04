@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 
   if (loot::IsApplicationMutexLocked()) {
     // An instance of LOOT is already running, so focus its window then quit.
-    HWND hWnd = ::FindWindow(NULL, L"LOOT");
+    HWND hWnd = ::FindWindow(nullptr, L"LOOT");
     ::SetForegroundWindow(hWnd);
     return 0;
   }
@@ -87,40 +87,41 @@ int main(int argc, char* argv[]) {
       QLibraryInfo::location(QLibraryInfo::TranslationsPath);
 #endif
 
-  auto loaded =
-      translator.load(QLocale(QString::fromStdString(state.getLanguage())),
-                      QString("qt"),
-                      QString("_"),
-                      translationsPath);
+  auto loaded = translator.load(
+      QLocale(QString::fromStdString(state.getSettings().getLanguage())),
+      QString("qt"),
+      QString("_"),
+      translationsPath);
 
   if (loaded) {
     app.installTranslator(&translator);
   }
 
   // Apply theme.
-  auto styleSheet =
-      loot::loadStyleSheet(state.getResourcesPath(), state.getTheme());
+  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
+                                         state.getSettings().getTheme());
   if (styleSheet.has_value()) {
-    qApp->setStyleSheet(styleSheet.value());
-    auto palette =
-        loot::loadPalette(state.getResourcesPath(), state.getTheme());
+    app.setStyleSheet(styleSheet.value());
+    auto palette = loot::loadPalette(state.getResourcesPath(),
+                                     state.getSettings().getTheme());
     if (palette.has_value()) {
-      qApp->setPalette(palette.value());
+      app.setPalette(palette.value());
     }
   } else {
     // Fall back to the default theme, which has a stylesheet but no palette
     // config.
     styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
     if (styleSheet.has_value()) {
-      qApp->setStyleSheet(styleSheet.value());
+      app.setStyleSheet(styleSheet.value());
     }
   }
 
   loot::MainWindow mainWindow(state);
 
-  auto wasMaximised = state.getWindowPosition()
-                          .value_or(loot::LootSettings::WindowPosition())
-                          .maximised;
+  const auto wasMaximised = state.getSettings()
+                                .getWindowPosition()
+                                .value_or(loot::LootSettings::WindowPosition())
+                                .maximised;
 
   if (wasMaximised) {
     mainWindow.showMaximized();

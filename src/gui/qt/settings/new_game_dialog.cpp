@@ -48,14 +48,6 @@ QString NewGameDialog::getGameType() const {
 }
 
 void NewGameDialog::setupUi() {
-  nameLabel = new QLabel(this);
-  typeLabel = new QLabel(this);
-  folderLabel = new QLabel(this);
-
-  nameInput = new QLineEdit(this);
-  typeComboBox = new QComboBox(this);
-  folderInput = new QLineEdit(this);
-
   auto buttonBox = new QDialogButtonBox(
       QDialogButtonBox::Save | QDialogButtonBox::Cancel, this);
   buttonBox->setObjectName("dialogButtons");

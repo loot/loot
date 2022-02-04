@@ -54,13 +54,12 @@ protected:
     touch(gitRepoPath_ / "masterlist.yaml");
     touch(gitRepoPath_ / "prelude.yaml");
 
-    checkoutBranch(gitRepoPath_, "v0.17");
+    checkoutBranch("v0.17");
   }
 
   void TearDown() override { std::filesystem::remove_all(gitRepoPath_); }
 
-  void checkoutBranch(const std::filesystem::path& gitRepoPath,
-                      const std::string& branch) {
+  void checkoutBranch(const std::string& branch) {
     std::ofstream out(gitRepoPath_ / ".git" / "HEAD");
     out << "ref: refs/heads/" + branch;
     out.close();
@@ -623,7 +622,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "custom");
+  checkoutBranch("custom");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -647,7 +646,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "custom");
+  checkoutBranch("custom");
   std::filesystem::remove(gitRepoPath_ / "masterlist.yaml");
 
   settings_.load(settingsFile_, lootDataPath);
@@ -672,7 +671,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "custom");
+  checkoutBranch("custom");
   std::filesystem::remove_all(gitRepoPath_ / ".git");
 
   settings_.load(settingsFile_, lootDataPath);
@@ -697,7 +696,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "v0.17");
+  checkoutBranch("v0.17");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -806,7 +805,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "custom");
+  checkoutBranch("custom");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -826,7 +825,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "custom");
+  checkoutBranch("custom");
   std::filesystem::remove(gitRepoPath_ / "prelude.yaml");
 
   settings_.load(settingsFile_, lootDataPath);
@@ -848,7 +847,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "custom");
+  checkoutBranch("custom");
   std::filesystem::remove_all(gitRepoPath_ / ".git");
 
   settings_.load(settingsFile_, lootDataPath);
@@ -870,7 +869,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  checkoutBranch(gitRepoPath_, "v0.17");
+  checkoutBranch("v0.17");
 
   settings_.load(settingsFile_, lootDataPath);
 

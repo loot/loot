@@ -43,12 +43,13 @@ void FiltersWidget::setGroups(const std::vector<std::string>& groupNames) {
   setComboBoxItems(groupPluginsFilter, groupNames);
 }
 
-void FiltersWidget::setMessageCounts(unsigned int hidden, unsigned int total) {
-  hiddenMessagesCountLabel->setText(QString::number(hidden) % QString(" / ") %
+void FiltersWidget::setMessageCounts(size_t hidden, size_t total) {
+  hiddenMessagesCountLabel->setText(QString::number(hidden) % " / " %
                                     QString::number(total));
 }
-void FiltersWidget::setPluginCounts(unsigned int hidden, unsigned int total) {
-  hiddenPluginsCountLabel->setText(QString::number(hidden) % QString(" / ") %
+
+void FiltersWidget::setPluginCounts(size_t hidden, size_t total) {
+  hiddenPluginsCountLabel->setText(QString::number(hidden) % " / " %
                                    QString::number(total));
 }
 
@@ -98,35 +99,24 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
 }
 
 void FiltersWidget::setupUi() {
-  conflictingPluginsFilterLabel = new QLabel(this);
-  conflictingPluginsFilter = new QComboBox(this);
+  static constexpr int SPACER_WIDTH = 20;
+  static constexpr int SPACER_HEIGHT = 40;
+
   conflictingPluginsFilter->setObjectName("conflictingPluginsFilter");
-
-  groupPluginsFilterLabel = new QLabel(this);
-  groupPluginsFilter = new QComboBox(this);
   groupPluginsFilter->setObjectName("groupPluginsFilter");
-
-  contentFilterLabel = new QLabel(this);
-  contentFilter = new QLineEdit(this);
   contentFilter->setObjectName("contentFilter");
-
-  versionNumbersFilter = new QCheckBox(this);
   versionNumbersFilter->setObjectName("versionNumbersFilter");
-  crcsFilter = new QCheckBox(this);
   crcsFilter->setObjectName("crcsFilter");
-  bashTagsFilter = new QCheckBox(this);
   bashTagsFilter->setObjectName("bashTagsFilter");
-  notesFilter = new QCheckBox(this);
   notesFilter->setObjectName("notesFilter");
-  pluginMessagesFilter = new QCheckBox(this);
   pluginMessagesFilter->setObjectName("pluginMessagesFilter");
-  inactivePluginsFilter = new QCheckBox(this);
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
-  messagelessPluginsFilter = new QCheckBox(this);
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
 
-  auto verticalSpacer =
-      new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,
+                                        SPACER_HEIGHT,
+                                        QSizePolicy::Minimum,
+                                        QSizePolicy::Expanding);
 
   auto divider = new QFrame(this);
   divider->setFrameShape(QFrame::HLine);
@@ -141,7 +131,14 @@ void FiltersWidget::setupUi() {
   hiddenMessagesCountLabel = new QLabel(this);
 
   auto verticalLayout = new QVBoxLayout(this);
-  verticalLayout->setContentsMargins(8, 8, 8, 8);
+
+  const auto leftMargin = style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
+  const auto topMargin = style()->pixelMetric(QStyle::PM_LayoutTopMargin);
+  const auto rightMargin = style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+  const auto bottomMargin = style()->pixelMetric(QStyle::PM_LayoutBottomMargin);
+
+  verticalLayout->setContentsMargins(
+      leftMargin, topMargin, rightMargin, bottomMargin);
 
   verticalLayout->addWidget(conflictingPluginsFilterLabel);
   verticalLayout->addWidget(conflictingPluginsFilter);
@@ -265,7 +262,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   return filters;
 }
 
-void FiltersWidget::on_conflictingPluginsFilter_activated(int index) {
+void FiltersWidget::on_conflictingPluginsFilter_activated() {
   // Don't emit pluginFilterChanged even though this is a plugin filter,
   // because conflict filtering is slow and requires a progress dialog,
   // and we don't want that to happen for the other plugin filters.
@@ -277,7 +274,7 @@ void FiltersWidget::on_conflictingPluginsFilter_activated(int index) {
   }
 }
 
-void FiltersWidget::on_groupPluginsFilter_activated(int index) {
+void FiltersWidget::on_groupPluginsFilter_activated() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
@@ -285,31 +282,31 @@ void FiltersWidget::on_contentFilter_editingFinished() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_versionNumbersFilter_stateChanged(int state) {
+void FiltersWidget::on_versionNumbersFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_crcsFilter_stateChanged(int state) {
+void FiltersWidget::on_crcsFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_bashTagsFilter_stateChanged(int state) {
+void FiltersWidget::on_bashTagsFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_notesFilter_stateChanged(int state) {
+void FiltersWidget::on_notesFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_pluginMessagesFilter_stateChanged(int state) {
+void FiltersWidget::on_pluginMessagesFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_inactivePluginsFilter_stateChanged(int state) {
+void FiltersWidget::on_inactivePluginsFilter_stateChanged() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_messagelessPluginsFilter_stateChanged(int state) {
+void FiltersWidget::on_messagelessPluginsFilter_stateChanged() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 }

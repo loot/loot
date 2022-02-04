@@ -35,7 +35,7 @@ class OpenLogLocationQuery : public Query {
 public:
   OpenLogLocationQuery(std::filesystem::path logPath) : logPath_(logPath) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->info("Opening LOOT's local appdata folder.");

@@ -40,7 +40,7 @@ std::optional<PluginMetadata> evaluateMasterlistMetadata(
     const std::string& pluginName) {
   try {
     return game.GetMasterlistMetadata(pluginName, true);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error(
@@ -69,7 +69,7 @@ std::optional<PluginMetadata> evaluateUserlistMetadata(
     const std::string& pluginName) {
   try {
     return game.GetUserMetadata(pluginName, true);
-  } catch (std::exception& e) {
+  } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
       logger->error(
@@ -123,19 +123,19 @@ std::string getCommaSeparatedTags(const std::vector<std::string>& tags) {
 }
 
 PluginItem::PluginItem() :
-    hasUserMetadata(false),
     isActive(false),
     isDirty(false),
     isEmpty(false),
-    isLightPlugin(false),
     isMaster(false),
-    loadsArchive(false) {}
+    isLightPlugin(false),
+    loadsArchive(false),
+    hasUserMetadata(false) {}
 
 PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
                        const gui::Game& game,
                        std::string language) :
     name(plugin->GetName()),
-    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder())),
+    loadOrderIndex(game.GetActiveLoadOrderIndex(*plugin, game.GetLoadOrder())),
     crc(plugin->GetCRC()),
     version(plugin->GetVersion()),
     isActive(game.IsPluginActive(plugin->GetName())),

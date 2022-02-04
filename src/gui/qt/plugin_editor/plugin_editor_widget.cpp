@@ -39,7 +39,25 @@ PluginEditorWidget::PluginEditorWidget(
     QWidget *parent,
     const std::vector<LootSettings::Language> &languages,
     const std::string &language) :
-    QWidget(parent), languages(languages), language(language) {
+    QWidget(parent),
+    languages(languages),
+    language(language),
+    loadAfterTab(new LoadAfterFileTableTab(this,
+                                           this->languages,
+                                           this->language,
+                                           filenameCompletions)),
+    requirementsTab(new FileTableTab(this,
+                                     this->languages,
+                                     this->language,
+                                     filenameCompletions)),
+    incompatibilitiesTab(new FileTableTab(this,
+                                          this->languages,
+                                          this->language,
+                                          filenameCompletions)),
+    messagesTab(new MessageTableTab(this, this->languages, this->language)),
+    tagsTab(new TagTableTab(this, bashTagCompletions)),
+    dirtyTab(new CleaningDataTableTab(this, this->languages, this->language)),
+    cleanTab(new CleaningDataTableTab(this, this->languages, this->language)) {
   setupUi();
 }
 
@@ -132,26 +150,9 @@ void PluginEditorWidget::setupUi() {
   auto widgetLayout = new QVBoxLayout();
   auto headerLayout = new QHBoxLayout();
 
-  pluginLabel = new QLabel();
-
   auto buttonBox = new QDialogButtonBox(
       QDialogButtonBox::Save | QDialogButtonBox::Cancel, this);
   buttonBox->setObjectName("dialogButtons");
-
-  tabs = new QTabWidget(this);
-
-  groupTab = new GroupTab(this);
-  loadAfterTab = new LoadAfterFileTableTab(
-      this, languages, language, filenameCompletions);
-  requirementsTab =
-      new FileTableTab(this, languages, language, filenameCompletions);
-  incompatibilitiesTab =
-      new FileTableTab(this, languages, language, filenameCompletions);
-  messagesTab = new MessageTableTab(this, languages, language);
-  tagsTab = new TagTableTab(this, bashTagCompletions);
-  dirtyTab = new CleaningDataTableTab(this, languages, language);
-  cleanTab = new CleaningDataTableTab(this, languages, language);
-  locationsTab = new LocationTableTab(this);
 
   tabs->addTab(groupTab, QString());
   tabs->addTab(loadAfterTab, QString());
@@ -186,15 +187,25 @@ void PluginEditorWidget::setupUi() {
 }
 
 void PluginEditorWidget::translateUi() {
-  tabs->setTabText(0, translate("Group"));
-  tabs->setTabText(1, translate("Load After"));
-  tabs->setTabText(2, translate("Requirements"));
-  tabs->setTabText(3, translate("Incompatibilities"));
-  tabs->setTabText(4, translate("Messages"));
-  tabs->setTabText(5, translate("Bash Tags"));
-  tabs->setTabText(6, translate("Dirty Plugin Info"));
-  tabs->setTabText(7, translate("Clean Plugin Info"));
-  tabs->setTabText(8, translate("Locations"));
+  static constexpr int GROUP_TAB_INDEX = 0;
+  static constexpr int LOAD_AFTER_TAB_INDEX = 1;
+  static constexpr int REQUIREMENTS_TAB_INDEX = 2;
+  static constexpr int INCOMPATIBILITIES_TAB_INDEX = 3;
+  static constexpr int MESSAGES_TAB_INDEX = 4;
+  static constexpr int BASH_TAGS_TAB_INDEX = 5;
+  static constexpr int DIRTY_PLUGIN_INFO_TAB_INDEX = 6;
+  static constexpr int CLEAN_PLUGIN_INFO_TAB_INDEX = 7;
+  static constexpr int LOCATIONS_TAB_INDEX = 8;
+
+  tabs->setTabText(GROUP_TAB_INDEX, translate("Group"));
+  tabs->setTabText(LOAD_AFTER_TAB_INDEX, translate("Load After"));
+  tabs->setTabText(REQUIREMENTS_TAB_INDEX, translate("Requirements"));
+  tabs->setTabText(INCOMPATIBILITIES_TAB_INDEX, translate("Incompatibilities"));
+  tabs->setTabText(MESSAGES_TAB_INDEX, translate("Messages"));
+  tabs->setTabText(BASH_TAGS_TAB_INDEX, translate("Bash Tags"));
+  tabs->setTabText(DIRTY_PLUGIN_INFO_TAB_INDEX, translate("Dirty Plugin Info"));
+  tabs->setTabText(CLEAN_PLUGIN_INFO_TAB_INDEX, translate("Clean Plugin Info"));
+  tabs->setTabText(LOCATIONS_TAB_INDEX, translate("Locations"));
 }
 
 PluginMetadata PluginEditorWidget::getUserMetadata() {
@@ -218,7 +229,7 @@ PluginMetadata PluginEditorWidget::getUserMetadata() {
 }
 
 void PluginEditorWidget::connectTableRowCountChangedSignal(
-    BaseTableTab *tableTab) {
+    const BaseTableTab *tableTab) {
   connect(tableTab,
           &BaseTableTab::tableRowCountChanged,
           this,
@@ -238,10 +249,10 @@ void PluginEditorWidget::on_dialogButtons_rejected() {
 }
 
 void PluginEditorWidget::handleTableRowCountChanged(bool hasUserMetadata) {
-  auto tableTab = qobject_cast<QWidget *>(sender());
+  const auto tableTab = qobject_cast<QWidget *>(sender());
 
   // tabWidget is null for the message content dialog.
-  auto tabIndex = tabs->indexOf(tableTab);
+  const auto tabIndex = tabs->indexOf(tableTab);
 
   if (hasUserMetadata) {
     tabs->setTabIcon(tabIndex, IconFactory::getHasUserMetadataIcon());

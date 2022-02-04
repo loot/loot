@@ -44,10 +44,10 @@ public:
   struct WindowPosition {
     WindowPosition();
 
-    long top;
-    long bottom;
-    long left;
-    long right;
+    int top;
+    int bottom;
+    int left;
+    int right;
     bool maximised;
   };
 

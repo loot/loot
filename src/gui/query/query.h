@@ -52,6 +52,14 @@ typedef std::variant<std::monostate,
 
 class Query {
 public:
+  Query() = default;
+  Query(const Query&) = delete;
+  Query(Query&&) = delete;
+  virtual ~Query() = default;
+
+  Query& operator=(const Query&) = delete;
+  Query& operator=(Query&&) = delete;
+
   virtual QueryResult executeLogic() = 0;
   virtual std::string getErrorMessage() const {
     return boost::locale::translate(

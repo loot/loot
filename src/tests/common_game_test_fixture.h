@@ -119,7 +119,7 @@ protected:
     ASSERT_FALSE(exists(dataPath / missingEsp));
   }
 
-  void TearDown() {
+  void TearDown() override {
     // Grant write permissions to everything in rootTestPath
     // in case the test made anything read only.
     for (const auto& path :

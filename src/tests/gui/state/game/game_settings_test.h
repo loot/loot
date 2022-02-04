@@ -296,7 +296,7 @@ TEST_P(GameSettingsTest,
     out.close();
   }
 
-  GameType gameTypes[6] = {
+  std::array<GameType, 6> gameTypes = {
       GameType::tes4,
       GameType::tes5,
       GameType::fo3,
@@ -304,11 +304,12 @@ TEST_P(GameSettingsTest,
       GameType::fo4,
       GameType::tes5se,
   };
-  for (int i = 0; i < 6; ++i) {
-    if (gameTypes[i] == GetParam()) {
-      EXPECT_TRUE(GameSettings(gameTypes[i]).FindGamePath().has_value());
+
+  for (const auto gameType : gameTypes) {
+    if (gameType == GetParam()) {
+      EXPECT_TRUE(GameSettings(gameType).FindGamePath().has_value());
     } else {
-      EXPECT_FALSE(GameSettings(gameTypes[i]).FindGamePath().has_value());
+      EXPECT_FALSE(GameSettings(gameType).FindGamePath().has_value());
     }
   }
 
@@ -371,39 +372,33 @@ TEST_P(GameSettingsTest,
 }
 
 TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
-  GameSettings settings_;
   settings_.SetName("name");
   EXPECT_EQ("name", settings_.Name());
 }
 
 TEST_P(GameSettingsTest, setMasterShouldStoreGivenValue) {
-  GameSettings settings_;
   settings_.SetMaster("master");
   EXPECT_EQ("master", settings_.Master());
 }
 
 TEST_P(GameSettingsTest, setMinimumHeaderVersionShouldStoreGivenValue) {
-  GameSettings settings_;
   settings_.SetMinimumHeaderVersion(1.34f);
   EXPECT_EQ(1.34f, settings_.MinimumHeaderVersion());
 }
 
 TEST_P(GameSettingsTest, setRegistryKeyShouldStoreGivenValue) {
-  GameSettings settings_;
   auto keys = std::vector<std::string>({"key"});
   settings_.SetRegistryKeys(keys);
   EXPECT_EQ(keys, settings_.RegistryKeys());
 }
 
 TEST_P(GameSettingsTest, setMasterlistSourceShouldStoreGivenValue) {
-  GameSettings settings_;
   settings_.SetMasterlistSource("url");
   EXPECT_EQ("url", settings_.MasterlistSource());
 }
 
 TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
   std::string pathValue = u8"p\u00E1th";
-  GameSettings settings_;
 
   settings_.SetGamePath(std::filesystem::u8path(pathValue));
   EXPECT_EQ(pathValue, settings_.GamePath().u8string());
@@ -412,7 +407,6 @@ TEST_P(GameSettingsTest, setGamePathShouldStoreGivenValue) {
 TEST_P(GameSettingsTest,
        setGameLocalFolderShouldSetLocalPathToTheNamedFolderInLocalAppData) {
   std::string folderName = u8"p\u00E1th";
-  GameSettings settings_;
 
   settings_.SetGameLocalFolder(folderName);
 

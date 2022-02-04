@@ -43,10 +43,10 @@ public slots:
 private:
   LootState &state;
 
-  QNetworkAccessManager *networkAccessManager;
+  QNetworkAccessManager *networkAccessManager{nullptr};
 
-  bool preludeUpdated;
-  bool masterlistUpdated;
+  bool preludeUpdated{false};
+  bool masterlistUpdated{false};
 
   void updatePrelude();
   void updateMasterlist();

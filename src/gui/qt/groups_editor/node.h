@@ -54,7 +54,12 @@ public:
        const QString &name,
        bool isUserMetadata,
        bool containsInstalledPlugins);
+  Node(const Node &) = delete;
+  Node(Node &&) = delete;
   ~Node();
+
+  Node &operator=(const Node &) = delete;
+  Node &operator=(Node &&) = delete;
 
   QString getName() const;
   bool isUserMetadata() const;
@@ -76,8 +81,8 @@ public:
              const QStyleOptionGraphicsItem *option,
              QWidget *widget) override;
 
-  void setPos(const QPointF &pos);
-  void setPos(qreal x, qreal y);
+  void setPosition(const QPointF &pos);
+  void setPosition(qreal x, qreal y);
 
   static constexpr int RADIUS = 10;
   static constexpr int DIAMETER = RADIUS * 2;
@@ -94,12 +99,11 @@ protected:
 
 private:
   QList<Edge *> edgeList;
-  GraphView *graph;
+  QGraphicsItem *edgeToCursor;
+  NodeLabel *textItem;
   bool isUserMetadata_;
   bool containsInstalledPlugins;
   bool drawEdgeToCursor;
-  QGraphicsItem *edgeToCursor;
-  NodeLabel *textItem;
 
   QColor getNodeColor() const;
   void removeEdgeToCursor();

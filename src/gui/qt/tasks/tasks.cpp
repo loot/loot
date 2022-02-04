@@ -36,7 +36,7 @@ void QueryTask::execute() {
     }
 
     emit finished(query->executeLogic());
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     auto logger = getLogger();
     if (logger) {
       logger->error("Exception while executing query: {}", e.what());
@@ -66,7 +66,7 @@ TaskExecutor::TaskExecutor(QObject *parent, std::vector<Task *> tasks) :
           &TaskExecutor::onWorkerThreadFinished);
 
   if (!tasks.empty()) {
-    auto firstTask = tasks[currentTask];
+    auto firstTask = tasks.at(currentTask);
     connect(this, &TaskExecutor::start, firstTask, &Task::execute);
   }
 
@@ -81,7 +81,7 @@ TaskExecutor::~TaskExecutor() {
 
 bool TaskExecutor::wait(unsigned long time) { return workerThread.wait(time); }
 
-void TaskExecutor::onTaskFinished(QueryResult result) {
+void TaskExecutor::onTaskFinished() {
   auto task = qobject_cast<Task *>(sender());
 
   // Disconnect the finished task from the start signal so that it doesn't
@@ -97,15 +97,13 @@ void TaskExecutor::onTaskFinished(QueryResult result) {
     return;
   }
 
-  connect(this, &TaskExecutor::start, tasks[currentTask], &Task::execute);
+  connect(this, &TaskExecutor::start, tasks.at(currentTask), &Task::execute);
 
   // Now start the next task.
   emit start();
 }
 
-void TaskExecutor::onTaskError(const std::string &message) {
-  workerThread.quit();
-}
+void TaskExecutor::onTaskError() { workerThread.quit(); }
 
 void TaskExecutor::onWorkerThreadFinished() {
   tasks.clear();

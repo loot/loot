@@ -26,11 +26,11 @@
 #ifndef LOOT_GUI_QT_GROUPS_EDITOR_GROUPS_EDITOR_DIALOG
 #define LOOT_GUI_QT_GROUPS_EDITOR_GROUPS_EDITOR_DIALOG
 
-#include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListWidget>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 #include <set>
 
@@ -50,12 +50,12 @@ public:
   std::vector<Group> getUserGroups() const;
 
 private:
-  GraphView *graphView;
-  QLabel *groupPluginsTitle;
-  QListWidget *groupPluginsList;
-  QLabel *groupNameInputLabel;
-  QLineEdit *groupNameInput;
-  QAbstractButton *addGroupButton;
+  GraphView *graphView{new GraphView(this)};
+  QLabel *groupPluginsTitle{new QLabel(this)};
+  QListWidget *groupPluginsList{new QListWidget(this)};
+  QLabel *groupNameInputLabel{new QLabel(this)};
+  QLineEdit *groupNameInput{new QLineEdit(this)};
+  QPushButton *addGroupButton{new QPushButton(this)};
 
   PluginItemModel *pluginItemModel;
 
@@ -65,7 +65,7 @@ private:
 private slots:
   void on_graphView_groupSelected(const QString &name);
   void on_groupNameInput_textChanged(const QString &text);
-  void on_addGroupButton_clicked(bool checked);
+  void on_addGroupButton_clicked();
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();
 };

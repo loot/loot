@@ -59,11 +59,12 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
   }
 
   for (int i = maxBackupIndex - 1; i > -1; --i) {
-    const std::filesystem::path backupFilePath =
+    const std::filesystem::path oldBackupFilePath =
         backupDirectory / (filenameFormat % i).str();
-    if (std::filesystem::exists(backupFilePath)) {
+    if (std::filesystem::exists(oldBackupFilePath)) {
       std::filesystem::rename(
-          backupFilePath, backupDirectory / (filenameFormat % (i + 1)).str());
+          oldBackupFilePath,
+          backupDirectory / (filenameFormat % (i + 1)).str());
     }
   }
 
@@ -94,20 +95,23 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   using boost::locale::translate;
 
   const std::string itmRecords =
-      (format(translate(
-           "%1% ITM record", "%1% ITM records", cleaningData.GetITMCount())) %
+      (format(translate("%1% ITM record",
+                        "%1% ITM records",
+                        static_cast<int>(cleaningData.GetITMCount()))) %
        cleaningData.GetITMCount())
           .str();
   const std::string deletedReferences =
-      (format(translate("%1% deleted reference",
-                        "%1% deleted references",
-                        cleaningData.GetDeletedReferenceCount())) %
+      (format(translate(
+           "%1% deleted reference",
+           "%1% deleted references",
+           static_cast<int>(cleaningData.GetDeletedReferenceCount()))) %
        cleaningData.GetDeletedReferenceCount())
           .str();
   const std::string deletedNavmeshes =
-      (format(translate("%1% deleted navmesh",
-                        "%1% deleted navmeshes",
-                        cleaningData.GetDeletedNavmeshCount())) %
+      (format(
+           translate("%1% deleted navmesh",
+                     "%1% deleted navmeshes",
+                     static_cast<int>(cleaningData.GetDeletedNavmeshCount()))) %
        cleaningData.GetDeletedNavmeshCount())
           .str();
 
@@ -169,7 +173,7 @@ std::vector<SimpleMessage> ToSimpleMessages(
     const std::vector<Message>& messages,
     const std::string& language) {
   std::vector<SimpleMessage> simpleMessages;
-  for (const auto message : messages) {
+  for (const auto& message : messages) {
     auto simpleMessage = message.ToSimpleMessage(language);
     if (simpleMessage.has_value()) {
       simpleMessages.push_back(simpleMessage.value());
@@ -230,11 +234,16 @@ std::vector<Message> CheckForRemovedPlugins(
   // without normalising case.
   std::set<std::string> pluginsSet(pluginsAfter.cbegin(), pluginsAfter.cend());
 
+  static constexpr const char* GHOST_EXTENSION = ".ghost";
+  static constexpr size_t GHOST_EXTENSION_LENGTH =
+      std::char_traits<char>::length(GHOST_EXTENSION);
+
   std::vector<Message> messages;
   for (auto& plugin : pluginsBefore) {
     std::string unghostedPluginName;
-    if (boost::iends_with(plugin, ".ghost")) {
-      unghostedPluginName = plugin.substr(0, plugin.length() - 6);
+    if (boost::iends_with(plugin, GHOST_EXTENSION)) {
+      unghostedPluginName =
+          plugin.substr(0, plugin.length() - GHOST_EXTENSION_LENGTH);
     } else {
       unghostedPluginName = plugin;
     }
@@ -256,7 +265,7 @@ std::vector<Message> CheckForRemovedPlugins(
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath) {
   std::string rootKey;
-  size_t startOfSubKey;
+  size_t startOfSubKey = 0;
   if (registryPath.rfind("HKEY_", 0) == 0) {
     auto firstBackslashPos = registryPath.find('\\');
     if (firstBackslashPos == std::string::npos) {

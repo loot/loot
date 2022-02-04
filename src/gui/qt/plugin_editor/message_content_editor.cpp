@@ -33,23 +33,23 @@ namespace loot {
 MessageContentEditor::MessageContentEditor(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages) :
-    QDialog(parent), languages(languages) {
+    QDialog(parent),
+    languages(languages),
+    tableWidget(new MessageContentTableWidget(this, languages)) {
   setupUi();
 }
 
 void MessageContentEditor::initialiseInputs(
     const std::vector<MessageContent>& metadata) {
-  tableWidget->initialiseInputs(metadata);
+  tableWidget->initialiseInputs({}, metadata);
 }
 
 std::vector<MessageContent> MessageContentEditor::getMetadata() const {
-  return tableWidget->getMetadata();
+  return tableWidget->getUserMetadata();
 }
 
 void MessageContentEditor::setupUi() {
   setWindowModality(Qt::WindowModal);
-
-  tableWidget = new MessageContentTableWidget(this, languages);
 
   auto buttonBox = new QDialogButtonBox(
       QDialogButtonBox::Save | QDialogButtonBox::Cancel, this);

@@ -31,143 +31,44 @@ namespace loot {
 LocationTableModel::LocationTableModel(QObject* parent,
                                        std::vector<Location> nonUserMetadata,
                                        std::vector<Location> userMetadata) :
-    QAbstractTableModel(parent),
-    nonUserMetadata(nonUserMetadata),
-    userMetadata(userMetadata) {}
+    MetadataTableModel(parent, nonUserMetadata, userMetadata) {}
 
-std::vector<Location> LocationTableModel::getUserMetadata() const {
-  return userMetadata;
+int LocationTableModel::columnCount(const QModelIndex&) const {
+  static constexpr int COLUMN_COUNT = std::max({URL_COLUMN, NAME_COLUMN}) + 1;
+  return COLUMN_COUNT;
 }
 
-int LocationTableModel::rowCount(const QModelIndex& parent) const {
-  return nonUserMetadata.size() + userMetadata.size();
-}
-
-int LocationTableModel::columnCount(const QModelIndex& parent) const {
-  return 2;
-}
-
-QVariant LocationTableModel::data(const QModelIndex& index, int role) const {
-  if (role != Qt::DisplayRole && role != Qt::EditRole) {
-    return QVariant();
-  }
-
-  if (!index.isValid()) {
-    return QVariant();
-  }
-
-  if (index.row() >= rowCount()) {
-    return QVariant();
-  }
-
-  const auto& element =
-      index.row() < nonUserMetadata.size()
-          ? nonUserMetadata.at(index.row())
-          : userMetadata.at(index.row() - nonUserMetadata.size());
-
-  switch (index.column()) {
-    case 0:
+QVariant LocationTableModel::data(const Location& element,
+                                  int column,
+                                  int) const {
+  switch (column) {
+    case URL_COLUMN:
       return QVariant(QString::fromStdString(element.GetURL()));
-    case 1:
+    case NAME_COLUMN:
       return QVariant(QString::fromStdString(element.GetName()));
     default:
       return QVariant();
   }
 }
 
-QVariant LocationTableModel::headerData(int section,
-                                        Qt::Orientation orientation,
-                                        int role) const {
-  if (role != Qt::DisplayRole) {
-    return QVariant();
-  }
-
-  if (orientation != Qt::Horizontal) {
-    return QVariant();
-  }
-
+QVariant LocationTableModel::headerText(int section) const {
   switch (section) {
-    case 0:
+    case URL_COLUMN:
       return QVariant(translate("URL"));
-    case 1:
+    case NAME_COLUMN:
       return QVariant(translate("Name"));
     default:
       return QVariant();
   }
 }
 
-Qt::ItemFlags LocationTableModel::flags(const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return Qt::ItemIsEnabled;
-  }
-
-  if (index.row() < nonUserMetadata.size()) {
-    return QAbstractItemModel::flags(index);
-  }
-
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-}
-
-bool LocationTableModel::setData(const QModelIndex& index,
-                                 const QVariant& value,
-                                 int role) {
-  if (!index.isValid() || role != Qt::EditRole) {
-    return false;
-  }
-
-  if (index.row() < nonUserMetadata.size() ||
-      index.column() > columnCount() - 1) {
-    return false;
-  }
-
-  auto& element = userMetadata.at(index.row() - nonUserMetadata.size());
-
-  if (index.column() == 0) {
+void LocationTableModel::setData(Location& element,
+                                 int column,
+                                 const QVariant& value) {
+  if (column == URL_COLUMN) {
     element = Location(value.toString().toStdString(), element.GetName());
   } else {
     element = Location(element.GetURL(), value.toString().toStdString());
   }
-
-  emit dataChanged(index, index, {role});
-  return true;
-}
-
-bool LocationTableModel::insertRows(int row,
-                                    int count,
-                                    const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount()) {
-    return false;
-  }
-
-  beginInsertRows(parent, row, row + count - 1);
-
-  auto index = row - nonUserMetadata.size();
-
-  userMetadata.insert(userMetadata.begin() + index, count, Location());
-
-  endInsertRows();
-
-  return true;
-}
-
-bool LocationTableModel::removeRows(int row,
-                                    int count,
-                                    const QModelIndex& parent) {
-  if (row < nonUserMetadata.size() || row > rowCount() ||
-      row + count > rowCount()) {
-    return false;
-  }
-
-  beginRemoveRows(parent, row, row + count - 1);
-
-  auto startIndex = row - nonUserMetadata.size();
-  auto endIndex = startIndex + count;
-
-  userMetadata.erase(userMetadata.begin() + startIndex,
-                     userMetadata.begin() + endIndex);
-
-  endRemoveRows();
-
-  return true;
 }
 }

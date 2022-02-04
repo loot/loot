@@ -44,8 +44,8 @@ public:
   void setPlugins(const std::vector<std::string> &pluginNames);
   void setGroups(const std::vector<std::string> &groupNames);
 
-  void setMessageCounts(unsigned int hidden, unsigned int total);
-  void setPluginCounts(unsigned int hidden, unsigned int total);
+  void setMessageCounts(size_t hidden, size_t total);
+  void setPluginCounts(size_t hidden, size_t total);
 
   void hideVersionNumbers(bool hide);
   void hideCRCs(bool hide);
@@ -68,23 +68,23 @@ signals:
   void cardContentFilterChanged(CardContentFiltersState state);
 
 private:
-  QLabel *conflictingPluginsFilterLabel;
-  QComboBox *conflictingPluginsFilter;
-  QLabel *groupPluginsFilterLabel;
-  QComboBox *groupPluginsFilter;
-  QLabel *contentFilterLabel;
-  QLineEdit *contentFilter;
-  QCheckBox *versionNumbersFilter;
-  QCheckBox *crcsFilter;
-  QCheckBox *bashTagsFilter;
-  QCheckBox *notesFilter;
-  QCheckBox *pluginMessagesFilter;
-  QCheckBox *inactivePluginsFilter;
-  QCheckBox *messagelessPluginsFilter;
-  QLabel *hiddenPluginsLabel;
-  QLabel *hiddenPluginsCountLabel;
-  QLabel *hiddenMessagesLabel;
-  QLabel *hiddenMessagesCountLabel;
+  QLabel *conflictingPluginsFilterLabel{new QLabel(this)};
+  QComboBox *conflictingPluginsFilter{new QComboBox(this)};
+  QLabel *groupPluginsFilterLabel{new QLabel(this)};
+  QComboBox *groupPluginsFilter{new QComboBox(this)};
+  QLabel *contentFilterLabel{new QLabel(this)};
+  QLineEdit *contentFilter{new QLineEdit(this)};
+  QCheckBox *versionNumbersFilter{new QCheckBox(this)};
+  QCheckBox *crcsFilter{new QCheckBox(this)};
+  QCheckBox *bashTagsFilter{new QCheckBox(this)};
+  QCheckBox *notesFilter{new QCheckBox(this)};
+  QCheckBox *pluginMessagesFilter{new QCheckBox(this)};
+  QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
+  QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
+  QLabel *hiddenPluginsLabel{new QLabel(this)};
+  QLabel *hiddenPluginsCountLabel{new QLabel(this)};
+  QLabel *hiddenMessagesLabel{new QLabel(this)};
+  QLabel *hiddenMessagesCountLabel{new QLabel(this)};
 
   void setupUi();
 
@@ -94,16 +94,16 @@ private:
                                const std::vector<std::string> &items);
 
 private slots:
-  void on_conflictingPluginsFilter_activated(int index);
-  void on_groupPluginsFilter_activated(int index);
+  void on_conflictingPluginsFilter_activated();
+  void on_groupPluginsFilter_activated();
   void on_contentFilter_editingFinished();
-  void on_versionNumbersFilter_stateChanged(int state);
-  void on_crcsFilter_stateChanged(int state);
-  void on_bashTagsFilter_stateChanged(int state);
-  void on_notesFilter_stateChanged(int state);
-  void on_pluginMessagesFilter_stateChanged(int state);
-  void on_inactivePluginsFilter_stateChanged(int state);
-  void on_messagelessPluginsFilter_stateChanged(int state);
+  void on_versionNumbersFilter_stateChanged();
+  void on_crcsFilter_stateChanged();
+  void on_bashTagsFilter_stateChanged();
+  void on_notesFilter_stateChanged();
+  void on_pluginMessagesFilter_stateChanged();
+  void on_inactivePluginsFilter_stateChanged();
+  void on_messagelessPluginsFilter_stateChanged();
 };
 }
 

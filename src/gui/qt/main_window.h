@@ -53,6 +53,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableView>
@@ -83,53 +84,61 @@ public:
   void initialise();
 
 private:
-  QAction *actionSort;
-  QAction *actionApplySort;
-  QAction *actionDiscardSort;
-  QAction *actionUpdateMasterlist;
-  QAction *actionSearch;
-  QAction *actionViewDocs;
-  QAction *actionOpenLOOTDataFolder;
-  QAction *actionJoinDiscordServer;
-  QAction *actionAbout;
-  QAction *actionQuit;
-  QAction *actionOpenGroupsEditor;
-  QAction *actionCopyLoadOrder;
-  QAction *actionCopyContent;
-  QAction *actionRefreshContent;
-  QAction *actionRedatePlugins;
-  QAction *actionClearAllUserMetadata;
-  QAction *actionCopyMetadata;
-  QAction *actionCopyCardContent;
-  QAction *actionEditMetadata;
-  QAction *actionClearMetadata;
-  QAction *actionSettings;
-  QAction *actionBackupData;
-  QComboBox *gameComboBox;
-  QToolBox *toolBox;
-  QTableView *sidebarPluginsView;
-  QListView *pluginCardsView;
-  QMenuBar *menubar;
-  QMenu *menuFile;
-  QMenu *menuHelp;
-  QMenu *menuGame;
-  QMenu *menuPlugin;
-  QStatusBar *statusbar;
-  QToolBar *toolBar;
-  QProgressDialog *progressDialog;
+  LootState &state;
 
-  FiltersWidget *filtersWidget;
-  SettingsDialog *settingsDialog;
+  QAction *actionSort{new QAction(this)};
+  QAction *actionApplySort{new QAction(this)};
+  QAction *actionDiscardSort{new QAction(this)};
+  QAction *actionUpdateMasterlist{new QAction(this)};
+  QAction *actionSearch{new QAction(this)};
+  QAction *actionViewDocs{new QAction(this)};
+  QAction *actionOpenLOOTDataFolder{new QAction(this)};
+  QAction *actionJoinDiscordServer{new QAction(this)};
+  QAction *actionAbout{new QAction(this)};
+  QAction *actionQuit{new QAction(this)};
+  QAction *actionOpenGroupsEditor{new QAction(this)};
+  QAction *actionCopyLoadOrder{new QAction(this)};
+  QAction *actionCopyContent{new QAction(this)};
+  QAction *actionRefreshContent{new QAction(this)};
+  QAction *actionRedatePlugins{new QAction(this)};
+  QAction *actionClearAllUserMetadata{new QAction(this)};
+  QAction *actionCopyMetadata{new QAction(this)};
+  QAction *actionCopyCardContent{new QAction(this)};
+  QAction *actionEditMetadata{new QAction(this)};
+  QAction *actionClearMetadata{new QAction(this)};
+  QAction *actionSettings{new QAction(this)};
+  QAction *actionBackupData{new QAction(this)};
+
+  QMenuBar *menubar{new QMenuBar(this)};
+  QMenu *menuFile{new QMenu(menubar)};
+  QMenu *menuHelp{new QMenu(menubar)};
+  QMenu *menuGame{new QMenu(menubar)};
+  QMenu *menuPlugin{new QMenu(menubar)};
+  QStatusBar *statusbar{new QStatusBar(this)};
+  QToolBar *toolBar{new QToolBar(this)};
+  QComboBox *gameComboBox{new QComboBox(toolBar)};
+  QProgressDialog *progressDialog{new QProgressDialog(this)};
+
+  QSplitter *sidebarSplitter{new QSplitter(this)};
+  QToolBox *toolBox{new QToolBox(sidebarSplitter)};
+  FiltersWidget *filtersWidget{new FiltersWidget(toolBox)};
+  QTableView *sidebarPluginsView{new QTableView(toolBox)};
+
+  QSplitter *editorSplitter{
+      new QSplitter(Qt::Orientation::Vertical, sidebarSplitter)};
+  QListView *pluginCardsView{new QListView(editorSplitter)};
   PluginEditorWidget *pluginEditorWidget;
-  SearchDialog *searchDialog;
-  GroupsEditorDialog *groupsEditor;
 
-  PluginItemModel *pluginItemModel;
-  PluginItemFilterModel *proxyModel;
+  SettingsDialog *settingsDialog{new SettingsDialog(this)};
+  SearchDialog *searchDialog{new SearchDialog(this)};
+
+  PluginItemModel *pluginItemModel{new PluginItemModel(this)};
+  PluginItemFilterModel *proxyModel{new PluginItemFilterModel(this)};
+
+  GroupsEditorDialog *groupsEditor{
+      new GroupsEditorDialog(this, pluginItemModel)};
 
   QNetworkAccessManager networkAccessManager;
-
-  LootState &state;
 
   std::optional<QPersistentModelIndex> lastEnteredCardIndex;
 
@@ -170,13 +179,13 @@ private:
 
   PluginItem getSelectedPlugin() const;
 
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
 
   void executeBackgroundQuery(std::unique_ptr<Query> query,
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
   void executeBackgroundTasks(std::vector<Task *> tasks,
-                              ProgressUpdater *progressUpdater);
+                              const ProgressUpdater *progressUpdater);
 
   void sendHttpRequest(const std::string &url,
                        void (MainWindow::*onFinished)());
@@ -186,46 +195,45 @@ private:
 
   void handleError(const std::string &message);
   void handleException(const std::exception &exception);
-  void handleQueryException(const std::unique_ptr<Query> query,
+  void handleQueryException(const Query &query,
                             const std::exception &exception);
 
   void handleGameDataLoaded(QueryResult result);
   void handlePluginsSorted(QueryResult results);
 
-  QMenu *createPopupMenu();
+  QMenu *createPopupMenu() override;
 
   std::optional<std::filesystem::path> createBackup();
 
 private slots:
-  void on_actionSettings_triggered(bool checked);
-  void on_actionBackupData_triggered(bool checked);
-  void on_actionQuit_triggered(bool checked);
-  void on_actionOpenGroupsEditor_triggered(bool checked);
-  void on_actionSearch_triggered(bool checked);
-  void on_actionCopyLoadOrder_triggered(bool checked);
-  void on_actionCopyContent_triggered(bool checked);
-  void on_actionRefreshContent_triggered(bool checked);
-  void on_actionRedatePlugins_triggered(bool checked);
-  void on_actionClearAllUserMetadata_triggered(bool checked);
-  void on_actionEditMetadata_triggered(bool checked);
-  void on_actionCopyMetadata_triggered(bool checked);
-  void on_actionCopyCardContent_triggered(bool checked);
-  void on_actionClearMetadata_triggered(bool checked);
-  void on_actionViewDocs_triggered(bool checked);
-  void on_actionOpenLOOTDataFolder_triggered(bool checked);
-  void on_actionJoinDiscordServer_triggered(bool checked);
-  void on_actionAbout_triggered(bool checked);
+  void on_actionSettings_triggered();
+  void on_actionBackupData_triggered();
+  void on_actionQuit_triggered();
+  void on_actionOpenGroupsEditor_triggered();
+  void on_actionSearch_triggered();
+  void on_actionCopyLoadOrder_triggered();
+  void on_actionCopyContent_triggered();
+  void on_actionRefreshContent_triggered();
+  void on_actionRedatePlugins_triggered();
+  void on_actionClearAllUserMetadata_triggered();
+  void on_actionEditMetadata_triggered();
+  void on_actionCopyMetadata_triggered();
+  void on_actionCopyCardContent_triggered();
+  void on_actionClearMetadata_triggered();
+  void on_actionViewDocs_triggered();
+  void on_actionOpenLOOTDataFolder_triggered();
+  void on_actionJoinDiscordServer_triggered();
+  void on_actionAbout_triggered();
 
   void on_gameComboBox_activated(int index);
-  void on_actionSort_triggered(bool checked);
-  void on_actionApplySort_triggered(bool checked);
-  void on_actionDiscardSort_triggered(bool checked);
-  void on_actionUpdateMasterlist_triggered(bool checked);
+  void on_actionSort_triggered();
+  void on_actionApplySort_triggered();
+  void on_actionDiscardSort_triggered();
+  void on_actionUpdateMasterlist_triggered();
 
   void on_sidebarPluginsView_doubleClicked(const QModelIndex &index);
   void on_sidebarPluginsSelectionModel_selectionChanged(
-      const QItemSelection &selected,
-      const QItemSelection &deselected);
+      const QItemSelection &selected);
 
   void on_pluginCardsView_entered(const QModelIndex &index);
 
@@ -251,7 +259,7 @@ private slots:
 
   void on_groupsEditor_accepted();
 
-  void on_searchDialog_finished(int result);
+  void on_searchDialog_finished();
   void on_searchDialog_textChanged(const QString &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
 

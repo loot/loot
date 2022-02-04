@@ -28,41 +28,48 @@ along with LOOT.  If not, see
 
 #include <boost/locale.hpp>
 
-#include "gui/query/types/metadata_query.h"
+#include "gui/query/query.h"
 #include "gui/state/game/game.h"
 #include "loot/loot_version.h"
 
 namespace loot {
-
-template<typename G = gui::Game>
-class GetGameDataQuery : public MetadataQuery<G> {
+class GetGameDataQuery : public Query {
 public:
-  GetGameDataQuery(G& game,
+  GetGameDataQuery(gui::Game& game,
                    std::string language,
                    std::function<void(std::string)> sendProgressUpdate) :
-      MetadataQuery<G>(game, language),
+      game_(game),
+      language_(language),
       sendProgressUpdate_(sendProgressUpdate) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     sendProgressUpdate_(boost::locale::translate(
         "Parsing, merging and evaluating metadata..."));
 
     /* If the game's plugins object is empty, this is the first time loading
        the game data, so also load the metadata lists. */
-    bool isFirstLoad = this->getGame().GetPlugins().empty();
+    bool isFirstLoad = game_.GetPlugins().empty();
 
-    this->getGame().LoadAllInstalledPlugins(true);
+    game_.LoadAllInstalledPlugins(true);
 
-    if (isFirstLoad)
-      this->getGame().LoadMetadata();
+    if (isFirstLoad) {
+      game_.LoadMetadata();
+    }
 
     // Sort plugins into their load order.
-    auto installed = this->getGame().GetPluginsInLoadOrder();
+    auto installed = game_.GetPluginsInLoadOrder();
 
-    return this->generateDerivedMetadata(installed.cbegin(), installed.cend());
+    std::vector<PluginItem> metadata;
+    for (const auto& plugin : installed) {
+      metadata.push_back(PluginItem(plugin, game_, language_));
+    }
+
+    return metadata;
   }
 
 private:
+  gui::Game& game_;
+  std::string language_;
   std::function<void(std::string)> sendProgressUpdate_;
 };
 }
