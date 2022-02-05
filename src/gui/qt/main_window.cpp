@@ -31,6 +31,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
+#include <QtWidgets/QScrollBar>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QTextEdit>
 
@@ -547,6 +548,13 @@ void MainWindow::setupViews() {
           &QItemSelectionModel::selectionChanged,
           this,
           &MainWindow::on_sidebarPluginsSelectionModel_selectionChanged);
+
+  // Scrolling the cards jumps around too much by default, because the step
+  // size is related to the height of list items, which can be quite a lot
+  // larger than usual for a list of lines of text. A step size of 24 is the
+  // height of two empty cards, which seems reasonable.
+  static constexpr int CARD_SCROLL_STEP_SIZE = 24;
+  pluginCardsView->verticalScrollBar()->setSingleStep(CARD_SCROLL_STEP_SIZE);
 }
 
 void MainWindow::translateUi() {
