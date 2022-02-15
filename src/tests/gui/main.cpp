@@ -22,8 +22,17 @@
     <https://www.gnu.org/licenses/>.
     */
 
+#ifdef _MSC_VER
+// Qt typedef's a uint type in the global namespace that spdlog shadows, just
+// disable the warning.
+#pragma warning(disable : 4459)
 #include <spdlog/sinks/null_sink.h>
 #include <spdlog/spdlog.h>
+#pragma warning(default : 4459)
+#else
+#include <spdlog/sinks/null_sink.h>
+#include <spdlog/spdlog.h>
+#endif
 
 #include <QtCore/QCoreApplication>
 #include <boost/locale.hpp>

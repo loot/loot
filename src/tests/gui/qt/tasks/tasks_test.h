@@ -46,7 +46,7 @@ class TestQuery : public Query {
 public:
   TestQuery(int value) : value(value) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     if (value < 0) {
       throw std::runtime_error("Value is negative");
     }

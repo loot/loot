@@ -59,16 +59,12 @@ void SearchDialog::setSearchResults(size_t resultsCount) {
 }
 
 void SearchDialog::setupUi() {
-  searchInput = new QLineEdit(this);
   searchInput->setObjectName("searchInput");
-  countLabel = new QLabel(this);
 
   auto buttonBox = new QDialogButtonBox(this);
   buttonBox->setObjectName("dialogButtons");
 
-  previousButton = new QPushButton(this);
   previousButton->setObjectName("previousButton");
-  nextButton = new QPushButton(this);
   nextButton->setObjectName("nextButton");
 
   buttonBox->addButton(previousButton, QDialogButtonBox::YesRole);
@@ -101,9 +97,9 @@ void SearchDialog::translateUi() {
 }
 
 void SearchDialog::updateCountLabel() {
-  int index = state.currentResultIndex.value_or(-1);
+  const int index = state.currentResultIndex.value_or(-1);
 
-  countLabel->setText(QString::number(index + 1) % QString(" / ") %
+  countLabel->setText(QString::number(index + 1) % " / " %
                       QString::number(state.resultsCount));
 }
 
@@ -115,12 +111,12 @@ void SearchDialog::on_searchInput_textChanged(const QString& text) {
   emit textChanged(text);
 }
 
-void SearchDialog::on_previousButton_clicked(bool checked) {
+void SearchDialog::on_previousButton_clicked() {
   if (state.resultsCount == 0) {
     return;
   }
 
-  unsigned int newIndex = 0;
+  size_t newIndex = 0;
   if (!state.currentResultIndex.has_value()) {
     newIndex = state.resultsCount - 1;
   } else if (state.currentResultIndex.value() == 0) {
@@ -137,12 +133,12 @@ void SearchDialog::on_previousButton_clicked(bool checked) {
   emit currentResultChanged(newIndex);
 }
 
-void SearchDialog::on_nextButton_clicked(bool checked) {
+void SearchDialog::on_nextButton_clicked() {
   if (state.resultsCount == 0) {
     return;
   }
 
-  unsigned int newIndex = 0;
+  size_t newIndex = 0;
   if (!state.currentResultIndex.has_value()) {
     newIndex = 0;
   } else if (state.currentResultIndex.value() >= state.resultsCount - 1) {

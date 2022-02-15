@@ -28,7 +28,15 @@
 #define FMT_NO_FMT_STRING_ALIAS
 #define SPDLOG_WCHAR_FILENAMES
 
+#ifdef _MSC_VER
+// Qt typedef's a uint type in the global namespace that spdlog shadows, just
+// disable the warning.
+#pragma warning(disable : 4459)
 #include <spdlog/spdlog.h>
+#pragma warning(default : 4459)
+#else
+#include <spdlog/spdlog.h>
+#endif
 
 #include <filesystem>
 

@@ -72,9 +72,9 @@ void GeneralInformationCounters::countMessages(
   totalMessages += messages.size();
 }
 
-unsigned int countHiddenMessages(const std::vector<PluginItem>& plugins,
-                                 const CardContentFiltersState& filters) {
-  unsigned int hidden = 0;
+size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
+                           const CardContentFiltersState& filters) {
+  size_t hidden = 0;
 
   for (const auto& plugin : plugins) {
     if (filters.hideAllPluginMessages) {

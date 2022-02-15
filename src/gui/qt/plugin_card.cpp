@@ -150,8 +150,8 @@ void PluginCard::setContent(const PluginItem& plugin,
   auto addTagsText = getTagsText(plugin.addTags, filters.hideBashTags);
   auto removeTagsText = getTagsText(plugin.removeTags, filters.hideBashTags);
 
-  auto showBashTags = !currentTagsText.isEmpty() || !addTagsText.isEmpty() ||
-                      !removeTagsText.isEmpty();
+  const auto showBashTags = !currentTagsText.isEmpty() ||
+                            !addTagsText.isEmpty() || !removeTagsText.isEmpty();
 
   if (showBashTags) {
     currentTagsLabel->setText(currentTagsText);
@@ -207,59 +207,41 @@ void PluginCard::setSearchResult(bool isSearchResult,
 }
 
 void PluginCard::setupUi() {
-  nameLabel = new QLabel(this);
-  crcLabel = new QLabel(this);
   crcLabel->setObjectName("plugin-crc");
-  versionLabel = new QLabel(this);
   versionLabel->setObjectName("plugin-version");
 
   // Set this height so that cards without icons have a header the same height
   // cards with icons.
   nameLabel->setMinimumHeight(ATTRIBUTE_ICON_HEIGHT);
 
-  isActiveLabel = new QLabel(this);
   isActiveLabel->setVisible(false);
-  masterFileLabel = new QLabel(this);
   masterFileLabel->setVisible(false);
-  lightPluginLabel = new QLabel(this);
   lightPluginLabel->setVisible(false);
-  emptyPluginLabel = new QLabel(this);
   emptyPluginLabel->setVisible(false);
-  loadsArchiveLabel = new QLabel(this);
   loadsArchiveLabel->setVisible(false);
-  isCleanLabel = new QLabel(this);
   isCleanLabel->setVisible(false);
-  hasUserEditsLabel = new QLabel(this);
   hasUserEditsLabel->setVisible(false);
 
-  tagsGroupBox = new QGroupBox(this);
   tagsGroupBox->setVisible(false);
 
-  currentTagsHeaderLabel = new QLabel(this);
   currentTagsHeaderLabel->setVisible(false);
 
-  currentTagsLabel = new QLabel(this);
   currentTagsLabel->setObjectName("tags-current");
   currentTagsLabel->setWordWrap(true);
   currentTagsLabel->setVisible(false);
 
-  addTagsHeaderLabel = new QLabel(this);
   addTagsHeaderLabel->setVisible(false);
 
-  addTagsLabel = new QLabel(this);
   addTagsLabel->setObjectName("tags-add");
   addTagsLabel->setWordWrap(true);
   addTagsLabel->setVisible(false);
 
-  removeTagsHeaderLabel = new QLabel(this);
   removeTagsHeaderLabel->setVisible(false);
 
-  removeTagsLabel = new QLabel(this);
   removeTagsLabel->setObjectName("tags-remove");
   removeTagsLabel->setWordWrap(true);
   removeTagsLabel->setVisible(false);
 
-  messagesWidget = new MessagesWidget(this);
   messagesWidget->setVisible(false);
 
   setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
@@ -355,7 +337,7 @@ void PluginCardDelegate::paint(QPainter* painter,
     widget = setPluginCardContent(pluginCard, index);
   }
 
-  auto sizeHint = calculateSize(widget, styleOption);
+  const auto sizeHint = calculateSize(widget, styleOption);
 
   widget->setFixedSize(sizeHint);
 
@@ -420,7 +402,7 @@ QSize PluginCardDelegate::sizeHint(const QStyleOptionViewItem& option,
 }
 
 QWidget* PluginCardDelegate::createEditor(QWidget* parent,
-                                          const QStyleOptionViewItem& option,
+                                          const QStyleOptionViewItem&,
                                           const QModelIndex& index) const {
   if (!index.isValid()) {
     return nullptr;
@@ -446,9 +428,9 @@ void PluginCardDelegate::setEditorData(QWidget* editor,
   }
 }
 
-void PluginCardDelegate::setModelData(QWidget* editor,
-                                      QAbstractItemModel* model,
-                                      const QModelIndex& index) const {
+void PluginCardDelegate::setModelData(QWidget*,
+                                      QAbstractItemModel*,
+                                      const QModelIndex&) const {
   // Do nothing, it's not actually an editor.
 }
 
@@ -485,15 +467,15 @@ PluginCard* PluginCardDelegate::setPluginCardContent(PluginCard* card,
   return card;
 }
 
-QSize PluginCardDelegate::calculateSize(QWidget* widget,
+QSize PluginCardDelegate::calculateSize(const QWidget* widget,
                                         const QStyleOptionViewItem& option) {
-  auto minLayoutWidth = widget->layout()->minimumSize().width();
-  auto rectWidth = option.rect.width();
+  const auto minLayoutWidth = widget->layout()->minimumSize().width();
+  const auto rectWidth = option.rect.width();
 
-  auto width = rectWidth > minLayoutWidth ? rectWidth : minLayoutWidth;
-  auto height = widget->hasHeightForWidth()
-                    ? widget->layout()->minimumHeightForWidth(width)
-                    : widget->minimumHeight();
+  const auto width = rectWidth > minLayoutWidth ? rectWidth : minLayoutWidth;
+  const auto height = widget->hasHeightForWidth()
+                          ? widget->layout()->minimumHeightForWidth(width)
+                          : widget->minimumHeight();
 
   return QSize(width, height);
 }

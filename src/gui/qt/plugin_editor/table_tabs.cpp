@@ -46,15 +46,15 @@ int calculateItemWidth(const QString& text) {
                        .size(Qt::TextSingleLine, text)
                        .width();
 
-  auto leftPadding =
+  const auto leftPadding =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
-  auto rightPadding =
+  const auto rightPadding =
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  return textWidth + leftPadding + rightPadding;
+  return static_cast<int>(textWidth) + leftPadding + rightPadding;
 }
 
-int calculateMaxHeaderWidth(QAbstractItemModel* model,
+int calculateMaxHeaderWidth(const QAbstractItemModel* model,
                             int column,
                             int currentMaxHeaderWidth) {
   auto headerText = model->headerData(column, Qt::Horizontal);
@@ -69,7 +69,7 @@ int calculateMaxHeaderWidth(QAbstractItemModel* model,
 }
 
 int calculateMaxDropdownRowWidth(const QString& text, int currentMaxRowWidth) {
-  auto rowWidth = calculateItemWidth(text);
+  const auto rowWidth = calculateItemWidth(text);
 
   return rowWidth > currentMaxRowWidth ? rowWidth : currentMaxRowWidth;
 }
@@ -89,21 +89,23 @@ int calculateMinimumColumnWidth(QAbstractItemModel* model,
                                 const std::map<std::string, QVariant>& values) {
   // Set the minimum column width longest text (plus padding) in the column.
   // First check the header width.
-  auto maxHeaderWidth = calculateMaxHeaderWidth(model, column, 0);
+  const auto maxHeaderWidth = calculateMaxHeaderWidth(model, column, 0);
   auto maxColumnWidth = maxHeaderWidth;
 
   // The values contain strings that appear in a combo box dropdown menu, check
   // their widths too.
-  for (const auto [key, value] : values) {
+  for (const auto& [key, value] : values) {
     if (value.isValid()) {
       maxColumnWidth =
           calculateMaxDropdownRowWidth(value.toString(), maxColumnWidth);
     }
   }
 
-  if (maxColumnWidth > maxHeaderWidth && values.size() > 10) {
-    // If there are more than 10 (that may be variable, I don't know) items, a
-    // scroll bar will be shown, so take its width into account.
+  // If there are more than 10 (that may be variable, I don't know) items, a
+  // scroll bar will be shown, so take its width into account.
+  static constexpr size_t MAX_ITEMS_WITHOUT_SCROLLING = 10;
+  if (maxColumnWidth > maxHeaderWidth &&
+      values.size() > MAX_ITEMS_WITHOUT_SCROLLING) {
     maxColumnWidth +=
         QApplication::style()->pixelMetric(QStyle::PM_ScrollBarExtent);
   }
@@ -120,7 +122,7 @@ int calculateMinimumColumnWidth(
 
   // The values contain strings that appear in a combo box dropdown menu, check
   // their widths too.
-  for (const auto [text, value] : values) {
+  for (const auto& [text, value] : values) {
     maxTextWidth = calculateMaxDropdownRowWidth(text, maxTextWidth);
   }
 
@@ -187,13 +189,13 @@ void BaseTableTab::setColumnFixedWidth(int column, int width) {
   tableView->horizontalHeader()->resizeSection(column, width);
 }
 
-void BaseTableTab::acceptDrops() {
+void BaseTableTab::configureAsDropTarget() {
   tableView->setAcceptDrops(true);
   tableView->setDropIndicatorShown(true);
 }
 
-void BaseTableTab::resizeEvent(QResizeEvent* event) {
-  auto header = tableView->horizontalHeader();
+void BaseTableTab::resizeEvent(QResizeEvent*) {
+  const auto header = tableView->horizontalHeader();
   for (int i = 0; i < header->count(); i += 1) {
     if (!header->isSectionHidden(i) &&
         header->sectionResizeMode(i) != QHeaderView::Fixed) {
@@ -201,7 +203,7 @@ void BaseTableTab::resizeEvent(QResizeEvent* event) {
     }
   }
 
-  auto tableWidth = tableView->width();
+  const auto tableWidth = tableView->width();
 
   // Some header sections are fixed width, we don't want to resize them,
   // so exclude them from the headers width scaling factor calculation.
@@ -218,10 +220,11 @@ void BaseTableTab::resizeEvent(QResizeEvent* event) {
     return;
   }
 
-  auto scalingFactor = double(tableWidth) / headersWidth;
+  const auto scalingFactor = static_cast<double>(tableWidth) / headersWidth;
 
   for (auto i = 0; i < header->count(); i += 1) {
-    int newColumnWidth = tableView->columnWidth(i) * scalingFactor;
+    const int newColumnWidth =
+        static_cast<int>(tableView->columnWidth(i) * scalingFactor);
     if (header->sectionResizeMode(i) != QHeaderView::Fixed) {
       tableView->setColumnWidth(i, newColumnWidth);
     }
@@ -230,7 +233,7 @@ void BaseTableTab::resizeEvent(QResizeEvent* event) {
   // If the headers are now wider than the table view (e.g. due to rounding
   // errors), reduce the width of the final visible header to fit.
   // Add a fudge factor of 2 to account for border widths.
-  auto excess = header->length() + 2 - tableView->width();
+  const auto excess = header->length() + 2 - tableView->width();
   if (excess > 0) {
     auto index = header->count() - 1;
     while (index >= 0 &&
@@ -245,14 +248,11 @@ void BaseTableTab::resizeEvent(QResizeEvent* event) {
 }
 
 void BaseTableTab::setupUi() {
-  tableView = new QTableView(this);
   tableView->verticalHeader()->hide();
   tableView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-  addNewRowButton = new QPushButton(this);
   addNewRowButton->setObjectName("addNewRowButton");
 
-  deleteRowButton = new QPushButton(this);
   deleteRowButton->setObjectName("deleteRowButton");
   deleteRowButton->setEnabled(false);
 
@@ -277,12 +277,12 @@ void BaseTableTab::translateUi() {
   deleteRowButton->setText(translate("Delete row"));
 }
 
-void BaseTableTab::on_addNewRowButton_clicked(bool checked) {
+void BaseTableTab::on_addNewRowButton_clicked() {
   auto model = tableView->model();
   model->insertRow(model->rowCount());
 }
 
-void BaseTableTab::on_deleteRowButton_clicked(bool checked) {
+void BaseTableTab::on_deleteRowButton_clicked() {
   auto model = tableView->model();
   auto selectedIndexes = tableView->selectionModel()->selectedIndexes();
 
@@ -301,9 +301,7 @@ void BaseTableTab::on_deleteRowButton_clicked(bool checked) {
   }
 }
 
-void BaseTableTab::onSelectionModelSelectionChanged(
-    const QItemSelection& selected,
-    const QItemSelection& deselected) {
+void BaseTableTab::onSelectionModelSelectionChanged() {
   // Ignore the 'selected' parameter because it only contains what's
   // changed and so would omit any already-selected editable rows.
   auto selectedIndexes = tableView->selectionModel()->selectedIndexes();
@@ -312,9 +310,9 @@ void BaseTableTab::onSelectionModelSelectionChanged(
     return;
   }
 
-  auto model = tableView->model();
+  const auto model = tableView->model();
   for (const auto& index : selectedIndexes) {
-    auto flags = model->flags(index);
+    const auto flags = model->flags(index);
 
     if (flags.testFlag(Qt::ItemIsEditable)) {
       deleteRowButton->setEnabled(true);
@@ -337,11 +335,11 @@ FileTableTab::FileTableTab(QWidget* parent,
                            const std::vector<LootSettings::Language>& languages,
                            const std::string& language,
                            const QStringList& completions) :
-    BaseTableTab(parent),
-    language(language),
+    MetadataTableTab(parent),
     languages(languages),
+    language(language),
     completions(completions) {
-  acceptDrops();
+  configureAsDropTarget();
 }
 
 void FileTableTab::initialiseInputs(const std::vector<File>& nonUserMetadata,
@@ -354,8 +352,8 @@ void FileTableTab::initialiseInputs(const std::vector<File>& nonUserMetadata,
   auto filenameDelegate = new AutocompletingLineEditDelegate(this, completions);
   auto detailDelegate = new MessageContentDelegate(this, languages);
 
-  setItemDelegateForColumn(0, filenameDelegate);
-  setItemDelegateForColumn(2, detailDelegate);
+  setItemDelegateForColumn(tableModel->NAME_COLUMN, filenameDelegate);
+  setItemDelegateForColumn(tableModel->DETAIL_COLUMN, detailDelegate);
 }
 
 std::vector<File> FileTableTab::getUserMetadata() const {
@@ -371,14 +369,14 @@ void LoadAfterFileTableTab::initialiseInputs(
     const std::vector<File>& userMetadata) {
   FileTableTab::initialiseInputs(nonUserMetadata, userMetadata);
 
-  setColumnHidden(1, true);
-  setColumnHidden(2, true);
+  setColumnHidden(FileTableModel::DISPLAY_NAME_COLUMN, true);
+  setColumnHidden(FileTableModel::DETAIL_COLUMN, true);
 }
 
 MessageContentTableWidget::MessageContentTableWidget(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages) :
-    BaseTableTab(parent) {
+    MetadataTableTab(parent) {
   for (const auto& language : languages) {
     auto name = QString::fromStdString(language.name);
     this->languages.push_back(
@@ -389,37 +387,41 @@ MessageContentTableWidget::MessageContentTableWidget(
 }
 
 void MessageContentTableWidget::initialiseInputs(
-    const std::vector<MessageContent>& metadata) {
+    const std::vector<MessageContent>& nonUserMetadata,
+    const std::vector<MessageContent>& userMetadata) {
   std::map<MessageType, std::pair<QString, QVariant>> messageTypeMap = {
       {MessageType::say, {translate("Note"), QString("say")}},
       {MessageType::warn, {translate("Warning"), QString("warn")}},
       {MessageType::error, {translate("Error"), QString("error")}}};
 
-  auto tableModel = new MessageContentTableModel(this, metadata, languageMap);
+  auto tableModel = new MessageContentTableModel(
+      this, nonUserMetadata, userMetadata, languageMap);
 
   setTableModel(tableModel);
-  setColumnFixedWidth(0,
-                      calculateMinimumColumnWidth(tableModel, 0, languageMap));
+  setColumnFixedWidth(
+      tableModel->LANGUAGE_COLUMN,
+      calculateMinimumColumnWidth(
+          tableModel, tableModel->LANGUAGE_COLUMN, languageMap));
 
   auto languageDelegate = new ComboBoxDelegate(this, languages);
 
-  setItemDelegateForColumn(0, languageDelegate);
+  setItemDelegateForColumn(tableModel->LANGUAGE_COLUMN, languageDelegate);
 }
 
-std::vector<MessageContent> MessageContentTableWidget::getMetadata() const {
+std::vector<MessageContent> MessageContentTableWidget::getUserMetadata() const {
   return dynamic_cast<MessageContentTableModel*>(getTableModel())
-      ->getMetadata();
+      ->getUserMetadata();
 }
 
 bool MessageContentTableWidget::hasUserMetadata() const {
-  return !getMetadata().empty();
+  return !getUserMetadata().empty();
 }
 
 MessageTableTab::MessageTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    BaseTableTab(parent), language(language), languages(languages) {}
+    MetadataTableTab(parent), languages(languages), language(language) {}
 
 void MessageTableTab::initialiseInputs(
     const std::vector<Message>& nonUserMetadata,
@@ -445,8 +447,8 @@ void MessageTableTab::initialiseInputs(
   auto messageTypeDelegate = new ComboBoxDelegate(this, messageTypes);
   auto contentDelegate = new MessageContentDelegate(this, languages);
 
-  setItemDelegateForColumn(0, messageTypeDelegate);
-  setItemDelegateForColumn(1, contentDelegate);
+  setItemDelegateForColumn(tableModel->TYPE_COLUMN, messageTypeDelegate);
+  setItemDelegateForColumn(tableModel->CONTENT_COLUMN, contentDelegate);
 }
 
 std::vector<Message> MessageTableTab::getUserMetadata() const {
@@ -477,7 +479,7 @@ CleaningDataTableTab::CleaningDataTableTab(
     QWidget* parent,
     const std::vector<LootSettings::Language>& languages,
     const std::string& language) :
-    BaseTableTab(parent), language(language), languages(languages) {}
+    MetadataTableTab(parent), languages(languages), language(language) {}
 
 void CleaningDataTableTab::initialiseInputs(
     const std::vector<PluginCleaningData>& nonUserMetadata,
@@ -489,18 +491,18 @@ void CleaningDataTableTab::initialiseInputs(
 
   auto crcDelegate = new CrcLineEditDelegate(this);
 
-  setItemDelegateForColumn(0, crcDelegate);
+  setItemDelegateForColumn(tableModel->CRC_COLUMN, crcDelegate);
 
   auto detailDelegate = new MessageContentDelegate(this, languages);
 
-  setItemDelegateForColumn(5, detailDelegate);
+  setItemDelegateForColumn(tableModel->DETAIL_COLUMN, detailDelegate);
 }
 
 void CleaningDataTableTab::hideCounts(bool hide) {
-  setColumnHidden(1, hide);
-  setColumnHidden(2, hide);
-  setColumnHidden(3, hide);
-  setColumnHidden(5, hide);
+  setColumnHidden(CleaningDataTableModel::ITM_COLUMN, hide);
+  setColumnHidden(CleaningDataTableModel::DELETED_REFERENCE_COLUMN, hide);
+  setColumnHidden(CleaningDataTableModel::DELETED_NAVMESH_COLUMN, hide);
+  setColumnHidden(CleaningDataTableModel::DETAIL_COLUMN, hide);
 }
 
 std::vector<PluginCleaningData> CleaningDataTableTab::getUserMetadata() const {
@@ -513,7 +515,7 @@ bool CleaningDataTableTab::hasUserMetadata() const {
 }
 
 TagTableTab::TagTableTab(QWidget* parent, const QStringList& completions) :
-    BaseTableTab(parent), completions(completions) {}
+    MetadataTableTab(parent), completions(completions) {}
 
 void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
                                    const std::vector<Tag>& userMetadata) {
@@ -530,13 +532,15 @@ void TagTableTab::initialiseInputs(const std::vector<Tag>& nonUserMetadata,
 
   setTableModel(tableModel);
   setColumnFixedWidth(
-      0, calculateMinimumColumnWidth(tableModel, 0, suggestionTypes));
+      tableModel->TYPE_COLUMN,
+      calculateMinimumColumnWidth(
+          tableModel, tableModel->TYPE_COLUMN, suggestionTypes));
 
   auto addRemoveDelegate = new ComboBoxDelegate(this, suggestionTypes);
   auto nameDelegate = new AutocompletingLineEditDelegate(this, completions);
 
-  setItemDelegateForColumn(0, addRemoveDelegate);
-  setItemDelegateForColumn(1, nameDelegate);
+  setItemDelegateForColumn(tableModel->TYPE_COLUMN, addRemoveDelegate);
+  setItemDelegateForColumn(tableModel->NAME_COLUMN, nameDelegate);
 }
 
 std::vector<Tag> TagTableTab::getUserMetadata() const {

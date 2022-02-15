@@ -78,9 +78,6 @@ std::optional<std::string> GroupTab::getUserMetadata() const {
 }
 
 void GroupTab::setupUi() {
-  groupLabel = new QLabel(this);
-  groupComboBox = new QComboBox(this);
-
   auto layout = new QFormLayout(this);
 
   layout->addRow(groupLabel, groupComboBox);

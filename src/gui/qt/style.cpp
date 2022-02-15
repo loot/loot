@@ -36,6 +36,10 @@
 #include "gui/state/loot_paths.h"
 
 namespace loot {
+static constexpr const char* QSS_SUFFIX = ".theme.qss";
+static constexpr size_t QSS_SUFFIX_LENGTH =
+    std::char_traits<char>::length(QSS_SUFFIX);
+
 std::optional<QString> loadStyleSheet(const QString& resourcePath) {
   QFile file(resourcePath);
   if (!file.exists()) {
@@ -64,7 +68,7 @@ std::optional<QString> loadStyleSheet(
     logger->info("Loading style sheet for the \"{}\" theme...", themeName);
   }
 
-  auto filesystemPath = (resourcesPath / "themes" / (themeName + ".theme.qss"));
+  auto filesystemPath = (resourcesPath / "themes" / (themeName + QSS_SUFFIX));
   auto styleSheet =
       loadStyleSheet(QString::fromStdString(filesystemPath.u8string()));
   if (styleSheet.has_value()) {
@@ -250,7 +254,7 @@ std::vector<std::string> findThemes(
     }
 
     auto filename = it->path().filename().u8string();
-    if (!boost::iends_with(filename, ".theme.qss")) {
+    if (!boost::iends_with(filename, QSS_SUFFIX)) {
       continue;
     }
 
@@ -258,7 +262,7 @@ std::vector<std::string> findThemes(
       logger->info("Found theme QSS file: {}", filename);
     }
 
-    auto themeName = filename.substr(0, filename.size() - 10);
+    auto themeName = filename.substr(0, filename.size() - QSS_SUFFIX_LENGTH);
     if (themes.count(themeName) == 0) {
       themes.insert(themeName);
     }

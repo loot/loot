@@ -43,6 +43,12 @@ namespace loot {
 class GamesManager {
 public:
   GamesManager() : currentGame_(installedGames_.end()) {}
+  GamesManager(const GamesManager&) = delete;
+  GamesManager(GamesManager&&) = delete;
+  virtual ~GamesManager() = default;
+
+  GamesManager& operator=(const GamesManager&) = delete;
+  GamesManager& operator=(GamesManager&&) = delete;
 
   // Installed games have their game paths set in the returned settings.
   std::vector<GameSettings> LoadInstalledGames(
@@ -55,7 +61,7 @@ public:
 
     std::optional<std::string> currentGameFolder;
     if (currentGame_ != installedGames_.end()) {
-      currentGameFolder = currentGame_->FolderName();
+      currentGameFolder = currentGame_->GetSettings().FolderName();
     }
 
     bool currentGameUpdated = false;
@@ -76,6 +82,7 @@ public:
         }
 
         GetCurrentGame()
+            .GetSettings()
             .SetName(gameSettings.Name())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
             .SetRegistryKeys(gameSettings.RegistryKeys())
@@ -136,11 +143,12 @@ public:
                     newGameFolder);
     }
 
-    currentGame_ = find_if(installedGames_.begin(),
-                           installedGames_.end(),
-                           [&](const gui::Game& game) {
-                             return newGameFolder == game.FolderName();
-                           });
+    currentGame_ =
+        find_if(installedGames_.begin(),
+                installedGames_.end(),
+                [&](const gui::Game& game) {
+                  return newGameFolder == game.GetSettings().FolderName();
+                });
 
     if (currentGame_ == installedGames_.end()) {
       logger->error(
@@ -155,7 +163,7 @@ public:
     }
 
     if (logger) {
-      logger->debug("New game is: {}", currentGame_->Name());
+      logger->debug("New game is: {}", currentGame_->GetSettings().Name());
     }
   }
 
@@ -164,7 +172,7 @@ public:
 
     std::vector<std::string> installedGames;
     for (const auto& game : installedGames_) {
-      installedGames.push_back(game.FolderName());
+      installedGames.push_back(game.GetSettings().FolderName());
     }
 
     return installedGames;
@@ -172,7 +180,7 @@ public:
 
   std::optional<std::string> GetFirstInstalledGameFolderName() const {
     if (!installedGames_.empty()) {
-      return installedGames_.front().FolderName();
+      return installedGames_.front().GetSettings().FolderName();
     }
 
     return std::nullopt;
@@ -181,10 +189,11 @@ public:
   bool IsGameInstalled(const std::string& gameFolder) const {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
-    return std::any_of(
-        installedGames_.cbegin(),
-        installedGames_.cend(),
-        [&](const gui::Game& game) { return gameFolder == game.FolderName(); });
+    return std::any_of(installedGames_.cbegin(),
+                       installedGames_.cend(),
+                       [&](const gui::Game& game) {
+                         return gameFolder == game.GetSettings().FolderName();
+                       });
   }
 
 private:
@@ -194,9 +203,9 @@ private:
 
   static bool GameNeedsRecreating(const gui::Game& game,
                                   const GameSettings& newSettings) {
-    return game.GamePath() != newSettings.GamePath() ||
-           game.GameLocalPath() != newSettings.GameLocalPath() ||
-           game.Master() != newSettings.Master();
+    return game.GetSettings().GamePath() != newSettings.GamePath() ||
+           game.GetSettings().GameLocalPath() != newSettings.GameLocalPath() ||
+           game.GetSettings().Master() != newSettings.Master();
   }
 
   std::vector<gui::Game> installedGames_;

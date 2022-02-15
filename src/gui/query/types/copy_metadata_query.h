@@ -38,7 +38,7 @@ public:
                     std::string pluginName) :
       game_(game), language_(language), pluginName_(pluginName) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Copying metadata for plugin {}", pluginName_);

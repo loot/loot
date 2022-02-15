@@ -47,20 +47,20 @@ public:
   bool areInputValuesValid() const;
 
 private:
-  QLabel *defaultGameLabel;
-  QLabel *languageLabel;
-  QLabel *themeLabel;
-  QLabel *updateMasterlistLabel;
-  QLabel *checkUpdatesLabel;
-  QLabel *loggingLabel;
-  QLabel *preludeSourceLabel;
-  QComboBox *defaultGameComboBox;
-  QComboBox *languageComboBox;
-  QComboBox *themeComboBox;
-  QCheckBox *updateMasterlistCheckbox;
-  QCheckBox *checkUpdatesCheckbox;
-  QCheckBox *loggingCheckbox;
-  QLineEdit *preludeSourceInput;
+  QLabel *defaultGameLabel{new QLabel(this)};
+  QLabel *languageLabel{new QLabel(this)};
+  QLabel *themeLabel{new QLabel(this)};
+  QLabel *updateMasterlistLabel{new QLabel(this)};
+  QLabel *checkUpdatesLabel{new QLabel(this)};
+  QLabel *loggingLabel{new QLabel(this)};
+  QLabel *preludeSourceLabel{new QLabel(this)};
+  QComboBox *defaultGameComboBox{new QComboBox(this)};
+  QComboBox *languageComboBox{new QComboBox(this)};
+  QComboBox *themeComboBox{new QComboBox(this)};
+  QCheckBox *updateMasterlistCheckbox{new QCheckBox(this)};
+  QCheckBox *checkUpdatesCheckbox{new QCheckBox(this)};
+  QCheckBox *loggingCheckbox{new QCheckBox(this)};
+  QLineEdit *preludeSourceInput{new QLineEdit(this)};
 
   void setupUi();
   void translateUi();

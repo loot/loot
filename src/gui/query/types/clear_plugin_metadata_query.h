@@ -26,36 +26,37 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 #define LOOT_GUI_QUERY_CLEAR_PLUGIN_METADATA_QUERY
 
-#include "gui/query/types/metadata_query.h"
+#include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
 namespace loot {
-template<typename G = gui::Game>
-class ClearPluginMetadataQuery : public MetadataQuery<G> {
+class ClearPluginMetadataQuery : public Query {
 public:
-  ClearPluginMetadataQuery(G& game,
+  ClearPluginMetadataQuery(gui::Game& game,
                            std::string language,
                            std::string pluginName) :
-      MetadataQuery<G>(game, language), pluginName_(pluginName) {}
+      game_(game), language_(language), pluginName_(pluginName) {}
 
-  QueryResult executeLogic() {
+  QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
       logger->debug("Clearing user metadata for plugin {}", pluginName_);
     }
 
-    this->getGame().ClearUserMetadata(pluginName_);
-    this->getGame().SaveUserMetadata();
+    game_.ClearUserMetadata(pluginName_);
+    game_.SaveUserMetadata();
 
-    auto metadata = this->generateDerivedMetadata(pluginName_);
-    if (metadata.has_value()) {
-      return metadata.value();
+    auto plugin = game_.GetPlugin(pluginName_);
+    if (plugin) {
+      return PluginItem(plugin, game_, language_);
     }
 
     return std::monostate();
   }
 
 private:
+  gui::Game& game_;
+  std::string language_;
   const std::string pluginName_;
 };
 }

@@ -44,8 +44,8 @@ public:
   std::optional<std::string> getUserMetadata() const;
 
 private:
-  QLabel* groupLabel;
-  QComboBox* groupComboBox;
+  QLabel* groupLabel{new QLabel(this)};
+  QComboBox* groupComboBox{new QComboBox(this)};
   std::string nonUserGroupName;
 
   void setupUi();

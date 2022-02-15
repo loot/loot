@@ -3,6 +3,8 @@ cmake_policy(SET CMP0015 NEW)
 project(LOOT)
 include(ExternalProject)
 
+option(RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -230,6 +232,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/location_table_model.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/message_content_table_model.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/message_table_model.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/metadata_table_model.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/models/tag_table_model.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/plugin_editor_widget.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/plugin_editor/table_tabs.h"
@@ -255,7 +258,6 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/copy_metadata_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_conflicting_plugins_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_game_data_query.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/query/types/metadata_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_log_location_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_readme_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/sort_plugins_query.h"
@@ -373,8 +375,8 @@ target_link_libraries(loot_gui_tests PRIVATE
 ##############################
 
 # Include source and library directories.
-target_include_directories(LOOT PRIVATE
-    "${CMAKE_SOURCE_DIR}/src"
+target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(LOOT SYSTEM PRIVATE
     ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
@@ -382,8 +384,8 @@ target_include_directories(LOOT PRIVATE
     ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS})
 
-target_include_directories(loot_gui_tests PRIVATE
-    "${CMAKE_SOURCE_DIR}/src"
+target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(loot_gui_tests SYSTEM PRIVATE
     ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
@@ -412,6 +414,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
             INSTALL_RPATH "${CMAKE_INSTALL_RPATH};."
             BUILD_WITH_INSTALL_RPATH ON)
 
+    target_compile_options(LOOT PRIVATE "-Wall" "-Wextra")
+
     set(LOOT_LIBS pthread http_parser ssh2 stdc++fs icui18n)
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
     target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
@@ -421,13 +425,65 @@ if(MSVC)
     set_target_properties(LOOT PROPERTIES WIN32_EXECUTABLE TRUE)
 
     # Turn off permissive mode to be more standards-compliant and avoid compiler errors.
-    target_compile_options(LOOT PRIVATE "/permissive-")
+    target_compile_options(LOOT PRIVATE "/permissive-" "/W4")
 
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
-        "/permissive-" "$<$<CONFIG:DEBUG>:/bigobj>")
+        "/permissive-" "/W4" "$<$<CONFIG:DEBUG>:/bigobj>")
 
     target_link_libraries(LOOT PRIVATE comctl32 psapi)
+endif()
+
+##############################
+# Configure clang-tidy
+##############################
+
+if(RUN_CLANG_TIDY)
+    set(CLANG_TIDY_COMMON_CHECKS
+        "cppcoreguidelines-avoid-c-arrays"
+        "cppcoreguidelines-c-copy-assignment-signature"
+        "cppcoreguidelines-explicit-virtual-functions"
+        "cppcoreguidelines-init-variables"
+        "cppcoreguidelines-interfaces-global-init"
+        "cppcoreguidelines-macro-usage"
+        "cppcoreguidelines-narrowing-conventions"
+        "cppcoreguidelines-no-malloc"
+        "cppcoreguidelines-pro-bounds-array-to-pointer-decay"
+        "cppcoreguidelines-pro-bounds-constant-array-index"
+        "cppcoreguidelines-pro-bounds-pointer-arithmetic"
+        "cppcoreguidelines-pro-type-const-cast"
+        "cppcoreguidelines-pro-type-cstyle-cast"
+        "cppcoreguidelines-pro-type-member-init"
+        "cppcoreguidelines-pro-type-reinterpret-cast"
+        "cppcoreguidelines-pro-type-static-cast-downcast"
+        "cppcoreguidelines-pro-type-union-access"
+        "cppcoreguidelines-pro-type-vararg"
+        "cppcoreguidelines-pro-type-slicing")
+
+    set(CLANG_TIDY_APP_CHECKS
+        ${CLANG_TIDY_COMMON_CHECKS}
+        "cppcoreguidelines-avoid-goto"
+        "cppcoreguidelines-avoid-magic-numbers"
+        "cppcoreguidelines-non-private-member-variables-in-classes"
+        "cppcoreguidelines-special-member-functions")
+
+    # Skip some checks for tests because they're not worth the noise (e.g. GTest
+    # happens to use goto, lots of tests use magic numbers as expected values).
+    set(CLANG_TIDY_TEST_CHECKS
+        ${CLANG_TIDY_COMMON_CHECKS})
+
+    list(JOIN CLANG_TIDY_APP_CHECKS "," CLANG_TIDY_APP_CHECKS_JOINED)
+    list(JOIN CLANG_TIDY_TEST_CHECKS "," CLANG_TIDY_TEST_CHECKS_JOINED)
+
+    set(CLANG_TIDY_APP
+        clang-tidy "-header-filter=.*" "-checks=${CLANG_TIDY_APP_CHECKS_JOINED}")
+    set(CLANG_TIDY_TEST
+        clang-tidy "-header-filter=.*" "-checks=${CLANG_TIDY_TEST_CHECKS_JOINED}")
+
+    set_target_properties(LOOT PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_APP}")
+
+    set_target_properties(loot_gui_tests PROPERTIES
+        CXX_CLANG_TIDY "${CLANG_TIDY_TEST}")
 endif()
 
 ##############################

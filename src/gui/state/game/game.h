@@ -37,16 +37,20 @@
 
 namespace loot {
 namespace gui {
-class Game : public GameSettings {
+class Game {
 public:
   Game(const GameSettings& gameSettings,
        const std::filesystem::path& lootDataPath,
        const std::filesystem::path& preludePath);
   Game(const Game& game);
+  Game(Game&& game);
+  ~Game() = default;
 
   Game& operator=(const Game& game);
+  Game& operator=(Game&& game);
 
-  using GameSettings::Type;
+  const GameSettings& GetSettings() const;
+  GameSettings& GetSettings();
 
   void Init();
 
@@ -76,7 +80,7 @@ public:
 
   bool IsPluginActive(const std::string& pluginName) const;
   std::optional<short> GetActiveLoadOrderIndex(
-      const std::shared_ptr<const PluginInterface>& plugin,
+      const PluginInterface& plugin,
       const std::vector<std::string>& loadOrder) const;
 
   std::vector<std::string> SortPlugins();
@@ -100,8 +104,7 @@ public:
       const std::string& pluginName,
       bool evaluateConditions = false) const;
   std::optional<PluginMetadata> GetNonUserMetadata(
-      const std::shared_ptr<const PluginInterface>& plugin,
-      bool evaluateConditions = false) const;
+      const PluginInterface& plugin) const;
 
   void SetUserGroups(const std::vector<Group>& groups);
   void AddUserMetadata(const PluginMetadata& metadata);
@@ -114,6 +117,7 @@ private:
   std::vector<std::string> GetInstalledPluginNames();
   void AppendMessages(std::vector<Message> messages);
 
+  GameSettings settings_;
   std::shared_ptr<GameInterface> gameHandle_;
   std::vector<Message> messages_;
   std::filesystem::path lootDataPath_;

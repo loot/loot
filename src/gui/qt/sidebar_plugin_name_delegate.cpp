@@ -52,8 +52,8 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   auto pluginItem = index.data(RawDataRole).value<PluginItem>();
   auto isEditorOpen = index.data(EditorStateRole).toBool();
 
-  auto isSelected = styleOption.state.testFlag(QStyle::State_Selected) &&
-                    styleOption.state.testFlag(QStyle::State_Active);
+  const auto isSelected = styleOption.state.testFlag(QStyle::State_Selected) &&
+                          styleOption.state.testFlag(QStyle::State_Active);
   if (isSelected) {
     painter->setPen(styleOption.palette.highlightedText().color());
   }

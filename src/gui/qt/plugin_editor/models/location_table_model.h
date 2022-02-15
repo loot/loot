@@ -28,45 +28,26 @@
 
 #include <loot/metadata/location.h>
 
-#include <QtCore/QAbstractTableModel>
+#include "gui/qt/plugin_editor/models/metadata_table_model.h"
 
 namespace loot {
-class LocationTableModel : public QAbstractTableModel {
+class LocationTableModel : public MetadataTableModel<Location> {
 public:
   LocationTableModel(QObject* parent,
                      std::vector<Location> nonUserMetadata,
                      std::vector<Location> userMetadata);
 
-  std::vector<Location> getUserMetadata() const;
-
-  int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-
   int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
-  QVariant data(const QModelIndex& index,
-                int role = Qt::DisplayRole) const override;
-
-  QVariant headerData(int section,
-                      Qt::Orientation orientation,
-                      int role) const override;
-
-  Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-  bool setData(const QModelIndex& index,
-               const QVariant& value,
-               int role) override;
-
-  bool insertRows(int row,
-                  int count,
-                  const QModelIndex& parent = QModelIndex()) override;
-
-  bool removeRows(int row,
-                  int count,
-                  const QModelIndex& parent = QModelIndex()) override;
+  static constexpr int URL_COLUMN = 0;
+  static constexpr int NAME_COLUMN = 1;
 
 private:
-  std::vector<Location> nonUserMetadata;
-  std::vector<Location> userMetadata;
+  QVariant data(const Location& element, int column, int role) const override;
+
+  QVariant headerText(int column) const override;
+
+  void setData(Location& element, int column, const QVariant& value) override;
 };
 }
 

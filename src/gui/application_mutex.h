@@ -41,19 +41,24 @@
 
 namespace loot {
 #ifdef _WIN32
-class ApplicationMutexGuard {
+class [[maybe_unused]] ApplicationMutexGuard {
 public:
   static constexpr const wchar_t* MUTEX_NAME = L"LOOT.Shell.Instance";
 
-  ApplicationMutexGuard() : hMutex(NULL) {
-    hMutex = ::CreateMutex(NULL, FALSE, MUTEX_NAME);
+  ApplicationMutexGuard() : hMutex(nullptr) {
+    hMutex = ::CreateMutex(nullptr, FALSE, MUTEX_NAME);
   }
+  ApplicationMutexGuard(const ApplicationMutexGuard&) = delete;
+  ApplicationMutexGuard(ApplicationMutexGuard&&) = delete;
 
   ~ApplicationMutexGuard() {
-    if (hMutex != NULL) {
+    if (hMutex != nullptr) {
       ::ReleaseMutex(hMutex);
     }
   }
+
+  ApplicationMutexGuard& operator=(const ApplicationMutexGuard&) = delete;
+  ApplicationMutexGuard& operator=(ApplicationMutexGuard&&) = delete;
 
 private:
   HANDLE hMutex;
@@ -62,10 +67,10 @@ private:
 bool IsApplicationMutexLocked() {
   return ::OpenMutex(MUTEX_ALL_ACCESS,
                      FALSE,
-                     ApplicationMutexGuard::MUTEX_NAME) != NULL;
+                     ApplicationMutexGuard::MUTEX_NAME) != nullptr;
 }
 #else
-class ApplicationMutexGuard {};
+class [[maybe_unused]] ApplicationMutexGuard {};
 
 bool IsApplicationMutexLocked() { return false; }
 #endif

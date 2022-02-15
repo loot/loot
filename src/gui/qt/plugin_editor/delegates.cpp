@@ -41,8 +41,8 @@ ComboBoxDelegate::ComboBoxDelegate(
     QStyledItemDelegate(parent), textAndData(textAndData) {}
 
 QWidget* ComboBoxDelegate::createEditor(QWidget* parent,
-                                        const QStyleOptionViewItem& option,
-                                        const QModelIndex& index) const {
+                                        const QStyleOptionViewItem&,
+                                        const QModelIndex&) const {
   QComboBox* comboBox = new QComboBox(parent);
 
   for (const auto& entry : textAndData) {
@@ -68,15 +68,15 @@ void ComboBoxDelegate::setEditorData(QWidget* editor,
 void ComboBoxDelegate::setModelData(QWidget* editor,
                                     QAbstractItemModel* model,
                                     const QModelIndex& index) const {
-  QComboBox* comboBox = qobject_cast<QComboBox*>(editor);
+  const QComboBox* comboBox = qobject_cast<QComboBox*>(editor);
   Q_ASSERT(comboBox);
 
   model->setData(index, comboBox->currentData(), Qt::EditRole);
 }
 
 QWidget* CrcLineEditDelegate::createEditor(QWidget* parent,
-                                           const QStyleOptionViewItem& option,
-                                           const QModelIndex& index) const {
+                                           const QStyleOptionViewItem&,
+                                           const QModelIndex&) const {
   QLineEdit* lineEdit = new QLineEdit(parent);
   lineEdit->setInputMask("HHHHHHHH");
 
@@ -96,7 +96,7 @@ void CrcLineEditDelegate::setEditorData(QWidget* editor,
 void CrcLineEditDelegate::setModelData(QWidget* editor,
                                        QAbstractItemModel* model,
                                        const QModelIndex& index) const {
-  QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
+  const QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
   Q_ASSERT(lineEdit);
 
   model->setData(index, lineEdit->text(), Qt::EditRole);
@@ -107,10 +107,9 @@ MessageContentDelegate::MessageContentDelegate(
     const std::vector<LootSettings::Language>& languages) :
     QStyledItemDelegate(parent), languages(languages) {}
 
-QWidget* MessageContentDelegate::createEditor(
-    QWidget* parent,
-    const QStyleOptionViewItem& option,
-    const QModelIndex& index) const {
+QWidget* MessageContentDelegate::createEditor(QWidget* parent,
+                                              const QStyleOptionViewItem&,
+                                              const QModelIndex&) const {
   auto editor = new MessageContentEditor(parent, languages);
   editor->setFocusPolicy(Qt::StrongFocus);
 
@@ -137,13 +136,13 @@ void MessageContentDelegate::setModelData(QWidget* editor,
   }
 }
 
-void MessageContentDelegate::updateEditorGeometry(
-    QWidget* editor,
-    const QStyleOptionViewItem& option,
-    const QModelIndex& index) const {
-  auto parentGeometry = editor->parentWidget()->geometry();
-  auto mappedGeometry = editor->parentWidget()->parentWidget()->mapToGlobal(
-      parentGeometry.topLeft());
+void MessageContentDelegate::updateEditorGeometry(QWidget* editor,
+                                                  const QStyleOptionViewItem&,
+                                                  const QModelIndex&) const {
+  const auto parentGeometry = editor->parentWidget()->geometry();
+  const auto mappedGeometry =
+      editor->parentWidget()->parentWidget()->mapToGlobal(
+          parentGeometry.topLeft());
 
   editor->move(mappedGeometry);
 }
@@ -155,8 +154,8 @@ AutocompletingLineEditDelegate::AutocompletingLineEditDelegate(
 
 QWidget* AutocompletingLineEditDelegate::createEditor(
     QWidget* parent,
-    const QStyleOptionViewItem& option,
-    const QModelIndex& index) const {
+    const QStyleOptionViewItem&,
+    const QModelIndex&) const {
   auto completer = new QCompleter(completions, parent);
   completer->setCaseSensitivity(Qt::CaseInsensitive);
 
@@ -181,7 +180,7 @@ void AutocompletingLineEditDelegate::setModelData(
     QWidget* editor,
     QAbstractItemModel* model,
     const QModelIndex& index) const {
-  QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
+  const QLineEdit* lineEdit = qobject_cast<QLineEdit*>(editor);
   Q_ASSERT(lineEdit);
 
   model->setData(index, lineEdit->text(), Qt::EditRole);

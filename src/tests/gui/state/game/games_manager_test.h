@@ -43,7 +43,7 @@ public:
 
 private:
   std::optional<std::filesystem::path> FindGamePath(
-      const GameSettings& gameSettings) const {
+      const GameSettings& gameSettings) const override {
     if (gameSettings.Type() == GameType::tes5 ||
         gameSettings.Type() == GameType::fonv) {
       return gameSettings.GamePath() / gameSettings.FolderName();
@@ -52,10 +52,10 @@ private:
     return std::nullopt;
   }
 
-  void InitialiseGameData(gui::Game& game) {
-    auto it = initialiseCounts_.find(game.FolderName());
+  void InitialiseGameData(gui::Game& game) override {
+    auto it = initialiseCounts_.find(game.GetSettings().FolderName());
     if (it == initialiseCounts_.end()) {
-      initialiseCounts_.emplace(game.FolderName(), 1);
+      initialiseCounts_.emplace(game.GetSettings().FolderName(), 1);
     } else {
       it->second++;
     }
@@ -147,7 +147,8 @@ TEST(
       std::filesystem::path(),
       std::filesystem::path());
 
-  EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
+  EXPECT_EQ(currentFolderName,
+            manager.GetCurrentGame().GetSettings().FolderName());
   EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
 
   ASSERT_EQ(1, settings.size());
@@ -177,7 +178,8 @@ TEST(
       std::filesystem::path(),
       std::filesystem::path());
 
-  EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
+  EXPECT_EQ(currentFolderName,
+            manager.GetCurrentGame().GetSettings().FolderName());
   EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
 
   ASSERT_EQ(1, settings.size());
@@ -207,7 +209,8 @@ TEST(
       std::filesystem::path(),
       std::filesystem::path());
 
-  EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
+  EXPECT_EQ(currentFolderName,
+            manager.GetCurrentGame().GetSettings().FolderName());
   EXPECT_EQ(1, manager.GetInitialiseCount(currentFolderName));
 
   ASSERT_EQ(1, settings.size());
@@ -238,16 +241,18 @@ TEST(
   auto settings = manager.LoadInstalledGames(
       {newGameSettings}, std::filesystem::path(), std::filesystem::path());
 
-  EXPECT_EQ(currentFolderName, manager.GetCurrentGame().FolderName());
+  EXPECT_EQ(currentFolderName,
+            manager.GetCurrentGame().GetSettings().FolderName());
   EXPECT_EQ(0, manager.GetInitialiseCount(currentFolderName));
 
-  EXPECT_EQ(newGameSettings.Name(), manager.GetCurrentGame().Name());
+  EXPECT_EQ(newGameSettings.Name(),
+            manager.GetCurrentGame().GetSettings().Name());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
-            manager.GetCurrentGame().MinimumHeaderVersion());
+            manager.GetCurrentGame().GetSettings().MinimumHeaderVersion());
   EXPECT_EQ(newGameSettings.RegistryKeys(),
-            manager.GetCurrentGame().RegistryKeys());
+            manager.GetCurrentGame().GetSettings().RegistryKeys());
   EXPECT_EQ(newGameSettings.MasterlistSource(),
-            manager.GetCurrentGame().MasterlistSource());
+            manager.GetCurrentGame().GetSettings().MasterlistSource());
 
   ASSERT_EQ(1, settings.size());
   EXPECT_EQ(newGameSettings.Name(), settings[0].Name());
@@ -291,7 +296,7 @@ TEST(GamesManager, setCurrentGameShouldUpdateStoredReference) {
   manager.SetCurrentGame(GameSettings(GameType::tes5).FolderName());
 
   EXPECT_EQ(GameSettings(GameType::tes5).FolderName(),
-            manager.GetCurrentGame().FolderName());
+            manager.GetCurrentGame().GetSettings().FolderName());
 }
 
 TEST(GamesManager, setCurrentGameShouldNotInitialiseGameData) {

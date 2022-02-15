@@ -58,14 +58,14 @@ void Edge::adjust() {
     return;
   }
 
-  QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
-  auto length = line.length();
+  const QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
+  const auto length = line.length();
 
   prepareGeometryChange();
 
-  if (length > qreal(20.0)) {
-    QPointF edgeOffset((line.dx() * Node::RADIUS) / length,
-                       (line.dy() * Node::RADIUS) / length);
+  if (length > qreal{Node::DIAMETER}) {
+    const QPointF edgeOffset((line.dx() * Node::RADIUS) / length,
+                             (line.dy() * Node::RADIUS) / length);
     sourcePoint = line.p1() + edgeOffset;
     destPoint = line.p2() - edgeOffset;
   } else {
@@ -79,13 +79,13 @@ QRectF Edge::boundingRect() const {
     return QRectF();
   }
 
-  auto padding = (LINE_WIDTH + ARROW_HYPOTENUSE) / 2.0;
+  static constexpr auto PADDING = (LINE_WIDTH + ARROW_HYPOTENUSE) / 2.0;
 
   return QRectF(sourcePoint,
                 QSizeF(destPoint.x() - sourcePoint.x(),
                        destPoint.y() - sourcePoint.y()))
       .normalized()
-      .adjusted(-padding, -padding, padding, padding);
+      .adjusted(-PADDING, -PADDING, PADDING, PADDING);
 }
 
 void Edge::paint(QPainter *painter,
@@ -101,7 +101,7 @@ void Edge::paint(QPainter *painter,
     return;
   }
 
-  auto color = getDefaultColor(isUserMetadata_);
+  const auto color = getDefaultColor(isUserMetadata_);
 
   painter->setPen(
       QPen(color, LINE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -129,20 +129,20 @@ void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
-  QLineF line(startPos, endPos);
+  const QLineF line(startPos, endPos);
 
-  if (qFuzzyCompare(line.length(), qreal(0.0))) {
+  if (qFuzzyCompare(line.length(), qreal{0.0})) {
     return QPolygonF();
   }
 
-  auto angleOfLine = std::atan2(-line.dy(), line.dx());
-  auto angleOfArrowEdge1 = angleOfLine - M_PI / 3;
-  auto angleOfArrowEdge2 = angleOfArrowEdge1 - M_PI / 3;
+  const auto angleOfLine = std::atan2(-line.dy(), line.dx());
+  const auto angleOfArrowEdge1 = angleOfLine - M_PI / 3;
+  const auto angleOfArrowEdge2 = angleOfArrowEdge1 - M_PI / 3;
 
-  auto destArrowP1 =
+  const auto destArrowP1 =
       endPos + QPointF(sin(angleOfArrowEdge1) * ARROW_HYPOTENUSE,
                        cos(angleOfArrowEdge1) * ARROW_HYPOTENUSE);
-  auto destArrowP2 =
+  const auto destArrowP2 =
       endPos + QPointF(sin(angleOfArrowEdge2) * ARROW_HYPOTENUSE,
                        cos(angleOfArrowEdge2) * ARROW_HYPOTENUSE);
 
@@ -151,7 +151,10 @@ QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
 }
 
 QColor getDefaultColor(bool isUserMetadata) {
-  auto colorGroup = isUserMetadata ? QPalette::Active : QPalette::Disabled;
+  static constexpr int MAX_ALPHA = 255;
+
+  const auto colorGroup =
+      isUserMetadata ? QPalette::Active : QPalette::Disabled;
   auto color = QGuiApplication::palette().color(colorGroup, QPalette::Text);
 
   // The color may use the alpha channel to appear darken its RGB color, but
@@ -159,20 +162,21 @@ QColor getDefaultColor(bool isUserMetadata) {
   // which we don't want. Use the alpha channel and the background color
   // (QPalette::base) to work out what the equivalent opaque color is and use
   // that instead.
-  auto alpha = color.alpha();
-  if (alpha == 255) {
+  const auto alpha = color.alpha();
+  if (alpha == MAX_ALPHA) {
     return color;
   }
 
   auto backgroundColor =
       QGuiApplication::palette().color(colorGroup, QPalette::Base);
 
-  auto red = backgroundColor.red() +
-             (color.red() - backgroundColor.red()) * alpha / 255;
-  auto green = backgroundColor.green() +
-               (color.green() - backgroundColor.green()) * alpha / 255;
-  auto blue = backgroundColor.blue() +
-              (color.blue() - backgroundColor.blue()) * alpha / 255;
+  const auto red = backgroundColor.red() +
+                   (color.red() - backgroundColor.red()) * alpha / MAX_ALPHA;
+  const auto green =
+      backgroundColor.green() +
+      (color.green() - backgroundColor.green()) * alpha / MAX_ALPHA;
+  const auto blue = backgroundColor.blue() +
+                    (color.blue() - backgroundColor.blue()) * alpha / MAX_ALPHA;
 
   return QColor(red, green, blue);
 }

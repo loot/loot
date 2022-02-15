@@ -63,9 +63,9 @@ private:
   const std::vector<LootSettings::Language> &languages;
   const std::string language;
 
-  QLabel *pluginLabel;
-  QTabWidget *tabs;
-  GroupTab *groupTab;
+  QLabel *pluginLabel{new QLabel(this)};
+  QTabWidget *tabs{new QTabWidget(this)};
+  GroupTab *groupTab{new GroupTab(this)};
   LoadAfterFileTableTab *loadAfterTab;
   FileTableTab *requirementsTab;
   FileTableTab *incompatibilitiesTab;
@@ -73,7 +73,7 @@ private:
   TagTableTab *tagsTab;
   CleaningDataTableTab *dirtyTab;
   CleaningDataTableTab *cleanTab;
-  LocationTableTab *locationsTab;
+  LocationTableTab *locationsTab{new LocationTableTab(this)};
 
   QStringList bashTagCompletions;
   QStringList filenameCompletions;
@@ -83,7 +83,7 @@ private:
 
   PluginMetadata getUserMetadata();
 
-  void connectTableRowCountChangedSignal(BaseTableTab *tableTab);
+  void connectTableRowCountChangedSignal(const BaseTableTab *tableTab);
 
 private slots:
   void on_dialogButtons_accepted();

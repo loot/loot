@@ -68,7 +68,12 @@ class TaskExecutor : public QObject {
   Q_OBJECT
 public:
   TaskExecutor(QObject *parent, std::vector<Task *> tasks);
+  TaskExecutor(const TaskExecutor &) = delete;
+  TaskExecutor(TaskExecutor &&) = delete;
   ~TaskExecutor();
+
+  TaskExecutor &operator=(const TaskExecutor &) = delete;
+  TaskExecutor &operator=(TaskExecutor &&) = delete;
 
   bool wait(unsigned long time);
 
@@ -82,8 +87,8 @@ private:
   size_t currentTask;
 
 private slots:
-  void onTaskFinished(QueryResult result);
-  void onTaskError(const std::string &message);
+  void onTaskFinished();
+  void onTaskError();
   void onWorkerThreadFinished();
 };
 }
