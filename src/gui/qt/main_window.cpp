@@ -719,7 +719,10 @@ void MainWindow::updateGeneralInformation() {
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      masterlistInfo, preludeInfo, initMessages);
+      state.GetCurrentGame().GetSettings().Type(),
+      masterlistInfo,
+      preludeInfo,
+      initMessages);
 }
 
 void MainWindow::updateGeneralMessages() {

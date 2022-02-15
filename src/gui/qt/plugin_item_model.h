@@ -94,7 +94,8 @@ public:
 
   void setEditorPluginName(const std::optional<std::string>& editorPluginName);
 
-  void setGeneralInformation(const FileRevisionSummary& masterlistRevision,
+  void setGeneralInformation(GameType gameType,
+                             const FileRevisionSummary& masterlistRevision,
                              const FileRevisionSummary& preludeRevision,
                              const std::vector<SimpleMessage>& messages);
 

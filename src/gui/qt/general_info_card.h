@@ -30,6 +30,7 @@
 #include <loot/struct/simple_message.h>
 
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 
 #include "gui/qt/helpers.h"
@@ -47,11 +48,18 @@ public:
 
   void setMessageCounts(size_t warnings, size_t errors, size_t total);
 
-  void setPluginCounts(size_t active, size_t dirty, size_t total);
+  void setPluginCounts(size_t activeLight,
+                       size_t activeRegular,
+                       size_t dirty,
+                       size_t total);
 
   void setGeneralMessages(const std::vector<SimpleMessage>& messages);
 
+  void setGameType(GameType gameType);
+
 private:
+  static constexpr int PLUGIN_VALUE_COLUMN = 5;
+
   QLabel* headingLabel{new QLabel(this)};
   QLabel* masterlistRevisionLabel{new QLabel(this)};
   QLabel* masterlistRevisionValue{new QLabel(this)};
@@ -69,11 +77,17 @@ private:
   QLabel* totalMessagesCountValue{new QLabel(this)};
   QLabel* activeCountLabel{new QLabel(this)};
   QLabel* activeCountValue{new QLabel(this)};
+  QLabel* activeLightCountLabel{new QLabel(this)};
+  QLabel* activeLightCountValue{new QLabel(this)};
+  QLabel* activeRegularCountLabel{new QLabel(this)};
+  QLabel* activeRegularCountValue{new QLabel(this)};
   QLabel* dirtyCountLabel{new QLabel(this)};
   QLabel* dirtyCountValue{new QLabel(this)};
   QLabel* totalPluginsCountLabel{new QLabel(this)};
   QLabel* totalPluginsCountValue{new QLabel(this)};
+  QGridLayout* gridLayout{new QGridLayout()};
   MessagesWidget* messagesWidget{new MessagesWidget(this)};
+  bool showSeparateLightPluginCount{false};
 
   void setupUi();
 

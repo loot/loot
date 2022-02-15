@@ -34,8 +34,11 @@ GeneralInformationCounters::GeneralInformationCounters(
   totalPlugins = plugins.size();
 
   for (const auto& plugin : plugins) {
-    if (plugin.isActive) {
-      active += 1;
+    if (plugin.isActive && plugin.isLightPlugin) {
+      activeLight += 1;
+    }
+    if (plugin.isActive && !plugin.isLightPlugin) {
+      activeRegular += 1;
     }
     if (plugin.isDirty) {
       dirty += 1;

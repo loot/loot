@@ -440,12 +440,15 @@ GeneralInfoCard* PluginCardDelegate::setGeneralInfoCardContent(
   auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
 
+  generalInfoCard->setGameType(generalInfo.gameType);
   generalInfoCard->setMasterlistInfo(generalInfo.masterlistRevision);
   generalInfoCard->setPreludeInfo(generalInfo.preludeRevision);
   generalInfoCard->setMessageCounts(
       counters.warnings, counters.errors, counters.totalMessages);
-  generalInfoCard->setPluginCounts(
-      counters.active, counters.dirty, counters.totalPlugins);
+  generalInfoCard->setPluginCounts(counters.activeLight,
+                                   counters.activeRegular,
+                                   counters.dirty,
+                                   counters.totalPlugins);
   generalInfoCard->setGeneralMessages(generalInfo.generalMessages);
 
   return generalInfoCard;

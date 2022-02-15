@@ -327,11 +327,13 @@ void PluginItemModel::setEditorPluginName(
 }
 
 void PluginItemModel::setGeneralInformation(
+    GameType gameType,
     const FileRevisionSummary& masterlistRevision,
     const FileRevisionSummary& preludeRevision,
     const std::vector<SimpleMessage>& messages) {
   const auto infoIndex = index(0, CARDS_COLUMN);
 
+  generalInformation.gameType = gameType;
   generalInformation.masterlistRevision = masterlistRevision;
   generalInformation.preludeRevision = preludeRevision;
   generalInformation.generalMessages = messages;
