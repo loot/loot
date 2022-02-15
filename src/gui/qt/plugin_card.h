@@ -43,7 +43,7 @@ namespace loot {
 class PluginCard : public QFrame {
   Q_OBJECT
 public:
-  PluginCard(QWidget* parent);
+  explicit PluginCard(QWidget* parent);
 
   void setContent(const PluginItem& plugin,
                   const CardContentFiltersState& filters);
@@ -83,7 +83,7 @@ typedef std::tuple<QString, QString, QString, std::vector<std::string>, bool>
 class PluginCardDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
-  PluginCardDelegate(QListView* parent);
+  explicit PluginCardDelegate(QListView* parent);
 
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,

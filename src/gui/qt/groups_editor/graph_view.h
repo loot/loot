@@ -38,7 +38,7 @@ class GraphView : public QGraphicsView {
   Q_OBJECT
 
 public:
-  GraphView(QWidget *parent = nullptr);
+  explicit GraphView(QWidget *parent = nullptr);
 
   void setGroups(const std::vector<Group> &masterlistGroups,
                  const std::vector<Group> &userGroups,

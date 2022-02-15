@@ -35,7 +35,7 @@ namespace loot {
 class GroupTab : public QWidget {
   Q_OBJECT
 public:
-  GroupTab(QWidget* parent);
+  explicit GroupTab(QWidget* parent);
 
   void initialiseInputs(const std::vector<std::string>& groups,
                         const std::optional<std::string>& nonUserGroup,

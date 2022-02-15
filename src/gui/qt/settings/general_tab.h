@@ -39,7 +39,7 @@ namespace loot {
 class GeneralTab : public QFrame {
   Q_OBJECT
 public:
-  GeneralTab(QWidget *parent = nullptr);
+  explicit GeneralTab(QWidget *parent = nullptr);
 
   void initialiseInputs(const LootSettings &settings,
                         const std::vector<std::string> &themes);

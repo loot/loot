@@ -43,7 +43,7 @@ struct SearchState {
 class SearchDialog : public QDialog {
   Q_OBJECT
 public:
-  SearchDialog(QWidget *parent);
+  explicit SearchDialog(QWidget *parent);
 
   void reset();
   void setSearchResults(size_t resultsCount);

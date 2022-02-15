@@ -43,7 +43,7 @@ enum class FileType { Masterlist, MasterlistPrelude };
 
 struct FileRevisionSummary {
   FileRevisionSummary();
-  FileRevisionSummary(const FileRevision& fileRevision);
+  explicit FileRevisionSummary(const FileRevision& fileRevision);
   FileRevisionSummary(const std::string& id, const std::string& date);
 
   std::string id;

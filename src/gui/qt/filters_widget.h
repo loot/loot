@@ -39,7 +39,7 @@ namespace loot {
 class FiltersWidget : public QWidget {
   Q_OBJECT
 public:
-  FiltersWidget(QWidget *parent);
+  explicit FiltersWidget(QWidget *parent);
 
   void setPlugins(const std::vector<std::string> &pluginNames);
   void setGroups(const std::vector<std::string> &groupNames);

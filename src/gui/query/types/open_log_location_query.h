@@ -33,7 +33,8 @@ along with LOOT.  If not, see
 namespace loot {
 class OpenLogLocationQuery : public Query {
 public:
-  OpenLogLocationQuery(std::filesystem::path logPath) : logPath_(logPath) {}
+  explicit OpenLogLocationQuery(std::filesystem::path logPath) :
+      logPath_(logPath) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();

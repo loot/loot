@@ -79,7 +79,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  MainWindow(LootState &state, QWidget *parent = nullptr);
+  explicit MainWindow(LootState &state, QWidget *parent = nullptr);
 
   void initialise();
 

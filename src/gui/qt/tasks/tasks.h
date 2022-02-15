@@ -55,7 +55,7 @@ signals:
 class QueryTask : public Task {
   Q_OBJECT
 public:
-  QueryTask(std::unique_ptr<Query> query);
+  explicit QueryTask(std::unique_ptr<Query> query);
 
 public slots:
   void execute() override;

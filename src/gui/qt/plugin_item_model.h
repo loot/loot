@@ -61,7 +61,7 @@ public:
   static const int SIDEBAR_STATE_COLUMN;
   static const int CARDS_COLUMN;
 
-  PluginItemModel(QObject* parent);
+  explicit PluginItemModel(QObject* parent);
 
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 

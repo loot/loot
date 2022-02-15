@@ -33,7 +33,7 @@
 namespace loot {
 class MessagesWidget : public QWidget {
 public:
-  MessagesWidget(QWidget* parent);
+  explicit MessagesWidget(QWidget* parent);
 
   bool willChangeContent(const std::vector<SimpleMessage>& messages) const;
   void setMessages(const std::vector<SimpleMessage>& messages);

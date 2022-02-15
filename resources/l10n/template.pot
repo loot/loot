@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-05 20:58+0000\n"
+"POT-Creation-Date: 2022-02-15 18:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,22 +128,22 @@ msgstr ""
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:90
+#: src/gui/qt/helpers.cpp:88
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:192
+#: src/gui/qt/helpers.cpp:190
 msgid "N/A: No masterlist present"
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:197
+#: src/gui/qt/helpers.cpp:195
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:205
+#: src/gui/qt/helpers.cpp:203
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
@@ -488,7 +488,7 @@ msgstr ""
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:298 src/gui/qt/plugin_item_model.cpp:125
+#: src/gui/qt/plugin_card.cpp:298 src/gui/qt/plugin_item_model.cpp:122
 msgid "Has User Metadata"
 msgstr ""
 
@@ -509,7 +509,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/gui/qt/plugin_item_model.cpp:123
+#: src/gui/qt/plugin_item_model.cpp:120
 msgid "Editor Is Open"
 msgstr ""
 
@@ -801,7 +801,7 @@ msgstr ""
 msgid "Parsing, merging and evaluating metadata..."
 msgstr ""
 
-#: src/gui/query/types/sort_plugins_query.h:55
+#: src/gui/query/types/sort_plugins_query.h:54
 msgid "Sorting load order..."
 msgstr ""
 

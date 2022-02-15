@@ -39,7 +39,7 @@ namespace loot {
 class GeneralInfoCard : public QFrame {
   Q_OBJECT
 public:
-  GeneralInfoCard(QWidget* parent);
+  explicit GeneralInfoCard(QWidget* parent);
 
   void setMasterlistInfo(FileRevisionSummary masterlistInfo);
 
