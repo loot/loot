@@ -63,20 +63,28 @@ private:
   const std::vector<LootSettings::Language> &languages;
   const std::string language;
 
+  QStringList bashTagCompletions;
+  QStringList filenameCompletions;
+
   QLabel *pluginLabel{new QLabel(this)};
   QTabWidget *tabs{new QTabWidget(this)};
   GroupTab *groupTab{new GroupTab(this)};
-  LoadAfterFileTableTab *loadAfterTab;
-  FileTableTab *requirementsTab;
-  FileTableTab *incompatibilitiesTab;
-  MessageTableTab *messagesTab;
-  TagTableTab *tagsTab;
-  CleaningDataTableTab *dirtyTab;
-  CleaningDataTableTab *cleanTab;
+  LoadAfterFileTableTab *loadAfterTab{
+      new LoadAfterFileTableTab(this,
+                                languages,
+                                language,
+                                filenameCompletions)};
+  FileTableTab *requirementsTab{
+      new FileTableTab(this, languages, language, filenameCompletions)};
+  FileTableTab *incompatibilitiesTab{
+      new FileTableTab(this, languages, language, filenameCompletions)};
+  MessageTableTab *messagesTab{new MessageTableTab(this, languages, language)};
+  TagTableTab *tagsTab{new TagTableTab(this, bashTagCompletions)};
+  CleaningDataTableTab *dirtyTab{
+      new CleaningDataTableTab(this, languages, language)};
+  CleaningDataTableTab *cleanTab{
+      new CleaningDataTableTab(this, languages, language)};
   LocationTableTab *locationsTab{new LocationTableTab(this)};
-
-  QStringList bashTagCompletions;
-  QStringList filenameCompletions;
 
   void setupUi();
   void translateUi();

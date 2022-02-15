@@ -84,7 +84,7 @@ signals:
 private:
   QThread workerThread;
   std::vector<Task *> tasks;
-  size_t currentTask;
+  size_t currentTask{0};
 
 private slots:
   void onTaskFinished();

@@ -32,9 +32,6 @@
 #include "gui/qt/icon_factory.h"
 
 namespace loot {
-SearchResultData::SearchResultData() :
-    isResult(false), isCurrentResult(false) {}
-
 SearchResultData::SearchResultData(bool isResult, bool isCurrentResult) :
     isResult(isResult), isCurrentResult(isCurrentResult) {}
 

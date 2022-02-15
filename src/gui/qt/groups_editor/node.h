@@ -99,11 +99,11 @@ protected:
 
 private:
   QList<Edge *> edgeList;
-  QGraphicsItem *edgeToCursor;
-  NodeLabel *textItem;
-  bool isUserMetadata_;
-  bool containsInstalledPlugins;
-  bool drawEdgeToCursor;
+  QGraphicsItem *edgeToCursor{nullptr};
+  NodeLabel *textItem{nullptr};
+  bool isUserMetadata_{false};
+  bool containsInstalledPlugins{false};
+  bool drawEdgeToCursor{false};
 
   QColor getNodeColor() const;
   void removeEdgeToCursor();

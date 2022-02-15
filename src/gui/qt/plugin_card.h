@@ -103,8 +103,8 @@ public:
                     const QModelIndex& index) const override;
 
 private:
-  GeneralInfoCard* generalInfoCard;
-  PluginCard* pluginCard;
+  GeneralInfoCard* generalInfoCard{nullptr};
+  PluginCard* pluginCard{nullptr};
   mutable std::map<SizeHintCacheKey, std::pair<QWidget*, QSize>> sizeHintCache;
 
   static GeneralInfoCard* setGeneralInfoCardContent(

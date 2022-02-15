@@ -127,7 +127,10 @@ private:
   QSplitter *editorSplitter{
       new QSplitter(Qt::Orientation::Vertical, sidebarSplitter)};
   QListView *pluginCardsView{new QListView(editorSplitter)};
-  PluginEditorWidget *pluginEditorWidget;
+  PluginEditorWidget *pluginEditorWidget{
+      new PluginEditorWidget(editorSplitter,
+                             state.getSettings().getLanguages(),
+                             state.getSettings().getLanguage())};
 
   SettingsDialog *settingsDialog{new SettingsDialog(this)};
   SearchDialog *searchDialog{new SearchDialog(this)};

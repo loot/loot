@@ -39,7 +39,7 @@ namespace loot {
 inline static const std::string DEFAULT_GROUP_NAME = Group().GetName();
 
 struct PluginItem {
-  PluginItem();
+  PluginItem() = default;
   PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
              const gui::Game& game,
              std::string language);
@@ -51,13 +51,13 @@ struct PluginItem {
   std::optional<std::string> group;
   std::optional<std::string> cleaningUtility;
 
-  bool isActive;
-  bool isDirty;
-  bool isEmpty;
-  bool isMaster;
-  bool isLightPlugin;
-  bool loadsArchive;
-  bool hasUserMetadata;
+  bool isActive{false};
+  bool isDirty{false};
+  bool isEmpty{false};
+  bool isMaster{false};
+  bool isLightPlugin{false};
+  bool loadsArchive{false};
+  bool hasUserMetadata{false};
 
   std::vector<std::string> currentTags;
   std::vector<std::string> addTags;

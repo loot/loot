@@ -26,23 +26,9 @@
 #include "gui/qt/counters.h"
 
 namespace loot {
-GeneralInformationCounters::GeneralInformationCounters() :
-    warnings(0),
-    errors(0),
-    totalMessages(0),
-    active(0),
-    dirty(0),
-    totalPlugins(0) {}
-
 GeneralInformationCounters::GeneralInformationCounters(
     const std::vector<SimpleMessage>& generalMessages,
-    const std::vector<PluginItem>& plugins) :
-    warnings(0),
-    errors(0),
-    totalMessages(0),
-    active(0),
-    dirty(0),
-    totalPlugins(0) {
+    const std::vector<PluginItem>& plugins) {
   countMessages(generalMessages);
 
   totalPlugins = plugins.size();

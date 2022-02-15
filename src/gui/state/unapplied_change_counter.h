@@ -29,8 +29,6 @@
 namespace loot {
 class UnappliedChangeCounter {
 public:
-  UnappliedChangeCounter() : unappliedChangeCounter_(0) {}
-
   bool HasUnappliedChanges() const { return unappliedChangeCounter_ > 0; }
 
   void IncrementUnappliedChangeCounter() { ++unappliedChangeCounter_; }
@@ -42,7 +40,7 @@ public:
   }
 
 private:
-  size_t unappliedChangeCounter_;
+  size_t unappliedChangeCounter_{0};
 };
 }
 

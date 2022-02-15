@@ -122,15 +122,6 @@ std::string getCommaSeparatedTags(const std::vector<std::string>& tags) {
   return tagsText.substr(0, tagsText.length() - 2);
 }
 
-PluginItem::PluginItem() :
-    isActive(false),
-    isDirty(false),
-    isEmpty(false),
-    isMaster(false),
-    isLightPlugin(false),
-    loadsArchive(false),
-    hasUserMetadata(false) {}
-
 PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
                        const gui::Game& game,
                        std::string language) :
@@ -139,12 +130,10 @@ PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
     crc(plugin->GetCRC()),
     version(plugin->GetVersion()),
     isActive(game.IsPluginActive(plugin->GetName())),
-    isDirty(false),
     isEmpty(plugin->IsEmpty()),
     isMaster(plugin->IsMaster()),
     isLightPlugin(plugin->IsLightPlugin()),
-    loadsArchive(plugin->LoadsArchive()),
-    hasUserMetadata(false) {
+    loadsArchive(plugin->LoadsArchive()) {
   auto userMetadata = game.GetUserMetadata(plugin->GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata =

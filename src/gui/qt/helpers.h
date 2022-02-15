@@ -42,7 +42,7 @@ namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
 
 struct FileRevisionSummary {
-  FileRevisionSummary();
+  FileRevisionSummary() = default;
   explicit FileRevisionSummary(const FileRevision& fileRevision);
   FileRevisionSummary(const std::string& id, const std::string& date);
 

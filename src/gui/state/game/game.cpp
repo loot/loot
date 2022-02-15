@@ -80,9 +80,7 @@ Game::Game(const GameSettings& gameSettings,
            const std::filesystem::path& preludePath) :
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
-    preludePath_(preludePath),
-    loadOrderSortCount_(0),
-    pluginsFullyLoaded_(false) {}
+    preludePath_(preludePath) {}
 
 Game::Game(const Game& game) {
   lock_guard<mutex> guard(game.mutex_);

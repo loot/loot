@@ -78,8 +78,6 @@ void writeFileRevision(const std::filesystem::path& filePath,
   out << *root;
 }
 
-FileRevisionSummary::FileRevisionSummary() {}
-
 FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
     id(fileRevision.id.substr(0, SHORT_HASH_LENGTH)), date(fileRevision.date) {
   if (fileRevision.is_modified) {

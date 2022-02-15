@@ -46,11 +46,11 @@ static constexpr int DragRole = Qt::UserRole + 7;
 static constexpr int SearchResultRole = Qt::UserRole + 8;
 
 struct SearchResultData {
-  SearchResultData();
+  SearchResultData() = default;
   SearchResultData(bool isResult, bool isCurrentResult);
 
-  bool isResult;
-  bool isCurrentResult;
+  bool isResult{false};
+  bool isCurrentResult{false};
 };
 
 class PluginItemModel : public QAbstractListModel {

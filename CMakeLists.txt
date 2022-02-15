@@ -160,7 +160,6 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/backup.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/counters.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_states.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/filters_widget.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/general_info.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/general_info_card.cpp"
