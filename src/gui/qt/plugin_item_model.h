@@ -56,10 +56,11 @@ struct SearchResultData {
 class PluginItemModel : public QAbstractListModel {
   Q_OBJECT
 public:
-  static const int SIDEBAR_LOAD_ORDER_COLUMN;
-  static const int SIDEBAR_NAME_COLUMN;
-  static const int SIDEBAR_STATE_COLUMN;
-  static const int CARDS_COLUMN;
+  static constexpr int SIDEBAR_PLUGIN_INDEX_COLUMN = 0;
+  static constexpr int SIDEBAR_LOAD_ORDER_COLUMN = 1;
+  static constexpr int SIDEBAR_NAME_COLUMN = 2;
+  static constexpr int SIDEBAR_STATE_COLUMN = 3;
+  static constexpr int CARDS_COLUMN = 4;
 
   explicit PluginItemModel(QObject* parent);
 

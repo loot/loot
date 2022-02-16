@@ -185,6 +185,8 @@ void Game::Init() {
   }
 }
 
+bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
+
 std::shared_ptr<const PluginInterface> Game::GetPlugin(
     const std::string& name) const {
   return gameHandle_->GetPlugin(name);

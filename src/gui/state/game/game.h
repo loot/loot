@@ -53,6 +53,7 @@ public:
   GameSettings& GetSettings();
 
   void Init();
+  bool IsInitialised() const;
 
   std::shared_ptr<const PluginInterface> GetPlugin(
       const std::string& name) const;

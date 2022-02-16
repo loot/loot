@@ -149,30 +149,56 @@ std::optional<QDate> getDateFromCommitJson(const QJsonDocument& document,
   return QDate::fromString(dateString, Qt::ISODate);
 }
 
+int calculatePluginIndexSectionWidth(size_t pluginCount) {
+  // Find the widest digit character in the current font and use that to
+  // calculate the load order section width.
+  static constexpr std::array<char, 10> DIGIT_CHARACTERS = {
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+  const auto fontMetrics = QFontMetricsF(QApplication::font());
+
+  qreal maxCharWidth = 0;
+  for (const auto hexCharacter : DIGIT_CHARACTERS) {
+    const auto width =
+        fontMetrics.size(Qt::TextSingleLine, QString(QChar(hexCharacter)))
+            .width();
+    if (width > maxCharWidth) {
+      maxCharWidth = width;
+    }
+  }
+
+  const auto paddingWidth =
+      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+
+  const int numberOfDigits = log10(pluginCount) + 1;
+
+  return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
+}
+
 int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
   // Find the widest hex character in the current font and use that to
   // calculate the load order section width.
-  static const std::array<char, 16> HEX_CHARACTERS = {'0',
-                                                      '1',
-                                                      '2',
-                                                      '3',
-                                                      '4',
-                                                      '5',
-                                                      '6',
-                                                      '7',
-                                                      '8',
-                                                      '9',
-                                                      'A',
-                                                      'B',
-                                                      'C',
-                                                      'D',
-                                                      'E',
-                                                      'F'};
+  static constexpr std::array<char, 16> HEX_CHARACTERS = {'0',
+                                                          '1',
+                                                          '2',
+                                                          '3',
+                                                          '4',
+                                                          '5',
+                                                          '6',
+                                                          '7',
+                                                          '8',
+                                                          '9',
+                                                          'A',
+                                                          'B',
+                                                          'C',
+                                                          'D',
+                                                          'E',
+                                                          'F'};
 
   auto fontMetrics = QFontMetricsF(QApplication::font());
 
   qreal maxCharWidth = 0;
-  for (const auto& hexCharacter : HEX_CHARACTERS) {
+  for (const auto hexCharacter : HEX_CHARACTERS) {
     auto width =
         fontMetrics.size(Qt::TextSingleLine, QString(QChar(hexCharacter)))
             .width();
@@ -506,9 +532,14 @@ void MainWindow::setupViews() {
 
   auto horizontalHeader = sidebarPluginsView->horizontalHeader();
   horizontalHeader->hide();
-  horizontalHeader->setSectionResizeMode(0, QHeaderView::Fixed);
-  horizontalHeader->setSectionResizeMode(1, QHeaderView::Stretch);
-  horizontalHeader->setSectionResizeMode(2, QHeaderView::Fixed);
+  horizontalHeader->setSectionResizeMode(
+      PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN, QHeaderView::Fixed);
+  horizontalHeader->setSectionResizeMode(
+      PluginItemModel::SIDEBAR_PLUGIN_INDEX_COLUMN, QHeaderView::Fixed);
+  horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_NAME_COLUMN,
+                                         QHeaderView::Stretch);
+  horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_STATE_COLUMN,
+                                         QHeaderView::Fixed);
 
   updateSidebarColumnWidths();
 
@@ -751,13 +782,27 @@ void MainWindow::updateSidebarColumnWidths() {
                 state.GetCurrentGame().GetSettings().Type())
           : calculateSidebarLoadOrderSectionWidth(GameType::tes5se);
 
-  const auto minimumSectionWidth = stateSectionWidth < loadOrderSectionWidth
-                                       ? stateSectionWidth
-                                       : loadOrderSectionWidth;
+  // If a game hasn't loaded yet, assume that the player will have something in
+  // the order of hundreds of plugins enabled - it's the number of digits that
+  // matters, not the number itself.
+  static constexpr size_t DEFAULT_LOAD_ORDER_SIZE_ESTIMATE = 255;
+
+  const auto pluginIndexSectionWidth =
+      state.HasCurrentGame() && state.GetCurrentGame().IsInitialised()
+          ? calculatePluginIndexSectionWidth(
+                state.GetCurrentGame().GetPlugins().size())
+          : calculatePluginIndexSectionWidth(DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
+
+  const auto minimumSectionWidth = std::min(
+      {loadOrderSectionWidth, pluginIndexSectionWidth, stateSectionWidth});
 
   horizontalHeader->setMinimumSectionSize(minimumSectionWidth);
-  horizontalHeader->resizeSection(0, loadOrderSectionWidth);
-  horizontalHeader->resizeSection(2, stateSectionWidth);
+  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN,
+                                  loadOrderSectionWidth);
+  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_PLUGIN_INDEX_COLUMN,
+                                  pluginIndexSectionWidth);
+  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_STATE_COLUMN,
+                                  stateSectionWidth);
 }
 
 void MainWindow::setFiltersState(PluginFiltersState&& filtersState) {
