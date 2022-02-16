@@ -68,6 +68,7 @@ private:
   QLabel* removeTagsHeaderLabel{new QLabel(this)};
   QLabel* removeTagsLabel{new QLabel(this)};
   QGroupBox* tagsGroupBox{new QGroupBox(this)};
+  QLabel* locationsLabel{new QLabel(this)};
   MessagesWidget* messagesWidget{new MessagesWidget(this)};
 
   void setupUi();
@@ -75,9 +76,14 @@ private:
   void translateUi();
 };
 
-// current, add and remove bash tags, messages, and whether this is the general
-// info card or not.
-typedef std::tuple<QString, QString, QString, std::vector<std::string>, bool>
+// current, add and remove bash tags, messages, locations, and whether this is
+// the general info card or not.
+typedef std::tuple<QString,
+                   QString,
+                   QString,
+                   std::vector<std::string>,
+                   std::vector<std::string>,
+                   bool>
     SizeHintCacheKey;
 
 class PluginCardDelegate : public QStyledItemDelegate {

@@ -65,6 +65,7 @@ struct PluginItem {
   std::vector<std::string> removeTags;
 
   std::vector<SimpleMessage> messages;
+  std::vector<Location> locations;
 
   bool containsText(const std::string& text) const;
   bool containsMatchingText(const std::regex& regex) const;

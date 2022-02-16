@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-17 17:18+0000\n"
+"POT-Creation-Date: 2022-02-18 18:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -483,49 +483,57 @@ msgstr ""
 msgid "Masterlist updated to revision %s."
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:182
+#: src/gui/qt/plugin_card.cpp:200
+msgid "Source:"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:201
+msgid "Sources:"
+msgstr ""
+
+#: src/gui/qt/plugin_card.cpp:217
 #, c-format
 msgid "Verified clean by %s"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:293
+#: src/gui/qt/plugin_card.cpp:333
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/settings/game_tab.cpp:121
+#: src/gui/qt/plugin_card.cpp:334 src/gui/qt/settings/game_tab.cpp:121
 msgid "Master File"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:295
+#: src/gui/qt/plugin_card.cpp:335
 msgid "Light Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:296
+#: src/gui/qt/plugin_card.cpp:336
 msgid "Empty Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:297
+#: src/gui/qt/plugin_card.cpp:337
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:298 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:338 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:300
+#: src/gui/qt/plugin_card.cpp:340
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:301
+#: src/gui/qt/plugin_card.cpp:341
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:302 src/gui/qt/plugin_editor/table_tabs.cpp:523
+#: src/gui/qt/plugin_card.cpp:342 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Add"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:303 src/gui/qt/plugin_editor/table_tabs.cpp:523
+#: src/gui/qt/plugin_card.cpp:343 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Remove"
 msgstr ""
 

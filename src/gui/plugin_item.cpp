@@ -170,6 +170,24 @@ PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
       removeTags.push_back(tag.GetName());
     }
   }
+
+  locations = evaluatedMetadata.GetLocations();
+
+  // Set numbered names for locations with no existing name so that URLs
+  // don't appear in the UI.
+  if (locations.size() == 1 && locations[0].GetName().empty()) {
+    locations[0] =
+        Location(locations[0].GetURL(), boost::locale::translate("Location"));
+  } else if (locations.size() > 1) {
+    for (size_t i = 0; i < locations.size(); i += 1) {
+      if (locations[i].GetName().empty()) {
+        auto locationName =
+            (boost::format(boost::locale::translate("Location %1%")) % (i + 1))
+                .str();
+        locations[i] = Location(locations[i].GetURL(), locationName);
+      }
+    }
+  }
 }
 
 bool PluginItem::containsText(const std::string& text) const {
@@ -208,6 +226,12 @@ bool PluginItem::containsText(const std::string& text) const {
 
   for (const auto& message : messages) {
     if (boost::icontains(message.text, text)) {
+      return true;
+    }
+  }
+
+  for (const auto& location : locations) {
+    if (boost::icontains(location.GetName(), text)) {
       return true;
     }
   }
@@ -255,6 +279,12 @@ bool PluginItem::containsMatchingText(const std::regex& regex) const {
     }
   }
 
+  for (const auto& location : locations) {
+    if (std::regex_search(location.GetName(), regex)) {
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -283,6 +313,10 @@ std::string PluginItem::contentToSearch() const {
 
   for (const auto& message : messages) {
     text += message.text;
+  }
+
+  for (const auto& location : locations) {
+    text += location.GetName();
   }
 
   return text;
@@ -367,10 +401,19 @@ std::string PluginItem::getMarkdownContent() const {
     content += "\n" + messagesAsMarkdown(messages);
   }
 
+  if (!locations.empty()) {
+    content += "\n## Locations\n\n";
+
+    for (const auto& location : locations) {
+      content += "- [" + location.GetName() + "](" + location.GetURL() + ")\n";
+    }
+  }
+
   content += "\n";
 
   return content;
 }
+
 std::string PluginItem::loadOrderIndexText() const {
   if (loadOrderIndex.has_value()) {
     auto formatString = isLightPlugin ? "FE %03X" : "%02X";

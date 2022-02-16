@@ -71,11 +71,13 @@ The plugin card's header holds the following information, some of which is only 
 - The "Verified clean" icon.
 - The "Has User Metadata" icon.
 
-Messages and Bash Tag suggestions are displayed below the plugin card's header.
+Messages, Bash Tag suggestions and plugin sources are displayed below the plugin card's header.
 
 LOOT's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action. If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
 
 Users generally don't need to do anything with Bash Tag suggestions, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply. For these reasons, they are hidden by default.
+
+Plugin sources are obtained from location metadata, and don't necessarily reflect where you downloaded the plugin from. If multiple mods provide a plugin with the same filename, that plugin may be listed with links to where each of those mods are hosted.
 
 Filters
 =======
