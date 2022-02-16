@@ -28,9 +28,13 @@
 #include <QtCore/QStringBuilder>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
+#include <boost/format.hpp>
+#include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 FiltersWidget::FiltersWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
@@ -105,6 +109,7 @@ void FiltersWidget::setupUi() {
   conflictingPluginsFilter->setObjectName("conflictingPluginsFilter");
   groupPluginsFilter->setObjectName("groupPluginsFilter");
   contentFilter->setObjectName("contentFilter");
+  contentRegexCheckbox->setObjectName("contentRegexCheckbox");
   versionNumbersFilter->setObjectName("versionNumbersFilter");
   crcsFilter->setObjectName("crcsFilter");
   bashTagsFilter->setObjectName("bashTagsFilter");
@@ -146,6 +151,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(groupPluginsFilter);
   verticalLayout->addWidget(contentFilterLabel);
   verticalLayout->addWidget(contentFilter);
+  verticalLayout->addWidget(contentRegexCheckbox, 0, Qt::AlignRight);
   verticalLayout->addWidget(versionNumbersFilter);
   verticalLayout->addWidget(crcsFilter);
   verticalLayout->addWidget(bashTagsFilter);
@@ -177,6 +183,7 @@ void FiltersWidget::translateUi() {
   groupPluginsFilterLabel->setText(translate("Show only plugins in group"));
   contentFilterLabel->setText(
       translate("Show only plugins with cards that contain"));
+  contentRegexCheckbox->setText(translate("Use regular expression"));
   versionNumbersFilter->setText(translate("Hide version numbers"));
   crcsFilter->setText(translate("Hide CRCs"));
   bashTagsFilter->setText(translate("Hide Bash Tags"));
@@ -204,6 +211,10 @@ void FiltersWidget::translateUi() {
   contentFilter->setPlaceholderText(translate("No text specified"));
   contentFilter->setToolTip(
       translate("Press Enter or click outside the input to set the filter."));
+
+  contentRegexCheckbox->setToolTip(
+      translate("If checked, interprets the content filter text as a regular "
+                "expression."));
 }
 
 void FiltersWidget::setComboBoxItems(QComboBox* comboBox,
@@ -256,7 +267,29 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   }
 
   if (!contentFilter->text().isEmpty()) {
-    filters.content = contentFilter->text().toStdString();
+    auto contentFilterText = contentFilter->text().toStdString();
+    if (contentRegexCheckbox->isChecked()) {
+      try {
+        filters.content = std::regex(
+            contentFilterText, std::regex::ECMAScript | std::regex::icase);
+      } catch (const std::exception& e) {
+        auto logger = getLogger();
+        if (logger) {
+          logger->error("Invalid content filter regex: {}", e.what());
+        }
+
+        auto message = (boost::format(boost::locale::translate(
+                            "Invalid regular expression: %1%")) %
+                        e.what())
+                           .str();
+
+        QToolTip::showText(contentFilter->mapToGlobal(QPoint(0, 0)),
+                           QString::fromStdString(message),
+                           contentFilter);
+      }
+    } else {
+      filters.content = contentFilterText;
+    }
   }
 
   return filters;
@@ -279,6 +312,10 @@ void FiltersWidget::on_groupPluginsFilter_activated() {
 }
 
 void FiltersWidget::on_contentFilter_editingFinished() {
+  emit pluginFilterChanged(getPluginFiltersState());
+}
+
+void FiltersWidget::on_contentRegexCheckbox_stateChanged() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 

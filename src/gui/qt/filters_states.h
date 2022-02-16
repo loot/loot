@@ -28,7 +28,9 @@
 
 #include <QtCore/QMetaType>
 #include <optional>
+#include <regex>
 #include <string>
+#include <variant>
 
 namespace loot {
 struct CardContentFiltersState {
@@ -44,7 +46,7 @@ struct PluginFiltersState {
   bool hideMessagelessPlugins{false};
   std::optional<std::string> conflictsPluginName;
   std::optional<std::string> groupName;
-  std::optional<std::string> content;
+  std::variant<std::monostate, std::string, std::regex> content;
 };
 }
 

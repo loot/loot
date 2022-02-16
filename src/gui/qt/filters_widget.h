@@ -74,6 +74,7 @@ private:
   QComboBox *groupPluginsFilter{new QComboBox(this)};
   QLabel *contentFilterLabel{new QLabel(this)};
   QLineEdit *contentFilter{new QLineEdit(this)};
+  QCheckBox *contentRegexCheckbox{new QCheckBox};
   QCheckBox *versionNumbersFilter{new QCheckBox(this)};
   QCheckBox *crcsFilter{new QCheckBox(this)};
   QCheckBox *bashTagsFilter{new QCheckBox(this)};
@@ -97,6 +98,7 @@ private slots:
   void on_conflictingPluginsFilter_activated();
   void on_groupPluginsFilter_activated();
   void on_contentFilter_editingFinished();
+  void on_contentRegexCheckbox_stateChanged();
   void on_versionNumbersFilter_stateChanged();
   void on_crcsFilter_stateChanged();
   void on_bashTagsFilter_stateChanged();

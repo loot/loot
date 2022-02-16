@@ -107,3 +107,8 @@ Show only plugins in group
 
 Show only plugins with cards that contain
   This hides any plugins that don't have the filter input value present in any of the text on their cards.
+
+  The "Use regular expression" checkbox controls whether the input value is
+  interpreted as text or as a regular expression. If ticked and the input value
+  is not a valid regular expression, a tooltip detailing the issue will be
+  displayed and the card content filter will be ignored.
