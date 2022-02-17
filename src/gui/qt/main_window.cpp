@@ -1936,18 +1936,22 @@ void MainWindow::on_groupsEditor_accepted() {
 
 void MainWindow::on_searchDialog_finished() { searchDialog->reset(); }
 
-void MainWindow::on_searchDialog_textChanged(const QString& text) {
-  if (text.isEmpty()) {
+void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
+  if (text.userType() == QMetaType::QString && text.toString().isEmpty()) {
     proxyModel->clearSearchResults();
     return;
   }
 
-  auto results = proxyModel->match(
-      proxyModel->index(0, PluginItemModel::CARDS_COLUMN),
-      ContentSearchRole,
-      QVariant(text),
-      -1,
-      Qt::MatchFlag::MatchContains | Qt::MatchFlag::MatchWrap);
+  const auto flags = text.userType() == QMetaType::QRegularExpression
+                         ? Qt::MatchRegularExpression | Qt::MatchWrap
+                         : Qt::MatchContains | Qt::MatchWrap;
+
+  auto results =
+      proxyModel->match(proxyModel->index(0, PluginItemModel::CARDS_COLUMN),
+                        ContentSearchRole,
+                        text,
+                        -1,
+                        flags);
 
   proxyModel->setSearchResults(results);
   searchDialog->setSearchResults(results.size());

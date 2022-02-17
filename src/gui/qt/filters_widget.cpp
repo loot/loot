@@ -28,10 +28,7 @@
 #include <QtCore/QStringBuilder>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
-#include <boost/format.hpp>
-#include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"
 #include "gui/state/logging.h"
@@ -278,14 +275,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
           logger->error("Invalid content filter regex: {}", e.what());
         }
 
-        auto message = (boost::format(boost::locale::translate(
-                            "Invalid regular expression: %1%")) %
-                        e.what())
-                           .str();
-
-        QToolTip::showText(contentFilter->mapToGlobal(QPoint(0, 0)),
-                           QString::fromStdString(message),
-                           contentFilter);
+        showInvalidRegexTooltip(*contentFilter, e.what());
       }
     } else {
       filters.content = contentFilterText;

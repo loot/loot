@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-16 19:32+0000\n"
+"POT-Creation-Date: 2022-02-17 17:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,80 +18,76 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/gui/qt/filters_widget.cpp:182
+#: src/gui/qt/filters_widget.cpp:179
 msgid "Show only conflicting plugins for"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:183
+#: src/gui/qt/filters_widget.cpp:180
 msgid "Show only plugins in group"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:185
+#: src/gui/qt/filters_widget.cpp:182
 msgid "Show only plugins with cards that contain"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:186
+#: src/gui/qt/filters_widget.cpp:183 src/gui/qt/search_dialog.cpp:99
 msgid "Use regular expression"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:187
+#: src/gui/qt/filters_widget.cpp:184
 msgid "Hide version numbers"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:188
+#: src/gui/qt/filters_widget.cpp:185
 msgid "Hide CRCs"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:189
+#: src/gui/qt/filters_widget.cpp:186
 msgid "Hide Bash Tags"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:190
+#: src/gui/qt/filters_widget.cpp:187
 msgid "Hide notes"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:191
+#: src/gui/qt/filters_widget.cpp:188
 msgid "Hide all plugin messages"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:192
+#: src/gui/qt/filters_widget.cpp:189
 msgid "Hide inactive plugins"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:193
+#: src/gui/qt/filters_widget.cpp:190
 msgid "Hide messageless plugins"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:194
+#: src/gui/qt/filters_widget.cpp:191
 msgid "Hidden plugins:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:195
+#: src/gui/qt/filters_widget.cpp:192
 msgid "Hidden messages:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:197
+#: src/gui/qt/filters_widget.cpp:194
 msgid "No plugin selected"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:204
+#: src/gui/qt/filters_widget.cpp:201
 msgid "No group selected"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:211
+#: src/gui/qt/filters_widget.cpp:208
 msgid "No text specified"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:213
+#: src/gui/qt/filters_widget.cpp:210
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:216
+#: src/gui/qt/filters_widget.cpp:213
 msgid "If checked, interprets the content filter text as a regular expression."
-msgstr ""
-
-#: src/gui/qt/filters_widget.cpp:282
-msgid "Invalid regular expression: %1%"
 msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:174
@@ -148,23 +144,27 @@ msgstr ""
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:88
+#: src/gui/qt/helpers.cpp:92
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:190
+#: src/gui/qt/helpers.cpp:194
 msgid "N/A: No masterlist present"
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:195
+#: src/gui/qt/helpers.cpp:199
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:203
+#: src/gui/qt/helpers.cpp:207
 msgid "Unknown: No revision metadata found"
+msgstr ""
+
+#: src/gui/qt/helpers.cpp:334
+msgid "Invalid regular expression: %1%"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:587
@@ -468,17 +468,17 @@ msgstr ""
 msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1993
+#: src/gui/qt/main_window.cpp:1997
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2034
+#: src/gui/qt/main_window.cpp:2038
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2047
+#: src/gui/qt/main_window.cpp:2051
 #, c-format
 msgid "Masterlist updated to revision %s."
 msgstr ""
@@ -533,19 +533,24 @@ msgstr ""
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:92
+#: src/gui/qt/search_dialog.cpp:95
 msgid "Search Cards"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:94
+#: src/gui/qt/search_dialog.cpp:97
 msgid "Search cards"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:95
+#: src/gui/qt/search_dialog.cpp:101
+msgid ""
+"If checked, interprets the search text as a Perl-like regular expression."
+msgstr ""
+
+#: src/gui/qt/search_dialog.cpp:104
 msgid "Find Previous"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:96
+#: src/gui/qt/search_dialog.cpp:105
 msgid "Find Next"
 msgstr ""
 

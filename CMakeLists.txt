@@ -367,7 +367,7 @@ add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
     cpptoml libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Core Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
+    Qt::Widgets Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -537,10 +537,20 @@ else()
         libicuuc.so.56.1
         libQt6Core.so.6
         libQt6Core.so.6.2.2
+        libQt6DBus.so.6
+        libQt6DBus.so.6.2.2
+        libQt6Gui.so.6
+        libQt6Gui.so.6.2.2
         libQt6Network.so.6
         libQt6Network.so.6.2.2
         libQt6Test.so.6
-        libQt6Test.so.6.2.2)
+        libQt6Test.so.6.2.2
+        libQt6Widgets.so.6
+        libQt6Widgets.so.6.2.2
+        libQt6XcbQpa.so.6
+        libQt6XcbQpa.so.6.2.2
+        libQt6OpenGL.so.6
+        libQt6OpenGL.so.6.2.2)
 
     foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
         add_custom_command(TARGET loot_gui_tests POST_BUILD

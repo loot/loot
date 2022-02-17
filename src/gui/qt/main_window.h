@@ -263,7 +263,7 @@ private slots:
   void on_groupsEditor_accepted();
 
   void on_searchDialog_finished();
-  void on_searchDialog_textChanged(const QString &text);
+  void on_searchDialog_textChanged(const QVariant &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
 
   void handleGameChanged(QueryResult result);
