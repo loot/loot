@@ -1888,7 +1888,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
       auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
       if (pluginItem.name == pluginName) {
-        auto plugin = PluginItem(state.GetCurrentGame().GetPlugin(pluginName),
+        auto plugin = PluginItem(*state.GetCurrentGame().GetPlugin(pluginName),
                                  state.GetCurrentGame(),
                                  state.getSettings().getLanguage());
 

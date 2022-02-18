@@ -37,11 +37,9 @@
 #include "gui/state/game/game.h"
 
 namespace loot {
-inline static const std::string DEFAULT_GROUP_NAME = Group().GetName();
-
 struct PluginItem {
   PluginItem() = default;
-  PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
+  PluginItem(const PluginInterface& plugin,
              const gui::Game& game,
              std::string language);
 

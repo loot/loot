@@ -108,7 +108,7 @@ bool PluginItemFilterModel::filterAcceptsRow(
   }
 
   if (filterState.groupName.has_value() &&
-      item.group.value_or(DEFAULT_GROUP_NAME) !=
+      item.group.value_or(Group::DEFAULT_NAME) !=
           filterState.groupName.value()) {
     return false;
   }

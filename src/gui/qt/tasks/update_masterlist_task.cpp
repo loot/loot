@@ -127,7 +127,7 @@ void UpdateMasterlistTask::finish() {
     std::vector<PluginItem> metadata;
     for (const auto &plugin : plugins) {
       metadata.push_back(PluginItem(
-          plugin, state.GetCurrentGame(), state.getSettings().getLanguage()));
+          *plugin, state.GetCurrentGame(), state.getSettings().getLanguage()));
     }
 
     emit finished(metadata);

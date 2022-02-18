@@ -177,9 +177,8 @@ void LootState::init(const std::string& cmdLineGame,
   if (logger) {
     logger->info(
         "LOOT version: {}+{}", gui::Version::string(), gui::Version::revision);
-    logger->info("libloot version: {}+{}",
-                 LootVersion::GetVersionString(),
-                 LootVersion::revision);
+    logger->info(
+        "libloot version: {}+{}", GetLiblootVersion(), GetLiblootRevision());
   }
 
 #ifdef _WIN32
@@ -192,7 +191,7 @@ void LootState::init(const std::string& cmdLineGame,
 
   // Now that settings have been loaded, set the locale again to handle
   // translations.
-  if (settings_.getLanguage() != MessageContent::defaultLanguage) {
+  if (settings_.getLanguage() != MessageContent::DEFAULT_LANGUAGE) {
     if (logger) {
       logger->debug("Initialising language settings.");
       logger->debug("Selected language: {}", settings_.getLanguage());

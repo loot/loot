@@ -42,11 +42,11 @@ public:
   Game(const GameSettings& gameSettings,
        const std::filesystem::path& lootDataPath,
        const std::filesystem::path& preludePath);
-  Game(const Game& game);
+  Game(const Game& game) = delete;
   Game(Game&& game);
   ~Game() = default;
 
-  Game& operator=(const Game& game);
+  Game& operator=(const Game& game) = delete;
   Game& operator=(Game&& game);
 
   const GameSettings& GetSettings() const;
@@ -55,21 +55,17 @@ public:
   void Init();
   bool IsInitialised() const;
 
-  std::shared_ptr<const PluginInterface> GetPlugin(
-      const std::string& name) const;
-  std::vector<std::shared_ptr<const PluginInterface>> GetPlugins() const;
-  std::vector<std::shared_ptr<const PluginInterface>> GetPluginsInLoadOrder()
-      const;
-  std::vector<Message> CheckInstallValidity(
-      const std::shared_ptr<const PluginInterface>& plugin,
-      const PluginMetadata& metadata,
-      const std::string& language) const;
+  const PluginInterface* GetPlugin(const std::string& name) const;
+  std::vector<const PluginInterface*> GetPlugins() const;
+  std::vector<const PluginInterface*> GetPluginsInLoadOrder() const;
+  std::vector<Message> CheckInstallValidity(const PluginInterface& plugin,
+                                            const PluginMetadata& metadata,
+                                            const std::string& language) const;
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
   void LoadCreationClubPluginNames();
-  bool IsCreationClubPlugin(
-      const std::shared_ptr<const PluginInterface>& plugin) const;
+  bool IsCreationClubPlugin(const PluginInterface& plugin) const;
 
   void LoadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.
@@ -122,7 +118,7 @@ private:
   void AppendMessages(std::vector<Message> messages);
 
   GameSettings settings_;
-  std::shared_ptr<GameInterface> gameHandle_;
+  std::unique_ptr<GameInterface> gameHandle_;
   std::vector<Message> messages_;
   std::filesystem::path lootDataPath_;
   std::filesystem::path preludePath_;

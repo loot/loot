@@ -113,27 +113,27 @@ std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
   return evaluatedUserMetadata;
 }
 
-PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
+PluginItem::PluginItem(const PluginInterface& plugin,
                        const gui::Game& game,
                        std::string language) :
-    name(plugin->GetName()),
-    loadOrderIndex(game.GetActiveLoadOrderIndex(*plugin, game.GetLoadOrder())),
-    crc(plugin->GetCRC()),
-    version(plugin->GetVersion()),
-    isActive(game.IsPluginActive(plugin->GetName())),
-    isEmpty(plugin->IsEmpty()),
-    isMaster(plugin->IsMaster()),
-    isLightPlugin(plugin->IsLightPlugin()),
-    loadsArchive(plugin->LoadsArchive()),
+    name(plugin.GetName()),
+    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder())),
+    crc(plugin.GetCRC()),
+    version(plugin.GetVersion()),
+    isActive(game.IsPluginActive(plugin.GetName())),
+    isEmpty(plugin.IsEmpty()),
+    isMaster(plugin.IsMaster()),
+    isLightPlugin(plugin.IsLightPlugin()),
+    loadsArchive(plugin.LoadsArchive()),
     isCreationClubPlugin(game.IsCreationClubPlugin(plugin)) {
-  auto userMetadata = game.GetUserMetadata(plugin->GetName());
+  auto userMetadata = game.GetUserMetadata(plugin.GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata =
         userMetadata.has_value() && !userMetadata.value().HasNameOnly();
   }
 
-  auto evaluatedMetadata = evaluateMetadata(game, plugin->GetName())
-                               .value_or(PluginMetadata(plugin->GetName()));
+  auto evaluatedMetadata = evaluateMetadata(game, plugin.GetName())
+                               .value_or(PluginMetadata(plugin.GetName()));
 
   isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
   group = evaluatedMetadata.GetGroup();
@@ -144,14 +144,14 @@ PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
   evaluatedMessages.insert(
       end(evaluatedMessages), begin(validityMessages), end(validityMessages));
   evaluatedMetadata.SetMessages(evaluatedMessages);
-  messages = evaluatedMetadata.GetSimpleMessages(language);
+  messages = ToSimpleMessages(evaluatedMetadata.GetMessages(), language);
 
   if (!evaluatedMetadata.GetCleanInfo().empty()) {
     cleaningUtility =
         evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
   }
 
-  for (const auto& tag : plugin->GetBashTags()) {
+  for (const auto& tag : plugin.GetBashTags()) {
     currentTags.push_back(tag.GetName());
   }
 

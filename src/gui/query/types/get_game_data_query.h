@@ -63,7 +63,7 @@ public:
 
     std::vector<PluginItem> metadata;
     for (const auto& plugin : installed) {
-      metadata.push_back(PluginItem(plugin, game_, language_));
+      metadata.push_back(PluginItem(*plugin, game_, language_));
     }
 
     return metadata;

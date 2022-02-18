@@ -65,7 +65,7 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   painter->drawText(styleOption.rect, Qt::AlignLeft, name);
 
   if (isEditorOpen && pluginItem.group.has_value() &&
-      pluginItem.group.value() != DEFAULT_GROUP_NAME) {
+      pluginItem.group.value() != Group::DEFAULT_NAME) {
     auto groupRect = styleOption.rect;
     groupRect.translate(0, SIDEBAR_EDIT_MODE_ROW_HEIGHT / 2);
 

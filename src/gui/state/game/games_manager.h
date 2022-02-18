@@ -88,7 +88,7 @@ public:
             .SetRegistryKeys(gameSettings.RegistryKeys())
             .SetMasterlistSource(gameSettings.MasterlistSource());
 
-        installedGames.push_back(GetCurrentGame());
+        installedGames.push_back(std::move(GetCurrentGame()));
         currentGameUpdated = true;
       } else {
         if (logger) {
@@ -100,7 +100,7 @@ public:
             gui::Game(gameSettings, lootDataPath, preludePath));
       }
     }
-    installedGames_ = installedGames;
+    installedGames_ = std::move(installedGames);
 
     if (currentGameUpdated) {
       SetCurrentGame(currentGameFolder.value());

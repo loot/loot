@@ -119,7 +119,7 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
   auto groupName = name.toStdString();
 
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
-    auto pluginGroup = plugin.group.value_or(DEFAULT_GROUP_NAME);
+    auto pluginGroup = plugin.group.value_or(Group::DEFAULT_NAME);
 
     if (pluginGroup == groupName) {
       groupPluginsList->addItem(QString::fromStdString(plugin.name));

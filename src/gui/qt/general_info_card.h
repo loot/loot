@@ -26,7 +26,6 @@
 #ifndef LOOT_GUI_QT_GENERAL_INFO_CARD
 #define LOOT_GUI_QT_GENERAL_INFO_CARD
 
-#include <loot/struct/file_revision.h>
 #include <loot/struct/simple_message.h>
 
 #include <QtWidgets/QFrame>

@@ -30,7 +30,6 @@
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
 #include <loot/metadata/tag.h>
-#include <loot/struct/file_revision.h>
 #include <loot/vertex.h>
 
 #include <filesystem>
@@ -45,7 +44,7 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
-std::string EscapeMarkdownSpecialChars(std::string text);
+std::string EscapeMarkdownASCIIPunctuation(std::string text);
 
 // Create a Message, escaping any Markdown special characters in the input text.
 Message PlainTextMessage(MessageType type, std::string text);
@@ -55,10 +54,6 @@ Message PlainTextMessage(MessageType type, std::string text);
 SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
-
-std::vector<SimpleMessage> ToSimpleMessages(
-    const std::vector<Message>& messages,
-    const std::string& language);
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 

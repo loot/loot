@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-23 21:55+0000\n"
+"POT-Creation-Date: 2022-02-27 11:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -650,41 +650,41 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:83
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "CRC"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:85
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "ITM Count"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:87
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted References"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:89
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Deleted Navmeshes"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:91
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 msgid "Cleaning Utility"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:93
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:76
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
 msgid "Detail"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:72
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
 msgid "Filename"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:74
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
 msgid "Display Name"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/file_table_model.cpp:78
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:83
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:84
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
 msgstr ""
@@ -708,11 +708,11 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:80
 msgid "Type"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:81
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:82
 msgid "Content"
 msgstr ""
 
@@ -879,46 +879,46 @@ msgstr ""
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:166 src/gui/state/loot_state.cpp:221
+#: src/gui/state/loot_state.cpp:166 src/gui/state/loot_state.cpp:220
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:236
+#: src/gui/state/loot_state.cpp:235
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:255
+#: src/gui/state/loot_state.cpp:254
 msgid "Error: failed to override game path, the game %1% was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:295
+#: src/gui/state/loot_state.cpp:294
 msgid "Error: The initial game could not be selected. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:318
+#: src/gui/state/loot_state.cpp:317
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:250 src/gui/state/game/game.cpp:289
+#: src/gui/state/game/game.cpp:228 src/gui/state/game/game.cpp:271
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:263
+#: src/gui/state/game/game.cpp:241
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:325
+#: src/gui/state/game/game.cpp:311
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:368
+#: src/gui/state/game/game.cpp:353
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:388
+#: src/gui/state/game/game.cpp:373
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -927,48 +927,48 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:408
+#: src/gui/state/game/game.cpp:393
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:426
+#: src/gui/state/game/game.cpp:411
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:450
+#: src/gui/state/game/game.cpp:435
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: %1%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:548 src/gui/state/game/game.cpp:628
+#: src/gui/state/game/game.cpp:533 src/gui/state/game/game.cpp:613
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:653
+#: src/gui/state/game/game.cpp:638
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:665
+#: src/gui/state/game/game.cpp:650
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:701
+#: src/gui/state/game/game.cpp:686
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:728
+#: src/gui/state/game/game.cpp:713
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:790
+#: src/gui/state/game/game.cpp:775
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -986,42 +986,42 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:98
+#: src/gui/state/game/helpers.cpp:100
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:105
+#: src/gui/state/game/helpers.cpp:107
 msgid "%1% deleted reference"
 msgid_plural "%1% deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:112
+#: src/gui/state/game/helpers.cpp:114
 msgid "%1% deleted navmesh"
 msgid_plural "%1% deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:122
+#: src/gui/state/game/helpers.cpp:124
 msgid "%1% found %2%, %3% and %4%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:128
+#: src/gui/state/game/helpers.cpp:130
 msgid "%1% found dirty edits."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:134 src/gui/state/game/helpers.cpp:140
-#: src/gui/state/game/helpers.cpp:145
+#: src/gui/state/game/helpers.cpp:136 src/gui/state/game/helpers.cpp:142
+#: src/gui/state/game/helpers.cpp:147
 msgid "%1% found %2% and %3%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:149 src/gui/state/game/helpers.cpp:152
-#: src/gui/state/game/helpers.cpp:155
+#: src/gui/state/game/helpers.cpp:151 src/gui/state/game/helpers.cpp:154
+#: src/gui/state/game/helpers.cpp:157
 msgid "%1% found %2%."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:255
+#: src/gui/state/game/helpers.cpp:243
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""

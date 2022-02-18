@@ -75,24 +75,20 @@ bool hasPluginFileExtension(const std::string& filename) {
          boost::iends_with(filename, ".esl");
 }
 
+std::string GetDisplayName(const File& file) {
+  if (file.GetDisplayName().empty()) {
+    return EscapeMarkdownASCIIPunctuation(std::string(file.GetName()));
+  }
+
+  return file.GetDisplayName();
+}
+
 Game::Game(const GameSettings& gameSettings,
            const std::filesystem::path& lootDataPath,
            const std::filesystem::path& preludePath) :
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
     preludePath_(preludePath) {}
-
-Game::Game(const Game& game) {
-  lock_guard<mutex> guard(game.mutex_);
-
-  settings_ = game.settings_;
-  gameHandle_ = game.gameHandle_;
-  messages_ = game.messages_;
-  lootDataPath_ = game.lootDataPath_;
-  preludePath_ = game.preludePath_;
-  loadOrderSortCount_ = game.loadOrderSortCount_;
-  pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
-}
 
 Game::Game(Game&& game) {
   lock_guard<mutex> guard(game.mutex_);
@@ -104,22 +100,6 @@ Game::Game(Game&& game) {
   preludePath_ = std::move(game.preludePath_);
   loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
   pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
-}
-
-Game& Game::operator=(const Game& game) {
-  if (&game != this) {
-    std::scoped_lock lock(mutex_, game.mutex_);
-
-    settings_ = game.settings_;
-    lootDataPath_ = game.lootDataPath_;
-    preludePath_ = game.preludePath_;
-    gameHandle_ = game.gameHandle_;
-    pluginsFullyLoaded_ = game.pluginsFullyLoaded_;
-    messages_ = game.messages_;
-    loadOrderSortCount_ = game.loadOrderSortCount_;
-  }
-
-  return *this;
 }
 
 Game& Game::operator=(Game&& game) {
@@ -187,18 +167,16 @@ void Game::Init() {
 
 bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
 
-std::shared_ptr<const PluginInterface> Game::GetPlugin(
-    const std::string& name) const {
+const PluginInterface* Game::GetPlugin(const std::string& name) const {
   return gameHandle_->GetPlugin(name);
 }
 
-std::vector<std::shared_ptr<const PluginInterface>> Game::GetPlugins() const {
+std::vector<const PluginInterface*> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
-std::vector<std::shared_ptr<const PluginInterface>>
-Game::GetPluginsInLoadOrder() const {
-  std::vector<std::shared_ptr<const PluginInterface>> installed;
+std::vector<const PluginInterface*> Game::GetPluginsInLoadOrder() const {
+  std::vector<const PluginInterface*> installed;
 
   for (const auto& pluginName : GetLoadOrder()) {
     const auto plugin = GetPlugin(pluginName);
@@ -211,7 +189,7 @@ Game::GetPluginsInLoadOrder() const {
 }
 
 std::vector<Message> Game::CheckInstallValidity(
-    const std::shared_ptr<const PluginInterface>& plugin,
+    const PluginInterface& plugin,
     const PluginMetadata& metadata,
     const std::string& language) const {
   auto logger = getLogger();
@@ -219,10 +197,10 @@ std::vector<Message> Game::CheckInstallValidity(
   if (logger) {
     logger->trace(
         "Checking that the current install is valid according to {}'s data.",
-        plugin->GetName());
+        plugin.GetName());
   }
   std::vector<Message> messages;
-  if (IsPluginActive(plugin->GetName())) {
+  if (IsPluginActive(plugin.GetName())) {
     const auto fileExists = [&](const std::string& file) {
       return std::filesystem::exists(settings_.DataPath() / u8path(file)) ||
              (hasPluginFileExtension(file) &&
@@ -237,11 +215,11 @@ std::vector<Message> Game::CheckInstallValidity(
         });
 
     if (!hasFilterTag) {
-      for (const auto& master : plugin->GetMasters()) {
+      for (const auto& master : plugin.GetMasters()) {
         if (!fileExists(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is missing.",
-                          plugin->GetName(),
+                          plugin.GetName(),
                           master);
           }
           messages.push_back(
@@ -254,7 +232,7 @@ std::vector<Message> Game::CheckInstallValidity(
         } else if (!IsPluginActive(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is inactive.",
-                          plugin->GetName(),
+                          plugin.GetName(),
                           master);
           }
           messages.push_back(
@@ -275,29 +253,33 @@ std::vector<Message> Game::CheckInstallValidity(
       if (!fileExists(file)) {
         if (logger) {
           logger->error("\"{}\" requires \"{}\", but it is missing. {}",
-                        plugin->GetName(),
+                        plugin.GetName(),
                         file,
-                        req.ChooseDetail(MessageContent::defaultLanguage)
+                        SelectMessageContent(req.GetDetail(),
+                                             MessageContent::DEFAULT_LANGUAGE)
                             .value_or(MessageContent())
                             .GetText());
         }
-        if (displayNamesWithMessages.count(req.GetDisplayName()) > 0) {
+
+        const auto displayName = GetDisplayName(req);
+
+        if (displayNamesWithMessages.count(displayName) > 0) {
           continue;
         }
 
         auto localisedText = (boost::format(boost::locale::translate(
                                   "This plugin requires \"%1%\" to be "
                                   "installed, but it is missing.")) %
-                              req.GetDisplayName())
+                              displayName)
                                  .str();
-        auto detailContent = req.ChooseDetail(language);
+        auto detailContent = SelectMessageContent(req.GetDetail(), language);
         auto messageText =
             detailContent.has_value()
                 ? localisedText + " " + detailContent.value().GetText()
                 : localisedText;
 
         messages.push_back(Message(MessageType::error, messageText));
-        displayNamesWithMessages.insert(req.GetDisplayName());
+        displayNamesWithMessages.insert(displayName);
       }
     }
 
@@ -310,13 +292,17 @@ std::vector<Message> Game::CheckInstallValidity(
         if (logger) {
           logger->error(
               "\"{}\" is incompatible with \"{}\", but both are present. {}",
-              plugin->GetName(),
+              plugin.GetName(),
               file,
-              inc.ChooseDetail(MessageContent::defaultLanguage)
+              SelectMessageContent(inc.GetDetail(),
+                                   MessageContent::DEFAULT_LANGUAGE)
                   .value_or(MessageContent())
                   .GetText());
         }
-        if (displayNamesWithMessages.count(inc.GetDisplayName()) > 0) {
+
+        const auto displayName = GetDisplayName(inc);
+
+        if (displayNamesWithMessages.count(displayName) > 0) {
           continue;
         }
 
@@ -324,23 +310,22 @@ std::vector<Message> Game::CheckInstallValidity(
             (boost::format(boost::locale::translate(
                  "This plugin is incompatible with \"%1%\", but both "
                  "are present.")) %
-             inc.GetDisplayName())
+             displayName)
                 .str();
-        auto detailContent = inc.ChooseDetail(language);
+        auto detailContent = SelectMessageContent(inc.GetDetail(), language);
         auto messageText =
             detailContent.has_value()
                 ? localisedText + " " + detailContent.value().GetText()
                 : localisedText;
 
         messages.push_back(Message(MessageType::error, messageText));
-        displayNamesWithMessages.insert(inc.GetDisplayName());
+        displayNamesWithMessages.insert(displayName);
       }
     }
   }
 
-  if (plugin->IsLightPlugin() &&
-      !boost::iends_with(plugin->GetName(), ".esp")) {
-    for (const auto& masterName : plugin->GetMasters()) {
+  if (plugin.IsLightPlugin() && !boost::iends_with(plugin.GetName(), ".esp")) {
+    for (const auto& masterName : plugin.GetMasters()) {
       auto master = GetPlugin(masterName);
       if (!master) {
         if (logger) {
@@ -348,7 +333,7 @@ std::vector<Message> Game::CheckInstallValidity(
               "Tried to get plugin object for master \"{}\" of \"{}\" but it "
               "was not loaded.",
               masterName,
-              plugin->GetName());
+              plugin.GetName());
         }
         continue;
       }
@@ -359,7 +344,7 @@ std::vector<Message> Game::CheckInstallValidity(
               "\"{}\" is a light master and requires the non-master plugin "
               "\"{}\". This can cause issues in-game, and sorting will fail "
               "while this plugin is installed.",
-              plugin->GetName(),
+              plugin.GetName(),
               masterName);
         }
         messages.push_back(PlainTextMessage(
@@ -374,13 +359,13 @@ std::vector<Message> Game::CheckInstallValidity(
     }
   }
 
-  if (plugin->IsLightPlugin() && !plugin->IsValidAsLightPlugin()) {
+  if (plugin.IsLightPlugin() && !plugin.IsValidAsLightPlugin()) {
     if (logger) {
       logger->error(
           "\"{}\" contains records that have FormIDs outside the valid range "
           "for an ESL plugin. Using this plugin will cause irreversible damage "
           "to your game saves.",
-          plugin->GetName());
+          plugin.GetName());
     }
     messages.push_back(PlainTextMessage(
         MessageType::error,
@@ -390,14 +375,14 @@ std::vector<Message> Game::CheckInstallValidity(
             "will cause irreversible damage to your game saves.")));
   }
 
-  if (plugin->GetHeaderVersion().has_value() &&
-      plugin->GetHeaderVersion().value() < settings_.MinimumHeaderVersion()) {
+  if (plugin.GetHeaderVersion().has_value() &&
+      plugin.GetHeaderVersion().value() < settings_.MinimumHeaderVersion()) {
     if (logger) {
       logger->warn(
           "\"{}\" has a header version of {}, which is less than the game's "
           "minimum supported header version of {}.",
-          plugin->GetName(),
-          plugin->GetHeaderVersion().value(),
+          plugin.GetName(),
+          plugin.GetHeaderVersion().value(),
           settings_.MinimumHeaderVersion());
     }
     messages.push_back(PlainTextMessage(
@@ -407,13 +392,13 @@ std::vector<Message> Game::CheckInstallValidity(
                 like file name and version. */
              "This plugin has a header version of %1%, which is less than "
              "the game's minimum supported header version of %2%.")) %
-         plugin->GetHeaderVersion().value() % settings_.MinimumHeaderVersion())
+         plugin.GetHeaderVersion().value() % settings_.MinimumHeaderVersion())
             .str()));
   }
 
   if (metadata.GetGroup().has_value()) {
     auto groupName = metadata.GetGroup().value();
-    auto groups = gameHandle_->GetDatabase()->GetGroups();
+    auto groups = gameHandle_->GetDatabase().GetGroups();
     const auto groupIsUndefined =
         std::none_of(groups.cbegin(), groups.cend(), [&](const Group& group) {
           return group.GetName() == groupName;
@@ -441,7 +426,7 @@ std::vector<Message> Game::CheckInstallValidity(
         logger->info(
             "\"{}\" has suggestions for the following Bash Tags that "
             "conflict with the plugin's BashTags file: {}.",
-            plugin->GetName(),
+            plugin.GetName(),
             commaSeparatedTags);
       }
       messages.push_back(PlainTextMessage(
@@ -651,8 +636,8 @@ std::vector<std::string> Game::SortPlugins() {
         MessageType::error,
         (boost::format(boost::locale::translate(
              "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%")) %
-         EscapeMarkdownSpecialChars(e.GetCycle().front().GetName()) %
-         EscapeMarkdownSpecialChars(e.GetCycle().back().GetName()) %
+         EscapeMarkdownASCIIPunctuation(e.GetCycle().front().GetName()) %
+         EscapeMarkdownASCIIPunctuation(e.GetCycle().back().GetName()) %
          DescribeCycle(e.GetCycle()))
             .str()));
     sortedPlugins.clear();
@@ -691,7 +676,7 @@ void Game::DecrementLoadOrderSortCount() {
 
 std::vector<Message> Game::GetMessages() const {
   std::vector<Message> output(
-      gameHandle_->GetDatabase()->GetGeneralMessages(true));
+      gameHandle_->GetDatabase().GetGeneralMessages(true));
   output.insert(end(output), begin(messages_), end(messages_));
 
   if (loadOrderSortCount_ == 0)
@@ -777,7 +762,7 @@ void Game::LoadMetadata() {
     logger->debug("Parsing metadata list(s).");
   }
   try {
-    gameHandle_->GetDatabase()->LoadLists(
+    gameHandle_->GetDatabase().LoadLists(
         masterlistPath, userlistPath, masterlistPreludePath);
   } catch (const std::exception& e) {
     if (logger) {
@@ -799,27 +784,27 @@ void Game::LoadMetadata() {
              "LOOT's main menu.\n\nYou can also seek support on LOOT's forum "
              "thread, which is linked to on [LOOT's "
              "website](https://loot.github.io/).")) %
-         EscapeMarkdownSpecialChars(e.what()))
+         EscapeMarkdownASCIIPunctuation(e.what()))
             .str()));
   }
 }
 
 std::vector<std::string> Game::GetKnownBashTags() const {
-  return gameHandle_->GetDatabase()->GetKnownBashTags();
+  return gameHandle_->GetDatabase().GetKnownBashTags();
 }
 
 std::vector<Group> Game::GetMasterlistGroups() const {
-  return gameHandle_->GetDatabase()->GetGroups(false);
+  return gameHandle_->GetDatabase().GetGroups(false);
 }
 
 std::vector<Group> Game::GetUserGroups() const {
-  return gameHandle_->GetDatabase()->GetUserGroups();
+  return gameHandle_->GetDatabase().GetUserGroups();
 }
 
 std::optional<PluginMetadata> Game::GetMasterlistMetadata(
     const std::string& pluginName,
     bool evaluateConditions) const {
-  return gameHandle_->GetDatabase()->GetPluginMetadata(
+  return gameHandle_->GetDatabase().GetPluginMetadata(
       pluginName, false, evaluateConditions);
 }
 
@@ -846,28 +831,28 @@ std::optional<PluginMetadata> Game::GetNonUserMetadata(
 std::optional<PluginMetadata> Game::GetUserMetadata(
     const std::string& pluginName,
     bool evaluateConditions) const {
-  return gameHandle_->GetDatabase()->GetPluginUserMetadata(pluginName,
-                                                           evaluateConditions);
+  return gameHandle_->GetDatabase().GetPluginUserMetadata(pluginName,
+                                                          evaluateConditions);
 }
 
 void Game::SetUserGroups(const std::vector<Group>& groups) {
-  return gameHandle_->GetDatabase()->SetUserGroups(groups);
+  return gameHandle_->GetDatabase().SetUserGroups(groups);
 }
 
 void Game::AddUserMetadata(const PluginMetadata& metadata) {
-  gameHandle_->GetDatabase()->SetPluginUserMetadata(metadata);
+  gameHandle_->GetDatabase().SetPluginUserMetadata(metadata);
 }
 
 void Game::ClearUserMetadata(const std::string& pluginName) {
-  gameHandle_->GetDatabase()->DiscardPluginUserMetadata(pluginName);
+  gameHandle_->GetDatabase().DiscardPluginUserMetadata(pluginName);
 }
 
 void Game::ClearAllUserMetadata() {
-  gameHandle_->GetDatabase()->DiscardAllUserMetadata();
+  gameHandle_->GetDatabase().DiscardAllUserMetadata();
 }
 
 void Game::SaveUserMetadata() {
-  gameHandle_->GetDatabase()->WriteUserMetadata(UserlistPath(), true);
+  gameHandle_->GetDatabase().WriteUserMetadata(UserlistPath(), true);
 }
 
 std::filesystem::path Game::GetLOOTGamePath() const {
@@ -906,9 +891,9 @@ void Game::AppendMessages(std::vector<Message> messages) {
     AppendMessage(message);
   }
 }
-bool Game::IsCreationClubPlugin(
-    const std::shared_ptr<const PluginInterface>& plugin) const {
-  return creationClubPlugins_.count(Filename(plugin->GetName())) != 0;
+
+bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
+  return creationClubPlugins_.count(Filename(plugin.GetName())) != 0;
 }
 }
 }

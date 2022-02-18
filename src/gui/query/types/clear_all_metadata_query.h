@@ -62,9 +62,8 @@ private:
   gui::Game& game_;
   std::string language_;
 
-  std::vector<std::shared_ptr<const PluginInterface>> getUserlistPlugins()
-      const {
-    std::vector<std::shared_ptr<const PluginInterface>> userlistPlugins;
+  std::vector<const PluginInterface*> getUserlistPlugins() const {
+    std::vector<const PluginInterface*> userlistPlugins;
     for (const auto& plugin : game_.GetPlugins()) {
       if (game_.GetUserMetadata(plugin->GetName()).has_value()) {
         userlistPlugins.push_back(plugin);
@@ -75,12 +74,11 @@ private:
   }
 
   std::vector<PluginItem> getDerivedMetadata(
-      const std::vector<std::shared_ptr<const PluginInterface>>&
-          userlistPlugins) {
+      const std::vector<const PluginInterface*>& userlistPlugins) {
     std::vector<PluginItem> plugins;
 
     for (const auto& plugin : userlistPlugins) {
-      auto derivedMetadata = PluginItem(plugin, game_, language_);
+      auto derivedMetadata = PluginItem(*plugin, game_, language_);
       plugins.push_back(derivedMetadata);
     }
 

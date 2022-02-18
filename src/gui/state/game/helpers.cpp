@@ -75,19 +75,21 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
 }
 
 Message PlainTextMessage(MessageType type, std::string text) {
-  return Message(type, EscapeMarkdownSpecialChars(text));
+  return Message(type, EscapeMarkdownASCIIPunctuation(text));
 }
 
 SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text) {
   SimpleMessage message;
   message.type = type;
-  message.text = EscapeMarkdownSpecialChars(text);
+  message.text = EscapeMarkdownASCIIPunctuation(text);
   return message;
 }
 
-std::string EscapeMarkdownSpecialChars(std::string text) {
-  auto specialCharsRegex = std::regex("([\\\\`*_{}\\[\\]()#+.!-])");
-  return std::regex_replace(text, specialCharsRegex, "\\$1");
+std::string EscapeMarkdownASCIIPunctuation(std::string text) {
+  // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
+  static const std::regex asciiPunctuationCharacters(
+      "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
+  return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
 }
 
 Message ToMessage(const PluginCleaningData& cleaningData) {
@@ -167,20 +169,6 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   }
 
   return Message(MessageType::warn, detail);
-}
-
-std::vector<SimpleMessage> ToSimpleMessages(
-    const std::vector<Message>& messages,
-    const std::string& language) {
-  std::vector<SimpleMessage> simpleMessages;
-  for (const auto& message : messages) {
-    auto simpleMessage = message.ToSimpleMessage(language);
-    if (simpleMessage.has_value()) {
-      simpleMessages.push_back(simpleMessage.value());
-    }
-  }
-
-  return simpleMessages;
 }
 
 std::string DescribeEdgeType(EdgeType edgeType) {

@@ -53,8 +53,9 @@ QVariant FileTableModel::data(const File& element, int column, int role) const {
       return QVariant(QString::fromStdString(element.GetDisplayName()));
     case DETAIL_COLUMN: {
       if (role == Qt::DisplayRole) {
-        auto contentText =
-            element.ChooseDetail(language).value_or(MessageContent()).GetText();
+        auto contentText = SelectMessageContent(element.GetDetail(), language)
+                               .value_or(MessageContent())
+                               .GetText();
         return QVariant(QString::fromStdString(contentText));
       }
       return QVariant::fromValue(element.GetDetail());
