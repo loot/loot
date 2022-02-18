@@ -272,6 +272,7 @@ void MainWindow::initialise() {
     filtersWidget->hideVersionNumbers(filters.hideVersionNumbers);
     filtersWidget->hideCRCs(filters.hideCRCs);
     filtersWidget->hideBashTags(filters.hideBashTags);
+    filtersWidget->hideLocations(filters.hideLocations);
     filtersWidget->hideNotes(filters.hideNotes);
     filtersWidget->hidePluginMessages(filters.hideAllPluginMessages);
     filtersWidget->hideInactivePlugins(filters.hideInactivePlugins);

@@ -613,6 +613,8 @@ void LootSettings::load(const std::filesystem::path& file,
         filters->get_as<bool>("hideCRCs").value_or(filters_.hideCRCs);
     filters_.hideBashTags =
         filters->get_as<bool>("hideBashTags").value_or(filters_.hideBashTags);
+    filters_.hideLocations =
+        filters->get_as<bool>("hideLocations").value_or(filters_.hideLocations);
     filters_.hideNotes =
         filters->get_as<bool>("hideNotes").value_or(filters_.hideNotes);
     filters_.hideAllPluginMessages =
@@ -690,6 +692,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   filters->insert("hideVersionNumbers", filters_.hideVersionNumbers);
   filters->insert("hideCRCs", filters_.hideCRCs);
   filters->insert("hideBashTags", filters_.hideBashTags);
+  filters->insert("hideLocations", filters_.hideLocations);
   filters->insert("hideNotes", filters_.hideNotes);
   filters->insert("hideAllPluginMessages", filters_.hideAllPluginMessages);
   filters->insert("hideInactivePlugins", filters_.hideInactivePlugins);

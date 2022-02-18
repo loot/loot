@@ -64,6 +64,10 @@ void FiltersWidget::hideBashTags(bool hide) {
   bashTagsFilter->setChecked(hide);
 }
 
+void FiltersWidget::hideLocations(bool hide) {
+  locationsFilter->setChecked(hide);
+}
+
 void FiltersWidget::hideNotes(bool hide) { notesFilter->setChecked(hide); }
 
 void FiltersWidget::hidePluginMessages(bool hide) {
@@ -91,6 +95,7 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
   filters.hideVersionNumbers = versionNumbersFilter->isChecked();
   filters.hideCRCs = crcsFilter->isChecked();
   filters.hideBashTags = bashTagsFilter->isChecked();
+  filters.hideLocations = locationsFilter->isChecked();
   filters.hideNotes = notesFilter->isChecked();
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
@@ -110,6 +115,7 @@ void FiltersWidget::setupUi() {
   versionNumbersFilter->setObjectName("versionNumbersFilter");
   crcsFilter->setObjectName("crcsFilter");
   bashTagsFilter->setObjectName("bashTagsFilter");
+  locationsFilter->setObjectName("locationsFilter");
   notesFilter->setObjectName("notesFilter");
   pluginMessagesFilter->setObjectName("pluginMessagesFilter");
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
@@ -152,6 +158,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(versionNumbersFilter);
   verticalLayout->addWidget(crcsFilter);
   verticalLayout->addWidget(bashTagsFilter);
+  verticalLayout->addWidget(locationsFilter);
   verticalLayout->addWidget(notesFilter);
   verticalLayout->addWidget(pluginMessagesFilter);
   verticalLayout->addWidget(inactivePluginsFilter);
@@ -184,6 +191,7 @@ void FiltersWidget::translateUi() {
   versionNumbersFilter->setText(translate("Hide version numbers"));
   crcsFilter->setText(translate("Hide CRCs"));
   bashTagsFilter->setText(translate("Hide Bash Tags"));
+  locationsFilter->setText(translate("Hide Sources"));
   notesFilter->setText(translate("Hide notes"));
   pluginMessagesFilter->setText(translate("Hide all plugin messages"));
   inactivePluginsFilter->setText(translate("Hide inactive plugins"));
@@ -242,6 +250,7 @@ CardContentFiltersState FiltersWidget::getCardContentFiltersState() const {
   filters.hideVersionNumbers = versionNumbersFilter->isChecked();
   filters.hideCRCs = crcsFilter->isChecked();
   filters.hideBashTags = bashTagsFilter->isChecked();
+  filters.hideLocations = locationsFilter->isChecked();
   filters.hideNotes = notesFilter->isChecked();
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
 
@@ -318,6 +327,10 @@ void FiltersWidget::on_crcsFilter_stateChanged() {
 }
 
 void FiltersWidget::on_bashTagsFilter_stateChanged() {
+  emit cardContentFilterChanged(getCardContentFiltersState());
+}
+
+void FiltersWidget::on_locationsFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 

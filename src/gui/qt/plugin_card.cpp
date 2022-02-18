@@ -87,7 +87,12 @@ std::vector<std::string> getMessageTexts(
 }
 
 std::vector<std::string> getLocationNames(
-    const std::vector<Location>& locations) {
+    const std::vector<Location>& locations,
+    bool hideLocations) {
+  if (hideLocations) {
+    return {};
+  }
+
   std::vector<std::string> names;
   std::transform(locations.begin(),
                  locations.end(),
@@ -121,7 +126,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
         getTagsText(pluginItem.addTags, filters.hideBashTags),
         getTagsText(pluginItem.removeTags, filters.hideBashTags),
         getMessageTexts(filterMessages(pluginItem.messages, filters)),
-        getLocationNames(pluginItem.locations),
+        getLocationNames(pluginItem.locations, filters.hideLocations),
         false);
   }
 }
@@ -185,7 +190,8 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   tagsGroupBox->setVisible(showBashTags);
 
-  const auto showLocations = !plugin.locations.empty();
+  const auto showLocations =
+      !plugin.locations.empty() && !filters.hideLocations;
   if (showLocations) {
     std::vector<std::string> locationLinks;
     std::transform(plugin.locations.begin(),

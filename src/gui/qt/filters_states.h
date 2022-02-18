@@ -37,6 +37,7 @@ struct CardContentFiltersState {
   bool hideVersionNumbers{false};
   bool hideCRCs{false};
   bool hideBashTags{false};
+  bool hideLocations{false};
   bool hideNotes{false};
   bool hideAllPluginMessages{false};
 };

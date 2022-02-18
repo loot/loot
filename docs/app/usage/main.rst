@@ -90,6 +90,8 @@ Hide CRCs
   Hides the CRCs displayed in orange next to those plugins that provide them.
 Hide Bash Tags
   Hides all Bash Tag suggestions.
+Hide Sources
+  Hides all plugin sources.
 Hide notes
   Hides all plugin messages that have the Note: prefix, or the equivalent text for the language selected in LOOT's settings.
 Hide all plugin messages

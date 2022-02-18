@@ -59,6 +59,7 @@ public:
     bool hideVersionNumbers{false};
     bool hideCRCs{false};
     bool hideBashTags{true};
+    bool hideLocations{true};
     bool hideNotes{false};
     bool hideAllPluginMessages{false};
     bool hideInactivePlugins{false};
