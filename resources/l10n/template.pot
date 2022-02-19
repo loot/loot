@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-18 19:05+0000\n"
+"POT-Creation-Date: 2022-02-19 22:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -365,7 +365,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:1155 src/gui/query/query.h:66
+#: src/gui/qt/main_window.cpp:1155 src/gui/query/query.h:67
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -826,7 +826,7 @@ msgstr ""
 msgid "Add new game..."
 msgstr ""
 
-#: src/gui/query/query.h:76
+#: src/gui/query/query.h:97
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -923,32 +923,32 @@ msgstr ""
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:499 src/gui/state/game/game.cpp:584
+#: src/gui/state/game/game.cpp:499 src/gui/state/game/game.cpp:579
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:609
+#: src/gui/state/game/game.cpp:604
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:621
+#: src/gui/state/game/game.cpp:616
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:657
+#: src/gui/state/game/game.cpp:652
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:684
+#: src/gui/state/game/game.cpp:679
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:746
+#: src/gui/state/game/game.cpp:741
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

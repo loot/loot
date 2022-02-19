@@ -78,4 +78,5 @@ Install Path Registry Keys
   Either this or an install path must be supplied.
 
 Local AppData Path
-  The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``.
+  The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``. If left empty,
+  LOOT will derive the path to use from the base game type.
