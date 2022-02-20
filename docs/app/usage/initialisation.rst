@@ -9,6 +9,9 @@ LOOT's initialisation can be customised using command line parameters:
 ``--game=<game identifier>``:
   Set the game to run for. If the supplied game identifier is recognised, the default and last game values are ignored. The game identifiers recognised by default are ``Morrowind``, ``Oblivion``, ``Skyrim``, ``Skyrim Special Edition``, ``Skyrim VR``, ``Fallout3``, ``FalloutNV``, ``Fallout4``, ``Fallout4VR``, ``Nehrim``, ``Enderal`` and ``Enderal Special Edition``.
 
+``--game-path=<path>``:
+  Set the install path of the game identified by ``--game``. This replaces any existing value stored in LOOT's settings.
+
 ``--loot-data-path=<path>``:
   Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_CONFIG_HOME/LOOT``, ``$HOME/.config/LOOT`` or the current path on Linux.
 

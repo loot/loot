@@ -38,7 +38,9 @@ public:
   LootState(const std::filesystem::path& lootAppPath,
             const std::filesystem::path& lootDataPath);
 
-  void init(const std::string& cmdLineGame, bool autoSort);
+  void init(const std::string& cmdLineGame,
+            const std::filesystem::path& cmdLineGamePath,
+            bool autoSort);
   void initCurrentGame();
 
   const std::vector<SimpleMessage>& getInitMessages() const;

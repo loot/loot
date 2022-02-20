@@ -99,7 +99,9 @@ LootState::LootState(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) :
     LootPaths(lootAppPath, lootDataPath) {}
 
-void LootState::init(const std::string& cmdLineGame, bool autoSort) {
+void LootState::init(const std::string& cmdLineGame,
+                     const std::filesystem::path& cmdLineGamePath,
+                     bool autoSort) {
   if (autoSort && cmdLineGame.empty()) {
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
@@ -109,6 +111,15 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
                   "provided.")));
   } else {
     settings_.setAutoSort(autoSort);
+  }
+
+  if (cmdLineGame.empty() && !cmdLineGamePath.empty()) {
+    initMessages_.push_back(PlainTextSimpleMessage(
+        MessageType::error,
+        /* translators: --game and --game-path are command-line arguments and
+           shouldn't be translated. */
+        translate("Error: --game-path was passed but no --game parameter was "
+                  "provided.")));
   }
 
   // Do some preliminary locale / UTF-8 support setup here, in case the settings
@@ -225,6 +236,35 @@ void LootState::init(const std::string& cmdLineGame, bool autoSort) {
                "Error: Could not create LOOT prelude directory. %1%")) %
            e.what())
               .str()));
+    }
+  }
+
+  // Override game path if given as a command line parameter.
+  if (!cmdLineGamePath.empty()) {
+    auto gamesSettings = settings_.getGameSettings();
+    auto it = std::find_if(gamesSettings.begin(),
+                           gamesSettings.end(),
+                           [&](const GameSettings& settings) {
+                             return settings.FolderName() == cmdLineGame;
+                           });
+
+    if (it == gamesSettings.end()) {
+      initMessages_.push_back(PlainTextSimpleMessage(
+          MessageType::error,
+          (boost::format(translate(
+               "Error: failed to override game path, the game %1% was not "
+               "recognised.")) %
+           cmdLineGame)
+              .str()));
+    } else {
+      if (logger) {
+        logger->info("Overriding path for game {} from {} to {}",
+                     cmdLineGame,
+                     it->GamePath().u8string(),
+                     cmdLineGamePath.u8string());
+      }
+      it->SetGamePath(cmdLineGamePath);
+      settings_.storeGameSettings(gamesSettings);
     }
   }
 

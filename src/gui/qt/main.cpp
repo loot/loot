@@ -58,24 +58,24 @@ int main(int argc, char* argv[]) {
   parser.addVersionOption();
   parser.addOptions(
       {{"game",
-        QString::fromStdString("Set the game that LOOT will initially load"),
-        QString::fromStdString("game")},
+        "Set the game that LOOT will initially load",
+        "game identifier"},
+       {"game-path", "Set the initial game's install path.", "path"},
        {"loot-data-path",
-        QString::fromStdString(
-            "Set the directory where LOOT will store its data"),
-        QString::fromStdString("directory")},
-       {"auto-sort",
-        QString::fromStdString(
-            "Automatically sort the load order on launch")}});
+        "Set the directory where LOOT will store its data",
+        "path"},
+       {"auto-sort", "Automatically sort the load order on launch"}});
   parser.process(app);
 
   auto lootDataPath =
       std::filesystem::u8path(parser.value("loot-data-path").toStdString());
   auto startupGameFolder = parser.value("game").toStdString();
+  auto gamePath =
+      std::filesystem::u8path(parser.value("game-path").toStdString());
   auto autoSort = parser.isSet("auto-sort");
 
   loot::LootState state("", lootDataPath);
-  state.init(startupGameFolder, autoSort);
+  state.init(startupGameFolder, gamePath, autoSort);
 
   // Load Qt's translations.
   QTranslator translator;
