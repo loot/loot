@@ -255,6 +255,12 @@ void PluginCard::setupUi() {
   // cards with icons.
   nameLabel->setMinimumHeight(ATTRIBUTE_ICON_HEIGHT);
 
+  static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
+  auto nameFont = nameLabel->font();
+  const auto nameFontSize = nameFont.pointSizeF();
+  nameFont.setPointSizeF(nameFontSize * NAME_FONT_SIZE_MULTIPLIER);
+  nameLabel->setFont(nameFont);
+
   isActiveLabel->setVisible(false);
   masterFileLabel->setVisible(false);
   lightPluginLabel->setVisible(false);
