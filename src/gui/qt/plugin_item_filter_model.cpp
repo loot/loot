@@ -109,8 +109,13 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return false;
   }
 
-  if (filterState.content.has_value() &&
-      !item.containsText(filterState.content.value())) {
+  if (std::holds_alternative<std::string>(filterState.content) &&
+      !item.containsText(std::get<std::string>(filterState.content))) {
+    return false;
+  }
+
+  if (std::holds_alternative<std::regex>(filterState.content) &&
+      !item.containsMatchingText(std::get<std::regex>(filterState.content))) {
     return false;
   }
 

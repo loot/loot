@@ -36,7 +36,7 @@ static constexpr int SIDEBAR_EDIT_MODE_ROW_HEIGHT = 40;
 class SidebarPluginNameDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
-  SidebarPluginNameDelegate(QObject* parent);
+  explicit SidebarPluginNameDelegate(QObject* parent);
 
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,

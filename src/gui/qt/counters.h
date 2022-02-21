@@ -33,17 +33,18 @@
 
 namespace loot {
 struct GeneralInformationCounters {
-  GeneralInformationCounters();
+  GeneralInformationCounters() = default;
   GeneralInformationCounters(const std::vector<SimpleMessage>& generalMessages,
                              const std::vector<PluginItem>& plugins);
 
-  size_t warnings;
-  size_t errors;
-  size_t totalMessages;
+  size_t warnings{0};
+  size_t errors{0};
+  size_t totalMessages{0};
 
-  size_t active;
-  size_t dirty;
-  size_t totalPlugins;
+  size_t activeLight{0};
+  size_t activeRegular{0};
+  size_t dirty{0};
+  size_t totalPlugins{0};
 
 private:
   void countMessages(const std::vector<SimpleMessage>& messages);

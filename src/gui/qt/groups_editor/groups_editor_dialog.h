@@ -57,7 +57,7 @@ private:
   QLineEdit *groupNameInput{new QLineEdit(this)};
   QPushButton *addGroupButton{new QPushButton(this)};
 
-  PluginItemModel *pluginItemModel;
+  PluginItemModel *pluginItemModel{nullptr};
 
   void setupUi();
   void translateUi();

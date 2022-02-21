@@ -42,8 +42,7 @@ public:
       game_(game),
       language_(language),
       counter_(counter),
-      sendProgressUpdate_(sendProgressUpdate),
-      useSortingErrorMessage(false) {}
+      sendProgressUpdate_(sendProgressUpdate) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -121,7 +120,7 @@ private:
   std::string language_;
   UnappliedChangeCounter& counter_;
   const std::function<void(std::string)> sendProgressUpdate_;
-  bool useSortingErrorMessage;
+  bool useSortingErrorMessage{false};
 };
 }
 

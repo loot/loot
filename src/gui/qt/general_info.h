@@ -34,6 +34,7 @@
 
 namespace loot {
 struct GeneralInformation {
+  GameType gameType{GameType::tes4};
   FileRevisionSummary masterlistRevision;
   FileRevisionSummary preludeRevision;
   std::vector<SimpleMessage> generalMessages;

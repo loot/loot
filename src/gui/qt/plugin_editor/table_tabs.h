@@ -45,7 +45,7 @@ namespace loot {
 class BaseTableTab : public QWidget {
   Q_OBJECT
 public:
-  BaseTableTab(QWidget* parent);
+  explicit BaseTableTab(QWidget* parent);
 
 signals:
   void tableRowCountChanged(bool hasUserMetadata);

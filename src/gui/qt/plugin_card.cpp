@@ -30,6 +30,7 @@
 #include <QtCore/QStringList>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QVBoxLayout>
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 
@@ -85,6 +86,22 @@ std::vector<std::string> getMessageTexts(
   return texts;
 }
 
+std::vector<std::string> getLocationNames(
+    const std::vector<Location>& locations,
+    bool hideLocations) {
+  if (hideLocations) {
+    return {};
+  }
+
+  std::vector<std::string> names;
+  std::transform(locations.begin(),
+                 locations.end(),
+                 std::back_inserter(names),
+                 [](const auto& location) { return location.GetName(); });
+
+  return names;
+}
+
 void setIcon(QLabel* label, QIcon icon) {
   label->setPixmap(IconFactory::getPixmap(icon, ATTRIBUTE_ICON_HEIGHT));
 }
@@ -97,6 +114,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
                             QString(),
                             QString(),
                             getMessageTexts(generalInfo.generalMessages),
+                            {},
                             true);
   } else {
     auto pluginItem = index.data(RawDataRole).value<PluginItem>();
@@ -108,6 +126,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
         getTagsText(pluginItem.addTags, filters.hideBashTags),
         getTagsText(pluginItem.removeTags, filters.hideBashTags),
         getMessageTexts(filterMessages(pluginItem.messages, filters)),
+        getLocationNames(pluginItem.locations, filters.hideLocations),
         false);
   }
 }
@@ -171,6 +190,28 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   tagsGroupBox->setVisible(showBashTags);
 
+  const auto showLocations =
+      !plugin.locations.empty() && !filters.hideLocations;
+  if (showLocations) {
+    std::vector<std::string> locationLinks;
+    std::transform(plugin.locations.begin(),
+                   plugin.locations.end(),
+                   std::back_inserter(locationLinks),
+                   [](const auto& location) {
+                     return "[" + location.GetName() + "](" +
+                            location.GetURL() + ")";
+                   });
+
+    std::string locationsText = plugin.locations.size() == 1
+                                    ? boost::locale::translate("Source:")
+                                    : boost::locale::translate("Sources:");
+    locationsText += "  " + boost::join(locationLinks, u8" \uFF5C ");
+
+    locationsLabel->setText(QString::fromStdString(locationsText));
+  }
+
+  locationsLabel->setVisible(showLocations);
+
   auto messages = filterMessages(plugin.messages, filters);
   if (!messages.empty()) {
     messagesWidget->setMessages(messages);
@@ -214,6 +255,12 @@ void PluginCard::setupUi() {
   // cards with icons.
   nameLabel->setMinimumHeight(ATTRIBUTE_ICON_HEIGHT);
 
+  static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
+  auto nameFont = nameLabel->font();
+  const auto nameFontSize = nameFont.pointSizeF();
+  nameFont.setPointSizeF(nameFontSize * NAME_FONT_SIZE_MULTIPLIER);
+  nameLabel->setFont(nameFont);
+
   isActiveLabel->setVisible(false);
   masterFileLabel->setVisible(false);
   lightPluginLabel->setVisible(false);
@@ -243,6 +290,10 @@ void PluginCard::setupUi() {
   removeTagsLabel->setVisible(false);
 
   messagesWidget->setVisible(false);
+
+  locationsLabel->setTextFormat(Qt::MarkdownText);
+  locationsLabel->setOpenExternalLinks(true);
+  locationsLabel->setVisible(false);
 
   setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
   setIcon(masterFileLabel, IconFactory::getMasterFileIcon());
@@ -283,6 +334,7 @@ void PluginCard::setupUi() {
   layout->addLayout(headerLayout);
   layout->addWidget(messagesWidget);
   layout->addWidget(tagsGroupBox);
+  layout->addWidget(locationsLabel);
 
   setLayout(layout);
 
@@ -440,12 +492,15 @@ GeneralInfoCard* PluginCardDelegate::setGeneralInfoCardContent(
   auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
 
+  generalInfoCard->setGameType(generalInfo.gameType);
   generalInfoCard->setMasterlistInfo(generalInfo.masterlistRevision);
   generalInfoCard->setPreludeInfo(generalInfo.preludeRevision);
   generalInfoCard->setMessageCounts(
       counters.warnings, counters.errors, counters.totalMessages);
-  generalInfoCard->setPluginCounts(
-      counters.active, counters.dirty, counters.totalPlugins);
+  generalInfoCard->setPluginCounts(counters.activeLight,
+                                   counters.activeRegular,
+                                   counters.dirty,
+                                   counters.totalPlugins);
   generalInfoCard->setGeneralMessages(generalInfo.generalMessages);
 
   return generalInfoCard;

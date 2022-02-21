@@ -31,7 +31,11 @@
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QDate>
 #include <QtCore/QFile>
+#include <QtCore/QPoint>
 #include <QtCore/QUrl>
+#include <QtWidgets/QToolTip>
+#include <QtWidgets/QWidget>
+#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
 
@@ -77,8 +81,6 @@ void writeFileRevision(const std::filesystem::path& filePath,
 
   out << *root;
 }
-
-FileRevisionSummary::FileRevisionSummary() {}
 
 FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
     id(fileRevision.id.substr(0, SHORT_HASH_LENGTH)), date(fileRevision.date) {
@@ -325,5 +327,16 @@ std::optional<QByteArray> readHttpResponse(QNetworkReply* reply) {
   }
 
   return data;
+}
+
+void showInvalidRegexTooltip(QWidget& widget, const std::string& details) {
+  auto message = (boost::format(boost::locale::translate(
+                      "Invalid regular expression: %1%")) %
+                  details)
+                     .str();
+
+  QToolTip::showText(widget.mapToGlobal(QPoint(0, 0)),
+                     QString::fromStdString(message),
+                     &widget);
 }
 }

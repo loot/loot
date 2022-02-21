@@ -55,7 +55,7 @@ signals:
 class QueryTask : public Task {
   Q_OBJECT
 public:
-  QueryTask(std::unique_ptr<Query> query);
+  explicit QueryTask(std::unique_ptr<Query> query);
 
 public slots:
   void execute() override;
@@ -84,7 +84,7 @@ signals:
 private:
   QThread workerThread;
   std::vector<Task *> tasks;
-  size_t currentTask;
+  size_t currentTask{0};
 
 private slots:
   void onTaskFinished();

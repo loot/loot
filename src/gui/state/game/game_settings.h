@@ -41,7 +41,7 @@ constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
 
 class GameSettings {
 public:
-  GameSettings();
+  GameSettings() = default;
   explicit GameSettings(const GameType gameType,
                         const std::string& lootFolder = "");
 
@@ -71,10 +71,10 @@ public:
   std::optional<std::filesystem::path> FindGamePath() const;
 
 private:
-  GameType type_;
+  GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
-  float mininumHeaderVersion_;
+  float mininumHeaderVersion_{0.0f};
 
   std::vector<std::string> registryKeys_;
 

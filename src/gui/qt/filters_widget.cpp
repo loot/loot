@@ -31,6 +31,7 @@
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/qt/helpers.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 FiltersWidget::FiltersWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
@@ -63,6 +64,10 @@ void FiltersWidget::hideBashTags(bool hide) {
   bashTagsFilter->setChecked(hide);
 }
 
+void FiltersWidget::hideLocations(bool hide) {
+  locationsFilter->setChecked(hide);
+}
+
 void FiltersWidget::hideNotes(bool hide) { notesFilter->setChecked(hide); }
 
 void FiltersWidget::hidePluginMessages(bool hide) {
@@ -90,6 +95,7 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
   filters.hideVersionNumbers = versionNumbersFilter->isChecked();
   filters.hideCRCs = crcsFilter->isChecked();
   filters.hideBashTags = bashTagsFilter->isChecked();
+  filters.hideLocations = locationsFilter->isChecked();
   filters.hideNotes = notesFilter->isChecked();
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
@@ -105,9 +111,11 @@ void FiltersWidget::setupUi() {
   conflictingPluginsFilter->setObjectName("conflictingPluginsFilter");
   groupPluginsFilter->setObjectName("groupPluginsFilter");
   contentFilter->setObjectName("contentFilter");
+  contentRegexCheckbox->setObjectName("contentRegexCheckbox");
   versionNumbersFilter->setObjectName("versionNumbersFilter");
   crcsFilter->setObjectName("crcsFilter");
   bashTagsFilter->setObjectName("bashTagsFilter");
+  locationsFilter->setObjectName("locationsFilter");
   notesFilter->setObjectName("notesFilter");
   pluginMessagesFilter->setObjectName("pluginMessagesFilter");
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
@@ -146,9 +154,11 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(groupPluginsFilter);
   verticalLayout->addWidget(contentFilterLabel);
   verticalLayout->addWidget(contentFilter);
+  verticalLayout->addWidget(contentRegexCheckbox, 0, Qt::AlignRight);
   verticalLayout->addWidget(versionNumbersFilter);
   verticalLayout->addWidget(crcsFilter);
   verticalLayout->addWidget(bashTagsFilter);
+  verticalLayout->addWidget(locationsFilter);
   verticalLayout->addWidget(notesFilter);
   verticalLayout->addWidget(pluginMessagesFilter);
   verticalLayout->addWidget(inactivePluginsFilter);
@@ -177,9 +187,11 @@ void FiltersWidget::translateUi() {
   groupPluginsFilterLabel->setText(translate("Show only plugins in group"));
   contentFilterLabel->setText(
       translate("Show only plugins with cards that contain"));
+  contentRegexCheckbox->setText(translate("Use regular expression"));
   versionNumbersFilter->setText(translate("Hide version numbers"));
   crcsFilter->setText(translate("Hide CRCs"));
   bashTagsFilter->setText(translate("Hide Bash Tags"));
+  locationsFilter->setText(translate("Hide Sources"));
   notesFilter->setText(translate("Hide notes"));
   pluginMessagesFilter->setText(translate("Hide all plugin messages"));
   inactivePluginsFilter->setText(translate("Hide inactive plugins"));
@@ -204,6 +216,10 @@ void FiltersWidget::translateUi() {
   contentFilter->setPlaceholderText(translate("No text specified"));
   contentFilter->setToolTip(
       translate("Press Enter or click outside the input to set the filter."));
+
+  contentRegexCheckbox->setToolTip(
+      translate("If checked, interprets the content filter text as a regular "
+                "expression."));
 }
 
 void FiltersWidget::setComboBoxItems(QComboBox* comboBox,
@@ -234,6 +250,7 @@ CardContentFiltersState FiltersWidget::getCardContentFiltersState() const {
   filters.hideVersionNumbers = versionNumbersFilter->isChecked();
   filters.hideCRCs = crcsFilter->isChecked();
   filters.hideBashTags = bashTagsFilter->isChecked();
+  filters.hideLocations = locationsFilter->isChecked();
   filters.hideNotes = notesFilter->isChecked();
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
 
@@ -256,7 +273,22 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   }
 
   if (!contentFilter->text().isEmpty()) {
-    filters.content = contentFilter->text().toStdString();
+    auto contentFilterText = contentFilter->text().toStdString();
+    if (contentRegexCheckbox->isChecked()) {
+      try {
+        filters.content = std::regex(
+            contentFilterText, std::regex::ECMAScript | std::regex::icase);
+      } catch (const std::exception& e) {
+        auto logger = getLogger();
+        if (logger) {
+          logger->error("Invalid content filter regex: {}", e.what());
+        }
+
+        showInvalidRegexTooltip(*contentFilter, e.what());
+      }
+    } else {
+      filters.content = contentFilterText;
+    }
   }
 
   return filters;
@@ -282,6 +314,10 @@ void FiltersWidget::on_contentFilter_editingFinished() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
+void FiltersWidget::on_contentRegexCheckbox_stateChanged() {
+  emit pluginFilterChanged(getPluginFiltersState());
+}
+
 void FiltersWidget::on_versionNumbersFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
@@ -291,6 +327,10 @@ void FiltersWidget::on_crcsFilter_stateChanged() {
 }
 
 void FiltersWidget::on_bashTagsFilter_stateChanged() {
+  emit cardContentFilterChanged(getCardContentFiltersState());
+}
+
+void FiltersWidget::on_locationsFilter_stateChanged() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 

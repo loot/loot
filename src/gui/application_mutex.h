@@ -45,9 +45,7 @@ class [[maybe_unused]] ApplicationMutexGuard {
 public:
   static constexpr const wchar_t* MUTEX_NAME = L"LOOT.Shell.Instance";
 
-  ApplicationMutexGuard() : hMutex(nullptr) {
-    hMutex = ::CreateMutex(nullptr, FALSE, MUTEX_NAME);
-  }
+  ApplicationMutexGuard() = default;
   ApplicationMutexGuard(const ApplicationMutexGuard&) = delete;
   ApplicationMutexGuard(ApplicationMutexGuard&&) = delete;
 
@@ -61,7 +59,7 @@ public:
   ApplicationMutexGuard& operator=(ApplicationMutexGuard&&) = delete;
 
 private:
-  HANDLE hMutex;
+  HANDLE hMutex{::CreateMutex(nullptr, FALSE, MUTEX_NAME)};
 };
 
 bool IsApplicationMutexLocked() {

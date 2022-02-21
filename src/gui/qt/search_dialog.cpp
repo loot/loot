@@ -25,6 +25,7 @@
 
 #include "gui/qt/search_dialog.h"
 
+#include <QtCore/QRegularExpression>
 #include <QtCore/QStringBuilder>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHBoxLayout>
@@ -60,6 +61,7 @@ void SearchDialog::setSearchResults(size_t resultsCount) {
 
 void SearchDialog::setupUi() {
   searchInput->setObjectName("searchInput");
+  regexCheckbox->setObjectName("regexCheckbox");
 
   auto buttonBox = new QDialogButtonBox(this);
   buttonBox->setObjectName("dialogButtons");
@@ -77,6 +79,7 @@ void SearchDialog::setupUi() {
   inputLayout->addWidget(countLabel);
 
   dialogLayout->addLayout(inputLayout);
+  dialogLayout->addWidget(regexCheckbox);
   dialogLayout->addWidget(buttonBox);
 
   setLayout(dialogLayout);
@@ -92,6 +95,12 @@ void SearchDialog::translateUi() {
   setWindowTitle(translate("Search Cards"));
 
   searchInput->setPlaceholderText(translate("Search cards"));
+
+  regexCheckbox->setText(translate("Use regular expression"));
+  regexCheckbox->setToolTip(
+      translate("If checked, interprets the search text as a Perl-like regular "
+                "expression."));
+
   previousButton->setText(translate("Find Previous"));
   nextButton->setText(translate("Find Next"));
 }
@@ -108,7 +117,25 @@ void SearchDialog::on_searchInput_textChanged(const QString& text) {
     reset();
   }
 
-  emit textChanged(text);
+  QVariant value = text;
+
+  if (regexCheckbox->isChecked()) {
+    auto regex =
+        QRegularExpression(text, QRegularExpression::CaseInsensitiveOption);
+
+    if (!regex.isValid()) {
+      showInvalidRegexTooltip(*searchInput, regex.errorString().toStdString());
+      return;
+    }
+
+    value = regex;
+  }
+
+  emit textChanged(value);
+}
+
+void SearchDialog::on_regexCheckbox_stateChanged() {
+  on_searchInput_textChanged(searchInput->text());
 }
 
 void SearchDialog::on_previousButton_clicked() {

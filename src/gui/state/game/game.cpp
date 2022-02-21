@@ -80,9 +80,7 @@ Game::Game(const GameSettings& gameSettings,
            const std::filesystem::path& preludePath) :
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
-    preludePath_(preludePath),
-    loadOrderSortCount_(0),
-    pluginsFullyLoaded_(false) {}
+    preludePath_(preludePath) {}
 
 Game::Game(const Game& game) {
   lock_guard<mutex> guard(game.mutex_);
@@ -186,6 +184,8 @@ void Game::Init() {
     }
   }
 }
+
+bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
 
 std::shared_ptr<const PluginInterface> Game::GetPlugin(
     const std::string& name) const {
@@ -524,11 +524,6 @@ fs::path Game::MasterlistPath() const {
 
 fs::path Game::UserlistPath() const {
   return GetLOOTGamePath() / "userlist.yaml";
-}
-
-fs::path Game::PluginsTxtPath() const {
-  return lootDataPath_.parent_path() / u8path(settings_.FolderName()) /
-         "plugins.txt";
 }
 
 std::vector<std::string> Game::GetLoadOrder() const {

@@ -58,13 +58,13 @@ protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-  Node *source;
-  Node *dest;
+  Node *source{nullptr};
+  Node *dest{nullptr};
 
   QPointF sourcePoint;
   QPointF destPoint;
 
-  bool isUserMetadata_;
+  bool isUserMetadata_{false};
 };
 
 QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos);

@@ -21,7 +21,7 @@ A few items in the menus are not self-explanatory:
 
 - "Copy Content" copies the data displayed in LOOT's cards to the clipboard as YAML-formatted text.
 - "Refresh Content" re-scans the installed plugins' headers and regenerates the content LOOT displays. This can be useful if you have made changes to your installed plugins while LOOT was open. Refreshing content will also discard any CRCs that were previously calculated, as they may have changed.
-- The "Search Cards..." option allows you to search all the visible text displayed on plugin cards, so the results may be affected by any filters you have active.
+- The "Search Cards..." option allows you to search all the visible text displayed on plugin cards, so the results may be affected by any filters you have active. Searching can optionally be done using case-insensitive Perl-like regular expressions instead of case-insensitive text comparison.
 
 Users running LOOT natively on Linux must have ``xclip`` installed in order to use the clipboard copy features.
 
@@ -56,7 +56,7 @@ Before a sorted load order is applied, LOOT saves a backup of the current load o
 Plugin Cards & Sidebar Items
 ============================
 
-Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's name and an icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active, while light plugins have their light plugin index displayed. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
+Each plugin is displayed on its own "card", which displays all the information LOOT has for that plugin, and provides access to plugin-specific functionality, including editing its metadata. Each plugin also has an item in the sidebar's Plugins section. The sidebar item contains the plugin's listed position, name and an icon for plugins that have user metadata. It also displays the plugin's in-game load order index if the plugin is active, while light plugins have their light plugin index displayed. Clicking on a plugin's sidebar item will select it, so that the Plugin menu options operate on it. Double-clicking a plugin's sidebar item will jump to its card.
 
 The plugin card's header holds the following information, some of which is only displayed if applicable:
 
@@ -71,11 +71,13 @@ The plugin card's header holds the following information, some of which is only 
 - The "Verified clean" icon.
 - The "Has User Metadata" icon.
 
-Messages and Bash Tag suggestions are displayed below the plugin card's header.
+Messages, Bash Tag suggestions and plugin sources are displayed below the plugin card's header.
 
 LOOT's plugin messages are a valuable resource, acting as a means of providing users with information that they might otherwise not obtain. It is important for a stable, healthy game that you act on any messages that require action. If you think a message suggests an unnecessary action, report it to an official LOOT thread. If you encounter a message that is non-conditional, ie. it suggests an action but is still displayed on subsequent runs of LOOT after the action has been carried out, also report it to an official LOOT thread, so that it can be made conditional.
 
 Users generally don't need to do anything with Bash Tag suggestions, as if they're using Wrye Bash it will automatically apply LOOT's suggestions, and if they're not using Wrye Bash then this information doesn't apply. For these reasons, they are hidden by default.
+
+Plugin sources are obtained from location metadata, and don't necessarily reflect where you downloaded the plugin from. If multiple mods provide a plugin with the same filename, that plugin may be listed with links to where each of those mods are hosted.
 
 Filters
 =======
@@ -88,6 +90,8 @@ Hide CRCs
   Hides the CRCs displayed in orange next to those plugins that provide them.
 Hide Bash Tags
   Hides all Bash Tag suggestions.
+Hide Sources
+  Hides all plugin sources.
 Hide notes
   Hides all plugin messages that have the Note: prefix, or the equivalent text for the language selected in LOOT's settings.
 Hide all plugin messages
@@ -107,3 +111,8 @@ Show only plugins in group
 
 Show only plugins with cards that contain
   This hides any plugins that don't have the filter input value present in any of the text on their cards.
+
+  The "Use regular expression" checkbox controls whether the input value is
+  interpreted as text or as a regular expression. If ticked and the input value
+  is not a valid regular expression, a tooltip detailing the issue will be
+  displayed and the card content filter will be ignored.
