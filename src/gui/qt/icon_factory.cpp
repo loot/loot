@@ -128,6 +128,10 @@ QIcon IconFactory::getRedateIcon() {
   return getIcon(":/icons/material-icons/today_black_48dp.svg");
 }
 
+QIcon IconFactory::getFixIcon() {
+  return getIcon(":/icons/material-icons/build_black_48dp.svg");
+}
+
 QIcon IconFactory::getDeleteIcon() {
   return getIcon(":/icons/material-icons/delete_black_48dp.svg");
 }

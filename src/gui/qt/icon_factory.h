@@ -60,6 +60,7 @@ public:
   static QIcon getCopyMetadataIcon();
   static QIcon getRefreshIcon();
   static QIcon getRedateIcon();
+  static QIcon getFixIcon();
   static QIcon getDeleteIcon();
   static QIcon getViewDocsIcon();
   static QIcon getOpenLOOTDataFolderIcon();

@@ -83,6 +83,8 @@ public:
       const PluginInterface& plugin,
       const std::vector<std::string>& loadOrder) const;
 
+  bool IsLoadOrderAmbiguous() const;
+
   std::vector<std::string> SortPlugins();
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();

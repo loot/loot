@@ -450,6 +450,9 @@ void MainWindow::setupMenuBar() {
   actionRedatePlugins->setObjectName("actionRedatePlugins");
   actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
 
+  actionFixAmbiguousLoadOrder->setObjectName("actionFixAmbiguousLoadOrder");
+  actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
+
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
@@ -485,6 +488,7 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionCopyContent);
   menuGame->addAction(actionRefreshContent);
   menuGame->addSeparator();
+  menuGame->addAction(actionFixAmbiguousLoadOrder);
   menuGame->addAction(actionRedatePlugins);
   menuGame->addAction(actionClearAllUserMetadata);
   menuPlugin->addAction(actionEditMetadata);
@@ -627,6 +631,7 @@ void MainWindow::translateUi() {
   actionCopyContent->setText(translate("Copy Content"));
   actionRefreshContent->setText(translate("Refresh Content"));
   actionRedatePlugins->setText(translate("Redate Plugins..."));
+  actionFixAmbiguousLoadOrder->setText(translate("Fix Ambiguous Load Order"));
   actionClearAllUserMetadata->setText(translate("Clear All User Metadata..."));
 
   menuPlugin->setTitle(translate("Plugin"));
@@ -654,6 +659,8 @@ void MainWindow::enableGameActions() {
       state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
       state.GetCurrentGame().GetSettings().Type() == GameType::tes5se;
   actionRedatePlugins->setEnabled(enableRedatePlugins);
+
+  actionFixAmbiguousLoadOrder->setEnabled(false);
 }
 
 void MainWindow::disableGameActions() {
@@ -1217,7 +1224,7 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   enableGameActions();
 }
 
-void MainWindow::handlePluginsSorted(QueryResult result) {
+bool MainWindow::handlePluginsSorted(QueryResult result) {
   filtersWidget->resetConflictsAndGroupsFilters();
 
   auto sortedPlugins = std::get<PluginItems>(result);
@@ -1234,7 +1241,7 @@ void MainWindow::handlePluginsSorted(QueryResult result) {
 
     // Plugins didn't change but general messages may have.
     updateGeneralMessages();
-    return;
+    return false;
   }
 
   auto currentLoadOrder = state.GetCurrentGame().GetLoadOrder();
@@ -1250,6 +1257,8 @@ void MainWindow::handlePluginsSorted(QueryResult result) {
   }
 
   handleGameDataLoaded(sortedPlugins);
+
+  return loadOrderHasChanged;
 }
 
 QMenu* MainWindow::createPopupMenu() {
@@ -1278,6 +1287,25 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
   std::filesystem::remove_all(destDir);
 
   return zipPath;
+}
+
+void MainWindow::checkForAmbiguousLoadOrder() {
+  if (!state.GetCurrentGame().IsLoadOrderAmbiguous()) {
+    actionFixAmbiguousLoadOrder->setEnabled(false);
+    return;
+  }
+
+  QMessageBox::warning(
+      this,
+      translate("Ambiguous load order detected"),
+      translate("LOOT has detected that the current load order is ambiguous, "
+                "which means that other applications might use a different "
+                "load order than what LOOT displays.\n\n"
+                "You can use the \"Fix Ambiguous Load Order\" action in the "
+                "Game menu to unambiguously set the load order to what is "
+                "displayed by LOOT."));
+
+  actionFixAmbiguousLoadOrder->setEnabled(true);
 }
 
 void MainWindow::on_actionSettings_triggered() {
@@ -1383,6 +1411,20 @@ void MainWindow::on_actionCopyContent_triggered() {
 
     showNotification(
         translate("LOOT's content has been copied to the clipboard."));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
+  try {
+    auto loadOrder = state.GetCurrentGame().GetLoadOrder();
+    state.GetCurrentGame().SetLoadOrder(loadOrder);
+
+    showNotification(
+        translate("The load order displayed by LOOT has been set."));
+
+    actionFixAmbiguousLoadOrder->setEnabled(false);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1772,6 +1814,10 @@ void MainWindow::on_actionDiscardSort_triggered() {
     updateGeneralMessages();
 
     exitSortingState();
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // at start of sorting.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2005,6 +2051,10 @@ void MainWindow::handleGameChanged(QueryResult result) {
     handleGameDataLoaded(result);
 
     updateSidebarColumnWidths();
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // when loading the new game's data.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2013,6 +2063,10 @@ void MainWindow::handleGameChanged(QueryResult result) {
 void MainWindow::handleRefreshGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // when refreshing game data.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2035,6 +2089,10 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
         sortPlugins(true);
       }
     }
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // when loading game data.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2042,7 +2100,13 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
 
 void MainWindow::handlePluginsManualSorted(QueryResult result) {
   try {
-    handlePluginsSorted(result);
+    const auto loadOrderChanged = handlePluginsSorted(result);
+
+    if (!loadOrderChanged) {
+      // Perform ambiguous load order check because load order state was
+      // refreshed at the start of sorting.
+      checkForAmbiguousLoadOrder();
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2115,6 +2179,10 @@ void MainWindow::handleConflictsChecked(QueryResult result) {
 
     setFiltersState(filtersWidget->getPluginFiltersState(),
                     std::move(conflictingPluginNames));
+
+    // Load order state was refreshed when plugins were loaded, so check for
+    // ambiguity.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }

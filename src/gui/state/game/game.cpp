@@ -599,6 +599,10 @@ std::optional<short> Game::GetActiveLoadOrderIndex(
   return std::nullopt;
 }
 
+bool Game::IsLoadOrderAmbiguous() const {
+  return gameHandle_->IsLoadOrderAmbiguous();
+}
+
 std::vector<std::string> Game::SortPlugins() {
   auto logger = getLogger();
 
