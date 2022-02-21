@@ -149,6 +149,20 @@ std::optional<QDate> getDateFromCommitJson(const QJsonDocument& document,
   return QDate::fromString(dateString, Qt::ISODate);
 }
 
+int calculateSidebarHeaderWidth(const QAbstractItemView& view, int column) {
+  const auto headerText =
+      view.model()->headerData(column, Qt::Horizontal).toString();
+
+  const auto textWidth = QFontMetricsF(QApplication::font())
+                             .size(Qt::TextSingleLine, headerText)
+                             .width();
+
+  const auto paddingWidth =
+      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+
+  return textWidth + paddingWidth;
+}
+
 int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   // Find the widest digit character in the current font and use that to
   // calculate the load order section width.
@@ -532,11 +546,12 @@ void MainWindow::setupViews() {
   verticalHeader->hide();
 
   auto horizontalHeader = sidebarPluginsView->horizontalHeader();
-  horizontalHeader->hide();
+  horizontalHeader->setDefaultAlignment(Qt::AlignLeft);
+  horizontalHeader->setHighlightSections(false);
   horizontalHeader->setSectionResizeMode(
-      PluginItemModel::SIDEBAR_POSITION_COLUMN, QHeaderView::Fixed);
+      PluginItemModel::SIDEBAR_POSITION_COLUMN, QHeaderView::Interactive);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_INDEX_COLUMN,
-                                         QHeaderView::Fixed);
+                                         QHeaderView::Interactive);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_NAME_COLUMN,
                                          QHeaderView::Stretch);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_STATE_COLUMN,
@@ -770,6 +785,9 @@ void MainWindow::updateGeneralMessages() {
 void MainWindow::updateSidebarColumnWidths() {
   const auto horizontalHeader = sidebarPluginsView->horizontalHeader();
 
+  const auto positionSectionHeaderWidth = calculateSidebarHeaderWidth(
+      *sidebarPluginsView, PluginItemModel::SIDEBAR_POSITION_COLUMN);
+
   // If a game hasn't loaded yet, assume that the player will have something in
   // the order of hundreds of plugins enabled - it's the number of digits that
   // matters, not the number itself.
@@ -781,6 +799,9 @@ void MainWindow::updateSidebarColumnWidths() {
                 state.GetCurrentGame().GetPlugins().size())
           : calculateSidebarPositionSectionWidth(
                 DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
+
+  const auto indexSectionHeaderWidth = calculateSidebarHeaderWidth(
+      *sidebarPluginsView, PluginItemModel::SIDEBAR_INDEX_COLUMN);
 
   // If there is no current game set (i.e. on initial construction), use TES5 SE
   // to calculate the load order section width because that's one of the games
@@ -795,14 +816,19 @@ void MainWindow::updateSidebarColumnWidths() {
       QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
       QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
 
-  const auto minimumSectionWidth =
-      std::min({positionSectionWidth, indexSectionWidth, stateSectionWidth});
+  const auto minimumSectionWidth = std::min({positionSectionHeaderWidth,
+                                             positionSectionWidth,
+                                             indexSectionHeaderWidth,
+                                             indexSectionWidth,
+                                             stateSectionWidth});
 
   horizontalHeader->setMinimumSectionSize(minimumSectionWidth);
-  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_POSITION_COLUMN,
-                                  positionSectionWidth);
-  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_INDEX_COLUMN,
-                                  indexSectionWidth);
+  horizontalHeader->resizeSection(
+      PluginItemModel::SIDEBAR_POSITION_COLUMN,
+      std::max({positionSectionHeaderWidth, positionSectionWidth}));
+  horizontalHeader->resizeSection(
+      PluginItemModel::SIDEBAR_INDEX_COLUMN,
+      std::max({indexSectionHeaderWidth, indexSectionWidth}));
   horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_STATE_COLUMN,
                                   stateSectionWidth);
 }

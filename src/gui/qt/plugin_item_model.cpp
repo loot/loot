@@ -161,8 +161,27 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
-QVariant PluginItemModel::headerData(int, Qt::Orientation, int) const {
-  return QVariant();
+QVariant PluginItemModel::headerData(int section,
+                                     Qt::Orientation orientation,
+                                     int role) const {
+  if (role != Qt::DisplayRole) {
+    return QVariant();
+  }
+
+  if (orientation != Qt::Horizontal) {
+    return QVariant();
+  }
+
+  switch (section) {
+    case SIDEBAR_POSITION_COLUMN:
+      return "Position";
+    case SIDEBAR_INDEX_COLUMN:
+      return "Index";
+    case SIDEBAR_NAME_COLUMN:
+      return "Plugin Name";
+    default:
+      return QVariant();
+  }
 }
 
 Qt::ItemFlags PluginItemModel::flags(const QModelIndex& index) const {
