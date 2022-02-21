@@ -79,7 +79,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  MainWindow(LootState &state, QWidget *parent = nullptr);
+  explicit MainWindow(LootState &state, QWidget *parent = nullptr);
 
   void initialise();
 
@@ -127,7 +127,10 @@ private:
   QSplitter *editorSplitter{
       new QSplitter(Qt::Orientation::Vertical, sidebarSplitter)};
   QListView *pluginCardsView{new QListView(editorSplitter)};
-  PluginEditorWidget *pluginEditorWidget;
+  PluginEditorWidget *pluginEditorWidget{
+      new PluginEditorWidget(editorSplitter,
+                             state.getSettings().getLanguages(),
+                             state.getSettings().getLanguage())};
 
   SettingsDialog *settingsDialog{new SettingsDialog(this)};
   SearchDialog *searchDialog{new SearchDialog(this)};
@@ -260,7 +263,7 @@ private slots:
   void on_groupsEditor_accepted();
 
   void on_searchDialog_finished();
-  void on_searchDialog_textChanged(const QString &text);
+  void on_searchDialog_textChanged(const QVariant &text);
   void on_searchDialog_currentResultChanged(size_t resultIndex);
 
   void handleGameChanged(QueryResult result);

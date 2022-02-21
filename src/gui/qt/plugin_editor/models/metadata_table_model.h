@@ -163,7 +163,7 @@ protected:
 
   virtual void setData(T& element, int column, const QVariant& value) = 0;
 
-  size_t getUserMetadataSize() const { return userMetadata.size(); }
+  size_t getNonUserMetadataSize() const { return nonUserMetadata.size(); }
 
 private:
   std::vector<T> nonUserMetadata;

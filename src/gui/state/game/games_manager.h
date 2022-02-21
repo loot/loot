@@ -42,7 +42,7 @@
 namespace loot {
 class GamesManager {
 public:
-  GamesManager() : currentGame_(installedGames_.end()) {}
+  GamesManager() = default;
   GamesManager(const GamesManager&) = delete;
   GamesManager(GamesManager&&) = delete;
   virtual ~GamesManager() = default;
@@ -209,7 +209,7 @@ private:
   }
 
   std::vector<gui::Game> installedGames_;
-  std::vector<gui::Game>::iterator currentGame_;
+  std::vector<gui::Game>::iterator currentGame_{installedGames_.end()};
 
   // Mutex used to protect access to member variables.
   mutable std::recursive_mutex mutex_;

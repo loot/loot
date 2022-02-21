@@ -41,7 +41,7 @@ namespace loot {
 class SettingsDialog : public QDialog {
   Q_OBJECT
 public:
-  SettingsDialog(QWidget *parent);
+  explicit SettingsDialog(QWidget *parent);
 
   void initialiseInputs(const LootSettings &settings,
                         const std::vector<std::string> &themes,

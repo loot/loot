@@ -34,7 +34,7 @@ namespace loot {
 class PluginItemFilterModel : public QSortFilterProxyModel {
   Q_OBJECT
 public:
-  PluginItemFilterModel(QObject* parent = nullptr);
+  explicit PluginItemFilterModel(QObject* parent = nullptr);
 
   void setFiltersState(PluginFiltersState&& state);
   void setFiltersState(PluginFiltersState&& state,

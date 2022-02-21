@@ -39,7 +39,7 @@ namespace loot {
 class FiltersWidget : public QWidget {
   Q_OBJECT
 public:
-  FiltersWidget(QWidget *parent);
+  explicit FiltersWidget(QWidget *parent);
 
   void setPlugins(const std::vector<std::string> &pluginNames);
   void setGroups(const std::vector<std::string> &groupNames);
@@ -50,6 +50,7 @@ public:
   void hideVersionNumbers(bool hide);
   void hideCRCs(bool hide);
   void hideBashTags(bool hide);
+  void hideLocations(bool hide);
   void hideNotes(bool hide);
   void hidePluginMessages(bool hide);
   void hideInactivePlugins(bool hide);
@@ -74,9 +75,11 @@ private:
   QComboBox *groupPluginsFilter{new QComboBox(this)};
   QLabel *contentFilterLabel{new QLabel(this)};
   QLineEdit *contentFilter{new QLineEdit(this)};
+  QCheckBox *contentRegexCheckbox{new QCheckBox};
   QCheckBox *versionNumbersFilter{new QCheckBox(this)};
   QCheckBox *crcsFilter{new QCheckBox(this)};
   QCheckBox *bashTagsFilter{new QCheckBox(this)};
+  QCheckBox *locationsFilter{new QCheckBox(this)};
   QCheckBox *notesFilter{new QCheckBox(this)};
   QCheckBox *pluginMessagesFilter{new QCheckBox(this)};
   QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
@@ -97,9 +100,11 @@ private slots:
   void on_conflictingPluginsFilter_activated();
   void on_groupPluginsFilter_activated();
   void on_contentFilter_editingFinished();
+  void on_contentRegexCheckbox_stateChanged();
   void on_versionNumbersFilter_stateChanged();
   void on_crcsFilter_stateChanged();
   void on_bashTagsFilter_stateChanged();
+  void on_locationsFilter_stateChanged();
   void on_notesFilter_stateChanged();
   void on_pluginMessagesFilter_stateChanged();
   void on_inactivePluginsFilter_stateChanged();

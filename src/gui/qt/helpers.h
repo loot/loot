@@ -42,8 +42,8 @@ namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
 
 struct FileRevisionSummary {
-  FileRevisionSummary();
-  FileRevisionSummary(const FileRevision& fileRevision);
+  FileRevisionSummary() = default;
+  explicit FileRevisionSummary(const FileRevision& fileRevision);
   FileRevisionSummary(const std::string& id, const std::string& date);
 
   std::string id;
@@ -71,6 +71,8 @@ bool updateFile(const std::filesystem::path& source,
 bool isValidUrl(const std::string& location);
 
 std::optional<QByteArray> readHttpResponse(QNetworkReply* reply);
+
+void showInvalidRegexTooltip(QWidget& widget, const std::string& details);
 }
 
 Q_DECLARE_METATYPE(loot::MessageContent);

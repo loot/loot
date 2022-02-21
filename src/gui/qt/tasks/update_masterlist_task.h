@@ -35,7 +35,7 @@ namespace loot {
 class UpdateMasterlistTask : public Task {
   Q_OBJECT
 public:
-  UpdateMasterlistTask(LootState &state);
+  explicit UpdateMasterlistTask(LootState &state);
 
 public slots:
   void execute() override;

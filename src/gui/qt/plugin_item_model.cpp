@@ -32,16 +32,8 @@
 #include "gui/qt/icon_factory.h"
 
 namespace loot {
-SearchResultData::SearchResultData() :
-    isResult(false), isCurrentResult(false) {}
-
 SearchResultData::SearchResultData(bool isResult, bool isCurrentResult) :
     isResult(isResult), isCurrentResult(isCurrentResult) {}
-
-const int PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN = 0;
-const int PluginItemModel::SIDEBAR_NAME_COLUMN = 1;
-const int PluginItemModel::SIDEBAR_STATE_COLUMN = 2;
-const int PluginItemModel::CARDS_COLUMN = 3;
 
 PluginItemModel::PluginItemModel(QObject* parent) :
     QAbstractListModel(parent) {}
@@ -52,9 +44,13 @@ int PluginItemModel::rowCount(const QModelIndex&) const {
 }
 
 int PluginItemModel::columnCount(const QModelIndex&) const {
-  // Column 0 is for plugin sidebar items, column 1 is for plugin cards.
-  // Although they use the same data, they need different size hints.
-  return 4;
+  static constexpr int COLUMN_COUNT = std::max({SIDEBAR_LOAD_ORDER_COLUMN,
+                                                SIDEBAR_PLUGIN_INDEX_COLUMN,
+                                                SIDEBAR_NAME_COLUMN,
+                                                SIDEBAR_STATE_COLUMN,
+                                                CARDS_COLUMN}) +
+                                      1;
+  return COLUMN_COUNT;
 }
 
 QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
@@ -92,6 +88,13 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
       case SIDEBAR_LOAD_ORDER_COLUMN: {
         if (role == Qt::DisplayRole) {
           return QString::fromStdString(plugin.loadOrderIndexText());
+        }
+
+        break;
+      }
+      case SIDEBAR_PLUGIN_INDEX_COLUMN: {
+        if (role == Qt::DisplayRole) {
+          return QString::number(index.row());
         }
 
         break;
@@ -263,8 +266,8 @@ bool PluginItemModel::setData(const QModelIndex& index,
   }
 
   // The RawDataRole data changed, emit dataChanged for all columns.
-  const auto topLeft = index.siblingAtColumn(SIDEBAR_LOAD_ORDER_COLUMN);
-  const auto bottomRight = index.siblingAtColumn(CARDS_COLUMN);
+  const auto topLeft = index.siblingAtColumn(0);
+  const auto bottomRight = index.siblingAtColumn(columnCount() - 1);
 
   emit dataChanged(topLeft, bottomRight, {role});
   return true;
@@ -330,11 +333,13 @@ void PluginItemModel::setEditorPluginName(
 }
 
 void PluginItemModel::setGeneralInformation(
+    GameType gameType,
     const FileRevisionSummary& masterlistRevision,
     const FileRevisionSummary& preludeRevision,
     const std::vector<SimpleMessage>& messages) {
   const auto infoIndex = index(0, CARDS_COLUMN);
 
+  generalInformation.gameType = gameType;
   generalInformation.masterlistRevision = masterlistRevision;
   generalInformation.preludeRevision = preludeRevision;
   generalInformation.generalMessages = messages;

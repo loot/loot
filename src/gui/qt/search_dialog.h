@@ -27,6 +27,7 @@
 #define LOOT_GUI_QT_SEARCH_DIALOG
 
 #include <QtCore/QModelIndex>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -43,13 +44,13 @@ struct SearchState {
 class SearchDialog : public QDialog {
   Q_OBJECT
 public:
-  SearchDialog(QWidget *parent);
+  explicit SearchDialog(QWidget *parent);
 
   void reset();
   void setSearchResults(size_t resultsCount);
 
 signals:
-  void textChanged(const QString &text);
+  void textChanged(const QVariant &text);
   void currentResultChanged(size_t resultIndex);
 
 private:
@@ -57,6 +58,7 @@ private:
   QLabel *countLabel{new QLabel(this)};
   QPushButton *previousButton{new QPushButton(this)};
   QPushButton *nextButton{new QPushButton(this)};
+  QCheckBox *regexCheckbox{new QCheckBox(this)};
 
   SearchState state;
 
@@ -67,6 +69,7 @@ private:
 
 private slots:
   void on_searchInput_textChanged(const QString &text);
+  void on_regexCheckbox_stateChanged();
   void on_previousButton_clicked();
   void on_nextButton_clicked();
 };

@@ -46,22 +46,23 @@ static constexpr int DragRole = Qt::UserRole + 7;
 static constexpr int SearchResultRole = Qt::UserRole + 8;
 
 struct SearchResultData {
-  SearchResultData();
+  SearchResultData() = default;
   SearchResultData(bool isResult, bool isCurrentResult);
 
-  bool isResult;
-  bool isCurrentResult;
+  bool isResult{false};
+  bool isCurrentResult{false};
 };
 
 class PluginItemModel : public QAbstractListModel {
   Q_OBJECT
 public:
-  static const int SIDEBAR_LOAD_ORDER_COLUMN;
-  static const int SIDEBAR_NAME_COLUMN;
-  static const int SIDEBAR_STATE_COLUMN;
-  static const int CARDS_COLUMN;
+  static constexpr int SIDEBAR_PLUGIN_INDEX_COLUMN = 0;
+  static constexpr int SIDEBAR_LOAD_ORDER_COLUMN = 1;
+  static constexpr int SIDEBAR_NAME_COLUMN = 2;
+  static constexpr int SIDEBAR_STATE_COLUMN = 3;
+  static constexpr int CARDS_COLUMN = 4;
 
-  PluginItemModel(QObject* parent);
+  explicit PluginItemModel(QObject* parent);
 
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
@@ -94,7 +95,8 @@ public:
 
   void setEditorPluginName(const std::optional<std::string>& editorPluginName);
 
-  void setGeneralInformation(const FileRevisionSummary& masterlistRevision,
+  void setGeneralInformation(GameType gameType,
+                             const FileRevisionSummary& masterlistRevision,
                              const FileRevisionSummary& preludeRevision,
                              const std::vector<SimpleMessage>& messages);
 

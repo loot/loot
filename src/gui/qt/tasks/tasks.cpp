@@ -51,7 +51,7 @@ void QueryTask::execute() {
 }
 
 TaskExecutor::TaskExecutor(QObject *parent, std::vector<Task *> tasks) :
-    QObject(parent), tasks(tasks), currentTask(0) {
+    QObject(parent), tasks(tasks) {
   // Move all the tasks to the worker thread.
   for (auto task : tasks) {
     task->moveToThread(&workerThread);

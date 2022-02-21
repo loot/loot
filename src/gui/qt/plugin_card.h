@@ -43,7 +43,7 @@ namespace loot {
 class PluginCard : public QFrame {
   Q_OBJECT
 public:
-  PluginCard(QWidget* parent);
+  explicit PluginCard(QWidget* parent);
 
   void setContent(const PluginItem& plugin,
                   const CardContentFiltersState& filters);
@@ -68,6 +68,7 @@ private:
   QLabel* removeTagsHeaderLabel{new QLabel(this)};
   QLabel* removeTagsLabel{new QLabel(this)};
   QGroupBox* tagsGroupBox{new QGroupBox(this)};
+  QLabel* locationsLabel{new QLabel(this)};
   MessagesWidget* messagesWidget{new MessagesWidget(this)};
 
   void setupUi();
@@ -75,15 +76,20 @@ private:
   void translateUi();
 };
 
-// current, add and remove bash tags, messages, and whether this is the general
-// info card or not.
-typedef std::tuple<QString, QString, QString, std::vector<std::string>, bool>
+// current, add and remove bash tags, messages, locations, and whether this is
+// the general info card or not.
+typedef std::tuple<QString,
+                   QString,
+                   QString,
+                   std::vector<std::string>,
+                   std::vector<std::string>,
+                   bool>
     SizeHintCacheKey;
 
 class PluginCardDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
-  PluginCardDelegate(QListView* parent);
+  explicit PluginCardDelegate(QListView* parent);
 
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,
@@ -103,8 +109,8 @@ public:
                     const QModelIndex& index) const override;
 
 private:
-  GeneralInfoCard* generalInfoCard;
-  PluginCard* pluginCard;
+  GeneralInfoCard* generalInfoCard{nullptr};
+  PluginCard* pluginCard{nullptr};
   mutable std::map<SizeHintCacheKey, std::pair<QWidget*, QSize>> sizeHintCache;
 
   static GeneralInfoCard* setGeneralInfoCardContent(

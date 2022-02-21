@@ -39,25 +39,7 @@ PluginEditorWidget::PluginEditorWidget(
     QWidget *parent,
     const std::vector<LootSettings::Language> &languages,
     const std::string &language) :
-    QWidget(parent),
-    languages(languages),
-    language(language),
-    loadAfterTab(new LoadAfterFileTableTab(this,
-                                           this->languages,
-                                           this->language,
-                                           filenameCompletions)),
-    requirementsTab(new FileTableTab(this,
-                                     this->languages,
-                                     this->language,
-                                     filenameCompletions)),
-    incompatibilitiesTab(new FileTableTab(this,
-                                          this->languages,
-                                          this->language,
-                                          filenameCompletions)),
-    messagesTab(new MessageTableTab(this, this->languages, this->language)),
-    tagsTab(new TagTableTab(this, bashTagCompletions)),
-    dirtyTab(new CleaningDataTableTab(this, this->languages, this->language)),
-    cleanTab(new CleaningDataTableTab(this, this->languages, this->language)) {
+    QWidget(parent), languages(languages), language(language) {
   setupUi();
 }
 

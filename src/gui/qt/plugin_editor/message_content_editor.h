@@ -47,7 +47,7 @@ public:
 
 private:
   const std::vector<LootSettings::Language> &languages;
-  MessageContentTableWidget *tableWidget;
+  MessageContentTableWidget *tableWidget{new MessageContentTableWidget(this, languages)};
 
   void setupUi();
   void translateUi();

@@ -53,6 +53,7 @@ public:
   GameSettings& GetSettings();
 
   void Init();
+  bool IsInitialised() const;
 
   std::shared_ptr<const PluginInterface> GetPlugin(
       const std::string& name) const;
@@ -73,7 +74,6 @@ public:
 
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
-  std::filesystem::path PluginsTxtPath() const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
@@ -122,8 +122,8 @@ private:
   std::vector<Message> messages_;
   std::filesystem::path lootDataPath_;
   std::filesystem::path preludePath_;
-  unsigned short loadOrderSortCount_;
-  bool pluginsFullyLoaded_;
+  unsigned short loadOrderSortCount_{0};
+  bool pluginsFullyLoaded_{false};
 
   mutable std::mutex mutex_;
 };

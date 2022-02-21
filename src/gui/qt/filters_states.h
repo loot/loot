@@ -26,31 +26,28 @@
 #ifndef LOOT_GUI_QT_FILTERS_STATES
 #define LOOT_GUI_QT_FILTERS_STATES
 
-#include <optional>
-#include <string>
-
 #include <QtCore/QMetaType>
+#include <optional>
+#include <regex>
+#include <string>
+#include <variant>
 
 namespace loot {
-
 struct CardContentFiltersState {
-  CardContentFiltersState();
-
-  bool hideVersionNumbers;
-  bool hideCRCs;
-  bool hideBashTags;
-  bool hideNotes;
-  bool hideAllPluginMessages;
+  bool hideVersionNumbers{false};
+  bool hideCRCs{false};
+  bool hideBashTags{false};
+  bool hideLocations{false};
+  bool hideNotes{false};
+  bool hideAllPluginMessages{false};
 };
 
 struct PluginFiltersState {
-  PluginFiltersState();
-
-  bool hideInactivePlugins;
-  bool hideMessagelessPlugins;
+  bool hideInactivePlugins{false};
+  bool hideMessagelessPlugins{false};
   std::optional<std::string> conflictsPluginName;
   std::optional<std::string> groupName;
-  std::optional<std::string> content;
+  std::variant<std::monostate, std::string, std::regex> content;
 };
 }
 

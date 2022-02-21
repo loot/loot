@@ -88,7 +88,7 @@ Qt::ItemFlags FileTableModel::flags(const QModelIndex& index) const {
     return flags | Qt::ItemIsDropEnabled;
   }
 
-  if (index.row() < static_cast<int>(getUserMetadataSize())) {
+  if (index.row() < static_cast<int>(getNonUserMetadataSize())) {
     return flags;
   }
 

@@ -35,10 +35,7 @@ public:
   ApplySortQuery(G& game,
                  UnappliedChangeCounter& counter,
                  const std::vector<std::string>& plugins) :
-      game_(game),
-      counter_(counter),
-      plugins_(plugins),
-      useSortingErrorMessage(false) {}
+      game_(game), counter_(counter), plugins_(plugins) {}
 
   QueryResult executeLogic() override {
     auto logger = getLogger();
@@ -68,7 +65,7 @@ private:
   G& game_;
   UnappliedChangeCounter& counter_;
   const std::vector<std::string> plugins_;
-  bool useSortingErrorMessage;
+  bool useSortingErrorMessage{false};
 };
 }
 

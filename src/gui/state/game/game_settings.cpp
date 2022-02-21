@@ -43,9 +43,6 @@ static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
 static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
 
-GameSettings::GameSettings() :
-    type_(GameType::tes4), mininumHeaderVersion_(0.0f) {}
-
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode) {
   if (Type() == GameType::tes3) {
