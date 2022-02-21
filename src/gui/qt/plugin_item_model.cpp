@@ -44,8 +44,8 @@ int PluginItemModel::rowCount(const QModelIndex&) const {
 }
 
 int PluginItemModel::columnCount(const QModelIndex&) const {
-  static constexpr int COLUMN_COUNT = std::max({SIDEBAR_LOAD_ORDER_COLUMN,
-                                                SIDEBAR_PLUGIN_INDEX_COLUMN,
+  static constexpr int COLUMN_COUNT = std::max({SIDEBAR_POSITION_COLUMN,
+                                                SIDEBAR_INDEX_COLUMN,
                                                 SIDEBAR_NAME_COLUMN,
                                                 SIDEBAR_STATE_COLUMN,
                                                 CARDS_COLUMN}) +
@@ -85,16 +85,16 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
     auto plugin = items.at(itemsIndex);
 
     switch (index.column()) {
-      case SIDEBAR_LOAD_ORDER_COLUMN: {
+      case SIDEBAR_POSITION_COLUMN: {
         if (role == Qt::DisplayRole) {
-          return QString::fromStdString(plugin.loadOrderIndexText());
+          return QString::number(index.row());
         }
 
         break;
       }
-      case SIDEBAR_PLUGIN_INDEX_COLUMN: {
+      case SIDEBAR_INDEX_COLUMN: {
         if (role == Qt::DisplayRole) {
-          return QString::number(index.row());
+          return QString::fromStdString(plugin.loadOrderIndexText());
         }
 
         break;

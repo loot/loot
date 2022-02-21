@@ -149,7 +149,7 @@ std::optional<QDate> getDateFromCommitJson(const QJsonDocument& document,
   return QDate::fromString(dateString, Qt::ISODate);
 }
 
-int calculatePluginIndexSectionWidth(size_t pluginCount) {
+int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   // Find the widest digit character in the current font and use that to
   // calculate the load order section width.
   static constexpr std::array<char, 10> DIGIT_CHARACTERS = {
@@ -175,7 +175,7 @@ int calculatePluginIndexSectionWidth(size_t pluginCount) {
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
-int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
+int calculateSidebarIndexSectionWidth(GameType gameType) {
   // Find the widest hex character in the current font and use that to
   // calculate the load order section width.
   static constexpr std::array<char, 16> HEX_CHARACTERS = {'0',
@@ -534,9 +534,9 @@ void MainWindow::setupViews() {
   auto horizontalHeader = sidebarPluginsView->horizontalHeader();
   horizontalHeader->hide();
   horizontalHeader->setSectionResizeMode(
-      PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN, QHeaderView::Fixed);
-  horizontalHeader->setSectionResizeMode(
-      PluginItemModel::SIDEBAR_PLUGIN_INDEX_COLUMN, QHeaderView::Fixed);
+      PluginItemModel::SIDEBAR_POSITION_COLUMN, QHeaderView::Fixed);
+  horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_INDEX_COLUMN,
+                                         QHeaderView::Fixed);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_NAME_COLUMN,
                                          QHeaderView::Stretch);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_STATE_COLUMN,
@@ -770,38 +770,39 @@ void MainWindow::updateGeneralMessages() {
 void MainWindow::updateSidebarColumnWidths() {
   const auto horizontalHeader = sidebarPluginsView->horizontalHeader();
 
-  auto stateSectionWidth =
-      QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
-      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
-
-  // If there is no current game set (i.e. on initial construction), use TES5 SE
-  // to calculate the load order section width because that's one of the games
-  // that uses the wider width.
-  const auto loadOrderSectionWidth =
-      state.HasCurrentGame()
-          ? calculateSidebarLoadOrderSectionWidth(
-                state.GetCurrentGame().GetSettings().Type())
-          : calculateSidebarLoadOrderSectionWidth(GameType::tes5se);
-
   // If a game hasn't loaded yet, assume that the player will have something in
   // the order of hundreds of plugins enabled - it's the number of digits that
   // matters, not the number itself.
   static constexpr size_t DEFAULT_LOAD_ORDER_SIZE_ESTIMATE = 255;
 
-  const auto pluginIndexSectionWidth =
+  const auto positionSectionWidth =
       state.HasCurrentGame() && state.GetCurrentGame().IsInitialised()
-          ? calculatePluginIndexSectionWidth(
+          ? calculateSidebarPositionSectionWidth(
                 state.GetCurrentGame().GetPlugins().size())
-          : calculatePluginIndexSectionWidth(DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
+          : calculateSidebarPositionSectionWidth(
+                DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
 
-  const auto minimumSectionWidth = std::min(
-      {loadOrderSectionWidth, pluginIndexSectionWidth, stateSectionWidth});
+  // If there is no current game set (i.e. on initial construction), use TES5 SE
+  // to calculate the load order section width because that's one of the games
+  // that uses the wider width.
+  const auto indexSectionWidth =
+      state.HasCurrentGame()
+          ? calculateSidebarIndexSectionWidth(
+                state.GetCurrentGame().GetSettings().Type())
+          : calculateSidebarIndexSectionWidth(GameType::tes5se);
+
+  const auto stateSectionWidth =
+      QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
+      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+
+  const auto minimumSectionWidth =
+      std::min({positionSectionWidth, indexSectionWidth, stateSectionWidth});
 
   horizontalHeader->setMinimumSectionSize(minimumSectionWidth);
-  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN,
-                                  loadOrderSectionWidth);
-  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_PLUGIN_INDEX_COLUMN,
-                                  pluginIndexSectionWidth);
+  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_POSITION_COLUMN,
+                                  positionSectionWidth);
+  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_INDEX_COLUMN,
+                                  indexSectionWidth);
   horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_STATE_COLUMN,
                                   stateSectionWidth);
 }
