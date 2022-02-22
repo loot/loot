@@ -59,6 +59,7 @@ struct PluginItem {
   bool isLightPlugin{false};
   bool loadsArchive{false};
   bool hasUserMetadata{false};
+  bool isCreationClubPlugin{false};
 
   std::vector<std::string> currentTags;
   std::vector<std::string> addTags;

@@ -133,7 +133,8 @@ PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
     isEmpty(plugin->IsEmpty()),
     isMaster(plugin->IsMaster()),
     isLightPlugin(plugin->IsLightPlugin()),
-    loadsArchive(plugin->LoadsArchive()) {
+    loadsArchive(plugin->LoadsArchive()),
+    isCreationClubPlugin(game.IsCreationClubPlugin(plugin)) {
   auto userMetadata = game.GetUserMetadata(plugin->GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata =

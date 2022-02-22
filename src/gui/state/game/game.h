@@ -67,6 +67,10 @@ public:
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
+  void LoadCreationClubPluginNames();
+  bool IsCreationClubPlugin(
+      const std::shared_ptr<const PluginInterface>& plugin) const;
+
   void LoadAllInstalledPlugins(
       bool headersOnly);  // Loads all installed plugins.
   bool ArePluginsFullyLoaded()
@@ -124,6 +128,9 @@ private:
   std::filesystem::path preludePath_;
   unsigned short loadOrderSortCount_{0};
   bool pluginsFullyLoaded_{false};
+
+  // Use Filename to benefit from libloot's case-insensitive comparisons.
+  std::set<Filename> creationClubPlugins_;
 
   mutable std::mutex mutex_;
 };

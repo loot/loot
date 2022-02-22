@@ -291,6 +291,7 @@ void MainWindow::initialise() {
     filtersWidget->hidePluginMessages(filters.hideAllPluginMessages);
     filtersWidget->hideInactivePlugins(filters.hideInactivePlugins);
     filtersWidget->hideMessagelessPlugins(filters.hideMessagelessPlugins);
+    filtersWidget->hideCreationClubPlugins(filters.hideCreationClubPlugins);
 
     // Apply the filters before loading the game because that avoids having
     // to re-filter the full plugin list.

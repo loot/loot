@@ -56,6 +56,8 @@ public:
       game_.LoadMetadata();
     }
 
+    game_.LoadCreationClubPluginNames();
+
     // Sort plugins into their load order.
     auto installed = game_.GetPluginsInLoadOrder();
 

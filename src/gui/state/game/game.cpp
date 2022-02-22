@@ -486,6 +486,31 @@ void Game::RedatePlugins() {
   }
 }
 
+void Game::LoadCreationClubPluginNames() {
+  creationClubPlugins_.clear();
+
+  if (settings_.Type() != GameType::tes5se &&
+      settings_.Type() != GameType::fo4) {
+    return;
+  }
+
+  const auto cccFilename =
+      settings_.Type() == GameType::tes5se ? "Skyrim.ccc" : "Fallout4.ccc";
+  const auto cccFilePath = settings_.GamePath() / cccFilename;
+
+  if (!fs::exists(cccFilePath)) {
+    return;
+  }
+
+  std::ifstream in(cccFilePath);
+
+  for (std::string line; std::getline(in, line);) {
+    if (!line.empty()) {
+      creationClubPlugins_.insert(Filename(line));
+    }
+  }
+}
+
 void Game::LoadAllInstalledPlugins(bool headersOnly) {
   try {
     gameHandle_->LoadCurrentLoadOrderState();
@@ -856,6 +881,10 @@ void Game::AppendMessages(std::vector<Message> messages) {
   for (auto message : messages) {
     AppendMessage(message);
   }
+}
+bool Game::IsCreationClubPlugin(
+    const std::shared_ptr<const PluginInterface>& plugin) const {
+  return creationClubPlugins_.count(Filename(plugin->GetName())) != 0;
 }
 }
 }
