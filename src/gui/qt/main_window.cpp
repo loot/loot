@@ -425,6 +425,7 @@ void MainWindow::setupMenuBar() {
   actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
 
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
+  actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
 
   actionAbout->setObjectName("actionAbout");
   actionAbout->setIcon(IconFactory::getAboutIcon());
@@ -453,6 +454,7 @@ void MainWindow::setupMenuBar() {
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
   actionCopyMetadata->setObjectName("actionCopyMetadata");
+  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
 
   actionCopyCardContent->setObjectName("actionCopyCardContent");
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
@@ -506,9 +508,11 @@ void MainWindow::setupToolBar() {
   actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
 
   actionApplySort->setObjectName("actionApplySort");
+  actionApplySort->setIcon(IconFactory::getApplySortIcon());
   actionApplySort->setVisible(false);
 
   actionDiscardSort->setObjectName("actionDiscardSort");
+  actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
   actionDiscardSort->setVisible(false);
 
   // Create toolbar.
