@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-23 07:22+0000\n"
+"POT-Creation-Date: 2022-02-23 21:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -937,32 +937,38 @@ msgstr ""
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:524 src/gui/state/game/game.cpp:604
+#: src/gui/state/game/game.cpp:450
+msgid ""
+"This plugin has a BashTags file that will override the suggestions made by "
+"LOOT for the following Bash Tags: %1%."
+msgstr ""
+
+#: src/gui/state/game/game.cpp:548 src/gui/state/game/game.cpp:628
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:629
+#: src/gui/state/game/game.cpp:653
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:641
+#: src/gui/state/game/game.cpp:665
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:677
+#: src/gui/state/game/game.cpp:701
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:704
+#: src/gui/state/game/game.cpp:728
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:766
+#: src/gui/state/game/game.cpp:790
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

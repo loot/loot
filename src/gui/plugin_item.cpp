@@ -113,15 +113,6 @@ std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
   return evaluatedUserMetadata;
 }
 
-std::string getCommaSeparatedTags(const std::vector<std::string>& tags) {
-  std::string tagsText;
-  for (const auto& tag : tags) {
-    tagsText += tag + ", ";
-  }
-
-  return tagsText.substr(0, tagsText.length() - 2);
-}
-
 PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
                        const gui::Game& game,
                        std::string language) :
@@ -385,17 +376,15 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (!currentTags.empty()) {
-    content +=
-        "- Current Bash Tags: " + getCommaSeparatedTags(currentTags) + "\n";
+    content += "- Current Bash Tags: " + boost::join(currentTags, ", ") + "\n";
   }
 
   if (!addTags.empty()) {
-    content += "- Add Bash Tags: " + getCommaSeparatedTags(addTags) + "\n";
+    content += "- Add Bash Tags: " + boost::join(addTags, ", ") + "\n";
   }
 
   if (!removeTags.empty()) {
-    content +=
-        "- Remove Bash Tags: " + getCommaSeparatedTags(removeTags) + "\n";
+    content += "- Remove Bash Tags: " + boost::join(removeTags, ", ") + "\n";
   }
 
   if (!messages.empty()) {
