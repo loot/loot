@@ -29,6 +29,7 @@
 #include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
+#include <loot/metadata/tag.h>
 #include <loot/struct/file_revision.h>
 #include <loot/vertex.h>
 
@@ -67,6 +68,16 @@ std::vector<Message> CheckForRemovedPlugins(
 
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath);
+
+std::vector<Tag> ReadBashTagsFile(std::istream& in);
+
+std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+                                  const std::string& pluginName);
+
+// Return a list of tag names that are added by one source but removed by the
+// other.
+std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+                                         const std::vector<Tag>& tags2);
 }
 
 #endif

@@ -292,4 +292,93 @@ std::tuple<std::string, std::string, std::string> SplitRegistryPath(
 
   return std::make_tuple(rootKey, subKey, value);
 }
+
+std::vector<Tag> ReadBashTagsFile(std::istream& in) {
+  std::vector<Tag> tags;
+  for (std::string line; std::getline(in, line);) {
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+
+    line = line.substr(0, line.find('#'));
+
+    std::vector<std::string> entries;
+    boost::split(entries, line, boost::is_any_of(","));
+
+    for (auto& entry : entries) {
+      boost::trim(entry);
+
+      if (entry.empty()) {
+        continue;
+      }
+
+      if (entry[0] == '-') {
+        tags.push_back(Tag(entry.substr(1), false));
+      } else {
+        tags.push_back(Tag(entry));
+      }
+    }
+  }
+
+  return tags;
+}
+
+std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+                                  const std::string& pluginName) {
+  static constexpr size_t PLUGIN_EXTENSION_LENGTH = 4;
+  const auto filename =
+      pluginName.substr(0, pluginName.length() - PLUGIN_EXTENSION_LENGTH) +
+      ".txt";
+  const auto filePath = dataPath / "BashTags" / filename;
+
+  if (!std::filesystem::exists(filePath)) {
+    return {};
+  }
+
+  std::ifstream in(filePath);
+
+  return ReadBashTagsFile(in);
+}
+
+std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+                                         const std::vector<Tag>& tags2) {
+  std::set<std::string> additions1;
+  std::set<std::string> additions2;
+  std::set<std::string> removals1;
+  std::set<std::string> removals2;
+
+  for (const auto& tag : tags1) {
+    if (tag.IsAddition()) {
+      additions1.insert(tag.GetName());
+    } else {
+      removals1.insert(tag.GetName());
+    }
+  }
+
+  for (const auto& tag : tags2) {
+    if (tag.IsAddition()) {
+      additions2.insert(tag.GetName());
+    } else {
+      removals2.insert(tag.GetName());
+    }
+  }
+
+  std::vector<std::string> conflicts;
+
+  std::set_intersection(additions1.begin(),
+                        additions1.end(),
+                        removals2.begin(),
+                        removals2.end(),
+                        std::back_inserter(conflicts));
+
+  std::set_intersection(additions2.begin(),
+                        additions2.end(),
+                        removals1.begin(),
+                        removals1.end(),
+                        std::back_inserter(conflicts));
+
+  std::sort(conflicts.begin(), conflicts.end());
+
+  return conflicts;
+}
 }

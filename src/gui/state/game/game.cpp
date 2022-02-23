@@ -430,6 +430,30 @@ std::vector<Message> Game::CheckInstallValidity(
     }
   }
 
+  const auto lootTags = metadata.GetTags();
+  if (!lootTags.empty()) {
+    const auto bashTagFileTags =
+        ReadBashTagsFile(settings_.DataPath(), metadata.GetName());
+    const auto conflictingTags = GetTagConflicts(lootTags, bashTagFileTags);
+    if (!conflictingTags.empty()) {
+      const auto commaSeparatedTags = boost::join(conflictingTags, ", ");
+      if (logger) {
+        logger->info(
+            "\"{}\" has suggestions for the following Bash Tags that "
+            "conflict with the plugin's BashTags file: {}.",
+            plugin->GetName(),
+            commaSeparatedTags);
+      }
+      messages.push_back(PlainTextMessage(
+          MessageType::say,
+          (boost::format(boost::locale::translate(
+               "This plugin has a BashTags file that will override the "
+               "suggestions made by LOOT for the following Bash Tags: %1%.")) %
+           commaSeparatedTags)
+              .str()));
+    }
+  }
+
   // Also generate dirty messages.
   for (const auto& element : metadata.GetDirtyInfo()) {
     messages.push_back(ToMessage(element));

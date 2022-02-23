@@ -27,6 +27,8 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
+
 #include "gui/state/game/helpers.h"
 
 namespace loot {
@@ -237,6 +239,79 @@ TEST(SplitRegistryPath, shouldThrowIfInputIsEmptyOrOnlyBackslashes) {
   EXPECT_THROW(SplitRegistryPath("\\\\"), std::invalid_argument);
   EXPECT_THROW(SplitRegistryPath("\\"), std::invalid_argument);
   EXPECT_THROW(SplitRegistryPath(""), std::invalid_argument);
+}
+
+TEST(ReadBashTagsFile, shouldCorrectlyReadTheExampleFileContent) {
+  // From the Wrye Bash Advanced Readme
+  // <https://wrye-bash.github.io/docs/Wrye%20Bash%20Advanced%20Readme.html#patch-tags>
+  const auto fileContent = R"(
+# Everything after a '#' is a comment
+# Every line that is not a comment
+# or empty will add or remove tags
+# from the plugin
+
+Delev, Relev # This line will add two
+             # new tags to the plugin...
+
+-C.Water     # ...while this line removes
+             # a tag from the plugin
+
+# Addition and removal can also be
+# done in one line:
+C.Location, -C.LockList
+
+# The result of this file would be:
+# Added: C.Location, Delev, Relev
+# Removed: C.LockList, C.Water)";
+
+  std::stringstream in(fileContent);
+
+  const auto tags = ReadBashTagsFile(in);
+  const std::vector<Tag> expectedTags{Tag("Delev"),
+                                      Tag("Relev"),
+                                      Tag("C.Water", false),
+                                      Tag("C.Location"),
+                                      Tag("C.LockList", false)};
+
+  EXPECT_EQ(expectedTags, tags);
+}
+
+TEST(ReadBashTagsFile, shouldReturnAnEmptyVectorIfThePathDoesNotExist) {
+  EXPECT_TRUE(
+      ReadBashTagsFile(std::filesystem::temp_directory_path() / "missing",
+                       "Blank.esp")
+          .empty());
+}
+
+TEST(ReadBashTagsFile, shouldReadFromAPluginFile) {
+  const auto dataPath = getTempPath();
+  const auto bashTagsDir = dataPath / "BashTags";
+
+  std::filesystem::create_directories(bashTagsDir);
+
+  std::ofstream out(bashTagsDir / "Blank.txt");
+  out << "C.Location, Delev, -Relev";
+  out.close();
+
+  const auto tags = ReadBashTagsFile(dataPath, "Blank.esp");
+
+  const std::vector<Tag> expectedTags{
+      Tag("C.Location"), Tag("Delev"), Tag("Relev", false)};
+
+  EXPECT_EQ(expectedTags, tags);
+
+  std::filesystem::remove_all(dataPath);
+}
+
+TEST(GetTagConflicts,
+     shouldReturnTagNamesAddedByOneSourceAndRemovedByTheOther) {
+  const auto conflicts =
+      GetTagConflicts({Tag("A", false), Tag("B"), Tag("C", false), Tag("D")},
+                      {Tag("A"), Tag("B", false), Tag("C", false)});
+
+  const std::vector<std::string> expectedConflicts{"A", "B"};
+
+  EXPECT_EQ(expectedConflicts, conflicts);
 }
 }
 }
