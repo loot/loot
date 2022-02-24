@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-02-20 12:09+0000\n"
-"PO-Revision-Date: 2022-02-24 11:54+0200\n"
+"PO-Revision-Date: 2022-02-24 11:59+0200\n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -918,7 +918,7 @@ msgstr ""
 #: src/gui/state/loot_state.cpp:121
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
-"Ошибка: --auto-sort (автосортировка) прошла, но параметр --game не был "
+"Ошибка: --game-path (автосортировка) прошла, но параметр --game не был "
 "указан."
 
 #: src/gui/state/loot_state.cpp:143

@@ -912,7 +912,7 @@ msgstr ""
 #: src/gui/state/loot_state.cpp:121
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
-"Помилка: --auto-sort (автосортування) пройшло, але параметр --game не було "
+"Помилка: --game-path (автосортування) пройшло, але параметр --game не було "
 "вказано."
 
 #: src/gui/state/loot_state.cpp:143
