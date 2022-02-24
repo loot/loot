@@ -39,6 +39,8 @@ constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
     "1014940\\InstallLocation";
 
+std::string GetPluginsFolderName(GameType gameType);
+
 class GameSettings {
 public:
   GameSettings() = default;
@@ -59,6 +61,8 @@ public:
   std::filesystem::path GameLocalPath() const;
   std::filesystem::path DataPath() const;
 
+  std::string PluginsFolderName() const;
+
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
@@ -68,8 +72,6 @@ public:
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
   GameSettings& SetGameLocalFolder(const std::string& folderName);
 
-  std::optional<std::filesystem::path> FindGamePath() const;
-
 private:
   GameType type_{GameType::tes4};
   std::string name_;
@@ -78,7 +80,6 @@ private:
 
   std::vector<std::string> registryKeys_;
 
-  std::string pluginsFolderName_;
   std::string lootFolderName_;
 
   std::string masterlistSource_;

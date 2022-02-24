@@ -26,7 +26,6 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
-#include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
 #include <loot/metadata/tag.h>
@@ -37,9 +36,6 @@
 #include <vector>
 
 namespace loot {
-bool ExecutableExists(const GameType& gameType,
-                      const std::filesystem::path& gamePath);
-
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 

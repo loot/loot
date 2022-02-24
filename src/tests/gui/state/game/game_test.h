@@ -28,7 +28,6 @@ along with LOOT.  If not, see
 #include <fstream>
 
 #include "gui/state/game/game.h"
-#include "gui/state/game/game_detection_error.h"
 #include "gui/state/game/helpers.h"
 #include "tests/common_game_test_fixture.h"
 

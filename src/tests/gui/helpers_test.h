@@ -29,9 +29,62 @@ along with LOOT.  If not, see
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
+class FindXboxGamingRootPathTest : public CommonGameTestFixture {};
+
+INSTANTIATE_TEST_SUITE_P(,
+                         FindXboxGamingRootPathTest,
+                         ::testing::Values(GameType::tes3));
+
+TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {
+  EXPECT_FALSE(GetDriveRootPaths().empty());
+}
+
+TEST_P(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfTheDotGamingRootFileDoesNotExist) {
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
+TEST_P(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootIsADirectory) {
+  std::filesystem::create_directory(dataPath / ".GamingRoot");
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
+TEST_P(FindXboxGamingRootPathTest,
+       shouldThrowIfDotGamingRootContainsAnOddNumberOfBytes) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  out << "12345678901";
+  out.close();
+
+  EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
+}
+
+TEST_P(FindXboxGamingRootPathTest, shouldThrowIfDotGamingRootIsTooShort) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  out << "12";
+  out.close();
+
+  EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
+}
+
+TEST_P(FindXboxGamingRootPathTest,
+       shouldInterpretTheNinthAndFollowingBytesAsANullTerminatedUtf16LeString) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  const char* data = "12345678t\0e\0s\0t\0 \0p\0a\0t\0h\0\0\0";
+  out.write(data, 28);
+  out.close();
+
+  const auto gamingRootPath = FindXboxGamingRootPath(dataPath);
+  const auto expectedPath = dataPath / "test path";
+
+  EXPECT_EQ(expectedPath, gamingRootPath);
+}
+
 // MSVC interprets source files in the default code page, so
 // for me u8"\xC3\x9C" != u8"\u00DC", which is a lot of fun.
 // To avoid insanity, write non-ASCII characters as \uXXXX escapes.

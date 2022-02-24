@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_QT_GENERAL_INFO
 #define LOOT_GUI_QT_GENERAL_INFO
 
+#include <loot/enum/game_type.h>
 #include <loot/struct/simple_message.h>
 
 #include <QtCore/QMetaType>

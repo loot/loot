@@ -23,10 +23,14 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_GAME_GAME_DETECTION_ERROR
-#define LOOT_GUI_STATE_GAME_GAME_DETECTION_ERROR
+#ifndef LOOT_GUI_STATE_GAME_GAME_DETECTION
+#define LOOT_GUI_STATE_GAME_GAME_DETECTION
 
 #include <stdexcept>
+#include <filesystem>
+#include <vector>
+
+#include "gui/state/game/game_settings.h"
 
 namespace loot {
 /**
@@ -37,6 +41,15 @@ class GameDetectionError : public std::runtime_error {
 public:
   using std::runtime_error::runtime_error;
 };
+
+struct GamePaths {
+  std::filesystem::path installPath;
+  std::filesystem::path localPath;
+};
+
+std::optional<GamePaths> FindGamePaths(
+    const GameSettings& settings,
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths);
 }
 
 #endif

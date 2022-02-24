@@ -49,12 +49,13 @@ public:
   LootSettings& getSettings();
 
 private:
-  std::optional<std::filesystem::path> FindGamePath(
+  std::optional<GamePaths> FindGamePaths(
       const GameSettings& gameSettings) const override;
   void InitialiseGameData(gui::Game& game) override;
 
   void SetInitialGame(std::string cmdLineGame);
 
+  std::vector<std::filesystem::path> xboxGamingRootPaths_;
   std::vector<SimpleMessage> initMessages_;
   LootSettings settings_;
 

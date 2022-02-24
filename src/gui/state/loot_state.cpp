@@ -45,7 +45,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
-#include "gui/state/game/game_detection_error.h"
+#include "gui/state/game/game_detection.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -223,6 +223,21 @@ void LootState::init(const std::string& cmdLineGame,
     }
   }
 
+  // Find Xbox gaming root paths for detection of games installed through the
+  // Microsoft Store / Xbox app.
+  try {
+    for (const auto& driveRootPath : GetDriveRootPaths()) {
+      const auto xboxGamingRootPath = FindXboxGamingRootPath(driveRootPath);
+      if (xboxGamingRootPath.has_value()) {
+        xboxGamingRootPaths_.push_back(xboxGamingRootPath.value());
+      }
+    }
+  } catch (const exception& e) {
+    if (logger) {
+      logger->error("Failed to find Xbox gaming root paths: {}", e.what());
+    }
+  }
+
   // Check if the prelude directory exists and create it if not.
   auto preludeDir = LootPaths::getPreludePath().parent_path();
   if (!fs::exists(preludeDir)) {
@@ -328,11 +343,9 @@ const LootSettings& LootState::getSettings() const { return settings_; }
 
 LootSettings& LootState::getSettings() { return settings_; }
 
-// warning C26436: The type 'class loot::LootState' with a virtual function
-// needs either public virtual or protected non-virtual destructor (c.35).
-std::optional<std::filesystem::path> LootState::FindGamePath(
+std::optional<GamePaths> LootState::FindGamePaths(
     const GameSettings& gameSettings) const {
-  return gameSettings.FindGamePath();
+  return loot::FindGamePaths(gameSettings, xboxGamingRootPaths_);
 }
 
 void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }

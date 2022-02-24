@@ -36,17 +36,6 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-bool ExecutableExists(const GameType& gameType,
-                      const std::filesystem::path& gamePath) {
-  if (gameType == GameType::tes5) {
-    return std::filesystem::exists(gamePath / "TESV.exe");
-  } else if (gameType == GameType::tes5se) {
-    return std::filesystem::exists(gamePath / "SkyrimSE.exe");
-  }
-
-  return true;  // Don't bother checking for the other games.
-}
-
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
   const int maxBackupIndex = 2;

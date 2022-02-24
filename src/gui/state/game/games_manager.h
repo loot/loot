@@ -35,7 +35,7 @@
 #include <vector>
 
 #include "gui/state/game/game.h"
-#include "gui/state/game/game_detection_error.h"
+#include "gui/state/game/game_detection.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
@@ -67,11 +67,13 @@ public:
     bool currentGameUpdated = false;
     std::vector<gui::Game> installedGames;
     for (auto& gameSettings : gamesSettings) {
-      auto gamePath = FindGamePath(gameSettings);
-      if (!gamePath.has_value()) {
+      auto gamePaths = FindGamePaths(gameSettings);
+      if (!gamePaths.has_value()) {
         continue;
       }
-      gameSettings.SetGamePath(gamePath.value());
+
+      gameSettings.SetGamePath(gamePaths.value().installPath);
+      gameSettings.SetGameLocalPath(gamePaths.value().localPath);
 
       if (currentGameFolder.has_value() &&
           currentGameFolder.value() == gameSettings.FolderName() &&
@@ -197,7 +199,7 @@ public:
   }
 
 private:
-  virtual std::optional<std::filesystem::path> FindGamePath(
+  virtual std::optional<GamePaths> FindGamePaths(
       const GameSettings& gameSettings) const = 0;
   virtual void InitialiseGameData(gui::Game& game) = 0;
 
