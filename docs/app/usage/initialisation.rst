@@ -26,6 +26,8 @@ Once a game has been set, LOOT will scan its plugins and load the game’s maste
 
 If LOOT detects that it is the first time you have run that version of LOOT, it will display a "First-Time Tips" dialog, which provides some information about the user interface that may not be immediately obvious.
 
+.. _microsoft_store_compatibility:
+
 Microsoft Store Compatibility
 =============================
 
