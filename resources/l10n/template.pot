@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.17.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-02-27 21:19+0000\n"
+"POT-Creation-Date: 2022-03-01 16:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,55 +98,55 @@ msgstr ""
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:174
+#: src/gui/qt/general_info_card.cpp:176
 msgid "General Information"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:176
+#: src/gui/qt/general_info_card.cpp:178
 msgid "Masterlist Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:177
+#: src/gui/qt/general_info_card.cpp:179
 msgid "Masterlist Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:178
+#: src/gui/qt/general_info_card.cpp:180
 msgid "Masterlist Prelude Revision ID"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:179
+#: src/gui/qt/general_info_card.cpp:181
 msgid "Masterlist Prelude Update Date"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:181
+#: src/gui/qt/general_info_card.cpp:183
 msgid "Warnings"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:182
+#: src/gui/qt/general_info_card.cpp:184
 msgid "Errors"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:183
+#: src/gui/qt/general_info_card.cpp:185
 msgid "Total Messages"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:185
+#: src/gui/qt/general_info_card.cpp:187
 msgid "Active Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:186
+#: src/gui/qt/general_info_card.cpp:188
 msgid "Active Regular Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:187
+#: src/gui/qt/general_info_card.cpp:189
 msgid "Active Light Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:188
+#: src/gui/qt/general_info_card.cpp:190
 msgid "Dirty Plugins"
 msgstr ""
 
-#: src/gui/qt/general_info_card.cpp:189
+#: src/gui/qt/general_info_card.cpp:191
 msgid "Total Plugins"
 msgstr ""
 
@@ -526,44 +526,44 @@ msgstr ""
 msgid "Verified clean by %s"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:345
+#: src/gui/qt/plugin_card.cpp:341
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:346 src/gui/qt/settings/game_tab.cpp:121
+#: src/gui/qt/plugin_card.cpp:342 src/gui/qt/settings/game_tab.cpp:121
 msgid "Master File"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:347
+#: src/gui/qt/plugin_card.cpp:343
 msgid "Light Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:348
+#: src/gui/qt/plugin_card.cpp:344
 msgid "Empty Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:349
+#: src/gui/qt/plugin_card.cpp:345
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:350 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:346 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:352
+#: src/gui/qt/plugin_card.cpp:348
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:353
+#: src/gui/qt/plugin_card.cpp:349
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:354 src/gui/qt/plugin_editor/table_tabs.cpp:523
+#: src/gui/qt/plugin_card.cpp:350 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Add"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:355 src/gui/qt/plugin_editor/table_tabs.cpp:523
+#: src/gui/qt/plugin_card.cpp:351 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Remove"
 msgstr ""
 
