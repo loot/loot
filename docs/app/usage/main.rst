@@ -100,6 +100,8 @@ Hide inactive plugins
   Hides all plugins that are inactive.
 Hide messageless plugins
   Hides all plugins that have no visible messages.
+Hide Creation Club plugins
+  Hides all plugins that are available through Bethesda's Creation Club.
 
 The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also three other filters in the sidebar tab:
 
