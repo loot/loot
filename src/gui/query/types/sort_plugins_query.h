@@ -54,18 +54,6 @@ public:
     sendProgressUpdate_(boost::locale::translate("Sorting load order..."));
     std::vector<std::string> plugins = game_.SortPlugins();
 
-    try {
-      if (game_.GetSettings().Type() == GameType::tes5 ||
-          game_.GetSettings().Type() == GameType::tes5se ||
-          game_.GetSettings().Type() == GameType::tes5vr ||
-          game_.GetSettings().Type() == GameType::fo4 ||
-          game_.GetSettings().Type() == GameType::fo4vr)
-        applyUnchangedLoadOrder(plugins);
-    } catch (...) {
-      useSortingErrorMessage = true;
-      throw;
-    }
-
     auto result = getResult(plugins);
 
     // plugins will be empty if there was a sorting error.
@@ -75,26 +63,7 @@ public:
     return result;
   }
 
-  std::string getErrorMessage() const override {
-    if (useSortingErrorMessage) {
-      return getSortingErrorMessage(game_);
-    }
-
-    return Query::getErrorMessage();
-  }
-
 private:
-  void applyUnchangedLoadOrder(const std::vector<std::string>& plugins) {
-    if (plugins.empty() ||
-        !equal(begin(plugins), end(plugins), begin(game_.GetLoadOrder())))
-      return;
-
-    // Load order has not been changed, set it without asking for user input
-    // because there are no changes to accept and some plugins' positions
-    // may only be inferred and not written to loadorder.txt/plugins.txt.
-    game_.SetLoadOrder(plugins);
-  }
-
   std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
     std::vector<PluginItem> result;
 
@@ -104,7 +73,7 @@ private:
         continue;
       }
 
-      auto derivedMetadata = PluginItem(plugin, game_, language_);
+      auto derivedMetadata = PluginItem(*plugin, game_, language_);
       const auto index = game_.GetActiveLoadOrderIndex(*plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.loadOrderIndex = index;
@@ -120,7 +89,6 @@ private:
   std::string language_;
   UnappliedChangeCounter& counter_;
   const std::function<void(std::string)> sendProgressUpdate_;
-  bool useSortingErrorMessage{false};
 };
 }
 

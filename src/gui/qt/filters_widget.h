@@ -55,6 +55,7 @@ public:
   void hidePluginMessages(bool hide);
   void hideInactivePlugins(bool hide);
   void hideMessagelessPlugins(bool hide);
+  void hideCreationClubPlugins(bool hide);
 
   void resetConflictsAndGroupsFilters();
 
@@ -84,6 +85,7 @@ private:
   QCheckBox *pluginMessagesFilter{new QCheckBox(this)};
   QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
   QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
+  QCheckBox *creationClubPluginsFilter{new QCheckBox(this)};
   QLabel *hiddenPluginsLabel{new QLabel(this)};
   QLabel *hiddenPluginsCountLabel{new QLabel(this)};
   QLabel *hiddenMessagesLabel{new QLabel(this)};
@@ -109,6 +111,7 @@ private slots:
   void on_pluginMessagesFilter_stateChanged();
   void on_inactivePluginsFilter_stateChanged();
   void on_messagelessPluginsFilter_stateChanged();
+  void on_creationClubPluginsFilter_stateChanged();
 };
 }
 

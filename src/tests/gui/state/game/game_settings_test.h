@@ -260,68 +260,6 @@ TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
   EXPECT_EQ("folder", settings_.FolderName());
 }
 
-TEST_P(GameSettingsTest,
-       findGamePathShouldBeNulloptIfGamePathIsNotSetAndGameHasNoRegistryEntry) {
-  EXPECT_FALSE(GameSettings(GetParam()).FindGamePath().has_value());
-}
-
-TEST_P(GameSettingsTest, findGamePathShouldHaveAValueIfGamePathIsValid) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
-
-  EXPECT_TRUE(settings.FindGamePath().has_value());
-}
-
-TEST_P(GameSettingsTest, findGamePathShouldSupportNonAsciiGameMasters) {
-  auto settings = GameSettings(GetParam(), u8"non\u00C1sciiFolder")
-                      .SetGamePath(dataPath.parent_path())
-                      .SetGameLocalPath(localPath);
-  settings.SetMaster(nonAsciiEsp);
-
-  EXPECT_TRUE(settings.FindGamePath().has_value());
-}
-
-TEST_P(GameSettingsTest,
-       findGamePathShouldHaveAValueForOnlyOneSiblingGameAtATime) {
-  auto currentPath = std::filesystem::current_path();
-
-  std::filesystem::create_directory(dataPath / ".." / "LOOT");
-  std::filesystem::current_path(dataPath / ".." / "LOOT");
-  if (GetParam() == GameType::tes5) {
-    std::ofstream out(std::filesystem::path("..") / "TESV.exe");
-    // out << "";
-    out.close();
-  } else if (GetParam() == GameType::tes5se) {
-    std::ofstream out(std::filesystem::path("..") / "SkyrimSE.exe");
-    // out << "";
-    out.close();
-  }
-
-  std::array<GameType, 6> gameTypes = {
-      GameType::tes4,
-      GameType::tes5,
-      GameType::fo3,
-      GameType::fonv,
-      GameType::fo4,
-      GameType::tes5se,
-  };
-
-  for (const auto gameType : gameTypes) {
-    if (gameType == GetParam()) {
-      EXPECT_TRUE(GameSettings(gameType).FindGamePath().has_value());
-    } else {
-      EXPECT_FALSE(GameSettings(gameType).FindGamePath().has_value());
-    }
-  }
-
-  std::filesystem::current_path(currentPath);
-  std::filesystem::remove_all(dataPath / ".." / "LOOT");
-  if (GetParam() == GameType::tes5) {
-    std::filesystem::remove(dataPath / ".." / "TESV.exe");
-  } else if (GetParam() == GameType::tes5se) {
-    std::filesystem::remove(dataPath / ".." / "SkyrimSE.exe");
-  }
-}
-
 TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
   GameSettings game1 = GameSettings(GameType::tes5, "game1")
                            .SetMaster("master1")

@@ -4,6 +4,171 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.0 - Unreleased
+===================
+
+Added
+-----
+
+- Support for games installed through the Microsoft Store or Xbox apps. Older
+  versions of the apps install games with very restricted permissions that are
+  difficult to change, and which cause problems when modding. Newer versions
+  install games with much less restricted permissions, but there are still some
+  issues that are not present in versions of the games installed from other
+  sources like Steam or GOG. See :ref:`microsoft_store_compatibility` for more
+  information.
+- The ``--game-path`` CLI parameter can be used in conjunction with ``--game``
+  to replace the identified game's install path in LOOT's settings.
+- LOOT will now display a warning message in a plugin's card if it makes any
+  Bash Tag suggestions that would be overridden by the content of an installed
+  BashTags file for that plugin.
+- Location metadata is now displayed at the bottom of plugin cards.
+- It's now possible to search cards using regular expressions by ticking the
+  "Use regular expression" checkbox in the search dialog.
+- It's now possible to filter plugin content using a regular expression by
+  ticking the "Use regular expression" checkbox below the content filter input
+  in the sidebar.
+- A "Hide Sources" filter has been added to control the display of location
+  metadata. It is enabled by default.
+- A "Hide Creation Club plugins" filter has been added to hide any installed
+  Creation Club plugins' cards for games that support the Creation Club. It is
+  disabled by default.
+- The sidebar plugins list now includes a column that contains the plugin's
+  position in the load order.
+- The File menu has a new "Backup LOOT Data" action that creates a timestamped
+  zip file in ``%LOCALAPPDATA%\LOOT\backups\`` that contains the contents of
+  ``%LOCALAPPDATA%\LOOT``, excluding the ``backups`` directory, any ``.git``
+  directories and the ``LOOTDebugLog.txt`` file.
+- LOOT will now automatically backup its existing data when a new version of
+  LOOT is run for the first time.
+- The Game menu has a new "Fix Ambiguous Load Order" action. It starts off
+  disabled, but LOOT will enable it and display a warning dialog if it detects
+  an ambiguous load order (e.g. when you've just installed a new plugin and not
+  yet given it an explicit load order position). The menu action saves the load
+  order that is seen by LOOT so that there's no room for ambiguity.
+- The Help menu has a new "Join Discord Server" action that opens the LOOT
+  Discord server's invitation link in your default web browser.
+- It's now possible to configure a game's minimum header version using the new
+  "Minimum Header Version" field for games in the settings dialog.
+- It's now possible to view and edit multilingual message content in the plugin
+  metadata editor. The editor tables display the text selected for the current
+  language, and double-clicking on a table cell holding message content will
+  open a dialog with an editable table containing the multilingual content.
+- A "Detail" column has been added to the plugin metadata editor's Requirements,
+  Incompatibilities and Dirty Plugin Info tabs to represent the metadata's
+  detail field.
+
+Fixed
+-----
+
+- LOOT would sometimes display a blank white window when run.
+- LOOT's uninstaller did not remove the LOOT game folders for Skyrim Special
+  Edition, Skyrim VR, Fallout 4 VR, Nehrim, Enderal or Enderal Special Edition
+  when asked to remove user data.
+- When sorting failed LOOT would display an error message giving a path to
+  a file that may be read-only, but the file path was always wrong for Morrowind
+  and was also wrong if using a non-default local AppData path for the current
+  game.
+- Two versions that only differ by the presence and absence of pre-release
+  identifiers were not correctly compared according to Semantic Versioning,
+  which states that 1.0.0-alpha is less than 1.0.0. Via libloot.
+
+Changed
+-------
+
+- Official LOOT releases now require the MSVC 2019 redistributable, which LOOT's
+  installer will automatically download and install if necessary. In additon, a
+  64-bit build is available that requires a 64-bit version of Windows 10
+  (1809) or later, and this build is recommended for everyone with a PC that
+  meets that requirement.
+- The user interface has been completely replaced by a new implementation using
+  Qt. The new user interface is more efficient, responsive and maintainable, and
+  has a substantially different look and feel. In additon, it introduces the
+  following changes to LOOT's functionality:
+
+  - The toolbar overflow menu items have been moved into File, Game and Help
+    menus in the new menu bar.
+  - Plugin cards no longer have menus: instead there's a Plugin menu in the menu
+    bar that contains the same actions, which operate on the plugin that's
+    currently selected in the sidebar.
+  - Notifications are now displayed in the status bar rather than in a pop-up
+    toast widget.
+  - It's no longer possible to select card text to copy it to the clipboard, so
+    instead there's a "Copy Card Content" action in the Plugin menu.
+  - Clicking on a plugin in the sidebar selects it, and double-clicking
+    scrolls to its card, instead of single-clicking scrolling to its card
+    and double-clicking opening it in the metadata editor.
+  - The game selection dropdown now only lists games that LOOT detects are
+    installed, instead of displaying all configured games and disabling those
+    that aren't detected.
+  - Markdown text is now interpreted as CommonMark instead of GitHub Flavored
+    Markdown.
+  - Themes have been reimplemented, see the :ref:`themes` section for more
+    information about the new theme file formats.
+
+- Updating the masterlist prelude and masterlists no longer uses Git. This
+  massively speeds up fetching the prelude or masterlist for the first time.
+
+  - Each pair of repository URL and branch settings has been replaced by a
+    source setting that accepts a local path or HTTP(S) URL of a metadata
+    file.
+
+    LOOT will migrate existing repository URL and branch settings for any
+    repository on GitHub. It will also migrate local repository paths so long
+    as the path is to a Git repository with the relevant metadata file in the
+    repository working copy's root directory. LOOT will display a warning if
+    it cannot migrate existing settings.
+  - The revision ID displayed by LOOT is now the Git blob hash of the file
+    instead of the Git commit hash that the file is from. When calculating the
+    hash, LOOT first replaces all CRLF line endings with LF, which may cause it
+    to produce different blob hash values from Git when using an unofficial
+    masterlist.
+  - The date displayed by LOOT is now the date on which the masterlist was last
+    updated, not the date of the Git commit that it was updated to.
+
+- The First Time Tips dialog is now displayed before loading the game it's
+  running for, and no longer runs if auto-sort is enabled.
+- The "Open Debug Log Location" menu action has been renamed to "Open LOOT Data
+  Folder".
+- The "Local Data Path" game setting has been renamed to "Local AppData Path".
+- Bash Tag suggestions are now hidden by default.
+- The Active Plugins count in the General Information card has been split into
+  Active Regular Plugins and Active Light Plugins for games that support light
+  plugins, as they have separate limits.
+- Content is now copied as Markdown that is equivalent to what is displayed,
+  instead of as raw JSON data.
+- Plugin metadata is now copied as YAML instead of JSON, using the same format
+  as LOOT uses when saving user metadata.
+- Bash Tags are now displayed below messages because they're generally of
+  less interest to users, and they're grouped together to make it more obvious
+  what they are.
+- The Groups Editor now lays out groups vertically rather than horizontally.
+- LOOT's game folders have been moved into ``%LOCALAPPDATA%\LOOT\games`` to
+  differentiate them from the other files and folders in
+  ``%LOCALAPPDATA%\LOOT``. LOOT will migrate each existing game folder to the
+  new location when it is run for that game.
+- LOOT now supports `v0.18 <https://loot-api.readthedocs.io/en/0.18.0/metadata/changelog.html#id1>`_ of its metadata syntax.
+- Updated the Bulgarian translation.
+- Updated the Czech translation.
+- Updated the German translation.
+- Updated the Italian translation.
+- Updated the Spanish translation.
+- Updated the Russian translation.
+- Updated the Ukrainian translation.
+- Updated Boost to v1.77.0.
+- Updated libloot to v0.18.0.
+
+Removed
+-------
+
+- LOOT will no longer silently set an unchanged load order when sorting, which
+  it previously did for Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 4 and
+  Fallout 4 VR.
+- The "Jump To General Information" toolbar button.
+- The Chromium Embedded Framework dependency.
+- The nlohmann/json dependency.
+- All JavaScript dependencies.
+
 0.17.0 - 2021-12-19
 ===================
 
@@ -943,7 +1108,7 @@ Added
 Changed
 -------
 
-- LOOT now supports v0.10 of the metadata syntax. This breaks compatibility with existing syntax, which may cause existing user metadata to fail to load. See :doc:`the syntax version history <loot_api:metadata/changelog>` for the details.
+- LOOT now supports v0.10 of the metadata syntax. This breaks compatibility with existing syntax, which may cause existing user metadata to fail to load. See `the syntax version history <https://loot-api.readthedocs.io/en/0.10.3/metadata/changelog.html#id1>`_ for the details.
 - The Global Priority toggle button in the metadata editor has been replaced with an input field to reflect the change in syntax for global priorities.
 - Added a "Clean Plugin Info" tab to the metadata editor, for editing metadata that identifies a plugin as being clean.
 - Added a "Verified clean" icon to plugin cards that is displayed for plugins that are identified as clean.

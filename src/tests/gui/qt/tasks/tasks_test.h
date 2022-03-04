@@ -130,7 +130,7 @@ TEST(TaskExecutor, shouldRunEachTaskOnceInSeries) {
 
   qint64 lastEndTimestamp = 0;
   for (int i = 0; i < 100; i += 1) {
-    auto taskSpyFinished = taskFinishedSpies[i]->wait(20);
+    auto taskSpyFinished = taskFinishedSpies[i]->wait();
 
     EXPECT_TRUE(taskSpyFinished);
     ASSERT_EQ(1, taskFinishedSpies[i]->count());
@@ -189,7 +189,7 @@ TEST(TaskExecutor, shouldRunUntilTheFirstError) {
   qint64 lastEndTimestamp = 0;
   for (int i = 0; i < 100; i += 1) {
     if (i < 50) {
-      auto taskSpyFinished = taskFinishedSpies[i]->wait(20);
+      auto taskSpyFinished = taskFinishedSpies[i]->wait();
 
       EXPECT_TRUE(taskSpyFinished);
       ASSERT_EQ(1, taskFinishedSpies[i]->count());
@@ -209,7 +209,7 @@ TEST(TaskExecutor, shouldRunUntilTheFirstError) {
       EXPECT_LT(startTimestamp, endTimestamp);
       lastEndTimestamp = endTimestamp;
     } else if (i == 50) {
-      auto taskSpyFinished = taskErroredSpies[i]->wait(20);
+      auto taskSpyFinished = taskErroredSpies[i]->wait();
 
       EXPECT_TRUE(taskSpyFinished);
       ASSERT_EQ(0, taskFinishedSpies[i]->count());

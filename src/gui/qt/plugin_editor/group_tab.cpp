@@ -33,7 +33,7 @@
 
 namespace loot {
 GroupTab::GroupTab(QWidget* parent) :
-    QWidget(parent), nonUserGroupName(DEFAULT_GROUP_NAME) {
+    QWidget(parent), nonUserGroupName(Group::DEFAULT_NAME) {
   setupUi();
 }
 
@@ -46,7 +46,7 @@ void GroupTab::initialiseInputs(const std::vector<std::string>& groups,
     groupComboBox->addItem(QString::fromStdString(group));
   }
 
-  nonUserGroupName = nonUserGroup.value_or(DEFAULT_GROUP_NAME);
+  nonUserGroupName = nonUserGroup.value_or(Group::DEFAULT_NAME);
 
   if (userGroup.has_value()) {
     groupComboBox->setCurrentText(QString::fromStdString(userGroup.value()));

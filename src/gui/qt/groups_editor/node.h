@@ -36,9 +36,6 @@ namespace loot {
 class Edge;
 class GraphView;
 
-inline static const QString DEFAULT_GROUP_NAME_QT =
-    QString::fromStdString(DEFAULT_GROUP_NAME);
-
 class NodeLabel : public QGraphicsSimpleTextItem {
 public:
   NodeLabel(const QString &text, bool isUserMetadata);

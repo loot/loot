@@ -27,65 +27,62 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
+
 #include "gui/state/game/helpers.h"
 
 namespace loot {
 namespace test {
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeBackslash) {
-  EXPECT_EQ("\\\\", EscapeMarkdownSpecialChars("\\"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeBackslash) {
+  EXPECT_EQ("\\\\", EscapeMarkdownASCIIPunctuation("\\"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeBacktick) {
-  EXPECT_EQ("\\`", EscapeMarkdownSpecialChars("`"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeBacktick) {
+  EXPECT_EQ("\\`", EscapeMarkdownASCIIPunctuation("`"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeAsterisk) {
-  EXPECT_EQ("\\*", EscapeMarkdownSpecialChars("*"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeAsterisk) {
+  EXPECT_EQ("\\*", EscapeMarkdownASCIIPunctuation("*"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeUnderscore) {
-  EXPECT_EQ("\\_", EscapeMarkdownSpecialChars("_"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeUnderscore) {
+  EXPECT_EQ("\\_", EscapeMarkdownASCIIPunctuation("_"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeCurlyBraces) {
-  EXPECT_EQ("\\{", EscapeMarkdownSpecialChars("{"));
-  EXPECT_EQ("\\}", EscapeMarkdownSpecialChars("}"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeCurlyBraces) {
+  EXPECT_EQ("\\{", EscapeMarkdownASCIIPunctuation("{"));
+  EXPECT_EQ("\\}", EscapeMarkdownASCIIPunctuation("}"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeSquareBrackets) {
-  EXPECT_EQ("\\[", EscapeMarkdownSpecialChars("["));
-  EXPECT_EQ("\\]", EscapeMarkdownSpecialChars("]"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeSquareBrackets) {
+  EXPECT_EQ("\\[", EscapeMarkdownASCIIPunctuation("["));
+  EXPECT_EQ("\\]", EscapeMarkdownASCIIPunctuation("]"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeParentheses) {
-  EXPECT_EQ("\\(", EscapeMarkdownSpecialChars("("));
-  EXPECT_EQ("\\)", EscapeMarkdownSpecialChars(")"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeParentheses) {
+  EXPECT_EQ("\\(", EscapeMarkdownASCIIPunctuation("("));
+  EXPECT_EQ("\\)", EscapeMarkdownASCIIPunctuation(")"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeHash) {
-  EXPECT_EQ("\\#", EscapeMarkdownSpecialChars("#"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeHash) {
+  EXPECT_EQ("\\#", EscapeMarkdownASCIIPunctuation("#"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapePlus) {
-  EXPECT_EQ("\\+", EscapeMarkdownSpecialChars("+"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapePlus) {
+  EXPECT_EQ("\\+", EscapeMarkdownASCIIPunctuation("+"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeHyphen) {
-  EXPECT_EQ("\\-", EscapeMarkdownSpecialChars("-"));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeHyphen) {
+  EXPECT_EQ("\\-", EscapeMarkdownASCIIPunctuation("-"));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapePeriod) {
-  EXPECT_EQ("\\.", EscapeMarkdownSpecialChars("."));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapePeriod) {
+  EXPECT_EQ("\\.", EscapeMarkdownASCIIPunctuation("."));
 }
 
-TEST(EscapeMarkdownSpecialChars, shouldEscapeExclamationMark) {
-  EXPECT_EQ("\\!", EscapeMarkdownSpecialChars("!"));
-}
-
-TEST(EscapeMarkdownSpecialChars, shouldNotEscapeNonSpecialCharacters) {
-  auto text = "normal, text & \"symbols\"";
-  EXPECT_EQ(text, EscapeMarkdownSpecialChars(text));
+TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeExclamationMark) {
+  EXPECT_EQ("\\!", EscapeMarkdownASCIIPunctuation("!"));
 }
 
 TEST(PlainTextMessage, shouldEscapeMarkdownSpecialCharacters) {
@@ -107,56 +104,74 @@ TEST(ToMessage, shouldOutputAllNonZeroCounts) {
   EXPECT_EQ(
       "cleaner found 2 ITM records, 10 deleted references and 30 deleted "
       "navmeshes. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+      SelectMessageContent(message.GetContent(),
+                           MessageContent::DEFAULT_LANGUAGE)
+          .value()
+          .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found dirty edits. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ("cleaner found dirty edits. detail",
+            SelectMessageContent(message.GetContent(),
+                                 MessageContent::DEFAULT_LANGUAGE)
+                .value()
+                .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
   EXPECT_EQ(
       "cleaner found 10 deleted references and 30 deleted navmeshes. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+      SelectMessageContent(message.GetContent(),
+                           MessageContent::DEFAULT_LANGUAGE)
+          .value()
+          .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 30 deleted navmeshes. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ("cleaner found 30 deleted navmeshes. detail",
+            SelectMessageContent(message.GetContent(),
+                                 MessageContent::DEFAULT_LANGUAGE)
+                .value()
+                .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 10 deleted references. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ("cleaner found 10 deleted references. detail",
+            SelectMessageContent(message.GetContent(),
+                                 MessageContent::DEFAULT_LANGUAGE)
+                .value()
+                .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 30));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 2 ITM records and 30 deleted navmeshes. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. detail",
+            SelectMessageContent(message.GetContent(),
+                                 MessageContent::DEFAULT_LANGUAGE)
+                .value()
+                .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 2 ITM records. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ("cleaner found 2 ITM records. detail",
+            SelectMessageContent(message.GetContent(),
+                                 MessageContent::DEFAULT_LANGUAGE)
+                .value()
+                .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 0));
   EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 2 ITM records and 10 deleted references. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. detail",
+            SelectMessageContent(message.GetContent(),
+                                 MessageContent::DEFAULT_LANGUAGE)
+                .value()
+                .GetText());
 }
 
 TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
@@ -170,7 +185,10 @@ TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
   EXPECT_EQ(
       "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
       "navmeshes. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+      SelectMessageContent(message.GetContent(),
+                           MessageContent::DEFAULT_LANGUAGE)
+          .value()
+          .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3));
@@ -178,7 +196,10 @@ TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
   EXPECT_EQ(
       "cleaner found 2 ITM records, 1 deleted reference and 3 deleted "
       "navmeshes. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+      SelectMessageContent(message.GetContent(),
+                           MessageContent::DEFAULT_LANGUAGE)
+          .value()
+          .GetText());
 
   message =
       ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1));
@@ -186,7 +207,10 @@ TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
   EXPECT_EQ(
       "cleaner found 3 ITM records, 2 deleted references and 1 deleted "
       "navmesh. detail",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+      SelectMessageContent(message.GetContent(),
+                           MessageContent::DEFAULT_LANGUAGE)
+          .value()
+          .GetText());
 }
 
 TEST(ToMessage,
@@ -197,7 +221,10 @@ TEST(ToMessage,
   EXPECT_EQ(
       "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
       "navmeshes.",
-      message.GetContent(MessageContent::defaultLanguage).value().GetText());
+      SelectMessageContent(message.GetContent(),
+                           MessageContent::DEFAULT_LANGUAGE)
+          .value()
+          .GetText());
 }
 
 TEST(SplitRegistryPath, shouldAssumeHKLMIfNoRootKeyIsGiven) {
@@ -237,6 +264,79 @@ TEST(SplitRegistryPath, shouldThrowIfInputIsEmptyOrOnlyBackslashes) {
   EXPECT_THROW(SplitRegistryPath("\\\\"), std::invalid_argument);
   EXPECT_THROW(SplitRegistryPath("\\"), std::invalid_argument);
   EXPECT_THROW(SplitRegistryPath(""), std::invalid_argument);
+}
+
+TEST(ReadBashTagsFile, shouldCorrectlyReadTheExampleFileContent) {
+  // From the Wrye Bash Advanced Readme
+  // <https://wrye-bash.github.io/docs/Wrye%20Bash%20Advanced%20Readme.html#patch-tags>
+  const auto fileContent = R"(
+# Everything after a '#' is a comment
+# Every line that is not a comment
+# or empty will add or remove tags
+# from the plugin
+
+Delev, Relev # This line will add two
+             # new tags to the plugin...
+
+-C.Water     # ...while this line removes
+             # a tag from the plugin
+
+# Addition and removal can also be
+# done in one line:
+C.Location, -C.LockList
+
+# The result of this file would be:
+# Added: C.Location, Delev, Relev
+# Removed: C.LockList, C.Water)";
+
+  std::stringstream in(fileContent);
+
+  const auto tags = ReadBashTagsFile(in);
+  const std::vector<Tag> expectedTags{Tag("Delev"),
+                                      Tag("Relev"),
+                                      Tag("C.Water", false),
+                                      Tag("C.Location"),
+                                      Tag("C.LockList", false)};
+
+  EXPECT_EQ(expectedTags, tags);
+}
+
+TEST(ReadBashTagsFile, shouldReturnAnEmptyVectorIfThePathDoesNotExist) {
+  EXPECT_TRUE(
+      ReadBashTagsFile(std::filesystem::temp_directory_path() / "missing",
+                       "Blank.esp")
+          .empty());
+}
+
+TEST(ReadBashTagsFile, shouldReadFromAPluginFile) {
+  const auto dataPath = getTempPath();
+  const auto bashTagsDir = dataPath / "BashTags";
+
+  std::filesystem::create_directories(bashTagsDir);
+
+  std::ofstream out(bashTagsDir / "Blank.txt");
+  out << "C.Location, Delev, -Relev";
+  out.close();
+
+  const auto tags = ReadBashTagsFile(dataPath, "Blank.esp");
+
+  const std::vector<Tag> expectedTags{
+      Tag("C.Location"), Tag("Delev"), Tag("Relev", false)};
+
+  EXPECT_EQ(expectedTags, tags);
+
+  std::filesystem::remove_all(dataPath);
+}
+
+TEST(GetTagConflicts,
+     shouldReturnTagNamesAddedByOneSourceAndRemovedByTheOther) {
+  const auto conflicts =
+      GetTagConflicts({Tag("A", false), Tag("B"), Tag("C", false), Tag("D")},
+                      {Tag("A"), Tag("B", false), Tag("C", false)});
+
+  const std::vector<std::string> expectedConflicts{"A", "B"};
+
+  EXPECT_EQ(expectedConflicts, conflicts);
 }
 }
 }

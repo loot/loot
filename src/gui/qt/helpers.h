@@ -27,7 +27,6 @@
 #define LOOT_GUI_QT_HELPERS
 
 #include <loot/metadata/message_content.h>
-#include <loot/struct/file_revision.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMetaType>
@@ -40,6 +39,12 @@
 
 namespace loot {
 enum class FileType { Masterlist, MasterlistPrelude };
+
+struct FileRevision {
+  std::string id;
+  std::string date;
+  bool is_modified{false};
+};
 
 struct FileRevisionSummary {
   FileRevisionSummary() = default;

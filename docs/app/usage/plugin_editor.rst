@@ -8,7 +8,7 @@ The editor panel is accessed by selecting a plugin in the sidebar and then click
 
 The editor's header displays the name of the plugin being edited, "Save" and "Cancel" buttons, and a row of tabs.
 
-The Main tab's page contains the "Group" dropdown, which sets the group that the plugin belongs to, and is set to the "default" group by default.
+The Group tab's page contains the "Group" dropdown, which sets the group that the plugin belongs to, and is set to the "default" group by default.
 
   Plugin groups are used to concisely load groups of plugins after others. The dropdown lists all defined groups: to define new groups or edit existing groups, use the Groups Editor.
 
@@ -46,7 +46,7 @@ Bash Tags
   Each Bash Tag has three fields:
 
   - The add/remove field determines whether the Tag is to be suggested for addition or removal.
-  - The name is the actual Bash Tag name. The field gives autocomplete suggestions for Bash Tags that LOOT knows are supported for the current game.
+  - The Bash Tag field is the actual Bash Tag name. The field gives autocomplete suggestions for Bash Tags that LOOT knows are supported for the current game.
   - The condition decides if the Tag is to be suggested or not. It functions as for files and messages.
 
   If a plugin's masters are missing, an error message will be displayed for it. Filter patches are special mods designed for use with a Bashed Patch that do not require all their masters to be present, and so any plugin with the Filter tag applied and missing masters will not cause any errors to be displayed.
@@ -72,9 +72,9 @@ Clean Plugin Info
   LOOT uses the information supplied to display an icon on the plugin's card if it matches any of the given CRCs.
 
 Locations
-  A list of URLs that the mod to which the plugin belongs can be found at. This metadata is not currently used by LOOT, but it may be useful to record it. Each location has two fields:
+  A list of URLs that the mod to which the plugin belongs can be found at. LOOT displays these as source hyperlinks on the plugin's card. Each location has two fields:
 
   - The URL at which the plugin's parent mod can be found.
-  - The Name you wish to give the URL.
+  - The Name you wish to give the URL. If given, LOOT uses this as the text displayed for the hyperlink on the plugin's card.
 
 .. _Wrye Bash's readme: https://wrye-bash.github.io/docs/Wrye%20Bash%20Advanced%20Readme.html#patch-tags

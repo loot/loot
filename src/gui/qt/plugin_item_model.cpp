@@ -44,8 +44,8 @@ int PluginItemModel::rowCount(const QModelIndex&) const {
 }
 
 int PluginItemModel::columnCount(const QModelIndex&) const {
-  static constexpr int COLUMN_COUNT = std::max({SIDEBAR_LOAD_ORDER_COLUMN,
-                                                SIDEBAR_PLUGIN_INDEX_COLUMN,
+  static constexpr int COLUMN_COUNT = std::max({SIDEBAR_POSITION_COLUMN,
+                                                SIDEBAR_INDEX_COLUMN,
                                                 SIDEBAR_NAME_COLUMN,
                                                 SIDEBAR_STATE_COLUMN,
                                                 CARDS_COLUMN}) +
@@ -85,16 +85,16 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
     auto plugin = items.at(itemsIndex);
 
     switch (index.column()) {
-      case SIDEBAR_LOAD_ORDER_COLUMN: {
+      case SIDEBAR_POSITION_COLUMN: {
         if (role == Qt::DisplayRole) {
-          return QString::fromStdString(plugin.loadOrderIndexText());
+          return QString::number(index.row());
         }
 
         break;
       }
-      case SIDEBAR_PLUGIN_INDEX_COLUMN: {
+      case SIDEBAR_INDEX_COLUMN: {
         if (role == Qt::DisplayRole) {
-          return QString::number(index.row());
+          return QString::fromStdString(plugin.loadOrderIndexText());
         }
 
         break;
@@ -161,8 +161,27 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
-QVariant PluginItemModel::headerData(int, Qt::Orientation, int) const {
-  return QVariant();
+QVariant PluginItemModel::headerData(int section,
+                                     Qt::Orientation orientation,
+                                     int role) const {
+  if (role != Qt::DisplayRole) {
+    return QVariant();
+  }
+
+  if (orientation != Qt::Horizontal) {
+    return QVariant();
+  }
+
+  switch (section) {
+    case SIDEBAR_POSITION_COLUMN:
+      return "Position";
+    case SIDEBAR_INDEX_COLUMN:
+      return "Index";
+    case SIDEBAR_NAME_COLUMN:
+      return "Plugin Name";
+    default:
+      return QVariant();
+  }
 }
 
 Qt::ItemFlags PluginItemModel::flags(const QModelIndex& index) const {

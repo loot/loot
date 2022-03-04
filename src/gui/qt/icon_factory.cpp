@@ -76,6 +76,14 @@ QIcon IconFactory::getSortIcon() {
   return getIcon(":/icons/material-icons/sort_black_48dp.svg");
 }
 
+QIcon IconFactory::getApplySortIcon() {
+  return getIcon(":/icons/material-icons/check_black_48dp.svg");
+}
+
+QIcon IconFactory::getDiscardSortIcon() {
+  return getIcon(":/icons/material-icons/close_black_48dp.svg");
+}
+
 QIcon IconFactory::getUpdateMasterlistIcon() {
   return getIcon(":/icons/material-icons/file_download_black_48dp.svg");
 }
@@ -108,12 +116,20 @@ QIcon IconFactory::getCopyContentIcon() {
   return getIcon(":/icons/material-icons/content_copy_black_48dp.svg");
 }
 
+QIcon IconFactory::getCopyMetadataIcon() {
+  return getIcon(":/icons/material-icons/data_object_black_48dp.svg");
+}
+
 QIcon IconFactory::getRefreshIcon() {
   return getIcon(":/icons/material-icons/refresh_black_48dp.svg");
 }
 
 QIcon IconFactory::getRedateIcon() {
   return getIcon(":/icons/material-icons/today_black_48dp.svg");
+}
+
+QIcon IconFactory::getFixIcon() {
+  return getIcon(":/icons/material-icons/build_black_48dp.svg");
 }
 
 QIcon IconFactory::getDeleteIcon() {
@@ -126,6 +142,10 @@ QIcon IconFactory::getViewDocsIcon() {
 
 QIcon IconFactory::getOpenLOOTDataFolderIcon() {
   return getIcon(":/icons/material-icons/folder_black_48dp.svg");
+}
+
+QIcon IconFactory::getJoinDiscordServerIcon() {
+  return getIcon(":/icons/material-icons/forum_black_48dp.svg");
 }
 
 QIcon IconFactory::getAboutIcon() {

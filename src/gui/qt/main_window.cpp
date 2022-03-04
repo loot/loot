@@ -149,7 +149,21 @@ std::optional<QDate> getDateFromCommitJson(const QJsonDocument& document,
   return QDate::fromString(dateString, Qt::ISODate);
 }
 
-int calculatePluginIndexSectionWidth(size_t pluginCount) {
+int calculateSidebarHeaderWidth(const QAbstractItemView& view, int column) {
+  const auto headerText =
+      view.model()->headerData(column, Qt::Horizontal).toString();
+
+  const auto textWidth = QFontMetricsF(QApplication::font())
+                             .size(Qt::TextSingleLine, headerText)
+                             .width();
+
+  const auto paddingWidth =
+      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+
+  return textWidth + paddingWidth;
+}
+
+int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   // Find the widest digit character in the current font and use that to
   // calculate the load order section width.
   static constexpr std::array<char, 10> DIGIT_CHARACTERS = {
@@ -175,7 +189,7 @@ int calculatePluginIndexSectionWidth(size_t pluginCount) {
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
-int calculateSidebarLoadOrderSectionWidth(GameType gameType) {
+int calculateSidebarIndexSectionWidth(GameType gameType) {
   // Find the widest hex character in the current font and use that to
   // calculate the load order section width.
   static constexpr std::array<char, 16> HEX_CHARACTERS = {'0',
@@ -277,6 +291,7 @@ void MainWindow::initialise() {
     filtersWidget->hidePluginMessages(filters.hideAllPluginMessages);
     filtersWidget->hideInactivePlugins(filters.hideInactivePlugins);
     filtersWidget->hideMessagelessPlugins(filters.hideMessagelessPlugins);
+    filtersWidget->hideCreationClubPlugins(filters.hideCreationClubPlugins);
 
     // Apply the filters before loading the game because that avoids having
     // to re-filter the full plugin list.
@@ -410,6 +425,7 @@ void MainWindow::setupMenuBar() {
   actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
 
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
+  actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
 
   actionAbout->setObjectName("actionAbout");
   actionAbout->setIcon(IconFactory::getAboutIcon());
@@ -434,10 +450,14 @@ void MainWindow::setupMenuBar() {
   actionRedatePlugins->setObjectName("actionRedatePlugins");
   actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
 
+  actionFixAmbiguousLoadOrder->setObjectName("actionFixAmbiguousLoadOrder");
+  actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
+
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
   actionCopyMetadata->setObjectName("actionCopyMetadata");
+  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
 
   actionCopyCardContent->setObjectName("actionCopyCardContent");
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
@@ -468,6 +488,7 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionCopyContent);
   menuGame->addAction(actionRefreshContent);
   menuGame->addSeparator();
+  menuGame->addAction(actionFixAmbiguousLoadOrder);
   menuGame->addAction(actionRedatePlugins);
   menuGame->addAction(actionClearAllUserMetadata);
   menuPlugin->addAction(actionEditMetadata);
@@ -491,9 +512,11 @@ void MainWindow::setupToolBar() {
   actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
 
   actionApplySort->setObjectName("actionApplySort");
+  actionApplySort->setIcon(IconFactory::getApplySortIcon());
   actionApplySort->setVisible(false);
 
   actionDiscardSort->setObjectName("actionDiscardSort");
+  actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
   actionDiscardSort->setVisible(false);
 
   // Create toolbar.
@@ -532,11 +555,12 @@ void MainWindow::setupViews() {
   verticalHeader->hide();
 
   auto horizontalHeader = sidebarPluginsView->horizontalHeader();
-  horizontalHeader->hide();
+  horizontalHeader->setDefaultAlignment(Qt::AlignLeft);
+  horizontalHeader->setHighlightSections(false);
   horizontalHeader->setSectionResizeMode(
-      PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN, QHeaderView::Fixed);
-  horizontalHeader->setSectionResizeMode(
-      PluginItemModel::SIDEBAR_PLUGIN_INDEX_COLUMN, QHeaderView::Fixed);
+      PluginItemModel::SIDEBAR_POSITION_COLUMN, QHeaderView::Interactive);
+  horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_INDEX_COLUMN,
+                                         QHeaderView::Interactive);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_NAME_COLUMN,
                                          QHeaderView::Stretch);
   horizontalHeader->setSectionResizeMode(PluginItemModel::SIDEBAR_STATE_COLUMN,
@@ -607,6 +631,7 @@ void MainWindow::translateUi() {
   actionCopyContent->setText(translate("Copy Content"));
   actionRefreshContent->setText(translate("Refresh Content"));
   actionRedatePlugins->setText(translate("Redate Plugins..."));
+  actionFixAmbiguousLoadOrder->setText(translate("Fix Ambiguous Load Order"));
   actionClearAllUserMetadata->setText(translate("Clear All User Metadata..."));
 
   menuPlugin->setTitle(translate("Plugin"));
@@ -634,6 +659,8 @@ void MainWindow::enableGameActions() {
       state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
       state.GetCurrentGame().GetSettings().Type() == GameType::tes5se;
   actionRedatePlugins->setEnabled(enableRedatePlugins);
+
+  actionFixAmbiguousLoadOrder->setEnabled(false);
 }
 
 void MainWindow::disableGameActions() {
@@ -770,38 +797,50 @@ void MainWindow::updateGeneralMessages() {
 void MainWindow::updateSidebarColumnWidths() {
   const auto horizontalHeader = sidebarPluginsView->horizontalHeader();
 
-  auto stateSectionWidth =
-      QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
-      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
-
-  // If there is no current game set (i.e. on initial construction), use TES5 SE
-  // to calculate the load order section width because that's one of the games
-  // that uses the wider width.
-  const auto loadOrderSectionWidth =
-      state.HasCurrentGame()
-          ? calculateSidebarLoadOrderSectionWidth(
-                state.GetCurrentGame().GetSettings().Type())
-          : calculateSidebarLoadOrderSectionWidth(GameType::tes5se);
+  const auto positionSectionHeaderWidth = calculateSidebarHeaderWidth(
+      *sidebarPluginsView, PluginItemModel::SIDEBAR_POSITION_COLUMN);
 
   // If a game hasn't loaded yet, assume that the player will have something in
   // the order of hundreds of plugins enabled - it's the number of digits that
   // matters, not the number itself.
   static constexpr size_t DEFAULT_LOAD_ORDER_SIZE_ESTIMATE = 255;
 
-  const auto pluginIndexSectionWidth =
+  const auto positionSectionWidth =
       state.HasCurrentGame() && state.GetCurrentGame().IsInitialised()
-          ? calculatePluginIndexSectionWidth(
+          ? calculateSidebarPositionSectionWidth(
                 state.GetCurrentGame().GetPlugins().size())
-          : calculatePluginIndexSectionWidth(DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
+          : calculateSidebarPositionSectionWidth(
+                DEFAULT_LOAD_ORDER_SIZE_ESTIMATE);
 
-  const auto minimumSectionWidth = std::min(
-      {loadOrderSectionWidth, pluginIndexSectionWidth, stateSectionWidth});
+  const auto indexSectionHeaderWidth = calculateSidebarHeaderWidth(
+      *sidebarPluginsView, PluginItemModel::SIDEBAR_INDEX_COLUMN);
+
+  // If there is no current game set (i.e. on initial construction), use TES5 SE
+  // to calculate the load order section width because that's one of the games
+  // that uses the wider width.
+  const auto indexSectionWidth =
+      state.HasCurrentGame()
+          ? calculateSidebarIndexSectionWidth(
+                state.GetCurrentGame().GetSettings().Type())
+          : calculateSidebarIndexSectionWidth(GameType::tes5se);
+
+  const auto stateSectionWidth =
+      QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
+      QApplication::style()->pixelMetric(QStyle::PM_LayoutRightMargin);
+
+  const auto minimumSectionWidth = std::min({positionSectionHeaderWidth,
+                                             positionSectionWidth,
+                                             indexSectionHeaderWidth,
+                                             indexSectionWidth,
+                                             stateSectionWidth});
 
   horizontalHeader->setMinimumSectionSize(minimumSectionWidth);
-  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_LOAD_ORDER_COLUMN,
-                                  loadOrderSectionWidth);
-  horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_PLUGIN_INDEX_COLUMN,
-                                  pluginIndexSectionWidth);
+  horizontalHeader->resizeSection(
+      PluginItemModel::SIDEBAR_POSITION_COLUMN,
+      std::max({positionSectionHeaderWidth, positionSectionWidth}));
+  horizontalHeader->resizeSection(
+      PluginItemModel::SIDEBAR_INDEX_COLUMN,
+      std::max({indexSectionHeaderWidth, indexSectionWidth}));
   horizontalHeader->resizeSection(PluginItemModel::SIDEBAR_STATE_COLUMN,
                                   stateSectionWidth);
 }
@@ -1185,7 +1224,7 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   enableGameActions();
 }
 
-void MainWindow::handlePluginsSorted(QueryResult result) {
+bool MainWindow::handlePluginsSorted(QueryResult result) {
   filtersWidget->resetConflictsAndGroupsFilters();
 
   auto sortedPlugins = std::get<PluginItems>(result);
@@ -1202,7 +1241,7 @@ void MainWindow::handlePluginsSorted(QueryResult result) {
 
     // Plugins didn't change but general messages may have.
     updateGeneralMessages();
-    return;
+    return false;
   }
 
   auto currentLoadOrder = state.GetCurrentGame().GetLoadOrder();
@@ -1218,6 +1257,8 @@ void MainWindow::handlePluginsSorted(QueryResult result) {
   }
 
   handleGameDataLoaded(sortedPlugins);
+
+  return loadOrderHasChanged;
 }
 
 QMenu* MainWindow::createPopupMenu() {
@@ -1246,6 +1287,25 @@ std::optional<std::filesystem::path> MainWindow::createBackup() {
   std::filesystem::remove_all(destDir);
 
   return zipPath;
+}
+
+void MainWindow::checkForAmbiguousLoadOrder() {
+  if (!state.GetCurrentGame().IsLoadOrderAmbiguous()) {
+    actionFixAmbiguousLoadOrder->setEnabled(false);
+    return;
+  }
+
+  QMessageBox::warning(
+      this,
+      translate("Ambiguous load order detected"),
+      translate("LOOT has detected that the current load order is ambiguous, "
+                "which means that other applications might use a different "
+                "load order than what LOOT displays.\n\n"
+                "You can use the \"Fix Ambiguous Load Order\" action in the "
+                "Game menu to unambiguously set the load order to what is "
+                "displayed by LOOT."));
+
+  actionFixAmbiguousLoadOrder->setEnabled(true);
 }
 
 void MainWindow::on_actionSettings_triggered() {
@@ -1351,6 +1411,20 @@ void MainWindow::on_actionCopyContent_triggered() {
 
     showNotification(
         translate("LOOT's content has been copied to the clipboard."));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionFixAmbiguousLoadOrder_triggered() {
+  try {
+    auto loadOrder = state.GetCurrentGame().GetLoadOrder();
+    state.GetCurrentGame().SetLoadOrder(loadOrder);
+
+    showNotification(
+        translate("The load order displayed by LOOT has been set."));
+
+    actionFixAmbiguousLoadOrder->setEnabled(false);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1740,6 +1814,10 @@ void MainWindow::on_actionDiscardSort_triggered() {
     updateGeneralMessages();
 
     exitSortingState();
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // at start of sorting.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1856,7 +1934,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
       auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
       if (pluginItem.name == pluginName) {
-        auto plugin = PluginItem(state.GetCurrentGame().GetPlugin(pluginName),
+        auto plugin = PluginItem(*state.GetCurrentGame().GetPlugin(pluginName),
                                  state.GetCurrentGame(),
                                  state.getSettings().getLanguage());
 
@@ -1973,6 +2051,10 @@ void MainWindow::handleGameChanged(QueryResult result) {
     handleGameDataLoaded(result);
 
     updateSidebarColumnWidths();
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // when loading the new game's data.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1981,6 +2063,10 @@ void MainWindow::handleGameChanged(QueryResult result) {
 void MainWindow::handleRefreshGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // when refreshing game data.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2003,6 +2089,10 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
         sortPlugins(true);
       }
     }
+
+    // Perform ambiguous load order check because load order state was refreshed
+    // when loading game data.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2010,7 +2100,13 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
 
 void MainWindow::handlePluginsManualSorted(QueryResult result) {
   try {
-    handlePluginsSorted(result);
+    const auto loadOrderChanged = handlePluginsSorted(result);
+
+    if (!loadOrderChanged) {
+      // Perform ambiguous load order check because load order state was
+      // refreshed at the start of sorting.
+      checkForAmbiguousLoadOrder();
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2083,6 +2179,10 @@ void MainWindow::handleConflictsChecked(QueryResult result) {
 
     setFiltersState(filtersWidget->getPluginFiltersState(),
                     std::move(conflictingPluginNames));
+
+    // Load order state was refreshed when plugins were loaded, so check for
+    // ambiguity.
+    checkForAmbiguousLoadOrder();
   } catch (const std::exception& e) {
     handleException(e);
   }

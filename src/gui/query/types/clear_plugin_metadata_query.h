@@ -48,7 +48,7 @@ public:
 
     auto plugin = game_.GetPlugin(pluginName_);
     if (plugin) {
-      return PluginItem(plugin, game_, language_);
+      return PluginItem(*plugin, game_, language_);
     }
 
     return std::monostate();

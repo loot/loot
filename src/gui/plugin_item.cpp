@@ -113,35 +113,27 @@ std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
   return evaluatedUserMetadata;
 }
 
-std::string getCommaSeparatedTags(const std::vector<std::string>& tags) {
-  std::string tagsText;
-  for (const auto& tag : tags) {
-    tagsText += tag + ", ";
-  }
-
-  return tagsText.substr(0, tagsText.length() - 2);
-}
-
-PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
+PluginItem::PluginItem(const PluginInterface& plugin,
                        const gui::Game& game,
                        std::string language) :
-    name(plugin->GetName()),
-    loadOrderIndex(game.GetActiveLoadOrderIndex(*plugin, game.GetLoadOrder())),
-    crc(plugin->GetCRC()),
-    version(plugin->GetVersion()),
-    isActive(game.IsPluginActive(plugin->GetName())),
-    isEmpty(plugin->IsEmpty()),
-    isMaster(plugin->IsMaster()),
-    isLightPlugin(plugin->IsLightPlugin()),
-    loadsArchive(plugin->LoadsArchive()) {
-  auto userMetadata = game.GetUserMetadata(plugin->GetName());
+    name(plugin.GetName()),
+    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder())),
+    crc(plugin.GetCRC()),
+    version(plugin.GetVersion()),
+    isActive(game.IsPluginActive(plugin.GetName())),
+    isEmpty(plugin.IsEmpty()),
+    isMaster(plugin.IsMaster()),
+    isLightPlugin(plugin.IsLightPlugin()),
+    loadsArchive(plugin.LoadsArchive()),
+    isCreationClubPlugin(game.IsCreationClubPlugin(plugin)) {
+  auto userMetadata = game.GetUserMetadata(plugin.GetName());
   if (userMetadata.has_value()) {
     hasUserMetadata =
         userMetadata.has_value() && !userMetadata.value().HasNameOnly();
   }
 
-  auto evaluatedMetadata = evaluateMetadata(game, plugin->GetName())
-                               .value_or(PluginMetadata(plugin->GetName()));
+  auto evaluatedMetadata = evaluateMetadata(game, plugin.GetName())
+                               .value_or(PluginMetadata(plugin.GetName()));
 
   isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
   group = evaluatedMetadata.GetGroup();
@@ -152,14 +144,14 @@ PluginItem::PluginItem(const std::shared_ptr<const PluginInterface>& plugin,
   evaluatedMessages.insert(
       end(evaluatedMessages), begin(validityMessages), end(validityMessages));
   evaluatedMetadata.SetMessages(evaluatedMessages);
-  messages = evaluatedMetadata.GetSimpleMessages(language);
+  messages = ToSimpleMessages(evaluatedMetadata.GetMessages(), language);
 
   if (!evaluatedMetadata.GetCleanInfo().empty()) {
     cleaningUtility =
         evaluatedMetadata.GetCleanInfo().begin()->GetCleaningUtility();
   }
 
-  for (const auto& tag : plugin->GetBashTags()) {
+  for (const auto& tag : plugin.GetBashTags()) {
     currentTags.push_back(tag.GetName());
   }
 
@@ -384,17 +376,15 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (!currentTags.empty()) {
-    content +=
-        "- Current Bash Tags: " + getCommaSeparatedTags(currentTags) + "\n";
+    content += "- Current Bash Tags: " + boost::join(currentTags, ", ") + "\n";
   }
 
   if (!addTags.empty()) {
-    content += "- Add Bash Tags: " + getCommaSeparatedTags(addTags) + "\n";
+    content += "- Add Bash Tags: " + boost::join(addTags, ", ") + "\n";
   }
 
   if (!removeTags.empty()) {
-    content +=
-        "- Remove Bash Tags: " + getCommaSeparatedTags(removeTags) + "\n";
+    content += "- Remove Bash Tags: " + boost::join(removeTags, ", ") + "\n";
   }
 
   if (!messages.empty()) {

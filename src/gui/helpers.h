@@ -29,6 +29,7 @@
 #include <loot/struct/simple_message.h>
 
 #include <filesystem>
+#include <optional>
 #include <vector>
 
 namespace loot {
@@ -42,7 +43,15 @@ std::string FromWinWide(const std::wstring& wstr);
 std::string RegKeyStringValue(const std::string& rootKey,
                               const std::string& subkey,
                               const std::string& value);
+
+std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
+                                            const std::string& subKey);
 #endif
+
+std::vector<std::filesystem::path> GetDriveRootPaths();
+
+std::optional<std::filesystem::path> FindXboxGamingRootPath(
+    const std::filesystem::path& driveRootPath);
 
 // Compare strings as if they're filenames, respecting filesystem case
 // insensitivity on Windows. Returns -1 if lhs < rhs, 0 if lhs == rhs, and 1 if

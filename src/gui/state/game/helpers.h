@@ -26,10 +26,9 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
-#include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
-#include <loot/struct/file_revision.h>
+#include <loot/metadata/tag.h>
 #include <loot/vertex.h>
 
 #include <filesystem>
@@ -37,14 +36,11 @@
 #include <vector>
 
 namespace loot {
-bool ExecutableExists(const GameType& gameType,
-                      const std::filesystem::path& gamePath);
-
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
-std::string EscapeMarkdownSpecialChars(std::string text);
+std::string EscapeMarkdownASCIIPunctuation(std::string text);
 
 // Create a Message, escaping any Markdown special characters in the input text.
 Message PlainTextMessage(MessageType type, std::string text);
@@ -55,10 +51,6 @@ SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
 
-std::vector<SimpleMessage> ToSimpleMessages(
-    const std::vector<Message>& messages,
-    const std::string& language);
-
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<Message> CheckForRemovedPlugins(
@@ -67,6 +59,16 @@ std::vector<Message> CheckForRemovedPlugins(
 
 std::tuple<std::string, std::string, std::string> SplitRegistryPath(
     const std::string& registryPath);
+
+std::vector<Tag> ReadBashTagsFile(std::istream& in);
+
+std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+                                  const std::string& pluginName);
+
+// Return a list of tag names that are added by one source but removed by the
+// other.
+std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+                                         const std::vector<Tag>& tags2);
 }
 
 #endif

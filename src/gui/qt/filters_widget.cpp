@@ -82,6 +82,10 @@ void FiltersWidget::hideMessagelessPlugins(bool hide) {
   messagelessPluginsFilter->setChecked(hide);
 }
 
+void FiltersWidget::hideCreationClubPlugins(bool hide) {
+  creationClubPluginsFilter->setChecked(hide);
+}
+
 void FiltersWidget::resetConflictsAndGroupsFilters() {
   conflictingPluginsFilter->setCurrentIndex(0);
   groupPluginsFilter->setCurrentIndex(0);
@@ -100,6 +104,7 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
   filters.hideMessagelessPlugins = messagelessPluginsFilter->isChecked();
+  filters.hideCreationClubPlugins = creationClubPluginsFilter->isChecked();
 
   return filters;
 }
@@ -120,6 +125,7 @@ void FiltersWidget::setupUi() {
   pluginMessagesFilter->setObjectName("pluginMessagesFilter");
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
+  creationClubPluginsFilter->setObjectName("creationClubPluginsFilter");
 
   auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,
                                         SPACER_HEIGHT,
@@ -163,6 +169,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(pluginMessagesFilter);
   verticalLayout->addWidget(inactivePluginsFilter);
   verticalLayout->addWidget(messagelessPluginsFilter);
+  verticalLayout->addWidget(creationClubPluginsFilter);
   verticalLayout->addItem(verticalSpacer);
   verticalLayout->addWidget(divider);
 
@@ -196,6 +203,7 @@ void FiltersWidget::translateUi() {
   pluginMessagesFilter->setText(translate("Hide all plugin messages"));
   inactivePluginsFilter->setText(translate("Hide inactive plugins"));
   messagelessPluginsFilter->setText(translate("Hide messageless plugins"));
+  creationClubPluginsFilter->setText(translate("Hide Creation Club plugins"));
   hiddenPluginsLabel->setText(translate("Hidden plugins:"));
   hiddenMessagesLabel->setText(translate("Hidden messages:"));
 
@@ -262,6 +270,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
 
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
   filters.hideMessagelessPlugins = messagelessPluginsFilter->isChecked();
+  filters.hideCreationClubPlugins = creationClubPluginsFilter->isChecked();
 
   if (conflictingPluginsFilter->currentIndex() > 0) {
     filters.conflictsPluginName =
@@ -347,6 +356,9 @@ void FiltersWidget::on_inactivePluginsFilter_stateChanged() {
 }
 
 void FiltersWidget::on_messagelessPluginsFilter_stateChanged() {
+  emit pluginFilterChanged(getPluginFiltersState());
+}
+void FiltersWidget::on_creationClubPluginsFilter_stateChanged() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 }

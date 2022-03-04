@@ -36,17 +36,6 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-bool ExecutableExists(const GameType& gameType,
-                      const std::filesystem::path& gamePath) {
-  if (gameType == GameType::tes5) {
-    return std::filesystem::exists(gamePath / "TESV.exe");
-  } else if (gameType == GameType::tes5se) {
-    return std::filesystem::exists(gamePath / "SkyrimSE.exe");
-  }
-
-  return true;  // Don't bother checking for the other games.
-}
-
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
   const int maxBackupIndex = 2;
@@ -75,19 +64,21 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
 }
 
 Message PlainTextMessage(MessageType type, std::string text) {
-  return Message(type, EscapeMarkdownSpecialChars(text));
+  return Message(type, EscapeMarkdownASCIIPunctuation(text));
 }
 
 SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text) {
   SimpleMessage message;
   message.type = type;
-  message.text = EscapeMarkdownSpecialChars(text);
+  message.text = EscapeMarkdownASCIIPunctuation(text);
   return message;
 }
 
-std::string EscapeMarkdownSpecialChars(std::string text) {
-  auto specialCharsRegex = std::regex("([\\\\`*_{}\\[\\]()#+.!-])");
-  return std::regex_replace(text, specialCharsRegex, "\\$1");
+std::string EscapeMarkdownASCIIPunctuation(std::string text) {
+  // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
+  static const std::regex asciiPunctuationCharacters(
+      "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
+  return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
 }
 
 Message ToMessage(const PluginCleaningData& cleaningData) {
@@ -167,20 +158,6 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   }
 
   return Message(MessageType::warn, detail);
-}
-
-std::vector<SimpleMessage> ToSimpleMessages(
-    const std::vector<Message>& messages,
-    const std::string& language) {
-  std::vector<SimpleMessage> simpleMessages;
-  for (const auto& message : messages) {
-    auto simpleMessage = message.ToSimpleMessage(language);
-    if (simpleMessage.has_value()) {
-      simpleMessages.push_back(simpleMessage.value());
-    }
-  }
-
-  return simpleMessages;
 }
 
 std::string DescribeEdgeType(EdgeType edgeType) {
@@ -291,5 +268,94 @@ std::tuple<std::string, std::string, std::string> SplitRegistryPath(
   std::string value = registryPath.substr(lastBackslashPos + 1);
 
   return std::make_tuple(rootKey, subKey, value);
+}
+
+std::vector<Tag> ReadBashTagsFile(std::istream& in) {
+  std::vector<Tag> tags;
+  for (std::string line; std::getline(in, line);) {
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+
+    line = line.substr(0, line.find('#'));
+
+    std::vector<std::string> entries;
+    boost::split(entries, line, boost::is_any_of(","));
+
+    for (auto& entry : entries) {
+      boost::trim(entry);
+
+      if (entry.empty()) {
+        continue;
+      }
+
+      if (entry[0] == '-') {
+        tags.push_back(Tag(entry.substr(1), false));
+      } else {
+        tags.push_back(Tag(entry));
+      }
+    }
+  }
+
+  return tags;
+}
+
+std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
+                                  const std::string& pluginName) {
+  static constexpr size_t PLUGIN_EXTENSION_LENGTH = 4;
+  const auto filename =
+      pluginName.substr(0, pluginName.length() - PLUGIN_EXTENSION_LENGTH) +
+      ".txt";
+  const auto filePath = dataPath / "BashTags" / filename;
+
+  if (!std::filesystem::exists(filePath)) {
+    return {};
+  }
+
+  std::ifstream in(filePath);
+
+  return ReadBashTagsFile(in);
+}
+
+std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
+                                         const std::vector<Tag>& tags2) {
+  std::set<std::string> additions1;
+  std::set<std::string> additions2;
+  std::set<std::string> removals1;
+  std::set<std::string> removals2;
+
+  for (const auto& tag : tags1) {
+    if (tag.IsAddition()) {
+      additions1.insert(tag.GetName());
+    } else {
+      removals1.insert(tag.GetName());
+    }
+  }
+
+  for (const auto& tag : tags2) {
+    if (tag.IsAddition()) {
+      additions2.insert(tag.GetName());
+    } else {
+      removals2.insert(tag.GetName());
+    }
+  }
+
+  std::vector<std::string> conflicts;
+
+  std::set_intersection(additions1.begin(),
+                        additions1.end(),
+                        removals2.begin(),
+                        removals2.end(),
+                        std::back_inserter(conflicts));
+
+  std::set_intersection(additions2.begin(),
+                        additions2.end(),
+                        removals1.begin(),
+                        removals1.end(),
+                        std::back_inserter(conflicts));
+
+  std::sort(conflicts.begin(), conflicts.end());
+
+  return conflicts;
 }
 }
