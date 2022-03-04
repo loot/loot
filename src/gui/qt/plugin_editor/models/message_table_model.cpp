@@ -60,8 +60,9 @@ QVariant MessageTableModel::data(const Message& element,
     }
     case CONTENT_COLUMN: {
       if (role == Qt::DisplayRole) {
-        auto contentText =
-            element.GetContent(language).value_or(MessageContent()).GetText();
+        auto contentText = SelectMessageContent(element.GetContent(), language)
+                               .value_or(MessageContent())
+                               .GetText();
         return QVariant(QString::fromStdString(contentText));
       }
       return QVariant::fromValue(element.GetContent());

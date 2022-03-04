@@ -127,6 +127,8 @@ void GeneralInfoCard::setupUi() {
   static constexpr int METADATA_COLUMN_MIN_WIDTH = 72;
   static constexpr int MESSAGE_COLUMN_MIN_WIDTH = 32;
 
+  scaleCardHeading(*headingLabel);
+
   auto generalInfoLayout = new QVBoxLayout();
   generalInfoLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
@@ -156,7 +158,7 @@ void GeneralInfoCard::setupUi() {
   gridLayout->addWidget(totalMessagesCountLabel, 2, MESSAGE_LABEL_COLUMN);
   gridLayout->addWidget(totalMessagesCountValue, 2, MESSAGE_VALUE_COLUMN);
 
-  // Set game type to tes5se so that the value of showSeparateLightPluginCount 
+  // Set game type to tes5se so that the value of showSeparateLightPluginCount
   // changes from its default and the plugin count cells get initialised.
   setGameType(GameType::tes5se);
 
@@ -187,5 +189,13 @@ void GeneralInfoCard::translateUi() {
   activeLightCountLabel->setText(translate("Active Light Plugins"));
   dirtyCountLabel->setText(translate("Dirty Plugins"));
   totalPluginsCountLabel->setText(translate("Total Plugins"));
+}
+
+void scaleCardHeading(QLabel& label) {
+  static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
+  auto headingFont = label.font();
+  const auto headingFontSize = headingFont.pointSizeF();
+  headingFont.setPointSizeF(headingFontSize * NAME_FONT_SIZE_MULTIPLIER);
+  label.setFont(headingFont);
 }
 }

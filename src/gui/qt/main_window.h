@@ -101,6 +101,7 @@ private:
   QAction *actionCopyContent{new QAction(this)};
   QAction *actionRefreshContent{new QAction(this)};
   QAction *actionRedatePlugins{new QAction(this)};
+  QAction *actionFixAmbiguousLoadOrder{new QAction(this)};
   QAction *actionClearAllUserMetadata{new QAction(this)};
   QAction *actionCopyMetadata{new QAction(this)};
   QAction *actionCopyCardContent{new QAction(this)};
@@ -202,11 +203,13 @@ private:
                             const std::exception &exception);
 
   void handleGameDataLoaded(QueryResult result);
-  void handlePluginsSorted(QueryResult results);
+  bool handlePluginsSorted(QueryResult results);
 
   QMenu *createPopupMenu() override;
 
   std::optional<std::filesystem::path> createBackup();
+
+  void checkForAmbiguousLoadOrder();
 
 private slots:
   void on_actionSettings_triggered();
@@ -216,6 +219,7 @@ private slots:
   void on_actionSearch_triggered();
   void on_actionCopyLoadOrder_triggered();
   void on_actionCopyContent_triggered();
+  void on_actionFixAmbiguousLoadOrder_triggered();
   void on_actionRefreshContent_triggered();
   void on_actionRedatePlugins_triggered();
   void on_actionClearAllUserMetadata_triggered();

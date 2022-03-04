@@ -45,6 +45,7 @@ struct CardContentFiltersState {
 struct PluginFiltersState {
   bool hideInactivePlugins{false};
   bool hideMessagelessPlugins{false};
+  bool hideCreationClubPlugins{false};
   std::optional<std::string> conflictsPluginName;
   std::optional<std::string> groupName;
   std::variant<std::monostate, std::string, std::regex> content;

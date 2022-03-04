@@ -42,11 +42,16 @@ public:
   }
 
 private:
-  std::optional<std::filesystem::path> FindGamePath(
+  std::optional<GamePaths> FindGamePaths(
       const GameSettings& gameSettings) const override {
     if (gameSettings.Type() == GameType::tes5 ||
         gameSettings.Type() == GameType::fonv) {
-      return gameSettings.GamePath() / gameSettings.FolderName();
+      GamePaths gamePaths;
+      // This install path matches the testing plugins folder paths.
+      gamePaths.installPath =
+          gameSettings.GamePath() / gameSettings.FolderName();
+      gamePaths.localPath = gameSettings.GameLocalPath();
+      return gamePaths;
     }
 
     return std::nullopt;
@@ -92,7 +97,7 @@ TEST(GamesManager, loadInstalledGamesShouldSetTheGamePathsOfInstalledGames) {
 
   EXPECT_EQ(GameSettings(GameType::tes4).GamePath(), settings[0].GamePath());
 
-  EXPECT_NE(GameSettings(GameType::fonv).GamePath(), settings[2].GamePath());
+  EXPECT_NE(GameSettings(GameType::tes5).GamePath(), settings[1].GamePath());
   EXPECT_EQ("Skyrim", settings[1].GamePath());
 
   EXPECT_NE(GameSettings(GameType::fonv).GamePath(), settings[2].GamePath());

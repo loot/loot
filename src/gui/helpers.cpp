@@ -39,12 +39,19 @@
 #include <shlwapi.h>
 #include <windows.h>
 #else
+#include <mntent.h>
 #include <unicode/uchar.h>
 #include <unicode/unistr.h>
+
+#include <cstdio>
+
 using icu::UnicodeString;
 #endif
 
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
+#include <boost/locale.hpp>
+#include <fstream>
 
 #include "gui/state/logging.h"
 
@@ -100,25 +107,27 @@ std::string FromWinWide(const std::wstring& wstr) {
   return str;
 }
 
+HKEY GetRegistryRootKey(const std::string& rootKey) {
+  if (rootKey == "HKEY_CLASSES_ROOT")
+    return HKEY_CLASSES_ROOT;
+  else if (rootKey == "HKEY_CURRENT_CONFIG")
+    return HKEY_CURRENT_CONFIG;
+  else if (rootKey == "HKEY_CURRENT_USER")
+    return HKEY_CURRENT_USER;
+  else if (rootKey == "HKEY_LOCAL_MACHINE")
+    return HKEY_LOCAL_MACHINE;
+  else if (rootKey == "HKEY_USERS")
+    return HKEY_USERS;
+  else
+    throw std::invalid_argument("Invalid registry key given.");
+}
+
 std::string RegKeyStringValue(const std::string& rootKey,
                               const std::string& subkey,
                               const std::string& value) {
-  HKEY hKey = NULL;
+  HKEY hKey = GetRegistryRootKey(rootKey);
   DWORD len = MAX_PATH;
   std::wstring wstr(MAX_PATH, 0);
-
-  if (rootKey == "HKEY_CLASSES_ROOT")
-    hKey = HKEY_CLASSES_ROOT;
-  else if (rootKey == "HKEY_CURRENT_CONFIG")
-    hKey = HKEY_CURRENT_CONFIG;
-  else if (rootKey == "HKEY_CURRENT_USER")
-    hKey = HKEY_CURRENT_USER;
-  else if (rootKey == "HKEY_LOCAL_MACHINE")
-    hKey = HKEY_LOCAL_MACHINE;
-  else if (rootKey == "HKEY_USERS")
-    hKey = HKEY_USERS;
-  else
-    throw std::invalid_argument("Invalid registry key given.");
 
   auto logger = getLogger();
   if (logger) {
@@ -168,7 +177,233 @@ std::string RegKeyStringValue(const std::string& rootKey,
     return "";
   }
 }
+
+std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
+                                            const std::string& subKey) {
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace(
+        "Getting subkey names for registry key and subkey: {}, {}, "
+        "{}",
+        rootKey,
+        subKey);
+  }
+
+  HKEY hKey;
+  auto status = RegOpenKeyEx(GetRegistryRootKey(rootKey),
+                             ToWinWide(subKey).c_str(),
+                             0,
+                             KEY_ENUMERATE_SUB_KEYS,
+                             &hKey);
+
+  if (status != ERROR_SUCCESS) {
+    if (logger) {
+      // system_error gets the details from Windows.
+      const auto error =
+          std::system_error(GetLastError(), std::system_category());
+
+      logger->warn("Failed to open the Registry key \"{}\": {}",
+                   rootKey + "\\" + subKey,
+                   error.what());
+    }
+
+    // Don't throw because failure could be because the key simply does not
+    // exist, which is an unexceptional failure state.
+    return {};
+  }
+
+  std::vector<std::string> subKeyNames;
+  DWORD subKeyIndex = 0;
+  DWORD len = MAX_PATH;
+  std::wstring subKeyName(MAX_PATH, 0);
+  status = ERROR_SUCCESS;
+
+  while (status == ERROR_SUCCESS) {
+    status = RegEnumKeyEx(hKey,
+                          subKeyIndex,
+                          &subKeyName[0],
+                          &len,
+                          nullptr,
+                          nullptr,
+                          nullptr,
+                          nullptr);
+
+    if (status != ERROR_SUCCESS && status != ERROR_NO_MORE_ITEMS) {
+      RegCloseKey(hKey);
+
+      throw std::system_error(
+          GetLastError(),
+          std::system_category(),
+          "Failed to get the subkeys of the Registry key: " + rootKey + "\\" +
+              subKey);
+    }
+
+    subKeyNames.push_back(FromWinWide(subKeyName.c_str()));
+
+    subKeyIndex += 1;
+  }
+
+  RegCloseKey(hKey);
+
+  return subKeyNames;
+}
 #endif
+
+std::vector<std::filesystem::path> GetDriveRootPaths() {
+#ifdef _WIN32
+  const auto maxBufferLength = GetLogicalDriveStrings(0, nullptr);
+
+  if (maxBufferLength == 0) {
+    throw std::system_error(
+        GetLastError(),
+        std::system_category(),
+        "Failed to length of the buffer needed to hold all drive root paths");
+  }
+
+  // Add space for the terminating null character.
+  std::vector<wchar_t> buffer(size_t{maxBufferLength} + 1);
+
+  const size_t stringsLength =
+      GetLogicalDriveStrings(static_cast<DWORD>(buffer.size()), buffer.data());
+
+  // Trim any unused buffer bytes.
+  buffer.resize(stringsLength);
+
+  std::vector<std::filesystem::path> paths;
+
+  auto stringStartIt = buffer.begin();
+  for (auto it = buffer.begin(); it != buffer.end(); ++it) {
+    if (*it == 0) {
+      const std::wstring drive(stringStartIt, it);
+      paths.push_back(std::filesystem::path(drive));
+
+      stringStartIt = std::next(it);
+    }
+  }
+
+  return paths;
+#else
+  FILE* mountsFile = setmntent("/proc/self/mounts", "r");
+
+  if (mountsFile == nullptr) {
+    throw std::runtime_error("Failed to open /proc/self/mounts");
+  }
+
+  // Java increased their buffer size to 4 KiB:
+  // <https://bugs.openjdk.java.net/browse/JDK-8229872>
+  // .NET uses 8KiB:
+  // <https://github.com/dotnet/runtime/blob/7414af2a5f6d8d99efc27d3f5ef7a394e0b23c42/src/native/libs/System.Native/pal_mount.c#L24>
+  static constexpr size_t BUFFER_SIZE = 8192;
+  struct mntent entry {};
+  std::array<char, BUFFER_SIZE> stringsBuffer{};
+  std::vector<std::filesystem::path> paths;
+
+  while (getmntent_r(
+             mountsFile, &entry, stringsBuffer.data(), stringsBuffer.size()) !=
+         nullptr) {
+    paths.push_back(entry.mnt_dir);
+  }
+
+  endmntent(mountsFile);
+
+  return paths;
+#endif
+}
+
+std::optional<std::filesystem::path> FindXboxGamingRootPath(
+    const std::filesystem::path& driveRootPath) {
+  const auto logger = getLogger();
+  const auto gamingRootFilePath = driveRootPath / ".GamingRoot";
+
+  std::vector<char> bytes;
+
+  try {
+    if (!std::filesystem::is_regular_file(gamingRootFilePath)) {
+      return std::nullopt;
+    }
+
+    std::ifstream in(gamingRootFilePath, std::ios::binary);
+
+    std::copy(std::istreambuf_iterator<char>(in),
+              std::istreambuf_iterator<char>(),
+              std::back_inserter(bytes));
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error("Failed to read file at {}: {}",
+                    gamingRootFilePath.u8string(),
+                    e.what());
+    }
+
+    // Don't propagate this error as it could be due to a legitimate failure
+    // case like the drive not being ready (e.g. a removable disk drive with
+    // nothing in it).
+    return std::nullopt;
+  }
+
+  if (logger) {
+    // Log the contents of .GamingRoot because I'm not sure of the format and
+    // this would help debugging.
+    std::vector<std::string> hexBytes;
+    std::transform(bytes.begin(),
+                   bytes.end(),
+                   std::back_inserter(hexBytes),
+                   [](char byte) {
+                     std::stringstream stream;
+                     stream << "0x" << std::hex << int{byte};
+                     return stream.str();
+                   });
+
+    logger->debug("Read the following bytes from {}: {}",
+                  gamingRootFilePath.u8string(),
+                  boost::join(hexBytes, " "));
+  }
+
+  // The content of .GamingRoot is the byte sequence 52 47 42 58 01 00 00 00
+  // followed by the null-terminated UTF-16LE location of the Xbox games folder
+  // on the same drive.
+
+  if (bytes.size() % 2 != 0) {
+    logger->error(
+        "Found a non-even number of bytes in the file at {}, cannot interpret "
+        "it as UTF-16LE",
+        gamingRootFilePath.u8string());
+    throw std::runtime_error(
+        "Found a non-even number of bytes in the file at \"" +
+        gamingRootFilePath.u8string() + "\"");
+  }
+
+  std::vector<char16_t> content;
+  for (size_t i = 0; i < bytes.size(); i += 2) {
+    // char16_t is little-endian on all platforms LOOT runs on.
+    char16_t highByte = bytes.at(i);
+    char16_t lowByte = bytes.at(i + 1);
+    char16_t value = highByte | (lowByte << CHAR_BIT);
+    content.push_back(value);
+  }
+
+  static constexpr size_t CHAR16_PATH_OFFSET = 4;
+  if (content.size() < CHAR16_PATH_OFFSET + 1) {
+    if (logger) {
+      logger->error(
+          ".GamingRoot content was unexpectedly short at {} char16_t long",
+          content.size());
+    }
+
+    throw std::runtime_error("The file at \"" + gamingRootFilePath.u8string() +
+                             "\" is shorter than expected.");
+  }
+
+  // Cut off the null char16_t at the end.
+  const std::u16string relativePath(content.begin() + CHAR16_PATH_OFFSET,
+                                    content.end() - 1);
+
+  if (logger) {
+    logger->debug("Read the following relative path from .GamingRoot: {}",
+                  std::filesystem::path(relativePath).u8string());
+  }
+
+  return driveRootPath / relativePath;
+}
 
 int CompareFilenames(const std::string& lhs, const std::string& rhs) {
 #ifdef _WIN32

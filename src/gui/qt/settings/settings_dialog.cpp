@@ -89,7 +89,7 @@ void SettingsDialog::setupUi() {
   sidebarLayout->addWidget(addGameButton);
 
   tabsLayout->addLayout(sidebarLayout);
-  tabsLayout->addWidget(stackedWidget);
+  tabsLayout->addWidget(stackedWidget, 1);
 
   dialogLayout->addLayout(tabsLayout);
   dialogLayout->addWidget(buttonBox);

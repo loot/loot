@@ -46,6 +46,8 @@ public:
   static QIcon getEditIcon();
 
   static QIcon getSortIcon();
+  static QIcon getApplySortIcon();
+  static QIcon getDiscardSortIcon();
   static QIcon getUpdateMasterlistIcon();
 
   static QIcon getSettingsIcon();
@@ -55,11 +57,14 @@ public:
   static QIcon getSearchIcon();
   static QIcon getCopyLoadOrderIcon();
   static QIcon getCopyContentIcon();
+  static QIcon getCopyMetadataIcon();
   static QIcon getRefreshIcon();
   static QIcon getRedateIcon();
+  static QIcon getFixIcon();
   static QIcon getDeleteIcon();
   static QIcon getViewDocsIcon();
   static QIcon getOpenLOOTDataFolderIcon();
+  static QIcon getJoinDiscordServerIcon();
   static QIcon getAboutIcon();
 
   // Caches resized pixmaps so that the transformation only needs to be done

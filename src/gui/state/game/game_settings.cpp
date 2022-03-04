@@ -43,6 +43,24 @@ static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
 static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
 
+std::string GetPluginsFolderName(GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+      return "Data Files";
+    case GameType::tes4:
+    case GameType::tes5:
+    case GameType::tes5se:
+    case GameType::tes5vr:
+    case GameType::fo3:
+    case GameType::fonv:
+    case GameType::fo4:
+    case GameType::fo4vr:
+      return "Data";
+    default:
+      throw std::logic_error("Unrecognised game type");
+  }
+}
+
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode) {
   if (Type() == GameType::tes3) {
@@ -56,7 +74,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
                      "Software\\GOG.com\\Games\\1435828767\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1435828767_is1\\InstallLocation"};
-    pluginsFolderName_ = "Data Files";
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
     mininumHeaderVersion_ = MORROWIND_MINIMUM_HEADER_VERSION;
@@ -76,7 +93,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
                      "Software\\GOG.com\\Games\\1458058109\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1458058109_is1\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
     mininumHeaderVersion_ = OBLIVION_MINIMUM_HEADER_VERSION;
@@ -87,7 +103,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim\\Installed Path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 72850\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_FO3_MINIMUM_HEADER_VERSION;
@@ -99,7 +114,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
         "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path",
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
         "489830\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
@@ -110,7 +124,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 611670\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
@@ -129,7 +142,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
                      "Software\\GOG.com\\Games\\1248282609\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1248282609_is1\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
     mininumHeaderVersion_ = SKYRIM_FO3_MINIMUM_HEADER_VERSION;
@@ -148,7 +160,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
                      "Software\\GOG.com\\Games\\1454587428\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1454587428_is1\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
     mininumHeaderVersion_ = FONV_MINIMUM_HEADER_VERSION;
@@ -160,7 +171,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     registryKeys_ = {"Software\\Bethesda Softworks\\Fallout4\\Installed Path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 377160\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
@@ -172,7 +182,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
         "Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path",
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
         "611660\\InstallLocation"};
-    pluginsFolderName_ = "Data";
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
@@ -214,7 +223,7 @@ std::filesystem::path GameSettings::GameLocalPath() const {
 }
 
 std::filesystem::path GameSettings::DataPath() const {
-  return gamePath_ / pluginsFolderName_;
+  return gamePath_ / GetPluginsFolderName(type_);
 }
 
 GameSettings& GameSettings::SetName(const std::string& name) {
@@ -258,51 +267,5 @@ GameSettings& GameSettings::SetGameLocalPath(
 GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
   gameLocalPath_ = getLocalAppDataPath() / u8path(folderName);
   return *this;
-}
-
-std::optional<std::filesystem::path> GameSettings::FindGamePath() const {
-  auto logger = getLogger();
-  try {
-    if (logger) {
-      logger->trace("Checking if game \"{}\" is installed.", name_);
-    }
-    if (!gamePath_.empty() &&
-        exists(gamePath_ / pluginsFolderName_ / u8path(masterFile_))) {
-      return gamePath_;
-    }
-
-    std::filesystem::path gamePath = "..";
-    if (exists(gamePath / pluginsFolderName_ / u8path(masterFile_)) &&
-        ExecutableExists(type_, gamePath)) {
-      return gamePath;
-    }
-
-#ifdef _WIN32
-    for (const auto& registryKey : registryKeys_) {
-      auto [rootKey, subKey, value] = SplitRegistryPath(registryKey);
-      gamePath = RegKeyStringValue(rootKey, subKey, value);
-
-      // Hack for Nehrim installed through Steam, as its Steam install
-      // puts all the game files inside a NehrimFiles subdirectory.
-      if (!gamePath.empty() && registryKey == NEHRIM_STEAM_REGISTRY_KEY) {
-        gamePath /= "NehrimFiles";
-      }
-
-      if (!gamePath.empty() &&
-          exists(gamePath / pluginsFolderName_ / u8path(masterFile_)) &&
-          ExecutableExists(type_, gamePath)) {
-        return gamePath;
-      }
-    }
-#endif
-  } catch (const std::exception& e) {
-    if (logger) {
-      logger->error("Error while checking if game \"{}\" is installed: {}",
-                    name_,
-                    e.what());
-    }
-  }
-
-  return std::nullopt;
 }
 }

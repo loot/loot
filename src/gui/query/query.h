@@ -26,7 +26,6 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_QUERY
 #define LOOT_GUI_QUERY_QUERY
 
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <optional>
 #include <string>
@@ -70,37 +69,6 @@ public:
         .str();
   };
 };
-
-template<typename G>
-inline std::string getSortingErrorMessage(const G& game) {
-  const auto loadOrderFile = [&]() {
-    // This isn't 100% accurate (it doesn't handle when Oblivion is configured
-    // to use the install path instead of the local data path), but it's good
-    // enough for a general advisory. It's not extracted into a separate
-    // function to avoid it being misused somewhere else.
-    const GameSettings settings = game.GetSettings();
-    if (settings.Type() == GameType::tes3) {
-      return settings.GamePath() / "Morrowind.ini";
-    }
-
-    // This is a misuse of FolderName(), but it works because LOOT's game
-    // folder names happen to match the names of the folders used by the games
-    // themselves.
-    const auto gameLocalPath =
-        settings.GameLocalPath().empty()
-            ? getLocalAppDataPath() / settings.FolderName()
-            : settings.GameLocalPath();
-    return gameLocalPath / "plugins.txt";
-  }();
-
-  return (boost::format(boost::locale::translate(
-              "Oh no, something went wrong! This is usually because \"%1%\" "
-              "is set to be read-only. If it is, unset it and try again. If "
-              "it isn't, you can check your LOOTDebugLog.txt (you can get to "
-              "it through the main menu) for more information.")) %
-          loadOrderFile.u8string())
-      .str();
-}
 }
 
 #endif
