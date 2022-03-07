@@ -54,7 +54,7 @@ protected:
     touch(gitRepoPath_ / "masterlist.yaml");
     touch(gitRepoPath_ / "prelude.yaml");
 
-    checkoutBranch("v0.17");
+    checkoutBranch("v0.18");
   }
 
   void TearDown() override { std::filesystem::remove_all(gitRepoPath_); }
@@ -101,14 +101,14 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+                               "enderal/v0.18/masterlist.yaml"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
           .SetGameLocalFolder("Enderal Special Edition")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+                               "enderal/v0.18/masterlist.yaml"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
@@ -126,7 +126,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
   EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
-  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml",
+  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml",
             settings_.getPreludeSource());
 
   // GameSettings equality only checks name and folder, so check
@@ -467,7 +467,7 @@ TEST_P(LootSettingsTest,
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.17/"
+      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.18/"
       "masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
@@ -696,7 +696,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  checkoutBranch("v0.17");
+  checkoutBranch("v0.18");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -788,7 +788,7 @@ TEST_P(LootSettingsTest,
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/"
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/"
       "prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
@@ -831,7 +831,7 @@ TEST_P(
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -853,7 +853,7 @@ TEST_P(
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -869,7 +869,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  checkoutBranch("v0.17");
+  checkoutBranch("v0.18");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -889,7 +889,7 @@ TEST_P(
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 

@@ -93,7 +93,7 @@ TEST_P(GameSettingsTest,
                "48282609_is1\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout3/v0.17/"
+          "https://raw.githubusercontent.com/loot/fallout3/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -117,7 +117,7 @@ TEST_P(GameSettingsTest,
                "54587428_is1\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/falloutnv/v0.17/"
+          "https://raw.githubusercontent.com/loot/falloutnv/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -133,7 +133,7 @@ TEST_P(GameSettingsTest,
                "eam App 377160\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4/v0.17/"
+          "https://raw.githubusercontent.com/loot/fallout4/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -150,7 +150,7 @@ TEST_P(GameSettingsTest,
                "eam App 611660\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/fallout4vr/v0.17/"
+          "https://raw.githubusercontent.com/loot/fallout4vr/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -172,7 +172,7 @@ TEST_P(GameSettingsTest,
                "35828767_is1\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/morrowind/v0.17/"
+          "https://raw.githubusercontent.com/loot/morrowind/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -196,7 +196,7 @@ TEST_P(GameSettingsTest,
                "58058109_is1\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/oblivion/v0.17/"
+          "https://raw.githubusercontent.com/loot/oblivion/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -212,7 +212,7 @@ TEST_P(GameSettingsTest,
                "eam App 72850\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrim/v0.17/masterlist.yaml",
+          "https://raw.githubusercontent.com/loot/skyrim/v0.18/masterlist.yaml",
           settings_.MasterlistSource());
       break;
     case GameType::tes5se:
@@ -228,7 +228,7 @@ TEST_P(GameSettingsTest,
                "eam App 489830\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimse/v0.17/"
+          "https://raw.githubusercontent.com/loot/skyrimse/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -245,7 +245,7 @@ TEST_P(GameSettingsTest,
                "eam App 611670\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
-          "https://raw.githubusercontent.com/loot/skyrimvr/v0.17/"
+          "https://raw.githubusercontent.com/loot/skyrimvr/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;

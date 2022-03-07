@@ -44,7 +44,7 @@ using std::filesystem::u8path;
 
 namespace loot {
 static const std::set<std::string> oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15"});
+    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15", "v0.17"});
 
 static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
@@ -214,8 +214,9 @@ std::optional<std::string> migrateMasterlistRepoSettings(
   }
 
   if (!branch) {
-    // No branch, it would be set to the default, which was v0.17.
-    branch = std::string(DEFAULT_MASTERLIST_BRANCH);
+    // No branch, it would be set to the default, which was v0.17 in the last
+    // version of LOOT to have a branch config property.
+    branch = std::string("v0.17");
     if (logger) {
       logger->warn(
           "Found repo config property but not branch, "
@@ -314,8 +315,9 @@ std::optional<std::string> migratePreludeRepoSettings(
   }
 
   if (!branch) {
-    // No branch, it would be set to the default.
-    branch = std::string(DEFAULT_MASTERLIST_BRANCH);
+    // No branch, it would be set to the default, which was v0.17 in the last
+    // version of LOOT to have a branch config property.
+    branch = std::string("v0.17");
     if (logger) {
       logger->info(
           "Found prelude repository URL config but not prelude branch, "
