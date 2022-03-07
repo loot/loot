@@ -267,7 +267,7 @@ void GraphView::wheelEvent(QWheelEvent *event) {
   const auto mouseWheelRotationAngle =
       event->angleDelta().y() / ROTATION_SCALING_FACTOR;
 
-  const auto scaleFactor = pow(BASE_SCALE_FACTOR, -mouseWheelRotationAngle);
+  const auto scaleFactor = pow(BASE_SCALE_FACTOR, mouseWheelRotationAngle);
 
   const auto factor = transform()
                           .scale(scaleFactor, scaleFactor)
