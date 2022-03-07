@@ -50,8 +50,6 @@ static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
                std::regex::ECMAScript | std::regex::icase);
 
-static const std::string DEFAULT_MASTERLIST_BRANCH = "v0.17";
-
 std::string getOldDefaultRepoUrl(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -217,7 +215,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(
 
   if (!branch) {
     // No branch, it would be set to the default, which was v0.17.
-    branch = DEFAULT_MASTERLIST_BRANCH;
+    branch = std::string(DEFAULT_MASTERLIST_BRANCH);
     if (logger) {
       logger->warn(
           "Found repo config property but not branch, "
@@ -317,7 +315,7 @@ std::optional<std::string> migratePreludeRepoSettings(
 
   if (!branch) {
     // No branch, it would be set to the default.
-    branch = DEFAULT_MASTERLIST_BRANCH;
+    branch = std::string(DEFAULT_MASTERLIST_BRANCH);
     if (logger) {
       logger->info(
           "Found prelude repository URL config but not prelude branch, "

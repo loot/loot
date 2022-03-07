@@ -111,7 +111,8 @@ private:
   std::string lastVersion_;
   std::string language_{"en"};
   std::string preludeSource_{
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml"};
+      std::string("https://raw.githubusercontent.com/loot/prelude/") +
+      DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml"};
   std::string theme_{"default"};
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_{
@@ -139,8 +140,7 @@ private:
                "ea"
                "m App 933480\\InstallLocation"})
           .SetGameLocalFolder("enderal")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
           .SetRegistryKeys(
@@ -150,8 +150,7 @@ private:
                "ea"
                "m App 976620\\InstallLocation"})
           .SetGameLocalFolder("Enderal Special Edition")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
   };
   Filters filters_;
   std::vector<Language> languages_{

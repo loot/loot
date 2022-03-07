@@ -35,11 +35,14 @@
 #include "loot/enum/game_type.h"
 
 namespace loot {
-constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
+inline constexpr std::string_view NEHRIM_STEAM_REGISTRY_KEY =
     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
     "1014940\\InstallLocation";
+static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.17";
 
 std::string GetPluginsFolderName(GameType gameType);
+
+std::string GetDefaultMasterlistUrl(std::string repoName);
 
 class GameSettings {
 public:
