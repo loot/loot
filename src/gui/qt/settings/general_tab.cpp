@@ -79,7 +79,8 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
       QVariant(QString::fromStdString(settings.getTheme())));
   themeComboBox->setCurrentIndex(themeIndex);
 
-  updateMasterlistCheckbox->setChecked(settings.updateMasterlist());
+  updateMasterlistCheckbox->setChecked(
+      settings.isMasterlistUpdateBeforeSortEnabled());
   checkUpdatesCheckbox->setChecked(settings.isLootUpdateCheckEnabled());
   loggingCheckbox->setChecked(settings.isDebugLoggingEnabled());
 
@@ -92,7 +93,8 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
       defaultGameComboBox->currentData().toString().toStdString();
   auto language = languageComboBox->currentData().toString().toStdString();
   auto theme = themeComboBox->currentData().toString().toStdString();
-  const auto updateMasterlist = updateMasterlistCheckbox->isChecked();
+  const auto enableMasterlistUpdateBeforeSort =
+      updateMasterlistCheckbox->isChecked();
   const auto checkForUpdates = checkUpdatesCheckbox->isChecked();
   const auto enableDebugLogging = loggingCheckbox->isChecked();
   auto preludeSource = preludeSourceInput->text().toStdString();
@@ -100,7 +102,7 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   settings.setDefaultGame(defaultGame);
   settings.setLanguage(language);
   settings.setTheme(theme);
-  settings.updateMasterlist(updateMasterlist);
+  settings.enableMasterlistUpdateBeforeSort(enableMasterlistUpdateBeforeSort);
   settings.enableLootUpdateCheck(checkForUpdates);
   settings.enableDebugLogging(enableDebugLogging);
   settings.setPreludeSource(preludeSource);

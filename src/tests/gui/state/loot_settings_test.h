@@ -111,7 +111,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isLootUpdateCheckEnabled());
   EXPECT_EQ("auto", settings_.getGame());
   EXPECT_EQ("auto", settings_.getLastGame());
@@ -237,7 +237,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   settings_.load(settingsFile_, lootDataPath);
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_FALSE(settings_.isLootUpdateCheckEnabled());
   EXPECT_EQ("Oblivion", settings_.getGame());
   EXPECT_EQ("Skyrim", settings_.getLastGame());
@@ -330,7 +330,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
 
   settings_.load(unicodeSettingsFile_, lootDataPath);
 
-  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_EQ("Oblivion", settings_.getGame());
 }
@@ -980,7 +980,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   filters.hideCRCs = true;
 
   settings_.enableDebugLogging(true);
-  settings_.updateMasterlist(true);
+  settings_.enableMasterlistUpdateBeforeSort(true);
   settings_.enableLootUpdateCheck(false);
   settings_.setDefaultGame(game);
   settings_.storeLastGame(lastGame);
@@ -998,7 +998,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings.load(settingsFile_, lootDataPath);
 
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings.updateMasterlist());
+  EXPECT_TRUE(settings.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_FALSE(settings.isLootUpdateCheckEnabled());
   EXPECT_EQ(game, settings.getGame());
   EXPECT_EQ(lastGame, settings.getLastGame());

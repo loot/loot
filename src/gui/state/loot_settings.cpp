@@ -540,8 +540,8 @@ void LootSettings::load(const std::filesystem::path& file,
 
   enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
                             .value_or(enableDebugLogging_);
-  updateMasterlist_ =
-      settings->get_as<bool>("updateMasterlist").value_or(updateMasterlist_);
+  updateMasterlistBeforeSort_ = settings->get_as<bool>("updateMasterlist")
+                                    .value_or(updateMasterlistBeforeSort_);
   enableLootUpdateCheck_ = settings->get_as<bool>("enableLootUpdateCheck")
                                .value_or(enableLootUpdateCheck_);
   game_ = settings->get_as<std::string>("game").value_or(game_);
@@ -640,7 +640,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   auto root = cpptoml::make_table();
 
   root->insert("enableDebugLogging", enableDebugLogging_);
-  root->insert("updateMasterlist", updateMasterlist_);
+  root->insert("updateMasterlist", updateMasterlistBeforeSort_);
   root->insert("enableLootUpdateCheck", enableLootUpdateCheck_);
   root->insert("game", game_);
   root->insert("language", language_);
@@ -716,7 +716,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   out << *root;
 }
 
-bool LootSettings::shouldAutoSort() const {
+bool LootSettings::isAutoSortEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return autoSort_;
@@ -728,10 +728,10 @@ bool LootSettings::isDebugLoggingEnabled() const {
   return enableDebugLogging_;
 }
 
-bool LootSettings::updateMasterlist() const {
+bool LootSettings::isMasterlistUpdateBeforeSortEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return updateMasterlist_;
+  return updateMasterlistBeforeSort_;
 }
 
 bool LootSettings::isLootUpdateCheckEnabled() const {
@@ -825,7 +825,7 @@ void LootSettings::setPreludeSource(const std::string& source) {
   preludeSource_ = source;
 }
 
-void LootSettings::setAutoSort(bool autoSort) {
+void LootSettings::enableAutoSort(bool autoSort) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   autoSort_ = autoSort;
@@ -838,10 +838,10 @@ void LootSettings::enableDebugLogging(bool enable) {
   loot::enableDebugLogging(enable);
 }
 
-void LootSettings::updateMasterlist(bool update) {
+void LootSettings::enableMasterlistUpdateBeforeSort(bool update) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  updateMasterlist_ = update;
+  updateMasterlistBeforeSort_ = update;
 }
 
 void LootSettings::enableLootUpdateCheck(bool enable) {

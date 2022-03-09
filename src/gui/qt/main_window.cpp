@@ -876,7 +876,7 @@ bool MainWindow::hasErrorMessages() const {
 void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> tasks;
 
-  if (state.getSettings().updateMasterlist()) {
+  if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
     auto task = new UpdateMasterlistTask(state);
@@ -2076,7 +2076,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
 
-    if (state.getSettings().shouldAutoSort()) {
+    if (state.getSettings().isAutoSortEnabled()) {
       if (hasErrorMessages()) {
         state.GetCurrentGame().AppendMessage(
             Message(MessageType::error,
