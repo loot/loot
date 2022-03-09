@@ -36,8 +36,7 @@ along with LOOT.  If not, see
 namespace loot {
 bool operator==(const LootSettings::Language& lhs,
                 const LootSettings::Language& rhs) {
-  return lhs.locale == rhs.locale && lhs.name == rhs.name &&
-         lhs.fontFamily == rhs.fontFamily;
+  return lhs.locale == rhs.locale && lhs.name == rhs.name;
 }
 
 namespace test {
@@ -179,44 +178,27 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   auto actualLanguages = settings_.getLanguages();
   EXPECT_EQ(18, actualLanguages.size());
-  EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
-            actualLanguages[0]);
-  EXPECT_EQ(LootSettings::Language({"bg", "Български", std::nullopt}),
-            actualLanguages[1]);
-  EXPECT_EQ(LootSettings::Language({"cs", "Čeština", std::nullopt}),
-            actualLanguages[2]);
-  EXPECT_EQ(LootSettings::Language({"da", "Dansk", std::nullopt}),
-            actualLanguages[3]);
-  EXPECT_EQ(LootSettings::Language({"de", "Deutsch", std::nullopt}),
-            actualLanguages[4]);
-  EXPECT_EQ(LootSettings::Language({"es", "Español", std::nullopt}),
-            actualLanguages[5]);
-  EXPECT_EQ(LootSettings::Language({"fi", "Suomi", std::nullopt}),
-            actualLanguages[6]);
-  EXPECT_EQ(LootSettings::Language({"fr", "Français", std::nullopt}),
-            actualLanguages[7]);
-  EXPECT_EQ(LootSettings::Language({"it", "Italiano", std::nullopt}),
-            actualLanguages[8]);
-  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
-            actualLanguages[9]);
-  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
-            actualLanguages[10]);
-  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
-            actualLanguages[11]);
-  EXPECT_EQ(
-      LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
-      actualLanguages[12]);
-  EXPECT_EQ(
-      LootSettings::Language({"pt_PT", "Português de Portugal", std::nullopt}),
-      actualLanguages[13]);
-  EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
-            actualLanguages[14]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
-            actualLanguages[15]);
-  EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"en", "English"}), actualLanguages[0]);
+  EXPECT_EQ(LootSettings::Language({"bg", "Български"}), actualLanguages[1]);
+  EXPECT_EQ(LootSettings::Language({"cs", "Čeština"}), actualLanguages[2]);
+  EXPECT_EQ(LootSettings::Language({"da", "Dansk"}), actualLanguages[3]);
+  EXPECT_EQ(LootSettings::Language({"de", "Deutsch"}), actualLanguages[4]);
+  EXPECT_EQ(LootSettings::Language({"es", "Español"}), actualLanguages[5]);
+  EXPECT_EQ(LootSettings::Language({"fi", "Suomi"}), actualLanguages[6]);
+  EXPECT_EQ(LootSettings::Language({"fr", "Français"}), actualLanguages[7]);
+  EXPECT_EQ(LootSettings::Language({"it", "Italiano"}), actualLanguages[8]);
+  EXPECT_EQ(LootSettings::Language({"ja", "日本語"}), actualLanguages[9]);
+  EXPECT_EQ(LootSettings::Language({"ko", "한국어"}), actualLanguages[10]);
+  EXPECT_EQ(LootSettings::Language({"pl", "Polski"}), actualLanguages[11]);
+  EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil"}),
+            actualLanguages[12]);
+  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal"}),
+            actualLanguages[13]);
+  EXPECT_EQ(LootSettings::Language({"ru", "Русский"}), actualLanguages[14]);
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska"}), actualLanguages[15]);
+  EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська"}),
             actualLanguages[16]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
-            actualLanguages[17]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[17]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
@@ -249,8 +231,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "hideCRCs = true" << endl
       << "[[languages]]" << endl
       << "locale = \"en\"" << endl
-      << "name = \"English\"" << endl
-      << "fontFamily = \"Times New Roman\"" << endl;
+      << "name = \"English\"" << endl;
   out.close();
 
   settings_.load(settingsFile_, lootDataPath);
@@ -278,7 +259,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_TRUE(settings_.getFilters().hideCRCs);
 
   EXPECT_EQ(1, settings_.getLanguages().size());
-  EXPECT_EQ(LootSettings::Language({"en", "English", "Times New Roman"}),
+  EXPECT_EQ(LootSettings::Language({"en", "English"}),
             settings_.getLanguages()[0]);
 }
 

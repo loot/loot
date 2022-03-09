@@ -52,7 +52,6 @@ public:
   struct Language {
     std::string locale;
     std::string name;
-    std::optional<std::string> fontFamily;
   };
 
   struct Filters {
@@ -154,24 +153,24 @@ private:
   };
   Filters filters_;
   std::vector<Language> languages_{
-      Language({"en", "English", std::nullopt}),
-      Language({"bg", "Български", std::nullopt}),
-      Language({"cs", "Čeština", std::nullopt}),
-      Language({"da", "Dansk", std::nullopt}),
-      Language({"de", "Deutsch", std::nullopt}),
-      Language({"es", "Español", std::nullopt}),
-      Language({"fi", "Suomi", std::nullopt}),
-      Language({"fr", "Français", std::nullopt}),
-      Language({"it", "Italiano", std::nullopt}),
-      Language({"ja", "日本語", "Meiryo"}),
-      Language({"ko", "한국어", "Malgun Gothic"}),
-      Language({"pl", "Polski", std::nullopt}),
-      Language({"pt_BR", "Português do Brasil", std::nullopt}),
-      Language({"pt_PT", "Português de Portugal", std::nullopt}),
-      Language({"ru", "Русский", std::nullopt}),
-      Language({"sv", "Svenska", std::nullopt}),
-      Language({"uk_UA", "Українська", std::nullopt}),
-      Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+      Language({"en", "English"}),
+      Language({"bg", "Български"}),
+      Language({"cs", "Čeština"}),
+      Language({"da", "Dansk"}),
+      Language({"de", "Deutsch"}),
+      Language({"es", "Español"}),
+      Language({"fi", "Suomi"}),
+      Language({"fr", "Français"}),
+      Language({"it", "Italiano"}),
+      Language({"ja", "日本語"}),
+      Language({"ko", "한국어"}),
+      Language({"pl", "Polski"}),
+      Language({"pt_BR", "Português do Brasil"}),
+      Language({"pt_PT", "Português de Portugal"}),
+      Language({"ru", "Русский"}),
+      Language({"sv", "Svenska"}),
+      Language({"uk_UA", "Українська"}),
+      Language({"zh_CN", "简体中文"}),
   };
 
   mutable std::recursive_mutex mutex_;

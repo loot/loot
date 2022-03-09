@@ -522,11 +522,6 @@ LootSettings::Language convert(const cpptoml::table& table) {
   language.locale = *locale;
   language.name = *name;
 
-  auto fontFamily = table.get_as<std::string>("fontFamily");
-  if (fontFamily) {
-    language.fontFamily = *fontFamily;
-  }
-
   return language;
 }
 
@@ -711,9 +706,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       auto languageTable = cpptoml::make_table();
       languageTable->insert("locale", language.locale);
       languageTable->insert("name", language.name);
-      if (language.fontFamily.has_value()) {
-        languageTable->insert("fontFamily", language.fontFamily.value());
-      }
+
       languageTables->push_back(languageTable);
     }
     root->insert("languages", languageTables);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-07 16:54+0000\n"
+"POT-Creation-Date: 2022-03-09 21:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -722,7 +722,7 @@ msgid "Name"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
-#: src/gui/qt/settings/general_tab.cpp:138
+#: src/gui/qt/settings/general_tab.cpp:140
 msgid "Language"
 msgstr ""
 
@@ -780,47 +780,47 @@ msgstr ""
 msgid "Delete game"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:137
+#: src/gui/qt/settings/general_tab.cpp:139
 msgid "Default Game"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:139
+#: src/gui/qt/settings/general_tab.cpp:141
 msgid "Theme"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:140
+#: src/gui/qt/settings/general_tab.cpp:142
 msgid "Update masterlist before sorting"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:141
+#: src/gui/qt/settings/general_tab.cpp:143
 msgid "Check for LOOT updates on startup"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:142
+#: src/gui/qt/settings/general_tab.cpp:144
 msgid "Enable debug logging"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:143
+#: src/gui/qt/settings/general_tab.cpp:145
 msgid "Masterlist prelude source"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:146
+#: src/gui/qt/settings/general_tab.cpp:148
 msgid "Language changes will be applied after LOOT is restarted."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:148
+#: src/gui/qt/settings/general_tab.cpp:150
 msgid "Theme changes will be applied after LOOT is restarted."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:150
+#: src/gui/qt/settings/general_tab.cpp:152
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:152
+#: src/gui/qt/settings/general_tab.cpp:154
 msgid "A prelude source is required."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:154
+#: src/gui/qt/settings/general_tab.cpp:156
 msgid "Autodetect"
 msgstr ""
 
