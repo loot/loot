@@ -382,6 +382,13 @@ void MainWindow::setupUi() {
   sidebarSplitter->setStretchFactor(0, 1);
   sidebarSplitter->setStretchFactor(1, 2);
 
+  const auto horizontalSpace =
+      style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing);
+  const auto verticalSpace =
+      style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing);
+  sidebarSplitter->setContentsMargins(
+      horizontalSpace, verticalSpace, horizontalSpace, verticalSpace);
+
   setCentralWidget(sidebarSplitter);
 
   progressDialog->setWindowModality(Qt::WindowModal);
