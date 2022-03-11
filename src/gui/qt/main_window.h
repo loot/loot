@@ -239,10 +239,13 @@ private slots:
   void on_actionUpdateMasterlist_triggered();
 
   void on_sidebarPluginsView_doubleClicked(const QModelIndex &index);
+  void on_sidebarPluginsView_customContextMenuRequested(const QPoint &position);
   void on_sidebarPluginsSelectionModel_selectionChanged(
       const QItemSelection &selected);
 
   void on_pluginCardsView_entered(const QModelIndex &index);
+  void on_pluginCardsView_pressed(const QModelIndex &index);
+  void on_pluginCardsView_customContextMenuRequested(const QPoint &position);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
   void on_pluginItemModel_dataChanged(const QModelIndex &topLeft,

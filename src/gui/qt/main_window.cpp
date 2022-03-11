@@ -580,6 +580,9 @@ void MainWindow::setupViews() {
       PluginItemModel::SIDEBAR_NAME_COLUMN,
       new SidebarPluginNameDelegate(sidebarPluginsView));
 
+  // Enable the right-click Plugin context menu.
+  sidebarPluginsView->setContextMenuPolicy(Qt::CustomContextMenu);
+
   pluginCardsView->setModel(proxyModel);
   pluginCardsView->setModelColumn(PluginItemModel::CARDS_COLUMN);
   pluginCardsView->setSelectionMode(QAbstractItemView::NoSelection);
@@ -596,9 +599,10 @@ void MainWindow::setupViews() {
   // leading to layout issues.
   pluginCardsView->setWordWrap(true);
 
-  // Don't set the delegates until after the model is set, as the
-  // former may depend on the latter.
   pluginCardsView->setItemDelegate(new PluginCardDelegate(pluginCardsView));
+
+  // Enable the right-click Plugin context menu.
+  pluginCardsView->setContextMenuPolicy(Qt::CustomContextMenu);
 
   // Plugin selection handling needs to be set up after the model has been
   // set, as before then there is no selection model.
@@ -1543,22 +1547,22 @@ void MainWindow::on_actionEditMetadata_triggered() {
       return;
     }
 
-    auto plugin = getSelectedPlugin();
-    auto groups = GetGroupNames(state.GetCurrentGame());
+    const auto selectedPluginName = getSelectedPlugin().name;
+    const auto groups = GetGroupNames(state.GetCurrentGame());
 
     pluginEditorWidget->initialiseInputs(
         groups,
-        plugin.name,
+        selectedPluginName,
         state.GetCurrentGame().GetNonUserMetadata(
-            *state.GetCurrentGame().GetPlugin(plugin.name)),
-        state.GetCurrentGame().GetUserMetadata(plugin.name));
+            *state.GetCurrentGame().GetPlugin(selectedPluginName)),
+        state.GetCurrentGame().GetUserMetadata(selectedPluginName));
 
     pluginEditorWidget->show();
 
     state.IncrementUnappliedChangeCounter();
 
     // Refresh the sidebar items so that all their groups are displayed.
-    pluginItemModel->setEditorPluginName(plugin.name);
+    pluginItemModel->setEditorPluginName(selectedPluginName);
 
     enterEditingState();
   } catch (const std::exception& e) {
@@ -1853,6 +1857,27 @@ void MainWindow::on_sidebarPluginsView_doubleClicked(const QModelIndex& index) {
   pluginCardsView->scrollTo(cardIndex, QAbstractItemView::PositionAtTop);
 }
 
+void MainWindow::on_sidebarPluginsView_customContextMenuRequested(
+    const QPoint& position) {
+  const auto itemIndex = sidebarPluginsView->indexAt(position);
+
+  if (!itemIndex.isValid() || itemIndex.row() == 0) {
+    return;
+  }
+
+  sidebarPluginsView->selectRow(itemIndex.row());
+
+  // For some reason mapToGlobal() doesn't include the height of the table's
+  // horizontal header, so add that so that the menu gets displayed in the
+  // correct position.
+  const auto headerHeight = sidebarPluginsView->horizontalHeader()->height();
+
+  auto globalPos = sidebarPluginsView->mapToGlobal(position);
+  globalPos.setY(globalPos.y() + headerHeight);
+
+  menuPlugin->exec(globalPos);
+}
+
 void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
     const QItemSelection& selected) {
   if (selected.isEmpty()) {
@@ -1874,6 +1899,29 @@ void MainWindow::on_pluginCardsView_entered(const QModelIndex& index) {
   }
 
   lastEnteredCardIndex = QPersistentModelIndex(index);
+}
+
+void MainWindow::on_pluginCardsView_pressed(const QModelIndex& index) {
+  // Open the persistent editor on mouse button press too because if a
+  // card is entered while a modal (e.g. a context menu) is open, the
+  // entered signal will not fire, but a click to dismiss the modal will
+  // fire.
+  on_pluginCardsView_entered(index);
+}
+
+void MainWindow::on_pluginCardsView_customContextMenuRequested(
+    const QPoint& position) {
+  const auto itemIndex = pluginCardsView->indexAt(position);
+
+  if (!itemIndex.isValid() || itemIndex.row() == 0) {
+    return;
+  }
+
+  sidebarPluginsView->selectRow(itemIndex.row());
+
+  const auto globalPos = pluginCardsView->mapToGlobal(position);
+
+  menuPlugin->exec(globalPos);
 }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
