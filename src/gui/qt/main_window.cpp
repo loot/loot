@@ -534,6 +534,7 @@ void MainWindow::setupToolBar() {
   toolBar->addAction(actionUpdateMasterlist);
   toolBar->addAction(actionApplySort);
   toolBar->addAction(actionDiscardSort);
+  toolBar->addAction(actionSearch);
 }
 
 void MainWindow::setupViews() {
