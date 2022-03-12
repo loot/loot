@@ -143,6 +143,9 @@ Changed
   less interest to users, and they're grouped together to make it more obvious
   what they are.
 - The Groups Editor now lays out groups vertically rather than horizontally.
+- The Groups Editor no longer has a separate "drawing mode": instead, lines
+  between groups can be drawn by double-clicking a node then dragging to another
+  node, as in LOOT v0.16.1 and earlier.
 - LOOT's game folders have been moved into ``%LOCALAPPDATA%\LOOT\games`` to
   differentiate them from the other files and folders in
   ``%LOCALAPPDATA%\LOOT``. LOOT will migrate each existing game folder to the
