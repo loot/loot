@@ -156,6 +156,11 @@ void PluginEditorWidget::setupUi() {
 
   translateUi();
 
+  connect(groupTab,
+          &GroupTab::groupChanged,
+          this,
+          &PluginEditorWidget::handleTabContentChanged);
+
   connectTableRowCountChangedSignal(loadAfterTab);
   connectTableRowCountChangedSignal(requirementsTab);
   connectTableRowCountChangedSignal(incompatibilitiesTab);
@@ -215,7 +220,7 @@ void PluginEditorWidget::connectTableRowCountChangedSignal(
   connect(tableTab,
           &BaseTableTab::tableRowCountChanged,
           this,
-          &PluginEditorWidget::handleTableRowCountChanged);
+          &PluginEditorWidget::handleTabContentChanged);
 }
 
 void PluginEditorWidget::on_dialogButtons_accepted() {
@@ -230,11 +235,11 @@ void PluginEditorWidget::on_dialogButtons_rejected() {
   emit rejected();
 }
 
-void PluginEditorWidget::handleTableRowCountChanged(bool hasUserMetadata) {
-  const auto tableTab = qobject_cast<QWidget *>(sender());
+void PluginEditorWidget::handleTabContentChanged(bool hasUserMetadata) {
+  const auto tab = qobject_cast<QWidget *>(sender());
 
   // tabWidget is null for the message content dialog.
-  const auto tabIndex = tabs->indexOf(tableTab);
+  const auto tabIndex = tabs->indexOf(tab);
 
   if (hasUserMetadata) {
     tabs->setTabIcon(tabIndex, IconFactory::getHasUserMetadataIcon());

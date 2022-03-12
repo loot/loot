@@ -43,6 +43,9 @@ public:
 
   std::optional<std::string> getUserMetadata() const;
 
+signals:
+  void groupChanged(bool hasUserMetadata);
+
 private:
   QLabel* groupLabel{new QLabel(this)};
   QComboBox* groupComboBox{new QComboBox(this)};

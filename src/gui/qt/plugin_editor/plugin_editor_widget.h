@@ -96,7 +96,7 @@ private:
 private slots:
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();
-  void handleTableRowCountChanged(bool hasUserMetadata);
+  void handleTabContentChanged(bool hasUserMetadata);
 };
 }
 
