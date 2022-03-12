@@ -2072,7 +2072,12 @@ void MainWindow::on_groupsEditor_accepted() {
 void MainWindow::on_searchDialog_finished() { searchDialog->reset(); }
 
 void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
-  if (text.userType() == QMetaType::QString && text.toString().isEmpty()) {
+  const auto isEmpty =
+      (text.userType() == QMetaType::QString && text.toString().isEmpty()) ||
+      (text.userType() == QMetaType::QRegularExpression &&
+       text.toRegularExpression().pattern().isEmpty());
+
+  if (isEmpty) {
     proxyModel->clearSearchResults();
     return;
   }
