@@ -718,7 +718,7 @@ msgid "Name"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
-#: src/gui/qt/settings/general_tab.cpp:140
+#: src/gui/qt/settings/general_tab.cpp:146
 msgid "Language"
 msgstr ""
 
@@ -776,47 +776,43 @@ msgstr ""
 msgid "Delete game"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:139
+#: src/gui/qt/settings/general_tab.cpp:145
 msgid "Default Game"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:141
+#: src/gui/qt/settings/general_tab.cpp:147
 msgid "Theme"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:142
+#: src/gui/qt/settings/general_tab.cpp:148
 msgid "Update masterlist before sorting"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:143
+#: src/gui/qt/settings/general_tab.cpp:149
 msgid "Check for LOOT updates on startup"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:144
+#: src/gui/qt/settings/general_tab.cpp:150
 msgid "Enable debug logging"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:145
+#: src/gui/qt/settings/general_tab.cpp:151
 msgid "Masterlist prelude source"
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:148
-msgid "Language changes will be applied after LOOT is restarted."
-msgstr ""
-
-#: src/gui/qt/settings/general_tab.cpp:150
-msgid "Theme changes will be applied after LOOT is restarted."
-msgstr ""
-
-#: src/gui/qt/settings/general_tab.cpp:152
+#: src/gui/qt/settings/general_tab.cpp:154
 msgid "The output is logged to the LOOTDebugLog.txt file."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:154
+#: src/gui/qt/settings/general_tab.cpp:156
 msgid "A prelude source is required."
 msgstr ""
 
-#: src/gui/qt/settings/general_tab.cpp:156
+#: src/gui/qt/settings/general_tab.cpp:159
+msgid "Language and theme changes will be applied after LOOT is restarted."
+msgstr ""
+
+#: src/gui/qt/settings/general_tab.cpp:161
 msgid "Autodetect"
 msgstr ""
 
