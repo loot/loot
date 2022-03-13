@@ -103,8 +103,9 @@ private:
   QAction *actionRedatePlugins{new QAction(this)};
   QAction *actionFixAmbiguousLoadOrder{new QAction(this)};
   QAction *actionClearAllUserMetadata{new QAction(this)};
-  QAction *actionCopyMetadata{new QAction(this)};
+  QAction *actionCopyPluginName{new QAction(this)};
   QAction *actionCopyCardContent{new QAction(this)};
+  QAction *actionCopyMetadata{new QAction(this)};
   QAction *actionEditMetadata{new QAction(this)};
   QAction *actionClearMetadata{new QAction(this)};
   QAction *actionSettings{new QAction(this)};
@@ -225,8 +226,9 @@ private slots:
   void on_actionRedatePlugins_triggered();
   void on_actionClearAllUserMetadata_triggered();
   void on_actionEditMetadata_triggered();
-  void on_actionCopyMetadata_triggered();
+  void on_actionCopyPluginName_triggered();
   void on_actionCopyCardContent_triggered();
+  void on_actionCopyMetadata_triggered();
   void on_actionClearMetadata_triggered();
   void on_actionViewDocs_triggered();
   void on_actionOpenLOOTDataFolder_triggered();

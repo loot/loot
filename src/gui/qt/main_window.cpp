@@ -464,11 +464,14 @@ void MainWindow::setupMenuBar() {
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
-  actionCopyMetadata->setObjectName("actionCopyMetadata");
-  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
+  actionCopyPluginName->setObjectName("actionCopyPluginName");
+  actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
 
   actionCopyCardContent->setObjectName("actionCopyCardContent");
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
+
+  actionCopyMetadata->setObjectName("actionCopyMetadata");
+  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
 
   actionEditMetadata->setObjectName("actionEditMetadata");
   actionEditMetadata->setIcon(IconFactory::getEditIcon());
@@ -501,8 +504,9 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionClearAllUserMetadata);
   menuPlugin->addAction(actionEditMetadata);
   menuPlugin->addSeparator();
-  menuPlugin->addAction(actionCopyMetadata);
+  menuPlugin->addAction(actionCopyPluginName);
   menuPlugin->addAction(actionCopyCardContent);
+  menuPlugin->addAction(actionCopyMetadata);
   menuPlugin->addSeparator();
   menuPlugin->addAction(actionClearMetadata);
   menuHelp->addAction(actionViewDocs);
@@ -648,8 +652,9 @@ void MainWindow::translateUi() {
   actionClearAllUserMetadata->setText(translate("Clear All User Metadata..."));
 
   menuPlugin->setTitle(translate("Plugin"));
-  actionCopyMetadata->setText(translate("Copy Metadata"));
+  actionCopyPluginName->setText(translate("Copy Plugin Name"));
   actionCopyCardContent->setText(translate("Copy Card Content"));
+  actionCopyMetadata->setText(translate("Copy Metadata"));
   actionEditMetadata->setText(translate("Edit Metadata..."));
   actionClearMetadata->setText(translate("Clear User Metadata..."));
 
@@ -1608,6 +1613,24 @@ void MainWindow::on_actionCopyMetadata_triggered() {
     auto text =
         (boost::format(boost::locale::translate(
              "The metadata for \"%s\" has been copied to the clipboard.")) %
+         selectedPluginName)
+            .str();
+
+    showNotification(QString::fromStdString(text));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionCopyPluginName_triggered() {
+  try {
+    const auto selectedPluginName = getSelectedPlugin().name;
+
+    CopyToClipboard(selectedPluginName);
+
+    const auto text =
+        (boost::format(boost::locale::translate(
+             "The plugin name \"%s\" has been copied to the clipboard.")) %
          selectedPluginName)
             .str();
 
