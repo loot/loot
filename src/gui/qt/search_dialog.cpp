@@ -63,6 +63,8 @@ void SearchDialog::setupUi() {
   searchInput->setObjectName("searchInput");
   regexCheckbox->setObjectName("regexCheckbox");
 
+  searchInput->setClearButtonEnabled(true);
+
   auto buttonBox = new QDialogButtonBox(this);
   buttonBox->setObjectName("dialogButtons");
 

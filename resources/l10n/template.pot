@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-12 23:18+0000\n"
+"POT-Creation-Date: 2022-03-13 11:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,83 +18,83 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/gui/qt/filters_widget.cpp:193
+#: src/gui/qt/filters_widget.cpp:195
 msgid "Show only conflicting plugins for"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:194
+#: src/gui/qt/filters_widget.cpp:196
 msgid "Show only plugins in group"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:196
+#: src/gui/qt/filters_widget.cpp:198
 msgid "Show only plugins with cards that contain"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:197 src/gui/qt/search_dialog.cpp:99
+#: src/gui/qt/filters_widget.cpp:199 src/gui/qt/search_dialog.cpp:101
 msgid "Use regular expression"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:198
+#: src/gui/qt/filters_widget.cpp:200
 msgid "Hide version numbers"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:199
+#: src/gui/qt/filters_widget.cpp:201
 msgid "Hide CRCs"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:200
+#: src/gui/qt/filters_widget.cpp:202
 msgid "Hide Bash Tags"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:201
+#: src/gui/qt/filters_widget.cpp:203
 msgid "Hide Sources"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:202
+#: src/gui/qt/filters_widget.cpp:204
 msgid "Hide notes"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:203
+#: src/gui/qt/filters_widget.cpp:205
 msgid "Hide all plugin messages"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:204
+#: src/gui/qt/filters_widget.cpp:206
 msgid "Hide inactive plugins"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:205
+#: src/gui/qt/filters_widget.cpp:207
 msgid "Hide messageless plugins"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:206
+#: src/gui/qt/filters_widget.cpp:208
 msgid "Hide Creation Club plugins"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:207
+#: src/gui/qt/filters_widget.cpp:209
 msgid "Hidden plugins:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:208
+#: src/gui/qt/filters_widget.cpp:210
 msgid "Hidden messages:"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:210
+#: src/gui/qt/filters_widget.cpp:212
 msgid "No plugin selected"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:217
+#: src/gui/qt/filters_widget.cpp:219
 msgid "No group selected"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:224
+#: src/gui/qt/filters_widget.cpp:226
 msgid "No text specified"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:226
+#: src/gui/qt/filters_widget.cpp:228
 msgid "Press Enter or click outside the input to set the filter."
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:229
+#: src/gui/qt/filters_widget.cpp:231
 msgid "If checked, interprets the content filter text as a regular expression."
 msgstr ""
 
@@ -571,24 +571,24 @@ msgstr ""
 msgid "Editor Is Open"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:95
+#: src/gui/qt/search_dialog.cpp:97
 msgid "Search Cards"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:97
+#: src/gui/qt/search_dialog.cpp:99
 msgid "Search cards"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:101
+#: src/gui/qt/search_dialog.cpp:103
 msgid ""
 "If checked, interprets the search text as a Perl-like regular expression."
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:104
+#: src/gui/qt/search_dialog.cpp:106
 msgid "Find Previous"
 msgstr ""
 
-#: src/gui/qt/search_dialog.cpp:105
+#: src/gui/qt/search_dialog.cpp:107
 msgid "Find Next"
 msgstr ""
 

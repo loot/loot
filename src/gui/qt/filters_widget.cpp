@@ -127,6 +127,8 @@ void FiltersWidget::setupUi() {
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
   creationClubPluginsFilter->setObjectName("creationClubPluginsFilter");
 
+  contentFilter->setClearButtonEnabled(true);
+
   auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,
                                         SPACER_HEIGHT,
                                         QSizePolicy::Minimum,
