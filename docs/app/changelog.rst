@@ -26,6 +26,8 @@ Fixed
 - The plugin content filters were not applied correctly.
 - Enderal Special Edition is no longer detected as installed if Skyrim Special
   Edition is installed through the Microsoft Store.
+- The search dialog now navigates to the matching card and disables its
+  navigation buttons when there is only one search result.
 
 Changed
 -------
