@@ -2057,6 +2057,8 @@ void MainWindow::on_filtersWidget_cardContentFilterChanged(
 void MainWindow::on_settingsDialog_accepted() {
   try {
     settingsDialog->recordInputValues(state);
+
+    state.getSettings().save(state.getSettingsPath());
   } catch (const std::exception& e) {
     handleException(e);
   }

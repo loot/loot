@@ -494,17 +494,17 @@ msgstr ""
 msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2147
+#: src/gui/qt/main_window.cpp:2149
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2198
+#: src/gui/qt/main_window.cpp:2200
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2211
+#: src/gui/qt/main_window.cpp:2213
 #, c-format
 msgid "Masterlist updated to revision %s."
 msgstr ""
