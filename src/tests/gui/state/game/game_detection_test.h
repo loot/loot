@@ -183,6 +183,29 @@ TEST_P(FindGamePathsTest, shouldFindNewMSGamePathIfPresent) {
 }
 
 TEST_P(FindGamePathsTest,
+       shouldNotFindNewMSGamePathIfPresentButGameIsNotAnInstanceOfItsBase) {
+  const auto settings =
+      GameSettings(GetParam()).SetRegistryKeys({}).SetIsBaseGameInstance(false);
+
+  if (!IsOnMicrosoftStore()) {
+    return;
+  }
+
+  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
+  const auto gamePath = GetGamePath(xboxGamingRootPath);
+  std::filesystem::create_directories(gamePath);
+  std::filesystem::copy(dataPath,
+                        gamePath / dataPath.filename(),
+                        std::filesystem::copy_options::recursive);
+
+  CreateGameExecutable(gamePath);
+
+  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath});
+
+  EXPECT_FALSE(gamePaths.has_value());
+}
+
+TEST_P(FindGamePathsTest,
        shouldNotOverrideExistingNonEmptyLocalPathIfAMSGameIsFound) {
   const auto settings =
       GameSettings(GetParam()).SetGameLocalPath(localPath).SetRegistryKeys({});

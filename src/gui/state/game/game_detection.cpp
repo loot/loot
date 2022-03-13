@@ -436,6 +436,12 @@ std::optional<GamePaths> FindGamePaths(
     return paths;
   }
 
+  if (!settings.IsBaseGameInstance()) {
+    // Don't look for Microsoft installs for games that aren't instances of
+    // their base game (e.g. total conversions).
+    return std::nullopt;
+  }
+
   auto msGamePaths =
       FindNewMicrosoftStoreGamePaths(settings, xboxGamingRootPaths);
 
