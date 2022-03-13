@@ -26,6 +26,7 @@
 #include "gui/qt/main_window.h"
 
 #include <QtCore/QJsonDocument>
+#include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QHeaderView>
@@ -1003,7 +1004,7 @@ void MainWindow::showNotification(const QString& message) {
   statusBar()->showMessage(message, NOTIFICATION_LIFETIME_MS);
 }
 
-PluginItem MainWindow::getSelectedPlugin() const {
+QModelIndex MainWindow::getSelectedPluginIndex() const {
   auto selectedPluginIndices =
       sidebarPluginsView->selectionModel()->selectedIndexes();
   if (selectedPluginIndices.isEmpty()) {
@@ -1011,7 +1012,11 @@ PluginItem MainWindow::getSelectedPlugin() const {
         "Cannot copy plugin metadata when no plugin is selected");
   }
 
-  auto indexData = selectedPluginIndices.first().data(RawDataRole);
+  return selectedPluginIndices.first();
+}
+
+PluginItem MainWindow::getSelectedPlugin() const {
+  auto indexData = getSelectedPluginIndex().data(RawDataRole);
   if (!indexData.canConvert<PluginItem>()) {
     throw std::runtime_error("Cannot convert data to PluginItem");
   }
@@ -1567,6 +1572,24 @@ void MainWindow::on_actionEditMetadata_triggered() {
     pluginItemModel->setEditorPluginName(selectedPluginName);
 
     enterEditingState();
+
+    // Scroll the sidebar and cards lists to the plugin being edited.
+    const auto sidebarIndex = getSelectedPluginIndex();
+    const auto cardIndex =
+        sidebarIndex.siblingAtColumn(PluginItemModel::CARDS_COLUMN);
+
+    // Use a timeout of 1 ms so that scrolling is done after the widget is
+    // actually opened by Qt's event loop. Use 1 instead of 0 because the
+    // ordering between zero timers and other event sources is undefined.
+    QTimer::singleShot(1, [=]() {
+      try {
+        sidebarPluginsView->scrollTo(sidebarIndex,
+                                     QAbstractItemView::PositionAtTop);
+        pluginCardsView->scrollTo(cardIndex, QAbstractItemView::PositionAtTop);
+      } catch (const std::exception& e) {
+        handleException(e);
+      }
+    });
   } catch (const std::exception& e) {
     handleException(e);
   }

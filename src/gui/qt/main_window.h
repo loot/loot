@@ -181,6 +181,7 @@ private:
   void showFirstRunDialog();
   void showNotification(const QString &message);
 
+  QModelIndex getSelectedPluginIndex() const;
   PluginItem getSelectedPlugin() const;
 
   void closeEvent(QCloseEvent *event) override;
