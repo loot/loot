@@ -666,6 +666,7 @@ void MainWindow::enableGameActions() {
   menuGame->setEnabled(true);
   actionSort->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
+  actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
       state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
@@ -679,6 +680,7 @@ void MainWindow::disableGameActions() {
   menuGame->setEnabled(false);
   actionSort->setEnabled(false);
   actionUpdateMasterlist->setEnabled(false);
+  actionSearch->setEnabled(false);
 
   // Also disable plugin actions because they
   // only make sense within the context of a game.
