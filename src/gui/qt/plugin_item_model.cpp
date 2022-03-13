@@ -82,7 +82,7 @@ QVariant PluginItemModel::data(const QModelIndex& index, int role) const {
     }
   } else {
     const int itemsIndex = index.row() - 1;
-    auto plugin = items.at(itemsIndex);
+    const auto& plugin = items.at(itemsIndex);
 
     switch (index.column()) {
       case SIDEBAR_POSITION_COLUMN: {
