@@ -101,7 +101,7 @@ private:
 private slots:
   void on_conflictingPluginsFilter_activated();
   void on_groupPluginsFilter_activated();
-  void on_contentFilter_editingFinished();
+  void on_contentFilter_textEdited();
   void on_contentRegexCheckbox_stateChanged();
   void on_versionNumbersFilter_stateChanged();
   void on_crcsFilter_stateChanged();
