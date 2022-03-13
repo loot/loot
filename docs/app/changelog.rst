@@ -4,6 +4,52 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.1 - Unreleased
+===================
+
+Added
+-----
+
+- The "Search Cards" button has been reintroduced to the toolbar.
+- A "Clear" button is now displayed in the content filter and search inputs to
+  help quickly empty them.
+
+Fixed
+-----
+
+- An empty regular expression search pattern no longer matches all plugin cards.
+- The Group tab in the plugin metadata editor now correctly displays a "Has User
+  Metadata" icon when a user has overridden the plugin's group.
+- The plugin content filters were not applied correctly.
+
+Changed
+-------
+
+- The content filter is now applied on text entry (i.e. as you type) instead of
+  waiting for the Enter key to be pressed or another user interface element to
+  be selected.
+- Settings are now saved when the "Save" button is used to exit the Settings
+  dialog instead of only on quitting LOOT, to guard against a crash after
+  exiting the dialog causing changes to be lost.
+- The Settings dialog's "General" panel now includes text that explains that the
+  Language and Theme settings only take effect after restarting LOOT. Previously
+  this information was conveyed in tooltips.
+- Opening the metadata editor for a plugin now scrolls to that plugin in the
+  sidebar and card lists.
+- The "Master File" icon is now called the "Master Plugin" icon for consistency
+  with the other plugin type icons, and the "Master File" game setting now has
+  the label "Main Master Plugin" for clarity.
+- The main window's content area now has some padding to avoid some visual
+  confusion.
+- A minor performance improvement to all operations involving the sidebar and
+  plugin card lists.
+
+Removed
+-------
+
+- The ``fontFamily`` field in LOOT's languages settings, as it's no longer used
+  as of LOOT v0.18.0.
+
 0.18.0 - 2022-03-07
 ===================
 
