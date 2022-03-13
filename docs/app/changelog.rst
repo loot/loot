@@ -11,8 +11,12 @@ Added
 -----
 
 - The "Search Cards" button has been reintroduced to the toolbar.
+- The Plugin menu now has a "Copy Plugin Name" action.
 - A "Clear" button is now displayed in the content filter and search inputs to
   help quickly empty them.
+- A new "Is instance of base game" game setting to help distinguish between
+  instances of the base game types and total conversions that build off of those
+  base game types.
 
 Fixed
 -----
@@ -21,6 +25,10 @@ Fixed
 - The Group tab in the plugin metadata editor now correctly displays a "Has User
   Metadata" icon when a user has overridden the plugin's group.
 - The plugin content filters were not applied correctly.
+- Enderal Special Edition is no longer detected as installed if Skyrim Special
+  Edition is installed through the Microsoft Store.
+- The search dialog now navigates to the matching card and disables its
+  navigation buttons when there is only one search result.
 
 Changed
 -------

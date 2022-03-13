@@ -47,6 +47,10 @@ QString NewGameDialog::getGameType() const {
   return typeComboBox->currentText();
 }
 
+bool NewGameDialog::getGameIsInstanceOfBase() const {
+  return baseGameInstanceCheckbox->isChecked();
+}
+
 void NewGameDialog::setupUi() {
   auto buttonBox = new QDialogButtonBox(
       QDialogButtonBox::Save | QDialogButtonBox::Cancel, this);
@@ -57,6 +61,7 @@ void NewGameDialog::setupUi() {
 
   formLayout->addRow(nameLabel, nameInput);
   formLayout->addRow(typeLabel, typeComboBox);
+  formLayout->addRow(baseGameInstanceLabel, baseGameInstanceCheckbox);
   formLayout->addRow(folderLabel, folderInput);
 
   dialogLayout->addLayout(formLayout);
@@ -72,6 +77,8 @@ void NewGameDialog::setupUi() {
 
   typeComboBox->setCurrentIndex(0);
 
+  baseGameInstanceCheckbox->setChecked(true);
+
   QMetaObject::connectSlotsByName(this);
 }
 void NewGameDialog::translateUi() {
@@ -79,6 +86,7 @@ void NewGameDialog::translateUi() {
 
   nameLabel->setText(translate("Name"));
   typeLabel->setText(translate("Base Game"));
+  baseGameInstanceLabel->setText(translate("Is instance of base game"));
   folderLabel->setText(translate("LOOT Folder"));
 
   nameInput->setToolTip(translate("A name is required."));
