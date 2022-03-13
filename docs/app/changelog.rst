@@ -13,6 +13,9 @@ Added
 - The "Search Cards" button has been reintroduced to the toolbar.
 - A "Clear" button is now displayed in the content filter and search inputs to
   help quickly empty them.
+- A new "Is instance of base game" game setting to help distinguish between
+  instances of the base game types and total conversions that build off of those
+  base game types.
 
 Fixed
 -----

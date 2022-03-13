@@ -240,6 +240,7 @@ TEST(
 
   auto newGameSettings = GameSettings(GameType::tes5)
                              .SetName("different")
+                             .SetIsBaseGameInstance(false)
                              .SetMinimumHeaderVersion(100.0f)
                              .SetRegistryKeys({"different"})
                              .SetMasterlistSource("different");
@@ -252,6 +253,8 @@ TEST(
 
   EXPECT_EQ(newGameSettings.Name(),
             manager.GetCurrentGame().GetSettings().Name());
+  EXPECT_EQ(newGameSettings.IsBaseGameInstance(),
+            manager.GetCurrentGame().GetSettings().IsBaseGameInstance());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
             manager.GetCurrentGame().GetSettings().MinimumHeaderVersion());
   EXPECT_EQ(newGameSettings.RegistryKeys(),

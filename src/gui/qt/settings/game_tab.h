@@ -55,6 +55,7 @@ signals:
 private:
   QLabel *nameLabel{new QLabel(this)};
   QLabel *baseGameLabel{new QLabel(this)};
+  QLabel *baseGameInstanceLabel{new QLabel(this)};
   QLabel *lootFolderLabel{new QLabel(this)};
   QLabel *masterFileLabel{new QLabel(this)};
   QLabel *minimumHeaderVersionLabel{new QLabel(this)};
@@ -69,6 +70,7 @@ private:
   QLineEdit *installPathInput{new QLineEdit(this)};
   QLineEdit *localDataPathInput{new QLineEdit(this)};
   QComboBox *baseGameComboBox{new QComboBox(this)};
+  QCheckBox *baseGameInstanceCheckbox{new QCheckBox(this)};
   QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
   QPlainTextEdit *registryKeysInput{new QPlainTextEdit(this)};
   QPushButton *deleteGameButton{new QPushButton(this)};

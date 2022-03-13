@@ -370,8 +370,6 @@ GameType mapGameType(const std::string& gameType) {
 
 GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
                      const std::filesystem::path& lootDataPath) {
-  GameSettings game;
-
   auto type = table->get_as<std::string>("type");
   if (!type) {
     throw std::runtime_error("'type' key missing from game settings table");
@@ -393,11 +391,21 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     }
   }
 
-  game = GameSettings(mapGameType(*type), *folder);
+  GameSettings game(mapGameType(*type), *folder);
 
   auto name = table->get_as<std::string>("name");
   if (name) {
     game.SetName(*name);
+  }
+
+  auto isBaseGameInstance = table->get_as<bool>("isBaseGameInstance");
+  if (isBaseGameInstance) {
+    game.SetIsBaseGameInstance(*isBaseGameInstance);
+  } else if (game.FolderName() == "Nehrim" || game.FolderName() == "Enderal" ||
+             game.FolderName() == "Enderal Special Edition") {
+    // Migrate default settings for Nehrim, Enderal and Enderal SE,
+    // which are not base game instances.
+    game.SetIsBaseGameInstance(false);
   }
 
   auto master = table->get_as<std::string>("master");
@@ -667,6 +675,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       auto game = cpptoml::make_table();
       game->insert("type", GameSettings(gameSettings.Type()).FolderName());
       game->insert("name", gameSettings.Name());
+      game->insert("isBaseGameInstance", gameSettings.IsBaseGameInstance());
       game->insert("folder", gameSettings.FolderName());
       game->insert("master", gameSettings.Master());
       game->insert("minimumHeaderVersion", gameSettings.MinimumHeaderVersion());

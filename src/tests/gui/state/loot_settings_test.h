@@ -90,12 +90,14 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::fo4vr),
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
+          .SetIsBaseGameInstance(false)
           .SetMaster("Nehrim.esm")
           .SetRegistryKeys(
               {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
                "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
+          .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
           .SetGameLocalFolder("enderal")
@@ -103,6 +105,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
                                "enderal/v0.18/masterlist.yaml"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
+          .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
           .SetGameLocalFolder("Enderal Special Edition")
@@ -135,6 +138,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(expectedGameSettings, actualGameSettings);
 
   EXPECT_EQ(expectedGameSettings[0].Type(), actualGameSettings[0].Type());
+  EXPECT_EQ(expectedGameSettings[0].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
   EXPECT_EQ(expectedGameSettings[0].RegistryKeys(),
             actualGameSettings[0].RegistryKeys());
@@ -142,6 +147,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[0].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
+  EXPECT_EQ(expectedGameSettings[1].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
   EXPECT_EQ(expectedGameSettings[1].RegistryKeys(),
             actualGameSettings[1].RegistryKeys());
@@ -149,6 +156,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[1].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
+  EXPECT_EQ(expectedGameSettings[2].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
   EXPECT_EQ(expectedGameSettings[2].RegistryKeys(),
             actualGameSettings[2].RegistryKeys());
@@ -156,6 +165,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[2].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
+  EXPECT_EQ(expectedGameSettings[3].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
   EXPECT_EQ(expectedGameSettings[3].RegistryKeys(),
             actualGameSettings[3].RegistryKeys());
@@ -163,6 +174,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[3].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
+  EXPECT_EQ(expectedGameSettings[4].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
   EXPECT_EQ(expectedGameSettings[4].RegistryKeys(),
             actualGameSettings[4].RegistryKeys());
@@ -170,6 +183,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[4].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
+  EXPECT_EQ(expectedGameSettings[5].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
   EXPECT_EQ(expectedGameSettings[5].RegistryKeys(),
             actualGameSettings[5].RegistryKeys());
@@ -261,6 +276,71 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ(1, settings_.getLanguages().size());
   EXPECT_EQ(LootSettings::Language({"en", "English"}),
             settings_.getLanguages()[0]);
+}
+
+TEST_P(LootSettingsTest, loadingShouldSetIsBaseGameInstanceIfGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "isBaseGameInstance = false" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesNehrim) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Nehrim\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Enderal\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderalSpecialEdition) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Enderal Special Edition\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
 }
 
 TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {

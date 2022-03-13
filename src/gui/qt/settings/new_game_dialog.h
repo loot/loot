@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_QT_SETTINGS_NEW_GAME_DIALOG
 #define LOOT_GUI_QT_SETTINGS_NEW_GAME_DIALOG
 
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
@@ -41,14 +42,17 @@ public:
   QString getGameName() const;
   QString getGameFolder() const;
   QString getGameType() const;
+  bool getGameIsInstanceOfBase() const;
 
 private:
   QLabel *nameLabel{new QLabel(this)};
   QLabel *folderLabel{new QLabel(this)};
   QLabel *typeLabel{new QLabel(this)};
+  QLabel *baseGameInstanceLabel{new QLabel(this)};
   QLineEdit *nameInput{new QLineEdit(this)};
   QLineEdit *folderInput{new QLineEdit(this)};
   QComboBox *typeComboBox{new QComboBox(this)};
+  QCheckBox *baseGameInstanceCheckbox{new QCheckBox(this)};
 
   QStringList currentGameFolders;
 

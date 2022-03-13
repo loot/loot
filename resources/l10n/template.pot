@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-13 12:09+0000\n"
+"POT-Creation-Date: 2022-03-13 15:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -712,8 +712,8 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:118
-#: src/gui/qt/settings/new_game_dialog.cpp:80
+#: src/gui/qt/settings/game_tab.cpp:122
+#: src/gui/qt/settings/new_game_dialog.cpp:87
 msgid "Name"
 msgstr ""
 
@@ -742,41 +742,46 @@ msgstr ""
 msgid "Bash Tag"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:119
-#: src/gui/qt/settings/new_game_dialog.cpp:81
+#: src/gui/qt/settings/game_tab.cpp:123
+#: src/gui/qt/settings/new_game_dialog.cpp:88
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:120
-#: src/gui/qt/settings/new_game_dialog.cpp:82
-msgid "LOOT Folder"
-msgstr ""
-
-#: src/gui/qt/settings/game_tab.cpp:121
-msgid "Main Master Plugin"
-msgstr ""
-
-#: src/gui/qt/settings/game_tab.cpp:122
-msgid "Minimum Header Version"
-msgstr ""
-
-#: src/gui/qt/settings/game_tab.cpp:123
-msgid "Masterlist Source"
-msgstr ""
-
 #: src/gui/qt/settings/game_tab.cpp:124
-msgid "Install Path"
+#: src/gui/qt/settings/new_game_dialog.cpp:89
+msgid "Is instance of base game"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:125
-msgid "Install Path Registry Keys"
+#: src/gui/qt/settings/new_game_dialog.cpp:90
+msgid "LOOT Folder"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:126
-msgid "Local AppData Path"
+msgid "Main Master Plugin"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:127
+msgid "Minimum Header Version"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:128
+msgid "Masterlist Source"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:129
+msgid "Install Path"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:130
+msgid "Install Path Registry Keys"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:131
+msgid "Local AppData Path"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:133
 msgid "Delete game"
 msgstr ""
 
@@ -820,19 +825,19 @@ msgstr ""
 msgid "Autodetect"
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:78
+#: src/gui/qt/settings/new_game_dialog.cpp:85
 msgid "Add new game"
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:84
+#: src/gui/qt/settings/new_game_dialog.cpp:92
 msgid "A name is required."
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:85
+#: src/gui/qt/settings/new_game_dialog.cpp:93
 msgid "A folder is required."
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:106
+#: src/gui/qt/settings/new_game_dialog.cpp:114
 msgid "A game with this folder already exists."
 msgstr ""
 
@@ -864,14 +869,14 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:477
+#: src/gui/state/loot_settings.cpp:485
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:499
+#: src/gui/state/loot_settings.cpp:507
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
