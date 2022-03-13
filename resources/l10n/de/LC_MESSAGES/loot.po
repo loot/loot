@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.18.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-03-13 18:41+0000\n"
-"PO-Revision-Date: 2022-03-13 21:27+0100\n"
+"PO-Revision-Date: 2022-03-13 21:58+0100\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -509,7 +509,7 @@ msgstr "Die Metadaten für \"%s\" wurden in die Zwischenablage kopiert."
 #: src/gui/qt/main_window.cpp:1633
 #, c-format
 msgid "The plugin name \"%s\" has been copied to the clipboard."
-msgstr "Der Plugin Name  für \"%s\" wurde in die Zwischenablage kopiert."
+msgstr "Der Plugin Name für \"%s\" wurde in die Zwischenablage kopiert."
 
 #: src/gui/qt/main_window.cpp:1652
 #, c-format
