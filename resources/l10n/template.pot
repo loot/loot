@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-13 12:08+0000\n"
+"POT-Creation-Date: 2022-03-13 12:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -526,8 +526,8 @@ msgstr ""
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:342 src/gui/qt/settings/game_tab.cpp:121
-msgid "Master File"
+#: src/gui/qt/plugin_card.cpp:342
+msgid "Master Plugin"
 msgstr ""
 
 #: src/gui/qt/plugin_card.cpp:343
@@ -750,6 +750,10 @@ msgstr ""
 #: src/gui/qt/settings/game_tab.cpp:120
 #: src/gui/qt/settings/new_game_dialog.cpp:82
 msgid "LOOT Folder"
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:121
+msgid "Main Master Plugin"
 msgstr ""
 
 #: src/gui/qt/settings/game_tab.cpp:122

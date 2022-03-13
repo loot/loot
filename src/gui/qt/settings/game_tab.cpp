@@ -118,7 +118,7 @@ void GameTab::translateUi() {
   nameLabel->setText(translate("Name"));
   baseGameLabel->setText(translate("Base Game"));
   lootFolderLabel->setText(translate("LOOT Folder"));
-  masterFileLabel->setText(translate("Master File"));
+  masterFileLabel->setText(translate("Main Master Plugin"));
   minimumHeaderVersionLabel->setText(translate("Minimum Header Version"));
   masterlistSourceLabel->setText(translate("Masterlist Source"));
   installPathLabel->setText(translate("Install Path"));

@@ -58,8 +58,8 @@ Base Game Type
 LOOT Folder
   The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
 
-Master File
-  The game's main master file. This is checked for when detecting if the game is installed.
+Main Master Plugin
+  The game's main master plugin. This is checked for when detecting if the game is installed.
 
 Minimum Header Version
   LOOT will display a warning message for any plugin that has a header version less than this value. Note that this version is different from any version that LOOT may be able to read from the plugin's description field.
