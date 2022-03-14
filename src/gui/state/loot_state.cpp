@@ -110,7 +110,7 @@ void LootState::init(const std::string& cmdLineGame,
         translate("Error: --auto-sort was passed but no --game parameter was "
                   "provided.")));
   } else {
-    settings_.setAutoSort(autoSort);
+    settings_.enableAutoSort(autoSort);
   }
 
   if (cmdLineGame.empty() && !cmdLineGamePath.empty()) {

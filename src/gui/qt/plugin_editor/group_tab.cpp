@@ -82,6 +82,10 @@ void GroupTab::setupUi() {
 
   layout->addRow(groupLabel, groupComboBox);
 
+  connect(groupComboBox, &QComboBox::currentTextChanged, [this]() {
+    emit groupChanged(getUserMetadata().has_value());
+  });
+
   translateUi();
 }
 

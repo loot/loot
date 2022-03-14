@@ -36,8 +36,7 @@ along with LOOT.  If not, see
 namespace loot {
 bool operator==(const LootSettings::Language& lhs,
                 const LootSettings::Language& rhs) {
-  return lhs.locale == rhs.locale && lhs.name == rhs.name &&
-         lhs.fontFamily == rhs.fontFamily;
+  return lhs.locale == rhs.locale && lhs.name == rhs.name;
 }
 
 namespace test {
@@ -54,7 +53,7 @@ protected:
     touch(gitRepoPath_ / "masterlist.yaml");
     touch(gitRepoPath_ / "prelude.yaml");
 
-    checkoutBranch("v0.17");
+    checkoutBranch("v0.18");
   }
 
   void TearDown() override { std::filesystem::remove_all(gitRepoPath_); }
@@ -91,28 +90,31 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::fo4vr),
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
+          .SetIsBaseGameInstance(false)
           .SetMaster("Nehrim.esm")
           .SetRegistryKeys(
               {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
                "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
+          .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+                               "enderal/v0.18/masterlist.yaml"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
+          .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
           .SetGameLocalFolder("Enderal Special Edition")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+                               "enderal/v0.18/masterlist.yaml"),
   });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isLootUpdateCheckEnabled());
   EXPECT_EQ("auto", settings_.getGame());
   EXPECT_EQ("auto", settings_.getLastGame());
@@ -126,7 +128,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
   EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
-  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml",
+  EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml",
             settings_.getPreludeSource());
 
   // GameSettings equality only checks name and folder, so check
@@ -136,6 +138,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(expectedGameSettings, actualGameSettings);
 
   EXPECT_EQ(expectedGameSettings[0].Type(), actualGameSettings[0].Type());
+  EXPECT_EQ(expectedGameSettings[0].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
   EXPECT_EQ(expectedGameSettings[0].RegistryKeys(),
             actualGameSettings[0].RegistryKeys());
@@ -143,6 +147,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[0].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
+  EXPECT_EQ(expectedGameSettings[1].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
   EXPECT_EQ(expectedGameSettings[1].RegistryKeys(),
             actualGameSettings[1].RegistryKeys());
@@ -150,6 +156,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[1].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
+  EXPECT_EQ(expectedGameSettings[2].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
   EXPECT_EQ(expectedGameSettings[2].RegistryKeys(),
             actualGameSettings[2].RegistryKeys());
@@ -157,6 +165,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[2].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
+  EXPECT_EQ(expectedGameSettings[3].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
   EXPECT_EQ(expectedGameSettings[3].RegistryKeys(),
             actualGameSettings[3].RegistryKeys());
@@ -164,6 +174,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[3].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
+  EXPECT_EQ(expectedGameSettings[4].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
   EXPECT_EQ(expectedGameSettings[4].RegistryKeys(),
             actualGameSettings[4].RegistryKeys());
@@ -171,6 +183,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
             actualGameSettings[4].MasterlistSource());
 
   EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
+  EXPECT_EQ(expectedGameSettings[5].IsBaseGameInstance(),
+            actualGameSettings[0].IsBaseGameInstance());
   EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
   EXPECT_EQ(expectedGameSettings[5].RegistryKeys(),
             actualGameSettings[5].RegistryKeys());
@@ -179,44 +193,27 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   auto actualLanguages = settings_.getLanguages();
   EXPECT_EQ(18, actualLanguages.size());
-  EXPECT_EQ(LootSettings::Language({"en", "English", std::nullopt}),
-            actualLanguages[0]);
-  EXPECT_EQ(LootSettings::Language({"bg", "Български", std::nullopt}),
-            actualLanguages[1]);
-  EXPECT_EQ(LootSettings::Language({"cs", "Čeština", std::nullopt}),
-            actualLanguages[2]);
-  EXPECT_EQ(LootSettings::Language({"da", "Dansk", std::nullopt}),
-            actualLanguages[3]);
-  EXPECT_EQ(LootSettings::Language({"de", "Deutsch", std::nullopt}),
-            actualLanguages[4]);
-  EXPECT_EQ(LootSettings::Language({"es", "Español", std::nullopt}),
-            actualLanguages[5]);
-  EXPECT_EQ(LootSettings::Language({"fi", "Suomi", std::nullopt}),
-            actualLanguages[6]);
-  EXPECT_EQ(LootSettings::Language({"fr", "Français", std::nullopt}),
-            actualLanguages[7]);
-  EXPECT_EQ(LootSettings::Language({"it", "Italiano", std::nullopt}),
-            actualLanguages[8]);
-  EXPECT_EQ(LootSettings::Language({"ja", "日本語", "Meiryo"}),
-            actualLanguages[9]);
-  EXPECT_EQ(LootSettings::Language({"ko", "한국어", "Malgun Gothic"}),
-            actualLanguages[10]);
-  EXPECT_EQ(LootSettings::Language({"pl", "Polski", std::nullopt}),
-            actualLanguages[11]);
-  EXPECT_EQ(
-      LootSettings::Language({"pt_BR", "Português do Brasil", std::nullopt}),
-      actualLanguages[12]);
-  EXPECT_EQ(
-      LootSettings::Language({"pt_PT", "Português de Portugal", std::nullopt}),
-      actualLanguages[13]);
-  EXPECT_EQ(LootSettings::Language({"ru", "Русский", std::nullopt}),
-            actualLanguages[14]);
-  EXPECT_EQ(LootSettings::Language({"sv", "Svenska", std::nullopt}),
-            actualLanguages[15]);
-  EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська", std::nullopt}),
+  EXPECT_EQ(LootSettings::Language({"en", "English"}), actualLanguages[0]);
+  EXPECT_EQ(LootSettings::Language({"bg", "Български"}), actualLanguages[1]);
+  EXPECT_EQ(LootSettings::Language({"cs", "Čeština"}), actualLanguages[2]);
+  EXPECT_EQ(LootSettings::Language({"da", "Dansk"}), actualLanguages[3]);
+  EXPECT_EQ(LootSettings::Language({"de", "Deutsch"}), actualLanguages[4]);
+  EXPECT_EQ(LootSettings::Language({"es", "Español"}), actualLanguages[5]);
+  EXPECT_EQ(LootSettings::Language({"fi", "Suomi"}), actualLanguages[6]);
+  EXPECT_EQ(LootSettings::Language({"fr", "Français"}), actualLanguages[7]);
+  EXPECT_EQ(LootSettings::Language({"it", "Italiano"}), actualLanguages[8]);
+  EXPECT_EQ(LootSettings::Language({"ja", "日本語"}), actualLanguages[9]);
+  EXPECT_EQ(LootSettings::Language({"ko", "한국어"}), actualLanguages[10]);
+  EXPECT_EQ(LootSettings::Language({"pl", "Polski"}), actualLanguages[11]);
+  EXPECT_EQ(LootSettings::Language({"pt_BR", "Português do Brasil"}),
+            actualLanguages[12]);
+  EXPECT_EQ(LootSettings::Language({"pt_PT", "Português de Portugal"}),
+            actualLanguages[13]);
+  EXPECT_EQ(LootSettings::Language({"ru", "Русский"}), actualLanguages[14]);
+  EXPECT_EQ(LootSettings::Language({"sv", "Svenska"}), actualLanguages[15]);
+  EXPECT_EQ(LootSettings::Language({"uk_UA", "Українська"}),
             actualLanguages[16]);
-  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
-            actualLanguages[17]);
+  EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[17]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
@@ -249,14 +246,13 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "hideCRCs = true" << endl
       << "[[languages]]" << endl
       << "locale = \"en\"" << endl
-      << "name = \"English\"" << endl
-      << "fontFamily = \"Times New Roman\"" << endl;
+      << "name = \"English\"" << endl;
   out.close();
 
   settings_.load(settingsFile_, lootDataPath);
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_FALSE(settings_.isLootUpdateCheckEnabled());
   EXPECT_EQ("Oblivion", settings_.getGame());
   EXPECT_EQ("Skyrim", settings_.getLastGame());
@@ -278,8 +274,73 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_TRUE(settings_.getFilters().hideCRCs);
 
   EXPECT_EQ(1, settings_.getLanguages().size());
-  EXPECT_EQ(LootSettings::Language({"en", "English", "Times New Roman"}),
+  EXPECT_EQ(LootSettings::Language({"en", "English"}),
             settings_.getLanguages()[0]);
+}
+
+TEST_P(LootSettingsTest, loadingShouldSetIsBaseGameInstanceIfGiven) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "isBaseGameInstance = false" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  ASSERT_EQ(9, settings_.getGameSettings().size());
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesNehrim) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Nehrim\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderal) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Enderal\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderalSpecialEdition) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Enderal Special Edition\"" << endl;
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
+  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
 }
 
 TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
@@ -349,7 +410,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
 
   settings_.load(unicodeSettingsFile_, lootDataPath);
 
-  EXPECT_TRUE(settings_.updateMasterlist());
+  EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_EQ("Oblivion", settings_.getGame());
 }
@@ -467,7 +528,7 @@ TEST_P(LootSettingsTest,
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.17/"
+      "https://raw.githubusercontent.com/loot/oblivion-foo/v0.18/"
       "masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
@@ -696,7 +757,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  checkoutBranch("v0.17");
+  checkoutBranch("v0.18");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -788,7 +849,7 @@ TEST_P(LootSettingsTest,
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/"
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/"
       "prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
@@ -831,7 +892,7 @@ TEST_P(
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -853,7 +914,7 @@ TEST_P(
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -869,7 +930,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  checkoutBranch("v0.17");
+  checkoutBranch("v0.18");
 
   settings_.load(settingsFile_, lootDataPath);
 
@@ -889,7 +950,7 @@ TEST_P(
   settings_.load(settingsFile_, lootDataPath);
 
   auto expectedSource =
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml";
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
@@ -999,7 +1060,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   filters.hideCRCs = true;
 
   settings_.enableDebugLogging(true);
-  settings_.updateMasterlist(true);
+  settings_.enableMasterlistUpdateBeforeSort(true);
   settings_.enableLootUpdateCheck(false);
   settings_.setDefaultGame(game);
   settings_.storeLastGame(lastGame);
@@ -1017,7 +1078,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings.load(settingsFile_, lootDataPath);
 
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
-  EXPECT_TRUE(settings.updateMasterlist());
+  EXPECT_TRUE(settings.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_FALSE(settings.isLootUpdateCheckEnabled());
   EXPECT_EQ(game, settings.getGame());
   EXPECT_EQ(lastGame, settings.getLastGame());

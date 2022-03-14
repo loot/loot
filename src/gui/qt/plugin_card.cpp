@@ -339,7 +339,7 @@ void PluginCard::setupUi() {
 
 void PluginCard::translateUi() {
   isActiveLabel->setToolTip(translate("Active Plugin"));
-  masterFileLabel->setToolTip(translate("Master File"));
+  masterFileLabel->setToolTip(translate("Master Plugin"));
   lightPluginLabel->setToolTip(translate("Light Plugin"));
   emptyPluginLabel->setToolTip(translate("Empty Plugin"));
   loadsArchiveLabel->setToolTip(translate("Loads Archive"));

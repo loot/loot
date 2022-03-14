@@ -44,13 +44,11 @@ using std::filesystem::u8path;
 
 namespace loot {
 static const std::set<std::string> oldDefaultBranches(
-    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15"});
+    {"master", "v0.7", "v0.8", "v0.10", "v0.13", "v0.14", "v0.15", "v0.17"});
 
 static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
                std::regex::ECMAScript | std::regex::icase);
-
-static const std::string DEFAULT_MASTERLIST_BRANCH = "v0.17";
 
 std::string getOldDefaultRepoUrl(GameType gameType) {
   switch (gameType) {
@@ -216,8 +214,9 @@ std::optional<std::string> migrateMasterlistRepoSettings(
   }
 
   if (!branch) {
-    // No branch, it would be set to the default, which was v0.17.
-    branch = DEFAULT_MASTERLIST_BRANCH;
+    // No branch, it would be set to the default, which was v0.17 in the last
+    // version of LOOT to have a branch config property.
+    branch = std::string("v0.17");
     if (logger) {
       logger->warn(
           "Found repo config property but not branch, "
@@ -316,8 +315,9 @@ std::optional<std::string> migratePreludeRepoSettings(
   }
 
   if (!branch) {
-    // No branch, it would be set to the default.
-    branch = DEFAULT_MASTERLIST_BRANCH;
+    // No branch, it would be set to the default, which was v0.17 in the last
+    // version of LOOT to have a branch config property.
+    branch = std::string("v0.17");
     if (logger) {
       logger->info(
           "Found prelude repository URL config but not prelude branch, "
@@ -370,8 +370,6 @@ GameType mapGameType(const std::string& gameType) {
 
 GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
                      const std::filesystem::path& lootDataPath) {
-  GameSettings game;
-
   auto type = table->get_as<std::string>("type");
   if (!type) {
     throw std::runtime_error("'type' key missing from game settings table");
@@ -393,11 +391,21 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     }
   }
 
-  game = GameSettings(mapGameType(*type), *folder);
+  GameSettings game(mapGameType(*type), *folder);
 
   auto name = table->get_as<std::string>("name");
   if (name) {
     game.SetName(*name);
+  }
+
+  auto isBaseGameInstance = table->get_as<bool>("isBaseGameInstance");
+  if (isBaseGameInstance) {
+    game.SetIsBaseGameInstance(*isBaseGameInstance);
+  } else if (game.FolderName() == "Nehrim" || game.FolderName() == "Enderal" ||
+             game.FolderName() == "Enderal Special Edition") {
+    // Migrate default settings for Nehrim, Enderal and Enderal SE,
+    // which are not base game instances.
+    game.SetIsBaseGameInstance(false);
   }
 
   auto master = table->get_as<std::string>("master");
@@ -522,11 +530,6 @@ LootSettings::Language convert(const cpptoml::table& table) {
   language.locale = *locale;
   language.name = *name;
 
-  auto fontFamily = table.get_as<std::string>("fontFamily");
-  if (fontFamily) {
-    language.fontFamily = *fontFamily;
-  }
-
   return language;
 }
 
@@ -545,8 +548,8 @@ void LootSettings::load(const std::filesystem::path& file,
 
   enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
                             .value_or(enableDebugLogging_);
-  updateMasterlist_ =
-      settings->get_as<bool>("updateMasterlist").value_or(updateMasterlist_);
+  updateMasterlistBeforeSort_ = settings->get_as<bool>("updateMasterlist")
+                                    .value_or(updateMasterlistBeforeSort_);
   enableLootUpdateCheck_ = settings->get_as<bool>("enableLootUpdateCheck")
                                .value_or(enableLootUpdateCheck_);
   game_ = settings->get_as<std::string>("game").value_or(game_);
@@ -645,7 +648,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   auto root = cpptoml::make_table();
 
   root->insert("enableDebugLogging", enableDebugLogging_);
-  root->insert("updateMasterlist", updateMasterlist_);
+  root->insert("updateMasterlist", updateMasterlistBeforeSort_);
   root->insert("enableLootUpdateCheck", enableLootUpdateCheck_);
   root->insert("game", game_);
   root->insert("language", language_);
@@ -672,6 +675,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       auto game = cpptoml::make_table();
       game->insert("type", GameSettings(gameSettings.Type()).FolderName());
       game->insert("name", gameSettings.Name());
+      game->insert("isBaseGameInstance", gameSettings.IsBaseGameInstance());
       game->insert("folder", gameSettings.FolderName());
       game->insert("master", gameSettings.Master());
       game->insert("minimumHeaderVersion", gameSettings.MinimumHeaderVersion());
@@ -711,9 +715,7 @@ void LootSettings::save(const std::filesystem::path& file) {
       auto languageTable = cpptoml::make_table();
       languageTable->insert("locale", language.locale);
       languageTable->insert("name", language.name);
-      if (language.fontFamily.has_value()) {
-        languageTable->insert("fontFamily", language.fontFamily.value());
-      }
+
       languageTables->push_back(languageTable);
     }
     root->insert("languages", languageTables);
@@ -723,7 +725,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   out << *root;
 }
 
-bool LootSettings::shouldAutoSort() const {
+bool LootSettings::isAutoSortEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return autoSort_;
@@ -735,10 +737,10 @@ bool LootSettings::isDebugLoggingEnabled() const {
   return enableDebugLogging_;
 }
 
-bool LootSettings::updateMasterlist() const {
+bool LootSettings::isMasterlistUpdateBeforeSortEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return updateMasterlist_;
+  return updateMasterlistBeforeSort_;
 }
 
 bool LootSettings::isLootUpdateCheckEnabled() const {
@@ -832,7 +834,7 @@ void LootSettings::setPreludeSource(const std::string& source) {
   preludeSource_ = source;
 }
 
-void LootSettings::setAutoSort(bool autoSort) {
+void LootSettings::enableAutoSort(bool autoSort) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   autoSort_ = autoSort;
@@ -845,10 +847,10 @@ void LootSettings::enableDebugLogging(bool enable) {
   loot::enableDebugLogging(enable);
 }
 
-void LootSettings::updateMasterlist(bool update) {
+void LootSettings::enableMasterlistUpdateBeforeSort(bool update) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  updateMasterlist_ = update;
+  updateMasterlistBeforeSort_ = update;
 }
 
 void LootSettings::enableLootUpdateCheck(bool enable) {

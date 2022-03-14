@@ -63,8 +63,8 @@ The plugin card's header holds the following information, some of which is only 
 - The "Active Plugin" icon.
 - The plugin name.
 - The plugin's version number, extracted from its description field.
-- The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting, except the the CRC of the game's main master file, which is never displayed.
-- The "Master File" icon.
+- The plugin's :abbr:`CRC (Cyclic Redundancy Checksum)`, which can be used to uniquely identify it. CRCs are only displayed after they have been calculated during conflict filtering or sorting, except the the CRC of the game's main master plugin, which is never displayed.
+- The "Master Plugin" icon.
 - The "Light Plugin" icon.
 - The "Empty Plugin" icon.
 - The "Loads Archive" icon.

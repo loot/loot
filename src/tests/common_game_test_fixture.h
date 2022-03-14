@@ -95,7 +95,7 @@ protected:
     copyPlugin(sourcePluginsPath, blankPluginDependentEsp);
     copyPlugin(sourcePluginsPath, blankDifferentPluginDependentEsp);
 
-    // Make sure the game master file exists.
+    // Make sure the game master plugin exists.
     ASSERT_NO_THROW(
         std::filesystem::copy_file(dataPath / blankEsm, dataPath / masterFile));
     ASSERT_TRUE(exists(dataPath / masterFile));

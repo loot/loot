@@ -61,6 +61,7 @@ private:
   QCheckBox *checkUpdatesCheckbox{new QCheckBox(this)};
   QCheckBox *loggingCheckbox{new QCheckBox(this)};
   QLineEdit *preludeSourceInput{new QLineEdit(this)};
+  QLabel *descriptionLabel{new QLabel(this)};
 
   void setupUi();
   void translateUi();

@@ -86,6 +86,7 @@ public:
         GetCurrentGame()
             .GetSettings()
             .SetName(gameSettings.Name())
+            .SetIsBaseGameInstance(gameSettings.IsBaseGameInstance())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
             .SetRegistryKeys(gameSettings.RegistryKeys())
             .SetMasterlistSource(gameSettings.MasterlistSource());

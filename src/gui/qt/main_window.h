@@ -103,8 +103,9 @@ private:
   QAction *actionRedatePlugins{new QAction(this)};
   QAction *actionFixAmbiguousLoadOrder{new QAction(this)};
   QAction *actionClearAllUserMetadata{new QAction(this)};
-  QAction *actionCopyMetadata{new QAction(this)};
+  QAction *actionCopyPluginName{new QAction(this)};
   QAction *actionCopyCardContent{new QAction(this)};
+  QAction *actionCopyMetadata{new QAction(this)};
   QAction *actionEditMetadata{new QAction(this)};
   QAction *actionClearMetadata{new QAction(this)};
   QAction *actionSettings{new QAction(this)};
@@ -181,6 +182,7 @@ private:
   void showFirstRunDialog();
   void showNotification(const QString &message);
 
+  QModelIndex getSelectedPluginIndex() const;
   PluginItem getSelectedPlugin() const;
 
   void closeEvent(QCloseEvent *event) override;
@@ -224,8 +226,9 @@ private slots:
   void on_actionRedatePlugins_triggered();
   void on_actionClearAllUserMetadata_triggered();
   void on_actionEditMetadata_triggered();
-  void on_actionCopyMetadata_triggered();
+  void on_actionCopyPluginName_triggered();
   void on_actionCopyCardContent_triggered();
+  void on_actionCopyMetadata_triggered();
   void on_actionClearMetadata_triggered();
   void on_actionViewDocs_triggered();
   void on_actionOpenLOOTDataFolder_triggered();
@@ -239,10 +242,13 @@ private slots:
   void on_actionUpdateMasterlist_triggered();
 
   void on_sidebarPluginsView_doubleClicked(const QModelIndex &index);
+  void on_sidebarPluginsView_customContextMenuRequested(const QPoint &position);
   void on_sidebarPluginsSelectionModel_selectionChanged(
       const QItemSelection &selected);
 
   void on_pluginCardsView_entered(const QModelIndex &index);
+  void on_pluginCardsView_pressed(const QModelIndex &index);
+  void on_pluginCardsView_customContextMenuRequested(const QPoint &position);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
   void on_pluginItemModel_dataChanged(const QModelIndex &topLeft,

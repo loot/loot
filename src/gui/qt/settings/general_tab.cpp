@@ -25,6 +25,7 @@
 
 #include "gui/qt/settings/general_tab.h"
 
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QVBoxLayout>
@@ -79,7 +80,8 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
       QVariant(QString::fromStdString(settings.getTheme())));
   themeComboBox->setCurrentIndex(themeIndex);
 
-  updateMasterlistCheckbox->setChecked(settings.updateMasterlist());
+  updateMasterlistCheckbox->setChecked(
+      settings.isMasterlistUpdateBeforeSortEnabled());
   checkUpdatesCheckbox->setChecked(settings.isLootUpdateCheckEnabled());
   loggingCheckbox->setChecked(settings.isDebugLoggingEnabled());
 
@@ -92,7 +94,8 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
       defaultGameComboBox->currentData().toString().toStdString();
   auto language = languageComboBox->currentData().toString().toStdString();
   auto theme = themeComboBox->currentData().toString().toStdString();
-  const auto updateMasterlist = updateMasterlistCheckbox->isChecked();
+  const auto enableMasterlistUpdateBeforeSort =
+      updateMasterlistCheckbox->isChecked();
   const auto checkForUpdates = checkUpdatesCheckbox->isChecked();
   const auto enableDebugLogging = loggingCheckbox->isChecked();
   auto preludeSource = preludeSourceInput->text().toStdString();
@@ -100,7 +103,7 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   settings.setDefaultGame(defaultGame);
   settings.setLanguage(language);
   settings.setTheme(theme);
-  settings.updateMasterlist(updateMasterlist);
+  settings.enableMasterlistUpdateBeforeSort(enableMasterlistUpdateBeforeSort);
   settings.enableLootUpdateCheck(checkForUpdates);
   settings.enableDebugLogging(enableDebugLogging);
   settings.setPreludeSource(preludeSource);
@@ -120,6 +123,9 @@ bool GeneralTab::areInputValuesValid() const {
 void GeneralTab::setupUi() {
   defaultGameComboBox->addItem(QString(), QVariant(QString("auto")));
 
+  const auto lineHeight = QFontMetricsF(QApplication::font()).height();
+  const auto spacer = new QSpacerItem(0, static_cast<int>(lineHeight));
+
   auto generalLayout = new QFormLayout(this);
 
   generalLayout->addRow(defaultGameLabel, defaultGameComboBox);
@@ -129,6 +135,8 @@ void GeneralTab::setupUi() {
   generalLayout->addRow(checkUpdatesLabel, checkUpdatesCheckbox);
   generalLayout->addRow(loggingLabel, loggingCheckbox);
   generalLayout->addRow(preludeSourceLabel, preludeSourceInput);
+  generalLayout->addItem(spacer);
+  generalLayout->addRow(descriptionLabel);
 
   translateUi();
 }
@@ -142,14 +150,13 @@ void GeneralTab::translateUi() {
   loggingLabel->setText(translate("Enable debug logging"));
   preludeSourceLabel->setText(translate("Masterlist prelude source"));
 
-  languageLabel->setToolTip(
-      translate("Language changes will be applied after LOOT is restarted."));
-  themeLabel->setToolTip(
-      translate("Theme changes will be applied after LOOT is restarted."));
   loggingLabel->setToolTip(
       translate("The output is logged to the LOOTDebugLog.txt file."));
 
   preludeSourceInput->setToolTip(translate("A prelude source is required."));
+
+  descriptionLabel->setText(translate(
+      "Language and theme changes will be applied after LOOT is restarted."));
 
   defaultGameComboBox->setItemText(0, translate("Autodetect"));
 }

@@ -26,6 +26,7 @@
 #include "gui/qt/main_window.h"
 
 #include <QtCore/QJsonDocument>
+#include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QHeaderView>
@@ -382,6 +383,13 @@ void MainWindow::setupUi() {
   sidebarSplitter->setStretchFactor(0, 1);
   sidebarSplitter->setStretchFactor(1, 2);
 
+  const auto horizontalSpace =
+      style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing);
+  const auto verticalSpace =
+      style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing);
+  sidebarSplitter->setContentsMargins(
+      horizontalSpace, verticalSpace, horizontalSpace, verticalSpace);
+
   setCentralWidget(sidebarSplitter);
 
   progressDialog->setWindowModality(Qt::WindowModal);
@@ -456,11 +464,14 @@ void MainWindow::setupMenuBar() {
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
   actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
-  actionCopyMetadata->setObjectName("actionCopyMetadata");
-  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
+  actionCopyPluginName->setObjectName("actionCopyPluginName");
+  actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
 
   actionCopyCardContent->setObjectName("actionCopyCardContent");
   actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
+
+  actionCopyMetadata->setObjectName("actionCopyMetadata");
+  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
 
   actionEditMetadata->setObjectName("actionEditMetadata");
   actionEditMetadata->setIcon(IconFactory::getEditIcon());
@@ -493,8 +504,9 @@ void MainWindow::setupMenuBar() {
   menuGame->addAction(actionClearAllUserMetadata);
   menuPlugin->addAction(actionEditMetadata);
   menuPlugin->addSeparator();
-  menuPlugin->addAction(actionCopyMetadata);
+  menuPlugin->addAction(actionCopyPluginName);
   menuPlugin->addAction(actionCopyCardContent);
+  menuPlugin->addAction(actionCopyMetadata);
   menuPlugin->addSeparator();
   menuPlugin->addAction(actionClearMetadata);
   menuHelp->addAction(actionViewDocs);
@@ -534,6 +546,7 @@ void MainWindow::setupToolBar() {
   toolBar->addAction(actionUpdateMasterlist);
   toolBar->addAction(actionApplySort);
   toolBar->addAction(actionDiscardSort);
+  toolBar->addAction(actionSearch);
 }
 
 void MainWindow::setupViews() {
@@ -572,6 +585,9 @@ void MainWindow::setupViews() {
       PluginItemModel::SIDEBAR_NAME_COLUMN,
       new SidebarPluginNameDelegate(sidebarPluginsView));
 
+  // Enable the right-click Plugin context menu.
+  sidebarPluginsView->setContextMenuPolicy(Qt::CustomContextMenu);
+
   pluginCardsView->setModel(proxyModel);
   pluginCardsView->setModelColumn(PluginItemModel::CARDS_COLUMN);
   pluginCardsView->setSelectionMode(QAbstractItemView::NoSelection);
@@ -588,9 +604,10 @@ void MainWindow::setupViews() {
   // leading to layout issues.
   pluginCardsView->setWordWrap(true);
 
-  // Don't set the delegates until after the model is set, as the
-  // former may depend on the latter.
   pluginCardsView->setItemDelegate(new PluginCardDelegate(pluginCardsView));
+
+  // Enable the right-click Plugin context menu.
+  pluginCardsView->setContextMenuPolicy(Qt::CustomContextMenu);
 
   // Plugin selection handling needs to be set up after the model has been
   // set, as before then there is no selection model.
@@ -635,8 +652,9 @@ void MainWindow::translateUi() {
   actionClearAllUserMetadata->setText(translate("Clear All User Metadata..."));
 
   menuPlugin->setTitle(translate("Plugin"));
-  actionCopyMetadata->setText(translate("Copy Metadata"));
+  actionCopyPluginName->setText(translate("Copy Plugin Name"));
   actionCopyCardContent->setText(translate("Copy Card Content"));
+  actionCopyMetadata->setText(translate("Copy Metadata"));
   actionEditMetadata->setText(translate("Edit Metadata..."));
   actionClearMetadata->setText(translate("Clear User Metadata..."));
 
@@ -654,6 +672,7 @@ void MainWindow::enableGameActions() {
   menuGame->setEnabled(true);
   actionSort->setEnabled(true);
   actionUpdateMasterlist->setEnabled(true);
+  actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
       state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
@@ -667,6 +686,7 @@ void MainWindow::disableGameActions() {
   menuGame->setEnabled(false);
   actionSort->setEnabled(false);
   actionUpdateMasterlist->setEnabled(false);
+  actionSearch->setEnabled(false);
 
   // Also disable plugin actions because they
   // only make sense within the context of a game.
@@ -876,7 +896,7 @@ bool MainWindow::hasErrorMessages() const {
 void MainWindow::sortPlugins(bool isAutoSort) {
   std::vector<Task*> tasks;
 
-  if (state.getSettings().updateMasterlist()) {
+  if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
     auto task = new UpdateMasterlistTask(state);
@@ -989,7 +1009,7 @@ void MainWindow::showNotification(const QString& message) {
   statusBar()->showMessage(message, NOTIFICATION_LIFETIME_MS);
 }
 
-PluginItem MainWindow::getSelectedPlugin() const {
+QModelIndex MainWindow::getSelectedPluginIndex() const {
   auto selectedPluginIndices =
       sidebarPluginsView->selectionModel()->selectedIndexes();
   if (selectedPluginIndices.isEmpty()) {
@@ -997,7 +1017,11 @@ PluginItem MainWindow::getSelectedPlugin() const {
         "Cannot copy plugin metadata when no plugin is selected");
   }
 
-  auto indexData = selectedPluginIndices.first().data(RawDataRole);
+  return selectedPluginIndices.first();
+}
+
+PluginItem MainWindow::getSelectedPlugin() const {
+  auto indexData = getSelectedPluginIndex().data(RawDataRole);
   if (!indexData.canConvert<PluginItem>()) {
     throw std::runtime_error("Cannot convert data to PluginItem");
   }
@@ -1535,24 +1559,42 @@ void MainWindow::on_actionEditMetadata_triggered() {
       return;
     }
 
-    auto plugin = getSelectedPlugin();
-    auto groups = GetGroupNames(state.GetCurrentGame());
+    const auto selectedPluginName = getSelectedPlugin().name;
+    const auto groups = GetGroupNames(state.GetCurrentGame());
 
     pluginEditorWidget->initialiseInputs(
         groups,
-        plugin.name,
+        selectedPluginName,
         state.GetCurrentGame().GetNonUserMetadata(
-            *state.GetCurrentGame().GetPlugin(plugin.name)),
-        state.GetCurrentGame().GetUserMetadata(plugin.name));
+            *state.GetCurrentGame().GetPlugin(selectedPluginName)),
+        state.GetCurrentGame().GetUserMetadata(selectedPluginName));
 
     pluginEditorWidget->show();
 
     state.IncrementUnappliedChangeCounter();
 
     // Refresh the sidebar items so that all their groups are displayed.
-    pluginItemModel->setEditorPluginName(plugin.name);
+    pluginItemModel->setEditorPluginName(selectedPluginName);
 
     enterEditingState();
+
+    // Scroll the sidebar and cards lists to the plugin being edited.
+    const auto sidebarIndex = getSelectedPluginIndex();
+    const auto cardIndex =
+        sidebarIndex.siblingAtColumn(PluginItemModel::CARDS_COLUMN);
+
+    // Use a timeout of 1 ms so that scrolling is done after the widget is
+    // actually opened by Qt's event loop. Use 1 instead of 0 because the
+    // ordering between zero timers and other event sources is undefined.
+    QTimer::singleShot(1, [=]() {
+      try {
+        sidebarPluginsView->scrollTo(sidebarIndex,
+                                     QAbstractItemView::PositionAtTop);
+        pluginCardsView->scrollTo(cardIndex, QAbstractItemView::PositionAtTop);
+      } catch (const std::exception& e) {
+        handleException(e);
+      }
+    });
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1571,6 +1613,24 @@ void MainWindow::on_actionCopyMetadata_triggered() {
     auto text =
         (boost::format(boost::locale::translate(
              "The metadata for \"%s\" has been copied to the clipboard.")) %
+         selectedPluginName)
+            .str();
+
+    showNotification(QString::fromStdString(text));
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionCopyPluginName_triggered() {
+  try {
+    const auto selectedPluginName = getSelectedPlugin().name;
+
+    CopyToClipboard(selectedPluginName);
+
+    const auto text =
+        (boost::format(boost::locale::translate(
+             "The plugin name \"%s\" has been copied to the clipboard.")) %
          selectedPluginName)
             .str();
 
@@ -1845,6 +1905,27 @@ void MainWindow::on_sidebarPluginsView_doubleClicked(const QModelIndex& index) {
   pluginCardsView->scrollTo(cardIndex, QAbstractItemView::PositionAtTop);
 }
 
+void MainWindow::on_sidebarPluginsView_customContextMenuRequested(
+    const QPoint& position) {
+  const auto itemIndex = sidebarPluginsView->indexAt(position);
+
+  if (!itemIndex.isValid() || itemIndex.row() == 0) {
+    return;
+  }
+
+  sidebarPluginsView->selectRow(itemIndex.row());
+
+  // For some reason mapToGlobal() doesn't include the height of the table's
+  // horizontal header, so add that so that the menu gets displayed in the
+  // correct position.
+  const auto headerHeight = sidebarPluginsView->horizontalHeader()->height();
+
+  auto globalPos = sidebarPluginsView->mapToGlobal(position);
+  globalPos.setY(globalPos.y() + headerHeight);
+
+  menuPlugin->exec(globalPos);
+}
+
 void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
     const QItemSelection& selected) {
   if (selected.isEmpty()) {
@@ -1866,6 +1947,29 @@ void MainWindow::on_pluginCardsView_entered(const QModelIndex& index) {
   }
 
   lastEnteredCardIndex = QPersistentModelIndex(index);
+}
+
+void MainWindow::on_pluginCardsView_pressed(const QModelIndex& index) {
+  // Open the persistent editor on mouse button press too because if a
+  // card is entered while a modal (e.g. a context menu) is open, the
+  // entered signal will not fire, but a click to dismiss the modal will
+  // fire.
+  on_pluginCardsView_entered(index);
+}
+
+void MainWindow::on_pluginCardsView_customContextMenuRequested(
+    const QPoint& position) {
+  const auto itemIndex = pluginCardsView->indexAt(position);
+
+  if (!itemIndex.isValid() || itemIndex.row() == 0) {
+    return;
+  }
+
+  sidebarPluginsView->selectRow(itemIndex.row());
+
+  const auto globalPos = pluginCardsView->mapToGlobal(position);
+
+  menuPlugin->exec(globalPos);
 }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
@@ -1999,6 +2103,8 @@ void MainWindow::on_filtersWidget_cardContentFilterChanged(
 void MainWindow::on_settingsDialog_accepted() {
   try {
     settingsDialog->recordInputValues(state);
+
+    state.getSettings().save(state.getSettingsPath());
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2016,7 +2122,12 @@ void MainWindow::on_groupsEditor_accepted() {
 void MainWindow::on_searchDialog_finished() { searchDialog->reset(); }
 
 void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
-  if (text.userType() == QMetaType::QString && text.toString().isEmpty()) {
+  const auto isEmpty =
+      (text.userType() == QMetaType::QString && text.toString().isEmpty()) ||
+      (text.userType() == QMetaType::QRegularExpression &&
+       text.toRegularExpression().pattern().isEmpty());
+
+  if (isEmpty) {
     proxyModel->clearSearchResults();
     return;
   }
@@ -2076,7 +2187,7 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   try {
     handleGameDataLoaded(result);
 
-    if (state.getSettings().shouldAutoSort()) {
+    if (state.getSettings().isAutoSortEnabled()) {
       if (hasErrorMessages()) {
         state.GetCurrentGame().AppendMessage(
             Message(MessageType::error,

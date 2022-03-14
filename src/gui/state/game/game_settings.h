@@ -35,11 +35,14 @@
 #include "loot/enum/game_type.h"
 
 namespace loot {
-constexpr inline std::string_view NEHRIM_STEAM_REGISTRY_KEY =
+inline constexpr std::string_view NEHRIM_STEAM_REGISTRY_KEY =
     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
     "1014940\\InstallLocation";
+static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.18";
 
 std::string GetPluginsFolderName(GameType gameType);
+
+std::string GetDefaultMasterlistUrl(std::string repoName);
 
 class GameSettings {
 public:
@@ -60,6 +63,7 @@ public:
   std::filesystem::path GamePath() const;
   std::filesystem::path GameLocalPath() const;
   std::filesystem::path DataPath() const;
+  bool IsBaseGameInstance() const;
 
   std::string PluginsFolderName() const;
 
@@ -71,12 +75,14 @@ public:
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
   GameSettings& SetGameLocalFolder(const std::string& folderName);
+  GameSettings& SetIsBaseGameInstance(bool isInstance);
 
 private:
   GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
   float mininumHeaderVersion_{0.0f};
+  bool isBaseGameInstance_{true};
 
   std::vector<std::string> registryKeys_;
 

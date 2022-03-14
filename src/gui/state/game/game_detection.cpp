@@ -75,8 +75,8 @@ bool ExecutableExists(const GameType& gameType,
     case GameType::tes4:
     case GameType::fo3:
     case GameType::fonv:
-      // Don't bother checking for the games that don't share their master file
-      // name.
+      // Don't bother checking for the games that don't share their master
+      // plugin name.
       return true;
     default:
       throw std::logic_error("Unrecognised game type");
@@ -102,7 +102,7 @@ std::optional<std::filesystem::path> FindNormalGameInstallPath(
     // If checking the given game path, we can assume that it's for the
     // intended game because it's been provided by the user - we don't need
     // to also check the game executable to disambiguate between games with
-    // the same master file.
+    // the same master plugin.
     auto gamePath = settings.GamePath();
     if (!gamePath.empty() &&
         exists(gamePath / GetPluginsFolderName(settings.Type()) /
@@ -434,6 +434,12 @@ std::optional<GamePaths> FindGamePaths(
     // There's no way to guess a value for localPath, just leave it as it's
     // currently set.
     return paths;
+  }
+
+  if (!settings.IsBaseGameInstance()) {
+    // Don't look for Microsoft installs for games that aren't instances of
+    // their base game (e.g. total conversions).
+    return std::nullopt;
   }
 
   auto msGamePaths =

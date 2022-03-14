@@ -52,7 +52,6 @@ public:
   struct Language {
     std::string locale;
     std::string name;
-    std::optional<std::string> fontFamily;
   };
 
   struct Filters {
@@ -71,9 +70,9 @@ public:
             const std::filesystem::path& lootDataPath);
   void save(const std::filesystem::path& file);
 
-  bool shouldAutoSort() const;
+  bool isAutoSortEnabled() const;
   bool isDebugLoggingEnabled() const;
-  bool updateMasterlist() const;
+  bool isMasterlistUpdateBeforeSortEnabled() const;
   bool isLootUpdateCheckEnabled() const;
   std::string getGame() const;
   std::string getLastGame() const;
@@ -90,9 +89,9 @@ public:
   void setLanguage(const std::string& language);
   void setTheme(const std::string& theme);
   void setPreludeSource(const std::string& source);
-  void setAutoSort(bool autSort);
+  void enableAutoSort(bool enable);
   void enableDebugLogging(bool enable);
-  void updateMasterlist(bool update);
+  void enableMasterlistUpdateBeforeSort(bool enable);
   void enableLootUpdateCheck(bool enable);
 
   void storeLastGame(const std::string& lastGame);
@@ -104,14 +103,15 @@ public:
 private:
   bool autoSort_{false};
   bool enableDebugLogging_{false};
-  bool updateMasterlist_{true};
+  bool updateMasterlistBeforeSort_{true};
   bool enableLootUpdateCheck_{true};
   std::string game_{"auto"};
   std::string lastGame_{"auto"};
   std::string lastVersion_;
   std::string language_{"en"};
   std::string preludeSource_{
-      "https://raw.githubusercontent.com/loot/prelude/v0.17/prelude.yaml"};
+      std::string("https://raw.githubusercontent.com/loot/prelude/") +
+      DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml"};
   std::string theme_{"default"};
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_{
@@ -126,6 +126,7 @@ private:
       GameSettings(GameType::fo4vr),
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
+          .SetIsBaseGameInstance(false)
           .SetMaster("Nehrim.esm")
           .SetRegistryKeys({"Software\\Microsoft\\Windows\\CurrentVersion\\"
                             "Uninstall\\Nehr"
@@ -133,16 +134,17 @@ private:
                             std::string(NEHRIM_STEAM_REGISTRY_KEY)}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
+          .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
                "ea"
                "m App 933480\\InstallLocation"})
           .SetGameLocalFolder("enderal")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
+          .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_"
                "Path",
@@ -150,29 +152,28 @@ private:
                "ea"
                "m App 976620\\InstallLocation"})
           .SetGameLocalFolder("Enderal Special Edition")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.17/masterlist.yaml"),
+          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
   };
   Filters filters_;
   std::vector<Language> languages_{
-      Language({"en", "English", std::nullopt}),
-      Language({"bg", "Български", std::nullopt}),
-      Language({"cs", "Čeština", std::nullopt}),
-      Language({"da", "Dansk", std::nullopt}),
-      Language({"de", "Deutsch", std::nullopt}),
-      Language({"es", "Español", std::nullopt}),
-      Language({"fi", "Suomi", std::nullopt}),
-      Language({"fr", "Français", std::nullopt}),
-      Language({"it", "Italiano", std::nullopt}),
-      Language({"ja", "日本語", "Meiryo"}),
-      Language({"ko", "한국어", "Malgun Gothic"}),
-      Language({"pl", "Polski", std::nullopt}),
-      Language({"pt_BR", "Português do Brasil", std::nullopt}),
-      Language({"pt_PT", "Português de Portugal", std::nullopt}),
-      Language({"ru", "Русский", std::nullopt}),
-      Language({"sv", "Svenska", std::nullopt}),
-      Language({"uk_UA", "Українська", std::nullopt}),
-      Language({"zh_CN", "简体中文", "Microsoft Yahei"}),
+      Language({"en", "English"}),
+      Language({"bg", "Български"}),
+      Language({"cs", "Čeština"}),
+      Language({"da", "Dansk"}),
+      Language({"de", "Deutsch"}),
+      Language({"es", "Español"}),
+      Language({"fi", "Suomi"}),
+      Language({"fr", "Français"}),
+      Language({"it", "Italiano"}),
+      Language({"ja", "日本語"}),
+      Language({"ko", "한국어"}),
+      Language({"pl", "Polski"}),
+      Language({"pt_BR", "Português do Brasil"}),
+      Language({"pt_PT", "Português de Portugal"}),
+      Language({"ru", "Русский"}),
+      Language({"sv", "Svenska"}),
+      Language({"uk_UA", "Українська"}),
+      Language({"zh_CN", "简体中文"}),
   };
 
   mutable std::recursive_mutex mutex_;
