@@ -88,7 +88,8 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return true;
   }
 
-  const auto sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+  const auto sourceIndex =
+      sourceModel()->index(sourceRow, PluginItemModel::CARDS_COLUMN, sourceParent);
 
   auto item = sourceIndex.data(RawDataRole).value<PluginItem>();
   auto contentFilters =

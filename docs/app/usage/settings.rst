@@ -42,7 +42,7 @@ LOOT's game-specific settings can be customised by selecting a game in the sideb
 Name
   The name of the game, or another identifying text, that is displayed in menus and the LOOT's title bar.
 
-Base Game Type
+Base Game
   Every game LOOT runs for must use the plugin file format and load order system of one of the following games:
 
   - TES III: Morrowind
@@ -55,11 +55,14 @@ Base Game Type
   - Fallout 4
   - Fallout 4 VR
 
+Is instance of base game
+  This is used to distinguish between instances of a base game and instances of total conversions that build off of that base game.
+
 LOOT Folder
   The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
 
-Master File
-  The game's main master file. This is checked for when detecting if the game is installed.
+Main Master Plugin
+  The game's main master plugin. This is checked for when detecting if the game is installed.
 
 Minimum Header Version
   LOOT will display a warning message for any plugin that has a header version less than this value. Note that this version is different from any version that LOOT may be able to read from the plugin's description field.

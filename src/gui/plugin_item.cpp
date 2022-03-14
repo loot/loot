@@ -343,7 +343,7 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (isMaster) {
-    attributes.push_back("Master File");
+    attributes.push_back("Master Plugin");
   }
 
   if (isLightPlugin) {

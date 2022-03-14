@@ -61,8 +61,43 @@ std::string GetPluginsFolderName(GameType gameType) {
   }
 }
 
+std::string GetDefaultMasterlistRepositoryName(GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+      return "morrowind";
+    case GameType::tes4:
+      return "oblivion";
+    case GameType::tes5:
+      return "skyrim";
+    case GameType::tes5se:
+      return "skyrimse";
+    case GameType::tes5vr:
+      return "skyrimvr";
+    case GameType::fo3:
+      return "fallout3";
+    case GameType::fonv:
+      return "falloutnv";
+    case GameType::fo4:
+      return "fallout4";
+    case GameType::fo4vr:
+      return "fallout4vr";
+    default:
+      throw std::logic_error("Unrecognised game type");
+  }
+}
+
+std::string GetDefaultMasterlistUrl(std::string repoName) {
+  return std::string("https://raw.githubusercontent.com/loot/") + repoName +
+         "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
+}
+
+std::string GetDefaultMasterlistUrl(GameType gameType) {
+  const auto repoName = GetDefaultMasterlistRepositoryName(gameType);
+  return GetDefaultMasterlistUrl(repoName);
+}
+
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
-    type_(gameCode) {
+    type_(gameCode), masterlistSource_(GetDefaultMasterlistUrl(gameCode)) {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
     registryKeys_ = {"Software\\Bethesda Softworks\\Morrowind\\Installed Path",
@@ -77,9 +112,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
     mininumHeaderVersion_ = MORROWIND_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/morrowind/v0.17/"
-        "masterlist.yaml";
   } else if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKeys_ = {"Software\\Bethesda Softworks\\Oblivion\\Installed Path",
@@ -96,8 +128,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Oblivion";
     masterFile_ = "Oblivion.esm";
     mininumHeaderVersion_ = OBLIVION_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/oblivion/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5) {
     name_ = "TES V: Skyrim";
     registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim\\Installed Path",
@@ -106,8 +136,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_FO3_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/skyrim/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5se) {
     name_ = "TES V: Skyrim Special Edition";
     registryKeys_ = {
@@ -117,8 +145,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/skyrimse/v0.17/masterlist.yaml";
   } else if (Type() == GameType::tes5vr) {
     name_ = "TES V: Skyrim VR";
     registryKeys_ = {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
@@ -127,8 +153,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Skyrim VR";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/skyrimvr/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
     registryKeys_ = {"Software\\Bethesda Softworks\\Fallout3\\Installed Path",
@@ -145,8 +169,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout3";
     masterFile_ = "Fallout3.esm";
     mininumHeaderVersion_ = SKYRIM_FO3_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/fallout3/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
     registryKeys_ = {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
@@ -163,9 +185,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "FalloutNV";
     masterFile_ = "FalloutNV.esm";
     mininumHeaderVersion_ = FONV_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/falloutnv/v0.17/"
-        "masterlist.yaml";
   } else if (Type() == GameType::fo4) {
     name_ = "Fallout 4";
     registryKeys_ = {"Software\\Bethesda Softworks\\Fallout4\\Installed Path",
@@ -174,8 +193,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout4";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/fallout4/v0.17/masterlist.yaml";
   } else if (Type() == GameType::fo4vr) {
     name_ = "Fallout 4 VR";
     registryKeys_ = {
@@ -185,13 +202,11 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     lootFolderName_ = "Fallout4VR";
     masterFile_ = "Fallout4.esm";
     mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
-    masterlistSource_ =
-        "https://raw.githubusercontent.com/loot/fallout4vr/v0.17/"
-        "masterlist.yaml";
   }
 
-  if (!folder.empty())
+  if (!folder.empty()) {
     lootFolderName_ = folder;
+  }
 }
 
 bool GameSettings::operator==(const GameSettings& rhs) const {
@@ -225,6 +240,8 @@ std::filesystem::path GameSettings::GameLocalPath() const {
 std::filesystem::path GameSettings::DataPath() const {
   return gamePath_ / GetPluginsFolderName(type_);
 }
+
+bool GameSettings::IsBaseGameInstance() const { return isBaseGameInstance_; }
 
 GameSettings& GameSettings::SetName(const std::string& name) {
   name_ = name;
@@ -266,6 +283,11 @@ GameSettings& GameSettings::SetGameLocalPath(
 
 GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
   gameLocalPath_ = getLocalAppDataPath() / u8path(folderName);
+  return *this;
+}
+
+GameSettings& GameSettings::SetIsBaseGameInstance(bool isInstance) {
+  isBaseGameInstance_ = isInstance;
   return *this;
 }
 }

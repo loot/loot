@@ -127,6 +127,8 @@ void FiltersWidget::setupUi() {
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
   creationClubPluginsFilter->setObjectName("creationClubPluginsFilter");
 
+  contentFilter->setClearButtonEnabled(true);
+
   auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,
                                         SPACER_HEIGHT,
                                         QSizePolicy::Minimum,
@@ -222,8 +224,6 @@ void FiltersWidget::translateUi() {
   }
 
   contentFilter->setPlaceholderText(translate("No text specified"));
-  contentFilter->setToolTip(
-      translate("Press Enter or click outside the input to set the filter."));
 
   contentRegexCheckbox->setToolTip(
       translate("If checked, interprets the content filter text as a regular "
@@ -319,7 +319,7 @@ void FiltersWidget::on_groupPluginsFilter_activated() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_contentFilter_editingFinished() {
+void FiltersWidget::on_contentFilter_textEdited() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 

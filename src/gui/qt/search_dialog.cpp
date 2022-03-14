@@ -50,10 +50,11 @@ void SearchDialog::setSearchResults(size_t resultsCount) {
 
   countLabel->setText(QString("0 / ") % QString::number(resultsCount));
 
-  if (resultsCount > 1) {
-    previousButton->setDisabled(false);
-    nextButton->setDisabled(false);
+  const auto disableButtons = resultsCount < 2;
+  previousButton->setDisabled(disableButtons);
+  nextButton->setDisabled(disableButtons);
 
+  if (resultsCount > 0) {
     // Jump to the first search result.
     on_nextButton_clicked();
   }
@@ -63,14 +64,16 @@ void SearchDialog::setupUi() {
   searchInput->setObjectName("searchInput");
   regexCheckbox->setObjectName("regexCheckbox");
 
+  searchInput->setClearButtonEnabled(true);
+
   auto buttonBox = new QDialogButtonBox(this);
   buttonBox->setObjectName("dialogButtons");
 
   previousButton->setObjectName("previousButton");
   nextButton->setObjectName("nextButton");
 
-  buttonBox->addButton(previousButton, QDialogButtonBox::YesRole);
-  buttonBox->addButton(nextButton, QDialogButtonBox::YesRole);
+  buttonBox->addButton(previousButton, QDialogButtonBox::ActionRole);
+  buttonBox->addButton(nextButton, QDialogButtonBox::ActionRole);
 
   auto dialogLayout = new QVBoxLayout();
   auto inputLayout = new QHBoxLayout();
