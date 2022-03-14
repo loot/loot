@@ -475,6 +475,106 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
             settings_.getGameSettings()[0].GameLocalPath());
 }
 
+TEST_P(
+    LootSettingsTest,
+    loadingShouldMigrateMasterlistSourcesUsingOfficialRepositoriesAndOldDefaultBranches) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "masterlistSource = "
+         "\"https://raw.githubusercontent.com/loot/oblivion/v0.17/"
+         "masterlist.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/loot/oblivion/v0.18/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest,
+       loadingShouldPreserveRepositoryThroughMasterlistSourceMigration) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "masterlistSource = "
+         "\"https://raw.githubusercontent.com/loot/skyrimse/v0.17/"
+         "masterlist.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/loot/skyrimse/v0.18/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldNotMigrateMasterlistSourcesUsingOfficialRepositoriesAndBranchesThatAreNotOldDefaults) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "masterlistSource = "
+         "\"https://raw.githubusercontent.com/loot/oblivion/custom/"
+         "masterlist.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/loot/oblivion/custom/masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldNotMigrateMasterlistSourcesUsingNonOfficialRepositoriesAndOldDefaultBranches) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "masterlistSource = "
+         "\"https://raw.githubusercontent.com/not-loot/skyrimse/v0.17/"
+         "masterlist.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/not-loot/skyrimse/v0.17/"
+      "masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "masterlistSource = \"C:\\\\masterlist.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource = "C:\\masterlist.yaml";
+  EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
 TEST_P(LootSettingsTest,
        loadingTomlShouldIgnoreMasterlistRepoSettingsIfASourceIsAlsoGiven) {
   using std::endl;
@@ -803,6 +903,74 @@ TEST_P(
       "https://raw.githubusercontent.com/my-forks/fallout4-vr/custom/"
       "masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldMigratePreludeSourceUsingTheOfficialRepositoryAndAnOldDefaultBranch) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "[[games]]" << endl
+      << "name = \"Game Name\"" << endl
+      << "type = \"Oblivion\"" << endl
+      << "folder = \"Oblivion\"" << endl
+      << "preludeSource = "
+         "\"https://raw.githubusercontent.com/loot/prelude/v0.17/"
+         "prelude.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldNotMigratePreludeSourceUsingTheOfficialRepositoryAndABranchThatIsNotAnOldDefault) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeSource = "
+         "\"https://raw.githubusercontent.com/loot/prelude/custom/"
+         "prelude.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/loot/prelude/custom/prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(
+    LootSettingsTest,
+    loadingShouldNotMigratePreludeSourcesUsingANonOfficialRepositoryAndOldDefaultBranch) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeSource = "
+         "\"https://raw.githubusercontent.com/not-loot/prelude/v0.17/"
+         "prelude.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource =
+      "https://raw.githubusercontent.com/not-loot/prelude/v0.17/"
+      "prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
+}
+
+TEST_P(LootSettingsTest, loadingShouldNotMigratePathPreludeSource) {
+  using std::endl;
+  std::ofstream out(settingsFile_);
+  out << "preludeSource = \"C:\\\\prelude.yaml\"";
+  out.close();
+
+  settings_.load(settingsFile_, lootDataPath);
+
+  const auto expectedSource = "C:\\prelude.yaml";
+  EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
 TEST_P(LootSettingsTest,
