@@ -39,6 +39,8 @@ namespace loot {
 std::vector<std::string> checkSettingsFile(
     const std::filesystem::path& filePath);
 
+std::string getDefaultPreludeSource();
+
 class LootSettings {
 public:
   struct WindowPosition {
@@ -109,9 +111,7 @@ private:
   std::string lastGame_{"auto"};
   std::string lastVersion_;
   std::string language_{"en"};
-  std::string preludeSource_{
-      std::string("https://raw.githubusercontent.com/loot/prelude/") +
-      DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml"};
+  std::string preludeSource_{getDefaultPreludeSource()};
   std::string theme_{"default"};
   std::optional<WindowPosition> windowPosition_;
   std::vector<GameSettings> gameSettings_{
