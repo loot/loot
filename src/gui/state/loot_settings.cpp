@@ -342,6 +342,62 @@ std::optional<std::string> migratePreludeRepoSettings(
   return migratedSource;
 }
 
+std::string migrateMasterlistSource(GameType gameType,
+                                    const std::string& source) {
+  static const std::vector<std::string> officialMasterlistRepos = {"morrowind",
+                                                                   "oblivion",
+                                                                   "skyrim",
+                                                                   "skyrimse",
+                                                                   "skyrimvr",
+                                                                   "fallout3",
+                                                                   "falloutnv",
+                                                                   "fallout4",
+                                                                   "fallout4vr",
+                                                                   "enderal"};
+
+  for (const auto& repo : officialMasterlistRepos) {
+    for (const auto& branch : oldDefaultBranches) {
+      const auto url = "https://raw.githubusercontent.com/loot/" + repo + "/" +
+                       branch + "/masterlist.yaml";
+
+      if (source == url) {
+        const auto newSource = GetDefaultMasterlistUrl(repo);
+
+        const auto logger = getLogger();
+        if (logger) {
+          logger->info(
+              "Migrating masterlist source from {} to {}", source, newSource);
+        }
+
+        return newSource;
+      }
+    }
+  }
+
+  return source;
+}
+
+std::string migratePreludeSource(const std::string& source) {
+  for (const auto& branch : oldDefaultBranches) {
+    const auto url = "https://raw.githubusercontent.com/loot/prelude/" +
+                     branch + "/prelude.yaml";
+
+    if (source == url) {
+      const auto newSource = getDefaultPreludeSource();
+
+      const auto logger = getLogger();
+      if (logger) {
+        logger->info(
+            "Migrating prelude source from {} to {}", source, newSource);
+      }
+
+      return newSource;
+    }
+  }
+
+  return source;
+}
+
 GameType mapGameType(const std::string& gameType) {
   if (gameType == GameSettings(GameType::tes3).FolderName()) {
     return GameType::tes3;
@@ -421,7 +477,7 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
 
   auto source = table->get_as<std::string>("masterlistSource");
   if (source) {
-    game.SetMasterlistSource(*source);
+    game.SetMasterlistSource(migrateMasterlistSource(game.Type(), *source));
   } else {
     auto url = table->get_as<std::string>("repo");
     auto branch = table->get_as<std::string>("branch");
@@ -515,6 +571,11 @@ std::vector<std::string> checkSettingsFile(
   return warningMessages;
 }
 
+std::string getDefaultPreludeSource() {
+  return std::string("https://raw.githubusercontent.com/loot/prelude/") +
+         DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml";
+}
+
 LootSettings::Language convert(const cpptoml::table& table) {
   auto locale = table.get_as<std::string>("locale");
   if (!locale) {
@@ -561,7 +622,7 @@ void LootSettings::load(const std::filesystem::path& file,
 
   const auto preludeSource = settings->get_as<std::string>("preludeSource");
   if (preludeSource) {
-    preludeSource_ = *preludeSource;
+    preludeSource_ = migratePreludeSource(*preludeSource);
   } else {
     auto url = settings->get_as<std::string>("preludeRepo");
     auto branch = settings->get_as<std::string>("preludeBranch");

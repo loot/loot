@@ -51,6 +51,12 @@ Changed
   confusion.
 - A minor performance improvement to all operations involving the sidebar and
   plugin card lists.
+- LOOT now supports migrating from old default prelude and masterlist sources in
+  readiness for any potential future changes to the default source locations.
+- Updated the Bulgarian translation.
+- Updated the German translation.
+- Updated the Italian translation.
+- Updated the Ukrainian translation.
 
 Removed
 -------
