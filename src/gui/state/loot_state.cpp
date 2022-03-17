@@ -154,8 +154,7 @@ void LootState::init(const std::string& cmdLineGame,
   // Load settings.
   if (fs::exists(LootPaths::getSettingsPath())) {
     try {
-      settings_.load(LootPaths::getSettingsPath(),
-                     LootPaths::getLootDataPath());
+      settings_.load(LootPaths::getSettingsPath());
     } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
