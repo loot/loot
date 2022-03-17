@@ -40,6 +40,10 @@
 void logRuntimeEnvironment() {
   const auto logger = loot::getLogger();
   if (logger) {
+    logger->info("Running {}-bit LOOT on {} and the {} CPU architecture",
+                 QSysInfo::WordSize,
+                 QSysInfo::prettyProductName().toStdString(),
+                 QSysInfo::currentCpuArchitecture().toStdString());
     logger->info("LOOT version: {}+{}",
                  loot::gui::Version::string(),
                  loot::gui::Version::revision);
