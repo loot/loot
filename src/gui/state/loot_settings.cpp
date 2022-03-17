@@ -342,8 +342,7 @@ std::optional<std::string> migratePreludeRepoSettings(
   return migratedSource;
 }
 
-std::string migrateMasterlistSource(GameType gameType,
-                                    const std::string& source) {
+std::string migrateMasterlistSource(const std::string& source) {
   static const std::vector<std::string> officialMasterlistRepos = {"morrowind",
                                                                    "oblivion",
                                                                    "skyrim",
@@ -477,7 +476,7 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
 
   auto source = table->get_as<std::string>("masterlistSource");
   if (source) {
-    game.SetMasterlistSource(migrateMasterlistSource(game.Type(), *source));
+    game.SetMasterlistSource(migrateMasterlistSource(*source));
   } else {
     auto url = table->get_as<std::string>("repo");
     auto branch = table->get_as<std::string>("branch");
