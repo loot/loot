@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-17 16:40+0000\n"
+"POT-Creation-Date: 2022-03-17 18:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -892,43 +892,43 @@ msgid ""
 "menu) for more information."
 msgstr ""
 
-#. translators: --auto-sort and --game are command-line arguments and
-#. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:110
-msgid "Error: --auto-sort was passed but no --game parameter was provided."
+#: src/gui/state/loot_state.cpp:166
+msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:138
+#: src/gui/state/loot_state.cpp:190
 msgid "Error: Could not create LOOT data directory. %1%"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:160 src/gui/state/loot_state.cpp:214
+#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:244
+#. translators: --auto-sort and --game are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:218
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:293
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:257
+#: src/gui/state/loot_state.cpp:311
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:272
+#: src/gui/state/loot_state.cpp:326
 msgid "Error: failed to override game path, the game %1% was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:312
+#: src/gui/state/loot_state.cpp:360
 msgid "Error: The initial game could not be selected. %1%"
-msgstr ""
-
-#: src/gui/state/loot_state.cpp:335
-msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
