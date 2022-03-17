@@ -108,6 +108,12 @@ LootState::LootState(const std::filesystem::path& lootAppPath,
   fs::remove(LootPaths::getLogPath());
   setLogPath(LootPaths::getLogPath());
   SetLoggingCallback(apiLogCallback);
+
+  // Enable debug logging before settings are loaded to capture as much
+  // information as possible if settings can't be loaded. Don't change
+  // the value in settings_ so that if the settings file doesn't configure
+  // logging loading settings still defaults debug logging to disabled.
+  enableDebugLogging(true);
 }
 
 void LootState::init(const std::string& cmdLineGame,
@@ -217,23 +223,6 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
 
   // Apply debug logging settings.
   enableDebugLogging(settings_.isDebugLoggingEnabled());
-
-  // Log some useful info.
-  auto logger = getLogger();
-  if (logger) {
-    logger->info(
-        "LOOT version: {}+{}", gui::Version::string(), gui::Version::revision);
-    logger->info(
-        "libloot version: {}+{}", GetLiblootVersion(), GetLiblootRevision());
-  }
-
-#ifdef _WIN32
-  // Check if LOOT is being run through Mod Organiser.
-  bool runFromMO = GetModuleHandle(ToWinWide("hook.dll").c_str()) != nullptr;
-  if (runFromMO && logger) {
-    logger->info("LOOT is being run through Mod Organiser.");
-  }
-#endif
 
   // Now that settings have been loaded, set the locale again to handle
   // translations.

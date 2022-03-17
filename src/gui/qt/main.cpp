@@ -35,6 +35,28 @@
 #include "gui/qt/style.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_state.h"
+#include "gui/version.h"
+
+void logRuntimeEnvironment() {
+  const auto logger = loot::getLogger();
+  if (logger) {
+    logger->info("LOOT version: {}+{}",
+                 loot::gui::Version::string(),
+                 loot::gui::Version::revision);
+    logger->info("libloot version: {}+{}",
+                 loot::GetLiblootVersion(),
+                 loot::GetLiblootRevision());
+
+#ifdef _WIN32
+    // Check if LOOT is being run through Mod Organiser.
+    const bool runFromMO =
+        GetModuleHandle(loot::ToWinWide("hook.dll").c_str()) != nullptr;
+    if (runFromMO) {
+      logger->info("LOOT is being run through Mod Organiser.");
+    }
+#endif
+  }
+}
 
 int main(int argc, char* argv[]) {
 #ifdef _WIN32
@@ -75,6 +97,9 @@ int main(int argc, char* argv[]) {
   auto autoSort = parser.isSet("auto-sort");
 
   loot::LootState state("", lootDataPath);
+
+  logRuntimeEnvironment();
+
   state.init(startupGameFolder, gamePath, autoSort);
 
   // Load Qt's translations.
