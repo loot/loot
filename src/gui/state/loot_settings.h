@@ -68,8 +68,7 @@ public:
     bool hideCreationClubPlugins{false};
   };
 
-  void load(const std::filesystem::path& file,
-            const std::filesystem::path& lootDataPath);
+  void load(const std::filesystem::path& file);
   void save(const std::filesystem::path& file);
 
   bool isAutoSortEnabled() const;

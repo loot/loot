@@ -237,6 +237,35 @@ TEST_P(
   EXPECT_TRUE(std::filesystem::exists(lootGamePath / "file.txt"));
 }
 
+TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
+  using std::filesystem::u8path;
+
+  if (GetParam() != GameType::tes5se) {
+    return;
+  }
+
+  Game game(defaultGameSettings, lootDataPath, "");
+
+  const auto legacyGamePath = lootDataPath / "SkyrimSE";
+  std::filesystem::create_directory(legacyGamePath);
+  std::ofstream out(legacyGamePath / "file.txt");
+  out << "";
+  out.close();
+
+  const auto lootGamesPath = lootDataPath / "games";
+  std::filesystem::remove_all(lootGamesPath);
+
+  ASSERT_FALSE(std::filesystem::exists(lootGamesPath));
+  EXPECT_NO_THROW(game.Init());
+
+  const auto lootGamePath =
+      lootGamesPath / u8path(game.GetSettings().FolderName());
+
+  EXPECT_FALSE(std::filesystem::exists(legacyGamePath));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath));
+  EXPECT_TRUE(std::filesystem::exists(lootGamePath / "file.txt"));
+}
+
 TEST_P(GameTest, initShouldNotThrowIfGameAndLocalPathsAreNotEmpty) {
   Game game(defaultGameSettings, "", "");
 

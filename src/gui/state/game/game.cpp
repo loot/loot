@@ -147,19 +147,33 @@ void Game::Init() {
             "a directory");
       }
 
-      auto legacyGamePath = lootDataPath_ / u8path(settings_.FolderName());
-      if (fs::is_directory(legacyGamePath)) {
-        if (logger) {
-          logger->info(
-              "Found a folder for this game in the LOOT data folder, assuming "
-              "that it's a legacy game folder and moving into the correct "
-              "subdirectory...");
-        }
-        fs::create_directories(lootGamePath.parent_path());
-        fs::rename(legacyGamePath, lootGamePath);
-      } else {
-        fs::create_directories(lootGamePath);
+      std::vector<fs::path> legacyGamePaths{lootDataPath_ /
+                                            u8path(settings_.FolderName())};
+
+      if (settings_.Type() == GameType::tes5se) {
+        // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
+        // migrate from that if it's present.
+        legacyGamePaths.insert(legacyGamePaths.begin(),
+                               lootDataPath_ / "SkyrimSE");
       }
+
+      for (const auto& legacyGamePath : legacyGamePaths) {
+        if (fs::is_directory(legacyGamePath)) {
+          if (logger) {
+            logger->info(
+                "Found a folder for this game in the LOOT data folder, "
+                "assuming "
+                "that it's a legacy game folder and moving into the correct "
+                "subdirectory...");
+          }
+
+          fs::create_directories(lootGamePath.parent_path());
+          fs::rename(legacyGamePath, lootGamePath);
+          break;
+        }
+      }
+
+      fs::create_directories(lootGamePath);
     }
   }
 }

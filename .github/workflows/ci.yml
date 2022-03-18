@@ -174,8 +174,6 @@ jobs:
       - name: Run C++ tests
         run: |
           cd build
-          git config --global user.email "github@github-actions"
-          git config --global user.name "GitHub"
           ./loot_gui_tests
 
       - name: Install packages for building docs
@@ -306,8 +304,6 @@ jobs:
       - name: Run C++ tests
         run: |
           cd build/Release
-          git config --global user.email "github@github-actions"
-          git config --global user.name "GitHub"
           .\loot_gui_tests.exe
 
       - name: Install packages for building docs

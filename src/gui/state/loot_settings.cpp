@@ -342,8 +342,7 @@ std::optional<std::string> migratePreludeRepoSettings(
   return migratedSource;
 }
 
-std::string migrateMasterlistSource(GameType gameType,
-                                    const std::string& source) {
+std::string migrateMasterlistSource(const std::string& source) {
   static const std::vector<std::string> officialMasterlistRepos = {"morrowind",
                                                                    "oblivion",
                                                                    "skyrim",
@@ -424,8 +423,7 @@ GameType mapGameType(const std::string& gameType) {
   }
 }
 
-GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
-                     const std::filesystem::path& lootDataPath) {
+GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
   auto type = table->get_as<std::string>("type");
   if (!type) {
     throw std::runtime_error("'type' key missing from game settings table");
@@ -440,11 +438,6 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
     type = cpptoml::option<std::string>(
         GameSettings(GameType::tes5se).FolderName());
     folder = type;
-
-    auto path = lootDataPath / "SkyrimSE";
-    if (std::filesystem::exists(path)) {
-      std::filesystem::rename(path, lootDataPath / u8path(*folder));
-    }
   }
 
   GameSettings game(mapGameType(*type), *folder);
@@ -477,7 +470,7 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table,
 
   auto source = table->get_as<std::string>("masterlistSource");
   if (source) {
-    game.SetMasterlistSource(migrateMasterlistSource(game.Type(), *source));
+    game.SetMasterlistSource(migrateMasterlistSource(*source));
   } else {
     auto url = table->get_as<std::string>("repo");
     auto branch = table->get_as<std::string>("branch");
@@ -594,8 +587,7 @@ LootSettings::Language convert(const cpptoml::table& table) {
   return language;
 }
 
-void LootSettings::load(const std::filesystem::path& file,
-                        const std::filesystem::path& lootDataPath) {
+void LootSettings::load(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   // Don't use cpptoml::parse_file() as it just uses a std stream,
@@ -656,7 +648,7 @@ void LootSettings::load(const std::filesystem::path& file,
 
     for (const auto& game : *games) {
       try {
-        gameSettings_.push_back(convert(game, lootDataPath));
+        gameSettings_.push_back(convert(game));
       } catch (const std::exception& e) {
         // Skip invalid games.
         if (logger) {

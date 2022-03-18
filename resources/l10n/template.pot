@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.18.0\n"
+"Project-Id-Version: LOOT 0.18.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-14 22:26+0000\n"
+"POT-Creation-Date: 2022-03-17 18:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -878,79 +878,79 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:541
+#: src/gui/state/loot_settings.cpp:534
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:563
+#: src/gui/state/loot_settings.cpp:556
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
 
-#. translators: --auto-sort and --game are command-line arguments and
-#. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:110
-msgid "Error: --auto-sort was passed but no --game parameter was provided."
+#: src/gui/state/loot_state.cpp:166
+msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#. translators: --game and --game-path are command-line arguments and
-#. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:121
-msgid "Error: --game-path was passed but no --game parameter was provided."
-msgstr ""
-
-#: src/gui/state/loot_state.cpp:143
+#: src/gui/state/loot_state.cpp:190
 msgid "Error: Could not create LOOT data directory. %1%"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:166 src/gui/state/loot_state.cpp:220
+#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:250
+#. translators: --auto-sort and --game are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:218
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:293
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:269
+#. translators: --game and --game-path are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:311
+msgid "Error: --game-path was passed but no --game parameter was provided."
+msgstr ""
+
+#: src/gui/state/loot_state.cpp:326
 msgid "Error: failed to override game path, the game %1% was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:309
+#: src/gui/state/loot_state.cpp:360
 msgid "Error: The initial game could not be selected. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:332
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-
-#: src/gui/state/game/game.cpp:227 src/gui/state/game/game.cpp:270
+#: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:240
+#: src/gui/state/game/game.cpp:254
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:310
+#: src/gui/state/game/game.cpp:324
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:352
+#: src/gui/state/game/game.cpp:366
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:372
+#: src/gui/state/game/game.cpp:386
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -959,48 +959,48 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:392
+#: src/gui/state/game/game.cpp:406
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:410
+#: src/gui/state/game/game.cpp:424
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:434
+#: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: %1%."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:532 src/gui/state/game/game.cpp:616
+#: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:630
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:641
+#: src/gui/state/game/game.cpp:655
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:653
+#: src/gui/state/game/game.cpp:667
 msgid "The group \"%1%\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:689
+#: src/gui/state/game/game.cpp:703
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:716
+#: src/gui/state/game/game.cpp:730
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:778
+#: src/gui/state/game/game.cpp:792
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
