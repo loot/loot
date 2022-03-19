@@ -834,7 +834,7 @@ msgstr "Masterlist Quelle"
 
 #: src/gui/qt/settings/game_tab.cpp:129
 msgid "Install Path"
-msgstr "Installations-ordnerpfad"
+msgstr "Installationspfad"
 
 #: src/gui/qt/settings/game_tab.cpp:130
 msgid "Install Path Registry Keys"
