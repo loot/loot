@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-17 18:00+0000\n"
+"POT-Creation-Date: 2022-03-18 18:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -618,7 +618,7 @@ msgstr ""
 msgid "Plugins in %s"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:162
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:163
 msgid "Group already exists!"
 msgstr ""
 
