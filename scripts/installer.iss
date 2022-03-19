@@ -96,10 +96,6 @@ Source: "build\Release\loot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 
 ; Common Qt files
-Source: "build\Release\D3Dcompiler_47.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\opengl32sw.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\iconengines\*"; \
 DestDir: "{app}\iconengines"; Flags: ignoreversion
 Source: "build\Release\imageformats\*"; \
