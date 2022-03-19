@@ -3,15 +3,16 @@
 # Copyright (C) 2014 Ipradel
 # Copyright (C) 2015 Freso
 # Copyright (C) 2019 DaCoolX
+# Copyright (C) 2022 pStyl3
 # This file is distributed under the same license as the LOOT package.
 # Diese Datei untersteht derselben Lizenz wie das LOOT Paket
 msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-03-13 18:41+0000\n"
-"PO-Revision-Date: 2022-03-13 21:58+0100\n"
-"Last-Translator: pStyl3 <qp-game@gmx.de>\n"
+"POT-Creation-Date: 2022-03-17 18:00+0000\n"
+"PO-Revision-Date: 2022-03-19 07:53+0100\n"
+"Last-Translator: DaCoolX <2771553+DaCoolX@users.noreply.github.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -205,11 +206,11 @@ msgstr "Einstellungen..."
 
 #: src/gui/qt/main_window.cpp:640
 msgid "Backup LOOT Data"
-msgstr "Sichere LOOT Data"
+msgstr "Sichere LOOT Daten"
 
 #: src/gui/qt/main_window.cpp:641
 msgid "Open LOOT Data Folder"
-msgstr "Öffne LOOT Data Ordner"
+msgstr "Öffne LOOT Daten-Ordner"
 
 #: src/gui/qt/main_window.cpp:642
 msgid "Quit"
@@ -245,7 +246,7 @@ msgstr "Datiere Plugins neu..."
 
 #: src/gui/qt/main_window.cpp:651
 msgid "Fix Ambiguous Load Order"
-msgstr "Behebe unklare Ladereihenfolge"
+msgstr "Behebe un­ein­deu­tige Ladereihenfolge"
 
 #: src/gui/qt/main_window.cpp:652
 msgid "Clear All User Metadata..."
@@ -309,7 +310,7 @@ msgid ""
 "data has been backed up to: %2%"
 msgstr ""
 "Dies scheint das erste Mal zu sein das Sie LOOT v%1%. gestartet haben. Ihre "
-"aktuelle LOOT Data wurde gesichert nach: %2%"
+"aktuelle LOOT Daten wurde gesichert nach: %2%"
 
 #: src/gui/qt/main_window.cpp:966
 msgid "This appears to be the first time you have run LOOT v%1%."
@@ -344,8 +345,8 @@ msgid ""
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 "Einige Funktionen sind deaktiviert während der Metadaten-Editor geöffnet ist "
-"oder während es eine sortierte Ladereihenfolge gibt, die nicht gespeichert "
-"oder verworfen wurde."
+"oder während es eine sortierte Ladereihenfolge gibt, die noch nicht "
+"gespeichert oder verworfen wurde."
 
 #: src/gui/qt/main_window.cpp:989 src/gui/qt/main_window.cpp:1769
 #, c-format
@@ -419,7 +420,7 @@ msgstr "Das Sortieren hat keine Änderungen der Ladereihenfolge bewirkt."
 
 #: src/gui/qt/main_window.cpp:1324
 msgid "Ambiguous load order detected"
-msgstr "Unklare Ladereihenfolge erkannt"
+msgstr "Uneindeutige Ladereihenfolge erkannt"
 
 #: src/gui/qt/main_window.cpp:1325
 msgid ""
@@ -430,9 +431,9 @@ msgid ""
 "You can use the \"Fix Ambiguous Load Order\" action in the Game menu to "
 "unambiguously set the load order to what is displayed by LOOT."
 msgstr ""
-"LOOT hat festgestellt das die Ladereihenfolge unklar ist, was bedeutet das "
-"andere Programme eine andere Ladereihenfolge verwenden könnten als das was "
-"LOOT anzeigt.\n"
+"LOOT hat festgestellt das die Ladereihenfolge uneindeutig ist, was bedeutet "
+"das andere Programme eine andere Ladereihenfolge verwenden könnten als das "
+"was LOOT anzeigt.\n"
 "\n"
 "Sie können die \"Behebe unklare Ladereihenfolge\" Aktion im Spiel Menü "
 "nutzen, um die Ladereihenfolge eindeutig festzulegen dementsprechend wie es "
@@ -440,7 +441,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1365
 msgid "Your LOOT data has been backed up to: %1%"
-msgstr "Ihre LOOT Data wurde gesichert nach: %1%"
+msgstr "Ihre LOOT Daten wurde gesichert nach: %1%"
 
 #: src/gui/qt/main_window.cpp:1372
 msgid "No backup has been created as LOOT has no data to backup."
@@ -550,7 +551,7 @@ msgstr "Über LOOT"
 
 #: src/gui/qt/main_window.cpp:2084
 msgid "Identifying conflicting plugins..."
-msgstr "Identifiziere inkompatible Plugins..."
+msgstr "Identifiziere widersprüchliche Plugins..."
 
 #: src/gui/qt/main_window.cpp:2195
 msgid ""
@@ -562,7 +563,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2246
 msgid "No masterlist update was necessary."
-msgstr "Aktualisierung der Masterlist nicht nötig."
+msgstr "Aktualisierung der Masterlist war nicht von Nöten."
 
 #: src/gui/qt/main_window.cpp:2259
 #, c-format
@@ -639,7 +640,7 @@ msgstr "Suche Karten"
 msgid ""
 "If checked, interprets the search text as a Perl-like regular expression."
 msgstr ""
-"Wenn angekreuzt, wird der Such-Text als Perl-kompatible Regular Expression "
+"Wenn angekreuzt, wird der Such-Text als Perl-kompatibler Regulärer Ausdruck "
 "interpretiert."
 
 #: src/gui/qt/search_dialog.cpp:107
@@ -664,7 +665,7 @@ msgstr "Füge neue Gruppe hinzu"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:130
 msgid "No plugins are in this group."
-msgstr "Keine Plugins sind in dieser Grupper."
+msgstr "Keine Plugins sind in dieser Gruppe."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:142
 #, c-format
@@ -812,7 +813,7 @@ msgstr "Basis-Videospiel"
 #: src/gui/qt/settings/game_tab.cpp:124
 #: src/gui/qt/settings/new_game_dialog.cpp:89
 msgid "Is instance of base game"
-msgstr "Ist Instanz des Basisspiels"
+msgstr "Ist Instanz des Basis-Videospiels"
 
 #: src/gui/qt/settings/game_tab.cpp:125
 #: src/gui/qt/settings/new_game_dialog.cpp:90
@@ -833,7 +834,7 @@ msgstr "Masterlist Quelle"
 
 #: src/gui/qt/settings/game_tab.cpp:129
 msgid "Install Path"
-msgstr "Installationspfad"
+msgstr "Installations-ordnerpfad"
 
 #: src/gui/qt/settings/game_tab.cpp:130
 msgid "Install Path Registry Keys"
@@ -849,7 +850,7 @@ msgstr "Lösche Videospiel"
 
 #: src/gui/qt/settings/general_tab.cpp:145
 msgid "Default Game"
-msgstr "Standard-Auswahl"
+msgstr "Standard-Videospiel"
 
 #: src/gui/qt/settings/general_tab.cpp:147
 msgid "Theme"
@@ -937,7 +938,7 @@ msgstr "Einlesen, zusammenführen und auswerten der Metadaten..."
 msgid "Sorting load order..."
 msgstr "Sortiere Ladereihenfolge..."
 
-#: src/gui/state/loot_settings.cpp:485
+#: src/gui/state/loot_settings.cpp:534
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -947,7 +948,7 @@ msgstr ""
 "nicht migriert werden! Sie können im LOOTDebugLog.txt (Sie können es über "
 "das Datei-Menü erreichen) für mehr Informationen nachsehen."
 
-#: src/gui/state/loot_settings.cpp:507
+#: src/gui/state/loot_settings.cpp:556
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -957,70 +958,70 @@ msgstr ""
 "migriert werden! Sie können im LOOTDebugLog.txt (Sie können es über das "
 "Datei-Menü erreichen) für mehr Informationen nachsehen."
 
-#. translators: --auto-sort and --game are command-line arguments and
-#. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:110
-msgid "Error: --auto-sort was passed but no --game parameter was provided."
+#: src/gui/state/loot_state.cpp:166
+msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
-"Fehler: --auto-sort wurde übergeben aber kein --game Parameter wurde "
-"angegeben."
+"Fehler: Videospiel-spezifische Einstellungen konnten nicht initialisiert "
+"werden. %1%"
 
-#. translators: --game and --game-path are command-line arguments and
-#. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:121
-msgid "Error: --game-path was passed but no --game parameter was provided."
-msgstr ""
-"Fehler: --game-path wurde übergeben aber kein --game Parameter wurde "
-"angegeben."
-
-#: src/gui/state/loot_state.cpp:143
+#: src/gui/state/loot_state.cpp:190
 msgid "Error: Could not create LOOT data directory. %1%"
 msgstr "Fehler: Konnte LOOT-Datenordner nicht anlegen. %1%"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:166 src/gui/state/loot_state.cpp:220
+#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
 msgid "Error: Settings parsing failed. %1%"
 msgstr "Fehler: Einlesen der Einstellungen fehlgeschlagen. %1%"
 
-#: src/gui/state/loot_state.cpp:250
+#. translators: --auto-sort and --game are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:218
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr ""
+"Fehler: --auto-sort wurde übergeben aber kein --game Parameter wurde "
+"angegeben."
+
+#: src/gui/state/loot_state.cpp:293
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr "Fehler: Konnte LOOT-Prelude-Ordner nicht anlegen. %1%"
 
-#: src/gui/state/loot_state.cpp:269
+#. translators: --game and --game-path are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:311
+msgid "Error: --game-path was passed but no --game parameter was provided."
+msgstr ""
+"Fehler: --game-path wurde übergeben aber kein --game Parameter wurde "
+"angegeben."
+
+#: src/gui/state/loot_state.cpp:326
 msgid "Error: failed to override game path, the game %1% was not recognised."
 msgstr ""
 "Fehler: Überschreiben des Videospiel-Ordnerpfades fehlgeschlagen, das "
 "Videospiel %1% wurde nicht erkannt."
 
-#: src/gui/state/loot_state.cpp:309
+#: src/gui/state/loot_state.cpp:360
 msgid "Error: The initial game could not be selected. %1%"
 msgstr "Fehler: Das initiale Videospiel konnte nicht ausgewählt werden. %1%"
 
-#: src/gui/state/loot_state.cpp:332
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr ""
-"Fehler: Videospiel-spezifische Einstellungen konnten nicht initialisiert "
-"werden. %1%"
-
-#: src/gui/state/game/game.cpp:227 src/gui/state/game/game.cpp:270
+#: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
 "Dieses Plugin setzt voraus das \"%1%\" installiert ist, aber es fehlt "
 "momentan."
 
-#: src/gui/state/game/game.cpp:240
+#: src/gui/state/game/game.cpp:254
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
 msgstr ""
 "Dieses Plugin setzt voraus das \"%1%\" aktiviert ist, aber es ist momentan "
 "deaktiviert."
 
-#: src/gui/state/game/game.cpp:310
+#: src/gui/state/game/game.cpp:324
 msgid "This plugin is incompatible with \"%1%\", but both are present."
 msgstr "Dieses Plugin ist inkompatibel mit \"%1%\", aber beide sind vorhanden."
 
-#: src/gui/state/game/game.cpp:352
+#: src/gui/state/game/game.cpp:366
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"%1%\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
@@ -1030,7 +1031,7 @@ msgstr ""
 "voraus. Dies kann Probleme im Videospiel verursachen, und jegliches "
 "Sortieren wird fehlschlagen solang dieses Plugin installiert ist."
 
-#: src/gui/state/game/game.cpp:372
+#: src/gui/state/game/game.cpp:386
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1042,7 +1043,7 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:392
+#: src/gui/state/game/game.cpp:406
 msgid ""
 "This plugin has a header version of %1%, which is less than the game's "
 "minimum supported header version of %2%."
@@ -1050,11 +1051,11 @@ msgstr ""
 "Dieses Plugin hat ein Kopfzeilenversion von %1%, welcher geringer ist als "
 "die minimal-unterstützte Kopfzeilenversion von %2%."
 
-#: src/gui/state/game/game.cpp:410
+#: src/gui/state/game/game.cpp:424
 msgid "This plugin belongs to the group \"%1%\", which does not exist."
 msgstr "Dieses Plugin gehört zur Gruppe \"%1%\", welche nicht existiert."
 
-#: src/gui/state/game/game.cpp:434
+#: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: %1%."
@@ -1062,7 +1063,7 @@ msgstr ""
 "Dieses Plugin hat eine BashTags Datei die Vorschläge von LOOT überschreiben "
 "wird für die folgenden Bash Tags: %1%."
 
-#: src/gui/state/game/game.cpp:532 src/gui/state/game/game.cpp:616
+#: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:630
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1070,19 +1071,19 @@ msgstr ""
 "Laden der derzeitigen Ladereihenfolge fehlgeschlagen, angezeigte "
 "Informationen sind womöglich inakkurat."
 
-#: src/gui/state/game/game.cpp:641
+#: src/gui/state/game/game.cpp:655
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
 msgstr "Zyklische Interaktion zwischen \"%1%\" und \"%2%\" festgestellt: %3%"
 
-#: src/gui/state/game/game.cpp:653
+#: src/gui/state/game/game.cpp:667
 msgid "The group \"%1%\" does not exist."
 msgstr "Die Gruppe \"%1%\" existiert nicht."
 
-#: src/gui/state/game/game.cpp:689
+#: src/gui/state/game/game.cpp:703
 msgid "You have not sorted your load order this session."
 msgstr "Sie haben Ihre Ladereihenfolge in dieser Sitzung noch nicht sortiert."
 
-#: src/gui/state/game/game.cpp:716
+#: src/gui/state/game/game.cpp:730
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1092,7 +1093,7 @@ msgstr ""
 "den FE Reihenfolge-Index teilen. Deaktivieren Sie ein normales Plugin oder "
 "alle Ihre Light-Plugins um potenziellen Problemen auszuweichen."
 
-#: src/gui/state/game/game.cpp:778
+#: src/gui/state/game/game.cpp:792
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
@@ -1166,4 +1167,5 @@ msgstr "%1% hat %2% gefunden."
 #: src/gui/state/game/helpers.cpp:232
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr ""
-"LOOT hat festgestellt das \"%1%\" ungültig ist wird es ab sofort ignorieren."
+"LOOT hat festgestellt das \"%1%\" ungültig ist und wird es ab sofort "
+"ignorieren."
