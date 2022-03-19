@@ -8,7 +8,7 @@ LOOT can be installed either using its automated installer or manually. If you a
 
 The official 64-bit LOOT release requires the `MSVC 2019 x64 redistributable`_ to be installed, while the 32-bit release requires the `MSVC 2010 x86 redistributable`_ and the `MSVC 2019 x86 redistributable`_ to be installed.
 
-The installer automatically downloads and installs the appropriate MSVC 2019 redistributable if you don't already have it installed, but if you use the LOOT archive then you will need to do so manually.
+The installer automatically downloads and installs the appropriate redistributables if you don't already have them installed, but if you use the LOOT archive then you will need to do so manually.
 
 If LOOT was installed using the installer, then use the uninstaller linked to in the Start Menu to uninstall LOOT. If LOOT was installed manually:
 
