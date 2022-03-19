@@ -31,7 +31,7 @@ jobs:
           body: |
             The win64 build requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe). Users are recommended to run this build if their PC meets the Windows version requirement.
 
-            The win32 build requires Windows 7 or later and the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe). This build is provided for those who cannot run the win64 build.
+            The win32 build requires Windows 7 or later, the [MSVC 2010 x86 redistributable](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2010-vc-100-sp1-no-longer-supported) and the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe). This build is provided for those who cannot run the win64 build.
 
             The `.exe` installers will automatically download and install the appropriate redistributable if you don't already have it installed.
 
