@@ -137,6 +137,18 @@ Source: "build\Release\Qt5Widgets.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\bearer\*"; \
 DestDir: "{app}\bearer"; Flags: ignoreversion
+
+#ifdef MyAppIs64Bit
+Source: "build\Release\libcrypto-1_1-x64.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\libssl-1_1-x64.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+#else
+Source: "build\Release\libcrypto-1_1.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\libssl-1_1.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+#endif
 #endif
 
 Source: "build\docs\html\*"; \
