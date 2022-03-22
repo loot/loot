@@ -31,6 +31,12 @@ namespace loot {
 SidebarPluginNameDelegate::SidebarPluginNameDelegate(QObject* parent) :
     QStyledItemDelegate(parent) {}
 
+void SidebarPluginNameDelegate::setColors(QColor selectedText,
+                                          QColor unselectedGroup) {
+  selectedTextColor = selectedText;
+  unselectedGroupColor = unselectedGroup;
+}
+
 void SidebarPluginNameDelegate::paint(QPainter* painter,
                                       const QStyleOptionViewItem& option,
                                       const QModelIndex& index) const {
@@ -53,9 +59,12 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   auto isEditorOpen = index.data(EditorStateRole).toBool();
 
   const auto isSelected = styleOption.state.testFlag(QStyle::State_Selected) &&
-                          styleOption.state.testFlag(QStyle::State_Active);
+                    styleOption.state.testFlag(QStyle::State_Active);
   if (isSelected) {
-    painter->setPen(styleOption.palette.highlightedText().color());
+    const auto color = selectedTextColor.isValid()
+                           ? selectedTextColor
+                           : styleOption.palette.highlightedText().color();
+    painter->setPen(color);
   }
 
   auto name = QFontMetricsF(painter->font())
@@ -70,8 +79,11 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
     groupRect.translate(0, SIDEBAR_EDIT_MODE_ROW_HEIGHT / 2);
 
     if (!isSelected) {
-      painter->setPen(
-          styleOption.palette.color(QPalette::Disabled, QPalette::Text));
+      const auto color =
+          unselectedGroupColor.isValid()
+              ? unselectedGroupColor
+              : styleOption.palette.color(QPalette::Disabled, QPalette::Text);
+      painter->setPen(color);
     }
 
     auto group = painter->fontMetrics().elidedText(

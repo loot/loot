@@ -118,6 +118,8 @@ void GeneralInfoCard::setGameType(GameType gameType) {
       totalPluginsCountValue, totalCountRow, PLUGIN_VALUE_COLUMN);
 }
 
+void GeneralInfoCard::refreshMessages() { messagesWidget->refresh(); }
+
 void GeneralInfoCard::setupUi() {
   static constexpr int TABLE_COLUMN_SPACING = 16;
   static constexpr int METADATA_LABEL_COLUMN = 0;

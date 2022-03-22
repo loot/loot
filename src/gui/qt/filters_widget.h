@@ -28,6 +28,7 @@
 
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QWidget>
@@ -36,7 +37,7 @@
 #include "gui/state/loot_settings.h"
 
 namespace loot {
-class FiltersWidget : public QWidget {
+class FiltersWidget : public QFrame {
   Q_OBJECT
 public:
   explicit FiltersWidget(QWidget *parent);
@@ -96,6 +97,7 @@ private:
 private slots:
   void on_conflictingPluginsFilter_activated();
   void on_groupPluginsFilter_activated();
+  void on_contentFilter_textChanged();
   void on_contentFilter_textEdited();
   void on_contentRegexCheckbox_clicked();
   void on_versionNumbersFilter_clicked();

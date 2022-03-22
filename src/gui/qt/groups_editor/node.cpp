@@ -36,12 +36,14 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-NodeLabel::NodeLabel(const QString &text, bool isUserMetadata) :
+NodeLabel::NodeLabel(const GraphView &graphView,
+                     const QString &text,
+                     bool isUserMetadata) :
     QGraphicsSimpleTextItem(text) {
   setZValue(2);
 
   auto brush = this->brush();
-  brush.setColor(getDefaultColor(isUserMetadata));
+  brush.setColor(getDefaultColor(graphView, isUserMetadata));
 
   setBrush(brush);
 }
@@ -49,8 +51,8 @@ NodeLabel::NodeLabel(const QString &text, bool isUserMetadata) :
 void NodeLabel::paint(QPainter *painter,
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget) {
-  auto backgroundColor =
-      QGuiApplication::palette().color(QPalette::Active, QPalette::Base);
+  const auto backgroundColor =
+      qobject_cast<GraphView *>(scene()->parent())->getBackgroundColor();
 
   painter->setPen(Qt::NoPen);
   painter->setBrush(backgroundColor);
@@ -63,7 +65,7 @@ Node::Node(GraphView *graphView,
            const QString &name,
            bool isUserMetadata,
            bool containsInstalledPlugins) :
-    textItem(new NodeLabel(name, isUserMetadata)),
+    textItem(new NodeLabel(*graphView, name, isUserMetadata)),
     isUserMetadata_(isUserMetadata),
     containsInstalledPlugins(containsInstalledPlugins) {
   setFlag(ItemIsMovable);
@@ -273,7 +275,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   if (drawEdgeToCursor) {
     removeEdgeToCursor();
 
-    const auto color = getDefaultColor(true);
+    const auto graphView = qobject_cast<GraphView *>(scene()->parent());
+    const auto color = getDefaultColor(*graphView, true);
     auto pen =
         QPen(color, LINE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     auto polygon = createLineWithArrow(scenePos(), event->scenePos());
@@ -314,7 +317,8 @@ QColor Node::getNodeColor() const {
     return QColor("#8BC34A");
   }
 
-  return getDefaultColor(isUserMetadata_);
+  const auto graphView = qobject_cast<GraphView *>(scene()->parent());
+  return getDefaultColor(*graphView, isUserMetadata_);
 }
 
 void Node::removeEdgeToCursor() {

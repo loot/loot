@@ -106,9 +106,9 @@ QLabel* createMessageLabel() {
   return label;
 }
 
-void updateMessageLabel(QLabel* label, const SimpleMessage& message) {
+void updateMessageLabel(QLabel* label, const BareMessage& message) {
   auto oldPropertyValue = label->property(MESSAGE_TYPE_PROPERTY);
-  auto newPropertyValue = getPropertyValue(message.type);
+  auto newPropertyValue = getPropertyValue(message.first);
   auto propertyChanged =
       oldPropertyValue.isValid() && oldPropertyValue != newPropertyValue;
 
@@ -118,7 +118,7 @@ void updateMessageLabel(QLabel* label, const SimpleMessage& message) {
   // CommonMark instead of GitHub Flavored Markdown, or set custom styling
   // beyond setting the link text (which is done by setting the palette Link
   // color).
-  label->setText(getHtmlText(message.text));
+  label->setText(getHtmlText(message.second));
 
   if (propertyChanged) {
     // Trigger styling changes.
@@ -127,39 +127,17 @@ void updateMessageLabel(QLabel* label, const SimpleMessage& message) {
   }
 }
 
-MessagesWidget::MessagesWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
-
-bool MessagesWidget::willChangeContent(
-    const std::vector<SimpleMessage>& messages) const {
-  if (static_cast<int>(messages.size() * COLUMN_COUNT) != layout()->count()) {
-    return true;
-  }
-
-  if (messages.empty() && layout()->count() == 0) {
-    return false;
-  }
-
-  // Start at the second item and increment by two because we're not interested
-  // in the bullet points.
-  std::vector<std::pair<QVariant, std::string>> currentMessages;
-  for (int i = MESSAGE_LABEL_COLUMN; i < layout()->count(); i += COLUMN_COUNT) {
-    auto label = qobject_cast<QLabel*>(layout()->itemAt(i)->widget());
-    auto messageType = label->property(MESSAGE_TYPE_PROPERTY);
-
-    const auto markdownTextIndex = (i - 1) / 2;
-    auto text = markdownTexts.at(markdownTextIndex);
-
-    currentMessages.push_back(std::make_pair(messageType, text));
-  }
-
-  std::vector<std::pair<QVariant, std::string>> newMessages;
+std::vector<BareMessage> toBareMessages(
+    const std::vector<SimpleMessage>& messages) {
+  std::vector<BareMessage> bareMessages;
   for (const auto& message : messages) {
-    auto messageType = getPropertyValue(message.type);
-    newMessages.push_back(std::make_pair(messageType, message.text));
+    bareMessages.push_back(BareMessage{message.type, message.text});
   }
 
-  return currentMessages != newMessages;
+  return bareMessages;
 }
+
+MessagesWidget::MessagesWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
 
 void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
   if (!willChangeContent(messages)) {
@@ -167,6 +145,27 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
     return;
   }
 
+  setMessages(toBareMessages(messages));
+}
+
+void MessagesWidget::refresh() { setMessages(currentMessages); }
+
+void MessagesWidget::setupUi() {
+  // Bullet points rendered using rich text are positioned uncomfortably close
+  // to the text following them, and there's no way to change that. Use a
+  // QGridLayout instead of a QVBoxLayout to fake a bullet point list by putting
+  // bullet point characters in the first column and the message texts in the
+  // second column.
+  auto layout = new QGridLayout(this);
+  layout->setSizeConstraint(QLayout::SetMinimumSize);
+
+  layout->setColumnStretch(MESSAGE_LABEL_COLUMN, 1);
+
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+}
+
+void MessagesWidget::setMessages(const std::vector<BareMessage>& messages) {
   // Don't use rowCount() because that seems to have a starting value of 1
   // even when there's nothing in the layout yet. Instead, use count() /
   // COLUMN_COUNT.
@@ -201,35 +200,30 @@ void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
     gridLayout->addWidget(messageLabel, row, MESSAGE_LABEL_COLUMN);
   }
 
-  markdownTexts.clear();
-
   // Now update the QLabels.
   for (size_t i = 0; i < messages.size(); i += 1) {
     const auto position = static_cast<int>(i);
     auto label = qobject_cast<QLabel*>(
         gridLayout->itemAtPosition(position, MESSAGE_LABEL_COLUMN)->widget());
-    updateMessageLabel(label, messages.at(i));
-
-    // Store the source markdown text because it can't be retrieved from
-    // the QLabel text, as that's set using HTML.
-    markdownTexts.push_back(messages.at(i).text);
+    const auto& message = messages.at(i);
+    updateMessageLabel(label, message);
   }
 
   layout()->activate();
+
+  // Store the source markdown text because it can't be retrieved from the
+  // QLabel text, as that's set using HTML. Also store the message types
+  // because it's easier to do that than to derive them from the current
+  // layout content.
+  currentMessages = messages;
 }
 
-void MessagesWidget::setupUi() {
-  // Bullet points rendered using rich text are positioned uncomfortably close
-  // to the text following them, and there's no way to change that. Use a
-  // QGridLayout instead of a QVBoxLayout to fake a bullet point list by putting
-  // bullet point characters in the first column and the message texts in the
-  // second column.
-  auto layout = new QGridLayout(this);
-  layout->setSizeConstraint(QLayout::SetMinimumSize);
+bool MessagesWidget::willChangeContent(
+    const std::vector<SimpleMessage>& messages) const {
+  if (messages.size() != currentMessages.size()) {
+    return true;
+  }
 
-  layout->setColumnStretch(MESSAGE_LABEL_COLUMN, 1);
-
-  layout->setContentsMargins(0, 0, 0, 0);
-  layout->setSpacing(0);
+  return currentMessages != toBareMessages(messages);
 }
 }

@@ -262,6 +262,21 @@ void MainWindow::initialise() {
   }
 }
 
+void MainWindow::applyTheme() {
+  // Apply theme.
+  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
+                                         state.getSettings().getTheme());
+  if (!styleSheet.has_value()) {
+    // Fall back to the default theme.
+    styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
+  }
+
+  if (styleSheet.has_value()) {
+    qApp->setStyleSheet(styleSheet.value());
+    qApp->style()->polish(qApp);
+  }
+}
+
 void MainWindow::setupUi() {
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icon.ico"));
@@ -359,77 +374,83 @@ void MainWindow::setupUi() {
   setupViews();
 
   translateUi();
+  setIcons();
 
   disableGameActions();
 
   QMetaObject::connectSlotsByName(this);
+
+  connect(this,
+          &MainWindow::normalIconColorChanged,
+          this,
+          &MainWindow::handleIconColorChanged);
+  connect(this,
+          &MainWindow::disabledIconColorChanged,
+          this,
+          &MainWindow::handleIconColorChanged);
+  connect(this,
+          &MainWindow::selectedIconColorChanged,
+          this,
+          &MainWindow::handleIconColorChanged);
+  connect(this,
+          &MainWindow::selectedSidebarPluginTextColorChanged,
+          this,
+          &MainWindow::handleSidebarTextColorChanged);
+  connect(this,
+          &MainWindow::unselectedSidebarPluginGroupColorChanged,
+          this,
+          &MainWindow::handleSidebarTextColorChanged);
+  connect(this,
+          &MainWindow::linkColorChanged,
+          this,
+          &MainWindow::handleLinkColorChanged);
 }
 
 void MainWindow::setupMenuBar() {
   // Create actions.
   actionSettings->setObjectName("actionSettings");
-  actionSettings->setIcon(IconFactory::getSettingsIcon());
 
   actionBackupData->setObjectName("actionBackupData");
-  actionBackupData->setIcon(IconFactory::getArchiveIcon());
 
   actionQuit->setObjectName("actionQuit");
-  actionQuit->setIcon(IconFactory::getQuitIcon());
 
   actionViewDocs->setObjectName("actionViewDocs");
-  actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
   actionViewDocs->setShortcut(QKeySequence::HelpContents);
 
   actionOpenLOOTDataFolder->setObjectName("actionOpenLOOTDataFolder");
-  actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
 
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
-  actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
 
   actionAbout->setObjectName("actionAbout");
-  actionAbout->setIcon(IconFactory::getAboutIcon());
 
   actionOpenGroupsEditor->setObjectName("actionOpenGroupsEditor");
-  actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
 
   actionSearch->setObjectName("actionSearch");
-  actionSearch->setIcon(IconFactory::getSearchIcon());
   actionSearch->setShortcut(QKeySequence::Find);
 
   actionCopyLoadOrder->setObjectName("actionCopyLoadOrder");
-  actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
 
   actionCopyContent->setObjectName("actionCopyContent");
-  actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
 
   actionRefreshContent->setObjectName("actionRefreshContent");
-  actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
   actionRefreshContent->setShortcut(QKeySequence::Refresh);
 
   actionRedatePlugins->setObjectName("actionRedatePlugins");
-  actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
 
   actionFixAmbiguousLoadOrder->setObjectName("actionFixAmbiguousLoadOrder");
-  actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
 
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
-  actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
   actionCopyPluginName->setObjectName("actionCopyPluginName");
-  actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
 
   actionCopyCardContent->setObjectName("actionCopyCardContent");
-  actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
 
   actionCopyMetadata->setObjectName("actionCopyMetadata");
-  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
 
   actionEditMetadata->setObjectName("actionEditMetadata");
-  actionEditMetadata->setIcon(IconFactory::getEditIcon());
   actionEditMetadata->setShortcut(QString("Ctrl+E"));
 
   actionClearMetadata->setObjectName("actionClearMetadata");
-  actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
 
   // Create menu bar.
   setMenuBar(menubar);
@@ -469,17 +490,13 @@ void MainWindow::setupMenuBar() {
 void MainWindow::setupToolBar() {
   // Create actions.
   actionSort->setObjectName("actionSort");
-  actionSort->setIcon(IconFactory::getSortIcon());
 
   actionUpdateMasterlist->setObjectName("actionUpdateMasterlist");
-  actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
 
   actionApplySort->setObjectName("actionApplySort");
-  actionApplySort->setIcon(IconFactory::getApplySortIcon());
   actionApplySort->setVisible(false);
 
   actionDiscardSort->setObjectName("actionDiscardSort");
-  actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
   actionDiscardSort->setVisible(false);
 
   // Create toolbar.
@@ -617,6 +634,34 @@ void MainWindow::translateUi() {
   // Translate sidebar.
   toolBox->setItemText(0, translate("Plugins"));
   toolBox->setItemText(1, translate("Filters"));
+}
+
+void MainWindow::setIcons() {
+  actionSettings->setIcon(IconFactory::getSettingsIcon());
+  actionBackupData->setIcon(IconFactory::getArchiveIcon());
+  actionQuit->setIcon(IconFactory::getQuitIcon());
+  actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
+  actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
+  actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
+  actionAbout->setIcon(IconFactory::getAboutIcon());
+  actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
+  actionSearch->setIcon(IconFactory::getSearchIcon());
+  actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
+  actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
+  actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
+  actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
+  actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
+  actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
+  actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
+  actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
+  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
+  actionEditMetadata->setIcon(IconFactory::getEditIcon());
+  actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
+
+  actionSort->setIcon(IconFactory::getSortIcon());
+  actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
+  actionApplySort->setIcon(IconFactory::getApplySortIcon());
+  actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
 }
 
 void MainWindow::enableGameActions() {
@@ -2010,9 +2055,14 @@ void MainWindow::on_filtersWidget_cardContentFilterChanged(
 
 void MainWindow::on_settingsDialog_accepted() {
   try {
+    const auto currentTheme = state.getSettings().getTheme();
     settingsDialog->recordInputValues(state);
 
     state.getSettings().save(state.getSettingsPath());
+
+    if (state.getSettings().getTheme() != currentTheme) {
+      applyTheme();
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2263,4 +2313,46 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
 
 void MainWindow::handleWorkerThreadFinished() { progressDialog->reset(); }
 
+void MainWindow::handleIconColorChanged() {
+  IconFactory::setColours(
+      normalIconColor, disabledIconColor, selectedIconColor);
+
+  setIcons();
+
+  sidebarPluginsView->reset();
+
+  const auto cardDelegate =
+      qobject_cast<PluginCardDelegate*>(pluginCardsView->itemDelegate());
+
+  if (cardDelegate) {
+    cardDelegate->setIcons();
+    pluginCardsView->reset();
+  }
+}
+
+void MainWindow::handleSidebarTextColorChanged() {
+  const auto sidebarDelegate = qobject_cast<SidebarPluginNameDelegate*>(
+      sidebarPluginsView->itemDelegateForColumn(
+          PluginItemModel::SIDEBAR_NAME_COLUMN));
+
+  if (sidebarDelegate) {
+    sidebarDelegate->setColors(selectedSidebarPluginTextColor,
+                               unselectedSidebarPluginGroupColor);
+    sidebarPluginsView->reset();
+  }
+}
+
+void MainWindow::handleLinkColorChanged() {
+  auto palette = qApp->palette();
+  palette.setColor(QPalette::Active, QPalette::Link, linkColor);
+  qApp->setPalette(palette);
+
+  const auto cardDelegate =
+      qobject_cast<PluginCardDelegate*>(pluginCardsView->itemDelegate());
+
+  if (cardDelegate) {
+    cardDelegate->refreshMessages();
+    pluginCardsView->reset();
+  }
+}
 }

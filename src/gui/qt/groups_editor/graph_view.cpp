@@ -29,7 +29,9 @@
 #include <math.h>
 
 #include <QtCore/QRandomGenerator>
+#include <QtGui/QGuiApplication>
 #include <QtGui/QKeyEvent>
+#include <QtWidgets/QStyle>
 #include <set>
 
 #include "gui/qt/groups_editor/edge.h"
@@ -84,7 +86,13 @@ void setNodePositions(const std::vector<Node *> &nodes,
   }
 }
 
-GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
+GraphView::GraphView(QWidget *parent) : QGraphicsView(parent),
+    masterColor(
+        QGuiApplication::palette().color(QPalette::Disabled, QPalette::Text)),
+    userColor(
+        QGuiApplication::palette().color(QPalette::Active, QPalette::Text)),
+    backgroundColor(
+        QGuiApplication::palette().color(QPalette::Active, QPalette::Base)) {
   static constexpr qreal INITIAL_SCALING_FACTOR = 0.8;
   static constexpr int MIN_VIEW_SIZE = 400;
 
@@ -230,6 +238,12 @@ std::vector<GroupNodePosition> GraphView::getNodePositions() const {
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
 }
+
+QColor GraphView::getMasterColor() const { return masterColor; }
+
+QColor GraphView::getUserColor() const { return userColor; }
+
+QColor GraphView::getBackgroundColor() const { return backgroundColor; }
 
 #if QT_CONFIG(wheelevent)
 void GraphView::wheelEvent(QWheelEvent *event) {

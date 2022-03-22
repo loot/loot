@@ -74,11 +74,16 @@ public:
                            QIcon::Mode mode = QIcon::Normal,
                            QIcon::State state = QIcon::Off);
 
+  static void setColours(QColor normal, QColor disabled, QColor selected);
+
 private:
   static std::map<QString, QIcon> icons;
   static std::map<std::tuple<qint64, double, QIcon::Mode, QIcon::State>,
                   QPixmap>
       pixmaps;
+  static QColor normalColor;
+  static QColor disabledColor;
+  static QColor selectedColor;
 
   static QIcon getIcon(QString resourcePath);
 };

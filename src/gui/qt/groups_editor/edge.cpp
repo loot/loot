@@ -27,10 +27,10 @@
 
 #include <QtGui/QGuiApplication>
 #include <QtGui/QPainter>
-#include <QtGui/QPalette>
 #include <QtMath>
 #include <QtWidgets/QGraphicsScene>
 
+#include "gui/qt/groups_editor/graph_view.h"
 #include "gui/qt/groups_editor/node.h"
 
 namespace loot {
@@ -101,7 +101,8 @@ void Edge::paint(QPainter *painter,
     return;
   }
 
-  const auto color = getDefaultColor(isUserMetadata_);
+  const auto graphView = qobject_cast<GraphView *>(scene()->parent());
+  const auto color = getDefaultColor(*graphView, isUserMetadata_);
 
   painter->setPen(
       QPen(color, LINE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -150,25 +151,22 @@ QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos) {
                      << line.p2();
 }
 
-QColor getDefaultColor(bool isUserMetadata) {
+QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata) {
   static constexpr int MAX_ALPHA = 255;
 
-  const auto colorGroup =
-      isUserMetadata ? QPalette::Active : QPalette::Disabled;
-  auto color = QGuiApplication::palette().color(colorGroup, QPalette::Text);
+  const auto color =
+      isUserMetadata ? graphView.getUserColor() : graphView.getMasterColor();
 
   // The color may use the alpha channel to appear darken its RGB color, but
   // that means that overlapping shapes using this color will appear lighter,
   // which we don't want. Use the alpha channel and the background color
-  // (QPalette::base) to work out what the equivalent opaque color is and use
-  // that instead.
+  // to work out what the equivalent opaque color is and use that instead.
   const auto alpha = color.alpha();
   if (alpha == MAX_ALPHA) {
     return color;
   }
 
-  auto backgroundColor =
-      QGuiApplication::palette().color(colorGroup, QPalette::Base);
+  const auto backgroundColor = graphView.getBackgroundColor();
 
   const auto red = backgroundColor.red() +
                    (color.red() - backgroundColor.red()) * alpha / MAX_ALPHA;

@@ -1,3 +1,18 @@
+loot--GraphView {
+    qproperty-masterColor: #787878;
+    qproperty-userColor: palette(text);
+    qproperty-backgroundColor: palette(base);
+}
+
+loot--MainWindow {
+    qproperty-normalIconColor: #787878;
+    qproperty-disabledIconColor: #A8A8A8;
+    qproperty-selectedIconColor: palette(highlighted-text);
+    qproperty-selectedSidebarPluginTextColor: #FFFFFF;
+    qproperty-unselectedSidebarPluginGroupColor: #787878;
+    qproperty-linkColor: #0000FF;
+}
+
 loot--GeneralInfoCard,
 loot--PluginCard {
 	background-color: palette(base);
@@ -47,4 +62,13 @@ QLabel#tags-add {
 
 QLabel#tags-remove {
     color: #F44336;
+}
+
+/* These are necessary to reliably update painted (not "editor") widget styling.
+*/
+loot--GeneralInfoCard > QLabel,
+loot--GeneralInfoCard > loot--MessagesWidget,
+loot--PluginCard > QLabel,
+loot--PluginCard > QGroupBox::title {
+    color: palette(text);
 }

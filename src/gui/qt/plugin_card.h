@@ -45,10 +45,14 @@ class PluginCard : public QFrame {
 public:
   explicit PluginCard(QWidget* parent);
 
+  void setIcons();
+
   void setContent(const PluginItem& plugin,
                   const CardContentFiltersState& filters);
 
   void setSearchResult(bool isSearchResult, bool isCurrentSearchResult);
+
+  void refreshMessages();
 
 private:
   QLabel* nameLabel{new QLabel(this)};
@@ -90,6 +94,9 @@ class PluginCardDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
   explicit PluginCardDelegate(QListView* parent);
+
+  void setIcons();
+  void refreshMessages();
 
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,

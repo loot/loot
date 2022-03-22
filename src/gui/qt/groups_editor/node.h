@@ -38,7 +38,9 @@ class GraphView;
 
 class NodeLabel : public QGraphicsSimpleTextItem {
 public:
-  NodeLabel(const QString &text, bool isUserMetadata);
+  NodeLabel(const GraphView &graphView,
+            const QString &text,
+            bool isUserMetadata);
 
   void paint(QPainter *painter,
              const QStyleOptionGraphicsItem *option,

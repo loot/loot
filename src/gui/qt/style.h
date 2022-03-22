@@ -27,7 +27,6 @@
 #define LOOT_GUI_QT_STYLE
 
 #include <QtCore/QString>
-#include <QtGui/QPalette>
 #include <filesystem>
 #include <optional>
 #include <string>
@@ -37,9 +36,6 @@ namespace loot {
 std::optional<QString> loadStyleSheet(
     const std::filesystem::path& resourcesPath,
     const std::string& themeName);
-
-std::optional<QPalette> loadPalette(const std::filesystem::path& resourcesPath,
-                                    const std::string& themeName);
 
 std::vector<std::string> findThemes(const std::filesystem::path& resourcesPath);
 }

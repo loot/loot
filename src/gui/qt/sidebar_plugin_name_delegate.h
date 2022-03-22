@@ -38,9 +38,15 @@ class SidebarPluginNameDelegate : public QStyledItemDelegate {
 public:
   explicit SidebarPluginNameDelegate(QObject* parent);
 
+  void setColors(QColor selectedName, QColor selectedGroup);
+
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,
              const QModelIndex& index) const override;
+
+private:
+  QColor selectedTextColor;
+  QColor unselectedGroupColor;
 };
 }
 
