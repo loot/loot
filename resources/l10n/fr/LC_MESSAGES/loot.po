@@ -873,7 +873,7 @@ msgstr "L'output est stocké dans le fichier LOOTDebugLog.txt."
 
 #: src/gui/qt/settings/general_tab.cpp:156
 msgid "A prelude source is required."
-msgstr "Un prelude  source est requis."
+msgstr "Un prelude source est requis."
 
 #: src/gui/qt/settings/general_tab.cpp:159
 msgid "Language and theme changes will be applied after LOOT is restarted."
@@ -940,7 +940,7 @@ msgid ""
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
-"Votre URL de dépôt de masterlist prelude  et de paramètres de branches n'a "
+"Votre URL de dépôt de masterlist prelude et de paramètres de branches n'a "
 "pas pu être migré. Veuillez vérifier votre LOOTDebugLog.txt (auquel vous "
 "pouvez accéder depuis le menu principal) pour plus d'informations."
 
@@ -950,7 +950,7 @@ msgid ""
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
-"Votre URL de dépôt de masterlist prelude  et de paramètres de branches n'a "
+"Votre URL de dépôt de masterlist et de paramètres de branches n'a "
 "pas pu être migré. Veuillez vérifier votre LOOTDebugLog.txt (auquel vous "
 "pouvez accéder depuis le menu principal) pour plus d'informations."
 
@@ -975,7 +975,7 @@ msgstr "Erreur : Échec de l’analyse des paramètres. %1%"
 #: src/gui/state/loot_state.cpp:218
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
-"Erreur: --auto-sort a réussi mais aucun paramètre --game a  été transmis."
+"Erreur: --auto-sort a réussi mais aucun paramètre --game a été transmis."
 
 #: src/gui/state/loot_state.cpp:293
 msgid "Error: Could not create LOOT prelude directory. %1%"
@@ -1002,7 +1002,7 @@ msgstr "Erreur : Le jeu initial n’a pas pu être sélectionné. %1%"
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
 msgid "This plugin requires \"%1%\" to be installed, but it is missing."
 msgstr ""
-"Ce plugins requiert l'installation de  \"%1%\", mais celui-ci est manquant."
+"Ce plugins requiert l'installation de \"%1%\", mais celui-ci est manquant."
 
 #: src/gui/state/game/game.cpp:254
 msgid "This plugin requires \"%1%\" to be active, but it is inactive."
