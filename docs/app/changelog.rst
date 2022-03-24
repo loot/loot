@@ -4,6 +4,57 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.2 - 2022-03-23
+===================
+
+Added
+-----
+
+- LOOT now logs whether it's 32-bit or 64-bit and the operating system and CPU
+  architecture it's running on, to aid debugging.
+
+Fixed
+-----
+
+- When built using Qt 5, LOOT requires the MSVC 2010 redistributable to be
+  installed, which was unknown. The requirement is now documented and the
+  installer will now download and install the redistributable if it cannot find
+  it already installed.
+- The installer did not include two OpenSSL DLLs when packaging a LOOT build
+  based on Qt 5. This meant that masterlist update would fail when using LOOT's
+  default sources, or any other HTTPS URL sources.
+
+  The two DLLs that were missing have different filenames depending on the build
+  type. For 32-bit builds, they are ``libcrypto-1_1.dll`` and
+  ``libssl-1_1.dll``. For 64-bit builds, they are ``libcrypto-1_1-x64.dll`` and
+  ``libssl-1_1-x64.dll``.
+- Entering text into the text input in the groups editor will make the "Add a
+  new group" button the default, so that pressing the Enter key will add the
+  named group instead of exiting the editor.
+
+Changed
+-------
+
+- LOOT now detects installed themes once on startup instead of each time the
+  settings dialog is opened, reducing the delay before the dialog is displayed.
+- When migrating LOOT game folders, LOOT now migrates a ``SkyrimSE`` folder
+  (only used by LOOT v0.10.0) when loading that game, to match migration of
+  other game folders. Previously that folder would be migrated when loading
+  LOOT's settings, and only when loading settings saved by LOOT v0.10.0.
+- LOOT now writes its log with debug verbosity before LOOT's settings are
+  loaded, to prevent any low-severity messages written during that time always
+  being lost.
+- Updated the French translation.
+- Updated the German translation.
+
+Removed
+-------
+
+- The ``D3Dcompiler_47.dll``, ``libEGL.dll``, ``libGLESv2.dll`` and
+  ``opengl32sw.dll`` DLLs are no longer included in LOOT packages as they
+  appear to be unused and removing them reduces package and install sizes by at
+  least 30%.
+
 0.18.1 - 2022-03-15
 ===================
 

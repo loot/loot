@@ -147,6 +147,8 @@ private:
 
   std::optional<QPersistentModelIndex> lastEnteredCardIndex;
 
+  std::vector<std::string> themes;
+
   void setupUi();
   void setupMenuBar();
   void setupToolBar();
