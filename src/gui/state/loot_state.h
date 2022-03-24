@@ -49,11 +49,20 @@ public:
   LootSettings& getSettings();
 
 private:
+  void createLootDataPath();
+  void loadSettings(const std::string& cmdLineGame, bool autoSort);
+  void checkSettingsFile();
+  void findXboxGamingRootPaths();
+  void createPreludeDirectory();
+  void overrideGamePath(const std::string& gameFolderName,
+                        const std::filesystem::path& gamePath);
+  void setInitialGame(const std::string& preferredGame);
+
   std::optional<GamePaths> FindGamePaths(
       const GameSettings& gameSettings) const override;
   void InitialiseGameData(gui::Game& game) override;
 
-  void SetInitialGame(std::string cmdLineGame);
+  std::string selectInitialGame(std::string preferredGame) const;
 
   std::vector<std::filesystem::path> xboxGamingRootPaths_;
   std::vector<SimpleMessage> initMessages_;

@@ -150,6 +150,7 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
   addGroupButton->setDisabled(text.isEmpty());
+  addGroupButton->setDefault(!text.isEmpty());
 }
 
 void GroupsEditorDialog::on_addGroupButton_clicked() {

@@ -58,6 +58,9 @@ public:
     std::lock_guard<std::recursive_mutex> guard(mutex_);
 
     auto logger = getLogger();
+    if (logger) {
+      logger->debug("Detecting installed games.");
+    }
 
     std::optional<std::string> currentGameFolder;
     if (currentGame_ != installedGames_.end()) {

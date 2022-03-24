@@ -3,7 +3,7 @@
 ; be displayed correctly.
 
 #define MyAppName "LOOT"
-#define MyAppVersion "0.18.0"
+#define MyAppVersion "0.18.2"
 #define MyAppPublisher "LOOT Team"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
@@ -96,10 +96,6 @@ Source: "build\Release\loot.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 
 ; Common Qt files
-Source: "build\Release\D3Dcompiler_47.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\opengl32sw.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\iconengines\*"; \
 DestDir: "{app}\iconengines"; Flags: ignoreversion
 Source: "build\Release\imageformats\*"; \
@@ -141,6 +137,18 @@ Source: "build\Release\Qt5Widgets.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
 Source: "build\Release\bearer\*"; \
 DestDir: "{app}\bearer"; Flags: ignoreversion
+
+#ifdef MyAppIs64Bit
+Source: "build\Release\libcrypto-1_1-x64.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\libssl-1_1-x64.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+#else
+Source: "build\Release\libcrypto-1_1.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+Source: "build\Release\libssl-1_1.dll"; \
+DestDir: "{app}"; Flags: ignoreversion
+#endif
 #endif
 
 Source: "build\docs\html\*"; \
@@ -189,7 +197,12 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-Filename: "{tmp}\vc_redist.{#VCRedistArch}.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2019 Redistributable...
+
+#if QtVersion == "5"
+Filename: "{tmp}\vc_redist.2010.{#VCRedistArch}.exe"; Parameters: "/q /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2010 Redistributable...
+#endif
+
+Filename: "{tmp}\vc_redist.2019.{#VCRedistArch}.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2019 Redistributable...
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -269,6 +282,8 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
+var VC2010RedistNeedsInstall: Boolean;
+var VC2019RedistNeedsInstall: Boolean;
 
 // Set LOOT's language in settings.toml
 procedure SetLootLanguage();
@@ -325,8 +340,11 @@ begin
   end;
 end;
 
-function VCRedistNeedsInstall: Boolean;
+function VCRedistNeedsInstall(VersionMajor, VersionMinor, VersionBld: Cardinal): Boolean;
 var
+  RuntimesPathComponent: String;
+  MajorValueName: String;
+  MinorValueName: String;
   SubKeyName: String;
   IsSuccessful: Boolean;
   IsRuntimeInstalled: Cardinal;
@@ -335,40 +353,51 @@ var
   InstalledVersionBld: Cardinal;
   Arch: String;
 begin
-  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\{#VCRedistArch}';
+  if VersionMajor = 10 then begin
+    RuntimesPathComponent := 'VCRedist';
+    MajorValueName := 'MajorVersion';
+    MinorValueName := 'MinorVersion';
+  end
+  else begin
+    RuntimesPathComponent := 'Runtimes';
+    MajorValueName := 'Major';
+    MinorValueName := 'Minor';
+  end;
+
+  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\' + RuntimesPathComponent + '\{#VCRedistArch}';
 
   IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Installed', IsRuntimeInstalled);
 
   if (IsSuccessful = False) or (IsRuntimeInstalled <> 1) then begin
-    Log('MSVC 14.0 {#VCRedistArch} runtime is not installed');
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime is not installed');
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Major', InstalledVersionMajor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, MajorValueName, InstalledVersionMajor);
 
-  if (IsSuccessful = False) or (InstalledVersionMajor <> 14) then begin
-    Log('MSVC 14.0 {#VCRedistArch} runtime major version is not 14: ' + IntToStr(InstalledVersionMajor));
+  if (IsSuccessful = False) or (InstalledVersionMajor <> VersionMajor) then begin
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime major version is not ' + IntToStr(VersionMajor) + ': ' + IntToStr(InstalledVersionMajor));
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Minor', InstalledVersionMinor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, MinorValueName, InstalledVersionMinor);
 
-  if (IsSuccessful = False) or (InstalledVersionMinor < 15) then begin
-    Log('MSVC 14.0 {#VCRedistArch} runtime major version is less than 15: ' + IntToStr(InstalledVersionMinor));
+  if (IsSuccessful = False) or (InstalledVersionMinor < VersionMinor) then begin
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime minor version is less than ' + IntToStr(VersionMinor) + ': ' + IntToStr(InstalledVersionMinor));
     Result := True;
     exit;
   end;
 
   IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Bld', InstalledVersionBld);
 
-  if (IsSuccessful = False) or (InstalledVersionBld < 26706) then begin
-    Log('MSVC 14.0 {#VCRedistArch} runtime build is less than 26706: ' + IntToStr(InstalledVersionBld));
+  if (IsSuccessful = False) or (InstalledVersionBld < VersionBld) then begin
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime build is less than ' + IntToStr(VersionBld) + ': ' + IntToStr(InstalledVersionBld));
     Result := True
   end
   else begin
-    Log('MSVC 14.0 {#VCRedistArch} runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
     Result := False;
   end;
 end;
@@ -403,7 +432,13 @@ end;
 
 procedure InitializeWizard;
 begin
-  if VCRedistNeedsInstall then begin
+#if QtVersion == "5"
+  VC2010RedistNeedsInstall := VCRedistNeedsInstall(10, 0, 40219)
+#endif
+
+  VC2019RedistNeedsInstall := VCRedistNeedsInstall(14, 15, 26706)
+
+  if VC2019RedistNeedsInstall or VC2010RedistNeedsInstall then begin
     DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
   end;
 end;
@@ -413,7 +448,21 @@ begin
         Log(Format('Current page ID: %d', [CurPageID]));
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
     DownloadPage.Clear;
-    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.{#VCRedistArch}.exe', 'vc_redist.{#VCRedistArch}.exe', '');
+
+#if QtVersion == "5"
+    if VC2010RedistNeedsInstall then begin
+#if VCRedistArch == "x86"
+      DownloadPage.Add('https://download.microsoft.com/download/C/6/D/C6D0FD4E-9E53-4897-9B91-836EBA2AACD3/vcredist_x86.exe', 'vc_redist.2010.x86.exe', '');
+#else
+      DownloadPage.Add('https://download.microsoft.com/download/A/8/0/A80747C3-41BD-45DF-B505-E9710D2744E0/vcredist_x64.exe', 'vc_redist.2010.x64.exe', '');
+#endif
+    end;
+#endif
+
+    if VC2019RedistNeedsInstall then begin
+      DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.{#VCRedistArch}.exe', 'vc_redist.2019.{#VCRedistArch}.exe', '');
+    end;
+
     DownloadPage.Show;
     try
       try

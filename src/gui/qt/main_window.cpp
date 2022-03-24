@@ -264,6 +264,8 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
+    themes = findThemes(state.getResourcesPath());
+
     if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
     }
@@ -1334,7 +1336,6 @@ void MainWindow::checkForAmbiguousLoadOrder() {
 
 void MainWindow::on_actionSettings_triggered() {
   try {
-    auto themes = findThemes(state.getResourcesPath());
     auto currentGameFolder =
         state.HasCurrentGame()
             ? std::optional(state.GetCurrentGame().GetSettings().FolderName())

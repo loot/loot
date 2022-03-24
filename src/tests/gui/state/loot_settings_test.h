@@ -249,7 +249,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "name = \"English\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
@@ -288,7 +288,7 @@ TEST_P(LootSettingsTest, loadingShouldSetIsBaseGameInstanceIfGiven) {
       << "isBaseGameInstance = false" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
@@ -306,7 +306,7 @@ TEST_P(
       << "folder = \"Nehrim\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
 }
@@ -322,7 +322,7 @@ TEST_P(
       << "folder = \"Enderal\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
 }
@@ -338,7 +338,7 @@ TEST_P(
       << "folder = \"Enderal Special Edition\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
 }
@@ -353,7 +353,7 @@ TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
       << "minimumHeaderVersion = 1.0" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
@@ -370,7 +370,7 @@ TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyStringValues) {
       << "registry = \"a registry path\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
@@ -389,7 +389,7 @@ TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyArrayValues) {
       << "registry = [\"a registry path\", \"another registry path\"]" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
@@ -408,7 +408,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
       << "game = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(unicodeSettingsFile_, lootDataPath);
+  settings_.load(unicodeSettingsFile_);
 
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
   EXPECT_TRUE(settings_.isDebugLoggingEnabled());
@@ -426,7 +426,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
       << u8"local_path = \"non\u00C1sciiGameLocalPath\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
@@ -448,7 +448,7 @@ TEST_P(LootSettingsTest,
       << "local_folder = \"folder\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("TES III: Morrowind", settings_.getGameSettings()[0].Name());
@@ -466,7 +466,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
       << u8"local_folder = \"non\u00C1sciiGameFolder\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
@@ -489,7 +489,7 @@ TEST_P(
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/v0.18/masterlist.yaml";
@@ -509,7 +509,7 @@ TEST_P(LootSettingsTest,
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimse/v0.18/masterlist.yaml";
@@ -530,7 +530,7 @@ TEST_P(
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/masterlist.yaml";
@@ -551,7 +551,7 @@ TEST_P(
          "masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/not-loot/skyrimse/v0.17/"
@@ -569,7 +569,7 @@ TEST_P(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
       << "masterlistSource = \"C:\\\\masterlist.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource = "C:\\masterlist.yaml";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -588,7 +588,7 @@ TEST_P(LootSettingsTest,
       << "masterlistSource = \"masterlist-source\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = "masterlist-source";
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -606,7 +606,7 @@ TEST_P(
       << "branch = \"custom\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/custom/"
@@ -625,7 +625,7 @@ TEST_P(LootSettingsTest,
       << "repo = \"https://github.com/loot/oblivion-foo/\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion-foo/v0.18/"
@@ -644,7 +644,7 @@ TEST_P(LootSettingsTest,
       << "branch = \"v0.7\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -664,7 +664,7 @@ TEST_P(
       << "branch = \"foo\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/oblivion/foo/masterlist.yaml";
@@ -684,7 +684,7 @@ TEST_P(
       << "branch = \"v0.7\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameType::tes4).MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -702,7 +702,7 @@ TEST_P(LootSettingsTest,
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrimvr/foo/masterlist.yaml";
@@ -721,7 +721,7 @@ TEST_P(LootSettingsTest,
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/skyrim-vr/foo/masterlist.yaml";
@@ -740,7 +740,7 @@ TEST_P(LootSettingsTest,
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4vr/foo/masterlist.yaml";
@@ -760,7 +760,7 @@ TEST_P(
       << "branch = \"foo\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/fallout4-vr/foo/masterlist.yaml";
@@ -785,7 +785,7 @@ TEST_P(
 
   checkoutBranch("custom");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -810,7 +810,7 @@ TEST_P(
   checkoutBranch("custom");
   std::filesystem::remove(gitRepoPath_ / "masterlist.yaml");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameType::fo4vr).MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -835,7 +835,7 @@ TEST_P(
   checkoutBranch("custom");
   std::filesystem::remove_all(gitRepoPath_ / ".git");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameType::fo4vr).MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -859,7 +859,7 @@ TEST_P(
 
   checkoutBranch("v0.18");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "masterlist.yaml").u8string();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -878,7 +878,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = GameSettings(GameType::fo4vr).MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
@@ -897,7 +897,7 @@ TEST_P(
       << "branch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/my-forks/fallout4-vr/custom/"
@@ -919,7 +919,7 @@ TEST_P(
          "prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
@@ -936,7 +936,7 @@ TEST_P(
          "prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/custom/prelude.yaml";
@@ -953,7 +953,7 @@ TEST_P(
          "prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource =
       "https://raw.githubusercontent.com/not-loot/prelude/v0.17/"
@@ -967,7 +967,7 @@ TEST_P(LootSettingsTest, loadingShouldNotMigratePathPreludeSource) {
   out << "preludeSource = \"C:\\\\prelude.yaml\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   const auto expectedSource = "C:\\prelude.yaml";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -982,7 +982,7 @@ TEST_P(LootSettingsTest,
       << "preludeSource = \"prelude-source\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = "prelude-source";
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -995,7 +995,7 @@ TEST_P(LootSettingsTest,
   out << "preludeBranch = \"custom\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/custom/"
@@ -1014,7 +1014,7 @@ TEST_P(LootSettingsTest,
   out << "preludeRepo = \"https://github.com/loot/prelude.git\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.18/"
@@ -1036,7 +1036,7 @@ TEST_P(
 
   checkoutBranch("custom");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "prelude.yaml").u8string();
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -1057,7 +1057,7 @@ TEST_P(
   checkoutBranch("custom");
   std::filesystem::remove(gitRepoPath_ / "prelude.yaml");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
@@ -1079,7 +1079,7 @@ TEST_P(
   checkoutBranch("custom");
   std::filesystem::remove_all(gitRepoPath_ / ".git");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
@@ -1100,7 +1100,7 @@ TEST_P(
 
   checkoutBranch("v0.18");
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource = (gitRepoPath_ / "prelude.yaml").u8string();
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
@@ -1115,7 +1115,7 @@ TEST_P(
       << "preludeBranch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml";
@@ -1131,7 +1131,7 @@ TEST_P(LootSettingsTest,
       << "preludeBranch = \"custom\"";
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   auto expectedSource =
       "https://raw.githubusercontent.com/my-forks/prelude-test/custom/"
@@ -1148,7 +1148,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
       << "folder = \"SkyrimSE\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   EXPECT_EQ(GameType::tes5se, settings_.getGameSettings()[0].Type());
   EXPECT_EQ("Skyrim Special Edition",
@@ -1165,7 +1165,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
       << "branch = \"foo\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   GameSettings testGame = GameSettings(GameType::tes4, "Test")
                               .SetName("Game Name")
@@ -1200,7 +1200,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
       << "folder = \"Oblivion\"" << endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
 
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
@@ -1243,7 +1243,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.save(settingsFile_);
 
   LootSettings settings;
-  settings.load(settingsFile_, lootDataPath);
+  settings.load(settingsFile_);
 
   EXPECT_TRUE(settings.isDebugLoggingEnabled());
   EXPECT_TRUE(settings.isMasterlistUpdateBeforeSortEnabled());
@@ -1320,7 +1320,7 @@ TEST_P(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   out << "lastVersion = \"0.7.1\"" << std::endl;
   out.close();
 
-  settings_.load(settingsFile_, lootDataPath);
+  settings_.load(settingsFile_);
   settings_.updateLastVersion();
 
   EXPECT_EQ(currentVersion, settings_.getLastVersion());
