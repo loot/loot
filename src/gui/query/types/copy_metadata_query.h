@@ -61,7 +61,7 @@ public:
 
     // Generate text representation.
     std::string text =
-        "[spoiler][code]" + metadata.AsYaml() + "[/code][/spoiler]";
+        "[spoiler][code]\n" + metadata.AsYaml() + "\n[/code][/spoiler]";
 
     CopyToClipboard(text);
 
