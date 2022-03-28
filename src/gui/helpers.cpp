@@ -183,8 +183,7 @@ std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
   const auto logger = getLogger();
   if (logger) {
     logger->trace(
-        "Getting subkey names for registry key and subkey: {}, {}, "
-        "{}",
+        "Getting subkey names for registry key and subkey: {}, {}",
         rootKey,
         subKey);
   }
