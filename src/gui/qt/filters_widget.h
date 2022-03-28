@@ -47,18 +47,9 @@ public:
   void setMessageCounts(size_t hidden, size_t total);
   void setPluginCounts(size_t hidden, size_t total);
 
-  void hideVersionNumbers(bool hide);
-  void hideCRCs(bool hide);
-  void hideBashTags(bool hide);
-  void hideLocations(bool hide);
-  void hideNotes(bool hide);
-  void hidePluginMessages(bool hide);
-  void hideInactivePlugins(bool hide);
-  void hideMessagelessPlugins(bool hide);
-  void hideCreationClubPlugins(bool hide);
-
   void resetConflictsAndGroupsFilters();
 
+  void setFilterStates(const LootSettings::Filters &filters);
   LootSettings::Filters getFilterSettings() const;
 
   PluginFiltersState getPluginFiltersState() const;
@@ -86,6 +77,7 @@ private:
   QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
   QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
   QCheckBox *creationClubPluginsFilter{new QCheckBox(this)};
+  QCheckBox *showOnlyWarningsAndErrorsFilter{new QCheckBox(this)};
   QLabel *hiddenPluginsLabel{new QLabel(this)};
   QLabel *hiddenPluginsCountLabel{new QLabel(this)};
   QLabel *hiddenMessagesLabel{new QLabel(this)};
@@ -95,6 +87,8 @@ private:
 
   void translateUi();
 
+  void updateWarningsAndErrorsFilterState();
+
   static void setComboBoxItems(QComboBox *comboBox,
                                const std::vector<std::string> &items);
 
@@ -102,16 +96,17 @@ private slots:
   void on_conflictingPluginsFilter_activated();
   void on_groupPluginsFilter_activated();
   void on_contentFilter_textEdited();
-  void on_contentRegexCheckbox_stateChanged();
-  void on_versionNumbersFilter_stateChanged();
-  void on_crcsFilter_stateChanged();
-  void on_bashTagsFilter_stateChanged();
-  void on_locationsFilter_stateChanged();
-  void on_notesFilter_stateChanged();
-  void on_pluginMessagesFilter_stateChanged();
-  void on_inactivePluginsFilter_stateChanged();
-  void on_messagelessPluginsFilter_stateChanged();
-  void on_creationClubPluginsFilter_stateChanged();
+  void on_contentRegexCheckbox_clicked();
+  void on_versionNumbersFilter_clicked();
+  void on_crcsFilter_clicked();
+  void on_bashTagsFilter_clicked();
+  void on_locationsFilter_clicked();
+  void on_notesFilter_clicked();
+  void on_pluginMessagesFilter_clicked();
+  void on_inactivePluginsFilter_clicked();
+  void on_messagelessPluginsFilter_clicked();
+  void on_creationClubPluginsFilter_clicked();
+  void on_showOnlyWarningsAndErrorsFilter_clicked(bool checked);
 };
 }
 

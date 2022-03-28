@@ -54,43 +54,72 @@ void FiltersWidget::setPluginCounts(size_t hidden, size_t total) {
                                    QString::number(total));
 }
 
-void FiltersWidget::hideVersionNumbers(bool hide) {
-  versionNumbersFilter->setChecked(hide);
-}
-
-void FiltersWidget::hideCRCs(bool hide) { crcsFilter->setChecked(hide); }
-
-void FiltersWidget::hideBashTags(bool hide) {
-  bashTagsFilter->setChecked(hide);
-}
-
-void FiltersWidget::hideLocations(bool hide) {
-  locationsFilter->setChecked(hide);
-}
-
-void FiltersWidget::hideNotes(bool hide) { notesFilter->setChecked(hide); }
-
-void FiltersWidget::hidePluginMessages(bool hide) {
-  pluginMessagesFilter->setChecked(hide);
-}
-
-void FiltersWidget::hideInactivePlugins(bool hide) {
-  inactivePluginsFilter->setChecked(hide);
-}
-
-void FiltersWidget::hideMessagelessPlugins(bool hide) {
-  messagelessPluginsFilter->setChecked(hide);
-}
-
-void FiltersWidget::hideCreationClubPlugins(bool hide) {
-  creationClubPluginsFilter->setChecked(hide);
-}
-
 void FiltersWidget::resetConflictsAndGroupsFilters() {
   conflictingPluginsFilter->setCurrentIndex(0);
   groupPluginsFilter->setCurrentIndex(0);
 
   emit pluginFilterChanged(getPluginFiltersState());
+}
+
+void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
+  bool hasContentFilterChanged{false};
+  bool hasPluginFilterChanged{false};
+
+  if (versionNumbersFilter->isChecked() != filters.hideVersionNumbers) {
+    versionNumbersFilter->setChecked(filters.hideVersionNumbers);
+    hasContentFilterChanged = true;
+  }
+
+  if (crcsFilter->isChecked() != filters.hideCRCs) {
+    crcsFilter->setChecked(filters.hideCRCs);
+    hasContentFilterChanged = true;
+  }
+
+  if (bashTagsFilter->isChecked() != filters.hideBashTags) {
+    bashTagsFilter->setChecked(filters.hideBashTags);
+    hasContentFilterChanged = true;
+  }
+
+  if (locationsFilter->isChecked() != filters.hideLocations) {
+    locationsFilter->setChecked(filters.hideLocations);
+    hasContentFilterChanged = true;
+  }
+
+  if (notesFilter->isChecked() != filters.hideNotes) {
+    notesFilter->setChecked(filters.hideNotes);
+    hasContentFilterChanged = true;
+  }
+
+  if (pluginMessagesFilter->isChecked() != filters.hideAllPluginMessages) {
+    pluginMessagesFilter->setChecked(filters.hideAllPluginMessages);
+    hasContentFilterChanged = true;
+  }
+
+  if (inactivePluginsFilter->isChecked() != filters.hideInactivePlugins) {
+    inactivePluginsFilter->setChecked(filters.hideInactivePlugins);
+    hasPluginFilterChanged = true;
+  }
+
+  if (messagelessPluginsFilter->isChecked() != filters.hideMessagelessPlugins) {
+    messagelessPluginsFilter->setChecked(filters.hideMessagelessPlugins);
+    hasPluginFilterChanged = true;
+  }
+
+  if (creationClubPluginsFilter->isChecked() !=
+      filters.hideCreationClubPlugins) {
+    creationClubPluginsFilter->setChecked(filters.hideCreationClubPlugins);
+    hasPluginFilterChanged = true;
+  }
+
+  updateWarningsAndErrorsFilterState();
+
+  if (hasContentFilterChanged) {
+    emit cardContentFilterChanged(getCardContentFiltersState());
+  }
+
+  if (hasPluginFilterChanged) {
+    emit pluginFilterChanged(getPluginFiltersState());
+  }
 }
 
 LootSettings::Filters FiltersWidget::getFilterSettings() const {
@@ -126,6 +155,8 @@ void FiltersWidget::setupUi() {
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
   creationClubPluginsFilter->setObjectName("creationClubPluginsFilter");
+  showOnlyWarningsAndErrorsFilter->setObjectName(
+      "showOnlyWarningsAndErrorsFilter");
 
   contentFilter->setClearButtonEnabled(true);
 
@@ -172,6 +203,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(inactivePluginsFilter);
   verticalLayout->addWidget(messagelessPluginsFilter);
   verticalLayout->addWidget(creationClubPluginsFilter);
+  verticalLayout->addWidget(showOnlyWarningsAndErrorsFilter);
   verticalLayout->addItem(verticalSpacer);
   verticalLayout->addWidget(divider);
 
@@ -206,6 +238,8 @@ void FiltersWidget::translateUi() {
   inactivePluginsFilter->setText(translate("Hide inactive plugins"));
   messagelessPluginsFilter->setText(translate("Hide messageless plugins"));
   creationClubPluginsFilter->setText(translate("Hide Creation Club plugins"));
+  showOnlyWarningsAndErrorsFilter->setText(
+      translate("Show only warnings and errors"));
   hiddenPluginsLabel->setText(translate("Hidden plugins:"));
   hiddenMessagesLabel->setText(translate("Hidden messages:"));
 
@@ -228,6 +262,16 @@ void FiltersWidget::translateUi() {
   contentRegexCheckbox->setToolTip(
       translate("If checked, interprets the content filter text as a regular "
                 "expression."));
+}
+
+void FiltersWidget::updateWarningsAndErrorsFilterState() {
+  const auto allChecked =
+      bashTagsFilter->isChecked() && locationsFilter->isChecked() &&
+      notesFilter->isChecked() && messagelessPluginsFilter->isChecked();
+
+  if (allChecked != showOnlyWarningsAndErrorsFilter->isChecked()) {
+    showOnlyWarningsAndErrorsFilter->setChecked(allChecked);
+  }
 }
 
 void FiltersWidget::setComboBoxItems(QComboBox* comboBox,
@@ -323,42 +367,84 @@ void FiltersWidget::on_contentFilter_textEdited() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_contentRegexCheckbox_stateChanged() {
+void FiltersWidget::on_contentRegexCheckbox_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_versionNumbersFilter_stateChanged() {
+void FiltersWidget::on_versionNumbersFilter_clicked() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_crcsFilter_stateChanged() {
+void FiltersWidget::on_crcsFilter_clicked() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_bashTagsFilter_stateChanged() {
+void FiltersWidget::on_bashTagsFilter_clicked() {
+  updateWarningsAndErrorsFilterState();
+
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_locationsFilter_stateChanged() {
+void FiltersWidget::on_locationsFilter_clicked() {
+  updateWarningsAndErrorsFilterState();
+
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_notesFilter_stateChanged() {
+void FiltersWidget::on_notesFilter_clicked() {
+  updateWarningsAndErrorsFilterState();
+
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_pluginMessagesFilter_stateChanged() {
+void FiltersWidget::on_pluginMessagesFilter_clicked() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_inactivePluginsFilter_stateChanged() {
+void FiltersWidget::on_inactivePluginsFilter_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_messagelessPluginsFilter_stateChanged() {
+void FiltersWidget::on_messagelessPluginsFilter_clicked() {
+  updateWarningsAndErrorsFilterState();
+
   emit pluginFilterChanged(getPluginFiltersState());
 }
-void FiltersWidget::on_creationClubPluginsFilter_stateChanged() {
+
+void FiltersWidget::on_creationClubPluginsFilter_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
+}
+
+void FiltersWidget::on_showOnlyWarningsAndErrorsFilter_clicked(bool checked) {
+  bool hasContentFilterChanged{false};
+  bool hasPluginFilterChanged{false};
+
+  if (bashTagsFilter->isChecked() != checked) {
+    bashTagsFilter->setChecked(checked);
+    hasContentFilterChanged = true;
+  }
+
+  if (locationsFilter->isChecked() != checked) {
+    locationsFilter->setChecked(checked);
+    hasContentFilterChanged = true;
+  }
+
+  if (notesFilter->isChecked() != checked) {
+    notesFilter->setChecked(checked);
+    hasContentFilterChanged = true;
+  }
+
+  if (messagelessPluginsFilter->isChecked() != checked) {
+    messagelessPluginsFilter->setChecked(checked);
+    hasPluginFilterChanged = true;
+  }
+
+  if (hasContentFilterChanged) {
+    emit cardContentFilterChanged(getCardContentFiltersState());
+  }
+
+  if (hasPluginFilterChanged) {
+    emit pluginFilterChanged(getPluginFiltersState());
+  }
 }
 }
