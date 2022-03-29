@@ -620,7 +620,7 @@ void MainWindow::setupViews() {
 }
 
 void MainWindow::translateUi() {
-  setWindowTitle(translate("LOOT"));
+  setWindowTitle("LOOT");
 
   // Translate toolbar items.
   actionSort->setText(translate("Sort Plugins"));
