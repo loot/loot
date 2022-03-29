@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-04-09 22:25+0100\n"
+"POT-Creation-Date: 2022-04-10 18:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -605,28 +605,28 @@ msgstr ""
 msgid "Find Next"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:109
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:111
 msgid "Groups Editor"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:111
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:113
 msgid "Group name"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:112
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:114
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:130
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:132
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:142
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:144
 #, c-format
 msgid "Plugins in %s"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:163
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:165
 msgid "Group already exists!"
 msgstr ""
 

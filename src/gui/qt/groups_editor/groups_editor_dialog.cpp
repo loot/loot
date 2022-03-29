@@ -39,7 +39,9 @@
 namespace loot {
 GroupsEditorDialog::GroupsEditorDialog(QWidget* parent,
                                        PluginItemModel* pluginItemModel) :
-    QDialog(parent), pluginItemModel(pluginItemModel) {
+    QDialog(parent,
+            Qt::Dialog | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
+    pluginItemModel(pluginItemModel) {
   setupUi();
 }
 
