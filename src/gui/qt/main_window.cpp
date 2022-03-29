@@ -1172,7 +1172,8 @@ bool MainWindow::handlePluginsSorted(QueryResult result) {
   } else {
     state.DecrementUnappliedChangeCounter();
 
-    showNotification(translate("Sorting made no changes to the load order."));
+    QMessageBox::information(
+        this, "LOOT", translate("Sorting made no changes to the load order."));
   }
 
   handleGameDataLoaded(sortedPlugins);
