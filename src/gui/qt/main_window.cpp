@@ -286,15 +286,7 @@ void MainWindow::initialise() {
     }
 
     const auto& filters = state.getSettings().getFilters();
-    filtersWidget->hideVersionNumbers(filters.hideVersionNumbers);
-    filtersWidget->hideCRCs(filters.hideCRCs);
-    filtersWidget->hideBashTags(filters.hideBashTags);
-    filtersWidget->hideLocations(filters.hideLocations);
-    filtersWidget->hideNotes(filters.hideNotes);
-    filtersWidget->hidePluginMessages(filters.hideAllPluginMessages);
-    filtersWidget->hideInactivePlugins(filters.hideInactivePlugins);
-    filtersWidget->hideMessagelessPlugins(filters.hideMessagelessPlugins);
-    filtersWidget->hideCreationClubPlugins(filters.hideCreationClubPlugins);
+    filtersWidget->setFilterStates(filters);
 
     // Apply the filters before loading the game because that avoids having
     // to re-filter the full plugin list.
