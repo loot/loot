@@ -285,7 +285,7 @@ msgstr "Відкрити документацію"
 
 #: src/gui/qt/main_window.cpp:657
 msgid "Join Discord Server"
-msgstr "Приєднатися серверу Discord"
+msgstr "Приєднатися до серверу Discord"
 
 #: src/gui/qt/main_window.cpp:658
 msgid "About"
