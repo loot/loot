@@ -140,7 +140,7 @@ bool GraphView::addGroup(const std::string &name) {
 
   auto pos = QPointF(0, 0);
   while (scene()->itemAt(pos, QTransform())) {
-    pos.setX(pos.x() + NODE_SPACING_HORIZONTAL);
+    pos.setX(pos.x() + NODE_SPACING);
   }
   scene()->addItem(node);
   node->setPosition(pos);

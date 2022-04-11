@@ -152,6 +152,33 @@ ExternalProject_Add(spdlog
 ExternalProject_Get_Property(spdlog SOURCE_DIR)
 set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF --config Release)
+else()
+    set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
+endif()
+
+ExternalProject_Add(ogdf
+    PREFIX "external"
+    URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
+    BUILD_COMMAND ${OGDF_BUILD_COMMAND}
+    INSTALL_COMMAND "")
+ExternalProject_Get_Property(ogdf SOURCE_DIR BINARY_DIR)
+set(OGDF_INCLUDE_DIRS 
+    "${SOURCE_DIR}/include" 
+    "${BINARY_DIR}/include")
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(OGDF_LIBRARY_DIR "${BINARY_DIR}/Release")
+else()
+    set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
+endif()
+
+set(OGDF_LIBRARIES
+    "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${CMAKE_STATIC_LIBRARY_SUFFIX}"
+    "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
 ##############################
 # General Settings
 ##############################
@@ -364,9 +391,9 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT cpptoml libloot minizip-ng spdlog)
+add_dependencies(LOOT cpptoml libloot minizip-ng spdlog ogdf)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES})
+    Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
@@ -387,7 +414,8 @@ target_include_directories(LOOT SYSTEM PRIVATE
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
-    ${SPDLOG_INCLUDE_DIRS})
+    ${SPDLOG_INCLUDE_DIRS}
+    ${OGDF_INCLUDE_DIRS})
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE

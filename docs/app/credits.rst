@@ -31,7 +31,7 @@ In addition, the following are credited with application-related support:
 
 * Testing: Too many to list, thank you all!
 
-LOOT uses the `Boost`_, `cpptoml`_, and `spdlog`_ libraries, and the `Qt`_ framework.
+LOOT uses the `Boost`_, `cpptoml`_, and `spdlog`_ libraries and the `OGDF`_ and `Qt`_ frameworks.
 
 .. _GitHub: https://github.com/loot/
 .. _here: https://loot.github.io/credits/
@@ -39,4 +39,5 @@ LOOT uses the `Boost`_, `cpptoml`_, and `spdlog`_ libraries, and the `Qt`_ frame
 .. _Boost: https://www.boost.org/
 .. _cpptoml: https://github.com/skystrife/cpptoml
 .. _spdlog: https://github.com/gabime/spdlog
+.. _OGDF: https://ogdf.uos.de/
 .. _Qt: https://www.qt.io/

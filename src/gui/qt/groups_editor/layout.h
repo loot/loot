@@ -33,7 +33,7 @@
 #include "gui/qt/groups_editor/node.h"
 
 namespace loot {
-constexpr qreal NODE_SPACING_HORIZONTAL = 70;
+constexpr qreal NODE_SPACING = 70;
 
 std::map<Node*, QPointF> calculateGraphLayout(const std::vector<Node*>& nodes);
 }

@@ -25,159 +25,90 @@
 
 #include "gui/qt/groups_editor/layout.h"
 
+#include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/layered/MedianHeuristic.h>
+#include <ogdf/layered/OptimalHierarchyLayout.h>
+#include <ogdf/layered/OptimalRanking.h>
+#include <ogdf/layered/SugiyamaLayout.h>
+
 #include "gui/qt/groups_editor/edge.h"
 
 namespace loot {
-constexpr qreal NODE_SPACING_VERTICAL = 70;
-
-void depthFirstSearch(Node *node,
-                      int depth,
-                      std::set<Node *> &visitedNodes,
-                      std::function<void(Node *, int)> visitor) {
-  visitor(node, depth);
-
-  visitedNodes.insert(node);
-
-  for (const auto edge : node->outEdges()) {
-    auto nextNode = edge->destNode();
-    if (visitedNodes.count(nextNode) == 0) {
-      depthFirstSearch(nextNode, depth + 1, visitedNodes, visitor);
-    }
-  }
-}
-
-void reverseDepthFirstSearch(Node *node,
-                             int depth,
-                             std::set<Node *> &visitedNodes,
-                             std::function<void(Node *, int)> visitor) {
-  visitor(node, depth);
-
-  visitedNodes.insert(node);
-
-  for (const auto edge : node->inEdges()) {
-    auto nextNode = edge->sourceNode();
-    if (visitedNodes.count(nextNode) == 0) {
-      reverseDepthFirstSearch(nextNode, depth - 1, visitedNodes, visitor);
-    }
-  }
-
-  return;
-}
-
-int countMaxPathLength(Node *rootNode) {
-  std::set<Node *> visitedNodes;
-  static constexpr int INITIAL_DEPTH = 1;
-  auto maxDepth = INITIAL_DEPTH;
-
-  depthFirstSearch(rootNode,
-                   INITIAL_DEPTH,
-                   visitedNodes,
-                   [&maxDepth](const Node *, int depth) {
-                     if (depth > maxDepth) {
-                       maxDepth = depth;
-                     }
-                   });
-
-  return maxDepth;
-};
-
-void visitConnectedSubgraph(Node *topLevelNode,
-                            int topLevel,
-                            std::function<void(Node *, int)> setNodePosition) {
-  std::set<Node *> visitedNodes;
-
-  Node *leafNode = topLevelNode;
-  int furthestLevel = topLevel;
-  depthFirstSearch(
-      topLevelNode, topLevel, visitedNodes, [&](Node *node, int depth) {
-        // Set the node position, and record the leaf node of the longest
-        // path.
-        setNodePosition(node, depth);
-        if (depth > furthestLevel) {
-          leafNode = node;
-          furthestLevel = depth;
-        }
-      });
-
-  // Now start with the leaf node of the longest path and do a DFS of in
-  // edges to find any nodes that are connected but not yet assigned levels.
-  visitedNodes.clear();
-  reverseDepthFirstSearch(
-      leafNode, furthestLevel, visitedNodes, setNodePosition);
-};
+constexpr double LAYER_SPACING = 30.0;
 
 std::map<Node *, QPointF> calculateGraphLayout(
     const std::vector<Node *> &nodes) {
-  // This algorithm makes no attempt to avoid intersections between edges,
-  // which can cause confusion, but it's good enough as a naive approach.
+  ogdf::Graph graph;
+  ogdf::GraphAttributes graphAttributes(
+      graph,
+      ogdf::GraphAttributes::nodeGraphics |
+          ogdf::GraphAttributes::edgeGraphics |
+          ogdf::GraphAttributes::edgeArrow | ogdf::GraphAttributes::nodeLabel |
+          ogdf::GraphAttributes::edgeStyle | ogdf::GraphAttributes::nodeStyle |
+          ogdf::GraphAttributes::nodeTemplate);
 
-  // Identify nodes, root nodes and their longest path lengths.
-  std::vector<Node *> rootNodes;
-  std::map<Node *, int> rootNodeMaxPathLengths;
+  graphAttributes.directed() = true;
+
+  // Add all nodes to the graph.
+  std::map<Node *, ogdf::node> graphNodes;
+  std::map<ogdf::node, Node *> sceneNodes;
   for (const auto node : nodes) {
-    if (node->isRootNode()) {
-      rootNodes.push_back(node);
-      auto maxPathLength = countMaxPathLength(node);
-      rootNodeMaxPathLengths.emplace(node, maxPathLength);
+    const auto graphNode = graph.newNode();
+    const auto boundingRect = node->boundingRect();
+
+    // The height and width are transposed because the layout algorithm
+    // arranges layers vertically, and the result is then rotated to get a
+    // horizonal layout.
+    graphAttributes.width(graphNode) = boundingRect.height();
+    graphAttributes.height(graphNode) = boundingRect.width();
+
+    graphNodes.emplace(node, graphNode);
+    sceneNodes.emplace(graphNode, node);
+  }
+
+  // Now add all edges to the graph, without having to worry if the nodes
+  // already exist or not.
+  for (const auto node : nodes) {
+    const auto fromGraphNode = graphNodes.find(node);
+    if (fromGraphNode == graphNodes.end()) {
+      throw std::logic_error("Node is not in graph");
+    }
+
+    for (const auto outEdge : node->outEdges()) {
+      const auto toGraphNode = graphNodes.find(outEdge->destNode());
+      if (toGraphNode == graphNodes.end()) {
+        throw std::logic_error("Node is not in graph");
+      }
+
+      graph.newEdge(fromGraphNode->second, toGraphNode->second);
     }
   }
 
-  // Sort the root nodes by their max path length so that the node with the
-  // longest path is first. This ensures that the longest path is laid out
-  // to be the straightest.
-  std::sort(rootNodes.begin(),
-            rootNodes.end(),
-            [&rootNodeMaxPathLengths](auto lhs, auto rhs) {
-              return rootNodeMaxPathLengths.at(lhs) >
-                     rootNodeMaxPathLengths.at(rhs);
-            });
+  ogdf::SugiyamaLayout SL;
+  SL.setRanking(new ogdf::OptimalRanking);
+  SL.setCrossMin(new ogdf::MedianHeuristic);
 
-  // Set the node level to its depth along the current path. To prevent nodes
-  // at the same depth from being positioned at the same point, keep a count
-  // of how many nodes each level has, and apply an offset based on that count.
-  std::set<Node *> visitedNodes;
-  std::map<Node *, int> nodeLevels;
-  std::map<Node *, size_t> nodeLevelOffsets;
-  std::map<int, size_t> levelNodeCounts;
+  ogdf::OptimalHierarchyLayout *ohl = new ogdf::OptimalHierarchyLayout;
+  ohl->layerDistance(LAYER_SPACING);
+  ohl->nodeDistance(NODE_SPACING);
+  SL.setLayout(ohl);
 
-  const auto setNodePosition = [&](Node *node, int depth) {
-    if (nodeLevels.count(node) != 0) {
-      // Don't set a position if it's already got one.
-      return;
-    }
+  SL.call(graphAttributes);
 
-    auto it = levelNodeCounts.find(depth);
-    if (it == levelNodeCounts.end()) {
-      it = levelNodeCounts.emplace(depth, 0).first;
-    }
-
-    nodeLevels.emplace(node, depth);
-    nodeLevelOffsets.emplace(node, it->second);
-    it->second += 1;
-  };
-
-  // Now visit each of the root nodes in turn, setting levels and offsets for
-  // every connected node.
-  static constexpr int TOP_LEVEL = 0;
-  for (const auto rootNode : rootNodes) {
-    visitConnectedSubgraph(rootNode, TOP_LEVEL, setNodePosition);
-  }
+  // Now rotate the layout to get a layers arranged horizontally.
+  graphAttributes.rotateLeft90();
 
   std::map<Node *, QPointF> nodePositions;
-  for (const auto node : nodes) {
-    if (nodeLevels.count(node) == 0) {
-      // This shouldn't happen, but if this node has no assigned level, just
-      // put it on the top level.
-      setNodePosition(node, TOP_LEVEL);
+
+  for (const auto node : graph.nodes) {
+    QPointF position(graphAttributes.x(node), graphAttributes.y(node));
+
+    const auto sceneNode = sceneNodes.find(node);
+    if (sceneNode == sceneNodes.end()) {
+      throw std::logic_error("Node is not in scene");
     }
 
-    auto level = nodeLevels.find(node)->second;
-    auto offset = nodeLevelOffsets.find(node)->second;
-
-    const auto position = QPointF(offset * NODE_SPACING_HORIZONTAL,
-                                  level * NODE_SPACING_VERTICAL);
-
-    nodePositions.emplace(node, position);
+    nodePositions.emplace(sceneNode->second, position);
   }
 
   return nodePositions;
