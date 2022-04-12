@@ -57,6 +57,7 @@ endif()
 ExternalProject_Add(GTest
     PREFIX "external"
     URL "https://github.com/google/googletest/archive/release-1.11.0.tar.gz"
+    URL_HASH "SHA256=b4870bf121ff7795ba20d20bcdd8627b8e088f2d1dab299a031c1034eddc93d5"
     CMAKE_ARGS -Dgtest_force_shared_crt=ON
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
@@ -95,6 +96,7 @@ endif()
 ExternalProject_Add(zlib
     PREFIX "external"
     URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz"
+    URL_HASH "SHA256=629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff"
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE TRUE)
 ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
@@ -105,6 +107,7 @@ set(ZLIB_LIBRARY
 ExternalProject_Add(minizip-ng
     PREFIX "external"
     URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.4.tar.gz"
+    URL_HASH "SHA256=2ab219f651901a337a7d3c268128711b80330a99ea36bdc528c76b591a624c3c"
     CMAKE_ARGS
         -DMZ_ZLIB=ON
         -DMZ_BZIP2=OFF
@@ -130,6 +133,7 @@ set(MINIZIP_NG_LIBRARIES
 ExternalProject_Add(testing-plugins
     PREFIX "external"
     URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
+    URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -137,6 +141,7 @@ ExternalProject_Add(testing-plugins
 ExternalProject_Add(cpptoml
     PREFIX "external"
     URL "https://github.com/skystrife/cpptoml/archive/v0.1.1.tar.gz"
+    URL_HASH "SHA256=23af72468cfd4040984d46a0dd2a609538579c78ddc429d6b8fd7a10a6e24403"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -146,6 +151,7 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 ExternalProject_Add(spdlog
     PREFIX "external"
     URL "https://github.com/gabime/spdlog/archive/v1.9.2.tar.gz"
+    URL_HASH "SHA256=6fff9215f5cb81760be4cc16d033526d1080427d236e86d70bb02994f85e3d38"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -162,6 +168,7 @@ endif()
 ExternalProject_Add(ogdf
     PREFIX "external"
     URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
+URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
     BUILD_COMMAND ${OGDF_BUILD_COMMAND}
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(ogdf SOURCE_DIR BINARY_DIR)
