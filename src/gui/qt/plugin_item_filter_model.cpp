@@ -88,8 +88,8 @@ bool PluginItemFilterModel::filterAcceptsRow(
     return true;
   }
 
-  const auto sourceIndex =
-      sourceModel()->index(sourceRow, PluginItemModel::CARDS_COLUMN, sourceParent);
+  const auto sourceIndex = sourceModel()->index(
+      sourceRow, PluginItemModel::CARDS_COLUMN, sourceParent);
 
   auto item = sourceIndex.data(RawDataRole).value<PluginItem>();
   auto contentFilters =
@@ -105,6 +105,10 @@ bool PluginItemFilterModel::filterAcceptsRow(
   }
 
   if (filterState.hideCreationClubPlugins && item.isCreationClubPlugin) {
+    return false;
+  }
+
+  if (filterState.showOnlyEmptyPlugins && !item.isEmpty) {
     return false;
   }
 

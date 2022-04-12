@@ -77,6 +77,7 @@ private:
   QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
   QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
   QCheckBox *creationClubPluginsFilter{new QCheckBox(this)};
+  QCheckBox *showOnlyEmptyPluginsFilter{new QCheckBox(this)};
   QCheckBox *showOnlyWarningsAndErrorsFilter{new QCheckBox(this)};
   QLabel *hiddenPluginsLabel{new QLabel(this)};
   QLabel *hiddenPluginsCountLabel{new QLabel(this)};
@@ -106,6 +107,7 @@ private slots:
   void on_inactivePluginsFilter_clicked();
   void on_messagelessPluginsFilter_clicked();
   void on_creationClubPluginsFilter_clicked();
+  void on_showOnlyEmptyPluginsFilter_clicked();
   void on_showOnlyWarningsAndErrorsFilter_clicked(bool checked);
 };
 }

@@ -66,6 +66,7 @@ public:
     bool hideInactivePlugins{false};
     bool hideMessagelessPlugins{false};
     bool hideCreationClubPlugins{false};
+    bool showOnlyEmptyPlugins{false};
   };
 
   void load(const std::filesystem::path& file);

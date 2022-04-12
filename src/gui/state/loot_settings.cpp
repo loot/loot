@@ -684,6 +684,9 @@ void LootSettings::load(const std::filesystem::path& file) {
     filters_.hideCreationClubPlugins =
         filters->get_as<bool>("hideCreationClubPlugins")
             .value_or(filters_.hideCreationClubPlugins);
+    filters_.showOnlyEmptyPlugins =
+        filters->get_as<bool>("showOnlyEmptyPlugins")
+            .value_or(filters_.showOnlyEmptyPlugins);
   }
 
   const auto languages = settings->get_table_array("languages");
@@ -758,6 +761,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   filters->insert("hideInactivePlugins", filters_.hideInactivePlugins);
   filters->insert("hideMessagelessPlugins", filters_.hideMessagelessPlugins);
   filters->insert("hideCreationClubPlugins", filters_.hideCreationClubPlugins);
+  filters->insert("showOnlyEmptyPlugins", filters_.showOnlyEmptyPlugins);
 
   root->insert("filters", filters);
 

@@ -111,6 +111,11 @@ void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
     hasPluginFilterChanged = true;
   }
 
+  if (showOnlyEmptyPluginsFilter->isChecked() != filters.showOnlyEmptyPlugins) {
+    showOnlyEmptyPluginsFilter->setChecked(filters.showOnlyEmptyPlugins);
+    hasPluginFilterChanged = true;
+  }
+
   updateWarningsAndErrorsFilterState();
 
   if (hasContentFilterChanged) {
@@ -134,6 +139,7 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
   filters.hideMessagelessPlugins = messagelessPluginsFilter->isChecked();
   filters.hideCreationClubPlugins = creationClubPluginsFilter->isChecked();
+  filters.showOnlyEmptyPlugins = showOnlyEmptyPluginsFilter->isChecked();
 
   return filters;
 }
@@ -155,6 +161,7 @@ void FiltersWidget::setupUi() {
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
   creationClubPluginsFilter->setObjectName("creationClubPluginsFilter");
+  showOnlyEmptyPluginsFilter->setObjectName("showOnlyEmptyPluginsFilter");
   showOnlyWarningsAndErrorsFilter->setObjectName(
       "showOnlyWarningsAndErrorsFilter");
 
@@ -203,6 +210,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(inactivePluginsFilter);
   verticalLayout->addWidget(messagelessPluginsFilter);
   verticalLayout->addWidget(creationClubPluginsFilter);
+  verticalLayout->addWidget(showOnlyEmptyPluginsFilter);
   verticalLayout->addWidget(showOnlyWarningsAndErrorsFilter);
   verticalLayout->addItem(verticalSpacer);
   verticalLayout->addWidget(divider);
@@ -238,6 +246,7 @@ void FiltersWidget::translateUi() {
   inactivePluginsFilter->setText(translate("Hide inactive plugins"));
   messagelessPluginsFilter->setText(translate("Hide messageless plugins"));
   creationClubPluginsFilter->setText(translate("Hide Creation Club plugins"));
+  showOnlyEmptyPluginsFilter->setText(translate("Show only empty plugins"));
   showOnlyWarningsAndErrorsFilter->setText(
       translate("Show only warnings and errors"));
   hiddenPluginsLabel->setText(translate("Hidden plugins:"));
@@ -315,6 +324,7 @@ PluginFiltersState FiltersWidget::getPluginFiltersState() const {
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
   filters.hideMessagelessPlugins = messagelessPluginsFilter->isChecked();
   filters.hideCreationClubPlugins = creationClubPluginsFilter->isChecked();
+  filters.showOnlyEmptyPlugins = showOnlyEmptyPluginsFilter->isChecked();
 
   if (conflictingPluginsFilter->currentIndex() > 0) {
     filters.conflictsPluginName =
@@ -412,6 +422,10 @@ void FiltersWidget::on_messagelessPluginsFilter_clicked() {
 }
 
 void FiltersWidget::on_creationClubPluginsFilter_clicked() {
+  emit pluginFilterChanged(getPluginFiltersState());
+}
+
+void FiltersWidget::on_showOnlyEmptyPluginsFilter_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
