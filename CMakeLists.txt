@@ -450,10 +450,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
     target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 else()
-    target_link_libraries(LOOT PRIVATE
-        ${LIBLOOT_SHARED_LIBRARY} ICU::uc ICU::i18n)
-    target_link_libraries(loot_gui_tests PRIVATE
-        ${LIBLOOT_SHARED_LIBRARY} ICU::uc ICU::i18n)
+    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc)
+
+    target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
+    target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -463,10 +463,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
             BUILD_WITH_INSTALL_RPATH ON)
 
     target_compile_options(LOOT PRIVATE "-Wall" "-Wextra")
-
-    set(LOOT_LIBS pthread http_parser ssh2 stdc++fs icui18n)
-    target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
-    target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
 endif()
 
 if(MSVC)
@@ -478,8 +474,6 @@ if(MSVC)
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
         "/permissive-" "/W4" "$<$<CONFIG:DEBUG>:/bigobj>")
-
-    target_link_libraries(LOOT PRIVATE comctl32 psapi)
 endif()
 
 ##############################
