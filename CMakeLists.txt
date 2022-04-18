@@ -54,6 +54,8 @@ if(NOT Qt6_FOUND)
     find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
 endif()
 
+find_package(OGDF CONFIG)
+
 ExternalProject_Add(GTest
     PREFIX "external"
     URL "https://github.com/google/googletest/archive/release-1.11.0.tar.gz"
@@ -158,33 +160,39 @@ ExternalProject_Add(spdlog
 ExternalProject_Get_Property(spdlog SOURCE_DIR)
 set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF --config Release)
+if(OGDF_FOUND)
+    # Set the value to the found target instead of a list of libraries, it
+    # still works. No need to set OGDF_INCLUDE_DIRS, that's already done when
+    # find_package is run.
+    set(OGDF_LIBRARIES OGDF)
 else()
-    set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF --config Release)
+    else()
+        set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
+    endif()
+
+    ExternalProject_Add(OGDF
+        PREFIX "external"
+        URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
+    URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
+        BUILD_COMMAND ${OGDF_BUILD_COMMAND}
+        INSTALL_COMMAND "")
+    ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
+    set(OGDF_INCLUDE_DIRS
+        "${SOURCE_DIR}/include"
+        "${BINARY_DIR}/include")
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/Release")
+    else()
+        set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
+    endif()
+
+    set(OGDF_LIBRARIES
+        "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
-
-ExternalProject_Add(ogdf
-    PREFIX "external"
-    URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
-URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
-    BUILD_COMMAND ${OGDF_BUILD_COMMAND}
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(ogdf SOURCE_DIR BINARY_DIR)
-set(OGDF_INCLUDE_DIRS 
-    "${SOURCE_DIR}/include" 
-    "${BINARY_DIR}/include")
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(OGDF_LIBRARY_DIR "${BINARY_DIR}/Release")
-else()
-    set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
-endif()
-
-set(OGDF_LIBRARIES
-    "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${CMAKE_STATIC_LIBRARY_SUFFIX}"
-    "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 ##############################
 # General Settings
@@ -398,7 +406,7 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT cpptoml libloot minizip-ng spdlog ogdf)
+add_dependencies(LOOT cpptoml libloot minizip-ng spdlog OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
