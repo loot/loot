@@ -181,7 +181,7 @@ jobs:
           mkdir build
           cd build
           export CXX="g++-8" CC="gcc-8"
-          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DCMAKE_PREFIX_PATH="${{ steps.qt-metadata.outputs.root }};${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           make all
 
       - name: Run C++ tests
@@ -320,21 +320,24 @@ jobs:
             $qtVersion = "5.15.2"
             $qtArch = "win32_msvc2019"
             $qtArchDir = "msvc2019"
+            $qtCMakeVarName = "Qt5_ROOT"
 
             aqt install-tool windows desktop tools_openssl_x86
           } else {
             $qtVersion = "6.2.2"
             $qtArch = "win64_msvc2019_64"
             $qtArchDir = "msvc2019_64"
+            $qtCMakeVarName = "Qt6_ROOT"
           }
 
           aqt install-qt windows desktop $qtVersion $qtArch
           echo "::set-output name=root::${{ github.workspace }}/$qtVersion/$qtArchDir"
+          echo "::set-output name=cmake-var-name::$qtCMakeVarName"
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DCMAKE_PREFIX_PATH="${{ steps.qt-metadata.outputs.root }};${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -D${{ steps.qt-metadata.outputs.cmake-var-name }}="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
