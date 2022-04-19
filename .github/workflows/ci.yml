@@ -147,7 +147,8 @@ jobs:
             libicu-dev \
             g++-8 \
             build-essential \
-            libgl1-mesa-dev
+            libgl1-mesa-dev \
+            gettext
 
       - name: Download & build Boost
         run: |
