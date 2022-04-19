@@ -43,15 +43,15 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost REQUIRED COMPONENTS locale system)
+find_package(Boost 1.77 REQUIRED COMPONENTS locale system)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    find_package(ICU REQUIRED COMPONENTS uc i18n)
+    find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
 endif()
 
-find_package(Qt6 COMPONENTS Widgets Network Test)
+find_package(Qt6 6.2 COMPONENTS Widgets Network Test)
 if(NOT Qt6_FOUND)
-    find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
+    find_package(Qt5 5.15 COMPONENTS Widgets Network Test REQUIRED)
 endif()
 
 find_package(OGDF CONFIG)
