@@ -54,7 +54,8 @@ std::map<Node *, QPointF> calculateGraphLayout(
   std::map<ogdf::node, Node *> sceneNodes;
   for (const auto node : nodes) {
     const auto graphNode = graph.newNode();
-    const auto boundingRect = node->boundingRect();
+    const auto boundingRect =
+        node->boundingRect().marginsRemoved(Node::MARGINS);
 
     // The height and width are transposed because the layout algorithm
     // arranges layers vertically, and the result is then rotated to get a
