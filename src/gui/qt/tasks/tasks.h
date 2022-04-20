@@ -75,8 +75,6 @@ public:
   TaskExecutor &operator=(const TaskExecutor &) = delete;
   TaskExecutor &operator=(TaskExecutor &&) = delete;
 
-  bool wait(unsigned long time);
-
 signals:
   void start();
   void finished();
