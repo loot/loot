@@ -36,8 +36,6 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
@@ -143,8 +141,6 @@ private:
   GroupsEditorDialog *groupsEditor{
       new GroupsEditorDialog(this, pluginItemModel)};
 
-  QNetworkAccessManager networkAccessManager;
-
   std::optional<QPersistentModelIndex> lastEnteredCardIndex;
 
   std::vector<std::string> themes;
@@ -194,12 +190,6 @@ private:
                               ProgressUpdater *progressUpdater);
   void executeBackgroundTasks(std::vector<Task *> tasks,
                               const ProgressUpdater *progressUpdater);
-
-  void sendHttpRequest(const std::string &url,
-                       void (MainWindow::*onFinished)());
-
-  void addUpdateAvailableMessage();
-  void addUpdateCheckErrorMessage();
 
   void handleError(const std::string &message);
   void handleException(const std::exception &exception);
@@ -286,12 +276,9 @@ private slots:
   void handleMasterlistUpdated(QueryResult result);
   void handleConflictsChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);
+  void handleUpdateCheckFinished(QueryResult result);
+  void handleUpdateCheckError(const std::string &);
   void handleWorkerThreadFinished();
-
-  void handleGetLatestReleaseResponseFinished();
-  void handleGetTagCommitResponseFinished();
-  void handleUpdateCheckNetworkError(QNetworkReply::NetworkError error);
-  void handleUpdateCheckSSLError(const QList<QSslError> &errors);
 };
 }
 
