@@ -605,6 +605,9 @@ void LootSettings::load(const std::filesystem::path& file) {
                                     .value_or(updateMasterlistBeforeSort_);
   enableLootUpdateCheck_ = settings->get_as<bool>("enableLootUpdateCheck")
                                .value_or(enableLootUpdateCheck_);
+  useNoSortingChangesDialog_ =
+      settings->get_as<bool>("useNoSortingChangesDialog")
+          .value_or(useNoSortingChangesDialog_);
   game_ = settings->get_as<std::string>("game").value_or(game_);
   language_ = settings->get_as<std::string>("language").value_or(language_);
   theme_ = settings->get_as<std::string>("theme").value_or(theme_);
@@ -706,6 +709,7 @@ void LootSettings::save(const std::filesystem::path& file) {
   root->insert("enableDebugLogging", enableDebugLogging_);
   root->insert("updateMasterlist", updateMasterlistBeforeSort_);
   root->insert("enableLootUpdateCheck", enableLootUpdateCheck_);
+  root->insert("useNoSortingChangesDialog", useNoSortingChangesDialog_);
   root->insert("game", game_);
   root->insert("language", language_);
   root->insert("theme", theme_);
@@ -804,6 +808,12 @@ bool LootSettings::isLootUpdateCheckEnabled() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
   return enableLootUpdateCheck_;
+}
+
+bool LootSettings::isNoSortingChangesDialogEnabled() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return useNoSortingChangesDialog_;
 }
 
 std::string LootSettings::getGame() const {
@@ -914,6 +924,12 @@ void LootSettings::enableLootUpdateCheck(bool enable) {
   lock_guard<recursive_mutex> guard(mutex_);
 
   enableLootUpdateCheck_ = enable;
+}
+
+void LootSettings::enableNoSortingChangesDialog(bool enable) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  useNoSortingChangesDialog_ = enable;
 }
 
 void LootSettings::storeLastGame(const std::string& lastGame) {

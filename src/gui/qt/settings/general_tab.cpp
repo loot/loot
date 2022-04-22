@@ -84,6 +84,8 @@ void GeneralTab::initialiseInputs(const LootSettings& settings,
       settings.isMasterlistUpdateBeforeSortEnabled());
   checkUpdatesCheckbox->setChecked(settings.isLootUpdateCheckEnabled());
   loggingCheckbox->setChecked(settings.isDebugLoggingEnabled());
+  useNoSortingChangesDialogCheckbox->setChecked(
+      settings.isNoSortingChangesDialogEnabled());
 
   preludeSourceInput->setText(
       QString::fromStdString(settings.getPreludeSource()));
@@ -98,6 +100,8 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
       updateMasterlistCheckbox->isChecked();
   const auto checkForUpdates = checkUpdatesCheckbox->isChecked();
   const auto enableDebugLogging = loggingCheckbox->isChecked();
+  const auto enableNoSortingChangesDialog =
+      useNoSortingChangesDialogCheckbox->isChecked();
   auto preludeSource = preludeSourceInput->text().toStdString();
 
   settings.setDefaultGame(defaultGame);
@@ -106,6 +110,7 @@ void GeneralTab::recordInputValues(LootSettings& settings) {
   settings.enableMasterlistUpdateBeforeSort(enableMasterlistUpdateBeforeSort);
   settings.enableLootUpdateCheck(checkForUpdates);
   settings.enableDebugLogging(enableDebugLogging);
+  settings.enableNoSortingChangesDialog(enableNoSortingChangesDialog);
   settings.setPreludeSource(preludeSource);
 }
 
@@ -134,6 +139,8 @@ void GeneralTab::setupUi() {
   generalLayout->addRow(updateMasterlistLabel, updateMasterlistCheckbox);
   generalLayout->addRow(checkUpdatesLabel, checkUpdatesCheckbox);
   generalLayout->addRow(loggingLabel, loggingCheckbox);
+  generalLayout->addRow(useNoSortingChangesDialogLabel,
+                        useNoSortingChangesDialogCheckbox);
   generalLayout->addRow(preludeSourceLabel, preludeSourceInput);
   generalLayout->addItem(spacer);
   generalLayout->addRow(descriptionLabel);
@@ -149,6 +156,8 @@ void GeneralTab::translateUi() {
   checkUpdatesLabel->setText(translate("Check for LOOT updates on startup"));
   loggingLabel->setText(translate("Enable debug logging"));
   preludeSourceLabel->setText(translate("Masterlist prelude source"));
+  useNoSortingChangesDialogLabel->setText(
+      translate("Display dialog when sorting makes no changes"));
 
   loggingLabel->setToolTip(
       translate("The output is logged to the LOOTDebugLog.txt file."));
