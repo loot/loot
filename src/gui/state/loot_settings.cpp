@@ -545,8 +545,8 @@ std::vector<std::string> checkSettingsFile(
         throw std::runtime_error("'type' key missing from game settings table");
       }
 
-      auto url = settings->get_as<std::string>("repo");
-      auto branch = settings->get_as<std::string>("branch");
+      auto url = game->get_as<std::string>("repo");
+      auto branch = game->get_as<std::string>("branch");
 
       if (url || branch) {
         auto migratedSource =
