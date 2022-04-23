@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.2\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-04-22 17:51+0100\n"
+"POT-Creation-Date: 2022-04-23 13:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -725,7 +725,7 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:122
+#: src/gui/qt/settings/game_tab.cpp:156
 #: src/gui/qt/settings/new_game_dialog.cpp:87
 msgid "Name"
 msgstr ""
@@ -755,46 +755,50 @@ msgstr ""
 msgid "Bash Tag"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:123
+#: src/gui/qt/settings/game_tab.cpp:57
+msgid "Browse..."
+msgstr ""
+
+#: src/gui/qt/settings/game_tab.cpp:157
 #: src/gui/qt/settings/new_game_dialog.cpp:88
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:124
+#: src/gui/qt/settings/game_tab.cpp:158
 #: src/gui/qt/settings/new_game_dialog.cpp:89
 msgid "Is instance of base game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:125
+#: src/gui/qt/settings/game_tab.cpp:159
 #: src/gui/qt/settings/new_game_dialog.cpp:90
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:126
+#: src/gui/qt/settings/game_tab.cpp:160
 msgid "Main Master Plugin"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:127
+#: src/gui/qt/settings/game_tab.cpp:161
 msgid "Minimum Header Version"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:128
+#: src/gui/qt/settings/game_tab.cpp:162
 msgid "Masterlist Source"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:129
+#: src/gui/qt/settings/game_tab.cpp:163
 msgid "Install Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:130
+#: src/gui/qt/settings/game_tab.cpp:164
 msgid "Install Path Registry Keys"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:131
+#: src/gui/qt/settings/game_tab.cpp:165
 msgid "Local AppData Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:133
+#: src/gui/qt/settings/game_tab.cpp:167
 msgid "Delete game"
 msgstr ""
 

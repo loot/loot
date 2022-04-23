@@ -25,12 +25,46 @@
 
 #include "gui/qt/settings/game_tab.h"
 
+#include <QtWidgets/QFileDialog>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/qt/helpers.h"
 
 namespace loot {
+FolderPicker::FolderPicker(QWidget* parent) : QFrame(parent) { setupUi(); }
+
+QString FolderPicker::text() const { return textInput->text(); }
+
+void FolderPicker::setText(const QString& text) { textInput->setText(text); }
+
+void FolderPicker::setupUi() {
+  browseButton->setObjectName("browseButton");
+
+  const auto layout = new QHBoxLayout(this);
+
+  layout->addWidget(textInput);
+  layout->addWidget(browseButton);
+
+  layout->setContentsMargins(QMargins());
+
+  translateUi();
+
+  QMetaObject::connectSlotsByName(this);
+}
+
+void FolderPicker::translateUi() {
+  browseButton->setText(translate("Browse..."));
+}
+
+void FolderPicker::on_browseButton_clicked() {
+  QString directory = QFileDialog::getExistingDirectory(this);
+
+  if (!directory.isEmpty()) {
+    textInput->setText(directory);
+  }
+}
+
 const std::map<std::string, GameType> GameTab::GAME_TYPES_BY_FOLDER({
     {GameSettings(GameType::tes3).FolderName(), GameType::tes3},
     {GameSettings(GameType::tes4).FolderName(), GameType::tes4},

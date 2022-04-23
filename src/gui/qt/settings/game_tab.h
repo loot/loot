@@ -39,6 +39,26 @@
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
+class FolderPicker : public QFrame {
+  Q_OBJECT
+public:
+  explicit FolderPicker(QWidget *parent);
+
+  QString text() const;
+
+  void setText(const QString &text);
+
+private:
+  QLineEdit *textInput{new QLineEdit(this)};
+  QPushButton *browseButton{new QPushButton(this)};
+
+  void setupUi();
+  void translateUi();
+
+private slots:
+  void on_browseButton_clicked();
+};
+
 class GameTab : public QFrame {
   Q_OBJECT
 public:
@@ -67,8 +87,8 @@ private:
   QLineEdit *lootFolderInput{new QLineEdit(this)};
   QLineEdit *masterFileInput{new QLineEdit(this)};
   QLineEdit *masterlistSourceInput{new QLineEdit(this)};
-  QLineEdit *installPathInput{new QLineEdit(this)};
-  QLineEdit *localDataPathInput{new QLineEdit(this)};
+  FolderPicker *installPathInput{new FolderPicker(this)};
+  FolderPicker *localDataPathInput{new FolderPicker(this)};
   QComboBox *baseGameComboBox{new QComboBox(this)};
   QCheckBox *baseGameInstanceCheckbox{new QCheckBox(this)};
   QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
