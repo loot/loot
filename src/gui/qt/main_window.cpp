@@ -1290,9 +1290,13 @@ void MainWindow::on_actionOpenGroupsEditor_triggered() {
       }
     }
 
+    const auto groupNodePositions =
+        LoadGroupNodePositions(state.GetCurrentGame().GroupNodePositionsPath());
+
     groupsEditor->setGroups(state.GetCurrentGame().GetMasterlistGroups(),
                             state.GetCurrentGame().GetUserGroups(),
-                            installedPluginGroups);
+                            installedPluginGroups,
+                            groupNodePositions);
 
     groupsEditor->show();
   } catch (const std::exception& e) {
@@ -2013,6 +2017,9 @@ void MainWindow::on_groupsEditor_accepted() {
   try {
     state.GetCurrentGame().SetUserGroups(groupsEditor->getUserGroups());
     state.GetCurrentGame().SaveUserMetadata();
+
+    SaveGroupNodePositions(state.GetCurrentGame().GroupNodePositionsPath(),
+                           groupsEditor->getNodePositions());
   } catch (const std::exception& e) {
     handleException(e);
   }

@@ -45,9 +45,11 @@ public:
 
   void setGroups(const std::vector<Group> &masterlistGroups,
                  const std::vector<Group> &userGroups,
-                 const std::set<std::string> &installedPluginGroups);
+                 const std::set<std::string> &installedPluginGroups,
+                 const std::vector<GroupNodePosition> &nodePositions);
 
   std::vector<Group> getUserGroups() const;
+  std::vector<GroupNodePosition> getNodePositions() const;
 
 private:
   GraphView *graphView{new GraphView(this)};

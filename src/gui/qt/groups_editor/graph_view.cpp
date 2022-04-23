@@ -25,6 +25,7 @@
 
 #include "gui/qt/groups_editor/graph_view.h"
 
+#include <cpptoml.h>
 #include <math.h>
 
 #include <QtCore/QRandomGenerator>
@@ -34,6 +35,7 @@
 #include "gui/qt/groups_editor/edge.h"
 #include "gui/qt/groups_editor/layout.h"
 #include "gui/qt/groups_editor/node.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 std::map<std::string, Node *>::iterator insertNode(
@@ -56,6 +58,32 @@ std::map<std::string, Node *>::iterator insertNode(
   return map.emplace(name, node).first;
 }
 
+std::map<std::string, QPointF> convertNodePositions(
+    const std::vector<GroupNodePosition> &nodePositions) {
+  std::map<std::string, QPointF> map;
+
+  for (const auto &position : nodePositions) {
+    map.emplace(position.groupName, QPointF(position.x, position.y));
+  }
+
+  return map;
+}
+
+void setNodePositions(const std::vector<Node *> &nodes,
+                      const std::map<std::string, QPointF> &savedPositions) {
+  for (const auto node : nodes) {
+    const auto name = node->getName().toStdString();
+    const auto positionIt = savedPositions.find(name);
+
+    if (positionIt == savedPositions.end()) {
+      throw std::runtime_error(
+          "Failed to set node positions, could not find position for " + name);
+    } else {
+      node->setPosition(positionIt->second);
+    }
+  }
+}
+
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
   static constexpr qreal INITIAL_SCALING_FACTOR = 0.8;
   static constexpr int MIN_VIEW_SIZE = 400;
@@ -74,7 +102,8 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
 
 void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
                           const std::vector<Group> &userGroups,
-                          const std::set<std::string> &installedPluginGroups) {
+                          const std::set<std::string> &installedPluginGroups,
+                          const std::vector<GroupNodePosition> &nodePositions) {
   // Remove all existing items.
   scene()->clear();
 
@@ -123,7 +152,7 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
   }
 
   // Now position the new nodes.
-  doLayout();
+  doLayout(nodePositions);
 }
 
 bool GraphView::addGroup(const std::string &name) {
@@ -175,6 +204,24 @@ std::vector<Group> GraphView::getUserGroups() const {
   return userGroups;
 }
 
+std::vector<GroupNodePosition> GraphView::getNodePositions() const {
+  std::vector<GroupNodePosition> nodePositions;
+
+  for (const auto item : scene()->items()) {
+    auto node = qgraphicsitem_cast<Node *>(item);
+    if (node) {
+      const auto name = node->getName().toStdString();
+      const auto scenePos = node->scenePos();
+
+      GroupNodePosition position{name, scenePos.x(), scenePos.y()};
+
+      nodePositions.push_back(position);
+    }
+  }
+
+  return nodePositions;
+}
+
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
 }
@@ -205,7 +252,7 @@ void GraphView::wheelEvent(QWheelEvent *event) {
 }
 #endif
 
-void GraphView::doLayout() {
+void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   std::vector<Node *> nodes;
   for (const auto item : scene()->items()) {
     auto node = qgraphicsitem_cast<Node *>(item);
@@ -214,9 +261,26 @@ void GraphView::doLayout() {
     }
   }
 
-  const auto nodePositions = calculateGraphLayout(nodes);
-  for (const auto &[node, position] : nodePositions) {
-    node->setPosition(position);
+  const auto logger = getLogger();
+  try {
+    const auto nodePositionsMap = convertNodePositions(nodePositions);
+
+    setNodePositions(nodes, nodePositionsMap);
+
+    if (logger) {
+      logger->info("Graph layout loaded from saved node positions");
+    }
+  } catch (const std::exception &e) {
+    if (logger) {
+      logger->warn("Failed to set node positions from stored data: {}",
+                   e.what());
+      logger->info("Calculating new graph layout");
+    }
+
+    const auto calculatedNodePositions = calculateGraphLayout(nodes);
+    for (const auto &[node, position] : calculatedNodePositions) {
+      node->setPosition(position);
+    }
   }
 }
 }
