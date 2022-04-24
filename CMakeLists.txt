@@ -331,6 +331,7 @@ set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_detection_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/group_node_positions_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"

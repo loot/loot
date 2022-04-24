@@ -574,7 +574,7 @@ fs::path Game::UserlistPath() const {
 }
 
 fs::path Game::GroupNodePositionsPath() const {
-  return GetLOOTGamePath() / "group_node_positions.toml";
+  return GetLOOTGamePath() / "group_node_positions.bin";
 }
 
 std::vector<std::string> Game::GetLoadOrder() const {

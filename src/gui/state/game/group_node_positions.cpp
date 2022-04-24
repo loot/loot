@@ -25,47 +25,81 @@
 
 #include "gui/state/game/group_node_positions.h"
 
-#include <cpptoml.h>
-
 #include <fstream>
 
-#include "gui/state/logging.h"
-
 namespace loot {
+constexpr uint32_t LGNP_MAGIC_NUMBER = 0x504E474C;
+constexpr uint8_t LGNP_FORMAT_VERSION = 1;
+
+size_t readStringLength(std::istream& in) {
+  uint16_t length{0};
+  in.read(reinterpret_cast<char*>(&length), sizeof length);
+
+  return length;
+}
+
+// Write string length as a 16-bit unsigned integer.
+// Throw if the string length doesn't fit in 16 bits, because this should only
+// be used for group names and no group name should be that long.
+void writeStringLength(std::ostream& out, size_t length) {
+  // Don't care about endianness because the files don't need to be portable.
+  if (length <= UINT16_MAX) {
+    const auto castLength = static_cast<uint16_t>(length);
+
+    out.write(reinterpret_cast<const char*>(&castLength), sizeof castLength);
+  } else {
+    throw std::runtime_error("Cannot write length of string longer than " +
+                             std::to_string(UINT16_MAX) + " bytes");
+  }
+}
+
 std::vector<GroupNodePosition> LoadGroupNodePositions(
     const std ::filesystem::path& filePath) {
   if (!std::filesystem::exists(filePath)) {
     return {};
   }
 
-  std::ifstream in(filePath);
+  std::ifstream in(filePath, std::ios_base::in | std::ios_base::binary);
   if (!in.is_open()) {
-    throw cpptoml::parse_exception(filePath.u8string() +
-                                   " could not be opened for parsing");
+    throw std::runtime_error(filePath.u8string() +
+                             " could not be opened for parsing");
   }
 
-  const auto settings = cpptoml::parser(in).parse();
+  uint32_t magicNumber{0};
+  in.read(reinterpret_cast<char*>(&magicNumber), sizeof magicNumber);
 
-  const auto positionsTable = settings->get_table_array("positions");
-  if (!positionsTable) {
-    return {};
+  if (magicNumber != LGNP_MAGIC_NUMBER) {
+    throw std::runtime_error("Failed to parse " + filePath.u8string() +
+                             ": wrong magic number");
   }
 
-  const auto logger = getLogger();
+  uint8_t formatVersion{0};
+  in.read(reinterpret_cast<char*>(&formatVersion), sizeof formatVersion);
+
+  if (formatVersion != LGNP_FORMAT_VERSION) {
+    throw std::runtime_error("Failed to parse " + filePath.u8string() +
+                             ": unrecognised format version");
+  }
 
   std::vector<GroupNodePosition> nodePositions;
-  for (const auto& positionTable : *positionsTable) {
-    const auto name = positionTable->get_as<std::string>("name");
-    const auto x = positionTable->get_as<double>("x");
-    const auto y = positionTable->get_as<double>("y");
+  while (in.good()) {
+    const auto stringLength = readStringLength(in);
 
-    if (name && x && y) {
-      nodePositions.push_back(GroupNodePosition{*name, *x, *y});
-    } else {
-      logger->error(
-          "Failed to read position for node, name or x or y are "
-          "missing.");
+    if (!in.good()) {
+      // Handle reaching end of file.
+      break;
     }
+
+    std::string name(stringLength, '\0');
+    in.read(name.data(), stringLength);
+
+    double x{0.0};
+    in.read(reinterpret_cast<char*>(&x), sizeof x);
+
+    double y{0.0};
+    in.read(reinterpret_cast<char*>(&y), sizeof y);
+
+    nodePositions.push_back(GroupNodePosition{name, x, y});
   }
 
   return nodePositions;
@@ -73,29 +107,31 @@ std::vector<GroupNodePosition> LoadGroupNodePositions(
 
 void SaveGroupNodePositions(const std ::filesystem::path& filePath,
                             const std::vector<GroupNodePosition>& positions) {
-  std::ofstream out(filePath);
+  // Don't care about endianness because the files don't need to be portable.
+
+  std::ofstream out(
+      filePath,
+      std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
   if (!out.is_open()) {
-    throw cpptoml::parse_exception(filePath.u8string() +
-                                   " could not be opened for writing");
+    throw std::runtime_error(filePath.u8string() +
+                             " could not be opened for writing");
   }
 
-  auto root = cpptoml::make_table();
+  out.write(reinterpret_cast<const char*>(&LGNP_MAGIC_NUMBER),
+            sizeof LGNP_MAGIC_NUMBER);
+  out.write(reinterpret_cast<const char*>(&LGNP_FORMAT_VERSION),
+            sizeof LGNP_FORMAT_VERSION);
 
-  if (!positions.empty()) {
-    auto positionTables = cpptoml::make_table_array();
+  for (const auto& nodePosition : positions) {
+    writeStringLength(out, nodePosition.groupName.size());
 
-    for (const auto& nodePosition : positions) {
-      auto positionTable = cpptoml::make_table();
-      positionTable->insert("name", nodePosition.groupName);
-      positionTable->insert("x", nodePosition.x);
-      positionTable->insert("y", nodePosition.y);
+    // Don't write the null terminator as it's unnecessary.
+    out.write(nodePosition.groupName.c_str(), nodePosition.groupName.size());
 
-      positionTables->push_back(positionTable);
-    }
-
-    root->insert("positions", positionTables);
+    out.write(reinterpret_cast<const char*>(&nodePosition.x),
+              sizeof nodePosition.x);
+    out.write(reinterpret_cast<const char*>(&nodePosition.y),
+              sizeof nodePosition.y);
   }
-
-  out << *root;
 }
 }

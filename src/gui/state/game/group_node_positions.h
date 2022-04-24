@@ -27,6 +27,7 @@
 #define LOOT_GUI_STATE_GAME_GROUP_NODE_POSITIONS
 
 #include <filesystem>
+#include <string>
 #include <vector>
 
 namespace loot {
