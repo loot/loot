@@ -20,10 +20,12 @@ Copyright License Texts
 .. include:: MIT License (cpptoml).txt
   :literal:
 
-LOOT & `libloot`_
-==================
+LOOT, `libloot`_, `OGDF`_ & `Qt`_
+=================================
 
 .. _libloot: https://github.com/loot/libloot
+.. _OGDF: https://ogdf.uos.de/
+.. _Qt: https://www.qt.io/
 
 .. include:: GNU GPL v3.txt
   :literal:

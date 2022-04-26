@@ -76,6 +76,7 @@ public:
   bool isDebugLoggingEnabled() const;
   bool isMasterlistUpdateBeforeSortEnabled() const;
   bool isLootUpdateCheckEnabled() const;
+  bool isNoSortingChangesDialogEnabled() const;
   std::string getGame() const;
   std::string getLastGame() const;
   std::string getLastVersion() const;
@@ -95,6 +96,7 @@ public:
   void enableDebugLogging(bool enable);
   void enableMasterlistUpdateBeforeSort(bool enable);
   void enableLootUpdateCheck(bool enable);
+  void enableNoSortingChangesDialog(bool enable);
 
   void storeLastGame(const std::string& lastGame);
   void storeWindowPosition(const WindowPosition& position);
@@ -107,6 +109,7 @@ private:
   bool enableDebugLogging_{false};
   bool updateMasterlistBeforeSort_{true};
   bool enableLootUpdateCheck_{true};
+  bool useNoSortingChangesDialog_{true};
   std::string game_{"auto"};
   std::string lastGame_{"auto"};
   std::string lastVersion_;

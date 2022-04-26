@@ -43,20 +43,23 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost REQUIRED COMPONENTS locale system)
+find_package(Boost 1.77 REQUIRED COMPONENTS locale system)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    find_package(ICU REQUIRED COMPONENTS uc i18n)
+    find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
 endif()
 
-find_package(Qt6 COMPONENTS Widgets Network Test)
+find_package(Qt6 6.2 COMPONENTS Widgets Network Test)
 if(NOT Qt6_FOUND)
-    find_package(Qt5 COMPONENTS Widgets Network Test REQUIRED)
+    find_package(Qt5 5.15 COMPONENTS Widgets Network Test REQUIRED)
 endif()
+
+find_package(OGDF CONFIG)
 
 ExternalProject_Add(GTest
     PREFIX "external"
     URL "https://github.com/google/googletest/archive/release-1.11.0.tar.gz"
+    URL_HASH "SHA256=b4870bf121ff7795ba20d20bcdd8627b8e088f2d1dab299a031c1034eddc93d5"
     CMAKE_ARGS -Dgtest_force_shared_crt=ON
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
@@ -95,6 +98,7 @@ endif()
 ExternalProject_Add(zlib
     PREFIX "external"
     URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz"
+    URL_HASH "SHA256=629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff"
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE TRUE)
 ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
@@ -105,6 +109,7 @@ set(ZLIB_LIBRARY
 ExternalProject_Add(minizip-ng
     PREFIX "external"
     URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.4.tar.gz"
+    URL_HASH "SHA256=2ab219f651901a337a7d3c268128711b80330a99ea36bdc528c76b591a624c3c"
     CMAKE_ARGS
         -DMZ_ZLIB=ON
         -DMZ_BZIP2=OFF
@@ -130,6 +135,7 @@ set(MINIZIP_NG_LIBRARIES
 ExternalProject_Add(testing-plugins
     PREFIX "external"
     URL "https://github.com/Ortham/testing-plugins/archive/1.4.1.tar.gz"
+    URL_HASH "SHA256=57f82495a737013c1b828d43fbe87edcb57768f85c6416e8d17f273d692691cf"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -137,6 +143,7 @@ ExternalProject_Add(testing-plugins
 ExternalProject_Add(cpptoml
     PREFIX "external"
     URL "https://github.com/skystrife/cpptoml/archive/v0.1.1.tar.gz"
+    URL_HASH "SHA256=23af72468cfd4040984d46a0dd2a609538579c78ddc429d6b8fd7a10a6e24403"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -146,11 +153,46 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 ExternalProject_Add(spdlog
     PREFIX "external"
     URL "https://github.com/gabime/spdlog/archive/v1.9.2.tar.gz"
+    URL_HASH "SHA256=6fff9215f5cb81760be4cc16d033526d1080427d236e86d70bb02994f85e3d38"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(spdlog SOURCE_DIR)
 set(SPDLOG_INCLUDE_DIRS "${SOURCE_DIR}/include")
+
+if(OGDF_FOUND)
+    # Set the value to the found target instead of a list of libraries, it
+    # still works. No need to set OGDF_INCLUDE_DIRS, that's already done when
+    # find_package is run.
+    set(OGDF_LIBRARIES OGDF)
+else()
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF --config Release)
+    else()
+        set(OGDF_BUILD_COMMAND ${CMAKE_COMMAND} --build . --target OGDF)
+    endif()
+
+    ExternalProject_Add(OGDF
+        PREFIX "external"
+        URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
+    URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
+        BUILD_COMMAND ${OGDF_BUILD_COMMAND}
+        INSTALL_COMMAND "")
+    ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
+    set(OGDF_INCLUDE_DIRS
+        "${SOURCE_DIR}/include"
+        "${BINARY_DIR}/include")
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(OGDF_LIBRARY_DIR "${BINARY_DIR}/Release")
+    else()
+        set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
+    endif()
+
+    set(OGDF_LIBRARIES
+        "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OGDF${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        "${OGDF_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}COIN${CMAKE_STATIC_LIBRARY_SUFFIX}")
+endif()
 
 ##############################
 # General Settings
@@ -166,6 +208,7 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/edge.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/groups_editor_dialog.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/graph_view.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/layout.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/node.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/icon_factory.cpp"
@@ -194,11 +237,13 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/style.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/check_for_update_task.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/update_masterlist_task.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/logging.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
@@ -218,6 +263,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/edge.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/groups_editor_dialog.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/graph_view.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/layout.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/groups_editor/node.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/icon_factory.h"
@@ -246,6 +292,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/settings/settings_dialog.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/sidebar_plugin_name_delegate.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/style.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/check_for_update_task.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/update_masterlist_task.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/query.h"
@@ -265,6 +312,7 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/logging.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
@@ -283,6 +331,7 @@ set(LOOT_SRC_TESTS_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_detection_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/group_node_positions_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/helpers_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_paths_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/loot_settings_test.h"
@@ -328,6 +377,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/logging.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.cpp"
@@ -342,6 +392,7 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_paths.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/loot_settings.h"
@@ -362,9 +413,9 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT cpptoml libloot minizip-ng spdlog)
+add_dependencies(LOOT cpptoml libloot minizip-ng spdlog OGDF)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES})
+    Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
@@ -385,7 +436,8 @@ target_include_directories(LOOT SYSTEM PRIVATE
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
-    ${SPDLOG_INCLUDE_DIRS})
+    ${SPDLOG_INCLUDE_DIRS}
+    ${OGDF_INCLUDE_DIRS})
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
@@ -405,10 +457,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
     target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 else()
-    target_link_libraries(LOOT PRIVATE
-        ${LIBLOOT_SHARED_LIBRARY} ICU::uc ICU::i18n)
-    target_link_libraries(loot_gui_tests PRIVATE
-        ${LIBLOOT_SHARED_LIBRARY} ICU::uc ICU::i18n)
+    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc)
+
+    target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
+    target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -418,10 +470,6 @@ if(CMAKE_COMPILER_IS_GNUCXX)
             BUILD_WITH_INSTALL_RPATH ON)
 
     target_compile_options(LOOT PRIVATE "-Wall" "-Wextra")
-
-    set(LOOT_LIBS pthread http_parser ssh2 stdc++fs icui18n)
-    target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
-    target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
 endif()
 
 if(MSVC)
@@ -433,8 +481,6 @@ if(MSVC)
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
         "/permissive-" "/W4" "$<$<CONFIG:DEBUG>:/bigobj>")
-
-    target_link_libraries(LOOT PRIVATE comctl32 psapi)
 endif()
 
 ##############################

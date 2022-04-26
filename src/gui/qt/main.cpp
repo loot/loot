@@ -37,6 +37,23 @@
 #include "gui/state/loot_state.h"
 #include "gui/version.h"
 
+bool isRunningThroughModOrganiser() {
+#ifdef _WIN32
+  const std::array<const char*, 3> dlls = {
+      "hook.dll", "usvfs_x86.dll", "usvfs_x64.dll"};
+
+  for (const auto dll : dlls) {
+    const bool isDllLoaded =
+        GetModuleHandle(loot::ToWinWide(dll).c_str()) != nullptr;
+    if (isDllLoaded) {
+      return true;
+    }
+  }
+#endif
+
+  return false;
+}
+
 void logRuntimeEnvironment() {
   const auto logger = loot::getLogger();
   if (logger) {
@@ -51,14 +68,9 @@ void logRuntimeEnvironment() {
                  loot::GetLiblootVersion(),
                  loot::GetLiblootRevision());
 
-#ifdef _WIN32
-    // Check if LOOT is being run through Mod Organiser.
-    const bool runFromMO =
-        GetModuleHandle(loot::ToWinWide("hook.dll").c_str()) != nullptr;
-    if (runFromMO) {
+    if (isRunningThroughModOrganiser()) {
       logger->info("LOOT is being run through Mod Organiser.");
     }
-#endif
   }
 }
 

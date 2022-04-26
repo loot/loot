@@ -25,7 +25,6 @@
 
 #include "gui/qt/main_window.h"
 
-#include <QtCore/QJsonDocument>
 #include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
@@ -43,6 +42,7 @@
 #include "gui/qt/plugin_item_filter_model.h"
 #include "gui/qt/sidebar_plugin_name_delegate.h"
 #include "gui/qt/style.h"
+#include "gui/qt/tasks/check_for_update_task.h"
 #include "gui/qt/tasks/update_masterlist_task.h"
 #include "gui/query/types/apply_sort_query.h"
 #include "gui/query/types/cancel_sort_query.h"
@@ -92,62 +92,6 @@ bool hasLoadOrderChanged(const std::vector<std::string>& oldLoadOrder,
   }
 
   return false;
-}
-
-int compareLOOTVersion(const std::string& version) {
-  std::vector<std::string> parts;
-  boost::split(parts, version, boost::is_any_of("."));
-
-  if (parts.size() != 3) {
-    throw std::runtime_error("Unexpect number of version parts in " + version);
-  }
-
-  const auto givenMajor = std::stoul(parts.at(0));
-  if (gui::Version::major > givenMajor) {
-    return 1;
-  }
-
-  if (gui::Version::major < givenMajor) {
-    return -1;
-  }
-
-  const auto givenMinor = std::stoul(parts.at(1));
-  if (gui::Version::minor > givenMinor) {
-    return 1;
-  }
-
-  if (gui::Version::minor < givenMinor) {
-    return -1;
-  }
-
-  const auto givenPatch = std::stoul(parts.at(2));
-  if (gui::Version::patch > givenPatch) {
-    return 1;
-  }
-
-  if (gui::Version::patch < givenPatch) {
-    return -1;
-  }
-
-  return 0;
-}
-
-std::optional<QDate> getDateFromCommitJson(const QJsonDocument& document,
-                                           const std::string& commitHash) {
-  // Committer can be null, but that will just result in an Undefined value.
-  auto dateString = document["commit"]["committer"]["date"].toString();
-  if (dateString.isEmpty()) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->error(
-          "Error while checking for LOOT updates: couldn't get commit date for "
-          "commit {}",
-          commitHash);
-    }
-    return std::nullopt;
-  }
-
-  return QDate::fromString(dateString, Qt::ISODate);
 }
 
 int calculateSidebarHeaderWidth(const QAbstractItemView& view, int column) {
@@ -301,8 +245,16 @@ void MainWindow::initialise() {
 
     // Check for updates.
     if (state.getSettings().isLootUpdateCheckEnabled()) {
-      sendHttpRequest("https://api.github.com/repos/loot/loot/releases/latest",
-                      &MainWindow::handleGetLatestReleaseResponseFinished);
+      // This task can be run in the main thread because it's non-blocking.
+      const auto task = new CheckForUpdateTask();
+
+      connect(
+          task, &Task::finished, this, &MainWindow::handleUpdateCheckFinished);
+      connect(task, &Task::finished, task, &QObject::deleteLater);
+      connect(task, &Task::error, this, &MainWindow::handleUpdateCheckError);
+      connect(task, &Task::error, task, &QObject::deleteLater);
+
+      task->execute();
     }
   } catch (const std::exception& e) {
     handleException(e);
@@ -620,7 +572,7 @@ void MainWindow::setupViews() {
 }
 
 void MainWindow::translateUi() {
-  setWindowTitle(translate("LOOT"));
+  setWindowTitle("LOOT");
 
   // Translate toolbar items.
   actionSort->setText(translate("Sort Plugins"));
@@ -1144,57 +1096,6 @@ void MainWindow::executeBackgroundTasks(
   executor->start();
 }
 
-void MainWindow::sendHttpRequest(const std::string& url,
-                                 void (MainWindow::*onFinished)()) {
-  QNetworkRequest request(QUrl(QString::fromStdString(url)));
-  request.setRawHeader("Accept", "application/vnd.github.v3+json");
-  const auto reply = networkAccessManager.get(request);
-
-  connect(reply, &QNetworkReply::finished, this, onFinished);
-  connect(reply,
-          &QNetworkReply::errorOccurred,
-          this,
-          &MainWindow::handleUpdateCheckNetworkError);
-  connect(reply,
-          &QNetworkReply::sslErrors,
-          this,
-          &MainWindow::handleUpdateCheckSSLError);
-}
-
-void MainWindow::addUpdateAvailableMessage() {
-  auto logger = getLogger();
-  if (logger) {
-    logger->info("LOOT update is available.");
-  }
-
-  auto text = (boost::format(boost::locale::translate(
-                   "A [new release](%s) of LOOT is available.")) %
-               "https://github.com/loot/loot/releases/latest")
-                  .str();
-
-  state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
-  updateGeneralMessages();
-}
-
-void MainWindow::addUpdateCheckErrorMessage() {
-  auto text =
-      boost::locale::translate(
-          "Failed to check for LOOT updates! You can check your "
-          "LOOTDebugLog.txt "
-          "(you can get to it through the main menu) for more information.")
-          .str();
-
-  auto generalMessages = pluginItemModel->getGeneralMessages();
-  for (const auto& message : generalMessages) {
-    if (message.text == text) {
-      return;
-    }
-  }
-
-  state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
-  updateGeneralMessages();
-}
-
 void MainWindow::handleError(const std::string& message) {
   progressDialog->reset();
 
@@ -1271,7 +1172,14 @@ bool MainWindow::handlePluginsSorted(QueryResult result) {
   } else {
     state.DecrementUnappliedChangeCounter();
 
-    showNotification(translate("Sorting made no changes to the load order."));
+    const auto message =
+        translate("Sorting made no changes to the load order.");
+
+    if (state.getSettings().isNoSortingChangesDialogEnabled()) {
+      QMessageBox::information(this, "LOOT", message);
+    } else {
+      showNotification(message);
+    }
   }
 
   handleGameDataLoaded(sortedPlugins);
@@ -1382,9 +1290,13 @@ void MainWindow::on_actionOpenGroupsEditor_triggered() {
       }
     }
 
+    const auto groupNodePositions =
+        LoadGroupNodePositions(state.GetCurrentGame().GroupNodePositionsPath());
+
     groupsEditor->setGroups(state.GetCurrentGame().GetMasterlistGroups(),
                             state.GetCurrentGame().GetUserGroups(),
-                            installedPluginGroups);
+                            installedPluginGroups,
+                            groupNodePositions);
 
     groupsEditor->show();
   } catch (const std::exception& e) {
@@ -1878,8 +1790,6 @@ void MainWindow::on_actionDiscardSort_triggered() {
 
 void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
-    std::vector<Task*> tasks;
-
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
     auto task = new UpdateMasterlistTask(state);
@@ -2107,6 +2017,9 @@ void MainWindow::on_groupsEditor_accepted() {
   try {
     state.GetCurrentGame().SetUserGroups(groupsEditor->getUserGroups());
     state.GetCurrentGame().SaveUserMetadata();
+
+    SaveGroupNodePositions(state.GetCurrentGame().GroupNodePositionsPath(),
+                           groupsEditor->getNodePositions());
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2297,161 +2210,51 @@ void MainWindow::handleProgressUpdate(const QString& message) {
   progressDialog->setLabelText(message);
 }
 
+void MainWindow::handleUpdateCheckFinished(QueryResult result) {
+  try {
+    const bool updateIsAvailable = std::get<bool>(result);
+    if (updateIsAvailable) {
+      const auto logger = getLogger();
+      if (logger) {
+        logger->info("LOOT update is available.");
+      }
+
+      const auto text = (boost::format(boost::locale::translate(
+                             "A [new release](%s) of LOOT is available.")) %
+                         "https://github.com/loot/loot/releases/latest")
+                            .str();
+
+      state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
+      updateGeneralMessages();
+    }
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::handleUpdateCheckError(const std::string&) {
+  try {
+    const auto text =
+        boost::locale::translate(
+            "Failed to check for LOOT updates! You can check your "
+            "LOOTDebugLog.txt "
+            "(you can get to it through the main menu) for more information.")
+            .str();
+
+    const auto generalMessages = pluginItemModel->getGeneralMessages();
+    for (const auto& message : generalMessages) {
+      if (message.text == text) {
+        return;
+      }
+    }
+
+    state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
+    updateGeneralMessages();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
 void MainWindow::handleWorkerThreadFinished() { progressDialog->reset(); }
 
-void MainWindow::handleGetLatestReleaseResponseFinished() {
-  try {
-    auto logger = getLogger();
-    if (logger) {
-      logger->trace(
-          "Finished receiving a response for getting the latest release's tag");
-    }
-
-    auto responseData =
-        readHttpResponse(qobject_cast<QNetworkReply*>(sender()));
-
-    if (!responseData.has_value()) {
-      addUpdateCheckErrorMessage();
-      return;
-    }
-
-    auto json = QJsonDocument::fromJson(responseData.value());
-    auto tagName = json["tag_name"].toString().toStdString();
-
-    const auto comparisonResult = compareLOOTVersion(tagName);
-    if (comparisonResult < 0) {
-      addUpdateAvailableMessage();
-      return;
-    }
-    if (comparisonResult > 0) {
-      return;
-    }
-
-    // Versions are equal, get commit dates to compare. First get the
-    // tag's commit hash.
-    auto url = "https://api.github.com/repos/loot/loot/commits/tags/" + tagName;
-    sendHttpRequest(url, &MainWindow::handleGetTagCommitResponseFinished);
-  } catch (const std::exception& e) {
-    handleException(e);
-  }
-}
-
-void MainWindow::handleGetTagCommitResponseFinished() {
-  try {
-    auto logger = getLogger();
-    if (logger) {
-      logger->trace(
-          "Finished receiving a response for getting the latest release tag's "
-          "commit");
-    }
-
-    auto responseData =
-        readHttpResponse(qobject_cast<QNetworkReply*>(sender()));
-
-    if (!responseData.has_value()) {
-      addUpdateCheckErrorMessage();
-      return;
-    }
-
-    auto json = QJsonDocument::fromJson(responseData.value());
-    auto commitHash = json["sha"].toString().toStdString();
-
-    if (boost::istarts_with(commitHash, gui::Version::revision)) {
-      return;
-    }
-
-    const auto tagCommitDate = getDateFromCommitJson(json, commitHash);
-    if (!tagCommitDate.has_value()) {
-      addUpdateCheckErrorMessage();
-      return;
-    }
-
-    auto url = "https://api.github.com/repos/loot/loot/commits/" +
-               gui::Version::revision;
-
-    QNetworkRequest request(QUrl(QString::fromStdString(url)));
-    request.setRawHeader("Accept", "application/vnd.github.v3+json");
-    auto reply = networkAccessManager.get(request);
-
-    connect(reply, &QNetworkReply::finished, [this, tagCommitDate, reply]() {
-      auto logger = getLogger();
-      if (logger) {
-        logger->trace(
-            "Finished receiving a response for getting the LOOT build's "
-            "commit");
-      }
-
-      auto responseData = readHttpResponse(reply);
-
-      if (!responseData.has_value()) {
-        addUpdateCheckErrorMessage();
-        return;
-      }
-
-      auto json = QJsonDocument::fromJson(responseData.value());
-      auto buildCommitDate =
-          getDateFromCommitJson(json, gui::Version::revision);
-      if (!buildCommitDate.has_value()) {
-        addUpdateCheckErrorMessage();
-        return;
-      }
-
-      if (tagCommitDate.value() > buildCommitDate.value()) {
-        logger->info("Tag date: {}, build date: {}",
-                     tagCommitDate.value().toString().toStdString(),
-                     buildCommitDate.value().toString().toStdString());
-        addUpdateAvailableMessage();
-      } else if (logger) {
-        logger->info("No LOOT update is available.");
-      }
-    });
-    connect(reply,
-            &QNetworkReply::errorOccurred,
-            this,
-            &MainWindow::handleUpdateCheckNetworkError);
-    connect(reply,
-            &QNetworkReply::sslErrors,
-            this,
-            &MainWindow::handleUpdateCheckSSLError);
-  } catch (const std::exception& e) {
-    handleException(e);
-  }
-}
-
-void MainWindow::handleUpdateCheckNetworkError(
-    QNetworkReply::NetworkError error) {
-  try {
-    auto reply = qobject_cast<QIODevice*>(sender());
-
-    auto logger = getLogger();
-    if (logger) {
-      logger->error(
-          "Error while checking for LOOT updates: error code is {}, "
-          "description "
-          "is: {}",
-          error,
-          reply->errorString().toStdString());
-    }
-
-    addUpdateCheckErrorMessage();
-  } catch (const std::exception& e) {
-    handleException(e);
-  }
-}
-
-void MainWindow::handleUpdateCheckSSLError(const QList<QSslError>& errors) {
-  try {
-    auto logger = getLogger();
-    for (const auto& error : errors) {
-      if (logger) {
-        logger->error("Error while checking for LOOT updates: {}",
-                      error.errorString().toStdString());
-      }
-    }
-
-    addUpdateCheckErrorMessage();
-  } catch (const std::exception& e) {
-    handleException(e);
-  }
-}
 }

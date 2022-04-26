@@ -130,7 +130,7 @@ QRectF Node::boundingRect() const {
   const auto height = RADIUS + TEXT_Y_POS + textRect.height();
   auto leftPos = -1 * width / 2;
 
-  return QRectF(leftPos, -RADIUS, width, height);
+  return QRectF(leftPos, -RADIUS, width, height).marginsAdded(MARGINS);
 }
 
 QPainterPath Node::shape() const {

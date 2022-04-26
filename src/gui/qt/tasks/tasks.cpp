@@ -79,8 +79,6 @@ TaskExecutor::~TaskExecutor() {
   workerThread.wait();
 }
 
-bool TaskExecutor::wait(unsigned long time) { return workerThread.wait(time); }
-
 void TaskExecutor::onTaskFinished() {
   auto task = qobject_cast<Task *>(sender());
 

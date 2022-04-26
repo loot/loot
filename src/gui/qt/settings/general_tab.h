@@ -53,6 +53,7 @@ private:
   QLabel *updateMasterlistLabel{new QLabel(this)};
   QLabel *checkUpdatesLabel{new QLabel(this)};
   QLabel *loggingLabel{new QLabel(this)};
+  QLabel *useNoSortingChangesDialogLabel{new QLabel(this)};
   QLabel *preludeSourceLabel{new QLabel(this)};
   QComboBox *defaultGameComboBox{new QComboBox(this)};
   QComboBox *languageComboBox{new QComboBox(this)};
@@ -60,6 +61,7 @@ private:
   QCheckBox *updateMasterlistCheckbox{new QCheckBox(this)};
   QCheckBox *checkUpdatesCheckbox{new QCheckBox(this)};
   QCheckBox *loggingCheckbox{new QCheckBox(this)};
+  QCheckBox *useNoSortingChangesDialogCheckbox{new QCheckBox(this)};
   QLineEdit *preludeSourceInput{new QLineEdit(this)};
   QLabel *descriptionLabel{new QLabel(this)};
 

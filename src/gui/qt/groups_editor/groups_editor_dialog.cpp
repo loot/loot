@@ -39,21 +39,30 @@
 namespace loot {
 GroupsEditorDialog::GroupsEditorDialog(QWidget* parent,
                                        PluginItemModel* pluginItemModel) :
-    QDialog(parent), pluginItemModel(pluginItemModel) {
+    QDialog(
+        parent,
+        Qt::Dialog | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
+    pluginItemModel(pluginItemModel) {
   setupUi();
 }
 
 void GroupsEditorDialog::setGroups(
     const std::vector<Group>& masterlistGroups,
     const std::vector<Group>& userGroups,
-    const std::set<std::string>& installedPluginGroups) {
-  graphView->setGroups(masterlistGroups, userGroups, installedPluginGroups);
+    const std::set<std::string>& installedPluginGroups,
+    const std::vector<GroupNodePosition>& nodePositions) {
+  graphView->setGroups(
+      masterlistGroups, userGroups, installedPluginGroups, nodePositions);
   groupPluginsTitle->setVisible(false);
   groupPluginsList->setVisible(false);
 }
 
 std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
   return graphView->getUserGroups();
+}
+
+std::vector<GroupNodePosition> GroupsEditorDialog::getNodePositions() const {
+  return graphView->getNodePositions();
 }
 
 void GroupsEditorDialog::setupUi() {

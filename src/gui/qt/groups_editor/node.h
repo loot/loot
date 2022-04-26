@@ -84,6 +84,7 @@ public:
   static constexpr int RADIUS = 10;
   static constexpr int DIAMETER = RADIUS * 2;
   static constexpr double TEXT_Y_POS = RADIUS * 1.5;
+  static constexpr QMarginsF MARGINS = QMarginsF(20, 20, 20, 20);
 
 protected:
   QVariant itemChange(GraphicsItemChange change,

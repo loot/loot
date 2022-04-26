@@ -44,6 +44,7 @@ typedef std::vector<PluginItem> PluginItems;
 typedef std::vector<std::pair<PluginItem, bool>> GetConflictingPluginsResult;
 
 typedef std::variant<std::monostate,
+                     bool,
                      CancelSortResult,
                      PluginItems,
                      PluginItem,

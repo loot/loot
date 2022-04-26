@@ -573,6 +573,10 @@ fs::path Game::UserlistPath() const {
   return GetLOOTGamePath() / "userlist.yaml";
 }
 
+fs::path Game::GroupNodePositionsPath() const {
+  return GetLOOTGamePath() / "group_node_positions.bin";
+}
+
 std::vector<std::string> Game::GetLoadOrder() const {
   return gameHandle_->GetLoadOrder();
 }

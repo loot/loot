@@ -31,6 +31,8 @@
 #include <QtWidgets/QGraphicsView>
 #include <set>
 
+#include "gui/state/game/group_node_positions.h"
+
 namespace loot {
 class Node;
 
@@ -42,11 +44,13 @@ public:
 
   void setGroups(const std::vector<Group> &masterlistGroups,
                  const std::vector<Group> &userGroups,
-                 const std::set<std::string> &installedPluginGroups);
+                 const std::set<std::string> &installedPluginGroups,
+                 const std::vector<GroupNodePosition> &nodePositions);
 
   bool addGroup(const std::string &name);
 
   std::vector<Group> getUserGroups() const;
+  std::vector<GroupNodePosition> getNodePositions() const;
 
   void handleGroupSelected(const QString &name);
 
@@ -61,7 +65,7 @@ protected:
 private:
   static constexpr qreal SCALE_CONSTANT = qreal(1.2);
 
-  void doLayout();
+  void doLayout(const std::vector<GroupNodePosition> &nodePositions);
 };
 }
 

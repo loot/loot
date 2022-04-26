@@ -25,6 +25,7 @@
 
 #include "gui/qt/groups_editor/graph_view.h"
 
+#include <cpptoml.h>
 #include <math.h>
 
 #include <QtCore/QRandomGenerator>
@@ -32,12 +33,11 @@
 #include <set>
 
 #include "gui/qt/groups_editor/edge.h"
+#include "gui/qt/groups_editor/layout.h"
 #include "gui/qt/groups_editor/node.h"
+#include "gui/state/logging.h"
 
 namespace loot {
-constexpr qreal NODE_SPACING_HORIZONTAL = 70;
-constexpr qreal NODE_SPACING_VERTICAL = 70;
-
 std::map<std::string, Node *>::iterator insertNode(
     GraphView *graphView,
     std::map<std::string, Node *> &map,
@@ -58,81 +58,31 @@ std::map<std::string, Node *>::iterator insertNode(
   return map.emplace(name, node).first;
 }
 
-void depthFirstSearch(Node *node,
-                      int depth,
-                      std::set<Node *> &visitedNodes,
-                      std::function<void(Node *, int)> visitor) {
-  visitor(node, depth);
+std::map<std::string, QPointF> convertNodePositions(
+    const std::vector<GroupNodePosition> &nodePositions) {
+  std::map<std::string, QPointF> map;
 
-  visitedNodes.insert(node);
+  for (const auto &position : nodePositions) {
+    map.emplace(position.groupName, QPointF(position.x, position.y));
+  }
 
-  for (const auto edge : node->outEdges()) {
-    auto nextNode = edge->destNode();
-    if (visitedNodes.count(nextNode) == 0) {
-      depthFirstSearch(nextNode, depth + 1, visitedNodes, visitor);
+  return map;
+}
+
+void setNodePositions(const std::vector<Node *> &nodes,
+                      const std::map<std::string, QPointF> &savedPositions) {
+  for (const auto node : nodes) {
+    const auto name = node->getName().toStdString();
+    const auto positionIt = savedPositions.find(name);
+
+    if (positionIt == savedPositions.end()) {
+      throw std::runtime_error(
+          "Failed to set node positions, could not find position for " + name);
+    } else {
+      node->setPosition(positionIt->second);
     }
   }
 }
-
-void reverseDepthFirstSearch(Node *node,
-                             int depth,
-                             std::set<Node *> &visitedNodes,
-                             std::function<void(Node *, int)> visitor) {
-  visitor(node, depth);
-
-  visitedNodes.insert(node);
-
-  for (const auto edge : node->inEdges()) {
-    auto nextNode = edge->sourceNode();
-    if (visitedNodes.count(nextNode) == 0) {
-      reverseDepthFirstSearch(nextNode, depth - 1, visitedNodes, visitor);
-    }
-  }
-
-  return;
-}
-
-int countMaxPathLength(Node *rootNode) {
-  std::set<Node *> visitedNodes;
-  static constexpr int INITIAL_DEPTH = 1;
-  auto maxDepth = INITIAL_DEPTH;
-
-  depthFirstSearch(rootNode,
-                   INITIAL_DEPTH,
-                   visitedNodes,
-                   [&maxDepth](const Node *, int depth) {
-                     if (depth > maxDepth) {
-                       maxDepth = depth;
-                     }
-                   });
-
-  return maxDepth;
-};
-
-void visitConnectedSubgraph(Node *topLevelNode,
-                            int topLevel,
-                            std::function<void(Node *, int)> setNodePosition) {
-  std::set<Node *> visitedNodes;
-
-  Node *leafNode = topLevelNode;
-  int furthestLevel = topLevel;
-  depthFirstSearch(
-      topLevelNode, topLevel, visitedNodes, [&](Node *node, int depth) {
-        // Set the node position, and record the leaf node of the longest
-        // path.
-        setNodePosition(node, depth);
-        if (depth > furthestLevel) {
-          leafNode = node;
-          furthestLevel = depth;
-        }
-      });
-
-  // Now start with the leaf node of the longest path and do a DFS of in
-  // edges to find any nodes that are connected but not yet assigned levels.
-  visitedNodes.clear();
-  reverseDepthFirstSearch(
-      leafNode, furthestLevel, visitedNodes, setNodePosition);
-};
 
 GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
   static constexpr qreal INITIAL_SCALING_FACTOR = 0.8;
@@ -152,7 +102,8 @@ GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
 
 void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
                           const std::vector<Group> &userGroups,
-                          const std::set<std::string> &installedPluginGroups) {
+                          const std::set<std::string> &installedPluginGroups,
+                          const std::vector<GroupNodePosition> &nodePositions) {
   // Remove all existing items.
   scene()->clear();
 
@@ -201,7 +152,7 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
   }
 
   // Now position the new nodes.
-  doLayout();
+  doLayout(nodePositions);
 }
 
 bool GraphView::addGroup(const std::string &name) {
@@ -216,9 +167,9 @@ bool GraphView::addGroup(const std::string &name) {
 
   auto node = new Node(this, qName, true, false);
 
-  auto pos = QPointF(0, 0);
+  auto pos = mapToScene(width() / 2, height() / 2);
   while (scene()->itemAt(pos, QTransform())) {
-    pos.setX(pos.x() + NODE_SPACING_HORIZONTAL);
+    pos.setY(pos.y() + NODE_SPACING);
   }
   scene()->addItem(node);
   node->setPosition(pos);
@@ -253,6 +204,24 @@ std::vector<Group> GraphView::getUserGroups() const {
   return userGroups;
 }
 
+std::vector<GroupNodePosition> GraphView::getNodePositions() const {
+  std::vector<GroupNodePosition> nodePositions;
+
+  for (const auto item : scene()->items()) {
+    auto node = qgraphicsitem_cast<Node *>(item);
+    if (node) {
+      const auto name = node->getName().toStdString();
+      const auto scenePos = node->scenePos();
+
+      GroupNodePosition position{name, scenePos.x(), scenePos.y()};
+
+      nodePositions.push_back(position);
+    }
+  }
+
+  return nodePositions;
+}
+
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
 }
@@ -283,79 +252,35 @@ void GraphView::wheelEvent(QWheelEvent *event) {
 }
 #endif
 
-void GraphView::doLayout() {
-  // This algorithm makes no attempt to avoid intersections between edges,
-  // which can cause confusion, but it's good enough as a naive approach.
-
-  // Identify nodes, root nodes and their longest path lengths.
+void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   std::vector<Node *> nodes;
-  std::vector<Node *> rootNodes;
-  std::map<Node *, int> rootNodeMaxPathLengths;
   for (const auto item : scene()->items()) {
     auto node = qgraphicsitem_cast<Node *>(item);
     if (node) {
       nodes.push_back(node);
-      if (node->isRootNode()) {
-        rootNodes.push_back(node);
-        auto maxPathLength = countMaxPathLength(node);
-        rootNodeMaxPathLengths.emplace(node, maxPathLength);
-      }
     }
   }
 
-  // Sort the root nodes by their max path length so that the node with the
-  // longest path is first. This ensures that the longest path is laid out
-  // to be the straightest.
-  std::sort(rootNodes.begin(),
-            rootNodes.end(),
-            [&rootNodeMaxPathLengths](auto lhs, auto rhs) {
-              return rootNodeMaxPathLengths.at(lhs) >
-                     rootNodeMaxPathLengths.at(rhs);
-            });
+  const auto logger = getLogger();
+  try {
+    const auto nodePositionsMap = convertNodePositions(nodePositions);
 
-  // Set the node level to its depth along the current path. To prevent nodes
-  // at the same depth from being positioned at the same point, keep a count
-  // of how many nodes each level has, and apply an offset based on that count.
-  std::set<Node *> visitedNodes;
-  std::map<Node *, int> nodeLevels;
-  std::map<Node *, size_t> nodeLevelOffsets;
-  std::map<int, size_t> levelNodeCounts;
+    setNodePositions(nodes, nodePositionsMap);
 
-  const auto setNodePosition = [&](Node *node, int depth) {
-    if (nodeLevels.count(node) != 0) {
-      // Don't set a position if it's already got one.
-      return;
+    if (logger) {
+      logger->info("Graph layout loaded from saved node positions");
+    }
+  } catch (const std::exception &e) {
+    if (logger) {
+      logger->warn("Failed to set node positions from stored data: {}",
+                   e.what());
+      logger->info("Calculating new graph layout");
     }
 
-    auto it = levelNodeCounts.find(depth);
-    if (it == levelNodeCounts.end()) {
-      it = levelNodeCounts.emplace(depth, 0).first;
+    const auto calculatedNodePositions = calculateGraphLayout(nodes);
+    for (const auto &[node, position] : calculatedNodePositions) {
+      node->setPosition(position);
     }
-
-    nodeLevels.emplace(node, depth);
-    nodeLevelOffsets.emplace(node, it->second);
-    it->second += 1;
-  };
-
-  // Now visit each of the root nodes in turn, setting levels and offsets for
-  // every connected node.
-  static constexpr int TOP_LEVEL = 0;
-  for (const auto rootNode : rootNodes) {
-    visitConnectedSubgraph(rootNode, TOP_LEVEL, setNodePosition);
-  }
-
-  for (const auto node : nodes) {
-    if (nodeLevels.count(node) == 0) {
-      // This shouldn't happen, but if this node has no assigned level, just
-      // put it on the top level.
-      setNodePosition(node, TOP_LEVEL);
-    }
-
-    auto level = nodeLevels.find(node)->second;
-    auto offset = nodeLevelOffsets.find(node)->second;
-
-    node->setPosition(offset * NODE_SPACING_HORIZONTAL,
-                      level * NODE_SPACING_VERTICAL);
   }
 }
 }
