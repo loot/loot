@@ -48,11 +48,16 @@ void GroupTab::initialiseInputs(const std::vector<std::string>& groups,
 
   nonUserGroupName = nonUserGroup.value_or(Group::DEFAULT_NAME);
 
-  if (userGroup.has_value()) {
-    groupComboBox->setCurrentText(QString::fromStdString(userGroup.value()));
-  } else {
-    groupComboBox->setCurrentText(QString::fromStdString(nonUserGroupName));
+  const auto currentGroupName =
+      QString::fromStdString(userGroup.value_or(nonUserGroupName));
+
+  auto groupIndex = groupComboBox->findText(currentGroupName);
+  if (groupIndex < 0) {
+    groupComboBox->addItem(translate("%1 (Group does not exist)").arg(currentGroupName));
+    groupIndex = groupComboBox->count() - 1;
   }
+
+  groupComboBox->setCurrentIndex(groupIndex);
 
   auto groupNameToHighlight = QString::fromStdString(nonUserGroupName);
   auto model = qobject_cast<QStandardItemModel*>(groupComboBox->model());
