@@ -30,6 +30,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QTableView>
@@ -338,10 +339,14 @@ void MainWindow::setupUi() {
 
   setCentralWidget(sidebarSplitter);
 
+  const auto progressBar = new QProgressBar();
+  progressBar->setTextVisible(false);
+  progressBar->setMinimum(0);
+  progressBar->setMaximum(0);
+
   progressDialog->setWindowModality(Qt::WindowModal);
   progressDialog->setCancelButton(nullptr);
-  progressDialog->setMinimum(0);
-  progressDialog->setMaximum(0);
+  progressDialog->setBar(progressBar);
   progressDialog->reset();
 
   pluginItemModel->setObjectName("pluginItemModel");
@@ -2208,6 +2213,7 @@ void MainWindow::handleConflictsChecked(QueryResult result) {
 void MainWindow::handleProgressUpdate(const QString& message) {
   progressDialog->open();
   progressDialog->setLabelText(message);
+  progressDialog->adjustSize();
 }
 
 void MainWindow::handleUpdateCheckFinished(QueryResult result) {
