@@ -186,18 +186,23 @@ std::vector<Group> GraphView::getUserGroups() const {
       continue;
     }
 
-    std::vector<std::string> afterGroups;
-    for (const auto edge : node->edges()) {
-      if (edge->destNode() == node &&
-          (node->isUserMetadata() || edge->isUserMetadata())) {
-        // The edge is going to this node, i.e. this node is after
-        // sourceNode().
-        afterGroups.push_back(edge->sourceNode()->getName().toStdString());
+    const auto edges = node->edges();
+    if (edges.isEmpty()) {
+      userGroups.push_back(Group(node->getName().toStdString()));
+    } else {
+      std::vector<std::string> afterGroups;
+      for (const auto edge : edges) {
+        if (edge->destNode() == node &&
+            (node->isUserMetadata() || edge->isUserMetadata())) {
+          // The edge is going to this node, i.e. this node is after
+          // sourceNode().
+          afterGroups.push_back(edge->sourceNode()->getName().toStdString());
+        }
       }
-    }
 
-    if (!afterGroups.empty()) {
-      userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
+      if (!afterGroups.empty()) {
+        userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
+      }
     }
   }
 
