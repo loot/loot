@@ -75,7 +75,7 @@ msgstr "Creation Club Plugins ausblenden"
 
 #: src/gui/qt/filters_widget.cpp:249
 msgid "Show only empty plugins"
-msgstr "Zeige nur leer Plugins"
+msgstr "Zeige nur leere Plugins"
 
 #: src/gui/qt/filters_widget.cpp:251
 msgid "Show only warnings and errors"
@@ -682,7 +682,7 @@ msgstr "Gruppe existiert bereits!"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:56
 msgid "%1 (Group does not exist)"
-msgstr "%1% (Gruppe existiert nicht)"
+msgstr "%1 (Gruppe existiert nicht)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:97
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
