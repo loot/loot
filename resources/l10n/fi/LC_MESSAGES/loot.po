@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-05-08 15:54+0100\n"
-"PO-Revision-Date: 2022-05-13 14:36+0300\n"
+"PO-Revision-Date: 2022-05-13 18:24+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -18,7 +18,6 @@ msgstr ""
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
 
-# requires context for what comes after
 #: src/gui/qt/filters_widget.cpp:235
 msgid "Show only conflicting plugins for"
 msgstr "Näytä vain seuraavan kanssa ristiriidassa olevat lisäosat"
@@ -89,11 +88,11 @@ msgstr "Piilotetut viestit:"
 
 #: src/gui/qt/filters_widget.cpp:255
 msgid "No plugin selected"
-msgstr "(Älä suodata)"
+msgstr "(Älä suodata lisäosia)"
 
 #: src/gui/qt/filters_widget.cpp:262
 msgid "No group selected"
-msgstr "(Älä suodata)"
+msgstr "(Älä suodata ryhmiä)"
 
 #: src/gui/qt/filters_widget.cpp:269
 msgid "No text specified"
@@ -250,7 +249,7 @@ msgstr "Korjaa epäselvä järjestys"
 
 #: src/gui/qt/main_window.cpp:603
 msgid "Clear All User Metadata..."
-msgstr "Poista kaikki muokatut metatiedot"
+msgstr "Poista kaikki muokatut metatiedot..."
 
 #: src/gui/qt/main_window.cpp:605
 msgid "Plugin"
@@ -274,7 +273,7 @@ msgstr "Muokkaa metatietoja..."
 
 #: src/gui/qt/main_window.cpp:610
 msgid "Clear User Metadata..."
-msgstr "Poista muokatut metatiedot"
+msgstr "Poista muokatut metatiedot..."
 
 #: src/gui/qt/main_window.cpp:612
 msgid "Help"
@@ -335,7 +334,7 @@ msgid ""
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "Voit vetää lisäosia sivupalkista metatietoja muokattaessa välilehtiin "
-"\"Näiden jälkeen\", \"Vaatimukset\" ja \"Yhteensopimattomat\""
+"\"Näiden jälkeen\", \"Vaatimukset\" ja \"Yhteensopimattomat\"."
 
 #: src/gui/qt/main_window.cpp:935
 msgid ""
@@ -911,7 +910,7 @@ msgstr "Yleiset"
 
 #: src/gui/qt/settings/settings_dialog.cpp:114
 msgid "Add new game..."
-msgstr "Lisää peli"
+msgstr "Lisää peli..."
 
 #: src/gui/query/types/apply_sort_query.h:95
 msgid ""
@@ -1062,7 +1061,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:659
 msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Vuorovaikutussilmukka löytyi lisäosien väliltä: %1% ja %2%: %3%."
+msgstr "Vuorovaikutussilmukka löytyi lisäosien väliltä: %1% ja %2%: %3%"
 
 #: src/gui/state/game/game.cpp:671
 msgid "The group \"%1%\" does not exist."
@@ -1151,549 +1150,3 @@ msgstr "%1% löysi %2%."
 #: src/gui/state/game/helpers.cpp:232
 msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
 msgstr "LOOT on havainnut, että %1% on virheellinen ja jättää sen huomiotta."
-
-#~ msgid "Invalid game ID supplied."
-#~ msgstr "Viallinen pelin ID."
-
-#~ msgid "Game path could not be detected."
-#~ msgstr "Pelin asennusta ei löydetty."
-
-#~ msgid ""
-#~ "libloadorder failed to create a game handle. Details could not be fetched."
-#~ msgstr ""
-#~ "libloadorder epäonnistui pelin käsittelyssä. Tietoja virheestä ei "
-#~ "löydetty."
-
-#~ msgid "libloadorder failed to create a game handle. Details:"
-#~ msgstr "libloadorder epäonnistui pelin käsittelyssä. Tiedot:"
-
-#~ msgid ""
-#~ "libloadorder failed to initialise game master file support. Details could "
-#~ "not be fetched."
-#~ msgstr ""
-#~ "libloadorder epäonnistui pelin kantatiedoston lataamisessa. Tietoja "
-#~ "virheestä ei löydetty."
-
-#~ msgid "libloadorder failed to initialise game master file support. Details:"
-#~ msgstr "libloadorder epäonnistui pelin kantatiedoston lataamisessa. Tiedot:"
-
-#~ msgid ""
-#~ "libloadorder failed to get the active plugins list. Details could not be "
-#~ "fetched."
-#~ msgstr ""
-#~ "libloadorder epäonnistui käytössä olevan lisäosalistan hakemisessa. "
-#~ "Tietoja virheestä ei löydetty."
-
-#~ msgid "libloadorder failed to get the active plugins list. Details:"
-#~ msgstr ""
-#~ "libloadorder epäonnistui käytössä olevan lisäosalistan hakemisessa. "
-#~ "Tiedot:"
-
-#~ msgid ""
-#~ "libloadorder failed to set the load order. Details could not be fetched."
-#~ msgstr ""
-#~ "libloadorder ei voinut tallentaa uutta latausjärjestystä. Tietoja "
-#~ "virheestä ei löydetty."
-
-#~ msgid "libloadorder failed to get the load order. Details:"
-#~ msgstr "libloadorder ei voinut lukea latausjärjestystä. Tiedot:"
-
-#~ msgid "libloadorder failed to set the load order. Details:"
-#~ msgstr "libloadorder ei voinut tallentaa uutta latausjärjestystä. Tiedot:"
-
-#~ msgid "Could not create LOOT folder for game. Details:"
-#~ msgstr "Pelin LOOT-kansion luominen epäonnistui. Tiedot:"
-
-#~ msgid "Unable to open \"%1%\" for CRC calculation."
-#~ msgstr "Lisäosan \"%1%\" avaaminen CRC:n laskemista varten epäonnistui."
-
-#~ msgid "Failed to parse condition \"%1%\": %2%"
-#~ msgstr "Ehdon \"%1%\" lukeminen epäonnistui: %2%"
-
-#~ msgid "Failed to parse condition \"%1%\"."
-#~ msgstr "Ehdon \"%1%\" lukeminen epäonnistui."
-
-#~ msgid "Cannot read \"%1%\". Details: %2%"
-#~ msgstr "\"%1%\" ei voitu lukea. Tiedot: %2%"
-
-#~ msgid "Git operation failed. Error: %1%"
-#~ msgstr "Git-toiminto epäonnistui. Virhe: %1%"
-
-#~ msgid "Rolled back to the previous revision."
-#~ msgstr "Palautettiin edelliseen versioon."
-
-#~ msgid ""
-#~ "Please submit any edits made for reasons other than personal preference "
-#~ "to the LOOT team so that they may be included in the masterlist."
-#~ msgstr ""
-#~ "Lähetäthän pelin toimivuuteen vaikuttavat muutokset LOOT-tiimille, jotta "
-#~ "ne voidaan sisällyttää kantatiedostoon."
-
-#~ msgid "Remove Plugin"
-#~ msgstr "Poista lisäosa"
-
-#~ msgid "Priority"
-#~ msgstr "Tärkeys"
-
-#~ msgid "Select a plugin to edit its load order metadata."
-#~ msgstr "Valitse lisäosa muokataksesi sen latausjärjestyksen metatietoja."
-
-#~ msgid ""
-#~ "Drag and drop a plugin here to make the selected plugin load after it. "
-#~ "The \"Show only conflicting plugins\" checkbox must be checked."
-#~ msgstr ""
-#~ "Vedä ja pudota lisäosa tähän, niin se ladataan ennen valittua lisäosaa. "
-#~ "\"Näytä vain ristiriidassa olevat lisäosat\" täytyy olla valittu."
-
-#~ msgid ""
-#~ "Plugins with higher priorities will load after plugins with smaller "
-#~ "priorities that they conflict with, unless one must explicitly load after "
-#~ "the other."
-#~ msgstr ""
-#~ "Lisäosat, joiden tärkeys on suurempi, ladataan muiden ristiriidassa "
-#~ "olevien lisäosien jälkeen, ellei jotakin lisäosaa ole pakko ladata toisen "
-#~ "jälkeen."
-
-#~ msgid ""
-#~ "Filters the plugin list to only display plugins which can be loaded after "
-#~ "the currently selected plugin, and which either conflict with it, or, if "
-#~ "it loads a BSA, also load BSAs. Also enables drag and drop of plugins "
-#~ "into the Load After box."
-#~ msgstr ""
-#~ "Näyttää lisäosalistalla vain lisäosat, jotka voidaan ladata valitun "
-#~ "lisäosan jälkeen, ja jotka ovat ristiriidassa sen kanssa. Lisäosa "
-#~ "näytetään myös, jos se ja valittu lisäosa lataavat BSA-tiedoston. Sallii "
-#~ "lisäosien vetämisen ja pudottamisen \"Lataa näiden jälkeen\" -laatikkoon."
-
-#~ msgid ""
-#~ "Only newly-added plugins may be removed here. Use the metadata editor to "
-#~ "remove other user-added plugins."
-#~ msgstr ""
-#~ "Vain nyt lisätyt lisäosat voidaan poistaa tästä. Muut lisäosat tulee "
-#~ "poistaa muokkaamalla metatietoja."
-
-#~ msgid "Priority: "
-#~ msgstr "Tärkeys: "
-
-#~ msgid "Enable User Changes"
-#~ msgstr "Ota omat muokkaukset käyttöön"
-
-#~ msgid "Add File"
-#~ msgstr "Lisää tiedosto"
-
-#~ msgid "Edit File"
-#~ msgstr "Muokkaa tiedostoa"
-
-#~ msgid "Remove File"
-#~ msgstr "Poista tiedosto"
-
-#~ msgid "Save Changes"
-#~ msgstr "Tallenna muutokset"
-
-#~ msgid "Cancel"
-#~ msgstr "Peruuta"
-
-#~ msgid "UDR Count"
-#~ msgstr "UDR-lukumäärä"
-
-#~ msgid ""
-#~ "If unchecked, any user-added metadata will be ignored during sorting."
-#~ msgstr "Itse lisätyt metatiedot ohitetaan, jos tämä ei ole valittu."
-
-#~ msgid "LOOT: Warning"
-#~ msgstr "LOOT: Varoitus"
-
-#~ msgid "Edit Message"
-#~ msgstr "Muokkaa viestiä"
-
-#~ msgid "Remove Message"
-#~ msgstr "Poista viesti"
-
-#~ msgid "Add Bash Tag"
-#~ msgstr "Lisää Bash-tagi"
-
-#~ msgid "Edit Bash Tag"
-#~ msgstr "Muokkaa Bash-tagia"
-
-#~ msgid "Remove Bash Tag"
-#~ msgstr "Poista Bash-tagi"
-
-#~ msgid "Add Dirty Info"
-#~ msgstr "Lisää likainen tieto"
-
-#~ msgid "Edit Dirty Info"
-#~ msgstr "Muokkaa likaista tietoa"
-
-#~ msgid "Remove Dirty Info"
-#~ msgstr "Poista likainen tieto"
-
-#~ msgid "LOOT: Add File/Plugin"
-#~ msgstr "LOOT: Lisää tiedosto/lisäosa"
-
-#~ msgid "LOOT: Add Message"
-#~ msgstr "LOOT: Lisää viesti"
-
-#~ msgid "Error: No content specified. Row will not be added."
-#~ msgstr "Virhe: ei sisältöä valittuna. Riviä ei lisätä."
-
-#~ msgid "LOOT: Error"
-#~ msgstr "LOOT: Virhe"
-
-#~ msgid "LOOT: Add Tag"
-#~ msgstr "LOOT: Lisää tagi"
-
-#~ msgid "LOOT: Add Dirty Info"
-#~ msgstr "LOOT: Lisää likainen tieto"
-
-#~ msgid "LOOT: Edit File/Plugin"
-#~ msgstr "LOOT: Muokkaa tiedostoa/lisäosaa"
-
-#~ msgid "LOOT: Edit Message"
-#~ msgstr "LOOT: Muokkaa viestiä"
-
-#~ msgid "Error: No content specified. Row will not be edited."
-#~ msgstr "Virhe: ei sisältöä valittuna. Riviä ei muokata."
-
-#~ msgid "LOOT: Edit Tag"
-#~ msgstr "LOOT: Muokkaa tagia"
-
-#~ msgid "LOOT: Edit Dirty Info"
-#~ msgstr "LOOT: Muokkaa likaista tietoa"
-
-#~ msgid "Masterlist update failed. Details: %1%"
-#~ msgstr "Kantatiedoston päivitys epäonnistui. Tiedot: %1%"
-
-#~ msgid "Masterlist revision check failed. Details: %1%"
-#~ msgstr "Kantatiedoston version tarkistus epäonnistui. Tiedot: %1%"
-
-#~ msgid "Masterlist parsing failed. Details: %1%"
-#~ msgstr "Kantatiedoston lukeminen epäonnistui. Tiedot: %1%"
-
-#~ msgid "Unknown"
-#~ msgstr "Tuntematon"
-
-#~ msgid "Error: LOOT is already running. This instance will now quit."
-#~ msgstr "Virhe: LOOT on jo käynnissä. Tämä prosessi lopetetaan."
-
-#~ msgid "Error: Could not apply translation."
-#~ msgstr "Virhe: käännöstä ei voitu käyttää."
-
-#~ msgid "Error: The selected language is not available on this system."
-#~ msgstr "Virhe: valittu kieli ei ole saatavilla tässä asennuksessa."
-
-#~ msgid "Error: Games' settings parsing failed. %1%"
-#~ msgstr "Virhe: pelin asetusten lukeminen epäonnistui. %1%"
-
-#~ msgid "Error: None of the supported games were detected."
-#~ msgstr "Virhe: yhtään tuettua peliä ei löytynyt."
-
-#~ msgid "View Last Report"
-#~ msgstr "Näytä viimeisin raportti"
-
-#~ msgid "&View Last Report"
-#~ msgstr "Näytä &viimeisin raportti"
-
-#~ msgid "View &Debug Log"
-#~ msgstr "Näytä lokitie&dosto"
-
-#~ msgid "&Sort Plugins"
-#~ msgstr "Järje&stä lisäosat"
-
-#~ msgid "&Edit"
-#~ msgstr "&Muokkaa"
-
-#~ msgid ""
-#~ "Opens the Metadata Editor, where plugins' sorting metadata, messages, "
-#~ "dirty info and Bash Tag suggestions can be edited."
-#~ msgstr ""
-#~ "Avaa metatietojen muokkausohjelman, jossa voit muokata lisäosien "
-#~ "järjestyksen metatietoja, viestejä, likaisia tietoja ja Bash-"
-#~ "tagiehdotuksia."
-
-#~ msgid "Sorts your plugins, then displays a report of the results."
-#~ msgstr "Järjestää lisäosasi ja näyttää raportin tuloksista."
-
-#~ msgid "Opens the last report generated for the current game."
-#~ msgstr "Avaa viimeisimmän raportin kyseiselle pelille."
-
-#~ msgid "LOOT: Report Viewer"
-#~ msgstr "LOOT: Raporttilukija"
-
-#~ msgid "LOOT: Settings"
-#~ msgstr "LOOT: Asetukset"
-
-#~ msgid "Error: \"%1%\" cannot be found."
-#~ msgstr "Error: \"%1%\" ei löytynyt."
-
-#~ msgid ""
-#~ "Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
-#~ "Vegas."
-#~ msgstr ""
-#~ "Latausjärjestyksen optimointi Oblivioniin, Skyrimiin, Fallout 3:seen ja "
-#~ "Fallout: New Vegasiin."
-
-#~ msgid "LOOT: Working..."
-#~ msgstr "LOOT: Työstetään..."
-
-#~ msgid "LOOT working..."
-#~ msgstr "LOOT työskentelee..."
-
-#~ msgid "Userlist parsing failed. Details: %1%"
-#~ msgstr "Käyttäjälistan lukeminen epäonnistui. Tiedot: %1%"
-
-#~ msgid ""
-#~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: %1%"
-#~ msgstr "Yleinen viesti sisältää ehdon, jota ei voida lukea. Tiedot: %1%"
-
-#~ msgid ""
-#~ "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-#~ msgstr "\"%1%\" sisältää ehdon, jota ei voida lukea. Tiedot: %2%"
-
-#~ msgid "Building plugin graph..."
-#~ msgstr "Rakennetaan lisäosakaaviota..."
-
-#~ msgid "Failed to set the load order. Details: %1%"
-#~ msgstr "Latausjärjestyksen tallennus epäonnistui. Tiedot: %1%"
-
-#~ msgid ""
-#~ "The load order displayed in the Details tab was not applied as sorting "
-#~ "was canceled."
-#~ msgstr "Latausjärjestystä ei tallennettu, koska järjestäminen peruutettiin."
-
-#~ msgid "Failed to calculate the load order. Details: %1%"
-#~ msgstr "Latausjärjestyksen laskeminen epäonnistui. Tiedot: %1%"
-
-#~ msgid "Error: %1%"
-#~ msgstr "Virhe: %1%"
-
-#~ msgid "Error: Masterlist parsing failed. %1%"
-#~ msgstr "Virhe: kantatiedoston lukeminen epäonnistui. %1%"
-
-#~ msgid "Error: Userlist parsing failed. %1%"
-#~ msgstr "Virhe: käyttäjälistan lukeminen epäonnistui. %1%"
-
-#~ msgid "Error: Failed to get load order. %1%"
-#~ msgstr "Virhe: latausjärjestyksen hakeminen epäonnistui. %1%"
-
-#~ msgid "Error: Failed to set plugin timestamps. %1%"
-#~ msgstr "Virhe: lisäosan päiväyksen asettaminen epäonnistui. %1%"
-
-#~ msgid "LOOT: Plugin Redate"
-#~ msgstr "LOOT: Lisäosien päiväyksien muuttaminen"
-
-#~ msgid "Filename (required):"
-#~ msgstr "Tiedostonimi (vaaditaan):"
-
-#~ msgid "Displayed Name:"
-#~ msgstr "Nimi:"
-
-#~ msgid "Condition:"
-#~ msgstr "Ehto:"
-
-#~ msgid "Edit Content"
-#~ msgstr "Muokkaa sisältöä"
-
-#~ msgid "String"
-#~ msgstr "Merkkijono"
-
-#~ msgid "Type:"
-#~ msgstr "Tyyppi:"
-
-#~ msgid "Language:"
-#~ msgstr "Kieli:"
-
-#~ msgid "Content:"
-#~ msgstr "Sisältö:"
-
-#~ msgid "Error: No content row selected."
-#~ msgstr "Virhe: yhtään sisältöriviä ei valittu."
-
-#~ msgid "Add/Remove:"
-#~ msgstr "Lisää/poista:"
-
-#~ msgid "CRC (required):"
-#~ msgstr "CRC (vaaditaan):"
-
-#~ msgid "ITM Count:"
-#~ msgstr "ITM-lukumäärä:"
-
-#~ msgid "UDR Count:"
-#~ msgstr "UDR-lukumäärä:"
-
-#~ msgid "Deleted Navmesh Count:"
-#~ msgstr "Poistettujen Navmeshien lukumäärä:"
-
-#~ msgid "Cleaning Utility (required):"
-#~ msgstr "Puhdistustyökalu (vaaditaan):"
-
-#~ msgid "None"
-#~ msgstr "Ei mitään"
-
-#~ msgid "Low"
-#~ msgstr "Vähän"
-
-#~ msgid "Medium"
-#~ msgstr "Keskiverto"
-
-#~ msgid "High"
-#~ msgstr "Paljon"
-
-#~ msgid "Edit Game"
-#~ msgstr "Muokkaa peliä"
-
-#~ msgid "Remove Game"
-#~ msgstr "Poista peli"
-
-#~ msgid "View reports externally in default browser."
-#~ msgstr "Näytä raportit verkkoselaimessa."
-
-#~ msgid "Master File"
-#~ msgstr "Kantatiedosto"
-
-#~ msgid "Masterlist Repository URL"
-#~ msgstr "Kantatiedoston säilön URL"
-
-#~ msgid "Masterlist Repository Branch"
-#~ msgstr "Kantatiedoston säilön haara"
-
-#~ msgid "Debug Verbosity:"
-#~ msgstr "Virhelokiin kirjattavat tiedot:"
-
-#~ msgid "LOOT: Add Game"
-#~ msgstr "LOOT: Lisää peli"
-
-#~ msgid ""
-#~ "Error: A path and/or registry key is required. Row will not be added."
-#~ msgstr "Virhe: polku ja/tai rekisteriavain vaaditaan. Riviä ei listätä."
-
-#~ msgid ""
-#~ "Error: A game with this name is already defined. Row will not be added."
-#~ msgstr "Virhe: tämänniminen peli on jo määritelty. Riviä ei lisätä."
-
-#~ msgid "LOOT: Edit Game"
-#~ msgstr "LOOT: Muokkaa peliä"
-
-#~ msgid "Error: Name is required. Row will not be added."
-#~ msgstr "Virhe: nimi vaaditaan. Riviä ei lisätä."
-
-#~ msgid "Error: Folder is required. Row will not be added."
-#~ msgstr "Virhe: kansio vaaditaan. Riviä ei lisätä."
-
-#~ msgid "Master File:"
-#~ msgstr "Kantatiedosto:"
-
-#~ msgid "Masterlist Repository URL:"
-#~ msgstr "Kantatiedoston säilön URL:"
-
-#~ msgid "Masterlist Repository Branch:"
-#~ msgstr "Kantatiedoston säilön haara:"
-
-#~ msgid "Install Path:"
-#~ msgstr "Asennuspolku:"
-
-#~ msgid "Install Path Registry Key:"
-#~ msgstr "Asennuspolun rekisteriavain:"
-
-#~ msgid "Note:"
-#~ msgstr "Huom:"
-
-#~ msgid "Bash Tag Suggestion(s):"
-#~ msgstr "Bash-tagiehdotukset:"
-
-#~ msgid "Warning:"
-#~ msgstr "Varoitus:"
-
-#~ msgid "Error:"
-#~ msgstr "Virhe:"
-
-#~ msgid "LOOT Report"
-#~ msgstr "LOOT raportti"
-
-#~ msgid "Summary"
-#~ msgstr "Yhteenveto"
-
-#~ msgid "LOOT Version"
-#~ msgstr "LOOT-versio"
-
-#~ msgid "Enabled"
-#~ msgstr "Päällä"
-
-#~ msgid "Disabled"
-#~ msgstr "Pois päältä"
-
-#~ msgid ""
-#~ "There have been no changes in the Details tab since LOOT was last run for "
-#~ "this game."
-#~ msgstr ""
-#~ "Tiedot eivät ole muuttuneet LOOTin viimekertaisen tarkistuksen jälkeen."
-
-#~ msgid "Number of Warnings"
-#~ msgstr "Varoitusten lukumäärä"
-
-#~ msgid "Number of Errors"
-#~ msgstr "Virheiden lukumäärä"
-
-#~ msgid "Version:"
-#~ msgstr "Versio:"
-
-#~ msgid "Add:"
-#~ msgstr "Lisää:"
-
-#~ msgid "Remove:"
-#~ msgstr "Poista:"
-
-#~ msgid ""
-#~ "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. "
-#~ "Clean with %4%."
-#~ msgstr ""
-#~ "Sisältää %1% ITM-kirjausta, %2% UDR-kirjausta ja %3% poistettua "
-#~ "navmeshiä. Puhdista työkalulla %4%."
-
-#~ msgid "Clean with %1%."
-#~ msgstr "Puhdista työkalulla %1%."
-
-#~ msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-#~ msgstr ""
-#~ "Sisältää %1% UDR-kirjausta ja %2% poistettua navmeshiä. Puhdista "
-#~ "työkalulla %3%."
-
-#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
-#~ msgstr "Sisältää %1% poistettua navmeshiä. Puhdista työkalulla %2%."
-
-#~ msgid "Contains %1% UDR records. Clean with %2%."
-#~ msgstr "Sisältää %1% UDR-kirjausta. Puhdista työkalulla %2%."
-
-#~ msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-#~ msgstr ""
-#~ "Sisältää %1% ITM-kirjausta ja %2% poistettua navmeshiä. Puhdista "
-#~ "työkalulla %3%."
-
-#~ msgid "Contains %1% ITM records. Clean with %2%."
-#~ msgstr "Sisältää %1% ITM-kirjausta. Puhdista työkalulla %2%."
-
-#~ msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-#~ msgstr ""
-#~ "Sisältää %1% ITM-kirjausta ja %2% UDR-kirjausta. Puhdista työkalulla %3%."
-
-#~ msgid ""
-#~ "The LOOT Report requires Javascript to be enabled in order to function."
-#~ msgstr "LOOT-raportti vaatii Javascriptiä toimiakseen."
-
-#~ msgid "Hide Bash Tag Suggestions"
-#~ msgstr "Piilota Bash-tagiehdotukset"
-
-#~ msgid "%1% of %2% plugins hidden."
-#~ msgstr "%1%/%2% lisäosaa piilotettiin."
-
-#~ msgid "%1% of %2% messages hidden."
-#~ msgstr "%1%/%2% viestiä piilotettiin."
-
-#~ msgid "Invalid file path:"
-#~ msgstr "Virheellinen tiedostosijainti:"
-
-#~ msgid "Invalid folder path:"
-#~ msgstr "Virheellinen kansiopolku:"
-
-#~ msgid "Expected \"%1%\" at \"%2%\"."
-#~ msgstr "Odotettiin \"%1%\" osoitteessa \"%2%\"."
