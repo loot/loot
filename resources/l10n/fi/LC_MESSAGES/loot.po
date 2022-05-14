@@ -1,1082 +1,1152 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BOSS v3.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-07 20:08-0000\n"
-"PO-Revision-Date: 2014-06-05 19:32+0200\n"
+"Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
+"POT-Creation-Date: 2022-05-08 15:54+0100\n"
+"PO-Revision-Date: 2022-05-13 18:24+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-KeywordsList: translate:1,1t;translate:1c,2,t\n"
 "X-Poedit-Basepath: ../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: fi\n"
 "X-Poedit-SearchPath-0: backend\n"
 "X-Poedit-SearchPath-1: gui\n"
 
-#: backend/game.cpp:99
-msgid "Invalid game ID supplied."
-msgstr "Viallinen pelin ID."
-
-#: backend/game.cpp:159
-msgid "Game path could not be detected."
-msgstr "Pelin asennusta ei löydetty."
-
-#: backend/game.cpp:262 backend/game.cpp:343 backend/game.cpp:419
-msgid ""
-"libloadorder failed to create a game handle. Details could not be fetched."
-msgstr ""
-"libloadorder epäonnistui pelin käsittelyssä. Tietoja virheestä ei löydetty."
-
-#: backend/game.cpp:266 backend/game.cpp:347 backend/game.cpp:423
-msgid "libloadorder failed to create a game handle. Details:"
-msgstr "libloadorder epäonnistui pelin käsittelyssä. Tiedot:"
-
-#: backend/game.cpp:281 backend/game.cpp:362 backend/game.cpp:437
-msgid ""
-"libloadorder failed to initialise game master file support. Details could "
-"not be fetched."
-msgstr ""
-"libloadorder epäonnistui pelin kantatiedoston lataamisessa. Tietoja "
-"virheestä ei löydetty."
-
-#: backend/game.cpp:285 backend/game.cpp:366 backend/game.cpp:441
-msgid "libloadorder failed to initialise game master file support. Details:"
-msgstr "libloadorder epäonnistui pelin kantatiedoston lataamisessa. Tiedot:"
-
-#: backend/game.cpp:298
-msgid ""
-"libloadorder failed to get the active plugins list. Details could not be "
-"fetched."
-msgstr ""
-"libloadorder epäonnistui käytössä olevan lisäosalistan hakemisessa. Tietoja "
-"virheestä ei löydetty."
-
-#: backend/game.cpp:302
-msgid "libloadorder failed to get the active plugins list. Details:"
-msgstr ""
-"libloadorder epäonnistui käytössä olevan lisäosalistan hakemisessa. Tiedot:"
-
-#: backend/game.cpp:379 backend/game.cpp:466
-msgid ""
-"libloadorder failed to set the load order. Details could not be fetched."
-msgstr ""
-"libloadorder ei voinut tallentaa uutta latausjärjestystä. Tietoja virheestä "
-"ei löydetty."
-
-#: backend/game.cpp:383
-msgid "libloadorder failed to get the load order. Details:"
-msgstr "libloadorder ei voinut lukea latausjärjestystä. Tiedot:"
-
-#: backend/game.cpp:470
-msgid "libloadorder failed to set the load order. Details:"
-msgstr "libloadorder ei voinut tallentaa uutta latausjärjestystä. Tiedot:"
-
-#: backend/game.cpp:490
-msgid "Could not create LOOT folder for game. Details:"
-msgstr "Pelin LOOT-kansion luominen epäonnistui. Tiedot:"
-
-#: backend/graph.cpp:47
-msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
-msgstr ""
-"Vuorovaikutussilmukka löytyi kahden lisäosan väliltä: \"%1%\" ja \"%2%\"."
-
-#: backend/helpers.cpp:141
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "Lisäosan \"%1%\" avaaminen CRC:n laskemista varten epäonnistui."
-
-#: backend/helpers.cpp:262
-msgid "None Specified"
-msgstr "Ei määritelty"
-
-#: backend/metadata.cpp:143
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "Ehdon \"%1%\" lukeminen epäonnistui: %2%"
-
-#: backend/metadata.cpp:148
-msgid "Failed to parse condition \"%1%\"."
-msgstr "Ehdon \"%1%\" lukeminen epäonnistui."
-
-#: backend/metadata.cpp:330
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr "\"%1%\" ei voitu lukea. Tiedot: %2%"
-
-#: backend/metadata.cpp:729 backend/metadata.cpp:740
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr ""
-"Tämä lisäosa vaatii, että lisäosa \"%1%\" on asennettu, mutta se puuttuu."
-
-#: backend/metadata.cpp:733
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr ""
-"Tämä lisäosa vaatii, että lisäosa \"%1%\" on käytössä, mutta se on poistettu "
-"käytöstä."
-
-#: backend/metadata.cpp:746
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr ""
-"Tämä lisäosa ei ole yhteensopiva lisäosan \"%1%\" kanssa, mutta molemmat "
-"löydettiin."
-
-#: backend/network.cpp:82
-msgid "Git operation failed. Error: %1%"
-msgstr "Git-toiminto epäonnistui. Virhe: %1%"
-
-#: backend/network.cpp:300
-msgid "Masterlist revision"
-msgstr "Kantatiedoston versio"
-
-#: backend/network.cpp:300
-msgid "Rolled back to the previous revision."
-msgstr "Palautettiin edelliseen versioon."
-
-#: gui/editor.cpp:159 gui/editor.cpp:326 gui/editor.cpp:464
-msgid ""
-"Please submit any edits made for reasons other than personal preference to "
-"the LOOT team so that they may be included in the masterlist."
-msgstr ""
-"Lähetäthän pelin toimivuuteen vaikuttavat muutokset LOOT-tiimille, jotta ne "
-"voidaan sisällyttää kantatiedostoon."
-
-#: gui/editor.cpp:162
-msgid "Show only conflicting plugins"
-msgstr "Näytä vain ristiriidassa olevat lisäosat"
-
-#: gui/editor.cpp:168 gui/editor.cpp:847
-msgid "Remove Plugin"
-msgstr "Poista lisäosa"
-
-#: gui/editor.cpp:171
-msgid "Plugin"
-msgstr "Lisäosa"
-
-#: gui/editor.cpp:172
-msgid "Priority"
-msgstr "Tärkeys"
-
-#: gui/editor.cpp:174 gui/editor.cpp:518 gui/editor.cpp:522 gui/editor.cpp:526
-msgid "Filename"
-msgstr "Tiedostonimi"
-
-#: gui/editor.cpp:175 gui/editor.cpp:519 gui/editor.cpp:523 gui/editor.cpp:527
-msgid "Display Name"
-msgstr "Nimi"
-
-#: gui/editor.cpp:176 gui/editor.cpp:520 gui/editor.cpp:524 gui/editor.cpp:528
-#: gui/editor.cpp:532 gui/misc.cpp:37
-msgid "Condition"
-msgstr "Tila"
-
-#: gui/editor.cpp:199 gui/editor.cpp:577
-msgid "Select a plugin to edit its load order metadata."
-msgstr "Valitse lisäosa muokataksesi sen latausjärjestyksen metatietoja."
-
-#: gui/editor.cpp:200
-msgid ""
-"Drag and drop a plugin here to make the selected plugin load after it. The "
-"\"Show only conflicting plugins\" checkbox must be checked."
-msgstr ""
-"Vedä ja pudota lisäosa tähän, niin se ladataan ennen valittua lisäosaa. "
-"\"Näytä vain ristiriidassa olevat lisäosat\" täytyy olla valittu."
-
-#: gui/editor.cpp:201 gui/editor.cpp:578
-msgid ""
-"Plugins with higher priorities will load after plugins with smaller "
-"priorities that they conflict with, unless one must explicitly load after "
-"the other."
-msgstr ""
-"Lisäosat, joiden tärkeys on suurempi, ladataan muiden ristiriidassa olevien "
-"lisäosien jälkeen, ellei jotakin lisäosaa ole pakko ladata toisen jälkeen."
-
-#: gui/editor.cpp:202
-msgid ""
-"Filters the plugin list to only display plugins which can be loaded after "
-"the currently selected plugin, and which either conflict with it, or, if it "
-"loads a BSA, also load BSAs. Also enables drag and drop of plugins into the "
-"Load After box."
-msgstr ""
-"Näyttää lisäosalistalla vain lisäosat, jotka voidaan ladata valitun lisäosan "
-"jälkeen, ja jotka ovat ristiriidassa sen kanssa. Lisäosa näytetään myös, jos "
-"se ja valittu lisäosa lataavat BSA-tiedoston. Sallii lisäosien vetämisen ja "
-"pudottamisen \"Lataa näiden jälkeen\" -laatikkoon."
-
-#: gui/editor.cpp:203
-msgid ""
-"Only newly-added plugins may be removed here. Use the metadata editor to "
-"remove other user-added plugins."
-msgstr ""
-"Vain nyt lisätyt lisäosat voidaan poistaa tästä. Muut lisäosat tulee poistaa "
-"muokkaamalla metatietoja."
-
-#: gui/editor.cpp:211 gui/editor.cpp:596
-msgid "Priority: "
-msgstr "Tärkeys:"
-
-#: gui/editor.cpp:215 gui/editor.cpp:510
-msgid "Load After"
-msgstr "Lataa näiden jälkeen"
-
-#: gui/editor.cpp:489
-msgid "Enable User Changes"
-msgstr "Ota omat muokkaukset käyttöön"
-
-#: gui/editor.cpp:491 gui/editor.cpp:841
-msgid "Add File"
-msgstr "Lisää tiedosto"
-
-#: gui/editor.cpp:492 gui/editor.cpp:842
-msgid "Edit File"
-msgstr "Muokkaa tiedostoa"
-
-#: gui/editor.cpp:493 gui/editor.cpp:843
-msgid "Remove File"
-msgstr "Poista tiedosto"
-
-#: gui/editor.cpp:494
-msgid "Save Changes"
-msgstr "Tallenna muutokset"
-
-#: gui/editor.cpp:495
-msgid "Cancel"
-msgstr "Peruuta"
-
-#: gui/editor.cpp:508
-msgid "Requirements"
-msgstr "Vaatimukset"
-
-#: gui/editor.cpp:509
-msgid "Incompatibilities"
-msgstr "Yhteensopivuus"
-
-#: gui/editor.cpp:511
-msgid "Messages"
-msgstr "Viestit"
-
-#: gui/editor.cpp:512
-msgid "Bash Tags"
-msgstr "Bash-tagit"
-
-#: gui/editor.cpp:513
-msgid "Dirty Info"
-msgstr "Likainen tieto"
-
-#: gui/editor.cpp:516
-msgid "Plugins"
-msgstr "Lisäosat"
-
-#: gui/editor.cpp:530
-msgid "Add/Remove"
-msgstr "Lisää/Poista"
-
-#: gui/editor.cpp:531
-msgid "Bash Tag"
-msgstr "Bash-tagi"
-
-#: gui/editor.cpp:534
-msgid "CRC"
-msgstr "CRC"
-
-#: gui/editor.cpp:535
-msgid "ITM Count"
-msgstr "ITM-lukumäärä"
-
-#: gui/editor.cpp:536
-msgid "UDR Count"
-msgstr "UDR-lukumäärä"
-
-#: gui/editor.cpp:537
-msgid "Deleted Navmesh Count"
-msgstr "Poistettujen Navmeshien lukumäärä"
-
-#: gui/editor.cpp:538
-msgid "Cleaning Utility"
-msgstr "Puhdistustyökalu"
-
-#: gui/editor.cpp:541
-msgid "Copy Name"
-msgstr "Kopioi nimi"
-
-#: gui/editor.cpp:542
-msgid "Copy Metadata As Text"
-msgstr "Kopioi metatiedot tekstinä"
-
-#: gui/editor.cpp:543
-msgid "Remove All User-Added Metadata"
-msgstr "Poista kaikki lisäämäni metatiedot"
-
-#: gui/editor.cpp:579
-msgid "If unchecked, any user-added metadata will be ignored during sorting."
-msgstr "Itse lisätyt metatiedot ohitetaan, jos tämä ei ole valittu."
-
-#: gui/editor.cpp:580 gui/editor.cpp:581
-msgid "Only user-added data may be removed."
-msgstr "Vain itse lisätyt metatiedot voidaan poistaa."
-
-#: gui/editor.cpp:813
-msgid ""
-"Are you sure you want to clear all existing user-added metadata from this "
-"plugin?"
-msgstr ""
-"Oletko varma, että haluat poistaa kaikki lisäämäsi metatiedot tästä "
-"lisäosasta."
-
-#: gui/editor.cpp:814 gui/main.cpp:1074
-msgid "LOOT: Warning"
-msgstr "LOOT: Varoitus"
-
-#: gui/editor.cpp:845
-msgid "Add Plugin"
-msgstr "Lisää lisäosa"
-
-#: gui/editor.cpp:846
-msgid "Edit Plugin"
-msgstr "Muokkaa lisäosaa"
-
-#: gui/editor.cpp:849
-msgid "Add Message"
-msgstr "Lisää viesti"
-
-#: gui/editor.cpp:850
-msgid "Edit Message"
-msgstr "Muokkaa viestiä"
-
-#: gui/editor.cpp:851
-msgid "Remove Message"
-msgstr "Poista viesti"
-
-#: gui/editor.cpp:853
-msgid "Add Bash Tag"
-msgstr "Lisää Bash-tagi"
-
-#: gui/editor.cpp:854
-msgid "Edit Bash Tag"
-msgstr "Muokkaa Bash-tagia"
-
-#: gui/editor.cpp:855
-msgid "Remove Bash Tag"
-msgstr "Poista Bash-tagi"
-
-#: gui/editor.cpp:857
-msgid "Add Dirty Info"
-msgstr "Lisää likainen tieto"
-
-#: gui/editor.cpp:858
-msgid "Edit Dirty Info"
-msgstr "Muokkaa likaista tietoa"
-
-#: gui/editor.cpp:859
-msgid "Remove Dirty Info"
-msgstr "Poista likainen tieto"
-
-#: gui/editor.cpp:877
-msgid "LOOT: Add File/Plugin"
-msgstr "LOOT: Lisää tiedosto/lisäosa"
-
-#: gui/editor.cpp:899
-msgid "LOOT: Add Message"
-msgstr "LOOT: Lisää viesti"
-
-#: gui/editor.cpp:909
-msgid "Error: No content specified. Row will not be added."
-msgstr "Virhe: ei sisältöä valittuna. Riviä ei lisätä."
-
-#: gui/editor.cpp:910 gui/editor.cpp:992 gui/main.cpp:180 gui/main.cpp:197
-#: gui/main.cpp:212 gui/main.cpp:295 gui/main.cpp:305 gui/main.cpp:318
-#: gui/main.cpp:326 gui/main.cpp:357 gui/main.cpp:374 gui/main.cpp:544
-#: gui/main.cpp:565 gui/main.cpp:581 gui/main.cpp:946 gui/main.cpp:998
-#: gui/main.cpp:1020 gui/main.cpp:1085 gui/main.cpp:1122 gui/misc.cpp:313
-#: gui/misc.cpp:328 gui/settings.cpp:288 gui/settings.cpp:300
-#: gui/settings.cpp:308 gui/settings.cpp:352 gui/settings.cpp:360
-#: gui/settings.cpp:368
-msgid "LOOT: Error"
-msgstr "LOOT: Virhe"
-
-#: gui/editor.cpp:920
-msgid "LOOT: Add Tag"
-msgstr "LOOT: Lisää tagi"
-
-#: gui/editor.cpp:934
-msgid "LOOT: Add Dirty Info"
-msgstr "LOOT: Lisää likainen tieto"
-
-#: gui/editor.cpp:953
-msgid "LOOT: Edit File/Plugin"
-msgstr "LOOT: Muokkaa tiedostoa/lisäosaa"
-
-#: gui/editor.cpp:977
-msgid "LOOT: Edit Message"
-msgstr "LOOT: Muokkaa viestiä"
-
-#: gui/editor.cpp:991
-msgid "Error: No content specified. Row will not be edited."
-msgstr "Virhe: ei sisältöä valittuna. Riviä ei muokata."
-
-#: gui/editor.cpp:1001
-msgid "LOOT: Edit Tag"
-msgstr "LOOT: Muokkaa tagia"
-
-#: gui/editor.cpp:1023
-msgid "LOOT: Edit Dirty Info"
-msgstr "LOOT: Muokkaa likaista tietoa"
-
-#: gui/main.cpp:120
-msgid "Masterlist update failed. Details: %1%"
-msgstr "Kantatiedoston päivitys epäonnistui. Tiedot: %1%"
-
-#: gui/main.cpp:132
-msgid "Masterlist revision check failed. Details: %1%"
-msgstr "Kantatiedoston version tarkistus epäonnistui. Tiedot: %1%"
-
-#: gui/main.cpp:150
-msgid "Masterlist parsing failed. Details: %1%"
-msgstr "Kantatiedoston lukeminen epäonnistui. Tiedot: %1%"
-
-#: gui/main.cpp:158
-msgid "Unknown"
-msgstr "Tuntematon"
-
-#: gui/main.cpp:160
-msgid "No masterlist"
-msgstr "Ei kantatiedostoa"
-
-#: gui/main.cpp:179
-msgid "Error: LOOT is already running. This instance will now quit."
-msgstr "Virhe: LOOT on jo käynnissä. Tämä prosessi lopetetaan."
-
-#: gui/main.cpp:196
-msgid "Error: Could not create local app data LOOT folder."
-msgstr "Virhe: LOOT ei voinut luoda "
-
-#: gui/main.cpp:211
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Virhe: asetusten lukeminen epäonnistui. %1%"
-
-#: gui/main.cpp:294
-msgid "Error: Could not apply translation."
-msgstr "Virhe: käännöstä ei voitu käyttää."
-
-#: gui/main.cpp:304
-msgid "Error: The selected language is not available on this system."
-msgstr "Virhe: valittu kieli ei ole saatavilla tässä asennuksessa."
-
-#: gui/main.cpp:317 gui/main.cpp:373 gui/main.cpp:543
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Virhe: pelikohtaisia asetuksia ei voitu ladata. %1%"
-
-#: gui/main.cpp:325
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr "Virhe: pelin asetusten lukeminen epäonnistui. %1%"
-
-#: gui/main.cpp:356
-msgid "Error: None of the supported games were detected."
-msgstr "Virhe: yhtään tuettua peliä ei löytynyt."
-
-#: gui/main.cpp:401
-msgid "Edit Metadata"
-msgstr "Muokkaa metatietoja"
-
-#: gui/main.cpp:402
+#: src/gui/qt/filters_widget.cpp:235
+msgid "Show only conflicting plugins for"
+msgstr "Näytä vain seuraavan kanssa ristiriidassa olevat lisäosat"
+
+#: src/gui/qt/filters_widget.cpp:236
+msgid "Show only plugins in group"
+msgstr "Näytä vain seuraavan ryhmän lisäosat"
+
+#: src/gui/qt/filters_widget.cpp:238
+msgid "Show only plugins with cards that contain"
+msgstr "Hae lisäosien ilmoituksista"
+
+#: src/gui/qt/filters_widget.cpp:239 src/gui/qt/search_dialog.cpp:102
+msgid "Use regular expression"
+msgstr "Käytä säännöllisenä lausekkeena"
+
+#: src/gui/qt/filters_widget.cpp:240
+msgid "Hide version numbers"
+msgstr "Piilota versionumerot"
+
+#: src/gui/qt/filters_widget.cpp:241
+msgid "Hide CRCs"
+msgstr "Piilota CRC-tarkistussummat"
+
+#: src/gui/qt/filters_widget.cpp:242
+msgid "Hide Bash Tags"
+msgstr "Piilota Bash-tägit"
+
+#: src/gui/qt/filters_widget.cpp:243
+msgid "Hide Sources"
+msgstr "Piilota lähteet"
+
+#: src/gui/qt/filters_widget.cpp:244
+msgid "Hide notes"
+msgstr "Piilota huomautukset"
+
+#: src/gui/qt/filters_widget.cpp:245
+msgid "Hide all plugin messages"
+msgstr "Piilota kaikki ilmoitukset"
+
+#: src/gui/qt/filters_widget.cpp:246
+msgid "Hide inactive plugins"
+msgstr "Näytä vain aktiiviset lisäosat"
+
+#: src/gui/qt/filters_widget.cpp:247
+msgid "Hide messageless plugins"
+msgstr "Näytä vain ilmoitukselliset lisäosat"
+
+#: src/gui/qt/filters_widget.cpp:248
+msgid "Hide Creation Club plugins"
+msgstr "Piilota Creation Clubin lisäosat"
+
+#: src/gui/qt/filters_widget.cpp:249
+msgid "Show only empty plugins"
+msgstr "Näytä vain tyhjät lisäosat"
+
+#: src/gui/qt/filters_widget.cpp:251
+msgid "Show only warnings and errors"
+msgstr "Näytä vain varoitukset ja virheet"
+
+#: src/gui/qt/filters_widget.cpp:252
+msgid "Hidden plugins:"
+msgstr "Piilotetut lisäosat:"
+
+#: src/gui/qt/filters_widget.cpp:253
+msgid "Hidden messages:"
+msgstr "Piilotetut viestit:"
+
+#: src/gui/qt/filters_widget.cpp:255
+msgid "No plugin selected"
+msgstr "(Älä suodata lisäosia)"
+
+#: src/gui/qt/filters_widget.cpp:262
+msgid "No group selected"
+msgstr "(Älä suodata ryhmiä)"
+
+#: src/gui/qt/filters_widget.cpp:269
+msgid "No text specified"
+msgstr "(Ei hakua)"
+
+#: src/gui/qt/filters_widget.cpp:272
+msgid "If checked, interprets the content filter text as a regular expression."
+msgstr "Hakusanaa käytetään säännöllisenä lausekkeena (regular expression)."
+
+#: src/gui/qt/general_info_card.cpp:176
+msgid "General Information"
+msgstr "Yleistietoja"
+
+#: src/gui/qt/general_info_card.cpp:178
+msgid "Masterlist Revision ID"
+msgstr "Pääluettelon versionumero"
+
+#: src/gui/qt/general_info_card.cpp:179
+msgid "Masterlist Update Date"
+msgstr "Pääluettelo päivitetty"
+
+#: src/gui/qt/general_info_card.cpp:180
+msgid "Masterlist Prelude Revision ID"
+msgstr "Pääluettelon pohjan versio"
+
+#: src/gui/qt/general_info_card.cpp:181
+msgid "Masterlist Prelude Update Date"
+msgstr "Pääluettelon pohja päivitetty"
+
+#: src/gui/qt/general_info_card.cpp:183
+msgid "Warnings"
+msgstr "Varoitukset"
+
+#: src/gui/qt/general_info_card.cpp:184
+msgid "Errors"
+msgstr "Virheet"
+
+#: src/gui/qt/general_info_card.cpp:185
+msgid "Total Messages"
+msgstr "Ilmoituksia yhteensä"
+
+#: src/gui/qt/general_info_card.cpp:187
+msgid "Active Plugins"
+msgstr "Aktiivisia lisäosia"
+
+#: src/gui/qt/general_info_card.cpp:188
+msgid "Active Regular Plugins"
+msgstr "Aktiivisia tavallisia lisäosia"
+
+#: src/gui/qt/general_info_card.cpp:189
+msgid "Active Light Plugins"
+msgstr "Aktiivisia kevytlisäosia"
+
+#: src/gui/qt/general_info_card.cpp:190
+msgid "Dirty Plugins"
+msgstr "Siivoamattomia lisäosia"
+
+#: src/gui/qt/general_info_card.cpp:191
+msgid "Total Plugins"
+msgstr "Lisäosia yhteensä"
+
+#. translators: this text is displayed if LOOT has detected that the
+#. masterlist has been modified since it was downloaded.
+#: src/gui/qt/helpers.cpp:92
+msgid "(edited)"
+msgstr "(muokattu)"
+
+#: src/gui/qt/helpers.cpp:194
+msgid "N/A: No masterlist present"
+msgstr "Pääluettelo ei ole saatavilla"
+
+#. translators: N/A is an abbreviation for Not Applicable. A
+#. masterlist is a database that contains information for
+#. various mods.
+#: src/gui/qt/helpers.cpp:199
+msgid "N/A: No masterlist prelude present"
+msgstr "Pääluettelon pohja ei ole saatavilla"
+
+#: src/gui/qt/helpers.cpp:207
+msgid "Unknown: No revision metadata found"
+msgstr "Tuntematon: version metatietoja ei löydy"
+
+#: src/gui/qt/helpers.cpp:334
+msgid "Invalid regular expression: %1%"
+msgstr "Virheellinen säännöllinen lauseke: %1%"
+
+#: src/gui/qt/main_window.cpp:583
 msgid "Sort Plugins"
 msgstr "Järjestä lisäosat"
 
-#: gui/main.cpp:403
-msgid "View Last Report"
-msgstr "Näytä viimeisin raportti"
-
-#: gui/main.cpp:407
-msgid "&View Last Report"
-msgstr "Näytä &viimeisin raportti"
-
-#: gui/main.cpp:408
-msgid "View &Debug Log"
-msgstr "Näytä lokitie&dosto"
-
-#: gui/main.cpp:409
-msgid "&Sort Plugins"
-msgstr "Järje&stä lisäosat"
-
-#: gui/main.cpp:410
-msgid "&Redate Plugins"
-msgstr "Jä&rjestä lisäosien päiväykset"
-
-#: gui/main.cpp:413
-msgid "&File"
-msgstr "&Tiedosto"
-
-#: gui/main.cpp:415
-msgid "&Metadata..."
-msgstr "&Metatiedot..."
-
-#: gui/main.cpp:416
-msgid "&Settings..."
-msgstr "&Asetukset..."
-
-#: gui/main.cpp:417
-msgid "&Edit"
-msgstr "&Muokkaa"
-
-#: gui/main.cpp:429
-msgid "&Game"
-msgstr "&Peli"
-
-#: gui/main.cpp:434
-msgid "&Help"
-msgstr "&Apua"
-
-#: gui/main.cpp:458
-msgid ""
-"Opens the Metadata Editor, where plugins' sorting metadata, messages, dirty "
-"info and Bash Tag suggestions can be edited."
-msgstr ""
-"Avaa metatietojen muokkausohjelman, jossa voit muokata lisäosien "
-"järjestyksen metatietoja, viestejä, likaisia tietoja ja Bash-tagiehdotuksia."
-
-#: gui/main.cpp:459
-msgid "Sorts your plugins, then displays a report of the results."
-msgstr "Järjestää lisäosasi ja näyttää raportin tuloksista."
-
-#: gui/main.cpp:460
-msgid "Opens the last report generated for the current game."
-msgstr "Avaa viimeisimmän raportin kyseiselle pelille."
-
-#: gui/main.cpp:519 gui/main.cpp:962
-msgid "LOOT: Report Viewer"
-msgstr "LOOT: Raporttilukija"
-
-#: gui/main.cpp:527
-msgid "LOOT: Settings"
-msgstr "LOOT: Asetukset"
-
-#: gui/main.cpp:564 gui/main.cpp:580
-msgid "Error: \"%1%\" cannot be found."
-msgstr "Error: \"%1%\" ei löytynyt."
-
-#: gui/main.cpp:592
-msgid ""
-"Load order optimisation for Oblivion, Skyrim, Fallout 3 and Fallout: New "
-"Vegas."
-msgstr ""
-"Latausjärjestyksen optimointi Oblivioniin, Skyrimiin, Fallout 3:seen ja "
-"Fallout: New Vegasiin."
-
-#: gui/main.cpp:623 gui/main.cpp:827 gui/main.cpp:974
-msgid "LOOT: Working..."
-msgstr "LOOT: Työstetään..."
-
-#: gui/main.cpp:623 gui/main.cpp:974
-msgid "LOOT working..."
-msgstr "LOOT työskentelee..."
-
-#: gui/main.cpp:680
-msgid "Userlist parsing failed. Details: %1%"
-msgstr "Käyttäjälistan lukeminen epäonnistui. Tiedot: %1%"
-
-#: gui/main.cpp:721
-msgid ""
-"A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr "Yleinen viesti sisältää ehdon, jota ei voida lukea. Tiedot: %1%"
-
-#: gui/main.cpp:754
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" sisältää ehdon, jota ei voida lukea. Tiedot: %2%"
-
-#: gui/main.cpp:767
-msgid "Building plugin graph..."
-msgstr "Rakennetaan lisäosakaaviota..."
-
-#: gui/main.cpp:812
-msgid "LOOT: Calculated Load Order"
-msgstr "LOOT: Laskettu latausjärjestys"
-
-#: gui/main.cpp:827
-msgid "Recalculating load order..."
-msgstr "Lasketaan latausjärjestystä uudelleen..."
-
-#: gui/main.cpp:884
-msgid "Failed to set the load order. Details: %1%"
-msgstr "Latausjärjestyksen tallennus epäonnistui. Tiedot: %1%"
-
-#: gui/main.cpp:894
-msgid ""
-"The load order displayed in the Details tab was not applied as sorting was "
-"canceled."
-msgstr "Latausjärjestystä ei tallennettu, koska järjestäminen peruutettiin."
-
-#: gui/main.cpp:899
-msgid "Failed to calculate the load order. Details: %1%"
-msgstr "Latausjärjestyksen laskeminen epäonnistui. Tiedot: %1%"
-
-#: gui/main.cpp:945
-msgid "Error: %1%"
-msgstr "Virhe: %1%"
-
-#: gui/main.cpp:997
-msgid "Error: Masterlist parsing failed. %1%"
-msgstr "Virhe: kantatiedoston lukeminen epäonnistui. %1%"
-
-#: gui/main.cpp:1019
-msgid "Error: Userlist parsing failed. %1%"
-msgstr "Virhe: käyttäjälistan lukeminen epäonnistui. %1%"
-
-#: gui/main.cpp:1065
-msgid "LOOT: Metadata Editor"
-msgstr "LOOT: Metatietojen muokkaus"
-
-#: gui/main.cpp:1074
-msgid ""
-"This feature is provided so that modders using the Creation Kit may set the "
-"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
-"will be re-downloaded by Steam. Do you wish to continue?"
-msgstr ""
-"Tämä toiminto sallii lisäosien luojien käyttää kyseistä latausjärjestystä "
-"Creation Kitissä. Sivuvaikutuksena Steam Workshopista ladatut lisäosat "
-"ladataan uudelleen, kun seuraavan kerran käynnistät Skyrimin. Jatketaanko?"
-
-#: gui/main.cpp:1084
-msgid "Error: Failed to get load order. %1%"
-msgstr "Virhe: latausjärjestyksen hakeminen epäonnistui. %1%"
-
-#: gui/main.cpp:1121
-msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr "Virhe: lisäosan päiväyksen asettaminen epäonnistui. %1%"
-
-#: gui/main.cpp:1128
-msgid "Plugins were successfully redated."
-msgstr "Lisäosat päivättiin uudelleen onnistuneesti."
-
-#: gui/main.cpp:1129
-msgid "LOOT: Plugin Redate"
-msgstr "LOOT: Lisäosien päiväyksien muuttaminen"
-
-#: gui/misc.cpp:35
-msgid "Type"
-msgstr "Tyyppi"
-
-#: gui/misc.cpp:36
-msgid "Content"
-msgstr "Sisältö"
-
-#: gui/misc.cpp:38 gui/misc.cpp:181
-msgid "Language"
-msgstr "Kieli"
-
-#: gui/misc.cpp:117
-msgid "Filename (required):"
-msgstr "Tiedostonimi (vaaditaan):"
-
-#: gui/misc.cpp:120
-msgid "Displayed Name:"
-msgstr "Nimi:"
-
-#: gui/misc.cpp:123 gui/misc.cpp:207 gui/misc.cpp:363
-msgid "Condition:"
-msgstr "Ehto:"
-
-#: gui/misc.cpp:177
-msgid "Add Content"
-msgstr "Lisää sisältöä"
-
-#: gui/misc.cpp:178
-msgid "Edit Content"
-msgstr "Muokkaa sisältöä"
-
-#: gui/misc.cpp:179
-msgid "Remove Content"
-msgstr "Poista sisältöä"
-
-#: gui/misc.cpp:182
-msgid "String"
-msgstr "Merkkijono"
-
-#: gui/misc.cpp:204 gui/settings.cpp:429
-msgid "Type:"
-msgstr "Tyyppi:"
-
-#: gui/misc.cpp:219 gui/settings.cpp:109
-msgid "Language:"
-msgstr "Kieli:"
-
-#: gui/misc.cpp:222
-msgid "Content:"
-msgstr "Sisältö:"
-
-#: gui/misc.cpp:312 gui/misc.cpp:327
-msgid "Error: No content row selected."
-msgstr "Virhe: yhtään sisältöriviä ei valittu."
-
-#: gui/misc.cpp:357
-msgid "Add/Remove:"
-msgstr "Lisää/poista:"
-
-#: gui/misc.cpp:360 gui/settings.cpp:426
-msgid "Name (required):"
-msgstr "Nimi (vaaditaan):"
-
-#: gui/misc.cpp:425
-msgid "CRC (required):"
-msgstr "CRC (vaaditaan):"
-
-#: gui/misc.cpp:428
-msgid "ITM Count:"
-msgstr "ITM-lukumäärä:"
-
-#: gui/misc.cpp:431
-msgid "UDR Count:"
-msgstr "UDR-lukumäärä:"
-
-#: gui/misc.cpp:434
-msgid "Deleted Navmesh Count:"
-msgstr "Poistettujen Navmeshien lukumäärä:"
-
-#: gui/misc.cpp:437
-msgid "Cleaning Utility (required):"
-msgstr "Puhdistustyökalu (vaaditaan):"
-
-#: gui/settings.cpp:42
-msgid "None"
-msgstr "Ei mitään"
-
-#: gui/settings.cpp:43
-msgid "Low"
-msgstr "Vähän"
-
-#: gui/settings.cpp:44
-msgid "Medium"
-msgstr "Keskiverto"
-
-#: gui/settings.cpp:45
-msgid "High"
-msgstr "Paljon"
-
-#: gui/settings.cpp:49
-msgid "Autodetect"
-msgstr "Tunnista automaattisesti"
-
-#: gui/settings.cpp:67
-msgid "Add Game"
-msgstr "Lisää peli"
-
-#: gui/settings.cpp:68
-msgid "Edit Game"
-msgstr "Muokkaa peliä"
-
-#: gui/settings.cpp:69
-msgid "Remove Game"
-msgstr "Poista peli"
-
-#: gui/settings.cpp:71
-msgid "Update masterlist before sorting."
-msgstr "Päivitä kantatiedosto ennen järjestämistä"
-
-#: gui/settings.cpp:72
-msgid "View reports externally in default browser."
-msgstr "Näytä raportit verkkoselaimessa."
-
-#: gui/settings.cpp:75
-msgid "Name"
-msgstr "Nimi"
-
-#: gui/settings.cpp:76
-msgid "Base Game Type"
-msgstr "Pelin tyyppi"
-
-#: gui/settings.cpp:77
-msgid "LOOT Folder Name"
-msgstr "LOOT-kansion nimi"
-
-#: gui/settings.cpp:78
-msgid "Master File"
-msgstr "Kantatiedosto"
-
-#: gui/settings.cpp:79
-msgid "Masterlist Repository URL"
-msgstr "Kantatiedoston säilön URL"
-
-#: gui/settings.cpp:80
-msgid "Masterlist Repository Branch"
-msgstr "Kantatiedoston säilön haara"
-
-#: gui/settings.cpp:81
-msgid "Install Path"
-msgstr "Asennuspolku"
-
-#: gui/settings.cpp:82
-msgid "Install Path Registry Key"
-msgstr "Asennuspolun rekisteriavain"
-
-#: gui/settings.cpp:106
-msgid "Default Game:"
-msgstr "Oletuspeli:"
-
-#: gui/settings.cpp:112
-msgid "Debug Verbosity:"
-msgstr "Virhelokiin kirjattavat tiedot:"
-
-#: gui/settings.cpp:131
-msgid "Language and game changes will be applied after LOOT is restarted."
-msgstr ""
-"Kieli- ja peliasetusten muutokset tulevat voimaan LOOTin seuraavan "
-"käynnistyksen yhteydessä."
-
-#: gui/settings.cpp:144
-msgid "The output is logged to the LOOTDebugLog.txt file."
-msgstr "Tiedot kirjataan LOOTDebugLog.txt-tiedostoon."
-
-#: gui/settings.cpp:280
-msgid "LOOT: Add Game"
-msgstr "LOOT: Lisää peli"
-
-#: gui/settings.cpp:287 gui/settings.cpp:367
-msgid "Error: A path and/or registry key is required. Row will not be added."
-msgstr "Virhe: polku ja/tai rekisteriavain vaaditaan. Riviä ei listätä."
-
-#: gui/settings.cpp:299
-msgid "Error: A game with this name is already defined. Row will not be added."
-msgstr "Virhe: tämänniminen peli on jo määritelty. Riviä ei lisätä."
-
-#: gui/settings.cpp:307
-msgid ""
-"Error: A game with this folder name is already defined. Row will not be "
-"added."
-msgstr "Virhe: tässä kansiossa oleva peli on jo määritelty. Riviä ei lisätä."
-
-#: gui/settings.cpp:330
-msgid "LOOT: Edit Game"
-msgstr "LOOT: Muokkaa peliä"
-
-#: gui/settings.cpp:351
-msgid "Error: Name is required. Row will not be added."
-msgstr "Virhe: nimi vaaditaan. Riviä ei lisätä."
-
-#: gui/settings.cpp:359
-msgid "Error: Folder is required. Row will not be added."
-msgstr "Virhe: kansio vaaditaan. Riviä ei lisätä."
-
-#: gui/settings.cpp:432
-msgid "LOOT Folder Name (required):"
-msgstr "LOOT-kansion nimi (vaaditaan):"
-
-#: gui/settings.cpp:435
-msgid "Master File:"
-msgstr "Kantatiedosto:"
-
-#: gui/settings.cpp:438
-msgid "Masterlist Repository URL:"
-msgstr "Kantatiedoston säilön URL:"
-
-#: gui/settings.cpp:441
-msgid "Masterlist Repository Branch:"
-msgstr "Kantatiedoston säilön haara:"
-
-#: gui/settings.cpp:444
-msgid "Install Path:"
-msgstr "Asennuspolku:"
-
-#: gui/settings.cpp:447
-msgid "Install Path Registry Key:"
-msgstr "Asennuspolun rekisteriavain:"
-
-#: backend/generators.h:57
-msgid "Note:"
-msgstr "Huom:"
-
-#: backend/generators.h:59
-msgid "Bash Tag Suggestion(s):"
-msgstr "Bash-tagiehdotukset:"
-
-#: backend/generators.h:61
-msgid "Warning:"
-msgstr "Varoitus:"
-
-#: backend/generators.h:63
-msgid "Error:"
-msgstr "Virhe:"
-
-#: backend/generators.h:128
-msgid "LOOT Report"
-msgstr "LOOT raportti"
-
-#: backend/generators.h:154 backend/generators.h:217
-msgid "Summary"
-msgstr "Yhteenveto"
-
-#: backend/generators.h:160
-msgid "Details"
+#: src/gui/qt/main_window.cpp:584
+msgid "Update Masterlist"
+msgstr "Päivitä pääluettelo"
+
+#: src/gui/qt/main_window.cpp:585
+msgid "Apply Sorted Load Order"
+msgstr "Tallenna uusi järjestys"
+
+#: src/gui/qt/main_window.cpp:586
+msgid "Discard Sorted Load Order"
+msgstr "Hylkää uusi järjestys"
+
+#: src/gui/qt/main_window.cpp:589
+msgid "File"
+msgstr "Tiedosto"
+
+#: src/gui/qt/main_window.cpp:590
+msgid "Settings..."
+msgstr "Asetukset..."
+
+#: src/gui/qt/main_window.cpp:591
+msgid "Backup LOOT Data"
+msgstr "Varmuuskopioi LOOTin tiedot"
+
+#: src/gui/qt/main_window.cpp:592
+msgid "Open LOOT Data Folder"
+msgstr "Avaa LOOTin tiedostokansio"
+
+#: src/gui/qt/main_window.cpp:593
+msgid "Quit"
+msgstr "Poistu"
+
+#: src/gui/qt/main_window.cpp:595
+msgid "Game"
+msgstr "Peli"
+
+#: src/gui/qt/main_window.cpp:596
+msgid "Edit Groups..."
+msgstr "Muokkaa ryhmiä..."
+
+#: src/gui/qt/main_window.cpp:597
+msgid "Search Cards..."
+msgstr "Hae korteista..."
+
+#: src/gui/qt/main_window.cpp:598
+msgid "Copy Load Order"
+msgstr "Kopioi järjestys"
+
+#: src/gui/qt/main_window.cpp:599
+msgid "Copy Content"
+msgstr "Kopioi sisältö"
+
+#: src/gui/qt/main_window.cpp:600
+msgid "Refresh Content"
+msgstr "Päivitä sisältö"
+
+#: src/gui/qt/main_window.cpp:601
+msgid "Redate Plugins..."
+msgstr "Muuta lisäosien päiväykset..."
+
+#: src/gui/qt/main_window.cpp:602
+msgid "Fix Ambiguous Load Order"
+msgstr "Korjaa epäselvä järjestys"
+
+#: src/gui/qt/main_window.cpp:603
+msgid "Clear All User Metadata..."
+msgstr "Poista kaikki muokatut metatiedot..."
+
+#: src/gui/qt/main_window.cpp:605
+msgid "Plugin"
+msgstr "Lisäosa"
+
+#: src/gui/qt/main_window.cpp:606
+msgid "Copy Plugin Name"
+msgstr "Kopioi lisäosan nimi"
+
+#: src/gui/qt/main_window.cpp:607
+msgid "Copy Card Content"
+msgstr "Kopioi kortin sisältö"
+
+#: src/gui/qt/main_window.cpp:608
+msgid "Copy Metadata"
+msgstr "Kopioi metatiedot"
+
+#: src/gui/qt/main_window.cpp:609
+msgid "Edit Metadata..."
+msgstr "Muokkaa metatietoja..."
+
+#: src/gui/qt/main_window.cpp:610
+msgid "Clear User Metadata..."
+msgstr "Poista muokatut metatiedot..."
+
+#: src/gui/qt/main_window.cpp:612
+msgid "Help"
+msgstr "Apua"
+
+#: src/gui/qt/main_window.cpp:613
+msgid "View Documentation"
+msgstr "Näytä dokumentointi"
+
+#: src/gui/qt/main_window.cpp:614
+msgid "Join Discord Server"
+msgstr "Liity Discordiin"
+
+#: src/gui/qt/main_window.cpp:615
+msgid "About"
 msgstr "Tiedot"
 
-#: backend/generators.h:166
+#: src/gui/qt/main_window.cpp:618
+msgid "Plugins"
+msgstr "Lisäosat"
+
+#: src/gui/qt/main_window.cpp:619
 msgid "Filters"
 msgstr "Suodattimet"
 
-#: backend/generators.h:230
-msgid "LOOT Version"
-msgstr "LOOT-versio"
+#: src/gui/qt/main_window.cpp:851 src/gui/qt/main_window.cpp:1798
+msgid "Updating and parsing masterlist..."
+msgstr "Päivitetään pääluetteloa..."
 
-#: backend/generators.h:239
-msgid "Masterlist Version"
-msgstr "Kantatiedoston versio"
-
-#: backend/generators.h:248
-msgid "Masterlist Updating"
-msgstr "Kantatiedoston päivitys"
-
-#: backend/generators.h:252
-msgid "Enabled"
-msgstr "Päällä"
-
-#: backend/generators.h:254
-msgid "Disabled"
-msgstr "Pois päältä"
-
-#: backend/generators.h:263
+#: src/gui/qt/main_window.cpp:910
 msgid ""
-"There have been no changes in the Details tab since LOOT was last run for "
-"this game."
+"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
+"data has been backed up to: %2%"
 msgstr ""
-"Tiedot eivät ole muuttuneet LOOTin viimekertaisen tarkistuksen jälkeen."
+"Tämä on ensimmäinen kerta, kun LOOT v%1% on käynnistetty tällä "
+"tietokoneella. LOOTin tiedot on tallennettu seuraavaan kansioon: %2%"
 
-#: backend/generators.h:273
-msgid "General Messages"
-msgstr "Yleiset viestit"
+#: src/gui/qt/main_window.cpp:917
+msgid "This appears to be the first time you have run LOOT v%1%."
+msgstr ""
+"Tämä on ensimmäinen kerta, kun LOOT v%1% on käynnistetty tällä tietokoneella."
 
-#: backend/generators.h:283
-msgid "Total Number of Messages"
-msgstr "Viestien lukumäärä"
+#: src/gui/qt/main_window.cpp:923
+msgid "Here are some tips to help you get started with the interface."
+msgstr "Tässä on muutamat ohjeet, joilla voit tutustua käyttöliittymään."
 
-#: backend/generators.h:292
-msgid "Number of Warnings"
-msgstr "Varoitusten lukumäärä"
-
-#: backend/generators.h:301
-msgid "Number of Errors"
-msgstr "Virheiden lukumäärä"
-
-#: backend/generators.h:342
-msgid "Version:"
-msgstr "Versio:"
-
-#: backend/generators.h:362
-msgid "Add:"
-msgstr "Lisää:"
-
-#: backend/generators.h:368
-msgid "Remove:"
-msgstr "Poista:"
-
-#: backend/generators.h:376
+#: src/gui/qt/main_window.cpp:926
 msgid ""
-"Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
-"with %4%."
+"CRCs are only displayed after plugins have been loaded, either by conflict "
+"filtering, or by sorting."
 msgstr ""
-"Sisältää %1% ITM-kirjausta, %2% UDR-kirjausta ja %3% poistettua navmeshiä. "
-"Puhdista työkalulla %4%."
+"CRC-tarkistussummat näkyvät vasta, kun lisäosat on ladattu sovellukseen joko "
+"ristiriitojen hakemisen tai lisäosien järjestämisen seurauksena."
 
-#: backend/generators.h:378
-msgid "Clean with %1%."
-msgstr "Puhdista työkalulla %1%."
-
-#: backend/generators.h:382
-msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
+#: src/gui/qt/main_window.cpp:930
+msgid ""
+"Plugins can be drag and dropped from the sidebar into the metadata editor's "
+"\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Sisältää %1% UDR-kirjausta ja %2% poistettua navmeshiä. Puhdista työkalulla "
-"%3%."
+"Voit vetää lisäosia sivupalkista metatietoja muokattaessa välilehtiin "
+"\"Näiden jälkeen\", \"Vaatimukset\" ja \"Yhteensopimattomat\"."
 
-#: backend/generators.h:384
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Sisältää %1% poistettua navmeshiä. Puhdista työkalulla %2%."
-
-#: backend/generators.h:386
-msgid "Contains %1% UDR records. Clean with %2%."
-msgstr "Sisältää %1% UDR-kirjausta. Puhdista työkalulla %2%"
-
-#: backend/generators.h:389
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+#: src/gui/qt/main_window.cpp:935
+msgid ""
+"Some features are disabled while the metadata editor is open, or while there "
+"is a sorted load order that has not been applied or discarded."
 msgstr ""
-"Sisältää %1% ITM-kirjausta ja %2% poistettua navmeshiä. Puhdista työkalulla "
-"%3%."
+"Jotkin ominaisuudet eivät ole käytettävissä, kun metatietoja ollaan "
+"muokkaamassa tai järjestystä ei ole tallennettu eikä hylätty."
 
-#: backend/generators.h:391
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Sisältää %1% ITM-kirjausta. Puhdista työkalulla %2%."
-
-#: backend/generators.h:394
-msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
+#: src/gui/qt/main_window.cpp:940 src/gui/qt/main_window.cpp:1679
+#, c-format
+msgid ""
+"LOOT is free, but if you want to show your appreciation with some money, "
+"donations may be made to WrinklyNinja (LOOT's creator and main developer) "
+"using %s."
 msgstr ""
-"Sisältää %1% ITM-kirjausta ja %2% UDR-kirjausta. Puhdista työkalulla %3%."
+"LOOT on ilmainen, mutta rahallinen tuki on arvostettua. Voit lähettää "
+"lahjoituksesi WrinklyNinjalle (LOOTin luoja sekä pääkehittäjä) tästä: %s."
 
-#: backend/generators.h:430
-msgid "The LOOT Report requires Javascript to be enabled in order to function."
-msgstr "LOOT-raportti vaatii Javascriptiä toimiakseen."
+#: src/gui/qt/main_window.cpp:951
+msgid "First-Time Tips"
+msgstr "Ensikerran vinkkejä"
 
-#: backend/generators.h:457
-msgid "Hide Version Numbers"
-msgstr "Piilota versionumerot"
+#: src/gui/qt/main_window.cpp:986
+msgid "metadata edits"
+msgstr "muokattuja metatietoja"
 
-#: backend/generators.h:466
-msgid "Hide CRCs"
-msgstr "Piilota CRC:t"
+#: src/gui/qt/main_window.cpp:987
+msgid "sorted load order"
+msgstr "uutta järjestystä"
 
-#: backend/generators.h:475
-msgid "Hide Bash Tag Suggestions"
-msgstr "Piilota Bash-tagiehdotukset"
+#: src/gui/qt/main_window.cpp:989
+#, c-format
+msgid ""
+"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+msgstr "Et ole vielä tallentanut tai hylännyt %s. Haluatko varmasti poistua?"
 
-#: backend/generators.h:483
-msgid "Hide Notes"
-msgstr "Piilota huomautukset"
-
-#: backend/generators.h:499
-msgid "Hide All Plugin Messages"
-msgstr "Piilota kaikki lisäosaviestit"
-
-#: backend/generators.h:507
-msgid "Hide Messageless Plugins"
-msgstr "Piilota viestittömät lisäosat"
-
-#: backend/generators.h:517
-msgid "%1% of %2% plugins hidden."
-msgstr "%1%/%2% lisäosaa piilotettiin"
-
-#: backend/generators.h:525
-msgid "%1% of %2% messages hidden."
-msgstr "%1%/%2% viestiä piilotettiin."
-
-#: backend/parsers.h:470 backend/parsers.h:553
-msgid "Invalid file path:"
-msgstr "Virheellinen tiedostosijainti:"
-
-#: backend/parsers.h:518
-msgid "Invalid folder path:"
-msgstr "Virheellinen kansiopolku:"
-
-#: backend/parsers.h:535
-msgid "Invalid regex string:"
-msgstr "Virheellinen säännöllinen lauseke:"
-
-#: backend/parsers.h:630
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "Odotettiin \"%1%\" osoitteessa \"%2%\"."
-
-#: gui/misc.h:36
-msgid "Note"
-msgstr "Huomaa"
-
-#: gui/misc.h:37
-msgid "Warning"
-msgstr "Varoitus"
-
-#: gui/misc.h:38
+#: src/gui/qt/main_window.cpp:1108 src/gui/qt/plugin_editor/table_tabs.cpp:395
+#: src/gui/qt/plugin_editor/table_tabs.cpp:432
 msgid "Error"
 msgstr "Virhe"
 
-#: gui/misc.h:42
+#: src/gui/qt/main_window.cpp:1118 src/gui/query/query.h:67
+msgid ""
+"Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
+"get to it through the main menu) for more information."
+msgstr ""
+"Oho! Jokin meni pieleen! LOOTDebugLog.txt saattaa sisältää lisätietoja "
+"virheestä. Löydät sen päävalikon kautta."
+
+#: src/gui/qt/main_window.cpp:1163
+msgid ""
+"Failed to sort plugins. Details may be provided in the General Information "
+"section."
+msgstr "Järjestäminen epäonnistui. Lisätietoja voi löytyä yleistietojen alta."
+
+#: src/gui/qt/main_window.cpp:1181
+msgid "Sorting made no changes to the load order."
+msgstr "Järjestys ei tarvinnut muutosta."
+
+#: src/gui/qt/main_window.cpp:1231
+msgid "Ambiguous load order detected"
+msgstr "Epäselvä järjestys havaittu"
+
+#: src/gui/qt/main_window.cpp:1232
+msgid ""
+"LOOT has detected that the current load order is ambiguous, which means that "
+"other applications might use a different load order than what LOOT "
+"displays.\n"
+"\n"
+"You can use the \"Fix Ambiguous Load Order\" action in the Game menu to "
+"unambiguously set the load order to what is displayed by LOOT."
+msgstr ""
+"LOOT on havainnut, että tämänhetkinen järjestys on epäselvä: muut "
+"sovellukset saattavat käyttää toista järjestystä.\n"
+"\n"
+"Voit valita Peli-valikon alta \"Korjaa epäselvä järjestys\" tallentaaksesi "
+"LOOTissa näkyvän järjestyksen kaikille sovelluksille."
+
+#: src/gui/qt/main_window.cpp:1271
+msgid "Your LOOT data has been backed up to: %1%"
+msgstr "LOOTin tiedot on tallennettu seuraavaan kansioon: %1%"
+
+#: src/gui/qt/main_window.cpp:1278
+msgid "No backup has been created as LOOT has no data to backup."
+msgstr ""
+"Varmuuskopiota ei voitu luoda, koska mitään varmuuskopioitavaa ei ole "
+"LOOTtiin tallennettu."
+
+#: src/gui/qt/main_window.cpp:1329
+msgid "The load order has been copied to the clipboard."
+msgstr "Järjestys on kopioitu leikepöydälle."
+
+#: src/gui/qt/main_window.cpp:1347
+msgid "LOOT's content has been copied to the clipboard."
+msgstr "LOOTin sisältö on kopioitu leikepöydälle."
+
+#: src/gui/qt/main_window.cpp:1359
+msgid "The load order displayed by LOOT has been set."
+msgstr "LOOTin järjestys on tallennettu."
+
+#. translators: Title of a dialog box.
+#: src/gui/qt/main_window.cpp:1380
+msgid "Redate Plugins?"
+msgstr "Muuta lisäosien päiväykset?"
+
+#: src/gui/qt/main_window.cpp:1382
+msgid ""
+"This feature is provided so that modders using the Creation Kit may set the "
+"load order it uses. A side-effect is that any subscribed Steam Workshop mods "
+"will be re-downloaded by Steam (this does not affect Skyrim Special "
+"Edition). Do you wish to continue?"
+msgstr ""
+"Tämä toiminto sallii lisäosien kehittäjien käyttää kyseistä järjestystä "
+"Creation Kitissä. Sivuvaikutuksena Steam Workshopista ladatut lisäosat "
+"ladataan myöhemmin uudelleen (ei koske Skyrim Special Editioniä). "
+"Jatketaanko?"
+
+#. translators: Notification text.
+#: src/gui/qt/main_window.cpp:1394
+msgid "Plugins were successfully redated."
+msgstr "Lisäosat päiväykset muutettiin onnistuneesti."
+
+#: src/gui/qt/main_window.cpp:1406
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from all "
+"plugins?"
+msgstr ""
+"Oletko varma, että haluat poistaa kaikki lisäämäsi metatiedot kaikista "
+"lisäosista?"
+
+#: src/gui/qt/main_window.cpp:1454
+msgid "All user-added metadata has been cleared."
+msgstr "Kaikki muokatut metatiedot poistettiin."
+
+#: src/gui/qt/main_window.cpp:1467
+msgid ""
+"The plugin metadata editor is already open, first close the editor before "
+"attempting to edit another plugin's metadata."
+msgstr ""
+"Olet jo muokkaamassa lisäosan metatietoja. Sulje edellinen lisäosa ennen "
+"toisen lisäosan metatietojen muokkaamista."
+
+#: src/gui/qt/main_window.cpp:1525
+#, c-format
+msgid "The metadata for \"%s\" has been copied to the clipboard."
+msgstr "Lisäosan %s metatiedot on kopioitu leikepöydälle."
+
+#: src/gui/qt/main_window.cpp:1543
+#, c-format
+msgid "The plugin name \"%s\" has been copied to the clipboard."
+msgstr "Lisäosan %s nimi on kopioitu leikepöydälle."
+
+#: src/gui/qt/main_window.cpp:1562
+#, c-format
+msgid "The card content for \"%s\" has been copied to the clipboard."
+msgstr "Lisäosan %s kortti on kopioitu leikepöydälle."
+
+#: src/gui/qt/main_window.cpp:1577
+#, c-format
+msgid ""
+"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+msgstr ""
+"Oletko varma, että haluat poistaa kaikki muokatut metatiedot lisäosasta %s?"
+
+#: src/gui/qt/main_window.cpp:1617
+#, c-format
+msgid "The user-added metadata for \"%s\" has been cleared."
+msgstr "Muokatut metatiedot on poistettu lisäosasta %s."
+
+#: src/gui/qt/main_window.cpp:1668
+#, c-format
+msgid "Version %s (build %s)"
+msgstr "Versio %s (koonti %s)"
+
+#: src/gui/qt/main_window.cpp:1673
+msgid ""
+"Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
+"Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
+"Fallout: New Vegas, Fallout 4 and Fallout 4 VR."
+msgstr ""
+"Järjestyksen optimointi peleihin Morrowind, Oblivion, Nehrim, Skyrim, "
+"Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
+"3, Fallout: New Vegas, Fallout 4 ja Fallout 4 VR."
+
+#: src/gui/qt/main_window.cpp:1690
+msgid "About LOOT"
+msgstr "Tietoja LOOTista"
+
+#: src/gui/qt/main_window.cpp:1992
+msgid "Identifying conflicting plugins..."
+msgstr "Haetaan ristiriidassa olevia lisäosia..."
+
+#: src/gui/qt/main_window.cpp:2106
+msgid ""
+"Auto-sort has been cancelled as there is at least one error message "
+"displayed."
+msgstr "Automaattinen järjestäminen on peruutettu virheilmoituksen takia."
+
+#: src/gui/qt/main_window.cpp:2157
+msgid "No masterlist update was necessary."
+msgstr "Pääluettelon päivitystä ei tarvittu."
+
+#: src/gui/qt/main_window.cpp:2170
+#, c-format
+msgid "Masterlist updated to revision %s."
+msgstr "Pääluettelo päivitettiin versioon %s."
+
+#: src/gui/qt/main_window.cpp:2229
+#, c-format
+msgid "A [new release](%s) of LOOT is available."
+msgstr "LOOTista on saatavilla [uusi versio](%s)."
+
+#: src/gui/qt/main_window.cpp:2245
+msgid ""
+"Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
+"can get to it through the main menu) for more information."
+msgstr ""
+"Päivitysten haku epäonnistui! LOOTDebugLog.txt saattaa sisältää lisätietoja "
+"virheestä. Löydät sen päävalikon kautta."
+
+#: src/gui/qt/plugin_card.cpp:206
+msgid "Source:"
+msgstr "Lähde:"
+
+#: src/gui/qt/plugin_card.cpp:207
+msgid "Sources:"
+msgstr "Lähteet:"
+
+#: src/gui/qt/plugin_card.cpp:223
+#, c-format
+msgid "Verified clean by %s"
+msgstr "Vahvistettu puhtaaksi (%s)"
+
+#: src/gui/qt/plugin_card.cpp:341
+msgid "Active Plugin"
+msgstr "Aktiivinen lisäosa"
+
+#: src/gui/qt/plugin_card.cpp:342
+msgid "Master Plugin"
+msgstr "Master-lisäosa"
+
+#: src/gui/qt/plugin_card.cpp:343
+msgid "Light Plugin"
+msgstr "Kevytlisäosa"
+
+#: src/gui/qt/plugin_card.cpp:344
+msgid "Empty Plugin"
+msgstr "Tyhjä lisäosa"
+
+#: src/gui/qt/plugin_card.cpp:345
+msgid "Loads Archive"
+msgstr "Sisältää arkiston"
+
+#: src/gui/qt/plugin_card.cpp:346 src/gui/qt/plugin_item_model.cpp:128
+msgid "Has User Metadata"
+msgstr "Metatietoja muutettu"
+
+#: src/gui/qt/plugin_card.cpp:348
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
+msgid "Bash Tags"
+msgstr "Bash-tagit"
+
+#: src/gui/qt/plugin_card.cpp:349
+msgid "Current"
+msgstr "Tämänhetkinen"
+
+#: src/gui/qt/plugin_card.cpp:350 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Add"
 msgstr "Lisää"
 
-#: gui/misc.h:43
+#: src/gui/qt/plugin_card.cpp:351 src/gui/qt/plugin_editor/table_tabs.cpp:523
 msgid "Remove"
 msgstr "Poista"
+
+#: src/gui/qt/plugin_item_model.cpp:126
+msgid "Editor Is Open"
+msgstr "Muokkaus on auki"
+
+#: src/gui/qt/search_dialog.cpp:98
+msgid "Search Cards"
+msgstr "Hae korteista"
+
+#: src/gui/qt/search_dialog.cpp:100
+msgid "Search cards"
+msgstr "Hae korteista"
+
+#: src/gui/qt/search_dialog.cpp:104
+msgid ""
+"If checked, interprets the search text as a Perl-like regular expression."
+msgstr "Käytä Perlin mukaista säännöllistä lauseketta."
+
+#: src/gui/qt/search_dialog.cpp:107
+msgid "Find Previous"
+msgstr "Hae edellinen"
+
+#: src/gui/qt/search_dialog.cpp:108
+msgid "Find Next"
+msgstr "Hae seuraava"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:118
+msgid "Groups Editor"
+msgstr "Ryhmien muokkaus"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:120
+msgid "Group name"
+msgstr "Ryhmän nimi"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:121
+msgid "Add a new group"
+msgstr "Luo uusi ryhmä"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:139
+msgid "No plugins are in this group."
+msgstr "Ryhmä ei sisällä lisäosia."
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:151
+#, c-format
+msgid "Plugins in %s"
+msgstr "Lisäosat ryhmässä %s"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:172
+msgid "Group already exists!"
+msgstr "Ryhmä on jo olemassa!"
+
+#: src/gui/qt/plugin_editor/group_tab.cpp:56
+msgid "%1 (Group does not exist)"
+msgstr "%1 (Ryhmä ei ole olemassa)"
+
+#: src/gui/qt/plugin_editor/group_tab.cpp:97
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
+msgid "Group"
+msgstr "Ryhmä"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
+msgid "Load After"
+msgstr "Näiden jälkeen"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
+msgid "Requirements"
+msgstr "Vaatimukset"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:190
+msgid "Incompatibilities"
+msgstr "Yhteensopimattomat"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:191
+msgid "Messages"
+msgstr "Viestit"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:193
+msgid "Dirty Plugin Info"
+msgstr "Siivoamattomat tiedot"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:194
+msgid "Clean Plugin Info"
+msgstr "Puhtaat tiedot"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:195
+msgid "Locations"
+msgstr "Sijainnit"
+
+#: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:247
+msgid "This tab contains user metadata."
+msgstr "Sisältää muokattuja metatietoja."
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:276
+msgid "Add new row"
+msgstr "Uusi rivi"
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:277
+msgid "Delete row"
+msgstr "Poista rivi"
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:393
+#: src/gui/qt/plugin_editor/table_tabs.cpp:430
+msgid "Note"
+msgstr "Huomaa"
+
+#: src/gui/qt/plugin_editor/table_tabs.cpp:394
+#: src/gui/qt/plugin_editor/table_tabs.cpp:431
+msgid "Warning"
+msgstr "Varoitus"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+msgid "CRC"
+msgstr "CRC-tarkistussumma"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+msgid "ITM Count"
+msgstr "ITM-tietueita"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+msgid "Deleted References"
+msgstr "Poistettuja osoittimia"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+msgid "Deleted Navmeshes"
+msgstr "Poistettuja Navmeshejä"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+msgid "Cleaning Utility"
+msgstr "Puhdistustyökalu"
+
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
+msgid "Detail"
+msgstr "Tiedot"
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:73
+msgid "Filename"
+msgstr "Tiedostonimi"
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:75
+msgid "Display Name"
+msgstr "Nimi"
+
+#: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
+msgid "Condition"
+msgstr "Tila"
+
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:57
+msgid "URL"
+msgstr "URL"
+
+#: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
+#: src/gui/qt/settings/game_tab.cpp:156
+#: src/gui/qt/settings/new_game_dialog.cpp:87
+msgid "Name"
+msgstr "Nimi"
+
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:69
+#: src/gui/qt/settings/general_tab.cpp:153
+msgid "Language"
+msgstr "Kieli"
+
+#: src/gui/qt/plugin_editor/models/message_content_table_model.cpp:71
+msgid "Text"
+msgstr "Teksti"
+
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:80
+msgid "Type"
+msgstr "Tyyppi"
+
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:82
+msgid "Content"
+msgstr "Sisältö"
+
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:63
+msgid "Add/Remove"
+msgstr "Lisää/Poista"
+
+#: src/gui/qt/plugin_editor/models/tag_table_model.cpp:65
+msgid "Bash Tag"
+msgstr "Bash-tagi"
+
+#: src/gui/qt/settings/game_tab.cpp:57
+msgid "Browse..."
+msgstr "Selaa..."
+
+#: src/gui/qt/settings/game_tab.cpp:157
+#: src/gui/qt/settings/new_game_dialog.cpp:88
+msgid "Base Game"
+msgstr "Pohjautuu peliin"
+
+#: src/gui/qt/settings/game_tab.cpp:158
+#: src/gui/qt/settings/new_game_dialog.cpp:89
+msgid "Is instance of base game"
+msgstr "Ei pohjapelistä erillinen"
+
+#: src/gui/qt/settings/game_tab.cpp:159
+#: src/gui/qt/settings/new_game_dialog.cpp:90
+msgid "LOOT Folder"
+msgstr "LOOTin kansio"
+
+#: src/gui/qt/settings/game_tab.cpp:160
+msgid "Main Master Plugin"
+msgstr "Päälisäosa"
+
+#: src/gui/qt/settings/game_tab.cpp:161
+msgid "Minimum Header Version"
+msgstr "Otsikkotietojen minimiversio"
+
+#: src/gui/qt/settings/game_tab.cpp:162
+msgid "Masterlist Source"
+msgstr "Pääluettelon lähde"
+
+#: src/gui/qt/settings/game_tab.cpp:163
+msgid "Install Path"
+msgstr "Asennuspolku"
+
+#: src/gui/qt/settings/game_tab.cpp:164
+msgid "Install Path Registry Keys"
+msgstr "Asennuspolun rekisteriavaimet"
+
+#: src/gui/qt/settings/game_tab.cpp:165
+msgid "Local AppData Path"
+msgstr "Paikallisten tiedostojen sijainti"
+
+#: src/gui/qt/settings/game_tab.cpp:167
+msgid "Delete game"
+msgstr "Poista peli"
+
+#: src/gui/qt/settings/general_tab.cpp:152
+msgid "Default Game"
+msgstr "Oletuspeli"
+
+#: src/gui/qt/settings/general_tab.cpp:154
+msgid "Theme"
+msgstr "Ulkoasu"
+
+#: src/gui/qt/settings/general_tab.cpp:155
+msgid "Update masterlist before sorting"
+msgstr "Päivitä pääluettelo ennen järjestämistä"
+
+#: src/gui/qt/settings/general_tab.cpp:156
+msgid "Check for LOOT updates on startup"
+msgstr "Hae LOOTin päivitykset käynnistäessä"
+
+#: src/gui/qt/settings/general_tab.cpp:157
+msgid "Enable debug logging"
+msgstr "Tallenna virheenkorjausloki"
+
+#: src/gui/qt/settings/general_tab.cpp:158
+msgid "Masterlist prelude source"
+msgstr "Pääluettelon pohjan lähde"
+
+#: src/gui/qt/settings/general_tab.cpp:160
+msgid "Display dialog when sorting makes no changes"
+msgstr "Näytä valintaikkuna, vaikkei järjestys muuttunut"
+
+#: src/gui/qt/settings/general_tab.cpp:163
+msgid "The output is logged to the LOOTDebugLog.txt file."
+msgstr "Tiedot kirjataan LOOTDebugLog.txt-tiedostoon."
+
+#: src/gui/qt/settings/general_tab.cpp:165
+msgid "A prelude source is required."
+msgstr "Pohjalähde vaaditaan."
+
+#: src/gui/qt/settings/general_tab.cpp:168
+msgid "Language and theme changes will be applied after LOOT is restarted."
+msgstr "LOOT on käynnistettävä uudelleen kielen ja ulkoasun muuttamiseksi."
+
+#: src/gui/qt/settings/general_tab.cpp:170
+msgid "Autodetect"
+msgstr "Tunnista automaattisesti"
+
+#: src/gui/qt/settings/new_game_dialog.cpp:85
+msgid "Add new game"
+msgstr "Lisää peli"
+
+#: src/gui/qt/settings/new_game_dialog.cpp:92
+msgid "A name is required."
+msgstr "Nimi vaaditaan."
+
+#: src/gui/qt/settings/new_game_dialog.cpp:93
+msgid "A folder is required."
+msgstr "Kansio vaaditaan."
+
+#: src/gui/qt/settings/new_game_dialog.cpp:114
+msgid "A game with this folder already exists."
+msgstr "Tämä kansio kuuluu jo lisätylle pelille."
+
+#: src/gui/qt/settings/settings_dialog.cpp:110
+msgid "Settings"
+msgstr "Asetukset"
+
+#: src/gui/qt/settings/settings_dialog.cpp:112
+msgid "General"
+msgstr "Yleiset"
+
+#: src/gui/qt/settings/settings_dialog.cpp:114
+msgid "Add new game..."
+msgstr "Lisää peli..."
+
+#: src/gui/query/types/apply_sort_query.h:95
+msgid ""
+"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"read-only. If it is, unset it and try again. If it isn't, you can check your "
+"LOOTDebugLog.txt (you can get to it through the main menu) for more "
+"information."
+msgstr ""
+"Oho! Jokin meni pieleen! Yleensä tämä johtuu \"vain luku\"-merkistä polussa: "
+"%1%. Poista merkintä ja yritä uudelleen. Jos merkintää ei ole, katso "
+"LOOTDebugLog.txt päävalikon kautta."
+
+#: src/gui/query/types/get_game_data_query.h:47
+msgid "Parsing, merging and evaluating metadata..."
+msgstr "Luetaan ja prosessoidaan metatietoja..."
+
+#: src/gui/query/types/sort_plugins_query.h:54
+msgid "Sorting load order..."
+msgstr "Järjestetään..."
+
+#: src/gui/state/loot_settings.cpp:534
+msgid ""
+"Your masterlist prelude repository URL and branch settings could not be "
+"migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
+"File menu) for more information."
+msgstr ""
+"Pääluettelon pohjan URL-osoitetta ja haaran asetuksia ei voitu päivittää! "
+"LOOTDebugLog.txt saattaa sisältää lisätietoja virheestä. Löydät sen "
+"päävalikon kautta."
+
+#: src/gui/state/loot_settings.cpp:556
+msgid ""
+"Your masterlist repository URL and branch settings could not be migrated! "
+"You can check your LOOTDebugLog.txt (you can get to it through the File "
+"menu) for more information."
+msgstr ""
+"Pääluettelon URL-osoitetta ja haaran asetuksia ei voitu päivittää! "
+"LOOTDebugLog.txt saattaa sisältää lisätietoja virheestä. Löydät sen "
+"päävalikon kautta."
+
+#: src/gui/state/loot_state.cpp:166
+msgid "Error: Game-specific settings could not be initialised. %1%"
+msgstr "Virhe: pelikohtaisia asetuksia ei voitu ladata. %1%"
+
+#: src/gui/state/loot_state.cpp:190
+msgid "Error: Could not create LOOT data directory. %1%"
+msgstr ""
+"Virhe: LOOT ei onnistunut luomaan paikallista kansiota sovellustiedoille. %1%"
+
+#. translators: This error is displayed when LOOT is unable to
+#. load its own settings file. The placeholder is for additional
+#. detail about what went wrong.
+#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
+msgid "Error: Settings parsing failed. %1%"
+msgstr "Virhe: asetusten lukeminen epäonnistui. %1%"
+
+#. translators: --auto-sort and --game are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:218
+msgid "Error: --auto-sort was passed but no --game parameter was provided."
+msgstr "Virhe: --auto-sort oli määritelty, mutta --game parametri puuttui."
+
+#: src/gui/state/loot_state.cpp:293
+msgid "Error: Could not create LOOT prelude directory. %1%"
+msgstr ""
+"Virhe: LOOT ei onnistunut luomaan paikallista kansiota pohjatiedoille. %1%"
+
+#. translators: --game and --game-path are command-line arguments and
+#. shouldn't be translated.
+#: src/gui/state/loot_state.cpp:311
+msgid "Error: --game-path was passed but no --game parameter was provided."
+msgstr "Virhe: --game-path oli määritelty, mutta --game parametri puuttui."
+
+#: src/gui/state/loot_state.cpp:326
+msgid "Error: failed to override game path, the game %1% was not recognised."
+msgstr ""
+"Virhe: pelin polun uudelleenmääritys ei onnistunut. Tuntematon peli %1%."
+
+#: src/gui/state/loot_state.cpp:360
+msgid "Error: The initial game could not be selected. %1%"
+msgstr "Virhe: peliä ei voitu valita. %1%"
+
+#: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
+msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgstr "Tämä lisäosa vaatii, että lisäosa %1% on asennettu, mutta se puuttuu."
+
+#: src/gui/state/game/game.cpp:254
+msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgstr ""
+"Tämä lisäosa vaatii, että lisäosa %1% on käytössä, mutta se on poistettu "
+"käytöstä."
+
+#: src/gui/state/game/game.cpp:324
+msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgstr ""
+"Tämä lisäosa ei ole yhteensopiva lisäosan %1% kanssa, mutta molemmat "
+"löydettiin."
+
+#: src/gui/state/game/game.cpp:366
+msgid ""
+"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This can cause issues in-game, and sorting will fail while this plugin is "
+"installed."
+msgstr ""
+"Tämä lisäosa on kevyt master ja vaatii lisäosan %1%. Tämä voi aiheuttaa "
+"ongelmia pelissä ja järjestäminen epäonnistuu tämän lisäosan ollessa "
+"asennettu."
+
+#: src/gui/state/game/game.cpp:386
+msgid ""
+"This plugin contains records that have FormIDs outside the valid range for "
+"an ESL plugin. Using this plugin will cause irreversible damage to your game "
+"saves."
+msgstr ""
+"Tämä lisäosa sisältää tietueita, joiden FormID on kevytlisäosien sallittujen "
+"arvojen ulkopuolella. Tämän lisäosan käyttäminen aiheuttaa lopullista tuhoa "
+"pelin tallennuksille."
+
+#. translators: A header is the part of a file that stores data
+#. like file name and version.
+#: src/gui/state/game/game.cpp:406
+msgid ""
+"This plugin has a header version of %1%, which is less than the game's "
+"minimum supported header version of %2%."
+msgstr ""
+"Tämän lisäosan otsikkotietojen versio on %1%, joka on vanhempi kuin pelin "
+"vanhin tuettu versio %2%."
+
+#: src/gui/state/game/game.cpp:424
+msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgstr "Tämä lisäosa kuuluu ryhmään %1%, jota ei ole olemassa."
+
+#: src/gui/state/game/game.cpp:448
+msgid ""
+"This plugin has a BashTags file that will override the suggestions made by "
+"LOOT for the following Bash Tags: %1%."
+msgstr ""
+"Tämä lisäosa sisältää BashTags-tiedoston, joka ohittaa nämä LOOTin tekemät "
+"suositukset: %1%."
+
+#: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
+msgid ""
+"Failed to load the current load order, information displayed may be "
+"incorrect."
+msgstr ""
+"Nykyisen järjestyksen lukeminen epäonnistui. Näytetyt tiedot eivät "
+"välttämättä vastaa todellisuutta."
+
+#: src/gui/state/game/game.cpp:659
+msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
+msgstr "Vuorovaikutussilmukka löytyi lisäosien väliltä: %1% ja %2%: %3%"
+
+#: src/gui/state/game/game.cpp:671
+msgid "The group \"%1%\" does not exist."
+msgstr "Ryhmää %1% ei ole olemassa."
+
+#: src/gui/state/game/game.cpp:707
+msgid "You have not sorted your load order this session."
+msgstr "Et ole vielä tällä kerralla järjestänyt lisäosiasi."
+
+#: src/gui/state/game/game.cpp:734
+msgid ""
+"You have a normal plugin and at least one light plugin sharing the FE load "
+"order index. Deactivate a normal plugin or all your light plugins to avoid "
+"potential issues."
+msgstr ""
+"Tavallinen ja vähintään yksi kevytlisäosa jakavat FE-indeksin "
+"järjestyksessäsi. Poista käytöstä joko tavallinen lisäosa tai kaikki "
+"kevytlisäosat ongelmien välttämiseksi."
+
+#: src/gui/state/game/game.cpp:796
+msgid ""
+"An error occurred while parsing the metadata list(s): %1%.\n"
+"\n"
+"Try updating your masterlist to resolve the error. If the error is with your "
+"user metadata, this probably happened because an update to LOOT changed its "
+"metadata syntax support. Your user metadata will have to be updated "
+"manually.\n"
+"\n"
+"To do so, use 'Open LOOT Data Folder' in LOOT's File menu to open its data "
+"folder, then open your 'userlist.yaml' file in the relevant game folder. You "
+"can then edit the metadata it contains with reference to the documentation, "
+"which is accessible through LOOT's main menu.\n"
+"\n"
+"You can also seek support on LOOT's forum thread, which is linked to on "
+"[LOOT's website](https://loot.github.io/)."
+msgstr ""
+"Metatietojen lukemisessa tapahtui virhe: %1%\n"
+"\n"
+"Yritä päivittää pääluettelo. Jos virhe on muokatuissa metatiedoissa, syy on "
+"luultavasti LOOTin päivityksessä tullut uusi metatietojen syntaksi ja joudut "
+"käsin päivittämään muokkaamasi metatiedot.\n"
+"\n"
+"Avaa LOOTin tiedostokansio tiedosto-valikon alta ja muokkaa userlist.yaml-"
+"tiedostoa kyseisen pelin kansiossa. Katso tiedoston dokumentaatiota, jonka "
+"löydät LOOTin päävalikon kautta, tiedostoa muokatessasi.\n"
+"\n"
+"Voit myös kysyä tukea LOOTin keskustelupalstalla, joka löytyy [LOOTin "
+"verkkosivuilta](https://loot.github.io/)."
+
+#: src/gui/state/game/helpers.cpp:89
+msgid "%1% ITM record"
+msgid_plural "%1% ITM records"
+msgstr[0] "%1% ITM-tietueen"
+msgstr[1] "%1% ITM-tietuetta"
+
+#: src/gui/state/game/helpers.cpp:96
+msgid "%1% deleted reference"
+msgid_plural "%1% deleted references"
+msgstr[0] "%1% poistetun osoitteen"
+msgstr[1] "%1% poistettua osoitetta"
+
+#: src/gui/state/game/helpers.cpp:103
+msgid "%1% deleted navmesh"
+msgid_plural "%1% deleted navmeshes"
+msgstr[0] "%1% poistetun navmeshin"
+msgstr[1] "%1% poistettua navmeshiä"
+
+#: src/gui/state/game/helpers.cpp:113
+msgid "%1% found %2%, %3% and %4%."
+msgstr "%1% löysi %2%, %3% ja %4%."
+
+#: src/gui/state/game/helpers.cpp:119
+msgid "%1% found dirty edits."
+msgstr "%1% löysi siivoamattomia muokkauksia."
+
+#: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
+#: src/gui/state/game/helpers.cpp:136
+msgid "%1% found %2% and %3%."
+msgstr "%1% löysi %2% ja %3%."
+
+#: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
+#: src/gui/state/game/helpers.cpp:146
+msgid "%1% found %2%."
+msgstr "%1% löysi %2%."
+
+#: src/gui/state/game/helpers.cpp:232
+msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
+msgstr "LOOT on havainnut, että %1% on virheellinen ja jättää sen huomiotta."
