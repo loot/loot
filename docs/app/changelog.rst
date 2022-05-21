@@ -4,6 +4,64 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.3 - 2022-05-21
+===================
+
+Added
+-----
+
+- A "Show only warnings and errors" filter has been added that combines the Bash
+  Tags, sources, notes and messageless plugins filters.
+- A "Show only empty plugins" filter hides any plugins that are not empty.
+- The Groups Editor window can now be maximised and minimised using the new
+  buttons in the window frame.
+- Group positions in the Groups Editor will now be remembered, unless a group
+  with no saved position is encountered when opening the Groups Editor.
+
+Fixed
+-----
+
+- When checking if old (pre-0.18.0) game masterlist settings could be migrated,
+  LOOT checked the wrong settings fields, so would never display a warning if
+  automatic migration couldn't be done.
+- LOOT detects and logs when it's run from Mod Organizer, but its detection did
+  not work for newer versions of Mod Organizer.
+- LOOT would forget about any groups that were not connected to any other groups
+  when exiting the Groups Editor.
+- The progress bar in the progress dialog now uses the full width of the dialog
+  as intended.
+- When opening the plugin metadata editor for a plugin assigned to a group that
+  does not exist, LOOT would set the Group dropdown to the first listed group.
+  It now adds the missing group to the list (with a note that the group does not
+  exist) and selects that group.
+
+Changed
+-------
+
+- If sorting makes no changes a notification dialog is now displayed by default.
+  The new dialog can be suppressed using a new setting in LOOT's settings
+  dialog.
+- Groups graph layout has been improved: it now runs left to right to make
+  use of the available space in most screens, group names will no longer
+  overlap, and the layout algorithm now produces better results for non-trivial
+  graphs.
+- Groups in the Groups Editor graph now have a little padding so that their
+  names do not run right to the edge of the graph's area.
+- When a new group is added in the Groups Editor, it is now added in the centre
+  of the visible area, and offset downwards if there is already something at
+  that location.
+- The game install path and local AppData path settings now have folder pickers
+  that can be used to simplify setting values for those settings.
+- When metadata is copied to the clipboard, the BBCode tags are now separated
+  from the metadata YAML by line breaks.
+- Updated the Bulgarian translation.
+- Updated the Finnish translation.
+- Updated the French translation.
+- Updated the German translation.
+- Updated the Japanese translation.
+- Updated the Russian translation.
+- Updated the Ukrainian translation.
+
 0.18.2 - 2022-03-23
 ===================
 
