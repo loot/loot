@@ -304,7 +304,7 @@ begin
       for I := 0 to GetArrayLength(Lines) - 1 do begin
         if Copy(Lines[I], 0, Length(SearchLineStart)) = SearchLineStart then begin
           Lines[I] := LanguageLine;
-          SaveStringsToUTF8File(File, Lines, False)
+          SaveStringsToFile(File, Lines, False)
           Break;
         end;
       end;
