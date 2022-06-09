@@ -3,7 +3,7 @@
 ; be displayed correctly.
 
 #define MyAppName "LOOT"
-#define MyAppVersion "0.18.2"
+#define MyAppVersion "0.18.3"
 #define MyAppPublisher "LOOT Team"
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
@@ -304,7 +304,7 @@ begin
       for I := 0 to GetArrayLength(Lines) - 1 do begin
         if Copy(Lines[I], 0, Length(SearchLineStart)) = SearchLineStart then begin
           Lines[I] := LanguageLine;
-          SaveStringsToUTF8File(File, Lines, False)
+          SaveStringsToFile(File, Lines, False)
           Break;
         end;
       end;

@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.18.2\n"
+"Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-04-23 19:57+0100\n"
-"PO-Revision-Date: 2022-05-09 19:41+0300\n"
+"POT-Creation-Date: 2022-05-08 15:54+0100\n"
+"PO-Revision-Date: 2022-05-14 22:07+0300\n"
 "Last-Translator: Georgi Georgiev (RacerBG) <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <g.georgiev.shumen@gmail.com>\n"
 "Language: bg\n"
@@ -179,131 +179,131 @@ msgstr "Внимание: Ревизията на метаданните не е
 msgid "Invalid regular expression: %1%"
 msgstr "Невалиден регулярен израз: %1%"
 
-#: src/gui/qt/main_window.cpp:578
+#: src/gui/qt/main_window.cpp:583
 msgid "Sort Plugins"
 msgstr "Сортирай приставките"
 
-#: src/gui/qt/main_window.cpp:579
+#: src/gui/qt/main_window.cpp:584
 msgid "Update Masterlist"
 msgstr "Обнови основния списък"
 
-#: src/gui/qt/main_window.cpp:580
+#: src/gui/qt/main_window.cpp:585
 msgid "Apply Sorted Load Order"
 msgstr "Приложи реда за зареждане"
 
-#: src/gui/qt/main_window.cpp:581
+#: src/gui/qt/main_window.cpp:586
 msgid "Discard Sorted Load Order"
 msgstr "Отмени реда за зареждане"
 
-#: src/gui/qt/main_window.cpp:584
+#: src/gui/qt/main_window.cpp:589
 msgid "File"
 msgstr "Файл"
 
-#: src/gui/qt/main_window.cpp:585
+#: src/gui/qt/main_window.cpp:590
 msgid "Settings..."
 msgstr "Настройки..."
 
-#: src/gui/qt/main_window.cpp:586
+#: src/gui/qt/main_window.cpp:591
 msgid "Backup LOOT Data"
 msgstr "Съхрани данните на „LOOT“"
 
-#: src/gui/qt/main_window.cpp:587
+#: src/gui/qt/main_window.cpp:592
 msgid "Open LOOT Data Folder"
 msgstr "Папка с данни на „LOOT“"
 
-#: src/gui/qt/main_window.cpp:588
+#: src/gui/qt/main_window.cpp:593
 msgid "Quit"
 msgstr "Изход"
 
-#: src/gui/qt/main_window.cpp:590
+#: src/gui/qt/main_window.cpp:595
 msgid "Game"
 msgstr "Игра"
 
-#: src/gui/qt/main_window.cpp:591
+#: src/gui/qt/main_window.cpp:596
 msgid "Edit Groups..."
 msgstr "Редактирай групите..."
 
-#: src/gui/qt/main_window.cpp:592
+#: src/gui/qt/main_window.cpp:597
 msgid "Search Cards..."
 msgstr "Търси в съдържанието..."
 
-#: src/gui/qt/main_window.cpp:593
+#: src/gui/qt/main_window.cpp:598
 msgid "Copy Load Order"
 msgstr "Копирай реда за зареждане"
 
-#: src/gui/qt/main_window.cpp:594
+#: src/gui/qt/main_window.cpp:599
 msgid "Copy Content"
 msgstr "Копирай съдържанието"
 
-#: src/gui/qt/main_window.cpp:595
+#: src/gui/qt/main_window.cpp:600
 msgid "Refresh Content"
 msgstr "Опресни съдържанието"
 
-#: src/gui/qt/main_window.cpp:596
+#: src/gui/qt/main_window.cpp:601
 msgid "Redate Plugins..."
 msgstr "Промени датата на приставките..."
 
-#: src/gui/qt/main_window.cpp:597
+#: src/gui/qt/main_window.cpp:602
 msgid "Fix Ambiguous Load Order"
 msgstr "Поправи реда за зареждане"
 
-#: src/gui/qt/main_window.cpp:598
+#: src/gui/qt/main_window.cpp:603
 msgid "Clear All User Metadata..."
 msgstr "Изчисти всички добавени метаданни..."
 
-#: src/gui/qt/main_window.cpp:600
+#: src/gui/qt/main_window.cpp:605
 msgid "Plugin"
 msgstr "Приставка"
 
-#: src/gui/qt/main_window.cpp:601
+#: src/gui/qt/main_window.cpp:606
 msgid "Copy Plugin Name"
 msgstr "Копирай името на приставката"
 
-#: src/gui/qt/main_window.cpp:602
+#: src/gui/qt/main_window.cpp:607
 msgid "Copy Card Content"
 msgstr "Копирай съдържанието"
 
-#: src/gui/qt/main_window.cpp:603
+#: src/gui/qt/main_window.cpp:608
 msgid "Copy Metadata"
 msgstr "Копирай метаданните"
 
-#: src/gui/qt/main_window.cpp:604
+#: src/gui/qt/main_window.cpp:609
 msgid "Edit Metadata..."
 msgstr "Редактирай метаданните..."
 
-#: src/gui/qt/main_window.cpp:605
+#: src/gui/qt/main_window.cpp:610
 msgid "Clear User Metadata..."
 msgstr "Изчисти добавените метаданни..."
 
-#: src/gui/qt/main_window.cpp:607
+#: src/gui/qt/main_window.cpp:612
 msgid "Help"
 msgstr "Помощ"
 
-#: src/gui/qt/main_window.cpp:608
+#: src/gui/qt/main_window.cpp:613
 msgid "View Documentation"
 msgstr "Виж документацията"
 
-#: src/gui/qt/main_window.cpp:609
+#: src/gui/qt/main_window.cpp:614
 msgid "Join Discord Server"
 msgstr "Присъединете се към „Discord“"
 
-#: src/gui/qt/main_window.cpp:610
+#: src/gui/qt/main_window.cpp:615
 msgid "About"
 msgstr "Относно"
 
-#: src/gui/qt/main_window.cpp:613
+#: src/gui/qt/main_window.cpp:618
 msgid "Plugins"
 msgstr "Приставки"
 
-#: src/gui/qt/main_window.cpp:614
+#: src/gui/qt/main_window.cpp:619
 msgid "Filters"
 msgstr "Филтри"
 
-#: src/gui/qt/main_window.cpp:846 src/gui/qt/main_window.cpp:1793
+#: src/gui/qt/main_window.cpp:851 src/gui/qt/main_window.cpp:1798
 msgid "Updating and parsing masterlist..."
 msgstr "Обновяване и разбор на основния списък..."
 
-#: src/gui/qt/main_window.cpp:905
+#: src/gui/qt/main_window.cpp:910
 msgid ""
 "This appears to be the first time you have run LOOT v%1%. Your current LOOT "
 "data has been backed up to: %2%"
@@ -311,15 +311,15 @@ msgstr ""
 "Изглежда това е първото стартиране на „LOOT“ в%1%. Текущите данни на „LOOT“ "
 "са съхранени в: %2%"
 
-#: src/gui/qt/main_window.cpp:912
+#: src/gui/qt/main_window.cpp:917
 msgid "This appears to be the first time you have run LOOT v%1%."
 msgstr "Изглежда това е първото стартиране на „LOOT“ в%1%."
 
-#: src/gui/qt/main_window.cpp:918
+#: src/gui/qt/main_window.cpp:923
 msgid "Here are some tips to help you get started with the interface."
 msgstr "Ето няколко съвета, които ще са Ви от полза."
 
-#: src/gui/qt/main_window.cpp:921
+#: src/gui/qt/main_window.cpp:926
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -327,7 +327,7 @@ msgstr ""
 "CRC се показва само след като приставките бъдат заредени с филтри за "
 "несъвместимост или сортиране."
 
-#: src/gui/qt/main_window.cpp:925
+#: src/gui/qt/main_window.cpp:930
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
@@ -336,7 +336,7 @@ msgstr ""
 "таблиците на редактора на метаданните - „Зареди след“, „Изисквания“ и "
 "„Несъвместимости“."
 
-#: src/gui/qt/main_window.cpp:930
+#: src/gui/qt/main_window.cpp:935
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -344,7 +344,7 @@ msgstr ""
 "Някои функции са изключени, докато редакторът на метаданните е отворен или "
 "докато има сортиран ред за зареждане, който не е приложен или отхвърлен."
 
-#: src/gui/qt/main_window.cpp:935 src/gui/qt/main_window.cpp:1674
+#: src/gui/qt/main_window.cpp:940 src/gui/qt/main_window.cpp:1679
 #, c-format
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
@@ -354,19 +354,19 @@ msgstr ""
 "„LOOT“ е безплатен, но ако искате да направите дарение, може да подкрепите "
 "WrinklyNinja (той е създател и главен разработчик на „LOOT“) чрез %s."
 
-#: src/gui/qt/main_window.cpp:946
+#: src/gui/qt/main_window.cpp:951
 msgid "First-Time Tips"
 msgstr "Начални съвети"
 
-#: src/gui/qt/main_window.cpp:981
+#: src/gui/qt/main_window.cpp:986
 msgid "metadata edits"
 msgstr "редакциите на метаданни"
 
-#: src/gui/qt/main_window.cpp:982
+#: src/gui/qt/main_window.cpp:987
 msgid "sorted load order"
 msgstr "сортирания ред за зареждане"
 
-#: src/gui/qt/main_window.cpp:984
+#: src/gui/qt/main_window.cpp:989
 #, c-format
 msgid ""
 "You have not yet applied or cancelled your %s. Are you sure you want to quit?"
@@ -374,12 +374,12 @@ msgstr ""
 "Все още не сте приложили или отказали %s. Сигурни ли сте, че искате да "
 "излезете?"
 
-#: src/gui/qt/main_window.cpp:1103 src/gui/qt/plugin_editor/table_tabs.cpp:395
+#: src/gui/qt/main_window.cpp:1108 src/gui/qt/plugin_editor/table_tabs.cpp:395
 #: src/gui/qt/plugin_editor/table_tabs.cpp:432
 msgid "Error"
 msgstr "Грешка"
 
-#: src/gui/qt/main_window.cpp:1113 src/gui/query/query.h:67
+#: src/gui/qt/main_window.cpp:1118 src/gui/query/query.h:67
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -387,7 +387,7 @@ msgstr ""
 "Нещо се обърка! Вижте „LOOTDebugLog.txt“ (през главното меню) за повече "
 "информация."
 
-#: src/gui/qt/main_window.cpp:1158
+#: src/gui/qt/main_window.cpp:1163
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
@@ -395,15 +395,15 @@ msgstr ""
 "Сортирането на приставките е неуспешно. За повече подробности, вижте раздела "
 "\"Обща информация\"."
 
-#: src/gui/qt/main_window.cpp:1176
+#: src/gui/qt/main_window.cpp:1181
 msgid "Sorting made no changes to the load order."
 msgstr "Сортирането не промени реда за зареждане."
 
-#: src/gui/qt/main_window.cpp:1226
+#: src/gui/qt/main_window.cpp:1231
 msgid "Ambiguous load order detected"
 msgstr "Редът за зареждане е неточен"
 
-#: src/gui/qt/main_window.cpp:1227
+#: src/gui/qt/main_window.cpp:1232
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -418,32 +418,32 @@ msgstr ""
 "Изберете „Поправи реда за зареждане“ в падащото меню „Игра“ за да използвате "
 "текущия ред за зареждане."
 
-#: src/gui/qt/main_window.cpp:1266
+#: src/gui/qt/main_window.cpp:1271
 msgid "Your LOOT data has been backed up to: %1%"
 msgstr "Данните на „LOOT“ са съхранени в: %1%"
 
-#: src/gui/qt/main_window.cpp:1273
+#: src/gui/qt/main_window.cpp:1278
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "В момента, „LOOT“ няма данни за съхранение."
 
-#: src/gui/qt/main_window.cpp:1324
+#: src/gui/qt/main_window.cpp:1329
 msgid "The load order has been copied to the clipboard."
 msgstr "Редът за зареждане беше копиран в клипборда."
 
-#: src/gui/qt/main_window.cpp:1342
+#: src/gui/qt/main_window.cpp:1347
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Съдържанието на „LOOT“ беше копирано в клипборда."
 
-#: src/gui/qt/main_window.cpp:1354
+#: src/gui/qt/main_window.cpp:1359
 msgid "The load order displayed by LOOT has been set."
 msgstr "Редът за зареждане е зададен."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1375
+#: src/gui/qt/main_window.cpp:1380
 msgid "Redate Plugins?"
 msgstr "Промени датата на приставките?"
 
-#: src/gui/qt/main_window.cpp:1377
+#: src/gui/qt/main_window.cpp:1382
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -456,11 +456,11 @@ msgstr ""
 "ли да продължите?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1389
+#: src/gui/qt/main_window.cpp:1394
 msgid "Plugins were successfully redated."
 msgstr "Датата на приставките беше променена успешно."
 
-#: src/gui/qt/main_window.cpp:1401
+#: src/gui/qt/main_window.cpp:1406
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -468,11 +468,11 @@ msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
 "всички приставки?"
 
-#: src/gui/qt/main_window.cpp:1449
+#: src/gui/qt/main_window.cpp:1454
 msgid "All user-added metadata has been cleared."
 msgstr "Всички добавени метаданни бяха изчистени."
 
-#: src/gui/qt/main_window.cpp:1462
+#: src/gui/qt/main_window.cpp:1467
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -480,22 +480,22 @@ msgstr ""
 "Трябва да затворите редактора на метаданните, преди да редактирате "
 "метаданните на друга приставка."
 
-#: src/gui/qt/main_window.cpp:1520
+#: src/gui/qt/main_window.cpp:1525
 #, c-format
 msgid "The metadata for \"%s\" has been copied to the clipboard."
 msgstr "Метаданните на „%s“ бяха копирани в клипборда."
 
-#: src/gui/qt/main_window.cpp:1538
+#: src/gui/qt/main_window.cpp:1543
 #, c-format
 msgid "The plugin name \"%s\" has been copied to the clipboard."
 msgstr "Името на приставката „%s“ е копирано в клипборда."
 
-#: src/gui/qt/main_window.cpp:1557
+#: src/gui/qt/main_window.cpp:1562
 #, c-format
 msgid "The card content for \"%s\" has been copied to the clipboard."
 msgstr "Съдържанието на „%s“ е копирано в клипборда."
 
-#: src/gui/qt/main_window.cpp:1572
+#: src/gui/qt/main_window.cpp:1577
 #, c-format
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"%s\"?"
@@ -503,17 +503,17 @@ msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
 "„%s“?"
 
-#: src/gui/qt/main_window.cpp:1612
+#: src/gui/qt/main_window.cpp:1617
 #, c-format
 msgid "The user-added metadata for \"%s\" has been cleared."
 msgstr "Добавените метаданни на „%s“ бяха изчистени."
 
-#: src/gui/qt/main_window.cpp:1663
+#: src/gui/qt/main_window.cpp:1668
 #, c-format
 msgid "Version %s (build %s)"
 msgstr "Версия %s (Компилация %s)"
 
-#: src/gui/qt/main_window.cpp:1668
+#: src/gui/qt/main_window.cpp:1673
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
@@ -523,36 +523,36 @@ msgstr ""
 "„Skyrim“, „Enderal“, „Skyrim SE“, „Enderal SE“, „Skyrim VR“, „Fallout 3“, "
 "„Fallout: NV“, „Fallout 4“ и „Fallout 4 VR“."
 
-#: src/gui/qt/main_window.cpp:1685
+#: src/gui/qt/main_window.cpp:1690
 msgid "About LOOT"
 msgstr "За „LOOT“"
 
-#: src/gui/qt/main_window.cpp:1987
+#: src/gui/qt/main_window.cpp:1992
 msgid "Identifying conflicting plugins..."
 msgstr "Откриване на несъвместимите приставки..."
 
-#: src/gui/qt/main_window.cpp:2101
+#: src/gui/qt/main_window.cpp:2106
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 "Автоматичното сортиране е прекратено, поради поне едно съобщение за грешка."
 
-#: src/gui/qt/main_window.cpp:2152
+#: src/gui/qt/main_window.cpp:2157
 msgid "No masterlist update was necessary."
 msgstr "Не беше необходимо обновяване на основния списък."
 
-#: src/gui/qt/main_window.cpp:2165
+#: src/gui/qt/main_window.cpp:2170
 #, c-format
 msgid "Masterlist updated to revision %s."
 msgstr "Основният списък е обновен до ревизия %s."
 
-#: src/gui/qt/main_window.cpp:2223
+#: src/gui/qt/main_window.cpp:2229
 #, c-format
 msgid "A [new release](%s) of LOOT is available."
 msgstr "Налична е [нова версия](%s) на „LOOT“."
 
-#: src/gui/qt/main_window.cpp:2239
+#: src/gui/qt/main_window.cpp:2245
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -664,7 +664,11 @@ msgstr "Приставки в „%s“"
 msgid "Group already exists!"
 msgstr "Групата вече съществува!"
 
-#: src/gui/qt/plugin_editor/group_tab.cpp:92
+#: src/gui/qt/plugin_editor/group_tab.cpp:56
+msgid "%1 (Group does not exist)"
+msgstr "„%1“ (групата не съществува)"
+
+#: src/gui/qt/plugin_editor/group_tab.cpp:97
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
 msgid "Group"
 msgstr "Групирай"

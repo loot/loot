@@ -102,6 +102,8 @@ Hide messageless plugins
   Hides all plugins that have no visible messages.
 Hide Creation Club plugins
   Hides all plugins that are available through Bethesda's Creation Club.
+Show only warnings and errors
+  Combines the Bash Tags, sources, notes and messageless plugins filters. Enabling it enables those other filters, and disabling any of those other filters will also disable it.
 
 The filter toggles have their states saved on quitting LOOT, and they are restored when LOOT is next launched. There are also three other filters in the sidebar tab:
 
