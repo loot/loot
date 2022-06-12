@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #: src/gui/qt/filters_widget.cpp:235
 msgid "Show only conflicting plugins for"
@@ -102,7 +102,7 @@ msgstr ""
 
 #: src/gui/qt/general_info_card.cpp:176
 msgid "General Information"
-msgstr "Основна інформація"
+msgstr "Загальна інформація"
 
 #: src/gui/qt/general_info_card.cpp:178
 msgid "Masterlist Revision ID"
@@ -390,8 +390,8 @@ msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
 msgstr ""
-"Не вдалося відсортувати плагіни. Детальна інформація може бути надана в "
-"розділі \"Загальна інформація\"."
+"Не вдалося відсортувати плагіни. Детальна інформація може бути в розділі "
+"\"Загальна інформація\"."
 
 #: src/gui/qt/main_window.cpp:1181
 msgid "Sorting made no changes to the load order."
@@ -677,7 +677,7 @@ msgstr "Група"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:188
 msgid "Load After"
-msgstr "Завнтажувати після"
+msgstr "Завантажувати після"
 
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:189
 msgid "Requirements"
@@ -1030,8 +1030,8 @@ msgid ""
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
-"Плагін містить записи, які мають FormID за межами допустимих для ESL-"
-"плагіна. Використання цього плагіна призведе до необоротнього пошкодження "
+"Плагін містить записи, які мають FormID за межами прийнятних для ESL-"
+"плагіна. Використання цього плагіна призведе до невідворотнього пошкодження "
 "ваших ігрових сейв-файлів."
 
 #. translators: A header is the part of a file that stores data
@@ -1082,9 +1082,9 @@ msgid ""
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
-"У вас є нормальный плагін та як мінімум один легкий плагін, з одним FE "
-"індексом завантаження. Відключіть нормальний плагін чи усі ваші легкі моди "
-"задля уникнення можливих проблем."
+"У вас є звичайний та як мінімум один легкий плагіни, з однаковим FE індексом "
+"завантаження. Відключіть звичайний плагін чи усі ваші легкі моди задля "
+"уникнення можливих проблем."
 
 #: src/gui/state/game/game.cpp:796
 msgid ""
