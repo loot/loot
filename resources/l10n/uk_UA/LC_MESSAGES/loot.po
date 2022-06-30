@@ -1122,8 +1122,8 @@ msgstr ""
 msgid "%1% ITM record"
 msgid_plural "%1% ITM records"
 msgstr[0] "%1% ITM-запис"
-msgstr[1] "%1% ITM-записей"
-msgstr[2] "%1% ITM-записей"
+msgstr[1] "%1% ITM-записи"
+msgstr[2] "%1% ITM-записів"
 
 #: src/gui/state/game/helpers.cpp:96
 msgid "%1% deleted reference"
