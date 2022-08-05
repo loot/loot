@@ -137,7 +137,12 @@ QRectF Node::boundingRect() const {
 
 QPainterPath Node::shape() const {
   QPainterPath path;
-  path.addEllipse(-RADIUS, -RADIUS, DIAMETER, DIAMETER);
+  // Draw circle with a little bit of padding (radius / 2) to make it easier to
+  // grab nodes.
+  path.addEllipse(-RADIUS - RADIUS / 2,
+                  -RADIUS - RADIUS / 2,
+                  DIAMETER + RADIUS,
+                  DIAMETER + RADIUS);
 
   const auto textRect = textItem->boundingRect();
   const auto width = textRect.width();
