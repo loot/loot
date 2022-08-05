@@ -86,7 +86,8 @@ void setNodePositions(const std::vector<Node *> &nodes,
   }
 }
 
-GraphView::GraphView(QWidget *parent) : QGraphicsView(parent),
+GraphView::GraphView(QWidget *parent) :
+    QGraphicsView(parent),
     masterColor(
         QGuiApplication::palette().color(QPalette::Disabled, QPalette::Text)),
     userColor(
@@ -208,9 +209,7 @@ std::vector<Group> GraphView::getUserGroups() const {
         }
       }
 
-      if (!afterGroups.empty()) {
-        userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
-      }
+      userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
     }
   }
 
