@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-06 07:59+0100\n"
+"POT-Creation-Date: 2022-08-06 08:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -196,99 +196,99 @@ msgid "Discard Sorted Load Order"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:606
-msgid "File"
+msgid "&File"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:607
-msgid "Settings..."
+msgid "&Settings..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:608
-msgid "Backup LOOT Data"
+msgid "&Backup LOOT Data"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:609
-msgid "Open LOOT Data Folder"
+msgid "&Open LOOT Data Folder"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:610
-msgid "Quit"
+msgid "&Quit"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:612
-msgid "Game"
+msgid "&Game"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:613
-msgid "Edit Groups..."
+msgid "&Edit Groups..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:614
-msgid "Search Cards..."
+msgid "&Search Cards..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:615
-msgid "Copy Load Order"
+msgid "Copy &Load Order"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:616
-msgid "Copy Content"
+msgid "&Copy Content"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:617
-msgid "Refresh Content"
+msgid "&Refresh Content"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:618
-msgid "Redate Plugins..."
+msgid "Re&date Plugins..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:619
-msgid "Fix Ambiguous Load Order"
+msgid "&Fix Ambiguous Load Order"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:620
-msgid "Clear All User Metadata..."
+msgid "Clear All &User Metadata..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:622
-msgid "Plugin"
+msgid "&Plugin"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:623
-msgid "Copy Plugin Name"
+msgid "Copy &Plugin Name"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:624
-msgid "Copy Card Content"
+msgid "Copy &Card Content"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:625
-msgid "Copy Metadata"
+msgid "Copy &Metadata"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:626
-msgid "Edit Metadata..."
+msgid "&Edit Metadata..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:627
-msgid "Clear User Metadata..."
+msgid "Clear &User Metadata..."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:629
-msgid "Help"
+msgid "&Help"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:630
-msgid "View Documentation"
+msgid "&View Documentation"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:631
-msgid "Join Discord Server"
+msgid "&Join Discord Server"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:632
-msgid "About"
+msgid "&About"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:635

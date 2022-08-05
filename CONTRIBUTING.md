@@ -73,14 +73,13 @@ You can also add comments of your own for future translators such as why you tra
 Some strings to be translated may contain special characters. Different types of special character that may be encountered are:
 
 * Backslashes (`\`). These are used to escape backslashes and double-quotation marks (`"`) in the C++ translation strings. Don't add new backslashes into translations, and make sure all backslashes in the original string are retained in the translation.
-* Formatting placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear in a few different formats:
+* Formatting placeholders are used so that LOOT can substitute text or numbers that are generated at runtime into pre-made strings. They appear in two different formats:
   1. A number surrounded by percentage signs, e.g. `%1%`.
-  2. A named placeholder, e.g. `%(icon)s` (the name in parentheses must not be changed).
-  3. A simple placeholder `%s`.
+  2. A simple placeholder `%s`.
 
   If formatting placeholders are used in the untranslated string, they **must all** be present in the translated string, or LOOT will encounter an error when it tries to display the translated string. Placeholders can be moved around so that the sentence makes grammatical sense in the target language.
-* A small number of strings also include HTML `<span>` elements that wrap translatable text. While the text inside the elements should be translated, the element tags and their attributes should not be.
-* A small number of strings also include Markdown hyperlinks (e.g. `[example text](http://example.com/)`). Similar to HTML `<span>` elements, the text between the square brackets should be translated, but the text between the parentheses should not be.
+* A small number of strings include an ampersand (`&`) immediately before another character: these indicate mnemonic shortcuts that can be used for keyboard shortcuts. The ampersand can be moved to a suitable character in the translated text (make sure that each menu item in a menu uses a different mnemonic character). For example, the string `&File` is displayed as `File` and indicates that the user can use `Alt + F` to navigate to that menu item, and the `F` is underlined when the user holds down the `Alt` key.
+* A small number of strings include Markdown hyperlinks (e.g. `[example text](http://example.com/)`). The text between the square brackets should be translated, but the text between the parentheses should not be.
 
 ### Adding A New Translation
 

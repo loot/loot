@@ -603,33 +603,33 @@ void MainWindow::translateUi() {
   actionDiscardSort->setText(translate("Discard Sorted Load Order"));
 
   // Translate menu bar items.
-  menuFile->setTitle(translate("File"));
-  actionSettings->setText(translate("Settings..."));
-  actionBackupData->setText(translate("Backup LOOT Data"));
-  actionOpenLOOTDataFolder->setText(translate("Open LOOT Data Folder"));
-  actionQuit->setText(translate("Quit"));
+  menuFile->setTitle(translate("&File"));
+  actionSettings->setText(translate("&Settings..."));
+  actionBackupData->setText(translate("&Backup LOOT Data"));
+  actionOpenLOOTDataFolder->setText(translate("&Open LOOT Data Folder"));
+  actionQuit->setText(translate("&Quit"));
 
-  menuGame->setTitle(translate("Game"));
-  actionOpenGroupsEditor->setText(translate("Edit Groups..."));
-  actionSearch->setText(translate("Search Cards..."));
-  actionCopyLoadOrder->setText(translate("Copy Load Order"));
-  actionCopyContent->setText(translate("Copy Content"));
-  actionRefreshContent->setText(translate("Refresh Content"));
-  actionRedatePlugins->setText(translate("Redate Plugins..."));
-  actionFixAmbiguousLoadOrder->setText(translate("Fix Ambiguous Load Order"));
-  actionClearAllUserMetadata->setText(translate("Clear All User Metadata..."));
+  menuGame->setTitle(translate("&Game"));
+  actionOpenGroupsEditor->setText(translate("&Edit Groups..."));
+  actionSearch->setText(translate("&Search Cards..."));
+  actionCopyLoadOrder->setText(translate("Copy &Load Order"));
+  actionCopyContent->setText(translate("&Copy Content"));
+  actionRefreshContent->setText(translate("&Refresh Content"));
+  actionRedatePlugins->setText(translate("Re&date Plugins..."));
+  actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
+  actionClearAllUserMetadata->setText(translate("Clear All &User Metadata..."));
 
-  menuPlugin->setTitle(translate("Plugin"));
-  actionCopyPluginName->setText(translate("Copy Plugin Name"));
-  actionCopyCardContent->setText(translate("Copy Card Content"));
-  actionCopyMetadata->setText(translate("Copy Metadata"));
-  actionEditMetadata->setText(translate("Edit Metadata..."));
-  actionClearMetadata->setText(translate("Clear User Metadata..."));
+  menuPlugin->setTitle(translate("&Plugin"));
+  actionCopyPluginName->setText(translate("Copy &Plugin Name"));
+  actionCopyCardContent->setText(translate("Copy &Card Content"));
+  actionCopyMetadata->setText(translate("Copy &Metadata"));
+  actionEditMetadata->setText(translate("&Edit Metadata..."));
+  actionClearMetadata->setText(translate("Clear &User Metadata..."));
 
-  menuHelp->setTitle(translate("Help"));
-  actionViewDocs->setText(translate("View Documentation"));
-  actionJoinDiscordServer->setText(translate("Join Discord Server"));
-  actionAbout->setText(translate("About"));
+  menuHelp->setTitle(translate("&Help"));
+  actionViewDocs->setText(translate("&View Documentation"));
+  actionJoinDiscordServer->setText(translate("&Join Discord Server"));
+  actionAbout->setText(translate("&About"));
 
   // Translate sidebar.
   toolBox->setItemText(0, translate("Plugins"));
