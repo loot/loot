@@ -236,6 +236,13 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
       << "right = 4" << endl
       << "maximised = true" << endl
       << endl
+      << "[groupsEditorWindow]" << endl
+      << "top = 5" << endl
+      << "bottom = 6" << endl
+      << "left = 7" << endl
+      << "right = 8" << endl
+      << "maximised = true" << endl
+      << endl
       << "[[games]]" << endl
       << "name = \"Game Name\"" << endl
       << "type = \"Oblivion\"" << endl
@@ -261,12 +268,19 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ("dark", settings_.getTheme());
   EXPECT_EQ("../prelude.yaml", settings_.getPreludeSource());
 
-  ASSERT_TRUE(settings_.getWindowPosition().has_value());
-  EXPECT_EQ(1, settings_.getWindowPosition().value().top);
-  EXPECT_EQ(2, settings_.getWindowPosition().value().bottom);
-  EXPECT_EQ(3, settings_.getWindowPosition().value().left);
-  EXPECT_EQ(4, settings_.getWindowPosition().value().right);
-  EXPECT_TRUE(settings_.getWindowPosition().value().maximised);
+  ASSERT_TRUE(settings_.getMainWindowPosition().has_value());
+  EXPECT_EQ(1, settings_.getMainWindowPosition().value().top);
+  EXPECT_EQ(2, settings_.getMainWindowPosition().value().bottom);
+  EXPECT_EQ(3, settings_.getMainWindowPosition().value().left);
+  EXPECT_EQ(4, settings_.getMainWindowPosition().value().right);
+  EXPECT_TRUE(settings_.getMainWindowPosition().value().maximised);
+
+  ASSERT_TRUE(settings_.getGroupsEditorWindowPosition().has_value());
+  EXPECT_EQ(5, settings_.getGroupsEditorWindowPosition().value().top);
+  EXPECT_EQ(6, settings_.getGroupsEditorWindowPosition().value().bottom);
+  EXPECT_EQ(7, settings_.getGroupsEditorWindowPosition().value().left);
+  EXPECT_EQ(8, settings_.getGroupsEditorWindowPosition().value().right);
+  EXPECT_TRUE(settings_.getGroupsEditorWindowPosition().value().maximised);
 
   EXPECT_EQ("Game Name", settings_.getGameSettings().at(0).Name());
 
@@ -1218,6 +1232,14 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   windowPosition.left = 3;
   windowPosition.right = 4;
   windowPosition.maximised = true;
+
+  LootSettings::WindowPosition groupsEditorWindowPosition;
+  groupsEditorWindowPosition.top = 1;
+  groupsEditorWindowPosition.bottom = 2;
+  groupsEditorWindowPosition.left = 3;
+  groupsEditorWindowPosition.right = 4;
+  groupsEditorWindowPosition.maximised = true;
+
   const std::vector<GameSettings> games({
       GameSettings(GameType::tes4)
           .SetName("Game Name")
@@ -1236,7 +1258,8 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   settings_.setTheme(theme);
   settings_.setPreludeSource(preludeSource);
 
-  settings_.storeWindowPosition(windowPosition);
+  settings_.storeMainWindowPosition(windowPosition);
+  settings_.storeGroupsEditorWindowPosition(groupsEditorWindowPosition);
   settings_.storeGameSettings(games);
   settings_.storeFilters(filters);
 
@@ -1254,12 +1277,19 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(theme, settings.getTheme());
   EXPECT_EQ(preludeSource, settings.getPreludeSource());
 
-  ASSERT_TRUE(settings_.getWindowPosition().has_value());
-  EXPECT_EQ(1, settings_.getWindowPosition().value().top);
-  EXPECT_EQ(2, settings.getWindowPosition().value().bottom);
-  EXPECT_EQ(3, settings.getWindowPosition().value().left);
-  EXPECT_EQ(4, settings.getWindowPosition().value().right);
-  EXPECT_TRUE(settings.getWindowPosition().value().maximised);
+  ASSERT_TRUE(settings_.getMainWindowPosition().has_value());
+  EXPECT_EQ(1, settings_.getMainWindowPosition().value().top);
+  EXPECT_EQ(2, settings.getMainWindowPosition().value().bottom);
+  EXPECT_EQ(3, settings.getMainWindowPosition().value().left);
+  EXPECT_EQ(4, settings.getMainWindowPosition().value().right);
+  EXPECT_TRUE(settings.getMainWindowPosition().value().maximised);
+
+  ASSERT_TRUE(settings_.getGroupsEditorWindowPosition().has_value());
+  EXPECT_EQ(1, settings_.getGroupsEditorWindowPosition().value().top);
+  EXPECT_EQ(2, settings.getGroupsEditorWindowPosition().value().bottom);
+  EXPECT_EQ(3, settings.getGroupsEditorWindowPosition().value().left);
+  EXPECT_EQ(4, settings.getGroupsEditorWindowPosition().value().right);
+  EXPECT_TRUE(settings.getGroupsEditorWindowPosition().value().maximised);
 
   EXPECT_EQ(games[0].Name(), settings.getGameSettings().at(0).Name());
   EXPECT_EQ(games[0].MinimumHeaderVersion(),
@@ -1299,14 +1329,29 @@ TEST_P(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
   EXPECT_EQ("Fallout3", settings_.getLastGame());
 }
 
-TEST_P(LootSettingsTest, storeWindowPositionShouldReplaceExistingValue) {
+TEST_P(LootSettingsTest, storeMainWindowPositionShouldReplaceExistingValue) {
   LootSettings::WindowPosition expectedPosition;
   expectedPosition.top = 1;
-  settings_.storeWindowPosition(expectedPosition);
+  settings_.storeMainWindowPosition(expectedPosition);
 
-  ASSERT_TRUE(settings_.getWindowPosition().has_value());
+  ASSERT_TRUE(settings_.getMainWindowPosition().has_value());
   LootSettings::WindowPosition actualPosition =
-      settings_.getWindowPosition().value();
+      settings_.getMainWindowPosition().value();
+  EXPECT_EQ(expectedPosition.top, actualPosition.top);
+  EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
+  EXPECT_EQ(expectedPosition.left, actualPosition.left);
+  EXPECT_EQ(expectedPosition.right, actualPosition.right);
+}
+
+TEST_P(LootSettingsTest,
+       storeGroupsEditorWindowPositionShouldReplaceExistingValue) {
+  LootSettings::WindowPosition expectedPosition;
+  expectedPosition.top = 1;
+  settings_.storeGroupsEditorWindowPosition(expectedPosition);
+
+  ASSERT_TRUE(settings_.getGroupsEditorWindowPosition().has_value());
+  LootSettings::WindowPosition actualPosition =
+      settings_.getGroupsEditorWindowPosition().value();
   EXPECT_EQ(expectedPosition.top, actualPosition.top);
   EXPECT_EQ(expectedPosition.bottom, actualPosition.bottom);
   EXPECT_EQ(expectedPosition.left, actualPosition.left);

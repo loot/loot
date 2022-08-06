@@ -587,6 +587,44 @@ LootSettings::Language convert(const cpptoml::table& table) {
   return language;
 }
 
+std::shared_ptr<cpptoml::table> windowPositionToToml(
+    const LootSettings::WindowPosition& windowPosition) {
+  auto window = cpptoml::make_table();
+  window->insert("top", windowPosition.top);
+  window->insert("bottom", windowPosition.bottom);
+  window->insert("left", windowPosition.left);
+  window->insert("right", windowPosition.right);
+  window->insert("maximised", windowPosition.maximised);
+
+  return window;
+}
+
+std::optional<LootSettings::WindowPosition> windowPositionFromToml(
+    const std::shared_ptr<cpptoml::table>& table) {
+  if (!table) {
+    return std::nullopt;
+  }
+
+  const auto windowTop = table->get_as<long>("top");
+  const auto windowBottom = table->get_as<long>("bottom");
+  const auto windowLeft = table->get_as<long>("left");
+  const auto windowRight = table->get_as<long>("right");
+  const auto windowMaximised = table->get_as<bool>("maximised");
+  if (windowTop && windowBottom && windowLeft && windowRight &&
+      windowMaximised) {
+    LootSettings::WindowPosition windowPosition;
+    windowPosition.top = *windowTop;
+    windowPosition.bottom = *windowBottom;
+    windowPosition.left = *windowLeft;
+    windowPosition.right = *windowRight;
+    windowPosition.maximised = *windowMaximised;
+
+    return windowPosition;
+  }
+
+  return std::nullopt;
+}
+
 void LootSettings::load(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
@@ -627,21 +665,17 @@ void LootSettings::load(const std::filesystem::path& file) {
     }
   }
 
-  const auto windowTop = settings->get_qualified_as<long>("window.top");
-  const auto windowBottom = settings->get_qualified_as<long>("window.bottom");
-  const auto windowLeft = settings->get_qualified_as<long>("window.left");
-  const auto windowRight = settings->get_qualified_as<long>("window.right");
-  const auto windowMaximised =
-      settings->get_qualified_as<bool>("window.maximised");
-  if (windowTop && windowBottom && windowLeft && windowRight &&
-      windowMaximised) {
-    WindowPosition windowPosition;
-    windowPosition.top = *windowTop;
-    windowPosition.bottom = *windowBottom;
-    windowPosition.left = *windowLeft;
-    windowPosition.right = *windowRight;
-    windowPosition.maximised = *windowMaximised;
-    windowPosition_ = windowPosition;
+  const auto window = settings->get_table("window");
+  const auto windowPosition = windowPositionFromToml(window);
+  if (windowPosition.has_value()) {
+    mainWindowPosition_ = windowPosition.value();
+  }
+
+  const auto groupsEditorWindow = settings->get_table("groupsEditorWindow");
+  const auto groupsEditorWindowPosition =
+      windowPositionFromToml(groupsEditorWindow);
+  if (groupsEditorWindowPosition.has_value()) {
+    groupsEditorWindowPosition_ = groupsEditorWindowPosition.value();
   }
 
   const auto games = settings->get_table_array("games");
@@ -717,15 +751,14 @@ void LootSettings::save(const std::filesystem::path& file) {
   root->insert("lastVersion", lastVersion_);
   root->insert("preludeSource", preludeSource_);
 
-  if (windowPosition_.has_value()) {
-    auto windowPosition = windowPosition_.value();
-    auto window = cpptoml::make_table();
-    window->insert("top", windowPosition.top);
-    window->insert("bottom", windowPosition.bottom);
-    window->insert("left", windowPosition.left);
-    window->insert("right", windowPosition.right);
-    window->insert("maximised", windowPosition.maximised);
+  if (mainWindowPosition_.has_value()) {
+    auto window = windowPositionToToml(mainWindowPosition_.value());
     root->insert("window", window);
+  }
+
+  if (groupsEditorWindowPosition_.has_value()) {
+    auto window = windowPositionToToml(groupsEditorWindowPosition_.value());
+    root->insert("groupsEditorWindow", window);
   }
 
   if (!gameSettings_.empty()) {
@@ -852,11 +885,18 @@ std::string LootSettings::getPreludeSource() const {
   return preludeSource_;
 }
 
-std::optional<LootSettings::WindowPosition> LootSettings::getWindowPosition()
-    const {
+std::optional<LootSettings::WindowPosition>
+LootSettings::getMainWindowPosition() const {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  return windowPosition_;
+  return mainWindowPosition_;
+}
+
+std::optional<LootSettings::WindowPosition>
+LootSettings::getGroupsEditorWindowPosition() const {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  return groupsEditorWindowPosition_;
 }
 
 const std::vector<GameSettings>& LootSettings::getGameSettings() const {
@@ -938,10 +978,17 @@ void LootSettings::storeLastGame(const std::string& lastGame) {
   this->lastGame_ = lastGame;
 }
 
-void LootSettings::storeWindowPosition(const WindowPosition& position) {
+void LootSettings::storeMainWindowPosition(const WindowPosition& position) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  windowPosition_ = position;
+  mainWindowPosition_ = position;
+}
+
+void LootSettings::storeGroupsEditorWindowPosition(
+    const WindowPosition& position) {
+  lock_guard<recursive_mutex> guard(mutex_);
+
+  groupsEditorWindowPosition_ = position;
 }
 
 void LootSettings::storeGameSettings(

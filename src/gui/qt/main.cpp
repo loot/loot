@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
   mainWindow.applyTheme();
 
   const auto wasMaximised = state.getSettings()
-                                .getWindowPosition()
+                                .getMainWindowPosition()
                                 .value_or(loot::LootSettings::WindowPosition())
                                 .maximised;
 

@@ -186,6 +186,49 @@ int calculateSidebarIndexSectionWidth(GameType gameType) {
   }
 }
 
+LootSettings::WindowPosition getWindowPosition(QWidget& window) {
+  LootSettings::WindowPosition position;
+
+  // Use the normal geometry because that gives the size and position as if
+  // the window is neither maximised or minimised. This is useful because if
+  // LOOT is opened into a maximised state, unmaximising it should restore
+  // the previous unmaximised size and position, and that can't be done
+  // without recording the normal geometry.
+  const auto geometry = window.normalGeometry();
+  position.left = geometry.x();
+  position.top = geometry.y();
+  position.right = position.left + geometry.width();
+  position.bottom = position.top + geometry.height();
+  position.maximised = window.isMaximized();
+
+  return position;
+}
+
+void setWindowPosition(QWidget& window,
+                       const LootSettings::WindowPosition& position) {
+  const auto width = position.right - position.left;
+  const auto height = position.bottom - position.top;
+
+  const auto geometry = QRect(position.left, position.top, width, height);
+  const auto topLeft = geometry.topLeft();
+
+  if (QGuiApplication::screenAt(topLeft) == nullptr) {
+    // No screen exists at the old position, just leave the Window at the
+    // default position Qt gives it so that it isn't positioned off-screen.
+    auto logger = getLogger();
+    if (logger) {
+      logger->warn(
+          "Could not restore window position because no screen exists "
+          "at the coordinates ({}, {})",
+          topLeft.x(),
+          topLeft.y());
+    }
+    window.resize(width, height);
+  } else {
+    window.setGeometry(geometry);
+  }
+}
+
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
     QMainWindow(parent), state(state) {
   qRegisterMetaType<QueryResult>("QueryResult");
@@ -282,35 +325,24 @@ void MainWindow::setupUi() {
   setWindowIcon(QIcon(":/icon.ico"));
 #endif
 
-  auto lastWindowPosition = state.getSettings().getWindowPosition();
+  auto lastWindowPosition = state.getSettings().getMainWindowPosition();
   if (lastWindowPosition.has_value()) {
-    const auto& windowPosition = lastWindowPosition.value();
-    const auto width = windowPosition.right - windowPosition.left;
-    const auto height = windowPosition.bottom - windowPosition.top;
-
-    const auto geometry =
-        QRect(windowPosition.left, windowPosition.top, width, height);
-    const auto topLeft = geometry.topLeft();
-
-    if (QGuiApplication::screenAt(topLeft) == nullptr) {
-      // No screen exists at the old position, just leave the Window at the
-      // default position Qt gives it so that it isn't positioned off-screen.
-      auto logger = getLogger();
-      if (logger) {
-        logger->warn(
-            "Could not restore LOOT window position because no screen exists "
-            "at the coordinates ({}, {})",
-            topLeft.x(),
-            topLeft.y());
-      }
-      resize(width, height);
-    } else {
-      setGeometry(geometry);
-    }
+    setWindowPosition(*this, lastWindowPosition.value());
   } else {
     static constexpr int DEFAULT_WIDTH = 1024;
     static constexpr int DEFAULT_HEIGHT = 768;
     resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  }
+
+  const auto groupsEditorWindowPosition =
+      state.getSettings().getGroupsEditorWindowPosition();
+  if (groupsEditorWindowPosition.has_value()) {
+    setWindowPosition(*groupsEditor, groupsEditorWindowPosition.value());
+
+    if (groupsEditorWindowPosition.value().maximised) {
+      groupsEditor->setWindowState(groupsEditor->windowState() |
+                                   Qt::WindowMaximized);
+    }
   }
 
   // Set up status bar.
@@ -1050,25 +1082,17 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    LootSettings::WindowPosition position;
+    const auto position = getWindowPosition(*this);
 
-    // Use the normal geometry because that gives the size and position as if
-    // the window is neither maximised or minimised. This is useful because if
-    // LOOT is opened into a maximised state, unmaximising it should restore
-    // the previous unmaximised size and position, and that can't be done
-    // without recording the normal geometry.
-    const auto geometry = normalGeometry();
-    position.left = geometry.x();
-    position.top = geometry.y();
-    position.right = position.left + geometry.width();
-    position.bottom = position.top + geometry.height();
-    position.maximised = isMaximized();
+    state.getSettings().storeMainWindowPosition(position);
 
-    state.getSettings().storeWindowPosition(position);
+    const auto groupsEditorPosition = getWindowPosition(*groupsEditor);
+
+    state.getSettings().storeGroupsEditorWindowPosition(groupsEditorPosition);
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
-      logger->error("Failed to record window position: {}", e.what());
+      logger->error("Failed to record window positions: {}", e.what());
     }
   }
 
