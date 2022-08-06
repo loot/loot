@@ -530,9 +530,9 @@ void MainWindow::setupViews() {
 
   auto verticalHeader = sidebarPluginsView->verticalHeader();
   verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
-  verticalHeader->setMaximumSectionSize(SIDEBAR_EDIT_MODE_ROW_HEIGHT);
-  verticalHeader->setMinimumSectionSize(SIDEBAR_NORMAL_ROW_HEIGHT);
-  verticalHeader->setDefaultSectionSize(SIDEBAR_NORMAL_ROW_HEIGHT);
+  verticalHeader->setMaximumSectionSize(getSidebarRowHeight(true));
+  verticalHeader->setMinimumSectionSize(getSidebarRowHeight(false));
+  verticalHeader->setDefaultSectionSize(getSidebarRowHeight(false));
   verticalHeader->hide();
 
   auto horizontalHeader = sidebarPluginsView->horizontalHeader();
@@ -705,7 +705,7 @@ void MainWindow::enterEditingState() {
   actionSort->setDisabled(true);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
-      SIDEBAR_EDIT_MODE_ROW_HEIGHT);
+      getSidebarRowHeight(true));
 }
 
 void MainWindow::exitEditingState() {
@@ -720,7 +720,7 @@ void MainWindow::exitEditingState() {
   actionSort->setEnabled(true);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
-      SIDEBAR_NORMAL_ROW_HEIGHT);
+      getSidebarRowHeight(false));
 }
 
 void MainWindow::enterSortingState() {
