@@ -25,7 +25,7 @@
 
 #include "gui/state/loot_settings.h"
 
-#include <cpptoml.h>
+#include <toml++/toml.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
@@ -191,8 +191,8 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
 
 std::optional<std::string> migrateMasterlistRepoSettings(
     GameType gameType,
-    cpptoml::option<std::string> url,
-    cpptoml::option<std::string> branch) {
+    std::optional<std::string> url,
+    std::optional<std::string> branch) {
   auto logger = getLogger();
 
   if (!url && !branch) {
@@ -293,8 +293,8 @@ std::optional<std::string> migratePreludeRepoSettings(const std::string& url,
 }
 
 std::optional<std::string> migratePreludeRepoSettings(
-    cpptoml::option<std::string> url,
-    cpptoml::option<std::string> branch) {
+    std::optional<std::string> url,
+    std::optional<std::string> branch) {
   auto logger = getLogger();
 
   if (!url && !branch) {
@@ -423,31 +423,31 @@ GameType mapGameType(const std::string& gameType) {
   }
 }
 
-GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
-  auto type = table->get_as<std::string>("type");
+GameSettings convertGameTable(const toml::table& table) {
+  auto type = table["type"].value<std::string>();
   if (!type) {
     throw std::runtime_error("'type' key missing from game settings table");
   }
 
-  auto folder = table->get_as<std::string>("folder");
+  auto folder = table["folder"].value<std::string>();
   if (!folder) {
     throw std::runtime_error("'folder' key missing from game settings table");
   }
 
   if (*type == "SkyrimSE" && *folder == *type) {
-    type = cpptoml::option<std::string>(
-        GameSettings(GameType::tes5se).FolderName());
+    type =
+        std::optional<std::string>(GameSettings(GameType::tes5se).FolderName());
     folder = type;
   }
 
   GameSettings game(mapGameType(*type), *folder);
 
-  auto name = table->get_as<std::string>("name");
+  auto name = table["name"].value<std::string>();
   if (name) {
     game.SetName(*name);
   }
 
-  auto isBaseGameInstance = table->get_as<bool>("isBaseGameInstance");
+  auto isBaseGameInstance = table["isBaseGameInstance"].value<bool>();
   if (isBaseGameInstance) {
     game.SetIsBaseGameInstance(*isBaseGameInstance);
   } else if (game.FolderName() == "Nehrim" || game.FolderName() == "Enderal" ||
@@ -457,23 +457,23 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     game.SetIsBaseGameInstance(false);
   }
 
-  auto master = table->get_as<std::string>("master");
+  auto master = table["master"].value<std::string>();
   if (master) {
     game.SetMaster(*master);
   }
 
   const auto minimumHeaderVersion =
-      table->get_as<double>("minimumHeaderVersion");
+      table["minimumHeaderVersion"].value<double>();
   if (minimumHeaderVersion) {
     game.SetMinimumHeaderVersion((float)*minimumHeaderVersion);
   }
 
-  auto source = table->get_as<std::string>("masterlistSource");
+  auto source = table["masterlistSource"].value<std::string>();
   if (source) {
     game.SetMasterlistSource(migrateMasterlistSource(*source));
   } else {
-    auto url = table->get_as<std::string>("repo");
-    auto branch = table->get_as<std::string>("branch");
+    auto url = table["repo"].value<std::string>();
+    auto branch = table["branch"].value<std::string>();
     auto migratedSource =
         migrateMasterlistRepoSettings(game.Type(), url, branch);
     if (migratedSource.has_value()) {
@@ -481,13 +481,13 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     }
   }
 
-  auto path = table->get_as<std::string>("path");
+  auto path = table["path"].value<std::string>();
   if (path) {
     game.SetGamePath(u8path(*path));
   }
 
-  auto localPath = table->get_as<std::string>("local_path");
-  auto localFolder = table->get_as<std::string>("local_folder");
+  auto localPath = table["local_path"].value<std::string>();
+  auto localFolder = table["local_folder"].value<std::string>();
   if (localPath && localFolder) {
     throw std::runtime_error(
         "Game settings have local_path and local_folder set, use only one.");
@@ -497,11 +497,18 @@ GameSettings convert(const std::shared_ptr<cpptoml::table>& table) {
     game.SetGameLocalFolder(*localFolder);
   }
 
-  auto registryKeys = table->get_array_of<std::string>("registry");
-  if (registryKeys) {
-    game.SetRegistryKeys(*registryKeys);
+  if (table["registry"].is_array()) {
+    std::vector<std::string> registryKeys;
+    for (const auto& element : *table["registry"].as_array()) {
+      const auto registryKey = element.value<std::string>();
+      if (registryKey.has_value()) {
+        registryKeys.push_back(registryKey.value());
+      }
+    }
+
+    game.SetRegistryKeys(registryKeys);
   } else {
-    auto registryKey = table->get_as<std::string>("registry");
+    auto registryKey = table["registry"].value<std::string>();
     if (registryKey) {
       game.SetRegistryKeys({*registryKey});
     }
@@ -514,18 +521,18 @@ std::vector<std::string> checkSettingsFile(
     const std::filesystem::path& filePath) {
   std::vector<std::string> warningMessages;
 
-  // Don't use cpptoml::parse_file() as it just uses a std stream,
+  // Don't use toml::parse_file() as it just uses a std stream,
   // which don't support UTF-8 paths on Windows.
   std::ifstream in(filePath);
   if (!in.is_open()) {
-    throw cpptoml::parse_exception(filePath.u8string() +
-                                   " could not be opened for parsing");
+    throw std::runtime_error(filePath.u8string() +
+                             " could not be opened for parsing");
   }
 
-  auto settings = cpptoml::parser(in).parse();
+  auto settings = toml::parse(in);
 
-  auto preludeUrl = settings->get_as<std::string>("preludeRepo");
-  auto preludeBranch = settings->get_as<std::string>("preludeBranch");
+  auto preludeUrl = settings["preludeRepo"].value<std::string>();
+  auto preludeBranch = settings["preludeBranch"].value<std::string>();
 
   if (preludeUrl || preludeBranch) {
     auto migratedSource = migratePreludeRepoSettings(preludeUrl, preludeBranch);
@@ -537,20 +544,24 @@ std::vector<std::string> checkSettingsFile(
     }
   }
 
-  auto games = settings->get_table_array("games");
-  if (games) {
+  if (settings["games"].is_array_of_tables()) {
+    const auto games = settings["games"].as_array();
     for (const auto& game : *games) {
-      auto type = game->get_as<std::string>("type");
+      if (!game.is_table()) {
+        throw std::runtime_error("games array element is not a table");
+      }
+
+      auto type = game.at_path("type").value<std::string>();
       if (!type) {
         throw std::runtime_error("'type' key missing from game settings table");
       }
 
-      auto url = game->get_as<std::string>("repo");
-      auto branch = game->get_as<std::string>("branch");
+      auto url = game.at_path("repo").value<std::string>();
+      auto branch = game.at_path("branch").value<std::string>();
 
       if (url || branch) {
-        auto migratedSource =
-            migrateMasterlistRepoSettings(mapGameType(*type), url, branch);
+        auto migratedSource = migrateMasterlistRepoSettings(
+            mapGameType(type.value()), url, branch);
         if (!migratedSource.has_value()) {
           warningMessages.push_back(boost::locale::translate(
               "Your masterlist repository URL and branch settings could not be "
@@ -569,47 +580,42 @@ std::string getDefaultPreludeSource() {
          DEFAULT_MASTERLIST_BRANCH + "/prelude.yaml";
 }
 
-LootSettings::Language convert(const cpptoml::table& table) {
-  auto locale = table.get_as<std::string>("locale");
+LootSettings::Language convertLanguageTable(const toml::table& table) {
+  auto locale = table["locale"].value<std::string>();
   if (!locale) {
     throw std::runtime_error("'locale' key missing from language table");
   }
 
-  auto name = table.get_as<std::string>("name");
+  auto name = table["name"].value<std::string>();
   if (!name) {
     throw std::runtime_error("'name' key missing from language table");
   }
 
   LootSettings::Language language;
-  language.locale = *locale;
-  language.name = *name;
+  language.locale = locale.value();
+  language.name = name.value();
 
   return language;
 }
 
-std::shared_ptr<cpptoml::table> windowPositionToToml(
+toml::table windowPositionToToml(
     const LootSettings::WindowPosition& windowPosition) {
-  auto window = cpptoml::make_table();
-  window->insert("top", windowPosition.top);
-  window->insert("bottom", windowPosition.bottom);
-  window->insert("left", windowPosition.left);
-  window->insert("right", windowPosition.right);
-  window->insert("maximised", windowPosition.maximised);
-
-  return window;
+  return toml::table{
+      {"top", windowPosition.top},
+      {"bottom", windowPosition.bottom},
+      {"left", windowPosition.left},
+      {"right", windowPosition.right},
+      {"maximised", windowPosition.maximised},
+  };
 }
 
 std::optional<LootSettings::WindowPosition> windowPositionFromToml(
-    const std::shared_ptr<cpptoml::table>& table) {
-  if (!table) {
-    return std::nullopt;
-  }
-
-  const auto windowTop = table->get_as<long>("top");
-  const auto windowBottom = table->get_as<long>("bottom");
-  const auto windowLeft = table->get_as<long>("left");
-  const auto windowRight = table->get_as<long>("right");
-  const auto windowMaximised = table->get_as<bool>("maximised");
+    const toml::table& table) {
+  const auto windowTop = table["top"].value<long>();
+  const auto windowBottom = table["bottom"].value<long>();
+  const auto windowLeft = table["left"].value<long>();
+  const auto windowRight = table["right"].value<long>();
+  const auto windowMaximised = table["maximised"].value<bool>();
   if (windowTop && windowBottom && windowLeft && windowRight &&
       windowMaximised) {
     LootSettings::WindowPosition windowPosition;
@@ -628,64 +634,70 @@ std::optional<LootSettings::WindowPosition> windowPositionFromToml(
 void LootSettings::load(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  // Don't use cpptoml::parse_file() as it just uses a std stream,
+  // Don't use toml::parse_file() as it just uses a std stream,
   // which don't support UTF-8 paths on Windows.
   std::ifstream in(file);
   if (!in.is_open())
-    throw cpptoml::parse_exception(file.u8string() +
-                                   " could not be opened for parsing");
+    throw std::runtime_error(file.u8string() +
+                             " could not be opened for parsing");
 
-  const auto settings = cpptoml::parser(in).parse();
+  const auto settings = toml::parse(in, file.u8string());
 
-  enableDebugLogging_ = settings->get_as<bool>("enableDebugLogging")
-                            .value_or(enableDebugLogging_);
-  updateMasterlistBeforeSort_ = settings->get_as<bool>("updateMasterlist")
-                                    .value_or(updateMasterlistBeforeSort_);
-  enableLootUpdateCheck_ = settings->get_as<bool>("enableLootUpdateCheck")
-                               .value_or(enableLootUpdateCheck_);
-  useNoSortingChangesDialog_ =
-      settings->get_as<bool>("useNoSortingChangesDialog")
-          .value_or(useNoSortingChangesDialog_);
-  game_ = settings->get_as<std::string>("game").value_or(game_);
-  language_ = settings->get_as<std::string>("language").value_or(language_);
-  theme_ = settings->get_as<std::string>("theme").value_or(theme_);
-  lastGame_ = settings->get_as<std::string>("lastGame").value_or(lastGame_);
-  lastVersion_ =
-      settings->get_as<std::string>("lastVersion").value_or(lastVersion_);
+  enableDebugLogging_ =
+      settings["enableDebugLogging"].value_or(enableDebugLogging_);
+  updateMasterlistBeforeSort_ =
+      settings["updateMasterlist"].value_or(updateMasterlistBeforeSort_);
+  enableLootUpdateCheck_ =
+      settings["enableLootUpdateCheck"].value_or(enableLootUpdateCheck_);
+  useNoSortingChangesDialog_ = settings["useNoSortingChangesDialog"].value_or(
+      useNoSortingChangesDialog_);
+  game_ = settings["game"].value_or(game_);
+  language_ = settings["language"].value_or(language_);
+  theme_ = settings["theme"].value_or(theme_);
+  lastGame_ = settings["lastGame"].value_or(lastGame_);
+  lastVersion_ = settings["lastVersion"].value_or(lastVersion_);
 
-  const auto preludeSource = settings->get_as<std::string>("preludeSource");
-  if (preludeSource) {
-    preludeSource_ = migratePreludeSource(*preludeSource);
+  const auto preludeSource = settings["preludeSource"].value<std::string>();
+  if (preludeSource.has_value()) {
+    preludeSource_ = migratePreludeSource(preludeSource.value());
   } else {
-    auto url = settings->get_as<std::string>("preludeRepo");
-    auto branch = settings->get_as<std::string>("preludeBranch");
+    auto url = settings["preludeRepo"].value<std::string>();
+    auto branch = settings["preludeBranch"].value<std::string>();
     auto migratedSource = migratePreludeRepoSettings(url, branch);
     if (migratedSource.has_value()) {
       preludeSource_ = migratedSource.value();
     }
   }
 
-  const auto window = settings->get_table("window");
-  const auto windowPosition = windowPositionFromToml(window);
-  if (windowPosition.has_value()) {
-    mainWindowPosition_ = windowPosition.value();
+  const auto window = settings["window"];
+  if (window.is_table()) {
+    const auto windowPosition = windowPositionFromToml(*window.as_table());
+    if (windowPosition.has_value()) {
+      mainWindowPosition_ = windowPosition.value();
+    }
   }
 
-  const auto groupsEditorWindow = settings->get_table("groupsEditorWindow");
-  const auto groupsEditorWindowPosition =
-      windowPositionFromToml(groupsEditorWindow);
-  if (groupsEditorWindowPosition.has_value()) {
-    groupsEditorWindowPosition_ = groupsEditorWindowPosition.value();
+  const auto groupsEditorWindow = settings["groupsEditorWindow"];
+  if (window.is_table()) {
+    const auto groupsEditorWindowPosition =
+        windowPositionFromToml(*groupsEditorWindow.as_table());
+    if (groupsEditorWindowPosition.has_value()) {
+      groupsEditorWindowPosition_ = groupsEditorWindowPosition.value();
+    }
   }
 
-  const auto games = settings->get_table_array("games");
-  if (games) {
+  const auto games = settings["games"];
+  if (games.is_array_of_tables()) {
     auto logger = getLogger();
     gameSettings_.clear();
 
-    for (const auto& game : *games) {
+    for (const auto& game : *games.as_array()) {
       try {
-        gameSettings_.push_back(convert(game));
+        if (!game.is_table()) {
+          throw std::runtime_error("games array element is not a table");
+        }
+
+        gameSettings_.push_back(convertGameTable(*game.as_table()));
       } catch (const std::exception& e) {
         // Skip invalid games.
         if (logger) {
@@ -698,39 +710,42 @@ void LootSettings::load(const std::filesystem::path& file) {
     appendBaseGames();
   }
 
-  const auto filters = settings->get_table("filters");
-  if (filters) {
-    filters_.hideVersionNumbers = filters->get_as<bool>("hideVersionNumbers")
+  const auto filters = settings["filters"];
+  if (filters.is_table()) {
+    filters_.hideVersionNumbers = filters.at_path("hideVersionNumbers")
                                       .value_or(filters_.hideVersionNumbers);
-    filters_.hideCRCs =
-        filters->get_as<bool>("hideCRCs").value_or(filters_.hideCRCs);
+    filters_.hideCRCs = filters.at_path("hideCRCs").value_or(filters_.hideCRCs);
     filters_.hideBashTags =
-        filters->get_as<bool>("hideBashTags").value_or(filters_.hideBashTags);
+        filters.at_path("hideBashTags").value_or(filters_.hideBashTags);
     filters_.hideLocations =
-        filters->get_as<bool>("hideLocations").value_or(filters_.hideLocations);
+        filters.at_path("hideLocations").value_or(filters_.hideLocations);
     filters_.hideNotes =
-        filters->get_as<bool>("hideNotes").value_or(filters_.hideNotes);
+        filters.at_path("hideNotes").value_or(filters_.hideNotes);
     filters_.hideAllPluginMessages =
-        filters->get_as<bool>("hideAllPluginMessages")
+        filters.at_path("hideAllPluginMessages")
             .value_or(filters_.hideAllPluginMessages);
-    filters_.hideInactivePlugins = filters->get_as<bool>("hideInactivePlugins")
+    filters_.hideInactivePlugins = filters.at_path("hideInactivePlugins")
                                        .value_or(filters_.hideInactivePlugins);
     filters_.hideMessagelessPlugins =
-        filters->get_as<bool>("hideMessagelessPlugins")
+        filters.at_path("hideMessagelessPlugins")
             .value_or(filters_.hideMessagelessPlugins);
     filters_.hideCreationClubPlugins =
-        filters->get_as<bool>("hideCreationClubPlugins")
+        filters.at_path("hideCreationClubPlugins")
             .value_or(filters_.hideCreationClubPlugins);
     filters_.showOnlyEmptyPlugins =
-        filters->get_as<bool>("showOnlyEmptyPlugins")
+        filters.at_path("showOnlyEmptyPlugins")
             .value_or(filters_.showOnlyEmptyPlugins);
   }
 
-  const auto languages = settings->get_table_array("languages");
-  if (languages) {
+  const auto languages = settings["languages"];
+  if (languages.is_array_of_tables()) {
     languages_.clear();
-    for (const auto& language : *languages) {
-      languages_.push_back(convert(*language));
+    for (const auto& language : *languages.as_array()) {
+      if (!language.is_table()) {
+        throw std::runtime_error("languages array element is not a table");
+      }
+
+      languages_.push_back(convertLanguageTable(*language.as_table()));
     }
   }
 }
@@ -738,85 +753,86 @@ void LootSettings::load(const std::filesystem::path& file) {
 void LootSettings::save(const std::filesystem::path& file) {
   lock_guard<recursive_mutex> guard(mutex_);
 
-  auto root = cpptoml::make_table();
-
-  root->insert("enableDebugLogging", enableDebugLogging_);
-  root->insert("updateMasterlist", updateMasterlistBeforeSort_);
-  root->insert("enableLootUpdateCheck", enableLootUpdateCheck_);
-  root->insert("useNoSortingChangesDialog", useNoSortingChangesDialog_);
-  root->insert("game", game_);
-  root->insert("language", language_);
-  root->insert("theme", theme_);
-  root->insert("lastGame", lastGame_);
-  root->insert("lastVersion", lastVersion_);
-  root->insert("preludeSource", preludeSource_);
+  toml::table root{
+      {"enableDebugLogging", enableDebugLogging_},
+      {"updateMasterlist", updateMasterlistBeforeSort_},
+      {"enableLootUpdateCheck", enableLootUpdateCheck_},
+      {"useNoSortingChangesDialog", useNoSortingChangesDialog_},
+      {"game", game_},
+      {"language", language_},
+      {"theme", theme_},
+      {"lastGame", lastGame_},
+      {"lastVersion", lastVersion_},
+      {"preludeSource", preludeSource_},
+      {"filters",
+       toml::table{
+           {"hideVersionNumbers", filters_.hideVersionNumbers},
+           {"hideCRCs", filters_.hideCRCs},
+           {"hideBashTags", filters_.hideBashTags},
+           {"hideLocations", filters_.hideLocations},
+           {"hideNotes", filters_.hideNotes},
+           {"hideAllPluginMessages", filters_.hideAllPluginMessages},
+           {"hideInactivePlugins", filters_.hideInactivePlugins},
+           {"hideMessagelessPlugins", filters_.hideMessagelessPlugins},
+           {"hideCreationClubPlugins", filters_.hideCreationClubPlugins},
+           {"showOnlyEmptyPlugins", filters_.showOnlyEmptyPlugins},
+       }}};
 
   if (mainWindowPosition_.has_value()) {
-    auto window = windowPositionToToml(mainWindowPosition_.value());
-    root->insert("window", window);
+    const auto window = windowPositionToToml(mainWindowPosition_.value());
+    root.insert("window", window);
   }
 
   if (groupsEditorWindowPosition_.has_value()) {
-    auto window = windowPositionToToml(groupsEditorWindowPosition_.value());
-    root->insert("groupsEditorWindow", window);
+    const auto window =
+        windowPositionToToml(groupsEditorWindowPosition_.value());
+    root.insert("groupsEditorWindow", window);
   }
 
   if (!gameSettings_.empty()) {
-    auto games = cpptoml::make_table_array();
+    toml::array games;
 
     for (const auto& gameSettings : gameSettings_) {
-      auto game = cpptoml::make_table();
-      game->insert("type", GameSettings(gameSettings.Type()).FolderName());
-      game->insert("name", gameSettings.Name());
-      game->insert("isBaseGameInstance", gameSettings.IsBaseGameInstance());
-      game->insert("folder", gameSettings.FolderName());
-      game->insert("master", gameSettings.Master());
-      game->insert("minimumHeaderVersion", gameSettings.MinimumHeaderVersion());
-      game->insert("masterlistSource", gameSettings.MasterlistSource());
-      game->insert("path", gameSettings.GamePath().u8string());
-      game->insert("local_path", gameSettings.GameLocalPath().u8string());
+      toml::table game{
+          {"type", GameSettings(gameSettings.Type()).FolderName()},
+          {"name", gameSettings.Name()},
+          {"isBaseGameInstance", gameSettings.IsBaseGameInstance()},
+          {"folder", gameSettings.FolderName()},
+          {"master", gameSettings.Master()},
+          {"minimumHeaderVersion", gameSettings.MinimumHeaderVersion()},
+          {"masterlistSource", gameSettings.MasterlistSource()},
+          {"path", gameSettings.GamePath().u8string()},
+          {"local_path", gameSettings.GameLocalPath().u8string()},
+      };
 
-      auto registry = cpptoml::make_array();
+      toml::array registry;
       for (const auto& key : gameSettings.RegistryKeys()) {
-        registry->push_back(key);
+        registry.push_back(key);
       }
 
-      game->insert("registry", registry);
-      games->push_back(game);
+      game.insert("registry", registry);
+      games.push_back(game);
     }
 
-    root->insert("games", games);
+    root.insert("games", games);
   }
 
-  auto filters = cpptoml::make_table();
-  filters->insert("hideVersionNumbers", filters_.hideVersionNumbers);
-  filters->insert("hideCRCs", filters_.hideCRCs);
-  filters->insert("hideBashTags", filters_.hideBashTags);
-  filters->insert("hideLocations", filters_.hideLocations);
-  filters->insert("hideNotes", filters_.hideNotes);
-  filters->insert("hideAllPluginMessages", filters_.hideAllPluginMessages);
-  filters->insert("hideInactivePlugins", filters_.hideInactivePlugins);
-  filters->insert("hideMessagelessPlugins", filters_.hideMessagelessPlugins);
-  filters->insert("hideCreationClubPlugins", filters_.hideCreationClubPlugins);
-  filters->insert("showOnlyEmptyPlugins", filters_.showOnlyEmptyPlugins);
-
-  root->insert("filters", filters);
-
   if (!languages_.empty()) {
-    auto languageTables = cpptoml::make_table_array();
+    toml::array languageTables;
 
     for (const auto& language : languages_) {
-      auto languageTable = cpptoml::make_table();
-      languageTable->insert("locale", language.locale);
-      languageTable->insert("name", language.name);
+      const toml::table languageTable{
+          {"locale", language.locale},
+          {"name", language.name},
+      };
 
-      languageTables->push_back(languageTable);
+      languageTables.push_back(languageTable);
     }
-    root->insert("languages", languageTables);
+    root.insert("languages", languageTables);
   }
 
   std::ofstream out(file);
-  out << *root;
+  out << root;
 }
 
 bool LootSettings::isAutoSortEnabled() const {

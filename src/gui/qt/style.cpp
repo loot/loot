@@ -25,8 +25,6 @@
 
 #include "gui/qt/style.h"
 
-#include <cpptoml.h>
-
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <boost/algorithm/string.hpp>

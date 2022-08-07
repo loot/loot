@@ -25,7 +25,6 @@
 
 #include "gui/qt/groups_editor/graph_view.h"
 
-#include <cpptoml.h>
 #include <math.h>
 
 #include <QtCore/QRandomGenerator>

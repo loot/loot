@@ -25,8 +25,8 @@
 
 #include "gui/qt/helpers.h"
 
-#include <cpptoml.h>
 #include <loot/exception/file_access_error.h>
+#include <toml++/toml.h>
 
 #include <QtCore/QCryptographicHash>
 #include <QtCore/QDate>
@@ -68,10 +68,8 @@ void writeFileRevision(const std::filesystem::path& filePath,
                  date);
   }
 
-  auto root = cpptoml::make_table();
-
-  root->insert(METADATA_ID_KEY, id);
-  root->insert(METADATA_DATE_KEY, date);
+  const auto table =
+      toml::table{{METADATA_ID_KEY, id}, {METADATA_DATE_KEY, date}};
 
   std::ofstream out(metadataPath);
   if (!out.is_open()) {
@@ -79,7 +77,7 @@ void writeFileRevision(const std::filesystem::path& filePath,
                              " could not be opened for writing");
   }
 
-  out << *root;
+  out << table;
 }
 
 FileRevisionSummary::FileRevisionSummary(const FileRevision& fileRevision) :
@@ -145,7 +143,7 @@ FileRevision getFileRevision(const std::filesystem::path& filePath) {
     throw FileAccessError(metadataPath.u8string() + " is not a regular file");
   }
 
-  // Don't use cpptoml::parse_file() as it just uses a std stream,
+  // Don't use toml::parse_file() as it just uses a std stream,
   // which don't support UTF-8 paths on Windows.
   std::ifstream in(metadataPath);
   if (!in.is_open()) {
@@ -153,21 +151,21 @@ FileRevision getFileRevision(const std::filesystem::path& filePath) {
                              " could not be opened for parsing");
   }
 
-  auto metadata = cpptoml::parser(in).parse();
+  const auto metadata = toml::parse(in, metadataPath.u8string());
 
-  auto hash = metadata->get_as<std::string>(METADATA_ID_KEY);
-  auto timestamp = metadata->get_as<std::string>(METADATA_DATE_KEY);
+  auto hash = metadata[METADATA_ID_KEY].value<std::string>();
+  auto timestamp = metadata[METADATA_DATE_KEY].value<std::string>();
 
-  if (!hash) {
+  if (!hash.has_value()) {
     throw std::runtime_error("blob_sha1 field is missing");
   }
 
-  if (!timestamp) {
+  if (!timestamp.has_value()) {
     throw std::runtime_error("update_timestamp field is missing");
   }
 
-  revision.is_modified = revision.id != *hash;
-  revision.date = *timestamp;
+  revision.is_modified = revision.id != hash.value();
+  revision.date = timestamp.value();
 
   return revision;
 }

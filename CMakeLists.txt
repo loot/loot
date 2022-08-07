@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 cmake_policy(SET CMP0015 NEW)
 project(LOOT)
 include(ExternalProject)
+include(FetchContent)
 
 option(RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
 
@@ -140,15 +141,12 @@ ExternalProject_Add(testing-plugins
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
 
-ExternalProject_Add(cpptoml
-    PREFIX "external"
-    URL "https://github.com/skystrife/cpptoml/archive/v0.1.1.tar.gz"
-    URL_HASH "SHA256=23af72468cfd4040984d46a0dd2a609538579c78ddc429d6b8fd7a10a6e24403"
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(cpptoml SOURCE_DIR)
-set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
+FetchContent_Declare(
+    tomlplusplus
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.1.0.tar.gz"
+    URL_HASH "SHA256=dae72714fc356ca1b019298d9e6275cc41ba95546ae722ccdb6795e92f47762e"
+)
+FetchContent_MakeAvailable(tomlplusplus)
 
 ExternalProject_Add(spdlog
     PREFIX "external"
@@ -413,14 +411,14 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT cpptoml libloot minizip-ng spdlog OGDF)
+add_dependencies(LOOT libloot minizip-ng spdlog OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    cpptoml libloot minizip-ng spdlog GTest testing-plugins)
+    libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
@@ -431,23 +429,23 @@ target_link_libraries(loot_gui_tests PRIVATE
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
+    "${tomlplusplus_SOURCE_DIR}/include"
     ${OGDF_INCLUDE_DIRS})
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
-    ${SPDLOG_INCLUDE_DIRS})
+    ${SPDLOG_INCLUDE_DIRS}
+    "${tomlplusplus_SOURCE_DIR}/include")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
