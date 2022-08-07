@@ -97,8 +97,8 @@ endif()
 
 ExternalProject_Add(zlib
     PREFIX "external"
-    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz"
-    URL_HASH "SHA256=629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff"
+    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.12.tar.gz"
+    URL_HASH "SHA256=d8688496ea40fb61787500e863cc63c9afcbc524468cedeb478068924eb54932"
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE TRUE)
 ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
