@@ -186,6 +186,8 @@ bool GraphView::addGroup(const std::string &name) {
   return true;
 }
 
+void GraphView::autoLayout() { doLayout({}); }
+
 std::vector<Group> GraphView::getUserGroups() const {
   std::vector<Group> userGroups;
 

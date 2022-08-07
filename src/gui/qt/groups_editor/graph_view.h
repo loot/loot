@@ -52,6 +52,7 @@ public:
                  const std::vector<GroupNodePosition> &nodePositions);
 
   bool addGroup(const std::string &name);
+  void autoLayout();
 
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;

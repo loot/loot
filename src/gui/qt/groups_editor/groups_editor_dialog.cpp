@@ -84,6 +84,8 @@ void GroupsEditorDialog::setupUi() {
   addGroupButton->setObjectName("addGroupButton");
   addGroupButton->setDisabled(true);
 
+  autoArrangeButton->setObjectName("autoArrangeButton");
+
   auto buttonBox = new QDialogButtonBox(
       QDialogButtonBox::Save | QDialogButtonBox::Cancel, this);
   buttonBox->setObjectName("dialogButtons");
@@ -99,6 +101,7 @@ void GroupsEditorDialog::setupUi() {
   sidebarLayout->addWidget(groupPluginsTitle);
   sidebarLayout->addWidget(groupPluginsList, 1);
   sidebarLayout->addSpacerItem(verticalSpacer);
+  sidebarLayout->addWidget(autoArrangeButton);
   sidebarLayout->addLayout(formLayout);
 
   mainLayout->addWidget(graphView, 1);
@@ -119,6 +122,7 @@ void GroupsEditorDialog::translateUi() {
 
   groupNameInputLabel->setText(translate("Group name"));
   addGroupButton->setText(translate("Add a new group"));
+  autoArrangeButton->setText(translate("Auto arrange groups"));
 }
 
 void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
@@ -175,6 +179,10 @@ void GroupsEditorDialog::on_addGroupButton_clicked() {
   }
 
   groupNameInput->clear();
+}
+
+void GroupsEditorDialog::on_autoArrangeButton_clicked() {
+  graphView->autoLayout();
 }
 
 void GroupsEditorDialog::on_dialogButtons_accepted() { accept(); }

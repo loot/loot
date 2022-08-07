@@ -58,6 +58,7 @@ private:
   QLabel *groupNameInputLabel{new QLabel(this)};
   QLineEdit *groupNameInput{new QLineEdit(this)};
   QPushButton *addGroupButton{new QPushButton(this)};
+  QPushButton *autoArrangeButton{new QPushButton(this)};
 
   PluginItemModel *pluginItemModel{nullptr};
 
@@ -68,6 +69,7 @@ private slots:
   void on_graphView_groupSelected(const QString &name);
   void on_groupNameInput_textChanged(const QString &text);
   void on_addGroupButton_clicked();
+  void on_autoArrangeButton_clicked();
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();
 };
