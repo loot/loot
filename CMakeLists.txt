@@ -152,8 +152,8 @@ set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
 
 ExternalProject_Add(spdlog
     PREFIX "external"
-    URL "https://github.com/gabime/spdlog/archive/v1.9.2.tar.gz"
-    URL_HASH "SHA256=6fff9215f5cb81760be4cc16d033526d1080427d236e86d70bb02994f85e3d38"
+    URL "https://github.com/gabime/spdlog/archive/v1.10.0.tar.gz"
+    URL_HASH "SHA256=697f91700237dbae2326b90469be32b876b2b44888302afbc7aceb68bcfe8224"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
