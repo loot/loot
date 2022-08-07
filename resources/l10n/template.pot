@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-07 09:02+0100\n"
+"POT-Creation-Date: 2022-08-07 12:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -617,16 +617,20 @@ msgstr ""
 msgid "Auto arrange groups"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:143
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:142
+msgid "You have unsaved changes. Are you sure you want to discard them?"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:164
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:155
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:176
 #, c-format
 msgid "Plugins in %s"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:176
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:197
 msgid "Group already exists!"
 msgstr ""
 

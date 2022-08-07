@@ -125,6 +125,27 @@ void GroupsEditorDialog::translateUi() {
   autoArrangeButton->setText(translate("Auto arrange groups"));
 }
 
+void GroupsEditorDialog::closeEvent(QCloseEvent* event) {
+  if (graphView->hasUnsavedChanges() && !askShouldDiscardChanges()) {
+    event->ignore();
+    return;
+  }
+
+  QDialog::closeEvent(event);
+}
+
+bool GroupsEditorDialog::askShouldDiscardChanges() {
+  auto button = QMessageBox::question(
+      this,
+      "LOOT",
+      translate(
+          "You have unsaved changes. Are you sure you want to discard them?"),
+      QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No,
+      QMessageBox::StandardButton::No);
+
+  return button == QMessageBox::StandardButton::Yes;
+}
+
 void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
   groupPluginsList->clear();
   groupPluginsTitle->clear();
@@ -187,5 +208,11 @@ void GroupsEditorDialog::on_autoArrangeButton_clicked() {
 
 void GroupsEditorDialog::on_dialogButtons_accepted() { accept(); }
 
-void GroupsEditorDialog::on_dialogButtons_rejected() { reject(); }
+void GroupsEditorDialog::on_dialogButtons_rejected() {
+  if (graphView->hasUnsavedChanges() && !askShouldDiscardChanges()) {
+    return;
+  }
+
+  reject();
+}
 }

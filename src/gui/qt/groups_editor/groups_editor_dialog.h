@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_QT_GROUPS_EDITOR_GROUPS_EDITOR_DIALOG
 #define LOOT_GUI_QT_GROUPS_EDITOR_GROUPS_EDITOR_DIALOG
 
+#include <QtGui/QCloseEvent>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -64,6 +65,10 @@ private:
 
   void setupUi();
   void translateUi();
+
+  void closeEvent(QCloseEvent *event) override;
+
+  bool askShouldDiscardChanges();
 
 private slots:
   void on_graphView_groupSelected(const QString &name);

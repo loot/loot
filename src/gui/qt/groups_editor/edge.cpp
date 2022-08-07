@@ -124,6 +124,10 @@ void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   dest->removeEdge(this);
   dest->update();
 
+  // Register unsaved changes before removing the item so that the scene is
+  // still valid.
+  qobject_cast<GraphView *>(scene()->parent())->registerUnsavedChanges();
+
   scene()->removeItem(this);
   delete this;
   // DO NOT use "this" past this line.

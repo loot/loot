@@ -115,6 +115,7 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
                           const std::vector<GroupNodePosition> &nodePositions) {
   // Remove all existing items.
   scene()->clear();
+  hasUnsavedChanges_ = false;
 
   // Now add the given groups.
   std::map<std::string, Node *> groupNameNodeMap;
@@ -183,10 +184,18 @@ bool GraphView::addGroup(const std::string &name) {
   scene()->addItem(node);
   node->setPosition(pos);
 
+  registerUnsavedChanges();
+
   return true;
 }
 
-void GraphView::autoLayout() { doLayout({}); }
+void GraphView::autoLayout() {
+  doLayout({});
+
+  registerUnsavedChanges();
+}
+
+void GraphView::registerUnsavedChanges() { hasUnsavedChanges_ = true; }
 
 std::vector<Group> GraphView::getUserGroups() const {
   std::vector<Group> userGroups;
@@ -235,6 +244,8 @@ std::vector<GroupNodePosition> GraphView::getNodePositions() const {
 
   return nodePositions;
 }
+
+bool GraphView::hasUnsavedChanges() const { return hasUnsavedChanges_; }
 
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
