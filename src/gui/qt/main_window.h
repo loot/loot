@@ -270,7 +270,8 @@ private slots:
   void on_sidebarPluginsView_doubleClicked(const QModelIndex &index);
   void on_sidebarPluginsView_customContextMenuRequested(const QPoint &position);
   void on_sidebarPluginsSelectionModel_selectionChanged(
-      const QItemSelection &selected);
+      const QItemSelection &selected,
+      const QItemSelection &deselected);
 
   void on_pluginCardsView_entered(const QModelIndex &index);
   void on_pluginCardsView_pressed(const QModelIndex &index);

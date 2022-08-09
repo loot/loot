@@ -1904,7 +1904,13 @@ void MainWindow::on_sidebarPluginsView_customContextMenuRequested(
 }
 
 void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
-    const QItemSelection& selected) {
+    const QItemSelection& selected,
+    const QItemSelection& deselected) {
+  if (selected.isEmpty() && deselected.isEmpty()) {
+    // Selection hasn't changed but indices of selected items has.
+    return;
+  }
+
   if (selected.isEmpty()) {
     disablePluginActions();
   } else {
