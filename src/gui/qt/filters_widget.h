@@ -68,7 +68,7 @@ private:
   QComboBox *groupPluginsFilter{new QComboBox(this)};
   QLabel *contentFilterLabel{new QLabel(this)};
   QLineEdit *contentFilter{new QLineEdit(this)};
-  QCheckBox *contentRegexCheckbox{new QCheckBox};
+  QCheckBox *contentRegexCheckbox{new QCheckBox(this)};
   QCheckBox *versionNumbersFilter{new QCheckBox(this)};
   QCheckBox *crcsFilter{new QCheckBox(this)};
   QCheckBox *bashTagsFilter{new QCheckBox(this)};

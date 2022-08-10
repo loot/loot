@@ -248,6 +248,7 @@ void BaseTableTab::resizeEvent(QResizeEvent*) {
 }
 
 void BaseTableTab::setupUi() {
+  tableView->setTabKeyNavigation(false);
   tableView->verticalHeader()->hide();
   tableView->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 

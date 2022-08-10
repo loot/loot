@@ -33,7 +33,6 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
-#include <QtWidgets/QTableView>
 #include <QtWidgets/QTextEdit>
 
 #include "gui/backup.h"
@@ -551,6 +550,7 @@ void MainWindow::setupToolBar() {
 
 void MainWindow::setupViews() {
   sidebarPluginsView->setModel(proxyModel);
+  sidebarPluginsView->setTabKeyNavigation(false);
   sidebarPluginsView->setDragEnabled(true);
   sidebarPluginsView->setSelectionMode(QAbstractItemView::SingleSelection);
   sidebarPluginsView->setSelectionBehavior(QAbstractItemView::SelectRows);
