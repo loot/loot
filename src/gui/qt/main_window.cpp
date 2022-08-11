@@ -354,11 +354,11 @@ void MainWindow::setupUi() {
   searchDialog->setObjectName("searchDialog");
   sidebarPluginsView->setObjectName("sidebarPluginsView");
 
-  toolBox->addItem(sidebarPluginsView, QString("Plugins"));
+  toolBox->addItem(sidebarPluginsView, QString("P&lugins"));
 
   filtersWidget->setObjectName("filtersWidget");
 
-  toolBox->addItem(filtersWidget, QString("Filters"));
+  toolBox->addItem(filtersWidget, QString("F&ilters"));
 
   sidebarSplitter->addWidget(toolBox);
 
@@ -669,8 +669,8 @@ void MainWindow::translateUi() {
   actionAbout->setText(translate("&About"));
 
   // Translate sidebar.
-  toolBox->setItemText(0, translate("Plugins"));
-  toolBox->setItemText(1, translate("Filters"));
+  toolBox->setItemText(0, translate("P&lugins"));
+  toolBox->setItemText(1, translate("F&ilters"));
 }
 
 void MainWindow::setIcons() {
