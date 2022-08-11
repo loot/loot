@@ -497,6 +497,11 @@ void MainWindow::setupMenuBar() {
   menuFile->addAction(actionQuit);
   menuGame->addAction(actionOpenGroupsEditor);
   menuGame->addSeparator();
+  menuGame->addAction(actionSort);
+  menuGame->addAction(actionUpdateMasterlist);
+  menuGame->addAction(actionApplySort);
+  menuGame->addAction(actionDiscardSort);
+  menuGame->addSeparator();
   menuGame->addAction(actionSearch);
   menuGame->addAction(actionCopyLoadOrder);
   menuGame->addAction(actionCopyContent);
@@ -629,10 +634,10 @@ void MainWindow::translateUi() {
   setWindowTitle("LOOT");
 
   // Translate toolbar items.
-  actionSort->setText(translate("Sort Plugins"));
-  actionUpdateMasterlist->setText(translate("Update Masterlist"));
-  actionApplySort->setText(translate("Apply Sorted Load Order"));
-  actionDiscardSort->setText(translate("Discard Sorted Load Order"));
+  actionSort->setText(translate("&Sort Plugins"));
+  actionUpdateMasterlist->setText(translate("Update &Masterlist"));
+  actionApplySort->setText(translate("&Apply Sorted Load Order"));
+  actionDiscardSort->setText(translate("&Discard Sorted Load Order"));
 
   // Translate menu bar items.
   menuFile->setTitle(translate("&File"));
@@ -643,11 +648,11 @@ void MainWindow::translateUi() {
 
   menuGame->setTitle(translate("&Game"));
   actionOpenGroupsEditor->setText(translate("&Edit Groups..."));
-  actionSearch->setText(translate("&Search Cards..."));
+  actionSearch->setText(translate("Searc&h Cards..."));
   actionCopyLoadOrder->setText(translate("Copy &Load Order"));
   actionCopyContent->setText(translate("&Copy Content"));
   actionRefreshContent->setText(translate("&Refresh Content"));
-  actionRedatePlugins->setText(translate("Re&date Plugins..."));
+  actionRedatePlugins->setText(translate("Redate &Plugins..."));
   actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
   actionClearAllUserMetadata->setText(translate("Clear All &User Metadata..."));
 
