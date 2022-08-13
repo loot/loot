@@ -4,6 +4,57 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.4 - Unreleased
+===================
+
+Added
+-----
+
+- Mnemonics (Alt keyboard shortcuts) have been added for LOOT's menus and sidebar headings.
+- The groups editor's window position is now saved.
+- The groups editor now has a button to auto-arrange the layout of groups.
+- The groups editor now prompts when exiting without saving and changes have been made.
+- Debug logging now replaces the user's home directory (i.e. the value of ``%USERPROFILE%``) with the literal string ``%USERPROFILE%`` to help avoid the user accidentally revealing their name when sharing their debug log.
+- The Sort Plugins, Update Masterlist, Apply Sorted Load Order and Discard Sorted Load Order toolbar actions have been added to the Game menu so that they can be selected using keyboard navigation.
+
+Fixed
+-----
+
+- Groups with only out-edges are now saved when exiting the groups editor.
+- The height of sidebar rows now scales with text line height so that text is not cut off when using Windows text scaling greater than 100%.
+- LOOT's installer no longer double-encodes the settings file when it sets LOOT's language, so non-ASCII text like language names is no longer mangled.
+- LOOT's uninstaller now correctly removes a variety of files and directories that it previously missed.
+- The plugin menu is no longer incorrectly disabled when filtering visible plugins.
+- Refreshing LOOT's content no longer enables the plugin menu with no plugin selected.
+- The general information card could be sized incorrectly when switching between games.
+- Plugin card heights could be calculated incorrectly when changing the width of the cards list.
+- LOOT no longer logs an unnecessary error when downloading a masterlist for the first time.
+- LOOT no longer logs an unnecessary error when setting group positions in the groups editor for the first time.
+
+Changed
+-------
+
+- Disabling the warnings and errors filter now restores its component filters' previous states instead of disabling all of them.
+- The text for sources displayed on plugin cards can now wrap around to new lines.
+- Keyboard navigation of the user interface has been improved:
+  - Navigating between elements using the Tab key now does so in a more intuitive order in the filters sidebar, groups editor, game settings panel, new game dialog and settings dialog.
+  - The table views in the plugins sidebar panel and plugin metadata editor and the game registry keys text box no longer prevent the Tab key from being used to move from them to the next UI element.
+  - The message content editor dialog no longer closes if the Tab key is pressed while it is open.
+  - The step size for the minimum header version game setting input has been changed from 1 to 0.01.
+- The group nodes (circles) in the groups editor now have a little padding to make selecting them easier.
+- Theme changes are now applied when saving and exiting the settings dialog, instead of when LOOT starts.
+- Updated the Bulgarian translation.
+- Updated the Finnish translation.
+- Updated the French translation.
+- Updated the German translation.
+- Updated the Italian translation.
+- Updated the Ukrainian translation.
+- Updated zlib to 1.2.12.
+- Updated minizip-ng to 3.0.6.
+- Updated spdlog to 1.10.0.
+- Updated Qt to 6.2.4.
+- Replaced cpptoml with toml++.
+
 0.18.3 - 2022-05-21
 ===================
 
