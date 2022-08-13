@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-12 17:33+0100\n"
+"POT-Creation-Date: 2022-08-13 06:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -492,31 +492,31 @@ msgstr ""
 msgid "About LOOT"
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2072
+#: src/gui/qt/main_window.cpp:2081
 msgid "Identifying conflicting plugins..."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2191
+#: src/gui/qt/main_window.cpp:2200
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2242
+#: src/gui/qt/main_window.cpp:2251
 msgid "No masterlist update was necessary."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2255
+#: src/gui/qt/main_window.cpp:2264
 #, c-format
 msgid "Masterlist updated to revision %s."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2314
+#: src/gui/qt/main_window.cpp:2323
 #, c-format
 msgid "A [new release](%s) of LOOT is available."
 msgstr ""
 
-#: src/gui/qt/main_window.cpp:2330
+#: src/gui/qt/main_window.cpp:2339
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."

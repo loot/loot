@@ -1912,14 +1912,23 @@ void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
     const QItemSelection& selected,
     const QItemSelection& deselected) {
   if (selected.isEmpty() && deselected.isEmpty()) {
-    // Selection hasn't changed but indices of selected items has.
+    // Selection hasn't changed but indices of selected items have.
     return;
   }
 
-  if (selected.isEmpty()) {
-    disablePluginActions();
-  } else {
+  bool hasPluginSelected = false;
+  for (const auto& index : selected.indexes()) {
+    if (index.row() > 0) {
+      // The zeroth row is for the general information card.
+      hasPluginSelected = true;
+      break;
+    }
+  }
+
+  if (hasPluginSelected) {
     enablePluginActions();
+  } else {
+    disablePluginActions();
   }
 }
 
