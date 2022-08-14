@@ -85,6 +85,8 @@ public:
                             const QStyleOptionViewItem& option,
                             const QModelIndex& index) const override;
 
+  bool eventFilter(QObject* editor, QEvent* event) override;
+
 private:
   const std::vector<LootSettings::Language>& languages;
 };

@@ -25,11 +25,12 @@
 
 #include "gui/qt/groups_editor/graph_view.h"
 
-#include <cpptoml.h>
 #include <math.h>
 
 #include <QtCore/QRandomGenerator>
+#include <QtGui/QGuiApplication>
 #include <QtGui/QKeyEvent>
+#include <QtWidgets/QStyle>
 #include <set>
 
 #include "gui/qt/groups_editor/edge.h"
@@ -84,7 +85,14 @@ void setNodePositions(const std::vector<Node *> &nodes,
   }
 }
 
-GraphView::GraphView(QWidget *parent) : QGraphicsView(parent) {
+GraphView::GraphView(QWidget *parent) :
+    QGraphicsView(parent),
+    masterColor(
+        QGuiApplication::palette().color(QPalette::Disabled, QPalette::Text)),
+    userColor(
+        QGuiApplication::palette().color(QPalette::Active, QPalette::Text)),
+    backgroundColor(
+        QGuiApplication::palette().color(QPalette::Active, QPalette::Base)) {
   static constexpr qreal INITIAL_SCALING_FACTOR = 0.8;
   static constexpr int MIN_VIEW_SIZE = 400;
 
@@ -106,6 +114,7 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
                           const std::vector<GroupNodePosition> &nodePositions) {
   // Remove all existing items.
   scene()->clear();
+  hasUnsavedChanges_ = false;
 
   // Now add the given groups.
   std::map<std::string, Node *> groupNameNodeMap;
@@ -174,8 +183,18 @@ bool GraphView::addGroup(const std::string &name) {
   scene()->addItem(node);
   node->setPosition(pos);
 
+  registerUnsavedChanges();
+
   return true;
 }
+
+void GraphView::autoLayout() {
+  doLayout({});
+
+  registerUnsavedChanges();
+}
+
+void GraphView::registerUnsavedChanges() { hasUnsavedChanges_ = true; }
 
 std::vector<Group> GraphView::getUserGroups() const {
   std::vector<Group> userGroups;
@@ -200,9 +219,7 @@ std::vector<Group> GraphView::getUserGroups() const {
         }
       }
 
-      if (!afterGroups.empty()) {
-        userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
-      }
+      userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
     }
   }
 
@@ -227,9 +244,17 @@ std::vector<GroupNodePosition> GraphView::getNodePositions() const {
   return nodePositions;
 }
 
+bool GraphView::hasUnsavedChanges() const { return hasUnsavedChanges_; }
+
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
 }
+
+QColor GraphView::getMasterColor() const { return masterColor; }
+
+QColor GraphView::getUserColor() const { return userColor; }
+
+QColor GraphView::getBackgroundColor() const { return backgroundColor; }
 
 #if QT_CONFIG(wheelevent)
 void GraphView::wheelEvent(QWheelEvent *event) {

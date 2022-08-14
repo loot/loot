@@ -57,6 +57,8 @@ public:
 
   void setGameType(GameType gameType);
 
+  void refreshMessages();
+
 private:
   static constexpr int PLUGIN_VALUE_COLUMN = 5;
 

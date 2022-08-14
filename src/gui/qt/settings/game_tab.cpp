@@ -130,6 +130,8 @@ GameSettings GameTab::getGameSettings() const {
 }
 
 void GameTab::setupUi() {
+  minimumHeaderVersionSpinBox->setSingleStep(0.01);
+  registryKeysInput->setTabChangesFocus(true);
   deleteGameButton->setObjectName("deleteGameButton");
 
   auto generalLayout = new QFormLayout(this);

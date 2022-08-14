@@ -147,6 +147,20 @@ void MessageContentDelegate::updateEditorGeometry(QWidget* editor,
   editor->move(mappedGeometry);
 }
 
+bool MessageContentDelegate::eventFilter(QObject* editor, QEvent* event) {
+  const auto keyEvent = static_cast<QKeyEvent*>(event);
+
+  switch (keyEvent->key()) {
+    case Qt::Key_Tab:
+    case Qt::Key_Backtab:
+      // Ignore tabs and back-tabs so that keyboard nagivation works within the
+      // editor (which is a dialog).
+      return false;
+    default:
+      return QStyledItemDelegate::eventFilter(editor, event);
+  }
+}
+
 AutocompletingLineEditDelegate::AutocompletingLineEditDelegate(
     QObject* parent,
     const QStringList& completions) :

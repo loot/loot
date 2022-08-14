@@ -28,8 +28,20 @@
 #include "gui/qt/plugin_item_model.h"
 
 namespace loot {
+qreal getSidebarRowHeight(bool inEditMode) {
+  const auto lineHeight = QFontMetricsF(QApplication::font()).height() * 1.1;
+
+  return inEditMode ? lineHeight * 2.0 : lineHeight;
+}
+
 SidebarPluginNameDelegate::SidebarPluginNameDelegate(QObject* parent) :
     QStyledItemDelegate(parent) {}
+
+void SidebarPluginNameDelegate::setColors(QColor selectedText,
+                                          QColor unselectedGroup) {
+  selectedTextColor = selectedText;
+  unselectedGroupColor = unselectedGroup;
+}
 
 void SidebarPluginNameDelegate::paint(QPainter* painter,
                                       const QStyleOptionViewItem& option,
@@ -55,7 +67,10 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   const auto isSelected = styleOption.state.testFlag(QStyle::State_Selected) &&
                           styleOption.state.testFlag(QStyle::State_Active);
   if (isSelected) {
-    painter->setPen(styleOption.palette.highlightedText().color());
+    const auto color = selectedTextColor.isValid()
+                           ? selectedTextColor
+                           : styleOption.palette.highlightedText().color();
+    painter->setPen(color);
   }
 
   auto name = QFontMetricsF(painter->font())
@@ -67,11 +82,14 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   if (isEditorOpen && pluginItem.group.has_value() &&
       pluginItem.group.value() != Group::DEFAULT_NAME) {
     auto groupRect = styleOption.rect;
-    groupRect.translate(0, SIDEBAR_EDIT_MODE_ROW_HEIGHT / 2);
+    groupRect.translate(0, getSidebarRowHeight(true) / 2.0);
 
     if (!isSelected) {
-      painter->setPen(
-          styleOption.palette.color(QPalette::Disabled, QPalette::Text));
+      const auto color =
+          unselectedGroupColor.isValid()
+              ? unselectedGroupColor
+              : styleOption.palette.color(QPalette::Disabled, QPalette::Text);
+      painter->setPen(color);
     }
 
     auto group = painter->fontMetrics().elidedText(

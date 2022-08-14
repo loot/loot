@@ -31,17 +31,26 @@
 #include <QtWidgets/QWidget>
 
 namespace loot {
+// Use a pair of message type and text to avoid having to define the obvious
+// comparison operators.
+typedef std::pair<MessageType, std::string> BareMessage;
+
 class MessagesWidget : public QWidget {
 public:
   explicit MessagesWidget(QWidget* parent);
 
-  bool willChangeContent(const std::vector<SimpleMessage>& messages) const;
   void setMessages(const std::vector<SimpleMessage>& messages);
 
+  void refresh();
+
 private:
-  std::vector<std::string> markdownTexts;
+  std::vector<BareMessage> currentMessages;
 
   void setupUi();
+
+  void setMessages(const std::vector<BareMessage>& messages);
+
+  bool willChangeContent(const std::vector<SimpleMessage>& messages) const;
 };
 }
 

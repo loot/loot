@@ -12,14 +12,6 @@ Copyright License Texts
 .. include:: Boost Software License v1.0.txt
   :literal:
 
-`cpptoml`_
-==========
-
-.. _cpptoml: https://github.com/skystrife/cpptoml
-
-.. include:: MIT License (cpptoml).txt
-  :literal:
-
 LOOT, `libloot`_, `OGDF`_ & `Qt`_
 =================================
 
@@ -50,4 +42,12 @@ LOOT Documentation
 .. _spdlog: https://github.com/gabime/spdlog
 
 .. include:: MIT License (spdlog).txt
+  :literal:
+
+`toml++`_
+==========
+
+.. _toml++: https://github.com/marzer/tomlplusplus
+
+.. include:: MIT License (toml++).txt
   :literal:

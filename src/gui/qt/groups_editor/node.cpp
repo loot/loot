@@ -36,12 +36,14 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-NodeLabel::NodeLabel(const QString &text, bool isUserMetadata) :
+NodeLabel::NodeLabel(const GraphView &graphView,
+                     const QString &text,
+                     bool isUserMetadata) :
     QGraphicsSimpleTextItem(text) {
   setZValue(2);
 
   auto brush = this->brush();
-  brush.setColor(getDefaultColor(isUserMetadata));
+  brush.setColor(getDefaultColor(graphView, isUserMetadata));
 
   setBrush(brush);
 }
@@ -49,8 +51,8 @@ NodeLabel::NodeLabel(const QString &text, bool isUserMetadata) :
 void NodeLabel::paint(QPainter *painter,
                       const QStyleOptionGraphicsItem *option,
                       QWidget *widget) {
-  auto backgroundColor =
-      QGuiApplication::palette().color(QPalette::Active, QPalette::Base);
+  const auto backgroundColor =
+      qobject_cast<GraphView *>(scene()->parent())->getBackgroundColor();
 
   painter->setPen(Qt::NoPen);
   painter->setBrush(backgroundColor);
@@ -63,7 +65,7 @@ Node::Node(GraphView *graphView,
            const QString &name,
            bool isUserMetadata,
            bool containsInstalledPlugins) :
-    textItem(new NodeLabel(name, isUserMetadata)),
+    textItem(new NodeLabel(*graphView, name, isUserMetadata)),
     isUserMetadata_(isUserMetadata),
     containsInstalledPlugins(containsInstalledPlugins) {
   setFlag(ItemIsMovable);
@@ -135,7 +137,12 @@ QRectF Node::boundingRect() const {
 
 QPainterPath Node::shape() const {
   QPainterPath path;
-  path.addEllipse(-RADIUS, -RADIUS, DIAMETER, DIAMETER);
+  // Draw circle with a little bit of padding (radius / 2) to make it easier
+  // to grab nodes.
+  path.addEllipse(-RADIUS - RADIUS / 2,
+                  -RADIUS - RADIUS / 2,
+                  DIAMETER + RADIUS,
+                  DIAMETER + RADIUS);
 
   const auto textRect = textItem->boundingRect();
   const auto width = textRect.width();
@@ -208,6 +215,10 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       delete edge;
     }
 
+    // Register unsaved changes before removing the item so that the scene
+    // is still valid.
+    registerUnsavedChanges();
+
     scene()->removeItem(this->textItem);
     scene()->removeItem(this);
     delete this->textItem;
@@ -248,6 +259,8 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
     auto edge = new Edge(this, node, true);
     scene()->addItem(edge);
+
+    registerUnsavedChanges();
   }
 
   drawEdgeToCursor = false;
@@ -270,10 +283,13 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   updateTextPos();
 
+  registerUnsavedChanges();
+
   if (drawEdgeToCursor) {
     removeEdgeToCursor();
 
-    const auto color = getDefaultColor(true);
+    const auto graphView = qobject_cast<GraphView *>(scene()->parent());
+    const auto color = getDefaultColor(*graphView, true);
     auto pen =
         QPen(color, LINE_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     auto polygon = createLineWithArrow(scenePos(), event->scenePos());
@@ -314,7 +330,8 @@ QColor Node::getNodeColor() const {
     return QColor("#8BC34A");
   }
 
-  return getDefaultColor(isUserMetadata_);
+  const auto graphView = qobject_cast<GraphView *>(scene()->parent());
+  return getDefaultColor(*graphView, isUserMetadata_);
 }
 
 void Node::removeEdgeToCursor() {
@@ -328,5 +345,9 @@ void Node::removeEdgeToCursor() {
 void Node::updateTextPos() {
   const auto textWidth = textItem->boundingRect().width();
   textItem->setPos(x() - textWidth / 2, y() + TEXT_Y_POS);
+}
+
+void Node::registerUnsavedChanges() {
+  qobject_cast<GraphView *>(scene()->parent())->registerUnsavedChanges();
 }
 }

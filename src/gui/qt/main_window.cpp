@@ -33,7 +33,6 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
-#include <QtWidgets/QTableView>
 #include <QtWidgets/QTextEdit>
 
 #include "gui/backup.h"
@@ -186,6 +185,49 @@ int calculateSidebarIndexSectionWidth(GameType gameType) {
   }
 }
 
+LootSettings::WindowPosition getWindowPosition(QWidget& window) {
+  LootSettings::WindowPosition position;
+
+  // Use the normal geometry because that gives the size and position as if
+  // the window is neither maximised or minimised. This is useful because if
+  // LOOT is opened into a maximised state, unmaximising it should restore
+  // the previous unmaximised size and position, and that can't be done
+  // without recording the normal geometry.
+  const auto geometry = window.normalGeometry();
+  position.left = geometry.x();
+  position.top = geometry.y();
+  position.right = position.left + geometry.width();
+  position.bottom = position.top + geometry.height();
+  position.maximised = window.isMaximized();
+
+  return position;
+}
+
+void setWindowPosition(QWidget& window,
+                       const LootSettings::WindowPosition& position) {
+  const auto width = position.right - position.left;
+  const auto height = position.bottom - position.top;
+
+  const auto geometry = QRect(position.left, position.top, width, height);
+  const auto topLeft = geometry.topLeft();
+
+  if (QGuiApplication::screenAt(topLeft) == nullptr) {
+    // No screen exists at the old position, just leave the Window at the
+    // default position Qt gives it so that it isn't positioned off-screen.
+    auto logger = getLogger();
+    if (logger) {
+      logger->warn(
+          "Could not restore window position because no screen exists "
+          "at the coordinates ({}, {})",
+          topLeft.x(),
+          topLeft.y());
+    }
+    window.resize(width, height);
+  } else {
+    window.setGeometry(geometry);
+  }
+}
+
 MainWindow::MainWindow(LootState& state, QWidget* parent) :
     QMainWindow(parent), state(state) {
   qRegisterMetaType<QueryResult>("QueryResult");
@@ -262,40 +304,44 @@ void MainWindow::initialise() {
   }
 }
 
+void MainWindow::applyTheme() {
+  // Apply theme.
+  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
+                                         state.getSettings().getTheme());
+  if (!styleSheet.has_value()) {
+    // Fall back to the default theme.
+    styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
+  }
+
+  if (styleSheet.has_value()) {
+    qApp->setStyleSheet(styleSheet.value());
+    qApp->style()->polish(qApp);
+  }
+}
+
 void MainWindow::setupUi() {
 #ifdef _WIN32
   setWindowIcon(QIcon(":/icon.ico"));
 #endif
 
-  auto lastWindowPosition = state.getSettings().getWindowPosition();
+  auto lastWindowPosition = state.getSettings().getMainWindowPosition();
   if (lastWindowPosition.has_value()) {
-    const auto& windowPosition = lastWindowPosition.value();
-    const auto width = windowPosition.right - windowPosition.left;
-    const auto height = windowPosition.bottom - windowPosition.top;
-
-    const auto geometry =
-        QRect(windowPosition.left, windowPosition.top, width, height);
-    const auto topLeft = geometry.topLeft();
-
-    if (QGuiApplication::screenAt(topLeft) == nullptr) {
-      // No screen exists at the old position, just leave the Window at the
-      // default position Qt gives it so that it isn't positioned off-screen.
-      auto logger = getLogger();
-      if (logger) {
-        logger->warn(
-            "Could not restore LOOT window position because no screen exists "
-            "at the coordinates ({}, {})",
-            topLeft.x(),
-            topLeft.y());
-      }
-      resize(width, height);
-    } else {
-      setGeometry(geometry);
-    }
+    setWindowPosition(*this, lastWindowPosition.value());
   } else {
     static constexpr int DEFAULT_WIDTH = 1024;
     static constexpr int DEFAULT_HEIGHT = 768;
     resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  }
+
+  const auto groupsEditorWindowPosition =
+      state.getSettings().getGroupsEditorWindowPosition();
+  if (groupsEditorWindowPosition.has_value()) {
+    setWindowPosition(*groupsEditor, groupsEditorWindowPosition.value());
+
+    if (groupsEditorWindowPosition.value().maximised) {
+      groupsEditor->setWindowState(groupsEditor->windowState() |
+                                   Qt::WindowMaximized);
+    }
   }
 
   // Set up status bar.
@@ -308,11 +354,11 @@ void MainWindow::setupUi() {
   searchDialog->setObjectName("searchDialog");
   sidebarPluginsView->setObjectName("sidebarPluginsView");
 
-  toolBox->addItem(sidebarPluginsView, QString("Plugins"));
+  toolBox->addItem(sidebarPluginsView, QString("P&lugins"));
 
   filtersWidget->setObjectName("filtersWidget");
 
-  toolBox->addItem(filtersWidget, QString("Filters"));
+  toolBox->addItem(filtersWidget, QString("F&ilters"));
 
   sidebarSplitter->addWidget(toolBox);
 
@@ -359,77 +405,83 @@ void MainWindow::setupUi() {
   setupViews();
 
   translateUi();
+  setIcons();
 
   disableGameActions();
 
   QMetaObject::connectSlotsByName(this);
+
+  connect(this,
+          &MainWindow::normalIconColorChanged,
+          this,
+          &MainWindow::handleIconColorChanged);
+  connect(this,
+          &MainWindow::disabledIconColorChanged,
+          this,
+          &MainWindow::handleIconColorChanged);
+  connect(this,
+          &MainWindow::selectedIconColorChanged,
+          this,
+          &MainWindow::handleIconColorChanged);
+  connect(this,
+          &MainWindow::selectedSidebarPluginTextColorChanged,
+          this,
+          &MainWindow::handleSidebarTextColorChanged);
+  connect(this,
+          &MainWindow::unselectedSidebarPluginGroupColorChanged,
+          this,
+          &MainWindow::handleSidebarTextColorChanged);
+  connect(this,
+          &MainWindow::linkColorChanged,
+          this,
+          &MainWindow::handleLinkColorChanged);
 }
 
 void MainWindow::setupMenuBar() {
   // Create actions.
   actionSettings->setObjectName("actionSettings");
-  actionSettings->setIcon(IconFactory::getSettingsIcon());
 
   actionBackupData->setObjectName("actionBackupData");
-  actionBackupData->setIcon(IconFactory::getArchiveIcon());
 
   actionQuit->setObjectName("actionQuit");
-  actionQuit->setIcon(IconFactory::getQuitIcon());
 
   actionViewDocs->setObjectName("actionViewDocs");
-  actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
   actionViewDocs->setShortcut(QKeySequence::HelpContents);
 
   actionOpenLOOTDataFolder->setObjectName("actionOpenLOOTDataFolder");
-  actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
 
   actionJoinDiscordServer->setObjectName("actionJoinDiscordServer");
-  actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
 
   actionAbout->setObjectName("actionAbout");
-  actionAbout->setIcon(IconFactory::getAboutIcon());
 
   actionOpenGroupsEditor->setObjectName("actionOpenGroupsEditor");
-  actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
 
   actionSearch->setObjectName("actionSearch");
-  actionSearch->setIcon(IconFactory::getSearchIcon());
   actionSearch->setShortcut(QKeySequence::Find);
 
   actionCopyLoadOrder->setObjectName("actionCopyLoadOrder");
-  actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
 
   actionCopyContent->setObjectName("actionCopyContent");
-  actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
 
   actionRefreshContent->setObjectName("actionRefreshContent");
-  actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
   actionRefreshContent->setShortcut(QKeySequence::Refresh);
 
   actionRedatePlugins->setObjectName("actionRedatePlugins");
-  actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
 
   actionFixAmbiguousLoadOrder->setObjectName("actionFixAmbiguousLoadOrder");
-  actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
 
   actionClearAllUserMetadata->setObjectName("actionClearAllUserMetadata");
-  actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
 
   actionCopyPluginName->setObjectName("actionCopyPluginName");
-  actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
 
   actionCopyCardContent->setObjectName("actionCopyCardContent");
-  actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
 
   actionCopyMetadata->setObjectName("actionCopyMetadata");
-  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
 
   actionEditMetadata->setObjectName("actionEditMetadata");
-  actionEditMetadata->setIcon(IconFactory::getEditIcon());
   actionEditMetadata->setShortcut(QString("Ctrl+E"));
 
   actionClearMetadata->setObjectName("actionClearMetadata");
-  actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
 
   // Create menu bar.
   setMenuBar(menubar);
@@ -444,6 +496,11 @@ void MainWindow::setupMenuBar() {
   menuFile->addSeparator();
   menuFile->addAction(actionQuit);
   menuGame->addAction(actionOpenGroupsEditor);
+  menuGame->addSeparator();
+  menuGame->addAction(actionSort);
+  menuGame->addAction(actionUpdateMasterlist);
+  menuGame->addAction(actionApplySort);
+  menuGame->addAction(actionDiscardSort);
   menuGame->addSeparator();
   menuGame->addAction(actionSearch);
   menuGame->addAction(actionCopyLoadOrder);
@@ -469,17 +526,13 @@ void MainWindow::setupMenuBar() {
 void MainWindow::setupToolBar() {
   // Create actions.
   actionSort->setObjectName("actionSort");
-  actionSort->setIcon(IconFactory::getSortIcon());
 
   actionUpdateMasterlist->setObjectName("actionUpdateMasterlist");
-  actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
 
   actionApplySort->setObjectName("actionApplySort");
-  actionApplySort->setIcon(IconFactory::getApplySortIcon());
   actionApplySort->setVisible(false);
 
   actionDiscardSort->setObjectName("actionDiscardSort");
-  actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
   actionDiscardSort->setVisible(false);
 
   // Create toolbar.
@@ -502,6 +555,7 @@ void MainWindow::setupToolBar() {
 
 void MainWindow::setupViews() {
   sidebarPluginsView->setModel(proxyModel);
+  sidebarPluginsView->setTabKeyNavigation(false);
   sidebarPluginsView->setDragEnabled(true);
   sidebarPluginsView->setSelectionMode(QAbstractItemView::SingleSelection);
   sidebarPluginsView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -513,9 +567,9 @@ void MainWindow::setupViews() {
 
   auto verticalHeader = sidebarPluginsView->verticalHeader();
   verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
-  verticalHeader->setMaximumSectionSize(SIDEBAR_EDIT_MODE_ROW_HEIGHT);
-  verticalHeader->setMinimumSectionSize(SIDEBAR_NORMAL_ROW_HEIGHT);
-  verticalHeader->setDefaultSectionSize(SIDEBAR_NORMAL_ROW_HEIGHT);
+  verticalHeader->setMaximumSectionSize(getSidebarRowHeight(true));
+  verticalHeader->setMinimumSectionSize(getSidebarRowHeight(false));
+  verticalHeader->setDefaultSectionSize(getSidebarRowHeight(false));
   verticalHeader->hide();
 
   auto horizontalHeader = sidebarPluginsView->horizontalHeader();
@@ -580,43 +634,71 @@ void MainWindow::translateUi() {
   setWindowTitle("LOOT");
 
   // Translate toolbar items.
-  actionSort->setText(translate("Sort Plugins"));
-  actionUpdateMasterlist->setText(translate("Update Masterlist"));
-  actionApplySort->setText(translate("Apply Sorted Load Order"));
-  actionDiscardSort->setText(translate("Discard Sorted Load Order"));
+  actionSort->setText(translate("&Sort Plugins"));
+  actionUpdateMasterlist->setText(translate("Update &Masterlist"));
+  actionApplySort->setText(translate("&Apply Sorted Load Order"));
+  actionDiscardSort->setText(translate("&Discard Sorted Load Order"));
 
   // Translate menu bar items.
-  menuFile->setTitle(translate("File"));
-  actionSettings->setText(translate("Settings..."));
-  actionBackupData->setText(translate("Backup LOOT Data"));
-  actionOpenLOOTDataFolder->setText(translate("Open LOOT Data Folder"));
-  actionQuit->setText(translate("Quit"));
+  menuFile->setTitle(translate("&File"));
+  actionSettings->setText(translate("&Settings..."));
+  actionBackupData->setText(translate("&Backup LOOT Data"));
+  actionOpenLOOTDataFolder->setText(translate("&Open LOOT Data Folder"));
+  actionQuit->setText(translate("&Quit"));
 
-  menuGame->setTitle(translate("Game"));
-  actionOpenGroupsEditor->setText(translate("Edit Groups..."));
-  actionSearch->setText(translate("Search Cards..."));
-  actionCopyLoadOrder->setText(translate("Copy Load Order"));
-  actionCopyContent->setText(translate("Copy Content"));
-  actionRefreshContent->setText(translate("Refresh Content"));
-  actionRedatePlugins->setText(translate("Redate Plugins..."));
-  actionFixAmbiguousLoadOrder->setText(translate("Fix Ambiguous Load Order"));
-  actionClearAllUserMetadata->setText(translate("Clear All User Metadata..."));
+  menuGame->setTitle(translate("&Game"));
+  actionOpenGroupsEditor->setText(translate("&Edit Groups..."));
+  actionSearch->setText(translate("Searc&h Cards..."));
+  actionCopyLoadOrder->setText(translate("Copy &Load Order"));
+  actionCopyContent->setText(translate("&Copy Content"));
+  actionRefreshContent->setText(translate("&Refresh Content"));
+  actionRedatePlugins->setText(translate("Redate &Plugins..."));
+  actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
+  actionClearAllUserMetadata->setText(translate("Clear All &User Metadata..."));
 
-  menuPlugin->setTitle(translate("Plugin"));
-  actionCopyPluginName->setText(translate("Copy Plugin Name"));
-  actionCopyCardContent->setText(translate("Copy Card Content"));
-  actionCopyMetadata->setText(translate("Copy Metadata"));
-  actionEditMetadata->setText(translate("Edit Metadata..."));
-  actionClearMetadata->setText(translate("Clear User Metadata..."));
+  menuPlugin->setTitle(translate("&Plugin"));
+  actionCopyPluginName->setText(translate("Copy &Plugin Name"));
+  actionCopyCardContent->setText(translate("Copy &Card Content"));
+  actionCopyMetadata->setText(translate("Copy &Metadata"));
+  actionEditMetadata->setText(translate("&Edit Metadata..."));
+  actionClearMetadata->setText(translate("Clear &User Metadata..."));
 
-  menuHelp->setTitle(translate("Help"));
-  actionViewDocs->setText(translate("View Documentation"));
-  actionJoinDiscordServer->setText(translate("Join Discord Server"));
-  actionAbout->setText(translate("About"));
+  menuHelp->setTitle(translate("&Help"));
+  actionViewDocs->setText(translate("&View Documentation"));
+  actionJoinDiscordServer->setText(translate("&Join Discord Server"));
+  actionAbout->setText(translate("&About"));
 
   // Translate sidebar.
-  toolBox->setItemText(0, translate("Plugins"));
-  toolBox->setItemText(1, translate("Filters"));
+  toolBox->setItemText(0, translate("P&lugins"));
+  toolBox->setItemText(1, translate("F&ilters"));
+}
+
+void MainWindow::setIcons() {
+  actionSettings->setIcon(IconFactory::getSettingsIcon());
+  actionBackupData->setIcon(IconFactory::getArchiveIcon());
+  actionQuit->setIcon(IconFactory::getQuitIcon());
+  actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
+  actionOpenLOOTDataFolder->setIcon(IconFactory::getOpenLOOTDataFolderIcon());
+  actionJoinDiscordServer->setIcon(IconFactory::getJoinDiscordServerIcon());
+  actionAbout->setIcon(IconFactory::getAboutIcon());
+  actionOpenGroupsEditor->setIcon(IconFactory::getOpenGroupsEditorIcon());
+  actionSearch->setIcon(IconFactory::getSearchIcon());
+  actionCopyLoadOrder->setIcon(IconFactory::getCopyLoadOrderIcon());
+  actionCopyContent->setIcon(IconFactory::getCopyContentIcon());
+  actionRefreshContent->setIcon(IconFactory::getRefreshIcon());
+  actionRedatePlugins->setIcon(IconFactory::getRedateIcon());
+  actionFixAmbiguousLoadOrder->setIcon(IconFactory::getFixIcon());
+  actionClearAllUserMetadata->setIcon(IconFactory::getDeleteIcon());
+  actionCopyPluginName->setIcon(IconFactory::getCopyContentIcon());
+  actionCopyCardContent->setIcon(IconFactory::getCopyContentIcon());
+  actionCopyMetadata->setIcon(IconFactory::getCopyMetadataIcon());
+  actionEditMetadata->setIcon(IconFactory::getEditIcon());
+  actionClearMetadata->setIcon(IconFactory::getDeleteIcon());
+
+  actionSort->setIcon(IconFactory::getSortIcon());
+  actionUpdateMasterlist->setIcon(IconFactory::getUpdateMasterlistIcon());
+  actionApplySort->setIcon(IconFactory::getApplySortIcon());
+  actionDiscardSort->setIcon(IconFactory::getDiscardSortIcon());
 }
 
 void MainWindow::enableGameActions() {
@@ -660,7 +742,7 @@ void MainWindow::enterEditingState() {
   actionSort->setDisabled(true);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
-      SIDEBAR_EDIT_MODE_ROW_HEIGHT);
+      getSidebarRowHeight(true));
 }
 
 void MainWindow::exitEditingState() {
@@ -675,7 +757,7 @@ void MainWindow::exitEditingState() {
   actionSort->setEnabled(true);
 
   sidebarPluginsView->verticalHeader()->setDefaultSectionSize(
-      SIDEBAR_NORMAL_ROW_HEIGHT);
+      getSidebarRowHeight(false));
 }
 
 void MainWindow::enterSortingState() {
@@ -1005,25 +1087,17 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   try {
-    LootSettings::WindowPosition position;
+    const auto position = getWindowPosition(*this);
 
-    // Use the normal geometry because that gives the size and position as if
-    // the window is neither maximised or minimised. This is useful because if
-    // LOOT is opened into a maximised state, unmaximising it should restore
-    // the previous unmaximised size and position, and that can't be done
-    // without recording the normal geometry.
-    const auto geometry = normalGeometry();
-    position.left = geometry.x();
-    position.top = geometry.y();
-    position.right = position.left + geometry.width();
-    position.bottom = position.top + geometry.height();
-    position.maximised = isMaximized();
+    state.getSettings().storeMainWindowPosition(position);
 
-    state.getSettings().storeWindowPosition(position);
+    const auto groupsEditorPosition = getWindowPosition(*groupsEditor);
+
+    state.getSettings().storeGroupsEditorWindowPosition(groupsEditorPosition);
   } catch (const std::exception& e) {
     auto logger = getLogger();
     if (logger) {
-      logger->error("Failed to record window position: {}", e.what());
+      logger->error("Failed to record window positions: {}", e.what());
     }
   }
 
@@ -1835,11 +1909,26 @@ void MainWindow::on_sidebarPluginsView_customContextMenuRequested(
 }
 
 void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
-    const QItemSelection& selected) {
-  if (selected.isEmpty()) {
-    disablePluginActions();
-  } else {
+    const QItemSelection& selected,
+    const QItemSelection& deselected) {
+  if (selected.isEmpty() && deselected.isEmpty()) {
+    // Selection hasn't changed but indices of selected items have.
+    return;
+  }
+
+  bool hasPluginSelected = false;
+  for (const auto& index : selected.indexes()) {
+    if (index.row() > 0) {
+      // The zeroth row is for the general information card.
+      hasPluginSelected = true;
+      break;
+    }
+  }
+
+  if (hasPluginSelected) {
     enablePluginActions();
+  } else {
+    disablePluginActions();
   }
 }
 
@@ -2010,9 +2099,14 @@ void MainWindow::on_filtersWidget_cardContentFilterChanged(
 
 void MainWindow::on_settingsDialog_accepted() {
   try {
+    const auto currentTheme = state.getSettings().getTheme();
     settingsDialog->recordInputValues(state);
 
     state.getSettings().save(state.getSettingsPath());
+
+    if (state.getSettings().getTheme() != currentTheme) {
+      applyTheme();
+    }
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2263,4 +2357,46 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
 
 void MainWindow::handleWorkerThreadFinished() { progressDialog->reset(); }
 
+void MainWindow::handleIconColorChanged() {
+  IconFactory::setColours(
+      normalIconColor, disabledIconColor, selectedIconColor);
+
+  setIcons();
+
+  sidebarPluginsView->reset();
+
+  const auto cardDelegate =
+      qobject_cast<PluginCardDelegate*>(pluginCardsView->itemDelegate());
+
+  if (cardDelegate) {
+    cardDelegate->setIcons();
+    pluginCardsView->reset();
+  }
+}
+
+void MainWindow::handleSidebarTextColorChanged() {
+  const auto sidebarDelegate = qobject_cast<SidebarPluginNameDelegate*>(
+      sidebarPluginsView->itemDelegateForColumn(
+          PluginItemModel::SIDEBAR_NAME_COLUMN));
+
+  if (sidebarDelegate) {
+    sidebarDelegate->setColors(selectedSidebarPluginTextColor,
+                               unselectedSidebarPluginGroupColor);
+    sidebarPluginsView->reset();
+  }
+}
+
+void MainWindow::handleLinkColorChanged() {
+  auto palette = qApp->palette();
+  palette.setColor(QPalette::Active, QPalette::Link, linkColor);
+  qApp->setPalette(palette);
+
+  const auto cardDelegate =
+      qobject_cast<PluginCardDelegate*>(pluginCardsView->itemDelegate());
+
+  if (cardDelegate) {
+    cardDelegate->refreshMessages();
+    pluginCardsView->reset();
+  }
+}
 }

@@ -140,6 +140,16 @@ void prepareWidget(QWidget* widget) {
 
 PluginCard::PluginCard(QWidget* parent) : QFrame(parent) { setupUi(); }
 
+void PluginCard::setIcons() {
+  setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
+  setIcon(masterFileLabel, IconFactory::getMasterFileIcon());
+  setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
+  setIcon(emptyPluginLabel, IconFactory::getEmptyPluginIcon());
+  setIcon(loadsArchiveLabel, IconFactory::getLoadsArchiveIcon());
+  setIcon(isCleanLabel, IconFactory::getIsCleanIcon());
+  setIcon(hasUserEditsLabel, IconFactory::getHasUserMetadataIcon());
+}
+
 void PluginCard::setContent(const PluginItem& plugin,
                             const CardContentFiltersState& filters) {
   nameLabel->setText(QString::fromStdString(plugin.name));
@@ -247,6 +257,8 @@ void PluginCard::setSearchResult(bool isSearchResult,
   }
 }
 
+void PluginCard::refreshMessages() { messagesWidget->refresh(); }
+
 void PluginCard::setupUi() {
   crcLabel->setObjectName("plugin-crc");
   versionLabel->setObjectName("plugin-version");
@@ -291,13 +303,7 @@ void PluginCard::setupUi() {
   locationsLabel->setOpenExternalLinks(true);
   locationsLabel->setVisible(false);
 
-  setIcon(isActiveLabel, IconFactory::getIsActiveIcon());
-  setIcon(masterFileLabel, IconFactory::getMasterFileIcon());
-  setIcon(lightPluginLabel, IconFactory::getLightPluginIcon());
-  setIcon(emptyPluginLabel, IconFactory::getEmptyPluginIcon());
-  setIcon(loadsArchiveLabel, IconFactory::getLoadsArchiveIcon());
-  setIcon(isCleanLabel, IconFactory::getIsCleanIcon());
-  setIcon(hasUserEditsLabel, IconFactory::getHasUserMetadataIcon());
+  setIcons();
 
   auto layout = new QVBoxLayout();
   layout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -357,6 +363,13 @@ PluginCardDelegate::PluginCardDelegate(QListView* parent) :
     pluginCard(new PluginCard(parent->viewport())) {
   prepareWidget(generalInfoCard);
   prepareWidget(pluginCard);
+}
+
+void PluginCardDelegate::setIcons() { pluginCard->setIcons(); }
+
+void PluginCardDelegate::refreshMessages() {
+  generalInfoCard->refreshMessages();
+  pluginCard->refreshMessages();
 }
 
 void PluginCardDelegate::paint(QPainter* painter,
@@ -430,8 +443,7 @@ QSize PluginCardDelegate::sizeHint(const QStyleOptionViewItem& option,
 
     QWidget* widget = nullptr;
     if (index.row() == 0) {
-      widget =
-          setGeneralInfoCardContent(new GeneralInfoCard(parentWidget), index);
+      widget = setGeneralInfoCardContent(generalInfoCard, index);
     } else {
       widget = setPluginCardContent(new PluginCard(parentWidget), index);
     }

@@ -83,7 +83,8 @@ public:
   std::string getLanguage() const;
   std::string getTheme() const;
   std::string getPreludeSource() const;
-  std::optional<WindowPosition> getWindowPosition() const;
+  std::optional<WindowPosition> getMainWindowPosition() const;
+  std::optional<WindowPosition> getGroupsEditorWindowPosition() const;
   const std::vector<GameSettings>& getGameSettings() const;
   const Filters& getFilters() const;
   const std::vector<Language>& getLanguages() const;
@@ -99,7 +100,8 @@ public:
   void enableNoSortingChangesDialog(bool enable);
 
   void storeLastGame(const std::string& lastGame);
-  void storeWindowPosition(const WindowPosition& position);
+  void storeMainWindowPosition(const WindowPosition& position);
+  void storeGroupsEditorWindowPosition(const WindowPosition& position);
   void storeGameSettings(const std::vector<GameSettings>& gameSettings);
   void storeFilters(const Filters& filters);
   void updateLastVersion();
@@ -116,7 +118,8 @@ private:
   std::string language_{"en"};
   std::string preludeSource_{getDefaultPreludeSource()};
   std::string theme_{"default"};
-  std::optional<WindowPosition> windowPosition_;
+  std::optional<WindowPosition> mainWindowPosition_;
+  std::optional<WindowPosition> groupsEditorWindowPosition_;
   std::vector<GameSettings> gameSettings_{
       GameSettings(GameType::tes3),
       GameSettings(GameType::tes4),

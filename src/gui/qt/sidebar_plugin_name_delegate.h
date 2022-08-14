@@ -27,20 +27,26 @@
 #define LOOT_GUI_QT_SIDEBAR_PLUGIN_NAME_DELEGATE
 
 #include <QtGui/QPainter>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QStyledItemDelegate>
 
 namespace loot {
-static constexpr int SIDEBAR_NORMAL_ROW_HEIGHT = 18;
-static constexpr int SIDEBAR_EDIT_MODE_ROW_HEIGHT = 40;
+qreal getSidebarRowHeight(bool inEditMode);
 
 class SidebarPluginNameDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
   explicit SidebarPluginNameDelegate(QObject* parent);
 
+  void setColors(QColor selectedName, QColor selectedGroup);
+
   void paint(QPainter* painter,
              const QStyleOptionViewItem& option,
              const QModelIndex& index) const override;
+
+private:
+  QColor selectedTextColor;
+  QColor unselectedGroupColor;
 };
 }
 

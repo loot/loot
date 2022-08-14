@@ -46,13 +46,13 @@ public:
 
 private:
   QLabel *nameLabel{new QLabel(this)};
-  QLabel *folderLabel{new QLabel(this)};
   QLabel *typeLabel{new QLabel(this)};
   QLabel *baseGameInstanceLabel{new QLabel(this)};
+  QLabel *folderLabel{new QLabel(this)};
   QLineEdit *nameInput{new QLineEdit(this)};
-  QLineEdit *folderInput{new QLineEdit(this)};
   QComboBox *typeComboBox{new QComboBox(this)};
   QCheckBox *baseGameInstanceCheckbox{new QCheckBox(this)};
+  QLineEdit *folderInput{new QLineEdit(this)};
 
   QStringList currentGameFolders;
 

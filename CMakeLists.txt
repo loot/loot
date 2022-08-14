@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 cmake_policy(SET CMP0015 NEW)
 project(LOOT)
 include(ExternalProject)
+include(FetchContent)
 
 option(RUN_CLANG_TIDY "Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator." OFF)
 
@@ -58,8 +59,8 @@ find_package(OGDF CONFIG)
 
 ExternalProject_Add(GTest
     PREFIX "external"
-    URL "https://github.com/google/googletest/archive/release-1.11.0.tar.gz"
-    URL_HASH "SHA256=b4870bf121ff7795ba20d20bcdd8627b8e088f2d1dab299a031c1034eddc93d5"
+    URL "https://github.com/google/googletest/archive/release-1.12.1.tar.gz"
+    URL_HASH "SHA256=81964fe578e9bd7c94dfdb09c8e4d6e6759e19967e397dbea48d1c10e45d0df2"
     CMAKE_ARGS -Dgtest_force_shared_crt=ON
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
@@ -97,8 +98,8 @@ endif()
 
 ExternalProject_Add(zlib
     PREFIX "external"
-    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.11.tar.gz"
-    URL_HASH "SHA256=629380c90a77b964d896ed37163f5c3a34f6e6d897311f1df2a7016355c45eff"
+    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.12.tar.gz"
+    URL_HASH "SHA256=d8688496ea40fb61787500e863cc63c9afcbc524468cedeb478068924eb54932"
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE TRUE)
 ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
@@ -108,8 +109,8 @@ set(ZLIB_LIBRARY
 
 ExternalProject_Add(minizip-ng
     PREFIX "external"
-    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.4.tar.gz"
-    URL_HASH "SHA256=2ab219f651901a337a7d3c268128711b80330a99ea36bdc528c76b591a624c3c"
+    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.6.tar.gz"
+    URL_HASH "SHA256=383fa1bdc28c482828a8a8db53f758dbd44291b641182724fda5df5b59cce543"
     CMAKE_ARGS
         -DMZ_ZLIB=ON
         -DMZ_BZIP2=OFF
@@ -140,20 +141,17 @@ ExternalProject_Add(testing-plugins
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
 
-ExternalProject_Add(cpptoml
-    PREFIX "external"
-    URL "https://github.com/skystrife/cpptoml/archive/v0.1.1.tar.gz"
-    URL_HASH "SHA256=23af72468cfd4040984d46a0dd2a609538579c78ddc429d6b8fd7a10a6e24403"
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(cpptoml SOURCE_DIR)
-set(CPPTOML_INCLUDE_DIRS "${SOURCE_DIR}/include")
+FetchContent_Declare(
+    tomlplusplus
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.1.0.tar.gz"
+    URL_HASH "SHA256=dae72714fc356ca1b019298d9e6275cc41ba95546ae722ccdb6795e92f47762e"
+)
+FetchContent_MakeAvailable(tomlplusplus)
 
 ExternalProject_Add(spdlog
     PREFIX "external"
-    URL "https://github.com/gabime/spdlog/archive/v1.9.2.tar.gz"
-    URL_HASH "SHA256=6fff9215f5cb81760be4cc16d033526d1080427d236e86d70bb02994f85e3d38"
+    URL "https://github.com/gabime/spdlog/archive/v1.10.0.tar.gz"
+    URL_HASH "SHA256=697f91700237dbae2326b90469be32b876b2b44888302afbc7aceb68bcfe8224"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -413,14 +411,14 @@ endif()
 
 # Build Qt application.
 add_executable(LOOT ${LOOT_ALL_SOURCES})
-add_dependencies(LOOT cpptoml libloot minizip-ng spdlog OGDF)
+add_dependencies(LOOT libloot minizip-ng spdlog OGDF)
 target_link_libraries(LOOT PRIVATE
     Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
-    cpptoml libloot minizip-ng spdlog GTest testing-plugins)
+    libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
     Qt::Widgets Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
@@ -431,23 +429,23 @@ target_link_libraries(loot_gui_tests PRIVATE
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
     ${SPDLOG_INCLUDE_DIRS}
+    "${tomlplusplus_SOURCE_DIR}/include"
     ${OGDF_INCLUDE_DIRS})
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    ${CPPTOML_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GTEST_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
-    ${SPDLOG_INCLUDE_DIRS})
+    ${SPDLOG_INCLUDE_DIRS}
+    "${tomlplusplus_SOURCE_DIR}/include")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(LOOT PRIVATE UNICODE _UNICODE NOMINMAX)
@@ -586,21 +584,21 @@ else()
         libicuuc.so.56
         libicuuc.so.56.1
         libQt6Core.so.6
-        libQt6Core.so.6.2.2
+        libQt6Core.so.6.2.4
         libQt6DBus.so.6
-        libQt6DBus.so.6.2.2
+        libQt6DBus.so.6.2.4
         libQt6Gui.so.6
-        libQt6Gui.so.6.2.2
+        libQt6Gui.so.6.2.4
         libQt6Network.so.6
-        libQt6Network.so.6.2.2
+        libQt6Network.so.6.2.4
         libQt6Test.so.6
-        libQt6Test.so.6.2.2
+        libQt6Test.so.6.2.4
         libQt6Widgets.so.6
-        libQt6Widgets.so.6.2.2
+        libQt6Widgets.so.6.2.4
         libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.2.2
+        libQt6XcbQpa.so.6.2.4
         libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.2.2)
+        libQt6OpenGL.so.6.2.4)
 
     foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
         add_custom_command(TARGET loot_gui_tests POST_BUILD

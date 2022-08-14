@@ -176,10 +176,25 @@ QPixmap IconFactory::getPixmap(const QIcon& icon,
   return pixmap;
 }
 
+void IconFactory::setColours(QColor normal, QColor disabled, QColor selected) {
+  icons.clear();
+  pixmaps.clear();
+
+  normalColor = normal;
+  disabledColor = disabled;
+  selectedColor = selected;
+}
+
 std::map<QString, QIcon> IconFactory::icons;
 
 std::map<std::tuple<qint64, double, QIcon::Mode, QIcon::State>, QPixmap>
     IconFactory::pixmaps;
+
+QColor IconFactory::normalColor;
+
+QColor IconFactory::disabledColor;
+
+QColor IconFactory::selectedColor;
 
 QIcon IconFactory::getIcon(QString resourcePath) {
   const auto it = icons.find(resourcePath);
@@ -187,17 +202,29 @@ QIcon IconFactory::getIcon(QString resourcePath) {
     return it->second;
   }
 
-  auto normalColor = QGuiApplication::palette().color(QPalette::Disabled,
-                                                      QPalette::WindowText);
-  auto selectedColor = QGuiApplication::palette().color(
-      QPalette::Active, QPalette::HighlightedText);
+  if (!normalColor.isValid()) {
+    normalColor = QGuiApplication::palette().color(QPalette::Disabled,
+                                                   QPalette::WindowText);
+  }
+
+  if (!disabledColor.isValid()) {
+    disabledColor = QGuiApplication::palette().color(QPalette::Disabled,
+                                                     QPalette::WindowText);
+  }
+
+  if (!selectedColor.isValid()) {
+    selectedColor = QGuiApplication::palette().color(QPalette::Active,
+                                                     QPalette::HighlightedText);
+  }
 
   auto rawPixmap = QPixmap(resourcePath);
   auto normalPixmap = changeColor(rawPixmap, normalColor);
+  auto disabledPixmap = changeColor(rawPixmap, disabledColor);
   auto selectedPixmap = changeColor(rawPixmap, selectedColor);
 
   QIcon icon;
   icon.addPixmap(normalPixmap, QIcon::Normal);
+  icon.addPixmap(disabledPixmap, QIcon::Disabled);
   icon.addPixmap(selectedPixmap, QIcon::Selected);
 
   icons.emplace(resourcePath, icon);

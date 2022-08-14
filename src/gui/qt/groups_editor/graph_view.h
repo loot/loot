@@ -38,6 +38,10 @@ class Node;
 
 class GraphView : public QGraphicsView {
   Q_OBJECT
+  Q_PROPERTY(QColor masterColor MEMBER masterColor READ getMasterColor)
+  Q_PROPERTY(QColor userColor MEMBER userColor READ getUserColor)
+  Q_PROPERTY(
+      QColor backgroundColor MEMBER backgroundColor READ getBackgroundColor)
 
 public:
   explicit GraphView(QWidget *parent = nullptr);
@@ -48,11 +52,18 @@ public:
                  const std::vector<GroupNodePosition> &nodePositions);
 
   bool addGroup(const std::string &name);
+  void autoLayout();
+  void registerUnsavedChanges();
 
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
+  bool hasUnsavedChanges() const;
 
   void handleGroupSelected(const QString &name);
+
+  QColor getMasterColor() const;
+  QColor getUserColor() const;
+  QColor getBackgroundColor() const;
 
 signals:
   void groupSelected(const QString &name);
@@ -64,6 +75,11 @@ protected:
 
 private:
   static constexpr qreal SCALE_CONSTANT = qreal(1.2);
+
+  QColor masterColor;
+  QColor userColor;
+  QColor backgroundColor;
+  bool hasUnsavedChanges_{false};
 
   void doLayout(const std::vector<GroupNodePosition> &nodePositions);
 };

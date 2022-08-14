@@ -50,10 +50,10 @@ public:
   void recordInputValues(LootState &state);
 
 private:
-  QPushButton *addGameButton{new QPushButton(this)};
-  QStackedWidget *stackedWidget{new QStackedWidget(this)};
   QListWidget *listWidget{new QListWidget(this)};
+  QPushButton *addGameButton{new QPushButton(this)};
   GeneralTab *generalTab{new GeneralTab(this)};
+  QStackedWidget *stackedWidget{new QStackedWidget(this)};
 
   void setupUi();
   void translateUi();

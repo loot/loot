@@ -29,6 +29,7 @@
 #include <QtCore/QStringBuilder>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QStyle>
 #include <QtWidgets/QVBoxLayout>
 
 #include "gui/qt/helpers.h"
@@ -116,6 +117,8 @@ void SearchDialog::updateCountLabel() {
 }
 
 void SearchDialog::on_searchInput_textChanged(const QString& text) {
+  searchInput->style()->polish(searchInput);
+
   if (text.isEmpty()) {
     reset();
   }

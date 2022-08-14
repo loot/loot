@@ -84,15 +84,15 @@ private:
   QLabel *registryKeysLabel{new QLabel(this)};
   QLabel *localDataPathLabel{new QLabel(this)};
   QLineEdit *nameInput{new QLineEdit(this)};
-  QLineEdit *lootFolderInput{new QLineEdit(this)};
-  QLineEdit *masterFileInput{new QLineEdit(this)};
-  QLineEdit *masterlistSourceInput{new QLineEdit(this)};
-  FolderPicker *installPathInput{new FolderPicker(this)};
-  FolderPicker *localDataPathInput{new FolderPicker(this)};
   QComboBox *baseGameComboBox{new QComboBox(this)};
   QCheckBox *baseGameInstanceCheckbox{new QCheckBox(this)};
+  QLineEdit *lootFolderInput{new QLineEdit(this)};
+  QLineEdit *masterFileInput{new QLineEdit(this)};
   QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
+  QLineEdit *masterlistSourceInput{new QLineEdit(this)};
+  FolderPicker *installPathInput{new FolderPicker(this)};
   QPlainTextEdit *registryKeysInput{new QPlainTextEdit(this)};
+  FolderPicker *localDataPathInput{new FolderPicker(this)};
   QPushButton *deleteGameButton{new QPushButton(this)};
 
   void setupUi();

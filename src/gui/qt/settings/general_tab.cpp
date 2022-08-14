@@ -165,7 +165,7 @@ void GeneralTab::translateUi() {
   preludeSourceInput->setToolTip(translate("A prelude source is required."));
 
   descriptionLabel->setText(translate(
-      "Language and theme changes will be applied after LOOT is restarted."));
+      "Language changes will be applied after LOOT is restarted."));
 
   defaultGameComboBox->setItemText(0, translate("Autodetect"));
 }

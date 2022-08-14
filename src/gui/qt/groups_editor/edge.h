@@ -26,12 +26,12 @@
 #ifndef LOOT_GUI_QT_GROUPS_EDITOR_EDGE
 #define LOOT_GUI_QT_GROUPS_EDITOR_EDGE
 
-#include <QtGui/QPalette>
 #include <QtWidgets/QGraphicsItem>
 #include <QtWidgets/QGraphicsSceneMouseEvent>
 
 namespace loot {
 class Node;
+class GraphView;
 
 static constexpr int LINE_WIDTH = 1;
 static constexpr qreal ARROW_HYPOTENUSE = 10;
@@ -69,7 +69,7 @@ private:
 
 QPolygonF createLineWithArrow(QPointF startPos, QPointF endPos);
 
-QColor getDefaultColor(bool isUserMetadata);
+QColor getDefaultColor(const GraphView &graphView, bool isUserMetadata);
 }
 
 #endif

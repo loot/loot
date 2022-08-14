@@ -138,29 +138,11 @@ int main(int argc, char* argv[]) {
     app.installTranslator(&translator);
   }
 
-  // Apply theme.
-  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
-                                         state.getSettings().getTheme());
-  if (styleSheet.has_value()) {
-    app.setStyleSheet(styleSheet.value());
-    auto palette = loot::loadPalette(state.getResourcesPath(),
-                                     state.getSettings().getTheme());
-    if (palette.has_value()) {
-      app.setPalette(palette.value());
-    }
-  } else {
-    // Fall back to the default theme, which has a stylesheet but no palette
-    // config.
-    styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
-    if (styleSheet.has_value()) {
-      app.setStyleSheet(styleSheet.value());
-    }
-  }
-
   loot::MainWindow mainWindow(state);
+  mainWindow.applyTheme();
 
   const auto wasMaximised = state.getSettings()
-                                .getWindowPosition()
+                                .getMainWindowPosition()
                                 .value_or(loot::LootSettings::WindowPosition())
                                 .maximised;
 
