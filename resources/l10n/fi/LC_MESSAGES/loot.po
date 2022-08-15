@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.18.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-08-13 06:48+0100\n"
-"PO-Revision-Date: 2022-08-13 19:48+0300\n"
+"PO-Revision-Date: 2022-08-15 11:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: loot-fi@3v.fi\n"
 "Language: fi\n"
@@ -189,7 +189,7 @@ msgstr "&Päivitä pääluettelo"
 
 #: src/gui/qt/main_window.cpp:639
 msgid "&Apply Sorted Load Order"
-msgstr "Tallenna uu&si järjestys"
+msgstr "Tallenna &uusi järjestys"
 
 #: src/gui/qt/main_window.cpp:640
 msgid "&Discard Sorted Load Order"
@@ -257,7 +257,7 @@ msgstr "&Lisäosa"
 
 #: src/gui/qt/main_window.cpp:660
 msgid "Copy &Plugin Name"
-msgstr "&Kopioi lisäosan nimi"
+msgstr "Kopioi lisäosan &nimi"
 
 #: src/gui/qt/main_window.cpp:661
 msgid "Copy &Card Content"
