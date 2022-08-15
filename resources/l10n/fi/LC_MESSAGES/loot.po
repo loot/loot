@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.18.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-08-13 06:48+0100\n"
-"PO-Revision-Date: 2022-08-15 11:58+0300\n"
+"PO-Revision-Date: 2022-08-15 12:29+0300\n"
 "Last-Translator: \n"
 "Language-Team: loot-fi@3v.fi\n"
 "Language: fi\n"
@@ -181,7 +181,7 @@ msgstr "Virheellinen säännöllinen lauseke: %1%"
 
 #: src/gui/qt/main_window.cpp:637
 msgid "&Sort Plugins"
-msgstr "&Järjestä lisäosat"
+msgstr "J&ärjestä lisäosat"
 
 #: src/gui/qt/main_window.cpp:638
 msgid "Update &Masterlist"
@@ -225,7 +225,7 @@ msgstr "&Muokkaa ryhmiä..."
 
 #: src/gui/qt/main_window.cpp:651
 msgid "Searc&h Cards..."
-msgstr "&Hae korteista..."
+msgstr "Hae ko&rteista..."
 
 #: src/gui/qt/main_window.cpp:652
 msgid "Copy &Load Order"
@@ -249,7 +249,7 @@ msgstr "Korjaa &epäselvä järjestys"
 
 #: src/gui/qt/main_window.cpp:657
 msgid "Clear All &User Metadata..."
-msgstr "&Poista kaikki muokatut metatiedot..."
+msgstr "Poist&a kaikki muokatut metatiedot..."
 
 #: src/gui/qt/main_window.cpp:659
 msgid "&Plugin"
