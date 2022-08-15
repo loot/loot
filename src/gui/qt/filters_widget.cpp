@@ -268,14 +268,17 @@ void FiltersWidget::translateUi() {
                 "expression."));
 }
 
-void FiltersWidget::updateWarningsAndErrorsFilterState() {
+bool FiltersWidget::updateWarningsAndErrorsFilterState() {
   const auto allChecked =
       bashTagsFilter->isChecked() && locationsFilter->isChecked() &&
       notesFilter->isChecked() && messagelessPluginsFilter->isChecked();
 
   if (allChecked != showOnlyWarningsAndErrorsFilter->isChecked()) {
     showOnlyWarningsAndErrorsFilter->setChecked(allChecked);
+    return true;
   }
+
+  return false;
 }
 
 void FiltersWidget::setComboBoxItems(QComboBox* comboBox,
@@ -388,20 +391,35 @@ void FiltersWidget::on_crcsFilter_clicked() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_bashTagsFilter_clicked() {
-  updateWarningsAndErrorsFilterState();
+void FiltersWidget::on_bashTagsFilter_clicked(bool checked) {
+  auto changed = updateWarningsAndErrorsFilterState();
+  if (changed && checked) {
+    // Record the previous state of this filter.
+    warningsAndErrorFilterMemory = getFilterSettings();
+    warningsAndErrorFilterMemory.hideBashTags = false;
+  }
 
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_locationsFilter_clicked() {
-  updateWarningsAndErrorsFilterState();
+void FiltersWidget::on_locationsFilter_clicked(bool checked) {
+  auto changed = updateWarningsAndErrorsFilterState();
+  if (changed && checked) {
+    // Record the previous state of this filter.
+    warningsAndErrorFilterMemory = getFilterSettings();
+    warningsAndErrorFilterMemory.hideLocations = false;
+  }
 
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 
-void FiltersWidget::on_notesFilter_clicked() {
-  updateWarningsAndErrorsFilterState();
+void FiltersWidget::on_notesFilter_clicked(bool checked) {
+  auto changed = updateWarningsAndErrorsFilterState();
+  if (changed && checked) {
+    // Record the previous state of this filter.
+    warningsAndErrorFilterMemory = getFilterSettings();
+    warningsAndErrorFilterMemory.hideNotes = false;
+  }
 
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
@@ -414,8 +432,13 @@ void FiltersWidget::on_inactivePluginsFilter_clicked() {
   emit pluginFilterChanged(getPluginFiltersState());
 }
 
-void FiltersWidget::on_messagelessPluginsFilter_clicked() {
-  updateWarningsAndErrorsFilterState();
+void FiltersWidget::on_messagelessPluginsFilter_clicked(bool checked) {
+  auto changed = updateWarningsAndErrorsFilterState();
+  if (changed && checked) {
+    // Record the previous state of this filter.
+    warningsAndErrorFilterMemory = getFilterSettings();
+    warningsAndErrorFilterMemory.hideMessagelessPlugins = false;
+  }
 
   emit pluginFilterChanged(getPluginFiltersState());
 }
@@ -429,25 +452,46 @@ void FiltersWidget::on_showOnlyEmptyPluginsFilter_clicked() {
 }
 
 void FiltersWidget::on_showOnlyWarningsAndErrorsFilter_clicked(bool checked) {
+  // If enabling this filter directly, the bash tags, locations, notes and
+  // messageless plugins filters should all be enabled if they aren't already.
+  // If disabling this filter directly, those filters should only be disabled
+  // if they weren't already enabled when this filter was enabled.
+  // If this filter is disabled by disabling one of its component filters,
+  // then no other component filters should be disabled (that's handled by
+  // updateWarningsAndErrorsFilterState()).
+  // If this filter is enabled by enabling one of its component filters
+  // individually (with the others being already enabled), then when this
+  // filter is disabled directly it should only disable the last component
+  // filter to be enabled.
   bool hasContentFilterChanged{false};
   bool hasPluginFilterChanged{false};
 
-  if (bashTagsFilter->isChecked() != checked) {
+  if (checked) {
+    // If enabling this filter, record the current state of all filters before
+    // making changes.
+    warningsAndErrorFilterMemory = getFilterSettings();
+  }
+
+  if (bashTagsFilter->isChecked() != checked &&
+      (checked || !warningsAndErrorFilterMemory.hideBashTags)) {
     bashTagsFilter->setChecked(checked);
     hasContentFilterChanged = true;
   }
 
-  if (locationsFilter->isChecked() != checked) {
+  if (locationsFilter->isChecked() != checked &&
+      (checked || !warningsAndErrorFilterMemory.hideLocations)) {
     locationsFilter->setChecked(checked);
     hasContentFilterChanged = true;
   }
 
-  if (notesFilter->isChecked() != checked) {
+  if (notesFilter->isChecked() != checked &&
+      (checked || !warningsAndErrorFilterMemory.hideNotes)) {
     notesFilter->setChecked(checked);
     hasContentFilterChanged = true;
   }
 
-  if (messagelessPluginsFilter->isChecked() != checked) {
+  if (messagelessPluginsFilter->isChecked() != checked &&
+      (checked || !warningsAndErrorFilterMemory.hideMessagelessPlugins)) {
     messagelessPluginsFilter->setChecked(checked);
     hasPluginFilterChanged = true;
   }
