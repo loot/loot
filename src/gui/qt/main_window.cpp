@@ -634,42 +634,78 @@ void MainWindow::translateUi() {
   setWindowTitle("LOOT");
 
   // Translate toolbar items.
+  /* translators: This string is also an action in the Game menu. */
   actionSort->setText(translate("&Sort Plugins"));
+  /* translators: This string is also an action in the Game menu. */
   actionUpdateMasterlist->setText(translate("Update &Masterlist"));
+  /* translators: This string is also an action in the Game menu. */
   actionApplySort->setText(translate("&Apply Sorted Load Order"));
+  /* translators: This string is also an action in the Game menu. */
   actionDiscardSort->setText(translate("&Discard Sorted Load Order"));
 
   // Translate menu bar items.
+  /* translators: The mnemonic in this string shouldn't conflict with other
+     menus or sidebar sections. */
   menuFile->setTitle(translate("&File"));
+  /* translators: This string is an action in the File menu. */
   actionSettings->setText(translate("&Settings..."));
+  /* translators: This string is an action in the File menu. */
   actionBackupData->setText(translate("&Backup LOOT Data"));
+  /* translators: This string is an action in the File menu. */
   actionOpenLOOTDataFolder->setText(translate("&Open LOOT Data Folder"));
+  /* translators: This string is an action in the File menu. */
   actionQuit->setText(translate("&Quit"));
 
+  /* translators: The mnemonic in this string shouldn't conflict with other
+     menus or sidebar sections. */
   menuGame->setTitle(translate("&Game"));
+  /* translators: This string is an action in the Game menu. */
   actionOpenGroupsEditor->setText(translate("&Edit Groups..."));
+  /* translators: This string is an action in the Game menu. */
   actionSearch->setText(translate("Searc&h Cards..."));
+  /* translators: This string is an action in the Game menu. */
   actionCopyLoadOrder->setText(translate("Copy &Load Order"));
+  /* translators: This string is an action in the Game menu. */
   actionCopyContent->setText(translate("&Copy Content"));
+  /* translators: This string is an action in the Game menu. */
   actionRefreshContent->setText(translate("&Refresh Content"));
+  /* translators: This string is an action in the Game menu. */
   actionRedatePlugins->setText(translate("Redate &Plugins..."));
+  /* translators: This string is an action in the Game menu. */
   actionFixAmbiguousLoadOrder->setText(translate("&Fix Ambiguous Load Order"));
+  /* translators: This string is an action in the Game menu. */
   actionClearAllUserMetadata->setText(translate("Clear All &User Metadata..."));
 
+  /* translators: The mnemonic in this string shouldn't conflict with other
+     menus or sidebar sections. */
   menuPlugin->setTitle(translate("&Plugin"));
+  /* translators: This string is an action in the Plugin menu. */
   actionCopyPluginName->setText(translate("Copy &Plugin Name"));
+  /* translators: This string is an action in the Plugin menu. */
   actionCopyCardContent->setText(translate("Copy &Card Content"));
+  /* translators: This string is an action in the Plugin menu. */
   actionCopyMetadata->setText(translate("Copy &Metadata"));
+  /* translators: This string is an action in the Plugin menu. */
   actionEditMetadata->setText(translate("&Edit Metadata..."));
+  /* translators: This string is an action in the Plugin menu. */
   actionClearMetadata->setText(translate("Clear &User Metadata..."));
 
+  /* translators: The mnemonic in this string shouldn't conflict with other
+     menus or sidebar sections. */
   menuHelp->setTitle(translate("&Help"));
+  /* translators: This string is an action in the Help menu. */
   actionViewDocs->setText(translate("&View Documentation"));
+  /* translators: This string is an action in the Help menu. */
   actionJoinDiscordServer->setText(translate("&Join Discord Server"));
+  /* translators: This string is an action in the Help menu. */
   actionAbout->setText(translate("&About"));
 
   // Translate sidebar.
+  /* translators: The mnemonic in this string shouldn't conflict with other
+     menus or sidebar sections. */
   toolBox->setItemText(0, translate("P&lugins"));
+  /* translators: The mnemonic in this string shouldn't conflict with other
+     menus or sidebar sections. */
   toolBox->setItemText(1, translate("F&ilters"));
 }
 
