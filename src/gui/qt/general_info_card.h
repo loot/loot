@@ -95,8 +95,6 @@ private:
 
   void translateUi();
 };
-
-void scaleCardHeading(QLabel& label);
 }
 
 #endif

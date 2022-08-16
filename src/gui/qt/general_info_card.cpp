@@ -192,12 +192,4 @@ void GeneralInfoCard::translateUi() {
   dirtyCountLabel->setText(translate("Dirty Plugins"));
   totalPluginsCountLabel->setText(translate("Total Plugins"));
 }
-
-void scaleCardHeading(QLabel& label) {
-  static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
-  auto headingFont = label.font();
-  const auto headingFontSize = headingFont.pointSizeF();
-  headingFont.setPointSizeF(headingFontSize * NAME_FONT_SIZE_MULTIPLIER);
-  label.setFont(headingFont);
-}
 }

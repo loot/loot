@@ -32,6 +32,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkReply>
+#include <QtWidgets/QLabel>
 #include <filesystem>
 #include <vector>
 
@@ -56,6 +57,8 @@ struct FileRevisionSummary {
 };
 
 QString translate(const char* text);
+
+void scaleCardHeading(QLabel& label);
 
 std::string calculateGitBlobHash(const QByteArray& data);
 

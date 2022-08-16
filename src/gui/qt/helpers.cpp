@@ -101,6 +101,14 @@ QString translate(const char* text) {
   return QString::fromStdString(boost::locale::translate(text).str());
 }
 
+void scaleCardHeading(QLabel& label) {
+  static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
+  auto headingFont = label.font();
+  const auto headingFontSize = headingFont.pointSizeF();
+  headingFont.setPointSizeF(headingFontSize * NAME_FONT_SIZE_MULTIPLIER);
+  label.setFont(headingFont);
+}
+
 std::string calculateGitBlobHash(const QByteArray& data) {
   auto sizeString = std::to_string(data.size());
 

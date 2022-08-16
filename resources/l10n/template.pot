@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-15 03:15-0700\n"
+"POT-Creation-Date: 2022-08-16 21:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,22 +160,22 @@ msgstr ""
 msgid "(edited)"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:192
+#: src/gui/qt/helpers.cpp:200
 msgid "N/A: No masterlist present"
 msgstr ""
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:197
+#: src/gui/qt/helpers.cpp:205
 msgid "N/A: No masterlist prelude present"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:205
+#: src/gui/qt/helpers.cpp:213
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:332
+#: src/gui/qt/helpers.cpp:340
 msgid "Invalid regular expression: %1%"
 msgstr ""
 
@@ -558,57 +558,57 @@ msgid ""
 "can get to it through the main menu) for more information."
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:216
+#: src/gui/qt/plugin_card.cpp:154
 msgid "Source:"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:217
+#: src/gui/qt/plugin_card.cpp:155
 msgid "Sources:"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:233
+#: src/gui/qt/plugin_card.cpp:171
 #, c-format
 msgid "Verified clean by %s"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:347
+#: src/gui/qt/plugin_card.cpp:285
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:348
+#: src/gui/qt/plugin_card.cpp:286
 msgid "Master Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:349
+#: src/gui/qt/plugin_card.cpp:287
 msgid "Light Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:350
+#: src/gui/qt/plugin_card.cpp:288
 msgid "Empty Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:351
+#: src/gui/qt/plugin_card.cpp:289
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:352 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:290 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:354
+#: src/gui/qt/plugin_card.cpp:292
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:355
+#: src/gui/qt/plugin_card.cpp:293
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:356 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:357 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:295 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr ""
 

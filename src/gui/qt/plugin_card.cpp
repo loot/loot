@@ -25,23 +25,23 @@
 
 #include "gui/qt/plugin_card.h"
 
-#include <QtCore/QAbstractProxyModel>
-#include <QtCore/QStringBuilder>
-#include <QtCore/QStringList>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QStyle>
 #include <QtWidgets/QVBoxLayout>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
-#include "gui/qt/counters.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
-#include "gui/qt/plugin_item_model.h"
 
 namespace loot {
 static constexpr int ATTRIBUTE_ICON_HEIGHT = 18;
+
+void setIcon(QLabel* label, QIcon icon) {
+  label->setPixmap(IconFactory::getPixmap(icon, ATTRIBUTE_ICON_HEIGHT));
+}
 
 QString getTagsText(const std::vector<std::string> tags, bool hideTags) {
   if (hideTags) {
@@ -74,68 +74,6 @@ std::vector<SimpleMessage> filterMessages(
   }
 
   return filteredMessages;
-}
-
-std::vector<std::string> getMessageTexts(
-    const std::vector<SimpleMessage>& messages) {
-  std::vector<std::string> texts;
-  for (const auto& message : messages) {
-    texts.push_back(message.text);
-  }
-
-  return texts;
-}
-
-std::vector<std::string> getLocationNames(
-    const std::vector<Location>& locations,
-    bool hideLocations) {
-  if (hideLocations) {
-    return {};
-  }
-
-  std::vector<std::string> names;
-  std::transform(locations.begin(),
-                 locations.end(),
-                 std::back_inserter(names),
-                 [](const auto& location) { return location.GetName(); });
-
-  return names;
-}
-
-void setIcon(QLabel* label, QIcon icon) {
-  label->setPixmap(IconFactory::getPixmap(icon, ATTRIBUTE_ICON_HEIGHT));
-}
-
-SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
-  if (index.row() == 0) {
-    auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
-
-    return SizeHintCacheKey(QString(),
-                            QString(),
-                            QString(),
-                            getMessageTexts(generalInfo.generalMessages),
-                            {},
-                            true);
-  } else {
-    auto pluginItem = index.data(RawDataRole).value<PluginItem>();
-    auto filters =
-        index.data(CardContentFiltersRole).value<CardContentFiltersState>();
-
-    return SizeHintCacheKey(
-        getTagsText(pluginItem.currentTags, filters.hideBashTags),
-        getTagsText(pluginItem.addTags, filters.hideBashTags),
-        getTagsText(pluginItem.removeTags, filters.hideBashTags),
-        getMessageTexts(filterMessages(pluginItem.messages, filters)),
-        getLocationNames(pluginItem.locations, filters.hideLocations),
-        false);
-  }
-}
-
-void prepareWidget(QWidget* widget) {
-  auto sizePolicy = widget->sizePolicy();
-  sizePolicy.setRetainSizeWhenHidden(true);
-  widget->setSizePolicy(sizePolicy);
-  widget->setHidden(true);
 }
 
 PluginCard::PluginCard(QWidget* parent) : QFrame(parent) { setupUi(); }
@@ -355,191 +293,5 @@ void PluginCard::translateUi() {
   currentTagsHeaderLabel->setText(translate("Current"));
   addTagsHeaderLabel->setText(translate("Add"));
   removeTagsHeaderLabel->setText(translate("Remove"));
-}
-
-PluginCardDelegate::PluginCardDelegate(QListView* parent) :
-    QStyledItemDelegate(parent),
-    generalInfoCard(new GeneralInfoCard(parent->viewport())),
-    pluginCard(new PluginCard(parent->viewport())) {
-  prepareWidget(generalInfoCard);
-  prepareWidget(pluginCard);
-}
-
-void PluginCardDelegate::setIcons() { pluginCard->setIcons(); }
-
-void PluginCardDelegate::refreshMessages() {
-  generalInfoCard->refreshMessages();
-  pluginCard->refreshMessages();
-}
-
-void PluginCardDelegate::paint(QPainter* painter,
-                               const QStyleOptionViewItem& option,
-                               const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return QStyledItemDelegate::paint(painter, option, index);
-  }
-
-  auto styleOption = QStyleOptionViewItem(option);
-  initStyleOption(&styleOption, index);
-
-  // This drawControl is needed to draw the styling that's used to
-  // indicate when an item is hovered over or selected.
-  styleOption.widget->style()->drawControl(
-      QStyle::CE_ItemViewItem, &styleOption, painter, styleOption.widget);
-  painter->save();
-
-  painter->translate(styleOption.rect.topLeft());
-
-  QWidget* widget = nullptr;
-
-  if (index.row() == 0) {
-    widget = setGeneralInfoCardContent(generalInfoCard, index);
-  } else {
-    widget = setPluginCardContent(pluginCard, index);
-  }
-
-  const auto sizeHint = calculateSize(widget, styleOption);
-
-  widget->setFixedSize(sizeHint);
-
-  widget->render(painter, QPoint(), QRegion(), QWidget::DrawChildren);
-
-  painter->restore();
-}
-
-QSize PluginCardDelegate::sizeHint(const QStyleOptionViewItem& option,
-                                   const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return QStyledItemDelegate::sizeHint(option, index);
-  }
-
-  auto styleOption = QStyleOptionViewItem(option);
-  initStyleOption(&styleOption, index);
-
-  // Cache widgets and size hints by SizeHintCacheKey because that contains all
-  // the data that the card size could depend on, aside from the available
-  // width, and so it means that different plugins with cards of the same size
-  // can share cached widget objects and size data.
-  //
-  // It's a bit inefficient to do all the message and tag transformations here
-  // and again when setting the actual card content (if that happens), but in
-  // practice the cost is negligible.
-  auto cacheKey = getSizeHintCacheKey(index);
-
-  auto it = sizeHintCache.find(cacheKey);
-  if (it != sizeHintCache.end()) {
-    // Found a cached size, check if its width matches the current available
-    // width.
-    if (it->second.second.width() == styleOption.rect.width()) {
-      // The cached size is valid, return it.
-      return it->second.second;
-    }
-  } else {
-    // There is no size hint cached, create the relevant class of widget, set
-    // relevant content so that a correct size hint can be calculated, then
-    // add a cache entry with an invalid size - the size will be overwritten
-    // before this function returns.
-    QWidget* parentWidget = qobject_cast<QListView*>(parent())->viewport();
-
-    QWidget* widget = nullptr;
-    if (index.row() == 0) {
-      widget = setGeneralInfoCardContent(generalInfoCard, index);
-    } else {
-      widget = setPluginCardContent(new PluginCard(parentWidget), index);
-    }
-
-    it = sizeHintCache.emplace(cacheKey, std::make_pair(widget, QSize())).first;
-  }
-
-  // If the widget is new, it's already been initalised with the appopriate data
-  // above. If the widget is not new then it already has appropriate data and a
-  // size just needs to be calculated for the current available width.
-  auto sizeHint = calculateSize(it->second.first, styleOption);
-
-  it->second.second = sizeHint;
-
-  return sizeHint;
-}
-
-QWidget* PluginCardDelegate::createEditor(QWidget* parent,
-                                          const QStyleOptionViewItem&,
-                                          const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return nullptr;
-  }
-
-  if (index.row() == 0) {
-    return new GeneralInfoCard(parent);
-  } else {
-    return new PluginCard(parent);
-  }
-}
-
-void PluginCardDelegate::setEditorData(QWidget* editor,
-                                       const QModelIndex& index) const {
-  if (!index.isValid()) {
-    return;
-  }
-
-  if (index.row() == 0) {
-    setGeneralInfoCardContent(qobject_cast<GeneralInfoCard*>(editor), index);
-  } else {
-    setPluginCardContent(qobject_cast<PluginCard*>(editor), index);
-  }
-}
-
-void PluginCardDelegate::setModelData(QWidget*,
-                                      QAbstractItemModel*,
-                                      const QModelIndex&) const {
-  // Do nothing, it's not actually an editor.
-}
-
-GeneralInfoCard* PluginCardDelegate::setGeneralInfoCardContent(
-    GeneralInfoCard* generalInfoCard,
-    const QModelIndex& index) {
-  auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
-  auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
-
-  generalInfoCard->setGameType(generalInfo.gameType);
-  generalInfoCard->setMasterlistInfo(generalInfo.masterlistRevision);
-  generalInfoCard->setPreludeInfo(generalInfo.preludeRevision);
-  generalInfoCard->setMessageCounts(
-      counters.warnings, counters.errors, counters.totalMessages);
-  generalInfoCard->setPluginCounts(counters.activeLight,
-                                   counters.activeRegular,
-                                   counters.dirty,
-                                   counters.totalPlugins);
-  generalInfoCard->setGeneralMessages(generalInfo.generalMessages);
-
-  return generalInfoCard;
-}
-
-PluginCard* PluginCardDelegate::setPluginCardContent(PluginCard* card,
-                                                     const QModelIndex& index) {
-  auto pluginItem = index.data(RawDataRole).value<PluginItem>();
-  auto filters =
-      index.data(CardContentFiltersRole).value<CardContentFiltersState>();
-  auto searchResultData =
-      index.data(SearchResultRole).value<SearchResultData>();
-
-  card->setContent(pluginItem, filters);
-
-  card->setSearchResult(searchResultData.isResult,
-                        searchResultData.isCurrentResult);
-
-  return card;
-}
-
-QSize PluginCardDelegate::calculateSize(const QWidget* widget,
-                                        const QStyleOptionViewItem& option) {
-  const auto minLayoutWidth = widget->layout()->minimumSize().width();
-  const auto rectWidth = option.rect.width();
-
-  const auto width = rectWidth > minLayoutWidth ? rectWidth : minLayoutWidth;
-  const auto height = widget->hasHeightForWidth()
-                          ? widget->layout()->minimumHeightForWidth(width)
-                          : widget->minimumHeight();
-
-  return QSize(width, height);
 }
 }
