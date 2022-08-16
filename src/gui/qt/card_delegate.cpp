@@ -192,6 +192,10 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem& option,
   auto styleOption = QStyleOptionViewItem(option);
   initStyleOption(&styleOption, index);
 
+  if (!styleOption.rect.isValid()) {
+    return QStyledItemDelegate::sizeHint(option, index);
+  }
+
   // Cache widgets and size hints by SizeHintCacheKey because that contains all
   // the data that the card size could depend on, aside from the available
   // width, and so it means that different plugins with cards of the same size
