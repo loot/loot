@@ -223,7 +223,11 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem& option,
 
     QWidget* widget = nullptr;
     if (index.row() == 0) {
-      widget = setGeneralInfoCardContent(generalInfoCard, index);
+      widget =
+          setGeneralInfoCardContent(new GeneralInfoCard(parentWidget), index);
+      // The general info widget needs to be prepared because unlike the plugin
+      // cards it's got static text that is visible over the painted content.
+      prepareWidget(widget);
     } else {
       widget = setPluginCardContent(new PluginCard(parentWidget), index);
     }
