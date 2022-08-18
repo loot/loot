@@ -26,20 +26,21 @@
 #ifndef LOOT_GUI_QT_PLUGIN_CARD
 #define LOOT_GUI_QT_PLUGIN_CARD
 
-#include <QtGui/QPainter>
-#include <QtWidgets/QApplication>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QListView>
-#include <QtWidgets/QStyledItemDelegate>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 #include "gui/plugin_item.h"
 #include "gui/qt/filters_states.h"
-#include "gui/qt/general_info_card.h"
+#include "gui/qt/messages_widget.h"
 
 namespace loot {
+QString getTagsText(const std::vector<std::string> tags, bool hideTags);
+
+std::vector<SimpleMessage> filterMessages(
+    const std::vector<SimpleMessage>& messages,
+    const CardContentFiltersState& filters);
+
 class PluginCard : public QFrame {
   Q_OBJECT
 public:
@@ -78,56 +79,6 @@ private:
   void setupUi();
 
   void translateUi();
-};
-
-// current, add and remove bash tags, messages, locations, and whether this is
-// the general info card or not.
-typedef std::tuple<QString,
-                   QString,
-                   QString,
-                   std::vector<std::string>,
-                   std::vector<std::string>,
-                   bool>
-    SizeHintCacheKey;
-
-class PluginCardDelegate : public QStyledItemDelegate {
-  Q_OBJECT
-public:
-  explicit PluginCardDelegate(QListView* parent);
-
-  void setIcons();
-  void refreshMessages();
-
-  void paint(QPainter* painter,
-             const QStyleOptionViewItem& option,
-             const QModelIndex& index) const override;
-
-  QSize sizeHint(const QStyleOptionViewItem& option,
-                 const QModelIndex& index) const override;
-
-  QWidget* createEditor(QWidget* parent,
-                        const QStyleOptionViewItem& option,
-                        const QModelIndex& index) const override;
-
-  void setEditorData(QWidget* editor, const QModelIndex& index) const override;
-
-  void setModelData(QWidget* editor,
-                    QAbstractItemModel* model,
-                    const QModelIndex& index) const override;
-
-private:
-  GeneralInfoCard* generalInfoCard{nullptr};
-  PluginCard* pluginCard{nullptr};
-  mutable std::map<SizeHintCacheKey, std::pair<QWidget*, QSize>> sizeHintCache;
-
-  static GeneralInfoCard* setGeneralInfoCardContent(
-      GeneralInfoCard* generalInfoCard,
-      const QModelIndex& index);
-  static PluginCard* setPluginCardContent(PluginCard* card,
-                                          const QModelIndex& index);
-
-  static QSize calculateSize(const QWidget* widget,
-                             const QStyleOptionViewItem& option);
 };
 }
 

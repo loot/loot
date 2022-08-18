@@ -85,11 +85,13 @@ private:
   QLabel *hiddenMessagesLabel{new QLabel(this)};
   QLabel *hiddenMessagesCountLabel{new QLabel(this)};
 
+  LootSettings::Filters warningsAndErrorFilterMemory;
+
   void setupUi();
 
   void translateUi();
 
-  void updateWarningsAndErrorsFilterState();
+  bool updateWarningsAndErrorsFilterState();
 
   static void setComboBoxItems(QComboBox *comboBox,
                                const std::vector<std::string> &items);
@@ -102,12 +104,12 @@ private slots:
   void on_contentRegexCheckbox_clicked();
   void on_versionNumbersFilter_clicked();
   void on_crcsFilter_clicked();
-  void on_bashTagsFilter_clicked();
-  void on_locationsFilter_clicked();
-  void on_notesFilter_clicked();
+  void on_bashTagsFilter_clicked(bool checked);
+  void on_locationsFilter_clicked(bool checked);
+  void on_notesFilter_clicked(bool checked);
   void on_pluginMessagesFilter_clicked();
   void on_inactivePluginsFilter_clicked();
-  void on_messagelessPluginsFilter_clicked();
+  void on_messagelessPluginsFilter_clicked(bool checked);
   void on_creationClubPluginsFilter_clicked();
   void on_showOnlyEmptyPluginsFilter_clicked();
   void on_showOnlyWarningsAndErrorsFilter_clicked(bool checked);

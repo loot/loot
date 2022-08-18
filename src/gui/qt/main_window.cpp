@@ -36,9 +36,9 @@
 #include <QtWidgets/QTextEdit>
 
 #include "gui/backup.h"
+#include "gui/qt/card_delegate.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
-#include "gui/qt/plugin_card.h"
 #include "gui/qt/plugin_item_filter_model.h"
 #include "gui/qt/sidebar_plugin_name_delegate.h"
 #include "gui/qt/style.h"
@@ -609,7 +609,7 @@ void MainWindow::setupViews() {
   // leading to layout issues.
   pluginCardsView->setWordWrap(true);
 
-  pluginCardsView->setItemDelegate(new PluginCardDelegate(pluginCardsView));
+  pluginCardsView->setItemDelegate(new CardDelegate(pluginCardsView));
 
   // Enable the right-click Plugin context menu.
   pluginCardsView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -2402,7 +2402,7 @@ void MainWindow::handleIconColorChanged() {
   sidebarPluginsView->reset();
 
   const auto cardDelegate =
-      qobject_cast<PluginCardDelegate*>(pluginCardsView->itemDelegate());
+      qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
 
   if (cardDelegate) {
     cardDelegate->setIcons();
@@ -2428,7 +2428,7 @@ void MainWindow::handleLinkColorChanged() {
   qApp->setPalette(palette);
 
   const auto cardDelegate =
-      qobject_cast<PluginCardDelegate*>(pluginCardsView->itemDelegate());
+      qobject_cast<CardDelegate*>(pluginCardsView->itemDelegate());
 
   if (cardDelegate) {
     cardDelegate->refreshMessages();
