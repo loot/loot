@@ -182,7 +182,7 @@ msgstr "Невірний regex вираз: %1%"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:638
 msgid "&Sort Plugins"
-msgstr "&Cортувати плагіни"
+msgstr "Cортувати плаг&іни"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:640
@@ -192,7 +192,7 @@ msgstr "Оновити &правила сортування"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:642
 msgid "&Apply Sorted Load Order"
-msgstr "З&астосувати відсортований порядок завантаження"
+msgstr "Застос&увати відсортований порядок завантаження"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:644
@@ -208,7 +208,7 @@ msgstr "&Файл"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:651
 msgid "&Settings..."
-msgstr "&Налаштування..."
+msgstr "Н&алаштування..."
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:653
@@ -218,7 +218,7 @@ msgstr "Резервне копіювання дан&их LOOT"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:655
 msgid "&Open LOOT Data Folder"
-msgstr "Відкрити папку &LOOT"
+msgstr "Відкрити &папку LOOT"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:657
@@ -244,7 +244,7 @@ msgstr "Знайти &картки..."
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:667
 msgid "Copy &Load Order"
-msgstr "Скопіювати порядок &завантаження"
+msgstr "Скопію&вати порядок завантаження"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:669
@@ -259,7 +259,7 @@ msgstr "&Оновити зміст"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:673
 msgid "Redate &Plugins..."
-msgstr "Пере&датувати плагіни..."
+msgstr "П&ередатувати плагіни..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:675
@@ -269,7 +269,7 @@ msgstr "&Виправити неоднозначний порядок заван
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:677
 msgid "Clear All &User Metadata..."
-msgstr "Очистити вс&і користувацькі метадані..."
+msgstr "О&чистити всі користувацькі метадані..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -285,12 +285,12 @@ msgstr "&Копіювати назву плагіну"
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:685
 msgid "Copy &Card Content"
-msgstr "Скопіювати &зміст картки"
+msgstr "Скопіювати зм&іст картки"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:687
 msgid "Copy &Metadata"
-msgstr "Ко&піювати метадані"
+msgstr "&Копіювати метадані"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:689
@@ -300,7 +300,7 @@ msgstr "Редаг&увати метадані..."
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:691
 msgid "Clear &User Metadata..."
-msgstr "Очистити користувацькі &метадані..."
+msgstr "Очис&тити користувацькі метадані..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
@@ -316,7 +316,7 @@ msgstr "&Відкрити документацію"
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:699
 msgid "&Join Discord Server"
-msgstr "Приєднатися до серверу &Discord"
+msgstr "Приєднатися до сер&веру Discord"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:701
@@ -327,13 +327,13 @@ msgstr "Про п&рограму"
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:706
 msgid "P&lugins"
-msgstr "П&лагіни"
+msgstr "&Плагіни"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:709
 msgid "F&ilters"
-msgstr "Фі&льтри"
+msgstr "Фільтр&и"
 
 #: src/gui/qt/main_window.cpp:969 src/gui/qt/main_window.cpp:1908
 msgid "Updating and parsing masterlist..."
