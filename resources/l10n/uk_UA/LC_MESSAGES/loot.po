@@ -239,7 +239,7 @@ msgstr "&Редагувати групи..."
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:665
 msgid "Searc&h Cards..."
-msgstr "Знайти &картки..."
+msgstr "З&найти картки..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:667
@@ -264,7 +264,7 @@ msgstr "П&ередатувати плагіни..."
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:675
 msgid "&Fix Ambiguous Load Order"
-msgstr "&Виправити неоднозначний порядок завантаження"
+msgstr "В&иправити неоднозначний порядок завантаження"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:677
@@ -290,7 +290,7 @@ msgstr "Скопіювати зм&іст картки"
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:687
 msgid "Copy &Metadata"
-msgstr "&Копіювати метадані"
+msgstr "Копію&вати метадані"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:689
@@ -316,7 +316,7 @@ msgstr "&Відкрити документацію"
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:699
 msgid "&Join Discord Server"
-msgstr "Приєднатися до сер&веру Discord"
+msgstr "Долучи&тися до серверу Discord"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:701
@@ -327,7 +327,7 @@ msgstr "Про п&рограму"
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:706
 msgid "P&lugins"
-msgstr "&Плагіни"
+msgstr "Плаг&іни"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
