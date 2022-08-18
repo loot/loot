@@ -197,7 +197,7 @@ msgstr "При&ложи реда за зареждане"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:644
 msgid "&Discard Sorted Load Order"
-msgstr "От&мени реда за зареждане"
+msgstr "Отм&ени реда за зареждане"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
