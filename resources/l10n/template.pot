@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-20 16:01+0100\n"
+"POT-Creation-Date: 2022-08-20 16:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -571,44 +571,44 @@ msgstr ""
 msgid "Verified clean by %s"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:285
+#: src/gui/qt/plugin_card.cpp:286
 msgid "Active Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:286
+#: src/gui/qt/plugin_card.cpp:287
 msgid "Master Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:287
+#: src/gui/qt/plugin_card.cpp:288
 msgid "Light Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:288
+#: src/gui/qt/plugin_card.cpp:289
 msgid "Empty Plugin"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:289
+#: src/gui/qt/plugin_card.cpp:290
 msgid "Loads Archive"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:290 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:291 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:292
+#: src/gui/qt/plugin_card.cpp:293
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:293
+#: src/gui/qt/plugin_card.cpp:294
 msgid "Current"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:295 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr ""
 
-#: src/gui/qt/plugin_card.cpp:295 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:296 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr ""
 

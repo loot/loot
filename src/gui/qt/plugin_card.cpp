@@ -239,6 +239,7 @@ void PluginCard::setupUi() {
 
   locationsLabel->setTextFormat(Qt::MarkdownText);
   locationsLabel->setOpenExternalLinks(true);
+  locationsLabel->setWordWrap(true);
   locationsLabel->setVisible(false);
 
   setIcons();
