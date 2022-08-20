@@ -27,6 +27,7 @@
 
 #include "gui/qt/counters.h"
 #include "gui/qt/plugin_item_model.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 std::vector<std::string> getMessageTexts(
@@ -228,6 +229,27 @@ void CardSizingCache::update(const QAbstractItemModel* model,
   }
 }
 
+QWidget* CardSizingCache::update(const QModelIndex& index) {
+  const auto cacheKey = getSizeHintCacheKey(index);
+
+  const auto it = cardCache.find(cacheKey);
+  if (it != cardCache.end()) {
+    return it->second;
+  }
+
+  QWidget* widget = nullptr;
+  if (index.row() == 0) {
+    widget =
+        setGeneralInfoCardContent(new GeneralInfoCard(cardParentWidget), index);
+  } else {
+    widget = setPluginCardContent(new PluginCard(cardParentWidget), index);
+  }
+
+  prepareWidget(widget);
+
+  return cardCache.emplace(cacheKey, widget).first->second;
+}
+
 QWidget* CardSizingCache::getCard(const SizeHintCacheKey& key) const {
   auto it = cardCache.find(key);
   if (it != cardCache.end()) {
@@ -249,25 +271,8 @@ int CardSizingCache::getLargestMinWidth() const {
   return largest;
 }
 
-void CardSizingCache::update(const QModelIndex& index) {
-  const auto cacheKey = getSizeHintCacheKey(index);
-
-  if (cardCache.find(cacheKey) == cardCache.end()) {
-    QWidget* widget = nullptr;
-    if (index.row() == 0) {
-      widget = setGeneralInfoCardContent(new GeneralInfoCard(cardParentWidget),
-                                         index);
-    } else {
-      widget = setPluginCardContent(new PluginCard(cardParentWidget), index);
-    }
-    prepareWidget(widget);
-
-    cardCache.emplace(cacheKey, widget);
-  }
-}
-
 CardDelegate::CardDelegate(QListView* parent,
-                           const CardSizingCache& cardSizingCache) :
+                           CardSizingCache& cardSizingCache) :
     QStyledItemDelegate(parent),
     generalInfoCard(new GeneralInfoCard(parent->viewport())),
     pluginCard(new PluginCard(parent->viewport())),
@@ -347,7 +352,15 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem& option,
     it = sizeHintCache.emplace(cacheKey, QSize()).first;
   }
 
-  const auto card = cardSizingCache->getCard(cacheKey);
+  auto card = cardSizingCache->getCard(cacheKey);
+  if (card == nullptr) {
+    const auto logger = getLogger();
+    logger->info(
+        "No cached card exists for row {}, card sizes may not be calculated "
+        "correctly",
+        index.row());
+    card = cardSizingCache->update(index);
+  }
 
   const auto sizeHint =
       calculateSize(card, styleOption, cardSizingCache->getLargestMinWidth());

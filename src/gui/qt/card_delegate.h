@@ -81,6 +81,7 @@ public:
   void update(const QAbstractItemModel* model);
   void update(const QModelIndex& topLeft, const QModelIndex& bottomRight);
   void update(const QAbstractItemModel*, int firstRow, int lastRow);
+  QWidget* update(const QModelIndex& index);
 
   QWidget* getCard(const SizeHintCacheKey& key) const;
 
@@ -89,15 +90,12 @@ public:
 private:
   QWidget* cardParentWidget{nullptr};
   std::map<SizeHintCacheKey, QWidget*> cardCache;
-
-  void update(const QModelIndex& index);
 };
 
 class CardDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
-  explicit CardDelegate(QListView* parent,
-                        const CardSizingCache& cardSizingCache);
+  explicit CardDelegate(QListView* parent, CardSizingCache& cardSizingCache);
 
   void setIcons();
   void refreshMessages();
@@ -122,7 +120,7 @@ public:
 private:
   GeneralInfoCard* generalInfoCard{nullptr};
   PluginCard* pluginCard{nullptr};
-  const CardSizingCache* cardSizingCache;
+  CardSizingCache* cardSizingCache;
   mutable std::map<SizeHintCacheKey, QSize> sizeHintCache;
 };
 }
