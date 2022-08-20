@@ -55,15 +55,47 @@ std::vector<std::string> getLocationNames(
   return names;
 }
 
+QString getLongestString(std::initializer_list<std::string> list) {
+  if (list.size() == 0) {
+    return QString();
+  }
+
+  const std::string* longestString = list.begin();
+  size_t longestStringLength = 0;
+
+  for (auto& string : list) {
+    const auto length = string.size();
+    if (longestStringLength < length) {
+      longestString = &string;
+      longestStringLength = length;
+    }
+  }
+
+  return QString::fromStdString(*longestString);
+}
+
 SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
   if (index.row() == 0) {
     auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
+    auto counters =
+        index.data(CountersRole).value<GeneralInformationCounters>();
 
-    return SizeHintCacheKey(QString(),
-                            QString(),
-                            QString(),
+    const auto secondColumnString =
+        getLongestString({generalInfo.masterlistRevision.id,
+                          generalInfo.masterlistRevision.date,
+                          generalInfo.preludeRevision.id,
+                          generalInfo.preludeRevision.date});
+    const auto fourthColumnString = QString::number(counters.totalMessages);
+    const auto sixthColumnString = QString::number(counters.totalPlugins);
+
+    const auto supportsLightPlugins =
+        gameSupportsLightPlugins(generalInfo.gameType) ? "true" : "false";
+
+    return SizeHintCacheKey(secondColumnString,
+                            fourthColumnString,
+                            sixthColumnString,
                             getMessageTexts(generalInfo.generalMessages),
-                            {},
+                            {supportsLightPlugins},
                             true);
   } else {
     auto pluginItem = index.data(RawDataRole).value<PluginItem>();

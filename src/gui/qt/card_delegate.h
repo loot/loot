@@ -40,8 +40,26 @@ namespace loot {
 // aside from the available width, and so it means that different plugins with
 // cards of the same size can share cached size data.
 //
-// In order of appearance, the tuple fields are: current, add and remove bash
-// tags, messages, locations, and whether this is the general info card or not.
+// In order of appearance, the tuple fields are:
+//
+//   General info card:
+//
+//   1. Longest text in second table column
+//   2. Longest text in fourth table column (total messages count)
+//   3. Longest text in sixth table column (total plugins count)
+//   4. Message texts
+//   5. Whether the game supports light plugins or not
+//   6. true
+//
+//   Plugin card:
+//
+//   1. Current bash tags
+//   2. Add bash tags
+//   3. Remove bash tags
+//   4. Message texts
+//   5. Location info
+//   6. false
+//
 typedef std::tuple<QString,
                    QString,
                    QString,
