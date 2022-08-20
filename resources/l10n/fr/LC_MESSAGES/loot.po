@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.18.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-08-16 21:34+0100\n"
-"PO-Revision-Date: 2022-08-19 20:59-0700\n"
+"PO-Revision-Date: 2022-08-19 21:07-0700\n"
 "Last-Translator: Zamix <kais.djeradi@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -184,158 +184,158 @@ msgstr "Expression régulière invalide: %1%"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:638
 msgid "&Sort Plugins"
-msgstr ""
+msgstr "&Trier les plugins"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:640
 msgid "Update &Masterlist"
-msgstr ""
+msgstr "&Mettre à jour la Masterlist"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:642
 msgid "&Apply Sorted Load Order"
-msgstr ""
+msgstr "App&liquer le tri de l'ordre de chargement"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:644
 msgid "&Discard Sorted Load Order"
-msgstr ""
+msgstr "Dé&sactiver le tri de l'ordre de chargement"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:649
 msgid "&File"
-msgstr ""
+msgstr "&Fichier"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:651
 msgid "&Settings..."
-msgstr ""
+msgstr "&Paramètres.."
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:653
 msgid "&Backup LOOT Data"
-msgstr ""
+msgstr "&Sauvegarder les data de LOOT"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:655
 msgid "&Open LOOT Data Folder"
-msgstr ""
+msgstr "&Ouvrir le dossier des data de LOOT"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:657
 msgid "&Quit"
-msgstr ""
+msgstr "&Quitter"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:661
 msgid "&Game"
-msgstr ""
+msgstr "&Jeu"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:663
 msgid "&Edit Groups..."
-msgstr ""
+msgstr "&Editer les groupes..."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:665
 msgid "Searc&h Cards..."
-msgstr ""
+msgstr "&Chercher les cartes.."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:667
 msgid "Copy &Load Order"
-msgstr ""
+msgstr "Copier l'&ordre de chargement"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:669
 msgid "&Copy Content"
-msgstr ""
+msgstr "Co&pier le contenu"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:671
 msgid "&Refresh Content"
-msgstr ""
+msgstr "&Actualiser le contenu"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:673
 msgid "Redate &Plugins..."
-msgstr ""
+msgstr "Re&dater les plugins.."
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:675
 msgid "&Fix Ambiguous Load Order"
-msgstr ""
+msgstr "Co&rriger l'ordre de chargement ambigu"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:677
 msgid "Clear All &User Metadata..."
-msgstr ""
+msgstr "&Nettoyer tout les metadata de l'utilisateur.."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:681
 msgid "&Plugin"
-msgstr ""
+msgstr "&Plugin"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:683
 msgid "Copy &Plugin Name"
-msgstr ""
+msgstr "&Copier le nom du plugin"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:685
 msgid "Copy &Card Content"
-msgstr ""
+msgstr "C&opier le contenu de la carte"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:687
 msgid "Copy &Metadata"
-msgstr ""
+msgstr "Copier les &metadata"
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:689
 msgid "&Edit Metadata..."
-msgstr ""
+msgstr "&Editer les metadata.."
 
 #. translators: This string is an action in the Plugin menu.
 #: src/gui/qt/main_window.cpp:691
 msgid "Clear &User Metadata..."
-msgstr ""
+msgstr "&Nettoyer la metadata de l'utilisateur.."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:695
 msgid "&Help"
-msgstr ""
+msgstr "&Aide"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:697
 msgid "&View Documentation"
-msgstr ""
+msgstr "&Voir la documentation"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:699
 msgid "&Join Discord Server"
-msgstr ""
+msgstr "&Rejoindre le serveur Discord"
 
 #. translators: This string is an action in the Help menu.
 #: src/gui/qt/main_window.cpp:701
 msgid "&About"
-msgstr ""
+msgstr "&A propos de"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:706
 msgid "P&lugins"
-msgstr ""
+msgstr "P&lugins"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
 #: src/gui/qt/main_window.cpp:709
 msgid "F&ilters"
-msgstr ""
+msgstr "F&iltres"
 
 #: src/gui/qt/main_window.cpp:969 src/gui/qt/main_window.cpp:1908
 msgid "Updating and parsing masterlist..."
@@ -700,11 +700,13 @@ msgstr "Ajouter un nouveau groupe"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:125
 msgid "Auto arrange groups"
-msgstr ""
+msgstr "Arranger les groupes automatiquement"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:142
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
+"Certaines modifications n'ont pas été sauvegardées. Êtes-vous sûr de vouloir "
+"les abandonnées?"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:164
 msgid "No plugins are in this group."
@@ -938,7 +940,7 @@ msgstr "Un prelude source est requis."
 
 #: src/gui/qt/settings/general_tab.cpp:168
 msgid "Language changes will be applied after LOOT is restarted."
-msgstr ""
+msgstr "Le nouveau langage sera appliqué au prochain redémarrage de LOOT."
 
 #: src/gui/qt/settings/general_tab.cpp:170
 msgid "Autodetect"
