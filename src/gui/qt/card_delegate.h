@@ -89,7 +89,7 @@ public:
 
 private:
   QWidget* cardParentWidget{nullptr};
-  std::map<int, SizeHintCacheKey> keyCache;
+  std::map<int, const SizeHintCacheKey*> keyCache;
   std::map<SizeHintCacheKey, std::pair<QWidget*, unsigned int>> cardCache;
 };
 

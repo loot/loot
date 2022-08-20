@@ -238,12 +238,12 @@ QWidget* CardSizingCache::update(const QModelIndex& index) {
   // entry.
   const auto keyCacheIt = keyCache.find(index.row());
   const auto newCacheKey = getSizeHintCacheKey(index);
-  const auto newCardCacheIt = cardCache.find(newCacheKey);
+  auto newCardCacheIt = cardCache.find(newCacheKey);
 
   if (keyCacheIt != keyCache.end()) {
     // This row has a cached key, get it.
     const auto oldCacheKey = keyCacheIt->second;
-    if (oldCacheKey == newCacheKey) {
+    if (*oldCacheKey == newCacheKey) {
       // The cache key hasn't changed, no need to make any changes.
       // Just return the key's card. It should never be null but handle that
       // for safety.
@@ -252,46 +252,47 @@ QWidget* CardSizingCache::update(const QModelIndex& index) {
     } else {
       // The cache key has changed, get the old key's card cache entry and
       // reduce its count by 1.
-      const auto oldCardCacheIt = cardCache.find(oldCacheKey);
+      const auto oldCardCacheIt = cardCache.find(*oldCacheKey);
       if (oldCardCacheIt != cardCache.end()) {
         oldCardCacheIt->second.second -= 1;
 
         // If the old key's count is now 0, remove it from the card cache.
         if (oldCardCacheIt->second.second == 0) {
           cardCache.erase(oldCardCacheIt);
-          // oldCardCacheIt is now invalidated, don't use it again.
         }
       }
     }
+  }
 
-    // Now update the key cache entry to contain the new key for this row.
-    keyCacheIt->second = newCacheKey;
+  // If there is no entry for the new cache key, create one.
+  if (newCardCacheIt == cardCache.end()) {
+    QWidget* widget = nullptr;
+    if (index.row() == 0) {
+      widget = setGeneralInfoCardContent(new GeneralInfoCard(cardParentWidget),
+                                         index);
+    } else {
+      widget = setPluginCardContent(new PluginCard(cardParentWidget), index);
+    }
+
+    prepareWidget(widget);
+
+    newCardCacheIt =
+        cardCache.emplace(newCacheKey, std::make_pair(widget, 0)).first;
+  }
+
+  // Increase the new cache key's usage count by 1.
+  newCardCacheIt->second.second += 1;
+
+  if (keyCacheIt == keyCache.end()) {
+    // This row has no cached key, add a pointer to the new key.
+    keyCache.emplace(index.row(), &newCardCacheIt->first);
   } else {
-    // This row has no cached key, add the new key.
-    keyCache.emplace(index.row(), newCacheKey);
+    // Now update the key cache entry to point to the new key for this row.
+    keyCacheIt->second = &newCardCacheIt->first;
   }
 
-  // If the new cache key already has an entry, increase its usage count by 1
-  // and then return the card.
-  if (newCardCacheIt != cardCache.end()) {
-    newCardCacheIt->second.second += 1;
-    return newCardCacheIt->second.first;
-  }
-
-  // Otherwise, create a new card cache entry.
-
-  QWidget* widget = nullptr;
-  if (index.row() == 0) {
-    widget =
-        setGeneralInfoCardContent(new GeneralInfoCard(cardParentWidget), index);
-  } else {
-    widget = setPluginCardContent(new PluginCard(cardParentWidget), index);
-  }
-
-  prepareWidget(widget);
-
-  return cardCache.emplace(newCacheKey, std::make_pair(widget, 1))
-      .first->second.first;
+  // Return the new cache key entry's card.
+  return newCardCacheIt->second.first;
 }
 
 QWidget* CardSizingCache::getCard(const SizeHintCacheKey& key) const {
