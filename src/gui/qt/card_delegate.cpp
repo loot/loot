@@ -121,22 +121,125 @@ PluginCard* setPluginCardContent(PluginCard* card, const QModelIndex& index) {
   return card;
 }
 
-QSize calculateSize(const QWidget* widget, const QStyleOptionViewItem& option) {
-  const auto minLayoutWidth = widget->layout()->minimumSize().width();
+static std::map<QWidget*, int> minWidthByCard;
+
+QSize calculateSize(const QWidget* card,
+                    const QStyleOptionViewItem& option,
+                    int largestMinCardWidth) {
+  /*
+   * There are three relevant widths:
+   *
+   * 1. The width of the viewport
+   * 2. The card's minimum width
+   * 3. The largest minimum width of the cards in the list
+   *
+   * If the viewport is wider than the card's minimum width, this function
+   * should return the viewport width so that the card expands to fill the
+   * viewport.
+   *
+   * If the viewport is narrower than the card's minimum width, this function
+   * should return the card's minimum width so that Qt can use that to
+   * calculate how much it should be possible to horizontally scroll the
+   * viewport by (which it does using the largest width it's given).
+   *
+   * The largest minumum width is needed because text wrapping means that the
+   * card's height depends on its width, and all cards must have the same
+   * width, so when the viewport is narrow enough that scroll bars appear, all
+   * cards must continue to have the same width even out-of-view, which means
+   * they must all continue to have the same width as the card with the largest
+   * minimum width.
+   *
+   * The problem is that you don't know what the largest minimum width is when
+   * you're calculating card sizes for the first time, so you can't get an
+   * accurate height. That's why the card sizing cache is used to get it, as
+   * that cache is populated before the delegate tries to size anything.
+   */
+  const auto minCardWidth = card->layout()->minimumSize().width();
+
+  // option.rect is the width of the scrollable area that the viewport looks
+  // into. It's initially set to some not very useful value, and is subsequently
+  // set equal to largestMinWidth once the scrollable area has been resized to
+  // fit the cards it contains. This repeats whenever the viewport is resized.
   const auto rectWidth = option.rect.width();
 
-  const auto width = rectWidth > minLayoutWidth ? rectWidth : minLayoutWidth;
-  const auto height = widget->hasHeightForWidth()
-                          ? widget->layout()->minimumHeightForWidth(width)
-                          : widget->minimumHeight();
+  const auto cardWidth = std::max(rectWidth, minCardWidth);
 
-  return QSize(width, height);
+  const auto widthForHeight = std::max(rectWidth, largestMinCardWidth);
+
+  const auto height =
+      card->hasHeightForWidth()
+          ? card->layout()->minimumHeightForWidth(widthForHeight)
+          : card->minimumHeight();
+
+  return QSize(cardWidth, height);
 }
 
-CardDelegate::CardDelegate(QListView* parent) :
+CardSizingCache::CardSizingCache(QWidget* cardParentWidget) :
+    cardParentWidget(cardParentWidget) {}
+
+void CardSizingCache::update(const QAbstractItemModel* model) {
+  update(model, 0, model->rowCount());
+}
+
+void CardSizingCache::update(const QModelIndex& topLeft,
+                             const QModelIndex& bottomRight) {
+  update(topLeft.model(), topLeft.row(), bottomRight.row());
+}
+
+void CardSizingCache::update(const QAbstractItemModel* model,
+                             int firstRow,
+                             int lastRow) {
+  for (int row = firstRow; row <= lastRow; row += 1) {
+    const auto index = model->index(row, PluginItemModel::CARDS_COLUMN);
+
+    update(index);
+  }
+}
+
+QWidget* CardSizingCache::getCard(const SizeHintCacheKey& key) const {
+  auto it = cardCache.find(key);
+  if (it != cardCache.end()) {
+    return it->second;
+  }
+
+  return nullptr;
+}
+
+int CardSizingCache::getLargestMinWidth() const {
+  int largest = 0;
+  for (const auto& [key, widget] : cardCache) {
+    const auto minWidth = widget->layout()->minimumSize().width();
+    if (minWidth > largest) {
+      largest = minWidth;
+    }
+  }
+
+  return largest;
+}
+
+void CardSizingCache::update(const QModelIndex& index) {
+  const auto cacheKey = getSizeHintCacheKey(index);
+
+  if (cardCache.find(cacheKey) == cardCache.end()) {
+    QWidget* widget = nullptr;
+    if (index.row() == 0) {
+      widget = setGeneralInfoCardContent(new GeneralInfoCard(cardParentWidget),
+                                         index);
+    } else {
+      widget = setPluginCardContent(new PluginCard(cardParentWidget), index);
+    }
+    prepareWidget(widget);
+
+    cardCache.emplace(cacheKey, widget);
+  }
+}
+
+CardDelegate::CardDelegate(QListView* parent,
+                           const CardSizingCache& cardSizingCache) :
     QStyledItemDelegate(parent),
     generalInfoCard(new GeneralInfoCard(parent->viewport())),
-    pluginCard(new PluginCard(parent->viewport())) {
+    pluginCard(new PluginCard(parent->viewport())),
+    cardSizingCache(&cardSizingCache) {
   prepareWidget(generalInfoCard);
   prepareWidget(pluginCard);
 }
@@ -174,7 +277,8 @@ void CardDelegate::paint(QPainter* painter,
     widget = setPluginCardContent(pluginCard, index);
   }
 
-  const auto sizeHint = calculateSize(widget, styleOption);
+  const auto sizeHint =
+      calculateSize(widget, styleOption, cardSizingCache->getLargestMinWidth());
 
   widget->setFixedSize(sizeHint);
 
@@ -196,51 +300,27 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem& option,
     return QStyledItemDelegate::sizeHint(option, index);
   }
 
-  // Cache widgets and size hints by SizeHintCacheKey because that contains all
-  // the data that the card size could depend on, aside from the available
-  // width, and so it means that different plugins with cards of the same size
-  // can share cached widget objects and size data.
-  //
-  // It's a bit inefficient to do all the message and tag transformations here
-  // and again when setting the actual card content (if that happens), but in
-  // practice the cost is negligible.
-  auto cacheKey = getSizeHintCacheKey(index);
+  const auto cacheKey = getSizeHintCacheKey(index);
 
   auto it = sizeHintCache.find(cacheKey);
   if (it != sizeHintCache.end()) {
     // Found a cached size, check if its width matches the current available
     // width.
-    if (it->second.second.width() == styleOption.rect.width()) {
+    if (it->second.width() == styleOption.rect.width()) {
       // The cached size is valid, return it.
-      return it->second.second;
+      return it->second;
     }
   } else {
-    // There is no size hint cached, create the relevant class of widget, set
-    // relevant content so that a correct size hint can be calculated, then
-    // add a cache entry with an invalid size - the size will be overwritten
-    // before this function returns.
-    QWidget* parentWidget = qobject_cast<QListView*>(parent())->viewport();
-
-    QWidget* widget = nullptr;
-    if (index.row() == 0) {
-      widget =
-          setGeneralInfoCardContent(new GeneralInfoCard(parentWidget), index);
-      // The general info widget needs to be prepared because unlike the plugin
-      // cards it's got static text that is visible over the painted content.
-      prepareWidget(widget);
-    } else {
-      widget = setPluginCardContent(new PluginCard(parentWidget), index);
-    }
-
-    it = sizeHintCache.emplace(cacheKey, std::make_pair(widget, QSize())).first;
+    // Store an invalid size so that it can be replaced below.
+    it = sizeHintCache.emplace(cacheKey, QSize()).first;
   }
 
-  // If the widget is new, it's already been initalised with the appopriate data
-  // above. If the widget is not new then it already has appropriate data and a
-  // size just needs to be calculated for the current available width.
-  auto sizeHint = calculateSize(it->second.first, styleOption);
+  const auto card = cardSizingCache->getCard(cacheKey);
 
-  it->second.second = sizeHint;
+  const auto sizeHint =
+      calculateSize(card, styleOption, cardSizingCache->getLargestMinWidth());
+
+  it->second = sizeHint;
 
   return sizeHint;
 }

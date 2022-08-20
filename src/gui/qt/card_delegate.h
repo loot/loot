@@ -33,10 +33,15 @@
 
 #include "gui/qt/general_info_card.h"
 #include "gui/qt/plugin_card.h"
+#include "gui/qt/plugin_item_model.h"
 
 namespace loot {
-// current, add and remove bash tags, messages, locations, and whether this is
-// the general info card or not.
+// SizeHintCacheKey contains all the data that the card size could depend on,
+// aside from the available width, and so it means that different plugins with
+// cards of the same size can share cached size data.
+//
+// In order of appearance, the tuple fields are: current, add and remove bash
+// tags, messages, locations, and whether this is the general info card or not.
 typedef std::tuple<QString,
                    QString,
                    QString,
@@ -45,10 +50,36 @@ typedef std::tuple<QString,
                    bool>
     SizeHintCacheKey;
 
+/**
+ * Whenever the model's raw data changes, this cache needs to be updated for the
+ * affected indexes. This update needs to happen before the delegate's paint or
+ * size hint methods are called so that they are given the correct largest min
+ * width value.
+ */
+class CardSizingCache {
+public:
+  explicit CardSizingCache(QWidget* cardParentWidget);
+
+  void update(const QAbstractItemModel* model);
+  void update(const QModelIndex& topLeft, const QModelIndex& bottomRight);
+  void update(const QAbstractItemModel*, int firstRow, int lastRow);
+
+  QWidget* getCard(const SizeHintCacheKey& key) const;
+
+  int getLargestMinWidth() const;
+
+private:
+  QWidget* cardParentWidget{nullptr};
+  std::map<SizeHintCacheKey, QWidget*> cardCache;
+
+  void update(const QModelIndex& index);
+};
+
 class CardDelegate : public QStyledItemDelegate {
   Q_OBJECT
 public:
-  explicit CardDelegate(QListView* parent);
+  explicit CardDelegate(QListView* parent,
+                        const CardSizingCache& cardSizingCache);
 
   void setIcons();
   void refreshMessages();
@@ -73,7 +104,8 @@ public:
 private:
   GeneralInfoCard* generalInfoCard{nullptr};
   PluginCard* pluginCard{nullptr};
-  mutable std::map<SizeHintCacheKey, std::pair<QWidget*, QSize>> sizeHintCache;
+  const CardSizingCache* cardSizingCache;
+  mutable std::map<SizeHintCacheKey, QSize> sizeHintCache;
 };
 }
 
