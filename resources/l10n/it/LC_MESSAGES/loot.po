@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.18.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-08-16 21:34+0100\n"
-"PO-Revision-Date: 2022-08-19 21:08-0700\n"
+"PO-Revision-Date: 2022-08-20 01:42-0700\n"
 "Last-Translator: Griam\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -194,12 +194,12 @@ msgstr "&Aggiorna la Masterlist"
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:642
 msgid "&Apply Sorted Load Order"
-msgstr "App&lica l'ordine di caricamento Ordinato"
+msgstr "App&lica l'ordine di caricamento modificato"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:644
 msgid "&Discard Sorted Load Order"
-msgstr "&Scarta l'ordine di caricamento Ordinato"
+msgstr "&Non applicare l'ordine di caricamento modificato"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
