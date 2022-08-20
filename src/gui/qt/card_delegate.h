@@ -89,7 +89,8 @@ public:
 
 private:
   QWidget* cardParentWidget{nullptr};
-  std::map<SizeHintCacheKey, QWidget*> cardCache;
+  std::map<int, SizeHintCacheKey> keyCache;
+  std::map<SizeHintCacheKey, std::pair<QWidget*, unsigned int>> cardCache;
 };
 
 class CardDelegate : public QStyledItemDelegate {
