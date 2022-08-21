@@ -233,7 +233,7 @@ jobs:
 
     strategy:
       matrix:
-        platform: [Win32, x64]
+        qt-major-version: [5, 6]
 
     steps:
       - uses: actions/checkout@v3
@@ -253,15 +253,8 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          if ("${{ matrix.platform }}" -eq "Win32") {
-            $addressModel = 32
-          } else {
-            $addressModel = 64
-          }
-
-          echo "address_model=$addressModel" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           echo "root=${{ github.workspace }}/boost_1_77_0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/64/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Set OGDF install path
         shell: bash
@@ -274,14 +267,14 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
+          key: ${{ runner.os }}-x64-Boost-1.77.0
 
       - name: OGDF cache
         id: ogdf-cache
         uses: actions/cache@v3
         with:
           path: ${{ env.OGDF_INSTALL_PATH }}
-          key: ${{ runner.os }}-${{ matrix.platform }}-ogdf-${{ env.OGDF_VERSION }}
+          key: ${{ runner.os }}-x64-ogdf-${{ env.OGDF_VERSION }}
 
       - name: Download and extract svg_to_ico
         run: |
@@ -294,7 +287,7 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address_model }} locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
@@ -304,7 +297,7 @@ jobs:
 
           mkdir ogdf-${env:OGDF_VERSION}/build
           cd ogdf-${env:OGDF_VERSION}/build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}"
           cmake --build . --config Release
           cmake --install . --config Release
         if: steps.ogdf-cache.outputs.cache-hit != 'true'
@@ -314,28 +307,21 @@ jobs:
         run: |
           python -m pip install aqtinstall
 
-          if ("${{ matrix.platform }}" -eq "Win32") {
+          if ("${{ matrix.qt-major-version }}" -eq "5") {
             $qtVersion = "5.15.2"
-            $qtArch = "win32_msvc2019"
-            $qtArchDir = "msvc2019"
-            $qtCMakeVarName = "Qt5_ROOT"
 
-            aqt install-tool windows desktop tools_openssl_x86
+            aqt install-tool windows desktop tools_openssl_x64
           } else {
             $qtVersion = "6.4.2"
-            $qtArch = "win64_msvc2019_64"
-            $qtArchDir = "msvc2019_64"
-            $qtCMakeVarName = "Qt6_ROOT"
           }
 
-          aqt install-qt windows desktop $qtVersion $qtArch
-          echo "root=${{ github.workspace }}/$qtVersion/$qtArchDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "cmake_var_name=$qtCMakeVarName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          aqt install-qt windows desktop $qtVersion win64_msvc2019_64
+          echo "root=${{ github.workspace }}/$qtVersion/msvc2019_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -D${{ steps.qt-metadata.outputs.cmake_var_name }}="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DQt${{ matrix.qt-major-version }}_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
@@ -371,13 +357,7 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          if [[ "${{ matrix.platform }}" == "Win32" ]]
-          then
-            PLATFORM=win32
-          else
-            PLATFORM=win64
-          fi
-          echo "basename=loot_${VERSION}-${PLATFORM}" >> $GITHUB_OUTPUT
+          echo "basename=loot_${VERSION}-Qt${{ matrix.qt-major-version }}-win64" >> $GITHUB_OUTPUT
 
       - name: Build archive
         run: |
@@ -387,11 +367,8 @@ jobs:
 
       - name: Build installer
         run: |
-          if ("${{ matrix.platform }}" -eq "Win32") {
-            scripts\build_installer.ps1 -QtVersion 5
-          } else {
-            scripts\build_installer.ps1 -QtVersion 6 -LOOTIs64Bit
-          }
+          scripts\build_installer.ps1 -QtVersion "${{ matrix.qt-major-version }}"
+
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
       - name: Upload archive

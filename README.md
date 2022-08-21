@@ -75,8 +75,6 @@ Packaging scripts are provided for creating an installer on Windows and compress
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean, Swedish and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
 
-Building the installer will always build a 32-bit installer executable. The installer will run in 32-bit mode by default and install the 32-bit MSVC redistributable, even if it installs a 64-bit build of LOOT. To build an installer that runs in 64-bit mode and installs the 64-bit MSVC redistributable, pass `-DMyAppIs64Bit` when building the installer.
-
 The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `python scripts/archive.py`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
 
 The archive packaging script calls `windeployqt.exe` when run on Windows: it must be accessible from your `PATH`.

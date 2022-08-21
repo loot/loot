@@ -1,6 +1,4 @@
 param(
-  [Parameter(HelpMessage="Builds an installer for a 64-bit LOOT build")]
-  [switch]$LOOTIs64Bit = $False,
   [Parameter(HelpMessage="The Qt version to bundle")]
   $QtVersion = 6
 )
@@ -29,13 +27,8 @@ foreach ($languageFile in $unofficialLanguageFiles) {
 
 $env:PATH += ';' + $innoInstallPath
 
-if ($LOOTIs64Bit) {
-  Write-Output "Building installer for 64-bit LOOT and Qt version $QtVersion"
-  iscc -DMyAppIs64Bit "-DQtVersion=$QtVersion" scripts\installer.iss
-} else {
-  Write-Output "Building installer for 32-bit LOOT and Qt version $QtVersion"
-  iscc "-DQtVersion=$QtVersion" scripts\installer.iss
-}
+Write-Output "Building installer for LOOT with Qt version $QtVersion"
+iscc "-DQtVersion=$QtVersion" scripts\installer.iss
 
 if ($LastExitCode -ne 0) {
   throw 'Failed to build the LOOT installer'

@@ -72,11 +72,7 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win32.7z")
-        else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win64.7z")
-        endif()
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win64.7z")
     else()
         set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-Linux.tar.xz")
     endif()
@@ -564,24 +560,17 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     if(NOT Qt6_FOUND)
         # Copy the OpenSSL binaries, they're not included in what windeployqt
         # deploys.
-        if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-            set(QT_OPENSSL_PLATFORM "x86")
-            set(QT_OPENSSL_SUFFIX "")
-        else()
-            set(QT_OPENSSL_PLATFORM "x64")
-            set(QT_OPENSSL_SUFFIX "-x64")
-        endif()
-        set(QT_OPENSSL_BIN_PATH "${QT_DIR}/../../Tools/OpenSSL/Win_${QT_OPENSSL_PLATFORM}/bin")
+        set(QT_OPENSSL_BIN_PATH "${QT_DIR}/../../Tools/OpenSSL/Win_x64/bin")
 
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_OPENSSL_BIN_PATH}/libcrypto-1_1${QT_OPENSSL_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:LOOT>/libcrypto-1_1${QT_OPENSSL_SUFFIX}.dll")
+                "${QT_OPENSSL_BIN_PATH}/libcrypto-1_1-x64.dll"
+                "$<TARGET_FILE_DIR:LOOT>/libcrypto-1_1-x64.dll")
 
         add_custom_command(TARGET LOOT POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_OPENSSL_BIN_PATH}/libssl-1_1${QT_OPENSSL_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:LOOT>/libssl-1_1${QT_OPENSSL_SUFFIX}.dll")
+                "${QT_OPENSSL_BIN_PATH}/libssl-1_1-x64.dll"
+                "$<TARGET_FILE_DIR:LOOT>/libssl-1_1-x64.dll")
     endif()
 
     # Copy Qt binaries and resources.

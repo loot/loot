@@ -29,11 +29,9 @@ jobs:
           release_name: LOOT v${{ steps.get-git-tag.outputs.name }}
           draft: true
           body: |
-            The win64 build requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe). Users are recommended to run this build if their PC meets the Windows version requirement.
+            LOOT requires a 64-bit version of Windows 10 (1809) or later and the [MSVC 2019 x64 redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe).
 
-            The win32 build requires Windows 7 or later, the [MSVC 2010 x86 redistributable](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2010-vc-100-sp1-no-longer-supported) and the [MSVC 2019 x86 redistributable](https://aka.ms/vs/16/release/vc_redist.x86.exe). This build is provided for those who cannot run the win64 build.
-
-            The `.exe` installers will automatically download and install the appropriate redistributable if you don't already have it installed.
+            The `.exe` installer will automatically download and install the redistributable if you don't already have it installed.
 
             [7-Zip](https://www.7-zip.org/) is required to extract the `.7z` archives.
 
@@ -45,7 +43,7 @@ jobs:
 
     strategy:
       matrix:
-        platform: [Win32, x64]
+        qt-major-version: [5, 6]
 
     steps:
       - uses: actions/checkout@v3
@@ -59,15 +57,8 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          if ("${{ matrix.platform }}" -eq "Win32") {
-            $addressModel = 32
-          } else {
-            $addressModel = 64
-          }
-
-          echo "address-model=$addressModel" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           echo "root=${{ github.workspace }}/boost_1_77_0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/64/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Set OGDF install path
         shell: bash
@@ -80,14 +71,14 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-${{ matrix.platform }}-Boost-1.77.0
+          key: ${{ runner.os }}-x64-Boost-1.77.0
 
       - name: OGDF cache
         id: ogdf-cache
         uses: actions/cache@v3
         with:
           path: ${{ env.OGDF_INSTALL_PATH }}
-          key: ${{ runner.os }}-${{ matrix.platform }}-ogdf-${{ env.OGDF_VERSION }}
+          key: ${{ runner.os }}-x64-ogdf-${{ env.OGDF_VERSION }}
 
       - name: Download and extract svg_to_ico
         run: |
@@ -100,7 +91,7 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
@@ -110,7 +101,7 @@ jobs:
 
           mkdir ogdf-${env:OGDF_VERSION}/build
           cd ogdf-${env:OGDF_VERSION}/build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DCMAKE_INSTALL_PREFIX="${env:OGDF_INSTALL_PATH}"
           cmake --build . --config Release
           cmake --install . --config Release
         if: steps.ogdf-cache.outputs.cache-hit != 'true'
@@ -120,28 +111,21 @@ jobs:
         run: |
           python -m pip install aqtinstall
 
-          if ("${{ matrix.platform }}" -eq "Win32") {
+          if ("${{ matrix.qt-major-version }}" -eq "5") {
             $qtVersion = "5.15.2"
-            $qtArch = "win32_msvc2019"
-            $qtArchDir = "msvc2019"
-            $qtCMakeVarName = "Qt5_ROOT"
 
-            aqt install-tool windows desktop tools_openssl_x86
+            aqt install-tool windows desktop tools_openssl_x64
           } else {
             $qtVersion = "6.4.2"
-            $qtArch = "win64_msvc2019_64"
-            $qtArchDir = "msvc2019_64"
-            $qtCMakeVarName = "Qt6_ROOT"
           }
 
-          aqt install-qt windows desktop $qtVersion $qtArch
-          echo "root=${{ github.workspace }}/$qtVersion/$qtArchDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "cmake-var-name=$qtCMakeVarName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          aqt install-qt windows desktop $qtVersion win64_msvc2019_64
+          echo "root=${{ github.workspace }}/$qtVersion/msvc2019" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -D${{ steps.qt-metadata.outputs.cmake-var-name }}="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DQt${{ matrix.qt-major-version }}_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
 
@@ -169,13 +153,7 @@ jobs:
         id: get-artifact-basename
         shell: bash
         run: |
-          if [[ "${{ matrix.platform }}" == "Win32" ]]
-          then
-            PLATFORM=win32
-          else
-            PLATFORM=win64
-          fi
-          echo "basename=loot_${{ needs.create_release.outputs.git_tag }}-${PLATFORM}" >> $GITHUB_OUTPUT
+          echo "basename=loot_${{ needs.create_release.outputs.git_tag }}-Qt${{ matrix.qt-major-version }}-win64" >> $GITHUB_OUTPUT
 
       - name: Build archive
         run: |
@@ -185,11 +163,7 @@ jobs:
 
       - name: Build installer
         run: |
-          if ("${{ matrix.platform }}" -eq "Win32") {
-            scripts\build_installer.ps1 -QtVersion 5
-          } else {
-            scripts\build_installer.ps1 -QtVersion 6 -LOOTIs64Bit
-          }
+          scripts\build_installer.ps1 -QtVersion "${{ matrix.qt-major-version }}"
 
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 

@@ -70,15 +70,10 @@ def copy_qt_resources(executable_path, output_path, qt_root_path):
                 os.remove(dll_path)
 
         # If creating an archive for a Qt-5-based executable, we need to also
-        # copy a couple of OpenSSL DLLs, which have slightly different names
-        # based on whether they're 32-bit or 64-bit. The DLLs will already have
-        # been copied to the same folder as executable_path by CMake, so just
-        # copy whatever exists there, as that's easier than trying to check if
-        # LOOT is 32-bit or 64-bit.
+        # copy a couple of OpenSSL DLLs. The DLLs will already have been copied
+        # to the same folder as executable_path by CMake.
         openssl_dlls = [
-            'libcrypto-1_1.dll',
             'libcrypto-1_1-x64.dll',
-            'libssl-1_1.dll',
             'libssl-1_1-x64.dll'
         ]
 
