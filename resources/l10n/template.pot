@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.3\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-20 16:11+0100\n"
+"POT-Creation-Date: 2022-08-21 08:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Unknown: No revision metadata found"
 msgstr ""
 
-#: src/gui/qt/helpers.cpp:340
+#: src/gui/qt/helpers.cpp:344
 msgid "Invalid regular expression: %1%"
 msgstr ""
 
