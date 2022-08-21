@@ -313,7 +313,17 @@ void MainWindow::applyTheme() {
   }
 
   if (styleSheet.has_value()) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     qApp->setStyleSheet(styleSheet.value());
+#else
+    const auto font = qApp->font();
+    qApp->setStyleSheet(styleSheet.value());
+
+    // Reapply previous font because setting the stylesheet seems to unset the
+    // font.
+    qApp->setFont(font);
+#endif
+
     qApp->style()->polish(qApp);
   }
 }

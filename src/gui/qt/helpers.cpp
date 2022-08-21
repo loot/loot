@@ -102,11 +102,20 @@ QString translate(const char* text) {
 }
 
 void scaleCardHeading(QLabel& label) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+  // Scale the current font size by a multiplier to respect Windows' font
+  // scaling, which setting the font size in QSS doesn't do.
   static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
   auto headingFont = label.font();
   const auto headingFontSize = headingFont.pointSizeF();
   headingFont.setPointSizeF(headingFontSize * NAME_FONT_SIZE_MULTIPLIER);
   label.setFont(headingFont);
+#else
+  // Scaling the current font size produces inconsistent results with Qt 5,
+  // which doesn't adapt to Windows' font scaling, so set the font size
+  // using QSS.
+  label.setObjectName("card-title");
+#endif
 }
 
 std::string calculateGitBlobHash(const QByteArray& data) {
