@@ -58,10 +58,6 @@ int main(int argc, char **argv) {
   // Set the logger to use a null sink.
   spdlog::create<spdlog::sinks::null_sink_st>("loot_logger");
 
-  // Register a few meta types for when running with Qt 5.
-  qRegisterMetaType<loot::QueryResult>("QueryResult");
-  qRegisterMetaType<std::string>("std::string");
-
   QCoreApplication app(argc, argv);
 
   ::testing::InitGoogleTest(&argc, argv);

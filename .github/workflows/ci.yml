@@ -9,6 +9,7 @@ on:
 
 env:
   OGDF_VERSION: dogwood-202202
+  QT_VERSION: 6.4.2
 
 jobs:
   # Check if the template.pot file is up to date. Run this as a separate job
@@ -96,9 +97,6 @@ jobs:
 
   linux:
     runs-on: ubuntu-20.04
-
-    env:
-      QT_VERSION: 6.4.2
 
     steps:
       - uses: actions/checkout@v3
@@ -231,10 +229,6 @@ jobs:
   windows:
     runs-on: windows-2019
 
-    strategy:
-      matrix:
-        qt-major-version: [5, 6]
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -307,21 +301,13 @@ jobs:
         run: |
           python -m pip install aqtinstall
 
-          if ("${{ matrix.qt-major-version }}" -eq "5") {
-            $qtVersion = "5.15.2"
-
-            aqt install-tool windows desktop tools_openssl_x64
-          } else {
-            $qtVersion = "6.4.2"
-          }
-
-          aqt install-qt windows desktop $qtVersion win64_msvc2019_64
-          echo "root=${{ github.workspace }}/$qtVersion/msvc2019_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          aqt install-qt windows desktop ${env:QT_VERSION} win64_msvc2019_64
+          echo "root=${{ github.workspace }}/${env:QT_VERSION}/msvc2019_64" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DQt${{ matrix.qt-major-version }}_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -G "Visual Studio 16 2019" -A x64 -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
@@ -357,7 +343,7 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ steps.get-loot-version.outputs.version }}"
-          echo "basename=loot_${VERSION}-Qt${{ matrix.qt-major-version }}-win64" >> $GITHUB_OUTPUT
+          echo "basename=loot_${VERSION}-win64" >> $GITHUB_OUTPUT
 
       - name: Build archive
         run: |
@@ -367,7 +353,7 @@ jobs:
 
       - name: Build installer
         run: |
-          scripts\build_installer.ps1 -QtVersion "${{ matrix.qt-major-version }}"
+          scripts\build_installer.ps1
 
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 

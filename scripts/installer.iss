@@ -20,10 +20,6 @@
 #define SimplifiedChineseExists
 #endif
 
-#ifndef QtVersion
-#define QtVersion "6"
-#endif
-
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -98,7 +94,6 @@ DestDir: "{app}\styles"; Flags: ignoreversion
 Source: "build\Release\translations\*"; \
 DestDir: "{app}\translations"; Flags: ignoreversion
 
-#if QtVersion == "6"
 ; Qt 6 files
 Source: "build\Release\Qt6Core.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
@@ -114,26 +109,6 @@ Source: "build\Release\networkinformation\*"; \
 DestDir: "{app}\networkinformation"; Flags: ignoreversion
 Source: "build\Release\tls\*"; \
 DestDir: "{app}\tls"; Flags: ignoreversion
-#elif QtVersion == "5"
-; Qt 5 files
-Source: "build\Release\Qt5Core.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Gui.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Network.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Svg.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Widgets.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\bearer\*"; \
-DestDir: "{app}\bearer"; Flags: ignoreversion
-
-Source: "build\Release\libcrypto-1_1-x64.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\libssl-1_1-x64.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-#endif
 
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
@@ -181,10 +156,6 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-
-#if QtVersion == "5"
-Filename: "{tmp}\vc_redist.2010.x64.exe"; Parameters: "/q /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2010 Redistributable...
-#endif
 
 Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2019 Redistributable...
 
@@ -283,7 +254,6 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
-var VC2010RedistNeedsInstall: Boolean;
 var VC2019RedistNeedsInstall: Boolean;
 
 // Set LOOT's language in settings.toml
@@ -343,9 +313,6 @@ end;
 
 function VCRedistNeedsInstall(VersionMajor, VersionMinor, VersionBld: Cardinal): Boolean;
 var
-  RuntimesPathComponent: String;
-  MajorValueName: String;
-  MinorValueName: String;
   SubKeyName: String;
   IsSuccessful: Boolean;
   IsRuntimeInstalled: Cardinal;
@@ -354,18 +321,7 @@ var
   InstalledVersionBld: Cardinal;
   Arch: String;
 begin
-  if VersionMajor = 10 then begin
-    RuntimesPathComponent := 'VCRedist';
-    MajorValueName := 'MajorVersion';
-    MinorValueName := 'MinorVersion';
-  end
-  else begin
-    RuntimesPathComponent := 'Runtimes';
-    MajorValueName := 'Major';
-    MinorValueName := 'Minor';
-  end;
-
-  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\' + RuntimesPathComponent + '\x64';
+  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\Runtimes\x64';
 
   IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Installed', IsRuntimeInstalled);
 
@@ -375,7 +331,7 @@ begin
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, MajorValueName, InstalledVersionMajor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Major', InstalledVersionMajor);
 
   if (IsSuccessful = False) or (InstalledVersionMajor <> VersionMajor) then begin
     Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime major version is not ' + IntToStr(VersionMajor) + ': ' + IntToStr(InstalledVersionMajor));
@@ -383,7 +339,7 @@ begin
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, MinorValueName, InstalledVersionMinor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Minor', InstalledVersionMinor);
 
   if (IsSuccessful = False) or (InstalledVersionMinor < VersionMinor) then begin
     Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime minor version is less than ' + IntToStr(VersionMinor) + ': ' + IntToStr(InstalledVersionMinor));
@@ -474,13 +430,9 @@ end;
 
 procedure InitializeWizard;
 begin
-#if QtVersion == "5"
-  VC2010RedistNeedsInstall := VCRedistNeedsInstall(10, 0, 40219)
-#endif
-
   VC2019RedistNeedsInstall := VCRedistNeedsInstall(14, 15, 26706)
 
-  if VC2019RedistNeedsInstall or VC2010RedistNeedsInstall then begin
+  if VC2019RedistNeedsInstall then begin
     DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
   end;
 end;
@@ -490,12 +442,6 @@ begin
         Log(Format('Current page ID: %d', [CurPageID]));
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
     DownloadPage.Clear;
-
-#if QtVersion == "5"
-    if VC2010RedistNeedsInstall then begin
-      DownloadPage.Add('https://download.microsoft.com/download/A/8/0/A80747C3-41BD-45DF-B505-E9710D2744E0/vcredist_x64.exe', 'vc_redist.2010.x64.exe', '');
-    end;
-#endif
 
     if VC2019RedistNeedsInstall then begin
       DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x64.exe', 'vc_redist.2019.x64.exe', '');

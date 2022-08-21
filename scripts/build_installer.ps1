@@ -1,8 +1,3 @@
-param(
-  [Parameter(HelpMessage="The Qt version to bundle")]
-  $QtVersion = 6
-)
-
 $ErrorActionPreference = "Stop"
 
 function DownloadLanguageFile($languageFile, $innoPath) {
@@ -27,8 +22,8 @@ foreach ($languageFile in $unofficialLanguageFiles) {
 
 $env:PATH += ';' + $innoInstallPath
 
-Write-Output "Building installer for LOOT with Qt version $QtVersion"
-iscc "-DQtVersion=$QtVersion" scripts\installer.iss
+Write-Output "Building installer for LOOT"
+iscc scripts\installer.iss
 
 if ($LastExitCode -ne 0) {
   throw 'Failed to build the LOOT installer'

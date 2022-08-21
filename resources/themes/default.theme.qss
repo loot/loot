@@ -39,10 +39,6 @@ QLabel[messageType="error"] {
 	background-color: #FF8A80;
 }
 
-QLabel#card-title {
-    font-size: 10.1pt;
-}
-
 QLabel#plugin-crc,
 QLabel#plugin-version {
 	margin-left: 16px;

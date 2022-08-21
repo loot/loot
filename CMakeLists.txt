@@ -53,10 +53,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(TBB REQUIRED)
 endif()
 
-find_package(Qt6 6.2 COMPONENTS Widgets Network Test)
-if(NOT Qt6_FOUND)
-    find_package(Qt5 5.15 COMPONENTS Widgets Network Test REQUIRED)
-endif()
+find_package(Qt6 6.2 COMPONENTS Widgets Network Test REQUIRED)
 
 find_package(OGDF CONFIG)
 
@@ -550,29 +547,9 @@ endif()
 # Post-Build Steps
 ##############################
 
-if(Qt6_FOUND)
-    set(QT_DIR ${Qt6_DIR}/../../..)
-else()
-    set(QT_DIR ${Qt5_DIR}/../../..)
-endif()
+set(QT_DIR ${Qt6_DIR}/../../..)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if(NOT Qt6_FOUND)
-        # Copy the OpenSSL binaries, they're not included in what windeployqt
-        # deploys.
-        set(QT_OPENSSL_BIN_PATH "${QT_DIR}/../../Tools/OpenSSL/Win_x64/bin")
-
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_OPENSSL_BIN_PATH}/libcrypto-1_1-x64.dll"
-                "$<TARGET_FILE_DIR:LOOT>/libcrypto-1_1-x64.dll")
-
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_OPENSSL_BIN_PATH}/libssl-1_1-x64.dll"
-                "$<TARGET_FILE_DIR:LOOT>/libssl-1_1-x64.dll")
-    endif()
-
     # Copy Qt binaries and resources.
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>

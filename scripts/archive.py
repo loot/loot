@@ -56,35 +56,15 @@ def copy_qt_resources(executable_path, output_path, qt_root_path):
         )
 
         # windeployqt copies a few DLLs that aren't actually used by LOOT, so
-        # delete them from the output path. Some of these are only copied for
-        # Qt5, so only delete those that exist.
+        # delete them from the output path.
         unnecessary_dlls = [
             'D3Dcompiler_47.dll',
-            'libEGL.dll',
-            'libGLESv2.dll',
             'opengl32sw.dll'
         ]
         for unnecessary_dll in unnecessary_dlls:
             dll_path = os.path.join(output_path, unnecessary_dll)
             if os.path.exists(dll_path):
                 os.remove(dll_path)
-
-        # If creating an archive for a Qt-5-based executable, we need to also
-        # copy a couple of OpenSSL DLLs. The DLLs will already have been copied
-        # to the same folder as executable_path by CMake.
-        openssl_dlls = [
-            'libcrypto-1_1-x64.dll',
-            'libssl-1_1-x64.dll'
-        ]
-
-        binaries_path = os.path.dirname(executable_path)
-        for openssl_dll in openssl_dlls:
-            dll_path = os.path.join(binaries_path, openssl_dll)
-            if os.path.exists(dll_path):
-                shutil.copy2(
-                    dll_path,
-                    os.path.join(output_path, openssl_dll)
-                )
 
         return
 
