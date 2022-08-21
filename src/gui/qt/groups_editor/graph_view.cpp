@@ -294,25 +294,33 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   }
 
   const auto logger = getLogger();
-  try {
-    const auto nodePositionsMap = convertNodePositions(nodePositions);
 
-    setNodePositions(nodes, nodePositionsMap);
+  if (!nodePositions.empty()) {
+    try {
+      const auto nodePositionsMap = convertNodePositions(nodePositions);
 
-    if (logger) {
-      logger->info("Graph layout loaded from saved node positions");
-    }
-  } catch (const std::exception &e) {
-    if (logger) {
-      logger->warn("Failed to set node positions from stored data: {}",
-                   e.what());
-      logger->info("Calculating new graph layout");
-    }
+      setNodePositions(nodes, nodePositionsMap);
 
-    const auto calculatedNodePositions = calculateGraphLayout(nodes);
-    for (const auto &[node, position] : calculatedNodePositions) {
-      node->setPosition(position);
+      if (logger) {
+        logger->info("Graph layout loaded from saved node positions");
+      }
+
+      return;
+    } catch (const std::exception &e) {
+      if (logger) {
+        logger->warn("Failed to set node positions from stored data: {}",
+                     e.what());
+      }
     }
+  }
+
+  if (logger) {
+    logger->info("Calculating new graph layout");
+  }
+
+  const auto calculatedNodePositions = calculateGraphLayout(nodes);
+  for (const auto &[node, position] : calculatedNodePositions) {
+    node->setPosition(position);
   }
 }
 }
