@@ -29,7 +29,16 @@
 
 namespace loot {
 qreal getSidebarRowHeight(bool inEditMode) {
-  const auto lineHeight = QFontMetricsF(QApplication::font()).height() * 1.1;
+  // For some reason Qt 5 and 6 have different line heights here, so use
+  // different multipliers.
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+  static constexpr double MULTIPLIER = 1.125;
+#else
+  static constexpr double MULTIPLIER = 1.3846;
+#endif
+
+  const auto lineHeight =
+      QFontMetricsF(QApplication::font()).height() * MULTIPLIER;
 
   return inEditMode ? lineHeight * 2.0 : lineHeight;
 }
