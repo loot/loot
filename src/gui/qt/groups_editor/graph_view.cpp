@@ -205,20 +205,19 @@ std::vector<Group> GraphView::getUserGroups() const {
       continue;
     }
 
-    const auto edges = node->edges();
-    if (edges.isEmpty()) {
-      userGroups.push_back(Group(node->getName().toStdString()));
-    } else {
-      std::vector<std::string> afterGroups;
-      for (const auto edge : edges) {
-        if (edge->destNode() == node &&
-            (node->isUserMetadata() || edge->isUserMetadata())) {
-          // The edge is going to this node, i.e. this node is after
-          // sourceNode().
-          afterGroups.push_back(edge->sourceNode()->getName().toStdString());
-        }
-      }
+    // A node should be recorded as a user group if it is user metadata itself
+    // or if it is not user metadata but has a user metadata edge going to it:
+    // in the latter case only user metadata edges should be recorded as load
+    // after metadata.
 
+    std::vector<std::string> afterGroups;
+    for (const auto edge : node->inEdges()) {
+      if (node->isUserMetadata() || edge->isUserMetadata()) {
+        afterGroups.push_back(edge->sourceNode()->getName().toStdString());
+      }
+    }
+
+    if (node->isUserMetadata() || !afterGroups.empty()) {
       userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
     }
   }
