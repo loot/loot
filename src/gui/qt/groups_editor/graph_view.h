@@ -53,11 +53,11 @@ public:
 
   bool addGroup(const std::string &name);
   void autoLayout();
-  void registerUnsavedChanges();
+  void registerUserLayoutChange();
 
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
-  bool hasUnsavedChanges() const;
+  bool hasUnsavedLayoutChanges() const;
 
   void handleGroupSelected(const QString &name);
 
@@ -79,7 +79,7 @@ private:
   QColor masterColor;
   QColor userColor;
   QColor backgroundColor;
-  bool hasUnsavedChanges_{false};
+  bool hasUnsavedLayoutChanges_{false};
 
   void doLayout(const std::vector<GroupNodePosition> &nodePositions);
 };

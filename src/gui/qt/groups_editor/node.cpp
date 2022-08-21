@@ -215,10 +215,6 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       delete edge;
     }
 
-    // Register unsaved changes before removing the item so that the scene
-    // is still valid.
-    registerUnsavedChanges();
-
     scene()->removeItem(this->textItem);
     scene()->removeItem(this);
     delete this->textItem;
@@ -259,8 +255,6 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
     auto edge = new Edge(this, node, true);
     scene()->addItem(edge);
-
-    registerUnsavedChanges();
   }
 
   drawEdgeToCursor = false;
@@ -283,7 +277,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
   updateTextPos();
 
-  registerUnsavedChanges();
+  qobject_cast<GraphView *>(scene()->parent())->registerUserLayoutChange();
 
   if (drawEdgeToCursor) {
     removeEdgeToCursor();
@@ -345,9 +339,5 @@ void Node::removeEdgeToCursor() {
 void Node::updateTextPos() {
   const auto textWidth = textItem->boundingRect().width();
   textItem->setPos(x() - textWidth / 2, y() + TEXT_Y_POS);
-}
-
-void Node::registerUnsavedChanges() {
-  qobject_cast<GraphView *>(scene()->parent())->registerUnsavedChanges();
 }
 }

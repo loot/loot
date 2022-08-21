@@ -114,7 +114,7 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
                           const std::vector<GroupNodePosition> &nodePositions) {
   // Remove all existing items.
   scene()->clear();
-  hasUnsavedChanges_ = false;
+  hasUnsavedLayoutChanges_ = false;
 
   // Now add the given groups.
   std::map<std::string, Node *> groupNameNodeMap;
@@ -183,18 +183,19 @@ bool GraphView::addGroup(const std::string &name) {
   scene()->addItem(node);
   node->setPosition(pos);
 
-  registerUnsavedChanges();
-
   return true;
 }
 
 void GraphView::autoLayout() {
   doLayout({});
 
-  registerUnsavedChanges();
+  // Reset unsaved change tracker because all user customisations have been
+  // removed (while the auto layout results can vary, they're all pretty
+  // similar and not worth counting as a user customisation).
+  hasUnsavedLayoutChanges_ = false;
 }
 
-void GraphView::registerUnsavedChanges() { hasUnsavedChanges_ = true; }
+void GraphView::registerUserLayoutChange() { hasUnsavedLayoutChanges_ = true; }
 
 std::vector<Group> GraphView::getUserGroups() const {
   std::vector<Group> userGroups;
@@ -243,7 +244,9 @@ std::vector<GroupNodePosition> GraphView::getNodePositions() const {
   return nodePositions;
 }
 
-bool GraphView::hasUnsavedChanges() const { return hasUnsavedChanges_; }
+bool GraphView::hasUnsavedLayoutChanges() const {
+  return hasUnsavedLayoutChanges_;
+}
 
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);

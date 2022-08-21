@@ -63,12 +63,16 @@ private:
 
   PluginItemModel *pluginItemModel{nullptr};
 
+  std::vector<Group> initialUserGroups;
+  std::vector<GroupNodePosition> initialNodePositions;
+
   void setupUi();
   void translateUi();
 
   void closeEvent(QCloseEvent *event) override;
 
   bool askShouldDiscardChanges();
+  bool hasUnsavedChanges();
 
 private slots:
   void on_graphView_groupSelected(const QString &name);

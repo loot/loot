@@ -108,7 +108,6 @@ private:
   QColor getNodeColor() const;
   void removeEdgeToCursor();
   void updateTextPos();
-  void registerUnsavedChanges();
 };
 }
 
