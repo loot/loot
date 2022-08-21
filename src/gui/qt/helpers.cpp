@@ -217,6 +217,10 @@ FileRevisionSummary getFileRevisionSummary(
 
 bool isFileUpToDate(const std::filesystem::path& filePath,
                     const std::string& expectedHash) {
+  if (!std::filesystem::exists(filePath)) {
+    return false;
+  }
+
   auto logger = getLogger();
 
   try {
