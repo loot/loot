@@ -30,6 +30,11 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
+bool gameSupportsLightPlugins(GameType gameType) {
+  return gameType == GameType::tes5se || gameType == GameType::tes5vr ||
+         gameType == GameType::fo4 || gameType == GameType::fo4vr;
+}
+
 GeneralInfoCard::GeneralInfoCard(QWidget* parent) : QFrame(parent) {
   setupUi();
 }
@@ -80,10 +85,8 @@ void GeneralInfoCard::setGeneralMessages(
 
 void GeneralInfoCard::setGameType(GameType gameType) {
   auto oldValue = showSeparateLightPluginCount;
-  showSeparateLightPluginCount =
-      gameType == GameType::tes5se || gameType == GameType::tes5vr ||
-      gameType == GameType::fo4 || gameType == GameType::fo4vr;
-
+  showSeparateLightPluginCount = gameSupportsLightPlugins(gameType);
+      
   if (showSeparateLightPluginCount == oldValue) {
     return;
   }

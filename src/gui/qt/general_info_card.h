@@ -37,6 +37,8 @@
 #include "gui/qt/messages_widget.h"
 
 namespace loot {
+bool gameSupportsLightPlugins(GameType gameType);
+
 class GeneralInfoCard : public QFrame {
   Q_OBJECT
 public:

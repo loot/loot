@@ -36,7 +36,6 @@
 #include <QtWidgets/QTextEdit>
 
 #include "gui/backup.h"
-#include "gui/qt/card_delegate.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 #include "gui/qt/plugin_item_filter_model.h"
@@ -314,7 +313,17 @@ void MainWindow::applyTheme() {
   }
 
   if (styleSheet.has_value()) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     qApp->setStyleSheet(styleSheet.value());
+#else
+    const auto font = qApp->font();
+    qApp->setStyleSheet(styleSheet.value());
+
+    // Reapply previous font because setting the stylesheet seems to unset the
+    // font.
+    qApp->setFont(font);
+#endif
+
     qApp->style()->polish(qApp);
   }
 }
@@ -609,7 +618,10 @@ void MainWindow::setupViews() {
   // leading to layout issues.
   pluginCardsView->setWordWrap(true);
 
-  pluginCardsView->setItemDelegate(new CardDelegate(pluginCardsView));
+  cardSizingCache.update(pluginItemModel);
+
+  pluginCardsView->setItemDelegate(
+      new CardDelegate(pluginCardsView, cardSizingCache));
 
   // Enable the right-click Plugin context menu.
   pluginCardsView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -2018,6 +2030,8 @@ void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
     return;
   }
 
+  cardSizingCache.update(topLeft, bottomRight);
+
   if (roles.isEmpty() || roles.contains(CardContentFiltersRole)) {
     proxyModel->invalidate();
   }
@@ -2040,6 +2054,12 @@ void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
     filtersWidget->setPlugins(pluginNames);
     pluginEditorWidget->setFilenameCompletions(pluginNames);
   }
+}
+
+void MainWindow::on_pluginItemModel_rowsInserted(const QModelIndex&,
+                                                 int first,
+                                                 int last) {
+  cardSizingCache.update(pluginItemModel, first, last);
 }
 
 void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {

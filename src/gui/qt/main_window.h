@@ -61,6 +61,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
+#include "gui/qt/card_delegate.h"
 #include "gui/qt/filters_widget.h"
 #include "gui/qt/groups_editor/groups_editor_dialog.h"
 #include "gui/qt/plugin_editor/plugin_editor_widget.h"
@@ -161,6 +162,7 @@ private:
 
   PluginItemModel *pluginItemModel{new PluginItemModel(this)};
   PluginItemFilterModel *proxyModel{new PluginItemFilterModel(this)};
+  CardSizingCache cardSizingCache{pluginCardsView->viewport()};
 
   GroupsEditorDialog *groupsEditor{
       new GroupsEditorDialog(this, pluginItemModel)};
@@ -286,6 +288,9 @@ private slots:
                                       const QModelIndex &bottomRight,
                                       const QVector<int> &roles);
 #endif
+  void on_pluginItemModel_rowsInserted(const QModelIndex &,
+                                       int first,
+                                       int last);
 
   void on_pluginEditorWidget_accepted(PluginMetadata userMetadata);
   void on_pluginEditorWidget_rejected();

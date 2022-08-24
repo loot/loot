@@ -37,6 +37,30 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
+std::map<std::string, std::set<std::string>> groupsAsMap(
+    const std::vector<Group>& groups) {
+  std::map<std::string, std::set<std::string>> map;
+
+  for (const auto& group : groups) {
+    const auto afterGroups = group.GetAfterGroups();
+    map.emplace(group.GetName(),
+                std::set(afterGroups.begin(), afterGroups.end()));
+  }
+
+  return map;
+}
+
+std::map<std::string, std::pair<double, double>> positionsAsMap(
+    const std::vector<GroupNodePosition>& positions) {
+  std::map<std::string, std::pair<double, double>> map;
+
+  for (const auto& position : positions) {
+    map.emplace(position.groupName, std::make_pair(position.x, position.y));
+  }
+
+  return map;
+}
+
 GroupsEditorDialog::GroupsEditorDialog(QWidget* parent,
                                        PluginItemModel* pluginItemModel) :
     QDialog(
@@ -55,6 +79,9 @@ void GroupsEditorDialog::setGroups(
       masterlistGroups, userGroups, installedPluginGroups, nodePositions);
   groupPluginsTitle->setVisible(false);
   groupPluginsList->setVisible(false);
+
+  initialUserGroups = userGroups;
+  initialNodePositions = nodePositions;
 }
 
 std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
@@ -126,7 +153,7 @@ void GroupsEditorDialog::translateUi() {
 }
 
 void GroupsEditorDialog::closeEvent(QCloseEvent* event) {
-  if (graphView->hasUnsavedChanges() && !askShouldDiscardChanges()) {
+  if (hasUnsavedChanges() && !askShouldDiscardChanges()) {
     event->ignore();
     return;
   }
@@ -144,6 +171,42 @@ bool GroupsEditorDialog::askShouldDiscardChanges() {
       QMessageBox::StandardButton::No);
 
   return button == QMessageBox::StandardButton::Yes;
+}
+
+bool GroupsEditorDialog::hasUnsavedChanges() {
+  // Check if the user groups have changed since they were initially set.
+  // The order the groups are listed in doesn't matter, and neither does
+  // the order of their load after groups.
+
+  // Convert the groups vectors into structures that can be compared without
+  // differences in order.
+  const auto oldGroups = groupsAsMap(initialUserGroups);
+  auto newGroups = groupsAsMap(getUserGroups());
+
+  // The old groups may contain the default group with no load afters,
+  // so add it to the new groups if it's not there.
+  const auto defaultGroupName = Group().GetName();
+  auto it = newGroups.find(Group::DEFAULT_NAME);
+  if (it == newGroups.end()) {
+    newGroups.emplace(Group::DEFAULT_NAME, std::set<std::string>());
+  }
+
+  if (oldGroups != newGroups) {
+    return true;
+  }
+
+  if (initialNodePositions.empty()) {
+    // If there weren't any defined positions when the editor was opened,
+    // check if the user made any position changes (that weren't undone
+    // by auto-arranging groups).
+    return graphView->hasUnsavedLayoutChanges();
+  }
+
+  // Similarly, convert positions vectors to be compared without ordering.
+  const auto oldPositions = positionsAsMap(initialNodePositions);
+  const auto newPositions = positionsAsMap(getNodePositions());
+
+  return oldPositions != newPositions;
 }
 
 void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
@@ -209,7 +272,7 @@ void GroupsEditorDialog::on_autoArrangeButton_clicked() {
 void GroupsEditorDialog::on_dialogButtons_accepted() { accept(); }
 
 void GroupsEditorDialog::on_dialogButtons_rejected() {
-  if (graphView->hasUnsavedChanges() && !askShouldDiscardChanges()) {
+  if (hasUnsavedChanges() && !askShouldDiscardChanges()) {
     return;
   }
 

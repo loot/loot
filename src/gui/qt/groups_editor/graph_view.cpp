@@ -114,7 +114,7 @@ void GraphView::setGroups(const std::vector<Group> &masterlistGroups,
                           const std::vector<GroupNodePosition> &nodePositions) {
   // Remove all existing items.
   scene()->clear();
-  hasUnsavedChanges_ = false;
+  hasUnsavedLayoutChanges_ = false;
 
   // Now add the given groups.
   std::map<std::string, Node *> groupNameNodeMap;
@@ -183,18 +183,19 @@ bool GraphView::addGroup(const std::string &name) {
   scene()->addItem(node);
   node->setPosition(pos);
 
-  registerUnsavedChanges();
-
   return true;
 }
 
 void GraphView::autoLayout() {
   doLayout({});
 
-  registerUnsavedChanges();
+  // Reset unsaved change tracker because all user customisations have been
+  // removed (while the auto layout results can vary, they're all pretty
+  // similar and not worth counting as a user customisation).
+  hasUnsavedLayoutChanges_ = false;
 }
 
-void GraphView::registerUnsavedChanges() { hasUnsavedChanges_ = true; }
+void GraphView::registerUserLayoutChange() { hasUnsavedLayoutChanges_ = true; }
 
 std::vector<Group> GraphView::getUserGroups() const {
   std::vector<Group> userGroups;
@@ -205,20 +206,19 @@ std::vector<Group> GraphView::getUserGroups() const {
       continue;
     }
 
-    const auto edges = node->edges();
-    if (edges.isEmpty()) {
-      userGroups.push_back(Group(node->getName().toStdString()));
-    } else {
-      std::vector<std::string> afterGroups;
-      for (const auto edge : edges) {
-        if (edge->destNode() == node &&
-            (node->isUserMetadata() || edge->isUserMetadata())) {
-          // The edge is going to this node, i.e. this node is after
-          // sourceNode().
-          afterGroups.push_back(edge->sourceNode()->getName().toStdString());
-        }
-      }
+    // A node should be recorded as a user group if it is user metadata itself
+    // or if it is not user metadata but has a user metadata edge going to it:
+    // in the latter case only user metadata edges should be recorded as load
+    // after metadata.
 
+    std::vector<std::string> afterGroups;
+    for (const auto edge : node->inEdges()) {
+      if (node->isUserMetadata() || edge->isUserMetadata()) {
+        afterGroups.push_back(edge->sourceNode()->getName().toStdString());
+      }
+    }
+
+    if (node->isUserMetadata() || !afterGroups.empty()) {
       userGroups.push_back(Group(node->getName().toStdString(), afterGroups));
     }
   }
@@ -244,7 +244,9 @@ std::vector<GroupNodePosition> GraphView::getNodePositions() const {
   return nodePositions;
 }
 
-bool GraphView::hasUnsavedChanges() const { return hasUnsavedChanges_; }
+bool GraphView::hasUnsavedLayoutChanges() const {
+  return hasUnsavedLayoutChanges_;
+}
 
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
@@ -292,25 +294,33 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   }
 
   const auto logger = getLogger();
-  try {
-    const auto nodePositionsMap = convertNodePositions(nodePositions);
 
-    setNodePositions(nodes, nodePositionsMap);
+  if (!nodePositions.empty()) {
+    try {
+      const auto nodePositionsMap = convertNodePositions(nodePositions);
 
-    if (logger) {
-      logger->info("Graph layout loaded from saved node positions");
-    }
-  } catch (const std::exception &e) {
-    if (logger) {
-      logger->warn("Failed to set node positions from stored data: {}",
-                   e.what());
-      logger->info("Calculating new graph layout");
-    }
+      setNodePositions(nodes, nodePositionsMap);
 
-    const auto calculatedNodePositions = calculateGraphLayout(nodes);
-    for (const auto &[node, position] : calculatedNodePositions) {
-      node->setPosition(position);
+      if (logger) {
+        logger->info("Graph layout loaded from saved node positions");
+      }
+
+      return;
+    } catch (const std::exception &e) {
+      if (logger) {
+        logger->warn("Failed to set node positions from stored data: {}",
+                     e.what());
+      }
     }
+  }
+
+  if (logger) {
+    logger->info("Calculating new graph layout");
+  }
+
+  const auto calculatedNodePositions = calculateGraphLayout(nodes);
+  for (const auto &[node, position] : calculatedNodePositions) {
+    node->setPosition(position);
   }
 }
 }

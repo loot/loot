@@ -678,7 +678,7 @@ void LootSettings::load(const std::filesystem::path& file) {
   }
 
   const auto groupsEditorWindow = settings["groupsEditorWindow"];
-  if (window.is_table()) {
+  if (groupsEditorWindow.is_table()) {
     const auto groupsEditorWindowPosition =
         windowPositionFromToml(*groupsEditorWindow.as_table());
     if (groupsEditorWindowPosition.has_value()) {
