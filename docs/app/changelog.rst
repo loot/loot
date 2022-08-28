@@ -4,7 +4,7 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.18.4 - Unreleased
+0.18.4 - 2022-08-28
 ===================
 
 Added
