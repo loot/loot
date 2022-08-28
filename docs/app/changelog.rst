@@ -37,10 +37,12 @@ Changed
 - Disabling the warnings and errors filter now restores its component filters' previous states instead of disabling all of them.
 - The text for sources displayed on plugin cards can now wrap around to new lines.
 - Keyboard navigation of the user interface has been improved:
+
   - Navigating between elements using the Tab key now does so in a more intuitive order in the filters sidebar, groups editor, game settings panel, new game dialog and settings dialog.
   - The table views in the plugins sidebar panel and plugin metadata editor and the game registry keys text box no longer prevent the Tab key from being used to move from them to the next UI element.
   - The message content editor dialog no longer closes if the Tab key is pressed while it is open.
   - The step size for the minimum header version game setting input has been changed from 1 to 0.01.
+
 - The group nodes (circles) in the groups editor now have a little padding to make selecting them easier.
 - Theme changes are now applied when saving and exiting the settings dialog, instead of when LOOT starts.
 - Updated the Bulgarian translation.
