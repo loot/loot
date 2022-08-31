@@ -174,11 +174,11 @@ QVariant PluginItemModel::headerData(int section,
 
   switch (section) {
     case SIDEBAR_POSITION_COLUMN:
-      return "Position";
+      return translate("Position");
     case SIDEBAR_INDEX_COLUMN:
-      return "Index";
+      return translate("Index");
     case SIDEBAR_NAME_COLUMN:
-      return "Plugin Name";
+      return translate("Plugin Name");
     default:
       return QVariant();
   }
