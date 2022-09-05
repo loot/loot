@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.4\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-22 17:04+0100\n"
+"POT-Creation-Date: 2022-08-30 06:21-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -614,6 +614,18 @@ msgstr ""
 
 #: src/gui/qt/plugin_item_model.cpp:126
 msgid "Editor Is Open"
+msgstr ""
+
+#: src/gui/qt/plugin_item_model.cpp:177
+msgid "Position"
+msgstr ""
+
+#: src/gui/qt/plugin_item_model.cpp:179
+msgid "Index"
+msgstr ""
+
+#: src/gui/qt/plugin_item_model.cpp:181
+msgid "Plugin Name"
 msgstr ""
 
 #: src/gui/qt/search_dialog.cpp:99
