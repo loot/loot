@@ -721,7 +721,7 @@ std::vector<Message> Game::GetMessages() const {
   static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 254;
 
   if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS && settings_.Type() == GameType::tes3 && 
-      std::filesystem::exists(preludePath_+"MWSE.dll")) {
+      std::filesystem::exists(preludePath_/"MWSE.dll")) {
       auto logger = getLogger();
     if (logger) {
       logger->warn(
