@@ -720,7 +720,20 @@ std::vector<Message> Game::GetMessages() const {
 
   static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 254;
 
-  if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
+  if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS && settings_.Type() == GameType::tes3 && 
+      std::filesystem::exists(preludePath_+"MWSE.dll")) {
+      auto logger = getLogger();
+    if (logger) {
+      logger->warn(
+          "More than 255 normal plugins are activated at the same time.");
+    }
+    output.push_back(PlainTextMessage(
+        MessageType::warn,
+        boost::locale::translate(
+          "Do not launch Morrowind without the use of MWSE or it will"
+          "cause unaccountable damage to your game.")));
+  }
+  else if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
       hasActiveEsl) {
     auto logger = getLogger();
     if (logger) {
