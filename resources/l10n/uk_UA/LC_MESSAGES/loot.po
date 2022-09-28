@@ -662,7 +662,7 @@ msgstr "Позиція"
 
 #: src/gui/qt/plugin_item_model.cpp:179
 msgid "Index"
-msgstr "Індекс:"
+msgstr "Індекс"
 
 #: src/gui/qt/plugin_item_model.cpp:181
 msgid "Plugin Name"
