@@ -128,7 +128,7 @@ jobs:
 
             aqt install-tool windows desktop tools_openssl_x86
           } else {
-            $qtVersion = "6.2.4"
+            $qtVersion = "6.4.0"
             $qtArch = "win64_msvc2019_64"
             $qtArchDir = "msvc2019_64"
             $qtCMakeVarName = "Qt6_ROOT"
