@@ -225,7 +225,13 @@ TEST_P(GameSettingsTest,
               {"Software\\Bethesda Softworks\\Skyrim Special "
                "Edition\\Installed Path",
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 489830\\InstallLocation"}),
+               "eam App 489830\\InstallLocation",
+               "Software\\GOG.com\\Games\\1162721350\\path",
+               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+               "1162721350_is1\\InstallLocation",
+               "Software\\GOG.com\\Games\\1711230643\\path",
+               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+               "1711230643_is1\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrimse/v0.18/"
