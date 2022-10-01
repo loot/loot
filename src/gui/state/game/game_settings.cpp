@@ -141,7 +141,15 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     registryKeys_ = {
         "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path",
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
-        "489830\\InstallLocation"};
+        "489830\\InstallLocation",
+        // Skyrim SE
+        "Software\\GOG.com\\Games\\1162721350\\path",
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+        "1162721350_is1\\InstallLocation",
+        // Anniversary Edition patch
+        "Software\\GOG.com\\Games\\1711230643\\path",
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+        "1711230643_is1\\InstallLocation"};
     lootFolderName_ = "Skyrim Special Edition";
     masterFile_ = "Skyrim.esm";
     mininumHeaderVersion_ = SKYRIM_SE_MINIMUM_HEADER_VERSION;
