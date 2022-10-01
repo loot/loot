@@ -46,9 +46,6 @@ static constexpr const char* METADATA_PATH_SUFFIX = ".metadata.toml";
 static constexpr const char* METADATA_ID_KEY = "blob_sha1";
 static constexpr const char* METADATA_DATE_KEY = "update_timestamp";
 static constexpr int SHORT_HASH_LENGTH = 7;
-static constexpr const char* HEADER_PREFIX = "blob ";
-static constexpr size_t HEADER_PREFIX_LENGTH =
-    std::char_traits<char>::length(HEADER_PREFIX);
 
 std::filesystem::path getFileMetadataPath(std::filesystem::path filePath) {
   filePath += METADATA_PATH_SUFFIX;
@@ -120,10 +117,22 @@ void scaleCardHeading(QLabel& label) {
 
 std::string calculateGitBlobHash(const QByteArray& data) {
   auto sizeString = std::to_string(data.size());
-
   auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 3, 0))
+  static constexpr QByteArrayView HEADER_PREFIX = QByteArrayView("blob ");
+
+  hasher.addData(HEADER_PREFIX);
+  hasher.addData(QByteArrayView(sizeString.c_str(), sizeString.size() + 1));
+#else
+  static constexpr const char* HEADER_PREFIX = "blob ";
+  static constexpr size_t HEADER_PREFIX_LENGTH =
+      std::char_traits<char>::length(HEADER_PREFIX);
+
   hasher.addData(HEADER_PREFIX, HEADER_PREFIX_LENGTH);
   hasher.addData(sizeString.c_str(), sizeString.size() + 1);
+#endif
+
   hasher.addData(data);
 
   return QString(hasher.result().toHex()).toStdString();
