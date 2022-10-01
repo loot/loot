@@ -731,7 +731,7 @@ std::vector<Message> Game::GetMessages() const {
         MessageType::warn,
         boost::locale::translate(
           "Do not launch Morrowind without the use of MWSE or it will"
-          "cause unaccountable damage to your game.")));
+          "cause severe damage to your game.")));
   }
   else if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
       hasActiveEsl) {
