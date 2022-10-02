@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-10-01 16:34+0100\n"
-"PO-Revision-Date: 2022-10-02 11:28+0200\n"
+"POT-Creation-Date: 2022-10-02 17:17+0100\n"
+"PO-Revision-Date: 2022-10-02 20:21+0200\n"
 "Last-Translator: pStyl3 <qp-game@gmx.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -1155,7 +1155,15 @@ msgstr "Die Gruppe \"%1%\" existiert nicht."
 msgid "You have not sorted your load order this session."
 msgstr "Sie haben Ihre Ladereihenfolge in dieser Sitzung noch nicht sortiert."
 
-#: src/gui/state/game/game.cpp:734
+#: src/gui/state/game/game.cpp:735
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+"Starten Sie Morrowind nicht ohne die Verwendung von MWSE, da dies zu "
+"schweren Schäden an Ihrem Spiel führen kann."
+
+#: src/gui/state/game/game.cpp:749
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1165,7 +1173,7 @@ msgstr ""
 "den FE Reihenfolge-Index teilen. Deaktivieren Sie ein normales Plugin oder "
 "alle Ihre Light-Plugins um potenziellen Problemen auszuweichen."
 
-#: src/gui/state/game/game.cpp:796
+#: src/gui/state/game/game.cpp:812
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
