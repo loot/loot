@@ -11,6 +11,9 @@ Added
 -----
 
 - Built-in support for the GOG distribution of Skyrim Special Edition.
+- LOOT will now display a warning message reminding the user to launch Morrowind
+  with MWSE if a Morrowind install has more than 254 plugins active and MWSE is
+  installed.
 
 Fixed
 -----
@@ -27,6 +30,7 @@ Changed
 - Improved the formatting of plugin metadata when it is serialised as YAML. Via
   libloot.
 - Updated the Bulgarian translation.
+- Updated the German translation.
 - Updated the Ukrainian translation.
 - Updated libloot to 0.18.1.
 - Updated Qt to 6.4.0.
