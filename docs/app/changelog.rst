@@ -4,6 +4,33 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.5 - 2022-10-02
+===================
+
+Added
+-----
+
+- Built-in support for the GOG distribution of Skyrim Special Edition.
+
+Fixed
+-----
+
+- If Oblivion's ``Oblivion.ini`` could not be found or read, or if it did not
+  contain the ``bUseMyGamesDirectory`` setting, the game's install path would be
+  used as the parent directory for ``plugins.txt``. LOOT now correctly
+  defaults to using the game's local app data directory, and only uses the
+  install path if ``bUseMyGamesDirectory=0`` is found. Via libloot.
+
+Changed
+-------
+
+- Improved the formatting of plugin metadata when it is serialised as YAML. Via
+  libloot.
+- Updated the Bulgarian translation.
+- Updated the Ukrainian translation.
+- Updated libloot to 0.18.1.
+- Updated Qt to 6.4.0.
+
 0.18.4 - 2022-08-28
 ===================
 

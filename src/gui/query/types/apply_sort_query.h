@@ -81,9 +81,10 @@ private:
         return settings.GamePath() / "Morrowind.ini";
       }
 
-      // This is a misuse of FolderName(), but it works because LOOT's game
-      // folder names happen to match the names of the folders used by the games
-      // themselves.
+      // FIXME: This is a hack that doesn't always give the right path. libloot
+      // branch get-active-plugins-file-path has a
+      // GameInterface::GetActivePluginsFilePath() method that can be used when
+      // v0.19.0 is released (adding the method breaks ABI compatibility).
       const auto gameLocalPath =
           settings.GameLocalPath().empty()
               ? getLocalAppDataPath() / settings.FolderName()
