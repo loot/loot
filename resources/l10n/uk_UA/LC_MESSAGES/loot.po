@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.18.4\n"
+"Project-Id-Version: LOOT v0.18.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-30 06:21-0700\n"
+"POT-Creation-Date: 2022-10-02 17:17+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: \n"
@@ -156,26 +156,26 @@ msgstr "Всього плагінів"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:90
+#: src/gui/qt/helpers.cpp:87
 msgid "(edited)"
 msgstr "(змінено)"
 
-#: src/gui/qt/helpers.cpp:209
+#: src/gui/qt/helpers.cpp:218
 msgid "N/A: No masterlist present"
 msgstr "N/A: Правила сортування відсутні"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:214
+#: src/gui/qt/helpers.cpp:223
 msgid "N/A: No masterlist prelude present"
 msgstr "N/A: Prelude-файл правил сортування відсутній"
 
-#: src/gui/qt/helpers.cpp:222
+#: src/gui/qt/helpers.cpp:231
 msgid "Unknown: No revision metadata found"
 msgstr "Невідомо: Дані ревізії не знайдені"
 
-#: src/gui/qt/helpers.cpp:353
+#: src/gui/qt/helpers.cpp:362
 msgid "Invalid regular expression: %1%"
 msgstr "Невірний regex вираз: %1%"
 
@@ -974,7 +974,7 @@ msgstr "Повідомлення загального призначення"
 msgid "Add new game..."
 msgstr "Додати нову гру..."
 
-#: src/gui/query/types/apply_sort_query.h:95
+#: src/gui/query/types/apply_sort_query.h:96
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -1132,7 +1132,15 @@ msgstr "Група \"%1%\" не існує."
 msgid "You have not sorted your load order this session."
 msgstr "У цій сесії порядок завантаження ще не відсортовано."
 
-#: src/gui/state/game/game.cpp:734
+#: src/gui/state/game/game.cpp:735
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+"Не запускайте Morrowind без використання MWSE, інакше це завдасть серйозної "
+"шкоди вашій грі."
+
+#: src/gui/state/game/game.cpp:749
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1142,7 +1150,7 @@ msgstr ""
 "завантаження. Відключіть звичайний плагін чи усі ваші легкі моди задля "
 "уникнення можливих проблем."
 
-#: src/gui/state/game/game.cpp:796
+#: src/gui/state/game/game.cpp:812
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"
