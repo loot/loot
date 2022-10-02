@@ -720,33 +720,36 @@ std::vector<Message> Game::GetMessages() const {
 
   static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 254;
 
-  if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS && settings_.Type() == GameType::tes3 && 
-      std::filesystem::exists(preludePath_/"MWSE.dll")) {
+  if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS) {
+    if (settings_.Type() == GameType::tes3 &&
+        std::filesystem::exists(preludePath_ / "MWSE.dll")) {
       auto logger = getLogger();
-    if (logger) {
-      logger->warn(
-          "More than 254 normal plugins are activated at the same time.");
+      if (logger) {
+        logger->warn("{} plugins are activated at the same time.",
+                     activeNormalPluginsCount);
+      }
+
+      output.push_back(PlainTextMessage(
+          MessageType::warn,
+          boost::locale::translate(
+              "Do not launch Morrowind without the use of MWSE or it will "
+              "cause severe damage to your game.")));
+    } else if (hasActiveEsl) {
+      auto logger = getLogger();
+      if (logger) {
+        logger->warn(
+            "{} normal plugins and at least one light plugin are active at "
+            "the same time.",
+            activeNormalPluginsCount);
+      }
+
+      output.push_back(PlainTextMessage(
+          MessageType::warn,
+          boost::locale::translate(
+              "You have a normal plugin and at least one light plugin sharing "
+              "the FE load order index. Deactivate a normal plugin or all your "
+              "light plugins to avoid potential issues.")));
     }
-    output.push_back(PlainTextMessage(
-        MessageType::warn,
-        boost::locale::translate(
-          "Do not launch Morrowind without the use of MWSE or it will"
-          "cause severe damage to your game.")));
-  }
-  else if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
-      hasActiveEsl) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->warn(
-          "255 normal plugins and at least one light plugin are active at the "
-          "same time.");
-    }
-    output.push_back(PlainTextMessage(
-        MessageType::warn,
-        boost::locale::translate(
-            "You have a normal plugin and at least one light plugin sharing "
-            "the FE load order index. Deactivate a normal plugin or all your "
-            "light plugins to avoid potential issues.")));
   }
 
   return output;
