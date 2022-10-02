@@ -725,7 +725,7 @@ std::vector<Message> Game::GetMessages() const {
       auto logger = getLogger();
     if (logger) {
       logger->warn(
-          "More than 255 normal plugins are activated at the same time.");
+          "More than 254 normal plugins are activated at the same time.");
     }
     output.push_back(PlainTextMessage(
         MessageType::warn,
