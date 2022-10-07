@@ -29,6 +29,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "gui/state/game/detection/epic_games_store.h"
 #include "gui/state/game/detection/microsoft_store.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
@@ -124,9 +125,15 @@ std::optional<GamePaths> FindGamePaths(
   }
 
   if (!settings.IsBaseGameInstance()) {
-    // Don't look for Microsoft installs for games that aren't instances of
-    // their base game (e.g. total conversions).
+    // Don't look for Microsoft Store or Epic Games Store installs for games
+    // that aren't instances of their base game (e.g. total conversions).
     return std::nullopt;
+  }
+
+  installPath = FindEpicGamesStoreGameInstallPath(settings);
+  if (installPath.has_value()) {
+    paths.installPath = installPath.value();
+    return paths;
   }
 
   const auto msGamePaths =
