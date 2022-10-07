@@ -22,11 +22,11 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_GUI_STATE_GAME_GAME_DETECTION_TEST
-#define LOOT_TESTS_GUI_STATE_GAME_GAME_DETECTION_TEST
+#ifndef LOOT_TESTS_GUI_STATE_GAME_DETECTION_TEST
+#define LOOT_TESTS_GUI_STATE_GAME_DETECTION_TEST
 
 #include "gui/helpers.h"
-#include "gui/state/game/game_detection.h"
+#include "gui/state/game/detection.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot {

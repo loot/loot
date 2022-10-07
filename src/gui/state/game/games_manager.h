@@ -35,7 +35,7 @@
 #include <vector>
 
 #include "gui/state/game/game.h"
-#include "gui/state/game/game_detection.h"
+#include "gui/state/game/detection.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
