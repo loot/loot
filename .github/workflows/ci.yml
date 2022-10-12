@@ -118,8 +118,8 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          echo "::set-output name=root::~/boost_1_77_0"
-          echo "::set-output name=librarydir::~/boost_1_77_0/stage/64/lib"
+          echo "root=~/boost_1_77_0" >> $GITHUB_OUTPUT
+          echo "librarydir=~/boost_1_77_0/stage/64/lib" >> $GITHUB_OUTPUT
 
       - name: Set OGDF install path
         run: echo "OGDF_INSTALL_PATH=${{ github.workspace }}/ogdf-${{ env.OGDF_VERSION }}-install" >> $GITHUB_ENV
@@ -161,7 +161,7 @@ jobs:
         run: |
           python -m pip install aqtinstall
           aqt install-qt linux desktop $QT_VERSION gcc_64
-          echo "::set-output name=root::${{ github.workspace }}/$QT_VERSION/gcc_64"
+          echo "root=${{ github.workspace }}/$QT_VERSION/gcc_64" >> $GITHUB_OUTPUT
 
       - name: Download and build OGDF
         run: |
@@ -211,8 +211,8 @@ jobs:
           LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
           SAFE_GIT_REF_SUFFIX=${GIT_REF_SUFFIX//[\/<>\"|]/_}
-          echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
-          echo "::set-output name=ref::$SAFE_GIT_REF_SUFFIX"
+          echo "version=$LOOT_SAFE_DESC_REF" >> $GITHUB_OUTPUT
+          echo "ref=$SAFE_GIT_REF_SUFFIX" >> $GITHUB_OUTPUT
 
       - name: Build archive
         id: build-archive
@@ -225,7 +225,7 @@ jobs:
           python scripts/archive.py . "${{ steps.get-loot-version.outputs.ref }}" "${{ steps.qt-metadata.outputs.root }}"
           mv "build/loot_${{ steps.get-loot-version.outputs.version }}.tar.xz" "build/$FILENAME"
 
-          echo "::set-output name=filename::$FILENAME"
+          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
 
   windows:
     runs-on: windows-2019
@@ -243,14 +243,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Get pip cache dir
-        id: pip-cache-dir-path
-        run: echo "::set-output name=dir::$(pip cache dir)"
-
       - name: pip cache
         uses: actions/cache@v3
         with:
-          path: ${{ steps.pip-cache-dir-path.outputs.dir }}
+          path: ~\AppData\Local\pip\Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
       - name: Get Boost metadata
@@ -262,9 +258,9 @@ jobs:
             $addressModel = 64
           }
 
-          echo "::set-output name=address-model::$addressModel"
-          echo "::set-output name=root::${{ github.workspace }}/boost_1_77_0"
-          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib"
+          echo "address_model=$addressModel" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "root=${{ github.workspace }}/boost_1_77_0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Set OGDF install path
         shell: bash
@@ -297,7 +293,7 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address-model }} locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a ${{ steps.boost-metadata.outputs.address_model }} locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
@@ -332,13 +328,13 @@ jobs:
           }
 
           aqt install-qt windows desktop $qtVersion $qtArch
-          echo "::set-output name=root::${{ github.workspace }}/$qtVersion/$qtArchDir"
-          echo "::set-output name=cmake-var-name::$qtCMakeVarName"
+          echo "root=${{ github.workspace }}/$qtVersion/$qtArchDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "cmake_var_name=$qtCMakeVarName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Run CMake
         run: |
           cd build
-          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -D${{ steps.qt-metadata.outputs.cmake-var-name }}="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
+          cmake .. -G "Visual Studio 16 2019" -A ${{ matrix.platform }} -DBOOST_ROOT="${{ steps.boost-metadata.outputs.root }}" -DBOOST_LIBRARYDIR="${{ steps.boost-metadata.outputs.librarydir }}" -D${{ steps.qt-metadata.outputs.cmake_var_name }}="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           cmake --build . --config Release
 
       - name: Run C++ tests
@@ -366,8 +362,8 @@ jobs:
           LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF_SUFFIX}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
           SAFE_GIT_REF_SUFFIX=${GIT_REF_SUFFIX//[\/<>\"|]/_}
-          echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
-          echo "::set-output name=ref::$SAFE_GIT_REF_SUFFIX"
+          echo "version=$LOOT_SAFE_DESC_REF" >> $GITHUB_OUTPUT
+          echo "ref=$SAFE_GIT_REF_SUFFIX" >> $GITHUB_OUTPUT
 
       - name: Get LOOT artifact basename
         id: get-artifact-basename
@@ -380,7 +376,7 @@ jobs:
           else
             PLATFORM=win64
           fi
-          echo "::set-output name=basename::loot_${VERSION}-${PLATFORM}"
+          echo "basename=loot_${VERSION}-${PLATFORM}" >> $GITHUB_OUTPUT
 
       - name: Build archive
         run: |

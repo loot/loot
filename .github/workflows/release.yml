@@ -18,7 +18,7 @@ jobs:
         id: get-git-tag
         run: |
           GIT_REF=${{ github.ref }}
-          echo "::set-output name=name::${GIT_REF#refs/*/}"
+          echo "name=${GIT_REF#refs/*/}" >> $GITHUB_OUTPUT
 
       - id: create_release
         uses: actions/create-release@v1
@@ -65,9 +65,9 @@ jobs:
             $addressModel = 64
           }
 
-          echo "::set-output name=address-model::$addressModel"
-          echo "::set-output name=root::${{ github.workspace }}/boost_1_77_0"
-          echo "::set-output name=librarydir::${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib"
+          echo "address-model=$addressModel" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "root=${{ github.workspace }}/boost_1_77_0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/$addressModel/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Set OGDF install path
         shell: bash
@@ -135,8 +135,8 @@ jobs:
           }
 
           aqt install-qt windows desktop $qtVersion $qtArch
-          echo "::set-output name=root::${{ github.workspace }}/$qtVersion/$qtArchDir"
-          echo "::set-output name=cmake-var-name::$qtCMakeVarName"
+          echo "root=${{ github.workspace }}/$qtVersion/$qtArchDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "cmake-var-name=$qtCMakeVarName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Run CMake
         run: |
@@ -163,7 +163,7 @@ jobs:
           GIT_REF=${{ github.ref }}
           LOOT_DESC_REF=${GIT_DESCRIBE}_${GIT_REF#refs/*/}
           LOOT_SAFE_DESC_REF=${LOOT_DESC_REF//[\/<>\"|]/_}
-          echo "::set-output name=version::$LOOT_SAFE_DESC_REF"
+          echo "version=$LOOT_SAFE_DESC_REF" >> $GITHUB_OUTPUT
 
       - name: Get LOOT artifact basename
         id: get-artifact-basename
@@ -175,7 +175,7 @@ jobs:
           else
             PLATFORM=win64
           fi
-          echo "::set-output name=basename::loot_${{ needs.create_release.outputs.git_tag }}-${PLATFORM}"
+          echo "basename=loot_${{ needs.create_release.outputs.git_tag }}-${PLATFORM}" >> $GITHUB_OUTPUT
 
       - name: Build archive
         run: |
