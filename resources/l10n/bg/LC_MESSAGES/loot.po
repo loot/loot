@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.18.4\n"
+"Project-Id-Version: LOOT 0.18.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-30 06:21-0700\n"
-"PO-Revision-Date: 2022-09-27 18:29+0300\n"
+"POT-Creation-Date: 2022-10-02 17:17+0100\n"
+"PO-Revision-Date: 2022-10-02 21:14+0300\n"
 "Last-Translator: Georgi Georgiev (RacerBG) <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <g.georgiev.shumen@gmail.com>\n"
 "Language: bg\n"
@@ -156,26 +156,26 @@ msgstr "Общо приставки"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:90
+#: src/gui/qt/helpers.cpp:87
 msgid "(edited)"
 msgstr "(редактиран)"
 
-#: src/gui/qt/helpers.cpp:209
+#: src/gui/qt/helpers.cpp:218
 msgid "N/A: No masterlist present"
 msgstr "Внимание: Основният списък липсва"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:214
+#: src/gui/qt/helpers.cpp:223
 msgid "N/A: No masterlist prelude present"
 msgstr "Внимание: Основният каталожен списък липсва"
 
-#: src/gui/qt/helpers.cpp:222
+#: src/gui/qt/helpers.cpp:231
 msgid "Unknown: No revision metadata found"
 msgstr "Внимание: Ревизията на метаданните не е намерена"
 
-#: src/gui/qt/helpers.cpp:353
+#: src/gui/qt/helpers.cpp:362
 msgid "Invalid regular expression: %1%"
 msgstr "Невалиден регулярен израз: %1%"
 
@@ -973,7 +973,7 @@ msgstr "Общи"
 msgid "Add new game..."
 msgstr "Добави нова игра..."
 
-#: src/gui/query/types/apply_sort_query.h:95
+#: src/gui/query/types/apply_sort_query.h:96
 msgid ""
 "Oh no, something went wrong! This is usually because \"%1%\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -1069,7 +1069,7 @@ msgid ""
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Тази приставка се нуждае от „%1%“. Това може да създаде проблеми в играта и "
+"Тази приставка се нуждае от „%1%“. Това може да причини проблеми в играта и "
 "сортирането няма да е успешно, докато тя е инсталирана."
 
 #: src/gui/state/game/game.cpp:386
@@ -1122,7 +1122,15 @@ msgstr "Групата „%1%“ не съществува."
 msgid "You have not sorted your load order this session."
 msgstr "Редът за зареждане не е сортиран по време на тази сесия."
 
-#: src/gui/state/game/game.cpp:734
+#: src/gui/state/game/game.cpp:735
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+"Не стартирайте „Morrowind“ без приставката MWSE, защото това може да причини "
+"сериозни щети на Вашата игра."
+
+#: src/gui/state/game/game.cpp:749
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1132,7 +1140,7 @@ msgstr ""
 "реда за зареждане. Изключете обикновената приставка или всички зависими за "
 "да избегнете потенциални проблеми."
 
-#: src/gui/state/game/game.cpp:796
+#: src/gui/state/game/game.cpp:812
 msgid ""
 "An error occurred while parsing the metadata list(s): %1%.\n"
 "\n"

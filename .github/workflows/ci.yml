@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
@@ -71,7 +71,7 @@ jobs:
           mkdir downloaded_artifacts
 
       - name: Download all artifacts for this workflow from GitHub Actions
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: downloaded_artifacts
 
@@ -101,16 +101,16 @@ jobs:
       QT_VERSION: 6.4.0
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
       - name: pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -126,7 +126,7 @@ jobs:
 
       - name: Boost cache
         id: boost-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
@@ -135,7 +135,7 @@ jobs:
 
       - name: OGDF cache
         id: ogdf-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.OGDF_INSTALL_PATH }}
           key: ${{ runner.os }}-ogdf-${{ env.OGDF_VERSION }}
@@ -235,11 +235,11 @@ jobs:
         platform: [Win32, x64]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
@@ -248,7 +248,7 @@ jobs:
         run: echo "::set-output name=dir::$(pip cache dir)"
 
       - name: pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -272,7 +272,7 @@ jobs:
 
       - name: Boost cache
         id: boost-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
@@ -281,7 +281,7 @@ jobs:
 
       - name: OGDF cache
         id: ogdf-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.OGDF_INSTALL_PATH }}
           key: ${{ runner.os }}-${{ matrix.platform }}-ogdf-${{ env.OGDF_VERSION }}
@@ -398,14 +398,14 @@ jobs:
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
       - name: Upload archive
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
           path: build/${{ steps.get-artifact-basename.outputs.basename }}.7z
         if: github.event_name == 'push'
 
       - name: Upload installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
           path: build/${{ steps.get-artifact-basename.outputs.basename }}.exe

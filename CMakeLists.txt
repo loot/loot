@@ -70,12 +70,12 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.1/libloot-0.18.1-0-gc4cdfbb_0.18.1-win32.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.2/libloot-0.18.2-0-gb1a9e31_0.18.2-win32.7z")
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.1/libloot-0.18.1-0-gc4cdfbb_0.18.1-win64.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.2/libloot-0.18.2-0-gb1a9e31_0.18.2-win64.7z")
         endif()
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.1/libloot-0.18.1-0-gc4cdfbb_0.18.1-Linux.tar.xz")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.2/libloot-0.18.2-0-gb1a9e31_0.18.2-Linux.tar.xz")
     endif()
 endif()
 
@@ -239,8 +239,11 @@ set(LOOT_SRC_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/check_for_update_task.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/update_masterlist_task.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
@@ -308,8 +311,11 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_log_location_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_readme_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/sort_plugins_query.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.h"
@@ -327,8 +333,8 @@ set(LOOT_SRC_TESTS_GUI_CPP_FILES
     "${CMAKE_SOURCE_DIR}/src/tests/gui/qt/tasks/non_blocking_test_task.cpp")
 
 set(LOOT_SRC_TESTS_GUI_H_FILES
+    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/detection_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_test.h"
-    "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_detection_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/game_settings_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/games_manager_test.h"
     "${CMAKE_SOURCE_DIR}/src/tests/gui/state/game/group_node_positions_test.h"
@@ -374,8 +380,11 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.cpp"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.cpp"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.cpp"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/helpers.cpp"
@@ -388,8 +397,11 @@ set(LOOT_GUI_TESTS_ALL_SOURCES
     "${CMAKE_SOURCE_DIR}/src/gui/plugin_item.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/helpers.h"
     "${CMAKE_SOURCE_DIR}/src/gui/qt/tasks/tasks.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/common.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/epic_games_store.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection/microsoft_store.h"
+    "${CMAKE_SOURCE_DIR}/src/gui/state/game/detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_detection.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/game_settings.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/games_manager.h"
     "${CMAKE_SOURCE_DIR}/src/gui/state/game/group_node_positions.h"
