@@ -29,7 +29,9 @@
 
 using std::filesystem::u8path;
 
-namespace loot {
+namespace {
+using loot::GameType;
+
 std::string GetMicrosoftStoreGameLocalFolder(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -84,8 +86,9 @@ std::vector<std::filesystem::path> GetGameLocalisationDirectories(
       throw std::logic_error("Unsupported Microsoft Store game");
   }
 };
+}
 
-namespace ms::modern {
+namespace loot::ms::modern {
 std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -184,7 +187,7 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 }
 }
 
-namespace ms::legacy {
+namespace loot::ms::legacy {
 std::optional<std::string> GetMicrosoftStoreAppName(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -312,6 +315,7 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 #endif
 }
 
+namespace loot {
 std::optional<GamePaths> FindMicrosoftStoreGamePaths(
     const GameSettings& settings,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths) {
@@ -326,5 +330,4 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 
   return msGamePaths;
 }
-
 }

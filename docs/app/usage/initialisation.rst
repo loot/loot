@@ -104,3 +104,8 @@ LOOT looks for games using the following sources:
 This means that if you've got the same game installed through the Microsoft Store and another source (e.g. Steam or GOG), LOOT will by default detect the latter first.
 
 If LOOT's automatic game detection doesn't work correctly for you, you'll need to manually provide the correct install path in LOOT's settings and then relaunch LOOT.
+
+Epic Games Store Compatibility
+==============================
+
+LOOT supports games bought through the Epic Games Store, but Fallout 3's localisations are installed in separate subdirectories. This is the same as when the game is installed through the Microsoft Store, so LOOT will pick one localisation as described for the Microsoft Store above.

@@ -48,9 +48,13 @@
 #include "gui/helpers.h"
 #include "gui/state/logging.h"
 
+namespace {
+using loot::GameSettings;
+using loot::GameType;
+using loot::getLogger;
+
 using std::filesystem::u8path;
 
-namespace loot {
 struct EgsManifestData {
   std::string appName;
   std::string installLocation;
@@ -63,11 +67,12 @@ std::optional<std::string> GetEgsAppName(GameType gameType) {
       // 5d600e4f59974aeba0259c7734134e27 but I don't think there's any benefit
       // to checking for it too.
       return "ac82db5035584c7f8a2c548d98c86b2c";
+    case GameType::fo3:
+      return "adeae8bbfc94427db57c7dfecce3f1d4";
     case GameType::tes3:
     case GameType::tes4:
     case GameType::tes5:
     case GameType::tes5vr:
-    case GameType::fo3:
     case GameType::fonv:
     case GameType::fo4:
     case GameType::fo4vr:
@@ -76,6 +81,23 @@ std::optional<std::string> GetEgsAppName(GameType gameType) {
       throw std::logic_error("Unrecognised game type");
   }
 }
+
+std::vector<std::filesystem::path> GetGameLocalisationDirectories(
+    GameType gameType,
+    const std::filesystem::path& basePath) {
+  switch (gameType) {
+    case GameType::tes5se:
+      return {basePath};
+    case GameType::fo3:
+      return {basePath / "Fallout 3 GOTY English",
+              basePath / "Fallout 3 GOTY French",
+              basePath / "Fallout 3 GOTY German",
+              basePath / "Fallout 3 GOTY Italian",
+              basePath / "Fallout 3 GOTY Spanish"};
+    default:
+      throw std::logic_error("Unsupported Epic Games Store game");
+  }
+};
 
 #ifdef _WIN32
 std::filesystem::path GetProgramDataPath() {
@@ -95,9 +117,9 @@ std::filesystem::path GetProgramDataPath() {
 std::filesystem::path GetEgsManifestsPath() {
   // Try using Registry key first.
   const auto appDataPath =
-      RegKeyStringValue("HKEY_LOCAL_MACHINE",
-                        "Software\\Epic Games\\EpicGamesLauncher",
-                        "AppDataPath");
+      loot::RegKeyStringValue("HKEY_LOCAL_MACHINE",
+                              "Software\\Epic Games\\EpicGamesLauncher",
+                              "AppDataPath");
 
   if (!appDataPath.empty()) {
     return u8path(appDataPath) / "Manifests";
@@ -205,15 +227,28 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 
   return std::nullopt;
 }
+}
 
+namespace loot {
 std::optional<std::filesystem::path> FindEpicGamesStoreGameInstallPath(
     const GameSettings& settings) {
   try {
     const auto installPath = GetEgsGameInstallPath(settings);
 
-    if (installPath.has_value() &&
-        IsValidGamePath(settings, installPath.value())) {
-      return installPath;
+    if (installPath.has_value()) {
+      // Fallout 3 has several localised copies of the game in
+      // subdirectories of its installLocation. We can't really tell which
+      // one the player wants, so go through each of them in order in case
+      // the user has deleted the directories they don't want (it's a lot of
+      // wasted space otherwise).
+      const auto pathsToCheck =
+          GetGameLocalisationDirectories(settings.Type(), installPath.value());
+
+      for (const auto& pathToCheck : pathsToCheck) {
+        if (IsValidGamePath(settings, pathToCheck)) {
+          return pathToCheck;
+        }
+      }
     }
   } catch (const std::exception& e) {
     const auto logger = getLogger();
