@@ -23,8 +23,12 @@
     <https://www.gnu.org/licenses/>.
     */
 
+#include "gui/state/game/detection/common.h"
+
+#include <functional>
+
 #include "gui/helpers.h"
-#include "gui/state/game/detection/microsoft_store.h"
+#include "gui/state/logging.h"
 
 namespace loot {
 std::string GetExecutableName(GameType gameType) {
@@ -81,5 +85,57 @@ bool IsValidGamePath(const GameSettings& settings,
                                  GetPluginsFolderName(settings.Type()) /
                                  std::filesystem::u8path(settings.Master())) &&
          ExecutableExists(settings.Type(), pathToCheck);
+}
+
+std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
+    const GameSettings& settings,
+    const std::vector<std::string>& uiPreferredLanguages,
+    const std::vector<LocalisedGameInstallPath>& paths) {
+  const auto logger = getLogger();
+
+  const auto findPreferredLanguageIndex = [&](const std::string& language) {
+    // The input languages are two-letter ISO-639-1 codes.
+    // Preferred languages may be ISO-639-1 codes or they may be more
+    // like IETF BCP 47 language codes, so only compare the first two
+    // bytes.
+    for (size_t i = 0; i < uiPreferredLanguages.size(); i += 1) {
+      if (uiPreferredLanguages[i].substr(0, 2) == language) {
+        return i;
+      }
+    }
+
+    // If the language isn't in the preferred list, return one past the last
+    // index so that its path is sorted after those that do appear in the list.
+
+    return uiPreferredLanguages.size();
+  };
+
+  // Sort the given paths so they're in the same order as the preferred
+  // languages.
+  auto pathsToCheck = paths;
+  std::stable_sort(pathsToCheck.begin(),
+                   pathsToCheck.end(),
+                   [&](const auto& lhs, const auto& rhs) {
+                     auto lhsIndex = findPreferredLanguageIndex(lhs.language);
+                     auto rhsIndex = findPreferredLanguageIndex(rhs.language);
+
+                     return lhsIndex < rhsIndex;
+                   });
+
+  // Now check each of the sorted paths in turn and return the first
+  // valid path.
+  for (const auto& pathToCheck : pathsToCheck) {
+    if (logger) {
+      logger->debug("Checking if game install path {} for language {} is valid",
+                    pathToCheck.installPath.u8string(),
+                    pathToCheck.language);
+    }
+
+    if (IsValidGamePath(settings, pathToCheck.installPath)) {
+      return pathToCheck.installPath;
+    }
+  }
+
+  return std::nullopt;
 }
 }

@@ -87,6 +87,28 @@ protected:
         throw std::runtime_error("Unsupported Microsoft Store game");
     }
   }
+
+  std::vector<std::filesystem::path> SetUpLocalisedGamePaths(
+      const std::filesystem::path& xboxGamingRootPath,
+      const std::initializer_list<const char*>& gameFolders) {
+    std::vector<std::filesystem::path> gamesPaths;
+
+    for (const auto& gameFolder : gameFolders) {
+      const auto gamePath = xboxGamingRootPath /
+                            "The Elder Scrolls IV- Oblivion (PC)" / "Content" /
+                            gameFolder;
+      std::filesystem::create_directories(gamePath);
+      std::filesystem::copy(dataPath,
+                            gamePath / dataPath.filename(),
+                            std::filesystem::copy_options::recursive);
+
+      CreateGameExecutable(gamePath);
+
+      gamesPaths.push_back(gamePath);
+    }
+
+    return gamesPaths;
+  }
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
@@ -104,7 +126,7 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(FindGamePathsTest, shouldBeNulloptIfGameIsNotInstalled) {
   const auto settings = GameSettings(GetParam()).SetRegistryKeys({});
 
-  EXPECT_FALSE(FindGamePaths(settings, {}).has_value());
+  EXPECT_FALSE(FindGamePaths(settings, {}, {}).has_value());
 }
 
 TEST_P(FindGamePathsTest,
@@ -113,7 +135,7 @@ TEST_P(FindGamePathsTest,
                             .SetGamePath(dataPath.parent_path())
                             .SetGameLocalPath(localPath);
 
-  const auto gamePaths = FindGamePaths(settings, {});
+  const auto gamePaths = FindGamePaths(settings, {}, {});
 
   EXPECT_EQ(settings.GamePath(), gamePaths.value().installPath);
   EXPECT_EQ(settings.GameLocalPath(), gamePaths.value().localPath);
@@ -125,7 +147,7 @@ TEST_P(FindGamePathsTest, shouldSupportNonAsciiGameMasters) {
                             .SetGameLocalPath(localPath)
                             .SetMaster(nonAsciiEsp);
 
-  const auto gamePaths = FindGamePaths(settings, {});
+  const auto gamePaths = FindGamePaths(settings, {}, {});
 
   EXPECT_EQ(settings.GamePath(), gamePaths.value().installPath);
   EXPECT_EQ(settings.GameLocalPath(), gamePaths.value().localPath);
@@ -142,7 +164,7 @@ TEST_P(FindGamePathsTest, shouldFindGameInParentOfCurrentDirectory) {
 
   CreateGameExecutable(gamePath);
 
-  const auto gamePaths = FindGamePaths(GameSettings(GetParam()), {});
+  const auto gamePaths = FindGamePaths(GameSettings(GetParam()), {}, {});
 
   // Restore the previous current path.
   std::filesystem::current_path(currentPath);
@@ -167,7 +189,7 @@ TEST_P(FindGamePathsTest, shouldFindNewMSGamePathIfPresent) {
 
   CreateGameExecutable(gamePath);
 
-  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath});
+  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath}, {});
 
   std::filesystem::path expectedLocalPath;
   if (settings.Type() == GameType::tes5se) {
@@ -200,7 +222,7 @@ TEST_P(FindGamePathsTest,
 
   CreateGameExecutable(gamePath);
 
-  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath});
+  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath}, {});
 
   EXPECT_FALSE(gamePaths.has_value());
 }
@@ -223,13 +245,14 @@ TEST_P(FindGamePathsTest,
 
   CreateGameExecutable(gamePath);
 
-  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath});
+  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath}, {});
 
   EXPECT_EQ(gamePath, gamePaths.value().installPath);
   EXPECT_EQ(settings.GameLocalPath(), gamePaths.value().localPath);
 }
 
-TEST_P(FindGamePathsTest, shouldTryLocalisationDirectoriesInTurn) {
+TEST_P(FindGamePathsTest,
+       shouldTryLocalisationDirectoriesInTurnIfNoPreferredLanguagesAreGiven) {
   if (GetParam() != GameType::tes4) {
     return;
   }
@@ -237,19 +260,52 @@ TEST_P(FindGamePathsTest, shouldTryLocalisationDirectoriesInTurn) {
   const auto settings = GameSettings(GetParam()).SetRegistryKeys({});
 
   const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
-  const auto gamePath = xboxGamingRootPath /
-                        "The Elder Scrolls IV- Oblivion (PC)" / "Content" /
-                        "Oblivion GOTY Italian";
-  std::filesystem::create_directories(gamePath);
-  std::filesystem::copy(dataPath,
-                        gamePath / dataPath.filename(),
-                        std::filesystem::copy_options::recursive);
 
-  CreateGameExecutable(gamePath);
+  const auto gamesPaths = SetUpLocalisedGamePaths(
+      xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
-  auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath});
+  const auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath}, {});
 
-  EXPECT_EQ(gamePath, gamePaths.value().installPath);
+  EXPECT_EQ(gamesPaths[1], gamePaths.value().installPath);
+  EXPECT_EQ("", gamePaths.value().localPath);
+}
+
+TEST_P(FindGamePathsTest,
+       shouldTryLocalisationDirectoriesInPreferredLanguageOrder) {
+  if (GetParam() != GameType::tes4) {
+    return;
+  }
+
+  const auto settings = GameSettings(GetParam()).SetRegistryKeys({});
+
+  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
+
+  const auto gamesPaths = SetUpLocalisedGamePaths(
+      xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
+
+  const auto gamePaths =
+      FindGamePaths(settings, {xboxGamingRootPath}, {"es", "it"});
+
+  EXPECT_EQ(gamesPaths[0], gamePaths.value().installPath);
+  EXPECT_EQ("", gamePaths.value().localPath);
+}
+
+TEST_P(FindGamePathsTest,
+       shouldTryLocalisationDirectoriesNotInPreferredLanguagesLast) {
+  if (GetParam() != GameType::tes4) {
+    return;
+  }
+
+  const auto settings = GameSettings(GetParam()).SetRegistryKeys({});
+
+  const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
+
+  const auto gamesPaths = SetUpLocalisedGamePaths(
+      xboxGamingRootPath, {"Oblivion GOTY English", "Oblivion GOTY Spanish"});
+
+  const auto gamePaths = FindGamePaths(settings, {xboxGamingRootPath}, {"es"});
+
+  EXPECT_EQ(gamesPaths[1], gamePaths.value().installPath);
   EXPECT_EQ("", gamePaths.value().localPath);
 }
 }

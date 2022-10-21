@@ -129,6 +129,8 @@ void LootState::init(const std::string& cmdLineGame,
   // Microsoft Store / Xbox app.
   findXboxGamingRootPaths();
 
+  preferredUILanguages_ = GetPreferredUILanguages();
+
   // Check if the prelude directory exists and create it if not.
   createPreludeDirectory();
 
@@ -365,7 +367,21 @@ void LootState::setInitialGame(const std::string& preferredGame) {
 
 std::optional<GamePaths> LootState::FindGamePaths(
     const GameSettings& gameSettings) const {
-  return loot::FindGamePaths(gameSettings, xboxGamingRootPaths_);
+  const auto gamePaths = loot::FindGamePaths(
+      gameSettings, xboxGamingRootPaths_, preferredUILanguages_);
+
+  const auto logger = getLogger();
+  if (logger) {
+    if (gamePaths.has_value()) {
+      logger->info("Using game install path \"{}\" and local path \"{}\"",
+                   gamePaths.value().installPath.u8string(),
+                   gamePaths.value().localPath.u8string());
+    } else {
+      logger->info("Could not find game paths");
+    }
+  }
+
+  return gamePaths;
 }
 
 void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }

@@ -52,6 +52,7 @@ namespace {
 using loot::GameSettings;
 using loot::GameType;
 using loot::getLogger;
+using loot::LocalisedGameInstallPath;
 
 using std::filesystem::u8path;
 
@@ -82,18 +83,21 @@ std::optional<std::string> GetEgsAppName(GameType gameType) {
   }
 }
 
-std::vector<std::filesystem::path> GetGameLocalisationDirectories(
+std::vector<LocalisedGameInstallPath> GetGameLocalisationDirectories(
     GameType gameType,
     const std::filesystem::path& basePath) {
   switch (gameType) {
     case GameType::tes5se:
-      return {basePath};
+      // There's only one path, it could be for any language that
+      // the game supports, so just use en (the choice doesn't
+      // matter).
+      return {{basePath, "en"}};
     case GameType::fo3:
-      return {basePath / "Fallout 3 GOTY English",
-              basePath / "Fallout 3 GOTY French",
-              basePath / "Fallout 3 GOTY German",
-              basePath / "Fallout 3 GOTY Italian",
-              basePath / "Fallout 3 GOTY Spanish"};
+      return {{basePath / "Fallout 3 GOTY English", "en"},
+              {basePath / "Fallout 3 GOTY French", "fr"},
+              {basePath / "Fallout 3 GOTY German", "de"},
+              {basePath / "Fallout 3 GOTY Italian", "it"},
+              {basePath / "Fallout 3 GOTY Spanish", "es"}};
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
@@ -231,24 +235,20 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 
 namespace loot {
 std::optional<std::filesystem::path> FindEpicGamesStoreGameInstallPath(
-    const GameSettings& settings) {
+    const GameSettings& settings,
+    const std::vector<std::string>& preferredUILanguages) {
   try {
     const auto installPath = GetEgsGameInstallPath(settings);
 
     if (installPath.has_value()) {
       // Fallout 3 has several localised copies of the game in
-      // subdirectories of its installLocation. We can't really tell which
-      // one the player wants, so go through each of them in order in case
-      // the user has deleted the directories they don't want (it's a lot of
-      // wasted space otherwise).
+      // subdirectories of its installLocation, so get the best match for the
+      // user's current language.
       const auto pathsToCheck =
           GetGameLocalisationDirectories(settings.Type(), installPath.value());
 
-      for (const auto& pathToCheck : pathsToCheck) {
-        if (IsValidGamePath(settings, pathToCheck)) {
-          return pathToCheck;
-        }
-      }
+      return GetLocalisedGameInstallPath(
+          settings, preferredUILanguages, pathsToCheck);
     }
   } catch (const std::exception& e) {
     const auto logger = getLogger();

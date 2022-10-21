@@ -55,6 +55,75 @@ using icu::UnicodeString;
 
 #include "gui/state/logging.h"
 
+namespace {
+std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
+  std::vector<std::wstring> elements;
+
+  auto stringStartIt = nullDelimitedList.begin();
+  for (auto it = nullDelimitedList.begin(); it != nullDelimitedList.end();
+       ++it) {
+    if (*it == 0) {
+      const std::wstring element(stringStartIt, it);
+      elements.push_back(element);
+
+      stringStartIt = std::next(it);
+    }
+  }
+
+  return elements;
+}
+
+#ifdef _WIN32
+std::vector<std::string> GetPreferredUILanguages(
+    std::function<bool(DWORD, PULONG, PZZWSTR, PULONG)> win32Function,
+    bool isSystem) {
+  const auto logger = loot::getLogger();
+  const auto systemOrUser = isSystem ? "system" : "user";
+
+  ULONG wszLanguagesBuffer = 0;
+  ULONG cchLanguagesBuffer = 0;
+  auto result = win32Function(
+      MUI_LANGUAGE_NAME, &wszLanguagesBuffer, NULL, &cchLanguagesBuffer);
+
+  if (!result) {
+    if (logger) {
+      logger->error("Failed to get size of {} preferred UI languages buffer",
+                    systemOrUser);
+    }
+
+    return {};
+  }
+  // The buffer contains an ordered list of null-delimited languages, ending
+  // with two null characters.
+  std::vector<wchar_t> buffer(size_t{cchLanguagesBuffer});
+
+  result = win32Function(MUI_LANGUAGE_NAME,
+                         &wszLanguagesBuffer,
+                         buffer.data(),
+                         &cchLanguagesBuffer);
+
+  if (!result) {
+    if (logger) {
+      logger->error("Failed to get the {} preferred UI languages",
+                    systemOrUser);
+    }
+    return {};
+  }
+
+  std::vector<std::string> languages;
+
+  for (const auto& languageBytes : SplitOnNulls(buffer)) {
+    std::wstring language(languageBytes.begin(), languageBytes.end());
+    if (!language.empty()) {
+      languages.push_back(loot::FromWinWide(language));
+    }
+  }
+
+  return languages;
+}
+#endif
+}
+
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file) {
 #ifdef _WIN32
@@ -182,10 +251,9 @@ std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
                                             const std::string& subKey) {
   const auto logger = getLogger();
   if (logger) {
-    logger->trace(
-        "Getting subkey names for registry key and subkey: {}, {}",
-        rootKey,
-        subKey);
+    logger->trace("Getting subkey names for registry key and subkey: {}, {}",
+                  rootKey,
+                  subKey);
   }
 
   HKEY hKey;
@@ -247,6 +315,46 @@ std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
   return subKeyNames;
 }
 #endif
+
+std::vector<std::string> GetPreferredUILanguages() {
+#ifdef _WIN32
+  const auto logger = loot::getLogger();
+
+  const auto systemPreferredLanguages =
+      ::GetPreferredUILanguages(GetSystemPreferredUILanguages, true);
+  if (logger) {
+    logger->debug("System preferred UI languages are: {}",
+                  boost::join(systemPreferredLanguages, ", "));
+  }
+
+  const auto userPreferredLanguages =
+      ::GetPreferredUILanguages(GetUserPreferredUILanguages, false);
+  if (logger) {
+    logger->debug("User preferred UI languages are: {}",
+                  boost::join(userPreferredLanguages, ", "));
+  }
+
+  std::vector<std::string> preferredLanguages = userPreferredLanguages;
+  for (const auto& language : systemPreferredLanguages) {
+    // Deduplicate languages, this approach doesn't scale well but that doesn't
+    // matter, the language lists are very small.
+    if (std::find(preferredLanguages.begin(),
+                  preferredLanguages.end(),
+                  language) == preferredLanguages.end()) {
+      preferredLanguages.push_back(language);
+    }
+  }
+
+  if (logger) {
+    logger->debug("Merged preferred UI languages are: {}",
+                  boost::join(preferredLanguages, ", "));
+  }
+
+  return preferredLanguages;
+#else
+  return {};
+#endif
+}
 
 std::vector<std::filesystem::path> GetDriveRootPaths() {
 #ifdef _WIN32

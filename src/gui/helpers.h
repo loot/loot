@@ -48,6 +48,8 @@ std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
                                             const std::string& subKey);
 #endif
 
+std::vector<std::string> GetPreferredUILanguages();
+
 std::vector<std::filesystem::path> GetDriveRootPaths();
 
 std::optional<std::filesystem::path> FindXboxGamingRootPath(

@@ -36,7 +36,8 @@
 namespace loot {
 std::optional<GamePaths> FindMicrosoftStoreGamePaths(
     const GameSettings& settings,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths);
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages);
 }
 
 #endif

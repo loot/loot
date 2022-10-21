@@ -45,7 +45,8 @@ public:
 
 std::optional<GamePaths> FindGamePaths(
     const GameSettings& settings,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths);
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages);
 }
 
 #endif

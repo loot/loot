@@ -103,7 +103,8 @@ std::optional<std::filesystem::path> FindGameInstallPathInRegistry(
 
 std::optional<GamePaths> FindGamePaths(
     const GameSettings& settings,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths) {
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages) {
   const auto logger = getLogger();
   if (logger) {
     logger->trace("Checking if game \"{}\" is installed.", settings.Name());
@@ -130,14 +131,15 @@ std::optional<GamePaths> FindGamePaths(
     return std::nullopt;
   }
 
-  installPath = FindEpicGamesStoreGameInstallPath(settings);
+  installPath =
+      FindEpicGamesStoreGameInstallPath(settings, preferredUILanguages);
   if (installPath.has_value()) {
     paths.installPath = installPath.value();
     return paths;
   }
 
-  const auto msGamePaths =
-      FindMicrosoftStoreGamePaths(settings, xboxGamingRootPaths);
+  const auto msGamePaths = FindMicrosoftStoreGamePaths(
+      settings, xboxGamingRootPaths, preferredUILanguages);
 
   if (msGamePaths.has_value()) {
     paths.installPath = msGamePaths.value().installPath;
