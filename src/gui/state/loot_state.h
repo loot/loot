@@ -65,6 +65,7 @@ private:
   std::string selectInitialGame(std::string preferredGame) const;
 
   std::vector<std::filesystem::path> xboxGamingRootPaths_;
+  std::vector<std::string> preferredUILanguages_;
   std::vector<SimpleMessage> initMessages_;
   LootSettings settings_;
 

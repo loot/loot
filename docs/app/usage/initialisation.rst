@@ -91,16 +91,26 @@ For both old and new installs, the following games have each of their localisati
 * Fallout 3
 * Fallout: New Vegas
 
-LOOT has no way of knowing which it should use, so it will check each of those subdirectories in turn, using the order English, French, German, Italian, and Spanish (the latter two are not present for Morrowind), stopping at the first subdirectory it finds a copy of the game in.
+LOOT will check the localisations in the order of Windows' preferred UI languages, stopping at the first subdirectory it finds a copy of the game in.
 
-LOOT looks for games using the following sources:
+Epic Games Store Compatibility
+==============================
 
-1. the install path configured for the game
-2. the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``).
-3. the registry keys configured for the game
-4. the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (On Linux each mount point is checked in the order they're listed in ``/proc/self/mounts``.)
-5. the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
+LOOT supports games bought through the Epic Games Store, but Fallout 3's localisations are installed in separate subdirectories. This is the same as when the game is installed through the Microsoft Store, so LOOT will pick one localisation as described for the Microsoft Store above.
 
-This means that if you've got the same game installed through the Microsoft Store and another source (e.g. Steam or GOG), LOOT will by default detect the latter first.
+Install Location Detection
+==========================
+
+LOOT looks for each game using the following sources in order:
+
+1. the path given by the ``--game-path`` command line parameter (only for the game identified by the ``--game`` command line parameter)
+2. the install path configured for the game
+3. the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``).
+4. the registry keys configured for the game
+5. the install location used by the Epic Games Store
+6. the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (On Linux each mount point is checked in the order they're listed in ``/proc/self/mounts``.)
+7. the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
+
+For example, if you've got the same game installed through Steam and the Microsoft Store, LOOT will find the Steam install using its Registry keys and use that install path.
 
 If LOOT's automatic game detection doesn't work correctly for you, you'll need to manually provide the correct install path in LOOT's settings and then relaunch LOOT.

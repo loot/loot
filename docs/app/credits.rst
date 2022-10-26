@@ -14,7 +14,7 @@ In addition, the following are credited with application-related support:
   * Bulgarian: Georgi Georgiev
   * Chinese (Simplified): bluesky404, silentdark
   * Czech: ThePotatoChronicler
-  * Danish: Freso
+  * Danish: Freso, ZyPA
   * Finnish: 3ventic
   * French: Kaos, cpasmoi, Sita, Zamix
   * German: lpradel, DaCoolX, Infernio, pStyl3

@@ -4,6 +4,26 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.6 - 2022-10-22
+===================
+
+Added
+-----
+
+- Built-in support for the Epic Games Store distributions of Skyrim Special
+  Edition and Fallout 3.
+
+Changed
+-------
+
+- Improved game detection for game installs that have localisations installed
+  in side-by-side subfolders (e.g. the Epic Games Store and Microsoft Store
+  distributions of Fallout 3). LOOT will now check each localisation's folder in
+  the order of Windows' preferred user interface languages, so it should now
+  pick the same localisation as the store's launcher.
+- Updated the Danish translation.
+- Updated libloot to v0.18.2.
+
 0.18.5 - 2022-10-02
 ===================
 

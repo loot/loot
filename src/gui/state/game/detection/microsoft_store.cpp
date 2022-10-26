@@ -29,7 +29,10 @@
 
 using std::filesystem::u8path;
 
-namespace loot {
+namespace {
+using loot::GameType;
+using loot::LocalisedGameInstallPath;
+
 std::string GetMicrosoftStoreGameLocalFolder(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -50,42 +53,45 @@ std::string GetMicrosoftStoreGameLocalFolder(GameType gameType) {
   }
 }
 
-std::vector<std::filesystem::path> GetGameLocalisationDirectories(
+std::vector<LocalisedGameInstallPath> GetGameLocalisationDirectories(
     GameType gameType,
     const std::filesystem::path& basePath) {
   switch (gameType) {
     case GameType::tes3:
-      return {basePath / "Morrowind GOTY English",
-              basePath / "Morrowind GOTY French",
-              basePath / "Morrowind GOTY German"};
+      return {{basePath / "Morrowind GOTY English", "en"},
+              {basePath / "Morrowind GOTY French", "fr"},
+              {basePath / "Morrowind GOTY German", "de"}};
     case GameType::tes4:
-      return {basePath / "Oblivion GOTY English",
-              basePath / "Oblivion GOTY French",
-              basePath / "Oblivion GOTY German",
-              basePath / "Oblivion GOTY Italian",
-              basePath / "Oblivion GOTY Spanish"};
-    case GameType::tes5se:
-      return {basePath};
+      return {{basePath / "Oblivion GOTY English", "en"},
+              {basePath / "Oblivion GOTY French", "fr"},
+              {basePath / "Oblivion GOTY German", "de"},
+              {basePath / "Oblivion GOTY Italian", "it"},
+              {basePath / "Oblivion GOTY Spanish", "es"}};
     case GameType::fo3:
-      return {basePath / "Fallout 3 GOTY English",
-              basePath / "Fallout 3 GOTY French",
-              basePath / "Fallout 3 GOTY German",
-              basePath / "Fallout 3 GOTY Italian",
-              basePath / "Fallout 3 GOTY Spanish"};
+      return {{basePath / "Fallout 3 GOTY English", "en"},
+              {basePath / "Fallout 3 GOTY French", "fr"},
+              {basePath / "Fallout 3 GOTY German", "de"},
+              {basePath / "Fallout 3 GOTY Italian", "it"},
+              {basePath / "Fallout 3 GOTY Spanish", "es"}};
     case GameType::fonv:
-      return {basePath / "Fallout New Vegas English",
-              basePath / "Fallout New Vegas French",
-              basePath / "Fallout New Vegas German",
-              basePath / "Fallout New Vegas Italian",
-              basePath / "Fallout New Vegas Spanish"};
+      return {{basePath / "Fallout New Vegas English", "en"},
+              {basePath / "Fallout New Vegas French", "fr"},
+              {basePath / "Fallout New Vegas German", "de"},
+              {basePath / "Fallout New Vegas Italian", "it"},
+              {basePath / "Fallout New Vegas Spanish", "es"}};
+    case GameType::tes5se:
     case GameType::fo4:
-      return {basePath};
+      // There's only one path, it could be for any language that
+      // the game supports, so just use en (the choice doesn't
+      // matter).
+      return {{basePath, "en"}};
     default:
       throw std::logic_error("Unsupported Microsoft Store game");
   }
 };
+}
 
-namespace ms::modern {
+namespace loot::ms::modern {
 std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -152,7 +158,8 @@ std::filesystem::path GetGameContentPath(
 
 std::optional<GamePaths> FindMicrosoftStoreGamePaths(
     const GameSettings& settings,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths) {
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages) {
   if (!IsOnMicrosoftStore(settings.Type())) {
     return std::nullopt;
   }
@@ -170,13 +177,14 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
     const auto pathsToCheck =
         GetGameLocalisationDirectories(settings.Type(), locationPath);
 
-    for (const auto& pathToCheck : pathsToCheck) {
-      if (IsValidGamePath(settings, pathToCheck)) {
-        GamePaths paths;
-        paths.installPath = pathToCheck;
-        paths.localPath = GetMicrosoftStoreGameLocalPath(settings.Type());
-        return paths;
-      }
+    const auto validPath = GetLocalisedGameInstallPath(
+        settings, preferredUILanguages, pathsToCheck);
+
+    if (validPath.has_value()) {
+      GamePaths paths;
+      paths.installPath = validPath.value();
+      paths.localPath = GetMicrosoftStoreGameLocalPath(settings.Type());
+      return paths;
     }
   }
 
@@ -184,7 +192,7 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 }
 }
 
-namespace ms::legacy {
+namespace loot::ms::legacy {
 std::optional<std::string> GetMicrosoftStoreAppName(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -255,7 +263,8 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
 
 #ifdef _WIN32
 std::optional<GamePaths> FindMicrosoftStoreGamePaths(
-    const GameSettings& settings) {
+    const GameSettings& settings,
+    const std::vector<std::string>& preferredUILanguages) {
   // Search for the Microsoft Store version of the game.
   // This follows the process detailed here:
   // <https://github.com/wrye-bash/wrye-bash/wiki/%5Bdev%5D-Microsoft-Store-Games#finding-a-Game>
@@ -296,13 +305,14 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
       const auto pathsToCheck =
           GetGameLocalisationDirectories(settings.Type(), locationPath);
 
-      for (const auto& pathToCheck : pathsToCheck) {
-        if (IsValidGamePath(settings, pathToCheck)) {
-          GamePaths paths;
-          paths.installPath = pathToCheck;
-          paths.localPath = GetMicrosoftStoreGameLocalPath(settings.Type());
-          return paths;
-        }
+      const auto validPath = GetLocalisedGameInstallPath(
+          settings, preferredUILanguages, pathsToCheck);
+
+      if (validPath.has_value()) {
+        GamePaths paths;
+        paths.installPath = validPath.value();
+        paths.localPath = GetMicrosoftStoreGameLocalPath(settings.Type());
+        return paths;
       }
     }
   }
@@ -312,19 +322,21 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 #endif
 }
 
+namespace loot {
 std::optional<GamePaths> FindMicrosoftStoreGamePaths(
     const GameSettings& settings,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths) {
-  const auto msGamePaths =
-      ms::modern::FindMicrosoftStoreGamePaths(settings, xboxGamingRootPaths);
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages) {
+  const auto msGamePaths = ms::modern::FindMicrosoftStoreGamePaths(
+      settings, xboxGamingRootPaths, preferredUILanguages);
 
 #ifdef _WIN32
   if (!msGamePaths.has_value()) {
-    return ms::legacy::FindMicrosoftStoreGamePaths(settings);
+    return ms::legacy::FindMicrosoftStoreGamePaths(settings,
+                                                   preferredUILanguages);
   }
 #endif
 
   return msGamePaths;
 }
-
 }

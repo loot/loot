@@ -35,7 +35,8 @@
 
 namespace loot {
 std::optional<std::filesystem::path> FindEpicGamesStoreGameInstallPath(
-    const GameSettings& settings);
+    const GameSettings& settings,
+    const std::vector<std::string>& preferredUILanguages);
 }
 
 #endif

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT 0.18.5\n"
+"Project-Id-Version: LOOT 0.18.6\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-10-02 17:17+0100\n"
+"POT-Creation-Date: 2022-10-21 22:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -964,42 +964,42 @@ msgid ""
 "menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:166
+#: src/gui/state/loot_state.cpp:168
 msgid "Error: Game-specific settings could not be initialised. %1%"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:190
+#: src/gui/state/loot_state.cpp:192
 msgid "Error: Could not create LOOT data directory. %1%"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
+#: src/gui/state/loot_state.cpp:209 src/gui/state/loot_state.cpp:264
 msgid "Error: Settings parsing failed. %1%"
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:218
+#: src/gui/state/loot_state.cpp:220
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:293
+#: src/gui/state/loot_state.cpp:295
 msgid "Error: Could not create LOOT prelude directory. %1%"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:311
+#: src/gui/state/loot_state.cpp:313
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:326
+#: src/gui/state/loot_state.cpp:328
 msgid "Error: failed to override game path, the game %1% was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:360
+#: src/gui/state/loot_state.cpp:362
 msgid "Error: The initial game could not be selected. %1%"
 msgstr ""
 
