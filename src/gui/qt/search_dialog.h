@@ -46,6 +46,8 @@ class SearchDialog : public QDialog {
 public:
   explicit SearchDialog(QWidget *parent);
 
+  QVariant getSearchText() const;
+
   void reset();
   void setSearchResults(size_t resultsCount);
 
