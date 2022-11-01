@@ -27,6 +27,8 @@
 #define LOOT_GUI_QT_PLUGIN_EDITOR_MODELS_METADATA_TABLE_MODEL
 
 #include <QtCore/QAbstractTableModel>
+#include <QtGui/QGuiApplication>
+#include <QtGui/QPalette>
 
 namespace loot {
 template<typename T>
@@ -40,7 +42,8 @@ public:
 
   QVariant data(const QModelIndex& index,
                 int role = Qt::DisplayRole) const override {
-    if (role != Qt::DisplayRole && role != Qt::EditRole) {
+    if (role != Qt::DisplayRole && role != Qt::EditRole &&
+        role != Qt::ForegroundRole) {
       return QVariant();
     }
 
@@ -52,10 +55,20 @@ public:
       return QVariant();
     }
 
+    const auto isNonUserMetadata =
+        index.row() < static_cast<int>(nonUserMetadata.size());
+
     const auto& element =
-        index.row() < static_cast<int>(nonUserMetadata.size())
+        isNonUserMetadata
             ? nonUserMetadata.at(index.row())
             : userMetadata.at(index.row() - nonUserMetadata.size());
+
+    if (role == Qt::ForegroundRole) {
+      // Grey out metadata that's not editable.
+      return isNonUserMetadata ? QGuiApplication::palette().color(
+                                     QPalette::Disabled, QPalette::WindowText)
+                               : QVariant();
+    }
 
     return data(element, index.column(), role);
   }
