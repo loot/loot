@@ -951,8 +951,7 @@ void MainWindow::setFiltersState(PluginFiltersState&& filtersState) {
 
   updateCounts(pluginItemModel->getGeneralMessages(),
                pluginItemModel->getPluginItems());
-  searchDialog->reset();
-  proxyModel->clearSearchResults();
+  refreshSearch();
 }
 
 void MainWindow::setFiltersState(
@@ -963,8 +962,11 @@ void MainWindow::setFiltersState(
 
   updateCounts(pluginItemModel->getGeneralMessages(),
                pluginItemModel->getPluginItems());
-  searchDialog->reset();
-  proxyModel->clearSearchResults();
+  refreshSearch();
+}
+
+void MainWindow::refreshSearch() {
+  on_searchDialog_textChanged(searchDialog->getSearchText());
 }
 
 bool MainWindow::hasErrorMessages() const {
@@ -2040,9 +2042,7 @@ void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
       roles.contains(CardContentFiltersRole)) {
     updateCounts(pluginItemModel->getGeneralMessages(),
                  pluginItemModel->getPluginItems());
-
-    searchDialog->reset();
-    proxyModel->clearSearchResults();
+    refreshSearch();
   }
 
   if (roles.isEmpty() || roles.contains(RawDataRole)) {
@@ -2191,6 +2191,11 @@ void MainWindow::on_searchDialog_textChanged(const QVariant& text) {
   if (isEmpty) {
     proxyModel->clearSearchResults();
     return;
+  }
+
+  if (text.userType() == QMetaType::QRegularExpression &&
+      !text.toRegularExpression().isValid()) {
+    // Do nothing if given an invalid regex.
   }
 
   const auto flags = text.userType() == QMetaType::QRegularExpression

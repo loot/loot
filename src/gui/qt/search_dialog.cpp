@@ -37,6 +37,16 @@
 namespace loot {
 SearchDialog::SearchDialog(QWidget* parent) : QDialog(parent) { setupUi(); }
 
+QVariant SearchDialog::getSearchText() const {
+  const auto text = searchInput->text();
+
+  if (regexCheckbox->isChecked()) {
+    return QRegularExpression(text, QRegularExpression::CaseInsensitiveOption);
+  }
+
+  return text;
+}
+
 void SearchDialog::reset() {
   searchInput->clear();
   countLabel->setText("0 / 0");
@@ -123,18 +133,15 @@ void SearchDialog::on_searchInput_textChanged(const QString& text) {
     reset();
   }
 
-  QVariant value = text;
+  const auto value = getSearchText();
 
-  if (regexCheckbox->isChecked()) {
-    auto regex =
-        QRegularExpression(text, QRegularExpression::CaseInsensitiveOption);
+  if (value.userType() == QMetaType::QRegularExpression) {
+    const auto regex = value.toRegularExpression();
 
     if (!regex.isValid()) {
       showInvalidRegexTooltip(*searchInput, regex.errorString().toStdString());
       return;
     }
-
-    value = regex;
   }
 
   emit textChanged(value);
@@ -187,5 +194,4 @@ void SearchDialog::on_nextButton_clicked() {
 
   emit currentResultChanged(newIndex);
 }
-
 }
