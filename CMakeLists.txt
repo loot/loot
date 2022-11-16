@@ -151,8 +151,8 @@ FetchContent_MakeAvailable(tomlplusplus)
 
 ExternalProject_Add(spdlog
     PREFIX "external"
-    URL "https://github.com/gabime/spdlog/archive/v1.10.0.tar.gz"
-    URL_HASH "SHA256=697f91700237dbae2326b90469be32b876b2b44888302afbc7aceb68bcfe8224"
+    URL "https://github.com/gabime/spdlog/archive/v1.11.0.tar.gz"
+    URL_HASH "SHA256=ca5cae8d6cac15dae0ec63b21d6ad3530070650f68076f3a4a862ca293a858bb"
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")

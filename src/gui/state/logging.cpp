@@ -75,7 +75,7 @@ protected:
       boost::replace_all(payload, search, replacement);
     }
 
-    msgCopy.payload = fmt::to_string_view(payload);
+    msgCopy.payload = payload;
 
     sink.log(msgCopy);
   }
