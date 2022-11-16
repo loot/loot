@@ -560,6 +560,10 @@ fs::path Game::MasterlistPath() const {
   return GetLOOTGamePath() / "masterlist.yaml";
 }
 
+std::filesystem::path Game::GetActivePluginsFilePath() const {
+  return gameHandle_->GetActivePluginsFilePath();
+}
+
 fs::path Game::UserlistPath() const {
   return GetLOOTGamePath() / "userlist.yaml";
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.6\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-12-24 18:04+0000\n"
+"POT-Creation-Date: 2022-12-25 23:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -932,7 +932,7 @@ msgstr ""
 msgid "Add new game..."
 msgstr ""
 
-#: src/gui/query/types/apply_sort_query.h:97
+#: src/gui/query/types/apply_sort_query.h:76
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -1001,26 +1001,26 @@ msgstr ""
 msgid "Error: The initial game could not be selected. {0}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:227 src/gui/state/game/game.cpp:270
+#: src/gui/state/game/game.cpp:228 src/gui/state/game/game.cpp:271
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:240
+#: src/gui/state/game/game.cpp:241
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:310
+#: src/gui/state/game/game.cpp:311
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:353
+#: src/gui/state/game/game.cpp:354
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:374
+#: src/gui/state/game/game.cpp:375
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1029,54 +1029,54 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:395
+#: src/gui/state/game/game.cpp:396
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:414
+#: src/gui/state/game/game.cpp:415
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:439
+#: src/gui/state/game/game.cpp:440
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:537 src/gui/state/game/game.cpp:625
+#: src/gui/state/game/game.cpp:538 src/gui/state/game/game.cpp:630
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:651
+#: src/gui/state/game/game.cpp:656
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:664
+#: src/gui/state/game/game.cpp:669
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:699
+#: src/gui/state/game/game.cpp:704
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:727
+#: src/gui/state/game/game.cpp:732
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:741
+#: src/gui/state/game/game.cpp:746
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:805
+#: src/gui/state/game/game.cpp:810
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1130,6 +1130,6 @@ msgstr ""
 msgid "{0} found {1}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:237
+#: src/gui/state/game/helpers.cpp:241
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""
