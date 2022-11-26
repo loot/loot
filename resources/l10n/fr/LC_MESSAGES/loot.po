@@ -178,8 +178,8 @@ msgid "Unknown: No revision metadata found"
 msgstr "Inconnu: Pas de revision metadata trouvé"
 
 #: src/gui/qt/helpers.cpp:340
-msgid "Invalid regular expression: %1%"
-msgstr "Expression régulière invalide: %1%"
+msgid "Invalid regular expression: {0}"
+msgstr "Expression régulière invalide: {0}"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:638
@@ -343,15 +343,15 @@ msgstr "Mise à jour et tri de la masterlist.."
 
 #: src/gui/qt/main_window.cpp:1028
 msgid ""
-"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
-"data has been backed up to: %2%"
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
 msgstr ""
-"Il semblerait que ce soit la première fois que vous lancez LOOT v%1%. Vos "
-"données LOOT actuels ont été sauvegarder vers: %2%"
+"Il semblerait que ce soit la première fois que vous lancez LOOT v{0}. Vos "
+"données LOOT actuels ont été sauvegarder vers: {1}"
 
 #: src/gui/qt/main_window.cpp:1035
-msgid "This appears to be the first time you have run LOOT v%1%."
-msgstr "Il semblerait que ce soit la première fois que vous lancez LOOT v%1%."
+msgid "This appears to be the first time you have run LOOT v{0}."
+msgstr "Il semblerait que ce soit la première fois que vous lancez LOOT v{0}."
 
 #: src/gui/qt/main_window.cpp:1041
 msgid "Here are some tips to help you get started with the interface."
@@ -389,11 +389,11 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "LOOT est gratuit, mais si vous voulez nous montrer votre soutien avec de "
 "l'argent, les donations peuvent être envoyés à WrinklyNinja (Le créateur et "
-"développeur majeure de LOOT) using %s."
+"développeur majeure de LOOT) using {0}."
 
 #: src/gui/qt/main_window.cpp:1069
 msgid "First-Time Tips"
@@ -410,9 +410,9 @@ msgstr "ordre de chargement trié"
 #: src/gui/qt/main_window.cpp:1107
 #, c-format
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
 msgstr ""
-"Vous n'avez pas encore appliqué ou annulé votre %s. Êtes-vous sur de vouloir "
+"Vous n'avez pas encore appliqué ou annulé votre {0}. Êtes-vous sur de vouloir "
 "quitter?"
 
 #: src/gui/qt/main_window.cpp:1218 src/gui/qt/plugin_editor/table_tabs.cpp:396
@@ -461,8 +461,8 @@ msgstr ""
 "le menu Jeu pour instaurer un ordre de chargement tel que LOOT affiche."
 
 #: src/gui/qt/main_window.cpp:1381
-msgid "Your LOOT data has been backed up to: %1%"
-msgstr "Vos données LOOT ont été sauvegarder vers: %1%"
+msgid "Your LOOT data has been backed up to: {0}"
+msgstr "Vos données LOOT ont été sauvegarder vers: {0}"
 
 #: src/gui/qt/main_window.cpp:1388
 msgid "No backup has been created as LOOT has no data to backup."
@@ -526,36 +526,36 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1635
 #, c-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Les metadata pour \"%s\" ont été copié vers le presse-papier."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Les metadata pour \"{0}\" ont été copié vers le presse-papier."
 
 #: src/gui/qt/main_window.cpp:1653
 #, c-format
-msgid "The plugin name \"%s\" has been copied to the clipboard."
-msgstr "Le nom du plugin \"%s\" a été copié vers le presse-papier."
+msgid "The plugin name \"{0}\" has been copied to the clipboard."
+msgstr "Le nom du plugin \"{0}\" a été copié vers le presse-papier."
 
 #: src/gui/qt/main_window.cpp:1672
 #, c-format
-msgid "The card content for \"%s\" has been copied to the clipboard."
-msgstr "Le contenu de la carte pour \"%s\" a été copie pour le presse-papier."
+msgid "The card content for \"{0}\" has been copied to the clipboard."
+msgstr "Le contenu de la carte pour \"{0}\" a été copie pour le presse-papier."
 
 #: src/gui/qt/main_window.cpp:1687
 #, c-format
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Êtes-vous sûr de vouloir nettoyer toutes les metadata d'utilisateurs "
-"existantes de \"%s\"?"
+"existantes de \"{0}\"?"
 
 #: src/gui/qt/main_window.cpp:1727
 #, c-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Les metadata ajoutés par l'utilisateur pour \"%s\" ont été nettoyer."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Les metadata ajoutés par l'utilisateur pour \"{0}\" ont été nettoyer."
 
 #: src/gui/qt/main_window.cpp:1778
 #, c-format
-msgid "Version %s (build %s)"
-msgstr "Version %s (build %s)"
+msgid "Version {0} (build {1})"
+msgstr "Version {0} (build {1})"
 
 #: src/gui/qt/main_window.cpp:1783
 msgid ""
@@ -589,13 +589,13 @@ msgstr "Aucune mise à jour de la masterlist est nécessaire."
 
 #: src/gui/qt/main_window.cpp:2300
 #, c-format
-msgid "Masterlist updated to revision %s."
-msgstr "Masterlist mise à jour vers %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Masterlist mise à jour vers {0}."
 
 #: src/gui/qt/main_window.cpp:2359
 #, c-format
-msgid "A [new release](%s) of LOOT is available."
-msgstr "Une [new release](%s) de LOOT est disponible."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "Une [new release]({0}) de LOOT est disponible."
 
 #: src/gui/qt/main_window.cpp:2375
 msgid ""
@@ -616,8 +616,8 @@ msgstr "Sources:"
 
 #: src/gui/qt/plugin_card.cpp:171
 #, c-format
-msgid "Verified clean by %s"
-msgstr "Vérifié et propre par %s"
+msgid "Verified clean by {0}"
+msgstr "Vérifié et propre par {0}"
 
 #: src/gui/qt/plugin_card.cpp:285
 msgid "Active Plugin"
@@ -714,8 +714,8 @@ msgstr "Aucun plugin n’est dans ce groupe."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:176
 #, c-format
-msgid "Plugins in %s"
-msgstr "Plugins dans %s"
+msgid "Plugins in {0}"
+msgstr "Plugins dans {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:197
 msgid "Group already exists!"
@@ -976,12 +976,12 @@ msgstr "Ajouter un nouveau jeu.."
 
 #: src/gui/query/types/apply_sort_query.h:95
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Une erreur est survenue. Cela arrive souvent car \"%1%\" est qualifié comme "
+"Une erreur est survenue. Cela arrive souvent car \"{0}\" est qualifié comme "
 "lecture-seulement (read -only). Si il l'est, veuillez le décocher et "
 "réessayer. Si il ne l'est pas, vous pouvez vérifier votre LOOTDebugLog.txt "
 "(auquel vous pouvez accéder depuis le menu principal) pour plus "
@@ -1016,20 +1016,20 @@ msgstr ""
 "accéder depuis le menu principal) pour plus d'informations."
 
 #: src/gui/state/loot_state.cpp:166
-msgid "Error: Game-specific settings could not be initialised. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
-"Erreur : Les paramètres spécifiques au jeu n’ont pas pu être initialisés. %1%"
+"Erreur : Les paramètres spécifiques au jeu n’ont pas pu être initialisés. {0}"
 
 #: src/gui/state/loot_state.cpp:190
-msgid "Error: Could not create LOOT data directory. %1%"
-msgstr "Erreur : Impossible de créer le répertoire de données LOOT. %1%"
+msgid "Error: Could not create LOOT data directory. {0}"
+msgstr "Erreur : Impossible de créer le répertoire de données LOOT. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
 #: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Erreur : Échec de l’analyse des paramètres. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Erreur : Échec de l’analyse des paramètres. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
@@ -1039,8 +1039,8 @@ msgstr ""
 "Erreur: --auto-sort a réussi mais aucun paramètre --game a été transmis."
 
 #: src/gui/state/loot_state.cpp:293
-msgid "Error: Could not create LOOT prelude directory. %1%"
-msgstr "Erreur : Impossible de créer le répertoire de prélude LOOT. %1%"
+msgid "Error: Could not create LOOT prelude directory. {0}"
+msgstr "Erreur : Impossible de créer le répertoire de prélude LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
@@ -1051,35 +1051,35 @@ msgstr ""
 "fourni."
 
 #: src/gui/state/loot_state.cpp:326
-msgid "Error: failed to override game path, the game %1% was not recognised."
+msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
-"Erreur : n’a pas réussi à remplacer le chemin de jeu, le %1% de jeu n’a pas "
+"Erreur : n’a pas réussi à remplacer le chemin de jeu, le {0} de jeu n’a pas "
 "été reconnu."
 
 #: src/gui/state/loot_state.cpp:360
-msgid "Error: The initial game could not be selected. %1%"
-msgstr "Erreur : Le jeu initial n’a pas pu être sélectionné. %1%"
+msgid "Error: The initial game could not be selected. {0}"
+msgstr "Erreur : Le jeu initial n’a pas pu être sélectionné. {0}"
 
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr ""
-"Ce plugins requiert l'installation de \"%1%\", mais celui-ci est manquant."
+"Ce plugins requiert l'installation de \"{0}\", mais celui-ci est manquant."
 
 #: src/gui/state/game/game.cpp:254
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Ce plugin requiert \"%1%\" comme actif, mais il ne l'est pas."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Ce plugin requiert \"{0}\" comme actif, mais il ne l'est pas."
 
 #: src/gui/state/game/game.cpp:324
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Ce plugin est incompatible avec \"%1%\", mais les deux sont présents."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "Ce plugin est incompatible avec \"{0}\", mais les deux sont présents."
 
 #: src/gui/state/game/game.cpp:366
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Ce plugin est un light master et requiert le non-master plugin \"%1%\". Cela "
+"Ce plugin est un light master et requiert le non-master plugin \"{0}\". Cela "
 "peut causer des problèmes dans le jeu, et le triage ne pourra pas être "
 "effectuer tant que le plugin est installé."
 
@@ -1097,23 +1097,23 @@ msgstr ""
 #. like file name and version.
 #: src/gui/state/game/game.cpp:406
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"Ce plugin a une header version de %1%, qui est moins que le minimum supporté "
-"par le jeu, version %2%."
+"Ce plugin a une header version de {0}, qui est moins que le minimum supporté "
+"par le jeu, version {1}."
 
 #: src/gui/state/game/game.cpp:424
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "Ce plugin appartient au groupe \"%1%\", qui n'existe pas."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Ce plugin appartient au groupe \"{0}\", qui n'existe pas."
 
 #: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: %1%."
+"LOOT for the following Bash Tags: {0}."
 msgstr ""
 "Ce plugin a un fichier BashTags qui outrepassera la suggestion faite par "
-"LOOT pour le BashTags suivant: %1%."
+"LOOT pour le BashTags suivant: {0}."
 
 #: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
 msgid ""
@@ -1124,12 +1124,12 @@ msgstr ""
 "affichés peuvent être incorrectes."
 
 #: src/gui/state/game/game.cpp:659
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "L'interaction cyclique détecté entre \"%1%\" et \"%2%\": %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "L'interaction cyclique détecté entre \"{0}\" et \"{1}\": {2}"
 
 #: src/gui/state/game/game.cpp:671
-msgid "The group \"%1%\" does not exist."
-msgstr "Le groupe \"%1%\" n'existe pas."
+msgid "The group \"{0}\" does not exist."
+msgstr "Le groupe \"{0}\" n'existe pas."
 
 #: src/gui/state/game/game.cpp:707
 msgid "You have not sorted your load order this session."
@@ -1147,7 +1147,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:796
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -1163,7 +1163,7 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 "Un erreur s'est produite pendant l'analyse de la liste de(s) metadata(s): "
-"%1%.\n"
+"{0}.\n"
 "\n"
 "Essayer de mettre à jour votre masterlist pour résoudre cette erreur. Si "
 "celle-ci provient de votre metadata utilisateur, la cause peut provenir "
@@ -1179,41 +1179,41 @@ msgstr ""
 "accessible depuis [LOOT's website](https://loot.github.io/)."
 
 #: src/gui/state/game/helpers.cpp:89
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% ITM record"
-msgstr[1] "%1% ITM records"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} ITM record"
+msgstr[1] "{0} ITM records"
 
 #: src/gui/state/game/helpers.cpp:96
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% reference supprimé"
-msgstr[1] "%1% reference supprimés"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} reference supprimé"
+msgstr[1] "{0} reference supprimés"
 
 #: src/gui/state/game/helpers.cpp:103
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% navmesh supprimé"
-msgstr[1] "%1% navmesh supprimés"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} navmesh supprimé"
+msgstr[1] "{0} navmesh supprimés"
 
 #: src/gui/state/game/helpers.cpp:113
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% a trouvé %2%, %3% et %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0} a trouvé {1}, {2} et {3}."
 
 #: src/gui/state/game/helpers.cpp:119
-msgid "%1% found dirty edits."
-msgstr "%1% a trouvé des edits sales."
+msgid "{0} found dirty edits."
+msgstr "{0} a trouvé des edits sales."
 
 #: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
 #: src/gui/state/game/helpers.cpp:136
-msgid "%1% found %2% and %3%."
-msgstr "%1% a trouvé %2% et %3%."
+msgid "{0} found {1} and {2}."
+msgstr "{0} a trouvé {1} et {2}."
 
 #: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
 #: src/gui/state/game/helpers.cpp:146
-msgid "%1% found %2%."
-msgstr "%1% a trouvé %2%."
+msgid "{0} found {1}."
+msgstr "{0} a trouvé {1}."
 
 #: src/gui/state/game/helpers.cpp:232
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "Loot a détecté que \"%1%\" est invalide et l'ignorera désormais."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "Loot a détecté que \"{0}\" est invalide et l'ignorera désormais."

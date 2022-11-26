@@ -26,6 +26,7 @@
 #include "gui/qt/helpers.h"
 
 #include <loot/exception/file_access_error.h>
+#include <spdlog/fmt/fmt.h>
 #include <toml++/toml.h>
 
 #include <QtCore/QCryptographicHash>
@@ -35,7 +36,6 @@
 #include <QtCore/QUrl>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QWidget>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
 
@@ -358,10 +358,9 @@ std::optional<QByteArray> readHttpResponse(QNetworkReply* reply) {
 }
 
 void showInvalidRegexTooltip(QWidget& widget, const std::string& details) {
-  auto message = (boost::format(boost::locale::translate(
-                      "Invalid regular expression: %1%")) %
-                  details)
-                     .str();
+  auto message = fmt::format(
+      boost::locale::translate("Invalid regular expression: {0}").str(),
+      details);
 
   QToolTip::showText(widget.mapToGlobal(QPoint(0, 0)),
                      QString::fromStdString(message),

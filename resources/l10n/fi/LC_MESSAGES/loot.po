@@ -176,8 +176,8 @@ msgid "Unknown: No revision metadata found"
 msgstr "Tuntematon: version metatietoja ei löydy"
 
 #: src/gui/qt/helpers.cpp:332
-msgid "Invalid regular expression: %1%"
-msgstr "Virheellinen säännöllinen lauseke: %1%"
+msgid "Invalid regular expression: {0}"
+msgstr "Virheellinen säännöllinen lauseke: {0}"
 
 #: src/gui/qt/main_window.cpp:637
 msgid "&Sort Plugins"
@@ -305,16 +305,16 @@ msgstr "Päivitetään pääluetteloa..."
 
 #: src/gui/qt/main_window.cpp:992
 msgid ""
-"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
-"data has been backed up to: %2%"
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
 msgstr ""
-"Tämä on ensimmäinen kerta, kun LOOT v%1% on käynnistetty tällä "
-"tietokoneella. LOOTin tiedot on tallennettu seuraavaan kansioon: %2%"
+"Tämä on ensimmäinen kerta, kun LOOT v{0} on käynnistetty tällä "
+"tietokoneella. LOOTin tiedot on tallennettu seuraavaan kansioon: {1}"
 
 #: src/gui/qt/main_window.cpp:999
-msgid "This appears to be the first time you have run LOOT v%1%."
+msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr ""
-"Tämä on ensimmäinen kerta, kun LOOT v%1% on käynnistetty tällä tietokoneella."
+"Tämä on ensimmäinen kerta, kun LOOT v{0} on käynnistetty tällä tietokoneella."
 
 #: src/gui/qt/main_window.cpp:1005
 msgid "Here are some tips to help you get started with the interface."
@@ -349,10 +349,10 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "LOOT on ilmainen, mutta rahallinen tuki on arvostettua. Voit lähettää "
-"lahjoituksesi WrinklyNinjalle (LOOTin luoja sekä pääkehittäjä) tästä: %s."
+"lahjoituksesi WrinklyNinjalle (LOOTin luoja sekä pääkehittäjä) tästä: {0}."
 
 #: src/gui/qt/main_window.cpp:1033
 msgid "First-Time Tips"
@@ -369,8 +369,8 @@ msgstr "uutta järjestystä"
 #: src/gui/qt/main_window.cpp:1071
 #, c-format
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "Et ole vielä tallentanut tai hylännyt %s. Haluatko varmasti poistua?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
+msgstr "Et ole vielä tallentanut tai hylännyt {0}. Haluatko varmasti poistua?"
 
 #: src/gui/qt/main_window.cpp:1182 src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -415,8 +415,8 @@ msgstr ""
 "LOOTissa näkyvän järjestyksen kaikille sovelluksille."
 
 #: src/gui/qt/main_window.cpp:1345
-msgid "Your LOOT data has been backed up to: %1%"
-msgstr "LOOTin tiedot on tallennettu seuraavaan kansioon: %1%"
+msgid "Your LOOT data has been backed up to: {0}"
+msgstr "LOOTin tiedot on tallennettu seuraavaan kansioon: {0}"
 
 #: src/gui/qt/main_window.cpp:1352
 msgid "No backup has been created as LOOT has no data to backup."
@@ -480,35 +480,35 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1599
 #, c-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Lisäosan %s metatiedot on kopioitu leikepöydälle."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Lisäosan {0} metatiedot on kopioitu leikepöydälle."
 
 #: src/gui/qt/main_window.cpp:1617
 #, c-format
-msgid "The plugin name \"%s\" has been copied to the clipboard."
-msgstr "Lisäosan %s nimi on kopioitu leikepöydälle."
+msgid "The plugin name \"{0}\" has been copied to the clipboard."
+msgstr "Lisäosan {0} nimi on kopioitu leikepöydälle."
 
 #: src/gui/qt/main_window.cpp:1636
 #, c-format
-msgid "The card content for \"%s\" has been copied to the clipboard."
-msgstr "Lisäosan %s kortti on kopioitu leikepöydälle."
+msgid "The card content for \"{0}\" has been copied to the clipboard."
+msgstr "Lisäosan {0} kortti on kopioitu leikepöydälle."
 
 #: src/gui/qt/main_window.cpp:1651
 #, c-format
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
-"Oletko varma, että haluat poistaa kaikki muokatut metatiedot lisäosasta %s?"
+"Oletko varma, että haluat poistaa kaikki muokatut metatiedot lisäosasta {0}?"
 
 #: src/gui/qt/main_window.cpp:1691
 #, c-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Muokatut metatiedot on poistettu lisäosasta %s."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Muokatut metatiedot on poistettu lisäosasta {0}."
 
 #: src/gui/qt/main_window.cpp:1742
 #, c-format
-msgid "Version %s (build %s)"
-msgstr "Versio %s (koonti %s)"
+msgid "Version {0} (build {1})"
+msgstr "Versio {0} (koonti {1})"
 
 #: src/gui/qt/main_window.cpp:1747
 msgid ""
@@ -540,13 +540,13 @@ msgstr "Pääluettelon päivitystä ei tarvittu."
 
 #: src/gui/qt/main_window.cpp:2264
 #, c-format
-msgid "Masterlist updated to revision %s."
-msgstr "Pääluettelo päivitettiin versioon %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Pääluettelo päivitettiin versioon {0}."
 
 #: src/gui/qt/main_window.cpp:2323
 #, c-format
-msgid "A [new release](%s) of LOOT is available."
-msgstr "LOOTista on saatavilla [uusi versio](%s)."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "LOOTista on saatavilla [uusi versio]({0})."
 
 #: src/gui/qt/main_window.cpp:2339
 msgid ""
@@ -566,8 +566,8 @@ msgstr "Lähteet:"
 
 #: src/gui/qt/plugin_card.cpp:233
 #, c-format
-msgid "Verified clean by %s"
-msgstr "Vahvistettu puhtaaksi (%s)"
+msgid "Verified clean by {0}"
+msgstr "Vahvistettu puhtaaksi ({0})"
 
 #: src/gui/qt/plugin_card.cpp:347
 msgid "Active Plugin"
@@ -661,8 +661,8 @@ msgstr "Ryhmä ei sisällä lisäosia."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:176
 #, c-format
-msgid "Plugins in %s"
-msgstr "Lisäosat ryhmässä %s"
+msgid "Plugins in {0}"
+msgstr "Lisäosat ryhmässä {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:197
 msgid "Group already exists!"
@@ -923,13 +923,13 @@ msgstr "Lisää peli..."
 
 #: src/gui/query/types/apply_sort_query.h:95
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
 "Oho! Jokin meni pieleen! Yleensä tämä johtuu \"vain luku\"-merkistä polussa: "
-"%1%. Poista merkintä ja yritä uudelleen. Jos merkintää ei ole, katso "
+"{0}. Poista merkintä ja yritä uudelleen. Jos merkintää ei ole, katso "
 "LOOTDebugLog.txt päävalikon kautta."
 
 #: src/gui/query/types/get_game_data_query.h:47
@@ -961,20 +961,20 @@ msgstr ""
 "päävalikon kautta."
 
 #: src/gui/state/loot_state.cpp:166
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Virhe: pelikohtaisia asetuksia ei voitu ladata. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Virhe: pelikohtaisia asetuksia ei voitu ladata. {0}"
 
 #: src/gui/state/loot_state.cpp:190
-msgid "Error: Could not create LOOT data directory. %1%"
+msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
-"Virhe: LOOT ei onnistunut luomaan paikallista kansiota sovellustiedoille. %1%"
+"Virhe: LOOT ei onnistunut luomaan paikallista kansiota sovellustiedoille. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
 #: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Virhe: asetusten lukeminen epäonnistui. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Virhe: asetusten lukeminen epäonnistui. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
@@ -983,9 +983,9 @@ msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr "Virhe: --auto-sort oli määritelty, mutta --game parametri puuttui."
 
 #: src/gui/state/loot_state.cpp:293
-msgid "Error: Could not create LOOT prelude directory. %1%"
+msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
-"Virhe: LOOT ei onnistunut luomaan paikallista kansiota pohjatiedoille. %1%"
+"Virhe: LOOT ei onnistunut luomaan paikallista kansiota pohjatiedoille. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
@@ -994,37 +994,37 @@ msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr "Virhe: --game-path oli määritelty, mutta --game parametri puuttui."
 
 #: src/gui/state/loot_state.cpp:326
-msgid "Error: failed to override game path, the game %1% was not recognised."
+msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
-"Virhe: pelin polun uudelleenmääritys ei onnistunut. Tuntematon peli %1%."
+"Virhe: pelin polun uudelleenmääritys ei onnistunut. Tuntematon peli {0}."
 
 #: src/gui/state/loot_state.cpp:360
-msgid "Error: The initial game could not be selected. %1%"
-msgstr "Virhe: peliä ei voitu valita. %1%"
+msgid "Error: The initial game could not be selected. {0}"
+msgstr "Virhe: peliä ei voitu valita. {0}"
 
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Tämä lisäosa vaatii, että lisäosa %1% on asennettu, mutta se puuttuu."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Tämä lisäosa vaatii, että lisäosa {0} on asennettu, mutta se puuttuu."
 
 #: src/gui/state/game/game.cpp:254
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr ""
-"Tämä lisäosa vaatii, että lisäosa %1% on käytössä, mutta se on poistettu "
+"Tämä lisäosa vaatii, että lisäosa {0} on käytössä, mutta se on poistettu "
 "käytöstä."
 
 #: src/gui/state/game/game.cpp:324
-msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
-"Tämä lisäosa ei ole yhteensopiva lisäosan %1% kanssa, mutta molemmat "
+"Tämä lisäosa ei ole yhteensopiva lisäosan {0} kanssa, mutta molemmat "
 "löydettiin."
 
 #: src/gui/state/game/game.cpp:366
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Tämä lisäosa on kevyt master ja vaatii lisäosan %1%. Tämä voi aiheuttaa "
+"Tämä lisäosa on kevyt master ja vaatii lisäosan {0}. Tämä voi aiheuttaa "
 "ongelmia pelissä ja järjestäminen epäonnistuu tämän lisäosan ollessa "
 "asennettu."
 
@@ -1042,23 +1042,23 @@ msgstr ""
 #. like file name and version.
 #: src/gui/state/game/game.cpp:406
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"Tämän lisäosan otsikkotietojen versio on %1%, joka on vanhempi kuin pelin "
-"vanhin tuettu versio %2%."
+"Tämän lisäosan otsikkotietojen versio on {0}, joka on vanhempi kuin pelin "
+"vanhin tuettu versio {1}."
 
 #: src/gui/state/game/game.cpp:424
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "Tämä lisäosa kuuluu ryhmään %1%, jota ei ole olemassa."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Tämä lisäosa kuuluu ryhmään {0}, jota ei ole olemassa."
 
 #: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: %1%."
+"LOOT for the following Bash Tags: {0}."
 msgstr ""
 "Tämä lisäosa sisältää BashTags-tiedoston, joka ohittaa nämä LOOTin tekemät "
-"suositukset: %1%."
+"suositukset: {0}."
 
 #: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
 msgid ""
@@ -1069,12 +1069,12 @@ msgstr ""
 "välttämättä vastaa todellisuutta."
 
 #: src/gui/state/game/game.cpp:659
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Vuorovaikutussilmukka löytyi lisäosien väliltä: %1% ja %2%: %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "Vuorovaikutussilmukka löytyi lisäosien väliltä: {0} ja {1}: {2}"
 
 #: src/gui/state/game/game.cpp:671
-msgid "The group \"%1%\" does not exist."
-msgstr "Ryhmää %1% ei ole olemassa."
+msgid "The group \"{0}\" does not exist."
+msgstr "Ryhmää {0} ei ole olemassa."
 
 #: src/gui/state/game/game.cpp:707
 msgid "You have not sorted your load order this session."
@@ -1092,7 +1092,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:796
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -1107,7 +1107,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Metatietojen lukemisessa tapahtui virhe: %1%\n"
+"Metatietojen lukemisessa tapahtui virhe: {0}\n"
 "\n"
 "Yritä päivittää pääluettelo. Jos virhe on muokatuissa metatiedoissa, syy on "
 "luultavasti LOOTin päivityksessä tullut uusi metatietojen syntaksi ja joudut "
@@ -1121,41 +1121,41 @@ msgstr ""
 "verkkosivuilta](https://loot.github.io/)."
 
 #: src/gui/state/game/helpers.cpp:89
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% ITM-tietueen"
-msgstr[1] "%1% ITM-tietuetta"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} ITM-tietueen"
+msgstr[1] "{0} ITM-tietuetta"
 
 #: src/gui/state/game/helpers.cpp:96
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% poistetun osoitteen"
-msgstr[1] "%1% poistettua osoitetta"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} poistetun osoitteen"
+msgstr[1] "{0} poistettua osoitetta"
 
 #: src/gui/state/game/helpers.cpp:103
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% poistetun navmeshin"
-msgstr[1] "%1% poistettua navmeshiä"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} poistetun navmeshin"
+msgstr[1] "{0} poistettua navmeshiä"
 
 #: src/gui/state/game/helpers.cpp:113
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% löysi %2%, %3% ja %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0} löysi {1}, {2} ja {3}."
 
 #: src/gui/state/game/helpers.cpp:119
-msgid "%1% found dirty edits."
-msgstr "%1% löysi siivoamattomia muokkauksia."
+msgid "{0} found dirty edits."
+msgstr "{0} löysi siivoamattomia muokkauksia."
 
 #: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
 #: src/gui/state/game/helpers.cpp:136
-msgid "%1% found %2% and %3%."
-msgstr "%1% löysi %2% ja %3%."
+msgid "{0} found {1} and {2}."
+msgstr "{0} löysi {1} ja {2}."
 
 #: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
 #: src/gui/state/game/helpers.cpp:146
-msgid "%1% found %2%."
-msgstr "%1% löysi %2%."
+msgid "{0} found {1}."
+msgstr "{0} löysi {1}."
 
 #: src/gui/state/game/helpers.cpp:232
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT on havainnut, että %1% on virheellinen ja jättää sen huomiotta."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT on havainnut, että {0} on virheellinen ja jättää sen huomiotta."

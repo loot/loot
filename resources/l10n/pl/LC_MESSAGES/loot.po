@@ -84,41 +84,41 @@ msgid "Could not create BOSS folder for game. Details:"
 msgstr "Nie można utworzyć folderu BOSS dla gry. Szczegóły:"
 
 #: backend/graph.cpp:46
-msgid "Cyclic interaction detected between plugins \"%1%\" and \"%2%\"."
+msgid "Cyclic interaction detected between plugins \"{0}\" and \"{1}\"."
 msgstr ""
-"Wykryto zamknięte koło powiązań pomiędzy dodatkami \"%1%\" and \"%2%\"."
+"Wykryto zamknięte koło powiązań pomiędzy dodatkami \"{0}\" and \"{1}\"."
 
 #: backend/helpers.cpp:140
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "Nie można otworzyć  \"%1%\" by obliczyć CRC."
+msgid "Unable to open \"{0}\" for CRC calculation."
+msgstr "Nie można otworzyć  \"{0}\" by obliczyć CRC."
 
 #: backend/helpers.cpp:259
 msgid "None Specified"
 msgstr "Brak wybranych"
 
 #: backend/metadata.cpp:142
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "Przetwarzanie warunku nieudane \"%1%\": %2%"
+msgid "Failed to parse condition \"{0}\": {1}"
+msgstr "Przetwarzanie warunku nieudane \"{0}\": {1}"
 
 #: backend/metadata.cpp:147
-msgid "Failed to parse condition \"%1%\"."
-msgstr "Przetwarzanie warunku nieudane \"%1%\"."
+msgid "Failed to parse condition \"{0}\"."
+msgstr "Przetwarzanie warunku nieudane \"{0}\"."
 
 #: backend/metadata.cpp:708 backend/metadata.cpp:719
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Ta wtyczka wymaga  \"%1%\", a jest niezainstalowany."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Ta wtyczka wymaga  \"{0}\", a jest niezainstalowany."
 
 #: backend/metadata.cpp:712
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Ta wtyczka wymaga aktywnego \"%1%\" a jest nieaktywny."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Ta wtyczka wymaga aktywnego \"{0}\" a jest nieaktywny."
 
 #: backend/metadata.cpp:725
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Ta wtyczka jest niekompatybilna z \"%1%\" , a jest aktywna."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "Ta wtyczka jest niekompatybilna z \"{0}\" , a jest aktywna."
 
 #: backend/network.cpp:75
-msgid "Git operation failed. Error: %1%"
-msgstr "Operacja na Git nie udana. Błąd: %1%"
+msgid "Git operation failed. Error: {0}"
+msgstr "Operacja na Git nie udana. Błąd: {0}"
 
 #: backend/network.cpp:313
 msgid "Masterlist revision"
@@ -418,12 +418,12 @@ msgid "BOSS: Edit Dirty Info"
 msgstr "BOSS: Edytuj dane o dublach"
 
 #: gui/main.cpp:119
-msgid "Masterlist update failed. Details: %1%"
-msgstr "Aktualizacja Bazy danych nie powiodła się. Szczegóły: %1%"
+msgid "Masterlist update failed. Details: {0}"
+msgstr "Aktualizacja Bazy danych nie powiodła się. Szczegóły: {0}"
 
 #: gui/main.cpp:137
-msgid "Masterlist parsing failed. Details: %1%"
-msgstr "Przetwarzanie Bazy danych nie powiodło się. Szczegóły: %1%"
+msgid "Masterlist parsing failed. Details: {0}"
+msgstr "Przetwarzanie Bazy danych nie powiodło się. Szczegóły: {0}"
 
 #: gui/main.cpp:145
 msgid "Unknown"
@@ -442,8 +442,8 @@ msgid "Error: Could not create local app data BOSS folder."
 msgstr "Błąd: Nie znaleziono folderu z ustawieniami BOSS."
 
 #: gui/main.cpp:198
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Błąd: Przetwarzanie ustawień nieudane. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Błąd: Przetwarzanie ustawień nieudane. {0}"
 
 #: gui/main.cpp:279
 msgid "Error: Could not apply translation."
@@ -454,12 +454,12 @@ msgid "Error: The selected language is not available on this system."
 msgstr "Błąd: Wybrany język jest niedostępny w tym systemie."
 
 #: gui/main.cpp:302 gui/main.cpp:358 gui/main.cpp:528
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Błąd: Nie można zainicjować ustawień gry. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Błąd: Nie można zainicjować ustawień gry. {0}"
 
 #: gui/main.cpp:310
-msgid "Error: Games' settings parsing failed. %1%"
-msgstr "Błąd: Przetwarzanie ustawień gry nieudane. %1%"
+msgid "Error: Games' settings parsing failed. {0}"
+msgstr "Błąd: Przetwarzanie ustawień gry nieudane. {0}"
 
 #: gui/main.cpp:341
 msgid "Error: None of the supported games were detected."
@@ -542,8 +542,8 @@ msgid "BOSS: Settings"
 msgstr "BOSS: Ustawienia"
 
 #: gui/main.cpp:549 gui/main.cpp:565
-msgid "Error: \"%1%\" cannot be found."
-msgstr "Błąd: Nie znaleziono \"%1%\""
+msgid "Error: \"{0}\" cannot be found."
+msgstr "Błąd: Nie znaleziono \"{0}\""
 
 #: gui/main.cpp:577
 msgid ""
@@ -562,19 +562,19 @@ msgid "BOSS working..."
 msgstr "BOSS pracuje..."
 
 #: gui/main.cpp:665
-msgid "Userlist parsing failed. Details: %1%"
-msgstr "Przetwarzanie listy użytkownika zawiodło. Szczegóły:  %1%"
+msgid "Userlist parsing failed. Details: {0}"
+msgstr "Przetwarzanie listy użytkownika zawiodło. Szczegóły:  {0}"
 
 #: gui/main.cpp:706
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
-"%1%"
-msgstr "Wiadomość nie możliwa do oszacowania. Szczegóły: %1%"
+"{0}"
+msgstr "Wiadomość nie możliwa do oszacowania. Szczegóły: {0}"
 
 #: gui/main.cpp:739
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr ""
-"\"%1%\" zawiera warunek który nie może zostać oszacowany. Szczegóły: %2%"
+"\"{0}\" zawiera warunek który nie może zostać oszacowany. Szczegóły: {1}"
 
 #: gui/main.cpp:758
 msgid "Building plugin graph..."
@@ -589,8 +589,8 @@ msgid "Recalculating load order..."
 msgstr "Obliczanie kolejności ładowania..."
 
 #: gui/main.cpp:875
-msgid "Failed to set the load order. Details: %1%"
-msgstr "Nie udało się ustalić kolejności ładowania. Szczegóły: %1%"
+msgid "Failed to set the load order. Details: {0}"
+msgstr "Nie udało się ustalić kolejności ładowania. Szczegóły: {0}"
 
 #: gui/main.cpp:885
 msgid ""
@@ -601,20 +601,20 @@ msgstr ""
 "gdyż sortowanie zostało anulowane."
 
 #: gui/main.cpp:890
-msgid "Failed to calculate the load order. Details: %1%"
-msgstr "Wyliczenie kolejności ładowania nieudane. Szczegóły: %1%"
+msgid "Failed to calculate the load order. Details: {0}"
+msgstr "Wyliczenie kolejności ładowania nieudane. Szczegóły: {0}"
 
 #: gui/main.cpp:936
-msgid "Error: %1%"
-msgstr "Błąd: %1%"
+msgid "Error: {0}"
+msgstr "Błąd: {0}"
 
 #: gui/main.cpp:988
-msgid "Error: Masterlist parsing failed. %1%"
-msgstr "Błąd: Przetwarzanie bazy danych nieudane. %1%"
+msgid "Error: Masterlist parsing failed. {0}"
+msgstr "Błąd: Przetwarzanie bazy danych nieudane. {0}"
 
 #: gui/main.cpp:1010
-msgid "Error: Userlist parsing failed. %1%"
-msgstr "Błąd: Przetwarzanie listy użytkownika nieudane. %1%"
+msgid "Error: Userlist parsing failed. {0}"
+msgstr "Błąd: Przetwarzanie listy użytkownika nieudane. {0}"
 
 #: gui/main.cpp:1056
 msgid "BOSS: Metadata Editor"
@@ -631,13 +631,13 @@ msgstr ""
 "Steam Workshop będzie ponownie pobrany przez Steam. Czy chcesz kontynuować?"
 
 #: gui/main.cpp:1075
-msgid "Error: Failed to get load order. %1%"
-msgstr "Błąd: Wczytywanie kolejności ładowania nieudane. %1%"
+msgid "Error: Failed to get load order. {0}"
+msgstr "Błąd: Wczytywanie kolejności ładowania nieudane. {0}"
 
 #: gui/main.cpp:1112
 #, fuzzy
-msgid "Error: Failed to set plugin timestamps. %1%"
-msgstr "Błąd: Ustawianie znacznika czasu wtyczek nieudane. %1%"
+msgid "Error: Failed to set plugin timestamps. {0}"
+msgstr "Błąd: Ustawianie znacznika czasu wtyczek nieudane. {0}"
 
 #: gui/main.cpp:1119
 msgid "Plugins were successfully redated."
@@ -965,39 +965,39 @@ msgstr "Usuń:"
 
 #: backend/generators.h:375
 msgid ""
-"Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. Clean "
-"with %4%."
+"Contains {0} ITM records, {1} UDR records and {2} deleted navmeshes. Clean "
+"with {3}."
 msgstr ""
-"Zawiera %1% wpisów ITM, %2% wpisów UDR oraz %3% usuniętych navmesh. Oczyść w "
-"%4%."
+"Zawiera {0} wpisów ITM, {1} wpisów UDR oraz {2} usuniętych navmesh. Oczyść w "
+"{3}."
 
 #: backend/generators.h:377
-msgid "Clean with %1%."
-msgstr "Wyczyść w %1%."
+msgid "Clean with {0}."
+msgstr "Wyczyść w {0}."
 
 #: backend/generators.h:381
-msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
-msgstr "Zawiera %1% wpisów UDR oraz %2% usuniętych navmesh. Oczyść w %3%."
+msgid "Contains {0} UDR records and {1} deleted navmeshes. Clean with {2}."
+msgstr "Zawiera {0} wpisów UDR oraz {1} usuniętych navmesh. Oczyść w {2}."
 
 #: backend/generators.h:383
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Zawiera %1% usuniętych navmesh. Oczyść w %2%."
+msgid "Contains {0} deleted navmeshes. Clean with {1}."
+msgstr "Zawiera {0} usuniętych navmesh. Oczyść w {1}."
 
 #: backend/generators.h:385
-msgid "Contains %1% UDR records. Clean with %2%."
-msgstr "Zawiera %1% wpisów UDR. Oczyść w %2%."
+msgid "Contains {0} UDR records. Clean with {1}."
+msgstr "Zawiera {0} wpisów UDR. Oczyść w {1}."
 
 #: backend/generators.h:388
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
-msgstr "Zawiera %1% wpisów ITM oraz %2% usuniętych navmesh. Oczyść w %3%."
+msgid "Contains {0} ITM records and {1} deleted navmeshes. Clean with {2}."
+msgstr "Zawiera {0} wpisów ITM oraz {1} usuniętych navmesh. Oczyść w {2}."
 
 #: backend/generators.h:390
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Zawiera %1% wpisów ITM. Wyczyść w %2%."
+msgid "Contains {0} ITM records. Clean with {1}."
+msgstr "Zawiera {0} wpisów ITM. Wyczyść w {1}."
 
 #: backend/generators.h:393
-msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-msgstr "Zawiera %1% wpisów ITM oraz %2% wpisów UDR. Oczyść w %3%."
+msgid "Contains {0} ITM records and {1} UDR records. Clean with {2}."
+msgstr "Zawiera {0} wpisów ITM oraz {1} wpisów UDR. Oczyść w {2}."
 
 #: backend/generators.h:429
 msgid "The BOSS Report requires Javascript to be enabled in order to function."
@@ -1028,12 +1028,12 @@ msgid "Hide Messageless Plugins"
 msgstr "Ukryj wtyczki bez wiadomości"
 
 #: backend/generators.h:516
-msgid "%1% of %2% plugins hidden."
-msgstr "%1% z %2% wtyczek ukrytych."
+msgid "{0} of {1} plugins hidden."
+msgstr "{0} z {1} wtyczek ukrytych."
 
 #: backend/generators.h:524
-msgid "%1% of %2% messages hidden."
-msgstr "%1% z %2% wiadomości ukrytych."
+msgid "{0} of {1} messages hidden."
+msgstr "{0} z {1} wiadomości ukrytych."
 
 #: backend/parsers.h:467 backend/parsers.h:550
 msgid "Invalid file path:"
@@ -1048,8 +1048,8 @@ msgid "Invalid regex string:"
 msgstr "Nieprawidłowy ciąg regex:"
 
 #: backend/parsers.h:627
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "Oczekiwano  \"%1%\" w \"%2%\"."
+msgid "Expected \"{0}\" at \"{1}\"."
+msgstr "Oczekiwano  \"{0}\" w \"{1}\"."
 
 #: gui/misc.h:35
 msgid "Note"

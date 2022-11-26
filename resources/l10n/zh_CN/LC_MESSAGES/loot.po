@@ -21,12 +21,12 @@ msgstr ""
 
 #: src/gui/cef/query/query.h:49
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"哦不，出错了！这通常是因为\"%1%\"设置为只读了。如果是的话，解除只读然后再试一"
+"哦不，出错了！这通常是因为\"{0}\"设置为只读了。如果是的话，解除只读然后再试一"
 "下。如果不是的，你可以检查你的LOOTDebugLog.txt（你可以在主菜单中找到它）来获"
 "得详细信息。"
 
@@ -44,8 +44,8 @@ msgstr "解析、融合并评估插件元数据..."
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\"包含一条无法被解析的条件。详细信息：%2%"
+msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
+msgstr "\"{0}\"包含一条无法被解析的条件。详细信息：{1}"
 
 #: src/gui/cef/query/types/metadata_query.h:254
 #: src/gui/cef/query/types/metadata_query.h:255
@@ -71,36 +71,36 @@ msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr "错误: --auto-sort 已完成但是没有 --game 参数被提供。"
 
 #: src/gui/state/loot_state.cpp:127
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "错误：无法创建LOOT配置文件。%1%"
+msgid "Error: Could not create LOOT settings file. {0}"
+msgstr "错误：无法创建LOOT配置文件。{0}"
 
 #: src/gui/state/loot_state.cpp:144
-msgid "Error: Settings parsing failed. %1%"
-msgstr "错误：设置解析失败。%1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "错误：设置解析失败。{0}"
 
 #: src/gui/state/loot_state.cpp:203
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "错误：游戏专属设置无法初始化。%1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "错误：游戏专属设置无法初始化。{0}"
 
 #: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "这个插件需要安装\"%1%\"。"
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "这个插件需要安装\"{0}\"。"
 
 #: src/gui/state/game/game.cpp:191
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "这个插件激活\"%1%\"。"
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "这个插件激活\"{0}\"。"
 
 #: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "这个插件与\"%1%\"不兼容，但是两者都存在。"
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "这个插件与\"{0}\"不兼容，但是两者都存在。"
 
 #: src/gui/state/game/game.cpp:276
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"这个插件是一个轻量主插件，但是却依赖非主插件\"%1%\"。这可能会在游戏中导致问"
+"这个插件是一个轻量主插件，但是却依赖非主插件\"{0}\"。这可能会在游戏中导致问"
 "题，在有这个插件时排序将会失败。"
 
 #: src/gui/state/game/game.cpp:296
@@ -114,13 +114,13 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:313
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
-msgstr "这个插件的版本为%1%，这比游戏的最小支持的版本%2%要低。"
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
+msgstr "这个插件的版本为{0}，这比游戏的最小支持的版本{1}要低。"
 
 #: src/gui/state/game/game.cpp:331
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "这个插件属于不存在的组\"%1%\"。"
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "这个插件属于不存在的组\"{0}\"。"
 
 #: src/gui/state/game/game.cpp:400 src/gui/state/game/game.cpp:485
 msgid ""
@@ -129,12 +129,12 @@ msgid ""
 msgstr "加载当前加载顺序失败，显示信息可能不正确。"
 
 #: src/gui/state/game/game.cpp:510
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "\"%1%\"和 \"%2%\"之间产生循环：%3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "\"{0}\"和 \"{1}\"之间产生循环：{2}"
 
 #: src/gui/state/game/game.cpp:522
-msgid "The group \"%1%\" does not exist."
-msgstr "\"%1%\"组不存在。"
+msgid "The group \"{0}\" does not exist."
+msgstr "\"{0}\"组不存在。"
 
 #: src/gui/state/game/game.cpp:558
 msgid "You have not sorted your load order this session."
@@ -160,7 +160,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:655
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -175,7 +175,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"解析元数据列表发生错误：%1%。\n"
+"解析元数据列表发生错误：{0}。\n"
 "\n"
 "尝试更新你的主列表以解决错误。如果这个错误是你的用户数据导致的，这可能由于升"
 "级 LOOT 时改变了元数据的语法支持。你的用户数据必须手动更新。\n"
@@ -188,41 +188,41 @@ msgstr ""
 "io/)。"
 
 #: src/gui/state/game/helpers.cpp:88
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1%个ITM记录"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0}个ITM记录"
 
 #: src/gui/state/game/helpers.cpp:92
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1%个已删除的引用"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0}个已删除的引用"
 
 #: src/gui/state/game/helpers.cpp:98
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1%个已删除的导航"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0}个已删除的导航"
 
 #: src/gui/state/game/helpers.cpp:108
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1%发现%2%，%3%和%4%。"
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0}发现{1}，{2}和{3}。"
 
 #: src/gui/state/game/helpers.cpp:114
-msgid "%1% found dirty edits."
-msgstr "%1%发现dirty编辑器。"
+msgid "{0} found dirty edits."
+msgstr "{0}发现dirty编辑器。"
 
 #: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
 #: src/gui/state/game/helpers.cpp:131
-msgid "%1% found %2% and %3%."
-msgstr "%1%发现%2%和%3%。"
+msgid "{0} found {1} and {2}."
+msgstr "{0}发现{1}和{2}。"
 
 #: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
 #: src/gui/state/game/helpers.cpp:141
-msgid "%1% found %2%."
-msgstr "%1%发现%2%。"
+msgid "{0} found {1}."
+msgstr "{0}发现{1}。"
 
 #: src/gui/state/game/helpers.cpp:222
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT检测到\"%1%\"无效，现在将忽略它。"
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT检测到\"{0}\"无效，现在将忽略它。"
 
 #: src/gui/html/elements/editable-table.ts:436
 msgid "Add New Row"
@@ -245,12 +245,12 @@ msgid "No plugins are in this group."
 msgstr "这个组中没有插件。"
 
 #: src/gui/html/elements/loot-groups-editor.ts:441
-msgid "Plugins in %s"
-msgstr "%s里的插件"
+msgid "Plugins in {0}"
+msgstr "{0}里的插件"
 
 #: src/gui/html/elements/loot-plugin-card.ts:341
-msgid "Verified clean by %s"
-msgstr "由%s验证清理"
+msgid "Verified clean by {0}"
+msgstr "由{0}验证清理"
 
 #: src/gui/html/js/events.ts:216
 msgid "Identifying conflicting plugins..."
@@ -261,8 +261,8 @@ msgid "Updating and parsing masterlist..."
 msgstr "更新并解析主列表..."
 
 #: src/gui/html/js/events.ts:334
-msgid "Masterlist updated to revision %s."
-msgstr "主列表已更新到版次%s。"
+msgid "Masterlist updated to revision {0}."
+msgstr "主列表已更新到版次{0}。"
 
 #: src/gui/html/js/events.ts:341
 msgid "No masterlist update was necessary."
@@ -273,8 +273,8 @@ msgid "Cyclic interaction detected"
 msgstr "检测到循环交互"
 
 #: src/gui/html/js/events.ts:422
-msgid "Failed to sort plugins. Details: %s"
-msgstr "无法调整排序，详细信息：%s"
+msgid "Failed to sort plugins. Details: {0}"
+msgstr "无法调整排序，详细信息：{0}"
 
 #: src/gui/html/js/events.ts:458
 msgid "Sorting made no changes to the load order."
@@ -329,8 +329,8 @@ msgstr "加载顺序已被复制到剪贴板。"
 
 #: src/gui/html/js/events.ts:639
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "你还没用应用或取消你的%s。确定要退出吗？"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
+msgstr "你还没用应用或取消你的{0}。确定要退出吗？"
 
 #: src/gui/html/js/events.ts:643 src/gui/html/js/translateStaticText.ts:480
 msgid "Quit"
@@ -346,17 +346,17 @@ msgid "metadata edits"
 msgstr "元数据编辑"
 
 #: src/gui/html/js/events.ts:1075
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "\"%s\"的元数据已被复制到剪贴板。"
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "\"{0}\"的元数据已被复制到剪贴板。"
 
 #: src/gui/html/js/events.ts:1096
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr "你确定要清除从\"%s\"清除所有用户添加的元数据？"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
+msgstr "你确定要清除从\"{0}\"清除所有用户添加的元数据？"
 
 #: src/gui/html/js/events.ts:1118
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "\"%s\"中用户添加的元数据已被清除。"
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "\"{0}\"中用户添加的元数据已被清除。"
 
 #. An abbreviation of Not Applicable.
 #: src/gui/html/js/game.ts:141
@@ -377,8 +377,8 @@ msgstr ""
 "获得详细信息。"
 
 #: src/gui/html/js/loot.ts:322
-msgid "A [new release](%s) of LOOT is available."
-msgstr "一个[新版本](%s)的LOOT发行了。"
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "一个[新版本]({0})的LOOT发行了。"
 
 #: src/gui/html/js/loot.ts:362
 msgid ""
@@ -872,10 +872,10 @@ msgstr "首次运行小贴士"
 
 #: src/gui/html/js/translateStaticText.ts:744
 msgid ""
-"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"This appears to be the first time you have run LOOT v{0}. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"这似乎是你第一次运行LOOT v%s。这里有一些技巧可以帮助你开始使用这个软件。"
+"这似乎是你第一次运行LOOT v{0}。这里有一些技巧可以帮助你开始使用这个软件。"
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
 #: src/gui/html/js/translateStaticText.ts:751
@@ -932,10 +932,10 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "LOOT是免费的，但如果你想要表达你的感激，可以捐款给WrinklyNinja （LOOT的创造者"
-"和主要开发者） 使用 %s。"
+"和主要开发者） 使用 {0}。"
 
 #: src/gui/html/js/translateStaticText.ts:779
 msgid "OK"
@@ -946,8 +946,8 @@ msgid "About LOOT"
 msgstr "关于LOOT"
 
 #: src/gui/html/js/translateStaticText.ts:788
-msgid "Version %s (build %s)"
-msgstr "版本 %s (编译 %s)"
+msgid "Version {0} (build {1})"
+msgstr "版本 {0} (编译 {1})"
 
 #: src/gui/html/js/translateStaticText.ts:793
 msgid ""
@@ -971,17 +971,17 @@ msgstr ""
 #~ msgstr "全局优先级"
 
 #~ msgid ""
-#~ "An error occurred while parsing the masterlist: %1%. This probably "
+#~ "An error occurred while parsing the masterlist: {0}. This probably "
 #~ "happened because an update to LOOT changed its metadata syntax support. "
 #~ "Try updating your masterlist to resolve the error."
 #~ msgstr ""
-#~ "解析主列表时发生错误：%1%。这可能由于升级 LOOT 时改变了元数据的语法支持。"
+#~ "解析主列表时发生错误：{0}。这可能由于升级 LOOT 时改变了元数据的语法支持。"
 #~ "尝试更新你的主列表来解决这个错误。"
 
 #~ msgid ""
 #~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: %1%"
-#~ msgstr "一条全局信息包含的条件无法被解析，详细信息：%1%"
+#~ "Details: {0}"
+#~ msgstr "一条全局信息包含的条件无法被解析，详细信息：{0}"
 
 #~ msgid "Loading plugin contents..."
 #~ msgstr "加载插件内容..."
@@ -995,8 +995,8 @@ msgstr ""
 #~ msgid "Game path could not be detected."
 #~ msgstr "无法检测到游戏路径。"
 
-#~ msgid "Could not create LOOT folder for game. Details: %1%"
-#~ msgstr "无法创建 LOOT 文件夹。详细信息：%1%"
+#~ msgid "Could not create LOOT folder for game. Details: {0}"
+#~ msgstr "无法创建 LOOT 文件夹。详细信息：{0}"
 
 #~ msgid "Game path is not initialised."
 #~ msgstr "游戏路径未初始化。"
@@ -1005,33 +1005,33 @@ msgstr ""
 #~ "libloadorder failed to create a game handle. Details could not be fetched."
 #~ msgstr "libloadorder 无法创建游戏处理器，详细信息无法获取。"
 
-#~ msgid "libloadorder failed to create a game handle. Details: %1%"
-#~ msgstr "libloadorder 无法创建游戏处理器，详细信息：%1%"
+#~ msgid "libloadorder failed to create a game handle. Details: {0}"
+#~ msgstr "libloadorder 无法创建游戏处理器，详细信息：{0}"
 
 #~ msgid ""
 #~ "libloadorder failed to check if a plugin is active. Details could not be "
 #~ "fetched."
 #~ msgstr "libloadorder 无法检查插件是否处于活动状态，详细信息无法获取。"
 
-#~ msgid "libloadorder failed to check if a plugin is active. Details: %1%"
-#~ msgstr "libloadorder 无法检查插件是否处于活动状态。详细信息︰%1%"
+#~ msgid "libloadorder failed to check if a plugin is active. Details: {0}"
+#~ msgstr "libloadorder 无法检查插件是否处于活动状态。详细信息︰{0}"
 
 #~ msgid ""
 #~ "libloadorder failed to get the load order. Details could not be fetched."
 #~ msgstr "libloadorder 无法获取加载顺序，详细信息无法获取。"
 
-#~ msgid "libloadorder failed to get the load order. Details: %1%"
-#~ msgstr "libloadorder 无法获取加载顺序，详细信息：%1%"
+#~ msgid "libloadorder failed to get the load order. Details: {0}"
+#~ msgstr "libloadorder 无法获取加载顺序，详细信息：{0}"
 
 #~ msgid ""
 #~ "libloadorder failed to set the load order. Details could not be fetched."
 #~ msgstr "libloadorder 无法设置加载顺序，详细信息无法获取。"
 
-#~ msgid "libloadorder failed to set the load order. Details: %1%"
-#~ msgstr "libloadorder 无法设置加载顺序，详细信息：%1%"
+#~ msgid "libloadorder failed to set the load order. Details: {0}"
+#~ msgstr "libloadorder 无法设置加载顺序，详细信息：{0}"
 
-#~ msgid "Git operation failed. Error: %1%"
-#~ msgstr "Git 操作失败。错误：%1%"
+#~ msgid "Git operation failed. Error: {0}"
+#~ msgstr "Git 操作失败。错误：{0}"
 
 #~ msgid ""
 #~ "An error occurred while trying to clone the remote masterlist repository."
@@ -1043,63 +1043,63 @@ msgstr ""
 #~ msgstr ""
 #~ "更新主列表时发生错误。这可能是由于服务器端故障。过几分钟后再进行尝试。"
 
-#~ msgid "Unable to open \"%1%\" for CRC calculation."
-#~ msgstr "无法打开\"%1%\"进行CRC计算。"
+#~ msgid "Unable to open \"{0}\" for CRC calculation."
+#~ msgstr "无法打开\"{0}\"进行CRC计算。"
 
 #~ msgid "Failed to open file in its default application."
 #~ msgstr "无法使用它的默认程序来打开这个文件。"
 
-#~ msgid "Invalid file path: %1%"
-#~ msgstr "无效文件路径：%1%"
+#~ msgid "Invalid file path: {0}"
+#~ msgstr "无效文件路径：{0}"
 
-#~ msgid "Invalid regex string \"%1%\": %2%"
-#~ msgstr "无效表达式\"%1%\"：%2%"
+#~ msgid "Invalid regex string \"{0}\": {1}"
+#~ msgstr "无效表达式\"{0}\"：{1}"
 
-#~ msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
-#~ msgstr "无法解析条件 \"%1%\"：预期 %2% 在 \"%3%\"。"
+#~ msgid "Failed to parse condition \"{0}\": expected \"{1}\" at \"{2}\"."
+#~ msgstr "无法解析条件 \"{0}\"：预期 {1} 在 \"{2}\"。"
 
 #~ msgid ""
-#~ "Failed to parse condition \"%1%\": only partially matched expected syntax."
-#~ msgstr "无法解析条件 \"%1%\": 只是部分匹配预期的语法。"
+#~ "Failed to parse condition \"{0}\": only partially matched expected syntax."
+#~ msgstr "无法解析条件 \"{0}\": 只是部分匹配预期的语法。"
 
-#~ msgid "Cannot read \"%1%\". Details: %2%"
-#~ msgstr "无法读取\"%1%\"。详细信息：%2%"
+#~ msgid "Cannot read \"{0}\". Details: {1}"
+#~ msgstr "无法读取\"{0}\"。详细信息：{1}"
 
 #~ msgid ""
 #~ "An error occurred while trying to read the local masterlist's version. If "
-#~ "this error happens again, try deleting the \".git\" folder in %1%."
+#~ "this error happens again, try deleting the \".git\" folder in {0}."
 #~ msgstr ""
-#~ "读取本地主列表版本时发生错误。如果错误再次发生，请尝试删除%1%里的\".git"
+#~ "读取本地主列表版本时发生错误。如果错误再次发生，请尝试删除{0}里的\".git"
 #~ "\"文件夹。"
 
 #~ msgid ""
 #~ "An error occurred while trying to access the local masterlist repository. "
-#~ "If this error happens again, try deleting the \".git\" folder in %1%."
+#~ "If this error happens again, try deleting the \".git\" folder in {0}."
 #~ msgstr ""
-#~ "存取本地主列表库时发生错误。如果错误再次发生，请尝试删除%1%里的\".git\"文"
+#~ "存取本地主列表库时发生错误。如果错误再次发生，请尝试删除{0}里的\".git\"文"
 #~ "件夹。"
 
 #~ msgid ""
 #~ "An error occurred while trying to read information on the updated "
 #~ "masterlist. If this error happens again, try deleting the \".git\" folder "
-#~ "in %1%."
+#~ "in {0}."
 #~ msgstr ""
-#~ "更新主列表时读取信息发生错误。如果错误再次发生，请尝试删除%1%里的\".git"
+#~ "更新主列表时读取信息发生错误。如果错误再次发生，请尝试删除{0}里的\".git"
 #~ "\"文件夹。"
 
 #~ msgid ""
-#~ "%1% found %2% ITM records, %3% deleted references and %4% deleted "
+#~ "{0} found {1} ITM records, {2} deleted references and {3} deleted "
 #~ "navmeshes."
-#~ msgstr "%1%发现%2%个ITM记录，%3%个已删除引用和%4%已删除导航。"
+#~ msgstr "{0}发现{1}个ITM记录，{2}个已删除引用和{3}已删除导航。"
 
-#~ msgid "%1% found %2% deleted references and %3% deleted navmeshes."
-#~ msgstr "%1%发现%2%个已删除引用和%3%个已删除导航。"
+#~ msgid "{0} found {1} deleted references and {2} deleted navmeshes."
+#~ msgstr "{0}发现{1}个已删除引用和{2}个已删除导航。"
 
-#~ msgid "%1% found %2% ITM records and %3% deleted navmeshes."
-#~ msgstr "%1%发现%2%个ITM记录和%3%个已删除导航。"
+#~ msgid "{0} found {1} ITM records and {2} deleted navmeshes."
+#~ msgstr "{0}发现{1}个ITM记录和{2}个已删除导航。"
 
-#~ msgid "%1% found %2% ITM records and %3% deleted references."
-#~ msgstr "%1%发现%2%个ITM记录和%3%个已删除引用。"
+#~ msgid "{0} found {1} ITM records and {2} deleted references."
+#~ msgstr "{0}发现{1}个ITM记录和{2}个已删除引用。"
 
 #~ msgid "Masterlist revision"
 #~ msgstr "主列表版次"
@@ -1110,23 +1110,23 @@ msgstr ""
 #~ msgid "Unsupported game ID supplied."
 #~ msgstr "不支持的游戏ID"
 
-#~ msgid "Expected \"%1%\" at \"%2%\"."
-#~ msgstr "预期\"%1%\"在\"%2%\"。"
+#~ msgid "Expected \"{0}\" at \"{1}\"."
+#~ msgstr "预期\"{0}\"在\"{1}\"。"
 
-#~ msgid "Failed to change game. Details: %1%"
-#~ msgstr "无法更换游戏，详细信息：%1%"
+#~ msgid "Failed to change game. Details: {0}"
+#~ msgstr "无法更换游戏，详细信息：{0}"
 
-#~ msgid "Failed to copy plugin metadata. Details: %1%"
-#~ msgstr "无法复制插件元数据，详细信息：%1%"
+#~ msgid "Failed to copy plugin metadata. Details: {0}"
+#~ msgstr "无法复制插件元数据，详细信息：{0}"
 
-#~ msgid "Failed to apply plugin metadata. Details: %1%"
-#~ msgstr "无法应用插件元数据，详细信息：%1%"
+#~ msgid "Failed to apply plugin metadata. Details: {0}"
+#~ msgstr "无法应用插件元数据，详细信息：{0}"
 
-#~ msgid "Failed to get game data. Details: %1%"
-#~ msgstr "无法获取游戏数据，详细信息：%1%"
+#~ msgid "Failed to get game data. Details: {0}"
+#~ msgstr "无法获取游戏数据，详细信息：{0}"
 
-#~ msgid "Failed to update the masterlist. Details: %1%"
-#~ msgstr "无法更新主列表，详细信息：%1%"
+#~ msgid "Failed to update the masterlist. Details: {0}"
+#~ msgstr "无法更新主列表，详细信息：{0}"
 
 #~ msgid "An exception occurred while loading this plugin. Details:"
 #~ msgstr "载入这个插件时发生意外，详细信息："
@@ -1139,17 +1139,17 @@ msgstr ""
 #~ msgid "libloadorder failed to initialise game master file support. Details:"
 #~ msgstr "libloadorder 无法初始化游戏master文件支持，详细信息："
 
-#~ msgid "Clean with %1%."
-#~ msgstr "使用%1%清理。"
+#~ msgid "Clean with {0}."
+#~ msgstr "使用{0}清理。"
 
-#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
-#~ msgstr "包含%1%个已删除导航。使用%2%清理。"
+#~ msgid "Contains {0} deleted navmeshes. Clean with {1}."
+#~ msgstr "包含{0}个已删除导航。使用{1}清理。"
 
-#~ msgid "Contains %1% deleted references. Clean with %2%."
-#~ msgstr "包含%1%个已删除引用。使用%2%清理。"
+#~ msgid "Contains {0} deleted references. Clean with {1}."
+#~ msgstr "包含{0}个已删除引用。使用{1}清理。"
 
-#~ msgid "Contains %1% ITM records. Clean with %2%."
-#~ msgstr "包含%1%个ITM记录。使用%2%清理。"
+#~ msgid "Contains {0} ITM records. Clean with {1}."
+#~ msgstr "包含{0}个ITM记录。使用{1}清理。"
 
 #~ msgid "Building plugin graph..."
 #~ msgstr "构建插件图表..."
@@ -1175,8 +1175,8 @@ msgstr ""
 #~ msgid "Regenerating displayed content..."
 #~ msgstr "重建显示内容..."
 
-#~ msgid "Error: Games' settings parsing failed. %1%"
-#~ msgstr "错误：游戏设置解析失败。%1%"
+#~ msgid "Error: Games' settings parsing failed. {0}"
+#~ msgstr "错误：游戏设置解析失败。{0}"
 
 #~ msgid "Invalid folder path:"
 #~ msgstr "无效文件夹路径："

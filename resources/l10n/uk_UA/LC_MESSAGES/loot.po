@@ -176,8 +176,8 @@ msgid "Unknown: No revision metadata found"
 msgstr "Невідомо: Дані ревізії не знайдені"
 
 #: src/gui/qt/helpers.cpp:362
-msgid "Invalid regular expression: %1%"
-msgstr "Невірний regex вираз: %1%"
+msgid "Invalid regular expression: {0}"
+msgstr "Невірний regex вираз: {0}"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:650
@@ -341,15 +341,15 @@ msgstr "Оновлення та обробка правил сортування
 
 #: src/gui/qt/main_window.cpp:1040
 msgid ""
-"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
-"data has been backed up to: %2%"
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
 msgstr ""
-"Схоже, що це перший раз, коли ви запустили LOOT v%1%. Наявні дані програми "
-"скопійовано до: %2%"
+"Схоже, що це перший раз, коли ви запустили LOOT v{0}. Наявні дані програми "
+"скопійовано до: {1}"
 
 #: src/gui/qt/main_window.cpp:1047
-msgid "This appears to be the first time you have run LOOT v%1%."
-msgstr "Схоже, що це перший раз, коли ви запустили LOOT v%1%."
+msgid "This appears to be the first time you have run LOOT v{0}."
+msgstr "Схоже, що це перший раз, коли ви запустили LOOT v{0}."
 
 #: src/gui/qt/main_window.cpp:1053
 msgid "Here are some tips to help you get started with the interface."
@@ -384,11 +384,11 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "LOOT безплатний, але якщо ви хочете надати фінансову підтримку, пожертви "
 "можуть бути направлені WrinklyNinja (творець і основний розробник LOOT), "
-"через %s."
+"через {0}."
 
 #: src/gui/qt/main_window.cpp:1081
 msgid "First-Time Tips"
@@ -405,8 +405,8 @@ msgstr "відсортований порядок завантаження"
 #: src/gui/qt/main_window.cpp:1119
 #, c-format
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "Ви усе ще не застосували чи не відмінили %s. Дійсно хочете вийти?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
+msgstr "Ви усе ще не застосували чи не відмінили {0}. Дійсно хочете вийти?"
 
 #: src/gui/qt/main_window.cpp:1230 src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -455,8 +455,8 @@ msgstr ""
 "дії LOOT."
 
 #: src/gui/qt/main_window.cpp:1393
-msgid "Your LOOT data has been backed up to: %1%"
-msgstr "Дані LOOT збережено до: %1%"
+msgid "Your LOOT data has been backed up to: {0}"
+msgstr "Дані LOOT збережено до: {0}"
 
 #: src/gui/qt/main_window.cpp:1400
 msgid "No backup has been created as LOOT has no data to backup."
@@ -519,36 +519,36 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1647
 #, c-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Метадані для \"%s\" скопійовані до буферу обміну."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Метадані для \"{0}\" скопійовані до буферу обміну."
 
 #: src/gui/qt/main_window.cpp:1665
 #, c-format
-msgid "The plugin name \"%s\" has been copied to the clipboard."
-msgstr "Ім'я плагіну \"%s\" скопійовано до буферу обміну."
+msgid "The plugin name \"{0}\" has been copied to the clipboard."
+msgstr "Ім'я плагіну \"{0}\" скопійовано до буферу обміну."
 
 #: src/gui/qt/main_window.cpp:1684
 #, c-format
-msgid "The card content for \"%s\" has been copied to the clipboard."
-msgstr "Зміст картки для \"%s\" скопійовано до буферу обміну."
+msgid "The card content for \"{0}\" has been copied to the clipboard."
+msgstr "Зміст картки для \"{0}\" скопійовано до буферу обміну."
 
 #: src/gui/qt/main_window.cpp:1699
 #, c-format
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
-"Ви впевнені, що хочете очистити усі існуючі користувацькі метадані для \"%s"
+"Ви впевнені, що хочете очистити усі існуючі користувацькі метадані для \"{0}"
 "\"?"
 
 #: src/gui/qt/main_window.cpp:1739
 #, c-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Користувацькі метадані для \"%s\" були очищені."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Користувацькі метадані для \"{0}\" були очищені."
 
 #: src/gui/qt/main_window.cpp:1790
 #, c-format
-msgid "Version %s (build %s)"
-msgstr "Версія %s (збірка %s)"
+msgid "Version {0} (build {1})"
+msgstr "Версія {0} (збірка {1})"
 
 #: src/gui/qt/main_window.cpp:1795
 msgid ""
@@ -582,13 +582,13 @@ msgstr "Оновлення правил сортування не потрібн
 
 #: src/gui/qt/main_window.cpp:2320
 #, c-format
-msgid "Masterlist updated to revision %s."
-msgstr "Список правил сортування оновлено до версії %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Список правил сортування оновлено до версії {0}."
 
 #: src/gui/qt/main_window.cpp:2379
 #, c-format
-msgid "A [new release](%s) of LOOT is available."
-msgstr "Доступна [нова версія](%s) LOOT."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "Доступна [нова версія]({0}) LOOT."
 
 #: src/gui/qt/main_window.cpp:2395
 msgid ""
@@ -608,8 +608,8 @@ msgstr "Джерела:"
 
 #: src/gui/qt/plugin_card.cpp:171
 #, c-format
-msgid "Verified clean by %s"
-msgstr "Перевірено на чистоту в %s"
+msgid "Verified clean by {0}"
+msgstr "Перевірено на чистоту в {0}"
 
 #: src/gui/qt/plugin_card.cpp:286
 msgid "Active Plugin"
@@ -715,8 +715,8 @@ msgstr "У цій групі немає плагінів."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:239
 #, c-format
-msgid "Plugins in %s"
-msgstr "Плагіни в %s"
+msgid "Plugins in {0}"
+msgstr "Плагіни в {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:260
 msgid "Group already exists!"
@@ -976,12 +976,12 @@ msgstr "Додати нову гру..."
 
 #: src/gui/query/types/apply_sort_query.h:96
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"О ні, щось пішло не так! Зазвичай це стається, бо \"%1%\" тільки для "
+"О ні, щось пішло не так! Зазвичай це стається, бо \"{0}\" тільки для "
 "читання. Якщо це не так, зніміть цей атрибут і спробуйте знову. Якщо ні, то "
 "додаткову інформацію можна дізнатись у файлі LOOTDebugLog.txt (можна "
 "отримати доступ до нього через головне меню)."
@@ -1015,20 +1015,20 @@ msgstr ""
 "Файли)."
 
 #: src/gui/state/loot_state.cpp:166
-msgid "Error: Game-specific settings could not be initialised. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
-"Помилка: Специфічні для гри налаштування не можуть бути ініціалізовані. %1%"
+"Помилка: Специфічні для гри налаштування не можуть бути ініціалізовані. {0}"
 
 #: src/gui/state/loot_state.cpp:190
-msgid "Error: Could not create LOOT data directory. %1%"
-msgstr "Помилка: Неможливо створити папку даних LOOT. %1%"
+msgid "Error: Could not create LOOT data directory. {0}"
+msgstr "Помилка: Неможливо створити папку даних LOOT. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
 #: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Помилка: Обробка налаштувань не вдалась. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Помилка: Обробка налаштувань не вдалась. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
@@ -1039,8 +1039,8 @@ msgstr ""
 "вказано."
 
 #: src/gui/state/loot_state.cpp:293
-msgid "Error: Could not create LOOT prelude directory. %1%"
-msgstr "Помилка: Неможливо створити папку для prelude-файлу LOOT. %1%"
+msgid "Error: Could not create LOOT prelude directory. {0}"
+msgstr "Помилка: Неможливо створити папку для prelude-файлу LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
@@ -1051,32 +1051,32 @@ msgstr ""
 "вказано."
 
 #: src/gui/state/loot_state.cpp:326
-msgid "Error: failed to override game path, the game %1% was not recognised."
-msgstr "Помилка: не вдалося перевизначити шлях до гри, гра %1% не розпізнана."
+msgid "Error: failed to override game path, the game {0} was not recognised."
+msgstr "Помилка: не вдалося перевизначити шлях до гри, гра {0} не розпізнана."
 
 #: src/gui/state/loot_state.cpp:360
-msgid "Error: The initial game could not be selected. %1%"
-msgstr "Помилка: Стартову гру не можливо обрати. %1%"
+msgid "Error: The initial game could not be selected. {0}"
+msgstr "Помилка: Стартову гру не можливо обрати. {0}"
 
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Цей плагін потребує встановленого плагіна \"%1%\", але він відсутній."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Цей плагін потребує встановленого плагіна \"{0}\", але він відсутній."
 
 #: src/gui/state/game/game.cpp:254
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Цей плагін потребує підключеного плагіна \"%1%\", але він не активний."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Цей плагін потребує підключеного плагіна \"{0}\", але він не активний."
 
 #: src/gui/state/game/game.cpp:324
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Цей плагін несумісний з \"%1%\", але обидва файли присутні."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "Цей плагін несумісний з \"{0}\", але обидва файли присутні."
 
 #: src/gui/state/game/game.cpp:366
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Цей плагін є легким майстром і потребує не-майстер плагін \"%1%\". Це може "
+"Цей плагін є легким майстром і потребує не-майстер плагін \"{0}\". Це може "
 "викликати проблеми у грі, й сортування не вдасться, поки цей плагін "
 "встановлено."
 
@@ -1094,23 +1094,23 @@ msgstr ""
 #. like file name and version.
 #: src/gui/state/game/game.cpp:406
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"Цей плагін має версію заголовку %1%, котра є старішою за мінімально "
-"підтримувану грою версію %2%."
+"Цей плагін має версію заголовку {0}, котра є старішою за мінімально "
+"підтримувану грою версію {1}."
 
 #: src/gui/state/game/game.cpp:424
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "Плагін у групі \"%1%\", яка не існує."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Плагін у групі \"{0}\", яка не існує."
 
 #: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: %1%."
+"LOOT for the following Bash Tags: {0}."
 msgstr ""
 "Цей плагін має файл BashTags, який перевизначить пропозиції, зроблені LOOT "
-"для наступних тегів: %1%."
+"для наступних тегів: {0}."
 
 #: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
 msgid ""
@@ -1121,12 +1121,12 @@ msgstr ""
 "може бути не вірною."
 
 #: src/gui/state/game/game.cpp:659
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Циклічну взаємодію знайдено між плагінами \"%1%\" та \"%2%\": %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "Циклічну взаємодію знайдено між плагінами \"{0}\" та \"{1}\": {2}"
 
 #: src/gui/state/game/game.cpp:671
-msgid "The group \"%1%\" does not exist."
-msgstr "Група \"%1%\" не існує."
+msgid "The group \"{0}\" does not exist."
+msgstr "Група \"{0}\" не існує."
 
 #: src/gui/state/game/game.cpp:707
 msgid "You have not sorted your load order this session."
@@ -1152,7 +1152,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:812
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -1167,7 +1167,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Виникла помилка при опрацюванні списку метаданих: %1%.\n"
+"Виникла помилка при опрацюванні списку метаданих: {0}.\n"
 "\n"
 "Для виправлення помилки спробуйте оновити список правил сортування . Якщо "
 "помилки у ваших користувацьких метаданих, то причиною може бути зміна "
@@ -1183,44 +1183,44 @@ msgstr ""
 "LOOT](https://loot.github.io/)."
 
 #: src/gui/state/game/helpers.cpp:89
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% ITM-запис"
-msgstr[1] "%1% ITM-записи"
-msgstr[2] "%1% ITM-записів"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} ITM-запис"
+msgstr[1] "{0} ITM-записи"
+msgstr[2] "{0} ITM-записів"
 
 #: src/gui/state/game/helpers.cpp:96
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% видалене посилання"
-msgstr[1] "%1% видалених посилань"
-msgstr[2] "%1% видалених посилань"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} видалене посилання"
+msgstr[1] "{0} видалених посилань"
+msgstr[2] "{0} видалених посилань"
 
 #: src/gui/state/game/helpers.cpp:103
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% видалений навмеш"
-msgstr[1] "%1% видалених навмешів"
-msgstr[2] "%1% видалених навмешів"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} видалений навмеш"
+msgstr[1] "{0} видалених навмешів"
+msgstr[2] "{0} видалених навмешів"
 
 #: src/gui/state/game/helpers.cpp:113
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% містить %2%, %3% та %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0} містить {1}, {2} та {3}."
 
 #: src/gui/state/game/helpers.cpp:119
-msgid "%1% found dirty edits."
-msgstr "%1% містить брудні правки."
+msgid "{0} found dirty edits."
+msgstr "{0} містить брудні правки."
 
 #: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
 #: src/gui/state/game/helpers.cpp:136
-msgid "%1% found %2% and %3%."
-msgstr "%1% містить %2% та %3%."
+msgid "{0} found {1} and {2}."
+msgstr "{0} містить {1} та {2}."
 
 #: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
 #: src/gui/state/game/helpers.cpp:146
-msgid "%1% found %2%."
-msgstr "%1% містить %2%."
+msgid "{0} found {1}."
+msgstr "{0} містить {1}."
 
 #: src/gui/state/game/helpers.cpp:232
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT визначив, що \"%1%\" невірний та тепер ігнорує його."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT визначив, що \"{0}\" невірний та тепер ігнорує його."

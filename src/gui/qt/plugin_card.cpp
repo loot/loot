@@ -25,11 +25,12 @@
 
 #include "gui/qt/plugin_card.h"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QVBoxLayout>
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
@@ -168,9 +169,8 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   if (plugin.cleaningUtility.has_value()) {
     auto cleanText =
-        (boost::format(boost::locale::translate("Verified clean by %s")) %
-         plugin.cleaningUtility.value())
-            .str();
+        fmt::format(boost::locale::translate("Verified clean by {0}").str(),
+                    plugin.cleaningUtility.value());
     isCleanLabel->setToolTip(QString::fromStdString(cleanText));
   } else {
     isCleanLabel->setToolTip(QString());

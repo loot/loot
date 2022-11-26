@@ -605,64 +605,64 @@ msgid "Parsing, merging and evaluating metadata..."
 msgstr "Parsar, slår samman och utvärderar metadata..."
 
 #: src/gui/query_handler.cpp:203 src/gui/query_handler.cpp:206
-msgid "Failed to change game. Details: %1%"
-msgstr "Det gick inte att byta spel. Information: %1%"
+msgid "Failed to change game. Details: {0}"
+msgstr "Det gick inte att byta spel. Information: {0}"
 
 #: src/gui/query_handler.cpp:220 src/gui/query_handler.cpp:223
 #: src/gui/query_handler.cpp:298 src/gui/query_handler.cpp:301
 #: src/gui/query_handler.cpp:329 src/gui/query_handler.cpp:332
-msgid "Failed to copy plugin metadata. Details: %1%"
-msgstr "Det gick inte att kopiera insticksmodulmetadata. Information: %1%"
+msgid "Failed to copy plugin metadata. Details: {0}"
+msgstr "Det gick inte att kopiera insticksmodulmetadata. Information: {0}"
 
 #: src/gui/query_handler.cpp:238 src/gui/query_handler.cpp:248
-msgid "Failed to apply plugin metadata. Details: %1%"
-msgstr "Det gick inte att tillämpa insticksmodulmetadata. Information: %1%"
+msgid "Failed to apply plugin metadata. Details: {0}"
+msgstr "Det gick inte att tillämpa insticksmodulmetadata. Information: {0}"
 
 #: src/gui/query_handler.cpp:596
 msgid ""
-"An error occurred while parsing the masterlist: %1%. This probably happened "
+"An error occurred while parsing the masterlist: {0}. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Try updating "
 "your masterlist to resolve the error."
 msgstr ""
-"Ett fel uppstod när huvudlistan parsades: %1%. Det beror troligtvis på att "
+"Ett fel uppstod när huvudlistan parsades: {0}. Det beror troligtvis på att "
 "en uppdatering av LOOT ändrade dess syntaxstöd för metadata. Försök att "
 "uppdatera din huvudlista för att åtgärda felet."
 
 #: src/gui/query_handler.cpp:611
 msgid ""
-"An error occurred while parsing the userlist: %1%. This probably happened "
+"An error occurred while parsing the userlist: {0}. This probably happened "
 "because an update to LOOT changed its metadata syntax support. Your user "
 "metadata will have to be updated manually.\n"
 "\n"
 "To do so, use the 'Open Debug Log Location' in LOOT's main menu to open its "
 "data folder, then open your 'userlist.yaml' file in the relevant game "
 "folder. You can then edit the metadata it contains with reference to the "
-"[syntax documentation](https://loot.github.io/docs/%2%.%3%.%4%/LOOT%"
+"[syntax documentation](https://loot.github.io/docs/{1}.{2}.{3}/LOOT%"
 "%20Metadata%%20Syntax.html).\n"
 "\n"
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Ett fel uppstod när användarlistan parsades: %1%. Det beror troligtvis på "
+"Ett fel uppstod när användarlistan parsades: {0}. Det beror troligtvis på "
 "att en uppdatering av LOOT ändrade dess syntaxstöd för metadata. Din "
 "användarmetadata måste uppdateras manuellt.\n"
 "\n"
 "För att göra det, välj \"Öppna felsökningsloggens mapp\" i LOOT:s huvudmeny "
 "för att öppna dess datamapp och öppna därefter filen \"userlist.yaml\" i den "
 "relevanta spelmappen. Du kan därefter redigera den metadata den innehåller i "
-"enlighet med [syntaxhjälpdokumentationen](https://loot.github.io/docs/%2%.%3%."
-"%4%/LOOT%%20Metadata%%20Syntax.html).\n"
+"enlighet med [syntaxhjälpdokumentationen](https://loot.github.io/docs/{1}.{2}."
+"{3}/LOOT%%20Metadata%%20Syntax.html).\n"
 "\n"
 "Du kan även söka hjälp via LOOT:s forumtråd, till vilken du finner en länk "
 "på [LOOT:s webbplats](https://loot.github.io/)."
 
 #: src/gui/query_handler.cpp:719 src/gui/query_handler.cpp:722
-msgid "Failed to get game data. Details: %1%"
-msgstr "Det gick inte att hämta speldata. Information: %1%"
+msgid "Failed to get game data. Details: {0}"
+msgstr "Det gick inte att hämta speldata. Information: {0}"
 
 #: src/gui/query_handler.cpp:803 src/gui/query_handler.cpp:806
-msgid "Failed to update the masterlist. Details: %1%"
-msgstr "Det gick inte att uppdatera huvudlistan. Information: %1%"
+msgid "Failed to update the masterlist. Details: {0}"
+msgstr "Det gick inte att uppdatera huvudlistan. Information: {0}"
 
 #: src/gui/query_handler.cpp:845
 msgid "Loading plugin contents..."
@@ -673,37 +673,37 @@ msgid "Sorting load order..."
 msgstr "Sorterar inläsningsordning..."
 
 #: src/gui/query_handler.cpp:906
-msgid "Failed to sort plugins. Details: %1%"
-msgstr "Det gick inte att sortera insticksmodulerna. Information: %1%"
+msgid "Failed to sort plugins. Details: {0}"
+msgstr "Det gick inte att sortera insticksmodulerna. Information: {0}"
 
 #: src/gui/query_handler.cpp:936
 msgid ""
 "A global message contains a condition that could not be evaluated. Details: "
-"%1%"
+"{0}"
 msgstr ""
 "Ett globalt meddelande innehåller ett villkor som inte kunde utvärderas. "
-"Information: %1%"
+"Information: {0}"
 
 #: src/gui/query_handler.cpp:958 src/backend/plugin/plugin_sorter.cpp:216
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 msgstr ""
-"\"%1%\" innehåller ett villkor som inte kunde utvärderas. Information: %2%"
+"\"{0}\" innehåller ett villkor som inte kunde utvärderas. Information: {1}"
 
 #: src/backend/app/loot_paths.cpp:85
 msgid "Failed to get %LOCALAPPDATA% path."
 msgstr "Det gick inte att hämta sökvägen för %LOCALAPPDATA%."
 
 #: src/backend/app/loot_state.cpp:124
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "Fel: Det gick inte att skapa en inställningsfil för LOOT. %1%"
+msgid "Error: Could not create LOOT settings file. {0}"
+msgstr "Fel: Det gick inte att skapa en inställningsfil för LOOT. {0}"
 
 #: src/backend/app/loot_state.cpp:131
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Fel: Parsningen av inställningarna misslyckades. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Fel: Parsningen av inställningarna misslyckades. {0}"
 
 #: src/backend/app/loot_state.cpp:194
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Fel: Det gick inte att initiera spelspecifika inställningar. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Fel: Det gick inte att initiera spelspecifika inställningar. {0}"
 
 #: src/backend/app/loot_state.cpp:272
 msgid "None of the supported games were detected."
@@ -777,8 +777,8 @@ msgid "libloadorder failed to set the load order. Details:"
 msgstr "libloadorder kunde inte ange inläsningsordningen. Information:"
 
 #: src/backend/helpers/git_helper.cpp:104
-msgid "Git operation failed. Error: %1%"
-msgstr "Det gick inte att utföra git-åtgärden. Fel: %1%"
+msgid "Git operation failed. Error: {0}"
+msgstr "Det gick inte att utföra git-åtgärden. Fel: {0}"
 
 #: src/backend/helpers/git_helper.cpp:145
 msgid ""
@@ -798,8 +798,8 @@ msgid "Unknown: Git repository missing"
 msgstr "Okänd: Git-databas saknas"
 
 #: src/backend/helpers/helpers.cpp:81
-msgid "Unable to open \"%1%\" for CRC calculation."
-msgstr "Det gick inte att öppna \"%1%\" för CRC-beräkning."
+msgid "Unable to open \"{0}\" for CRC calculation."
+msgstr "Det gick inte att öppna \"{0}\" för CRC-beräkning."
 
 #: src/backend/helpers/helpers.cpp:122 src/backend/helpers/helpers.cpp:125
 msgid "Failed to open file in its default application."
@@ -808,10 +808,10 @@ msgstr "Det gick inte att öppna filen i dess standardprogram."
 #: src/backend/masterlist.cpp:43
 msgid ""
 "An error occurred while trying to read the local masterlist's version. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
+"this error happens again, try deleting the \".git\" folder in {0}."
 msgstr ""
 "Ett fel uppstod när den lokala versionen av huvudlistan skulle läsas. Om "
-"felet inträffar igen, försök att ta bort mappen \".git\" i %1%."
+"felet inträffar igen, försök att ta bort mappen \".git\" i {0}."
 
 #: src/backend/masterlist.cpp:47
 msgid "N/A: No masterlist present"
@@ -824,20 +824,20 @@ msgstr "(redigerad)"
 #: src/backend/masterlist.cpp:118 src/backend/masterlist.cpp:132
 msgid ""
 "An error occurred while trying to access the local masterlist repository. If "
-"this error happens again, try deleting the \".git\" folder in %1%."
+"this error happens again, try deleting the \".git\" folder in {0}."
 msgstr ""
 "Ett fel uppstod under försök att få åtkomst till den lokala versionen av "
 "huvudlistan. Om felet inträffar igen, försök att ta bort mappen \".git\" i "
-"%1%."
+"{0}."
 
 #: src/backend/masterlist.cpp:239
 msgid ""
 "An error occurred while trying to read information on the updated "
 "masterlist. If this error happens again, try deleting the \".git\" folder in "
-"%1%."
+"{0}."
 msgstr ""
 "Ett fel uppstod när information i den uppdaterade huvudlistan skulle läsas. "
-"Om felet inträffar igen, försök att ta bort mappen \".git\" i %1%."
+"Om felet inträffar igen, försök att ta bort mappen \".git\" i {0}."
 
 #: src/backend/masterlist.cpp:253
 msgid "Masterlist revision"
@@ -861,90 +861,90 @@ msgstr "Ogiltig filsökväg:"
 
 #: src/backend/metadata/condition_grammar.h:187
 #: src/backend/metadata/condition_grammar.h:213
-msgid "Invalid regex string \"%1%\": %2%"
-msgstr "Ogiltigt RegEx-uttryck \"%1%\": %2%"
+msgid "Invalid regex string \"{0}\": {1}"
+msgstr "Ogiltigt RegEx-uttryck \"{0}\": {1}"
 
 #: src/backend/metadata/condition_grammar.h:205
 msgid "Invalid folder path:"
 msgstr "Ogiltig mappsökväg:"
 
 #: src/backend/metadata/condition_grammar.h:385
-msgid "Expected \"%1%\" at \"%2%\"."
-msgstr "\"%1%\" förväntades för \"%2%\"."
+msgid "Expected \"{0}\" at \"{1}\"."
+msgstr "\"{0}\" förväntades för \"{1}\"."
 
 #: src/backend/metadata/conditional_metadata.cpp:73
 #: src/backend/metadata/conditional_metadata.cpp:104
-msgid "Failed to parse condition \"%1%\": %2%"
-msgstr "Det gick inte att parsa villkoret \"%1%\": %2%"
+msgid "Failed to parse condition \"{0}\": {1}"
+msgstr "Det gick inte att parsa villkoret \"{0}\": {1}"
 
 #: src/backend/metadata/conditional_metadata.cpp:78
 #: src/backend/metadata/conditional_metadata.cpp:109
-msgid "Failed to parse condition \"%1%\"."
-msgstr "Det gick inte att parsa villkoret \"%1%\"."
+msgid "Failed to parse condition \"{0}\"."
+msgstr "Det gick inte att parsa villkoret \"{0}\"."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:69
 msgid ""
-"Contains %1% ITM records, %2% deleted references and %3% deleted navmeshes. "
-"Clean with %4%."
+"Contains {0} ITM records, {1} deleted references and {2} deleted navmeshes. "
+"Clean with {3}."
 msgstr ""
-"Innehåller %1% ITM-poster, %2% borttagna referenser och %3% borttagna "
-"navigeringsytor. Städa med %4%."
+"Innehåller {0} ITM-poster, {1} borttagna referenser och {2} borttagna "
+"navigeringsytor. Städa med {3}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:71
-msgid "Clean with %1%."
-msgstr "Städa med %1%."
+msgid "Clean with {0}."
+msgstr "Städa med {0}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:74
 msgid ""
-"Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+"Contains {0} deleted references and {1} deleted navmeshes. Clean with {2}."
 msgstr ""
-"Innehåller %1% borttagna referenser och %2% borttagna navigeringsytor. Städa "
-"med %3%."
+"Innehåller {0} borttagna referenser och {1} borttagna navigeringsytor. Städa "
+"med {2}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:76
-msgid "Contains %1% deleted navmeshes. Clean with %2%."
-msgstr "Innehåller %1% borttagna navigeringsytor. Städa med %2%."
+msgid "Contains {0} deleted navmeshes. Clean with {1}."
+msgstr "Innehåller {0} borttagna navigeringsytor. Städa med {1}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:78
-msgid "Contains %1% deleted references. Clean with %2%."
-msgstr "Innehåller %1% borttagna referenser. Städa med %2%."
+msgid "Contains {0} deleted references. Clean with {1}."
+msgstr "Innehåller {0} borttagna referenser. Städa med {1}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:81
-msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+msgid "Contains {0} ITM records and {1} deleted navmeshes. Clean with {2}."
 msgstr ""
-"Innehåller %1% ITM-poster och %2% borttagna navigeringsytor. Städa med %3%."
+"Innehåller {0} ITM-poster och {1} borttagna navigeringsytor. Städa med {2}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:83
-msgid "Contains %1% ITM records. Clean with %2%."
-msgstr "Innehåller %1% ITM-poster. Städa med %2%."
+msgid "Contains {0} ITM records. Clean with {1}."
+msgstr "Innehåller {0} ITM-poster. Städa med {1}."
 
 #: src/backend/metadata/plugin_dirty_info.cpp:86
-msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
-msgstr "Innehåller %1% ITM-poster och %2% borttagna referenser. Städa med %3%."
+msgid "Contains {0} ITM records and {1} deleted references. Clean with {2}."
+msgstr "Innehåller {0} ITM-poster och {1} borttagna referenser. Städa med {2}."
 
 #: src/backend/plugin/plugin.cpp:115
-msgid "Cannot read \"%1%\". Details: %2%"
-msgstr "Det gick inte att läsa \"%1%\". Information: %2%"
+msgid "Cannot read \"{0}\". Details: {1}"
+msgstr "Det gick inte att läsa \"{0}\". Information: {1}"
 
 #: src/backend/plugin/plugin.cpp:213 src/backend/plugin/plugin.cpp:224
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Denna insticksmodul kräver att \"%1%\" är installerad, men den saknas."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Denna insticksmodul kräver att \"{0}\" är installerad, men den saknas."
 
 #: src/backend/plugin/plugin.cpp:216
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr ""
-"Denna insticksmodul kräver att \"%1%\" är aktiverad, men den är inaktiverad."
+"Denna insticksmodul kräver att \"{0}\" är aktiverad, men den är inaktiverad."
 
 #: src/backend/plugin/plugin.cpp:230
-msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
-"Denna insticksmodul är inkompatibel med \"%1%\", men bägge finns "
+"Denna insticksmodul är inkompatibel med \"{0}\", men bägge finns "
 "installerade."
 
 #: src/backend/plugin/plugin_sorter.cpp:81
 msgid ""
-"Cyclic interaction detected between plugins \"%1%\" and \"%2%\". Back cycle: "
-"%3%"
+"Cyclic interaction detected between plugins \"{0}\" and \"{1}\". Back cycle: "
+"{2}"
 msgstr ""
-"Cyklisk interaktion har identifierats mellan insticksmodulerna \"%1%\" och "
-"\"%2%\". Återgångscykel: %3%"
+"Cyklisk interaktion har identifierats mellan insticksmodulerna \"{0}\" och "
+"\"{1}\". Återgångscykel: {2}"

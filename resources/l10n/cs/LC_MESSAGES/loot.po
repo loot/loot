@@ -248,8 +248,8 @@ msgstr "Aktualizace a rozbor masterlistu..."
 
 #: src/gui/qt/main_window.cpp:870
 msgid ""
-"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
-"data has been backed up to: %2%"
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:876
@@ -285,10 +285,10 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "LOOT je zdarma, ale pokud chcete s jistými penězi uvést své ocenění, můžete "
-"s pomocí %s darovat WrinklyNinja (tvůrce LOOT a hlavní vývojář)."
+"s pomocí {0} darovat WrinklyNinja (tvůrce LOOT a hlavní vývojář)."
 
 #: src/gui/qt/main_window.cpp:904
 msgid "First-Time Tips"
@@ -305,13 +305,13 @@ msgstr "načítací řada seřazena"
 #: src/gui/qt/main_window.cpp:937
 #, c-format
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "Dosud jsi nepoužil nebo nezrušil %s. Opravdu chcete skončit?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
+msgstr "Dosud jsi nepoužil nebo nezrušil {0}. Opravdu chcete skončit?"
 
 #: src/gui/qt/main_window.cpp:1139
 #, c-format
-msgid "A [new release](%s) of LOOT is available."
-msgstr "K dispozici je [new release](%s) LOOT."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "K dispozici je [new release]({0}) LOOT."
 
 #: src/gui/qt/main_window.cpp:1150
 msgid ""
@@ -346,7 +346,7 @@ msgid "Sorting made no changes to the load order."
 msgstr "Seřazení neudělalo žádné změny  do seřazovací řady."
 
 #: src/gui/qt/main_window.cpp:1303
-msgid "Your LOOT data has been backed up to: %1%"
+msgid "Your LOOT data has been backed up to: {0}"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1353
@@ -399,31 +399,31 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1515
 #, c-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Metadata pro \"%s\" byla zkopírována do schránky."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Metadata pro \"{0}\" byla zkopírována do schránky."
 
 #: src/gui/qt/main_window.cpp:1534
 #, c-format
-msgid "The card content for \"%s\" has been copied to the clipboard."
+msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1549
 #, c-format
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Opravdu chcete odstranit všechny existující metadata přidané uživatelem z "
-"\"%s\"?"
+"\"{0}\"?"
 
 #: src/gui/qt/main_window.cpp:1588
 #, c-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Metadata přidaná uživatelem pro \"%s\" byla vymazána."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Metadata přidaná uživatelem pro \"{0}\" byla vymazána."
 
 #: src/gui/qt/main_window.cpp:1639
 #, c-format
-msgid "Version %s (build %s)"
-msgstr "Verze %s (build %s)"
+msgid "Version {0} (build {1})"
+msgstr "Verze {0} (build {1})"
 
 #: src/gui/qt/main_window.cpp:1644
 msgid ""
@@ -452,13 +452,13 @@ msgstr "Masterlist aktualizace nebyla nutná."
 
 #: src/gui/qt/main_window.cpp:2079
 #, c-format
-msgid "Masterlist updated to revision %s."
-msgstr "Masterlist aktualize do revize %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Masterlist aktualize do revize {0}."
 
 #: src/gui/qt/plugin_card.cpp:182
 #, c-format
-msgid "Verified clean by %s"
-msgstr "Ověřené vyčištění z %s"
+msgid "Verified clean by {0}"
+msgstr "Ověřené vyčištění z {0}"
 
 #: src/gui/qt/plugin_card.cpp:311
 msgid "Active Plugin"
@@ -539,7 +539,7 @@ msgstr ""
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:146
 #, c-format
-msgid "Plugins in %s"
+msgid "Plugins in {0}"
 msgstr ""
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:166
@@ -795,12 +795,12 @@ msgstr ""
 
 #: src/gui/query/query.h:70
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Neeee, něco se pokazilo! Obvykle je to proto, že \"%1%\" je nastaveno jen "
+"Neeee, něco se pokazilo! Obvykle je to proto, že \"{0}\" je nastaveno jen "
 "pro čtení. Pokud je, přenastavte to a akci opakujte. Pokud není, můžeš "
 "zkontrolovat LOOTDebugLog. txt (Mužeš ho nalézt v hlavním menu) pro více "
 "informací."
@@ -819,41 +819,41 @@ msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
 #: src/gui/state/loot_state.cpp:130
-msgid "Error: Could not create LOOT data directory. %1%"
+msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
 #: src/gui/state/loot_state.cpp:150
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Chyba : Analýza nastavení selhala. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Chyba : Analýza nastavení selhala. {0}"
 
 #: src/gui/state/loot_state.cpp:197
-msgid "Error: Could not create LOOT prelude directory. %1%"
+msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #: src/gui/state/loot_state.cpp:226
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Chyba: Specifická nastavení hry nemohla být započata. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Chyba: Specifická nastavení hry nemohla být započata. {0}"
 
 #: src/gui/state/game/game.cpp:211 src/gui/state/game/game.cpp:250
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Tento plugin vyžaduje instalaci \"%1%\", ale to chybí."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Tento plugin vyžaduje instalaci \"{0}\", ale to chybí."
 
 #: src/gui/state/game/game.cpp:224
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Tento plugin vyžaduje, aby byl aktivní \"%1%\", ale to je neaktivní."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Tento plugin vyžaduje, aby byl aktivní \"{0}\", ale to je neaktivní."
 
 #: src/gui/state/game/game.cpp:286
-msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:329
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Tento plugin je light master a vyžaduje plugin \"%1%\", který není hlavní "
+"Tento plugin je light master a vyžaduje plugin \"{0}\", který není hlavní "
 "plugin. To může způsobit problémy během hry a třídění selže během instalace "
 "tohoto pluginu."
 
@@ -866,12 +866,12 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:369
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:389
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:458 src/gui/state/game/game.cpp:543
@@ -882,12 +882,12 @@ msgstr ""
 "Nelze načíst aktuální zatížení, zobrazené informace mohou být nesprávné."
 
 #: src/gui/state/game/game.cpp:568
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
 #: src/gui/state/game/game.cpp:580
-msgid "The group \"%1%\" does not exist."
-msgstr "Skupina \"%1%\" neexistuje."
+msgid "The group \"{0}\" does not exist."
+msgstr "Skupina \"{0}\" neexistuje."
 
 #: src/gui/state/game/game.cpp:616
 msgid "You have not sorted your load order this session."
@@ -902,7 +902,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:706
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -924,47 +924,47 @@ msgid "(edited)"
 msgstr "(upraveno)"
 
 #: src/gui/state/game/helpers.cpp:109
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% ITM Záznam"
-msgstr[1] "%1% Záznamy"
-msgstr[2] "%1% Záznamů"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} ITM Záznam"
+msgstr[1] "{0} Záznamy"
+msgstr[2] "{0} Záznamů"
 
 #: src/gui/state/game/helpers.cpp:113
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% odstranilo odkaz"
-msgstr[1] "%1% odstranilo odkazy"
-msgstr[2] "%1% odstranilo odkazy"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} odstranilo odkaz"
+msgstr[1] "{0} odstranilo odkazy"
+msgstr[2] "{0} odstranilo odkazy"
 
 #: src/gui/state/game/helpers.cpp:119
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% odstranil navmesh"
-msgstr[1] "%1% odstranilo navmeshe"
-msgstr[2] "%1% odstranilo navmeshe"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} odstranil navmesh"
+msgstr[1] "{0} odstranilo navmeshe"
+msgstr[2] "{0} odstranilo navmeshe"
 
 #: src/gui/state/game/helpers.cpp:129
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% nalezlo %2%, %3% a %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0} nalezlo {1}, {2} a {3}."
 
 #: src/gui/state/game/helpers.cpp:135
-msgid "%1% found dirty edits."
-msgstr "%1% nalezlo špatné úpravy."
+msgid "{0} found dirty edits."
+msgstr "{0} nalezlo špatné úpravy."
 
 #: src/gui/state/game/helpers.cpp:141 src/gui/state/game/helpers.cpp:147
 #: src/gui/state/game/helpers.cpp:152
-msgid "%1% found %2% and %3%."
-msgstr "%1% nalezlo %2% a %3%."
+msgid "{0} found {1} and {2}."
+msgstr "{0} nalezlo {1} a {2}."
 
 #: src/gui/state/game/helpers.cpp:156 src/gui/state/game/helpers.cpp:159
 #: src/gui/state/game/helpers.cpp:162
-msgid "%1% found %2%."
-msgstr "%1% nalezlo %2%."
+msgid "{0} found {1}."
+msgstr "{0} nalezlo {1}."
 
 #: src/gui/state/game/helpers.cpp:257
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT detekoval %1% je neplatné and bude to odteď ignorovat."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT detekoval {0} je neplatné and bude to odteď ignorovat."
 
 #: src/gui/state/game/helpers.cpp:317
 msgid "N/A: No masterlist present"
@@ -981,13 +981,13 @@ msgid "Unknown: Git repository missing"
 msgstr "Neznámý: úložiště Git chybí"
 
 #~ msgid ""
-#~ "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
+#~ "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
 #~ msgstr ""
-#~ "\"%1%\" Obsahuje pravidlo které nemohlo být vyhodnoceno. Detaily: %2%"
+#~ "\"{0}\" Obsahuje pravidlo které nemohlo být vyhodnoceno. Detaily: {1}"
 
 #, javascript-format
-#~ msgid "Failed to sort plugins. Details: %s"
-#~ msgstr "Nepodařilo se seřadit pluginy. Detaily: %s"
+#~ msgid "Failed to sort plugins. Details: {0}"
+#~ msgstr "Nepodařilo se seřadit pluginy. Detaily: {0}"
 
 #~ msgid "Redate"
 #~ msgstr "Přehrát"
@@ -1066,10 +1066,10 @@ msgstr "Neznámý: úložiště Git chybí"
 
 #, javascript-format
 #~ msgid ""
-#~ "This appears to be the first time you have run LOOT v%s. Here are some "
+#~ "This appears to be the first time you have run LOOT v{0}. Here are some "
 #~ "tips to help you get started with the interface."
 #~ msgstr ""
-#~ "Zdá se, že jste poprvé spustili LOOT v%s. Zde je několik tipů, které vám "
+#~ "Zdá se, že jste poprvé spustili LOOT v{0}. Zde je několik tipů, které vám "
 #~ "pomohou začít s rozhraním."
 
 #~ msgid "Click %(menu_icon)s buttons to open menus."
@@ -1113,15 +1113,15 @@ msgstr "Neznámý: úložiště Git chybí"
 #~ "Fallout 3, Fallout : New Vegas, Fallout 4 a Fallout 4 VR."
 
 #~ msgid ""
-#~ "This plugin is incompatible with \"%1%\", but both files are present."
+#~ "This plugin is incompatible with \"{0}\", but both files are present."
 #~ msgstr ""
-#~ "Tento plugin není kompatibilní s \"%1%\", ale jsou přítomny oba soubory."
+#~ "Tento plugin není kompatibilní s \"{0}\", ale jsou přítomny oba soubory."
 
 #~ msgid ""
-#~ "Cyclic interaction detected between \"%1%\" and \"%2%\". Back cycle: %3%"
+#~ "Cyclic interaction detected between \"{0}\" and \"{1}\". Back cycle: {2}"
 #~ msgstr ""
-#~ "Cyklická interakce byla zjištěna mezi \"%1%\" a \"%2%\". Zpětný cyklus: "
-#~ "%3%"
+#~ "Cyklická interakce byla zjištěna mezi \"{0}\" a \"{1}\". Zpětný cyklus: "
+#~ "{2}"
 
 #~ msgid ""
 #~ "You have a normal plugin and at least one light master sharing the FE "
@@ -1142,7 +1142,7 @@ msgstr "Neznámý: úložiště Git chybí"
 #~ "a opraveny během několika hodin."
 
 #~ msgid ""
-#~ "An error occurred while parsing the metadata list(s): %1%.\n"
+#~ "An error occurred while parsing the metadata list(s): {0}.\n"
 #~ "\n"
 #~ "Try updating your masterlist to resolve the error. If the error is with "
 #~ "your user metadata, this probably happened because an update to LOOT "
@@ -1157,7 +1157,7 @@ msgstr "Neznámý: úložiště Git chybí"
 #~ "You can also seek support on LOOT's forum thread, which is linked to on "
 #~ "[LOOT's website](https://loot.github.io/)."
 #~ msgstr ""
-#~ "Při analýze seznamů metadat se vyskytla chyba: %1%.\n"
+#~ "Při analýze seznamů metadat se vyskytla chyba: {0}.\n"
 #~ "\n"
 #~ "Pokuste se aktualizovat hlavní seznam a vyřešit chybu. Pokud je chyba u "
 #~ "vašich uživatelských metadat, pravděpodobně k tomu došlo, protože "
@@ -1173,8 +1173,8 @@ msgstr "Neznámý: úložiště Git chybí"
 #~ "Můžete také požádat o podporu ve fóru LOOT, který je propojen s webovou "
 #~ "stránkou [LOOT] (https://loot.github.io/)."
 
-#~ msgid "Error: Could not create LOOT settings file. %1%"
-#~ msgstr "Chyba: Nemožno vytvořit LOOT soubor nastavení. %1%"
+#~ msgid "Error: Could not create LOOT settings file. {0}"
+#~ msgstr "Chyba: Nemožno vytvořit LOOT soubor nastavení. {0}"
 
 #~ msgid "Error: Could not initialise logging."
 #~ msgstr "Chyba: Nemožno započít záznamování."

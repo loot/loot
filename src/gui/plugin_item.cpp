@@ -25,8 +25,9 @@
 
 #include "gui/plugin_item.h"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <variant>
 
@@ -52,12 +53,14 @@ std::optional<PluginMetadata> evaluateMasterlistMetadata(
 
     PluginMetadata master(pluginName);
     master.SetMessages({
-        PlainTextMessage(MessageType::error,
-                         (boost::format(boost::locale::translate(
-                              "\"%1%\" contains a condition that could not be "
-                              "evaluated. Details: %2%")) %
-                          pluginName % e.what())
-                             .str()),
+        PlainTextMessage(
+            MessageType::error,
+            fmt::format(boost::locale::translate(
+                            "\"{0}\" contains a condition that could not be "
+                            "evaluated. Details: {1}")
+                            .str(),
+                        pluginName,
+                        e.what())),
     });
 
     return master;
@@ -81,12 +84,14 @@ std::optional<PluginMetadata> evaluateUserlistMetadata(
 
     PluginMetadata user(pluginName);
     user.SetMessages({
-        PlainTextMessage(MessageType::error,
-                         (boost::format(boost::locale::translate(
-                              "\"%1%\" contains a condition that could not be "
-                              "evaluated. Details: %2%")) %
-                          pluginName % e.what())
-                             .str()),
+        PlainTextMessage(
+            MessageType::error,
+            fmt::format(boost::locale::translate(
+                            "\"{0}\" contains a condition that could not be "
+                            "evaluated. Details: {1}")
+                            .str(),
+                        pluginName,
+                        e.what())),
     });
 
     return user;
@@ -173,9 +178,8 @@ PluginItem::PluginItem(const PluginInterface& plugin,
   } else if (locations.size() > 1) {
     for (size_t i = 0; i < locations.size(); i += 1) {
       if (locations[i].GetName().empty()) {
-        auto locationName =
-            (boost::format(boost::locale::translate("Location %1%")) % (i + 1))
-                .str();
+        const auto locationName =
+            fmt::format(boost::locale::translate("Location {0}").str(), i + 1);
         locations[i] = Location(locations[i].GetURL(), locationName);
       }
     }
@@ -406,9 +410,9 @@ std::string PluginItem::getMarkdownContent() const {
 
 std::string PluginItem::loadOrderIndexText() const {
   if (loadOrderIndex.has_value()) {
-    auto formatString = isLightPlugin ? "FE %03X" : "%02X";
+    auto formatString = isLightPlugin ? "FE {:03X}" : "{:02X}";
 
-    return (boost::format(formatString) % loadOrderIndex.value()).str();
+    return fmt::format(formatString, loadOrderIndex.value());
   } else {
     return "";
   }

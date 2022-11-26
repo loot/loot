@@ -45,8 +45,9 @@
 #include <windows.h>
 #endif
 
+#include <spdlog/fmt/fmt.h>
+
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
@@ -235,26 +236,26 @@ std::vector<Message> Game::CheckInstallValidity(
                           plugin.GetName(),
                           master);
           }
-          messages.push_back(
-              PlainTextMessage(MessageType::error,
-                               (boost::format(boost::locale::translate(
-                                    "This plugin requires \"%1%\" to be "
-                                    "installed, but it is missing.")) %
-                                master)
-                                   .str()));
+          messages.push_back(PlainTextMessage(
+              MessageType::error,
+              fmt::format(
+                  boost::locale::translate("This plugin requires \"{0}\" to be "
+                                           "installed, but it is missing.")
+                      .str(),
+                  master)));
         } else if (!IsPluginActive(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is inactive.",
                           plugin.GetName(),
                           master);
           }
-          messages.push_back(
-              PlainTextMessage(MessageType::error,
-                               (boost::format(boost::locale::translate(
-                                    "This plugin requires \"%1%\" to be "
-                                    "active, but it is inactive.")) %
-                                master)
-                                   .str()));
+          messages.push_back(PlainTextMessage(
+              MessageType::error,
+              fmt::format(
+                  boost::locale::translate("This plugin requires \"{0}\" to be "
+                                           "active, but it is inactive.")
+                      .str(),
+                  master)));
         }
       }
     }
@@ -280,11 +281,11 @@ std::vector<Message> Game::CheckInstallValidity(
           continue;
         }
 
-        auto localisedText = (boost::format(boost::locale::translate(
-                                  "This plugin requires \"%1%\" to be "
-                                  "installed, but it is missing.")) %
-                              displayName)
-                                 .str();
+        auto localisedText = fmt::format(
+            boost::locale::translate("This plugin requires \"{0}\" to be "
+                                     "installed, but it is missing.")
+                .str(),
+            displayName);
         auto detailContent = SelectMessageContent(req.GetDetail(), language);
         auto messageText =
             detailContent.has_value()
@@ -319,12 +320,12 @@ std::vector<Message> Game::CheckInstallValidity(
           continue;
         }
 
-        auto localisedText =
-            (boost::format(boost::locale::translate(
-                 "This plugin is incompatible with \"%1%\", but both "
-                 "are present.")) %
-             displayName)
-                .str();
+        auto localisedText = fmt::format(
+            boost::locale::translate(
+                "This plugin is incompatible with \"{0}\", but both "
+                "are present.")
+                .str(),
+            displayName);
         auto detailContent = SelectMessageContent(inc.GetDetail(), language);
         auto messageText =
             detailContent.has_value()
@@ -362,12 +363,14 @@ std::vector<Message> Game::CheckInstallValidity(
         }
         messages.push_back(PlainTextMessage(
             MessageType::error,
-            (boost::format(boost::locale::translate(
-                 "This plugin is a light master and requires the non-master "
-                 "plugin \"%1%\". This can cause issues in-game, and sorting "
-                 "will fail while this plugin is installed.")) %
-             masterName)
-                .str()));
+            fmt::format(
+                boost::locale::translate(
+                    "This plugin is a light master and requires the non-master "
+                    "plugin \"{0}\". This can cause issues in-game, and "
+                    "sorting "
+                    "will fail while this plugin is installed.")
+                    .str(),
+                masterName)));
       }
     }
   }
@@ -400,13 +403,15 @@ std::vector<Message> Game::CheckInstallValidity(
     }
     messages.push_back(PlainTextMessage(
         MessageType::warn,
-        (boost::format(boost::locale::translate(
-             /* translators: A header is the part of a file that stores data
-                like file name and version. */
-             "This plugin has a header version of %1%, which is less than "
-             "the game's minimum supported header version of %2%.")) %
-         plugin.GetHeaderVersion().value() % settings_.MinimumHeaderVersion())
-            .str()));
+        fmt::format(
+            boost::locale::translate(
+                /* translators: A header is the part of a file that stores data
+                   like file name and version. */
+                "This plugin has a header version of {0}, which is less than "
+                "the game's minimum supported header version of {1}.")
+                .str(),
+            plugin.GetHeaderVersion().value(),
+            settings_.MinimumHeaderVersion())));
   }
 
   if (metadata.GetGroup().has_value()) {
@@ -420,11 +425,11 @@ std::vector<Message> Game::CheckInstallValidity(
     if (groupIsUndefined) {
       messages.push_back(PlainTextMessage(
           MessageType::error,
-          (boost::format(
-               boost::locale::translate("This plugin belongs to the group "
-                                        "\"%1%\", which does not exist.")) %
-           groupName)
-              .str()));
+          fmt::format(
+              boost::locale::translate("This plugin belongs to the group "
+                                       "\"{0}\", which does not exist.")
+                  .str(),
+              groupName)));
     }
   }
 
@@ -444,11 +449,12 @@ std::vector<Message> Game::CheckInstallValidity(
       }
       messages.push_back(PlainTextMessage(
           MessageType::say,
-          (boost::format(boost::locale::translate(
-               "This plugin has a BashTags file that will override the "
-               "suggestions made by LOOT for the following Bash Tags: %1%.")) %
-           commaSeparatedTags)
-              .str()));
+          fmt::format(
+              boost::locale::translate(
+                  "This plugin has a BashTags file that will override the "
+                  "suggestions made by LOOT for the following Bash Tags: {0}.")
+                  .str(),
+              commaSeparatedTags)));
     }
   }
 
@@ -655,22 +661,23 @@ std::vector<std::string> Game::SortPlugins() {
     }
     AppendMessage(Message(
         MessageType::error,
-        (boost::format(boost::locale::translate(
-             "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%")) %
-         EscapeMarkdownASCIIPunctuation(e.GetCycle().front().GetName()) %
-         EscapeMarkdownASCIIPunctuation(e.GetCycle().back().GetName()) %
-         DescribeCycle(e.GetCycle()))
-            .str()));
+        fmt::format(
+            boost::locale::translate(
+                "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}")
+                .str(),
+            EscapeMarkdownASCIIPunctuation(e.GetCycle().front().GetName()),
+            EscapeMarkdownASCIIPunctuation(e.GetCycle().back().GetName()),
+            DescribeCycle(e.GetCycle()))));
     sortedPlugins.clear();
   } catch (UndefinedGroupError& e) {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(MessageType::error,
-                                   (boost::format(boost::locale::translate(
-                                        "The group \"%1%\" does not exist.")) %
-                                    e.GetGroupName())
-                                       .str()));
+    AppendMessage(PlainTextMessage(
+        MessageType::error,
+        fmt::format(
+            boost::locale::translate("The group \"{0}\" does not exist.").str(),
+            e.GetGroupName())));
     sortedPlugins.clear();
   } catch (const std::exception& e) {
     if (logger) {
@@ -808,21 +815,23 @@ void Game::LoadMetadata() {
     }
     AppendMessage(Message(
         MessageType::error,
-        (boost::format(boost::locale::translate(
-             "An error occurred while parsing the metadata list(s): "
-             "%1%.\n\nTry updating your masterlist to resolve the error. If "
-             "the error is with your user metadata, this probably happened "
-             "because an update to LOOT changed its metadata syntax support. "
-             "Your user metadata will have to be updated manually.\n\nTo do "
-             "so, use 'Open LOOT Data Folder' in LOOT's File menu to "
-             "open its data folder, then open your 'userlist.yaml' file in the "
-             "relevant game folder. You can then edit the metadata it contains "
-             "with reference to the documentation, which is accessible through "
-             "LOOT's main menu.\n\nYou can also seek support on LOOT's forum "
-             "thread, which is linked to on [LOOT's "
-             "website](https://loot.github.io/).")) %
-         EscapeMarkdownASCIIPunctuation(e.what()))
-            .str()));
+        fmt::format(
+            boost::locale::translate(
+                "An error occurred while parsing the metadata list(s): "
+                "{0}.\n\nTry updating your masterlist to resolve the error. If "
+                "the error is with your user metadata, this probably happened "
+                "because an update to LOOT changed its metadata syntax "
+                "support. Your user metadata will have to be updated "
+                "manually.\n\nTo do so, use 'Open LOOT Data Folder' in LOOT's "
+                "File menu to open its data folder, then open your "
+                "'userlist.yaml' file in the relevant game folder. You can "
+                "then edit the metadata it contains with reference to the "
+                "documentation, which is accessible through LOOT's main "
+                "menu.\n\nYou can also seek support on LOOT's forum thread, "
+                "which is linked to on [LOOT's "
+                "website](https://loot.github.io/).")
+                .str(),
+            EscapeMarkdownASCIIPunctuation(e.what()))));
   }
 }
 

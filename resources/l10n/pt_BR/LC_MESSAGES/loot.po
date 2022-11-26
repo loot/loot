@@ -20,12 +20,12 @@ msgstr ""
 
 #: src/gui/cef/query/query.h:49
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Oh não, algo de errado aconteceu! Isso geralmente acontece pois \"%1%\" está "
+"Oh não, algo de errado aconteceu! Isso geralmente acontece pois \"{0}\" está "
 "definido como somente leitura. Se for o caso, desmarque a opção de somente "
 "leitura e tente novamente. Se não for isso, você pode checar sua "
 "LOOTDebugLog.txt (você pode obtê-la pelo menu principal) para obter mais "
@@ -45,8 +45,8 @@ msgstr "Analisando, juntando e avaliando metadados..."
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\" contém uma condição que não pôde ser avaliada. Detalhes: %2%"
+msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
+msgstr "\"{0}\" contém uma condição que não pôde ser avaliada. Detalhes: {1}"
 
 #: src/gui/cef/query/types/metadata_query.h:254
 #: src/gui/cef/query/types/metadata_query.h:255
@@ -73,38 +73,38 @@ msgstr ""
 "Erro: --auto-sort foi dado mas nenhum parâmetro --game foi providenciado."
 
 #: src/gui/state/loot_state.cpp:127
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "Erro: Não foi possível criar o arquivo de configurações do LOOT. %1%"
+msgid "Error: Could not create LOOT settings file. {0}"
+msgstr "Erro: Não foi possível criar o arquivo de configurações do LOOT. {0}"
 
 #: src/gui/state/loot_state.cpp:144
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Erro: Falha na análise das configurações. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Erro: Falha na análise das configurações. {0}"
 
 #: src/gui/state/loot_state.cpp:203
-msgid "Error: Game-specific settings could not be initialised. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
-"Erro: configurações específicas de jogo não puderam ser inicializadas. %1%"
+"Erro: configurações específicas de jogo não puderam ser inicializadas. {0}"
 
 #: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr ""
-"Este plug-in requer que o \"%1%\" esteja instalado, mas não foi encontrado."
+"Este plug-in requer que o \"{0}\" esteja instalado, mas não foi encontrado."
 
 #: src/gui/state/game/game.cpp:191
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Este plug-in requer que o \"%1%\" esteja ativo, mas está inativo."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Este plug-in requer que o \"{0}\" esteja ativo, mas está inativo."
 
 #: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"%1%\", but both files are present."
-msgstr "Este plug-in é incompatível com \"%1%\", mas ambos estão presentes."
+msgid "This plugin is incompatible with \"{0}\", but both files are present."
+msgstr "Este plug-in é incompatível com \"{0}\", mas ambos estão presentes."
 
 #: src/gui/state/game/game.cpp:276
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Este plug-in é um mestre light e requer o plug-in não mestre \"%1%\". Isso "
+"Este plug-in é um mestre light e requer o plug-in não mestre \"{0}\". Isso "
 "pode causar problemas no jogo, e a organização vai falhar quando esse plug-"
 "in estiver instalado."
 
@@ -119,15 +119,15 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:313
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"Este plug-in tem uma versão de cabeçalho de %1%, que é menor que a versão "
-"mínima suportada pelo jogo que é %2%."
+"Este plug-in tem uma versão de cabeçalho de {0}, que é menor que a versão "
+"mínima suportada pelo jogo que é {1}."
 
 #: src/gui/state/game/game.cpp:331
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "Este plug-in pertence ao grupo \"%1%\", que não existe."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Este plug-in pertence ao grupo \"{0}\", que não existe."
 
 #: src/gui/state/game/game.cpp:400 src/gui/state/game/game.cpp:485
 msgid ""
@@ -138,12 +138,12 @@ msgstr ""
 "estar incorreta."
 
 #: src/gui/state/game/game.cpp:510
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Interação cíclica detectada entre \"%1%\" e \"%2%\": %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "Interação cíclica detectada entre \"{0}\" e \"{1}\": {2}"
 
 #: src/gui/state/game/game.cpp:522
-msgid "The group \"%1%\" does not exist."
-msgstr "O grupo \"%1%\" não existe."
+msgid "The group \"{0}\" does not exist."
+msgstr "O grupo \"{0}\" não existe."
 
 #: src/gui/state/game/game.cpp:558
 msgid "You have not sorted your load order this session."
@@ -171,7 +171,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:655
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -186,7 +186,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Um erro ocorreu durante a análise da(s) lista(s) de metadados: %1%.\n"
+"Um erro ocorreu durante a análise da(s) lista(s) de metadados: {0}.\n"
 "\n"
 "Tente atualizar sua lista mestre para resolver o problema. Se o erro é com "
 "seus metadados de usuário, isso provavelmente aconteceu por causa de uma "
@@ -203,44 +203,44 @@ msgstr ""
 "linkado no [Site do LOOT](https://loot.github.io/)."
 
 #: src/gui/state/game/helpers.cpp:88
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% recorde ITM"
-msgstr[1] "%1% recordes ITM"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} recorde ITM"
+msgstr[1] "{0} recordes ITM"
 
 #: src/gui/state/game/helpers.cpp:92
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% referência deletada"
-msgstr[1] "%1% referências deletadas"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} referência deletada"
+msgstr[1] "{0} referências deletadas"
 
 #: src/gui/state/game/helpers.cpp:98
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% navmesh deletada"
-msgstr[1] "%1% navmeshes deletada"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} navmesh deletada"
+msgstr[1] "{0} navmeshes deletada"
 
 #: src/gui/state/game/helpers.cpp:108
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% encontrou %2%, %3% e %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0} encontrou {1}, {2} e {3}."
 
 #: src/gui/state/game/helpers.cpp:114
-msgid "%1% found dirty edits."
-msgstr "%1% encontrou edições sujas."
+msgid "{0} found dirty edits."
+msgstr "{0} encontrou edições sujas."
 
 #: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
 #: src/gui/state/game/helpers.cpp:131
-msgid "%1% found %2% and %3%."
-msgstr "%1% encontrou %2% e %3%."
+msgid "{0} found {1} and {2}."
+msgstr "{0} encontrou {1} e {2}."
 
 #: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
 #: src/gui/state/game/helpers.cpp:141
-msgid "%1% found %2%."
-msgstr "%1% encontrou %2%."
+msgid "{0} found {1}."
+msgstr "{0} encontrou {1}."
 
 #: src/gui/state/game/helpers.cpp:222
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "O LOOT detectou que \"%1%\" é inválido e vai ignorá-lo."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "O LOOT detectou que \"{0}\" é inválido e vai ignorá-lo."
 
 #: src/gui/html/elements/editable-table.ts:436
 msgid "Add New Row"
@@ -263,12 +263,12 @@ msgid "No plugins are in this group."
 msgstr "Não há plug-ins nesse grupo."
 
 #: src/gui/html/elements/loot-groups-editor.ts:441
-msgid "Plugins in %s"
-msgstr "Plug-ins no %s"
+msgid "Plugins in {0}"
+msgstr "Plug-ins no {0}"
 
 #: src/gui/html/elements/loot-plugin-card.ts:341
-msgid "Verified clean by %s"
-msgstr "Limpo, verificado pelo %s"
+msgid "Verified clean by {0}"
+msgstr "Limpo, verificado pelo {0}"
 
 #: src/gui/html/js/events.ts:216
 msgid "Identifying conflicting plugins..."
@@ -279,8 +279,8 @@ msgid "Updating and parsing masterlist..."
 msgstr "Atualizando e analisando lista mestre..."
 
 #: src/gui/html/js/events.ts:334
-msgid "Masterlist updated to revision %s."
-msgstr "Lista mestre atualizada para a revisão %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Lista mestre atualizada para a revisão {0}."
 
 #: src/gui/html/js/events.ts:341
 msgid "No masterlist update was necessary."
@@ -291,8 +291,8 @@ msgid "Cyclic interaction detected"
 msgstr "Interação cíclica detectada"
 
 #: src/gui/html/js/events.ts:422
-msgid "Failed to sort plugins. Details: %s"
-msgstr "Falha ao organizar os plug-ins. Detalhes: %s"
+msgid "Failed to sort plugins. Details: {0}"
+msgstr "Falha ao organizar os plug-ins. Detalhes: {0}"
 
 #: src/gui/html/js/events.ts:458
 msgid "Sorting made no changes to the load order."
@@ -348,9 +348,9 @@ msgstr "A ordem de carregamento foi copiada para a área de transferência."
 
 #: src/gui/html/js/events.ts:636
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
 msgstr ""
-"Você ainda não aplicou ou cancelou sua %s. Você tem certeza que quer sair?"
+"Você ainda não aplicou ou cancelou sua {0}. Você tem certeza que quer sair?"
 
 #: src/gui/html/js/events.ts:640 src/gui/html/js/translateStaticText.ts:482
 msgid "Quit"
@@ -365,19 +365,19 @@ msgid "metadata edits"
 msgstr "edições de metadados"
 
 #: src/gui/html/js/events.ts:1069
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Os metadados para o \"%s\" foram copiado para a área de transferência."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Os metadados para o \"{0}\" foram copiado para a área de transferência."
 
 #: src/gui/html/js/events.ts:1090
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Você tem certeza que quer remover todos os metadados adicionados pelo "
-"usuário existentes do \"%s\"?"
+"usuário existentes do \"{0}\"?"
 
 #: src/gui/html/js/events.ts:1112
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Os metadados adicionados pelo usuário para o \"%s\" foram removidos."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Os metadados adicionados pelo usuário para o \"{0}\" foram removidos."
 
 #: src/gui/html/js/game.ts:139
 msgid "N/A"
@@ -397,8 +397,8 @@ msgstr ""
 "txt (você pode obtê-lo pelo menu inicial) para mais informações."
 
 #: src/gui/html/js/loot.ts:322
-msgid "A [new release](%s) of LOOT is available."
-msgstr "Uma [nova versão](%s) do LOOT está disponível."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "Uma [nova versão]({0}) do LOOT está disponível."
 
 #: src/gui/html/js/loot.ts:362
 msgid ""
@@ -887,10 +887,10 @@ msgstr "Dicas para Uso Inicial"
 
 #: src/gui/html/js/translateStaticText.ts:745
 msgid ""
-"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"This appears to be the first time you have run LOOT v{0}. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"Esta aparenta ser a primeira vez que você abriu o LOOT v%s. Aqui estão "
+"Esta aparenta ser a primeira vez que você abriu o LOOT v{0}. Aqui estão "
 "algumas dicas para te ajudar a começar a mexer na interface."
 
 #: src/gui/html/js/translateStaticText.ts:753
@@ -957,11 +957,11 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "O LOOT é grátis, mas se você quiser mostrar sua apreciação com dinheiro, as "
 "doações podem ser feitas ao WrinklyNinja (criador do LOOT e desenvolvedor "
-"principal) usando o %s."
+"principal) usando o {0}."
 
 #: src/gui/html/js/translateStaticText.ts:784
 msgid "OK"
@@ -972,8 +972,8 @@ msgid "About LOOT"
 msgstr "Sobre o LOOT"
 
 #: src/gui/html/js/translateStaticText.ts:793
-msgid "Version %s (build %s)"
-msgstr "Versão %s (compilação %s)"
+msgid "Version {0} (build {1})"
+msgstr "Versão {0} (compilação {1})"
 
 #: src/gui/html/js/translateStaticText.ts:798
 msgid ""
@@ -1049,63 +1049,63 @@ msgstr ""
 #~ msgid "Could not create LOOT folder for game. Details:"
 #~ msgstr "Não foi possível criar a pasta do LOOT para o jogo. Detalhes:"
 
-#~ msgid "Git operation failed. Error: %1%"
-#~ msgstr "A operação do Git falhou. Erro: %1%"
+#~ msgid "Git operation failed. Error: {0}"
+#~ msgstr "A operação do Git falhou. Erro: {0}"
 
 #~ msgid "Rolled back to the previous revision."
 #~ msgstr "Revertida para a versão anterior."
 
-#~ msgid "Unable to open \"%1%\" for CRC calculation."
-#~ msgstr "Falha ao abrir \"%1%\" para o cálculo de CRC."
+#~ msgid "Unable to open \"{0}\" for CRC calculation."
+#~ msgstr "Falha ao abrir \"{0}\" para o cálculo de CRC."
 
-#~ msgid "Failed to parse condition \"%1%\": %2%"
-#~ msgstr "Falha ao analisar condição \"%1%\": %2%"
+#~ msgid "Failed to parse condition \"{0}\": {1}"
+#~ msgstr "Falha ao analisar condição \"{0}\": {1}"
 
-#~ msgid "Failed to parse condition \"%1%\"."
-#~ msgstr "Falha ao analisar condição \"%1%\"."
+#~ msgid "Failed to parse condition \"{0}\"."
+#~ msgstr "Falha ao analisar condição \"{0}\"."
 
-#~ msgid "Cannot read \"%1%\". Details: %2%"
-#~ msgstr "Falha ao ler \"%1%\". Detalhes: %2%"
+#~ msgid "Cannot read \"{0}\". Details: {1}"
+#~ msgstr "Falha ao ler \"{0}\". Detalhes: {1}"
 
 #~ msgid ""
-#~ "Contains %1% ITM records, %2% UDR records and %3% deleted navmeshes. "
-#~ "Clean with %4%."
+#~ "Contains {0} ITM records, {1} UDR records and {2} deleted navmeshes. "
+#~ "Clean with {3}."
 #~ msgstr ""
-#~ "Contém %1% recorde(s) ITM, %2% recorde(s) UDR e %3% navmesh(es) "
-#~ "deletada(s). Limpe com o %4%."
+#~ "Contém {0} recorde(s) ITM, {1} recorde(s) UDR e {2} navmesh(es) "
+#~ "deletada(s). Limpe com o {3}."
 
-#~ msgid "Clean with %1%."
-#~ msgstr "Limpe com o %1%."
+#~ msgid "Clean with {0}."
+#~ msgstr "Limpe com o {0}."
 
-#~ msgid "Contains %1% UDR records and %2% deleted navmeshes. Clean with %3%."
+#~ msgid "Contains {0} UDR records and {1} deleted navmeshes. Clean with {2}."
 #~ msgstr ""
-#~ "Contém %1% recorde(s) UDR e %2% navmesh(es) deletada(s). Limpe com o %3%."
+#~ "Contém {0} recorde(s) UDR e {1} navmesh(es) deletada(s). Limpe com o {2}."
 
-#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
-#~ msgstr "Contém %1% navmesh(es) excluída(s). Limpe com o %2%."
+#~ msgid "Contains {0} deleted navmeshes. Clean with {1}."
+#~ msgstr "Contém {0} navmesh(es) excluída(s). Limpe com o {1}."
 
-#~ msgid "Contains %1% UDR records. Clean with %2%."
-#~ msgstr "Contém %1% recorde(s) UDR. Limpe com o %2%."
+#~ msgid "Contains {0} UDR records. Clean with {1}."
+#~ msgstr "Contém {0} recorde(s) UDR. Limpe com o {1}."
 
-#~ msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+#~ msgid "Contains {0} ITM records and {1} deleted navmeshes. Clean with {2}."
 #~ msgstr ""
-#~ "Contém %1% recorde(s) ITM e %2% navmesh(es) excluída(s). Limpe com o %3%."
+#~ "Contém {0} recorde(s) ITM e {1} navmesh(es) excluída(s). Limpe com o {2}."
 
-#~ msgid "Contains %1% ITM records. Clean with %2%."
-#~ msgstr "Contém %1% recorde(s) ITM. Limpe com o %2%."
+#~ msgid "Contains {0} ITM records. Clean with {1}."
+#~ msgstr "Contém {0} recorde(s) ITM. Limpe com o {1}."
 
-#~ msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-#~ msgstr "Contém %1% recorde(s) ITM e %2% recorde(s) UDR. Limpe com o %3%."
+#~ msgid "Contains {0} ITM records and {1} UDR records. Clean with {2}."
+#~ msgstr "Contém {0} recorde(s) ITM e {1} recorde(s) UDR. Limpe com o {2}."
 
-#~ msgid "Error: Games' settings parsing failed. %1%"
-#~ msgstr "Erro: Falha na análise na configuração dos jogos. %1%"
+#~ msgid "Error: Games' settings parsing failed. {0}"
+#~ msgstr "Erro: Falha na análise na configuração dos jogos. {0}"
 
 #~ msgid ""
 #~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: %1%"
+#~ "Details: {0}"
 #~ msgstr ""
 #~ "Uma mensagem global contém uma condição que não pôde ser analisada. "
-#~ "Detalhes: %1%"
+#~ "Detalhes: {0}"
 
 #~ msgid "Invalid file path:"
 #~ msgstr "Caminho de arquivo inválido:"
@@ -1116,8 +1116,8 @@ msgstr ""
 #~ msgid "Invalid regex string:"
 #~ msgstr "Linha de expressão regular inválida:"
 
-#~ msgid "Expected \"%1%\" at \"%2%\"."
-#~ msgstr "Esperado \"%1% \" em \"%2% \"."
+#~ msgid "Expected \"{0}\" at \"{1}\"."
+#~ msgstr "Esperado \"{0} \" em \"{1} \"."
 
 #~ msgid "Yes"
 #~ msgstr "Sim"
@@ -1272,11 +1272,11 @@ msgstr ""
 #~ msgid "BOSS: Edit Dirty Info"
 #~ msgstr "BOSS: Editar Informação Suja"
 
-#~ msgid "Masterlist update failed. Details: %1%"
-#~ msgstr "Atualização MasterList falhou. Detalhes: %1%"
+#~ msgid "Masterlist update failed. Details: {0}"
+#~ msgstr "Atualização MasterList falhou. Detalhes: {0}"
 
-#~ msgid "Masterlist parsing failed. Details: %1%"
-#~ msgstr "Análise MasterList falhou. Detalhes: %1%"
+#~ msgid "Masterlist parsing failed. Details: {0}"
+#~ msgstr "Análise MasterList falhou. Detalhes: {0}"
 
 #~ msgid "Unknown"
 #~ msgstr "Desconhecido"
@@ -1314,8 +1314,8 @@ msgstr ""
 #~ msgid "BOSS: Settings"
 #~ msgstr "BOSS: Configurações"
 
-#~ msgid "Error: \"%1%\" cannot be found."
-#~ msgstr "Erro: \"%1%\" não pode ser encontrado."
+#~ msgid "Error: \"{0}\" cannot be found."
+#~ msgstr "Erro: \"{0}\" não pode ser encontrado."
 
 #~ msgid "BOSS: Working..."
 #~ msgstr "BOSS: Funcionando..."
@@ -1323,8 +1323,8 @@ msgstr ""
 #~ msgid "BOSS working..."
 #~ msgstr "BOSS: Funcionando..."
 
-#~ msgid "Userlist parsing failed. Details: %1%"
-#~ msgstr "Lista de Usuários análise falhou. Detalhes: %1%"
+#~ msgid "Userlist parsing failed. Details: {0}"
+#~ msgstr "Lista de Usuários análise falhou. Detalhes: {0}"
 
 #~ msgid "Building plugin graph..."
 #~ msgstr "Construindo Gráfico Plugin..."
@@ -1339,23 +1339,23 @@ msgstr ""
 #~ "A ordem de carregamento exibido na guia Detalhes não foi aplicado como "
 #~ "classificação foi cancelado."
 
-#~ msgid "Failed to calculate the load order. Details: %1%"
-#~ msgstr "Falha ao calcular a ordem de carregamento. Detalhes: %1%"
+#~ msgid "Failed to calculate the load order. Details: {0}"
+#~ msgstr "Falha ao calcular a ordem de carregamento. Detalhes: {0}"
 
-#~ msgid "Error: %1%"
-#~ msgstr "Erro: %1%"
+#~ msgid "Error: {0}"
+#~ msgstr "Erro: {0}"
 
-#~ msgid "Error: Masterlist parsing failed. %1%"
-#~ msgstr "Erro: MasterList análise falhou. %1%"
+#~ msgid "Error: Masterlist parsing failed. {0}"
+#~ msgstr "Erro: MasterList análise falhou. {0}"
 
-#~ msgid "Error: Userlist parsing failed. %1%"
-#~ msgstr "Erro: Lista de Usuários análise falhou. %1%"
+#~ msgid "Error: Userlist parsing failed. {0}"
+#~ msgstr "Erro: Lista de Usuários análise falhou. {0}"
 
-#~ msgid "Error: Failed to get load order. %1%"
-#~ msgstr "Erro: Falha ao obter o fim da carga. %1%"
+#~ msgid "Error: Failed to get load order. {0}"
+#~ msgstr "Erro: Falha ao obter o fim da carga. {0}"
 
-#~ msgid "Error: Failed to set plugin timestamps. %1%"
-#~ msgstr "Erro: Falha ao definir timestamps plugin. %1%"
+#~ msgid "Error: Failed to set plugin timestamps. {0}"
+#~ msgstr "Erro: Falha ao definir timestamps plugin. {0}"
 
 #~ msgid "BOSS: Plugin Redate"
 #~ msgstr "BOSS: Relatar Plugin"
@@ -1534,8 +1534,8 @@ msgstr ""
 #~ msgid "Hide Bash Tag Suggestions"
 #~ msgstr "Esconder Sugestões de Marcação Bash"
 
-#~ msgid "%1% of %2% plugins hidden."
-#~ msgstr "%1% plugins escondidos do %2%."
+#~ msgid "{0} of {1} plugins hidden."
+#~ msgstr "{0} plugins escondidos do {1}."
 
-#~ msgid "%1% of %2% messages hidden."
-#~ msgstr "%1% mensagens escondidos do %2%."
+#~ msgid "{0} of {1} messages hidden."
+#~ msgstr "{0} mensagens escondidos do {1}."

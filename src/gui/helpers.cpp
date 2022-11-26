@@ -48,8 +48,9 @@
 using icu::UnicodeString;
 #endif
 
+#include <spdlog/fmt/fmt.h>
+
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
 
@@ -660,9 +661,7 @@ void CopyToClipboard(const std::string& text) {
 #endif
 }
 
-std::string crcToString(uint32_t crc) {
-  return (boost::format("%08X") % crc).str();
-}
+std::string crcToString(uint32_t crc) { return fmt::format("{:08X}", crc); }
 
 std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages) {
   if (messages.empty()) {
