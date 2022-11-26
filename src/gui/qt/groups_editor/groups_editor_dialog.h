@@ -65,6 +65,7 @@ private:
 
   std::vector<Group> initialUserGroups;
   std::vector<GroupNodePosition> initialNodePositions;
+  std::optional<std::string> selectedGroupName;
 
   void setupUi();
   void translateUi();
@@ -75,6 +76,7 @@ private:
   bool hasUnsavedChanges();
 
 private slots:
+  void on_graphView_groupRemoved(const QString name);
   void on_graphView_groupSelected(const QString &name);
   void on_groupNameInput_textChanged(const QString &text);
   void on_addGroupButton_clicked();

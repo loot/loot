@@ -248,6 +248,10 @@ bool GraphView::hasUnsavedLayoutChanges() const {
   return hasUnsavedLayoutChanges_;
 }
 
+void GraphView::handleGroupRemoved(const QString &name) {
+  emit groupRemoved(name);
+}
+
 void GraphView::handleGroupSelected(const QString &name) {
   emit groupSelected(name);
 }

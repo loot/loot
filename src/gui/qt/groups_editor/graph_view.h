@@ -59,6 +59,7 @@ public:
   std::vector<GroupNodePosition> getNodePositions() const;
   bool hasUnsavedLayoutChanges() const;
 
+  void handleGroupRemoved(const QString &name);
   void handleGroupSelected(const QString &name);
 
   QColor getMasterColor() const;
@@ -66,6 +67,7 @@ public:
   QColor getBackgroundColor() const;
 
 signals:
+  void groupRemoved(const QString name);
   void groupSelected(const QString &name);
 
 protected:

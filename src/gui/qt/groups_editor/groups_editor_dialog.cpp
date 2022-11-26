@@ -83,6 +83,7 @@ void GroupsEditorDialog::setGroups(
 
   initialUserGroups = userGroups;
   initialNodePositions = nodePositions;
+  selectedGroupName = std::nullopt;
 }
 
 std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
@@ -210,11 +211,24 @@ bool GroupsEditorDialog::hasUnsavedChanges() {
   return oldPositions != newPositions;
 }
 
+void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
+  // If the removed group is the currently selected group, it's no longer
+  // selected, so reset the associated state.
+  if (selectedGroupName.has_value() &&
+      selectedGroupName == name.toStdString()) {
+    selectedGroupName = std::nullopt;
+
+    groupPluginsTitle->setVisible(false);
+    groupPluginsList->setVisible(false);
+  }
+}
+
 void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
   groupPluginsList->clear();
   groupPluginsTitle->clear();
 
   auto groupName = name.toStdString();
+  selectedGroupName = groupName;
 
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
     auto pluginGroup = plugin.group.value_or(Group::DEFAULT_NAME);

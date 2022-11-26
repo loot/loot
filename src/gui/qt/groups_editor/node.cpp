@@ -215,8 +215,12 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       delete edge;
     }
 
+    auto graphicsWidget = qobject_cast<GraphView *>(scene()->parent());
+    graphicsWidget->handleGroupRemoved(textItem->text());
+
     scene()->removeItem(this->textItem);
     scene()->removeItem(this);
+
     delete this->textItem;
     delete this;
     // DO NOT use "this" past this line, except in the "else" block below.
