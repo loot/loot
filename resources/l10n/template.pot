@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.6\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-11-26 15:54+0000\n"
+"POT-Creation-Date: 2022-11-26 16:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -671,11 +671,11 @@ msgstr ""
 msgid "Group already exists!"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/group_tab.cpp:56
-msgid "%1 (Group does not exist)"
+#: src/gui/qt/plugin_editor/group_tab.cpp:60
+msgid "{0} (Group does not exist)"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/group_tab.cpp:97
+#: src/gui/qt/plugin_editor/group_tab.cpp:103
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
 msgid "Group"
 msgstr ""

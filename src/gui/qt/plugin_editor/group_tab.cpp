@@ -25,8 +25,11 @@
 
 #include "gui/qt/plugin_editor/group_tab.h"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <QtGui/QStandardItemModel>
 #include <QtWidgets/QFormLayout>
+#include <boost/locale.hpp>
 
 #include "gui/plugin_item.h"
 #include "gui/qt/helpers.h"
@@ -48,12 +51,15 @@ void GroupTab::initialiseInputs(const std::vector<std::string>& groups,
 
   nonUserGroupName = nonUserGroup.value_or(Group::DEFAULT_NAME);
 
-  const auto currentGroupName =
-      QString::fromStdString(userGroup.value_or(nonUserGroupName));
+  const auto currentGroupName = userGroup.value_or(nonUserGroupName);
 
-  auto groupIndex = groupComboBox->findText(currentGroupName);
+  auto groupIndex =
+      groupComboBox->findText(QString::fromStdString(currentGroupName));
   if (groupIndex < 0) {
-    groupComboBox->addItem(translate("%1 (Group does not exist)").arg(currentGroupName));
+    const auto text = QString::fromStdString(fmt::format(
+        boost::locale::translate("{0} (Group does not exist)").str(),
+        currentGroupName));
+    groupComboBox->addItem(text);
     groupIndex = groupComboBox->count() - 1;
   }
 

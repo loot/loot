@@ -738,8 +738,8 @@ msgid "Group already exists!"
 msgstr "Gruppe existiert bereits!"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:56
-msgid "%1 (Group does not exist)"
-msgstr "%1 (Gruppe existiert nicht)"
+msgid "{0} (Group does not exist)"
+msgstr "{0} (Gruppe existiert nicht)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:97
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
