@@ -78,12 +78,18 @@ void GroupsEditorDialog::setGroups(
     const std::vector<GroupNodePosition>& nodePositions) {
   graphView->setGroups(
       masterlistGroups, userGroups, installedPluginGroups, nodePositions);
+
+  // Reset UI elements.
   groupPluginsTitle->setVisible(false);
   groupPluginsList->setVisible(false);
+  pluginComboBox->setVisible(false);
+  addPluginButton->setVisible(false);
+  addPluginButton->setDisabled(true);
 
   initialUserGroups = userGroups;
   initialNodePositions = nodePositions;
   selectedGroupName = std::nullopt;
+  newPluginGroups.clear();
 }
 
 std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
@@ -92,6 +98,11 @@ std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
 
 std::vector<GroupNodePosition> GroupsEditorDialog::getNodePositions() const {
   return graphView->getNodePositions();
+}
+
+std::unordered_map<std::string, std::string>
+GroupsEditorDialog::getNewPluginGroups() const {
+  return newPluginGroups;
 }
 
 void GroupsEditorDialog::setupUi() {
@@ -108,6 +119,17 @@ void GroupsEditorDialog::setupUi() {
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
+  pluginComboBox->setVisible(false);
+
+  addPluginButton->setObjectName("addPluginButton");
+  addPluginButton->setVisible(false);
+  addPluginButton->setDisabled(true);
+
+  auto divider = new QFrame(this);
+  divider->setObjectName("divider");
+  divider->setFrameShape(QFrame::HLine);
+  divider->setFrameShadow(QFrame::Sunken);
+
   groupNameInput->setObjectName("groupNameInput");
 
   addGroupButton->setObjectName("addGroupButton");
@@ -122,7 +144,11 @@ void GroupsEditorDialog::setupUi() {
   auto dialogLayout = new QVBoxLayout();
   auto mainLayout = new QHBoxLayout();
   auto sidebarLayout = new QVBoxLayout();
+  auto newPluginFormLayout = new QFormLayout();
   auto formLayout = new QFormLayout();
+
+  newPluginFormLayout->addWidget(pluginComboBox);
+  newPluginFormLayout->addWidget(addPluginButton);
 
   formLayout->addRow(groupNameInputLabel, groupNameInput);
   formLayout->addWidget(addGroupButton);
@@ -130,6 +156,8 @@ void GroupsEditorDialog::setupUi() {
   sidebarLayout->addWidget(groupPluginsTitle);
   sidebarLayout->addWidget(groupPluginsList, 1);
   sidebarLayout->addSpacerItem(verticalSpacer);
+  sidebarLayout->addLayout(newPluginFormLayout);
+  sidebarLayout->addWidget(divider);
   sidebarLayout->addWidget(autoArrangeButton);
   sidebarLayout->addLayout(formLayout);
 
@@ -148,6 +176,8 @@ void GroupsEditorDialog::setupUi() {
 
 void GroupsEditorDialog::translateUi() {
   setWindowTitle(translate("Groups Editor"));
+
+  addPluginButton->setText(translate("Add plugin to group"));
 
   groupNameInputLabel->setText(translate("Group name"));
   addGroupButton->setText(translate("Add a new group"));
@@ -176,6 +206,11 @@ bool GroupsEditorDialog::askShouldDiscardChanges() {
 }
 
 bool GroupsEditorDialog::hasUnsavedChanges() {
+  // Check if any plugins' groups have changed.
+  if (!newPluginGroups.empty()) {
+    return true;
+  }
+
   // Check if the user groups have changed since they were initially set.
   // The order the groups are listed in doesn't matter, and neither does
   // the order of their load after groups.
@@ -211,30 +246,25 @@ bool GroupsEditorDialog::hasUnsavedChanges() {
   return oldPositions != newPositions;
 }
 
-void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
-  // If the removed group is the currently selected group, it's no longer
-  // selected, so reset the associated state.
-  if (selectedGroupName.has_value() &&
-      selectedGroupName == name.toStdString()) {
-    selectedGroupName = std::nullopt;
-
-    groupPluginsTitle->setVisible(false);
-    groupPluginsList->setVisible(false);
+void GroupsEditorDialog::refreshPluginLists() {
+  if (!selectedGroupName.has_value()) {
+    // Shouldn't be possible.
+    return;
   }
-}
 
-void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
   groupPluginsList->clear();
-  groupPluginsTitle->clear();
+  pluginComboBox->clear();
 
-  auto groupName = name.toStdString();
-  selectedGroupName = groupName;
+  const auto groupName = selectedGroupName.value();
 
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
-    auto pluginGroup = plugin.group.value_or(Group::DEFAULT_NAME);
+    const auto pluginGroup = getPluginGroup(plugin);
 
     if (pluginGroup == groupName) {
       groupPluginsList->addItem(QString::fromStdString(plugin.name));
+    } else {
+      // Add plugins that aren't in the current group to the combo box.
+      pluginComboBox->addItem(QString::fromStdString(plugin.name));
     }
   }
 
@@ -250,6 +280,71 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
     groupPluginsList->addItem(item);
   }
 
+  pluginComboBox->setEnabled(pluginComboBox->count() > 0);
+  addPluginButton->setEnabled(pluginComboBox->count() > 0);
+}
+
+const PluginItem* GroupsEditorDialog::getPluginItem(
+    const std::string& pluginName) const {
+  for (const auto& plugin : pluginItemModel->getPluginItems()) {
+    if (plugin.name == pluginName) {
+      return &plugin;
+    }
+  }
+
+  return nullptr;
+}
+
+const std::string GroupsEditorDialog::getPluginGroup(
+    const PluginItem& pluginItem) const {
+  auto newPluginGroupIt = newPluginGroups.find(pluginItem.name);
+
+  return newPluginGroupIt == newPluginGroups.end()
+             ? pluginItem.group.value_or(Group::DEFAULT_NAME)
+             : newPluginGroupIt->second;
+}
+
+bool GroupsEditorDialog::containsMoreThanOnePlugin(
+    const std::string& groupName) const {
+  size_t pluginsCount = 0;
+
+  for (const auto& plugin : pluginItemModel->getPluginItems()) {
+    const auto pluginGroup = getPluginGroup(plugin);
+
+    if (pluginGroup == groupName) {
+      if (pluginsCount == 1) {
+        return true;
+      }
+
+      pluginsCount += 1;
+    }
+  }
+
+  return false;
+}
+
+void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
+  // If the removed group is the currently selected group, it's no longer
+  // selected, so reset the associated state.
+  if (selectedGroupName.has_value() &&
+      selectedGroupName == name.toStdString()) {
+    selectedGroupName = std::nullopt;
+
+    groupPluginsTitle->setVisible(false);
+    groupPluginsList->setVisible(false);
+    pluginComboBox->setVisible(false);
+    addPluginButton->setVisible(false);
+  }
+}
+
+void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
+  groupPluginsTitle->clear();
+
+  auto groupName = name.toStdString();
+  selectedGroupName = groupName;
+
+  refreshPluginLists();
+
   auto titleText =
       fmt::format(boost::locale::translate("Plugins in {0}").str(), groupName);
 
@@ -257,11 +352,58 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
 
   groupPluginsTitle->setVisible(true);
   groupPluginsList->setVisible(true);
+  pluginComboBox->setVisible(true);
+  addPluginButton->setVisible(true);
 }
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
   addGroupButton->setDisabled(text.isEmpty());
   addGroupButton->setDefault(!text.isEmpty());
+}
+
+void GroupsEditorDialog::on_addPluginButton_clicked() {
+  if (!selectedGroupName.has_value()) {
+    // Shouldn't be possible.
+    return;
+  }
+
+  const auto pluginName = pluginComboBox->currentText().toStdString();
+  const auto groupName = selectedGroupName.value();
+
+  // Get the plugin's item.
+  const auto pluginItem = getPluginItem(pluginName);
+  if (!pluginItem) {
+    // Shouldn't be possible.
+    return;
+  }
+
+  // Get the plugin's current group.
+  const auto currentPluginGroup = getPluginGroup(*pluginItem);
+
+  // Count how many plugins are in the current group.
+  const auto containsOtherPlugins =
+      containsMoreThanOnePlugin(currentPluginGroup);
+
+  // Check the group against the plugin's saved group and just remove
+  // the plugin from the map if the two are equal, to prevent moving a
+  // plugin to a new group and back again from being treated as an unsaved
+  // change.
+  if (pluginItem->group == groupName) {
+    newPluginGroups.erase(pluginName);
+  } else {
+    // Store the plugin's new group.
+    newPluginGroups.insert_or_assign(pluginName, groupName);
+  }
+
+  // Refresh the group's plugin list.
+  refreshPluginLists();
+
+  // Update whether or not the plugin's old group still contains any plugins.
+  graphView->setGroupContainsInstalledPlugins(currentPluginGroup,
+                                              containsOtherPlugins);
+
+  // Update the plugin's new group to register it contains plugins.
+  graphView->setGroupContainsInstalledPlugins(groupName, true);
 }
 
 void GroupsEditorDialog::on_addGroupButton_clicked() {

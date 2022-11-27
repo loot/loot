@@ -209,6 +209,7 @@ private:
   void setFiltersState(PluginFiltersState &&state,
                        std::vector<std::string> &&conflictingPluginNames);
   void refreshSearch();
+  void refreshPluginRawData(const std::string &pluginName);
 
   bool hasErrorMessages() const;
 

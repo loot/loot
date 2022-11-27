@@ -186,6 +186,22 @@ bool GraphView::addGroup(const std::string &name) {
   return true;
 }
 
+void GraphView::setGroupContainsInstalledPlugins(
+    const std::string &name,
+    bool containsInstalledPlugins) {
+  const auto qName = QString::fromStdString(name);
+
+  for (const auto item : scene()->items()) {
+    auto node = qgraphicsitem_cast<Node *>(item);
+    if (!node || node->getName() != qName) {
+      continue;
+    }
+
+    node->setContainsInstalledPlugins(containsInstalledPlugins);
+    return;
+  }
+}
+
 void GraphView::autoLayout() {
   doLayout({});
 

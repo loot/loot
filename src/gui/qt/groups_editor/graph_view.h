@@ -52,6 +52,8 @@ public:
                  const std::vector<GroupNodePosition> &nodePositions);
 
   bool addGroup(const std::string &name);
+  void setGroupContainsInstalledPlugins(const std::string &name,
+                                        bool containsInstalledPlugins);
   void autoLayout();
   void registerUserLayoutChange();
 

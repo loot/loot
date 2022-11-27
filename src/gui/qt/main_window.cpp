@@ -971,6 +971,24 @@ void MainWindow::refreshSearch() {
   on_searchDialog_textChanged(searchDialog->getSearchText());
 }
 
+void MainWindow::refreshPluginRawData(const std::string& pluginName) {
+  for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
+    const auto index = pluginItemModel->index(i, 0);
+    const auto pluginItem = index.data(RawDataRole).value<PluginItem>();
+
+    if (pluginItem.name == pluginName) {
+      const auto plugin =
+          PluginItem(*state.GetCurrentGame().GetPlugin(pluginName),
+                     state.GetCurrentGame(),
+                     state.getSettings().getLanguage());
+
+      const auto indexData = QVariant::fromValue(plugin);
+      pluginItemModel->setData(index, indexData, RawDataRole);
+      break;
+    }
+  }
+}
+
 bool MainWindow::hasErrorMessages() const {
   const auto counters = GeneralInformationCounters(
       pluginItemModel->getGeneralMessages(), pluginItemModel->getPluginItems());
@@ -2103,20 +2121,7 @@ void MainWindow::on_pluginEditorWidget_accepted(PluginMetadata userMetadata) {
 
     pluginItemModel->setEditorPluginName(std::nullopt);
 
-    for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
-      const auto index = pluginItemModel->index(i, 0);
-      auto pluginItem = index.data(RawDataRole).value<PluginItem>();
-
-      if (pluginItem.name == pluginName) {
-        auto plugin = PluginItem(*state.GetCurrentGame().GetPlugin(pluginName),
-                                 state.GetCurrentGame(),
-                                 state.getSettings().getLanguage());
-
-        auto indexData = QVariant::fromValue(plugin);
-        pluginItemModel->setData(index, indexData, RawDataRole);
-        break;
-      }
-    }
+    refreshPluginRawData(pluginName);
 
     state.DecrementUnappliedChangeCounter();
 
@@ -2188,6 +2193,25 @@ void MainWindow::on_settingsDialog_accepted() {
 void MainWindow::on_groupsEditor_accepted() {
   try {
     state.GetCurrentGame().SetUserGroups(groupsEditor->getUserGroups());
+
+    for (const auto& [pluginName, groupName] :
+         groupsEditor->getNewPluginGroups()) {
+      // Update the plugin's group in user metadata.
+      auto userMetadata = state.GetCurrentGame().GetUserMetadata(pluginName);
+
+      if (userMetadata.has_value()) {
+        userMetadata.value().SetGroup(groupName);
+        state.GetCurrentGame().AddUserMetadata(userMetadata.value());
+      } else {
+        PluginMetadata metadata(pluginName);
+        metadata.SetGroup(groupName);
+        state.GetCurrentGame().AddUserMetadata(metadata);
+      }
+
+      // Now update the plugin in the UI's plugin item model.
+      refreshPluginRawData(pluginName);
+    }
+
     state.GetCurrentGame().SaveUserMetadata();
 
     SaveGroupNodePositions(state.GetCurrentGame().GroupNodePositionsPath(),

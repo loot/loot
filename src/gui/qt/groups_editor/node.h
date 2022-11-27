@@ -63,6 +63,8 @@ public:
   QString getName() const;
   bool isUserMetadata() const;
 
+  void setContainsInstalledPlugins(bool containsInstalledPlugins);
+
   void addEdge(Edge *edge);
   void removeEdge(Edge *edge);
   QList<Edge *> edges() const;
