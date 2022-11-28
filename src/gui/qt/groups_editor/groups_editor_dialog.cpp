@@ -85,6 +85,7 @@ void GroupsEditorDialog::setGroups(
   pluginComboBox->setVisible(false);
   addPluginButton->setVisible(false);
   addPluginButton->setDisabled(true);
+  renameGroupButton->setDisabled(true);
 
   initialUserGroups = userGroups;
   initialNodePositions = nodePositions;
@@ -135,6 +136,9 @@ void GroupsEditorDialog::setupUi() {
   addGroupButton->setObjectName("addGroupButton");
   addGroupButton->setDisabled(true);
 
+  renameGroupButton->setObjectName("renameGroupButton");
+  renameGroupButton->setDisabled(true);
+
   autoArrangeButton->setObjectName("autoArrangeButton");
 
   auto buttonBox = new QDialogButtonBox(
@@ -152,6 +156,7 @@ void GroupsEditorDialog::setupUi() {
 
   formLayout->addRow(groupNameInputLabel, groupNameInput);
   formLayout->addWidget(addGroupButton);
+  formLayout->addWidget(renameGroupButton);
 
   sidebarLayout->addWidget(groupPluginsTitle);
   sidebarLayout->addWidget(groupPluginsList, 1);
@@ -181,6 +186,7 @@ void GroupsEditorDialog::translateUi() {
 
   groupNameInputLabel->setText(translate("Group name"));
   addGroupButton->setText(translate("Add a new group"));
+  renameGroupButton->setText(translate("Rename current group"));
   autoArrangeButton->setText(translate("Auto arrange groups"));
 }
 
@@ -334,6 +340,8 @@ void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
     groupPluginsList->setVisible(false);
     pluginComboBox->setVisible(false);
     addPluginButton->setVisible(false);
+
+    renameGroupButton->setEnabled(false);
   }
 }
 
@@ -354,11 +362,24 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
   groupPluginsList->setVisible(true);
   pluginComboBox->setVisible(true);
   addPluginButton->setVisible(true);
+
+  // Only enable renaming groups for user groups.
+  const auto shouldEnableRenameGroup =
+      !groupNameInput->text().isEmpty() && graphView->isUserGroup(groupName);
+
+  renameGroupButton->setEnabled(shouldEnableRenameGroup);
 }
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
   addGroupButton->setDisabled(text.isEmpty());
   addGroupButton->setDefault(!text.isEmpty());
+
+  // Only enable renaming groups for user groups.
+  const auto shouldEnableRenameGroup =
+      !text.isEmpty() && selectedGroupName.has_value() &&
+      graphView->isUserGroup(selectedGroupName.value());
+
+  renameGroupButton->setEnabled(shouldEnableRenameGroup);
 }
 
 void GroupsEditorDialog::on_addPluginButton_clicked() {
@@ -419,6 +440,46 @@ void GroupsEditorDialog::on_addGroupButton_clicked() {
   }
 
   groupNameInput->clear();
+}
+
+void GroupsEditorDialog::on_renameGroupButton_clicked() {
+  if (groupNameInput->text().isEmpty() || !selectedGroupName.has_value() ||
+      !graphView->isUserGroup(selectedGroupName.value())) {
+    return;
+  }
+
+  const auto oldName = selectedGroupName.value();
+  const auto newName = groupNameInput->text().toStdString();
+
+  // Renaming groups isn't a built-in operation, instead:
+  // 1. Create a new group with the new name and and load after metadata from
+  //    the old group.
+  // 2. Replace any "load after" references to the old group in other groups'
+  //    metadata with the new group.
+  // 3. Update any plugins in the old group to be in the new group. This
+  //    includes any plugins that have already had their group changed.
+  // 4. Remove the old group.
+
+  // Renaming the group in the graph is equivalent to steps 1, 2 and 4.
+  graphView->renameGroup(oldName, newName);
+
+  // Update plugin groups (step 3).
+  for (const auto& plugin : pluginItemModel->getPluginItems()) {
+    const auto pluginGroup = getPluginGroup(plugin);
+
+    if (pluginGroup == oldName) {
+      newPluginGroups.insert_or_assign(plugin.name, newName);
+    }
+  }
+
+  // Update the stored selected group name.
+  selectedGroupName = newName;
+
+  // Update group name displayed above plugin list.
+  const auto titleText =
+      fmt::format(boost::locale::translate("Plugins in {0}").str(), newName);
+
+  groupPluginsTitle->setText(QString::fromStdString(titleText));
 }
 
 void GroupsEditorDialog::on_autoArrangeButton_clicked() {

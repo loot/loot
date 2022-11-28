@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.6\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-11-28 12:39+0000\n"
+"POT-Creation-Date: 2022-11-28 13:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -639,39 +639,44 @@ msgstr ""
 msgid "Find Next"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:178
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:183
 msgid "Groups Editor"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:180
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:185
 msgid "Add plugin to group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:182
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:187
 msgid "Group name"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:183
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:188
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:184
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:189
+msgid "Rename current group"
+msgstr ""
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:190
 msgid "Auto arrange groups"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:201
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:207
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:272
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:278
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:335
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:357
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:480
 msgid "Plugins in {0}"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:402
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:437
 msgid "Group already exists!"
 msgstr ""
 

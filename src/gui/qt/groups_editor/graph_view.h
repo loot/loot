@@ -52,6 +52,7 @@ public:
                  const std::vector<GroupNodePosition> &nodePositions);
 
   bool addGroup(const std::string &name);
+  void renameGroup(const std::string &oldName, const std::string &newName);
   void setGroupContainsInstalledPlugins(const std::string &name,
                                         bool containsInstalledPlugins);
   void autoLayout();
@@ -60,6 +61,7 @@ public:
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
   bool hasUnsavedLayoutChanges() const;
+  bool isUserGroup(const std::string &name) const;
 
   void handleGroupRemoved(const QString &name);
   void handleGroupSelected(const QString &name);

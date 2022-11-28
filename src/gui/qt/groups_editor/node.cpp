@@ -82,8 +82,13 @@ QString Node::getName() const { return textItem->text(); }
 
 bool Node::isUserMetadata() const { return isUserMetadata_; }
 
-void Node::setContainsInstalledPlugins(bool containsInstalledPlugins) {
-  this->containsInstalledPlugins = containsInstalledPlugins;
+void Node::setName(const QString &name) {
+  textItem->setText(name);
+  updateTextPos();
+}
+
+void Node::setContainsInstalledPlugins(bool contains) {
+  this->containsInstalledPlugins = contains;
 }
 
 void Node::addEdge(Edge *edge) {
