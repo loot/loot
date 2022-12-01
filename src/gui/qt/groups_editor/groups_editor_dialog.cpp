@@ -131,6 +131,11 @@ void GroupsEditorDialog::setupUi() {
   divider->setFrameShape(QFrame::HLine);
   divider->setFrameShadow(QFrame::Sunken);
 
+  auto divider2 = new QFrame(this);
+  divider2->setObjectName("divider");
+  divider2->setFrameShape(QFrame::HLine);
+  divider2->setFrameShadow(QFrame::Sunken);
+
   groupNameInput->setObjectName("groupNameInput");
 
   addGroupButton->setObjectName("addGroupButton");
@@ -148,11 +153,7 @@ void GroupsEditorDialog::setupUi() {
   auto dialogLayout = new QVBoxLayout();
   auto mainLayout = new QHBoxLayout();
   auto sidebarLayout = new QVBoxLayout();
-  auto newPluginFormLayout = new QFormLayout();
   auto formLayout = new QFormLayout();
-
-  newPluginFormLayout->addWidget(pluginComboBox);
-  newPluginFormLayout->addWidget(addPluginButton);
 
   formLayout->addRow(groupNameInputLabel, groupNameInput);
   formLayout->addWidget(addGroupButton);
@@ -161,8 +162,11 @@ void GroupsEditorDialog::setupUi() {
   sidebarLayout->addWidget(groupPluginsTitle);
   sidebarLayout->addWidget(groupPluginsList, 1);
   sidebarLayout->addSpacerItem(verticalSpacer);
-  sidebarLayout->addLayout(newPluginFormLayout);
+  sidebarLayout->addWidget(pluginComboBox);
+  sidebarLayout->addWidget(addPluginButton);
   sidebarLayout->addWidget(divider);
+  sidebarLayout->addLayout(formLayout);
+  sidebarLayout->addWidget(divider2);
   sidebarLayout->addWidget(autoArrangeButton);
   sidebarLayout->addLayout(formLayout);
 
