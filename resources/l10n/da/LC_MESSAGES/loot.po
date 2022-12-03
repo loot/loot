@@ -181,8 +181,8 @@ msgid "Unknown: No revision metadata found"
 msgstr "Ukendt: Ingen revisions-metadata fundet"
 
 #: src/gui/qt/helpers.cpp:362
-msgid "Invalid regular expression: %1%"
-msgstr "Ugyldigt regulært udtryk: %1%"
+msgid "Invalid regular expression: {0}"
+msgstr "Ugyldigt regulært udtryk: {0}"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:650
@@ -346,15 +346,15 @@ msgstr "Opdaterer og læser masterliste..."
 
 #: src/gui/qt/main_window.cpp:1040
 msgid ""
-"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
-"data has been backed up to: %2%"
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
 msgstr ""
-"Det ser ud til at være første gang, du har kørt LOOT v%1%. Dine nuværende "
-"LOOT-data er blevet sikkerhedskopieret til: %2%"
+"Det ser ud til at være første gang, du har kørt LOOT v{0}. Dine nuværende "
+"LOOT-data er blevet sikkerhedskopieret til: {1}"
 
 #: src/gui/qt/main_window.cpp:1047
-msgid "This appears to be the first time you have run LOOT v%1%."
-msgstr "Det ser ud til at være første gang, du har kørt LOOT v%1%."
+msgid "This appears to be the first time you have run LOOT v{0}."
+msgstr "Det ser ud til at være første gang, du har kørt LOOT v{0}."
 
 #: src/gui/qt/main_window.cpp:1053
 msgid "Here are some tips to help you get started with the interface."
@@ -389,10 +389,10 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "LOOT er gratis, men hvis du vil vise din taknemmelighed med nogle penge, kan "
-"der doneres til WrinklyNinja (LOOT's skaber og hoved udvikler) gennem %s."
+"der doneres til WrinklyNinja (LOOT's skaber og hoved udvikler) gennem {0}."
 
 #: src/gui/qt/main_window.cpp:1081
 msgid "First-Time Tips"
@@ -409,9 +409,9 @@ msgstr "sorteret indlæsningsrækkefølge"
 #: src/gui/qt/main_window.cpp:1119
 #, c-format
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
 msgstr ""
-"Du har ikke anvendt eller annulleret din %s. Er du sikker på du vil afslutte?"
+"Du har ikke anvendt eller annulleret din {0}. Er du sikker på du vil afslutte?"
 
 #: src/gui/qt/main_window.cpp:1230 src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
@@ -458,8 +458,8 @@ msgstr ""
 "til entydigt at indstille indlæsningsrækkefølgen til det, der vises af LOOT."
 
 #: src/gui/qt/main_window.cpp:1393
-msgid "Your LOOT data has been backed up to: %1%"
-msgstr "Dine LOOT-data er blevet sikkerhedskopieret til: %1%"
+msgid "Your LOOT data has been backed up to: {0}"
+msgstr "Dine LOOT-data er blevet sikkerhedskopieret til: {0}"
 
 #: src/gui/qt/main_window.cpp:1400
 msgid "No backup has been created as LOOT has no data to backup."
@@ -523,36 +523,36 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1647
 #, c-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Metadata for “%s” er blevet kopieret til udklipsholderen."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Metadata for “{0}” er blevet kopieret til udklipsholderen."
 
 #: src/gui/qt/main_window.cpp:1665
 #, c-format
-msgid "The plugin name \"%s\" has been copied to the clipboard."
-msgstr "Plugin-navnet \"%s\" er blevet kopieret til udklipsholderen."
+msgid "The plugin name \"{0}\" has been copied to the clipboard."
+msgstr "Plugin-navnet \"{0}\" er blevet kopieret til udklipsholderen."
 
 #: src/gui/qt/main_window.cpp:1684
 #, c-format
-msgid "The card content for \"%s\" has been copied to the clipboard."
-msgstr "Kortindholdet for \"%s\" er blevet kopieret til udklipsholderen."
+msgid "The card content for \"{0}\" has been copied to the clipboard."
+msgstr "Kortindholdet for \"{0}\" er blevet kopieret til udklipsholderen."
 
 #: src/gui/qt/main_window.cpp:1699
 #, c-format
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Er du sikker på du vil rydde al eksisterende brugertilføjet metadata fra "
-"“%s”?"
+"“{0}”?"
 
 #: src/gui/qt/main_window.cpp:1739
 #, c-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Det brugertilføjede metadata for “%s” blev ryddet."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Det brugertilføjede metadata for “{0}” blev ryddet."
 
 #: src/gui/qt/main_window.cpp:1790
 #, c-format
-msgid "Version %s (build %s)"
-msgstr "Version %s (byg %s)"
+msgid "Version {0} (build {1})"
+msgstr "Version {0} (byg {1})"
 
 #: src/gui/qt/main_window.cpp:1795
 msgid ""
@@ -586,13 +586,13 @@ msgstr "Masterlisteopdatering var ikke nødvendig."
 
 #: src/gui/qt/main_window.cpp:2320
 #, c-format
-msgid "Masterlist updated to revision %s."
-msgstr "Masterliste opdateret til udgave %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Masterliste opdateret til udgave {0}."
 
 #: src/gui/qt/main_window.cpp:2379
 #, c-format
-msgid "A [new release](%s) of LOOT is available."
-msgstr "En [ny version](%s) af LOOT er tilgængelig."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "En [ny version]({0}) af LOOT er tilgængelig."
 
 #: src/gui/qt/main_window.cpp:2395
 msgid ""
@@ -612,8 +612,8 @@ msgstr "Kilder:"
 
 #: src/gui/qt/plugin_card.cpp:171
 #, c-format
-msgid "Verified clean by %s"
-msgstr "Bekræftet rensning af %s"
+msgid "Verified clean by {0}"
+msgstr "Bekræftet rensning af {0}"
 
 #: src/gui/qt/plugin_card.cpp:286
 msgid "Active Plugin"
@@ -719,16 +719,16 @@ msgstr "Ingen plugins i denne gruppe."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:239
 #, c-format
-msgid "Plugins in %s"
-msgstr "Plugins i %s"
+msgid "Plugins in {0}"
+msgstr "Plugins i {0}"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:260
 msgid "Group already exists!"
 msgstr "Gruppe eksistere allerede!"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:56
-msgid "%1 (Group does not exist)"
-msgstr "%1 (Gruppen findes ikke)"
+msgid "{0} (Group does not exist)"
+msgstr "{0} (Gruppen findes ikke)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:97
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
@@ -980,12 +980,12 @@ msgstr "Tilføj nyt spil..."
 
 #: src/gui/query/types/apply_sort_query.h:96
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Åh nej, noget gik galt! Dette er normalt fordi \"%1%\" er indstillet til at "
+"Åh nej, noget gik galt! Dette er normalt fordi \"{0}\" er indstillet til at "
 "være skrivebeskyttet. Hvis dette er tilfældet, skal du ændre indstillingen "
 "og prøve igen. Hvis det ikke er tilfældet kan du kigge i din LOOTDebugLog."
 "txt (du kan finde den via hovedmenuen) for mere information."
@@ -1019,19 +1019,19 @@ msgstr ""
 "Fil-menuen) for at få flere oplysninger."
 
 #: src/gui/state/loot_state.cpp:166
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Fejl: Spilspecifikke indstillinger kunne ikke initialiseres. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Fejl: Spilspecifikke indstillinger kunne ikke initialiseres. {0}"
 
 #: src/gui/state/loot_state.cpp:190
-msgid "Error: Could not create LOOT data directory. %1%"
-msgstr "Fejl: Kunne ikke oprette LOOT's datamappe. %1%"
+msgid "Error: Could not create LOOT data directory. {0}"
+msgstr "Fejl: Kunne ikke oprette LOOT's datamappe. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
 #: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Fejl: Kunne ikke læse indstillinger. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Fejl: Kunne ikke læse indstillinger. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
@@ -1041,8 +1041,8 @@ msgstr ""
 "Fejl: --auto-sort blev bestået, men ingen --game parameter blev angivet."
 
 #: src/gui/state/loot_state.cpp:293
-msgid "Error: Could not create LOOT prelude directory. %1%"
-msgstr "Fejl: Kunne ikke oprette LOOT optakts-mappen. %1%"
+msgid "Error: Could not create LOOT prelude directory. {0}"
+msgstr "Fejl: Kunne ikke oprette LOOT optakts-mappen. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
@@ -1052,33 +1052,33 @@ msgstr ""
 "Fejl: --game-path blev bestået, men ingen --game parameter blev angivet."
 
 #: src/gui/state/loot_state.cpp:326
-msgid "Error: failed to override game path, the game %1% was not recognised."
-msgstr "Fejl: Kunne ikke overskrive spilstien, spillet %1% blev ikke genkendt."
+msgid "Error: failed to override game path, the game {0} was not recognised."
+msgstr "Fejl: Kunne ikke overskrive spilstien, spillet {0} blev ikke genkendt."
 
 #: src/gui/state/loot_state.cpp:360
-msgid "Error: The initial game could not be selected. %1%"
-msgstr "Fejl: Det indledende spil kunne ikke vælges. %1%"
+msgid "Error: The initial game could not be selected. {0}"
+msgstr "Fejl: Det indledende spil kunne ikke vælges. {0}"
 
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Pluginet kræver at “%1%” er installeret, men det mangler."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Pluginet kræver at “{0}” er installeret, men det mangler."
 
 #: src/gui/state/game/game.cpp:254
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Pluginet kræver at “%1%” er aktivt, men det er inaktivt."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Pluginet kræver at “{0}” er aktivt, men det er inaktivt."
 
 #: src/gui/state/game/game.cpp:324
-msgid "This plugin is incompatible with \"%1%\", but both are present."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
-"Dette plugin er ikke inkompatibelt med “%1%”, men begge filer er til stede."
+"Dette plugin er ikke inkompatibelt med “{0}”, men begge filer er til stede."
 
 #: src/gui/state/game/game.cpp:366
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Dette plugin er en let master og kræver ikke-master plugin \"%1%\". Dette "
+"Dette plugin er en let master og kræver ikke-master plugin \"{0}\". Dette "
 "kan forårsage problemer i spillet, og sortering vil mislykkes, mens dette "
 "plugin er installeret."
 
@@ -1096,23 +1096,23 @@ msgstr ""
 #. like file name and version.
 #: src/gui/state/game/game.cpp:406
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"Dette plugin har en header version på %1%, hvilket er mindre end spillets "
-"mindste understøttede header version på %2%."
+"Dette plugin har en header version på {0}, hvilket er mindre end spillets "
+"mindste understøttede header version på {1}."
 
 #: src/gui/state/game/game.cpp:424
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "Dette plugin tilhører gruppen \"%1%\", som ikke eksisterer."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Dette plugin tilhører gruppen \"{0}\", som ikke eksisterer."
 
 #: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: %1%."
+"LOOT for the following Bash Tags: {0}."
 msgstr ""
 "Dette plugin har en BashTags-fil, der vil tilsidesætte forslagene fra LOOT "
-"til følgende Bash-tags: %1%."
+"til følgende Bash-tags: {0}."
 
 #: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
 msgid ""
@@ -1123,12 +1123,12 @@ msgstr ""
 "kan være ukorrekt."
 
 #: src/gui/state/game/game.cpp:659
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Cyklisk interaktion registreret mellem \"%1%\" og \"%2%\": %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "Cyklisk interaktion registreret mellem \"{0}\" og \"{1}\": {2}"
 
 #: src/gui/state/game/game.cpp:671
-msgid "The group \"%1%\" does not exist."
-msgstr "Gruppen “%1%” findes ikke."
+msgid "The group \"{0}\" does not exist."
+msgstr "Gruppen “{0}” findes ikke."
 
 #: src/gui/state/game/game.cpp:707
 msgid "You have not sorted your load order this session."
@@ -1154,7 +1154,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:812
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -1169,7 +1169,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Der opstod en fejl under indlæsning af metadatalist(en/erne): %1%.\n"
+"Der opstod en fejl under indlæsning af metadatalist(en/erne): {0}.\n"
 "\n"
 "Prøv at opdatere din masterliste for at løse fejlen. Hvis fejlen skyldes "
 "dine bruger metadata, er dette sandsynligvis sket, fordi en opdatering af "
@@ -1185,44 +1185,44 @@ msgstr ""
 "hjemmeside](https://loot.github.io/)."
 
 #: src/gui/state/game/helpers.cpp:89
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% ITM-post"
-msgstr[1] "%1% ITM-poster"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} ITM-post"
+msgstr[1] "{0} ITM-poster"
 
 #: src/gui/state/game/helpers.cpp:96
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% slettet reference"
-msgstr[1] "%1% slettede referencer"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} slettet reference"
+msgstr[1] "{0} slettede referencer"
 
 #: src/gui/state/game/helpers.cpp:103
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% slettet navmesh"
-msgstr[1] "%1% slettede navmesh’er"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} slettet navmesh"
+msgstr[1] "{0} slettede navmesh’er"
 
 #: src/gui/state/game/helpers.cpp:113
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%1% fandt %2%, %3% og %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{0} fandt {1}, {2} og {3}."
 
 #: src/gui/state/game/helpers.cpp:119
-msgid "%1% found dirty edits."
-msgstr "%1% fandt beskidte ændringer/redigeringer."
+msgid "{0} found dirty edits."
+msgstr "{0} fandt beskidte ændringer/redigeringer."
 
 #: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
 #: src/gui/state/game/helpers.cpp:136
-msgid "%1% found %2% and %3%."
-msgstr "%1% fandt %2% og %3%."
+msgid "{0} found {1} and {2}."
+msgstr "{0} fandt {1} og {2}."
 
 #: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
 #: src/gui/state/game/helpers.cpp:146
-msgid "%1% found %2%."
-msgstr "%1% fandt %2%."
+msgid "{0} found {1}."
+msgstr "{0} fandt {1}."
 
 #: src/gui/state/game/helpers.cpp:232
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT har opdaget at “{0}” er ugyldigt og ignorerer det nu."
 
 #
 # File: src/gui/html/js/translateStaticText.js, line: 289
@@ -1316,8 +1316,8 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 # File: src/gui/html/js/events.js, line: 204
 # File: src/gui/html/js/events.js, line: 204
 #, javascript-format
-#~ msgid "Failed to sort plugins. Details: %s"
-#~ msgstr "Kunne ikke sortere plugins. Detaljer: %s"
+#~ msgid "Failed to sort plugins. Details: {0}"
+#~ msgstr "Kunne ikke sortere plugins. Detaljer: {0}"
 
 #
 # File: src/gui/html/js/translateStaticText.js, line: 369
@@ -1431,41 +1431,41 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 #
 #
 #~ msgid ""
-#~ "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-#~ msgstr "“%1%” indeholder en betingelse der ikke kunne løses. Detaljer: %2%"
+#~ "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
+#~ msgstr "“{0}” indeholder en betingelse der ikke kunne løses. Detaljer: {1}"
 
 #
 #
-#~ msgid "%1% found %2% ITM records and %3% deleted navmeshes."
-#~ msgstr "%1% fandt %2% ITM‐poster og %3% slettede navmesh’er."
+#~ msgid "{0} found {1} ITM records and {2} deleted navmeshes."
+#~ msgstr "{0} fandt {1} ITM‐poster og {2} slettede navmesh’er."
 
 #
 #
-#~ msgid "%1% found %2% ITM records and %3% deleted references."
-#~ msgstr "%1% fandt %2% ITM‐poster og %3% slettede referencer."
+#~ msgid "{0} found {1} ITM records and {2} deleted references."
+#~ msgstr "{0} fandt {1} ITM‐poster og {2} slettede referencer."
 
 #
 #
 #~ msgid ""
-#~ "%1% found %2% ITM records, %3% deleted references and %4% deleted "
+#~ "{0} found {1} ITM records, {2} deleted references and {3} deleted "
 #~ "navmeshes."
 #~ msgstr ""
-#~ "%1% fandt %2% ITM‐poster, %3% slettede referencer og %4% slettede "
+#~ "{0} fandt {1} ITM‐poster, {2} slettede referencer og {3} slettede "
 #~ "navmesh’er."
 
 #
 #
-#~ msgid "%1% found %2% deleted references and %3% deleted navmeshes."
-#~ msgstr "%1% fandt %2% slettede referencer og %3% slettede navmesh’er."
+#~ msgid "{0} found {1} deleted references and {2} deleted navmeshes."
+#~ msgstr "{0} fandt {1} slettede referencer og {2} slettede navmesh’er."
 
 #
 #
 #~ msgid ""
 #~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: %1%"
+#~ "Details: {0}"
 #~ msgstr ""
 #~ "En global besked indeholder en betingelse der ikke kunne evalueres. "
-#~ "Detaljer: %1%"
+#~ "Detaljer: {0}"
 
 #
 #
@@ -1485,11 +1485,11 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 #
 #
 #~ msgid ""
-#~ "An error occurred while parsing the masterlist: %1%. This probably "
+#~ "An error occurred while parsing the masterlist: {0}. This probably "
 #~ "happened because an update to LOOT changed its metadata syntax support. "
 #~ "Try updating your masterlist to resolve the error."
 #~ msgstr ""
-#~ "Kunne ikke analysere masterlisten: %1%. Dette skete formodentlig fordi en "
+#~ "Kunne ikke analysere masterlisten: {0}. Dette skete formodentlig fordi en "
 #~ "LOOT‐opdatering ændrede dets understøttede metadatasyntaks. Prøv at "
 #~ "opdatere masterlisten for at løse fejlen."
 
@@ -1497,10 +1497,10 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 #
 #~ msgid ""
 #~ "An error occurred while trying to access the local masterlist repository. "
-#~ "If this error happens again, try deleting the \".git\" folder in %1%."
+#~ "If this error happens again, try deleting the \".git\" folder in {0}."
 #~ msgstr ""
 #~ "Der opstod en fejl i forsøg på at tilgå det lokale masterliste‐lager. "
-#~ "Prøv at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
+#~ "Prøv at slette “.git”‐mappen i {0} hvis fejlen opstår igen."
 
 #
 #
@@ -1515,19 +1515,19 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 #~ msgid ""
 #~ "An error occurred while trying to read information on the updated "
 #~ "masterlist. If this error happens again, try deleting the \".git\" folder "
-#~ "in %1%."
+#~ "in {0}."
 #~ msgstr ""
 #~ "Der opstod en fejl i forsøg på at læse information om den opdaterede "
-#~ "masterliste. Prøv at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
+#~ "masterliste. Prøv at slette “.git”‐mappen i {0} hvis fejlen opstår igen."
 
 #
 #
 #~ msgid ""
 #~ "An error occurred while trying to read the local masterlist's version. If "
-#~ "this error happens again, try deleting the \".git\" folder in %1%."
+#~ "this error happens again, try deleting the \".git\" folder in {0}."
 #~ msgstr ""
 #~ "Der opstod en fejl i forsøg på at læse versionen af den lokale "
-#~ "masterliste. Prøv at slette “.git”‐mappen i %1% hvis fejlen opstår igen."
+#~ "masterliste. Prøv at slette “.git”‐mappen i {0} hvis fejlen opstår igen."
 
 #
 #
@@ -1551,8 +1551,8 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Cannot read \"%1%\". Details: %2%"
-#~ msgstr "Kan ikke læse “%1%”. Detaljer: %2%"
+#~ msgid "Cannot read \"{0}\". Details: {1}"
+#~ msgstr "Kan ikke læse “{0}”. Detaljer: {1}"
 
 #
 #
@@ -1561,33 +1561,33 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Clean with %1%."
-#~ msgstr "Rengør med %1%."
+#~ msgid "Clean with {0}."
+#~ msgstr "Rengør med {0}."
 
 #
 #
-#~ msgid "Contains %1% ITM records and %2% UDR records. Clean with %3%."
-#~ msgstr "Indeholder %1% ITM-poster og %2% UDR-poster. Rengør med %3%."
+#~ msgid "Contains {0} ITM records and {1} UDR records. Clean with {2}."
+#~ msgstr "Indeholder {0} ITM-poster og {1} UDR-poster. Rengør med {2}."
 
 #
 #
-#~ msgid "Contains %1% ITM records. Clean with %2%."
-#~ msgstr "Indeholder %1% ITM‐poster. Rengør med %2%."
+#~ msgid "Contains {0} ITM records. Clean with {1}."
+#~ msgstr "Indeholder {0} ITM‐poster. Rengør med {1}."
 
 #
 #
-#~ msgid "Contains %1% UDR records. Clean with %2%."
-#~ msgstr "Indeholder %1% UDR-poster. Rengør med %2%."
+#~ msgid "Contains {0} UDR records. Clean with {1}."
+#~ msgstr "Indeholder {0} UDR-poster. Rengør med {1}."
 
 #
 #
-#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
-#~ msgstr "Indeholder %1% slettede navmesh’er. Rengør med %2%."
+#~ msgid "Contains {0} deleted navmeshes. Clean with {1}."
+#~ msgstr "Indeholder {0} slettede navmesh’er. Rengør med {1}."
 
 #
 #
-#~ msgid "Contains %1% deleted references. Clean with %2%."
-#~ msgstr "Indeholder %1% slettede referencer. Rengør med %2%."
+#~ msgid "Contains {0} deleted references. Clean with {1}."
+#~ msgstr "Indeholder {0} slettede referencer. Rengør med {1}."
 
 #
 #
@@ -1611,28 +1611,28 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Error: Games' settings parsing failed. %1%"
-#~ msgstr "Fejl: Kunne ikke analysere spillenes indstillinger. %1%"
+#~ msgid "Error: Games' settings parsing failed. {0}"
+#~ msgstr "Fejl: Kunne ikke analysere spillenes indstillinger. {0}"
 
 #
 #
-#~ msgid "Expected \"%1%\" at \"%2%\"."
-#~ msgstr "Forventede “%1%” ved “%2%”."
+#~ msgid "Expected \"{0}\" at \"{1}\"."
+#~ msgstr "Forventede “{0}” ved “{1}”."
 
 #
 #
-#~ msgid "Failed to apply plugin metadata. Details: %1%"
-#~ msgstr "Kunne ikke anvende plugin‐metadata. Detaljer: %1%"
+#~ msgid "Failed to apply plugin metadata. Details: {0}"
+#~ msgstr "Kunne ikke anvende plugin‐metadata. Detaljer: {0}"
 
 #
 #
-#~ msgid "Failed to change game. Details: %1%"
-#~ msgstr "Kunne ikke ændre spil. Detaljer: %1%"
+#~ msgid "Failed to change game. Details: {0}"
+#~ msgstr "Kunne ikke ændre spil. Detaljer: {0}"
 
 #
 #
-#~ msgid "Failed to copy plugin metadata. Details: %1%"
-#~ msgstr "Kunne ikke kopiere plugin‐metadata: Detaljer: %1%"
+#~ msgid "Failed to copy plugin metadata. Details: {0}"
+#~ msgstr "Kunne ikke kopiere plugin‐metadata: Detaljer: {0}"
 
 #
 #
@@ -1641,8 +1641,8 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Failed to get game data. Details: %1%"
-#~ msgstr "Kunne ikke hente spildata. Detaljer: %1%"
+#~ msgid "Failed to get game data. Details: {0}"
+#~ msgstr "Kunne ikke hente spildata. Detaljer: {0}"
 
 #
 #
@@ -1651,22 +1651,22 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Failed to parse condition \"%1%\": expected \"%2%\" at \"%3%\"."
+#~ msgid "Failed to parse condition \"{0}\": expected \"{1}\" at \"{2}\"."
 #~ msgstr ""
-#~ "Kunne ikke analysere betingelsen “%1%”: forventedede “%2%” ved “%3%”."
+#~ "Kunne ikke analysere betingelsen “{0}”: forventedede “{1}” ved “{2}”."
 
 #
 #
 #~ msgid ""
-#~ "Failed to parse condition \"%1%\": only partially matched expected syntax."
+#~ "Failed to parse condition \"{0}\": only partially matched expected syntax."
 #~ msgstr ""
-#~ "Kunne ikke analysere betingelsen “%1%”: passede kun delvist på den "
+#~ "Kunne ikke analysere betingelsen “{0}”: passede kun delvist på den "
 #~ "forventede syntaks."
 
 #
 #
-#~ msgid "Failed to update the masterlist. Details: %1%"
-#~ msgstr "Kunne ikke opdatere masterlisten. Detaljer: %1%"
+#~ msgid "Failed to update the masterlist. Details: {0}"
+#~ msgstr "Kunne ikke opdatere masterlisten. Detaljer: {0}"
 
 #
 #
@@ -1685,8 +1685,8 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Git operation failed. Error: %1%"
-#~ msgstr "Git‐handling fejlede. Fejl: %1%"
+#~ msgid "Git operation failed. Error: {0}"
+#~ msgstr "Git‐handling fejlede. Fejl: {0}"
 
 #
 #
@@ -1839,8 +1839,8 @@ msgstr "LOOT har opdaget at “%1%” er ugyldigt og ignorerer det nu."
 
 #
 #
-#~ msgid "Unable to open \"%1%\" for CRC calculation."
-#~ msgstr "Kan ikke åbne “%1%” til beregning af CRC."
+#~ msgid "Unable to open \"{0}\" for CRC calculation."
+#~ msgstr "Kan ikke åbne “{0}” til beregning af CRC."
 
 #
 #

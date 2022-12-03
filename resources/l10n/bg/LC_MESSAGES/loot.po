@@ -176,8 +176,8 @@ msgid "Unknown: No revision metadata found"
 msgstr "Внимание: Ревизията на метаданните не е намерена"
 
 #: src/gui/qt/helpers.cpp:362
-msgid "Invalid regular expression: %1%"
-msgstr "Невалиден регулярен израз: %1%"
+msgid "Invalid regular expression: {0}"
+msgstr "Невалиден регулярен израз: {0}"
 
 #. translators: This string is also an action in the Game menu.
 #: src/gui/qt/main_window.cpp:650
@@ -341,15 +341,15 @@ msgstr "Обновяване и разбор на основния списък.
 
 #: src/gui/qt/main_window.cpp:1040
 msgid ""
-"This appears to be the first time you have run LOOT v%1%. Your current LOOT "
-"data has been backed up to: %2%"
+"This appears to be the first time you have run LOOT v{0}. Your current LOOT "
+"data has been backed up to: {1}"
 msgstr ""
-"Изглежда това е първото стартиране на „LOOT“ в%1%. Текущите данни на „LOOT“ "
-"са съхранени в: %2%"
+"Изглежда това е първото стартиране на „LOOT“ в{0}. Текущите данни на „LOOT“ "
+"са съхранени в: {1}"
 
 #: src/gui/qt/main_window.cpp:1047
-msgid "This appears to be the first time you have run LOOT v%1%."
-msgstr "Изглежда това е първото стартиране на „LOOT“ в%1%."
+msgid "This appears to be the first time you have run LOOT v{0}."
+msgstr "Изглежда това е първото стартиране на „LOOT“ в{0}."
 
 #: src/gui/qt/main_window.cpp:1053
 msgid "Here are some tips to help you get started with the interface."
@@ -385,10 +385,10 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
 "„LOOT“ е безплатен, но ако искате да направите дарение, може да подкрепите "
-"WrinklyNinja (той е създател и главен разработчик на „LOOT“) чрез %s."
+"WrinklyNinja (той е създател и главен разработчик на „LOOT“) чрез {0}."
 
 #: src/gui/qt/main_window.cpp:1081
 msgid "First-Time Tips"
@@ -405,9 +405,9 @@ msgstr "сортирания ред за зареждане"
 #: src/gui/qt/main_window.cpp:1119
 #, c-format
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
 msgstr ""
-"Все още не сте приложили или отказали %s. Сигурни ли сте, че искате да "
+"Все още не сте приложили или отказали {0}. Сигурни ли сте, че искате да "
 "излезете?"
 
 #: src/gui/qt/main_window.cpp:1230 src/gui/qt/plugin_editor/table_tabs.cpp:396
@@ -455,8 +455,8 @@ msgstr ""
 "текущия ред за зареждане."
 
 #: src/gui/qt/main_window.cpp:1393
-msgid "Your LOOT data has been backed up to: %1%"
-msgstr "Данните на „LOOT“ са съхранени в: %1%"
+msgid "Your LOOT data has been backed up to: {0}"
+msgstr "Данните на „LOOT“ са съхранени в: {0}"
 
 #: src/gui/qt/main_window.cpp:1400
 msgid "No backup has been created as LOOT has no data to backup."
@@ -518,36 +518,36 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1647
 #, c-format
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "Метаданните на „%s“ бяха копирани в клипборда."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "Метаданните на „{0}“ бяха копирани в клипборда."
 
 #: src/gui/qt/main_window.cpp:1665
 #, c-format
-msgid "The plugin name \"%s\" has been copied to the clipboard."
-msgstr "Името на приставката „%s“ е копирано в клипборда."
+msgid "The plugin name \"{0}\" has been copied to the clipboard."
+msgstr "Името на приставката „{0}“ е копирано в клипборда."
 
 #: src/gui/qt/main_window.cpp:1684
 #, c-format
-msgid "The card content for \"%s\" has been copied to the clipboard."
-msgstr "Съдържанието на „%s“ е копирано в клипборда."
+msgid "The card content for \"{0}\" has been copied to the clipboard."
+msgstr "Съдържанието на „{0}“ е копирано в клипборда."
 
 #: src/gui/qt/main_window.cpp:1699
 #, c-format
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Сигурни ли сте, че искате да изчистите съществуващите добавени метаданни от "
-"„%s“?"
+"„{0}“?"
 
 #: src/gui/qt/main_window.cpp:1739
 #, c-format
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "Добавените метаданни на „%s“ бяха изчистени."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "Добавените метаданни на „{0}“ бяха изчистени."
 
 #: src/gui/qt/main_window.cpp:1790
 #, c-format
-msgid "Version %s (build %s)"
-msgstr "Версия %s (Компилация %s)"
+msgid "Version {0} (build {1})"
+msgstr "Версия {0} (Компилация {1})"
 
 #: src/gui/qt/main_window.cpp:1795
 msgid ""
@@ -580,13 +580,13 @@ msgstr "Не беше необходимо обновяване на основ�
 
 #: src/gui/qt/main_window.cpp:2320
 #, c-format
-msgid "Masterlist updated to revision %s."
-msgstr "Основният списък е обновен до ревизия %s."
+msgid "Masterlist updated to revision {0}."
+msgstr "Основният списък е обновен до ревизия {0}."
 
 #: src/gui/qt/main_window.cpp:2379
 #, c-format
-msgid "A [new release](%s) of LOOT is available."
-msgstr "Налична е [нова версия](%s) на „LOOT“."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "Налична е [нова версия]({0}) на „LOOT“."
 
 #: src/gui/qt/main_window.cpp:2395
 msgid ""
@@ -606,8 +606,8 @@ msgstr "Източници:"
 
 #: src/gui/qt/plugin_card.cpp:171
 #, c-format
-msgid "Verified clean by %s"
-msgstr "Според „%s“, приставката е чиста"
+msgid "Verified clean by {0}"
+msgstr "Според „{0}“, приставката е чиста"
 
 #: src/gui/qt/plugin_card.cpp:286
 msgid "Active Plugin"
@@ -713,16 +713,16 @@ msgstr "В тази група няма приставки."
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:239
 #, c-format
-msgid "Plugins in %s"
-msgstr "Приставки в „%s“"
+msgid "Plugins in {0}"
+msgstr "Приставки в „{0}“"
 
 #: src/gui/qt/groups_editor/groups_editor_dialog.cpp:260
 msgid "Group already exists!"
 msgstr "Групата вече съществува!"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:56
-msgid "%1 (Group does not exist)"
-msgstr "„%1“ (групата не съществува)"
+msgid "{0} (Group does not exist)"
+msgstr "„{0}“ (групата не съществува)"
 
 #: src/gui/qt/plugin_editor/group_tab.cpp:97
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
@@ -975,12 +975,12 @@ msgstr "Добави нова игра..."
 
 #: src/gui/query/types/apply_sort_query.h:96
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"Нещо се обърка! Възможно е „%1%“ да е включен в режим само за четене. Ако е "
+"Нещо се обърка! Възможно е „{0}“ да е включен в режим само за четене. Ако е "
 "така, изключете го и опитайте отново. Ако причината е друга, вижте "
 "„LOOTDebugLog.txt“ (през главното меню) за повече информация."
 
@@ -1013,19 +1013,19 @@ msgstr ""
 "информация."
 
 #: src/gui/state/loot_state.cpp:166
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "Грешка: Настройките на играта не могат да бъдат инициализирани. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "Грешка: Настройките на играта не могат да бъдат инициализирани. {0}"
 
 #: src/gui/state/loot_state.cpp:190
-msgid "Error: Could not create LOOT data directory. %1%"
-msgstr "Грешка: Папката с данните на „LOOT“ не може да бъде създадена. %1%"
+msgid "Error: Could not create LOOT data directory. {0}"
+msgstr "Грешка: Папката с данните на „LOOT“ не може да бъде създадена. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
 #: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
-msgid "Error: Settings parsing failed. %1%"
-msgstr "Грешка: Разборът на настройките е неуспешен. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "Грешка: Разборът на настройките е неуспешен. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
@@ -1034,8 +1034,8 @@ msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr "Грешка: Параметърът --auto-sort е отчетен, но --game не е намерен."
 
 #: src/gui/state/loot_state.cpp:293
-msgid "Error: Could not create LOOT prelude directory. %1%"
-msgstr "Грешка: Папката на каталога на „LOOT“ не може да бъде създадена. %1%"
+msgid "Error: Could not create LOOT prelude directory. {0}"
+msgstr "Грешка: Папката на каталога на „LOOT“ не може да бъде създадена. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
@@ -1044,32 +1044,32 @@ msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr "Грешка: Параметърът --game-path е отчетен, но --game не е намерен."
 
 #: src/gui/state/loot_state.cpp:326
-msgid "Error: failed to override game path, the game %1% was not recognised."
-msgstr "Грешка: Местоположението на играта „%1%“ не е разпознато."
+msgid "Error: failed to override game path, the game {0} was not recognised."
+msgstr "Грешка: Местоположението на играта „{0}“ не е разпознато."
 
 #: src/gui/state/loot_state.cpp:360
-msgid "Error: The initial game could not be selected. %1%"
-msgstr "Грешка: Играта по подразбиране не може да бъде избрана. %1%"
+msgid "Error: The initial game could not be selected. {0}"
+msgstr "Грешка: Играта по подразбиране не може да бъде избрана. {0}"
 
 #: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "Тази приставка изисква „%1%“ да бъде инсталирана, но тя липсва."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "Тази приставка изисква „{0}“ да бъде инсталирана, но тя липсва."
 
 #: src/gui/state/game/game.cpp:254
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "Тази приставка изисква „%1%“ да бъде активна, но тя е неактивна."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "Тази приставка изисква „{0}“ да бъде активна, но тя е неактивна."
 
 #: src/gui/state/game/game.cpp:324
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "Тази приставка не е съвместима с „%1%“, но и двете са налични."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "Тази приставка не е съвместима с „{0}“, но и двете са налични."
 
 #: src/gui/state/game/game.cpp:366
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"Тази приставка се нуждае от „%1%“. Това може да причини проблеми в играта и "
+"Тази приставка се нуждае от „{0}“. Това може да причини проблеми в играта и "
 "сортирането няма да е успешно, докато тя е инсталирана."
 
 #: src/gui/state/game/game.cpp:386
@@ -1086,21 +1086,21 @@ msgstr ""
 #. like file name and version.
 #: src/gui/state/game/game.cpp:406
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"Тази приставка има заглавка с версия %1%, която е по-ниска от минималната "
-"поддържана версия на заглавката, която е %2%."
+"Тази приставка има заглавка с версия {0}, която е по-ниска от минималната "
+"поддържана версия на заглавката, която е {1}."
 
 #: src/gui/state/game/game.cpp:424
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "Тази приставка принадлежи към групата „%1%“, която не съществува."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "Тази приставка принадлежи към групата „{0}“, която не съществува."
 
 #: src/gui/state/game/game.cpp:448
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
-"LOOT for the following Bash Tags: %1%."
-msgstr "Тази приставка има етикети на „Bash“, които ще променят: %1%."
+"LOOT for the following Bash Tags: {0}."
+msgstr "Тази приставка има етикети на „Bash“, които ще променят: {0}."
 
 #: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
 msgid ""
@@ -1111,12 +1111,12 @@ msgstr ""
 "може да е невалидна."
 
 #: src/gui/state/game/game.cpp:659
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "Установено е циклично взаимодействие между „%1%“ и „%2%“: %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "Установено е циклично взаимодействие между „{0}“ и „{1}“: {2}"
 
 #: src/gui/state/game/game.cpp:671
-msgid "The group \"%1%\" does not exist."
-msgstr "Групата „%1%“ не съществува."
+msgid "The group \"{0}\" does not exist."
+msgstr "Групата „{0}“ не съществува."
 
 #: src/gui/state/game/game.cpp:707
 msgid "You have not sorted your load order this session."
@@ -1142,7 +1142,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:812
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -1157,7 +1157,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"Възникна грешка, по време на разбора на списъ(ка)ците с метаданни: %1%.\n"
+"Възникна грешка, по време на разбора на списъ(ка)ците с метаданни: {0}.\n"
 "\n"
 "Моля, обновете основния списък за да поправите грешката. Ако грешката е в "
 "добавените метаданни, причината може да е в обновяване на „LOOT“, което е "
@@ -1173,41 +1173,41 @@ msgstr ""
 "io/)."
 
 #: src/gui/state/game/helpers.cpp:89
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "%1% ITM запис"
-msgstr[1] "%1% ITM записа"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "{0} ITM запис"
+msgstr[1] "{0} ITM записа"
 
 #: src/gui/state/game/helpers.cpp:96
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "%1% изтрита връзка"
-msgstr[1] "%1% изтрити връзки"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "{0} изтрита връзка"
+msgstr[1] "{0} изтрити връзки"
 
 #: src/gui/state/game/helpers.cpp:103
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "%1% изтрит навигационен обект"
-msgstr[1] "%1% изтрити навигационни обекта"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "{0} изтрит навигационен обект"
+msgstr[1] "{0} изтрити навигационни обекта"
 
 #: src/gui/state/game/helpers.cpp:113
-msgid "%1% found %2%, %3% and %4%."
-msgstr "„%1%“ намери %2%, %3% и %4%."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "„{0}“ намери {1}, {2} и {3}."
 
 #: src/gui/state/game/helpers.cpp:119
-msgid "%1% found dirty edits."
-msgstr "%1% намерени мръсни редакции."
+msgid "{0} found dirty edits."
+msgstr "{0} намерени мръсни редакции."
 
 #: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
 #: src/gui/state/game/helpers.cpp:136
-msgid "%1% found %2% and %3%."
-msgstr "„%1%“ намери %2% и %3%."
+msgid "{0} found {1} and {2}."
+msgstr "„{0}“ намери {1} и {2}."
 
 #: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
 #: src/gui/state/game/helpers.cpp:146
-msgid "%1% found %2%."
-msgstr "„%1%“ намери %2%."
+msgid "{0} found {1}."
+msgstr "„{0}“ намери {1}."
 
 #: src/gui/state/game/helpers.cpp:232
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "„LOOT“ установи, че „%1%“ е невалиден и ще бъде игнориран."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "„LOOT“ установи, че „{0}“ е невалиден и ще бъде игнориран."

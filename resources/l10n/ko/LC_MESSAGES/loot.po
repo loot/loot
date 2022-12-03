@@ -24,12 +24,12 @@ msgstr ""
 
 #: src/gui/cef/query/query.h:49
 msgid ""
-"Oh no, something went wrong! This is usually because \"%1%\" is set to be "
+"Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
 "LOOTDebugLog.txt (you can get to it through the main menu) for more "
 "information."
 msgstr ""
-"이런, 문제가 발생했습니다! \"%1%\"가 읽기 전용으로 설정되어 있기 때문입니다. "
+"이런, 문제가 발생했습니다! \"{0}\"가 읽기 전용으로 설정되어 있기 때문입니다. "
 "만약 그렇다면 해당 설정을 해제한 후 다시 시도하십시오. 그렇지 않다면 "
 "LOOTDebugLog.txt (메인 메뉴를 통해 얻을 수 있음)에서 자세한 정보를 확인할 수 "
 "있습니다."
@@ -48,8 +48,8 @@ msgstr "플러그인 메타데이터를 파싱, 병합 및 평가 중..."
 
 #: src/gui/cef/query/types/metadata_query.h:205
 #: src/gui/cef/query/types/metadata_query.h:232
-msgid "\"%1%\" contains a condition that could not be evaluated. Details: %2%"
-msgstr "\"%1%\"에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: %2%"
+msgid "\"{0}\" contains a condition that could not be evaluated. Details: {1}"
+msgstr "\"{0}\"에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: {1}"
 
 #. translators: N/A is an abbreviation for Not Applicable. A masterlist is a database that contains information for various mods.
 #: src/gui/cef/query/types/metadata_query.h:256
@@ -79,37 +79,37 @@ msgstr ""
 "오류: --auto-sort가 전달되었지만 --game 매개 변수가 제공되지 않았습니다."
 
 #: src/gui/state/loot_state.cpp:129
-msgid "Error: Could not create LOOT settings file. %1%"
-msgstr "오류: LOOT 설정 파일을 만들 수 없습니다. %1%"
+msgid "Error: Could not create LOOT settings file. {0}"
+msgstr "오류: LOOT 설정 파일을 만들 수 없습니다. {0}"
 
 #. translators: This error is displayed when LOOT is unable to load its own settings file. The placeholder is for additional detail about what went wrong.
 #: src/gui/state/loot_state.cpp:148
-msgid "Error: Settings parsing failed. %1%"
-msgstr "오류: 설정의 구문 분석을 하지 못했습니다. %1%"
+msgid "Error: Settings parsing failed. {0}"
+msgstr "오류: 설정의 구문 분석을 하지 못했습니다. {0}"
 
 #: src/gui/state/loot_state.cpp:208
-msgid "Error: Game-specific settings could not be initialised. %1%"
-msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. %1%"
+msgid "Error: Game-specific settings could not be initialised. {0}"
+msgstr "오류: 게임별 설정을 초기화 할 수 없습니다. {0}"
 
 #: src/gui/state/game/game.cpp:178 src/gui/state/game/game.cpp:214
-msgid "This plugin requires \"%1%\" to be installed, but it is missing."
-msgstr "이 플러그인은 \"%1%\"가 설치되어야 하지만 찾을 수 없습니다."
+msgid "This plugin requires \"{0}\" to be installed, but it is missing."
+msgstr "이 플러그인은 \"{0}\"가 설치되어야 하지만 찾을 수 없습니다."
 
 #: src/gui/state/game/game.cpp:191
-msgid "This plugin requires \"%1%\" to be active, but it is inactive."
-msgstr "이 플러그인은 \"%1%\"가 활성화되어야 하지만 비활성화되어있습니다."
+msgid "This plugin requires \"{0}\" to be active, but it is inactive."
+msgstr "이 플러그인은 \"{0}\"가 활성화되어야 하지만 비활성화되어있습니다."
 
 #: src/gui/state/game/game.cpp:240
-msgid "This plugin is incompatible with \"%1%\", but both are present."
-msgstr "이 플러그인은 \"%1%\"와 호환되지 않지만 둘 다 존재합니다."
+msgid "This plugin is incompatible with \"{0}\", but both are present."
+msgstr "이 플러그인은 \"{0}\"와 호환되지 않지만 둘 다 존재합니다."
 
 #: src/gui/state/game/game.cpp:276
 msgid ""
-"This plugin is a light master and requires the non-master plugin \"%1%\". "
+"This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
-"이 플러그인은 경량 마스터이며 비 마스터 플러그인 \"%1%\"가 필요합니다. 이로 "
+"이 플러그인은 경량 마스터이며 비 마스터 플러그인 \"{0}\"가 필요합니다. 이로 "
 "인해 게임 내에서 문제가 발생하고 플러그인이 설치된 동안 정렬이 실패할 수 있습"
 "니다."
 
@@ -126,15 +126,15 @@ msgstr ""
 #. translators: A header is the part of a file that stores data like file name and version.
 #: src/gui/state/game/game.cpp:314
 msgid ""
-"This plugin has a header version of %1%, which is less than the game's "
-"minimum supported header version of %2%."
+"This plugin has a header version of {0}, which is less than the game's "
+"minimum supported header version of {1}."
 msgstr ""
-"이 플러그인의 헤더 버전은 %1%이며,  이는 게임에서 지원되는 최소 헤더 버전인 "
-"%2%보다 낮습니다."
+"이 플러그인의 헤더 버전은 {0}이며,  이는 게임에서 지원되는 최소 헤더 버전인 "
+"{1}보다 낮습니다."
 
 #: src/gui/state/game/game.cpp:333
-msgid "This plugin belongs to the group \"%1%\", which does not exist."
-msgstr "이 플러그인은 존재하지 않는 \"%1%\" 그룹에 속해 있습니다."
+msgid "This plugin belongs to the group \"{0}\", which does not exist."
+msgstr "이 플러그인은 존재하지 않는 \"{0}\" 그룹에 속해 있습니다."
 
 #: src/gui/state/game/game.cpp:402 src/gui/state/game/game.cpp:487
 msgid ""
@@ -145,12 +145,12 @@ msgstr ""
 "다."
 
 #: src/gui/state/game/game.cpp:512
-msgid "Cyclic interaction detected between \"%1%\" and \"%2%\": %3%"
-msgstr "\"%1%\"와 \"%2%\"플러그인 사이의 순환 참조가 감지됨 : %3%"
+msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
+msgstr "\"{0}\"와 \"{1}\"플러그인 사이의 순환 참조가 감지됨 : {2}"
 
 #: src/gui/state/game/game.cpp:524
-msgid "The group \"%1%\" does not exist."
-msgstr "\"%1%\" 그룹이 존재하지 않습니다."
+msgid "The group \"{0}\" does not exist."
+msgstr "\"{0}\" 그룹이 존재하지 않습니다."
 
 #: src/gui/state/game/game.cpp:560
 msgid "You have not sorted your load order this session."
@@ -178,7 +178,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:657
 msgid ""
-"An error occurred while parsing the metadata list(s): %1%.\n"
+"An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
 "Try updating your masterlist to resolve the error. If the error is with your "
 "user metadata, this probably happened because an update to LOOT changed its "
@@ -193,7 +193,7 @@ msgid ""
 "You can also seek support on LOOT's forum thread, which is linked to on "
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
-"메타데이터 목록을 구문 분석하는 동안 오류가 발생했습니다. : %1%.\n"
+"메타데이터 목록을 구문 분석하는 동안 오류가 발생했습니다. : {0}.\n"
 "\n"
 "마스터 목록을 업데이트하여 오류를 해결하십시오. 사용자 메타데이터에 오류가 있"
 "는 경우 LOOT 업데이트로 메타데이터 구문 지원이 변경되었기 때문일 수 있습니"
@@ -208,41 +208,41 @@ msgstr ""
 "을 요청할 수도 있습니다."
 
 #: src/gui/state/game/helpers.cpp:88
-msgid "%1% ITM record"
-msgid_plural "%1% ITM records"
-msgstr[0] "ITM 레코드 %1% 개"
+msgid "{0} ITM record"
+msgid_plural "{0} ITM records"
+msgstr[0] "ITM 레코드 {0} 개"
 
 #: src/gui/state/game/helpers.cpp:92
-msgid "%1% deleted reference"
-msgid_plural "%1% deleted references"
-msgstr[0] "삭제된 참조 %1%개"
+msgid "{0} deleted reference"
+msgid_plural "{0} deleted references"
+msgstr[0] "삭제된 참조 {0}개"
 
 #: src/gui/state/game/helpers.cpp:98
-msgid "%1% deleted navmesh"
-msgid_plural "%1% deleted navmeshes"
-msgstr[0] "삭제된 Navmesh %1%개"
+msgid "{0} deleted navmesh"
+msgid_plural "{0} deleted navmeshes"
+msgstr[0] "삭제된 Navmesh {0}개"
 
 #: src/gui/state/game/helpers.cpp:108
-msgid "%1% found %2%, %3% and %4%."
-msgstr "%2%, %3%과 %4% %1%개 찾음."
+msgid "{0} found {1}, {2} and {3}."
+msgstr "{1}, {2}과 {3} {0}개 찾음."
 
 #: src/gui/state/game/helpers.cpp:114
-msgid "%1% found dirty edits."
-msgstr "지저분한 편집 %1% 개 찾음."
+msgid "{0} found dirty edits."
+msgstr "지저분한 편집 {0} 개 찾음."
 
 #: src/gui/state/game/helpers.cpp:120 src/gui/state/game/helpers.cpp:126
 #: src/gui/state/game/helpers.cpp:131
-msgid "%1% found %2% and %3%."
-msgstr "%2%과 %3% %1%개 찾음."
+msgid "{0} found {1} and {2}."
+msgstr "{1}과 {2} {0}개 찾음."
 
 #: src/gui/state/game/helpers.cpp:135 src/gui/state/game/helpers.cpp:138
 #: src/gui/state/game/helpers.cpp:141
-msgid "%1% found %2%."
-msgstr "%2% %1%개 찾음."
+msgid "{0} found {1}."
+msgstr "{1} {0}개 찾음."
 
 #: src/gui/state/game/helpers.cpp:222
-msgid "LOOT has detected that \"%1%\" is invalid and is now ignoring it."
-msgstr "LOOT에서 %1%가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
+msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
+msgstr "LOOT에서 {0}가 유효하지 않음을 감지하여 현재 무시하고 있습니다."
 
 #: src/gui/html/elements/editable-table.ts:438
 msgid "Add New Row"
@@ -270,12 +270,12 @@ msgid "No plugins are in this group."
 msgstr "이 그룹에는 플러그인이 없습니다."
 
 #: src/gui/html/elements/loot-groups-editor.ts:440
-msgid "Plugins in %s"
-msgstr "%s의 플러그인"
+msgid "Plugins in {0}"
+msgstr "{0}의 플러그인"
 
 #: src/gui/html/elements/loot-plugin-card.ts:339
-msgid "Verified clean by %s"
-msgstr "%s에서 정리 확인"
+msgid "Verified clean by {0}"
+msgstr "{0}에서 정리 확인"
 
 #: src/gui/html/js/events.ts:218
 msgid "Identifying conflicting plugins..."
@@ -286,8 +286,8 @@ msgid "Updating and parsing masterlist..."
 msgstr "마스터 리스트 갱신 및 구문 분석 중..."
 
 #: src/gui/html/js/events.ts:337
-msgid "Masterlist updated to revision %s."
-msgstr "마스터 리스트를 %s버전으로 갱신되었습니다."
+msgid "Masterlist updated to revision {0}."
+msgstr "마스터 리스트를 {0}버전으로 갱신되었습니다."
 
 #: src/gui/html/js/events.ts:344
 msgid "No masterlist update was necessary."
@@ -298,8 +298,8 @@ msgid "Cyclic interaction detected"
 msgstr "순환 상호 작용 감지됨"
 
 #: src/gui/html/js/events.ts:424
-msgid "Failed to sort plugins. Details: %s"
-msgstr "플러그인을 정렬하지 못했습니다. 세부 정보: %s"
+msgid "Failed to sort plugins. Details: {0}"
+msgstr "플러그인을 정렬하지 못했습니다. 세부 정보: {0}"
 
 #: src/gui/html/js/events.ts:460
 msgid "Sorting made no changes to the load order."
@@ -357,8 +357,8 @@ msgstr "로드 순서가 클립보드에 복사되었습니다."
 
 #: src/gui/html/js/events.ts:640
 msgid ""
-"You have not yet applied or cancelled your %s. Are you sure you want to quit?"
-msgstr "아직 %s을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
+msgstr "아직 {0}을/를 적용하거나 취소하지 않았습니다. 종료하시겠습니까?"
 
 #: src/gui/html/js/events.ts:644 src/gui/html/js/translateStaticText.ts:372
 msgid "Quit"
@@ -374,17 +374,17 @@ msgid "metadata edits"
 msgstr "메타데이터 편집"
 
 #: src/gui/html/js/events.ts:1086
-msgid "The metadata for \"%s\" has been copied to the clipboard."
-msgstr "\"%s\"에 대한 메타데이터가 클립보드에 복사되었습니다."
+msgid "The metadata for \"{0}\" has been copied to the clipboard."
+msgstr "\"{0}\"에 대한 메타데이터가 클립보드에 복사되었습니다."
 
 #: src/gui/html/js/events.ts:1107
 msgid ""
-"Are you sure you want to clear all existing user-added metadata from \"%s\"?"
-msgstr "\"%s\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
+"Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
+msgstr "\"{0}\"에서 기존의 모든 사용자 추가 메타데이터를 삭제하시겠습니까?"
 
 #: src/gui/html/js/events.ts:1129
-msgid "The user-added metadata for \"%s\" has been cleared."
-msgstr "\"%s\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
+msgid "The user-added metadata for \"{0}\" has been cleared."
+msgstr "\"{0}\"에 대한 사용자 추가 메타데이터가 삭제되었습니다."
 
 #. An abbreviation of Not Applicable.
 #: src/gui/html/js/game.ts:141
@@ -405,8 +405,8 @@ msgstr ""
 "뉴를 통해 얻을 수 있음)에서 확인할 수 있습니다."
 
 #: src/gui/html/js/loot.ts:330
-msgid "A [new release](%s) of LOOT is available."
-msgstr "LOOT의 [새 버전](%s)을 사용할 수 있습니다."
+msgid "A [new release]({0}) of LOOT is available."
+msgstr "LOOT의 [새 버전]({0})을 사용할 수 있습니다."
 
 #: src/gui/html/js/loot.ts:370
 msgid ""
@@ -904,10 +904,10 @@ msgstr "처음 팁"
 
 #: src/gui/html/js/translateStaticText.ts:628
 msgid ""
-"This appears to be the first time you have run LOOT v%s. Here are some tips "
+"This appears to be the first time you have run LOOT v{0}. Here are some tips "
 "to help you get started with the interface."
 msgstr ""
-"LOOT v%s를 실행하신 것은 이번이 처음이신 것 같습니다. 다음은 인터페이스를 시"
+"LOOT v{0}를 실행하신 것은 이번이 처음이신 것 같습니다. 다음은 인터페이스를 시"
 "작하는데 도움이되는 몇가지 팁입니다."
 
 #. The %(menu_icon)s placeholder is replaced with the menu icon (three vertical dots).
@@ -970,9 +970,9 @@ msgstr ""
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
-"using %s."
+"using {0}."
 msgstr ""
-"LOOT는 무료입니다. 하지만 약간의 기부금으로 감사의 마음을 표현하고 싶다면 %s"
+"LOOT는 무료입니다. 하지만 약간의 기부금으로 감사의 마음을 표현하고 싶다면 {0}"
 "를 사용하여 WrinklyNinja (LOOT의 제작자 및 메인 개발자)에게 기부할 수 있습니"
 "다."
 
@@ -985,8 +985,8 @@ msgid "About LOOT"
 msgstr "LOOT 정보"
 
 #: src/gui/html/js/translateStaticText.ts:671
-msgid "Version %s (build %s)"
-msgstr "버전 %s (빌드 %s)"
+msgid "Version {0} (build {1})"
+msgstr "버전 {0} (빌드 {1})"
 
 #: src/gui/html/js/translateStaticText.ts:676
 msgid ""
@@ -1077,8 +1077,8 @@ msgstr ""
 #~ msgid "Adding edges to plugin graph and performing topological sort..."
 #~ msgstr "플러그인 그래프에 엣지를 추가하고 위상 정렬을 수행 중..."
 
-#~ msgid "Git operation failed. Error: %1%"
-#~ msgstr "Git 작업이 실패했습니다. 오류: %1%"
+#~ msgid "Git operation failed. Error: {0}"
+#~ msgstr "Git 작업이 실패했습니다. 오류: {0}"
 
 #~ msgid "Object memory already allocated!"
 #~ msgstr "개체 메모리는 이미 할당되어있습니다!"
@@ -1094,10 +1094,10 @@ msgstr ""
 
 #~ msgid ""
 #~ "An error occurred while trying to read the local masterlist's version. If "
-#~ "this error happens again, try deleting the \".git\" folder in %1%."
+#~ "this error happens again, try deleting the \".git\" folder in {0}."
 #~ msgstr ""
 #~ "로컬 마스터 리스트의 버전을 읽는 동안 오류가 발생했습니다. 이 오류가 다시 "
-#~ "발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+#~ "발생한다면 {0}에서 \".git\" 폴더를 삭제하십시오."
 
 #~ msgid ""
 #~ "An error occurred while trying to clone the remote masterlist repository."
@@ -1105,10 +1105,10 @@ msgstr ""
 
 #~ msgid ""
 #~ "An error occurred while trying to access the local masterlist repository. "
-#~ "If this error happens again, try deleting the \".git\" folder in %1%."
+#~ "If this error happens again, try deleting the \".git\" folder in {0}."
 #~ msgstr ""
 #~ "로컬 마스터 리스트 저장소에 저장하는 동안 오류가 발생했습니다. 이 오류가 "
-#~ "다시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+#~ "다시 발생한다면 {0}에서 \".git\" 폴더를 삭제하십시오."
 
 #~ msgid ""
 #~ "An error occurred while trying to update the masterlist. This could be "
@@ -1120,10 +1120,10 @@ msgstr ""
 #~ msgid ""
 #~ "An error occurred while trying to read information on the updated "
 #~ "masterlist. If this error happens again, try deleting the \".git\" folder "
-#~ "in %1%."
+#~ "in {0}."
 #~ msgstr ""
 #~ "갱신된 마스터 리스트에 대한 정보를 읽는 동안 오류가 발생했습니다. 이 오류"
-#~ "가 다시 발생한다면 %1%에서 \".git\" 폴더를 삭제하십시오."
+#~ "가 다시 발생한다면 {0}에서 \".git\" 폴더를 삭제하십시오."
 
 #~ msgid "Masterlist revision"
 #~ msgstr "마스터 리스트 버전"
@@ -1131,66 +1131,66 @@ msgstr ""
 #~ msgid "Rolled back to the previous revision."
 #~ msgstr "이전 버전으로 되돌립니다."
 
-#~ msgid "Unable to open \"%1%\" for CRC calculation."
-#~ msgstr "CRC 연산을 위해 \"%1%\"을 열 수 없습니다."
+#~ msgid "Unable to open \"{0}\" for CRC calculation."
+#~ msgstr "CRC 연산을 위해 \"{0}\"을 열 수 없습니다."
 
-#~ msgid "Failed to parse condition \"%1%\": %2%"
-#~ msgstr "\"%1%\"조건을 구문 분석하지 못했습니다: %2%"
+#~ msgid "Failed to parse condition \"{0}\": {1}"
+#~ msgstr "\"{0}\"조건을 구문 분석하지 못했습니다: {1}"
 
-#~ msgid "Failed to parse condition \"%1%\"."
-#~ msgstr "\"%1%\"조건을 구문 분석하지 못했습니다."
+#~ msgid "Failed to parse condition \"{0}\"."
+#~ msgstr "\"{0}\"조건을 구문 분석하지 못했습니다."
 
-#~ msgid "Cannot read \"%1%\". Details: %2%"
-#~ msgstr "\"%1%\"을 읽을 수 없습니다. 자세한 사항: %2%"
-
-#~ msgid ""
-#~ "Contains %1% ITM records, %2% deleted references and %3% deleted "
-#~ "navmeshes. Clean with %4%."
-#~ msgstr ""
-#~ "%1%개의 ITM 레코드, %2%개의 삭제된 참조와 %3%개의 삭제된 Navmesh가 포함되"
-#~ "어있습니다. %4%를 사용하여 청소하십시오."
-
-#~ msgid "Clean with %1%."
-#~ msgstr "%1%를 사용하여 청소하십시오."
+#~ msgid "Cannot read \"{0}\". Details: {1}"
+#~ msgstr "\"{0}\"을 읽을 수 없습니다. 자세한 사항: {1}"
 
 #~ msgid ""
-#~ "Contains %1% deleted references and %2% deleted navmeshes. Clean with %3%."
+#~ "Contains {0} ITM records, {1} deleted references and {2} deleted "
+#~ "navmeshes. Clean with {3}."
 #~ msgstr ""
-#~ "%1%개의 삭제된 참조와 %2%개의 삭제된 Navmesh가 포함되어있습니다. %3%를 사"
+#~ "{0}개의 ITM 레코드, {1}개의 삭제된 참조와 {2}개의 삭제된 Navmesh가 포함되"
+#~ "어있습니다. {3}를 사용하여 청소하십시오."
+
+#~ msgid "Clean with {0}."
+#~ msgstr "{0}를 사용하여 청소하십시오."
+
+#~ msgid ""
+#~ "Contains {0} deleted references and {1} deleted navmeshes. Clean with {2}."
+#~ msgstr ""
+#~ "{0}개의 삭제된 참조와 {1}개의 삭제된 Navmesh가 포함되어있습니다. {2}를 사"
 #~ "용하여 청소하십시오."
 
-#~ msgid "Contains %1% deleted navmeshes. Clean with %2%."
+#~ msgid "Contains {0} deleted navmeshes. Clean with {1}."
 #~ msgstr ""
-#~ "%1%개의 삭제된 navmesh가 포함되어있습니다. %2%를 사용하여 청소하십시오."
+#~ "{0}개의 삭제된 navmesh가 포함되어있습니다. {1}를 사용하여 청소하십시오."
 
-#~ msgid "Contains %1% deleted references. Clean with %2%."
+#~ msgid "Contains {0} deleted references. Clean with {1}."
 #~ msgstr ""
-#~ "%1%개의 삭제된 참조가 포함되어있습니다. %2%를 사용하여 청소하십시오."
+#~ "{0}개의 삭제된 참조가 포함되어있습니다. {1}를 사용하여 청소하십시오."
 
-#~ msgid "Contains %1% ITM records and %2% deleted navmeshes. Clean with %3%."
+#~ msgid "Contains {0} ITM records and {1} deleted navmeshes. Clean with {2}."
 #~ msgstr ""
-#~ "%1%개의 ITM 레코드와 %2%개의 삭제된 Navmesh가 포함되어있습니다. %3%를 사용"
+#~ "{0}개의 ITM 레코드와 {1}개의 삭제된 Navmesh가 포함되어있습니다. {2}를 사용"
 #~ "하여 청소하십시오."
 
-#~ msgid "Contains %1% ITM records. Clean with %2%."
-#~ msgstr "%1%개의 ITM 레코드가 포함되어있습니다. %2%를 사용하여 청소하십시오."
+#~ msgid "Contains {0} ITM records. Clean with {1}."
+#~ msgstr "{0}개의 ITM 레코드가 포함되어있습니다. {1}를 사용하여 청소하십시오."
 
-#~ msgid "Contains %1% ITM records and %2% deleted references. Clean with %3%."
+#~ msgid "Contains {0} ITM records and {1} deleted references. Clean with {2}."
 #~ msgstr ""
-#~ "%1%개의 ITM 레코드와 %2%개의 삭제된 참조가 포함되어있습니다. %3%를 사용하"
+#~ "{0}개의 ITM 레코드와 {1}개의 삭제된 참조가 포함되어있습니다. {2}를 사용하"
 #~ "여 청소하십시오."
 
-#~ msgid "Error: Games' settings parsing failed. %1%"
-#~ msgstr "오류: 게임 설정의 구문 분석을 하지 못했습니다. %1%"
+#~ msgid "Error: Games' settings parsing failed. {0}"
+#~ msgstr "오류: 게임 설정의 구문 분석을 하지 못했습니다. {0}"
 
 #~ msgid "None of the supported games were detected."
 #~ msgstr "지원되는 게임 중 어느 것도 감지되지 않았습니다."
 
-#~ msgid "Failed to change game. Details: %1%"
-#~ msgstr "게임을 변경하지 못했습니다. 자세한 사항: %1%"
+#~ msgid "Failed to change game. Details: {0}"
+#~ msgstr "게임을 변경하지 못했습니다. 자세한 사항: {0}"
 
-#~ msgid "Failed to copy plugin metadata. Details: %1%"
-#~ msgstr "플러그인 메타데이터를 복사하지 못했습니다. 자세한 사항: %1%"
+#~ msgid "Failed to copy plugin metadata. Details: {0}"
+#~ msgstr "플러그인 메타데이터를 복사하지 못했습니다. 자세한 사항: {0}"
 
 #~ msgid "Loading plugin contents..."
 #~ msgstr "플러그인 내용 로드 중..."
@@ -1204,32 +1204,32 @@ msgstr ""
 #~ msgid "Parsing masterlist..."
 #~ msgstr "마스터 리스트 구문 분석 중..."
 
-#~ msgid "An error occurred while parsing the masterlist: %1%"
-#~ msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
+#~ msgid "An error occurred while parsing the masterlist: {0}"
+#~ msgstr "마스터 리스트를 구문 분석하는 동안 오류가 발생했습니다: {0}"
 
 #~ msgid "Parsing userlist..."
 #~ msgstr "유저리스트 구문 분석 중..."
 
-#~ msgid "An error occurred while parsing the userlist: %1%"
-#~ msgstr "유저리스트를 구문 분석하는 동안 오류가 발생했습니다: %1%"
+#~ msgid "An error occurred while parsing the userlist: {0}"
+#~ msgstr "유저리스트를 구문 분석하는 동안 오류가 발생했습니다: {0}"
 
 #~ msgid "Loading general messages..."
 #~ msgstr "일반 메시지 로드 중..."
 
 #~ msgid ""
 #~ "A global message contains a condition that could not be evaluated. "
-#~ "Details: %1%"
+#~ "Details: {0}"
 #~ msgstr ""
-#~ "전역 메세지에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: %1%"
+#~ "전역 메세지에는 평가될 수 없는 조건이 포함되어 있습니다. 자세한 사항: {0}"
 
-#~ msgid "Failed to get game data. Details: %1%"
-#~ msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: %1%"
+#~ msgid "Failed to get game data. Details: {0}"
+#~ msgstr "게임 데이터를 가져오지 못했습니다. 자세한 사항: {0}"
 
 #~ msgid "Regenerating displayed content..."
 #~ msgstr "표시되는 내용을 재생성 중..."
 
-#~ msgid "Failed to update the masterlist. Details: %1%"
-#~ msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: %1%"
+#~ msgid "Failed to update the masterlist. Details: {0}"
+#~ msgstr "마스터 리스트를 갱신하지 못했습니다. 자세한 사항: {0}"
 
 #~ msgid "Invalid file path:"
 #~ msgstr "잘못된 파일 경로:"
@@ -1240,8 +1240,8 @@ msgstr ""
 #~ msgid "Invalid regex string:"
 #~ msgstr "잘못된 정규식 문자열:"
 
-#~ msgid "Expected \"%1%\" at \"%2%\"."
-#~ msgstr "\"%1%\"에서 \"%2%\"가 예상됩니다."
+#~ msgid "Expected \"{0}\" at \"{1}\"."
+#~ msgstr "\"{0}\"에서 \"{1}\"가 예상됩니다."
 
 #~ msgid "Show Only Conflicts"
 #~ msgstr "충돌만 보기"

@@ -26,9 +26,9 @@
 #include "gui/state/game/helpers.h"
 
 #include <loot/api.h>
+#include <spdlog/fmt/fmt.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 #include <fstream>
 #include <regex>
@@ -39,25 +39,25 @@ namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
   const int maxBackupIndex = 2;
-  boost::format filenameFormat = boost::format("loadorder.bak.%1%");
+  const auto filenameFormat = "loadorder.bak.{0}";
 
   std::filesystem::path backupFilePath =
-      backupDirectory / (filenameFormat % 2).str();
+      backupDirectory / fmt::format(filenameFormat, 2);
   if (std::filesystem::exists(backupFilePath)) {
     std::filesystem::remove(backupFilePath);
   }
 
   for (int i = maxBackupIndex - 1; i > -1; --i) {
     const std::filesystem::path oldBackupFilePath =
-        backupDirectory / (filenameFormat % i).str();
+        backupDirectory / fmt::format(filenameFormat, i);
     if (std::filesystem::exists(oldBackupFilePath)) {
       std::filesystem::rename(
           oldBackupFilePath,
-          backupDirectory / (filenameFormat % (i + 1)).str());
+          backupDirectory / fmt::format(filenameFormat, i + 1));
     }
   }
 
-  std::ofstream out(backupDirectory / (filenameFormat % 0).str());
+  std::ofstream out(backupDirectory / fmt::format(filenameFormat, 0));
   for (const auto& plugin : loadOrder) {
     out << plugin << std::endl;
   }
@@ -82,71 +82,76 @@ std::string EscapeMarkdownASCIIPunctuation(std::string text) {
 }
 
 Message ToMessage(const PluginCleaningData& cleaningData) {
-  using boost::format;
   using boost::locale::translate;
+  using fmt::format;
 
   const std::string itmRecords =
-      (format(translate("%1% ITM record",
-                        "%1% ITM records",
-                        static_cast<int>(cleaningData.GetITMCount()))) %
-       cleaningData.GetITMCount())
-          .str();
-  const std::string deletedReferences =
-      (format(translate(
-           "%1% deleted reference",
-           "%1% deleted references",
-           static_cast<int>(cleaningData.GetDeletedReferenceCount()))) %
-       cleaningData.GetDeletedReferenceCount())
-          .str();
+      format(translate("{0} ITM record",
+                       "{0} ITM records",
+                       static_cast<int>(cleaningData.GetITMCount()))
+                 .str(),
+             cleaningData.GetITMCount());
+  const std::string deletedReferences = format(
+      translate("{0} deleted reference",
+                "{0} deleted references",
+                static_cast<int>(cleaningData.GetDeletedReferenceCount()))
+          .str(),
+      cleaningData.GetDeletedReferenceCount());
   const std::string deletedNavmeshes =
-      (format(
-           translate("%1% deleted navmesh",
-                     "%1% deleted navmeshes",
-                     static_cast<int>(cleaningData.GetDeletedNavmeshCount()))) %
-       cleaningData.GetDeletedNavmeshCount())
-          .str();
+      format(translate("{0} deleted navmesh",
+                       "{0} deleted navmeshes",
+                       static_cast<int>(cleaningData.GetDeletedNavmeshCount()))
+                 .str(),
+             cleaningData.GetDeletedNavmeshCount());
 
-  format f;
+  std::string message;
   if (cleaningData.GetITMCount() > 0 &&
       cleaningData.GetDeletedReferenceCount() > 0 &&
-      cleaningData.GetDeletedNavmeshCount() > 0)
-    f = format(translate("%1% found %2%, %3% and %4%.")) %
-        cleaningData.GetCleaningUtility() % itmRecords % deletedReferences %
-        deletedNavmeshes;
-  else if (cleaningData.GetITMCount() == 0 &&
-           cleaningData.GetDeletedReferenceCount() == 0 &&
-           cleaningData.GetDeletedNavmeshCount() == 0)
-    f = format(translate("%1% found dirty edits.")) %
-        cleaningData.GetCleaningUtility();
-
-  else if (cleaningData.GetITMCount() == 0 &&
-           cleaningData.GetDeletedReferenceCount() > 0 &&
-           cleaningData.GetDeletedNavmeshCount() > 0)
-    f = format(translate("%1% found %2% and %3%.")) %
-        cleaningData.GetCleaningUtility() % deletedReferences %
-        deletedNavmeshes;
-  else if (cleaningData.GetITMCount() > 0 &&
-           cleaningData.GetDeletedReferenceCount() == 0 &&
-           cleaningData.GetDeletedNavmeshCount() > 0)
-    f = format(translate("%1% found %2% and %3%.")) %
-        cleaningData.GetCleaningUtility() % itmRecords % deletedNavmeshes;
-  else if (cleaningData.GetITMCount() > 0 &&
-           cleaningData.GetDeletedReferenceCount() > 0 &&
-           cleaningData.GetDeletedNavmeshCount() == 0)
-    f = format(translate("%1% found %2% and %3%.")) %
-        cleaningData.GetCleaningUtility() % itmRecords % deletedReferences;
-
-  else if (cleaningData.GetITMCount() > 0)
-    f = format(translate("%1% found %2%.")) %
-        cleaningData.GetCleaningUtility() % itmRecords;
+      cleaningData.GetDeletedNavmeshCount() > 0) {
+    message = format(translate("{0} found {1}, {2} and {3}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     itmRecords,
+                     deletedReferences,
+                     deletedNavmeshes);
+  } else if (cleaningData.GetITMCount() == 0 &&
+             cleaningData.GetDeletedReferenceCount() == 0 &&
+             cleaningData.GetDeletedNavmeshCount() == 0) {
+    message = format(translate("{0} found dirty edits.").str(),
+                     cleaningData.GetCleaningUtility());
+  } else if (cleaningData.GetITMCount() == 0 &&
+             cleaningData.GetDeletedReferenceCount() > 0 &&
+             cleaningData.GetDeletedNavmeshCount() > 0) {
+    message = format(translate("{0} found {1} and {2}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     deletedReferences,
+                     deletedNavmeshes);
+  } else if (cleaningData.GetITMCount() > 0 &&
+             cleaningData.GetDeletedReferenceCount() == 0 &&
+             cleaningData.GetDeletedNavmeshCount() > 0) {
+    message = format(translate("{0} found {1} and {2}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     itmRecords,
+                     deletedNavmeshes);
+  } else if (cleaningData.GetITMCount() > 0 &&
+             cleaningData.GetDeletedReferenceCount() > 0 &&
+             cleaningData.GetDeletedNavmeshCount() == 0) {
+    message = format(translate("{0} found {1} and {2}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     itmRecords,
+                     deletedReferences);
+  } else if (cleaningData.GetITMCount() > 0)
+    message = format(translate("{0} found {1}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     itmRecords);
   else if (cleaningData.GetDeletedReferenceCount() > 0)
-    f = format(translate("%1% found %2%.")) %
-        cleaningData.GetCleaningUtility() % deletedReferences;
+    message = format(translate("{0} found {1}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     deletedReferences);
   else if (cleaningData.GetDeletedNavmeshCount() > 0)
-    f = format(translate("%1% found %2%.")) %
-        cleaningData.GetCleaningUtility() % deletedNavmeshes;
+    message = format(translate("{0} found {1}.").str(),
+                     cleaningData.GetCleaningUtility(),
+                     deletedNavmeshes);
 
-  std::string message = f.str();
   auto detail = cleaningData.GetDetail();
   if (detail.empty()) {
     return Message(MessageType::warn, message);
@@ -228,11 +233,11 @@ std::vector<Message> CheckForRemovedPlugins(
     if (pluginsSet.count(unghostedPluginName) == 0) {
       messages.push_back(PlainTextMessage(
           MessageType::warn,
-          (boost::format(
-               boost::locale::translate("LOOT has detected that \"%1%\" is "
-                                        "invalid and is now ignoring it.")) %
-           plugin)
-              .str()));
+          fmt::format(
+              boost::locale::translate("LOOT has detected that \"{0}\" is "
+                                       "invalid and is now ignoring it.")
+                  .str(),
+              plugin)));
     }
   }
 

@@ -25,13 +25,14 @@
 
 #include "gui/qt/groups_editor/groups_editor_dialog.h"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/qt/helpers.h"
@@ -236,8 +237,7 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
   }
 
   auto titleText =
-      (boost::format(boost::locale::translate("Plugins in %s")) % groupName)
-          .str();
+      fmt::format(boost::locale::translate("Plugins in {0}").str(), groupName);
 
   groupPluginsTitle->setText(QString::fromStdString(titleText));
 

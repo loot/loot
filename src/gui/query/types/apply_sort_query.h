@@ -26,7 +26,7 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_APPLY_SORT_QUERY
 #define LOOT_GUI_QUERY_APPLY_SORT_QUERY
 
-#include <boost/format.hpp>
+#include <spdlog/fmt/fmt.h>
 
 #include "gui/helpers.h"
 #include "gui/query/query.h"
@@ -92,13 +92,14 @@ private:
       return gameLocalPath / "plugins.txt";
     }();
 
-    return (boost::format(boost::locale::translate(
-                "Oh no, something went wrong! This is usually because \"%1%\" "
-                "is set to be read-only. If it is, unset it and try again. If "
-                "it isn't, you can check your LOOTDebugLog.txt (you can get to "
-                "it through the main menu) for more information.")) %
-            loadOrderFile.u8string())
-        .str();
+    return fmt::format(
+        boost::locale::translate(
+            "Oh no, something went wrong! This is usually because \"{0}\" "
+            "is set to be read-only. If it is, unset it and try again. If "
+            "it isn't, you can check your LOOTDebugLog.txt (you can get to "
+            "it through the main menu) for more information.")
+            .str(),
+        loadOrderFile.u8string());
   }
 };
 }

@@ -25,8 +25,6 @@
 
 #include "gui/qt/plugin_editor/models/cleaning_data_table_model.h"
 
-#include <boost/format.hpp>
-
 #include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 

@@ -25,6 +25,8 @@
 
 #include "gui/qt/main_window.h"
 
+#include <spdlog/fmt/fmt.h>
+
 #include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
@@ -1020,14 +1022,14 @@ void MainWindow::showFirstRunDialog() {
   auto zipPath = createBackup();
 
   std::string textTemplate = R"(
-<p>%1%</p>
-<p>%2%</p>
+<p>{}</p>
+<p>{}</p>
 <ul>
-  <li>%3%</li>
-  <li>%4%</li>
-  <li>%5%</li>
+  <li>{}</li>
+  <li>{}</li>
+  <li>{}</li>
 </ul>
-<p>%6%</p>
+<p>{}</p>
 )";
 
   std::string paragraph1;
@@ -1037,47 +1039,60 @@ void MainWindow::showFirstRunDialog() {
                 "\" style=\"white-space: nowrap\">" + zipPathString +
                 "</a></pre>";
 
-    paragraph1 =
-        (boost::format(boost::locale::translate(
-             "This appears to be the first time you have run LOOT v%1%. Your "
-             "current LOOT data has been backed up to: %2%")) %
-         gui::Version::string() % link)
-            .str();
+    paragraph1 = fmt::format(
+        boost::locale::translate(
+            "This appears to be the first time you have run LOOT v{0}. Your "
+            "current LOOT data has been backed up to: {1}")
+            .str(),
+        gui::Version::string(),
+        link);
   } else {
-    paragraph1 =
-        (boost::format(boost::locale::translate(
-             "This appears to be the first time you have run LOOT v%1%.")) %
-         gui::Version::string())
-            .str();
+    paragraph1 = fmt::format(
+        boost::locale::translate(
+            "This appears to be the first time you have run LOOT v{0}.")
+            .str(),
+        gui::Version::string());
   }
 
-  auto paragraph2 = boost::locale::translate(
-      "Here are some tips to help you get started with the interface.");
-
-  auto listItem1 = boost::locale::translate(
-      "CRCs are only displayed after plugins have been loaded, either by "
-      "conflict filtering, or by sorting.");
-
-  auto listItem2 = boost::locale::translate(
-      "Plugins can be drag and dropped from the sidebar into the metadata "
-      "editor's \"load after\", \"requirements\" and \"incompatibility\" "
-      "tables.");
-
-  auto listItem3 = boost::locale::translate(
-      "Some features are disabled while the metadata editor is open, or while "
-      "there is a sorted load order that has not been applied or discarded.");
-
-  auto paragraph3 =
-      (boost::format(boost::locale::translate(
-           "LOOT is free, but if you want to show your appreciation with some "
-           "money, donations may be made to WrinklyNinja (LOOT's creator and "
-           "main developer) using %s.")) %
-       "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>")
+  auto paragraph2 =
+      boost::locale::translate(
+          "Here are some tips to help you get started with the interface.")
           .str();
 
-  std::string text = (boost::format(textTemplate) % paragraph1 % paragraph2 %
-                      listItem1 % listItem2 % listItem3 % paragraph3)
-                         .str();
+  auto listItem1 =
+      boost::locale::translate(
+          "CRCs are only displayed after plugins have been loaded, either by "
+          "conflict filtering, or by sorting.")
+          .str();
+
+  auto listItem2 =
+      boost::locale::translate(
+          "Plugins can be drag and dropped from the sidebar into the metadata "
+          "editor's \"load after\", \"requirements\" and \"incompatibility\" "
+          "tables.")
+          .str();
+
+  auto listItem3 = boost::locale::translate(
+                       "Some features are disabled while the metadata editor "
+                       "is open, or while there is a sorted load order that "
+                       "has not been applied or discarded.")
+                       .str();
+
+  auto paragraph3 = fmt::format(
+      boost::locale::translate(
+          "LOOT is free, but if you want to show your appreciation with some "
+          "money, donations may be made to WrinklyNinja (LOOT's creator and "
+          "main developer) using {0}.")
+          .str(),
+      "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>");
+
+  std::string text = fmt::format(textTemplate,
+                                 paragraph1,
+                                 paragraph2,
+                                 listItem1,
+                                 listItem2,
+                                 listItem3,
+                                 paragraph3);
 
   auto messageBox = QMessageBox(QMessageBox::NoIcon,
                                 translate("First-Time Tips"),
@@ -1117,11 +1132,12 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     auto changeType = pluginEditorWidget->isVisible()
                           ? boost::locale::translate("metadata edits")
                           : boost::locale::translate("sorted load order");
-    auto questionText = (boost::format(boost::locale::translate(
-                             "You have not yet applied or cancelled your %s. "
-                             "Are you sure you want to quit?")) %
-                         changeType)
-                            .str();
+    auto questionText =
+        fmt::format(boost::locale::translate(
+                        "You have not yet applied or cancelled your {0}. "
+                        "Are you sure you want to quit?")
+                        .str(),
+                    changeType.str());
 
     auto button = QMessageBox::question(
         this,
@@ -1391,10 +1407,10 @@ void MainWindow::on_actionBackupData_triggered() {
       auto link = "<pre><a href=\"file:" + zipPathString +
                   "\" style=\"white-space: nowrap\">" + zipPathString +
                   "</a></pre>";
-      auto message = (boost::format(boost::locale::translate(
-                          "Your LOOT data has been backed up to: %1%")) %
-                      link)
-                         .str();
+      auto message = fmt::format(
+          boost::locale::translate("Your LOOT data has been backed up to: {0}")
+              .str(),
+          link);
 
       QMessageBox::information(this, "LOOT", QString::fromStdString(message));
     } else {
@@ -1644,11 +1660,11 @@ void MainWindow::on_actionCopyMetadata_triggered() {
 
     query.executeLogic();
 
-    auto text =
-        (boost::format(boost::locale::translate(
-             "The metadata for \"%s\" has been copied to the clipboard.")) %
-         selectedPluginName)
-            .str();
+    auto text = fmt::format(
+        boost::locale::translate(
+            "The metadata for \"{0}\" has been copied to the clipboard.")
+            .str(),
+        selectedPluginName);
 
     showNotification(QString::fromStdString(text));
   } catch (const std::exception& e) {
@@ -1662,11 +1678,11 @@ void MainWindow::on_actionCopyPluginName_triggered() {
 
     CopyToClipboard(selectedPluginName);
 
-    const auto text =
-        (boost::format(boost::locale::translate(
-             "The plugin name \"%s\" has been copied to the clipboard.")) %
-         selectedPluginName)
-            .str();
+    const auto text = fmt::format(
+        boost::locale::translate(
+            "The plugin name \"{0}\" has been copied to the clipboard.")
+            .str(),
+        selectedPluginName);
 
     showNotification(QString::fromStdString(text));
   } catch (const std::exception& e) {
@@ -1681,11 +1697,11 @@ void MainWindow::on_actionCopyCardContent_triggered() {
 
     CopyToClipboard(content);
 
-    auto text =
-        (boost::format(boost::locale::translate(
-             "The card content for \"%s\" has been copied to the clipboard.")) %
-         selectedPlugin.name)
-            .str();
+    auto text = fmt::format(
+        boost::locale::translate(
+            "The card content for \"{0}\" has been copied to the clipboard.")
+            .str(),
+        selectedPlugin.name);
 
     showNotification(QString::fromStdString(text));
   } catch (const std::exception& e) {
@@ -1697,11 +1713,11 @@ void MainWindow::on_actionClearMetadata_triggered() {
   try {
     auto selectedPluginName = getSelectedPlugin().name;
 
-    auto questionText = (boost::format(boost::locale::translate(
-                             "Are you sure you want to clear all existing "
-                             "user-added metadata from \"%s\"?")) %
-                         selectedPluginName)
-                            .str();
+    auto questionText = fmt::format(
+        boost::locale::translate("Are you sure you want to clear all existing "
+                                 "user-added metadata from \"{0}\"?")
+            .str(),
+        selectedPluginName);
 
     auto button = QMessageBox::question(
         this,
@@ -1737,10 +1753,10 @@ void MainWindow::on_actionClearMetadata_triggered() {
     }
 
     auto notificationText =
-        (boost::format(boost::locale::translate(
-             "The user-added metadata for \"%s\" has been cleared.")) %
-         selectedPluginName)
-            .str();
+        fmt::format(boost::locale::translate(
+                        "The user-added metadata for \"{0}\" has been cleared.")
+                        .str(),
+                    selectedPluginName);
 
     showNotification(QString::fromStdString(notificationText));
   } catch (const std::exception& e) {
@@ -1775,10 +1791,10 @@ void MainWindow::on_actionJoinDiscordServer_triggered() {
 void MainWindow::on_actionAbout_triggered() {
   try {
     std::string textTemplate = R"(
-<p>%1%</p>
-<p>%2%</p>
+<p>{}</p>
+<p>{}</p>
 <p><a href="https://loot.github.io">https://loot.github.io</a></p>
-<p>%3%</p>
+<p>{}</p>
 <blockquote>
   LOOT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
 
@@ -1789,26 +1805,27 @@ void MainWindow::on_actionAbout_triggered() {
 )";
 
     auto paragraph1 =
-        (boost::format(boost::locale::translate("Version %s (build %s)")) %
-         gui::Version::string() % gui::Version::revision)
+        fmt::format(boost::locale::translate("Version {0} (build {1})").str(),
+                    gui::Version::string(),
+                    gui::Version::revision);
+
+    auto paragraph2 =
+        boost::locale::translate(
+            "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, "
+            "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim "
+            "VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.")
             .str();
 
-    auto paragraph2 = boost::locale::translate(
-        "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, "
-        "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, "
-        "Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR.");
-
-    auto paragraph4 =
-        (boost::format(boost::locale::translate(
-             "LOOT is free, but if you want to show your appreciation with "
-             "some money, donations may be made to WrinklyNinja (LOOT's "
-             "creator and main developer) using %s.")) %
-         "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>")
-            .str();
+    auto paragraph3 = fmt::format(
+        boost::locale::translate(
+            "LOOT is free, but if you want to show your appreciation with "
+            "some money, donations may be made to WrinklyNinja (LOOT's "
+            "creator and main developer) using {0}.")
+            .str(),
+        "<a href=\"https://www.paypal.me/OliverHamlet\">PayPal</a>");
 
     std::string text =
-        (boost::format(textTemplate) % paragraph1 % paragraph2 % paragraph4)
-            .str();
+        fmt::format(textTemplate, paragraph1, paragraph2, paragraph3);
 
     QMessageBox::about(
         this, translate("About LOOT"), QString::fromStdString(text));
@@ -2321,10 +2338,9 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
 
     auto masterlistInfo = getFileRevisionSummary(
         state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
-    auto infoText = (boost::format(boost::locale::translate(
-                         "Masterlist updated to revision %s.")) %
-                     masterlistInfo.id)
-                        .str();
+    auto infoText = fmt::format(
+        boost::locale::translate("Masterlist updated to revision {0}.").str(),
+        masterlistInfo.id);
 
     showNotification(QString::fromStdString(infoText));
   } catch (const std::exception& e) {
@@ -2380,10 +2396,10 @@ void MainWindow::handleUpdateCheckFinished(QueryResult result) {
         logger->info("LOOT update is available.");
       }
 
-      const auto text = (boost::format(boost::locale::translate(
-                             "A [new release](%s) of LOOT is available.")) %
-                         "https://github.com/loot/loot/releases/latest")
-                            .str();
+      const auto text = fmt::format(
+          boost::locale::translate("A [new release]({0}) of LOOT is available.")
+              .str(),
+          "https://github.com/loot/loot/releases/latest");
 
       state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
       updateGeneralMessages();

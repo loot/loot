@@ -40,8 +40,9 @@
 #include <windows.h>
 #endif
 
+#include <spdlog/fmt/fmt.h>
+
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
@@ -51,8 +52,8 @@
 #include "gui/state/loot_paths.h"
 #include "loot/api.h"
 
-using boost::format;
 using boost::locale::translate;
+using fmt::format;
 using std::exception;
 using std::locale;
 using std::lock_guard;
@@ -164,10 +165,11 @@ void LootState::initCurrentGame() {
     }
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        (format(translate(
-             "Error: Game-specific settings could not be initialised. %1%")) %
-         e.what())
-            .str()));
+        format(
+            translate(
+                "Error: Game-specific settings could not be initialised. {0}")
+                .str(),
+            e.what())));
   }
 }
 
@@ -189,9 +191,9 @@ void LootState::createLootDataPath() {
   } catch (const exception& e) {
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        (format(translate("Error: Could not create LOOT data directory. %1%")) %
-         e.what())
-            .str()));
+        format(
+            translate("Error: Could not create LOOT data directory. {0}").str(),
+            e.what())));
   }
 }
 
@@ -202,13 +204,12 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
     } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
-          (format(
-               /* translators: This error is displayed when LOOT is unable to
-                  load its own settings file. The placeholder is for additional
-                  detail about what went wrong. */
-               translate("Error: Settings parsing failed. %1%")) %
-           e.what())
-              .str()));
+          format(
+              /* translators: This error is displayed when LOOT is unable to
+                 load its own settings file. The placeholder is for additional
+                 detail about what went wrong. */
+              translate("Error: Settings parsing failed. {0}").str(),
+              e.what())));
     }
   }
 
@@ -257,13 +258,12 @@ void LootState::checkSettingsFile() {
   } catch (const exception& e) {
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        (format(
-             /* translators: This error is displayed when LOOT is unable to
-                load its own settings file. The placeholder is for additional
-                detail about what went wrong. */
-             translate("Error: Settings parsing failed. %1%")) %
-         e.what())
-            .str()));
+        format(
+            /* translators: This error is displayed when LOOT is unable to
+               load its own settings file. The placeholder is for additional
+               detail about what went wrong. */
+            translate("Error: Settings parsing failed. {0}").str(),
+            e.what())));
   }
 }
 
@@ -291,10 +291,10 @@ void LootState::createPreludeDirectory() {
     } catch (const exception& e) {
       initMessages_.push_back(PlainTextSimpleMessage(
           MessageType::error,
-          (format(translate(
-               "Error: Could not create LOOT prelude directory. %1%")) %
-           e.what())
-              .str()));
+          format(
+              translate("Error: Could not create LOOT prelude directory. {0}")
+                  .str(),
+              e.what())));
     }
   }
 }
@@ -324,11 +324,11 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   if (it == gamesSettings.end()) {
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        (boost::format(translate(
-             "Error: failed to override game path, the game %1% was not "
-             "recognised.")) %
-         gameFolderName)
-            .str()));
+        format(translate(
+                   "Error: failed to override game path, the game {0} was not "
+                   "recognised.")
+                   .str(),
+               gameFolderName)));
   } else {
     const auto logger = getLogger();
     if (logger) {
@@ -358,10 +358,9 @@ void LootState::setInitialGame(const std::string& preferredGame) {
     }
     initMessages_.push_back(PlainTextSimpleMessage(
         MessageType::error,
-        (format(
-             translate("Error: The initial game could not be selected. %1%")) %
-         e.what())
-            .str()));
+        format(translate("Error: The initial game could not be selected. {0}")
+                   .str(),
+               e.what())));
   }
 }
 
