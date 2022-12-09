@@ -93,6 +93,7 @@ private:
 private slots:
   void on_graphView_groupRemoved(const QString name);
   void on_graphView_groupSelected(const QString &name);
+  void on_pluginComboBox_editTextChanged(const QString &text);
   void on_groupNameInput_textChanged(const QString &text);
   void on_addPluginButton_clicked();
   void on_addGroupButton_clicked();

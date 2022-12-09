@@ -27,6 +27,7 @@
 
 #include <spdlog/fmt/fmt.h>
 
+#include <QtWidgets/QCompleter>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
@@ -35,6 +36,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <boost/locale.hpp>
 
+#include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 
 namespace loot {
@@ -120,7 +122,14 @@ void GroupsEditorDialog::setupUi() {
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
+  auto completer = new QCompleter(pluginComboBox->model(), this);
+  completer->setCompletionMode(QCompleter::PopupCompletion);
+  completer->setCaseSensitivity(Qt::CaseInsensitive);
+
   pluginComboBox->setVisible(false);
+  pluginComboBox->setEditable(true);
+  pluginComboBox->setInsertPolicy(QComboBox::NoInsert);
+  pluginComboBox->setCompleter(completer);
 
   addPluginButton->setObjectName("addPluginButton");
   addPluginButton->setVisible(false);
@@ -181,6 +190,13 @@ void GroupsEditorDialog::setupUi() {
   translateUi();
 
   QMetaObject::connectSlotsByName(this);
+
+  // For some reason QComboBox::editTextChanged doesn't fire, to bind to the
+  // internal QLineEdit instead.
+  connect(pluginComboBox->lineEdit(),
+          &QLineEdit::textChanged,
+          this,
+          &GroupsEditorDialog::on_pluginComboBox_editTextChanged);
 }
 
 void GroupsEditorDialog::translateUi() {
@@ -297,7 +313,7 @@ void GroupsEditorDialog::refreshPluginLists() {
 const PluginItem* GroupsEditorDialog::getPluginItem(
     const std::string& pluginName) const {
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
-    if (plugin.name == pluginName) {
+    if (CompareFilenames(plugin.name, pluginName) == 0) {
       return &plugin;
     }
   }
@@ -372,6 +388,14 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
       !groupNameInput->text().isEmpty() && graphView->isUserGroup(groupName);
 
   renameGroupButton->setEnabled(shouldEnableRenameGroup);
+}
+
+void GroupsEditorDialog::on_pluginComboBox_editTextChanged(
+    const QString& text) {
+  const auto enableAddPluginButton =
+      getPluginItem(text.toStdString()) != nullptr;
+
+  addPluginButton->setEnabled(enableAddPluginButton);
 }
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.18.6\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-12-01 17:45+0000\n"
+"POT-Creation-Date: 2022-12-09 18:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -639,44 +639,44 @@ msgstr ""
 msgid "Find Next"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:187
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:203
 msgid "Groups Editor"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:189
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:205
 msgid "Add plugin to group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:191
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:207
 msgid "Group name"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:192
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:208
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:193
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:209
 msgid "Rename current group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:194
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:210
 msgid "Auto arrange groups"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:211
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:227
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:282
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:298
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:361
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:484
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:377
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:508
 msgid "Plugins in {0}"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:441
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:465
 msgid "Group already exists!"
 msgstr ""
 
