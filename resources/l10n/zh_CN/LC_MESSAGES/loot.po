@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.16.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-12-09 18:14+0000\n"
-"PO-Revision-Date: 2022-12-11 19:02+0800\n"
+"PO-Revision-Date: 2022-12-11 19:10+0800\n"
 "Last-Translator: S猫 <silent.haven@gmail.com>\n"
 "Language-Team: S猫 <silent.haven@gmail.com>\n"
 "Language: zh_CN\n"
@@ -255,7 +255,7 @@ msgstr "复制内容(&C)"
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:685
 msgid "&Refresh Content"
-msgstr "刷新内容(&C)"
+msgstr "刷新内容(&R)"
 
 #. translators: This string is an action in the Game menu.
 #: src/gui/qt/main_window.cpp:687
