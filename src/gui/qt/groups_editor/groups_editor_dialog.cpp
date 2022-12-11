@@ -27,6 +27,7 @@
 
 #include <spdlog/fmt/fmt.h>
 
+#include <QtWidgets/QCompleter>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
@@ -35,6 +36,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <boost/locale.hpp>
 
+#include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 
 namespace loot {
@@ -78,11 +80,19 @@ void GroupsEditorDialog::setGroups(
     const std::vector<GroupNodePosition>& nodePositions) {
   graphView->setGroups(
       masterlistGroups, userGroups, installedPluginGroups, nodePositions);
+
+  // Reset UI elements.
   groupPluginsTitle->setVisible(false);
   groupPluginsList->setVisible(false);
+  pluginComboBox->setVisible(false);
+  addPluginButton->setVisible(false);
+  addPluginButton->setDisabled(true);
+  renameGroupButton->setDisabled(true);
 
   initialUserGroups = userGroups;
   initialNodePositions = nodePositions;
+  selectedGroupName = std::nullopt;
+  newPluginGroups.clear();
 }
 
 std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
@@ -91,6 +101,11 @@ std::vector<Group> loot::GroupsEditorDialog::getUserGroups() const {
 
 std::vector<GroupNodePosition> GroupsEditorDialog::getNodePositions() const {
   return graphView->getNodePositions();
+}
+
+std::unordered_map<std::string, std::string>
+GroupsEditorDialog::getNewPluginGroups() const {
+  return newPluginGroups;
 }
 
 void GroupsEditorDialog::setupUi() {
@@ -107,10 +122,36 @@ void GroupsEditorDialog::setupUi() {
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
+  auto completer = new QCompleter(pluginComboBox->model(), this);
+  completer->setCompletionMode(QCompleter::PopupCompletion);
+  completer->setCaseSensitivity(Qt::CaseInsensitive);
+
+  pluginComboBox->setVisible(false);
+  pluginComboBox->setEditable(true);
+  pluginComboBox->setInsertPolicy(QComboBox::NoInsert);
+  pluginComboBox->setCompleter(completer);
+
+  addPluginButton->setObjectName("addPluginButton");
+  addPluginButton->setVisible(false);
+  addPluginButton->setDisabled(true);
+
+  auto divider = new QFrame(this);
+  divider->setObjectName("divider");
+  divider->setFrameShape(QFrame::HLine);
+  divider->setFrameShadow(QFrame::Sunken);
+
+  auto divider2 = new QFrame(this);
+  divider2->setObjectName("divider");
+  divider2->setFrameShape(QFrame::HLine);
+  divider2->setFrameShadow(QFrame::Sunken);
+
   groupNameInput->setObjectName("groupNameInput");
 
   addGroupButton->setObjectName("addGroupButton");
   addGroupButton->setDisabled(true);
+
+  renameGroupButton->setObjectName("renameGroupButton");
+  renameGroupButton->setDisabled(true);
 
   autoArrangeButton->setObjectName("autoArrangeButton");
 
@@ -125,10 +166,16 @@ void GroupsEditorDialog::setupUi() {
 
   formLayout->addRow(groupNameInputLabel, groupNameInput);
   formLayout->addWidget(addGroupButton);
+  formLayout->addWidget(renameGroupButton);
 
   sidebarLayout->addWidget(groupPluginsTitle);
   sidebarLayout->addWidget(groupPluginsList, 1);
   sidebarLayout->addSpacerItem(verticalSpacer);
+  sidebarLayout->addWidget(pluginComboBox);
+  sidebarLayout->addWidget(addPluginButton);
+  sidebarLayout->addWidget(divider);
+  sidebarLayout->addLayout(formLayout);
+  sidebarLayout->addWidget(divider2);
   sidebarLayout->addWidget(autoArrangeButton);
   sidebarLayout->addLayout(formLayout);
 
@@ -143,13 +190,23 @@ void GroupsEditorDialog::setupUi() {
   translateUi();
 
   QMetaObject::connectSlotsByName(this);
+
+  // For some reason QComboBox::editTextChanged doesn't fire, to bind to the
+  // internal QLineEdit instead.
+  connect(pluginComboBox->lineEdit(),
+          &QLineEdit::textChanged,
+          this,
+          &GroupsEditorDialog::on_pluginComboBox_editTextChanged);
 }
 
 void GroupsEditorDialog::translateUi() {
   setWindowTitle(translate("Groups Editor"));
 
+  addPluginButton->setText(translate("Add plugin to group"));
+
   groupNameInputLabel->setText(translate("Group name"));
   addGroupButton->setText(translate("Add a new group"));
+  renameGroupButton->setText(translate("Rename current group"));
   autoArrangeButton->setText(translate("Auto arrange groups"));
 }
 
@@ -175,6 +232,11 @@ bool GroupsEditorDialog::askShouldDiscardChanges() {
 }
 
 bool GroupsEditorDialog::hasUnsavedChanges() {
+  // Check if any plugins' groups have changed.
+  if (!newPluginGroups.empty()) {
+    return true;
+  }
+
   // Check if the user groups have changed since they were initially set.
   // The order the groups are listed in doesn't matter, and neither does
   // the order of their load after groups.
@@ -210,17 +272,25 @@ bool GroupsEditorDialog::hasUnsavedChanges() {
   return oldPositions != newPositions;
 }
 
-void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
-  groupPluginsList->clear();
-  groupPluginsTitle->clear();
+void GroupsEditorDialog::refreshPluginLists() {
+  if (!selectedGroupName.has_value()) {
+    // Shouldn't be possible.
+    return;
+  }
 
-  auto groupName = name.toStdString();
+  groupPluginsList->clear();
+  pluginComboBox->clear();
+
+  const auto groupName = selectedGroupName.value();
 
   for (const auto& plugin : pluginItemModel->getPluginItems()) {
-    auto pluginGroup = plugin.group.value_or(Group::DEFAULT_NAME);
+    const auto pluginGroup = getPluginGroup(plugin);
 
     if (pluginGroup == groupName) {
       groupPluginsList->addItem(QString::fromStdString(plugin.name));
+    } else {
+      // Add plugins that aren't in the current group to the combo box.
+      pluginComboBox->addItem(QString::fromStdString(plugin.name));
     }
   }
 
@@ -236,6 +306,73 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
     groupPluginsList->addItem(item);
   }
 
+  pluginComboBox->setEnabled(pluginComboBox->count() > 0);
+  addPluginButton->setEnabled(pluginComboBox->count() > 0);
+}
+
+const PluginItem* GroupsEditorDialog::getPluginItem(
+    const std::string& pluginName) const {
+  for (const auto& plugin : pluginItemModel->getPluginItems()) {
+    if (CompareFilenames(plugin.name, pluginName) == 0) {
+      return &plugin;
+    }
+  }
+
+  return nullptr;
+}
+
+const std::string GroupsEditorDialog::getPluginGroup(
+    const PluginItem& pluginItem) const {
+  auto newPluginGroupIt = newPluginGroups.find(pluginItem.name);
+
+  return newPluginGroupIt == newPluginGroups.end()
+             ? pluginItem.group.value_or(Group::DEFAULT_NAME)
+             : newPluginGroupIt->second;
+}
+
+bool GroupsEditorDialog::containsMoreThanOnePlugin(
+    const std::string& groupName) const {
+  size_t pluginsCount = 0;
+
+  for (const auto& plugin : pluginItemModel->getPluginItems()) {
+    const auto pluginGroup = getPluginGroup(plugin);
+
+    if (pluginGroup == groupName) {
+      if (pluginsCount == 1) {
+        return true;
+      }
+
+      pluginsCount += 1;
+    }
+  }
+
+  return false;
+}
+
+void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
+  // If the removed group is the currently selected group, it's no longer
+  // selected, so reset the associated state.
+  if (selectedGroupName.has_value() &&
+      selectedGroupName == name.toStdString()) {
+    selectedGroupName = std::nullopt;
+
+    groupPluginsTitle->setVisible(false);
+    groupPluginsList->setVisible(false);
+    pluginComboBox->setVisible(false);
+    addPluginButton->setVisible(false);
+
+    renameGroupButton->setEnabled(false);
+  }
+}
+
+void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
+  groupPluginsTitle->clear();
+
+  auto groupName = name.toStdString();
+  selectedGroupName = groupName;
+
+  refreshPluginLists();
+
   auto titleText =
       fmt::format(boost::locale::translate("Plugins in {0}").str(), groupName);
 
@@ -243,11 +380,79 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
 
   groupPluginsTitle->setVisible(true);
   groupPluginsList->setVisible(true);
+  pluginComboBox->setVisible(true);
+  addPluginButton->setVisible(true);
+
+  // Only enable renaming groups for user groups.
+  const auto shouldEnableRenameGroup =
+      !groupNameInput->text().isEmpty() && graphView->isUserGroup(groupName);
+
+  renameGroupButton->setEnabled(shouldEnableRenameGroup);
+}
+
+void GroupsEditorDialog::on_pluginComboBox_editTextChanged(
+    const QString& text) {
+  const auto enableAddPluginButton =
+      getPluginItem(text.toStdString()) != nullptr;
+
+  addPluginButton->setEnabled(enableAddPluginButton);
 }
 
 void GroupsEditorDialog::on_groupNameInput_textChanged(const QString& text) {
   addGroupButton->setDisabled(text.isEmpty());
   addGroupButton->setDefault(!text.isEmpty());
+
+  // Only enable renaming groups for user groups.
+  const auto shouldEnableRenameGroup =
+      !text.isEmpty() && selectedGroupName.has_value() &&
+      graphView->isUserGroup(selectedGroupName.value());
+
+  renameGroupButton->setEnabled(shouldEnableRenameGroup);
+}
+
+void GroupsEditorDialog::on_addPluginButton_clicked() {
+  if (!selectedGroupName.has_value()) {
+    // Shouldn't be possible.
+    return;
+  }
+
+  const auto pluginName = pluginComboBox->currentText().toStdString();
+  const auto groupName = selectedGroupName.value();
+
+  // Get the plugin's item.
+  const auto pluginItem = getPluginItem(pluginName);
+  if (!pluginItem) {
+    // Shouldn't be possible.
+    return;
+  }
+
+  // Get the plugin's current group.
+  const auto currentPluginGroup = getPluginGroup(*pluginItem);
+
+  // Count how many plugins are in the current group.
+  const auto containsOtherPlugins =
+      containsMoreThanOnePlugin(currentPluginGroup);
+
+  // Check the group against the plugin's saved group and just remove
+  // the plugin from the map if the two are equal, to prevent moving a
+  // plugin to a new group and back again from being treated as an unsaved
+  // change.
+  if (pluginItem->group == groupName) {
+    newPluginGroups.erase(pluginName);
+  } else {
+    // Store the plugin's new group.
+    newPluginGroups.insert_or_assign(pluginName, groupName);
+  }
+
+  // Refresh the group's plugin list.
+  refreshPluginLists();
+
+  // Update whether or not the plugin's old group still contains any plugins.
+  graphView->setGroupContainsInstalledPlugins(currentPluginGroup,
+                                              containsOtherPlugins);
+
+  // Update the plugin's new group to register it contains plugins.
+  graphView->setGroupContainsInstalledPlugins(groupName, true);
 }
 
 void GroupsEditorDialog::on_addGroupButton_clicked() {
@@ -263,6 +468,46 @@ void GroupsEditorDialog::on_addGroupButton_clicked() {
   }
 
   groupNameInput->clear();
+}
+
+void GroupsEditorDialog::on_renameGroupButton_clicked() {
+  if (groupNameInput->text().isEmpty() || !selectedGroupName.has_value() ||
+      !graphView->isUserGroup(selectedGroupName.value())) {
+    return;
+  }
+
+  const auto oldName = selectedGroupName.value();
+  const auto newName = groupNameInput->text().toStdString();
+
+  // Renaming groups isn't a built-in operation, instead:
+  // 1. Create a new group with the new name and and load after metadata from
+  //    the old group.
+  // 2. Replace any "load after" references to the old group in other groups'
+  //    metadata with the new group.
+  // 3. Update any plugins in the old group to be in the new group. This
+  //    includes any plugins that have already had their group changed.
+  // 4. Remove the old group.
+
+  // Renaming the group in the graph is equivalent to steps 1, 2 and 4.
+  graphView->renameGroup(oldName, newName);
+
+  // Update plugin groups (step 3).
+  for (const auto& plugin : pluginItemModel->getPluginItems()) {
+    const auto pluginGroup = getPluginGroup(plugin);
+
+    if (pluginGroup == oldName) {
+      newPluginGroups.insert_or_assign(plugin.name, newName);
+    }
+  }
+
+  // Update the stored selected group name.
+  selectedGroupName = newName;
+
+  // Update group name displayed above plugin list.
+  const auto titleText =
+      fmt::format(boost::locale::translate("Plugins in {0}").str(), newName);
+
+  groupPluginsTitle->setText(QString::fromStdString(titleText));
 }
 
 void GroupsEditorDialog::on_autoArrangeButton_clicked() {

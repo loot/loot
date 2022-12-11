@@ -52,13 +52,18 @@ public:
                  const std::vector<GroupNodePosition> &nodePositions);
 
   bool addGroup(const std::string &name);
+  void renameGroup(const std::string &oldName, const std::string &newName);
+  void setGroupContainsInstalledPlugins(const std::string &name,
+                                        bool containsInstalledPlugins);
   void autoLayout();
   void registerUserLayoutChange();
 
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
   bool hasUnsavedLayoutChanges() const;
+  bool isUserGroup(const std::string &name) const;
 
+  void handleGroupRemoved(const QString &name);
   void handleGroupSelected(const QString &name);
 
   QColor getMasterColor() const;
@@ -66,6 +71,7 @@ public:
   QColor getBackgroundColor() const;
 
 signals:
+  void groupRemoved(const QString name);
   void groupSelected(const QString &name);
 
 protected:

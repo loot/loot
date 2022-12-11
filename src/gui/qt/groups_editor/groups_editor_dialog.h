@@ -27,6 +27,7 @@
 #define LOOT_GUI_QT_GROUPS_EDITOR_GROUPS_EDITOR_DIALOG
 
 #include <QtGui/QCloseEvent>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -51,20 +52,30 @@ public:
 
   std::vector<Group> getUserGroups() const;
   std::vector<GroupNodePosition> getNodePositions() const;
+  std::unordered_map<std::string, std::string> getNewPluginGroups() const;
 
 private:
   GraphView *graphView{new GraphView(this)};
+
   QLabel *groupPluginsTitle{new QLabel(this)};
   QListWidget *groupPluginsList{new QListWidget(this)};
+
+  QComboBox *pluginComboBox{new QComboBox(this)};
+  QPushButton *addPluginButton{new QPushButton(this)};
+
   QPushButton *autoArrangeButton{new QPushButton(this)};
+
   QLabel *groupNameInputLabel{new QLabel(this)};
   QLineEdit *groupNameInput{new QLineEdit(this)};
   QPushButton *addGroupButton{new QPushButton(this)};
+  QPushButton *renameGroupButton{new QPushButton(this)};
 
   PluginItemModel *pluginItemModel{nullptr};
 
   std::vector<Group> initialUserGroups;
   std::vector<GroupNodePosition> initialNodePositions;
+  std::optional<std::string> selectedGroupName;
+  std::unordered_map<std::string, std::string> newPluginGroups;
 
   void setupUi();
   void translateUi();
@@ -74,10 +85,19 @@ private:
   bool askShouldDiscardChanges();
   bool hasUnsavedChanges();
 
+  void refreshPluginLists();
+  const PluginItem *getPluginItem(const std::string &pluginName) const;
+  const std::string getPluginGroup(const PluginItem &pluginItem) const;
+  bool containsMoreThanOnePlugin(const std::string &groupName) const;
+
 private slots:
+  void on_graphView_groupRemoved(const QString name);
   void on_graphView_groupSelected(const QString &name);
+  void on_pluginComboBox_editTextChanged(const QString &text);
   void on_groupNameInput_textChanged(const QString &text);
+  void on_addPluginButton_clicked();
   void on_addGroupButton_clicked();
+  void on_renameGroupButton_clicked();
   void on_autoArrangeButton_clicked();
   void on_dialogButtons_accepted();
   void on_dialogButtons_rejected();

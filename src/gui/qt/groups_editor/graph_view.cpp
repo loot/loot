@@ -186,6 +186,35 @@ bool GraphView::addGroup(const std::string &name) {
   return true;
 }
 
+void GraphView::renameGroup(const std::string &oldName,
+                            const std::string &newName) {
+  auto qOldName = QString::fromStdString(oldName);
+
+  for (const auto item : scene()->items()) {
+    auto node = qgraphicsitem_cast<Node *>(item);
+    if (node && node->getName() == qOldName) {
+      node->setName(QString::fromStdString(newName));
+      return;
+    }
+  }
+}
+
+void GraphView::setGroupContainsInstalledPlugins(
+    const std::string &name,
+    bool containsInstalledPlugins) {
+  const auto qName = QString::fromStdString(name);
+
+  for (const auto item : scene()->items()) {
+    auto node = qgraphicsitem_cast<Node *>(item);
+    if (!node || node->getName() != qName) {
+      continue;
+    }
+
+    node->setContainsInstalledPlugins(containsInstalledPlugins);
+    return;
+  }
+}
+
 void GraphView::autoLayout() {
   doLayout({});
 
@@ -246,6 +275,23 @@ std::vector<GroupNodePosition> GraphView::getNodePositions() const {
 
 bool GraphView::hasUnsavedLayoutChanges() const {
   return hasUnsavedLayoutChanges_;
+}
+
+bool GraphView::isUserGroup(const std::string &name) const {
+  auto qName = QString::fromStdString(name);
+
+  for (const auto item : scene()->items()) {
+    auto node = qgraphicsitem_cast<Node *>(item);
+    if (node && node->getName() == qName) {
+      return node->isUserMetadata();
+    }
+  }
+
+  return false;
+}
+
+void GraphView::handleGroupRemoved(const QString &name) {
+  emit groupRemoved(name);
 }
 
 void GraphView::handleGroupSelected(const QString &name) {
