@@ -62,8 +62,10 @@ private:
                                "\" is not loaded.");
     }
 
+    const auto loadOrder = game_.GetLoadOrder();
+
     for (const auto& otherPlugin : game_.GetPluginsInLoadOrder()) {
-      auto metadata = PluginItem(*otherPlugin, game_, language_);
+      auto metadata = PluginItem(*otherPlugin, game_, loadOrder, language_);
       auto conflict = doPluginsConflict(*plugin, *otherPlugin);
 
       result.push_back(std::make_pair(metadata, conflict));

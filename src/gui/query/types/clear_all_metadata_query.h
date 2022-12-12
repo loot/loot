@@ -77,8 +77,10 @@ private:
       const std::vector<const PluginInterface*>& userlistPlugins) {
     std::vector<PluginItem> plugins;
 
+    const auto loadOrder = game_.GetLoadOrder();
+
     for (const auto& plugin : userlistPlugins) {
-      auto derivedMetadata = PluginItem(*plugin, game_, language_);
+      auto derivedMetadata = PluginItem(*plugin, game_, loadOrder, language_);
       plugins.push_back(derivedMetadata);
     }
 

@@ -120,9 +120,10 @@ std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
 
 PluginItem::PluginItem(const PluginInterface& plugin,
                        const gui::Game& game,
+                       const std::vector<std::string>& loadOrder,
                        std::string language) :
     name(plugin.GetName()),
-    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, game.GetLoadOrder())),
+    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, loadOrder)),
     crc(plugin.GetCRC()),
     version(plugin.GetVersion()),
     isActive(game.IsPluginActive(plugin.GetName())),

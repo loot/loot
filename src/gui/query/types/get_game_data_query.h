@@ -60,10 +60,11 @@ public:
 
     // Sort plugins into their load order.
     auto installed = game_.GetPluginsInLoadOrder();
+    const auto loadOrder = game_.GetLoadOrder();
 
     std::vector<PluginItem> metadata;
     for (const auto& plugin : installed) {
-      metadata.push_back(PluginItem(*plugin, game_, language_));
+      metadata.push_back(PluginItem(*plugin, game_, loadOrder, language_));
     }
 
     return metadata;

@@ -123,11 +123,14 @@ void UpdateMasterlistTask::finish() {
     state.GetCurrentGame().LoadMetadata();
 
     auto plugins = state.GetCurrentGame().GetPluginsInLoadOrder();
+    const auto loadOrder = state.GetCurrentGame().GetLoadOrder();
 
     std::vector<PluginItem> metadata;
     for (const auto &plugin : plugins) {
-      metadata.push_back(PluginItem(
-          *plugin, state.GetCurrentGame(), state.getSettings().getLanguage()));
+      metadata.push_back(PluginItem(*plugin,
+                                    state.GetCurrentGame(),
+                                    loadOrder,
+                                    state.getSettings().getLanguage()));
     }
 
     emit finished(metadata);

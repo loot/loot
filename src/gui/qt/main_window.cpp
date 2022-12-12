@@ -972,6 +972,8 @@ void MainWindow::refreshSearch() {
 }
 
 void MainWindow::refreshPluginRawData(const std::string& pluginName) {
+  const auto loadOrder = state.GetCurrentGame().GetLoadOrder();
+
   for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
     const auto index = pluginItemModel->index(i, 0);
     const auto pluginItem = index.data(RawDataRole).value<PluginItem>();
@@ -980,6 +982,7 @@ void MainWindow::refreshPluginRawData(const std::string& pluginName) {
       const auto plugin =
           PluginItem(*state.GetCurrentGame().GetPlugin(pluginName),
                      state.GetCurrentGame(),
+                     loadOrder,
                      state.getSettings().getLanguage());
 
       const auto indexData = QVariant::fromValue(plugin);

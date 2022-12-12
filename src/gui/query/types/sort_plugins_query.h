@@ -71,13 +71,15 @@ private:
   std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
     std::vector<PluginItem> result;
 
+    const auto loadOrder = game_.GetLoadOrder();
+
     for (const auto& pluginName : plugins) {
       auto plugin = game_.GetPlugin(pluginName);
       if (!plugin) {
         continue;
       }
 
-      auto derivedMetadata = PluginItem(*plugin, game_, language_);
+      auto derivedMetadata = PluginItem(*plugin, game_, loadOrder, language_);
       const auto index = game_.GetActiveLoadOrderIndex(*plugin, plugins);
       if (index.has_value()) {
         derivedMetadata.loadOrderIndex = index;
