@@ -60,6 +60,10 @@ public:
     if (!plugins.empty())
       counter_.IncrementUnappliedChangeCounter();
 
+    if (logger) {
+      logger->info("Sorting operation complete.");
+    }
+
     return result;
   }
 

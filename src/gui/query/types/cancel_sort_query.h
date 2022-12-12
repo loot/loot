@@ -36,6 +36,11 @@ public:
       game_(game), counter_(counter) {}
 
   QueryResult executeLogic() override {
+    auto logger = getLogger();
+    if (logger) {
+      logger->trace("User has rejected sorted load order, discarding it.");
+    }
+
     counter_.DecrementUnappliedChangeCounter();
     game_.DecrementLoadOrderSortCount();
 
