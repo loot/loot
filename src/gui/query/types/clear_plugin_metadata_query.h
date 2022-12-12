@@ -46,11 +46,14 @@ public:
     game_.ClearUserMetadata(pluginName_);
     game_.SaveUserMetadata();
 
-    const auto loadOrder = game_.GetLoadOrder();
-
     auto plugin = game_.GetPlugin(pluginName_);
     if (plugin) {
-      return PluginItem(*plugin, game_, loadOrder, language_);
+      return PluginItem(
+          *plugin,
+          game_,
+          game_.GetActiveLoadOrderIndex(*plugin, game_.GetLoadOrder()),
+          game_.IsPluginActive(plugin->GetName()),
+          language_);
     }
 
     return std::monostate();

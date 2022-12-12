@@ -62,25 +62,19 @@ private:
                                "\" is not loaded.");
     }
 
-    const auto loadOrder = game_.GetLoadOrder();
+    const std::function<std::pair<PluginItem, bool>(
+        const PluginInterface* const, std::optional<short>, bool)>
+        mapper = [&](const PluginInterface* const otherPlugin,
+                     std::optional<short> loadOrderIndex,
+                     bool isActive) {
+          const auto pluginItem = PluginItem(
+              *otherPlugin, game_, loadOrderIndex, isActive, language_);
+          const auto conflict = plugin->DoFormIDsOverlap(*otherPlugin);
 
-    for (const auto& otherPlugin : game_.GetPluginsInLoadOrder()) {
-      auto metadata = PluginItem(*otherPlugin, game_, loadOrder, language_);
-      auto conflict = doPluginsConflict(*plugin, *otherPlugin);
+          return std::make_pair(pluginItem, conflict);
+        };
 
-      result.push_back(std::make_pair(metadata, conflict));
-    }
-
-    return result;
-  }
-
-  bool doPluginsConflict(const PluginInterface& plugin,
-                         const PluginInterface& otherPlugin) {
-    if (plugin.DoFormIDsOverlap(otherPlugin)) {
-      return true;
-    } else {
-      return false;
-    }
+    return MapFromLoadOrderData(game_, game_.GetLoadOrder(), mapper);
   }
 
   gui::Game& game_;

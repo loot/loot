@@ -41,7 +41,8 @@ struct PluginItem {
   PluginItem() = default;
   PluginItem(const PluginInterface& plugin,
              const gui::Game& game,
-             const std::vector<std::string>& loadOrder,
+             const std::optional<short>& loadOrderIndex,
+             const bool isActive,
              std::string language);
 
   std::string name;
@@ -79,6 +80,11 @@ struct PluginItem {
 
   std::string loadOrderIndexText() const;
 };
+
+std::vector<PluginItem> GetPluginItems(
+    const std::vector<std::string>& pluginNames,
+    const gui::Game& game,
+    const std::string& language);
 }
 
 #endif

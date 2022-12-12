@@ -189,19 +189,6 @@ std::vector<const PluginInterface*> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
-std::vector<const PluginInterface*> Game::GetPluginsInLoadOrder() const {
-  std::vector<const PluginInterface*> installed;
-
-  for (const auto& pluginName : GetLoadOrder()) {
-    const auto plugin = GetPlugin(pluginName);
-    if (plugin) {
-      installed.push_back(plugin);
-    }
-  }
-
-  return installed;
-}
-
 std::vector<Message> Game::CheckInstallValidity(
     const PluginInterface& plugin,
     const PluginMetadata& metadata,

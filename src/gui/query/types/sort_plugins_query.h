@@ -69,21 +69,7 @@ public:
 
 private:
   std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
-    std::vector<PluginItem> result;
-
-    for (const auto& pluginName : plugins) {
-      auto plugin = game_.GetPlugin(pluginName);
-      if (!plugin) {
-        continue;
-      }
-
-      const auto derivedMetadata =
-          PluginItem(*plugin, game_, plugins, language_);
-
-      result.push_back(derivedMetadata);
-    }
-
-    return result;
+    return GetPluginItems(plugins, game_, language_);
   }
 
   gui::Game& game_;

@@ -120,13 +120,14 @@ std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
 
 PluginItem::PluginItem(const PluginInterface& plugin,
                        const gui::Game& game,
-                       const std::vector<std::string>& loadOrder,
+                       const std::optional<short>& loadOrderIndex,
+                       const bool isActive,
                        std::string language) :
     name(plugin.GetName()),
-    loadOrderIndex(game.GetActiveLoadOrderIndex(plugin, loadOrder)),
+    loadOrderIndex(loadOrderIndex),
     crc(plugin.GetCRC()),
     version(plugin.GetVersion()),
-    isActive(game.IsPluginActive(plugin.GetName())),
+    isActive(isActive),
     isEmpty(plugin.IsEmpty()),
     isMaster(plugin.IsMaster()),
     isLightPlugin(plugin.IsLightPlugin()),
@@ -417,5 +418,20 @@ std::string PluginItem::loadOrderIndexText() const {
   } else {
     return "";
   }
+}
+
+std::vector<PluginItem> GetPluginItems(
+    const std::vector<std::string>& pluginNames,
+    const gui::Game& game,
+    const std::string& language) {
+  const std::function<PluginItem(
+      const PluginInterface* const, std::optional<short>, bool)>
+      mapper = [&](const PluginInterface* const plugin,
+                   std::optional<short> loadOrderIndex,
+                   bool isActive) {
+        return PluginItem(*plugin, game, loadOrderIndex, isActive, language);
+      };
+
+  return MapFromLoadOrderData(game, pluginNames, mapper);
 }
 }

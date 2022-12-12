@@ -42,7 +42,7 @@ public:
     }
 
     // Record which plugins have userlist entries.
-    auto userlistPlugins = getUserlistPlugins();
+    auto userlistPlugins = getUserlistPluginNames();
 
     // Clear the user metadata.
     game_.ClearAllUserMetadata();
@@ -62,29 +62,20 @@ private:
   gui::Game& game_;
   std::string language_;
 
-  std::vector<const PluginInterface*> getUserlistPlugins() const {
-    std::vector<const PluginInterface*> userlistPlugins;
-    for (const auto& plugin : game_.GetPlugins()) {
-      if (game_.GetUserMetadata(plugin->GetName()).has_value()) {
-        userlistPlugins.push_back(plugin);
+  std::vector<std::string> getUserlistPluginNames() const {
+    std::vector<std::string> pluginNames;
+    for (const auto& pluginName : game_.GetLoadOrder()) {
+      if (game_.GetUserMetadata(pluginName).has_value()) {
+        pluginNames.push_back(pluginName);
       }
     }
 
-    return userlistPlugins;
+    return pluginNames;
   }
 
   std::vector<PluginItem> getDerivedMetadata(
-      const std::vector<const PluginInterface*>& userlistPlugins) {
-    std::vector<PluginItem> plugins;
-
-    const auto loadOrder = game_.GetLoadOrder();
-
-    for (const auto& plugin : userlistPlugins) {
-      auto derivedMetadata = PluginItem(*plugin, game_, loadOrder, language_);
-      plugins.push_back(derivedMetadata);
-    }
-
-    return plugins;
+      const std::vector<std::string>& userlistPlugins) {
+    return GetPluginItems(userlistPlugins, game_, language_);
   }
 };
 }

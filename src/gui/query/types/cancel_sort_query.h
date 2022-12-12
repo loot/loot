@@ -26,6 +26,8 @@ along with LOOT.  If not, see
 #ifndef LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 #define LOOT_GUI_QUERY_CANCEL_SORT_QUERY
 
+#include <functional>
+
 #include "gui/query/query.h"
 #include "gui/state/game/game.h"
 
@@ -44,22 +46,15 @@ public:
     counter_.DecrementUnappliedChangeCounter();
     game_.DecrementLoadOrderSortCount();
 
-    std::vector<std::string> loadOrder = game_.GetLoadOrder();
+    const std::function<std::pair<std::string, std::optional<short>>(
+        const PluginInterface* const, std::optional<short>, bool)>
+        mapper = [](const PluginInterface* const plugin,
+                    std::optional<short> loadOrderIndex,
+                    bool) {
+          return std::make_pair(plugin->GetName(), loadOrderIndex);
+        };
 
-    std::vector<std::pair<std::string, std::optional<short>>> result;
-    for (const auto& pluginName : loadOrder) {
-      auto plugin = game_.GetPlugin(pluginName);
-      if (!plugin) {
-        continue;
-      }
-
-      auto loadOrderIndex =
-          game_.GetActiveLoadOrderIndex(*plugin, loadOrder);
-
-      result.push_back(std::make_pair(pluginName, loadOrderIndex));
-    }
-
-    return result;
+    return MapFromLoadOrderData(game_, game_.GetLoadOrder(), mapper);
   }
 
 private:
