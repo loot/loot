@@ -164,7 +164,7 @@ int main(int argc, char* argv[]) {
 
     timer->callOnTimeout([&]() {
       if (logger) {
-        logger->info("Checking if maximised window geometry has updated.");
+        logger->debug("Checking if maximised window geometry has updated.");
       }
 
       // Initialise after LOOP_COUNTER_MAX loops just in case the initial
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
                         " checks, initialising the UI anyway."
                   : "Window geometry has updated, initialising the UI.";
 
-          logger->info(message);
+          logger->debug(message);
         }
 
         mainWindow.initialise();

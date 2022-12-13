@@ -400,7 +400,7 @@ QSize CardDelegate::sizeHint(const QStyleOptionViewItem& option,
   auto card = cardSizingCache->getCard(cacheKey);
   if (card == nullptr) {
     const auto logger = getLogger();
-    logger->info(
+    logger->warn(
         "No cached card exists for row {}, card sizes may not be calculated "
         "correctly",
         index.row());

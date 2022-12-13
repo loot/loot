@@ -245,9 +245,9 @@ bool isFileUpToDate(const std::filesystem::path& filePath,
     auto existingFileHash = calculateGitBlobHash(filePath);
 
     if (logger) {
-      logger->info("Calculated blob hash for file at {}: {}",
-                   filePath.u8string(),
-                   existingFileHash);
+      logger->debug("Calculated blob hash for file at {}: {}",
+                    filePath.u8string(),
+                    existingFileHash);
     }
 
     return expectedHash == existingFileHash;
@@ -280,7 +280,7 @@ bool updateFileWithData(const std::filesystem::path& filePath,
   if (logger) {
     auto logMessage = hasChanged ? "Updated file at {}, new blob hash is {}"
                                  : "{} is already up to date with blob hash {}";
-    logger->info(logMessage, filePath.u8string(), newHash);
+    logger->debug(logMessage, filePath.u8string(), newHash);
   }
 
   // Update the metadata file even if the file is up to date, as the
@@ -312,7 +312,7 @@ bool updateFile(const std::filesystem::path& source,
   if (logger) {
     auto logMessage = hasChanged ? "Updated file at {}, new blob hash is {}"
                                  : "{} is already up to date with blob hash {}";
-    logger->info(logMessage, destination.u8string(), newHash);
+    logger->debug(logMessage, destination.u8string(), newHash);
   }
 
   // Update the metadata file even if the file is up to date, as the

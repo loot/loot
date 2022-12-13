@@ -41,11 +41,6 @@ static constexpr size_t QSS_SUFFIX_LENGTH =
 std::optional<QString> loadStyleSheet(const QString& resourcePath) {
   QFile file(resourcePath);
   if (!file.exists()) {
-    auto logger = getLogger();
-    if (logger) {
-      logger->warn("Unable to set stylesheet, {} not found.",
-                   resourcePath.toStdString());
-    }
     return std::nullopt;
   }
 
@@ -63,7 +58,7 @@ std::optional<QString> loadStyleSheet(
 
   auto logger = getLogger();
   if (logger) {
-    logger->info("Loading style sheet for the \"{}\" theme...", themeName);
+    logger->debug("Loading style sheet for the \"{}\" theme...", themeName);
   }
 
   auto filesystemPath = (resourcesPath / "themes" / (themeName + QSS_SUFFIX));
@@ -75,8 +70,9 @@ std::optional<QString> loadStyleSheet(
 
   if (logger) {
     logger->warn(
-        "Failed to find the style sheet in the filesystem, attempting to load "
-        "from built-in resources...");
+        "Failed to find the style sheet for the \"{}\" theme in the "
+        "filesystem, attempting to load from built-in resources...",
+        themeName);
   }
 
   auto builtInPath =
@@ -87,7 +83,10 @@ std::optional<QString> loadStyleSheet(
   }
 
   if (logger) {
-    logger->error("Failed to find the style sheet in the built-in resources.");
+    logger->error(
+        "Failed to find the style sheet for the \"{}\" theme in the filesystem "
+        "or built-in resources.",
+        themeName);
   }
 
   return std::nullopt;
@@ -116,7 +115,7 @@ std::vector<std::string> findThemes(
     }
 
     if (logger) {
-      logger->info("Found theme QSS file: {}", filename);
+      logger->debug("Found theme QSS file: {}", filename);
     }
 
     auto themeName = filename.substr(0, filename.size() - QSS_SUFFIX_LENGTH);
