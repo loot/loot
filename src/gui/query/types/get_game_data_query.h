@@ -59,14 +59,7 @@ public:
     game_.LoadCreationClubPluginNames();
 
     // Sort plugins into their load order.
-    auto installed = game_.GetPluginsInLoadOrder();
-
-    std::vector<PluginItem> metadata;
-    for (const auto& plugin : installed) {
-      metadata.push_back(PluginItem(*plugin, game_, language_));
-    }
-
-    return metadata;
+    return GetPluginItems(game_.GetLoadOrder(), game_, language_);
   }
 
 private:

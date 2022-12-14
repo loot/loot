@@ -27,6 +27,7 @@
 #define LOOT_GUI_STATE_GAME_GAME
 
 #include <filesystem>
+#include <functional>
 #include <mutex>
 #include <optional>
 #include <string>
@@ -57,7 +58,6 @@ public:
 
   const PluginInterface* GetPlugin(const std::string& name) const;
   std::vector<const PluginInterface*> GetPlugins() const;
-  std::vector<const PluginInterface*> GetPluginsInLoadOrder() const;
   std::vector<Message> CheckInstallValidity(const PluginInterface& plugin,
                                             const PluginMetadata& metadata,
                                             const std::string& language) const;
@@ -133,6 +133,48 @@ private:
 
   mutable std::mutex mutex_;
 };
+}
+
+template<typename T>
+std::vector<T> MapFromLoadOrderData(
+    const gui::Game& game,
+    const std::vector<std::string>& loadOrder,
+    const std::function<
+        T(const PluginInterface* const, std::optional<short>, bool)>& mapper) {
+  std::vector<T> data;
+
+  short numberOfActiveLightPlugins = 0;
+  short numberOfActiveNormalPlugins = 0;
+
+  for (const auto& pluginName : loadOrder) {
+    const auto plugin = game.GetPlugin(pluginName);
+    if (!plugin) {
+      continue;
+    }
+
+    const auto isLight = plugin->IsLightPlugin();
+    const auto isActive = game.IsPluginActive(pluginName);
+
+    const auto numberOfActivePlugins =
+        isLight ? numberOfActiveLightPlugins : numberOfActiveNormalPlugins;
+
+    const auto activeLoadOrderIndex =
+        isActive ? std::optional(numberOfActivePlugins) : std::nullopt;
+
+    const auto datum = mapper(plugin, activeLoadOrderIndex, isActive);
+
+    data.push_back(datum);
+
+    if (isActive) {
+      if (isLight) {
+        ++numberOfActiveLightPlugins;
+      } else {
+        ++numberOfActiveNormalPlugins;
+      }
+    }
+  }
+
+  return data;
 }
 }
 

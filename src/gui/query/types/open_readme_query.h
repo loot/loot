@@ -42,7 +42,7 @@ public:
   QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
-      logger->info("Opening LOOT's readme.");
+      logger->trace("Opening LOOT's readme.");
     }
 
     auto canonicalPath =

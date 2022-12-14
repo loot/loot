@@ -89,9 +89,9 @@ void createBackup(const std::filesystem::path& sourceDir,
                   const std::filesystem::path& destDir) {
   auto logger = getLogger();
   if (logger) {
-    logger->info("Creating backup of {} in {}",
-                 sourceDir.u8string(),
-                 destDir.u8string());
+    logger->trace("Creating backup of {} in {}",
+                  sourceDir.u8string(),
+                  destDir.u8string());
   }
 
   for (auto it = std::filesystem::recursive_directory_iterator(sourceDir);
@@ -103,9 +103,9 @@ void createBackup(const std::filesystem::path& sourceDir,
     if (filename == ".git" || (it.depth() == 0 && filename == "backups")) {
       // Don't recurse into .git folders or the root backups folder.
       if (logger) {
-        logger->info("Not recursing into directory {} at depth {}",
-                     filename,
-                     it.depth());
+        logger->debug("Not recursing into directory {} at depth {}",
+                      filename,
+                      it.depth());
       }
       it.disable_recursion_pending();
     }
@@ -114,7 +114,7 @@ void createBackup(const std::filesystem::path& sourceDir,
         (it.depth() == 0 && filename == "LOOTDebugLog.txt")) {
       // Skip copying the debug log and anything that isn't a normal file.
       if (logger) {
-        logger->info(
+        logger->debug(
             "Skipping directory entry {} at depth {}", filename, it.depth());
       }
       continue;
@@ -128,7 +128,8 @@ void createBackup(const std::filesystem::path& sourceDir,
   }
 
   if (logger) {
-    logger->info("Backup created at {}", destDir.u8string());
+    logger->info(
+        "Backup of {} created in {}", sourceDir.u8string(), destDir.u8string());
   }
 }
 }

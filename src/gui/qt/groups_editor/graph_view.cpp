@@ -348,7 +348,7 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
       setNodePositions(nodes, nodePositionsMap);
 
       if (logger) {
-        logger->info("Graph layout loaded from saved node positions");
+        logger->debug("Graph layout loaded from saved node positions");
       }
 
       return;
@@ -361,7 +361,7 @@ void GraphView::doLayout(const std::vector<GroupNodePosition> &nodePositions) {
   }
 
   if (logger) {
-    logger->info("Calculating new graph layout");
+    logger->debug("Calculating new graph layout");
   }
 
   const auto calculatedNodePositions = calculateGraphLayout(nodes);

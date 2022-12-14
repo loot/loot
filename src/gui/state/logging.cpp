@@ -187,7 +187,7 @@ void enableDebugLogging(bool enable) {
     if (enable) {
       logger->set_level(spdlog::level::level_enum::trace);
     } else {
-      logger->set_level(spdlog::level::level_enum::warn);
+      logger->set_level(spdlog::level::level_enum::info);
     }
   }
 }

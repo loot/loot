@@ -189,19 +189,6 @@ std::vector<const PluginInterface*> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
-std::vector<const PluginInterface*> Game::GetPluginsInLoadOrder() const {
-  std::vector<const PluginInterface*> installed;
-
-  for (const auto& pluginName : GetLoadOrder()) {
-    const auto plugin = GetPlugin(pluginName);
-    if (plugin) {
-      installed.push_back(plugin);
-    }
-  }
-
-  return installed;
-}
-
 std::vector<Message> Game::CheckInstallValidity(
     const PluginInterface& plugin,
     const PluginMetadata& metadata,
@@ -343,7 +330,7 @@ std::vector<Message> Game::CheckInstallValidity(
       auto master = GetPlugin(masterName);
       if (!master) {
         if (logger) {
-          logger->info(
+          logger->debug(
               "Tried to get plugin object for master \"{}\" of \"{}\" but it "
               "was not loaded.",
               masterName,
@@ -922,7 +909,7 @@ std::vector<std::string> Game::GetInstalledPluginNames() {
       string name = it->path().filename().u8string();
 
       if (logger) {
-        logger->info("Found plugin: {}", name);
+        logger->debug("Found plugin: {}", name);
       }
 
       plugins.push_back(name);

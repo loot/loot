@@ -372,11 +372,16 @@ std::optional<GamePaths> LootState::FindGamePaths(
   const auto logger = getLogger();
   if (logger) {
     if (gamePaths.has_value()) {
-      logger->info("Using game install path \"{}\" and local path \"{}\"",
-                   gamePaths.value().installPath.u8string(),
-                   gamePaths.value().localPath.u8string());
+      logger->info(
+          "Using install path \"{}\" and local path \"{}\" for game with LOOT "
+          "folder name \"{}\".",
+          gamePaths.value().installPath.u8string(),
+          gamePaths.value().localPath.u8string(),
+          gameSettings.FolderName());
     } else {
-      logger->info("Could not find game paths");
+      logger->info(
+          "Could not find paths for game with LOOT folder name \"{}\".",
+          gameSettings.FolderName());
     }
   }
 

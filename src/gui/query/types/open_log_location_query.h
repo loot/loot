@@ -39,7 +39,7 @@ public:
   QueryResult executeLogic() override {
     auto logger = getLogger();
     if (logger) {
-      logger->info("Opening LOOT's local appdata folder.");
+      logger->trace("Opening LOOT's local appdata folder.");
     }
     OpenInDefaultApplication(logPath_.parent_path());
 

@@ -202,7 +202,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       event->button() == Qt::RightButton) {
     auto logger = getLogger();
     if (logger) {
-      logger->info("Removing Node for group {}",
+      logger->info("Removing node for group {}",
                    textItem->text().toStdString());
     }
 

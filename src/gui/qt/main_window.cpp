@@ -972,17 +972,22 @@ void MainWindow::refreshSearch() {
 }
 
 void MainWindow::refreshPluginRawData(const std::string& pluginName) {
+  const auto loadOrder = state.GetCurrentGame().GetLoadOrder();
+
   for (int i = 1; i < pluginItemModel->rowCount(); i += 1) {
     const auto index = pluginItemModel->index(i, 0);
     const auto pluginItem = index.data(RawDataRole).value<PluginItem>();
 
     if (pluginItem.name == pluginName) {
-      const auto plugin =
-          PluginItem(*state.GetCurrentGame().GetPlugin(pluginName),
-                     state.GetCurrentGame(),
-                     state.getSettings().getLanguage());
+      const auto& plugin = *state.GetCurrentGame().GetPlugin(pluginName);
+      const auto newPluginItem = PluginItem(
+          plugin,
+          state.GetCurrentGame(),
+          state.GetCurrentGame().GetActiveLoadOrderIndex(plugin, loadOrder),
+          state.GetCurrentGame().IsPluginActive(plugin.GetName()),
+          state.getSettings().getLanguage());
 
-      const auto indexData = QVariant::fromValue(plugin);
+      const auto indexData = QVariant::fromValue(newPluginItem);
       pluginItemModel->setData(index, indexData, RawDataRole);
       break;
     }
@@ -1471,15 +1476,8 @@ void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
-    auto plugins = state.GetCurrentGame().GetPluginsInLoadOrder();
-    std::vector<std::string> pluginNames;
-    pluginNames.reserve(plugins.size());
-
-    for (const auto& plugin : plugins) {
-      pluginNames.push_back(plugin->GetName());
-    }
-
-    CopyLoadOrderQuery query(state.GetCurrentGame(), pluginNames);
+    CopyLoadOrderQuery query(state.GetCurrentGame(),
+                             state.GetCurrentGame().GetLoadOrder());
 
     query.executeLogic();
 

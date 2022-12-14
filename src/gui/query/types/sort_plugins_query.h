@@ -60,29 +60,16 @@ public:
     if (!plugins.empty())
       counter_.IncrementUnappliedChangeCounter();
 
+    if (logger) {
+      logger->info("Sorting operation complete.");
+    }
+
     return result;
   }
 
 private:
   std::vector<PluginItem> getResult(const std::vector<std::string>& plugins) {
-    std::vector<PluginItem> result;
-
-    for (const auto& pluginName : plugins) {
-      auto plugin = game_.GetPlugin(pluginName);
-      if (!plugin) {
-        continue;
-      }
-
-      auto derivedMetadata = PluginItem(*plugin, game_, language_);
-      const auto index = game_.GetActiveLoadOrderIndex(*plugin, plugins);
-      if (index.has_value()) {
-        derivedMetadata.loadOrderIndex = index;
-      }
-
-      result.push_back(derivedMetadata);
-    }
-
-    return result;
+    return GetPluginItems(plugins, game_, language_);
   }
 
   gui::Game& game_;
