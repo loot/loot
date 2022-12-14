@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2021-03-26 12:21+0000\n"
 "PO-Revision-Date: 2021-04-02 21:39-0700\n"
-"Last-Translator: zDas (zDasF1xer)\n"
+"Last-Translator: Gabi Blanc\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Oh não, algo de errado aconteceu! Isso geralmente acontece pois \"{0}\" está "
 "definido como somente leitura. Se for o caso, desmarque a opção de somente "
-"leitura e tente novamente. Se não for isso, você pode checar sua "
+"leitura e tente novamente. Se não for isso, você pode checar seu "
 "LOOTDebugLog.txt (você pode obtê-la pelo menu principal) para obter mais "
 "informações."
 
@@ -36,7 +36,7 @@ msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
 msgstr ""
-"Oh não, algo de errado aconteceu! Você pode checar sua LOOTDebugLog.txt "
+"Oh não, algo de errado aconteceu! Você pode checar seu LOOTDebugLog.txt "
 "(você pode obtê-la pelo menu principal) para obter mais informações."
 
 #: src/gui/cef/query/types/get_game_data_query.h:47
@@ -147,7 +147,7 @@ msgstr "O grupo \"{0}\" não existe."
 
 #: src/gui/state/game/game.cpp:558
 msgid "You have not sorted your load order this session."
-msgstr "Você não organizou sua ordem de carregamento esta sessão."
+msgstr "Você não organizou sua ordem de carregamento nesta sessão."
 
 #: src/gui/state/game/game.cpp:582
 msgid ""
@@ -217,8 +217,8 @@ msgstr[1] "{0} referências deletadas"
 #: src/gui/state/game/helpers.cpp:98
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
-msgstr[0] "{0} navmesh deletada"
-msgstr[1] "{0} navmeshes deletada"
+msgstr[0] "{0} navmesh deletado"
+msgstr[1] "{0} navmeshes deletados"
 
 #: src/gui/state/game/helpers.cpp:108
 msgid "{0} found {1}, {2} and {3}."
@@ -244,7 +244,7 @@ msgstr "O LOOT detectou que \"{0}\" é inválido e vai ignorá-lo."
 
 #: src/gui/html/elements/editable-table.ts:436
 msgid "Add New Row"
-msgstr "Adicionar Nova Coluna"
+msgstr "Adicionar Nova Linha"
 
 #: src/gui/html/elements/loot-groups-editor.ts:428
 msgid "Add a new group"
@@ -284,7 +284,7 @@ msgstr "Lista mestre atualizada para a revisão {0}."
 
 #: src/gui/html/js/events.ts:341
 msgid "No masterlist update was necessary."
-msgstr "Uma atualização de lista mestre não foi necessária."
+msgstr "Não foi necessário atualizar a lista mestre."
 
 #: src/gui/html/js/events.ts:415
 msgid "Cyclic interaction detected"
@@ -312,7 +312,7 @@ msgstr ""
 "Este recurso é providenciado para que modders que usam o Creation Kit "
 "definam a ordem de carregamento que ele usa. Um efeito colateral é que "
 "quaisquer mods do Steam Workshop serão baixados novamente pelo Steam (isso "
-"não afeta o Skyrim Special Edition). Você quer continuar?"
+"não afeta o Skyrim Special Edition). Deseja continuar?"
 
 #: src/gui/html/js/events.ts:506
 msgid "Redate"
@@ -350,7 +350,7 @@ msgstr "A ordem de carregamento foi copiada para a área de transferência."
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
 msgstr ""
-"Você ainda não aplicou ou cancelou sua {0}. Você tem certeza que quer sair?"
+"Você ainda não aplicou ou cancelou sua {0}. Você tem certeza que deseja sair?"
 
 #: src/gui/html/js/events.ts:640 src/gui/html/js/translateStaticText.ts:482
 msgid "Quit"
@@ -457,7 +457,7 @@ msgstr "Principal"
 
 #: src/gui/html/js/translateStaticText.ts:139
 msgid "Load After"
-msgstr "Carregar Depois De"
+msgstr "Carregar depois de"
 
 #: src/gui/html/js/translateStaticText.ts:143
 msgid "Requirements"
@@ -481,7 +481,7 @@ msgstr "Informação do Plugin Sujo"
 
 #: src/gui/html/js/translateStaticText.ts:163
 msgid "Clean Plugin Info"
-msgstr "Informações do Plugin Limpoo"
+msgstr "Informações do Plugin Limpo"
 
 #: src/gui/html/js/translateStaticText.ts:167
 msgid "Locations"
@@ -543,7 +543,7 @@ msgstr "Referências Deletadas"
 
 #: src/gui/html/js/translateStaticText.ts:260
 msgid "Deleted Navmeshes"
-msgstr "Navmeshes Deletadas"
+msgstr "Navmeshes Deletados"
 
 #: src/gui/html/js/translateStaticText.ts:264
 #: src/gui/html/js/translateStaticText.ts:273
@@ -584,7 +584,7 @@ msgstr "Um nome de arquivo é requerido."
 #: src/gui/html/js/translateStaticText.ts:415
 #: src/gui/html/js/translateStaticText.ts:428
 msgid "Delete Row"
-msgstr "Deletar coluna"
+msgstr "Deletar linha"
 
 #: src/gui/html/js/translateStaticText.ts:333
 msgid "Note"
@@ -855,11 +855,11 @@ msgstr "Pasta do LOOT"
 
 #: src/gui/html/js/translateStaticText.ts:701
 msgid "Masterlist Repository URL"
-msgstr "URL do Repositório da Masterlist"
+msgstr "URL do Repositório da Lista Mestre"
 
 #: src/gui/html/js/translateStaticText.ts:706
 msgid "Masterlist Repository Branch"
-msgstr "Branch do Repositório da Masterlist"
+msgstr "Branch do Repositório da Lista Mestre"
 
 #: src/gui/html/js/translateStaticText.ts:711
 msgid "Install Path"
@@ -871,19 +871,19 @@ msgstr "Chave do Registro do Caminho de Instalação"
 
 #: src/gui/html/js/translateStaticText.ts:721
 msgid "Local Data Path"
-msgstr ""
+msgstr "Caminho de dados locais"
 
 #: src/gui/html/js/translateStaticText.ts:724
 msgid "Add new game"
-msgstr ""
+msgstr "Adicionar um novo jogo"
 
 #: src/gui/html/js/translateStaticText.ts:725
 msgid "Delete game"
-msgstr ""
+msgstr "Deletar jogo"
 
 #: src/gui/html/js/translateStaticText.ts:740
 msgid "First-Time Tips"
-msgstr "Dicas para Uso Inicial"
+msgstr "Dicas para o primeiro uso"
 
 #: src/gui/html/js/translateStaticText.ts:745
 msgid ""
@@ -895,7 +895,7 @@ msgstr ""
 
 #: src/gui/html/js/translateStaticText.ts:753
 msgid "Click %(menu_icon)s buttons to open menus."
-msgstr "Clique nos botões %(menu_icon)s para abrir menus."
+msgstr "Clique nos botões %(menu_icon)s para abrir os menus."
 
 #: src/gui/html/js/translateStaticText.ts:760
 msgid ""
@@ -938,7 +938,7 @@ msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
-"Alguns recursos são desabilitados enquanto o editor de metadados está "
+"Alguns recursos ficam desabilitados enquanto o editor de metadados está "
 "aberto, ou enquanto há uma ordem de carregamento que não foi aplicada ou "
 "descartada."
 
@@ -950,7 +950,7 @@ msgid ""
 msgstr ""
 "Muitos elementos da interface têm dicas. Se você não sabe o que uma coisa "
 "faz, tente passar o mouse sobre ela para descobrir. Caso contrário, a "
-"documentação do LOOT pode ser acessado pelo menu inicial."
+"documentação do LOOT pode ser acessada pelo menu inicial."
 
 #: src/gui/html/js/translateStaticText.ts:779
 #: src/gui/html/js/translateStaticText.ts:802
@@ -993,7 +993,7 @@ msgstr ""
 #~ msgstr "Ativar Edições"
 
 #~ msgid "Invalid game ID supplied."
-#~ msgstr "O ID de jogo suprido é inválido."
+#~ msgstr "O ID de jogo fornecido é inválido."
 
 #~ msgid "Game path could not be detected."
 #~ msgstr "O caminho do jogo não pôde ser detectado."
@@ -1117,13 +1117,13 @@ msgstr ""
 #~ msgstr "Linha de expressão regular inválida:"
 
 #~ msgid "Expected \"{0}\" at \"{1}\"."
-#~ msgstr "Esperado \"{0} \" em \"{1} \"."
+#~ msgstr "Esperado \"{0} \" em \"{1}\"."
 
 #~ msgid "Yes"
 #~ msgstr "Sim"
 
 #~ msgid "Dummy Plugin"
-#~ msgstr "Plugin Fictício"
+#~ msgstr "Plugin Vazio"
 
 #~ msgid "Click to open the plugin menu."
 #~ msgstr "Clique para abrir o menu de plug-ins."
@@ -1132,8 +1132,8 @@ msgstr ""
 #~ "Global priorities are compared against all other plugins. Normal "
 #~ "priorities are compared against only conflicting plugins."
 #~ msgstr ""
-#~ "Prioridades globais são comparadas contra todos os outros plug-ins. "
-#~ "Prioridades normais são comparadas somente contra plug-ins conflitantes."
+#~ "Prioridades globais são comparadas com todos os outros plug-ins. "
+#~ "Prioridades normais são comparadas somente com plug-ins conflitantes."
 
 #~ msgid "Global Priority"
 #~ msgstr "Prioridade Global"
@@ -1187,9 +1187,9 @@ msgstr ""
 #~ "Please submit any edits made for reasons other than personal preference "
 #~ "to the BOSS team so that they may be included in the masterlist."
 #~ msgstr ""
-#~ "Por favor, envie quaisquer edições feitas para outros fins que "
-#~ "preferência pessoal para a equipe BOSS razões para que possam ser "
-#~ "incluídos na masterlist."
+#~ "Por favor, envie quaisquer edições feitas para outros fins além "
+#~ "da preferência pessoal para a equipe do BOSS para que as mudanças "
+#~ "sejam incluídas na lista mestre."
 
 #~ msgid "Remove Plugin"
 #~ msgstr "Remover Plugin"
@@ -1213,7 +1213,7 @@ msgstr ""
 #~ msgstr "Copiar Nome"
 
 #~ msgid "BOSS: Warning"
-#~ msgstr "BOSS: Avisa"
+#~ msgstr "BOSS: Aviso"
 
 #~ msgid "Edit Message"
 #~ msgstr "Editar Mensagem"
@@ -1246,7 +1246,7 @@ msgstr ""
 #~ msgstr "BOSS: Adicionar Mensagem"
 
 #~ msgid "Error: No content specified. Row will not be added."
-#~ msgstr "Erro: Nenhum conteúdo especificado. Linha não será adicionado."
+#~ msgstr "Erro: Nenhum conteúdo especificado. Linha não será adicionada."
 
 #~ msgid "BOSS: Error"
 #~ msgstr "BOSS: Erro"
@@ -1264,7 +1264,7 @@ msgstr ""
 #~ msgstr "BOSS: Editar Mensagem"
 
 #~ msgid "Error: No content specified. Row will not be edited."
-#~ msgstr "Erro: Nenhum conteúdo especificado. Linha não será editado."
+#~ msgstr "Erro: Nenhum conteúdo especificado. Linha não será editada."
 
 #~ msgid "BOSS: Edit Tag"
 #~ msgstr "BOSS: Editar Marcação"
@@ -1273,31 +1273,31 @@ msgstr ""
 #~ msgstr "BOSS: Editar Informação Suja"
 
 #~ msgid "Masterlist update failed. Details: {0}"
-#~ msgstr "Atualização MasterList falhou. Detalhes: {0}"
+#~ msgstr "Atualização da Lista Mestre falhou. Detalhes: {0}"
 
 #~ msgid "Masterlist parsing failed. Details: {0}"
-#~ msgstr "Análise MasterList falhou. Detalhes: {0}"
+#~ msgstr "Análise da Lista Mestre falhou. Detalhes: {0}"
 
 #~ msgid "Unknown"
 #~ msgstr "Desconhecido"
 
 #~ msgid "Error: BOSS is already running. This instance will now quit."
-#~ msgstr "Erro: BOSS já está em execução. Essa instância será agora sair."
+#~ msgstr "Erro: BOSS já está em execução. Essa instância será fechada."
 
 #~ msgid "Error: Could not apply translation."
 #~ msgstr "Erro: Não foi possível aplicar a tradução."
 
 #~ msgid "Error: The selected language is not available on this system."
-#~ msgstr "Erro: O idioma selecionado não está disponível no sistema."
+#~ msgstr "Erro: O idioma selecionado não está disponível neste sistema."
 
 #~ msgid "Error: None of the supported games were detected."
-#~ msgstr "Erro: foram detectados Nenhum dos jogos suportados."
+#~ msgstr "Erro: Não foram detectados nenhum dos jogos suportados."
 
 #~ msgid "View Last Report"
-#~ msgstr "Ver ùltimo Relatório"
+#~ msgstr "Ver último Relatório"
 
 #~ msgid "&View Last Report"
-#~ msgstr "&Ver ùltimo Relatório"
+#~ msgstr "&Ver último Relatório"
 
 #~ msgid "View &Debug Log"
 #~ msgstr "Ver &Depurar Log"
@@ -1315,7 +1315,7 @@ msgstr ""
 #~ msgstr "BOSS: Configurações"
 
 #~ msgid "Error: \"{0}\" cannot be found."
-#~ msgstr "Erro: \"{0}\" não pode ser encontrado."
+#~ msgstr "Erro: \"{0}\" não pôde ser encontrado."
 
 #~ msgid "BOSS: Working..."
 #~ msgstr "BOSS: Funcionando..."
@@ -1324,10 +1324,10 @@ msgstr ""
 #~ msgstr "BOSS: Funcionando..."
 
 #~ msgid "Userlist parsing failed. Details: {0}"
-#~ msgstr "Lista de Usuários análise falhou. Detalhes: {0}"
+#~ msgstr "Análise da Lista do Usuário falhou. Detalhes: {0}"
 
 #~ msgid "Building plugin graph..."
-#~ msgstr "Construindo Gráfico Plugin..."
+#~ msgstr "Construindo Gráfico de Plugin..."
 
 #~ msgid "BOSS: Calculated Load Order"
 #~ msgstr "BOSS: Ordem de Carregamento Calculado"
@@ -1336,8 +1336,8 @@ msgstr ""
 #~ "The load order displayed in the Details tab was not applied as sorting "
 #~ "was canceled."
 #~ msgstr ""
-#~ "A ordem de carregamento exibido na guia Detalhes não foi aplicado como "
-#~ "classificação foi cancelado."
+#~ "A ordem de carregamento exibido na guia Detalhes não foi aplicado pois "
+#~ "a ordenação foi cancelada."
 
 #~ msgid "Failed to calculate the load order. Details: {0}"
 #~ msgstr "Falha ao calcular a ordem de carregamento. Detalhes: {0}"
@@ -1346,16 +1346,16 @@ msgstr ""
 #~ msgstr "Erro: {0}"
 
 #~ msgid "Error: Masterlist parsing failed. {0}"
-#~ msgstr "Erro: MasterList análise falhou. {0}"
+#~ msgstr "Erro: Análise da Lista Mestre falhou. {0}"
 
 #~ msgid "Error: Userlist parsing failed. {0}"
-#~ msgstr "Erro: Lista de Usuários análise falhou. {0}"
+#~ msgstr "Erro: Análise da Lista do Usuário falhou. {0}"
 
 #~ msgid "Error: Failed to get load order. {0}"
-#~ msgstr "Erro: Falha ao obter o fim da carga. {0}"
+#~ msgstr "Erro: Falha ao obter a ordem de carregamento. {0}"
 
 #~ msgid "Error: Failed to set plugin timestamps. {0}"
-#~ msgstr "Erro: Falha ao definir timestamps plugin. {0}"
+#~ msgstr "Erro: Falha ao definir a marca de tempo do plugin. {0}"
 
 #~ msgid "BOSS: Plugin Redate"
 #~ msgstr "BOSS: Relatar Plugin"
@@ -1385,7 +1385,7 @@ msgstr ""
 #~ msgstr "Conteúdo"
 
 #~ msgid "Error: No content row selected."
-#~ msgstr "Erro: Nenhuma linha de conteúdo selecionado."
+#~ msgstr "Erro: Nenhuma linha de conteúdo selecionada."
 
 #~ msgid "Add/Remove:"
 #~ msgstr "Adicionar/Remover"
@@ -1397,7 +1397,7 @@ msgstr ""
 #~ msgstr "Contagem UDR:"
 
 #~ msgid "Deleted Navmesh Count:"
-#~ msgstr "Contagem Navmesh Excluido:"
+#~ msgstr "Contagem de Navmesh Excluído(s):"
 
 #~ msgid "Cleaning Utility (required):"
 #~ msgstr "Utilitário de Limpeza (requerido):"
@@ -1430,7 +1430,7 @@ msgstr ""
 #~ msgstr "Nome da Pasta BOSS"
 
 #~ msgid "Debug Verbosity:"
-#~ msgstr "Depurar Verbozidade:"
+#~ msgstr "Depurar Verbosidade:"
 
 #~ msgid "BOSS: Add Game"
 #~ msgstr "BOSS: Adicionar Jogo"
@@ -1439,28 +1439,28 @@ msgstr ""
 #~ "Error: A path and/or registry key is required. Row will not be added."
 #~ msgstr ""
 #~ "Erro: É necessário um caminho e/ou a chave de registro. Linha não será "
-#~ "adicionado."
+#~ "adicionada."
 
 #~ msgid ""
 #~ "Error: A game with this name is already defined. Row will not be added."
 #~ msgstr ""
-#~ "Erro: Um jogo com este nome já está definido. Linha não será adicionado."
+#~ "Erro: Um jogo com este nome já está definido. Linha não será adicionada."
 
 #~ msgid ""
 #~ "Error: A game with this folder name is already defined. Row will not be "
 #~ "added."
 #~ msgstr ""
 #~ "Erro: Um jogo com este nome da pasta já está definido. Linha não será "
-#~ "adicionado."
+#~ "adicionada."
 
 #~ msgid "BOSS: Edit Game"
 #~ msgstr "BOSS: Editar Jogo"
 
 #~ msgid "Error: Name is required. Row will not be added."
-#~ msgstr "Erro: Nome é obrigatório. Linha não será adicionado."
+#~ msgstr "Erro: Nome é obrigatório. Linha não será adicionada."
 
 #~ msgid "Error: Folder is required. Row will not be added."
-#~ msgstr "Erro: A pasta é necessária. Linha não será adicionado."
+#~ msgstr "Erro: A pasta é necessária. Linha não será adicionada."
 
 #~ msgid "Master File:"
 #~ msgstr "Arquivo Mestre:"
