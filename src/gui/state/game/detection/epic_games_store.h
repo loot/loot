@@ -27,7 +27,6 @@
 #define LOOT_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE
 
 #include <filesystem>
-#include <stdexcept>
 #include <vector>
 
 #include "gui/state/game/detection/common.h"

@@ -31,7 +31,6 @@
 #include <boost/locale.hpp>
 #include <fstream>
 #include <regex>
-#include <thread>
 
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"

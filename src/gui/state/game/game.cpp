@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
-#include <thread>
+#include <unordered_set>
 
 #ifdef _WIN32
 #ifndef UNICODE

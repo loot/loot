@@ -31,7 +31,6 @@
 #include <mutex>
 #include <optional>
 #include <string>
-#include <unordered_set>
 
 #include "gui/state/game/game_settings.h"
 #include "loot/api.h"
