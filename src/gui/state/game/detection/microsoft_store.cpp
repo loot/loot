@@ -27,11 +27,8 @@
 
 #include "gui/helpers.h"
 
-using std::filesystem::u8path;
-
 namespace {
 using loot::GameType;
-using loot::LocalisedGameInstallPath;
 
 std::string GetMicrosoftStoreGameLocalFolder(GameType gameType) {
   switch (gameType) {
@@ -53,7 +50,7 @@ std::string GetMicrosoftStoreGameLocalFolder(GameType gameType) {
   }
 }
 
-std::vector<LocalisedGameInstallPath> GetGameLocalisationDirectories(
+std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
     GameType gameType,
     const std::filesystem::path& basePath) {
   switch (gameType) {
@@ -193,6 +190,8 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 }
 
 namespace loot::ms::legacy {
+using std::filesystem::u8path;
+
 std::optional<std::string> GetMicrosoftStoreAppName(GameType gameType) {
   switch (gameType) {
     case GameType::tes3:

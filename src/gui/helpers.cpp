@@ -44,8 +44,6 @@
 #include <unicode/unistr.h>
 
 #include <cstdio>
-
-using icu::UnicodeString;
 #endif
 
 #include <spdlog/fmt/fmt.h>
@@ -532,8 +530,8 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs) {
           "One of the filenames to compare was invalid.");
   }
 #else
-  auto unicodeLhs = UnicodeString::fromUTF8(lhs);
-  auto unicodeRhs = UnicodeString::fromUTF8(rhs);
+  auto unicodeLhs = icu::UnicodeString::fromUTF8(lhs);
+  auto unicodeRhs = icu::UnicodeString::fromUTF8(rhs);
   return unicodeLhs.caseCompare(unicodeRhs, U_FOLD_CASE_DEFAULT);
 #endif
 }

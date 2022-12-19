@@ -32,9 +32,6 @@
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
-using std::filesystem::exists;
-using std::filesystem::u8path;
-
 namespace loot {
 static constexpr float MORROWIND_MINIMUM_HEADER_VERSION = 1.2f;
 static constexpr float OBLIVION_MINIMUM_HEADER_VERSION = 0.8f;
@@ -290,7 +287,7 @@ GameSettings& GameSettings::SetGameLocalPath(
 }
 
 GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
-  gameLocalPath_ = getLocalAppDataPath() / u8path(folderName);
+  gameLocalPath_ = getLocalAppDataPath() / std::filesystem::u8path(folderName);
   return *this;
 }
 

@@ -57,12 +57,8 @@
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"
 
-using std::list;
 using std::lock_guard;
 using std::mutex;
-using std::string;
-using std::thread;
-using std::vector;
 using std::filesystem::u8path;
 
 namespace fs = std::filesystem;
@@ -467,7 +463,7 @@ void Game::RedatePlugins() {
   static constexpr std::chrono::seconds REDATE_TIMESTAMP_INTERVAL =
       std::chrono::seconds(60);
 
-  vector<string> loadorder = gameHandle_->GetLoadOrder();
+  const auto loadorder = gameHandle_->GetLoadOrder();
   if (!loadorder.empty()) {
     std::filesystem::file_time_type lastTime =
         std::filesystem::file_time_type::clock::time_point::min();
@@ -906,7 +902,7 @@ std::vector<std::string> Game::GetInstalledPluginNames() {
        ++it) {
     if (fs::is_regular_file(it->status()) &&
         gameHandle_->IsValidPlugin(it->path().filename().u8string())) {
-      string name = it->path().filename().u8string();
+      const auto name = it->path().filename().u8string();
 
       if (logger) {
         logger->debug("Found plugin: {}", name);

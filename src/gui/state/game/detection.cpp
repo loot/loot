@@ -34,7 +34,6 @@
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
-using std::filesystem::exists;
 using std::filesystem::u8path;
 
 namespace loot {
@@ -48,8 +47,9 @@ std::optional<std::filesystem::path> FindGameInstallPathInFilesystem(
     // the same master plugin.
     auto gamePath = settings.GamePath();
     if (!gamePath.empty() &&
-        exists(gamePath / GetPluginsFolderName(settings.Type()) /
-               u8path(settings.Master()))) {
+        std::filesystem::exists(gamePath /
+                                GetPluginsFolderName(settings.Type()) /
+                                u8path(settings.Master()))) {
       return gamePath;
     }
 
