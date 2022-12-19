@@ -65,6 +65,8 @@ namespace fs = std::filesystem;
 
 namespace loot {
 namespace gui {
+static constexpr const char* GHOST_EXTENSION = ".ghost";
+
 bool hasPluginFileExtension(const std::string& filename) {
   return boost::iends_with(filename, ".esp") ||
          boost::iends_with(filename, ".esm") ||
@@ -202,7 +204,7 @@ std::vector<Message> Game::CheckInstallValidity(
       return std::filesystem::exists(settings_.DataPath() / u8path(file)) ||
              (hasPluginFileExtension(file) &&
               std::filesystem::exists(settings_.DataPath() /
-                                      u8path(file + ".ghost")));
+                                      u8path(file + GHOST_EXTENSION)));
     };
 
     auto tags = metadata.GetTags();
@@ -470,7 +472,7 @@ void Game::RedatePlugins() {
     for (const auto& pluginName : loadorder) {
       fs::path filepath = settings_.DataPath() / u8path(pluginName);
       if (!fs::exists(filepath)) {
-        filepath += ".ghost";
+        filepath += GHOST_EXTENSION;
         if (!fs::exists(filepath)) {
           continue;
         }
