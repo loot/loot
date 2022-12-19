@@ -50,6 +50,7 @@ find_package(Boost 1.77 REQUIRED COMPONENTS locale system)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
+    find_package(TBB REQUIRED)
 endif()
 
 find_package(Qt6 6.2 COMPONENTS Widgets Network Test)
@@ -471,7 +472,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
     target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 else()
-    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc)
+    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc TBB::tbb)
 
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
     target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})

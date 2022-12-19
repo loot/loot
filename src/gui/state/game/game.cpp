@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <execution>
 #include <fstream>
 #include <unordered_set>
 
@@ -895,30 +896,45 @@ std::filesystem::path Game::GetLOOTGamePath() const {
 }
 
 std::vector<std::string> Game::GetInstalledPluginNames() const {
-  std::vector<std::string> plugins;
-
-  auto logger = getLogger();
+  const auto logger = getLogger();
   if (logger) {
     logger->trace("Scanning for plugins in {}",
                   settings_.DataPath().u8string());
   }
 
+  // Checking to see if a plugin is valid is relatively slow, almost entirely
+  // due to blocking on opening the file, so instead just add all the files
+  // found to a buffer and then check if they're valid plugins in parallel.
+  std::vector<std::string> maybePlugins;
+
   for (fs::directory_iterator it(settings_.DataPath());
        it != fs::directory_iterator();
        ++it) {
-    if (fs::is_regular_file(it->status()) &&
-        gameHandle_->IsValidPlugin(it->path().filename().u8string())) {
+    if (fs::is_regular_file(it->status())) {
       const auto name = it->path().filename().u8string();
 
-      if (logger) {
-        logger->debug("Found plugin: {}", name);
-      }
-
-      plugins.push_back(name);
+      maybePlugins.push_back(name);
     }
   }
 
-  return plugins;
+  const auto newEndIt =
+      std::remove_if(std::execution::par_unseq,
+                     maybePlugins.begin(),
+                     maybePlugins.end(),
+                     [&](const std::string& name) {
+                       try {
+                         const auto isValid = gameHandle_->IsValidPlugin(name);
+                         if (isValid && logger) {
+                           logger->debug("Found plugin: {}", name);
+                         }
+                         return !isValid;
+                       } catch (...) {
+                         return true;
+                       }
+                     });
+  maybePlugins.erase(newEndIt, maybePlugins.end());
+
+  return maybePlugins;
 }
 
 void Game::AppendMessages(std::vector<Message> messages) {
