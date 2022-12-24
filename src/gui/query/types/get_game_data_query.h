@@ -50,13 +50,23 @@ public:
        the game data, so also load the metadata lists. */
     bool isFirstLoad = game_.GetPlugins().empty();
 
-    game_.LoadAllInstalledPlugins(true);
+    std::vector<std::thread> threads;
+
+    threads.push_back(
+        std::thread([&]() { game_.LoadAllInstalledPlugins(true); }));
 
     if (isFirstLoad) {
-      game_.LoadMetadata();
+      threads.push_back(std::thread([&]() { game_.LoadMetadata(); }));
     }
 
-    game_.LoadCreationClubPluginNames();
+    threads.push_back(
+        std::thread([&]() { game_.LoadCreationClubPluginNames(); }));
+
+    for (auto& thread : threads) {
+      if (thread.joinable()) {
+        thread.join();
+      }
+    }
 
     // Sort plugins into their load order.
     return GetPluginItems(game_.GetLoadOrder(), game_, language_);
