@@ -116,7 +116,7 @@ public:
 
 private:
   std::filesystem::path GetLOOTGamePath() const;
-  std::vector<std::string> GetInstalledPluginNames();
+  std::vector<std::string> GetInstalledPluginNames() const;
   void AppendMessages(std::vector<Message> messages);
 
   GameSettings settings_;

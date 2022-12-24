@@ -890,7 +890,7 @@ std::filesystem::path Game::GetLOOTGamePath() const {
   return lootDataPath_ / "games" / u8path(settings_.FolderName());
 }
 
-std::vector<std::string> Game::GetInstalledPluginNames() {
+std::vector<std::string> Game::GetInstalledPluginNames() const {
   std::vector<std::string> plugins;
 
   auto logger = getLogger();
