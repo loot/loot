@@ -4,6 +4,50 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.18.7 - Unreleased
+===================
+
+Added
+-----
+
+- It is now possible to add plugins to groups from within the groups editor.
+- It is now possible to rename groups in the groups editor.
+
+Fixed
+-----
+
+- When the currently-selected group in the groups editor is removed, its
+  information to the right of the dialog is now cleared.
+
+Changed
+-------
+
+- Sorting is now significantly faster, with tests showing over 5 times the
+  sorting speed of LOOT v0.18.6.
+- Game data loading is now faster, with test showing a 40% improvement since
+  LOOT v0.18.6.
+- Changing LOOT's plugin data or active filters no longer resets the search
+  dialog, instead the search results are updated to reflect the changes.
+- Non-user metadata rows in the plugin metadata editor's tables are now greyed
+  out to distinguish them from editable user metadata rows.
+- ``LOOT.exe`` did not include some file info fields that are required according
+  to Microsoft's documentation. The ``CompanyName``, ``FileDescription``,
+  ``InternalName``, ``OriginalFilename`` and ``ProductName`` fields have been
+  added.
+- Translatable text now consistently uses C++20-style formatting replacement
+  fields (e.g. ``{0}``, ``{1}``).
+- LOOT now includes informational messages in its log when debug logging is
+  disabled.
+- Updated the Bulgarian translation.
+- Updated the Chinese translation.
+- Updated the Finnish translation.
+- Updated the German translation.
+- Updated the Japanese translation.
+- Updated the Ukrainian translation.
+- Updated libloot to v0.18.3.
+- Updated Qt to 6.4.1.
+- Updated spdlog to v1.11.0.
+
 0.18.6 - 2022-10-22
 ===================
 
