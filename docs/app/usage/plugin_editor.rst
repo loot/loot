@@ -12,7 +12,7 @@ The Group tab's page contains the "Group" dropdown, which sets the group that th
 
   Plugin groups are used to concisely load groups of plugins after others. The dropdown lists all defined groups: to define new groups or edit existing groups, use the Groups Editor.
 
-The other tab pages contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist cannot. The Load After, Requirements and Incompatibilities tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
+The other tab pages contain metadata tables, which are detailed below. New rows can be added, and existing user-added rows can be removed, though rows containing metadata from the masterlist or from plugins cannot. Such non-user metadata rows are greyed out to indicate that they are not editable. The Load After, Requirements and Incompatibilities tables can have rows added by dragging and dropping plugins from the sidebar into the table area.
 
 Load After
   This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has two fields:
