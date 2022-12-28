@@ -18,6 +18,9 @@ Fixed
 
 - When the currently-selected group in the groups editor is removed, its
   information to the right of the dialog is now cleared.
+- LOOT now limits itself to scanning fixed and RAM disk drives when searching
+  for Microsoft Store games. LOOT would previously also scan other drives, like
+  optical and floppy disk drives and network drives.
 
 Changed
 -------
