@@ -60,6 +60,7 @@ Changed
 - Updated libloot to v0.19.0.
 - Updated Qt to 6.4.1.
 - Updated spdlog to v1.11.0.
+- Updated zlib to 1.2.13.
 - Linux builds are now built using GCC 10 and now link against the ``tbb``
   library.
 
