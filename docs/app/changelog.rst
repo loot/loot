@@ -4,12 +4,17 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.18.7 - Unreleased
+0.19.0 - Unreleased
 ===================
 
 Added
 -----
 
+- Sorting now takes into account overlapping assets in BSAs/BA2s that are loaded
+  by plugins. If two plugins don't make changes to the same record but load BSAs
+  (or BA2s for Fallout 4) that contain data for the same asset path, the plugin
+  that loads more assets will load first (unless that's contradicted by
+  higher-priority data and metadata).
 - It is now possible to add plugins to groups from within the groups editor.
 - It is now possible to rename groups in the groups editor.
 
@@ -21,18 +26,23 @@ Fixed
 - LOOT now limits itself to scanning fixed and RAM disk drives when searching
   for Microsoft Store games. LOOT would previously also scan other drives, like
   optical and floppy disk drives and network drives.
+- If LOOT could not apply a sorted load order, the error message could give the
+  wrong path to the file that the game uses to store the load order.
 
 Changed
 -------
 
-- Sorting is now significantly faster, with tests showing over 5 times the
-  sorting speed of LOOT v0.18.6.
+- Sorting is now significantly faster, with tests showing over 290 times the
+  sorting speed of LOOT v0.18.6 with large load orders. Due to the changes,
+  LOOT may sort unrelated plugins differently.
 - Game data loading is now faster, with test showing a 40% improvement since
   LOOT v0.18.6.
 - Changing LOOT's plugin data or active filters no longer resets the search
   dialog, instead the search results are updated to reflect the changes.
 - Non-user metadata rows in the plugin metadata editor's tables are now greyed
   out to distinguish them from editable user metadata rows.
+- Cyclic interaction errors now distinguish between group edges that involve
+  user metadata and those that don't.
 - ``LOOT.exe`` did not include some file info fields that are required according
   to Microsoft's documentation. The ``CompanyName``, ``FileDescription``,
   ``InternalName``, ``OriginalFilename`` and ``ProductName`` fields have been
@@ -47,9 +57,11 @@ Changed
 - Updated the German translation.
 - Updated the Japanese translation.
 - Updated the Ukrainian translation.
-- Updated libloot to v0.18.3.
+- Updated libloot to v0.19.0.
 - Updated Qt to 6.4.1.
 - Updated spdlog to v1.11.0.
+- Linux builds are now built using GCC 10 and now link against the ``tbb``
+  library.
 
 0.18.6 - 2022-10-22
 ===================
