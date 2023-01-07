@@ -26,14 +26,16 @@
 #ifndef LOOT_GUI_STATE_GAME_GAME
 #define LOOT_GUI_STATE_GAME_GAME
 
+#include <execution>
 #include <filesystem>
 #include <functional>
 #include <mutex>
 #include <optional>
 #include <string>
-#include <unordered_set>
+#include <variant>
 
 #include "gui/state/game/game_settings.h"
+#include "gui/state/logging.h"
 #include "loot/api.h"
 
 namespace loot {
@@ -75,6 +77,7 @@ public:
   std::filesystem::path MasterlistPath() const;
   std::filesystem::path UserlistPath() const;
   std::filesystem::path GroupNodePositionsPath() const;
+  std::filesystem::path GetActivePluginsFilePath() const;
 
   std::vector<std::string> GetLoadOrder() const;
   void SetLoadOrder(const std::vector<std::string>& loadOrder);
@@ -117,7 +120,7 @@ public:
 
 private:
   std::filesystem::path GetLOOTGamePath() const;
-  std::vector<std::string> GetInstalledPluginNames();
+  std::vector<std::string> GetInstalledPluginNames() const;
   void AppendMessages(std::vector<Message> messages);
 
   GameSettings settings_;
@@ -141,11 +144,16 @@ std::vector<T> MapFromLoadOrderData(
     const std::vector<std::string>& loadOrder,
     const std::function<
         T(const PluginInterface* const, std::optional<short>, bool)>& mapper) {
-  std::vector<T> data;
+  typedef std::tuple<const PluginInterface* const, std::optional<short>, bool>
+      LoadOrderTuple;
+
+  std::vector<LoadOrderTuple> data;
+  data.reserve(loadOrder.size());
 
   short numberOfActiveLightPlugins = 0;
   short numberOfActiveNormalPlugins = 0;
 
+  // First get all the necessary data to call the mapper, as this is fast.
   for (const auto& pluginName : loadOrder) {
     const auto plugin = game.GetPlugin(pluginName);
     if (!plugin) {
@@ -161,9 +169,7 @@ std::vector<T> MapFromLoadOrderData(
     const auto activeLoadOrderIndex =
         isActive ? std::optional(numberOfActivePlugins) : std::nullopt;
 
-    const auto datum = mapper(plugin, activeLoadOrderIndex, isActive);
-
-    data.push_back(datum);
+    data.push_back(std::make_tuple(plugin, activeLoadOrderIndex, isActive));
 
     if (isActive) {
       if (isLight) {
@@ -174,7 +180,54 @@ std::vector<T> MapFromLoadOrderData(
     }
   }
 
-  return data;
+  // Now perform the mapping in a second loop that can be parallelised
+  // (because sometimes the mapper is slow).
+  //
+  // Store mapped data in an std::variant because if the transformation is
+  // fallible then there needs to be some way of detecting that. The second
+  // type in the variant holds the exception message string if an exception
+  // is thrown by the mapper.
+  typedef std::variant<T, std::string> MappedDataOrError;
+  const auto transformer = [&mapper](const LoadOrderTuple& loadOrderTuple) {
+    try {
+      const auto [plugin, activeLoadOrderIndex, isActive] = loadOrderTuple;
+
+      const auto mappedData = mapper(plugin, activeLoadOrderIndex, isActive);
+
+      return MappedDataOrError(mappedData);
+    } catch (const std::exception& e) {
+      const auto logger = getLogger();
+      if (logger) {
+        logger->error(
+            "Failed to map load order data to output type, exception is: {}",
+            e.what());
+      }
+      return MappedDataOrError(e.what());
+    }
+  };
+
+  // Can't use std::back_inserter as the output iterator when running the
+  // transform in parallel, so presize the vector.
+  std::vector<MappedDataOrError> maybeMappedData(data.size());
+
+  std::transform(std::execution::par_unseq,
+                 data.cbegin(),
+                 data.cend(),
+                 maybeMappedData.begin(),
+                 transformer);
+
+  std::vector<T> mappedData;
+  mappedData.reserve(maybeMappedData.size());
+
+  for (const auto& mappedDataOrError : maybeMappedData) {
+    if (std::holds_alternative<T>(mappedDataOrError)) {
+      mappedData.push_back(std::get<T>(mappedDataOrError));
+    } else {
+      throw std::runtime_error(std::get<std::string>(mappedDataOrError));
+    }
+  }
+
+  return mappedData;
 }
 }
 

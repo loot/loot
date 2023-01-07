@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
-cmake_policy(SET CMP0015 NEW)
-cmake_policy(SET CMP0135 NEW)
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
 project(LOOT)
 include(ExternalProject)
 include(FetchContent)
@@ -49,6 +50,7 @@ find_package(Boost 1.77 REQUIRED COMPONENTS locale system)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
+    find_package(TBB REQUIRED)
 endif()
 
 find_package(Qt6 6.2 COMPONENTS Widgets Network Test)
@@ -71,12 +73,12 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.3/libloot-0.18.3-win32.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.0/libloot-0.19.0-win32.7z")
         else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.3/libloot-0.18.3-win64.7z")
+            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.0/libloot-0.19.0-win64.7z")
         endif()
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.18.3/libloot-0.18.3-Linux.tar.xz")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.0/libloot-0.19.0-Linux.tar.xz")
     endif()
 endif()
 
@@ -99,8 +101,8 @@ endif()
 
 ExternalProject_Add(zlib
     PREFIX "external"
-    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.12.tar.gz"
-    URL_HASH "SHA256=d8688496ea40fb61787500e863cc63c9afcbc524468cedeb478068924eb54932"
+    URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.13.tar.gz"
+    URL_HASH "SHA256=1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428"
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE TRUE)
 ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
@@ -110,8 +112,8 @@ set(ZLIB_LIBRARY
 
 ExternalProject_Add(minizip-ng
     PREFIX "external"
-    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.6.tar.gz"
-    URL_HASH "SHA256=383fa1bdc28c482828a8a8db53f758dbd44291b641182724fda5df5b59cce543"
+    URL "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/3.0.8.tar.gz"
+    URL_HASH "SHA256=27cc2f62cd02d79b71b346fc6ace02728385f8ba9c6b5f124062b0790a04629a"
     CMAKE_ARGS
         -DMZ_ZLIB=ON
         -DMZ_BZIP2=OFF
@@ -144,8 +146,8 @@ ExternalProject_Add(testing-plugins
 
 FetchContent_Declare(
     tomlplusplus
-    URL "https://github.com/marzer/tomlplusplus/archive/v3.1.0.tar.gz"
-    URL_HASH "SHA256=dae72714fc356ca1b019298d9e6275cc41ba95546ae722ccdb6795e92f47762e"
+    URL "https://github.com/marzer/tomlplusplus/archive/v3.2.0.tar.gz"
+    URL_HASH "SHA256=aeba776441df4ac32e4d4db9d835532db3f90fd530a28b74e4751a2915a55565"
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
@@ -470,7 +472,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
     target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
 else()
-    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc)
+    set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc TBB::tbb)
 
     target_link_libraries(LOOT PRIVATE X11 ${LOOT_LIBS})
     target_link_libraries(loot_gui_tests PRIVATE ${LOOT_LIBS})
@@ -599,21 +601,21 @@ else()
         libicuuc.so.56
         libicuuc.so.56.1
         libQt6Core.so.6
-        libQt6Core.so.6.4.1
+        libQt6Core.so.6.4.2
         libQt6DBus.so.6
-        libQt6DBus.so.6.4.1
+        libQt6DBus.so.6.4.2
         libQt6Gui.so.6
-        libQt6Gui.so.6.4.1
+        libQt6Gui.so.6.4.2
         libQt6Network.so.6
-        libQt6Network.so.6.4.1
+        libQt6Network.so.6.4.2
         libQt6Test.so.6
-        libQt6Test.so.6.4.1
+        libQt6Test.so.6.4.2
         libQt6Widgets.so.6
-        libQt6Widgets.so.6.4.1
+        libQt6Widgets.so.6.4.2
         libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.4.1
+        libQt6XcbQpa.so.6.4.2
         libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.4.1)
+        libQt6OpenGL.so.6.4.2)
 
     foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
         add_custom_command(TARGET loot_gui_tests POST_BUILD

@@ -69,7 +69,7 @@ private:
                      bool isActive) {
           const auto pluginItem = PluginItem(
               *otherPlugin, game_, loadOrderIndex, isActive, language_);
-          const auto conflict = plugin->DoFormIDsOverlap(*otherPlugin);
+          const auto conflict = plugin->DoRecordsOverlap(*otherPlugin);
 
           return std::make_pair(pluginItem, conflict);
         };

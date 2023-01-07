@@ -31,7 +31,6 @@
 #include <boost/locale.hpp>
 #include <fstream>
 #include <regex>
-#include <thread>
 
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -39,8 +38,6 @@
 
 using std::lock_guard;
 using std::recursive_mutex;
-using std::string;
-using std::filesystem::u8path;
 
 namespace loot {
 static const std::set<std::string> oldDefaultBranches(
@@ -483,7 +480,7 @@ GameSettings convertGameTable(const toml::table& table) {
 
   auto path = table["path"].value<std::string>();
   if (path) {
-    game.SetGamePath(u8path(*path));
+    game.SetGamePath(std::filesystem::u8path(*path));
   }
 
   auto localPath = table["local_path"].value<std::string>();
@@ -492,7 +489,7 @@ GameSettings convertGameTable(const toml::table& table) {
     throw std::runtime_error(
         "Game settings have local_path and local_folder set, use only one.");
   } else if (localPath) {
-    game.SetGameLocalPath(u8path(*localPath));
+    game.SetGameLocalPath(std::filesystem::u8path(*localPath));
   } else if (localFolder) {
     game.SetGameLocalFolder(*localFolder);
   }

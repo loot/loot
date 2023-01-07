@@ -25,8 +25,6 @@
 
 #include "gui/state/loot_state.h"
 
-#include <unordered_set>
-
 #ifdef _WIN32
 #ifndef UNICODE
 #define UNICODE
@@ -55,11 +53,6 @@
 using boost::locale::translate;
 using fmt::format;
 using std::exception;
-using std::locale;
-using std::lock_guard;
-using std::mutex;
-using std::string;
-using std::vector;
 
 namespace fs = std::filesystem;
 
@@ -100,7 +93,7 @@ LootState::LootState(const std::filesystem::path& lootAppPath,
     LootPaths(lootAppPath, lootDataPath) {
   // Do some preliminary locale / UTF-8 support setup.
   boost::locale::generator gen;
-  locale::global(gen("en.UTF-8"));
+  std::locale::global(gen("en.UTF-8"));
 
   // Check if the LOOT local app data folder exists, and create it if not.
   createLootDataPath();
@@ -158,7 +151,7 @@ void LootState::initCurrentGame() {
       logger->debug("Game named {} has been initialsed",
                     GetCurrentGame().GetSettings().Name());
     }
-  } catch (const std::exception& e) {
+  } catch (const exception& e) {
     if (logger) {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());
@@ -240,7 +233,7 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
     boost::locale::generator gen;
     gen.add_messages_path(LootPaths::getL10nPath().u8string());
     gen.add_messages_domain("loot");
-    locale::global(gen(settings_.getLanguage() + ".UTF-8"));
+    std::locale::global(gen(settings_.getLanguage() + ".UTF-8"));
   }
 }
 
@@ -352,7 +345,7 @@ void LootState::setInitialGame(const std::string& preferredGame) {
       logger->debug("Game selected is {}",
                     GetCurrentGame().GetSettings().Name());
     }
-  } catch (const std::exception& e) {
+  } catch (const exception& e) {
     if (logger) {
       logger->error("Initial game could not be selected: {}", e.what());
     }

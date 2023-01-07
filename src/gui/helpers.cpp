@@ -44,8 +44,6 @@
 #include <unicode/unistr.h>
 
 #include <cstdio>
-
-using icu::UnicodeString;
 #endif
 
 #include <spdlog/fmt/fmt.h>
@@ -121,6 +119,27 @@ std::vector<std::string> GetPreferredUILanguages(
   }
 
   return languages;
+}
+
+const char* getDriveTypeText(UINT driveType) {
+  switch (driveType) {
+    case DRIVE_UNKNOWN:
+      return "DRIVE_UNKNOWN";
+    case DRIVE_NO_ROOT_DIR:
+      return "DRIVE_NO_ROOT_DIR";
+    case DRIVE_REMOVABLE:
+      return "DRIVE_REMOVABLE";
+    case DRIVE_FIXED:
+      return "DRIVE_FIXED";
+    case DRIVE_REMOTE:
+      return "DRIVE_REMOTE";
+    case DRIVE_CDROM:
+      return "DRIVE_CDROM";
+    case DRIVE_RAMDISK:
+      return "DRIVE_RAMDISK";
+    default:
+      return "unknown type";
+  }
 }
 #endif
 }
@@ -379,11 +398,24 @@ std::vector<std::filesystem::path> GetDriveRootPaths() {
 
   std::vector<std::filesystem::path> paths;
 
+  const auto logger = getLogger();
   auto stringStartIt = buffer.begin();
   for (auto it = buffer.begin(); it != buffer.end(); ++it) {
     if (*it == 0) {
       const std::wstring drive(stringStartIt, it);
-      paths.push_back(std::filesystem::path(drive));
+
+      // Check the drive type to avoid looking up paths on drives
+      // that games won't be installed on, like optical disk drives,
+      // network drives, floppy disk drives, etc.
+      const auto driveType = GetDriveType(drive.c_str());
+
+      if (driveType == DRIVE_FIXED || driveType == DRIVE_RAMDISK) {
+        paths.push_back(std::filesystem::path(drive));
+      } else if (logger) {
+        logger->info("Skipping found drive {} as it is of type {}",
+                     std::filesystem::path(drive).u8string(),
+                     getDriveTypeText(driveType));
+      }
 
       stringStartIt = std::next(it);
     }
@@ -532,8 +564,8 @@ int CompareFilenames(const std::string& lhs, const std::string& rhs) {
           "One of the filenames to compare was invalid.");
   }
 #else
-  auto unicodeLhs = UnicodeString::fromUTF8(lhs);
-  auto unicodeRhs = UnicodeString::fromUTF8(rhs);
+  auto unicodeLhs = icu::UnicodeString::fromUTF8(lhs);
+  auto unicodeRhs = icu::UnicodeString::fromUTF8(rhs);
   return unicodeLhs.caseCompare(unicodeRhs, U_FOLD_CASE_DEFAULT);
 #endif
 }

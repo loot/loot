@@ -27,7 +27,9 @@ Game menu.
 
 The groups editor consists of an interactive graph displaying all defined groups
 and their load after metadata, and a sidebar containing input for defining new
-groups and a list of plugins in the currently selected group.
+groups, renaming the currently selected group, a list of plugins in the
+currently selected group and a dropdown combo box for adding plugins to the
+currently selected group.
 
 - Groups are displayed as circular nodes in the graph, labelled with their
   names.

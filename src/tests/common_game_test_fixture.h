@@ -34,7 +34,6 @@ along with LOOT.  If not, see
 #include <filesystem>
 #include <fstream>
 #include <map>
-#include <unordered_set>
 
 #include "loot/enum/game_type.h"
 #include "tests/gui/test_helpers.h"

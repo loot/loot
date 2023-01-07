@@ -27,8 +27,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <execution>
 #include <fstream>
-#include <thread>
+#include <unordered_set>
 
 #ifdef _WIN32
 #ifndef UNICODE
@@ -57,18 +58,16 @@
 #include "loot/exception/file_access_error.h"
 #include "loot/exception/undefined_group_error.h"
 
-using std::list;
 using std::lock_guard;
 using std::mutex;
-using std::string;
-using std::thread;
-using std::vector;
 using std::filesystem::u8path;
 
 namespace fs = std::filesystem;
 
 namespace loot {
 namespace gui {
+static constexpr const char* GHOST_EXTENSION = ".ghost";
+
 bool hasPluginFileExtension(const std::string& filename) {
   return boost::iends_with(filename, ".esp") ||
          boost::iends_with(filename, ".esm") ||
@@ -206,7 +205,7 @@ std::vector<Message> Game::CheckInstallValidity(
       return std::filesystem::exists(settings_.DataPath() / u8path(file)) ||
              (hasPluginFileExtension(file) &&
               std::filesystem::exists(settings_.DataPath() /
-                                      u8path(file + ".ghost")));
+                                      u8path(file + GHOST_EXTENSION)));
     };
 
     auto tags = metadata.GetTags();
@@ -467,14 +466,14 @@ void Game::RedatePlugins() {
   static constexpr std::chrono::seconds REDATE_TIMESTAMP_INTERVAL =
       std::chrono::seconds(60);
 
-  vector<string> loadorder = gameHandle_->GetLoadOrder();
+  const auto loadorder = gameHandle_->GetLoadOrder();
   if (!loadorder.empty()) {
     std::filesystem::file_time_type lastTime =
         std::filesystem::file_time_type::clock::time_point::min();
     for (const auto& pluginName : loadorder) {
       fs::path filepath = settings_.DataPath() / u8path(pluginName);
       if (!fs::exists(filepath)) {
-        filepath += ".ghost";
+        filepath += GHOST_EXTENSION;
         if (!fs::exists(filepath)) {
           continue;
         }
@@ -560,6 +559,10 @@ bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
 fs::path Game::MasterlistPath() const {
   return GetLOOTGamePath() / "masterlist.yaml";
+}
+
+std::filesystem::path Game::GetActivePluginsFilePath() const {
+  return gameHandle_->GetActivePluginsFilePath();
 }
 
 fs::path Game::UserlistPath() const {
@@ -892,31 +895,46 @@ std::filesystem::path Game::GetLOOTGamePath() const {
   return lootDataPath_ / "games" / u8path(settings_.FolderName());
 }
 
-std::vector<std::string> Game::GetInstalledPluginNames() {
-  std::vector<std::string> plugins;
-
-  auto logger = getLogger();
+std::vector<std::string> Game::GetInstalledPluginNames() const {
+  const auto logger = getLogger();
   if (logger) {
     logger->trace("Scanning for plugins in {}",
                   settings_.DataPath().u8string());
   }
 
+  // Checking to see if a plugin is valid is relatively slow, almost entirely
+  // due to blocking on opening the file, so instead just add all the files
+  // found to a buffer and then check if they're valid plugins in parallel.
+  std::vector<std::string> maybePlugins;
+
   for (fs::directory_iterator it(settings_.DataPath());
        it != fs::directory_iterator();
        ++it) {
-    if (fs::is_regular_file(it->status()) &&
-        gameHandle_->IsValidPlugin(it->path().filename().u8string())) {
-      string name = it->path().filename().u8string();
+    if (fs::is_regular_file(it->status())) {
+      const auto name = it->path().filename().u8string();
 
-      if (logger) {
-        logger->debug("Found plugin: {}", name);
-      }
-
-      plugins.push_back(name);
+      maybePlugins.push_back(name);
     }
   }
 
-  return plugins;
+  const auto newEndIt =
+      std::remove_if(std::execution::par_unseq,
+                     maybePlugins.begin(),
+                     maybePlugins.end(),
+                     [&](const std::string& name) {
+                       try {
+                         const auto isValid = gameHandle_->IsValidPlugin(name);
+                         if (isValid && logger) {
+                           logger->debug("Found plugin: {}", name);
+                         }
+                         return !isValid;
+                       } catch (...) {
+                         return true;
+                       }
+                     });
+  maybePlugins.erase(newEndIt, maybePlugins.end());
+
+  return maybePlugins;
 }
 
 void Game::AppendMessages(std::vector<Message> messages) {

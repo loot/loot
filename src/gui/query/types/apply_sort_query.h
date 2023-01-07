@@ -71,27 +71,6 @@ private:
   bool useSortingErrorMessage{false};
 
   std::string getSortingErrorMessage(const G& game) const {
-    const auto loadOrderFile = [&]() {
-      // This isn't 100% accurate (it doesn't handle when Oblivion is configured
-      // to use the install path instead of the local data path), but it's good
-      // enough for a general advisory. It's not extracted into a separate
-      // function to avoid it being misused somewhere else.
-      const GameSettings settings = game.GetSettings();
-      if (settings.Type() == GameType::tes3) {
-        return settings.GamePath() / "Morrowind.ini";
-      }
-
-      // FIXME: This is a hack that doesn't always give the right path. libloot
-      // branch get-active-plugins-file-path has a
-      // GameInterface::GetActivePluginsFilePath() method that can be used when
-      // v0.19.0 is released (adding the method breaks ABI compatibility).
-      const auto gameLocalPath =
-          settings.GameLocalPath().empty()
-              ? getLocalAppDataPath() / settings.FolderName()
-              : settings.GameLocalPath();
-      return gameLocalPath / "plugins.txt";
-    }();
-
     return fmt::format(
         boost::locale::translate(
             "Oh no, something went wrong! This is usually because \"{0}\" "
@@ -99,7 +78,7 @@ private:
             "it isn't, you can check your LOOTDebugLog.txt (you can get to "
             "it through the main menu) for more information.")
             .str(),
-        loadOrderFile.u8string());
+        game.GetActivePluginsFilePath().u8string());
   }
 };
 }

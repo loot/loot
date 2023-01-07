@@ -181,10 +181,14 @@ std::string DescribeEdgeType(EdgeType edgeType) {
       return "Masterlist Load After";
     case EdgeType::userLoadAfter:
       return "User Load After";
-    case EdgeType::group:
-      return "Group";
-    case EdgeType::overlap:
-      return "Overlap";
+    case EdgeType::masterlistGroup:
+      return "Masterlist Group";
+    case EdgeType::userGroup:
+      return "User Group";
+    case EdgeType::recordOverlap:
+      return "Record Overlap";
+    case EdgeType::assetOverlap:
+      return "Asset Overlap";
     case EdgeType::tieBreak:
       return "Tie Break";
     default:

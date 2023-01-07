@@ -49,12 +49,8 @@
 #include "gui/state/logging.h"
 
 namespace {
-using loot::GameSettings;
 using loot::GameType;
 using loot::getLogger;
-using loot::LocalisedGameInstallPath;
-
-using std::filesystem::u8path;
 
 struct EgsManifestData {
   std::string appName;
@@ -83,7 +79,7 @@ std::optional<std::string> GetEgsAppName(GameType gameType) {
   }
 }
 
-std::vector<LocalisedGameInstallPath> GetGameLocalisationDirectories(
+std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
     GameType gameType,
     const std::filesystem::path& basePath) {
   switch (gameType) {
@@ -126,7 +122,7 @@ std::filesystem::path GetEgsManifestsPath() {
                               "AppDataPath");
 
   if (!appDataPath.empty()) {
-    return u8path(appDataPath) / "Manifests";
+    return std::filesystem::u8path(appDataPath) / "Manifests";
   }
 
   // Fall back to using building the usual path if the Registry key couldn't
@@ -189,7 +185,7 @@ EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
 }
 
 std::optional<std::filesystem::path> GetEgsGameInstallPath(
-    const GameSettings& settings) {
+    const loot::GameSettings& settings) {
 #ifdef _WIN32
   // Unfortunately we don't know which is the right manifest file, so iterate
   // over them until the one containing the correct AppName is found.
@@ -223,7 +219,7 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
               entry.path().u8string());
         }
 
-        return u8path(manifestData.installLocation);
+        return std::filesystem::u8path(manifestData.installLocation);
       }
     }
   }

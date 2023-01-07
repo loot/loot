@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     env:
-      QT_VERSION: 6.4.1
+      QT_VERSION: 6.4.2
 
     steps:
       - uses: actions/checkout@v3
@@ -145,7 +145,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-upgrade \
             libicu-dev \
-            g++-8 \
+            libtbb-dev \
+            g++-10 \
             build-essential \
             libgl1-mesa-dev \
             gettext
@@ -153,7 +154,7 @@ jobs:
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ~ --boost-version 1.77.0 -a 64 -t gcc-8 locale system
+          python install_boost.py --directory ~ --boost-version 1.77.0 -a 64 -t gcc-10 locale system
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
@@ -171,7 +172,7 @@ jobs:
           mkdir ogdf-${OGDF_VERSION}/build
           cd ogdf-${OGDF_VERSION}/build
 
-          export CXX="g++-8" CC="gcc-8"
+          export CXX="g++-10" CC="gcc-10"
           cmake .. -DCMAKE_INSTALL_PREFIX="${OGDF_INSTALL_PATH}"
           cmake --build .
           cmake --install .
@@ -181,7 +182,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          export CXX="g++-8" CC="gcc-8"
+          export CXX="g++-10" CC="gcc-10"
           cmake .. -DBOOST_ROOT=${{ steps.boost-metadata.outputs.root }} -DBOOST_LIBRARYDIR=${{ steps.boost-metadata.outputs.librarydir }} -DQt6_ROOT="${{ steps.qt-metadata.outputs.root }}" -DOGDF_ROOT="${{ env.OGDF_INSTALL_PATH }}"
           make all
 
@@ -321,7 +322,7 @@ jobs:
 
             aqt install-tool windows desktop tools_openssl_x86
           } else {
-            $qtVersion = "6.4.1"
+            $qtVersion = "6.4.2"
             $qtArch = "win64_msvc2019_64"
             $qtArchDir = "msvc2019_64"
             $qtCMakeVarName = "Qt6_ROOT"
