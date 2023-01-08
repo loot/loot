@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.18.4\n"
+"Project-Id-Version: LOOT v0.19.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-08-16 21:34+0100\n"
-"PO-Revision-Date: 2022-08-20 01:42-0700\n"
+"POT-Creation-Date: 2022-12-25 23:20+0000\n"
+"PO-Revision-Date: 2023-01-08 18:59+0100\n"
 "Last-Translator: Griam\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/gui/qt/filters_widget.cpp:230
 msgid "Show only conflicting plugins for"
@@ -30,7 +30,7 @@ msgstr "Mostra solo i plugin in gruppo"
 msgid "Show only plugins with cards that contain"
 msgstr "Mostra solo i plugin con le Card che contengono"
 
-#: src/gui/qt/filters_widget.cpp:234 src/gui/qt/search_dialog.cpp:103
+#: src/gui/qt/filters_widget.cpp:234 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
 msgstr "Usa espressioni regolari"
 
@@ -104,244 +104,244 @@ msgstr ""
 "Se selezionato, interpreta il testo del filtro del contenuto come "
 "un'espressione regolare."
 
-#: src/gui/qt/general_info_card.cpp:178
+#: src/gui/qt/general_info_card.cpp:181
 msgid "General Information"
 msgstr "Informazioni Generali"
 
-#: src/gui/qt/general_info_card.cpp:180
+#: src/gui/qt/general_info_card.cpp:183
 msgid "Masterlist Revision ID"
 msgstr "ID della Revisione della Masterlist"
 
-#: src/gui/qt/general_info_card.cpp:181
+#: src/gui/qt/general_info_card.cpp:184
 msgid "Masterlist Update Date"
 msgstr "Data della dell'aggiornamento della Masterlist"
 
-#: src/gui/qt/general_info_card.cpp:182
+#: src/gui/qt/general_info_card.cpp:185
 msgid "Masterlist Prelude Revision ID"
 msgstr "ID della Revisione del preludio della Masterlist"
 
-#: src/gui/qt/general_info_card.cpp:183
+#: src/gui/qt/general_info_card.cpp:186
 msgid "Masterlist Prelude Update Date"
 msgstr "Data dell'aggiornamento del preludio della Masterlist"
 
-#: src/gui/qt/general_info_card.cpp:185
+#: src/gui/qt/general_info_card.cpp:188
 msgid "Warnings"
 msgstr "Avvertenze"
 
-#: src/gui/qt/general_info_card.cpp:186
+#: src/gui/qt/general_info_card.cpp:189
 msgid "Errors"
 msgstr "Errori"
 
-#: src/gui/qt/general_info_card.cpp:187
+#: src/gui/qt/general_info_card.cpp:190
 msgid "Total Messages"
 msgstr "Messaggi Totali"
 
-#: src/gui/qt/general_info_card.cpp:189
+#: src/gui/qt/general_info_card.cpp:192
 msgid "Active Plugins"
 msgstr "Plugin Attivi"
 
-#: src/gui/qt/general_info_card.cpp:190
+#: src/gui/qt/general_info_card.cpp:193
 msgid "Active Regular Plugins"
 msgstr "Plugin Regolari attivi"
 
-#: src/gui/qt/general_info_card.cpp:191
+#: src/gui/qt/general_info_card.cpp:194
 msgid "Active Light Plugins"
 msgstr "Plugin Light attivi"
 
-#: src/gui/qt/general_info_card.cpp:192
+#: src/gui/qt/general_info_card.cpp:195
 msgid "Dirty Plugins"
 msgstr "Plugin contenenti Errori"
 
-#: src/gui/qt/general_info_card.cpp:193
+#: src/gui/qt/general_info_card.cpp:196
 msgid "Total Plugins"
 msgstr "Plugin Totali"
 
 #. translators: this text is displayed if LOOT has detected that the
 #. masterlist has been modified since it was downloaded.
-#: src/gui/qt/helpers.cpp:90
+#: src/gui/qt/helpers.cpp:87
 msgid "(edited)"
 msgstr "(modificata)"
 
-#: src/gui/qt/helpers.cpp:200
+#: src/gui/qt/helpers.cpp:218
 msgid "N/A: No masterlist present"
 msgstr "N/D: Nessuna Masterlist presente"
 
 #. translators: N/A is an abbreviation for Not Applicable. A
 #. masterlist is a database that contains information for
 #. various mods.
-#: src/gui/qt/helpers.cpp:205
+#: src/gui/qt/helpers.cpp:223
 msgid "N/A: No masterlist prelude present"
 msgstr "N/D: Nessun preludio di Masterlist presente"
 
-#: src/gui/qt/helpers.cpp:213
+#: src/gui/qt/helpers.cpp:231
 msgid "Unknown: No revision metadata found"
 msgstr "Sconosciuto: metadati di revisione non trovati"
 
-#: src/gui/qt/helpers.cpp:340
+#: src/gui/qt/helpers.cpp:362
 msgid "Invalid regular expression: {0}"
 msgstr "Espressione regolare non valida {0}"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:638
+#: src/gui/qt/main_window.cpp:652
 msgid "&Sort Plugins"
 msgstr "&Ordina i plugin"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:640
+#: src/gui/qt/main_window.cpp:654
 msgid "Update &Masterlist"
 msgstr "&Aggiorna la Masterlist"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:642
+#: src/gui/qt/main_window.cpp:656
 msgid "&Apply Sorted Load Order"
 msgstr "App&lica l'ordine di caricamento modificato"
 
 #. translators: This string is also an action in the Game menu.
-#: src/gui/qt/main_window.cpp:644
+#: src/gui/qt/main_window.cpp:658
 msgid "&Discard Sorted Load Order"
 msgstr "&Non applicare l'ordine di caricamento modificato"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:649
+#: src/gui/qt/main_window.cpp:663
 msgid "&File"
 msgstr "&File"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:651
+#: src/gui/qt/main_window.cpp:665
 msgid "&Settings..."
 msgstr "&Impostazioni..."
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:653
+#: src/gui/qt/main_window.cpp:667
 msgid "&Backup LOOT Data"
 msgstr "&Backup dei Dati di LOOT"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:655
+#: src/gui/qt/main_window.cpp:669
 msgid "&Open LOOT Data Folder"
 msgstr "&Apri la cartella Data di LOOT"
 
 #. translators: This string is an action in the File menu.
-#: src/gui/qt/main_window.cpp:657
+#: src/gui/qt/main_window.cpp:671
 msgid "&Quit"
 msgstr "&Chiudi"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:661
+#: src/gui/qt/main_window.cpp:675
 msgid "&Game"
 msgstr "&Gioco"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:663
+#: src/gui/qt/main_window.cpp:677
 msgid "&Edit Groups..."
 msgstr "&Modifica Gruppi..."
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:665
+#: src/gui/qt/main_window.cpp:679
 msgid "Searc&h Cards..."
 msgstr "&Cerca le Card..."
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:667
+#: src/gui/qt/main_window.cpp:681
 msgid "Copy &Load Order"
 msgstr "Co&pia Ordine di Caricamento"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:669
+#: src/gui/qt/main_window.cpp:683
 msgid "&Copy Content"
 msgstr "Cop&ia il Contenuto"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:671
+#: src/gui/qt/main_window.cpp:685
 msgid "&Refresh Content"
 msgstr "A&ggiorna il Contenuto"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:673
+#: src/gui/qt/main_window.cpp:687
 msgid "Redate &Plugins..."
 msgstr "Modi&fica la data dei plugin..."
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:675
+#: src/gui/qt/main_window.cpp:689
 msgid "&Fix Ambiguous Load Order"
 msgstr "Correggi l'ordine di caricamento &dubbio"
 
 #. translators: This string is an action in the Game menu.
-#: src/gui/qt/main_window.cpp:677
+#: src/gui/qt/main_window.cpp:691
 msgid "Clear All &User Metadata..."
 msgstr "Cancella &tutti i metadati dell'utente..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:681
+#: src/gui/qt/main_window.cpp:695
 msgid "&Plugin"
 msgstr "&Plugin"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:683
+#: src/gui/qt/main_window.cpp:697
 msgid "Copy &Plugin Name"
 msgstr "&Copia il nome del Plugin"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:685
+#: src/gui/qt/main_window.cpp:699
 msgid "Copy &Card Content"
 msgstr "C&opia il contenuto della Card"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:687
+#: src/gui/qt/main_window.cpp:701
 msgid "Copy &Metadata"
 msgstr "Co&pia Metadati"
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:689
+#: src/gui/qt/main_window.cpp:703
 msgid "&Edit Metadata..."
 msgstr "&Modifica Metadati..."
 
 #. translators: This string is an action in the Plugin menu.
-#: src/gui/qt/main_window.cpp:691
+#: src/gui/qt/main_window.cpp:705
 msgid "Clear &User Metadata..."
 msgstr "Cancella Metadati dell'&utente..."
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:695
+#: src/gui/qt/main_window.cpp:709
 msgid "&Help"
 msgstr "&Aiuto"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:697
+#: src/gui/qt/main_window.cpp:711
 msgid "&View Documentation"
 msgstr "&Visualizza la documentazione"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:699
+#: src/gui/qt/main_window.cpp:713
 msgid "&Join Discord Server"
 msgstr "&Unisciti al Server Discord"
 
 #. translators: This string is an action in the Help menu.
-#: src/gui/qt/main_window.cpp:701
+#: src/gui/qt/main_window.cpp:715
 msgid "&About"
 msgstr "&Informazioni"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:706
+#: src/gui/qt/main_window.cpp:720
 msgid "P&lugins"
 msgstr "P&lugins"
 
 #. translators: The mnemonic in this string shouldn't conflict with other
 #. menus or sidebar sections.
-#: src/gui/qt/main_window.cpp:709
+#: src/gui/qt/main_window.cpp:723
 msgid "F&ilters"
 msgstr "F&iltri"
 
-#: src/gui/qt/main_window.cpp:969 src/gui/qt/main_window.cpp:1908
+#: src/gui/qt/main_window.cpp:1008 src/gui/qt/main_window.cpp:1955
 msgid "Updating and parsing masterlist..."
 msgstr "Aggiornamento e analisi della Masterlist..."
 
-#: src/gui/qt/main_window.cpp:1028
+#: src/gui/qt/main_window.cpp:1067
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
@@ -349,15 +349,15 @@ msgstr ""
 "Questa sembra essere la prima volta che esegui LOOT v{0}. I dati attuali di "
 "LOOT sono stati salvati in: {1}"
 
-#: src/gui/qt/main_window.cpp:1035
+#: src/gui/qt/main_window.cpp:1075
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr "Questa sembra essere la prima volta che esegui LOOT v{0}."
 
-#: src/gui/qt/main_window.cpp:1041
+#: src/gui/qt/main_window.cpp:1082
 msgid "Here are some tips to help you get started with the interface."
 msgstr "Ecco alcuni suggerimenti per iniziare a usare l'interfaccia."
 
-#: src/gui/qt/main_window.cpp:1044
+#: src/gui/qt/main_window.cpp:1087
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -365,16 +365,16 @@ msgstr ""
 "I CRC vengono mostrati solo dopo che i plugin sono stati caricati per "
 "filtraggio dei conflitti o per ordinamento."
 
-#: src/gui/qt/main_window.cpp:1048
+#: src/gui/qt/main_window.cpp:1093
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
 "I plugin possono essere trascinati dalla sidebar al \"carica dopo\" "
-"dell'Editor dei metadati e alle tabelle di \"requisiti\" e \"incompatibilità"
-"\"."
+"dell'Editor dei metadati e alle tabelle di \"requisiti\" e "
+"\"incompatibilità\"."
 
-#: src/gui/qt/main_window.cpp:1053
+#: src/gui/qt/main_window.cpp:1099
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
@@ -383,8 +383,7 @@ msgstr ""
 "o quando c'è un ordine di caricamento che non può essere applicato o "
 "scartato."
 
-#: src/gui/qt/main_window.cpp:1058 src/gui/qt/main_window.cpp:1789
-#, c-format
+#: src/gui/qt/main_window.cpp:1106 src/gui/qt/main_window.cpp:1837
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -394,31 +393,31 @@ msgstr ""
 "una donazione a WrinklyNinja (Creatore e sviluppatore principale di LOOT) "
 "utilizzando {0}."
 
-#: src/gui/qt/main_window.cpp:1069
+#: src/gui/qt/main_window.cpp:1121
 msgid "First-Time Tips"
 msgstr "Suggerimenti per la prima volta"
 
-#: src/gui/qt/main_window.cpp:1104
+#: src/gui/qt/main_window.cpp:1156
 msgid "metadata edits"
 msgstr "modifiche ai metadati"
 
-#: src/gui/qt/main_window.cpp:1105
+#: src/gui/qt/main_window.cpp:1157
 msgid "sorted load order"
 msgstr "ordine di caricamento sistemato"
 
-#: src/gui/qt/main_window.cpp:1107
-#, c-format
+#: src/gui/qt/main_window.cpp:1160
 msgid ""
-"You have not yet applied or cancelled your {0}. Are you sure you want to quit?"
+"You have not yet applied or cancelled your {0}. Are you sure you want to "
+"quit?"
 msgstr ""
 "Non hai ancora applicato o annullato il tuo {0}. Sei sicuro di volere uscire?"
 
-#: src/gui/qt/main_window.cpp:1218 src/gui/qt/plugin_editor/table_tabs.cpp:396
+#: src/gui/qt/main_window.cpp:1271 src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Errore"
 
-#: src/gui/qt/main_window.cpp:1228 src/gui/query/query.h:67
+#: src/gui/qt/main_window.cpp:1281 src/gui/query/query.h:67
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -427,7 +426,7 @@ msgstr ""
 "controllare il tuo LOOTDebugLog.txt (è possibile ottenerlo tramite il menu "
 "principale)."
 
-#: src/gui/qt/main_window.cpp:1273
+#: src/gui/qt/main_window.cpp:1326
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
@@ -435,15 +434,15 @@ msgstr ""
 "Ordinamento dei plugin non riuscito. I dettagli potrebbero essere presenti "
 "nella sezione Informazioni generali."
 
-#: src/gui/qt/main_window.cpp:1291
+#: src/gui/qt/main_window.cpp:1344
 msgid "Sorting made no changes to the load order."
 msgstr "L'ordinamento non ha modificato l'ordine di caricamento."
 
-#: src/gui/qt/main_window.cpp:1341
+#: src/gui/qt/main_window.cpp:1394
 msgid "Ambiguous load order detected"
 msgstr "Rilevato un Ordine di caricamento dubbio"
 
-#: src/gui/qt/main_window.cpp:1342
+#: src/gui/qt/main_window.cpp:1395
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -460,32 +459,32 @@ msgstr ""
 "Gioco per impostare l'ordine di caricamento in modo univoco, a quello "
 "mostrato da LOOT."
 
-#: src/gui/qt/main_window.cpp:1381
+#: src/gui/qt/main_window.cpp:1434
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "I tuoi dati di LOOT sono stati salvati in: {0}"
 
-#: src/gui/qt/main_window.cpp:1388
+#: src/gui/qt/main_window.cpp:1441
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "Non è stato creato un Backup, in quanto non ci sono dati da salvare."
 
-#: src/gui/qt/main_window.cpp:1439
+#: src/gui/qt/main_window.cpp:1485
 msgid "The load order has been copied to the clipboard."
 msgstr "L'ordine di caricamento è stato copiato negli appunti."
 
-#: src/gui/qt/main_window.cpp:1457
+#: src/gui/qt/main_window.cpp:1503
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Il contenuto di LOOT è stato copiato negli appunti."
 
-#: src/gui/qt/main_window.cpp:1469
+#: src/gui/qt/main_window.cpp:1515
 msgid "The load order displayed by LOOT has been set."
 msgstr "L'ordine di caricamento di LOOT è stato impostato."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1490
+#: src/gui/qt/main_window.cpp:1536
 msgid "Redate Plugins?"
 msgstr "Vuoi modificare la data dei plugin?"
 
-#: src/gui/qt/main_window.cpp:1492
+#: src/gui/qt/main_window.cpp:1538
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -499,22 +498,22 @@ msgstr ""
 "Edition). Continuare?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1504
+#: src/gui/qt/main_window.cpp:1550
 msgid "Plugins were successfully redated."
 msgstr "La modifica della data dei plugin è avvenuta con successo."
 
-#: src/gui/qt/main_window.cpp:1516
+#: src/gui/qt/main_window.cpp:1562
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
 msgstr ""
 "Cancellare tutti i metadati aggiunti dall'utente esistenti da tutti i plugin?"
 
-#: src/gui/qt/main_window.cpp:1564
+#: src/gui/qt/main_window.cpp:1610
 msgid "All user-added metadata has been cleared."
 msgstr "Tutti i metadati aggiunti dall'utente sono stati cancellati."
 
-#: src/gui/qt/main_window.cpp:1577
+#: src/gui/qt/main_window.cpp:1623
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -522,38 +521,32 @@ msgstr ""
 "L'editor dei metadati dei plugin è ancora aperto, chiudi l'editor prima di "
 "tentare di modificare i metadati di un altro plugin."
 
-#: src/gui/qt/main_window.cpp:1635
-#, c-format
+#: src/gui/qt/main_window.cpp:1681
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "I metadati per \"{0}\" sono stati copiati negli appunti."
 
-#: src/gui/qt/main_window.cpp:1653
-#, c-format
+#: src/gui/qt/main_window.cpp:1699
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Il nome del plugin \"{0}\" è stato copiato negli appunti."
 
-#: src/gui/qt/main_window.cpp:1672
-#, c-format
+#: src/gui/qt/main_window.cpp:1718
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Il contenuto della Cars per \"{0}\" è stato copiato negli appunti."
 
-#: src/gui/qt/main_window.cpp:1687
-#, c-format
+#: src/gui/qt/main_window.cpp:1733
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr "Cancellare tutti i metadati aggiunti dall'utente esistenti da \"{0}\"?"
 
-#: src/gui/qt/main_window.cpp:1727
-#, c-format
+#: src/gui/qt/main_window.cpp:1773
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "I metadati aggiunti dall'utente per \"{0}\" sono stati cancellati."
 
-#: src/gui/qt/main_window.cpp:1778
-#, c-format
+#: src/gui/qt/main_window.cpp:1824
 msgid "Version {0} (build {1})"
 msgstr "Versione {0} (build {1})"
 
-#: src/gui/qt/main_window.cpp:1783
+#: src/gui/qt/main_window.cpp:1830
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
@@ -563,15 +556,15 @@ msgstr ""
 "Skyrim, Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, "
 "Fallout 3, Fallout: New Vegas, Fallout 4 e Fallout 4 VR."
 
-#: src/gui/qt/main_window.cpp:1800
+#: src/gui/qt/main_window.cpp:1847
 msgid "About LOOT"
 msgstr "Informazioni su LOOT"
 
-#: src/gui/qt/main_window.cpp:2117
+#: src/gui/qt/main_window.cpp:2157
 msgid "Identifying conflicting plugins..."
 msgstr "Identificazione dei plugin in conflitto…"
 
-#: src/gui/qt/main_window.cpp:2236
+#: src/gui/qt/main_window.cpp:2300
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -579,21 +572,19 @@ msgstr ""
 "L'ordinamento automatico è stato annullato in quanto è stato visualizzato "
 "almeno un messaggio di errore."
 
-#: src/gui/qt/main_window.cpp:2287
+#: src/gui/qt/main_window.cpp:2351
 msgid "No masterlist update was necessary."
 msgstr "Non è necessario aggiornare la Masterlist."
 
-#: src/gui/qt/main_window.cpp:2300
-#, c-format
+#: src/gui/qt/main_window.cpp:2364
 msgid "Masterlist updated to revision {0}."
 msgstr "Masterlist aggiornata alla revisione {0}."
 
-#: src/gui/qt/main_window.cpp:2359
-#, c-format
+#: src/gui/qt/main_window.cpp:2422
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "E' disponibile una [nuova versione]({0}) di LOOT."
 
-#: src/gui/qt/main_window.cpp:2375
+#: src/gui/qt/main_window.cpp:2438
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -602,57 +593,56 @@ msgstr ""
 "informazioni, è possibile controllare LOOTDebugLog.txt (è possibile farlo "
 "tramite il menu principale)."
 
-#: src/gui/qt/plugin_card.cpp:154
+#: src/gui/qt/plugin_card.cpp:155
 msgid "Source:"
 msgstr "Sorgente:"
 
-#: src/gui/qt/plugin_card.cpp:155
+#: src/gui/qt/plugin_card.cpp:156
 msgid "Sources:"
 msgstr "Sorgenti:"
 
-#: src/gui/qt/plugin_card.cpp:171
-#, c-format
+#: src/gui/qt/plugin_card.cpp:172
 msgid "Verified clean by {0}"
 msgstr "Pulizia verificata da {0}"
 
-#: src/gui/qt/plugin_card.cpp:285
+#: src/gui/qt/plugin_card.cpp:286
 msgid "Active Plugin"
 msgstr "Plugin attivo"
 
-#: src/gui/qt/plugin_card.cpp:286
+#: src/gui/qt/plugin_card.cpp:287
 msgid "Master Plugin"
 msgstr "Plugin Master"
 
-#: src/gui/qt/plugin_card.cpp:287
+#: src/gui/qt/plugin_card.cpp:288
 msgid "Light Plugin"
 msgstr "Plugin Light"
 
-#: src/gui/qt/plugin_card.cpp:288
+#: src/gui/qt/plugin_card.cpp:289
 msgid "Empty Plugin"
 msgstr "Plugin vuoto"
 
-#: src/gui/qt/plugin_card.cpp:289
+#: src/gui/qt/plugin_card.cpp:290
 msgid "Loads Archive"
 msgstr "Carica Archivio"
 
-#: src/gui/qt/plugin_card.cpp:290 src/gui/qt/plugin_item_model.cpp:128
+#: src/gui/qt/plugin_card.cpp:291 src/gui/qt/plugin_item_model.cpp:128
 msgid "Has User Metadata"
 msgstr "Contiene metadati dell'utente"
 
-#: src/gui/qt/plugin_card.cpp:292
+#: src/gui/qt/plugin_card.cpp:293
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:192
 msgid "Bash Tags"
 msgstr "Bash Tags"
 
-#: src/gui/qt/plugin_card.cpp:293
+#: src/gui/qt/plugin_card.cpp:294
 msgid "Current"
 msgstr "Attuale"
 
-#: src/gui/qt/plugin_card.cpp:294 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:295 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
 msgstr "Aggiungi"
 
-#: src/gui/qt/plugin_card.cpp:295 src/gui/qt/plugin_editor/table_tabs.cpp:524
+#: src/gui/qt/plugin_card.cpp:296 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
 msgstr "Rimuovi"
 
@@ -660,68 +650,88 @@ msgstr "Rimuovi"
 msgid "Editor Is Open"
 msgstr "L'Editor è aperto"
 
-#: src/gui/qt/search_dialog.cpp:99
+#: src/gui/qt/plugin_item_model.cpp:177
+msgid "Position"
+msgstr "Posizione"
+
+#: src/gui/qt/plugin_item_model.cpp:179
+msgid "Index"
+msgstr "Indice"
+
+#: src/gui/qt/plugin_item_model.cpp:181
+msgid "Plugin Name"
+msgstr "Nome del plugin"
+
+#: src/gui/qt/search_dialog.cpp:109
 msgid "Search Cards"
 msgstr "Cerca le Card"
 
-#: src/gui/qt/search_dialog.cpp:101
+#: src/gui/qt/search_dialog.cpp:111
 msgid "Search cards"
 msgstr "Cerca le Card"
 
-#: src/gui/qt/search_dialog.cpp:105
+#: src/gui/qt/search_dialog.cpp:115
 msgid ""
 "If checked, interprets the search text as a Perl-like regular expression."
 msgstr ""
 "Se è selezionato, interpreta il testo di ricerca come un'espressione "
 "regolare Perl."
 
-#: src/gui/qt/search_dialog.cpp:108
+#: src/gui/qt/search_dialog.cpp:118
 msgid "Find Previous"
 msgstr "Trova precedente"
 
-#: src/gui/qt/search_dialog.cpp:109
+#: src/gui/qt/search_dialog.cpp:119
 msgid "Find Next"
 msgstr "Trova successivo"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:121
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:203
 msgid "Groups Editor"
 msgstr "Apri l'Editor dei Gruppi"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:123
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:205
+msgid "Add plugin to group"
+msgstr "Aggiungi plugin al gruppo"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:207
 msgid "Group name"
 msgstr "Nome del gruppo"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:124
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:208
 msgid "Add a new group"
 msgstr "Aggiungi un nuovo gruppo"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:125
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:209
+msgid "Rename current group"
+msgstr "Rinomina il gruppo in uso"
+
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:210
 msgid "Auto arrange groups"
 msgstr "Organizza i gruppi automaticamente"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:142
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:227
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
 "Le modifiche non sono state salvate. Siete sicuri di volere abbandonare?"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:164
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:298
 msgid "No plugins are in this group."
 msgstr "Non ci sono plugin in questo gruppo."
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:176
-#, c-format
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:377
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:508
 msgid "Plugins in {0}"
 msgstr "Plugin in {0}"
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:197
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:465
 msgid "Group already exists!"
 msgstr "Il gruppo esiste già!"
 
-#: src/gui/qt/plugin_editor/group_tab.cpp:56
+#: src/gui/qt/plugin_editor/group_tab.cpp:60
 msgid "{0} (Group does not exist)"
 msgstr "{0} (Il Gruppo non esiste)"
 
-#: src/gui/qt/plugin_editor/group_tab.cpp:97
+#: src/gui/qt/plugin_editor/group_tab.cpp:103
 #: src/gui/qt/plugin_editor/plugin_editor_widget.cpp:187
 msgid "Group"
 msgstr "Gruppo"
@@ -776,27 +786,27 @@ msgstr "Nota"
 msgid "Warning"
 msgstr "Attenzione"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:82
 msgid "CRC"
 msgstr "CRC"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:84
 msgid "ITM Count"
 msgstr "Conteggio ITM"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:86
 msgid "Deleted References"
 msgstr "Riferimenti Cancellati"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:88
 msgid "Deleted Navmeshes"
 msgstr "Navmeshes Cancellati"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:90
 msgid "Cleaning Utility"
 msgstr "Utility di pulizia"
 
-#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:94
+#: src/gui/qt/plugin_editor/models/cleaning_data_table_model.cpp:92
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:77
 msgid "Detail"
 msgstr "Dettaglio"
@@ -970,7 +980,7 @@ msgstr "Generale"
 msgid "Add new game..."
 msgstr "Aggiungi un nuovo gioco..."
 
-#: src/gui/query/types/apply_sort_query.h:95
+#: src/gui/query/types/apply_sort_query.h:76
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -990,7 +1000,7 @@ msgstr "Analisi, unione e valutazione dei metadati…"
 msgid "Sorting load order..."
 msgstr "Ordinamento dell'ordine di caricamento..."
 
-#: src/gui/state/loot_settings.cpp:541
+#: src/gui/state/loot_settings.cpp:538
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
@@ -1000,7 +1010,7 @@ msgstr ""
 "essere trasferiti. Per ulteriori informazioni, è possibile controllare "
 "LOOTDebugLog.txt (è possibile farlo tramite il menu principale)."
 
-#: src/gui/state/loot_settings.cpp:567
+#: src/gui/state/loot_settings.cpp:564
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
@@ -1010,68 +1020,68 @@ msgstr ""
 "trasferiti. Per ulteriori informazioni, è possibile controllare LOOTDebugLog."
 "txt (è possibile farlo tramite il menu principale)."
 
-#: src/gui/state/loot_state.cpp:166
+#: src/gui/state/loot_state.cpp:163
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 "Errore: Le impostazione specifiche del gioco non possono essere "
 "inizializzate. {0}"
 
-#: src/gui/state/loot_state.cpp:190
+#: src/gui/state/loot_state.cpp:188
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "Errore: Impossibile creare la directory di dati LOOT. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:262
+#: src/gui/state/loot_state.cpp:204 src/gui/state/loot_state.cpp:258
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Errore: Analisi delle impostazioni fallita. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:218
+#: src/gui/state/loot_state.cpp:214
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Errore: --auto-sort è stato approvato ma del --game, non è stato fornito "
 "alcun parametro."
 
-#: src/gui/state/loot_state.cpp:293
+#: src/gui/state/loot_state.cpp:288
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Errore: Impossibile creare la directory dei preludi LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:311
+#: src/gui/state/loot_state.cpp:306
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "Errore: --game-path è stato approvato ma del --game, non è stato fornito "
 "alcun parametro."
 
-#: src/gui/state/loot_state.cpp:326
+#: src/gui/state/loot_state.cpp:321
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 "Errore: non è stato possibile sovrascrivere il percorso di gioco, il gioco "
 "{0} non è stato riconosciuto."
 
-#: src/gui/state/loot_state.cpp:360
+#: src/gui/state/loot_state.cpp:354
 msgid "Error: The initial game could not be selected. {0}"
 msgstr "Errore: Il gioco iniziale non può essere selezionato. {0}"
 
-#: src/gui/state/game/game.cpp:241 src/gui/state/game/game.cpp:284
+#: src/gui/state/game/game.cpp:228 src/gui/state/game/game.cpp:271
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr ""
 "Questo plugin richiede \"{0}\" per essere installato, ma non è presente."
 
-#: src/gui/state/game/game.cpp:254
+#: src/gui/state/game/game.cpp:241
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr "Questo plugin richiede che \"{0}\" sia attivo, ma è inattivo."
 
-#: src/gui/state/game/game.cpp:324
+#: src/gui/state/game/game.cpp:311
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
 "Questo plugin è incompatibile con \"{0}\", ma entrambi i file sono presenti."
 
-#: src/gui/state/game/game.cpp:366
+#: src/gui/state/game/game.cpp:354
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
@@ -1081,7 +1091,7 @@ msgstr ""
 "può causare problemi nel gioco e l'ordinamento avrà esito negativo durante "
 "l'installazione di questo plug-in."
 
-#: src/gui/state/game/game.cpp:386
+#: src/gui/state/game/game.cpp:375
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1093,7 +1103,7 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:406
+#: src/gui/state/game/game.cpp:396
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
@@ -1101,11 +1111,11 @@ msgstr ""
 "Questo plugin ha una versione di intestazione {0}, che è inferiore alla "
 "versione di intestazione supportata minima del gioco di {1}."
 
-#: src/gui/state/game/game.cpp:424
+#: src/gui/state/game/game.cpp:415
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Questo plugin appartiene al gruppo \"{0}\", che non è presente."
 
-#: src/gui/state/game/game.cpp:448
+#: src/gui/state/game/game.cpp:440
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
@@ -1113,7 +1123,7 @@ msgstr ""
 "Questo plugin ha un file BashTags che sovrascriverà i suggerimenti fatti da "
 "LOOT per i seguenti Bash Tags: {0}."
 
-#: src/gui/state/game/game.cpp:546 src/gui/state/game/game.cpp:634
+#: src/gui/state/game/game.cpp:538 src/gui/state/game/game.cpp:630
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1121,19 +1131,27 @@ msgstr ""
 "Impossibile caricare l'ordine di caricamento corrente, le informazioni "
 "visualizzate potrebbero non essere corrette."
 
-#: src/gui/state/game/game.cpp:659
+#: src/gui/state/game/game.cpp:656
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Interazione ciclica rilevata tra \"{0}\" e \"{1}\": {2}"
 
-#: src/gui/state/game/game.cpp:671
+#: src/gui/state/game/game.cpp:669
 msgid "The group \"{0}\" does not exist."
 msgstr "Il gruppo \"{0}\" non esiste."
 
-#: src/gui/state/game/game.cpp:707
+#: src/gui/state/game/game.cpp:704
 msgid "You have not sorted your load order this session."
 msgstr "Non hai modificato l'ordine di caricamento in questa sessione."
 
-#: src/gui/state/game/game.cpp:734
+#: src/gui/state/game/game.cpp:732
+msgid ""
+"Do not launch Morrowind without the use of MWSE or it will cause severe "
+"damage to your game."
+msgstr ""
+"Non avviare Morrowind senza l'utilizzo di MWSE, potresti causare gravi danni "
+"al gioco."
+
+#: src/gui/state/game/game.cpp:746
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1143,7 +1161,7 @@ msgstr ""
 "dell'ordine di caricamento FE. Disattiva un plugin normale o tutti i tuoi "
 "plugin light per evitare potenziali problemi."
 
-#: src/gui/state/game/game.cpp:796
+#: src/gui/state/game/game.cpp:810
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1182,19 +1200,19 @@ msgid_plural "{0} ITM records"
 msgstr[0] "{0} ITM record"
 msgstr[1] "{0} ITM records"
 
-#: src/gui/state/game/helpers.cpp:96
+#: src/gui/state/game/helpers.cpp:95
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
 msgstr[0] "{0} riferimento eliminato"
 msgstr[1] "{0} riferimenti eliminati"
 
-#: src/gui/state/game/helpers.cpp:103
+#: src/gui/state/game/helpers.cpp:101
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
 msgstr[0] "{0} navmesh eliminato"
 msgstr[1] "{0} navmeshes eliminati"
 
-#: src/gui/state/game/helpers.cpp:113
+#: src/gui/state/game/helpers.cpp:111
 msgid "{0} found {1}, {2} and {3}."
 msgstr "{0} trovati {1}, {2} e {3}."
 
@@ -1202,16 +1220,16 @@ msgstr "{0} trovati {1}, {2} e {3}."
 msgid "{0} found dirty edits."
 msgstr "{0} dirty edit trovati."
 
-#: src/gui/state/game/helpers.cpp:125 src/gui/state/game/helpers.cpp:131
-#: src/gui/state/game/helpers.cpp:136
+#: src/gui/state/game/helpers.cpp:124 src/gui/state/game/helpers.cpp:131
+#: src/gui/state/game/helpers.cpp:138
 msgid "{0} found {1} and {2}."
 msgstr "{0} trovati {1} e {2}."
 
-#: src/gui/state/game/helpers.cpp:140 src/gui/state/game/helpers.cpp:143
-#: src/gui/state/game/helpers.cpp:146
+#: src/gui/state/game/helpers.cpp:143 src/gui/state/game/helpers.cpp:147
+#: src/gui/state/game/helpers.cpp:151
 msgid "{0} found {1}."
 msgstr "{0} trovati {1}."
 
-#: src/gui/state/game/helpers.cpp:232
+#: src/gui/state/game/helpers.cpp:241
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT ha rilevato che \"{0}\" non è valido e ora lo sta ignorando."
