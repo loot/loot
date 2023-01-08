@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT v0.18.5\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2022-12-09 18:14+0000\n"
+"POT-Creation-Date: 2022-12-25 23:20+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: IllusiveMan196\n"
 "Language-Team: \n"
@@ -24,7 +24,7 @@ msgstr "Показати лише плагіни у групі"
 
 #: src/gui/qt/filters_widget.cpp:233
 msgid "Show only plugins with cards that contain"
-msgstr "Показати лише плагіни ім'я яких містить"
+msgstr "Показати лише плагіни картка яких містить"
 
 #: src/gui/qt/filters_widget.cpp:234 src/gui/qt/search_dialog.cpp:113
 msgid "Use regular expression"
@@ -335,11 +335,11 @@ msgstr "Плаг&іни"
 msgid "F&ilters"
 msgstr "Фільтр&и"
 
-#: src/gui/qt/main_window.cpp:1003 src/gui/qt/main_window.cpp:1957
+#: src/gui/qt/main_window.cpp:1008 src/gui/qt/main_window.cpp:1955
 msgid "Updating and parsing masterlist..."
 msgstr "Оновлення та обробка правил сортування.."
 
-#: src/gui/qt/main_window.cpp:1062
+#: src/gui/qt/main_window.cpp:1067
 msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
@@ -347,15 +347,15 @@ msgstr ""
 "Схоже, що це перший раз, коли ви запустили LOOT v{0}. Наявні дані програми "
 "скопійовано до: {1}"
 
-#: src/gui/qt/main_window.cpp:1070
+#: src/gui/qt/main_window.cpp:1075
 msgid "This appears to be the first time you have run LOOT v{0}."
 msgstr "Схоже, що це перший раз, коли ви запустили LOOT v{0}."
 
-#: src/gui/qt/main_window.cpp:1077
+#: src/gui/qt/main_window.cpp:1082
 msgid "Here are some tips to help you get started with the interface."
 msgstr "Ось деякі поради, які допоможуть почати роботу з інтерфейсом."
 
-#: src/gui/qt/main_window.cpp:1082
+#: src/gui/qt/main_window.cpp:1087
 msgid ""
 "CRCs are only displayed after plugins have been loaded, either by conflict "
 "filtering, or by sorting."
@@ -363,23 +363,23 @@ msgstr ""
 "CRC відображаються лише після завантаження плагінів, фільтрації конфліктів "
 "чи сортування."
 
-#: src/gui/qt/main_window.cpp:1088
+#: src/gui/qt/main_window.cpp:1093
 msgid ""
 "Plugins can be drag and dropped from the sidebar into the metadata editor's "
 "\"load after\", \"requirements\" and \"incompatibility\" tables."
 msgstr ""
-"Плагіни можна перетягувати і скидати з бічної панелі в таблиці "
-"\"завантажувати після\", \"вимоги\" і \"несумісність\" редактора метаданих."
+"Плагіни можна перетягувати з бічної панелі до таблиць \"завантажувати після"
+"\", \"вимоги\" і \"несумісність\" редактора метаданих."
 
-#: src/gui/qt/main_window.cpp:1094
+#: src/gui/qt/main_window.cpp:1099
 msgid ""
 "Some features are disabled while the metadata editor is open, or while there "
 "is a sorted load order that has not been applied or discarded."
 msgstr ""
 "Деякі функції відключені поки відкрито редактор метаданих чи поки "
-"відсортований порядок завантаження не було застосовано чи скасовано."
+"відсортований порядок завантаження не застосовано чи скасовано."
 
-#: src/gui/qt/main_window.cpp:1101 src/gui/qt/main_window.cpp:1839
+#: src/gui/qt/main_window.cpp:1106 src/gui/qt/main_window.cpp:1837
 msgid ""
 "LOOT is free, but if you want to show your appreciation with some money, "
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
@@ -389,30 +389,30 @@ msgstr ""
 "можуть бути направлені WrinklyNinja (творець і основний розробник LOOT), "
 "через {0}."
 
-#: src/gui/qt/main_window.cpp:1116
+#: src/gui/qt/main_window.cpp:1121
 msgid "First-Time Tips"
 msgstr "Поради для новачків"
 
-#: src/gui/qt/main_window.cpp:1151
+#: src/gui/qt/main_window.cpp:1156
 msgid "metadata edits"
 msgstr "правки метаданих"
 
-#: src/gui/qt/main_window.cpp:1152
+#: src/gui/qt/main_window.cpp:1157
 msgid "sorted load order"
 msgstr "відсортований порядок завантаження"
 
-#: src/gui/qt/main_window.cpp:1155
+#: src/gui/qt/main_window.cpp:1160
 msgid ""
 "You have not yet applied or cancelled your {0}. Are you sure you want to "
 "quit?"
 msgstr "Ви усе ще не застосували чи не відмінили {0}. Дійсно хочете вийти?"
 
-#: src/gui/qt/main_window.cpp:1266 src/gui/qt/plugin_editor/table_tabs.cpp:396
+#: src/gui/qt/main_window.cpp:1271 src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr "Помилка"
 
-#: src/gui/qt/main_window.cpp:1276 src/gui/query/query.h:67
+#: src/gui/qt/main_window.cpp:1281 src/gui/query/query.h:67
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
 "get to it through the main menu) for more information."
@@ -420,7 +420,7 @@ msgstr ""
 "О ні, щось пішло не так! Додаткову інформацію можна дізнатись у файлі "
 "LOOTDebugLog.txt (можна отримати доступ до нього через головне меню)."
 
-#: src/gui/qt/main_window.cpp:1321
+#: src/gui/qt/main_window.cpp:1326
 msgid ""
 "Failed to sort plugins. Details may be provided in the General Information "
 "section."
@@ -428,15 +428,15 @@ msgstr ""
 "Не вдалося відсортувати плагіни. Детальна інформація може бути в розділі "
 "\"Загальна інформація\"."
 
-#: src/gui/qt/main_window.cpp:1339
+#: src/gui/qt/main_window.cpp:1344
 msgid "Sorting made no changes to the load order."
 msgstr "Сортування не змінило порядок завантаження."
 
-#: src/gui/qt/main_window.cpp:1389
+#: src/gui/qt/main_window.cpp:1394
 msgid "Ambiguous load order detected"
 msgstr "Виявлено неоднозначний порядок завантаження"
 
-#: src/gui/qt/main_window.cpp:1390
+#: src/gui/qt/main_window.cpp:1395
 msgid ""
 "LOOT has detected that the current load order is ambiguous, which means that "
 "other applications might use a different load order than what LOOT "
@@ -453,32 +453,32 @@ msgstr ""
 "\"Гра\", однозначно встановить порядок завантаження відповідно результату "
 "дії LOOT."
 
-#: src/gui/qt/main_window.cpp:1429
+#: src/gui/qt/main_window.cpp:1434
 msgid "Your LOOT data has been backed up to: {0}"
 msgstr "Дані LOOT збережено до: {0}"
 
-#: src/gui/qt/main_window.cpp:1436
+#: src/gui/qt/main_window.cpp:1441
 msgid "No backup has been created as LOOT has no data to backup."
 msgstr "Резервну копію не створено, у LOOT немає даних для збереження."
 
-#: src/gui/qt/main_window.cpp:1487
+#: src/gui/qt/main_window.cpp:1485
 msgid "The load order has been copied to the clipboard."
 msgstr "Порядок завантаження скопійовано до буферу обміну."
 
-#: src/gui/qt/main_window.cpp:1505
+#: src/gui/qt/main_window.cpp:1503
 msgid "LOOT's content has been copied to the clipboard."
 msgstr "Вміст LOOT скопійовано до буферу обміну."
 
-#: src/gui/qt/main_window.cpp:1517
+#: src/gui/qt/main_window.cpp:1515
 msgid "The load order displayed by LOOT has been set."
 msgstr "Порядок завантаження, відображений LOOT, встановлено."
 
 #. translators: Title of a dialog box.
-#: src/gui/qt/main_window.cpp:1538
+#: src/gui/qt/main_window.cpp:1536
 msgid "Redate Plugins?"
 msgstr "Редатувати плагіни?"
 
-#: src/gui/qt/main_window.cpp:1540
+#: src/gui/qt/main_window.cpp:1538
 msgid ""
 "This feature is provided so that modders using the Creation Kit may set the "
 "load order it uses. A side-effect is that any subscribed Steam Workshop mods "
@@ -492,11 +492,11 @@ msgstr ""
 "Edition). Продовжити?"
 
 #. translators: Notification text.
-#: src/gui/qt/main_window.cpp:1552
+#: src/gui/qt/main_window.cpp:1550
 msgid "Plugins were successfully redated."
 msgstr "Плагіни було успішно редатовано."
 
-#: src/gui/qt/main_window.cpp:1564
+#: src/gui/qt/main_window.cpp:1562
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from all "
 "plugins?"
@@ -504,11 +504,11 @@ msgstr ""
 "Ви впевнені що хочете очистити всі існуючі користувацькі метадані для всіх "
 "плагінів?"
 
-#: src/gui/qt/main_window.cpp:1612
+#: src/gui/qt/main_window.cpp:1610
 msgid "All user-added metadata has been cleared."
 msgstr "Користувацькі метадані було очищено."
 
-#: src/gui/qt/main_window.cpp:1625
+#: src/gui/qt/main_window.cpp:1623
 msgid ""
 "The plugin metadata editor is already open, first close the editor before "
 "attempting to edit another plugin's metadata."
@@ -516,34 +516,34 @@ msgstr ""
 "Редактор метаданих плагіна вже відкрито, спочатку закрийте редактор, перш "
 "ніж намагатися редагувати метадані іншого плагіна."
 
-#: src/gui/qt/main_window.cpp:1683
+#: src/gui/qt/main_window.cpp:1681
 msgid "The metadata for \"{0}\" has been copied to the clipboard."
 msgstr "Метадані для \"{0}\" скопійовані до буферу обміну."
 
-#: src/gui/qt/main_window.cpp:1701
+#: src/gui/qt/main_window.cpp:1699
 msgid "The plugin name \"{0}\" has been copied to the clipboard."
 msgstr "Ім'я плагіну \"{0}\" скопійовано до буферу обміну."
 
-#: src/gui/qt/main_window.cpp:1720
+#: src/gui/qt/main_window.cpp:1718
 msgid "The card content for \"{0}\" has been copied to the clipboard."
 msgstr "Зміст картки для \"{0}\" скопійовано до буферу обміну."
 
-#: src/gui/qt/main_window.cpp:1735
+#: src/gui/qt/main_window.cpp:1733
 msgid ""
 "Are you sure you want to clear all existing user-added metadata from \"{0}\"?"
 msgstr ""
 "Ви впевнені, що хочете очистити усі існуючі користувацькі метадані для "
 "\"{0}\"?"
 
-#: src/gui/qt/main_window.cpp:1775
+#: src/gui/qt/main_window.cpp:1773
 msgid "The user-added metadata for \"{0}\" has been cleared."
 msgstr "Користувацькі метадані для \"{0}\" були очищені."
 
-#: src/gui/qt/main_window.cpp:1826
+#: src/gui/qt/main_window.cpp:1824
 msgid "Version {0} (build {1})"
 msgstr "Версія {0} (збірка {1})"
 
-#: src/gui/qt/main_window.cpp:1832
+#: src/gui/qt/main_window.cpp:1830
 msgid ""
 "Load order optimisation for Morrowind, Oblivion, Nehrim, Skyrim, Enderal, "
 "Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout 3, "
@@ -553,15 +553,15 @@ msgstr ""
 "Enderal, Skyrim Special Edition, Enderal Special Edition, Skyrim VR, Fallout "
 "3, Fallout: New Vegas, Fallout 4 та Fallout 4 VR."
 
-#: src/gui/qt/main_window.cpp:1849
+#: src/gui/qt/main_window.cpp:1847
 msgid "About LOOT"
 msgstr "Про LOOT"
 
-#: src/gui/qt/main_window.cpp:2159
+#: src/gui/qt/main_window.cpp:2157
 msgid "Identifying conflicting plugins..."
 msgstr "Визначення конфліктних плагінів..."
 
-#: src/gui/qt/main_window.cpp:2302
+#: src/gui/qt/main_window.cpp:2300
 msgid ""
 "Auto-sort has been cancelled as there is at least one error message "
 "displayed."
@@ -569,19 +569,19 @@ msgstr ""
 "Автосортування скасовано, так як відображається як мінімум одне повідомлення "
 "про помилку."
 
-#: src/gui/qt/main_window.cpp:2353
+#: src/gui/qt/main_window.cpp:2351
 msgid "No masterlist update was necessary."
 msgstr "Оновлення правил сортування не потрібне."
 
-#: src/gui/qt/main_window.cpp:2366
+#: src/gui/qt/main_window.cpp:2364
 msgid "Masterlist updated to revision {0}."
 msgstr "Список правил сортування оновлено до версії {0}."
 
-#: src/gui/qt/main_window.cpp:2424
+#: src/gui/qt/main_window.cpp:2422
 msgid "A [new release]({0}) of LOOT is available."
 msgstr "Доступна [нова версія]({0}) LOOT."
 
-#: src/gui/qt/main_window.cpp:2440
+#: src/gui/qt/main_window.cpp:2438
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
@@ -918,7 +918,7 @@ msgstr "Перевірити оновлення LOOT при запуску"
 
 #: src/gui/qt/settings/general_tab.cpp:157
 msgid "Enable debug logging"
-msgstr "Включити лог налаштування"
+msgstr "Увімкнути журнал налагодження"
 
 #: src/gui/qt/settings/general_tab.cpp:158
 msgid "Masterlist prelude source"
@@ -972,7 +972,7 @@ msgstr "Повідомлення загального призначення"
 msgid "Add new game..."
 msgstr "Додати нову гру..."
 
-#: src/gui/query/types/apply_sort_query.h:97
+#: src/gui/query/types/apply_sort_query.h:76
 msgid ""
 "Oh no, something went wrong! This is usually because \"{0}\" is set to be "
 "read-only. If it is, unset it and try again. If it isn't, you can check your "
@@ -992,83 +992,83 @@ msgstr "Обробка, об'єднання та оцінка метаданих
 msgid "Sorting load order..."
 msgstr "Сортування порядку завантаження..."
 
-#: src/gui/state/loot_settings.cpp:541
+#: src/gui/state/loot_settings.cpp:538
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
-"Не вдалося оновити налаштування гілки та URI сховку prelude-файлу! Більш "
+"Не вдалося оновити налаштування гілки та URL сховку prelude-файлу! Більш "
 "докладну інформацію можна отримати у LOOTDebugLog.txt (доступ через меню "
 "Файли)."
 
-#: src/gui/state/loot_settings.cpp:567
+#: src/gui/state/loot_settings.cpp:564
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
-"Не вдалося оновити налаштування гілки та URI сховку правил сортування! Більш "
+"Не вдалося оновити налаштування гілки та URL сховку правил сортування! Більш "
 "докладну інформацію можна отримати у LOOTDebugLog.txt (доступ через меню "
 "Файли)."
 
-#: src/gui/state/loot_state.cpp:170
+#: src/gui/state/loot_state.cpp:163
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 "Помилка: Специфічні для гри налаштування не можуть бути ініціалізовані. {0}"
 
-#: src/gui/state/loot_state.cpp:195
+#: src/gui/state/loot_state.cpp:188
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr "Помилка: Неможливо створити папку даних LOOT. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:211 src/gui/state/loot_state.cpp:265
+#: src/gui/state/loot_state.cpp:204 src/gui/state/loot_state.cpp:258
 msgid "Error: Settings parsing failed. {0}"
 msgstr "Помилка: Обробка налаштувань не вдалась. {0}"
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:221
+#: src/gui/state/loot_state.cpp:214
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 "Помилка: --auto-sort (автосортування) пройшло, але параметр --game не було "
 "вказано."
 
-#: src/gui/state/loot_state.cpp:295
+#: src/gui/state/loot_state.cpp:288
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr "Помилка: Неможливо створити папку для prelude-файлу LOOT. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:313
+#: src/gui/state/loot_state.cpp:306
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 "Помилка: --game-path (автосортування) пройшло, але параметр --game не було "
 "вказано."
 
-#: src/gui/state/loot_state.cpp:328
+#: src/gui/state/loot_state.cpp:321
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr "Помилка: не вдалося перевизначити шлях до гри, гра {0} не розпізнана."
 
-#: src/gui/state/loot_state.cpp:361
+#: src/gui/state/loot_state.cpp:354
 msgid "Error: The initial game could not be selected. {0}"
 msgstr "Помилка: Стартову гру не можливо обрати. {0}"
 
-#: src/gui/state/game/game.cpp:242 src/gui/state/game/game.cpp:285
+#: src/gui/state/game/game.cpp:228 src/gui/state/game/game.cpp:271
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr "Цей плагін потребує встановленого плагіна \"{0}\", але він відсутній."
 
-#: src/gui/state/game/game.cpp:255
+#: src/gui/state/game/game.cpp:241
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr "Цей плагін потребує підключеного плагіна \"{0}\", але він не активний."
 
-#: src/gui/state/game/game.cpp:325
+#: src/gui/state/game/game.cpp:311
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr "Цей плагін несумісний з \"{0}\", але обидва файли присутні."
 
-#: src/gui/state/game/game.cpp:368
+#: src/gui/state/game/game.cpp:354
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
@@ -1078,19 +1078,19 @@ msgstr ""
 "викликати проблеми у грі, й сортування не вдасться, поки цей плагін "
 "встановлено."
 
-#: src/gui/state/game/game.cpp:389
+#: src/gui/state/game/game.cpp:375
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
 "saves."
 msgstr ""
-"Плагін містить записи, які мають FormID за межами прийнятних для ESL-"
-"плагіна. Використання цього плагіна призведе до невідворотнього пошкодження "
-"ваших ігрових сейв-файлів."
+"Плагін містить записи, FormID яких за межами прийнятних для ESL-плагіна. "
+"Використання цього плагіна призведе до незворотнього пошкодження ваших "
+"ігрових сейв-файлів."
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:410
+#: src/gui/state/game/game.cpp:396
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
@@ -1098,11 +1098,11 @@ msgstr ""
 "Цей плагін має версію заголовку {0}, котра є старішою за мінімально "
 "підтримувану грою версію {1}."
 
-#: src/gui/state/game/game.cpp:429
+#: src/gui/state/game/game.cpp:415
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr "Плагін у групі \"{0}\", яка не існує."
 
-#: src/gui/state/game/game.cpp:454
+#: src/gui/state/game/game.cpp:440
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
@@ -1110,7 +1110,7 @@ msgstr ""
 "Цей плагін має файл BashTags, який перевизначить пропозиції, зроблені LOOT "
 "для наступних тегів: {0}."
 
-#: src/gui/state/game/game.cpp:552 src/gui/state/game/game.cpp:640
+#: src/gui/state/game/game.cpp:538 src/gui/state/game/game.cpp:630
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
@@ -1118,19 +1118,19 @@ msgstr ""
 "Не вдалося завантажити поточний порядок завантаження, відображена інформація "
 "може бути не вірною."
 
-#: src/gui/state/game/game.cpp:666
+#: src/gui/state/game/game.cpp:656
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr "Циклічну взаємодію знайдено між плагінами \"{0}\" та \"{1}\": {2}"
 
-#: src/gui/state/game/game.cpp:679
+#: src/gui/state/game/game.cpp:669
 msgid "The group \"{0}\" does not exist."
 msgstr "Група \"{0}\" не існує."
 
-#: src/gui/state/game/game.cpp:714
+#: src/gui/state/game/game.cpp:704
 msgid "You have not sorted your load order this session."
 msgstr "У цій сесії порядок завантаження ще не відсортовано."
 
-#: src/gui/state/game/game.cpp:742
+#: src/gui/state/game/game.cpp:732
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
@@ -1138,7 +1138,7 @@ msgstr ""
 "Не запускайте Morrowind без використання MWSE, інакше це завдасть серйозної "
 "шкоди вашій грі."
 
-#: src/gui/state/game/game.cpp:756
+#: src/gui/state/game/game.cpp:746
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
@@ -1148,7 +1148,7 @@ msgstr ""
 "завантаження. Відключіть звичайний плагін чи усі ваші легкі моди задля "
 "уникнення можливих проблем."
 
-#: src/gui/state/game/game.cpp:820
+#: src/gui/state/game/game.cpp:810
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1219,6 +1219,6 @@ msgstr "{0} містить {1} та {2}."
 msgid "{0} found {1}."
 msgstr "{0} містить {1}."
 
-#: src/gui/state/game/helpers.cpp:237
+#: src/gui/state/game/helpers.cpp:241
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "LOOT визначив, що \"{0}\" невірний та тепер ігнорує його."
