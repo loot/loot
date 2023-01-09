@@ -55,6 +55,7 @@ Changed
 - Updated the Chinese translation.
 - Updated the Finnish translation.
 - Updated the German translation.
+- Updated the Italian translation.
 - Updated the Japanese translation.
 - Updated the Ukrainian translation.
 - Updated libloot to v0.19.0.
