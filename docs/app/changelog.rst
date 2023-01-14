@@ -4,6 +4,14 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.19.1 - 2023-01-14
+===================
+
+Fixed
+-----
+
+- The 0.19.0 release did not have the correct version number.
+
 0.19.0 - 2023-01-14
 ===================
 

@@ -27,8 +27,8 @@
 namespace loot {
 namespace gui {
 const unsigned int Version::major = 0;
-const unsigned int Version::minor = 18;
-const unsigned int Version::patch = 6;
+const unsigned int Version::minor = 19;
+const unsigned int Version::patch = 1;
 const std::string Version::revision = "@GIT_COMMIT_STRING@";
 
 std::string Version::string() {
