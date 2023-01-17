@@ -4,7 +4,15 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
-0.19.0 - Unreleased
+0.19.1 - 2023-01-14
+===================
+
+Fixed
+-----
+
+- The 0.19.0 release did not have the correct version number.
+
+0.19.0 - 2023-01-14
 ===================
 
 Added
@@ -58,7 +66,7 @@ Changed
 - Updated the Italian translation.
 - Updated the Japanese translation.
 - Updated the Ukrainian translation.
-- Updated libloot to v0.19.1.
+- Updated libloot to v0.19.2.
 - Updated Qt to 6.4.2.
 - Updated spdlog to v1.11.0.
 - Updated zlib to 1.2.13.
