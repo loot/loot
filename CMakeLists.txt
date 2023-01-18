@@ -46,7 +46,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.77 REQUIRED COMPONENTS locale system)
+find_package(Boost 1.77 REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
@@ -423,14 +423,14 @@ endif()
 add_executable(LOOT ${LOOT_ALL_SOURCES})
 add_dependencies(LOOT libloot minizip-ng spdlog OGDF)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
+    Qt::Widgets Qt::Network Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
     libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
+    Qt::Widgets Qt::Network Qt::Test Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -439,7 +439,7 @@ target_link_libraries(loot_gui_tests PRIVATE
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    ${Boost_INCLUDE_DIRS}
+    Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
@@ -449,7 +449,7 @@ target_include_directories(LOOT SYSTEM PRIVATE
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    ${Boost_INCLUDE_DIRS}
+    Boost::headers
     ${GTEST_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}

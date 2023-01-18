@@ -152,7 +152,7 @@ jobs:
       - name: Download & build Boost
         run: |
           wget https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ~ --boost-version 1.77.0 -a 64 -t gcc-10 locale system
+          python install_boost.py --directory ~ --boost-version 1.77.0 -a 64 -t gcc-10 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download Qt
@@ -281,7 +281,7 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale system
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
