@@ -154,8 +154,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-
-Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2019 Redistributable...
+Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: "{cm:InstallingMSVCRedist}"
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -249,6 +248,8 @@ uk_UA.DeleteUserFiles=Чи ви хочете видалити ваші нала�
 #ifdef SimplifiedChineseExists
 zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
+
+en.InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable...
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
