@@ -318,7 +318,6 @@ var
   InstalledVersionMajor: Cardinal;
   InstalledVersionMinor: Cardinal;
   InstalledVersionBld: Cardinal;
-  Arch: String;
 begin
   SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\Runtimes\x64';
 
