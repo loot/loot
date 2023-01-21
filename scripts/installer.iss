@@ -8,6 +8,8 @@
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
+#define MasterlistBranch "v0.18"
+
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')
 #define KoreanExists
 #endif
@@ -74,6 +76,7 @@ Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 #endif
 
 [Tasks]
+Name: "masterlists"; Description: "{cm:DownloadMasterlists}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
@@ -147,6 +150,67 @@ Source: "resources\l10n\uk_UA\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
+
+; Masterlists
+Source: "{tmp}\prelude.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\prelude\prelude.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Morrowind\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Morrowind\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Oblivion\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Oblivion\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Skyrim\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Skyrim Special Edition\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim Special Edition\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Skyrim VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim VR\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Fallout3\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout3\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\FalloutNV\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\FalloutNV\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Fallout4\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
+
+Source: "{tmp}\Fallout4VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; \
+AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4VR\masterlist.yaml')); \
+Flags: external ignoreversion; \
+Tasks: masterlists
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -250,6 +314,8 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
 
 en.InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable...
+
+en.DownloadMasterlists=Download and install the latest masterlists
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
@@ -357,6 +423,40 @@ begin
   end;
 end;
 
+function CalculateGitBlobHash(const FilePath: String): String;
+var Buffer: AnsiString;
+var Content: AnsiString;
+begin
+    if not LoadStringFromFile(FilePath, Content) then begin
+      Log(Format('Failed to load file at %s', [FilePath]));
+      Result := ''
+    end
+    else begin
+      Buffer := 'blob ' + IntToStr(Length(Content)) + #0 + Content;
+      Result := GetSHA1OfString(Buffer);
+    end;
+end;
+
+procedure WriteDownloadMetadata(const FilePath: String);
+var
+  MetadataFilePath: String;
+  UpdateTimestamp: String;
+  BlobSHA1: String;
+  Toml: TArrayOfString;
+begin
+  // Write a <FilePath>.metadata.toml file that contains blob_sha1 and update_timestamp string fields.
+  MetadataFilePath := FilePath + '.metadata.toml';
+  UpdateTimestamp := GetDateTimeString('yyyy/mm/dd', '-', ':');
+  BlobSha1 := CalculateGitBlobHash(FilePath);
+  Toml := [
+    'blob_sha1 = "' + BlobSha1 + '"',
+    'update_timestamp = "' + UpdateTimestamp + '"'
+  ];
+  if not SaveStringsToUTF8File(MetadataFilePath, Toml, False) then begin
+    Log(Format('Failed to write file at %s', [MetadataFilePath]));
+  end;
+end;
+
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
 begin
   if Progress = ProgressMax then
@@ -432,19 +532,33 @@ begin
 
   if VC2019RedistNeedsInstall then begin
     DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+    DownloadPage.Clear;
+    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x64.exe', 'vc_redist.2019.x64.exe', '');
   end;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
-        Log(Format('Current page ID: %d', [CurPageID]));
-  if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
-    DownloadPage.Clear;
-
-    if VC2019RedistNeedsInstall then begin
-      DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x64.exe', 'vc_redist.2019.x64.exe', '');
+  Log(Format('Current page ID: %d', [CurPageID]));
+  if (CurPageID = wpSelectTasks) and WizardIsTaskSelected('masterlists') then begin
+    if not Assigned(DownloadPage) then begin
+      DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+      DownloadPage.Clear;
     end;
 
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'Morrowind\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'Oblivion\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'Skyrim\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'Skyrim Special Edition\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'Skyrim VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'Fallout3\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'FalloutNV\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'Fallout4\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'Fallout4VR\masterlist.yaml', '');
+  end;
+
+  if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
     DownloadPage.Show;
     try
       try
