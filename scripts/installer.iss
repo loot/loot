@@ -148,8 +148,6 @@ DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "{tmp}\vc_redist.x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
-
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
