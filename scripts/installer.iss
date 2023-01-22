@@ -152,65 +152,46 @@ Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
 ; Masterlists
-Source: "{tmp}\prelude.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\prelude"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\prelude\prelude.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Morrowind\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Morrowind\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Oblivion\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Oblivion\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Skyrim\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Skyrim Special Edition\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim Special Edition\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Skyrim VR\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Skyrim VR\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Fallout3\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout3\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\FalloutNV\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\FalloutNV\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Fallout4\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
-
-Source: "{tmp}\Fallout4VR\masterlist.yaml"; \
-DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; \
-AfterInstall: WriteDownloadMetadata(ExpandConstant('{localappdata}\{#MyAppName}\games\Fallout4VR\masterlist.yaml')); \
-Flags: external ignoreversion; \
-Tasks: masterlists
+Source: "build\masterlists\prelude\prelude.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; Flags: ignoreversion
+Source: "build\masterlists\prelude\prelude.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; Flags: ignoreversion
+Source: "build\masterlists\Morrowind\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; Flags: ignoreversion
+Source: "build\masterlists\Morrowind\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim VR\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
+Source: "build\masterlists\Fallout3\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
+Source: "build\masterlists\Fallout3\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
+Source: "build\masterlists\FalloutNV\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; Flags: ignoreversion
+Source: "build\masterlists\FalloutNV\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4VR\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -457,6 +438,14 @@ begin
   end;
 end;
 
+procedure InstallMetadataFile(PathSuffix: String);
+var TargetPath: String;
+begin
+  TargetPath := ExpandConstant('{localappdata}\{#MyAppName}\') + PathSuffix;
+  FileCopy(ExpandConstant('{tmp}\') + PathSuffix, TargetPath, False);
+  WriteDownloadMetadata(TargetPath);
+end;
+
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
 begin
   if Progress = ProgressMax then
@@ -546,16 +535,16 @@ begin
       DownloadPage.Clear;
     end;
 
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'Morrowind\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'Oblivion\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'Skyrim\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'Skyrim Special Edition\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'Skyrim VR\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'Fallout3\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'FalloutNV\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'Fallout4\masterlist.yaml', '');
-    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'Fallout4VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude\prelude.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'games\Morrowind\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Oblivion\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim Special Edition\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout3\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'games\FalloutNV\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4VR\masterlist.yaml', '');
   end;
 
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
@@ -582,5 +571,18 @@ begin
 
   if CurStep = ssPostInstall then begin
     SetLootLanguage();
+
+    if WizardIsTaskSelected('masterlists') then begin
+      InstallMetadataFile('prelude\prelude.yaml');
+      InstallMetadataFile('games\Morrowind\masterlist.yaml');
+      InstallMetadataFile('games\Oblivion\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim Special Edition\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim VR\masterlist.yaml');
+      InstallMetadataFile('games\Fallout3\masterlist.yaml');
+      InstallMetadataFile('games\FalloutNV\masterlist.yaml');
+      InstallMetadataFile('games\Fallout4\masterlist.yaml');
+      InstallMetadataFile('games\Fallout4VR\masterlist.yaml');
+    end
   end
 end;
