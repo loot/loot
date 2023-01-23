@@ -121,12 +121,7 @@ int main(int argc, char* argv[]) {
   // Load Qt's translations.
   QTranslator translator;
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
   auto translationsPath = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
-#else
-  auto translationsPath =
-      QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-#endif
 
   auto loaded = translator.load(
       QLocale(QString::fromStdString(state.getSettings().getLanguage())),

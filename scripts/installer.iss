@@ -8,6 +8,8 @@
 #define MyAppURL "https://loot.github.io"
 #define MyAppExeName "LOOT.exe"
 
+#define MasterlistBranch "v0.18"
+
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\Korean.isl')
 #define KoreanExists
 #endif
@@ -18,16 +20,6 @@
 
 #if FileExists(AddBackslash(CompilerPath) + 'Languages\ChineseSimplified.isl')
 #define SimplifiedChineseExists
-#endif
-
-#ifdef MyAppIs64Bit
-#define VCRedistArch "x64"
-#else
-#define VCRedistArch "x86"
-#endif
-
-#ifndef QtVersion
-#define QtVersion "6"
 #endif
 
 [Setup]
@@ -54,11 +46,8 @@ DisableDirPage=no
 DisableReadyPage=yes
 DisableProgramGroupPage=yes
 WizardStyle=modern
-
-#ifdef MyAppIs64Bit
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
-#endif
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -87,6 +76,7 @@ Name: "zh_CN"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 #endif
 
 [Tasks]
+Name: "masterlists"; Description: "{cm:DownloadMasterlists}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
@@ -107,7 +97,6 @@ DestDir: "{app}\styles"; Flags: ignoreversion
 Source: "build\Release\translations\*"; \
 DestDir: "{app}\translations"; Flags: ignoreversion
 
-#if QtVersion == "6"
 ; Qt 6 files
 Source: "build\Release\Qt6Core.dll"; \
 DestDir: "{app}"; Flags: ignoreversion
@@ -123,33 +112,6 @@ Source: "build\Release\networkinformation\*"; \
 DestDir: "{app}\networkinformation"; Flags: ignoreversion
 Source: "build\Release\tls\*"; \
 DestDir: "{app}\tls"; Flags: ignoreversion
-#elif QtVersion == "5"
-; Qt 5 files
-Source: "build\Release\Qt5Core.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Gui.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Network.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Svg.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\Qt5Widgets.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\bearer\*"; \
-DestDir: "{app}\bearer"; Flags: ignoreversion
-
-#ifdef MyAppIs64Bit
-Source: "build\Release\libcrypto-1_1-x64.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\libssl-1_1-x64.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-#else
-Source: "build\Release\libcrypto-1_1.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-Source: "build\Release\libssl-1_1.dll"; \
-DestDir: "{app}"; Flags: ignoreversion
-#endif
-#endif
 
 Source: "build\docs\html\*"; \
 DestDir: "{app}\docs"; Flags: ignoreversion recursesubdirs
@@ -189,7 +151,47 @@ DestDir: "{app}\resources\l10n\uk_UA\LC_MESSAGES"; Flags: ignoreversion
 Source: "resources\l10n\zh_CN\LC_MESSAGES\loot.mo"; \
 DestDir: "{app}\resources\l10n\zh_CN\LC_MESSAGES"; Flags: ignoreversion
 
-Source: "{tmp}\vc_redist.{#VCRedistArch}.exe"; DestDir: {tmp}; Flags: deleteafterinstall external skipifsourcedoesntexist
+; Masterlists
+Source: "build\masterlists\prelude\prelude.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; Flags: ignoreversion
+Source: "build\masterlists\prelude\prelude.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\prelude"; Flags: ignoreversion
+Source: "build\masterlists\Morrowind\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; Flags: ignoreversion
+Source: "build\masterlists\Morrowind\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Morrowind"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Oblivion\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Oblivion"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim Special Edition\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim Special Edition"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
+Source: "build\masterlists\Skyrim VR\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Skyrim VR"; Flags: ignoreversion
+Source: "build\masterlists\Fallout3\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
+Source: "build\masterlists\Fallout3\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout3"; Flags: ignoreversion
+Source: "build\masterlists\FalloutNV\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; Flags: ignoreversion
+Source: "build\masterlists\FalloutNV\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\FalloutNV"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4VR\masterlist.yaml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
+Source: "build\masterlists\Fallout4VR\masterlist.yaml.metadata.toml"; \
+DestDir: "{localappdata}\{#MyAppName}\games\Fallout4VR"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -197,12 +199,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
-
-#if QtVersion == "5"
-Filename: "{tmp}\vc_redist.2010.{#VCRedistArch}.exe"; Parameters: "/q /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2010 Redistributable...
-#endif
-
-Filename: "{tmp}\vc_redist.2019.{#VCRedistArch}.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: Installing Visual C++ 2019 Redistributable...
+Filename: "{tmp}\vc_redist.2019.x64.exe"; Parameters: "/quiet /norestart"; Flags: skipifdoesntexist; StatusMsg: "{cm:InstallingMSVCRedist}"
 
 [Registry]
 ; Store install path for backwards-compatibility with old NSIS install script behaviour.
@@ -297,9 +294,12 @@ uk_UA.DeleteUserFiles=Чи ви хочете видалити ваші нала�
 zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
 
+en.InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable...
+
+en.DownloadMasterlists=Download and install the latest masterlists
+
 [Code]
 var DownloadPage: TDownloadWizardPage;
-var VC2010RedistNeedsInstall: Boolean;
 var VC2019RedistNeedsInstall: Boolean;
 
 // Set LOOT's language in settings.toml
@@ -359,50 +359,35 @@ end;
 
 function VCRedistNeedsInstall(VersionMajor, VersionMinor, VersionBld: Cardinal): Boolean;
 var
-  RuntimesPathComponent: String;
-  MajorValueName: String;
-  MinorValueName: String;
   SubKeyName: String;
   IsSuccessful: Boolean;
   IsRuntimeInstalled: Cardinal;
   InstalledVersionMajor: Cardinal;
   InstalledVersionMinor: Cardinal;
   InstalledVersionBld: Cardinal;
-  Arch: String;
 begin
-  if VersionMajor = 10 then begin
-    RuntimesPathComponent := 'VCRedist';
-    MajorValueName := 'MajorVersion';
-    MinorValueName := 'MinorVersion';
-  end
-  else begin
-    RuntimesPathComponent := 'Runtimes';
-    MajorValueName := 'Major';
-    MinorValueName := 'Minor';
-  end;
-
-  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\' + RuntimesPathComponent + '\{#VCRedistArch}';
+  SubKeyName := 'SOFTWARE\Microsoft\VisualStudio\' + IntToStr(VersionMajor) + '.0\VC\Runtimes\x64';
 
   IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Installed', IsRuntimeInstalled);
 
   if (IsSuccessful = False) or (IsRuntimeInstalled <> 1) then begin
-    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime is not installed');
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime is not installed');
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, MajorValueName, InstalledVersionMajor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Major', InstalledVersionMajor);
 
   if (IsSuccessful = False) or (InstalledVersionMajor <> VersionMajor) then begin
-    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime major version is not ' + IntToStr(VersionMajor) + ': ' + IntToStr(InstalledVersionMajor));
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime major version is not ' + IntToStr(VersionMajor) + ': ' + IntToStr(InstalledVersionMajor));
     Result := True;
     exit;
   end;
 
-  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, MinorValueName, InstalledVersionMinor);
+  IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Minor', InstalledVersionMinor);
 
   if (IsSuccessful = False) or (InstalledVersionMinor < VersionMinor) then begin
-    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime minor version is less than ' + IntToStr(VersionMinor) + ': ' + IntToStr(InstalledVersionMinor));
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime minor version is less than ' + IntToStr(VersionMinor) + ': ' + IntToStr(InstalledVersionMinor));
     Result := True;
     exit;
   end;
@@ -410,13 +395,55 @@ begin
   IsSuccessful := RegQueryDwordValue(HKEY_LOCAL_MACHINE, SubKeyName, 'Bld', InstalledVersionBld);
 
   if (IsSuccessful = False) or (InstalledVersionBld < VersionBld) then begin
-    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime build is less than ' + IntToStr(VersionBld) + ': ' + IntToStr(InstalledVersionBld));
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime build is less than ' + IntToStr(VersionBld) + ': ' + IntToStr(InstalledVersionBld));
     Result := True
   end
   else begin
-    Log('MSVC ' + IntToStr(VersionMajor) + '.0 {#VCRedistArch} runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
+    Log('MSVC ' + IntToStr(VersionMajor) + '.0 x64 runtime v' + IntToStr(InstalledVersionMajor) + '.' + IntToStr(InstalledVersionMinor) + '.' + IntToStr(InstalledVersionBld) + ' is installed');
     Result := False;
   end;
+end;
+
+function CalculateGitBlobHash(const FilePath: String): String;
+var Buffer: AnsiString;
+var Content: AnsiString;
+begin
+    if not LoadStringFromFile(FilePath, Content) then begin
+      Log(Format('Failed to load file at %s', [FilePath]));
+      Result := ''
+    end
+    else begin
+      Buffer := 'blob ' + IntToStr(Length(Content)) + #0 + Content;
+      Result := GetSHA1OfString(Buffer);
+    end;
+end;
+
+procedure WriteDownloadMetadata(const FilePath: String);
+var
+  MetadataFilePath: String;
+  UpdateTimestamp: String;
+  BlobSHA1: String;
+  Toml: TArrayOfString;
+begin
+  // Write a <FilePath>.metadata.toml file that contains blob_sha1 and update_timestamp string fields.
+  MetadataFilePath := FilePath + '.metadata.toml';
+  UpdateTimestamp := GetDateTimeString('yyyy/mm/dd', '-', ':');
+  BlobSha1 := CalculateGitBlobHash(FilePath);
+  Toml := [
+    'blob_sha1 = "' + BlobSha1 + '"',
+    'update_timestamp = "' + UpdateTimestamp + '"'
+  ];
+  if not SaveStringsToUTF8File(MetadataFilePath, Toml, False) then begin
+    Log(Format('Failed to write file at %s', [MetadataFilePath]));
+  end;
+end;
+
+procedure InstallMetadataFile(PathSuffix: String);
+var TargetPath: String;
+begin
+  TargetPath := ExpandConstant('{localappdata}\{#MyAppName}\') + PathSuffix;
+  FileCopy(ExpandConstant('{tmp}\') + PathSuffix, TargetPath, False);
+  WriteDownloadMetadata(TargetPath);
 end;
 
 function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
@@ -490,37 +517,37 @@ end;
 
 procedure InitializeWizard;
 begin
-#if QtVersion == "5"
-  VC2010RedistNeedsInstall := VCRedistNeedsInstall(10, 0, 40219)
-#endif
-
   VC2019RedistNeedsInstall := VCRedistNeedsInstall(14, 15, 26706)
 
-  if VC2019RedistNeedsInstall or VC2010RedistNeedsInstall then begin
+  if VC2019RedistNeedsInstall then begin
     DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+    DownloadPage.Clear;
+    DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.x64.exe', 'vc_redist.2019.x64.exe', '');
   end;
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
 begin
-        Log(Format('Current page ID: %d', [CurPageID]));
+  Log(Format('Current page ID: %d', [CurPageID]));
+  if (CurPageID = wpSelectTasks) and WizardIsTaskSelected('masterlists') then begin
+    if not Assigned(DownloadPage) then begin
+      DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+      DownloadPage.Clear;
+    end;
+
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/prelude/{#MasterlistBranch}/prelude.yaml', 'prelude\prelude.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/morrowind/{#MasterlistBranch}/masterlist.yaml', 'games\Morrowind\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/oblivion/{#MasterlistBranch}/masterlist.yaml', 'games\Oblivion\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrim/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimse/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim Special Edition\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/skyrimvr/{#MasterlistBranch}/masterlist.yaml', 'games\Skyrim VR\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout3/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout3\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/falloutnv/{#MasterlistBranch}/masterlist.yaml', 'games\FalloutNV\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4\masterlist.yaml', '');
+    DownloadPage.Add('https://raw.githubusercontent.com/loot/fallout4vr/{#MasterlistBranch}/masterlist.yaml', 'games\Fallout4VR\masterlist.yaml', '');
+  end;
+
   if Assigned(DownloadPage) and (CurPageID = wpSelectTasks) then begin
-    DownloadPage.Clear;
-
-#if QtVersion == "5"
-    if VC2010RedistNeedsInstall then begin
-#if VCRedistArch == "x86"
-      DownloadPage.Add('https://download.microsoft.com/download/C/6/D/C6D0FD4E-9E53-4897-9B91-836EBA2AACD3/vcredist_x86.exe', 'vc_redist.2010.x86.exe', '');
-#else
-      DownloadPage.Add('https://download.microsoft.com/download/A/8/0/A80747C3-41BD-45DF-B505-E9710D2744E0/vcredist_x64.exe', 'vc_redist.2010.x64.exe', '');
-#endif
-    end;
-#endif
-
-    if VC2019RedistNeedsInstall then begin
-      DownloadPage.Add('https://aka.ms/vs/16/release/vc_redist.{#VCRedistArch}.exe', 'vc_redist.2019.{#VCRedistArch}.exe', '');
-    end;
-
     DownloadPage.Show;
     try
       try
@@ -544,5 +571,18 @@ begin
 
   if CurStep = ssPostInstall then begin
     SetLootLanguage();
+
+    if WizardIsTaskSelected('masterlists') then begin
+      InstallMetadataFile('prelude\prelude.yaml');
+      InstallMetadataFile('games\Morrowind\masterlist.yaml');
+      InstallMetadataFile('games\Oblivion\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim Special Edition\masterlist.yaml');
+      InstallMetadataFile('games\Skyrim VR\masterlist.yaml');
+      InstallMetadataFile('games\Fallout3\masterlist.yaml');
+      InstallMetadataFile('games\FalloutNV\masterlist.yaml');
+      InstallMetadataFile('games\Fallout4\masterlist.yaml');
+      InstallMetadataFile('games\Fallout4VR\masterlist.yaml');
+    end
   end
 end;

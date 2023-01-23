@@ -99,7 +99,6 @@ QString translate(const char* text) {
 }
 
 void scaleCardHeading(QLabel& label) {
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
   // Scale the current font size by a multiplier to respect Windows' font
   // scaling, which setting the font size in QSS doesn't do.
   static constexpr double NAME_FONT_SIZE_MULTIPLIER = 1.143;
@@ -107,31 +106,16 @@ void scaleCardHeading(QLabel& label) {
   const auto headingFontSize = headingFont.pointSizeF();
   headingFont.setPointSizeF(headingFontSize * NAME_FONT_SIZE_MULTIPLIER);
   label.setFont(headingFont);
-#else
-  // Scaling the current font size produces inconsistent results with Qt 5,
-  // which doesn't adapt to Windows' font scaling, so set the font size
-  // using QSS.
-  label.setObjectName("card-title");
-#endif
 }
 
 std::string calculateGitBlobHash(const QByteArray& data) {
   auto sizeString = std::to_string(data.size());
   auto hasher = QCryptographicHash(QCryptographicHash::Sha1);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 3, 0))
   static constexpr QByteArrayView HEADER_PREFIX = QByteArrayView("blob ");
 
   hasher.addData(HEADER_PREFIX);
   hasher.addData(QByteArrayView(sizeString.c_str(), sizeString.size() + 1));
-#else
-  static constexpr const char* HEADER_PREFIX = "blob ";
-  static constexpr size_t HEADER_PREFIX_LENGTH =
-      std::char_traits<char>::length(HEADER_PREFIX);
-
-  hasher.addData(HEADER_PREFIX, HEADER_PREFIX_LENGTH);
-  hasher.addData(sizeString.c_str(), sizeString.size() + 1);
-#endif
 
   hasher.addData(data);
 

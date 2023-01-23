@@ -315,16 +315,7 @@ void MainWindow::applyTheme() {
   }
 
   if (styleSheet.has_value()) {
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     qApp->setStyleSheet(styleSheet.value());
-#else
-    const auto font = qApp->font();
-    qApp->setStyleSheet(styleSheet.value());
-
-    // Reapply previous font because setting the stylesheet seems to unset the
-    // font.
-    qApp->setFont(font);
-#endif
 
     qApp->style()->polish(qApp);
   }
@@ -2052,15 +2043,9 @@ void MainWindow::on_pluginCardsView_customContextMenuRequested(
   menuPlugin->exec(globalPos);
 }
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
 void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
                                                 const QModelIndex& bottomRight,
                                                 const QList<int>& roles) {
-#else
-void MainWindow::on_pluginItemModel_dataChanged(const QModelIndex& topLeft,
-                                                const QModelIndex& bottomRight,
-                                                const QVector<int>& roles) {
-#endif
   if (!topLeft.isValid() || !bottomRight.isValid()) {
     return;
   }

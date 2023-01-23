@@ -46,17 +46,14 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 
-find_package(Boost 1.77 REQUIRED COMPONENTS locale system)
+find_package(Boost 1.77 REQUIRED COMPONENTS locale)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(ICU 66 REQUIRED COMPONENTS uc i18n)
     find_package(TBB REQUIRED)
 endif()
 
-find_package(Qt6 6.2 COMPONENTS Widgets Network Test)
-if(NOT Qt6_FOUND)
-    find_package(Qt5 5.15 COMPONENTS Widgets Network Test REQUIRED)
-endif()
+find_package(Qt6 6.2 COMPONENTS Widgets Network Test REQUIRED)
 
 find_package(OGDF CONFIG)
 
@@ -72,11 +69,7 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win32.7z")
-        else()
-            set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win64.7z")
-        endif()
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win64.7z")
     else()
         set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-Linux.tar.xz")
     endif()
@@ -430,14 +423,14 @@ endif()
 add_executable(LOOT ${LOOT_ALL_SOURCES})
 add_dependencies(LOOT libloot minizip-ng spdlog OGDF)
 target_link_libraries(LOOT PRIVATE
-    Qt::Widgets Qt::Network Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
+    Qt::Widgets Qt::Network Boost::locale ${MINIZIP_NG_LIBRARIES} ${OGDF_LIBRARIES})
 
 # Build application tests.
 add_executable(loot_gui_tests ${LOOT_GUI_TESTS_ALL_SOURCES})
 add_dependencies(loot_gui_tests
     libloot minizip-ng spdlog GTest testing-plugins)
 target_link_libraries(loot_gui_tests PRIVATE
-    Qt::Widgets Qt::Network Qt::Test Boost::system Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
+    Qt::Widgets Qt::Network Qt::Test Boost::locale ${MINIZIP_NG_LIBRARIES} ${GTEST_LIBRARIES})
 
 ##############################
 # Set Target-Specific Flags
@@ -446,7 +439,7 @@ target_link_libraries(loot_gui_tests PRIVATE
 # Include source and library directories.
 target_include_directories(LOOT PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(LOOT SYSTEM PRIVATE
-    ${Boost_INCLUDE_DIRS}
+    Boost::headers
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
     ${MINIZIP_NG_INCLUDE_DIRS}
@@ -456,7 +449,7 @@ target_include_directories(LOOT SYSTEM PRIVATE
 
 target_include_directories(loot_gui_tests PRIVATE "${CMAKE_SOURCE_DIR}/src")
 target_include_directories(loot_gui_tests SYSTEM PRIVATE
-    ${Boost_INCLUDE_DIRS}
+    Boost::headers
     ${GTEST_INCLUDE_DIRS}
     ${ICU_INCLUDE_DIRS}
     ${LIBLOOT_INCLUDE_DIRS}
@@ -554,36 +547,9 @@ endif()
 # Post-Build Steps
 ##############################
 
-if(Qt6_FOUND)
-    set(QT_DIR ${Qt6_DIR}/../../..)
-else()
-    set(QT_DIR ${Qt5_DIR}/../../..)
-endif()
+set(QT_DIR ${Qt6_DIR}/../../..)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if(NOT Qt6_FOUND)
-        # Copy the OpenSSL binaries, they're not included in what windeployqt
-        # deploys.
-        if(CMAKE_GENERATOR_PLATFORM STREQUAL "Win32")
-            set(QT_OPENSSL_PLATFORM "x86")
-            set(QT_OPENSSL_SUFFIX "")
-        else()
-            set(QT_OPENSSL_PLATFORM "x64")
-            set(QT_OPENSSL_SUFFIX "-x64")
-        endif()
-        set(QT_OPENSSL_BIN_PATH "${QT_DIR}/../../Tools/OpenSSL/Win_${QT_OPENSSL_PLATFORM}/bin")
-
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_OPENSSL_BIN_PATH}/libcrypto-1_1${QT_OPENSSL_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:LOOT>/libcrypto-1_1${QT_OPENSSL_SUFFIX}.dll")
-
-        add_custom_command(TARGET LOOT POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${QT_OPENSSL_BIN_PATH}/libssl-1_1${QT_OPENSSL_SUFFIX}.dll"
-                "$<TARGET_FILE_DIR:LOOT>/libssl-1_1${QT_OPENSSL_SUFFIX}.dll")
-    endif()
-
     # Copy Qt binaries and resources.
     add_custom_command(TARGET LOOT POST_BUILD
         COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>

@@ -56,7 +56,7 @@ Parameter | Values | Default |Description
 `LIBLOOT_URL` | A URL | A GitHub release archive URL | The URL to get the libloot release archive from. By default, this is the URL of a libloot release archive hosted on GitHub. Specifying this is useful if you want to link to a libloot that was built and packaged locally.
 `RUN_CLANG_TIDY` | `ON`, `OFF` | `OFF` | Whether or not to run clang-tidy during build. Has no effect when using CMake's MSVC generator.
 
-You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.4.2/msvc2019_64`) or `Qt5_ROOT` if CMake cannot find Qt.
+You may also need to set `BOOST_ROOT` if CMake cannot find Boost, and `Qt6_ROOT` (e.g. to `C:/Qt/6.4.2/msvc2019_64`) if CMake cannot find Qt.
 
 ## Building The Documentation
 
@@ -74,8 +74,6 @@ Alternatively, you can use Docker to avoid changing your development environment
 Packaging scripts are provided for creating an installer on Windows and compressed archives on Windows and Linux.
 
 Run the `scripts/installer.iss` [Inno Setup](http://www.jrsoftware.org/isinfo.php) script to build an installer executable in the `build` folder. If the unofficial Korean, Swedish and Simplified Chinese Inno Setup translation files are installed alongside the official translation files, then the installer script will also offer those language options. If they are not found, the installer will be built without them.
-
-Building the installer will always build a 32-bit installer executable. The installer will run in 32-bit mode by default and install the 32-bit MSVC redistributable, even if it installs a 64-bit build of LOOT. To build an installer that runs in 64-bit mode and installs the 64-bit MSVC redistributable, pass `-DMyAppIs64Bit` when building the installer.
 
 The archive packaging script requires [Git](https://git-scm.com/), and on Windows it also requires [7-Zip](https://www.7-zip.org/), while on Linux it requires `tar` and `xz`. It can be run using `python scripts/archive.py`, and creates an archive for LOOT in the `build` folder. The archives are named as described in the Downloads section above.
 
