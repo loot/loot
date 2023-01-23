@@ -295,8 +295,14 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 #endif
 
 en.InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable...
+bg.InstallingMSVCRedist=Инсталиране на „Visual C++ 2019 Redistributable“...
+it.InstallingMSVCRedist=Installazione di Visual C++ Redistributable...
+uk_UA.InstallingMSVCRedist=Встановлюємо Visual C++ 2019 Redistributable...
 
 en.DownloadMasterlists=Download and install the latest masterlists
+bg.DownloadMasterlists=Изтегляне и инсталиране на най-новите основни списъци
+it.DownloadMasterlists=Scarica e installa le ultime Masterlist
+uk_UA.DownloadMasterlists=Завантажити та встановити останні правила сортування
 
 [Code]
 var DownloadPage: TDownloadWizardPage;
