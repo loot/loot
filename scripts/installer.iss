@@ -275,7 +275,7 @@ cs.DeleteUserFiles=Vymazat Uživatelské Soubory
 da.DeleteUserFiles=Ønsker du at slette dine indstillinger og bruger metadata?
 de.DeleteUserFiles=Möchten Sie Ihre Einstellungen und Benutzer-Metadaten löschen?
 es.DeleteUserFiles=¿Desea borrar sus ajustes y metadatos de usuario?
-fi.DeleteUserFiles=Haluatko poistaa asetukset ja käyttäjä metatiedot?
+fi.DeleteUserFiles=Haluatko poistaa asetukset ja paikallisesti muokatut metatiedot?
 fr.DeleteUserFiles=Voulez-vous supprimer vos paramètres et les métadonnées de l'utilisateur?
 it.DeleteUserFiles=Vuoi cancellare le tue impostazioni e i meta-dati utente?
 ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
@@ -296,11 +296,13 @@ zh_CN.DeleteUserFiles=你想要删除你的设置和用户数据吗？
 
 en.InstallingMSVCRedist=Installing Visual C++ 2019 Redistributable...
 bg.InstallingMSVCRedist=Инсталиране на „Visual C++ 2019 Redistributable“...
+fi.InstallingMSVCRedist=Asennetaan Visual C++ 2019 Redistributable...
 it.InstallingMSVCRedist=Installazione di Visual C++ Redistributable...
 uk_UA.InstallingMSVCRedist=Встановлюємо Visual C++ 2019 Redistributable...
 
 en.DownloadMasterlists=Download and install the latest masterlists
 bg.DownloadMasterlists=Изтегляне и инсталиране на най-новите основни списъци
+fi.DownloadMasterlists=Lataa ja asenna uusimmat pääluettelot
 it.DownloadMasterlists=Scarica e installa le ultime Masterlist
 uk_UA.DownloadMasterlists=Завантажити та встановити останні правила сортування
 
