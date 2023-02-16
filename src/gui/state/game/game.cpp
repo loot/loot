@@ -704,49 +704,91 @@ std::vector<Message> Game::GetMessages() const {
             "You have not sorted your load order this session.")));
 
   size_t activeNormalPluginsCount = 0;
-  bool hasActiveEsl = false;
+  size_t activeLightPluginsCount = 0;
   for (const auto& plugin : GetPlugins()) {
     if (IsPluginActive(plugin->GetName())) {
       if (plugin->IsLightPlugin()) {
-        hasActiveEsl = true;
+        ++activeLightPluginsCount;
       } else {
         ++activeNormalPluginsCount;
       }
     }
   }
 
-  static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 254;
+  static constexpr size_t MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 1023;
+  static constexpr size_t SAFE_MAX_ACTIVE_NORMAL_PLUGINS = 255;
+  static constexpr size_t SAFE_MAX_ACTIVE_LIGHT_PLUGINS = 4096;
 
-  if (activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS) {
-    if (settings_.Type() == GameType::tes3 &&
-        std::filesystem::exists(preludePath_ / "MWSE.dll")) {
-      auto logger = getLogger();
-      if (logger) {
-        logger->warn("{} plugins are activated at the same time.",
-                     activeNormalPluginsCount);
-      }
+  const auto logger = getLogger();
+  const auto isMWSEInstalled =
+      settings_.Type() == GameType::tes3 &&
+      std::filesystem::exists(settings_.GamePath() / "MWSE.dll");
 
-      output.push_back(PlainTextMessage(
-          MessageType::warn,
-          boost::locale::translate(
-              "Do not launch Morrowind without the use of MWSE or it will "
-              "cause severe damage to your game.")));
-    } else if (hasActiveEsl) {
-      auto logger = getLogger();
-      if (logger) {
-        logger->warn(
-            "{} normal plugins and at least one light plugin are active at "
-            "the same time.",
-            activeNormalPluginsCount);
-      }
+  auto safeMaxActiveNormalPlugins = SAFE_MAX_ACTIVE_NORMAL_PLUGINS;
 
-      output.push_back(PlainTextMessage(
-          MessageType::warn,
-          boost::locale::translate(
-              "You have a normal plugin and at least one light plugin sharing "
-              "the FE load order index. Deactivate a normal plugin or all your "
-              "light plugins to avoid potential issues.")));
+  if (isMWSEInstalled) {
+    if (logger) {
+      logger->info(
+          "MWSE is installed, which raises the safe maximum number of active "
+          "plugins from {} to {}",
+          SAFE_MAX_ACTIVE_NORMAL_PLUGINS,
+          MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
     }
+    safeMaxActiveNormalPlugins = MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS;
+  }
+
+  if (activeNormalPluginsCount > safeMaxActiveNormalPlugins) {
+    if (logger) {
+      logger->warn(
+          "The load order has {} active normal plugins, the safe limit is {}.",
+          activeNormalPluginsCount,
+          safeMaxActiveNormalPlugins);
+    }
+  }
+
+  if (isMWSEInstalled &&
+      activeNormalPluginsCount > SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
+      activeNormalPluginsCount <= MWSE_SAFE_MAX_ACTIVE_NORMAL_PLUGINS) {
+    if (logger) {
+      logger->warn(
+          "Morrowind must be launched using MWSE: {} plugins are active, "
+          "which is more than the {} plugins that vanilla Morrowind "
+          "supports.",
+          activeNormalPluginsCount,
+          SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
+    }
+
+    output.push_back(PlainTextMessage(
+        MessageType::warn,
+        boost::locale::translate(
+            "Do not launch Morrowind without the use of MWSE or it will "
+            "cause severe damage to your game.")));
+  }
+
+  if (activeLightPluginsCount > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
+    if (logger) {
+      logger->warn(
+          "The load order has {} active light plugins, the safe limit is {}.",
+          activeLightPluginsCount,
+          SAFE_MAX_ACTIVE_LIGHT_PLUGINS);
+    }
+  }
+
+  if (activeNormalPluginsCount >= SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
+      activeLightPluginsCount > 0) {
+    if (logger) {
+      logger->warn(
+          "{} normal plugins and at least one light plugin are active at "
+          "the same time.",
+          activeNormalPluginsCount);
+    }
+
+    output.push_back(PlainTextMessage(
+        MessageType::warn,
+        boost::locale::translate(
+            "You have a normal plugin and at least one light plugin sharing "
+            "the FE load order index. Deactivate a normal plugin or all your "
+            "light plugins to avoid potential issues.")));
   }
 
   return output;
