@@ -697,11 +697,14 @@ std::vector<Message> Game::GetMessages() const {
       gameHandle_->GetDatabase().GetGeneralMessages(true));
   output.insert(end(output), begin(messages_), end(messages_));
 
-  if (loadOrderSortCount_ == 0)
-    output.push_back(PlainTextMessage(
-        MessageType::warn,
-        boost::locale::translate(
-            "You have not sorted your load order this session.")));
+  const auto addWarning = [&output](const std::string& text) {
+    output.push_back(PlainTextMessage(MessageType::warn, text));
+  };
+
+  if (loadOrderSortCount_ == 0) {
+    addWarning(boost::locale::translate(
+        "You have not sorted your load order this session."));
+  }
 
   size_t activeNormalPluginsCount = 0;
   size_t activeLightPluginsCount = 0;
@@ -744,6 +747,22 @@ std::vector<Message> Game::GetMessages() const {
           activeNormalPluginsCount,
           safeMaxActiveNormalPlugins);
     }
+
+    if (activeLightPluginsCount > 0) {
+      addWarning(fmt::format(
+          boost::locale::translate("You have {} active normal plugins but the "
+                                   "game only supports up to {}.")
+              .str(),
+          activeNormalPluginsCount,
+          safeMaxActiveNormalPlugins));
+    } else {
+      addWarning(fmt::format(
+          boost::locale::translate("You have {} active plugins but the "
+                                   "game only supports up to {}.")
+              .str(),
+          activeNormalPluginsCount,
+          safeMaxActiveNormalPlugins));
+    }
   }
 
   if (isMWSEInstalled &&
@@ -758,11 +777,9 @@ std::vector<Message> Game::GetMessages() const {
           SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
     }
 
-    output.push_back(PlainTextMessage(
-        MessageType::warn,
-        boost::locale::translate(
-            "Do not launch Morrowind without the use of MWSE or it will "
-            "cause severe damage to your game.")));
+    addWarning(boost::locale::translate(
+        "Do not launch Morrowind without the use of MWSE or it will "
+        "cause severe damage to your game."));
   }
 
   if (activeLightPluginsCount > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
@@ -772,6 +789,13 @@ std::vector<Message> Game::GetMessages() const {
           activeLightPluginsCount,
           SAFE_MAX_ACTIVE_LIGHT_PLUGINS);
     }
+
+    addWarning(fmt::format(
+        boost::locale::translate("You have {} active light plugins but the "
+                                 "game only supports up to {}.")
+            .str(),
+        activeLightPluginsCount,
+        SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
   }
 
   if (activeNormalPluginsCount >= SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
@@ -783,12 +807,10 @@ std::vector<Message> Game::GetMessages() const {
           activeNormalPluginsCount);
     }
 
-    output.push_back(PlainTextMessage(
-        MessageType::warn,
-        boost::locale::translate(
-            "You have a normal plugin and at least one light plugin sharing "
-            "the FE load order index. Deactivate a normal plugin or all your "
-            "light plugins to avoid potential issues.")));
+    addWarning(boost::locale::translate(
+        "You have a normal plugin and at least one light plugin sharing "
+        "the FE load order index. Deactivate a normal plugin or all your "
+        "light plugins to avoid potential issues."));
   }
 
   return output;
