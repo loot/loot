@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: LOOT v0.19.0\n"
+"Project-Id-Version: LOOT v0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2022-12-25 23:20+0000\n"
-"PO-Revision-Date: 2023-01-08 18:59+0100\n"
+"PO-Revision-Date: 2023-01-24 02:06-0800\n"
 "Last-Translator: Griam\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -640,11 +640,11 @@ msgstr "Attuale"
 
 #: src/gui/qt/plugin_card.cpp:295 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Add"
-msgstr "Aggiungi"
+msgstr "Aggiunge"
 
 #: src/gui/qt/plugin_card.cpp:296 src/gui/qt/plugin_editor/table_tabs.cpp:524
 msgid "Remove"
-msgstr "Rimuovi"
+msgstr "Rimuove"
 
 #: src/gui/qt/plugin_item_model.cpp:126
 msgid "Editor Is Open"
