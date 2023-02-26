@@ -1199,8 +1199,8 @@ msgstr[2] "{0} ITM wyników"
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
 msgstr[0] "{0} usunięty odnośnik"
-msgstr[1] "{0}  usunięte odnośniki"
-msgstr[2] "{0}  usunięte odnośniki"
+msgstr[1] "{0} usunięte odnośniki"
+msgstr[2] "{0} usunięte odnośniki"
 
 #: src/gui/state/game/helpers.cpp:101
 msgid "{0} deleted navmesh"
