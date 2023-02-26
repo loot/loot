@@ -21,7 +21,7 @@ In addition, the following are credited with application-related support:
   * Italian: Griam, nicola89b, albie
   * Japanese: kuroko, tktk11, Menchi
   * Korean: SteamB23, sean-kang
-  * Polish: Łukasz Niemczyk, Yoosk
+  * Polish: Łukasz Niemczyk, Yoosk, alemisiu
   * Portuguese: ironmagician
   * Portuguese (Brazil): Kassane, zDasF1xer
   * Russian: Tokc.D.K., Kerber, IllusiveMan196
