@@ -282,7 +282,7 @@ ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 #ifdef KoreanExists
 ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
 #endif
-pl.DeleteUserFiles=Czy chcesz usunąć swoje ustawienia i  metadane użytkownika?
+pl.DeleteUserFiles=Czy chcesz usunąć swoje ustawienia i metadane użytkownika?
 pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
 pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
 ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
