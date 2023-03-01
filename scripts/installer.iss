@@ -282,7 +282,7 @@ ja.DeleteUserFiles=設定とユーザーメタデータを削除しますか？
 #ifdef KoreanExists
 ko.DeleteUserFiles=당신은 당신의 설정과 사용자 메타 데이터를 삭제 하시겠습니까?
 #endif
-pl.DeleteUserFiles=Czy chcesz usunąć ustawienia i metadane użytkownika?
+pl.DeleteUserFiles=Czy chcesz usunąć swoje ustawienia i  metadane użytkownika?
 pt_BR.DeleteUserFiles=Você quer deletar suas configurações e dados de usuário?
 pt_PT.DeleteUserFiles=Deseja apagar as suas configurações e metadados de utilizador?
 ru.DeleteUserFiles=Вы хотите удалить ваши настройки и метаданные пользователя?
@@ -299,6 +299,7 @@ bg.InstallingMSVCRedist=Инсталиране на „Visual C++ 2019 Redistrib
 de.InstallingMSVCRedist=Installiere Visual C++ 2019 Redistributable...
 fi.InstallingMSVCRedist=Asennetaan Visual C++ 2019 Redistributable...
 it.InstallingMSVCRedist=Installazione di Visual C++ Redistributable...
+pl.InstallingMSVCRedist=Instalowanie dystrybucji Visual C++ 2019...
 uk_UA.InstallingMSVCRedist=Встановлюємо Visual C++ 2019 Redistributable...
 
 en.DownloadMasterlists=Download and install the latest masterlists
@@ -306,6 +307,7 @@ bg.DownloadMasterlists=Изтегляне и инсталиране на най-
 de.DownloadMasterlists=Lade und installiere die aktuellen Masterlisten
 fi.DownloadMasterlists=Lataa ja asenna uusimmat pääluettelot
 it.DownloadMasterlists=Scarica e installa le ultime Masterlist
+pl.DownloadMasterlists=Ściągnij i zainstaluj ostatnią listę główną
 uk_UA.DownloadMasterlists=Завантажити та встановити останні правила сортування
 
 [Code]
