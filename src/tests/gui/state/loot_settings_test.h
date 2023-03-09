@@ -113,8 +113,8 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetRegistryKeys(
               {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 976620\\InstallLocation"})
-          .SetGameLocalFolder("Enderal Special Edition")
+               "App 976620\\InstallLocation",
+               "Software\\GOG.com\\Games\\1708684988\\path"})
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
   });
