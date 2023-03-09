@@ -137,7 +137,8 @@ private:
           .SetRegistryKeys({"Software\\Microsoft\\Windows\\CurrentVersion\\"
                             "Uninstall\\Nehr"
                             "im - At Fate's Edge_is1\\InstallLocation",
-                            std::string(NEHRIM_STEAM_REGISTRY_KEY)}),
+                            std::string(NEHRIM_STEAM_REGISTRY_KEY),
+                            "Software\\GOG.com\\Games\\1497007810\\path"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
           .SetIsBaseGameInstance(false)
