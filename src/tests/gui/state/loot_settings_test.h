@@ -94,12 +94,16 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetMaster("Nehrim.esm")
           .SetRegistryKeys(
               {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
-               "all\\Nehrim - At Fate's Edge_is1\\InstallLocation"}),
+               "all\\Nehrim - At Fate's Edge_is1\\InstallLocation",
+               std::string(NEHRIM_STEAM_REGISTRY_KEY),
+               "Software\\GOG.com\\Games\\1497007810\\path"}),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
           .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path"})
+              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
+               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
+               "App 933480\\InstallLocation"})
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
@@ -107,8 +111,10 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
           .SetName("Enderal: Forgotten Stories (Special Edition)")
           .SetIsBaseGameInstance(false)
           .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path"})
-          .SetGameLocalFolder("Enderal Special Edition")
+              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
+               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
+               "App 976620\\InstallLocation",
+               "Software\\GOG.com\\Games\\1708684988\\path"})
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
   });
@@ -137,59 +143,16 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       settings_.getGameSettings();
   EXPECT_EQ(expectedGameSettings, actualGameSettings);
 
-  EXPECT_EQ(expectedGameSettings[0].Type(), actualGameSettings[0].Type());
-  EXPECT_EQ(expectedGameSettings[0].IsBaseGameInstance(),
-            actualGameSettings[0].IsBaseGameInstance());
-  EXPECT_EQ(expectedGameSettings[0].Master(), actualGameSettings[0].Master());
-  EXPECT_EQ(expectedGameSettings[0].RegistryKeys(),
-            actualGameSettings[0].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[0].MasterlistSource(),
-            actualGameSettings[0].MasterlistSource());
-
-  EXPECT_EQ(expectedGameSettings[1].Type(), actualGameSettings[1].Type());
-  EXPECT_EQ(expectedGameSettings[1].IsBaseGameInstance(),
-            actualGameSettings[0].IsBaseGameInstance());
-  EXPECT_EQ(expectedGameSettings[1].Master(), actualGameSettings[1].Master());
-  EXPECT_EQ(expectedGameSettings[1].RegistryKeys(),
-            actualGameSettings[1].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[1].MasterlistSource(),
-            actualGameSettings[1].MasterlistSource());
-
-  EXPECT_EQ(expectedGameSettings[2].Type(), actualGameSettings[2].Type());
-  EXPECT_EQ(expectedGameSettings[2].IsBaseGameInstance(),
-            actualGameSettings[0].IsBaseGameInstance());
-  EXPECT_EQ(expectedGameSettings[2].Master(), actualGameSettings[2].Master());
-  EXPECT_EQ(expectedGameSettings[2].RegistryKeys(),
-            actualGameSettings[2].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[2].MasterlistSource(),
-            actualGameSettings[2].MasterlistSource());
-
-  EXPECT_EQ(expectedGameSettings[3].Type(), actualGameSettings[3].Type());
-  EXPECT_EQ(expectedGameSettings[3].IsBaseGameInstance(),
-            actualGameSettings[0].IsBaseGameInstance());
-  EXPECT_EQ(expectedGameSettings[3].Master(), actualGameSettings[3].Master());
-  EXPECT_EQ(expectedGameSettings[3].RegistryKeys(),
-            actualGameSettings[3].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[3].MasterlistSource(),
-            actualGameSettings[3].MasterlistSource());
-
-  EXPECT_EQ(expectedGameSettings[4].Type(), actualGameSettings[4].Type());
-  EXPECT_EQ(expectedGameSettings[4].IsBaseGameInstance(),
-            actualGameSettings[0].IsBaseGameInstance());
-  EXPECT_EQ(expectedGameSettings[4].Master(), actualGameSettings[4].Master());
-  EXPECT_EQ(expectedGameSettings[4].RegistryKeys(),
-            actualGameSettings[4].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[4].MasterlistSource(),
-            actualGameSettings[4].MasterlistSource());
-
-  EXPECT_EQ(expectedGameSettings[5].Type(), actualGameSettings[5].Type());
-  EXPECT_EQ(expectedGameSettings[5].IsBaseGameInstance(),
-            actualGameSettings[0].IsBaseGameInstance());
-  EXPECT_EQ(expectedGameSettings[5].Master(), actualGameSettings[5].Master());
-  EXPECT_EQ(expectedGameSettings[5].RegistryKeys(),
-            actualGameSettings[5].RegistryKeys());
-  EXPECT_EQ(expectedGameSettings[5].MasterlistSource(),
-            actualGameSettings[5].MasterlistSource());
+  for (size_t i = 0; i < actualGameSettings.size(); ++i) {
+    EXPECT_EQ(expectedGameSettings[i].Type(), actualGameSettings[i].Type());
+    EXPECT_EQ(expectedGameSettings[i].IsBaseGameInstance(),
+              actualGameSettings[i].IsBaseGameInstance());
+    EXPECT_EQ(expectedGameSettings[i].Master(), actualGameSettings[i].Master());
+    EXPECT_EQ(expectedGameSettings[i].RegistryKeys(),
+              actualGameSettings[i].RegistryKeys());
+    EXPECT_EQ(expectedGameSettings[i].MasterlistSource(),
+              actualGameSettings[i].MasterlistSource());
+  }
 
   auto actualLanguages = settings_.getLanguages();
   EXPECT_EQ(18, actualLanguages.size());

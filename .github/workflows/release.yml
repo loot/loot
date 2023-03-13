@@ -54,8 +54,8 @@ jobs:
       - name: Get Boost metadata
         id: boost-metadata
         run: |
-          echo "root=${{ github.workspace }}/boost_1_77_0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          echo "librarydir=${{ github.workspace }}/boost_1_77_0/stage/64/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "root=${{ github.workspace }}/boost_1_81_0" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "librarydir=${{ github.workspace }}/boost_1_81_0/stage/64/lib" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Set OGDF install path
         shell: bash
@@ -68,7 +68,7 @@ jobs:
           path: |
             ${{ steps.boost-metadata.outputs.root }}/boost
             ${{ steps.boost-metadata.outputs.root }}/stage
-          key: ${{ runner.os }}-x64-Boost-1.77.0
+          key: ${{ runner.os }}-x64-Boost-1.81.0
 
       - name: OGDF cache
         id: ogdf-cache
@@ -88,7 +88,7 @@ jobs:
       - name: Download & build Boost
         run: |
           curl -sSfLO https://raw.githubusercontent.com/Ortham/ci-scripts/2.1.2/install_boost.py
-          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.77.0 -a 64 locale
+          python install_boost.py --directory ${{ github.workspace }} --boost-version 1.81.0 -a 64 locale
         if: steps.boost-cache.outputs.cache-hit != 'true'
 
       - name: Download and build OGDF
