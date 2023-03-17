@@ -567,21 +567,21 @@ else()
         libicuuc.so.56
         libicuuc.so.56.1
         libQt6Core.so.6
-        libQt6Core.so.6.4.2
+        libQt6Core.so.6.4.3
         libQt6DBus.so.6
-        libQt6DBus.so.6.4.2
+        libQt6DBus.so.6.4.3
         libQt6Gui.so.6
-        libQt6Gui.so.6.4.2
+        libQt6Gui.so.6.4.3
         libQt6Network.so.6
-        libQt6Network.so.6.4.2
+        libQt6Network.so.6.4.3
         libQt6Test.so.6
-        libQt6Test.so.6.4.2
+        libQt6Test.so.6.4.3
         libQt6Widgets.so.6
-        libQt6Widgets.so.6.4.2
+        libQt6Widgets.so.6.4.3
         libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.4.2
+        libQt6XcbQpa.so.6.4.3
         libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.4.2)
+        libQt6OpenGL.so.6.4.3)
 
     foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
         add_custom_command(TARGET loot_gui_tests POST_BUILD
