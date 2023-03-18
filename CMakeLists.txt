@@ -69,15 +69,18 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-win64.7z")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.3/libloot-0.19.3-win64.7z")
+        set(LIBLOOT_HASH "SHA256=7462aa4d618857213f51cc90d83879dd81c6733cb249447b1d96a466f0a0194b")
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.2/libloot-0.19.2-Linux.tar.xz")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.3/libloot-0.19.3-Linux.tar.xz")
+        set(LIBLOOT_HASH "SHA256=7878f0a3e3cd5d0d9a733fcd38ad53185afdae72d57fecf794dfe73494f134dc")
     endif()
 endif()
 
 ExternalProject_Add(libloot
     PREFIX "external"
     URL ${LIBLOOT_URL}
+    URL_HASH ${LIBLOOT_HASH}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
@@ -169,7 +172,7 @@ else()
     ExternalProject_Add(OGDF
         PREFIX "external"
         URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
-    URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
+        URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
