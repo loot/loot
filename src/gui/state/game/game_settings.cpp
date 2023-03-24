@@ -100,25 +100,35 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     registryKeys_ = {"Software\\Bethesda Softworks\\Morrowind\\Installed Path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 22320\\InstallLocation",
+                     // GOG package
                      "Software\\GOG.com\\Games\\1440163901\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1440163901_is1\\InstallLocation",
+                     // GOG game
                      "Software\\GOG.com\\Games\\1435828767\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-                     "1435828767_is1\\InstallLocation"};
+                     "1435828767_is1\\InstallLocation",
+                     // GOG Amazon Prime game
+                     "Software\\GOG.com\\Games\\1432185303\\path",
+                     "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                     "1432185303_is1\\InstallLocation"};
     lootFolderName_ = "Morrowind";
     masterFile_ = "Morrowind.esm";
     mininumHeaderVersion_ = MORROWIND_MINIMUM_HEADER_VERSION;
   } else if (Type() == GameType::tes4) {
     name_ = "TES IV: Oblivion";
     registryKeys_ = {"Software\\Bethesda Softworks\\Oblivion\\Installed Path",
+                     // Steam GOTY edition
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 22330\\InstallLocation",
+                     // Steam GOTY edition deluxe
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 900883\\InstallLocation",
+                     // GOG package
                      "Software\\GOG.com\\Games\\1242989820\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1242989820_is1\\InstallLocation",
+                     // GOG game
                      "Software\\GOG.com\\Games\\1458058109\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1458058109_is1\\InstallLocation"};
@@ -139,11 +149,15 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
         "Software\\Bethesda Softworks\\Skyrim Special Edition\\Installed Path",
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
         "489830\\InstallLocation",
-        // Skyrim SE
+        // GOG Anniversary Upgrade DLC/patch
         "Software\\GOG.com\\Games\\1162721350\\path",
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
         "1162721350_is1\\InstallLocation",
-        // Anniversary Edition patch
+        // GOG package
+        "Software\\GOG.com\\Games\\1801825368\\path",
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+        "1801825368_is1\\InstallLocation",
+        // GOG game
         "Software\\GOG.com\\Games\\1711230643\\path",
         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
         "1711230643_is1\\InstallLocation"};
@@ -161,13 +175,17 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
   } else if (Type() == GameType::fo3) {
     name_ = "Fallout 3";
     registryKeys_ = {"Software\\Bethesda Softworks\\Fallout3\\Installed Path",
+                     // Steam
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 22300\\InstallLocation",
+                     // Steam GOTY edition
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 22370\\InstallLocation",
+                     // GOG game
                      "Software\\GOG.com\\Games\\1454315831\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1454315831_is1\\InstallLocation",
+                     // GOG package
                      "Software\\GOG.com\\Games\\1248282609\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1248282609_is1\\InstallLocation"};
@@ -177,13 +195,17 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
   } else if (Type() == GameType::fonv) {
     name_ = "Fallout: New Vegas";
     registryKeys_ = {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
+                     // Steam
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 22380\\InstallLocation",
+                     // Steam PCR release (Polish, Czech, Russian?)
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "Steam App 22490\\InstallLocation",
+                     // GOG package
                      "Software\\GOG.com\\Games\\1312824873\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1312824873_is1\\InstallLocation",
+                     // GOG game
                      "Software\\GOG.com\\Games\\1454587428\\path",
                      "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                      "1454587428_is1\\InstallLocation"};

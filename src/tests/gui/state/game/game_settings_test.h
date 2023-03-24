@@ -169,7 +169,10 @@ TEST_P(GameSettingsTest,
                "40163901_is1\\InstallLocation",
                "Software\\GOG.com\\Games\\1435828767\\path",
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
-               "35828767_is1\\InstallLocation"}),
+               "35828767_is1\\InstallLocation",
+               "Software\\GOG.com\\Games\\1432185303\\path",
+               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+               "1432185303_is1\\InstallLocation"}),
           settings_.RegistryKeys());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/morrowind/v0.18/"
@@ -229,6 +232,9 @@ TEST_P(GameSettingsTest,
                "Software\\GOG.com\\Games\\1162721350\\path",
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                "1162721350_is1\\InstallLocation",
+               "Software\\GOG.com\\Games\\1801825368\\path",
+               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+               "1801825368_is1\\InstallLocation",
                "Software\\GOG.com\\Games\\1711230643\\path",
                "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                "1711230643_is1\\InstallLocation"}),
