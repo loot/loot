@@ -1131,12 +1131,12 @@ msgid "You have not sorted your load order this session."
 msgstr "У цій сесії порядок завантаження ще не відсортовано."
 
 #: src/gui/state/game/game.cpp:753
-msgid "You have {} active normal plugins but the game only supports up to {}."
-msgstr "У вас є {} активних нормальних плагінів, але гра підтримує лише до {}."
+msgid "You have {0} active normal plugins but the game only supports up to {1}."
+msgstr "У вас є {0} активних нормальних плагінів, але гра підтримує лише до {1}."
 
 #: src/gui/state/game/game.cpp:760
-msgid "You have {} active plugins but the game only supports up to {}."
-msgstr "У вас {} активних плагінів, але гра підтримує лише до {}."
+msgid "You have {0} active plugins but the game only supports up to {1}."
+msgstr "У вас {0} активних плагінів, але гра підтримує лише до {1}."
 
 #: src/gui/state/game/game.cpp:781
 msgid ""
@@ -1147,8 +1147,8 @@ msgstr ""
 "шкоди вашій грі."
 
 #: src/gui/state/game/game.cpp:794
-msgid "You have {} active light plugins but the game only supports up to {}."
-msgstr "У вас {} активних легких плагінів, але гра підтримує лише {}."
+msgid "You have {0} active light plugins but the game only supports up to {1}."
+msgstr "У вас {0} активних легких плагінів, але гра підтримує лише {1}."
 
 #: src/gui/state/game/game.cpp:811
 msgid ""

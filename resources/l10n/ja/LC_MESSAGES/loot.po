@@ -1123,15 +1123,15 @@ msgid "You have not sorted your load order this session."
 msgstr "ロードオーダーのソートはまだ行われていません。"
 
 #: src/gui/state/game/game.cpp:753
-msgid "You have {} active normal plugins but the game only supports up to {}."
+msgid "You have {0} active normal plugins but the game only supports up to {1}."
 msgstr ""
-"{} 個の標準プラグインが有効にされていますが、このゲームで扱えるのは {} 個まで"
+"{0} 個の標準プラグインが有効にされていますが、このゲームで扱えるのは {1} 個まで"
 "です。"
 
 #: src/gui/state/game/game.cpp:760
-msgid "You have {} active plugins but the game only supports up to {}."
+msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
-"{} 個のプラグインが有効にされていますが、このゲームで扱えるのは {} 個までで"
+"{0} 個のプラグインが有効にされていますが、このゲームで扱えるのは {1} 個までで"
 "す。"
 
 #: src/gui/state/game/game.cpp:781
@@ -1143,9 +1143,9 @@ msgstr ""
 "ることになります。"
 
 #: src/gui/state/game/game.cpp:794
-msgid "You have {} active light plugins but the game only supports up to {}."
+msgid "You have {0} active light plugins but the game only supports up to {1}."
 msgstr ""
-"{} 個のライトプラグインが有効にされていますが、このゲームで扱えるのは {} 個ま"
+"{0} 個のライトプラグインが有効にされていますが、このゲームで扱えるのは {1} 個ま"
 "でです。"
 
 #: src/gui/state/game/game.cpp:811

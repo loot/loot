@@ -1121,12 +1121,12 @@ msgid "You have not sorted your load order this session."
 msgstr "Редът за зареждане не е сортиран по време на тази сесия."
 
 #: src/gui/state/game/game.cpp:753
-msgid "You have {} active normal plugins but the game only supports up to {}."
-msgstr "Активни са {} обикновени приставки, но играта поддържа само до {}."
+msgid "You have {0} active normal plugins but the game only supports up to {1}."
+msgstr "Активни са {0} обикновени приставки, но играта поддържа само до {1}."
 
 #: src/gui/state/game/game.cpp:760
-msgid "You have {} active plugins but the game only supports up to {}."
-msgstr "Активни са {} приставки, но играта поддържа само до {}."
+msgid "You have {0} active plugins but the game only supports up to {1}."
+msgstr "Активни са {0} приставки, но играта поддържа само до {1}."
 
 #: src/gui/state/game/game.cpp:781
 msgid ""
@@ -1137,8 +1137,8 @@ msgstr ""
 "сериозни щети на Вашата игра."
 
 #: src/gui/state/game/game.cpp:794
-msgid "You have {} active light plugins but the game only supports up to {}."
-msgstr "Активни са {} зависими приставки, но играта поддържа само до {}."
+msgid "You have {0} active light plugins but the game only supports up to {1}."
+msgstr "Активни са {0} зависими приставки, но играта поддържа само до {1}."
 
 #: src/gui/state/game/game.cpp:811
 msgid ""
