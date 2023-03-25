@@ -750,15 +750,15 @@ std::vector<Message> Game::GetMessages() const {
 
     if (activeLightPluginsCount > 0) {
       addWarning(fmt::format(
-          boost::locale::translate("You have {} active normal plugins but the "
-                                   "game only supports up to {}.")
+          boost::locale::translate("You have {0} active normal plugins but the "
+                                   "game only supports up to {1}.")
               .str(),
           activeNormalPluginsCount,
           safeMaxActiveNormalPlugins));
     } else {
       addWarning(fmt::format(
-          boost::locale::translate("You have {} active plugins but the "
-                                   "game only supports up to {}.")
+          boost::locale::translate("You have {0} active plugins but the "
+                                   "game only supports up to {1}.")
               .str(),
           activeNormalPluginsCount,
           safeMaxActiveNormalPlugins));
@@ -791,8 +791,8 @@ std::vector<Message> Game::GetMessages() const {
     }
 
     addWarning(fmt::format(
-        boost::locale::translate("You have {} active light plugins but the "
-                                 "game only supports up to {}.")
+        boost::locale::translate("You have {0} active light plugins but the "
+                                 "game only supports up to {1}.")
             .str(),
         activeLightPluginsCount,
         SAFE_MAX_ACTIVE_LIGHT_PLUGINS));

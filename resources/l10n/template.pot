@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-02-19 17:18+0000\n"
+"POT-Creation-Date: 2023-03-24 22:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1064,11 +1064,12 @@ msgid "You have not sorted your load order this session."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:753
-msgid "You have {} active normal plugins but the game only supports up to {}."
+msgid ""
+"You have {0} active normal plugins but the game only supports up to {1}."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:760
-msgid "You have {} active plugins but the game only supports up to {}."
+msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:781
@@ -1078,7 +1079,7 @@ msgid ""
 msgstr ""
 
 #: src/gui/state/game/game.cpp:794
-msgid "You have {} active light plugins but the game only supports up to {}."
+msgid "You have {0} active light plugins but the game only supports up to {1}."
 msgstr ""
 
 #: src/gui/state/game/game.cpp:811
