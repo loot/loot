@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT v0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2023-03-24 22:39+0000\n"
-"PO-Revision-Date: 2023-03-29 03:40-0700\n"
+"PO-Revision-Date: 2023-03-29 03:43-0700\n"
 "Last-Translator: Griam\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -1146,11 +1146,11 @@ msgstr "Non hai modificato l'ordine di caricamento in questa sessione."
 #: src/gui/state/game/game.cpp:753
 msgid ""
 "You have {0} active normal plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "Hai {0} plugin normali attivi ma il gioco ne supporta solo {1}."
 
 #: src/gui/state/game/game.cpp:760
 msgid "You have {0} active plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "Hai {0} plugin attivi ma il gioco ne supporta solo {1}."
 
 #: src/gui/state/game/game.cpp:781
 msgid ""
@@ -1162,7 +1162,7 @@ msgstr ""
 
 #: src/gui/state/game/game.cpp:794
 msgid "You have {0} active light plugins but the game only supports up to {1}."
-msgstr ""
+msgstr "Hai {0} plugin light attivi ma il gioco ne supporta solo {1}."
 
 #: src/gui/state/game/game.cpp:811
 msgid ""
