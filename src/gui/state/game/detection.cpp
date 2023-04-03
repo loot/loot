@@ -125,21 +125,6 @@ std::optional<GamePaths> FindGamePaths(
   if (installPath.has_value()) {
     paths.installPath = installPath.value();
 
-    // Enderal SE uses a different game local path depending on whether it was
-    // installed from GOG or not, and GOG and Steam both write to the same
-    // Registry key, so check whether the Enderal SE install found is a
-    // GOG install or not and set the local path accordingly, but only if it is
-    // not already set (to avoid clobbering user config).
-    if (settings.Type() == GameType::tes5se && paths.localPath.empty() &&
-        std::filesystem::exists(paths.installPath / "Enderal Launcher.exe")) {
-      // It's Enderal, but is it from GOG or elsewhere?
-      if (std::filesystem::exists(paths.installPath / "Galaxy64.dll")) {
-        paths.localPath = getLocalAppDataPath() / "Enderal Special Edition GOG";
-      } else {
-        paths.localPath = getLocalAppDataPath() / "Enderal Special Edition";
-      }
-    }
-
     return paths;
   }
 
