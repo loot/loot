@@ -58,8 +58,14 @@ private:
                         const std::filesystem::path& gamePath);
   void setInitialGame(const std::string& preferredGame);
 
-  std::optional<GamePaths> FindGamePaths(
-      const GameSettings& gameSettings) const override;
+  // Update the given games settings with new settings for installed games that
+  // didn't have a settings object, and updating existing settings objects for
+  // games that had one without any paths configured.
+  std::vector<GameSettings> FindInstalledGames(
+      const std::vector<GameSettings>& gamesSettings) const override;
+
+  bool IsInstalled(const GameSettings& gameSettings) const override;
+
   void InitialiseGameData(gui::Game& game) override;
 
   std::string selectInitialGame(std::string preferredGame) const;

@@ -109,18 +109,21 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
   }
 }
 
-bool IsOnMicrosoftStore(GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
-    case GameType::tes4:
-    case GameType::tes5se:
-    case GameType::fo3:
-    case GameType::fonv:
-    case GameType::fo4:
+bool IsOnMicrosoftStore(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::tes5se:
+    case GameId::fo3:
+    case GameId::fonv:
+    case GameId::fo4:
       return true;
-    case GameType::tes5:
-    case GameType::tes5vr:
-    case GameType::fo4vr:
+    case GameId::nehrim:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::fo4vr:
       return false;
     default:
       throw std::logic_error("Unrecognised game type");
@@ -153,13 +156,15 @@ std::filesystem::path GetGameContentPath(
   }
 }
 
-std::optional<GamePaths> FindMicrosoftStoreGamePaths(
-    const GameSettings& settings,
+std::optional<GameInstall> FindMicrosoftStoreGameInstall(
+    const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
-  if (!IsOnMicrosoftStore(settings.Type())) {
+  if (!IsOnMicrosoftStore(gameId)) {
     return std::nullopt;
   }
+
+  const GameType gameType = GetGameType(gameId);
 
   // Search for games installed using newer versions of the Xbox app,
   // which does not create Registry entries for the games. Instead, they
@@ -168,20 +173,21 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
   // location path out of that file. The game folders within that location
   // have fixed names.
   for (const auto& xboxGamingRootPath : xboxGamingRootPaths) {
-    const auto locationPath =
-        GetGameContentPath(settings.Type(), xboxGamingRootPath);
+    const auto locationPath = GetGameContentPath(gameType, xboxGamingRootPath);
 
     const auto pathsToCheck =
-        GetGameLocalisationDirectories(settings.Type(), locationPath);
+        GetGameLocalisationDirectories(gameType, locationPath);
 
-    const auto validPath = GetLocalisedGameInstallPath(
-        settings, preferredUILanguages, pathsToCheck);
+    const auto validPath =
+        GetLocalisedGameInstallPath(gameId, preferredUILanguages, pathsToCheck);
 
     if (validPath.has_value()) {
-      GamePaths paths;
-      paths.installPath = validPath.value();
-      paths.localPath = GetMicrosoftStoreGameLocalPath(settings.Type());
-      return paths;
+      GameInstall install;
+      install.gameId = gameId;
+      install.source = InstallSource::microsoft;
+      install.installPath = validPath.value();
+      install.localPath = GetMicrosoftStoreGameLocalPath(gameType);
+      return install;
     }
   }
 
@@ -192,31 +198,34 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 namespace loot::ms::legacy {
 using std::filesystem::u8path;
 
-std::optional<std::string> GetMicrosoftStoreAppName(GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
+std::optional<std::string> GetMicrosoftStoreAppName(GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
       return "BethesdaSoftworks.TESMorrowind-PC";
-    case GameType::tes4:
+    case GameId::tes4:
       return "BethesdaSoftworks.TESOblivion-PC";
-    case GameType::tes5se:
+    case GameId::tes5se:
       return "BethesdaSoftworks.SkyrimSE-PC";
-    case GameType::fo3:
+    case GameId::fo3:
       return "BethesdaSoftworks.Fallout3";
-    case GameType::fonv:
+    case GameId::fonv:
       return "BethesdaSoftworks.FalloutNewVegas";
-    case GameType::fo4:
+    case GameId::fo4:
       return "BethesdaSoftworks.Fallout4-PC";
-    case GameType::tes5:
-    case GameType::tes5vr:
-    case GameType::fo4vr:
+    case GameId::nehrim:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::tes5:
+    case GameId::tes5vr:
+    case GameId::fo4vr:
       return std::nullopt;
     default:
       throw std::logic_error("Unrecognised game type");
   }
 }
 
-std::optional<std::string> GetMicrosoftStorePackageName(GameType type) {
-  const auto appName = GetMicrosoftStoreAppName(type);
+std::optional<std::string> GetMicrosoftStorePackageName(const GameId gameId) {
+  const auto appName = GetMicrosoftStoreAppName(gameId);
   if (appName.has_value()) {
     static constexpr auto PUBLISHER_ID = "3275kfvn8vcwc";
     return appName.value() + "_" + PUBLISHER_ID;
@@ -225,7 +234,9 @@ std::optional<std::string> GetMicrosoftStorePackageName(GameType type) {
   return std::nullopt;
 }
 
-std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
+std::filesystem::path GetMicrosoftStoreGameLocalPath(const GameId gameId) {
+  const GameType gameType = GetGameType(gameId);
+
   switch (gameType) {
     case GameType::tes3:
       // Morrowind doesn't use the local path, return a blank path.
@@ -242,7 +253,7 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
       }
 
       return localAppDataPath / "Packages" /
-             u8path(GetMicrosoftStorePackageName(gameType).value()) /
+             u8path(GetMicrosoftStorePackageName(gameId).value()) /
              "LocalCache" / "Local" / gameLocalFolder;
     }
     case GameType::tes5se:
@@ -252,7 +263,7 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
       // FIXME: This case has not been verified.
     case GameType::fo4:
       return getLocalAppDataPath() / "Packages" /
-             u8path(GetMicrosoftStorePackageName(gameType).value()) /
+             u8path(GetMicrosoftStorePackageName(gameId).value()) /
              "LocalCache" / "Local" /
              u8path(GetMicrosoftStoreGameLocalFolder(gameType));
     default:
@@ -261,14 +272,16 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(GameType gameType) {
 }
 
 #ifdef _WIN32
-std::optional<GamePaths> FindMicrosoftStoreGamePaths(
-    const GameSettings& settings,
+std::optional<GameInstall> FindMicrosoftStoreGameInstall(
+    const GameId gameId,
     const std::vector<std::string>& preferredUILanguages) {
   // Search for the Microsoft Store version of the game.
   // This follows the process detailed here:
   // <https://github.com/wrye-bash/wrye-bash/wiki/%5Bdev%5D-Microsoft-Store-Games#finding-a-Game>
 
-  const auto packageName = GetMicrosoftStorePackageName(settings.Type());
+  const GameType gameType = GetGameType(gameId);
+
+  const auto packageName = GetMicrosoftStorePackageName(gameId);
   if (!packageName.has_value()) {
     // There is no Microsoft Store version of the game.
     return std::nullopt;
@@ -302,16 +315,18 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
       // the user has deleted the directories they don't want (it's a lot of
       // wasted space otherwise).
       const auto pathsToCheck =
-          GetGameLocalisationDirectories(settings.Type(), locationPath);
+          GetGameLocalisationDirectories(gameType, locationPath);
 
       const auto validPath = GetLocalisedGameInstallPath(
-          settings, preferredUILanguages, pathsToCheck);
+          gameId, preferredUILanguages, pathsToCheck);
 
       if (validPath.has_value()) {
-        GamePaths paths;
-        paths.installPath = validPath.value();
-        paths.localPath = GetMicrosoftStoreGameLocalPath(settings.Type());
-        return paths;
+        GameInstall install;
+        install.gameId = gameId;
+        install.source = InstallSource::microsoft;
+        install.installPath = validPath.value();
+        install.localPath = GetMicrosoftStoreGameLocalPath(gameId);
+        return install;
       }
     }
   }
@@ -321,21 +336,29 @@ std::optional<GamePaths> FindMicrosoftStoreGamePaths(
 #endif
 }
 
-namespace loot {
-std::optional<GamePaths> FindMicrosoftStoreGamePaths(
-    const GameSettings& settings,
+namespace loot::microsoft {
+std::vector<GameInstall> FindGameInstalls(
+    const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
-  const auto msGamePaths = ms::modern::FindMicrosoftStoreGamePaths(
-      settings, xboxGamingRootPaths, preferredUILanguages);
+  std::vector<GameInstall> installs;
+
+  auto install = ms::modern::FindMicrosoftStoreGameInstall(
+      gameId, xboxGamingRootPaths, preferredUILanguages);
+
+  if (install.has_value()) {
+    installs.push_back(install.value());
+  }
 
 #ifdef _WIN32
-  if (!msGamePaths.has_value()) {
-    return ms::legacy::FindMicrosoftStoreGamePaths(settings,
-                                                   preferredUILanguages);
+  const auto legacyInstall =
+      ms::legacy::FindMicrosoftStoreGameInstall(gameId, preferredUILanguages);
+
+  if (legacyInstall.has_value()) {
+    installs.push_back(legacyInstall.value());
   }
 #endif
 
-  return msGamePaths;
+  return installs;
 }
 }

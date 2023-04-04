@@ -34,8 +34,8 @@
 #include <string>
 #include <vector>
 
-#include "gui/state/game/game.h"
 #include "gui/state/game/detection.h"
+#include "gui/state/game/game.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 
@@ -62,6 +62,11 @@ public:
       logger->debug("Detecting installed games.");
     }
 
+    // Detect installed games and add GameSettings objects for those that
+    // aren't already represented by the objects that already exist. Also update
+    // game paths for existing settings objects that match a found install.
+    gamesSettings = FindInstalledGames(gamesSettings);
+
     std::optional<std::string> currentGameFolder;
     if (currentGame_ != installedGames_.end()) {
       currentGameFolder = currentGame_->GetSettings().FolderName();
@@ -70,13 +75,14 @@ public:
     bool currentGameUpdated = false;
     std::vector<gui::Game> installedGames;
     for (auto& gameSettings : gamesSettings) {
-      auto gamePaths = FindGamePaths(gameSettings);
-      if (!gamePaths.has_value()) {
+      if (!IsInstalled(gameSettings)) {
+        if (logger) {
+          logger->info(
+              "Could not find paths for game with LOOT folder name \"{}\".",
+              gameSettings.FolderName());
+        }
         continue;
       }
-
-      gameSettings.SetGamePath(gamePaths.value().installPath);
-      gameSettings.SetGameLocalPath(gamePaths.value().localPath);
 
       if (currentGameFolder.has_value() &&
           currentGameFolder.value() == gameSettings.FolderName() &&
@@ -203,8 +209,11 @@ public:
   }
 
 private:
-  virtual std::optional<GamePaths> FindGamePaths(
-      const GameSettings& gameSettings) const = 0;
+  virtual std::vector<GameSettings> FindInstalledGames(
+      const std::vector<GameSettings>& gamesSettings) const = 0;
+
+  virtual bool IsInstalled(const GameSettings& gameSettings) const = 0;
+
   virtual void InitialiseGameData(gui::Game& game) = 0;
 
   static bool GameNeedsRecreating(const gui::Game& game,

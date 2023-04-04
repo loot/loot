@@ -25,136 +25,45 @@
 
 #include "gui/state/game/detection.h"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/locale.hpp>
-
 #include "gui/helpers.h"
-#include "gui/state/game/detection/epic_games_store.h"
-#include "gui/state/game/detection/microsoft_store.h"
-#include "gui/state/game/helpers.h"
+#include "gui/state/game/detection/common.h"
+#include "gui/state/game/detection/detail.h"
 #include "gui/state/logging.h"
 
 using std::filesystem::u8path;
 
 namespace loot {
-std::optional<std::filesystem::path> FindGameInstallPathInFilesystem(
-    const GameSettings& settings) {
-  const auto logger = getLogger();
-  try {
-    // If checking the given game path, we can assume that it's for the
-    // intended game because it's been provided by the user - we don't need
-    // to also check the game executable to disambiguate between games with
-    // the same master plugin.
-    auto gamePath = settings.GamePath();
-    if (!gamePath.empty() &&
-        std::filesystem::exists(gamePath /
-                                GetPluginsFolderName(settings.Type()) /
-                                u8path(settings.Master()))) {
-      return gamePath;
-    }
-
-    // Check if LOOT is installed next to a game.
-    gamePath = "..";
-    if (IsValidGamePath(settings, gamePath)) {
-      return gamePath;
-    }
-  } catch (const std::exception& e) {
-    if (logger) {
-      logger->error("Error while checking if game \"{}\" is installed: {}",
-                    settings.Name(),
-                    e.what());
-    }
-  }
-
-  return std::nullopt;
-}
-
-std::optional<std::filesystem::path> FindGameInstallPathInRegistry(
-    const GameSettings& settings) {
-#ifdef _WIN32
-  try {
-    for (const auto& registryKey : settings.RegistryKeys()) {
-      const auto [rootKey, subKey, value] = SplitRegistryPath(registryKey);
-      const auto installedPath = RegKeyStringValue(rootKey, subKey, value);
-      auto gamePath = u8path(installedPath);
-
-      // Hack for Nehrim installed through Steam, as its Steam install
-      // puts all the game files inside a NehrimFiles subdirectory.
-      if (!gamePath.empty() && registryKey == NEHRIM_STEAM_REGISTRY_KEY) {
-        gamePath /= "NehrimFiles";
-      }
-
-      if (IsValidGamePath(settings, gamePath)) {
-        return gamePath;
-      }
-    }
-  } catch (const std::exception& e) {
-    const auto logger = getLogger();
-    if (logger) {
-      logger->error("Error while checking if game \"{}\" is installed: {}",
-                    settings.Name(),
-                    e.what());
-    }
-  }
-#endif
-
-  return std::nullopt;
-}
-
-std::optional<GamePaths> FindGamePaths(
-    const GameSettings& settings,
-    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
-    const std::vector<std::string>& preferredUILanguages) {
+bool IsInstalled(const GameSettings& settings) {
   const auto logger = getLogger();
   if (logger) {
     logger->trace("Checking if game \"{}\" is installed.", settings.Name());
   }
 
-  GamePaths paths;
-  paths.localPath = settings.GameLocalPath();
+  return IsValidGamePath(
+      settings.Type(), settings.Master(), settings.GamePath());
+}
 
-  auto installPath = FindGameInstallPathInFilesystem(settings);
-  if (installPath.has_value()) {
-    paths.installPath = installPath.value();
-  }
+// Filter the given game installs so that they do not contain any installs
+// that already have settings objects, then create new settings objects for
+// the remaining installs, with unique game names and folder names. Also update
+// paths in any matching existing settings objects. Returns
+// the settings objects (that may have been updated), plus the new settings
+// objects.
+void UpdateInstalledGamesSettings(
+    std::vector<GameSettings>& gamesSettings,
+    const std::vector<std::filesystem::path>& xboxGamingRootPaths,
+    const std::vector<std::string>& preferredUILanguages) {
+  const auto gameInstalls =
+      FindGameInstalls(xboxGamingRootPaths, preferredUILanguages);
 
-  if (!installPath.has_value()) {
-    installPath = FindGameInstallPathInRegistry(settings);
-  }
+  const auto newGameInstalls =
+      UpdateMatchingSettings(gamesSettings, gameInstalls, ArePathsEquivalent);
 
-  if (installPath.has_value()) {
-    paths.installPath = installPath.value();
+  const auto configuredInstalls = DetectConfiguredInstalls(gamesSettings);
 
-    return paths;
-  }
+  const auto gameSourceCounts =
+      CountGameInstalls(configuredInstalls, newGameInstalls);
 
-  if (!settings.IsBaseGameInstance()) {
-    // Don't look for Microsoft Store or Epic Games Store installs for games
-    // that aren't instances of their base game (e.g. total conversions).
-    return std::nullopt;
-  }
-
-  installPath =
-      FindEpicGamesStoreGameInstallPath(settings, preferredUILanguages);
-  if (installPath.has_value()) {
-    paths.installPath = installPath.value();
-    return paths;
-  }
-
-  const auto msGamePaths = FindMicrosoftStoreGamePaths(
-      settings, xboxGamingRootPaths, preferredUILanguages);
-
-  if (msGamePaths.has_value()) {
-    paths.installPath = msGamePaths.value().installPath;
-    // If there is already a non-empty game local path set, use it to respect
-    // user config, otherwise use the found path.
-    if (paths.localPath.empty()) {
-      paths.localPath = msGamePaths.value().localPath;
-    }
-
-    return paths;
-  }
-
-  return std::nullopt;
+  AppendNewGamesSettings(gamesSettings, gameSourceCounts, newGameInstalls);
 }
 }

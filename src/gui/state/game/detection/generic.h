@@ -23,19 +23,18 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE
-#define LOOT_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE
+#ifndef LOOT_GUI_STATE_GAME_DETECTION_GENERIC
+#define LOOT_GUI_STATE_GAME_DETECTION_GENERIC
 
-#include <filesystem>
 #include <vector>
 
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/game_settings.h"
 
-namespace loot::epic {
-std::optional<GameInstall> FindGameInstalls(
-    const GameId gameId,
-    const std::vector<std::string>& preferredUILanguages);
+namespace loot::generic {
+std::vector<GameInstall> FindGameInstalls(const GameId gameId);
+
+std::optional<GameInstall> DetectGameInstall(const GameSettings& settings);
 }
 
 #endif

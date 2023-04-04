@@ -30,7 +30,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "gui/state/game/detection/common.h"
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
@@ -43,8 +42,10 @@ public:
   using std::runtime_error::runtime_error;
 };
 
-std::optional<GamePaths> FindGamePaths(
-    const GameSettings& settings,
+bool IsInstalled(const GameSettings& settings);
+
+void UpdateInstalledGamesSettings(
+    std::vector<GameSettings>& gamesSettings,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
 }

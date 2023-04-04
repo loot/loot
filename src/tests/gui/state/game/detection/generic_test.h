@@ -22,31 +22,14 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_GUI_STATE_GAME_DETECTION_TEST
-#define LOOT_TESTS_GUI_STATE_GAME_DETECTION_TEST
+#ifndef LOOT_TESTS_GUI_STATE_GAME_DETECTION_GENERIC_TEST
+#define LOOT_TESTS_GUI_STATE_GAME_DETECTION_GENERIC_TEST
 
-#include "gui/helpers.h"
-#include "gui/state/game/detection.h"
+#include "gui/state/game/detection/generic.h"
 #include "tests/common_game_test_fixture.h"
 
 namespace loot::test {
-
-class IsInstalledTest : public CommonGameTestFixture {};
-
-// Pass an empty first argument, as it's a prefix for the test instantation,
-// but we only have the one so no prefix is necessary.
-INSTANTIATE_TEST_SUITE_P(,
-                         IsInstalledTest,
-                         ::testing::ValuesIn(ALL_GAME_TYPES));
-
-TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
-  const auto settings = GameSettings(GetParam())
-                            .SetMaster(nonAsciiEsp)
-                            .SetGamePath(dataPath.parent_path());
-  EXPECT_TRUE(IsInstalled(settings));
-}
-
-class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
+class Generic_FindGameInstallsTest : public CommonGameTestFixture {
 protected:
   void SetUp() override {
     CommonGameTestFixture::SetUp();
@@ -72,19 +55,28 @@ private:
   std::filesystem::path initialCurrentPath;
 };
 
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
-                         UpdateInstalledGamesSettingsTest,
-                         ::testing::Values(GameType::tes3));
+                         Generic_FindGameInstallsTest,
+                         ::testing::ValuesIn(ALL_GAME_TYPES));
 
-TEST_P(UpdateInstalledGamesSettingsTest,
-       shouldReturnSettingsForGameInParentOfCurrentDirectory) {
-  std::vector<GameSettings> gamesSettings;
-  UpdateInstalledGamesSettings(gamesSettings, {}, {});
+TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
+  const auto gameId = getTestGameId(GetParam());
+  const auto gameInstalls = loot::generic::FindGameInstalls(gameId);
 
-  ASSERT_EQ(1, gamesSettings.size());
-  EXPECT_EQ(GetParam(), gamesSettings[0].Type());
-  EXPECT_EQ("..", gamesSettings[0].GamePath());
-  EXPECT_EQ("", gamesSettings[0].GameLocalPath());
+  auto expectedSource = InstallSource::unknown;
+  if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5vr ||
+      GetParam() == GameType::fo4vr) {
+    expectedSource = InstallSource::steam;
+  }
+
+  ASSERT_EQ(1, gameInstalls.size());
+  EXPECT_EQ(gameId, gameInstalls[0].gameId);
+  EXPECT_EQ(expectedSource, gameInstalls[0].source);
+  EXPECT_EQ("..", gameInstalls[0].installPath);
+  EXPECT_EQ("", gameInstalls[0].localPath);
 }
 }
+
 #endif

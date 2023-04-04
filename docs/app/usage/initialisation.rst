@@ -101,16 +101,16 @@ LOOT supports games bought through the Epic Games Store, but Fallout 3's localis
 Install Location Detection
 ==========================
 
-LOOT looks for each game using the following sources in order:
+When LOOT starts, it first loads its configured game settings. If the ``--game`` and ``--game-path`` command line parameters are given it overrides the configured path for the given game using the given path. It then searches for supported games using all of the following sources:
 
-1. the path given by the ``--game-path`` command line parameter (only for the game identified by the ``--game`` command line parameter)
-2. the install path configured for the game
-3. the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``).
-4. the registry keys configured for the game
-5. the install location used by the Epic Games Store
-6. the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (On Linux each mount point is checked in the order they're listed in ``/proc/self/mounts``.)
-7. the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
+- the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``)
+- the game's Registry keys
+- the install location used by the Epic Games Store
+- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (On Linux each mount point is checked in the order they're listed in ``/proc/self/mounts``.)
+- the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
 
-For example, if you've got the same game installed through Steam and the Microsoft Store, LOOT will find the Steam install using its Registry keys and use that install path.
+The detected games are merged with the configured game settings, primarily by comparing the detected and configured game install paths. Any detected games that did not have matching configuration get new settings entries added for them. If multiple copies of a single game are detected, each instance is named differently in LOOT's settings to help differentiate between them.
+
+For example, if you've got Skyrim installed through Steam and the Microsoft Store, LOOT will find both installs, and may name one "TES V: Skyrim (Steam)" and the other "TES V: Skyrim (MS Store)".
 
 If LOOT's automatic game detection doesn't work correctly for you, you'll need to manually provide the correct install path in LOOT's settings and then relaunch LOOT.

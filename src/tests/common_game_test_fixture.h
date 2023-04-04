@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -35,11 +36,35 @@ along with LOOT.  If not, see
 #include <fstream>
 #include <map>
 
+#include "gui/state/game/detection/game_install.h"
 #include "loot/enum/game_type.h"
 #include "tests/gui/test_helpers.h"
 
 namespace loot {
 namespace test {
+static const std::array<GameType, 9> ALL_GAME_TYPES = {GameType::tes3,
+                                                       GameType::tes4,
+                                                       GameType::tes5,
+                                                       GameType::tes5se,
+                                                       GameType::tes5vr,
+                                                       GameType::fo3,
+                                                       GameType::fonv,
+                                                       GameType::fo4,
+                                                       GameType::fo4vr};
+
+static const std::array<GameId, 12> ALL_GAME_IDS = {GameId::tes3,
+                                                    GameId::tes4,
+                                                    GameId::nehrim,
+                                                    GameId::tes5,
+                                                    GameId::enderal,
+                                                    GameId::tes5se,
+                                                    GameId::enderalse,
+                                                    GameId::tes5vr,
+                                                    GameId::fo3,
+                                                    GameId::fonv,
+                                                    GameId::fo4,
+                                                    GameId::fo4vr};
+
 class CommonGameTestFixture : public ::testing::TestWithParam<GameType> {
 protected:
   CommonGameTestFixture() :
@@ -80,6 +105,12 @@ protected:
 
     create_directories(lootDataPath);
     ASSERT_TRUE(exists(lootDataPath));
+
+    if (isExecutableNeeded(GetParam())) {
+      touch(dataPath.parent_path() / getGameExecutable(GetParam()));
+      ASSERT_TRUE(
+          exists(dataPath.parent_path() / getGameExecutable(GetParam())));
+    }
 
     auto sourcePluginsPath = getSourcePluginsPath();
 
@@ -210,6 +241,55 @@ protected:
     });
   }
 
+  static bool isExecutableNeeded(const GameType gameType) {
+    return gameType == GameType::tes5 || gameType == GameType::tes5se ||
+           gameType == GameType::tes5vr || gameType == GameType::fo4 ||
+           gameType == GameType::fo4vr;
+  }
+
+  static std::string getGameExecutable(const GameType gameType) {
+    switch (gameType) {
+      case GameType::tes5:
+        return "TESV.exe";
+      case GameType::tes5se:
+        return "SkyrimSE.exe";
+      case GameType::tes5vr:
+        return "SkyrimVR.exe";
+      case GameType::fo4:
+        return "Fallout4.exe";
+      case GameType::fo4vr:
+        return "Fallout4VR.exe";
+      default:
+        throw std::logic_error("Unexpected game type");
+    }
+  }
+
+  // This does not handle Nehrim, Enderal or Enderal SE.
+  static GameId getTestGameId(const GameType gameType) {
+    switch (gameType) {
+      case GameType::tes3:
+        return GameId::tes3;
+      case GameType::tes4:
+        return GameId::tes4;
+      case GameType::tes5:
+        return GameId::tes5;
+      case GameType::tes5se:
+        return GameId::tes5se;
+      case GameType::tes5vr:
+        return GameId::tes5vr;
+      case GameType::fo3:
+        return GameId::fo3;
+      case GameType::fonv:
+        return GameId::fonv;
+      case GameType::fo4:
+        return GameId::fo4;
+      case GameType::fo4vr:
+        return GameId::fo4vr;
+      default:
+        throw std::logic_error("Unrecognised game ID");
+    }
+  }
+
 private:
   const std::filesystem::path rootTestPath;
 
@@ -255,6 +335,7 @@ private:
         return "Oblivion.esm";
       case GameType::tes5:
       case GameType::tes5se:
+      case GameType::tes5vr:
         return "Skyrim.esm";
       case GameType::fo3:
         return "Fallout3.esm";

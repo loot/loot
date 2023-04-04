@@ -32,9 +32,9 @@
 #include "gui/state/game/detection/common.h"
 #include "gui/state/game/game_settings.h"
 
-namespace loot {
-std::optional<GamePaths> FindMicrosoftStoreGamePaths(
-    const GameSettings& settings,
+namespace loot::microsoft {
+std::vector<GameInstall> FindGameInstalls(
+    const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
 }
