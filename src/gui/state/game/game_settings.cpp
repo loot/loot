@@ -93,6 +93,31 @@ std::string GetDefaultMasterlistUrl(GameType gameType) {
   return GetDefaultMasterlistUrl(repoName);
 }
 
+std::string ToString(const GameType gameType) {
+  switch (gameType) {
+    case GameType::tes3:
+      return "Morrowind";
+    case GameType::tes4:
+      return "Oblivion";
+    case GameType::tes5:
+      return "Skyrim";
+    case GameType::tes5se:
+      return "Skyrim Special Edition";
+    case GameType::tes5vr:
+      return "Skyrim VR";
+    case GameType::fo3:
+      return "Fallout3";
+    case GameType::fonv:
+      return "FalloutNV";
+    case GameType::fo4:
+      return "Fallout4";
+    case GameType::fo4vr:
+      return "Fallout4VR";
+    default:
+      throw std::logic_error("Unrecognised game type");
+  }
+}
+
 GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     type_(gameCode), masterlistSource_(GetDefaultMasterlistUrl(gameCode)) {
   if (Type() == GameType::tes3) {

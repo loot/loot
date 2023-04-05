@@ -66,15 +66,15 @@ void FolderPicker::on_browseButton_clicked() {
 }
 
 const std::map<std::string, GameType> GameTab::GAME_TYPES_BY_FOLDER({
-    {GameSettings(GameType::tes3).FolderName(), GameType::tes3},
-    {GameSettings(GameType::tes4).FolderName(), GameType::tes4},
-    {GameSettings(GameType::tes5).FolderName(), GameType::tes5},
-    {GameSettings(GameType::tes5se).FolderName(), GameType::tes5se},
-    {GameSettings(GameType::tes5vr).FolderName(), GameType::tes5vr},
-    {GameSettings(GameType::fo3).FolderName(), GameType::fo3},
-    {GameSettings(GameType::fonv).FolderName(), GameType::fonv},
-    {GameSettings(GameType::fo4).FolderName(), GameType::fo4},
-    {GameSettings(GameType::fo4vr).FolderName(), GameType::fo4vr},
+    {ToString(GameType::tes3), GameType::tes3},
+    {ToString(GameType::tes4), GameType::tes4},
+    {ToString(GameType::tes5), GameType::tes5},
+    {ToString(GameType::tes5se), GameType::tes5se},
+    {ToString(GameType::tes5vr), GameType::tes5vr},
+    {ToString(GameType::fo3), GameType::fo3},
+    {ToString(GameType::fonv), GameType::fonv},
+    {ToString(GameType::fo4), GameType::fo4},
+    {ToString(GameType::fo4vr), GameType::fo4vr},
 });
 
 GameTab::GameTab(const GameSettings& settings,
@@ -174,7 +174,7 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   }
 
   auto baseGameIndex = baseGameComboBox->findText(
-      QString::fromStdString(GameSettings(settings.Type()).FolderName()));
+      QString::fromStdString(ToString(settings.Type())));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
 
   nameInput->setEnabled(false);

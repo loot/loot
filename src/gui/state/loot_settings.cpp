@@ -395,24 +395,23 @@ std::string migratePreludeSource(const std::string& source) {
 }
 
 GameType mapGameType(const std::string& gameType) {
-  if (gameType == GameSettings(GameType::tes3).FolderName()) {
+  if (gameType == ToString(GameType::tes3)) {
     return GameType::tes3;
-  } else if (gameType == GameSettings(GameType::tes4).FolderName()) {
+  } else if (gameType == ToString(GameType::tes4)) {
     return GameType::tes4;
-  } else if (gameType == GameSettings(GameType::tes5).FolderName()) {
+  } else if (gameType == ToString(GameType::tes5)) {
     return GameType::tes5;
-  } else if (gameType == "SkyrimSE" ||
-             gameType == GameSettings(GameType::tes5se).FolderName()) {
+  } else if (gameType == "SkyrimSE" || gameType == ToString(GameType::tes5se)) {
     return GameType::tes5se;
-  } else if (gameType == GameSettings(GameType::tes5vr).FolderName()) {
+  } else if (gameType == ToString(GameType::tes5vr)) {
     return GameType::tes5vr;
-  } else if (gameType == GameSettings(GameType::fo3).FolderName()) {
+  } else if (gameType == ToString(GameType::fo3)) {
     return GameType::fo3;
-  } else if (gameType == GameSettings(GameType::fonv).FolderName()) {
+  } else if (gameType == ToString(GameType::fonv)) {
     return GameType::fonv;
-  } else if (gameType == GameSettings(GameType::fo4).FolderName()) {
+  } else if (gameType == ToString(GameType::fo4)) {
     return GameType::fo4;
-  } else if (gameType == GameSettings(GameType::fo4vr).FolderName()) {
+  } else if (gameType == ToString(GameType::fo4vr)) {
     return GameType::fo4vr;
   } else {
     throw std::runtime_error(
@@ -432,8 +431,7 @@ GameSettings convertGameTable(const toml::table& table) {
   }
 
   if (*type == "SkyrimSE" && *folder == *type) {
-    type =
-        std::optional<std::string>(GameSettings(GameType::tes5se).FolderName());
+    type = std::optional<std::string>(ToString(GameType::tes5se));
     folder = type;
   }
 
@@ -762,7 +760,7 @@ void LootSettings::save(const std::filesystem::path& file) {
 
     for (const auto& gameSettings : gameSettings_) {
       toml::table game{
-          {"type", GameSettings(gameSettings.Type()).FolderName()},
+          {"type", ToString(gameSettings.Type())},
           {"name", gameSettings.Name()},
           {"folder", gameSettings.FolderName()},
           {"master", gameSettings.Master()},

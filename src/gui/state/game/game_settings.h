@@ -44,6 +44,8 @@ std::string GetPluginsFolderName(GameType gameType);
 
 std::string GetDefaultMasterlistUrl(std::string repoName);
 
+std::string ToString(const GameType gameType);
+
 class GameSettings {
 public:
   GameSettings() = default;
