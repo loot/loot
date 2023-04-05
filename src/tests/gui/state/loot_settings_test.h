@@ -91,30 +91,16 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
           .SetIsBaseGameInstance(false)
-          .SetMaster("Nehrim.esm")
-          .SetRegistryKeys(
-              {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
-               "all\\Nehrim - At Fate's Edge_is1\\InstallLocation",
-               std::string(NEHRIM_STEAM_REGISTRY_KEY),
-               "Software\\GOG.com\\Games\\1497007810\\path"}),
+          .SetMaster("Nehrim.esm"),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
           .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 933480\\InstallLocation"})
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
           .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 976620\\InstallLocation",
-               "Software\\GOG.com\\Games\\1708684988\\path"})
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
   });
@@ -148,8 +134,6 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
     EXPECT_EQ(expectedGameSettings[i].IsBaseGameInstance(),
               actualGameSettings[i].IsBaseGameInstance());
     EXPECT_EQ(expectedGameSettings[i].Master(), actualGameSettings[i].Master());
-    EXPECT_EQ(expectedGameSettings[i].RegistryKeys(),
-              actualGameSettings[i].RegistryKeys());
     EXPECT_EQ(expectedGameSettings[i].MasterlistSource(),
               actualGameSettings[i].MasterlistSource());
   }
@@ -335,46 +319,6 @@ TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
   ASSERT_EQ(9, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_EQ(1.0, settings_.getGameSettings()[0].MinimumHeaderVersion());
-}
-
-TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyStringValues) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Oblivion\"" << endl
-      << "registry = \"a registry path\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ(1, settings_.getGameSettings()[0].RegistryKeys().size());
-  EXPECT_EQ("a registry path",
-            settings_.getGameSettings()[0].RegistryKeys()[0]);
-}
-
-TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyArrayValues) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Oblivion\"" << endl
-      << "registry = [\"a registry path\", \"another registry path\"]" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ(2, settings_.getGameSettings()[0].RegistryKeys().size());
-  EXPECT_EQ("a registry path",
-            settings_.getGameSettings()[0].RegistryKeys()[0]);
-  EXPECT_EQ("another registry path",
-            settings_.getGameSettings()[0].RegistryKeys()[1]);
 }
 
 TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {

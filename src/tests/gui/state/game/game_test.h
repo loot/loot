@@ -98,7 +98,6 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   GameSettings settings = defaultGameSettings;
   settings.SetName("foo");
   settings.SetMaster(blankEsm);
-  settings.SetRegistryKeys({"foo"});
   settings.SetMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 

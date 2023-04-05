@@ -494,23 +494,6 @@ GameSettings convertGameTable(const toml::table& table) {
     game.SetGameLocalFolder(*localFolder);
   }
 
-  if (table["registry"].is_array()) {
-    std::vector<std::string> registryKeys;
-    for (const auto& element : *table["registry"].as_array()) {
-      const auto registryKey = element.value<std::string>();
-      if (registryKey.has_value()) {
-        registryKeys.push_back(registryKey.value());
-      }
-    }
-
-    game.SetRegistryKeys(registryKeys);
-  } else {
-    auto registryKey = table["registry"].value<std::string>();
-    if (registryKey) {
-      game.SetRegistryKeys({*registryKey});
-    }
-  }
-
   return game;
 }
 
@@ -802,12 +785,6 @@ void LootSettings::save(const std::filesystem::path& file) {
           {"local_path", gameSettings.GameLocalPath().u8string()},
       };
 
-      toml::array registry;
-      for (const auto& key : gameSettings.RegistryKeys()) {
-        registry.push_back(key);
-      }
-
-      game.insert("registry", registry);
       games.push_back(game);
     }
 

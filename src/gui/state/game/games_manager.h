@@ -97,7 +97,6 @@ public:
             .SetName(gameSettings.Name())
             .SetIsBaseGameInstance(gameSettings.IsBaseGameInstance())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
-            .SetRegistryKeys(gameSettings.RegistryKeys())
             .SetMasterlistSource(gameSettings.MasterlistSource());
 
         installedGames.push_back(std::move(GetCurrentGame()));

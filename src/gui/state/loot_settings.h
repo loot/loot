@@ -133,29 +133,15 @@ private:
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
           .SetIsBaseGameInstance(false)
-          .SetMaster("Nehrim.esm")
-          .SetRegistryKeys(
-              {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim"
-               " - At Fate's Edge_is1\\InstallLocation",
-               std::string(NEHRIM_STEAM_REGISTRY_KEY),
-               "Software\\GOG.com\\Games\\1497007810\\path"}),
+          .SetMaster("Nehrim.esm"),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
           .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 933480\\InstallLocation"})
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
           .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 976620\\InstallLocation",
-               "Software\\GOG.com\\Games\\1708684988\\path"})
           .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
   };
   Filters filters_;

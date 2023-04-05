@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-04-04 23:18+0100\n"
+"POT-Creation-Date: 2023-04-05 08:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -783,7 +783,7 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:158
+#: src/gui/qt/settings/game_tab.cpp:147
 #: src/gui/qt/settings/new_game_dialog.cpp:87
 msgid "Name"
 msgstr ""
@@ -817,46 +817,42 @@ msgstr ""
 msgid "Browse..."
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:159
+#: src/gui/qt/settings/game_tab.cpp:148
 #: src/gui/qt/settings/new_game_dialog.cpp:88
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:160
+#: src/gui/qt/settings/game_tab.cpp:149
 #: src/gui/qt/settings/new_game_dialog.cpp:89
 msgid "Is instance of base game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:161
+#: src/gui/qt/settings/game_tab.cpp:150
 #: src/gui/qt/settings/new_game_dialog.cpp:90
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:162
+#: src/gui/qt/settings/game_tab.cpp:151
 msgid "Main Master Plugin"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:163
+#: src/gui/qt/settings/game_tab.cpp:152
 msgid "Minimum Header Version"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:164
+#: src/gui/qt/settings/game_tab.cpp:153
 msgid "Masterlist Source"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:165
+#: src/gui/qt/settings/game_tab.cpp:154
 msgid "Install Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:166
-msgid "Install Path Registry Keys"
-msgstr ""
-
-#: src/gui/qt/settings/game_tab.cpp:167
+#: src/gui/qt/settings/game_tab.cpp:155
 msgid "Local AppData Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:169
+#: src/gui/qt/settings/game_tab.cpp:157
 msgid "Delete game"
 msgstr ""
 
@@ -948,14 +944,14 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:538
+#: src/gui/state/loot_settings.cpp:521
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:564
+#: src/gui/state/loot_settings.cpp:547
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "

@@ -58,7 +58,6 @@ public:
   std::string FolderName() const;
   std::string Master() const;
   float MinimumHeaderVersion() const;
-  std::vector<std::string> RegistryKeys() const;
   std::string MasterlistSource() const;
   std::filesystem::path GamePath() const;
   std::filesystem::path GameLocalPath() const;
@@ -70,7 +69,6 @@ public:
   GameSettings& SetName(const std::string& name);
   GameSettings& SetMaster(const std::string& masterFile);
   GameSettings& SetMinimumHeaderVersion(float minimumHeaderVersion);
-  GameSettings& SetRegistryKeys(const std::vector<std::string>& registry);
   GameSettings& SetMasterlistSource(const std::string& source);
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
@@ -83,8 +81,6 @@ private:
   std::string masterFile_;
   float mininumHeaderVersion_{0.0f};
   bool isBaseGameInstance_{true};
-
-  std::vector<std::string> registryKeys_;
 
   std::string lootFolderName_;
 

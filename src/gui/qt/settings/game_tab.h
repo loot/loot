@@ -81,7 +81,6 @@ private:
   QLabel *minimumHeaderVersionLabel{new QLabel(this)};
   QLabel *masterlistSourceLabel{new QLabel(this)};
   QLabel *installPathLabel{new QLabel(this)};
-  QLabel *registryKeysLabel{new QLabel(this)};
   QLabel *localDataPathLabel{new QLabel(this)};
   QLineEdit *nameInput{new QLineEdit(this)};
   QComboBox *baseGameComboBox{new QComboBox(this)};
@@ -91,7 +90,6 @@ private:
   QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};
   QLineEdit *masterlistSourceInput{new QLineEdit(this)};
   FolderPicker *installPathInput{new FolderPicker(this)};
-  QPlainTextEdit *registryKeysInput{new QPlainTextEdit(this)};
   FolderPicker *localDataPathInput{new FolderPicker(this)};
   QPushButton *deleteGameButton{new QPushButton(this)};
 

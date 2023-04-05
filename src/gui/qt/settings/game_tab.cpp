@@ -103,14 +103,6 @@ GameSettings GameTab::getGameSettings() const {
   auto installPath =
       std::filesystem::u8path(installPathInput->text().toStdString());
 
-  auto registryKeysList = registryKeysInput->toPlainText().split('\n');
-  std::vector<std::string> registryKeys;
-  for (const auto& key : registryKeysList) {
-    if (!key.isEmpty()) {
-      registryKeys.push_back(key.toStdString());
-    }
-  }
-
   auto localDataPath =
       std::filesystem::u8path(localDataPathInput->text().toStdString());
 
@@ -122,7 +114,6 @@ GameSettings GameTab::getGameSettings() const {
   settings.SetMaster(masterFile);
   settings.SetMinimumHeaderVersion(minimumHeaderVersion);
   settings.SetMasterlistSource(masterlistSource);
-  settings.SetRegistryKeys(registryKeys);
   settings.SetGamePath(installPath);
   settings.SetGameLocalPath(localDataPath);
 
@@ -131,7 +122,6 @@ GameSettings GameTab::getGameSettings() const {
 
 void GameTab::setupUi() {
   minimumHeaderVersionSpinBox->setSingleStep(0.01);
-  registryKeysInput->setTabChangesFocus(true);
   deleteGameButton->setObjectName("deleteGameButton");
 
   auto generalLayout = new QFormLayout(this);
@@ -144,7 +134,6 @@ void GameTab::setupUi() {
   generalLayout->addRow(minimumHeaderVersionLabel, minimumHeaderVersionSpinBox);
   generalLayout->addRow(masterlistSourceLabel, masterlistSourceInput);
   generalLayout->addRow(installPathLabel, installPathInput);
-  generalLayout->addRow(registryKeysLabel, registryKeysInput);
   generalLayout->addRow(localDataPathLabel, localDataPathInput);
 
   generalLayout->addWidget(deleteGameButton);
@@ -163,7 +152,6 @@ void GameTab::translateUi() {
   minimumHeaderVersionLabel->setText(translate("Minimum Header Version"));
   masterlistSourceLabel->setText(translate("Masterlist Source"));
   installPathLabel->setText(translate("Install Path"));
-  registryKeysLabel->setText(translate("Install Path Registry Keys"));
   localDataPathLabel->setText(translate("Local AppData Path"));
 
   deleteGameButton->setText(translate("Delete game"));
@@ -195,13 +183,6 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   auto baseGameIndex = baseGameComboBox->findText(
       QString::fromStdString(GameSettings(settings.Type()).FolderName()));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
-
-  QString keys;
-  for (const auto& key : settings.RegistryKeys()) {
-    keys.append(QString::fromStdString(key));
-    keys.append("\n");
-  }
-  registryKeysInput->setPlainText(keys);
 
   nameInput->setEnabled(false);
   baseGameComboBox->setEnabled(false);

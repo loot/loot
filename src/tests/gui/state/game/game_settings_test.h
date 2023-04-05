@@ -58,7 +58,6 @@ TEST_P(
   EXPECT_EQ("", settings_.FolderName());
   EXPECT_EQ("", settings_.Master());
   EXPECT_EQ(0.0, settings_.MinimumHeaderVersion());
-  EXPECT_EQ(std::vector<std::string>(), settings_.RegistryKeys());
   EXPECT_EQ("", settings_.MasterlistSource());
 
   EXPECT_EQ("", settings_.GamePath());
@@ -79,20 +78,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Fallout3.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Fallout3\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 22300\\InstallLocation",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 22370\\InstallLocation",
-               "Software\\GOG.com\\Games\\1454315831\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
-               "54315831_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1248282609\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\12"
-               "48282609_is1\\InstallLocation"}),
-          settings_.RegistryKeys());
-      EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/fallout3/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
@@ -103,20 +88,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("FalloutNV.esm", settings_.Master());
       EXPECT_EQ(1.32f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\FalloutNV\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 22380\\InstallLocation",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 22490\\InstallLocation",
-               "Software\\GOG.com\\Games\\1312824873\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\13"
-               "12824873_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1454587428\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
-               "54587428_is1\\InstallLocation"}),
-          settings_.RegistryKeys());
-      EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/falloutnv/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
@@ -126,12 +97,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Fallout4", settings_.FolderName());
       EXPECT_EQ("Fallout4.esm", settings_.Master());
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
-      EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Fallout4\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 377160\\InstallLocation"}),
-          settings_.RegistryKeys());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/fallout4/v0.18/"
           "masterlist.yaml",
@@ -144,12 +109,6 @@ TEST_P(GameSettingsTest,
       // TODO: Get the real value off someone who owns Fallout 4 VR.
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Fallout 4 VR\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 611660\\InstallLocation"}),
-          settings_.RegistryKeys());
-      EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/fallout4vr/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
@@ -159,21 +118,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Morrowind", settings_.FolderName());
       EXPECT_EQ("Morrowind.esm", settings_.Master());
       EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
-      EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Morrowind\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 22320\\InstallLocation",
-               "Software\\GOG.com\\Games\\1440163901\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
-               "40163901_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1435828767\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
-               "35828767_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1432185303\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-               "1432185303_is1\\InstallLocation"}),
-          settings_.RegistryKeys());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/morrowind/v0.18/"
           "masterlist.yaml",
@@ -185,20 +129,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Oblivion.esm", settings_.Master());
       EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Oblivion\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 22330\\InstallLocation",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 900883\\InstallLocation",
-               "Software\\GOG.com\\Games\\1242989820\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\12"
-               "42989820_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1458058109\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\14"
-               "58058109_is1\\InstallLocation"}),
-          settings_.RegistryKeys());
-      EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/oblivion/v0.18/"
           "masterlist.yaml",
           settings_.MasterlistSource());
@@ -209,12 +139,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Skyrim\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 72850\\InstallLocation"}),
-          settings_.RegistryKeys());
-      EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrim/v0.18/masterlist.yaml",
           settings_.MasterlistSource());
       break;
@@ -223,22 +147,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim Special Edition", settings_.FolderName());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
-      EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Skyrim Special "
-               "Edition\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 489830\\InstallLocation",
-               "Software\\GOG.com\\Games\\1162721350\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-               "1162721350_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1801825368\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-               "1801825368_is1\\InstallLocation",
-               "Software\\GOG.com\\Games\\1711230643\\path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-               "1711230643_is1\\InstallLocation"}),
-          settings_.RegistryKeys());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrimse/v0.18/"
           "masterlist.yaml",
@@ -250,12 +158,6 @@ TEST_P(GameSettingsTest,
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       // TODO: Get the real value off someone who owns Skyrim VR.
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
-      EXPECT_EQ(
-          std::vector<std::string>(
-              {"Software\\Bethesda Softworks\\Skyrim VR\\Installed Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\St"
-               "eam App 611670\\InstallLocation"}),
-          settings_.RegistryKeys());
       EXPECT_EQ(
           "https://raw.githubusercontent.com/loot/skyrimvr/v0.18/"
           "masterlist.yaml",
@@ -276,13 +178,11 @@ TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
   GameSettings game1 = GameSettings(GameType::tes5, "game1")
                            .SetMaster("master1")
                            .SetMinimumHeaderVersion(0.94f)
-                           .SetRegistryKeys({"key1"})
                            .SetMasterlistSource("url1")
                            .SetGamePath("path1");
   GameSettings game2 = GameSettings(GameType::tes5, "game2")
                            .SetMaster("master2")
                            .SetMinimumHeaderVersion(1.34f)
-                           .SetRegistryKeys({"key2"})
                            .SetMasterlistSource("url2")
                            .SetGamePath("path2");
 
@@ -339,12 +239,6 @@ TEST_P(GameSettingsTest, setMasterShouldStoreGivenValue) {
 TEST_P(GameSettingsTest, setMinimumHeaderVersionShouldStoreGivenValue) {
   settings_.SetMinimumHeaderVersion(1.34f);
   EXPECT_EQ(1.34f, settings_.MinimumHeaderVersion());
-}
-
-TEST_P(GameSettingsTest, setRegistryKeyShouldStoreGivenValue) {
-  auto keys = std::vector<std::string>({"key"});
-  settings_.SetRegistryKeys(keys);
-  EXPECT_EQ(keys, settings_.RegistryKeys());
 }
 
 TEST_P(GameSettingsTest, setMasterlistSourceShouldStoreGivenValue) {
