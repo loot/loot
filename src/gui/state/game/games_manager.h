@@ -95,7 +95,6 @@ public:
         GetCurrentGame()
             .GetSettings()
             .SetName(gameSettings.Name())
-            .SetIsBaseGameInstance(gameSettings.IsBaseGameInstance())
             .SetMinimumHeaderVersion(gameSettings.MinimumHeaderVersion())
             .SetMasterlistSource(gameSettings.MasterlistSource());
 

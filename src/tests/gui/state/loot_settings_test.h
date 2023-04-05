@@ -90,17 +90,14 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
       GameSettings(GameType::fo4vr),
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
-          .SetIsBaseGameInstance(false)
           .SetMaster("Nehrim.esm"),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
-          .SetIsBaseGameInstance(false)
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
-          .SetIsBaseGameInstance(false)
           .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
                                "enderal/v0.18/masterlist.yaml"),
   });
@@ -131,8 +128,6 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
 
   for (size_t i = 0; i < actualGameSettings.size(); ++i) {
     EXPECT_EQ(expectedGameSettings[i].Type(), actualGameSettings[i].Type());
-    EXPECT_EQ(expectedGameSettings[i].IsBaseGameInstance(),
-              actualGameSettings[i].IsBaseGameInstance());
     EXPECT_EQ(expectedGameSettings[i].Master(), actualGameSettings[i].Master());
     EXPECT_EQ(expectedGameSettings[i].MasterlistSource(),
               actualGameSettings[i].MasterlistSource());
@@ -237,71 +232,6 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
   EXPECT_EQ(1, settings_.getLanguages().size());
   EXPECT_EQ(LootSettings::Language({"en", "English"}),
             settings_.getLanguages()[0]);
-}
-
-TEST_P(LootSettingsTest, loadingShouldSetIsBaseGameInstanceIfGiven) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Oblivion\"" << endl
-      << "isBaseGameInstance = false" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(
-    LootSettingsTest,
-    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesNehrim) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Nehrim\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(
-    LootSettingsTest,
-    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderal) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Enderal\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(
-    LootSettingsTest,
-    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderalSpecialEdition) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Enderal Special Edition\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
 }
 
 TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {

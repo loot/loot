@@ -62,7 +62,6 @@ public:
   std::filesystem::path GamePath() const;
   std::filesystem::path GameLocalPath() const;
   std::filesystem::path DataPath() const;
-  bool IsBaseGameInstance() const;
 
   std::string PluginsFolderName() const;
 
@@ -73,14 +72,12 @@ public:
   GameSettings& SetGamePath(const std::filesystem::path& path);
   GameSettings& SetGameLocalPath(const std::filesystem::path& GameLocalPath);
   GameSettings& SetGameLocalFolder(const std::string& folderName);
-  GameSettings& SetIsBaseGameInstance(bool isInstance);
 
 private:
   GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
   float mininumHeaderVersion_{0.0f};
-  bool isBaseGameInstance_{true};
 
   std::string lootFolderName_;
 

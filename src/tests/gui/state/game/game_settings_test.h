@@ -226,11 +226,6 @@ TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
   EXPECT_EQ("name", settings_.Name());
 }
 
-TEST_P(GameSettingsTest, setIsBaseGameInstanceShouldStoreGivenValue) {
-  settings_.SetIsBaseGameInstance(false);
-  EXPECT_FALSE(settings_.IsBaseGameInstance());
-}
-
 TEST_P(GameSettingsTest, setMasterShouldStoreGivenValue) {
   settings_.SetMaster("master");
   EXPECT_EQ("master", settings_.Master());

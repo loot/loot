@@ -175,8 +175,6 @@ std::filesystem::path GameSettings::DataPath() const {
   return gamePath_ / GetPluginsFolderName(type_);
 }
 
-bool GameSettings::IsBaseGameInstance() const { return isBaseGameInstance_; }
-
 GameSettings& GameSettings::SetName(const std::string& name) {
   name_ = name;
   return *this;
@@ -211,11 +209,6 @@ GameSettings& GameSettings::SetGameLocalPath(
 
 GameSettings& GameSettings::SetGameLocalFolder(const std::string& folderName) {
   gameLocalPath_ = getLocalAppDataPath() / std::filesystem::u8path(folderName);
-  return *this;
-}
-
-GameSettings& GameSettings::SetIsBaseGameInstance(bool isInstance) {
-  isBaseGameInstance_ = isInstance;
   return *this;
 }
 }

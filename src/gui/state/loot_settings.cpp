@@ -444,16 +444,6 @@ GameSettings convertGameTable(const toml::table& table) {
     game.SetName(*name);
   }
 
-  auto isBaseGameInstance = table["isBaseGameInstance"].value<bool>();
-  if (isBaseGameInstance) {
-    game.SetIsBaseGameInstance(*isBaseGameInstance);
-  } else if (game.FolderName() == "Nehrim" || game.FolderName() == "Enderal" ||
-             game.FolderName() == "Enderal Special Edition") {
-    // Migrate default settings for Nehrim, Enderal and Enderal SE,
-    // which are not base game instances.
-    game.SetIsBaseGameInstance(false);
-  }
-
   auto master = table["master"].value<std::string>();
   if (master) {
     game.SetMaster(*master);
@@ -776,7 +766,6 @@ void LootSettings::save(const std::filesystem::path& file) {
       toml::table game{
           {"type", GameSettings(gameSettings.Type()).FolderName()},
           {"name", gameSettings.Name()},
-          {"isBaseGameInstance", gameSettings.IsBaseGameInstance()},
           {"folder", gameSettings.FolderName()},
           {"master", gameSettings.Master()},
           {"minimumHeaderVersion", gameSettings.MinimumHeaderVersion()},

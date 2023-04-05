@@ -132,16 +132,13 @@ private:
       GameSettings(GameType::fo4vr),
       GameSettings(GameType::tes4, "Nehrim")
           .SetName("Nehrim - At Fate's Edge")
-          .SetIsBaseGameInstance(false)
           .SetMaster("Nehrim.esm"),
       GameSettings(GameType::tes5, "Enderal")
           .SetName("Enderal: Forgotten Stories")
-          .SetIsBaseGameInstance(false)
           .SetGameLocalFolder("enderal")
           .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
       GameSettings(GameType::tes5se, "Enderal Special Edition")
           .SetName("Enderal: Forgotten Stories (Special Edition)")
-          .SetIsBaseGameInstance(false)
           .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
   };
   Filters filters_;

@@ -75,7 +75,6 @@ signals:
 private:
   QLabel *nameLabel{new QLabel(this)};
   QLabel *baseGameLabel{new QLabel(this)};
-  QLabel *baseGameInstanceLabel{new QLabel(this)};
   QLabel *lootFolderLabel{new QLabel(this)};
   QLabel *masterFileLabel{new QLabel(this)};
   QLabel *minimumHeaderVersionLabel{new QLabel(this)};
@@ -84,7 +83,6 @@ private:
   QLabel *localDataPathLabel{new QLabel(this)};
   QLineEdit *nameInput{new QLineEdit(this)};
   QComboBox *baseGameComboBox{new QComboBox(this)};
-  QCheckBox *baseGameInstanceCheckbox{new QCheckBox(this)};
   QLineEdit *lootFolderInput{new QLineEdit(this)};
   QLineEdit *masterFileInput{new QLineEdit(this)};
   QDoubleSpinBox *minimumHeaderVersionSpinBox{new QDoubleSpinBox(this)};

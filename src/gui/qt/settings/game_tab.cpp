@@ -106,11 +106,8 @@ GameSettings GameTab::getGameSettings() const {
   auto localDataPath =
       std::filesystem::u8path(localDataPathInput->text().toStdString());
 
-  const auto isBaseGameInstance = baseGameInstanceCheckbox->isChecked();
-
   GameSettings settings(gameType, lootFolder);
   settings.SetName(name);
-  settings.SetIsBaseGameInstance(isBaseGameInstance);
   settings.SetMaster(masterFile);
   settings.SetMinimumHeaderVersion(minimumHeaderVersion);
   settings.SetMasterlistSource(masterlistSource);
@@ -128,7 +125,6 @@ void GameTab::setupUi() {
 
   generalLayout->addRow(nameLabel, nameInput);
   generalLayout->addRow(baseGameLabel, baseGameComboBox);
-  generalLayout->addRow(baseGameInstanceLabel, baseGameInstanceCheckbox);
   generalLayout->addRow(lootFolderLabel, lootFolderInput);
   generalLayout->addRow(masterFileLabel, masterFileInput);
   generalLayout->addRow(minimumHeaderVersionLabel, minimumHeaderVersionSpinBox);
@@ -146,7 +142,6 @@ void GameTab::setupUi() {
 void GameTab::translateUi() {
   nameLabel->setText(translate("Name"));
   baseGameLabel->setText(translate("Base Game"));
-  baseGameInstanceLabel->setText(translate("Is instance of base game"));
   lootFolderLabel->setText(translate("LOOT Folder"));
   masterFileLabel->setText(translate("Main Master Plugin"));
   minimumHeaderVersionLabel->setText(translate("Minimum Header Version"));
@@ -170,8 +165,6 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   localDataPathInput->setText(
       QString::fromStdString(settings.GameLocalPath().u8string()));
 
-  baseGameInstanceCheckbox->setChecked(settings.IsBaseGameInstance());
-
   while (baseGameComboBox->count() > 0) {
     baseGameComboBox->removeItem(0);
   }
@@ -186,7 +179,6 @@ void GameTab::initialiseInputs(const GameSettings& settings,
 
   nameInput->setEnabled(false);
   baseGameComboBox->setEnabled(false);
-  baseGameInstanceCheckbox->setEnabled(false);
   lootFolderInput->setEnabled(false);
 
   deleteGameButton->setEnabled(!isCurrentGame);
