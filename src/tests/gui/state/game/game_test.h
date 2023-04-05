@@ -101,7 +101,15 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
-  EXPECT_EQ(settings, game.GetSettings());
+  EXPECT_EQ(settings.Type(), game.GetSettings().Type());
+  EXPECT_EQ(settings.Name(), game.GetSettings().Name());
+  EXPECT_EQ(settings.FolderName(), game.GetSettings().FolderName());
+  EXPECT_EQ(settings.Master(), game.GetSettings().Master());
+  EXPECT_EQ(settings.MinimumHeaderVersion(),
+            game.GetSettings().MinimumHeaderVersion());
+  EXPECT_EQ(settings.MasterlistSource(), game.GetSettings().MasterlistSource());
+  EXPECT_EQ(settings.GamePath(), game.GetSettings().GamePath());
+  EXPECT_EQ(settings.GameLocalPath(), game.GetSettings().GameLocalPath());
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(defaultGameSettings.FolderName());

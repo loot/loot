@@ -52,9 +52,6 @@ public:
   explicit GameSettings(const GameType gameType,
                         const std::string& lootFolder = "");
 
-  bool operator==(
-      const GameSettings& rhs) const;  // Compares names and folder names.
-
   GameType Type() const;
   std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;

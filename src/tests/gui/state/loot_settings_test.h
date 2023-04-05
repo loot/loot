@@ -1084,10 +1084,19 @@ TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
 }
 
 TEST_P(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
-  const std::vector<GameSettings> gameSettings({GameSettings(GameType::tes5)});
-  settings_.storeGameSettings(gameSettings);
+  ASSERT_EQ(0, settings_.getGameSettings().size());
 
-  EXPECT_EQ(gameSettings, settings_.getGameSettings());
+  settings_.storeGameSettings(
+      {GameSettings(GameType::tes3), GameSettings(GameType::tes4)});
+
+  ASSERT_EQ(2, settings_.getGameSettings().size());
+  EXPECT_EQ(GameType::tes3, settings_.getGameSettings()[0].Type());
+  EXPECT_EQ(GameType::tes4, settings_.getGameSettings()[1].Type());
+
+  settings_.storeGameSettings({GameSettings(GameType::tes5)});
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameType::tes5, settings_.getGameSettings()[0].Type());
 }
 
 TEST_P(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {

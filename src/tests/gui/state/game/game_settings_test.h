@@ -174,53 +174,6 @@ TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
   EXPECT_EQ("folder", settings_.FolderName());
 }
 
-TEST_P(GameSettingsTest, gameSettingsWithTheSameIdsShouldBeEqual) {
-  GameSettings game1 = GameSettings(GameType::tes5, "game1")
-                           .SetMaster("master1")
-                           .SetMinimumHeaderVersion(0.94f)
-                           .SetMasterlistSource("url1")
-                           .SetGamePath("path1");
-  GameSettings game2 = GameSettings(GameType::tes5, "game2")
-                           .SetMaster("master2")
-                           .SetMinimumHeaderVersion(1.34f)
-                           .SetMasterlistSource("url2")
-                           .SetGamePath("path2");
-
-  EXPECT_TRUE(game1 == game2);
-}
-
-TEST_P(GameSettingsTest, gameSettingsWithTheSameNameShouldBeEqual) {
-  GameSettings game1 = GameSettings(GameType::tes4).SetName("name");
-  GameSettings game2 = GameSettings(GameType::tes5).SetName("name");
-
-  EXPECT_TRUE(game1 == game2);
-}
-
-TEST_P(GameSettingsTest, gameSettingsWithDifferentIdsAndNamesShouldNotBeEqual) {
-  GameSettings game1 = GameSettings(GameType::tes4);
-  GameSettings game2 = GameSettings(GameType::tes5);
-
-  EXPECT_FALSE(game1 == game2);
-}
-
-TEST_P(GameSettingsTest,
-       gameSettingsWithCaseInsensitivelyEqualNamesShouldNotBeEqual) {
-  GameSettings game1 =
-      GameSettings(GameType::tes4).SetName(u8"non\u00C1sciiName");
-  GameSettings game2 =
-      GameSettings(GameType::tes5).SetName(u8"non\u00E1sciiName");
-
-  EXPECT_FALSE(game1 == game2);
-}
-
-TEST_P(GameSettingsTest,
-       gameSettingsWithCaseInsensitivelyEqualFolderNamesShouldNotBeEqual) {
-  GameSettings game1 = GameSettings(GameType::tes4, u8"non\u00C1sciiFolder");
-  GameSettings game2 = GameSettings(GameType::tes5, u8"non\u00E1sciiFolder");
-
-  EXPECT_FALSE(game1 == game2);
-}
-
 TEST_P(GameSettingsTest, setNameShouldStoreGivenValue) {
   settings_.SetName("name");
   EXPECT_EQ("name", settings_.Name());

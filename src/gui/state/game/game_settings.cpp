@@ -172,10 +172,6 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
   }
 }
 
-bool GameSettings::operator==(const GameSettings& rhs) const {
-  return name_ == rhs.Name() || lootFolderName_ == rhs.FolderName();
-}
-
 GameType GameSettings::Type() const { return type_; }
 
 std::string GameSettings::Name() const { return name_; }
