@@ -83,7 +83,7 @@ std::string GetDefaultMasterlistRepositoryName(GameType gameType) {
   }
 }
 
-std::string GetDefaultMasterlistUrl(std::string repoName) {
+std::string GetDefaultMasterlistUrl(const std::string& repoName) {
   return std::string("https://raw.githubusercontent.com/loot/") + repoName +
          "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
 }

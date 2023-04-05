@@ -42,7 +42,7 @@ static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.18";
 
 std::string GetPluginsFolderName(GameType gameType);
 
-std::string GetDefaultMasterlistUrl(std::string repoName);
+std::string GetDefaultMasterlistUrl(const std::string& repoName);
 
 std::string ToString(const GameType gameType);
 
