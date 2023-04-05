@@ -676,8 +676,6 @@ void LootSettings::load(const std::filesystem::path& file) {
         }
       }
     }
-
-    appendBaseGames();
   }
 
   const auto filters = settings["filters"];
@@ -989,50 +987,4 @@ void LootSettings::updateLastVersion() {
   lastVersion_ = gui::Version::string();
 }
 
-void LootSettings::appendBaseGames() {
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes3)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes3));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes4)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes4));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes5)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes5));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes5se)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes5se));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes5vr)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes5vr));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fo3)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fo3));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fonv)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fonv));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fo4)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fo4));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fo4vr)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fo4vr));
-}
 }

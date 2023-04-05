@@ -78,29 +78,6 @@ INSTANTIATE_TEST_SUITE_P(, LootSettingsTest, ::testing::Values(GameType::tes5));
 
 TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   const std::string currentVersion = gui::Version::string();
-  const std::vector<GameSettings> expectedGameSettings({
-      GameSettings(GameType::tes3),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::tes5vr),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::fo4vr),
-      GameSettings(GameType::tes4, "Nehrim")
-          .SetName("Nehrim - At Fate's Edge")
-          .SetMaster("Nehrim.esm"),
-      GameSettings(GameType::tes5, "Enderal")
-          .SetName("Enderal: Forgotten Stories")
-          .SetGameLocalFolder("enderal")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.18/masterlist.yaml"),
-      GameSettings(GameType::tes5se, "Enderal Special Edition")
-          .SetName("Enderal: Forgotten Stories (Special Edition)")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.18/masterlist.yaml"),
-  });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
@@ -119,19 +96,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
   EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml",
             settings_.getPreludeSource());
-
-  // GameSettings equality only checks name and folder, so check
-  // other settings individually.
-  const std::vector<GameSettings> actualGameSettings =
-      settings_.getGameSettings();
-  EXPECT_EQ(expectedGameSettings, actualGameSettings);
-
-  for (size_t i = 0; i < actualGameSettings.size(); ++i) {
-    EXPECT_EQ(expectedGameSettings[i].Type(), actualGameSettings[i].Type());
-    EXPECT_EQ(expectedGameSettings[i].Master(), actualGameSettings[i].Master());
-    EXPECT_EQ(expectedGameSettings[i].MasterlistSource(),
-              actualGameSettings[i].MasterlistSource());
-  }
+  EXPECT_TRUE(settings_.getGameSettings().empty());
 
   auto actualLanguages = settings_.getLanguages();
   EXPECT_EQ(18, actualLanguages.size());
@@ -246,7 +211,7 @@ TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
+  ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_EQ(1.0, settings_.getGameSettings()[0].MinimumHeaderVersion());
 }
@@ -279,7 +244,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
+  ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
   EXPECT_EQ(u8"non\u00C1sciiGamePath",
             settings_.getGameSettings()[0].GamePath().u8string());
@@ -301,10 +266,7 @@ TEST_P(LootSettingsTest,
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("TES III: Morrowind", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ("TES IV: Oblivion", settings_.getGameSettings()[1].Name());
-  EXPECT_TRUE(settings_.getGameSettings()[1].GameLocalPath().empty());
+  EXPECT_TRUE(settings_.getGameSettings().empty());
 }
 
 TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
@@ -319,7 +281,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
+  ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
   EXPECT_EQ(getLocalAppDataPath() /
                 std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
@@ -1004,38 +966,6 @@ TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
   EXPECT_EQ(GameType::tes5se, settings_.getGameSettings()[0].Type());
   EXPECT_EQ("Skyrim Special Edition",
             settings_.getGameSettings()[0].FolderName());
-}
-
-TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Test\"" << endl
-      << "branch = \"foo\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  GameSettings testGame = GameSettings(GameType::tes4, "Test")
-                              .SetName("Game Name")
-                              .SetMasterlistSource("foo");
-
-  const std::vector<GameSettings> expectedGameSettings({
-      testGame,
-      GameSettings(GameType::tes3),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::tes5vr),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::fo4vr),
-  });
-  EXPECT_EQ(10, settings_.getGameSettings().size());
-  EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
 }
 
 TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {

@@ -120,27 +120,7 @@ private:
   std::string theme_{"default"};
   std::optional<WindowPosition> mainWindowPosition_;
   std::optional<WindowPosition> groupsEditorWindowPosition_;
-  std::vector<GameSettings> gameSettings_{
-      GameSettings(GameType::tes3),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::tes5vr),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::fo4vr),
-      GameSettings(GameType::tes4, "Nehrim")
-          .SetName("Nehrim - At Fate's Edge")
-          .SetMaster("Nehrim.esm"),
-      GameSettings(GameType::tes5, "Enderal")
-          .SetName("Enderal: Forgotten Stories")
-          .SetGameLocalFolder("enderal")
-          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
-      GameSettings(GameType::tes5se, "Enderal Special Edition")
-          .SetName("Enderal: Forgotten Stories (Special Edition)")
-          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
-  };
+  std::vector<GameSettings> gameSettings_;
   Filters filters_;
   std::vector<Language> languages_{
       Language({"en", "English"}),
@@ -164,8 +144,6 @@ private:
   };
 
   mutable std::recursive_mutex mutex_;
-
-  void appendBaseGames();
 };
 }
 
