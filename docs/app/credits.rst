@@ -23,7 +23,7 @@ In addition, the following are credited with application-related support:
   * Korean: SteamB23, sean-kang
   * Polish: Łukasz Niemczyk, Yoosk, alemisiu
   * Portuguese: ironmagician
-  * Portuguese (Brazil): Kassane, zDasF1xer
+  * Portuguese (Brazil): Kassane, zDasF1xer, Kyo-- (Carlos Gabriel)
   * Russian: Tokc.D.K., Kerber, IllusiveMan196
   * Spanish: Sharlikran, Artaios, Mr. Robo, Allen1351 (Ale)
   * Swedish: Mikael Hiort af Ornäs, simoneddeland, ddbb07
