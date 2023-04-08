@@ -199,6 +199,11 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
     return std::nullopt;
   }
 
+  const auto egsManifestsPath = GetEgsManifestsPath();
+  if (!std::filesystem::exists(egsManifestsPath)) {
+    return std::nullopt;
+  }
+
   const auto logger = getLogger();
 
   if (logger) {
@@ -209,7 +214,7 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
   }
 
   for (const auto& entry :
-       std::filesystem::directory_iterator(GetEgsManifestsPath())) {
+       std::filesystem::directory_iterator(egsManifestsPath)) {
     if (entry.is_regular_file() &&
         boost::iends_with(entry.path().filename().u8string(), ".item")) {
       const auto manifestData = GetEgsManifestData(entry.path());
