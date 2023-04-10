@@ -33,19 +33,17 @@ along with LOOT.  If not, see
 namespace loot::test {
 
 class IsInstalledTest : public CommonGameTestFixture,
-                        public testing::WithParamInterface<GameType> {
+                        public testing::WithParamInterface<GameId> {
 protected:
   IsInstalledTest() : CommonGameTestFixture(GetParam()) {}
 };
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
-INSTANTIATE_TEST_SUITE_P(,
-                         IsInstalledTest,
-                         ::testing::ValuesIn(ALL_GAME_TYPES));
+INSTANTIATE_TEST_SUITE_P(, IsInstalledTest, ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
-  const auto settings = GameSettings(GetParam())
+  const auto settings = GameSettings(getGameType())
                             .SetMaster(nonAsciiEsp)
                             .SetGamePath(dataPath.parent_path());
   EXPECT_TRUE(IsInstalled(settings));
@@ -53,7 +51,7 @@ TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
 
 class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
 protected:
-  UpdateInstalledGamesSettingsTest() : CommonGameTestFixture(GameType::tes3) {}
+  UpdateInstalledGamesSettingsTest() : CommonGameTestFixture(GameId::tes3) {}
 
   void SetUp() override {
     CommonGameTestFixture::SetUp();

@@ -32,7 +32,7 @@ along with LOOT.  If not, see
 namespace loot {
 namespace test {
 class GameSettingsTest : public CommonGameTestFixture,
-                         public testing::WithParamInterface<GameType> {
+                         public testing::WithParamInterface<GameId> {
 protected:
   GameSettingsTest() : CommonGameTestFixture(GetParam()) {}
 
@@ -45,13 +45,13 @@ protected:
 // all.
 INSTANTIATE_TEST_SUITE_P(,
                          GameSettingsTest,
-                         ::testing::Values(GameType::tes3,
-                                           GameType::tes4,
-                                           GameType::tes5,
-                                           GameType::fo3,
-                                           GameType::fonv,
-                                           GameType::fo4,
-                                           GameType::tes5se));
+                         ::testing::Values(GameId::tes3,
+                                           GameId::tes4,
+                                           GameId::tes5,
+                                           GameId::fo3,
+                                           GameId::fonv,
+                                           GameId::fo4,
+                                           GameId::tes5se));
 
 TEST_P(
     GameSettingsTest,
@@ -68,13 +68,13 @@ TEST_P(
 
 TEST_P(GameSettingsTest,
        idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
-  settings_ = GameSettings(GetParam());
+  settings_ = GameSettings(getGameType());
 
   // Repo branch changes between LOOT versions, so don't check an exact value.
-  EXPECT_EQ(GetParam(), settings_.Type());
+  EXPECT_EQ(getGameType(), settings_.Type());
   EXPECT_NE("", settings_.MasterlistSource());
 
-  switch (GetParam()) {
+  switch (getGameType()) {
     case GameType::fo3:
       EXPECT_EQ("Fallout 3", settings_.Name());
       EXPECT_EQ("Fallout3", settings_.FolderName());

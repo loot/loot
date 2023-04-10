@@ -50,7 +50,7 @@ TEST_P(GetGameTypeTest, shouldNotThrowForAnyValidGameId) {
 }
 
 class IsValidGamePathTest : public CommonGameTestFixture,
-                            public testing::WithParamInterface<GameType> {
+                            public testing::WithParamInterface<GameId> {
 protected:
   IsValidGamePathTest() : CommonGameTestFixture(GetParam()) {}
 };
@@ -59,10 +59,11 @@ protected:
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
                          IsValidGamePathTest,
-                         ::testing::ValuesIn(ALL_GAME_TYPES));
+                         ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsValidGamePathTest, shouldSupportNonAsciiGameMasters) {
-  EXPECT_TRUE(IsValidGamePath(GetParam(), nonAsciiEsp, dataPath.parent_path()));
+  EXPECT_TRUE(
+      IsValidGamePath(getGameType(), nonAsciiEsp, dataPath.parent_path()));
 }
 
 }

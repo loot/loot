@@ -35,8 +35,7 @@ class Microsoft_FindGameInstallsTest
     : public CommonGameTestFixture,
       public testing::WithParamInterface<GameId> {
 protected:
-  Microsoft_FindGameInstallsTest() :
-      CommonGameTestFixture(GetGameType(GetParam())) {}
+  Microsoft_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
 
   static std::filesystem::path GetGamePath(
       const std::filesystem::path& xboxGamingRootPath) {
@@ -72,14 +71,10 @@ protected:
       const auto gamePath = xboxGamingRootPath /
                             "The Elder Scrolls IV- Oblivion (PC)" / "Content" /
                             gameFolder;
-      std::filesystem::create_directories(gamePath);
-      std::filesystem::copy(dataPath,
-                            gamePath / dataPath.filename(),
+      std::filesystem::create_directories(gamePath.parent_path());
+      std::filesystem::copy(dataPath.parent_path(),
+                            gamePath,
                             std::filesystem::copy_options::recursive);
-
-      if (isExecutableNeeded(getGameType())) {
-        touch(gamePath / getGameExecutable(getGameType()));
-      }
 
       gamesPaths.push_back(gamePath);
     }
@@ -102,14 +97,10 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
   const auto gamePath = GetGamePath(xboxGamingRootPath);
-  std::filesystem::create_directories(gamePath);
-  std::filesystem::copy(dataPath,
-                        gamePath / dataPath.filename(),
+  std::filesystem::create_directories(gamePath.parent_path());
+  std::filesystem::copy(dataPath.parent_path(),
+                        gamePath,
                         std::filesystem::copy_options::recursive);
-
-  if (isExecutableNeeded(getGameType())) {
-    touch(gamePath / getGameExecutable(getGameType()));
-  }
 
   const auto gameId = GetParam();
   const auto gameInstalls = loot::microsoft::FindGameInstalls(

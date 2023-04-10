@@ -67,8 +67,8 @@ static const std::array<GameId, 12> ALL_GAME_IDS = {GameId::tes3,
 
 class CommonGameTestFixture : public ::testing::Test {
 protected:
-  CommonGameTestFixture(const GameType gameType) :
-      gameType_(gameType),
+  CommonGameTestFixture(const GameId gameId) :
+      gameId_(gameId),
       rootTestPath(getTempPath()),
       missingPath(rootTestPath / "missing"),
       dataPath(rootTestPath / "game" / getPluginsFolder()),
@@ -107,10 +107,9 @@ protected:
     create_directories(lootDataPath);
     ASSERT_TRUE(exists(lootDataPath));
 
-    if (isExecutableNeeded(gameType_)) {
-      touch(dataPath.parent_path() / getGameExecutable(gameType_));
-      ASSERT_TRUE(
-          exists(dataPath.parent_path() / getGameExecutable(gameType_)));
+    if (isExecutableNeeded()) {
+      touch(dataPath.parent_path() / getGameExecutable());
+      ASSERT_TRUE(exists(dataPath.parent_path() / getGameExecutable()));
     }
 
     auto sourcePluginsPath = getSourcePluginsPath();
@@ -188,7 +187,7 @@ protected:
 
   std::vector<std::string> getLoadOrder() {
     std::vector<std::string> actual;
-    if (isLoadOrderTimestampBased(gameType_)) {
+    if (isLoadOrderTimestampBased(getGameType())) {
       std::map<std::filesystem::file_time_type, std::string> loadOrder;
       for (std::filesystem::directory_iterator it(dataPath);
            it != std::filesystem::directory_iterator();
@@ -204,7 +203,7 @@ protected:
         }
       }
       for (const auto& plugin : loadOrder) actual.push_back(plugin.second);
-    } else if (gameType_ == GameType::tes5) {
+    } else if (getGameType() == GameType::tes5) {
       std::ifstream in(localPath / "loadorder.txt");
       while (in) {
         std::string line;
@@ -242,33 +241,36 @@ protected:
     });
   }
 
-  static bool isExecutableNeeded(const GameType gameType) {
-    return gameType == GameType::tes5 || gameType == GameType::tes5se ||
-           gameType == GameType::tes5vr || gameType == GameType::fo4 ||
-           gameType == GameType::fo4vr;
-  }
-
-  static std::string getGameExecutable(const GameType gameType) {
-    switch (gameType) {
-      case GameType::tes5:
-        return "TESV.exe";
-      case GameType::tes5se:
-        return "SkyrimSE.exe";
-      case GameType::tes5vr:
-        return "SkyrimVR.exe";
-      case GameType::fo4:
-        return "Fallout4.exe";
-      case GameType::fo4vr:
-        return "Fallout4VR.exe";
+  GameType getGameType() const {
+    switch (gameId_) {
+      case GameId::tes3:
+        return GameType::tes3;
+      case GameId::tes4:
+      case GameId::nehrim:
+        return GameType::tes4;
+      case GameId::tes5:
+      case GameId::enderal:
+        return GameType::tes5;
+      case GameId::tes5se:
+      case GameId::enderalse:
+        return GameType::tes5se;
+      case GameId::tes5vr:
+        return GameType::tes5vr;
+      case GameId::fo3:
+        return GameType::fo3;
+      case GameId::fonv:
+        return GameType::fonv;
+      case GameId::fo4:
+        return GameType::fo4;
+      case GameId::fo4vr:
+        return GameType::fo4vr;
       default:
-        throw std::logic_error("Unexpected game type");
+        throw std::logic_error("Unrecognised game ID");
     }
   }
 
-  GameType getGameType() const { return gameType_; }
-
 private:
-  GameType gameType_;
+  GameId gameId_;
   const std::filesystem::path rootTestPath;
 
 protected:
@@ -295,7 +297,7 @@ protected:
 
 private:
   std::filesystem::path getSourcePluginsPath() const {
-    switch (gameType_) {
+    switch (getGameType()) {
       case GameType::tes3:
         return "./Morrowind/Data Files";
       case GameType::tes4:
@@ -305,19 +307,23 @@ private:
     }
   }
 
-  inline std::string getMasterFile() const {
-    switch (gameType_) {
-      case GameType::tes3:
+  std::string getMasterFile() const {
+    switch (gameId_) {
+      case GameId::tes3:
         return "Morrowind.esm";
-      case GameType::tes4:
+      case GameId::tes4:
         return "Oblivion.esm";
-      case GameType::tes5:
-      case GameType::tes5se:
-      case GameType::tes5vr:
+      case GameId::nehrim:
+        return "Nehrim.esm";
+      case GameId::tes5:
+      case GameId::tes5se:
+      case GameId::tes5vr:
+      case GameId::enderal:
+      case GameId::enderalse:
         return "Skyrim.esm";
-      case GameType::fo3:
+      case GameId::fo3:
         return "Fallout3.esm";
-      case GameType::fonv:
+      case GameId::fonv:
         return "FalloutNV.esm";
       default:
         return "Fallout4.esm";
@@ -325,7 +331,7 @@ private:
   }
 
   std::string getPluginsFolder() const {
-    if (gameType_ == GameType::tes3) {
+    if (gameId_ == GameId::tes3) {
       return "Data Files";
     } else {
       return "Data";
@@ -333,7 +339,7 @@ private:
   }
 
   inline uint32_t getBlankEsmCrc() const {
-    switch (gameType_) {
+    switch (getGameType()) {
       case GameType::tes3:
         return 0x790DC6FB;
       case GameType::tes4:
@@ -346,7 +352,7 @@ private:
   void setLoadOrder(
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     using std::filesystem::u8path;
-    if (gameType_ == GameType::tes3) {
+    if (getGameType() == GameType::tes3) {
       std::ofstream out(dataPath.parent_path() / "Morrowind.ini");
       for (const auto& plugin : loadOrder) {
         if (plugin.second) {
@@ -358,7 +364,8 @@ private:
     } else {
       std::ofstream out(localPath / "plugins.txt");
       for (const auto& plugin : loadOrder) {
-        if (gameType_ == GameType::fo4 || gameType_ == GameType::tes5se) {
+        if (getGameType() == GameType::fo4 ||
+            getGameType() == GameType::tes5se) {
           if (plugin.second)
             out << '*';
         } else if (!plugin.second)
@@ -369,7 +376,7 @@ private:
       }
     }
 
-    if (isLoadOrderTimestampBased(gameType_)) {
+    if (isLoadOrderTimestampBased(getGameType())) {
       std::filesystem::file_time_type modificationTime =
           std::filesystem::file_time_type::clock::now();
       for (const auto& plugin : loadOrder) {
@@ -383,7 +390,7 @@ private:
         modificationTime += std::chrono::seconds(60);
         ;
       }
-    } else if (gameType_ == GameType::tes5) {
+    } else if (getGameType() == GameType::tes5) {
       std::ofstream out(localPath / "loadorder.txt");
       for (const auto& plugin : loadOrder) out << plugin.first << std::endl;
     }
@@ -392,6 +399,30 @@ private:
   inline static bool isLoadOrderTimestampBased(GameType gameType) {
     return gameType == GameType::tes3 || gameType == GameType::tes4 ||
            gameType == GameType::fo3 || gameType == GameType::fonv;
+  }
+
+  bool isExecutableNeeded() {
+    const GameType gameType = getGameType();
+    return gameType == GameType::tes5 || gameType == GameType::tes5se ||
+           gameType == GameType::tes5vr || gameType == GameType::fo4 ||
+           gameType == GameType::fo4vr;
+  }
+
+  std::string getGameExecutable() {
+    switch (getGameType()) {
+      case GameType::tes5:
+        return "TESV.exe";
+      case GameType::tes5se:
+        return "SkyrimSE.exe";
+      case GameType::tes5vr:
+        return "SkyrimVR.exe";
+      case GameType::fo4:
+        return "Fallout4.exe";
+      case GameType::fo4vr:
+        return "Fallout4VR.exe";
+      default:
+        throw std::logic_error("Unexpected game type");
+    }
   }
 };
 }

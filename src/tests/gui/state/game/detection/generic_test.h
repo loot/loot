@@ -34,8 +34,7 @@ class Generic_FindGameInstallsTest
     : public CommonGameTestFixture,
       public testing::WithParamInterface<GameId> {
 protected:
-  Generic_FindGameInstallsTest() :
-      CommonGameTestFixture(GetGameType(GetParam())) {}
+  Generic_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
 
   void SetUp() override {
     CommonGameTestFixture::SetUp();
@@ -48,13 +47,6 @@ protected:
     // Change the current path into a game subfolder.
     std::filesystem::create_directory(lootPath);
     std::filesystem::current_path(lootPath);
-
-    // The common fixture doesn't know that Nehrim has
-    // a different game master, so create it here.
-    if (GetParam() == GameId::nehrim) {
-      ASSERT_NO_THROW(std::filesystem::copy_file(dataPath / blankEsm,
-                                                 dataPath / "Nehrim.esm"));
-    }
   }
 
   void TearDown() override {

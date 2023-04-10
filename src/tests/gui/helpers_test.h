@@ -35,7 +35,7 @@ namespace loot {
 namespace test {
 class FindXboxGamingRootPathTest : public CommonGameTestFixture {
 protected:
-  FindXboxGamingRootPathTest() : CommonGameTestFixture(GameType::tes3) {}
+  FindXboxGamingRootPathTest() : CommonGameTestFixture(GameId::tes3) {}
 };
 
 TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {

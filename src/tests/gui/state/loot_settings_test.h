@@ -43,7 +43,7 @@ namespace test {
 class LootSettingsTest : public CommonGameTestFixture {
 protected:
   LootSettingsTest() :
-      CommonGameTestFixture(GameType::tes5),
+      CommonGameTestFixture(GameId::tes5),
       settingsFile_(lootDataPath / "settings_.toml"),
       unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml"),
       gitRepoPath_(getTempPath()) {}
