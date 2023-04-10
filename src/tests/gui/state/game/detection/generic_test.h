@@ -32,9 +32,10 @@ along with LOOT.  If not, see
 namespace loot::test {
 class Generic_FindGameInstallsTest
     : public CommonGameTestFixture,
-      public testing::WithParamInterface<GameType> {
+      public testing::WithParamInterface<GameId> {
 protected:
-  Generic_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+  Generic_FindGameInstallsTest() :
+      CommonGameTestFixture(GetGameType(GetParam())) {}
 
   void SetUp() override {
     CommonGameTestFixture::SetUp();
@@ -47,6 +48,13 @@ protected:
     // Change the current path into a game subfolder.
     std::filesystem::create_directory(lootPath);
     std::filesystem::current_path(lootPath);
+
+    // The common fixture doesn't know that Nehrim has
+    // a different game master, so create it here.
+    if (GetParam() == GameId::nehrim) {
+      ASSERT_NO_THROW(std::filesystem::copy_file(dataPath / blankEsm,
+                                                 dataPath / "Nehrim.esm"));
+    }
   }
 
   void TearDown() override {
@@ -64,16 +72,16 @@ private:
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
                          Generic_FindGameInstallsTest,
-                         ::testing::ValuesIn(ALL_GAME_TYPES));
+                         ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
-  const auto gameId = getTestGameId(GetParam());
+  const auto gameId = GetParam();
   const auto gameInstalls =
       loot::generic::FindGameInstalls(TestRegistry(), gameId);
 
   auto expectedSource = InstallSource::unknown;
-  if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5vr ||
-      GetParam() == GameType::fo4vr) {
+  if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
+      GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
   }
 

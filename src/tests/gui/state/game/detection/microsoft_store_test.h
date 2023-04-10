@@ -33,29 +33,30 @@ along with LOOT.  If not, see
 namespace loot::test {
 class Microsoft_FindGameInstallsTest
     : public CommonGameTestFixture,
-      public testing::WithParamInterface<GameType> {
+      public testing::WithParamInterface<GameId> {
 protected:
-  Microsoft_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+  Microsoft_FindGameInstallsTest() :
+      CommonGameTestFixture(GetGameType(GetParam())) {}
 
   static std::filesystem::path GetGamePath(
       const std::filesystem::path& xboxGamingRootPath) {
     switch (GetParam()) {
-      case GameType::tes3:
+      case GameId::tes3:
         return xboxGamingRootPath / "The Elder Scrolls III- Morrowind (PC)" /
                "Content" / "Morrowind GOTY English";
-      case GameType::tes4:
+      case GameId::tes4:
         return xboxGamingRootPath / "The Elder Scrolls IV- Oblivion (PC)" /
                "Content" / "Oblivion GOTY English";
-      case GameType::tes5se:
+      case GameId::tes5se:
         return xboxGamingRootPath /
                "The Elder Scrolls V- Skyrim Special Edition (PC)" / "Content";
-      case GameType::fo3:
+      case GameId::fo3:
         return xboxGamingRootPath / "Fallout 3- Game of the Year Edition (PC)" /
                "Content" / "Fallout 3 GOTY English";
-      case GameType::fonv:
+      case GameId::fonv:
         return xboxGamingRootPath / "Fallout- New Vegas Ultimate Edition (PC)" /
                "Content" / "Fallout New Vegas English";
-      case GameType::fo4:
+      case GameId::fo4:
         return xboxGamingRootPath / "Fallout 4 (PC)" / "Content";
       default:
         throw std::runtime_error("Unsupported Microsoft Store game");
@@ -76,8 +77,8 @@ protected:
                             gamePath / dataPath.filename(),
                             std::filesystem::copy_options::recursive);
 
-      if (isExecutableNeeded(GetParam())) {
-        touch(gamePath / getGameExecutable(GetParam()));
+      if (isExecutableNeeded(getGameType())) {
+        touch(gamePath / getGameExecutable(getGameType()));
       }
 
       gamesPaths.push_back(gamePath);
@@ -91,12 +92,12 @@ protected:
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
                          Microsoft_FindGameInstallsTest,
-                         ::testing::Values(GameType::tes3,
-                                           GameType::tes4,
-                                           GameType::tes5se,
-                                           GameType::fo3,
-                                           GameType::fonv,
-                                           GameType::fo4));
+                         ::testing::Values(GameId::tes3,
+                                           GameId::tes4,
+                                           GameId::tes5se,
+                                           GameId::fo3,
+                                           GameId::fonv,
+                                           GameId::fo4));
 
 TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   const auto xboxGamingRootPath = dataPath.parent_path().parent_path();
@@ -106,18 +107,18 @@ TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
                         gamePath / dataPath.filename(),
                         std::filesystem::copy_options::recursive);
 
-  if (isExecutableNeeded(GetParam())) {
-    touch(gamePath / getGameExecutable(GetParam()));
+  if (isExecutableNeeded(getGameType())) {
+    touch(gamePath / getGameExecutable(getGameType()));
   }
 
-  const auto gameId = getTestGameId(GetParam());
+  const auto gameId = GetParam();
   const auto gameInstalls = loot::microsoft::FindGameInstalls(
       TestRegistry(), gameId, {xboxGamingRootPath}, {});
 
   std::filesystem::path expectedLocalPath;
-  if (GetParam() == GameType::tes5se) {
+  if (GetParam() == GameId::tes5se) {
     expectedLocalPath = getLocalAppDataPath() / "Skyrim Special Edition MS";
-  } else if (GetParam() == GameType::fo4) {
+  } else if (GetParam() == GameId::fo4) {
     expectedLocalPath = getLocalAppDataPath() / "Fallout4 MS";
   } else {
     expectedLocalPath = "";
@@ -132,7 +133,7 @@ TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
 
 TEST_P(Microsoft_FindGameInstallsTest,
        shouldTryLocalisationDirectoriesInTurnIfNoPreferredLanguagesAreGiven) {
-  if (GetParam() != GameType::tes4) {
+  if (GetParam() != GameId::tes4) {
     return;
   }
 
@@ -141,7 +142,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
   const auto gamesPaths = SetUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
-  const auto gameId = getTestGameId(GetParam());
+  const auto gameId = GetParam();
   const auto gameInstalls = loot::microsoft::FindGameInstalls(
       TestRegistry(), gameId, {xboxGamingRootPath}, {});
 
@@ -154,7 +155,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
 TEST_P(Microsoft_FindGameInstallsTest,
        shouldTryLocalisationDirectoriesInPreferredLanguageOrder) {
-  if (GetParam() != GameType::tes4) {
+  if (GetParam() != GameId::tes4) {
     return;
   }
 
@@ -163,7 +164,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
   const auto gamesPaths = SetUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
-  const auto gameId = getTestGameId(GetParam());
+  const auto gameId = GetParam();
   const auto gameInstalls = loot::microsoft::FindGameInstalls(
       TestRegistry(), gameId, {xboxGamingRootPath}, {"es", "it"});
 
@@ -176,7 +177,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
 TEST_P(Microsoft_FindGameInstallsTest,
        shouldTryLocalisationDirectoriesNotInPreferredLanguagesLast) {
-  if (GetParam() != GameType::tes4) {
+  if (GetParam() != GameId::tes4) {
     return;
   }
 
@@ -185,7 +186,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
   const auto gamesPaths = SetUpLocalisedGamePaths(
       xboxGamingRootPath, {"Oblivion GOTY English", "Oblivion GOTY Spanish"});
 
-  const auto gameId = getTestGameId(GetParam());
+  const auto gameId = GetParam();
   const auto gameInstalls = loot::microsoft::FindGameInstalls(
       TestRegistry(), gameId, {xboxGamingRootPath}, {"es"});
 

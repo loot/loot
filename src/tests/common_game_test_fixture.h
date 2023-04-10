@@ -265,32 +265,6 @@ protected:
     }
   }
 
-  // This does not handle Nehrim, Enderal or Enderal SE.
-  static GameId getTestGameId(const GameType gameType) {
-    switch (gameType) {
-      case GameType::tes3:
-        return GameId::tes3;
-      case GameType::tes4:
-        return GameId::tes4;
-      case GameType::tes5:
-        return GameId::tes5;
-      case GameType::tes5se:
-        return GameId::tes5se;
-      case GameType::tes5vr:
-        return GameId::tes5vr;
-      case GameType::fo3:
-        return GameId::fo3;
-      case GameType::fonv:
-        return GameId::fonv;
-      case GameType::fo4:
-        return GameId::fo4;
-      case GameType::fo4vr:
-        return GameId::fo4vr;
-      default:
-        throw std::logic_error("Unrecognised game ID");
-    }
-  }
-
   GameType getGameType() const { return gameType_; }
 
 private:
