@@ -30,8 +30,12 @@ along with LOOT.  If not, see
 #include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
-class Generic_FindGameInstallsTest : public CommonGameTestFixture {
+class Generic_FindGameInstallsTest
+    : public CommonGameTestFixture,
+      public testing::WithParamInterface<GameType> {
 protected:
+  Generic_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+
   void SetUp() override {
     CommonGameTestFixture::SetUp();
 

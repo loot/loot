@@ -31,8 +31,12 @@ along with LOOT.  If not, see
 #include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
-class Microsoft_FindGameInstallsTest : public CommonGameTestFixture {
+class Microsoft_FindGameInstallsTest
+    : public CommonGameTestFixture,
+      public testing::WithParamInterface<GameType> {
 protected:
+  Microsoft_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+
   static std::filesystem::path GetGamePath(
       const std::filesystem::path& xboxGamingRootPath) {
     switch (GetParam()) {

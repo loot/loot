@@ -32,7 +32,11 @@ along with LOOT.  If not, see
 
 namespace loot::test {
 
-class IsInstalledTest : public CommonGameTestFixture {};
+class IsInstalledTest : public CommonGameTestFixture,
+                        public testing::WithParamInterface<GameType> {
+protected:
+  IsInstalledTest() : CommonGameTestFixture(GetParam()) {}
+};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.
@@ -49,6 +53,8 @@ TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
 
 class UpdateInstalledGamesSettingsTest : public CommonGameTestFixture {
 protected:
+  UpdateInstalledGamesSettingsTest() : CommonGameTestFixture(GameType::tes3) {}
+
   void SetUp() override {
     CommonGameTestFixture::SetUp();
 
@@ -73,17 +79,13 @@ private:
   std::filesystem::path initialCurrentPath;
 };
 
-INSTANTIATE_TEST_SUITE_P(,
-                         UpdateInstalledGamesSettingsTest,
-                         ::testing::Values(GameType::tes3));
-
-TEST_P(UpdateInstalledGamesSettingsTest,
+TEST_F(UpdateInstalledGamesSettingsTest,
        shouldReturnSettingsForGameInParentOfCurrentDirectory) {
   std::vector<GameSettings> gamesSettings;
   UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
-  EXPECT_EQ(GetParam(), gamesSettings[0].Type());
+  EXPECT_EQ(getGameType(), gamesSettings[0].Type());
   EXPECT_EQ("..", gamesSettings[0].GamePath());
   EXPECT_EQ("", gamesSettings[0].GameLocalPath());
 }

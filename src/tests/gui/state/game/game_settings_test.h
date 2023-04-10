@@ -31,8 +31,11 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class GameSettingsTest : public CommonGameTestFixture {
+class GameSettingsTest : public CommonGameTestFixture,
+                         public testing::WithParamInterface<GameType> {
 protected:
+  GameSettingsTest() : CommonGameTestFixture(GetParam()) {}
+
   GameSettings settings_;
 };
 

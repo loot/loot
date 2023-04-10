@@ -33,29 +33,28 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
-class FindXboxGamingRootPathTest : public CommonGameTestFixture {};
-
-INSTANTIATE_TEST_SUITE_P(,
-                         FindXboxGamingRootPathTest,
-                         ::testing::Values(GameType::tes3));
+class FindXboxGamingRootPathTest : public CommonGameTestFixture {
+protected:
+  FindXboxGamingRootPathTest() : CommonGameTestFixture(GameType::tes3) {}
+};
 
 TEST(GetDriveRootPaths, shouldReturnNonEmptyVector) {
   EXPECT_FALSE(GetDriveRootPaths().empty());
 }
 
-TEST_P(FindXboxGamingRootPathTest,
+TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfTheDotGamingRootFileDoesNotExist) {
   EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
-TEST_P(FindXboxGamingRootPathTest,
+TEST_F(FindXboxGamingRootPathTest,
        shouldReturnNulloptIfDotGamingRootIsADirectory) {
   std::filesystem::create_directory(dataPath / ".GamingRoot");
 
   EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
-TEST_P(FindXboxGamingRootPathTest,
+TEST_F(FindXboxGamingRootPathTest,
        shouldThrowIfDotGamingRootContainsAnOddNumberOfBytes) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   out << "12345678901";
@@ -64,7 +63,7 @@ TEST_P(FindXboxGamingRootPathTest,
   EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
 }
 
-TEST_P(FindXboxGamingRootPathTest, shouldThrowIfDotGamingRootIsTooShort) {
+TEST_F(FindXboxGamingRootPathTest, shouldThrowIfDotGamingRootIsTooShort) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   out << "12";
   out.close();
@@ -72,7 +71,7 @@ TEST_P(FindXboxGamingRootPathTest, shouldThrowIfDotGamingRootIsTooShort) {
   EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
 }
 
-TEST_P(FindXboxGamingRootPathTest,
+TEST_F(FindXboxGamingRootPathTest,
        shouldInterpretTheNinthAndFollowingBytesAsANullTerminatedUtf16LeString) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   const char* data = "12345678t\0e\0s\0t\0 \0p\0a\0t\0h\0\0\0";

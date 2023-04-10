@@ -49,7 +49,11 @@ TEST_P(GetGameTypeTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(GetGameType(GetParam()));
 }
 
-class IsValidGamePathTest : public CommonGameTestFixture {};
+class IsValidGamePathTest : public CommonGameTestFixture,
+                            public testing::WithParamInterface<GameType> {
+protected:
+  IsValidGamePathTest() : CommonGameTestFixture(GetParam()) {}
+};
 
 // Pass an empty first argument, as it's a prefix for the test instantation,
 // but we only have the one so no prefix is necessary.

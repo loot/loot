@@ -34,9 +34,11 @@ along with LOOT.  If not, see
 namespace loot {
 namespace gui {
 namespace test {
-class GameTest : public loot::test::CommonGameTestFixture {
+class GameTest : public loot::test::CommonGameTestFixture,
+                 public testing::WithParamInterface<GameType> {
 protected:
   GameTest() :
+      CommonGameTestFixture(GetParam()),
       loadOrderToSet_({
           masterFile,
           blankEsm,

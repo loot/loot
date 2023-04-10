@@ -65,9 +65,10 @@ static const std::array<GameId, 12> ALL_GAME_IDS = {GameId::tes3,
                                                     GameId::fo4,
                                                     GameId::fo4vr};
 
-class CommonGameTestFixture : public ::testing::TestWithParam<GameType> {
+class CommonGameTestFixture : public ::testing::Test {
 protected:
-  CommonGameTestFixture() :
+  CommonGameTestFixture(const GameType gameType) :
+      gameType_(gameType),
       rootTestPath(getTempPath()),
       missingPath(rootTestPath / "missing"),
       dataPath(rootTestPath / "game" / getPluginsFolder()),
@@ -106,10 +107,10 @@ protected:
     create_directories(lootDataPath);
     ASSERT_TRUE(exists(lootDataPath));
 
-    if (isExecutableNeeded(GetParam())) {
-      touch(dataPath.parent_path() / getGameExecutable(GetParam()));
+    if (isExecutableNeeded(gameType_)) {
+      touch(dataPath.parent_path() / getGameExecutable(gameType_));
       ASSERT_TRUE(
-          exists(dataPath.parent_path() / getGameExecutable(GetParam())));
+          exists(dataPath.parent_path() / getGameExecutable(gameType_)));
     }
 
     auto sourcePluginsPath = getSourcePluginsPath();
@@ -187,7 +188,7 @@ protected:
 
   std::vector<std::string> getLoadOrder() {
     std::vector<std::string> actual;
-    if (isLoadOrderTimestampBased(GetParam())) {
+    if (isLoadOrderTimestampBased(gameType_)) {
       std::map<std::filesystem::file_time_type, std::string> loadOrder;
       for (std::filesystem::directory_iterator it(dataPath);
            it != std::filesystem::directory_iterator();
@@ -203,7 +204,7 @@ protected:
         }
       }
       for (const auto& plugin : loadOrder) actual.push_back(plugin.second);
-    } else if (GetParam() == GameType::tes5) {
+    } else if (gameType_ == GameType::tes5) {
       std::ifstream in(localPath / "loadorder.txt");
       while (in) {
         std::string line;
@@ -290,7 +291,10 @@ protected:
     }
   }
 
+  GameType getGameType() const { return gameType_; }
+
 private:
+  GameType gameType_;
   const std::filesystem::path rootTestPath;
 
 protected:
@@ -317,7 +321,7 @@ protected:
 
 private:
   std::filesystem::path getSourcePluginsPath() const {
-    switch (GetParam()) {
+    switch (gameType_) {
       case GameType::tes3:
         return "./Morrowind/Data Files";
       case GameType::tes4:
@@ -328,7 +332,7 @@ private:
   }
 
   inline std::string getMasterFile() const {
-    switch (GetParam()) {
+    switch (gameType_) {
       case GameType::tes3:
         return "Morrowind.esm";
       case GameType::tes4:
@@ -347,7 +351,7 @@ private:
   }
 
   std::string getPluginsFolder() const {
-    if (GetParam() == GameType::tes3) {
+    if (gameType_ == GameType::tes3) {
       return "Data Files";
     } else {
       return "Data";
@@ -355,7 +359,7 @@ private:
   }
 
   inline uint32_t getBlankEsmCrc() const {
-    switch (GetParam()) {
+    switch (gameType_) {
       case GameType::tes3:
         return 0x790DC6FB;
       case GameType::tes4:
@@ -368,7 +372,7 @@ private:
   void setLoadOrder(
       const std::vector<std::pair<std::string, bool>>& loadOrder) const {
     using std::filesystem::u8path;
-    if (GetParam() == GameType::tes3) {
+    if (gameType_ == GameType::tes3) {
       std::ofstream out(dataPath.parent_path() / "Morrowind.ini");
       for (const auto& plugin : loadOrder) {
         if (plugin.second) {
@@ -380,7 +384,7 @@ private:
     } else {
       std::ofstream out(localPath / "plugins.txt");
       for (const auto& plugin : loadOrder) {
-        if (GetParam() == GameType::fo4 || GetParam() == GameType::tes5se) {
+        if (gameType_ == GameType::fo4 || gameType_ == GameType::tes5se) {
           if (plugin.second)
             out << '*';
         } else if (!plugin.second)
@@ -391,7 +395,7 @@ private:
       }
     }
 
-    if (isLoadOrderTimestampBased(GetParam())) {
+    if (isLoadOrderTimestampBased(gameType_)) {
       std::filesystem::file_time_type modificationTime =
           std::filesystem::file_time_type::clock::now();
       for (const auto& plugin : loadOrder) {
@@ -405,7 +409,7 @@ private:
         modificationTime += std::chrono::seconds(60);
         ;
       }
-    } else if (GetParam() == GameType::tes5) {
+    } else if (gameType_ == GameType::tes5) {
       std::ofstream out(localPath / "loadorder.txt");
       for (const auto& plugin : loadOrder) out << plugin.first << std::endl;
     }
