@@ -34,6 +34,7 @@
 #include <vector>
 
 #include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/detection/registry.h"
 #include "gui/state/game/game_settings.h"
 
 namespace loot {
@@ -46,6 +47,7 @@ std::string GetSourceDescription(const InstallSource source);
 std::string GetNameSourceSuffix(const InstallSource source);
 
 std::vector<GameInstall> FindGameInstalls(
+    const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages);
 

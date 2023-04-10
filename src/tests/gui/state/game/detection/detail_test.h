@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/game/detection/detail.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
 static const std::array<InstallSource, 5> ALL_INSTALL_SOURCES = {
@@ -80,7 +81,7 @@ TEST_P(GetNameSourceSuffixTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(GetNameSourceSuffix(GetParam()));
 }
 TEST(FindGameInstalls, shouldReturnAnEmptyVectorIfNoGamesAreInstalled) {
-  EXPECT_TRUE(FindGameInstalls({}, {}).empty());
+  EXPECT_TRUE(FindGameInstalls(TestRegistry(), {}, {}).empty());
 }
 
 TEST(CountGameInstalls, shouldCountConfiguredAndNewInstallsByGameAndSource) {

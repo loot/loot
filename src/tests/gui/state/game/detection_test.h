@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include "gui/helpers.h"
 #include "gui/state/game/detection.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
 
@@ -79,7 +80,7 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(UpdateInstalledGamesSettingsTest,
        shouldReturnSettingsForGameInParentOfCurrentDirectory) {
   std::vector<GameSettings> gamesSettings;
-  UpdateInstalledGamesSettings(gamesSettings, {}, {});
+  UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
   EXPECT_EQ(GetParam(), gamesSettings[0].Type());

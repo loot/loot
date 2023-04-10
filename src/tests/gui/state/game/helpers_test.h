@@ -227,45 +227,6 @@ TEST(ToMessage,
           .GetText());
 }
 
-TEST(SplitRegistryPath, shouldAssumeHKLMIfNoRootKeyIsGiven) {
-  auto [rootKey, subKey, value] = SplitRegistryPath("sub\\key\\value");
-
-  EXPECT_EQ("HKEY_LOCAL_MACHINE", rootKey);
-  EXPECT_EQ("sub\\key", subKey);
-  EXPECT_EQ("value", value);
-}
-
-TEST(SplitRegistryPath, shouldUseRootKeyIfSpecified) {
-  auto [rootKey, subKey, value] =
-      SplitRegistryPath("HKEY_DUMMY\\sub\\key\\value");
-
-  EXPECT_EQ("HKEY_DUMMY", rootKey);
-  EXPECT_EQ("sub\\key", subKey);
-  EXPECT_EQ("value", value);
-}
-
-TEST(SplitRegistryPath, shouldThrowIfNoValueIsGiven) {
-  EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY\\subkey\\"),
-               std::invalid_argument);
-  EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY\\subkey"), std::invalid_argument);
-}
-
-TEST(SplitRegistryPath, shouldThrowIfNoSubkeyOrValueAreGiven) {
-  EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY\\"), std::invalid_argument);
-  EXPECT_THROW(SplitRegistryPath("HKEY_DUMMY"), std::invalid_argument);
-}
-
-TEST(SplitRegistryPath, shouldThrowIfNoRootKeyOrValueAreGiven) {
-  EXPECT_THROW(SplitRegistryPath("subkey\\"), std::invalid_argument);
-  EXPECT_THROW(SplitRegistryPath("subkey"), std::invalid_argument);
-}
-
-TEST(SplitRegistryPath, shouldThrowIfInputIsEmptyOrOnlyBackslashes) {
-  EXPECT_THROW(SplitRegistryPath("\\\\"), std::invalid_argument);
-  EXPECT_THROW(SplitRegistryPath("\\"), std::invalid_argument);
-  EXPECT_THROW(SplitRegistryPath(""), std::invalid_argument);
-}
-
 TEST(ReadBashTagsFile, shouldCorrectlyReadTheExampleFileContent) {
   // From the Wrye Bash Advanced Readme
   // <https://wrye-bash.github.io/docs/Wrye%20Bash%20Advanced%20Readme.html#patch-tags>

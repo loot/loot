@@ -32,6 +32,8 @@
 #include <QtCore/QString>
 #include <boost/algorithm/string.hpp>
 
+#include "gui/state/game/detection/common.h"
+
 #ifdef _WIN32
 #ifndef UNICODE
 #define UNICODE
@@ -117,15 +119,16 @@ std::filesystem::path GetProgramDataPath() {
   return programDataPath;
 }
 
-std::filesystem::path GetEgsManifestsPath() {
+std::filesystem::path GetEgsManifestsPath(
+    const loot::RegistryInterface& registry) {
   // Try using Registry key first.
   const auto appDataPath =
-      loot::RegKeyStringValue("HKEY_LOCAL_MACHINE",
-                              "Software\\Epic Games\\EpicGamesLauncher",
-                              "AppDataPath");
+      registry.GetStringValue({"HKEY_LOCAL_MACHINE",
+                               "Software\\Epic Games\\EpicGamesLauncher",
+                               "AppDataPath"});
 
-  if (!appDataPath.empty()) {
-    return std::filesystem::u8path(appDataPath) / "Manifests";
+  if (appDataPath.has_value()) {
+    return std::filesystem::u8path(appDataPath.value()) / "Manifests";
   }
 
   // Fall back to using building the usual path if the Registry key couldn't
@@ -188,6 +191,7 @@ EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
 }
 
 std::optional<std::filesystem::path> GetEgsGameInstallPath(
+    const loot::RegistryInterface& registry,
     const loot::GameId gameId) {
 #ifdef _WIN32
   // Unfortunately we don't know which is the right manifest file, so iterate
@@ -199,7 +203,7 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
     return std::nullopt;
   }
 
-  const auto egsManifestsPath = GetEgsManifestsPath();
+  const auto egsManifestsPath = GetEgsManifestsPath(registry);
   if (!std::filesystem::exists(egsManifestsPath)) {
     return std::nullopt;
   }
@@ -239,10 +243,11 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 
 namespace loot::epic {
 std::optional<GameInstall> FindGameInstalls(
+    const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::string>& preferredUILanguages) {
   try {
-    const auto installPath = GetEgsGameInstallPath(gameId);
+    const auto installPath = GetEgsGameInstallPath(registry, gameId);
 
     if (installPath.has_value()) {
       // Fallout 3 has several localised copies of the game in

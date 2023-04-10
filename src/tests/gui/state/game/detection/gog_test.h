@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/game/detection/gog.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
 class GetGogGameIdsTest : public ::testing::TestWithParam<GameId> {};
@@ -45,8 +46,22 @@ INSTANTIATE_TEST_SUITE_P(,
                          GOG_FindGameInstallsTest,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
-TEST_P(GOG_FindGameInstallsTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(loot::gog::FindGameInstalls(GetParam()));
+TEST_P(GOG_FindGameInstallsTest,
+       shouldReturnAnEmptyVectorIfNoRegistryEntriesExist) {
+  const auto installs = loot::gog::FindGameInstalls(TestRegistry(), GetParam());
+
+  EXPECT_TRUE(installs.empty());
+}
+
+TEST_P(
+    GOG_FindGameInstallsTest,
+    shouldReturnAnEmptyVectorIfARegistryEntryExistsButItIsNotAValidGamePath) {
+  TestRegistry registry;
+  registry.SetStringValue("invalid");
+
+  const auto installs = loot::gog::FindGameInstalls(TestRegistry(), GetParam());
+
+  EXPECT_TRUE(installs.empty());
 }
 }
 

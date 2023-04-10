@@ -248,37 +248,6 @@ std::vector<Message> CheckForRemovedPlugins(
   return messages;
 }
 
-std::tuple<std::string, std::string, std::string> SplitRegistryPath(
-    const std::string& registryPath) {
-  std::string rootKey;
-  size_t startOfSubKey = 0;
-  if (registryPath.rfind("HKEY_", 0) == 0) {
-    auto firstBackslashPos = registryPath.find('\\');
-    if (firstBackslashPos == std::string::npos) {
-      throw std::invalid_argument(
-          "Registry path has no subkey or value components");
-    }
-    rootKey = registryPath.substr(0, firstBackslashPos);
-    startOfSubKey = firstBackslashPos + 1;
-  } else {
-    rootKey = "HKEY_LOCAL_MACHINE";
-    startOfSubKey = 0;
-  }
-
-  auto lastBackslashPos = registryPath.rfind('\\');
-  if (lastBackslashPos == std::string::npos ||
-      lastBackslashPos < startOfSubKey ||
-      lastBackslashPos == registryPath.length() - 1) {
-    throw std::invalid_argument("Registry path has no value component");
-  }
-
-  std::string subKey =
-      registryPath.substr(startOfSubKey, lastBackslashPos - startOfSubKey);
-  std::string value = registryPath.substr(lastBackslashPos + 1);
-
-  return std::make_tuple(rootKey, subKey, value);
-}
-
 std::vector<Tag> ReadBashTagsFile(std::istream& in) {
   std::vector<Tag> tags;
   for (std::string line; std::getline(in, line);) {

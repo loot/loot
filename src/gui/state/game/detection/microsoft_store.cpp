@@ -26,6 +26,7 @@
 #include "gui/state/game/detection/microsoft_store.h"
 
 #include "gui/helpers.h"
+#include "gui/state/game/detection/common.h"
 
 namespace {
 using loot::GameType;
@@ -273,6 +274,7 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(const GameId gameId) {
 
 #ifdef _WIN32
 std::optional<GameInstall> FindMicrosoftStoreGameInstall(
+    const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::string>& preferredUILanguages) {
   // Search for the Microsoft Store version of the game.
@@ -296,18 +298,23 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
 
   const auto packageKey = PACKAGE_KEY_PREFIX + packageName.value();
   const auto packageSubKeys =
-      GetRegistrySubKeys("HKEY_CLASSES_ROOT", packageKey);
+      registry.GetSubKeys("HKEY_CLASSES_ROOT", packageKey);
 
   for (const auto& fullName : packageSubKeys) {
     const auto fullNameKey = FULL_NAME_KEY_PREFIX + fullName;
     const auto fullNameSubKeys =
-        GetRegistrySubKeys("HKEY_LOCAL_MACHINE", fullNameKey);
+        registry.GetSubKeys("HKEY_LOCAL_MACHINE", fullNameKey);
 
     for (const auto& index : fullNameSubKeys) {
       const auto indexKey = INDEX_KEY_PREFIX + index;
-      const auto mutableLocation =
-          RegKeyStringValue("HKEY_LOCAL_MACHINE", indexKey, "MutableLocation");
-      const auto locationPath = u8path(mutableLocation);
+      const auto mutableLocation = registry.GetStringValue(
+          {"HKEY_LOCAL_MACHINE", indexKey, "MutableLocation"});
+
+      if (!mutableLocation.has_value()) {
+        continue;
+      }
+
+      const auto locationPath = u8path(mutableLocation.value());
 
       // Oblivion and Morrowind have several localised copies of the game in
       // subdirectories of their mutableLocation. We can't really tell which
@@ -338,6 +345,7 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
 
 namespace loot::microsoft {
 std::vector<GameInstall> FindGameInstalls(
+    const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
@@ -351,8 +359,8 @@ std::vector<GameInstall> FindGameInstalls(
   }
 
 #ifdef _WIN32
-  const auto legacyInstall =
-      ms::legacy::FindMicrosoftStoreGameInstall(gameId, preferredUILanguages);
+  const auto legacyInstall = ms::legacy::FindMicrosoftStoreGameInstall(
+      registry, gameId, preferredUILanguages);
 
   if (legacyInstall.has_value()) {
     installs.push_back(legacyInstall.value());

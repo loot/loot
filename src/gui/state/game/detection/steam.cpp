@@ -25,6 +25,8 @@
 
 #include "gui/state/game/detection/steam.h"
 
+#include "gui/state/game/detection/registry.h"
+
 namespace {
 using loot::GameId;
 
@@ -68,26 +70,28 @@ std::vector<std::string> GetSteamGameIds(const GameId gameId) {
   }
 }
 
-std::vector<std::string> GetRegistryKeys(const GameId gameId) {
+std::vector<loot::RegistryValue> GetRegistryValues(const GameId gameId) {
   const auto steamGameIds = GetSteamGameIds(gameId);
 
-  std::vector<std::string> registryKeys;
+  std::vector<loot::RegistryValue> registryValues;
   for (const auto& steamGameId : steamGameIds) {
-    registryKeys.push_back(
-        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
-        "Steam App " +
-        steamGameId + "\\InstallLocation");
+    registryValues.push_back(
+        {"HKEY_LOCAL_MACHINE",
+         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+         "Steam App " +
+             steamGameId,
+         "InstallLocation"});
   }
 
-  return registryKeys;
+  return registryValues;
 }
 }
 
 namespace loot::steam {
-std::vector<GameInstall> FindGameInstalls(const GameId gameId) {
-#ifdef _WIN32
-  const auto installPaths =
-      FindGameInstallPathsInRegistry(gameId, GetRegistryKeys(gameId));
+std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+                                          const GameId gameId) {
+  const auto installPaths = FindGameInstallPathsInRegistry(
+      registry, gameId, GetRegistryValues(gameId));
 
   std::vector<GameInstall> installs;
   for (const auto& installPath : installPaths) {
@@ -95,8 +99,5 @@ std::vector<GameInstall> FindGameInstalls(const GameId gameId) {
   }
 
   return installs;
-#else
-  return {};
-#endif
 }
 }

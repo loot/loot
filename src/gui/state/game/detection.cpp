@@ -51,10 +51,11 @@ bool IsInstalled(const GameSettings& settings) {
 // objects.
 void UpdateInstalledGamesSettings(
     std::vector<GameSettings>& gamesSettings,
+    const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
   const auto gameInstalls =
-      FindGameInstalls(xboxGamingRootPaths, preferredUILanguages);
+      FindGameInstalls(registry, xboxGamingRootPaths, preferredUILanguages);
 
   const auto newGameInstalls =
       UpdateMatchingSettings(gamesSettings, gameInstalls, ArePathsEquivalent);

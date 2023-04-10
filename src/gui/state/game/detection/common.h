@@ -54,15 +54,6 @@ std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
     const GameId gameId,
     const std::vector<std::string>& uiPreferredLanguages,
     const std::vector<LocalisedGameInstallPath>& paths);
-
-#ifdef _WIN32
-std::optional<std::filesystem::path> ReadPathFromRegistry(
-    const std::string& registryKey);
-
-std::vector<std::filesystem::path> FindGameInstallPathsInRegistry(
-    const GameId gameId,
-    const std::vector<std::string>& registryKeys);
-#endif
 }
 
 #endif

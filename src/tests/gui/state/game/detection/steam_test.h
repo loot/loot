@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/game/detection/steam.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
 class Steam_FindGameInstallsTest : public ::testing::TestWithParam<GameId> {};
@@ -35,8 +36,24 @@ INSTANTIATE_TEST_SUITE_P(,
                          Steam_FindGameInstallsTest,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
-TEST_P(Steam_FindGameInstallsTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(loot::steam::FindGameInstalls(GetParam()));
+TEST_P(Steam_FindGameInstallsTest,
+       shouldReturnAnEmptyVectorIfNoRegistryEntriesExist) {
+  const auto installs =
+      loot::steam::FindGameInstalls(TestRegistry(), GetParam());
+
+  EXPECT_TRUE(installs.empty());
+}
+
+TEST_P(
+    Steam_FindGameInstallsTest,
+    shouldReturnAnEmptyVectorIfARegistryEntryExistsButItIsNotAValidGamePath) {
+  TestRegistry registry;
+  registry.SetStringValue("invalid");
+
+  const auto installs =
+      loot::steam::FindGameInstalls(TestRegistry(), GetParam());
+
+  EXPECT_TRUE(installs.empty());
 }
 }
 

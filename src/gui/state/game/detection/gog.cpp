@@ -26,18 +26,22 @@
 #include "gui/state/game/detection/gog.h"
 
 namespace {
-std::vector<std::string> GetRegistryKeys(const loot::GameId gameId) {
+std::vector<loot::RegistryValue> GetRegistryValues(const loot::GameId gameId) {
   const auto gogGameIds = loot::gog::GetGogGameIds(gameId);
 
-  std::vector<std::string> registryKeys;
+  std::vector<loot::RegistryValue> registryValues;
   for (const auto& gogGameId : gogGameIds) {
-    registryKeys.push_back("Software\\GOG.com\\Games\\" + gogGameId + "\\path");
-    registryKeys.push_back(
-        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" +
-        gogGameId + "_is1\\InstallLocation");
+    registryValues.push_back({"HKEY_LOCAL_MACHINE",
+                              "Software\\GOG.com\\Games\\" + gogGameId,
+                              "path"});
+    registryValues.push_back(
+        {"HKEY_LOCAL_MACHINE",
+         "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" +
+             gogGameId + "_is1",
+         "InstallLocation"});
   }
 
-  return registryKeys;
+  return registryValues;
 }
 }
 
@@ -76,10 +80,10 @@ std::vector<std::string> GetGogGameIds(const GameId gameId) {
   }
 }
 
-std::vector<GameInstall> FindGameInstalls(const GameId gameId) {
-#ifdef _WIN32
-  const auto installPaths =
-      FindGameInstallPathsInRegistry(gameId, GetRegistryKeys(gameId));
+std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+                                          const GameId gameId) {
+  const auto installPaths = FindGameInstallPathsInRegistry(
+      registry, gameId, GetRegistryValues(gameId));
 
   std::vector<GameInstall> installs;
   for (const auto& installPath : installPaths) {
@@ -87,8 +91,5 @@ std::vector<GameInstall> FindGameInstalls(const GameId gameId) {
   }
 
   return installs;
-#else
-  return {};
-#endif
 }
 }

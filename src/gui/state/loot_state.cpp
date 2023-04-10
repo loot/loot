@@ -45,6 +45,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection.h"
+#include "gui/state/game/detection/registry.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -362,8 +363,10 @@ void LootState::setInitialGame(const std::string& preferredGame) {
 std::vector<GameSettings> LootState::FindInstalledGames(
     const std::vector<GameSettings>& gamesSettings) const {
   auto gamesSettingsToUpdate = gamesSettings;
-  UpdateInstalledGamesSettings(
-      gamesSettingsToUpdate, xboxGamingRootPaths_, preferredUILanguages_);
+  UpdateInstalledGamesSettings(gamesSettingsToUpdate,
+                               Registry(),
+                               xboxGamingRootPaths_,
+                               preferredUILanguages_);
 
   return gamesSettingsToUpdate;
 }

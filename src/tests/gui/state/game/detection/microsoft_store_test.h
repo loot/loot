@@ -28,6 +28,7 @@ along with LOOT.  If not, see
 #include "gui/helpers.h"
 #include "gui/state/game/detection/microsoft_store.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
 class Microsoft_FindGameInstallsTest : public CommonGameTestFixture {
@@ -106,8 +107,8 @@ TEST_P(Microsoft_FindGameInstallsTest, shouldFindNewMSGamePathIfPresent) {
   }
 
   const auto gameId = getTestGameId(GetParam());
-  const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
+  const auto gameInstalls = loot::microsoft::FindGameInstalls(
+      TestRegistry(), gameId, {xboxGamingRootPath}, {});
 
   std::filesystem::path expectedLocalPath;
   if (GetParam() == GameType::tes5se) {
@@ -137,8 +138,8 @@ TEST_P(Microsoft_FindGameInstallsTest,
       xboxGamingRootPath, {"Oblivion GOTY Spanish", "Oblivion GOTY Italian"});
 
   const auto gameId = getTestGameId(GetParam());
-  const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {});
+  const auto gameInstalls = loot::microsoft::FindGameInstalls(
+      TestRegistry(), gameId, {xboxGamingRootPath}, {});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
@@ -160,7 +161,7 @@ TEST_P(Microsoft_FindGameInstallsTest,
 
   const auto gameId = getTestGameId(GetParam());
   const auto gameInstalls = loot::microsoft::FindGameInstalls(
-      gameId, {xboxGamingRootPath}, {"es", "it"});
+      TestRegistry(), gameId, {xboxGamingRootPath}, {"es", "it"});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
@@ -181,8 +182,8 @@ TEST_P(Microsoft_FindGameInstallsTest,
       xboxGamingRootPath, {"Oblivion GOTY English", "Oblivion GOTY Spanish"});
 
   const auto gameId = getTestGameId(GetParam());
-  const auto gameInstalls =
-      loot::microsoft::FindGameInstalls(gameId, {xboxGamingRootPath}, {"es"});
+  const auto gameInstalls = loot::microsoft::FindGameInstalls(
+      TestRegistry(), gameId, {xboxGamingRootPath}, {"es"});
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);

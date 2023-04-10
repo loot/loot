@@ -27,6 +27,7 @@ along with LOOT.  If not, see
 
 #include "gui/state/game/detection/generic.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
 class Generic_FindGameInstallsTest : public CommonGameTestFixture {
@@ -63,7 +64,8 @@ INSTANTIATE_TEST_SUITE_P(,
 
 TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
   const auto gameId = getTestGameId(GetParam());
-  const auto gameInstalls = loot::generic::FindGameInstalls(gameId);
+  const auto gameInstalls =
+      loot::generic::FindGameInstalls(TestRegistry(), gameId);
 
   auto expectedSource = InstallSource::unknown;
   if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5vr ||

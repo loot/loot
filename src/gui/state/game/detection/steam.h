@@ -28,11 +28,12 @@
 
 #include <vector>
 
-#include "gui/state/game/detection/common.h"
+#include "gui/state/game/detection/game_install.h"
+#include "gui/state/game/detection/registry.h"
 
 namespace loot::steam {
-std::vector<GameInstall> FindGameInstalls(const GameId gameId);
+std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
+                                          const GameId gameId);
 }
-
 
 #endif

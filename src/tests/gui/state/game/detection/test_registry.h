@@ -22,23 +22,34 @@ along with LOOT.  If not, see
 <https://www.gnu.org/licenses/>.
 */
 
-#ifndef LOOT_TESTS_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE_TEST
-#define LOOT_TESTS_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE_TEST
+#ifndef LOOT_TESTS_GUI_STATE_GAME_DETECTION_TEST_REGISTRY
+#define LOOT_TESTS_GUI_STATE_GAME_DETECTION_TEST_REGISTRY
 
-#include "gui/state/game/detection/epic_games_store.h"
-#include "tests/common_game_test_fixture.h"
-#include "tests/gui/state/game/detection/test_registry.h"
+#include "gui/state/game/detection/registry.h"
 
 namespace loot::test {
-class Epic_FindGameInstallsTest : public ::testing::TestWithParam<GameId> {};
+class TestRegistry : public RegistryInterface {
+public:
+  std::optional<std::string> GetStringValue(
+      const RegistryValue&) const override {
+    return stringValue_;
+  }
 
-INSTANTIATE_TEST_SUITE_P(,
-                         Epic_FindGameInstallsTest,
-                         ::testing::ValuesIn(ALL_GAME_IDS));
+  std::vector<std::string> GetSubKeys(const std::string&,
+                                      const std::string&) const override {
+    return subKeys_;
+  }
 
-TEST_P(Epic_FindGameInstallsTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(loot::epic::FindGameInstalls(TestRegistry(), GetParam(), {}));
-}
+  void SetStringValue(const std::string& value) { stringValue_ = value; }
+
+  void SetSubKeys(const std::vector<std::string> subKeys) {
+    subKeys_ = subKeys;
+  }
+
+private:
+  std::optional<std::string> stringValue_;
+  std::vector<std::string> subKeys_;
+};
 }
 
 #endif

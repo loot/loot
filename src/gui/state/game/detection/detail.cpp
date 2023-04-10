@@ -196,6 +196,7 @@ std::vector<GameInstall> DeduplicateGameInstalls(
 
 // Search for installed copies of the given game, and return all those found.
 std::vector<GameInstall> FindGameInstalls(
+    const RegistryInterface& registry,
     const GameId gameId,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
@@ -206,23 +207,24 @@ std::vector<GameInstall> FindGameInstalls(
 
   std::vector<GameInstall> installs;
 
-  const auto steamInstalls = steam::FindGameInstalls(gameId);
+  const auto steamInstalls = steam::FindGameInstalls(registry, gameId);
   installs.insert(installs.end(), steamInstalls.begin(), steamInstalls.end());
 
-  const auto gogInstalls = gog::FindGameInstalls(gameId);
+  const auto gogInstalls = gog::FindGameInstalls(registry, gameId);
   installs.insert(installs.end(), gogInstalls.begin(), gogInstalls.end());
 
-  const auto genericInstalls = generic::FindGameInstalls(gameId);
+  const auto genericInstalls = generic::FindGameInstalls(registry, gameId);
   installs.insert(
       installs.end(), genericInstalls.begin(), genericInstalls.end());
 
-  const auto epicInstall = epic::FindGameInstalls(gameId, preferredUILanguages);
+  const auto epicInstall =
+      epic::FindGameInstalls(registry, gameId, preferredUILanguages);
   if (epicInstall.has_value()) {
     installs.push_back(epicInstall.value());
   }
 
   const auto msInstalls = microsoft::FindGameInstalls(
-      gameId, xboxGamingRootPaths, preferredUILanguages);
+      registry, gameId, xboxGamingRootPaths, preferredUILanguages);
   installs.insert(installs.end(), msInstalls.begin(), msInstalls.end());
 
   // The generic installs may duplicate Steam or GOG installs, so
@@ -231,6 +233,7 @@ std::vector<GameInstall> FindGameInstalls(
 }
 
 std::vector<GameInstall> FindGameInstalls(
+    const RegistryInterface& registry,
     const std::vector<std::filesystem::path>& xboxGamingRootPaths,
     const std::vector<std::string>& preferredUILanguages) {
   const std::vector<GameId> gameIds = {GameId::tes3,
@@ -249,8 +252,8 @@ std::vector<GameInstall> FindGameInstalls(
   std::vector<GameInstall> installs;
 
   for (const auto& gameId : gameIds) {
-    const auto gameInstalls =
-        FindGameInstalls(gameId, xboxGamingRootPaths, preferredUILanguages);
+    const auto gameInstalls = FindGameInstalls(
+        registry, gameId, xboxGamingRootPaths, preferredUILanguages);
     installs.insert(installs.end(), gameInstalls.begin(), gameInstalls.end());
   }
 
