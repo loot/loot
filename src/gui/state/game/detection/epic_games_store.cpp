@@ -118,8 +118,9 @@ std::filesystem::path GetProgramDataPath() {
 
   return programDataPath;
 }
+#endif
 
-std::filesystem::path GetEgsManifestsPath(
+std::optional<std::filesystem::path> GetEgsManifestsPath(
     const loot::RegistryInterface& registry) {
   // Try using Registry key first.
   const auto appDataPath =
@@ -131,6 +132,7 @@ std::filesystem::path GetEgsManifestsPath(
     return std::filesystem::u8path(appDataPath.value()) / "Manifests";
   }
 
+#ifdef _WIN32
   // Fall back to using building the usual path if the Registry key couldn't
   // be found or the value is empty.
   const auto logger = getLogger();
@@ -143,8 +145,10 @@ std::filesystem::path GetEgsManifestsPath(
 
   return GetProgramDataPath() / "Epic" / "EpicGamesLauncher" / "Data" /
          "Manifests";
-}
+#else
+  return std::nullopt;
 #endif
+}
 
 EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
   const auto logger = getLogger();
@@ -193,7 +197,6 @@ EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
 std::optional<std::filesystem::path> GetEgsGameInstallPath(
     const loot::RegistryInterface& registry,
     const loot::GameId gameId) {
-#ifdef _WIN32
   // Unfortunately we don't know which is the right manifest file, so iterate
   // over them until the one containing the correct AppName is found.
   const auto expectedAppName = GetEgsAppName(gameId);
@@ -204,7 +207,8 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
   }
 
   const auto egsManifestsPath = GetEgsManifestsPath(registry);
-  if (!std::filesystem::exists(egsManifestsPath)) {
+  if (!egsManifestsPath.has_value() ||
+      !std::filesystem::exists(egsManifestsPath.value())) {
     return std::nullopt;
   }
 
@@ -218,7 +222,7 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
   }
 
   for (const auto& entry :
-       std::filesystem::directory_iterator(egsManifestsPath)) {
+       std::filesystem::directory_iterator(egsManifestsPath.value())) {
     if (entry.is_regular_file() &&
         boost::iends_with(entry.path().filename().u8string(), ".item")) {
       const auto manifestData = GetEgsManifestData(entry.path());
@@ -235,7 +239,6 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
       }
     }
   }
-#endif
 
   return std::nullopt;
 }
