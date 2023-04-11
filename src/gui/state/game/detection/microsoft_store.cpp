@@ -272,7 +272,6 @@ std::filesystem::path GetMicrosoftStoreGameLocalPath(const GameId gameId) {
   }
 }
 
-#ifdef _WIN32
 std::optional<GameInstall> FindMicrosoftStoreGameInstall(
     const RegistryInterface& registry,
     const GameId gameId,
@@ -340,7 +339,6 @@ std::optional<GameInstall> FindMicrosoftStoreGameInstall(
 
   return std::nullopt;
 }
-#endif
 }
 
 namespace loot::microsoft {
@@ -358,14 +356,12 @@ std::vector<GameInstall> FindGameInstalls(
     installs.push_back(install.value());
   }
 
-#ifdef _WIN32
   const auto legacyInstall = ms::legacy::FindMicrosoftStoreGameInstall(
       registry, gameId, preferredUILanguages);
 
   if (legacyInstall.has_value()) {
     installs.push_back(legacyInstall.value());
   }
-#endif
 
   return installs;
 }
