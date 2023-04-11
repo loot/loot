@@ -119,17 +119,16 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
 }
 
-#ifndef _WIN32
-// Testing on Windows will find real game installs in the Registry, so cannot
-// test autodetection fully unless on Linux.
-TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathWasNotGiven) {
+TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
   auto settings = GameSettings(getGameType()).SetGameLocalPath(localPath);
   Game game(settings, "", "");
   EXPECT_THROW(game.Init(), std::invalid_argument);
 }
 
+#ifndef _WIN32
 TEST_P(GameTest, initShouldThrowOnLinuxWasLocalPathIsNotGiven) {
-  auto settings = GameSettings(getGameType()).SetGamePath(dataPath.parent_path());
+  auto settings =
+      GameSettings(getGameType()).SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, "");
   EXPECT_THROW(game.Init(), std::system_error);
 }
