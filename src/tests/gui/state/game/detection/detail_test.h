@@ -80,8 +80,145 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(GetNameSourceSuffixTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(GetNameSourceSuffix(GetParam()));
 }
-TEST(FindGameInstalls, shouldReturnAnEmptyVectorIfNoGamesAreInstalled) {
+
+class FindGameInstallsTest : public CommonGameTestFixture {
+protected:
+  FindGameInstallsTest() :
+      CommonGameTestFixture(GameId::tes5se),
+      epicManifestsPath(dataPath.parent_path().parent_path() / "Manifests"),
+      xboxGamingRootPath(dataPath.parent_path().parent_path() / "xbox"),
+      genericInstallPath(dataPath.parent_path()),
+      steamInstallPath(dataPath.parent_path().parent_path() / "steam"),
+      gogInstallPath(dataPath.parent_path().parent_path() / "gog"),
+      epicInstallPath(dataPath.parent_path().parent_path() / "epic"),
+      msInstallPath(xboxGamingRootPath /
+                    "The Elder Scrolls V- Skyrim Special Edition (PC)" /
+                    "Content") {
+    // Create generic install.
+    registry.SetStringValue(
+        "Software\\Bethesda Softworks\\Skyrim Special Edition",
+        genericInstallPath.u8string());
+
+    // Create Steam install.
+    CopyInstall(steamInstallPath);
+    registry.SetStringValue(
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App "
+        "489830",
+        steamInstallPath.u8string());
+
+    // Create GOG install.
+    CopyInstall(gogInstallPath);
+    registry.SetStringValue("Software\\GOG.com\\Games\\1801825368",
+                            gogInstallPath.u8string());
+
+    // Create Epic install.
+    CreateEpicManifest();
+    CopyInstall(epicInstallPath);
+    registry.SetStringValue("Software\\Epic Games\\EpicGamesLauncher",
+                            epicManifestsPath.parent_path().u8string());
+
+    // Create MS Store install.
+    CopyInstall(msInstallPath);
+  }
+
+  std::filesystem::path epicManifestsPath;
+  std::filesystem::path xboxGamingRootPath;
+
+  std::filesystem::path genericInstallPath;
+  std::filesystem::path steamInstallPath;
+  std::filesystem::path gogInstallPath;
+  std::filesystem::path epicInstallPath;
+  std::filesystem::path msInstallPath;
+
+  TestRegistry registry;
+
+private:
+  void CreateEpicManifest() {
+    std::filesystem::create_directory(epicManifestsPath);
+
+    std::ofstream out(epicManifestsPath / "manifest.item");
+    out << "{\"AppName\": \"ac82db5035584c7f8a2c548d98c86b2c\", "
+           "\"InstallLocation\": \"" +
+               boost::replace_all_copy(
+                   epicInstallPath.u8string(), "\\", "\\\\") +
+               "\"}";
+    out.close();
+  }
+
+  void CopyInstall(const std::filesystem::path& destination) {
+    std::filesystem::create_directories(destination.parent_path());
+
+    std::filesystem::copy(dataPath.parent_path(),
+                          destination,
+                          std::filesystem::copy_options::recursive);
+  }
+};
+
+TEST_F(FindGameInstallsTest, shouldReturnAnEmptyVectorIfNoGamesAreInstalled) {
   EXPECT_TRUE(FindGameInstalls(TestRegistry(), {}, {}).empty());
+}
+
+TEST_F(FindGameInstallsTest, shouldFindInstallsFromAllSupportedSources) {
+  const auto installs = FindGameInstalls(registry, {xboxGamingRootPath}, {});
+
+  ASSERT_EQ(5, installs.size());
+
+  EXPECT_EQ(GameId::tes5se, installs[0].gameId);
+  EXPECT_EQ(InstallSource::steam, installs[0].source);
+  EXPECT_EQ(steamInstallPath, installs[0].installPath);
+  EXPECT_EQ("", installs[0].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[1].gameId);
+  EXPECT_EQ(InstallSource::gog, installs[1].source);
+  EXPECT_EQ(gogInstallPath, installs[1].installPath);
+  EXPECT_EQ("", installs[1].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[2].gameId);
+  EXPECT_EQ(InstallSource::unknown, installs[2].source);
+  EXPECT_EQ(genericInstallPath, installs[2].installPath);
+  EXPECT_EQ("", installs[2].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[3].gameId);
+  EXPECT_EQ(InstallSource::epic, installs[3].source);
+  EXPECT_EQ(epicInstallPath, installs[3].installPath);
+  EXPECT_EQ("", installs[3].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[4].gameId);
+  EXPECT_EQ(InstallSource::microsoft, installs[4].source);
+  EXPECT_EQ(msInstallPath, installs[4].installPath);
+  EXPECT_EQ(getLocalAppDataPath() / "Skyrim Special Edition MS",
+            installs[4].localPath);
+}
+
+TEST_F(FindGameInstallsTest, shouldDeduplicateFoundInstalls) {
+  registry.SetStringValue(
+      "Software\\Bethesda Softworks\\Skyrim Special Edition",
+      steamInstallPath.u8string());
+
+  const auto installs = FindGameInstalls(registry, {xboxGamingRootPath}, {});
+
+  ASSERT_EQ(4, installs.size());
+
+  EXPECT_EQ(GameId::tes5se, installs[0].gameId);
+  EXPECT_EQ(InstallSource::steam, installs[0].source);
+  EXPECT_EQ(steamInstallPath, installs[0].installPath);
+  EXPECT_EQ("", installs[0].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[1].gameId);
+  EXPECT_EQ(InstallSource::gog, installs[1].source);
+  EXPECT_EQ(gogInstallPath, installs[1].installPath);
+  EXPECT_EQ("", installs[1].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[2].gameId);
+  EXPECT_EQ(InstallSource::epic, installs[2].source);
+  EXPECT_EQ(epicInstallPath, installs[2].installPath);
+  EXPECT_EQ("", installs[2].localPath);
+
+  EXPECT_EQ(GameId::tes5se, installs[3].gameId);
+  EXPECT_EQ(InstallSource::microsoft, installs[3].source);
+  EXPECT_EQ(msInstallPath, installs[3].installPath);
+  EXPECT_EQ(getLocalAppDataPath() / "Skyrim Special Edition MS",
+            installs[3].localPath);
 }
 
 TEST(CountGameInstalls, shouldCountConfiguredAndNewInstallsByGameAndSource) {

@@ -40,7 +40,11 @@ TEST_P(GetGogGameIdsTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(loot::gog::GetGogGameIds(GetParam()));
 }
 
-class GOG_FindGameInstallsTest : public ::testing::TestWithParam<GameId> {};
+class GOG_FindGameInstallsTest : public CommonGameTestFixture,
+                                 public ::testing::WithParamInterface<GameId> {
+protected:
+  GOG_FindGameInstallsTest() : CommonGameTestFixture(GetParam()) {}
+};
 
 INSTANTIATE_TEST_SUITE_P(,
                          GOG_FindGameInstallsTest,
@@ -57,11 +61,39 @@ TEST_P(
     GOG_FindGameInstallsTest,
     shouldReturnAnEmptyVectorIfARegistryEntryExistsButItIsNotAValidGamePath) {
   TestRegistry registry;
-  registry.SetStringValue("invalid");
 
-  const auto installs = loot::gog::FindGameInstalls(TestRegistry(), GetParam());
+  const auto gogGameIds = gog::GetGogGameIds(GetParam());
+  if (!gogGameIds.empty()) {
+    const auto subKey = "Software\\GOG.com\\Games\\" + gogGameIds[0];
+    registry.SetStringValue(subKey, "invalid");
+  }
+
+  const auto installs = loot::gog::FindGameInstalls(registry, GetParam());
 
   EXPECT_TRUE(installs.empty());
+}
+
+TEST_P(GOG_FindGameInstallsTest,
+       shouldReturnANonEmptyVectorIfARegistryEntryExistsWithAValidGamePath) {
+  TestRegistry registry;
+
+  const auto gogGameIds = gog::GetGogGameIds(GetParam());
+  if (!gogGameIds.empty()) {
+    const auto subKey = "Software\\GOG.com\\Games\\" + gogGameIds[0];
+    registry.SetStringValue(subKey, dataPath.parent_path().u8string());
+  }
+
+  const auto installs = gog::FindGameInstalls(registry, GetParam());
+
+  if (gogGameIds.empty()) {
+    ASSERT_TRUE(installs.empty());
+  } else {
+    ASSERT_EQ(1, installs.size());
+    EXPECT_EQ(GetParam(), installs[0].gameId);
+    EXPECT_EQ(InstallSource::gog, installs[0].source);
+    EXPECT_EQ(dataPath.parent_path(), installs[0].installPath);
+    EXPECT_EQ("", installs[0].localPath);
+  }
 }
 }
 

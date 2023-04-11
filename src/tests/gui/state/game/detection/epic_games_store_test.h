@@ -30,14 +30,114 @@ along with LOOT.  If not, see
 #include "tests/gui/state/game/detection/test_registry.h"
 
 namespace loot::test {
-class Epic_FindGameInstallsTest : public ::testing::TestWithParam<GameId> {};
+class Epic_FindGameInstallsExceptionTest
+    : public ::testing::TestWithParam<GameId> {};
 
 INSTANTIATE_TEST_SUITE_P(,
-                         Epic_FindGameInstallsTest,
+                         Epic_FindGameInstallsExceptionTest,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
-TEST_P(Epic_FindGameInstallsTest, shouldNotThrowForAnyValidGameId) {
+TEST_P(Epic_FindGameInstallsExceptionTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(loot::epic::FindGameInstalls(TestRegistry(), GetParam(), {}));
+}
+
+class Epic_FindGameInstallsTest : public CommonGameTestFixture,
+                                  public testing::WithParamInterface<GameId> {
+protected:
+  Epic_FindGameInstallsTest() :
+      CommonGameTestFixture(GetParam()),
+      epicManifestsPath(dataPath.parent_path().parent_path() / "Manifests") {
+    std::filesystem::create_directory(epicManifestsPath);
+
+    const std::string appName = GetParam() == GameId::tes5se
+                                    ? "ac82db5035584c7f8a2c548d98c86b2c"
+                                    : "adeae8bbfc94427db57c7dfecce3f1d4";
+
+    if (GetParam() == GameId::fo3) {
+      // FO3 has localised subdirectories.
+      gamePath = dataPath.parent_path().parent_path() / "game2";
+
+      const std::vector<std::string> folders{"Fallout 3 GOTY English",
+                                             "Fallout 3 GOTY French"};
+      for (const auto& folder : folders) {
+        const auto localisedInstall = gamePath / folder;
+        std::filesystem::create_directories(localisedInstall.parent_path());
+        std::filesystem::copy(dataPath.parent_path(),
+                              localisedInstall,
+                              std::filesystem::copy_options::recursive);
+      }
+
+    } else {
+      gamePath = dataPath.parent_path();
+    }
+
+    std::ofstream out(epicManifestsPath / "manifest.item");
+    out << "{\"AppName\": \"" + appName + "\", \"InstallLocation\": \"" +
+               boost::replace_all_copy(gamePath.u8string(), "\\", "\\\\") +
+               "\"}";
+    out.close();
+
+    registry.SetStringValue("Software\\Epic Games\\EpicGamesLauncher",
+                            epicManifestsPath.parent_path().u8string());
+  }
+
+  std::filesystem::path epicManifestsPath;
+  std::filesystem::path gamePath;
+
+  TestRegistry registry;
+};
+
+// Pass an empty first argument, as it's a prefix for the test instantation,
+// but we only have the one so no prefix is necessary.
+INSTANTIATE_TEST_SUITE_P(,
+                         Epic_FindGameInstallsTest,
+                         ::testing::Values(GameId::tes5se, GameId::fo3));
+
+TEST_P(Epic_FindGameInstallsTest, shouldFindAValidEpicInstall) {
+  const auto install = epic::FindGameInstalls(registry, GetParam(), {});
+
+  const auto expectedInstallPath = GetParam() == GameId::tes5se
+                                       ? gamePath
+                                       : gamePath / "Fallout 3 GOTY English";
+
+  ASSERT_TRUE(install.has_value());
+  EXPECT_EQ(GetParam(), install.value().gameId);
+  EXPECT_EQ(InstallSource::epic, install.value().source);
+  EXPECT_EQ(expectedInstallPath, install.value().installPath);
+  EXPECT_EQ("", install.value().localPath);
+}
+
+TEST_P(Epic_FindGameInstallsTest, shouldNotFindAnEpicInstallThatIsInvalid) {
+  std::filesystem::remove_all(gamePath);
+
+  const auto install = epic::FindGameInstalls(registry, GetParam(), {});
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_P(Epic_FindGameInstallsTest,
+       shouldNotFindAnEpicInstallIfTheManifestsDirectoryDoesNotExist) {
+  std::filesystem::remove_all(epicManifestsPath);
+
+  const auto install = epic::FindGameInstalls(registry, GetParam(), {});
+
+  EXPECT_FALSE(install.has_value());
+}
+
+TEST_P(Epic_FindGameInstallsTest,
+       shouldPickLocalisedInstallPathAccordingToPreferredUILanguageOrder) {
+  const auto install =
+      epic::FindGameInstalls(registry, GetParam(), {"fr", "en"});
+
+  const auto expectedInstallPath = GetParam() == GameId::tes5se
+                                       ? gamePath
+                                       : gamePath / "Fallout 3 GOTY French";
+
+  ASSERT_TRUE(install.has_value());
+  EXPECT_EQ(GetParam(), install.value().gameId);
+  EXPECT_EQ(InstallSource::epic, install.value().source);
+  EXPECT_EQ(expectedInstallPath, install.value().installPath);
+  EXPECT_EQ("", install.value().localPath);
 }
 }
 
