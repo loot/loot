@@ -26,26 +26,32 @@
 #ifndef LOOT_GUI_STATE_GAME_DETECTION_COMMON
 #define LOOT_GUI_STATE_GAME_DETECTION_COMMON
 
-#include <filesystem>
+#include <loot/enum/game_type.h>
 
-#include "gui/state/game/game_settings.h"
+#include <filesystem>
+#include <optional>
+#include <vector>
+
+#include "gui/state/game/detection/game_install.h"
 
 namespace loot {
-struct GamePaths {
-  std::filesystem::path installPath;
-  std::filesystem::path localPath;
-};
-
 struct LocalisedGameInstallPath {
   std::filesystem::path installPath;
   std::string language;
 };
 
-bool IsValidGamePath(const GameSettings& settings,
+std::string GetGameName(const GameId gameId);
+
+std::string GetMasterFilename(const GameId gameId);
+
+GameType GetGameType(const GameId gameId);
+
+bool IsValidGamePath(const GameType gameType,
+                     const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck);
 
 std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
-    const GameSettings& settings,
+    const GameId gameId,
     const std::vector<std::string>& uiPreferredLanguages,
     const std::vector<LocalisedGameInstallPath>& paths);
 }

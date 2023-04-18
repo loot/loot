@@ -45,6 +45,7 @@
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection.h"
+#include "gui/state/game/detection/registry.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -135,9 +136,11 @@ void LootState::init(const std::string& cmdLineGame,
   //-----------------------------------
 
   // Detect installed games.
-  LoadInstalledGames(settings_.getGameSettings(),
-                     LootPaths::getLootDataPath(),
-                     LootPaths::getPreludePath());
+  const auto gameSettings = LoadInstalledGames(settings_.getGameSettings(),
+                                               LootPaths::getLootDataPath(),
+                                               LootPaths::getPreludePath());
+
+  settings_.storeGameSettings(gameSettings);
 
   setInitialGame(cmdLineGame);
 }
@@ -357,28 +360,19 @@ void LootState::setInitialGame(const std::string& preferredGame) {
   }
 }
 
-std::optional<GamePaths> LootState::FindGamePaths(
-    const GameSettings& gameSettings) const {
-  const auto gamePaths = loot::FindGamePaths(
-      gameSettings, xboxGamingRootPaths_, preferredUILanguages_);
+std::vector<GameSettings> LootState::FindInstalledGames(
+    const std::vector<GameSettings>& gamesSettings) const {
+  auto gamesSettingsToUpdate = gamesSettings;
+  UpdateInstalledGamesSettings(gamesSettingsToUpdate,
+                               Registry(),
+                               xboxGamingRootPaths_,
+                               preferredUILanguages_);
 
-  const auto logger = getLogger();
-  if (logger) {
-    if (gamePaths.has_value()) {
-      logger->info(
-          "Using install path \"{}\" and local path \"{}\" for game with LOOT "
-          "folder name \"{}\".",
-          gamePaths.value().installPath.u8string(),
-          gamePaths.value().localPath.u8string(),
-          gameSettings.FolderName());
-    } else {
-      logger->info(
-          "Could not find paths for game with LOOT folder name \"{}\".",
-          gameSettings.FolderName());
-    }
-  }
+  return gamesSettingsToUpdate;
+}
 
-  return gamePaths;
+bool LootState::IsInstalled(const GameSettings& gameSettings) const {
+  return loot::IsInstalled(gameSettings);
 }
 
 void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }

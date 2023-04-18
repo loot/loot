@@ -57,9 +57,6 @@ std::vector<Message> CheckForRemovedPlugins(
     const std::vector<std::string> pluginsBefore,
     const std::vector<std::string> pluginsAfter);
 
-std::tuple<std::string, std::string, std::string> SplitRegistryPath(
-    const std::string& registryPath);
-
 std::vector<Tag> ReadBashTagsFile(std::istream& in);
 
 std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,

@@ -42,19 +42,26 @@ public:
   }
 
 private:
-  std::optional<GamePaths> FindGamePaths(
-      const GameSettings& gameSettings) const override {
-    if (gameSettings.Type() == GameType::tes5 ||
-        gameSettings.Type() == GameType::fonv) {
-      GamePaths gamePaths;
-      // This install path matches the testing plugins folder paths.
-      gamePaths.installPath =
-          gameSettings.GamePath() / gameSettings.FolderName();
-      gamePaths.localPath = gameSettings.GameLocalPath();
-      return gamePaths;
+  std::vector<GameSettings> FindInstalledGames(
+      const std::vector<GameSettings>& gamesSettings) const override {
+    std::vector<GameSettings> updatedSettings;
+
+    for (auto gameSettings : gamesSettings) {
+      if (gameSettings.Type() == GameType::tes5 ||
+          gameSettings.Type() == GameType::fonv) {
+        gameSettings.SetGamePath(gameSettings.GamePath() /
+                                 gameSettings.FolderName());
+      }
+
+      updatedSettings.push_back(gameSettings);
     }
 
-    return std::nullopt;
+    return updatedSettings;
+  }
+
+  bool IsInstalled(const GameSettings& gameSettings) const override {
+    return gameSettings.Type() == GameType::tes5 ||
+           gameSettings.Type() == GameType::fonv;
   }
 
   void InitialiseGameData(gui::Game& game) override {
@@ -69,19 +76,30 @@ private:
   mutable std::map<std::string, unsigned int> initialiseCounts_;
 };
 
-TEST(GamesManager,
-     loadInstalledGamesShouldLeaveGameSettingsUnchangedIfNoGamesAreInstalled) {
+TEST(
+    GamesManager,
+    loadInstalledGamesShouldFilterGamesSettingsThroughFindInstalledGamesBeforeUsingThem) {
   TestGamesManager manager;
-  auto settings = manager.LoadInstalledGames({GameSettings(GameType::tes4)},
-                                             std::filesystem::path(),
-                                             std::filesystem::path());
-
-  ASSERT_TRUE(manager.GetInstalledGameFolderNames().empty());
+  const auto settings = manager.LoadInstalledGames(
+      {
+          GameSettings(GameType::tes4),
+          GameSettings(GameType::tes5),
+          GameSettings(GameType::fonv),
+      },
+      std::filesystem::path(),
+      std::filesystem::path());
 
   EXPECT_EQ(GameSettings(GameType::tes4).GamePath(), settings[0].GamePath());
+
+  EXPECT_NE(GameSettings(GameType::tes5).GamePath(), settings[1].GamePath());
+  EXPECT_EQ("Skyrim", settings[1].GamePath());
+
+  EXPECT_NE(GameSettings(GameType::fonv).GamePath(), settings[2].GamePath());
+  EXPECT_EQ("FalloutNV", settings[2].GamePath());
 }
 
-TEST(GamesManager, loadInstalledGamesShouldSetTheGamePathsOfInstalledGames) {
+TEST(GamesManager,
+     loadInstalledGamesShouldNotInitialiseAnyGamesThatAreNotInstalled) {
   TestGamesManager manager;
   auto settings = manager.LoadInstalledGames(
       {
@@ -94,14 +112,6 @@ TEST(GamesManager, loadInstalledGamesShouldSetTheGamePathsOfInstalledGames) {
 
   ASSERT_EQ(std::vector<std::string>({"Skyrim", "FalloutNV"}),
             manager.GetInstalledGameFolderNames());
-
-  EXPECT_EQ(GameSettings(GameType::tes4).GamePath(), settings[0].GamePath());
-
-  EXPECT_NE(GameSettings(GameType::tes5).GamePath(), settings[1].GamePath());
-  EXPECT_EQ("Skyrim", settings[1].GamePath());
-
-  EXPECT_NE(GameSettings(GameType::fonv).GamePath(), settings[2].GamePath());
-  EXPECT_EQ("FalloutNV", settings[2].GamePath());
 }
 
 TEST(
@@ -240,9 +250,7 @@ TEST(
 
   auto newGameSettings = GameSettings(GameType::tes5)
                              .SetName("different")
-                             .SetIsBaseGameInstance(false)
                              .SetMinimumHeaderVersion(100.0f)
-                             .SetRegistryKeys({"different"})
                              .SetMasterlistSource("different");
   auto settings = manager.LoadInstalledGames(
       {newGameSettings}, std::filesystem::path(), std::filesystem::path());
@@ -253,12 +261,8 @@ TEST(
 
   EXPECT_EQ(newGameSettings.Name(),
             manager.GetCurrentGame().GetSettings().Name());
-  EXPECT_EQ(newGameSettings.IsBaseGameInstance(),
-            manager.GetCurrentGame().GetSettings().IsBaseGameInstance());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
             manager.GetCurrentGame().GetSettings().MinimumHeaderVersion());
-  EXPECT_EQ(newGameSettings.RegistryKeys(),
-            manager.GetCurrentGame().GetSettings().RegistryKeys());
   EXPECT_EQ(newGameSettings.MasterlistSource(),
             manager.GetCurrentGame().GetSettings().MasterlistSource());
 
@@ -266,7 +270,6 @@ TEST(
   EXPECT_EQ(newGameSettings.Name(), settings[0].Name());
   EXPECT_EQ(newGameSettings.MinimumHeaderVersion(),
             settings[0].MinimumHeaderVersion());
-  EXPECT_EQ(newGameSettings.RegistryKeys(), settings[0].RegistryKeys());
   EXPECT_EQ(newGameSettings.MasterlistSource(), settings[0].MasterlistSource());
 }
 

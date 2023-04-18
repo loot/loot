@@ -177,14 +177,11 @@ void SettingsDialog::on_addGameButton_clicked() {
   auto gameTypeText = newGameDialog->getGameType().toStdString();
   auto gameType = GameTab::GAME_TYPES_BY_FOLDER.at(gameTypeText);
 
-  const auto isBaseGameInstance = newGameDialog->getGameIsInstanceOfBase();
-
   auto name = newGameDialog->getGameName().toStdString();
   auto lootFolder = newGameDialog->getGameFolder().toStdString();
 
   GameSettings game(gameType, lootFolder);
   game.SetName(name);
-  game.SetIsBaseGameInstance(isBaseGameInstance);
 
   addGameTab(game, false);
 

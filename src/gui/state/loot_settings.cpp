@@ -395,24 +395,23 @@ std::string migratePreludeSource(const std::string& source) {
 }
 
 GameType mapGameType(const std::string& gameType) {
-  if (gameType == GameSettings(GameType::tes3).FolderName()) {
+  if (gameType == ToString(GameType::tes3)) {
     return GameType::tes3;
-  } else if (gameType == GameSettings(GameType::tes4).FolderName()) {
+  } else if (gameType == ToString(GameType::tes4)) {
     return GameType::tes4;
-  } else if (gameType == GameSettings(GameType::tes5).FolderName()) {
+  } else if (gameType == ToString(GameType::tes5)) {
     return GameType::tes5;
-  } else if (gameType == "SkyrimSE" ||
-             gameType == GameSettings(GameType::tes5se).FolderName()) {
+  } else if (gameType == "SkyrimSE" || gameType == ToString(GameType::tes5se)) {
     return GameType::tes5se;
-  } else if (gameType == GameSettings(GameType::tes5vr).FolderName()) {
+  } else if (gameType == ToString(GameType::tes5vr)) {
     return GameType::tes5vr;
-  } else if (gameType == GameSettings(GameType::fo3).FolderName()) {
+  } else if (gameType == ToString(GameType::fo3)) {
     return GameType::fo3;
-  } else if (gameType == GameSettings(GameType::fonv).FolderName()) {
+  } else if (gameType == ToString(GameType::fonv)) {
     return GameType::fonv;
-  } else if (gameType == GameSettings(GameType::fo4).FolderName()) {
+  } else if (gameType == ToString(GameType::fo4)) {
     return GameType::fo4;
-  } else if (gameType == GameSettings(GameType::fo4vr).FolderName()) {
+  } else if (gameType == ToString(GameType::fo4vr)) {
     return GameType::fo4vr;
   } else {
     throw std::runtime_error(
@@ -432,8 +431,7 @@ GameSettings convertGameTable(const toml::table& table) {
   }
 
   if (*type == "SkyrimSE" && *folder == *type) {
-    type =
-        std::optional<std::string>(GameSettings(GameType::tes5se).FolderName());
+    type = std::optional<std::string>(ToString(GameType::tes5se));
     folder = type;
   }
 
@@ -442,16 +440,6 @@ GameSettings convertGameTable(const toml::table& table) {
   auto name = table["name"].value<std::string>();
   if (name) {
     game.SetName(*name);
-  }
-
-  auto isBaseGameInstance = table["isBaseGameInstance"].value<bool>();
-  if (isBaseGameInstance) {
-    game.SetIsBaseGameInstance(*isBaseGameInstance);
-  } else if (game.FolderName() == "Nehrim" || game.FolderName() == "Enderal" ||
-             game.FolderName() == "Enderal Special Edition") {
-    // Migrate default settings for Nehrim, Enderal and Enderal SE,
-    // which are not base game instances.
-    game.SetIsBaseGameInstance(false);
   }
 
   auto master = table["master"].value<std::string>();
@@ -492,23 +480,6 @@ GameSettings convertGameTable(const toml::table& table) {
     game.SetGameLocalPath(std::filesystem::u8path(*localPath));
   } else if (localFolder) {
     game.SetGameLocalFolder(*localFolder);
-  }
-
-  if (table["registry"].is_array()) {
-    std::vector<std::string> registryKeys;
-    for (const auto& element : *table["registry"].as_array()) {
-      const auto registryKey = element.value<std::string>();
-      if (registryKey.has_value()) {
-        registryKeys.push_back(registryKey.value());
-      }
-    }
-
-    game.SetRegistryKeys(registryKeys);
-  } else {
-    auto registryKey = table["registry"].value<std::string>();
-    if (registryKey) {
-      game.SetRegistryKeys({*registryKey});
-    }
   }
 
   return game;
@@ -703,8 +674,6 @@ void LootSettings::load(const std::filesystem::path& file) {
         }
       }
     }
-
-    appendBaseGames();
   }
 
   const auto filters = settings["filters"];
@@ -791,9 +760,8 @@ void LootSettings::save(const std::filesystem::path& file) {
 
     for (const auto& gameSettings : gameSettings_) {
       toml::table game{
-          {"type", GameSettings(gameSettings.Type()).FolderName()},
+          {"type", ToString(gameSettings.Type())},
           {"name", gameSettings.Name()},
-          {"isBaseGameInstance", gameSettings.IsBaseGameInstance()},
           {"folder", gameSettings.FolderName()},
           {"master", gameSettings.Master()},
           {"minimumHeaderVersion", gameSettings.MinimumHeaderVersion()},
@@ -802,12 +770,6 @@ void LootSettings::save(const std::filesystem::path& file) {
           {"local_path", gameSettings.GameLocalPath().u8string()},
       };
 
-      toml::array registry;
-      for (const auto& key : gameSettings.RegistryKeys()) {
-        registry.push_back(key);
-      }
-
-      game.insert("registry", registry);
       games.push_back(game);
     }
 
@@ -1023,50 +985,4 @@ void LootSettings::updateLastVersion() {
   lastVersion_ = gui::Version::string();
 }
 
-void LootSettings::appendBaseGames() {
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes3)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes3));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes4)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes4));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes5)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes5));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes5se)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes5se));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::tes5vr)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::tes5vr));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fo3)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fo3));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fonv)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fonv));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fo4)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fo4));
-
-  if (find(begin(gameSettings_),
-           end(gameSettings_),
-           GameSettings(GameType::fo4vr)) == end(gameSettings_))
-    gameSettings_.push_back(GameSettings(GameType::fo4vr));
-}
 }

@@ -34,9 +34,11 @@ along with LOOT.  If not, see
 namespace loot {
 namespace gui {
 namespace test {
-class GameTest : public loot::test::CommonGameTestFixture {
+class GameTest : public loot::test::CommonGameTestFixture,
+                 public testing::WithParamInterface<GameId> {
 protected:
   GameTest() :
+      CommonGameTestFixture(GetParam()),
       loadOrderToSet_({
           masterFile,
           blankEsm,
@@ -57,7 +59,7 @@ protected:
       loadOrderBackupFile1("loadorder.bak.1"),
       loadOrderBackupFile2("loadorder.bak.2"),
       loadOrderBackupFile3("loadorder.bak.3"),
-      defaultGameSettings(GameSettings(GetParam(), u8"non\u00C1sciiFolder")
+      defaultGameSettings(GameSettings(getGameType(), u8"non\u00C1sciiFolder")
                               .SetMinimumHeaderVersion(0.0f)
                               .SetGamePath(dataPath.parent_path())
                               .SetGameLocalPath(localPath)) {}
@@ -85,24 +87,31 @@ protected:
 // but we only have the one so no prefix is necessary.
 INSTANTIATE_TEST_SUITE_P(,
                          GameTest,
-                         ::testing::Values(GameType::tes3,
-                                           GameType::tes4,
-                                           GameType::tes5,
-                                           GameType::fo3,
-                                           GameType::fonv,
-                                           GameType::fo4,
-                                           GameType::tes5se));
+                         ::testing::Values(GameId::tes3,
+                                           GameId::tes4,
+                                           GameId::tes5,
+                                           GameId::fo3,
+                                           GameId::fonv,
+                                           GameId::fo4,
+                                           GameId::tes5se));
 
 TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   using std::filesystem::u8path;
   GameSettings settings = defaultGameSettings;
   settings.SetName("foo");
   settings.SetMaster(blankEsm);
-  settings.SetRegistryKeys({"foo"});
   settings.SetMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
-  EXPECT_EQ(settings, game.GetSettings());
+  EXPECT_EQ(settings.Type(), game.GetSettings().Type());
+  EXPECT_EQ(settings.Name(), game.GetSettings().Name());
+  EXPECT_EQ(settings.FolderName(), game.GetSettings().FolderName());
+  EXPECT_EQ(settings.Master(), game.GetSettings().Master());
+  EXPECT_EQ(settings.MinimumHeaderVersion(),
+            game.GetSettings().MinimumHeaderVersion());
+  EXPECT_EQ(settings.MasterlistSource(), game.GetSettings().MasterlistSource());
+  EXPECT_EQ(settings.GamePath(), game.GetSettings().GamePath());
+  EXPECT_EQ(settings.GameLocalPath(), game.GetSettings().GameLocalPath());
 
   auto lootGamePath =
       lootDataPath / "games" / u8path(defaultGameSettings.FolderName());
@@ -110,23 +119,23 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   EXPECT_EQ(lootGamePath / "userlist.yaml", game.UserlistPath());
 }
 
-#ifndef _WIN32
-// Testing on Windows will find real game installs in the Registry, so cannot
-// test autodetection fully unless on Linux.
-TEST_P(GameTest, initShouldThrowOnLinuxIfGamePathWasNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGameLocalPath(localPath);
+TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
+  auto settings = GameSettings(getGameType()).SetGameLocalPath(localPath);
   Game game(settings, "", "");
   EXPECT_THROW(game.Init(), std::invalid_argument);
 }
 
+#ifndef _WIN32
 TEST_P(GameTest, initShouldThrowOnLinuxWasLocalPathIsNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  auto settings =
+      GameSettings(getGameType()).SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, "");
   EXPECT_THROW(game.Init(), std::system_error);
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  auto settings =
+      GameSettings(getGameType()).SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, "");
   EXPECT_NO_THROW(game.Init());
 }
@@ -240,7 +249,7 @@ TEST_P(
 TEST_P(GameTest, initShouldMigrateTheSkyrimSEGameFolder) {
   using std::filesystem::u8path;
 
-  if (GetParam() != GameType::tes5se) {
+  if (GetParam() != GameId::tes5se) {
     return;
   }
 
@@ -528,7 +537,7 @@ TEST_P(
 }
 
 TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
-  if (GetParam() != GameType::tes5se) {
+  if (GetParam() != GameId::tes5se) {
     return;
   }
 
@@ -568,11 +577,11 @@ TEST_P(
       *game.GetPlugin(blankEsm), PluginMetadata(blankEsm), "en");
 
   std::string messageText;
-  if (GetParam() == GameType::tes3) {
+  if (GetParam() == GameId::tes3) {
     messageText =
         "This plugin has a header version of 1\\.2\\, which is less than the "
         "game\\'s minimum supported header version of 5\\.1\\.";
-  } else if (GetParam() == GameType::tes4) {
+  } else if (GetParam() == GameId::tes4) {
     messageText =
         "This plugin has a header version of 0\\.8\\, which is less than the "
         "game\\'s minimum supported header version of 5\\.1\\.";
@@ -631,7 +640,7 @@ TEST_P(
   EXPECT_NO_THROW(game.RedatePlugins());
 
   auto interval = std::chrono::seconds(60);
-  if (GetParam() != GameType::tes5 && GetParam() != GameType::tes5se)
+  if (GetParam() != GameId::tes5 && GetParam() != GameId::tes5se)
     interval *= -1;
 
   for (size_t i = 0; i < loadOrder.size(); ++i) {

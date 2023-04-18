@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-03-24 22:39+0000\n"
+"POT-Creation-Date: 2023-04-10 18:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -783,8 +783,8 @@ msgid "URL"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/location_table_model.cpp:59
-#: src/gui/qt/settings/game_tab.cpp:158
-#: src/gui/qt/settings/new_game_dialog.cpp:87
+#: src/gui/qt/settings/game_tab.cpp:143
+#: src/gui/qt/settings/new_game_dialog.cpp:80
 msgid "Name"
 msgstr ""
 
@@ -817,46 +817,37 @@ msgstr ""
 msgid "Browse..."
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:159
-#: src/gui/qt/settings/new_game_dialog.cpp:88
+#: src/gui/qt/settings/game_tab.cpp:144
+#: src/gui/qt/settings/new_game_dialog.cpp:81
 msgid "Base Game"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:160
-#: src/gui/qt/settings/new_game_dialog.cpp:89
-msgid "Is instance of base game"
-msgstr ""
-
-#: src/gui/qt/settings/game_tab.cpp:161
-#: src/gui/qt/settings/new_game_dialog.cpp:90
+#: src/gui/qt/settings/game_tab.cpp:145
+#: src/gui/qt/settings/new_game_dialog.cpp:82
 msgid "LOOT Folder"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:162
+#: src/gui/qt/settings/game_tab.cpp:146
 msgid "Main Master Plugin"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:163
+#: src/gui/qt/settings/game_tab.cpp:147
 msgid "Minimum Header Version"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:164
+#: src/gui/qt/settings/game_tab.cpp:148
 msgid "Masterlist Source"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:165
+#: src/gui/qt/settings/game_tab.cpp:149
 msgid "Install Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:166
-msgid "Install Path Registry Keys"
-msgstr ""
-
-#: src/gui/qt/settings/game_tab.cpp:167
+#: src/gui/qt/settings/game_tab.cpp:150
 msgid "Local AppData Path"
 msgstr ""
 
-#: src/gui/qt/settings/game_tab.cpp:169
+#: src/gui/qt/settings/game_tab.cpp:152
 msgid "Delete game"
 msgstr ""
 
@@ -904,19 +895,19 @@ msgstr ""
 msgid "Autodetect"
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:85
+#: src/gui/qt/settings/new_game_dialog.cpp:78
 msgid "Add new game"
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:92
+#: src/gui/qt/settings/new_game_dialog.cpp:84
 msgid "A name is required."
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:93
+#: src/gui/qt/settings/new_game_dialog.cpp:85
 msgid "A folder is required."
 msgstr ""
 
-#: src/gui/qt/settings/new_game_dialog.cpp:114
+#: src/gui/qt/settings/new_game_dialog.cpp:106
 msgid "A game with this folder already exists."
 msgstr ""
 
@@ -948,56 +939,56 @@ msgstr ""
 msgid "Sorting load order..."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:538
+#: src/gui/state/loot_settings.cpp:509
 msgid ""
 "Your masterlist prelude repository URL and branch settings could not be "
 "migrated! You can check your LOOTDebugLog.txt (you can get to it through the "
 "File menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_settings.cpp:564
+#: src/gui/state/loot_settings.cpp:535
 msgid ""
 "Your masterlist repository URL and branch settings could not be migrated! "
 "You can check your LOOTDebugLog.txt (you can get to it through the File "
 "menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:163
+#: src/gui/state/loot_state.cpp:166
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:188
+#: src/gui/state/loot_state.cpp:191
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:204 src/gui/state/loot_state.cpp:258
+#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:261
 msgid "Error: Settings parsing failed. {0}"
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:214
+#: src/gui/state/loot_state.cpp:217
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:288
+#: src/gui/state/loot_state.cpp:291
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:306
+#: src/gui/state/loot_state.cpp:309
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:321
+#: src/gui/state/loot_state.cpp:324
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:354
+#: src/gui/state/loot_state.cpp:357
 msgid "Error: The initial game could not be selected. {0}"
 msgstr ""
 

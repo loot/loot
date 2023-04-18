@@ -66,15 +66,15 @@ void FolderPicker::on_browseButton_clicked() {
 }
 
 const std::map<std::string, GameType> GameTab::GAME_TYPES_BY_FOLDER({
-    {GameSettings(GameType::tes3).FolderName(), GameType::tes3},
-    {GameSettings(GameType::tes4).FolderName(), GameType::tes4},
-    {GameSettings(GameType::tes5).FolderName(), GameType::tes5},
-    {GameSettings(GameType::tes5se).FolderName(), GameType::tes5se},
-    {GameSettings(GameType::tes5vr).FolderName(), GameType::tes5vr},
-    {GameSettings(GameType::fo3).FolderName(), GameType::fo3},
-    {GameSettings(GameType::fonv).FolderName(), GameType::fonv},
-    {GameSettings(GameType::fo4).FolderName(), GameType::fo4},
-    {GameSettings(GameType::fo4vr).FolderName(), GameType::fo4vr},
+    {ToString(GameType::tes3), GameType::tes3},
+    {ToString(GameType::tes4), GameType::tes4},
+    {ToString(GameType::tes5), GameType::tes5},
+    {ToString(GameType::tes5se), GameType::tes5se},
+    {ToString(GameType::tes5vr), GameType::tes5vr},
+    {ToString(GameType::fo3), GameType::fo3},
+    {ToString(GameType::fonv), GameType::fonv},
+    {ToString(GameType::fo4), GameType::fo4},
+    {ToString(GameType::fo4vr), GameType::fo4vr},
 });
 
 GameTab::GameTab(const GameSettings& settings,
@@ -103,26 +103,14 @@ GameSettings GameTab::getGameSettings() const {
   auto installPath =
       std::filesystem::u8path(installPathInput->text().toStdString());
 
-  auto registryKeysList = registryKeysInput->toPlainText().split('\n');
-  std::vector<std::string> registryKeys;
-  for (const auto& key : registryKeysList) {
-    if (!key.isEmpty()) {
-      registryKeys.push_back(key.toStdString());
-    }
-  }
-
   auto localDataPath =
       std::filesystem::u8path(localDataPathInput->text().toStdString());
 
-  const auto isBaseGameInstance = baseGameInstanceCheckbox->isChecked();
-
   GameSettings settings(gameType, lootFolder);
   settings.SetName(name);
-  settings.SetIsBaseGameInstance(isBaseGameInstance);
   settings.SetMaster(masterFile);
   settings.SetMinimumHeaderVersion(minimumHeaderVersion);
   settings.SetMasterlistSource(masterlistSource);
-  settings.SetRegistryKeys(registryKeys);
   settings.SetGamePath(installPath);
   settings.SetGameLocalPath(localDataPath);
 
@@ -131,20 +119,17 @@ GameSettings GameTab::getGameSettings() const {
 
 void GameTab::setupUi() {
   minimumHeaderVersionSpinBox->setSingleStep(0.01);
-  registryKeysInput->setTabChangesFocus(true);
   deleteGameButton->setObjectName("deleteGameButton");
 
   auto generalLayout = new QFormLayout(this);
 
   generalLayout->addRow(nameLabel, nameInput);
   generalLayout->addRow(baseGameLabel, baseGameComboBox);
-  generalLayout->addRow(baseGameInstanceLabel, baseGameInstanceCheckbox);
   generalLayout->addRow(lootFolderLabel, lootFolderInput);
   generalLayout->addRow(masterFileLabel, masterFileInput);
   generalLayout->addRow(minimumHeaderVersionLabel, minimumHeaderVersionSpinBox);
   generalLayout->addRow(masterlistSourceLabel, masterlistSourceInput);
   generalLayout->addRow(installPathLabel, installPathInput);
-  generalLayout->addRow(registryKeysLabel, registryKeysInput);
   generalLayout->addRow(localDataPathLabel, localDataPathInput);
 
   generalLayout->addWidget(deleteGameButton);
@@ -157,13 +142,11 @@ void GameTab::setupUi() {
 void GameTab::translateUi() {
   nameLabel->setText(translate("Name"));
   baseGameLabel->setText(translate("Base Game"));
-  baseGameInstanceLabel->setText(translate("Is instance of base game"));
   lootFolderLabel->setText(translate("LOOT Folder"));
   masterFileLabel->setText(translate("Main Master Plugin"));
   minimumHeaderVersionLabel->setText(translate("Minimum Header Version"));
   masterlistSourceLabel->setText(translate("Masterlist Source"));
   installPathLabel->setText(translate("Install Path"));
-  registryKeysLabel->setText(translate("Install Path Registry Keys"));
   localDataPathLabel->setText(translate("Local AppData Path"));
 
   deleteGameButton->setText(translate("Delete game"));
@@ -182,8 +165,6 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   localDataPathInput->setText(
       QString::fromStdString(settings.GameLocalPath().u8string()));
 
-  baseGameInstanceCheckbox->setChecked(settings.IsBaseGameInstance());
-
   while (baseGameComboBox->count() > 0) {
     baseGameComboBox->removeItem(0);
   }
@@ -193,19 +174,11 @@ void GameTab::initialiseInputs(const GameSettings& settings,
   }
 
   auto baseGameIndex = baseGameComboBox->findText(
-      QString::fromStdString(GameSettings(settings.Type()).FolderName()));
+      QString::fromStdString(ToString(settings.Type())));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
-
-  QString keys;
-  for (const auto& key : settings.RegistryKeys()) {
-    keys.append(QString::fromStdString(key));
-    keys.append("\n");
-  }
-  registryKeysInput->setPlainText(keys);
 
   nameInput->setEnabled(false);
   baseGameComboBox->setEnabled(false);
-  baseGameInstanceCheckbox->setEnabled(false);
   lootFolderInput->setEnabled(false);
 
   deleteGameButton->setEnabled(!isCurrentGame);

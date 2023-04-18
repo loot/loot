@@ -39,13 +39,6 @@ void OpenInDefaultApplication(const std::filesystem::path& file);
 std::wstring ToWinWide(const std::string& str);
 
 std::string FromWinWide(const std::wstring& wstr);
-
-std::string RegKeyStringValue(const std::string& rootKey,
-                              const std::string& subkey,
-                              const std::string& value);
-
-std::vector<std::string> GetRegistrySubKeys(const std::string& rootKey,
-                                            const std::string& subKey);
 #endif
 
 std::vector<std::string> GetPreferredUILanguages();

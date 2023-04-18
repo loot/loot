@@ -43,6 +43,7 @@ namespace test {
 class LootSettingsTest : public CommonGameTestFixture {
 protected:
   LootSettingsTest() :
+      CommonGameTestFixture(GameId::tes5),
       settingsFile_(lootDataPath / "settings_.toml"),
       unicodeSettingsFile_(lootDataPath / "Andr\xc3\xa9_settings_.toml"),
       gitRepoPath_(getTempPath()) {}
@@ -70,54 +71,8 @@ protected:
   LootSettings settings_;
 };
 
-// Pass an empty first argument, as it's a prefix for the test instantation,
-// but we only have the one so no prefix is necessary.
-// Just test with one game because if it works for one it will work for them
-// all.
-INSTANTIATE_TEST_SUITE_P(, LootSettingsTest, ::testing::Values(GameType::tes5));
-
-TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
+TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   const std::string currentVersion = gui::Version::string();
-  const std::vector<GameSettings> expectedGameSettings({
-      GameSettings(GameType::tes3),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::tes5vr),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::fo4vr),
-      GameSettings(GameType::tes4, "Nehrim")
-          .SetName("Nehrim - At Fate's Edge")
-          .SetIsBaseGameInstance(false)
-          .SetMaster("Nehrim.esm")
-          .SetRegistryKeys(
-              {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninst"
-               "all\\Nehrim - At Fate's Edge_is1\\InstallLocation",
-               std::string(NEHRIM_STEAM_REGISTRY_KEY),
-               "Software\\GOG.com\\Games\\1497007810\\path"}),
-      GameSettings(GameType::tes5, "Enderal")
-          .SetName("Enderal: Forgotten Stories")
-          .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 933480\\InstallLocation"})
-          .SetGameLocalFolder("enderal")
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.18/masterlist.yaml"),
-      GameSettings(GameType::tes5se, "Enderal Special Edition")
-          .SetName("Enderal: Forgotten Stories (Special Edition)")
-          .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 976620\\InstallLocation",
-               "Software\\GOG.com\\Games\\1708684988\\path"})
-          .SetMasterlistSource("https://raw.githubusercontent.com/loot/"
-                               "enderal/v0.18/masterlist.yaml"),
-  });
 
   EXPECT_FALSE(settings_.isDebugLoggingEnabled());
   EXPECT_TRUE(settings_.isMasterlistUpdateBeforeSortEnabled());
@@ -136,23 +91,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
   EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml",
             settings_.getPreludeSource());
-
-  // GameSettings equality only checks name and folder, so check
-  // other settings individually.
-  const std::vector<GameSettings> actualGameSettings =
-      settings_.getGameSettings();
-  EXPECT_EQ(expectedGameSettings, actualGameSettings);
-
-  for (size_t i = 0; i < actualGameSettings.size(); ++i) {
-    EXPECT_EQ(expectedGameSettings[i].Type(), actualGameSettings[i].Type());
-    EXPECT_EQ(expectedGameSettings[i].IsBaseGameInstance(),
-              actualGameSettings[i].IsBaseGameInstance());
-    EXPECT_EQ(expectedGameSettings[i].Master(), actualGameSettings[i].Master());
-    EXPECT_EQ(expectedGameSettings[i].RegistryKeys(),
-              actualGameSettings[i].RegistryKeys());
-    EXPECT_EQ(expectedGameSettings[i].MasterlistSource(),
-              actualGameSettings[i].MasterlistSource());
-  }
+  EXPECT_TRUE(settings_.getGameSettings().empty());
 
   auto actualLanguages = settings_.getLanguages();
   EXPECT_EQ(18, actualLanguages.size());
@@ -179,7 +118,7 @@ TEST_P(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_EQ(LootSettings::Language({"zh_CN", "简体中文"}), actualLanguages[17]);
 }
 
-TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
+TEST_F(LootSettingsTest, loadingShouldReadFromATomlFile) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "enableDebugLogging = true" << endl
@@ -255,72 +194,7 @@ TEST_P(LootSettingsTest, loadingShouldReadFromATomlFile) {
             settings_.getLanguages()[0]);
 }
 
-TEST_P(LootSettingsTest, loadingShouldSetIsBaseGameInstanceIfGiven) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Oblivion\"" << endl
-      << "isBaseGameInstance = false" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(
-    LootSettingsTest,
-    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesNehrim) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Nehrim\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(
-    LootSettingsTest,
-    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderal) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Enderal\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(
-    LootSettingsTest,
-    loadingShouldSetIsBaseGameInstanceToFalseIfMissingAndGameFolderMatchesEnderalSpecialEdition) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Enderal Special Edition\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_FALSE(settings_.getGameSettings()[0].IsBaseGameInstance());
-}
-
-TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
+TEST_F(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -332,52 +206,12 @@ TEST_P(LootSettingsTest, loadingShouldSetGameMinimumHeaderVersion) {
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
+  ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
   EXPECT_EQ(1.0, settings_.getGameSettings()[0].MinimumHeaderVersion());
 }
 
-TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyStringValues) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Oblivion\"" << endl
-      << "registry = \"a registry path\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ(1, settings_.getGameSettings()[0].RegistryKeys().size());
-  EXPECT_EQ("a registry path",
-            settings_.getGameSettings()[0].RegistryKeys()[0]);
-}
-
-TEST_P(LootSettingsTest, loadingShouldSupportGameRegistryKeyArrayValues) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Oblivion\"" << endl
-      << "registry = [\"a registry path\", \"another registry path\"]" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ(2, settings_.getGameSettings()[0].RegistryKeys().size());
-  EXPECT_EQ("a registry path",
-            settings_.getGameSettings()[0].RegistryKeys()[0]);
-  EXPECT_EQ("another registry path",
-            settings_.getGameSettings()[0].RegistryKeys()[1]);
-}
-
-TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
+TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   using std::endl;
   std::ofstream out(unicodeSettingsFile_);
   out << "enableDebugLogging = true" << endl
@@ -392,7 +226,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPaths) {
   EXPECT_EQ("Oblivion", settings_.getGame());
 }
 
-TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
+TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -405,7 +239,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
+  ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
   EXPECT_EQ(u8"non\u00C1sciiGamePath",
             settings_.getGameSettings()[0].GamePath().u8string());
@@ -413,7 +247,7 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiPathsInGameSettings) {
             settings_.getGameSettings()[0].GameLocalPath().u8string());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingShouldSkipGameIfLocalPathAndLocalFolderAreBothSet) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -427,13 +261,10 @@ TEST_P(LootSettingsTest,
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
-  EXPECT_EQ("TES III: Morrowind", settings_.getGameSettings()[0].Name());
-  EXPECT_EQ("TES IV: Oblivion", settings_.getGameSettings()[1].Name());
-  EXPECT_TRUE(settings_.getGameSettings()[1].GameLocalPath().empty());
+  EXPECT_TRUE(settings_.getGameSettings().empty());
 }
 
-TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
+TEST_F(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -445,14 +276,14 @@ TEST_P(LootSettingsTest, loadingShouldHandleNonAsciiStringInLocalFolder) {
 
   settings_.load(settingsFile_);
 
-  ASSERT_EQ(9, settings_.getGameSettings().size());
+  ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ("Oblivion", settings_.getGameSettings()[0].FolderName());
   EXPECT_EQ(getLocalAppDataPath() /
                 std::filesystem::u8path(u8"non\u00C1sciiGameFolder"),
             settings_.getGameSettings()[0].GameLocalPath());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingShouldMigrateMasterlistSourcesUsingOfficialRepositoriesAndOldDefaultBranches) {
   using std::endl;
@@ -473,7 +304,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingShouldPreserveRepositoryThroughMasterlistSourceMigration) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -493,7 +324,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingShouldNotMigrateMasterlistSourcesUsingOfficialRepositoriesAndBranchesThatAreNotOldDefaults) {
   using std::endl;
@@ -514,7 +345,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingShouldNotMigrateMasterlistSourcesUsingNonOfficialRepositoriesAndOldDefaultBranches) {
   using std::endl;
@@ -536,7 +367,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
+TEST_F(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -552,7 +383,7 @@ TEST_P(LootSettingsTest, loadingShouldNotMigratePathMasterlistSources) {
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldIgnoreMasterlistRepoSettingsIfASourceIsAlsoGiven) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -571,7 +402,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldUseDefaultMasterlistRepoUrlWhenMigratingIfItIsNotGiven) {
   using std::endl;
@@ -591,7 +422,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldUseDefaultMasterlistBranchWhenMigratingIfItIsNotGiven) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -610,7 +441,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldUpgradeOldDefaultGameRepositoryBranches) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -627,7 +458,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldNotUpgradeNonDefaultBranchesForDefaultGameRepositories) {
   const std::vector<GameSettings> games({GameSettings(GameType::tes4)});
@@ -648,7 +479,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlCannotMigrateMasterlistRepoAndBranchForNonDefaultGameRepositories) {
   using std::endl;
@@ -667,7 +498,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldUpdateSkyrimVrRepoUrlFromOldDefaultRepoUrl) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -686,7 +517,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldMigrateSkyrimVrRepoUrlFromNonOldDefaultGitHubRepoUrl) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -705,7 +536,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldUpdateFallout4VrRepoUrlFromOldDefaultRepoUrl) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -724,7 +555,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldMigrateFallout4VrRepoUrlFromNonOldDefaultGitHubRepoUrl) {
   using std::endl;
@@ -744,7 +575,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldInterpretTheMasterlistRepoUrlAsALocalPathIfThereIsAGitRepoWithTheMasterlistFileAndTheGivenBranchCheckedOut) {
   auto escapedGitRepoPath =
@@ -768,7 +599,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldIgnoreMasterlistRepoSettingsIfTheUrlIsALocalPathButNotADirectoryContainingAMasterlist) {
   auto escapedGitRepoPath =
@@ -793,7 +624,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldIgnoreMasterlistRepoSettingsIfTheUrlIsALocalPathButNotAGitRepository) {
   auto escapedGitRepoPath =
@@ -818,7 +649,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldUseTheMasterlistRepoUrlIfItIsALocalGitRepoButTheGivenBranchIsNotCheckedOut) {
   auto escapedGitRepoPath =
@@ -842,7 +673,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldIgnoreMasterlistRepoSettingsIfTheUrlIsNotALocalPathAndIsNotAGitHubRepoUrl) {
   using std::endl;
@@ -861,7 +692,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldMigrateMasterlistRepoSettingsForAnyGitHubRepositoryUrl) {
   using std::endl;
@@ -882,7 +713,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingShouldMigratePreludeSourceUsingTheOfficialRepositoryAndAnOldDefaultBranch) {
   using std::endl;
@@ -903,7 +734,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingShouldNotMigratePreludeSourceUsingTheOfficialRepositoryAndABranchThatIsNotAnOldDefault) {
   using std::endl;
@@ -920,7 +751,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingShouldNotMigratePreludeSourcesUsingANonOfficialRepositoryAndOldDefaultBranch) {
   using std::endl;
@@ -938,7 +769,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(LootSettingsTest, loadingShouldNotMigratePathPreludeSource) {
+TEST_F(LootSettingsTest, loadingShouldNotMigratePathPreludeSource) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "preludeSource = \"C:\\\\prelude.yaml\"";
@@ -950,7 +781,7 @@ TEST_P(LootSettingsTest, loadingShouldNotMigratePathPreludeSource) {
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldIgnorePreludeRepoSettingsIfASourceIsAlsoGiven) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -965,7 +796,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldUseDefaultPreludeRepoUrlWhenMigratingIfItIsNotGiven) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -980,7 +811,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldUseDefaultPreludeBranchWhenMigratingIfItIsNotGiven) {
   // This isn't actually testable, as prelude migration will ignore any URL
   // that's not the official prelude repository's URL (as there's only ever
@@ -999,7 +830,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldInterpretThePreludeRepoUrlAsALocalPathIfThereIsAGitRepoWithThePreludeFileAndTheGivenBranchCheckedOut) {
   auto escapedGitRepoPath =
@@ -1019,7 +850,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldIgnorePreludeRepoSettingsIfTheUrlIsALocalPathButNotADirectoryContainingAPreludeFile) {
   auto escapedGitRepoPath =
@@ -1041,7 +872,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldIgnorePreludeRepoSettingsIfTheUrlIsALocalPathButNotAGitRepository) {
   auto escapedGitRepoPath =
@@ -1063,7 +894,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldUseThePreludeRepoUrlIfItIsALocalGitRepoButTheGivenBranchIsNotCheckedOut) {
   auto escapedGitRepoPath =
@@ -1083,7 +914,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(
+TEST_F(
     LootSettingsTest,
     loadingTomlShouldIgnorePreludeRepoSettingsIfTheUrlIsNotALocalPathAndIsNotAGitHubRepoUrl) {
   using std::endl;
@@ -1099,7 +930,7 @@ TEST_P(
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        loadingTomlShouldMigratePreludeRepoSettingsForAnyGitHubRepositoryUrl) {
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -1116,7 +947,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedSource, settings_.getPreludeSource());
 }
 
-TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
+TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -1132,39 +963,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
             settings_.getGameSettings()[0].FolderName());
 }
 
-TEST_P(LootSettingsTest, loadingTomlShouldAddMissingBaseGames) {
-  using std::endl;
-  std::ofstream out(settingsFile_);
-  out << "[[games]]" << endl
-      << "name = \"Game Name\"" << endl
-      << "type = \"Oblivion\"" << endl
-      << "folder = \"Test\"" << endl
-      << "branch = \"foo\"" << endl;
-  out.close();
-
-  settings_.load(settingsFile_);
-
-  GameSettings testGame = GameSettings(GameType::tes4, "Test")
-                              .SetName("Game Name")
-                              .SetMasterlistSource("foo");
-
-  const std::vector<GameSettings> expectedGameSettings({
-      testGame,
-      GameSettings(GameType::tes3),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::tes5vr),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::fo4vr),
-  });
-  EXPECT_EQ(10, settings_.getGameSettings().size());
-  EXPECT_EQ(expectedGameSettings, settings_.getGameSettings());
-}
-
-TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
+TEST_F(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   using std::endl;
   std::ofstream out(settingsFile_);
   out << "[[games]]" << endl
@@ -1182,7 +981,7 @@ TEST_P(LootSettingsTest, loadingTomlShouldSkipUnrecognisedGames) {
   EXPECT_EQ("Game Name", settings_.getGameSettings()[0].Name());
 }
 
-TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
+TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   const std::string game = "Oblivion";
   const std::string language = "fr";
   const std::string lastGame = "Skyrim";
@@ -1262,7 +1061,7 @@ TEST_P(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   EXPECT_EQ(filters.hideCRCs, settings.getFilters().hideCRCs);
 }
 
-TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
+TEST_F(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
   using std::filesystem::u8path;
   settings_.storeGameSettings(
       {GameSettings(GameType::tes4)
@@ -1279,20 +1078,29 @@ TEST_P(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
   EXPECT_NE(std::string::npos, contents.find(u8"non\u00C1sciiGameLocalPath"));
 }
 
-TEST_P(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
-  const std::vector<GameSettings> gameSettings({GameSettings(GameType::tes5)});
-  settings_.storeGameSettings(gameSettings);
+TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
+  ASSERT_EQ(0, settings_.getGameSettings().size());
 
-  EXPECT_EQ(gameSettings, settings_.getGameSettings());
+  settings_.storeGameSettings(
+      {GameSettings(GameType::tes3), GameSettings(GameType::tes4)});
+
+  ASSERT_EQ(2, settings_.getGameSettings().size());
+  EXPECT_EQ(GameType::tes3, settings_.getGameSettings()[0].Type());
+  EXPECT_EQ(GameType::tes4, settings_.getGameSettings()[1].Type());
+
+  settings_.storeGameSettings({GameSettings(GameType::tes5)});
+
+  ASSERT_EQ(1, settings_.getGameSettings().size());
+  EXPECT_EQ(GameType::tes5, settings_.getGameSettings()[0].Type());
 }
 
-TEST_P(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
+TEST_F(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {
   settings_.storeLastGame("Fallout3");
 
   EXPECT_EQ("Fallout3", settings_.getLastGame());
 }
 
-TEST_P(LootSettingsTest, storeMainWindowPositionShouldReplaceExistingValue) {
+TEST_F(LootSettingsTest, storeMainWindowPositionShouldReplaceExistingValue) {
   LootSettings::WindowPosition expectedPosition;
   expectedPosition.top = 1;
   settings_.storeMainWindowPosition(expectedPosition);
@@ -1306,7 +1114,7 @@ TEST_P(LootSettingsTest, storeMainWindowPositionShouldReplaceExistingValue) {
   EXPECT_EQ(expectedPosition.right, actualPosition.right);
 }
 
-TEST_P(LootSettingsTest,
+TEST_F(LootSettingsTest,
        storeGroupsEditorWindowPositionShouldReplaceExistingValue) {
   LootSettings::WindowPosition expectedPosition;
   expectedPosition.top = 1;
@@ -1321,7 +1129,7 @@ TEST_P(LootSettingsTest,
   EXPECT_EQ(expectedPosition.right, actualPosition.right);
 }
 
-TEST_P(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
+TEST_F(LootSettingsTest, updateLastVersionShouldSetValueToCurrentLootVersion) {
   const std::string currentVersion = gui::Version::string();
 
   std::ofstream out(settingsFile_);

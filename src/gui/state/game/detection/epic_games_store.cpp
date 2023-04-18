@@ -32,6 +32,8 @@
 #include <QtCore/QString>
 #include <boost/algorithm/string.hpp>
 
+#include "gui/state/game/detection/common.h"
+
 #ifdef _WIN32
 #ifndef UNICODE
 #define UNICODE
@@ -49,7 +51,7 @@
 #include "gui/state/logging.h"
 
 namespace {
-using loot::GameType;
+using loot::GameId;
 using loot::getLogger;
 
 struct EgsManifestData {
@@ -57,22 +59,25 @@ struct EgsManifestData {
   std::string installLocation;
 };
 
-std::optional<std::string> GetEgsAppName(GameType gameType) {
-  switch (gameType) {
-    case GameType::tes5se:
+std::optional<std::string> GetEgsAppName(GameId gameId) {
+  switch (gameId) {
+    case GameId::tes5se:
       // The Anniversary Edition "DLC" has an AppName of
       // 5d600e4f59974aeba0259c7734134e27 but I don't think there's any benefit
       // to checking for it too.
       return "ac82db5035584c7f8a2c548d98c86b2c";
-    case GameType::fo3:
+    case GameId::fo3:
       return "adeae8bbfc94427db57c7dfecce3f1d4";
-    case GameType::tes3:
-    case GameType::tes4:
-    case GameType::tes5:
-    case GameType::tes5vr:
-    case GameType::fonv:
-    case GameType::fo4:
-    case GameType::fo4vr:
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::enderal:
+    case GameId::enderalse:
+    case GameId::tes5vr:
+    case GameId::fonv:
+    case GameId::fo4:
+    case GameId::fo4vr:
       return std::nullopt;
     default:
       throw std::logic_error("Unrecognised game type");
@@ -80,15 +85,15 @@ std::optional<std::string> GetEgsAppName(GameType gameType) {
 }
 
 std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
-    GameType gameType,
+    GameId gameId,
     const std::filesystem::path& basePath) {
-  switch (gameType) {
-    case GameType::tes5se:
+  switch (gameId) {
+    case GameId::tes5se:
       // There's only one path, it could be for any language that
       // the game supports, so just use en (the choice doesn't
       // matter).
       return {{basePath, "en"}};
-    case GameType::fo3:
+    case GameId::fo3:
       return {{basePath / "Fallout 3 GOTY English", "en"},
               {basePath / "Fallout 3 GOTY French", "fr"},
               {basePath / "Fallout 3 GOTY German", "de"},
@@ -113,18 +118,21 @@ std::filesystem::path GetProgramDataPath() {
 
   return programDataPath;
 }
+#endif
 
-std::filesystem::path GetEgsManifestsPath() {
+std::optional<std::filesystem::path> GetEgsManifestsPath(
+    const loot::RegistryInterface& registry) {
   // Try using Registry key first.
   const auto appDataPath =
-      loot::RegKeyStringValue("HKEY_LOCAL_MACHINE",
-                              "Software\\Epic Games\\EpicGamesLauncher",
-                              "AppDataPath");
+      registry.GetStringValue({"HKEY_LOCAL_MACHINE",
+                               "Software\\Epic Games\\EpicGamesLauncher",
+                               "AppDataPath"});
 
-  if (!appDataPath.empty()) {
-    return std::filesystem::u8path(appDataPath) / "Manifests";
+  if (appDataPath.has_value()) {
+    return std::filesystem::u8path(appDataPath.value()) / "Manifests";
   }
 
+#ifdef _WIN32
   // Fall back to using building the usual path if the Registry key couldn't
   // be found or the value is empty.
   const auto logger = getLogger();
@@ -137,8 +145,10 @@ std::filesystem::path GetEgsManifestsPath() {
 
   return GetProgramDataPath() / "Epic" / "EpicGamesLauncher" / "Data" /
          "Manifests";
-}
+#else
+  return std::nullopt;
 #endif
+}
 
 EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
   const auto logger = getLogger();
@@ -185,14 +195,20 @@ EgsManifestData GetEgsManifestData(const std::filesystem::path& manifestPath) {
 }
 
 std::optional<std::filesystem::path> GetEgsGameInstallPath(
-    const loot::GameSettings& settings) {
-#ifdef _WIN32
+    const loot::RegistryInterface& registry,
+    const loot::GameId gameId) {
   // Unfortunately we don't know which is the right manifest file, so iterate
   // over them until the one containing the correct AppName is found.
-  const auto expectedAppName = GetEgsAppName(settings.Type());
+  const auto expectedAppName = GetEgsAppName(gameId);
 
   if (!expectedAppName.has_value()) {
     // Short-circuit to avoid unnecessary directory scanning.
+    return std::nullopt;
+  }
+
+  const auto egsManifestsPath = GetEgsManifestsPath(registry);
+  if (!egsManifestsPath.has_value() ||
+      !std::filesystem::exists(egsManifestsPath.value())) {
     return std::nullopt;
   }
 
@@ -202,11 +218,11 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
     logger->trace(
         "Checking if game \"{}\" is installed through the Epic Games "
         "Store.",
-        settings.Name());
+        loot::GetGameName(gameId));
   }
 
   for (const auto& entry :
-       std::filesystem::directory_iterator(GetEgsManifestsPath())) {
+       std::filesystem::directory_iterator(egsManifestsPath.value())) {
     if (entry.is_regular_file() &&
         boost::iends_with(entry.path().filename().u8string(), ".item")) {
       const auto manifestData = GetEgsManifestData(entry.path());
@@ -223,28 +239,33 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
       }
     }
   }
-#endif
 
   return std::nullopt;
 }
 }
 
-namespace loot {
-std::optional<std::filesystem::path> FindEpicGamesStoreGameInstallPath(
-    const GameSettings& settings,
+namespace loot::epic {
+std::optional<GameInstall> FindGameInstalls(
+    const RegistryInterface& registry,
+    const GameId gameId,
     const std::vector<std::string>& preferredUILanguages) {
   try {
-    const auto installPath = GetEgsGameInstallPath(settings);
+    const auto installPath = GetEgsGameInstallPath(registry, gameId);
 
     if (installPath.has_value()) {
       // Fallout 3 has several localised copies of the game in
       // subdirectories of its installLocation, so get the best match for the
       // user's current language.
       const auto pathsToCheck =
-          GetGameLocalisationDirectories(settings.Type(), installPath.value());
+          GetGameLocalisationDirectories(gameId, installPath.value());
 
-      return GetLocalisedGameInstallPath(
-          settings, preferredUILanguages, pathsToCheck);
+      const auto localisedInstallPath = GetLocalisedGameInstallPath(
+          gameId, preferredUILanguages, pathsToCheck);
+
+      if (localisedInstallPath.has_value()) {
+        return GameInstall{
+            gameId, InstallSource::epic, localisedInstallPath.value()};
+      }
     }
   } catch (const std::exception& e) {
     const auto logger = getLogger();
@@ -252,7 +273,7 @@ std::optional<std::filesystem::path> FindEpicGamesStoreGameInstallPath(
       logger->error(
           "Error while checking if game \"{}\" is installed through the Epic "
           "Games Store: {}",
-          settings.Name(),
+          GetGameName(gameId),
           e.what());
     }
   }

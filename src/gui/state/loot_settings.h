@@ -120,44 +120,7 @@ private:
   std::string theme_{"default"};
   std::optional<WindowPosition> mainWindowPosition_;
   std::optional<WindowPosition> groupsEditorWindowPosition_;
-  std::vector<GameSettings> gameSettings_{
-      GameSettings(GameType::tes3),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes5),
-      GameSettings(GameType::tes5se),
-      GameSettings(GameType::tes5vr),
-      GameSettings(GameType::fo3),
-      GameSettings(GameType::fonv),
-      GameSettings(GameType::fo4),
-      GameSettings(GameType::fo4vr),
-      GameSettings(GameType::tes4, "Nehrim")
-          .SetName("Nehrim - At Fate's Edge")
-          .SetIsBaseGameInstance(false)
-          .SetMaster("Nehrim.esm")
-          .SetRegistryKeys(
-              {"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Nehrim"
-               " - At Fate's Edge_is1\\InstallLocation",
-               std::string(NEHRIM_STEAM_REGISTRY_KEY),
-               "Software\\GOG.com\\Games\\1497007810\\path"}),
-      GameSettings(GameType::tes5, "Enderal")
-          .SetName("Enderal: Forgotten Stories")
-          .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\Enderal\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 933480\\InstallLocation"})
-          .SetGameLocalFolder("enderal")
-          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
-      GameSettings(GameType::tes5se, "Enderal Special Edition")
-          .SetName("Enderal: Forgotten Stories (Special Edition)")
-          .SetIsBaseGameInstance(false)
-          .SetRegistryKeys(
-              {"HKEY_CURRENT_USER\\SOFTWARE\\SureAI\\EnderalSE\\Install_Path",
-               "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam "
-               "App 976620\\InstallLocation",
-               "Software\\GOG.com\\Games\\1708684988\\path"})
-          .SetMasterlistSource(GetDefaultMasterlistUrl("enderal")),
-  };
+  std::vector<GameSettings> gameSettings_;
   Filters filters_;
   std::vector<Language> languages_{
       Language({"en", "English"}),
@@ -181,8 +144,6 @@ private:
   };
 
   mutable std::recursive_mutex mutex_;
-
-  void appendBaseGames();
 };
 }
 

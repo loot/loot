@@ -37,7 +37,7 @@ Masterlist prelude source
 Game Settings
 =============
 
-LOOT's game-specific settings can be customised by selecting a game in the sidebar. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. LOOT ships with settings for the "Nehrim - At Fate's Edge" total conversion mod as an example. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate the profiles for the base games it supports (Morrowind, Oblivion, Skyrim, Skyrim Special Edition, Skyrim VR, Fallout 3, Fallout: New Vegas, Fallout 4 and Fallout 4 VR) when it is next run.
+LOOT's game-specific settings can be customised by selecting a game in the sidebar. New game profiles can be added, making it easy to use LOOT across multiple copies of a game, including total conversion mods. Game profiles can also be deleted, though the active game cannot have its profile deleted, and LOOT will recreate default profiles for any games it detects when it is next run.
 
 Name
   The name of the game, or another identifying text, that is displayed in menus and the LOOT's title bar.
@@ -55,9 +55,6 @@ Base Game
   - Fallout 4
   - Fallout 4 VR
 
-Is instance of base game
-  This is used to distinguish between instances of a base game and instances of total conversions that build off of that base game.
-
 LOOT Folder
   The sub-folder which LOOT uses to store the game's files in. Each game must be given a unique sub-folder.
 
@@ -72,11 +69,6 @@ Masterlist Source
 
 Install Path
   The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
-
-Install Path Registry Keys
-  The registry keys that may contain the install path of the game. These are used to obtain the install path if LOOT has no previous record of the game's install path, or LOOT's stored install path is invalid. If a key does not specify its root, it is assumed to be ``HKEY_LOCAL_MACHINE``. The other recognised roots are ``HKEY_CLASSES_ROOT``, ``HKEY_CURRENT_CONFIG``, ``HKEY_CURRENT_USER`` and ``HKEY_USERS``.
-
-  Multiple keys can be provided, one per line, and are checked in the order they are given, stopping at the first key that exists and stores a valid install path.
 
 Local AppData Path
   The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``. If left empty,

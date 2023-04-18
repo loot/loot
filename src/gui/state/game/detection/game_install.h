@@ -23,21 +23,35 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE
-#define LOOT_GUI_STATE_GAME_DETECTION_EPIC_GAMES_STORE
+#ifndef LOOT_GUI_STATE_GAME_DETECTION_GAME_INSTALL
+#define LOOT_GUI_STATE_GAME_DETECTION_GAME_INSTALL
 
 #include <filesystem>
-#include <vector>
 
-#include "gui/state/game/detection/game_install.h"
-#include "gui/state/game/detection/registry.h"
-#include "gui/state/game/game_settings.h"
+namespace loot {
+enum struct GameId : uint8_t {
+  tes3,
+  tes4,
+  nehrim,
+  tes5,
+  enderal,
+  tes5se,
+  enderalse,
+  tes5vr,
+  fo3,
+  fonv,
+  fo4,
+  fo4vr
+};
 
-namespace loot::epic {
-std::optional<GameInstall> FindGameInstalls(
-    const RegistryInterface& registry,
-    const GameId gameId,
-    const std::vector<std::string>& preferredUILanguages);
+enum struct InstallSource : uint8_t { steam, gog, epic, microsoft, unknown };
+
+struct GameInstall {
+  GameId gameId{GameId::tes3};
+  InstallSource source{InstallSource::unknown};
+  std::filesystem::path installPath;
+  std::filesystem::path localPath;
+};
 }
 
 #endif
