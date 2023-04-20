@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-04-10 18:16+0100\n"
+"POT-Creation-Date: 2023-04-20 18:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1098,42 +1098,42 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:89
+#: src/gui/state/game/helpers.cpp:87
 msgid "{0} ITM record"
 msgid_plural "{0} ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:95
+#: src/gui/state/game/helpers.cpp:93
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:101
+#: src/gui/state/game/helpers.cpp:99
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:111
+#: src/gui/state/game/helpers.cpp:109
 msgid "{0} found {1}, {2} and {3}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:119
+#: src/gui/state/game/helpers.cpp:117
 msgid "{0} found dirty edits."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:124 src/gui/state/game/helpers.cpp:131
-#: src/gui/state/game/helpers.cpp:138
+#: src/gui/state/game/helpers.cpp:122 src/gui/state/game/helpers.cpp:129
+#: src/gui/state/game/helpers.cpp:136
 msgid "{0} found {1} and {2}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:143 src/gui/state/game/helpers.cpp:147
-#: src/gui/state/game/helpers.cpp:151
+#: src/gui/state/game/helpers.cpp:141 src/gui/state/game/helpers.cpp:145
+#: src/gui/state/game/helpers.cpp:149
 msgid "{0} found {1}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:241
+#: src/gui/state/game/helpers.cpp:239
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""

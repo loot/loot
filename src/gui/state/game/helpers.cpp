@@ -63,18 +63,16 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
   }
 }
 
-Message PlainTextMessage(MessageType type, std::string text) {
+Message PlainTextMessage(const MessageType type, const std::string& text) {
   return Message(type, EscapeMarkdownASCIIPunctuation(text));
 }
 
-SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text) {
-  SimpleMessage message;
-  message.type = type;
-  message.text = EscapeMarkdownASCIIPunctuation(text);
-  return message;
+SimpleMessage PlainTextSimpleMessage(const MessageType type,
+                                     const std::string& text) {
+  return SimpleMessage{type, EscapeMarkdownASCIIPunctuation(text)};
 }
 
-std::string EscapeMarkdownASCIIPunctuation(std::string text) {
+std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
   // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
   static const std::regex asciiPunctuationCharacters(
       "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
@@ -165,7 +163,7 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
   return Message(MessageType::warn, detail);
 }
 
-std::string DescribeEdgeType(EdgeType edgeType) {
+std::string DescribeEdgeType(const EdgeType edgeType) {
   switch (edgeType) {
     case EdgeType::hardcoded:
       return "Hardcoded";
@@ -214,8 +212,8 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
 }
 
 std::vector<Message> CheckForRemovedPlugins(
-    const std::vector<std::string> pluginsBefore,
-    const std::vector<std::string> pluginsAfter) {
+    const std::vector<std::string>& pluginsBefore,
+    const std::vector<std::string>& pluginsAfter) {
   // Plugin name case won't change, so can compare strings
   // without normalising case.
   std::set<std::string> pluginsSet(pluginsAfter.cbegin(), pluginsAfter.cend());

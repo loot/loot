@@ -40,22 +40,23 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
-std::string EscapeMarkdownASCIIPunctuation(std::string text);
+std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 
 // Create a Message, escaping any Markdown special characters in the input text.
-Message PlainTextMessage(MessageType type, std::string text);
+Message PlainTextMessage(const MessageType type, const std::string& text);
 
 // Create a SimpleMessage, escaping any Markdown special characters in the input
 // text.
-SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text);
+SimpleMessage PlainTextSimpleMessage(const MessageType type,
+                                     const std::string& text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<Message> CheckForRemovedPlugins(
-    const std::vector<std::string> pluginsBefore,
-    const std::vector<std::string> pluginsAfter);
+    const std::vector<std::string>& pluginsBefore,
+    const std::vector<std::string>& pluginsAfter);
 
 std::vector<Tag> ReadBashTagsFile(std::istream& in);
 
