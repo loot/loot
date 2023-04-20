@@ -35,6 +35,23 @@
 
 #include "gui/state/logging.h"
 
+namespace {
+constexpr const char* MS_FO4_AUTOMATRON_DATA_PATH =
+    "../../../Fallout 4- Automatron (PC)/Content/Data";
+constexpr const char* MS_FO4_CONTRAPTIONS_DATA_PATH =
+    "../../../Fallout 4- Contraptions Workshop (PC)/Content/Data";
+constexpr const char* MS_FO4_FAR_HARBOR_DATA_PATH =
+    "../../../Fallout 4- Far Harbor (PC)/Content/Data";
+constexpr const char* MS_FO4_TEXTURE_PACK_DATA_PATH =
+    "../../../Fallout 4- High Resolution Texture Pack/Content/Data";
+constexpr const char* MS_FO4_NUKA_WORLD_DATA_PATH =
+    "../../../Fallout 4- Nuka-World (PC)/Content/Data";
+constexpr const char* MS_FO4_VAULT_TEC_DATA_PATH =
+    "../../../Fallout 4- Vault-Tec Workshop (PC)/Content/Data";
+constexpr const char* MS_FO4_WASTELAND_DATA_PATH =
+    "../../../Fallout 4- Wasteland Workshop (PC)/Content/Data";
+}
+
 namespace loot {
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory) {
@@ -212,25 +229,25 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
 }
 
 std::vector<Message> CheckForRemovedPlugins(
-    const std::vector<std::string>& pluginsBefore,
-    const std::vector<std::string>& pluginsAfter) {
+    const std::vector<std::string>& pluginPathsBefore,
+    const std::vector<std::string>& pluginNamesAfter) {
   // Plugin name case won't change, so can compare strings
   // without normalising case.
-  std::set<std::string> pluginsSet(pluginsAfter.cbegin(), pluginsAfter.cend());
+  std::set<std::string> pluginsSet(pluginNamesAfter.cbegin(),
+                                   pluginNamesAfter.cend());
 
-  static constexpr const char* GHOST_EXTENSION = ".ghost";
   static constexpr size_t GHOST_EXTENSION_LENGTH =
       std::char_traits<char>::length(GHOST_EXTENSION);
 
   std::vector<Message> messages;
-  for (auto& plugin : pluginsBefore) {
-    std::string unghostedPluginName;
-    if (boost::iends_with(plugin, GHOST_EXTENSION)) {
-      unghostedPluginName =
-          plugin.substr(0, plugin.length() - GHOST_EXTENSION_LENGTH);
-    } else {
-      unghostedPluginName = plugin;
-    }
+  for (const auto& pluginPath : pluginPathsBefore) {
+    const auto unghostedPluginPath =
+        boost::iends_with(pluginPath, GHOST_EXTENSION)
+            ? pluginPath.substr(0, pluginPath.length() - GHOST_EXTENSION_LENGTH)
+            : pluginPath;
+
+    const auto unghostedPluginName =
+        std::filesystem::u8path(unghostedPluginPath).filename().u8string();
 
     if (pluginsSet.count(unghostedPluginName) == 0) {
       messages.push_back(PlainTextMessage(
@@ -239,7 +256,7 @@ std::vector<Message> CheckForRemovedPlugins(
               boost::locale::translate("LOOT has detected that \"{0}\" is "
                                        "invalid and is now ignoring it.")
                   .str(),
-              plugin)));
+              pluginPath)));
     }
   }
 
@@ -333,5 +350,54 @@ std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
   std::sort(conflicts.begin(), conflicts.end());
 
   return conflicts;
+}
+
+bool HasPluginFileExtension(const std::string& filename) {
+  return boost::iends_with(filename, ".esp") ||
+         boost::iends_with(filename, ".esm") ||
+         boost::iends_with(filename, ".esl");
+}
+
+std::filesystem::path ResolveGameFilePath(
+    const std::vector<std::filesystem::path>& externalDataPaths,
+    const std::filesystem::path& dataPath,
+    const std::string& filename) {
+  const auto filePath = std::filesystem::u8path(filename);
+
+  for (const auto& externalDataPath : externalDataPaths) {
+    const auto path = externalDataPath / filePath;
+    if (std::filesystem::exists(path)) {
+      return path;
+    }
+
+    if (HasPluginFileExtension) {
+      auto ghostedPath = path;
+      ghostedPath += GHOST_EXTENSION;
+
+      if (std::filesystem::exists(ghostedPath)) {
+        // Intentionally return the unghosted path.
+        return path;
+      }
+    }
+  }
+
+  return dataPath / filePath;
+}
+
+std::vector<std::filesystem::path> GetExternalDataPaths(
+    const GameType gameType,
+    const bool isMicrosoftStoreInstall,
+    const std::filesystem::path& dataPath) {
+  if (gameType == GameType::fo4 && isMicrosoftStoreInstall) {
+    return {dataPath / MS_FO4_AUTOMATRON_DATA_PATH,
+            dataPath / MS_FO4_NUKA_WORLD_DATA_PATH,
+            dataPath / MS_FO4_WASTELAND_DATA_PATH,
+            dataPath / MS_FO4_TEXTURE_PACK_DATA_PATH,
+            dataPath / MS_FO4_VAULT_TEC_DATA_PATH,
+            dataPath / MS_FO4_FAR_HARBOR_DATA_PATH,
+            dataPath / MS_FO4_CONTRAPTIONS_DATA_PATH};
+  }
+
+  return {};
 }
 }

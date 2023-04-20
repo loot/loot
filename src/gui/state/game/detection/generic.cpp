@@ -138,10 +138,6 @@ bool IsEpicInstall(const std::filesystem::path& installPath) {
   return std::filesystem::exists(installPath / ".egstore");
 }
 
-bool IsMicrosoftInstall(const std::filesystem::path& installPath) {
-  return std::filesystem::exists(installPath / "appxmanifest.xml");
-}
-
 std::optional<GameInstall> FindGameInstallInRegistry(
     const loot::RegistryInterface& registry,
     const GameId gameId) {
@@ -188,7 +184,7 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
     return GameInstall{gameId, InstallSource::epic, path};
   }
 
-  if (IsMicrosoftInstall(path)) {
+  if (loot::generic::IsMicrosoftInstall(path)) {
     return GameInstall{gameId, InstallSource::microsoft, path};
   }
 
@@ -229,6 +225,10 @@ GameId DetectGameId(const GameType gameType,
 }
 
 namespace loot::generic {
+bool IsMicrosoftInstall(const std::filesystem::path& installPath) {
+  return std::filesystem::exists(installPath / "appxmanifest.xml");
+}
+
 std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
                                           const GameId gameId) {
   std::vector<GameInstall> installs;

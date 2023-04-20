@@ -71,7 +71,7 @@ protected:
       gameId_(gameId),
       rootTestPath(getTempPath()),
       missingPath(rootTestPath / "missing"),
-      dataPath(rootTestPath / "game" / getPluginsFolder()),
+      dataPath(rootTestPath / "games" / "game" / getPluginsFolder()),
       localPath(rootTestPath / "local" / "game"),
       lootDataPath(rootTestPath / "local" / "LOOT"),
       masterFile(getMasterFile()),

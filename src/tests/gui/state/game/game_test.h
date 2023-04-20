@@ -30,6 +30,7 @@ along with LOOT.  If not, see
 #include "gui/state/game/game.h"
 #include "gui/state/game/helpers.h"
 #include "tests/common_game_test_fixture.h"
+#include "tests/gui/test_helpers.h"
 
 namespace loot {
 namespace gui {
@@ -611,6 +612,33 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAPluginGroupExists) {
       messages);
 }
 
+TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
+  if (GetParam() != GameId::fo4) {
+    // Only FO4 has external plugins.
+    return;
+  }
+
+  loot::test::touch(dataPath.parent_path() / "appxmanifest.xml");
+  const auto dlcPluginName = "DLCCoast.esm";
+  const auto dlcDataPath = dataPath.parent_path().parent_path().parent_path() /
+                           "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
+  std::filesystem::create_directories(dlcDataPath);
+  loot::test::touch(dlcDataPath / dlcPluginName);
+
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  PluginMetadata metadata(blankEsm);
+  metadata.SetRequirements({
+      File(dlcPluginName),
+      File(blankEsp),
+  });
+
+  const auto messages =
+      game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
+  EXPECT_TRUE(messages.empty());
+}
+
 TEST_P(
     GameTest,
     redatePluginsShouldRedatePluginsForSkyrimAndSkyrimSEAndDoNothingForOtherGames) {
@@ -697,6 +725,27 @@ TEST_P(GameTest,
   EXPECT_EQ(1, game.GetMessages().size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
             game.GetMessages()[0].GetContent()[0].GetText());
+}
+
+TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
+  if (GetParam() != GameId::fo4) {
+    // Only FO4 has external plugins.
+    return;
+  }
+
+  loot::test::touch(dataPath.parent_path() / "appxmanifest.xml");
+  const auto dlcPluginName = "DLCCoast.esm";
+  const auto dlcDataPath = dataPath.parent_path().parent_path().parent_path() /
+                           "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
+  std::filesystem::create_directories(dlcDataPath);
+  std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
+
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  const auto plugin = game.GetPlugin(dlcPluginName);
+
+  EXPECT_NE(nullptr, plugin);
 }
 
 TEST_P(GameTest, pluginsShouldNotBeFullyLoadedByDefault) {
@@ -913,6 +962,40 @@ TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
   Game game = CreateInitialisedGame(lootDataPath);
 
   ASSERT_EQ(1, game.GetMessages().size());
+}
+
+TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
+  if (GetParam() != GameId::fo4) {
+    // Only FO4 has external plugins.
+    return;
+  }
+
+  loot::test::touch(dataPath.parent_path() / "appxmanifest.xml");
+  const auto dlcPluginName = "DLCCoast.esm";
+  const auto dlcDataPath = dataPath.parent_path().parent_path().parent_path() /
+                           "Fallout 4- Far Harbor (PC)" / "Content" / "Data";
+  std::filesystem::create_directories(dlcDataPath);
+  std::filesystem::copy(dataPath / blankEsm, dlcDataPath / dlcPluginName);
+
+  Game game = CreateInitialisedGame("");
+  game.LoadAllInstalledPlugins(true);
+
+  const auto loadOrder = game.SortPlugins();
+
+  EXPECT_EQ(std::vector<std::string>({masterFile,
+                                      dlcPluginName,
+                                      blankEsm,
+                                      blankDifferentEsm,
+                                      blankMasterDependentEsm,
+                                      blankDifferentMasterDependentEsm,
+                                      blankEsp,
+                                      blankDifferentEsp,
+                                      blankMasterDependentEsp,
+                                      blankDifferentMasterDependentEsp,
+                                      blankPluginDependentEsp,
+                                      blankDifferentPluginDependentEsp,
+                                      nonAsciiEsp}),
+            loadOrder);
 }
 
 TEST_P(GameTest,
