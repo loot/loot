@@ -59,9 +59,6 @@
 #include "tests/gui/state/unapplied_change_counter_test.h"
 
 int main(int argc, char **argv) {
-  // Set the locale to get encoding conversions working correctly.
-  std::locale::global(boost::locale::generator().generate(""));
-
   // Set the logger to use a null sink.
   spdlog::create<spdlog::sinks::null_sink_st>("loot_logger");
 

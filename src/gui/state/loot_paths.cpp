@@ -47,23 +47,21 @@
 #include "gui/state/logging.h"
 #include "loot/api.h"
 
+namespace {
+std::filesystem::path getAppPath(const std::filesystem::path& givenPath) {
+  return givenPath.empty() ? loot::getExecutableDirectory() : givenPath;
+}
+
+std::filesystem::path getDataPath(const std::filesystem::path& givenPath) {
+  return givenPath.empty() ? loot::getLocalAppDataPath() / "LOOT" : givenPath;
+}
+}
+
 namespace loot {
 LootPaths::LootPaths(const std::filesystem::path& lootAppPath,
-                     const std::filesystem::path& lootDataPath) {
-  // Set the locale to get UTF-8 conversions working correctly.
-  std::locale::global(boost::locale::generator().generate(""));
-
-  if (lootAppPath.empty()) {
-    lootAppPath_ = getExecutableDirectory();
-  } else {
-    lootAppPath_ = lootAppPath;
-  }
-
-  if (!lootDataPath.empty())
-    lootDataPath_ = lootDataPath;
-  else
-    lootDataPath_ = getLocalAppDataPath() / "LOOT";
-}
+                     const std::filesystem::path& lootDataPath) :
+    lootAppPath_(getAppPath(lootAppPath)),
+    lootDataPath_(getDataPath(lootDataPath)) {}
 
 std::filesystem::path LootPaths::getReadmePath() const {
   return lootAppPath_ / "docs";
