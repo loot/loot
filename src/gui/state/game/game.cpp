@@ -90,8 +90,6 @@ Game::Game(const GameSettings& gameSettings,
     preludePath_(preludePath) {}
 
 Game::Game(Game&& game) {
-  lock_guard<mutex> guard(game.mutex_);
-
   settings_ = std::move(game.settings_);
   gameHandle_ = std::move(game.gameHandle_);
   messages_ = std::move(game.messages_);
@@ -103,8 +101,6 @@ Game::Game(Game&& game) {
 
 Game& Game::operator=(Game&& game) {
   if (&game != this) {
-    std::scoped_lock lock(mutex_, game.mutex_);
-
     settings_ = std::move(game.settings_);
     gameHandle_ = std::move(game.gameHandle_);
     messages_ = std::move(game.messages_);
@@ -679,17 +675,12 @@ std::vector<std::string> Game::SortPlugins() {
   return sortedPlugins;
 }
 
-void Game::IncrementLoadOrderSortCount() {
-  lock_guard<mutex> guard(mutex_);
-
-  ++loadOrderSortCount_;
-}
+void Game::IncrementLoadOrderSortCount() { ++loadOrderSortCount_; }
 
 void Game::DecrementLoadOrderSortCount() {
-  lock_guard<mutex> guard(mutex_);
-
-  if (loadOrderSortCount_ > 0)
+  if (loadOrderSortCount_ > 0) {
     --loadOrderSortCount_;
+  }
 }
 
 std::vector<Message> Game::GetMessages() const {
@@ -817,16 +808,10 @@ std::vector<Message> Game::GetMessages() const {
 }
 
 void Game::AppendMessage(const Message& message) {
-  lock_guard<mutex> guard(mutex_);
-
   messages_.push_back(message);
 }
 
-void Game::ClearMessages() {
-  lock_guard<mutex> guard(mutex_);
-
-  messages_.clear();
-}
+void Game::ClearMessages() { messages_.clear(); }
 
 void Game::LoadMetadata() {
   auto logger = getLogger();

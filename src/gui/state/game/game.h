@@ -133,8 +133,6 @@ private:
 
   // Use Filename to benefit from libloot's case-insensitive comparisons.
   std::set<Filename> creationClubPlugins_;
-
-  mutable std::mutex mutex_;
 };
 }
 
