@@ -124,7 +124,11 @@ public:
     return gamesSettings;
   }
 
-  bool HasCurrentGame() const { return currentGame_ != installedGames_.end(); }
+  bool HasCurrentGame() const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
+    return currentGame_ != installedGames_.end();
+  }
 
   gui::Game& GetCurrentGame() {
     std::lock_guard<std::recursive_mutex> guard(mutex_);
@@ -147,6 +151,8 @@ public:
   }
 
   void SetCurrentGame(const std::string& newGameFolder) {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
     auto logger = getLogger();
     if (logger) {
       logger->debug("Setting the current game to that with folder: {}",
@@ -189,6 +195,8 @@ public:
   }
 
   std::optional<std::string> GetFirstInstalledGameFolderName() const {
+    std::lock_guard<std::recursive_mutex> guard(mutex_);
+
     if (!installedGames_.empty()) {
       return installedGames_.front().GetSettings().FolderName();
     }

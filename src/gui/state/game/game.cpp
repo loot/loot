@@ -52,6 +52,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "gui/state/game/detection/generic.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
@@ -66,14 +67,6 @@ namespace fs = std::filesystem;
 
 namespace loot {
 namespace gui {
-static constexpr const char* GHOST_EXTENSION = ".ghost";
-
-bool hasPluginFileExtension(const std::string& filename) {
-  return boost::iends_with(filename, ".esp") ||
-         boost::iends_with(filename, ".esm") ||
-         boost::iends_with(filename, ".esl");
-}
-
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
     return EscapeMarkdownASCIIPunctuation(std::string(file.GetName()));
@@ -87,11 +80,11 @@ Game::Game(const GameSettings& gameSettings,
            const std::filesystem::path& preludePath) :
     settings_(gameSettings),
     lootDataPath_(lootDataPath),
-    preludePath_(preludePath) {}
+    preludePath_(preludePath),
+    isMicrosoftStoreInstall_(
+        generic::IsMicrosoftInstall(settings_.GamePath())) {}
 
 Game::Game(Game&& game) {
-  lock_guard<mutex> guard(game.mutex_);
-
   settings_ = std::move(game.settings_);
   gameHandle_ = std::move(game.gameHandle_);
   messages_ = std::move(game.messages_);
@@ -99,12 +92,11 @@ Game::Game(Game&& game) {
   preludePath_ = std::move(game.preludePath_);
   loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
   pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
+  isMicrosoftStoreInstall_ = std::move(game.isMicrosoftStoreInstall_);
 }
 
 Game& Game::operator=(Game&& game) {
   if (&game != this) {
-    std::scoped_lock lock(mutex_, game.mutex_);
-
     settings_ = std::move(game.settings_);
     gameHandle_ = std::move(game.gameHandle_);
     messages_ = std::move(game.messages_);
@@ -112,6 +104,7 @@ Game& Game::operator=(Game&& game) {
     preludePath_ = std::move(game.preludePath_);
     loadOrderSortCount_ = std::move(game.loadOrderSortCount_);
     pluginsFullyLoaded_ = std::move(game.pluginsFullyLoaded_);
+    isMicrosoftStoreInstall_ = std::move(game.isMicrosoftStoreInstall_);
   }
 
   return *this;
@@ -201,13 +194,6 @@ std::vector<Message> Game::CheckInstallValidity(
   }
   std::vector<Message> messages;
   if (IsPluginActive(plugin.GetName())) {
-    const auto fileExists = [&](const std::string& file) {
-      return std::filesystem::exists(settings_.DataPath() / u8path(file)) ||
-             (hasPluginFileExtension(file) &&
-              std::filesystem::exists(settings_.DataPath() /
-                                      u8path(file + GHOST_EXTENSION)));
-    };
-
     auto tags = metadata.GetTags();
     const auto hasFilterTag =
         std::any_of(tags.cbegin(), tags.cend(), [&](const Tag& tag) {
@@ -216,7 +202,7 @@ std::vector<Message> Game::CheckInstallValidity(
 
     if (!hasFilterTag) {
       for (const auto& master : plugin.GetMasters()) {
-        if (!fileExists(master)) {
+        if (!FileExists(master)) {
           if (logger) {
             logger->error("\"{}\" requires \"{}\", but it is missing.",
                           plugin.GetName(),
@@ -250,7 +236,7 @@ std::vector<Message> Game::CheckInstallValidity(
 
     for (const auto& req : metadata.GetRequirements()) {
       auto file = std::string(req.GetName());
-      if (!fileExists(file)) {
+      if (!FileExists(file)) {
         if (logger) {
           logger->error("\"{}\" requires \"{}\", but it is missing. {}",
                         plugin.GetName(),
@@ -287,8 +273,8 @@ std::vector<Message> Game::CheckInstallValidity(
 
     for (const auto& inc : metadata.GetIncompatibilities()) {
       auto file = std::string(inc.GetName());
-      if (fileExists(file) &&
-          (!hasPluginFileExtension(file) || IsPluginActive(file))) {
+      if (FileExists(file) &&
+          (!HasPluginFileExtension(file) || IsPluginActive(file))) {
         if (logger) {
           logger->error(
               "\"{}\" is incompatible with \"{}\", but both are present. {}",
@@ -471,7 +457,7 @@ void Game::RedatePlugins() {
     std::filesystem::file_time_type lastTime =
         std::filesystem::file_time_type::clock::time_point::min();
     for (const auto& pluginName : loadorder) {
-      fs::path filepath = settings_.DataPath() / u8path(pluginName);
+      auto filepath = ResolveGameFilePath(pluginName);
       if (!fs::exists(filepath)) {
         filepath += GHOST_EXTENSION;
         if (!fs::exists(filepath)) {
@@ -540,8 +526,8 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
             .str()));
   }
 
-  auto installedPluginNames = GetInstalledPluginNames();
-  gameHandle_->LoadPlugins(installedPluginNames, headersOnly);
+  const auto installedPluginPaths = GetInstalledPluginPaths();
+  gameHandle_->LoadPlugins(installedPluginPaths, headersOnly);
 
   // Check if any plugins have been removed.
   std::vector<std::string> loadedPluginNames;
@@ -550,7 +536,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
   }
 
   AppendMessages(
-      CheckForRemovedPlugins(installedPluginNames, loadedPluginNames));
+      CheckForRemovedPlugins(installedPluginPaths, loadedPluginNames));
 
   pluginsFullyLoaded_ = !headersOnly;
 }
@@ -638,11 +624,14 @@ std::vector<std::string> Game::SortPlugins() {
     // state that has been changed by sorting.
     ClearMessages();
 
-    auto currentLoadOrder = gameHandle_->GetLoadOrder();
+    std::vector<std::string> pluginPaths;
+    for (const auto& pluginName : gameHandle_->GetLoadOrder()) {
+      pluginPaths.push_back(ResolveGameFilePath(pluginName).u8string());
+    }
 
-    sortedPlugins = gameHandle_->SortPlugins(currentLoadOrder);
+    sortedPlugins = gameHandle_->SortPlugins(pluginPaths);
 
-    AppendMessages(CheckForRemovedPlugins(currentLoadOrder, sortedPlugins));
+    AppendMessages(CheckForRemovedPlugins(pluginPaths, sortedPlugins));
 
     IncrementLoadOrderSortCount();
   } catch (CyclicInteractionError& e) {
@@ -679,17 +668,12 @@ std::vector<std::string> Game::SortPlugins() {
   return sortedPlugins;
 }
 
-void Game::IncrementLoadOrderSortCount() {
-  lock_guard<mutex> guard(mutex_);
-
-  ++loadOrderSortCount_;
-}
+void Game::IncrementLoadOrderSortCount() { ++loadOrderSortCount_; }
 
 void Game::DecrementLoadOrderSortCount() {
-  lock_guard<mutex> guard(mutex_);
-
-  if (loadOrderSortCount_ > 0)
+  if (loadOrderSortCount_ > 0) {
     --loadOrderSortCount_;
+  }
 }
 
 std::vector<Message> Game::GetMessages() const {
@@ -817,16 +801,10 @@ std::vector<Message> Game::GetMessages() const {
 }
 
 void Game::AppendMessage(const Message& message) {
-  lock_guard<mutex> guard(mutex_);
-
   messages_.push_back(message);
 }
 
-void Game::ClearMessages() {
-  lock_guard<mutex> guard(mutex_);
-
-  messages_.clear();
-}
+void Game::ClearMessages() { messages_.clear(); }
 
 void Game::LoadMetadata() {
   auto logger = getLogger();
@@ -959,25 +937,55 @@ std::filesystem::path Game::GetLOOTGamePath() const {
   return lootDataPath_ / "games" / u8path(settings_.FolderName());
 }
 
-std::vector<std::string> Game::GetInstalledPluginNames() const {
+std::vector<std::string> Game::GetInstalledPluginPaths() const {
   const auto logger = getLogger();
-  if (logger) {
-    logger->trace("Scanning for plugins in {}",
-                  settings_.DataPath().u8string());
-  }
 
   // Checking to see if a plugin is valid is relatively slow, almost entirely
   // due to blocking on opening the file, so instead just add all the files
   // found to a buffer and then check if they're valid plugins in parallel.
   std::vector<std::string> maybePlugins;
+  std::set<Filename> foundPlugins;
+
+  // Scan external data paths first, as the game checks them before the main
+  // data path.
+  for (const auto& dataPath : GetExternalDataPaths(
+           settings_.Type(), isMicrosoftStoreInstall_, settings_.DataPath())) {
+    if (!std::filesystem::exists(dataPath)) {
+      continue;
+    }
+
+    if (logger) {
+      logger->trace("Scanning for plugins in {}", dataPath.u8string());
+    }
+
+    for (fs::directory_iterator it(dataPath); it != fs::directory_iterator();
+         ++it) {
+      if (fs::is_regular_file(it->status())) {
+        const auto filename = Filename(it->path().filename().u8string());
+        if (foundPlugins.count(filename) == 0) {
+          maybePlugins.push_back(it->path().u8string());
+          foundPlugins.insert(filename);
+        }
+      }
+    }
+  }
+
+  // Scan main data path separately as only its filenames need to be stored,
+  // not the whole path, which simplifies the log/debugging.
+  if (logger) {
+    logger->trace("Scanning for plugins in {}",
+                  settings_.DataPath().u8string());
+  }
 
   for (fs::directory_iterator it(settings_.DataPath());
        it != fs::directory_iterator();
        ++it) {
     if (fs::is_regular_file(it->status())) {
-      const auto name = it->path().filename().u8string();
-
-      maybePlugins.push_back(name);
+      const auto filename = Filename(it->path().filename().u8string());
+      if (foundPlugins.count(filename) == 0) {
+        maybePlugins.push_back(std::string(filename));
+        foundPlugins.insert(filename);
+      }
     }
   }
 
@@ -985,11 +993,11 @@ std::vector<std::string> Game::GetInstalledPluginNames() const {
       std::remove_if(std::execution::par_unseq,
                      maybePlugins.begin(),
                      maybePlugins.end(),
-                     [&](const std::string& name) {
+                     [&](const std::string& path) {
                        try {
-                         const auto isValid = gameHandle_->IsValidPlugin(name);
+                         const auto isValid = gameHandle_->IsValidPlugin(path);
                          if (isValid && logger) {
-                           logger->debug("Found plugin: {}", name);
+                           logger->debug("Found plugin: {}", path);
                          }
                          return !isValid;
                        } catch (...) {
@@ -1009,6 +1017,32 @@ void Game::AppendMessages(std::vector<Message> messages) {
 
 bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
   return creationClubPlugins_.count(Filename(plugin.GetName())) != 0;
+}
+
+std::filesystem::path Game::ResolveGameFilePath(
+    const std::string& filePath) const {
+  const auto externalDataPaths = GetExternalDataPaths(
+      settings_.Type(), isMicrosoftStoreInstall_, settings_.DataPath());
+
+  return loot::ResolveGameFilePath(
+      externalDataPaths, settings_.DataPath(), filePath);
+}
+
+bool Game::FileExists(const std::string& filePath) const {
+  // OK to call this for non-plugin files too.
+  auto resolvedPath = ResolveGameFilePath(filePath);
+
+  if (std::filesystem::exists(resolvedPath)) {
+    return true;
+  }
+
+  if (HasPluginFileExtension(filePath)) {
+    resolvedPath += GHOST_EXTENSION;
+
+    return std::filesystem::exists(resolvedPath);
+  }
+
+  return false;
 }
 }
 }

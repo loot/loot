@@ -49,6 +49,8 @@ protected:
       gitRepoPath_(getTempPath()) {}
 
   void SetUp() override {
+    CommonGameTestFixture::SetUp();
+
     std::filesystem::create_directories(gitRepoPath_ / ".git");
 
     touch(gitRepoPath_ / "masterlist.yaml");
@@ -57,7 +59,11 @@ protected:
     checkoutBranch("v0.18");
   }
 
-  void TearDown() override { std::filesystem::remove_all(gitRepoPath_); }
+  void TearDown() override {
+    std::filesystem::remove_all(gitRepoPath_);
+
+    CommonGameTestFixture::TearDown();
+  }
 
   void checkoutBranch(const std::string& branch) {
     std::ofstream out(gitRepoPath_ / ".git" / "HEAD");

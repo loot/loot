@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-04-10 18:16+0100\n"
+"POT-Creation-Date: 2023-05-07 09:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -953,65 +953,65 @@ msgid ""
 "menu) for more information."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:166
+#: src/gui/state/loot_state.cpp:162
 msgid "Error: Game-specific settings could not be initialised. {0}"
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:191
+#: src/gui/state/loot_state.cpp:187
 msgid "Error: Could not create LOOT data directory. {0}"
 msgstr ""
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
 #. detail about what went wrong.
-#: src/gui/state/loot_state.cpp:207 src/gui/state/loot_state.cpp:261
+#: src/gui/state/loot_state.cpp:203 src/gui/state/loot_state.cpp:257
 msgid "Error: Settings parsing failed. {0}"
 msgstr ""
 
 #. translators: --auto-sort and --game are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:217
+#: src/gui/state/loot_state.cpp:213
 msgid "Error: --auto-sort was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:291
+#: src/gui/state/loot_state.cpp:287
 msgid "Error: Could not create LOOT prelude directory. {0}"
 msgstr ""
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
-#: src/gui/state/loot_state.cpp:309
+#: src/gui/state/loot_state.cpp:305
 msgid "Error: --game-path was passed but no --game parameter was provided."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:324
+#: src/gui/state/loot_state.cpp:320
 msgid "Error: failed to override game path, the game {0} was not recognised."
 msgstr ""
 
-#: src/gui/state/loot_state.cpp:357
+#: src/gui/state/loot_state.cpp:353
 msgid "Error: The initial game could not be selected. {0}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:228 src/gui/state/game/game.cpp:271
+#: src/gui/state/game/game.cpp:214 src/gui/state/game/game.cpp:257
 msgid "This plugin requires \"{0}\" to be installed, but it is missing."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:241
+#: src/gui/state/game/game.cpp:227
 msgid "This plugin requires \"{0}\" to be active, but it is inactive."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:311
+#: src/gui/state/game/game.cpp:297
 msgid "This plugin is incompatible with \"{0}\", but both are present."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:354
+#: src/gui/state/game/game.cpp:340
 msgid ""
 "This plugin is a light master and requires the non-master plugin \"{0}\". "
 "This can cause issues in-game, and sorting will fail while this plugin is "
 "installed."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:375
+#: src/gui/state/game/game.cpp:361
 msgid ""
 "This plugin contains records that have FormIDs outside the valid range for "
 "an ESL plugin. Using this plugin will cause irreversible damage to your game "
@@ -1020,67 +1020,67 @@ msgstr ""
 
 #. translators: A header is the part of a file that stores data
 #. like file name and version.
-#: src/gui/state/game/game.cpp:396
+#: src/gui/state/game/game.cpp:382
 msgid ""
 "This plugin has a header version of {0}, which is less than the game's "
 "minimum supported header version of {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:415
+#: src/gui/state/game/game.cpp:401
 msgid "This plugin belongs to the group \"{0}\", which does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:440
+#: src/gui/state/game/game.cpp:426
 msgid ""
 "This plugin has a BashTags file that will override the suggestions made by "
 "LOOT for the following Bash Tags: {0}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:538 src/gui/state/game/game.cpp:630
+#: src/gui/state/game/game.cpp:524 src/gui/state/game/game.cpp:616
 msgid ""
 "Failed to load the current load order, information displayed may be "
 "incorrect."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:656
+#: src/gui/state/game/game.cpp:645
 msgid "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}"
 msgstr ""
 
-#: src/gui/state/game/game.cpp:669
+#: src/gui/state/game/game.cpp:658
 msgid "The group \"{0}\" does not exist."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:706
+#: src/gui/state/game/game.cpp:690
 msgid "You have not sorted your load order this session."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:753
+#: src/gui/state/game/game.cpp:737
 msgid ""
 "You have {0} active normal plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:760
+#: src/gui/state/game/game.cpp:744
 msgid "You have {0} active plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:781
+#: src/gui/state/game/game.cpp:765
 msgid ""
 "Do not launch Morrowind without the use of MWSE or it will cause severe "
 "damage to your game."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:794
+#: src/gui/state/game/game.cpp:778
 msgid "You have {0} active light plugins but the game only supports up to {1}."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:811
+#: src/gui/state/game/game.cpp:795
 msgid ""
 "You have a normal plugin and at least one light plugin sharing the FE load "
 "order index. Deactivate a normal plugin or all your light plugins to avoid "
 "potential issues."
 msgstr ""
 
-#: src/gui/state/game/game.cpp:874
+#: src/gui/state/game/game.cpp:852
 msgid ""
 "An error occurred while parsing the metadata list(s): {0}.\n"
 "\n"
@@ -1098,42 +1098,42 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:89
+#: src/gui/state/game/helpers.cpp:104
 msgid "{0} ITM record"
 msgid_plural "{0} ITM records"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:95
+#: src/gui/state/game/helpers.cpp:110
 msgid "{0} deleted reference"
 msgid_plural "{0} deleted references"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:101
+#: src/gui/state/game/helpers.cpp:116
 msgid "{0} deleted navmesh"
 msgid_plural "{0} deleted navmeshes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/gui/state/game/helpers.cpp:111
+#: src/gui/state/game/helpers.cpp:126
 msgid "{0} found {1}, {2} and {3}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:119
+#: src/gui/state/game/helpers.cpp:134
 msgid "{0} found dirty edits."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:124 src/gui/state/game/helpers.cpp:131
-#: src/gui/state/game/helpers.cpp:138
+#: src/gui/state/game/helpers.cpp:139 src/gui/state/game/helpers.cpp:146
+#: src/gui/state/game/helpers.cpp:153
 msgid "{0} found {1} and {2}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:143 src/gui/state/game/helpers.cpp:147
-#: src/gui/state/game/helpers.cpp:151
+#: src/gui/state/game/helpers.cpp:158 src/gui/state/game/helpers.cpp:162
+#: src/gui/state/game/helpers.cpp:166
 msgid "{0} found {1}."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:241
+#: src/gui/state/game/helpers.cpp:256
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""

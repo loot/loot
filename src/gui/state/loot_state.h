@@ -74,9 +74,6 @@ private:
   std::vector<std::string> preferredUILanguages_;
   std::vector<SimpleMessage> initMessages_;
   LootSettings settings_;
-
-  // Mutex used to protect access to member variables.
-  std::mutex mutex_;
 };
 }
 

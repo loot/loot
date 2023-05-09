@@ -69,11 +69,11 @@ set(GTEST_LIBRARIES "${BINARY_DIR}/lib/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRAR
 
 if(NOT DEFINED LIBLOOT_URL)
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.3/libloot-0.19.3-win64.7z")
-        set(LIBLOOT_HASH "SHA256=7462aa4d618857213f51cc90d83879dd81c6733cb249447b1d96a466f0a0194b")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.4/libloot-0.19.4-win64.7z")
+        set(LIBLOOT_HASH "SHA256=c88ab4c83de18d15e67fac0b7b88135bcb6e811ae7a442b20a2740e7e5e641dd")
     else()
-        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.3/libloot-0.19.3-Linux.tar.xz")
-        set(LIBLOOT_HASH "SHA256=7878f0a3e3cd5d0d9a733fcd38ad53185afdae72d57fecf794dfe73494f134dc")
+        set(LIBLOOT_URL "https://github.com/loot/libloot/releases/download/0.19.4/libloot-0.19.4-Linux.tar.xz")
+        set(LIBLOOT_HASH "SHA256=d3035b2bc2222b6c4daf61681bc16d991386b323a1361672885604c60ee199d3")
     endif()
 endif()
 
@@ -521,7 +521,7 @@ if(MSVC)
 
     # Set /bigobj to allow building Debug tests
     target_compile_options(loot_gui_tests PRIVATE
-        "/permissive-" "/W4" "$<$<CONFIG:DEBUG>:/bigobj>")
+        "/permissive-" "/W4" "/bigobj")
 endif()
 
 ##############################

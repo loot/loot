@@ -120,8 +120,11 @@ public:
 
 private:
   std::filesystem::path GetLOOTGamePath() const;
-  std::vector<std::string> GetInstalledPluginNames() const;
+  std::vector<std::string> GetInstalledPluginPaths() const;
   void AppendMessages(std::vector<Message> messages);
+  std::filesystem::path ResolveGameFilePath(
+      const std::string& pluginName) const;
+  bool FileExists(const std::string& file) const;
 
   GameSettings settings_;
   std::unique_ptr<GameInterface> gameHandle_;
@@ -130,11 +133,10 @@ private:
   std::filesystem::path preludePath_;
   unsigned short loadOrderSortCount_{0};
   bool pluginsFullyLoaded_{false};
+  bool isMicrosoftStoreInstall_{false};
 
   // Use Filename to benefit from libloot's case-insensitive comparisons.
   std::set<Filename> creationClubPlugins_;
-
-  mutable std::mutex mutex_;
 };
 }
 

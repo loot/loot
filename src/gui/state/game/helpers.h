@@ -26,6 +26,7 @@
 #ifndef LOOT_GUI_STATE_GAME_HELPERS
 #define LOOT_GUI_STATE_GAME_HELPERS
 
+#include <loot/enum/game_type.h>
 #include <loot/metadata/message.h>
 #include <loot/metadata/plugin_cleaning_data.h>
 #include <loot/metadata/tag.h>
@@ -36,26 +37,29 @@
 #include <vector>
 
 namespace loot {
+static constexpr const char* GHOST_EXTENSION = ".ghost";
+
 void BackupLoadOrder(const std::vector<std::string>& loadOrder,
                      const std::filesystem::path& backupDirectory);
 
 // Escape any Markdown special characters in the input text.
-std::string EscapeMarkdownASCIIPunctuation(std::string text);
+std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 
 // Create a Message, escaping any Markdown special characters in the input text.
-Message PlainTextMessage(MessageType type, std::string text);
+Message PlainTextMessage(const MessageType type, const std::string& text);
 
 // Create a SimpleMessage, escaping any Markdown special characters in the input
 // text.
-SimpleMessage PlainTextSimpleMessage(MessageType type, std::string text);
+SimpleMessage PlainTextSimpleMessage(const MessageType type,
+                                     const std::string& text);
 
 Message ToMessage(const PluginCleaningData& cleaningData);
 
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<Message> CheckForRemovedPlugins(
-    const std::vector<std::string> pluginsBefore,
-    const std::vector<std::string> pluginsAfter);
+    const std::vector<std::string>& pluginPathsBefore,
+    const std::vector<std::string>& pluginNamesAfter);
 
 std::vector<Tag> ReadBashTagsFile(std::istream& in);
 
@@ -66,6 +70,18 @@ std::vector<Tag> ReadBashTagsFile(const std::filesystem::path& dataPath,
 // other.
 std::vector<std::string> GetTagConflicts(const std::vector<Tag>& tags1,
                                          const std::vector<Tag>& tags2);
+
+bool HasPluginFileExtension(const std::string& filename);
+
+std::filesystem::path ResolveGameFilePath(
+    const std::vector<std::filesystem::path>& externalDataPaths,
+    const std::filesystem::path& dataPath,
+    const std::string& filename);
+
+std::vector<std::filesystem::path> GetExternalDataPaths(
+    const GameType gameType,
+    const bool isMicrosoftStoreInstall,
+    const std::filesystem::path& dataPath);
 }
 
 #endif

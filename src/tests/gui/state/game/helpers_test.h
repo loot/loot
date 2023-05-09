@@ -30,6 +30,7 @@
 #include <fstream>
 
 #include "gui/state/game/helpers.h"
+#include "tests/common_game_test_fixture.h"
 
 namespace loot {
 namespace test {
@@ -227,6 +228,19 @@ TEST(ToMessage,
           .GetText());
 }
 
+TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
+  const auto messages =
+      CheckForRemovedPlugins({"dir/test1.esp", "dir/test2.esp", "test3.esp"},
+                             {"test1.esp", "test3.esp"});
+
+  ASSERT_EQ(1, messages.size());
+  EXPECT_EQ(
+      "LOOT has detected that \\\"dir\\/test2\\.esp\\\" is invalid "
+      "and is now "
+      "ignoring it\\.",
+      messages[0].GetContent()[0].GetText());
+}
+
 TEST(ReadBashTagsFile, shouldCorrectlyReadTheExampleFileContent) {
   // From the Wrye Bash Advanced Readme
   // <https://wrye-bash.github.io/docs/Wrye%20Bash%20Advanced%20Readme.html#patch-tags>
@@ -298,6 +312,78 @@ TEST(GetTagConflicts,
   const std::vector<std::string> expectedConflicts{"A", "B"};
 
   EXPECT_EQ(expectedConflicts, conflicts);
+}
+
+class ResolveGameFilePathTest : public CommonGameTestFixture {
+protected:
+  ResolveGameFilePathTest() : CommonGameTestFixture(GameId::tes5se) {}
+};
+
+TEST_F(ResolveGameFilePathTest,
+       shouldReturnFilenameInExternalDataPathIfItExistsThere) {
+  const auto filename = "external.esp";
+  const auto filePath = localPath / filename;
+  std::filesystem::copy(dataPath / blankEsm, filePath);
+
+  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, filename);
+
+  EXPECT_EQ(filePath, pluginPath);
+}
+
+TEST_F(
+    ResolveGameFilePathTest,
+    shouldReturnPluginNameInExternalDataPathIfItExistsAsAGhostedPluginThere) {
+  const std::string filename = "external.esp";
+  std::filesystem::copy(dataPath / blankEsm, localPath / (filename + ".ghost"));
+
+  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, filename);
+
+  EXPECT_EQ(localPath / filename, pluginPath);
+}
+
+TEST_F(
+    ResolveGameFilePathTest,
+    shouldReturnFilenameInDataPathIfTheFileDoesNotExistInAnExternalDataPath) {
+  const auto filename = "test.esp";
+  const auto pluginPath = ResolveGameFilePath({localPath}, dataPath, filename);
+
+  EXPECT_EQ(dataPath / filename, pluginPath);
+}
+
+TEST(GetExternalDataPaths,
+     shouldReturnAnEmptyVectorIfTheGameIsNotAMicrosoftStoreInstall) {
+  const auto dataPath = std::filesystem::u8path("data");
+  const auto paths = GetExternalDataPaths(GameType::fo4, false, dataPath);
+
+  EXPECT_TRUE(paths.empty());
+}
+
+TEST(GetExternalDataPaths, shouldReturnAnEmptyVectorIfTheGameIsNotFallout4) {
+  const auto dataPath = std::filesystem::u8path("data");
+  const auto paths = GetExternalDataPaths(GameType::tes5se, true, dataPath);
+
+  EXPECT_TRUE(paths.empty());
+}
+
+TEST(GetExternalDataPaths,
+     shouldReturnDlcPluginPathsIfTheGameIsAMicrosoftStoreInstallOfFallout4) {
+  const auto dataPath = std::filesystem::u8path("data");
+  const auto paths = GetExternalDataPaths(GameType::fo4, true, dataPath);
+
+  EXPECT_EQ(std::vector<std::filesystem::path>(
+                {dataPath / "../../../Fallout 4- Automatron (PC)/Content/Data",
+                 dataPath / "../../../Fallout 4- Nuka-World "
+                            "(PC)/Content/Data",
+                 dataPath / "../../../Fallout 4- Wasteland Workshop "
+                            "(PC)/Content/Data",
+                 dataPath / "../../../Fallout 4- High Resolution Texture "
+                            "Pack/Content/Data",
+                 dataPath / "../../../Fallout 4- Vault-Tec Workshop "
+                            "(PC)/Content/Data",
+                 dataPath / "../../../Fallout 4- Far Harbor (PC)/Content/Data",
+                 dataPath / "../../../Fallout 4- Contraptions Workshop "
+                            "(PC)/Content/Data"}),
+            paths);
 }
 }
 }
