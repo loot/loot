@@ -370,7 +370,7 @@ std::filesystem::path ResolveGameFilePath(
       return path;
     }
 
-    if (HasPluginFileExtension) {
+    if (HasPluginFileExtension(filename)) {
       auto ghostedPath = path;
       ghostedPath += GHOST_EXTENSION;
 
