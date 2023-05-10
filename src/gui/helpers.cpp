@@ -47,6 +47,7 @@
 #endif
 
 #include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ranges.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
@@ -316,7 +317,7 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
   const auto logger = getLogger();
   const auto gamingRootFilePath = driveRootPath / ".GamingRoot";
 
-  std::vector<char> bytes;
+  std::vector<uint8_t> bytes;
 
   try {
     if (!std::filesystem::is_regular_file(gamingRootFilePath)) {
@@ -344,19 +345,9 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
   if (logger) {
     // Log the contents of .GamingRoot because I'm not sure of the format and
     // this would help debugging.
-    std::vector<std::string> hexBytes;
-    std::transform(bytes.begin(),
-                   bytes.end(),
-                   std::back_inserter(hexBytes),
-                   [](char byte) {
-                     std::stringstream stream;
-                     stream << "0x" << std::hex << int{byte};
-                     return stream.str();
-                   });
-
-    logger->debug("Read the following bytes from {}: {}",
+    logger->debug("Read the following bytes from {}: {::#04x}",
                   gamingRootFilePath.u8string(),
-                  boost::join(hexBytes, " "));
+                  bytes);
   }
 
   // The content of .GamingRoot seems to be the byte sequence 52 47 42 58 01 00
