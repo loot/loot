@@ -359,18 +359,17 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
                   boost::join(hexBytes, " "));
   }
 
-  // The content of .GamingRoot is the byte sequence 52 47 42 58 01 00 00 00
-  // followed by the null-terminated UTF-16LE location of the Xbox games folder
-  // on the same drive.
+  // The content of .GamingRoot seems to be the byte sequence 52 47 42 58 01 00
+  // 00 00 followed by the null-terminated UTF-16LE location of the Xbox games
+  // folder on the same drive.
 
   if (bytes.size() % 2 != 0) {
     logger->error(
         "Found a non-even number of bytes in the file at {}, cannot interpret "
         "it as UTF-16LE",
         gamingRootFilePath.u8string());
-    throw std::runtime_error(
-        "Found a non-even number of bytes in the file at \"" +
-        gamingRootFilePath.u8string() + "\"");
+
+    return std::nullopt;
   }
 
   std::vector<char16_t> content;
@@ -390,8 +389,7 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
           content.size());
     }
 
-    throw std::runtime_error("The file at \"" + gamingRootFilePath.u8string() +
-                             "\" is shorter than expected.");
+    return std::nullopt;
   }
 
   // Cut off the null char16_t at the end.

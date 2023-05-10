@@ -55,20 +55,21 @@ TEST_F(FindXboxGamingRootPathTest,
 }
 
 TEST_F(FindXboxGamingRootPathTest,
-       shouldThrowIfDotGamingRootContainsAnOddNumberOfBytes) {
+       shouldReturnNulloptIfDotGamingRootContainsAnOddNumberOfBytes) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   out << "12345678901";
   out.close();
 
-  EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
-TEST_F(FindXboxGamingRootPathTest, shouldThrowIfDotGamingRootIsTooShort) {
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootIsTooShort) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   out << "12";
   out.close();
 
-  EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
