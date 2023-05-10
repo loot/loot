@@ -396,6 +396,23 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
   const std::u16string relativePath(content.begin() + CHAR16_PATH_OFFSET,
                                     content.end() - 1);
 
+  // Check that the string does not contain any nul characters (i.e. 0x00 0x00
+  // in UTF-16), as while they're valid in UTF-16, they'll be passed around as
+  // a C string later, and nul characters are not allowed in Windows or Linux
+  // paths.
+  const auto containsNul =
+      std::find(relativePath.begin(), relativePath.end(), char16_t{0}) !=
+      relativePath.end();
+  if (containsNul) {
+    if (logger) {
+      logger->error(
+          "The relative path read from .GamingRoot contains a nul "
+          "character");
+    }
+
+    return std::nullopt;
+  }
+
   if (logger) {
     logger->debug("Read the following relative path from .GamingRoot: {}",
                   std::filesystem::path(relativePath).u8string());

@@ -85,6 +85,16 @@ TEST_F(FindXboxGamingRootPathTest,
   EXPECT_EQ(expectedPath, gamingRootPath);
 }
 
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootPathContainsNul) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  const char* data = "12345678t\0e\0s\0t\0\0\0p\0a\0t\0h\0\0\0";
+  out.write(data, 28);
+  out.close();
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
+}
+
 // MSVC interprets source files in the default code page, so
 // for me u8"\xC3\x9C" != u8"\u00DC", which is a lot of fun.
 // To avoid insanity, write non-ASCII characters as \uXXXX escapes.
