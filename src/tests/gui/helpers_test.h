@@ -55,20 +55,21 @@ TEST_F(FindXboxGamingRootPathTest,
 }
 
 TEST_F(FindXboxGamingRootPathTest,
-       shouldThrowIfDotGamingRootContainsAnOddNumberOfBytes) {
+       shouldReturnNulloptIfDotGamingRootContainsAnOddNumberOfBytes) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   out << "12345678901";
   out.close();
 
-  EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
-TEST_F(FindXboxGamingRootPathTest, shouldThrowIfDotGamingRootIsTooShort) {
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootIsTooShort) {
   std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
   out << "12";
   out.close();
 
-  EXPECT_THROW(FindXboxGamingRootPath(dataPath), std::runtime_error);
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
 TEST_F(FindXboxGamingRootPathTest,
@@ -82,6 +83,16 @@ TEST_F(FindXboxGamingRootPathTest,
   const auto expectedPath = dataPath / "test path";
 
   EXPECT_EQ(expectedPath, gamingRootPath);
+}
+
+TEST_F(FindXboxGamingRootPathTest,
+       shouldReturnNulloptIfDotGamingRootPathContainsNul) {
+  std::ofstream out(dataPath / ".GamingRoot", std::ios::binary);
+  const char* data = "12345678t\0e\0s\0t\0\0\0p\0a\0t\0h\0\0\0";
+  out.write(data, 28);
+  out.close();
+
+  EXPECT_FALSE(FindXboxGamingRootPath(dataPath).has_value());
 }
 
 // MSVC interprets source files in the default code page, so

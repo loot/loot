@@ -47,6 +47,7 @@
 #endif
 
 #include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ranges.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/locale.hpp>
@@ -316,7 +317,7 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
   const auto logger = getLogger();
   const auto gamingRootFilePath = driveRootPath / ".GamingRoot";
 
-  std::vector<char> bytes;
+  std::vector<uint8_t> bytes;
 
   try {
     if (!std::filesystem::is_regular_file(gamingRootFilePath)) {
@@ -344,33 +345,22 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
   if (logger) {
     // Log the contents of .GamingRoot because I'm not sure of the format and
     // this would help debugging.
-    std::vector<std::string> hexBytes;
-    std::transform(bytes.begin(),
-                   bytes.end(),
-                   std::back_inserter(hexBytes),
-                   [](char byte) {
-                     std::stringstream stream;
-                     stream << "0x" << std::hex << int{byte};
-                     return stream.str();
-                   });
-
-    logger->debug("Read the following bytes from {}: {}",
+    logger->debug("Read the following bytes from {}: {::#04x}",
                   gamingRootFilePath.u8string(),
-                  boost::join(hexBytes, " "));
+                  bytes);
   }
 
-  // The content of .GamingRoot is the byte sequence 52 47 42 58 01 00 00 00
-  // followed by the null-terminated UTF-16LE location of the Xbox games folder
-  // on the same drive.
+  // The content of .GamingRoot seems to be the byte sequence 52 47 42 58 01 00
+  // 00 00 followed by the null-terminated UTF-16LE location of the Xbox games
+  // folder on the same drive.
 
   if (bytes.size() % 2 != 0) {
     logger->error(
         "Found a non-even number of bytes in the file at {}, cannot interpret "
         "it as UTF-16LE",
         gamingRootFilePath.u8string());
-    throw std::runtime_error(
-        "Found a non-even number of bytes in the file at \"" +
-        gamingRootFilePath.u8string() + "\"");
+
+    return std::nullopt;
   }
 
   std::vector<char16_t> content;
@@ -390,13 +380,29 @@ std::optional<std::filesystem::path> FindXboxGamingRootPath(
           content.size());
     }
 
-    throw std::runtime_error("The file at \"" + gamingRootFilePath.u8string() +
-                             "\" is shorter than expected.");
+    return std::nullopt;
   }
 
   // Cut off the null char16_t at the end.
   const std::u16string relativePath(content.begin() + CHAR16_PATH_OFFSET,
                                     content.end() - 1);
+
+  // Check that the string does not contain any nul characters (i.e. 0x00 0x00
+  // in UTF-16), as while they're valid in UTF-16, they'll be passed around as
+  // a C string later, and nul characters are not allowed in Windows or Linux
+  // paths.
+  const auto containsNul =
+      std::find(relativePath.begin(), relativePath.end(), char16_t{0}) !=
+      relativePath.end();
+  if (containsNul) {
+    if (logger) {
+      logger->error(
+          "The relative path read from .GamingRoot contains a nul "
+          "character");
+    }
+
+    return std::nullopt;
+  }
 
   if (logger) {
     logger->debug("Read the following relative path from .GamingRoot: {}",
