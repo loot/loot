@@ -26,6 +26,18 @@
 #ifndef LOOT_GUI_STATE_GAME_GAME
 #define LOOT_GUI_STATE_GAME_GAME
 
+#ifndef _WIN32
+#ifdef emit
+// The TBB library is used on Linux to provide the implementation of the
+// standard library parallel execution algorithms, but oneTBB 2021.8.0 defines
+// an emit() function that clashes with Qt's emit macro, which may be defined
+// when this header is included. As such, undefine the macro before including
+// the standard library headers, and redefine it afterwards.
+#undef emit
+#define LOOT_SHOULD_REDEFINE_EMIT
+#endif
+#endif
+
 #include <execution>
 #include <filesystem>
 #include <functional>
@@ -33,6 +45,12 @@
 #include <optional>
 #include <string>
 #include <variant>
+
+#ifdef LOOT_SHOULD_REDEFINE_EMIT
+// Assume emit was Qt's emit macro, which is empty.
+#define emit
+#undef LOOT_SHOULD_REDEFINE_EMIT
+#endif
 
 #include "gui/state/game/game_settings.h"
 #include "gui/state/logging.h"
