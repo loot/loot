@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.19.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-05-07 09:17+0100\n"
+"POT-Creation-Date: 2023-05-22 22:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -908,6 +908,10 @@ msgid "A folder is required."
 msgstr ""
 
 #: src/gui/qt/settings/new_game_dialog.cpp:106
+msgid "LOOT folder names must not contain \"/\" or \"\\\"."
+msgstr ""
+
+#: src/gui/qt/settings/new_game_dialog.cpp:115
 msgid "A game with this folder already exists."
 msgstr ""
 
