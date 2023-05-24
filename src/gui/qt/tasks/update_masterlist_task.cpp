@@ -40,7 +40,7 @@ void UpdateMasterlistTask::execute() {
 
     updatePrelude();
   } catch (const std::exception &e) {
-    emit this->error(e.what());
+    handleException(e);
   }
 }
 
@@ -155,7 +155,7 @@ void UpdateMasterlistTask::onMasterlistReplyFinished() {
 
     finish();
   } catch (const std::exception &e) {
-    emit this->error(e.what());
+    handleException(e);
   }
 }
 
@@ -180,56 +180,7 @@ void UpdateMasterlistTask::onPreludeReplyFinished() {
     // Now update the masterlist.
     updateMasterlist();
   } catch (const std::exception &e) {
-    emit this->error(e.what());
-  }
-}
-
-void UpdateMasterlistTask::onNetworkError(
-    QNetworkReply::NetworkError networkError) {
-  try {
-    auto reply = qobject_cast<QIODevice *>(sender());
-    auto errorString = reply->errorString().toStdString();
-
-    auto logger = getLogger();
-    if (logger) {
-      logger->error(
-          "Network error encountered during prelude or masterlist update: "
-          "error code is {}, "
-          "description "
-          "is: {}",
-          networkError,
-          errorString);
-    }
-
-    emit this->error(errorString);
-  } catch (const std::exception &e) {
-    emit this->error(e.what());
-  }
-}
-
-void UpdateMasterlistTask::onSSLError(const QList<QSslError> &errors) {
-  try {
-    auto logger = getLogger();
-
-    std::string errorStrings;
-    for (const auto &error : errors) {
-      auto errorString = error.errorString().toStdString();
-      errorStrings += errorString + "; ";
-
-      if (logger) {
-        logger->error(
-            "SSL error encountered during prelude or masterlist update: {}",
-            errorString);
-      }
-    }
-
-    if (!errorStrings.empty()) {
-      errorStrings = errorStrings.substr(0, errorStrings.length() - 2);
-    }
-
-    emit error(errorStrings);
-  } catch (const std::exception &e) {
-    emit error(e.what());
+    handleException(e);
   }
 }
 }

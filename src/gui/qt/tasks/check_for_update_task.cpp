@@ -123,15 +123,6 @@ void CheckForUpdateTask::sendHttpRequest(
       reply, &QNetworkReply::sslErrors, this, &CheckForUpdateTask::onSSLError);
 }
 
-void CheckForUpdateTask::handleException(const std::exception &exception) {
-  const auto logger = getLogger();
-  if (logger) {
-    logger->error("Caught an exception: {}", exception.what());
-  }
-
-  emit error(exception.what());
-}
-
 void CheckForUpdateTask::onGetLatestReleaseReplyFinished() {
   try {
     const auto logger = getLogger();
@@ -255,55 +246,6 @@ void CheckForUpdateTask::onGetBuildCommitReplyFinished() {
       logger->info("No LOOT update is available.");
       emit finished(false);
     }
-  } catch (const std::exception &e) {
-    handleException(e);
-  }
-}
-
-void CheckForUpdateTask::onNetworkError(
-    QNetworkReply::NetworkError networkError) {
-  try {
-    const auto reply = qobject_cast<QIODevice *>(sender());
-    const auto errorString = reply->errorString().toStdString();
-
-    const auto logger = getLogger();
-    if (logger) {
-      logger->error(
-          "Network error encountered while checking for LOOT updates: "
-          "error code is {}, "
-          "description "
-          "is: {}",
-          networkError,
-          errorString);
-    }
-
-    emit error(errorString);
-  } catch (const std::exception &e) {
-    handleException(e);
-  }
-}
-
-void CheckForUpdateTask::onSSLError(const QList<QSslError> &errors) {
-  try {
-    const auto logger = getLogger();
-
-    std::string errorStrings;
-    for (const auto &error : errors) {
-      const auto errorString = error.errorString().toStdString();
-      errorStrings += errorString + "; ";
-
-      if (logger) {
-        logger->error(
-            "SSL error encountered while checking for LOOT updates: {}",
-            errorString);
-      }
-    }
-
-    if (!errorStrings.empty()) {
-      errorStrings = errorStrings.substr(0, errorStrings.length() - 2);
-    }
-
-    emit error(errorStrings);
   } catch (const std::exception &e) {
     handleException(e);
   }
