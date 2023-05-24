@@ -278,15 +278,19 @@ bool updateFileWithData(const std::filesystem::path& filePath,
 
 bool updateFile(const std::filesystem::path& source,
                 const std::filesystem::path& destination) {
-  auto logger = getLogger();
+  const auto logger = getLogger();
   if (logger) {
-    logger->info("Updating file at {} using file at {}",
+    logger->info("Updating file at \"{}\" using file at \"{}\"",
                  destination.u8string(),
                  source.u8string());
   }
 
-  auto newHash = calculateGitBlobHash(source);
-  auto hasChanged = !isFileUpToDate(destination, newHash);
+  if (source.empty()) {
+    throw std::invalid_argument("source path is empty");
+  }
+
+  const auto newHash = calculateGitBlobHash(source);
+  const auto hasChanged = !isFileUpToDate(destination, newHash);
 
   if (hasChanged) {
     std::filesystem::copy_file(
@@ -294,14 +298,15 @@ bool updateFile(const std::filesystem::path& source,
   }
 
   if (logger) {
-    auto logMessage = hasChanged ? "Updated file at {}, new blob hash is {}"
-                                 : "{} is already up to date with blob hash {}";
+    const auto logMessage = hasChanged
+                                ? "Updated file at {}, new blob hash is {}"
+                                : "{} is already up to date with blob hash {}";
     logger->debug(logMessage, destination.u8string(), newHash);
   }
 
   // Update the metadata file even if the file is up to date, as the
   // update timestamp may have changed.
-  auto updateTimestamp =
+  const auto updateTimestamp =
       QDate::currentDate().toString(Qt::ISODate).toStdString();
   writeFileRevision(destination, newHash, updateTimestamp);
 
