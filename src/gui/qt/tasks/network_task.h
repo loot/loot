@@ -23,30 +23,22 @@
     <https://www.gnu.org/licenses/>.
     */
 
-#ifndef LOOT_GUI_QT_TASKS_CHECK_FOR_UPDATE_TASK
-#define LOOT_GUI_QT_TASKS_CHECK_FOR_UPDATE_TASK
+#ifndef LOOT_GUI_QT_TASKS_NETWORK_TASK
+#define LOOT_GUI_QT_TASKS_NETWORK_TASK
 
-#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
 
-#include "gui/qt/tasks/network_task.h"
+#include "gui/qt/tasks/tasks.h"
 
 namespace loot {
-class CheckForUpdateTask : public NetworkTask {
+class NetworkTask : public Task {
   Q_OBJECT
-public slots:
-  void execute() override;
+protected:
+  void handleException(const std::exception &exception);
 
-private:
-  QNetworkAccessManager *networkAccessManager{nullptr};
-  std::optional<QDate> tagCommitDate;
-
-  void sendHttpRequest(const std::string &url,
-                       void (CheckForUpdateTask::*onFinished)());
-
-private slots:
-  void onGetLatestReleaseReplyFinished();
-  void onGetTagCommitReplyFinished();
-  void onGetBuildCommitReplyFinished();
+protected slots:
+  void onNetworkError(QNetworkReply::NetworkError error);
+  void onSSLError(const QList<QSslError> &errors);
 };
 }
 

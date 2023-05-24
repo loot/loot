@@ -92,14 +92,23 @@ void NewGameDialog::on_dialogButtons_accepted() {
     return;
   }
 
-  if (folderInput->text().isEmpty()) {
+  const auto lootFolder = folderInput->text();
+  if (lootFolder.isEmpty()) {
     QToolTip::showText(folderInput->mapToGlobal(QPoint(0, 0)),
                        folderInput->toolTip(),
                        folderInput);
     return;
   }
 
-  auto lowercaseLootFolder = folderInput->text().toLower();
+  if (lootFolder.contains('/') || lootFolder.contains('\\')) {
+    QToolTip::showText(
+        folderInput->mapToGlobal(QPoint(0, 0)),
+        translate("LOOT folder names must not contain \"/\" or \"\\\"."),
+        folderInput);
+    return;
+  }
+
+  auto lowercaseLootFolder = lootFolder.toLower();
   for (const auto& otherFolder : currentGameFolders) {
     if (lowercaseLootFolder == otherFolder.toLower()) {
       QToolTip::showText(folderInput->mapToGlobal(QPoint(0, 0)),

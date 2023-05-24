@@ -27,12 +27,11 @@
 #define LOOT_GUI_QT_TASKS_UPDATE_MASTERLIST_TASK
 
 #include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
 
-#include "gui/qt/tasks/tasks.h"
+#include "gui/qt/tasks/network_task.h"
 
 namespace loot {
-class UpdateMasterlistTask : public Task {
+class UpdateMasterlistTask : public NetworkTask {
   Q_OBJECT
 public:
   explicit UpdateMasterlistTask(LootState &state);
@@ -55,8 +54,6 @@ private:
 private slots:
   void onMasterlistReplyFinished();
   void onPreludeReplyFinished();
-  void onNetworkError(QNetworkReply::NetworkError error);
-  void onSSLError(const QList<QSslError> &errors);
 };
 }
 
