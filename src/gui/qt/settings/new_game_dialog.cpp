@@ -33,6 +33,49 @@
 #include "gui/qt/helpers.h"
 #include "gui/qt/settings/game_tab.h"
 
+namespace {
+bool isReservedBasename(const QString& filename) {
+  const auto basename = filename.left(filename.indexOf(".")).toUpper();
+
+  static constexpr std::array<const char*, 24> INVALID_NAMES = {
+      "CON",  "PRN",  "AUX",  "NUL",  "COM0", "COM1", "COM2", "COM3",
+      "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1",
+      "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+
+  for (const auto& name : INVALID_NAMES) {
+    if (basename == name) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool isValidFolderName(const QString& filename) {
+  if (filename.endsWith(' ') || filename.endsWith('.')) {
+    return false;
+  }
+
+  static constexpr std::array<char, 41> INVALID_CHARS = {
+      '<', '>', ':', '"', '/', '\\', '|', '?', '*'};
+
+  for (const auto& invalidChar : INVALID_CHARS) {
+    if (filename.contains(invalidChar)) {
+      return false;
+    }
+  }
+
+  // Also check for ASCII control characters.
+  for (char i = 0; i < 32; i += 1) {
+    if (filename.contains(i)) {
+      return false;
+    }
+  }
+
+  return !isReservedBasename(filename);
+}
+}
+
 namespace loot {
 NewGameDialog::NewGameDialog(QWidget* parent, QStringList currentGameFolders) :
     QDialog(parent), currentGameFolders(currentGameFolders) {
@@ -100,11 +143,10 @@ void NewGameDialog::on_dialogButtons_accepted() {
     return;
   }
 
-  if (lootFolder.contains('/') || lootFolder.contains('\\')) {
-    QToolTip::showText(
-        folderInput->mapToGlobal(QPoint(0, 0)),
-        translate("LOOT folder names must not contain \"/\" or \"\\\"."),
-        folderInput);
+  if (!isValidFolderName(lootFolder)) {
+    QToolTip::showText(folderInput->mapToGlobal(QPoint(0, 0)),
+                       translate("This is not a valid Windows folder name."),
+                       folderInput);
     return;
   }
 
