@@ -134,8 +134,37 @@ bool IsGogInstall(const GameId gameId,
   return false;
 }
 
-bool IsEpicInstall(const std::filesystem::path& installPath) {
-  return std::filesystem::exists(installPath / ".egstore");
+bool IsEpicInstall(const GameId gameId,
+                   const std::filesystem::path& installPath) {
+  switch (gameId) {
+    case GameId::tes5se:
+      return std::filesystem::exists(installPath / "EOSSDK-Win64-Shipping.dll");
+    case GameId::fo3:
+      return std::filesystem::exists(installPath / "FalloutLauncherEpic.exe");
+    case GameId::fonv:
+      return std::filesystem::exists(installPath / "EOSSDK-Win32-Shipping.dll");
+    default:
+      return false;
+  }
+}
+
+bool IsMicrosoftInstall(const GameId gameId,
+                        const std::filesystem::path& installPath) {
+  switch (gameId) {
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::fo3:
+    case GameId::fonv:
+      // tes3, tes4, fo3 and fonv install paths are localised, with the
+      // appxmanifest.xml file sitting in the parent directory.
+      return std::filesystem::exists(installPath.parent_path() /
+                                     "appxmanifest.xml");
+    case GameId::tes5se:
+    case GameId::fo4:
+      return std::filesystem::exists(installPath / "appxmanifest.xml");
+    default:
+      return false;
+  }
 }
 
 std::optional<GameInstall> FindGameInstallInRegistry(
@@ -166,7 +195,7 @@ std::optional<GameInstall> FindGameInstallInRegistry(
 }
 
 std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
-  const std::filesystem::path path = "..";
+  const auto path = std::filesystem::current_path().parent_path();
 
   if (!IsValidGamePath(GetGameType(gameId), GetMasterFilename(gameId), path)) {
     return std::nullopt;
@@ -180,11 +209,11 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
     return GameInstall{gameId, InstallSource::gog, path};
   }
 
-  if (IsEpicInstall(path)) {
+  if (IsEpicInstall(gameId, path)) {
     return GameInstall{gameId, InstallSource::epic, path};
   }
 
-  if (loot::generic::IsMicrosoftInstall(path)) {
+  if (IsMicrosoftInstall(gameId, path)) {
     return GameInstall{gameId, InstallSource::microsoft, path};
   }
 
@@ -219,14 +248,17 @@ GameId DetectGameId(const GameType gameType,
     case GameType::fo4vr:
       return GameId::fo4vr;
     default:
-      throw std::logic_error("Unrecognised game ID");
+      throw std::logic_error("Unrecognised game type");
   }
 }
 }
 
 namespace loot::generic {
-bool IsMicrosoftInstall(const std::filesystem::path& installPath) {
-  return std::filesystem::exists(installPath / "appxmanifest.xml");
+bool IsMicrosoftInstall(const GameType gameType,
+                        const std::filesystem::path& installPath) {
+  const auto gameId = DetectGameId(gameType, installPath);
+
+  return ::IsMicrosoftInstall(gameId, installPath);
 }
 
 std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
@@ -267,12 +299,12 @@ std::optional<GameInstall> DetectGameInstall(const GameSettings& settings) {
         gameId, InstallSource::gog, installPath, settings.GameLocalPath()};
   }
 
-  if (IsEpicInstall(installPath)) {
+  if (IsEpicInstall(gameId, installPath)) {
     return GameInstall{
         gameId, InstallSource::epic, installPath, settings.GameLocalPath()};
   }
 
-  if (IsMicrosoftInstall(installPath)) {
+  if (::IsMicrosoftInstall(gameId, installPath)) {
     return GameInstall{gameId,
                        InstallSource::microsoft,
                        installPath,

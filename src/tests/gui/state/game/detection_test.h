@@ -58,8 +58,7 @@ protected:
 
     initialCurrentPath = std::filesystem::current_path();
 
-    const auto gamePath = dataPath / "..";
-    const auto lootPath = gamePath / "LOOT";
+    const auto lootPath = dataPath.parent_path() / "LOOT";
 
     // Change the current path into a game subfolder.
     std::filesystem::create_directory(lootPath);
@@ -84,7 +83,8 @@ TEST_F(UpdateInstalledGamesSettingsTest,
 
   ASSERT_EQ(1, gamesSettings.size());
   EXPECT_EQ(getGameType(), gamesSettings[0].Type());
-  EXPECT_EQ("..", gamesSettings[0].GamePath());
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gamesSettings[0].GamePath());
   EXPECT_EQ("", gamesSettings[0].GameLocalPath());
 }
 }

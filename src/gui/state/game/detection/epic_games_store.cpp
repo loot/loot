@@ -68,6 +68,8 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
       return "ac82db5035584c7f8a2c548d98c86b2c";
     case GameId::fo3:
       return "adeae8bbfc94427db57c7dfecce3f1d4";
+    case GameId::fonv:
+      return "5daeb974a22a435988892319b3a4f476";
     case GameId::tes3:
     case GameId::tes4:
     case GameId::nehrim:
@@ -75,7 +77,6 @@ std::optional<std::string> GetEgsAppName(GameId gameId) {
     case GameId::enderal:
     case GameId::enderalse:
     case GameId::tes5vr:
-    case GameId::fonv:
     case GameId::fo4:
     case GameId::fo4vr:
       return std::nullopt;
@@ -99,6 +100,12 @@ std::vector<loot::LocalisedGameInstallPath> GetGameLocalisationDirectories(
               {basePath / "Fallout 3 GOTY German", "de"},
               {basePath / "Fallout 3 GOTY Italian", "it"},
               {basePath / "Fallout 3 GOTY Spanish", "es"}};
+    case GameId::fonv:
+      return {{basePath / "Fallout New Vegas English", "en"},
+              {basePath / "Fallout New Vegas French", "fr"},
+              {basePath / "Fallout New Vegas German", "de"},
+              {basePath / "Fallout New Vegas Italian", "it"},
+              {basePath / "Fallout New Vegas Spanish", "es"}};
     default:
       throw std::logic_error("Unsupported Epic Games Store game");
   }
@@ -242,6 +249,21 @@ std::optional<std::filesystem::path> GetEgsGameInstallPath(
 
   return std::nullopt;
 }
+
+std::filesystem::path GetAppDataPath(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes5se:
+    case GameId::fo3:
+      // Fallout 3 and Skyrim write to the same paths as their Steam
+      // distributions, so just provide an empty path so that the
+      // default gets used.
+      return {};
+    case GameId::fonv:
+      return loot::getLocalAppDataPath() / "FalloutNV_Epic";
+    default:
+      throw std::logic_error("Unsupported Epic Games Store game");
+  }
+}
 }
 
 namespace loot::epic {
@@ -263,8 +285,10 @@ std::optional<GameInstall> FindGameInstalls(
           gameId, preferredUILanguages, pathsToCheck);
 
       if (localisedInstallPath.has_value()) {
-        return GameInstall{
-            gameId, InstallSource::epic, localisedInstallPath.value()};
+        return GameInstall{gameId,
+                           InstallSource::epic,
+                           localisedInstallPath.value(),
+                           GetAppDataPath(gameId)};
       }
     }
   } catch (const std::exception& e) {

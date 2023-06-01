@@ -136,7 +136,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldFindGameInParentOfCurrentDirectory) {
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(expectedSource, gameInstalls[0].source);
-  EXPECT_EQ("..", gameInstalls[0].installPath);
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
@@ -150,7 +151,8 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifySteamSiblingGame) {
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(InstallSource::steam, gameInstalls[0].source);
-  EXPECT_EQ("..", gameInstalls[0].installPath);
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
@@ -175,32 +177,48 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyGogSiblingGame) {
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(expectedSource, gameInstalls[0].source);
-  EXPECT_EQ("..", gameInstalls[0].installPath);
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyEpicSiblingGame) {
-  touch(dataPath.parent_path() / ".egstore");
-
   const auto gameId = GetParam();
+
+  if (gameId == GameId::tes5se) {
+    touch(dataPath.parent_path() / "EOSSDK-Win64-Shipping.dll");
+  } else if (gameId == GameId::fo3) {
+    touch(dataPath.parent_path() / "FalloutLauncherEpic.exe");
+  } else if (gameId == GameId::fonv) {
+    touch(dataPath.parent_path() / "EOSSDK-Win32-Shipping.dll");
+  }
+
   const auto gameInstalls =
       loot::generic::FindGameInstalls(TestRegistry(), gameId);
 
-  auto expectedSource = InstallSource::epic;
-  if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
-      GetParam() == GameId::fo4vr) {
+  auto expectedSource = InstallSource::unknown;
+  if (gameId == GameId::tes5 || gameId == GameId::tes5vr ||
+      gameId == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
+  } else if (gameId == GameId::tes5se || gameId == GameId::fo3 ||
+             gameId == GameId::fonv) {
+    expectedSource = InstallSource::epic;
   }
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(expectedSource, gameInstalls[0].source);
-  EXPECT_EQ("..", gameInstalls[0].installPath);
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
 TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
-  touch(dataPath.parent_path() / "appxmanifest.xml");
+  if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4) {
+    touch(dataPath.parent_path() / "appxmanifest.xml");
+  } else {
+    touch(dataPath.parent_path().parent_path() / "appxmanifest.xml");
+  }
 
   const auto gameId = GetParam();
   const auto gameInstalls =
@@ -210,12 +228,16 @@ TEST_P(Generic_FindGameInstallsTest, shouldIdentifyMsStoreSiblingGame) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
+  } else if (GetParam() == GameId::nehrim || GetParam() == GameId::enderal ||
+             GetParam() == GameId::enderalse) {
+    expectedSource = InstallSource::unknown;
   }
 
   ASSERT_EQ(1, gameInstalls.size());
   EXPECT_EQ(gameId, gameInstalls[0].gameId);
   EXPECT_EQ(expectedSource, gameInstalls[0].source);
-  EXPECT_EQ("..", gameInstalls[0].installPath);
+  EXPECT_EQ(std::filesystem::current_path().parent_path(),
+            gameInstalls[0].installPath);
   EXPECT_EQ("", gameInstalls[0].localPath);
 }
 
@@ -393,14 +415,23 @@ TEST_P(DetectGameInstallTest, shouldDetectAGogInstall) {
 }
 
 TEST_P(DetectGameInstallTest, shouldDetectAnEpicInstall) {
-  touch(dataPath.parent_path() / ".egstore");
+  if (GetParam() == GameId::tes5se) {
+    touch(dataPath.parent_path() / "EOSSDK-Win64-Shipping.dll");
+  } else if (GetParam() == GameId::fo3) {
+    touch(dataPath.parent_path() / "FalloutLauncherEpic.exe");
+  } else if (GetParam() == GameId::fonv) {
+    touch(dataPath.parent_path() / "EOSSDK-Win32-Shipping.dll");
+  }
 
   const auto install = generic::DetectGameInstall(GetSettings());
 
-  auto expectedSource = InstallSource::epic;
+  auto expectedSource = InstallSource::unknown;
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
+  } else if (GetParam() == GameId::tes5se || GetParam() == GameId::fo3 ||
+             GetParam() == GameId::fonv) {
+    expectedSource = InstallSource::epic;
   }
 
   ASSERT_TRUE(install.has_value());
@@ -411,7 +442,11 @@ TEST_P(DetectGameInstallTest, shouldDetectAnEpicInstall) {
 }
 
 TEST_P(DetectGameInstallTest, shouldDetectAMicrosoftInstall) {
-  touch(dataPath.parent_path() / "appxmanifest.xml");
+  if (GetParam() == GameId::tes5se || GetParam() == GameId::fo4) {
+    touch(dataPath.parent_path() / "appxmanifest.xml");
+  } else {
+    touch(dataPath.parent_path().parent_path() / "appxmanifest.xml");
+  }
 
   const auto install = generic::DetectGameInstall(GetSettings());
 
@@ -419,6 +454,9 @@ TEST_P(DetectGameInstallTest, shouldDetectAMicrosoftInstall) {
   if (GetParam() == GameId::tes5 || GetParam() == GameId::tes5vr ||
       GetParam() == GameId::fo4vr) {
     expectedSource = InstallSource::steam;
+  } else if (GetParam() == GameId::nehrim || GetParam() == GameId::enderal ||
+             GetParam() == GameId::enderalse) {
+    expectedSource = InstallSource::unknown;
   }
 
   ASSERT_TRUE(install.has_value());
