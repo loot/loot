@@ -4,6 +4,73 @@ Version History
 
 Only application history is recorded here. A full history of masterlist changes may be viewed by browsing the GitHub repositories.
 
+0.20.0 - 2023-06-10
+===================
+
+Added
+-----
+
+- Support for the GOG distributions of Nehrim and Enderal.
+- Support for multiple instances of each supported game (e.g. from Steam, GOG,
+  Epic Games Store, Microsoft Store). LOOT will now look for all instances of
+  supported games and create a separate settings entry for each instance found.
+- Support for the Microsoft Store's Fallout 4 DLC, which get installed outside
+  of the Fallout 4 installation path.
+- LOOT now displays warning messages for all games when too many plugins are
+  active. Previously such messages were only displayed for Morrowind.
+- LOOT now displays error messages explaining why a group cannot be removed in
+  the Groups Editor instead of just doing nothing.
+- The installer now includes the most recent masterlists and prelude at time of
+  creation, and can optionally download all the latest masterlists and prelude
+  when installing LOOT.
+- The installer has been translated into Bulgarian, Italian and Ukrainian.
+
+Fixed
+-----
+
+- LOOT could crash on startup if it encountered an invalid ``.GamingRoot`` file
+  when trying to detect Microsoft Store games.
+- LOOT could error on startup if the Epic Games Launcher was not installed.
+- Cyclic interaction error messages could include too many plugins in the cycles
+  they displayed.
+- LOOT allowed invalid folder names when adding a new game in the Settings
+  dialog.
+- Errors encountered during masterlist updates or the check for new LOOT updates
+  would cause an internal error message to be displayed to the user. A generic
+  error message is now displayed instead, matching how other errors are handled.
+- Double-right-clicking on a group in the Groups Editor would prevent it from
+  being moved.
+- The sidebar plugins table text colour is now consistent across all columns
+  when a row is selected but the sidebar does not have focus.
+
+Changed
+-------
+
+- LOOT no longer treats any active plugins as inactive if too many are active,
+  as this could cause them to be deactivated unnecessarily when setting a sorted
+  load order.
+- Improved the warning messages displayed when there are too many active
+  Morrowind plugins.
+- If LOOT encounters an invalid ``.GamingRoot`` file, it now skips only that
+  file instead of all remaining ``.GamingRoot`` files.
+- Updated the Brazilian Portuguese translation.
+- Updated the Bulgarian translation.
+- Updated the Finnish translation.
+- Updated the German translation.
+- Updated the Italian translation.
+- Updated the Japanese translation.
+- Updated the Ukrainian translation.
+- Updated the Polish installer translation.
+- Updated Boost to 1.81.0.
+- Updated libloot to 0.19.4.
+- Updated Qt to 6.5.1.
+
+Removed
+-------
+
+- Support for Windows 7 and 8.1, and 32-bit Windows 10. LOOT now requires 64-bit
+  Windows 10 or 11.
+
 0.19.1 - 2023-01-14
 ===================
 
