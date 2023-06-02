@@ -29,10 +29,12 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsSceneMouseEvent>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QStyleOption>
 
 #include "gui/qt/groups_editor/edge.h"
 #include "gui/qt/groups_editor/graph_view.h"
+#include "gui/qt/helpers.h"
 #include "gui/state/logging.h"
 
 namespace loot {
@@ -198,6 +200,8 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   update();
   QGraphicsItem::mousePressEvent(event);
 
+  auto graphicsWidget = qobject_cast<GraphView *>(scene()->parent());
+
   if (isUserMetadata_ && !containsInstalledPlugins &&
       event->button() == Qt::RightButton) {
     auto logger = getLogger();
@@ -224,7 +228,6 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
       delete edge;
     }
 
-    auto graphicsWidget = qobject_cast<GraphView *>(scene()->parent());
     graphicsWidget->handleGroupRemoved(textItem->text());
 
     scene()->removeItem(this->textItem);
@@ -236,8 +239,20 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   } else if (event->button() == Qt::RightButton) {
     // Not user metadata, ignore the event.
     event->ignore();
+
+    // Inform the user why the event was ignored.
+    if (!isUserMetadata_) {
+      QMessageBox::critical(
+          graphicsWidget,
+          "LOOT",
+          translate("Only user groups can be removed!"));
+    } else if (containsInstalledPlugins) {
+      QMessageBox::critical(
+          graphicsWidget,
+          "LOOT",
+          translate("A group that is not empty cannot be removed!"));
+    }
   } else {
-    auto graphicsWidget = qobject_cast<GraphView *>(scene()->parent());
     graphicsWidget->handleGroupSelected(textItem->text());
   }
 }
