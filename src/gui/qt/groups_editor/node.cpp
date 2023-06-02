@@ -278,6 +278,10 @@ void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
   update();
   QGraphicsItem::mouseDoubleClickEvent(event);
 
+  if (event->button() != Qt::LeftButton) {
+    return;
+  }
+
   // Disable moving the item so that the item cannot be moved between
   // the mouse being double-clicked and released.
   setFlag(ItemIsMovable, false);
