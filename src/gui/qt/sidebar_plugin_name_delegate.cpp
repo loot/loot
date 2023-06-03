@@ -67,13 +67,14 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
   auto pluginItem = index.data(RawDataRole).value<PluginItem>();
   auto isEditorOpen = index.data(EditorStateRole).toBool();
 
-  const auto isSelected = styleOption.state.testFlag(QStyle::State_Selected) &&
-                          styleOption.state.testFlag(QStyle::State_Active);
+  const auto isSelected = styleOption.state.testFlag(QStyle::State_Selected);
+
   if (isSelected) {
-    const auto color = selectedTextColor.isValid()
-                           ? selectedTextColor
-                           : styleOption.palette.highlightedText().color();
-    painter->setPen(color);
+    const auto pluginColor =
+        selectedTextColor.isValid()
+            ? selectedTextColor
+            : styleOption.palette.highlightedText().color();
+    painter->setPen(pluginColor);
   }
 
   auto name = QFontMetricsF(painter->font())
@@ -88,11 +89,11 @@ void SidebarPluginNameDelegate::paint(QPainter* painter,
     groupRect.translate(0, getSidebarRowHeight(true) / 2.0);
 
     if (!isSelected) {
-      const auto color =
+      const auto groupColor =
           unselectedGroupColor.isValid()
               ? unselectedGroupColor
               : styleOption.palette.color(QPalette::Disabled, QPalette::Text);
-      painter->setPen(color);
+      painter->setPen(groupColor);
     }
 
     auto group = painter->fontMetrics().elidedText(
