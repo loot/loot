@@ -1225,9 +1225,3 @@ msgstr "„{0}“ намери {1}."
 #: src/gui/state/game/helpers.cpp:256
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr "„LOOT“ установи, че „{0}“ е невалиден и ще бъде игнориран."
-
-#~ msgid "Is instance of base game"
-#~ msgstr "Инстанция от базовата игра"
-
-#~ msgid "Install Path Registry Keys"
-#~ msgstr "Местоположение на ключовете от регистъра"
