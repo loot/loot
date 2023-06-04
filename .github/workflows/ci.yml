@@ -44,57 +44,6 @@ jobs:
             exit 1
           fi
 
-  # Publish to Artifactory as a separate job that runs after the build jobs
-  # because we must first clean out any existing artifacts for this Git ref,
-  # and we don't want to do that as a pre-build step in case the build fails
-  # and we're left with no artifacts published.
-  publish-to-artifactory:
-    runs-on: ubuntu-20.04
-    needs: [linux, windows]
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Clean up artifacts on Artifactory
-        run: |
-          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.0/remove_old_artifactory_files.py'
-
-          python3 remove_old_artifactory_files.py \
-            --artifactory-host loot.jfrog.io \
-            --artifactory-api-key ${{ secrets.ARTIFACTORY_API_KEY }} \
-            --artifactory-repository loot \
-            --current-branch "${GITHUB_REF#refs/*/}" \
-            --github-repository loot/loot \
-            --github-token ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create empty directory for artifacts
-        run: |
-          rm -rf downloaded_artifacts
-          mkdir downloaded_artifacts
-
-      - name: Download all artifacts for this workflow from GitHub Actions
-        uses: actions/download-artifact@v3
-        with:
-          path: downloaded_artifacts
-
-      - name: Publish artifacts to Artifactory
-        shell: bash
-        run: |
-          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.0/percent_encode.py'
-
-          PERCENT_ENCODED_GIT_REF_NAME=$(python3 percent_encode.py "${GITHUB_REF#refs/*/}")
-
-          for ARTIFACT_DIRECTORY in downloaded_artifacts/*
-          do
-            ARTIFACT_NAME="${ARTIFACT_DIRECTORY#downloaded_artifacts/}"
-            PERCENT_ENCODED_ARTIFACT_NAME=$(python3 percent_encode.py "$ARTIFACT_NAME")
-
-            curl -sSfL \
-              -X PUT \
-              -T "$ARTIFACT_DIRECTORY/$ARTIFACT_NAME" \
-              -H "X-JFrog-Art-Api: ${{ secrets.ARTIFACTORY_API_KEY }}" \
-              "https://loot.jfrog.io/artifactory/loot/${PERCENT_ENCODED_GIT_REF_NAME}/$PERCENT_ENCODED_ARTIFACT_NAME"
-          done
-
   linux:
     runs-on: ubuntu-20.04
 

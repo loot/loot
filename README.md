@@ -15,10 +15,14 @@ LOOT is intended to make using mods easier, and mod users should still possess a
 
 ## Downloads
 
-Releases are hosted on [GitHub](https://github.com/loot/loot/releases), and snapshot builds are available on [Artifactory](https://loot.jfrog.io/ui/native/loot/master/). The snapshot build archives are named like so:
+Releases are hosted on [GitHub](https://github.com/loot/loot/releases).
+
+Snapshot builds are available as artifacts from [GitHub Actions runs](https://github.com/loot/loot/actions), though they are only kept for 90 days and can only be downloaded when logged into a GitHub account. To mitigate these restrictions, snapshot build artifacts include a GPG signature that can be verified using the public key hosted [here](https://loot.github.io/.well-known/openpgpkey/hu/mj86by43a9hz8y8rbddtx54n3bwuuucg), which means it's possible to re-upload the artifacts elsewhere and still prove their authenticity.
+
+The snapshot build artifacts are named like so:
 
 ```
-loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.7z
+loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.<file extension>
 ```
 
 ## Building LOOT
