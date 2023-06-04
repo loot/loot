@@ -226,6 +226,12 @@ jobs:
 
           echo "filename=$FILENAME" >> $GITHUB_OUTPUT
 
+      - name: Import GPG key
+        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+
+      - name: Sign archive
+        run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
+
   windows:
     runs-on: windows-2019
 
@@ -345,11 +351,17 @@ jobs:
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           echo "basename=loot_${VERSION}-win64" >> $GITHUB_OUTPUT
 
+      - name: Import GPG key
+        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+
       - name: Build archive
         run: |
           $env:PATH="${{ steps.qt-metadata.outputs.root }}/bin;$env:PATH"
           python scripts\archive.py . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
+
+      - name: Sign archive
+        run: gpg --output "build/${{ steps.get-artifact-basename.outputs.basename }}.7z.sig" --detach-sig "build/${{ steps.get-artifact-basename.outputs.basename }}.7z"
 
       - name: Build installer
         run: |
@@ -357,16 +369,23 @@ jobs:
 
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
+      - name: Sign installer
+        run: gpg --output "build/${{ steps.get-artifact-basename.outputs.basename }}.exe.sig"  --detach-sig "build/${{ steps.get-artifact-basename.outputs.basename }}.exe"
+
       - name: Upload archive
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
-          path: build/${{ steps.get-artifact-basename.outputs.basename }}.7z
+          path: |
+            build/${{ steps.get-artifact-basename.outputs.basename }}.7z
+            build/${{ steps.get-artifact-basename.outputs.basename }}.7z.sig
         if: github.event_name == 'push'
 
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
-          path: build/${{ steps.get-artifact-basename.outputs.basename }}.exe
+          path: |
+            build/${{ steps.get-artifact-basename.outputs.basename }}.exe
+            build/${{ steps.get-artifact-basename.outputs.basename }}.exe.sig
         if: github.event_name == 'push'
