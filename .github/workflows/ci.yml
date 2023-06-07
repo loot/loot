@@ -44,57 +44,6 @@ jobs:
             exit 1
           fi
 
-  # Publish to Artifactory as a separate job that runs after the build jobs
-  # because we must first clean out any existing artifacts for this Git ref,
-  # and we don't want to do that as a pre-build step in case the build fails
-  # and we're left with no artifacts published.
-  publish-to-artifactory:
-    runs-on: ubuntu-20.04
-    needs: [linux, windows]
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Clean up artifacts on Artifactory
-        run: |
-          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.0/remove_old_artifactory_files.py'
-
-          python3 remove_old_artifactory_files.py \
-            --artifactory-host loot.jfrog.io \
-            --artifactory-api-key ${{ secrets.ARTIFACTORY_API_KEY }} \
-            --artifactory-repository loot \
-            --current-branch "${GITHUB_REF#refs/*/}" \
-            --github-repository loot/loot \
-            --github-token ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create empty directory for artifacts
-        run: |
-          rm -rf downloaded_artifacts
-          mkdir downloaded_artifacts
-
-      - name: Download all artifacts for this workflow from GitHub Actions
-        uses: actions/download-artifact@v3
-        with:
-          path: downloaded_artifacts
-
-      - name: Publish artifacts to Artifactory
-        shell: bash
-        run: |
-          curl -sfSLO 'https://raw.githubusercontent.com/Ortham/ci-scripts/2.2.0/percent_encode.py'
-
-          PERCENT_ENCODED_GIT_REF_NAME=$(python3 percent_encode.py "${GITHUB_REF#refs/*/}")
-
-          for ARTIFACT_DIRECTORY in downloaded_artifacts/*
-          do
-            ARTIFACT_NAME="${ARTIFACT_DIRECTORY#downloaded_artifacts/}"
-            PERCENT_ENCODED_ARTIFACT_NAME=$(python3 percent_encode.py "$ARTIFACT_NAME")
-
-            curl -sSfL \
-              -X PUT \
-              -T "$ARTIFACT_DIRECTORY/$ARTIFACT_NAME" \
-              -H "X-JFrog-Art-Api: ${{ secrets.ARTIFACTORY_API_KEY }}" \
-              "https://loot.jfrog.io/artifactory/loot/${PERCENT_ENCODED_GIT_REF_NAME}/$PERCENT_ENCODED_ARTIFACT_NAME"
-          done
-
   linux:
     runs-on: ubuntu-20.04
 
@@ -226,6 +175,12 @@ jobs:
 
           echo "filename=$FILENAME" >> $GITHUB_OUTPUT
 
+      - name: Import GPG key
+        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+
+      - name: Sign archive
+        run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
+
   windows:
     runs-on: windows-2019
 
@@ -345,11 +300,17 @@ jobs:
           VERSION="${{ steps.get-loot-version.outputs.version }}"
           echo "basename=loot_${VERSION}-win64" >> $GITHUB_OUTPUT
 
+      - name: Import GPG key
+        run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+
       - name: Build archive
         run: |
           $env:PATH="${{ steps.qt-metadata.outputs.root }}/bin;$env:PATH"
           python scripts\archive.py . "${{ steps.get-loot-version.outputs.ref }}"
           mv "build\loot_${{ steps.get-loot-version.outputs.version }}.7z" "build\${{ steps.get-artifact-basename.outputs.basename }}.7z"
+
+      - name: Sign archive
+        run: gpg --output "build/${{ steps.get-artifact-basename.outputs.basename }}.7z.sig" --detach-sig "build/${{ steps.get-artifact-basename.outputs.basename }}.7z"
 
       - name: Build installer
         run: |
@@ -357,16 +318,23 @@ jobs:
 
           mv "build\LOOT Installer.exe" "build\${{ steps.get-artifact-basename.outputs.basename }}.exe"
 
+      - name: Sign installer
+        run: gpg --output "build/${{ steps.get-artifact-basename.outputs.basename }}.exe.sig"  --detach-sig "build/${{ steps.get-artifact-basename.outputs.basename }}.exe"
+
       - name: Upload archive
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.7z
-          path: build/${{ steps.get-artifact-basename.outputs.basename }}.7z
+          path: |
+            build/${{ steps.get-artifact-basename.outputs.basename }}.7z
+            build/${{ steps.get-artifact-basename.outputs.basename }}.7z.sig
         if: github.event_name == 'push'
 
       - name: Upload installer
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.get-artifact-basename.outputs.basename }}.exe
-          path: build/${{ steps.get-artifact-basename.outputs.basename }}.exe
+          path: |
+            build/${{ steps.get-artifact-basename.outputs.basename }}.exe
+            build/${{ steps.get-artifact-basename.outputs.basename }}.exe.sig
         if: github.event_name == 'push'
