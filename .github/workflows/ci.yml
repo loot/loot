@@ -177,9 +177,11 @@ jobs:
 
       - name: Import GPG key
         run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+        if: github.event_name == 'push'
 
       - name: Sign archive
         run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
+        if: github.event_name == 'push'
 
   windows:
     runs-on: windows-2019
@@ -302,6 +304,7 @@ jobs:
 
       - name: Import GPG key
         run: echo -n "${{ secrets.GPG_SIGNING_KEY }}" | gpg --import
+        if: github.event_name == 'push'
 
       - name: Build archive
         run: |
@@ -311,6 +314,7 @@ jobs:
 
       - name: Sign archive
         run: gpg --output "build/${{ steps.get-artifact-basename.outputs.basename }}.7z.sig" --detach-sig "build/${{ steps.get-artifact-basename.outputs.basename }}.7z"
+        if: github.event_name == 'push'
 
       - name: Build installer
         run: |
@@ -320,6 +324,7 @@ jobs:
 
       - name: Sign installer
         run: gpg --output "build/${{ steps.get-artifact-basename.outputs.basename }}.exe.sig"  --detach-sig "build/${{ steps.get-artifact-basename.outputs.basename }}.exe"
+        if: github.event_name == 'push'
 
       - name: Upload archive
         uses: actions/upload-artifact@v3
