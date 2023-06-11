@@ -147,7 +147,7 @@ void LootState::initCurrentGame() {
   try {
     GetCurrentGame().Init();
     if (logger) {
-      logger->debug("Game named {} has been initialsed",
+      logger->debug("Game named {} has been initialised",
                     GetCurrentGame().GetSettings().Name());
     }
   } catch (const exception& e) {
