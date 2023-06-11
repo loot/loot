@@ -36,13 +36,9 @@
 #include "loot/enum/game_type.h"
 
 namespace loot {
-static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.18";
-
 std::string GetPluginsFolderName(GameId gameId);
 
 std::string GetPluginsFolderName(GameType gameType);
-
-std::string GetDefaultMasterlistUrl(const std::string& repoName);
 
 std::string ToString(const GameId gameId);
 
@@ -80,7 +76,7 @@ private:
   GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
-  float mininumHeaderVersion_{0.0f};
+  float minimumHeaderVersion_{0.0f};
 
   std::string lootFolderName_;
 

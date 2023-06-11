@@ -98,6 +98,17 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
   }
 }
 
+std::string GetDefaultMasterlistUrl(const std::string& repositoryName) {
+  return std::string("https://raw.githubusercontent.com/loot/") +
+         repositoryName + "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
+}
+
+std::string GetDefaultMasterlistUrl(const GameId gameId) {
+  const auto repoName = GetDefaultMasterlistRepositoryName(gameId);
+
+  return GetDefaultMasterlistUrl(repoName);
+}
+
 std::string GetSourceDescription(const InstallSource source) {
   switch (source) {
     case InstallSource::steam:
@@ -463,8 +474,7 @@ void AppendNewGamesSettings(
         GameSettings(gameInstall.gameId, folderName)
             .SetName(gameName)
             .SetMaster(GetMasterFilename(gameInstall.gameId))
-            .SetMasterlistSource(GetDefaultMasterlistUrl(
-                GetDefaultMasterlistRepositoryName(gameInstall.gameId)))
+            .SetMasterlistSource(GetDefaultMasterlistUrl(gameInstall.gameId))
             .SetGamePath(gameInstall.installPath)
             .SetGameLocalPath(gameInstall.localPath);
 

@@ -47,16 +47,14 @@ TEST_P(GetDefaultLootFolderNameTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(GetDefaultLootFolderName(GetParam()));
 }
 
-class GetDefaultMasterlistRepositoryNameTest
-    : public ::testing::TestWithParam<GameId> {};
+class GetDefaultMasterlistUrlTest : public ::testing::TestWithParam<GameId> {};
 
 INSTANTIATE_TEST_SUITE_P(,
-                         GetDefaultMasterlistRepositoryNameTest,
+                         GetDefaultMasterlistUrlTest,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
-TEST_P(GetDefaultMasterlistRepositoryNameTest,
-       shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetDefaultMasterlistRepositoryName(GetParam()));
+TEST_P(GetDefaultMasterlistUrlTest, shouldNotThrowForAnyValidGameId) {
+  EXPECT_NO_THROW(GetDefaultMasterlistUrl(GetParam()));
 }
 
 class GetSourceDescriptionTest
