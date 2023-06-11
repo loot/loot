@@ -36,6 +36,8 @@
 #include <tuple>
 #include <vector>
 
+#include "gui/state/game/detection/game_install.h"
+
 namespace loot {
 static constexpr const char* GHOST_EXTENSION = ".ghost";
 
@@ -79,7 +81,7 @@ std::filesystem::path ResolveGameFilePath(
     const std::string& filename);
 
 std::vector<std::filesystem::path> GetExternalDataPaths(
-    const GameType gameType,
+    const GameId gameId,
     const bool isMicrosoftStoreInstall,
     const std::filesystem::path& dataPath);
 }

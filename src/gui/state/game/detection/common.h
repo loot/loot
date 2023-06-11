@@ -44,9 +44,7 @@ std::string GetGameName(const GameId gameId);
 
 std::string GetMasterFilename(const GameId gameId);
 
-GameType GetGameType(const GameId gameId);
-
-bool IsValidGamePath(const GameType gameType,
+bool IsValidGamePath(const GameId gameId,
                      const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck);
 

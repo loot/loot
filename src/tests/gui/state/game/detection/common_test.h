@@ -41,14 +41,6 @@ TEST_P(GetMasterFilenameTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(GetMasterFilename(GetParam()));
 }
 
-class GetGameTypeTest : public ::testing::TestWithParam<GameId> {};
-
-INSTANTIATE_TEST_SUITE_P(, GetGameTypeTest, ::testing::ValuesIn(ALL_GAME_IDS));
-
-TEST_P(GetGameTypeTest, shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetGameType(GetParam()));
-}
-
 class IsValidGamePathTest : public CommonGameTestFixture,
                             public testing::WithParamInterface<GameId> {
 protected:
@@ -62,8 +54,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsValidGamePathTest, shouldSupportNonAsciiGameMasters) {
-  EXPECT_TRUE(
-      IsValidGamePath(getGameType(), nonAsciiEsp, dataPath.parent_path()));
+  EXPECT_TRUE(IsValidGamePath(GetParam(), nonAsciiEsp, dataPath.parent_path()));
 }
 
 }

@@ -47,8 +47,8 @@ private:
     std::vector<GameSettings> updatedSettings;
 
     for (auto gameSettings : gamesSettings) {
-      if (gameSettings.Type() == GameType::tes5 ||
-          gameSettings.Type() == GameType::fonv) {
+      if (gameSettings.Id() == GameId::tes5 ||
+          gameSettings.Id() == GameId::fonv) {
         gameSettings.SetGamePath(gameSettings.GamePath() /
                                  gameSettings.FolderName());
       }
@@ -60,8 +60,8 @@ private:
   }
 
   bool IsInstalled(const GameSettings& gameSettings) const override {
-    return gameSettings.Type() == GameType::tes5 ||
-           gameSettings.Type() == GameType::fonv;
+    return gameSettings.Id() == GameId::tes5 ||
+           gameSettings.Id() == GameId::fonv;
   }
 
   void InitialiseGameData(gui::Game& game) override {

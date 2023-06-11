@@ -38,11 +38,11 @@
 namespace loot {
 std::string GetPluginsFolderName(GameId gameId);
 
-std::string GetPluginsFolderName(GameType gameType);
-
 std::string ToString(const GameId gameId);
 
-std::string ToString(const GameType gameType);
+bool SupportsLightPlugins(const GameType gameType);
+
+bool ShouldAllowRedating(const GameType gameType);
 
 class GameSettings {
 public:

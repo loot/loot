@@ -82,7 +82,7 @@ TEST_F(UpdateInstalledGamesSettingsTest,
   UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
-  EXPECT_EQ(getGameType(), gamesSettings[0].Type());
+  EXPECT_EQ(GameId::tes3, gamesSettings[0].Id());
   EXPECT_EQ(std::filesystem::current_path().parent_path(),
             gamesSettings[0].GamePath());
   EXPECT_EQ("", gamesSettings[0].GameLocalPath());

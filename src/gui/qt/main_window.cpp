@@ -135,7 +135,7 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
-int calculateSidebarIndexSectionWidth(GameType gameType) {
+int calculateSidebarIndexSectionWidth(bool gameSupportsLightPlugins) {
   // Find the widest hex character in the current font and use that to
   // calculate the load order section width.
   static constexpr std::array<char, 16> HEX_CHARACTERS = {'0',
@@ -172,18 +172,13 @@ int calculateSidebarIndexSectionWidth(GameType gameType) {
 
   // If the game supports light plugins leave enough space for their longer
   // indexes, otherwise only leave space for two hex digits.
-  switch (gameType) {
-    case GameType::tes3:
-    case GameType::tes4:
-    case GameType::tes5:
-    case GameType::fo3:
-    case GameType::fonv:
-      return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
-    default:
-      auto prefixWidth =
-          static_cast<int>(fontMetrics.size(Qt::TextSingleLine, "FE ").width());
-      return prefixWidth + 3 * static_cast<int>(maxCharWidth) + paddingWidth;
+  if (gameSupportsLightPlugins) {
+    const auto prefixWidth =
+        static_cast<int>(fontMetrics.size(Qt::TextSingleLine, "FE ").width());
+    return prefixWidth + 3 * static_cast<int>(maxCharWidth) + paddingWidth;
   }
+
+  return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
 LootSettings::WindowPosition getWindowPosition(QWidget& window) {
@@ -749,8 +744,7 @@ void MainWindow::enableGameActions() {
   actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
-      state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
-      state.GetCurrentGame().GetSettings().Type() == GameType::tes5se;
+      ShouldAllowRedating(state.GetCurrentGame().GetSettings().Type());
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 
   actionFixAmbiguousLoadOrder->setEnabled(false);
@@ -872,7 +866,7 @@ void MainWindow::updateGeneralInformation() {
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      state.GetCurrentGame().GetSettings().Type(),
+      SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type()),
       masterlistInfo,
       preludeInfo,
       initMessages);
@@ -912,11 +906,12 @@ void MainWindow::updateSidebarColumnWidths() {
   // If there is no current game set (i.e. on initial construction), use TES5 SE
   // to calculate the load order section width because that's one of the games
   // that uses the wider width.
-  const auto indexSectionWidth =
+  const auto gameSupportsLightPlugins =
       state.HasCurrentGame()
-          ? calculateSidebarIndexSectionWidth(
-                state.GetCurrentGame().GetSettings().Type())
-          : calculateSidebarIndexSectionWidth(GameType::tes5se);
+          ? SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type())
+          : false;
+  const auto indexSectionWidth =
+      calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);
 
   const auto stateSectionWidth =
       QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +

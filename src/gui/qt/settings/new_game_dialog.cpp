@@ -86,7 +86,7 @@ QString NewGameDialog::getGameName() const { return nameInput->text(); }
 
 QString NewGameDialog::getGameFolder() const { return folderInput->text(); }
 
-QString NewGameDialog::getGameType() const {
+QString NewGameDialog::getBaseGame() const {
   return baseGameComboBox->currentText();
 }
 

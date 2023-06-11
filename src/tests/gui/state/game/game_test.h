@@ -102,6 +102,7 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
   settings.SetMasterlistSource("foo");
   Game game(settings, lootDataPath, "");
 
+  EXPECT_EQ(settings.Id(), game.GetSettings().Id());
   EXPECT_EQ(settings.Type(), game.GetSettings().Type());
   EXPECT_EQ(settings.Name(), game.GetSettings().Name());
   EXPECT_EQ(settings.FolderName(), game.GetSettings().FolderName());

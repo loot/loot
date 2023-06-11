@@ -385,10 +385,10 @@ std::filesystem::path ResolveGameFilePath(
 }
 
 std::vector<std::filesystem::path> GetExternalDataPaths(
-    const GameType gameType,
+    const GameId gameId,
     const bool isMicrosoftStoreInstall,
     const std::filesystem::path& dataPath) {
-  if (gameType == GameType::fo4 && isMicrosoftStoreInstall) {
+  if (gameId == GameId::fo4 && isMicrosoftStoreInstall) {
     return {dataPath / MS_FO4_AUTOMATRON_DATA_PATH,
             dataPath / MS_FO4_NUKA_WORLD_DATA_PATH,
             dataPath / MS_FO4_WASTELAND_DATA_PATH,

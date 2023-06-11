@@ -31,6 +31,38 @@ along with LOOT.  If not, see
 
 namespace loot {
 namespace test {
+class SupportsLightPluginsTest : public ::testing::TestWithParam<GameType> {};
+
+INSTANTIATE_TEST_SUITE_P(,
+                         SupportsLightPluginsTest,
+                         ::testing::ValuesIn(ALL_GAME_TYPES));
+
+TEST_P(SupportsLightPluginsTest,
+       shouldReturnTrueForOnlySkyrimSEAndVRAndFallout4AndVR) {
+  const auto result = SupportsLightPlugins(GetParam());
+  if (GetParam() == GameType::tes5se || GetParam() == GameType::tes5vr ||
+      GetParam() == GameType::fo4 || GetParam() == GameType::fo4vr) {
+    EXPECT_TRUE(result);
+  } else {
+    EXPECT_FALSE(result);
+  }
+}
+
+class ShouldAllowRedatingTest : public ::testing::TestWithParam<GameType> {};
+
+INSTANTIATE_TEST_SUITE_P(,
+                         ShouldAllowRedatingTest,
+                         ::testing::ValuesIn(ALL_GAME_TYPES));
+
+TEST_P(ShouldAllowRedatingTest, shouldReturnTrueForOnlySkyrimAndSkyrimSE) {
+  const auto result = ShouldAllowRedating(GetParam());
+  if (GetParam() == GameType::tes5 || GetParam() == GameType::tes5se) {
+    EXPECT_TRUE(result);
+  } else {
+    EXPECT_FALSE(result);
+  }
+}
+
 class GameSettingsTest : public CommonGameTestFixture,
                          public testing::WithParamInterface<GameId> {
 protected:
@@ -56,6 +88,7 @@ INSTANTIATE_TEST_SUITE_P(,
 TEST_P(
     GameSettingsTest,
     defaultConstructorShouldInitialiseIdToTes4AndAllOtherSettingsToEmptyStrings) {
+  EXPECT_EQ(GameId::tes4, settings_.Id());
   EXPECT_EQ(GameType::tes4, settings_.Type());
   EXPECT_EQ("", settings_.Name());
   EXPECT_EQ("", settings_.FolderName());
@@ -78,8 +111,8 @@ TEST_P(GameSettingsTest,
   // Repo branch changes between LOOT versions, so don't check an exact value.
   EXPECT_NE("", settings_.MasterlistSource());
 
-  switch (getGameType()) {
-    case GameType::fo3:
+  switch (GetParam()) {
+    case GameId::fo3:
       EXPECT_EQ("Fallout 3", settings_.Name());
       EXPECT_EQ("Fallout3.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
@@ -88,7 +121,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::fonv:
+    case GameId::fonv:
       EXPECT_EQ("Fallout: New Vegas", settings_.Name());
       EXPECT_EQ("FalloutNV.esm", settings_.Master());
       EXPECT_EQ(1.32f, settings_.MinimumHeaderVersion());
@@ -97,7 +130,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::fo4:
+    case GameId::fo4:
       EXPECT_EQ("Fallout 4", settings_.Name());
       EXPECT_EQ("Fallout4.esm", settings_.Master());
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
@@ -106,7 +139,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::fo4vr:
+    case GameId::fo4vr:
       EXPECT_EQ("Fallout 4 VR", settings_.Name());
       EXPECT_EQ("Fallout4.esm", settings_.Master());
       // TODO: Get the real value off someone who owns Fallout 4 VR.
@@ -116,7 +149,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::tes3:
+    case GameId::tes3:
       EXPECT_EQ("TES III: Morrowind", settings_.Name());
       EXPECT_EQ("Morrowind.esm", settings_.Master());
       EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
@@ -125,7 +158,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::tes4:
+    case GameId::tes4:
       EXPECT_EQ("TES IV: Oblivion", settings_.Name());
       EXPECT_EQ("Oblivion.esm", settings_.Master());
       EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
@@ -134,7 +167,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::tes5:
+    case GameId::tes5:
       EXPECT_EQ("TES V: Skyrim", settings_.Name());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
@@ -142,7 +175,7 @@ TEST_P(GameSettingsTest,
           "https://raw.githubusercontent.com/loot/skyrim/v0.18/masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::tes5se:
+    case GameId::tes5se:
       EXPECT_EQ("TES V: Skyrim Special Edition", settings_.Name());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
@@ -151,7 +184,7 @@ TEST_P(GameSettingsTest,
           "masterlist.yaml",
           settings_.MasterlistSource());
       break;
-    case GameType::tes5vr:
+    case GameId::tes5vr:
       EXPECT_EQ("TES V: Skyrim VR", settings_.Name());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       // TODO: Get the real value off someone who owns Skyrim VR.

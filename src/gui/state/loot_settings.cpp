@@ -479,28 +479,28 @@ GameId getGameId(const toml::table& table) {
   const auto masterFilename = table["master"].value<std::string>();
   const auto installPath = table["path"].value<std::string>();
 
-  if (gameType == ToString(GameType::tes3)) {
+  if (gameType == "Morrowind") {
     return GameId::tes3;
-  } else if (gameType == ToString(GameType::tes4)) {
+  } else if (gameType == "Oblivion") {
     // The Oblivion game type is shared between Oblivon and Nehrim.
     return IsNehrim(masterFilename, installPath) ? GameId::nehrim
                                                  : GameId::tes4;
-  } else if (gameType == ToString(GameType::tes5)) {
+  } else if (gameType == "Skyrim") {
     // The Skyrim game type is shared between Skyrim and Enderal.
     return IsEnderal(gameName, installPath) ? GameId::enderal : GameId::tes5;
-  } else if (gameType == "SkyrimSE" || gameType == ToString(GameType::tes5se)) {
+  } else if (gameType == "SkyrimSE" || gameType == "Skyrim Special Edition") {
     // The Skyrim SE game type is shared between Skyrim SE and Enderal SE.
     return IsEnderal(gameName, installPath) ? GameId::enderalse
                                             : GameId::tes5se;
-  } else if (gameType == ToString(GameType::tes5vr)) {
+  } else if (gameType == "Skyrim VR") {
     return GameId::tes5vr;
-  } else if (gameType == ToString(GameType::fo3)) {
+  } else if (gameType == "Fallout3") {
     return GameId::fo3;
-  } else if (gameType == ToString(GameType::fonv)) {
+  } else if (gameType == "FalloutNV") {
     return GameId::fonv;
-  } else if (gameType == ToString(GameType::fo4)) {
+  } else if (gameType == "Fallout4") {
     return GameId::fo4;
-  } else if (gameType == ToString(GameType::fo4vr)) {
+  } else if (gameType == "Fallout4VR") {
     return GameId::fo4vr;
   } else {
     throw std::runtime_error(
@@ -519,7 +519,7 @@ std::string getGameFolder(const toml::table& table) {
   // SkyrimSE was a previous serialised value for GameType::tes5se,
   // and the game folder name LOOT created for that game type.
   if (type && *type == "SkyrimSE" && *folder == *type) {
-    return ToString(GameType::tes5se);
+    return "Skyrim Special Edition";
   }
 
   return *folder;

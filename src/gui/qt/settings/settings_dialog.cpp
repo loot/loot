@@ -174,7 +174,7 @@ void SettingsDialog::on_addGameButton_clicked() {
     return;
   }
 
-  auto gameIdText = newGameDialog->getGameType().toStdString();
+  auto gameIdText = newGameDialog->getBaseGame().toStdString();
   auto gameId = GameTab::GAME_IDS_BY_STRING.at(gameIdText);
 
   auto name = newGameDialog->getGameName().toStdString();

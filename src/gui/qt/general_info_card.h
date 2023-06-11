@@ -37,8 +37,6 @@
 #include "gui/qt/messages_widget.h"
 
 namespace loot {
-bool gameSupportsLightPlugins(GameType gameType);
-
 class GeneralInfoCard : public QFrame {
   Q_OBJECT
 public:
@@ -57,7 +55,7 @@ public:
 
   void setGeneralMessages(const std::vector<SimpleMessage>& messages);
 
-  void setGameType(GameType gameType);
+  void setShowSeparateLightPluginCount(bool showCount);
 
   void refreshMessages();
 

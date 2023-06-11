@@ -35,7 +35,6 @@
 namespace {
 using loot::GameId;
 using loot::GameInstall;
-using loot::GameType;
 using loot::InstallSource;
 
 loot::RegistryValue GetRegistryValue(const GameId gameId) {
@@ -174,8 +173,7 @@ std::optional<GameInstall> FindGameInstallInRegistry(
       loot::ReadPathFromRegistry(registry, GetRegistryValue(gameId));
 
   if (path.has_value() &&
-      IsValidGamePath(
-          GetGameType(gameId), GetMasterFilename(gameId), path.value())) {
+      IsValidGamePath(gameId, GetMasterFilename(gameId), path.value())) {
     // Need to check what source the game is from.
     // The generic registry keys are not written by EGS or the MS Store,
     // so treat anything other than Steam and GOG as unknown.
@@ -197,7 +195,7 @@ std::optional<GameInstall> FindGameInstallInRegistry(
 std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
   const auto path = std::filesystem::current_path().parent_path();
 
-  if (!IsValidGamePath(GetGameType(gameId), GetMasterFilename(gameId), path)) {
+  if (!IsValidGamePath(gameId, GetMasterFilename(gameId), path)) {
     return std::nullopt;
   }
 
@@ -247,8 +245,7 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
 // Check if the given game settings resolve to an installed game, and
 // detect its ID and install source.
 std::optional<GameInstall> DetectGameInstall(const GameSettings& settings) {
-  if (!IsValidGamePath(
-          settings.Type(), settings.Master(), settings.GamePath())) {
+  if (!IsValidGamePath(settings.Id(), settings.Master(), settings.GamePath())) {
     return std::nullopt;
   }
 

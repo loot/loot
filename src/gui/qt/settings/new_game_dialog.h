@@ -41,7 +41,7 @@ public:
 
   QString getGameName() const;
   QString getGameFolder() const;
-  QString getGameType() const;
+  QString getBaseGame() const;
 
 private:
   QLabel *nameLabel{new QLabel(this)};

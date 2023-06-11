@@ -1214,7 +1214,7 @@ TEST_F(LootSettingsTest, loadingTomlShouldUpgradeOldSkyrimSEFolderAndType) {
 
   settings_.load(settingsFile_);
 
-  EXPECT_EQ(GameType::tes5se, settings_.getGameSettings()[0].Type());
+  EXPECT_EQ(GameId::tes5se, settings_.getGameSettings()[0].Id());
   EXPECT_EQ("Skyrim Special Edition",
             settings_.getGameSettings()[0].FolderName());
 }
@@ -1342,13 +1342,13 @@ TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
       {GameSettings(GameId::tes3, ""), GameSettings(GameId::tes4, "")});
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
-  EXPECT_EQ(GameType::tes3, settings_.getGameSettings()[0].Type());
-  EXPECT_EQ(GameType::tes4, settings_.getGameSettings()[1].Type());
+  EXPECT_EQ(GameId::tes3, settings_.getGameSettings()[0].Id());
+  EXPECT_EQ(GameId::tes4, settings_.getGameSettings()[1].Id());
 
   settings_.storeGameSettings({GameSettings(GameId::tes5, "")});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
-  EXPECT_EQ(GameType::tes5, settings_.getGameSettings()[0].Type());
+  EXPECT_EQ(GameId::tes5, settings_.getGameSettings()[0].Id());
 }
 
 TEST_F(LootSettingsTest, storeLastGameShouldReplaceExistingValue) {

@@ -90,7 +90,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
     const auto sixthColumnString = QString::number(counters.totalPlugins);
 
     const auto supportsLightPlugins =
-        gameSupportsLightPlugins(generalInfo.gameType) ? "true" : "false";
+        generalInfo.gameSupportsLightPlugins ? "true" : "false";
 
     return SizeHintCacheKey(secondColumnString,
                             fourthColumnString,
@@ -125,7 +125,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
   auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
 
-  card->setGameType(generalInfo.gameType);
+  card->setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
   card->setMasterlistInfo(generalInfo.masterlistRevision);
   card->setPreludeInfo(generalInfo.preludeRevision);
   card->setMessageCounts(

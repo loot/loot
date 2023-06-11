@@ -143,7 +143,7 @@ void Game::Init() {
       std::vector<fs::path> legacyGamePaths{lootDataPath_ /
                                             u8path(settings_.FolderName())};
 
-      if (settings_.Type() == GameType::tes5se) {
+      if (settings_.Id() == GameId::tes5se) {
         // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
         // migrate from that if it's present.
         legacyGamePaths.insert(legacyGamePaths.begin(),
@@ -441,8 +441,7 @@ std::vector<Message> Game::CheckInstallValidity(
 void Game::RedatePlugins() {
   auto logger = getLogger();
 
-  if (settings_.Type() != GameType::tes5 &&
-      settings_.Type() != GameType::tes5se) {
+  if (!ShouldAllowRedating(settings_.Type())) {
     if (logger) {
       logger->warn("Cannot redate plugins for game {}.", settings_.Name());
     }
@@ -708,7 +707,7 @@ std::vector<Message> Game::GetMessages() const {
 
   const auto logger = getLogger();
   const auto isMWSEInstalled =
-      settings_.Type() == GameType::tes3 &&
+      settings_.Id() == GameId::tes3 &&
       std::filesystem::exists(settings_.GamePath() / "MWSE.dll");
 
   auto safeMaxActiveNormalPlugins = SAFE_MAX_ACTIVE_NORMAL_PLUGINS;
@@ -949,7 +948,7 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
   // Scan external data paths first, as the game checks them before the main
   // data path.
   for (const auto& dataPath : GetExternalDataPaths(
-           settings_.Type(), isMicrosoftStoreInstall_, settings_.DataPath())) {
+           settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath())) {
     if (!std::filesystem::exists(dataPath)) {
       continue;
     }
@@ -1022,7 +1021,7 @@ bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
 std::filesystem::path Game::ResolveGameFilePath(
     const std::string& filePath) const {
   const auto externalDataPaths = GetExternalDataPaths(
-      settings_.Type(), isMicrosoftStoreInstall_, settings_.DataPath());
+      settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath());
 
   return loot::ResolveGameFilePath(
       externalDataPaths, settings_.DataPath(), filePath);

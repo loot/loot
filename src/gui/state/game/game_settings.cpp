@@ -34,7 +34,10 @@
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
-namespace loot {
+namespace {
+using loot::GameId;
+using loot::GameType;
+
 static constexpr float MORROWIND_MINIMUM_HEADER_VERSION = 1.2f;
 static constexpr float OBLIVION_MINIMUM_HEADER_VERSION = 0.8f;
 static constexpr float SKYRIM_FO3_MINIMUM_HEADER_VERSION = 0.94f;
@@ -42,6 +45,62 @@ static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
 static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
 
+GameType GetGameType(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      return GameType::tes3;
+    case GameId::tes4:
+    case GameId::nehrim:
+      return GameType::tes4;
+    case GameId::tes5:
+    case GameId::enderal:
+      return GameType::tes5;
+    case GameId::tes5se:
+    case GameId::enderalse:
+      return GameType::tes5se;
+    case GameId::tes5vr:
+      return GameType::tes5vr;
+    case GameId::fo3:
+      return GameType::fo3;
+    case GameId::fonv:
+      return GameType::fonv;
+    case GameId::fo4:
+      return GameType::fo4;
+    case GameId::fo4vr:
+      return GameType::fo4vr;
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
+
+float GetMinimumHeaderVersion(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      return MORROWIND_MINIMUM_HEADER_VERSION;
+    case GameId::tes4:
+    case GameId::nehrim:
+      return OBLIVION_MINIMUM_HEADER_VERSION;
+    case GameId::tes5:
+    case GameId::enderal:
+      return SKYRIM_FO3_MINIMUM_HEADER_VERSION;
+    case GameId::tes5se:
+    case GameId::tes5vr:
+    case GameId::enderalse:
+      return SKYRIM_SE_MINIMUM_HEADER_VERSION;
+    case GameId::fo3:
+      return SKYRIM_FO3_MINIMUM_HEADER_VERSION;
+    case GameId::fonv:
+      return FONV_MINIMUM_HEADER_VERSION;
+    case GameId::fo4:
+    case GameId::fo4vr:
+      return FO4_MINIMUM_HEADER_VERSION;
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
+}
+
+namespace loot {
 std::string GetPluginsFolderName(GameId gameId) {
   switch (gameId) {
     case GameId::tes3:
@@ -60,24 +119,6 @@ std::string GetPluginsFolderName(GameId gameId) {
       return "Data";
     default:
       throw std::logic_error("Unrecognised game ID");
-  }
-}
-
-std::string GetPluginsFolderName(GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
-      return "Data Files";
-    case GameType::tes4:
-    case GameType::tes5:
-    case GameType::tes5se:
-    case GameType::tes5vr:
-    case GameType::fo3:
-    case GameType::fonv:
-    case GameType::fo4:
-    case GameType::fo4vr:
-      return "Data";
-    default:
-      throw std::logic_error("Unrecognised game type");
   }
 }
 
@@ -112,55 +153,13 @@ std::string ToString(const GameId gameId) {
   }
 }
 
-std::string ToString(const GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
-      return "Morrowind";
-    case GameType::tes4:
-      return "Oblivion";
-    case GameType::tes5:
-      return "Skyrim";
-    case GameType::tes5se:
-      return "Skyrim Special Edition";
-    case GameType::tes5vr:
-      return "Skyrim VR";
-    case GameType::fo3:
-      return "Fallout3";
-    case GameType::fonv:
-      return "FalloutNV";
-    case GameType::fo4:
-      return "Fallout4";
-    case GameType::fo4vr:
-      return "Fallout4VR";
-    default:
-      throw std::logic_error("Unrecognised game type");
-  }
+bool SupportsLightPlugins(const GameType gameType) {
+  return gameType == GameType::tes5se || gameType == GameType::tes5vr ||
+         gameType == GameType::fo4 || gameType == GameType::fo4vr;
 }
 
-float GetMinimumHeaderVersion(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return MORROWIND_MINIMUM_HEADER_VERSION;
-    case GameId::tes4:
-    case GameId::nehrim:
-      return OBLIVION_MINIMUM_HEADER_VERSION;
-    case GameId::tes5:
-    case GameId::enderal:
-      return SKYRIM_FO3_MINIMUM_HEADER_VERSION;
-    case GameId::tes5se:
-    case GameId::tes5vr:
-    case GameId::enderalse:
-      return SKYRIM_SE_MINIMUM_HEADER_VERSION;
-    case GameId::fo3:
-      return SKYRIM_FO3_MINIMUM_HEADER_VERSION;
-    case GameId::fonv:
-      return FONV_MINIMUM_HEADER_VERSION;
-    case GameId::fo4:
-    case GameId::fo4vr:
-      return FO4_MINIMUM_HEADER_VERSION;
-    default:
-      throw std::logic_error("Unrecognised game ID");
-  }
+bool ShouldAllowRedating(const GameType gameType) {
+  return gameType == GameType::tes5 || gameType == GameType::tes5se;
 }
 
 GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :

@@ -464,7 +464,7 @@ TEST(AppendNewGamesSettings,
 
   ASSERT_EQ(2, gamesSettings.size());
 
-  EXPECT_EQ(GameType::tes5, gamesSettings[0].Type());
+  EXPECT_EQ(GameId::enderal, gamesSettings[0].Id());
   EXPECT_EQ("Enderal", gamesSettings[0].FolderName());
   EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].Name());
   EXPECT_EQ("Skyrim.esm", gamesSettings[0].Master());
@@ -474,7 +474,7 @@ TEST(AppendNewGamesSettings,
   EXPECT_EQ(installPath, gamesSettings[0].GamePath());
   EXPECT_EQ(localPath, gamesSettings[0].GameLocalPath());
 
-  EXPECT_EQ(GameType::tes4, gamesSettings[1].Type());
+  EXPECT_EQ(GameId::nehrim, gamesSettings[1].Id());
   EXPECT_EQ("Nehrim", gamesSettings[1].FolderName());
   EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].Name());
   EXPECT_EQ("Nehrim.esm", gamesSettings[1].Master());

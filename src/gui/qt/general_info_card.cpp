@@ -30,11 +30,6 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
-bool gameSupportsLightPlugins(GameType gameType) {
-  return gameType == GameType::tes5se || gameType == GameType::tes5vr ||
-         gameType == GameType::fo4 || gameType == GameType::fo4vr;
-}
-
 GeneralInfoCard::GeneralInfoCard(QWidget* parent) : QFrame(parent) {
   setupUi();
 }
@@ -83,10 +78,10 @@ void GeneralInfoCard::setGeneralMessages(
   layout()->activate();
 }
 
-void GeneralInfoCard::setGameType(GameType gameType) {
+void GeneralInfoCard::setShowSeparateLightPluginCount(bool showCount) {
   auto oldValue = showSeparateLightPluginCount;
-  showSeparateLightPluginCount = gameSupportsLightPlugins(gameType);
-      
+  showSeparateLightPluginCount = showCount;
+
   if (showSeparateLightPluginCount == oldValue) {
     return;
   }
@@ -163,9 +158,9 @@ void GeneralInfoCard::setupUi() {
   gridLayout->addWidget(totalMessagesCountLabel, 2, MESSAGE_LABEL_COLUMN);
   gridLayout->addWidget(totalMessagesCountValue, 2, MESSAGE_VALUE_COLUMN);
 
-  // Set game type to tes5se so that the value of showSeparateLightPluginCount
-  // changes from its default and the plugin count cells get initialised.
-  setGameType(GameType::tes5se);
+  // Set showSeparateLightPluginCount to true so that it changes from its
+  // default and the plugin count cells get initialised.
+  setShowSeparateLightPluginCount(true);
 
   generalInfoLayout->addWidget(headingLabel);
   generalInfoLayout->addLayout(gridLayout);
