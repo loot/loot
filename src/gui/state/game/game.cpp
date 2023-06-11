@@ -82,7 +82,7 @@ Game::Game(const GameSettings& gameSettings,
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
     isMicrosoftStoreInstall_(
-        generic::IsMicrosoftInstall(settings_.Type(), settings_.GamePath())) {}
+        generic::IsMicrosoftInstall(settings_.Id(), settings_.GamePath())) {}
 
 Game::Game(Game&& game) {
   settings_ = std::move(game.settings_);

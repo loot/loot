@@ -45,10 +45,10 @@ public:
 
 private:
   QLabel *nameLabel{new QLabel(this)};
-  QLabel *typeLabel{new QLabel(this)};
+  QLabel *baseGameLabel{new QLabel(this)};
   QLabel *folderLabel{new QLabel(this)};
   QLineEdit *nameInput{new QLineEdit(this)};
-  QComboBox *typeComboBox{new QComboBox(this)};
+  QComboBox *baseGameComboBox{new QComboBox(this)};
   QLineEdit *folderInput{new QLineEdit(this)};
 
   QStringList currentGameFolders;

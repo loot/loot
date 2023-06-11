@@ -336,7 +336,7 @@ protected:
 
   GameSettings GetSettings() const {
     GameSettings settings =
-        GameSettings(getGameType()).SetGamePath(dataPath.parent_path());
+        GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
     if (GetParam() == GameId::nehrim) {
       settings.SetMaster("Nehrim.esm");
     }
@@ -352,7 +352,7 @@ INSTANTIATE_TEST_SUITE_P(,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(DetectGameInstallTest, shouldNotDetectAGameInstallThatIsNotValid) {
-  const auto install = generic::DetectGameInstall(GameSettings(getGameType()));
+  const auto install = generic::DetectGameInstall(GameSettings(GetParam()));
 
   EXPECT_FALSE(install.has_value());
 }

@@ -68,7 +68,7 @@ TEST_P(
 
 TEST_P(GameSettingsTest,
        idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
-  settings_ = GameSettings(getGameType());
+  settings_ = GameSettings(GetParam());
 
   // Repo branch changes between LOOT versions, so don't check an exact value.
   EXPECT_EQ(getGameType(), settings_.Type());
@@ -172,7 +172,7 @@ TEST_P(GameSettingsTest,
 }
 
 TEST_P(GameSettingsTest, idConstructorShouldSetGameFolderIfGiven) {
-  settings_ = GameSettings(GameType::tes5, "folder");
+  settings_ = GameSettings(GameId::tes5, "folder");
 
   EXPECT_EQ("folder", settings_.FolderName());
 }

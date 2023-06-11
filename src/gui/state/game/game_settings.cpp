@@ -29,6 +29,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "gui/state/game/detection/common.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
 
@@ -39,6 +40,27 @@ static constexpr float SKYRIM_FO3_MINIMUM_HEADER_VERSION = 0.94f;
 static constexpr float SKYRIM_SE_MINIMUM_HEADER_VERSION = 1.7f;
 static constexpr float FONV_MINIMUM_HEADER_VERSION = 1.32f;
 static constexpr float FO4_MINIMUM_HEADER_VERSION = 0.95f;
+
+std::string GetPluginsFolderName(GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      return "Data Files";
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::tes5:
+    case GameId::enderal:
+    case GameId::tes5se:
+    case GameId::enderalse:
+    case GameId::tes5vr:
+    case GameId::fo3:
+    case GameId::fonv:
+    case GameId::fo4:
+    case GameId::fo4vr:
+      return "Data";
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
 
 std::string GetPluginsFolderName(GameType gameType) {
   switch (gameType) {
@@ -93,6 +115,37 @@ std::string GetDefaultMasterlistUrl(GameType gameType) {
   return GetDefaultMasterlistUrl(repoName);
 }
 
+std::string ToString(const GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
+      return "Morrowind";
+    case GameId::tes4:
+      return "Oblivion";
+    case GameId::nehrim:
+      return "Nehrim";
+    case GameId::tes5:
+      return "Skyrim";
+    case GameId::enderal:
+      return "Enderal";
+    case GameId::tes5se:
+      return "Skyrim Special Edition";
+    case GameId::enderalse:
+      return "Enderal Special Edition";
+    case GameId::tes5vr:
+      return "Skyrim VR";
+    case GameId::fo3:
+      return "Fallout3";
+    case GameId::fonv:
+      return "FalloutNV";
+    case GameId::fo4:
+      return "Fallout4";
+    case GameId::fo4vr:
+      return "Fallout4VR";
+    default:
+      throw std::logic_error("Unrecognised game ID");
+  }
+}
+
 std::string ToString(const GameType gameType) {
   switch (gameType) {
     case GameType::tes3:
@@ -118,8 +171,10 @@ std::string ToString(const GameType gameType) {
   }
 }
 
-GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
-    type_(gameCode), masterlistSource_(GetDefaultMasterlistUrl(gameCode)) {
+GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
+    id_(gameId),
+    type_(GetGameType(gameId)),
+    masterlistSource_(GetDefaultMasterlistUrl(type_)) {
   if (Type() == GameType::tes3) {
     name_ = "TES III: Morrowind";
     lootFolderName_ = "Morrowind";
@@ -167,10 +222,12 @@ GameSettings::GameSettings(const GameType gameCode, const std::string& folder) :
     mininumHeaderVersion_ = FO4_MINIMUM_HEADER_VERSION;
   }
 
-  if (!folder.empty()) {
-    lootFolderName_ = folder;
+  if (!lootFolder.empty()) {
+    lootFolderName_ = lootFolder;
   }
 }
+
+GameId GameSettings::Id() const { return id_; }
 
 GameType GameSettings::Type() const { return type_; }
 
@@ -193,7 +250,7 @@ std::filesystem::path GameSettings::GameLocalPath() const {
 }
 
 std::filesystem::path GameSettings::DataPath() const {
-  return gamePath_ / GetPluginsFolderName(type_);
+  return gamePath_ / GetPluginsFolderName(id_);
 }
 
 GameSettings& GameSettings::SetName(const std::string& name) {

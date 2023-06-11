@@ -32,6 +32,7 @@
 #include <fstream>
 #include <regex>
 
+#include "gui/state/game/detection/common.h"
 #include "gui/state/logging.h"
 #include "gui/state/loot_paths.h"
 #include "gui/version.h"
@@ -47,31 +48,32 @@ static const std::regex GITHUB_REPO_URL_REGEX =
     std::regex(R"(^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$)",
                std::regex::ECMAScript | std::regex::icase);
 
-std::string getOldDefaultRepoUrl(GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
+std::string getOldDefaultRepoUrl(GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
       return "https://github.com/loot/morrowind.git";
-    case GameType::tes4:
+    case GameId::tes4:
+    case GameId::nehrim:
       return "https://github.com/loot/oblivion.git";
-    case GameType::tes5:
+    case GameId::tes5:
       return "https://github.com/loot/skyrim.git";
-    case GameType::tes5se:
+    case GameId::enderal:
+    case GameId::enderalse:
+      return "https://github.com/loot/enderal.git";
+    case GameId::tes5se:
       return "https://github.com/loot/skyrimse.git";
-    case GameType::tes5vr:
+    case GameId::tes5vr:
       return "https://github.com/loot/skyrimvr.git";
-    case GameType::fo3:
+    case GameId::fo3:
       return "https://github.com/loot/fallout3.git";
-    case GameType::fonv:
+    case GameId::fonv:
       return "https://github.com/loot/falloutnv.git";
-    case GameType::fo4:
+    case GameId::fo4:
       return "https://github.com/loot/fallout4.git";
-    case GameType::fo4vr:
+    case GameId::fo4vr:
       return "https://github.com/loot/fallout4vr.git";
     default:
-      throw std::runtime_error(
-          "Unrecognised game type: " +
-          std::to_string(
-              static_cast<std::underlying_type_t<GameType>>(gameType)));
+      throw std::runtime_error("Unrecognised game ID: " + ToString(gameId));
   }
 }
 
@@ -113,7 +115,7 @@ bool isBranchCheckedOut(const std::filesystem::path& localGitRepo,
   return line == "ref: refs/heads/" + branch;
 }
 
-std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
+std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
                                                          std::string url,
                                                          std::string branch) {
   auto logger = getLogger();
@@ -128,7 +130,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
     branch = DEFAULT_MASTERLIST_BRANCH;
   }
 
-  if (gameType == GameType::tes5vr &&
+  if (gameId == GameId::tes5vr &&
       url == "https://github.com/loot/skyrimse.git") {
     // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
     auto newUrl = "https://github.com/loot/skyrimvr.git";
@@ -139,7 +141,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
     url = newUrl;
   }
 
-  if (gameType == GameType::fo4vr &&
+  if (gameId == GameId::fo4vr &&
       url == "https://github.com/loot/fallout4.git") {
     // Switch to the VR-specific repository (introduced for LOOT v0.17.0).
     auto newUrl = "https://github.com/loot/fallout4vr.git";
@@ -187,7 +189,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameType gameType,
 }
 
 std::optional<std::string> migrateMasterlistRepoSettings(
-    GameType gameType,
+    GameId gameId,
     std::optional<std::string> url,
     std::optional<std::string> branch) {
   auto logger = getLogger();
@@ -201,7 +203,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(
 
   if (!url) {
     // No url, it would be set to a game-type-dependent default.
-    url = getOldDefaultRepoUrl(gameType);
+    url = getOldDefaultRepoUrl(gameId);
     if (logger) {
       logger->warn(
           "Found game branch config property but not repo, "
@@ -222,7 +224,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(
     }
   }
 
-  auto migratedSource = migrateMasterlistRepoSettings(gameType, *url, *branch);
+  auto migratedSource = migrateMasterlistRepoSettings(gameId, *url, *branch);
   if (migratedSource.has_value() && logger) {
     logger->info(
         "Migrated masterlist repository URL {} and branch {} to source {}",
@@ -394,48 +396,139 @@ std::string migratePreludeSource(const std::string& source) {
   return source;
 }
 
-GameType mapGameType(const std::string& gameType) {
+GameId mapGameId(const std::string& gameId) {
+  if (gameId == ToString(GameId::tes3)) {
+    return GameId::tes3;
+  } else if (gameId == ToString(GameId::tes4)) {
+    return GameId::tes4;
+  } else if (gameId == ToString(GameId::nehrim)) {
+    return GameId::nehrim;
+  } else if (gameId == ToString(GameId::tes5)) {
+    return GameId::tes5;
+  } else if (gameId == ToString(GameId::enderal)) {
+    return GameId::enderal;
+  } else if (gameId == ToString(GameId::tes5se)) {
+    return GameId::tes5se;
+  } else if (gameId == ToString(GameId::enderalse)) {
+    return GameId::enderalse;
+  } else if (gameId == ToString(GameId::tes5vr)) {
+    return GameId::tes5vr;
+  } else if (gameId == ToString(GameId::fo3)) {
+    return GameId::fo3;
+  } else if (gameId == ToString(GameId::fonv)) {
+    return GameId::fonv;
+  } else if (gameId == ToString(GameId::fo4)) {
+    return GameId::fo4;
+  } else if (gameId == ToString(GameId::fo4vr)) {
+    return GameId::fo4vr;
+  } else {
+    throw std::runtime_error(
+        "invalid value for 'gameId' key in game settings table");
+  }
+}
+
+bool IsNehrim(const std::optional<std::string>& masterFilename,
+              const std::optional<std::string>& installPath) {
+  if (installPath.has_value() && !installPath.value().empty()) {
+    const auto path = std::filesystem::u8path(installPath.value());
+    return std::filesystem::exists(path / "NehrimLauncher.exe");
+  }
+
+  // If the install path is not present or empty, use the master
+  // filename as a heuristic that will work for LOOT's default
+  // settings for Nehrim, and hopefully for any custom settings.
+  return masterFilename.has_value() &&
+         masterFilename.value() == GetMasterFilename(GameId::nehrim);
+}
+
+bool IsEnderal(const std::optional<std::string>& gameName,
+               const std::optional<std::string>& installPath) {
+  if (installPath.has_value() && !installPath.value().empty()) {
+    const auto path = std::filesystem::u8path(installPath.value());
+    return std::filesystem::exists(path / "Enderal Launcher.exe");
+  }
+
+  // If the install path is not present or empty, use the game name as a
+  // heuristic that will work for LOOT's default settings for Enderal and
+  // hopefully any custom settings.
+  return gameName.has_value() && boost::icontains(gameName.value(), "enderal");
+}
+
+bool IsEnderalSE(const std::optional<std::string>& gameName,
+                 const std::optional<std::string>& installPath) {
+  // Enderal SE can be checked the same way as the non-SE version.
+  return IsEnderal(gameName, installPath);
+}
+
+GameId getGameId(const toml::table& table) {
+  auto gameId = table["gameId"].value<std::string>();
+
+  if (gameId) {
+    return mapGameId(*gameId);
+  }
+
+  auto type = table["type"].value<std::string>();
+  if (!type) {
+    throw std::runtime_error(
+        "'gameId' and 'type' keys both missing from game settings table");
+  }
+
+  const auto gameType = *type;
+  const auto gameName = table["name"].value<std::string>();
+  const auto masterFilename = table["master"].value<std::string>();
+  const auto installPath = table["path"].value<std::string>();
+
   if (gameType == ToString(GameType::tes3)) {
-    return GameType::tes3;
+    return GameId::tes3;
   } else if (gameType == ToString(GameType::tes4)) {
-    return GameType::tes4;
+    // The Oblivion game type is shared between Oblivon and Nehrim.
+    return IsNehrim(masterFilename, installPath) ? GameId::nehrim
+                                                 : GameId::tes4;
   } else if (gameType == ToString(GameType::tes5)) {
-    return GameType::tes5;
+    // The Skyrim game type is shared between Skyrim and Enderal.
+    return IsEnderal(gameName, installPath) ? GameId::enderal : GameId::tes5;
   } else if (gameType == "SkyrimSE" || gameType == ToString(GameType::tes5se)) {
-    return GameType::tes5se;
+    // The Skyrim SE game type is shared between Skyrim SE and Enderal SE.
+    return IsEnderal(gameName, installPath) ? GameId::enderalse
+                                            : GameId::tes5se;
   } else if (gameType == ToString(GameType::tes5vr)) {
-    return GameType::tes5vr;
+    return GameId::tes5vr;
   } else if (gameType == ToString(GameType::fo3)) {
-    return GameType::fo3;
+    return GameId::fo3;
   } else if (gameType == ToString(GameType::fonv)) {
-    return GameType::fonv;
+    return GameId::fonv;
   } else if (gameType == ToString(GameType::fo4)) {
-    return GameType::fo4;
+    return GameId::fo4;
   } else if (gameType == ToString(GameType::fo4vr)) {
-    return GameType::fo4vr;
+    return GameId::fo4vr;
   } else {
     throw std::runtime_error(
         "invalid value for 'type' key in game settings table");
   }
 }
 
-GameSettings convertGameTable(const toml::table& table) {
-  auto type = table["type"].value<std::string>();
-  if (!type) {
-    throw std::runtime_error("'type' key missing from game settings table");
-  }
-
-  auto folder = table["folder"].value<std::string>();
+std::string getGameFolder(const toml::table& table) {
+  const auto folder = table["folder"].value<std::string>();
   if (!folder) {
     throw std::runtime_error("'folder' key missing from game settings table");
   }
 
-  if (*type == "SkyrimSE" && *folder == *type) {
-    type = std::optional<std::string>(ToString(GameType::tes5se));
-    folder = type;
+  const auto type = table["type"].value<std::string>();
+
+  // SkyrimSE was a previous serialised value for GameType::tes5se,
+  // and the game folder name LOOT created for that game type.
+  if (type && *type == "SkyrimSE" && *folder == *type) {
+    return ToString(GameType::tes5se);
   }
 
-  GameSettings game(mapGameType(*type), *folder);
+  return *folder;
+}
+
+GameSettings convertGameTable(const toml::table& table) {
+  const auto gameId = getGameId(table);
+  const auto folder = getGameFolder(table);
+
+  GameSettings game(gameId, folder);
 
   auto name = table["name"].value<std::string>();
   if (name) {
@@ -459,8 +552,7 @@ GameSettings convertGameTable(const toml::table& table) {
   } else {
     auto url = table["repo"].value<std::string>();
     auto branch = table["branch"].value<std::string>();
-    auto migratedSource =
-        migrateMasterlistRepoSettings(game.Type(), url, branch);
+    auto migratedSource = migrateMasterlistRepoSettings(game.Id(), url, branch);
     if (migratedSource.has_value()) {
       game.SetMasterlistSource(migratedSource.value());
     }
@@ -519,17 +611,14 @@ std::vector<std::string> checkSettingsFile(
         throw std::runtime_error("games array element is not a table");
       }
 
-      auto type = game.at_path("type").value<std::string>();
-      if (!type) {
-        throw std::runtime_error("'type' key missing from game settings table");
-      }
+      const auto gameId = getGameId(*game.as_table());
 
       auto url = game.at_path("repo").value<std::string>();
       auto branch = game.at_path("branch").value<std::string>();
 
       if (url || branch) {
-        auto migratedSource = migrateMasterlistRepoSettings(
-            mapGameType(type.value()), url, branch);
+        auto migratedSource =
+            migrateMasterlistRepoSettings(gameId, url, branch);
         if (!migratedSource.has_value()) {
           warningMessages.push_back(boost::locale::translate(
               "Your masterlist repository URL and branch settings could not be "
@@ -760,7 +849,7 @@ void LootSettings::save(const std::filesystem::path& file) {
 
     for (const auto& gameSettings : gameSettings_) {
       toml::table game{
-          {"type", ToString(gameSettings.Type())},
+          {"gameId", ToString(gameSettings.Id())},
           {"name", gameSettings.Name()},
           {"folder", gameSettings.FolderName()},
           {"master", gameSettings.Master()},
