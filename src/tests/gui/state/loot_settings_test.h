@@ -709,14 +709,14 @@ TEST_F(LootSettingsTest,
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::tes4).MasterlistSource();
+  auto expectedSource = GameSettings(GameId::tes4, "").MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
 TEST_F(
     LootSettingsTest,
     loadingTomlShouldNotUpgradeNonDefaultBranchesForDefaultGameRepositories) {
-  const std::vector<GameSettings> games({GameSettings(GameId::tes4)});
+  const std::vector<GameSettings> games({GameSettings(GameId::tes4, "")});
 
   using std::endl;
   std::ofstream out(settingsFile_);
@@ -749,7 +749,7 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::tes4).MasterlistSource();
+  auto expectedSource = GameSettings(GameId::tes4, "").MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -869,7 +869,7 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::fo4vr).MasterlistSource();
+  auto expectedSource = GameSettings(GameId::fo4vr, "").MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -891,7 +891,7 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::fo4vr).MasterlistSource();
+  auto expectedSource = GameSettings(GameId::fo4vr, "").MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -931,7 +931,7 @@ TEST_F(
 
   settings_.load(settingsFile_);
 
-  auto expectedSource = GameSettings(GameId::fo4vr).MasterlistSource();
+  auto expectedSource = GameSettings(GameId::fo4vr, "").MasterlistSource();
   EXPECT_EQ(expectedSource, settings_.getGameSettings()[0].MasterlistSource());
 }
 
@@ -1259,7 +1259,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
   groupsEditorWindowPosition.maximised = true;
 
   const std::vector<GameSettings> games({
-      GameSettings(GameId::tes4)
+      GameSettings(GameId::tes4, "")
           .SetName("Game Name")
           .SetMinimumHeaderVersion(2.5),
   });
@@ -1321,7 +1321,7 @@ TEST_F(LootSettingsTest, saveShouldWriteSettingsToPassedTomlFile) {
 TEST_F(LootSettingsTest, saveShouldWriteNonAsciiPathsAsUtf8) {
   using std::filesystem::u8path;
   settings_.storeGameSettings(
-      {GameSettings(GameId::tes4)
+      {GameSettings(GameId::tes4, "")
            .SetGamePath(u8path(u8"non\u00C1sciiGamePath"))
            .SetGameLocalPath(u8path(u8"non\u00C1sciiGameLocalPath"))});
   settings_.save(settingsFile_);
@@ -1339,13 +1339,13 @@ TEST_F(LootSettingsTest, storeGameSettingsShouldReplaceExistingGameSettings) {
   ASSERT_EQ(0, settings_.getGameSettings().size());
 
   settings_.storeGameSettings(
-      {GameSettings(GameId::tes3), GameSettings(GameId::tes4)});
+      {GameSettings(GameId::tes3, ""), GameSettings(GameId::tes4, "")});
 
   ASSERT_EQ(2, settings_.getGameSettings().size());
   EXPECT_EQ(GameType::tes3, settings_.getGameSettings()[0].Type());
   EXPECT_EQ(GameType::tes4, settings_.getGameSettings()[1].Type());
 
-  settings_.storeGameSettings({GameSettings(GameId::tes5)});
+  settings_.storeGameSettings({GameSettings(GameId::tes5, "")});
 
   ASSERT_EQ(1, settings_.getGameSettings().size());
   EXPECT_EQ(GameType::tes5, settings_.getGameSettings()[0].Type());

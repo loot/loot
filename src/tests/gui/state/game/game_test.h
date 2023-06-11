@@ -119,20 +119,22 @@ TEST_P(GameTest, constructingFromGameSettingsShouldUseTheirValues) {
 }
 
 TEST_P(GameTest, initShouldThrowIfGamePathWasNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGameLocalPath(localPath);
+  auto settings = GameSettings(GetParam(), "").SetGameLocalPath(localPath);
   Game game(settings, "", "");
   EXPECT_THROW(game.Init(), std::invalid_argument);
 }
 
 #ifndef _WIN32
 TEST_P(GameTest, initShouldThrowOnLinuxWasLocalPathIsNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  auto settings =
+      GameSettings(GetParam(), "folder").SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, "");
   EXPECT_THROW(game.Init(), std::system_error);
 }
 #else
 TEST_P(GameTest, initShouldNotThrowOnWindowsIfLocalPathWasNotGiven) {
-  auto settings = GameSettings(GetParam()).SetGamePath(dataPath.parent_path());
+  auto settings =
+      GameSettings(GetParam(), "folder").SetGamePath(dataPath.parent_path());
   Game game(settings, lootDataPath, "");
   EXPECT_NO_THROW(game.Init());
 }

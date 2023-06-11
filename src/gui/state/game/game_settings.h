@@ -47,8 +47,7 @@ std::string ToString(const GameType gameType);
 class GameSettings {
 public:
   GameSettings() = default;
-  explicit GameSettings(const GameId gameId,
-                        const std::string& lootFolder = "");
+  explicit GameSettings(const GameId gameId, const std::string& lootFolder);
 
   GameId Id() const;
   GameType Type() const;

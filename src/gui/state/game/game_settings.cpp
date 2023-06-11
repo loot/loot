@@ -169,12 +169,8 @@ GameSettings::GameSettings(const GameId gameId, const std::string& lootFolder) :
     name_(GetGameName(gameId)),
     masterFile_(GetMasterFilename(gameId)),
     minimumHeaderVersion_(GetMinimumHeaderVersion(gameId)),
-    lootFolderName_(GetDefaultLootFolderName(gameId)),
-    masterlistSource_(GetDefaultMasterlistUrl(gameId)) {
-  if (!lootFolder.empty()) {
-    lootFolderName_ = lootFolder;
-  }
-}
+    lootFolderName_(lootFolder),
+    masterlistSource_(GetDefaultMasterlistUrl(gameId)) {}
 
 GameId GameSettings::Id() const { return id_; }
 

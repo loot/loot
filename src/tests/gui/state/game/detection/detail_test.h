@@ -380,7 +380,7 @@ TEST(
   const std::filesystem::path installPath = "install";
   const std::filesystem::path localPath = "local";
   std::vector<GameSettings> gamesSettings{GameSettings(),
-                                          GameSettings(GameId::fo4)};
+                                          GameSettings(GameId::fo4, "")};
   const std::vector<GameInstall> gameInstalls{
       GameInstall{GameId::fo4, InstallSource::unknown, installPath, localPath}};
   const auto comparator = [](const GameSettings&, const GameInstall&) {
@@ -402,9 +402,9 @@ TEST(UpdateMatchingSettings, shouldTrySecondaryMatchingByGameId) {
   const std::filesystem::path installPath2 = "install2";
   const std::filesystem::path localPath1 = "local1";
   const std::filesystem::path localPath2 = "local2";
-  std::vector<GameSettings> gamesSettings{GameSettings(GameId::nehrim),
-                                          GameSettings(GameId::tes4),
-                                          GameSettings(GameId::tes5)};
+  std::vector<GameSettings> gamesSettings{GameSettings(GameId::nehrim, ""),
+                                          GameSettings(GameId::tes4, ""),
+                                          GameSettings(GameId::tes5, "")};
   const std::vector<GameInstall> gameInstalls{
       GameInstall{
           GameId::nehrim, InstallSource::unknown, installPath1, localPath1},
@@ -430,7 +430,7 @@ TEST(UpdateMatchingSettings,
      shouldIncludeInstallInReturnedVectorIfItMatchesNoSettings) {
   const std::filesystem::path installPath = "install";
   const std::filesystem::path localPath = "local";
-  std::vector<GameSettings> gamesSettings{GameSettings(GameId::tes4)};
+  std::vector<GameSettings> gamesSettings{GameSettings(GameId::tes4, "")};
   const std::vector<GameInstall> gameInstalls{GameInstall{
       GameId::tes3, InstallSource::unknown, installPath, localPath}};
   const auto comparator = [](const GameSettings&, const GameInstall&) {

@@ -43,7 +43,7 @@ protected:
 INSTANTIATE_TEST_SUITE_P(, IsInstalledTest, ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
-  const auto settings = GameSettings(GetParam())
+  const auto settings = GameSettings(GetParam(), "")
                             .SetMaster(nonAsciiEsp)
                             .SetGamePath(dataPath.parent_path());
   EXPECT_TRUE(IsInstalled(settings));

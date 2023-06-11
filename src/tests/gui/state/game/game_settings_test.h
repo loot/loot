@@ -68,16 +68,19 @@ TEST_P(
 
 TEST_P(GameSettingsTest,
        idConstructorShouldInitialiseSettingsToDefaultsForThatGame) {
-  settings_ = GameSettings(GetParam());
+  const auto folder = "folder";
+  settings_ = GameSettings(GetParam(), folder);
+
+  EXPECT_EQ(GetParam(), settings_.Id());
+  EXPECT_EQ(getGameType(), settings_.Type());
+  EXPECT_EQ(folder, settings_.FolderName());
 
   // Repo branch changes between LOOT versions, so don't check an exact value.
-  EXPECT_EQ(getGameType(), settings_.Type());
   EXPECT_NE("", settings_.MasterlistSource());
 
   switch (getGameType()) {
     case GameType::fo3:
       EXPECT_EQ("Fallout 3", settings_.Name());
-      EXPECT_EQ("Fallout3", settings_.FolderName());
       EXPECT_EQ("Fallout3.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -87,7 +90,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::fonv:
       EXPECT_EQ("Fallout: New Vegas", settings_.Name());
-      EXPECT_EQ("FalloutNV", settings_.FolderName());
       EXPECT_EQ("FalloutNV.esm", settings_.Master());
       EXPECT_EQ(1.32f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -97,7 +99,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::fo4:
       EXPECT_EQ("Fallout 4", settings_.Name());
-      EXPECT_EQ("Fallout4", settings_.FolderName());
       EXPECT_EQ("Fallout4.esm", settings_.Master());
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -107,7 +108,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::fo4vr:
       EXPECT_EQ("Fallout 4 VR", settings_.Name());
-      EXPECT_EQ("Fallout4VR", settings_.FolderName());
       EXPECT_EQ("Fallout4.esm", settings_.Master());
       // TODO: Get the real value off someone who owns Fallout 4 VR.
       EXPECT_EQ(0.95f, settings_.MinimumHeaderVersion());
@@ -118,7 +118,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::tes3:
       EXPECT_EQ("TES III: Morrowind", settings_.Name());
-      EXPECT_EQ("Morrowind", settings_.FolderName());
       EXPECT_EQ("Morrowind.esm", settings_.Master());
       EXPECT_EQ(1.2f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -128,7 +127,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::tes4:
       EXPECT_EQ("TES IV: Oblivion", settings_.Name());
-      EXPECT_EQ("Oblivion", settings_.FolderName());
       EXPECT_EQ("Oblivion.esm", settings_.Master());
       EXPECT_EQ(0.8f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -138,7 +136,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::tes5:
       EXPECT_EQ("TES V: Skyrim", settings_.Name());
-      EXPECT_EQ("Skyrim", settings_.FolderName());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(0.94f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -147,7 +144,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::tes5se:
       EXPECT_EQ("TES V: Skyrim Special Edition", settings_.Name());
-      EXPECT_EQ("Skyrim Special Edition", settings_.FolderName());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
       EXPECT_EQ(
@@ -157,7 +153,6 @@ TEST_P(GameSettingsTest,
       break;
     case GameType::tes5vr:
       EXPECT_EQ("TES V: Skyrim VR", settings_.Name());
-      EXPECT_EQ("Skyrim VR", settings_.FolderName());
       EXPECT_EQ("Skyrim.esm", settings_.Master());
       // TODO: Get the real value off someone who owns Skyrim VR.
       EXPECT_EQ(1.7f, settings_.MinimumHeaderVersion());
