@@ -32,6 +32,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListWidget>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 #include <set>
@@ -70,6 +71,9 @@ private:
   QPushButton *addGroupButton{new QPushButton(this)};
   QPushButton *renameGroupButton{new QPushButton(this)};
 
+  QAction *actionCopyPluginNames{new QAction(this)};
+  QMenu *menuPluginsList{new QMenu(this)};
+
   PluginItemModel *pluginItemModel{nullptr};
 
   std::vector<Group> initialUserGroups;
@@ -90,9 +94,13 @@ private:
   const std::string getPluginGroup(const PluginItem &pluginItem) const;
   bool containsMoreThanOnePlugin(const std::string &groupName) const;
 
+  void handleException(const std::exception &exception);
+
 private slots:
+  void on_actionCopyPluginNames_triggered();
   void on_graphView_groupRemoved(const QString name);
   void on_graphView_groupSelected(const QString &name);
+  void on_groupPluginsList_customContextMenuRequested(const QPoint &position);
   void on_pluginComboBox_editTextChanged(const QString &text);
   void on_groupNameInput_textChanged(const QString &text);
   void on_addPluginButton_clicked();
