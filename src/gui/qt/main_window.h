@@ -232,7 +232,7 @@ private:
                             const std::exception &exception);
 
   void handleGameDataLoaded(QueryResult result);
-  bool handlePluginsSorted(QueryResult results);
+  bool handlePluginsSorted(std::vector<QueryResult> results);
 
   QMenu *createPopupMenu() override;
 
@@ -305,9 +305,9 @@ private slots:
   void handleGameChanged(QueryResult result);
   void handleRefreshGameDataLoaded(QueryResult result);
   void handleStartupGameDataLoaded(QueryResult result);
-  void handlePluginsManualSorted(QueryResult results);
-  void handlePluginsAutoSorted(QueryResult results);
-  void handleMasterlistUpdated(QueryResult result);
+  void handlePluginsManualSorted(std::vector<QueryResult> results);
+  void handlePluginsAutoSorted(std::vector<QueryResult> results);
+  void handleMasterlistUpdated(std::vector<QueryResult> results);
   void handleMasterlistsUpdated(std::vector<QueryResult> results);
   void handleConflictsChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);

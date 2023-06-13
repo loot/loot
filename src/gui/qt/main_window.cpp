@@ -1007,12 +1007,17 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    auto task = new UpdateMasterlistTask(state);
+    const auto preludeTask = new UpdatePreludeTask(state);
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
 
-    connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
-    connect(task, &Task::error, this, &MainWindow::handleError);
+    tasks.push_back(preludeTask);
 
-    tasks.push_back(task);
+    const auto masterlistTask =
+        new UpdateMasterlistTask(state.GetCurrentGame());
+
+    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+
+    tasks.push_back(masterlistTask);
   }
 
   auto progressUpdater = new ProgressUpdater();
@@ -1033,12 +1038,11 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   const auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
                                       : &MainWindow::handlePluginsManualSorted;
 
-  connect(sortTask, &Task::finished, this, sortHandler);
   connect(sortTask, &Task::error, this, &MainWindow::handleError);
 
   tasks.push_back(sortTask);
 
-  executeBackgroundTasks(tasks, progressUpdater, nullptr);
+  executeBackgroundTasks(tasks, progressUpdater, sortHandler);
 }
 
 void MainWindow::showFirstRunDialog() {
@@ -1316,10 +1320,14 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   enableGameActions();
 }
 
-bool MainWindow::handlePluginsSorted(QueryResult result) {
+bool MainWindow::handlePluginsSorted(std::vector<QueryResult> results) {
+  if (results.size() > 1) {
+    handleMasterlistUpdated(results);
+  }
+
   filtersWidget->resetConflictsAndGroupsFilters();
 
-  auto sortedPlugins = std::get<PluginItems>(result);
+  auto sortedPlugins = std::get<PluginItems>(results.back());
 
   if (sortedPlugins.empty()) {
     // If there was a sorting failure the array of plugins will be empty.
@@ -1434,14 +1442,19 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
     const auto preludePath = state.getPreludePath();
 
     std::vector<Task*> tasks;
+
+    const auto preludeTask = new UpdatePreludeTask(state);
+
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
+
+    tasks.push_back(preludeTask);
+
     for (const auto& settings : state.getSettings().getGameSettings()) {
       // Masterlist update assumes that the game folder exists, so ensure that.
       InitLootGameFolder(state.getLootDataPath(), settings);
 
       const auto task = new UpdateMasterlistTask(
           settings.FolderName(),
-          preludeSource,
-          preludePath,
           settings.MasterlistSource(),
           GetMasterlistPath(state.getLootDataPath(), settings));
 
@@ -1992,12 +2005,16 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    auto task = new UpdateMasterlistTask(state);
+    const auto preludeTask = new UpdatePreludeTask(state);
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
 
-    connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
-    connect(task, &Task::error, this, &MainWindow::handleError);
+    auto masterlistTask = new UpdateMasterlistTask(state.GetCurrentGame());
 
-    executeBackgroundTasks({task}, nullptr, nullptr);
+    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+
+    executeBackgroundTasks({preludeTask, masterlistTask},
+                           nullptr,
+                           &MainWindow::handleMasterlistUpdated);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2348,9 +2365,9 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   }
 }
 
-void MainWindow::handlePluginsManualSorted(QueryResult result) {
+void MainWindow::handlePluginsManualSorted(std::vector<QueryResult> results) {
   try {
-    const auto loadOrderChanged = handlePluginsSorted(result);
+    const auto loadOrderChanged = handlePluginsSorted(results);
 
     if (!loadOrderChanged) {
       // Perform ambiguous load order check because load order state was
@@ -2362,9 +2379,9 @@ void MainWindow::handlePluginsManualSorted(QueryResult result) {
   }
 }
 
-void MainWindow::handlePluginsAutoSorted(QueryResult result) {
+void MainWindow::handlePluginsAutoSorted(std::vector<QueryResult> results) {
   try {
-    handlePluginsSorted(result);
+    handlePluginsSorted(results);
 
     if (actionApplySort->isVisible()) {
       actionApplySort->trigger();
@@ -2378,10 +2395,13 @@ void MainWindow::handlePluginsAutoSorted(QueryResult result) {
   }
 }
 
-void MainWindow::handleMasterlistUpdated(QueryResult result) {
+void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
   try {
-    const auto updateResult = std::get<MasterlistUpdateResult>(result);
-    if (!updateResult.second) {
+    const auto wasPreludeUpdated = std::get<bool>(results.at(0));
+    const auto wasMasterlistUpdated =
+        std::get<MasterlistUpdateResult>(results.at(1)).second;
+
+    if (!wasPreludeUpdated && !wasMasterlistUpdated) {
       progressDialog->reset();
       showNotification(translate("No masterlist update was necessary."));
 
@@ -2413,15 +2433,19 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
 }
 
 void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
+  const bool wasPreludeUpdated = std::get<bool>(results.at(0));
+  const auto masterlistResults =
+      std::vector<QueryResult>{results.begin() + 1, results.end()};
+
   const auto logger = getLogger();
   const auto gamesSettings = state.getSettings().getGameSettings();
 
   std::vector<std::string> updatedGameNames;
   bool wasCurrentGameMasterlistUpdated = false;
-  for (const auto& result : results) {
+  for (const auto& result : masterlistResults) {
     const auto updateResult = std::get<MasterlistUpdateResult>(result);
 
-    if (updateResult.second) {
+    if (wasPreludeUpdated || updateResult.second) {
       const auto it =
           std::find_if(gamesSettings.begin(),
                        gamesSettings.end(),

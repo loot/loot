@@ -28,25 +28,11 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
-UpdateMasterlistTask::UpdateMasterlistTask(const LootState &state) :
+UpdatePreludeTask::UpdatePreludeTask(const LootState &state) :
     preludeSource(state.getSettings().getPreludeSource()),
-    preludePath(state.getPreludePath()),
-    masterlistSource(state.GetCurrentGame().GetSettings().MasterlistSource()),
-    masterlistPath(state.GetCurrentGame().MasterlistPath()) {}
+    preludePath(state.getPreludePath()) {}
 
-UpdateMasterlistTask::UpdateMasterlistTask(
-    const std::string &gameFolderName,
-    const std::string &preludeSource,
-    const std::filesystem::path &preludePath,
-    const std::string &masterlistSource,
-    const std::filesystem::path &masterlistPath) :
-    gameFolderName(gameFolderName),
-    preludeSource(preludeSource),
-    preludePath(preludePath),
-    masterlistSource(masterlistSource),
-    masterlistPath(masterlistPath) {}
-
-void UpdateMasterlistTask::execute() {
+void UpdatePreludeTask::execute() {
   try {
     // Delay construction of the manager so that it's created in the correct
     // thread.
@@ -54,114 +40,43 @@ void UpdateMasterlistTask::execute() {
       networkAccessManager = new QNetworkAccessManager(this);
     }
 
-    updatePrelude();
-  } catch (const std::exception &e) {
-    handleException(e);
-  }
-}
+    if (!isValidUrl(preludeSource)) {
+      // Treat the source as a local path, and copy the file from there.
+      auto sourcePath = std::filesystem::u8path(preludeSource);
 
-void UpdateMasterlistTask::updatePrelude() {
-  if (!isValidUrl(preludeSource)) {
-    // Treat the source as a local path, and copy the file from there.
-    auto sourcePath = std::filesystem::u8path(preludeSource);
+      const auto preludeUpdated = updateFile(sourcePath, preludePath);
 
-    preludeUpdated = updateFile(sourcePath, preludePath);
-
-    // Now update the masterlist.
-    updateMasterlist();
-    return;
-  }
-
-  auto logger = getLogger();
-  if (logger) {
-    logger->trace("Sending a prelude update request to GET {}", preludeSource);
-  }
-
-  QNetworkRequest request(QUrl(QString::fromStdString(preludeSource)));
-
-  const auto reply = networkAccessManager->get(request);
-
-  connect(reply,
-          &QNetworkReply::finished,
-          this,
-          &UpdateMasterlistTask::onPreludeReplyFinished);
-
-  connect(reply,
-          &QNetworkReply::errorOccurred,
-          this,
-          &UpdateMasterlistTask::onNetworkError);
-  connect(reply,
-          &QNetworkReply::sslErrors,
-          this,
-          &UpdateMasterlistTask::onSSLError);
-}
-
-void UpdateMasterlistTask::updateMasterlist() {
-  if (!isValidUrl(masterlistSource)) {
-    // Treat the source as a local path, and copy the file from there.
-    const auto sourcePath = std::filesystem::u8path(masterlistSource);
-
-    masterlistUpdated = updateFile(sourcePath, masterlistPath);
-
-    finish();
-    return;
-  }
-
-  auto logger = getLogger();
-  if (logger) {
-    logger->trace("Sending a masterlist update request to GET {}",
-                  masterlistSource);
-  }
-
-  QNetworkRequest request(QUrl(QString::fromStdString(masterlistSource)));
-
-  const auto reply = networkAccessManager->get(request);
-
-  connect(reply,
-          &QNetworkReply::finished,
-          this,
-          &UpdateMasterlistTask::onMasterlistReplyFinished);
-
-  connect(reply,
-          &QNetworkReply::errorOccurred,
-          this,
-          &UpdateMasterlistTask::onNetworkError);
-  connect(reply,
-          &QNetworkReply::sslErrors,
-          this,
-          &UpdateMasterlistTask::onSSLError);
-}
-
-void UpdateMasterlistTask::finish() {
-  emit finished(
-      std::make_pair(gameFolderName, preludeUpdated || masterlistUpdated));
-}
-
-void UpdateMasterlistTask::onMasterlistReplyFinished() {
-  try {
-    auto logger = getLogger();
-    if (logger) {
-      logger->trace("Finished receiving a response for masterlist update");
-    }
-
-    auto responseData =
-        readHttpResponse(qobject_cast<QNetworkReply *>(sender()));
-
-    if (!responseData.has_value()) {
-      emit error("Masterlist update response errored");
+      emit finished(preludeUpdated);
       return;
     }
 
-    masterlistUpdated =
-        updateFileWithData(masterlistPath, responseData.value());
+    auto logger = getLogger();
+    if (logger) {
+      logger->trace("Sending a prelude update request to GET {}",
+                    preludeSource);
+    }
 
-    finish();
+    QNetworkRequest request(QUrl(QString::fromStdString(preludeSource)));
+
+    const auto reply = networkAccessManager->get(request);
+
+    connect(reply,
+            &QNetworkReply::finished,
+            this,
+            &UpdatePreludeTask::onReplyFinished);
+
+    connect(reply,
+            &QNetworkReply::errorOccurred,
+            this,
+            &UpdatePreludeTask::onNetworkError);
+    connect(
+        reply, &QNetworkReply::sslErrors, this, &UpdatePreludeTask::onSSLError);
   } catch (const std::exception &e) {
     handleException(e);
   }
 }
 
-void UpdateMasterlistTask::onPreludeReplyFinished() {
+void UpdatePreludeTask::onReplyFinished() {
   try {
     auto logger = getLogger();
     if (logger) {
@@ -176,10 +91,92 @@ void UpdateMasterlistTask::onPreludeReplyFinished() {
       return;
     }
 
-    preludeUpdated = updateFileWithData(preludePath, responseData.value());
+    const auto preludeUpdated =
+        updateFileWithData(preludePath, responseData.value());
 
-    // Now update the masterlist.
-    updateMasterlist();
+    emit finished(preludeUpdated);
+  } catch (const std::exception &e) {
+    handleException(e);
+  }
+}
+
+UpdateMasterlistTask::UpdateMasterlistTask(const gui::Game &game) :
+    masterlistSource(game.GetSettings().MasterlistSource()),
+    masterlistPath(game.MasterlistPath()) {}
+
+UpdateMasterlistTask::UpdateMasterlistTask(
+    const std::string &gameFolderName,
+    const std::string &masterlistSource,
+    const std::filesystem::path &masterlistPath) :
+    gameFolderName(gameFolderName),
+    masterlistSource(masterlistSource),
+    masterlistPath(masterlistPath) {}
+
+void UpdateMasterlistTask::execute() {
+  try {
+    // Delay construction of the manager so that it's created in the correct
+    // thread.
+    if (networkAccessManager == nullptr) {
+      networkAccessManager = new QNetworkAccessManager(this);
+    }
+
+    if (!isValidUrl(masterlistSource)) {
+      // Treat the source as a local path, and copy the file from there.
+      const auto sourcePath = std::filesystem::u8path(masterlistSource);
+
+      const auto masterlistUpdated = updateFile(sourcePath, masterlistPath);
+
+      emit finished(std::make_pair(gameFolderName, masterlistUpdated));
+      return;
+    }
+
+    auto logger = getLogger();
+    if (logger) {
+      logger->trace("Sending a masterlist update request to GET {}",
+                    masterlistSource);
+    }
+
+    QNetworkRequest request(QUrl(QString::fromStdString(masterlistSource)));
+
+    const auto reply = networkAccessManager->get(request);
+
+    connect(reply,
+            &QNetworkReply::finished,
+            this,
+            &UpdateMasterlistTask::onReplyFinished);
+
+    connect(reply,
+            &QNetworkReply::errorOccurred,
+            this,
+            &UpdateMasterlistTask::onNetworkError);
+    connect(reply,
+            &QNetworkReply::sslErrors,
+            this,
+            &UpdateMasterlistTask::onSSLError);
+  } catch (const std::exception &e) {
+    handleException(e);
+  }
+}
+
+void UpdateMasterlistTask::onReplyFinished() {
+  try {
+    auto logger = getLogger();
+    if (logger) {
+      logger->trace("Finished receiving a response for masterlist update");
+    }
+
+    auto responseData =
+        readHttpResponse(qobject_cast<QNetworkReply *>(sender()));
+
+    if (!responseData.has_value()) {
+      emit error("Masterlist update response errored");
+      return;
+    }
+
+    const auto masterlistUpdated =
+        updateFileWithData(masterlistPath, responseData.value());
+
+    emit finished(std::make_pair(gameFolderName, masterlistUpdated));
   } catch (const std::exception &e) {
     handleException(e);
   }
