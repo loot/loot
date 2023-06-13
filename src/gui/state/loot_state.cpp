@@ -99,6 +99,10 @@ void apiLogCallback(LogLevel level, const char* message) {
 LootState::LootState(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) :
     LootPaths(lootAppPath, lootDataPath) {
+  // Do some preliminary locale / UTF-8 support setup.
+  boost::locale::generator gen;
+  std::locale::global(gen("en.UTF-8"));
+
   // Check if the LOOT local app data folder exists, and create it if not.
   createLootDataPath();
 
