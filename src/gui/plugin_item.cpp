@@ -405,7 +405,7 @@ std::string PluginItem::getMarkdownContent() const {
   }
 
   if (!messages.empty()) {
-    content += "\n" + messagesAsMarkdown(messages);
+    content += "\n" + MessagesAsMarkdown(messages);
   }
 
   if (!locations.empty()) {

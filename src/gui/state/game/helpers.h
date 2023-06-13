@@ -48,9 +48,6 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
 // Escape any Markdown special characters in the input text.
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 
-SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
-                                const std::string& language);
-
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
 std::vector<SourcedMessage> CheckForRemovedPlugins(

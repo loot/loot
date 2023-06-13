@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "loot/metadata/message.h"
+#include "loot/metadata/plugin_cleaning_data.h"
 
 namespace loot {
 enum struct MessageSource : unsigned int {
@@ -64,6 +65,11 @@ bool operator!=(const SourcedMessage& lhs, const SourcedMessage& rhs);
 SourcedMessage CreatePlainTextSourcedMessage(const MessageType type,
                                              const MessageSource source,
                                              const std::string& text);
+
+std::string MessagesAsMarkdown(const std::vector<SourcedMessage>& messages);
+
+SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
+                                const std::string& language);
 
 std::vector<SourcedMessage> ToSourcedMessages(
     const std::vector<Message>& messages,

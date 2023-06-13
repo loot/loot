@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.20.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-06-13 18:48+0100\n"
+"POT-Creation-Date: 2023-06-13 19:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: src/gui/qt/filters_widget.cpp:230
 msgid "Show only conflicting plugins for"
@@ -781,7 +780,7 @@ msgid "Display Name"
 msgstr ""
 
 #: src/gui/qt/plugin_editor/models/file_table_model.cpp:79
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:84
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:98
 #: src/gui/qt/plugin_editor/models/tag_table_model.cpp:67
 msgid "Condition"
 msgstr ""
@@ -805,11 +804,11 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:80
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:94
 msgid "Type"
 msgstr ""
 
-#: src/gui/qt/plugin_editor/models/message_table_model.cpp:82
+#: src/gui/qt/plugin_editor/models/message_table_model.cpp:96
 msgid "Content"
 msgstr ""
 
@@ -1110,42 +1109,6 @@ msgid ""
 "[LOOT's website](https://loot.github.io/)."
 msgstr ""
 
-#: src/gui/state/game/helpers.cpp:96
-msgid "{0} ITM record"
-msgid_plural "{0} ITM records"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game/helpers.cpp:102
-msgid "{0} deleted reference"
-msgid_plural "{0} deleted references"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game/helpers.cpp:108
-msgid "{0} deleted navmesh"
-msgid_plural "{0} deleted navmeshes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/gui/state/game/helpers.cpp:118
-msgid "{0} found {1}, {2} and {3}."
-msgstr ""
-
-#: src/gui/state/game/helpers.cpp:126
-msgid "{0} found dirty edits."
-msgstr ""
-
-#: src/gui/state/game/helpers.cpp:131 src/gui/state/game/helpers.cpp:138
-#: src/gui/state/game/helpers.cpp:145
-msgid "{0} found {1} and {2}."
-msgstr ""
-
-#: src/gui/state/game/helpers.cpp:150 src/gui/state/game/helpers.cpp:154
-#: src/gui/state/game/helpers.cpp:158
-msgid "{0} found {1}."
-msgstr ""
-
-#: src/gui/state/game/helpers.cpp:247
+#: src/gui/state/game/helpers.cpp:164
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
 msgstr ""

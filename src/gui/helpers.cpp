@@ -503,16 +503,6 @@ std::filesystem::path getLocalAppDataPath() {
 #endif
 }
 
-MessageType mapMessageType(const std::string& type) {
-  if (type == "say") {
-    return MessageType::say;
-  } else if (type == "warn") {
-    return MessageType::warn;
-  } else {
-    return MessageType::error;
-  }
-}
-
 void CopyToClipboard(const std::string& text) {
 #ifdef _WIN32
   if (!OpenClipboard(NULL)) {
@@ -561,28 +551,4 @@ void CopyToClipboard(const std::string& text) {
 }
 
 std::string crcToString(uint32_t crc) { return fmt::format("{:08X}", crc); }
-
-std::string messagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
-  if (messages.empty()) {
-    return "";
-  }
-
-  std::string content = "## Messages\n\n";
-
-  for (const auto& message : messages) {
-    content += "- ";
-
-    if (message.type == MessageType::warn) {
-      content += "Warning: ";
-    } else if (message.type == MessageType::error) {
-      content += "Error: ";
-    } else {
-      content += "Note: ";
-    }
-
-    content += message.text + "\n";
-  }
-
-  return content;
-}
 }

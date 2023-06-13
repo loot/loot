@@ -59,12 +59,8 @@ std::filesystem::path getExecutableDirectory();
 
 std::filesystem::path getLocalAppDataPath();
 
-MessageType mapMessageType(const std::string& type);
-
 void CopyToClipboard(const std::string& text);
 
 std::string crcToString(uint32_t crc);
-
-std::string messagesAsMarkdown(const std::vector<SourcedMessage>& messages);
 }
 #endif
