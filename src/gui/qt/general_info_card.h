@@ -27,7 +27,6 @@
 #define LOOT_GUI_QT_GENERAL_INFO_CARD
 
 #include <loot/enum/game_type.h>
-#include <loot/struct/simple_message.h>
 
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
@@ -53,7 +52,7 @@ public:
                        size_t dirty,
                        size_t total);
 
-  void setGeneralMessages(const std::vector<SimpleMessage>& messages);
+  void setGeneralMessages(const std::vector<SourcedMessage>& messages);
 
   void setShowSeparateLightPluginCount(bool showCount);
 

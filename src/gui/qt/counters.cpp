@@ -27,7 +27,7 @@
 
 namespace loot {
 GeneralInformationCounters::GeneralInformationCounters(
-    const std::vector<SimpleMessage>& generalMessages,
+    const std::vector<SourcedMessage>& generalMessages,
     const std::vector<PluginItem>& plugins) {
   countMessages(generalMessages);
 
@@ -49,7 +49,7 @@ GeneralInformationCounters::GeneralInformationCounters(
 }
 
 void GeneralInformationCounters::countMessages(
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   for (const auto& message : messages) {
     if (message.type == MessageType::warn) {
       warnings += 1;

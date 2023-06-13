@@ -181,7 +181,7 @@ std::vector<const PluginInterface*> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
-std::vector<Message> Game::CheckInstallValidity(
+std::vector<SourcedMessage> Game::CheckInstallValidity(
     const PluginInterface& plugin,
     const PluginMetadata& metadata,
     const std::string& language) const {
@@ -192,7 +192,7 @@ std::vector<Message> Game::CheckInstallValidity(
         "Checking that the current install is valid according to {}'s data.",
         plugin.GetName());
   }
-  std::vector<Message> messages;
+  std::vector<SourcedMessage> messages;
   if (IsPluginActive(plugin.GetName())) {
     auto tags = metadata.GetTags();
     const auto hasFilterTag =
@@ -208,8 +208,9 @@ std::vector<Message> Game::CheckInstallValidity(
                           plugin.GetName(),
                           master);
           }
-          messages.push_back(PlainTextMessage(
+          messages.push_back(CreatePlainTextSourcedMessage(
               MessageType::error,
+              MessageSource::missingMaster,
               fmt::format(
                   boost::locale::translate("This plugin requires \"{0}\" to be "
                                            "installed, but it is missing.")
@@ -221,8 +222,9 @@ std::vector<Message> Game::CheckInstallValidity(
                           plugin.GetName(),
                           master);
           }
-          messages.push_back(PlainTextMessage(
+          messages.push_back(CreatePlainTextSourcedMessage(
               MessageType::error,
+              MessageSource::inactiveMaster,
               fmt::format(
                   boost::locale::translate("This plugin requires \"{0}\" to be "
                                            "active, but it is inactive.")
@@ -264,7 +266,9 @@ std::vector<Message> Game::CheckInstallValidity(
                 ? localisedText + " " + detailContent.value().GetText()
                 : localisedText;
 
-        messages.push_back(Message(MessageType::error, messageText));
+        messages.push_back(SourcedMessage{MessageType::error,
+                                          MessageSource::requirementMetadata,
+                                          messageText});
         displayNamesWithMessages.insert(displayName);
       }
     }
@@ -304,7 +308,10 @@ std::vector<Message> Game::CheckInstallValidity(
                 ? localisedText + " " + detailContent.value().GetText()
                 : localisedText;
 
-        messages.push_back(Message(MessageType::error, messageText));
+        messages.push_back(
+            SourcedMessage{MessageType::error,
+                           MessageSource::incompatibilityMetadata,
+                           messageText});
         displayNamesWithMessages.insert(displayName);
       }
     }
@@ -333,8 +340,9 @@ std::vector<Message> Game::CheckInstallValidity(
               plugin.GetName(),
               masterName);
         }
-        messages.push_back(PlainTextMessage(
+        messages.push_back(CreatePlainTextSourcedMessage(
             MessageType::error,
+            MessageSource::lightPluginRequiresNonMaster,
             fmt::format(
                 boost::locale::translate(
                     "This plugin is a light master and requires the non-master "
@@ -355,8 +363,9 @@ std::vector<Message> Game::CheckInstallValidity(
           "to your game saves.",
           plugin.GetName());
     }
-    messages.push_back(PlainTextMessage(
+    messages.push_back(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::invalidLightPlugin,
         boost::locale::translate(
             "This plugin contains records that have FormIDs outside "
             "the valid range for an ESL plugin. Using this plugin "
@@ -373,8 +382,9 @@ std::vector<Message> Game::CheckInstallValidity(
           plugin.GetHeaderVersion().value(),
           settings_.MinimumHeaderVersion());
     }
-    messages.push_back(PlainTextMessage(
+    messages.push_back(CreatePlainTextSourcedMessage(
         MessageType::warn,
+        MessageSource::invalidHeaderVersion,
         fmt::format(
             boost::locale::translate(
                 /* translators: A header is the part of a file that stores data
@@ -395,8 +405,9 @@ std::vector<Message> Game::CheckInstallValidity(
         });
 
     if (groupIsUndefined) {
-      messages.push_back(PlainTextMessage(
+      messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::error,
+          MessageSource::missingGroup,
           fmt::format(
               boost::locale::translate("This plugin belongs to the group "
                                        "\"{0}\", which does not exist.")
@@ -419,8 +430,9 @@ std::vector<Message> Game::CheckInstallValidity(
             plugin.GetName(),
             commaSeparatedTags);
       }
-      messages.push_back(PlainTextMessage(
+      messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::say,
+          MessageSource::bashTagsOverride,
           fmt::format(
               boost::locale::translate(
                   "This plugin has a BashTags file that will override the "
@@ -432,7 +444,7 @@ std::vector<Message> Game::CheckInstallValidity(
 
   // Also generate dirty messages.
   for (const auto& element : metadata.GetDirtyInfo()) {
-    messages.push_back(ToMessage(element));
+    messages.push_back(ToSourcedMessage(element, language));
   }
 
   return messages;
@@ -518,8 +530,9 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
     if (logger) {
       logger->error("Failed to load current load order. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         boost::locale::translate("Failed to load the current load order, "
                                  "information displayed may be incorrect.")
             .str()));
@@ -610,8 +623,9 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to load current load order. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         boost::locale::translate("Failed to load the current load order, "
                                  "information displayed may be incorrect.")
             .str()));
@@ -637,8 +651,9 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(Message(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate(
                 "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}")
@@ -651,8 +666,9 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate("The group \"{0}\" does not exist.").str(),
             e.GetGroupName())));
@@ -675,18 +691,24 @@ void Game::DecrementLoadOrderSortCount() {
   }
 }
 
-std::vector<Message> Game::GetMessages() const {
-  std::vector<Message> output(
-      gameHandle_->GetDatabase().GetGeneralMessages(true));
+std::vector<SourcedMessage> Game::GetMessages(
+    const std::string& language) const {
+  std::vector<SourcedMessage> output(
+      ToSourcedMessages(gameHandle_->GetDatabase().GetGeneralMessages(true),
+                        MessageSource::messageMetadata,
+                        language));
   output.insert(end(output), begin(messages_), end(messages_));
 
-  const auto addWarning = [&output](const std::string& text) {
-    output.push_back(PlainTextMessage(MessageType::warn, text));
+  const auto addWarning = [&output](const MessageSource source,
+                                    const std::string& text) {
+    output.push_back(
+        CreatePlainTextSourcedMessage(MessageType::warn, source, text));
   };
 
   if (loadOrderSortCount_ == 0) {
-    addWarning(boost::locale::translate(
-        "You have not sorted your load order this session."));
+    addWarning(MessageSource::unsortedLoadOrderCheck,
+               boost::locale::translate(
+                   "You have not sorted your load order this session."));
   }
 
   size_t activeNormalPluginsCount = 0;
@@ -732,19 +754,21 @@ std::vector<Message> Game::GetMessages() const {
     }
 
     if (activeLightPluginsCount > 0) {
-      addWarning(fmt::format(
-          boost::locale::translate("You have {0} active normal plugins but the "
-                                   "game only supports up to {1}.")
-              .str(),
-          activeNormalPluginsCount,
-          safeMaxActiveNormalPlugins));
+      addWarning(MessageSource::activePluginsCountCheck,
+                 fmt::format(boost::locale::translate(
+                                 "You have {0} active normal plugins but the "
+                                 "game only supports up to {1}.")
+                                 .str(),
+                             activeNormalPluginsCount,
+                             safeMaxActiveNormalPlugins));
     } else {
-      addWarning(fmt::format(
-          boost::locale::translate("You have {0} active plugins but the "
-                                   "game only supports up to {1}.")
-              .str(),
-          activeNormalPluginsCount,
-          safeMaxActiveNormalPlugins));
+      addWarning(MessageSource::activePluginsCountCheck,
+                 fmt::format(boost::locale::translate(
+                                 "You have {0} active plugins but the "
+                                 "game only supports up to {1}.")
+                                 .str(),
+                             activeNormalPluginsCount,
+                             safeMaxActiveNormalPlugins));
     }
   }
 
@@ -760,9 +784,10 @@ std::vector<Message> Game::GetMessages() const {
           SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
     }
 
-    addWarning(boost::locale::translate(
-        "Do not launch Morrowind without the use of MWSE or it will "
-        "cause severe damage to your game."));
+    addWarning(MessageSource::activePluginsCountCheck,
+               boost::locale::translate(
+                   "Do not launch Morrowind without the use of MWSE or it will "
+                   "cause severe damage to your game."));
   }
 
   if (activeLightPluginsCount > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
@@ -773,12 +798,13 @@ std::vector<Message> Game::GetMessages() const {
           SAFE_MAX_ACTIVE_LIGHT_PLUGINS);
     }
 
-    addWarning(fmt::format(
-        boost::locale::translate("You have {0} active light plugins but the "
-                                 "game only supports up to {1}.")
-            .str(),
-        activeLightPluginsCount,
-        SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
+    addWarning(MessageSource::activePluginsCountCheck,
+               fmt::format(boost::locale::translate(
+                               "You have {0} active light plugins but the "
+                               "game only supports up to {1}.")
+                               .str(),
+                           activeLightPluginsCount,
+                           SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
   }
 
   if (activeNormalPluginsCount >= SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
@@ -790,16 +816,18 @@ std::vector<Message> Game::GetMessages() const {
           activeNormalPluginsCount);
     }
 
-    addWarning(boost::locale::translate(
-        "You have a normal plugin and at least one light plugin sharing "
-        "the FE load order index. Deactivate a normal plugin or all your "
-        "light plugins to avoid potential issues."));
+    addWarning(
+        MessageSource::activePluginsCountCheck,
+        boost::locale::translate(
+            "You have a normal plugin and at least one light plugin sharing "
+            "the FE load order index. Deactivate a normal plugin or all your "
+            "light plugins to avoid potential issues."));
   }
 
   return output;
 }
 
-void Game::AppendMessage(const Message& message) {
+void Game::AppendMessage(const SourcedMessage& message) {
   messages_.push_back(message);
 }
 
@@ -844,8 +872,9 @@ void Game::LoadMetadata() {
       logger->error("An error occurred while parsing the metadata list(s): {}",
                     e.what());
     }
-    AppendMessage(Message(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate(
                 "An error occurred while parsing the metadata list(s): "
@@ -1008,7 +1037,7 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
   return maybePlugins;
 }
 
-void Game::AppendMessages(std::vector<Message> messages) {
+void Game::AppendMessages(std::vector<SourcedMessage> messages) {
   for (auto message : messages) {
     AppendMessage(message);
   }

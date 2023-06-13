@@ -98,13 +98,13 @@ public:
   void setGeneralInformation(bool gameSupportsLightPlugins,
                              const FileRevisionSummary& masterlistRevision,
                              const FileRevisionSummary& preludeRevision,
-                             const std::vector<SimpleMessage>& messages);
+                             const std::vector<SourcedMessage>& messages);
 
   void setPreludeRevision(const FileRevisionSummary& preludeRevision);
 
-  void setGeneralMessages(std::vector<SimpleMessage>&& messages);
+  void setGeneralMessages(std::vector<SourcedMessage>&& messages);
 
-  const std::vector<SimpleMessage>& getGeneralMessages() const;
+  const std::vector<SourcedMessage>& getGeneralMessages() const;
 
   const GeneralInformation& getGeneralInfo() const;
 

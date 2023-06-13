@@ -355,7 +355,7 @@ void PluginItemModel::setGeneralInformation(
     bool gameSupportsLightPlugins,
     const FileRevisionSummary& masterlistRevision,
     const FileRevisionSummary& preludeRevision,
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   const auto infoIndex = index(0, CARDS_COLUMN);
 
   generalInformation.gameSupportsLightPlugins = gameSupportsLightPlugins;
@@ -375,14 +375,14 @@ void PluginItemModel::setPreludeRevision(
 }
 
 void PluginItemModel::setGeneralMessages(
-    std::vector<SimpleMessage>&& messages) {
+    std::vector<SourcedMessage>&& messages) {
   const auto infoIndex = index(0, CARDS_COLUMN);
   generalInformation.generalMessages = std::move(messages);
 
   emit dataChanged(infoIndex, infoIndex, {RawDataRole});
 }
 
-const std::vector<SimpleMessage>& PluginItemModel::getGeneralMessages() const {
+const std::vector<SourcedMessage>& PluginItemModel::getGeneralMessages() const {
   return generalInformation.generalMessages;
 }
 

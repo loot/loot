@@ -30,6 +30,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QStyle>
 
+#include "gui/sourced_message.h"
+
 namespace loot {
 static constexpr const char* MESSAGE_TYPE_PROPERTY = "messageType";
 static constexpr int COLUMN_COUNT = 2;
@@ -128,7 +130,7 @@ void updateMessageLabel(QLabel* label, const BareMessage& message) {
 }
 
 std::vector<BareMessage> toBareMessages(
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   std::vector<BareMessage> bareMessages;
   for (const auto& message : messages) {
     bareMessages.push_back(BareMessage{message.type, message.text});
@@ -139,7 +141,7 @@ std::vector<BareMessage> toBareMessages(
 
 MessagesWidget::MessagesWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
 
-void MessagesWidget::setMessages(const std::vector<SimpleMessage>& messages) {
+void MessagesWidget::setMessages(const std::vector<SourcedMessage>& messages) {
   if (!willChangeContent(messages)) {
     // Avoid expensive layout changes.
     return;
@@ -219,7 +221,7 @@ void MessagesWidget::setMessages(const std::vector<BareMessage>& messages) {
 }
 
 bool MessagesWidget::willChangeContent(
-    const std::vector<SimpleMessage>& messages) const {
+    const std::vector<SourcedMessage>& messages) const {
   if (messages.size() != currentMessages.size()) {
     return true;
   }

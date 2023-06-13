@@ -37,8 +37,8 @@
 namespace loot {
 QString getTagsText(const std::vector<std::string> tags, bool hideTags);
 
-std::vector<SimpleMessage> filterMessages(
-    const std::vector<SimpleMessage>& messages,
+std::vector<SourcedMessage> filterMessages(
+    const std::vector<SourcedMessage>& messages,
     const CardContentFiltersState& filters);
 
 class PluginCard : public QFrame {

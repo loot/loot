@@ -80,15 +80,6 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
   }
 }
 
-Message PlainTextMessage(const MessageType type, const std::string& text) {
-  return Message(type, EscapeMarkdownASCIIPunctuation(text));
-}
-
-SimpleMessage PlainTextSimpleMessage(const MessageType type,
-                                     const std::string& text) {
-  return SimpleMessage{type, EscapeMarkdownASCIIPunctuation(text)};
-}
-
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
   // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
   static const std::regex asciiPunctuationCharacters(
@@ -96,7 +87,8 @@ std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
   return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
 }
 
-Message ToMessage(const PluginCleaningData& cleaningData) {
+SourcedMessage ToSourcedMessage(const PluginCleaningData& cleaningData,
+                                const std::string& language) {
   using boost::locale::translate;
   using fmt::format;
 
@@ -167,17 +159,15 @@ Message ToMessage(const PluginCleaningData& cleaningData) {
                      cleaningData.GetCleaningUtility(),
                      deletedNavmeshes);
 
-  auto detail = cleaningData.GetDetail();
-  if (detail.empty()) {
-    return Message(MessageType::warn, message);
+  const auto selectedDetail =
+      SelectMessageContent(cleaningData.GetDetail(), language);
+
+  if (selectedDetail.has_value()) {
+    message += " " + selectedDetail.value().GetText();
   }
 
-  for (auto& content : detail) {
-    content = MessageContent(message + " " + content.GetText(),
-                             content.GetLanguage());
-  }
-
-  return Message(MessageType::warn, detail);
+  return SourcedMessage{
+      MessageType::warn, MessageSource::cleaningMetadata, message};
 }
 
 std::string DescribeEdgeType(const EdgeType edgeType) {
@@ -228,7 +218,7 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
   return text;
 }
 
-std::vector<Message> CheckForRemovedPlugins(
+std::vector<SourcedMessage> CheckForRemovedPlugins(
     const std::vector<std::string>& pluginPathsBefore,
     const std::vector<std::string>& pluginNamesAfter) {
   // Plugin name case won't change, so can compare strings
@@ -239,7 +229,7 @@ std::vector<Message> CheckForRemovedPlugins(
   static constexpr size_t GHOST_EXTENSION_LENGTH =
       std::char_traits<char>::length(GHOST_EXTENSION);
 
-  std::vector<Message> messages;
+  std::vector<SourcedMessage> messages;
   for (const auto& pluginPath : pluginPathsBefore) {
     const auto unghostedPluginPath =
         boost::iends_with(pluginPath, GHOST_EXTENSION)
@@ -250,8 +240,9 @@ std::vector<Message> CheckForRemovedPlugins(
         std::filesystem::u8path(unghostedPluginPath).filename().u8string();
 
     if (pluginsSet.count(unghostedPluginName) == 0) {
-      messages.push_back(PlainTextMessage(
+      messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::warn,
+          MessageSource::removedPluginsCheck,
           fmt::format(
               boost::locale::translate("LOOT has detected that \"{0}\" is "
                                        "invalid and is now ignoring it.")

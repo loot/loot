@@ -259,7 +259,7 @@ void MainWindow::initialise() {
     const auto initHasErrored =
         std::any_of(initMessages.begin(),
                     initMessages.end(),
-                    [](const SimpleMessage& message) {
+                    [](const SourcedMessage& message) {
                       return message.type == MessageType::error;
                     });
     pluginItemModel->setGeneralMessages(std::move(initMessages));
@@ -841,8 +841,9 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
   executeBackgroundQuery(std::move(query), handler, progressUpdater);
 }
 
-void MainWindow::updateCounts(const std::vector<SimpleMessage>& generalMessages,
-                              const std::vector<PluginItem>& plugins) {
+void MainWindow::updateCounts(
+    const std::vector<SourcedMessage>& generalMessages,
+    const std::vector<PluginItem>& plugins) {
   const auto counters = GeneralInformationCounters(generalMessages, plugins);
   const auto hiddenMessageCount =
       countHiddenMessages(plugins, filtersWidget->getCardContentFiltersState());
@@ -860,8 +861,8 @@ void MainWindow::updateGeneralInformation() {
                                             FileType::MasterlistPrelude);
 
   auto initMessages = state.getInitMessages();
-  auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getSettings().getLanguage());
+  const auto gameMessages =
+      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -874,8 +875,8 @@ void MainWindow::updateGeneralInformation() {
 
 void MainWindow::updateGeneralMessages() {
   auto initMessages = state.getInitMessages();
-  auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getSettings().getLanguage());
+  auto gameMessages =
+      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -2274,11 +2275,12 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
 
     if (state.getSettings().isAutoSortEnabled()) {
       if (hasErrorMessages()) {
-        state.GetCurrentGame().AppendMessage(
-            Message(MessageType::error,
-                    boost::locale::translate(
-                        "Auto-sort has been cancelled as there is at "
-                        "least one error message displayed.")));
+        state.GetCurrentGame().AppendMessage(CreatePlainTextSourcedMessage(
+            MessageType::error,
+            MessageSource::autoSortCancellation,
+            boost::locale::translate(
+                "Auto-sort has been cancelled as there is at "
+                "least one error message displayed.")));
 
         updateGeneralMessages();
       } else {
@@ -2403,7 +2405,8 @@ void MainWindow::handleUpdateCheckFinished(QueryResult result) {
               .str(),
           "https://github.com/loot/loot/releases/latest");
 
-      state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
+      state.GetCurrentGame().AppendMessage(
+          SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
       updateGeneralMessages();
     }
   } catch (const std::exception& e) {
@@ -2427,7 +2430,8 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
       }
     }
 
-    state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
+    state.GetCurrentGame().AppendMessage(
+        SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
     updateGeneralMessages();
   } catch (const std::exception& e) {
     handleException(e);

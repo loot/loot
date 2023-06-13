@@ -194,7 +194,7 @@ private:
   void exitSortingState();
 
   void loadGame(bool isOnLOOTStartup);
-  void updateCounts(const std::vector<SimpleMessage> &generalMessages,
+  void updateCounts(const std::vector<SourcedMessage> &generalMessages,
                     const std::vector<PluginItem> &plugins);
   void updateGeneralInformation();
   void updateGeneralMessages();

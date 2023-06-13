@@ -562,7 +562,7 @@ void CopyToClipboard(const std::string& text) {
 
 std::string crcToString(uint32_t crc) { return fmt::format("{:08X}", crc); }
 
-std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages) {
+std::string messagesAsMarkdown(const std::vector<SourcedMessage>& messages) {
   if (messages.empty()) {
     return "";
   }

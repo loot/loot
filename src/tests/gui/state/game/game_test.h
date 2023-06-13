@@ -293,11 +293,12 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatRequirementsArePresent) {
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin requires \"" +
-                            EscapeMarkdownASCIIPunctuation(missingEsp) +
-                            "\" to be installed, but it is missing."),
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                SourcedMessage{MessageType::error,
+                               MessageSource::requirementMetadata,
+                               "This plugin requires \"" +
+                                   EscapeMarkdownASCIIPunctuation(missingEsp) +
+                                   "\" to be installed, but it is missing."},
             }),
             messages);
 }
@@ -336,12 +337,14 @@ TEST_P(
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin requires \"foo\" to be installed, but it "
-                        "is missing."),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          SourcedMessage{MessageType::error,
+                         MessageSource::requirementMetadata,
+                         "This plugin requires \"foo\" to be installed, but it "
+                         "is missing."},
+      }),
+      messages);
 }
 
 TEST_P(
@@ -359,12 +362,14 @@ TEST_P(
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin requires \"foo\" to be installed, but it "
-                        "is missing."),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          SourcedMessage{MessageType::error,
+                         MessageSource::requirementMetadata,
+                         "This plugin requires \"foo\" to be installed, but it "
+                         "is missing."},
+      }),
+      messages);
 }
 
 TEST_P(GameTest,
@@ -380,11 +385,12 @@ TEST_P(GameTest,
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin is incompatible with \"" +
-                            EscapeMarkdownASCIIPunctuation(masterFile) +
-                            "\", but both are present."),
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                SourcedMessage{MessageType::error,
+                               MessageSource::incompatibilityMetadata,
+                               "This plugin is incompatible with \"" +
+                                   EscapeMarkdownASCIIPunctuation(masterFile) +
+                                   "\", but both are present."},
             }),
             messages);
 }
@@ -406,14 +412,15 @@ TEST_P(
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(
-      std::vector<Message>({
-          Message(MessageType::error,
-                  "This plugin is incompatible with \"" +
-                      EscapeMarkdownASCIIPunctuation(incompatibleFilename) +
-                      "\", but both are present."),
-      }),
-      messages);
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                SourcedMessage{
+                    MessageType::error,
+                    MessageSource::incompatibilityMetadata,
+                    "This plugin is incompatible with \"" +
+                        EscapeMarkdownASCIIPunctuation(incompatibleFilename) +
+                        "\", but both are present."},
+            }),
+            messages);
 }
 
 TEST_P(
@@ -430,12 +437,14 @@ TEST_P(
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin is incompatible with \"foo\", but both "
-                        "are present."),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          SourcedMessage{MessageType::error,
+                         MessageSource::incompatibilityMetadata,
+                         "This plugin is incompatible with \"foo\", but both "
+                         "are present."},
+      }),
+      messages);
 }
 
 TEST_P(
@@ -456,12 +465,14 @@ TEST_P(
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin is incompatible with \"test file\", but "
-                        "both are present."),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          SourcedMessage{MessageType::error,
+                         MessageSource::incompatibilityMetadata,
+                         "This plugin is incompatible with \"test file\", but "
+                         "both are present."},
+      }),
+      messages);
 }
 
 TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
@@ -480,11 +491,13 @@ TEST_P(GameTest, checkInstallValidityShouldGenerateMessagesFromDirtyInfo) {
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                ToMessage(PluginCleaningData(
-                    blankEsmCrc, "utility1", detail, 0, 1, 2)),
-                ToMessage(PluginCleaningData(
-                    0xDEADBEEF, "utility2", detail, 0, 5, 10)),
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                ToSourcedMessage(PluginCleaningData(
+                                     blankEsmCrc, "utility1", detail, 0, 1, 2),
+                                 MessageContent::DEFAULT_LANGUAGE),
+                ToSourcedMessage(PluginCleaningData(
+                                     0xDEADBEEF, "utility2", detail, 0, 5, 10),
+                                 MessageContent::DEFAULT_LANGUAGE),
             }),
             messages);
 }
@@ -499,13 +512,15 @@ TEST_P(
 
   auto messages = game.CheckInstallValidity(
       *game.GetPlugin(blankDifferentMasterDependentEsp), metadata, "en");
-  EXPECT_EQ(std::vector<Message>({
-                Message(MessageType::error,
-                        "This plugin requires \\\"" +
-                            EscapeMarkdownASCIIPunctuation(blankDifferentEsm) +
-                            "\\\" to be active\\, but it is inactive\\."),
-            }),
-            messages);
+  EXPECT_EQ(
+      std::vector<SourcedMessage>({
+          SourcedMessage{MessageType::error,
+                         MessageSource::inactiveMaster,
+                         "This plugin requires \\\"" +
+                             EscapeMarkdownASCIIPunctuation(blankDifferentEsm) +
+                             "\\\" to be active\\, but it is inactive\\."},
+      }),
+      messages);
 }
 
 TEST_P(
@@ -556,12 +571,13 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAnEslIsValid) {
   auto messages = game.CheckInstallValidity(
       *game.GetPlugin(blankEsl), PluginMetadata(blankEsl), "en");
   EXPECT_EQ(
-      std::vector<Message>({
-          Message(
+      std::vector<SourcedMessage>({
+          SourcedMessage{
               MessageType::error,
+              MessageSource::invalidLightPlugin,
               "This plugin contains records that have FormIDs outside the "
               "valid range for an ESL plugin\\. Using this plugin will cause "
-              "irreversible damage to your game saves\\."),
+              "irreversible damage to your game saves\\."},
       }),
       messages);
 }
@@ -591,7 +607,10 @@ TEST_P(
         "game\\'s minimum supported header version of 5\\.1\\.";
   }
 
-  EXPECT_EQ(std::vector<Message>({Message(MessageType::warn, messageText)}),
+  EXPECT_EQ(std::vector<SourcedMessage>(
+                {SourcedMessage{MessageType::warn,
+                                MessageSource::invalidHeaderVersion,
+                                messageText}}),
             messages);
 }
 
@@ -604,13 +623,14 @@ TEST_P(GameTest, checkInstallValidityShouldCheckThatAPluginGroupExists) {
 
   auto messages =
       game.CheckInstallValidity(*game.GetPlugin(blankEsm), metadata, "en");
-  EXPECT_EQ(
-      std::vector<Message>({
-          Message(MessageType::error,
-                  "This plugin belongs to the group \\\"missing group\\\"\\, "
-                  "which does not exist\\."),
-      }),
-      messages);
+  EXPECT_EQ(std::vector<SourcedMessage>({
+                SourcedMessage{
+                    MessageType::error,
+                    MessageSource::missingGroup,
+                    "This plugin belongs to the group \\\"missing group\\\"\\, "
+                    "which does not exist\\."},
+            }),
+            messages);
 }
 
 TEST_P(GameTest, checkInstallValidityShouldResolveExternalPluginPaths) {
@@ -723,9 +743,9 @@ TEST_P(GameTest,
 
   EXPECT_NO_THROW(game.LoadAllInstalledPlugins(false));
 
-  EXPECT_EQ(1, game.GetMessages().size());
+  EXPECT_EQ(1, game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
   EXPECT_EQ("You have not sorted your load order this session\\.",
-            game.GetMessages()[0].GetContent()[0].GetText());
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE)[0].text);
 }
 
 TEST_P(GameTest, loadAllInstalledPluginsShouldLoadPluginsAtExternalPaths) {
@@ -962,7 +982,7 @@ TEST_P(GameTest, setLoadOrderShouldKeepUpToThreeBackups) {
 TEST_P(GameTest, aMessageShouldBeCachedByDefault) {
   Game game = CreateInitialisedGame(lootDataPath);
 
-  ASSERT_EQ(1, game.GetMessages().size());
+  ASSERT_EQ(1, game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
 }
 
 TEST_P(GameTest, sortPluginsShouldSupportPluginsAtExternalPaths) {
@@ -1004,67 +1024,77 @@ TEST_P(GameTest,
   Game game = CreateInitialisedGame(lootDataPath);
   game.IncrementLoadOrderSortCount();
 
-  EXPECT_TRUE(game.GetMessages().empty());
+  EXPECT_TRUE(game.GetMessages(MessageContent::DEFAULT_LANGUAGE).empty());
 }
 
 TEST_P(GameTest,
        decrementingLoadOrderSortCountToZeroShouldShowTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame(lootDataPath);
-  auto expectedMessages = game.GetMessages();
+  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
-  EXPECT_EQ(expectedMessages, game.GetMessages());
+  EXPECT_EQ(expectedMessages,
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountThatIsAlreadyZeroShouldShowTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame(lootDataPath);
-  auto expectedMessages = game.GetMessages();
+  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
   game.DecrementLoadOrderSortCount();
 
-  EXPECT_EQ(expectedMessages, game.GetMessages());
+  EXPECT_EQ(expectedMessages,
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE));
 }
 
 TEST_P(
     GameTest,
     decrementingLoadOrderSortCountToANonZeroValueShouldSupressTheDefaultCachedMessage) {
   Game game = CreateInitialisedGame(lootDataPath);
-  auto expectedMessages = game.GetMessages();
+  auto expectedMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
   game.IncrementLoadOrderSortCount();
   game.IncrementLoadOrderSortCount();
   game.DecrementLoadOrderSortCount();
 
-  EXPECT_TRUE(game.GetMessages().empty());
+  EXPECT_TRUE(game.GetMessages(MessageContent::DEFAULT_LANGUAGE).empty());
 }
 
 TEST_P(GameTest, appendingMessagesShouldStoreThemInTheGivenOrder) {
   Game game = CreateInitialisedGame(lootDataPath);
-  std::vector<Message> messages({
-      Message(MessageType::say, "1"),
-      Message(MessageType::error, "2"),
+  std::vector<SourcedMessage> messages({
+      SourcedMessage{MessageType::say, MessageSource::messageMetadata, "1"},
+      SourcedMessage{MessageType::error, MessageSource::messageMetadata, "2"},
   });
-  for (const auto& message : messages) game.AppendMessage(message);
+  for (const auto& message : messages) {
+    game.AppendMessage(message);
+  }
 
-  ASSERT_EQ(3, game.GetMessages().size());
-  EXPECT_EQ(messages[0], game.GetMessages()[0]);
-  EXPECT_EQ(messages[1], game.GetMessages()[1]);
+  const auto gameMessages = game.GetMessages(MessageContent::DEFAULT_LANGUAGE);
+
+  ASSERT_EQ(3, gameMessages.size());
+  EXPECT_EQ(messages[0], gameMessages[0]);
+  EXPECT_EQ(messages[1], gameMessages[1]);
 }
 
 TEST_P(GameTest, clearingMessagesShouldRemoveAllAppendedMessages) {
   Game game = CreateInitialisedGame(lootDataPath);
-  std::vector<Message> messages({
-      Message(MessageType::say, "1"),
-      Message(MessageType::error, "2"),
+  std::vector<SourcedMessage> messages({
+      SourcedMessage{MessageType::say, MessageSource::messageMetadata, "1"},
+      SourcedMessage{MessageType::error, MessageSource::messageMetadata, "2"},
   });
-  for (const auto& message : messages) game.AppendMessage(message);
+  for (const auto& message : messages) {
+    game.AppendMessage(message);
+  }
 
-  auto previousSize = game.GetMessages().size();
+  const auto previousSize =
+      game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size();
 
   game.ClearMessages();
 
-  EXPECT_EQ(previousSize - messages.size(), game.GetMessages().size());
+  EXPECT_EQ(previousSize - messages.size(),
+            game.GetMessages(MessageContent::DEFAULT_LANGUAGE).size());
 }
 }
 }

@@ -26,15 +26,14 @@
 #ifndef LOOT_GUI_QT_COUNTERS
 #define LOOT_GUI_QT_COUNTERS
 
-#include <loot/struct/simple_message.h>
-
 #include "gui/plugin_item.h"
+#include "gui/sourced_message.h"
 #include "gui/qt/filters_states.h"
 
 namespace loot {
 struct GeneralInformationCounters {
   GeneralInformationCounters() = default;
-  GeneralInformationCounters(const std::vector<SimpleMessage>& generalMessages,
+  GeneralInformationCounters(const std::vector<SourcedMessage>& generalMessages,
                              const std::vector<PluginItem>& plugins);
 
   size_t warnings{0};
@@ -47,7 +46,7 @@ struct GeneralInformationCounters {
   size_t totalPlugins{0};
 
 private:
-  void countMessages(const std::vector<SimpleMessage>& messages);
+  void countMessages(const std::vector<SourcedMessage>& messages);
 };
 
 size_t countHiddenMessages(const std::vector<PluginItem>& plugins,

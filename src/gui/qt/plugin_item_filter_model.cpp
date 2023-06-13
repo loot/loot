@@ -29,7 +29,7 @@
 #include "gui/qt/plugin_item_model.h"
 
 namespace loot {
-bool anyMessagesVisible(const std::vector<SimpleMessage>& messages,
+bool anyMessagesVisible(const std::vector<SourcedMessage>& messages,
                         const CardContentFiltersState& filters) {
   if (filters.hideAllPluginMessages) {
     return false;

@@ -31,7 +31,7 @@
 
 namespace loot {
 std::vector<std::string> getMessageTexts(
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   std::vector<std::string> texts;
   for (const auto& message : messages) {
     texts.push_back(message.text);

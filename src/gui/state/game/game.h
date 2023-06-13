@@ -52,6 +52,7 @@
 #undef LOOT_SHOULD_REDEFINE_EMIT
 #endif
 
+#include "gui/sourced_message.h"
 #include "gui/state/game/game_settings.h"
 #include "gui/state/logging.h"
 #include "loot/api.h"
@@ -78,9 +79,10 @@ public:
 
   const PluginInterface* GetPlugin(const std::string& name) const;
   std::vector<const PluginInterface*> GetPlugins() const;
-  std::vector<Message> CheckInstallValidity(const PluginInterface& plugin,
-                                            const PluginMetadata& metadata,
-                                            const std::string& language) const;
+  std::vector<SourcedMessage> CheckInstallValidity(
+      const PluginInterface& plugin,
+      const PluginMetadata& metadata,
+      const std::string& language) const;
 
   void RedatePlugins();  // Change timestamps to match load order (Skyrim only).
 
@@ -111,8 +113,8 @@ public:
   void IncrementLoadOrderSortCount();
   void DecrementLoadOrderSortCount();
 
-  std::vector<Message> GetMessages() const;
-  void AppendMessage(const Message& message);
+  std::vector<SourcedMessage> GetMessages(const std::string& language) const;
+  void AppendMessage(const SourcedMessage& message);
   void ClearMessages();
 
   void LoadMetadata();
@@ -139,14 +141,14 @@ public:
 private:
   std::filesystem::path GetLOOTGamePath() const;
   std::vector<std::string> GetInstalledPluginPaths() const;
-  void AppendMessages(std::vector<Message> messages);
+  void AppendMessages(std::vector<SourcedMessage> messages);
   std::filesystem::path ResolveGameFilePath(
       const std::string& pluginName) const;
   bool FileExists(const std::string& file) const;
 
   GameSettings settings_;
   std::unique_ptr<GameInterface> gameHandle_;
-  std::vector<Message> messages_;
+  std::vector<SourcedMessage> messages_;
   std::filesystem::path lootDataPath_;
   std::filesystem::path preludePath_;
   unsigned short loadOrderSortCount_{0};

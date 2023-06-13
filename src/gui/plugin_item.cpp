@@ -36,9 +36,9 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-std::optional<PluginMetadata> evaluateMasterlistMetadata(
-    const gui::Game& game,
-    const std::string& pluginName) {
+std::variant<std::optional<PluginMetadata>, SourcedMessage>
+evaluateMasterlistMetadata(const gui::Game& game,
+                           const std::string& pluginName) {
   try {
     return game.GetMasterlistMetadata(pluginName, true);
   } catch (const std::exception& e) {
@@ -51,25 +51,20 @@ std::optional<PluginMetadata> evaluateMasterlistMetadata(
           e.what());
     }
 
-    PluginMetadata master(pluginName);
-    master.SetMessages({
-        PlainTextMessage(
-            MessageType::error,
-            fmt::format(boost::locale::translate(
-                            "\"{0}\" contains a condition that could not be "
-                            "evaluated. Details: {1}")
-                            .str(),
-                        pluginName,
-                        e.what())),
-    });
-
-    return master;
+    return CreatePlainTextSourcedMessage(
+        MessageType::error,
+        MessageSource::caughtException,
+        fmt::format(boost::locale::translate(
+                        "\"{0}\" contains a condition that could not be "
+                        "evaluated. Details: {1}")
+                        .str(),
+                    pluginName,
+                    e.what()));
   }
 }
 
-std::optional<PluginMetadata> evaluateUserlistMetadata(
-    const gui::Game& game,
-    const std::string& pluginName) {
+std::variant<std::optional<PluginMetadata>, SourcedMessage>
+evaluateUserlistMetadata(const gui::Game& game, const std::string& pluginName) {
   try {
     return game.GetUserMetadata(pluginName, true);
   } catch (const std::exception& e) {
@@ -82,40 +77,50 @@ std::optional<PluginMetadata> evaluateUserlistMetadata(
           e.what());
     }
 
-    PluginMetadata user(pluginName);
-    user.SetMessages({
-        PlainTextMessage(
-            MessageType::error,
-            fmt::format(boost::locale::translate(
-                            "\"{0}\" contains a condition that could not be "
-                            "evaluated. Details: {1}")
-                            .str(),
-                        pluginName,
-                        e.what())),
-    });
-
-    return user;
+    return CreatePlainTextSourcedMessage(
+        MessageType::error,
+        MessageSource::caughtException,
+        fmt::format(boost::locale::translate(
+                        "\"{0}\" contains a condition that could not be "
+                        "evaluated. Details: {1}")
+                        .str(),
+                    pluginName,
+                    e.what()));
   }
 }
 
-std::optional<PluginMetadata> evaluateMetadata(const gui::Game& game,
-                                               const std::string& pluginName) {
-  auto evaluatedMasterlistMetadata =
+std::pair<PluginMetadata, std::vector<SourcedMessage>> evaluateMetadata(
+    const gui::Game& game,
+    const std::string& pluginName) {
+  std::vector<SourcedMessage> evalErrors;
+
+  const auto evaluatedMasterlistMetadata =
       evaluateMasterlistMetadata(game, pluginName);
-  auto evaluatedUserMetadata = evaluateUserlistMetadata(game, pluginName);
+  const auto evaluatedUserMetadata = evaluateUserlistMetadata(game, pluginName);
 
-  if (!evaluatedMasterlistMetadata.has_value()) {
-    return evaluatedUserMetadata;
+  PluginMetadata metadata(pluginName);
+
+  if (std::holds_alternative<SourcedMessage>(evaluatedUserMetadata)) {
+    evalErrors.push_back(std::get<SourcedMessage>(evaluatedUserMetadata));
+  } else {
+    const auto userMetadata =
+        std::get<std::optional<PluginMetadata>>(evaluatedUserMetadata);
+    if (userMetadata.has_value()) {
+      metadata = userMetadata.value();
+    }
   }
 
-  if (!evaluatedUserMetadata.has_value()) {
-    return evaluatedMasterlistMetadata;
+  if (std::holds_alternative<SourcedMessage>(evaluatedMasterlistMetadata)) {
+    evalErrors.push_back(std::get<SourcedMessage>(evaluatedMasterlistMetadata));
+  } else {
+    const auto masterlistMetadata =
+        std::get<std::optional<PluginMetadata>>(evaluatedMasterlistMetadata);
+    if (masterlistMetadata.has_value()) {
+      metadata.MergeMetadata(masterlistMetadata.value());
+    }
   }
 
-  evaluatedUserMetadata.value().MergeMetadata(
-      evaluatedMasterlistMetadata.value());
-
-  return evaluatedUserMetadata;
+  return {metadata, evalErrors};
 }
 
 PluginItem::PluginItem(const PluginInterface& plugin,
@@ -139,19 +144,25 @@ PluginItem::PluginItem(const PluginInterface& plugin,
         userMetadata.has_value() && !userMetadata.value().HasNameOnly();
   }
 
-  auto evaluatedMetadata = evaluateMetadata(game, plugin.GetName())
-                               .value_or(PluginMetadata(plugin.GetName()));
+  const auto [evaluatedMetadata, evalErrors] =
+      evaluateMetadata(game, plugin.GetName());
 
   isDirty = !evaluatedMetadata.GetDirtyInfo().empty();
   group = evaluatedMetadata.GetGroup();
 
-  auto evaluatedMessages = evaluatedMetadata.GetMessages();
-  auto validityMessages =
+  messages.insert(messages.end(), evalErrors.begin(), evalErrors.end());
+
+  const auto evaluatedMessages =
+      ToSourcedMessages(evaluatedMetadata.GetMessages(),
+                        MessageSource::messageMetadata,
+                        language);
+  messages.insert(
+      messages.end(), evaluatedMessages.begin(), evaluatedMessages.end());
+
+  const auto validityMessages =
       game.CheckInstallValidity(plugin, evaluatedMetadata, language);
-  evaluatedMessages.insert(
-      end(evaluatedMessages), begin(validityMessages), end(validityMessages));
-  evaluatedMetadata.SetMessages(evaluatedMessages);
-  messages = ToSimpleMessages(evaluatedMetadata.GetMessages(), language);
+  messages.insert(
+      messages.end(), validityMessages.begin(), validityMessages.end());
 
   if (!evaluatedMetadata.GetCleanInfo().empty()) {
     cleaningUtility =

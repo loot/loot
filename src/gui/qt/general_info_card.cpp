@@ -68,7 +68,7 @@ void GeneralInfoCard::setPluginCounts(size_t activeLight,
 }
 
 void GeneralInfoCard::setGeneralMessages(
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   if (!messages.empty()) {
     messagesWidget->setMessages(messages);
   }

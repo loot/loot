@@ -27,7 +27,6 @@
 #define LOOT_GUI_QT_GENERAL_INFO
 
 #include <loot/enum/game_type.h>
-#include <loot/struct/simple_message.h>
 
 #include <QtCore/QMetaType>
 
@@ -38,7 +37,7 @@ struct GeneralInformation {
   bool gameSupportsLightPlugins{false};
   FileRevisionSummary masterlistRevision;
   FileRevisionSummary preludeRevision;
-  std::vector<SimpleMessage> generalMessages;
+  std::vector<SourcedMessage> generalMessages;
 
   std::string getMarkdownContent() const;
 };

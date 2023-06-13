@@ -61,10 +61,10 @@ QString getTagsText(const std::vector<std::string> tags, bool hideTags) {
   return tagsList.join(", ");
 }
 
-std::vector<SimpleMessage> filterMessages(
-    const std::vector<SimpleMessage>& messages,
+std::vector<SourcedMessage> filterMessages(
+    const std::vector<SourcedMessage>& messages,
     const CardContentFiltersState& filters) {
-  std::vector<SimpleMessage> filteredMessages;
+  std::vector<SourcedMessage> filteredMessages;
 
   if (!filters.hideAllPluginMessages) {
     for (const auto& message : messages) {
