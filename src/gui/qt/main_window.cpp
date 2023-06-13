@@ -1042,7 +1042,9 @@ void MainWindow::sortPlugins(bool isAutoSort) {
 
   tasks.push_back(sortTask);
 
-  executeBackgroundTasks(tasks, progressUpdater, sortHandler);
+  const auto executor = new SequentialTaskExecutor(this, tasks);
+
+  executeBackgroundTasks(executor, progressUpdater, sortHandler);
 }
 
 void MainWindow::showFirstRunDialog() {
@@ -1235,15 +1237,15 @@ void MainWindow::executeBackgroundQuery(
   connect(task, &Task::finished, this, onComplete);
   connect(task, &Task::error, this, &MainWindow::handleError);
 
-  executeBackgroundTasks({task}, progressUpdater, nullptr);
+  const auto executor = new SequentialTaskExecutor(this, {task});
+
+  executeBackgroundTasks(executor, progressUpdater, nullptr);
 }
 
 void MainWindow::executeBackgroundTasks(
-    std::vector<Task*> tasks,
+    TaskExecutor* executor,
     const ProgressUpdater* progressUpdater,
     void (MainWindow::*onComplete)(std::vector<QueryResult>)) {
-  auto executor = new TaskExecutor(this, tasks);
-
   if (progressUpdater != nullptr) {
     connect(progressUpdater,
             &ProgressUpdater::progressUpdate,
@@ -1465,8 +1467,11 @@ void MainWindow::on_actionUpdateMasterlists_triggered() {
 
     handleProgressUpdate(translate("Updating all masterlists..."));
 
+    const auto executor = new ParallelTaskExecutor(this, tasks);
+
     executeBackgroundTasks(
-        tasks, nullptr, &MainWindow::handleMasterlistsUpdated);
+        executor, nullptr, &MainWindow::handleMasterlistsUpdated);
+
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2012,9 +2017,11 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
 
     connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
 
-    executeBackgroundTasks({preludeTask, masterlistTask},
-                           nullptr,
-                           &MainWindow::handleMasterlistUpdated);
+    const auto executor =
+        new SequentialTaskExecutor(this, {preludeTask, masterlistTask});
+
+    executeBackgroundTasks(
+        executor, nullptr, &MainWindow::handleMasterlistUpdated);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2433,16 +2440,25 @@ void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
 }
 
 void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
-  const bool wasPreludeUpdated = std::get<bool>(results.at(0));
-  const auto masterlistResults =
-      std::vector<QueryResult>{results.begin() + 1, results.end()};
+  // The results are in an unknown order due to parallel task execution.
+  bool wasPreludeUpdated{false};
+  for (const auto& result : results) {
+    if (std::holds_alternative<bool>(result)) {
+      wasPreludeUpdated = std::get<bool>(result);
+      break;
+    }
+  }
 
   const auto logger = getLogger();
   const auto gamesSettings = state.getSettings().getGameSettings();
 
   std::vector<std::string> updatedGameNames;
-  bool wasCurrentGameMasterlistUpdated = false;
-  for (const auto& result : masterlistResults) {
+  bool wasCurrentGameMasterlistUpdated{false};
+  for (const auto& result : results) {
+    if (!std::holds_alternative<MasterlistUpdateResult>(result)) {
+      continue;
+    }
+
     const auto updateResult = std::get<MasterlistUpdateResult>(result);
 
     if (wasPreludeUpdated || updateResult.second) {

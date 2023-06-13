@@ -101,7 +101,7 @@ TEST(QueryTask, executeShouldEmitAFinishedIfQueryExecutionSucceeds) {
   EXPECT_EQ("1", std::get<PluginItem>(result).name);
 }
 
-TEST(TaskExecutor, shouldRunEachTaskOnceInSeries) {
+TEST(SequentialTaskExecutor, shouldRunEachTaskOnceInSeries) {
   std::vector<Task*> tasks;
   std::vector<std::unique_ptr<QSignalSpy>> taskFinishedSpies;
   std::vector<std::unique_ptr<QSignalSpy>> taskErroredSpies;
@@ -120,7 +120,7 @@ TEST(TaskExecutor, shouldRunEachTaskOnceInSeries) {
     taskErroredSpies.push_back(std::move(taskErroredSpy));
   }
 
-  auto executor = TaskExecutor(nullptr, tasks);
+  auto executor = SequentialTaskExecutor(nullptr, tasks);
 
   auto executorStartSpy = QSignalSpy(&executor, &TaskExecutor::start);
   auto executorFinishedSpy = QSignalSpy(&executor, &TaskExecutor::finished);
@@ -159,7 +159,7 @@ TEST(TaskExecutor, shouldRunEachTaskOnceInSeries) {
   EXPECT_EQ(1, executorFinishedSpy.count());
 }
 
-TEST(TaskExecutor, shouldRunUntilTheFirstError) {
+TEST(SequentialTaskExecutor, shouldRunUntilTheFirstError) {
   std::vector<Task*> tasks;
   std::vector<std::unique_ptr<QSignalSpy>> taskFinishedSpies;
   std::vector<std::unique_ptr<QSignalSpy>> taskErroredSpies;
@@ -178,7 +178,7 @@ TEST(TaskExecutor, shouldRunUntilTheFirstError) {
     taskErroredSpies.push_back(std::move(taskErroredSpy));
   }
 
-  auto executor = TaskExecutor(nullptr, tasks);
+  auto executor = SequentialTaskExecutor(nullptr, tasks);
 
   auto executorStartSpy = QSignalSpy(&executor, &TaskExecutor::start);
   auto executorFinishedSpy = QSignalSpy(&executor, &TaskExecutor::finished);
@@ -234,12 +234,12 @@ TEST(TaskExecutor, shouldRunUntilTheFirstError) {
   EXPECT_EQ(1, executorFinishedSpy.count());
 }
 
-TEST(TaskExecutor, shouldDeleteTasksOnceFinished) {
+TEST(SequentialTaskExecutor, shouldDeleteTasksOnceFinished) {
   QElapsedTimer timer;
   auto task = new NonBlockingTestTask(false, timer);
   auto taskDestroyedSpy = QSignalSpy(task, &QObject::destroyed);
 
-  auto executor = TaskExecutor(nullptr, {task});
+  auto executor = SequentialTaskExecutor(nullptr, {task});
 
   auto executorFinishedSpy = QSignalSpy(&executor, &TaskExecutor::finished);
 

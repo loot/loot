@@ -222,7 +222,7 @@ private:
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
   void executeBackgroundTasks(
-      std::vector<Task *> tasks,
+      TaskExecutor *executor,
       const ProgressUpdater *progressUpdater,
       void (MainWindow::*onComplete)(std::vector<QueryResult>));
 

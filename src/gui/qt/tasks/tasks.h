@@ -67,17 +67,23 @@ private:
 class TaskExecutor : public QObject {
   Q_OBJECT
 public:
-  TaskExecutor(QObject *parent, std::vector<Task *> tasks);
-  TaskExecutor(const TaskExecutor &) = delete;
-  TaskExecutor(TaskExecutor &&) = delete;
-  ~TaskExecutor();
-
-  TaskExecutor &operator=(const TaskExecutor &) = delete;
-  TaskExecutor &operator=(TaskExecutor &&) = delete;
+  TaskExecutor(QObject *parent);
 
 signals:
   void start();
   void finished(std::vector<QueryResult> results);
+};
+
+class SequentialTaskExecutor : public TaskExecutor {
+  Q_OBJECT
+public:
+  SequentialTaskExecutor(QObject *parent, std::vector<Task *> tasks);
+  SequentialTaskExecutor(const TaskExecutor &) = delete;
+  SequentialTaskExecutor(TaskExecutor &&) = delete;
+  ~SequentialTaskExecutor();
+
+  SequentialTaskExecutor &operator=(const SequentialTaskExecutor &) = delete;
+  SequentialTaskExecutor &operator=(SequentialTaskExecutor &&) = delete;
 
 private:
   QThread workerThread;
@@ -85,6 +91,29 @@ private:
   size_t currentTask{0};
 
   std::vector<QueryResult> taskResults;
+
+private slots:
+  void onTaskFinished(QueryResult result);
+  void onTaskError();
+  void onWorkerThreadFinished();
+};
+
+class ParallelTaskExecutor : public TaskExecutor {
+  Q_OBJECT
+public:
+  ParallelTaskExecutor(QObject *parent, std::vector<Task *> tasks);
+  ParallelTaskExecutor(const TaskExecutor &) = delete;
+  ParallelTaskExecutor(TaskExecutor &&) = delete;
+  ~ParallelTaskExecutor();
+
+  ParallelTaskExecutor &operator=(const ParallelTaskExecutor &) = delete;
+  ParallelTaskExecutor &operator=(ParallelTaskExecutor &&) = delete;
+
+private:
+  std::mutex mutex;
+  std::vector<Task *> tasks;
+  std::vector<QueryResult> taskResults;
+  std::vector<QThread *> workerThreads;
 
 private slots:
   void onTaskFinished(QueryResult result);
