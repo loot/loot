@@ -65,7 +65,68 @@ using std::filesystem::u8path;
 
 namespace fs = std::filesystem;
 
+namespace {
+std::filesystem::path GetLOOTGamePath(const std::filesystem::path& lootDataPath,
+                                      const std::string& folderName) {
+  return lootDataPath / "games" / std::filesystem::u8path(folderName);
+}
+}
+
 namespace loot {
+std::filesystem::path GetMasterlistPath(
+    const std::filesystem::path& lootDataPath,
+    const GameSettings& settings) {
+  return ::GetLOOTGamePath(lootDataPath, settings.FolderName()) /
+         MASTERLIST_FILENAME;
+}
+
+void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
+                        const GameSettings& settings) {
+  if (lootDataPath_.empty()) {
+    throw std::runtime_error("LOOT data path cannot be empty");
+  }
+
+  // Make sure that the LOOT game path exists.
+  const auto lootGamePath = GetLOOTGamePath(lootDataPath_, settings.FolderName());
+  if (!fs::is_directory(lootGamePath)) {
+    if (fs::exists(lootGamePath)) {
+      throw FileAccessError(
+          "Could not create LOOT folder for game, the path exists but is not "
+          "a directory");
+    }
+
+    std::vector<fs::path> legacyGamePaths{lootDataPath_ /
+                                          u8path(settings.FolderName())};
+
+    if (settings.Id() == GameId::tes5se) {
+      // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
+      // migrate from that if it's present.
+      legacyGamePaths.insert(legacyGamePaths.begin(),
+                             lootDataPath_ / "SkyrimSE");
+    }
+
+    const auto logger = getLogger();
+
+    for (const auto& legacyGamePath : legacyGamePaths) {
+      if (fs::is_directory(legacyGamePath)) {
+        if (logger) {
+          logger->info(
+              "Found a folder for this game in the LOOT data folder, "
+              "assuming "
+              "that it's a legacy game folder and moving into the correct "
+              "subdirectory...");
+        }
+
+        fs::create_directories(lootGamePath.parent_path());
+        fs::rename(legacyGamePath, lootGamePath);
+        break;
+      }
+    }
+
+    fs::create_directories(lootGamePath);
+  }
+}
+
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -130,45 +191,7 @@ void Game::Init() {
       settings_.Type(), settings_.GamePath(), settings_.GameLocalPath());
   gameHandle_->IdentifyMainMasterFile(settings_.Master());
 
-  if (!lootDataPath_.empty()) {
-    // Make sure that the LOOT game path exists.
-    auto lootGamePath = GetLOOTGamePath();
-    if (!fs::is_directory(lootGamePath)) {
-      if (fs::exists(lootGamePath)) {
-        throw FileAccessError(
-            "Could not create LOOT folder for game, the path exists but is not "
-            "a directory");
-      }
-
-      std::vector<fs::path> legacyGamePaths{lootDataPath_ /
-                                            u8path(settings_.FolderName())};
-
-      if (settings_.Id() == GameId::tes5se) {
-        // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
-        // migrate from that if it's present.
-        legacyGamePaths.insert(legacyGamePaths.begin(),
-                               lootDataPath_ / "SkyrimSE");
-      }
-
-      for (const auto& legacyGamePath : legacyGamePaths) {
-        if (fs::is_directory(legacyGamePath)) {
-          if (logger) {
-            logger->info(
-                "Found a folder for this game in the LOOT data folder, "
-                "assuming "
-                "that it's a legacy game folder and moving into the correct "
-                "subdirectory...");
-          }
-
-          fs::create_directories(lootGamePath.parent_path());
-          fs::rename(legacyGamePath, lootGamePath);
-          break;
-        }
-      }
-
-      fs::create_directories(lootGamePath);
-    }
-  }
+  InitLootGameFolder(lootDataPath_, settings_);
 }
 
 bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
@@ -556,7 +579,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
 fs::path Game::MasterlistPath() const {
-  return GetLOOTGamePath() / "masterlist.yaml";
+  return GetMasterlistPath(lootDataPath_, settings_);
 }
 
 std::filesystem::path Game::GetActivePluginsFilePath() const {
@@ -962,7 +985,7 @@ void Game::SaveUserMetadata() {
 }
 
 std::filesystem::path Game::GetLOOTGamePath() const {
-  return lootDataPath_ / "games" / u8path(settings_.FolderName());
+  return ::GetLOOTGamePath(lootDataPath_, settings_.FolderName());
 }
 
 std::vector<std::string> Game::GetInstalledPluginPaths() const {

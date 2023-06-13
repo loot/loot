@@ -28,7 +28,23 @@
 #include "gui/qt/helpers.h"
 
 namespace loot {
-UpdateMasterlistTask::UpdateMasterlistTask(LootState &state) : state(state) {}
+UpdateMasterlistTask::UpdateMasterlistTask(const LootState &state) :
+    preludeSource(state.getSettings().getPreludeSource()),
+    preludePath(state.getPreludePath()),
+    masterlistSource(state.GetCurrentGame().GetSettings().MasterlistSource()),
+    masterlistPath(state.GetCurrentGame().MasterlistPath()) {}
+
+UpdateMasterlistTask::UpdateMasterlistTask(
+    const std::string &gameFolderName,
+    const std::string &preludeSource,
+    const std::filesystem::path &preludePath,
+    const std::string &masterlistSource,
+    const std::filesystem::path &masterlistPath) :
+    gameFolderName(gameFolderName),
+    preludeSource(preludeSource),
+    preludePath(preludePath),
+    masterlistSource(masterlistSource),
+    masterlistPath(masterlistPath) {}
 
 void UpdateMasterlistTask::execute() {
   try {
@@ -45,12 +61,11 @@ void UpdateMasterlistTask::execute() {
 }
 
 void UpdateMasterlistTask::updatePrelude() {
-  auto source = state.getSettings().getPreludeSource();
-  if (!isValidUrl(source)) {
+  if (!isValidUrl(preludeSource)) {
     // Treat the source as a local path, and copy the file from there.
-    auto sourcePath = std::filesystem::u8path(source);
+    auto sourcePath = std::filesystem::u8path(preludeSource);
 
-    preludeUpdated = updateFile(sourcePath, state.getPreludePath());
+    preludeUpdated = updateFile(sourcePath, preludePath);
 
     // Now update the masterlist.
     updateMasterlist();
@@ -59,10 +74,10 @@ void UpdateMasterlistTask::updatePrelude() {
 
   auto logger = getLogger();
   if (logger) {
-    logger->trace("Sending a prelude update request to GET {}", source);
+    logger->trace("Sending a prelude update request to GET {}", preludeSource);
   }
 
-  QNetworkRequest request(QUrl(QString::fromStdString(source)));
+  QNetworkRequest request(QUrl(QString::fromStdString(preludeSource)));
 
   const auto reply = networkAccessManager->get(request);
 
@@ -82,13 +97,11 @@ void UpdateMasterlistTask::updatePrelude() {
 }
 
 void UpdateMasterlistTask::updateMasterlist() {
-  auto source = state.GetCurrentGame().GetSettings().MasterlistSource();
-  if (!isValidUrl(source)) {
+  if (!isValidUrl(masterlistSource)) {
     // Treat the source as a local path, and copy the file from there.
-    auto sourcePath = std::filesystem::u8path(source);
+    const auto sourcePath = std::filesystem::u8path(masterlistSource);
 
-    masterlistUpdated =
-        updateFile(sourcePath, state.GetCurrentGame().MasterlistPath());
+    masterlistUpdated = updateFile(sourcePath, masterlistPath);
 
     finish();
     return;
@@ -96,10 +109,11 @@ void UpdateMasterlistTask::updateMasterlist() {
 
   auto logger = getLogger();
   if (logger) {
-    logger->trace("Sending a masterlist update request to GET {}", source);
+    logger->trace("Sending a masterlist update request to GET {}",
+                  masterlistSource);
   }
 
-  QNetworkRequest request(QUrl(QString::fromStdString(source)));
+  QNetworkRequest request(QUrl(QString::fromStdString(masterlistSource)));
 
   const auto reply = networkAccessManager->get(request);
 
@@ -119,19 +133,8 @@ void UpdateMasterlistTask::updateMasterlist() {
 }
 
 void UpdateMasterlistTask::finish() {
-  if (preludeUpdated || masterlistUpdated) {
-    state.GetCurrentGame().LoadMetadata();
-
-    const auto pluginItems =
-        GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
-                       state.GetCurrentGame(),
-                       state.getSettings().getLanguage());
-
-    emit finished(pluginItems);
-    return;
-  }
-
-  emit finished(std::monostate());
+  emit finished(
+      std::make_pair(gameFolderName, preludeUpdated || masterlistUpdated));
 }
 
 void UpdateMasterlistTask::onMasterlistReplyFinished() {
@@ -149,7 +152,6 @@ void UpdateMasterlistTask::onMasterlistReplyFinished() {
       return;
     }
 
-    auto masterlistPath = state.GetCurrentGame().MasterlistPath();
     masterlistUpdated =
         updateFileWithData(masterlistPath, responseData.value());
 
@@ -174,7 +176,6 @@ void UpdateMasterlistTask::onPreludeReplyFinished() {
       return;
     }
 
-    auto preludePath = state.getPreludePath();
     preludeUpdated = updateFileWithData(preludePath, responseData.value());
 
     // Now update the masterlist.

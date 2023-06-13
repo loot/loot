@@ -79,7 +79,9 @@ TaskExecutor::~TaskExecutor() {
   workerThread.wait();
 }
 
-void TaskExecutor::onTaskFinished() {
+void TaskExecutor::onTaskFinished(QueryResult result) {
+  taskResults.push_back(result);
+
   auto task = qobject_cast<Task *>(sender());
 
   // Disconnect the finished task from the start signal so that it doesn't
@@ -106,6 +108,6 @@ void TaskExecutor::onTaskError() { workerThread.quit(); }
 void TaskExecutor::onWorkerThreadFinished() {
   tasks.clear();
 
-  emit finished();
+  emit finished(taskResults);
 }
 }

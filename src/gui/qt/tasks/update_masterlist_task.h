@@ -34,15 +34,24 @@ namespace loot {
 class UpdateMasterlistTask : public NetworkTask {
   Q_OBJECT
 public:
-  explicit UpdateMasterlistTask(LootState &state);
+  explicit UpdateMasterlistTask(const LootState& state);
+  UpdateMasterlistTask(const std::string& gameFolderName,
+                       const std::string& preludeSource,
+                       const std::filesystem::path& preludePath,
+                       const std::string& masterlistSource,
+                       const std::filesystem::path& masterlistPath);
 
 public slots:
   void execute() override;
 
 private:
-  LootState &state;
+  std::string gameFolderName;
+  std::string preludeSource;
+  std::filesystem::path preludePath;
+  std::string masterlistSource;
+  std::filesystem::path masterlistPath;
 
-  QNetworkAccessManager *networkAccessManager{nullptr};
+  QNetworkAccessManager* networkAccessManager{nullptr};
 
   bool preludeUpdated{false};
   bool masterlistUpdated{false};

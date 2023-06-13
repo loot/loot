@@ -126,6 +126,7 @@ private:
   QAction *actionEditMetadata{new QAction(this)};
   QAction *actionClearMetadata{new QAction(this)};
   QAction *actionSettings{new QAction(this)};
+  QAction *actionUpdateMasterlists{new QAction(this)};
   QAction *actionBackupData{new QAction(this)};
 
   QMenuBar *menubar{new QMenuBar(this)};
@@ -220,8 +221,10 @@ private:
   void executeBackgroundQuery(std::unique_ptr<Query> query,
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
-  void executeBackgroundTasks(std::vector<Task *> tasks,
-                              const ProgressUpdater *progressUpdater);
+  void executeBackgroundTasks(
+      std::vector<Task *> tasks,
+      const ProgressUpdater *progressUpdater,
+      void (MainWindow::*onComplete)(std::vector<QueryResult>));
 
   void handleError(const std::string &message);
   void handleException(const std::exception &exception);
@@ -239,6 +242,7 @@ private:
 
 private slots:
   void on_actionSettings_triggered();
+  void on_actionUpdateMasterlists_triggered();
   void on_actionBackupData_triggered();
   void on_actionQuit_triggered();
   void on_actionOpenGroupsEditor_triggered();
@@ -304,6 +308,7 @@ private slots:
   void handlePluginsManualSorted(QueryResult results);
   void handlePluginsAutoSorted(QueryResult results);
   void handleMasterlistUpdated(QueryResult result);
+  void handleMasterlistsUpdated(std::vector<QueryResult> results);
   void handleConflictsChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);
   void handleUpdateCheckFinished(QueryResult result);

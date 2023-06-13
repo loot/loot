@@ -58,6 +58,13 @@
 #include "loot/api.h"
 
 namespace loot {
+std::filesystem::path GetMasterlistPath(
+    const std::filesystem::path& lootDataPath,
+    const GameSettings& settings);
+
+void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
+                        const GameSettings& settings);
+
 namespace gui {
 class Game {
 public:

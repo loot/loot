@@ -36,6 +36,8 @@
 #include "loot/enum/game_type.h"
 
 namespace loot {
+static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
+
 std::string GetPluginsFolderName(GameId gameId);
 
 std::string ToString(const GameId gameId);

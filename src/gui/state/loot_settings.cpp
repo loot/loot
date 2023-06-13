@@ -153,8 +153,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
     url = newUrl;
   }
 
-  auto filename = "masterlist.yaml";
-  if (isLocalPath(url, filename)) {
+  if (isLocalPath(url, MASTERLIST_FILENAME)) {
     auto localRepoPath = std::filesystem::u8path(url);
     if (!isBranchCheckedOut(localRepoPath, branch) && logger) {
       logger->warn(
@@ -168,7 +167,7 @@ std::optional<std::string> migrateMasterlistRepoSettings(GameId gameId,
           branch);
     }
 
-    return (localRepoPath / filename).u8string();
+    return (localRepoPath / MASTERLIST_FILENAME).u8string();
   }
 
   std::smatch regexMatches;

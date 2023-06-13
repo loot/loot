@@ -77,15 +77,17 @@ public:
 
 signals:
   void start();
-  void finished();
+  void finished(std::vector<QueryResult> results);
 
 private:
   QThread workerThread;
   std::vector<Task *> tasks;
   size_t currentTask{0};
 
+  std::vector<QueryResult> taskResults;
+
 private slots:
-  void onTaskFinished();
+  void onTaskFinished(QueryResult result);
   void onTaskError();
   void onWorkerThreadFinished();
 };

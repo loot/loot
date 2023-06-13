@@ -437,6 +437,8 @@ void MainWindow::setupUi() {
 
 void MainWindow::setupMenuBar() {
   // Create actions.
+  actionUpdateMasterlists->setObjectName("actionUpdateMasterlists");
+
   actionSettings->setObjectName("actionSettings");
 
   actionBackupData->setObjectName("actionBackupData");
@@ -489,6 +491,9 @@ void MainWindow::setupMenuBar() {
   menubar->addAction(menuPlugin->menuAction());
   menubar->addAction(menuHelp->menuAction());
   menuFile->addAction(actionSettings);
+  menuFile->addSeparator();
+  menuFile->addAction(actionUpdateMasterlists);
+  menuFile->addSeparator();
   menuFile->addAction(actionBackupData);
   menuFile->addAction(actionOpenLOOTDataFolder);
   menuFile->addSeparator();
@@ -651,6 +656,8 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the File menu. */
   actionSettings->setText(translate("&Settings..."));
   /* translators: This string is an action in the File menu. */
+  actionUpdateMasterlists->setText(translate("&Update All Masterlists"));
+  /* translators: This string is an action in the File menu. */
   actionBackupData->setText(translate("&Backup LOOT Data"));
   /* translators: This string is an action in the File menu. */
   actionOpenLOOTDataFolder->setText(translate("&Open LOOT Data Folder"));
@@ -712,6 +719,7 @@ void MainWindow::translateUi() {
 
 void MainWindow::setIcons() {
   actionSettings->setIcon(IconFactory::getSettingsIcon());
+  actionUpdateMasterlists->setIcon(IconFactory::getUpdateMasterlistIcon());
   actionBackupData->setIcon(IconFactory::getArchiveIcon());
   actionQuit->setIcon(IconFactory::getQuitIcon());
   actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
@@ -768,6 +776,7 @@ void MainWindow::disablePluginActions() { menuPlugin->setEnabled(false); }
 
 void MainWindow::enterEditingState() {
   actionSettings->setDisabled(true);
+  actionUpdateMasterlists->setDisabled(true);
   actionOpenGroupsEditor->setDisabled(true);
   actionRefreshContent->setDisabled(true);
   actionClearAllUserMetadata->setDisabled(true);
@@ -783,6 +792,7 @@ void MainWindow::enterEditingState() {
 
 void MainWindow::exitEditingState() {
   actionSettings->setEnabled(true);
+  actionUpdateMasterlists->setEnabled(true);
   actionOpenGroupsEditor->setEnabled(true);
   actionRefreshContent->setEnabled(true);
   actionClearAllUserMetadata->setEnabled(true);
@@ -804,6 +814,7 @@ void MainWindow::enterSortingState() {
   actionDiscardSort->setVisible(true);
 
   actionSettings->setDisabled(true);
+  actionUpdateMasterlists->setDisabled(true);
   gameComboBox->setDisabled(true);
   actionRefreshContent->setDisabled(true);
   actionCopyLoadOrder->setDisabled(true);
@@ -817,6 +828,7 @@ void MainWindow::exitSortingState() {
   actionDiscardSort->setVisible(false);
 
   actionSettings->setDisabled(false);
+  actionUpdateMasterlists->setDisabled(false);
   gameComboBox->setDisabled(false);
   actionRefreshContent->setDisabled(false);
   actionCopyLoadOrder->setDisabled(false);
@@ -1026,7 +1038,7 @@ void MainWindow::sortPlugins(bool isAutoSort) {
 
   tasks.push_back(sortTask);
 
-  executeBackgroundTasks(tasks, progressUpdater);
+  executeBackgroundTasks(tasks, progressUpdater, nullptr);
 }
 
 void MainWindow::showFirstRunDialog() {
@@ -1219,12 +1231,13 @@ void MainWindow::executeBackgroundQuery(
   connect(task, &Task::finished, this, onComplete);
   connect(task, &Task::error, this, &MainWindow::handleError);
 
-  executeBackgroundTasks({task}, progressUpdater);
+  executeBackgroundTasks({task}, progressUpdater, nullptr);
 }
 
 void MainWindow::executeBackgroundTasks(
     std::vector<Task*> tasks,
-    const ProgressUpdater* progressUpdater) {
+    const ProgressUpdater* progressUpdater,
+    void (MainWindow::*onComplete)(std::vector<QueryResult>)) {
   auto executor = new TaskExecutor(this, tasks);
 
   if (progressUpdater != nullptr) {
@@ -1237,6 +1250,10 @@ void MainWindow::executeBackgroundTasks(
             &TaskExecutor::finished,
             progressUpdater,
             &QObject::deleteLater);
+  }
+
+  if (onComplete != nullptr) {
+    connect(executor, &TaskExecutor::finished, this, onComplete);
   }
 
   connect(executor, &TaskExecutor::finished, executor, &QObject::deleteLater);
@@ -1404,6 +1421,39 @@ void MainWindow::on_actionSettings_triggered() {
     // Adjust size because otherwise the size is slightly too small the first
     // time the dialog is opened.
     settingsDialog->adjustSize();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionUpdateMasterlists_triggered() {
+  try {
+    handleProgressUpdate(translate("Updating and parsing masterlist..."));
+
+    const auto preludeSource = state.getSettings().getPreludeSource();
+    const auto preludePath = state.getPreludePath();
+
+    std::vector<Task*> tasks;
+    for (const auto& settings : state.getSettings().getGameSettings()) {
+      // Masterlist update assumes that the game folder exists, so ensure that.
+      InitLootGameFolder(state.getLootDataPath(), settings);
+
+      const auto task = new UpdateMasterlistTask(
+          settings.FolderName(),
+          preludeSource,
+          preludePath,
+          settings.MasterlistSource(),
+          GetMasterlistPath(state.getLootDataPath(), settings));
+
+      connect(task, &Task::error, this, &MainWindow::handleError);
+
+      tasks.push_back(task);
+    }
+
+    handleProgressUpdate(translate("Updating all masterlists..."));
+
+    executeBackgroundTasks(
+        tasks, nullptr, &MainWindow::handleMasterlistsUpdated);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1947,7 +1997,7 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
     connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
     connect(task, &Task::error, this, &MainWindow::handleError);
 
-    executeBackgroundTasks({task}, nullptr);
+    executeBackgroundTasks({task}, nullptr, nullptr);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2330,7 +2380,8 @@ void MainWindow::handlePluginsAutoSorted(QueryResult result) {
 
 void MainWindow::handleMasterlistUpdated(QueryResult result) {
   try {
-    if (!std::holds_alternative<PluginItems>(result)) {
+    const auto updateResult = std::get<MasterlistUpdateResult>(result);
+    if (!updateResult.second) {
       progressDialog->reset();
       showNotification(translate("No masterlist update was necessary."));
 
@@ -2340,7 +2391,14 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
       return;
     }
 
-    handleGameDataLoaded(result);
+    state.GetCurrentGame().LoadMetadata();
+
+    const auto pluginItems =
+        GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
+                       state.GetCurrentGame(),
+                       state.getSettings().getLanguage());
+
+    handleGameDataLoaded(pluginItems);
 
     auto masterlistInfo = getFileRevisionSummary(
         state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
@@ -2352,6 +2410,71 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
   } catch (const std::exception& e) {
     handleException(e);
   }
+}
+
+void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
+  const auto logger = getLogger();
+  const auto gamesSettings = state.getSettings().getGameSettings();
+
+  std::vector<std::string> updatedGameNames;
+  bool wasCurrentGameMasterlistUpdated = false;
+  for (const auto& result : results) {
+    const auto updateResult = std::get<MasterlistUpdateResult>(result);
+
+    if (updateResult.second) {
+      const auto it =
+          std::find_if(gamesSettings.begin(),
+                       gamesSettings.end(),
+                       [&](const GameSettings& settings) {
+                         return settings.FolderName() == updateResult.first;
+                       });
+
+      if (it != gamesSettings.end()) {
+        updatedGameNames.push_back(it->Name());
+      } else if (logger) {
+        logger->error(
+            "Unrecognised game folder name {} encountered while "
+            "updating all masterlists",
+            updateResult.first);
+      }
+
+      if (updateResult.first ==
+          state.GetCurrentGame().GetSettings().FolderName()) {
+        wasCurrentGameMasterlistUpdated = true;
+      }
+    }
+  }
+
+  if (updatedGameNames.empty()) {
+    progressDialog->reset();
+    showNotification(translate("No masterlist updates were necessary."));
+
+    // Update general info as the timestamp may have changed and if
+    // metadata was previously missing it can now be displayed.
+    updateGeneralInformation();
+    return;
+  }
+
+  if (wasCurrentGameMasterlistUpdated) {
+    // Need to reload the current game data.
+    state.GetCurrentGame().LoadMetadata();
+
+    const auto pluginItems =
+        GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
+                       state.GetCurrentGame(),
+                       state.getSettings().getLanguage());
+
+    handleGameDataLoaded(pluginItems);
+  }
+
+  auto message = translate("Masterlists updated for the following games:\n\n");
+  for (const auto& gameName : updatedGameNames) {
+    message += QString::fromStdString(gameName + "\n");
+  }
+
+  auto messageBox = QMessageBox(
+      QMessageBox::NoIcon, translate("LOOT"), message, QMessageBox::Ok, this);
+  messageBox.exec();
 }
 
 void MainWindow::handleConflictsChecked(QueryResult result) {
