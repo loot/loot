@@ -97,6 +97,7 @@ TEST_F(LootSettingsTest, defaultConstructorShouldSetDefaultValues) {
   EXPECT_FALSE(settings_.getFilters().hideCRCs);
   EXPECT_FALSE(settings_.getFilters().hideNotes);
   EXPECT_FALSE(settings_.getFilters().hideAllPluginMessages);
+  EXPECT_FALSE(settings_.getFilters().hideOfficialPluginsCleaningMessages);
   EXPECT_FALSE(settings_.getFilters().hideInactivePlugins);
   EXPECT_FALSE(settings_.getFilters().hideMessagelessPlugins);
   EXPECT_EQ("https://raw.githubusercontent.com/loot/prelude/v0.18/prelude.yaml",

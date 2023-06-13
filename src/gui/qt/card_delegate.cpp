@@ -107,7 +107,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
         getTagsText(pluginItem.currentTags, filters.hideBashTags),
         getTagsText(pluginItem.addTags, filters.hideBashTags),
         getTagsText(pluginItem.removeTags, filters.hideBashTags),
-        getMessageTexts(filterMessages(pluginItem.messages, filters)),
+        getMessageTexts(filterMessages(pluginItem, filters)),
         getLocationNames(pluginItem.locations, filters.hideLocations),
         false);
   }

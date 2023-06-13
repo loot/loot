@@ -34,6 +34,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "gui/qt/counters.h"
 #include "gui/qt/helpers.h"
 #include "gui/qt/icon_factory.h"
 
@@ -62,13 +63,13 @@ QString getTagsText(const std::vector<std::string> tags, bool hideTags) {
 }
 
 std::vector<SourcedMessage> filterMessages(
-    const std::vector<SourcedMessage>& messages,
+    const PluginItem& plugin,
     const CardContentFiltersState& filters) {
   std::vector<SourcedMessage> filteredMessages;
 
   if (!filters.hideAllPluginMessages) {
-    for (const auto& message : messages) {
-      if (message.type != MessageType::say || !filters.hideNotes) {
+    for (const auto& message : plugin.messages) {
+      if (!shouldFilterMessage(plugin.name, message, filters)) {
         filteredMessages.push_back(message);
       }
     }
@@ -161,7 +162,7 @@ void PluginCard::setContent(const PluginItem& plugin,
 
   locationsLabel->setVisible(showLocations);
 
-  auto messages = filterMessages(plugin.messages, filters);
+  auto messages = filterMessages(plugin, filters);
   if (!messages.empty()) {
     messagesWidget->setMessages(messages);
   }

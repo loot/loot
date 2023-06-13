@@ -27,8 +27,8 @@
 #define LOOT_GUI_QT_COUNTERS
 
 #include "gui/plugin_item.h"
-#include "gui/sourced_message.h"
 #include "gui/qt/filters_states.h"
+#include "gui/sourced_message.h"
 
 namespace loot {
 struct GeneralInformationCounters {
@@ -48,6 +48,10 @@ struct GeneralInformationCounters {
 private:
   void countMessages(const std::vector<SourcedMessage>& messages);
 };
+
+bool shouldFilterMessage(const std::string& pluginName,
+                         const SourcedMessage& message,
+                         const CardContentFiltersState& filters);
 
 size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
                            const CardContentFiltersState& filters);

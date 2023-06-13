@@ -75,6 +75,8 @@ std::vector<std::filesystem::path> GetExternalDataPaths(
     const GameId gameId,
     const bool isMicrosoftStoreInstall,
     const std::filesystem::path& dataPath);
+
+bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName);
 }
 
 #endif

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.20.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-06-13 21:34+0100\n"
+"POT-Creation-Date: 2023-06-13 21:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,12 +53,12 @@ msgstr ""
 msgid "Hide notes"
 msgstr ""
 
-#: src/gui/qt/filters_widget.cpp:254
-msgid "Hide all plugin messages"
+#: src/gui/qt/filters_widget.cpp:255
+msgid "Hide official plugins' cleaning messages"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:256
-msgid "Hide official plugins' cleaning data"
+msgid "Hide all plugin messages"
 msgstr ""
 
 #: src/gui/qt/filters_widget.cpp:257

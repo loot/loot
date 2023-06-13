@@ -269,6 +269,7 @@ void MainWindow::initialise() {
     }
 
     const auto& filters = state.getSettings().getFilters();
+    filtersWidget->setGameId(state.GetCurrentGame().GetSettings().Id());
     filtersWidget->setFilterStates(filters);
 
     // Apply the filters before loading the game because that avoids having
@@ -2242,6 +2243,7 @@ void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {
 
 void MainWindow::handleGameChanged(QueryResult result) {
   try {
+    filtersWidget->setGameId(state.GetCurrentGame().GetSettings().Id());
     filtersWidget->resetConflictsAndGroupsFilters();
     disablePluginActions();
 

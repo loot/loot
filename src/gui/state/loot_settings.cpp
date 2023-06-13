@@ -780,6 +780,9 @@ void LootSettings::load(const std::filesystem::path& file) {
     filters_.hideAllPluginMessages =
         filters.at_path("hideAllPluginMessages")
             .value_or(filters_.hideAllPluginMessages);
+    filters_.hideOfficialPluginsCleaningMessages =
+        filters.at_path("hideOfficialPluginsCleaningMessages")
+            .value_or(filters_.hideOfficialPluginsCleaningMessages);
     filters_.hideInactivePlugins = filters.at_path("hideInactivePlugins")
                                        .value_or(filters_.hideInactivePlugins);
     filters_.hideMessagelessPlugins =
@@ -828,6 +831,8 @@ void LootSettings::save(const std::filesystem::path& file) {
            {"hideLocations", filters_.hideLocations},
            {"hideNotes", filters_.hideNotes},
            {"hideAllPluginMessages", filters_.hideAllPluginMessages},
+           {"hideOfficialPluginsCleaningMessages",
+            filters_.hideOfficialPluginsCleaningMessages},
            {"hideInactivePlugins", filters_.hideInactivePlugins},
            {"hideMessagelessPlugins", filters_.hideMessagelessPlugins},
            {"hideCreationClubPlugins", filters_.hideCreationClubPlugins},

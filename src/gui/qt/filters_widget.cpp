@@ -36,6 +36,8 @@
 namespace loot {
 FiltersWidget::FiltersWidget(QWidget* parent) : QFrame(parent) { setupUi(); }
 
+void FiltersWidget::setGameId(const GameId newGameId) { gameId = newGameId; }
+
 void FiltersWidget::setPlugins(const std::vector<std::string>& pluginNames) {
   setComboBoxItems(conflictingPluginsFilter, pluginNames);
 }
@@ -90,6 +92,13 @@ void FiltersWidget::setFilterStates(const LootSettings::Filters& filters) {
     hasContentFilterChanged = true;
   }
 
+  if (officialPluginsCleaningMessagesFilter->isChecked() !=
+      filters.hideOfficialPluginsCleaningMessages) {
+    officialPluginsCleaningMessagesFilter->setChecked(
+        filters.hideOfficialPluginsCleaningMessages);
+    hasContentFilterChanged = true;
+  }
+
   if (pluginMessagesFilter->isChecked() != filters.hideAllPluginMessages) {
     pluginMessagesFilter->setChecked(filters.hideAllPluginMessages);
     hasContentFilterChanged = true;
@@ -135,6 +144,8 @@ LootSettings::Filters FiltersWidget::getFilterSettings() const {
   filters.hideBashTags = bashTagsFilter->isChecked();
   filters.hideLocations = locationsFilter->isChecked();
   filters.hideNotes = notesFilter->isChecked();
+  filters.hideOfficialPluginsCleaningMessages =
+      officialPluginsCleaningMessagesFilter->isChecked();
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
   filters.hideInactivePlugins = inactivePluginsFilter->isChecked();
   filters.hideMessagelessPlugins = messagelessPluginsFilter->isChecked();
@@ -157,6 +168,8 @@ void FiltersWidget::setupUi() {
   bashTagsFilter->setObjectName("bashTagsFilter");
   locationsFilter->setObjectName("locationsFilter");
   notesFilter->setObjectName("notesFilter");
+  officialPluginsCleaningMessagesFilter->setObjectName(
+      "officialPluginsCleaningMessagesFilter");
   pluginMessagesFilter->setObjectName("pluginMessagesFilter");
   inactivePluginsFilter->setObjectName("inactivePluginsFilter");
   messagelessPluginsFilter->setObjectName("messagelessPluginsFilter");
@@ -201,6 +214,7 @@ void FiltersWidget::setupUi() {
   verticalLayout->addWidget(bashTagsFilter);
   verticalLayout->addWidget(locationsFilter);
   verticalLayout->addWidget(notesFilter);
+  verticalLayout->addWidget(officialPluginsCleaningMessagesFilter);
   verticalLayout->addWidget(pluginMessagesFilter);
   verticalLayout->addWidget(inactivePluginsFilter);
   verticalLayout->addWidget(messagelessPluginsFilter);
@@ -237,6 +251,8 @@ void FiltersWidget::translateUi() {
   bashTagsFilter->setText(translate("Hide Bash Tags"));
   locationsFilter->setText(translate("Hide Sources"));
   notesFilter->setText(translate("Hide notes"));
+  officialPluginsCleaningMessagesFilter->setText(
+      translate("Hide official plugins' cleaning messages"));
   pluginMessagesFilter->setText(translate("Hide all plugin messages"));
   inactivePluginsFilter->setText(translate("Hide inactive plugins"));
   messagelessPluginsFilter->setText(translate("Hide messageless plugins"));
@@ -311,7 +327,10 @@ CardContentFiltersState FiltersWidget::getCardContentFiltersState() const {
   filters.hideBashTags = bashTagsFilter->isChecked();
   filters.hideLocations = locationsFilter->isChecked();
   filters.hideNotes = notesFilter->isChecked();
+  filters.hideOfficialPluginsCleaningMessages =
+      officialPluginsCleaningMessagesFilter->isChecked();
   filters.hideAllPluginMessages = pluginMessagesFilter->isChecked();
+  filters.gameId = gameId;
 
   return filters;
 }
@@ -421,6 +440,10 @@ void FiltersWidget::on_notesFilter_clicked(bool checked) {
     warningsAndErrorFilterMemory.hideNotes = false;
   }
 
+  emit cardContentFilterChanged(getCardContentFiltersState());
+}
+
+void FiltersWidget::on_officialPluginsCleaningMessagesFilter_clicked() {
   emit cardContentFilterChanged(getCardContentFiltersState());
 }
 

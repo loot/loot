@@ -42,6 +42,7 @@ class FiltersWidget : public QFrame {
 public:
   explicit FiltersWidget(QWidget *parent);
 
+  void setGameId(const GameId gameId);
   void setPlugins(const std::vector<std::string> &pluginNames);
   void setGroups(const std::vector<std::string> &groupNames);
 
@@ -74,6 +75,7 @@ private:
   QCheckBox *bashTagsFilter{new QCheckBox(this)};
   QCheckBox *locationsFilter{new QCheckBox(this)};
   QCheckBox *notesFilter{new QCheckBox(this)};
+  QCheckBox *officialPluginsCleaningMessagesFilter{new QCheckBox(this)};
   QCheckBox *pluginMessagesFilter{new QCheckBox(this)};
   QCheckBox *inactivePluginsFilter{new QCheckBox(this)};
   QCheckBox *messagelessPluginsFilter{new QCheckBox(this)};
@@ -86,6 +88,7 @@ private:
   QLabel *hiddenMessagesCountLabel{new QLabel(this)};
 
   LootSettings::Filters warningsAndErrorFilterMemory;
+  GameId gameId{GameId::tes3};
 
   void setupUi();
 
@@ -107,6 +110,7 @@ private slots:
   void on_bashTagsFilter_clicked(bool checked);
   void on_locationsFilter_clicked(bool checked);
   void on_notesFilter_clicked(bool checked);
+  void on_officialPluginsCleaningMessagesFilter_clicked();
   void on_pluginMessagesFilter_clicked();
   void on_inactivePluginsFilter_clicked();
   void on_messagelessPluginsFilter_clicked(bool checked);
