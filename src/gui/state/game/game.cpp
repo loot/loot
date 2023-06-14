@@ -65,7 +65,68 @@ using std::filesystem::u8path;
 
 namespace fs = std::filesystem;
 
+namespace {
+std::filesystem::path GetLOOTGamePath(const std::filesystem::path& lootDataPath,
+                                      const std::string& folderName) {
+  return lootDataPath / "games" / std::filesystem::u8path(folderName);
+}
+}
+
 namespace loot {
+std::filesystem::path GetMasterlistPath(
+    const std::filesystem::path& lootDataPath,
+    const GameSettings& settings) {
+  return ::GetLOOTGamePath(lootDataPath, settings.FolderName()) /
+         MASTERLIST_FILENAME;
+}
+
+void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
+                        const GameSettings& settings) {
+  if (lootDataPath_.empty()) {
+    throw std::runtime_error("LOOT data path cannot be empty");
+  }
+
+  // Make sure that the LOOT game path exists.
+  const auto lootGamePath = GetLOOTGamePath(lootDataPath_, settings.FolderName());
+  if (!fs::is_directory(lootGamePath)) {
+    if (fs::exists(lootGamePath)) {
+      throw FileAccessError(
+          "Could not create LOOT folder for game, the path exists but is not "
+          "a directory");
+    }
+
+    std::vector<fs::path> legacyGamePaths{lootDataPath_ /
+                                          u8path(settings.FolderName())};
+
+    if (settings.Id() == GameId::tes5se) {
+      // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
+      // migrate from that if it's present.
+      legacyGamePaths.insert(legacyGamePaths.begin(),
+                             lootDataPath_ / "SkyrimSE");
+    }
+
+    const auto logger = getLogger();
+
+    for (const auto& legacyGamePath : legacyGamePaths) {
+      if (fs::is_directory(legacyGamePath)) {
+        if (logger) {
+          logger->info(
+              "Found a folder for this game in the LOOT data folder, "
+              "assuming "
+              "that it's a legacy game folder and moving into the correct "
+              "subdirectory...");
+        }
+
+        fs::create_directories(lootGamePath.parent_path());
+        fs::rename(legacyGamePath, lootGamePath);
+        break;
+      }
+    }
+
+    fs::create_directories(lootGamePath);
+  }
+}
+
 namespace gui {
 std::string GetDisplayName(const File& file) {
   if (file.GetDisplayName().empty()) {
@@ -82,7 +143,7 @@ Game::Game(const GameSettings& gameSettings,
     lootDataPath_(lootDataPath),
     preludePath_(preludePath),
     isMicrosoftStoreInstall_(
-        generic::IsMicrosoftInstall(settings_.Type(), settings_.GamePath())) {}
+        generic::IsMicrosoftInstall(settings_.Id(), settings_.GamePath())) {}
 
 Game::Game(Game&& game) {
   settings_ = std::move(game.settings_);
@@ -130,45 +191,7 @@ void Game::Init() {
       settings_.Type(), settings_.GamePath(), settings_.GameLocalPath());
   gameHandle_->IdentifyMainMasterFile(settings_.Master());
 
-  if (!lootDataPath_.empty()) {
-    // Make sure that the LOOT game path exists.
-    auto lootGamePath = GetLOOTGamePath();
-    if (!fs::is_directory(lootGamePath)) {
-      if (fs::exists(lootGamePath)) {
-        throw FileAccessError(
-            "Could not create LOOT folder for game, the path exists but is not "
-            "a directory");
-      }
-
-      std::vector<fs::path> legacyGamePaths{lootDataPath_ /
-                                            u8path(settings_.FolderName())};
-
-      if (settings_.Type() == GameType::tes5se) {
-        // LOOT v0.10.0 used SkyrimSE as its folder name for Skyrim SE, so
-        // migrate from that if it's present.
-        legacyGamePaths.insert(legacyGamePaths.begin(),
-                               lootDataPath_ / "SkyrimSE");
-      }
-
-      for (const auto& legacyGamePath : legacyGamePaths) {
-        if (fs::is_directory(legacyGamePath)) {
-          if (logger) {
-            logger->info(
-                "Found a folder for this game in the LOOT data folder, "
-                "assuming "
-                "that it's a legacy game folder and moving into the correct "
-                "subdirectory...");
-          }
-
-          fs::create_directories(lootGamePath.parent_path());
-          fs::rename(legacyGamePath, lootGamePath);
-          break;
-        }
-      }
-
-      fs::create_directories(lootGamePath);
-    }
-  }
+  InitLootGameFolder(lootDataPath_, settings_);
 }
 
 bool Game::IsInitialised() const { return gameHandle_ != nullptr; }
@@ -181,7 +204,7 @@ std::vector<const PluginInterface*> Game::GetPlugins() const {
   return gameHandle_->GetLoadedPlugins();
 }
 
-std::vector<Message> Game::CheckInstallValidity(
+std::vector<SourcedMessage> Game::CheckInstallValidity(
     const PluginInterface& plugin,
     const PluginMetadata& metadata,
     const std::string& language) const {
@@ -192,7 +215,7 @@ std::vector<Message> Game::CheckInstallValidity(
         "Checking that the current install is valid according to {}'s data.",
         plugin.GetName());
   }
-  std::vector<Message> messages;
+  std::vector<SourcedMessage> messages;
   if (IsPluginActive(plugin.GetName())) {
     auto tags = metadata.GetTags();
     const auto hasFilterTag =
@@ -208,8 +231,9 @@ std::vector<Message> Game::CheckInstallValidity(
                           plugin.GetName(),
                           master);
           }
-          messages.push_back(PlainTextMessage(
+          messages.push_back(CreatePlainTextSourcedMessage(
               MessageType::error,
+              MessageSource::missingMaster,
               fmt::format(
                   boost::locale::translate("This plugin requires \"{0}\" to be "
                                            "installed, but it is missing.")
@@ -221,8 +245,9 @@ std::vector<Message> Game::CheckInstallValidity(
                           plugin.GetName(),
                           master);
           }
-          messages.push_back(PlainTextMessage(
+          messages.push_back(CreatePlainTextSourcedMessage(
               MessageType::error,
+              MessageSource::inactiveMaster,
               fmt::format(
                   boost::locale::translate("This plugin requires \"{0}\" to be "
                                            "active, but it is inactive.")
@@ -264,7 +289,9 @@ std::vector<Message> Game::CheckInstallValidity(
                 ? localisedText + " " + detailContent.value().GetText()
                 : localisedText;
 
-        messages.push_back(Message(MessageType::error, messageText));
+        messages.push_back(SourcedMessage{MessageType::error,
+                                          MessageSource::requirementMetadata,
+                                          messageText});
         displayNamesWithMessages.insert(displayName);
       }
     }
@@ -304,7 +331,10 @@ std::vector<Message> Game::CheckInstallValidity(
                 ? localisedText + " " + detailContent.value().GetText()
                 : localisedText;
 
-        messages.push_back(Message(MessageType::error, messageText));
+        messages.push_back(
+            SourcedMessage{MessageType::error,
+                           MessageSource::incompatibilityMetadata,
+                           messageText});
         displayNamesWithMessages.insert(displayName);
       }
     }
@@ -333,8 +363,9 @@ std::vector<Message> Game::CheckInstallValidity(
               plugin.GetName(),
               masterName);
         }
-        messages.push_back(PlainTextMessage(
+        messages.push_back(CreatePlainTextSourcedMessage(
             MessageType::error,
+            MessageSource::lightPluginRequiresNonMaster,
             fmt::format(
                 boost::locale::translate(
                     "This plugin is a light master and requires the non-master "
@@ -355,8 +386,9 @@ std::vector<Message> Game::CheckInstallValidity(
           "to your game saves.",
           plugin.GetName());
     }
-    messages.push_back(PlainTextMessage(
+    messages.push_back(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::invalidLightPlugin,
         boost::locale::translate(
             "This plugin contains records that have FormIDs outside "
             "the valid range for an ESL plugin. Using this plugin "
@@ -373,8 +405,9 @@ std::vector<Message> Game::CheckInstallValidity(
           plugin.GetHeaderVersion().value(),
           settings_.MinimumHeaderVersion());
     }
-    messages.push_back(PlainTextMessage(
+    messages.push_back(CreatePlainTextSourcedMessage(
         MessageType::warn,
+        MessageSource::invalidHeaderVersion,
         fmt::format(
             boost::locale::translate(
                 /* translators: A header is the part of a file that stores data
@@ -395,8 +428,9 @@ std::vector<Message> Game::CheckInstallValidity(
         });
 
     if (groupIsUndefined) {
-      messages.push_back(PlainTextMessage(
+      messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::error,
+          MessageSource::missingGroup,
           fmt::format(
               boost::locale::translate("This plugin belongs to the group "
                                        "\"{0}\", which does not exist.")
@@ -419,8 +453,9 @@ std::vector<Message> Game::CheckInstallValidity(
             plugin.GetName(),
             commaSeparatedTags);
       }
-      messages.push_back(PlainTextMessage(
+      messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::say,
+          MessageSource::bashTagsOverride,
           fmt::format(
               boost::locale::translate(
                   "This plugin has a BashTags file that will override the "
@@ -432,7 +467,7 @@ std::vector<Message> Game::CheckInstallValidity(
 
   // Also generate dirty messages.
   for (const auto& element : metadata.GetDirtyInfo()) {
-    messages.push_back(ToMessage(element));
+    messages.push_back(ToSourcedMessage(element, language));
   }
 
   return messages;
@@ -441,8 +476,7 @@ std::vector<Message> Game::CheckInstallValidity(
 void Game::RedatePlugins() {
   auto logger = getLogger();
 
-  if (settings_.Type() != GameType::tes5 &&
-      settings_.Type() != GameType::tes5se) {
+  if (!ShouldAllowRedating(settings_.Type())) {
     if (logger) {
       logger->warn("Cannot redate plugins for game {}.", settings_.Name());
     }
@@ -519,8 +553,9 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
     if (logger) {
       logger->error("Failed to load current load order. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         boost::locale::translate("Failed to load the current load order, "
                                  "information displayed may be incorrect.")
             .str()));
@@ -544,7 +579,7 @@ void Game::LoadAllInstalledPlugins(bool headersOnly) {
 bool Game::ArePluginsFullyLoaded() const { return pluginsFullyLoaded_; }
 
 fs::path Game::MasterlistPath() const {
-  return GetLOOTGamePath() / "masterlist.yaml";
+  return GetMasterlistPath(lootDataPath_, settings_);
 }
 
 std::filesystem::path Game::GetActivePluginsFilePath() const {
@@ -611,8 +646,9 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to load current load order. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         boost::locale::translate("Failed to load the current load order, "
                                  "information displayed may be incorrect.")
             .str()));
@@ -638,8 +674,9 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(Message(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate(
                 "Cyclic interaction detected between \"{0}\" and \"{1}\": {2}")
@@ -652,8 +689,9 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(PlainTextMessage(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate("The group \"{0}\" does not exist.").str(),
             e.GetGroupName())));
@@ -676,18 +714,24 @@ void Game::DecrementLoadOrderSortCount() {
   }
 }
 
-std::vector<Message> Game::GetMessages() const {
-  std::vector<Message> output(
-      gameHandle_->GetDatabase().GetGeneralMessages(true));
+std::vector<SourcedMessage> Game::GetMessages(
+    const std::string& language) const {
+  std::vector<SourcedMessage> output(
+      ToSourcedMessages(gameHandle_->GetDatabase().GetGeneralMessages(true),
+                        MessageSource::messageMetadata,
+                        language));
   output.insert(end(output), begin(messages_), end(messages_));
 
-  const auto addWarning = [&output](const std::string& text) {
-    output.push_back(PlainTextMessage(MessageType::warn, text));
+  const auto addWarning = [&output](const MessageSource source,
+                                    const std::string& text) {
+    output.push_back(
+        CreatePlainTextSourcedMessage(MessageType::warn, source, text));
   };
 
   if (loadOrderSortCount_ == 0) {
-    addWarning(boost::locale::translate(
-        "You have not sorted your load order this session."));
+    addWarning(MessageSource::unsortedLoadOrderCheck,
+               boost::locale::translate(
+                   "You have not sorted your load order this session."));
   }
 
   size_t activeNormalPluginsCount = 0;
@@ -708,7 +752,7 @@ std::vector<Message> Game::GetMessages() const {
 
   const auto logger = getLogger();
   const auto isMWSEInstalled =
-      settings_.Type() == GameType::tes3 &&
+      settings_.Id() == GameId::tes3 &&
       std::filesystem::exists(settings_.GamePath() / "MWSE.dll");
 
   auto safeMaxActiveNormalPlugins = SAFE_MAX_ACTIVE_NORMAL_PLUGINS;
@@ -733,19 +777,21 @@ std::vector<Message> Game::GetMessages() const {
     }
 
     if (activeLightPluginsCount > 0) {
-      addWarning(fmt::format(
-          boost::locale::translate("You have {0} active normal plugins but the "
-                                   "game only supports up to {1}.")
-              .str(),
-          activeNormalPluginsCount,
-          safeMaxActiveNormalPlugins));
+      addWarning(MessageSource::activePluginsCountCheck,
+                 fmt::format(boost::locale::translate(
+                                 "You have {0} active normal plugins but the "
+                                 "game only supports up to {1}.")
+                                 .str(),
+                             activeNormalPluginsCount,
+                             safeMaxActiveNormalPlugins));
     } else {
-      addWarning(fmt::format(
-          boost::locale::translate("You have {0} active plugins but the "
-                                   "game only supports up to {1}.")
-              .str(),
-          activeNormalPluginsCount,
-          safeMaxActiveNormalPlugins));
+      addWarning(MessageSource::activePluginsCountCheck,
+                 fmt::format(boost::locale::translate(
+                                 "You have {0} active plugins but the "
+                                 "game only supports up to {1}.")
+                                 .str(),
+                             activeNormalPluginsCount,
+                             safeMaxActiveNormalPlugins));
     }
   }
 
@@ -761,9 +807,10 @@ std::vector<Message> Game::GetMessages() const {
           SAFE_MAX_ACTIVE_NORMAL_PLUGINS);
     }
 
-    addWarning(boost::locale::translate(
-        "Do not launch Morrowind without the use of MWSE or it will "
-        "cause severe damage to your game."));
+    addWarning(MessageSource::activePluginsCountCheck,
+               boost::locale::translate(
+                   "Do not launch Morrowind without the use of MWSE or it will "
+                   "cause severe damage to your game."));
   }
 
   if (activeLightPluginsCount > SAFE_MAX_ACTIVE_LIGHT_PLUGINS) {
@@ -774,12 +821,13 @@ std::vector<Message> Game::GetMessages() const {
           SAFE_MAX_ACTIVE_LIGHT_PLUGINS);
     }
 
-    addWarning(fmt::format(
-        boost::locale::translate("You have {0} active light plugins but the "
-                                 "game only supports up to {1}.")
-            .str(),
-        activeLightPluginsCount,
-        SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
+    addWarning(MessageSource::activePluginsCountCheck,
+               fmt::format(boost::locale::translate(
+                               "You have {0} active light plugins but the "
+                               "game only supports up to {1}.")
+                               .str(),
+                           activeLightPluginsCount,
+                           SAFE_MAX_ACTIVE_LIGHT_PLUGINS));
   }
 
   if (activeNormalPluginsCount >= SAFE_MAX_ACTIVE_NORMAL_PLUGINS &&
@@ -791,16 +839,18 @@ std::vector<Message> Game::GetMessages() const {
           activeNormalPluginsCount);
     }
 
-    addWarning(boost::locale::translate(
-        "You have a normal plugin and at least one light plugin sharing "
-        "the FE load order index. Deactivate a normal plugin or all your "
-        "light plugins to avoid potential issues."));
+    addWarning(
+        MessageSource::activePluginsCountCheck,
+        boost::locale::translate(
+            "You have a normal plugin and at least one light plugin sharing "
+            "the FE load order index. Deactivate a normal plugin or all your "
+            "light plugins to avoid potential issues."));
   }
 
   return output;
 }
 
-void Game::AppendMessage(const Message& message) {
+void Game::AppendMessage(const SourcedMessage& message) {
   messages_.push_back(message);
 }
 
@@ -845,8 +895,9 @@ void Game::LoadMetadata() {
       logger->error("An error occurred while parsing the metadata list(s): {}",
                     e.what());
     }
-    AppendMessage(Message(
+    AppendMessage(CreatePlainTextSourcedMessage(
         MessageType::error,
+        MessageSource::caughtException,
         fmt::format(
             boost::locale::translate(
                 "An error occurred while parsing the metadata list(s): "
@@ -934,7 +985,7 @@ void Game::SaveUserMetadata() {
 }
 
 std::filesystem::path Game::GetLOOTGamePath() const {
-  return lootDataPath_ / "games" / u8path(settings_.FolderName());
+  return ::GetLOOTGamePath(lootDataPath_, settings_.FolderName());
 }
 
 std::vector<std::string> Game::GetInstalledPluginPaths() const {
@@ -949,7 +1000,7 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
   // Scan external data paths first, as the game checks them before the main
   // data path.
   for (const auto& dataPath : GetExternalDataPaths(
-           settings_.Type(), isMicrosoftStoreInstall_, settings_.DataPath())) {
+           settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath())) {
     if (!std::filesystem::exists(dataPath)) {
       continue;
     }
@@ -1009,7 +1060,7 @@ std::vector<std::string> Game::GetInstalledPluginPaths() const {
   return maybePlugins;
 }
 
-void Game::AppendMessages(std::vector<Message> messages) {
+void Game::AppendMessages(std::vector<SourcedMessage> messages) {
   for (auto message : messages) {
     AppendMessage(message);
   }
@@ -1022,7 +1073,7 @@ bool Game::IsCreationClubPlugin(const PluginInterface& plugin) const {
 std::filesystem::path Game::ResolveGameFilePath(
     const std::string& filePath) const {
   const auto externalDataPaths = GetExternalDataPaths(
-      settings_.Type(), isMicrosoftStoreInstall_, settings_.DataPath());
+      settings_.Id(), isMicrosoftStoreInstall_, settings_.DataPath());
 
   return loot::ResolveGameFilePath(
       externalDataPaths, settings_.DataPath(), filePath);

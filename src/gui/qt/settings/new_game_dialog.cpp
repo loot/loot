@@ -86,8 +86,8 @@ QString NewGameDialog::getGameName() const { return nameInput->text(); }
 
 QString NewGameDialog::getGameFolder() const { return folderInput->text(); }
 
-QString NewGameDialog::getGameType() const {
-  return typeComboBox->currentText();
+QString NewGameDialog::getBaseGame() const {
+  return baseGameComboBox->currentText();
 }
 
 void NewGameDialog::setupUi() {
@@ -99,7 +99,7 @@ void NewGameDialog::setupUi() {
   auto formLayout = new QFormLayout();
 
   formLayout->addRow(nameLabel, nameInput);
-  formLayout->addRow(typeLabel, typeComboBox);
+  formLayout->addRow(baseGameLabel, baseGameComboBox);
   formLayout->addRow(folderLabel, folderInput);
 
   dialogLayout->addLayout(formLayout);
@@ -109,11 +109,11 @@ void NewGameDialog::setupUi() {
 
   translateUi();
 
-  for (const auto& gameType : GameTab::GAME_TYPES_BY_FOLDER) {
-    typeComboBox->addItem(QString::fromStdString(gameType.first));
+  for (const auto& gameId : GameTab::GAME_IDS_BY_STRING) {
+    baseGameComboBox->addItem(QString::fromStdString(gameId.first));
   }
 
-  typeComboBox->setCurrentIndex(0);
+  baseGameComboBox->setCurrentIndex(0);
 
   QMetaObject::connectSlotsByName(this);
 }
@@ -121,7 +121,7 @@ void NewGameDialog::translateUi() {
   setWindowTitle(translate("Add new game"));
 
   nameLabel->setText(translate("Name"));
-  typeLabel->setText(translate("Base Game"));
+  baseGameLabel->setText(translate("Base Game"));
   folderLabel->setText(translate("LOOT Folder"));
 
   nameInput->setToolTip(translate("A name is required."));

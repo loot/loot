@@ -28,12 +28,12 @@
 
 #include <loot/metadata/group.h>
 #include <loot/plugin_interface.h>
-#include <loot/struct/simple_message.h>
 
 #include <optional>
 #include <regex>
 #include <string>
 
+#include "gui/sourced_message.h"
 #include "gui/state/game/game.h"
 
 namespace loot {
@@ -65,7 +65,7 @@ struct PluginItem {
   std::vector<std::string> addTags;
   std::vector<std::string> removeTags;
 
-  std::vector<SimpleMessage> messages;
+  std::vector<SourcedMessage> messages;
   std::vector<Location> locations;
 
   bool containsText(const std::string& text) const;

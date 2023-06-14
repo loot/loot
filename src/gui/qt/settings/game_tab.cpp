@@ -65,16 +65,19 @@ void FolderPicker::on_browseButton_clicked() {
   }
 }
 
-const std::map<std::string, GameType> GameTab::GAME_TYPES_BY_FOLDER({
-    {ToString(GameType::tes3), GameType::tes3},
-    {ToString(GameType::tes4), GameType::tes4},
-    {ToString(GameType::tes5), GameType::tes5},
-    {ToString(GameType::tes5se), GameType::tes5se},
-    {ToString(GameType::tes5vr), GameType::tes5vr},
-    {ToString(GameType::fo3), GameType::fo3},
-    {ToString(GameType::fonv), GameType::fonv},
-    {ToString(GameType::fo4), GameType::fo4},
-    {ToString(GameType::fo4vr), GameType::fo4vr},
+const std::map<std::string, GameId> GameTab::GAME_IDS_BY_STRING({
+    {ToString(GameId::tes3), GameId::tes3},
+    {ToString(GameId::tes4), GameId::tes4},
+    {ToString(GameId::nehrim), GameId::nehrim},
+    {ToString(GameId::tes5), GameId::tes5},
+    {ToString(GameId::enderal), GameId::enderal},
+    {ToString(GameId::tes5se), GameId::tes5se},
+    {ToString(GameId::enderalse), GameId::enderalse},
+    {ToString(GameId::tes5vr), GameId::tes5vr},
+    {ToString(GameId::fo3), GameId::fo3},
+    {ToString(GameId::fonv), GameId::fonv},
+    {ToString(GameId::fo4), GameId::fo4},
+    {ToString(GameId::fo4vr), GameId::fo4vr},
 });
 
 GameTab::GameTab(const GameSettings& settings,
@@ -91,8 +94,8 @@ QString GameTab::getName() const { return nameInput->text(); }
 QString GameTab::getLootFolder() const { return lootFolderInput->text(); }
 
 GameSettings GameTab::getGameSettings() const {
-  auto gameTypeText = baseGameComboBox->currentText().toStdString();
-  auto gameType = GAME_TYPES_BY_FOLDER.at(gameTypeText);
+  auto gameIdText = baseGameComboBox->currentText().toStdString();
+  auto gameId = GAME_IDS_BY_STRING.at(gameIdText);
 
   auto name = nameInput->text().toStdString();
   auto lootFolder = lootFolderInput->text().toStdString();
@@ -106,7 +109,7 @@ GameSettings GameTab::getGameSettings() const {
   auto localDataPath =
       std::filesystem::u8path(localDataPathInput->text().toStdString());
 
-  GameSettings settings(gameType, lootFolder);
+  GameSettings settings(gameId, lootFolder);
   settings.SetName(name);
   settings.SetMaster(masterFile);
   settings.SetMinimumHeaderVersion(minimumHeaderVersion);
@@ -169,12 +172,12 @@ void GameTab::initialiseInputs(const GameSettings& settings,
     baseGameComboBox->removeItem(0);
   }
 
-  for (const auto& gameType : GAME_TYPES_BY_FOLDER) {
-    baseGameComboBox->addItem(QString::fromStdString(gameType.first));
+  for (const auto& gameId : GAME_IDS_BY_STRING) {
+    baseGameComboBox->addItem(QString::fromStdString(gameId.first));
   }
 
   auto baseGameIndex = baseGameComboBox->findText(
-      QString::fromStdString(ToString(settings.Type())));
+      QString::fromStdString(ToString(settings.Id())));
   baseGameComboBox->setCurrentIndex(baseGameIndex);
 
   nameInput->setEnabled(false);

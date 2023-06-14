@@ -57,6 +57,13 @@ using std::exception;
 
 namespace fs = std::filesystem;
 
+namespace {
+loot::SourcedMessage CreateInitErrorMessage(const std::string& text) {
+  return loot::CreatePlainTextSourcedMessage(
+      loot::MessageType::error, loot::MessageSource::init, text);
+}
+}
+
 namespace loot {
 void apiLogCallback(LogLevel level, const char* message) {
   auto logger = getLogger();
@@ -92,6 +99,10 @@ void apiLogCallback(LogLevel level, const char* message) {
 LootState::LootState(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) :
     LootPaths(lootAppPath, lootDataPath) {
+  // Do some preliminary locale / UTF-8 support setup.
+  boost::locale::generator gen;
+  std::locale::global(gen("en.UTF-8"));
+
   // Check if the LOOT local app data folder exists, and create it if not.
   createLootDataPath();
 
@@ -147,7 +158,7 @@ void LootState::initCurrentGame() {
   try {
     GetCurrentGame().Init();
     if (logger) {
-      logger->debug("Game named {} has been initialsed",
+      logger->debug("Game named {} has been initialised",
                     GetCurrentGame().GetSettings().Name());
     }
   } catch (const exception& e) {
@@ -155,17 +166,14 @@ void LootState::initCurrentGame() {
       logger->error("Game-specific settings could not be initialised: {}",
                     e.what());
     }
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
-        format(
-            translate(
-                "Error: Game-specific settings could not be initialised. {0}")
-                .str(),
-            e.what())));
+    initMessages_.push_back(CreateInitErrorMessage(format(
+        translate("Error: Game-specific settings could not be initialised. {0}")
+            .str(),
+        e.what())));
   }
 }
 
-const std::vector<SimpleMessage>& LootState::getInitMessages() const {
+const std::vector<SourcedMessage>& LootState::getInitMessages() const {
   return initMessages_;
 }
 
@@ -181,11 +189,9 @@ void LootState::createLootDataPath() {
   try {
     fs::create_directory(LootPaths::getLootDataPath());
   } catch (const exception& e) {
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
-        format(
-            translate("Error: Could not create LOOT data directory. {0}").str(),
-            e.what())));
+    initMessages_.push_back(CreateInitErrorMessage(format(
+        translate("Error: Could not create LOOT data directory. {0}").str(),
+        e.what())));
   }
 }
 
@@ -194,20 +200,17 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
     try {
       settings_.load(LootPaths::getSettingsPath());
     } catch (const exception& e) {
-      initMessages_.push_back(PlainTextSimpleMessage(
-          MessageType::error,
-          format(
-              /* translators: This error is displayed when LOOT is unable to
-                 load its own settings file. The placeholder is for additional
-                 detail about what went wrong. */
-              translate("Error: Settings parsing failed. {0}").str(),
-              e.what())));
+      initMessages_.push_back(CreateInitErrorMessage(format(
+          /* translators: This error is displayed when LOOT is unable to
+             load its own settings file. The placeholder is for additional
+             detail about what went wrong. */
+          translate("Error: Settings parsing failed. {0}").str(),
+          e.what())));
     }
   }
 
   if (autoSort && cmdLineGame.empty()) {
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
+    initMessages_.push_back(CreateInitErrorMessage(
         /* translators: --auto-sort and --game are command-line arguments and
            shouldn't be translated. */
         translate("Error: --auto-sort was passed but no --game parameter was "
@@ -244,18 +247,16 @@ void LootState::checkSettingsFile() {
   try {
     const auto warnings = loot::checkSettingsFile(LootPaths::getSettingsPath());
     for (const auto& warning : warnings) {
-      initMessages_.push_back(
-          PlainTextSimpleMessage(MessageType::warn, warning));
+      initMessages_.push_back(CreatePlainTextSourcedMessage(
+          MessageType::warn, MessageSource::init, warning));
     }
   } catch (const exception& e) {
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
-        format(
-            /* translators: This error is displayed when LOOT is unable to
-               load its own settings file. The placeholder is for additional
-               detail about what went wrong. */
-            translate("Error: Settings parsing failed. {0}").str(),
-            e.what())));
+    initMessages_.push_back(CreateInitErrorMessage(format(
+        /* translators: This error is displayed when LOOT is unable to
+           load its own settings file. The placeholder is for additional
+           detail about what went wrong. */
+        translate("Error: Settings parsing failed. {0}").str(),
+        e.what())));
   }
 }
 
@@ -281,12 +282,10 @@ void LootState::createPreludeDirectory() {
     try {
       fs::create_directory(preludeDir);
     } catch (const exception& e) {
-      initMessages_.push_back(PlainTextSimpleMessage(
-          MessageType::error,
-          format(
-              translate("Error: Could not create LOOT prelude directory. {0}")
-                  .str(),
-              e.what())));
+      initMessages_.push_back(CreateInitErrorMessage(format(
+          translate("Error: Could not create LOOT prelude directory. {0}")
+              .str(),
+          e.what())));
     }
   }
 }
@@ -298,8 +297,7 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   }
 
   if (gameFolderName.empty()) {
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
+    initMessages_.push_back(CreateInitErrorMessage(
         /* translators: --game and --game-path are command-line arguments and
            shouldn't be translated. */
         translate("Error: --game-path was passed but no --game parameter was "
@@ -314,13 +312,11 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
                          });
 
   if (it == gamesSettings.end()) {
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
-        format(translate(
-                   "Error: failed to override game path, the game {0} was not "
-                   "recognised.")
-                   .str(),
-               gameFolderName)));
+    initMessages_.push_back(CreateInitErrorMessage(format(
+        translate("Error: failed to override game path, the game {0} was not "
+                  "recognised.")
+            .str(),
+        gameFolderName)));
   } else {
     const auto logger = getLogger();
     if (logger) {
@@ -348,11 +344,9 @@ void LootState::setInitialGame(const std::string& preferredGame) {
     if (logger) {
       logger->error("Initial game could not be selected: {}", e.what());
     }
-    initMessages_.push_back(PlainTextSimpleMessage(
-        MessageType::error,
-        format(translate("Error: The initial game could not be selected. {0}")
-                   .str(),
-               e.what())));
+    initMessages_.push_back(CreateInitErrorMessage(format(
+        translate("Error: The initial game could not be selected. {0}").str(),
+        e.what())));
   }
 }
 

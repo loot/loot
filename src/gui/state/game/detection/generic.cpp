@@ -35,7 +35,6 @@
 namespace {
 using loot::GameId;
 using loot::GameInstall;
-using loot::GameType;
 using loot::InstallSource;
 
 loot::RegistryValue GetRegistryValue(const GameId gameId) {
@@ -174,8 +173,7 @@ std::optional<GameInstall> FindGameInstallInRegistry(
       loot::ReadPathFromRegistry(registry, GetRegistryValue(gameId));
 
   if (path.has_value() &&
-      IsValidGamePath(
-          GetGameType(gameId), GetMasterFilename(gameId), path.value())) {
+      IsValidGamePath(gameId, GetMasterFilename(gameId), path.value())) {
     // Need to check what source the game is from.
     // The generic registry keys are not written by EGS or the MS Store,
     // so treat anything other than Steam and GOG as unknown.
@@ -197,7 +195,7 @@ std::optional<GameInstall> FindGameInstallInRegistry(
 std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
   const auto path = std::filesystem::current_path().parent_path();
 
-  if (!IsValidGamePath(GetGameType(gameId), GetMasterFilename(gameId), path)) {
+  if (!IsValidGamePath(gameId, GetMasterFilename(gameId), path)) {
     return std::nullopt;
   }
 
@@ -219,45 +217,11 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
 
   return GameInstall{gameId, InstallSource::unknown, path};
 }
-
-GameId DetectGameId(const GameType gameType,
-                    const std::filesystem::path& installPath) {
-  switch (gameType) {
-    case GameType::tes3:
-      return GameId::tes3;
-    case GameType::tes4:
-      return std::filesystem::exists(installPath / "NehrimLauncher.exe")
-                 ? GameId::nehrim
-                 : GameId::tes4;
-    case GameType::tes5:
-      return std::filesystem::exists(installPath / "Enderal Launcher.exe")
-                 ? GameId::enderal
-                 : GameId::tes5;
-    case GameType::tes5se:
-      return std::filesystem::exists(installPath / "Enderal Launcher.exe")
-                 ? GameId::enderalse
-                 : GameId::tes5se;
-    case GameType::tes5vr:
-      return GameId::tes5vr;
-    case GameType::fo3:
-      return GameId::fo3;
-    case GameType::fonv:
-      return GameId::fonv;
-    case GameType::fo4:
-      return GameId::fo4;
-    case GameType::fo4vr:
-      return GameId::fo4vr;
-    default:
-      throw std::logic_error("Unrecognised game type");
-  }
-}
 }
 
 namespace loot::generic {
-bool IsMicrosoftInstall(const GameType gameType,
+bool IsMicrosoftInstall(const GameId gameId,
                         const std::filesystem::path& installPath) {
-  const auto gameId = DetectGameId(gameType, installPath);
-
   return ::IsMicrosoftInstall(gameId, installPath);
 }
 
@@ -281,13 +245,12 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
 // Check if the given game settings resolve to an installed game, and
 // detect its ID and install source.
 std::optional<GameInstall> DetectGameInstall(const GameSettings& settings) {
-  if (!IsValidGamePath(
-          settings.Type(), settings.Master(), settings.GamePath())) {
+  if (!IsValidGamePath(settings.Id(), settings.Master(), settings.GamePath())) {
     return std::nullopt;
   }
 
+  const auto gameId = settings.Id();
   const auto installPath = settings.GamePath();
-  const auto gameId = DetectGameId(settings.Type(), installPath);
 
   if (IsSteamInstall(gameId, installPath)) {
     return GameInstall{

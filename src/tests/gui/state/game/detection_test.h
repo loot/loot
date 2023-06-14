@@ -43,7 +43,7 @@ protected:
 INSTANTIATE_TEST_SUITE_P(, IsInstalledTest, ::testing::ValuesIn(ALL_GAME_IDS));
 
 TEST_P(IsInstalledTest, shouldSupportNonAsciiGameMasters) {
-  const auto settings = GameSettings(getGameType())
+  const auto settings = GameSettings(GetParam(), "")
                             .SetMaster(nonAsciiEsp)
                             .SetGamePath(dataPath.parent_path());
   EXPECT_TRUE(IsInstalled(settings));
@@ -82,7 +82,7 @@ TEST_F(UpdateInstalledGamesSettingsTest,
   UpdateInstalledGamesSettings(gamesSettings, TestRegistry(), {}, {});
 
   ASSERT_EQ(1, gamesSettings.size());
-  EXPECT_EQ(getGameType(), gamesSettings[0].Type());
+  EXPECT_EQ(GameId::tes3, gamesSettings[0].Id());
   EXPECT_EQ(std::filesystem::current_path().parent_path(),
             gamesSettings[0].GamePath());
   EXPECT_EQ("", gamesSettings[0].GameLocalPath());

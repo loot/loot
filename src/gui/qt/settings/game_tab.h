@@ -68,7 +68,7 @@ public:
   QString getLootFolder() const;
   GameSettings getGameSettings() const;
 
-  static const std::map<std::string, GameType> GAME_TYPES_BY_FOLDER;
+  static const std::map<std::string, GameId> GAME_IDS_BY_STRING;
 signals:
   void gameSettingsDeleted();
 

@@ -41,6 +41,7 @@
 #include "tests/gui/helpers_test.h"
 #include "tests/gui/qt/helpers_test.h"
 #include "tests/gui/qt/tasks/tasks_test.h"
+#include "tests/gui/sourced_message_test.h"
 #include "tests/gui/state/game/detection/common_test.h"
 #include "tests/gui/state/game/detection/detail_test.h"
 #include "tests/gui/state/game/detection/epic_games_store_test.h"

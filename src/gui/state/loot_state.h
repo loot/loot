@@ -43,7 +43,7 @@ public:
             bool autoSort);
   void initCurrentGame();
 
-  const std::vector<SimpleMessage>& getInitMessages() const;
+  const std::vector<SourcedMessage>& getInitMessages() const;
 
   const LootSettings& getSettings() const;
   LootSettings& getSettings();
@@ -72,7 +72,7 @@ private:
 
   std::vector<std::filesystem::path> xboxGamingRootPaths_;
   std::vector<std::string> preferredUILanguages_;
-  std::vector<SimpleMessage> initMessages_;
+  std::vector<SourcedMessage> initMessages_;
   LootSettings settings_;
 };
 }

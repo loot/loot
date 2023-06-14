@@ -40,12 +40,14 @@ along with LOOT.  If not, see
 namespace loot {
 typedef std::vector<std::pair<std::string, std::optional<short>>>
     CancelSortResult;
+typedef std::pair<std::string, bool> MasterlistUpdateResult;
 typedef std::vector<PluginItem> PluginItems;
 typedef std::vector<std::pair<PluginItem, bool>> GetConflictingPluginsResult;
 
 typedef std::variant<std::monostate,
                      bool,
                      CancelSortResult,
+                     MasterlistUpdateResult,
                      PluginItems,
                      PluginItem,
                      GetConflictingPluginsResult>

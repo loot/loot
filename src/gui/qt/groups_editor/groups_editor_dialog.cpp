@@ -38,6 +38,7 @@
 
 #include "gui/helpers.h"
 #include "gui/qt/helpers.h"
+#include "gui/qt/icon_factory.h"
 
 namespace loot {
 std::map<std::string, std::set<std::string>> groupsAsMap(
@@ -116,8 +117,10 @@ void GroupsEditorDialog::setupUi() {
   graphView->setObjectName("graphView");
   groupPluginsTitle->setVisible(false);
 
+  groupPluginsList->setObjectName("groupPluginsList");
   groupPluginsList->setVisible(false);
   groupPluginsList->setSelectionMode(QAbstractItemView::NoSelection);
+  groupPluginsList->setContextMenuPolicy(Qt::CustomContextMenu);
 
   auto verticalSpacer = new QSpacerItem(
       SPACER_WIDTH, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -187,6 +190,10 @@ void GroupsEditorDialog::setupUi() {
 
   setLayout(dialogLayout);
 
+  actionCopyPluginNames->setObjectName("actionCopyPluginNames");
+  actionCopyPluginNames->setIcon(IconFactory::getCopyContentIcon());
+  menuPluginsList->addAction(actionCopyPluginNames);
+
   translateUi();
 
   QMetaObject::connectSlotsByName(this);
@@ -201,6 +208,8 @@ void GroupsEditorDialog::setupUi() {
 
 void GroupsEditorDialog::translateUi() {
   setWindowTitle(translate("Groups Editor"));
+
+  actionCopyPluginNames->setText(translate("&Copy Plugin Names"));
 
   addPluginButton->setText(translate("Add plugin to group"));
 
@@ -294,6 +303,8 @@ void GroupsEditorDialog::refreshPluginLists() {
     }
   }
 
+  const auto groupHasPlugins = groupPluginsList->count() != 0;
+
   if (groupPluginsList->count() == 0) {
     auto text = translate("No plugins are in this group.");
     auto item = new QListWidgetItem();
@@ -349,6 +360,47 @@ bool GroupsEditorDialog::containsMoreThanOnePlugin(
   return false;
 }
 
+void GroupsEditorDialog::handleException(const std::exception& exception) {
+  const auto logger = getLogger();
+  if (logger) {
+    logger->error("Caught an exception: {}", exception.what());
+  }
+
+  auto message = boost::locale::translate(
+                     "Oh no, something went wrong! You can check your "
+                     "LOOTDebugLog.txt (you can get to it through the "
+                     "main menu) for more information.")
+                     .str();
+
+  QMessageBox::critical(
+      this, translate("Error"), QString::fromStdString(message));
+}
+
+void GroupsEditorDialog::on_actionCopyPluginNames_triggered() {
+  try {
+    if (!selectedGroupName.has_value() || groupPluginsList->count() == 0) {
+      return;
+    }
+
+    if (groupPluginsList->count() == 1 &&
+        groupPluginsList->item(0)->font().italic()) {
+      // Copy an empty string because the group is empty.
+      CopyToClipboard("");
+      return;
+    }
+
+    std::string selectedPluginNames;
+    for (int i = 0; i < groupPluginsList->count(); i += 1) {
+      const auto item = groupPluginsList->item(i);
+      selectedPluginNames += item->text().toStdString() + "\n";
+    }
+
+    CopyToClipboard(selectedPluginNames);
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
 void GroupsEditorDialog::on_graphView_groupRemoved(const QString name) {
   // If the removed group is the currently selected group, it's no longer
   // selected, so reset the associated state.
@@ -388,6 +440,11 @@ void GroupsEditorDialog::on_graphView_groupSelected(const QString& name) {
       !groupNameInput->text().isEmpty() && graphView->isUserGroup(groupName);
 
   renameGroupButton->setEnabled(shouldEnableRenameGroup);
+}
+
+void GroupsEditorDialog::on_groupPluginsList_customContextMenuRequested(
+    const QPoint& position) {
+  menuPluginsList->exec(groupPluginsList->mapToGlobal(position));
 }
 
 void GroupsEditorDialog::on_pluginComboBox_editTextChanged(

@@ -28,6 +28,20 @@
 #include "gui/helpers.h"
 #include "gui/qt/helpers.h"
 
+namespace {
+using loot::MessageType;
+
+MessageType MapMessageType(const std::string& type) {
+  if (type == "say") {
+    return MessageType::say;
+  } else if (type == "warn") {
+    return MessageType::warn;
+  } else {
+    return MessageType::error;
+  }
+}
+}
+
 namespace loot {
 MessageTableModel::MessageTableModel(
     QObject* parent,
@@ -91,7 +105,7 @@ void MessageTableModel::setData(Message& element,
                                 int column,
                                 const QVariant& value) {
   if (column == TYPE_COLUMN) {
-    element = Message(mapMessageType(value.toString().toStdString()),
+    element = Message(MapMessageType(value.toString().toStdString()),
                       element.GetContent(),
                       element.GetCondition());
   } else if (column == CONTENT_COLUMN) {

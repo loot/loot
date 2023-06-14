@@ -126,6 +126,7 @@ private:
   QAction *actionEditMetadata{new QAction(this)};
   QAction *actionClearMetadata{new QAction(this)};
   QAction *actionSettings{new QAction(this)};
+  QAction *actionUpdateMasterlists{new QAction(this)};
   QAction *actionBackupData{new QAction(this)};
 
   QMenuBar *menubar{new QMenuBar(this)};
@@ -194,7 +195,7 @@ private:
   void exitSortingState();
 
   void loadGame(bool isOnLOOTStartup);
-  void updateCounts(const std::vector<SimpleMessage> &generalMessages,
+  void updateCounts(const std::vector<SourcedMessage> &generalMessages,
                     const std::vector<PluginItem> &plugins);
   void updateGeneralInformation();
   void updateGeneralMessages();
@@ -220,8 +221,10 @@ private:
   void executeBackgroundQuery(std::unique_ptr<Query> query,
                               void (MainWindow::*onComplete)(QueryResult),
                               ProgressUpdater *progressUpdater);
-  void executeBackgroundTasks(std::vector<Task *> tasks,
-                              const ProgressUpdater *progressUpdater);
+  void executeBackgroundTasks(
+      TaskExecutor *executor,
+      const ProgressUpdater *progressUpdater,
+      void (MainWindow::*onComplete)(std::vector<QueryResult>));
 
   void handleError(const std::string &message);
   void handleException(const std::exception &exception);
@@ -229,7 +232,7 @@ private:
                             const std::exception &exception);
 
   void handleGameDataLoaded(QueryResult result);
-  bool handlePluginsSorted(QueryResult results);
+  bool handlePluginsSorted(std::vector<QueryResult> results);
 
   QMenu *createPopupMenu() override;
 
@@ -239,6 +242,7 @@ private:
 
 private slots:
   void on_actionSettings_triggered();
+  void on_actionUpdateMasterlists_triggered();
   void on_actionBackupData_triggered();
   void on_actionQuit_triggered();
   void on_actionOpenGroupsEditor_triggered();
@@ -301,9 +305,10 @@ private slots:
   void handleGameChanged(QueryResult result);
   void handleRefreshGameDataLoaded(QueryResult result);
   void handleStartupGameDataLoaded(QueryResult result);
-  void handlePluginsManualSorted(QueryResult results);
-  void handlePluginsAutoSorted(QueryResult results);
-  void handleMasterlistUpdated(QueryResult result);
+  void handlePluginsManualSorted(std::vector<QueryResult> results);
+  void handlePluginsAutoSorted(std::vector<QueryResult> results);
+  void handleMasterlistUpdated(std::vector<QueryResult> results);
+  void handleMasterlistsUpdated(std::vector<QueryResult> results);
   void handleConflictsChecked(QueryResult result);
   void handleProgressUpdate(const QString &message);
   void handleUpdateCheckFinished(QueryResult result);

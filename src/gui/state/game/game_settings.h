@@ -32,23 +32,26 @@
 #include <string>
 #include <vector>
 
+#include "gui/state/game/detection/game_install.h"
 #include "loot/enum/game_type.h"
 
 namespace loot {
-static constexpr const char* DEFAULT_MASTERLIST_BRANCH = "v0.18";
+static constexpr const char* MASTERLIST_FILENAME = "masterlist.yaml";
 
-std::string GetPluginsFolderName(GameType gameType);
+std::string GetPluginsFolderName(GameId gameId);
 
-std::string GetDefaultMasterlistUrl(const std::string& repoName);
+std::string ToString(const GameId gameId);
 
-std::string ToString(const GameType gameType);
+bool SupportsLightPlugins(const GameType gameType);
+
+bool ShouldAllowRedating(const GameType gameType);
 
 class GameSettings {
 public:
   GameSettings() = default;
-  explicit GameSettings(const GameType gameType,
-                        const std::string& lootFolder = "");
+  explicit GameSettings(const GameId gameId, const std::string& lootFolder);
 
+  GameId Id() const;
   GameType Type() const;
   std::string Name() const;  // Returns the game's name, eg. "TES IV: Oblivion".
   std::string FolderName() const;
@@ -70,10 +73,11 @@ public:
   GameSettings& SetGameLocalFolder(const std::string& folderName);
 
 private:
+  GameId id_{GameId::tes4};
   GameType type_{GameType::tes4};
   std::string name_;
   std::string masterFile_;
-  float mininumHeaderVersion_{0.0f};
+  float minimumHeaderVersion_{0.0f};
 
   std::string lootFolderName_;
 

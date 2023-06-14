@@ -31,29 +31,44 @@
 #include "gui/qt/tasks/network_task.h"
 
 namespace loot {
-class UpdateMasterlistTask : public NetworkTask {
+class UpdatePreludeTask : public NetworkTask {
   Q_OBJECT
 public:
-  explicit UpdateMasterlistTask(LootState &state);
+  explicit UpdatePreludeTask(const LootState& state);
 
 public slots:
   void execute() override;
 
 private:
-  LootState &state;
+  std::string preludeSource;
+  std::filesystem::path preludePath;
 
-  QNetworkAccessManager *networkAccessManager{nullptr};
-
-  bool preludeUpdated{false};
-  bool masterlistUpdated{false};
-
-  void updatePrelude();
-  void updateMasterlist();
-  void finish();
+  QNetworkAccessManager* networkAccessManager{nullptr};
 
 private slots:
-  void onMasterlistReplyFinished();
-  void onPreludeReplyFinished();
+  void onReplyFinished();
+};
+
+class UpdateMasterlistTask : public NetworkTask {
+  Q_OBJECT
+public:
+  explicit UpdateMasterlistTask(const gui::Game& game);
+  UpdateMasterlistTask(const std::string& gameFolderName,
+                       const std::string& masterlistSource,
+                       const std::filesystem::path& masterlistPath);
+
+public slots:
+  void execute() override;
+
+private:
+  std::string gameFolderName;
+  std::string masterlistSource;
+  std::filesystem::path masterlistPath;
+
+  QNetworkAccessManager* networkAccessManager{nullptr};
+
+private slots:
+  void onReplyFinished();
 };
 }
 

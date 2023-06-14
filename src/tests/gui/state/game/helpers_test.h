@@ -86,148 +86,6 @@ TEST(EscapeMarkdownASCIIPunctuation, shouldEscapeExclamationMark) {
   EXPECT_EQ("\\!", EscapeMarkdownASCIIPunctuation("!"));
 }
 
-TEST(PlainTextMessage, shouldEscapeMarkdownSpecialCharacters) {
-  auto message =
-      PlainTextMessage(MessageType::say, "normal text\\`*_{}[]()#+-.!");
-
-  auto expectedText = R"raw(normal text\\\`\*\_\{\}\[\]\(\)\#\+\-\.\!)raw";
-  EXPECT_EQ(expectedText, message.GetContent()[0].GetText());
-}
-
-TEST(ToMessage, shouldOutputAllNonZeroCounts) {
-  const auto detail = std::vector<MessageContent>({
-      MessageContent("detail"),
-  });
-
-  Message message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 30));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 2 ITM records, 10 deleted references and 30 deleted "
-      "navmeshes. detail",
-      SelectMessageContent(message.GetContent(),
-                           MessageContent::DEFAULT_LANGUAGE)
-          .value()
-          .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 0));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found dirty edits. detail",
-            SelectMessageContent(message.GetContent(),
-                                 MessageContent::DEFAULT_LANGUAGE)
-                .value()
-                .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 30));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 10 deleted references and 30 deleted navmeshes. detail",
-      SelectMessageContent(message.GetContent(),
-                           MessageContent::DEFAULT_LANGUAGE)
-          .value()
-          .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 0, 30));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 30 deleted navmeshes. detail",
-            SelectMessageContent(message.GetContent(),
-                                 MessageContent::DEFAULT_LANGUAGE)
-                .value()
-                .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 0, 10, 0));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 10 deleted references. detail",
-            SelectMessageContent(message.GetContent(),
-                                 MessageContent::DEFAULT_LANGUAGE)
-                .value()
-                .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 30));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 30 deleted navmeshes. detail",
-            SelectMessageContent(message.GetContent(),
-                                 MessageContent::DEFAULT_LANGUAGE)
-                .value()
-                .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 0, 0));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records. detail",
-            SelectMessageContent(message.GetContent(),
-                                 MessageContent::DEFAULT_LANGUAGE)
-                .value()
-                .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 10, 0));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ("cleaner found 2 ITM records and 10 deleted references. detail",
-            SelectMessageContent(message.GetContent(),
-                                 MessageContent::DEFAULT_LANGUAGE)
-                .value()
-                .GetText());
-}
-
-TEST(ToMessage, shouldDistinguishBetweenSingularAndPluralCounts) {
-  const auto detail = std::vector<MessageContent>({
-      MessageContent("detail"),
-  });
-
-  Message message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 1, 2, 3));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
-      "navmeshes. detail",
-      SelectMessageContent(message.GetContent(),
-                           MessageContent::DEFAULT_LANGUAGE)
-          .value()
-          .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 2, 1, 3));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 2 ITM records, 1 deleted reference and 3 deleted "
-      "navmeshes. detail",
-      SelectMessageContent(message.GetContent(),
-                           MessageContent::DEFAULT_LANGUAGE)
-          .value()
-          .GetText());
-
-  message =
-      ToMessage(PluginCleaningData(0x12345678, "cleaner", detail, 3, 2, 1));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 3 ITM records, 2 deleted references and 1 deleted "
-      "navmesh. detail",
-      SelectMessageContent(message.GetContent(),
-                           MessageContent::DEFAULT_LANGUAGE)
-          .value()
-          .GetText());
-}
-
-TEST(ToMessage,
-     shouldReturnAMessageWithCountsButNoDetailStringIfDetailIsAnEmptyVector) {
-  Message message = ToMessage(PluginCleaningData(
-      0x12345678, "cleaner", std::vector<MessageContent>(), 1, 2, 3));
-  EXPECT_EQ(MessageType::warn, message.GetType());
-  EXPECT_EQ(
-      "cleaner found 1 ITM record, 2 deleted references and 3 deleted "
-      "navmeshes.",
-      SelectMessageContent(message.GetContent(),
-                           MessageContent::DEFAULT_LANGUAGE)
-          .value()
-          .GetText());
-}
-
 TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
   const auto messages =
       CheckForRemovedPlugins({"dir/test1.esp", "dir/test2.esp", "test3.esp"},
@@ -238,7 +96,7 @@ TEST(CheckForRemovedPlugins, shouldCompareFilenamesBeforeAndAfter) {
       "LOOT has detected that \\\"dir\\/test2\\.esp\\\" is invalid "
       "and is now "
       "ignoring it\\.",
-      messages[0].GetContent()[0].GetText());
+      messages[0].text);
 }
 
 TEST(ReadBashTagsFile, shouldCorrectlyReadTheExampleFileContent) {
@@ -353,14 +211,14 @@ TEST_F(
 TEST(GetExternalDataPaths,
      shouldReturnAnEmptyVectorIfTheGameIsNotAMicrosoftStoreInstall) {
   const auto dataPath = std::filesystem::u8path("data");
-  const auto paths = GetExternalDataPaths(GameType::fo4, false, dataPath);
+  const auto paths = GetExternalDataPaths(GameId::fo4, false, dataPath);
 
   EXPECT_TRUE(paths.empty());
 }
 
 TEST(GetExternalDataPaths, shouldReturnAnEmptyVectorIfTheGameIsNotFallout4) {
   const auto dataPath = std::filesystem::u8path("data");
-  const auto paths = GetExternalDataPaths(GameType::tes5se, true, dataPath);
+  const auto paths = GetExternalDataPaths(GameId::tes5se, true, dataPath);
 
   EXPECT_TRUE(paths.empty());
 }
@@ -368,7 +226,7 @@ TEST(GetExternalDataPaths, shouldReturnAnEmptyVectorIfTheGameIsNotFallout4) {
 TEST(GetExternalDataPaths,
      shouldReturnDlcPluginPathsIfTheGameIsAMicrosoftStoreInstallOfFallout4) {
   const auto dataPath = std::filesystem::u8path("data");
-  const auto paths = GetExternalDataPaths(GameType::fo4, true, dataPath);
+  const auto paths = GetExternalDataPaths(GameId::fo4, true, dataPath);
 
   EXPECT_EQ(std::vector<std::filesystem::path>(
                 {dataPath / "../../../Fallout 4- Automatron (PC)/Content/Data",

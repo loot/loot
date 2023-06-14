@@ -26,11 +26,12 @@
 #define LOOT_GUI_HELPERS
 
 #include <loot/enum/message_type.h>
-#include <loot/struct/simple_message.h>
 
 #include <filesystem>
 #include <optional>
 #include <vector>
+
+#include "gui/sourced_message.h"
 
 namespace loot {
 void OpenInDefaultApplication(const std::filesystem::path& file);
@@ -58,12 +59,8 @@ std::filesystem::path getExecutableDirectory();
 
 std::filesystem::path getLocalAppDataPath();
 
-MessageType mapMessageType(const std::string& type);
-
 void CopyToClipboard(const std::string& text);
 
 std::string crcToString(uint32_t crc);
-
-std::string messagesAsMarkdown(const std::vector<SimpleMessage>& messages);
 }
 #endif

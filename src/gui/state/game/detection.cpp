@@ -39,8 +39,7 @@ bool IsInstalled(const GameSettings& settings) {
     logger->trace("Checking if game \"{}\" is installed.", settings.Name());
   }
 
-  return IsValidGamePath(
-      settings.Type(), settings.Master(), settings.GamePath());
+  return IsValidGamePath(settings.Id(), settings.Master(), settings.GamePath());
 }
 
 // Filter the given game installs so that they do not contain any installs

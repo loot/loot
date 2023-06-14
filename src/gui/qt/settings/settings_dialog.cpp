@@ -174,13 +174,13 @@ void SettingsDialog::on_addGameButton_clicked() {
     return;
   }
 
-  auto gameTypeText = newGameDialog->getGameType().toStdString();
-  auto gameType = GameTab::GAME_TYPES_BY_FOLDER.at(gameTypeText);
+  auto gameIdText = newGameDialog->getBaseGame().toStdString();
+  auto gameId = GameTab::GAME_IDS_BY_STRING.at(gameIdText);
 
   auto name = newGameDialog->getGameName().toStdString();
   auto lootFolder = newGameDialog->getGameFolder().toStdString();
 
-  GameSettings game(gameType, lootFolder);
+  GameSettings game(gameId, lootFolder);
   game.SetName(name);
 
   addGameTab(game, false);

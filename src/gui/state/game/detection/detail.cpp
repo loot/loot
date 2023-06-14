@@ -98,6 +98,17 @@ std::string GetDefaultMasterlistRepositoryName(const GameId gameId) {
   }
 }
 
+std::string GetDefaultMasterlistUrl(const std::string& repositoryName) {
+  return std::string("https://raw.githubusercontent.com/loot/") +
+         repositoryName + "/" + DEFAULT_MASTERLIST_BRANCH + "/masterlist.yaml";
+}
+
+std::string GetDefaultMasterlistUrl(const GameId gameId) {
+  const auto repoName = GetDefaultMasterlistRepositoryName(gameId);
+
+  return GetDefaultMasterlistUrl(repoName);
+}
+
 std::string GetSourceDescription(const InstallSource source) {
   switch (source) {
     case InstallSource::steam:
@@ -374,37 +385,6 @@ void UpdateSettingsPaths(GameSettings& settings, const GameInstall& install) {
   }
 }
 
-// Check if the settings refers to the same game (i.e. GameId) as the install.
-// This may give false results for the tes4, tes5 and tes5se game types.
-bool IsSameGame(const GameSettings& settings, const GameInstall& install) {
-  if (settings.Type() != GetGameType(install.gameId)) {
-    return false;
-  }
-
-  // The Oblivion, Skyrim and Skyrim SE game types are shared by Nehrim,
-  // Enderal and Enderal SE respectively, with no sure way to distinguish
-  // them using just their settings, so use heuristics to try to distinguish
-  // them.
-  if (settings.Type() == GameType::tes4) {
-    // Could be Oblivion or Nehrim, check if the master files are the same,
-    // as they're different between Oblivion and Nehrim.
-    return settings.Master() == GetMasterFilename(install.gameId);
-  } else if (settings.Type() == GameType::tes5) {
-    // Could be Skyrim or Enderal. Look for enderal in the name.
-    return boost::icontains(settings.Name(), "enderal")
-               ? install.gameId == GameId::enderal
-               : install.gameId == GameId::tes5;
-  } else if (settings.Type() == GameType::tes5se) {
-    // As above, could be Skyrim SE or Enderal SE, look for enderal in the name.
-    return boost::icontains(settings.Name(), "enderal")
-               ? install.gameId == GameId::enderalse
-               : install.gameId == GameId::tes5se;
-  }
-
-  // For all other game IDs there's a 1:1 mapping to game types.
-  return true;
-}
-
 bool ArePathsEquivalent(const GameSettings& settings,
                         const GameInstall& install) {
   return loot::equivalent(install.installPath, settings.GamePath());
@@ -432,7 +412,7 @@ std::vector<GameInstall> UpdateMatchingSettings(
                            gamesSettings.end(),
                            [&](const GameSettings& settings) {
                              return settings.GamePath().empty() &&
-                                    IsSameGame(settings, gameInstall);
+                                    settings.Id() == gameInstall.gameId;
                            });
     }
 
@@ -491,11 +471,10 @@ void AppendNewGamesSettings(
                    folderNames);
 
     const auto gameSettings =
-        GameSettings(GetGameType(gameInstall.gameId), folderName)
+        GameSettings(gameInstall.gameId, folderName)
             .SetName(gameName)
             .SetMaster(GetMasterFilename(gameInstall.gameId))
-            .SetMasterlistSource(GetDefaultMasterlistUrl(
-                GetDefaultMasterlistRepositoryName(gameInstall.gameId)))
+            .SetMasterlistSource(GetDefaultMasterlistUrl(gameInstall.gameId))
             .SetGamePath(gameInstall.installPath)
             .SetGameLocalPath(gameInstall.localPath);
 

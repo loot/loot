@@ -27,7 +27,6 @@
 #define LOOT_GUI_QT_GENERAL_INFO_CARD
 
 #include <loot/enum/game_type.h>
-#include <loot/struct/simple_message.h>
 
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
@@ -37,8 +36,6 @@
 #include "gui/qt/messages_widget.h"
 
 namespace loot {
-bool gameSupportsLightPlugins(GameType gameType);
-
 class GeneralInfoCard : public QFrame {
   Q_OBJECT
 public:
@@ -55,9 +52,9 @@ public:
                        size_t dirty,
                        size_t total);
 
-  void setGeneralMessages(const std::vector<SimpleMessage>& messages);
+  void setGeneralMessages(const std::vector<SourcedMessage>& messages);
 
-  void setGameType(GameType gameType);
+  void setShowSeparateLightPluginCount(bool showCount);
 
   void refreshMessages();
 

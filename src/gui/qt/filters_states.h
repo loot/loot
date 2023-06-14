@@ -32,6 +32,8 @@
 #include <string>
 #include <variant>
 
+#include "gui/state/game/detection/game_install.h"
+
 namespace loot {
 struct CardContentFiltersState {
   bool hideVersionNumbers{false};
@@ -39,7 +41,10 @@ struct CardContentFiltersState {
   bool hideBashTags{false};
   bool hideLocations{false};
   bool hideNotes{false};
+  bool hideOfficialPluginsCleaningMessages{false};
   bool hideAllPluginMessages{false};
+
+  GameId gameId{GameId::tes3};
 };
 
 struct PluginFiltersState {

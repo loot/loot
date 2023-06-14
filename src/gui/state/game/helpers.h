@@ -36,6 +36,9 @@
 #include <tuple>
 #include <vector>
 
+#include "gui/sourced_message.h"
+#include "gui/state/game/detection/game_install.h"
+
 namespace loot {
 static constexpr const char* GHOST_EXTENSION = ".ghost";
 
@@ -45,19 +48,9 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
 // Escape any Markdown special characters in the input text.
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text);
 
-// Create a Message, escaping any Markdown special characters in the input text.
-Message PlainTextMessage(const MessageType type, const std::string& text);
-
-// Create a SimpleMessage, escaping any Markdown special characters in the input
-// text.
-SimpleMessage PlainTextSimpleMessage(const MessageType type,
-                                     const std::string& text);
-
-Message ToMessage(const PluginCleaningData& cleaningData);
-
 std::string DescribeCycle(const std::vector<Vertex>& cycle);
 
-std::vector<Message> CheckForRemovedPlugins(
+std::vector<SourcedMessage> CheckForRemovedPlugins(
     const std::vector<std::string>& pluginPathsBefore,
     const std::vector<std::string>& pluginNamesAfter);
 
@@ -79,9 +72,11 @@ std::filesystem::path ResolveGameFilePath(
     const std::string& filename);
 
 std::vector<std::filesystem::path> GetExternalDataPaths(
-    const GameType gameType,
+    const GameId gameId,
     const bool isMicrosoftStoreInstall,
     const std::filesystem::path& dataPath);
+
+bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName);
 }
 
 #endif

@@ -29,14 +29,14 @@
 #include "gui/qt/plugin_item_model.h"
 
 namespace loot {
-bool anyMessagesVisible(const std::vector<SimpleMessage>& messages,
+bool anyMessagesVisible(const PluginItem& plugin,
                         const CardContentFiltersState& filters) {
   if (filters.hideAllPluginMessages) {
     return false;
   }
 
-  for (const auto& message : messages) {
-    if (message.type != MessageType::say || !filters.hideNotes) {
+  for (const auto& message : plugin.messages) {
+    if (!shouldFilterMessage(plugin.name, message, filters)) {
       return true;
     }
   }
@@ -100,7 +100,7 @@ bool PluginItemFilterModel::filterAcceptsRow(
   }
 
   if (filterState.hideMessagelessPlugins &&
-      !anyMessagesVisible(item.messages, contentFilters)) {
+      !anyMessagesVisible(item, contentFilters)) {
     return false;
   }
 

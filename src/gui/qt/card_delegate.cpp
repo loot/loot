@@ -31,7 +31,7 @@
 
 namespace loot {
 std::vector<std::string> getMessageTexts(
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   std::vector<std::string> texts;
   for (const auto& message : messages) {
     texts.push_back(message.text);
@@ -90,7 +90,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
     const auto sixthColumnString = QString::number(counters.totalPlugins);
 
     const auto supportsLightPlugins =
-        gameSupportsLightPlugins(generalInfo.gameType) ? "true" : "false";
+        generalInfo.gameSupportsLightPlugins ? "true" : "false";
 
     return SizeHintCacheKey(secondColumnString,
                             fourthColumnString,
@@ -107,7 +107,7 @@ SizeHintCacheKey getSizeHintCacheKey(const QModelIndex& index) {
         getTagsText(pluginItem.currentTags, filters.hideBashTags),
         getTagsText(pluginItem.addTags, filters.hideBashTags),
         getTagsText(pluginItem.removeTags, filters.hideBashTags),
-        getMessageTexts(filterMessages(pluginItem.messages, filters)),
+        getMessageTexts(filterMessages(pluginItem, filters)),
         getLocationNames(pluginItem.locations, filters.hideLocations),
         false);
   }
@@ -125,7 +125,7 @@ GeneralInfoCard* setGeneralInfoCardContent(GeneralInfoCard* card,
   auto generalInfo = index.data(RawDataRole).value<GeneralInformation>();
   auto counters = index.data(CountersRole).value<GeneralInformationCounters>();
 
-  card->setGameType(generalInfo.gameType);
+  card->setShowSeparateLightPluginCount(generalInfo.gameSupportsLightPlugins);
   card->setMasterlistInfo(generalInfo.masterlistRevision);
   card->setPreludeInfo(generalInfo.preludeRevision);
   card->setMessageCounts(

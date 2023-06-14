@@ -47,16 +47,14 @@ TEST_P(GetDefaultLootFolderNameTest, shouldNotThrowForAnyValidGameId) {
   EXPECT_NO_THROW(GetDefaultLootFolderName(GetParam()));
 }
 
-class GetDefaultMasterlistRepositoryNameTest
-    : public ::testing::TestWithParam<GameId> {};
+class GetDefaultMasterlistUrlTest : public ::testing::TestWithParam<GameId> {};
 
 INSTANTIATE_TEST_SUITE_P(,
-                         GetDefaultMasterlistRepositoryNameTest,
+                         GetDefaultMasterlistUrlTest,
                          ::testing::ValuesIn(ALL_GAME_IDS));
 
-TEST_P(GetDefaultMasterlistRepositoryNameTest,
-       shouldNotThrowForAnyValidGameId) {
-  EXPECT_NO_THROW(GetDefaultMasterlistRepositoryName(GetParam()));
+TEST_P(GetDefaultMasterlistUrlTest, shouldNotThrowForAnyValidGameId) {
+  EXPECT_NO_THROW(GetDefaultMasterlistUrl(GetParam()));
 }
 
 class GetSourceDescriptionTest
@@ -382,7 +380,7 @@ TEST(
   const std::filesystem::path installPath = "install";
   const std::filesystem::path localPath = "local";
   std::vector<GameSettings> gamesSettings{GameSettings(),
-                                          GameSettings(GameType::fo4)};
+                                          GameSettings(GameId::fo4, "")};
   const std::vector<GameInstall> gameInstalls{
       GameInstall{GameId::fo4, InstallSource::unknown, installPath, localPath}};
   const auto comparator = [](const GameSettings&, const GameInstall&) {
@@ -399,16 +397,14 @@ TEST(
   EXPECT_EQ(localPath, gamesSettings[1].GameLocalPath());
 }
 
-TEST(UpdateMatchingSettings,
-     shouldTrySecondaryMatchingByGameTypeAndMasterFilenameIfGameTypeIsTes4) {
+TEST(UpdateMatchingSettings, shouldTrySecondaryMatchingByGameId) {
   const std::filesystem::path installPath1 = "install1";
   const std::filesystem::path installPath2 = "install2";
   const std::filesystem::path localPath1 = "local1";
   const std::filesystem::path localPath2 = "local2";
-  std::vector<GameSettings> gamesSettings{
-      GameSettings(GameType::tes4).SetMaster("Nehrim.esm"),
-      GameSettings(GameType::tes4),
-      GameSettings(GameType::tes4).SetMaster("other.esm")};
+  std::vector<GameSettings> gamesSettings{GameSettings(GameId::nehrim, ""),
+                                          GameSettings(GameId::tes4, ""),
+                                          GameSettings(GameId::tes5, "")};
   const std::vector<GameInstall> gameInstalls{
       GameInstall{
           GameId::nehrim, InstallSource::unknown, installPath1, localPath1},
@@ -431,66 +427,10 @@ TEST(UpdateMatchingSettings,
 }
 
 TEST(UpdateMatchingSettings,
-     shouldTrySecondaryMatchingByGameTypeAndNameIfGameTypeIsTes5) {
-  const std::filesystem::path installPath1 = "install1";
-  const std::filesystem::path installPath2 = "install2";
-  const std::filesystem::path localPath1 = "local1";
-  const std::filesystem::path localPath2 = "local2";
-  std::vector<GameSettings> gamesSettings{
-      GameSettings(GameType::tes5).SetName("A name with Enderal in it"),
-      GameSettings(GameType::tes5)};
-  const std::vector<GameInstall> gameInstalls{
-      GameInstall{
-          GameId::enderal, InstallSource::unknown, installPath1, localPath1},
-      GameInstall{
-          GameId::tes5, InstallSource::unknown, installPath2, localPath2}};
-  const auto comparator = [](const GameSettings&, const GameInstall&) {
-    return false;
-  };
-
-  const auto newInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, comparator);
-
-  EXPECT_TRUE(newInstalls.empty());
-  EXPECT_EQ(installPath1, gamesSettings[0].GamePath());
-  EXPECT_EQ(localPath1, gamesSettings[0].GameLocalPath());
-  EXPECT_EQ(installPath2, gamesSettings[1].GamePath());
-  EXPECT_EQ(localPath2, gamesSettings[1].GameLocalPath());
-}
-
-TEST(UpdateMatchingSettings,
-     shouldTrySecondaryMatchingByGameTypeAndNameIfGameTypeIsTes5se) {
-  const std::filesystem::path installPath1 = "install1";
-  const std::filesystem::path installPath2 = "install2";
-  const std::filesystem::path localPath1 = "local1";
-  const std::filesystem::path localPath2 = "local2";
-  std::vector<GameSettings> gamesSettings{
-      GameSettings(GameType::tes5se).SetName("A name with Enderal in it"),
-      GameSettings(GameType::tes5se)};
-  const std::vector<GameInstall> gameInstalls{
-      GameInstall{
-          GameId::enderalse, InstallSource::unknown, installPath1, localPath1},
-      GameInstall{
-          GameId::tes5se, InstallSource::unknown, installPath2, localPath2}};
-  const auto comparator = [](const GameSettings&, const GameInstall&) {
-    return false;
-  };
-
-  const auto newInstalls =
-      UpdateMatchingSettings(gamesSettings, gameInstalls, comparator);
-
-  EXPECT_TRUE(newInstalls.empty());
-  EXPECT_EQ(installPath1, gamesSettings[0].GamePath());
-  EXPECT_EQ(localPath1, gamesSettings[0].GameLocalPath());
-  EXPECT_EQ(installPath2, gamesSettings[1].GamePath());
-  EXPECT_EQ(localPath2, gamesSettings[1].GameLocalPath());
-}
-
-TEST(UpdateMatchingSettings,
      shouldIncludeInstallInReturnedVectorIfItMatchesNoSettings) {
   const std::filesystem::path installPath = "install";
   const std::filesystem::path localPath = "local";
-  std::vector<GameSettings> gamesSettings{GameSettings(GameType::tes4)};
+  std::vector<GameSettings> gamesSettings{GameSettings(GameId::tes4, "")};
   const std::vector<GameInstall> gameInstalls{GameInstall{
       GameId::tes3, InstallSource::unknown, installPath, localPath}};
   const auto comparator = [](const GameSettings&, const GameInstall&) {
@@ -524,7 +464,7 @@ TEST(AppendNewGamesSettings,
 
   ASSERT_EQ(2, gamesSettings.size());
 
-  EXPECT_EQ(GameType::tes5, gamesSettings[0].Type());
+  EXPECT_EQ(GameId::enderal, gamesSettings[0].Id());
   EXPECT_EQ("Enderal", gamesSettings[0].FolderName());
   EXPECT_EQ("Enderal: Forgotten Stories", gamesSettings[0].Name());
   EXPECT_EQ("Skyrim.esm", gamesSettings[0].Master());
@@ -534,7 +474,7 @@ TEST(AppendNewGamesSettings,
   EXPECT_EQ(installPath, gamesSettings[0].GamePath());
   EXPECT_EQ(localPath, gamesSettings[0].GameLocalPath());
 
-  EXPECT_EQ(GameType::tes4, gamesSettings[1].Type());
+  EXPECT_EQ(GameId::nehrim, gamesSettings[1].Id());
   EXPECT_EQ("Nehrim", gamesSettings[1].FolderName());
   EXPECT_EQ("Nehrim - At Fate's Edge", gamesSettings[1].Name());
   EXPECT_EQ("Nehrim.esm", gamesSettings[1].Master());
@@ -546,7 +486,7 @@ TEST(AppendNewGamesSettings,
 TEST(AppendNewGamesSettings,
      shouldDeriveGameAndFolderNamesUsingTheExistingNamesOfPreviousSettings) {
   std::vector<GameSettings> gamesSettings{
-      GameSettings(GameType::tes3, "Morrowind").SetName("TES III: Morrowind")};
+      GameSettings(GameId::tes3, "Morrowind").SetName("TES III: Morrowind")};
 
   AppendNewGamesSettings(
       gamesSettings,

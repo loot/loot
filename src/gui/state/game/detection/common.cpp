@@ -33,28 +33,31 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-std::string GetExecutableName(GameType gameType) {
-  switch (gameType) {
-    case GameType::tes3:
+std::string GetExecutableName(GameId gameId) {
+  switch (gameId) {
+    case GameId::tes3:
       return "Morrowind.exe";
-    case GameType::tes4:
+    case GameId::tes4:
+    case GameId::nehrim:
       return "Oblivion.exe";
-    case GameType::tes5:
+    case GameId::tes5:
+    case GameId::enderal:
       return "TESV.exe";
-    case GameType::tes5se:
+    case GameId::tes5se:
+    case GameId::enderalse:
       return "SkyrimSE.exe";
-    case GameType::tes5vr:
+    case GameId::tes5vr:
       return "SkyrimVR.exe";
-    case GameType::fo3:
+    case GameId::fo3:
       return "Fallout3.exe";
-    case GameType::fonv:
+    case GameId::fonv:
       return "FalloutNV.exe";
-    case GameType::fo4:
+    case GameId::fo4:
       return "Fallout4.exe";
-    case GameType::fo4vr:
+    case GameId::fo4vr:
       return "Fallout4VR.exe";
     default:
-      throw std::logic_error("Unrecognised game type");
+      throw std::logic_error("Unrecognised game ID");
   }
 }
 
@@ -79,34 +82,6 @@ std::string GetMasterFilename(const GameId gameId) {
     case GameId::fo4:
     case GameId::fo4vr:
       return "Fallout4.esm";
-    default:
-      throw std::logic_error("Unrecognised game ID");
-  }
-}
-
-GameType GetGameType(const GameId gameId) {
-  switch (gameId) {
-    case GameId::tes3:
-      return GameType::tes3;
-    case GameId::tes4:
-    case GameId::nehrim:
-      return GameType::tes4;
-    case GameId::tes5:
-    case GameId::enderal:
-      return GameType::tes5;
-    case GameId::tes5se:
-    case GameId::enderalse:
-      return GameType::tes5se;
-    case GameId::tes5vr:
-      return GameType::tes5vr;
-    case GameId::fo3:
-      return GameType::fo3;
-    case GameId::fonv:
-      return GameType::fonv;
-    case GameId::fo4:
-      return GameType::fo4;
-    case GameId::fo4vr:
-      return GameType::fo4vr;
     default:
       throw std::logic_error("Unrecognised game ID");
   }
@@ -143,35 +118,38 @@ std::string GetGameName(const GameId gameId) {
   }
 }
 
-bool ExecutableExists(const GameType& gameType,
+bool ExecutableExists(const GameId& gameType,
                       const std::filesystem::path& gamePath) {
   switch (gameType) {
-    case GameType::tes5:
-    case GameType::tes5se:
-    case GameType::tes5vr:
-    case GameType::fo4:
-    case GameType::fo4vr:
+    case GameId::tes5:
+    case GameId::enderal:
+    case GameId::tes5se:
+    case GameId::enderalse:
+    case GameId::tes5vr:
+    case GameId::fo4:
+    case GameId::fo4vr:
       return std::filesystem::exists(
           gamePath / std::filesystem::u8path(GetExecutableName(gameType)));
-    case GameType::tes3:
-    case GameType::tes4:
-    case GameType::fo3:
-    case GameType::fonv:
+    case GameId::tes3:
+    case GameId::tes4:
+    case GameId::nehrim:
+    case GameId::fo3:
+    case GameId::fonv:
       // Don't bother checking for the games that don't share their master
       // plugin name.
       return true;
     default:
-      throw std::logic_error("Unrecognised game type");
+      throw std::logic_error("Unrecognised game ID");
   }
 }
 
-bool IsValidGamePath(const GameType gameType,
+bool IsValidGamePath(const GameId gameId,
                      const std::string& masterFilename,
                      const std::filesystem::path& pathToCheck) {
   return !pathToCheck.empty() &&
-         std::filesystem::exists(pathToCheck / GetPluginsFolderName(gameType) /
+         std::filesystem::exists(pathToCheck / GetPluginsFolderName(gameId) /
                                  std::filesystem::u8path(masterFilename)) &&
-         ExecutableExists(gameType, pathToCheck);
+         ExecutableExists(gameId, pathToCheck);
 }
 
 void SortPathsByPreferredLanguage(
@@ -225,9 +203,8 @@ std::optional<std::filesystem::path> GetLocalisedGameInstallPath(
                     pathToCheck.language);
     }
 
-    if (IsValidGamePath(GetGameType(gameId),
-                        GetMasterFilename(gameId),
-                        pathToCheck.installPath)) {
+    if (IsValidGamePath(
+            gameId, GetMasterFilename(gameId), pathToCheck.installPath)) {
       return pathToCheck.installPath;
     }
   }

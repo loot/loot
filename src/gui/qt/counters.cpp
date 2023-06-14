@@ -25,9 +25,11 @@
 
 #include "gui/qt/counters.h"
 
+#include "gui/state/game/helpers.h"
+
 namespace loot {
 GeneralInformationCounters::GeneralInformationCounters(
-    const std::vector<SimpleMessage>& generalMessages,
+    const std::vector<SourcedMessage>& generalMessages,
     const std::vector<PluginItem>& plugins) {
   countMessages(generalMessages);
 
@@ -49,7 +51,7 @@ GeneralInformationCounters::GeneralInformationCounters(
 }
 
 void GeneralInformationCounters::countMessages(
-    const std::vector<SimpleMessage>& messages) {
+    const std::vector<SourcedMessage>& messages) {
   for (const auto& message : messages) {
     if (message.type == MessageType::warn) {
       warnings += 1;
@@ -59,6 +61,22 @@ void GeneralInformationCounters::countMessages(
   }
 
   totalMessages += messages.size();
+}
+
+bool shouldFilterMessage(const std::string& pluginName,
+                         const SourcedMessage& message,
+                         const CardContentFiltersState& filters) {
+  if (message.type == MessageType::say && filters.hideNotes) {
+    return true;
+  }
+
+  if (filters.hideOfficialPluginsCleaningMessages &&
+      message.source == MessageSource::cleaningMetadata &&
+      IsOfficialPlugin(filters.gameId, pluginName)) {
+    return true;
+  }
+
+  return false;
 }
 
 size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
@@ -71,11 +89,12 @@ size_t countHiddenMessages(const std::vector<PluginItem>& plugins,
       continue;
     }
 
-    for (const auto& message : plugin.messages) {
-      if (message.type == MessageType::say && filters.hideNotes) {
-        hidden += 1;
-      }
-    }
+    hidden += std::count_if(plugin.messages.begin(),
+                            plugin.messages.end(),
+                            [&](const SourcedMessage& message) {
+                              return shouldFilterMessage(
+                                  plugin.name, message, filters);
+                            });
   }
 
   return hidden;

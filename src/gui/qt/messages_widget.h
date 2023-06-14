@@ -26,9 +26,9 @@
 #ifndef LOOT_GUI_QT_MESSAGES_WIDGET
 #define LOOT_GUI_QT_MESSAGES_WIDGET
 
-#include <loot/struct/simple_message.h>
-
 #include <QtWidgets/QWidget>
+
+#include "gui/sourced_message.h"
 
 namespace loot {
 // Use a pair of message type and text to avoid having to define the obvious
@@ -39,7 +39,7 @@ class MessagesWidget : public QWidget {
 public:
   explicit MessagesWidget(QWidget* parent);
 
-  void setMessages(const std::vector<SimpleMessage>& messages);
+  void setMessages(const std::vector<SourcedMessage>& messages);
 
   void refresh();
 
@@ -50,7 +50,7 @@ private:
 
   void setMessages(const std::vector<BareMessage>& messages);
 
-  bool willChangeContent(const std::vector<SimpleMessage>& messages) const;
+  bool willChangeContent(const std::vector<SourcedMessage>& messages) const;
 };
 }
 

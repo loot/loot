@@ -233,8 +233,7 @@ std::vector<std::filesystem::path> FindGameInstallPathsInRegistry(
     const auto path = ReadPathFromRegistry(registry, registryValue);
 
     if (path.has_value() &&
-        IsValidGamePath(
-            GetGameType(gameId), GetMasterFilename(gameId), path.value())) {
+        IsValidGamePath(gameId, GetMasterFilename(gameId), path.value())) {
       installPaths.push_back(path.value());
     }
   }

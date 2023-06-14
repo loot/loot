@@ -135,7 +135,7 @@ int calculateSidebarPositionSectionWidth(size_t pluginCount) {
   return numberOfDigits * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
-int calculateSidebarIndexSectionWidth(GameType gameType) {
+int calculateSidebarIndexSectionWidth(bool gameSupportsLightPlugins) {
   // Find the widest hex character in the current font and use that to
   // calculate the load order section width.
   static constexpr std::array<char, 16> HEX_CHARACTERS = {'0',
@@ -172,18 +172,13 @@ int calculateSidebarIndexSectionWidth(GameType gameType) {
 
   // If the game supports light plugins leave enough space for their longer
   // indexes, otherwise only leave space for two hex digits.
-  switch (gameType) {
-    case GameType::tes3:
-    case GameType::tes4:
-    case GameType::tes5:
-    case GameType::fo3:
-    case GameType::fonv:
-      return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
-    default:
-      auto prefixWidth =
-          static_cast<int>(fontMetrics.size(Qt::TextSingleLine, "FE ").width());
-      return prefixWidth + 3 * static_cast<int>(maxCharWidth) + paddingWidth;
+  if (gameSupportsLightPlugins) {
+    const auto prefixWidth =
+        static_cast<int>(fontMetrics.size(Qt::TextSingleLine, "FE ").width());
+    return prefixWidth + 3 * static_cast<int>(maxCharWidth) + paddingWidth;
   }
+
+  return 2 * static_cast<int>(maxCharWidth) + paddingWidth;
 }
 
 LootSettings::WindowPosition getWindowPosition(QWidget& window) {
@@ -264,7 +259,7 @@ void MainWindow::initialise() {
     const auto initHasErrored =
         std::any_of(initMessages.begin(),
                     initMessages.end(),
-                    [](const SimpleMessage& message) {
+                    [](const SourcedMessage& message) {
                       return message.type == MessageType::error;
                     });
     pluginItemModel->setGeneralMessages(std::move(initMessages));
@@ -274,6 +269,7 @@ void MainWindow::initialise() {
     }
 
     const auto& filters = state.getSettings().getFilters();
+    filtersWidget->setGameId(state.GetCurrentGame().GetSettings().Id());
     filtersWidget->setFilterStates(filters);
 
     // Apply the filters before loading the game because that avoids having
@@ -441,6 +437,8 @@ void MainWindow::setupUi() {
 
 void MainWindow::setupMenuBar() {
   // Create actions.
+  actionUpdateMasterlists->setObjectName("actionUpdateMasterlists");
+
   actionSettings->setObjectName("actionSettings");
 
   actionBackupData->setObjectName("actionBackupData");
@@ -493,6 +491,9 @@ void MainWindow::setupMenuBar() {
   menubar->addAction(menuPlugin->menuAction());
   menubar->addAction(menuHelp->menuAction());
   menuFile->addAction(actionSettings);
+  menuFile->addSeparator();
+  menuFile->addAction(actionUpdateMasterlists);
+  menuFile->addSeparator();
   menuFile->addAction(actionBackupData);
   menuFile->addAction(actionOpenLOOTDataFolder);
   menuFile->addSeparator();
@@ -655,6 +656,8 @@ void MainWindow::translateUi() {
   /* translators: This string is an action in the File menu. */
   actionSettings->setText(translate("&Settings..."));
   /* translators: This string is an action in the File menu. */
+  actionUpdateMasterlists->setText(translate("&Update All Masterlists"));
+  /* translators: This string is an action in the File menu. */
   actionBackupData->setText(translate("&Backup LOOT Data"));
   /* translators: This string is an action in the File menu. */
   actionOpenLOOTDataFolder->setText(translate("&Open LOOT Data Folder"));
@@ -716,6 +719,7 @@ void MainWindow::translateUi() {
 
 void MainWindow::setIcons() {
   actionSettings->setIcon(IconFactory::getSettingsIcon());
+  actionUpdateMasterlists->setIcon(IconFactory::getUpdateMasterlistIcon());
   actionBackupData->setIcon(IconFactory::getArchiveIcon());
   actionQuit->setIcon(IconFactory::getQuitIcon());
   actionViewDocs->setIcon(IconFactory::getViewDocsIcon());
@@ -749,8 +753,7 @@ void MainWindow::enableGameActions() {
   actionSearch->setEnabled(true);
 
   const auto enableRedatePlugins =
-      state.GetCurrentGame().GetSettings().Type() == GameType::tes5 ||
-      state.GetCurrentGame().GetSettings().Type() == GameType::tes5se;
+      ShouldAllowRedating(state.GetCurrentGame().GetSettings().Type());
   actionRedatePlugins->setEnabled(enableRedatePlugins);
 
   actionFixAmbiguousLoadOrder->setEnabled(false);
@@ -773,6 +776,7 @@ void MainWindow::disablePluginActions() { menuPlugin->setEnabled(false); }
 
 void MainWindow::enterEditingState() {
   actionSettings->setDisabled(true);
+  actionUpdateMasterlists->setDisabled(true);
   actionOpenGroupsEditor->setDisabled(true);
   actionRefreshContent->setDisabled(true);
   actionClearAllUserMetadata->setDisabled(true);
@@ -788,6 +792,7 @@ void MainWindow::enterEditingState() {
 
 void MainWindow::exitEditingState() {
   actionSettings->setEnabled(true);
+  actionUpdateMasterlists->setEnabled(true);
   actionOpenGroupsEditor->setEnabled(true);
   actionRefreshContent->setEnabled(true);
   actionClearAllUserMetadata->setEnabled(true);
@@ -809,6 +814,7 @@ void MainWindow::enterSortingState() {
   actionDiscardSort->setVisible(true);
 
   actionSettings->setDisabled(true);
+  actionUpdateMasterlists->setDisabled(true);
   gameComboBox->setDisabled(true);
   actionRefreshContent->setDisabled(true);
   actionCopyLoadOrder->setDisabled(true);
@@ -822,6 +828,7 @@ void MainWindow::exitSortingState() {
   actionDiscardSort->setVisible(false);
 
   actionSettings->setDisabled(false);
+  actionUpdateMasterlists->setDisabled(false);
   gameComboBox->setDisabled(false);
   actionRefreshContent->setDisabled(false);
   actionCopyLoadOrder->setDisabled(false);
@@ -847,8 +854,9 @@ void MainWindow::loadGame(bool isOnLOOTStartup) {
   executeBackgroundQuery(std::move(query), handler, progressUpdater);
 }
 
-void MainWindow::updateCounts(const std::vector<SimpleMessage>& generalMessages,
-                              const std::vector<PluginItem>& plugins) {
+void MainWindow::updateCounts(
+    const std::vector<SourcedMessage>& generalMessages,
+    const std::vector<PluginItem>& plugins) {
   const auto counters = GeneralInformationCounters(generalMessages, plugins);
   const auto hiddenMessageCount =
       countHiddenMessages(plugins, filtersWidget->getCardContentFiltersState());
@@ -866,13 +874,13 @@ void MainWindow::updateGeneralInformation() {
                                             FileType::MasterlistPrelude);
 
   auto initMessages = state.getInitMessages();
-  auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getSettings().getLanguage());
+  const auto gameMessages =
+      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
   pluginItemModel->setGeneralInformation(
-      state.GetCurrentGame().GetSettings().Type(),
+      SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type()),
       masterlistInfo,
       preludeInfo,
       initMessages);
@@ -880,8 +888,8 @@ void MainWindow::updateGeneralInformation() {
 
 void MainWindow::updateGeneralMessages() {
   auto initMessages = state.getInitMessages();
-  auto gameMessages = ToSimpleMessages(state.GetCurrentGame().GetMessages(),
-                                       state.getSettings().getLanguage());
+  auto gameMessages =
+      state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
   initMessages.insert(
       initMessages.end(), gameMessages.begin(), gameMessages.end());
 
@@ -912,11 +920,12 @@ void MainWindow::updateSidebarColumnWidths() {
   // If there is no current game set (i.e. on initial construction), use TES5 SE
   // to calculate the load order section width because that's one of the games
   // that uses the wider width.
-  const auto indexSectionWidth =
+  const auto gameSupportsLightPlugins =
       state.HasCurrentGame()
-          ? calculateSidebarIndexSectionWidth(
-                state.GetCurrentGame().GetSettings().Type())
-          : calculateSidebarIndexSectionWidth(GameType::tes5se);
+          ? SupportsLightPlugins(state.GetCurrentGame().GetSettings().Type())
+          : false;
+  const auto indexSectionWidth =
+      calculateSidebarIndexSectionWidth(gameSupportsLightPlugins);
 
   const auto stateSectionWidth =
       QApplication::style()->pixelMetric(QStyle::PM_ListViewIconSize) +
@@ -998,12 +1007,17 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   if (state.getSettings().isMasterlistUpdateBeforeSortEnabled()) {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    auto task = new UpdateMasterlistTask(state);
+    const auto preludeTask = new UpdatePreludeTask(state);
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
 
-    connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
-    connect(task, &Task::error, this, &MainWindow::handleError);
+    tasks.push_back(preludeTask);
 
-    tasks.push_back(task);
+    const auto masterlistTask =
+        new UpdateMasterlistTask(state.GetCurrentGame());
+
+    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+
+    tasks.push_back(masterlistTask);
   }
 
   auto progressUpdater = new ProgressUpdater();
@@ -1024,12 +1038,13 @@ void MainWindow::sortPlugins(bool isAutoSort) {
   const auto sortHandler = isAutoSort ? &MainWindow::handlePluginsAutoSorted
                                       : &MainWindow::handlePluginsManualSorted;
 
-  connect(sortTask, &Task::finished, this, sortHandler);
   connect(sortTask, &Task::error, this, &MainWindow::handleError);
 
   tasks.push_back(sortTask);
 
-  executeBackgroundTasks(tasks, progressUpdater);
+  const auto executor = new SequentialTaskExecutor(this, tasks);
+
+  executeBackgroundTasks(executor, progressUpdater, sortHandler);
 }
 
 void MainWindow::showFirstRunDialog() {
@@ -1222,14 +1237,15 @@ void MainWindow::executeBackgroundQuery(
   connect(task, &Task::finished, this, onComplete);
   connect(task, &Task::error, this, &MainWindow::handleError);
 
-  executeBackgroundTasks({task}, progressUpdater);
+  const auto executor = new SequentialTaskExecutor(this, {task});
+
+  executeBackgroundTasks(executor, progressUpdater, nullptr);
 }
 
 void MainWindow::executeBackgroundTasks(
-    std::vector<Task*> tasks,
-    const ProgressUpdater* progressUpdater) {
-  auto executor = new TaskExecutor(this, tasks);
-
+    TaskExecutor* executor,
+    const ProgressUpdater* progressUpdater,
+    void (MainWindow::*onComplete)(std::vector<QueryResult>)) {
   if (progressUpdater != nullptr) {
     connect(progressUpdater,
             &ProgressUpdater::progressUpdate,
@@ -1240,6 +1256,10 @@ void MainWindow::executeBackgroundTasks(
             &TaskExecutor::finished,
             progressUpdater,
             &QObject::deleteLater);
+  }
+
+  if (onComplete != nullptr) {
+    connect(executor, &TaskExecutor::finished, this, onComplete);
   }
 
   connect(executor, &TaskExecutor::finished, executor, &QObject::deleteLater);
@@ -1302,10 +1322,14 @@ void MainWindow::handleGameDataLoaded(QueryResult result) {
   enableGameActions();
 }
 
-bool MainWindow::handlePluginsSorted(QueryResult result) {
+bool MainWindow::handlePluginsSorted(std::vector<QueryResult> results) {
+  if (results.size() > 1) {
+    handleMasterlistUpdated(results);
+  }
+
   filtersWidget->resetConflictsAndGroupsFilters();
 
-  auto sortedPlugins = std::get<PluginItems>(result);
+  auto sortedPlugins = std::get<PluginItems>(results.back());
 
   if (sortedPlugins.empty()) {
     // If there was a sorting failure the array of plugins will be empty.
@@ -1407,6 +1431,47 @@ void MainWindow::on_actionSettings_triggered() {
     // Adjust size because otherwise the size is slightly too small the first
     // time the dialog is opened.
     settingsDialog->adjustSize();
+  } catch (const std::exception& e) {
+    handleException(e);
+  }
+}
+
+void MainWindow::on_actionUpdateMasterlists_triggered() {
+  try {
+    handleProgressUpdate(translate("Updating and parsing masterlist..."));
+
+    const auto preludeSource = state.getSettings().getPreludeSource();
+    const auto preludePath = state.getPreludePath();
+
+    std::vector<Task*> tasks;
+
+    const auto preludeTask = new UpdatePreludeTask(state);
+
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
+
+    tasks.push_back(preludeTask);
+
+    for (const auto& settings : state.getSettings().getGameSettings()) {
+      // Masterlist update assumes that the game folder exists, so ensure that.
+      InitLootGameFolder(state.getLootDataPath(), settings);
+
+      const auto task = new UpdateMasterlistTask(
+          settings.FolderName(),
+          settings.MasterlistSource(),
+          GetMasterlistPath(state.getLootDataPath(), settings));
+
+      connect(task, &Task::error, this, &MainWindow::handleError);
+
+      tasks.push_back(task);
+    }
+
+    handleProgressUpdate(translate("Updating all masterlists..."));
+
+    const auto executor = new ParallelTaskExecutor(this, tasks);
+
+    executeBackgroundTasks(
+        executor, nullptr, &MainWindow::handleMasterlistsUpdated);
+
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1945,12 +2010,18 @@ void MainWindow::on_actionUpdateMasterlist_triggered() {
   try {
     handleProgressUpdate(translate("Updating and parsing masterlist..."));
 
-    auto task = new UpdateMasterlistTask(state);
+    const auto preludeTask = new UpdatePreludeTask(state);
+    connect(preludeTask, &Task::error, this, &MainWindow::handleError);
 
-    connect(task, &Task::finished, this, &MainWindow::handleMasterlistUpdated);
-    connect(task, &Task::error, this, &MainWindow::handleError);
+    auto masterlistTask = new UpdateMasterlistTask(state.GetCurrentGame());
 
-    executeBackgroundTasks({task}, nullptr);
+    connect(masterlistTask, &Task::error, this, &MainWindow::handleError);
+
+    const auto executor =
+        new SequentialTaskExecutor(this, {preludeTask, masterlistTask});
+
+    executeBackgroundTasks(
+        executor, nullptr, &MainWindow::handleMasterlistUpdated);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -2246,6 +2317,7 @@ void MainWindow::on_searchDialog_currentResultChanged(size_t resultIndex) {
 
 void MainWindow::handleGameChanged(QueryResult result) {
   try {
+    filtersWidget->setGameId(state.GetCurrentGame().GetSettings().Id());
     filtersWidget->resetConflictsAndGroupsFilters();
     disablePluginActions();
 
@@ -2279,11 +2351,12 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
 
     if (state.getSettings().isAutoSortEnabled()) {
       if (hasErrorMessages()) {
-        state.GetCurrentGame().AppendMessage(
-            Message(MessageType::error,
-                    boost::locale::translate(
-                        "Auto-sort has been cancelled as there is at "
-                        "least one error message displayed.")));
+        state.GetCurrentGame().AppendMessage(CreatePlainTextSourcedMessage(
+            MessageType::error,
+            MessageSource::autoSortCancellation,
+            boost::locale::translate(
+                "Auto-sort has been cancelled as there is at "
+                "least one error message displayed.")));
 
         updateGeneralMessages();
       } else {
@@ -2299,9 +2372,9 @@ void MainWindow::handleStartupGameDataLoaded(QueryResult result) {
   }
 }
 
-void MainWindow::handlePluginsManualSorted(QueryResult result) {
+void MainWindow::handlePluginsManualSorted(std::vector<QueryResult> results) {
   try {
-    const auto loadOrderChanged = handlePluginsSorted(result);
+    const auto loadOrderChanged = handlePluginsSorted(results);
 
     if (!loadOrderChanged) {
       // Perform ambiguous load order check because load order state was
@@ -2313,9 +2386,9 @@ void MainWindow::handlePluginsManualSorted(QueryResult result) {
   }
 }
 
-void MainWindow::handlePluginsAutoSorted(QueryResult result) {
+void MainWindow::handlePluginsAutoSorted(std::vector<QueryResult> results) {
   try {
-    handlePluginsSorted(result);
+    handlePluginsSorted(results);
 
     if (actionApplySort->isVisible()) {
       actionApplySort->trigger();
@@ -2329,9 +2402,13 @@ void MainWindow::handlePluginsAutoSorted(QueryResult result) {
   }
 }
 
-void MainWindow::handleMasterlistUpdated(QueryResult result) {
+void MainWindow::handleMasterlistUpdated(std::vector<QueryResult> results) {
   try {
-    if (!std::holds_alternative<PluginItems>(result)) {
+    const auto wasPreludeUpdated = std::get<bool>(results.at(0));
+    const auto wasMasterlistUpdated =
+        std::get<MasterlistUpdateResult>(results.at(1)).second;
+
+    if (!wasPreludeUpdated && !wasMasterlistUpdated) {
       progressDialog->reset();
       showNotification(translate("No masterlist update was necessary."));
 
@@ -2341,7 +2418,14 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
       return;
     }
 
-    handleGameDataLoaded(result);
+    state.GetCurrentGame().LoadMetadata();
+
+    const auto pluginItems =
+        GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
+                       state.GetCurrentGame(),
+                       state.getSettings().getLanguage());
+
+    handleGameDataLoaded(pluginItems);
 
     auto masterlistInfo = getFileRevisionSummary(
         state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
@@ -2353,6 +2437,84 @@ void MainWindow::handleMasterlistUpdated(QueryResult result) {
   } catch (const std::exception& e) {
     handleException(e);
   }
+}
+
+void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
+  // The results are in an unknown order due to parallel task execution.
+  bool wasPreludeUpdated{false};
+  for (const auto& result : results) {
+    if (std::holds_alternative<bool>(result)) {
+      wasPreludeUpdated = std::get<bool>(result);
+      break;
+    }
+  }
+
+  const auto logger = getLogger();
+  const auto gamesSettings = state.getSettings().getGameSettings();
+
+  std::vector<std::string> updatedGameNames;
+  bool wasCurrentGameMasterlistUpdated{false};
+  for (const auto& result : results) {
+    if (!std::holds_alternative<MasterlistUpdateResult>(result)) {
+      continue;
+    }
+
+    const auto updateResult = std::get<MasterlistUpdateResult>(result);
+
+    if (wasPreludeUpdated || updateResult.second) {
+      const auto it =
+          std::find_if(gamesSettings.begin(),
+                       gamesSettings.end(),
+                       [&](const GameSettings& settings) {
+                         return settings.FolderName() == updateResult.first;
+                       });
+
+      if (it != gamesSettings.end()) {
+        updatedGameNames.push_back(it->Name());
+      } else if (logger) {
+        logger->error(
+            "Unrecognised game folder name {} encountered while "
+            "updating all masterlists",
+            updateResult.first);
+      }
+
+      if (updateResult.first ==
+          state.GetCurrentGame().GetSettings().FolderName()) {
+        wasCurrentGameMasterlistUpdated = true;
+      }
+    }
+  }
+
+  if (updatedGameNames.empty()) {
+    progressDialog->reset();
+    showNotification(translate("No masterlist updates were necessary."));
+
+    // Update general info as the timestamp may have changed and if
+    // metadata was previously missing it can now be displayed.
+    updateGeneralInformation();
+    return;
+  }
+
+  if (wasCurrentGameMasterlistUpdated) {
+    // Need to reload the current game data.
+    state.GetCurrentGame().LoadMetadata();
+
+    const auto pluginItems =
+        GetPluginItems(state.GetCurrentGame().GetLoadOrder(),
+                       state.GetCurrentGame(),
+                       state.getSettings().getLanguage());
+
+    handleGameDataLoaded(pluginItems);
+  }
+
+  auto message = translate("Masterlists updated for the following games:\n\n");
+  for (const auto& gameName : updatedGameNames) {
+    message += QString::fromStdString(gameName + "\n");
+  }
+
+  auto messageBox = QMessageBox(
+      QMessageBox::NoIcon, translate("LOOT"), message, QMessageBox::Ok, this);
+  messageBox.exec();
 }
 
 void MainWindow::handleConflictsChecked(QueryResult result) {
@@ -2408,7 +2570,8 @@ void MainWindow::handleUpdateCheckFinished(QueryResult result) {
               .str(),
           "https://github.com/loot/loot/releases/latest");
 
-      state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
+      state.GetCurrentGame().AppendMessage(
+          SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
       updateGeneralMessages();
     }
   } catch (const std::exception& e) {
@@ -2432,7 +2595,8 @@ void MainWindow::handleUpdateCheckError(const std::string&) {
       }
     }
 
-    state.GetCurrentGame().AppendMessage(Message(MessageType::error, text));
+    state.GetCurrentGame().AppendMessage(
+        SourcedMessage{MessageType::error, MessageSource::updateCheck, text});
     updateGeneralMessages();
   } catch (const std::exception& e) {
     handleException(e);

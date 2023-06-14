@@ -80,104 +80,11 @@ void BackupLoadOrder(const std::vector<std::string>& loadOrder,
   }
 }
 
-Message PlainTextMessage(const MessageType type, const std::string& text) {
-  return Message(type, EscapeMarkdownASCIIPunctuation(text));
-}
-
-SimpleMessage PlainTextSimpleMessage(const MessageType type,
-                                     const std::string& text) {
-  return SimpleMessage{type, EscapeMarkdownASCIIPunctuation(text)};
-}
-
 std::string EscapeMarkdownASCIIPunctuation(const std::string& text) {
   // As defined by <https://github.github.com/gfm/#ascii-punctuation-character>.
   static const std::regex asciiPunctuationCharacters(
       "([!\"#$%&'()*+,\\-./:;<=>?@\\[\\\\\\]^_`{|}~])");
   return std::regex_replace(text, asciiPunctuationCharacters, "\\$1");
-}
-
-Message ToMessage(const PluginCleaningData& cleaningData) {
-  using boost::locale::translate;
-  using fmt::format;
-
-  const std::string itmRecords =
-      format(translate("{0} ITM record",
-                       "{0} ITM records",
-                       static_cast<int>(cleaningData.GetITMCount()))
-                 .str(),
-             cleaningData.GetITMCount());
-  const std::string deletedReferences = format(
-      translate("{0} deleted reference",
-                "{0} deleted references",
-                static_cast<int>(cleaningData.GetDeletedReferenceCount()))
-          .str(),
-      cleaningData.GetDeletedReferenceCount());
-  const std::string deletedNavmeshes =
-      format(translate("{0} deleted navmesh",
-                       "{0} deleted navmeshes",
-                       static_cast<int>(cleaningData.GetDeletedNavmeshCount()))
-                 .str(),
-             cleaningData.GetDeletedNavmeshCount());
-
-  std::string message;
-  if (cleaningData.GetITMCount() > 0 &&
-      cleaningData.GetDeletedReferenceCount() > 0 &&
-      cleaningData.GetDeletedNavmeshCount() > 0) {
-    message = format(translate("{0} found {1}, {2} and {3}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     itmRecords,
-                     deletedReferences,
-                     deletedNavmeshes);
-  } else if (cleaningData.GetITMCount() == 0 &&
-             cleaningData.GetDeletedReferenceCount() == 0 &&
-             cleaningData.GetDeletedNavmeshCount() == 0) {
-    message = format(translate("{0} found dirty edits.").str(),
-                     cleaningData.GetCleaningUtility());
-  } else if (cleaningData.GetITMCount() == 0 &&
-             cleaningData.GetDeletedReferenceCount() > 0 &&
-             cleaningData.GetDeletedNavmeshCount() > 0) {
-    message = format(translate("{0} found {1} and {2}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     deletedReferences,
-                     deletedNavmeshes);
-  } else if (cleaningData.GetITMCount() > 0 &&
-             cleaningData.GetDeletedReferenceCount() == 0 &&
-             cleaningData.GetDeletedNavmeshCount() > 0) {
-    message = format(translate("{0} found {1} and {2}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     itmRecords,
-                     deletedNavmeshes);
-  } else if (cleaningData.GetITMCount() > 0 &&
-             cleaningData.GetDeletedReferenceCount() > 0 &&
-             cleaningData.GetDeletedNavmeshCount() == 0) {
-    message = format(translate("{0} found {1} and {2}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     itmRecords,
-                     deletedReferences);
-  } else if (cleaningData.GetITMCount() > 0)
-    message = format(translate("{0} found {1}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     itmRecords);
-  else if (cleaningData.GetDeletedReferenceCount() > 0)
-    message = format(translate("{0} found {1}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     deletedReferences);
-  else if (cleaningData.GetDeletedNavmeshCount() > 0)
-    message = format(translate("{0} found {1}.").str(),
-                     cleaningData.GetCleaningUtility(),
-                     deletedNavmeshes);
-
-  auto detail = cleaningData.GetDetail();
-  if (detail.empty()) {
-    return Message(MessageType::warn, message);
-  }
-
-  for (auto& content : detail) {
-    content = MessageContent(message + " " + content.GetText(),
-                             content.GetLanguage());
-  }
-
-  return Message(MessageType::warn, detail);
 }
 
 std::string DescribeEdgeType(const EdgeType edgeType) {
@@ -228,7 +135,7 @@ std::string DescribeCycle(const std::vector<Vertex>& cycle) {
   return text;
 }
 
-std::vector<Message> CheckForRemovedPlugins(
+std::vector<SourcedMessage> CheckForRemovedPlugins(
     const std::vector<std::string>& pluginPathsBefore,
     const std::vector<std::string>& pluginNamesAfter) {
   // Plugin name case won't change, so can compare strings
@@ -239,7 +146,7 @@ std::vector<Message> CheckForRemovedPlugins(
   static constexpr size_t GHOST_EXTENSION_LENGTH =
       std::char_traits<char>::length(GHOST_EXTENSION);
 
-  std::vector<Message> messages;
+  std::vector<SourcedMessage> messages;
   for (const auto& pluginPath : pluginPathsBefore) {
     const auto unghostedPluginPath =
         boost::iends_with(pluginPath, GHOST_EXTENSION)
@@ -250,8 +157,9 @@ std::vector<Message> CheckForRemovedPlugins(
         std::filesystem::u8path(unghostedPluginPath).filename().u8string();
 
     if (pluginsSet.count(unghostedPluginName) == 0) {
-      messages.push_back(PlainTextMessage(
+      messages.push_back(CreatePlainTextSourcedMessage(
           MessageType::warn,
+          MessageSource::removedPluginsCheck,
           fmt::format(
               boost::locale::translate("LOOT has detected that \"{0}\" is "
                                        "invalid and is now ignoring it.")
@@ -385,10 +293,10 @@ std::filesystem::path ResolveGameFilePath(
 }
 
 std::vector<std::filesystem::path> GetExternalDataPaths(
-    const GameType gameType,
+    const GameId gameId,
     const bool isMicrosoftStoreInstall,
     const std::filesystem::path& dataPath) {
-  if (gameType == GameType::fo4 && isMicrosoftStoreInstall) {
+  if (gameId == GameId::fo4 && isMicrosoftStoreInstall) {
     return {dataPath / MS_FO4_AUTOMATRON_DATA_PATH,
             dataPath / MS_FO4_NUKA_WORLD_DATA_PATH,
             dataPath / MS_FO4_WASTELAND_DATA_PATH,
@@ -399,5 +307,340 @@ std::vector<std::filesystem::path> GetExternalDataPaths(
   }
 
   return {};
+}
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/morrowind/__init__.py#L125>
+static constexpr std::array<const char*, 3> TES3_OFFICIAL_PLUGINS = {
+    "bloodmoon.esm",
+    "morrowind.esm",
+    "tribunal.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/oblivion/__init__.py#L266>
+static constexpr std::array<const char*, 16> TES4_OFFICIAL_PLUGINS = {
+    "dlcbattlehorncastle.esp",
+    "dlcfrostcrag.esp",
+    "dlchorsearmor.esp",
+    "dlcmehrunesrazor.esp",
+    "dlcorrery.esp",
+    "dlcshiveringisles.esp",
+    "dlcspelltomes.esp",
+    "dlcthievesden.esp",
+    "dlcvilelair.esp",
+    "knights.esp",
+    "oblivion.esm",
+    "oblivion_1.1b.esm",
+    "oblivion_1.1.esm",
+    "oblivion_gbr si.esm",
+    "oblivion_goty non-si.esm",
+    "oblivion_si.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrim/__init__.py#L277>
+static constexpr std::array<const char*, 8> TES5_OFFICIAL_PLUGINS = {
+    "dawnguard.esm",
+    "dragonborn.esm",
+    "hearthfires.esm",
+    "highrestexturepack01.esp",
+    "highrestexturepack02.esp",
+    "highrestexturepack03.esp",
+    "skyrim.esm",
+    "update.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimse/__init__.py#L104>
+static constexpr std::array<const char*, 79> TES5SE_OFFICIAL_PLUGINS = {
+    "skyrim.esm",
+    "update.esm",
+    "dawnguard.esm",
+    "dragonborn.esm",
+    "hearthfires.esm",
+    "ccafdsse001-dwesanctuary.esm",
+    "ccasvsse001-almsivi.esm",
+    "ccbgssse001-fish.esm",
+    "ccbgssse002-exoticarrows.esl",
+    "ccbgssse003-zombies.esl",
+    "ccbgssse004-ruinsedge.esl",
+    "ccbgssse005-goldbrand.esl",
+    "ccbgssse006-stendarshammer.esl",
+    "ccbgssse007-chrysamere.esl",
+    "ccbgssse008-wraithguard.esl",
+    "ccbgssse010-petdwarvenarmoredmudcrab.esl",
+    "ccbgssse011-hrsarmrelvn.esl",
+    "ccbgssse012-hrsarmrstl.esl",
+    "ccbgssse013-dawnfang.esl",
+    "ccbgssse014-spellpack01.esl",
+    "ccbgssse016-umbra.esm",
+    "ccbgssse018-shadowrend.esl",
+    "ccbgssse019-staffofsheogorath.esl",
+    "ccbgssse020-graycowl.esl",
+    "ccbgssse021-lordsmail.esl",
+    "ccbgssse025-advdsgs.esm",
+    "ccbgssse031-advcyrus.esm",
+    "ccbgssse034-mntuni.esl",
+    "ccbgssse035-petnhound.esl",
+    "ccbgssse036-petbwolf.esl",
+    "ccbgssse037-curios.esl",
+    "ccbgssse038-bowofshadows.esl",
+    "ccbgssse040-advobgobs.esl",
+    "ccbgssse041-netchleather.esl",
+    "ccbgssse043-crosselv.esl",
+    "ccbgssse045-hasedoki.esl",
+    "ccbgssse050-ba_daedric.esl",
+    "ccbgssse051-ba_daedricmail.esl",
+    "ccbgssse052-ba_iron.esl",
+    "ccbgssse053-ba_leather.esl",
+    "ccbgssse054-ba_orcish.esl",
+    "ccbgssse055-ba_orcishscaled.esl",
+    "ccbgssse056-ba_silver.esl",
+    "ccbgssse057-ba_stalhrim.esl",
+    "ccbgssse058-ba_steel.esl",
+    "ccbgssse059-ba_dragonplate.esl",
+    "ccbgssse060-ba_dragonscale.esl",
+    "ccbgssse061-ba_dwarven.esl",
+    "ccbgssse062-ba_dwarvenmail.esl",
+    "ccbgssse063-ba_ebony.esl",
+    "ccbgssse064-ba_elven.esl",
+    "ccbgssse066-staves.esl",
+    "ccbgssse067-daedinv.esm",
+    "ccbgssse068-bloodfall.esl",
+    "ccbgssse069-contest.esl",
+    "cccbhsse001-gaunt.esl",
+    "ccedhsse001-norjewel.esl",
+    "ccedhsse002-splkntset.esl",
+    "ccedhsse003-redguard.esl",
+    "cceejsse001-hstead.esm",
+    "cceejsse002-tower.esl",
+    "cceejsse003-hollow.esl",
+    "cceejsse004-hall.esl",
+    "cceejsse005-cave.esm",
+    "ccffbsse001-imperialdragon.esl",
+    "ccffbsse002-crossbowpack.esl",
+    "ccfsvsse001-backpacks.esl",
+    "cckrtsse001_altar.esl",
+    "ccmtysse001-knightsofthenine.esl",
+    "ccmtysse002-ve.esl",
+    "ccpewsse002-armsofchaos.esl",
+    "ccqdrsse001-survivalmode.esl",
+    "ccqdrsse002-firewood.esl",
+    "ccrmssse001-necrohouse.esl",
+    "cctwbsse001-puzzledungeon.esm",
+    "ccvsvsse001-winter.esl",
+    "ccvsvsse002-pets.esl",
+    "ccvsvsse003-necroarts.esl",
+    "ccvsvsse004-beafarmer.esl"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/skyrimvr/__init__.py#L70>
+static constexpr std::array<const char*, 80> TES5VR_OFFICIAL_PLUGINS = {
+    "skyrim.esm",
+    "update.esm",
+    "dawnguard.esm",
+    "dragonborn.esm",
+    "hearthfires.esm",
+    "ccafdsse001-dwesanctuary.esm",
+    "ccasvsse001-almsivi.esm",
+    "ccbgssse001-fish.esm",
+    "ccbgssse002-exoticarrows.esl",
+    "ccbgssse003-zombies.esl",
+    "ccbgssse004-ruinsedge.esl",
+    "ccbgssse005-goldbrand.esl",
+    "ccbgssse006-stendarshammer.esl",
+    "ccbgssse007-chrysamere.esl",
+    "ccbgssse008-wraithguard.esl",
+    "ccbgssse010-petdwarvenarmoredmudcrab.esl",
+    "ccbgssse011-hrsarmrelvn.esl",
+    "ccbgssse012-hrsarmrstl.esl",
+    "ccbgssse013-dawnfang.esl",
+    "ccbgssse014-spellpack01.esl",
+    "ccbgssse016-umbra.esm",
+    "ccbgssse018-shadowrend.esl",
+    "ccbgssse019-staffofsheogorath.esl",
+    "ccbgssse020-graycowl.esl",
+    "ccbgssse021-lordsmail.esl",
+    "ccbgssse025-advdsgs.esm",
+    "ccbgssse031-advcyrus.esm",
+    "ccbgssse034-mntuni.esl",
+    "ccbgssse035-petnhound.esl",
+    "ccbgssse036-petbwolf.esl",
+    "ccbgssse037-curios.esl",
+    "ccbgssse038-bowofshadows.esl",
+    "ccbgssse040-advobgobs.esl",
+    "ccbgssse041-netchleather.esl",
+    "ccbgssse043-crosselv.esl",
+    "ccbgssse045-hasedoki.esl",
+    "ccbgssse050-ba_daedric.esl",
+    "ccbgssse051-ba_daedricmail.esl",
+    "ccbgssse052-ba_iron.esl",
+    "ccbgssse053-ba_leather.esl",
+    "ccbgssse054-ba_orcish.esl",
+    "ccbgssse055-ba_orcishscaled.esl",
+    "ccbgssse056-ba_silver.esl",
+    "ccbgssse057-ba_stalhrim.esl",
+    "ccbgssse058-ba_steel.esl",
+    "ccbgssse059-ba_dragonplate.esl",
+    "ccbgssse060-ba_dragonscale.esl",
+    "ccbgssse061-ba_dwarven.esl",
+    "ccbgssse062-ba_dwarvenmail.esl",
+    "ccbgssse063-ba_ebony.esl",
+    "ccbgssse064-ba_elven.esl",
+    "ccbgssse066-staves.esl",
+    "ccbgssse067-daedinv.esm",
+    "ccbgssse068-bloodfall.esl",
+    "ccbgssse069-contest.esl",
+    "cccbhsse001-gaunt.esl",
+    "ccedhsse001-norjewel.esl",
+    "ccedhsse002-splkntset.esl",
+    "ccedhsse003-redguard.esl",
+    "cceejsse001-hstead.esm",
+    "cceejsse002-tower.esl",
+    "cceejsse003-hollow.esl",
+    "cceejsse004-hall.esl",
+    "cceejsse005-cave.esm",
+    "ccffbsse001-imperialdragon.esl",
+    "ccffbsse002-crossbowpack.esl",
+    "ccfsvsse001-backpacks.esl",
+    "cckrtsse001_altar.esl",
+    "ccmtysse001-knightsofthenine.esl",
+    "ccmtysse002-ve.esl",
+    "ccpewsse002-armsofchaos.esl",
+    "ccqdrsse001-survivalmode.esl",
+    "ccqdrsse002-firewood.esl",
+    "ccrmssse001-necrohouse.esl",
+    "cctwbsse001-puzzledungeon.esm",
+    "ccvsvsse001-winter.esl",
+    "ccvsvsse002-pets.esl",
+    "ccvsvsse003-necroarts.esl",
+    "ccvsvsse004-beafarmer.esl"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/nehrim/__init__.py#L84>
+static constexpr std::array<const char*, 5> NEHRIM_OFFICIAL_PLUGINS = {
+    "nehrim.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/enderal/__init__.py#L92>
+static constexpr std::array<const char*, 3> ENDERAL_OFFICIAL_PLUGINS = {
+    "enderal - forgotten stories.esm",
+    "skyrim.esm",
+    "update.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/enderalse/__init__.py#L63>
+static constexpr std::array<const char*, 7> ENDERALSE_OFFICIAL_PLUGINS = {
+    "dawnguard.esm",
+    "dragonborn.esm",
+    "enderal - forgotten stories.esm",
+    "hearthfires.esm",
+    "skyrim.esm",
+    "skyui_se.esp",
+    "update.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/fallout3/__init__.py#L277>
+static constexpr std::array<const char*, 6> FO3_OFFICIAL_PLUGINS = {
+    "anchorage.esm",
+    "brokensteel.esm",
+    "fallout3.esm",
+    "pointlookout.esm",
+    "thepitt.esm",
+    "zeta.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/falloutnv/__init__.py#L103>
+static constexpr std::array<const char*, 11> FONV_OFFICIAL_PLUGINS = {
+    "caravanpack.esm",
+    "classicpack.esm",
+    "deadmoney.esm",
+    "falloutnv.esm",
+    "falloutnv_lang.esp",
+    "gunrunnersarsenal.esm",
+    "honesthearts.esm",
+    "lonesomeroad.esm",
+    "mercenarypack.esm",
+    "oldworldblues.esm",
+    "tribalpack.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/fallout4/__init__.py#L140>
+static constexpr std::array<const char*, 7> FO4_OFFICIAL_PLUGINS = {
+    "dlccoast.esm",
+    "dlcnukaworld.esm",
+    "dlcrobot.esm",
+    "dlcworkshop01.esm",
+    "dlcworkshop02.esm",
+    "dlcworkshop03.esm",
+    "fallout4.esm"};
+
+// Taken from
+// <https://github.com/wrye-bash/wrye-bash/blob/ea0a4f36fc57ad904487f2dbd9ec7e8b587bb528/Mopy/bash/game/fallout4vr/__init__.py#L74>
+static constexpr std::array<const char*, 8> FO4VR_OFFICIAL_PLUGINS = {
+    "dlccoast.esm",
+    "dlcnukaworld.esm",
+    "dlcrobot.esm",
+    "dlcworkshop01.esm",
+    "dlcworkshop02.esm",
+    "dlcworkshop03.esm",
+    "fallout4.esm",
+    "fallout4_vr.esm"};
+
+bool IsOfficialPlugin(const GameId gameId, const std::string& pluginName) {
+  const auto lowercased = boost::locale::to_lower(pluginName);
+
+  switch (gameId) {
+    case GameId::tes3:
+      return std::find(TES3_OFFICIAL_PLUGINS.begin(),
+                       TES3_OFFICIAL_PLUGINS.end(),
+                       lowercased) != TES3_OFFICIAL_PLUGINS.end();
+    case GameId::tes4:
+      return std::find(TES4_OFFICIAL_PLUGINS.begin(),
+                       TES4_OFFICIAL_PLUGINS.end(),
+                       lowercased) != TES4_OFFICIAL_PLUGINS.end();
+    case GameId::nehrim:
+      return std::find(NEHRIM_OFFICIAL_PLUGINS.begin(),
+                       NEHRIM_OFFICIAL_PLUGINS.end(),
+                       lowercased) != NEHRIM_OFFICIAL_PLUGINS.end();
+    case GameId::tes5:
+      return std::find(TES5_OFFICIAL_PLUGINS.begin(),
+                       TES5_OFFICIAL_PLUGINS.end(),
+                       lowercased) != TES5_OFFICIAL_PLUGINS.end();
+    case GameId::enderal:
+      return std::find(ENDERAL_OFFICIAL_PLUGINS.begin(),
+                       ENDERAL_OFFICIAL_PLUGINS.end(),
+                       lowercased) != ENDERAL_OFFICIAL_PLUGINS.end();
+    case GameId::tes5se:
+      return std::find(TES5SE_OFFICIAL_PLUGINS.begin(),
+                       TES5SE_OFFICIAL_PLUGINS.end(),
+                       lowercased) != TES5SE_OFFICIAL_PLUGINS.end();
+    case GameId::enderalse:
+      return std::find(ENDERALSE_OFFICIAL_PLUGINS.begin(),
+                       ENDERALSE_OFFICIAL_PLUGINS.end(),
+                       lowercased) != ENDERALSE_OFFICIAL_PLUGINS.end();
+    case GameId::tes5vr:
+      return std::find(TES5VR_OFFICIAL_PLUGINS.begin(),
+                       TES5VR_OFFICIAL_PLUGINS.end(),
+                       lowercased) != TES5VR_OFFICIAL_PLUGINS.end();
+    case GameId::fo3:
+      return std::find(FO3_OFFICIAL_PLUGINS.begin(),
+                       FO3_OFFICIAL_PLUGINS.end(),
+                       lowercased) != FO3_OFFICIAL_PLUGINS.end();
+    case GameId::fonv:
+      return std::find(FONV_OFFICIAL_PLUGINS.begin(),
+                       FONV_OFFICIAL_PLUGINS.end(),
+                       lowercased) != FONV_OFFICIAL_PLUGINS.end();
+    case GameId::fo4:
+      return std::find(FO4_OFFICIAL_PLUGINS.begin(),
+                       FO4_OFFICIAL_PLUGINS.end(),
+                       lowercased) != FO4_OFFICIAL_PLUGINS.end();
+    case GameId::fo4vr:
+      return std::find(FO4VR_OFFICIAL_PLUGINS.begin(),
+                       FO4VR_OFFICIAL_PLUGINS.end(),
+                       lowercased) != FO4VR_OFFICIAL_PLUGINS.end();
+    default:
+      throw std::logic_error("Unrecognised game type");
+  }
+
+  return false;
 }
 }
