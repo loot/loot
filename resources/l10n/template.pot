@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LOOT 0.20.0\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
-"POT-Creation-Date: 2023-06-17 15:57+0100\n"
+"POT-Creation-Date: 2023-06-17 16:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -455,14 +455,14 @@ msgid ""
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1282
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:376
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:378
 #: src/gui/qt/plugin_editor/table_tabs.cpp:396
 #: src/gui/qt/plugin_editor/table_tabs.cpp:433
 msgid "Error"
 msgstr ""
 
 #: src/gui/qt/main_window.cpp:1292
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:370
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:372
 #: src/gui/qt/tasks/network_task.cpp:38 src/gui/query/query.h:69
 msgid ""
 "Oh no, something went wrong! You can check your LOOTDebugLog.txt (you can "
@@ -723,44 +723,46 @@ msgstr ""
 msgid "Groups Editor"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:212
+#. translators: This string is an action in the Groups Editor plugin list
+#. context menu. It is currently the only entry.
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:214
 msgid "&Copy Plugin Names"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:214
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:216
 msgid "Add plugin to group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:216
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:218
 msgid "Group name"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:217
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:219
 msgid "Add a new group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:218
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:220
 msgid "Rename current group"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:219
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:221
 msgid "Auto arrange groups"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:236
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:238
 msgid "You have unsaved changes. Are you sure you want to discard them?"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:309
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:311
 msgid "No plugins are in this group."
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:429
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:565
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:431
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:567
 msgid "Plugins in {0}"
 msgstr ""
 
-#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:522
+#: src/gui/qt/groups_editor/groups_editor_dialog.cpp:524
 msgid "Group already exists!"
 msgstr ""
 
