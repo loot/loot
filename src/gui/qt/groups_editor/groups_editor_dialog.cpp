@@ -209,6 +209,8 @@ void GroupsEditorDialog::setupUi() {
 void GroupsEditorDialog::translateUi() {
   setWindowTitle(translate("Groups Editor"));
 
+  /* translators: This string is an action in the Groups Editor plugin list
+     context menu. It is currently the only entry. */
   actionCopyPluginNames->setText(translate("&Copy Plugin Names"));
 
   addPluginButton->setText(translate("Add plugin to group"));

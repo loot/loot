@@ -87,7 +87,8 @@ void InitLootGameFolder(const std::filesystem::path& lootDataPath_,
   }
 
   // Make sure that the LOOT game path exists.
-  const auto lootGamePath = GetLOOTGamePath(lootDataPath_, settings.FolderName());
+  const auto lootGamePath =
+      GetLOOTGamePath(lootDataPath_, settings.FolderName());
   if (!fs::is_directory(lootGamePath)) {
     if (fs::exists(lootGamePath)) {
       throw FileAccessError(
@@ -674,7 +675,7 @@ std::vector<std::string> Game::SortPlugins() {
     if (logger) {
       logger->error("Failed to sort plugins. Details: {}", e.what());
     }
-    AppendMessage(CreatePlainTextSourcedMessage(
+    AppendMessage(SourcedMessage{
         MessageType::error,
         MessageSource::caughtException,
         fmt::format(
@@ -683,7 +684,7 @@ std::vector<std::string> Game::SortPlugins() {
                 .str(),
             EscapeMarkdownASCIIPunctuation(e.GetCycle().front().GetName()),
             EscapeMarkdownASCIIPunctuation(e.GetCycle().back().GetName()),
-            DescribeCycle(e.GetCycle()))));
+            DescribeCycle(e.GetCycle()))});
     sortedPlugins.clear();
   } catch (UndefinedGroupError& e) {
     if (logger) {
@@ -895,7 +896,7 @@ void Game::LoadMetadata() {
       logger->error("An error occurred while parsing the metadata list(s): {}",
                     e.what());
     }
-    AppendMessage(CreatePlainTextSourcedMessage(
+    AppendMessage(SourcedMessage{
         MessageType::error,
         MessageSource::caughtException,
         fmt::format(
@@ -914,7 +915,7 @@ void Game::LoadMetadata() {
                 "which is linked to on [LOOT's "
                 "website](https://loot.github.io/).")
                 .str(),
-            EscapeMarkdownASCIIPunctuation(e.what()))));
+            EscapeMarkdownASCIIPunctuation(e.what()))});
   }
 }
 
