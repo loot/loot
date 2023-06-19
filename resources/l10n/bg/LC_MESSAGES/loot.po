@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: LOOT 0.20.1\n"
 "Report-Msgid-Bugs-To: https://github.com/loot/loot/issues\n"
 "POT-Creation-Date: 2023-06-17 16:01+0100\n"
-"PO-Revision-Date: 2023-06-19 18:16+0300\n"
+"PO-Revision-Date: 2023-06-19 20:56+0300\n"
 "Last-Translator: Georgi Georgiev (RacerBG) <g.georgiev.shumen@gmail.com>\n"
 "Language-Team: Bulgarian <g.georgiev.shumen@gmail.com>\n"
 "Language: bg\n"
@@ -270,12 +270,12 @@ msgstr "&Обнови всички основни списъци"
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:661
 msgid "&Backup LOOT Data"
-msgstr "&Съхрани данните на „LOOT“"
+msgstr "&Съхрани данните на LOOT"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:663
 msgid "&Open LOOT Data Folder"
-msgstr "&Папка с данни на „LOOT“"
+msgstr "&Папка с данни на LOOT"
 
 #. translators: This string is an action in the File menu.
 #: src/gui/qt/main_window.cpp:665
@@ -402,12 +402,12 @@ msgid ""
 "This appears to be the first time you have run LOOT v{0}. Your current LOOT "
 "data has been backed up to: {1}"
 msgstr ""
-"Изглежда това е първото стартиране на „LOOT“ в{0}. Текущите данни на „LOOT“ "
-"са съхранени в: {1}"
+"Изглежда това е първото стартиране на LOOT в{0}. Текущите данни на LOOT са "
+"съхранени в: {1}"
 
 #: src/gui/qt/main_window.cpp:1081
 msgid "This appears to be the first time you have run LOOT v{0}."
-msgstr "Изглежда това е първото стартиране на „LOOT“ в{0}."
+msgstr "Изглежда това е първото стартиране на LOOT в{0}."
 
 #: src/gui/qt/main_window.cpp:1088
 msgid "Here are some tips to help you get started with the interface."
@@ -444,8 +444,8 @@ msgid ""
 "donations may be made to WrinklyNinja (LOOT's creator and main developer) "
 "using {0}."
 msgstr ""
-"„LOOT“ е безплатен, но ако искате да направите дарение, може да подкрепите "
-"WrinklyNinja (той е създател и главен разработчик на „LOOT“) чрез {0}."
+"LOOT е безплатен, но ако искате да направите дарение, може да подкрепите "
+"WrinklyNinja (създател и главен разработчик на LOOT) чрез {0}."
 
 #: src/gui/qt/main_window.cpp:1127
 msgid "First-Time Tips"
@@ -509,8 +509,8 @@ msgid ""
 "You can use the \"Fix Ambiguous Load Order\" action in the Game menu to "
 "unambiguously set the load order to what is displayed by LOOT."
 msgstr ""
-"„LOOT“ установи, че текущият ред за зареждане е неточен (възможно е играта "
-"да използва различен ред за зареждане).\n"
+"LOOT установи, че текущият ред за зареждане е неточен (възможно е играта да "
+"използва различен ред за зареждане).\n"
 "\n"
 "Изберете „Поправи реда за зареждане“ в падащото меню „Игра“ за да използвате "
 "текущия ред за зареждане."
@@ -521,11 +521,11 @@ msgstr "Обновяване на всички основни списъци..."
 
 #: src/gui/qt/main_window.cpp:1490
 msgid "Your LOOT data has been backed up to: {0}"
-msgstr "Данните на „LOOT“ са съхранени в: {0}"
+msgstr "Данните на LOOT са съхранени в: {0}"
 
 #: src/gui/qt/main_window.cpp:1497
 msgid "No backup has been created as LOOT has no data to backup."
-msgstr "В момента, „LOOT“ няма данни за съхранение."
+msgstr "В момента, LOOT няма данни за съхранение."
 
 #: src/gui/qt/main_window.cpp:1541
 msgid "The load order has been copied to the clipboard."
@@ -533,7 +533,7 @@ msgstr "Редът за зареждане беше копиран в клипб
 
 #: src/gui/qt/main_window.cpp:1559
 msgid "LOOT's content has been copied to the clipboard."
-msgstr "Съдържанието на „LOOT“ беше копирано в клипборда."
+msgstr "Съдържанието на LOOT беше копирано в клипборда."
 
 #: src/gui/qt/main_window.cpp:1571
 msgid "The load order displayed by LOOT has been set."
@@ -620,7 +620,7 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:1903
 msgid "About LOOT"
-msgstr "За „LOOT“"
+msgstr "За LOOT"
 
 #: src/gui/qt/main_window.cpp:2213
 msgid "Identifying conflicting plugins..."
@@ -655,18 +655,18 @@ msgstr ""
 
 #: src/gui/qt/main_window.cpp:2516
 msgid "LOOT"
-msgstr "„LOOT“"
+msgstr "LOOT"
 
 #: src/gui/qt/main_window.cpp:2569
 msgid "A [new release]({0}) of LOOT is available."
-msgstr "Налична е [нова версия]({0}) на „LOOT“."
+msgstr "Налична е [нова версия]({0}) на LOOT."
 
 #: src/gui/qt/main_window.cpp:2586
 msgid ""
 "Failed to check for LOOT updates! You can check your LOOTDebugLog.txt (you "
 "can get to it through the main menu) for more information."
 msgstr ""
-"Проверката за обновявания на „LOOT“ е неуспешна! Вижте „LOOTDebugLog."
+"Проверката за обновявания на LOOT е неуспешна! Вижте „LOOTDebugLog."
 "txt“ (през главното меню) за повече информация."
 
 #: src/gui/qt/plugin_card.cpp:156
@@ -959,7 +959,7 @@ msgstr "Игра"
 #: src/gui/qt/settings/game_tab.cpp:148
 #: src/gui/qt/settings/new_game_dialog.cpp:125
 msgid "LOOT Folder"
-msgstr "Папка на „LOOT“"
+msgstr "Папка на LOOT"
 
 #: src/gui/qt/settings/game_tab.cpp:149
 msgid "Main Master Plugin"
@@ -999,7 +999,7 @@ msgstr "Обновяване на основния списък преди со�
 
 #: src/gui/qt/settings/general_tab.cpp:156
 msgid "Check for LOOT updates on startup"
-msgstr "Проверка за обновявания при стартиране на „LOOT“"
+msgstr "Проверка за обновявания при стартиране на LOOT"
 
 #: src/gui/qt/settings/general_tab.cpp:157
 msgid "Enable debug logging"
@@ -1024,7 +1024,7 @@ msgstr "Изисква се източник на каталога."
 
 #: src/gui/qt/settings/general_tab.cpp:168
 msgid "Language changes will be applied after LOOT is restarted."
-msgstr "Промяната на езика ще бъде приложена след рестартиране на „LOOT“."
+msgstr "Промяната на езика ще бъде приложена след рестартиране на LOOT."
 
 #: src/gui/qt/settings/general_tab.cpp:170
 msgid "Autodetect"
@@ -1107,7 +1107,7 @@ msgstr "Грешка: Настройките на играта не могат �
 
 #: src/gui/state/loot_state.cpp:193
 msgid "Error: Could not create LOOT data directory. {0}"
-msgstr "Грешка: Папката с данните на „LOOT“ не може да бъде създадена. {0}"
+msgstr "Грешка: Папката с данните на LOOT не може да бъде създадена. {0}"
 
 #. translators: This error is displayed when LOOT is unable to
 #. load its own settings file. The placeholder is for additional
@@ -1124,7 +1124,7 @@ msgstr "Грешка: Параметърът --auto-sort е отчетен, но
 
 #: src/gui/state/loot_state.cpp:286
 msgid "Error: Could not create LOOT prelude directory. {0}"
-msgstr "Грешка: Папката на каталога на „LOOT“ не може да бъде създадена. {0}"
+msgstr "Грешка: Папката на каталога на LOOT не може да бъде създадена. {0}"
 
 #. translators: --game and --game-path are command-line arguments and
 #. shouldn't be translated.
@@ -1271,9 +1271,8 @@ msgstr ""
 "да редактирате метаданните, съобразно документацията, която е налична в "
 "главното меню на „LOOT“.\n"
 "\n"
-"Ако имате въпроси, посетете форума на „LOOT“ от [тук](https://loot.github."
-"io/)."
+"Ако имате въпроси, посетете форума на LOOT от [тук](https://loot.github.io/)."
 
 #: src/gui/state/game/helpers.cpp:164
 msgid "LOOT has detected that \"{0}\" is invalid and is now ignoring it."
-msgstr "„LOOT“ установи, че „{0}“ е невалиден и ще бъде игнориран."
+msgstr "LOOT установи, че „{0}“ е невалиден и ще бъде игнориран."
