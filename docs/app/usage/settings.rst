@@ -68,7 +68,7 @@ Masterlist Source
   The URL of a masterlist file that LOOT uses to update its local copy of the masterlist.
 
 Install Path
-  The path to the game's folder, in which the Data folder lies. Either this or a registry key must be supplied.
+  The path to the game's folder, in which the Data folder lies.
 
 Local AppData Path
   The path to the game's local application data directory, which is usually in ``%LOCALAPPDATA%`` and for most games contains ``plugins.txt``. If left empty,
