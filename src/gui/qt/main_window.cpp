@@ -253,7 +253,9 @@ void MainWindow::initialise() {
       showFirstRunDialog();
     }
 
-    state.initCurrentGame();
+    if (state.HasCurrentGame()) {
+      state.initCurrentGame();
+    }
 
     auto initMessages = state.getInitMessages();
     const auto initHasErrored =

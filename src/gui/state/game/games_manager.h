@@ -171,11 +171,8 @@ public:
           "Cannot set the current game: the game with folder \"{}\" is not "
           "installed.",
           newGameFolder);
-      throw GameDetectionError(
-          "Cannot set the current game: the game with folder \"" +
-          newGameFolder +
-          "\" cannot be found. If it is installed, try running the game's "
-          "launcher to register its location.");
+      throw GameDetectionError("The game with folder \"" + newGameFolder +
+                               "\" cannot be found.");
     }
 
     if (logger) {
