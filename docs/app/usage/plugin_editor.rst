@@ -17,7 +17,7 @@ The other tab pages contain metadata tables, which are detailed below. New rows 
 Load After
   This is a list of plugins which, if present, the current plugin must load after, but which are not required. This metadata can be used for resolving specific compatibility issues. Each entry has two fields:
 
-  - The filename is the path, relative to the game's Data folder, of the file to be checked for. This field is required. It gives the filenames of installed plugins as autocomplete suggestions.
+  - The filename is the path, relative to the game's plugins folder (usually ``Data``), of the file to be checked for. This field is required. It gives the filenames of installed plugins as autocomplete suggestions.
   - The condition is the optional condition string that is used to determine if the file should be checked for. If left blank, the file will always be checked for. Condition strings are a relatively advanced part of LOOT's functionality, and their syntax is covered in the Metadata Syntax documentation.
 
 Requirements
