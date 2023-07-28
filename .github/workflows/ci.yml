@@ -9,7 +9,7 @@ on:
 
 env:
   OGDF_VERSION: dogwood-202202
-  QT_VERSION: 6.5.1
+  QT_VERSION: 6.5.2
 
 jobs:
   # Check if the template.pot file is up to date. Run this as a separate job
