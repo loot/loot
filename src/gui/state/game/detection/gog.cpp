@@ -87,7 +87,8 @@ std::vector<GameInstall> FindGameInstalls(const RegistryInterface& registry,
 
   std::vector<GameInstall> installs;
   for (const auto& installPath : installPaths) {
-    installs.push_back(GameInstall{gameId, InstallSource::gog, installPath});
+    installs.push_back(GameInstall{
+        gameId, InstallSource::gog, installPath, std::filesystem::path()});
   }
 
   return installs;

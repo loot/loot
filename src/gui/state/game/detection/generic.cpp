@@ -179,14 +179,17 @@ std::optional<GameInstall> FindGameInstallInRegistry(
     // so treat anything other than Steam and GOG as unknown.
 
     if (IsSteamInstall(gameId, path.value())) {
-      return GameInstall{gameId, InstallSource::steam, path.value()};
+      return GameInstall{
+          gameId, InstallSource::steam, path.value(), std::filesystem::path()};
     }
 
     if (IsGogInstall(gameId, path.value())) {
-      return GameInstall{gameId, InstallSource::gog, path.value()};
+      return GameInstall{
+          gameId, InstallSource::gog, path.value(), std::filesystem::path()};
     }
 
-    return GameInstall{gameId, InstallSource::unknown, path.value()};
+    return GameInstall{
+        gameId, InstallSource::unknown, path.value(), std::filesystem::path()};
   }
 
   return std::nullopt;
@@ -200,22 +203,27 @@ std::optional<GameInstall> FindSiblingGameInstall(const GameId gameId) {
   }
 
   if (IsSteamInstall(gameId, path)) {
-    return GameInstall{gameId, InstallSource::steam, path};
+    return GameInstall{
+        gameId, InstallSource::steam, path, std::filesystem::path()};
   }
 
   if (IsGogInstall(gameId, path)) {
-    return GameInstall{gameId, InstallSource::gog, path};
+    return GameInstall{
+        gameId, InstallSource::gog, path, std::filesystem::path()};
   }
 
   if (IsEpicInstall(gameId, path)) {
-    return GameInstall{gameId, InstallSource::epic, path};
+    return GameInstall{
+        gameId, InstallSource::epic, path, std::filesystem::path()};
   }
 
   if (IsMicrosoftInstall(gameId, path)) {
-    return GameInstall{gameId, InstallSource::microsoft, path};
+    return GameInstall{
+        gameId, InstallSource::microsoft, path, std::filesystem::path()};
   }
 
-  return GameInstall{gameId, InstallSource::unknown, path};
+  return GameInstall{
+      gameId, InstallSource::unknown, path, std::filesystem::path()};
 }
 }
 
