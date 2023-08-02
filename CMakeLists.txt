@@ -61,7 +61,9 @@ ExternalProject_Add(GTest
     PREFIX "external"
     URL "https://github.com/google/googletest/archive/release-1.12.1.tar.gz"
     URL_HASH "SHA256=81964fe578e9bd7c94dfdb09c8e4d6e6759e19967e397dbea48d1c10e45d0df2"
-    CMAKE_ARGS -Dgtest_force_shared_crt=ON
+    CMAKE_ARGS
+        -Dgtest_force_shared_crt=ON
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(GTest SOURCE_DIR BINARY_DIR)
 set(GTEST_INCLUDE_DIRS "${SOURCE_DIR}/googletest/include")
@@ -86,11 +88,17 @@ ExternalProject_Add(libloot
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(libloot SOURCE_DIR)
 set(LIBLOOT_INCLUDE_DIRS "${SOURCE_DIR}/include")
-set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot.dll${CMAKE_STATIC_LIBRARY_SUFFIX}")
+else()
+    set(LIBLOOT_STATIC_LIBRARY "${SOURCE_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}loot${CMAKE_STATIC_LIBRARY_SUFFIX}")
+endif()
 set(LIBLOOT_SHARED_LIBRARY "${SOURCE_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}loot${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(ZLIB_LIB_NAME "zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic$<$<CONFIG:Debug>:d>${CMAKE_STATIC_LIBRARY_SUFFIX}")
 else()
     set(ZLIB_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}z${CMAKE_STATIC_LIBRARY_SUFFIX}")
 endif()
@@ -99,6 +107,8 @@ ExternalProject_Add(zlib
     PREFIX "external"
     URL "https://github.com/madler/zlib/archive/refs/tags/v1.2.13.tar.gz"
     URL_HASH "SHA256=1525952a0a567581792613a9723333d7f8cc20b87a81f920fb8bc7e3f2251428"
+    CMAKE_ARGS
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     INSTALL_COMMAND ""
     BUILD_IN_SOURCE TRUE)
 ExternalProject_Get_Property(zlib SOURCE_DIR BINARY_DIR)
@@ -124,6 +134,7 @@ ExternalProject_Add(minizip-ng
         -DMZ_COMPRESS_ONLY=ON
         -DZLIB_ROOT=${ZLIB_ROOT}
         -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     INSTALL_COMMAND ""
     DEPENDS zlib)
 ExternalProject_Get_Property(minizip-ng SOURCE_DIR BINARY_DIR)
@@ -173,6 +184,8 @@ else()
         PREFIX "external"
         URL "https://ogdf.uos.de/wp-content/uploads/2022/02/ogdf.v2022.02.zip"
         URL_HASH "SHA256=5234b41dd8f52f5dda537794ecb26ccfeb928d8520e0c48e0f84bbc75f4b6c1e"
+        CMAKE_ARGS
+            -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
         BUILD_COMMAND ${OGDF_BUILD_COMMAND}
         INSTALL_COMMAND "")
     ExternalProject_Get_Property(OGDF SOURCE_DIR BINARY_DIR)
@@ -180,7 +193,7 @@ else()
         "${SOURCE_DIR}/include"
         "${BINARY_DIR}/include")
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}/Release")
     else()
         set(OGDF_LIBRARY_DIR "${BINARY_DIR}")
@@ -504,6 +517,15 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
     target_link_libraries(LOOT PRIVATE ${LIBLOOT_STATIC_LIBRARY})
     target_link_libraries(loot_gui_tests PRIVATE ${LIBLOOT_STATIC_LIBRARY})
+
+    if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        target_compile_definitions(LOOT PRIVATE LOOT_STATIC)
+        target_compile_definitions(loot_gui_tests PRIVATE LOOT_STATIC)
+
+        target_link_libraries(LOOT PRIVATE tbb_static bz2)
+        target_link_libraries(loot_gui_tests PRIVATE tbb_static bz2)
+        target_link_libraries(Qt6::Widgets INTERFACE bz2)
+    endif()
 else()
     set(LOOT_LIBS ${LIBLOOT_SHARED_LIBRARY} ICU::uc TBB::tbb)
 
@@ -590,14 +612,16 @@ endif()
 set(QT_DIR ${Qt6_DIR}/../../..)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    # Copy Qt binaries and resources.
-    add_custom_command(TARGET LOOT POST_BUILD
-        COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
-        COMMENT "Running windeployqt...")
+    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        # Copy Qt binaries and resources.
+        add_custom_command(TARGET LOOT POST_BUILD
+            COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:LOOT>
+            COMMENT "Running windeployqt...")
 
-    add_custom_command(TARGET loot_gui_tests POST_BUILD
-        COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:loot_gui_tests>
-        COMMENT "Running windeployqt...")
+        add_custom_command(TARGET loot_gui_tests POST_BUILD
+            COMMAND ${QT_DIR}/bin/windeployqt $<TARGET_FILE:loot_gui_tests>
+            COMMENT "Running windeployqt...")
+    endif()
 else()
     set(LOOT_QT_TEST_RESOURCES
         libicudata.so.56
@@ -607,21 +631,21 @@ else()
         libicuuc.so.56
         libicuuc.so.56.1
         libQt6Core.so.6
-        libQt6Core.so.6.5.1
+        libQt6Core.so.6.5.2
         libQt6DBus.so.6
-        libQt6DBus.so.6.5.1
+        libQt6DBus.so.6.5.2
         libQt6Gui.so.6
-        libQt6Gui.so.6.5.1
+        libQt6Gui.so.6.5.2
         libQt6Network.so.6
-        libQt6Network.so.6.5.1
+        libQt6Network.so.6.5.2
         libQt6Test.so.6
-        libQt6Test.so.6.5.1
+        libQt6Test.so.6.5.2
         libQt6Widgets.so.6
-        libQt6Widgets.so.6.5.1
+        libQt6Widgets.so.6.5.2
         libQt6XcbQpa.so.6
-        libQt6XcbQpa.so.6.5.1
+        libQt6XcbQpa.so.6.5.2
         libQt6OpenGL.so.6
-        libQt6OpenGL.so.6.5.1)
+        libQt6OpenGL.so.6.5.2)
 
     foreach(TEST_RESOURCE ${LOOT_QT_TEST_RESOURCES})
         add_custom_command(TARGET loot_gui_tests POST_BUILD

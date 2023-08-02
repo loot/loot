@@ -56,7 +56,7 @@ private:
   void createPreludeDirectory();
   void overrideGamePath(const std::string& gameFolderName,
                         const std::filesystem::path& gamePath);
-  void setInitialGame(const std::string& preferredGame);
+  void setInitialGame(const std::string& cliGameValue);
 
   // Update the given games settings with new settings for installed games that
   // didn't have a settings object, and updating existing settings objects for
@@ -68,7 +68,8 @@ private:
 
   void InitialiseGameData(gui::Game& game) override;
 
-  std::string selectInitialGame(std::string preferredGame) const;
+  std::optional<std::string> getPreferredGameFolderName(
+      const std::string& cliGameValue) const;
 
   std::vector<std::filesystem::path> xboxGamingRootPaths_;
   std::vector<std::string> preferredUILanguages_;

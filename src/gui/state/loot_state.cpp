@@ -330,23 +330,46 @@ void LootState::overrideGamePath(const std::string& gameFolderName,
   }
 }
 
-void LootState::setInitialGame(const std::string& preferredGame) {
+void LootState::setInitialGame(const std::string& cliGameValue) {
   const auto logger = getLogger();
 
+  auto gameFolderName = getPreferredGameFolderName(cliGameValue);
+
+  if (!gameFolderName.has_value()) {
+    gameFolderName = GetFirstInstalledGameFolderName();
+  }
+
+  if (!gameFolderName.has_value()) {
+    if (logger) {
+      logger->error(
+          "Initial game could not be selected: no supported games were "
+          "detected");
+    }
+
+    initMessages_.push_back(CreateInitErrorMessage(translate(
+        "No supported games were detected. Try running the launcher(s) "
+        "for the supported game(s) that you have installed (e.g. press "
+        "\"Play\" in Steam or GOG Galaxy), then restarting LOOT.")));
+
+    return;
+  }
+
   try {
-    const auto gameFolderName = selectInitialGame(preferredGame);
-    SetCurrentGame(gameFolderName);
+    SetCurrentGame(gameFolderName.value());
     if (logger) {
       logger->debug("Game selected is {}",
                     GetCurrentGame().GetSettings().Name());
     }
   } catch (const exception& e) {
     if (logger) {
-      logger->error("Initial game could not be selected: {}", e.what());
+      logger->error("Initial game could not be set: {}", e.what());
     }
     initMessages_.push_back(CreateInitErrorMessage(format(
-        translate("Error: The initial game could not be selected. {0}").str(),
-        e.what())));
+        translate(
+            "The initial game with folder name \"{0}\" could not be set. If it "
+            "is installed, try running its launcher then restarting LOOT.")
+            .str(),
+        gameFolderName.value())));
   }
 }
 
@@ -367,7 +390,10 @@ bool LootState::IsInstalled(const GameSettings& gameSettings) const {
 
 void LootState::InitialiseGameData(gui::Game& game) { game.Init(); }
 
-std::string LootState::selectInitialGame(std::string preferredGame) const {
+std::optional<std::string> LootState::getPreferredGameFolderName(
+    const std::string& cliGameValue) const {
+  auto preferredGame = cliGameValue;
+
   if (preferredGame.empty()) {
     // Get preferred game from settings.
     if (settings_.getGame() != "auto") {
@@ -381,12 +407,6 @@ std::string LootState::selectInitialGame(std::string preferredGame) const {
     return preferredGame;
   }
 
-  auto firstInstalledGame = GetFirstInstalledGameFolderName();
-  if (!firstInstalledGame.has_value()) {
-    // No games installed, throw an exception.
-    throw GameDetectionError("None of the supported games were detected.");
-  }
-
-  return firstInstalledGame.value();
+  return std::nullopt;
 }
 }
