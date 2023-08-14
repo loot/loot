@@ -183,6 +183,15 @@ jobs:
         run: gpg --output "build/${{ steps.build-archive.outputs.filename }}.sig" --detach-sig "build/${{ steps.build-archive.outputs.filename }}"
         if: github.event_name == 'push'
 
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.build-archive.outputs.filename }}
+          path: |
+            build/${{ steps.build-archive.outputs.filename }}
+            build/${{ steps.build-archive.outputs.filename }}.sig
+        if: github.event_name == 'push'
+
   windows:
     runs-on: windows-2019
 
