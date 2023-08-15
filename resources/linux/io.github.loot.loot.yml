@@ -1,0 +1,42 @@
+app-id: io.github.loot.loot
+runtime: org.kde.Platform
+runtime-version: '6.5'
+sdk: org.kde.Sdk
+command: LOOT
+modules:
+  - name: application
+    buildsystem: simple
+    build-commands:
+      - install -D bin/LOOT /app/bin/LOOT
+      - install -D lib/libloot.so /app/lib/libloot.so
+      - cp -r share /app
+    sources:
+      - type: archive
+        path: ../../build/loot.tar.xz
+  - name: libicu
+    buildsystem: simple
+    build-commands:
+      - install -D icu/usr/local/lib/libicudata.so.66 icu/usr/local/lib/libicuuc.so.66 /app/lib/
+      - install -D icu/usr/local/share/icu/66.1/LICENSE /app/share/doc/libicu66/copyright
+    sources:
+      - type: archive
+        url: https://github.com/unicode-org/icu/releases/download/release-66-1/icu4c-66_1-Ubuntu18.04-x64.tgz
+        sha256: 20c995f4d1285b31cf6aace2d3e7fe12bd974e3cb6776f7a174e5976d6b88fec
+  - name: libtbb
+    buildsystem: simple
+    build-commands:
+      - install -D lib/intel64/gcc4.8/libtbb.so.2 /app/lib/
+      - install -D LICENSE /app/share/doc/libtbb2/copyright
+    sources:
+      - type: archive
+        url: https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz
+        sha256: bb8cddd0277605d3ee7f4e19b138c983f298d69fcbb585385b59ef7239d5ef83
+
+finish-args:
+  - --socket=x11
+  - --share=ipc
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --share=network
+  - --device=dri
+  - --filesystem=host
