@@ -135,7 +135,11 @@ std::vector<std::pair<std::string, std::string>> getStringsToCensor() {
   const auto userProfilePath = getUserProfilePath();
 
   if (userProfilePath.has_value()) {
+#ifdef _WIN32
     return {{userProfilePath.value().u8string(), "%USERPROFILE%"}};
+#else
+    return {{userProfilePath.value().u8string(), "$HOME"}};
+#endif
   }
 
   return {};
