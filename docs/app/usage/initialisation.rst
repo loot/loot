@@ -106,7 +106,7 @@ When LOOT starts, it first loads its configured game settings. If the ``--game``
 - the parent directory of the current working directory (e.g. if LOOT is at ``Skyrim Special Edition\LOOT\LOOT.exe`` next to ``Skyrim Special Edition\SkyrimSE.exe``)
 - the game's Registry keys
 - the install location used by the Epic Games Store
-- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (On Linux each mount point is checked in the order they're listed in ``/proc/self/mounts``.)
+- the install locations used by newer versions of the Microsoft Store and Xbox apps, checking each drive in the order they're listed by Windows. (This is skipped on Linux.)
 - the install locations used by older versions of the Microsoft Store and Xbox apps, checked using the packages' registry keys.
 
 The detected games are merged with the configured game settings, primarily by comparing the detected and configured game install paths. Any detected games that did not have matching configuration get new settings entries added for them. If multiple copies of a single game are detected, each instance is named differently in LOOT's settings to help differentiate between them.
