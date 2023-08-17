@@ -619,11 +619,10 @@ void MainWindow::setupViews() {
 
   // Plugin selection handling needs to be set up after the model has been
   // set, as before then there is no selection model.
-  const auto selectionModel = sidebarPluginsView->selectionModel();
-  connect(selectionModel,
+  connect(sidebarPluginsView->selectionModel(),
           &QItemSelectionModel::selectionChanged,
           this,
-          &MainWindow::on_sidebarPluginsSelectionModel_selectionChanged);
+          &MainWindow::handleSidebarPluginsSelectionChanged);
 
   // Scrolling the cards jumps around too much by default, because the step
   // size is related to the height of list items, which can be quite a lot
@@ -2081,7 +2080,7 @@ void MainWindow::on_sidebarPluginsView_customContextMenuRequested(
   menuPlugin->exec(globalPos);
 }
 
-void MainWindow::on_sidebarPluginsSelectionModel_selectionChanged(
+void MainWindow::handleSidebarPluginsSelectionChanged(
     const QItemSelection& selected,
     const QItemSelection& deselected) {
   if (selected.isEmpty() && deselected.isEmpty()) {

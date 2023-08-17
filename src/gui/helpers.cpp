@@ -56,6 +56,7 @@
 #include "gui/state/logging.h"
 
 namespace {
+#ifdef _WIN32
 std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
   std::vector<std::wstring> elements;
 
@@ -73,7 +74,6 @@ std::vector<std::wstring> SplitOnNulls(std::vector<wchar_t> nullDelimitedList) {
   return elements;
 }
 
-#ifdef _WIN32
 std::vector<std::string> GetPreferredUILanguages(
     std::function<bool(DWORD, PULONG, PZZWSTR, PULONG)> win32Function,
     bool isSystem) {
