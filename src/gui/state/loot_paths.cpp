@@ -60,16 +60,22 @@ std::filesystem::path getDataPath(const std::filesystem::path& givenPath) {
 namespace loot {
 LootPaths::LootPaths(const std::filesystem::path& lootAppPath,
                      const std::filesystem::path& lootDataPath) :
-    lootAppPath_(getAppPath(lootAppPath)),
-    lootDataPath_(getDataPath(lootDataPath)) {}
-
-std::filesystem::path LootPaths::getReadmePath() const {
-  return lootAppPath_ / "docs";
+    lootDataPath_(getDataPath(lootDataPath)) {
+  const auto appPath = getAppPath(lootAppPath);
+#ifdef _WIN32
+  lootDocsPath_ = appPath / "docs";
+  lootL10nPath_ = appPath / "resources" / "l10n";
+#else
+  // On Linux, the executable is in <prefix>/bin, and the docs and
+  // translation files are in <prefix>/share.
+  lootDocsPath_ = appPath.parent_path() / "share" / "doc" / "loot";
+  lootL10nPath_ = appPath.parent_path() / "share" / "locale";
+#endif
 }
 
-std::filesystem::path LootPaths::getL10nPath() const {
-  return lootAppPath_ / "resources" / "l10n";
-}
+std::filesystem::path LootPaths::getReadmePath() const { return lootDocsPath_; }
+
+std::filesystem::path LootPaths::getL10nPath() const { return lootL10nPath_; }
 
 std::filesystem::path LootPaths::getLootDataPath() const {
   return lootDataPath_;

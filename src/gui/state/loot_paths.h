@@ -43,7 +43,8 @@ public:
   std::filesystem::path getPreludePath() const;
 
 private:
-  std::filesystem::path lootAppPath_;
+  std::filesystem::path lootDocsPath_;
+  std::filesystem::path lootL10nPath_;
   std::filesystem::path lootDataPath_;
 };
 }

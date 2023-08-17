@@ -160,19 +160,8 @@ def compress(source_path, destination_path):
             check=True
         )
 
-def create_app_archive(root_path, release_path, temp_path, destination_path, qt_root_path):
-    # Ensure that the output directory is empty.
-    if os.path.exists(temp_path):
-        shutil.rmtree(temp_path)
-
-    os.makedirs(temp_path)
-
-    # Copy LOOT exectuable and other binaries.
-    binaries = []
-    if os.name == 'nt':
-        binaries = ['LOOT.exe', 'loot.dll']
-    else:
-        binaries = ['LOOT', 'libloot.so']
+def prepare_windows_archive(root_path, release_path, temp_path, qt_root_path):
+    binaries = ['LOOT.exe', 'loot.dll']
 
     for binary in binaries:
         shutil.copy2(
@@ -202,37 +191,93 @@ def create_app_archive(root_path, release_path, temp_path, destination_path, qt_
         os.path.join(temp_path, 'docs')
     )
 
-    if os.name != 'nt':
-        # ICU and Intel TBB binaries.
-        os_binaries = [
-            '/usr/lib/x86_64-linux-gnu/libtbb.so.2',
-            '/usr/lib/x86_64-linux-gnu/libicudata.so.66',
-            '/usr/lib/x86_64-linux-gnu/libicuuc.so.66'
-        ]
+def prepare_linux_archive(root_path, release_path, temp_path, qt_root_path):
+    bin_path = os.path.join(temp_path, 'bin')
+    os.makedirs(bin_path)
+    shutil.copy2(
+        os.path.join(release_path, 'LOOT'),
+        os.path.join(bin_path, 'LOOT')
+    )
 
-        for binary in os_binaries:
-            shutil.copy2(
-                binary,
-                os.path.join(temp_path, os.path.basename(binary))
-            )
+    lib_path = os.path.join(temp_path, 'lib')
+    os.makedirs(lib_path)
 
-        # Appstream and Desktop files
-        extensions = ['desktop', 'metainfo.xml']
-        for extension in extensions:
-            filename = 'io.github.loot.loot.' + extension
-            shutil.copy2(
-                os.path.join(root_path, 'resources', 'linux', filename),
-                os.path.join(dest_dir_path, filename)
-            )
+    copy_qt_resources(
+        os.path.join(release_path, 'LOOT'),
+        lib_path,
+        qt_root_path
+    )
 
-        # Icon
-        dest_dir_path = os.path.join(temp_path, 'resources', 'icons')
+    # libloot, ICU and Intel TBB binaries.
+    other_libs = [
+        os.path.join(release_path, 'libloot.so'),
+        '/usr/lib/x86_64-linux-gnu/libtbb.so.2',
+        '/usr/lib/x86_64-linux-gnu/libicudata.so.66',
+        '/usr/lib/x86_64-linux-gnu/libicuuc.so.66'
+    ]
 
-        os.makedirs(dest_dir_path)
+    for library in other_libs:
         shutil.copy2(
-            os.path.join(root_path, 'resources', 'icons', 'loot.svg'),
-            os.path.join(dest_dir_path, 'loot.svg')
+            library,
+            os.path.join(lib_path, os.path.basename(library))
         )
+
+    # Appstream metainfo file
+    metainfo_filename = 'io.github.loot.loot.metainfo.xml'
+    metainfo_path = os.path.join(temp_path, 'share', 'metainfo')
+    os.makedirs(metainfo_path)
+    shutil.copy2(
+        os.path.join(root_path, 'resources', 'linux', metainfo_filename),
+        os.path.join(metainfo_path, metainfo_filename)
+    )
+
+
+    # Desktop file
+    desktop_filename = 'io.github.loot.loot.desktop'
+    applications_path = os.path.join(temp_path, 'share', 'applications')
+    os.makedirs(applications_path)
+    shutil.copy2(
+        os.path.join(root_path, 'resources', 'linux', desktop_filename),
+        os.path.join(applications_path, desktop_filename)
+    )
+
+    # Icon
+    icons_path = os.path.join(temp_path, 'share', 'icons', 'hicolor', 'scalable', 'apps')
+    os.makedirs(icons_path)
+    shutil.copy2(
+        os.path.join(root_path, 'resources', 'icons', 'loot.svg'),
+        os.path.join(icons_path, 'io.github.loot.loot.svg')
+    )
+
+    # Translation files.
+    for folder_name in get_language_folders(root_path):
+        l10n_path = os.path.join(temp_path, 'share', 'locale', folder_name, 'LC_MESSAGES')
+
+        os.makedirs(l10n_path)
+        shutil.copy2(
+            os.path.join(root_path, 'resources', 'l10n', folder_name, 'LC_MESSAGES', 'loot.mo'),
+            os.path.join(l10n_path, 'loot.mo')
+        )
+
+    # Documentation.
+    doc_path = os.path.join(temp_path, 'share', 'doc')
+    os.makedirs(doc_path)
+    shutil.copytree(
+        os.path.join(root_path, 'build', 'docs', 'html'),
+        os.path.join(doc_path, 'loot')
+    )
+
+def create_app_archive(root_path, release_path, temp_path, destination_path, qt_root_path):
+    # Ensure that the output directory is empty.
+    if os.path.exists(temp_path):
+        shutil.rmtree(temp_path)
+
+    os.makedirs(temp_path)
+
+    if os.name == 'nt':
+        prepare_windows_archive(root_path, release_path, temp_path, qt_root_path)
+    else:
+        prepare_linux_archive(root_path, release_path, temp_path, qt_root_path)
 
     compress(temp_path, destination_path)
 

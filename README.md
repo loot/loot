@@ -25,6 +25,14 @@ The snapshot build artifacts are named like so:
 loot_<last tag>-<revisions since tag>-g<short revision ID>_<branch>-<platform>.<file extension>
 ```
 
+The Linux archives use a standard directory layout (e.g. `bin/`, `lib/`, `share/`). To run LOOT in-place you'll probably need to set a couple of environment variables, e.g.
+
+```
+LD_LIBRARY_PATH=lib QT_PLUGIN_PATH=lib ./bin/LOOT
+```
+
+The Linux archives include libloot, Qt, Intel TBB and ICU libraries, but they depend on other system libraries may need to be installed separately.
+
 ## Building LOOT
 
 Refer to `.github/workflows/release.yml` for the build process.

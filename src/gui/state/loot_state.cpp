@@ -225,15 +225,18 @@ void LootState::loadSettings(const std::string& cmdLineGame, bool autoSort) {
   // Now that settings have been loaded, set the locale again to handle
   // translations.
   if (settings_.getLanguage() != MessageContent::DEFAULT_LANGUAGE) {
+    const auto l10nPath = LootPaths::getL10nPath().u8string();
     const auto logger = getLogger();
     if (logger) {
       logger->debug("Initialising language settings.");
       logger->debug("Selected language: {}", settings_.getLanguage());
+      logger->debug("Loading language messages from subdirectories in {}",
+                    l10nPath);
     }
 
     // Boost.Locale initialisation: Generate and imbue locales.
     boost::locale::generator gen;
-    gen.add_messages_path(LootPaths::getL10nPath().u8string());
+    gen.add_messages_path(l10nPath);
     gen.add_messages_domain("loot");
     std::locale::global(gen(settings_.getLanguage() + ".UTF-8"));
   }
