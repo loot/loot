@@ -42,6 +42,10 @@
 #include <boost/locale.hpp>
 #include <fstream>
 
+#ifndef _WIN32
+#include <QtCore/QProcess>
+#endif
+
 #include "gui/state/logging.h"
 
 namespace loot {
@@ -376,9 +380,6 @@ void CopyToClipboard(const std::string& text) {
 void OpenInDefaultApplication(const std::filesystem::path& path) {
 #ifdef _WIN32
   const auto urlString = "file:///" + path.u8string();
-#else
-  const auto urlString = "file://" + path.u8string();
-#endif
 
   const auto logger = getLogger();
   if (logger) {
@@ -395,5 +396,24 @@ void OpenInDefaultApplication(const std::filesystem::path& path) {
                     urlString);
     }
   }
+#else
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace("Attempting to request that the OS open the path {}",
+                  path.u8string());
+  }
+
+  const auto argument = QString::fromStdString(path.u8string());
+
+  QProcess process;
+  process.start("/usr/bin/xdg-open", {argument});
+
+  if (!process.waitForFinished()) {
+    if (logger) {
+      logger->error("Failed to run /usr/bin/xdg-open with the argument {}",
+                    path.u8string());
+    }
+  }
+#endif
 }
 }
