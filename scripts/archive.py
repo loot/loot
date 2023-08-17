@@ -191,7 +191,7 @@ def prepare_windows_archive(root_path, release_path, temp_path, qt_root_path):
         os.path.join(temp_path, 'docs')
     )
 
-def prepare_linux_archive(root_path, release_path, temp_path, qt_root_path):
+def prepare_linux_archive(root_path, release_path, temp_path):
     bin_path = os.path.join(temp_path, 'bin')
     os.makedirs(bin_path)
     shutil.copy2(
@@ -199,28 +199,13 @@ def prepare_linux_archive(root_path, release_path, temp_path, qt_root_path):
         os.path.join(bin_path, 'LOOT')
     )
 
+    # libloot
     lib_path = os.path.join(temp_path, 'lib')
     os.makedirs(lib_path)
-
-    copy_qt_resources(
-        os.path.join(release_path, 'LOOT'),
-        lib_path,
-        qt_root_path
-    )
-
-    # libloot, ICU and Intel TBB binaries.
-    other_libs = [
+    shutil.copy2(
         os.path.join(release_path, 'libloot.so'),
-        '/usr/lib/x86_64-linux-gnu/libtbb.so.2',
-        '/usr/lib/x86_64-linux-gnu/libicudata.so.66',
-        '/usr/lib/x86_64-linux-gnu/libicuuc.so.66'
-    ]
-
-    for library in other_libs:
-        shutil.copy2(
-            library,
-            os.path.join(lib_path, os.path.basename(library))
-        )
+        os.path.join(lib_path, 'libloot.so')
+    )
 
     # Appstream metainfo file
     metainfo_filename = 'io.github.loot.loot.metainfo.xml'
@@ -277,7 +262,7 @@ def create_app_archive(root_path, release_path, temp_path, destination_path, qt_
     if os.name == 'nt':
         prepare_windows_archive(root_path, release_path, temp_path, qt_root_path)
     else:
-        prepare_linux_archive(root_path, release_path, temp_path, qt_root_path)
+        prepare_linux_archive(root_path, release_path, temp_path)
 
     compress(temp_path, destination_path)
 
