@@ -320,9 +320,7 @@ void MainWindow::applyTheme() {
 }
 
 void MainWindow::setupUi() {
-#ifdef _WIN32
-  setWindowIcon(QIcon(":/icon.ico"));
-#endif
+  setWindowIcon(QIcon(":/icons/loot.svg"));
 
   auto lastWindowPosition = state.getSettings().getMainWindowPosition();
   if (lastWindowPosition.has_value()) {

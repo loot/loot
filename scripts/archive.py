@@ -202,6 +202,16 @@ def create_app_archive(root_path, release_path, temp_path, destination_path, qt_
         os.path.join(temp_path, 'docs')
     )
 
+    if os.name != 'nt':
+        # Icon
+        dest_dir_path = os.path.join(temp_path, 'resources', 'icons')
+
+        os.makedirs(dest_dir_path)
+        shutil.copy2(
+            os.path.join(root_path, 'resources', 'icons', 'loot.svg'),
+            os.path.join(dest_dir_path, 'loot.svg')
+        )
+
     compress(temp_path, destination_path)
 
     shutil.rmtree(temp_path)
