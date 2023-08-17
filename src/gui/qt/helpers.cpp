@@ -34,6 +34,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QPoint>
 #include <QtCore/QUrl>
+#include <QtGui/QClipboard>
+#include <QtGui/QGuiApplication>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QWidget>
 #include <boost/locale.hpp>
@@ -354,5 +356,19 @@ void showInvalidRegexTooltip(QWidget& widget, const std::string& details) {
   QToolTip::showText(widget.mapToGlobal(QPoint(0, 0)),
                      QString::fromStdString(message),
                      &widget);
+}
+
+void CopyToClipboard(const std::string& text) {
+  const auto clipboard = QGuiApplication::clipboard();
+  if (!clipboard) {
+    const auto logger = getLogger();
+    if (logger) {
+      logger->error("Could not get QClipboard object");
+    }
+
+    return;
+  }
+
+  clipboard->setText(QString::fromStdString(text));
 }
 }

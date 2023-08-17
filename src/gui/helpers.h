@@ -59,8 +59,6 @@ std::filesystem::path getExecutableDirectory();
 
 std::filesystem::path getLocalAppDataPath();
 
-void CopyToClipboard(const std::string& text);
-
 std::string crcToString(uint32_t crc);
 }
 #endif

@@ -167,6 +167,12 @@ private:
 };
 }
 
+std::string GetLoadOrderAsTextTable(const gui::Game& game,
+                                    const std::vector<std::string>& plugins);
+
+std::string GetMetadataAsBBCodeYaml(const gui::Game& game,
+                                    const std::string& pluginName);
+
 template<typename T>
 std::vector<T> MapFromLoadOrderData(
     const gui::Game& game,

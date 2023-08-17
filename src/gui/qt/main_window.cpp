@@ -50,8 +50,6 @@
 #include "gui/query/types/change_game_query.h"
 #include "gui/query/types/clear_all_metadata_query.h"
 #include "gui/query/types/clear_plugin_metadata_query.h"
-#include "gui/query/types/copy_load_order_query.h"
-#include "gui/query/types/copy_metadata_query.h"
 #include "gui/query/types/get_conflicting_plugins_query.h"
 #include "gui/query/types/get_game_data_query.h"
 #include "gui/query/types/open_log_location_query.h"
@@ -1532,10 +1530,10 @@ void MainWindow::on_actionSearch_triggered() { searchDialog->show(); }
 
 void MainWindow::on_actionCopyLoadOrder_triggered() {
   try {
-    CopyLoadOrderQuery query(state.GetCurrentGame(),
-                             state.GetCurrentGame().GetLoadOrder());
+    const auto text = GetLoadOrderAsTextTable(
+        state.GetCurrentGame(), state.GetCurrentGame().GetLoadOrder());
 
-    query.executeLogic();
+    CopyToClipboard(text);
 
     showNotification(
         translate("The load order has been copied to the clipboard."));
@@ -1724,21 +1722,27 @@ void MainWindow::on_actionEditMetadata_triggered() {
 
 void MainWindow::on_actionCopyMetadata_triggered() {
   try {
-    auto selectedPluginName = getSelectedPlugin().name;
+    const auto selectedPluginName = getSelectedPlugin().name;
 
-    CopyMetadataQuery query(state.GetCurrentGame(),
-                            state.getSettings().getLanguage(),
-                            selectedPluginName);
+    const auto text =
+        GetMetadataAsBBCodeYaml(state.GetCurrentGame(), selectedPluginName);
 
-    query.executeLogic();
+    CopyToClipboard(text);
 
-    auto text = fmt::format(
+    const auto logger = getLogger();
+    if (logger) {
+      logger->debug("Exported userlist metadata text for \"{}\": {}",
+                    selectedPluginName,
+                    text);
+    }
+
+    const auto message = fmt::format(
         boost::locale::translate(
             "The metadata for \"{0}\" has been copied to the clipboard.")
             .str(),
         selectedPluginName);
 
-    showNotification(QString::fromStdString(text));
+    showNotification(QString::fromStdString(message));
   } catch (const std::exception& e) {
     handleException(e);
   }

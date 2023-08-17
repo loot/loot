@@ -325,8 +325,6 @@ set(LOOT_SRC_GUI_H_FILES
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/change_game_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/clear_all_metadata_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/clear_plugin_metadata_query.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/query/types/copy_load_order_query.h"
-    "${CMAKE_SOURCE_DIR}/src/gui/query/types/copy_metadata_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_conflicting_plugins_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/get_game_data_query.h"
     "${CMAKE_SOURCE_DIR}/src/gui/query/types/open_log_location_query.h"

@@ -81,6 +81,8 @@ bool isValidUrl(const std::string& location);
 std::optional<QByteArray> readHttpResponse(QNetworkReply* reply);
 
 void showInvalidRegexTooltip(QWidget& widget, const std::string& details);
+
+void CopyToClipboard(const std::string& text);
 }
 
 Q_DECLARE_METATYPE(loot::MessageContent);
