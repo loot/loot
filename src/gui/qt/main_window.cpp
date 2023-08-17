@@ -36,6 +36,7 @@
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QScrollBar>
 #include <QtWidgets/QTextEdit>
+#include <boost/algorithm/string.hpp>
 
 #include "gui/backup.h"
 #include "gui/qt/helpers.h"
@@ -52,8 +53,6 @@
 #include "gui/query/types/clear_plugin_metadata_query.h"
 #include "gui/query/types/get_conflicting_plugins_query.h"
 #include "gui/query/types/get_game_data_query.h"
-#include "gui/query/types/open_log_location_query.h"
-#include "gui/query/types/open_readme_query.h"
 #include "gui/query/types/sort_plugins_query.h"
 #include "gui/version.h"
 
@@ -1842,9 +1841,24 @@ void MainWindow::on_actionClearMetadata_triggered() {
 
 void MainWindow::on_actionViewDocs_triggered() {
   try {
-    OpenReadmeQuery query(state.getReadmePath(), "index.html");
+    const auto logger = getLogger();
+    if (logger) {
+      logger->trace("Opening LOOT's readme.");
+    }
 
-    query.executeLogic();
+    const auto readmePath = state.getReadmePath();
+    const auto canonicalPath =
+        std::filesystem::canonical(readmePath / "index.html");
+    const auto canonicalReadmePath = std::filesystem::canonical(readmePath);
+
+    if (!boost::starts_with(canonicalPath.u8string(),
+                            canonicalReadmePath.u8string())) {
+      throw std::runtime_error(
+          "Attempted to open readme file outside of recognised readme "
+          "directory.");
+    }
+
+    OpenInDefaultApplication(canonicalPath);
   } catch (const std::exception& e) {
     handleException(e);
   }
@@ -1852,9 +1866,12 @@ void MainWindow::on_actionViewDocs_triggered() {
 
 void MainWindow::on_actionOpenLOOTDataFolder_triggered() {
   try {
-    OpenLogLocationQuery query(state.getLogPath());
+    const auto logger = getLogger();
+    if (logger) {
+      logger->trace("Opening LOOT's local appdata folder.");
+    }
 
-    query.executeLogic();
+    OpenInDefaultApplication(state.getLogPath().parent_path());
   } catch (const std::exception& e) {
     handleException(e);
   }

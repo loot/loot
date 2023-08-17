@@ -34,8 +34,6 @@
 #include "gui/sourced_message.h"
 
 namespace loot {
-void OpenInDefaultApplication(const std::filesystem::path& file);
-
 #ifdef _WIN32
 std::wstring ToWinWide(const std::string& str);
 

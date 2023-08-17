@@ -35,6 +35,7 @@
 #include <QtCore/QPoint>
 #include <QtCore/QUrl>
 #include <QtGui/QClipboard>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QGuiApplication>
 #include <QtWidgets/QToolTip>
 #include <QtWidgets/QWidget>
@@ -370,5 +371,29 @@ void CopyToClipboard(const std::string& text) {
   }
 
   clipboard->setText(QString::fromStdString(text));
+}
+
+void OpenInDefaultApplication(const std::filesystem::path& path) {
+#ifdef _WIN32
+  const auto urlString = "file:///" + path.u8string();
+#else
+  const auto urlString = "file://" + path.u8string();
+#endif
+
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace("Attempting to request that the OS open the URL {}",
+                  urlString);
+  }
+
+  const auto success =
+      QDesktopServices::openUrl(QUrl(QString::fromStdString(urlString)));
+
+  if (!success) {
+    if (logger) {
+      logger->error("Failed to request that the OS to open the URL {}",
+                    urlString);
+    }
+  }
 }
 }

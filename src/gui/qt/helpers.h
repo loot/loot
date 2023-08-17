@@ -83,6 +83,8 @@ std::optional<QByteArray> readHttpResponse(QNetworkReply* reply);
 void showInvalidRegexTooltip(QWidget& widget, const std::string& details);
 
 void CopyToClipboard(const std::string& text);
+
+void OpenInDefaultApplication(const std::filesystem::path& path);
 }
 
 Q_DECLARE_METATYPE(loot::MessageContent);
