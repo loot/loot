@@ -460,10 +460,11 @@ std::filesystem::path getLocalAppDataPath() {
 #ifdef _WIN32
   PWSTR path;
 
-  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK)
+  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &path) != S_OK) {
     throw std::system_error(GetLastError(),
                             std::system_category(),
                             "Failed to get %LOCALAPPDATA% path.");
+  }
 
   std::filesystem::path localAppDataPath(path);
   CoTaskMemFree(path);
@@ -471,19 +472,22 @@ std::filesystem::path getLocalAppDataPath() {
   return localAppDataPath;
 #else
   // Use XDG_CONFIG_HOME environmental variable if it's available.
-  const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
+  const auto xdgConfigHome = getenv("XDG_CONFIG_HOME");
 
-  if (xdgConfigHome != nullptr)
+  if (xdgConfigHome != nullptr) {
     return std::filesystem::u8path(xdgConfigHome);
+  }
 
   // Otherwise, use the HOME env. var. if it's available.
-  xdgConfigHome = getenv("HOME");
+  const auto home = getenv("HOME");
 
-  if (xdgConfigHome != nullptr)
-    return std::filesystem::u8path(xdgConfigHome) / ".config";
+  if (home == nullptr) {
+    // The POSIX spec requires the HOME environment variable to be set, don't
+    // try to work around it being missing.
+    throw std::runtime_error("The HOME environment variable has no value");
+  }
 
-  // If somehow both are missing, use the executable's directory.
-  return getExecutableDirectory();
+  return std::filesystem::u8path(home) / ".config";
 #endif
 }
 
