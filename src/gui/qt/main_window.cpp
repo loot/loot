@@ -865,12 +865,19 @@ void MainWindow::updateCounts(
 }
 
 void MainWindow::updateGeneralInformation() {
-  auto masterlistInfo = getFileRevisionSummary(
-      state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
-  auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
-                                            FileType::MasterlistPrelude);
-
+  const auto preludeInfo = getFileRevisionSummary(state.getPreludePath(),
+                                                  FileType::MasterlistPrelude);
   auto initMessages = state.getInitMessages();
+
+  if (!state.HasCurrentGame()) {
+    pluginItemModel->setGeneralInformation(
+        false, FileRevisionSummary(), preludeInfo, initMessages);
+    return;
+  }
+
+  const auto masterlistInfo = getFileRevisionSummary(
+      state.GetCurrentGame().MasterlistPath(), FileType::Masterlist);
+
   const auto gameMessages =
       state.GetCurrentGame().GetMessages(state.getSettings().getLanguage());
   initMessages.insert(
@@ -2499,8 +2506,9 @@ void MainWindow::handleMasterlistsUpdated(std::vector<QueryResult> results) {
             updateResult.first);
       }
 
-      if (updateResult.first ==
-          state.GetCurrentGame().GetSettings().FolderName()) {
+      if (state.HasCurrentGame() &&
+          updateResult.first ==
+              state.GetCurrentGame().GetSettings().FolderName()) {
         wasCurrentGameMasterlistUpdated = true;
       }
     }
