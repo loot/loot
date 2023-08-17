@@ -203,6 +203,19 @@ def create_app_archive(root_path, release_path, temp_path, destination_path, qt_
     )
 
     if os.name != 'nt':
+        # ICU and Intel TBB binaries.
+        os_binaries = [
+            '/usr/lib/x86_64-linux-gnu/libtbb.so.2',
+            '/usr/lib/x86_64-linux-gnu/libicudata.so.66',
+            '/usr/lib/x86_64-linux-gnu/libicuuc.so.66'
+        ]
+
+        for binary in os_binaries:
+            shutil.copy2(
+                binary,
+                os.path.join(temp_path, os.path.basename(binary))
+            )
+
         # Icon
         dest_dir_path = os.path.join(temp_path, 'resources', 'icons')
 
