@@ -37,13 +37,6 @@ TEST(LootPaths, getReadmePathShouldUseLootAppPath) {
   EXPECT_EQ(std::filesystem::u8path("app") / "docs", paths.getReadmePath());
 }
 
-TEST(LootPaths, getResourcesPathShouldUseLootAppPath) {
-  LootPaths paths("app", "");
-
-  EXPECT_EQ(std::filesystem::u8path("app") / "resources",
-            paths.getResourcesPath());
-}
-
 TEST(LootPaths, getL10nPathShouldUseLootAppPath) {
   LootPaths paths("app", "");
 

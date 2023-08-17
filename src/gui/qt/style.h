@@ -34,10 +34,10 @@
 
 namespace loot {
 std::optional<QString> loadStyleSheet(
-    const std::filesystem::path& resourcesPath,
+    const std::filesystem::path& themesPath,
     const std::string& themeName);
 
-std::vector<std::string> findThemes(const std::filesystem::path& resourcesPath);
+std::vector<std::string> findThemes(const std::filesystem::path& themesPath);
 }
 
 #endif

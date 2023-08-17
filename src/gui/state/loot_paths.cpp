@@ -67,12 +67,8 @@ std::filesystem::path LootPaths::getReadmePath() const {
   return lootAppPath_ / "docs";
 }
 
-std::filesystem::path LootPaths::getResourcesPath() const {
-  return lootAppPath_ / "resources";
-}
-
 std::filesystem::path LootPaths::getL10nPath() const {
-  return getResourcesPath() / "l10n";
+  return lootAppPath_ / "resources" / "l10n";
 }
 
 std::filesystem::path LootPaths::getLootDataPath() const {
@@ -81,6 +77,10 @@ std::filesystem::path LootPaths::getLootDataPath() const {
 
 std::filesystem::path LootPaths::getSettingsPath() const {
   return lootDataPath_ / "settings.toml";
+}
+
+std::filesystem::path LootPaths::getThemesPath() const {
+  return lootDataPath_ / "themes";
 }
 
 std::filesystem::path LootPaths::getLogPath() const {

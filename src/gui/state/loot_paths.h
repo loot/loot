@@ -35,10 +35,10 @@ public:
             const std::filesystem::path& lootDataPath);
 
   std::filesystem::path getReadmePath() const;
-  std::filesystem::path getResourcesPath() const;
   std::filesystem::path getL10nPath() const;
   std::filesystem::path getLootDataPath() const;
   std::filesystem::path getSettingsPath() const;
+  std::filesystem::path getThemesPath() const;
   std::filesystem::path getLogPath() const;
   std::filesystem::path getPreludePath() const;
 

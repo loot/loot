@@ -244,7 +244,7 @@ MainWindow::MainWindow(LootState& state, QWidget* parent) :
 
 void MainWindow::initialise() {
   try {
-    themes = findThemes(state.getResourcesPath());
+    themes = findThemes(state.getThemesPath());
 
     if (state.getSettings().getLastVersion() != gui::Version::string()) {
       showFirstRunDialog();
@@ -302,11 +302,11 @@ void MainWindow::initialise() {
 
 void MainWindow::applyTheme() {
   // Apply theme.
-  auto styleSheet = loot::loadStyleSheet(state.getResourcesPath(),
+  auto styleSheet = loot::loadStyleSheet(state.getThemesPath(),
                                          state.getSettings().getTheme());
   if (!styleSheet.has_value()) {
     // Fall back to the default theme.
-    styleSheet = loot::loadStyleSheet(state.getResourcesPath(), "default");
+    styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default");
   }
 
   if (styleSheet.has_value()) {
