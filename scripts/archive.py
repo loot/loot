@@ -216,6 +216,15 @@ def create_app_archive(root_path, release_path, temp_path, destination_path, qt_
                 os.path.join(temp_path, os.path.basename(binary))
             )
 
+        # Appstream and Desktop files
+        extensions = ['desktop', 'metainfo.xml']
+        for extension in extensions:
+            filename = 'io.github.loot.loot.' + extension
+            shutil.copy2(
+                os.path.join(root_path, 'resources', 'linux', filename),
+                os.path.join(dest_dir_path, filename)
+            )
+
         # Icon
         dest_dir_path = os.path.join(temp_path, 'resources', 'icons')
 
