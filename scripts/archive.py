@@ -137,7 +137,7 @@ def get_language_folders(root_path):
 def compress(source_path, destination_path):
     # Ensure that the output directory is empty.
     if os.path.exists(destination_path):
-        shutil.rmtree(destination_path)
+        os.remove(destination_path)
 
     filename = os.path.basename(destination_path)
     root_folder = os.path.basename(source_path)
@@ -276,7 +276,6 @@ if __name__ == "__main__":
     parser.add_argument('root-path', nargs=1)
     parser.add_argument('given-branch', nargs=1)
     parser.add_argument('qt-root-path', nargs='?')
-    parser.print_help()
 
     arguments = vars(parser.parse_args())
 
