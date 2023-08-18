@@ -35,6 +35,12 @@ flatpak --user install flathub org.kde.Platform//6.5
 flatpak --user install ~/Downloads/loot.flatpak
 ```
 
+You may also want to install the Adwaita theme:
+
+```
+flatpak install flathub org.kde.KStyle.Adwaita//6.5
+```
+
 ## Building LOOT
 
 Refer to `.github/workflows/release.yml` for the build process.

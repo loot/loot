@@ -32,6 +32,7 @@
   </qresource>
   <qresource prefix="/">
     <file>themes/default.theme.qss</file>
+    <file>themes/default-dark.theme.qss</file>
     <file>themes/dark.theme.qss</file>
   </qresource>
 </RCC>

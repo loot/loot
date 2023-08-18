@@ -1,0 +1,80 @@
+/* This is a variation of the default theme that's suitable for a dark palette. */
+loot--GraphView {
+    qproperty-masterColor: #4DFFFFFF;
+    qproperty-userColor: palette(text);
+    qproperty-backgroundColor: palette(base);
+}
+
+loot--MainWindow {
+    qproperty-normalIconColor: #4DE0E0E0;
+    qproperty-disabledIconColor: #787878;
+    qproperty-selectedIconColor: palette(highlighted-text);
+    qproperty-selectedSidebarPluginTextColor: #FFFFFF;
+    qproperty-unselectedSidebarPluginGroupColor: #4DE0E0E0;
+    qproperty-linkColor: #2979FF;
+}
+
+loot--GeneralInfoCard,
+loot--PluginCard {
+	background-color: palette(base);
+}
+
+QListView::item:alternate loot--GeneralInfoCard,
+QListView::item:alternate loot--PluginCard {
+	border-bottom: 1px solid palette(mid);
+}
+
+loot--PluginCard[isSearchResult="true"] {
+	border-left: 4px solid #1E88E5;
+}
+
+loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
+	border-left: 4px solid #1565C0;
+}
+
+QLabel[messageType="warn"] {
+	background-color: #FFE082;
+}
+
+QLabel[messageType="error"] {
+	background-color: #FF8A80;
+}
+
+QLabel#plugin-crc,
+QLabel#plugin-version {
+	margin-left: 16px;
+}
+
+QLabel#plugin-version {
+	color: #78909C;
+}
+
+QLabel#plugin-crc {
+	color: #8D6E63;
+}
+
+QLabel#tags-current {
+    color: silver;
+}
+
+QLabel#tags-add {
+    color: #4CAF50;
+}
+
+QLabel#tags-remove {
+    color: #F44336;
+}
+
+/* These are necessary to reliably update painted (not "editor") widget styling.
+*/
+loot--GeneralInfoCard QLabel,
+loot--MessagesWidget,
+loot--PluginCard QLabel,
+loot--PluginCard > QGroupBox::title {
+    color: palette(text);
+}
+
+QLabel[messageType="warn"],
+QLabel[messageType="error"] {
+    color: #000000;
+}

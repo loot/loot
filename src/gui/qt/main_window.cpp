@@ -30,6 +30,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QStyleHints>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressBar>
@@ -302,11 +303,33 @@ void MainWindow::initialise() {
 
 void MainWindow::applyTheme() {
   // Apply theme.
+  bool loadingDefault = state.getSettings().getTheme() == "default";
+
   auto styleSheet = loot::loadStyleSheet(state.getThemesPath(),
                                          state.getSettings().getTheme());
   if (!styleSheet.has_value()) {
     // Fall back to the default theme.
     styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default");
+    loadingDefault = true;
+  }
+
+  const auto logger = getLogger();
+  if (logger) {
+    logger->debug("Current style name is {}",
+                  qApp->style()->name().toStdString());
+  }
+
+  // Don't load default-dark when Qt is using the windowsvista style,
+  // as that ignores the system color scheme.
+  if (loadingDefault && qApp->style()->name() != "windowsvista" &&
+      QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark) {
+    // Load the default-dark theme instead as it gives better results.
+    if (logger) {
+      logger->debug(
+          "Loading default-dark theme instead of the default theme as a dark "
+          "colour scheme has been detected");
+    }
+    styleSheet = loot::loadStyleSheet(state.getThemesPath(), "default-dark");
   }
 
   if (styleSheet.has_value()) {
