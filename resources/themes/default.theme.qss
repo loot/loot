@@ -15,41 +15,41 @@ loot--MainWindow {
 
 loot--GeneralInfoCard,
 loot--PluginCard {
-	background-color: palette(base);
+    background-color: palette(base);
 }
 
 QListView::item:alternate loot--GeneralInfoCard,
 QListView::item:alternate loot--PluginCard {
-	border-bottom: 1px solid palette(mid);
+    border-bottom: 1px solid palette(mid);
 }
 
 loot--PluginCard[isSearchResult="true"] {
-	border-left: 4px solid #64B5F6;
+    border-left: 4px solid #64B5F6;
 }
 
 loot--PluginCard[isSearchResult="true"][isCurrentSearchResult="true"] {
-	border-left: 4px solid #3F51B5;
+    border-left: 4px solid #3F51B5;
 }
 
 QLabel[messageType="warn"] {
-	background-color: #FFE082;
+    background-color: #FFE082;
 }
 
 QLabel[messageType="error"] {
-	background-color: #FF8A80;
+    background-color: #FF8A80;
 }
 
 QLabel#plugin-crc,
 QLabel#plugin-version {
-	margin-left: 16px;
+    margin-left: 16px;
 }
 
 QLabel#plugin-version {
-	color: #607D8B;
+    color: #607D8B;
 }
 
 QLabel#plugin-crc {
-	color: #795548;
+    color: #795548;
 }
 
 QLabel#tags-current {
@@ -66,9 +66,9 @@ QLabel#tags-remove {
 
 /* These are necessary to reliably update painted (not "editor") widget styling.
 */
-loot--GeneralInfoCard > QLabel,
-loot--GeneralInfoCard > loot--MessagesWidget,
-loot--PluginCard > QLabel,
+loot--GeneralInfoCard QLabel,
+loot--MessagesWidget,
+loot--PluginCard QLabel,
 loot--PluginCard > QGroupBox::title {
     color: palette(text);
 }
