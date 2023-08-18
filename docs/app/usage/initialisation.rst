@@ -13,7 +13,7 @@ LOOT's initialisation can be customised using command line parameters:
   Set the install path of the game identified by ``--game``. This replaces any existing value stored in LOOT's settings.
 
 ``--loot-data-path=<path>``:
-  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_CONFIG_HOME/LOOT`` or ``$HOME/.config/LOOT`` on Linux.
+  Set the path to use for LOOT's application data storage. If this is an empty string or not specified, defaults to ``%LOCALAPPDATA%\LOOT`` on Windows and (in order of decreasing preference) ``$XDG_DATA_HOME/LOOT`` or ``$HOME/.local/share/LOOT`` on Linux.
 
 ``--auto-sort``:
   Once LOOT has initialised, automatically sort the load order, apply the sorted

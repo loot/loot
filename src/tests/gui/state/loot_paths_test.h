@@ -99,7 +99,6 @@ TEST(
   // its properties.
   EXPECT_EQ("LOOT", paths.getLootDataPath().filename());
   EXPECT_FALSE(paths.getLootDataPath().parent_path().empty());
-  EXPECT_TRUE(std::filesystem::exists(paths.getLootDataPath().parent_path()));
 }
 
 TEST(LootPaths, constructorShouldSetTheDataPathToGivenStringIfNonEmpty) {

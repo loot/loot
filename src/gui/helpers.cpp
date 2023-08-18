@@ -471,8 +471,8 @@ std::filesystem::path getLocalAppDataPath() {
 
   return localAppDataPath;
 #else
-  // Use XDG_CONFIG_HOME environmental variable if it's available.
-  const auto xdgConfigHome = getenv("XDG_CONFIG_HOME");
+  // Use XDG_DATA_HOME environmental variable if it's available.
+  const auto xdgConfigHome = getenv("XDG_DATA_HOME");
 
   if (xdgConfigHome != nullptr) {
     return std::filesystem::u8path(xdgConfigHome);
@@ -487,7 +487,7 @@ std::filesystem::path getLocalAppDataPath() {
     throw std::runtime_error("The HOME environment variable has no value");
   }
 
-  return std::filesystem::u8path(home) / ".config";
+  return std::filesystem::u8path(home) / ".local" / "share";
 #endif
 }
 
