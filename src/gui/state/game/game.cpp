@@ -52,6 +52,7 @@
 #include <boost/locale.hpp>
 
 #include "gui/helpers.h"
+#include "gui/state/game/detection/common.h"
 #include "gui/state/game/detection/generic.h"
 #include "gui/state/game/helpers.h"
 #include "gui/state/logging.h"
@@ -74,6 +75,20 @@ struct Counters {
 std::filesystem::path GetLOOTGamePath(const std::filesystem::path& lootDataPath,
                                       const std::string& folderName) {
   return lootDataPath / "games" / std::filesystem::u8path(folderName);
+}
+
+bool IsPathCaseSensitive(const std::filesystem::path& path) {
+  const auto lowercased =
+      path.parent_path() / std::filesystem::u8path(boost::locale::to_lower(
+                               path.filename().u8string()));
+  const auto uppercased =
+      path.parent_path() / std::filesystem::u8path(boost::locale::to_upper(
+                               path.filename().u8string()));
+
+  // It doesn't matter if there are errors, but the function overload that takes
+  // an error code object doesn't throw exceptions, which is useful.
+  std::error_code errorCode;
+  return !std::filesystem::equivalent(lowercased, uppercased, errorCode);
 }
 }
 
@@ -907,6 +922,56 @@ std::vector<SourcedMessage> Game::GetMessages(
             "You have a normal plugin and at least one light plugin sharing "
             "the FE load order index. Deactivate a normal plugin or all your "
             "light plugins to avoid potential issues."));
+  }
+
+  if (IsPathCaseSensitive(GetSettings().DataPath())) {
+    addWarning(
+        MessageSource::caseSensitivePathCheck,
+        fmt::format(
+            boost::locale::translate(
+                "{} is installed in a case-sensitive location. This may "
+                "cause issues as the game, mods and LOOT may assume that "
+                "filesystem paths are not case-sensitive, which is the default "
+                "on Windows.")
+                .str(),
+            GetSettings().Name()));
+  }
+
+  const auto gameLocalPath = GetSettings().GameLocalPath();
+  if (!gameLocalPath.empty()) {
+    if (!std::filesystem::exists(gameLocalPath)) {
+      // The directory does not exist. It might be because the parent directory
+      // is case-sensitive and LOOT's configuration uses the wrong case, or it
+      // might just be because the directory has not yet been created. Create
+      // the directory as doing so is usually harmless either way, and means we
+      // can then check its case-sensitivity.
+      if (logger) {
+        logger->warn(
+            "The game's configured local data path cannot be found, creating "
+            "it so that it can be checked for case-sensitivity.");
+      }
+      std::filesystem::create_directories(gameLocalPath);
+    }
+
+    if (IsPathCaseSensitive(gameLocalPath)) {
+      addWarning(
+          MessageSource::caseSensitivePathCheck,
+          fmt::format(
+              boost::locale::translate(
+                  "{}'s local application data is stored in a case-sensitive "
+                  "location. This may cause issues as the game, mods and LOOT "
+                  "may assume that filesystem paths are not case-sensitive, "
+                  "which is the default on Windows.")
+                  .str(),
+              GetSettings().Name()));
+    }
+  } else if (logger) {
+    // This is probably fine because the path shouldn't be empty on Linux and on
+    // Windows the filesystem is usually case-insensitive, but log a message
+    // just in case (no pun intended).
+    logger->debug(
+        "The game's configured local data path is empty, so the path cannot be "
+        "checked for case-sensitivity.");
   }
 
   return output;

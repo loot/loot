@@ -49,7 +49,8 @@ enum struct MessageSource : unsigned int {
   caughtException,
   unsortedLoadOrderCheck,
   activePluginsCountCheck,
-  removedPluginsCheck
+  removedPluginsCheck,
+  caseSensitivePathCheck
 };
 
 struct SourcedMessage {
