@@ -28,6 +28,7 @@
 #include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <map>
+#include <vdf_parser.hpp>
 
 #include "gui/helpers.h"
 #include "gui/state/game/detection/common.h"
@@ -169,53 +170,94 @@ std::vector<std::filesystem::path> ParseLibraryFoldersVdf(
     std::istream& stream) {
   const auto logger = loot::getLogger();
 
-  std::vector<std::filesystem::path> appManifestPaths;
+  try {
+    const auto root = tyti::vdf::read(stream);
 
-  // This is pretty hacky.
-  std::filesystem::path currentLibraryPath;
-  const std::string pathPrefix = "\t\t\"path\"\t\t\"";
-  const std::string appIdPrefix = "\t\t\t\"";
-
-  for (std::string line; std::getline(stream, line);) {
-    if (boost::starts_with(line, pathPrefix)) {
-      const auto path = GetStringValue(line, pathPrefix);
-
-      currentLibraryPath = std::filesystem::u8path(path);
-
+    if (root.name != "libraryfolders") {
       if (logger) {
-        logger->debug("Read Steam library path: {}", path);
+        logger->error(
+            "Steam library folders VDF file has unexpected root node name {}",
+            root.name);
+        return {};
       }
     }
 
-    if (boost::starts_with(line, appIdPrefix)) {
-      const auto endIndex = line.find("\"", appIdPrefix.size());
-      if (endIndex == std::string::npos) {
+    std::vector<std::filesystem::path> appManifestPaths;
+
+    for (const auto& [index, library] : root.childs) {
+      if (library == nullptr) {
         if (logger) {
-          logger->error("Unexpected end to Steam libraryfolders.vcf line: {}",
-                        line);
+          logger->error(
+              "Steam library folders VDF file has a key named {} with no "
+              "value, "
+              "skipping it",
+              index);
         }
         continue;
       }
-      const auto appId =
-          line.substr(appIdPrefix.size(), endIndex - appIdPrefix.size());
 
-      if (logger) {
-        logger->debug("Read Steam app ID {}", appId);
+      const auto pathIt = library->attribs.find("path");
+      if (pathIt == library->attribs.end()) {
+        if (logger) {
+          logger->error(
+              "Steam library folders VDF file has an object with no path key, "
+              "skipping it");
+        }
+        continue;
       }
 
-      const auto isSupportedGame = STEAM_GAME_ID_MAP.count(appId) == 1;
+      const auto appsIt = library->childs.find("apps");
+      if (appsIt == library->childs.end()) {
+        if (logger) {
+          logger->error(
+              "Steam library folders VDF file has an object with no apps key, "
+              "skipping it");
+        }
+        continue;
+      }
 
-      if (isSupportedGame) {
+      const auto apps = appsIt->second;
+      if (apps == nullptr) {
+        if (logger) {
+          logger->error(
+              "Steam library folders VDF file has a key named {} with no "
+              "value, "
+              "skipping it",
+              appsIt->first);
+        }
+        continue;
+      }
+
+      for (const auto& [appId, size] : apps->attribs) {
+        const auto isSupportedGame = STEAM_GAME_ID_MAP.count(appId) == 1;
+        if (!isSupportedGame) {
+          if (logger) {
+            logger->trace("Skipping app ID {} as it is not a supported game",
+                          appId);
+          }
+          continue;
+        }
+
         const auto manifestPath =
-            currentLibraryPath / "steamapps" /
+            std::filesystem::u8path(pathIt->second) / "steamapps" /
             std::filesystem::u8path("appmanifest_" + appId + ".acf");
 
         appManifestPaths.push_back(manifestPath);
       }
     }
-  }
 
-  return appManifestPaths;
+    // The parser exposes elements as unordered maps, so to ensure a consistent
+    // output order, sort the paths that have been collected.
+    std::sort(appManifestPaths.begin(), appManifestPaths.end());
+
+    return appManifestPaths;
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error("Failed to parse Steam libraryfolders.vdf file: {}",
+                    e.what());
+    }
+    return {};
+  }
 }
 
 struct SteamAppManifest {
@@ -224,25 +266,49 @@ struct SteamAppManifest {
 };
 
 // Returns game install directory.
-SteamAppManifest ParseAppManifest(std::istream& stream) {
-  SteamAppManifest manifest;
+std::optional<SteamAppManifest> ParseAppManifest(std::istream& stream) {
+  const auto logger = loot::getLogger();
 
-  // Again, this is pretty hacky.
-  const std::string installDirPrefix = "\t\"installdir\"\t\t\"";
-  const std::string appIdPrefix = "\t\"appid\"\t\t\"";
+  try {
+    const auto root = tyti::vdf::read(stream);
 
-  for (std::string line; std::getline(stream, line);) {
-    if (manifest.appId.empty() && boost::starts_with(line, appIdPrefix)) {
-      manifest.appId = GetStringValue(line, appIdPrefix);
+    if (root.name != "AppState") {
+      if (logger) {
+        logger->error(
+            "Steam app manifest ACF file has unexpected root node name {}",
+            root.name);
+        return std::nullopt;
+      }
     }
 
-    if (manifest.installDir.empty() &&
-        boost::starts_with(line, installDirPrefix)) {
-      manifest.installDir = GetStringValue(line, installDirPrefix);
+    const auto appIdIt = root.attribs.find("appid");
+    if (appIdIt == root.attribs.end()) {
+      if (logger) {
+        logger->error("Steam app manifest ACF file has no appid key");
+      }
+      return std::nullopt;
     }
+
+    const auto installDirIt = root.attribs.find("installdir");
+    if (installDirIt == root.attribs.end()) {
+      if (logger) {
+        logger->error("Steam app manifest ACF file has no installdir key");
+      }
+      return std::nullopt;
+    }
+
+    SteamAppManifest manifest;
+    manifest.appId = appIdIt->second;
+    manifest.installDir = installDirIt->second;
+
+    return manifest;
+  } catch (const std::exception& e) {
+    if (logger) {
+      logger->error("Failed to parse Steam libraryfolders.vdf file: {}",
+                    e.what());
+    }
+    return std::nullopt;
   }
-
-  return manifest;
 }
 }
 
@@ -266,9 +332,13 @@ std::optional<std::filesystem::path> GetSteamInstallPath(
 std::vector<std::filesystem::path> GetSteamAppManifestPaths(
     const std::filesystem::path& steamInstallPath) {
   const auto vdfPath = steamInstallPath / "config" / "libraryfolders.vdf";
+  const auto logger = getLogger();
+  if (logger) {
+    logger->trace("Reading libraryfolders.vdf file at {}", vdfPath.u8string());
+  }
+
   std::ifstream stream(vdfPath);
   if (!stream.is_open()) {
-    const auto logger = getLogger();
     if (logger) {
       logger->warn("The file at {} could not be opened for reading",
                    vdfPath.u8string());
@@ -294,11 +364,21 @@ std::optional<GameInstall> FindGameInstall(
     return std::nullopt;
   }
 
-  const auto manifest = ParseAppManifest(stream);
+  const auto result = ParseAppManifest(stream);
+
+  if (!result.has_value()) {
+    if (logger) {
+      logger->error("Failed to read data from the Steam app manifest at {}",
+                    steamAppManifestPath.u8string());
+    }
+    return std::nullopt;
+  }
+
+  const auto manifest = result.value();
 
   if (manifest.appId.empty()) {
     if (logger) {
-      logger->error("The Steam app manifest at {} has no appid",
+      logger->error("The Steam app manifest at {} has an empty appid",
                     steamAppManifestPath.u8string());
     }
     return std::nullopt;
@@ -306,7 +386,7 @@ std::optional<GameInstall> FindGameInstall(
 
   if (manifest.installDir.empty()) {
     if (logger) {
-      logger->error("The Steam app manifest at {} has no installdir",
+      logger->error("The Steam app manifest at {} has an empty installdir",
                     steamAppManifestPath.u8string());
     }
     return std::nullopt;
@@ -337,8 +417,9 @@ std::optional<GameInstall> FindGameInstall(
 
 #ifndef _WIN32
   // A local path must be specified when running on Linux.
-  install.localPath = steamapps / "compatdata" / manifest.appId / "pfx" /
-                      "drive_c" / "users" / "steamuser" / "AppData" / "Local" /
+  install.localPath = steamAppManifestPath.parent_path() / "compatdata" /
+                      manifest.appId / "pfx" / "drive_c" / "users" /
+                      "steamuser" / "AppData" / "Local" /
                       GetAppDataFolderName(install.gameId);
 #endif
 
